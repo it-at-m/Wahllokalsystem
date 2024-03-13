@@ -9,7 +9,7 @@ The system was developed and used for the first time during the Bundestags elect
 
 ### Built With
 
-The documentation project is built with technologies we use in our projects
+The project is built with technologies we use in our projects
 ([reference architecture](https://opensource.muenchen.de/publish.html#refarch)):
 
 * [Spring Boot](https://spring.io/projects/spring-boot)

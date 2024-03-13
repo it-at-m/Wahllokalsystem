@@ -4,7 +4,7 @@ The `Wahllokalsystem` is a system that supports elections in the city of munich.
 
 The system allows users to document the presence of the election board and situations during the election.
 
-The system was developed and use for the first time during the Bundestags election september 2017.
+The system was developed and used for the first time during the Bundestags election september 2017.
 
 
 ### Built With

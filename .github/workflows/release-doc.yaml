@@ -3,7 +3,7 @@ name: release docs
 on:
   push:
     branches:
-      - [ $default-branch ]
+      - dev
 
 jobs:
   build:

@@ -1,41 +1,39 @@
-## Customize this file after creating the new REPO and remove this lines.
-What to adjust:  
-* Add the your project or repo name direct under the logo.
-* Add a short and long desciption.
-* Add links for your final repo to report a bug or request a feature.
-* Add list of used technologies.
-* If you have, add a roadmap or remove this section.
-* Fill up the section for set up and documentation.
- * Start in this file only with documentation and link to the docs folder.
-* Add project shields. Use [shields.io](https://shields.io/)
+# Wahllokalsystem
 
-## ------- end to remove -------
-<!-- add Project Logo, if existing -->
+The `Wahllokalsystem` is a system that supports elections in the city of munich. It enables the election board of each constituency to enter the counted votes and deliver them securely to the election office.
 
-# repo or project name
+The system also allows users to document the presence of the election board and occurences during the election. It has certain offline capabilities in case of a broken network connection and is also able to notify all election offices via broadcast messages.
 
-*Add a description from your project here.*
+The system was developed and used for the first time during the Bundestags election september 2017.
 
 
 ### Built With
 
-The documentation project is built with technologies we use in our projects:
+The project is built with technologies we use in our projects
+([reference architecture](https://opensource.muenchen.de/publish.html#refarch)):
 
-* *write here the list of used technologies*
+* [Spring Boot](https://spring.io/projects/spring-boot)
+* [Vue.js](https://vuejs.org/)
 
 ## Roadmap
 
-*if you have a ROADMAP for your project add this here*
+We just started that is why a detailed roadmap is not available yet. All we can tell you today is that we plan about 4 phases:
 
+0. setup - getting familiar with the tools, the tech and the process and see what is todo
+1. updating the backend
+2. updating the frontend
+3. optimising the system
 
-See the [open issues](#) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/it-at-m/Wahllokalsystem/issues) for a full list of proposed features (and known issues).
 
 
 ## Set up
-*how can i start and fly this project*
+
+*comming soon during the development when the first services appear*
 
 ## Documentation
-*what insights do you have to tell*
+
+*comming soon during the development*
 
 ## Contributing
 

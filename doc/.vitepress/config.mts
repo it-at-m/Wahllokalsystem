@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress'
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "Wahllokalsystem",
-  description: "election supporting system",
+  description: "Datenerfassung am Wahltag",
   base: '/Wahllokalsystem/',
   srcDir: 'src', //markdown files are located in that directory
   themeConfig: {

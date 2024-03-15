@@ -6,13 +6,6 @@ hero:
   name: "Wahllokalsystem"
   text: "Datenerfassung am Wahltag"
   tagline: Beschreibung der Funktionalität und Technik
-  actions:
-    - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
-    - theme: alt
-      text: API Examples
-      link: /api-examples
 
 features:
   - title: Feature A

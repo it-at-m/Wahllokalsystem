@@ -12,16 +12,6 @@ export default defineConfig({
       { text: 'Technik', link: '/technik/' }
     ],
 
-    sidebar: [
-      {
-        text: 'Examples',
-        items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
-        ]
-      }
-    ],
-
     socialLinks: [
       { icon: 'github', link: 'https://github.com/it-at-m/Wahllokalsystem/' }
     ]

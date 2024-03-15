@@ -4,6 +4,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: "Wahllokalsystem",
   description: "election supporting system",
+  srcDir: 'src', //markdown files are located in that directory
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [

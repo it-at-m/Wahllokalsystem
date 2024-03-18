@@ -5,14 +5,14 @@ on:
     branches:
       - dev
     paths:
-      - 'doc/**'
+      - 'docs/**'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./doc
+        working-directory: ./docs
     steps:
       - uses: actions/checkout@v4
 
@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: 18
           cache: npm
-          cache-dependency-path: doc/package-lock.json
+          cache-dependency-path: docs/package-lock.json
 
       - run: npm install
 
@@ -30,4 +30,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./doc/dist
+          publish_dir: ./docs/dist

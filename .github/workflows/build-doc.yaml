@@ -3,14 +3,14 @@ name: build docs
 on:
   pull_request:
     paths:
-      - 'doc/**'
+      - 'docs/**'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./doc
+        working-directory: ./docs
     steps:
       - uses: actions/checkout@v4
 
@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: 18
           cache: npm
-          cache-dependency-path: doc/package-lock.json
+          cache-dependency-path: docs/package-lock.json
 
       - run: npm install
 

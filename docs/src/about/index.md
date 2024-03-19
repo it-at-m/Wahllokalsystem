@@ -1,15 +1,15 @@
 # About
 
-In diesem Repository wollen wir das Wahllokalsystem der Stadt München, dass initial zur Bundestagswahl 2017 eingeführt wurde,
-veröffentlichen. Anlass dafür ist eine geplante Lifecyclemaßnahme. Da wir ihm Rahmen dieser Maßnahme die gesamte Anwendung betrachten
+In diesem Repository wollen wir das Wahllokalsystem der Landeshauptstadt München, das initial zur Bundestagswahl 2017 eingeführt wurde,
+veröffentlichen. Anlass dafür ist eine geplante Lifecyclemaßnahme. Da wir im Rahmen dieser Maßnahme die gesamte Anwendung betrachten,
 bot es sich an entsprechend der [OpenSource-Strategie](https://opensource.muenchen.de/de/principles.html#rechtliche-und-politische-vorgaben)
-der Stadt München die Anwendung OpenSource zu stellen.
+der Stadt München, die Anwendung OpenSource zu stellen.
 
 Am Ende soll die Anwendung für Interessierte vollständig zur Verfügung stehen.
 
 ## Was kann die Software
 
-Der Hauptfokus der Software liegt auf den Handlungen am Wahltag. Sie unterstützt bei der Eröffnung des Wahllokals, indem man anhand einer Checkliste
+Der Hauptfokus der Software liegt auf den Handlungen am Wahltag. Sie unterstützt bei der Eröffnung des Wahllokals, indem man z.B. anhand einer Checkliste
 prüfen kann, dass alle notwendigen Materialien für die Durchführung vorhanden sind. Während der Zeit der Stimmabgabe wird übermittelt
 wie viele Wähler\*Innen bereits im Wahllokal waren. Des Weiteren werden über die Software wahlrelevante Vorkommnisse dokumentiert.
 

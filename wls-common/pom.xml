@@ -21,6 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.boot.version>3.2.3</spring.boot.version>
         <spring.cloud.version>2023.0.0</spring.cloud.version>
+        <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
         <!-- Version muss mit der in den spring-boot-dependencies bereitgestellten Lombok-Version übereinstimmen -->
         <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
@@ -60,5 +61,26 @@
         <developerConnection>scm:git:https://github.com/it-at-m/Wahllokalsystem.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${org.projectlombok.lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

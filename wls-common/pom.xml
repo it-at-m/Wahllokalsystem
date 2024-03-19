@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+
+    <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+    <artifactId>parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>wls-common</name>
+    <packaging>pom</packaging>
+    <description>Serviceübergreifende Aspekte</description>
+
+
+    <properties>
+        <java.version>17</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.boot.version>3.2.3</spring.boot.version>
+        <spring.cloud.version>2023.0.0</spring.cloud.version>
+        <!-- Version muss mit der in den spring-boot-dependencies bereitgestellten Lombok-Version übereinstimmen -->
+        <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>
+        <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
+    </properties>
+
+    <modules>
+        <module>exception</module>
+        <module>monitoring</module>
+        <module>security</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <!-- Import dependency management from Spring Boot -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <!-- Import dependency management from Spring Cloud -->
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring.cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+    <scm>
+        <url>https://github.com/it-at-m/Wahllokalsystem</url>
+        <connection>scm:git:https://github.com/it-at-m/Wahllokalsystem.git</connection>
+        <developerConnection>scm:git:https://github.com/it-at-m/Wahllokalsystem.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+</project>

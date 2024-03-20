@@ -1,28 +1,28 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.exception;
 
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionCategory;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionData;
 import lombok.Getter;
 
 @Getter
-public abstract class WlsException extends RuntimeException {
+//@formatter:off steht im Conflict mit checkstyle - TODO Issue erstellen und verlinken
+public abstract sealed class WlsException extends RuntimeException
+        permits FachlicheWlsException, TechnischeWlsException, InfrastrukturelleWlsException, SicherheitsWlsException {
+    //formatter:on
 
     private static final long serialVersionUID = 1L;
 
     private final WlsExceptionCategory category;
     private final String code;
-    //Kann aus Konstruktoren raus da die Exception primär intern erstellt wird
-    //wird nur gesetzt wenn eine Exception von einen anderen Service verabeitet wird
-    private final String service;
+    private final String serviceName;
     private final String message;
 
-    public WlsException(final WlsExceptionCategory category, final String code, final String service, final String message) {
-        this(null, category, code, service, message);
+    protected WlsException(final WlsExceptionCategory category, WlsExceptionData wlsExceptionData) {
+        super(wlsExceptionData.getCause());
+        this.category = category;
+        this.code = wlsExceptionData.getCode();
+        this.serviceName = wlsExceptionData.getServiceName();
+        this.message = wlsExceptionData.getMessage();
     }
 
-    public WlsException(final Throwable cause, final WlsExceptionCategory category, final String code, final String service, final String message) {
-        super(cause);
-        this.category = category;
-        this.code = code;
-        this.service = service;
-        this.message = message;
-    }
 }

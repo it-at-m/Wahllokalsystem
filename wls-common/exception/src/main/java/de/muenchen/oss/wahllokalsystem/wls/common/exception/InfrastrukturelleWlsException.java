@@ -1,12 +1,20 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.exception;
 
-public class InfrastrukturelleWlsException extends WlsException {
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.builder.WlsExceptionCreator;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.builder.WlsExceptionFactory;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.builder.states.CodeIsSet;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionCategory;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionData;
 
-    public InfrastrukturelleWlsException(String code, String service, String message) {
-        this(null, code, service, message);
+public final class InfrastrukturelleWlsException extends WlsException {
+
+    private static final WlsExceptionCreator<InfrastrukturelleWlsException> exceptionCreation = (InfrastrukturelleWlsException::new);
+
+    private InfrastrukturelleWlsException(final WlsExceptionData data) {
+        super(WlsExceptionCategory.INFRASTRUKTUR, data);
     }
 
-    public InfrastrukturelleWlsException(Throwable cause, String code, String service, String message) {
-        super(cause, WlsExceptionCategory.INFRASTRUKTUR, code, service, message);
+    public static CodeIsSet<InfrastrukturelleWlsException> withCode(final String code) {
+        return new WlsExceptionFactory<>(exceptionCreation).withCode(code);
     }
 }

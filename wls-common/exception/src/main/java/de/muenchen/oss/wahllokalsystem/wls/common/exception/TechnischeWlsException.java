@@ -1,12 +1,20 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.exception;
 
-public class TechnischeWlsException extends WlsException {
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.builder.WlsExceptionCreator;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.builder.WlsExceptionFactory;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.builder.states.CodeIsSet;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionCategory;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionData;
 
-    public TechnischeWlsException(String code, String service, String message) {
-        this(null, code, service, message);
+public final class TechnischeWlsException extends WlsException {
+
+    private static final WlsExceptionCreator<TechnischeWlsException> exceptionCreation = (TechnischeWlsException::new);
+
+    private TechnischeWlsException(final WlsExceptionData data) {
+        super(WlsExceptionCategory.TECHNISCH, data);
     }
 
-    public TechnischeWlsException(Throwable cause, String code, String service, String message) {
-        super(cause, WlsExceptionCategory.TECHNISCH, code, service, message);
+    public static CodeIsSet<TechnischeWlsException> withCode(final String code) {
+        return new WlsExceptionFactory<>(exceptionCreation).withCode(code);
     }
 }

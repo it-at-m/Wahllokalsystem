@@ -14,6 +14,14 @@
     <version>0.0.1-SNAPSHOT</version>
     <description>Projekt für die Fehlerinfrastruktur die Serviceübergreifend ist</description>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

@@ -12,7 +12,7 @@
 
     <artifactId>monitoring</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <description>Monitoring Aspekte</description>
+    <description>Übergreifende Monitoring Aspekte</description>
 
     <build>
         <plugins>

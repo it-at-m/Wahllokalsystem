@@ -1,0 +1,72 @@
+{
+    "allowRemoteResourceManagement": false,
+    "policyEnforcementMode": "ENFORCING",
+    "resources": [
+        {
+            "name": "WLS_BROADCAST_SERVICE_READ_THEENTITY",
+            "type": "wahllokalsystem-wls-broadcast-service-service",
+            "scopes": []
+        },
+        {
+            "name": "WLS_BROADCAST_SERVICE_WRITE_THEENTITY",
+            "type": "wahllokalsystem-wls-broadcast-service-service",
+            "scopes": []
+        },
+        {
+            "name": "WLS_BROADCAST_SERVICE_DELETE_THEENTITY",
+            "type": "wahllokalsystem-wls-broadcast-service-service",
+            "scopes": []
+        }
+    ],
+    "policies": [
+        {
+            "name": "rolepolicy_admin",
+            "type": "role",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+                "roles": "[{\"id\":\"wahllokalsystem/clientrole_admin\",\"required\":false}]"
+            }
+        },
+        {
+            "name": "rolepolicy_readonly",
+            "type": "role",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+                "roles": "[{\"id\":\"wahllokalsystem/clientrole_readonly\",\"required\":false}]"
+            }
+        },
+        {
+            "name": "permission_WLS_BROADCAST_SERVICE_DELETE_THEENTITY",
+            "type": "resource",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+                "resources": "[\"WLS_BROADCAST_SERVICE_DELETE_THEENTITY\"]",
+                "applyPolicies": "[\"rolepolicy_admin\"]"
+            }
+        },
+        {
+            "name": "permission_WLS_BROADCAST_SERVICE_WRITE_THEENTITY",
+            "type": "resource",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+                "resources": "[\"WLS_BROADCAST_SERVICE_WRITE_THEENTITY\"]",
+                "applyPolicies": "[\"rolepolicy_admin\"]"
+            }
+        },
+        {
+            "name": "permission_WLS_BROADCAST_SERVICE_READ_THEENTITY",
+            "type": "resource",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+                "resources": "[\"WLS_BROADCAST_SERVICE_READ_THEENTITY\"]",
+                "applyPolicies": "[\"rolepolicy_admin\",\"rolepolicy_readonly\"]"
+            }
+        }
+    ],
+    "scopes": []
+}

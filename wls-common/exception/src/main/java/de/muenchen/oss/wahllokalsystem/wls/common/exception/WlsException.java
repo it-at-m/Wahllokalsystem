@@ -5,7 +5,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionDa
 import lombok.Getter;
 
 @Getter
-//@formatter:off steht im Conflict mit checkstyle - TODO Issue erstellen und verlinken
+//@formatter:off steht im Conflict mit checkstyle - siehe Issue #53
 public abstract sealed class WlsException extends RuntimeException
         permits FachlicheWlsException, TechnischeWlsException, InfrastrukturelleWlsException, SicherheitsWlsException {
     //formatter:on

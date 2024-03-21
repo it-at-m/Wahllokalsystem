@@ -29,7 +29,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: https://sso.muenchen.de/auth/realms/${realm}/protocol/openid-connect/certs
+          jwk-set-uri:
 
 
 # Define the keycloak productive realm here
@@ -39,4 +39,4 @@ security:
   # possible values: none, all, changing (With changing, only changing requests such as POST, PUT, DELETE are logged)
   logging.requests: all
   oauth2:
-    resource.user-info-uri: https://sso.muenchen.de/auth/realms/${realm}/protocol/openid-connect/userinfo
+    resource.user-info-uri:

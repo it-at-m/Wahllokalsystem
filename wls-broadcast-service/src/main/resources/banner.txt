@@ -10,7 +10,7 @@
 
  Du benutzt den RefArch-Archetype und willst it@M helfen, ihn weiter zu verbessern? 
 
- Gib uns dein Feedback und Verbesserungsvorschläge unter https://git.muenchen.de/ccse/refarch-archetype/refarch-overview/-/issues/new?issuable_template=Feedback
+ Gib uns dein Feedback und Verbesserungsvorschläge unter: opensource@muenchen.de
 
  Application Name    : ${spring.application.name}
  Spring Boot Version : ${spring-boot.formatted-version}

@@ -14,7 +14,7 @@ public final class FachlicheWlsException extends WlsException {
         super(WlsExceptionCategory.FACHLICH, data);
     }
 
-    public static CodeIsSet<FachlicheWlsException> withCode(String code) {
+    public static CodeIsSet<FachlicheWlsException> withCode(final String code) {
         return new WlsExceptionFactory<>(exceptionCreation).withCode(code);
     }
 }

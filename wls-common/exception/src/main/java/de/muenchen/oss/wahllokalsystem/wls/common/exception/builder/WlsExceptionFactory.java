@@ -11,25 +11,25 @@ public class WlsExceptionFactory<T extends WlsException> implements ExceptionFin
 
     private final WlsExceptionCreator<T> exceptionCreator;
 
-    public WlsExceptionFactory(WlsExceptionCreator<T> builder) {
+    public WlsExceptionFactory(final WlsExceptionCreator<T> builder) {
         wlsExceptionData = new WlsExceptionData();
         this.exceptionCreator = builder;
     }
 
     @Override
-    public CodeIsSet<T> withCode(String code) {
+    public CodeIsSet<T> withCode(final String code) {
         wlsExceptionData.setCode(code);
         return this;
     }
 
     @Override
-    public CodeIsSet<T> inService(String serviceName) {
+    public CodeIsSet<T> inService(final String serviceName) {
         wlsExceptionData.setServiceName(serviceName);
         return this;
     }
 
     @Override
-    public CodeIsSet<T> withCause(Throwable cause) {
+    public CodeIsSet<T> withCause(final Throwable cause) {
         wlsExceptionData.setCause(cause);
         return this;
     }

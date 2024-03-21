@@ -25,7 +25,7 @@ public abstract class AbstractExceptionHandler {
 
     private final DTOMapper dtoMapper;
 
-    protected WlsExceptionDTO getWahlExceptionDTO(@NonNull Throwable throwable) {
+    protected WlsExceptionDTO getWahlExceptionDTO(@NonNull final Throwable throwable) {
         log.debug("Throwable > {}", throwable.toString());
         final WlsExceptionDTO data;
 
@@ -49,7 +49,7 @@ public abstract class AbstractExceptionHandler {
 
     protected abstract String getService();
 
-    protected WlsExceptionDTO createForTransientException(Throwable throwable) {
+    protected WlsExceptionDTO createForTransientException(final Throwable throwable) {
         return new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionKonstanten.CODE_TRANSIENT, getService(),
                 String.format("Temporäres Problem, Ursache: %s, Nachricht: %s", throwable.getClass(), throwable.getMessage()));
     }
@@ -58,7 +58,7 @@ public abstract class AbstractExceptionHandler {
         return new WlsExceptionDTO(WlsExceptionCategory.S, ExceptionKonstanten.CODE_SECURITY_ACCESS_DENIED, getService(), throwable.getMessage());
     }
 
-    protected ResponseEntity<WlsExceptionDTO> createResponse(WlsExceptionDTO wlsExceptionDTO) {
+    protected ResponseEntity<WlsExceptionDTO> createResponse(final WlsExceptionDTO wlsExceptionDTO) {
         return switch (wlsExceptionDTO.category()) {
         case T -> new ResponseEntity<>(wlsExceptionDTO,
                 ExceptionKonstanten.CODE_TRANSIENT.equals(wlsExceptionDTO.code()) ? HttpStatus.CONFLICT : HTTP_STATUS_TECHNISCHER_FEHLER);

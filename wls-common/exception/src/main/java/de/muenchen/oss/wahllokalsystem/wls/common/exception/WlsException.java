@@ -17,7 +17,7 @@ public abstract sealed class WlsException extends RuntimeException
     private final String serviceName;
     private final String message;
 
-    protected WlsException(final WlsExceptionCategory category, WlsExceptionData wlsExceptionData) {
+    protected WlsException(final WlsExceptionCategory category, final WlsExceptionData wlsExceptionData) {
         super(wlsExceptionData.getCause());
         this.category = category;
         this.code = wlsExceptionData.getCode();

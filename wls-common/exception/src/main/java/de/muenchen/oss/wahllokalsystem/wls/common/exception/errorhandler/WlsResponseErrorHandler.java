@@ -27,7 +27,7 @@ public class WlsResponseErrorHandler extends DefaultResponseErrorHandler {
     private final ObjectMapper mapper;
 
     @Override
-    public void handleError(@NonNull ClientHttpResponse response) throws WlsException {
+    public void handleError(@NonNull final ClientHttpResponse response) throws WlsException {
         final WlsException createdException;
         try {
             val wlsExceptionDTO = mapper.readValue(response.getBody(), WlsExceptionDTO.class);
@@ -61,7 +61,7 @@ public class WlsResponseErrorHandler extends DefaultResponseErrorHandler {
         return sb.toString();
     }
 
-    private WlsException createException(WlsExceptionDTO wahlExceptionDTO) {
+    private WlsException createException(final WlsExceptionDTO wahlExceptionDTO) {
         val category = wahlExceptionDTO.category();
         log.debug("Erzeugen einer Exception aus der Kategorie: {}", category);
 

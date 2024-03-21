@@ -13,7 +13,8 @@ public interface ExceptionKonstanten {
     String CODE_HTTP_MESSAGE_NOT_READABLE = "450";
 
     /**
-     * Code der Kategorie CATEGORY_TECHNISCH für Fehlersituationen, die bei erneutem Senden des unter fachlichen Gesichtspunkten unveränderten Requests gelingen
+     * Code der Kategorie CATEGORY_TECHNISCH für Fehlersituationen, die bei erneutem Senden des unter
+     * fachlichen Gesichtspunkten unveränderten Requests gelingen
      * könnten.
      */
     String CODE_TRANSIENT = "451";

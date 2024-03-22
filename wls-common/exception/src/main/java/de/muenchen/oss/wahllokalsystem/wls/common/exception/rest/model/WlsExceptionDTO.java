@@ -20,12 +20,12 @@ public record WlsExceptionDTO(@NotNull WlsExceptionCategory category, @NotNull S
         });
 
         this.service = Optional.ofNullable(service).orElseGet(() -> {
-            log.warn("Service war nicht enthalten. Setzte allgemeinen Service");
+            log.warn("Service ist nicht enthalten. Setze allgemeinen Service");
             return ExceptionKonstanten.SERVICE_UNBEKANNT;
         });
 
         this.message = Optional.ofNullable(message).orElseGet(() -> {
-            log.warn("Nachricht war nicht enthalten. Setze allgemeine Nachricht");
+            log.warn("Nachricht ist nicht enthalten. Setze allgemeine Nachricht");
             return ExceptionKonstanten.MESSAGE_UNBEKANNTER_FEHLER;
         });
     }

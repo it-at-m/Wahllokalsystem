@@ -2,21 +2,20 @@ package de.muenchen.wls.common.monitoring.metrics.filter;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.servlet.DispatcherServlet;
-import org.springframework.web.util.NestedServletException;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.util.NestedServletException;
 
 public class HttpRequestMetricFilter extends OncePerRequestFilter {
 

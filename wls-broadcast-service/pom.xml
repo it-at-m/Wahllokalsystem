@@ -15,15 +15,15 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>3.2.3</spring.boot.version>
+        <spring.boot.version>3.2.4</spring.boot.version>
         <spring.cloud.version>2023.0.0</spring.cloud.version>
         <logstash.encoder>7.0.1</logstash.encoder>
         <apache.commons.collections4>4.4</apache.commons.collections4>
         <apache.commons.csv>1.9.0</apache.commons.csv>
         <apache.commons.io>2.11.0</apache.commons.io>
         <apache.commons.lang3>3.12.0</apache.commons.lang3>
-        <apache.commons.text>1.9</apache.commons.text>
-        <apache.commons.validator>1.7</apache.commons.validator>
+        <apache.commons.text>1.11.0</apache.commons.text>
+        <apache.commons.validator>1.8.0</apache.commons.validator>
         <!-- SonarQube -->
         <sonar.scanner.version>3.9.0.2155</sonar.scanner.version>
         <!-- TestCoverage -->

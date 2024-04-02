@@ -4,7 +4,7 @@
 
 ### Definition of Done (DoD):
 
-[ ] Links geprüft
+- [ ] Links geprüft
 
 ### Referenzen[^1]:
 

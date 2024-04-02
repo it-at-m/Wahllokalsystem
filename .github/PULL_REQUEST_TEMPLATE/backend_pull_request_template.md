@@ -4,17 +4,12 @@
 
 ### Definition of Done (DoD):
 
-[ ] Doku aktualisiert
-
-[ ] Swagger-API vollständig
-
-[ ] Unit-Tests gepflegt
-
-[ ] Integrationstests gepflegt
-
-[ ] Beispiel-Requests gepflegt
-
-[ ] Doku aktualisiert
+- [ ] Doku aktualisiert
+- [ ] Swagger-API vollständig
+- [ ] Unit-Tests gepflegt
+- [ ] Integrationstests gepflegt
+- [ ] Beispiel-Requests gepflegt
+- [ ] Doku aktualisiert
 
 ### Referenzen[^1]:
 

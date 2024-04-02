@@ -4,11 +4,9 @@
 
 ### Definition of Done (DoD):
 
-[ ] Doku aktualisiert
-
-[ ] Unit-Tests gepflegt
-
-[ ] Komponententests gepflegt
+- [ ] Doku aktualisiert
+- [ ] Unit-Tests gepflegt
+- [ ] Komponententests gepflegt
 
 ### Referenzen[^1]:
 

@@ -122,6 +122,13 @@
             <artifactId>json-path</artifactId>
         </dependency>
 
+        <!-- wls dependencies -->
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>exception</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
         <!-- Datenbank -->
         <dependency>
             <groupId>com.h2database</groupId>

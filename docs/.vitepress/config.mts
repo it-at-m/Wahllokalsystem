@@ -1,4 +1,6 @@
-import { defineConfig } from 'vitepress'
+import {defineConfig} from 'vitepress'
+
+const PATH_TECHNIK = '/technik/';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -12,8 +14,17 @@ export default defineConfig({
       { text: 'Home', link: '/' },
       { text: 'About', link: '/about/' },
       { text: 'Features', link: '/features/' },
-      { text: 'Technik', link: '/technik/' }
+      { text: 'Technik', link: PATH_TECHNIK }
     ],
+
+    sidebar: {
+      [PATH_TECHNIK]: [
+        { text: 'Tools & Frameworks', link: `${PATH_TECHNIK}` },
+        {
+          text: 'Getting Started', link: `${PATH_TECHNIK}get_started/`
+        }
+      ]
+    },
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/it-at-m/Wahllokalsystem/' }

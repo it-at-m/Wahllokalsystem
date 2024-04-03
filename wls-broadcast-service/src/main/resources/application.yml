@@ -2,6 +2,10 @@ spring:
   application.name: @project.artifactId@
   banner.location: banner.txt
 
+service:
+    info:
+        oid: WLS-BROADCAST
+
 server:
   shutdown: "graceful"
   port: 8080

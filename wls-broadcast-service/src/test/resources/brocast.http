@@ -1,0 +1,32 @@
+POST http://localhost:39146/businessActions/broadcast
+Content-Type: application/json
+
+{
+    "wahlbezirkIDs": [
+        "wbz-1", "wbz-2"
+    ],
+    "nachricht": "Hallo welt"
+}
+
+###
+POST http://localhost:39146/businessActions/broadcast
+Content-Type: application/json
+
+{
+    "wahlbezirkIDs": [
+        "wbz-1", "wbz-3"
+    ],
+    "nachricht": "grüß gott"
+}
+
+### Get message for wbz-1
+GET http://localhost:39146/businessActions/getMessage/wbz-1
+
+### Get message for wbz-2
+GET http://localhost:39146/businessActions/getMessage/wbz-2
+
+### Get message for wbz-x
+GET http://localhost:39146/businessActions/getMessage/wbz-x
+
+### Delete lastest for wbz-1
+POST  http://localhost:39146/businessActions/messageRead/e19b06c3-495c-4a2d-8290-d4ddc0924d7d

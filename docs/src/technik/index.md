@@ -10,6 +10,9 @@ Welche Tools und Framework haben wir zur Entwicklung verwendet.
   - Imageregistry
 - Zenhub
   - Projektmanagement
+- Docker
+- SoapUI
+  - Beispielrequests 
 
 ## Frameworks
 

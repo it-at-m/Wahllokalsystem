@@ -18,4 +18,4 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Maven
-        run: mvn -f wls-common/pom.xml test
+        run: mvn -f wls-common/pom.xml verify

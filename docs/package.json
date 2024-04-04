@@ -5,6 +5,8 @@
     "docs:preview": "vitepress preview"
   },
   "devDependencies": {
-    "vitepress": "^1.0.0-rc.45"
+    "vitepress": "^1.0.0-rc.45",
+    "mermaid": "^10.9.0",
+    "vitepress-plugin-mermaid": "^2.0.16"
   }
 }

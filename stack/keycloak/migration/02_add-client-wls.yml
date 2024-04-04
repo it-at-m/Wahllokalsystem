@@ -22,7 +22,7 @@ changes:
   # Maps user client roles of current client prefixed by "ROLE_" into a claim "user_roles"
   - addClientMapper:
       clientId: ${SSO_CLIENT_ID}
-      name: userClientRole
+      name: userClientAuthorities
       protocolMapper: oidc-usermodel-client-role-mapper
       config:
         access.token.claim: true
@@ -30,9 +30,9 @@ changes:
         userinfo.token.claim: true
         jsonType.label: String
         multivalued: true
-        claim.name: "user_roles"
+        claim.name: "authorities"
         usermodel.clientRoleMapping.clientId: ${SSO_CLIENT_ID}
-        usermodel.clientRoleMapping.rolePrefix: "ROLE_"
+        usermodel.clientRoleMapping.rolePrefix: ""
 
   # !!! very import must have. Without that default scope u dont have access to userinfo-endpoint
   # which means the frontend ist unuseable

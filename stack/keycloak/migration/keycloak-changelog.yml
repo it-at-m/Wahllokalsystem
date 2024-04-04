@@ -5,3 +5,6 @@ includes:
   - path: 01_init-realm.yml
   - path: 02_add-client-wls.yml
   - path: 03_add-user-keycloak-test.yml
+  - path: 04_add-broadcast-authorities.yml
+  - path: 05_add-group-all-broadcast.yml
+  - path: 06_create-wls-all-user-with-broadcast-group.yml

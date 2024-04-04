@@ -1,0 +1,30 @@
+id: add group all broadcast authorities
+author: MrSebastian
+realm: ${SSO_REALM}
+changes:
+  - addGroup:
+      name: allBroadcastAuthorities
+  - assignRoleToGroup:
+      group: allBroadcastAuthorities
+      role: Broadcast_BUSINESSACTION_Broadcast
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBroadcastAuthorities
+      role: Broadcast_BUSINESSACTION_GetMessage
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBroadcastAuthorities
+      role: Broadcast_BUSINESSACTION_MessageRead
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBroadcastAuthorities
+      role: Broadcast_DELETE_Message
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBroadcastAuthorities
+      role: Broadcast_READ_Message
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBroadcastAuthorities
+      role: Broadcast_WRITE_Message
+      clientId: ${SSO_CLIENT_ID}

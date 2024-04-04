@@ -1,4 +1,4 @@
-id: add group all broadcast authorities
+id: add group with all broadcast authorities
 author: MrSebastian
 realm: ${SSO_REALM}
 changes:

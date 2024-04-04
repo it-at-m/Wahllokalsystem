@@ -1,4 +1,4 @@
-id: create user wls-all with broadcastgroup
+id: create user wls-all with broadcast group
 author: MrSebastian
 realm: ${SSO_REALM}
 changes:

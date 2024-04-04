@@ -19,7 +19,7 @@ changes:
       addToUserInfo: true
       addToAccessToken: true
 
-  # Maps user client roles of current client prefixed by "ROLE_" into a claim "user_roles"
+  # Maps user client roles of current client into a claim "authorities"
   - addClientMapper:
       clientId: ${SSO_CLIENT_ID}
       name: userClientAuthorities
@@ -35,7 +35,6 @@ changes:
         usermodel.clientRoleMapping.rolePrefix: ""
 
   # !!! very import must have. Without that default scope u dont have access to userinfo-endpoint
-  # which means the frontend ist unuseable
   - assignDefaultClientScope:
       clientId: ${SSO_CLIENT_ID}
       clientScopeName: openid

@@ -23,7 +23,8 @@ export default defineConfig({
         { text: 'Tools & Frameworks', link: `${PATH_TECHNIK}` },
         {
           text: 'Getting Started', link: `${PATH_TECHNIK}get_started/`
-        }
+        },
+        { text: 'Adr', link: `${PATH_TECHNIK}adr/` }
       ]
     },
 

@@ -1,6 +1,6 @@
 name: build push dev broadcast-service
 
-on:
+#on:
 #  push:
 #    branches:
 #      - dev

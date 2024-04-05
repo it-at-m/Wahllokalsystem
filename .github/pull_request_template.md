@@ -12,7 +12,6 @@
 - [ ] Unit-Tests gepflegt
 - [ ] Integrationstests gepflegt
 - [ ] Beispiel-Requests gepflegt
-- [ ] Doku aktualisiert
 
 <!-- Dokumentation -->
 ### Dokumentation

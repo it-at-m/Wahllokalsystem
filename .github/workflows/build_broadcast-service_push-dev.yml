@@ -2,11 +2,11 @@ name: build push dev broadcast-service
 
 on:
   push:
-#    branches:
-#      - dev
-#    paths:
-#      - 'wls-broadcast-service/**'
-#      - '.github/workflows/build_broadcast-service_push-dev.yml'
+    branches:
+      - dev
+    paths:
+      - 'wls-broadcast-service/**'
+      - '.github/workflows/build_broadcast-service_push-dev.yml'
 
 jobs:
   build:
@@ -37,7 +37,7 @@ jobs:
           images: ghcr.io/${{ github.repository }}-broadcast-service
           tags: |
             # set latest tag for default branch
-            type=raw,value=latest,enable=true
+            type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push untested Docker image to GHCR
         uses: docker/build-push-action@v5

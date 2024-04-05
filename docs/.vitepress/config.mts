@@ -6,6 +6,7 @@ const PATH_TECHNIK = '/technik/';
 export default defineConfig({
   title: "Wahllokalsystem",
   description: "Datenerfassung am Wahltag",
+  lang: "de-DE",
   base: '/Wahllokalsystem/',
   srcDir: 'src', //markdown files are located in that directory
   themeConfig: {

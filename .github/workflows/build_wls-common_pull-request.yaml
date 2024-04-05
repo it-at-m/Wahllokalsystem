@@ -1,4 +1,4 @@
-name: build wls-common
+name: verify pull request wls-common
 
 on:
   pull_request:

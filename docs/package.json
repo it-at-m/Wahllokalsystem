@@ -4,7 +4,11 @@
     "docs:build": "vitepress build",
     "docs:preview": "vitepress preview"
   },
+  "dependencies": {
+    "@mdi/js": "^7.2.96"
+  },
   "devDependencies": {
-    "vitepress": "^1.0.0-rc.45"
+    "vitepress": "^1.0.0-rc.45",
+    "@mdi/font": "^7.3.67"
   }
 }

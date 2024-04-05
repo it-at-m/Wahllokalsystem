@@ -37,17 +37,17 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests((requests) -> requests.requestMatchers(AntPathRequestMatcher.antMatcher("/**"),
-                        // allow access to /actuator/info
-                        AntPathRequestMatcher.antMatcher("/actuator/info"),
-                        // allow access to /actuator/health for OpenShift Health Check
-                        AntPathRequestMatcher.antMatcher("/actuator/health"),
-                        // allow access to /actuator/health/liveness for OpenShift Liveness Check
-                        AntPathRequestMatcher.antMatcher("/actuator/health/liveness"),
-                        // allow access to /actuator/health/readiness for OpenShift Readiness Check
-                        AntPathRequestMatcher.antMatcher("/actuator/health/readiness"),
-                        // allow access to /actuator/metrics for Prometheus monitoring in OpenShift
-                        AntPathRequestMatcher.antMatcher("/actuator/metrics"))
+                .authorizeHttpRequests((requests) -> requests.requestMatchers(
+                                // allow access to /actuator/info
+                                AntPathRequestMatcher.antMatcher("/actuator/info"),
+                                // allow access to /actuator/health for OpenShift Health Check
+                                AntPathRequestMatcher.antMatcher("/actuator/health"),
+                                // allow access to /actuator/health/liveness for OpenShift Liveness Check
+                                AntPathRequestMatcher.antMatcher("/actuator/health/liveness"),
+                                // allow access to /actuator/health/readiness for OpenShift Readiness Check
+                                AntPathRequestMatcher.antMatcher("/actuator/health/readiness"),
+                                // allow access to /actuator/metrics for Prometheus monitoring in OpenShift
+                                AntPathRequestMatcher.antMatcher("/actuator/metrics"))
                         .permitAll())
                 .authorizeHttpRequests((requests) -> requests.requestMatchers("/**")
                         .authenticated())

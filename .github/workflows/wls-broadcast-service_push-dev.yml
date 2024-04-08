@@ -1,0 +1,20 @@
+name: build push dev broadcast-service
+
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - 'wls-broadcast-service/**'
+      - '.github/workflows/wls-broadcast-service_push-dev.yml'
+
+jobs:
+  build-github-container-image:
+    permissions:
+      packages: write
+    needs:
+      - prepare-release
+    uses:
+      ./.github/workflows/callable-create-github-container-image.yml
+    with:
+      service: 'wls-broadcast-service'

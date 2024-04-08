@@ -1,4 +1,4 @@
-name: dispatch maven release
+name: dispatch microserivce maven release
 
 on:
   workflow_dispatch:

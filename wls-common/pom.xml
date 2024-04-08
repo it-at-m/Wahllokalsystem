@@ -19,43 +19,6 @@
         </license>
     </licenses>
 
-    <developers>
-        <developer>
-            <name>MrSebastian</name>
-            <organization>Landeshauptstadt München</organization>
-            <url>https://github.com/MrSebastian</url>
-            <roles>
-                <role>initiator</role>
-                <role>developer</role>
-            </roles>
-        </developer>
-        <developer>
-            <name>Nic12345678</name>
-            <organization>Landeshauptstadt München</organization>
-            <url>https://github.com/Nic12345678</url>
-            <roles>
-                <role>developer</role>
-            </roles>
-        </developer>
-        <developer>
-            <name>dragonfly28</name>
-            <organization>Landeshauptstadt München</organization>
-            <url>https://github.com/dragonfly28</url>
-            <roles>
-                <role>developer</role>
-            </roles>
-        </developer>
-        <developer>
-            <name>GerhardPx</name>
-            <organization>Landeshauptstadt München</organization>
-            <url>https://github.com/GerhardPx</url>
-            <roles>
-                <role>developer</role>
-            </roles>
-        </developer>
-    </developers>
-
-
     <properties>
         <java.version>17</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -274,5 +237,41 @@
             <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
+
+    <developers>
+        <developer>
+            <name>MrSebastian</name>
+            <organization>Landeshauptstadt München</organization>
+            <url>https://github.com/MrSebastian</url>
+            <roles>
+                <role>initiator</role>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Nic12345678</name>
+            <organization>Landeshauptstadt München</organization>
+            <url>https://github.com/Nic12345678</url>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>dragonfly28</name>
+            <organization>Landeshauptstadt München</organization>
+            <url>https://github.com/dragonfly28</url>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>GerhardPx</name>
+            <organization>Landeshauptstadt München</organization>
+            <url>https://github.com/GerhardPx</url>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
 
 </project>

@@ -22,4 +22,4 @@ jobs:
           cache-dependency-path: '${{ inputs.pom-dir }}/pom.xml'
 
       - name: Build with Maven
-        run: mvn -f ${{ inputs.pom-dir }}/pom.xml verify
+        run: mvn -B -ntp -f ${{ inputs.pom-dir }}/pom.xml verify

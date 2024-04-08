@@ -76,4 +76,11 @@ public class WlsResponseErrorHandler extends DefaultResponseErrorHandler {
     private WlsException completeWithDTOData(final CodeIsSet<?> startedWlsExceptionCreation, final WlsExceptionDTO dtoData) {
         return startedWlsExceptionCreation.inService(dtoData.service()).buildWithMessage(dtoData.message());
     }
+
+    public TechnischeWlsException createFalseObjectReferenceException (String Id,final Throwable cause){
+        return TechnischeWlsException
+                .withCode(ExceptionKonstanten.CODE_ALLGEMEIN_UNBEKANNT)
+                .inService(Id).withCause(cause)
+                .buildWithMessage(buildUndefinedErrorMessageWithCauseMessages(cause));
+    }
 }

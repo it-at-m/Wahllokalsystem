@@ -22,7 +22,7 @@ class SecuringWebAppTest {
     MockMvc api;
 
     @Test
-    public void accessSecuredResourceRootThenUnauthorized() throws Exception {
+    void accessSecuredResourceRootThenUnauthorized() throws Exception {
         api.perform(get("/"))
                 .andExpect(status().isUnauthorized());
     }
@@ -40,13 +40,13 @@ class SecuringWebAppTest {
     }
 
     @Test
-    public void accessUnsecuredResourceActuatorInfoThenOk() throws Exception {
+    void accessUnsecuredResourceActuatorInfoThenOk() throws Exception {
         api.perform(get("/actuator/info"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void accessUnsecuredResourceActuatorMetricsThenOk() throws Exception {
+    void accessUnsecuredResourceActuatorMetricsThenOk() throws Exception {
         api.perform(get("/actuator/metrics"))
                 .andExpect(status().isOk());
     }

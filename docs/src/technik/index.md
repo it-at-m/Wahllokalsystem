@@ -10,6 +10,10 @@ Welche Tools und Framework haben wir zur Entwicklung verwendet.
   - Imageregistry
 - Zenhub
   - Projektmanagement
+- Docker
+- SoapUI
+  - Beispielrequests 
+- [KeycloakMigration](https://mayope.github.io/keycloakmigration/migrations/client/)
 
 ## Frameworks
 

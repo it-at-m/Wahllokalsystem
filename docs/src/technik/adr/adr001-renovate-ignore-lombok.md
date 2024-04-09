@@ -71,7 +71,7 @@ Die Version des Annotation-Processors muss in unserem maven projekt definiert we
 </plugin>
 ```
 
-Die Versionen der Dependency und vom Processor sollten gleich sein. Die Wahrscheindlichkeit für Probleme wird mit dem Unterschied der Version (Major, Minor, Patch) zusammenhängen. 
+Die Versionen der Dependency und vom Processor sollten gleich sein. Die Wahrscheinlichkeit für Probleme wird mit dem Unterschied der Version (Major, Minor, Patch) zusammenhängen. 
 Da die Versionen aber an unterschiedlicher Stelle gepflegt werden kann dies aktuell nicht
 technisch sichergestellt werden. Daher wurde ein Kommentar in der `pom.xml` in den `properties` eingefügt:
 ```xml
@@ -100,7 +100,7 @@ hinzu muss `org.mapstruct:mapstruct-processor` als Dependency vorhanden sein.
 Aus meiner Sicht spricht gegen dieses Vorgehen, dass die Processors manuell gepflegt werden müssen, was Aufgrund der Kleinheiligkeit
 mühsamer sein dürfte als mit `annotationProcessorPaths` zu arbeiten. Bei Hebungen der
 Version müssten wir prüfen, ob sich etwas an der Architektur geändert hat, z.B. ob es jetzt eine weitere Klasse gibt, die man
-verwenden müssten. Klassen die gelöscht werden sorgen für Fehler und somit für schnelles Feedback.
+verwenden müsste. Klassen die gelöscht werden sorgen für Fehler und somit für schnelles Feedback.
 
 Beide Konfigurationsmöglichkeiten können nicht zur selben Zeit verwendet werden.
 

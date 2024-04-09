@@ -112,4 +112,6 @@ Weniger Pull-Requests die gehandhabt werden müssen.
 
 ### negativ
 
-Steigerung der Komplexität durch eine zusätzliche Konfiguration für eine Dependency. Ein Verweis in der Konfiguratio auf diesen ADR ist nicht möglich.
+Steigerung der Komplexität durch eine zusätzliche Konfiguration für eine Dependency. Ein Verweis in der Konfiguration auf diesen ADR ist nicht möglich.
+
+`lombok` wird in keinem Projekt mehr durch `renovate` gepflegt. Das halte ich für vertrebar da wir `lombok` immer im Kontext von `spring` verwenden.

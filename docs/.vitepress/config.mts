@@ -24,7 +24,9 @@ export default defineConfig({
         {
           text: 'Getting Started', link: `${PATH_TECHNIK}get_started/`
         },
-        { text: 'Adr', link: `${PATH_TECHNIK}adr/` }
+        { text: 'Adr', link: `${PATH_TECHNIK}adr/`, collapsed: true, items: [
+            { text: 'Renovate - ignoriere lombok', link: `${PATH_TECHNIK}adr/adr001-renovate-ignore-lombok` }
+        ] }
       ]
     },
 

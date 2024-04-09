@@ -1,9 +1,9 @@
-import {defineConfig} from 'vitepress'
+import {withMermaid} from "vitepress-plugin-mermaid"
 
 const PATH_TECHNIK = '/technik/';
 
 // https://vitepress.dev/reference/site-config
-export default defineConfig({
+export default withMermaid({
   title: "Wahllokalsystem",
   description: "Datenerfassung am Wahltag",
   lang: "de-DE",
@@ -24,6 +24,7 @@ export default defineConfig({
         {
           text: 'Getting Started', link: `${PATH_TECHNIK}get_started/`
         },
+        { text: 'Entwicklungsumgebung', link: `${PATH_TECHNIK}development/` },
         { text: 'Adr', link: `${PATH_TECHNIK}adr/`, collapsed: true, items: [
             { text: 'Renovate - ignoriere lombok', link: `${PATH_TECHNIK}adr/adr001-renovate-ignore-lombok` }
         ] }
@@ -33,5 +34,8 @@ export default defineConfig({
     socialLinks: [
       { icon: 'github', link: 'https://github.com/it-at-m/Wahllokalsystem/' }
     ]
+  },
+  mermaidPlugin: {
+    class: "mermaid my-class", // set additional css classes for parent container
   }
 })

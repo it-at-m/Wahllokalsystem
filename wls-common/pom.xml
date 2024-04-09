@@ -86,6 +86,10 @@
                             <tokenAuth>true</tokenAuth>
                             <autoPublish>true</autoPublish>
                             <deploymentName>${project.groupId}:${project.version}</deploymentName>
+                            <excludeArtifacts>
+                                <artifact>monitoring</artifact>
+                                <artifact>security</artifact>
+                            </excludeArtifacts>
                         </configuration>
                     </plugin>
                     <!-- GPG plugin -->

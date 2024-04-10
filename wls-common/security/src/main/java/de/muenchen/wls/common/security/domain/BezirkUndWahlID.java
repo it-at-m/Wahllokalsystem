@@ -1,26 +1,14 @@
 package de.muenchen.wls.common.security.domain;
-
-import javax.persistence.Column;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.Objects;
-
+@Data
+@NoArgsConstructor
 public class BezirkUndWahlID implements Serializable {
 
-    @Column(name = "wahlID")
-    @NotNull
-    @Size(max = 1000)
     private String wahlID;
-
-    @Column(name = "wahlbezirkID")
-    @NotNull
-    @Size(max = 1000)
     private String wahlbezirkID;
-
-    public BezirkUndWahlID() {
-
-    }
 
     public BezirkUndWahlID(String wahlbezirkID, String wahlID) {
         this.wahlbezirkID = wahlbezirkID;

@@ -13,6 +13,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
+import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,7 +48,7 @@ public class EncryptionBuilder {
      *             AES-Verschlüsselung.
      */
     public EncryptionBuilder(byte[] aSecret) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException {
-        SecretKeySpec secret = new SecretKeySpec(aSecret, 0, 16, AES);
+        val secret = new SecretKeySpec(aSecret, 0, 16, AES);
         _encryptCipher = Cipher.getInstance(AES);
         _encryptCipher.init(Cipher.ENCRYPT_MODE, secret);
         _decryptCipher = Cipher.getInstance(AES);
@@ -64,8 +65,8 @@ public class EncryptionBuilder {
     public String decryptValue(String value) {
         if (value != null && value.length() != 0) {
             try {
-                byte[] decode = Base64.getUrlDecoder().decode(value.getBytes());
-                byte[] finalized = _decryptCipher.doFinal(decode);
+                val decode = Base64.getUrlDecoder().decode(value.getBytes());
+                val finalized = _decryptCipher.doFinal(decode);
                 return new String(finalized);
             } catch (IllegalBlockSizeException | BadPaddingException e) {
                 log.error("Unable to decrypt the given value <" + value + "> as of an " + e.getClass().getSimpleName() + ". Using direct object reference!", e);
@@ -85,7 +86,7 @@ public class EncryptionBuilder {
     public String encryptValue(String value) {
         if (value != null && value.length() != 0) {
             try {
-                byte[] finalized = _encryptCipher.doFinal(value.getBytes());
+                val finalized = _encryptCipher.doFinal(value.getBytes());
                 value = Base64.getUrlEncoder().encodeToString(finalized);
             } catch (IllegalBlockSizeException | BadPaddingException e) {
                 log.error("Unable to encrypt the given value <" + value + "> as of an " + e.getClass().getSimpleName() + ". Using direct object reference!", e);

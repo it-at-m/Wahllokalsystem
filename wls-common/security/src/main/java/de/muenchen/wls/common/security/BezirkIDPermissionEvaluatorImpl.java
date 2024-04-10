@@ -1,5 +1,6 @@
 package de.muenchen.wls.common.security;
 
+import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -27,8 +28,8 @@ public class BezirkIDPermissionEvaluatorImpl implements BezirkIDPermissionEvalua
         }
         LOG.debug("tokenUserBezirkIdMatches {}, {}", bezirkId, auth.getPrincipal());
         try {
-            String bezirkIDFromToken = getBezirkID(auth);
-            String wbid_wnr = getWbid_wahlnummer(auth);
+            val bezirkIDFromToken = getBezirkID(auth);
+            val wbid_wnr = getWbid_wahlnummer(auth);
             boolean bezirkIdMatches = (bezirkId != null) && (bezirkId.equals(bezirkIDFromToken) || (wbid_wnr != null && wbid_wnr.contains(bezirkId)));
             LOG.debug("Check bezirkId {} from request against username {}, bezirkId {} from token or wbid_wahlnummer {}. RESULT = {}",
                     bezirkId,
@@ -43,13 +44,13 @@ public class BezirkIDPermissionEvaluatorImpl implements BezirkIDPermissionEvalua
         }
     }
 
-    private String getBezirkID(Authentication auth) {
-        Map details = (Map) ((OAuth2Authentication) auth).getUserAuthentication().getDetails();
+    private String getBezirkID(final Authentication auth) {
+        val details = (Map) ((OAuth2Authentication) auth).getUserAuthentication().getDetails();
         return (String) details.get(WAHLBEZIRK_ID);
     }
 
     private String getWbid_wahlnummer(Authentication auth) {
-        Map details = (Map) ((OAuth2Authentication) auth).getUserAuthentication().getDetails();
+        val details = (Map) ((OAuth2Authentication) auth).getUserAuthentication().getDetails();
         return (String) details.get(WBID_WAHLNUMMER);
     }
 }

@@ -1,6 +1,14 @@
 spring:
   application.name: @project.artifactId@
   banner.location: banner.txt
+  profiles:
+    group:
+      local:
+        - db-oracle
+  flyway:
+    locations:
+      - classpath:db/migrations/{vendor}
+  h2.console.enabled: false
 
 server:
   shutdown: "graceful"

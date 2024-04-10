@@ -89,7 +89,7 @@ Updates von `lombok` machen wir bei Updates von `spring` mit.
 
 ## Entscheidung
 
-Wir lassen `renovate` `org.projectlombok:lombok` ignorieren. Update von `lombok` erfolgen wie gehabt manuell.
+Wir lassen `renovate` `org.projectlombok:lombok` ignorieren. Updates von `lombok` erfolgen wie gehabt manuell.
 
 ### betrachtete Alternative
 
@@ -97,7 +97,7 @@ Es wäre möglich die Pflege der Version im `annotationProcessorPaths` weg zu be
 `annotationProcessorPaths` [`annotationProcessors` pflegen](https://projectlombok.org/contributing/lombok-execution-path) und dort die expliziten Klassen referenzieren. Kommt Mapstruct,
 hinzu muss `org.mapstruct:mapstruct-processor` als Dependency vorhanden sein.
 
-Aus meiner Sicht spricht gegen dieses Vorgehen, dass die Processors manuell gepflegt werden müssen, was Aufgrund der Kleinheiligkeit
+Aus meiner Sicht spricht gegen dieses Vorgehen, dass die Processors manuell gepflegt werden müssen, was Aufgrund der Kleinteiligkeit
 mühsamer sein dürfte als mit `annotationProcessorPaths` zu arbeiten. Bei Hebungen der
 Version müssten wir prüfen, ob sich etwas an der Architektur geändert hat, z.B. ob es jetzt eine weitere Klasse gibt, die man
 verwenden müsste. Klassen die gelöscht werden sorgen für Fehler und somit für schnelles Feedback.

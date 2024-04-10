@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -43,14 +42,13 @@ public class BezirkIDPermissionEvaluatorImpl implements BezirkIDPermissionEvalua
             return false;
         }
     }
-
     private String getBezirkID(final Authentication auth) {
-        val details = (Map) ((OAuth2Authentication) auth).getUserAuthentication().getDetails();
+        val details = (Map) auth.getDetails();
         return (String) details.get(WAHLBEZIRK_ID);
     }
 
     private String getWbid_wahlnummer(Authentication auth) {
-        val details = (Map) ((OAuth2Authentication) auth).getUserAuthentication().getDetails();
+        val details = (Map) auth.getDetails();
         return (String) details.get(WBID_WAHLNUMMER);
     }
 }

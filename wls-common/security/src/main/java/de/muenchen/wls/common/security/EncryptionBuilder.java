@@ -26,16 +26,16 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.errorhandler.WlsResp
  */
 public class EncryptionBuilder {
 
-    private static Logger log = LoggerFactory.getLogger(EncryptionBuilder.class);
-    private static ServiceIDFormatter formatter = new ServiceIDFormatter("tFormatter");
+    private static final Logger log = LoggerFactory.getLogger(EncryptionBuilder.class);
+    private static final ServiceIDFormatter formatter = new ServiceIDFormatter("tFormatter");
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
-    private WlsResponseErrorHandler handler = new WlsResponseErrorHandler(mapper);
+    private final WlsResponseErrorHandler handler = new WlsResponseErrorHandler(mapper);
 
     private static final String AES = "AES";
-    private Cipher _encryptCipher;
-    private Cipher _decryptCipher;
+    private final Cipher _encryptCipher;
+    private final Cipher _decryptCipher;
 
     /**
      * Konstruktor für den HTTP-Filter.
@@ -63,7 +63,7 @@ public class EncryptionBuilder {
      * @return The decrypted value.
      */
     public String decryptValue(String value) {
-        if (value != null && value.length() != 0) {
+        if (value != null && !value.isEmpty()) {
             try {
                 val decode = Base64.getUrlDecoder().decode(value.getBytes());
                 val finalized = _decryptCipher.doFinal(decode);
@@ -84,7 +84,7 @@ public class EncryptionBuilder {
      * @return The enscrypted value.
      */
     public String encryptValue(String value) {
-        if (value != null && value.length() != 0) {
+        if (value != null && !value.isEmpty()) {
             try {
                 val finalized = _encryptCipher.doFinal(value.getBytes());
                 value = Base64.getUrlEncoder().encodeToString(finalized);

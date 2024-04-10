@@ -4,7 +4,7 @@ services:
   ## Keycloak
   wls-keycloak:
     container_name: wls-keycloak
-    image: quay.io/keycloak/keycloak:20.0.3
+    image: quay.io/keycloak/keycloak:20.0.5
     command:
       - start-dev --http-relative-path /auth
     depends_on:

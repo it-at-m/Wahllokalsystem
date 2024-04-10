@@ -10,7 +10,7 @@ Dazu haben wir Regeln definiert. Diese Regeln und deren Hinterlegung in der jewe
 
 ### Pull-Requests
 
-Mit der Erstellung eines Pull-Requests wird mittel Workflow geprüft das Code funktional ist: `mvn verify`. Das bedeutet
+Mit der Erstellung eines Pull-Requests wird mittels Workflow geprüft das der Code funktional ist: `mvn verify`. Das bedeutet
 es werden die Tests ausgeführt und geprüft dass das Codestyle den Anforderungen entspricht.
 
 ### Push auf Defaultbranch

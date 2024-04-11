@@ -5,8 +5,10 @@
 package de.muenchen.oss.wahllokalsystem.configuration;
 
 import de.muenchen.oss.wahllokalsystem.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.domain.TheEntity;
-import de.muenchen.oss.wahllokalsystem.rest.TheEntityRepository;
+import de.muenchen.oss.wahllokalsystem.domain.Message;
+import de.muenchen.oss.wahllokalsystem.domain.MessageRepository;
+import de.muenchen.oss.wahllokalsystem.rest.MessageDTO;
+import java.time.LocalDateTime;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,27 +53,30 @@ class UnicodeConfigurationTest {
     private TestRestTemplate testRestTemplate;
 
     @Autowired
-    private TheEntityRepository theEntityRepository;
+    private MessageRepository messageRepository;
 
     @Test
     void testForNfcNormalization() {
         // Persist entity with decomposed string.
+        final MessageDTO messageDTO = new MessageDTO(UUID.fromString("id_1"), "wahlbezirkID_1", TEXT_ATTRIBUTE_DECOMPOSED,  LocalDateTime.of(1990, 10, 3, 2, 47));
         final TheEntityDto theEntityDto = new TheEntityDto();
-        theEntityDto.setTextAttribute(TEXT_ATTRIBUTE_DECOMPOSED);
-        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), theEntityDto.getTextAttribute().length());
-        final TheEntityDto response = testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), theEntityDto, TheEntityDto.class).getBody();
+        theEntityDto.setMyMessageDTO(messageDTO);
+
+        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), theEntityDto.getMyMessageDTO().nachricht().length());
+        final TheEntityDto response = testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), theEntityDto.getMyMessageDTO(), TheEntityDto.class).getBody();
 
         // Check whether response contains a composed string.
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, response.getTextAttribute());
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), response.getTextAttribute().length());
+        assert response != null;
+        assertEquals(TEXT_ATTRIBUTE_COMPOSED, response.getMyMessageDTO().nachricht());
+        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), response.getMyMessageDTO().nachricht().length());
 
         // Extract uuid from self link.
         final UUID uuid = UUID.fromString(StringUtils.substringAfterLast(response.getRequiredLink("self").getHref(), "/"));
 
         // Check persisted entity contains a composed string via JPA repository.
-        final TheEntity theEntity = theEntityRepository.findById(uuid).orElse(null);
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, theEntity.getTextAttribute());
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), theEntity.getTextAttribute().length());
+        final Message message = messageRepository.findById(uuid).orElse(null);
+        assertEquals(TEXT_ATTRIBUTE_COMPOSED, message.getNachricht());
+        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), message.getNachricht().length());
     }
 
 }

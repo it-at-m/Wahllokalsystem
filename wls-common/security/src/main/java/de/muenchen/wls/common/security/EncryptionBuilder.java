@@ -21,9 +21,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.errorhandler.WlsResponseErrorHandler;
 
-/**
- * Basisfunktionalität bezüglich symmetrischer Verschlüsselung.
- */
 public class EncryptionBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(EncryptionBuilder.class);
@@ -37,16 +34,6 @@ public class EncryptionBuilder {
     private final Cipher _encryptCipher;
     private final Cipher _decryptCipher;
 
-    /**
-     * Konstruktor für den HTTP-Filter.
-     *
-     * @throws InvalidKeyException wird geworfen bezüglich der
-     *             AES-Verschlüsselung.
-     * @throws NoSuchAlgorithmException wird geworfen bezüglich der
-     *             AES-Verschlüsselung.
-     * @throws NoSuchPaddingException wird geworfen bezüglich der
-     *             AES-Verschlüsselung.
-     */
     public EncryptionBuilder(byte[] aSecret) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException {
         val secret = new SecretKeySpec(aSecret, 0, 16, AES);
         _encryptCipher = Cipher.getInstance(AES);
@@ -55,13 +42,6 @@ public class EncryptionBuilder {
         _decryptCipher.init(Cipher.DECRYPT_MODE, secret);
     }
 
-    /**
-     * Decrypts a single value. This is the hook where the actual decryption
-     * mechanism is defined.
-     *
-     * @param value The value to be decrypted.
-     * @return The decrypted value.
-     */
     public String decryptValue(String value) {
         if (value != null && !value.isEmpty()) {
             try {
@@ -76,13 +56,6 @@ public class EncryptionBuilder {
         return value;
     }
 
-    /**
-     * Encrypts a single value. This is the hook where the actual encryption
-     * mechanism is defined.
-     *
-     * @param value The value to be encrypted.
-     * @return The enscrypted value.
-     */
     public String encryptValue(String value) {
         if (value != null && !value.isEmpty()) {
             try {

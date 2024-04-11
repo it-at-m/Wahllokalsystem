@@ -1,4 +1,4 @@
-package de.muenchen.wls.common.wls.security.testutils;
+package de.muenchen.wls.common.wls.security.testultils;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;

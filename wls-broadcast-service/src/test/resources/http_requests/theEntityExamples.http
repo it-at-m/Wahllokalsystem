@@ -1,5 +1,5 @@
 ###
-POST http://localhost:39146/theEntities
+POST http://localhost:{{WLS_BROADCAST_SERVICE_PORT}}/theEntities
 Content-Type: application/json
 
 {
@@ -7,4 +7,4 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:39146/theEntities
+GET http://localhost:{{WLS_BROADCAST_SERVICE_PORT}}/theEntities

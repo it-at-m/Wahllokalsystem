@@ -10,6 +10,9 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 /**
  * Application class for starting the micro-service.
@@ -33,6 +36,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         }
 )
 @EnableAutoConfiguration
+@EnableMethodSecurity(securedEnabled = true)
 public class MicroServiceApplication {
 
     public static void main(String[] args) {

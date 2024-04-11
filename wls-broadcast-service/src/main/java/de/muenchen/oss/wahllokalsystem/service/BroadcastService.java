@@ -34,6 +34,7 @@ public class BroadcastService {
     @Autowired
     BroadcastMapper bcMapper;
 
+    @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_Broadcast')")
     public void broadcast(final BroadcastMessageDTO messageToBroadcast){
         log.debug("#broadcast");
         
@@ -57,6 +58,7 @@ public class BroadcastService {
         messageRepo.saveAll(messagesToSave);
     }
 
+    @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_GetMessage')")
     public MessageDTO getOldestMessage(String wahlbezirkID) throws FachlicheWlsException {
         log.debug("#nachrichtenAbrufen");
 
@@ -75,6 +77,7 @@ public class BroadcastService {
         return bcMapper.toDto(message.get());
     }
 
+    @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_MessageRead')")
     public void deleteMessage(String nachrichtID) { //TODO UUID als Parameter
         log.debug("#nachrichtGelesen");
 

@@ -32,7 +32,7 @@ jobs:
           cache-dependency-path: '${{ github.event.inputs.service }}/pom.xml'
       - name: Perform maven release
         run: >
-          mvn -B -ntp release:prepare -f backend/pom.xml
+          mvn -B -ntp release:prepare -f ${{ github.event.inputs.service }}/pom.xml
           -DreleaseVersion=${{ github.event.inputs.release-version }} 
           -DdevelopmentVersion=${{ github.event.inputs.development-version }} 
           -Dtag=${{ github.event.inputs.service }}/v${{ github.event.inputs.release-version }}

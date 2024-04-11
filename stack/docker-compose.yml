@@ -1,6 +1,22 @@
 name: wls
 
 services:
+  ### WLS-Backend Services
+  wls-broadcast-service:
+    container_name: wls-broadcast-service
+    image: ghcr.io/it-at-m/wahllokalsystem-broadcast-service:latest # TODO muss noch latest-dev werden #15
+    depends_on:
+      - wls-db-oracle
+    env_file:
+      - .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=${WLS_BROADCAST_SERVICE_PROFILE}
+    ports:
+      - 8200:39146
+    networks:
+      - services
+      - keycloak
+
   ## Keycloak
   wls-keycloak:
     container_name: wls-keycloak

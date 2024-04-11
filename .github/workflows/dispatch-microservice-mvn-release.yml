@@ -13,9 +13,6 @@ on:
         required: true
         description: service/directory to build (wls-broadcast-service, ...)
 
-env:
-  gitTag: ${{ github.event.inputs.service }}/v${{ github.event.inputs.release-version }}
-
 jobs:
   run-mvn-release-prepare:
     runs-on: ubuntu-latest
@@ -38,7 +35,7 @@ jobs:
           mvn -B -ntp release:prepare -f backend/pom.xml
           -DreleaseVersion=${{ github.event.inputs.release-version }} 
           -DdevelopmentVersion=${{ github.event.inputs.development-version }} 
-          -Dtag=${{ env.gitTag }}
+          -Dtag=${{ github.event.inputs.service }}/v${{ github.event.inputs.release-version }}
           -Darguments="-DskipTests -B -ntp"
 
   build-github-release:
@@ -49,7 +46,7 @@ jobs:
     uses:
       ./.github/workflows/callable-create-github-release-from-tag.yml
     with:
-      tag: ${{ env.gitTag }}
+      tag: ${{ github.event.inputs.service }}/v${{ github.event.inputs.release-version }}
       service: ${{ github.event.inputs.service }}
 
   build-github-container-image:
@@ -60,5 +57,5 @@ jobs:
     uses:
       ./.github/workflows/callable-create-github-container-image.yml
     with:
-      tag: ${{ env.gitTag }}
+      tag: ${{ github.event.inputs.service }}/v${{ github.event.inputs.release-version }}
       service: ${{ github.event.inputs.service }}

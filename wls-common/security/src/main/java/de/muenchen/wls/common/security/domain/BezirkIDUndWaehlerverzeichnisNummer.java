@@ -25,8 +25,7 @@ public class BezirkIDUndWaehlerverzeichnisNummer implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof BezirkIDUndWaehlerverzeichnisNummer)) return false;
-        BezirkIDUndWaehlerverzeichnisNummer that = (BezirkIDUndWaehlerverzeichnisNummer) o;
+        if (!(o instanceof BezirkIDUndWaehlerverzeichnisNummer that)) return false;
         return Objects.equals(wahlbezirkID, that.wahlbezirkID) &&
                 Objects.equals(waehlerverzeichnisNummer, that.waehlerverzeichnisNummer);
     }

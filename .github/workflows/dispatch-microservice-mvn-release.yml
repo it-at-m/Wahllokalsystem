@@ -36,7 +36,7 @@ jobs:
           -DreleaseVersion=${{ github.event.inputs.release-version }} 
           -DdevelopmentVersion=${{ github.event.inputs.development-version }} 
           -Dtag=${{ github.event.inputs.service }}/v${{ github.event.inputs.release-version }}
-          -Darguments="-DskipTests -B -ntp"
+          -Darguments="-DskipTests"
 
   build-github-release:
     permissions:

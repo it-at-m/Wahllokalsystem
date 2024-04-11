@@ -4,6 +4,7 @@
  */
 package de.muenchen.oss.wahllokalsystem;
 
+import de.muenchen.oss.wahllokalsystem.rest.MessageDTO;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -26,8 +27,11 @@ public final class TestConstants {
     @ToString(callSuper = true)
     public static class TheEntityDto extends RepresentationModel {
 
-        private String textAttribute;
+        private MessageDTO myMessageDTO;
 
+        public void setMyMessageDTO(MessageDTO myMessageDTO) {
+            this.myMessageDTO = myMessageDTO;
+        }
     }
 
 }

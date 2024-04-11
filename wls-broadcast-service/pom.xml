@@ -164,7 +164,6 @@
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
         </dependency>
-
         <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -262,9 +261,7 @@
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
         </dependency>
-
     </dependencies>
-
 
     <scm>
         <url>https://github.com/it-at-m/Wahllokalsystem</url>
@@ -272,7 +269,6 @@
         <developerConnection>scm:git:https://github.com/it-at-m/Wahllokalsystem.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
-
 
     <build>
         <resources>

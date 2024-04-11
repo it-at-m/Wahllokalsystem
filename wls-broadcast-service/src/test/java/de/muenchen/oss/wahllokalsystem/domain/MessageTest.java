@@ -1,7 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.domain;
 
-import jakarta.validation.ValidatorFactory;
+
+import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.val;
@@ -13,9 +15,9 @@ import org.junit.jupiter.api.Nested;
 class MessageTest {
 
     @Nested
-    class Validation {
+    class ValidationTest {
 
-        private final ValidatorFactory factory = ValidatorFactory.buildDefaultValidatorFactory();
+        private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         private final Validator validator = factory.getValidator();
 
 

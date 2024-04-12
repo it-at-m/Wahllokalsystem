@@ -87,7 +87,6 @@ class BroadcastControllerTest {
         } catch (Exception e){
             thrownException = (RuntimeException) e;
         }
-
         Assertions.assertThat(thrownException)
                 .isNotNull()
                 .isInstanceOf(FachlicheWlsException.class)

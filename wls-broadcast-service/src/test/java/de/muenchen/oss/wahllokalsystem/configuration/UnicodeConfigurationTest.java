@@ -58,7 +58,7 @@ class UnicodeConfigurationTest {
     @Test
     void testForNfcNormalization() {
         // Persist entity with decomposed string.
-        final MessageDTO messageDTO = new MessageDTO(UUID.fromString("id_1"), "wahlbezirkID_1", TEXT_ATTRIBUTE_DECOMPOSED,  LocalDateTime.of(1990, 10, 3, 2, 47));
+        final MessageDTO messageDTO = new MessageDTO(UUID.fromString("1-2-3-4-5"), "wahlbezirkID_1", TEXT_ATTRIBUTE_DECOMPOSED,  LocalDateTime.of(1990, 10, 3, 2, 47));
         final TheEntityDto theEntityDto = new TheEntityDto();
         theEntityDto.setMyMessageDTO(messageDTO);
 

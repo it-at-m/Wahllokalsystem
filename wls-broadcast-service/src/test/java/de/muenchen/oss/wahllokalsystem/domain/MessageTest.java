@@ -43,7 +43,8 @@ class MessageTest {
         @Test
         void failurOnWahlbezirkIdIsMoreThan1024Chars() {
             val message = createMessageWithAllRequiredData();
-            message.setWahlbezirkID(StringUtils.left("", 1025));
+            String myString = " ".repeat(1025);
+            message.setWahlbezirkID(myString);
 
             val validationResult = validator.validate(message);
 
@@ -63,7 +64,8 @@ class MessageTest {
         @Test
         void failurOnNachrichtIsMoreThan1024Chars() {
             val message = createMessageWithAllRequiredData();
-            message.setNachricht(StringUtils.left("", 1025));
+            String myString = " ".repeat(1025);
+            message.setNachricht(myString);
 
             val validationResult = validator.validate(message);
 

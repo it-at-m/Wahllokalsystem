@@ -39,7 +39,7 @@ public class BroadcastService {
         log.debug("#broadcast");
         
         
-        // To Do Validierung Über die Validation API
+        // To Do Validierung Über die Validation API, correct also Test de/muenchen/oss/wahllokalsystem/rest/BroadcastControllerTest.java
         /*if ( wahlbezirkIDs == null || wahlbezirkIDs.isEmpty() || Strings.isNullOrEmpty(nachricht)) {
             throw WlsExceptionFactory.build(ExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG);
         }*/
@@ -53,16 +53,13 @@ public class BroadcastService {
             return message;
         }).toList();
 
-        log.debug("Storing {} new messages...", messagesToSave.size());
-
         messageRepo.saveAll(messagesToSave);
     }
 
     @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_GetMessage')")
     public MessageDTO getOldestMessage(String wahlbezirkID) throws FachlicheWlsException {
         log.debug("#nachrichtenAbrufen");
-
-        //ToDo:     Wird später
+        //ToDo:     Wird später aus neuem wls-common exception ExceptionKonstanten etwa gebaut
 
        /* if (Strings.isNullOrEmpty(wahlbezirkID)) {
             throw WlsExceptionFactory.build(ExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG);
@@ -79,17 +76,24 @@ public class BroadcastService {
 
     @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_MessageRead')")
     public void deleteMessage(String nachrichtID) { //TODO UUID als Parameter
-        log.debug("#nachrichtGelesen");
 
 //         if (Strings.isNullOrEmpty(nachrichtID)) {
 //             throw WlsExceptionFactory.build(ExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG);
 //         }
 
         val nachrichtUUID = java.util.UUID.fromString(nachrichtID);
+        //TODO hat das Altsystem einen Fehler geworfen wenn er nichts gefunden hat?
+        // Das Altsystem hat so getan alswürde es werfen:
+        // catch (Exception e) {
+        //    LOG.info("Message with OID:" + nachrichtUUID + "already deleted");
+        // }
+        // In Wirklichkeit wirft in diesem Fall CrudRepository keine Exception
+        // https://github.com/spring-projects/spring-data-commons/issues/2651
         try {
             messageRepo.deleteById(nachrichtUUID);
         } catch (Exception e) {
-            log.info("Message with OID:" + nachrichtUUID + "already deleted"); //TODO hat das Altsystem einen Fehler geworfen
+            //ToDo aus neuen ExceptionKonstanten etwas finden
+            log.error("Message with OID:" + nachrichtUUID + " could not be deleted");
         }
     }
 

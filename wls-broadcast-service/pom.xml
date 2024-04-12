@@ -317,6 +317,11 @@
                             <artifactId>lombok-mapstruct-binding</artifactId>
                             <version>${org.projectlombok.mapstructbinding.version}</version>
                         </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${org.mapstruct.version}</version>
+                        </path>
                     </annotationProcessorPaths>
                     <compilerArgs>
                         <compilerArg>

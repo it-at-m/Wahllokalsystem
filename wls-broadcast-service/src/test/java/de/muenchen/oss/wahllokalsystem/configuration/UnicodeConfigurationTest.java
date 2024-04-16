@@ -7,9 +7,12 @@ package de.muenchen.oss.wahllokalsystem.configuration;
 import de.muenchen.oss.wahllokalsystem.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.domain.Message;
 import de.muenchen.oss.wahllokalsystem.domain.MessageRepository;
+import de.muenchen.oss.wahllokalsystem.rest.BroadcastMessageDTO;
 import de.muenchen.oss.wahllokalsystem.rest.MessageDTO;
-import java.time.LocalDateTime;
-import org.apache.commons.lang3.StringUtils;
+import java.util.Arrays;
+import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,11 +20,9 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.net.URI;
-import java.util.UUID;
 
 import static de.muenchen.oss.wahllokalsystem.TestConstants.SPRING_TEST_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.TestConstants.SPRING_NO_SECURITY_PROFILE;
-import static de.muenchen.oss.wahllokalsystem.TestConstants.TheEntityDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(
@@ -33,9 +34,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
         }
 )
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
+@Slf4j
 class UnicodeConfigurationTest {
 
-    private static final String ENTITY_ENDPOINT_URL = "/theEntities";
+    private static final String ENTITY_ENDPOINT_URL = "/businessActions/broadcast";
+    private String GET_MESSAGE_PATH = "/businessActions/getMessage/" + "3";
 
     /**
      * Decomposed string:
@@ -57,24 +60,16 @@ class UnicodeConfigurationTest {
 
     @Test
     void testForNfcNormalization() {
-        // Persist entity with decomposed string.
-        final MessageDTO messageDTO = new MessageDTO(UUID.fromString("1-2-3-4-5"), "wahlbezirkID_1", TEXT_ATTRIBUTE_DECOMPOSED,  LocalDateTime.of(1990, 10, 3, 2, 47));
-        final TheEntityDto theEntityDto = new TheEntityDto();
-        theEntityDto.setMyMessageDTO(messageDTO);
+        List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
+        val broadcastMessageDTO = new BroadcastMessageDTO( wahlbezirke, TEXT_ATTRIBUTE_DECOMPOSED);
 
-        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), theEntityDto.getMyMessageDTO().nachricht().length());
-        final TheEntityDto response = testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), theEntityDto.getMyMessageDTO(), TheEntityDto.class).getBody();
-
-        // Check whether response contains a composed string.
-        assert response != null;
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, response.getMyMessageDTO().nachricht());
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), response.getMyMessageDTO().nachricht().length());
-
-        // Extract uuid from self link.
-        final UUID uuid = UUID.fromString(StringUtils.substringAfterLast(response.getRequiredLink("self").getHref(), "/"));
+        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), broadcastMessageDTO.nachricht().length());
+        testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), broadcastMessageDTO, Void.class);
+        final MessageDTO response = testRestTemplate.getForObject(URI.create(GET_MESSAGE_PATH), MessageDTO.class);
+        log.debug("response is: {}", response);
 
         // Check persisted entity contains a composed string via JPA repository.
-        final Message message = messageRepository.findById(uuid).orElse(null);
+        final Message message = messageRepository.findById(response.oid()).orElse(null);
         assertEquals(TEXT_ATTRIBUTE_COMPOSED, message.getNachricht());
         assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), message.getNachricht().length());
     }

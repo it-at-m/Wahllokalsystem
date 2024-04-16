@@ -14,9 +14,8 @@ public class BroadcastSecurityUtils {
     public static String BROADCAST_WRITE_MESSAGE = "Broadcast_WRITE_Message";
     public static String BROADCAST_DELETE_MESSAGE = "Broadcast_DELETE_Message";
 
-    private static String TESTUSER = "redv-101";
-    private static String TESTPASSWORD = "password";
-
+    private static final String TESTUSER = "redv-101";
+    private static final String TESTPASSWORD = "password";
 
     /**
      * Gewährung eines Vollzugriffs durch Zuteilung von allen möglichen Rollen.
@@ -28,11 +27,12 @@ public class BroadcastSecurityUtils {
     public static void runAs(String username, String password, String... roles) {
         assertNotNull(username, "Username must not be null!");
         assertNotNull(password, "Password must not be null!");
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(username, password, AuthorityUtils.createAuthorityList(roles)));
+        SecurityContextHolder.getContext()
+                .setAuthentication(new UsernamePasswordAuthenticationToken(username, password, AuthorityUtils.createAuthorityList(roles)));
     }
 
     public static String[] getAllAuthorities() {
-        return new String[]{
+        return new String[] {
                 BROADCAST_BUSINESSACTION_BROADCAST,
                 BROADCAST_BUSINESSACTION_NACHRICHTABRUFEN,
                 BROADCAST_BUSINESSACTION_NACHRICHTGELESEN,

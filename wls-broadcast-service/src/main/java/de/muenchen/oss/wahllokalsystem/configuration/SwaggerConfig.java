@@ -1,7 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.configuration;
 
-
-
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -16,14 +14,14 @@ import org.springframework.context.annotation.Configuration;
 public class SwaggerConfig {
 
     @Bean
-    GroupedOpenApi publicApi(){
+    GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
                 .group("public-apis")
                 .pathsToMatch("/**")
                 .build();
     }
 
-    OpenAPI customOpenAPI(){
+    OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info().title("Broadcast Service").version("toDoVersion").contact(new Contact().name("Your Name").email("Your E-Mail-Address")))
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))

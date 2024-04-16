@@ -29,7 +29,8 @@ public class BroadcastController {
     BroadcastService broadcastService;
 
     /**
-     * This BusinessAction's purpose is: Bietet einen Endpunkt an, der eine Nachricht für alle Wahlbezirke(Wahllokale) bereitstellt.
+     * This BusinessAction's purpose is: Bietet einen Endpunkt an, der eine Nachricht für alle
+     * Wahlbezirke(Wahllokale) bereitstellt.
      */
     @PostMapping(value = BROADCAST_PATH)
     public void broadcast(@RequestBody BroadcastMessageDTO body) {
@@ -37,7 +38,8 @@ public class BroadcastController {
     }
 
     /**
-     * This BusinessAction's purpose is: Endpunkt zum prüfen, ob eine Nachricht für dieses Wahllokal verfügbar ist
+     * This BusinessAction's purpose is: Endpunkt zum prüfen, ob eine Nachricht für dieses Wahllokal
+     * verfügbar ist
      * It returns one String.
      */
     @GetMapping(value = MESSAGE_PATH)
@@ -49,7 +51,7 @@ public class BroadcastController {
      * This BusinessAction's purpose is: Markiert die Nachricht mit der gegebenen ID als gelesen
      */
     @PostMapping(value = MESSAGE_READ_PATH) //TODO DeleteMapping wäre besser
-    public void deleteMessage(@PathVariable("nachrichtID") String nachrichtID) {  //TODO Besser wäre 204
+    public void deleteMessage(@PathVariable("nachrichtID") String nachrichtID) { //TODO Besser wäre 204
         broadcastService.deleteMessage(nachrichtID);
     }
 

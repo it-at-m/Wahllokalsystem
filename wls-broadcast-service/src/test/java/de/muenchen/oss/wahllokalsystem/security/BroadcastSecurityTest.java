@@ -15,7 +15,6 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 
-
 @SpringBootTest(
         classes = { MicroServiceApplication.class },
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -40,12 +39,13 @@ public class BroadcastSecurityTest {
     @Test
     public void broadcastAccessDeniedTest() {
 
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, AuthorityUtils.createAuthorityList("ROLE_DUMMY")));
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, AuthorityUtils.createAuthorityList("ROLE_DUMMY")));
         Exception thrownException = null;
-        try{
+        try {
             //noinspection DataFlowIssue
             broadcast_S.broadcast(null);
-        } catch (Exception e){
+        } catch (Exception e) {
             thrownException = e;
         }
         Assertions.assertThat(thrownException)
@@ -56,7 +56,8 @@ public class BroadcastSecurityTest {
 
     @Test
     public void getMessageAccessDeniedTest() {
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, AuthorityUtils.createAuthorityList("ROLE_DUMMY")));
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, AuthorityUtils.createAuthorityList("ROLE_DUMMY")));
         RuntimeException thrownException = null;
         try {
             broadcast_S.getOldestMessage(null);
@@ -71,7 +72,8 @@ public class BroadcastSecurityTest {
 
     @Test
     public void deleteAccessDeniedTest() {
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, AuthorityUtils.createAuthorityList("ROLE_DUMMY")));
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, AuthorityUtils.createAuthorityList("ROLE_DUMMY")));
         RuntimeException thrownException = null;
         try {
             broadcast_S.deleteMessage(null);

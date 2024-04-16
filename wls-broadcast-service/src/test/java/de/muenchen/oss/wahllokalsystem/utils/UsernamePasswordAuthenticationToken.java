@@ -13,14 +13,14 @@
  * limitations under the License.
  */
 package de.muenchen.oss.wahllokalsystem.utils;
+
 import lombok.Getter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 
-
 import java.util.Collection;
 
-        import org.springframework.security.core.GrantedAuthority;
-        import org.springframework.security.core.SpringSecurityCoreVersion;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.SpringSecurityCoreVersion;
 
 /**
  * An {@link org.springframework.security.core.Authentication} implementation that is
@@ -71,7 +71,7 @@ public class UsernamePasswordAuthenticationToken extends AbstractAuthenticationT
      * @param authorities
      */
     public UsernamePasswordAuthenticationToken(Object principal, Object credentials,
-                                               Collection<? extends GrantedAuthority> authorities) {
+            Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.principal = principal;
         this.credentials = credentials;
@@ -96,4 +96,3 @@ public class UsernamePasswordAuthenticationToken extends AbstractAuthenticationT
         credentials = null;
     }
 }
-

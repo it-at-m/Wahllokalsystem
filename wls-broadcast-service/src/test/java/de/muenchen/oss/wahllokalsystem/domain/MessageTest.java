@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.domain;
 
-
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
@@ -19,7 +18,6 @@ class MessageTest {
 
         private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         private final Validator validator = factory.getValidator();
-
 
         @Test
         void allRequiredFieldsAreSet() {

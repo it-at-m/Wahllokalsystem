@@ -34,14 +34,6 @@ public class SecurityConfiguration {
     @Value("${security.oauth2.resource.user-info-uri}")
     private String userInfoUri;
 
-    private static final String[] SWAGGER_WHITELIST = {
-        "/v3/api-docs/**",
-        "/swagger-resources/**",
-        "/swagger-ui/**",
-        "/webjars/**",
-        "/swagger-resources"
-    };
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http

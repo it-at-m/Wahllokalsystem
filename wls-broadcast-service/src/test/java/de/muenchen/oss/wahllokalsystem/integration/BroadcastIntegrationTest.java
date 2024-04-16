@@ -97,8 +97,6 @@ public class BroadcastIntegrationTest {
         closeable.close();
     }
 
-
-
     @Test
     public void broadcastIntegrationTest() throws Exception {
         log.debug("#BroadcastIntegrationTest");
@@ -115,7 +113,6 @@ public class BroadcastIntegrationTest {
         Assertions.assertThat(status).isEqualTo(200);
         log.debug("Result > Status: {} ", status);
     }
-
 
     @Test
     public void getMessageIntegrationTest() throws Exception {
@@ -140,7 +137,7 @@ public class BroadcastIntegrationTest {
         log.debug("#GetMessageNoContentIntegrationTest");
 
         ServletException thrownException = null;
-        try{
+        try {
             // @formatter:off
             MockHttpServletResponse result =
                     mvc.perform(
@@ -149,11 +146,11 @@ public class BroadcastIntegrationTest {
                                             .accept(MediaType.APPLICATION_JSON))
                             .andReturn().getResponse();
             // @formatter:on
-        } catch (Exception e){
+        } catch (Exception e) {
             thrownException = (ServletException) e;
         }
 
-        log.debug("thrown exception ist:{}", thrownException.toString());
+        log.debug("thrown exception ist:{}", thrownException);
         //ToDo: warum überschreibt der MockServer als ServletException die im BroadcastService, für de Fall isEmpty(), richtig geworfene FachlicheWlsException
         // Wie sollten wir das angehen?
         Assertions.assertThat(thrownException)
@@ -162,8 +159,8 @@ public class BroadcastIntegrationTest {
                 .isInstanceOf(ServletException.class)
                 //.hasMessageStartingWith("No message found")
                 .hasMessageContaining("No message found");
-                //.extracting("code")
-                //.isEqualTo(ExceptionKonstanten.CODE_ENTITY_NOT_FOUND);
+        //.extracting("code")
+        //.isEqualTo(ExceptionKonstanten.CODE_ENTITY_NOT_FOUND);
     }
 
     @Test

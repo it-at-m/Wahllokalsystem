@@ -62,7 +62,7 @@ class UnicodeConfigurationTest {
     @Test
     void testForNfcNormalization() {
         List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
-        val broadcastMessageDTO = new BroadcastMessageDTO( wahlbezirke, TEXT_ATTRIBUTE_DECOMPOSED);
+        val broadcastMessageDTO = new BroadcastMessageDTO(wahlbezirke, TEXT_ATTRIBUTE_DECOMPOSED);
 
         assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), broadcastMessageDTO.nachricht().length());
         testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), broadcastMessageDTO, Void.class);

@@ -45,7 +45,6 @@ class BroadcastControllerTest {
         messageRepo.deleteAll();
     }
 
-
     /**
      * To Do Test if right Exception will be thrown after implementing
      * Validierung Über die Validation API in
@@ -59,10 +58,10 @@ class BroadcastControllerTest {
     //public void getMessage_WahlbezirkID_Null_Test() throws Exception {
     //    broadcast_S.getMessage(null, null);
     //}
-//    @Test(expected = WlsException.class)
-//    public void messageRead_NachrichtID_Null_Test() {
-//        messageReadBusinessActionService.messageRead(null, null);
-//    }
+    //    @Test(expected = WlsException.class)
+    //    public void messageRead_NachrichtID_Null_Test() {
+    //        messageReadBusinessActionService.messageRead(null, null);
+    //    }
 
     @Test
     void broadcast() {
@@ -82,9 +81,9 @@ class BroadcastControllerTest {
     public void getOldestMessage_No_Message_Test() {
 
         RuntimeException thrownException = null;
-        try{
+        try {
             broadcast_S.getOldestMessage("123");
-        } catch (Exception e){
+        } catch (Exception e) {
             thrownException = (RuntimeException) e;
         }
         Assertions.assertThat(thrownException)
@@ -97,7 +96,7 @@ class BroadcastControllerTest {
     }
 
     @Test
-    public void getOldestMessageTest(){
+    public void getOldestMessageTest() {
         String wahlbezirkID = "4711";
         LocalDateTime time = LocalDateTime.of(2018, 5, 29, 12, 0);
         String messageToSave = "This is the test Message";
@@ -113,7 +112,7 @@ class BroadcastControllerTest {
     }
 
     @Test
-    public void getOldestMessage_MultipleMessageTest(){
+    public void getOldestMessage_MultipleMessageTest() {
         String wahlbezirkID = "4711";
         LocalDateTime time = LocalDateTime.of(2018, 5, 29, 12, 0);
         String messageToSave1 = "This is the test Message1";

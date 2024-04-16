@@ -23,15 +23,15 @@ public class Message {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private UUID oid;
 
-	@NotNull
-	@Size(max=1024)
+    @NotNull
+    @Size(max = 1024)
     private String wahlbezirkID;
 
-	@NotNull
-	@Size(max=1024)
+    @NotNull
+    @Size(max = 1024)
     private String nachricht;
 
-	@NotNull
+    @NotNull
     private LocalDateTime empfangsZeit;
 
 }

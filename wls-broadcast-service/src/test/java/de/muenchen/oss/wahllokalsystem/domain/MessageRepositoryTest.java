@@ -75,7 +75,7 @@ class MessageRepositoryTest {
 
         BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_1");
         broadcast_S.broadcast(m1);
-        BroadcastMessageDTO m2 = new BroadcastMessageDTO( wahlbezirke, "Ich bin Nachricht_2");
+        BroadcastMessageDTO m2 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_2");
         broadcast_S.broadcast(m2);
         BroadcastMessageDTO m3 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_3");
         broadcast_S.broadcast(m3);
@@ -90,8 +90,7 @@ class MessageRepositoryTest {
                 Comparator
                         .comparing((Message m) -> m.getEmpfangsZeit().toLocalDate())
                         .reversed()
-                        .thenComparing((Message m) -> m.getEmpfangsZeit().toLocalTime())
-        );
+                        .thenComparing((Message m) -> m.getEmpfangsZeit().toLocalTime()));
 
         Message sentMessage = allMessages.stream()
                 .filter(mes -> mes.getWahlbezirkID().equals(searchedWahlbezirkID))

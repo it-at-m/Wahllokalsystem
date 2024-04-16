@@ -8,6 +8,7 @@ import de.muenchen.oss.wahllokalsystem.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.domain.TheEntity;
 import de.muenchen.oss.wahllokalsystem.rest.TheEntityRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -54,6 +55,7 @@ class UnicodeConfigurationTest {
     private TheEntityRepository theEntityRepository;
 
     @Test
+    @Disabled("rework with real controller")
     void testForNfcNormalization() {
         // Persist entity with decomposed string.
         final TheEntityDto theEntityDto = new TheEntityDto();

@@ -6,6 +6,7 @@ const PATH_TECHNIK = '/technik/';
 export default withMermaid({
   title: "Wahllokalsystem",
   description: "Datenerfassung am Wahltag",
+  lang: "de-DE",
   base: '/Wahllokalsystem/',
   srcDir: 'src', //markdown files are located in that directory
   themeConfig: {
@@ -23,7 +24,10 @@ export default withMermaid({
         {
           text: 'Getting Started', link: `${PATH_TECHNIK}get_started/`
         },
-        { text: 'Entwicklungsumgebung', link: `${PATH_TECHNIK}development/`}
+        { text: 'Entwicklungsumgebung', link: `${PATH_TECHNIK}development/` },
+        { text: 'Adr', link: `${PATH_TECHNIK}adr/`, collapsed: true, items: [
+            { text: 'Renovate - ignoriere lombok', link: `${PATH_TECHNIK}adr/adr001-renovate-ignore-lombok` }
+        ] }
       ]
     },
 

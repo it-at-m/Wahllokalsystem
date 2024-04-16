@@ -1,12 +1,15 @@
-name: build docs
+name: build push dev docs
 
 on:
-  pull_request:
+  push:
+    branches:
+      - dev
     paths:
       - 'docs/**'
+      - '.github/workflows/doc_push-dev.yaml'
 
 jobs:
-  build:
+  build-and-publish:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -23,3 +26,9 @@ jobs:
       - run: npm install
 
       - run: npm run docs:build
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/.vitepress/dist

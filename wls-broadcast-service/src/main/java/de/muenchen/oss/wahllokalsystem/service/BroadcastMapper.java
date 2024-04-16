@@ -8,5 +8,5 @@ import org.mapstruct.Mapper;
 public interface BroadcastMapper {
 
     MessageDTO toDto(Message entityToMap);
-
+    Message toEntity(MessageDTO dtoToMap);
 }

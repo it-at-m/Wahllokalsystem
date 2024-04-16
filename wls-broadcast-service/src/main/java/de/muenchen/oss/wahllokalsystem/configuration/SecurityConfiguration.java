@@ -34,6 +34,14 @@ public class SecurityConfiguration {
     @Value("${security.oauth2.resource.user-info-uri}")
     private String userInfoUri;
 
+    private static final String[] SWAGGER_WHITELIST = {
+        "/v3/api-docs/**",
+        "/swagger-resources/**",
+        "/swagger-ui/**",
+        "/webjars/**",
+        "/swagger-resources"
+    };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -47,7 +55,12 @@ public class SecurityConfiguration {
                         // allow access to /actuator/health/readiness for OpenShift Readiness Check
                         AntPathRequestMatcher.antMatcher("/actuator/health/readiness"),
                         // allow access to /actuator/metrics for Prometheus monitoring in OpenShift
-                        AntPathRequestMatcher.antMatcher("/actuator/metrics"))
+                        AntPathRequestMatcher.antMatcher("/actuator/metrics"),
+                        AntPathRequestMatcher.antMatcher("/v3/api-docs/**"),
+                        AntPathRequestMatcher.antMatcher("/swagger-resources/**"),
+                        AntPathRequestMatcher.antMatcher("/swagger-ui/**"),
+                        AntPathRequestMatcher.antMatcher("/webjars/**"),
+                        AntPathRequestMatcher.antMatcher("/swagger-resources"))
                         .permitAll())
                 .authorizeHttpRequests((requests) -> requests.requestMatchers("/**")
                         .authenticated())

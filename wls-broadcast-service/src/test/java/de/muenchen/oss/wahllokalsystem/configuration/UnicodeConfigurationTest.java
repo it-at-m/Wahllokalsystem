@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class UnicodeConfigurationTest {
 
     private static final String ENTITY_ENDPOINT_URL = "/businessActions/broadcast";
-    private String GET_MESSAGE_PATH = "/businessActions/getMessage/" + "3";
+    private static final String GET_MESSAGE_PATH = "/businessActions/getMessage/" + "3";
 
     /**
      * Decomposed string:
@@ -70,7 +71,8 @@ class UnicodeConfigurationTest {
 
         // Check persisted entity contains a composed string via JPA repository.
         final Message message = messageRepository.findById(response.oid()).orElse(null);
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, message.getNachricht());
+        Assertions.assertThat(message).isNotNull();
+        Assertions.assertThat(message.getNachricht()).isEqualTo(TEXT_ATTRIBUTE_COMPOSED);
         assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), message.getNachricht().length());
     }
 

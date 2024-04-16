@@ -20,6 +20,9 @@ public final class TestConstants {
 
     public static final String SPRING_NO_SECURITY_PROFILE = "no-security";
 
+    public static final String TESTUSER = "redv-101";
+    public static final String TESTPASSWORD = "password";
+
     @NoArgsConstructor
     @Getter
     @Setter
@@ -28,10 +31,6 @@ public final class TestConstants {
     public static class TheEntityDto extends RepresentationModel {
 
         private MessageDTO myMessageDTO;
-
-        public void setMyMessageDTO(MessageDTO myMessageDTO) {
-            this.myMessageDTO = myMessageDTO;
-        }
     }
 
 }

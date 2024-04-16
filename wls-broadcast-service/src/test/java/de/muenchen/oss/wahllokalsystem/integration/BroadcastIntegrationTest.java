@@ -21,6 +21,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -64,6 +65,8 @@ public class BroadcastIntegrationTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    private AutoCloseable closeable;
+
     MockMvc mvc;
 
     @Value("${local.server.port}")
@@ -80,14 +83,18 @@ public class BroadcastIntegrationTest {
     public void setup() {
         log.debug("Setting up test ...");
         log.debug("Port > {}", port);
-        MockitoAnnotations.initMocks(this);
-
+        closeable = MockitoAnnotations.openMocks(this);
         mvc = MockMvcBuilders.webAppContextSetup(context)
                 .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
 
         BroadcastSecurityUtils.grantFullAccess();
         messageRepository.deleteAll();
+    }
+
+    @AfterEach
+    void closeService() throws Exception {
+        closeable.close();
     }
 
 

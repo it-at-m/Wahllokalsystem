@@ -10,8 +10,8 @@ Am Ende soll die Anwendung für Interessierte vollständig zur Verfügung stehen
 ## Was kann die Software
 
 Der Hauptfokus der Software liegt auf den Handlungen am Wahltag. Sie unterstützt bei der Eröffnung des Wahllokals, indem man z.B. anhand einer Checkliste
-prüfen kann, dass alle notwendigen Materialien für die Durchführung vorhanden sind. Während der Zeit der Stimmabgabe wird übermittelt
-wie viele Wähler\*Innen bereits im Wahllokal waren. Des Weiteren werden über die Software wahlrelevante Vorkommnisse dokumentiert.
+prüfen kann, dass alle notwendigen Materialien für die Durchführung vorhanden sind. Während der Zeit der Stimmabgabe wird übermittelt,
+wie viele Wähler\*innen bereits im Wahllokal waren. Des Weiteren werden über die Software wahlrelevante Vorkommnisse dokumentiert.
 
 Außerdem wird zu definierten Zeitpunkten abgefragt, welche Mitglieder des Wahlvorstandes im Wahllokal anwesend sind. So wird sichergestellt,
 dass das Gremium zu jederzeit ausreichend besetzt ist.
@@ -21,4 +21,4 @@ Dazu gibt es zahlreiche Regeln und Konsistenzprüfungen, die dem Wahlvorstand Fe
 
 Das Wahlamt kann über das System den Wahlbezirken wichtige Informationen zukommen lassen.
 
-🚧 Eine detaillierte Beschreibungen aller [Funktionen](/features/) folgt im Laufe der Veröffentlichung.
+🚧 Eine detaillierte Beschreibung aller [Funktionen](/features/) folgt im Laufe der Veröffentlichung.

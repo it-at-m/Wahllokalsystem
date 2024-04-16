@@ -1,0 +1,17 @@
+id: add first user to work with keycloak
+author: MrSebastian
+realm: ${SSO_REALM}
+changes:
+  - addUser:
+      name: keycloak_test
+      lastName: test
+      firstName: keycloak
+      enabled: true
+      emailVerified: true
+      email: keycloak.test@example.com
+      attributes:
+        user_name:
+          - keycloak_test
+  - updateUserPassword:
+      name: keycloak_test
+      password: "test"

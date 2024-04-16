@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
@@ -31,7 +29,7 @@
         <!-- Plugins -->
         <maven-scm-plugin.version>1.10.0</maven-scm-plugin.version>
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
-        <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
+        <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
         <maven.resources.plugin.version>3.3.1</maven.resources.plugin.version>
         <!-- Version muss mit der in den spring-boot-dependencies bereitgestellten Lombok-Version übereinstimmen -->
         <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>
@@ -207,10 +205,6 @@
 
         <!-- Spring developer tools -->
         <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-rest-hal-explorer</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
@@ -385,12 +379,12 @@
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
-                <version>2.28.0</version>
+                <version>2.43.0</version>
                 <dependencies>
                     <dependency>
                         <groupId>de.muenchen.oss</groupId>
                         <artifactId>itm-java-codeformat</artifactId>
-                        <version>1.0.7</version>
+                        <version>1.0.9</version>
                     </dependency>
                 </dependencies>
                 <configuration>
@@ -402,8 +396,8 @@
                         <eclipse>
                             <file>itm-java-codeformat/java_codestyle_formatter.xml</file>
                         </eclipse>
-                        <trimTrailingWhitespace/>
-                        <endWithNewline/>
+                        <trimTrailingWhitespace />
+                        <endWithNewline />
                     </java>
                 </configuration>
                 <executions>

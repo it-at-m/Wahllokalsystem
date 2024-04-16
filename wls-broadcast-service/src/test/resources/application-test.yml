@@ -1,5 +1,3 @@
-server:
-  port: 39146
 spring:
 
   # Spring JPA
@@ -24,12 +22,9 @@ spring:
         jwt:
           jwk-set-uri: http://localhost
 
-
-# Define the local keycloak realm here
-realm: <YOUR_LOCAL_REALM>
-
 security:
   # possible values: none, all, changing (With changing, only changing requests such as POST, PUT, DELETE are logged)
   logging.requests: all
   oauth2:
     resource.user-info-uri: http://localhost
+

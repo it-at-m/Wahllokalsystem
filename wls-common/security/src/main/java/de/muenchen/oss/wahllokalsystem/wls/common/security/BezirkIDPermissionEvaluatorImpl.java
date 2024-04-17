@@ -1,13 +1,12 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.security;
 
+import java.util.Map;
 import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 @Component(value = "bezirkIdPermisionEvaluator")
 @Profile("!" + Profiles.NO_BEZIRKS_ID_CHECK)

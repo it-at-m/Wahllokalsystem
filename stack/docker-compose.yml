@@ -1,6 +1,25 @@
 name: wls
 
 services:
+  ### WLS-Backend Services
+  wls-broadcast-service:
+    container_name: wls-broadcast-service
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-broadcast-service:latest-dev
+    depends_on:
+      - wls-db-oracle
+    env_file:
+      - .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=${WLS_BROADCAST_SERVICE_PROFILE}
+      - SPRING_DATASOURCE_URL=${WLS_BROADCAST_SERVICE_DB_URL}
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${WLS_BROADCAST_SERVICE_KEYCLOAK_URL}/certs
+      - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${WLS_BROADCAST_SERVICE_KEYCLOAK_URL}/userinfo
+    ports:
+      - 8200:39146
+    networks:
+      - services
+      - keycloak
+
   ## Keycloak
   wls-keycloak:
     container_name: wls-keycloak

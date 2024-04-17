@@ -17,9 +17,4 @@ public class DummyBezirkIdPermissionEvaluatorImpl implements BezirkIDPermissionE
         LOG.info("tokenUserBezirkIdMatches {}, {}", bezirkId, auth.getPrincipal());
         return true;
     }
-
-    private String loadBezirkID(String username) {
-        LOG.debug("#loadBezirkID {}", username);
-        return "123";
-    }
 }

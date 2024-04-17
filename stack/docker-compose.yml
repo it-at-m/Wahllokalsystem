@@ -50,6 +50,21 @@ services:
     networks:
       - keycloak
 
+  wls-db-oracle:
+    container_name: wls-db-oracle
+    image: gvenzl/oracle-xe:21-faststart
+    ports:
+      - 1521:1521
+    environment:
+      ORACLE_PASSWORD: secret
+      APP_USER: app_user
+      APP_USER_PASSWORD: secret
+    volumes:
+      - './oracle-database:/container-entrypoint-startdb.d'
+    networks:
+      - services
+
 networks:
   internal:
   keycloak:
+  services:

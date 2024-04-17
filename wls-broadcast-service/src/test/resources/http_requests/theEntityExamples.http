@@ -1,0 +1,10 @@
+###
+POST http://localhost:39146/theEntities
+Content-Type: application/json
+
+{
+  "textAttribute": "my text"
+}
+
+###
+GET http://localhost:39146/theEntities

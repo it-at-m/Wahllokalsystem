@@ -1,0 +1,10 @@
+###
+POST http://localhost:{{WLS_BROADCAST_SERVICE_PORT}}/theEntities
+Content-Type: application/json
+
+{
+  "textAttribute": "my text"
+}
+
+###
+GET http://localhost:{{WLS_BROADCAST_SERVICE_PORT}}/theEntities

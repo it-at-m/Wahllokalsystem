@@ -1,0 +1,13 @@
+name: verify pull request wls-common
+
+on:
+  pull_request:
+    paths:
+      - 'wls-common/**'
+
+jobs:
+  verify-pull-request:
+    uses:
+      ./.github/workflows/callable-run-mvn-verify.yml
+    with:
+      pom-dir: 'wls-common'

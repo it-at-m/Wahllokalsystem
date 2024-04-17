@@ -1,0 +1,89 @@
+name: wls
+
+services:
+  ### WLS-Backend Services
+  wls-broadcast-service:
+    container_name: wls-broadcast-service
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-broadcast-service:latest-dev
+    depends_on:
+      - wls-db-oracle
+    env_file:
+      - .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=${WLS_BROADCAST_SERVICE_PROFILE}
+      - SPRING_DATASOURCE_URL=${WLS_BROADCAST_SERVICE_DB_URL}
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${WLS_BROADCAST_SERVICE_KEYCLOAK_URL}/certs
+      - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${WLS_BROADCAST_SERVICE_KEYCLOAK_URL}/userinfo
+    ports:
+      - 8200:39146
+    networks:
+      - services
+      - keycloak
+
+  ## Keycloak
+  wls-keycloak:
+    container_name: wls-keycloak
+    image: quay.io/keycloak/keycloak:20.0.5
+    command:
+      - start-dev --http-relative-path /auth
+    depends_on:
+      - wls-db-postgres-keycloak
+    environment:
+      - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
+      - KC_HOSTNAME_STRICT=${KEYCLOAK_HOSTNAME_STRICT}
+      - DB=${KEYCLOAK_DB_TYPE}
+      - DB_URL=jdbc:postgresql://wls-db-postgres-keycloak:5432/${KEYCLOAK_DB}
+      - DB_USERNAME=${KEYCLOAK_DB_USER}
+      - DB_PASSWORD=${KEYCLOAK_DB_PASSWORD}
+    ports:
+      - 8100:8080
+    networks:
+      - keycloak
+
+  wls-init-keycloak:
+    container_name: wls-init-keycloak
+    image: klg71/keycloakmigration
+    depends_on:
+      - wls-keycloak
+    env_file:
+      - .env
+    environment:
+      - ADMIN_USER=${KEYCLOAK_ADMIN}
+      - ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
+      - BASEURL=${SSO_BASE_URL} # uses internal docker network to access the keycloak via its back channel port
+      - WAIT_FOR_KEYCLOAK=true
+      - KEYCLOAK_CHANGELOG=/migration/keycloak-changelog.yml
+    volumes:
+      - './keycloak/migration:/migration'
+    networks:
+      - keycloak
+
+  wls-db-postgres-keycloak:
+    container_name: wls-db-postgres-keycloak
+    image: postgres:16.0-alpine3.18
+    environment:
+      - POSTGRES_DB=${KEYCLOAK_DB}
+      - POSTGRES_USER=${KEYCLOAK_DB_USER}
+      - POSTGRES_PASSWORD=${KEYCLOAK_DB_PASSWORD}
+    networks:
+      - keycloak
+
+  wls-db-oracle:
+    container_name: wls-db-oracle
+    image: gvenzl/oracle-xe:21-faststart
+    ports:
+      - 1521:1521
+    environment:
+      ORACLE_PASSWORD: secret
+      APP_USER: app_user
+      APP_USER_PASSWORD: secret
+    volumes:
+      - './oracle-database:/container-entrypoint-startdb.d'
+    networks:
+      - services
+
+networks:
+  internal:
+  keycloak:
+  services:

@@ -1,21 +1,19 @@
 package de.muenchen.oss.wahllokalsystem.service;
 
+import de.muenchen.oss.wahllokalsystem.domain.Message;
+import de.muenchen.oss.wahllokalsystem.domain.MessageRepository;
 import de.muenchen.oss.wahllokalsystem.rest.BroadcastMessageDTO;
 import de.muenchen.oss.wahllokalsystem.rest.MessageDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionKonstanten;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
 import java.util.List;
-
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import de.muenchen.oss.wahllokalsystem.domain.Message;
-import de.muenchen.oss.wahllokalsystem.domain.MessageRepository;
 
 /**
  * Provides a service to execute business-actions.

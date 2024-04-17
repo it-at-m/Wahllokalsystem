@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.service;
 
-import de.muenchen.oss.wahllokalsystem.rest.MessageDTO;
 import de.muenchen.oss.wahllokalsystem.domain.Message;
+import de.muenchen.oss.wahllokalsystem.rest.MessageDTO;
 import org.mapstruct.Mapper;
 
 @Mapper

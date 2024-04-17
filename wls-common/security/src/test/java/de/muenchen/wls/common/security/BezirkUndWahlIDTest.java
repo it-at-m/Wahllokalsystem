@@ -20,7 +20,8 @@ class BezirkIDUndWahlIDTest {
         val unitUnderTest = new BezirkUndWahlID();
         unitUnderTest.setWahlID("1");
         unitUnderTest.setWahlbezirkID("2");
-        Assertions.assertThat(unitUnderTest.toString()).isEqualTo("de.muenchen.wls.common.security.domain.BezirkUndWahlID{" + "wahlID='" + 1 + '\'' +", wahlbezirkID='" + 2 + '\'' +'}');
+        Assertions.assertThat(unitUnderTest.toString())
+                .isEqualTo("de.muenchen.wls.common.security.domain.BezirkUndWahlID{" + "wahlID='" + 1 + '\'' + ", wahlbezirkID='" + 2 + '\'' + '}');
     }
 
     @Test

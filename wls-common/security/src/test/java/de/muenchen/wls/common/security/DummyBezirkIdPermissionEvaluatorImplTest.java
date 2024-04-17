@@ -1,4 +1,5 @@
 package de.muenchen.wls.common.security;
+
 import de.muenchen.wls.common.security.testultils.LoggerExtension;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -15,7 +16,7 @@ import java.util.HashMap;
 
 class DummyBezirkIdPermissionEvaluatorImplTest {
 
-    private final DummyBezirkIdPermissionEvaluatorImpl unitUnderTest= new DummyBezirkIdPermissionEvaluatorImpl();
+    private final DummyBezirkIdPermissionEvaluatorImpl unitUnderTest = new DummyBezirkIdPermissionEvaluatorImpl();
 
     @Nested
     class TestLoggingEvents {

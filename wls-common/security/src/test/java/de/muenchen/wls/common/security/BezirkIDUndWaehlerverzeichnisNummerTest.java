@@ -20,7 +20,8 @@ class BezirkIDUndWaehlerverzeichnisNummerTest {
         val unitUnderTest = new BezirkIDUndWaehlerverzeichnisNummer();
         unitUnderTest.setWaehlerverzeichnisNummer(Long.valueOf("1"));
         unitUnderTest.setWahlbezirkID("2");
-        Assertions.assertThat(unitUnderTest.toString()).isEqualTo("BezirkIDUndWaehlerverzeichnisNummer{" + "wahlbezirkID='" + 2 + '\'' +", waehlerverzeichnisNummer=" + 1 +'}');
+        Assertions.assertThat(unitUnderTest.toString())
+                .isEqualTo("BezirkIDUndWaehlerverzeichnisNummer{" + "wahlbezirkID='" + 2 + '\'' + ", waehlerverzeichnisNummer=" + 1 + '}');
     }
 
     @Test

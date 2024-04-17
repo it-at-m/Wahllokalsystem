@@ -42,6 +42,7 @@ public class BezirkIDPermissionEvaluatorImpl implements BezirkIDPermissionEvalua
             return false;
         }
     }
+
     private String getBezirkID(final Authentication auth) {
         val details = (Map) auth.getDetails();
         return (String) details.get(WAHLBEZIRK_ID);

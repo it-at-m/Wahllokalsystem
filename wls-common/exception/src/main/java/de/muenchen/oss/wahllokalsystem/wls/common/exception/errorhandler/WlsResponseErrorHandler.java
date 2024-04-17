@@ -43,7 +43,7 @@ public class WlsResponseErrorHandler extends DefaultResponseErrorHandler {
         throw createdException;
     }
 
-    public TechnischeWlsException createFalseObjectReferenceException (String Id,final Throwable cause){
+    public TechnischeWlsException createFalseObjectReferenceException(String Id, final Throwable cause) {
         return TechnischeWlsException
                 .withCode(ExceptionKonstanten.CODE_ALLGEMEIN_UNBEKANNT)
                 .inService(Id).withCause(cause)

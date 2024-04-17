@@ -1,4 +1,5 @@
 package de.muenchen.wls.common.security.domain;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Objects;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

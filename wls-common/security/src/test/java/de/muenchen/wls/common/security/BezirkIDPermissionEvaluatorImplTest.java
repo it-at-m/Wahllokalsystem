@@ -16,18 +16,17 @@ import java.util.HashMap;
 
 class BezirkIDPermissionEvaluatorImplTest {
 
-    private final BezirkIDPermissionEvaluatorImpl unitUnderTest= new BezirkIDPermissionEvaluatorImpl();
+    private final BezirkIDPermissionEvaluatorImpl unitUnderTest = new BezirkIDPermissionEvaluatorImpl();
 
     @Nested
     class TestTokenUserBezirkIdMatches {
-
 
         @RegisterExtension
         public LoggerExtension loggerExtension = new LoggerExtension();
 
         @Test
         void warnOnAuthenticationIsNull() {
-            unitUnderTest.tokenUserBezirkIdMatches("1234",null);
+            unitUnderTest.tokenUserBezirkIdMatches("1234", null);
             Assertions.assertThat(loggerExtension.getFormattedMessages().contains("No authentication object for bezirkId=1234")).isTrue();
         }
 

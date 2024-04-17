@@ -12,7 +12,6 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-
 class EncryptionBuilderTest {
 
     @RegisterExtension
@@ -60,11 +59,11 @@ class EncryptionBuilderTest {
             random.nextBytes(aByte);
             val unitUnderTest = new EncryptionBuilder(aByte);
             try {
-            unitUnderTest.encryptValue("376526723AFDAB3D");
+                unitUnderTest.encryptValue("376526723AFDAB3D");
             } catch (Exception e) {
                 Assertions.assertThat(loggerExtension.getFormattedMessages().size()).isEqualTo(1);
             }
-            }
+        }
 
     }
 }

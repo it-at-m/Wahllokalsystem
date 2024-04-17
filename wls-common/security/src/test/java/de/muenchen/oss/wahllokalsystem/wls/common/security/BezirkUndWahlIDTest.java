@@ -1,6 +1,6 @@
-package de.muenchen.wls.common.security;
+package de.muenchen.oss.wahllokalsystem.wls.common.security;
 
-import de.muenchen.wls.common.security.domain.BezirkUndWahlID;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

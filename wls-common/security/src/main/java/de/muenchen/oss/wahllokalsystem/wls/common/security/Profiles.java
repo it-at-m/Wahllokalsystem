@@ -1,4 +1,4 @@
-package de.muenchen.wls.common.security;
+package de.muenchen.oss.wahllokalsystem.wls.common.security;
 
 public interface Profiles {
     // Test Profiles

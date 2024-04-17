@@ -1,6 +1,6 @@
-package de.muenchen.wls.common.security;
+package de.muenchen.oss.wahllokalsystem.wls.common.security;
 
-import de.muenchen.wls.common.security.testultils.LoggerExtension;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.testultils.LoggerExtension;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

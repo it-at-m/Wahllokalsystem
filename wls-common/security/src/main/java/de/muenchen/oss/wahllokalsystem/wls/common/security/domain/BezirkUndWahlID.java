@@ -1,4 +1,4 @@
-package de.muenchen.wls.common.security.domain;
+package de.muenchen.oss.wahllokalsystem.wls.common.security.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

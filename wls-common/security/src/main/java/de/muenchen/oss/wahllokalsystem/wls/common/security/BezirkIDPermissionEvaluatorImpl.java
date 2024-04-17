@@ -1,4 +1,4 @@
-package de.muenchen.wls.common.security;
+package de.muenchen.oss.wahllokalsystem.wls.common.security;
 
 import lombok.val;
 import org.slf4j.Logger;

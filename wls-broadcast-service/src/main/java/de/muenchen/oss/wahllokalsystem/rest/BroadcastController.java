@@ -25,11 +25,6 @@ public class BroadcastController {
         broadcastService.broadcast(body);
     }
 
-    /**
-     * This BusinessAction's purpose is: Endpunkt zum prüfen, ob eine Nachricht für dieses Wahllokal
-     * verfügbar ist
-     * It returns one String.
-     */
     @GetMapping(value = MESSAGE_PATH)
     public MessageDTO getMessage(@PathVariable("wahlbezirkID") String wahlbezirkID) {
         return broadcastService.getOldestMessage(wahlbezirkID);

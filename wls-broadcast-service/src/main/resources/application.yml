@@ -3,8 +3,8 @@ spring:
   banner.location: banner.txt
 
 service:
-    info:
-        oid: WLS-BROADCAST
+  info:
+    oid: WLS-BROADCAST
 
 server:
   shutdown: "graceful"

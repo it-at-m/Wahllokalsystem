@@ -20,10 +20,6 @@ public class BroadcastController {
     @Autowired
     BroadcastService broadcastService;
 
-    /**
-     * This BusinessAction's purpose is: Bietet einen Endpunkt an, der eine Nachricht für alle
-     * Wahlbezirke(Wahllokale) bereitstellt.
-     */
     @PostMapping(value = BROADCAST_PATH)
     public void broadcast(@RequestBody BroadcastMessageDTO body) {
         broadcastService.broadcast(body);

@@ -168,7 +168,8 @@ public class BroadcastIntegrationTest {
         Message message = Testdaten.createMessage(Testdaten.WAHLBEZIRK_ID, Testdaten.MESSAGE, Testdaten.UHRZEIT);
         messageRepository.save(message);
 
-        Message foundMessage = messageRepository.findByNachricht(Testdaten.MESSAGE);
+        List<Message> foundMessages = messageRepository.findByWahlbezirkID(Testdaten.WAHLBEZIRK_ID);
+        Message foundMessage = foundMessages.stream().findFirst().get();
         Assertions.assertThat(foundMessage).isNotNull();
 
         // @formatter:off
@@ -182,7 +183,7 @@ public class BroadcastIntegrationTest {
         Assertions.assertThat(status).isEqualTo(200);
         log.info("Result > Status: {} ", status);
 
-        foundMessage = messageRepository.findByNachricht(Testdaten.MESSAGE);
-        Assertions.assertThat(foundMessage).isNull();
+        foundMessages = messageRepository.findByWahlbezirkID(Testdaten.WAHLBEZIRK_ID);
+        Assertions.assertThat(foundMessages).size().isEqualTo(0);
     }
 }

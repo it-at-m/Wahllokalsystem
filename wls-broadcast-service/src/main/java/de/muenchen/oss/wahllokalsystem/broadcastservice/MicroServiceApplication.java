@@ -37,11 +37,7 @@ public class MicroServiceApplication {
 
     public static void main(String[] args) {
 
-        try{
-            SpringApplication.run(MicroServiceApplication.class, args);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        SpringApplication.run(MicroServiceApplication.class, args);
     }
 
 }

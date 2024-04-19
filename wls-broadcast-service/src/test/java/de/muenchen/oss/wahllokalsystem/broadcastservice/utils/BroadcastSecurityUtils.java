@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.broadcastservice.utils;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 

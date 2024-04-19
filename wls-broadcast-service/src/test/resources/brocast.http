@@ -22,11 +22,17 @@ Content-Type: application/json
 ### Get message for wbz-1
 GET http://localhost:39146/businessActions/getMessage/wbz-1
 
+> {%
+    client.global.set("nachrichtID", response.body.oid);
+    client.global.set("wbzID", response.body.wahlbezirkID);
+%}
+
 ### Get message for wbz-2
-GET http://localhost:39146/businessActions/getMessage/wbz-2
+GET http://localhost:39146/businessActions/getMessage/{{wbzID}}
 
 ### Get message for wbz-x
 GET http://localhost:39146/businessActions/getMessage/wbz-x
 
 ### Delete lastest for wbz-1
-POST  http://localhost:39146/businessActions/messageRead/e19b06c3-495c-4a2d-8290-d4ddc0924d7d
+POST  http://localhost:39146/businessActions/messageRead/{{nachrichtID}}
+

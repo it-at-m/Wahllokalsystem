@@ -1,8 +1,11 @@
-package de.muenchen.oss.wahllokalsystem.broadcastservice.rest;
+package de.muenchen.oss.wahllokalsystem.broadcastservice.service;
 
 import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_TEST_PROFILE;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.domain.Message;
+import de.muenchen.oss.wahllokalsystem.broadcastservice.domain.MessageRepository;
+import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO;
+import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.MessageDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionKonstanten;
 import java.time.LocalDateTime;
@@ -10,8 +13,6 @@ import java.util.Arrays;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.broadcastservice.domain.MessageRepository;
-import de.muenchen.oss.wahllokalsystem.broadcastservice.service.BroadcastService;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.BroadcastSecurityUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,39 +30,21 @@ import org.springframework.test.context.ActiveProfiles;
         }
 )
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
-class BroadcastControllerTest {
+class BroadcastServiceTest {
 
     @Autowired
-    BroadcastService broadcast_S;
+    BroadcastService broadcastService;
 
     @Autowired
     private MessageRepository messageRepo;
 
     @BeforeEach
     public void setup() {
-        Assertions.assertThat(broadcast_S).isNotNull();
+        Assertions.assertThat(broadcastService).isNotNull();
         SecurityContextHolder.clearContext();
         BroadcastSecurityUtils.grantFullAccess();
         messageRepo.deleteAll();
     }
-
-    /**
-     * To Do Test if right Exception will be thrown after implementing
-     * Validierung Über die Validation API in
-     * src/main/java/de/muenchen/oss/wahllokalsystem/service/BroadcastService.java
-     */
-    //@Test(expected = WlsException.class)
-    //public void broadcast_WahlbezirkID_Null_Test() {
-    //    broadcast_S.broadcast(null, null, null);
-    //}
-    //@Test(expected = WlsException.class)
-    //public void getMessage_WahlbezirkID_Null_Test() throws Exception {
-    //    broadcast_S.getMessage(null, null);
-    //}
-    //    @Test(expected = WlsException.class)
-    //    public void messageRead_NachrichtID_Null_Test() {
-    //        messageReadBusinessActionService.messageRead(null, null);
-    //    }
 
     @Test
     void broadcast() {
@@ -69,7 +52,7 @@ class BroadcastControllerTest {
         String broadcastMessage = "Dies ist eine Broadcast-Nachricht";
 
         BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, broadcastMessage);
-        broadcast_S.broadcast(m1);
+        broadcastService.broadcast(m1);
 
         List<Message> messages = messageRepo.findByWahlbezirkID("4");
 
@@ -82,7 +65,7 @@ class BroadcastControllerTest {
 
         RuntimeException thrownException = null;
         try {
-            broadcast_S.getOldestMessage("123");
+            broadcastService.getOldestMessage("123");
         } catch (Exception e) {
             thrownException = (RuntimeException) e;
         }
@@ -107,7 +90,7 @@ class BroadcastControllerTest {
         msg1.setEmpfangsZeit(time);
         messageRepo.save(msg1);
 
-        MessageDTO foundMessage = broadcast_S.getOldestMessage(wahlbezirkID);
+        MessageDTO foundMessage = broadcastService.getOldestMessage(wahlbezirkID);
         Assertions.assertThat(msg1.getNachricht()).isEqualTo(foundMessage.nachricht());
     }
 
@@ -131,7 +114,7 @@ class BroadcastControllerTest {
         messageRepo.save(msg1);
         messageRepo.save(msg2);
 
-        String foundMessage = broadcast_S.getOldestMessage(wahlbezirkID).nachricht();
+        String foundMessage = broadcastService.getOldestMessage(wahlbezirkID).nachricht();
         Assertions.assertThat(messageToSave2).isEqualTo(foundMessage);
     }
 
@@ -154,9 +137,6 @@ class BroadcastControllerTest {
         messageRepo.save(msg1);
         messageRepo.save(msg2);
 
-        Message message_1 = messageRepo.findByNachricht(MESSAGE + wahlbezirkID_1);
-        broadcast_S.deleteMessage(message_1.getOid().toString());
-
         List<Message> stillExistingMessages = messageRepo.findByWahlbezirkID(wahlbezirkID_2);
 
         Assertions.assertThat(stillExistingMessages)
@@ -166,6 +146,5 @@ class BroadcastControllerTest {
         Assertions.assertThat(MESSAGE + wahlbezirkID_2).isEqualTo(stillExistingMessages.get(0).getNachricht());
         Assertions.assertThat(MESSAGE + wahlbezirkID_2).isEqualTo(stillExistingMessages.get(0).getNachricht());
 
-        broadcast_S.deleteMessage(message_1.getOid().toString());
     }
 }

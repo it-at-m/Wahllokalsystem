@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 class MessageRepositoryTest {
 
     @Autowired
-    BroadcastService broadcast_S;
+    BroadcastService broadcastService;
 
     @Autowired
     private MessageRepository repository;
@@ -74,15 +74,15 @@ class MessageRepositoryTest {
         String searchedWahlbezirkID = "3";
 
         BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_1");
-        broadcast_S.broadcast(m1);
+        broadcastService.broadcast(m1);
         BroadcastMessageDTO m2 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_2");
-        broadcast_S.broadcast(m2);
+        broadcastService.broadcast(m2);
         BroadcastMessageDTO m3 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_3");
-        broadcast_S.broadcast(m3);
+        broadcastService.broadcast(m3);
         BroadcastMessageDTO m4 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_4");
-        broadcast_S.broadcast(m4);
+        broadcastService.broadcast(m4);
         BroadcastMessageDTO m5 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_5");
-        broadcast_S.broadcast(m5);
+        broadcastService.broadcast(m5);
 
         //Expected -sent Message
         List<Message> allMessages = (List<Message>) repository.findAll();

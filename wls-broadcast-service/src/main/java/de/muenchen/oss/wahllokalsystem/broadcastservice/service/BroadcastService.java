@@ -30,7 +30,7 @@ public class BroadcastService {
     MessageRepository messageRepo;
 
     @Autowired
-    BroadcastMapper bcMapper;
+    BroadcastMapper broadcastMapper;
 
     @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_Broadcast')")
     public void broadcast(final BroadcastMessageDTO messageToBroadcast) {
@@ -74,7 +74,7 @@ public class BroadcastService {
             throw FachlicheWlsException.withCode(ExceptionKonstanten.CODE_ENTITY_NOT_FOUND).buildWithMessage("No message found");
         }
 
-        return bcMapper.toDto(message.get());
+        return broadcastMapper.toDto(message.get());
     }
 
     @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_MessageRead')")

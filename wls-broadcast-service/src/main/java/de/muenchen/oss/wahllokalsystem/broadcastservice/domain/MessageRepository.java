@@ -14,6 +14,4 @@ public interface MessageRepository extends CrudRepository<Message, UUID> {
     Optional<Message> findFirstByWahlbezirkIDOrderByEmpfangsZeit(String wahlbezirkID);
 
     List<Message> findByWahlbezirkID(String number);
-
-    Message findByNachricht(String s);
 }

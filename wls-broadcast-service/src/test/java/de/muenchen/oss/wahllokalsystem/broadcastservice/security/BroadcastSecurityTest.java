@@ -4,13 +4,14 @@ import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPR
 import de.muenchen.oss.wahllokalsystem.broadcastservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.service.BroadcastService;
-import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.UsernamePasswordAuthenticationToken;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
@@ -28,11 +29,11 @@ import org.springframework.test.context.ActiveProfiles;
 public class BroadcastSecurityTest {
 
     @Autowired
-    BroadcastService broadcast_S;
+    BroadcastService broadcastService;
 
     @BeforeEach
     public void setUp() {
-        Assertions.assertThat(broadcast_S).isNotNull();
+        Assertions.assertThat(broadcastService).isNotNull();
         SecurityContextHolder.clearContext();
     }
 
@@ -44,7 +45,7 @@ public class BroadcastSecurityTest {
         Exception thrownException = null;
         try {
             //noinspection DataFlowIssue
-            broadcast_S.broadcast(null);
+            broadcastService.broadcast(null);
         } catch (Exception e) {
             thrownException = e;
         }
@@ -60,7 +61,7 @@ public class BroadcastSecurityTest {
                 new UsernamePasswordAuthenticationToken(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, AuthorityUtils.createAuthorityList("ROLE_DUMMY")));
         RuntimeException thrownException = null;
         try {
-            broadcast_S.getOldestMessage(null);
+            broadcastService.getOldestMessage(null);
         } catch (Exception e) {
             thrownException = (RuntimeException) e;
         }
@@ -76,7 +77,7 @@ public class BroadcastSecurityTest {
                 new UsernamePasswordAuthenticationToken(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, AuthorityUtils.createAuthorityList("ROLE_DUMMY")));
         RuntimeException thrownException = null;
         try {
-            broadcast_S.deleteMessage(null);
+            broadcastService.deleteMessage(null);
         } catch (Exception e) {
             thrownException = (RuntimeException) e;
         }

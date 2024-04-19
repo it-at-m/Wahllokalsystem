@@ -13,7 +13,7 @@ public interface MessageRepository extends CrudRepository<Message, UUID> {
 
     Optional<Message> findFirstByWahlbezirkIDOrderByEmpfangsZeit(String wahlbezirkID);
 
-    List<Message> findByWahlbezirkID(String number);
+    List<Message> findByWahlbezirkID(String wahlbezirkId);
 
     Message findByNachricht(String s);
 }

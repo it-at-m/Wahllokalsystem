@@ -5,7 +5,6 @@ package de.muenchen.oss.wahllokalsystem.wls.common.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.errorhandler.WlsResponseErrorHandler;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -23,8 +22,6 @@ public class EncryptionBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(EncryptionBuilder.class);
     private static ServiceIDFormatter formatter;
-
-    private final ObjectMapper mapper = new ObjectMapper();
 
     private static final String AES = "AES";
     private final Cipher _encryptCipher;

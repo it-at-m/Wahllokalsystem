@@ -13,11 +13,11 @@ import lombok.NoArgsConstructor;
 public class BezirkUndWahlID implements Serializable {
 
     @NotNull
-    @Size(max =1000)
+    @Size(max = 1000)
     private String wahlID;
 
     @NotNull
-    @Size(max =1000)
+    @Size(max = 1000)
     private String wahlbezirkID;
 
 }

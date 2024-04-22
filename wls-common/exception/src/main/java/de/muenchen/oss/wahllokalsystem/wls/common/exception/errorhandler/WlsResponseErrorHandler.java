@@ -43,13 +43,6 @@ public class WlsResponseErrorHandler extends DefaultResponseErrorHandler {
         throw createdException;
     }
 
-    public TechnischeWlsException createFalseObjectReferenceException(String Id, final Throwable cause) {
-        return TechnischeWlsException
-                .withCode(ExceptionKonstanten.CODE_ALLGEMEIN_UNBEKANNT)
-                .inService(Id).withCause(cause)
-                .buildWithMessage(buildUndefinedErrorMessageWithCauseMessages(cause));
-    }
-
     private TechnischeWlsException createUnknownTechnischeWlsExceptionWithCause(final Throwable cause) {
         return TechnischeWlsException.withCode(ExceptionKonstanten.CODE_ALLGEMEIN_UNBEKANNT).inService(ExceptionKonstanten.SERVICE_UNBEKANNT).withCause(cause)
                 .buildWithMessage(buildUndefinedErrorMessageWithCauseMessages(cause));

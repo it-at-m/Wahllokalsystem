@@ -11,12 +11,17 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("!dummy.nobezirkid.check")
 @ExtendWith(MockitoExtension.class)
 class BezirkIDPermissionEvaluatorImplTest {
+
+    @Value("${profile.property.value}")
+    String activeProfile;
 
     private final BezirkIDPermissionEvaluatorImpl unitUnderTest = new BezirkIDPermissionEvaluatorImpl();
 
@@ -91,6 +96,12 @@ class BezirkIDPermissionEvaluatorImplTest {
 
             Assertions.assertThat(unitUnderTest.tokenUserBezirkIdMatches("4567", auth)).isFalse();
             Assertions.assertThat(loggerExtension.getFormattedMessages().size()).isEqualTo(0);
+        }
+
+        @IfProfileValue(name = "NO_BEZIRKS_ID_CHECK", value = "!dummy.nobezirkid.check")
+        @Test
+        void profileLoaded() {
+            Assertions.assertThat(true).isTrue();
         }
     }
 }

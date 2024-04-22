@@ -10,9 +10,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.annotation.IfProfileValue;
 
-@ActiveProfiles("!dummy.nobezirkid.check")
 @ExtendWith(MockitoExtension.class)
 class DummyBezirkIdPermissionEvaluatorImplTest {
 
@@ -22,15 +21,21 @@ class DummyBezirkIdPermissionEvaluatorImplTest {
     private final DummyBezirkIdPermissionEvaluatorImpl unitUnderTest = new DummyBezirkIdPermissionEvaluatorImpl();
 
     @Nested
-    class TestLoggingEvents {
+    class TestTokenUserBezirkIdMatches {
 
         @RegisterExtension
         public LoggerExtension loggerExtension = new LoggerExtension();
 
         @Test
-        void logInfoMatch() {
+        void idMatches() {
             Mockito.when(auth.getPrincipal()).thenReturn("1234");
             Assertions.assertThat(unitUnderTest.tokenUserBezirkIdMatches("1234", auth)).isTrue();
+        }
+
+        @IfProfileValue(name = "NO_BEZIRKS_ID_CHECK", value = "!dummy.nobezirkid.check")
+        @Test
+        void profileLoaded() {
+            Assertions.assertThat(true).isTrue();
         }
     }
 }

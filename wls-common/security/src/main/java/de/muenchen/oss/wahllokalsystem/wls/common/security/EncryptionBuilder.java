@@ -27,9 +27,9 @@ public class EncryptionBuilder {
     private final Cipher _decryptCipher;
     private static final String technischeExceptionKonstante = "S";
 
-    public EncryptionBuilder(byte[] aSecret) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException {
+    public EncryptionBuilder(byte[] aSecret, final ServiceIDFormatter formatter) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException {
         val secret = new SecretKeySpec(aSecret, 0, 16, AES);
-        formatter = new ServiceIDFormatter("tFormatter");
+        EncryptionBuilder.formatter = formatter;
         _encryptCipher = Cipher.getInstance(AES);
         _encryptCipher.init(Cipher.ENCRYPT_MODE, secret);
         _decryptCipher = Cipher.getInstance(AES);

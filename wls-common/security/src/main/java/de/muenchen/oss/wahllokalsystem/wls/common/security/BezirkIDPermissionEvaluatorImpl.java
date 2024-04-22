@@ -27,14 +27,14 @@ public class BezirkIDPermissionEvaluatorImpl implements BezirkIDPermissionEvalua
         LOG.debug("tokenUserBezirkIdMatches {}, {}", bezirkId, auth.getPrincipal());
         try {
             val bezirkIDFromToken = getBezirkID(auth);
-            val wahlBezirkid_wahlnummer = getWahlbezirkid_wahlnummer(auth);
+            val wahlbezirkid_wahlnummer = getWahlbezirkid_wahlnummer(auth);
             val bezirkIdMatches = (bezirkId != null)
-                    && (bezirkId.equals(bezirkIDFromToken) || (wahlBezirkid_wahlnummer != null && wahlBezirkid_wahlnummer.contains(bezirkId)));
+                    && (bezirkId.equals(bezirkIDFromToken) || (wahlbezirkid_wahlnummer != null && wahlbezirkid_wahlnummer.contains(bezirkId)));
             LOG.debug("Check bezirkId {} from request against username {}, bezirkId {} from token or wahlbezirkid_wahlnummer {}. RESULT = {}",
                     bezirkId,
                     auth.getPrincipal(),
                     bezirkIDFromToken,
-                    wahlBezirkid_wahlnummer,
+                    wahlbezirkid_wahlnummer,
                     bezirkIdMatches);
             return bezirkIdMatches;
         } catch (Exception e) {

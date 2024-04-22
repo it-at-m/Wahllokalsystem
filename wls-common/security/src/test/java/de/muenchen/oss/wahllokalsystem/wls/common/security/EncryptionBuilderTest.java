@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.security;
 
-import static org.assertj.core.api.Assertions.fail;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.testultils.LoggerExtension;

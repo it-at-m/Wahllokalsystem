@@ -4,6 +4,7 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.errorhandler.WlsResponseErrorHandler;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import java.security.InvalidKeyException;
@@ -21,18 +22,18 @@ import org.slf4j.LoggerFactory;
 public class EncryptionBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(EncryptionBuilder.class);
-    private static final ServiceIDFormatter formatter = new ServiceIDFormatter("tFormatter");
+    private static ServiceIDFormatter formatter;
 
     private final ObjectMapper mapper = new ObjectMapper();
-
-    private final WlsResponseErrorHandler handler = new WlsResponseErrorHandler(mapper);
 
     private static final String AES = "AES";
     private final Cipher _encryptCipher;
     private final Cipher _decryptCipher;
+    private static final String technischeExceptionKonstante = "S";
 
     public EncryptionBuilder(byte[] aSecret) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException {
         val secret = new SecretKeySpec(aSecret, 0, 16, AES);
+        formatter = new ServiceIDFormatter("tFormatter");
         _encryptCipher = Cipher.getInstance(AES);
         _encryptCipher.init(Cipher.ENCRYPT_MODE, secret);
         _decryptCipher = Cipher.getInstance(AES);
@@ -47,7 +48,7 @@ public class EncryptionBuilder {
                 return new String(finalized);
             } catch (IllegalBlockSizeException | BadPaddingException e) {
                 log.error("Unable to decrypt the given value <" + value + "> as of an " + e.getClass().getSimpleName() + ". Using direct object reference!", e);
-                throw handler.createFalseObjectReferenceException(formatter.getId(), e);
+                throw TechnischeWlsException.withCode(technischeExceptionKonstante).inService(formatter.getId()).buildWithMessage("Problem bei Referenzierung/Dereferenzierung von Objekt-Referenzen");
             }
         }
         return value;
@@ -60,7 +61,7 @@ public class EncryptionBuilder {
                 value = Base64.getUrlEncoder().encodeToString(finalized);
             } catch (IllegalBlockSizeException | BadPaddingException e) {
                 log.error("Unable to encrypt the given value <" + value + "> as of an " + e.getClass().getSimpleName() + ". Using direct object reference!", e);
-                throw handler.createFalseObjectReferenceException(formatter.getId(), e);
+                throw TechnischeWlsException.withCode(technischeExceptionKonstante).inService(formatter.getId()).buildWithMessage("Problem bei Referenzierung/Dereferenzierung von Objekt-Referenzen");
             }
         }
         return value;

@@ -14,9 +14,9 @@ public class BezirkIDPermissionEvaluatorImpl implements BezirkIDPermissionEvalua
 
     private static final Logger LOG = LoggerFactory.getLogger(BezirkIDPermissionEvaluatorImpl.class);
 
-    private static final String WAHLBEZIRK_ID = "wahlbezirkID";
+    private static final String AUTH_DETAILS_MAP_KEY_WAHLBEZIRK_ID = "wahlbezirkID";
 
-    private static final String WBID_WAHLNUMMER = "wbid_wahlnummer";
+    private static final String AUTH_DETAILS_MAP_KEY_WAHLBEZIRKID_WAHLNUMMER = "wahlbezirkid_wahlnummer";
 
     @Override
     public boolean tokenUserBezirkIdMatches(String bezirkId, Authentication auth) {
@@ -27,13 +27,13 @@ public class BezirkIDPermissionEvaluatorImpl implements BezirkIDPermissionEvalua
         LOG.debug("tokenUserBezirkIdMatches {}, {}", bezirkId, auth.getPrincipal());
         try {
             val bezirkIDFromToken = getBezirkID(auth);
-            val wbid_wnr = getWbid_wahlnummer(auth);
-            boolean bezirkIdMatches = (bezirkId != null) && (bezirkId.equals(bezirkIDFromToken) || (wbid_wnr != null && wbid_wnr.contains(bezirkId)));
-            LOG.debug("Check bezirkId {} from request against username {}, bezirkId {} from token or wbid_wahlnummer {}. RESULT = {}",
+            val wahlBezirkid_wahlnummer = getWahlbezirkid_wahlnummer(auth);
+            val bezirkIdMatches = (bezirkId != null) && (bezirkId.equals(bezirkIDFromToken) || (wahlBezirkid_wahlnummer != null && wahlBezirkid_wahlnummer.contains(bezirkId)));
+            LOG.debug("Check bezirkId {} from request against username {}, bezirkId {} from token or wahlbezirkid_wahlnummer {}. RESULT = {}",
                     bezirkId,
                     auth.getPrincipal(),
                     bezirkIDFromToken,
-                    wbid_wnr,
+                    wahlBezirkid_wahlnummer,
                     bezirkIdMatches);
             return bezirkIdMatches;
         } catch (Exception e) {
@@ -44,11 +44,11 @@ public class BezirkIDPermissionEvaluatorImpl implements BezirkIDPermissionEvalua
 
     private String getBezirkID(final Authentication auth) {
         val details = (Map) auth.getDetails();
-        return (String) details.get(WAHLBEZIRK_ID);
+        return (String) details.get(AUTH_DETAILS_MAP_KEY_WAHLBEZIRK_ID);
     }
 
-    private String getWbid_wahlnummer(Authentication auth) {
+    private String getWahlbezirkid_wahlnummer(final Authentication auth) {
         val details = (Map) auth.getDetails();
-        return (String) details.get(WBID_WAHLNUMMER);
+        return (String) details.get(AUTH_DETAILS_MAP_KEY_WAHLBEZIRKID_WAHLNUMMER);
     }
 }

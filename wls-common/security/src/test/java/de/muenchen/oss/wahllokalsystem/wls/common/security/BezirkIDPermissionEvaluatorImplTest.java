@@ -6,16 +6,22 @@ import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("!dummy.nobezirkid.check")
+@ExtendWith(MockitoExtension.class)
 class BezirkIDPermissionEvaluatorImplTest {
 
     private final BezirkIDPermissionEvaluatorImpl unitUnderTest = new BezirkIDPermissionEvaluatorImpl();
+
+    @Mock
+    Authentication auth;
 
     @Nested
     class TestTokenUserBezirkIdMatches {
@@ -25,35 +31,65 @@ class BezirkIDPermissionEvaluatorImplTest {
 
         @Test
         void warnOnAuthenticationIsNull() {
-            unitUnderTest.tokenUserBezirkIdMatches("1234", null);
-            Assertions.assertThat(loggerExtension.getFormattedMessages().contains("No authentication object for bezirkId=1234")).isTrue();
+            Assertions.assertThat(unitUnderTest.tokenUserBezirkIdMatches("1234", null)).isFalse();
+            Assertions.assertThat(loggerExtension.getFormattedMessages()).contains("No authentication object for bezirkId=1234");
         }
 
         @Test
         void errorWhileChecking() {
-            AuthenticationManager authManager = authentication -> authentication;
-            UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken("username", "password");
-            Authentication auth = authManager.authenticate(authRequest);
-            SecurityContext context = SecurityContextHolder.createEmptyContext();
-            context.setAuthentication(auth);
-            SecurityContextHolder.setContext(context);
-            unitUnderTest.tokenUserBezirkIdMatches("1234", auth);
-            Assertions.assertThat(loggerExtension.getFormattedMessages().contains("Error while checking bezirkId.")).isTrue();
+            Mockito.when(auth.getPrincipal()).thenReturn("1234");
+
+            Assertions.assertThat(unitUnderTest.tokenUserBezirkIdMatches("1234", auth)).isFalse();
+            Assertions.assertThat(loggerExtension.getFormattedMessages()).contains("Error while checking bezirkId.");
         }
 
         @Test
-        void bezirkIDMatches() {
+        void bezirkIDMatchesFromToken() {
             val map = new HashMap<>();
-            map.put("bezirkID", "1234");
+            map.put("wahlbezirkid_wahlnummer", "1234");
             map.put("wahlbezirkID", "1234");
-            AuthenticationManager authManager = authentication -> authentication;
-            UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken("username", "password");
-            authRequest.setDetails(map);
-            Authentication auth = authManager.authenticate(authRequest);
-            SecurityContext context = SecurityContextHolder.createEmptyContext();
-            context.setAuthentication(auth);
-            SecurityContextHolder.setContext(context);
+
+            Mockito.when(auth.getPrincipal()).thenReturn("1234");
+            Mockito.when(auth.getDetails()).thenReturn(map);
+
             Assertions.assertThat(unitUnderTest.tokenUserBezirkIdMatches("1234", auth)).isTrue();
+        }
+
+        @Test
+        void bezirkIDMatchesFromWahlBezirkID() {
+            val map = new HashMap<>();
+            map.put("wahlbezirkid_wahlnummer", "1234");
+            map.put("wahlbezirkID", "4567");
+
+            Mockito.when(auth.getPrincipal()).thenReturn("1234");
+            Mockito.when(auth.getDetails()).thenReturn(map);
+
+            Assertions.assertThat(unitUnderTest.tokenUserBezirkIdMatches("1234", auth)).isTrue();
+        }
+
+        @Test
+        void bezirkIDIsNull() {
+            val map = new HashMap<>();
+            map.put("wahlbezirkid_wahlnummer", "1234");
+            map.put("wahlbezirkID", "1234");
+
+            Mockito.when(auth.getPrincipal()).thenReturn("1234");
+            Mockito.when(auth.getDetails()).thenReturn(map);
+
+            Assertions.assertThat(unitUnderTest.tokenUserBezirkIdMatches(null, auth)).isFalse();
+            Assertions.assertThat(loggerExtension.getFormattedMessages().size()).isEqualTo(0);        }
+
+        @Test
+        void bezirkIDDoesNotMatch() {
+            val map = new HashMap<>();
+            map.put("wahlbezirkid_wahlnummer", null);
+            map.put("wahlbezirkID", "1234");
+
+            Mockito.when(auth.getPrincipal()).thenReturn("1234");
+            Mockito.when(auth.getDetails()).thenReturn(map);
+
+            Assertions.assertThat(unitUnderTest.tokenUserBezirkIdMatches("4567", auth)).isFalse();
+            Assertions.assertThat(loggerExtension.getFormattedMessages().size()).isEqualTo(0);
         }
     }
 }

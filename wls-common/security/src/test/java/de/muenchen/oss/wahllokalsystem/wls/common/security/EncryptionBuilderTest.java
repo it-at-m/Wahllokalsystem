@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.security;
 
+import static org.assertj.core.api.Assertions.fail;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.testultils.LoggerExtension;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -27,6 +28,20 @@ class EncryptionBuilderTest {
         }
 
         @Test
+        void emptyValue() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+            val aByte = new byte[16];
+            val unitUnderTest = new EncryptionBuilder(aByte);
+            Assertions.assertThat(unitUnderTest.decryptValue("").isEmpty()).isTrue();
+        }
+
+        @Test
+        void valueIsNull() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+            val aByte = new byte[16];
+            val unitUnderTest = new EncryptionBuilder(aByte);
+            Assertions.assertThat(unitUnderTest.decryptValue(null) == null).isTrue();
+        }
+
+        @Test
         void throwBadPadding() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
             val aByte = new byte[16];
             val random = new SecureRandom();
@@ -34,10 +49,11 @@ class EncryptionBuilderTest {
             val unitUnderTest = new EncryptionBuilder(aByte);
             try {
                 unitUnderTest.decryptValue("Efl8HLaoqguJ-CkS4r_m_QFD22PuZrDN_59pkXaAFR4=");
+                fail("Exception not thrown");
             } catch (Exception e) {
+                Assertions.assertThat(e.getMessage().contains("Problem bei Referenzierung/Dereferenzierung von Objekt-Referenzen")).isTrue();
                 Assertions.assertThat(loggerExtension.getFormattedMessages().size()).isEqualTo(1);
             }
-
         }
     }
 
@@ -52,17 +68,17 @@ class EncryptionBuilderTest {
         }
 
         @Test
-        void throwBadPadding() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+        void emptyValue() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
             val aByte = new byte[16];
-            val random = new SecureRandom();
-            random.nextBytes(aByte);
             val unitUnderTest = new EncryptionBuilder(aByte);
-            try {
-                unitUnderTest.encryptValue("376526723AFDAB3D");
-            } catch (Exception e) {
-                Assertions.assertThat(loggerExtension.getFormattedMessages().size()).isEqualTo(1);
-            }
+            Assertions.assertThat(unitUnderTest.encryptValue("").isEmpty()).isTrue();
         }
 
+        @Test
+        void valueIsNull() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+            val aByte = new byte[16];
+            val unitUnderTest = new EncryptionBuilder(aByte);
+            Assertions.assertThat(unitUnderTest.encryptValue(null) == null).isTrue();
+        }
     }
 }

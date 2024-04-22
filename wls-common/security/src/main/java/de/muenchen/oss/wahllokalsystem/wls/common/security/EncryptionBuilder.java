@@ -3,7 +3,6 @@
  */
 package de.muenchen.oss.wahllokalsystem.wls.common.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import java.security.InvalidKeyException;
@@ -45,7 +44,8 @@ public class EncryptionBuilder {
                 return new String(finalized);
             } catch (IllegalBlockSizeException | BadPaddingException e) {
                 log.error("Unable to decrypt the given value <" + value + "> as of an " + e.getClass().getSimpleName() + ". Using direct object reference!", e);
-                throw TechnischeWlsException.withCode(technischeExceptionKonstante).inService(formatter.getId()).buildWithMessage("Problem bei Referenzierung/Dereferenzierung von Objekt-Referenzen");
+                throw TechnischeWlsException.withCode(technischeExceptionKonstante).inService(formatter.getId())
+                        .buildWithMessage("Problem bei Referenzierung/Dereferenzierung von Objekt-Referenzen");
             }
         }
         return value;
@@ -58,7 +58,8 @@ public class EncryptionBuilder {
                 value = Base64.getUrlEncoder().encodeToString(finalized);
             } catch (IllegalBlockSizeException | BadPaddingException e) {
                 log.error("Unable to encrypt the given value <" + value + "> as of an " + e.getClass().getSimpleName() + ". Using direct object reference!", e);
-                throw TechnischeWlsException.withCode(technischeExceptionKonstante).inService(formatter.getId()).buildWithMessage("Problem bei Referenzierung/Dereferenzierung von Objekt-Referenzen");
+                throw TechnischeWlsException.withCode(technischeExceptionKonstante).inService(formatter.getId())
+                        .buildWithMessage("Problem bei Referenzierung/Dereferenzierung von Objekt-Referenzen");
             }
         }
         return value;

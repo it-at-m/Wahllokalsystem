@@ -77,7 +77,8 @@ class BezirkIDPermissionEvaluatorImplTest {
             Mockito.when(auth.getDetails()).thenReturn(map);
 
             Assertions.assertThat(unitUnderTest.tokenUserBezirkIdMatches(null, auth)).isFalse();
-            Assertions.assertThat(loggerExtension.getFormattedMessages().size()).isEqualTo(0);        }
+            Assertions.assertThat(loggerExtension.getFormattedMessages().size()).isEqualTo(0);
+        }
 
         @Test
         void bezirkIDDoesNotMatch() {

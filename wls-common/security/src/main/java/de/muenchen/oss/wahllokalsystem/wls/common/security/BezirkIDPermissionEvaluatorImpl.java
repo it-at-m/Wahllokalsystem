@@ -28,7 +28,8 @@ public class BezirkIDPermissionEvaluatorImpl implements BezirkIDPermissionEvalua
         try {
             val bezirkIDFromToken = getBezirkID(auth);
             val wahlBezirkid_wahlnummer = getWahlbezirkid_wahlnummer(auth);
-            val bezirkIdMatches = (bezirkId != null) && (bezirkId.equals(bezirkIDFromToken) || (wahlBezirkid_wahlnummer != null && wahlBezirkid_wahlnummer.contains(bezirkId)));
+            val bezirkIdMatches = (bezirkId != null)
+                    && (bezirkId.equals(bezirkIDFromToken) || (wahlBezirkid_wahlnummer != null && wahlBezirkid_wahlnummer.contains(bezirkId)));
             LOG.debug("Check bezirkId {} from request against username {}, bezirkId {} from token or wahlbezirkid_wahlnummer {}. RESULT = {}",
                     bezirkId,
                     auth.getPrincipal(),

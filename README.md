@@ -20,8 +20,8 @@ The project is built with technologies we use in our projects
 We just started that is why a detailed roadmap is not available yet. All we can tell you today is that we plan about 4 phases:
 
 0. setup - getting familiar with the tools, the tech and the process and see what is todo
-1. updating the backend
-2. updating the frontend
+1. updating the backend - done in 2024
+2. updating the frontend - started and done in 2025
 3. optimising the system
 
 See the [open issues](https://github.com/it-at-m/Wahllokalsystem/issues) for a full list of proposed features (and known issues).

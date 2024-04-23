@@ -4,9 +4,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ActiveProfiles;
 
 class ProfilesTest {
@@ -38,8 +37,7 @@ class ProfilesTest {
         }
     }
 
-    @Configuration
-    @ComponentScan("de.muenchen.oss.wahllokalsystem.wls.common.security") //all BezirkIDPermissionEvaluator impl classes should be found
+    @SpringBootApplication //all BezirkIDPermissionEvaluator impl classes should be found
     public static class TestConfiguration {
 
     }

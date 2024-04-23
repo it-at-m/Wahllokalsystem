@@ -6,13 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ActiveProfiles;
 
 class ProfilesTest {
 
-    @SpringBootTest(classes = { DummyBezirkIdPermissionEvaluatorImpl.class, BezirkIDPermissionEvaluatorImpl.class })
+    @SpringBootTest(classes = TestConfiguration.class)
     @ActiveProfiles(Profiles.NO_BEZIRKS_ID_CHECK)
-    @ComponentScan
     @Nested
     class NoBezirksIdCheck {
 
@@ -25,8 +25,7 @@ class ProfilesTest {
         }
     }
 
-    @SpringBootTest(classes = { DummyBezirkIdPermissionEvaluatorImpl.class, BezirkIDPermissionEvaluatorImpl.class })
-    @ComponentScan
+    @SpringBootTest(classes = TestConfiguration.class)
     @Nested
     class NoSpecialProfile {
 
@@ -37,5 +36,11 @@ class ProfilesTest {
         void evaluatorIsInstanceOfBezirkIDPermissionEvaluator() {
             Assertions.assertThat(permissionEvaluator).isExactlyInstanceOf(BezirkIDPermissionEvaluatorImpl.class);
         }
+    }
+
+    @Configuration
+    @ComponentScan("de.muenchen.oss.wahllokalsystem.wls.common.security") //all BezirkIDPermissionEvaluator impl classes should be found
+    public static class TestConfiguration {
+
     }
 }

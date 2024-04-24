@@ -113,6 +113,50 @@ public class BroadcastIntegrationTest {
     }
 
     @Test
+    public void broadcastIntegrationTestMessageIncomplete() {
+        log.debug("#BroadcastIntegrationTestMessageIncomplete");
+
+        final BroadcastMessageDTO bmDTOIncomplete1 = new BroadcastMessageDTO(null, Testdaten.MESSAGE);
+        Exception catchedException1 = null;
+        try {
+            MockHttpServletResponse result = mvc.perform(
+                    post(broadcast_url)
+                            .content(Testdaten.asJsonString(bmDTOIncomplete1))
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andReturn().getResponse();
+
+        } catch (Exception e) {
+            catchedException1 = e;
+        }
+
+        Assertions.assertThat(catchedException1)
+                .isNotNull()
+                .isInstanceOf(ServletException.class)
+                .hasMessageContaining("Das Object BroadcastMessage ist nicht vollständig.");
+
+        final BroadcastMessageDTO bmDTOIncomplete2 = new BroadcastMessageDTO(Arrays.asList("1", "2", "3", "4"), null);
+
+        Exception catchedException2 = null;
+        try {
+            MockHttpServletResponse result = mvc.perform(
+                    post(broadcast_url)
+                            .content(Testdaten.asJsonString(bmDTOIncomplete2))
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andReturn().getResponse();
+
+        } catch (Exception e) {
+            catchedException2 = e;
+        }
+
+        Assertions.assertThat(catchedException2)
+                .isNotNull()
+                .isInstanceOf(ServletException.class)
+                .hasMessageContaining("Das Object BroadcastMessage ist nicht vollständig.");
+    }
+
+    @Test
     public void getMessageIntegrationTest() throws Exception {
         log.debug("#GetMessageIntegrationTest");
         messageRepository.save(Testdaten.createMessage(Testdaten.WAHLBEZIRK_ID, Testdaten.MESSAGE, Testdaten.UHRZEIT));
@@ -125,7 +169,6 @@ public class BroadcastIntegrationTest {
                         .andReturn().getResponse();
         // @formatter:on
         String content = result.getContentAsString();
-        log.debug("string_obj {}", content);
         Message message = objectMapper.readValue(content, Message.class);
         Assertions.assertThat(message.getNachricht()).isEqualTo(Testdaten.MESSAGE);
     }

@@ -21,7 +21,10 @@ public class BroadcastController {
     @Autowired
     BroadcastService broadcastService;
 
-    @Operation(summary = "Nachricht an alle senden", description = "Sendet eine Nachricht an alle Wahlbezirke und speichert diese für jeden Wahlbezirk in der Datenbank")
+    @Operation(
+            summary = "Nachricht an alle senden",
+            description = "Sendet eine Nachricht an alle Wahlbezirke und speichert diese für jeden Wahlbezirk in der Datenbank"
+    )
     @PostMapping(value = BROADCAST_PATH)
     public void broadcast(@RequestBody BroadcastMessageDTO body) {
         broadcastService.broadcast(body);
@@ -33,7 +36,10 @@ public class BroadcastController {
         return broadcastService.getOldestMessage(wahlbezirkID);
     }
 
-    @Operation(summary = "Nachricht löschen", description = "Löscht die Nachricht mit der gegebenen ID, nachdem sie gelesen wurde. Es wird nur der dem entsprechenden Wahllokal zugewiesene Datenbankeintrag.")
+    @Operation(
+            summary = "Nachricht löschen",
+            description = "Löscht die Nachricht mit der gegebenen ID, nachdem sie gelesen wurde. Es wird nur der dem entsprechenden Wahllokal zugewiesene Datenbankeintrag."
+    )
     @PostMapping(value = MESSAGE_READ_PATH) //TODO DeleteMapping wäre besser
     public void deleteMessage(@PathVariable("nachrichtID") String nachrichtID) { //TODO Besser wäre 204
         broadcastService.deleteMessage(nachrichtID);

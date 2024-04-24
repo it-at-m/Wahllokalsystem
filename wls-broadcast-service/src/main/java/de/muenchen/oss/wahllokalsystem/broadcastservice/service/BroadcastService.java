@@ -6,6 +6,9 @@ import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO
 import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.MessageDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionKonstanten;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -32,17 +35,19 @@ public class BroadcastService {
     @Autowired
     BroadcastMapper broadcastMapper;
 
+    private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private final Validator validator = factory.getValidator();
+
     @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_Broadcast')")
     public void broadcast(final BroadcastMessageDTO messageToBroadcast) {
         log.debug("#broadcast");
 
-        // To Do Validierung Über die Validation API, correct also Test de/muenchen/oss/wahllokalsystem/rest/BroadcastControllerTest.java
-        /*
-         * if ( wahlbezirkIDs == null || wahlbezirkIDs.isEmpty() || Strings.isNullOrEmpty(nachricht)) {
-         * throw
-         * WlsExceptionFactory.build(ExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG);
-         * }
-         */
+        val validationResult = validator.validate(messageToBroadcast);
+
+        if (!validationResult.isEmpty()) {
+            throw FachlicheWlsException.withCode(ExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG)
+                    .buildWithMessage("Das Object BroadcastMessage ist nicht vollständig.");
+        }
 
         LocalDateTime now = LocalDateTime.now();
         List<Message> messagesToSave = messageToBroadcast.wahlbezirkIDs().stream().map(s -> {

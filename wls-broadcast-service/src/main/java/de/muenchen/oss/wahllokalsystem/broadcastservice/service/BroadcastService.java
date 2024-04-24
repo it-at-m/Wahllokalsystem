@@ -49,14 +49,7 @@ public class BroadcastService {
                     .buildWithMessage("Das Object BroadcastMessage ist nicht vollständig.");
         }
 
-        LocalDateTime now = LocalDateTime.now();
-        List<Message> messagesToSave = messageToBroadcast.wahlbezirkIDs().stream().map(s -> {
-            Message message = new Message();
-            message.setWahlbezirkID(s);
-            message.setEmpfangsZeit(now);
-            message.setNachricht(messageToBroadcast.nachricht());
-            return message;
-        }).toList();
+        List<Message> messagesToSave = broadcastMapper.fromBroadcastMessageDTOtoListOfMessages(messageToBroadcast);
 
         messageRepo.saveAll(messagesToSave);
     }

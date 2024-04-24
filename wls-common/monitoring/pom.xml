@@ -5,11 +5,11 @@
     <parent>
         <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
         <artifactId>parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>monitoring</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <description>Übergreifende Monitoring Aspekte</description>
 
     <build>

@@ -18,16 +18,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
-        classes = { MicroServiceApplication.class },
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = {
-                "spring.datasource.url=jdbc:h2:mem:wahllokalsystem;DB_CLOSE_ON_EXIT=FALSE",
-                "refarch.gracefulshutdown.pre-wait-seconds=0"
-        }
+        classes = { MicroServiceApplication.class }
 )
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
 class BroadcastServiceTest {
@@ -41,7 +35,6 @@ class BroadcastServiceTest {
     @BeforeEach
     public void setup() {
         Assertions.assertThat(broadcastService).isNotNull();
-        SecurityContextHolder.clearContext();
         BroadcastSecurityUtils.grantFullAccess();
         messageRepo.deleteAll();
     }

@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -100,6 +101,40 @@ class MessageRepositoryTest {
         //Actual - Found
         Optional<Message> optionalFoundMessage = repository.findFirstByWahlbezirkIDOrderByEmpfangsZeit(searchedWahlbezirkID);
         Assertions.assertThat(sentMessage).isEqualTo(optionalFoundMessage.get());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.REQUIRED, noRollbackFor = Exception.class)
+    void testDeleteById() {
+
+        String originalOid = "1-2-3-4-5";
+        String originalNachricht = "Test Nachricht";
+        // initialize
+        Message original = new Message();
+        original.setOid(UUID.fromString(originalOid));
+        original.setNachricht(originalNachricht);
+
+        // persist
+        original = repository.save(original);
+        // check
+        Message persisted = repository.findById(original.getOid()).orElse(null);
+
+        Assertions.assertThat(persisted).isNotNull();
+        Assertions.assertThat(persisted).isEqualTo(original);
+
+        repository.deleteById(original.getOid());
+
+        Message foundMessage = null;
+        Exception thrownException = null;
+
+        try{
+            foundMessage = repository.findById(original.getOid()).orElse(null);
+        } catch(Exception e){
+            thrownException = e;
+        }
+
+        Assertions.assertThat(foundMessage).isNull();
+        Assertions.assertThat(thrownException).isNull();
     }
 
 }

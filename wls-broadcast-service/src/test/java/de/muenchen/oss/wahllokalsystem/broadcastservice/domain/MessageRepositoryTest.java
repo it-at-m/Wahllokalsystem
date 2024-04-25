@@ -127,9 +127,9 @@ class MessageRepositoryTest {
         Message foundMessage = null;
         Exception thrownException = null;
 
-        try{
+        try {
             foundMessage = repository.findById(original.getOid()).orElse(null);
-        } catch(Exception e){
+        } catch (Exception e) {
             thrownException = e;
         }
 

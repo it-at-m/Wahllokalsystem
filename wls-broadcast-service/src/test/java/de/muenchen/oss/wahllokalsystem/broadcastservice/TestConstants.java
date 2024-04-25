@@ -4,14 +4,8 @@
  */
 package de.muenchen.oss.wahllokalsystem.broadcastservice;
 
-import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.MessageDTO;
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import org.springframework.hateoas.RepresentationModel;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TestConstants {
@@ -22,15 +16,5 @@ public final class TestConstants {
 
     public static final String TESTUSER = "redv-101";
     public static final String TESTPASSWORD = "password";
-
-    @NoArgsConstructor
-    @Getter
-    @Setter
-    @EqualsAndHashCode(callSuper = true)
-    @ToString(callSuper = true)
-    public static class TheEntityDto extends RepresentationModel {
-
-        private MessageDTO myMessageDTO;
-    }
 
 }

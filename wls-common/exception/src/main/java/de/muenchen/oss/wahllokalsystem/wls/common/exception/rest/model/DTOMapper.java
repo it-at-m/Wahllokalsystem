@@ -21,6 +21,4 @@ public interface DTOMapper {
         case TECHNISCH -> WlsExceptionCategory.T;
         };
     }
-
-    //WlsException fromWlsExceptionDTOtoWlsException(WlsExceptionDTO wlsExceptionDTO);
 }

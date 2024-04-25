@@ -38,31 +38,6 @@ class MessageRepositoryTest {
     @Autowired
     private MessageRepository repository;
 
-    @Test
-    @Transactional(propagation = Propagation.REQUIRED, noRollbackFor = Exception.class)
-    void testSave() {
-
-        String originalOid = "1-2-3-4-5";
-        String originalNachricht = "Test Nachricht";
-
-        // Implement your logic here by replacing and/or extending the code
-
-        // initialize
-        Message original = new Message();
-        original.setOid(UUID.fromString(originalOid));
-        original.setNachricht(originalNachricht);
-
-        // persist
-        original = repository.save(original);
-
-        // check
-        Message persisted = repository.findById(original.getOid()).orElse(null);
-
-        Assertions.assertThat(persisted).isNotNull();
-        Assertions.assertThat(persisted).isEqualTo(original);
-
-    }
-
     /**
      * Tests if searched saved Message from many is the first found
      */

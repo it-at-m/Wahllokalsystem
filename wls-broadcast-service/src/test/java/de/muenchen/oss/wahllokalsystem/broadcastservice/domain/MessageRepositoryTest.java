@@ -3,10 +3,10 @@ package de.muenchen.oss.wahllokalsystem.broadcastservice.domain;
 import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_TEST_PROFILE;
 
+import de.muenchen.oss.wahllokalsystem.broadcastservice.service.BroadcastMapperImpl;
 import org.assertj.core.api.Assertions;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO;
-import de.muenchen.oss.wahllokalsystem.broadcastservice.service.BroadcastService;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -33,31 +33,37 @@ import org.springframework.transaction.annotation.Transactional;
 class MessageRepositoryTest {
 
     @Autowired
-    BroadcastService broadcastService;
-
-    @Autowired
     private MessageRepository repository;
+    @Autowired
+    private BroadcastMapperImpl broadcastMapperImpl;
 
     /**
      * Tests if searched saved Message from many is the first found
      */
     @Test
     @Transactional(propagation = Propagation.REQUIRED, noRollbackFor = Exception.class)
-    void testFirst() {
+    void findFirstByWahlbezirkIDOrderByEmpfangsZeit_FirstMessageIsFound() {
 
         List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
         String searchedWahlbezirkID = "3";
 
         BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_1");
-        broadcastService.broadcast(m1);
         BroadcastMessageDTO m2 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_2");
-        broadcastService.broadcast(m2);
         BroadcastMessageDTO m3 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_3");
-        broadcastService.broadcast(m3);
         BroadcastMessageDTO m4 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_4");
-        broadcastService.broadcast(m4);
         BroadcastMessageDTO m5 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_5");
-        broadcastService.broadcast(m5);
+
+        List<Message> messagesToSend1 = broadcastMapperImpl.fromBroadcastMessageDTOtoListOfMessages(m1);
+        List<Message> messagesToSend2 = broadcastMapperImpl.fromBroadcastMessageDTOtoListOfMessages(m2);
+        List<Message> messagesToSend3 = broadcastMapperImpl.fromBroadcastMessageDTOtoListOfMessages(m3);
+        List<Message> messagesToSend4 = broadcastMapperImpl.fromBroadcastMessageDTOtoListOfMessages(m4);
+        List<Message> messagesToSend5 = broadcastMapperImpl.fromBroadcastMessageDTOtoListOfMessages(m5);
+
+        repository.saveAll(messagesToSend1);
+        repository.saveAll(messagesToSend2);
+        repository.saveAll(messagesToSend3);
+        repository.saveAll(messagesToSend4);
+        repository.saveAll(messagesToSend5);
 
         //Expected -sent Message
         List<Message> allMessages = (List<Message>) repository.findAll();
@@ -74,7 +80,7 @@ class MessageRepositoryTest {
 
         //Actual - Found
         Optional<Message> optionalFoundMessage = repository.findFirstByWahlbezirkIDOrderByEmpfangsZeit(searchedWahlbezirkID);
-        Assertions.assertThat(sentMessage).isEqualTo(optionalFoundMessage.get());
+        Assertions.assertThat(optionalFoundMessage.get()).isEqualTo(sentMessage);
     }
 
     @Test

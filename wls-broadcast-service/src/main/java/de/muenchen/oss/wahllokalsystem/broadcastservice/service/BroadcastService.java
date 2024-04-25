@@ -71,7 +71,7 @@ public class BroadcastService {
         val message = messageRepo.findFirstByWahlbezirkIDOrderByEmpfangsZeit(wahlbezirkID);
 
         if (message.isEmpty()) {
-            throw FachlicheWlsException.withCode(ExceptionKonstanten.CODE_ENTITY_NOT_FOUND).buildWithMessage("No message found");
+            throw FachlicheWlsException.withCode(ExceptionKonstanten.CODE_ENTITY_NOT_FOUND).inService(serviceOid).buildWithMessage("No message found");
         }
 
         return broadcastMapper.toDto(message.get());

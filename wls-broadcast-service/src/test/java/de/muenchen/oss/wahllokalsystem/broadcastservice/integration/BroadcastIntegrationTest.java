@@ -75,12 +75,12 @@ public class BroadcastIntegrationTest {
     @Value("${service.info.oid}")
     private String serviceOid;
 
-    private static final String broadcast_url = "/businessActions/broadcast";
-    private static final String getmessage_url = "/businessActions/getMessage/";
-    private static final String delete_url = "/businessActions/messageRead/";
+    private static final String BROADCAST_URL = "/businessActions/broadcast";
+    private static final String GETMESSAGE_URL = "/businessActions/getMessage/";
+    private static final String DELETE_URL = "/businessActions/messageRead/";
 
-    private static final List<String> wahlbezirkIDs = Arrays.asList("1", "2", "3");
-    private static final BroadcastMessageDTO bmDTO = new BroadcastMessageDTO(wahlbezirkIDs, Testdaten.MESSAGE);
+    private static final List<String> WAHLBEZIRK_I_DS = Arrays.asList("1", "2", "3");
+    private static final BroadcastMessageDTO BROADCAST_MESSAGE_DTO = new BroadcastMessageDTO(WAHLBEZIRK_I_DS, Testdaten.MESSAGE);
 
     @BeforeEach
     public void setup() {
@@ -106,8 +106,8 @@ public class BroadcastIntegrationTest {
         // @formatter:off
         MockHttpServletResponse result =
                 mvc.perform(
-                        post(broadcast_url)
-                                .content(Testdaten.asJsonString(bmDTO))
+                        post(BROADCAST_URL)
+                                .content(Testdaten.asJsonString(BROADCAST_MESSAGE_DTO))
                                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                                 .accept(MediaType.APPLICATION_JSON))
                         .andReturn().getResponse();
@@ -125,7 +125,7 @@ public class BroadcastIntegrationTest {
         Exception catchedException1 = null;
         try {
             MockHttpServletResponse result = mvc.perform(
-                    post(broadcast_url)
+                    post(BROADCAST_URL)
                             .content(Testdaten.asJsonString(bmDTOIncomplete1))
                             .contentType(MediaType.APPLICATION_JSON_UTF8)
                             .accept(MediaType.APPLICATION_JSON))
@@ -145,7 +145,7 @@ public class BroadcastIntegrationTest {
         Exception catchedException2 = null;
         try {
             MockHttpServletResponse result = mvc.perform(
-                    post(broadcast_url)
+                    post(BROADCAST_URL)
                             .content(Testdaten.asJsonString(bmDTOIncomplete2))
                             .contentType(MediaType.APPLICATION_JSON_UTF8)
                             .accept(MediaType.APPLICATION_JSON))
@@ -168,7 +168,7 @@ public class BroadcastIntegrationTest {
         // @formatter:off
         MockHttpServletResponse result =
                 mvc.perform(
-                        get(getmessage_url + Testdaten.WAHLBEZIRK_ID)
+                        get(GETMESSAGE_URL + Testdaten.WAHLBEZIRK_ID)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON))
                         .andReturn().getResponse();
@@ -184,7 +184,7 @@ public class BroadcastIntegrationTest {
         Exception catchedException1 = null;
         try {
             MockHttpServletResponse result = mvc.perform(
-                    get(getmessage_url + "    ")
+                    get(GETMESSAGE_URL + "    ")
                             .contentType(MediaType.APPLICATION_JSON_UTF8)
                             .accept(MediaType.APPLICATION_JSON))
                     .andReturn().getResponse();
@@ -203,7 +203,7 @@ public class BroadcastIntegrationTest {
     public void getMessageIntegrationTestGetParamEmpty() throws Exception {
         log.debug("#GetMessageIntegrationTestGetParamEmpty");
         String wahlbezirkID = "";
-        mvc.perform(get(getmessage_url + wahlbezirkID)
+        mvc.perform(get(GETMESSAGE_URL + wahlbezirkID)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> {
@@ -230,29 +230,20 @@ public class BroadcastIntegrationTest {
 
         ServletException thrownException = null;
         try {
-            // @formatter:off
-            MockHttpServletResponse result =
-                    mvc.perform(
-                                    get(getmessage_url + Testdaten.WAHLBEZIRK_ID)
-                                            .contentType(MediaType.APPLICATION_JSON_UTF8)
-                                            .accept(MediaType.APPLICATION_JSON))
-                            .andReturn().getResponse();
-            // @formatter:on
+            mvc.perform(
+                    get(GETMESSAGE_URL + Testdaten.WAHLBEZIRK_ID)
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .accept(MediaType.APPLICATION_JSON));
         } catch (Exception e) {
             thrownException = (ServletException) e;
         }
 
-        log.debug("thrown exception ist:{}", thrownException);
-        //ToDo: warum überschreibt der MockServer als ServletException die im BroadcastService, für de Fall isEmpty(), richtig geworfene FachlicheWlsException
-        // Wie sollten wir das angehen?
-        Assertions.assertThat(thrownException)
+        Assertions.assertThat(thrownException.getCause())
                 .isNotNull()
-                //.isInstanceOf(FachlicheWlsException.class)
-                .isInstanceOf(ServletException.class)
-                //.hasMessageStartingWith("No message found")
-                .hasMessageContaining("No message found");
-        //.extracting("code")
-        //.isEqualTo(ExceptionKonstanten.CODE_ENTITY_NOT_FOUND);
+                .isInstanceOf(FachlicheWlsException.class)
+                .hasMessageContaining("No message found")
+                .extracting("code", "serviceName")
+                .contains("204", serviceOid);
     }
 
     @Test
@@ -269,7 +260,7 @@ public class BroadcastIntegrationTest {
         // @formatter:off
         MockHttpServletResponse result =
                 mvc.perform(
-                        post(delete_url + foundMessage.getOid())
+                        post(DELETE_URL + foundMessage.getOid())
                                 .contentType(MediaType.APPLICATION_JSON_UTF8).accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
         // @formatter:on
 
@@ -287,7 +278,7 @@ public class BroadcastIntegrationTest {
 
         Exception catchedException1 = null;
         try {
-            mvc.perform(post(delete_url + "badformatparam-u-u-i-d")
+            mvc.perform(post(DELETE_URL + "badformatparam-u-u-i-d")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .accept(MediaType.APPLICATION_JSON));
         } catch (Exception e) {

@@ -66,11 +66,8 @@ class UnicodeConfigurationTest {
 
         assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), broadcastMessageDTO.nachricht().length());
         testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), broadcastMessageDTO, Void.class);
-        final MessageDTO response = testRestTemplate.getForObject(URI.create(GET_MESSAGE_PATH), MessageDTO.class);
-        log.debug("response is: {}", response);
-
         // Check persisted entity contains a composed string via JPA repository.
-        final Message message = messageRepository.findById(response.oid()).orElse(null);
+        final Message message = messageRepository.findFirstByWahlbezirkIDOrderByEmpfangsZeit("3").orElseThrow();
         Assertions.assertThat(message.getNachricht()).isEqualTo(TEXT_ATTRIBUTE_COMPOSED);
         assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), message.getNachricht().length());
     }

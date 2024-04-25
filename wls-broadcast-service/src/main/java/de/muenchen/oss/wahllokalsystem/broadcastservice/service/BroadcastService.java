@@ -9,10 +9,10 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionKonsta
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -56,15 +56,12 @@ public class BroadcastService {
 
     @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_GetMessage')")
     public MessageDTO getOldestMessage(String wahlbezirkID) throws FachlicheWlsException {
-        log.debug("#nachrichtenAbrufen");
-        //ToDo:     Wird später aus neuem wls-common exception ExceptionKonstanten etwa gebaut
+        log.debug("#nachrichtenAbrufen wahlbezirkID {} length {}", wahlbezirkID, wahlbezirkID.length());
 
-        /*
-         * if (Strings.isNullOrEmpty(wahlbezirkID)) {
-         * throw
-         * WlsExceptionFactory.build(ExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG);
-         * }
-         */
+        if (StringUtils.isEmpty(wahlbezirkID) || StringUtils.isBlank(wahlbezirkID)) {
+            throw FachlicheWlsException.withCode(ExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG)
+                    .buildWithMessage("wahlbezirkID is blank or empty");
+        }
 
         val message = messageRepo.findFirstByWahlbezirkIDOrderByEmpfangsZeit(wahlbezirkID);
 

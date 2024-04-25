@@ -10,10 +10,12 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import java.util.List;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,9 @@ public class BroadcastService {
 
     @Autowired
     BroadcastMapper broadcastMapper;
+
+    @Value("${service.info.oid}")
+    private String serviceOid;
 
     private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     private final Validator validator = factory.getValidator();
@@ -74,24 +79,18 @@ public class BroadcastService {
 
     @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_MessageRead')")
     public void deleteMessage(String nachrichtID) { //TODO UUID als Parameter
+        UUID nachrichtUUID;
+        if (StringUtils.isEmpty(nachrichtID) || StringUtils.isBlank(nachrichtID)) {
+            throw FachlicheWlsException.withCode(ExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG)
+                    .buildWithMessage("nachrichtID is blank or empty");
+        }
 
-        //         if (Strings.isNullOrEmpty(nachrichtID)) {
-        //             throw WlsExceptionFactory.build(ExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG);
-        //         }
-
-        val nachrichtUUID = java.util.UUID.fromString(nachrichtID);
-        //TODO hat das Altsystem einen Fehler geworfen wenn er nichts gefunden hat?
-        // Das Altsystem hat so getan alswürde es werfen:
-        // catch (Exception e) {
-        //    LOG.info("Message with OID:" + nachrichtUUID + "already deleted");
-        // }
-        // In Wirklichkeit wirft in diesem Fall CrudRepository keine Exception
-        // https://github.com/spring-projects/spring-data-commons/issues/2651
         try {
+            nachrichtUUID = java.util.UUID.fromString(nachrichtID);
             messageRepo.deleteById(nachrichtUUID);
         } catch (Exception e) {
-            //ToDo aus neuen ExceptionKonstanten etwas finden
-            log.error("Message with OID:" + nachrichtUUID + " could not be deleted");
+            throw FachlicheWlsException.withCode(ExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG).inService(serviceOid)
+                    .buildWithMessage("Nachricht-UUID bad format");
         }
     }
 

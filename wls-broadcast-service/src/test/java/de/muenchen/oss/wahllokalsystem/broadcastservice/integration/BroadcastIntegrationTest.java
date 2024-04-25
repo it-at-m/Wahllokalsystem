@@ -2,12 +2,9 @@ package de.muenchen.oss.wahllokalsystem.broadcastservice.integration;
 
 import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_TEST_PROFILE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.domain.Message;
@@ -16,6 +13,7 @@ import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO
 import de.muenchen.oss.wahllokalsystem.broadcastservice.service.BroadcastMapper;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.BroadcastSecurityUtils;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.Testdaten;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import jakarta.servlet.ServletException;
 import java.util.Arrays;
@@ -23,13 +21,11 @@ import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -283,5 +279,26 @@ public class BroadcastIntegrationTest {
 
         foundMessages = messageRepository.findByWahlbezirkID(Testdaten.WAHLBEZIRK_ID);
         Assertions.assertThat(foundMessages).size().isEqualTo(0);
+    }
+
+    @Test
+    public void deleteIntegrationTestBadFormatUUID() throws Exception {
+        log.debug("#deleteIntegrationTestBadFormatUUID");
+
+        Exception catchedException1 = null;
+        try {
+            mvc.perform(post(delete_url + "badformatparam-u-u-i-d")
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .accept(MediaType.APPLICATION_JSON));
+        } catch (Exception e) {
+            catchedException1 = e;
+        }
+
+        Assertions.assertThat(catchedException1.getCause())
+                .isNotNull()
+                .isInstanceOf(FachlicheWlsException.class)
+                .hasMessageContaining("Nachricht-UUID bad format")
+                .extracting("code", "serviceName")
+                .contains("150", serviceOid);
     }
 }

@@ -2,8 +2,11 @@ package de.muenchen.oss.wahllokalsystem.broadcastservice.integration;
 
 import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_TEST_PROFILE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.MicroServiceApplication;
@@ -13,9 +16,11 @@ import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO
 import de.muenchen.oss.wahllokalsystem.broadcastservice.service.BroadcastMapper;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.BroadcastSecurityUtils;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.Testdaten;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import jakarta.servlet.ServletException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 
@@ -35,6 +40,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
 @SpringBootTest(
@@ -70,8 +76,11 @@ public class BroadcastIntegrationTest {
     @Value("${local.server.port}")
     private int port;
 
+    @Value("${service.info.oid}")
+    private String serviceOid;
+
     private static final String broadcast_url = "/businessActions/broadcast";
-    private static final String getmessage_url = "/businessActions/getMessage/" + Testdaten.WAHLBEZIRK_ID;
+    private static final String getmessage_url = "/businessActions/getMessage/";
     private static final String delete_url = "/businessActions/messageRead/";
 
     private static final List<String> wahlbezirkIDs = Arrays.asList("1", "2", "3");
@@ -113,21 +122,110 @@ public class BroadcastIntegrationTest {
     }
 
     @Test
+    public void broadcastIntegrationTestMessageIncomplete() {
+        log.debug("#BroadcastIntegrationTestMessageIncomplete");
+
+        final BroadcastMessageDTO bmDTOIncomplete1 = new BroadcastMessageDTO(null, Testdaten.MESSAGE);
+        Exception catchedException1 = null;
+        try {
+            MockHttpServletResponse result = mvc.perform(
+                    post(broadcast_url)
+                            .content(Testdaten.asJsonString(bmDTOIncomplete1))
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andReturn().getResponse();
+
+        } catch (Exception e) {
+            catchedException1 = e;
+        }
+
+        Assertions.assertThat(catchedException1)
+                .isNotNull()
+                .isInstanceOf(ServletException.class)
+                .hasMessageContaining("Das Object BroadcastMessage ist nicht vollständig.");
+
+        final BroadcastMessageDTO bmDTOIncomplete2 = new BroadcastMessageDTO(Arrays.asList("1", "2", "3", "4"), null);
+
+        Exception catchedException2 = null;
+        try {
+            MockHttpServletResponse result = mvc.perform(
+                    post(broadcast_url)
+                            .content(Testdaten.asJsonString(bmDTOIncomplete2))
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andReturn().getResponse();
+
+        } catch (Exception e) {
+            catchedException2 = e;
+        }
+
+        Assertions.assertThat(catchedException2)
+                .isNotNull()
+                .isInstanceOf(ServletException.class)
+                .hasMessageContaining("Das Object BroadcastMessage ist nicht vollständig.");
+    }
+
+    @Test
     public void getMessageIntegrationTest() throws Exception {
         log.debug("#GetMessageIntegrationTest");
         messageRepository.save(Testdaten.createMessage(Testdaten.WAHLBEZIRK_ID, Testdaten.MESSAGE, Testdaten.UHRZEIT));
         // @formatter:off
         MockHttpServletResponse result =
                 mvc.perform(
-                        get(getmessage_url)
+                        get(getmessage_url + Testdaten.WAHLBEZIRK_ID)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON))
                         .andReturn().getResponse();
         // @formatter:on
         String content = result.getContentAsString();
-        log.debug("string_obj {}", content);
         Message message = objectMapper.readValue(content, Message.class);
         Assertions.assertThat(message.getNachricht()).isEqualTo(Testdaten.MESSAGE);
+    }
+
+    @Test
+    public void getMessageIntegrationTestGetParamBlank() {
+        log.debug("#GetMessageIntegrationTestGetParamBlan");
+        Exception catchedException1 = null;
+        try {
+            MockHttpServletResponse result = mvc.perform(
+                    get(getmessage_url + "    ")
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andReturn().getResponse();
+
+        } catch (Exception e) {
+            catchedException1 = e;
+        }
+
+        Assertions.assertThat(catchedException1)
+                .isNotNull()
+                .isInstanceOf(ServletException.class)
+                .hasMessageContaining("wahlbezirkID is blank or empty");
+    }
+
+    @Test
+    public void getMessageIntegrationTestGetParamEmpty() throws Exception {
+        log.debug("#GetMessageIntegrationTestGetParamEmpty");
+        String wahlbezirkID = "";
+        mvc.perform(get(getmessage_url + wahlbezirkID)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> {
+                    Map<String, Object> mmodel = result.getModelAndView().getModel();
+                    Assertions
+                            .assertThat(mmodel)
+                            .containsKey("wlsException")
+                            .extracting("wlsException")
+                            .isInstanceOf(TechnischeWlsException.class)
+                            .extracting("code", "serviceName")
+                            .contains("999", serviceOid);
+
+                    Assertions
+                            .assertThat(mmodel)
+                            .containsKey("wlsException")
+                            .extracting("wlsException.cause")
+                            .isInstanceOf(NoResourceFoundException.class);
+                });
     }
 
     @Test
@@ -139,7 +237,7 @@ public class BroadcastIntegrationTest {
             // @formatter:off
             MockHttpServletResponse result =
                     mvc.perform(
-                                    get(getmessage_url)
+                                    get(getmessage_url + Testdaten.WAHLBEZIRK_ID)
                                             .contentType(MediaType.APPLICATION_JSON_UTF8)
                                             .accept(MediaType.APPLICATION_JSON))
                             .andReturn().getResponse();

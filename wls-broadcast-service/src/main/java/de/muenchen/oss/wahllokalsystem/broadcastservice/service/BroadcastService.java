@@ -6,10 +6,13 @@ import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO
 import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.MessageDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionKonstanten;
-import java.time.LocalDateTime;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -32,41 +35,33 @@ public class BroadcastService {
     @Autowired
     BroadcastMapper broadcastMapper;
 
+    private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private final Validator validator = factory.getValidator();
+
     @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_Broadcast')")
     public void broadcast(final BroadcastMessageDTO messageToBroadcast) {
         log.debug("#broadcast");
 
-        // To Do Validierung Über die Validation API, correct also Test de/muenchen/oss/wahllokalsystem/rest/BroadcastControllerTest.java
-        /*
-         * if ( wahlbezirkIDs == null || wahlbezirkIDs.isEmpty() || Strings.isNullOrEmpty(nachricht)) {
-         * throw
-         * WlsExceptionFactory.build(ExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG);
-         * }
-         */
+        val validationResult = validator.validate(messageToBroadcast);
 
-        LocalDateTime now = LocalDateTime.now();
-        List<Message> messagesToSave = messageToBroadcast.wahlbezirkIDs().stream().map(s -> {
-            Message message = new Message();
-            message.setWahlbezirkID(s);
-            message.setEmpfangsZeit(now);
-            message.setNachricht(messageToBroadcast.nachricht());
-            return message;
-        }).toList();
+        if (!validationResult.isEmpty()) {
+            throw FachlicheWlsException.withCode(ExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG)
+                    .buildWithMessage("Das Object BroadcastMessage ist nicht vollständig.");
+        }
+
+        List<Message> messagesToSave = broadcastMapper.fromBroadcastMessageDTOtoListOfMessages(messageToBroadcast);
 
         messageRepo.saveAll(messagesToSave);
     }
 
     @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_GetMessage')")
     public MessageDTO getOldestMessage(String wahlbezirkID) throws FachlicheWlsException {
-        log.debug("#nachrichtenAbrufen");
-        //ToDo:     Wird später aus neuem wls-common exception ExceptionKonstanten etwa gebaut
+        log.debug("#nachrichtenAbrufen wahlbezirkID {} length {}", wahlbezirkID, wahlbezirkID.length());
 
-        /*
-         * if (Strings.isNullOrEmpty(wahlbezirkID)) {
-         * throw
-         * WlsExceptionFactory.build(ExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG);
-         * }
-         */
+        if (StringUtils.isEmpty(wahlbezirkID) || StringUtils.isBlank(wahlbezirkID)) {
+            throw FachlicheWlsException.withCode(ExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG)
+                    .buildWithMessage("wahlbezirkID is blank or empty");
+        }
 
         val message = messageRepo.findFirstByWahlbezirkIDOrderByEmpfangsZeit(wahlbezirkID);
 

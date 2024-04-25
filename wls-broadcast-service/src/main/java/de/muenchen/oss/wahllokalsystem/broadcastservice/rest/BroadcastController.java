@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.broadcastservice.rest;
 
 import de.muenchen.oss.wahllokalsystem.broadcastservice.service.BroadcastService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,19 +21,25 @@ public class BroadcastController {
     @Autowired
     BroadcastService broadcastService;
 
+    @Operation(
+            summary = "Nachricht an alle senden",
+            description = "Sendet eine Nachricht an alle Wahlbezirke und speichert diese für jeden Wahlbezirk in der Datenbank"
+    )
     @PostMapping(value = BROADCAST_PATH)
     public void broadcast(@RequestBody BroadcastMessageDTO body) {
         broadcastService.broadcast(body);
     }
 
+    @Operation(summary = "Letzte Nachricht lesen", description = "Sucht nach der ältesten Nachricht für die gegebene Wahlbezirk-Id und gibt diese zurück.")
     @GetMapping(value = MESSAGE_PATH)
     public MessageDTO getMessage(@PathVariable("wahlbezirkID") String wahlbezirkID) {
         return broadcastService.getOldestMessage(wahlbezirkID);
     }
 
-    /**
-     * This BusinessAction's purpose is: Markiert die Nachricht mit der gegebenen ID als gelesen
-     */
+    @Operation(
+            summary = "Nachricht löschen",
+            description = "Löscht die Nachricht mit der gegebenen ID, nachdem sie gelesen wurde. Es wird nur der dem entsprechenden Wahllokal zugewiesene Datenbankeintrag."
+    )
     @PostMapping(value = MESSAGE_READ_PATH) //TODO DeleteMapping wäre besser
     public void deleteMessage(@PathVariable("nachrichtID") String nachrichtID) { //TODO Besser wäre 204
         broadcastService.deleteMessage(nachrichtID);

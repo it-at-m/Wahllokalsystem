@@ -71,7 +71,6 @@ class UnicodeConfigurationTest {
 
         // Check persisted entity contains a composed string via JPA repository.
         final Message message = messageRepository.findById(response.oid()).orElse(null);
-        Assertions.assertThat(message).isNotNull();
         Assertions.assertThat(message.getNachricht()).isEqualTo(TEXT_ATTRIBUTE_COMPOSED);
         assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), message.getNachricht().length());
     }

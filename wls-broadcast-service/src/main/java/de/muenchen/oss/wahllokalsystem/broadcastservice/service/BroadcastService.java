@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
  * BusinessActionController.
  */
 @Service
-@PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_Broadcast')")
 @Slf4j
 @Component
 public class BroadcastService {
@@ -89,8 +88,12 @@ public class BroadcastService {
             nachrichtUUID = java.util.UUID.fromString(nachrichtID);
             messageRepo.deleteById(nachrichtUUID);
         } catch (Exception e) {
-            throw FachlicheWlsException.withCode(ExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG).inService(serviceOid)
-                    .buildWithMessage("Nachricht-UUID bad format");
+            if (e instanceof NumberFormatException) {
+                throw FachlicheWlsException.withCode(ExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG).inService(serviceOid)
+                        .buildWithMessage("Nachricht-UUID bad format");
+            } else {
+                throw e;
+            }
         }
     }
 

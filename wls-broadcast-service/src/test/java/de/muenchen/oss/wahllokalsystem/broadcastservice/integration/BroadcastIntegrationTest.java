@@ -16,6 +16,7 @@ import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.Testdaten;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import jakarta.servlet.ServletException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +81,7 @@ public class BroadcastIntegrationTest {
     private static final String DELETE_URL = "/businessActions/messageRead/";
 
     private static final List<String> WAHLBEZIRK_I_DS = Arrays.asList("1", "2", "3");
-    private static final BroadcastMessageDTO BROADCAST_MESSAGE_DTO = new BroadcastMessageDTO(WAHLBEZIRK_I_DS, Testdaten.MESSAGE);
+    private static final BroadcastMessageDTO BROADCAST_MESSAGE_DTO = new BroadcastMessageDTO(WAHLBEZIRK_I_DS, "Das ist ein Test");
 
     @BeforeEach
     public void setup() {
@@ -107,7 +108,7 @@ public class BroadcastIntegrationTest {
         MockHttpServletResponse result =
                 mvc.perform(
                         post(BROADCAST_URL)
-                                .content(Testdaten.asJsonString(BROADCAST_MESSAGE_DTO))
+                                .content(Testdaten.asJsonString(BROADCAST_MESSAGE_DTO, objectMapper))
                                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                                 .accept(MediaType.APPLICATION_JSON))
                         .andReturn().getResponse();
@@ -121,12 +122,12 @@ public class BroadcastIntegrationTest {
     public void broadcastIntegrationTestMessageIncomplete() {
         log.debug("#BroadcastIntegrationTestMessageIncomplete");
 
-        final BroadcastMessageDTO bmDTOIncomplete1 = new BroadcastMessageDTO(null, Testdaten.MESSAGE);
+        final BroadcastMessageDTO bmDTOIncomplete1 = new BroadcastMessageDTO(null, "Das ist ein Test");
         Exception catchedException1 = null;
         try {
-            MockHttpServletResponse result = mvc.perform(
+            mvc.perform(
                     post(BROADCAST_URL)
-                            .content(Testdaten.asJsonString(bmDTOIncomplete1))
+                            .content(Testdaten.asJsonString(bmDTOIncomplete1, objectMapper))
                             .contentType(MediaType.APPLICATION_JSON_UTF8)
                             .accept(MediaType.APPLICATION_JSON))
                     .andReturn().getResponse();
@@ -144,9 +145,9 @@ public class BroadcastIntegrationTest {
 
         Exception catchedException2 = null;
         try {
-            MockHttpServletResponse result = mvc.perform(
+            mvc.perform(
                     post(BROADCAST_URL)
-                            .content(Testdaten.asJsonString(bmDTOIncomplete2))
+                            .content(Testdaten.asJsonString(bmDTOIncomplete2, objectMapper))
                             .contentType(MediaType.APPLICATION_JSON_UTF8)
                             .accept(MediaType.APPLICATION_JSON))
                     .andReturn().getResponse();
@@ -164,18 +165,18 @@ public class BroadcastIntegrationTest {
     @Test
     public void getMessageIntegrationTest() throws Exception {
         log.debug("#GetMessageIntegrationTest");
-        messageRepository.save(Testdaten.createMessage(Testdaten.WAHLBEZIRK_ID, Testdaten.MESSAGE, Testdaten.UHRZEIT));
+        messageRepository.save(Testdaten.createMessage("123", "Das ist ein Test", LocalDateTime.now()));
         // @formatter:off
         MockHttpServletResponse result =
                 mvc.perform(
-                        get(GETMESSAGE_URL + Testdaten.WAHLBEZIRK_ID)
+                        get(GETMESSAGE_URL + "123")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON))
                         .andReturn().getResponse();
         // @formatter:on
         String content = result.getContentAsString();
         Message message = objectMapper.readValue(content, Message.class);
-        Assertions.assertThat(message.getNachricht()).isEqualTo(Testdaten.MESSAGE);
+        Assertions.assertThat(message.getNachricht()).isEqualTo("Das ist ein Test");
     }
 
     @Test
@@ -183,7 +184,7 @@ public class BroadcastIntegrationTest {
         log.debug("#GetMessageIntegrationTestGetParamBlan");
         Exception catchedException1 = null;
         try {
-            MockHttpServletResponse result = mvc.perform(
+            mvc.perform(
                     get(GETMESSAGE_URL + "    ")
                             .contentType(MediaType.APPLICATION_JSON_UTF8)
                             .accept(MediaType.APPLICATION_JSON))
@@ -231,7 +232,7 @@ public class BroadcastIntegrationTest {
         ServletException thrownException = null;
         try {
             mvc.perform(
-                    get(GETMESSAGE_URL + Testdaten.WAHLBEZIRK_ID)
+                    get(GETMESSAGE_URL + "123")
                             .contentType(MediaType.APPLICATION_JSON_UTF8)
                             .accept(MediaType.APPLICATION_JSON));
         } catch (Exception e) {
@@ -250,10 +251,10 @@ public class BroadcastIntegrationTest {
     public void deleteIntegrationTest() throws Exception {
         log.debug("#deleteIntegrationTest");
 
-        Message message = Testdaten.createMessage(Testdaten.WAHLBEZIRK_ID, Testdaten.MESSAGE, Testdaten.UHRZEIT);
+        Message message = Testdaten.createMessage("123", "Das ist ein Test", LocalDateTime.now());
         messageRepository.save(message);
 
-        List<Message> foundMessages = messageRepository.findByWahlbezirkID(Testdaten.WAHLBEZIRK_ID);
+        List<Message> foundMessages = messageRepository.findByWahlbezirkID("123");
         Message foundMessage = foundMessages.stream().findFirst().get();
         Assertions.assertThat(foundMessage).isNotNull();
 
@@ -268,12 +269,12 @@ public class BroadcastIntegrationTest {
         Assertions.assertThat(status).isEqualTo(200);
         log.info("Result > Status: {} ", status);
 
-        foundMessages = messageRepository.findByWahlbezirkID(Testdaten.WAHLBEZIRK_ID);
+        foundMessages = messageRepository.findByWahlbezirkID("123");
         Assertions.assertThat(foundMessages).size().isEqualTo(0);
     }
 
     @Test
-    public void deleteIntegrationTestBadFormatUUID() throws Exception {
+    public void deleteIntegrationTestBadFormatUUID() {
         log.debug("#deleteIntegrationTestBadFormatUUID");
 
         Exception catchedException1 = null;

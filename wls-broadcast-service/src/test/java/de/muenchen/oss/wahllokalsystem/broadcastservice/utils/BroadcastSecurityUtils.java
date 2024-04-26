@@ -19,7 +19,7 @@ public class BroadcastSecurityUtils {
     private static final String TESTPASSWORD = "password";
 
     /**
-     * Gewährung eines Vollzugriffs durch Zuteilung von allen möglichen Rollen.
+     * Gewährung eines Vollzugriffs durch Zuteilung von allen möglichen Rechten.
      */
     public static void grantFullAccess() {
         runAs(TESTUSER, TESTPASSWORD, getAllAuthorities());

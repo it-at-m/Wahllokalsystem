@@ -6,10 +6,6 @@ import java.time.LocalDateTime;
 
 public class Testdaten {
 
-    public static String WAHLBEZIRK_ID = "123";
-    public static String MESSAGE = "Das ist ein Test";
-    public static LocalDateTime UHRZEIT = LocalDateTime.now();
-
     public static Message createMessage(String wahlbezirkID, String nachricht, LocalDateTime time) {
         Message message = new Message();
         message.setEmpfangsZeit(time);
@@ -18,9 +14,8 @@ public class Testdaten {
         return message;
     }
 
-    public static String asJsonString(final Object obj) {
+    public static String asJsonString(final Object obj, ObjectMapper mapper) {
         try {
-            final ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(obj);
         } catch (Exception e) {
             throw new RuntimeException(e);

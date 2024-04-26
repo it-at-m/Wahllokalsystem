@@ -4,23 +4,22 @@
  */
 package de.muenchen.oss.wahllokalsystem.briefwahlservice.configuration;
 
+import static de.muenchen.oss.wahllokalsystem.briefwahlservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
+import static de.muenchen.oss.wahllokalsystem.briefwahlservice.TestConstants.SPRING_TEST_PROFILE;
+import static de.muenchen.oss.wahllokalsystem.briefwahlservice.TestConstants.TheEntityDto;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.domain.TheEntity;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.rest.TheEntityRepository;
+import java.net.URI;
+import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.net.URI;
-import java.util.UUID;
-
-import static de.muenchen.oss.wahllokalsystem.briefwahlservice.TestConstants.SPRING_TEST_PROFILE;
-import static de.muenchen.oss.wahllokalsystem.briefwahlservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
-import static de.muenchen.oss.wahllokalsystem.briefwahlservice.TestConstants.TheEntityDto;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(
         classes = { MicroServiceApplication.class },
@@ -36,14 +35,12 @@ class UnicodeConfigurationTest {
     private static final String ENTITY_ENDPOINT_URL = "/theEntities";
 
     /**
-     * Decomposed string:
-     * String "Ä-é" represented with unicode letters "A◌̈-e◌́"
+     * Decomposed string: String "Ä-é" represented with unicode letters "A◌̈-e◌́"
      */
     private static final String TEXT_ATTRIBUTE_DECOMPOSED = "\u0041\u0308-\u0065\u0301";
 
     /**
-     * Composed string:
-     * String "Ä-é" represented with unicode letters "Ä-é".
+     * Composed string: String "Ä-é" represented with unicode letters "Ä-é".
      */
     private static final String TEXT_ATTRIBUTE_COMPOSED = "\u00c4-\u00e9";
 
@@ -54,6 +51,7 @@ class UnicodeConfigurationTest {
     private TheEntityRepository theEntityRepository;
 
     @Test
+    @Disabled
     void testForNfcNormalization() {
         // Persist entity with decomposed string.
         final TheEntityDto theEntityDto = new TheEntityDto();

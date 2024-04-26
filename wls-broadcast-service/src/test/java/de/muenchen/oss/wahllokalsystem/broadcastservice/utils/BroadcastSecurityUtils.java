@@ -25,11 +25,11 @@ public class BroadcastSecurityUtils {
         runAs(TESTUSER, TESTPASSWORD, getAllAuthorities());
     }
 
-    public static void runAs(String username, String password, String... roles) {
+    public static void runAs(String username, String password, String... authorities) {
         assertNotNull(username, "Username must not be null!");
         assertNotNull(password, "Password must not be null!");
         SecurityContextHolder.getContext()
-                .setAuthentication(new UsernamePasswordAuthenticationToken(username, password, AuthorityUtils.createAuthorityList(roles)));
+                .setAuthentication(new UsernamePasswordAuthenticationToken(username, password, AuthorityUtils.createAuthorityList(authorities)));
     }
 
     public static String[] getAllAuthorities() {

@@ -52,4 +52,16 @@ class SecurityConfigurationTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void accessUnsecuredResourceV3ApiDocsThenOk() throws Exception {
+        api.perform(get("/v3/api-docs"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void accessUnsecuredResourceSwaggerUiThenOk() throws Exception {
+        api.perform(get("/swagger-ui/index.html"))
+                .andExpect(status().isOk());
+    }
+
 }

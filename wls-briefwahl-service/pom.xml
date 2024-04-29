@@ -39,7 +39,6 @@
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
     </properties>
 
-
     <dependencyManagement>
         <dependencies>
             <dependency>

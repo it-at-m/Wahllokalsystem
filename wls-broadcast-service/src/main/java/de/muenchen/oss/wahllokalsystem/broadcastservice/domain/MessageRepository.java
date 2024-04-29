@@ -52,6 +52,4 @@ public interface MessageRepository extends CrudRepository<Message, UUID> {
     void deleteAll();
 
     Optional<Message> findFirstByWahlbezirkIDOrderByEmpfangsZeit(String wahlbezirkID);
-
-    List<Message> findByWahlbezirkID(String number);
 }

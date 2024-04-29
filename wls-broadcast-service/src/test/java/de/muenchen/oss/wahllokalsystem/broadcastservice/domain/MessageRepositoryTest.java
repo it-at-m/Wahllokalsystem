@@ -3,7 +3,7 @@ package de.muenchen.oss.wahllokalsystem.broadcastservice.domain;
 import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_TEST_PROFILE;
 
-import de.muenchen.oss.wahllokalsystem.broadcastservice.service.BroadcastMapperImpl;
+import java.time.LocalDateTime;
 import org.assertj.core.api.Assertions;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO;
@@ -34,8 +34,6 @@ class MessageRepositoryTest {
 
     @Autowired
     private MessageRepository repository;
-    @Autowired
-    private BroadcastMapperImpl broadcastMapperImpl;
 
     /**
      * Tests if searched saved Message from many is the first found
@@ -53,11 +51,11 @@ class MessageRepositoryTest {
         BroadcastMessageDTO m4 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_4");
         BroadcastMessageDTO m5 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_5");
 
-        List<Message> messagesToSend1 = broadcastMapperImpl.fromBroadcastMessageDTOtoListOfMessages(m1);
-        List<Message> messagesToSend2 = broadcastMapperImpl.fromBroadcastMessageDTOtoListOfMessages(m2);
-        List<Message> messagesToSend3 = broadcastMapperImpl.fromBroadcastMessageDTOtoListOfMessages(m3);
-        List<Message> messagesToSend4 = broadcastMapperImpl.fromBroadcastMessageDTOtoListOfMessages(m4);
-        List<Message> messagesToSend5 = broadcastMapperImpl.fromBroadcastMessageDTOtoListOfMessages(m5);
+        List<Message> messagesToSend1 = mapForTestsFromBroadcastMessageDTO_toListOfMessages(m1, LocalDateTime.now());
+        List<Message> messagesToSend2 = mapForTestsFromBroadcastMessageDTO_toListOfMessages(m2, LocalDateTime.now());
+        List<Message> messagesToSend3 = mapForTestsFromBroadcastMessageDTO_toListOfMessages(m3, LocalDateTime.now());
+        List<Message> messagesToSend4 = mapForTestsFromBroadcastMessageDTO_toListOfMessages(m4, LocalDateTime.now());
+        List<Message> messagesToSend5 = mapForTestsFromBroadcastMessageDTO_toListOfMessages(m5, LocalDateTime.now());
 
         repository.saveAll(messagesToSend1);
         repository.saveAll(messagesToSend2);
@@ -115,6 +113,16 @@ class MessageRepositoryTest {
 
         Assertions.assertThat(foundMessage).isNull();
         Assertions.assertThat(thrownException).isNull();
+    }
+
+    private List<Message> mapForTestsFromBroadcastMessageDTO_toListOfMessages(BroadcastMessageDTO messageToBroadcast, LocalDateTime now) {
+        return messageToBroadcast.wahlbezirkIDs().stream().map(wahlbezirkId -> {
+            Message message = new Message();
+            message.setWahlbezirkID(wahlbezirkId);
+            message.setEmpfangsZeit(now);
+            message.setNachricht(messageToBroadcast.nachricht());
+            return message;
+        }).toList();
     }
 
 }

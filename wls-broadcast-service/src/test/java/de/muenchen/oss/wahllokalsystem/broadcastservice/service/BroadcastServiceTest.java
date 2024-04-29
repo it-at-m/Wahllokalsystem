@@ -11,6 +11,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionKonsta
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.BroadcastSecurityUtils;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
@@ -33,7 +35,7 @@ class BroadcastServiceTest {
     private MessageRepository messageRepo;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         Assertions.assertThat(broadcastService).isNotNull();
         BroadcastSecurityUtils.grantFullAccess();
         messageRepo.deleteAll();
@@ -47,14 +49,14 @@ class BroadcastServiceTest {
         BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, broadcastMessage);
         broadcastService.broadcast(m1);
 
-        List<Message> messages = messageRepo.findByWahlbezirkID("4");
+        Optional<Message> message = messageRepo.findFirstByWahlbezirkIDOrderByEmpfangsZeit("4");
 
-        Assertions.assertThat(messages.size()).isEqualTo(1);
-        Assertions.assertThat(broadcastMessage).isEqualTo(messages.get(0).getNachricht());
+        Assertions.assertThat(message).isNotNull();
+        Assertions.assertThat(broadcastMessage).isEqualTo(message.get().getNachricht());
     }
 
     @Test
-    public void getOldestMessage_No_Message_Test() {
+    void getOldestMessage_No_Message_Test() {
 
         RuntimeException thrownException = null;
         try {
@@ -72,7 +74,7 @@ class BroadcastServiceTest {
     }
 
     @Test
-    public void getOldestMessageTest() {
+    void getOldestMessageTest() {
         String wahlbezirkID = "4711";
         LocalDateTime time = LocalDateTime.of(2018, 5, 29, 12, 0);
         String messageToSave = "This is the test Message";
@@ -88,7 +90,7 @@ class BroadcastServiceTest {
     }
 
     @Test
-    public void getOldestMessage_MultipleMessageTest() {
+    void getOldestMessage_MultipleMessageTest() {
         String wahlbezirkID = "4711";
         LocalDateTime time = LocalDateTime.of(2018, 5, 29, 12, 0);
         String messageToSave1 = "This is the test Message1";
@@ -112,7 +114,7 @@ class BroadcastServiceTest {
     }
 
     @Test
-    public void deleteMessage_messageRead_DoubleDelete_Test() {
+    void deleteMessage_messageRead_DoubleDelete_Test() {
         String wahlbezirkID_1 = "1", wahlbezirkID_2 = "2";
         LocalDateTime time = LocalDateTime.of(2018, 5, 29, 12, 0);
 
@@ -130,14 +132,48 @@ class BroadcastServiceTest {
         messageRepo.save(msg1);
         messageRepo.save(msg2);
 
-        List<Message> stillExistingMessages = messageRepo.findByWahlbezirkID(wahlbezirkID_2);
+        List<Message> foundMessages = ((List<Message>) messageRepo.findAll()).stream()
+                .filter((m) -> m.getNachricht().equals(MESSAGE + wahlbezirkID_1)).toList();
 
-        Assertions.assertThat(stillExistingMessages)
+        Assertions.assertThat(foundMessages)
                 .hasSize(1)
                 .hasAtLeastOneElementOfType(Message.class);
 
-        Assertions.assertThat(MESSAGE + wahlbezirkID_2).isEqualTo(stillExistingMessages.get(0).getNachricht());
-        Assertions.assertThat(MESSAGE + wahlbezirkID_2).isEqualTo(stillExistingMessages.get(0).getNachricht());
+        Message foundMessage = foundMessages.get(0);
 
+        Assertions.assertThat(foundMessage.getOid()).isNotNull();
+        broadcastService.deleteMessage(foundMessage.getOid().toString());
+
+        foundMessages = ((List<Message>) messageRepo.findAll()).stream()
+                .filter((m) -> m.getNachricht().equals(MESSAGE + wahlbezirkID_2)).toList();
+
+        Assertions.assertThat(foundMessages)
+                .hasSize(1)
+                .hasAtLeastOneElementOfType(Message.class);
+
+        foundMessage = foundMessages.get(0);
+
+        Assertions.assertThat(MESSAGE + wahlbezirkID_2).isEqualTo(foundMessage.getNachricht());
+
+        Assertions.assertThat(foundMessage.getOid()).isNotNull();
+        broadcastService.deleteMessage(foundMessage.getOid().toString());
+
+        foundMessages = ((List<Message>) messageRepo.findAll()).stream().toList();
+
+        Assertions.assertThat(foundMessages).isEmpty();
+    }
+
+    @Test
+    void deleteMessage_NachrichtIdIsBlankOrEmpty() {
+        String nachrichtID_1 = "     ", nachrichtID_2 = "";
+        Assertions.assertThatExceptionOfType(FachlicheWlsException.class)
+                .isThrownBy(() -> broadcastService.deleteMessage(null))
+                .withMessageStartingWith("nachrichtID is blank or empty");
+        Assertions.assertThatExceptionOfType(FachlicheWlsException.class)
+                .isThrownBy(() -> broadcastService.deleteMessage(nachrichtID_1))
+                .withMessageStartingWith("nachrichtID is blank or empty");
+        Assertions.assertThatExceptionOfType(FachlicheWlsException.class)
+                .isThrownBy(() -> broadcastService.deleteMessage(nachrichtID_2))
+                .withMessageStartingWith("nachrichtID is blank or empty");
     }
 }

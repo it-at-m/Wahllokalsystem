@@ -1,5 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.broadcastservice.domain;
 
+import static java.sql.Types.VARCHAR;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -10,7 +12,7 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
@@ -22,6 +24,7 @@ public class Message {
     @Id
     @GeneratedValue(generator = "uuid")
     @UuidGenerator
+    @JdbcTypeCode(VARCHAR)
     private UUID oid;
 
     @NotNull

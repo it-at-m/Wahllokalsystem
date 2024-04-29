@@ -36,7 +36,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class MicroServiceApplication {
 
     public static void main(String[] args) {
-
         SpringApplication.run(MicroServiceApplication.class, args);
     }
 

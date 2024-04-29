@@ -38,14 +38,13 @@ public class BroadcastSecurityTest {
     BroadcastService broadcastService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         Assertions.assertThat(broadcastService).isNotNull();
         SecurityContextHolder.clearContext();
     }
 
     @Test
-    public void broadcastAccessDeniedTest() {
-
+    void broadcastAccessDeniedTest() {
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, AuthorityUtils.createAuthorityList("ROLE_DUMMY")));
 
@@ -54,7 +53,7 @@ public class BroadcastSecurityTest {
     }
 
     @Test
-    public void getMessageAccessDeniedTest() {
+    void getMessageAccessDeniedTest() {
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, AuthorityUtils.createAuthorityList("ROLE_DUMMY")));
 
@@ -64,7 +63,7 @@ public class BroadcastSecurityTest {
     }
 
     @Test
-    public void deleteAccessDeniedTest() {
+    void deleteAccessDeniedTest() {
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, AuthorityUtils.createAuthorityList("ROLE_DUMMY")));
 
@@ -74,8 +73,7 @@ public class BroadcastSecurityTest {
     }
 
     @Test
-    public void broadcastAccessPositiveTest() {
-
+    void broadcastAccessPositiveTest() {
         BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
                 BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_BROADCAST,
                 BroadcastSecurityUtils.BROADCAST_WRITE_MESSAGE
@@ -118,7 +116,7 @@ public class BroadcastSecurityTest {
     }
 
     @Test
-    public void getMessageAccessPositiveTest() {
+    void getMessageAccessPositiveTest() {
 
         BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
                 BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_NACHRICHTABRUFEN
@@ -146,7 +144,7 @@ public class BroadcastSecurityTest {
     }
 
     @Test
-    public void deleteMessageAccessPositiveTest() {
+    void deleteMessageAccessPositiveTest() {
 
         BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
                 BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_NACHRICHTGELESEN,

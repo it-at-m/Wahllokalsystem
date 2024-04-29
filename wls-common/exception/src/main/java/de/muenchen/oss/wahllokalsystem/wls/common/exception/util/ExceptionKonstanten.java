@@ -3,10 +3,6 @@ package de.muenchen.oss.wahllokalsystem.wls.common.exception.util;
 public interface ExceptionKonstanten {
 
     /**
-     * Code in der Kategorie CATEGORY_FACHLICH für Parameter unvollständig
-     */
-    String CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG = "150";
-    /**
      * Code in der Kategorie CATEGORY_FACHLICH für gesuchte Entität nicht gefunden
      */
     String CODE_ENTITY_NOT_FOUND = "204";

@@ -103,9 +103,8 @@ public class UserInfoAuthoritiesService {
 
     private static List<SimpleGrantedAuthority> asAuthorities(Object object) {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        if (object instanceof Collection) {
-            Collection<?> collection = (Collection<?>) object;
-            object = collection.toArray(new Object[0]);
+        if (object instanceof Collection collectionWithAuthorities) {
+            object = collectionWithAuthorities.toArray(new Object[0]);
         }
         if (ObjectUtils.isArray(object)) {
             authorities.addAll(

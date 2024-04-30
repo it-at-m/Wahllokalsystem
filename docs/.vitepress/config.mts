@@ -1,6 +1,7 @@
 import {withMermaid} from "vitepress-plugin-mermaid"
 
 const PATH_TECHNIK = '/technik/';
+const PATH_FEATURES = '/features/';
 
 // https://vitepress.dev/reference/site-config
 export default withMermaid({
@@ -28,6 +29,9 @@ export default withMermaid({
         { text: 'Adr', link: `${PATH_TECHNIK}adr/`, collapsed: true, items: [
             { text: 'Renovate - ignoriere lombok', link: `${PATH_TECHNIK}adr/adr001-renovate-ignore-lombok` }
         ] }
+      ],
+      [PATH_FEATURES]: [
+        { text: 'Briefwahl-Service', link: `${PATH_FEATURES}briefwahl-service/` },
       ]
     },
 

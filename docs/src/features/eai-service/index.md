@@ -27,7 +27,7 @@ Das Ergebnis das in den Wahllokalen ermittelt wurde kann mitgeteilt werden.
 
 ### Wahlbeteiligung
 
-Wahlbeteiligungen der in den jeweiligen Wahllokalen kann mitgeteilt werden.
+Wahlbeteiligungen der Wahllokale kann mitgeteilt werden.
 
 ### Wahllokalstatus
 

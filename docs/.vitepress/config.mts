@@ -34,8 +34,6 @@ export default withMermaid({
             ],
             [PATH_FEATURES]: [
                 {text: 'Briefwahl-Service', link: `${PATH_FEATURES}briefwahl-service/`},
-            ],
-            [PATH_FEATURES]: [
                 {text: 'Infomanagement-Service', link: `${PATH_FEATURES}infomanagement-service/`},
             ]
         },

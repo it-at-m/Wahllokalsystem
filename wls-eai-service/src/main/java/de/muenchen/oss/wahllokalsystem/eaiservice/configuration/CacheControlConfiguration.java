@@ -17,8 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
- * The class adds a {@link HttpHeaders#CACHE_CONTROL} header to each http response, if the header is
- * not already set.
+ * The class adds a {@link HttpHeaders#CACHE_CONTROL} header to each http response, if the header is not already set.
  */
 @Configuration
 public class CacheControlConfiguration {
@@ -34,23 +33,19 @@ public class CacheControlConfiguration {
     }
 
     /**
-     * The concrete implementation of the cache control filter which adds a
-     * {@link HttpHeaders#CACHE_CONTROL} to a http response, if the header is not already
+     * The concrete implementation of the cache control filter which adds a {@link HttpHeaders#CACHE_CONTROL} to a http response, if the header is not already
      * set.
      */
     public static class CacheControlFilter extends OncePerRequestFilter {
 
         /**
-         * The method which adds the {@link HttpHeaders#CACHE_CONTROL} header to the
-         * {@link HttpServletResponse} given in the parameter, if the header is not
+         * The method which adds the {@link HttpHeaders#CACHE_CONTROL} header to the {@link HttpServletResponse} given in the parameter, if the header is not
          * already set.
          *
-         * Same contract as for {@code super.doFilter}, but guaranteed to be just invoked once per request
-         * within a single request thread. See
+         * Same contract as for {@code super.doFilter}, but guaranteed to be just invoked once per request within a single request thread. See
          * {@link OncePerRequestFilter#shouldNotFilterAsyncDispatch()} for details.
          * <p>
-         * Provides HttpServletRequest and HttpServletResponse arguments instead of the default
-         * ServletRequest and ServletResponse ones.
+         * Provides HttpServletRequest and HttpServletResponse arguments instead of the default ServletRequest and ServletResponse ones.
          */
         @Override
         protected void doFilterInternal(HttpServletRequest request,

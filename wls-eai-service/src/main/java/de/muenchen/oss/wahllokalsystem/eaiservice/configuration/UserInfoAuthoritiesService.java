@@ -28,8 +28,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * Service, der einen OIDC /userinfo Endpoint aufruft (mit JWT Bearer Auth) und dort die enthaltenen
- * "Authorities" extrahiert.
+ * Service, der einen OIDC /userinfo Endpoint aufruft (mit JWT Bearer Auth) und dort die enthaltenen "Authorities" extrahiert.
  */
 @Slf4j
 public class UserInfoAuthoritiesService {
@@ -46,7 +45,7 @@ public class UserInfoAuthoritiesService {
     /**
      * Erzeugt eine neue Instanz.
      *
-     * @param userInfoUri userinfo Endpoint URI
+     * @param userInfoUri         userinfo Endpoint URI
      * @param restTemplateBuilder ein {@link RestTemplateBuilder}
      */
     public UserInfoAuthoritiesService(String userInfoUri, RestTemplateBuilder restTemplateBuilder) {

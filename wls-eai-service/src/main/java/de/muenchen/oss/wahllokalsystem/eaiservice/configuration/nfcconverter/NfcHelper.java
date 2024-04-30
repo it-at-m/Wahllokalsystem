@@ -125,11 +125,9 @@ public class NfcHelper {
     }
 
     /**
-     * Konvertieren der Header eines {@link HttpServletRequest} von Strings in die kanonische
-     * Unicode-Normalform (NFC).
+     * Konvertieren der Header eines {@link HttpServletRequest} von Strings in die kanonische Unicode-Normalform (NFC).
      *
-     * @param originalRequest Der {@link HttpServletRequest} zur Extraktion und Konvertierung der
-     *            Header.
+     * @param originalRequest Der {@link HttpServletRequest} zur Extraktion und Konvertierung der Header.
      * @return Map mit normalisierten Inhalt.
      * @see #nfcConverter(String)
      * @see Normalizer#normalize(CharSequence, Normalizer.Form)

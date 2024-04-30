@@ -2,6 +2,10 @@
 
 Das Wahllokalsystem hängt von anderen Anwendungen ab an die es Daten sendet und von den es Daten importiert.
 
+## Abhängigkeiten
+
+Der Service hat keine Abhängigkeiten zu anderen Services.
+
 ## Daten und Funktionen
 
 ### Wahldaten

@@ -29,12 +29,10 @@ public class AuthUtils {
      */
     public static String getUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof JwtAuthenticationToken) {
-            JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) authentication;
-            return (String) jwtAuth.getTokenAttributes().getOrDefault(TOKEN_USER_NAME, null);
-        } else if (authentication instanceof UsernamePasswordAuthenticationToken) {
-            UsernamePasswordAuthenticationToken usernameAuth = (UsernamePasswordAuthenticationToken) authentication;
-            return usernameAuth.getName();
+        if (authentication instanceof JwtAuthenticationToken jwtAuthenticationToken) {
+            return (String) jwtAuthenticationToken.getTokenAttributes().getOrDefault(TOKEN_USER_NAME, null);
+        } else if (authentication instanceof UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
+            return usernamePasswordAuthenticationToken.getName();
         } else {
             return NAME_UNAUTHENTICATED_USER;
         }

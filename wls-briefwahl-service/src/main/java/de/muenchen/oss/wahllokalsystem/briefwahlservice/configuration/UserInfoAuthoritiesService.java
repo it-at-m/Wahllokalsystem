@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -60,8 +59,7 @@ public class UserInfoAuthoritiesService {
     }
 
     /**
-     * Ruft den /userinfo Endpoint und extrahiert {@link GrantedAuthority}s aus dem "authorities"
-     * Claim.
+     * Ruft den /userinfo Endpoint und extrahiert {@link GrantedAuthority}s aus dem "authorities" Claim.
      *
      * @param jwt der JWT
      * @return die {@link GrantedAuthority}s gem. Claim "authorities" des /userinfo Endpoints
@@ -104,16 +102,15 @@ public class UserInfoAuthoritiesService {
 
     private static List<SimpleGrantedAuthority> asAuthorities(Object object) {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        if (object instanceof Collection) {
-            Collection<?> collection = (Collection<?>) object;
-            object = collection.toArray(new Object[0]);
+        if (object instanceof Collection collectionWithAuthorities) {
+            object = collectionWithAuthorities.toArray(new Object[0]);
         }
         if (ObjectUtils.isArray(object)) {
             authorities.addAll(
                     Stream.of(((Object[]) object))
                             .map(Object::toString)
                             .map(SimpleGrantedAuthority::new)
-                            .collect(Collectors.toList()));
+                            .toList());
         }
         return authorities;
     }

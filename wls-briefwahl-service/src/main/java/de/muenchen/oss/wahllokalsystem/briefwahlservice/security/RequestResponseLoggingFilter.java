@@ -50,8 +50,8 @@ public class RequestResponseLoggingFilter implements Filter {
     }
 
     /**
-     * The method logs the username extracted out of the {@link SecurityContext},
-     * the kind of HTTP-Request, the targeted URI and the response http status code.
+     * The method logs the username extracted out of the {@link SecurityContext}, the kind of
+     * HTTP-Request, the targeted URI and the response http status code.
      *
      * {@inheritDoc}
      */

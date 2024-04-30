@@ -1,6 +1,7 @@
 # EAI-Service
 
-Das Wahllokalsystem hängt von anderen Anwendungen ab an die es Daten sendet und von den es Daten importiert.
+Das Wahllokalsystem hängt von anderen Anwendungen ab, an die es Daten sendet und von den es Daten importiert.
+Die Schnittstelle zwischen diesen Anwendungen wird über diesen EAI-Service realisiert.
 
 ## Abhängigkeiten
 

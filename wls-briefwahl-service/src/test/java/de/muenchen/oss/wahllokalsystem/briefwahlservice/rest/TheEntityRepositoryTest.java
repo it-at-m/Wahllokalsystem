@@ -4,20 +4,19 @@
  */
 package de.muenchen.oss.wahllokalsystem.briefwahlservice.rest;
 
+import static de.muenchen.oss.wahllokalsystem.briefwahlservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
+import static de.muenchen.oss.wahllokalsystem.briefwahlservice.TestConstants.SPRING_TEST_PROFILE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import de.muenchen.oss.wahllokalsystem.briefwahlservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.briefwahlservice.domain.TheEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import de.muenchen.oss.wahllokalsystem.briefwahlservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.briefwahlservice.domain.TheEntity;
-
-import static de.muenchen.oss.wahllokalsystem.briefwahlservice.TestConstants.SPRING_TEST_PROFILE;
-import static de.muenchen.oss.wahllokalsystem.briefwahlservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(
         classes = { MicroServiceApplication.class },

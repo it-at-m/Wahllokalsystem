@@ -8,6 +8,7 @@ import static de.muenchen.oss.wahllokalsystem.briefwahlservice.TestConstants.SPR
 import static de.muenchen.oss.wahllokalsystem.briefwahlservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.MicroServiceApplication;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

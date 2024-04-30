@@ -1,0 +1,72 @@
+{
+    "allowRemoteResourceManagement": false,
+    "policyEnforcementMode": "ENFORCING",
+    "resources": [
+        {
+            "name": "WLS_INFOMANAGEMENT_SERVICE_READ_THEENTITY",
+            "type": "wls_realm-wls-infomanagement-service-service",
+            "scopes": []
+        },
+        {
+            "name": "WLS_INFOMANAGEMENT_SERVICE_WRITE_THEENTITY",
+            "type": "wls_realm-wls-infomanagement-service-service",
+            "scopes": []
+        },
+        {
+            "name": "WLS_INFOMANAGEMENT_SERVICE_DELETE_THEENTITY",
+            "type": "wls_realm-wls-infomanagement-service-service",
+            "scopes": []
+        }
+    ],
+    "policies": [
+        {
+            "name": "rolepolicy_admin",
+            "type": "role",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+                "roles": "[{\"id\":\"wls_realm/clientrole_admin\",\"required\":false}]"
+            }
+        },
+        {
+            "name": "rolepolicy_readonly",
+            "type": "role",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+                "roles": "[{\"id\":\"wls_realm/clientrole_readonly\",\"required\":false}]"
+            }
+        },
+        {
+            "name": "permission_WLS_INFOMANAGEMENT_SERVICE_DELETE_THEENTITY",
+            "type": "resource",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+                "resources": "[\"WLS_INFOMANAGEMENT_SERVICE_DELETE_THEENTITY\"]",
+                "applyPolicies": "[\"rolepolicy_admin\"]"
+            }
+        },
+        {
+            "name": "permission_WLS_INFOMANAGEMENT_SERVICE_WRITE_THEENTITY",
+            "type": "resource",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+                "resources": "[\"WLS_INFOMANAGEMENT_SERVICE_WRITE_THEENTITY\"]",
+                "applyPolicies": "[\"rolepolicy_admin\"]"
+            }
+        },
+        {
+            "name": "permission_WLS_INFOMANAGEMENT_SERVICE_READ_THEENTITY",
+            "type": "resource",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+                "resources": "[\"WLS_INFOMANAGEMENT_SERVICE_READ_THEENTITY\"]",
+                "applyPolicies": "[\"rolepolicy_admin\",\"rolepolicy_readonly\"]"
+            }
+        }
+    ],
+    "scopes": []
+}

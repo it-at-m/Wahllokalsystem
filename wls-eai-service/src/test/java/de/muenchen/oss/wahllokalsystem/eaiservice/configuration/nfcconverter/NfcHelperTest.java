@@ -6,6 +6,7 @@ package de.muenchen.oss.wahllokalsystem.eaiservice.configuration.nfcconverter;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import jakarta.servlet.http.Cookie;
 import java.util.Arrays;
@@ -42,6 +43,8 @@ class NfcHelperTest {
 
         assertEquals(THIRD_NFC, NfcHelper.nfcConverter(THIRD_NFD));
         assertEquals(THIRD_NFC.length(), NfcHelper.nfcConverter(THIRD_NFD).length());
+
+        assertNull(NfcHelper.nfcConverter((String) null));
     }
 
     @Test
@@ -87,6 +90,18 @@ class NfcHelperTest {
     }
 
     @Test
+    void nfcConverterCookieWithoutDomain() {
+        final Cookie cookieToConvert = createNfdCookie();
+        cookieToConvert.setDomain(null);
+        final Cookie nfcCookie = NfcHelper.nfcConverter(cookieToConvert);
+
+        assertEquals(NfcConverterTest.TOKEN, nfcCookie.getName());
+        assertEquals(Arrays.toString(NFC_OUTPUT_EXPECTED), nfcCookie.getValue());
+        assertNull(nfcCookie.getDomain());
+        assertEquals(THIRD_NFC, nfcCookie.getPath());
+    }
+
+    @Test
     void nfcConverterCookieArray() {
         final Cookie[] nfdCookies = Collections.nCopies(3, createNfdCookie()).toArray(new Cookie[3]);
         final Cookie[] nfcCookies = NfcHelper.nfcConverter(nfdCookies);
@@ -96,6 +111,11 @@ class NfcHelperTest {
             assertEquals(THIRD_NFC, nfcCookie.getDomain());
             assertEquals(THIRD_NFC, nfcCookie.getPath());
         });
+    }
+
+    @Test
+    void nfcConverterCookieArrayNullReturnNull() {
+        assertNull(NfcHelper.nfcConverter((Cookie[]) null));
     }
 
     private static Cookie createNfdCookie() {

@@ -11,3 +11,7 @@ GRANT CONNECT, RESOURCE, CREATE SESSION TO wls_broadcast_service;
 -- add user for wls-briefwahl-service
 CREATE USER wls_briefwahl_service IDENTIFIED BY secret QUOTA UNLIMITED ON USERS;
 GRANT CONNECT, RESOURCE, CREATE SESSION TO wls_briefwahl_service;
+
+-- add user for wls-infomanagement-service
+CREATE USER wls_infomanagement_service IDENTIFIED BY secret QUOTA UNLIMITED ON USERS;
+GRANT CONNECT, RESOURCE, CREATE SESSION TO wls_infomanagement_service;

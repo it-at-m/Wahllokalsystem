@@ -11,9 +11,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 
 /**
  * Utilities zu Authentifizierungsdaten.
- *
- * @author michael.prankl
- *
  */
 public class AuthUtils {
 

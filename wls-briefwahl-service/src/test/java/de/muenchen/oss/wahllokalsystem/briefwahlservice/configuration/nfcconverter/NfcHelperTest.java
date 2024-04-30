@@ -4,9 +4,8 @@
  */
 package de.muenchen.oss.wahllokalsystem.briefwahlservice.configuration.nfcconverter;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import jakarta.servlet.http.Cookie;
 import java.util.Arrays;
 import java.util.Collections;

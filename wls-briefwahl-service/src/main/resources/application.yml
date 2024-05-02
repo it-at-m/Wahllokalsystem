@@ -30,12 +30,16 @@ realm: wls_realm
 
 server:
   shutdown: "graceful"
-  port: 8080
+  port: 39146
   error:
     include-exception: false
     include-stacktrace: never
     whitelabel:
       enabled: false
+
+service:
+  info:
+    oid: WLS-BRIEFWAHL
 
 # Config for spring actuator endpoints
 management:

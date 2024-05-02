@@ -2,7 +2,11 @@
 POST http://localhost:8100/auth/realms/wls_realm/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 
-password=test&grant_type=password&client_secret=top-secret&client_id=wls&username=keycloak_test
+password = test &
+grant_type = password &
+client_secret = top-secret &
+client_id = wls &
+username = keycloak_test
 
 > {%
     client.global.set("auth_token", response.body.access_token);
@@ -13,7 +17,11 @@ password=test&grant_type=password&client_secret=top-secret&client_id=wls&usernam
 POST http://localhost:8100/auth/realms/wls_realm/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 
-password=test&grant_type=password&client_secret=top-secret&client_id=wls&username=wls_all
+password = test &
+grant_type = password &
+client_secret = top-secret &
+client_id = wls &
+username = wls_all
 
 > {%
     client.global.set("auth_token", response.body.access_token);

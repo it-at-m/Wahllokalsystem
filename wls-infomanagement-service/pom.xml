@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
-    <artifactId>wls-briefwahl-service</artifactId>
+    <artifactId>wls-infomanagement-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>wls_briefwahl_service</name>
+    <name>wls_infomanagement_service</name>
 
 
     <properties>
@@ -157,13 +157,6 @@
             <artifactId>hibernate-jpamodelgen</artifactId>
         </dependency>
 
-        <!-- wls-common -->
-        <dependency>
-            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
-            <artifactId>security</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
         <!-- Other -->
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
@@ -274,7 +267,7 @@
 
     </dependencies>
 
-
+    
     <scm>
         <url>https://github.com/it-at-m/Wahllokalsystem</url>
         <connection>scm:git:https://github.com/it-at-m/Wahllokalsystem.git</connection>
@@ -358,7 +351,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <argLine>${surefireArgLine}  -Dfile.encoding=${project.build.sourceEncoding}</argLine>
+                    <argLine>${surefireArgLine} -Dfile.encoding=${project.build.sourceEncoding}</argLine>
                 </configuration>
             </plugin>
 
@@ -378,10 +371,10 @@
                             <goal>prepare-agent</goal>
                         </goals>
                         <configuration>
-                           <append>true</append>
-                           <destFile>${sonar.jacoco.reportPath}</destFile>
-                           <!-- Sets the VM argument line used when unit tests are run. -->
-                           <propertyName>surefireArgLine</propertyName>
+                            <append>true</append>
+                            <destFile>${sonar.jacoco.reportPath}</destFile>
+                            <!-- Sets the VM argument line used when unit tests are run. -->
+                            <propertyName>surefireArgLine</propertyName>
                         </configuration>
                     </execution>
                     <execution>

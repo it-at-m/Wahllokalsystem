@@ -29,7 +29,10 @@ export default withMermaid({
                 {
                     text: 'Adr', link: `${PATH_TECHNIK}adr/`, collapsed: true, items: [
                         {text: 'Renovate - ignoriere lombok', link: `${PATH_TECHNIK}adr/adr001-renovate-ignore-lombok`},
-                        {text: 'Shared/Separated Datenmodell', link: `${PATH_TECHNIK}adr/adr002-controller-service-datamodels`}
+                        {
+                            text: 'Shared/Separated Datenmodell',
+                            link: `${PATH_TECHNIK}adr/adr002-controller-service-datamodels`
+                        }
                     ]
                 }
             ],

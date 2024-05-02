@@ -1,0 +1,15 @@
+GET http://localhost:39146/businessActions/beanstandeteWahlbriefe/{{wahlbezirkID}}/{{waehlerverzeichnisNummer}}
+
+###
+POST http://localhost:39146/businessActions/beanstandeteWahlbriefe/wbz-1/1
+Content-Type: application/json
+
+{
+  "beanstandeteWahlbriefe": {
+    "wahl1": [
+      "ZUGELASSEN",
+      "KEIN_ORIGINAL_SCHEIN",
+      "UNTERSCHRIFT_FEHLT"
+    ]
+  }
+}

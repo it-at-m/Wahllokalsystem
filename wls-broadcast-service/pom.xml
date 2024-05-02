@@ -23,7 +23,7 @@
         <apache.commons.text>1.11.0</apache.commons.text>
         <apache.commons.validator>1.8.0</apache.commons.validator>
         <!-- SonarQube -->
-        <sonar.scanner.version>3.9.0.2155</sonar.scanner.version>
+        <sonar.scanner.version>3.11.0.3922</sonar.scanner.version>
         <!-- TestCoverage -->
         <jacoco.version>0.8.11</jacoco.version>
         <!-- Plugins -->

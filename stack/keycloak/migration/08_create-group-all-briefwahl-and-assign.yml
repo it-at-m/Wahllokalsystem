@@ -1,0 +1,9 @@
+id: create group all briefwahl authorities
+author: MrSebastian
+realm: ${SSO_REALM}
+changes:
+  - addGroup:
+      name: allBriefwahlAuthorities
+  - assignGroup:
+      user: wls_all
+      group: allBriefwahlAuthorities

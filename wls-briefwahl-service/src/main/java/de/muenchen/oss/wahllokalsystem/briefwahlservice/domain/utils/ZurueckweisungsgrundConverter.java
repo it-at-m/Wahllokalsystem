@@ -20,7 +20,7 @@ public class ZurueckweisungsgrundConverter implements AttributeConverter<Zurueck
     @Override
     public Zurueckweisungsgrund[] convertToEntityAttribute(String dbData) {
         val dbDataSplitted = dbData.split(SPLIT_CHAR);
-        return Arrays.stream(dbDataSplitted).map(Zurueckweisungsgrund::valueOf)
+        return Arrays.stream(dbDataSplitted).filter(StringUtils::isNotBlank).map(Zurueckweisungsgrund::valueOf)
                 .toArray(Zurueckweisungsgrund[]::new);
     }
 }

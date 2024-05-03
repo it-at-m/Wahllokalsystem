@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+@PreAuthorize("hasAuthority('Briefwahl_READ_BeanstandeteWahlbriefe')")
 public interface BeanstandeteWahlbriefeRepository extends CrudRepository<BeanstandeteWahlbriefe, BezirkIDUndWaehlerverzeichnisNummer> {
 
     String CACHE = "BeanstandeteWahlbriefeCACHE";

@@ -11,7 +11,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
@@ -23,7 +22,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
  * <a href="http://docs.spring.io/spring-data/rest/docs/current/reference/html/">here</a>.
  * </p>
  */
-@RepositoryRestResource
 @PreAuthorize("hasAuthority(T(wls-wahlvorbereitung-service.security.AuthoritiesEnum).WLS_WAHLVORBEREITUNG_SERVICE_READ_THEENTITY.name())")
 public interface TheEntityRepository extends CrudRepository<TheEntity, UUID> { //NOSONAR
 

@@ -15,11 +15,15 @@ import jakarta.persistence.MapKeyColumn;
 import jakarta.validation.constraints.NotNull;
 import java.sql.Types;
 import java.util.HashMap;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class BeanstandeteWahlbriefe {
 
     @EmbeddedId

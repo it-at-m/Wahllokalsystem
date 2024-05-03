@@ -27,7 +27,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, TestConstants.SPRING_NO_BEZIRK_EVALUATOR_PROFILE })
+@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
 public class BeanstandeteWahlbriefeSecurityTest {
 
     private final String TESTUSER = "testuser";
@@ -90,9 +90,9 @@ public class BeanstandeteWahlbriefeSecurityTest {
             val requiredAuthorities = Authorities.ALL_AUTHORITIES_GET_BEANSTANDETE_WAHLBRIEFE;
             return Arrays.stream(requiredAuthorities)
                     .map(authorityToRemove ->
-                    //remove one authority from all required authorities
-                    Arguments.of(Arrays.stream(requiredAuthorities)
-                            .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+                            //remove one authority from all required authorities
+                            Arguments.of(Arrays.stream(requiredAuthorities)
+                                    .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
         }
 
     }
@@ -143,9 +143,9 @@ public class BeanstandeteWahlbriefeSecurityTest {
             val requiredAuthorities = Authorities.ALL_AUTHORITIES_ADD_BEANSTANDETE_WAHLBRIEFE;
             return Arrays.stream(requiredAuthorities)
                     .map(authorityToRemove ->
-                    //remove one authority from all required authorities
-                    Arguments.of(Arrays.stream(requiredAuthorities)
-                            .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+                            //remove one authority from all required authorities
+                            Arguments.of(Arrays.stream(requiredAuthorities)
+                                    .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
         }
     }
 

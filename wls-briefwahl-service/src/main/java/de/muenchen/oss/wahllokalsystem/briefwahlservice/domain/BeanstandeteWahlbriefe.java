@@ -33,9 +33,9 @@ public class BeanstandeteWahlbriefe {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "Zurueckweisegruende", joinColumns = {
-            @JoinColumn(name = "bw_wahlbezirkid", referencedColumnName = "wahlbezirkID"),
-            @JoinColumn(name = "bw_waehlerverzeichnisnummer", referencedColumnName = "waehlerverzeichnisNummer")
-    }
+                    @JoinColumn(name = "bw_wahlbezirkid", referencedColumnName = "wahlbezirkID"),
+                    @JoinColumn(name = "bw_waehlerverzeichnisnummer", referencedColumnName = "waehlerverzeichnisNummer")
+            }
     )
     @Column(name = "zurueckweisegruende")
     @MapKeyColumn(name = "wahlID")

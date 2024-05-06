@@ -48,7 +48,7 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
     class GetBeanstandeteWahlbriefe {
 
         @AfterEach
-        void setup() throws Exception {
+        void setup() {
             SecurityUtils.runAs("", "", Authorities.REPOSITORY_DELETE_BEANSTANDETE_WAHLBRIEFE);
             beanstandeteWahlbriefeRepository.deleteAll();
         }
@@ -121,7 +121,7 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
     class AddBeanstandeteWahlbriefe {
 
         @AfterEach
-        void setup() throws Exception {
+        void setup() {
             SecurityUtils.runAs("", "", Authorities.REPOSITORY_DELETE_BEANSTANDETE_WAHLBRIEFE);
             beanstandeteWahlbriefeRepository.deleteAll();
         }

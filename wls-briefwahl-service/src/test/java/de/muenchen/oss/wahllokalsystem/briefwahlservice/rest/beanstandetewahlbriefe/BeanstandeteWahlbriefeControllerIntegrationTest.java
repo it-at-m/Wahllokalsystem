@@ -48,7 +48,7 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
     class GetBeanstandeteWahlbriefe {
 
         @AfterEach
-        void setup() throws Exception {
+        void setup() {
             SecurityUtils.runAs("", "", Authorities.REPOSITORY_DELETE_BEANSTANDETE_WAHLBRIEFE);
             beanstandeteWahlbriefeRepository.deleteAll();
         }
@@ -60,7 +60,7 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
 
             val response = api.perform(request).andExpect(status().isNoContent()).andReturn();
 
-            Assertions.assertThat(response.getResponse().getContentAsString()).isNull();
+            Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
         }
 
         @Test
@@ -121,13 +121,13 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
     class AddBeanstandeteWahlbriefe {
 
         @AfterEach
-        void setup() throws Exception {
+        void setup() {
             SecurityUtils.runAs("", "", Authorities.REPOSITORY_DELETE_BEANSTANDETE_WAHLBRIEFE);
             beanstandeteWahlbriefeRepository.deleteAll();
         }
 
         @Test
-        @WithMockUser
+        @WithMockUser(authorities = { Authorities.SERVICE_ADD_BEANSTANDETE_WAHLBRIEFE, Authorities.REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE })
         void wlsExceptionOnInvalidRequest() throws Exception {
             val requestBody = BeanstandeteWahlbriefeCreateDTO.builder().build();
             val request = post("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/0").with(csrf()).contentType(MediaType.APPLICATION_JSON)

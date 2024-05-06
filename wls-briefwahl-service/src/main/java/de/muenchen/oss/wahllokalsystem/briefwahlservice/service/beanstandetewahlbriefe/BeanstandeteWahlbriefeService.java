@@ -30,8 +30,9 @@ public class BeanstandeteWahlbriefeService {
         log.info("#getBeanstandeteWahlbriefe");
         beanstandeteWahlbriefeValidator.valideReferenceOrThrow(beanstandeteWahlbriefeReference);
 
-        val id = beanstandeteWahlbriefeModelMapper.toEmbeddedId(beanstandeteWahlbriefeReference);
-        return beanstandeteWahlbriefeModelMapper.toModel(getOrNull(id));
+        BezirkIDUndWaehlerverzeichnisNummer id = beanstandeteWahlbriefeModelMapper.toEmbeddedId(beanstandeteWahlbriefeReference);
+        val beanstandeteWahlbriefeFromRepo = getOrNull(id);
+        return beanstandeteWahlbriefeFromRepo == null ? null : beanstandeteWahlbriefeModelMapper.toModel(beanstandeteWahlbriefeFromRepo);
     }
 
     @PreAuthorize(

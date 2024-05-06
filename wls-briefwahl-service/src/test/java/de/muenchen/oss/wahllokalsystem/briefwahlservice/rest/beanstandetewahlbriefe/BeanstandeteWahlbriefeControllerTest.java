@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
 @ExtendWith(MockitoExtension.class)
 class BeanstandeteWahlbriefeControllerTest {
@@ -39,7 +40,8 @@ class BeanstandeteWahlbriefeControllerTest {
 
         val result = controller.getBeanstandeteWahlbriefe(wahlbezirkID, waehlerverzeichnisNummer);
 
-        Assertions.assertThat(result).isEqualTo(mappedServiceResponse);
+        Assertions.assertThat(result.getBody()).isEqualTo(mappedServiceResponse);
+        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test

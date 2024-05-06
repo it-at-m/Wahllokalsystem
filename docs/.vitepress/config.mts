@@ -19,6 +19,10 @@ export default withMermaid({
             {text: 'Technik', link: PATH_TECHNIK}
         ],
 
+        outline: {
+            label: "Auf dieser Seite"
+        },
+
         sidebar: {
             [PATH_TECHNIK]: [
                 {text: 'Tools & Frameworks', link: `${PATH_TECHNIK}`},

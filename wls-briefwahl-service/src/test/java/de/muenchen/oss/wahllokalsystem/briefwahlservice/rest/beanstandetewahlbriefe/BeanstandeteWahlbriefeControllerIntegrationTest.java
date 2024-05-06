@@ -127,7 +127,7 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
         }
 
         @Test
-        @WithMockUser
+        @WithMockUser(authorities = { Authorities.SERVICE_ADD_BEANSTANDETE_WAHLBRIEFE, Authorities.REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE })
         void wlsExceptionOnInvalidRequest() throws Exception {
             val requestBody = BeanstandeteWahlbriefeCreateDTO.builder().build();
             val request = post("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/0").with(csrf()).contentType(MediaType.APPLICATION_JSON)

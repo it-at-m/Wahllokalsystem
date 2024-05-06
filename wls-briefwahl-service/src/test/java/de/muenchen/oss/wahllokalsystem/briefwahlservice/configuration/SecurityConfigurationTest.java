@@ -130,7 +130,7 @@ class SecurityConfigurationTest {
             val request = post("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/2").with(csrf()).contentType(MediaType.APPLICATION_JSON)
                     .content(requestBodyAsString);
 
-            Mockito.doNothing().when(beanstandeteWahlbriefeService).addBeanstandeteWahlbriefe(Mockito.any());
+            Mockito.doNothing().when(beanstandeteWahlbriefeService).setBeanstandeteWahlbriefe(Mockito.any());
 
             api.perform(request).andExpect(status().isOk());
         }

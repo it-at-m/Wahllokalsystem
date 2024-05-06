@@ -37,7 +37,7 @@ class BeanstandeteWahlbriefeControllerTest {
         Mockito.when(beanstandeteWahlbriefeService.getBeanstandeteWahlbriefe(modelReference)).thenReturn(serviceResponse);
         Mockito.when(beanstandeteWahlbriefeDTOMapper.toDTO(serviceResponse)).thenReturn(mappedServiceResponse);
 
-        val result = controller.getBeanstandeteWahlbriefeDTO(wahlbezirkID, waehlerverzeichnisNummer);
+        val result = controller.getBeanstandeteWahlbriefe(wahlbezirkID, waehlerverzeichnisNummer);
 
         Assertions.assertThat(result).isEqualTo(mappedServiceResponse);
     }
@@ -52,9 +52,9 @@ class BeanstandeteWahlbriefeControllerTest {
 
         Mockito.when(beanstandeteWahlbriefeDTOMapper.toCreateModel(requestBody, wahlbezirkID, waehlerverzeichnisNummer)).thenReturn(mappedModel);
 
-        controller.addBeanstandeteWahlbriefe(wahlbezirkID, waehlerverzeichnisNummer, requestBody);
+        controller.setBeanstandeteWahlbriefe(wahlbezirkID, waehlerverzeichnisNummer, requestBody);
 
-        Mockito.verify(beanstandeteWahlbriefeService).addBeanstandeteWahlbriefe(mappedModel);
+        Mockito.verify(beanstandeteWahlbriefeService).setBeanstandeteWahlbriefe(mappedModel);
     }
 
 }

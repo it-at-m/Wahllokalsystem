@@ -8,7 +8,7 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface BeanstandeteWahlbriefeModelMapper {
 
-    BezirkIDUndWaehlerverzeichnisNummer toId(BeanstandeteWahlbriefeReference reference);
+    BezirkIDUndWaehlerverzeichnisNummer toEmbeddedId(BeanstandeteWahlbriefeReference reference);
 
     @Mapping(target = "wahlbezirkID", source = "bezirkIDUndWaehlerverzeichnisNummer.wahlbezirkID")
     @Mapping(target = "waehlerverzeichnisNummer", source = "bezirkIDUndWaehlerverzeichnisNummer.waehlerverzeichnisNummer")

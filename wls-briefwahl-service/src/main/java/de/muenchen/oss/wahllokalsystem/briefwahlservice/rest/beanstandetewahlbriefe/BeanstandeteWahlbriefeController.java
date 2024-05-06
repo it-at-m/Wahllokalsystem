@@ -20,17 +20,17 @@ public class BeanstandeteWahlbriefeController {
     private final BeanstandeteWahlbriefeDTOMapper beanstandeteWahlbriefeDTOMapper;
 
     @GetMapping("{wahlbezirkID}/{waehlerverzeichnisNummer}")
-    public BeanstandeteWahlbriefeDTO getBeanstandeteWahlbriefeDTO(@PathVariable("wahlbezirkID") String wahlbezirkID,
+    public BeanstandeteWahlbriefeDTO getBeanstandeteWahlbriefe(@PathVariable("wahlbezirkID") String wahlbezirkID,
             @PathVariable("waehlerverzeichnisNummer") Long waehlerverzeichnisNummer) {
         val referenceModel = beanstandeteWahlbriefeDTOMapper.toReferenceModel(wahlbezirkID, waehlerverzeichnisNummer);
         return beanstandeteWahlbriefeDTOMapper.toDTO(beanstandeteWahlbriefeService.getBeanstandeteWahlbriefe(referenceModel));
     }
 
     @PostMapping("{wahlbezirkID}/{waehlerverzeichnisNummer}")
-    public void addBeanstandeteWahlbriefe(@PathVariable("wahlbezirkID") String wahlbezirkID,
+    public void setBeanstandeteWahlbriefe(@PathVariable("wahlbezirkID") String wahlbezirkID,
             @PathVariable("waehlerverzeichnisNummer") Long waehlerverzeichnisNummer,
             @RequestBody BeanstandeteWahlbriefeCreateDTO beanstandeteWahlbriefeCreateDTO) {
         val createModel = beanstandeteWahlbriefeDTOMapper.toCreateModel(beanstandeteWahlbriefeCreateDTO, wahlbezirkID, waehlerverzeichnisNummer);
-        beanstandeteWahlbriefeService.addBeanstandeteWahlbriefe(createModel);
+        beanstandeteWahlbriefeService.setBeanstandeteWahlbriefe(createModel);
     }
 }

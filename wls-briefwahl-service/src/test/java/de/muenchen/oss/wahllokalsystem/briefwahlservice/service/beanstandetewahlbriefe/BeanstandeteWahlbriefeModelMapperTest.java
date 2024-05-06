@@ -15,11 +15,11 @@ class BeanstandeteWahlbriefeModelMapperTest {
     private final BeanstandeteWahlbriefeModelMapper unitUnderTest = Mappers.getMapper(BeanstandeteWahlbriefeModelMapper.class);
 
     @Nested
-    class ToId {
+    class ToEmbeddedId {
 
         @Test
         void nullInNullOut() {
-            Assertions.assertThat(unitUnderTest.toId(null)).isNull();
+            Assertions.assertThat(unitUnderTest.toEmbeddedId(null)).isNull();
         }
 
         @Test
@@ -30,7 +30,7 @@ class BeanstandeteWahlbriefeModelMapperTest {
 
             val expectedResult = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
 
-            val result = unitUnderTest.toId(reference);
+            val result = unitUnderTest.toEmbeddedId(reference);
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }

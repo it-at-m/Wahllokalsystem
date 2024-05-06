@@ -40,7 +40,7 @@ class BeanstandeteWahlbriefeServiceTest {
             val mappedEntityId = new BezirkIDUndWaehlerverzeichnisNummer();
 
             Mockito.doNothing().when(beanstandeteWahlbriefeValidator).valideReferenceOrThrow(reference);
-            Mockito.when(beanstandeteWahlbriefeModelMapper.toId(reference)).thenReturn(mappedEntityId);
+            Mockito.when(beanstandeteWahlbriefeModelMapper.toEmbeddedId(reference)).thenReturn(mappedEntityId);
             Mockito.when(beanstandeteWahlbriefeRepository.findById(mappedEntityId)).thenReturn(Optional.empty());
             Mockito.when(beanstandeteWahlbriefeModelMapper.toModel(null)).thenReturn(null);
 
@@ -58,7 +58,7 @@ class BeanstandeteWahlbriefeServiceTest {
             val mappedEntity = BeanstandeteWahlbriefeModel.builder().build();
 
             Mockito.doNothing().when(beanstandeteWahlbriefeValidator).valideReferenceOrThrow(reference);
-            Mockito.when(beanstandeteWahlbriefeModelMapper.toId(reference)).thenReturn(mappedEntityId);
+            Mockito.when(beanstandeteWahlbriefeModelMapper.toEmbeddedId(reference)).thenReturn(mappedEntityId);
             Mockito.when(beanstandeteWahlbriefeRepository.findById(mappedEntityId)).thenReturn(Optional.of(entityFromRepo));
             Mockito.when(beanstandeteWahlbriefeModelMapper.toModel(entityFromRepo)).thenReturn(mappedEntity);
 
@@ -86,7 +86,7 @@ class BeanstandeteWahlbriefeServiceTest {
     }
 
     @Nested
-    class AddBeanstandeteWahlbriefe {
+    class SetBeanstandeteWahlbriefe {
         @Test
         void noSaveWhenModelIsInvalid() {
             val invalidModel = BeanstandeteWahlbriefeModel.builder().build();
@@ -95,7 +95,7 @@ class BeanstandeteWahlbriefeServiceTest {
 
             Mockito.doThrow(exceptionToThrow).when(beanstandeteWahlbriefeValidator).valideModelOrThrow(invalidModel);
 
-            val exceptionThrown = Assertions.catchException(() -> service.addBeanstandeteWahlbriefe(invalidModel));
+            val exceptionThrown = Assertions.catchException(() -> service.setBeanstandeteWahlbriefe(invalidModel));
 
             Assertions.assertThat(exceptionThrown).isSameAs(exceptionToThrow);
             Mockito.verify(beanstandeteWahlbriefeRepository, Mockito.times(0)).save(Mockito.any());
@@ -110,7 +110,7 @@ class BeanstandeteWahlbriefeServiceTest {
             Mockito.doNothing().when(beanstandeteWahlbriefeValidator).valideModelOrThrow(model);
             Mockito.when(beanstandeteWahlbriefeModelMapper.toEntity(model)).thenReturn(mappedEntityOfModel);
 
-            service.addBeanstandeteWahlbriefe(model);
+            service.setBeanstandeteWahlbriefe(model);
 
             Mockito.verify(beanstandeteWahlbriefeRepository).save(mappedEntityOfModel);
         }

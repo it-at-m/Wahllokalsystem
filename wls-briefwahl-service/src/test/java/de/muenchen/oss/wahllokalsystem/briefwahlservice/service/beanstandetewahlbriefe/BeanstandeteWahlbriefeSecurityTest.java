@@ -89,15 +89,15 @@ public class BeanstandeteWahlbriefeSecurityTest {
             val requiredAuthorities = Authorities.ALL_AUTHORITIES_GET_BEANSTANDETE_WAHLBRIEFE;
             return Arrays.stream(requiredAuthorities)
                     .map(authorityToRemove ->
-                    //remove one authority from all required authorities
-                    Arguments.of(Arrays.stream(requiredAuthorities)
-                            .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+                            //remove one authority from all required authorities
+                            Arguments.of(Arrays.stream(requiredAuthorities)
+                                    .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
         }
 
     }
 
     @Nested
-    class AddBeanstandeteWahlbriefe {
+    class SetBeanstandeteWahlbriefe {
 
         @Test
         void accessGranted() {
@@ -108,7 +108,7 @@ public class BeanstandeteWahlbriefeSecurityTest {
             SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.ALL_AUTHORITIES_ADD_BEANSTANDETE_WAHLBRIEFE);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            beanstandeteWahlbriefeService.addBeanstandeteWahlbriefe(beanstandeteWahlbriefeModel);
+            beanstandeteWahlbriefeService.setBeanstandeteWahlbriefe(beanstandeteWahlbriefeModel);
         }
 
         @Test
@@ -120,7 +120,7 @@ public class BeanstandeteWahlbriefeSecurityTest {
             SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.ALL_AUTHORITIES_ADD_BEANSTANDETE_WAHLBRIEFE);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
 
-            Assertions.assertThatThrownBy(() -> beanstandeteWahlbriefeService.addBeanstandeteWahlbriefe(beanstandeteWahlbriefeModel))
+            Assertions.assertThatThrownBy(() -> beanstandeteWahlbriefeService.setBeanstandeteWahlbriefe(beanstandeteWahlbriefeModel))
                     .isExactlyInstanceOf(AccessDeniedException.class);
         }
 
@@ -134,7 +134,7 @@ public class BeanstandeteWahlbriefeSecurityTest {
             SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, argumentsAccessor.get(0, String[].class));
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatThrownBy(() -> beanstandeteWahlbriefeService.addBeanstandeteWahlbriefe(beanstandeteWahlbriefeModel))
+            Assertions.assertThatThrownBy(() -> beanstandeteWahlbriefeService.setBeanstandeteWahlbriefe(beanstandeteWahlbriefeModel))
                     .isExactlyInstanceOf(AccessDeniedException.class);
         }
 
@@ -142,9 +142,9 @@ public class BeanstandeteWahlbriefeSecurityTest {
             val requiredAuthorities = Authorities.ALL_AUTHORITIES_ADD_BEANSTANDETE_WAHLBRIEFE;
             return Arrays.stream(requiredAuthorities)
                     .map(authorityToRemove ->
-                    //remove one authority from all required authorities
-                    Arguments.of(Arrays.stream(requiredAuthorities)
-                            .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+                            //remove one authority from all required authorities
+                            Arguments.of(Arrays.stream(requiredAuthorities)
+                                    .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
         }
     }
 

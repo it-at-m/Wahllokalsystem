@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan">
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group">
+        <intProp name="ThreadGroup.num_threads">1</intProp>
+        <intProp name="ThreadGroup.ramp_time">1</intProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
+          <stringProp name="LoopController.loops">1</stringProp>
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+        </elementProp>
+      </ThreadGroup>
+      <hashTree>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="SSO Setup"/>
+        <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="sso config">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="ssoUrl" elementType="Argument">
+                <stringProp name="Argument.name">ssoUrl</stringProp>
+                <stringProp name="Argument.value">localhost</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="ssoPort" elementType="Argument">
+                <stringProp name="Argument.name">ssoPort</stringProp>
+                <stringProp name="Argument.value">8100</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="ssoPathToken" elementType="Argument">
+                <stringProp name="Argument.name">ssoPathToken</stringProp>
+                <stringProp name="Argument.value">/auth/realms/wls_realm/protocol/openid-connect/token</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="ssoPathUserInfo" elementType="Argument">
+                <stringProp name="Argument.name">ssoPathUserInfo</stringProp>
+                <stringProp name="Argument.value">/auth/realms/wls_realm/protocol/openid-connect/userinfo</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </Arguments>
+          <hashTree/>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="get token for authorized user">
+            <stringProp name="HTTPSampler.domain">${ssoUrl}</stringProp>
+            <stringProp name="HTTPSampler.port">${ssoPort}</stringProp>
+            <stringProp name="HTTPSampler.path">${ssoPathToken}</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="password" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.value">test</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="HTTPArgument.content_type">text/plain</stringProp>
+                  <stringProp name="Argument.name">password</stringProp>
+                </elementProp>
+                <elementProp name="grant_type" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.value">password</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">grant_type</stringProp>
+                </elementProp>
+                <elementProp name="client_secret" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.value">top-secret</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">client_secret</stringProp>
+                </elementProp>
+                <elementProp name="client_id" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.value">wls</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">client_id</stringProp>
+                </elementProp>
+                <elementProp name="username" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.value">wls_all</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">username</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="get access token">
+              <stringProp name="JSONPostProcessor.referenceNames">access_token</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.access_token</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="get token_type">
+              <stringProp name="JSONPostProcessor.referenceNames">tokenType</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.token_type</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="log userinfo">
+            <stringProp name="HTTPSampler.domain">${ssoUrl}</stringProp>
+            <stringProp name="HTTPSampler.port">${ssoPort}</stringProp>
+            <stringProp name="HTTPSampler.path">${ssoPathUserInfo}</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+              <collectionProp name="HeaderManager.headers">
+                <elementProp name="" elementType="Header">
+                  <stringProp name="Header.name">Authorization</stringProp>
+                  <stringProp name="Header.value">${tokenType} ${access_token}</stringProp>
+                </elementProp>
+                <elementProp name="" elementType="Header">
+                  <stringProp name="Header.name">Content-Type</stringProp>
+                  <stringProp name="Header.value">application/json</stringProp>
+                </elementProp>
+              </collectionProp>
+            </HeaderManager>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="briefwahl-service"/>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Default HTTP Header Manager">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">Content-Type</stringProp>
+                <stringProp name="Header.value">application/json</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="service config">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="host" elementType="Argument">
+                <stringProp name="Argument.name">host</stringProp>
+                <stringProp name="Argument.value">localhost</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="port" elementType="Argument">
+                <stringProp name="Argument.name">port</stringProp>
+                <stringProp name="Argument.value">39146</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </Arguments>
+          <hashTree/>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="beanstandete wahlbriefe"/>
+          <hashTree>
+            <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="path config">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="beanstandeteWahlbriefe" elementType="Argument">
+                  <stringProp name="Argument.name">beanstandeteWahlbriefe</stringProp>
+                  <stringProp name="Argument.value">/businessActions/beanstandeteWahlbriefe</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="wahlbezirkID" elementType="Argument">
+                  <stringProp name="Argument.name">wahlbezirkID</stringProp>
+                  <stringProp name="Argument.value">wbzid</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="waehlerverzeichnisnummer" elementType="Argument">
+                  <stringProp name="Argument.name">waehlerverzeichnisnummer</stringProp>
+                  <stringProp name="Argument.value">1</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </Arguments>
+            <hashTree/>
+            <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="successful requests"/>
+            <hashTree>
+              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+                <collectionProp name="HeaderManager.headers">
+                  <elementProp name="" elementType="Header">
+                    <stringProp name="Header.name">Authorization</stringProp>
+                    <stringProp name="Header.value">${tokenType} ${access_token}</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </HeaderManager>
+              <hashTree/>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="get by id empty response">
+                <stringProp name="HTTPSampler.domain">${host}</stringProp>
+                <stringProp name="HTTPSampler.port">${port}</stringProp>
+                <stringProp name="HTTPSampler.path">${beanstandeteWahlbriefe}/${wahlbezirkID}/${waehlerverzeichnisnummer}</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <stringProp name="HTTPSampler.method">GET</stringProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+                  <collectionProp name="Arguments.arguments"/>
+                </elementProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="HttpStatus noContent">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49590">204</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+                <BeanShellAssertion guiclass="BeanShellAssertionGui" testclass="BeanShellAssertion" testname="BeanShell Assertion response body is null">
+                  <stringProp name="BeanShellAssertion.query">if (ResponseData.length != 0) {
+    Failure = true;
+    FailureMessage = &quot;Expected empty response, got: &quot; + new String(ResponseData);
+}</stringProp>
+                  <stringProp name="BeanShellAssertion.filename"></stringProp>
+                  <stringProp name="BeanShellAssertion.parameters"></stringProp>
+                  <boolProp name="BeanShellAssertion.resetInterpreter">false</boolProp>
+                </BeanShellAssertion>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="post beanstandete wahlbriefe">
+                <stringProp name="HTTPSampler.domain">${host}</stringProp>
+                <stringProp name="HTTPSampler.port">${port}</stringProp>
+                <stringProp name="HTTPSampler.path">${beanstandeteWahlbriefe}/${wahlbezirkID}/${waehlerverzeichnisnummer}</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;beanstandeteWahlbriefe&quot;: {&#xd;
+		&quot;wahl1&quot;: [&quot;SCHEIN_UNGUELTIG&quot;, &quot;SCHEIN_UNGUELTIG&quot;, &quot;SCHEIN_UNGUELTIG&quot;, &quot;SCHEIN_UNGUELTIG&quot;],&#xd;
+		&quot;wahl2&quot;: [&quot;LOSE_STIMMZETTEL&quot;, &quot;LOSE_STIMMZETTEL&quot;, &quot;SCHEIN_UNGUELTIG&quot;, &quot;SCHEINE_UNGLEICH_UMSCHLAEGE&quot;]&#xd;
+	}&#xd;
+}&#xd;
+</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="HttpStatus ok">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49586">200</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+                <BeanShellAssertion guiclass="BeanShellAssertionGui" testclass="BeanShellAssertion" testname="BeanShell Assertion response body is null" enabled="true">
+                  <stringProp name="BeanShellAssertion.query">if (ResponseData.length != 0) {
+    Failure = true;
+    FailureMessage = &quot;Expected empty response, got: &quot; + new String(ResponseData);
+}</stringProp>
+                  <stringProp name="BeanShellAssertion.filename"></stringProp>
+                  <stringProp name="BeanShellAssertion.parameters"></stringProp>
+                  <boolProp name="BeanShellAssertion.resetInterpreter">false</boolProp>
+                </BeanShellAssertion>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="get by id with response body">
+                <stringProp name="HTTPSampler.domain">${host}</stringProp>
+                <stringProp name="HTTPSampler.port">${port}</stringProp>
+                <stringProp name="HTTPSampler.path">${beanstandeteWahlbriefe}/${wahlbezirkID}/${waehlerverzeichnisnummer}</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <stringProp name="HTTPSampler.method">GET</stringProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+                  <collectionProp name="Arguments.arguments"/>
+                </elementProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="HttpStatus ok">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49586">200</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="response is matches">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="1022841014">{&quot;wahlbezirkID&quot;:&quot;wbzid&quot;,&quot;waehlerverzeichnisNummer&quot;:1,&quot;beanstandeteWahlbriefe&quot;:{&quot;wahl1&quot;:[&quot;SCHEIN_UNGUELTIG&quot;,&quot;SCHEIN_UNGUELTIG&quot;,&quot;SCHEIN_UNGUELTIG&quot;,&quot;SCHEIN_UNGUELTIG&quot;],&quot;wahl2&quot;:[&quot;LOSE_STIMMZETTEL&quot;,&quot;LOSE_STIMMZETTEL&quot;,&quot;SCHEIN_UNGUELTIG&quot;,&quot;SCHEINE_UNGLEICH_UMSCHLAEGE&quot;]}}</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">8</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+            <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="failed requests"/>
+            <hashTree>
+              <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="get"/>
+              <hashTree>
+                <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="authenticated"/>
+                <hashTree>
+                  <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+                    <collectionProp name="HeaderManager.headers">
+                      <elementProp name="" elementType="Header">
+                        <stringProp name="Header.name">Authorization</stringProp>
+                        <stringProp name="Header.value">${tokenType} ${access_token}</stringProp>
+                      </elementProp>
+                    </collectionProp>
+                  </HeaderManager>
+                  <hashTree/>
+                  <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="wahlbezirkID missing">
+                    <stringProp name="HTTPSampler.domain">${host}</stringProp>
+                    <stringProp name="HTTPSampler.port">${port}</stringProp>
+                    <stringProp name="HTTPSampler.path">${beanstandeteWahlbriefe}</stringProp>
+                    <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                    <stringProp name="HTTPSampler.method">GET</stringProp>
+                    <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                    <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+                    <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+                      <collectionProp name="Arguments.arguments"/>
+                    </elementProp>
+                  </HTTPSamplerProxy>
+                  <hashTree>
+                    <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="HttpStatus bad request">
+                      <collectionProp name="Asserion.test_strings">
+                        <stringProp name="52469">500</stringProp>
+                      </collectionProp>
+                      <stringProp name="Assertion.custom_message"></stringProp>
+                      <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                      <boolProp name="Assertion.assume_success">false</boolProp>
+                      <intProp name="Assertion.test_type">8</intProp>
+                    </ResponseAssertion>
+                    <hashTree/>
+                    <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="category=T">
+                      <stringProp name="JSON_PATH">$.category</stringProp>
+                      <stringProp name="EXPECTED_VALUE">T</stringProp>
+                      <boolProp name="JSONVALIDATION">true</boolProp>
+                      <boolProp name="EXPECT_NULL">false</boolProp>
+                      <boolProp name="INVERT">false</boolProp>
+                      <boolProp name="ISREGEX">true</boolProp>
+                    </JSONPathAssertion>
+                    <hashTree/>
+                    <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="code=999">
+                      <stringProp name="JSON_PATH">$.code</stringProp>
+                      <stringProp name="EXPECTED_VALUE">999</stringProp>
+                      <boolProp name="JSONVALIDATION">true</boolProp>
+                      <boolProp name="EXPECT_NULL">false</boolProp>
+                      <boolProp name="INVERT">false</boolProp>
+                      <boolProp name="ISREGEX">true</boolProp>
+                    </JSONPathAssertion>
+                    <hashTree/>
+                    <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="service=999">
+                      <stringProp name="JSON_PATH">$.service</stringProp>
+                      <stringProp name="EXPECTED_VALUE">WLS-BRIEFWAHL</stringProp>
+                      <boolProp name="JSONVALIDATION">true</boolProp>
+                      <boolProp name="EXPECT_NULL">false</boolProp>
+                      <boolProp name="INVERT">false</boolProp>
+                      <boolProp name="ISREGEX">true</boolProp>
+                    </JSONPathAssertion>
+                    <hashTree/>
+                  </hashTree>
+                  <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="waehlerverzeichnissnummer missing">
+                    <stringProp name="HTTPSampler.domain">${host}</stringProp>
+                    <stringProp name="HTTPSampler.port">${port}</stringProp>
+                    <stringProp name="HTTPSampler.path">${beanstandeteWahlbriefe}</stringProp>
+                    <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                    <stringProp name="HTTPSampler.method">GET</stringProp>
+                    <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                    <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+                    <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+                      <collectionProp name="Arguments.arguments"/>
+                    </elementProp>
+                  </HTTPSamplerProxy>
+                  <hashTree>
+                    <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="HttpStatus bad request">
+                      <collectionProp name="Asserion.test_strings">
+                        <stringProp name="52469">500</stringProp>
+                      </collectionProp>
+                      <stringProp name="Assertion.custom_message"></stringProp>
+                      <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                      <boolProp name="Assertion.assume_success">false</boolProp>
+                      <intProp name="Assertion.test_type">8</intProp>
+                    </ResponseAssertion>
+                    <hashTree/>
+                    <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="category=T" enabled="true">
+                      <stringProp name="JSON_PATH">$.category</stringProp>
+                      <stringProp name="EXPECTED_VALUE">T</stringProp>
+                      <boolProp name="JSONVALIDATION">true</boolProp>
+                      <boolProp name="EXPECT_NULL">false</boolProp>
+                      <boolProp name="INVERT">false</boolProp>
+                      <boolProp name="ISREGEX">true</boolProp>
+                    </JSONPathAssertion>
+                    <hashTree/>
+                    <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="code=999" enabled="true">
+                      <stringProp name="JSON_PATH">$.code</stringProp>
+                      <stringProp name="EXPECTED_VALUE">999</stringProp>
+                      <boolProp name="JSONVALIDATION">true</boolProp>
+                      <boolProp name="EXPECT_NULL">false</boolProp>
+                      <boolProp name="INVERT">false</boolProp>
+                      <boolProp name="ISREGEX">true</boolProp>
+                    </JSONPathAssertion>
+                    <hashTree/>
+                    <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="service=999" enabled="true">
+                      <stringProp name="JSON_PATH">$.service</stringProp>
+                      <stringProp name="EXPECTED_VALUE">WLS-BRIEFWAHL</stringProp>
+                      <boolProp name="JSONVALIDATION">true</boolProp>
+                      <boolProp name="EXPECT_NULL">false</boolProp>
+                      <boolProp name="INVERT">false</boolProp>
+                      <boolProp name="ISREGEX">true</boolProp>
+                    </JSONPathAssertion>
+                    <hashTree/>
+                  </hashTree>
+                  <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="waehlerverzeichnisnummer is 0">
+                    <stringProp name="HTTPSampler.domain">${host}</stringProp>
+                    <stringProp name="HTTPSampler.port">${port}</stringProp>
+                    <stringProp name="HTTPSampler.path">${beanstandeteWahlbriefe}</stringProp>
+                    <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                    <stringProp name="HTTPSampler.method">GET</stringProp>
+                    <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                    <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+                    <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+                      <collectionProp name="Arguments.arguments"/>
+                    </elementProp>
+                  </HTTPSamplerProxy>
+                  <hashTree/>
+                  <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="wahlbezirkID is empty string">
+                    <stringProp name="HTTPSampler.domain">${host}</stringProp>
+                    <stringProp name="HTTPSampler.port">${port}</stringProp>
+                    <stringProp name="HTTPSampler.path">${beanstandeteWahlbriefe}</stringProp>
+                    <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                    <stringProp name="HTTPSampler.method">GET</stringProp>
+                    <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                    <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+                    <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+                      <collectionProp name="Arguments.arguments"/>
+                    </elementProp>
+                  </HTTPSamplerProxy>
+                  <hashTree/>
+                  <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="wahlbezirkID is blank string">
+                    <stringProp name="HTTPSampler.domain">${host}</stringProp>
+                    <stringProp name="HTTPSampler.port">${port}</stringProp>
+                    <stringProp name="HTTPSampler.path">${beanstandeteWahlbriefe}</stringProp>
+                    <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                    <stringProp name="HTTPSampler.method">GET</stringProp>
+                    <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                    <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+                    <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+                      <collectionProp name="Arguments.arguments"/>
+                    </elementProp>
+                  </HTTPSamplerProxy>
+                  <hashTree/>
+                </hashTree>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="unauthenticated">
+                <stringProp name="HTTPSampler.domain">${host}</stringProp>
+                <stringProp name="HTTPSampler.port">${port}</stringProp>
+                <stringProp name="HTTPSampler.path">${beanstandeteWahlbriefe}</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <stringProp name="HTTPSampler.method">GET</stringProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+                  <collectionProp name="Arguments.arguments"/>
+                </elementProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="HttpStatus unauthorized">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="51509">401</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">8</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+              </hashTree>
+              <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="post"/>
+              <hashTree/>
+            </hashTree>
+          </hashTree>
+        </hashTree>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="AssertionVisualizer" testclass="ResultCollector" testname="failedAssertions">
+          <boolProp name="ResultCollector.error_logging">true</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>

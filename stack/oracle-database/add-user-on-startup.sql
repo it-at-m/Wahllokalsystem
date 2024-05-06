@@ -7,3 +7,11 @@ alter session set container=XEPDB1;
 -- add user for wls-broadcast-service
 CREATE USER wls_broadcast_service IDENTIFIED BY secret QUOTA UNLIMITED ON USERS;
 GRANT CONNECT, RESOURCE, CREATE SESSION TO wls_broadcast_service;
+
+-- add user for wls-briefwahl-service
+CREATE USER wls_briefwahl_service IDENTIFIED BY secret QUOTA UNLIMITED ON USERS;
+GRANT CONNECT, RESOURCE, CREATE SESSION TO wls_briefwahl_service;
+
+-- add user for wls-infomanagement-service
+CREATE USER wls_infomanagement_service IDENTIFIED BY secret QUOTA UNLIMITED ON USERS;
+GRANT CONNECT, RESOURCE, CREATE SESSION TO wls_infomanagement_service;

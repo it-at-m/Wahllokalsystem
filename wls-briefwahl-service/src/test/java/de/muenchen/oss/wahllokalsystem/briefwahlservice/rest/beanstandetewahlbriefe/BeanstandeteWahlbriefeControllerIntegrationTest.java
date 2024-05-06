@@ -60,7 +60,7 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
 
             val response = api.perform(request).andExpect(status().isNoContent()).andReturn();
 
-            Assertions.assertThat(response.getResponse().getContentAsString()).isNull();
+            Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
         }
 
         @Test

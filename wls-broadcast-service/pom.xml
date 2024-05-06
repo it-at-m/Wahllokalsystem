@@ -313,20 +313,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- Fügt den Klassen die aktuelle Version hinzu. Für Swagger-Doku -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven.jar.plugin.version}</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

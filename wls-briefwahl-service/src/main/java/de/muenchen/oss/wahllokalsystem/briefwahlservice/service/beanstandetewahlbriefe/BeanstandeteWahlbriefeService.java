@@ -6,6 +6,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWae
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,8 @@ public class BeanstandeteWahlbriefeService {
         beanstandeteWahlbriefeValidator.valideReferenceOrThrow(beanstandeteWahlbriefeReference);
 
         BezirkIDUndWaehlerverzeichnisNummer id = beanstandeteWahlbriefeModelMapper.toId(beanstandeteWahlbriefeReference);
-        return beanstandeteWahlbriefeModelMapper.toModel(getOrNull(id));
+        val beanstandeteWahlbriefeFromRepo = getOrNull(id);
+        return beanstandeteWahlbriefeFromRepo == null ? null : beanstandeteWahlbriefeModelMapper.toModel(beanstandeteWahlbriefeFromRepo);
     }
 
     @PreAuthorize(

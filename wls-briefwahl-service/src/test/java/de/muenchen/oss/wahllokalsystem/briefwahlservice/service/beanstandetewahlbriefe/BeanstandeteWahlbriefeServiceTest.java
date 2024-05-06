@@ -74,9 +74,7 @@ class BeanstandeteWahlbriefeServiceTest {
 
             Mockito.doThrow(exceptionToThrow).when(beanstandeteWahlbriefeValidator).valideReferenceOrThrow(reference);
 
-            val exceptionThrown = Assertions.catchThrowable(() -> {
-                service.getBeanstandeteWahlbriefe(reference);
-            });
+            val exceptionThrown = Assertions.catchThrowable(() -> service.getBeanstandeteWahlbriefe(reference));
 
             Assertions.assertThat(exceptionThrown).isSameAs(exceptionToThrow);
             Mockito.verify(beanstandeteWahlbriefeRepository, Mockito.times(0)).findById(Mockito.any());

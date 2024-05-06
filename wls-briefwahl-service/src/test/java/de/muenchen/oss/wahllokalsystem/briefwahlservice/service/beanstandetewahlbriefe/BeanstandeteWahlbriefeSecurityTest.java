@@ -89,9 +89,9 @@ public class BeanstandeteWahlbriefeSecurityTest {
             val requiredAuthorities = Authorities.ALL_AUTHORITIES_GET_BEANSTANDETE_WAHLBRIEFE;
             return Arrays.stream(requiredAuthorities)
                     .map(authorityToRemove ->
-                            //remove one authority from all required authorities
-                            Arguments.of(Arrays.stream(requiredAuthorities)
-                                    .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+                    //remove one authority from all required authorities
+                    Arguments.of(Arrays.stream(requiredAuthorities)
+                            .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
         }
 
     }
@@ -142,9 +142,9 @@ public class BeanstandeteWahlbriefeSecurityTest {
             val requiredAuthorities = Authorities.ALL_AUTHORITIES_ADD_BEANSTANDETE_WAHLBRIEFE;
             return Arrays.stream(requiredAuthorities)
                     .map(authorityToRemove ->
-                            //remove one authority from all required authorities
-                            Arguments.of(Arrays.stream(requiredAuthorities)
-                                    .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+                    //remove one authority from all required authorities
+                    Arguments.of(Arrays.stream(requiredAuthorities)
+                            .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
         }
     }
 

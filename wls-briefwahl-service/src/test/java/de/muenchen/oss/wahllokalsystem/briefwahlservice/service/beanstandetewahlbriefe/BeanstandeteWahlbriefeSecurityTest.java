@@ -2,13 +2,12 @@ package de.muenchen.oss.wahllokalsystem.briefwahlservice.service.beanstandetewah
 
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.TestConstants;
+import de.muenchen.oss.wahllokalsystem.briefwahlservice.test.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.test.utils.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.Stream;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -149,24 +148,4 @@ public class BeanstandeteWahlbriefeSecurityTest {
         }
     }
 
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    private static class Authorities {
-        public static final String SERVICE_GET_BEANSTANDETE_WAHLBRIEFE = "Briefwahl_BUSINESSACTION_GetBeanstandeteWahlbriefe";
-        public static final String SERVICE_ADD_BEANSTANDETE_WAHLBRIEFE = "Briefwahl_BUSINESSACTION_PostBeanstandeteWahlbriefe";
-
-        public static final String REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE = "Briefwahl_READ_BeanstandeteWahlbriefe";
-        public static final String REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE = "Briefwahl_WRITE_BeanstandeteWahlbriefe";
-
-        public static final String[] ALL_AUTHORITIES_GET_BEANSTANDETE_WAHLBRIEFE = {
-                SERVICE_GET_BEANSTANDETE_WAHLBRIEFE,
-
-                REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE
-        };
-
-        public static final String[] ALL_AUTHORITIES_ADD_BEANSTANDETE_WAHLBRIEFE = {
-                SERVICE_ADD_BEANSTANDETE_WAHLBRIEFE,
-
-                REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE
-        };
-    }
 }

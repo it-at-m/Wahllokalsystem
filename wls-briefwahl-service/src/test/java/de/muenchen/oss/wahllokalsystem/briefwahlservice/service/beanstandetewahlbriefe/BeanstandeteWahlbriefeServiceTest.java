@@ -42,7 +42,6 @@ class BeanstandeteWahlbriefeServiceTest {
             Mockito.doNothing().when(beanstandeteWahlbriefeValidator).valideReferenceOrThrow(reference);
             Mockito.when(beanstandeteWahlbriefeModelMapper.toEmbeddedId(reference)).thenReturn(mappedEntityId);
             Mockito.when(beanstandeteWahlbriefeRepository.findById(mappedEntityId)).thenReturn(Optional.empty());
-            Mockito.when(beanstandeteWahlbriefeModelMapper.toModel(null)).thenReturn(null);
 
             val result = service.getBeanstandeteWahlbriefe(reference);
 

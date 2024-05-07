@@ -5,10 +5,8 @@
 package de.muenchen.oss.wahllokalsystem.broadcastservice.configuration;
 
 import de.muenchen.oss.wahllokalsystem.broadcastservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.broadcastservice.domain.Message;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.domain.MessageRepository;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO;
-import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.MessageDTO;
 import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -28,18 +26,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(
         classes = { MicroServiceApplication.class },
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = {
-                "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
-                "refarch.gracefulshutdown.pre-wait-seconds=0"
-        }
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
 @Slf4j
 class UnicodeConfigurationTest {
 
     private static final String ENTITY_ENDPOINT_URL = "/businessActions/broadcast";
-    private static final String GET_MESSAGE_PATH = "/businessActions/getMessage/" + "3";
 
     /**
      * Decomposed string:

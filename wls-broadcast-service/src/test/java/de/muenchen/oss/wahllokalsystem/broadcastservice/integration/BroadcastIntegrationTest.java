@@ -41,11 +41,7 @@ import org.springframework.web.context.WebApplicationContext;
 @Slf4j
 @SpringBootTest(
         classes = { MicroServiceApplication.class },
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = {
-                "spring.datasource.url=jdbc:h2:mem:wahllokalsystem;DB_CLOSE_ON_EXIT=FALSE",
-                "refarch.gracefulshutdown.pre-wait-seconds=0"
-        }
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
 public class BroadcastIntegrationTest {
@@ -103,15 +99,12 @@ public class BroadcastIntegrationTest {
     @Test
     void broadcastIntegrationTest() throws Exception {
         log.debug("#BroadcastIntegrationTest");
-        // @formatter:off
-        MockHttpServletResponse result =
-                mvc.perform(
-                        post(BROADCAST_URL)
-                                .content(Testdaten.asJsonString(BROADCAST_MESSAGE_DTO, objectMapper))
-                                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                                .accept(MediaType.APPLICATION_JSON))
-                        .andReturn().getResponse();
-        // @formatter:on
+        MockHttpServletResponse result = mvc.perform(
+                post(BROADCAST_URL)
+                        .content(Testdaten.asJsonString(BROADCAST_MESSAGE_DTO, objectMapper))
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
         int status = result.getStatus();
         Assertions.assertThat(status).isEqualTo(200);
         log.debug("Result > Status: {} ", status);
@@ -174,14 +167,11 @@ public class BroadcastIntegrationTest {
     void getMessageIntegrationTest() throws Exception {
         log.debug("#GetMessageIntegrationTest");
         messageRepository.save(Testdaten.createMessage("123", "Das ist ein Test", LocalDateTime.now()));
-        // @formatter:off
-        MockHttpServletResponse result =
-                mvc.perform(
-                        get(GETMESSAGE_URL + "123")
+        MockHttpServletResponse result = mvc.perform(
+                get(GETMESSAGE_URL + "123")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON))
-                        .andReturn().getResponse();
-        // @formatter:on
+                .andReturn().getResponse();
         String content = result.getContentAsString();
         Message message = objectMapper.readValue(content, Message.class);
         Assertions.assertThat(message.getNachricht()).isEqualTo("Das ist ein Test");
@@ -279,29 +269,12 @@ public class BroadcastIntegrationTest {
 
         foundMessages = ((List<Message>) messageRepository
                 .findAll()).stream().filter((m) -> m.getWahlbezirkID().equals("123")).toList();
-        ;
         Assertions.assertThat(foundMessages).isEmpty();
     }
 
     @Test
     void deleteIntegrationTestBadFormatUUID() {
         log.debug("#deleteIntegrationTestBadFormatUUID");
-
-        //        Exception catchedException1 = null;
-        //        try {
-        //            mvc.perform(post(DELETE_URL + "badformatparam-u-u-i-d")
-        //                    .contentType(MediaType.APPLICATION_JSON_UTF8)
-        //                    .accept(MediaType.APPLICATION_JSON));
-        //        } catch (Exception e) {
-        //            catchedException1 = e;
-        //        }
-        //
-        //        Assertions.assertThat(catchedException1.getCause())
-        //                .isNotNull()
-        //                .isInstanceOf(FachlicheWlsException.class)
-        //                .hasMessageContaining("Nachricht-UUID bad format")
-        //                .extracting("code", "serviceName")
-        //                .contains("150", serviceOid);
 
         ServletException thrownException = null;
         try {

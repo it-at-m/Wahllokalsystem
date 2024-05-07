@@ -42,7 +42,7 @@ public class BroadcastService {
 
         if (null == messageToBroadcast || null == messageToBroadcast.wahlbezirkIDs() || messageToBroadcast.wahlbezirkIDs().size() <= 0
                 || StringUtils.isEmpty(messageToBroadcast.nachricht()) || StringUtils.isBlank(messageToBroadcast.nachricht())) {
-            throw FachlicheWlsException.withCode(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG)
+            throw FachlicheWlsException.withCode(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG).inService(serviceOid)
                     .buildWithMessage("Das Object BroadcastMessage ist nicht vollständig.");
         }
 
@@ -56,7 +56,7 @@ public class BroadcastService {
         log.debug("#nachrichtenAbrufen wahlbezirkID {} length {}", wahlbezirkID, wahlbezirkID.length());
 
         if (StringUtils.isEmpty(wahlbezirkID) || StringUtils.isBlank(wahlbezirkID)) {
-            throw FachlicheWlsException.withCode(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG)
+            throw FachlicheWlsException.withCode(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG).inService(serviceOid)
                     .buildWithMessage("wahlbezirkID is blank or empty");
         }
 

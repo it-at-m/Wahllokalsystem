@@ -9,9 +9,9 @@
 Wenn wir OpenSource auf Github entwickeln und somit anderen Personen die Möglichkeit geben unsere Anwendung zu verwenden,
 sollten wir dafür sorgen, dass die Einstiegshürde so gering wie möglich ist.
 
-Aktuell ist nicht standardisiert welche Datenbank wann verwendet werden wird. Somit kann es sein, dass H2 zum Einsatz kommt
-oder Oracle, abhängig vom Profil, dass beim Start gesetzt wird. H2 läuft in Memory und kann somit ohne zusätzliche
-Infrastruktur verwendet werden. Oracle hingegen benötigt einen Datenbankserver.
+Aktuell ist nicht standardisiert welche Datenbank wann verwendet wird. Abhängig von dem beim Start verwendeten Profil
+kann entweder eine H2- oder Oracle-DB verwendet werden. Während H2 ohne zusätzliche Infrastruktur in Memory läuft
+benötigt Oracle einen Datenbankserver.
 
 Des Weiteren ist aktuell das Profil `local` notwendig um die Services zu starten. Die in den Services hinterlegten Startskripte
 sind daher wichtig, um die Services zu starten.

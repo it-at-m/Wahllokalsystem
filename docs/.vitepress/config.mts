@@ -28,7 +28,11 @@ export default withMermaid({
                 {text: 'Entwicklungsumgebung', link: `${PATH_TECHNIK}development/`},
                 {
                     text: 'Adr', link: `${PATH_TECHNIK}adr/`, collapsed: true, items: [
-                        {text: 'Renovate - ignoriere lombok', link: `${PATH_TECHNIK}adr/adr001-renovate-ignore-lombok`}
+                        {text: 'Renovate - ignoriere lombok', link: `${PATH_TECHNIK}adr/adr001-renovate-ignore-lombok`},
+                        {
+                            text: 'Verbesserung Einstiegsfreundlichkeit',
+                            link: `? ${PATH_TECHNIK}ard/adr-improve-getting-started-of-services.md`
+                        },
                     ]
                 }
             ],

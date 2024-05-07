@@ -2,7 +2,7 @@
 
 ## Status
 
-<adr-status status='proposed'></adr-status>
+<adr-status status='accepted'></adr-status>
 
 ## Kontext
 

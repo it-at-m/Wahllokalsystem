@@ -12,7 +12,9 @@
     <module name="BeforeExecutionExclusionFileFilter">
         <property name="fileNamePattern" value="module\-info\.java$"/>
     </module>
-
+    <module name="BeforeExecutionExclusionFileFilter">
+        <property name="fileNamePattern" value="target[/\\]generated-sources[/\\].*"/>
+    </module>
     <module name="TreeWalker">
         <module name="OuterTypeFilename"/>
         <module name="NoLineWrap">

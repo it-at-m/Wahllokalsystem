@@ -12,9 +12,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MessageRepository extends CrudRepository<Message, UUID> {
 
-    /**
-     * Name for the specific cache.
-     */
     String CACHE = "MESSAGE_CACHE";
 
     @Override

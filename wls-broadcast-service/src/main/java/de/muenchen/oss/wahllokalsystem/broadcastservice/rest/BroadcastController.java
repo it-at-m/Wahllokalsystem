@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.broadcastservice.rest;
 
 import de.muenchen.oss.wahllokalsystem.broadcastservice.service.BroadcastService;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/businessActions")
+@RequiredArgsConstructor
 public class BroadcastController {
 
     private final String BROADCAST_PATH = "/broadcast";
@@ -19,11 +21,11 @@ public class BroadcastController {
     private final String MESSAGE_READ_PATH = "/messageRead/{nachrichtID}";
 
     @Autowired
-    BroadcastService broadcastService;
+    private final BroadcastService broadcastService;
 
     @Operation(
             summary = "Nachricht an alle senden",
-            description = "Sendet eine Nachricht an alle Wahlbezirke und speichert diese für jeden Wahlbezirk in der Datenbank"
+            description = "Bietet einen Endpunkt an, der eine Nachricht für alle Wahlbezirke(Wahllokale) bereitstellt."
     )
     @PostMapping(value = BROADCAST_PATH)
     public void broadcast(@RequestBody BroadcastMessageDTO body) {

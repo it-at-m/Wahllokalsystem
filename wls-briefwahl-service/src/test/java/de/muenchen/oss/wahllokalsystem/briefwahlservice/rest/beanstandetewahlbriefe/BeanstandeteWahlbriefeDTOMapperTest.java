@@ -29,14 +29,14 @@ class BeanstandeteWahlbriefeDTOMapperTest {
             zurueckweisungen.put("wahl2", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.KEIN_ORIGINAL_SCHEIN });
             val dtoToMap = new BeanstandeteWahlbriefeCreateDTO(zurueckweisungen);
             val wahlbezirkID = "wahlbezirkID";
-            val waehlerverzeichnisnummer = 3L;
+            val waehlerverzeichnisNummer = 3L;
 
             val expectedZurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();
             expectedZurueckweisungen.put("wahl1", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT });
             expectedZurueckweisungen.put("wahl2", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.KEIN_ORIGINAL_SCHEIN });
-            val expectedResult = new BeanstandeteWahlbriefeModel(wahlbezirkID, waehlerverzeichnisnummer, expectedZurueckweisungen);
+            val expectedResult = new BeanstandeteWahlbriefeModel(wahlbezirkID, waehlerverzeichnisNummer, expectedZurueckweisungen);
 
-            val result = unitUnderTest.toCreateModel(dtoToMap, wahlbezirkID, waehlerverzeichnisnummer);
+            val result = unitUnderTest.toCreateModel(dtoToMap, wahlbezirkID, waehlerverzeichnisNummer);
 
             Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
         }
@@ -53,11 +53,11 @@ class BeanstandeteWahlbriefeDTOMapperTest {
         @Test
         void isMapped() {
             val wahlbezirkId = "wahlbezirkID";
-            val waehlerverzeichnisnummer = 3L;
+            val waehlerverzeichnisNummer = 3L;
 
-            val expectedResult = new BeanstandeteWahlbriefeReference(wahlbezirkId, waehlerverzeichnisnummer);
+            val expectedResult = new BeanstandeteWahlbriefeReference(wahlbezirkId, waehlerverzeichnisNummer);
 
-            val result = unitUnderTest.toReferenceModel(wahlbezirkId, waehlerverzeichnisnummer);
+            val result = unitUnderTest.toReferenceModel(wahlbezirkId, waehlerverzeichnisNummer);
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
@@ -73,17 +73,17 @@ class BeanstandeteWahlbriefeDTOMapperTest {
         @Test
         void isMapped() {
             val wahlbezirkId = "wahlbezirkID";
-            val waehlerverzeichnisnummer = 3L;
+            val waehlerverzeichnisNummer = 3L;
             val zurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();
             zurueckweisungen.put("wahl1", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT, Zurueckweisungsgrund.KEIN_ORIGINAL_SCHEIN });
             zurueckweisungen.put("wahl2", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.GEGENSTAND_IM_UMSCHLAG });
-            val modelToMap = new BeanstandeteWahlbriefeModel(wahlbezirkId, waehlerverzeichnisnummer, zurueckweisungen);
+            val modelToMap = new BeanstandeteWahlbriefeModel(wahlbezirkId, waehlerverzeichnisNummer, zurueckweisungen);
 
             val expectedZurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();
             expectedZurueckweisungen.put("wahl1",
                     new Zurueckweisungsgrund[] { Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT, Zurueckweisungsgrund.KEIN_ORIGINAL_SCHEIN });
             expectedZurueckweisungen.put("wahl2", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.GEGENSTAND_IM_UMSCHLAG });
-            val expectedResult = new BeanstandeteWahlbriefeDTO(wahlbezirkId, waehlerverzeichnisnummer, expectedZurueckweisungen);
+            val expectedResult = new BeanstandeteWahlbriefeDTO(wahlbezirkId, waehlerverzeichnisNummer, expectedZurueckweisungen);
 
             val result = unitUnderTest.toDTO(modelToMap);
 

@@ -1,4 +1,4 @@
-id: add briefwahl beanstandete wahlbriefe authorities to group all briefwahl
+id: add briefwahl beanstandete wahlbriefe authorities to group allBriefwahlAuthorities
 author: MrSebastian
 realm: ${SSO_REALM}
 changes:

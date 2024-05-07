@@ -1,4 +1,4 @@
-id: create group all briefwahl authorities
+id: create group allBriefwahlAuthorities
 author: MrSebastian
 realm: ${SSO_REALM}
 changes:

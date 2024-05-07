@@ -149,24 +149,24 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
         )
         void dataAreSaved() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
-            val waehlerverzeichnisnummer = 89L;
+            val waehlerverzeichnisNummer = 89L;
 
             val zurueckweisungen = Map.of("wahl1",
                     new Zurueckweisungsgrund[] { Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT }, "wahl2",
                     new Zurueckweisungsgrund[] { Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT });
             val requestBody = new BeanstandeteWahlbriefeCreateDTO(zurueckweisungen);
-            val request = post("/businessActions/beanstandeteWahlbriefe/" + wahlbezirkID + "/" + waehlerverzeichnisnummer).with(csrf())
+            val request = post("/businessActions/beanstandeteWahlbriefe/" + wahlbezirkID + "/" + waehlerverzeichnisNummer).with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(requestBody));
 
             val expectedRepoResponse = new BeanstandeteWahlbriefe();
-            expectedRepoResponse.setBezirkIDUndWaehlerverzeichnisNummer(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisnummer));
+            expectedRepoResponse.setBezirkIDUndWaehlerverzeichnisNummer(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer));
             expectedRepoResponse.setBeanstandeteWahlbriefe(zurueckweisungen);
 
             api.perform(request).andExpect(status().isOk());
 
             SecurityUtils.runAs("", "", Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE);
-            val repoResponse = beanstandeteWahlbriefeRepository.findById(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisnummer))
+            val repoResponse = beanstandeteWahlbriefeRepository.findById(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer))
                     .orElseThrow();
 
             Assertions.assertThat(repoResponse).usingRecursiveComparison().isEqualTo(expectedRepoResponse);

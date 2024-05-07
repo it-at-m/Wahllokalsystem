@@ -78,14 +78,14 @@ class BeanstandeteWahlbriefeModelMapperTest {
         @Test
         void objectIsMapped() {
             val wahlbezirkId = "wbzId";
-            val waehlerverzeichnisnummer = 2L;
+            val waehlerverzeichnisNummer = 2L;
             val zurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();
             zurueckweisungen.put("wahl1", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT });
             zurueckweisungen.put("wahl2", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT,
                     Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT });
-            val objectToMap = new BeanstandeteWahlbriefeModel(wahlbezirkId, waehlerverzeichnisnummer, zurueckweisungen);
+            val objectToMap = new BeanstandeteWahlbriefeModel(wahlbezirkId, waehlerverzeichnisNummer, zurueckweisungen);
 
-            val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkId, waehlerverzeichnisnummer);
+            val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkId, waehlerverzeichnisNummer);
             val expectedZurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();
             expectedZurueckweisungen.put("wahl1", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT });
             expectedZurueckweisungen.put("wahl2", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT,

@@ -1,4 +1,4 @@
-id: add briefwahl bestandete wahlbriefe authorities
+id: add briefwahl beanstandete wahlbriefe authorities
 author: MrSebastian
 realm: ${SSO_REALM}
 changes:

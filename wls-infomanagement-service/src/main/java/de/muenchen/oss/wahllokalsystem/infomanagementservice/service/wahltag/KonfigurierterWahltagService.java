@@ -18,7 +18,7 @@ public class KonfigurierterWahltagService {
     private final KonfigurierterWahltagMapper mapper;
 
     public KonfigurierterWahltagModel getKonfigurierterWahltag(Object headers) {
-        
+
         log.info("#getKonfigurierterWahltag");
 
         val konfigurierterWahltagFromRepo = konfigurierterWahltagRepository.findByWahltagStatus(WahltagStatus.AKTIV);

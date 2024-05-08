@@ -5,6 +5,7 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.configuration;
 
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.TheEntity;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.TheEntityRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -16,11 +17,10 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.net.URI;
 import java.util.UUID;
-import wls.TestConstants;
 
+import static de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
+import static de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static wls.TestConstants.SPRING_NO_SECURITY_PROFILE;
-import static wls.TestConstants.SPRING_TEST_PROFILE;
 
 @SpringBootTest(
         classes = { MicroServiceApplication.class },

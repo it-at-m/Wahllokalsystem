@@ -15,10 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
+import static de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
+import static de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static wls.TestConstants.SPRING_NO_SECURITY_PROFILE;
-import static wls.TestConstants.SPRING_TEST_PROFILE;
 
 @SpringBootTest(
         classes = { MicroServiceApplication.class },

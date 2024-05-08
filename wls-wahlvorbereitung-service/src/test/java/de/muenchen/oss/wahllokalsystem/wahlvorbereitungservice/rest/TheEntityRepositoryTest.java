@@ -13,10 +13,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import static de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
+import static de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static wls.TestConstants.SPRING_NO_SECURITY_PROFILE;
-import static wls.TestConstants.SPRING_TEST_PROFILE;
 
 @SpringBootTest(
         classes = { MicroServiceApplication.class },

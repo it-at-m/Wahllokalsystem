@@ -22,7 +22,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
  * <a href="http://docs.spring.io/spring-data/rest/docs/current/reference/html/">here</a>.
  * </p>
  */
-@PreAuthorize("hasAuthority(T(wls-wahlvorbereitung-service.security.AuthoritiesEnum).WLS_WAHLVORBEREITUNG_SERVICE_READ_THEENTITY.name())")
+@PreAuthorize("hasAuthority(T(de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.security.AuthoritiesEnum).WLS_WAHLVORBEREITUNG_SERVICE_READ_THEENTITY.name())")
 public interface TheEntityRepository extends CrudRepository<TheEntity, UUID> { //NOSONAR
 
     /**
@@ -52,7 +52,7 @@ public interface TheEntityRepository extends CrudRepository<TheEntity, UUID> { /
      */
     @Override
     @CachePut(value = CACHE, key = "#p0.id")
-    @PreAuthorize("hasAuthority(T(wls-wahlvorbereitung-service.security.AuthoritiesEnum).WLS_WAHLVORBEREITUNG_SERVICE_WRITE_THEENTITY.name())")
+    @PreAuthorize("hasAuthority(T(de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.security.AuthoritiesEnum).WLS_WAHLVORBEREITUNG_SERVICE_WRITE_THEENTITY.name())")
     <S extends TheEntity> S save(S theEntity);
 
     /**
@@ -66,7 +66,7 @@ public interface TheEntityRepository extends CrudRepository<TheEntity, UUID> { /
      * @return the collection saved {@link TheEntity}.
      */
     @Override
-    @PreAuthorize("hasAuthority(T(wls-wahlvorbereitung-service.security.AuthoritiesEnum).WLS_WAHLVORBEREITUNG_SERVICE_WRITE_THEENTITY.name())")
+    @PreAuthorize("hasAuthority(T(de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.security.AuthoritiesEnum).WLS_WAHLVORBEREITUNG_SERVICE_WRITE_THEENTITY.name())")
     <S extends TheEntity> Iterable<S> saveAll(Iterable<S> entities);
 
     /**
@@ -76,7 +76,7 @@ public interface TheEntityRepository extends CrudRepository<TheEntity, UUID> { /
      */
     @Override
     @CacheEvict(value = CACHE, key = "#p0")
-    @PreAuthorize("hasAuthority(T(wls-wahlvorbereitung-service.security.AuthoritiesEnum).WLS_WAHLVORBEREITUNG_SERVICE_DELETE_THEENTITY.name())")
+    @PreAuthorize("hasAuthority(T(de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.security.AuthoritiesEnum).WLS_WAHLVORBEREITUNG_SERVICE_DELETE_THEENTITY.name())")
     void deleteById(UUID id);
 
     /**
@@ -86,7 +86,7 @@ public interface TheEntityRepository extends CrudRepository<TheEntity, UUID> { /
      */
     @Override
     @CacheEvict(value = CACHE, key = "#p0.id")
-    @PreAuthorize("hasAuthority(T(wls-wahlvorbereitung-service.security.AuthoritiesEnum).WLS_WAHLVORBEREITUNG_SERVICE_DELETE_THEENTITY.name())")
+    @PreAuthorize("hasAuthority(T(de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.security.AuthoritiesEnum).WLS_WAHLVORBEREITUNG_SERVICE_DELETE_THEENTITY.name())")
     void delete(TheEntity entity);
 
     /**
@@ -96,7 +96,7 @@ public interface TheEntityRepository extends CrudRepository<TheEntity, UUID> { /
      */
     @Override
     @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority(T(wls-wahlvorbereitung-service.security.AuthoritiesEnum).WLS_WAHLVORBEREITUNG_SERVICE_DELETE_THEENTITY.name())")
+    @PreAuthorize("hasAuthority(T(de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.security.AuthoritiesEnum).WLS_WAHLVORBEREITUNG_SERVICE_DELETE_THEENTITY.name())")
     void deleteAll(Iterable<? extends TheEntity> entities);
 
     /**
@@ -104,7 +104,7 @@ public interface TheEntityRepository extends CrudRepository<TheEntity, UUID> { /
      */
     @Override
     @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority(T(wls-wahlvorbereitung-service.security.AuthoritiesEnum).WLS_WAHLVORBEREITUNG_SERVICE_DELETE_THEENTITY.name())")
+    @PreAuthorize("hasAuthority(T(de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.security.AuthoritiesEnum).WLS_WAHLVORBEREITUNG_SERVICE_DELETE_THEENTITY.name())")
     void deleteAll();
 
 }

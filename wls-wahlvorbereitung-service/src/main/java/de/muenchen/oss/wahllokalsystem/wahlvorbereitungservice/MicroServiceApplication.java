@@ -24,7 +24,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan(
         basePackages = {
                 "org.springframework.data.jpa.convert.threeten",
-                "de.muenchen.oss.wahllokalsystem.wahlvorbereitung"
+                "de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice"
         }
 )
 @EnableJpaRepositories(

@@ -1,0 +1,12 @@
+id: add user attribute mapper wahlbezirksart
+author: MrSebastian
+realm: ${SSO_REALM}
+changes:
+  # maps user attribute user_name to a claim user_name
+  - addClientUserAttributeMapper:
+      clientId: ${SSO_CLIENT_ID}
+      name: wahlbezirksArt
+      userAttribute: wahlbezirksArt
+      claimName: wahlbezirksArt
+      addToUserInfo: true
+      addToAccessToken: true

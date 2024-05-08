@@ -37,6 +37,10 @@ export default withMermaid({
                             text: 'Verbesserung Einstiegsfreundlichkeit',
                             link: `${PATH_TECHNIK}adr/adr-improve-getting-started-of-services`
                         },
+                        {
+                            text: 'Shared/Separated Datenmodell',
+                            link: `${PATH_TECHNIK}adr/adr002-controller-service-datamodels`
+                        },
                     ]
                 }
             ],

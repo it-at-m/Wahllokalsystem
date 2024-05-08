@@ -1,0 +1,9 @@
+id: create group allInfomanagementAuthorities and link wls_all
+author: MrSebastian
+realm: ${SSO_REALM}
+changes:
+  - addGroup:
+      name: allInfomanagementAuthorities
+  - assignGroup:
+      user: wls_all
+      group: allInfomanagementAuthorities

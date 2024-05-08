@@ -8,3 +8,4 @@ includes:
   - path: 04_add-broadcast-authorities.yml
   - path: 05_add-group-all-broadcast.yml
   - path: 06_create-wls-all-user-with-broadcast-group.yml
+  - path: create-group-all-infomanagement-authorities-and-link-user.yml

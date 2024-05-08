@@ -19,6 +19,10 @@ export default withMermaid({
             {text: 'Technik', link: PATH_TECHNIK}
         ],
 
+        outline: {
+            label: "Auf dieser Seite"
+        },
+
         sidebar: {
             [PATH_TECHNIK]: [
                 {text: 'Tools & Frameworks', link: `${PATH_TECHNIK}`},
@@ -32,7 +36,11 @@ export default withMermaid({
                         {
                             text: 'Shared/Separated Datenmodell',
                             link: `${PATH_TECHNIK}adr/adr002-controller-service-datamodels`
-                        }
+                        },
+                        {
+                            text: 'Verbesserung Einstiegsfreundlichkeit',
+                            link: `${PATH_TECHNIK}adr/adr-improve-getting-started-of-services`
+                        },
                     ]
                 }
             ],

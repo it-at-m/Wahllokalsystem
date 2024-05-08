@@ -28,7 +28,7 @@ Im Controller waren es drei Argumente, die aber zu einer semantischen Einheit ge
 
 Grundsätzlich sind mit dem Shared- und Separated-Datenmodell zwei Varianten zur Kopplung von Controller und Service möglich. Die Kriterien dazu sind oben beispielhaft beschrieben.
 
-Services sollen aber einheitlich aufgebaut sein. Um die Verständlichkeit zu wahren dürfen sich die beiden Varianten  innerhalb eines Service nicht vermischen.
+Services sollen aber einheitlich aufgebaut sein. Um die Verständlichkeit zu wahren dürfen sich die beiden Varianten innerhalb eines Service nicht vermischen.
 
 ### Separated-Datenmodell je Layer
 

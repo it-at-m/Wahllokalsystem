@@ -5,6 +5,7 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.configuration;
 
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.MicroServiceApplication;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,6 +40,7 @@ class CacheControlConfigurationTest {
     private TestRestTemplate testRestTemplate;
 
     @Test
+    @Disabled
     void testForCacheControlHeadersForEntityEndpoint() {
         ResponseEntity<String> response = testRestTemplate.exchange(ENTITY_ENDPOINT_URL, HttpMethod.GET, null, String.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());

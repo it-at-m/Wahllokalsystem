@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -53,7 +54,7 @@ public class NfcHelper {
      * @see Normalizer#normalize(CharSequence, Normalizer.Form)
      */
     public static StringBuffer nfcConverter(final StringBuffer in) {
-        return new StringBuffer(nfcConverter(in.toString()));
+        return new StringBuffer(Objects.requireNonNull(nfcConverter(in.toString())));
     }
 
     /**

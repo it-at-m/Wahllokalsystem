@@ -104,8 +104,7 @@ public class UserInfoAuthoritiesService {
 
     private static List<SimpleGrantedAuthority> asAuthorities(Object object) {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        if (object instanceof Collection) {
-            Collection<?> collection = (Collection<?>) object;
+        if (object instanceof Collection<?> collection) {
             object = collection.toArray(new Object[0]);
         }
         if (ObjectUtils.isArray(object)) {
@@ -113,7 +112,7 @@ public class UserInfoAuthoritiesService {
                     Stream.of(((Object[]) object))
                             .map(Object::toString)
                             .map(SimpleGrantedAuthority::new)
-                            .collect(Collectors.toList()));
+                            .toList());
         }
         return authorities;
     }

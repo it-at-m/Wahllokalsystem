@@ -61,7 +61,8 @@ class UnicodeConfigurationTest {
         final TestConstants.TheEntityDto theEntityDto = new TestConstants.TheEntityDto();
         theEntityDto.setTextAttribute(TEXT_ATTRIBUTE_DECOMPOSED);
         assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), theEntityDto.getTextAttribute().length());
-        final TestConstants.TheEntityDto response = testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), theEntityDto, TestConstants.TheEntityDto.class).getBody();
+        final TestConstants.TheEntityDto response = testRestTemplate
+                .postForEntity(URI.create(ENTITY_ENDPOINT_URL), theEntityDto, TestConstants.TheEntityDto.class).getBody();
 
         // Check whether response contains a composed string.
         assertEquals(TEXT_ATTRIBUTE_COMPOSED, response.getTextAttribute());

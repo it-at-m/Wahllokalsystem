@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
-import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -111,56 +110,41 @@ public class BroadcastIntegrationTest {
     }
 
     @Test
-    void broadcastIntegrationTestMessageIncomplete() {
+    void broadcastIntegrationTestMessageIncomplete() throws Exception {
         log.debug("#BroadcastIntegrationTestMessageIncomplete");
 
         Exception catchedException1 = null;
         final BroadcastMessageDTO bmDTOIncomplete1 = new BroadcastMessageDTO(null, "Das ist ein Test");
+        mvc.perform(post(BROADCAST_URL)
+                .content(Testdaten.asJsonString(bmDTOIncomplete1, objectMapper))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> {
+                    Exception resolvedException = result.getResolvedException();
+                    Assertions
+                            .assertThat(resolvedException)
+                            .isInstanceOf(FachlicheWlsException.class)
+                            .extracting("code", "serviceName", "message")
+                            .contains(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG, serviceOid,
+                                    "Das Object BroadcastMessage ist nicht vollständig.");
+                });
 
-        try {
-            mvc.perform(post(BROADCAST_URL)
-                    .content(Testdaten.asJsonString(bmDTOIncomplete1, objectMapper))
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(result -> {
-                        Exception resolvedException = result.getResolvedException();
-                        Assertions
-                                .assertThat(resolvedException)
-                                .isInstanceOf(FachlicheWlsException.class)
-                                .extracting("code", "serviceName", "message")
-                                .contains(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG, serviceOid,
-                                        "Das Object BroadcastMessage ist nicht vollständig.");
-                    });
-        } catch (Exception e) {
-            catchedException1 = e;
-        }
-
-        Assertions.assertThat(catchedException1).isNull();
-
-        Exception catchedException2 = null;
         final BroadcastMessageDTO bmDTOIncomplete2 = new BroadcastMessageDTO(Arrays.asList("1", "2", "3", "4"), null);
-
-        try {
-            mvc.perform(post(BROADCAST_URL)
-                    .content(Testdaten.asJsonString(bmDTOIncomplete2, objectMapper))
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(result -> {
-                        Exception resolvedException = result.getResolvedException();
-                        Assertions
-                                .assertThat(resolvedException)
-                                .isInstanceOf(FachlicheWlsException.class)
-                                .extracting("code", "serviceName", "message")
-                                .contains(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG, serviceOid,
-                                        "Das Object BroadcastMessage ist nicht vollständig.");
-                    });
-        } catch (Exception e) {
-            catchedException2 = e;
-        }
-
-        Assertions.assertThat(catchedException2).isNull();
+        mvc.perform(post(BROADCAST_URL)
+                .content(Testdaten.asJsonString(bmDTOIncomplete2, objectMapper))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> {
+                    Exception resolvedException = result.getResolvedException();
+                    Assertions
+                            .assertThat(resolvedException)
+                            .isInstanceOf(FachlicheWlsException.class)
+                            .extracting("code", "serviceName", "message")
+                            .contains(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG, serviceOid,
+                                    "Das Object BroadcastMessage ist nicht vollständig.");
+                });
     }
 
     @Test
@@ -178,72 +162,53 @@ public class BroadcastIntegrationTest {
     }
 
     @Test
-    void getMessageIntegrationTestGetParamBlank() {
+    void getMessageIntegrationTestGetParamBlank() throws Exception {
         log.debug("#GetMessageIntegrationTestGetParamBlank");
-        Exception thrownException = null;
-        try {
-            mvc.perform(get(GETMESSAGE_URL + "   ")
-                    .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(result -> {
-                        Exception resolvedException = result.getResolvedException();
-                        Assertions
-                                .assertThat(resolvedException)
-                                .isInstanceOf(FachlicheWlsException.class)
-                                .extracting("code", "serviceName", "message")
-                                .contains(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG, serviceOid,
-                                        "wahlbezirkID is blank or empty");
-                    });
-        } catch (Exception e) {
-            thrownException = e;
-        }
+        mvc.perform(get(GETMESSAGE_URL + "   ")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> {
+                    Exception resolvedException = result.getResolvedException();
+                    Assertions
+                            .assertThat(resolvedException)
+                            .isInstanceOf(FachlicheWlsException.class)
+                            .extracting("code", "serviceName", "message")
+                            .contains(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG, serviceOid,
+                                    "wahlbezirkID is blank or empty");
+                });
 
-        Assertions.assertThat(thrownException).isNull();
     }
 
     @Test
-    void getMessageIntegrationTestGetParamEmpty() {
+    void getMessageIntegrationTestGetParamEmpty() throws Exception {
         log.debug("#GetMessageIntegrationTestGetParamEmpty");
         String wahlbezirkID = "";
-        Exception thrownException = null;
-        try {
-            mvc.perform(get(GETMESSAGE_URL + wahlbezirkID)
-                    .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isInternalServerError())
-                    .andExpect(result -> {
-                        JSONObject actualJsonContent = new JSONObject(result.getResponse().getContentAsString());
-                        JSONObject expectedJson = new JSONObject(
-                                "{\"category\":\"T\",\"code\":\"999\",\"service\":\"WLS-BROADCAST\",\"message\":\"Ursache: class org.springframework.web.servlet.resource.NoResourceFoundException, Nachricht: No static resource businessActions/getMessage.\"}");
-                        Assertions.assertThat(actualJsonContent).usingRecursiveComparison().ignoringFields().isEqualTo(expectedJson);
-                    });
-        } catch (Exception e) {
-            thrownException = e;
-        }
 
-        Assertions.assertThat(thrownException).isNull();
+        mvc.perform(get(GETMESSAGE_URL + wahlbezirkID)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError())
+                .andExpect(result -> {
+                    String actualStringResponse = result.getResponse().getContentAsString();
+                    String expectedStringResponse = "{\"category\":\"T\",\"code\":\"999\",\"service\":\"WLS-BROADCAST\",\"message\":\"Ursache: class org.springframework.web.servlet.resource.NoResourceFoundException, Nachricht: No static resource businessActions/getMessage.\"}";
+                    Assertions.assertThat(actualStringResponse).isEqualTo(expectedStringResponse);
+                });
     }
 
     @Test
-    void getMessageNoContentIntegrationTest() {
+    void getMessageNoContentIntegrationTest() throws Exception {
         log.debug("#GetMessageNoContentIntegrationTest");
         ServletException thrownException = null;
-        try {
-            mvc.perform(get(GETMESSAGE_URL + "123")
-                    .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isNoContent())
-                    .andExpect(result -> {
-                        Exception resolvedException = result.getResolvedException();
-                        Assertions
-                                .assertThat(resolvedException)
-                                .isInstanceOf(FachlicheWlsException.class)
-                                .extracting("code", "serviceName", "message")
-                                .contains("204", serviceOid, "No message found");
-                    });
-        } catch (Exception e) {
-            thrownException = (ServletException) e;
-        }
-
-        Assertions.assertThat(thrownException).isNull();
+        mvc.perform(get(GETMESSAGE_URL + "123")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andExpect(result -> {
+                    Exception resolvedException = result.getResolvedException();
+                    Assertions
+                            .assertThat(resolvedException)
+                            .isInstanceOf(FachlicheWlsException.class)
+                            .extracting("code", "serviceName", "message")
+                            .contains("204", serviceOid, "No message found");
+                });
     }
 
     @Test
@@ -273,27 +238,19 @@ public class BroadcastIntegrationTest {
     }
 
     @Test
-    void deleteIntegrationTestBadFormatUUID() {
+    void deleteIntegrationTestBadFormatUUID() throws Exception {
         log.debug("#deleteIntegrationTestBadFormatUUID");
-
-        ServletException thrownException = null;
-        try {
-            mvc.perform(post(DELETE_URL + "badformatparam-u-u-i-d")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(result -> {
-                        Exception resolvedException = result.getResolvedException();
-                        Assertions
-                                .assertThat(resolvedException)
-                                .isInstanceOf(FachlicheWlsException.class)
-                                .extracting("code", "serviceName", "message")
-                                .contains("150", serviceOid, "Nachricht-UUID bad format");
-                    });
-        } catch (Exception e) {
-            thrownException = (ServletException) e;
-        }
-
-        Assertions.assertThat(thrownException).isNull();
+        mvc.perform(post(DELETE_URL + "badformatparam-u-u-i-d")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> {
+                    Exception resolvedException = result.getResolvedException();
+                    Assertions
+                            .assertThat(resolvedException)
+                            .isInstanceOf(FachlicheWlsException.class)
+                            .extracting("code", "serviceName", "message")
+                            .contains("150", serviceOid, "Nachricht-UUID bad format");
+                });
     }
 }

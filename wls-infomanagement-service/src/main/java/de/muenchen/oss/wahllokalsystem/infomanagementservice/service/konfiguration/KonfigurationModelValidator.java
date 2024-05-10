@@ -10,8 +10,11 @@ public class KonfigurationModelValidator {
     private static final String CODE_GETKONFIGURATION_PARAMETER_UNVOLLSTAENDIG = "102";
     private static final String MSG_GETKONFIGURATION_PARAMETER_UNVOLLSTAENDIG = "getKonfiguration: Suchkriterien unvollständig.";
 
-    @Value("${service.info.oid}")
-    String serviceID;
+    private final String serviceID;
+
+    public KonfigurationModelValidator(@Value("${service.info.oid}") final String serviceID) {
+        this.serviceID = serviceID;
+    }
 
     public void valideOrThrowGetKonfigurationByKey(final KonfigurationKonfigKey konfigurationKonfigKey) {
         if (konfigurationKonfigKey == null) {

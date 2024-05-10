@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-@PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_GetKonfiguration')")
 public class KonfigurationService {
 
     private final KonfigurationRepository konfigurationRepository;
@@ -24,6 +23,7 @@ public class KonfigurationService {
 
     private final JWTService jwtService;
 
+    @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_GetKonfiguration')")
     public Optional<KonfigurationModel> getKonfiguration(@NotNull final KonfigurationKonfigKey konfigurationKonfigKey) {
         log.info("#getKonfiguration");
 

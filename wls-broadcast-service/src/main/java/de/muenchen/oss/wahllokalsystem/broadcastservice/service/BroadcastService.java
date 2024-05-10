@@ -81,7 +81,7 @@ public class BroadcastService {
             messageRepo.deleteById(nachrichtUUID);
         } catch (IllegalArgumentException e) {
             throw FachlicheWlsException.withCode(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG).inService(serviceOid)
-                        .buildWithMessage("Nachricht-UUID bad format");
+                    .buildWithMessage("Nachricht-UUID bad format");
         }
     }
 

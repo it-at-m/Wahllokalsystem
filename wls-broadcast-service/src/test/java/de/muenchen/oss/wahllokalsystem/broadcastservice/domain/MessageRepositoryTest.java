@@ -99,13 +99,8 @@ class MessageRepositoryTest {
         repository.deleteById(original.getOid());
 
         Message foundMessage = null;
-        Exception thrownException = null;
 
-        try {
-            foundMessage = repository.findById(original.getOid()).orElse(null);
-        } catch (Exception e) {
-            thrownException = e;
-        }
+        foundMessage = repository.findById(original.getOid()).orElse(null);
 
         Assertions.assertThat(foundMessage).isNull();
     }

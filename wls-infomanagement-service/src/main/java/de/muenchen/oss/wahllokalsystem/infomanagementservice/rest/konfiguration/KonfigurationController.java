@@ -1,8 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration;
 
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationKonfigKey;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationService;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,8 +16,13 @@ public class KonfigurationController {
 
     private final KonfigurationService konfigurationService;
 
+    private final KonfigurationDTOMapper konfigurationDTOMapper;
+
     @GetMapping("/konfiguration/{key}")
-    public void getKonfiguration(@PathVariable("key") String key) {
-        konfigurationService.getKonfiguration(KonfigurationKonfigKey.ABSCHLUSSTEXT);
+    public ResponseEntity<KonfigurationDTO> getKonfiguration(@PathVariable("key") KonfigurationKey key) {
+        val konfiguration = konfigurationService.getKonfiguration(konfigurationDTOMapper.toModelKey(key));
+
+        return konfiguration.map(konfigurationModel -> ResponseEntity.ok(konfigurationDTOMapper.toDTO(konfigurationModel)))
+                .orElseGet(() -> ResponseEntity.noContent().build());
     }
 }

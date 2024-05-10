@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration;
 
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.Konfiguration;
 import java.util.Map;
 import java.util.Optional;
 import lombok.val;
@@ -7,6 +8,8 @@ import org.mapstruct.Mapper;
 
 @Mapper
 public interface KonfigurationModelMapper {
+
+    KonfigurationModel toModel(Konfiguration konfigurationEntity);
 
     Map<KonfigurationKonfigKey, Map<WahlbezirkArt, KonfigurationKonfigKey>> alternativeKeys = Map.of(
             KonfigurationKonfigKey.FRUEHESTE_EROEFFNUNGSZEIT, Map.of(WahlbezirkArt.UWB, KonfigurationKonfigKey.FRUEHESTE_EROEFFNUNGSZEIT_UW, WahlbezirkArt.BWB,

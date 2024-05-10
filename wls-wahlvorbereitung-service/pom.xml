@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
-    <artifactId>wls-infomanagement-service</artifactId>
+    <artifactId>wls-wahlvorbereitung-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>wls_infomanagement_service</name>
+    <name>wls_wahlvorbereitung_service</name>
 
 
     <properties>
@@ -105,13 +105,6 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-jose</artifactId>
-        </dependency>
-
-        <!-- wls-common -->
-        <dependency>
-            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
-            <artifactId>exception</artifactId>
-            <version>1.0.0</version>
         </dependency>
 
         <!-- json etc. -->
@@ -274,7 +267,7 @@
 
     </dependencies>
 
-    
+
     <scm>
         <url>https://github.com/it-at-m/Wahllokalsystem</url>
         <connection>scm:git:https://github.com/it-at-m/Wahllokalsystem.git</connection>

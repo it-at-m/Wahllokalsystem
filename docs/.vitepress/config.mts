@@ -19,6 +19,10 @@ export default withMermaid({
             {text: 'Technik', link: PATH_TECHNIK}
         ],
 
+        outline: {
+            label: "Auf dieser Seite"
+        },
+
         sidebar: {
             [PATH_TECHNIK]: [
                 {text: 'Tools & Frameworks', link: `${PATH_TECHNIK}`},
@@ -28,7 +32,15 @@ export default withMermaid({
                 {text: 'Entwicklungsumgebung', link: `${PATH_TECHNIK}development/`},
                 {
                     text: 'Adr', link: `${PATH_TECHNIK}adr/`, collapsed: true, items: [
-                        {text: 'Renovate - ignoriere lombok', link: `${PATH_TECHNIK}adr/adr001-renovate-ignore-lombok`}
+                        {text: 'Renovate - ignoriere lombok', link: `${PATH_TECHNIK}adr/adr001-renovate-ignore-lombok`},
+                        {
+                            text: 'Verbesserung Einstiegsfreundlichkeit',
+                            link: `${PATH_TECHNIK}adr/adr-improve-getting-started-of-services`
+                        },
+                        {
+                            text: 'Shared/Separated Datenmodell',
+                            link: `${PATH_TECHNIK}adr/adr002-controller-service-datamodels`
+                        },
                     ]
                 }
             ],

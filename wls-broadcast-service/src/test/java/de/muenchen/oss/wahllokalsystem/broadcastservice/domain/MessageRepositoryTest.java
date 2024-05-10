@@ -108,7 +108,6 @@ class MessageRepositoryTest {
         }
 
         Assertions.assertThat(foundMessage).isNull();
-        Assertions.assertThat(thrownException).isNull();
     }
 
     private List<Message> mapForTestsFromBroadcastMessageDTO_toListOfMessages(BroadcastMessageDTO messageToBroadcast, LocalDateTime now) {

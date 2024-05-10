@@ -42,7 +42,7 @@ public class BroadcastController {
             summary = "Nachricht löschen",
             description = "Löscht die Nachricht mit der gegebenen ID, nachdem sie gelesen wurde. Es wird nur der dem entsprechenden Wahllokal zugewiesene Datenbankeintrag."
     )
-    @PostMapping(value = MESSAGE_READ_PATH) //TODO DeleteMapping wäre besser
+    @PostMapping(value = MESSAGE_READ_PATH)
     public void deleteMessage(@PathVariable("nachrichtID") String nachrichtID) { //TODO Besser wäre 204
         broadcastService.deleteMessage(nachrichtID);
     }

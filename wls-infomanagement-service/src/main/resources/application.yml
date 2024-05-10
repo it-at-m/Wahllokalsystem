@@ -37,6 +37,10 @@ server:
     whitelabel:
       enabled: false
 
+service:
+  info:
+    oid: WLS-INFOMANAGEMENT
+
 # Config for spring actuator endpoints
 management:
   server.port: ${server.port}

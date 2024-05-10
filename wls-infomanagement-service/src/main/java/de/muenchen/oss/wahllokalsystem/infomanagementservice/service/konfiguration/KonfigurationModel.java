@@ -2,7 +2,9 @@ package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfigurat
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 
+@Builder
 public record KonfigurationModel(@NotNull @Size(max = 255) String schluessel,
                                  @Size(max = 1024) String wert,
                                  @Size(max = 1024) String beschreibung,

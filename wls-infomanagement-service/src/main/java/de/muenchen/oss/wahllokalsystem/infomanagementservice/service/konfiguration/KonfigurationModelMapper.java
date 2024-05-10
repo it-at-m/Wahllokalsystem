@@ -20,15 +20,12 @@ public interface KonfigurationModelMapper {
                     KonfigurationKonfigKey.FRUEHESTE_SCHLIESSUNGSZEIT_BW)
     );
 
-    default String toString(final KonfigurationKonfigKey konfigKey, final WahlbezirkArt wahlbezirkArt) {
-        val alternativKey = getAlternativKey(konfigKey, wahlbezirkArt);
-
-        return alternativKey.orElse(konfigKey).name();
-
-    }
-
     default Optional<KonfigurationKonfigKey> getAlternativKey(final KonfigurationKonfigKey konfigKey, final WahlbezirkArt wahlbezirkArt) {
         val alternativKey = alternativeKeys.get(konfigKey);
-        return Optional.ofNullable(alternativKey.get(wahlbezirkArt));
+        if (alternativKey == null) {
+            return Optional.empty();
+        } else {
+            return Optional.ofNullable(alternativKey.get(wahlbezirkArt));
+        }
     }
 }

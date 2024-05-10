@@ -77,16 +77,11 @@ public class BroadcastService {
         }
 
         try {
-            UUID nachrichtUUID;
-            nachrichtUUID = java.util.UUID.fromString(nachrichtID);
+            UUID nachrichtUUID = java.util.UUID.fromString(nachrichtID);
             messageRepo.deleteById(nachrichtUUID);
-        } catch (Exception e) {
-            if (e instanceof NumberFormatException) {
-                throw FachlicheWlsException.withCode(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG).inService(serviceOid)
+        } catch (IllegalArgumentException e) {
+            throw FachlicheWlsException.withCode(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG).inService(serviceOid)
                         .buildWithMessage("Nachricht-UUID bad format");
-            } else {
-                throw e;
-            }
         }
     }
 

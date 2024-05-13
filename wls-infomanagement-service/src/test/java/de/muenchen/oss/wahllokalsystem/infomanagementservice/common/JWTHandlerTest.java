@@ -8,13 +8,12 @@ import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
-class JWTServiceTest {
+class JWTHandlerTest {
 
-    private final JWTService unitUnderTest = new JWTService();
+    private final JWTHandler unitUnderTest = new JWTHandler();
 
     @Nested
     class GetDetail {
@@ -25,11 +24,10 @@ class JWTServiceTest {
             val detailValue = "detailValue";
 
             val jwt = createJWT(Map.of(detailKey, detailValue));
-            SecurityContextHolder.getContext().setAuthentication(new JwtAuthenticationToken(jwt));
 
             val expectedResult = Optional.of(detailValue);
 
-            val result = unitUnderTest.getDetail(detailKey);
+            val result = unitUnderTest.getDetail(detailKey, new JwtAuthenticationToken(jwt));
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
@@ -39,9 +37,8 @@ class JWTServiceTest {
             val detailKey = "requestedKey";
 
             val jwt = createJWT(Map.of(detailKey + "extra", detailKey));
-            SecurityContextHolder.getContext().setAuthentication(new JwtAuthenticationToken(jwt));
 
-            val result = unitUnderTest.getDetail(detailKey);
+            val result = unitUnderTest.getDetail(detailKey, new JwtAuthenticationToken(jwt));
 
             Assertions.assertThat(result).isEmpty();
         }

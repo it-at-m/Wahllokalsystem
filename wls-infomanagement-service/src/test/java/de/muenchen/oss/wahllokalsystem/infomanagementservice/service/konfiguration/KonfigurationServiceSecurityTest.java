@@ -2,7 +2,7 @@ package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfigurat
 
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.TestConstants;
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.common.JWTService;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.common.JWTHandler;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.SecurityUtils;
 import java.util.Arrays;
@@ -31,7 +31,7 @@ public class KonfigurationServiceSecurityTest {
     private final String TESTUSER_PASSWORD = "secret";
 
     @MockBean
-    JWTService jwtService;
+    JWTHandler jwtHandler;
 
     @Autowired
     KonfigurationService konfigurationService;

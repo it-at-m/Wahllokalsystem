@@ -2,7 +2,6 @@ package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfigurat
 
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.TestConstants;
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.common.JWTHandler;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.SecurityUtils;
 import java.util.Arrays;
@@ -18,7 +17,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
@@ -29,9 +27,6 @@ public class KonfigurationServiceSecurityTest {
 
     private final String TESTUSER = "testuser";
     private final String TESTUSER_PASSWORD = "secret";
-
-    @MockBean
-    JWTHandler jwtHandler;
 
     @Autowired
     KonfigurationService konfigurationService;

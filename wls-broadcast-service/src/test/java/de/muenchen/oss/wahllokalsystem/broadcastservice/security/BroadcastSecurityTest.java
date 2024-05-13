@@ -12,6 +12,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,144 +39,154 @@ public class BroadcastSecurityTest {
         SecurityContextHolder.clearContext();
     }
 
-    @Test
-    void broadcastAccessDeniedTest() {
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, AuthorityUtils.createAuthorityList("ROLE_DUMMY")));
+    @Nested
+    class BroadcastTest {
 
-        Assertions.assertThatExceptionOfType(AccessDeniedException.class)
-                .isThrownBy(() -> broadcastService.broadcast(null)).withMessageStartingWith("Access Denied");
-    }
+        @Test
+        void accessDenied_dummyRolle() {
+            SecurityContextHolder.getContext().setAuthentication(
+                    new UsernamePasswordAuthenticationToken(TestConstants.TESTUSER, TestConstants.TESTPASSWORD,
+                            AuthorityUtils.createAuthorityList("ROLE_DUMMY")));
 
-    @Test
-    void getMessageAccessDeniedTest() {
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, AuthorityUtils.createAuthorityList("ROLE_DUMMY")));
+            Assertions.assertThatExceptionOfType(AccessDeniedException.class)
+                    .isThrownBy(() -> broadcastService.broadcast(null)).withMessageStartingWith("Access Denied");
+        }
 
-        Assertions.assertThatExceptionOfType(AccessDeniedException.class)
-                .isThrownBy(() -> broadcastService.getOldestMessage(null))
-                .withMessageStartingWith("Access Denied");
-    }
+        @Test
+        void accessDenied_missingOneAuthority_BROADCAST_WRITE_MESSAGE() {
 
-    @Test
-    void deleteAccessDeniedTest() {
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, AuthorityUtils.createAuthorityList("ROLE_DUMMY")));
+            BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
+                    BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_BROADCAST
+            });
 
-        Assertions.assertThatExceptionOfType(AccessDeniedException.class)
-                .isThrownBy(() -> broadcastService.deleteMessage(null))
-                .withMessageStartingWith("Access Denied");
-    }
+            List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
+            BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, "I should fail");
+            Assertions.assertThatExceptionOfType(AccessDeniedException.class)
+                    .isThrownBy(() -> broadcastService.broadcast(m1))
+                    .withMessageStartingWith("Access Denied");
 
-    @Test
-    void broadcastAccessPositiveTest() {
-        BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
-                BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_BROADCAST,
-                BroadcastSecurityUtils.BROADCAST_WRITE_MESSAGE
-        });
+        }
 
-        Exception thrownException = null;
-        try {
+        @Test
+        void accessDenied_missingOneAuthority_BROADCAST_BUSINESSACTION_BROADCAST() {
+
+            List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
+            BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, "I should fail");
+            BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
+                    BroadcastSecurityUtils.BROADCAST_WRITE_MESSAGE
+            });
+
+            Assertions.assertThatExceptionOfType(AccessDeniedException.class)
+                    .isThrownBy(() -> broadcastService.broadcast(m1))
+                    .withMessageStartingWith("Access Denied");
+
+        }
+
+        @Test
+        void accessPositive() {
+
+            BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
+                    BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_BROADCAST,
+                    BroadcastSecurityUtils.BROADCAST_WRITE_MESSAGE
+            });
             List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
             BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, "I should have access");
-            broadcastService.broadcast(m1);
-        } catch (Exception e) {
-            thrownException = e;
+
+            Assertions.assertThatCode(() -> broadcastService.broadcast(m1))
+                    .doesNotThrowAnyException();
         }
 
-        Assertions.assertThat(thrownException).isNull();
-
-        /**
-         * Fails if missing authority BroadcastSecurityUtils.BROADCAST_WRITE_MESSAGE
-         */
-        BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
-                BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_BROADCAST
-        });
-
-        List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
-        BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, "I should fail");
-        Assertions.assertThatExceptionOfType(AccessDeniedException.class)
-                .isThrownBy(() -> broadcastService.broadcast(m1))
-                .withMessageStartingWith("Access Denied");
-
-        /**
-         * Fails if missing authority BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_BROADCAST
-         */
-        BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
-                BroadcastSecurityUtils.BROADCAST_WRITE_MESSAGE
-        });
-
-        Assertions.assertThatExceptionOfType(AccessDeniedException.class)
-                .isThrownBy(() -> broadcastService.broadcast(m1))
-                .withMessageStartingWith("Access Denied");
     }
 
-    @Test
-    void getMessageAccessPositiveTest() {
+    @Nested
+    class GetMessageTest {
 
-        BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
-                BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_NACHRICHTABRUFEN
-        });
+        @Test
+        void accessDenied() {
+            SecurityContextHolder.getContext().setAuthentication(
+                    new UsernamePasswordAuthenticationToken(TestConstants.TESTUSER, TestConstants.TESTPASSWORD,
+                            AuthorityUtils.createAuthorityList("ROLE_DUMMY")));
 
-        Exception thrownException = null;
-        try {
-            broadcastService.getOldestMessage("wahlbezirkId");
-        } catch (Exception e) {
-            thrownException = e;
+            Assertions.assertThatExceptionOfType(AccessDeniedException.class)
+                    .isThrownBy(() -> broadcastService.getOldestMessage(null))
+                    .withMessageStartingWith("Access Denied");
         }
 
-        Assertions.assertThat(thrownException).isNotInstanceOf(AccessDeniedException.class);
+        @Test
+        void accessDenied_missing_Role_BROADCAST_BUSINESSACTION_NACHRICHTABRUFEN() {
 
-        /**
-         * Fails if missing authority BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_NACHRICHTABRUFEN
-         */
-        BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
-                BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_BROADCAST
-        });
+            BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
+                    BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_BROADCAST
+            });
 
-        Assertions.assertThatExceptionOfType(AccessDeniedException.class)
-                .isThrownBy(() -> broadcastService.getOldestMessage("wahlbezirkId"))
-                .withMessageStartingWith("Access Denied");
+            Assertions.assertThatExceptionOfType(AccessDeniedException.class)
+                    .isThrownBy(() -> broadcastService.getOldestMessage("wahlbezirkId"))
+                    .withMessageStartingWith("Access Denied");
+        }
+
+        @Test
+        void accessPositiveTest_Role_BROADCAST_BUSINESSACTION_NACHRICHTABRUFEN() {
+
+            BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
+                    BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_NACHRICHTABRUFEN
+            });
+
+            Assertions.assertThatThrownBy(() -> broadcastService.getOldestMessage("wahlbezirkId")).isNotInstanceOf(AccessDeniedException.class);
+        }
     }
 
-    @Test
-    void deleteMessageAccessPositiveTest() {
+    @Nested
+    class DeleteTest {
 
-        BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
-                BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_NACHRICHTGELESEN,
-                BroadcastSecurityUtils.BROADCAST_DELETE_MESSAGE
-        });
+        @Test
+        void accessDenied() {
+            SecurityContextHolder.getContext().setAuthentication(
+                    new UsernamePasswordAuthenticationToken(TestConstants.TESTUSER, TestConstants.TESTPASSWORD,
+                            AuthorityUtils.createAuthorityList("ROLE_DUMMY")));
 
-        Exception thrownException = null;
-        try {
-            broadcastService.deleteMessage("1-2-3-4-5");
-        } catch (Exception e) {
-            thrownException = e;
+            Assertions.assertThatExceptionOfType(AccessDeniedException.class)
+                    .isThrownBy(() -> broadcastService.deleteMessage(null))
+                    .withMessageStartingWith("Access Denied");
         }
 
-        Assertions.assertThat(thrownException).isNull();
+        @Test
+        void accessDenied_missing_Role_BROADCAST_DELETE_MESSAGE() {
 
-        /**
-         * Fails if missing authority BroadcastSecurityUtils.BROADCAST_DELETE_MESSAGE
-         */
-        BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
-                BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_NACHRICHTGELESEN
-        });
+            BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
+                    BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_NACHRICHTGELESEN
+            });
 
-        Assertions.assertThatExceptionOfType(AccessDeniedException.class)
-                .isThrownBy(() -> broadcastService.deleteMessage("1-2-3-4-5"))
-                .withMessageStartingWith("Access Denied");
+            Assertions.assertThatExceptionOfType(AccessDeniedException.class)
+                    .isThrownBy(() -> broadcastService.deleteMessage("1-2-3-4-5"))
+                    .withMessageStartingWith("Access Denied");
 
-        /**
-         * Fails if missing authority BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_NACHRICHTGELESEN
-         */
-        BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
-                BroadcastSecurityUtils.BROADCAST_DELETE_MESSAGE
-        });
+        }
 
-        Assertions.assertThatExceptionOfType(AccessDeniedException.class)
-                .isThrownBy(() -> broadcastService.deleteMessage("1-2-3-4-5"))
-                .withMessageStartingWith("Access Denied");
+        @Test
+        void accessDenied_missing_Role_BROADCAST_BUSINESSACTION_NACHRICHTGELESEN() {
+
+            BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
+                    BroadcastSecurityUtils.BROADCAST_DELETE_MESSAGE
+            });
+
+            Assertions.assertThatExceptionOfType(AccessDeniedException.class)
+                    .isThrownBy(() -> broadcastService.deleteMessage("1-2-3-4-5"))
+                    .withMessageStartingWith("Access Denied");
+
+        }
+
+        @Test
+        void accessPositive() {
+
+            BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
+                    BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_NACHRICHTGELESEN,
+                    BroadcastSecurityUtils.BROADCAST_DELETE_MESSAGE
+            });
+
+            Assertions.assertThatCode(() -> broadcastService.deleteMessage("1-2-3-4-5"))
+                    .doesNotThrowAnyException();
+        }
+
     }
 
 }

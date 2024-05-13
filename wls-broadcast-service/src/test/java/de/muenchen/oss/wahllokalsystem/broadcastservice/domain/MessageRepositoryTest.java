@@ -81,11 +81,9 @@ class MessageRepositoryTest {
     @Transactional(propagation = Propagation.REQUIRED, noRollbackFor = Exception.class)
     void testDeleteById() {
 
-        String originalOid = "1-2-3-4-5";
         String originalNachricht = "Test Nachricht";
         // initialize
         Message original = new Message();
-        original.setOid(UUID.fromString(originalOid));
         original.setNachricht(originalNachricht);
 
         // persist

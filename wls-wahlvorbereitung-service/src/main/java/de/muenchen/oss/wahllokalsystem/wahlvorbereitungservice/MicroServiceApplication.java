@@ -2,7 +2,7 @@
  * Copyright (c): it@M - Dienstleister für Informations- und Telekommunikationstechnik
  * der Landeshauptstadt München, 2024
  */
-package de.muenchen.oss.wahllokalsystem.briefwahlservice;
+package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -18,20 +18,18 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan(
         basePackages = {
                 "org.springframework.data.jpa.convert.threeten",
-                "de.muenchen.oss.wahllokalsystem.briefwahlservice",
-                "de.muenchen.oss.wahllokalsystem.wls.common.exception",
-                "de.muenchen.oss.wahllokalsystem.wls.common.security"
+                "de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice"
         }
 )
 @EntityScan(
         basePackages = {
                 "org.springframework.data.jpa.convert.threeten",
-                "de.muenchen.oss.wahllokalsystem.briefwahlservice"
+                "de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice"
         }
 )
 @EnableJpaRepositories(
         basePackages = {
-                "de.muenchen.oss.wahllokalsystem.briefwahlservice"
+                "de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice"
         }
 )
 @EnableAutoConfiguration

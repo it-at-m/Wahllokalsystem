@@ -1,0 +1,14 @@
+name: verify pull request wahlvorbereitung-service
+
+on:
+  pull_request:
+    paths:
+      - 'wls-wahlvorbereitung-service/**'
+      - '.github/workflows/wls-wahlvorbereitung-service_pull-request.yml'
+
+jobs:
+  verify-pull-request:
+    uses:
+      ./.github/workflows/callable-run-mvn-verify.yml
+    with:
+      pom-dir: 'wls-wahlvorbereitung-service'

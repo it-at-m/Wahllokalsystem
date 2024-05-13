@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
-    <artifactId>wls-briefwahl-service</artifactId>
+    <artifactId>wls-wahlvorbereitung-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>wls_briefwahl_service</name>
+    <name>wls_wahlvorbereitung_service</name>
 
 
     <properties>
@@ -155,13 +155,6 @@
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-jpamodelgen</artifactId>
-        </dependency>
-
-        <!-- wls-common -->
-        <dependency>
-            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
-            <artifactId>security</artifactId>
-            <version>1.0.0</version>
         </dependency>
 
         <!-- Other -->
@@ -358,7 +351,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <argLine>${surefireArgLine}  -Dfile.encoding=${project.build.sourceEncoding}</argLine>
+                    <argLine>${surefireArgLine} -Dfile.encoding=${project.build.sourceEncoding}</argLine>
                 </configuration>
             </plugin>
 
@@ -378,10 +371,10 @@
                             <goal>prepare-agent</goal>
                         </goals>
                         <configuration>
-                           <append>true</append>
-                           <destFile>${sonar.jacoco.reportPath}</destFile>
-                           <!-- Sets the VM argument line used when unit tests are run. -->
-                           <propertyName>surefireArgLine</propertyName>
+                            <append>true</append>
+                            <destFile>${sonar.jacoco.reportPath}</destFile>
+                            <!-- Sets the VM argument line used when unit tests are run. -->
+                            <propertyName>surefireArgLine</propertyName>
                         </configuration>
                     </execution>
                     <execution>

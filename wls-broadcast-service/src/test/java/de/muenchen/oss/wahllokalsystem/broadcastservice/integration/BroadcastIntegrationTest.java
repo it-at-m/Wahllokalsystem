@@ -102,7 +102,7 @@ public class BroadcastIntegrationTest {
         @Test
         void broadcast() throws Exception {
             log.debug("#BroadcastIntegrationTest");
-            MockHttpServletResponse result = null;
+            MockHttpServletResponse result;
             result = mvc.perform(
                     post(BROADCAST_URL)
                             .content(Testdaten.asJsonString(BROADCAST_MESSAGE_DTO, objectMapper))
@@ -205,7 +205,6 @@ public class BroadcastIntegrationTest {
     @Test
     void getMessageNoContentIntegrationTest() throws Exception {
         log.debug("#GetMessageNoContentIntegrationTest");
-        ServletException thrownException = null;
         mvc.perform(get(GETMESSAGE_URL + "123")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())

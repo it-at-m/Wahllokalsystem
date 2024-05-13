@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,7 +95,7 @@ class MessageRepositoryTest {
 
         repository.deleteById(original.getOid());
 
-        Message foundMessage = null;
+        Message foundMessage;
 
         foundMessage = repository.findById(original.getOid()).orElse(null);
 

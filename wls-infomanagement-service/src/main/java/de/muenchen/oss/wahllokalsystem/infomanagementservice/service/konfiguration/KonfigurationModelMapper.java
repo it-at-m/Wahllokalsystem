@@ -17,8 +17,7 @@ public interface KonfigurationModelMapper {
             KonfigurationKonfigKey.SPAETESTE_EROEFFNUNGSZEIT, Map.of(WahlbezirkArt.UWB, KonfigurationKonfigKey.SPAETESTE_EROEFFNUNGSZEIT_UW, WahlbezirkArt.BWB,
                     KonfigurationKonfigKey.SPAETESTE_EROEFFNUNGSZEIT_BW),
             KonfigurationKonfigKey.FRUEHESTE_SCHLIESSUNGSZEIT, Map.of(WahlbezirkArt.UWB, KonfigurationKonfigKey.FRUEHESTE_EROEFFNUNGSZEIT_UW, WahlbezirkArt.BWB,
-                    KonfigurationKonfigKey.FRUEHESTE_SCHLIESSUNGSZEIT_BW)
-    );
+                    KonfigurationKonfigKey.FRUEHESTE_SCHLIESSUNGSZEIT_BW));
 
     default Optional<KonfigurationKonfigKey> getAlternativKey(final KonfigurationKonfigKey konfigKey, final WahlbezirkArt wahlbezirkArt) {
         val alternativKey = alternativeKeys.get(konfigKey);

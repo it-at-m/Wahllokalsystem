@@ -35,3 +35,7 @@ Authorization: {{ token_type }} {{ auth_token }}
 ### get konfigration WILLKOMMENSTEXT
 GET http://localhost:39146/businessActions/konfiguration/WILLKOMMENSTEXT
 Authorization: {{ token_type }} {{ auth_token }}
+
+### get konfigration FRUEHESTE_EROEFFNUNGSZEIT
+GET http://localhost:39146/businessActions/konfiguration/FRUEHESTE_EROEFFNUNGSZEIT
+Authorization: {{ token_type }} {{ auth_token }}

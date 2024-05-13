@@ -9,6 +9,8 @@ public class Authorities {
     public static final String SERVICE_GET_KONFIGURATION = "Infomanagement_BUSINESSACTION_GetKonfiguration";
 
     public static final String REPOSITORY_READ_KONFIGURATION = "Infomanagement_READ_Konfiguration";
+    public static final String REPOSITORY_DELETE_KONFIGURATION = "Infomanagement_DELETE_Konfiguration";
+    public static final String REPOSITORY_WRITE_KONFIGURATION = "Infomanagement_WRITE_Konfiguration";
 
     public static final String[] ALL_AUTHORITIES_GET_KONFIGURATION = new String[] {
             SERVICE_GET_KONFIGURATION,

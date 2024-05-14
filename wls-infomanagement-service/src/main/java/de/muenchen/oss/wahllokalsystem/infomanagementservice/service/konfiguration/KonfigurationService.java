@@ -71,10 +71,10 @@ public class KonfigurationService {
         }
 
         final Optional<Konfiguration> konfiguration = switch (konfigurationKonfigKey) {
-            case FRUEHESTE_LOGIN_UHRZEIT -> konfigurationRepository.getFruehesteLoginUhrzeit();
-            case SPAETESTE_LOGIN_UHRZEIT -> konfigurationRepository.getSpaetesteLoginUhrzeit();
-            case WILLKOMMENSTEXT -> konfigurationRepository.getWillkommenstext();
-            default -> Optional.empty();
+        case FRUEHESTE_LOGIN_UHRZEIT -> konfigurationRepository.getFruehesteLoginUhrzeit();
+        case SPAETESTE_LOGIN_UHRZEIT -> konfigurationRepository.getSpaetesteLoginUhrzeit();
+        case WILLKOMMENSTEXT -> konfigurationRepository.getWillkommenstext();
+        default -> Optional.empty();
         };
 
         return konfiguration.map(konfigurationModelMapper::toModel);

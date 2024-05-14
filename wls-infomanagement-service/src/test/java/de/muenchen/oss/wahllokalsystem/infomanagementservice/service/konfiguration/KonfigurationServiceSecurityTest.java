@@ -78,9 +78,9 @@ public class KonfigurationServiceSecurityTest {
             val requiredAuthorities = Authorities.ALL_AUTHORITIES_GET_KONFIGURATION;
             return Arrays.stream(requiredAuthorities)
                     .map(authorityToRemove ->
-                            //remove one authority from all required authorities
-                            Arguments.of(Arrays.stream(requiredAuthorities)
-                                    .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+                    //remove one authority from all required authorities
+                    Arguments.of(Arrays.stream(requiredAuthorities)
+                            .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
         }
     }
 
@@ -147,9 +147,9 @@ public class KonfigurationServiceSecurityTest {
             val requiredAuthorities = Authorities.ALL_AUTHORITIES_GET_KONFIGURATIONS;
             return Arrays.stream(requiredAuthorities)
                     .map(authorityToRemove ->
-                            //remove one authority from all required authorities
-                            Arguments.of(Arrays.stream(requiredAuthorities)
-                                    .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+                    //remove one authority from all required authorities
+                    Arguments.of(Arrays.stream(requiredAuthorities)
+                            .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
         }
     }
 
@@ -182,9 +182,9 @@ public class KonfigurationServiceSecurityTest {
             val requiredAuthorities = Authorities.ALL_AUTHORITIES_GET_KENNBUCHSTABEN_LISTEN;
             return Arrays.stream(requiredAuthorities)
                     .map(authorityToRemove ->
-                            //remove one authority from all required authorities
-                            Arguments.of(Arrays.stream(requiredAuthorities)
-                                    .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+                    //remove one authority from all required authorities
+                    Arguments.of(Arrays.stream(requiredAuthorities)
+                            .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
         }
     }
 

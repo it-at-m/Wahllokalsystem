@@ -15,3 +15,4 @@ includes:
   - path: add-authorities-infomanagement-konfiguration.yml
   - path: add-user-attribute-mapper-wahlbezirks-art.yml
   - path: add-wahlbezirksart-to-user.yml
+  - path: add-authority-infomanagement-kennbuchstaben.yml

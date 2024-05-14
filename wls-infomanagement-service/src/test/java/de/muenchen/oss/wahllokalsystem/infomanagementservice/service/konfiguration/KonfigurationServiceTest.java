@@ -312,6 +312,11 @@ class KonfigurationServiceTest {
         }
 
         @Test
+        void whenParameterIsNullThenReturnsEmpty() {
+            Assertions.assertThat(unitUnderTest.getKonfigurationUnauthorized(null)).isEmpty();
+        }
+
+        @Test
         void fruehesteLoginUhrzeitIsReadFromRepo() {
             val mockedRepoResponse = new Konfiguration();
             val mockedMappedEntityAsModel = KonfigurationModel.builder().build();

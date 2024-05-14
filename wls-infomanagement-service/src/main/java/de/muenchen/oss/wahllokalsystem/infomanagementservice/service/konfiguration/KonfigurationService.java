@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration;
 
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.common.security.AuthenticationHandler;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.Konfiguration;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.KonfigurationRepository;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
@@ -55,6 +56,24 @@ public class KonfigurationService {
         val konfigurationFromRepo = konfigurationRepository.findById(repositoryLookupKey.name());
 
         return konfigurationFromRepo.map(konfigurationModelMapper::toModel);
+    }
+
+    public Optional<KonfigurationModel> getKonfigurationUnauthorized(final KonfigurationKonfigKey konfigurationKonfigKey) {
+        log.info("#getKonfigurationUnauthorized");
+
+        if (konfigurationKonfigKey == null) {
+            return Optional.empty();
+        }
+
+        final Optional<Konfiguration> konfiguration =
+                switch (konfigurationKonfigKey) {
+                    case FRUEHESTE_LOGIN_UHRZEIT -> konfigurationRepository.getFruehesteLoginUhrzeit();
+                    case SPAETESTE_LOGIN_UHRZEIT -> konfigurationRepository.getSpaetesteLoginUhrzeit();
+                    case WILLKOMMENSTEXT -> konfigurationRepository.getWillkommenstext();
+                    default -> Optional.empty();
+                };
+
+        return konfiguration.map(konfigurationModelMapper::toModel);
     }
 
     @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_GetKonfigurationen')")

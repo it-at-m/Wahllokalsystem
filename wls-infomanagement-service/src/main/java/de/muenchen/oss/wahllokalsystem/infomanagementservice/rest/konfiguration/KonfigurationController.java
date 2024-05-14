@@ -46,6 +46,14 @@ public class KonfigurationController {
         }
     }
 
+    @GetMapping("/konfigurationUnauthorized/{key}")
+    public ResponseEntity<KonfigurationDTO> getKonfigurationUnauthorized(@PathVariable("key") final KonfigurationKey key) {
+        val konfiguration = konfigurationService.getKonfigurationUnauthorized(konfigurationDTOMapper.toModelKey(key));
+
+        return konfiguration.map(konfigurationModel -> ResponseEntity.ok(konfigurationDTOMapper.toDTO(konfigurationModel)))
+                .orElseGet(() -> ResponseEntity.noContent().build());
+    }
+
     @GetMapping("/kennbuchstaben")
     public KennbuchstabenListenDTO getKennbuchstabenListen() {
         return konfigurationDTOMapper.toDTO(konfigurationService.getKennbuchstabenListen());

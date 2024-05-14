@@ -50,3 +50,7 @@ Content-Type: application/json
 ### get konfigration FRUEHESTE_EROEFFNUNGSZEIT
 GET http://localhost:39146/businessActions/konfiguration/FRUEHESTE_EROEFFNUNGSZEIT
 Authorization: {{ token_type }} {{ auth_token }}
+
+### get KENNBUCHSTABEN
+GET http://localhost:39146/businessActions/kennbuchstaben
+Authorization: {{ token_type }} {{ auth_token }}

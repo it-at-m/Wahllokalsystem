@@ -4,11 +4,15 @@ spring:
   profiles:
     group:
       local:
-        - db-oracle
+        - db-h2
   flyway:
     locations:
       - classpath:db/migrations/{vendor}
   h2.console.enabled: false
+
+service:
+  info:
+    oid: WLS-BROADCAST
 
 server:
   shutdown: "graceful"

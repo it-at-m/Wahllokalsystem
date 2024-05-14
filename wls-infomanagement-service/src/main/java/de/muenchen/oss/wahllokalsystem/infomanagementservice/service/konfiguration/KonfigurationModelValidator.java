@@ -10,6 +10,9 @@ public class KonfigurationModelValidator {
     private static final String CODE_GETKONFIGURATION_PARAMETER_UNVOLLSTAENDIG = "102";
     private static final String MSG_GETKONFIGURATION_PARAMETER_UNVOLLSTAENDIG = "getKonfiguration: Suchkriterien unvollständig.";
 
+    private static final String CODE_POSTKONFIGURATION_PARAMETER_UNVOLLSTAENDIG = "100";
+    private static final String MSG_POSTKONFIGURATION_PARAMETER_UNVOLLSTAENDIG = "postKonfiguration: Suchkriterien unvollständig.";
+
     private final String serviceID;
 
     public KonfigurationModelValidator(@Value("${service.info.oid}") final String serviceID) {
@@ -20,6 +23,13 @@ public class KonfigurationModelValidator {
         if (konfigurationKonfigKey == null) {
             throw FachlicheWlsException.withCode(CODE_GETKONFIGURATION_PARAMETER_UNVOLLSTAENDIG).inService(serviceID)
                     .buildWithMessage(MSG_GETKONFIGURATION_PARAMETER_UNVOLLSTAENDIG);
+        }
+    }
+
+    public void valideOrThrowSetKonfiguration(final KonfigurationSetModel konfigurationSetModel) {
+        if (konfigurationSetModel == null || konfigurationSetModel.schluessel() == null) {
+            throw FachlicheWlsException.withCode(CODE_POSTKONFIGURATION_PARAMETER_UNVOLLSTAENDIG).inService(serviceID)
+                    .buildWithMessage(MSG_POSTKONFIGURATION_PARAMETER_UNVOLLSTAENDIG);
         }
     }
 }

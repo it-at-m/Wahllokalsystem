@@ -2,6 +2,8 @@ package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfigurat
 
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.common.security.AuthenticationHandler;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.KonfigurationRepository;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import jakarta.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Optional;
@@ -13,12 +15,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class KonfigurationService {
 
     private static final WahlbezirkArt WAHLBEZIRK_ART_FALLBACK = WahlbezirkArt.UWB;
     private static final String WAHLBEZIRK_ART_USER_DETAIL_KEY = "wahlbezirksArt";
+
+    private static final String CODE_POSTKONFIGURATION_NOT_SAVEABLE = "101";
+    private static final String MSG_POSTKONFIGURATION_NOT_SAVEABLE = "postKonfiguration: Die Konfiguration konnte nicht gespeichert werden";
 
     private final KonfigurationRepository konfigurationRepository;
 
@@ -27,6 +32,8 @@ public class KonfigurationService {
     private final KonfigurationModelValidator konfigurationModelValidator;
 
     private final Collection<AuthenticationHandler> authenticationHandlers;
+
+    private final ServiceIDFormatter serviceIDFormatter;
 
     @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_GetKonfiguration')")
     public Optional<KonfigurationModel> getKonfiguration(@NotNull final KonfigurationKonfigKey konfigurationKonfigKey) {
@@ -41,6 +48,23 @@ public class KonfigurationService {
         val konfigurationFromRepo = konfigurationRepository.findById(repositoryLookupKey.name());
 
         return konfigurationFromRepo.map(konfigurationModelMapper::toModel);
+    }
+
+    @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_PostKonfiguration')")
+    public void setKonfiguration(@NotNull final KonfigurationSetModel konfigurationSetModel) {
+        log.info("#postKonfiguration");
+
+        konfigurationModelValidator.valideOrThrowSetKonfiguration(konfigurationSetModel);
+
+        val entityToSave = konfigurationModelMapper.toEntity(konfigurationSetModel);
+
+        try {
+            konfigurationRepository.save(entityToSave);
+        } catch (final Exception onSaveException) {
+            log.error("#setKonfiguration unsaveable: ", onSaveException);
+            throw TechnischeWlsException.withCode(CODE_POSTKONFIGURATION_NOT_SAVEABLE).inService(serviceIDFormatter.getId())
+                    .buildWithMessage(MSG_POSTKONFIGURATION_NOT_SAVEABLE);
+        }
     }
 
     private WahlbezirkArt getWahlbezirkArt() {

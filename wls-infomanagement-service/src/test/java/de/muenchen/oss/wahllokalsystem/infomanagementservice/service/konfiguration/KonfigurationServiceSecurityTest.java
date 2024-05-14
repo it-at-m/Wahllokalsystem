@@ -4,6 +4,8 @@ import de.muenchen.oss.wahllokalsystem.infomanagementservice.MicroServiceApplica
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.Konfiguration;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.KonfigurationRepository;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationKonfigKey;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationSetModel;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
@@ -76,9 +78,9 @@ public class KonfigurationServiceSecurityTest {
             val requiredAuthorities = Authorities.ALL_AUTHORITIES_GET_KONFIGURATION;
             return Arrays.stream(requiredAuthorities)
                     .map(authorityToRemove ->
-                    //remove one authority from all required authorities
-                    Arguments.of(Arrays.stream(requiredAuthorities)
-                            .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+                            //remove one authority from all required authorities
+                            Arguments.of(Arrays.stream(requiredAuthorities)
+                                    .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
         }
     }
 
@@ -145,9 +147,9 @@ public class KonfigurationServiceSecurityTest {
             val requiredAuthorities = Authorities.ALL_AUTHORITIES_GET_KONFIGURATIONS;
             return Arrays.stream(requiredAuthorities)
                     .map(authorityToRemove ->
-                    //remove one authority from all required authorities
-                    Arguments.of(Arrays.stream(requiredAuthorities)
-                            .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+                            //remove one authority from all required authorities
+                            Arguments.of(Arrays.stream(requiredAuthorities)
+                                    .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
         }
     }
 
@@ -180,9 +182,9 @@ public class KonfigurationServiceSecurityTest {
             val requiredAuthorities = Authorities.ALL_AUTHORITIES_GET_KENNBUCHSTABEN_LISTEN;
             return Arrays.stream(requiredAuthorities)
                     .map(authorityToRemove ->
-                    //remove one authority from all required authorities
-                    Arguments.of(Arrays.stream(requiredAuthorities)
-                            .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+                            //remove one authority from all required authorities
+                            Arguments.of(Arrays.stream(requiredAuthorities)
+                                    .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
         }
     }
 

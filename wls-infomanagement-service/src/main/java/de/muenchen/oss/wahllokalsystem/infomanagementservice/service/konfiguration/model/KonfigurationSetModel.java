@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration;
+package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

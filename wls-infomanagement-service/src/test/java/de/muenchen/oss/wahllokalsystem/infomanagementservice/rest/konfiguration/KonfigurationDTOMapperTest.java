@@ -5,11 +5,11 @@ import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration.
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration.dto.KennbuchstabenListenDTO;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration.dto.KonfigurationDTO;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration.dto.KonfigurationSetDTO;
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KennbuchstabenListeModel;
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KennbuchstabenListenModel;
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KennbuchstabenModel;
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationModel;
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationSetModel;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KennbuchstabenListeModel;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KennbuchstabenListenModel;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KennbuchstabenModel;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationModel;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationSetModel;
 import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;

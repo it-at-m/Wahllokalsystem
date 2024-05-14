@@ -1,5 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration;
 
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationKonfigKey;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationSetModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import lombok.val;
 import org.assertj.core.api.Assertions;

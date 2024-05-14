@@ -3,6 +3,11 @@ package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfigurat
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.common.security.AuthenticationHandler;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.Konfiguration;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.KonfigurationRepository;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KennbuchstabenListenModel;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationKonfigKey;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationModel;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationSetModel;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.WahlbezirkArt;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
@@ -66,10 +71,10 @@ public class KonfigurationService {
         }
 
         final Optional<Konfiguration> konfiguration = switch (konfigurationKonfigKey) {
-        case FRUEHESTE_LOGIN_UHRZEIT -> konfigurationRepository.getFruehesteLoginUhrzeit();
-        case SPAETESTE_LOGIN_UHRZEIT -> konfigurationRepository.getSpaetesteLoginUhrzeit();
-        case WILLKOMMENSTEXT -> konfigurationRepository.getWillkommenstext();
-        default -> Optional.empty();
+            case FRUEHESTE_LOGIN_UHRZEIT -> konfigurationRepository.getFruehesteLoginUhrzeit();
+            case SPAETESTE_LOGIN_UHRZEIT -> konfigurationRepository.getSpaetesteLoginUhrzeit();
+            case WILLKOMMENSTEXT -> konfigurationRepository.getWillkommenstext();
+            default -> Optional.empty();
         };
 
         return konfiguration.map(konfigurationModelMapper::toModel);

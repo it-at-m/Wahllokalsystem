@@ -1,0 +1,24 @@
+id: add briefwahl beanstandete wahlbriefe authorities to group allBriefwahlAuthorities
+author: MrSebastian
+realm: ${SSO_REALM}
+changes:
+  - assignRoleToGroup:
+      group: allBriefwahlAuthorities
+      role: Briefwahl_BUSINESSACTION_GetBeanstandeteWahlbriefe
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBriefwahlAuthorities
+      role: Briefwahl_BUSINESSACTION_PostBeanstandeteWahlbriefe
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBriefwahlAuthorities
+      role: Briefwahl_READ_BeanstandeteWahlbriefe
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBriefwahlAuthorities
+      role: Briefwahl_WRITE_BeanstandeteWahlbriefe
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBriefwahlAuthorities
+      role: Briefwahl_DELETE_BeanstandeteWahlbriefe
+      clientId: ${SSO_CLIENT_ID}

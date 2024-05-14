@@ -1,0 +1,162 @@
+POST http://localhost:8100/auth/realms/wls_realm/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+password = test &
+grant_type = password &
+client_secret = top-secret &
+client_id = wls &
+username = wls_all
+
+> {%
+    client.global.set("auth_token", response.body.access_token);
+    client.global.set("token_type", response.body.token_type);
+%}
+
+### get userinfo with auth_token
+GET http://localhost:8100/auth/realms/wls_realm/protocol/openid-connect/userinfo
+Authorization: {{ token_type }} {{ auth_token }}
+
+###
+GET http://localhost:39146/businessActions/beanstandeteWahlbriefe/wbz-1/1
+Authorization: {{ token_type }} {{ auth_token }}
+
+###
+POST http://localhost:39146/businessActions/beanstandeteWahlbriefe/wbz-1/1
+Authorization: {{ token_type }} {{ auth_token }}
+Content-Type: application/json
+
+{
+  "beanstandeteWahlbriefe": {
+    "wahl1": [
+      "ZUGELASSEN",
+      "KEIN_ORIGINAL_SCHEIN",
+      "UNTERSCHRIFT_FEHLT"
+    ]
+  }
+}
+
+###
+POST http://localhost:39146/businessActions/beanstandeteWahlbriefe/wbz-1/1
+Authorization: {{ token_type }} {{ auth_token }}
+Content-Type: application/json
+
+{
+  "beanstandeteWahlbriefe": {
+    "wahl2": [
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN"
+    ],
+    "wahl3": [
+      "ZUGELASSEN",
+      "UNTERSCHRIFT_FEHLT",
+      "ZUGELASSEN",
+      "UNTERSCHRIFT_FEHLT"
+    ]
+  }
+}

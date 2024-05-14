@@ -9,6 +9,9 @@ includes:
   - path: 05_add-group-all-broadcast.yml
   - path: 06_create-wls-all-user-with-broadcast-group.yml
   - path: create-group-all-infomanagement-authorities-and-link-user.yml
+  - path: 07_add-briefwahl-beanstandete-wahlbriefe-authorities.yml
+  - path: 08_create-group-all-briefwahl-and-assign.yml
+  - path: 09_add-briefwahl-beanstandete-wahbriefe-to-group-all-briefwahl.yml
   - path: add-authorities-infomanagement-konfiguration.yml
   - path: add-user-attribute-mapper-wahlbezirks-art.yml
   - path: add-wahlbezirksart-to-user.yml

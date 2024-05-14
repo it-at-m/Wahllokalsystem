@@ -3,10 +3,12 @@ package de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KennbuchstabenListenModel;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationKonfigKey;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationModel;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationService;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationSetModel;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.val;
@@ -99,7 +101,7 @@ class KonfigurationControllerTest {
             val mockedMappedModelAsDTO = KonfigurationDTO.builder().build();
 
             Mockito.when(konfigurationService.getAllKonfigurations()).thenReturn(mockedServiceResponseModel);
-            Mockito.when(konfigurationDTOMapper.toDTO(any())).thenReturn(mockedMappedModelAsDTO);
+            Mockito.when(konfigurationDTOMapper.toDTO(any(KonfigurationModel.class))).thenReturn(mockedMappedModelAsDTO);
 
             val result = unitUnderTest.getKonfigurations();
 
@@ -116,6 +118,22 @@ class KonfigurationControllerTest {
             Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
             Assertions.assertThat(result.getBody()).isNull();
 
+        }
+    }
+
+    @Nested
+    class GetKennbuchstabenListen {
+
+        @Test
+        void serviceCalled() {
+            val mockedServiceResponse = new KennbuchstabenListenModel(Collections.emptyList());
+            val mockedMappedResponseAsDTO = new KennbuchstabenListenDTO(Collections.emptyList());
+
+            Mockito.when(konfigurationDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedMappedResponseAsDTO);
+
+            val result = unitUnderTest.getKennbuchstabenListen();
+
+            Assertions.assertThat(result).isSameAs(mockedMappedResponseAsDTO);
         }
     }
 

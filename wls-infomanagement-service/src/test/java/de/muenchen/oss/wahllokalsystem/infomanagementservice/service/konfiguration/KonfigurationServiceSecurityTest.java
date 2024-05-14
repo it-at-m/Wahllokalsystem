@@ -2,6 +2,8 @@ package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfigurat
 
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.TestConstants;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.Konfiguration;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.KonfigurationRepository;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
@@ -9,6 +11,7 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,12 +36,21 @@ public class KonfigurationServiceSecurityTest {
     @Autowired
     KonfigurationService konfigurationService;
 
+    @Autowired
+    KonfigurationRepository konfigurationRepository;
+
     @MockBean
     KonfigurationModelValidator konfigurationModelValidator;
 
     @BeforeEach
     void setup() {
         SecurityContextHolder.clearContext();
+    }
+
+    @AfterEach
+    void tearDown() {
+        SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.REPOSITORY_DELETE_KONFIGURATION);
+        konfigurationRepository.deleteAll();
     }
 
     @Nested
@@ -131,6 +143,41 @@ public class KonfigurationServiceSecurityTest {
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
             val requiredAuthorities = Authorities.ALL_AUTHORITIES_GET_KONFIGURATIONS;
+            return Arrays.stream(requiredAuthorities)
+                    .map(authorityToRemove ->
+                            //remove one authority from all required authorities
+                            Arguments.of(Arrays.stream(requiredAuthorities)
+                                    .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+        }
+    }
+
+    @Nested
+    class GetKennbuchstabenListen {
+
+        @Test
+        void accessGranted() {
+            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.REPOSITORY_WRITE_KONFIGURATION);
+            konfigurationRepository.save(new Konfiguration("KENNBUCHSTABEN", "", "", ""));
+
+            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.ALL_AUTHORITIES_GET_KENNBUCHSTABEN_LISTEN);
+
+            Assertions.assertThatNoException().isThrownBy(() -> konfigurationService.getKennbuchstabenListen());
+        }
+
+        @ParameterizedTest(name = "{index} - {1} missing")
+        @MethodSource("getMissingAuthoritiesVariations")
+        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
+            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.REPOSITORY_WRITE_KONFIGURATION);
+            konfigurationRepository.save(new Konfiguration("KENNBUCHSTABEN", "", "", ""));
+            
+            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, argumentsAccessor.get(0, String[].class));
+
+            Assertions.assertThatThrownBy(() -> konfigurationService.getKennbuchstabenListen())
+                    .isExactlyInstanceOf(AccessDeniedException.class);
+        }
+
+        private static Stream<Arguments> getMissingAuthoritiesVariations() {
+            val requiredAuthorities = Authorities.ALL_AUTHORITIES_GET_KENNBUCHSTABEN_LISTEN;
             return Arrays.stream(requiredAuthorities)
                     .map(authorityToRemove ->
                             //remove one authority from all required authorities

@@ -7,6 +7,7 @@ import de.muenchen.oss.wahllokalsystem.infomanagementservice.common.JWTHandler;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.common.security.AuthenticationHandler;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.Konfiguration;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.KonfigurationRepository;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import java.util.ArrayList;
@@ -252,6 +253,41 @@ class KonfigurationServiceTest {
             val result = unitUnderTest.getAllKonfigurations();
 
             Assertions.assertThat(result).isEmpty();
+        }
+    }
+
+    @Nested
+    class GetKennbuchstabenListen {
+
+        @Test
+        void kennbuchstabenFound() {
+            val konfigurationWert = "wert";
+            val mockedRepoResponse = new Konfiguration();
+            mockedRepoResponse.setWert(konfigurationWert);
+            val mockedMappedEntityAsModel = KennbuchstabenListenModel.builder().build();
+
+            Mockito.when(konfigurationRepository.findById("KENNBUCHSTABEN")).thenReturn(Optional.of(mockedRepoResponse));
+            Mockito.when(konfigurationModelMapper.toKennbuchstabenListenModel(konfigurationWert)).thenReturn(mockedMappedEntityAsModel);
+
+            val result = unitUnderTest.getKennbuchstabenListen();
+
+            Assertions.assertThat(result).isSameAs(mockedMappedEntityAsModel);
+        }
+
+        @Test
+        void exceptionWhenNoKennbuchtabenFoundInRepo() {
+            val mockedServiceID = "serviceID";
+
+            Mockito.when(serviceIDFormatter.getId()).thenReturn(mockedServiceID);
+            Mockito.when(konfigurationRepository.findById("KENNBUCHSTABEN")).thenReturn(Optional.empty());
+
+            val exceptionThrown = Assertions.catchException(() -> unitUnderTest.getKennbuchstabenListen());
+
+            val expectedException = FachlicheWlsException.withCode("103").inService(mockedServiceID).buildWithMessage("");
+
+            Assertions.assertThat(exceptionThrown).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedException);
+            Assertions.assertThat(exceptionThrown.getMessage()).isNotNull();
+
         }
     }
 

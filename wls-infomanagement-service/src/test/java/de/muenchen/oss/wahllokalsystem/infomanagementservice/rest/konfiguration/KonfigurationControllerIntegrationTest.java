@@ -15,6 +15,7 @@ import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.SecurityUtils
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.WithMockUserAsJwt;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
+import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -183,6 +184,30 @@ public class KonfigurationControllerIntegrationTest {
             };
 
             Assertions.assertThat(responseBodyDTO).containsExactlyInAnyOrder(expectedResponseItems);
+        }
+    }
+
+    @Nested
+    class GetKennbuchstabenListen {
+
+        @Test
+        @WithMockUserAsJwt(
+                authorities = { Authorities.SERVICE_GET_KENNBUCHSTABEN_LISTEN, Authorities.REPOSITORY_READ_KONFIGURATION,
+                        Authorities.REPOSITORY_WRITE_KONFIGURATION }
+        )
+        void kennbuchstabenFoundDefaultSettings() throws Exception {
+            konfigurationRepository.save(new Konfiguration("KENNBUCHSTABEN", "a,b, c;A,B,C$1,2;11,12", "", ""));
+
+            val request = MockMvcRequestBuilders.get("/businessActions/kennbuchstaben");
+
+            val response = api.perform(request).andExpect(status().isOk()).andReturn();
+            val responseBodyDTO = objectMapper.readValue(response.getResponse().getContentAsString(), KennbuchstabenListenDTO.class);
+
+            val expectedResponseDTO = new KennbuchstabenListenDTO(List.of(new KennbuchstabenListeDTO(
+                    List.of(new KennbuchstabenDTO(List.of("a", "b", " c")), new KennbuchstabenDTO(List.of("A", "B", "C")))
+            ), new KennbuchstabenListeDTO(List.of(new KennbuchstabenDTO(List.of("1", "2")), new KennbuchstabenDTO(List.of("11", "12"))))));
+
+            Assertions.assertThat(responseBodyDTO).isEqualTo(expectedResponseDTO);
         }
     }
 }

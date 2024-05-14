@@ -34,4 +34,9 @@ public class KonfigurationController {
 
         konfigurationService.setKonfiguration(konfigurationSetModel);
     }
+
+    @GetMapping("/konfiguration")
+    public Iterable<KonfigurationDTO> getKonfigurations() {
+        return konfigurationService.getAllKonfigurations().stream().map(konfigurationDTOMapper::toDTO).toList();
+    }
 }

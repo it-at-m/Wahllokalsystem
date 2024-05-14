@@ -6,6 +6,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsExcepti
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import jakarta.validation.constraints.NotNull;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +49,13 @@ public class KonfigurationService {
         val konfigurationFromRepo = konfigurationRepository.findById(repositoryLookupKey.name());
 
         return konfigurationFromRepo.map(konfigurationModelMapper::toModel);
+    }
+
+    @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_GetKonfigurationen')")
+    public List<KonfigurationModel> getAllKonfigurations() {
+        log.info("#getKonfigurationen");
+
+        return konfigurationRepository.findAll().stream().map(konfigurationModelMapper::toModel).toList();
     }
 
     @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_PostKonfiguration')")

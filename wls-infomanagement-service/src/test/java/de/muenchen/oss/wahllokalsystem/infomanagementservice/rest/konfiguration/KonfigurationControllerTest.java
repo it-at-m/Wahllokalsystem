@@ -128,6 +128,7 @@ class KonfigurationControllerTest {
             val mockedServiceResponse = new KennbuchstabenListenModel(Collections.emptyList());
             val mockedMappedResponseAsDTO = new KennbuchstabenListenDTO(Collections.emptyList());
 
+            Mockito.when(konfigurationService.getKennbuchstabenListen()).thenReturn(mockedServiceResponse);
             Mockito.when(konfigurationDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedMappedResponseAsDTO);
 
             val result = unitUnderTest.getKennbuchstabenListen();

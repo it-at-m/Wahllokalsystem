@@ -149,7 +149,7 @@ class KonfigurationModelMapperTest {
 
         val result = unitUnderTest.toKennbuchstabenModel(stringToMap);
 
-        val expectedResult = new KennbuchstabenModel(List.of("a", "b ", "1"));
+        val expectedResult = new KennbuchstabenModel(List.of("a", "b ", " 1"));
 
         Assertions.assertThat(result).isEqualTo(expectedResult);
     }

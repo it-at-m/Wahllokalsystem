@@ -2,5 +2,5 @@ package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfigurat
 
 public enum WahlbezirkArt {
     UWB, //Urnenwahl
-    BWB; //Briefwahl
+    BWB  //Briefwahl
 }

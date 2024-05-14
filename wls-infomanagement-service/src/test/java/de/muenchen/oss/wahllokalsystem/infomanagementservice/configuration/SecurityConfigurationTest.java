@@ -1,17 +1,27 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.configuration;
 
 import static de.muenchen.oss.wahllokalsystem.infomanagementservice.TestConstants.SPRING_TEST_PROFILE;
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationService;
+import java.util.Optional;
+import lombok.val;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
@@ -21,6 +31,9 @@ class SecurityConfigurationTest {
 
     @Autowired
     MockMvc api;
+
+    @MockBean
+    KonfigurationService konfigurationService;
 
     @Test
     void accessSecuredResourceRootThenUnauthorized() throws Exception {
@@ -62,6 +75,28 @@ class SecurityConfigurationTest {
     void accessUnsecuredResourceSwaggerUiThenOk() throws Exception {
         api.perform(get("/swagger-ui/index.html"))
                 .andExpect(status().isOk());
+    }
+
+    @Nested
+    class Konfiguration {
+
+        @Test
+        @WithAnonymousUser
+        void accessGetKonfigurationWithKeyUnauthorizedThenUnauthorized() throws Exception {
+            val request = MockMvcRequestBuilders.get("/businessActions/konfiguration/ABSCHLUSSTEXT");
+
+            api.perform(request).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessGetKonfigurationWithKeyAuthorizedThenNoContent() throws Exception {
+            Mockito.when(konfigurationService.getKonfiguration(any())).thenReturn(Optional.empty());
+
+            val request = MockMvcRequestBuilders.get("/businessActions/konfiguration/ABSCHLUSSTEXT");
+
+            api.perform(request).andExpect(status().isNoContent());
+        }
     }
 
 }

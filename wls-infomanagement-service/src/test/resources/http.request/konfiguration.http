@@ -54,3 +54,6 @@ Authorization: {{ token_type }} {{ auth_token }}
 ### get KENNBUCHSTABEN
 GET http://localhost:39146/businessActions/kennbuchstaben
 Authorization: {{ token_type }} {{ auth_token }}
+
+### get wilkommenstext as anonymous
+GET localhost:39146/businessActions/konfigurationUnauthorized/WILLKOMMENSTEXT

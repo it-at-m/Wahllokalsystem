@@ -36,6 +36,17 @@ Authorization: {{ token_type }} {{ auth_token }}
 GET http://localhost:39146/businessActions/konfiguration/WILLKOMMENSTEXT
 Authorization: {{ token_type }} {{ auth_token }}
 
+### POST konfigration WILLKOMMENSTEXT
+POST http://localhost:39146/businessActions/konfiguration/WILLKOMMENSTEXT
+Authorization: {{ token_type }} {{ auth_token }}
+Content-Type: application/json
+
+{
+  "wert": "neuer Willkommenstext",
+  "beschreibung": "neuer Beschreibung",
+  "standardwert": "neuer Standardwert"
+}
+
 ### get konfigration FRUEHESTE_EROEFFNUNGSZEIT
 GET http://localhost:39146/businessActions/konfiguration/FRUEHESTE_EROEFFNUNGSZEIT
 Authorization: {{ token_type }} {{ auth_token }}

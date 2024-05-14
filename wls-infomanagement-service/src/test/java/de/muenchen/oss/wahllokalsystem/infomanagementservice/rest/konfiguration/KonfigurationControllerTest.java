@@ -18,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @ExtendWith(MockitoExtension.class)
@@ -89,7 +90,7 @@ class KonfigurationControllerTest {
     class GetKonfigurationen {
 
         @Test
-        void serviceCalled() {
+        void serviceCalledOkWhenDataFound() {
             val mockedServiceResponseModel = List.of(
                     KonfigurationModel.builder().build(),
                     KonfigurationModel.builder().build(),
@@ -102,7 +103,19 @@ class KonfigurationControllerTest {
 
             val result = unitUnderTest.getKonfigurations();
 
-            Assertions.assertThat(result).hasSize(mockedServiceResponseModel.size());
+            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+            Assertions.assertThat(result.getBody()).hasSize(mockedServiceResponseModel.size());
+        }
+
+        @Test
+        void serviceCalledNoContentWhenNoDataFound() {
+            Mockito.when(konfigurationService.getAllKonfigurations()).thenReturn(null);
+
+            val result = unitUnderTest.getKonfigurations();
+
+            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+            Assertions.assertThat(result.getBody()).isNull();
+
         }
     }
 

@@ -36,7 +36,13 @@ public class KonfigurationController {
     }
 
     @GetMapping("/konfiguration")
-    public Iterable<KonfigurationDTO> getKonfigurations() {
-        return konfigurationService.getAllKonfigurations().stream().map(konfigurationDTOMapper::toDTO).toList();
+    public ResponseEntity<Iterable<KonfigurationDTO>> getKonfigurations() {
+        val allKonfigurations = konfigurationService.getAllKonfigurations();
+
+        if (allKonfigurations == null) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(allKonfigurations.stream().map(konfigurationDTOMapper::toDTO).toList());
+        }
     }
 }

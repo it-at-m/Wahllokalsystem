@@ -88,8 +88,7 @@ class KonfigurationModelMapperTest {
         @Test
         void mapFallbackValueWhenStandardwertIsNull() {
             val wert = "wert";
-            final String standardwert = null;
-            val modelToMap = KonfigurationSetModel.builder().standardwert(standardwert).wert(wert).build();
+            val modelToMap = KonfigurationSetModel.builder().standardwert(null).wert(wert).build();
 
             val result = unitUnderTest.mapStandardwertFromModel(modelToMap);
 

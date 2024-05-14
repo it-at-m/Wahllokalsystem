@@ -47,9 +47,7 @@ class KonfigurationModelValidatorTest {
 
         @Test
         void exceptionWhenModelIsNull() {
-            final KonfigurationSetModel modelIsNull = null;
-
-            val exceptionThrown = Assertions.catchException(() -> unitUnderTest.validOrThrowSetKonfiguration(modelIsNull));
+            val exceptionThrown = Assertions.catchException(() -> unitUnderTest.validOrThrowSetKonfiguration(null));
 
             val expectedException = FachlicheWlsException.withCode("100").inService(SERVICE_ID).buildWithMessage("");
 

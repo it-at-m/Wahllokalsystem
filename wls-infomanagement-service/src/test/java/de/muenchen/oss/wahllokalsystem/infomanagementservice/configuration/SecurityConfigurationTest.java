@@ -2,10 +2,13 @@ package de.muenchen.oss.wahllokalsystem.infomanagementservice.configuration;
 
 import static de.muenchen.oss.wahllokalsystem.infomanagementservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration.KonfigurationSetDTO;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationService;
 import java.util.Optional;
 import lombok.val;
@@ -17,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.actuate.observability.AutoCon
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -31,6 +35,9 @@ class SecurityConfigurationTest {
 
     @Autowired
     MockMvc api;
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     @MockBean
     KonfigurationService konfigurationService;
@@ -96,6 +103,24 @@ class SecurityConfigurationTest {
             val request = MockMvcRequestBuilders.get("/businessActions/konfiguration/ABSCHLUSSTEXT");
 
             api.perform(request).andExpect(status().isNoContent());
+        }
+
+        @Test
+        @WithAnonymousUser
+        void accessPostKonfigurationWithKeyUnauthorizedThenUnauthorized() throws Exception {
+            val request = MockMvcRequestBuilders.post("/businessActions/konfiguration/ABSCHLUSSTEXT").with(csrf());
+
+            api.perform(request).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessPostKonfigurationWithKeyAuthorizedThenOk() throws Exception {
+            val requestBody = new KonfigurationSetDTO("wert", "beschreibung", "default");
+            val request = MockMvcRequestBuilders.post("/businessActions/konfiguration/ABSCHLUSSTEXT").with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestBody));
+
+            api.perform(request).andExpect(status().isOk());
         }
     }
 

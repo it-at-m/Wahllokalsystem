@@ -1,8 +1,11 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration;
 
+import static org.mockito.ArgumentMatchers.eq;
+
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationKonfigKey;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationModel;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationService;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationSetModel;
 import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -61,6 +64,23 @@ class KonfigurationControllerTest {
             Assertions.assertThat(result).isEqualTo(ResponseEntity.noContent().build());
         }
 
+    }
+
+    @Nested
+    class PostKonfiguration {
+
+        @Test
+        void serviceCalledWithMappedData() {
+            val konfigKey = KonfigurationKey.KENNBUCHSTABEN;
+            val requestDTO = new KonfigurationSetDTO("wert", "beschreibung", "standardwert");
+
+            val mockedServiceSetModel = new KonfigurationSetModel(konfigKey.name(), requestDTO.wert(), requestDTO.beschreibung(), requestDTO.standardwert());
+
+            Mockito.when(konfigurationDTOMapper.toSetModel(eq(konfigKey), eq(requestDTO))).thenReturn(mockedServiceSetModel);
+            Mockito.doNothing().when(konfigurationService).setKonfiguration(mockedServiceSetModel);
+
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postKonfiguration(konfigKey, requestDTO));
+        }
     }
 
 }

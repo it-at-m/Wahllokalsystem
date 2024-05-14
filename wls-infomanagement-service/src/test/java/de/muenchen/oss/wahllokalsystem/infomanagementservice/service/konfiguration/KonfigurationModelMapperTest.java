@@ -43,4 +43,49 @@ class KonfigurationModelMapperTest {
         }
     }
 
+    @Nested
+    class ToEntity {
+
+        @Test
+        void modelIsMappedToEntity() {
+            val schluessel = "schluessel";
+            val wert = "wert";
+            val beschreibung = "beschreibung";
+            val standardwert = "standardwert";
+            val modelToMap = new KonfigurationSetModel(schluessel, wert, beschreibung, standardwert);
+            val expectedResult = new Konfiguration(schluessel, wert, beschreibung, standardwert);
+
+            val result = unitUnderTest.toEntity(modelToMap);
+
+            Assertions.assertThat(result).isEqualTo(expectedResult);
+        }
+
+    }
+
+    @Nested
+    class MapStandardwertFromModel {
+
+        @Test
+        void mapExistingStandardwert() {
+            val wert = "wert";
+            val standardwert = "standardwert";
+            val modelToMap = KonfigurationSetModel.builder().standardwert(standardwert).wert(wert).build();
+
+            val result = unitUnderTest.mapStandardwertFromModel(modelToMap);
+
+            Assertions.assertThat(result).isEqualTo(standardwert);
+        }
+
+        @Test
+        void mapFallbackValueWhenStandardwertIsNull() {
+            val wert = "wert";
+            final String standardwert = null;
+            val modelToMap = KonfigurationSetModel.builder().standardwert(standardwert).wert(wert).build();
+
+            val result = unitUnderTest.mapStandardwertFromModel(modelToMap);
+
+            Assertions.assertThat(result).isEqualTo(wert);
+        }
+    }
+
 }

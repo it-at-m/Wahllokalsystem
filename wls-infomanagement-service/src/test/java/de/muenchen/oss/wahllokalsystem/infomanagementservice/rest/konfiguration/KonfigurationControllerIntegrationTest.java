@@ -1,25 +1,34 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration;
 
 import static de.muenchen.oss.wahllokalsystem.infomanagementservice.TestConstants.SPRING_TEST_PROFILE;
+import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.Konfiguration;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.KonfigurationRepository;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationModelValidator;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.WithMockUserAsJwt;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -36,14 +45,17 @@ public class KonfigurationControllerIntegrationTest {
     @Autowired
     KonfigurationRepository konfigurationRepository;
 
+    @SpyBean
+    KonfigurationModelValidator konfigurationModelValidator;
+
+    @AfterEach
+    void tearDown() {
+        SecurityUtils.runAs("", "", Authorities.REPOSITORY_DELETE_KONFIGURATION);
+        konfigurationRepository.deleteAll();
+    }
+
     @Nested
     class GetKonfiguration {
-
-        @AfterEach
-        void tearDown() {
-            SecurityUtils.runAs("", "", Authorities.REPOSITORY_DELETE_KONFIGURATION);
-            konfigurationRepository.deleteAll();
-        }
 
         @Test
         @WithMockUserAsJwt(authorities = { Authorities.SERVICE_GET_KONFIGURATION, Authorities.REPOSITORY_READ_KONFIGURATION })
@@ -77,6 +89,76 @@ public class KonfigurationControllerIntegrationTest {
                     konfigurationToFind.getBeschreibung(), konfigurationToFind.getStandardwert());
 
             Assertions.assertThat(responseBody).isEqualTo(expectedResponseBody);
+        }
+    }
+
+    @Nested
+    class PostKonfiguration {
+
+        @Test
+        @WithMockUserAsJwt(
+                authorities = { Authorities.SERVICE_POST_KONFIGURATION, Authorities.REPOSITORY_WRITE_KONFIGURATION, Authorities.REPOSITORY_READ_KONFIGURATION }
+        )
+        void newDataSuccessfullySaved() throws Exception {
+            val konfigurationKey = "WILLKOMMENSTEXT";
+            val requestBody = new KonfigurationSetDTO("wert", "beschreibung", "standard");
+            val request = createPostWithBody(konfigurationKey, requestBody);
+
+            val response = api.perform(request).andExpect(status().isOk()).andReturn();
+            SecurityUtils.runAs("", "", Authorities.REPOSITORY_READ_KONFIGURATION);
+            val savedKonfiguration = konfigurationRepository.findById(konfigurationKey).get();
+
+            Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
+
+            val expectedSavedKonfiguration = new Konfiguration(konfigurationKey, requestBody.wert(), requestBody.beschreibung(), requestBody.standardwert());
+            Assertions.assertThat(savedKonfiguration).isEqualTo(expectedSavedKonfiguration);
+        }
+
+        @Test
+        @WithMockUserAsJwt(
+                authorities = { Authorities.SERVICE_POST_KONFIGURATION, Authorities.REPOSITORY_WRITE_KONFIGURATION, Authorities.REPOSITORY_READ_KONFIGURATION }
+        )
+        void oldDataOverriden() throws Exception {
+            val konfigurationKey = "WILLKOMMENSTEXT";
+            val requestBody = new KonfigurationSetDTO("wert", "beschreibung", "standard");
+            val request = createPostWithBody(konfigurationKey, requestBody);
+
+            val konfigurationToOverride = new Konfiguration(konfigurationKey, "old value", "old description", "old default");
+            konfigurationRepository.save(konfigurationToOverride);
+
+            api.perform(request).andExpect(status().isOk());
+            SecurityUtils.runAs("", "", Authorities.REPOSITORY_READ_KONFIGURATION);
+            val savedKonfiguration = konfigurationRepository.findById(konfigurationKey).get();
+
+            val expectedSavedKonfiguration = new Konfiguration(konfigurationKey, requestBody.wert(), requestBody.beschreibung(), requestBody.standardwert());
+            Assertions.assertThat(savedKonfiguration).isEqualTo(expectedSavedKonfiguration);
+        }
+
+        @Test
+        @WithMockUserAsJwt(
+                authorities = { Authorities.SERVICE_POST_KONFIGURATION, Authorities.REPOSITORY_WRITE_KONFIGURATION }
+        )
+        void validationExceptionOccurredAndIsMapped() throws Exception {
+            val requestBody = new KonfigurationSetDTO(null, "beschreibung", "standard");
+            val request = createPostWithBody("WILLKOMMENSTEXT", requestBody);
+
+            val mockedExceptionMessage = "mocked null pointer exception";
+            val mockedValidationException = new NullPointerException(mockedExceptionMessage);
+            Mockito.doThrow(mockedValidationException).when(konfigurationModelValidator).valideOrThrowSetKonfiguration(any());
+
+            val response = api.perform(request).andExpect(status().isInternalServerError()).andReturn();
+            val responseBodyDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
+
+            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T, "999", "WLS-INFOMANAGEMENT", "");
+
+            Assertions.assertThat(responseBodyDTO).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedWlsExceptionDTO);
+            Assertions.assertThat(responseBodyDTO.message()).contains(mockedExceptionMessage);
+        }
+
+        private MockHttpServletRequestBuilder createPostWithBody(final String konfigurationKey, final KonfigurationSetDTO requestDTO) throws Exception {
+            return MockMvcRequestBuilders.post("/businessActions/konfiguration/" + konfigurationKey).with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                    .content(
+                            objectMapper.writeValueAsString(requestDTO));
         }
     }
 }

@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration;
 
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationModel;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationSetModel;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -44,6 +45,21 @@ class KonfigurationDTOMapperTest {
             val mappedValuesName = unitUnderTest.toModelKey(key).name();
 
             Assertions.assertThat(parametersName).isEqualTo(mappedValuesName);
+        }
+    }
+
+    @Nested
+    class ToSetModel {
+        @Test
+        void isMappedToModel() {
+            val dtoToMap = new KonfigurationSetDTO("wert", "beschreibung", "standard");
+            val keyToMap = KonfigurationKey.FRUEHESTE_EROEFFNUNGSZEIT;
+
+            val expectedResult = new KonfigurationSetModel("FRUEHESTE_EROEFFNUNGSZEIT", "wert", "beschreibung", "standard");
+
+            val result = unitUnderTest.toSetModel(keyToMap, dtoToMap);
+
+            Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
 

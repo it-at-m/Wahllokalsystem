@@ -7,6 +7,8 @@ import de.muenchen.oss.wahllokalsystem.infomanagementservice.common.JWTHandler;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.common.security.AuthenticationHandler;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.Konfiguration;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.KonfigurationRepository;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
 import lombok.val;
@@ -25,7 +27,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 @ExtendWith(MockitoExtension.class)
 class KonfigurationServiceTest {
-
     @Mock
     KonfigurationRepository konfigurationRepository;
 
@@ -34,6 +35,9 @@ class KonfigurationServiceTest {
 
     @Mock
     KonfigurationModelValidator konfigurationModelValidator;
+
+    @Mock
+    ServiceIDFormatter serviceIDFormatter;
 
     @Mock
     JWTHandler jwtHandler;
@@ -169,6 +173,56 @@ class KonfigurationServiceTest {
             val result = unitUnderTest.getKonfiguration(keyForRequestedKonfiguration);
 
             Assertions.assertThat(result.get()).isSameAs(mappedMockedKonfiguration);
+        }
+    }
+
+    @Nested
+    class SetKonfiguration {
+
+        @Test
+        void isSaved() {
+            val konfigurationSetModel = KonfigurationSetModel.builder().build();
+
+            val mockedKonfigurationEntity = new Konfiguration();
+
+            Mockito.doNothing().when(konfigurationModelValidator).valideOrThrowSetKonfiguration(konfigurationSetModel);
+            Mockito.when(konfigurationModelMapper.toEntity(konfigurationSetModel)).thenReturn(mockedKonfigurationEntity);
+
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.setKonfiguration(konfigurationSetModel));
+
+            Mockito.verify(konfigurationRepository).save(mockedKonfigurationEntity);
+        }
+
+        @Test
+        void exceptionFromValidationIsUnhandled() {
+            val konfigurationSetModel = KonfigurationSetModel.builder().build();
+
+            val mockedValidatorException = new IllegalArgumentException("WRONG!!!");
+
+            Mockito.doThrow(mockedValidatorException).when(konfigurationModelValidator).valideOrThrowSetKonfiguration(konfigurationSetModel);
+
+            Assertions.assertThatThrownBy(() -> unitUnderTest.setKonfiguration(konfigurationSetModel)).isSameAs(mockedValidatorException);
+        }
+
+        @Test
+        void exceptionFromRepositoryIsHandled() {
+            val konfigurationSetModel = KonfigurationSetModel.builder().build();
+
+            val mockedRepositoryException = new IllegalArgumentException("i cant saved");
+            val mockedKonfigurationEntity = new Konfiguration();
+            val mockedServiceID = "serviceID";
+
+            Mockito.doNothing().when(konfigurationModelValidator).valideOrThrowSetKonfiguration(konfigurationSetModel);
+            Mockito.when(konfigurationModelMapper.toEntity(konfigurationSetModel)).thenReturn(mockedKonfigurationEntity);
+            Mockito.when(konfigurationRepository.save(mockedKonfigurationEntity)).thenThrow(mockedRepositoryException);
+            Mockito.when(serviceIDFormatter.getId()).thenReturn(mockedServiceID);
+
+            val exceptionThrown = Assertions.catchException(() -> unitUnderTest.setKonfiguration(konfigurationSetModel));
+
+            val expectedException = TechnischeWlsException.withCode("101").inService(mockedServiceID).buildWithMessage("");
+
+            Assertions.assertThat(exceptionThrown).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedException);
+            Assertions.assertThat(exceptionThrown.getMessage()).isNotNull();
         }
     }
 

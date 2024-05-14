@@ -15,18 +15,18 @@ class KonfigurationModelValidatorTest {
     private final KonfigurationModelValidator unitUnderTest = new KonfigurationModelValidator(SERVICE_ID);
 
     @Nested
-    class ValideOrThrowGetKonfigurationByKey {
+    class ValidOrThrowGetKonfigurationByKey {
 
         @Test
         void noExceptionOnNonNull() {
             Assertions.assertThatNoException()
-                    .isThrownBy(() -> unitUnderTest.valideOrThrowGetKonfigurationByKey(KonfigurationKonfigKey.WILLKOMMENSTEXT));
+                    .isThrownBy(() -> unitUnderTest.validOrThrowGetKonfigurationByKey(KonfigurationKonfigKey.WILLKOMMENSTEXT));
         }
 
         @Test
         void exceptionOnNullKey() {
 
-            val exceptionThrown = Assertions.catchException(() -> unitUnderTest.valideOrThrowGetKonfigurationByKey(null));
+            val exceptionThrown = Assertions.catchException(() -> unitUnderTest.validOrThrowGetKonfigurationByKey(null));
 
             val expectedException = FachlicheWlsException.withCode("102").inService(SERVICE_ID).buildWithMessage("");
 
@@ -36,20 +36,20 @@ class KonfigurationModelValidatorTest {
     }
 
     @Nested
-    class ValideOrThrowSetKonfiguration {
+    class ValidOrThrowSetKonfiguration {
 
         @Test
         void noExceptionWhenValid() {
             val validModel = initValidModel().build();
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.valideOrThrowSetKonfiguration(validModel));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validOrThrowSetKonfiguration(validModel));
         }
 
         @Test
         void exceptionWhenModelIsNull() {
             final KonfigurationSetModel modelIsNull = null;
 
-            val exceptionThrown = Assertions.catchException(() -> unitUnderTest.valideOrThrowSetKonfiguration(modelIsNull));
+            val exceptionThrown = Assertions.catchException(() -> unitUnderTest.validOrThrowSetKonfiguration(modelIsNull));
 
             val expectedException = FachlicheWlsException.withCode("100").inService(SERVICE_ID).buildWithMessage("");
 
@@ -61,7 +61,7 @@ class KonfigurationModelValidatorTest {
         void exceptionWhenSchluesselIsNull() {
             val invalidModel = initValidModel().schluessel(null).build();
 
-            val exceptionThrown = Assertions.catchException(() -> unitUnderTest.valideOrThrowSetKonfiguration(invalidModel));
+            val exceptionThrown = Assertions.catchException(() -> unitUnderTest.validOrThrowSetKonfiguration(invalidModel));
 
             val expectedException = FachlicheWlsException.withCode("100").inService(SERVICE_ID).buildWithMessage("");
 

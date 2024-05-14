@@ -21,14 +21,14 @@ public class KonfigurationModelValidator {
         this.serviceID = serviceID;
     }
 
-    public void valideOrThrowGetKonfigurationByKey(final KonfigurationKonfigKey konfigurationKonfigKey) {
+    public void validOrThrowGetKonfigurationByKey(final KonfigurationKonfigKey konfigurationKonfigKey) {
         if (konfigurationKonfigKey == null) {
             throw FachlicheWlsException.withCode(CODE_GETKONFIGURATION_PARAMETER_UNVOLLSTAENDIG).inService(serviceID)
                     .buildWithMessage(MSG_GETKONFIGURATION_PARAMETER_UNVOLLSTAENDIG);
         }
     }
 
-    public void valideOrThrowSetKonfiguration(final KonfigurationSetModel konfigurationSetModel) {
+    public void validOrThrowSetKonfiguration(final KonfigurationSetModel konfigurationSetModel) {
         if (konfigurationSetModel == null || konfigurationSetModel.schluessel() == null) {
             throw FachlicheWlsException.withCode(CODE_POSTKONFIGURATION_PARAMETER_UNVOLLSTAENDIG).inService(serviceID)
                     .buildWithMessage(MSG_POSTKONFIGURATION_PARAMETER_UNVOLLSTAENDIG);

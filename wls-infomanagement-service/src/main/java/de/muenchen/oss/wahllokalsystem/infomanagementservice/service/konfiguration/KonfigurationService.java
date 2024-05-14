@@ -52,7 +52,7 @@ public class KonfigurationService {
     public Optional<KonfigurationModel> getKonfiguration(@NotNull final KonfigurationKonfigKey konfigurationKonfigKey) {
         log.info("#getKonfiguration");
 
-        konfigurationModelValidator.valideOrThrowGetKonfigurationByKey(konfigurationKonfigKey);
+        konfigurationModelValidator.validOrThrowGetKonfigurationByKey(konfigurationKonfigKey);
 
         val wahlbezirkArtOfRequest = getWahlbezirkArt();
         val alternativKey = konfigurationModelMapper.getAlternativKey(konfigurationKonfigKey, wahlbezirkArtOfRequest);
@@ -91,7 +91,7 @@ public class KonfigurationService {
     public void setKonfiguration(@NotNull final KonfigurationSetModel konfigurationSetModel) {
         log.info("#postKonfiguration");
 
-        konfigurationModelValidator.valideOrThrowSetKonfiguration(konfigurationSetModel);
+        konfigurationModelValidator.validOrThrowSetKonfiguration(konfigurationSetModel);
 
         val entityToSave = konfigurationModelMapper.toEntity(konfigurationSetModel);
 

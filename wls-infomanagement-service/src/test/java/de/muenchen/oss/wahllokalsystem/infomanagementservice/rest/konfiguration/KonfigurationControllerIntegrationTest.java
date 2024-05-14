@@ -152,7 +152,7 @@ public class KonfigurationControllerIntegrationTest {
 
             val mockedExceptionMessage = "mocked null pointer exception";
             val mockedValidationException = new NullPointerException(mockedExceptionMessage);
-            Mockito.doThrow(mockedValidationException).when(konfigurationModelValidator).valideOrThrowSetKonfiguration(any());
+            Mockito.doThrow(mockedValidationException).when(konfigurationModelValidator).validOrThrowSetKonfiguration(any());
 
             val response = api.perform(request).andExpect(status().isInternalServerError()).andReturn();
             val responseBodyDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);

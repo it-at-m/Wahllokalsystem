@@ -82,7 +82,7 @@ class KonfigurationServiceTest {
             val mockedKonfigurationFromRepoAsOptional = Optional.of(mockedKonfigurationFromRepo);
             val mappedMockedKonfiguration = KonfigurationModel.builder().build();
 
-            Mockito.doNothing().when(konfigurationModelValidator).valideOrThrowGetKonfigurationByKey(alternativeKey);
+            Mockito.doNothing().when(konfigurationModelValidator).validOrThrowGetKonfigurationByKey(alternativeKey);
             Mockito.when(jwtHandler.canHandle(any())).thenReturn(true);
             Mockito.when(jwtHandler.getDetail(eq(JWT_DETAIL_WAHLBEZIRKSART_KEY), any())).thenReturn(Optional.of("BWB"));
             Mockito.when(konfigurationModelMapper.getAlternativKey(keyForRequestedKonfiguration, WahlbezirkArt.BWB)).thenReturn(Optional.of(alternativeKey));
@@ -103,7 +103,7 @@ class KonfigurationServiceTest {
             val mockedKonfigurationFromRepoAsOptional = Optional.of(mockedKonfigurationFromRepo);
             val mappedMockedKonfiguration = KonfigurationModel.builder().build();
 
-            Mockito.doNothing().when(konfigurationModelValidator).valideOrThrowGetKonfigurationByKey(keyForRequestedKonfiguration);
+            Mockito.doNothing().when(konfigurationModelValidator).validOrThrowGetKonfigurationByKey(keyForRequestedKonfiguration);
             Mockito.when(jwtHandler.canHandle(any())).thenReturn(true);
             Mockito.when(jwtHandler.getDetail(eq(JWT_DETAIL_WAHLBEZIRKSART_KEY), any())).thenReturn(Optional.of("BWB"));
             Mockito.when(konfigurationModelMapper.getAlternativKey(keyForRequestedKonfiguration, WahlbezirkArt.BWB)).thenReturn(Optional.empty());
@@ -122,7 +122,7 @@ class KonfigurationServiceTest {
 
             final Optional<Konfiguration> mockedKonfigurationFromRepoAsOptional = Optional.empty();
 
-            Mockito.doNothing().when(konfigurationModelValidator).valideOrThrowGetKonfigurationByKey(keyForRequestedKonfiguration);
+            Mockito.doNothing().when(konfigurationModelValidator).validOrThrowGetKonfigurationByKey(keyForRequestedKonfiguration);
             Mockito.when(jwtHandler.canHandle(any())).thenReturn(true);
             Mockito.when(jwtHandler.getDetail(eq(JWT_DETAIL_WAHLBEZIRKSART_KEY), any())).thenReturn(Optional.of("BWB"));
             Mockito.when(konfigurationModelMapper.getAlternativKey(keyForRequestedKonfiguration, WahlbezirkArt.BWB)).thenReturn(Optional.empty());
@@ -140,7 +140,7 @@ class KonfigurationServiceTest {
 
             val validationException = new IllegalArgumentException("sth failed");
 
-            Mockito.doThrow(validationException).when(konfigurationModelValidator).valideOrThrowGetKonfigurationByKey(keyForRequestedKonfiguration);
+            Mockito.doThrow(validationException).when(konfigurationModelValidator).validOrThrowGetKonfigurationByKey(keyForRequestedKonfiguration);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.getKonfiguration(keyForRequestedKonfiguration)).isSameAs(validationException);
         }
@@ -154,7 +154,7 @@ class KonfigurationServiceTest {
             val mockedKonfigurationFromRepoAsOptional = Optional.of(mockedKonfigurationFromRepo);
             val mappedMockedKonfiguration = KonfigurationModel.builder().build();
 
-            Mockito.doNothing().when(konfigurationModelValidator).valideOrThrowGetKonfigurationByKey(keyForRequestedKonfiguration);
+            Mockito.doNothing().when(konfigurationModelValidator).validOrThrowGetKonfigurationByKey(keyForRequestedKonfiguration);
             Mockito.when(jwtHandler.canHandle(any())).thenReturn(true);
             Mockito.when(jwtHandler.getDetail(eq(JWT_DETAIL_WAHLBEZIRKSART_KEY), any())).thenReturn(Optional.empty());
             Mockito.when(konfigurationModelMapper.getAlternativKey(keyForRequestedKonfiguration, WahlbezirkArt.UWB)).thenReturn(Optional.empty());
@@ -177,7 +177,7 @@ class KonfigurationServiceTest {
 
             SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("princiap", "credential"));
 
-            Mockito.doNothing().when(konfigurationModelValidator).valideOrThrowGetKonfigurationByKey(keyForRequestedKonfiguration);
+            Mockito.doNothing().when(konfigurationModelValidator).validOrThrowGetKonfigurationByKey(keyForRequestedKonfiguration);
             Mockito.when(jwtHandler.canHandle(any())).thenReturn(false);
             Mockito.when(konfigurationModelMapper.getAlternativKey(keyForRequestedKonfiguration, WahlbezirkArt.UWB)).thenReturn(Optional.empty());
             Mockito.when(konfigurationModelMapper.toModel(mockedKonfigurationFromRepo)).thenReturn(mappedMockedKonfiguration);
@@ -198,7 +198,7 @@ class KonfigurationServiceTest {
 
             val mockedKonfigurationEntity = new Konfiguration();
 
-            Mockito.doNothing().when(konfigurationModelValidator).valideOrThrowSetKonfiguration(konfigurationSetModel);
+            Mockito.doNothing().when(konfigurationModelValidator).validOrThrowSetKonfiguration(konfigurationSetModel);
             Mockito.when(konfigurationModelMapper.toEntity(konfigurationSetModel)).thenReturn(mockedKonfigurationEntity);
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.setKonfiguration(konfigurationSetModel));
@@ -212,7 +212,7 @@ class KonfigurationServiceTest {
 
             val mockedValidatorException = new IllegalArgumentException("WRONG!!!");
 
-            Mockito.doThrow(mockedValidatorException).when(konfigurationModelValidator).valideOrThrowSetKonfiguration(konfigurationSetModel);
+            Mockito.doThrow(mockedValidatorException).when(konfigurationModelValidator).validOrThrowSetKonfiguration(konfigurationSetModel);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.setKonfiguration(konfigurationSetModel)).isSameAs(mockedValidatorException);
         }
@@ -225,7 +225,7 @@ class KonfigurationServiceTest {
             val mockedKonfigurationEntity = new Konfiguration();
             val mockedServiceID = "serviceID";
 
-            Mockito.doNothing().when(konfigurationModelValidator).valideOrThrowSetKonfiguration(konfigurationSetModel);
+            Mockito.doNothing().when(konfigurationModelValidator).validOrThrowSetKonfiguration(konfigurationSetModel);
             Mockito.when(konfigurationModelMapper.toEntity(konfigurationSetModel)).thenReturn(mockedKonfigurationEntity);
             Mockito.when(konfigurationRepository.save(mockedKonfigurationEntity)).thenThrow(mockedRepositoryException);
             Mockito.when(serviceIDFormatter.getId()).thenReturn(mockedServiceID);

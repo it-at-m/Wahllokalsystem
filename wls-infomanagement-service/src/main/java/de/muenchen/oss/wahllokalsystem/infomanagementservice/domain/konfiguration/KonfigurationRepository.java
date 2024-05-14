@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface KonfigurationRepository extends CrudRepository<Konfiguration, String> {
@@ -15,32 +16,35 @@ public interface KonfigurationRepository extends CrudRepository<Konfiguration, S
 
     @Override
     @PreAuthorize("hasAuthority('Infomanagement_READ_Konfiguration')")
+    @NonNull
     List<Konfiguration> findAll();
 
     @Override
     @Cacheable(value = CACHE, key = "#p0")
     @PreAuthorize("hasAuthority('Infomanagement_READ_Konfiguration')")
-    Optional<Konfiguration> findById(String key);
+    @NonNull
+    Optional<Konfiguration> findById(@NonNull String key);
 
     @Override
     @CachePut(value = CACHE, key = "#p0.schluessel")
     @PreAuthorize("hasAuthority('Infomanagement_WRITE_Konfiguration')")
-    <S extends Konfiguration> S save(S konfiguration);
+    @NonNull
+    <S extends Konfiguration> S save(@NonNull S konfiguration);
 
     @Override
     @CacheEvict(value = CACHE, key = "#p0")
     @PreAuthorize("hasAuthority('Infomanagement_DELETE_Konfiguration')")
-    void deleteById(String key);
+    void deleteById(@NonNull String key);
 
     @Override
     @CacheEvict(value = CACHE, key = "#p0.schluessel")
     @PreAuthorize("hasAuthority('Infomanagement_DELETE_Konfiguration')")
-    void delete(Konfiguration entity);
+    void delete(@NonNull Konfiguration entity);
 
     @Override
     @CacheEvict(value = CACHE, allEntries = true)
     @PreAuthorize("hasAuthority('Infomanagement_DELETE_Konfiguration')")
-    void deleteAll(Iterable<? extends Konfiguration> entities);
+    void deleteAll(@NonNull Iterable<? extends Konfiguration> entities);
 
     @Override
     @CacheEvict(value = CACHE, allEntries = true)

@@ -364,10 +364,6 @@ class KonfigurationServiceTest {
             return Arrays.stream(KonfigurationKonfigKey.values()).filter(konfigKey -> !SUPPORTED_KEYS.contains(konfigKey)).map(Arguments::of);
         }
 
-        private static Stream<Arguments> getSupportedKeys() {
-            return SUPPORTED_KEYS.stream().map(Arguments::of);
-        }
-
     }
 
 }

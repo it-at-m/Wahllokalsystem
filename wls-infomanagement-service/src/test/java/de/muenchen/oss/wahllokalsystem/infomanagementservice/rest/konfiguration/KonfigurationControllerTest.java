@@ -1,11 +1,13 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationKonfigKey;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationModel;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationService;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationSetModel;
+import java.util.List;
 import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -80,6 +82,27 @@ class KonfigurationControllerTest {
             Mockito.doNothing().when(konfigurationService).setKonfiguration(mockedServiceSetModel);
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postKonfiguration(konfigKey, requestDTO));
+        }
+    }
+
+    @Nested
+    class GetKonfigurationen {
+
+        @Test
+        void serviceCalled() {
+            val mockedServiceResponseModel = List.of(
+                    KonfigurationModel.builder().build(),
+                    KonfigurationModel.builder().build(),
+                    KonfigurationModel.builder().build()
+            );
+            val mockedMappedModelAsDTO = KonfigurationDTO.builder().build();
+
+            Mockito.when(konfigurationService.getAllKonfigurations()).thenReturn(mockedServiceResponseModel);
+            Mockito.when(konfigurationDTOMapper.toDTO(any())).thenReturn(mockedMappedModelAsDTO);
+
+            val result = unitUnderTest.getKonfigurations();
+
+            Assertions.assertThat(result).hasSize(mockedServiceResponseModel.size());
         }
     }
 

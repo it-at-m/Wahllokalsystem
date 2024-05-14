@@ -122,6 +122,25 @@ class SecurityConfigurationTest {
 
             api.perform(request).andExpect(status().isOk());
         }
+
+        @Test
+        @WithAnonymousUser
+        void accessGetKonfigurationenUnauthorizedThenUnauthorized() throws Exception {
+            val request = MockMvcRequestBuilders.get("/businessActions/konfiguration");
+
+            api.perform(request).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessGetKonfigurationenAuthorizedThenOk() throws Exception {
+            Mockito.when(konfigurationService.getKonfiguration(any())).thenReturn(Optional.empty());
+
+            val request = MockMvcRequestBuilders.get("/businessActions/konfiguration");
+
+            api.perform(request).andExpect(status().isOk());
+        }
+
     }
 
 }

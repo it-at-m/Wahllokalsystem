@@ -161,4 +161,28 @@ public class KonfigurationControllerIntegrationTest {
                             objectMapper.writeValueAsString(requestDTO));
         }
     }
+
+    @Nested
+    class GetKonfigurationen {
+        @Test
+        @WithMockUserAsJwt(
+                authorities = { Authorities.SERVICE_GET_KONFIUGRATIONEN, Authorities.REPOSITORY_READ_KONFIGURATION, Authorities.REPOSITORY_WRITE_KONFIGURATION }
+        )
+        void konfigurationDataFound() throws Exception {
+            konfigurationRepository.save(new Konfiguration("schluessel1", "wert1", "beschreibung1", "standard1"));
+            konfigurationRepository.save(new Konfiguration("schluessel2", "wert2", "beschreibung2", "standard2"));
+
+            val request = MockMvcRequestBuilders.get("/businessActions/konfiguration");
+
+            val response = api.perform(request).andExpect(status().isOk()).andReturn();
+            val responseBodyDTO = objectMapper.readValue(response.getResponse().getContentAsString(), KonfigurationDTO[].class);
+
+            val expectedResponseItems = new KonfigurationDTO[] {
+                    new KonfigurationDTO("schluessel1", "wert1", "beschreibung1", "standard1"),
+                    new KonfigurationDTO("schluessel2", "wert2", "beschreibung2", "standard2"),
+            };
+
+            Assertions.assertThat(responseBodyDTO).containsExactlyInAnyOrder(expectedResponseItems);
+        }
+    }
 }

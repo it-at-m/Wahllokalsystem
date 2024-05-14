@@ -10,6 +10,8 @@ import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguratio
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -223,6 +225,33 @@ class KonfigurationServiceTest {
 
             Assertions.assertThat(exceptionThrown).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedException);
             Assertions.assertThat(exceptionThrown.getMessage()).isNotNull();
+        }
+    }
+
+    @Nested
+    class GetAllKonfigurations {
+
+        @Test
+        void dataFromRepository() {
+            val mockedRepositoryResponse = List.of(new Konfiguration(), new Konfiguration());
+            val mockedMappedEntityAsModel = KonfigurationModel.builder().build();
+
+            Mockito.when(konfigurationRepository.findAll()).thenReturn(mockedRepositoryResponse);
+            Mockito.when(konfigurationModelMapper.toModel(any())).thenReturn(mockedMappedEntityAsModel);
+
+            val result = unitUnderTest.getAllKonfigurations();
+
+            Assertions.assertThat(result).hasSize(mockedRepositoryResponse.size());
+        }
+
+        @Test
+        void noDataFromRepository() {
+
+            Mockito.when(konfigurationRepository.findAll()).thenReturn(Collections.emptyList());
+
+            val result = unitUnderTest.getAllKonfigurations();
+
+            Assertions.assertThat(result).isEmpty();
         }
     }
 

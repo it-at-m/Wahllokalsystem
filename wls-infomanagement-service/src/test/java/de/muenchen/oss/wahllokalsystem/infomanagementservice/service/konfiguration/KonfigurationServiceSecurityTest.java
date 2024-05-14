@@ -108,4 +108,34 @@ public class KonfigurationServiceSecurityTest {
             return Arrays.stream(authorities).filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new);
         }
     }
+
+    @Nested
+    class GetAllKonfigurations {
+
+        @Test
+        void accessGranted() {
+
+            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.ALL_AUTHORITIES_GET_KONFIGURATIONS);
+
+            Assertions.assertThatNoException().isThrownBy(() -> konfigurationService.getAllKonfigurations());
+        }
+
+        @ParameterizedTest(name = "{index} - {1} missing")
+        @MethodSource("getMissingAuthoritiesVariations")
+        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
+            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, argumentsAccessor.get(0, String[].class));
+
+            Assertions.assertThatThrownBy(() -> konfigurationService.getAllKonfigurations())
+                    .isExactlyInstanceOf(AccessDeniedException.class);
+        }
+
+        private static Stream<Arguments> getMissingAuthoritiesVariations() {
+            val requiredAuthorities = Authorities.ALL_AUTHORITIES_GET_KONFIGURATIONS;
+            return Arrays.stream(requiredAuthorities)
+                    .map(authorityToRemove ->
+                            //remove one authority from all required authorities
+                            Arguments.of(Arrays.stream(requiredAuthorities)
+                                    .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+        }
+    }
 }

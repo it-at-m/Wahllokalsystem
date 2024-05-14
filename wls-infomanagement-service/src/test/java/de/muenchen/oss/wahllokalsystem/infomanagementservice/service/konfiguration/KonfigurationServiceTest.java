@@ -11,15 +11,20 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsExceptio
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -289,6 +294,70 @@ class KonfigurationServiceTest {
             Assertions.assertThat(exceptionThrown.getMessage()).isNotNull();
 
         }
+    }
+
+    @Nested
+    class GetKonfigurationUnauthorized {
+
+        private static final List<KonfigurationKonfigKey> SUPPORTED_KEYS = List.of(KonfigurationKonfigKey.FRUEHESTE_LOGIN_UHRZEIT,
+                KonfigurationKonfigKey.SPAETESTE_LOGIN_UHRZEIT, KonfigurationKonfigKey.WILLKOMMENSTEXT);
+
+        @ParameterizedTest
+        @MethodSource("getNonSupporetedKeys")
+        void verifyRepoNotCalled(final KonfigurationKonfigKey konfigurationKonfigKey) {
+            val result = unitUnderTest.getKonfigurationUnauthorized(konfigurationKonfigKey);
+
+            Assertions.assertThat(result).isEmpty();
+            Mockito.verifyNoInteractions(konfigurationRepository);
+        }
+
+        @Test
+        void fruehesteLoginUhrzeitIsReadFromRepo() {
+            val mockedRepoResponse = new Konfiguration();
+            val mockedMappedEntityAsModel = KonfigurationModel.builder().build();
+
+            Mockito.when(konfigurationRepository.getFruehesteLoginUhrzeit()).thenReturn(Optional.of(mockedRepoResponse));
+            Mockito.when(konfigurationModelMapper.toModel(mockedRepoResponse)).thenReturn(mockedMappedEntityAsModel);
+
+            val result = unitUnderTest.getKonfigurationUnauthorized(KonfigurationKonfigKey.FRUEHESTE_LOGIN_UHRZEIT);
+
+            Assertions.assertThat(result.get()).isSameAs(mockedMappedEntityAsModel);
+        }
+
+        @Test
+        void spaetesteLoginUhrzeitIsReadFromRepo() {
+            val mockedRepoResponse = new Konfiguration();
+            val mockedMappedEntityAsModel = KonfigurationModel.builder().build();
+
+            Mockito.when(konfigurationRepository.getSpaetesteLoginUhrzeit()).thenReturn(Optional.of(mockedRepoResponse));
+            Mockito.when(konfigurationModelMapper.toModel(mockedRepoResponse)).thenReturn(mockedMappedEntityAsModel);
+
+            val result = unitUnderTest.getKonfigurationUnauthorized(KonfigurationKonfigKey.SPAETESTE_LOGIN_UHRZEIT);
+
+            Assertions.assertThat(result.get()).isSameAs(mockedMappedEntityAsModel);
+        }
+
+        @Test
+        void willkommenstextIsReadFromRepo() {
+            val mockedRepoResponse = new Konfiguration();
+            val mockedMappedEntityAsModel = KonfigurationModel.builder().build();
+
+            Mockito.when(konfigurationRepository.getWillkommenstext()).thenReturn(Optional.of(mockedRepoResponse));
+            Mockito.when(konfigurationModelMapper.toModel(mockedRepoResponse)).thenReturn(mockedMappedEntityAsModel);
+
+            val result = unitUnderTest.getKonfigurationUnauthorized(KonfigurationKonfigKey.WILLKOMMENSTEXT);
+
+            Assertions.assertThat(result.get()).isSameAs(mockedMappedEntityAsModel);
+        }
+
+        private static Stream<Arguments> getNonSupporetedKeys() {
+            return Arrays.stream(KonfigurationKonfigKey.values()).filter(konfigKey -> !SUPPORTED_KEYS.contains(konfigKey)).map(Arguments::of);
+        }
+
+        private static Stream<Arguments> getSupportedKeys() {
+            return SUPPORTED_KEYS.stream().map(Arguments::of);
+        }
+
     }
 
 }

@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration.KonfigurationSetDTO;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationModel;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationService;
 import java.util.Optional;
 import lombok.val;
@@ -155,6 +156,16 @@ class SecurityConfigurationTest {
             Mockito.when(konfigurationService.getKonfiguration(any())).thenReturn(Optional.empty());
 
             val request = MockMvcRequestBuilders.get("/businessActions/kennbuchstaben");
+
+            api.perform(request).andExpect(status().isOk());
+        }
+
+        @Test
+        @WithAnonymousUser
+        void accessGetKonfigurationUnauthorizedThenOk() throws Exception {
+            Mockito.when(konfigurationService.getKonfigurationUnauthorized(any())).thenReturn(Optional.of(KonfigurationModel.builder().build()));
+
+            val request = MockMvcRequestBuilders.get("/businessActions/konfigurationUnauthorized/WILLKOMMENSTEXT");
 
             api.perform(request).andExpect(status().isOk());
         }

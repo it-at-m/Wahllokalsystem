@@ -137,4 +137,39 @@ class KonfigurationControllerTest {
         }
     }
 
+    @Nested
+    class GetKonfigurationUnauthorized {
+
+        @Test
+        void okWhenDataWasFound() {
+            val konfigKey = KonfigurationKey.KENNBUCHSTABEN;
+            val mockedKonfigKeyAsModel = KonfigurationKonfigKey.KENNBUCHSTABEN;
+            val mockedServiceResponseModel = KonfigurationModel.builder().build();
+            val mockedMappedModelAsDTO = KonfigurationDTO.builder().build();
+
+            Mockito.when(konfigurationService.getKonfigurationUnauthorized(mockedKonfigKeyAsModel)).thenReturn(Optional.of(mockedServiceResponseModel));
+            Mockito.when(konfigurationDTOMapper.toModelKey(konfigKey)).thenReturn(mockedKonfigKeyAsModel);
+            Mockito.when(konfigurationDTOMapper.toDTO(mockedServiceResponseModel)).thenReturn(mockedMappedModelAsDTO);
+
+            val result = unitUnderTest.getKonfigurationUnauthorized(konfigKey);
+
+            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+            Assertions.assertThat(result.getBody()).isSameAs(mockedMappedModelAsDTO);
+        }
+
+        @Test
+        void noContentWhenNoDataFound() {
+            val konfigKey = KonfigurationKey.KENNBUCHSTABEN;
+            val mockedKonfigKeyAsModel = KonfigurationKonfigKey.KENNBUCHSTABEN;
+
+            Mockito.when(konfigurationService.getKonfigurationUnauthorized(mockedKonfigKeyAsModel)).thenReturn(Optional.empty());
+            Mockito.when(konfigurationDTOMapper.toModelKey(konfigKey)).thenReturn(mockedKonfigKeyAsModel);
+
+            val result = unitUnderTest.getKonfigurationUnauthorized(konfigKey);
+
+            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+            Assertions.assertThat(result.getBody()).isNull();
+        }
+    }
+
 }

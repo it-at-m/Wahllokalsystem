@@ -169,7 +169,7 @@ public class KonfigurationServiceSecurityTest {
         void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.REPOSITORY_WRITE_KONFIGURATION);
             konfigurationRepository.save(new Konfiguration("KENNBUCHSTABEN", "", "", ""));
-            
+
             SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatThrownBy(() -> konfigurationService.getKennbuchstabenListen())
@@ -183,6 +183,16 @@ public class KonfigurationServiceSecurityTest {
                             //remove one authority from all required authorities
                             Arguments.of(Arrays.stream(requiredAuthorities)
                                     .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+        }
+    }
+
+    @Nested
+    class GetKonfigurationUnauthorized {
+        @Test
+        void accessGranted() {
+            SecurityContextHolder.clearContext();
+
+            Assertions.assertThatNoException().isThrownBy(() -> konfigurationService.getKonfigurationUnauthorized(KonfigurationKonfigKey.WILLKOMMENSTEXT));
         }
     }
 }

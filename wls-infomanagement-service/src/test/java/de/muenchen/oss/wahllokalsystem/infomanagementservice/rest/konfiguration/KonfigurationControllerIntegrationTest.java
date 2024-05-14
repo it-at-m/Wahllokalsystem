@@ -27,6 +27,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -208,6 +210,32 @@ public class KonfigurationControllerIntegrationTest {
             ), new KennbuchstabenListeDTO(List.of(new KennbuchstabenDTO(List.of("1", "2")), new KennbuchstabenDTO(List.of("11", "12"))))));
 
             Assertions.assertThat(responseBodyDTO).isEqualTo(expectedResponseDTO);
+        }
+    }
+
+    @Nested
+    class GetKonfigurationUnauthorized {
+
+        @Test
+        @WithAnonymousUser
+        void willkommenstextFound() throws Exception {
+            SecurityUtils.runAs("", "", Authorities.REPOSITORY_WRITE_KONFIGURATION);
+            val schluesel = "WILLKOMMENSTEXT";
+            val wert = "hello world";
+            val beschreibung = "beschreibung";
+            val standard = "standard";
+            val konfigurationToFind = new Konfiguration(schluesel, wert, beschreibung, standard);
+            konfigurationRepository.save(konfigurationToFind);
+            SecurityContextHolder.clearContext();
+
+            val request = MockMvcRequestBuilders.get("/businessActions/konfigurationUnauthorized/WILLKOMMENSTEXT");
+
+            val result = api.perform(request).andExpect(status().isOk()).andReturn();
+            val resultBodyDTO = objectMapper.readValue(result.getResponse().getContentAsString(), KonfigurationDTO.class);
+
+            val expectedResultBodyDTO = new KonfigurationDTO(schluesel, wert, beschreibung, standard);
+
+            Assertions.assertThat(resultBodyDTO).isEqualTo(expectedResultBodyDTO);
         }
     }
 }

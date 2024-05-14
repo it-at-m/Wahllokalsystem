@@ -96,8 +96,7 @@ class KonfigurationControllerTest {
             val mockedServiceResponseModel = List.of(
                     KonfigurationModel.builder().build(),
                     KonfigurationModel.builder().build(),
-                    KonfigurationModel.builder().build()
-            );
+                    KonfigurationModel.builder().build());
             val mockedMappedModelAsDTO = KonfigurationDTO.builder().build();
 
             Mockito.when(konfigurationService.getAllKonfigurations()).thenReturn(mockedServiceResponseModel);

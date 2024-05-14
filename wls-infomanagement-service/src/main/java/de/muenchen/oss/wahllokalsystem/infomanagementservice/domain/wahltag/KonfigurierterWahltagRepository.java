@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag;
 
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.wahltag.WahltagStatus;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -14,7 +15,7 @@ public interface KonfigurierterWahltagRepository extends CrudRepository<Konfigur
     String CACHE = "KonfigurierterWahltagCACHE";
 
     @Override
-    Iterable<KonfigurierterWahltag> findAll();
+    List<KonfigurierterWahltag> findAll();
 
     @Override
     @Cacheable(value = CACHE, key = "#p0")

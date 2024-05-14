@@ -12,10 +12,13 @@ public class KonfigurierterWahltagValidator {
 
     private final ServiceIDFormatter serviceIDFormatter;
 
-    private static final ExceptionDataWrapper POST_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("104",
+    private static final ExceptionDataWrapper POST_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("100",
             "postKonfigurierterWahltag: Suchkriterien unvollständig.");
 
-    public void validModelOrThrow(KonfigurierterWahltagModel konfigurierterWahltag) {
+    private static final ExceptionDataWrapper DELETE_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("104",
+            "deleteKonfigurierterWahltag: Suchkriterien unvollständig.");
+
+    public void validPostModelOrThrow(KonfigurierterWahltagModel konfigurierterWahltag) {
         if (konfigurierterWahltag == null || konfigurierterWahltag.wahltag() == null || konfigurierterWahltag.wahltagID() == null) {
 
             throw FachlicheWlsException.withCode(POST_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG.code()).inService(serviceIDFormatter.getId())
@@ -23,4 +26,15 @@ public class KonfigurierterWahltagValidator {
                             POST_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG.message());
         }
     }
+
+    public void validDeleteModelOrThrow(KonfigurierterWahltagModel konfigurierterWahltag) {
+
+        if (konfigurierterWahltag.wahltagID() == null || konfigurierterWahltag.wahltagID().isEmpty()) {
+
+            throw FachlicheWlsException.withCode(DELETE_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG.code()).inService(serviceIDFormatter.getId())
+                    .buildWithMessage(
+                            DELETE_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG.message());
+        }
+    }
+
 }

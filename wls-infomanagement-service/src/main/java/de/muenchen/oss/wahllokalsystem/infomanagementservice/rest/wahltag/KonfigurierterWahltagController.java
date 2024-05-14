@@ -1,10 +1,14 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.wahltag;
 
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.wahltag.KonfigurierterWahltagModel;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.wahltag.KonfigurierterWahltagService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,41 +38,25 @@ public class KonfigurierterWahltagController {
         konfigurierterWahltagService.setKonfigurierterWahltag(mapper.toModel(konfigurierterWahltagDTO));
     }
 
-    //    /**
-    //     * This BusinessAction's purpose is: Aktualisiert den konfigurierten Wahltag
-    //     */
-    //    @RequestMapping(value = KONFIGURIERTER_WAHLTAG_PATH, method = RequestMethod.POST)
-    //    public ResponseEntity<?> postKonfigurierterWahltag(@RequestHeader Map<String, Object> headers, @RequestBody KonfigurierterWahltag_ konfigurierterWahltag) {
-    //        postKonfigurierterWahltagactionService.postKonfigurierterWahltag(headers, konfigurierterWahltag);
-    //        return new ResponseEntity<>(HttpStatus.OK);
-    //    }
-    //
-    //    /**
-    //     * This BusinessAction's purpose is: Loescht den konfigurierten Wahltag
-    //     */
-    //    @RequestMapping(value = KONFIGURIERTER_WAHLTAG_PATH_DELETE, method = RequestMethod.DELETE)
-    //    public ResponseEntity<?> deleteKonfigurierterWahltag(@RequestHeader Map<String, Object> headers, @PathVariable("wahltagID") String wahltagID) {
-    //        deleteKonfigurierterWahltagactionService.deleteKonfigurierterWahltag(headers, wahltagID);
-    //        return new ResponseEntity<>(HttpStatus.OK);
-    //    }
-    //
-    //    /**
-    //     * This BusinessAction's purpose is: Liefert alle konfigurierten Wahltage It returns multiple KonfigurierterWahltag_.
-    //     */
-    //    @RequestMapping(value = KONFIGURIERTE_WAHLTAGE_PATH, method = RequestMethod.GET)
-    //    public ResponseEntity<List<KonfigurierterWahltag_>> getKonfigurierteWahltage(@RequestHeader Map<String, Object> headers) {
-    //        List<KonfigurierterWahltag_> konfigurierteWahltage = getKonfigurierteWahltageactionService.getKonfigurierteWahltage(headers);
-    //        if (konfigurierteWahltage == null || konfigurierteWahltage.isEmpty()) {
-    //            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    //        }
-    //        return new ResponseEntity<>(konfigurierteWahltage, HttpStatus.OK);
-    //    }
-    //
-    //    @RequestMapping(value = LOGIN_CHECK_PATH + "/{wahltagID}", method = RequestMethod.GET)
-    //    public ResponseEntity<Boolean> getLoginCheck(@RequestHeader Map<String, Object> headers, @PathVariable("wahltagID") String wahltagID) {
-    //        boolean result = getLoginCheckactionService.getLoginCheck(headers, wahltagID);
-    //        return new ResponseEntity<>(result, HttpStatus.OK);
-    //    }
+    @DeleteMapping(value = KONFIGURIERTER_WAHLTAG_PATH_DELETE)
+    public void deleteKonfigurierterWahltag(@PathVariable("wahltagID") String wahltagID) {
+        val konfigurierterWahltagModel = new KonfigurierterWahltagModel(null, wahltagID, null, null);
+        konfigurierterWahltagService.deleteKonfigurierterWahltag(konfigurierterWahltagModel);
+    }
+
+    @GetMapping(value = KONFIGURIERTE_WAHLTAGE_PATH)
+    public ResponseEntity<List<KonfigurierterWahltagDTO>> getKonfigurierteWahltage() {
+        List<KonfigurierterWahltagDTO> konfigurierteWahltageDTO = mapper.toDTOList(konfigurierterWahltagService.getKonfigurierteWahltage());
+        return withBodyOrNoContent(konfigurierteWahltageDTO);
+    }
+
+    // TODO rename method sinnvoll!!!
+    @GetMapping(value = LOGIN_CHECK_PATH + "/{wahltagID}")
+    public ResponseEntity<Boolean> getLoginCheck(@PathVariable("wahltagID") String wahltagID) {
+        val konfigurierterWahltagModel = new KonfigurierterWahltagModel(null, wahltagID, null, null);
+        boolean result = konfigurierterWahltagService.getLoginCheck(konfigurierterWahltagModel);
+        return withBodyOrNoContent(result);
+    }
 
     private <T> ResponseEntity<T> withBodyOrNoContent(final T body) {
         if (body == null) {

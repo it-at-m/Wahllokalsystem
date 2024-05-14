@@ -9,6 +9,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.Konfiguration;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.KonfigurationRepository;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration.dto.KennbuchstabenDTO;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration.dto.KennbuchstabenListeDTO;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration.dto.KennbuchstabenListenDTO;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration.dto.KonfigurationDTO;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration.dto.KonfigurationSetDTO;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationModelValidator;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.SecurityUtils;
@@ -206,7 +211,7 @@ public class KonfigurationControllerIntegrationTest {
             val responseBodyDTO = objectMapper.readValue(response.getResponse().getContentAsString(), KennbuchstabenListenDTO.class);
 
             val expectedResponseDTO = new KennbuchstabenListenDTO(List.of(new KennbuchstabenListeDTO(
-                    List.of(new KennbuchstabenDTO(List.of("a", "b", " c")), new KennbuchstabenDTO(List.of("A", "B", "C")))),
+                            List.of(new KennbuchstabenDTO(List.of("a", "b", " c")), new KennbuchstabenDTO(List.of("A", "B", "C")))),
                     new KennbuchstabenListeDTO(List.of(new KennbuchstabenDTO(List.of("1", "2")), new KennbuchstabenDTO(List.of("11", "12"))))));
 
             Assertions.assertThat(responseBodyDTO).isEqualTo(expectedResponseDTO);

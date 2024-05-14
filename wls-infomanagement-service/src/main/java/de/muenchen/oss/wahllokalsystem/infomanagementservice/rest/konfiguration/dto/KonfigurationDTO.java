@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration;
+package de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

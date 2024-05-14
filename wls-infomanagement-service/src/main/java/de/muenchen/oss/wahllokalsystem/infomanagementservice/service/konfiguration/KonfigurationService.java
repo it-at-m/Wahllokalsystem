@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfigurat
 
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.common.security.AuthenticationHandler;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.KonfigurationRepository;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import jakarta.validation.constraints.NotNull;
@@ -23,8 +24,13 @@ public class KonfigurationService {
     private static final WahlbezirkArt WAHLBEZIRK_ART_FALLBACK = WahlbezirkArt.UWB;
     private static final String WAHLBEZIRK_ART_USER_DETAIL_KEY = "wahlbezirksArt";
 
+    private static final String KONFIGURATION_KEY_KENNBUCHSTABEN = KonfigurationKonfigKey.KENNBUCHSTABEN.name();
+
     private static final String CODE_POSTKONFIGURATION_NOT_SAVEABLE = "101";
     private static final String MSG_POSTKONFIGURATION_NOT_SAVEABLE = "postKonfiguration: Die Konfiguration konnte nicht gespeichert werden";
+
+    private static final String CODE_GETKENNBUCHSTABENLISTEN_KONFIGURATION_NOT_FOUND = "103";
+    private static final String MSG_GETKENNBUCHSTABENLISTEN_KONFIGURATION_NOT_FOUND = "getKennbuchstabenListen: Es wurde keinen Kennbuchstaben gefunden.";
 
     private final KonfigurationRepository konfigurationRepository;
 
@@ -73,6 +79,15 @@ public class KonfigurationService {
             throw TechnischeWlsException.withCode(CODE_POSTKONFIGURATION_NOT_SAVEABLE).inService(serviceIDFormatter.getId())
                     .buildWithMessage(MSG_POSTKONFIGURATION_NOT_SAVEABLE);
         }
+    }
+
+    @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_GetKennbuchstabenListen')")
+    public KennbuchstabenListenModel getKennbuchstabenListen() {
+        val kennbuchstaben = konfigurationRepository.findById(KONFIGURATION_KEY_KENNBUCHSTABEN).orElseThrow(
+                () -> FachlicheWlsException.withCode(CODE_GETKENNBUCHSTABENLISTEN_KONFIGURATION_NOT_FOUND).inService(serviceIDFormatter.getId())
+                        .buildWithMessage(MSG_GETKENNBUCHSTABENLISTEN_KONFIGURATION_NOT_FOUND));
+
+        return konfigurationModelMapper.toKennbuchstabenListenModel(kennbuchstaben.getWert());
     }
 
     private WahlbezirkArt getWahlbezirkArt() {

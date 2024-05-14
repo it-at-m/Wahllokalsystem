@@ -45,4 +45,10 @@ public class KonfigurationController {
             return ResponseEntity.ok(allKonfigurations.stream().map(konfigurationDTOMapper::toDTO).toList());
         }
     }
+
+    @GetMapping("/kennbuchstaben")
+    public KennbuchstabenListenDTO getKennbuchstabenListen() {
+        return konfigurationDTOMapper.toDTO(konfigurationService.getKennbuchstabenListen());
+    }
+
 }

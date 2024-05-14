@@ -1,19 +1,19 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.wahltag;
 
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.wahltag.KonfigurierterWahltagService;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/businessActions")
 @RequiredArgsConstructor
-public class WahltagController {
+public class KonfigurierterWahltagController {
 
     private final String KONFIGURIERTER_WAHLTAG_PATH = "/konfigurierterWahltag";
     private final String KONFIGURIERTER_WAHLTAG_PATH_DELETE = "/konfigurierterWahltag/{wahltagID}";
@@ -21,22 +21,18 @@ public class WahltagController {
     private final String LOGIN_CHECK_PATH = "/loginCheck";
 
     private final KonfigurierterWahltagService konfigurierterWahltagService;
-    private final KonfigurierterWahltagMapper mapper;
+    private final KonfigurierterWahltagDTOMapper mapper;
 
     @GetMapping(value = KONFIGURIERTER_WAHLTAG_PATH)
-    public ResponseEntity<KonfigurierterWahltagDTO> getKonfigurierterWahltag(@RequestHeader Map<String, Object> headers) {
-        val konfigurierterWahltagModel = konfigurierterWahltagService.getKonfigurierterWahltag(headers);
-        val konfigurierterWahltagDTO = mapper.toDTO(konfigurierterWahltagModel);
+    public ResponseEntity<KonfigurierterWahltagDTO> getKonfigurierterWahltag() {
+        val konfigurierterWahltagDTO = mapper.toDTO(konfigurierterWahltagService.getKonfigurierterWahltag());
         return withBodyOrNoContent(konfigurierterWahltagDTO);
     }
 
-    //    @GetMapping("{wahlbezirkID}/{waehlerverzeichnisNummer}")
-    //    public ResponseEntity<BeanstandeteWahlbriefeDTO> getBeanstandeteWahlbriefe(@PathVariable("wahlbezirkID") String wahlbezirkID,
-    //        @PathVariable("waehlerverzeichnisNummer") Long waehlerverzeichnisNummer) {
-    //        val referenceModel = beanstandeteWahlbriefeDTOMapper.toReferenceModel(wahlbezirkID, waehlerverzeichnisNummer);
-    //        val beanstandeteWahlbriefeFromService = beanstandeteWahlbriefeDTOMapper.toDTO(beanstandeteWahlbriefeService.getBeanstandeteWahlbriefe(referenceModel));
-    //        return withBodyOrNoContent(beanstandeteWahlbriefeFromService);
-    //    }
+    @PostMapping(value = KONFIGURIERTER_WAHLTAG_PATH)
+    public void setKonfigurierterWahltag(@RequestBody KonfigurierterWahltagDTO konfigurierterWahltagDTO) {
+        konfigurierterWahltagService.setKonfigurierterWahltag(mapper.toModel(konfigurierterWahltagDTO));
+    }
 
     //    /**
     //     * This BusinessAction's purpose is: Aktualisiert den konfigurierten Wahltag

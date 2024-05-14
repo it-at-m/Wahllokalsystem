@@ -1,13 +1,12 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.wahltag;
 
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag.KonfigurierterWahltag;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.wahltag.KonfigurierterWahltagModel;
 import org.mapstruct.Mapper;
 
 @Mapper
-public interface KonfigurierterWahltagMapper {
+public interface KonfigurierterWahltagDTOMapper {
 
-    KonfigurierterWahltagModel toModel(KonfigurierterWahltag entity);
+    KonfigurierterWahltagModel toModel(KonfigurierterWahltagDTO dto);
 
     KonfigurierterWahltagDTO toDTO(KonfigurierterWahltagModel model);
 

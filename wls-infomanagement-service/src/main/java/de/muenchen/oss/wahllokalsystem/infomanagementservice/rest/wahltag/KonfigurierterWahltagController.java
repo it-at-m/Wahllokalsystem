@@ -50,7 +50,6 @@ public class KonfigurierterWahltagController {
         return withBodyOrNoContent(konfigurierteWahltageDTO);
     }
 
-    // TODO rename method sinnvoll!!!
     @GetMapping(value = LOGIN_CHECK_PATH + "/{wahltagID}")
     public ResponseEntity<Boolean> isWahltagActive(@PathVariable("wahltagID") String wahltagID) {
         val konfigurierterWahltagModel = new KonfigurierterWahltagModel(null, wahltagID, null, null);

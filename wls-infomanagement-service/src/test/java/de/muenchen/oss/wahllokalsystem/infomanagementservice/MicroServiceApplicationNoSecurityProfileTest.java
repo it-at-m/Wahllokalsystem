@@ -9,7 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @ActiveProfiles(TestConstants.SPRING_NO_SECURITY_PROFILE)
-public class MicroServiceApplication_NoSecurityProfile_Test {
+public class MicroServiceApplicationNoSecurityProfileTest {
 
     @Autowired
     AnonymousHandler anonymousHandler;

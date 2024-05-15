@@ -19,3 +19,7 @@ GRANT CONNECT, RESOURCE, CREATE SESSION TO wls_wahlvorbereitung_service;
 -- add user for wls-infomanagement-service
 CREATE USER wls_infomanagement_service IDENTIFIED BY secret QUOTA UNLIMITED ON USERS;
 GRANT CONNECT, RESOURCE, CREATE SESSION TO wls_infomanagement_service;
+
+-- add user for wls-eai-service
+CREATE USER wls_eai_service IDENTIFIED BY secret QUOTA UNLIMITED ON USERS;
+GRANT CONNECT, RESOURCE, CREATE SESSION TO wls_eai_service;

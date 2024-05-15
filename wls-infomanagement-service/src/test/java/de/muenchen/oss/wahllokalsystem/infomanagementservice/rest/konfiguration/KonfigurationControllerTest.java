@@ -148,7 +148,6 @@ class KonfigurationControllerTest {
             val mockedKonfigKeyAsModel = KonfigurationKonfigKey.KENNBUCHSTABEN;
             val mockedServiceResponseModel = KonfigurationModel.builder().build();
             val mockedMappedModelAsDTO = KonfigurationDTO.builder().build();
-
             Mockito.when(konfigurationService.getKonfigurationUnauthorized(mockedKonfigKeyAsModel)).thenReturn(Optional.of(mockedServiceResponseModel));
             Mockito.when(konfigurationDTOMapper.toModelKey(konfigKey)).thenReturn(mockedKonfigKeyAsModel);
             Mockito.when(konfigurationDTOMapper.toDTO(mockedServiceResponseModel)).thenReturn(mockedMappedModelAsDTO);

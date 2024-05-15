@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.common;
 
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.common.security.JWTHandler;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;

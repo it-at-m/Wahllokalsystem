@@ -1,6 +1,5 @@
-package de.muenchen.oss.wahllokalsystem.infomanagementservice.common;
+package de.muenchen.oss.wahllokalsystem.infomanagementservice.common.security;
 
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.common.security.AuthenticationHandler;
 import java.util.Optional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;

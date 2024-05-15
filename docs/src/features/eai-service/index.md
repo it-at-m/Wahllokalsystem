@@ -31,4 +31,4 @@ Wahlbeteiligungen der Wahllokale kann mitgeteilt werden.
 
 ### Wahllokalstatus
 
-Der Zustand, Schritt im Wahlprozess, in dem sich die Wahllokale befinden kann mitgeteilt werden.
+Der Zustand in dem sich die Wahllokale befinden kann mitgeteilt werden.

@@ -257,7 +257,6 @@ class KonfigurationServiceTest {
 
         @Test
         void noDataFromRepository() {
-
             Mockito.when(konfigurationRepository.findAll()).thenReturn(Collections.emptyList());
 
             val result = unitUnderTest.getAllKonfigurations();

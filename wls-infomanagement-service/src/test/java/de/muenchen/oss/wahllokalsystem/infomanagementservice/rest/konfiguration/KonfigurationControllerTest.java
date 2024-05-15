@@ -119,7 +119,6 @@ class KonfigurationControllerTest {
 
             Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
             Assertions.assertThat(result.getBody()).isNull();
-
         }
     }
 

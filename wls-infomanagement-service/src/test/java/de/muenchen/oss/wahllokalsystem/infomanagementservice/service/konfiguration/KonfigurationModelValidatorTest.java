@@ -25,7 +25,6 @@ class KonfigurationModelValidatorTest {
 
         @Test
         void exceptionOnNullKey() {
-
             val exceptionThrown = Assertions.catchException(() -> unitUnderTest.validOrThrowGetKonfigurationByKey(null));
 
             val expectedException = FachlicheWlsException.withCode("102").inService(SERVICE_ID).buildWithMessage("");

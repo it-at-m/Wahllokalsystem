@@ -1,5 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.utils;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+import org.junit.jupiter.params.provider.Arguments;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +21,14 @@ public class SecurityUtils {
 
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(username, password, AuthorityUtils.createAuthorityList(authorities)));
+    }
+
+    public static Stream<Arguments> buildArgumentsForMissingAuthoritiesVariations(final String[] allRequiredAuthorities) {
+        return Arrays.stream(allRequiredAuthorities)
+                .map(authorityToRemove ->
+                //remove one authority from all required authorities
+                Arguments.of(Arrays.stream(allRequiredAuthorities)
+                        .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
     }
 
 }

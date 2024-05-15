@@ -32,9 +32,6 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
 public class KonfigurationServiceSecurityTest {
 
-    private final String TESTUSER = "testuser";
-    private final String TESTUSER_PASSWORD = "secret";
-
     @Autowired
     KonfigurationService konfigurationService;
 
@@ -51,7 +48,7 @@ public class KonfigurationServiceSecurityTest {
 
     @AfterEach
     void tearDown() {
-        SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.REPOSITORY_DELETE_KONFIGURATION);
+        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_KONFIGURATION);
         konfigurationRepository.deleteAll();
     }
 
@@ -60,7 +57,7 @@ public class KonfigurationServiceSecurityTest {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.ALL_AUTHORITIES_GET_KONFIGURATION);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_KONFIGURATION);
 
             Assertions.assertThatNoException().isThrownBy(() -> konfigurationService.getKonfiguration(KonfigurationKonfigKey.WILLKOMMENSTEXT));
         }
@@ -68,7 +65,7 @@ public class KonfigurationServiceSecurityTest {
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
         void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, argumentsAccessor.get(0, String[].class));
+            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatThrownBy(() -> konfigurationService.getKonfiguration(KonfigurationKonfigKey.WILLKOMMENSTEXT))
                     .isExactlyInstanceOf(AccessDeniedException.class);
@@ -78,9 +75,9 @@ public class KonfigurationServiceSecurityTest {
             val requiredAuthorities = Authorities.ALL_AUTHORITIES_GET_KONFIGURATION;
             return Arrays.stream(requiredAuthorities)
                     .map(authorityToRemove ->
-                    //remove one authority from all required authorities
-                    Arguments.of(Arrays.stream(requiredAuthorities)
-                            .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+                            //remove one authority from all required authorities
+                            Arguments.of(Arrays.stream(requiredAuthorities)
+                                    .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
         }
     }
 
@@ -89,7 +86,7 @@ public class KonfigurationServiceSecurityTest {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.ALL_AUTHORITIES_SET_KONFIGURATION);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_KONFIGURATION);
 
             val konfigurationSetModel = new KonfigurationSetModel("schluessel", "wert", "beschreibung", "standwert");
 
@@ -98,7 +95,7 @@ public class KonfigurationServiceSecurityTest {
 
         @Test
         void accessDeniedOnMissingServiceAuthority() {
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD,
+            SecurityUtils.runWith(
                     removeAuthority(Authorities.ALL_AUTHORITIES_SET_KONFIGURATION, Authorities.SERVICE_POST_KONFIGURATION));
 
             val konfigurationSetModel = new KonfigurationSetModel("schluessel", "wert", "beschreibung", "standwert");
@@ -109,7 +106,7 @@ public class KonfigurationServiceSecurityTest {
 
         @Test
         void wlsExceptionOnMissingWriteAuthority() {
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD,
+            SecurityUtils.runWith(
                     removeAuthority(Authorities.ALL_AUTHORITIES_SET_KONFIGURATION, Authorities.REPOSITORY_WRITE_KONFIGURATION));
 
             val konfigurationSetModel = new KonfigurationSetModel("schluessel", "wert", "beschreibung", "standwert");
@@ -129,7 +126,7 @@ public class KonfigurationServiceSecurityTest {
         @Test
         void accessGranted() {
 
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.ALL_AUTHORITIES_GET_KONFIGURATIONS);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_KONFIGURATIONS);
 
             Assertions.assertThatNoException().isThrownBy(() -> konfigurationService.getAllKonfigurations());
         }
@@ -137,7 +134,7 @@ public class KonfigurationServiceSecurityTest {
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
         void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, argumentsAccessor.get(0, String[].class));
+            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatThrownBy(() -> konfigurationService.getAllKonfigurations())
                     .isExactlyInstanceOf(AccessDeniedException.class);
@@ -147,9 +144,9 @@ public class KonfigurationServiceSecurityTest {
             val requiredAuthorities = Authorities.ALL_AUTHORITIES_GET_KONFIGURATIONS;
             return Arrays.stream(requiredAuthorities)
                     .map(authorityToRemove ->
-                    //remove one authority from all required authorities
-                    Arguments.of(Arrays.stream(requiredAuthorities)
-                            .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+                            //remove one authority from all required authorities
+                            Arguments.of(Arrays.stream(requiredAuthorities)
+                                    .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
         }
     }
 
@@ -158,10 +155,10 @@ public class KonfigurationServiceSecurityTest {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.REPOSITORY_WRITE_KONFIGURATION);
+            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_KONFIGURATION);
             konfigurationRepository.save(new Konfiguration("KENNBUCHSTABEN", "", "", ""));
 
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.ALL_AUTHORITIES_GET_KENNBUCHSTABEN_LISTEN);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_KENNBUCHSTABEN_LISTEN);
 
             Assertions.assertThatNoException().isThrownBy(() -> konfigurationService.getKennbuchstabenListen());
         }
@@ -169,10 +166,10 @@ public class KonfigurationServiceSecurityTest {
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
         void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.REPOSITORY_WRITE_KONFIGURATION);
+            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_KONFIGURATION);
             konfigurationRepository.save(new Konfiguration("KENNBUCHSTABEN", "", "", ""));
 
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, argumentsAccessor.get(0, String[].class));
+            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatThrownBy(() -> konfigurationService.getKennbuchstabenListen())
                     .isExactlyInstanceOf(AccessDeniedException.class);
@@ -182,9 +179,9 @@ public class KonfigurationServiceSecurityTest {
             val requiredAuthorities = Authorities.ALL_AUTHORITIES_GET_KENNBUCHSTABEN_LISTEN;
             return Arrays.stream(requiredAuthorities)
                     .map(authorityToRemove ->
-                    //remove one authority from all required authorities
-                    Arguments.of(Arrays.stream(requiredAuthorities)
-                            .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+                            //remove one authority from all required authorities
+                            Arguments.of(Arrays.stream(requiredAuthorities)
+                                    .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
         }
     }
 

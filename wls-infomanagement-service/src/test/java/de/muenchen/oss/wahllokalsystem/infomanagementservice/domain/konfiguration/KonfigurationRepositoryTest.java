@@ -22,14 +22,14 @@ class KonfigurationRepositoryTest {
 
     @AfterEach
     void tearDown() {
-        SecurityUtils.runAs("", "", Authorities.REPOSITORY_DELETE_KONFIGURATION);
+        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_KONFIGURATION);
         konfigurationRepository.deleteAll();
     }
 
     @Test
     void getFruehesteLoginUhrzeit() {
         val konfigurationFruehesteLoginUhrzeit = new Konfiguration("FRUEHESTE_LOGIN_UHRZEIT", "06:00:00", "", "");
-        SecurityUtils.runAs("", "", Authorities.REPOSITORY_WRITE_KONFIGURATION);
+        SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_KONFIGURATION);
         konfigurationRepository.save(konfigurationFruehesteLoginUhrzeit);
         SecurityContextHolder.clearContext();
 
@@ -39,7 +39,7 @@ class KonfigurationRepositoryTest {
     @Test
     void getSpaetesteLoginUhrzeit() {
         val konfigurationFruehesteLoginUhrzeit = new Konfiguration("SPAETESTE_LOGIN_UHRZEIT", "23:56:00", "", "");
-        SecurityUtils.runAs("", "", Authorities.REPOSITORY_WRITE_KONFIGURATION);
+        SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_KONFIGURATION);
         konfigurationRepository.save(konfigurationFruehesteLoginUhrzeit);
         SecurityContextHolder.clearContext();
 
@@ -49,7 +49,7 @@ class KonfigurationRepositoryTest {
     @Test
     void getWillkommenstext() {
         val konfigurationFruehesteLoginUhrzeit = new Konfiguration("WILLKOMMENSTEXT", "hello world", "", "");
-        SecurityUtils.runAs("", "", Authorities.REPOSITORY_WRITE_KONFIGURATION);
+        SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_KONFIGURATION);
         konfigurationRepository.save(konfigurationFruehesteLoginUhrzeit);
         SecurityContextHolder.clearContext();
 

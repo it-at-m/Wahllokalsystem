@@ -58,7 +58,7 @@ public class KonfigurationControllerIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        SecurityUtils.runAs("", "", Authorities.REPOSITORY_DELETE_KONFIGURATION);
+        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_KONFIGURATION);
         konfigurationRepository.deleteAll();
     }
 
@@ -113,7 +113,7 @@ public class KonfigurationControllerIntegrationTest {
             val request = createPostWithBody(konfigurationKey, requestBody);
 
             val response = api.perform(request).andExpect(status().isOk()).andReturn();
-            SecurityUtils.runAs("", "", Authorities.REPOSITORY_READ_KONFIGURATION);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_KONFIGURATION);
             val savedKonfiguration = konfigurationRepository.findById(konfigurationKey).get();
 
             Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
@@ -135,7 +135,7 @@ public class KonfigurationControllerIntegrationTest {
             konfigurationRepository.save(konfigurationToOverride);
 
             api.perform(request).andExpect(status().isOk());
-            SecurityUtils.runAs("", "", Authorities.REPOSITORY_READ_KONFIGURATION);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_KONFIGURATION);
             val savedKonfiguration = konfigurationRepository.findById(konfigurationKey).get();
 
             val expectedSavedKonfiguration = new Konfiguration(konfigurationKey, requestBody.wert(), requestBody.beschreibung(), requestBody.standardwert());
@@ -211,7 +211,7 @@ public class KonfigurationControllerIntegrationTest {
             val responseBodyDTO = objectMapper.readValue(response.getResponse().getContentAsString(), KennbuchstabenListenDTO.class);
 
             val expectedResponseDTO = new KennbuchstabenListenDTO(List.of(new KennbuchstabenListeDTO(
-                    List.of(new KennbuchstabenDTO(List.of("a", "b", " c")), new KennbuchstabenDTO(List.of("A", "B", "C")))),
+                            List.of(new KennbuchstabenDTO(List.of("a", "b", " c")), new KennbuchstabenDTO(List.of("A", "B", "C")))),
                     new KennbuchstabenListeDTO(List.of(new KennbuchstabenDTO(List.of("1", "2")), new KennbuchstabenDTO(List.of("11", "12"))))));
 
             Assertions.assertThat(responseBodyDTO).isEqualTo(expectedResponseDTO);
@@ -224,7 +224,7 @@ public class KonfigurationControllerIntegrationTest {
         @Test
         @WithAnonymousUser
         void willkommenstextFound() throws Exception {
-            SecurityUtils.runAs("", "", Authorities.REPOSITORY_WRITE_KONFIGURATION);
+            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_KONFIGURATION);
             val schluesel = "WILLKOMMENSTEXT";
             val wert = "hello world";
             val beschreibung = "beschreibung";

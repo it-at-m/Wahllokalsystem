@@ -61,7 +61,7 @@ services:
 
   wls-db-postgres-keycloak:
     container_name: wls-db-postgres-keycloak
-    image: postgres:16.0-alpine3.18
+    image: postgres:16.3-alpine3.18
     environment:
       - POSTGRES_DB=${KEYCLOAK_DB}
       - POSTGRES_USER=${KEYCLOAK_DB_USER}

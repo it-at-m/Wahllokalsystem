@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 public class KonfigurierterWahltagService {
 
     private static final ExceptionDataWrapper DELETE_KONFIGURIERTERWAHLTAG_NOT_DELETEABLE = new ExceptionDataWrapper("105",
-            "deleteKonfigurierterWahltag: Der konfigurierte Wahltag konnte nicht geloescht werden.");
+        "deleteKonfigurierterWahltag: Der konfigurierte Wahltag konnte nicht geloescht werden.");
 
     private final ServiceIDFormatter serviceIDFormatter;
 
@@ -67,8 +67,8 @@ public class KonfigurierterWahltagService {
         } catch (Exception e) {
             log.error("#deleteKonfigurierterWahltag undeleteable: " + e);
             throw FachlicheWlsException.withCode(DELETE_KONFIGURIERTERWAHLTAG_NOT_DELETEABLE.code()).inService(serviceIDFormatter.getId())
-                    .buildWithMessage(
-                            DELETE_KONFIGURIERTERWAHLTAG_NOT_DELETEABLE.message());
+                .buildWithMessage(
+                    DELETE_KONFIGURIERTERWAHLTAG_NOT_DELETEABLE.message());
         }
     }
 
@@ -82,7 +82,7 @@ public class KonfigurierterWahltagService {
         return konfigurierterWahltagMapper.toModelList(konfigurierteWahltage);
     }
 
-    public boolean getLoginCheck(KonfigurierterWahltagModel konfigurierterWahltagModel) {
+    public boolean isWahltagActive(KonfigurierterWahltagModel konfigurierterWahltagModel) {
 
         log.debug("#getLoginCheck");
         Optional<KonfigurierterWahltag> konfigurierterWahltag = konfigurierterWahltagRepository.findById(konfigurierterWahltagModel.wahltagID());

@@ -52,9 +52,9 @@ public class KonfigurierterWahltagController {
 
     // TODO rename method sinnvoll!!!
     @GetMapping(value = LOGIN_CHECK_PATH + "/{wahltagID}")
-    public ResponseEntity<Boolean> getLoginCheck(@PathVariable("wahltagID") String wahltagID) {
+    public ResponseEntity<Boolean> isWahltagActive(@PathVariable("wahltagID") String wahltagID) {
         val konfigurierterWahltagModel = new KonfigurierterWahltagModel(null, wahltagID, null, null);
-        boolean result = konfigurierterWahltagService.getLoginCheck(konfigurierterWahltagModel);
+        boolean result = konfigurierterWahltagService.isWahltagActive(konfigurierterWahltagModel);
         return withBodyOrNoContent(result);
     }
 

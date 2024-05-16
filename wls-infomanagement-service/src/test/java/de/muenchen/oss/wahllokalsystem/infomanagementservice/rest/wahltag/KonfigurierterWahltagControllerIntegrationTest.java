@@ -10,7 +10,6 @@ import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag.Konf
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag.KonfigurierterWahltagRepository;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.utils.SecurityUtils;
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.utils.WithMockUserAsJwt;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.wahltag.KonfigurierterWahltagValidator;
 import java.time.LocalDate;
 import lombok.val;
@@ -23,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -55,7 +55,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
     class GetKonfigurierterWahltag {
 
         @Test
-        @WithMockUserAsJwt(authorities = { Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG })
+        @WithMockUser(authorities = { Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG })
         void emptyResponse() throws Exception {
             val request = MockMvcRequestBuilders.get("/businessActions/konfigurierterWahltag");
 
@@ -65,7 +65,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
         }
 
         @Test
-        @WithMockUserAsJwt(
+        @WithMockUser(
             authorities = { Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG,
                 Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG }
         )
@@ -95,7 +95,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
     class PostKonfigurierterWahltag {
 
         @Test
-        @WithMockUserAsJwt(
+        @WithMockUser(
             authorities = { Authorities.SERVICE_POST_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
                 Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
         )
@@ -120,7 +120,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
         }
 
         @Test
-        @WithMockUserAsJwt(
+        @WithMockUser(
             authorities = { Authorities.SERVICE_POST_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
                 Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
         )
@@ -141,7 +141,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
         }
 
         @Test
-        @WithMockUserAsJwt(
+        @WithMockUser(
             authorities = { Authorities.SERVICE_POST_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
                 Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
         )
@@ -188,7 +188,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
     class GetKonfigurierteWahltage {
 
         @Test
-        @WithMockUserAsJwt(authorities = { Authorities.SERVICE_GET_KONFIGURIERTEWAHLTAGE, Authorities.REPOSITORY_READ_KONFIGURIERTEWAHLTAGE })
+        @WithMockUser(authorities = { Authorities.SERVICE_GET_KONFIGURIERTEWAHLTAGE, Authorities.REPOSITORY_READ_KONFIGURIERTEWAHLTAGE })
         void emptyResponse() throws Exception {
             val request = MockMvcRequestBuilders.get("/businessActions/konfigurierteWahltage");
 
@@ -198,7 +198,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
         }
 
         @Test
-        @WithMockUserAsJwt(
+        @WithMockUser(
             authorities = { Authorities.SERVICE_GET_KONFIGURIERTEWAHLTAGE, Authorities.REPOSITORY_READ_KONFIGURIERTEWAHLTAGE,
                 Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG }
         )
@@ -234,7 +234,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
     class isWahltagActive {
 
         @Test
-        @WithMockUserAsJwt(authorities = {})
+        @WithMockUser(authorities = {})
         void isFalseWhenWahltagNotFound() throws Exception {
             val request = MockMvcRequestBuilders.get("/businessActions/loginCheck/5555");
 
@@ -244,7 +244,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
         }
 
         @Test
-        @WithMockUserAsJwt(authorities = { Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG })
+        @WithMockUser(authorities = { Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG })
         void isInactiveFound() throws Exception {
 
             val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", WahltagStatus.INAKTIV, "4711");
@@ -266,7 +266,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
         }
 
         @Test
-        @WithMockUserAsJwt(authorities = { Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG })
+        @WithMockUser(authorities = { Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG })
         void isActiveFound() throws Exception {
 
             val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", WahltagStatus.INAKTIV, "4711");

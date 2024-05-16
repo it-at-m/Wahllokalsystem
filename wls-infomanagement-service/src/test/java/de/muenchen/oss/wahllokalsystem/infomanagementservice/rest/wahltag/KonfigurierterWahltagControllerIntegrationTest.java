@@ -66,8 +66,8 @@ public class KonfigurierterWahltagControllerIntegrationTest {
 
         @Test
         @WithMockUser(
-            authorities = { Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG,
-                Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG }
+                authorities = { Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG,
+                        Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG }
         )
         void dataFound() throws Exception {
 
@@ -85,7 +85,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
             val responseBody = objectMapper.readValue(response.getResponse().getContentAsString(), KonfigurierterWahltagDTO.class);
 
             val expectedResponseBody = new KonfigurierterWahltagDTO(konfigurierterWahltagExpected.getWahltag(), konfigurierterWahltagExpected.getWahltagID(),
-                konfigurierterWahltagExpected.getWahltagStatus(), konfigurierterWahltagExpected.getNummer());
+                    konfigurierterWahltagExpected.getWahltagStatus(), konfigurierterWahltagExpected.getNummer());
 
             Assertions.assertThat(responseBody).isEqualTo(expectedResponseBody);
         }
@@ -96,8 +96,8 @@ public class KonfigurierterWahltagControllerIntegrationTest {
 
         @Test
         @WithMockUser(
-            authorities = { Authorities.SERVICE_POST_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
-                Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
+                authorities = { Authorities.SERVICE_POST_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
+                        Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
         )
         void newAktivWahltagSavedAndReadOKWithBody() throws Exception {
             // DB leer, Wahltag neu setzen mit WahltagStatus.AKTIV -> OK zurück mit empty body
@@ -114,15 +114,15 @@ public class KonfigurierterWahltagControllerIntegrationTest {
             val responseGetBody = objectMapper.readValue(responseGet.getResponse().getContentAsString(), KonfigurierterWahltagDTO.class);
 
             val expectedResponseGetBody = new KonfigurierterWahltagDTO(konfigurierterWahltagDTO.wahltag(), konfigurierterWahltagDTO.wahltagID(),
-                konfigurierterWahltagDTO.wahltagStatus(), konfigurierterWahltagDTO.nummer());
+                    konfigurierterWahltagDTO.wahltagStatus(), konfigurierterWahltagDTO.nummer());
 
             Assertions.assertThat(responseGetBody).isEqualTo(expectedResponseGetBody);
         }
 
         @Test
         @WithMockUser(
-            authorities = { Authorities.SERVICE_POST_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
-                Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
+                authorities = { Authorities.SERVICE_POST_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
+                        Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
         )
         void newInaktivWahltagSavedAndReadOKNoContent() throws Exception {
             // Dooffall: DB leer neu setzen mit WahltagStatus.INAKTIV -> OK zurück mit empty body
@@ -142,8 +142,8 @@ public class KonfigurierterWahltagControllerIntegrationTest {
 
         @Test
         @WithMockUser(
-            authorities = { Authorities.SERVICE_POST_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
-                Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
+                authorities = { Authorities.SERVICE_POST_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
+                        Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
         )
         void overrideAktivWahltagAndReadOKWithContent() throws Exception {
             // DB hat aktiven Wahltag, überschreiben mit neuem Wahltag -> -> OK zurück mit empty body
@@ -157,8 +157,8 @@ public class KonfigurierterWahltagControllerIntegrationTest {
             konfigurierterWahltagRepository.save(konfigurierterWahltag3);
 
             val konfigurierterWahltagPostDTO = new KonfigurierterWahltagDTO(konfigurierterWahltagExpected.getWahltag(),
-                konfigurierterWahltagExpected.getWahltagID(),
-                konfigurierterWahltagExpected.getWahltagStatus(), konfigurierterWahltagExpected.getNummer());
+                    konfigurierterWahltagExpected.getWahltagID(),
+                    konfigurierterWahltagExpected.getWahltagStatus(), konfigurierterWahltagExpected.getNummer());
             val requestPost = createPostWithBody(konfigurierterWahltagPostDTO);
 
             val responsePost = api.perform(requestPost).andExpect(status().isOk()).andReturn();
@@ -171,7 +171,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
             val responseGetBody = objectMapper.readValue(responseGet.getResponse().getContentAsString(), KonfigurierterWahltagDTO.class);
 
             val expectedResponseGetBody = new KonfigurierterWahltagDTO(konfigurierterWahltagPostDTO.wahltag(), konfigurierterWahltagPostDTO.wahltagID(),
-                konfigurierterWahltagPostDTO.wahltagStatus(), konfigurierterWahltagPostDTO.nummer());
+                    konfigurierterWahltagPostDTO.wahltagStatus(), konfigurierterWahltagPostDTO.nummer());
 
             Assertions.assertThat(responseGetBody).isEqualTo(expectedResponseGetBody);
         }
@@ -181,7 +181,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
     // Dooffall: DB hat nur inaktive Wahltage, neu setzen mit WahltagStatus.INAKTIV -> kein Wahltag
     private MockHttpServletRequestBuilder createPostWithBody(final KonfigurierterWahltagDTO requestDTO) throws Exception {
         return MockMvcRequestBuilders.post("/businessActions/konfigurierterWahltag").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(requestDTO));
+                .content(objectMapper.writeValueAsString(requestDTO));
     }
 
     @Nested
@@ -199,8 +199,8 @@ public class KonfigurierterWahltagControllerIntegrationTest {
 
         @Test
         @WithMockUser(
-            authorities = { Authorities.SERVICE_GET_KONFIGURIERTEWAHLTAGE, Authorities.REPOSITORY_READ_KONFIGURIERTEWAHLTAGE,
-                Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG }
+                authorities = { Authorities.SERVICE_GET_KONFIGURIERTEWAHLTAGE, Authorities.REPOSITORY_READ_KONFIGURIERTEWAHLTAGE,
+                        Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG }
         )
         void dataFound() throws Exception {
 
@@ -218,12 +218,12 @@ public class KonfigurierterWahltagControllerIntegrationTest {
             val responseBodyDTO = objectMapper.readValue(response.getResponse().getContentAsString(), KonfigurierterWahltagDTO[].class);
 
             val expectedResponseBodyDTO = new KonfigurierterWahltagDTO[] {
-                new KonfigurierterWahltagDTO(konfigurierterWahltag1.getWahltag(), konfigurierterWahltag1.getWahltagID(),
-                    konfigurierterWahltag1.getWahltagStatus(), konfigurierterWahltag1.getNummer()),
-                new KonfigurierterWahltagDTO(konfigurierterWahltag2.getWahltag(), konfigurierterWahltag2.getWahltagID(),
-                    konfigurierterWahltag2.getWahltagStatus(), konfigurierterWahltag2.getNummer()),
-                new KonfigurierterWahltagDTO(konfigurierterWahltag3.getWahltag(), konfigurierterWahltag3.getWahltagID(),
-                    konfigurierterWahltag3.getWahltagStatus(), konfigurierterWahltag3.getNummer())
+                    new KonfigurierterWahltagDTO(konfigurierterWahltag1.getWahltag(), konfigurierterWahltag1.getWahltagID(),
+                            konfigurierterWahltag1.getWahltagStatus(), konfigurierterWahltag1.getNummer()),
+                    new KonfigurierterWahltagDTO(konfigurierterWahltag2.getWahltag(), konfigurierterWahltag2.getWahltagID(),
+                            konfigurierterWahltag2.getWahltagStatus(), konfigurierterWahltag2.getNummer()),
+                    new KonfigurierterWahltagDTO(konfigurierterWahltag3.getWahltag(), konfigurierterWahltag3.getWahltagID(),
+                            konfigurierterWahltag3.getWahltagStatus(), konfigurierterWahltag3.getNummer())
             };
 
             Assertions.assertThat(responseBodyDTO).isEqualTo(expectedResponseBodyDTO);

@@ -33,7 +33,7 @@ class KonfigurierterWahltagControllerTest {
         @Test
         void serviceCalledWithDataFound() {
             val mockDTO = KonfigurierterWahltagDTO.builder().wahltag(LocalDate.now()).wahltagStatus(WahltagStatus.INAKTIV).wahltagID("1-2-3").nummer("4711")
-                .build();
+                    .build();
             val mockModel = KonfigurierterWahltagModel.builder().build();
 
             Mockito.when(konfigurierterWahltagDTOMapper.toDTO(mockModel)).thenReturn(mockDTO);
@@ -101,14 +101,14 @@ class KonfigurierterWahltagControllerTest {
         void serviceCalledWithDataFound() {
 
             val mockDTOList = List.of(
-                KonfigurierterWahltagDTO.builder().build(),
-                KonfigurierterWahltagDTO.builder().build(),
-                KonfigurierterWahltagDTO.builder().build());
+                    KonfigurierterWahltagDTO.builder().build(),
+                    KonfigurierterWahltagDTO.builder().build(),
+                    KonfigurierterWahltagDTO.builder().build());
 
             val mockModelList = List.of(
-                KonfigurierterWahltagModel.builder().build(),
-                KonfigurierterWahltagModel.builder().build(),
-                KonfigurierterWahltagModel.builder().build());
+                    KonfigurierterWahltagModel.builder().build(),
+                    KonfigurierterWahltagModel.builder().build(),
+                    KonfigurierterWahltagModel.builder().build());
 
             Mockito.when(konfigurierterWahltagDTOMapper.toDTOList(mockModelList)).thenReturn(mockDTOList);
             Mockito.when(konfigurierterWahltagService.getKonfigurierteWahltage()).thenReturn(mockModelList);
@@ -161,4 +161,3 @@ class KonfigurierterWahltagControllerTest {
         }
     }
 }
-

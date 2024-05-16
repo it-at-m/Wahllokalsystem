@@ -26,7 +26,7 @@ import org.springframework.util.Assert;
 final public class WithMockUserAsJwtSecurityContextFactory implements WithSecurityContextFactory<WithMockUserAsJwt> {
 
     private SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder
-        .getContextHolderStrategy();
+            .getContextHolderStrategy();
 
     @Override
     public SecurityContext createSecurityContext(WithMockUserAsJwt withUser) {
@@ -62,6 +62,6 @@ final public class WithMockUserAsJwtSecurityContextFactory implements WithSecuri
 
     private Map<String, Object> createClaimsMap(final String[] concatedClaimProperties, final String keyValueSeparator) {
         return Arrays.stream(concatedClaimProperties).map(concatedClaimProperty -> concatedClaimProperty.split(keyValueSeparator))
-            .collect(Collectors.toMap(propertyAsArray -> propertyAsArray[0], propertyAsArray -> propertyAsArray[1]));
+                .collect(Collectors.toMap(propertyAsArray -> propertyAsArray[0], propertyAsArray -> propertyAsArray[1]));
     }
 }

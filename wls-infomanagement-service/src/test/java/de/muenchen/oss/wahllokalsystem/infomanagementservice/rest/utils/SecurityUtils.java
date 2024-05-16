@@ -9,7 +9,7 @@ public class SecurityUtils {
     public static void runAs(String username, String password, String... authorities) {
 
         SecurityContextHolder.getContext().setAuthentication(
-            new UsernamePasswordAuthenticationToken(username, password, AuthorityUtils.createAuthorityList(authorities)));
+                new UsernamePasswordAuthenticationToken(username, password, AuthorityUtils.createAuthorityList(authorities)));
     }
 
 }

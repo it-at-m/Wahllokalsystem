@@ -1,4 +1,36 @@
+### get token for keycloak_test
+POST http://kubernetes.docker.internal:8100/auth/realms/wls_realm/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+password = test &
+grant_type = password &
+client_secret = top-secret &
+client_id = wls &
+username = keycloak_test
+
+> {%
+    client.global.set("auth_token", response.body.access_token);
+    client.global.set("token_type", response.body.token_type);
+%}
+
+### get token for wls_all
+POST http://kubernetes.docker.internal:8100/auth/realms/wls_realm/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+password = test &
+grant_type = password &
+client_secret = top-secret &
+client_id = wls &
+username = wls_all
+
+> {%
+    client.global.set("auth_token", response.body.access_token);
+    client.global.set("token_type", response.body.token_type);
+%}
+
+### Broadcast Message for wbz-1 and wbz-2
 POST http://localhost:39146/businessActions/broadcast
+Authorization: {{ token_type }} {{ auth_token }}
 Content-Type: application/json
 
 {
@@ -10,6 +42,7 @@ Content-Type: application/json
 
 ###
 POST http://localhost:39146/businessActions/broadcast
+Authorization: {{ token_type }} {{ auth_token }}
 Content-Type: application/json
 
 {
@@ -21,6 +54,7 @@ Content-Type: application/json
 
 ### Get message for wbz-1
 GET http://localhost:39146/businessActions/getMessage/wbz-1
+Authorization: {{ token_type }} {{ auth_token }}
 
 > {%
     client.global.set("nachrichtID", response.body.oid);
@@ -29,10 +63,13 @@ GET http://localhost:39146/businessActions/getMessage/wbz-1
 
 ### Get message for wbz-2
 GET http://localhost:39146/businessActions/getMessage/{{wbzID}}
+Authorization: {{ token_type }} {{ auth_token }}
 
 ### Get message for wbz-x
 GET http://localhost:39146/businessActions/getMessage/wbz-x
+Authorization: {{ token_type }} {{ auth_token }}
 
 ### Delete lastest for wbz-1
 POST  http://localhost:39146/businessActions/messageRead/{{nachrichtID}}
+Authorization: {{ token_type }} {{ auth_token }}
 

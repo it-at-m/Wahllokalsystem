@@ -203,7 +203,6 @@ public class KonfigurierterWahltagControllerIntegrationTest {
                         Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG }
         )
         void dataFound() throws Exception {
-
             val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", WahltagStatus.INAKTIV, "4711");
             val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", WahltagStatus.INAKTIV, "0190");
             val konfigurierterWahltag3 = new KonfigurierterWahltag(LocalDate.now(), "6-7-8", WahltagStatus.AKTIV, "0103");
@@ -246,7 +245,6 @@ public class KonfigurierterWahltagControllerIntegrationTest {
         @Test
         @WithMockUser(authorities = { Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG })
         void isInactiveFound() throws Exception {
-
             val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", WahltagStatus.INAKTIV, "4711");
             val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", WahltagStatus.INAKTIV, "0190");
             val konfigurierterWahltag3 = new KonfigurierterWahltag(LocalDate.now(), "6-7-8", WahltagStatus.AKTIV, "0103");
@@ -268,7 +266,6 @@ public class KonfigurierterWahltagControllerIntegrationTest {
         @Test
         @WithMockUser(authorities = { Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG })
         void isActiveFound() throws Exception {
-
             val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", WahltagStatus.INAKTIV, "4711");
             val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", WahltagStatus.INAKTIV, "0190");
             val konfigurierterWahltag3 = new KonfigurierterWahltag(LocalDate.now(), "6-7-8", WahltagStatus.AKTIV, "0103");

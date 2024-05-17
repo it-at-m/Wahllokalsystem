@@ -71,9 +71,9 @@ public class KonfigurierterWahltagControllerIntegrationTest {
         )
         void dataFound() throws Exception {
 
-            val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", WahltagStatus.INAKTIV, "4711");
-            val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", WahltagStatus.INAKTIV, "0190");
-            val konfigurierterWahltagExpected = new KonfigurierterWahltag(LocalDate.now(), "6-7-8", WahltagStatus.AKTIV, "0103");
+            val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
+            val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");
+            val konfigurierterWahltagExpected = new KonfigurierterWahltag(LocalDate.now(), "6-7-8", true, "0103");
 
             konfigurierterWahltagRepository.save(konfigurierterWahltag1);
             konfigurierterWahltagRepository.save(konfigurierterWahltag2);
@@ -85,7 +85,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
             val responseBody = objectMapper.readValue(response.getResponse().getContentAsString(), KonfigurierterWahltagDTO.class);
 
             val expectedResponseBody = new KonfigurierterWahltagDTO(konfigurierterWahltagExpected.getWahltag(), konfigurierterWahltagExpected.getWahltagID(),
-                    konfigurierterWahltagExpected.getWahltagStatus(), konfigurierterWahltagExpected.getNummer());
+                    WahltagStatus.AKTIV, konfigurierterWahltagExpected.getNummer());
 
             Assertions.assertThat(responseBody).isEqualTo(expectedResponseBody);
         }
@@ -147,10 +147,10 @@ public class KonfigurierterWahltagControllerIntegrationTest {
         )
         void overrideAktiverWahltagAndReadOKWithContent() throws Exception {
             // DB hat aktiven Wahltag, überschreiben mit neuem Wahltag -> -> OK zurück mit empty body
-            val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", WahltagStatus.INAKTIV, "4711");
-            val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", WahltagStatus.INAKTIV, "0190");
-            val konfigurierterWahltag3 = new KonfigurierterWahltag(LocalDate.now(), "6-7-8-", WahltagStatus.AKTIV, "8888");
-            val konfigurierterWahltagExpected = new KonfigurierterWahltag(LocalDate.now(), "9-10-11", WahltagStatus.AKTIV, "0103");
+            val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
+            val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");
+            val konfigurierterWahltag3 = new KonfigurierterWahltag(LocalDate.now(), "6-7-8-", true, "8888");
+            val konfigurierterWahltagExpected = new KonfigurierterWahltag(LocalDate.now(), "9-10-11", true, "0103");
 
             konfigurierterWahltagRepository.save(konfigurierterWahltag1);
             konfigurierterWahltagRepository.save(konfigurierterWahltag2);
@@ -158,7 +158,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
 
             val konfigurierterWahltagPostDTO = new KonfigurierterWahltagDTO(konfigurierterWahltagExpected.getWahltag(),
                     konfigurierterWahltagExpected.getWahltagID(),
-                    konfigurierterWahltagExpected.getWahltagStatus(), konfigurierterWahltagExpected.getNummer());
+                    WahltagStatus.AKTIV, konfigurierterWahltagExpected.getNummer());
             val requestPost = createPostWithBody(konfigurierterWahltagPostDTO);
 
             val responsePost = api.perform(requestPost).andExpect(status().isOk()).andReturn();
@@ -203,9 +203,9 @@ public class KonfigurierterWahltagControllerIntegrationTest {
                         Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG }
         )
         void dataFound() throws Exception {
-            val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", WahltagStatus.INAKTIV, "4711");
-            val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", WahltagStatus.INAKTIV, "0190");
-            val konfigurierterWahltag3 = new KonfigurierterWahltag(LocalDate.now(), "6-7-8", WahltagStatus.AKTIV, "0103");
+            val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
+            val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");
+            val konfigurierterWahltag3 = new KonfigurierterWahltag(LocalDate.now(), "6-7-8", true, "0103");
 
             konfigurierterWahltagRepository.save(konfigurierterWahltag1);
             konfigurierterWahltagRepository.save(konfigurierterWahltag2);
@@ -218,11 +218,11 @@ public class KonfigurierterWahltagControllerIntegrationTest {
 
             val expectedResponseBodyDTO = new KonfigurierterWahltagDTO[] {
                     new KonfigurierterWahltagDTO(konfigurierterWahltag1.getWahltag(), konfigurierterWahltag1.getWahltagID(),
-                            konfigurierterWahltag1.getWahltagStatus(), konfigurierterWahltag1.getNummer()),
+                            WahltagStatus.INAKTIV, konfigurierterWahltag1.getNummer()),
                     new KonfigurierterWahltagDTO(konfigurierterWahltag2.getWahltag(), konfigurierterWahltag2.getWahltagID(),
-                            konfigurierterWahltag2.getWahltagStatus(), konfigurierterWahltag2.getNummer()),
+                            WahltagStatus.INAKTIV, konfigurierterWahltag2.getNummer()),
                     new KonfigurierterWahltagDTO(konfigurierterWahltag3.getWahltag(), konfigurierterWahltag3.getWahltagID(),
-                            konfigurierterWahltag3.getWahltagStatus(), konfigurierterWahltag3.getNummer())
+                            WahltagStatus.AKTIV, konfigurierterWahltag3.getNummer())
             };
 
             Assertions.assertThat(responseBodyDTO).isEqualTo(expectedResponseBodyDTO);
@@ -245,9 +245,9 @@ public class KonfigurierterWahltagControllerIntegrationTest {
         @Test
         @WithMockUser(authorities = { Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG })
         void isInactiveFound() throws Exception {
-            val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", WahltagStatus.INAKTIV, "4711");
-            val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", WahltagStatus.INAKTIV, "0190");
-            val konfigurierterWahltag3 = new KonfigurierterWahltag(LocalDate.now(), "6-7-8", WahltagStatus.AKTIV, "0103");
+            val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
+            val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");
+            val konfigurierterWahltag3 = new KonfigurierterWahltag(LocalDate.now(), "6-7-8", true, "0103");
 
             konfigurierterWahltagRepository.save(konfigurierterWahltag1);
             konfigurierterWahltagRepository.save(konfigurierterWahltag2);
@@ -266,9 +266,9 @@ public class KonfigurierterWahltagControllerIntegrationTest {
         @Test
         @WithMockUser(authorities = { Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG })
         void isActiveFound() throws Exception {
-            val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", WahltagStatus.INAKTIV, "4711");
-            val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", WahltagStatus.INAKTIV, "0190");
-            val konfigurierterWahltag3 = new KonfigurierterWahltag(LocalDate.now(), "6-7-8", WahltagStatus.AKTIV, "0103");
+            val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
+            val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");
+            val konfigurierterWahltag3 = new KonfigurierterWahltag(LocalDate.now(), "6-7-8", true, "0103");
 
             konfigurierterWahltagRepository.save(konfigurierterWahltag1);
             konfigurierterWahltagRepository.save(konfigurierterWahltag2);

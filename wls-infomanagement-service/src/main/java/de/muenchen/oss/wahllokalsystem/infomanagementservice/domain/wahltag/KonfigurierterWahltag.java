@@ -1,9 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag;
 
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.wahltag.WahltagStatus;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -27,9 +24,7 @@ public class KonfigurierterWahltag {
     @Size(max = 255)
     private String wahltagID;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private WahltagStatus wahltagStatus;
+    private boolean active;
 
     @NotNull
     @Size(max = 255)

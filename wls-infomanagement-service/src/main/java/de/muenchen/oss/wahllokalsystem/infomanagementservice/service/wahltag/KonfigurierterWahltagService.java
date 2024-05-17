@@ -3,12 +3,10 @@ package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.wahltag;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag.KonfigurierterWahltag;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag.KonfigurierterWahltagRepository;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.exception.ExceptionDataWrapper;
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.wahltag.WahltagStatus;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -35,7 +33,7 @@ public class KonfigurierterWahltagService {
     @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_GetKonfigurierterWahltag')")
     public KonfigurierterWahltagModel getKonfigurierterWahltag() {
         log.info("#getKonfigurierterWahltag");
-        val entity = konfigurierterWahltagRepository.findByWahltagStatus(WahltagStatus.AKTIV);
+        val entity = konfigurierterWahltagRepository.findByActive(true);
         return entity == null ? null : konfigurierterWahltagMapper.toModel(entity);
     }
 
@@ -46,7 +44,7 @@ public class KonfigurierterWahltagService {
         konfigurierterWahltagValidator.validPostModelOrThrow(konfigurierterWahltagModel);
         val konfigurierterWahltagEntity = konfigurierterWahltagMapper.toEntity(konfigurierterWahltagModel);
 
-        if (konfigurierterWahltagModel.wahltagStatus() == WahltagStatus.AKTIV) {
+        if (konfigurierterWahltagModel.active()) {
             konfigurierterWahltagRepository.setExistingKonfigurierteWahltageInaktiv();
         }
 
@@ -82,6 +80,6 @@ public class KonfigurierterWahltagService {
         log.debug("#getLoginCheck");
         val konfigurierterWahltag = konfigurierterWahltagRepository.findById(konfigurierterWahltagModel.wahltagID());
 
-        return konfigurierterWahltag.isPresent() && !konfigurierterWahltag.get().getWahltagStatus().equals(WahltagStatus.INAKTIV);
+        return konfigurierterWahltag.isPresent() && konfigurierterWahltag.get().isActive();
     }
 }

@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.wahltag;
 
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.wahltag.WahltagStatus;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import java.time.LocalDate;
@@ -106,7 +105,7 @@ class KonfigurierterWahltagValidatorTest {
     }
 
     private KonfigurierterWahltagModel.KonfigurierterWahltagModelBuilder initValidModel() {
-        return KonfigurierterWahltagModel.builder().wahltag(LocalDate.now()).wahltagID("wahltagID").wahltagStatus(WahltagStatus.AKTIV).nummer("nummer");
+        return KonfigurierterWahltagModel.builder().wahltag(LocalDate.now()).wahltagID("wahltagID").active(true).nummer("nummer");
     }
 
 }

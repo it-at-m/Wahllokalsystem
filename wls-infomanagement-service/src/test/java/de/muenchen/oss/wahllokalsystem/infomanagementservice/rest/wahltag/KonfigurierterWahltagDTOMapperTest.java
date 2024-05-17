@@ -4,10 +4,15 @@ import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.wahltag.Kon
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mapstruct.factory.Mappers;
 
 class KonfigurierterWahltagDTOMapperTest {
@@ -29,7 +34,7 @@ class KonfigurierterWahltagDTOMapperTest {
             val wahltagStatus = WahltagStatus.INAKTIV;
             val nummer = "4711";
 
-            val modelInput = new KonfigurierterWahltagModel(wahltag, wahltagID, wahltagStatus, nummer);
+            val modelInput = new KonfigurierterWahltagModel(wahltag, wahltagID, false, nummer);
             val dtoExpected = new KonfigurierterWahltagDTO(wahltag, wahltagID, wahltagStatus, nummer);
 
             val result = unitUnderTest.toDTO(modelInput);
@@ -54,7 +59,7 @@ class KonfigurierterWahltagDTOMapperTest {
             val nummer = "4711";
 
             val dtoInput = new KonfigurierterWahltagDTO(wahltag, wahltagID, wahltagStatus, nummer);
-            val modelExpected = new KonfigurierterWahltagModel(wahltag, wahltagID, wahltagStatus, nummer);
+            val modelExpected = new KonfigurierterWahltagModel(wahltag, wahltagID, false, nummer);
 
             val result = unitUnderTest.toModel(dtoInput);
             Assertions.assertThat(result).isEqualTo(modelExpected);
@@ -85,9 +90,9 @@ class KonfigurierterWahltagDTOMapperTest {
             val wahltagStatus_3 = WahltagStatus.INAKTIV;
             val nummer_3 = "0190";
 
-            val modelInput_1 = new KonfigurierterWahltagModel(wahltag_1, wahltagID_1, wahltagStatus_1, nummer_1);
-            val modelInput_2 = new KonfigurierterWahltagModel(wahltag_2, wahltagID_2, wahltagStatus_2, nummer_2);
-            val modelInput_3 = new KonfigurierterWahltagModel(wahltag_3, wahltagID_3, wahltagStatus_3, nummer_3);
+            val modelInput_1 = new KonfigurierterWahltagModel(wahltag_1, wahltagID_1, false, nummer_1);
+            val modelInput_2 = new KonfigurierterWahltagModel(wahltag_2, wahltagID_2, true, nummer_2);
+            val modelInput_3 = new KonfigurierterWahltagModel(wahltag_3, wahltagID_3, false, nummer_3);
             KonfigurierterWahltagModel[] modelArr = { modelInput_1, modelInput_2, modelInput_3 };
             List<KonfigurierterWahltagModel> konfigurierteWahltageModelListInput = Arrays.asList(modelArr);
 
@@ -99,6 +104,51 @@ class KonfigurierterWahltagDTOMapperTest {
 
             val result = unitUnderTest.toDTOList(konfigurierteWahltageModelListInput);
             Assertions.assertThat(result).isEqualTo(konfigurierteWahltageDTOListExpected);
+        }
+    }
+
+    @Nested
+    class StatusToActiveFlag {
+
+        private static final List<WahltagStatus> STATUS_VALUES_THAT_ARE_ACTIVE = List.of(WahltagStatus.AKTIV);
+
+        @Test
+        void nullReturnsFalse() {
+            Assertions.assertThat(unitUnderTest.statusToActiveFlag(null)).isFalse();
+        }
+
+        @ParameterizedTest
+        @MethodSource("argumentsForStatusValuesReturnTrue")
+        void verifyStatusValuesReturningTrue(final ArgumentsAccessor argumentsAccessor) {
+            Assertions.assertThat(unitUnderTest.statusToActiveFlag(argumentsAccessor.get(0, WahltagStatus.class))).isTrue();
+        }
+
+        @ParameterizedTest
+        @MethodSource("argumentsForStatusValuesReturnFalse")
+        void verifyStatusValuesReturningFalse(final ArgumentsAccessor argumentsAccessor) {
+            Assertions.assertThat(unitUnderTest.statusToActiveFlag(argumentsAccessor.get(0, WahltagStatus.class))).isFalse();
+        }
+
+        private static Stream<Arguments> argumentsForStatusValuesReturnTrue() {
+            return STATUS_VALUES_THAT_ARE_ACTIVE.stream().map(Arguments::of);
+        }
+
+        private static Stream<Arguments> argumentsForStatusValuesReturnFalse() {
+            return Arrays.stream(WahltagStatus.values()).filter(status -> !STATUS_VALUES_THAT_ARE_ACTIVE.contains(status)).map(Arguments::of);
+        }
+    }
+
+    @Nested
+    class ActiveFlagToStatus {
+
+        @Test
+        void trueIsActive() {
+            Assertions.assertThat(unitUnderTest.activeFlagToStatus(true)).isEqualTo(WahltagStatus.AKTIV);
+        }
+
+        @Test
+        void falseIsInactive() {
+            Assertions.assertThat(unitUnderTest.activeFlagToStatus(false)).isEqualTo(WahltagStatus.INAKTIV);
         }
     }
 }

@@ -40,7 +40,7 @@ public class KonfigurierterWahltagController {
 
     @DeleteMapping(value = KONFIGURIERTER_WAHLTAG_PATH_DELETE)
     public void deleteKonfigurierterWahltag(@PathVariable("wahltagID") String wahltagID) {
-        val konfigurierterWahltagModel = new KonfigurierterWahltagModel(null, wahltagID, null, null);
+        val konfigurierterWahltagModel = new KonfigurierterWahltagModel(null, wahltagID, false, null);
         konfigurierterWahltagService.deleteKonfigurierterWahltag(konfigurierterWahltagModel);
     }
 
@@ -52,7 +52,7 @@ public class KonfigurierterWahltagController {
 
     @GetMapping(value = LOGIN_CHECK_PATH + "/{wahltagID}")
     public ResponseEntity<Boolean> isWahltagActive(@PathVariable("wahltagID") String wahltagID) {
-        val konfigurierterWahltagModel = new KonfigurierterWahltagModel(null, wahltagID, null, null);
+        val konfigurierterWahltagModel = new KonfigurierterWahltagModel(null, wahltagID, false, null);
         boolean result = konfigurierterWahltagService.isWahltagActive(konfigurierterWahltagModel);
         return withBodyOrNoContent(result);
     }

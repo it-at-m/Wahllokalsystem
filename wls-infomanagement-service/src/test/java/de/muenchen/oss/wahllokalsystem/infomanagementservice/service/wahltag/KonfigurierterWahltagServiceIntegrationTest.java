@@ -4,7 +4,6 @@ import de.muenchen.oss.wahllokalsystem.infomanagementservice.MicroServiceApplica
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag.KonfigurierterWahltag;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag.KonfigurierterWahltagRepository;
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.wahltag.WahltagStatus;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.val;
@@ -34,16 +33,16 @@ public class KonfigurierterWahltagServiceIntegrationTest {
 
         @Test
         void onlyExistingKonfigurierterWahltagAreInaktiv() {
-            val existingWahltag1 = new KonfigurierterWahltag(LocalDate.parse("2024-06-12"), "wahltag1", WahltagStatus.AKTIV, "nummer1");
-            val existingWahltag2 = new KonfigurierterWahltag(LocalDate.parse("2024-05-12"), "wahltag2", WahltagStatus.INAKTIV, "nummer2");
-            val existingWahltag3 = new KonfigurierterWahltag(LocalDate.parse("2024-07-13"), "wahltag3", WahltagStatus.INAKTIV, "nummer3");
-            val existingWahltag4 = new KonfigurierterWahltag(LocalDate.parse("2024-08-14"), "wahltag4", WahltagStatus.INAKTIV, "nummer4");
+            val existingWahltag1 = new KonfigurierterWahltag(LocalDate.parse("2024-06-12"), "wahltag1", true, "nummer1");
+            val existingWahltag2 = new KonfigurierterWahltag(LocalDate.parse("2024-05-12"), "wahltag2", false, "nummer2");
+            val existingWahltag3 = new KonfigurierterWahltag(LocalDate.parse("2024-07-13"), "wahltag3", false, "nummer3");
+            val existingWahltag4 = new KonfigurierterWahltag(LocalDate.parse("2024-08-14"), "wahltag4", false, "nummer4");
             transactionTemplate.execute((status) -> {
                 konfigurierterWahltagRepository.saveAll(List.of(existingWahltag1, existingWahltag2, existingWahltag3, existingWahltag4));
                 return null;
             });
 
-            val wahltagModelToSave = new KonfigurierterWahltagModel(LocalDate.parse("2024-05-17"), "neuerWahltag", WahltagStatus.AKTIV, "neueNummer");
+            val wahltagModelToSave = new KonfigurierterWahltagModel(LocalDate.parse("2024-05-17"), "neuerWahltag", true, "neueNummer");
 
             unitUnderTest.setKonfigurierterWahltag(wahltagModelToSave);
 
@@ -52,8 +51,8 @@ public class KonfigurierterWahltagServiceIntegrationTest {
                     .get();
             val otherWahltage = allSavedWahltage.stream().filter(wahltag -> !wahltag.getWahltagID().equals(wahltagModelToSave.wahltagID())).toList();
 
-            Assertions.assertThat(otherWahltage).allSatisfy(wahltag -> Assertions.assertThat(wahltag.getWahltagStatus()).isEqualTo(WahltagStatus.INAKTIV));
-            Assertions.assertThat(lastAddedAktivWahltag.getWahltagStatus()).isEqualTo(WahltagStatus.AKTIV);
+            Assertions.assertThat(otherWahltage).allSatisfy(wahltag -> Assertions.assertThat(wahltag.isActive()).isFalse());
+            Assertions.assertThat(lastAddedAktivWahltag.isActive()).isTrue();
         }
     }
 }

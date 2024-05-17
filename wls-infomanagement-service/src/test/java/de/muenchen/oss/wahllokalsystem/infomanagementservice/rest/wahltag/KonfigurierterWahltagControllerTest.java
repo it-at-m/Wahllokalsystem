@@ -69,7 +69,7 @@ class KonfigurierterWahltagControllerTest {
             val nummer = "4711";
 
             val postMockDTO = new KonfigurierterWahltagDTO(wahltag, wahltagID, wahltagStatus, nummer);
-            val mockModel = new KonfigurierterWahltagModel(wahltag, wahltagID, wahltagStatus, nummer);
+            val mockModel = new KonfigurierterWahltagModel(wahltag, wahltagID, false, nummer);
 
             Mockito.when(konfigurierterWahltagDTOMapper.toModel(postMockDTO)).thenReturn(mockModel);
             Mockito.doNothing().when(konfigurierterWahltagService).setKonfigurierterWahltag(mockModel);
@@ -84,7 +84,7 @@ class KonfigurierterWahltagControllerTest {
         @Test
         void serviceCalledWithDeleteDataOK() {
             val wahltagID = "1-2-3";
-            val mockModel = new KonfigurierterWahltagModel(null, wahltagID, null, null);
+            val mockModel = new KonfigurierterWahltagModel(null, wahltagID, false, null);
 
             Mockito.doNothing().when(konfigurierterWahltagService).deleteKonfigurierterWahltag(mockModel);
 
@@ -133,7 +133,7 @@ class KonfigurierterWahltagControllerTest {
         @Test
         void serviceCalledWithActiveWahltagId() {
             val wahltagID = "1-2-3";
-            val mockModel = new KonfigurierterWahltagModel(null, wahltagID, null, null);
+            val mockModel = new KonfigurierterWahltagModel(null, wahltagID, false, null);
 
             Mockito.when(konfigurierterWahltagService.isWahltagActive(mockModel)).thenReturn(true);
 
@@ -145,7 +145,7 @@ class KonfigurierterWahltagControllerTest {
         @Test
         void serviceCalledWithInactiveWahltagId() {
             val wahltagID = "4-5-6";
-            val mockModel = new KonfigurierterWahltagModel(null, wahltagID, null, null);
+            val mockModel = new KonfigurierterWahltagModel(null, wahltagID, false, null);
 
             Mockito.when(konfigurierterWahltagService.isWahltagActive(mockModel)).thenReturn(false);
 

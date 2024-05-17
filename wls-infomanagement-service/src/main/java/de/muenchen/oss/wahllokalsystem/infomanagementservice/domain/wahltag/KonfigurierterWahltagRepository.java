@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag;
 
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.wahltag.WahltagStatus;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.cache.annotation.CacheEvict;
@@ -48,10 +47,10 @@ public interface KonfigurierterWahltagRepository extends CrudRepository<Konfigur
     @PreAuthorize("hasAuthority('Infomanagement_DELETE_KonfigurierterWahltag')")
     void deleteAll();
 
-    KonfigurierterWahltag findByWahltagStatus(@Param(value = "wahltagStatus") WahltagStatus wahltagStatus);
+    KonfigurierterWahltag findByActive(@Param(value = "active") boolean isActive);
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)
-    @Query("UPDATE KonfigurierterWahltag w SET w.wahltagStatus = 'INAKTIV'")
+    @Query("UPDATE KonfigurierterWahltag w SET w.active = false")
     @PreAuthorize("hasAuthority('Infomanagement_WRITE_KonfigurierterWahltag')")
     void setExistingKonfigurierteWahltageInaktiv();
 

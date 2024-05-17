@@ -2,23 +2,16 @@ package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.wahltag;
 
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag.KonfigurierterWahltag;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag.KonfigurierterWahltagRepository;
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.wahltag.WahltagStatus;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -50,9 +43,9 @@ class KonfigurierterWahltagServiceTest {
         @Test
         void konfigurierterWahltagFound() {
             val mockedWahltagFromRepo = new KonfigurierterWahltag();
-            val mockedEntityAsModel = KonfigurierterWahltagModel.builder().wahltagStatus(WahltagStatus.AKTIV).build();
+            val mockedEntityAsModel = KonfigurierterWahltagModel.builder().active(true).build();
 
-            Mockito.when(konfigurierterWahltagRepository.findByWahltagStatus(WahltagStatus.AKTIV)).thenReturn(mockedWahltagFromRepo);
+            Mockito.when(konfigurierterWahltagRepository.findByActive(true)).thenReturn(mockedWahltagFromRepo);
             Mockito.when(konfigurierterWahltagMapper.toModel(mockedWahltagFromRepo)).thenReturn(mockedEntityAsModel);
 
             val result = unitUnderTest.getKonfigurierterWahltag();
@@ -63,7 +56,7 @@ class KonfigurierterWahltagServiceTest {
 
         @Test
         void noKonfigurierterWahltagFound() {
-            Mockito.when(konfigurierterWahltagRepository.findByWahltagStatus(WahltagStatus.AKTIV)).thenReturn(null);
+            Mockito.when(konfigurierterWahltagRepository.findByActive(true)).thenReturn(null);
 
             val result = unitUnderTest.getKonfigurierterWahltag();
 
@@ -88,7 +81,7 @@ class KonfigurierterWahltagServiceTest {
 
         @Test
         void newInaktivWahltagSaved() {
-            val konfigurierterWahltagToSave = KonfigurierterWahltagModel.builder().wahltagStatus(WahltagStatus.INAKTIV).build();
+            val konfigurierterWahltagToSave = KonfigurierterWahltagModel.builder().active(false).build();
 
             val mockedModelAsEntity = new KonfigurierterWahltag();
 
@@ -104,7 +97,7 @@ class KonfigurierterWahltagServiceTest {
 
         @Test
         void newAktivWahltagSaved() {
-            val konfigurierterWahltagToSave = KonfigurierterWahltagModel.builder().wahltagStatus(WahltagStatus.AKTIV).build();
+            val konfigurierterWahltagToSave = KonfigurierterWahltagModel.builder().active(true).build();
 
             val mockedModelAsEntity = new KonfigurierterWahltag();
 
@@ -126,7 +119,7 @@ class KonfigurierterWahltagServiceTest {
         @Test
         void validationOfModelFailed() {
             val wahltagID = "wahltagID";
-            val konfigurierteWahltagDeleteModel = new KonfigurierterWahltagModel(null, wahltagID, null, null);
+            val konfigurierteWahltagDeleteModel = new KonfigurierterWahltagModel(null, wahltagID, false, null);
 
             val mockedValidationException = new RuntimeException("failed Validation");
 
@@ -141,7 +134,7 @@ class KonfigurierterWahltagServiceTest {
         @Test
         void deletionSuccessful() {
             val wahltagID = "wahltagID";
-            val konfigurierteWahltagDeleteModel = new KonfigurierterWahltagModel(null, wahltagID, null, null);
+            val konfigurierteWahltagDeleteModel = new KonfigurierterWahltagModel(null, wahltagID, false, null);
 
             val mockedModelAsEntity = new KonfigurierterWahltag();
             mockedModelAsEntity.setWahltagID(wahltagID);
@@ -161,7 +154,7 @@ class KonfigurierterWahltagServiceTest {
         @Test
         void onDeleteExceptionIsMappedAndThrown() {
             val wahltagID = "wahltagID";
-            val konfigurierteWahltagDeleteModel = new KonfigurierterWahltagModel(null, wahltagID, null, null);
+            val konfigurierteWahltagDeleteModel = new KonfigurierterWahltagModel(null, wahltagID, false, null);
 
             val mockedThrownException = new RuntimeException("on delete exception");
             val mockedModelAsEntity = new KonfigurierterWahltag();
@@ -200,55 +193,40 @@ class KonfigurierterWahltagServiceTest {
     @Nested
     class IsWahltagActive {
 
-        private static final WahltagStatus[] WAHLTAG_STATUS_THAT_ARE_ACTIVE = {
-                WahltagStatus.AKTIV,
-        };
-
         @Test
         void falseOnNoRepoHit() {
             val wahltagID = "wahltagID";
-            val konfigurierterWahltagModel = new KonfigurierterWahltagModel(null, wahltagID, null, null);
+            val konfigurierterWahltagModel = new KonfigurierterWahltagModel(null, wahltagID, true, null);
 
             Mockito.when(konfigurierterWahltagRepository.findById(wahltagID)).thenReturn(Optional.empty());
 
             Assertions.assertThat(unitUnderTest.isWahltagActive(konfigurierterWahltagModel)).isFalse();
         }
 
-        @ParameterizedTest(name = "{index} - status: {0}")
-        @MethodSource("argumentsResultingInTrue")
-        void verifyStatusValueResultingInTrue(final ArgumentsAccessor arguments) {
+        @Test
+        void verifyInactiveRepoValueReturnsFalse() {
             val wahltagID = "wahltagID";
-            val konfigurierterWahltagModel = new KonfigurierterWahltagModel(null, wahltagID, null, null);
+            val konfigurierterWahltagModel = new KonfigurierterWahltagModel(null, wahltagID, false, null);
 
             val mockedEntity = new KonfigurierterWahltag();
-            mockedEntity.setWahltagStatus(arguments.get(0, WahltagStatus.class));
-
-            Mockito.when(konfigurierterWahltagRepository.findById(wahltagID)).thenReturn(Optional.of(mockedEntity));
-
-            Assertions.assertThat(unitUnderTest.isWahltagActive(konfigurierterWahltagModel)).isTrue();
-        }
-
-        @ParameterizedTest(name = "{index} - status: {0}")
-        @MethodSource("argumentsResultingInFalse")
-        void verifyStatusValuesResultingInFalse(final ArgumentsAccessor arguments) {
-            val wahltagID = "wahltagID";
-            val konfigurierterWahltagModel = new KonfigurierterWahltagModel(null, wahltagID, null, null);
-
-            val mockedEntity = new KonfigurierterWahltag();
-            mockedEntity.setWahltagStatus(arguments.get(0, WahltagStatus.class));
+            mockedEntity.setActive(false);
 
             Mockito.when(konfigurierterWahltagRepository.findById(wahltagID)).thenReturn(Optional.of(mockedEntity));
 
             Assertions.assertThat(unitUnderTest.isWahltagActive(konfigurierterWahltagModel)).isFalse();
         }
 
-        private static Stream<Arguments> argumentsResultingInTrue() {
-            return Arrays.stream(WAHLTAG_STATUS_THAT_ARE_ACTIVE).map(Arguments::of);
-        }
+        @Test
+        void verifyActiveRepoValueReturnsTrue() {
+            val wahltagID = "wahltagID";
+            val konfigurierterWahltagModel = new KonfigurierterWahltagModel(null, wahltagID, true, null);
 
-        private static Stream<Arguments> argumentsResultingInFalse() {
-            val wahltagStatusThatAreActiveAsList = List.of(WAHLTAG_STATUS_THAT_ARE_ACTIVE);
-            return Arrays.stream(WahltagStatus.values()).filter(status -> !wahltagStatusThatAreActiveAsList.contains(status)).map(Arguments::of);
+            val mockedEntity = new KonfigurierterWahltag();
+            mockedEntity.setActive(true);
+
+            Mockito.when(konfigurierterWahltagRepository.findById(wahltagID)).thenReturn(Optional.of(mockedEntity));
+
+            Assertions.assertThat(unitUnderTest.isWahltagActive(konfigurierterWahltagModel)).isTrue();
         }
     }
 }

@@ -20,7 +20,6 @@ public class KonfigurierterWahltagValidator {
 
     public void validPostModelOrThrow(KonfigurierterWahltagModel konfigurierterWahltag) {
         if (konfigurierterWahltag == null || konfigurierterWahltag.wahltag() == null || konfigurierterWahltag.wahltagID() == null) {
-
             throw FachlicheWlsException.withCode(POST_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG.code()).inService(serviceIDFormatter.getId())
                     .buildWithMessage(
                             POST_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG.message());

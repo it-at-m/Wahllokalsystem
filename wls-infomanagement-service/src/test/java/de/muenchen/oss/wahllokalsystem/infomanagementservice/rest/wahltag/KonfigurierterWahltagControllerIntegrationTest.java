@@ -178,7 +178,6 @@ public class KonfigurierterWahltagControllerIntegrationTest {
 
     }
 
-    // Dooffall: DB hat nur inaktive Wahltage, neu setzen mit WahltagStatus.INAKTIV -> kein Wahltag
     private MockHttpServletRequestBuilder createPostWithBody(final KonfigurierterWahltagDTO requestDTO) throws Exception {
         return MockMvcRequestBuilders.post("/businessActions/konfigurierterWahltag").with(csrf()).contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestDTO));

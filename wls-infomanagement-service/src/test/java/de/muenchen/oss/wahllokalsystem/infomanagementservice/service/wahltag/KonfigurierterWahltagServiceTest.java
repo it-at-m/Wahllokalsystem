@@ -164,8 +164,6 @@ class KonfigurierterWahltagServiceTest {
             Mockito.when(konfigurierterWahltagMapper.toEntity(konfigurierteWahltagDeleteModel)).thenReturn(mockedModelAsEntity);
             Mockito.when(serviceIDFormatter.getId()).thenReturn(SERVICDE_ID);
 
-            val thrownException = Assertions.catchException(() -> unitUnderTest.deleteKonfigurierterWahltag(konfigurierteWahltagDeleteModel));
-
             val expectedException = FachlicheWlsException.withCode("105").inService(SERVICDE_ID)
                     .buildWithMessage("deleteKonfigurierterWahltag: Der konfigurierte Wahltag konnte nicht geloescht werden.");
 

@@ -80,7 +80,7 @@ class KonfigurierterWahltagServiceTest {
     class SetKonfigurierterWahltag {
 
         @Test
-        void noSaveOnFailedValidtion() {
+        void noSaveOnFailedValidation() {
             val konfigurierterWahltagToSave = KonfigurierterWahltagModel.builder().build();
 
             val mockedValidationException = new RuntimeException("failed validation");
@@ -196,7 +196,7 @@ class KonfigurierterWahltagServiceTest {
     class GetKonfigurierteWahltage {
 
         @Test
-        void listOfKonfigurierteWahltagIsSend() {
+        void listOfKonfigurierteWahltageIsSend() {
             val mockedRepoResponse = Arrays.asList(new KonfigurierterWahltag(), new KonfigurierterWahltag(), new KonfigurierterWahltag());
             mockedRepoResponse.forEach(wahltag -> wahltag.setWahltag(LocalDate.now()));
             val mockedRepoResponseAsModelList = Arrays.asList(KonfigurierterWahltagModel.builder().build(), KonfigurierterWahltagModel.builder().build());

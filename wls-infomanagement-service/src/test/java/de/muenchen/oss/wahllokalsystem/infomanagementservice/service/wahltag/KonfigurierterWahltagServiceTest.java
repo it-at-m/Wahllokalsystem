@@ -19,8 +19,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -45,9 +43,6 @@ class KonfigurierterWahltagServiceTest {
 
     @InjectMocks
     KonfigurierterWahltagService unitUnderTest;
-
-    @Captor
-    ArgumentCaptor<List<KonfigurierterWahltag>> listKonfigurierterWahltagCaptor;
 
     @Nested
     class GetKonfigurierterWahltag {
@@ -112,21 +107,15 @@ class KonfigurierterWahltagServiceTest {
             val konfigurierterWahltagToSave = KonfigurierterWahltagModel.builder().wahltagStatus(WahltagStatus.AKTIV).build();
 
             val mockedModelAsEntity = new KonfigurierterWahltag();
-            val mockedRepoFindAll = List.of(new KonfigurierterWahltag(), new KonfigurierterWahltag(), new KonfigurierterWahltag());
-            mockedRepoFindAll.forEach(wahltag -> wahltag.setWahltagStatus(WahltagStatus.AKTIV));
 
             Mockito.doNothing().when(konfigurierterWahltagValidator).validPostModelOrThrow(konfigurierterWahltagToSave);
             Mockito.when(konfigurierterWahltagMapper.toEntity(konfigurierterWahltagToSave)).thenReturn(mockedModelAsEntity);
-            Mockito.when(konfigurierterWahltagRepository.findAll()).thenReturn(mockedRepoFindAll);
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.setKonfigurierterWahltag(konfigurierterWahltagToSave));
 
             Mockito.verify(konfigurierterWahltagRepository).save(mockedModelAsEntity);
 
-            Mockito.verify(konfigurierterWahltagRepository).saveAll(listKonfigurierterWahltagCaptor.capture());
-            val updatedKonfigurierteWahltag = listKonfigurierterWahltagCaptor.getValue();
-            Assertions.assertThat(updatedKonfigurierteWahltag)
-                    .allSatisfy(actual -> Assertions.assertThat(actual.getWahltagStatus()).isEqualTo(WahltagStatus.INAKTIV));
+            Mockito.verify(konfigurierterWahltagRepository).setExistingKonfigurierteWahltageInaktiv();
 
         }
     }

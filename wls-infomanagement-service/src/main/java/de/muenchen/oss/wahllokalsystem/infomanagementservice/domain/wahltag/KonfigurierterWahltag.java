@@ -1,9 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.wahltag.WahltagStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -23,8 +19,6 @@ import org.springframework.stereotype.Indexed;
 @AllArgsConstructor
 public class KonfigurierterWahltag {
 
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
     @NotNull
     private java.time.LocalDate wahltag;
 

@@ -55,4 +55,29 @@ public class KonfigurierterWahltagServiceIntegrationTest {
             Assertions.assertThat(lastAddedAktivWahltag.isActive()).isTrue();
         }
     }
+
+    @Nested
+    class GetKonfigurierteWahltage {
+
+        @Test
+        void dataIsSortedByWahltagASC() {
+            val wahltag1 = new KonfigurierterWahltag(LocalDate.parse("2024-06-12"), "wahltag1", true, "nummer1");
+            val wahltag2 = new KonfigurierterWahltag(LocalDate.parse("2024-05-12"), "wahltag2", false, "nummer2");
+            val wahltag3 = new KonfigurierterWahltag(LocalDate.parse("2024-07-13"), "wahltag3", false, "nummer3");
+            val wahltag4 = new KonfigurierterWahltag(LocalDate.parse("2024-08-14"), "wahltag4", false, "nummer4");
+            val wahltageToFindSorted = List.of(wahltag1, wahltag2, wahltag3, wahltag4);
+            transactionTemplate.execute((status) -> {
+                konfigurierterWahltagRepository.saveAll(wahltageToFindSorted);
+                return null;
+            });
+
+            val result = unitUnderTest.getKonfigurierteWahltage();
+
+            Assertions.assertThat(result.size()).isEqualTo(wahltageToFindSorted.size());
+            Assertions.assertThat(result.get(0).wahltagID()).isEqualTo(wahltageToFindSorted.get(1).getWahltagID());
+            Assertions.assertThat(result.get(1).wahltagID()).isEqualTo(wahltageToFindSorted.get(0).getWahltagID());
+            Assertions.assertThat(result.get(2).wahltagID()).isEqualTo(wahltageToFindSorted.get(2).getWahltagID());
+            Assertions.assertThat(result.get(3).wahltagID()).isEqualTo(wahltageToFindSorted.get(3).getWahltagID());
+        }
+    }
 }

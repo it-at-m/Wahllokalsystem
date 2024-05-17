@@ -1,5 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.wahltag;
 
+import static org.mockito.ArgumentMatchers.any;
+
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag.KonfigurierterWahltag;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag.KonfigurierterWahltagRepository;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
@@ -16,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
 
 @ExtendWith(MockitoExtension.class)
 class KonfigurierterWahltagServiceTest {
@@ -173,7 +176,7 @@ class KonfigurierterWahltagServiceTest {
             mockedRepoResponse.forEach(wahltag -> wahltag.setWahltag(LocalDate.now()));
             val mockedRepoResponseAsModelList = Arrays.asList(KonfigurierterWahltagModel.builder().build(), KonfigurierterWahltagModel.builder().build());
 
-            Mockito.when(konfigurierterWahltagRepository.findAll()).thenReturn(mockedRepoResponse);
+            Mockito.when(konfigurierterWahltagRepository.findAll(any(Sort.class))).thenReturn(mockedRepoResponse);
             Mockito.when(konfigurierterWahltagMapper.toModelList(mockedRepoResponse)).thenReturn(mockedRepoResponseAsModelList);
 
             Assertions.assertThat(unitUnderTest.getKonfigurierteWahltage()).isSameAs(mockedRepoResponseAsModelList);

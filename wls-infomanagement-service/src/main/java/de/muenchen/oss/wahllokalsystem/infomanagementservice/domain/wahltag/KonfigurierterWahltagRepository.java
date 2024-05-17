@@ -8,9 +8,11 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-public interface KonfigurierterWahltagRepository extends CrudRepository<KonfigurierterWahltag, String> {
+public interface KonfigurierterWahltagRepository
+        extends CrudRepository<KonfigurierterWahltag, String>, PagingAndSortingRepository<KonfigurierterWahltag, String> {
 
     String CACHE = "KonfigurierterWahltagCACHE";
 

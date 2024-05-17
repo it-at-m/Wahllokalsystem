@@ -1,15 +1,14 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.wahltag;
 
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag.KonfigurierterWahltag;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag.KonfigurierterWahltagRepository;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.exception.ExceptionDataWrapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
-import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,8 +68,7 @@ public class KonfigurierterWahltagService {
     @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_GetKonfigurierteWahltage')")
     public List<KonfigurierterWahltagModel> getKonfigurierteWahltage() {
         log.info("#getKonfigurierteWahltage");
-        List<KonfigurierterWahltag> konfigurierteWahltage = konfigurierterWahltagRepository.findAll();
-        konfigurierteWahltage.sort(Comparator.comparing(KonfigurierterWahltag::getWahltag));
+        val konfigurierteWahltage = konfigurierterWahltagRepository.findAll(Sort.by(Sort.Direction.ASC, "wahltag"));
 
         return konfigurierterWahltagMapper.toModelList(konfigurierteWahltage);
     }

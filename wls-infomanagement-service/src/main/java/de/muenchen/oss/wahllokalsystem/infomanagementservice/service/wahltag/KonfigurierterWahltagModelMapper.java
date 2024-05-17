@@ -11,5 +11,5 @@ public interface KonfigurierterWahltagModelMapper {
 
     KonfigurierterWahltag toEntity(KonfigurierterWahltagModel model);
 
-    List<KonfigurierterWahltagModel> toModelList(List<KonfigurierterWahltag> konfigurierteWahltage);
+    List<KonfigurierterWahltagModel> toModelList(Iterable<KonfigurierterWahltag> konfigurierteWahltage);
 }

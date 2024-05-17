@@ -23,9 +23,9 @@ services:
   ## Keycloak
   wls-keycloak:
     container_name: wls-keycloak
-    image: quay.io/keycloak/keycloak:20.0.5
+    image: quay.io/keycloak/keycloak:24.0.4
     command:
-      - start-dev --http-relative-path /auth
+      - start-dev
     depends_on:
       - wls-db-postgres-keycloak
     environment:
@@ -36,6 +36,7 @@ services:
       - DB_URL=jdbc:postgresql://wls-db-postgres-keycloak:5432/${KEYCLOAK_DB}
       - DB_USERNAME=${KEYCLOAK_DB_USER}
       - DB_PASSWORD=${KEYCLOAK_DB_PASSWORD}
+      - KC_HTTP_RELATIVE_PATH=auth
     ports:
       - 8100:8080
     networks:

@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +41,7 @@ public class KonfigurierterWahltagService {
     }
 
     @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_PostKonfigurierterWahltag')")
+    @Transactional
     public void setKonfigurierterWahltag(KonfigurierterWahltagModel konfigurierterWahltagModel) {
 
         log.info("#postKonfigurierterWahltag");
@@ -47,9 +49,7 @@ public class KonfigurierterWahltagService {
         val konfigurierterWahltagEntity = konfigurierterWahltagMapper.toEntity(konfigurierterWahltagModel);
 
         if (konfigurierterWahltagModel.wahltagStatus() == WahltagStatus.AKTIV) {
-            Iterable<KonfigurierterWahltag> wahltage = konfigurierterWahltagRepository.findAll();
-            wahltage.forEach(wt -> wt.setWahltagStatus(WahltagStatus.INAKTIV));
-            konfigurierterWahltagRepository.saveAll(wahltage);
+            konfigurierterWahltagRepository.setExistingKonfigurierteWahltageInaktiv();
         }
 
         konfigurierterWahltagRepository.save(konfigurierterWahltagEntity);

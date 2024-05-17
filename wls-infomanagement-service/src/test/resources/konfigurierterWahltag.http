@@ -1,0 +1,57 @@
+### get token for wls_all
+POST http://localhost:8100/auth/realms/wls_realm/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+password = test &
+grant_type = password &
+client_secret = top-secret &
+client_id = wls &
+username = wls_all
+
+> {%
+    client.global.set("auth_token", response.body.access_token);
+    client.global.set("token_type", response.body.token_type);
+%}
+
+### get userinfo with auth_token
+GET http://localhost:8100/auth/realms/wls_realm/protocol/openid-connect/userinfo
+Authorization: {{ token_type }} {{ auth_token }}
+
+### get konfigurierter Wahltag
+GET http://localhost:39146/businessActions/konfigurierterWahltag
+Authorization: {{ token_type }} {{ auth_token }}
+
+### get konfigurierte Wahltage
+GET http://localhost:39146/businessActions/konfigurierteWahltage
+Authorization: {{ token_type }} {{ auth_token }}
+
+### post konfigurierter Wahltag EU-Wahl-24
+POST http://localhost:39146/businessActions/konfigurierterWahltag
+Authorization: {{ token_type }} {{ auth_token }}
+Content-Type: application/json
+
+{
+  "wahltag": "2024-06-09",
+  "wahltagID": "euwahl24",
+  "wahltagStatus": "AKTIV",
+  "nummer": "nummer"
+}
+
+### POST konfigurierter Wahltag BTW-21
+POST http://localhost:39146/businessActions/konfigurierterWahltag
+Authorization: {{ token_type }} {{ auth_token }}
+Content-Type: application/json
+
+{
+  "wahltag": "2021-09-26",
+  "wahltagID": "BTW-21",
+  "wahltagStatus": "AKTIV",
+  "nummer": "nummer2"
+}
+
+### DELETE konfigurierter Wahltag BTW-21
+DELETE http://localhost:39146/businessActions/konfigurierterWahltag/BTW-21
+Authorization: {{ token_type }} {{ auth_token }}
+
+### check is aktive
+GET http://localhost:39146/businessActions/loginCheck/BTW-21

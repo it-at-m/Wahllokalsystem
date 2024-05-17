@@ -80,7 +80,7 @@ public class KonfigurierterWahltagService {
 
     public boolean isWahltagActive(KonfigurierterWahltagModel konfigurierterWahltagModel) {
         log.debug("#getLoginCheck");
-        Optional<KonfigurierterWahltag> konfigurierterWahltag = konfigurierterWahltagRepository.findById(konfigurierterWahltagModel.wahltagID());
+        val konfigurierterWahltag = konfigurierterWahltagRepository.findById(konfigurierterWahltagModel.wahltagID());
 
         return konfigurierterWahltag.isPresent() && !konfigurierterWahltag.get().getWahltagStatus().equals(WahltagStatus.INAKTIV);
     }

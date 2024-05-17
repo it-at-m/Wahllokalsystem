@@ -74,33 +74,27 @@ class KonfigurierterWahltagValidatorTest {
 
         @Test
         void noExceptionOnValidModel() {
-            val validModel = initValidModel().build();
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validDeleteModelOrThrow(validModel));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validDeleteModelOrThrow("wahltagID"));
         }
 
         @Test
         void exceptionWhenWahltagIDIsNul() {
-            val invalidModel = initValidModel().wahltagID(null).build();
-
             Mockito.when(serviceIDFormatter.getId()).thenReturn(SERVICE_ID);
 
             val expectedException = FachlicheWlsException.withCode("104").inService(SERVICE_ID)
                     .buildWithMessage("deleteKonfigurierterWahltag: Suchkriterien unvollständig.");
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validDeleteModelOrThrow(invalidModel)).usingRecursiveComparison().isEqualTo(expectedException);
+            Assertions.assertThatThrownBy(() -> unitUnderTest.validDeleteModelOrThrow(null)).usingRecursiveComparison().isEqualTo(expectedException);
         }
 
         @Test
         void exceptionWhenWahltagIDIsEmpty() {
-            val invalidModel = initValidModel().wahltagID("").build();
-
             Mockito.when(serviceIDFormatter.getId()).thenReturn(SERVICE_ID);
 
             val expectedException = FachlicheWlsException.withCode("104").inService(SERVICE_ID)
                     .buildWithMessage("deleteKonfigurierterWahltag: Suchkriterien unvollständig.");
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validDeleteModelOrThrow(invalidModel)).usingRecursiveComparison().isEqualTo(expectedException);
+            Assertions.assertThatThrownBy(() -> unitUnderTest.validDeleteModelOrThrow("")).usingRecursiveComparison().isEqualTo(expectedException);
         }
     }
 

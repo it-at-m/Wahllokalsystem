@@ -119,13 +119,12 @@ class KonfigurierterWahltagServiceTest {
         @Test
         void validationOfModelFailed() {
             val wahltagID = "wahltagID";
-            val konfigurierteWahltagDeleteModel = new KonfigurierterWahltagModel(null, wahltagID, false, null);
 
             val mockedValidationException = new RuntimeException("failed Validation");
 
-            Mockito.doThrow(mockedValidationException).when(konfigurierterWahltagValidator).validDeleteModelOrThrow(konfigurierteWahltagDeleteModel);
+            Mockito.doThrow(mockedValidationException).when(konfigurierterWahltagValidator).validDeleteModelOrThrow(wahltagID);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.deleteKonfigurierterWahltag(konfigurierteWahltagDeleteModel))
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.deleteKonfigurierterWahltag(wahltagID))
                     .isSameAs(mockedValidationException);
 
             Mockito.verifyNoInteractions(konfigurierterWahltagRepository);
@@ -134,40 +133,33 @@ class KonfigurierterWahltagServiceTest {
         @Test
         void deletionSuccessful() {
             val wahltagID = "wahltagID";
-            val konfigurierteWahltagDeleteModel = new KonfigurierterWahltagModel(null, wahltagID, false, null);
-
-            val mockedModelAsEntity = new KonfigurierterWahltag();
-            mockedModelAsEntity.setWahltagID(wahltagID);
 
             Mockito.doNothing().when(konfigurierterWahltagRepository).deleteById(wahltagID);
-            Mockito.when(konfigurierterWahltagMapper.toEntity(konfigurierteWahltagDeleteModel)).thenReturn(mockedModelAsEntity);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.deleteKonfigurierterWahltag(konfigurierteWahltagDeleteModel));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.deleteKonfigurierterWahltag(wahltagID));
 
             Mockito.verify(konfigurierterWahltagRepository).deleteById(wahltagID);
             Mockito.verifyNoMoreInteractions(konfigurierterWahltagRepository);
 
-            Mockito.verify(konfigurierterWahltagValidator).validDeleteModelOrThrow(konfigurierteWahltagDeleteModel);
+            Mockito.verify(konfigurierterWahltagValidator).validDeleteModelOrThrow(wahltagID);
 
         }
 
         @Test
         void onDeleteExceptionIsMappedAndThrown() {
             val wahltagID = "wahltagID";
-            val konfigurierteWahltagDeleteModel = new KonfigurierterWahltagModel(null, wahltagID, false, null);
 
             val mockedThrownException = new RuntimeException("on delete exception");
             val mockedModelAsEntity = new KonfigurierterWahltag();
             mockedModelAsEntity.setWahltagID(wahltagID);
 
             Mockito.doThrow(mockedThrownException).when(konfigurierterWahltagRepository).deleteById(wahltagID);
-            Mockito.when(konfigurierterWahltagMapper.toEntity(konfigurierteWahltagDeleteModel)).thenReturn(mockedModelAsEntity);
             Mockito.when(serviceIDFormatter.getId()).thenReturn(SERVICDE_ID);
 
             val expectedException = FachlicheWlsException.withCode("105").inService(SERVICDE_ID)
                     .buildWithMessage("deleteKonfigurierterWahltag: Der konfigurierte Wahltag konnte nicht geloescht werden.");
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.deleteKonfigurierterWahltag(konfigurierteWahltagDeleteModel))
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.deleteKonfigurierterWahltag(wahltagID))
                     .usingRecursiveComparison().isEqualTo(expectedException);
         }
     }
@@ -194,37 +186,34 @@ class KonfigurierterWahltagServiceTest {
         @Test
         void falseOnNoRepoHit() {
             val wahltagID = "wahltagID";
-            val konfigurierterWahltagModel = new KonfigurierterWahltagModel(null, wahltagID, true, null);
 
             Mockito.when(konfigurierterWahltagRepository.findById(wahltagID)).thenReturn(Optional.empty());
 
-            Assertions.assertThat(unitUnderTest.isWahltagActive(konfigurierterWahltagModel)).isFalse();
+            Assertions.assertThat(unitUnderTest.isWahltagActive(wahltagID)).isFalse();
         }
 
         @Test
         void verifyInactiveRepoValueReturnsFalse() {
             val wahltagID = "wahltagID";
-            val konfigurierterWahltagModel = new KonfigurierterWahltagModel(null, wahltagID, false, null);
 
             val mockedEntity = new KonfigurierterWahltag();
             mockedEntity.setActive(false);
 
             Mockito.when(konfigurierterWahltagRepository.findById(wahltagID)).thenReturn(Optional.of(mockedEntity));
 
-            Assertions.assertThat(unitUnderTest.isWahltagActive(konfigurierterWahltagModel)).isFalse();
+            Assertions.assertThat(unitUnderTest.isWahltagActive(wahltagID)).isFalse();
         }
 
         @Test
         void verifyActiveRepoValueReturnsTrue() {
             val wahltagID = "wahltagID";
-            val konfigurierterWahltagModel = new KonfigurierterWahltagModel(null, wahltagID, true, null);
 
             val mockedEntity = new KonfigurierterWahltag();
             mockedEntity.setActive(true);
 
             Mockito.when(konfigurierterWahltagRepository.findById(wahltagID)).thenReturn(Optional.of(mockedEntity));
 
-            Assertions.assertThat(unitUnderTest.isWahltagActive(konfigurierterWahltagModel)).isTrue();
+            Assertions.assertThat(unitUnderTest.isWahltagActive(wahltagID)).isTrue();
         }
     }
 }

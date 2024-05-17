@@ -4,6 +4,7 @@ import de.muenchen.oss.wahllokalsystem.infomanagementservice.exception.Exception
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,8 +27,8 @@ public class KonfigurierterWahltagValidator {
         }
     }
 
-    public void validDeleteModelOrThrow(KonfigurierterWahltagModel konfigurierterWahltag) {
-        if (konfigurierterWahltag.wahltagID() == null || konfigurierterWahltag.wahltagID().isEmpty()) {
+    public void validDeleteModelOrThrow(final String wahltagID) {
+        if (StringUtils.isEmpty(wahltagID)) {
             throw FachlicheWlsException.withCode(DELETE_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG.code()).inService(serviceIDFormatter.getId())
                     .buildWithMessage(
                             DELETE_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG.message());

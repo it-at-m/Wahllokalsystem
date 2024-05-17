@@ -84,9 +84,8 @@ class KonfigurierterWahltagControllerTest {
         @Test
         void serviceCalledWithDeleteDataOK() {
             val wahltagID = "1-2-3";
-            val mockModel = new KonfigurierterWahltagModel(null, wahltagID, false, null);
 
-            Mockito.doNothing().when(konfigurierterWahltagService).deleteKonfigurierterWahltag(mockModel);
+            Mockito.doNothing().when(konfigurierterWahltagService).deleteKonfigurierterWahltag(wahltagID);
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.deleteKonfigurierterWahltag(wahltagID));
         }
@@ -133,9 +132,8 @@ class KonfigurierterWahltagControllerTest {
         @Test
         void serviceCalledWithActiveWahltagId() {
             val wahltagID = "1-2-3";
-            val mockModel = new KonfigurierterWahltagModel(null, wahltagID, false, null);
 
-            Mockito.when(konfigurierterWahltagService.isWahltagActive(mockModel)).thenReturn(true);
+            Mockito.when(konfigurierterWahltagService.isWahltagActive(wahltagID)).thenReturn(true);
 
             val result = unitUnderTest.isWahltagActive(wahltagID);
 
@@ -145,9 +143,8 @@ class KonfigurierterWahltagControllerTest {
         @Test
         void serviceCalledWithInactiveWahltagId() {
             val wahltagID = "4-5-6";
-            val mockModel = new KonfigurierterWahltagModel(null, wahltagID, false, null);
 
-            Mockito.when(konfigurierterWahltagService.isWahltagActive(mockModel)).thenReturn(false);
+            Mockito.when(konfigurierterWahltagService.isWahltagActive(wahltagID)).thenReturn(false);
 
             val result = unitUnderTest.isWahltagActive(wahltagID);
 

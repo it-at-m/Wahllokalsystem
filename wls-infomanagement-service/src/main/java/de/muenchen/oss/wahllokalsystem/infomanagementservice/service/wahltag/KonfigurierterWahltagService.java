@@ -52,13 +52,12 @@ public class KonfigurierterWahltagService {
     }
 
     @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_DeleteKonfigurierterWahltag')")
-    public void deleteKonfigurierterWahltag(KonfigurierterWahltagModel konfigurierterWahltagModel) {
+    public void deleteKonfigurierterWahltag(final String wahltagID) {
         log.info("#deleteKonfigurierterWahltag");
-        konfigurierterWahltagValidator.validDeleteModelOrThrow(konfigurierterWahltagModel);
-        val konfigurierterWahltagEntity = konfigurierterWahltagMapper.toEntity(konfigurierterWahltagModel);
+        konfigurierterWahltagValidator.validDeleteModelOrThrow(wahltagID);
 
         try {
-            konfigurierterWahltagRepository.deleteById(konfigurierterWahltagEntity.getWahltagID());
+            konfigurierterWahltagRepository.deleteById(wahltagID);
         } catch (Exception e) {
             log.error("#deleteKonfigurierterWahltag undeleteable: " + e);
             throw FachlicheWlsException.withCode(DELETE_KONFIGURIERTERWAHLTAG_NOT_DELETEABLE.code()).inService(serviceIDFormatter.getId())
@@ -76,9 +75,9 @@ public class KonfigurierterWahltagService {
         return konfigurierterWahltagMapper.toModelList(konfigurierteWahltage);
     }
 
-    public boolean isWahltagActive(KonfigurierterWahltagModel konfigurierterWahltagModel) {
+    public boolean isWahltagActive(final String wahltagID) {
         log.debug("#getLoginCheck");
-        val konfigurierterWahltag = konfigurierterWahltagRepository.findById(konfigurierterWahltagModel.wahltagID());
+        val konfigurierterWahltag = konfigurierterWahltagRepository.findById(wahltagID);
 
         return konfigurierterWahltag.isPresent() && konfigurierterWahltag.get().isActive();
     }

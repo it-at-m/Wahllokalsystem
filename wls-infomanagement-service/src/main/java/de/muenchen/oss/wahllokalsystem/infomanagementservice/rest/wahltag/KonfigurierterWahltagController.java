@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.wahltag;
 
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.wahltag.KonfigurierterWahltagModel;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.wahltag.KonfigurierterWahltagService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -40,8 +39,7 @@ public class KonfigurierterWahltagController {
 
     @DeleteMapping(value = KONFIGURIERTER_WAHLTAG_PATH_DELETE)
     public void deleteKonfigurierterWahltag(@PathVariable("wahltagID") String wahltagID) {
-        val konfigurierterWahltagModel = new KonfigurierterWahltagModel(null, wahltagID, false, null);
-        konfigurierterWahltagService.deleteKonfigurierterWahltag(konfigurierterWahltagModel);
+        konfigurierterWahltagService.deleteKonfigurierterWahltag(wahltagID);
     }
 
     @GetMapping(value = KONFIGURIERTE_WAHLTAGE_PATH)
@@ -52,8 +50,7 @@ public class KonfigurierterWahltagController {
 
     @GetMapping(value = LOGIN_CHECK_PATH + "/{wahltagID}")
     public ResponseEntity<Boolean> isWahltagActive(@PathVariable("wahltagID") String wahltagID) {
-        val konfigurierterWahltagModel = new KonfigurierterWahltagModel(null, wahltagID, false, null);
-        boolean result = konfigurierterWahltagService.isWahltagActive(konfigurierterWahltagModel);
+        boolean result = konfigurierterWahltagService.isWahltagActive(wahltagID);
         return withBodyOrNoContent(result);
     }
 

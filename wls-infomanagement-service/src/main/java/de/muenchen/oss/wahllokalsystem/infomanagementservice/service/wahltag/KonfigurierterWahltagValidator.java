@@ -28,9 +28,7 @@ public class KonfigurierterWahltagValidator {
     }
 
     public void validDeleteModelOrThrow(KonfigurierterWahltagModel konfigurierterWahltag) {
-
         if (konfigurierterWahltag.wahltagID() == null || konfigurierterWahltag.wahltagID().isEmpty()) {
-
             throw FachlicheWlsException.withCode(DELETE_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG.code()).inService(serviceIDFormatter.getId())
                     .buildWithMessage(
                             DELETE_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG.message());

@@ -63,7 +63,6 @@ class KonfigurierterWahltagControllerTest {
 
         @Test
         void serviceCalledWithPostDataOK() {
-
             val wahltag = LocalDate.now();
             val wahltagID = "1-2-3";
             val wahltagStatus = WahltagStatus.INAKTIV;
@@ -84,7 +83,6 @@ class KonfigurierterWahltagControllerTest {
 
         @Test
         void serviceCalledWithDeleteDataOK() {
-
             val wahltagID = "1-2-3";
             val mockModel = new KonfigurierterWahltagModel(null, wahltagID, null, null);
 
@@ -99,7 +97,6 @@ class KonfigurierterWahltagControllerTest {
 
         @Test
         void serviceCalledWithDataFound() {
-
             val mockDTOList = List.of(
                     KonfigurierterWahltagDTO.builder().build(),
                     KonfigurierterWahltagDTO.builder().build(),
@@ -121,7 +118,6 @@ class KonfigurierterWahltagControllerTest {
 
         @Test
         void serviceCalledWithNoDataFound() {
-
             Mockito.when(konfigurierterWahltagDTOMapper.toDTOList(null)).thenReturn(null);
             Mockito.when(konfigurierterWahltagService.getKonfigurierteWahltage()).thenReturn(null);
 
@@ -136,7 +132,6 @@ class KonfigurierterWahltagControllerTest {
 
         @Test
         void serviceCalledWithActiveWahltagId() {
-
             val wahltagID = "1-2-3";
             val mockModel = new KonfigurierterWahltagModel(null, wahltagID, null, null);
 
@@ -149,7 +144,6 @@ class KonfigurierterWahltagControllerTest {
 
         @Test
         void serviceCalledWithInactiveWahltagId() {
-
             val wahltagID = "4-5-6";
             val mockModel = new KonfigurierterWahltagModel(null, wahltagID, null, null);
 

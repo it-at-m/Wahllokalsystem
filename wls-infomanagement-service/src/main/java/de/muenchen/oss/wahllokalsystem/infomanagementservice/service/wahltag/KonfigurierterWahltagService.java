@@ -34,7 +34,6 @@ public class KonfigurierterWahltagService {
 
     @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_GetKonfigurierterWahltag')")
     public KonfigurierterWahltagModel getKonfigurierterWahltag() {
-
         log.info("#getKonfigurierterWahltag");
         val entity = konfigurierterWahltagRepository.findByWahltagStatus(WahltagStatus.AKTIV);
         return entity == null ? null : konfigurierterWahltagMapper.toModel(entity);
@@ -43,7 +42,6 @@ public class KonfigurierterWahltagService {
     @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_PostKonfigurierterWahltag')")
     @Transactional
     public void setKonfigurierterWahltag(KonfigurierterWahltagModel konfigurierterWahltagModel) {
-
         log.info("#postKonfigurierterWahltag");
         konfigurierterWahltagValidator.validPostModelOrThrow(konfigurierterWahltagModel);
         val konfigurierterWahltagEntity = konfigurierterWahltagMapper.toEntity(konfigurierterWahltagModel);
@@ -57,7 +55,6 @@ public class KonfigurierterWahltagService {
 
     @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_DeleteKonfigurierterWahltag')")
     public void deleteKonfigurierterWahltag(KonfigurierterWahltagModel konfigurierterWahltagModel) {
-
         log.info("#deleteKonfigurierterWahltag");
         konfigurierterWahltagValidator.validDeleteModelOrThrow(konfigurierterWahltagModel);
         val konfigurierterWahltagEntity = konfigurierterWahltagMapper.toEntity(konfigurierterWahltagModel);
@@ -74,7 +71,6 @@ public class KonfigurierterWahltagService {
 
     @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_GetKonfigurierteWahltage')")
     public List<KonfigurierterWahltagModel> getKonfigurierteWahltage() {
-
         log.info("#getKonfigurierteWahltage");
         List<KonfigurierterWahltag> konfigurierteWahltage = konfigurierterWahltagRepository.findAll();
         konfigurierteWahltage.sort(Comparator.comparing(KonfigurierterWahltag::getWahltag));
@@ -83,7 +79,6 @@ public class KonfigurierterWahltagService {
     }
 
     public boolean isWahltagActive(KonfigurierterWahltagModel konfigurierterWahltagModel) {
-
         log.debug("#getLoginCheck");
         Optional<KonfigurierterWahltag> konfigurierterWahltag = konfigurierterWahltagRepository.findById(konfigurierterWahltagModel.wahltagID());
 

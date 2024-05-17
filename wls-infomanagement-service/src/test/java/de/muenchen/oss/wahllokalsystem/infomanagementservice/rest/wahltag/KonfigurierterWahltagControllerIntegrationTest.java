@@ -145,7 +145,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
                 authorities = { Authorities.SERVICE_POST_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
                         Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
         )
-        void overrideAktivWahltagAndReadOKWithContent() throws Exception {
+        void overrideAktiverWahltagAndReadOKWithContent() throws Exception {
             // DB hat aktiven Wahltag, überschreiben mit neuem Wahltag -> -> OK zurück mit empty body
             val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", WahltagStatus.INAKTIV, "4711");
             val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", WahltagStatus.INAKTIV, "0190");

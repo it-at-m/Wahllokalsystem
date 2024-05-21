@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.urnenwahlvorbereitung;
 
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.urnenwahlvorbereitung.UrnenwahlvorbereitungService;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -19,6 +20,7 @@ public class UrnenwahlvorbereitungController {
 
     private final UrnenwahlvorbereitungDTOMapper urnenwahlvorbereitungDTOMapper;
 
+    @Operation(description = "Laden der Wahlvorbereitungsdaten des Urnenwahllokals {wahlbezirkID}")
     @GetMapping("{wahlbezirkID}")
     public ResponseEntity<UrnenwahlvorbereitungDTO> getUrnenwahlVorbereitung(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
         val urnenwahlvorbereitungModel = service.getUrnenwahlvorbereitung(wahlbezirkID);

@@ -273,7 +273,6 @@
         </dependency>
 
     </dependencies>
-
     
     <scm>
         <url>https://github.com/it-at-m/Wahllokalsystem</url>
@@ -434,6 +433,7 @@
                 <version>3.3.1</version>
                 <configuration>
                     <configLocation>checkstyle.xml</configLocation>
+                    <excludeGeneratedSources>true</excludeGeneratedSources>
                 </configuration>
                 <executions>
                     <execution>

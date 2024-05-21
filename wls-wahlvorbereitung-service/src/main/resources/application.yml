@@ -5,6 +5,8 @@ spring:
     group:
       local:
         - db-oracle
+      no-security:
+        - dummy.nobezirkid.check
   flyway:
     locations:
       - classpath:db/migrations/{vendor}

@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.configuration;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.MicroServiceApplication;
@@ -30,6 +31,18 @@ public class SecurityConfigurationTest {
 
     @Autowired
     MockMvc mockMvc;
+
+    @Test
+    void accessUnsecuredResourceV3ApiDocsThenOk() throws Exception {
+        mockMvc.perform(get("/v3/api-docs"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void accessUnsecuredResourceSwaggerUiThenOk() throws Exception {
+        mockMvc.perform(get("/swagger-ui/index.html"))
+                .andExpect(status().isOk());
+    }
 
     @Nested
     class Urnenwahlvorbereitung {

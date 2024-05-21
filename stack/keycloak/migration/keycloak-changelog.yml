@@ -13,3 +13,5 @@ includes:
   - path: 08_create-group-all-briefwahl-and-assign.yml
   - path: 09_add-briefwahl-beanstandete-wahbriefe-to-group-all-briefwahl.yml
   - path: add-authorities-infomanagement-konfigurierterwahltag.yml
+  - path: create-and-assign-group-all-wahlvorbereitung.yml
+  - path: add-authorities-wahlvorbereitung-urnenwahlvorbereitung.yml

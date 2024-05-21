@@ -1,0 +1,30 @@
+id: add authorities wahlvorbereitung urnenwahlvorbereitung
+author: MrSebastian
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: Wahlvorbereitung_BUSINESSACTION_GetUrnenwahlVorbereitung
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_BUSINESSACTION_GetUrnenwahlVorbereitung
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Wahlvorbereitung_WRITE_UrnenwahlVorbereitung
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_WRITE_UrnenwahlVorbereitung
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Wahlvorbereitung_DELETE_UrnenwahlVorbereitung
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_DELETE_UrnenwahlVorbereitung
+      clientId: ${SSO_CLIENT_ID}

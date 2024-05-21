@@ -434,6 +434,7 @@
                 <version>3.3.1</version>
                 <configuration>
                     <configLocation>checkstyle.xml</configLocation>
+                    <excludeGeneratedSources>true</excludeGeneratedSources>
                 </configuration>
                 <executions>
                     <execution>

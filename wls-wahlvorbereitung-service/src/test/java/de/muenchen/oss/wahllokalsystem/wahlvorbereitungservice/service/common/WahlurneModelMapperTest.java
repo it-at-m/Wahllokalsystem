@@ -17,7 +17,7 @@ class WahlurneModelMapperTest {
         @Test
         void isMapped() {
             val wahlID = "wahlID";
-            val anzahl = 23l;
+            val anzahl = 23;
             val urneVersiegelt = true;
             val entityToMap = new Wahlurne(wahlID, anzahl, urneVersiegelt);
 

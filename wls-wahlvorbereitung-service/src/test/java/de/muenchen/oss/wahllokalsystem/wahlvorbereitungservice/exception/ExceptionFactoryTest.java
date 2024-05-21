@@ -38,7 +38,6 @@ class ExceptionFactoryTest {
             val expectedResult = FachlicheWlsException.withCode(code).inService(serviceID).buildWithMessage(message);
 
             Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
-
         }
 
     }

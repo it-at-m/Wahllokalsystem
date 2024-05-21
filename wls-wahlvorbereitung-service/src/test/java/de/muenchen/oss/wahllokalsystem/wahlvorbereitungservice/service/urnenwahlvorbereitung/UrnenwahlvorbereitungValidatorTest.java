@@ -35,7 +35,6 @@ class UrnenwahlvorbereitungValidatorTest {
         @Test
         void exceptionWhenWahlbezirkIDIsNull() {
             val exceptionToThrow = FachlicheWlsException.withCode("000").buildWithMessage("error");
-
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG)).thenReturn(exceptionToThrow);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlbezirkIDOrThrow(null)).isSameAs(exceptionToThrow);
@@ -44,7 +43,6 @@ class UrnenwahlvorbereitungValidatorTest {
         @Test
         void exceptionWhenWahlbezirkIDIsEmpty() {
             val exceptionToThrow = FachlicheWlsException.withCode("000").buildWithMessage("error");
-
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG)).thenReturn(exceptionToThrow);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlbezirkIDOrThrow("")).isSameAs(exceptionToThrow);

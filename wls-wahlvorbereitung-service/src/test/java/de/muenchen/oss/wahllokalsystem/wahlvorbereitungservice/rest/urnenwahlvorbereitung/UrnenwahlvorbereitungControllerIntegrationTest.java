@@ -91,7 +91,6 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
             val response = mockMvc.perform(request).andExpect(status().isNoContent()).andReturn();
 
             Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
-
         }
     }
 }

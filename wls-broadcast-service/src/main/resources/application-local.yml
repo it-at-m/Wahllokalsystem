@@ -7,7 +7,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://kubernetes.docker.internal:8100/auth/realms/${realm}/protocol/openid-connect/userinfo
+          jwk-set-uri: http://kubernetes.docker.internal:8100/auth/realms/${realm}/protocol/openid-connect/certs
 
 
 # Define the local keycloak realm here

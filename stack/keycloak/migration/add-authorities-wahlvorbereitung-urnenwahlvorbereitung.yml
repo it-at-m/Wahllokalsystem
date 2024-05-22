@@ -12,6 +12,15 @@ changes:
       clientId: ${SSO_CLIENT_ID}
 
   - addRole:
+      name: Wahlvorbereitung_BUSINESSACTION_PostUrnenwahlVorbereitung
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_BUSINESSACTION_PostUrnenwahlVorbereitung
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
       name: Wahlvorbereitung_WRITE_UrnenwahlVorbereitung
       clientRole: true
       clientId: ${SSO_CLIENT_ID}

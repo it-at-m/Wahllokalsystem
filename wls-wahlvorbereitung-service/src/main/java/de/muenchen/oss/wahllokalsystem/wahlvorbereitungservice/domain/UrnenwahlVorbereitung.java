@@ -29,6 +29,7 @@ public class UrnenwahlVorbereitung {
     @CollectionTable(name = "UWVorbereitung_Urnen", joinColumns = @JoinColumn(name = "vorbereitung_wahlbezirkID"))
     @NotNull
     @Size(min = 1)
+    @Builder.Default
     private java.util.List<Wahlurne> urnenAnzahl = new java.util.ArrayList<>();
 
     private long anzahlWahlkabinen;

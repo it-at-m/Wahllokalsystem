@@ -19,3 +19,26 @@ Authorization: {{ token_type }} {{ auth_token }}
 ### GET wbzID-1
 GET http://localhost:39150/businessActions/urnenwahlVorbereitung/wbzID-1
 Authorization: {{ token_type }} {{ auth_token }}
+
+### POST wbzID-1
+POST http://localhost:39150/businessActions/urnenwahlVorbereitung/wbzID-1
+Authorization: {{ token_type }} {{ auth_token }}
+Content-Type: application/json
+
+{
+  "anzahlNebenraeume": 10,
+  "anzahlWahlkabinen": 12,
+  "anzahlWahltische": 21,
+  "urnenAnzahl": [
+    {
+      "anzahl": 1,
+      "urneVersiegelt": true,
+      "wahlID": "wahlID1"
+    },
+    {
+      "wahlID": "wahlID2",
+      "urneVersiegelt": false,
+      "anzahl": 13
+    }
+  ]
+}

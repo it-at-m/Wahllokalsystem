@@ -41,4 +41,25 @@ class UrnenwahlvorbereitungDTOMapperTest {
         }
     }
 
+    @Nested
+    class ToModel {
+
+        @Test
+        void isMapped() {
+            val anzahlKabinen = 12;
+            val anzahlWahltische = 21;
+            val anzahlNebenraeume = 4;
+            val urnen = List.of(new WahlurneDTO("wahlID1", 2, true), new WahlurneDTO("wahlID2", 4, false));
+            val dtoToMap = new UrnenwahlvorbereitungWriteDTO(anzahlKabinen, anzahlWahltische, anzahlNebenraeume, urnen);
+            val wahlbezirkIDToMap = "wahlbezirkID";
+
+            val result = unitUnderTest.toModel(wahlbezirkIDToMap, dtoToMap);
+
+            val expectedResult = new UrnenwahlvorbereitungModel(wahlbezirkIDToMap, anzahlKabinen, anzahlWahltische, anzahlNebenraeume,
+                    List.of(new WahlurneModel("wahlID1", 2, true), new WahlurneModel("wahlID2", 4, false)));
+
+            Assertions.assertThat(result).isEqualTo(expectedResult);
+        }
+    }
+
 }

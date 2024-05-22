@@ -8,4 +8,6 @@ import org.mapstruct.Mapper;
 public interface UrnenwahlvorbereitungModelMapper {
 
     UrnenwahlvorbereitungModel toModel(UrnenwahlVorbereitung entity);
+
+    UrnenwahlVorbereitung toEntity(UrnenwahlvorbereitungModel model);
 }

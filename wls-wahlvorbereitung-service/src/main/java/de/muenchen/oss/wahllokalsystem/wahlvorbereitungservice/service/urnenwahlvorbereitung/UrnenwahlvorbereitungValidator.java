@@ -16,4 +16,11 @@ public class UrnenwahlvorbereitungValidator {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG);
         }
     }
+
+    public void validModelToSetOrThrow(final UrnenwahlvorbereitungModel modelToValidate) {
+        if (modelToValidate == null || modelToValidate.wahlbezirkID() == null || modelToValidate.wahlbezirkID()
+                .isEmpty() || modelToValidate.urnenAnzahl().isEmpty()) {//urnenanzahl cannot be null because of the records constructor
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG);
+        }
+    }
 }

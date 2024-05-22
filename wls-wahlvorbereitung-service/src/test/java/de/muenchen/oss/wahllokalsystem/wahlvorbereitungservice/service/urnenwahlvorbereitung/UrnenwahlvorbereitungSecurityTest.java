@@ -2,9 +2,12 @@ package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.urnenwah
 
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.TestConstants;
+import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.common.WahlurneModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.SecurityUtils;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
+import java.util.List;
 import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -78,6 +81,61 @@ public class UrnenwahlvorbereitungSecurityTest {
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
             return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_URNENWAHLVORBEREITUNG);
+        }
+    }
+
+    @Nested
+    class SetUrnenwahlvorbereitung {
+
+        @Test
+        void accessGranted() {
+            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_POST_URNENWAHLVORBEITUNG);
+
+            val wahlbezirkID = "wahlbezirkID";
+            val modelToSet = new UrnenwahlvorbereitungModel(wahlbezirkID, 0, 0, 0, List.of(new WahlurneModel("wahlID", 1, true)));
+
+            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
+
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.setUrnenwahlvorbereitung(modelToSet));
+        }
+
+        @Test
+        void bezirkIDPermissionEvaluatorFailed() {
+            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_POST_URNENWAHLVORBEITUNG);
+
+            val wahlbezirkID = "wahlbezirkID";
+            val modelToSet = new UrnenwahlvorbereitungModel(wahlbezirkID, 0, 0, 0, List.of(new WahlurneModel("wahlID", 1, true)));
+
+            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
+
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setUrnenwahlvorbereitung(modelToSet))
+                    .isExactlyInstanceOf(AccessDeniedException.class);
+        }
+
+        @Test
+        void accessDeniedOnServiceAuthorityMissing() {
+            SecurityUtils.runAs(Authorities.REPOSITORY_WRITE_URNENWAHLVORBEREITUNG);
+
+            val wahlbezirkID = "wahlbezirkID";
+            val modelToSet = new UrnenwahlvorbereitungModel(wahlbezirkID, 0, 0, 0, List.of(new WahlurneModel("wahlID", 1, true)));
+
+            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
+
+            Assertions.assertThatThrownBy(() -> unitUnderTest.setUrnenwahlvorbereitung(modelToSet))
+                    .isExactlyInstanceOf(AccessDeniedException.class);
+        }
+
+        @Test
+        void wlsExceptionOnRepoWriteAuthorityMissing() {
+            SecurityUtils.runAs(Authorities.SERVICE_POST_URNENWAHLVORBEREITUNG);
+
+            val wahlbezirkID = "wahlbezirkID";
+            val modelToSet = new UrnenwahlvorbereitungModel(wahlbezirkID, 0, 0, 0, List.of(new WahlurneModel("wahlID", 1, true)));
+
+            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
+
+            Assertions.assertThatThrownBy(() -> unitUnderTest.setUrnenwahlvorbereitung(modelToSet))
+                    .isExactlyInstanceOf(TechnischeWlsException.class);
         }
     }
 }

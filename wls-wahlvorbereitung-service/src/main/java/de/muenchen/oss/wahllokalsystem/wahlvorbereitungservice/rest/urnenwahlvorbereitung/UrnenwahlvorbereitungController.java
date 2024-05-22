@@ -33,6 +33,7 @@ public class UrnenwahlvorbereitungController {
         return withBodyOrNoContent(urnenwahlvorbereitungModel.map(urnenwahlvorbereitungDTOMapper::toDTO));
     }
 
+    @Operation(description = "Aktualisiert die Wahlvorbereitungsdaten des Urnenwahllokals {wahlbezirkID}")
     @PostMapping("{wahlbezirkID}")
     @ResponseStatus(HttpStatus.CREATED)
     public void postUrnenwahlvorbereitung(@PathVariable("wahlbezirkID") final String wahlbezirkID,

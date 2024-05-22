@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfigurat
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.common.security.AuthenticationHandler;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.Konfiguration;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.KonfigurationRepository;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KennbuchstabenListenModel;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationKonfigKey;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationModel;
@@ -31,12 +32,6 @@ public class KonfigurationService {
     private static final String WAHLBEZIRK_ART_USER_DETAIL_KEY = "wahlbezirksArt";
 
     private static final String KONFIGURATION_KEY_KENNBUCHSTABEN = KonfigurationKonfigKey.KENNBUCHSTABEN.name();
-
-    private static final String CODE_POSTKONFIGURATION_NOT_SAVEABLE = "101";
-    private static final String MSG_POSTKONFIGURATION_NOT_SAVEABLE = "postKonfiguration: Die Konfiguration konnte nicht gespeichert werden";
-
-    private static final String CODE_GETKENNBUCHSTABENLISTEN_KONFIGURATION_NOT_FOUND = "103";
-    private static final String MSG_GETKENNBUCHSTABENLISTEN_KONFIGURATION_NOT_FOUND = "getKennbuchstabenListen: Es wurde keinen Kennbuchstaben gefunden.";
 
     private final KonfigurationRepository konfigurationRepository;
 
@@ -99,16 +94,17 @@ public class KonfigurationService {
             konfigurationRepository.save(entityToSave);
         } catch (final Exception onSaveException) {
             log.error("#setKonfiguration unsaveable: ", onSaveException);
-            throw TechnischeWlsException.withCode(CODE_POSTKONFIGURATION_NOT_SAVEABLE).inService(serviceIDFormatter.getId())
-                    .buildWithMessage(MSG_POSTKONFIGURATION_NOT_SAVEABLE);
+            throw TechnischeWlsException.withCode(ExceptionConstants.POSTKONFIGURATION_NOT_SAVEABLE.code()).inService(serviceIDFormatter.getId())
+                    .buildWithMessage(ExceptionConstants.POSTKONFIGURATION_NOT_SAVEABLE.message());
         }
     }
 
     @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_GetKennbuchstabenListen')")
     public KennbuchstabenListenModel getKennbuchstabenListen() {
         val kennbuchstaben = konfigurationRepository.findById(KONFIGURATION_KEY_KENNBUCHSTABEN).orElseThrow(
-                () -> FachlicheWlsException.withCode(CODE_GETKENNBUCHSTABENLISTEN_KONFIGURATION_NOT_FOUND).inService(serviceIDFormatter.getId())
-                        .buildWithMessage(MSG_GETKENNBUCHSTABENLISTEN_KONFIGURATION_NOT_FOUND));
+                () -> FachlicheWlsException.withCode(ExceptionConstants.GETKENNBUCHSTABENLISTEN_KONFIGURATION_NOT_FOUND.code())
+                        .inService(serviceIDFormatter.getId())
+                        .buildWithMessage(ExceptionConstants.GETKENNBUCHSTABENLISTEN_KONFIGURATION_NOT_FOUND.message()));
 
         return konfigurationModelMapper.toKennbuchstabenListenModel(kennbuchstaben.getWert());
     }

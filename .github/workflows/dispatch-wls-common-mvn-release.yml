@@ -22,13 +22,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.branch }}
       - name: Setup git user
         uses: fregante/setup-git-user@v2
       - name: Set up JDK 17 and OSSRH auth / GPG signing
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: "17"
           distribution: "temurin"
@@ -51,7 +51,7 @@ jobs:
           CENTRAL_PASSWORD: ${{ secrets.sonatype_password }}
       - name: Create GitHub Release
         id: create_release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.event.inputs.release-tag }}
           draft: false

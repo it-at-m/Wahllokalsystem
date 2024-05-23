@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.waehlerverz
 
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.AbstractController;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.waehlerverzeichnis.WaehlerverzeichnisService;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -27,14 +28,14 @@ public class WaehlerverzeichnisController extends AbstractController {
     @ResponseStatus(HttpStatus.CREATED)
     public void postWaehlerverzeichnis(@PathVariable("wahlbezirkID") final String wahlbezirkID, @PathVariable("wvzNummer") final long wvzNummer,
             @RequestBody final WaehlerverzeichnisWriteDTO requestBody) {
-        val modelToSet = waehlerverzeichnisDTOMapper.toModel(wahlbezirkID, wvzNummer, requestBody);
+        val modelToSet = waehlerverzeichnisDTOMapper.toModel(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, wvzNummer), requestBody);
         waehlerverzeichnisService.setWaehlververzeichnis(modelToSet);
     }
 
     @GetMapping("{wahlbezirkID}/{wvzNummer}")
     public ResponseEntity<WaehlerverzeichnisDTO> getWaehlerverzeichnis(@PathVariable("wahlbezirkID") final String wahlbezirkID,
             @PathVariable("wvzNummer") final long wvzNummer) {
-        val waehlerverzeichnisModel = waehlerverzeichnisService.getWaehlerverzeichnis(waehlerverzeichnisDTOMapper.toReference(wahlbezirkID, wvzNummer));
+        val waehlerverzeichnisModel = waehlerverzeichnisService.getWaehlerverzeichnis(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, wvzNummer));
         return withBodyOrNoContent(waehlerverzeichnisModel.map(waehlerverzeichnisDTOMapper::toDto));
     }
 

@@ -11,6 +11,7 @@
     <artifactId>exception</artifactId>
     <version>1.0.1-SNAPSHOT</version>
     <description>Übergreifende Exception Aspekte</description>
+    <url>${wls.github.url}</url>
 
     <dependencies>
         <dependency>

@@ -1,0 +1,39 @@
+id: add authorities wahlvorbereitung waehlerverzeichnis
+author: MrSebastian
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: Wahlvorbereitung_BUSINESSACTION_GetWaehlerverzeichnis
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_BUSINESSACTION_GetWaehlerverzeichnis
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Wahlvorbereitung_BUSINESSACTION_PostWaehlerverzeichnis
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_BUSINESSACTION_PostWaehlerverzeichnis
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Wahlvorbereitung_WRITE_Waehlerverzeichnis
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_WRITE_Waehlerverzeichnis
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Wahlvorbereitung_DELETE_Waehlerverzeichnis
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_DELETE_Waehlerverzeichnis
+      clientId: ${SSO_CLIENT_ID}

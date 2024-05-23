@@ -15,3 +15,4 @@ includes:
   - path: add-authorities-infomanagement-konfigurierterwahltag.yml
   - path: create-and-assign-group-all-wahlvorbereitung.yml
   - path: add-authorities-wahlvorbereitung-urnenwahlvorbereitung.yml
+  - path: add-authorities-wahlvorbereitung-waehlerverzeichnis.yml

@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain;
 
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
+import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
@@ -20,9 +21,11 @@ public class Waehlerverzeichnis {
 
     private Boolean verzeichnisLagVor;
 
+    @Column(name = "berichtigungvorbeginn")
     private Boolean berichtigungVorBeginnDerAbstimmung;
 
     private Boolean nachtraeglicheBerichtigung;
 
+    @Column(name = "mitteilungungueltigescheine")
     private Boolean mitteilungUeberUngueltigeWahlscheineErhalten;
 }

@@ -1,6 +1,6 @@
 create table Waehlerverzeichnis
 (
-    waehlerverzeichnisNummer    NUMBER(19, 0) not null,
+    waehlerverzeichnisNummer    BIGINT        not null,
     wahlbezirkid                varchar(1000) not null,
     verzeichnislagvor           boolean,
     berichtigungvorbeginn       boolean,

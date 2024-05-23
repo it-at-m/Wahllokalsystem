@@ -1,5 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.urnenwahlvorbereitung;
 
+import static org.mockito.ArgumentMatchers.eq;
+
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.urnenwahlvorbereitung.UrnenwahlvorbereitungModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.urnenwahlvorbereitung.UrnenwahlvorbereitungService;
 import java.util.Collections;
@@ -56,6 +58,23 @@ class UrnenwahlvorbereitungControllerTest {
 
             Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
             Assertions.assertThat(result.getBody()).isNull();
+        }
+    }
+
+    @Nested
+    class PostUrnenwahlvorbereitung {
+
+        @Test
+        void requestIsMappedAndSendToService() {
+            val wahlbezirkID = "wahlbezirkID";
+            val requestBody = new UrnenwahlvorbereitungWriteDTO(0, 0, 0, Collections.emptyList());
+
+            val mockedMappedRequest = new UrnenwahlvorbereitungModel(wahlbezirkID, 0, 0, 0, Collections.emptyList());
+
+            Mockito.when(urnenwahlvorbereitungDTOMapper.toModel(eq(wahlbezirkID), eq(requestBody))).thenReturn(mockedMappedRequest);
+
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postUrnenwahlvorbereitung(wahlbezirkID, requestBody));
+            Mockito.verify(service).setUrnenwahlvorbereitung(mockedMappedRequest);
         }
     }
 

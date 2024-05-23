@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.configuration;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -14,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.actuate.observability.AutoCon
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -61,6 +63,24 @@ public class SecurityConfigurationTest {
             val request = MockMvcRequestBuilders.get("/businessActions/urnenwahlVorbereitung/wahlbezirkID");
 
             mockMvc.perform(request).andExpect(status().isNoContent());
+        }
+
+        @Test
+        @WithAnonymousUser
+        void accessPostUrnenwahlvorbereitungUnauthorizedThenUnauthorized() throws Exception {
+            val request = MockMvcRequestBuilders.post("/businessActions/urnenwahlVorbereitung/wahlbezirkID").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON).content("{}");
+
+            mockMvc.perform(request).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessPostUrnenwahlvorbereitungAuthorizedThenIsCreated() throws Exception {
+            val request = MockMvcRequestBuilders.post("/businessActions/urnenwahlVorbereitung/wahlbezirkID").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON).content("{}");
+
+            mockMvc.perform(request).andExpect(status().isCreated());
         }
     }
 }

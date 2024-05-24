@@ -29,7 +29,7 @@ public class WaehlerverzeichnisController extends AbstractController {
     public void postWaehlerverzeichnis(@PathVariable("wahlbezirkID") final String wahlbezirkID, @PathVariable("wvzNummer") final long wvzNummer,
             @RequestBody final WaehlerverzeichnisWriteDTO requestBody) {
         val modelToSet = waehlerverzeichnisDTOMapper.toModel(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, wvzNummer), requestBody);
-        waehlerverzeichnisService.setWaehlververzeichnis(modelToSet);
+        waehlerverzeichnisService.setWaehlerverzeichnis(modelToSet);
     }
 
     @GetMapping("{wahlbezirkID}/{wvzNummer}")

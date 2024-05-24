@@ -43,7 +43,7 @@ public class WaehlerverzeichnisService {
     }
 
     @PreAuthorize("hasAuthority('Wahlvorbereitung_BUSINESSACTION_PostWaehlerverzeichnis')")
-    public void setWaehlververzeichnis(@NotNull final WaehlerverzeichnisModel waehlververzeichnisToSet) {
+    public void setWaehlerverzeichnis(@NotNull final WaehlerverzeichnisModel waehlververzeichnisToSet) {
         waehlerverzeichnisValidator.valideModelToSetOrThrow(waehlververzeichnisToSet);
 
         try {

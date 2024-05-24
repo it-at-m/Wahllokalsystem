@@ -22,9 +22,9 @@ public class WaehlerverzeichnisValidator {
     public void validModelToSetOrThrow(final WaehlerverzeichnisModel waehlerverzeichnisModelToSet) {
         if (waehlerverzeichnisModelToSet == null || waehlerverzeichnisModelToSet.bezirkIDUndWaehlerverzeichnisNummer() == null
                 || waehlerverzeichnisModelToSet.bezirkIDUndWaehlerverzeichnisNummer()
-                .getWaehlerverzeichnisNummer() == null
+                        .getWaehlerverzeichnisNummer() == null
                 || waehlerverzeichnisModelToSet.bezirkIDUndWaehlerverzeichnisNummer()
-                .getWahlbezirkID() == null
+                        .getWahlbezirkID() == null
                 || waehlerverzeichnisModelToSet.bezirkIDUndWaehlerverzeichnisNummer().getWahlbezirkID().isEmpty()) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG);
         }

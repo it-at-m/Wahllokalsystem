@@ -27,8 +27,8 @@ public class WaehlerverzeichnisService {
     private final ExceptionFactory exceptionFactory;
 
     @PreAuthorize(
-            "hasAuthority('Wahlvorbereitung_BUSINESSACTION_GetWaehlerverzeichnis')"
-                    + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#ref.wahlbezirkID, authentication)"
+        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_GetWaehlerverzeichnis')"
+                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#ref.wahlbezirkID, authentication)"
     )
     public Optional<WaehlerverzeichnisModel> getWaehlerverzeichnis(@P("ref") final BezirkIDUndWaehlerverzeichnisNummer waehlerverzeichnisReference) {
         log.debug("#getWaehlerverzeichnis");

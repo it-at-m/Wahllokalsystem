@@ -27,28 +27,28 @@ public class WaehlerverzeichnisService {
     private final ExceptionFactory exceptionFactory;
 
     @PreAuthorize(
-        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_GetWaehlerverzeichnis')"
-                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#ref.wahlbezirkID, authentication)"
+            "hasAuthority('Wahlvorbereitung_BUSINESSACTION_GetWaehlerverzeichnis')"
+                    + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#ref.wahlbezirkID, authentication)"
     )
     public Optional<WaehlerverzeichnisModel> getWaehlerverzeichnis(@P("ref") final BezirkIDUndWaehlerverzeichnisNummer waehlerverzeichnisReference) {
         log.debug("#getWaehlerverzeichnis");
         log.debug("in: wahlbezirkID & wvzNummer > {}", waehlerverzeichnisReference);
 
-        waehlerverzeichnisValidator.valideWaehlerverzeichnisReferenceOrThrow(waehlerverzeichnisReference);
+        waehlerverzeichnisValidator.validWaehlerverzeichnisReferenceOrThrow(waehlerverzeichnisReference);
 
-        val result = waehlerverzeichnisRepository.findById(waehlerverzeichnisReference).map(waehlerverzeichnisModelMapper::toModel);
-        log.debug("out: waehlerverzeichnis > {}", result.orElse(null));
+        val waehlerverzeichnisFromRepo = waehlerverzeichnisRepository.findById(waehlerverzeichnisReference).map(waehlerverzeichnisModelMapper::toModel);
+        log.debug("out: waehlerverzeichnis > {}", waehlerverzeichnisFromRepo.orElse(null));
 
-        return result;
+        return waehlerverzeichnisFromRepo;
     }
 
     @PreAuthorize("hasAuthority('Wahlvorbereitung_BUSINESSACTION_PostWaehlerverzeichnis')")
     public void setWaehlerverzeichnis(@NotNull final WaehlerverzeichnisModel waehlververzeichnisToSet) {
-        waehlerverzeichnisValidator.valideModelToSetOrThrow(waehlververzeichnisToSet);
+        waehlerverzeichnisValidator.validModelToSetOrThrow(waehlververzeichnisToSet);
 
         try {
             waehlerverzeichnisRepository.save(waehlerverzeichnisModelMapper.toEntity(waehlververzeichnisToSet));
-        } catch (Exception onSaveException) {
+        } catch (final Exception onSaveException) {
             log.error("Fehler beim speichern: ", onSaveException);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
         }

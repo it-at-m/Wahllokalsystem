@@ -101,7 +101,7 @@ public class SecurityConfigurationTest {
 
         @Test
         @WithMockUser
-        void accessGetWaehlerverzeichnisAuthorizedThenIsNoContent() throws Exception {
+        void accessGetWaehlerverzeichnisAuthorizedThenNoContent() throws Exception {
             val request = MockMvcRequestBuilders.get("/businessActions/waehlerverzeichnis/waehlerbezirkID/1");
 
             mockMvc.perform(request).andExpect(status().isNoContent());
@@ -118,7 +118,7 @@ public class SecurityConfigurationTest {
 
         @Test
         @WithMockUser
-        void accessPostWaehlerverzeichnisAuthorizedThenIsCreated() throws Exception {
+        void accessPostWaehlerverzeichnisAuthorizedThenCreated() throws Exception {
             val request = MockMvcRequestBuilders.post("/businessActions/waehlerverzeichnis/waehlerbezirkID/1")
                     .with(csrf()).contentType(MediaType.APPLICATION_JSON).content("{}");
 

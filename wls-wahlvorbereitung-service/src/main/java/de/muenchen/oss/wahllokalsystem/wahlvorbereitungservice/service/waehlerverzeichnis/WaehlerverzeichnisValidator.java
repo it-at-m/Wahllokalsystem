@@ -12,19 +12,19 @@ public class WaehlerverzeichnisValidator {
 
     private final ExceptionFactory exceptionFactory;
 
-    public void valideWaehlerverzeichnisReferenceOrThrow(final BezirkIDUndWaehlerverzeichnisNummer waehlerverzeichnisReference) {
+    public void validWaehlerverzeichnisReferenceOrThrow(final BezirkIDUndWaehlerverzeichnisNummer waehlerverzeichnisReference) {
         if (waehlerverzeichnisReference == null || waehlerverzeichnisReference.getWahlbezirkID() == null || waehlerverzeichnisReference.getWahlbezirkID()
                 .isEmpty()) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG);
         }
     }
 
-    public void valideModelToSetOrThrow(final WaehlerverzeichnisModel waehlerverzeichnisModelToSet) {
+    public void validModelToSetOrThrow(final WaehlerverzeichnisModel waehlerverzeichnisModelToSet) {
         if (waehlerverzeichnisModelToSet == null || waehlerverzeichnisModelToSet.bezirkIDUndWaehlerverzeichnisNummer() == null
                 || waehlerverzeichnisModelToSet.bezirkIDUndWaehlerverzeichnisNummer()
-                        .getWaehlerverzeichnisNummer() == null
+                .getWaehlerverzeichnisNummer() == null
                 || waehlerverzeichnisModelToSet.bezirkIDUndWaehlerverzeichnisNummer()
-                        .getWahlbezirkID() == null
+                .getWahlbezirkID() == null
                 || waehlerverzeichnisModelToSet.bezirkIDUndWaehlerverzeichnisNummer().getWahlbezirkID().isEmpty()) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG);
         }

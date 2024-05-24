@@ -24,13 +24,13 @@ class WaehlerverzeichnisValidatorTest {
     WaehlerverzeichnisValidator unitUnderTest;
 
     @Nested
-    class ValideWaehlerverzeichnisReferenceOrThrow {
+    class ValidWaehlerverzeichnisReferenceOrThrow {
 
         @Test
         void noExceptionWhenReferenceIsValid() {
             val validReference = initValid();
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.valideWaehlerverzeichnisReferenceOrThrow(validReference));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWaehlerverzeichnisReferenceOrThrow(validReference));
         }
 
         @Test
@@ -38,7 +38,7 @@ class WaehlerverzeichnisValidatorTest {
             val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG)).thenReturn(mockedException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideWaehlerverzeichnisReferenceOrThrow(null)).isSameAs(mockedException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWaehlerverzeichnisReferenceOrThrow(null)).isSameAs(mockedException);
         }
 
         @Test
@@ -49,7 +49,7 @@ class WaehlerverzeichnisValidatorTest {
             val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG)).thenReturn(mockedException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideWaehlerverzeichnisReferenceOrThrow(null)).isSameAs(mockedException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWaehlerverzeichnisReferenceOrThrow(null)).isSameAs(mockedException);
         }
 
         @Test
@@ -60,7 +60,7 @@ class WaehlerverzeichnisValidatorTest {
             val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG)).thenReturn(mockedException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideWaehlerverzeichnisReferenceOrThrow(null)).isSameAs(mockedException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWaehlerverzeichnisReferenceOrThrow(null)).isSameAs(mockedException);
         }
 
         private BezirkIDUndWaehlerverzeichnisNummer initValid() {
@@ -69,13 +69,13 @@ class WaehlerverzeichnisValidatorTest {
     }
 
     @Nested
-    class ValideModelToSetOrThrow {
+    class ValidModelToSetOrThrow {
 
         @Test
         void noExceptionWhenModelIsValid() {
             val validModel = initValidModel().build();
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.valideModelToSetOrThrow(validModel));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(validModel));
         }
 
         @Test
@@ -83,7 +83,7 @@ class WaehlerverzeichnisValidatorTest {
             val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG)).thenReturn(mockedException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideModelToSetOrThrow(null)).isSameAs(mockedException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(null)).isSameAs(mockedException);
         }
 
         @Test
@@ -93,7 +93,7 @@ class WaehlerverzeichnisValidatorTest {
             val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG)).thenReturn(mockedException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideModelToSetOrThrow(invalidModel)).isSameAs(mockedException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(invalidModel)).isSameAs(mockedException);
         }
 
         @Test
@@ -104,7 +104,7 @@ class WaehlerverzeichnisValidatorTest {
             val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG)).thenReturn(mockedException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideModelToSetOrThrow(invalidModel)).isSameAs(mockedException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(invalidModel)).isSameAs(mockedException);
         }
 
         @Test
@@ -115,7 +115,7 @@ class WaehlerverzeichnisValidatorTest {
             val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG)).thenReturn(mockedException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideModelToSetOrThrow(invalidModel)).isSameAs(mockedException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(invalidModel)).isSameAs(mockedException);
         }
 
         @Test
@@ -126,7 +126,7 @@ class WaehlerverzeichnisValidatorTest {
             val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG)).thenReturn(mockedException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideModelToSetOrThrow(invalidModel)).isSameAs(mockedException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(invalidModel)).isSameAs(mockedException);
         }
 
         private WaehlerverzeichnisModel.WaehlerverzeichnisModelBuilder initValidModel() {

@@ -70,7 +70,7 @@ class WaehlerverzeichnisServiceTest {
 
             val mockedValidationException = new RuntimeException("validation failed");
 
-            Mockito.doThrow(mockedValidationException).when(waehlerverzeichnisValidator).valideWaehlerverzeichnisReferenceOrThrow(waehlerverzeichnisReference);
+            Mockito.doThrow(mockedValidationException).when(waehlerverzeichnisValidator).validWaehlerverzeichnisReferenceOrThrow(waehlerverzeichnisReference);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWaehlerverzeichnis(waehlerverzeichnisReference))
                     .isSameAs(mockedValidationException);
@@ -99,7 +99,7 @@ class WaehlerverzeichnisServiceTest {
 
             val mockedValidationException = new RuntimeException("validation failed");
 
-            Mockito.doThrow(mockedValidationException).when(waehlerverzeichnisValidator).valideModelToSetOrThrow(modelToSave);
+            Mockito.doThrow(mockedValidationException).when(waehlerverzeichnisValidator).validModelToSetOrThrow(modelToSave);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setWaehlerverzeichnis(modelToSave)).isSameAs(mockedValidationException);
         }

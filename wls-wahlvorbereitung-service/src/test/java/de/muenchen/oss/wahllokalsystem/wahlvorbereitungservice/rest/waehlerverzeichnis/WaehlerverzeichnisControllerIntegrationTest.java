@@ -129,7 +129,7 @@ public class WaehlerverzeichnisControllerIntegrationTest {
                     objectMapper.writeValueAsString(requestBody));
 
             val mockedValidationException = exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG);
-            Mockito.doThrow(mockedValidationException).when(waehlerverzeichnisValidator).valideModelToSetOrThrow(any());
+            Mockito.doThrow(mockedValidationException).when(waehlerverzeichnisValidator).validModelToSetOrThrow(any());
 
             val result = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
             val wlsExceptionFromBody = objectMapper.readValue(result.getResponse().getContentAsString(StandardCharsets.UTF_8), WlsExceptionDTO.class);

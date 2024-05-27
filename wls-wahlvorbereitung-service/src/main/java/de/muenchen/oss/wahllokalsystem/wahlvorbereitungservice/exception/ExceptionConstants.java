@@ -13,7 +13,7 @@ public class ExceptionConstants {
     private static final String MSG_PARAMS_UNVOLLSTAENDIG = "Fehler beim Speichern: Parameter unvollständig.";
 
     private static final String CODE_UNSAVEABLE = "903";
-    private static final String MSG_UNSAVEABLE = "Fehler beim speichern: Daten konnten nich gespeichert werden.";
+    private static final String MSG_UNSAVEABLE = "Fehler beim speichern: Daten konnten nicht gespeichert werden.";
 
     public static ExceptionDataWrapper SUCHKRITERIEN_UNVOLLSTAENDIG = new ExceptionDataWrapper(CODE_SUCHKRITERIEN_UNVOLLSTAENDIG,
             MSG_SUCHKRITERIEN_UNVOLLSTAENDIG);

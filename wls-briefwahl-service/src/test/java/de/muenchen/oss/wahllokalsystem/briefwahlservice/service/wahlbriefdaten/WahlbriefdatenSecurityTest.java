@@ -82,9 +82,9 @@ public class WahlbriefdatenSecurityTest {
             val requiredAuthorities = Authorities.ALL_AUTHORITIES_GET_WAHLBRIEFDATEN;
             return Arrays.stream(requiredAuthorities)
                     .map(authorityToRemove ->
-                            //remove one authority from all required authorities
-                            Arguments.of(Arrays.stream(requiredAuthorities)
-                                    .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+                    //remove one authority from all required authorities
+                    Arguments.of(Arrays.stream(requiredAuthorities)
+                            .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
         }
 
     }
@@ -135,9 +135,9 @@ public class WahlbriefdatenSecurityTest {
             val requiredAuthorities = Authorities.ALL_AUTHORITIES_SET_WAHLBRIEFDATEN;
             return Arrays.stream(requiredAuthorities)
                     .map(authorityToRemove ->
-                            //remove one authority from all required authorities
-                            Arguments.of(Arrays.stream(requiredAuthorities)
-                                    .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+                    //remove one authority from all required authorities
+                    Arguments.of(Arrays.stream(requiredAuthorities)
+                            .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
         }
     }
 }

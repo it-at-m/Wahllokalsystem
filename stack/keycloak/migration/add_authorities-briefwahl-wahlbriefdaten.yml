@@ -1,0 +1,39 @@
+id: add authorities briefwahl wahlbriefdaten
+author: MrSebastian
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: Briefwahl_BUSINESSACTION_GetWahlbriefdaten
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Briefwahl_BUSINESSACTION_GetWahlbriefdaten
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Briefwahl_BUSINESSACTION_PostWahlbriefdaten
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Briefwahl_BUSINESSACTION_PostWahlbriefdaten
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Briefwahl_WRITE_Wahlbriefdaten
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Briefwahl_WRITE_Wahlbriefdaten
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Briefwahl_DELETE_Wahlbriefdaten
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Briefwahl_DELETE_Wahlbriefdaten
+      clientId: ${SSO_CLIENT_ID}

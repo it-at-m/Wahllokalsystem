@@ -11,6 +11,8 @@
     <artifactId>security</artifactId>
     <version>1.0.1-SNAPSHOT</version>
     <description>Uebergreifende Security Aspekte</description>
+    <url>${wls.github.url}</url>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.security</groupId>

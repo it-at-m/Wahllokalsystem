@@ -13,6 +13,12 @@
     <description>Übergreifende Exception Aspekte</description>
     <url>${wls.github.url}</url>
 
+    <scm>
+        <url>${wls.github.url}</url>
+        <connection>${wls.github.scm.connection}</connection>
+        <developerConnection>${wls.github.scm.connection}</developerConnection>
+    </scm>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>

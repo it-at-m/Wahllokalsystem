@@ -9,7 +9,7 @@
     <name>wls-common</name>
     <packaging>pom</packaging>
     <description>Serviceübergreifende Aspekte</description>
-    <url>https://github.com/it-at-m/Wahllokalsystem</url>
+    <url>${wls.github.url}</url>
 
     <licenses>
         <license>
@@ -30,6 +30,7 @@
         <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+        <wls.github.url>https://github.com/it-at-m/Wahllokalsystem</wls.github.url>
     </properties>
 
     <modules>
@@ -174,7 +175,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>10.16.0</version>
+                            <version>10.17.0</version>
                         </dependency>
                     </dependencies>
                 </plugin>

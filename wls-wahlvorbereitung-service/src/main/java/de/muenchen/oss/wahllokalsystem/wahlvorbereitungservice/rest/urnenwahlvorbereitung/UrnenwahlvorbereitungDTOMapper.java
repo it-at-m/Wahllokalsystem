@@ -8,4 +8,6 @@ import org.mapstruct.Mapper;
 public interface UrnenwahlvorbereitungDTOMapper {
 
     UrnenwahlvorbereitungDTO toDTO(UrnenwahlvorbereitungModel model);
+
+    UrnenwahlvorbereitungModel toModel(String wahlbezirkID, UrnenwahlvorbereitungWriteDTO dto);
 }

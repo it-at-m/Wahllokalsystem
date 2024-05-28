@@ -5,6 +5,9 @@ import static org.mockito.Mockito.times;
 
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.UrnenwahlVorbereitung;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.UrnenwahlVorbereitungRepository;
+import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.exception.ExceptionFactory;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -27,6 +30,9 @@ class UrnenwahlvorbereitungServiceTest {
 
     @Mock
     UrnenwahlvorbereitungValidator urnenwahlvorbereitungValidator;
+
+    @Mock
+    ExceptionFactory exceptionFactory;
 
     @InjectMocks
     UrnenwahlvorbereitungService unitUnderTest;
@@ -72,6 +78,52 @@ class UrnenwahlvorbereitungServiceTest {
             Mockito.doThrow(mockedValidatorException).when(urnenwahlvorbereitungValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getUrnenwahlvorbereitung(wahlbezirkID)).isSameAs(mockedValidatorException);
+        }
+    }
+
+    @Nested
+    class SetUrnenwahlvorbereitung {
+
+        @Test
+        void isSaved() {
+            val modelToSave = UrnenwahlvorbereitungModel.builder().build();
+
+            val mockedModelAsEntity = new UrnenwahlVorbereitung();
+            Mockito.when(urnenwahlvorbereitungModelMapper.toEntity(modelToSave)).thenReturn(mockedModelAsEntity);
+
+            Mockito.doNothing().when(urnenwahlvorbereitungValidator).validModelToSetOrThrow(modelToSave);
+
+            unitUnderTest.setUrnenwahlvorbereitung(modelToSave);
+
+            Mockito.verify(urnenwahlVorbereitungRepository).save(mockedModelAsEntity);
+        }
+
+        @Test
+        void exceptionFromValidationGotThrown() {
+            val modelToSave = UrnenwahlvorbereitungModel.builder().build();
+
+            val mockedValidationException = new RuntimeException("validation failed");
+
+            Mockito.doThrow(mockedValidationException).when(urnenwahlvorbereitungValidator).validModelToSetOrThrow(modelToSave);
+
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setUrnenwahlvorbereitung(modelToSave)).isSameAs(mockedValidationException);
+        }
+
+        @Test
+        void exceptionFromSavingIsMapped() {
+            val modelToSave = UrnenwahlvorbereitungModel.builder().build();
+
+            val mockedModelAsEntity = new UrnenwahlVorbereitung();
+            val mockedSaveException = new RuntimeException("fail on save");
+            val mockedFactoryException = TechnischeWlsException.withCode("code").buildWithMessage("message");
+
+            Mockito.when(urnenwahlvorbereitungModelMapper.toEntity(modelToSave)).thenReturn(mockedModelAsEntity);
+            Mockito.doThrow(mockedSaveException).when(urnenwahlVorbereitungRepository).save(mockedModelAsEntity);
+            Mockito.doNothing().when(urnenwahlvorbereitungValidator).validModelToSetOrThrow(modelToSave);
+            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE)).thenReturn(mockedFactoryException);
+
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setUrnenwahlvorbereitung(modelToSave)).usingRecursiveComparison()
+                    .isSameAs(mockedFactoryException);
         }
     }
 

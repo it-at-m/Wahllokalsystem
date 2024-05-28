@@ -1,6 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.urnenwahlvorbereitung;
 
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.UrnenwahlVorbereitungRepository;
+import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.exception.ExceptionFactory;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,7 @@ public class UrnenwahlvorbereitungService {
     private final UrnenwahlvorbereitungModelMapper urnenwahlvorbereitungModelMapper;
 
     private final UrnenwahlvorbereitungValidator urnenwahlvorbereitungValidator;
+    private final ExceptionFactory exceptionFactory;
 
     @PreAuthorize(
         "hasAuthority('Wahlvorbereitung_BUSINESSACTION_GetUrnenwahlVorbereitung')"
@@ -34,5 +37,23 @@ public class UrnenwahlvorbereitungService {
         log.debug("out: urnenwahlVorbereitung > {}", dataFromRepo.orElse(null));
 
         return dataFromRepo.map(urnenwahlvorbereitungModelMapper::toModel);
+    }
+
+    @PreAuthorize(
+        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_PostUrnenwahlVorbereitung')"
+                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#vorbereitungToSet.wahlbezirkID, authentication)"
+    )
+    public void setUrnenwahlvorbereitung(@P("vorbereitungToSet") final UrnenwahlvorbereitungModel vorbereitungToSet) {
+        log.debug("#postUrnenwahlVorbereitung");
+        log.debug("in: urnenwahlVorbereitung > {}", vorbereitungToSet);
+
+        urnenwahlvorbereitungValidator.validModelToSetOrThrow(vorbereitungToSet);
+
+        try {
+            urnenwahlVorbereitungRepository.save(urnenwahlvorbereitungModelMapper.toEntity(vorbereitungToSet));
+        } catch (final Exception onSaveException) {
+            log.error("Fehler beim speichern: ", onSaveException);
+            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
+        }
     }
 }

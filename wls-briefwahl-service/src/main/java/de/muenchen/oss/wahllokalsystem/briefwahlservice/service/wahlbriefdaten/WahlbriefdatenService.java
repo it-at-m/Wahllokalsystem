@@ -5,6 +5,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,7 +23,7 @@ public class WahlbriefdatenService {
             "hasAuthority('Briefwahl_BUSINESSACTION_GetWahlbriefdaten')"
                     + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
     )
-    public Optional<WahlbriefdatenModel> getWahlbriefdaten(final String wahlbezirkID) {
+    public Optional<WahlbriefdatenModel> getWahlbriefdaten(@P("wahlbezirkID") final String wahlbezirkID) {
         log.info("#getBeanstandeteWahlbriefe");
         wahlbriefdatenValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
 
@@ -31,9 +32,9 @@ public class WahlbriefdatenService {
 
     @PreAuthorize(
             "hasAuthority('Briefwahl_BUSINESSACTION_PostWahlbriefdaten')"
-                    + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbriefdaten?.getWahlbezirkID(), authentication)"
+                    + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param?.wahlbezirkID(), authentication)"
     )
-    public void setWahlbriefdaten(final WahlbriefdatenModel wahlbriefdatenToSet) {
+    public void setWahlbriefdaten(@P("param") final WahlbriefdatenModel wahlbriefdatenToSet) {
         log.info("#postBeanstandeteWahlbriefe");
         wahlbriefdatenValidator.validWahlbriefdatenToSetOrThrow(wahlbriefdatenToSet);
 

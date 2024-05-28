@@ -50,9 +50,9 @@ public class KonfigurationService {
         konfigurationModelValidator.validOrThrowGetKonfigurationByKey(konfigurationKonfigKey);
 
         val wahlbezirkArtOfRequest = getWahlbezirkArt();
-        val alternativKey = konfigurationModelMapper.getAlternativKey(konfigurationKonfigKey, wahlbezirkArtOfRequest);
+        val alternativeKey = konfigurationModelMapper.getAlternativeKey(konfigurationKonfigKey, wahlbezirkArtOfRequest);
 
-        val repositoryLookupKey = alternativKey.orElse(konfigurationKonfigKey);
+        val repositoryLookupKey = alternativeKey.orElse(konfigurationKonfigKey);
         val konfigurationFromRepo = konfigurationRepository.findById(repositoryLookupKey.name());
 
         return konfigurationFromRepo.map(konfigurationModelMapper::toModel);

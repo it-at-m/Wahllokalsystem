@@ -39,16 +39,16 @@ class KonfigurationModelMapperTest {
     }
 
     @Nested
-    class GetAlternativKey {
+    class GetAlternativeKey {
 
         @Test
-        void alternativKeyWasFound() {
-            Assertions.assertThat(unitUnderTest.getAlternativKey(KonfigurationKonfigKey.FRUEHESTE_EROEFFNUNGSZEIT, WahlbezirkArt.BWB).get()).isNotNull();
+        void alternativeKeyWasFound() {
+            Assertions.assertThat(unitUnderTest.getAlternativeKey(KonfigurationKonfigKey.FRUEHESTE_EROEFFNUNGSZEIT, WahlbezirkArt.BWB).get()).isNotNull();
         }
 
         @Test
-        void noAlternativKeyWasFound() {
-            Assertions.assertThat(unitUnderTest.getAlternativKey(KonfigurationKonfigKey.WILLKOMMENSTEXT, WahlbezirkArt.BWB)).isEmpty();
+        void noAlternativeKeyWasFound() {
+            Assertions.assertThat(unitUnderTest.getAlternativeKey(KonfigurationKonfigKey.WILLKOMMENSTEXT, WahlbezirkArt.BWB)).isEmpty();
         }
     }
 

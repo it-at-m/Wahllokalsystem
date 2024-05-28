@@ -38,12 +38,12 @@ public interface KonfigurationModelMapper {
     char KENNBUCHSTABEN_LISTE_SEPARATOR = ';';
     char KENNBUCHSTABEN_SEPARATOR = ',';
 
-    default Optional<KonfigurationKonfigKey> getAlternativKey(final KonfigurationKonfigKey konfigKey, final WahlbezirkArt wahlbezirkArt) {
-        val alternativKey = alternativeKeys.get(konfigKey);
-        if (alternativKey == null) {
+    default Optional<KonfigurationKonfigKey> getAlternativeKey(final KonfigurationKonfigKey konfigKey, final WahlbezirkArt wahlbezirkArt) {
+        val alternativeKey = alternativeKeys.get(konfigKey);
+        if (alternativeKey == null) {
             return Optional.empty();
         } else {
-            return Optional.ofNullable(alternativKey.get(wahlbezirkArt));
+            return Optional.ofNullable(alternativeKey.get(wahlbezirkArt));
         }
     }
 

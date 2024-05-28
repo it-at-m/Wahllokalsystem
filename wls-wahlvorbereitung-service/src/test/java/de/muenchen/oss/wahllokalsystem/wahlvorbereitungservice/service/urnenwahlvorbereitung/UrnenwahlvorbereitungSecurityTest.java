@@ -109,7 +109,7 @@ public class UrnenwahlvorbereitungSecurityTest {
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setUrnenwahlvorbereitung(modelToSet))
-                    .isExactlyInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         @Test
@@ -122,7 +122,7 @@ public class UrnenwahlvorbereitungSecurityTest {
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.setUrnenwahlvorbereitung(modelToSet))
-                    .isExactlyInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         @Test

@@ -160,7 +160,7 @@ class KonfigurierterWahltagServiceTest {
             Mockito.when(serviceIDFormatter.getId()).thenReturn(SERVICDE_ID);
 
             val expectedException = FachlicheWlsException.withCode("105").inService(SERVICDE_ID)
-                    .buildWithMessage("deleteKonfigurierterWahltag: Der konfigurierte Wahltag konnte nicht geloescht werden.");
+                    .buildWithMessage("deleteKonfigurierterWahltag: Der konfigurierte Wahltag konnte nicht gelöscht werden.");
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.deleteKonfigurierterWahltag(wahltagID))
                     .usingRecursiveComparison().isEqualTo(expectedException);

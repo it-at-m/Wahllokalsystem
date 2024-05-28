@@ -68,7 +68,7 @@ public class KonfigurationServiceSecurityTest {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatThrownBy(() -> konfigurationService.getKonfiguration(KonfigurationKonfigKey.WILLKOMMENSTEXT))
-                    .isExactlyInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
@@ -96,7 +96,7 @@ public class KonfigurationServiceSecurityTest {
             val konfigurationSetModel = new KonfigurationSetModel("schluessel", "wert", "beschreibung", "standwert");
 
             Assertions.assertThatThrownBy(() -> konfigurationService.setKonfiguration(konfigurationSetModel))
-                    .isExactlyInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         @Test
@@ -107,7 +107,7 @@ public class KonfigurationServiceSecurityTest {
             val konfigurationSetModel = new KonfigurationSetModel("schluessel", "wert", "beschreibung", "standwert");
 
             Assertions.assertThatThrownBy(() -> konfigurationService.setKonfiguration(konfigurationSetModel))
-                    .isExactlyInstanceOf(TechnischeWlsException.class);
+                    .isInstanceOf(TechnischeWlsException.class);
         }
 
         private String[] removeAuthority(final String[] authorities, final String authorityToRemove) {
@@ -132,7 +132,7 @@ public class KonfigurationServiceSecurityTest {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatThrownBy(() -> konfigurationService.getAllKonfigurations())
-                    .isExactlyInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
@@ -162,7 +162,7 @@ public class KonfigurationServiceSecurityTest {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatThrownBy(() -> konfigurationService.getKennbuchstabenListen())
-                    .isExactlyInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {

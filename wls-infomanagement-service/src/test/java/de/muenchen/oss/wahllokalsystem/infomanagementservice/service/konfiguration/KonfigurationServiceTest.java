@@ -85,7 +85,7 @@ class KonfigurationServiceTest {
             Mockito.doNothing().when(konfigurationModelValidator).validOrThrowGetKonfigurationByKey(alternativeKey);
             Mockito.when(jwtHandler.canHandle(any())).thenReturn(true);
             Mockito.when(jwtHandler.getDetail(eq(JWT_DETAIL_WAHLBEZIRKSART_KEY), any())).thenReturn(Optional.of("BWB"));
-            Mockito.when(konfigurationModelMapper.getAlternativKey(keyForRequestedKonfiguration, WahlbezirkArt.BWB)).thenReturn(Optional.of(alternativeKey));
+            Mockito.when(konfigurationModelMapper.getAlternativeKey(keyForRequestedKonfiguration, WahlbezirkArt.BWB)).thenReturn(Optional.of(alternativeKey));
             Mockito.when(konfigurationModelMapper.toModel(mockedKonfigurationFromRepo)).thenReturn(mappedMockedKonfiguration);
             Mockito.when(konfigurationRepository.findById(alternativeKey.name())).thenReturn(mockedKonfigurationFromRepoAsOptional);
 
@@ -106,7 +106,7 @@ class KonfigurationServiceTest {
             Mockito.doNothing().when(konfigurationModelValidator).validOrThrowGetKonfigurationByKey(keyForRequestedKonfiguration);
             Mockito.when(jwtHandler.canHandle(any())).thenReturn(true);
             Mockito.when(jwtHandler.getDetail(eq(JWT_DETAIL_WAHLBEZIRKSART_KEY), any())).thenReturn(Optional.of("BWB"));
-            Mockito.when(konfigurationModelMapper.getAlternativKey(keyForRequestedKonfiguration, WahlbezirkArt.BWB)).thenReturn(Optional.empty());
+            Mockito.when(konfigurationModelMapper.getAlternativeKey(keyForRequestedKonfiguration, WahlbezirkArt.BWB)).thenReturn(Optional.empty());
             Mockito.when(konfigurationModelMapper.toModel(mockedKonfigurationFromRepo)).thenReturn(mappedMockedKonfiguration);
             Mockito.when(konfigurationRepository.findById(konfigKeyAsString)).thenReturn(mockedKonfigurationFromRepoAsOptional);
 
@@ -125,7 +125,7 @@ class KonfigurationServiceTest {
             Mockito.doNothing().when(konfigurationModelValidator).validOrThrowGetKonfigurationByKey(keyForRequestedKonfiguration);
             Mockito.when(jwtHandler.canHandle(any())).thenReturn(true);
             Mockito.when(jwtHandler.getDetail(eq(JWT_DETAIL_WAHLBEZIRKSART_KEY), any())).thenReturn(Optional.of("BWB"));
-            Mockito.when(konfigurationModelMapper.getAlternativKey(keyForRequestedKonfiguration, WahlbezirkArt.BWB)).thenReturn(Optional.empty());
+            Mockito.when(konfigurationModelMapper.getAlternativeKey(keyForRequestedKonfiguration, WahlbezirkArt.BWB)).thenReturn(Optional.empty());
             Mockito.when(konfigurationRepository.findById(konfigKeyAsString)).thenReturn(mockedKonfigurationFromRepoAsOptional);
 
             val result = unitUnderTest.getKonfiguration(keyForRequestedKonfiguration);
@@ -157,7 +157,7 @@ class KonfigurationServiceTest {
             Mockito.doNothing().when(konfigurationModelValidator).validOrThrowGetKonfigurationByKey(keyForRequestedKonfiguration);
             Mockito.when(jwtHandler.canHandle(any())).thenReturn(true);
             Mockito.when(jwtHandler.getDetail(eq(JWT_DETAIL_WAHLBEZIRKSART_KEY), any())).thenReturn(Optional.empty());
-            Mockito.when(konfigurationModelMapper.getAlternativKey(keyForRequestedKonfiguration, WahlbezirkArt.UWB)).thenReturn(Optional.empty());
+            Mockito.when(konfigurationModelMapper.getAlternativeKey(keyForRequestedKonfiguration, WahlbezirkArt.UWB)).thenReturn(Optional.empty());
             Mockito.when(konfigurationModelMapper.toModel(mockedKonfigurationFromRepo)).thenReturn(mappedMockedKonfiguration);
             Mockito.when(konfigurationRepository.findById(konfigKeyAsString)).thenReturn(mockedKonfigurationFromRepoAsOptional);
 
@@ -179,7 +179,7 @@ class KonfigurationServiceTest {
 
             Mockito.doNothing().when(konfigurationModelValidator).validOrThrowGetKonfigurationByKey(keyForRequestedKonfiguration);
             Mockito.when(jwtHandler.canHandle(any())).thenReturn(false);
-            Mockito.when(konfigurationModelMapper.getAlternativKey(keyForRequestedKonfiguration, WahlbezirkArt.UWB)).thenReturn(Optional.empty());
+            Mockito.when(konfigurationModelMapper.getAlternativeKey(keyForRequestedKonfiguration, WahlbezirkArt.UWB)).thenReturn(Optional.empty());
             Mockito.when(konfigurationModelMapper.toModel(mockedKonfigurationFromRepo)).thenReturn(mappedMockedKonfiguration);
             Mockito.when(konfigurationRepository.findById(konfigKeyAsString)).thenReturn(mockedKonfigurationFromRepoAsOptional);
 

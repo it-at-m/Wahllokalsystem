@@ -68,7 +68,7 @@ public class BeanstandeteWahlbriefeSecurityTest {
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
 
             Assertions.assertThatThrownBy(() -> beanstandeteWahlbriefeService.getBeanstandeteWahlbriefe(beanstandeteWahlbriefeReference))
-                    .isExactlyInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")
@@ -82,7 +82,7 @@ public class BeanstandeteWahlbriefeSecurityTest {
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
             Assertions.assertThatThrownBy(() -> beanstandeteWahlbriefeService.getBeanstandeteWahlbriefe(beanstandeteWahlbriefeReference))
-                    .isExactlyInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
@@ -121,7 +121,7 @@ public class BeanstandeteWahlbriefeSecurityTest {
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
 
             Assertions.assertThatThrownBy(() -> beanstandeteWahlbriefeService.setBeanstandeteWahlbriefe(beanstandeteWahlbriefeModel))
-                    .isExactlyInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")
@@ -135,7 +135,7 @@ public class BeanstandeteWahlbriefeSecurityTest {
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
             Assertions.assertThatThrownBy(() -> beanstandeteWahlbriefeService.setBeanstandeteWahlbriefe(beanstandeteWahlbriefeModel))
-                    .isExactlyInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {

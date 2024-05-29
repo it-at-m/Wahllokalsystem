@@ -32,10 +32,10 @@ services:
       - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
       - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
       - KC_HOSTNAME_STRICT=${KEYCLOAK_HOSTNAME_STRICT}
-      - DB=${KEYCLOAK_DB_TYPE}
-      - DB_URL=jdbc:postgresql://wls-db-postgres-keycloak:5432/${KEYCLOAK_DB}
-      - DB_USERNAME=${KEYCLOAK_DB_USER}
-      - DB_PASSWORD=${KEYCLOAK_DB_PASSWORD}
+      - KC_DB=${KEYCLOAK_DB_TYPE}
+      - KC_DB_URL=jdbc:postgresql://wls-db-postgres-keycloak:5432/${KEYCLOAK_DB}
+      - KC_DB_USERNAME=${KEYCLOAK_DB_USER}
+      - KC_DB_PASSWORD=${KEYCLOAK_DB_PASSWORD}
       - KC_HTTP_RELATIVE_PATH=auth
     ports:
       - 8100:8080

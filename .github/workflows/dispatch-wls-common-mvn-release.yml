@@ -40,7 +40,7 @@ jobs:
           mvn -B -ntp release:prepare release:perform -f wls-common/pom.xml
           -DreleaseVersion=${{ github.event.inputs.release-version }} 
           -DdevelopmentVersion=${{ github.event.inputs.development-version }} 
-          -Dtag=wls-common/${{ github.event.inputs.version }}
+          -Dtag=wls-common/${{ github.event.inputs.release-version }}
           -Darguments="-DskipTests"
         env:
           SIGN_KEY_PASS: ${{ secrets.gpg_passphrase }}
@@ -50,7 +50,7 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: wls-common/${{ github.event.inputs.version }}
+          tag_name: wls-common/${{ github.event.inputs.release-version }}
           draft: false
           prerelease: false
           generate_release_notes: false

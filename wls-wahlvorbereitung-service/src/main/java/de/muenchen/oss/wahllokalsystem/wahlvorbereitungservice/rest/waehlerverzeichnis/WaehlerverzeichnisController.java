@@ -28,7 +28,7 @@ public class WaehlerverzeichnisController extends AbstractController {
     @PostMapping("{wahlbezirkID}/{wvzNummer}")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(
-            description = "Speichern der Angaben über das Wählerverzeichnis des Urnenwahllokals {wahlbezirkID}. Wird je aktivem Wählerverzeichnis einmal gespeicehrt und per wvzNummer dem jeweiligen zugeordnet."
+            description = "Speichern der Angaben über das Wählerverzeichnis des Urnenwahllokals {wahlbezirkID}. Wird je aktivem Wählerverzeichnis einmal gespeichert und per wvzNummer dem jeweiligen zugeordnet."
     )
     public void postWaehlerverzeichnis(@PathVariable("wahlbezirkID") final String wahlbezirkID, @PathVariable("wvzNummer") final long wvzNummer,
             @RequestBody final WaehlerverzeichnisWriteDTO requestBody) {

@@ -16,3 +16,4 @@ includes:
   - path: create-and-assign-group-all-wahlvorbereitung.yml
   - path: add-authorities-wahlvorbereitung-urnenwahlvorbereitung.yml
   - path: add_authorities-briefwahl-wahlbriefdaten.yml
+  - path: add-authorities-wahlvorbereitung-waehlerverzeichnis.yml

@@ -31,6 +31,7 @@
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
         <wls.github.url>https://github.com/it-at-m/Wahllokalsystem</wls.github.url>
+        <wls.github.scm.connection>scm:git:https://github.com/it-at-m/Wahllokalsystem.git</wls.github.scm.connection>
     </properties>
 
     <modules>
@@ -67,9 +68,9 @@
 
 
     <scm>
-        <url>https://github.com/it-at-m/Wahllokalsystem</url>
-        <connection>scm:git:https://github.com/it-at-m/Wahllokalsystem.git</connection>
-        <developerConnection>scm:git:https://github.com/it-at-m/Wahllokalsystem.git</developerConnection>
+        <url>${wls.github.url}</url>
+        <connection>${wls.github.scm.connection}</connection>
+        <developerConnection>${wls.github.scm.connection}</developerConnection>
         <tag>HEAD</tag>
     </scm>
 

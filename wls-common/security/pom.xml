@@ -13,6 +13,13 @@
     <description>Uebergreifende Security Aspekte</description>
     <url>${wls.github.url}</url>
 
+    <scm>
+        <url>${wls.github.url}</url>
+        <connection>${wls.github.scm.connection}</connection>
+        <developerConnection>${wls.github.scm.connection}</developerConnection>
+      <tag>HEAD</tag>
+  </scm>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.security</groupId>

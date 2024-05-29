@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.urnenwahlvorbereitung.UrnenwahlvorbereitungService;
+import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.waehlerverzeichnis.WaehlerverzeichnisService;
 import lombok.val;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,9 @@ public class SecurityConfigurationTest {
 
     @MockBean
     UrnenwahlvorbereitungService urnenwahlvorbereitungService;
+
+    @MockBean
+    WaehlerverzeichnisService waehlerverzeichnisService;
 
     @Autowired
     MockMvc mockMvc;
@@ -79,6 +83,44 @@ public class SecurityConfigurationTest {
         void accessPostUrnenwahlvorbereitungAuthorizedThenIsCreated() throws Exception {
             val request = MockMvcRequestBuilders.post("/businessActions/urnenwahlVorbereitung/wahlbezirkID").with(csrf())
                     .contentType(MediaType.APPLICATION_JSON).content("{}");
+
+            mockMvc.perform(request).andExpect(status().isCreated());
+        }
+    }
+
+    @Nested
+    class Waehlerverzeichnis {
+
+        @Test
+        @WithAnonymousUser
+        void accessGetWaehlerverzeichnisUnauthorizedThenUnauthorized() throws Exception {
+            val request = MockMvcRequestBuilders.get("/businessActions/waehlerverzeichnis/waehlerbezirkID/1");
+
+            mockMvc.perform(request).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessGetWaehlerverzeichnisAuthorizedThenNoContent() throws Exception {
+            val request = MockMvcRequestBuilders.get("/businessActions/waehlerverzeichnis/waehlerbezirkID/1");
+
+            mockMvc.perform(request).andExpect(status().isNoContent());
+        }
+
+        @Test
+        @WithAnonymousUser
+        void accessPostWaehlerverzeichnisUnauthorizedThenUnauthorized() throws Exception {
+            val request = MockMvcRequestBuilders.post("/businessActions/waehlerverzeichnis/waehlerbezirkID/1")
+                    .with(csrf()).contentType(MediaType.APPLICATION_JSON).content("{}");
+
+            mockMvc.perform(request).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessPostWaehlerverzeichnisAuthorizedThenCreated() throws Exception {
+            val request = MockMvcRequestBuilders.post("/businessActions/waehlerverzeichnis/waehlerbezirkID/1")
+                    .with(csrf()).contentType(MediaType.APPLICATION_JSON).content("{}");
 
             mockMvc.perform(request).andExpect(status().isCreated());
         }

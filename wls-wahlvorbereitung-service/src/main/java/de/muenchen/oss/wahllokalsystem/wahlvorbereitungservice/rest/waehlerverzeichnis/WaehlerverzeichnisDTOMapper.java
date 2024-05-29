@@ -8,8 +8,8 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface WaehlerverzeichnisDTOMapper {
 
-    @Mapping(target = "bezirkIDUndWaehlerverzeichnisNummer", source = "waehlerverzeichnisReference")
     WaehlerverzeichnisModel toModel(BezirkIDUndWaehlerverzeichnisNummer waehlerverzeichnisReference, WaehlerverzeichnisWriteDTO waehlerverzeichnisWriteDTO);
 
+    @Mapping(target = "bezirkIDUndWaehlerverzeichnisNummer", source = "waehlerverzeichnisReference")
     WaehlerverzeichnisDTO toDto(WaehlerverzeichnisModel waehlerverzeichnisModel);
 }

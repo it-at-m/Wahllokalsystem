@@ -17,7 +17,7 @@ import org.springframework.stereotype.Indexed;
 public class Waehlerverzeichnis {
 
     @EmbeddedId
-    private BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer;
+    private BezirkIDUndWaehlerverzeichnisNummer waehlerverzeichnisReference;
 
     private Boolean verzeichnisLagVor;
 

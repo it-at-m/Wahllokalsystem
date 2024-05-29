@@ -20,12 +20,12 @@ public class WaehlerverzeichnisValidator {
     }
 
     public void validModelToSetOrThrow(final WaehlerverzeichnisModel waehlerverzeichnisModelToSet) {
-        if (waehlerverzeichnisModelToSet == null || waehlerverzeichnisModelToSet.bezirkIDUndWaehlerverzeichnisNummer() == null
-                || waehlerverzeichnisModelToSet.bezirkIDUndWaehlerverzeichnisNummer()
+        if (waehlerverzeichnisModelToSet == null || waehlerverzeichnisModelToSet.waehlerverzeichnisReference() == null
+                || waehlerverzeichnisModelToSet.waehlerverzeichnisReference()
                         .getWaehlerverzeichnisNummer() == null
-                || waehlerverzeichnisModelToSet.bezirkIDUndWaehlerverzeichnisNummer()
+                || waehlerverzeichnisModelToSet.waehlerverzeichnisReference()
                         .getWahlbezirkID() == null
-                || waehlerverzeichnisModelToSet.bezirkIDUndWaehlerverzeichnisNummer().getWahlbezirkID().isEmpty()) {
+                || waehlerverzeichnisModelToSet.waehlerverzeichnisReference().getWahlbezirkID().isEmpty()) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG);
         }
     }

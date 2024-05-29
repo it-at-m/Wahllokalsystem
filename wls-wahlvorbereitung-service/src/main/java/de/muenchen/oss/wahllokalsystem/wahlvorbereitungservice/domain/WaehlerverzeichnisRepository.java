@@ -20,7 +20,7 @@ public interface WaehlerverzeichnisRepository extends CrudRepository<Waehlerverz
     Optional<Waehlerverzeichnis> findById(BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer);
 
     @Override
-    @CachePut(value = CACHE, key = "#p0.bezirkIDUndWaehlerverzeichnisNummer")
+    @CachePut(value = CACHE, key = "#p0.waehlerverzeichnisReference")
     @PreAuthorize("hasAuthority('Wahlvorbereitung_WRITE_Waehlerverzeichnis')")
     <S extends Waehlerverzeichnis> S save(S waehlerverzeichnis);
 
@@ -30,7 +30,7 @@ public interface WaehlerverzeichnisRepository extends CrudRepository<Waehlerverz
     void deleteById(BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer);
 
     @Override
-    @CacheEvict(value = CACHE, key = "#p0.bezirkIDUndWaehlerverzeichnisNummer")
+    @CacheEvict(value = CACHE, key = "#p0.waehlerverzeichnisReference")
     @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_Waehlerverzeichnis')")
     void delete(Waehlerverzeichnis entity);
 

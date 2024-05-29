@@ -3,8 +3,8 @@ package de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahllokalzustand.excepti
 public class ExceptionConstants {
 
     //saveWahllokalZustand
-    String CODE_SAVEWAHLLOKALZUSTAND_WAHLBEZIRKID_FEHLT = "001";
-    String MESSAGE_SAVEWAHLLOKALZUSTAND_WAHLBEZIRKID_FEHLT = "Die WahlbezirkID fehlt";
+    public static final String CODE_SAVEWAHLLOKALZUSTAND_WAHLBEZIRKID_FEHLT = "001";
+    public static final String MESSAGE_SAVEWAHLLOKALZUSTAND_WAHLBEZIRKID_FEHLT = "Die WahlbezirkID fehlt";
 
     /**
      * @throws IllegalAccessException when constructor is used

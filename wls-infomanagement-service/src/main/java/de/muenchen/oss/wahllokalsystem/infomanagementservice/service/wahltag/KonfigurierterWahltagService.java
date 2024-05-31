@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.wahltag;
 
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag.KonfigurierterWahltagRepository;
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.exception.ExceptionDataWrapper;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import java.util.List;
@@ -17,9 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 public class KonfigurierterWahltagService {
-
-    private static final ExceptionDataWrapper DELETE_KONFIGURIERTERWAHLTAG_NOT_DELETEABLE = new ExceptionDataWrapper("105",
-            "deleteKonfigurierterWahltag: Der konfigurierte Wahltag konnte nicht geloescht werden.");
 
     private final ServiceIDFormatter serviceIDFormatter;
 
@@ -59,9 +56,9 @@ public class KonfigurierterWahltagService {
             konfigurierterWahltagRepository.deleteById(wahltagID);
         } catch (Exception e) {
             log.error("#deleteKonfigurierterWahltag undeleteable: " + e);
-            throw FachlicheWlsException.withCode(DELETE_KONFIGURIERTERWAHLTAG_NOT_DELETEABLE.code()).inService(serviceIDFormatter.getId())
+            throw FachlicheWlsException.withCode(ExceptionConstants.DELETE_KONFIGURIERTERWAHLTAG_NOT_DELETEABLE.code()).inService(serviceIDFormatter.getId())
                     .buildWithMessage(
-                            DELETE_KONFIGURIERTERWAHLTAG_NOT_DELETEABLE.message());
+                            ExceptionConstants.DELETE_KONFIGURIERTERWAHLTAG_NOT_DELETEABLE.message());
         }
     }
 

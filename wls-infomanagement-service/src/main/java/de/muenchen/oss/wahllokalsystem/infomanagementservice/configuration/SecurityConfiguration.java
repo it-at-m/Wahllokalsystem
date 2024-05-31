@@ -50,7 +50,8 @@ public class SecurityConfiguration {
                         AntPathRequestMatcher.antMatcher("/actuator/metrics"),
                         AntPathRequestMatcher.antMatcher("/v3/api-docs/**"),
                         AntPathRequestMatcher.antMatcher("/swagger-ui/**"),
-                        AntPathRequestMatcher.antMatcher("/businessActions/loginCheck/**"))
+                        AntPathRequestMatcher.antMatcher("/businessActions/loginCheck/**"),
+                        AntPathRequestMatcher.antMatcher("/businessActions/konfigurationUnauthorized/**"))
                         .permitAll())
                 .authorizeHttpRequests((requests) -> requests.requestMatchers("/**")
                         .authenticated())

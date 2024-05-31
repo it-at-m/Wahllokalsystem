@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.utils;
+package de.muenchen.oss.wahllokalsystem.infomanagementservice.utils;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

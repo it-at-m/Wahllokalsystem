@@ -1,15 +1,22 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.configuration;
 
 import static de.muenchen.oss.wahllokalsystem.infomanagementservice.TestConstants.SPRING_TEST_PROFILE;
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.wahltag.KonfigurierterWahltagService;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration.dto.KonfigurationSetDTO;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationService;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationModel;
+import java.util.Optional;
 import lombok.val;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -33,6 +40,12 @@ class SecurityConfigurationTest {
 
     @Autowired
     MockMvc api;
+
+    @Autowired
+    ObjectMapper objectMapper;
+
+    @MockBean
+    KonfigurationService konfigurationService;
 
     @Test
     void accessSecuredResourceRootThenUnauthorized() throws Exception {
@@ -149,6 +162,93 @@ class SecurityConfigurationTest {
         @WithAnonymousUser
         void accessGetLoginCheckUnauthorizedThenOk() throws Exception {
             val request = MockMvcRequestBuilders.get("/businessActions/loginCheck/wahltagID");
+
+            api.perform(request).andExpect(status().isOk());
+        }
+
+    }
+
+    @Nested
+    class Konfiguration {
+
+        @Test
+        @WithAnonymousUser
+        void accessGetKonfigurationWithKeyUnauthorizedThenUnauthorized() throws Exception {
+            val request = MockMvcRequestBuilders.get("/businessActions/konfiguration/ABSCHLUSSTEXT");
+
+            api.perform(request).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessGetKonfigurationWithKeyAuthorizedThenNoContent() throws Exception {
+            Mockito.when(konfigurationService.getKonfiguration(any())).thenReturn(Optional.empty());
+
+            val request = MockMvcRequestBuilders.get("/businessActions/konfiguration/ABSCHLUSSTEXT");
+
+            api.perform(request).andExpect(status().isNoContent());
+        }
+
+        @Test
+        @WithAnonymousUser
+        void accessPostKonfigurationWithKeyUnauthorizedThenUnauthorized() throws Exception {
+            val request = MockMvcRequestBuilders.post("/businessActions/konfiguration/ABSCHLUSSTEXT").with(csrf());
+
+            api.perform(request).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessPostKonfigurationWithKeyAuthorizedThenOk() throws Exception {
+            val requestBody = new KonfigurationSetDTO("wert", "beschreibung", "default");
+            val request = MockMvcRequestBuilders.post("/businessActions/konfiguration/ABSCHLUSSTEXT").with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestBody));
+
+            api.perform(request).andExpect(status().isOk());
+        }
+
+        @Test
+        @WithAnonymousUser
+        void accessGetKonfigurationenUnauthorizedThenUnauthorized() throws Exception {
+            val request = MockMvcRequestBuilders.get("/businessActions/konfiguration");
+
+            api.perform(request).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessGetKonfigurationenAuthorizedThenOk() throws Exception {
+            Mockito.when(konfigurationService.getKonfiguration(any())).thenReturn(Optional.empty());
+
+            val request = MockMvcRequestBuilders.get("/businessActions/konfiguration");
+
+            api.perform(request).andExpect(status().isOk());
+        }
+
+        @Test
+        @WithAnonymousUser
+        void accessGetKennbuchstabenListenUnauthorizedThenUnauthorized() throws Exception {
+            val request = MockMvcRequestBuilders.get("/businessActions/kennbuchstaben");
+
+            api.perform(request).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessGetKennbuchstabenListenAuthorizedThenOk() throws Exception {
+            Mockito.when(konfigurationService.getKonfiguration(any())).thenReturn(Optional.empty());
+
+            val request = MockMvcRequestBuilders.get("/businessActions/kennbuchstaben");
+
+            api.perform(request).andExpect(status().isOk());
+        }
+
+        @Test
+        @WithAnonymousUser
+        void accessGetKonfigurationUnauthorizedThenOk() throws Exception {
+            Mockito.when(konfigurationService.getKonfigurationUnauthorized(any())).thenReturn(Optional.of(KonfigurationModel.builder().build()));
+
+            val request = MockMvcRequestBuilders.get("/businessActions/konfigurationUnauthorized/WILLKOMMENSTEXT");
 
             api.perform(request).andExpect(status().isOk());
         }

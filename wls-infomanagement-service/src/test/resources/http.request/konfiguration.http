@@ -1,5 +1,5 @@
 ### get token for wls_all_bwb
-POST http://localhost:8100/auth/realms/wls_realm/protocol/openid-connect/token
+POST http://{{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 
 password = test &
@@ -14,7 +14,7 @@ username = wls_all_bwb
 %}
 
 ### get token for wls_all_uwb
-POST http://localhost:8100/auth/realms/wls_realm/protocol/openid-connect/token
+POST http://{{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 
 password = test &
@@ -29,11 +29,11 @@ username = wls_all_uwb
 %}
 
 ### get userinfo with auth_token
-GET http://localhost:8100/auth/realms/wls_realm/protocol/openid-connect/userinfo
+GET http://{{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
 Authorization: {{ token_type }} {{ auth_token }}
 
 ### get konfigration WILLKOMMENSTEXT
-GET http://localhost:39146/businessActions/konfiguration/WILLKOMMENSTEXT
+GET http://localhost:{{ WLS_INFOMANAGEMENT_SERVICE_PORT }}/businessActions/konfiguration/WILLKOMMENSTEXT
 Authorization: {{ token_type }} {{ auth_token }}
 
 ### POST konfigration WILLKOMMENSTEXT
@@ -48,12 +48,12 @@ Content-Type: application/json
 }
 
 ### get konfigration FRUEHESTE_EROEFFNUNGSZEIT
-GET http://localhost:39146/businessActions/konfiguration/FRUEHESTE_EROEFFNUNGSZEIT
+GET http://localhost:{{ WLS_INFOMANAGEMENT_SERVICE_PORT }}/businessActions/konfiguration/FRUEHESTE_EROEFFNUNGSZEIT
 Authorization: {{ token_type }} {{ auth_token }}
 
 ### get KENNBUCHSTABEN
-GET http://localhost:39146/businessActions/kennbuchstaben
+GET http://localhost:{{ WLS_INFOMANAGEMENT_SERVICE_PORT }}/businessActions/kennbuchstaben
 Authorization: {{ token_type }} {{ auth_token }}
 
 ### get wilkommenstext as anonymous
-GET localhost:39146/businessActions/konfigurationUnauthorized/WILLKOMMENSTEXT
+GET localhost:{{ WLS_INFOMANAGEMENT_SERVICE_PORT }}/businessActions/konfigurationUnauthorized/WILLKOMMENSTEXT

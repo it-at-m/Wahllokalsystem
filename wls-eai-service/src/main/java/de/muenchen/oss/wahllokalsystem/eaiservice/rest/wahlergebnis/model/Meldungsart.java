@@ -2,11 +2,11 @@ package de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.model;
 
 public enum Meldungsart {
     /**
-     * Niederschrift
+     * Niederschrift (V1)
      */
-    V1,
+    NIEDERSCHRIFT,
     /**
-     * Schnellmeldung
+     * Schnellmeldung (V3)
      */
-    V3;
+    SCHNELLMELDUNG;
 }

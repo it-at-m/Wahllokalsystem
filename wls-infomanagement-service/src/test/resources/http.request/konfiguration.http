@@ -32,11 +32,11 @@ username = wls_all_uwb
 GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
 Authorization: {{ token_type }} {{ auth_token }}
 
-### get konfigration WILLKOMMENSTEXT
+### get konfiguration WILLKOMMENSTEXT
 GET {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfiguration/WILLKOMMENSTEXT
 Authorization: {{ token_type }} {{ auth_token }}
 
-### POST konfigration WILLKOMMENSTEXT
+### POST konfiguration WILLKOMMENSTEXT
 POST {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfiguration/WILLKOMMENSTEXT
 Authorization: {{ token_type }} {{ auth_token }}
 Content-Type: application/json
@@ -47,7 +47,7 @@ Content-Type: application/json
   "standardwert": "neuer Standardwert"
 }
 
-### get konfigration FRUEHESTE_EROEFFNUNGSZEIT
+### get konfiguration FRUEHESTE_EROEFFNUNGSZEIT
 GET {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfiguration/FRUEHESTE_EROEFFNUNGSZEIT
 Authorization: {{ token_type }} {{ auth_token }}
 

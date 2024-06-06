@@ -1,5 +1,5 @@
 ### get token for keycloak_test
-POST http://kubernetes.docker.internal:8100/auth/realms/wls_realm/protocol/openid-connect/token
+POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 
 password = test &
@@ -14,7 +14,7 @@ username = keycloak_test
 %}
 
 ### get token for wls_all
-POST http://kubernetes.docker.internal:8100/auth/realms/wls_realm/protocol/openid-connect/token
+POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 
 password = test &
@@ -29,31 +29,33 @@ username = wls_all
 %}
 
 ### Broadcast Message for wbz-1 and wbz-2
-POST http://localhost:39146/businessActions/broadcast
+POST {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/broadcast
 Authorization: {{ token_type }} {{ auth_token }}
 Content-Type: application/json
 
 {
-    "wahlbezirkIDs": [
-        "wbz-1", "wbz-2"
-    ],
-    "nachricht": "Hallo welt"
+  "wahlbezirkIDs": [
+    "wbz-1",
+    "wbz-2"
+  ],
+  "nachricht": "Hallo welt"
 }
 
 ###
-POST http://localhost:39146/businessActions/broadcast
+POST {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/broadcast
 Authorization: {{ token_type }} {{ auth_token }}
 Content-Type: application/json
 
 {
-    "wahlbezirkIDs": [
-        "wbz-1", "wbz-3"
-    ],
-    "nachricht": "grüß gott"
+  "wahlbezirkIDs": [
+    "wbz-1",
+    "wbz-3"
+  ],
+  "nachricht": "grÃ¼ÃŸ gott"
 }
 
 ### Get message for wbz-1
-GET http://localhost:39146/businessActions/getMessage/wbz-1
+GET {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/getMessage/wbz-1
 Authorization: {{ token_type }} {{ auth_token }}
 
 > {%
@@ -62,14 +64,14 @@ Authorization: {{ token_type }} {{ auth_token }}
 %}
 
 ### Get message for wbz-2
-GET http://localhost:39146/businessActions/getMessage/{{wbzID}}
+GET {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/getMessage/{{wbzID}}
 Authorization: {{ token_type }} {{ auth_token }}
 
 ### Get message for wbz-x
-GET http://localhost:39146/businessActions/getMessage/wbz-x
+GET {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/getMessage/wbz-x
 Authorization: {{ token_type }} {{ auth_token }}
 
 ### Delete lastest for wbz-1
-POST  http://localhost:39146/businessActions/messageRead/{{nachrichtID}}
+POST  {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/messageRead/{{nachrichtID}}
 Authorization: {{ token_type }} {{ auth_token }}
 

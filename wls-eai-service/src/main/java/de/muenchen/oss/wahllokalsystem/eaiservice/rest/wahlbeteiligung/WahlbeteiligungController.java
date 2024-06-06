@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/wahlbeteiligung")
-public class WahlbeteiligungOperations {
+public class WahlbeteiligungController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)

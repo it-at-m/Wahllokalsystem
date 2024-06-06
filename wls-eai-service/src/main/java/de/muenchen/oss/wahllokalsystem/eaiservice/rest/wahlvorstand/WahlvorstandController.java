@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/wahlvorstaende")
-public class WahlvorstandOperations {
+public class WahlvorstandController {
 
     @GetMapping
     public Wahlvorstand loadWahlvorstand(@RequestParam("wahlbezirkID") String wahlbezirkID) {

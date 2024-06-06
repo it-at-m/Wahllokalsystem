@@ -51,7 +51,7 @@ Content-Type: application/json
     "wbz-1",
     "wbz-3"
   ],
-  "nachricht": "grüß gott"
+  "nachricht": "grÃ¼ÃŸ gott"
 }
 
 ### Get message for wbz-1

@@ -105,6 +105,13 @@
             <artifactId>spring-security-oauth2-jose</artifactId>
         </dependency>
 
+        <!-- wls-common -->
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>exception</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
         <!-- json etc. -->
         <dependency>
             <groupId>org.springframework.hateoas</groupId>

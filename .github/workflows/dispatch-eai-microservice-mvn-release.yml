@@ -39,6 +39,7 @@ jobs:
           -Darguments="-DskipTests"
 
   build-github-release:
+    runs-on: ubuntu-latest
     permissions:
       contents: write
     needs:

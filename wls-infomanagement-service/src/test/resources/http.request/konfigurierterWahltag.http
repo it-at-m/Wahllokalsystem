@@ -1,5 +1,5 @@
 ### get token for wls_all
-POST http://localhost:8100/auth/realms/wls_realm/protocol/openid-connect/token
+POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 
 password = test &
@@ -14,19 +14,19 @@ username = wls_all
 %}
 
 ### get userinfo with auth_token
-GET http://localhost:8100/auth/realms/wls_realm/protocol/openid-connect/userinfo
+GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
 Authorization: {{ token_type }} {{ auth_token }}
 
 ### get konfigurierter Wahltag
-GET http://localhost:39146/businessActions/konfigurierterWahltag
+GET {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurierterWahltag
 Authorization: {{ token_type }} {{ auth_token }}
 
 ### get konfigurierte Wahltage
-GET http://localhost:39146/businessActions/konfigurierteWahltage
+GET {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurierteWahltage
 Authorization: {{ token_type }} {{ auth_token }}
 
 ### post konfigurierter Wahltag EU-Wahl-24
-POST http://localhost:39146/businessActions/konfigurierterWahltag
+POST {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurierterWahltag
 Authorization: {{ token_type }} {{ auth_token }}
 Content-Type: application/json
 
@@ -38,7 +38,7 @@ Content-Type: application/json
 }
 
 ### POST konfigurierter Wahltag BTW-21
-POST http://localhost:39146/businessActions/konfigurierterWahltag
+POST {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurierterWahltag
 Authorization: {{ token_type }} {{ auth_token }}
 Content-Type: application/json
 
@@ -50,8 +50,8 @@ Content-Type: application/json
 }
 
 ### DELETE konfigurierter Wahltag BTW-21
-DELETE http://localhost:39146/businessActions/konfigurierterWahltag/BTW-21
+DELETE {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurierterWahltag/BTW-21
 Authorization: {{ token_type }} {{ auth_token }}
 
 ### check is aktive
-GET http://localhost:39146/businessActions/loginCheck/BTW-21
+GET {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/loginCheck/BTW-21

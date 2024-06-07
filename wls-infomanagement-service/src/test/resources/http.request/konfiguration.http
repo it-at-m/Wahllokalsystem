@@ -1,0 +1,59 @@
+### get token for wls_all_bwb
+POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+password = test &
+grant_type = password &
+client_secret = top-secret &
+client_id = wls &
+username = wls_all_bwb
+
+> {%
+    client.global.set("auth_token", response.body.access_token);
+    client.global.set("token_type", response.body.token_type);
+%}
+
+### get token for wls_all_uwb
+POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+password = test &
+grant_type = password &
+client_secret = top-secret &
+client_id = wls &
+username = wls_all_uwb
+
+> {%
+    client.global.set("auth_token", response.body.access_token);
+    client.global.set("token_type", response.body.token_type);
+%}
+
+### get userinfo with auth_token
+GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
+Authorization: {{ token_type }} {{ auth_token }}
+
+### get konfiguration WILLKOMMENSTEXT
+GET {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfiguration/WILLKOMMENSTEXT
+Authorization: {{ token_type }} {{ auth_token }}
+
+### POST konfiguration WILLKOMMENSTEXT
+POST {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfiguration/WILLKOMMENSTEXT
+Authorization: {{ token_type }} {{ auth_token }}
+Content-Type: application/json
+
+{
+  "wert": "neuer Willkommenstext",
+  "beschreibung": "neuer Beschreibung",
+  "standardwert": "neuer Standardwert"
+}
+
+### get konfiguration FRUEHESTE_EROEFFNUNGSZEIT
+GET {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfiguration/FRUEHESTE_EROEFFNUNGSZEIT
+Authorization: {{ token_type }} {{ auth_token }}
+
+### get KENNBUCHSTABEN
+GET {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/kennbuchstaben
+Authorization: {{ token_type }} {{ auth_token }}
+
+### get wilkommenstext as anonymous
+GET {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurationUnauthorized/WILLKOMMENSTEXT

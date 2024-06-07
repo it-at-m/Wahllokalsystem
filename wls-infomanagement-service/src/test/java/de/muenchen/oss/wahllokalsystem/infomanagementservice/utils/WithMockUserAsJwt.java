@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.utils;
+package de.muenchen.oss.wahllokalsystem.infomanagementservice.utils;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

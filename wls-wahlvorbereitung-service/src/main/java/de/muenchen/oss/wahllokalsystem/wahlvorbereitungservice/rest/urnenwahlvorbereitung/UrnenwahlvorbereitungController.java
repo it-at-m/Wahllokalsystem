@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.urnenwahlvorbereitung;
 
+import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.AbstractController;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.urnenwahlvorbereitung.UrnenwahlvorbereitungService;
 import io.swagger.v3.oas.annotations.Operation;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/businessActions/urnenwahlVorbereitung")
 @RequiredArgsConstructor
-public class UrnenwahlvorbereitungController {
-
-    private final UrnenwahlvorbereitungService service;
+public class UrnenwahlvorbereitungController extends AbstractController {
 
     private final UrnenwahlvorbereitungDTOMapper urnenwahlvorbereitungDTOMapper;
     private final UrnenwahlvorbereitungService urnenwahlvorbereitungService;
@@ -28,7 +26,7 @@ public class UrnenwahlvorbereitungController {
     @Operation(description = "Laden der Wahlvorbereitungsdaten des Urnenwahllokals {wahlbezirkID}")
     @GetMapping("{wahlbezirkID}")
     public ResponseEntity<UrnenwahlvorbereitungDTO> getUrnenwahlVorbereitung(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
-        val urnenwahlvorbereitungModel = service.getUrnenwahlvorbereitung(wahlbezirkID);
+        val urnenwahlvorbereitungModel = urnenwahlvorbereitungService.getUrnenwahlvorbereitung(wahlbezirkID);
 
         return withBodyOrNoContent(urnenwahlvorbereitungModel.map(urnenwahlvorbereitungDTOMapper::toDTO));
     }
@@ -40,9 +38,5 @@ public class UrnenwahlvorbereitungController {
             @RequestBody final UrnenwahlvorbereitungWriteDTO urnenwahlvorbereitungDTO) {
         val vorbereitungToSet = urnenwahlvorbereitungDTOMapper.toModel(wahlbezirkID, urnenwahlvorbereitungDTO);
         urnenwahlvorbereitungService.setUrnenwahlvorbereitung(vorbereitungToSet);
-    }
-
-    private <T> ResponseEntity<T> withBodyOrNoContent(final Optional<T> body) {
-        return body.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
     }
 }

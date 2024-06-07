@@ -8,9 +8,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag.KonfigurierterWahltag;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag.KonfigurierterWahltagRepository;
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.utils.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.wahltag.KonfigurierterWahltagValidator;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.SecurityUtils;
 import java.time.LocalDate;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -47,7 +47,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        SecurityUtils.runAs("", "", Authorities.REPOSITORY_DELETE_KONFIGURIERTERWAHLTAG);
+        SecurityUtils.runWith(de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_DELETE_KONFIGURIERTERWAHLTAG);
         konfigurierterWahltagRepository.deleteAll();
     }
 
@@ -55,7 +55,10 @@ public class KonfigurierterWahltagControllerIntegrationTest {
     class GetKonfigurierterWahltag {
 
         @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG })
+        @WithMockUser(
+                authorities = { de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG,
+                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
+        )
         void emptyResponse() throws Exception {
             val request = MockMvcRequestBuilders.get("/businessActions/konfigurierterWahltag");
 
@@ -66,11 +69,11 @@ public class KonfigurierterWahltagControllerIntegrationTest {
 
         @Test
         @WithMockUser(
-                authorities = { Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG,
-                        Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG }
+                authorities = { de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG,
+                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG,
+                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG }
         )
         void dataFound() throws Exception {
-
             val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
             val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");
             val konfigurierterWahltagExpected = new KonfigurierterWahltag(LocalDate.now(), "6-7-8", true, "0103");
@@ -96,8 +99,10 @@ public class KonfigurierterWahltagControllerIntegrationTest {
 
         @Test
         @WithMockUser(
-                authorities = { Authorities.SERVICE_POST_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
-                        Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
+                authorities = { de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_POST_KONFIGURIERTERWAHLTAG,
+                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
+                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG,
+                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
         )
         void newAktivWahltagSavedAndReadOKWithBody() throws Exception {
             // DB leer, Wahltag neu setzen mit WahltagStatus.AKTIV -> OK zurück mit empty body
@@ -121,8 +126,10 @@ public class KonfigurierterWahltagControllerIntegrationTest {
 
         @Test
         @WithMockUser(
-                authorities = { Authorities.SERVICE_POST_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
-                        Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
+                authorities = { de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_POST_KONFIGURIERTERWAHLTAG,
+                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
+                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG,
+                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
         )
         void newInaktivWahltagSavedAndReadOKNoContent() throws Exception {
             // Dooffall: DB leer neu setzen mit WahltagStatus.INAKTIV -> OK zurück mit empty body
@@ -142,8 +149,10 @@ public class KonfigurierterWahltagControllerIntegrationTest {
 
         @Test
         @WithMockUser(
-                authorities = { Authorities.SERVICE_POST_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
-                        Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG, Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
+                authorities = { de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_POST_KONFIGURIERTERWAHLTAG,
+                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
+                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG,
+                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
         )
         void overrideAktiverWahltagAndReadOKWithContent() throws Exception {
             // DB hat aktiven Wahltag, überschreiben mit neuem Wahltag -> -> OK zurück mit empty body
@@ -187,7 +196,10 @@ public class KonfigurierterWahltagControllerIntegrationTest {
     class GetKonfigurierteWahltage {
 
         @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_GET_KONFIGURIERTEWAHLTAGE, Authorities.REPOSITORY_READ_KONFIGURIERTEWAHLTAGE })
+        @WithMockUser(
+                authorities = { de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_GET_KONFIGURIERTEWAHLTAGE,
+                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_READ_KONFIGURIERTEWAHLTAGE }
+        )
         void emptyResponse() throws Exception {
             val request = MockMvcRequestBuilders.get("/businessActions/konfigurierteWahltage");
 
@@ -198,8 +210,9 @@ public class KonfigurierterWahltagControllerIntegrationTest {
 
         @Test
         @WithMockUser(
-                authorities = { Authorities.SERVICE_GET_KONFIGURIERTEWAHLTAGE, Authorities.REPOSITORY_READ_KONFIGURIERTEWAHLTAGE,
-                        Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG }
+                authorities = { de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_GET_KONFIGURIERTEWAHLTAGE,
+                        Authorities.REPOSITORY_READ_KONFIGURIERTEWAHLTAGE,
+                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG }
         )
         void dataFound() throws Exception {
             val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
@@ -242,7 +255,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
         }
 
         @Test
-        @WithMockUser(authorities = { Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG })
+        @WithMockUser(authorities = { de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG })
         void isInactiveFound() throws Exception {
             val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
             val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");
@@ -263,7 +276,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
         }
 
         @Test
-        @WithMockUser(authorities = { Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG })
+        @WithMockUser(authorities = { de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG })
         void isActiveFound() throws Exception {
             val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
             val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");

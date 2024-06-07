@@ -8,5 +8,5 @@ public enum MeldungsartDTO {
     /**
      * Schnellmeldung (V3)
      */
-    SCHNELLMELDUNG;
+    SCHNELLMELDUNG
 }

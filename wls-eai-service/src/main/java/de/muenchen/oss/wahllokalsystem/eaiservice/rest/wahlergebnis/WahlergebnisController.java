@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis;
 
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.model.Ergebnismeldung;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.ErgebnismeldungDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +15,7 @@ public class WahlergebnisController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public void saveWahlergebnismeldung(@Valid @RequestBody Ergebnismeldung ergebnismeldung) {
+    public void saveWahlergebnismeldung(@Valid @RequestBody ErgebnismeldungDTO ergebnismeldung) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

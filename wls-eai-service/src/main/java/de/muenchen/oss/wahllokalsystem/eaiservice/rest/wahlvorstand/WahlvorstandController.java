@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand;
 
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.model.Wahlvorstand;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.model.Wahlvorstandsaktualisierung;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandsaktualisierungDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,13 +18,13 @@ public class WahlvorstandController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Wahlvorstand loadWahlvorstand(@RequestParam("wahlbezirkID") String wahlbezirkID) {
+    public WahlvorstandDTO loadWahlvorstand(@RequestParam("wahlbezirkID") String wahlbezirkID) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public void saveAnwesenheit(@Valid @RequestBody Wahlvorstandsaktualisierung wahlvorstand) {
+    public void saveAnwesenheit(@Valid @RequestBody WahlvorstandsaktualisierungDTO wahlvorstand) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

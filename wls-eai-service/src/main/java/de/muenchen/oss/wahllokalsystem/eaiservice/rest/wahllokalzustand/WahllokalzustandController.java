@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahllokalzustand;
 
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahllokalzustand.model.WahllokalZustand;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahllokalzustand.dto.WahllokalZustandDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +15,7 @@ public class WahllokalzustandController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public void saveWahllokalZustand(@Valid @RequestBody WahllokalZustand wahllokalZustand) {
+    public void saveWahllokalZustand(@Valid @RequestBody WahllokalZustandDTO wahllokalZustand) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

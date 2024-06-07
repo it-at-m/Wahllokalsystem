@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlbeteiligung;
 
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlbeteiligung.model.WahlbeteiligungsMeldung;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlbeteiligung.dto.WahlbeteiligungsMeldungDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +15,7 @@ public class WahlbeteiligungController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public void saveWahlbeteiligung(@Valid @RequestBody WahlbeteiligungsMeldung wahlbeteiligung) {
+    public void saveWahlbeteiligung(@Valid @RequestBody WahlbeteiligungsMeldungDTO wahlbeteiligung) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

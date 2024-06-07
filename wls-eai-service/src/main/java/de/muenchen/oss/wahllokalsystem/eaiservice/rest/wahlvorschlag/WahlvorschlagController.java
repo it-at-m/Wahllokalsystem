@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag;
 
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.model.Referendumvorlagen;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.model.Wahlvorschlaege;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.model.WahlvorschlaegeListe;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.dto.ReferendumvorlagenDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.dto.WahlvorschlaegeDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.dto.WahlvorschlaegeListeDTO;
 import java.time.LocalDate;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,19 +18,19 @@ public class WahlvorschlagController {
 
     @GetMapping("referendum/{wahlID}/{wahlbezirkID}")
     @ResponseStatus(HttpStatus.OK)
-    public Referendumvorlagen loadReferendumvorlagen(@PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID) {
+    public ReferendumvorlagenDTO loadReferendumvorlagen(@PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @GetMapping("wahl/{wahlID}/{wahlbezirkID}")
     @ResponseStatus(HttpStatus.OK)
-    public Wahlvorschlaege loadWahlvorschlaege(@PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID) {
+    public WahlvorschlaegeDTO loadWahlvorschlaege(@PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @GetMapping("wahl/{wahlID}/liste")
     @ResponseStatus(HttpStatus.OK)
-    public WahlvorschlaegeListe loadWahlvorschlaegeListe(@RequestParam("forDate") LocalDate wahltag, @PathVariable("wahlID") String wahlID) {
+    public WahlvorschlaegeListeDTO loadWahlvorschlaegeListe(@RequestParam("forDate") LocalDate wahltag, @PathVariable("wahlID") String wahlID) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

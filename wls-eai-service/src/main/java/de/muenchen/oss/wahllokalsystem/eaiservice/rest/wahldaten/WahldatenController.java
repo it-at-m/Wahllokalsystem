@@ -1,10 +1,10 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten;
 
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.model.Basisdaten;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.model.Wahlberechtigte;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.model.Wahlbezirke;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.model.Wahlen;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.model.Wahltage;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.BasisdatenDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlberechtigteDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlbezirkeDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlenDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahltageDTO;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -21,31 +21,31 @@ public class WahldatenController {
 
     @GetMapping("wahlbezirke/{wahlbezirkID}/wahlberechtigte")
     @ResponseStatus(HttpStatus.OK)
-    public List<Wahlberechtigte> loadWahlberechtigte(@PathVariable("wahlbezirkID") String wahlbezirkID) {
+    public List<WahlberechtigteDTO> loadWahlberechtigte(@PathVariable("wahlbezirkID") String wahlbezirkID) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @GetMapping("wahltage")
     @ResponseStatus(HttpStatus.OK)
-    public Wahltage loadWahltageSinceIncluding(@RequestParam("includingAfter") LocalDate tag) {
+    public WahltageDTO loadWahltageSinceIncluding(@RequestParam("includingAfter") LocalDate tag) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @GetMapping("wahlbezirk")
     @ResponseStatus(HttpStatus.OK)
-    public Wahlbezirke loadWahlbezirke(@RequestParam("forDate") LocalDate wahltag, @RequestParam("withNummer") String nummer) {
+    public WahlbezirkeDTO loadWahlbezirke(@RequestParam("forDate") LocalDate wahltag, @RequestParam("withNummer") String nummer) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @GetMapping("wahlen")
     @ResponseStatus(HttpStatus.OK)
-    public Wahlen loadWahlen(@RequestParam("forDate") LocalDate wahltag, @RequestParam("withNummer") String nummer) {
+    public WahlenDTO loadWahlen(@RequestParam("forDate") LocalDate wahltag, @RequestParam("withNummer") String nummer) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @GetMapping("basisdaten")
     @ResponseStatus(HttpStatus.OK)
-    public Basisdaten getBasisdaten(@RequestParam("forDate") LocalDate wahltag, @RequestParam("withNummer") String nummer) {
+    public BasisdatenDTO getBasisdaten(@RequestParam("forDate") LocalDate wahltag, @RequestParam("withNummer") String nummer) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

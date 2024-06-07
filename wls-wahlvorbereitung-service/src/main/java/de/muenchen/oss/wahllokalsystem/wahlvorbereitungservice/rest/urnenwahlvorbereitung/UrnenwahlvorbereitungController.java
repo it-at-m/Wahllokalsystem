@@ -20,15 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UrnenwahlvorbereitungController extends AbstractController {
 
-    private final UrnenwahlvorbereitungService service;
-
     private final UrnenwahlvorbereitungDTOMapper urnenwahlvorbereitungDTOMapper;
     private final UrnenwahlvorbereitungService urnenwahlvorbereitungService;
 
     @Operation(description = "Laden der Wahlvorbereitungsdaten des Urnenwahllokals {wahlbezirkID}")
     @GetMapping("{wahlbezirkID}")
     public ResponseEntity<UrnenwahlvorbereitungDTO> getUrnenwahlVorbereitung(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
-        val urnenwahlvorbereitungModel = service.getUrnenwahlvorbereitung(wahlbezirkID);
+        val urnenwahlvorbereitungModel = urnenwahlvorbereitungService.getUrnenwahlvorbereitung(wahlbezirkID);
 
         return withBodyOrNoContent(urnenwahlvorbereitungModel.map(urnenwahlvorbereitungDTOMapper::toDTO));
     }

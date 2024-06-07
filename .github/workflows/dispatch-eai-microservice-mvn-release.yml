@@ -47,7 +47,7 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.tag }}
+          ref: ${{ github.event.inputs.service }}/${{ github.event.inputs.release-version }}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4

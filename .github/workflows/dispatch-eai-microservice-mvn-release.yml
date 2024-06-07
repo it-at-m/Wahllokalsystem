@@ -43,12 +43,32 @@ jobs:
       contents: write
     needs:
       - run-mvn-release-prepare
-    uses:
-      ./.github/workflows/callable-create-github-release-from-tag.yml
-    with:
-      tag: ${{ github.event.inputs.service }}/${{ github.event.inputs.release-version }}
-      service: ${{ github.event.inputs.service }}
-      files: "${{ inputs.service }}/target/*.jar\n${{ inputs.service }}/target/openapi.json"
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.tag }}
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          cache: 'maven'
+          cache-dependency-path: '${{ github.event.inputs.service }}/pom.xml'
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: build jar without tests
+        run: mvn -B -ntp -DskipTests verify -f ${{ github.event.inputs.service }}/pom.xml
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: "${{ github.event.inputs.service }}/target/*.jar\n${{ github.event.inputs.service }}/target/openapi.json"
+          tag_name: ${{ github.event.inputs.service }}/${{ github.event.inputs.release-version }}
+          draft: false
+          prerelease: false
+          generate_release_notes: false
 
   build-github-container-image:
     permissions:

@@ -19,7 +19,7 @@ public class UnterbrechungsUhrzeitValidator {
     }
 
     public void validModelToSetOrThrow(final UnterbrechungsUhrzeitModel modelToValidate) {
-        if (modelToValidate == null || StringUtils.isEmpty(modelToValidate.wahlbezirkID())) {
+        if (modelToValidate == null || StringUtils.isEmpty(modelToValidate.wahlbezirkID()) || modelToValidate.unterbrechungsUhrzeit() == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG);
         }
     }

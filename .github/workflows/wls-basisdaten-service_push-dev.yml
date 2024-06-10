@@ -1,0 +1,18 @@
+name: build push dev basisdaten-service
+
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - 'wls-infomanagement-service/**'
+      - '.github/workflows/wls-basisdaten-service_push-dev.yml'
+
+jobs:
+  build-github-container-image:
+    permissions:
+      packages: write
+    uses:
+      ./.github/workflows/callable-create-github-container-image.yml
+    with:
+      service: 'wls-basisdaten-service'

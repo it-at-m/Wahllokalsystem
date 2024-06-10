@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+@PreAuthorize("hasAuthority('Briefwahl_READ_Wahlbriefdaten')")
 public interface WahlbriefdatenRepository extends CrudRepository<Wahlbriefdaten, String> {
 
     String CACHE = "WahlbriefdatenCACHE";
@@ -21,8 +22,7 @@ public interface WahlbriefdatenRepository extends CrudRepository<Wahlbriefdaten,
     /**
      * Create or update a Wahlbriefdaten.
      * <p>
-     * If the oid already exists, the Wahlbriefdaten will be overridden, hence update. If the oid does
-     * no already exist, a new Wahlbriefdaten will be created,
+     * If the oid already exists, the Wahlbriefdaten will be overridden, hence update. If the oid does no already exist, a new Wahlbriefdaten will be created,
      * hence create.
      * </p>
      *

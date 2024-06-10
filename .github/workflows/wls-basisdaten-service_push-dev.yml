@@ -5,7 +5,7 @@ on:
     branches:
       - dev
     paths:
-      - 'wls-infomanagement-service/**'
+      - 'wls-basisdaten-service/**'
       - '.github/workflows/wls-basisdaten-service_push-dev.yml'
 
 jobs:

@@ -22,7 +22,8 @@ public interface WahlbriefdatenRepository extends CrudRepository<Wahlbriefdaten,
     /**
      * Create or update a Wahlbriefdaten.
      * <p>
-     * If the oid already exists, the Wahlbriefdaten will be overridden, hence update. If the oid does no already exist, a new Wahlbriefdaten will be created,
+     * If the oid already exists, the Wahlbriefdaten will be overridden, hence update. If the oid does
+     * no already exist, a new Wahlbriefdaten will be created,
      * hence create.
      * </p>
      *

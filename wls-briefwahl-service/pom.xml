@@ -16,12 +16,12 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>3.2.5</spring.boot.version>
-        <spring.cloud.version>2023.0.1</spring.cloud.version>
+        <spring.boot.version>3.3.0</spring.boot.version>
+        <spring.cloud.version>2023.0.2</spring.cloud.version>
         <logstash.encoder>7.4</logstash.encoder>
         <apache.commons.collections4>4.4</apache.commons.collections4>
-        <apache.commons.csv>1.10.0</apache.commons.csv>
-        <apache.commons.io>2.16.0</apache.commons.io>
+        <apache.commons.csv>1.11.0</apache.commons.csv>
+        <apache.commons.io>2.16.1</apache.commons.io>
         <apache.commons.lang3>3.14.0</apache.commons.lang3>
         <apache.commons.text>1.12.0</apache.commons.text>
         <apache.commons.validator>1.8.0</apache.commons.validator>
@@ -149,7 +149,7 @@
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc11</artifactId>
-            <version>23.3.0.23.09</version>
+            <version>23.4.0.24.05</version>
         </dependency>
         <!-- Hibernate Model Gen for type safe criterias -->
         <dependency>
@@ -431,7 +431,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.2.1</version>
+                <version>3.4.0</version>
                 <configuration>
                     <configLocation>checkstyle.xml</configLocation>
                 </configuration>
@@ -446,7 +446,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>10.16.0</version>
+                        <version>10.17.0</version>
                     </dependency>
                 </dependencies>
             </plugin>

@@ -10,8 +10,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.rest.beanstandetewahlbriefe.BeanstandeteWahlbriefeCreateDTO;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.rest.beanstandetewahlbriefe.BeanstandeteWahlbriefeDTO;
+import de.muenchen.oss.wahllokalsystem.briefwahlservice.rest.wahlbriefdaten.WahlbriefdatenWriteDTO;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.service.beanstandetewahlbriefe.BeanstandeteWahlbriefeModel;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.service.beanstandetewahlbriefe.BeanstandeteWahlbriefeService;
+import de.muenchen.oss.wahllokalsystem.briefwahlservice.service.wahlbriefdaten.WahlbriefdatenService;
 import java.util.HashMap;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -43,6 +45,9 @@ class SecurityConfigurationTest {
 
     @MockBean
     BeanstandeteWahlbriefeService beanstandeteWahlbriefeService;
+
+    @MockBean
+    WahlbriefdatenService wahlbriefdatenService;
 
     @Test
     void accessSecuredResourceRootThenUnauthorized() throws Exception {
@@ -131,6 +136,46 @@ class SecurityConfigurationTest {
                     .content(requestBodyAsString);
 
             Mockito.doNothing().when(beanstandeteWahlbriefeService).setBeanstandeteWahlbriefe(Mockito.any());
+
+            api.perform(request).andExpect(status().isOk());
+        }
+    }
+
+    @Nested
+    class Wahlbriefdaten {
+
+        @Test
+        @WithAnonymousUser
+        void accessGetWahlbriefdatenUnauthorizedThenUnauthorized() throws Exception {
+            val request = get("/businessActions/wahlbriefdaten/wahlbezirkID");
+
+            api.perform(request).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessGetWahlbriefdatenAuthorizedThenNoContent() throws Exception {
+            val request = get("/businessActions/wahlbriefdaten/wahlbezirkID");
+
+            api.perform(request).andExpect(status().isNoContent());
+        }
+
+        @Test
+        @WithAnonymousUser
+        void accessSetWahlbriefdatenUnauthorizedThenUnauthorized() throws Exception {
+            val requestBody = new WahlbriefdatenWriteDTO(null, null, null, null, null);
+            val request = post("/businessActions/wahlbriefdaten/wahlbezirkID").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
+                    objectMapper.writeValueAsString(requestBody));
+
+            api.perform(request).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessSetWahlbriefdatenAuthorizedThenOk() throws Exception {
+            val requestBody = new WahlbriefdatenWriteDTO(null, null, null, null, null);
+            val request = post("/businessActions/wahlbriefdaten/wahlbezirkID").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
+                    objectMapper.writeValueAsString(requestBody));
 
             api.perform(request).andExpect(status().isOk());
         }

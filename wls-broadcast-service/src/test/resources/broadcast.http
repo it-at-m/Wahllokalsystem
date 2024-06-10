@@ -1,0 +1,77 @@
+### get token for keycloak_test
+POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+password = test &
+grant_type = password &
+client_secret = top-secret &
+client_id = wls &
+username = keycloak_test
+
+> {%
+    client.global.set("auth_token", response.body.access_token);
+    client.global.set("token_type", response.body.token_type);
+%}
+
+### get token for wls_all
+POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+password = test &
+grant_type = password &
+client_secret = top-secret &
+client_id = wls &
+username = wls_all
+
+> {%
+    client.global.set("auth_token", response.body.access_token);
+    client.global.set("token_type", response.body.token_type);
+%}
+
+### Broadcast Message for wbz-1 and wbz-2
+POST {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/broadcast
+Authorization: {{ token_type }} {{ auth_token }}
+Content-Type: application/json
+
+{
+  "wahlbezirkIDs": [
+    "wbz-1",
+    "wbz-2"
+  ],
+  "nachricht": "Hallo welt"
+}
+
+###
+POST {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/broadcast
+Authorization: {{ token_type }} {{ auth_token }}
+Content-Type: application/json
+
+{
+  "wahlbezirkIDs": [
+    "wbz-1",
+    "wbz-3"
+  ],
+  "nachricht": "grüß gott"
+}
+
+### Get message for wbz-1
+GET {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/getMessage/wbz-1
+Authorization: {{ token_type }} {{ auth_token }}
+
+> {%
+    client.global.set("nachrichtID", response.body.oid);
+    client.global.set("wbzID", response.body.wahlbezirkID);
+%}
+
+### Get message for wbz-2
+GET {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/getMessage/{{wbzID}}
+Authorization: {{ token_type }} {{ auth_token }}
+
+### Get message for wbz-x
+GET {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/getMessage/wbz-x
+Authorization: {{ token_type }} {{ auth_token }}
+
+### Delete lastest for wbz-1
+POST  {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/messageRead/{{nachrichtID}}
+Authorization: {{ token_type }} {{ auth_token }}
+

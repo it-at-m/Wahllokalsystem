@@ -11,6 +11,14 @@
     <artifactId>monitoring</artifactId>
     <version>1.0.1-SNAPSHOT</version>
     <description>Übergreifende Monitoring Aspekte</description>
+    <url>${wls.github.url}</url>
+
+    <scm>
+        <url>${wls.github.url}</url>
+        <connection>${wls.github.scm.connection}</connection>
+        <developerConnection>${wls.github.scm.connection}</developerConnection>
+      <tag>HEAD</tag>
+  </scm>
 
     <build>
         <plugins>

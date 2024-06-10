@@ -4,7 +4,7 @@ services:
   ### WLS-Backend Services
   wls-broadcast-service:
     container_name: wls-broadcast-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-broadcast-service:latest-dev
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-broadcast-service:latest
     depends_on:
       - wls-db-oracle
     env_file:
@@ -16,6 +16,24 @@ services:
       - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${WLS_BROADCAST_SERVICE_KEYCLOAK_URL}/userinfo
     ports:
       - 8200:39146
+    networks:
+      - services
+      - keycloak
+
+  wls-infomanagement-service:
+    container_name: wls-infomanagement-service
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-infomanagement-service:latest
+    depends_on:
+      - wls-db-oracle
+    env_file:
+      - .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=${WLS_INFOMANAGEMENT_SERVICE_PROFILE}
+      - SPRING_DATASOURCE_URL=${WLS_INFOMANAGEMENT_SERVICE_DB_URL}
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${WLS_INFOMANAGEMENT_SERVICE_KEYCLOAK_URL}/certs
+      - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${WLS_INFOMANAGEMENT_SERVICE_KEYCLOAK_URL}/userinfo
+    ports:
+      - 8201:39146
     networks:
       - services
       - keycloak
@@ -32,10 +50,10 @@ services:
       - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
       - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
       - KC_HOSTNAME_STRICT=${KEYCLOAK_HOSTNAME_STRICT}
-      - DB=${KEYCLOAK_DB_TYPE}
-      - DB_URL=jdbc:postgresql://wls-db-postgres-keycloak:5432/${KEYCLOAK_DB}
-      - DB_USERNAME=${KEYCLOAK_DB_USER}
-      - DB_PASSWORD=${KEYCLOAK_DB_PASSWORD}
+      - KC_DB=${KEYCLOAK_DB_TYPE}
+      - KC_DB_URL=jdbc:postgresql://wls-db-postgres-keycloak:5432/${KEYCLOAK_DB}
+      - KC_DB_USERNAME=${KEYCLOAK_DB_USER}
+      - KC_DB_PASSWORD=${KEYCLOAK_DB_PASSWORD}
     ports:
       - 8100:8080
     networks:
@@ -61,7 +79,7 @@ services:
 
   wls-db-postgres-keycloak:
     container_name: wls-db-postgres-keycloak
-    image: postgres:16.0-alpine3.18
+    image: postgres:16.3-alpine3.18
     environment:
       - POSTGRES_DB=${KEYCLOAK_DB}
       - POSTGRES_USER=${KEYCLOAK_DB_USER}

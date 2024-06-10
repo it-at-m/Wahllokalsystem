@@ -10,9 +10,6 @@ on:
       release-version:
         description: "Release version ?"
         required: true
-      release-tag:
-        description: "Release tag ?"
-        required: true
       development-version:
         description: "Next Development version ?"
         required: true
@@ -22,13 +19,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.branch }}
       - name: Setup git user
         uses: fregante/setup-git-user@v2
       - name: Set up JDK 17 and OSSRH auth / GPG signing
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: "17"
           distribution: "temurin"
@@ -43,7 +40,7 @@ jobs:
           mvn -B -ntp release:prepare release:perform -f wls-common/pom.xml
           -DreleaseVersion=${{ github.event.inputs.release-version }} 
           -DdevelopmentVersion=${{ github.event.inputs.development-version }} 
-          -Dtag=${{ github.event.inputs.release-tag }} 
+          -Dtag=wls-common/${{ github.event.inputs.release-version }}
           -Darguments="-DskipTests"
         env:
           SIGN_KEY_PASS: ${{ secrets.gpg_passphrase }}
@@ -51,9 +48,9 @@ jobs:
           CENTRAL_PASSWORD: ${{ secrets.sonatype_password }}
       - name: Create GitHub Release
         id: create_release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.event.inputs.release-tag }}
+          tag_name: wls-common/${{ github.event.inputs.release-version }}
           draft: false
           prerelease: false
           generate_release_notes: false

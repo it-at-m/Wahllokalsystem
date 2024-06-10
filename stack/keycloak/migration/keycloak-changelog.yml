@@ -12,3 +12,12 @@ includes:
   - path: 07_add-briefwahl-beanstandete-wahlbriefe-authorities.yml
   - path: 08_create-group-all-briefwahl-and-assign.yml
   - path: 09_add-briefwahl-beanstandete-wahbriefe-to-group-all-briefwahl.yml
+  - path: add-authorities-infomanagement-konfigurierterwahltag.yml
+  - path: create-and-assign-group-all-wahlvorbereitung.yml
+  - path: add-authorities-wahlvorbereitung-urnenwahlvorbereitung.yml
+  - path: add_authorities-briefwahl-wahlbriefdaten.yml
+  - path: add-authorities-wahlvorbereitung-waehlerverzeichnis.yml
+  - path: add-authorities-infomanagement-konfiguration.yml
+  - path: add-user-attribute-mapper-wahlbezirks-art.yml
+  - path: add-wahlbezirksart-to-user.yml
+  - path: add-authority-infomanagement-kennbuchstaben.yml

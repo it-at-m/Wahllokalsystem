@@ -15,7 +15,7 @@ public class SecurityUtils {
 
     public static void runAs(String username, String password, String... authorities) {
         SecurityContextHolder.getContext().setAuthentication(
-            new UsernamePasswordAuthenticationToken(username, password, AuthorityUtils.createAuthorityList(authorities)));
+                new UsernamePasswordAuthenticationToken(username, password, AuthorityUtils.createAuthorityList(authorities)));
     }
 
     public static void runAs(String... authorities) {
@@ -24,9 +24,9 @@ public class SecurityUtils {
 
     public static Stream<Arguments> buildArgumentsForMissingAuthoritiesVariations(final String[] allRequiredAuthorities) {
         return Arrays.stream(allRequiredAuthorities)
-            .map(authorityToRemove ->
+                .map(authorityToRemove ->
                 //remove one authority from all required authorities
                 Arguments.of(Arrays.stream(allRequiredAuthorities)
-                    .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+                        .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
     }
 }

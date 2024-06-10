@@ -40,7 +40,7 @@ public class UnterbrechungsUhrzeitService {
 
     @PreAuthorize(
         "hasAuthority('Wahlvorbereitung_BUSINESSACTION_UnterbrechungsUhrzeit')"
-                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
+                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#unterbrechungsUhrzeitToSet.wahlbezirkID(), authentication)"
     )
     public void setUnterbrechungsUhrzeit(@P("unterbrechungsUhrzeitToSet") final UnterbrechungsUhrzeitModel unterbrechungsUhrzeitToSet) {
         log.debug("#postUnterbrechungsUhrzeit");

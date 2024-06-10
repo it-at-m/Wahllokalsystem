@@ -65,8 +65,8 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
     class GetUnterbrechungsUhrzeit {
         @Test
         @WithMockUser(
-            authorities = { Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT,
-                Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT }
+                authorities = { Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT,
+                        Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT }
         )
         void dataFound() throws Exception {
 
@@ -87,8 +87,8 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
 
         @Test
         @WithMockUser(
-            authorities = { Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT,
-                Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT }
+                authorities = { Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT,
+                        Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT }
         )
         void noDataFound() throws Exception {
 
@@ -112,8 +112,8 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
     class PostUnterbrechungsUhrzeit {
         @Test
         @WithMockUser(
-            authorities = { Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT,
-                Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT }
+                authorities = { Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT,
+                        Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT }
         )
         void newDataIsSaved() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
@@ -131,8 +131,8 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
 
         @Test
         @WithMockUser(
-            authorities = { Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT,
-                Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT }
+                authorities = { Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT,
+                        Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT }
         )
         void existingDataIsOverwritten() throws Exception {
 
@@ -161,8 +161,8 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
 
         @Test
         @WithMockUser(
-            authorities = { Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT,
-                Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT }
+                authorities = { Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT,
+                        Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT }
         )
         void gotWlsExceptionWhenParameterNotComplete() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
@@ -176,14 +176,14 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
             Assertions.assertThat(unterbrechungsUhrzeitRepository.findById(wahlbezirkID)).isEmpty();
 
             val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.PARAMS_UNVOLLSTAENDIG.code(), "WLS-WAHLVORBEREITUNG",
-                ExceptionConstants.PARAMS_UNVOLLSTAENDIG.message());
+                    ExceptionConstants.PARAMS_UNVOLLSTAENDIG.message());
             Assertions.assertThat(exceptionBodyFromResponse).usingRecursiveComparison().isEqualTo(expectedExceptionDTO);
         }
 
         @Test
         @WithMockUser(
-            authorities = { Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT,
-                Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT }
+                authorities = { Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT,
+                        Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT }
         )
         void gotWlsExceptionWhenNotSaveableCauseOfTooLongData() throws Exception {
             val wahlbezirkID = StringUtils.leftPad(" ", 255) + "wahlbezirkID";
@@ -198,14 +198,14 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
             Assertions.assertThat(unterbrechungsUhrzeitRepository.findById(wahlbezirkID)).isEmpty();
 
             val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionConstants.UNSAVEABLE.code(), "WLS-WAHLVORBEREITUNG",
-                ExceptionConstants.UNSAVEABLE.message());
+                    ExceptionConstants.UNSAVEABLE.message());
             Assertions.assertThat(exceptionBodyFromRepsonse).usingRecursiveComparison().isEqualTo(expectedExceptionDTO);
 
         }
 
         private RequestBuilder buildPostRequest(final String wahlbezirkID, final UnterbrechungsUhrzeitWriteDTO requestBody) throws Exception {
             return post("/businessActions/unterbrechungsUhrzeit/" + wahlbezirkID).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
-                objectMapper.writeValueAsString(requestBody));
+                    objectMapper.writeValueAsString(requestBody));
         }
     }
 

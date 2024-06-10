@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.eaiservice.configuration;
+package de.muenchen.oss.wahllokalsystem.basisdaten.configuration;
 
 import java.util.HashMap;
 import java.util.List;

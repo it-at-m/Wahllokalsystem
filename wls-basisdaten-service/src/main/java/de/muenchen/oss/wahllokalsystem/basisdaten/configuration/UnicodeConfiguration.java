@@ -2,9 +2,9 @@
  * Copyright (c): it@M - Dienstleister für Informations- und Telekommunikationstechnik
  * der Landeshauptstadt München, 2024
  */
-package de.muenchen.oss.wahllokalsystem.eaiservice.configuration;
+package de.muenchen.oss.wahllokalsystem.basisdaten.configuration;
 
-import de.muenchen.oss.wahllokalsystem.eaiservice.configuration.nfcconverter.NfcRequestFilter;
+import de.muenchen.oss.wahllokalsystem.basisdaten.configuration.nfcconverter.NfcRequestFilter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

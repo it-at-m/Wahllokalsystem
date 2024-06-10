@@ -2,7 +2,7 @@
  * Copyright (c): it@M - Dienstleister für Informations- und Telekommunikationstechnik
  * der Landeshauptstadt München, 2024
  */
-package de.muenchen.oss.wahllokalsystem.eaiservice.domain;
+package de.muenchen.oss.wahllokalsystem.basisdaten.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

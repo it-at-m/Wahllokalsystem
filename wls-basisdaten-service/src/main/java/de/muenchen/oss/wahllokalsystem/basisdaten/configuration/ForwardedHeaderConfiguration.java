@@ -2,7 +2,7 @@
  * Copyright (c): it@M - Dienstleister für Informations- und Telekommunikationstechnik
  * der Landeshauptstadt München, 2024
  */
-package de.muenchen.oss.wahllokalsystem.eaiservice.configuration;
+package de.muenchen.oss.wahllokalsystem.basisdaten.configuration;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -10,8 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.ForwardedHeaderFilter;
 
 /**
- * This class provides the {@link ForwardedHeaderFilter} to handle the headers of type "Forwarded"
- * and "X-Forwarded-*".
+ * This class provides the {@link ForwardedHeaderFilter} to handle the headers of type "Forwarded" and "X-Forwarded-*".
  */
 @Configuration
 public class ForwardedHeaderConfiguration {

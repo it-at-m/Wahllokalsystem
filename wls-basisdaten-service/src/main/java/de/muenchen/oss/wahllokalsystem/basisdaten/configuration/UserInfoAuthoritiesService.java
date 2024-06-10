@@ -2,7 +2,7 @@
  * Copyright (c): it@M - Dienstleister für Informations- und Telekommunikationstechnik
  * der Landeshauptstadt München, 2024
  */
-package de.muenchen.oss.wahllokalsystem.eaiservice.configuration;
+package de.muenchen.oss.wahllokalsystem.basisdaten.configuration;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.Ticker;
@@ -27,8 +27,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * Service, der einen OIDC /userinfo Endpoint aufruft (mit JWT Bearer Auth) und dort die enthaltenen
- * "Authorities" extrahiert.
+ * Service, der einen OIDC /userinfo Endpoint aufruft (mit JWT Bearer Auth) und dort die enthaltenen "Authorities" extrahiert.
  */
 @Slf4j
 public class UserInfoAuthoritiesService {
@@ -45,7 +44,7 @@ public class UserInfoAuthoritiesService {
     /**
      * Erzeugt eine neue Instanz.
      *
-     * @param userInfoUri userinfo Endpoint URI
+     * @param userInfoUri         userinfo Endpoint URI
      * @param restTemplateBuilder ein {@link RestTemplateBuilder}
      */
     public UserInfoAuthoritiesService(String userInfoUri, RestTemplateBuilder restTemplateBuilder) {

@@ -2,15 +2,15 @@
  * Copyright (c): it@M - Dienstleister für Informations- und Telekommunikationstechnik
  * der Landeshauptstadt München, 2024
  */
-package de.muenchen.oss.wahllokalsystem.eaiservice.rest;
+package de.muenchen.oss.wahllokalsystem.basisdaten.rest;
 
-import static de.muenchen.oss.wahllokalsystem.eaiservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
-import static de.muenchen.oss.wahllokalsystem.eaiservice.TestConstants.SPRING_TEST_PROFILE;
+import static de.muenchen.oss.wahllokalsystem.basisdaten.TestConstants.SPRING_NO_SECURITY_PROFILE;
+import static de.muenchen.oss.wahllokalsystem.basisdaten.TestConstants.SPRING_TEST_PROFILE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import de.muenchen.oss.wahllokalsystem.eaiservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.eaiservice.domain.TheEntity;
+import de.muenchen.oss.wahllokalsystem.basisdaten.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.basisdaten.domain.TheEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

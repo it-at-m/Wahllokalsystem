@@ -2,16 +2,16 @@
  * Copyright (c): it@M - Dienstleister für Informations- und Telekommunikationstechnik
  * der Landeshauptstadt München, 2024
  */
-package de.muenchen.oss.wahllokalsystem.eaiservice.configuration;
+package de.muenchen.oss.wahllokalsystem.basisdaten.configuration;
 
-import static de.muenchen.oss.wahllokalsystem.eaiservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
-import static de.muenchen.oss.wahllokalsystem.eaiservice.TestConstants.SPRING_TEST_PROFILE;
-import static de.muenchen.oss.wahllokalsystem.eaiservice.TestConstants.TheEntityDto;
+import static de.muenchen.oss.wahllokalsystem.basisdaten.TestConstants.SPRING_NO_SECURITY_PROFILE;
+import static de.muenchen.oss.wahllokalsystem.basisdaten.TestConstants.SPRING_TEST_PROFILE;
+import static de.muenchen.oss.wahllokalsystem.basisdaten.TestConstants.TheEntityDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import de.muenchen.oss.wahllokalsystem.eaiservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.eaiservice.domain.TheEntity;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.TheEntityRepository;
+import de.muenchen.oss.wahllokalsystem.basisdaten.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.basisdaten.domain.TheEntity;
+import de.muenchen.oss.wahllokalsystem.basisdaten.rest.TheEntityRepository;
 import java.net.URI;
 import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;

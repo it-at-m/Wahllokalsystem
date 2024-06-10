@@ -2,7 +2,7 @@
  * Copyright (c): it@M - Dienstleister für Informations- und Telekommunikationstechnik
  * der Landeshauptstadt München, 2024
  */
-package de.muenchen.oss.wahllokalsystem.eaiservice.security;
+package de.muenchen.oss.wahllokalsystem.basisdaten.security;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,8 +22,7 @@ public class AuthUtils {
     }
 
     /**
-     * Extrahiert den Usernamen aus dem vorliegenden Spring Security Context via
-     * {@link SecurityContextHolder}.
+     * Extrahiert den Usernamen aus dem vorliegenden Spring Security Context via {@link SecurityContextHolder}.
      *
      * @return der Username or a "unauthenticated", wenn keine {@link Authentication} existiert
      */

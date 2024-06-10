@@ -2,7 +2,7 @@
  * Copyright (c): it@M - Dienstleister für Informations- und Telekommunikationstechnik
  * der Landeshauptstadt München, 2024
  */
-package de.muenchen.oss.wahllokalsystem.eaiservice.configuration;
+package de.muenchen.oss.wahllokalsystem.basisdaten.configuration;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -11,8 +11,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 /**
- * Ein custom {@link JwtAuthenticationConverter}, der die Authorities mittels
- * {@link UserInfoAuthoritiesService} vom /userinfo Endpoint des OIDC Providers
+ * Ein custom {@link JwtAuthenticationConverter}, der die Authorities mittels {@link UserInfoAuthoritiesService} vom /userinfo Endpoint des OIDC Providers
  * bezieht.
  */
 public class JwtUserInfoAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {

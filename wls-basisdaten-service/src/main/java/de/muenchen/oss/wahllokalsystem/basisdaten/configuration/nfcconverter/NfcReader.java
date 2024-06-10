@@ -2,7 +2,7 @@
  * Copyright (c): it@M - Dienstleister für Informations- und Telekommunikationstechnik
  * der Landeshauptstadt München, 2024
  */
-package de.muenchen.oss.wahllokalsystem.eaiservice.configuration.nfcconverter;
+package de.muenchen.oss.wahllokalsystem.basisdaten.configuration.nfcconverter;
 
 import java.io.CharArrayReader;
 import java.io.IOException;

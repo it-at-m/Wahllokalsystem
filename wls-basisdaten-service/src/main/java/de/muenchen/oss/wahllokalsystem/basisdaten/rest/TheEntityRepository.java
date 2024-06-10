@@ -2,9 +2,9 @@
  * Copyright (c): it@M - Dienstleister für Informations- und Telekommunikationstechnik
  * der Landeshauptstadt München, 2024
  */
-package de.muenchen.oss.wahllokalsystem.eaiservice.rest;
+package de.muenchen.oss.wahllokalsystem.basisdaten.rest;
 
-import de.muenchen.oss.wahllokalsystem.eaiservice.domain.TheEntity;
+import de.muenchen.oss.wahllokalsystem.basisdaten.domain.TheEntity;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.cache.annotation.CacheEvict;
@@ -16,8 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 /**
  * Provides a Repository for {@link TheEntity}. This Repository is exported as a REST resource.
  * <p>
- * The Repository handles CRUD Operations. Every Operation is secured and takes care of the tenancy.
- * For specific Documentation on how the generated REST point
+ * The Repository handles CRUD Operations. Every Operation is secured and takes care of the tenancy. For specific Documentation on how the generated REST point
  * behaves, please consider the Spring Data Rest Reference
  * <a href="http://docs.spring.io/spring-data/rest/docs/current/reference/html/">here</a>.
  * </p>
@@ -43,8 +42,7 @@ public interface TheEntityRepository extends CrudRepository<TheEntity, UUID> { /
     /**
      * Create or update a {@link TheEntity}.
      * <p>
-     * If the id already exists, the {@link TheEntity} will be overridden, hence update. If the id does
-     * not already exist, a new {@link TheEntity} will be
+     * If the id already exists, the {@link TheEntity} will be overridden, hence update. If the id does not already exist, a new {@link TheEntity} will be
      * created, hence create.
      * </p>
      *
@@ -59,8 +57,7 @@ public interface TheEntityRepository extends CrudRepository<TheEntity, UUID> { /
     /**
      * Create or update a collection of {@link TheEntity}.
      * <p>
-     * If the id already exists, the {@link TheEntity}s will be overridden, hence update. If the id does
-     * not already exist, the new {@link TheEntity}s will be
+     * If the id already exists, the {@link TheEntity}s will be overridden, hence update. If the id does not already exist, the new {@link TheEntity}s will be
      * created, hence create.
      * </p>
      *

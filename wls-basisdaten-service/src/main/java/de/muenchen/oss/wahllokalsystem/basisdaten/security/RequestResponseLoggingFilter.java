@@ -2,7 +2,7 @@
  * Copyright (c): it@M - Dienstleister für Informations- und Telekommunikationstechnik
  * der Landeshauptstadt München, 2024
  */
-package de.muenchen.oss.wahllokalsystem.eaiservice.security;
+package de.muenchen.oss.wahllokalsystem.basisdaten.security;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -50,8 +50,7 @@ public class RequestResponseLoggingFilter implements Filter {
     }
 
     /**
-     * The method logs the username extracted out of the {@link SecurityContext}, the kind of
-     * HTTP-Request, the targeted URI and the response http status code.
+     * The method logs the username extracted out of the {@link SecurityContext}, the kind of HTTP-Request, the targeted URI and the response http status code.
      *
      * {@inheritDoc}
      */
@@ -87,7 +86,7 @@ public class RequestResponseLoggingFilter implements Filter {
     private boolean checkForLogging(HttpServletRequest httpServletRequest) {
         return requestLoggingMode.equals(REQUEST_LOGGING_MODE_ALL)
                 || (requestLoggingMode.equals(REQUEST_LOGGING_MODE_CHANGING)
-                        && CHANGING_METHODS.contains(httpServletRequest.getMethod()));
+                && CHANGING_METHODS.contains(httpServletRequest.getMethod()));
     }
 
 }

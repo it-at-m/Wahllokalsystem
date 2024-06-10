@@ -1,9 +1,9 @@
-package de.muenchen.oss.wahllokalsystem.eaiservice.configuration;
+package de.muenchen.oss.wahllokalsystem.basisdaten.configuration;
 
-import static de.muenchen.oss.wahllokalsystem.eaiservice.TestConstants.SPRING_TEST_PROFILE;
+import static de.muenchen.oss.wahllokalsystem.basisdaten.TestConstants.SPRING_TEST_PROFILE;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.muenchen.oss.wahllokalsystem.eaiservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.basisdaten.MicroServiceApplication;
 import lombok.Data;
 import lombok.val;
 import org.assertj.core.api.Assertions;

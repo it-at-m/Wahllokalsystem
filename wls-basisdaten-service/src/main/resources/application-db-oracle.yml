@@ -1,6 +1,6 @@
 spring:
   datasource:
-    username: wls_eai_service
+    username: wls_basisdaten_service
     password: secret
     url: jdbc:oracle:thin:@//localhost:1521/XEPDB1
   flyway:

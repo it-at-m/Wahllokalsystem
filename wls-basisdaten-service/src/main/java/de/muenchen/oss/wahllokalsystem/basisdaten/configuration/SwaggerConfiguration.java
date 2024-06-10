@@ -29,7 +29,7 @@ public class SwaggerConfiguration {
     OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(
-                        new Info().title("EAI Service")
+                        new Info().title("Basisdatenservice")
                                 .version(version)
                                 .contact(new Contact().name("Your Name").email("Your E-Mail-Address")))
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))

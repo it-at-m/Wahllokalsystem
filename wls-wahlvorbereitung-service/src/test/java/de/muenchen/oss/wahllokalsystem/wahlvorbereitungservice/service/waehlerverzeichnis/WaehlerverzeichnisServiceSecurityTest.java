@@ -48,7 +48,7 @@ public class WaehlerverzeichnisServiceSecurityTest {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runAs(Authorities.SERVICE_GET_WAEHLERVERZEICHNIS);
+            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_GET_WAEHLERVERZEICHNIS);
 
             val waehlerverzeichnisReference = new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 89L);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(waehlerverzeichnisReference.getWahlbezirkID()), any())).thenReturn(true);

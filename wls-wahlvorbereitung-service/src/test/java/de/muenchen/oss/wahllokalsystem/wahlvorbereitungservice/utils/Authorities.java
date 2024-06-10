@@ -11,13 +11,16 @@ public class Authorities {
     public static final String SERVICE_GET_WAEHLERVERZEICHNIS = "Wahlvorbereitung_BUSINESSACTION_GetWaehlerverzeichnis";
     public static final String SERVICE_POST_WAEHLERVERZEICHNIS = "Wahlvorbereitung_BUSINESSACTION_PostWaehlerverzeichnis";
 
+    public static final String REPOSITORY_READ_URNENWAHLBORBEREITUNG = "Wahlvorbereitung_READ_UrnenwahlVorbereitung";
     public static final String REPOSITORY_DELETE_URNENWAHLVORBEREITUNG = "Wahlvorbereitung_DELETE_UrnenwahlVorbereitung";
     public static final String REPOSITORY_WRITE_URNENWAHLVORBEREITUNG = "Wahlvorbereitung_WRITE_UrnenwahlVorbereitung";
+    public static final String REPOSITORY_READ_WAEHLERVERZEICHNIS = "Wahlvorbereitung_READ_Waehlerverzeichnis";
     public static final String REPOSITORY_WRITE_WAEHLERVERZEICHNIS = "Wahlvorbereitung_WRITE_Waehlerverzeichnis";
     public static final String REPOSITORY_DELETE_WAEHLERVERZEICHNIS = "Wahlvorbereitung_DELETE_Waehlerverzeichnis";
 
     public static final String[] ALL_AUTHORITIES_GET_URNENWAHLVORBEREITUNG = {
-            SERVICE_GET_URNENWAHLVORBEREITUNG
+            SERVICE_GET_URNENWAHLVORBEREITUNG,
+            REPOSITORY_READ_URNENWAHLBORBEREITUNG
     };
 
     public static final String[] ALL_AUTHORITIES_POST_URNENWAHLVORBEITUNG = {
@@ -26,7 +29,8 @@ public class Authorities {
     };
 
     public static final String[] ALL_AUTHORITIES_GET_WAEHLERVERZEICHNIS = {
-            SERVICE_GET_WAEHLERVERZEICHNIS
+            SERVICE_GET_WAEHLERVERZEICHNIS,
+            REPOSITORY_READ_WAEHLERVERZEICHNIS
     };
 
     public static final String[] ALL_AUTHORITIES_POST_WAEHLERVERZEICHNIS = {

@@ -1,0 +1,17 @@
+spring:
+  h2.console.enabled: true
+  datasource:
+    username: sa
+    password:
+    url: jdbc:h2:mem:wls-baisdaten-service
+  flyway:
+    enabled: true
+  jpa:
+    database: H2
+    hibernate:
+      ddl-auto: validate
+      naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true

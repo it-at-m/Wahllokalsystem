@@ -6,9 +6,4 @@ import lombok.Builder;
 @Builder
 public record UnterbrechungsUhrzeitModel(String wahlbezirkID, LocalDateTime unterbrechungsUhrzeit) {
 
-    public UnterbrechungsUhrzeitModel(final String wahlbezirkID, final LocalDateTime unterbrechungsUhrzeit) {
-        this.wahlbezirkID = wahlbezirkID;
-        this.unterbrechungsUhrzeit = unterbrechungsUhrzeit;
-
-    }
 }

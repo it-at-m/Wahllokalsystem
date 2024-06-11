@@ -69,7 +69,6 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
                         Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT }
         )
         void dataFound() throws Exception {
-
             val wahlbezirkIDToFind = "123";
             val unterbrechungsUhrzeitToFind = new UnterbrechungsUhrzeit();
             unterbrechungsUhrzeitToFind.setWahlbezirkID(wahlbezirkIDToFind);
@@ -131,11 +130,9 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
 
         @Test
         @WithMockUser(
-                authorities = { Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT,
-                        Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT }
+                authorities = { Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT }
         )
         void existingDataIsOverwritten() throws Exception {
-
             val wahlbezirkID = "wahlbezirkID";
             val writeDto1 = new UnterbrechungsUhrzeitWriteDTO(LocalDateTime.of(2023, 1, 1, 12, 0, 0));
             val request1 = buildPostRequest(wahlbezirkID, writeDto1);
@@ -161,8 +158,7 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
 
         @Test
         @WithMockUser(
-                authorities = { Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT,
-                        Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT }
+                authorities = { Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT }
         )
         void gotWlsExceptionWhenParameterNotComplete() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
@@ -182,8 +178,7 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
 
         @Test
         @WithMockUser(
-                authorities = { Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT,
-                        Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT }
+                authorities = { Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT }
         )
         void gotWlsExceptionWhenNotSaveableCauseOfTooLongData() throws Exception {
             val wahlbezirkID = StringUtils.leftPad(" ", 255) + "wahlbezirkID";

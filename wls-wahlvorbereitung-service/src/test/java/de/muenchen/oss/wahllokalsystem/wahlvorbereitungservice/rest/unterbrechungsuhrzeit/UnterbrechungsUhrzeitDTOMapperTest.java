@@ -36,7 +36,6 @@ class UnterbrechungsUhrzeitDTOMapperTest {
 
         @Test
         void isMapped() {
-
             val unterbrechungsUhrzeit = LocalDateTime.now();
             val dtoToMap = new UnterbrechungsUhrzeitWriteDTO(unterbrechungsUhrzeit);
             val wahlbezirkIDToMap = "wahlbezirkID";

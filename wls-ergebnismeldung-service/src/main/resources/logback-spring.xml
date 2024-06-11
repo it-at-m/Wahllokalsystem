@@ -20,7 +20,7 @@
         </appender>
 
         <!-- Logger -->
-        <logger name="de.muenchen.oss.wahllokalsystem.ergebnismeldung"
+        <logger name="de.muenchen.oss.wahllokalsystem.ergebnismeldungservice"
                 level="debug"
                 additivity="false">
             <appender-ref ref="STDOUT" />
@@ -84,7 +84,7 @@
         </appender>
 
         <!-- Logger -->
-        <logger name="de.muenchen.oss.wahllokalsystem.ergebnismeldung"
+        <logger name="de.muenchen.oss.wahllokalsystem.ergebnismeldungservice"
                 level="info"
                 additivity="false">
             <appender-ref ref="JSON_STDOUT" />

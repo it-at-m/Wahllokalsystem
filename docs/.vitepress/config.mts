@@ -48,6 +48,7 @@ export default withMermaid({
                 {text: 'Briefwahl-Service', link: `${PATH_FEATURES}briefwahl-service/`},
                 {text: 'Infomanagement-Service', link: `${PATH_FEATURES}infomanagement-service/`},
                 {text: 'EAI-Service', link: `${PATH_FEATURES}eai-service/`},
+                {text: 'Monitoring-Service', link: `${PATH_FEATURES}monitoring-service/`},
             ]
         },
 

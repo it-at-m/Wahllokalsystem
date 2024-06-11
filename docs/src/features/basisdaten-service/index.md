@@ -12,4 +12,6 @@ Wahlen, Wahlbezirke und Kopfdaten können in der Service-Datenbank gespeichert w
 
 ## Abhängigkeiten
 
-Der Service verwendet den EAI-Service, um Daten abzurufen und diese in der eigenen Datenbank zu speichern.
+Folgende Services werden zum Betrieb benötigt:
+- EAI-Service
+- Infomanagement-Service

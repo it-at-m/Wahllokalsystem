@@ -85,6 +85,7 @@ public class WaehlerverzeichnisControllerIntegrationTest {
 
             mockMvc.perform(request).andExpect(status().isCreated());
 
+            SecurityUtils.runAs(Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS);
             val savedWaehlerverzeichnis = waehlerverzeichnisRepository.findById(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer))
                     .get();
             val expectedWaehlerverzeichnis = new Waehlerverzeichnis(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
@@ -109,6 +110,7 @@ public class WaehlerverzeichnisControllerIntegrationTest {
 
             mockMvc.perform(request).andExpect(status().isCreated());
 
+            SecurityUtils.runAs(Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS);
             val savedWaehlerverzeichnis = waehlerverzeichnisRepository.findById(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer))
                     .get();
             val expectedWaehlerverzeichnis = new Waehlerverzeichnis(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
@@ -144,7 +146,7 @@ public class WaehlerverzeichnisControllerIntegrationTest {
     class GetWaehlerverzeichnis {
 
         @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_GET_WAEHLERVERZEICHNIS })
+        @WithMockUser(authorities = { Authorities.SERVICE_GET_WAEHLERVERZEICHNIS, Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS })
         void dataFound() throws Exception {
             val wahlbezirkIDToFind = "wahlbezirkIDToFind";
             val waehlerverzeichnisNummerToFind = 23L;
@@ -169,7 +171,7 @@ public class WaehlerverzeichnisControllerIntegrationTest {
         }
 
         @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_GET_WAEHLERVERZEICHNIS })
+        @WithMockUser(authorities = { Authorities.SERVICE_GET_WAEHLERVERZEICHNIS, Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS })
         void noDataFound() throws Exception {
             val wahlbezirkIDToFind = "wahlbezirkIDToFind";
             val waehlerverzeichnisNummerToFind = 23L;

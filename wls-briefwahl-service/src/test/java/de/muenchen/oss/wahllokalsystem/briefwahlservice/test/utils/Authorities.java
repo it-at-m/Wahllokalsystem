@@ -13,6 +13,7 @@ public class Authorities {
     public static final String REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE = "Briefwahl_READ_BeanstandeteWahlbriefe";
     public static final String REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE = "Briefwahl_WRITE_BeanstandeteWahlbriefe";
     public static final String REPOSITORY_DELETE_BEANSTANDETE_WAHLBRIEFE = "Briefwahl_DELETE_BeanstandeteWahlbriefe";
+    public static final String REPOSITORY_READ_WAHLBRIEFDATEN = "Briefwahl_READ_Wahlbriefdaten";
     public static final String REPOSITORY_WRITE_WAHLBRIEFDATEN = "Briefwahl_WRITE_Wahlbriefdaten";
     public static final String REPOSITORY_DELETE_WAHLBRIEFDATEN = "Briefwahl_DELETE_Wahlbriefdaten";
 
@@ -29,7 +30,8 @@ public class Authorities {
     };
 
     public static final String[] ALL_AUTHORITIES_GET_WAHLBRIEFDATEN = {
-            SERVICE_GET_WAHLBRIEFDATEN
+            SERVICE_GET_WAHLBRIEFDATEN,
+            REPOSITORY_READ_WAHLBRIEFDATEN
     };
 
     public static final String[] ALL_AUTHORITIES_SET_WAHLBRIEFDATEN = {

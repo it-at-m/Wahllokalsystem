@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.broadcastservice.domain;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.cache.annotation.CacheEvict;
@@ -10,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@PreAuthorize("hasAuthority('Broadcast_READ_Message')")
 public interface MessageRepository extends CrudRepository<Message, UUID> {
 
     String CACHE = "MESSAGE_CACHE";

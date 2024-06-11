@@ -90,7 +90,6 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
                         Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT }
         )
         void noDataFound() throws Exception {
-
             val wahlbezirkIDEmpty = "123";
 
             val wahlbezirkIDNotEmpty = "456";
@@ -111,8 +110,7 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
     class PostUnterbrechungsUhrzeit {
         @Test
         @WithMockUser(
-                authorities = { Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT,
-                        Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT }
+                authorities = { Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT }
         )
         void newDataIsSaved() throws Exception {
             val wahlbezirkID = "wahlbezirkID";

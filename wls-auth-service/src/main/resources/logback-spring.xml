@@ -20,7 +20,7 @@
         </appender>
 
         <!-- Logger -->
-        <logger name="de.muenchen.oss.wahllokalsystem.auth"
+        <logger name="de.muenchen.oss.wahllokalsystem.authservice"
                 level="debug"
                 additivity="false">
             <appender-ref ref="STDOUT" />
@@ -84,7 +84,7 @@
         </appender>
 
         <!-- Logger -->
-        <logger name="de.muenchen.oss.wahllokalsystem.auth"
+        <logger name="de.muenchen.oss.wahllokalsystem.authservice"
                 level="info"
                 additivity="false">
             <appender-ref ref="JSON_STDOUT" />

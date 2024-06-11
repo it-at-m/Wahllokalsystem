@@ -21,3 +21,4 @@ includes:
   - path: add-user-attribute-mapper-wahlbezirks-art.yml
   - path: add-wahlbezirksart-to-user.yml
   - path: add-authority-infomanagement-kennbuchstaben.yml
+  - path: add-authorities-wahlvorbereitung-unterbrechungsuhrzeit.yml

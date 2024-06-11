@@ -23,3 +23,7 @@ GRANT CONNECT, RESOURCE, CREATE SESSION TO wls_infomanagement_service;
 -- add user for wls-eai-service
 CREATE USER wls_eai_service IDENTIFIED BY secret QUOTA UNLIMITED ON USERS;
 GRANT CONNECT, RESOURCE, CREATE SESSION TO wls_eai_service;
+
+-- add user for wls-monitoring-service
+CREATE USER wls_monitoring_service IDENTIFIED BY secret QUOTA UNLIMITED ON USERS;
+GRANT CONNECT, RESOURCE, CREATE SESSION TO wls_monitoring_service;

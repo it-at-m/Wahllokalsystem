@@ -1,0 +1,29 @@
+POST http://localhost:8100/auth/realms/wls_realm/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+password = test &
+grant_type = password &
+client_secret = top-secret &
+client_id = wls &
+username = wls_all
+
+> {%
+    client.global.set("auth_token", response.body.access_token);
+    client.global.set("token_type", response.body.token_type);
+%}
+
+### get userinfo with auth_token
+GET http://localhost:8100/auth/realms/wls_realm/protocol/openid-connect/userinfo
+Authorization: {{ token_type }} {{ auth_token }}
+
+### GET wbzID-1
+GET http://localhost:39150/businessActions/eroeffnungsuhrzeit/wbzID-1
+
+### POST wbzID-1
+POST http://localhost:39150/businessActions/eroeffnungsuhrzeit/wbzID-1
+Content-Type: application/json
+
+{
+  "wahlbezirkID": "wbzID-999",
+  "eroeffnungsuhrzeit": "2024-06-10T16:54:44.606"
+}

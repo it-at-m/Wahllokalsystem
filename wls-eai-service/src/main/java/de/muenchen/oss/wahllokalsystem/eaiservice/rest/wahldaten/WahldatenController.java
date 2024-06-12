@@ -45,7 +45,7 @@ public class WahldatenController {
 
     @GetMapping("basisdaten")
     @ResponseStatus(HttpStatus.OK)
-    public BasisdatenDTO getBasisdaten(@RequestParam("forDate") LocalDate wahltag, @RequestParam("withNummer") String nummer) {
+    public BasisdatenDTO loadBasisdaten(@RequestParam("forDate") LocalDate wahltag, @RequestParam("withNummer") String nummer) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

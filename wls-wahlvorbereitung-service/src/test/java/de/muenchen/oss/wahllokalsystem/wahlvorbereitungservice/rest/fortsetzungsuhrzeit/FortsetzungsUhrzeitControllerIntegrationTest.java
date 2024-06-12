@@ -65,8 +65,8 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
     class GetFortsetzungsUhrzeit {
         @Test
         @WithMockUser(
-            authorities = { Authorities.SERVICE_FORTSETZUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT,
-                Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT }
+                authorities = { Authorities.SERVICE_FORTSETZUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT,
+                        Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT }
         )
         void dataFound() throws Exception {
             val wahlbezirkIDToFind = "123";
@@ -86,8 +86,8 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
 
         @Test
         @WithMockUser(
-            authorities = { Authorities.SERVICE_FORTSETZUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT,
-                Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT }
+                authorities = { Authorities.SERVICE_FORTSETZUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT,
+                        Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT }
         )
         void noDataFound() throws Exception {
             val wahlbezirkIDEmpty = "123";
@@ -110,7 +110,7 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
     class PostFortsetzungsUhrzeit {
         @Test
         @WithMockUser(
-            authorities = { Authorities.SERVICE_FORTSETZUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT }
+                authorities = { Authorities.SERVICE_FORTSETZUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT }
         )
         void newDataIsSaved() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
@@ -128,7 +128,7 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
 
         @Test
         @WithMockUser(
-            authorities = { Authorities.SERVICE_FORTSETZUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT }
+                authorities = { Authorities.SERVICE_FORTSETZUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT }
         )
         void existingDataIsOverwritten() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
@@ -156,7 +156,7 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
 
         @Test
         @WithMockUser(
-            authorities = { Authorities.SERVICE_FORTSETZUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT }
+                authorities = { Authorities.SERVICE_FORTSETZUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT }
         )
         void gotWlsExceptionWhenParameterNotComplete() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
@@ -170,13 +170,13 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
             Assertions.assertThat(fortsetzungsUhrzeitRepository.findById(wahlbezirkID)).isEmpty();
 
             val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.PARAMS_UNVOLLSTAENDIG.code(), "WLS-WAHLVORBEREITUNG",
-                ExceptionConstants.PARAMS_UNVOLLSTAENDIG.message());
+                    ExceptionConstants.PARAMS_UNVOLLSTAENDIG.message());
             Assertions.assertThat(exceptionBodyFromResponse).usingRecursiveComparison().isEqualTo(expectedExceptionDTO);
         }
 
         @Test
         @WithMockUser(
-            authorities = { Authorities.SERVICE_FORTSETZUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT }
+                authorities = { Authorities.SERVICE_FORTSETZUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT }
         )
         void gotWlsExceptionWhenNotSaveableCauseOfTooLongData() throws Exception {
             val wahlbezirkID = StringUtils.leftPad(" ", 255) + "wahlbezirkID";
@@ -191,14 +191,14 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
             Assertions.assertThat(fortsetzungsUhrzeitRepository.findById(wahlbezirkID)).isEmpty();
 
             val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionConstants.UNSAVEABLE.code(), "WLS-WAHLVORBEREITUNG",
-                ExceptionConstants.UNSAVEABLE.message());
+                    ExceptionConstants.UNSAVEABLE.message());
             Assertions.assertThat(exceptionBodyFromResponse).usingRecursiveComparison().isEqualTo(expectedExceptionDTO);
 
         }
 
         private RequestBuilder buildPostRequest(final String wahlbezirkID, final FortsetzungsUhrzeitWriteDTO requestBody) throws Exception {
             return post("/businessActions/fortsetzungsUhrzeit/" + wahlbezirkID).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
-                objectMapper.writeValueAsString(requestBody));
+                    objectMapper.writeValueAsString(requestBody));
         }
     }
 

@@ -35,7 +35,7 @@ public class FortsetzungsUhrzeitController extends AbstractController {
     @PostMapping("{wahlbezirkID}")
     @ResponseStatus(HttpStatus.CREATED)
     public void postFortsetzungsUhrzeit(@PathVariable("wahlbezirkID") final String wahlbezirkID,
-        @RequestBody final FortsetzungsUhrzeitWriteDTO fortsetzungsUhrzeitWriteDTO) {
+            @RequestBody final FortsetzungsUhrzeitWriteDTO fortsetzungsUhrzeitWriteDTO) {
         val fortsetzungsUhrzeitToSet = fortsetzungsUhrzeitDTOMapper.toModel(wahlbezirkID, fortsetzungsUhrzeitWriteDTO);
         fortsetzungsUhrzeitService.setFortsetzungsUhrzeit(fortsetzungsUhrzeitToSet);
     }

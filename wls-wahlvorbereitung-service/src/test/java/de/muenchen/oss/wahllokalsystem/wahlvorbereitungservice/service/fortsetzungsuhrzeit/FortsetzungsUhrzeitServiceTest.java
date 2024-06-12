@@ -123,7 +123,7 @@ class FortsetzungsUhrzeitServiceTest {
             Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE)).thenReturn(mockedFactoryException);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setFortsetzungsUhrzeit(modelToSave)).usingRecursiveComparison()
-                .isSameAs(mockedFactoryException);
+                    .isSameAs(mockedFactoryException);
         }
     }
 

@@ -23,7 +23,7 @@ public class FortsetzungsUhrzeitService {
 
     @PreAuthorize(
         "hasAuthority('Wahlvorbereitung_BUSINESSACTION_FortsetzungsUhrzeit')"
-            + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
+                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
     )
     public Optional<FortsetzungsUhrzeitModel> getFortsetzungsUhrzeit(@P("wahlbezirkID") final String wahlbezirkID) {
         log.debug("#getFortsetzungsUhrzeit");
@@ -40,7 +40,7 @@ public class FortsetzungsUhrzeitService {
 
     @PreAuthorize(
         "hasAuthority('Wahlvorbereitung_BUSINESSACTION_FortsetzungsUhrzeit')"
-            + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#fortsetzungsUhrzeitToSet.wahlbezirkID(), authentication)"
+                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#fortsetzungsUhrzeitToSet.wahlbezirkID(), authentication)"
     )
     public void setFortsetzungsUhrzeit(@P("fortsetzungsUhrzeitToSet") final FortsetzungsUhrzeitModel fortsetzungsUhrzeitToSet) {
         log.debug("#postFortsetzungsUhrzeit");

@@ -63,7 +63,7 @@ public class FortsetzungsUhrzeitSecurityTest {
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getFortsetzungsUhrzeit(wahlbezirkID))
-                .isInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")
@@ -75,7 +75,7 @@ public class FortsetzungsUhrzeitSecurityTest {
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.getFortsetzungsUhrzeit(wahlbezirkID))
-                .isInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         private static Stream<Arguments> getAuthoritiesVariations() {
@@ -108,7 +108,7 @@ public class FortsetzungsUhrzeitSecurityTest {
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setFortsetzungsUhrzeit(modelToSet))
-                .isInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         @Test
@@ -121,7 +121,7 @@ public class FortsetzungsUhrzeitSecurityTest {
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.setFortsetzungsUhrzeit(modelToSet))
-                .isInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         @Test
@@ -134,7 +134,7 @@ public class FortsetzungsUhrzeitSecurityTest {
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.setFortsetzungsUhrzeit(modelToSet))
-                .isExactlyInstanceOf(TechnischeWlsException.class);
+                    .isExactlyInstanceOf(TechnischeWlsException.class);
         }
 
     }

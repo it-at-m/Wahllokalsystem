@@ -27,7 +27,7 @@ public class WahldatenController {
 
     @GetMapping("wahltage")
     @ResponseStatus(HttpStatus.OK)
-    public WahltageDTO loadWahltageSinceIncluding(@RequestParam("includingAfter") LocalDate tag) {
+    public WahltageDTO loadWahltageSinceIncluding(@RequestParam("includingSince") LocalDate tag) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

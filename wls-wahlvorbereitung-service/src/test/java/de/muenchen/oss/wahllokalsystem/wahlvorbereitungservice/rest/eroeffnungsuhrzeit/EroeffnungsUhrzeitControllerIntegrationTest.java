@@ -113,7 +113,7 @@ public class EroeffnungsUhrzeitControllerIntegrationTest {
         )
         void newDataIsSaved() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
-            val writeDto = new EroeffnungsUhrzeitWriteDTO(wahlbezirkID, LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
+            val writeDto = new EroeffnungsUhrzeitWriteDTO(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
             val request = buildPostRequest(wahlbezirkID, writeDto);
 
             mockMvc.perform(request).andExpect(status().isCreated());
@@ -131,7 +131,7 @@ public class EroeffnungsUhrzeitControllerIntegrationTest {
         )
         void existingDataIsOverwritten() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
-            val writeDto1 = new EroeffnungsUhrzeitWriteDTO(wahlbezirkID, LocalDateTime.of(2023, 1, 1, 12, 0, 0));
+            val writeDto1 = new EroeffnungsUhrzeitWriteDTO(LocalDateTime.of(2023, 1, 1, 12, 0, 0));
             val request1 = buildPostRequest(wahlbezirkID, writeDto1);
 
             mockMvc.perform(request1).andExpect(status().isCreated());
@@ -141,7 +141,7 @@ public class EroeffnungsUhrzeitControllerIntegrationTest {
 
             Assertions.assertThat(eroeffnungsUhrzeitFromRepo1).isEqualTo(expectedEroeffnungsUhrzeit1);
 
-            val writeDto2 = new EroeffnungsUhrzeitWriteDTO(wahlbezirkID, LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
+            val writeDto2 = new EroeffnungsUhrzeitWriteDTO(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
             val request2 = buildPostRequest(wahlbezirkID, writeDto2);
 
             mockMvc.perform(request2).andExpect(status().isCreated());
@@ -159,7 +159,7 @@ public class EroeffnungsUhrzeitControllerIntegrationTest {
         )
         void gotWlsExceptionWhenParameterNotComplete() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
-            val writeDto = new EroeffnungsUhrzeitWriteDTO(null, null);
+            val writeDto = new EroeffnungsUhrzeitWriteDTO(null);
             val request = buildPostRequest(wahlbezirkID, writeDto);
 
             val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
@@ -179,7 +179,7 @@ public class EroeffnungsUhrzeitControllerIntegrationTest {
         )
         void gotWlsExceptionWhenNotSaveableCauseOfTooLongData() throws Exception {
             val wahlbezirkID = StringUtils.leftPad(" ", 255) + "wahlbezirkID";
-            val writeDto = new EroeffnungsUhrzeitWriteDTO(wahlbezirkID, LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
+            val writeDto = new EroeffnungsUhrzeitWriteDTO(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
 
             val request = buildPostRequest(wahlbezirkID, writeDto);
 

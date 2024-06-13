@@ -38,7 +38,7 @@ class EroeffnungsUhrzeitDTOMapperTest {
         void isMapped() {
             val eroeffnungsUhrzeit = LocalDateTime.now();
             val wahlbezirkIDToMap = "wahlbezirkID";
-            val dtoToMap = new EroeffnungsUhrzeitWriteDTO(wahlbezirkIDToMap, eroeffnungsUhrzeit);
+            val dtoToMap = new EroeffnungsUhrzeitWriteDTO(eroeffnungsUhrzeit);
 
             val result = unitUnderTest.toModel(wahlbezirkIDToMap, dtoToMap);
 

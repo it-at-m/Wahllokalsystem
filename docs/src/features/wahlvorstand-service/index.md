@@ -12,4 +12,4 @@ Folgende Services werden für den Betrieb benötigt:
 ## Daten und Funktionen
 
 - Abrufen der Wahlvorstände der Wahlbezirke
-- Pflege der Anwensenheiten der Wahlvorstände
+- Pflege der Anwesenheiten der Wahlvorstände

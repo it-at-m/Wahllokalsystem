@@ -1,0 +1,16 @@
+### Wahldaten loadWahlberechtigte
+GET http://localhost:39146/wahldaten/wahlbezirke/wbzID1/wahlberechtigte
+
+### Wahldaten loadWahltage
+GET http://localhost:39146/wahldaten/wahltage?includingAfter=2024-01-01
+
+### Wahlbeteiligung - saveWahlbeteiligung
+POST http://localhost:39146/wahlbeteiligung
+Content-Type: application/json
+
+{
+  "wahlID": "wahlID",
+  "wahlbezirkID": "wahlbezirkID",
+  "anzahlWaehler": 13,
+  "meldeZeitpunkt": "2024-01-01T00:00:00"
+}

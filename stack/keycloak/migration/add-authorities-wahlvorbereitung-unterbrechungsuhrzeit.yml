@@ -1,0 +1,39 @@
+id: add authorities wahlvorbereitung unterbrechungsuhrzeit
+author: dragonfly28
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: Wahlvorbereitung_BUSINESSACTION_UnterbrechungsUhrzeit
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_BUSINESSACTION_UnterbrechungsUhrzeit
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Wahlvorbereitung_READ_UnterbrechungsUhrzeit
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_READ_UnterbrechungsUhrzeit
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Wahlvorbereitung_WRITE_UnterbrechungsUhrzeit
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_WRITE_UnterbrechungsUhrzeit
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Wahlvorbereitung_DELETE_UnterbrechungsUhrzeit
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_DELETE_UnterbrechungsUhrzeit
+      clientId: ${SSO_CLIENT_ID}

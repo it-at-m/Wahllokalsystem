@@ -1,11 +1,11 @@
 package de.muenchen.oss.wahllokalsystem.broadcastservice.security;
 
 import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_TEST_PROFILE;
+
 import de.muenchen.oss.wahllokalsystem.broadcastservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.service.BroadcastService;
-
 import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.BroadcastSecurityUtils;
 import java.util.Arrays;
 import java.util.List;
@@ -128,7 +128,7 @@ public class BroadcastSecurityTest {
         void accessPositiveTest_Role_BROADCAST_BUSINESSACTION_NACHRICHTABRUFEN() {
 
             BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
-                    BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_NACHRICHTABRUFEN
+                    BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_NACHRICHTABRUFEN, BroadcastSecurityUtils.BROADCAST_READ_MESSAGE
             });
 
             Assertions.assertThatThrownBy(() -> broadcastService.getOldestMessage("wahlbezirkId")).isNotInstanceOf(AccessDeniedException.class);

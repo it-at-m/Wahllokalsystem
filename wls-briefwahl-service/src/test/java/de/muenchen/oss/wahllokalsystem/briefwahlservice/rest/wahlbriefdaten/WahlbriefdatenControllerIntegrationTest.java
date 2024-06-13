@@ -59,7 +59,7 @@ public class WahlbriefdatenControllerIntegrationTest {
     class GetWahlbriefdaten {
 
         @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_GET_WAHLBRIEFDATEN })
+        @WithMockUser(authorities = { Authorities.SERVICE_GET_WAHLBRIEFDATEN, Authorities.REPOSITORY_READ_WAHLBRIEFDATEN })
         void noDataFound() throws Exception {
             val request = get("/businessActions/wahlbriefdaten/wahlbezirkID");
 
@@ -69,7 +69,10 @@ public class WahlbriefdatenControllerIntegrationTest {
         }
 
         @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_GET_WAHLBRIEFDATEN, Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN })
+        @WithMockUser(
+                authorities = { Authorities.SERVICE_GET_WAHLBRIEFDATEN, Authorities.REPOSITORY_READ_WAHLBRIEFDATEN,
+                        Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN }
+        )
         void dataFound() throws Exception {
             val wahlbezirkIDToFind = "wahlbezirkID";
             val wahlbriefdaten1 = new Wahlbriefdaten("id1", null, null, null, null, null);
@@ -92,7 +95,9 @@ public class WahlbriefdatenControllerIntegrationTest {
     class PostWahlbriefdaten {
 
         @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_POST_WAHLBRIEFDATEN, Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN })
+        @WithMockUser(
+                authorities = { Authorities.SERVICE_POST_WAHLBRIEFDATEN, Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN }
+        )
         void newDataIsSaved() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             val requestBody = new WahlbriefdatenWriteDTO(1L, 2L, 3L, 4L, LocalDateTime.parse("2023-02-23T02:23:32.021"));
@@ -101,6 +106,7 @@ public class WahlbriefdatenControllerIntegrationTest {
                     .content(objectMapper.writeValueAsString(requestBody));
             api.perform(request).andExpect(status().isOk());
 
+            SecurityUtils.runAs("", "", Authorities.REPOSITORY_READ_WAHLBRIEFDATEN);
             val entityFromRepo = wahlbriefdatenRepository.findById(wahlbezirkID).get();
 
             val expectedSavedEntity = wahlbriefdatenModelMapper.toEntity(wahlbriefdatenDTOMapper.toModel(wahlbezirkID, requestBody));
@@ -108,7 +114,10 @@ public class WahlbriefdatenControllerIntegrationTest {
         }
 
         @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_POST_WAHLBRIEFDATEN, Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN })
+        @WithMockUser(
+                authorities = { Authorities.SERVICE_POST_WAHLBRIEFDATEN, Authorities.REPOSITORY_READ_WAHLBRIEFDATEN,
+                        Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN }
+        )
         void existingDataIsReplaced() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             val requestBody = new WahlbriefdatenWriteDTO(1L, 2L, 3L, 4L, LocalDateTime.parse("2035-02-27T00:01:02.003"));
@@ -120,6 +129,7 @@ public class WahlbriefdatenControllerIntegrationTest {
                     .content(objectMapper.writeValueAsString(requestBody));
             api.perform(request).andExpect(status().isOk());
 
+            SecurityUtils.runAs("", "", Authorities.REPOSITORY_READ_WAHLBRIEFDATEN);
             val entityFromRepo = wahlbriefdatenRepository.findById(wahlbezirkID).get();
 
             val expectedSavedEntity = wahlbriefdatenModelMapper.toEntity(wahlbriefdatenDTOMapper.toModel(wahlbezirkID, requestBody));

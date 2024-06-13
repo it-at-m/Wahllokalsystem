@@ -31,7 +31,7 @@ public class EroeffnungsUhrzeitController extends AbstractController {
         return withBodyOrNoContent(eroeffnungsuhrzeitModel.map(EroeffnungsuhrzeitDTOMapper::toDTO));
     }
 
-    @Operation(description = "Aktualisiert die Eroeffnungsuhrzeit des Urnenwahllokals {wahlbezirkID}")
+    @Operation(description = "Aktualisiert die Eroeffnungsuhrzeit des Wahllokals {wahlbezirkID}")
     @PostMapping("{wahlbezirkID}")
     @ResponseStatus(HttpStatus.CREATED)
     public void postEroeffnungsuhrzeit(@PathVariable("wahlbezirkID") final String wahlbezirkID,

@@ -60,7 +60,7 @@ public class EroeffnungsUhrzeitControllerTest {
     void requestIsMappedAndSendToService() {
         val wahlbezirkID = "wahlbezirkID";
         val eroeffnungsUhrzeit = LocalDateTime.now();
-        val requestBody = new EroeffnungsUhrzeitWriteDTO(eroeffnungsUhrzeit);
+        val requestBody = new EroeffnungsUhrzeitWriteDTO(wahlbezirkID, eroeffnungsUhrzeit);
 
         val mockedMappedRequest = new EroeffnungsUhrzeitModel(wahlbezirkID, eroeffnungsUhrzeit);
 

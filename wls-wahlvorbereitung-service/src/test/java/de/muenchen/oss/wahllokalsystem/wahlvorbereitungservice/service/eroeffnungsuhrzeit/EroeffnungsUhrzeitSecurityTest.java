@@ -7,6 +7,7 @@ import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.SecurityUti
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -45,7 +46,7 @@ public class EroeffnungsUhrzeitSecurityTest {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_GET_UNTERBRECHUNGSUHRZEIT);
+            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_GET_EROEFFNUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
 
@@ -56,7 +57,7 @@ public class EroeffnungsUhrzeitSecurityTest {
 
         @Test
         void bezirkIDPermissionEvaluatorFailed() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_GET_UNTERBRECHUNGSUHRZEIT);
+            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_GET_EROEFFNUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
 
@@ -79,7 +80,7 @@ public class EroeffnungsUhrzeitSecurityTest {
         }
 
         private static Stream<Arguments> getAuthoritiesVariations() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_UNTERBRECHUNGSUHRZEIT);
+            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_EROEFFNUNGSUHRZEIT);
         }
     }
 
@@ -88,7 +89,7 @@ public class EroeffnungsUhrzeitSecurityTest {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_POST_UNTERBRECHUNGSUHRZEIT);
+            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_POST_EROEFFNUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
             val modelToSet = new EroeffnungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
@@ -100,7 +101,7 @@ public class EroeffnungsUhrzeitSecurityTest {
 
         @Test
         void bezirkIDPermissionEvaluatorFailed() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_POST_UNTERBRECHUNGSUHRZEIT);
+            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_POST_EROEFFNUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
             val modelToSet = new EroeffnungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
@@ -113,7 +114,7 @@ public class EroeffnungsUhrzeitSecurityTest {
 
         @Test
         void accessDeniedOnServiceAuthorityMissing() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_REPO_UNTERBRECHUNGSUHRZEIT);
+            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_REPO_EROEFFNUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
             val modelToSet = new EroeffnungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
@@ -126,7 +127,12 @@ public class EroeffnungsUhrzeitSecurityTest {
 
         @Test
         void wlsExceptionOnRepoWriteAuthorityMissing() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_GET_UNTERBRECHUNGSUHRZEIT);
+
+            String[] ALL_AUTHORITIES_POST_EROEFFNUNGSUHRZEIT_WHITHOUT_REPO_WRITE = Arrays.stream(Authorities.ALL_AUTHORITIES_POST_EROEFFNUNGSUHRZEIT)
+                    .filter(auth -> !auth.equals(Authorities.REPOSITORY_WRITE_EROEFFNUNGSUHRZEIT))
+                    .toArray(String[]::new);
+
+            SecurityUtils.runAs(ALL_AUTHORITIES_POST_EROEFFNUNGSUHRZEIT_WHITHOUT_REPO_WRITE);
 
             val wahlbezirkID = "wahlbezirkID";
             val modelToSet = new EroeffnungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());

@@ -37,8 +37,10 @@ public class SecurityUtils {
      * <li>Arguments.of({"auth1", "auth2"}, "auth3")</li>
      * </ol>
      *
-     * @param allRequiredAuthorities
-     * @return
+     * @param allRequiredAuthorities Array with all authorities that are required to access
+     * @return Stream with arguments with combinations of authorities where one required authority is
+     *         missing. First argument is the subset, the second argument
+     *         is the missing authority
      */
     public static Stream<Arguments> buildArgumentsForMissingAuthoritiesVariations(final String[] allRequiredAuthorities) {
         return Arrays.stream(allRequiredAuthorities)

@@ -99,9 +99,9 @@ class ExceptionFactoryTest {
                 .filter(method -> method.getName().startsWith(createMethodNamePrefix))
                 .collect(Collectors.toMap(Method::getReturnType, Method::getName));
 
-        Assertions.assertThat(permittedSubclassed).allSatisfy(permittedSubclass -> {
-            Assertions.assertThat(createMethods.get(permittedSubclass)).isEqualTo(createMethodNamePrefix + permittedSubclass.getSimpleName());
-        });
+        Assertions.assertThat(permittedSubclassed).allSatisfy(permittedSubclass ->
+                Assertions.assertThat(createMethods.get(permittedSubclass)).isEqualTo(createMethodNamePrefix + permittedSubclass.getSimpleName())
+        );
     }
 
 }

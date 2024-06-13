@@ -48,6 +48,7 @@ jobs:
     with:
       tag: ${{ github.event.inputs.service }}/${{ github.event.inputs.release-version }}
       service: ${{ github.event.inputs.service }}
+      files: ${{ inputs.service }}/target/*.jar
 
   build-github-container-image:
     permissions:

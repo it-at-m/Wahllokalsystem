@@ -1,4 +1,4 @@
-POST http://localhost:8100/auth/realms/wls_realm/protocol/openid-connect/token
+POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 
 password = test &
@@ -13,15 +13,15 @@ username = wls_all
 %}
 
 ### get userinfo with auth_token
-GET http://localhost:8100/auth/realms/wls_realm/protocol/openid-connect/userinfo
+GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
 Authorization: {{ token_type }} {{ auth_token }}
 
 ###
-GET http://localhost:39146/businessActions/beanstandeteWahlbriefe/wbz-1/1
+GET {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/beanstandeteWahlbriefe/wbz-1/1
 Authorization: {{ token_type }} {{ auth_token }}
 
 ###
-POST http://localhost:39146/businessActions/beanstandeteWahlbriefe/wbz-1/1
+POST {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/beanstandeteWahlbriefe/wbz-1/1
 Authorization: {{ token_type }} {{ auth_token }}
 Content-Type: application/json
 
@@ -36,7 +36,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:39146/businessActions/beanstandeteWahlbriefe/wbz-1/1
+POST {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/beanstandeteWahlbriefe/wbz-1/1
 Authorization: {{ token_type }} {{ auth_token }}
 Content-Type: application/json
 

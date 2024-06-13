@@ -10,6 +10,10 @@ on:
         required: true
         type: string
         description: 'name of service to use'
+      files:
+        required: true
+        type: string
+        description: 'Newline-delimited globs of paths to assets to upload for release'
 
 env:
   REGISTRY: ghcr.io
@@ -41,8 +45,7 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            ${{ inputs.service }}/target/*.jar
+          files: ${{ inputs.files }}
           tag_name: ${{ inputs.tag }}
           draft: false
           prerelease: false

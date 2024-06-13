@@ -7,7 +7,6 @@ import de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.service.BroadcastService;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.BroadcastSecurityUtils;
-import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

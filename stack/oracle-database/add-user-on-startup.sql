@@ -35,3 +35,7 @@ GRANT CONNECT, RESOURCE, CREATE SESSION TO wls_monitoring_service;
 -- add user for wls-wahlvorstand-service
 CREATE USER wls_wahlvorstand_service IDENTIFIED BY secret QUOTA UNLIMITED ON USERS;
 GRANT CONNECT, RESOURCE, CREATE SESSION TO wls_wahlvorstand_service;
+
+-- add user for wls-ergebnismeldung-service
+CREATE USER wls_ergebnismeldung_service IDENTIFIED BY secret QUOTA UNLIMITED ON USERS;
+GRANT CONNECT, RESOURCE, CREATE SESSION TO wls_ergebnismeldung_service;

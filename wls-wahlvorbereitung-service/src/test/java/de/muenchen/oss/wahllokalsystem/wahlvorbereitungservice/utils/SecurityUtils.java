@@ -11,7 +11,7 @@ public class SecurityUtils {
 
     public static final String TESTUSER_DEFAULT = "TESTUSER";
 
-    public static final String TESTUSER_PASSWORD_DEFUALT = "TESTUSER_PASSWORD";
+    public static final String TESTUSER_PASSWORD_DEFAULT = "TESTUSER_PASSWORD";
 
     public static void runAs(String username, String password, String... authorities) {
         SecurityContextHolder.getContext().setAuthentication(
@@ -19,7 +19,7 @@ public class SecurityUtils {
     }
 
     public static void runAs(String... authorities) {
-        SecurityUtils.runAs(TESTUSER_DEFAULT, TESTUSER_PASSWORD_DEFUALT, authorities);
+        SecurityUtils.runAs(TESTUSER_DEFAULT, TESTUSER_PASSWORD_DEFAULT, authorities);
     }
 
     public static Stream<Arguments> buildArgumentsForMissingAuthoritiesVariations(final String[] allRequiredAuthorities) {

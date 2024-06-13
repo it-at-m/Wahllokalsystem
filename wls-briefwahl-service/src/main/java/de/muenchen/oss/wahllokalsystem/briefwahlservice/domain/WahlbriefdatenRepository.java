@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+@PreAuthorize("hasAuthority('Briefwahl_READ_Wahlbriefdaten')")
 public interface WahlbriefdatenRepository extends CrudRepository<Wahlbriefdaten, String> {
 
     String CACHE = "WahlbriefdatenCACHE";

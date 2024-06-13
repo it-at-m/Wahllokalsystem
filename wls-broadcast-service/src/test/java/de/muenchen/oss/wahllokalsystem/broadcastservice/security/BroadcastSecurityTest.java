@@ -7,6 +7,7 @@ import de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.service.BroadcastService;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.BroadcastSecurityUtils;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +56,10 @@ public class BroadcastSecurityTest {
         @Test
         void accessDenied_missingOneAuthority_BROADCAST_WRITE_MESSAGE() {
 
-            BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
+//            BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
+//                    BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_BROADCAST
+//            });
+            SecurityUtils.runWith(new String[] {
                     BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_BROADCAST
             });
 
@@ -72,7 +76,10 @@ public class BroadcastSecurityTest {
 
             List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
             BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, "I should fail");
-            BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
+//            BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
+//                    BroadcastSecurityUtils.BROADCAST_WRITE_MESSAGE
+//            });
+            SecurityUtils.runWith(new String[] {
                     BroadcastSecurityUtils.BROADCAST_WRITE_MESSAGE
             });
 

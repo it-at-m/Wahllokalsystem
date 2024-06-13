@@ -127,7 +127,6 @@ public class EroeffnungsUhrzeitSecurityTest {
 
         @Test
         void wlsExceptionOnRepoWriteAuthorityMissing() {
-
             val ALL_AUTHORITIES_POST_EROEFFNUNGSUHRZEIT_WHITHOUT_REPO_WRITE = Arrays.stream(Authorities.ALL_AUTHORITIES_POST_EROEFFNUNGSUHRZEIT)
                     .filter(auth -> !auth.equals(Authorities.REPOSITORY_WRITE_EROEFFNUNGSUHRZEIT))
                     .toArray(String[]::new);

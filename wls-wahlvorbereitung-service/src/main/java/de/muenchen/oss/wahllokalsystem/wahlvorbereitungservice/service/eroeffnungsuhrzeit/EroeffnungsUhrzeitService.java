@@ -7,6 +7,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.slf4j.MDC;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,17 @@ public class EroeffnungsUhrzeitService {
         eroeffnungsUhrzeitValidator.validModelToSetOrThrow(eroeffnungsuhrzeitToSet);
 
         try {
-            eroeffnungsUhrzeitRepository.save(eroeffnungsUhrzeitModelMapper.toEntity(eroeffnungsuhrzeitToSet));
+            val eroeffnungsuhrzeitToSave = eroeffnungsUhrzeitModelMapper.toEntity(eroeffnungsuhrzeitToSet);
+            eroeffnungsUhrzeitRepository.save(eroeffnungsuhrzeitToSave);
+            // Fachliches Logging mit  SIEM
+            try {
+                MDC.put("eid", "EROEFFNUNG");
+                MDC.put("result", "0");
+                log.info("openingTime={}|", eroeffnungsuhrzeitToSave.getEroeffnungsuhrzeit());
+            } finally {
+                MDC.remove("eid");
+                MDC.remove("result");
+            }
         } catch (Exception e) {
             log.error("Fehler beim speichern: ", e);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);

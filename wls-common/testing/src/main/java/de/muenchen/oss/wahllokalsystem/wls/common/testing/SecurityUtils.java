@@ -22,6 +22,24 @@ public class SecurityUtils {
         SecurityUtils.runAs(TESTUSER_DEFAULT, TESTUSER_PASSWORD_DEFAULT, authorities);
     }
 
+    /**
+     * Creates a stream of Arguments with combination of the required authorities with one authority
+     * missing in each combination.<br>
+     * The first argument is the
+     * array with the subset of authorities and the second argument is the missing authority
+     * <div>Example:</div>
+     * allRequiredAuthorities = { "auth1", "auth2", "auth3" }<br>
+     *
+     * Result in following arguments:<br>
+     * <ol>
+     * <li>Arguments.of({"auth2", "auth3"}, "auth1")</li>
+     * <li>Arguments.of({"auth1", "auth3"}, "auth2")</li>
+     * <li>Arguments.of({"auth1", "auth2"}, "auth3")</li>
+     * </ol>
+     *
+     * @param allRequiredAuthorities
+     * @return
+     */
     public static Stream<Arguments> buildArgumentsForMissingAuthoritiesVariations(final String[] allRequiredAuthorities) {
         return Arrays.stream(allRequiredAuthorities)
                 .map(authorityToRemove ->

@@ -13,6 +13,7 @@ public class Authorities {
     public static final String SERVICE_UNTERBRECHUNGSUHRZEIT = "Wahlvorbereitung_BUSINESSACTION_UnterbrechungsUhrzeit";
     public static final String SERVICE_GET_EROEFFNUNGSUHRZEIT = "Wahlvorbereitung_BUSINESSACTION_GetEroeffnungsuhrzeit";
     public static final String SERVICE_POST_EROEFFNUNGSUHRZEIT = "Wahlvorbereitung_BUSINESSACTION_PostEroeffnungsuhrzeit";
+    public static final String SERVICE_FORTSETZUNGSUHRZEIT = "Wahlvorbereitung_BUSINESSACTION_FortsetzungsUhrzeit";
 
     public static final String REPOSITORY_READ_URNENWAHLBORBEREITUNG = "Wahlvorbereitung_READ_UrnenwahlVorbereitung";
     public static final String REPOSITORY_DELETE_URNENWAHLVORBEREITUNG = "Wahlvorbereitung_DELETE_UrnenwahlVorbereitung";
@@ -26,6 +27,9 @@ public class Authorities {
     public static final String REPOSITORY_WRITE_EROEFFNUNGSUHRZEIT = "Wahlvorbereitung_WRITE_Eroeffnungsuhrzeit";
     public static final String REPOSITORY_READ_EROEFFNUNGSUHRZEIT = "Wahlvorbereitung_READ_Eroeffnungsuhrzeit";
     public static final String REPOSITORY_DELETE_EROEFFNUNGSUHRZEIT = "Wahlvorbereitung_DELETE_Eroeffnungsuhrzeit";
+    public static final String REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT = "Wahlvorbereitung_WRITE_FortsetzungsUhrzeit";
+    public static final String REPOSITORY_READ_FORTSETZUNGSUHRZEIT = "Wahlvorbereitung_READ_FortsetzungsUhrzeit";
+    public static final String REPOSITORY_DELETE_FORTSETZUNGSUHRZEIT = "Wahlvorbereitung_DELETE_FortsetzungsUhrzeit";
 
     public static final String[] ALL_AUTHORITIES_GET_URNENWAHLVORBEREITUNG = {
             SERVICE_GET_URNENWAHLVORBEREITUNG,
@@ -79,5 +83,22 @@ public class Authorities {
             REPOSITORY_READ_EROEFFNUNGSUHRZEIT,
             REPOSITORY_DELETE_EROEFFNUNGSUHRZEIT,
             REPOSITORY_READ_EROEFFNUNGSUHRZEIT
+    };
+  
+    public static final String[] ALL_AUTHORITIES_POST_FORTSETZUNGSUHRZEIT = {
+            SERVICE_FORTSETZUNGSUHRZEIT,
+            REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT,
+            REPOSITORY_READ_FORTSETZUNGSUHRZEIT
+    };
+
+    public static final String[] ALL_AUTHORITIES_GET_FORTSETZUNGSUHRZEIT = {
+            SERVICE_FORTSETZUNGSUHRZEIT,
+            REPOSITORY_READ_FORTSETZUNGSUHRZEIT
+    };
+
+    public static final String[] ALL_AUTHORITIES_REPO_FORTSETZUNGSUHRZEIT = {
+            REPOSITORY_READ_FORTSETZUNGSUHRZEIT,
+            REPOSITORY_DELETE_FORTSETZUNGSUHRZEIT,
+            REPOSITORY_READ_FORTSETZUNGSUHRZEIT
     };
 }

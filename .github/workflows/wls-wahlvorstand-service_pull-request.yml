@@ -1,0 +1,14 @@
+name: verify pull request wahlvorstand-service
+
+on:
+  pull_request:
+    paths:
+      - 'wls-wahlvorstand-service/**'
+      - '.github/workflows/wls-wahlvorstand-service_pull-request.yml'
+
+jobs:
+  verify-pull-request:
+    uses:
+      ./.github/workflows/callable-run-mvn-verify.yml
+    with:
+      pom-dir: 'wls-wahlvorstand-service'

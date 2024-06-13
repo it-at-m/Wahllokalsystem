@@ -1,12 +1,11 @@
 package de.muenchen.oss.wahllokalsystem.broadcastservice.utils;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-public class BroadcastSecurityUtils extends SecurityUtils {
+public class BroadcastSecurityUtils {
 
     public static String BROADCAST_BUSINESSACTION_BROADCAST = "Broadcast_BUSINESSACTION_Broadcast";
     public static String BROADCAST_BUSINESSACTION_NACHRICHTABRUFEN = "Broadcast_BUSINESSACTION_GetMessage";

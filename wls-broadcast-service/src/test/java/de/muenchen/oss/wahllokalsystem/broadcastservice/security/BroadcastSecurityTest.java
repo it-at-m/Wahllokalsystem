@@ -56,10 +56,7 @@ public class BroadcastSecurityTest {
         @Test
         void accessDenied_missingOneAuthority_BROADCAST_WRITE_MESSAGE() {
 
-//            BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
-//                    BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_BROADCAST
-//            });
-            SecurityUtils.runWith(new String[] {
+            BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
                     BroadcastSecurityUtils.BROADCAST_BUSINESSACTION_BROADCAST
             });
 
@@ -76,10 +73,7 @@ public class BroadcastSecurityTest {
 
             List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
             BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, "I should fail");
-//            BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
-//                    BroadcastSecurityUtils.BROADCAST_WRITE_MESSAGE
-//            });
-            SecurityUtils.runWith(new String[] {
+            BroadcastSecurityUtils.runAs(TestConstants.TESTUSER, TestConstants.TESTPASSWORD, new String[] {
                     BroadcastSecurityUtils.BROADCAST_WRITE_MESSAGE
             });
 

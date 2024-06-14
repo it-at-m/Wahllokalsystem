@@ -24,3 +24,4 @@ includes:
   - path: add-authorities-wahlvorbereitung-unterbrechungsuhrzeit.yml
   - path: add-missing-repository-read-authorities.yml
   - path: add-authorities-wahlvorbereitung-fortsetzungsuhrzeit.yml
+  - path: add-authorities-wahlvorbereitung-eroeffnungsuhrzeit.yml

@@ -11,6 +11,8 @@ public class Authorities {
     public static final String SERVICE_GET_WAEHLERVERZEICHNIS = "Wahlvorbereitung_BUSINESSACTION_GetWaehlerverzeichnis";
     public static final String SERVICE_POST_WAEHLERVERZEICHNIS = "Wahlvorbereitung_BUSINESSACTION_PostWaehlerverzeichnis";
     public static final String SERVICE_UNTERBRECHUNGSUHRZEIT = "Wahlvorbereitung_BUSINESSACTION_UnterbrechungsUhrzeit";
+    public static final String SERVICE_GET_EROEFFNUNGSUHRZEIT = "Wahlvorbereitung_BUSINESSACTION_GetEroeffnungsuhrzeit";
+    public static final String SERVICE_POST_EROEFFNUNGSUHRZEIT = "Wahlvorbereitung_BUSINESSACTION_PostEroeffnungsuhrzeit";
     public static final String SERVICE_FORTSETZUNGSUHRZEIT = "Wahlvorbereitung_BUSINESSACTION_FortsetzungsUhrzeit";
 
     public static final String REPOSITORY_READ_URNENWAHLBORBEREITUNG = "Wahlvorbereitung_READ_UrnenwahlVorbereitung";
@@ -22,6 +24,9 @@ public class Authorities {
     public static final String REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT = "Wahlvorbereitung_WRITE_UnterbrechungsUhrzeit";
     public static final String REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT = "Wahlvorbereitung_READ_UnterbrechungsUhrzeit";
     public static final String REPOSITORY_DELETE_UNTERBRECHUNGSUHRZEIT = "Wahlvorbereitung_DELETE_UnterbrechungsUhrzeit";
+    public static final String REPOSITORY_WRITE_EROEFFNUNGSUHRZEIT = "Wahlvorbereitung_WRITE_Eroeffnungsuhrzeit";
+    public static final String REPOSITORY_READ_EROEFFNUNGSUHRZEIT = "Wahlvorbereitung_READ_Eroeffnungsuhrzeit";
+    public static final String REPOSITORY_DELETE_EROEFFNUNGSUHRZEIT = "Wahlvorbereitung_DELETE_Eroeffnungsuhrzeit";
     public static final String REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT = "Wahlvorbereitung_WRITE_FortsetzungsUhrzeit";
     public static final String REPOSITORY_READ_FORTSETZUNGSUHRZEIT = "Wahlvorbereitung_READ_FortsetzungsUhrzeit";
     public static final String REPOSITORY_DELETE_FORTSETZUNGSUHRZEIT = "Wahlvorbereitung_DELETE_FortsetzungsUhrzeit";
@@ -61,6 +66,23 @@ public class Authorities {
             REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT,
             REPOSITORY_DELETE_UNTERBRECHUNGSUHRZEIT,
             REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT
+    };
+
+    public static final String[] ALL_AUTHORITIES_POST_EROEFFNUNGSUHRZEIT = {
+            SERVICE_POST_EROEFFNUNGSUHRZEIT,
+            REPOSITORY_WRITE_EROEFFNUNGSUHRZEIT,
+            REPOSITORY_READ_EROEFFNUNGSUHRZEIT
+    };
+
+    public static final String[] ALL_AUTHORITIES_GET_EROEFFNUNGSUHRZEIT = {
+            SERVICE_GET_EROEFFNUNGSUHRZEIT,
+            REPOSITORY_READ_EROEFFNUNGSUHRZEIT
+    };
+
+    public static final String[] ALL_AUTHORITIES_REPO_EROEFFNUNGSUHRZEIT = {
+            REPOSITORY_READ_EROEFFNUNGSUHRZEIT,
+            REPOSITORY_DELETE_EROEFFNUNGSUHRZEIT,
+            REPOSITORY_READ_EROEFFNUNGSUHRZEIT
     };
 
     public static final String[] ALL_AUTHORITIES_POST_FORTSETZUNGSUHRZEIT = {

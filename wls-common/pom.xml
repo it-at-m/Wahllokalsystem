@@ -5,7 +5,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.1.0</version>
     <name>wls-common</name>
     <packaging>pom</packaging>
     <description>Serviceübergreifende Aspekte</description>
@@ -72,7 +72,7 @@
         <url>${wls.github.url}</url>
         <connection>${wls.github.scm.connection}</connection>
         <developerConnection>${wls.github.scm.connection}</developerConnection>
-        <tag>HEAD</tag>
+        <tag>wls-common/1.1.0</tag>
     </scm>
 
     <profiles>

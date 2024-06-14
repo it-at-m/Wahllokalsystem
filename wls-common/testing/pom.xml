@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
         <artifactId>parent</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.1.0</version>
     </parent>
 
     <artifactId>testing</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.1.0</version>
     <description>Übergreifende Aspekte für das Testing</description>
     <url>${wls.github.url}</url>
 
@@ -19,7 +17,7 @@
         <url>${wls.github.url}</url>
         <connection>${wls.github.scm.connection}</connection>
         <developerConnection>${wls.github.scm.connection}</developerConnection>
-        <tag>HEAD</tag>
+        <tag>wls-common/1.1.0</tag>
     </scm>
 
     <dependencies>

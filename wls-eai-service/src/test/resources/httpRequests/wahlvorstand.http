@@ -1,0 +1,65 @@
+POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+password = test &
+grant_type = password &
+client_secret = top-secret &
+client_id = wls &
+username = wls_all
+
+> {%
+    client.global.set("auth_token", response.body.access_token);
+    client.global.set("token_type", response.body.token_type);
+%}
+
+### get userinfo with auth_token
+GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
+Authorization: {{ token_type }} {{ auth_token }}
+
+### GET Wahlvorstand wbz1
+GET {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende?wahlbezirkID=00000000-0000-0000-0000-000000000001
+Authorization: {{ token_type }} {{ auth_token }}
+
+### GET Wahlvorstand wbz2
+GET {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende?wahlbezirkID=00000000-0000-0000-0000-000000000002
+Authorization: {{ token_type }} {{ auth_token }}
+
+### GET Wahlvorstand wbz3
+GET {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende?wahlbezirkID=00000000-0000-0000-0000-000000000003
+Authorization: {{ token_type }} {{ auth_token }}
+
+### GET Wahlvorstand wbz4
+GET {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende?wahlbezirkID=00000000-0000-0000-0000-000000000004
+Authorization: {{ token_type }} {{ auth_token }}
+
+### POST Update Wahlvorstand wbz4
+POST {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende
+Authorization: {{ token_type }} {{ auth_token }}
+Content-Type: application/json
+
+{
+  "wahlbezirkID": "00000000-0000-0000-0000-000000000004",
+  "anwesenheitBeginn": "2024-06-14T19:01:12.456",
+  "mitglieder": [
+    {
+      "anwesend": true,
+      "identifikator": "00000000-0000-0000-0004-000000000001"
+    },
+    {
+      "anwesend": false,
+      "identifikator": "00000000-0000-0000-0004-000000000002"
+    },
+    {
+      "anwesend": true,
+      "identifikator": "00000000-0000-0000-0004-000000000003"
+    },
+    {
+      "anwesend": false,
+      "identifikator": "00000000-0000-0000-0004-000000000004"
+    },
+    {
+      "anwesend": true,
+      "identifikator": "00000000-0000-0000-0004-000000000005"
+    }
+  ]
+}

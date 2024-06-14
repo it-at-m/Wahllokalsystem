@@ -1,5 +1,5 @@
 id: add authorities wahlvorbereitung eroeffnungsuhrzeit
-author: dragonfly28
+author: Nic12345678
 realm: ${SSO_REALM}
 changes:
   - addRole:

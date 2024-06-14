@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    username: wls_ergebnismeldung_service
+    password: secret
+    url: jdbc:oracle:thin:@//localhost:1521/XEPDB1
+  flyway:
+    enabled: true
+  jpa:
+    database: oracle
+    hibernate:
+      ddl-auto: validate
+      naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true

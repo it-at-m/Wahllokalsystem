@@ -1,0 +1,49 @@
+id: add authorities wahlvorbereitung urnenwahlschliessungsuhrzeit
+author: dragonfly28
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: Wahlvorbereitung_BUSINESSACTION_GetUrnenwahlSchliessungsuhrzeit
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_BUSINESSACTION_GetUrnenwahlSchliessungsuhrzeit
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Wahlvorbereitung_BUSINESSACTION_PostUrnenwahlSchliessungsuhrzeit
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_BUSINESSACTION_PostUrnenwahlSchliessungsuhrzeit
+      clientId: ${SSO_CLIENT_ID}
+
+
+  - addRole:
+      name: Wahlvorbereitung_READ_UrnenwahlSchliessungsUhrzeit
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_READ_UrnenwahlSchliessungsUhrzeit
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Wahlvorbereitung_WRITE_UrnenwahlSchliessungsUhrzeit
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_WRITE_UrnenwahlSchliessungsUhrzeit
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Wahlvorbereitung_DELETE_UrnenwahlSchliessungsUhrzeit
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_DELETE_UrnenwahlSchliessungsUhrzeit
+      clientId: ${SSO_CLIENT_ID}

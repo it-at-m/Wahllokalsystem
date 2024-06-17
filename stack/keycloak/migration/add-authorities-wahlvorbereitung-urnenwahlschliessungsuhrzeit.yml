@@ -22,28 +22,28 @@ changes:
 
 
   - addRole:
-      name: Wahlvorbereitung_READ_UrnenwahlSchliessungsUhrzeit
+      name: Wahlvorbereitung_READ_UrnenwahlSchliessungsuhrzeit
       clientRole: true
       clientId: ${SSO_CLIENT_ID}
   - assignRoleToGroup:
       group: allWahlvorbereitungAuthorities
-      role: Wahlvorbereitung_READ_UrnenwahlSchliessungsUhrzeit
+      role: Wahlvorbereitung_READ_UrnenwahlSchliessungsuhrzeit
       clientId: ${SSO_CLIENT_ID}
 
   - addRole:
-      name: Wahlvorbereitung_WRITE_UrnenwahlSchliessungsUhrzeit
+      name: Wahlvorbereitung_WRITE_UrnenwahlSchliessungsuhrzeit
       clientRole: true
       clientId: ${SSO_CLIENT_ID}
   - assignRoleToGroup:
       group: allWahlvorbereitungAuthorities
-      role: Wahlvorbereitung_WRITE_UrnenwahlSchliessungsUhrzeit
+      role: Wahlvorbereitung_WRITE_UrnenwahlSchliessungsuhrzeit
       clientId: ${SSO_CLIENT_ID}
 
   - addRole:
-      name: Wahlvorbereitung_DELETE_UrnenwahlSchliessungsUhrzeit
+      name: Wahlvorbereitung_DELETE_UrnenwahlSchliessungsuhrzeit
       clientRole: true
       clientId: ${SSO_CLIENT_ID}
   - assignRoleToGroup:
       group: allWahlvorbereitungAuthorities
-      role: Wahlvorbereitung_DELETE_UrnenwahlSchliessungsUhrzeit
+      role: Wahlvorbereitung_DELETE_UrnenwahlSchliessungsuhrzeit
       clientId: ${SSO_CLIENT_ID}

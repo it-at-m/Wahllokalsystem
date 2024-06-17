@@ -23,8 +23,8 @@ public class UrnenwahlSchliessungsUhrzeitService {
     private final ExceptionFactory exceptionFactory;
 
     @PreAuthorize(
-        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_GetUrnenwahlSchliessungsUhrzeit')"
-                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
+        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_GetUrnenwahlSchliessungsuhrzeit')"
+            + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
     )
     public Optional<UrnenwahlSchliessungsUhrzeitModel> getUrnenwahlSchliessungsUhrzeit(@P("wahlbezirkID") final String wahlbezirkID) {
         log.debug("#getUrnenwahlSchliessungsUhrzeit");
@@ -40,11 +40,11 @@ public class UrnenwahlSchliessungsUhrzeitService {
     }
 
     @PreAuthorize(
-        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_PostUrnenwahlSchliessungsUhrzeit')"
-                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#urnenwahlSchliessungsUhrzeitToSet.wahlbezirkID(), authentication)"
+        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_PostUrnenwahlSchliessungsuhrzeit')"
+            + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#urnenwahlSchliessungsUhrzeitToSet.wahlbezirkID(), authentication)"
     )
     public void setUrnenwahlSchliessungsUhrzeit(
-            @P("urnenwahlSchliessungsUhrzeitToSet") final UrnenwahlSchliessungsUhrzeitModel urnenwahlSchliessungsUhrzeitToSet) {
+        @P("urnenwahlSchliessungsUhrzeitToSet") final UrnenwahlSchliessungsUhrzeitModel urnenwahlSchliessungsUhrzeitToSet) {
         log.debug("#postUrnenwahlSchliessungsUhrzeit");
         log.debug("in: urnenwahlSchliessungsUhrzeit > {}", urnenwahlSchliessungsUhrzeitToSet);
 

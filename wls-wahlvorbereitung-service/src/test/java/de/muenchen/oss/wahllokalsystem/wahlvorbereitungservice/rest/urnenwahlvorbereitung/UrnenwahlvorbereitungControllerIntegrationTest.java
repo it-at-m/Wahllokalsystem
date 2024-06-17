@@ -137,7 +137,7 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
             val firstNewWahlurne = requestBody.urnenAnzahl().get(0);
             val oldUrnen = List.of(new Wahlurne(firstNewWahlurne.wahlID() + "Old", firstNewWahlurne.anzahl() + 2, firstNewWahlurne.urneVersiegelt()));
             val entityToWriteOver = new UrnenwahlVorbereitung(wahlbezirkID, oldUrnen, requestBody.anzahlWahlkabinen(), requestBody.anzahlWahltische(),
-                requestBody.anzahlNebenraeume());
+                    requestBody.anzahlNebenraeume());
             urnenwahlVorbereitungRepository.save(entityToWriteOver);
 
             mockMvc.perform(request).andExpect(status().isCreated());
@@ -165,7 +165,7 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
             Assertions.assertThat(urnenwahlVorbereitungRepository.findById(wahlbezirkID)).isEmpty();
 
             val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.PARAMS_UNVOLLSTAENDIG.code(), "WLS-WAHLVORBEREITUNG",
-                ExceptionConstants.PARAMS_UNVOLLSTAENDIG.message());
+                    ExceptionConstants.PARAMS_UNVOLLSTAENDIG.message());
             Assertions.assertThat(exceptionBodyFromRepsonse).usingRecursiveComparison().isEqualTo(expectedExceptionDTO);
         }
 
@@ -184,13 +184,13 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
             Assertions.assertThat(urnenwahlVorbereitungRepository.findById(wahlbezirkID)).isEmpty();
 
             val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionConstants.UNSAVEABLE.code(), "WLS-WAHLVORBEREITUNG",
-                ExceptionConstants.UNSAVEABLE.message());
+                    ExceptionConstants.UNSAVEABLE.message());
             Assertions.assertThat(exceptionBodyFromRepsonse).usingRecursiveComparison().isEqualTo(expectedExceptionDTO);
         }
 
         private RequestBuilder buildPostRequest(final String wahlbezirkID, final UrnenwahlvorbereitungWriteDTO requestBody) throws Exception {
             return post("/businessActions/urnenwahlVorbereitung/" + wahlbezirkID).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
-                objectMapper.writeValueAsString(requestBody));
+                    objectMapper.writeValueAsString(requestBody));
         }
     }
 }

@@ -3,19 +3,19 @@ author: MrSebastian
 realm: ${SSO_REALM}
 changes:
   - addRole:
-      name: EAI_Wahlvorstaende_LoadWahlvorstand
+      name: aoueai_BUSINESSACTION_LoadWahlvorstand
       clientRole: true
       clientId: ${SSO_CLIENT_ID}
   - assignRoleToGroup:
       group: allEaiAuthorities
-      role: EAI_Wahlvorstaende_LoadWahlvorstand
+      role: aoueai_BUSINESSACTION_LoadWahlvorstand
       clientId: ${SSO_CLIENT_ID}
 
   - addRole:
-      name: EAI_Wahlvorstaende_SaveAnwesenheit
+      name: aoueai_BUSINESSACTION_SaveAnwesenheit
       clientRole: true
       clientId: ${SSO_CLIENT_ID}
   - assignRoleToGroup:
       group: allEaiAuthorities
-      role: EAI_Wahlvorstaende_SaveAnwesenheit
+      role: aoueai_BUSINESSACTION_SaveAnwesenheit
       clientId: ${SSO_CLIENT_ID}

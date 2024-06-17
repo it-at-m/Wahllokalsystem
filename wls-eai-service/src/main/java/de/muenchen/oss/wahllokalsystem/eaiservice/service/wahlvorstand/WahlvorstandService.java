@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.eaiservice.service;
+package de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlvorstand;
 
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.Wahlvorstand;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.WahlvorstandRepository;
@@ -26,15 +26,20 @@ public class WahlvorstandService {
 
     private final WahlvorstandMapper wahlvorstandMapper;
 
-    @PreAuthorize("hasAuthority('EAI_Wahlvorstaende_LoadWahlvorstand')")
+    private final WahlvorstandValidator wahlvorstandValidator;
+
+    @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadWahlvorstand')")
     public WahlvorstandDTO getWahlvorstandForWahlbezirk(final String wahlbezirkID) {
+        wahlvorstandValidator.validateWahlbezirkIDOrThrow(wahlbezirkID);
         val wahlbezirkUUID = convertIDToUUIDOrThrow(wahlbezirkID);
         return wahlvorstandRepository.findFirstByWahlbezirkID(wahlbezirkUUID).map(wahlvorstandMapper::toDTO).orElse(null);
     }
 
-    @PreAuthorize("hasAuthority('EAI_Wahlvorstaende_SaveAnwesenheit')")
+    @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_SaveAnwesenheit')")
     public void setAnwesenheit(final WahlvorstandsaktualisierungDTO aktualisierung) {
         //TODO was ist wenn es den Wahlvorstand nicht gibt den man aktualisieren soll
+        wahlvorstandValidator.valideSaveAnwesenheitDataOrThrow(aktualisierung);
+
         val wahlvorstandToUpdate = wahlvorstandRepository.findFirstByWahlbezirkID(convertIDToUUIDOrThrow(aktualisierung.wahlbezirkID()));
         if (wahlvorstandToUpdate.isPresent()) {
             val entity = wahlvorstandToUpdate.get();

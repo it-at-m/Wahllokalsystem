@@ -27,6 +27,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -39,6 +40,9 @@ import org.springframework.test.web.servlet.RequestBuilder;
 @AutoConfigureMockMvc
 @ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, Profiles.NO_BEZIRKS_ID_CHECK })
 public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
+
+    @Value("${service.info.oid}")
+    private String service_info_oid;
 
     @Autowired
     MockMvc mockMvc;
@@ -178,7 +182,7 @@ public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
             SecurityUtils.runAs(Authorities.REPOSITORY_READ_URNENWAHLSCHLIESSUNGSUHRZEIT);
             Assertions.assertThat(urnenwahlSchliessungsUhrzeitRepository.findById(wahlbezirkID)).isEmpty();
 
-            val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.PARAMS_UNVOLLSTAENDIG.code(), "WLS-WAHLVORBEREITUNG",
+            val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.PARAMS_UNVOLLSTAENDIG.code(), service_info_oid,
                     ExceptionConstants.PARAMS_UNVOLLSTAENDIG.message());
             Assertions.assertThat(exceptionBodyFromResponse).usingRecursiveComparison().isEqualTo(expectedExceptionDTO);
         }

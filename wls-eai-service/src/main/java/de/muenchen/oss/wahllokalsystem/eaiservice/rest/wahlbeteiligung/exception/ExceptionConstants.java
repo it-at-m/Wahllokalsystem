@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlbeteiligung.exception;
 
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionDataWrapper;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionDataWrapper;
 
 public class ExceptionConstants {
 

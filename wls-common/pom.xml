@@ -5,7 +5,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.2.0-SNAPSHOT</version>
     <name>wls-common</name>
     <packaging>pom</packaging>
     <description>Serviceübergreifende Aspekte</description>

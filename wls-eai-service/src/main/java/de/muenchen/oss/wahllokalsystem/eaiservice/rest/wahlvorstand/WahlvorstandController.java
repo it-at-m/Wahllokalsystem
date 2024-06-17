@@ -5,7 +5,6 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.Wahlvors
 import de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlvorstand.WahlvorstandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,14 +22,12 @@ public class WahlvorstandController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('EAI_Wahlvorstaende_LoadWahlvorstand')")
     public WahlvorstandDTO loadWahlvorstand(final @RequestParam("wahlbezirkID") String wahlbezirkID) {
         return wahlvorstandService.getWahlvorstandForWahlbezirk(wahlbezirkID);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('EAI_Wahlvorstaende_SaveAnwesenheit')")
     public void saveAnwesenheit(@RequestBody WahlvorstandsaktualisierungDTO wahlvorstand) {
         wahlvorstandService.setAnwesenheit(wahlvorstand);
     }

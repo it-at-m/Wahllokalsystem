@@ -2,8 +2,7 @@ package de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand;
 
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandsaktualisierungDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.service.WahlvorstandService;
-import jakarta.validation.Valid;
+import de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlvorstand.WahlvorstandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,7 +31,7 @@ public class WahlvorstandController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('EAI_Wahlvorstaende_SaveAnwesenheit')")
-    public void saveAnwesenheit(@Valid @RequestBody WahlvorstandsaktualisierungDTO wahlvorstand) {
+    public void saveAnwesenheit(@RequestBody WahlvorstandsaktualisierungDTO wahlvorstand) {
         wahlvorstandService.setAnwesenheit(wahlvorstand);
     }
 }

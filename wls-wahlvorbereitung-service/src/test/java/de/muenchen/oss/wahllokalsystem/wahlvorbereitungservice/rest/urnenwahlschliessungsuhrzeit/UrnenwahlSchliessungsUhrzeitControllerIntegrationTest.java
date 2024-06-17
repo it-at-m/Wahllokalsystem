@@ -42,7 +42,7 @@ import org.springframework.test.web.servlet.RequestBuilder;
 public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
 
     @Value("${service.info.oid}")
-    private String service_info_oid;
+    private String serviceInfoOid;
 
     @Autowired
     MockMvc mockMvc;
@@ -182,7 +182,7 @@ public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
             SecurityUtils.runAs(Authorities.REPOSITORY_READ_URNENWAHLSCHLIESSUNGSUHRZEIT);
             Assertions.assertThat(urnenwahlSchliessungsUhrzeitRepository.findById(wahlbezirkID)).isEmpty();
 
-            val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.PARAMS_UNVOLLSTAENDIG.code(), service_info_oid,
+            val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.PARAMS_UNVOLLSTAENDIG.code(), serviceInfoOid,
                     ExceptionConstants.PARAMS_UNVOLLSTAENDIG.message());
             Assertions.assertThat(exceptionBodyFromResponse).usingRecursiveComparison().isEqualTo(expectedExceptionDTO);
         }
@@ -204,7 +204,7 @@ public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
             SecurityUtils.runAs(Authorities.REPOSITORY_READ_URNENWAHLSCHLIESSUNGSUHRZEIT);
             Assertions.assertThat(urnenwahlSchliessungsUhrzeitRepository.findById(wahlbezirkID)).isEmpty();
 
-            val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionConstants.UNSAVEABLE.code(), "WLS-WAHLVORBEREITUNG",
+            val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionConstants.UNSAVEABLE.code(), serviceInfoOid,
                     ExceptionConstants.UNSAVEABLE.message());
             Assertions.assertThat(exceptionBodyFromResponse).usingRecursiveComparison().isEqualTo(expectedExceptionDTO);
 

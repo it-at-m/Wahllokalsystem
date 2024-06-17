@@ -26,7 +26,7 @@ class UrnenwahlSchliessungsUhrzeitModelMapperTest {
 
             val result = unitUnderTest.toModel(entityToMap);
 
-            val expectedResult= new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, urnenwahlSchliessungsUhrzeit);
+            val expectedResult = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, urnenwahlSchliessungsUhrzeit);
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }

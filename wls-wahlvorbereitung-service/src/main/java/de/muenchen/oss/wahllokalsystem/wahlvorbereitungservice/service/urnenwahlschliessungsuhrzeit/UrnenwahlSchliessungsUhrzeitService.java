@@ -62,7 +62,7 @@ public class UrnenwahlSchliessungsUhrzeitService {
                 MDC.remove("eid");
                 MDC.remove("result");
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.error("Fehler beim speichern: ", e);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
         }

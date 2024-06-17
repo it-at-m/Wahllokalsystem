@@ -63,3 +63,80 @@ Content-Type: application/json
     }
   ]
 }
+
+### POST Update - bezirkID fehlt
+POST {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende
+Authorization: {{ token_type }} {{ auth_token }}
+Content-Type: application/json
+
+{
+  "anwesenheitBeginn": "2024-06-14T19:01:12.456",
+  "mitglieder": [
+    {
+      "anwesend": true,
+      "identifikator": "00000000-0000-0000-0004-000000000001"
+    },
+    {
+      "anwesend": false,
+      "identifikator": "00000000-0000-0000-0004-000000000002"
+    },
+    {
+      "anwesend": true,
+      "identifikator": "00000000-0000-0000-0004-000000000003"
+    },
+    {
+      "anwesend": false,
+      "identifikator": "00000000-0000-0000-0004-000000000004"
+    },
+    {
+      "anwesend": true,
+      "identifikator": "00000000-0000-0000-0004-000000000005"
+    }
+  ]
+}
+
+### POST Update - anwesenheitBeginn fehlt
+POST {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende
+Authorization: {{ token_type }} {{ auth_token }}
+Content-Type: application/json
+
+{
+  "wahlbezirkID": "00000000-0000-0000-0000-000000000004",
+  "mitglieder": [
+    {
+      "anwesend": true,
+      "identifikator": "00000000-0000-0000-0004-000000000001"
+    },
+    {
+      "anwesend": false,
+      "identifikator": "00000000-0000-0000-0004-000000000002"
+    },
+    {
+      "anwesend": true,
+      "identifikator": "00000000-0000-0000-0004-000000000003"
+    },
+    {
+      "anwesend": false,
+      "identifikator": "00000000-0000-0000-0004-000000000004"
+    },
+    {
+      "anwesend": true,
+      "identifikator": "00000000-0000-0000-0004-000000000005"
+    }
+  ]
+}
+
+### POST Update - Identifikator fehlt
+POST {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende
+Authorization: {{ token_type }} {{ auth_token }}
+Content-Type: application/json
+
+{
+  "wahlbezirkID": "00000000-0000-0000-0000-000000000004",
+  "anwesenheitBeginn": "2024-06-14T19:01:12.456",
+  "mitglieder": [
+    {
+      "anwesend": true
+    }
+  ]
+}

@@ -3,7 +3,7 @@ package de.muenchen.oss.wahllokalsystem.eaiservice.configuration;
 import static de.muenchen.oss.wahllokalsystem.eaiservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -104,7 +104,7 @@ class SecurityConfigurationTest {
             val wahlvorstandAktualisierung = new WahlvorstandsaktualisierungDTO("wbzID", Set.of(new WahlvorstandsmitgliedAktualisierungDTO("id", true)),
                     LocalDateTime.now());
 
-            api.perform(post("/wahlvorstaende/anwesenheit").with(csrf()).contentType(MediaType.APPLICATION_JSON)
+            api.perform(put("/wahlvorstaende/anwesenheit").with(csrf()).contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(wahlvorstandAktualisierung))).andExpect(status().isUnauthorized());
         }
 
@@ -114,7 +114,7 @@ class SecurityConfigurationTest {
             val wahlvorstandAktualisierung = new WahlvorstandsaktualisierungDTO("wbzID", Set.of(new WahlvorstandsmitgliedAktualisierungDTO("id", true)),
                     LocalDateTime.now());
 
-            api.perform(post("/wahlvorstaende/anwesenheit").with(csrf()).contentType(MediaType.APPLICATION_JSON)
+            api.perform(put("/wahlvorstaende/anwesenheit").with(csrf()).contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(wahlvorstandAktualisierung))).andExpect(status().isOk());
         }
     }

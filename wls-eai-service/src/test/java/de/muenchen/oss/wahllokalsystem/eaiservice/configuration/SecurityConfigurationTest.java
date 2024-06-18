@@ -104,7 +104,7 @@ class SecurityConfigurationTest {
             val wahlvorstandAktualisierung = new WahlvorstandsaktualisierungDTO("wbzID", Set.of(new WahlvorstandsmitgliedAktualisierungDTO("id", true)),
                     LocalDateTime.now());
 
-            api.perform(post("/wahlvorstaende").with(csrf()).contentType(MediaType.APPLICATION_JSON)
+            api.perform(post("/wahlvorstaende/anwesenheit").with(csrf()).contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(wahlvorstandAktualisierung))).andExpect(status().isUnauthorized());
         }
 
@@ -114,7 +114,7 @@ class SecurityConfigurationTest {
             val wahlvorstandAktualisierung = new WahlvorstandsaktualisierungDTO("wbzID", Set.of(new WahlvorstandsmitgliedAktualisierungDTO("id", true)),
                     LocalDateTime.now());
 
-            api.perform(post("/wahlvorstaende").with(csrf()).contentType(MediaType.APPLICATION_JSON)
+            api.perform(post("/wahlvorstaende/anwesenheit").with(csrf()).contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(wahlvorstandAktualisierung))).andExpect(status().isOk());
         }
     }

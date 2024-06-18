@@ -26,7 +26,7 @@ public class WahlvorstandController {
         return wahlvorstandService.getWahlvorstandForWahlbezirk(wahlbezirkID);
     }
 
-    @PostMapping
+    @PostMapping("anwesenheit")
     @ResponseStatus(HttpStatus.OK)
     public void saveAnwesenheit(@RequestBody WahlvorstandsaktualisierungDTO wahlvorstand) {
         wahlvorstandService.setAnwesenheit(wahlvorstand);

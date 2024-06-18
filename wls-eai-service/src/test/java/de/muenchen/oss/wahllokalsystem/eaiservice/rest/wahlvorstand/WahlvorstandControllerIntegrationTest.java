@@ -144,7 +144,7 @@ public class WahlvorstandControllerIntegrationTest {
             val mitglieder = Set.of(new WahlvorstandsmitgliedAktualisierungDTO(mitglied1.getId().toString(), false),
                     new WahlvorstandsmitgliedAktualisierungDTO(mitglied2.getId().toString(), true));
             val aktualisierung = new WahlvorstandsaktualisierungDTO(wahlbezirkID.toString(), mitglieder, updateDateTime);
-            val request = MockMvcRequestBuilders.post("/wahlvorstaende").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
+            val request = MockMvcRequestBuilders.post("/wahlvorstaende/anwesenheit").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
                     objectMapper.writeValueAsString(aktualisierung));
 
             api.perform(request).andExpect(status().isOk());
@@ -169,7 +169,7 @@ public class WahlvorstandControllerIntegrationTest {
             val mitglieder = Set.of(new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), false),
                     new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), true));
             val aktualisierung = new WahlvorstandsaktualisierungDTO(UUID.randomUUID().toString(), mitglieder, updateDateTime);
-            val request = MockMvcRequestBuilders.post("/wahlvorstaende").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
+            val request = MockMvcRequestBuilders.post("/wahlvorstaende/anwesenheit").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
                     objectMapper.writeValueAsString(aktualisierung));
 
             api.perform(request).andExpect(status().isNotFound());
@@ -181,7 +181,7 @@ public class WahlvorstandControllerIntegrationTest {
             val mitglieder = Set.of(new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), false),
                     new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), true));
             val aktualisierung = new WahlvorstandsaktualisierungDTO(UUID.randomUUID().toString(), mitglieder, null);
-            val request = MockMvcRequestBuilders.post("/wahlvorstaende").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
+            val request = MockMvcRequestBuilders.post("/wahlvorstaende/anwesenheit").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
                     objectMapper.writeValueAsString(aktualisierung));
 
             api.perform(request).andExpect(status().isBadRequest());

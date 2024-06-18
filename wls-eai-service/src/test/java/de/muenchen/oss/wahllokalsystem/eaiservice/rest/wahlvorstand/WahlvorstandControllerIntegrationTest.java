@@ -34,9 +34,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, "no-security" })
+@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
 public class WahlvorstandControllerIntegrationTest {
 
     @Value("${service.info.oid}")
@@ -102,6 +102,7 @@ public class WahlvorstandControllerIntegrationTest {
         }
 
         @Test
+        @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLVORSTAND)
         void wlsExceptionOnInvalidWahlbezirkIDFormat() throws Exception {
             val request = MockMvcRequestBuilders.get("/wahlvorstaende?wahlbezirkID=wrongFormat");
 

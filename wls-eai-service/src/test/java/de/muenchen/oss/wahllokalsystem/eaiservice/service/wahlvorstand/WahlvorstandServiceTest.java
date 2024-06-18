@@ -4,6 +4,7 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.Wahlvorsta
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.WahlvorstandFunktion;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.WahlvorstandRepository;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.Wahlvorstandsmitglied;
+import de.muenchen.oss.wahllokalsystem.eaiservice.exception.NotFoundException;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandsaktualisierungDTO;
@@ -59,7 +60,7 @@ class WahlvorstandServiceTest {
 
             val result = unitUnderTest.getWahlvorstandForWahlbezirk(wahlbezirkID.toString());
 
-            Assertions.assertThat(result).isEqualTo(Optional.of(mockedMappedEntity));
+            Assertions.assertThat(result).isSameAs(mockedMappedEntity);
         }
 
         @Test
@@ -68,9 +69,8 @@ class WahlvorstandServiceTest {
 
             Mockito.when(wahlvorstandRepository.findFirstByWahlbezirkID(wahlbezirkID)).thenReturn(Optional.empty());
 
-            val result = unitUnderTest.getWahlvorstandForWahlbezirk(wahlbezirkID.toString());
-
-            Assertions.assertThat(result).isEmpty();
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlvorstandForWahlbezirk(wahlbezirkID.toString()))
+                    .usingRecursiveComparison().isEqualTo(new NotFoundException(wahlbezirkID, Wahlvorstand.class));
         }
 
         @Test

@@ -70,7 +70,7 @@ public class WahlvorstandControllerIntegrationTest {
         void noDataFound() throws Exception {
             val request = MockMvcRequestBuilders.get("/wahlvorstaende?wahlbezirkID=" + UUID.randomUUID());
 
-            val response = api.perform(request).andExpect(status().isOk()).andReturn();
+            val response = api.perform(request).andExpect(status().isNotFound()).andReturn();
 
             Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
         }

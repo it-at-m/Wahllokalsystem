@@ -21,9 +21,8 @@ public class WahlvorstandController {
     private final WahlvorstandService wahlvorstandService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     public WahlvorstandDTO loadWahlvorstand(final @RequestParam("wahlbezirkID") String wahlbezirkID) {
-        return wahlvorstandService.getWahlvorstandForWahlbezirk(wahlbezirkID).orElse(null);
+        return wahlvorstandService.getWahlvorstandForWahlbezirk(wahlbezirkID);
     }
 
     @PostMapping

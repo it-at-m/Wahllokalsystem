@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlvorstand;
 import de.muenchen.oss.wahllokalsystem.eaiservice.Authorities;
 import de.muenchen.oss.wahllokalsystem.eaiservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.eaiservice.TestConstants;
+import de.muenchen.oss.wahllokalsystem.eaiservice.exception.NotFoundException;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandsaktualisierungDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandsmitgliedAktualisierungDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
@@ -38,7 +39,8 @@ public class WahlvorstandServiceSecurityTest {
         void accessGranted() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GETWAHLVORSTANDFORWAHLBEZIRK);
 
-            Assertions.assertThatNoException().isThrownBy(() -> wahlvorstandService.getWahlvorstandForWahlbezirk(UUID.randomUUID().toString()));
+            Assertions.assertThatException().isThrownBy(() -> wahlvorstandService.getWahlvorstandForWahlbezirk(UUID.randomUUID().toString())).isInstanceOf(
+                    NotFoundException.class);
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")

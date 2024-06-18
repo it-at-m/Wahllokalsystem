@@ -25,6 +25,12 @@ public class GlobalExceptionHandler extends AbstractExceptionHandler {
         return createResponse(getWahlExceptionDTO(throwable));
     }
 
+    @ExceptionHandler
+    public ResponseEntity<Void> handleNotFoundException(final NotFoundException notFoundException) {
+        log.debug("not found entity {} with id {}", notFoundException.getEntityClass(), notFoundException.getRequestedID());
+        return ResponseEntity.notFound().build();
+    }
+
     @Override
     protected String getService() {
         return serviceIDFormatter.getId();

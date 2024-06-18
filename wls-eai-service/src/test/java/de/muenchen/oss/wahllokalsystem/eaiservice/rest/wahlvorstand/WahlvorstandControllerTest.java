@@ -5,7 +5,6 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.Wahlvors
 import de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlvorstand.WahlvorstandService;
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -33,19 +32,9 @@ class WahlvorstandControllerTest {
             val wahlbezirkID = "wahlbezirkID";
             val wahlvorstandFromService = new WahlvorstandDTO("wahlbezirkID", Collections.emptySet());
 
-            Mockito.when(wahlvorstandService.getWahlvorstandForWahlbezirk(wahlbezirkID)).thenReturn(Optional.of(wahlvorstandFromService));
+            Mockito.when(wahlvorstandService.getWahlvorstandForWahlbezirk(wahlbezirkID)).thenReturn(wahlvorstandFromService);
 
             Assertions.assertThat(unitUnderTest.loadWahlvorstand(wahlbezirkID)).isSameAs(wahlvorstandFromService);
-        }
-
-        @Test
-        void gotNoDataFromService() {
-
-            val wahlbezirkID = "wahlbezirkID";
-
-            Mockito.when(wahlvorstandService.getWahlvorstandForWahlbezirk(wahlbezirkID)).thenReturn(Optional.empty());
-
-            Assertions.assertThat(unitUnderTest.loadWahlvorstand(wahlbezirkID)).isNull();
         }
 
     }

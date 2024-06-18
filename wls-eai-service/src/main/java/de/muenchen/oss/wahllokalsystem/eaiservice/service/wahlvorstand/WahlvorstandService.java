@@ -3,13 +3,13 @@ package de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlvorstand;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.Wahlvorstand;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.WahlvorstandRepository;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.Wahlvorstandsmitglied;
+import de.muenchen.oss.wahllokalsystem.eaiservice.exception.NotFoundException;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandsaktualisierungDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandsmitgliedAktualisierungDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -29,10 +29,10 @@ public class WahlvorstandService {
     private final WahlvorstandValidator wahlvorstandValidator;
 
     @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadWahlvorstand')")
-    public Optional<WahlvorstandDTO> getWahlvorstandForWahlbezirk(final String wahlbezirkID) {
+    public WahlvorstandDTO getWahlvorstandForWahlbezirk(final String wahlbezirkID) {
         wahlvorstandValidator.validateWahlbezirkIDOrThrow(wahlbezirkID);
         val wahlbezirkUUID = convertIDToUUIDOrThrow(wahlbezirkID);
-        return wahlvorstandRepository.findFirstByWahlbezirkID(wahlbezirkUUID).map(wahlvorstandMapper::toDTO);
+        return wahlvorstandMapper.toDTO(findByWahlbezirkIDOrThrow(wahlbezirkUUID));
     }
 
     @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_SaveAnwesenheit')")
@@ -69,6 +69,10 @@ public class WahlvorstandService {
         } catch (final IllegalArgumentException illegalArgumentException) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.ID_NICHT_KONVERTIERBAR);
         }
+    }
+
+    private Wahlvorstand findByWahlbezirkIDOrThrow(final UUID wahlbezirkID) {
+        return wahlvorstandRepository.findFirstByWahlbezirkID(wahlbezirkID).orElseThrow(() -> new NotFoundException(wahlbezirkID, Wahlvorstand.class));
     }
 
 }

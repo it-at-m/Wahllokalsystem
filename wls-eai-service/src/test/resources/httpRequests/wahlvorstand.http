@@ -32,6 +32,10 @@ Authorization: {{ token_type }} {{ auth_token }}
 GET {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende?wahlbezirkID=00000000-0000-0000-0000-000000000004
 Authorization: {{ token_type }} {{ auth_token }}
 
+### GET Wahlvorstand not found
+GET {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende?wahlbezirkID=00000000-9999-0000-0000-000000000000
+Authorization: {{ token_type }} {{ auth_token }}
+
 ### POST Update Wahlvorstand wbz4
 POST {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende
 Authorization: {{ token_type }} {{ auth_token }}

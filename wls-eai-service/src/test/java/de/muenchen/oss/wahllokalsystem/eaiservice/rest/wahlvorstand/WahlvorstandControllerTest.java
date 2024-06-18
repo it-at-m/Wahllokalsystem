@@ -5,8 +5,10 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.Wahlvors
 import de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlvorstand.WahlvorstandService;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,14 +25,29 @@ class WahlvorstandControllerTest {
     @InjectMocks
     WahlvorstandController unitUnderTest;
 
-    @Test
-    void loadWahlvorstand() {
-        val wahlbezirkID = "wahlbezirkID";
-        val wahlvorstandFromService = new WahlvorstandDTO("wahlbezirkID", Collections.emptySet());
+    @Nested
+    class LoadWahlvorstand {
 
-        Mockito.when(wahlvorstandService.getWahlvorstandForWahlbezirk(wahlbezirkID)).thenReturn(wahlvorstandFromService);
+        @Test
+        void gotDataFromService() {
+            val wahlbezirkID = "wahlbezirkID";
+            val wahlvorstandFromService = new WahlvorstandDTO("wahlbezirkID", Collections.emptySet());
 
-        Assertions.assertThat(unitUnderTest.loadWahlvorstand(wahlbezirkID)).isSameAs(wahlvorstandFromService);
+            Mockito.when(wahlvorstandService.getWahlvorstandForWahlbezirk(wahlbezirkID)).thenReturn(Optional.of(wahlvorstandFromService));
+
+            Assertions.assertThat(unitUnderTest.loadWahlvorstand(wahlbezirkID)).isSameAs(wahlvorstandFromService);
+        }
+
+        @Test
+        void gotNoDataFromService() {
+
+            val wahlbezirkID = "wahlbezirkID";
+
+            Mockito.when(wahlvorstandService.getWahlvorstandForWahlbezirk(wahlbezirkID)).thenReturn(Optional.empty());
+
+            Assertions.assertThat(unitUnderTest.loadWahlvorstand(wahlbezirkID)).isNull();
+        }
+
     }
 
     @Test

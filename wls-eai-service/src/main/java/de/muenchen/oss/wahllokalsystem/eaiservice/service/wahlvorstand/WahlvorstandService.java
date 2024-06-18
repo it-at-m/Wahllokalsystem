@@ -9,6 +9,7 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.Wahlvors
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandsmitgliedAktualisierungDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -28,10 +29,10 @@ public class WahlvorstandService {
     private final WahlvorstandValidator wahlvorstandValidator;
 
     @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadWahlvorstand')")
-    public WahlvorstandDTO getWahlvorstandForWahlbezirk(final String wahlbezirkID) {
+    public Optional<WahlvorstandDTO> getWahlvorstandForWahlbezirk(final String wahlbezirkID) {
         wahlvorstandValidator.validateWahlbezirkIDOrThrow(wahlbezirkID);
         val wahlbezirkUUID = convertIDToUUIDOrThrow(wahlbezirkID);
-        return wahlvorstandRepository.findFirstByWahlbezirkID(wahlbezirkUUID).map(wahlvorstandMapper::toDTO).orElse(null);
+        return wahlvorstandRepository.findFirstByWahlbezirkID(wahlbezirkUUID).map(wahlvorstandMapper::toDTO);
     }
 
     @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_SaveAnwesenheit')")

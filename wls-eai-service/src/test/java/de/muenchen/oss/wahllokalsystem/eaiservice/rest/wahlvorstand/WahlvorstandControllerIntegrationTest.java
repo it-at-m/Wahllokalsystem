@@ -12,6 +12,7 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.Wahlvorsta
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.Wahlvorstandsmitglied;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlvorstand.WahlvorstandMapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
@@ -37,7 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureMockMvc
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, "no-security" })
 public class WahlvorstandControllerIntegrationTest {
-    
+
     @Value("${service.info.oid}")
     String serviceInfoOid;
 

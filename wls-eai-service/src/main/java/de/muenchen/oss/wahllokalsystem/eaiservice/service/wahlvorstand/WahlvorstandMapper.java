@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand;
+package de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlvorstand;
 
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.Wahlvorstand;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.Wahlvorstandsmitglied;

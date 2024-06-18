@@ -37,15 +37,11 @@ public class WahlvorstandService {
 
     @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_SaveAnwesenheit')")
     public void setAnwesenheit(final WahlvorstandsaktualisierungDTO aktualisierung) {
-        //TODO was ist wenn es den Wahlvorstand nicht gibt den man aktualisieren soll
         wahlvorstandValidator.valideSaveAnwesenheitDataOrThrow(aktualisierung);
 
-        val wahlvorstandToUpdate = wahlvorstandRepository.findFirstByWahlbezirkID(convertIDToUUIDOrThrow(aktualisierung.wahlbezirkID()));
-        if (wahlvorstandToUpdate.isPresent()) {
-            val entity = wahlvorstandToUpdate.get();
-            updateAnwesenheitOfWahlvorstand(aktualisierung, entity);
-            wahlvorstandRepository.save(entity);
-        }
+        val wahlvorstandToUpdate = findByWahlbezirkIDOrThrow(convertIDToUUIDOrThrow(aktualisierung.wahlbezirkID()));
+        updateAnwesenheitOfWahlvorstand(aktualisierung, wahlvorstandToUpdate);
+        wahlvorstandRepository.save(wahlvorstandToUpdate);
     }
 
     private void updateAnwesenheitOfWahlvorstand(final WahlvorstandsaktualisierungDTO updateData, final Wahlvorstand existingWahlvorstand) {

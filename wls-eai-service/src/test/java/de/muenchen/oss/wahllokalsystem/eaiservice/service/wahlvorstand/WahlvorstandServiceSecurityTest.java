@@ -67,7 +67,7 @@ public class WahlvorstandServiceSecurityTest {
             val aktualisierung = new WahlvorstandsaktualisierungDTO(UUID.randomUUID().toString(),
                     Set.of(new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), false)), LocalDateTime.now());
 
-            Assertions.assertThatNoException().isThrownBy(() -> wahlvorstandService.setAnwesenheit(aktualisierung));
+            Assertions.assertThatException().isThrownBy(() -> wahlvorstandService.setAnwesenheit(aktualisierung)).isInstanceOf(NotFoundException.class);
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")

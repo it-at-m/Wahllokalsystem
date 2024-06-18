@@ -133,7 +133,7 @@ class WahlvorstandServiceTest {
         }
 
         @Test
-        void noUpdateWhenWahlvorstandDoesntExists() {
+        void exceptionWhenWahlvorstandDoesNotExists() {
             val wahlbezirkID = UUID.randomUUID();
             val mitglied1 = new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), true);
             val mitglied2 = new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), false);
@@ -142,7 +142,8 @@ class WahlvorstandServiceTest {
 
             Mockito.when(wahlvorstandRepository.findFirstByWahlbezirkID(wahlbezirkID)).thenReturn(Optional.empty());
 
-            unitUnderTest.setAnwesenheit(aktualisierung);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setAnwesenheit(aktualisierung)).usingRecursiveComparison()
+                    .isEqualTo(new NotFoundException(wahlbezirkID, Wahlvorstand.class));
 
             Mockito.verify(wahlvorstandRepository, Mockito.times(0)).save(Mockito.any(Wahlvorstand.class));
         }

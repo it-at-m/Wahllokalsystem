@@ -166,7 +166,7 @@ class WahlvorstandServiceTest {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.ID_NICHT_KONVERTIERBAR)).thenReturn(mockedWlsException);
 
             Assertions.assertThatException().isThrownBy(
-                            () -> unitUnderTest.setAnwesenheit(new WahlvorstandsaktualisierungDTO("malformedID", Collections.emptySet(), LocalDateTime.now())))
+                    () -> unitUnderTest.setAnwesenheit(new WahlvorstandsaktualisierungDTO("malformedID", Collections.emptySet(), LocalDateTime.now())))
                     .isSameAs(mockedWlsException);
         }
     }

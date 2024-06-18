@@ -48,8 +48,7 @@ public class WahlvorstandService {
         updateData.mitglieder().forEach(mitgliedUpdateData -> {
             val mitgliedToUpdate = existingWahlvorstand.getMitglieder().stream()
                     .filter(setElement -> setElement.getId().toString().equals(mitgliedUpdateData.identifikator())).findFirst();
-            mitgliedToUpdate.ifPresent(mitglied ->
-                    updateAnwesenheitOfWahlvorstandsmitglied(updateData.anwesenheitBeginn(), mitgliedUpdateData, mitglied));
+            mitgliedToUpdate.ifPresent(mitglied -> updateAnwesenheitOfWahlvorstandsmitglied(updateData.anwesenheitBeginn(), mitgliedUpdateData, mitglied));
         });
     }
 

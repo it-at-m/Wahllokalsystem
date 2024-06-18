@@ -78,7 +78,7 @@ class WahlvorstandValidatorTest {
         void exceptionWhenAktualisierungIsNull() {
             val mockedValidationException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(
-                            de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN))
+                    de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN))
                     .thenReturn(mockedValidationException);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideSaveAnwesenheitDataOrThrow(null)).isSameAs(mockedValidationException);

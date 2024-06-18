@@ -17,7 +17,7 @@ public class Authorities {
     public static final String SERVICE_GET_URNENWAHLSCHLIESSUNGSUHRZEIT = "Wahlvorbereitung_BUSINESSACTION_GetUrnenwahlSchliessungsuhrzeit";
     public static final String SERVICE_POST_URNENWAHLSCHLIESSUNGSUHRZEIT = "Wahlvorbereitung_BUSINESSACTION_PostUrnenwahlSchliessungsuhrzeit";
 
-    public static final String REPOSITORY_READ_URNENWAHLBORBEREITUNG = "Wahlvorbereitung_READ_UrnenwahlVorbereitung";
+    public static final String REPOSITORY_READ_URNENWAHLVORBEREITUNG = "Wahlvorbereitung_READ_UrnenwahlVorbereitung";
     public static final String REPOSITORY_DELETE_URNENWAHLVORBEREITUNG = "Wahlvorbereitung_DELETE_UrnenwahlVorbereitung";
     public static final String REPOSITORY_WRITE_URNENWAHLVORBEREITUNG = "Wahlvorbereitung_WRITE_UrnenwahlVorbereitung";
     public static final String REPOSITORY_READ_WAEHLERVERZEICHNIS = "Wahlvorbereitung_READ_Waehlerverzeichnis";
@@ -38,7 +38,7 @@ public class Authorities {
 
     public static final String[] ALL_AUTHORITIES_GET_URNENWAHLVORBEREITUNG = {
             SERVICE_GET_URNENWAHLVORBEREITUNG,
-            REPOSITORY_READ_URNENWAHLBORBEREITUNG
+            REPOSITORY_READ_URNENWAHLVORBEREITUNG
     };
 
     public static final String[] ALL_AUTHORITIES_POST_URNENWAHLVORBEITUNG = {

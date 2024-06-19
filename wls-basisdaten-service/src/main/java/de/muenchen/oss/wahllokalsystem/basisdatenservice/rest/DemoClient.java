@@ -12,7 +12,7 @@ public class DemoClient {
     private final WahlvorschlagControllerApi wahlvorschlagControllerApi;
 
     public DemoDTO getDemo() {
-        val wahlvorschlaege = wahlvorschlagControllerApi.loadWahlvorschlaege("wahlID", "wahlbezirkID").block();
+        val wahlvorschlaege = wahlvorschlagControllerApi.loadWahlvorschlaege("wahlID", "wahlbezirkID");
 
         return new DemoDTO(wahlvorschlaege.getStimmzettelgebietID(), "" + wahlvorschlaege.getWahlvorschlaege().size());
     }

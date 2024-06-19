@@ -81,6 +81,13 @@
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
 
+        <!-- wls-common -->
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>exception</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+
         <!-- Caching -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -348,7 +355,7 @@
                             <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.eai.json</inputSpec>
 
                             <generatorName>java</generatorName>
-                            <library>webclient</library>
+                            <library>resttemplate</library>
 
                             <apiPackage>de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.api</apiPackage>
                             <modelPackage>de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.model</modelPackage>

@@ -5,6 +5,7 @@ import static java.sql.Types.VARCHAR;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import java.util.Collection;
@@ -32,6 +33,7 @@ public class Wahlvorstand extends BaseEntity {
     private UUID wahlbezirkID;
 
     @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "wahlvorstandid")
     private Collection<Wahlvorstandsmitglied> mitglieder;
 
 }

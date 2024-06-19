@@ -67,7 +67,7 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
     class GetUrnenwahlVorbereitung {
 
         @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_GET_URNENWAHLVORBEREITUNG, Authorities.REPOSITORY_READ_URNENWAHLBORBEREITUNG })
+        @WithMockUser(authorities = { Authorities.SERVICE_GET_URNENWAHLVORBEREITUNG, Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG })
         void dataFound() throws Exception {
             val wahlbezirkIDToFind = "wahlbezirkIDToFind";
 
@@ -88,7 +88,7 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
         }
 
         @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_GET_URNENWAHLVORBEREITUNG, Authorities.REPOSITORY_READ_URNENWAHLBORBEREITUNG })
+        @WithMockUser(authorities = { Authorities.SERVICE_GET_URNENWAHLVORBEREITUNG, Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG })
         void noDataFound() throws Exception {
             val wahlbezirkIDToLookup = "wahlbezirkIDToFind";
 
@@ -118,7 +118,7 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
 
             mockMvc.perform(request).andExpect(status().isCreated());
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_URNENWAHLBORBEREITUNG);
+            SecurityUtils.runAs(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
             val vorbereitungFromRepo = urnenwahlVorbereitungRepository.findById(wahlbezirkID).get();
 
             val expectedVorbereitung = urnenwahlvorbereitungModelMapper.toEntity(urnenwahlvorbereitungDTOMapper.toModel(wahlbezirkID, requestBody));
@@ -142,7 +142,7 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
 
             mockMvc.perform(request).andExpect(status().isCreated());
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_URNENWAHLBORBEREITUNG);
+            SecurityUtils.runAs(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
             val vorbereitungFromRepo = urnenwahlVorbereitungRepository.findById(wahlbezirkID).get();
 
             val expectedVorbereitung = urnenwahlvorbereitungModelMapper.toEntity(urnenwahlvorbereitungDTOMapper.toModel(wahlbezirkID, requestBody));
@@ -161,7 +161,7 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
             val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
             val exceptionBodyFromRepsonse = objectMapper.readValue(response.getResponse().getContentAsString(StandardCharsets.UTF_8), WlsExceptionDTO.class);
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_URNENWAHLBORBEREITUNG);
+            SecurityUtils.runAs(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
             Assertions.assertThat(urnenwahlVorbereitungRepository.findById(wahlbezirkID)).isEmpty();
 
             val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.PARAMS_UNVOLLSTAENDIG.code(), "WLS-WAHLVORBEREITUNG",
@@ -180,7 +180,7 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
             val response = mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
             val exceptionBodyFromRepsonse = objectMapper.readValue(response.getResponse().getContentAsString(StandardCharsets.UTF_8), WlsExceptionDTO.class);
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_URNENWAHLBORBEREITUNG);
+            SecurityUtils.runAs(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
             Assertions.assertThat(urnenwahlVorbereitungRepository.findById(wahlbezirkID)).isEmpty();
 
             val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionConstants.UNSAVEABLE.code(), "WLS-WAHLVORBEREITUNG",

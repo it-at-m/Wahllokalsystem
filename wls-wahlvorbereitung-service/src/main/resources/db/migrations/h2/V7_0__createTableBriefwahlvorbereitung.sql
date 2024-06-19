@@ -10,7 +10,7 @@ create table BWVorbereitung_Urnen
     wahlid                    varchar(1000) not null,
     anzahl                    BIGINT        not null,
     urneversiegelt            BOOLEAN,
-    constraint fk_UrnenwahlVorbereitung
+    constraint fk_Briefwahlvorbereitung
         foreign key (vorbereitung_wahlbezirkID)
             references Briefwahlvorbereitung (wahlbezirkID)
 );

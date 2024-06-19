@@ -15,6 +15,8 @@ public class Authorities {
     public static final String SERVICE_POST_EROEFFNUNGSUHRZEIT = "Wahlvorbereitung_BUSINESSACTION_PostEroeffnungsuhrzeit";
     public static final String SERVICE_FORTSETZUNGSUHRZEIT = "Wahlvorbereitung_BUSINESSACTION_FortsetzungsUhrzeit";
     public static final String SERVICE_BRIEFWAHLVORBEREITUNG = "Wahlvorbereitung_BUSINESSACTION_Briefwahlvorbereitung";
+    public static final String SERVICE_GET_URNENWAHLSCHLIESSUNGSUHRZEIT = "Wahlvorbereitung_BUSINESSACTION_GetUrnenwahlSchliessungsuhrzeit";
+    public static final String SERVICE_POST_URNENWAHLSCHLIESSUNGSUHRZEIT = "Wahlvorbereitung_BUSINESSACTION_PostUrnenwahlSchliessungsuhrzeit";
 
     public static final String REPOSITORY_READ_URNENWAHLBORBEREITUNG = "Wahlvorbereitung_READ_UrnenwahlVorbereitung";
     public static final String REPOSITORY_DELETE_URNENWAHLVORBEREITUNG = "Wahlvorbereitung_DELETE_UrnenwahlVorbereitung";
@@ -34,6 +36,9 @@ public class Authorities {
     public static final String REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG = "Wahlvorbereitung_WRITE_BRIEFWAHLVORBEREITUNG";
     public static final String REPOSITORY_READ_BRIEFWAHLVORBEREITUNG = "Wahlvorbereitung_READ_BRIEFWAHLVORBEREITUNG";
     public static final String REPOSITORY_DELETE_BRIEFWAHLVORBEREITUNG = "Wahlvorbereitung_DELETE_BRIEFWAHLVORBEREITUNG";
+    public static final String REPOSITORY_WRITE_URNENWAHLSCHLIESSUNGSUHRZEIT = "Wahlvorbereitung_WRITE_UrnenwahlSchliessungsuhrzeit";
+    public static final String REPOSITORY_READ_URNENWAHLSCHLIESSUNGSUHRZEIT = "Wahlvorbereitung_READ_UrnenwahlSchliessungsuhrzeit";
+    public static final String REPOSITORY_DELETE_URNENWAHLSCHLIESSUNGSUHRZEIT = "Wahlvorbereitung_DELETE_UrnenwahlSchliessungsuhrzeit";
 
     public static final String[] ALL_AUTHORITIES_GET_URNENWAHLVORBEREITUNG = {
             SERVICE_GET_URNENWAHLVORBEREITUNG,
@@ -121,5 +126,22 @@ public class Authorities {
             REPOSITORY_READ_BRIEFWAHLVORBEREITUNG,
             REPOSITORY_DELETE_BRIEFWAHLVORBEREITUNG,
             REPOSITORY_READ_BRIEFWAHLVORBEREITUNG
+    };
+
+    public static final String[] ALL_AUTHORITIES_POST_URNENWAHLSCHLIESSUNGSUHRZEIT = {
+            SERVICE_POST_URNENWAHLSCHLIESSUNGSUHRZEIT,
+            REPOSITORY_WRITE_URNENWAHLSCHLIESSUNGSUHRZEIT,
+            REPOSITORY_READ_URNENWAHLSCHLIESSUNGSUHRZEIT
+    };
+
+    public static final String[] ALL_AUTHORITIES_GET_URNENWAHLSCHLIESSUNGSUHRZEIT = {
+            SERVICE_GET_URNENWAHLSCHLIESSUNGSUHRZEIT,
+            REPOSITORY_READ_URNENWAHLSCHLIESSUNGSUHRZEIT
+    };
+
+    public static final String[] ALL_AUTHORITIES_REPO_URNENWAHLSCHLIESSUNGSUHRZEIT = {
+            REPOSITORY_READ_URNENWAHLSCHLIESSUNGSUHRZEIT,
+            REPOSITORY_DELETE_URNENWAHLSCHLIESSUNGSUHRZEIT,
+            REPOSITORY_READ_URNENWAHLSCHLIESSUNGSUHRZEIT
     };
 }

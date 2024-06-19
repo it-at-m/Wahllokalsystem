@@ -3,10 +3,10 @@ package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.briefwah
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.BriefwahlvorbereitungRepository;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.exception.ExceptionFactory;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import java.util.Optional;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;

@@ -110,7 +110,7 @@ class SecurityConfigurationTest {
 
         @Test
         @WithMockUser
-        void accessSaveAnwesenheitAuthorizedThenCreated() throws Exception {
+        void accessSaveAnwesenheitAuthorizedThenOk() throws Exception {
             val wahlvorstandAktualisierung = new WahlvorstandsaktualisierungDTO("wbzID", Set.of(new WahlvorstandsmitgliedAktualisierungDTO("id", true)),
                     LocalDateTime.now());
 

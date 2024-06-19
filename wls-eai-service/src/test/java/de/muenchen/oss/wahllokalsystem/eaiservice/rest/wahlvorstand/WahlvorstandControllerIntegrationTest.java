@@ -185,7 +185,6 @@ public class WahlvorstandControllerIntegrationTest {
                     objectMapper.writeValueAsString(aktualisierung));
 
             api.perform(request).andExpect(status().isBadRequest());
-
         }
     }
 

@@ -33,9 +33,9 @@ public class Authorities {
     public static final String REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT = "Wahlvorbereitung_WRITE_FortsetzungsUhrzeit";
     public static final String REPOSITORY_READ_FORTSETZUNGSUHRZEIT = "Wahlvorbereitung_READ_FortsetzungsUhrzeit";
     public static final String REPOSITORY_DELETE_FORTSETZUNGSUHRZEIT = "Wahlvorbereitung_DELETE_FortsetzungsUhrzeit";
-    public static final String REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG = "Wahlvorbereitung_WRITE_BRIEFWAHLVORBEREITUNG";
-    public static final String REPOSITORY_READ_BRIEFWAHLVORBEREITUNG = "Wahlvorbereitung_READ_BRIEFWAHLVORBEREITUNG";
-    public static final String REPOSITORY_DELETE_BRIEFWAHLVORBEREITUNG = "Wahlvorbereitung_DELETE_BRIEFWAHLVORBEREITUNG";
+    public static final String REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG = "Wahlvorbereitung_WRITE_Briefwahlvorbereitung";
+    public static final String REPOSITORY_READ_BRIEFWAHLVORBEREITUNG = "Wahlvorbereitung_READ_Briefwahlvorbereitung";
+    public static final String REPOSITORY_DELETE_BRIEFWAHLVORBEREITUNG = "Wahlvorbereitung_DELETE_Briefwahlvorbereitung";
     public static final String REPOSITORY_WRITE_URNENWAHLSCHLIESSUNGSUHRZEIT = "Wahlvorbereitung_WRITE_UrnenwahlSchliessungsuhrzeit";
     public static final String REPOSITORY_READ_URNENWAHLSCHLIESSUNGSUHRZEIT = "Wahlvorbereitung_READ_UrnenwahlSchliessungsuhrzeit";
     public static final String REPOSITORY_DELETE_URNENWAHLSCHLIESSUNGSUHRZEIT = "Wahlvorbereitung_DELETE_UrnenwahlSchliessungsuhrzeit";

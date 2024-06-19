@@ -128,7 +128,7 @@ public class BriefwahlvorbereitungControllerIntegrationTest {
             val briefwahlvorbereitungFromRepo = briefwahlvorbereitungRepository.findById(wahlbezirkID).get();
             val expectedBriefwahlvorbereitung = briefwahlvorbereitungModelMapper.toEntity(briefwahlvorbereitungDTOMapper.toModel(wahlbezirkID, writeDto));
 
-            Assertions.assertThat(briefwahlvorbereitungFromRepo).isEqualTo(expectedBriefwahlvorbereitung);
+            Assertions.assertThat(briefwahlvorbereitungFromRepo).usingRecursiveComparison().isEqualTo(expectedBriefwahlvorbereitung);
         }
 
         @Test
@@ -146,7 +146,7 @@ public class BriefwahlvorbereitungControllerIntegrationTest {
             val briefwahlvorbereitungFromRepo1 = briefwahlvorbereitungRepository.findById(wahlbezirkID).get();
             val expectedBriefwahlvorbereitung1 = briefwahlvorbereitungModelMapper.toEntity(briefwahlvorbereitungDTOMapper.toModel(wahlbezirkID, writeDto1));
 
-            Assertions.assertThat(briefwahlvorbereitungFromRepo1).isEqualTo(expectedBriefwahlvorbereitung1);
+            Assertions.assertThat(briefwahlvorbereitungFromRepo1).usingRecursiveComparison().isEqualTo(expectedBriefwahlvorbereitung1);
 
             val writeDto2 = new BriefwahlvorbereitungWriteDTO(urnenanzahl);
             val request2 = buildPostRequest(wahlbezirkID, writeDto2);
@@ -157,7 +157,7 @@ public class BriefwahlvorbereitungControllerIntegrationTest {
             val briefwahlvorbereitungFromRepo2 = briefwahlvorbereitungRepository.findById(wahlbezirkID).get();
             val expectedBriefwahlvorbereitung2 = briefwahlvorbereitungModelMapper.toEntity(briefwahlvorbereitungDTOMapper.toModel(wahlbezirkID, writeDto2));
 
-            Assertions.assertThat(briefwahlvorbereitungFromRepo2).isEqualTo(expectedBriefwahlvorbereitung2);
+            Assertions.assertThat(briefwahlvorbereitungFromRepo2).usingRecursiveComparison().isEqualTo(expectedBriefwahlvorbereitung2);
         }
 
         @Test

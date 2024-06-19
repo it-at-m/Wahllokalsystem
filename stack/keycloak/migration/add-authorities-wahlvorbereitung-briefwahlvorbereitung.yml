@@ -1,0 +1,39 @@
+id: add authorities wahlvorbereitung briefwahlvorbereitung
+author: GerhardPx
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: Wahlvorbereitung_BUSINESSACTION_Briefwahlvorbereitung
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_BUSINESSACTION_Briefwahlvorbereitung
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Wahlvorbereitung_READ_Briefwahlvorbereitung
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_READ_Briefwahlvorbereitung
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Wahlvorbereitung_WRITE_Briefwahlvorbereitung
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_WRITE_Briefwahlvorbereitung
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Wahlvorbereitung_DELETE_Briefwahlvorbereitung
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_DELETE_Briefwahlvorbereitung
+      clientId: ${SSO_CLIENT_ID}

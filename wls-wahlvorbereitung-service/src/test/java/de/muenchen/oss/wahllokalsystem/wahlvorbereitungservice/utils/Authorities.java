@@ -14,6 +14,7 @@ public class Authorities {
     public static final String SERVICE_GET_EROEFFNUNGSUHRZEIT = "Wahlvorbereitung_BUSINESSACTION_GetEroeffnungsuhrzeit";
     public static final String SERVICE_POST_EROEFFNUNGSUHRZEIT = "Wahlvorbereitung_BUSINESSACTION_PostEroeffnungsuhrzeit";
     public static final String SERVICE_FORTSETZUNGSUHRZEIT = "Wahlvorbereitung_BUSINESSACTION_FortsetzungsUhrzeit";
+    public static final String SERVICE_BRIEFWAHLVORBEREITUNG = "Wahlvorbereitung_BUSINESSACTION_Briefwahlvorbereitung";
 
     public static final String REPOSITORY_READ_URNENWAHLBORBEREITUNG = "Wahlvorbereitung_READ_UrnenwahlVorbereitung";
     public static final String REPOSITORY_DELETE_URNENWAHLVORBEREITUNG = "Wahlvorbereitung_DELETE_UrnenwahlVorbereitung";
@@ -30,6 +31,9 @@ public class Authorities {
     public static final String REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT = "Wahlvorbereitung_WRITE_FortsetzungsUhrzeit";
     public static final String REPOSITORY_READ_FORTSETZUNGSUHRZEIT = "Wahlvorbereitung_READ_FortsetzungsUhrzeit";
     public static final String REPOSITORY_DELETE_FORTSETZUNGSUHRZEIT = "Wahlvorbereitung_DELETE_FortsetzungsUhrzeit";
+    public static final String REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG = "Wahlvorbereitung_WRITE_BRIEFWAHLVORBEREITUNG";
+    public static final String REPOSITORY_READ_BRIEFWAHLVORBEREITUNG = "Wahlvorbereitung_READ_BRIEFWAHLVORBEREITUNG";
+    public static final String REPOSITORY_DELETE_BRIEFWAHLVORBEREITUNG = "Wahlvorbereitung_DELETE_BRIEFWAHLVORBEREITUNG";
 
     public static final String[] ALL_AUTHORITIES_GET_URNENWAHLVORBEREITUNG = {
             SERVICE_GET_URNENWAHLVORBEREITUNG,
@@ -100,5 +104,22 @@ public class Authorities {
             REPOSITORY_READ_FORTSETZUNGSUHRZEIT,
             REPOSITORY_DELETE_FORTSETZUNGSUHRZEIT,
             REPOSITORY_READ_FORTSETZUNGSUHRZEIT
+    };
+
+    public static final String[] ALL_AUTHORITIES_POST_BRIEFWAHLVORBEREITUNG = {
+            SERVICE_BRIEFWAHLVORBEREITUNG,
+            REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG,
+            REPOSITORY_READ_BRIEFWAHLVORBEREITUNG
+    };
+
+    public static final String[] ALL_AUTHORITIES_GET_BRIEFWAHLVORBEREITUNG = {
+            SERVICE_BRIEFWAHLVORBEREITUNG,
+            REPOSITORY_READ_BRIEFWAHLVORBEREITUNG
+    };
+
+    public static final String[] ALL_AUTHORITIES_REPO_BRIEFWAHLVORBEREITUNG = {
+            REPOSITORY_READ_BRIEFWAHLVORBEREITUNG,
+            REPOSITORY_DELETE_BRIEFWAHLVORBEREITUNG,
+            REPOSITORY_READ_BRIEFWAHLVORBEREITUNG
     };
 }

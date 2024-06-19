@@ -22,8 +22,8 @@ public class BriefwahlvorbereitungService {
     private final ExceptionFactory exceptionFactory;
 
     @PreAuthorize(
-            "hasAuthority('Wahlvorbereitung_BUSINESSACTION_Briefwahlvorbereitung')"
-                    + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
+        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_Briefwahlvorbereitung')"
+                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
     )
     public Optional<BriefwahlvorbereitungModel> getBriefwahlvorbereitung(@P("wahlbezirkID") final String wahlbezirkID) {
         log.debug("#getBriefwahlvorbereitung");
@@ -39,8 +39,8 @@ public class BriefwahlvorbereitungService {
     }
 
     @PreAuthorize(
-            "hasAuthority('Wahlvorbereitung_BUSINESSACTION_Briefwahlvorbereitung')"
-                    + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#briefwahlvorbereitungToSet.wahlbezirkID(), authentication)"
+        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_Briefwahlvorbereitung')"
+                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#briefwahlvorbereitungToSet.wahlbezirkID(), authentication)"
     )
     public void setBriefwahlvorbereitung(@P("briefwahlvorbereitungToSet") final BriefwahlvorbereitungModel briefwahlvorbereitungToSet) {
         log.debug("#postBriefwahlvorbereitung");

@@ -35,7 +35,7 @@ public class BriefwahlvorbereitungController extends AbstractController {
     @PostMapping("{wahlbezirkID}")
     @ResponseStatus(HttpStatus.CREATED)
     public void postBriefwahlvorbereitung(@PathVariable("wahlbezirkID") final String wahlbezirkID,
-                                        @RequestBody final BriefwahlvorbereitungWriteDTO briefwahlvorbereitungWriteDTO) {
+            @RequestBody final BriefwahlvorbereitungWriteDTO briefwahlvorbereitungWriteDTO) {
         val briefwahlvorbereitungToSet = briefwahlvorbereitungDTOMapper.toModel(wahlbezirkID, briefwahlvorbereitungWriteDTO);
         briefwahlvorbereitungService.setBriefwahlvorbereitung(briefwahlvorbereitungToSet);
     }

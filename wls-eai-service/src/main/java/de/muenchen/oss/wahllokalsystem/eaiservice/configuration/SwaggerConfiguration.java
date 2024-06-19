@@ -61,7 +61,7 @@ public class SwaggerConfiguration {
         if (operation.getResponses() != null) {
             addRequestBodyValidationErrorToAPI(operation, components);
         }
-        addNotFoundErrorToAPI(operation, components);
+        addNotFoundErrorToAPI(operation);
         addInternalErrorToAPI(operation, components);
         addUnhandledCommunicationErrorToAPI(operation, components);
     }
@@ -72,10 +72,9 @@ public class SwaggerConfiguration {
                 .content(new Content().addMediaType(APPLICATION_JSON_VALUE, createWlsExceptionDTOMediaType(components))));
     }
 
-    private void addNotFoundErrorToAPI(Operation operation, Components components) {
+    private void addNotFoundErrorToAPI(Operation operation) {
         operation.getResponses().addApiResponse("404", new ApiResponse()
-                .description("no resource found")
-                .content(new Content().addMediaType(APPLICATION_JSON_VALUE, createWlsExceptionDTOMediaType(components))));
+                .description("resource not found"));
     }
 
     private void addInternalErrorToAPI(Operation operation, Components components) {

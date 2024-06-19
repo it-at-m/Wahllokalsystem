@@ -89,7 +89,7 @@ public class UrnenwahlvorbereitungSecurityTest {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_POST_URNENWAHLVORBEITUNG);
+            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_POST_URNENWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
             val modelToSet = new UrnenwahlvorbereitungModel(wahlbezirkID, 0, 0, 0, List.of(new WahlurneModel("wahlID", 1, true)));
@@ -101,7 +101,7 @@ public class UrnenwahlvorbereitungSecurityTest {
 
         @Test
         void bezirkIDPermissionEvaluatorFailed() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_POST_URNENWAHLVORBEITUNG);
+            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_POST_URNENWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
             val modelToSet = new UrnenwahlvorbereitungModel(wahlbezirkID, 0, 0, 0, List.of(new WahlurneModel("wahlID", 1, true)));

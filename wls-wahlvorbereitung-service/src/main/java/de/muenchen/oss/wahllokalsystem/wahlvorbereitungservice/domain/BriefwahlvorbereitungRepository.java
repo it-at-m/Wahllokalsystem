@@ -10,7 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @PreAuthorize("hasAuthority('Wahlvorbereitung_READ_BriefwahlVorbereitung')")
 public interface BriefwahlvorbereitungRepository extends CrudRepository<Briefwahlvorbereitung, String> {
 
-    String CACHE = "BriefwahlVorbereitungCACHE";
+    String CACHE = "BriefwahlvorbereitungCACHE";
 
     @Override
     Iterable<Briefwahlvorbereitung> findAll();
@@ -21,26 +21,26 @@ public interface BriefwahlvorbereitungRepository extends CrudRepository<Briefwah
 
     @Override
     @CachePut(value = CACHE, key = "#p0.wahlbezirkID")
-    @PreAuthorize("hasAuthority('Wahlvorbereitung_WRITE_BriefwahlVorbereitung')")
-    <S extends Briefwahlvorbereitung> S save(S briefwahlVorbereitung);
+    @PreAuthorize("hasAuthority('Wahlvorbereitung_WRITE_Briefwahlvorbereitung')")
+    <S extends Briefwahlvorbereitung> S save(S briefwahlvorbereitung);
 
     @Override
     @CacheEvict(value = CACHE, key = "#p0")
-    @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_BriefwahlVorbereitung')")
+    @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_Briefwahlvorbereitung')")
     void deleteById(String wahlbezirkID);
 
     @Override
     @CacheEvict(value = CACHE, key = "#p0.wahlbezirkID")
-    @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_BriefwahlVorbereitung')")
+    @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_Briefwahlvorbereitung')")
     void delete(Briefwahlvorbereitung entity);
 
     @Override
     @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_BriefwahlVorbereitung')")
+    @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_Briefwahlvorbereitung')")
     void deleteAll(Iterable<? extends Briefwahlvorbereitung> entities);
 
     @Override
     @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_BriefwahlVorbereitung')")
+    @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_Briefwahlvorbereitung')")
     void deleteAll();
 }

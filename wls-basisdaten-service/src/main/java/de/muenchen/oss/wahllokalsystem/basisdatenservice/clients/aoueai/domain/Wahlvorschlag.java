@@ -23,32 +23,30 @@ public class Wahlvorschlag {
     @NotNull
     private String identifikator;
 
-
     @Column(name = "ordnungszahl")
     @NotNull
     private long ordnungszahl;
-
 
     @Column(name = "kurzname")
     @NotNull
     private String kurzname;
 
-
     @Column(name = "erhaeltStimmen")
     @NotNull
     private boolean erhaeltStimmen;
 
-
     @OrderColumn(name = "order_index")
-    @JoinTable(name = "Wahlvorschlag_Kandidaten", joinColumns = {@JoinColumn(name = "wahlvorschlag_oid")})
+    @JoinTable(name = "Wahlvorschlag_Kandidaten", joinColumns = { @JoinColumn(name = "wahlvorschlag_oid") })
     @ElementCollection
-    @AttributeOverrides({
-            @AttributeOverride(name = "identifikator", column = @Column(name = "kandidaten_identifikator")),
-            @AttributeOverride(name = "name", column = @Column(name = "kandidaten_name")),
-            @AttributeOverride(name = "listenposition", column = @Column(name = "kandidaten_listenposition")),
-            @AttributeOverride(name = "direktkandidat", column = @Column(name = "kandidaten_direktkandidat")),
-            @AttributeOverride(name = "tabellenSpalteInNiederschrift", column = @Column(name = "kandidaten_tabellenspalteinniederschrift")),
-            @AttributeOverride(name = "einzelbewerber", column = @Column(name = "kandidaten_einzelbewerber"))
-    })
+    @AttributeOverrides(
+        {
+                @AttributeOverride(name = "identifikator", column = @Column(name = "kandidaten_identifikator")),
+                @AttributeOverride(name = "name", column = @Column(name = "kandidaten_name")),
+                @AttributeOverride(name = "listenposition", column = @Column(name = "kandidaten_listenposition")),
+                @AttributeOverride(name = "direktkandidat", column = @Column(name = "kandidaten_direktkandidat")),
+                @AttributeOverride(name = "tabellenSpalteInNiederschrift", column = @Column(name = "kandidaten_tabellenspalteinniederschrift")),
+                @AttributeOverride(name = "einzelbewerber", column = @Column(name = "kandidaten_einzelbewerber"))
+        }
+    )
     private java.util.Set<Kandidat> kandidaten = new java.util.LinkedHashSet<>();
 }

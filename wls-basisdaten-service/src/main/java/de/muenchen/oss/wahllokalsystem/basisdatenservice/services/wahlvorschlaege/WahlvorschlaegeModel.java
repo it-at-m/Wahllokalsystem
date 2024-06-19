@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlaege;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.aoueai.domain.Wahlvorschlag;
 import jakarta.validation.constraints.NotNull;

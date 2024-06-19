@@ -1,8 +1,7 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlaege;
-
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionFactory;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

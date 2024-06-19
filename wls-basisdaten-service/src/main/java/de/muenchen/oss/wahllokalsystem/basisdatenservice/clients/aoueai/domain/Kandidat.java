@@ -11,26 +11,21 @@ public class Kandidat {
     @NotNull
     private String identifikator;
 
-
     @Column(name = "name")
     @NotNull
     private String name;
-
 
     @Column(name = "listenposition")
     @NotNull
     private long listenposition;
 
-
     @Column(name = "direktkandidat")
     @NotNull
     private boolean direktkandidat;
 
-
     @Column(name = "tabellenSpalteInNiederschrift")
     @NotNull
     private long tabellenSpalteInNiederschrift;
-
 
     @Column(name = "einzelbewerber")
     @NotNull

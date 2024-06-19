@@ -28,22 +28,22 @@ public class Wahlvorschlaege {
     @NotNull
     private String wahlbezirkID;
 
-
     @Column(name = "stimmzettelgebietID")
     @NotNull
     private String stimmzettelgebietID;
 
-
     @OrderColumn(name = "order_index")
-    @JoinTable(name = "Wahlvorschlaege_Wahlvorschlaege", joinColumns = {@JoinColumn(name = "wahlvorschlaege_oid")})
+    @JoinTable(name = "Wahlvorschlaege_Wahlvorschlaege", joinColumns = { @JoinColumn(name = "wahlvorschlaege_oid") })
     @ElementCollection
-    @AttributeOverrides({
-            @AttributeOverride(name = "identifikator", column = @Column(name = "wahlvorschlaege_identifikator")),
-            @AttributeOverride(name = "ordnungszahl", column = @Column(name = "wahlvorschlaege_ordnungszahl")),
-            @AttributeOverride(name = "kurzname", column = @Column(name = "wahlvorschlaege_kurzname")),
-            @AttributeOverride(name = "erhaeltStimmen", column = @Column(name = "wahlvorschlaege_erhaeltstimmen")),
-            @AttributeOverride(name = "kandidaten", column = @Column(name = "wahlvorschlaege_kandidaten"))
-    })
+    @AttributeOverrides(
+        {
+                @AttributeOverride(name = "identifikator", column = @Column(name = "wahlvorschlaege_identifikator")),
+                @AttributeOverride(name = "ordnungszahl", column = @Column(name = "wahlvorschlaege_ordnungszahl")),
+                @AttributeOverride(name = "kurzname", column = @Column(name = "wahlvorschlaege_kurzname")),
+                @AttributeOverride(name = "erhaeltStimmen", column = @Column(name = "wahlvorschlaege_erhaeltstimmen")),
+                @AttributeOverride(name = "kandidaten", column = @Column(name = "wahlvorschlaege_kandidaten"))
+        }
+    )
     @NotNull
     @Size(min = 1)
     private java.util.Set<Wahlvorschlag> wahlvorschlaege = new java.util.LinkedHashSet<>();

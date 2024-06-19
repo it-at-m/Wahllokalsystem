@@ -1,10 +1,14 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.exception;
 
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionDataWrapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ExceptionConstants {
+
+    private static final String CODE_GETWAHLVORSCHLAEGE_JACKSON_PARSE_ERROR = "311";
+    private static final String MSG_GETWAHLVORSCHLAEGE_JACKSON_PARSE_ERROR = "Beim parsen der Wahlvorschlaege für die Datenbank ist ein Fehler aufgetreten.";
 
     private static final String CODE_SUCHKRITERIEN_UNVOLLSTAENDIG = "901";
     private static final String MSG_SUCHKRITERIEN_UNVOLLSTAENDIG = "Fehler beim Laden: Suchkriterien unvollständig.";
@@ -14,6 +18,9 @@ public class ExceptionConstants {
 
     private static final String CODE_UNSAVEABLE = "903";
     private static final String MSG_UNSAVEABLE = "Fehler beim speichern: Daten konnten nicht gespeichert werden.";
+
+    public static ExceptionDataWrapper PARSE_ERROR = new ExceptionDataWrapper(CODE_GETWAHLVORSCHLAEGE_JACKSON_PARSE_ERROR,
+            MSG_GETWAHLVORSCHLAEGE_JACKSON_PARSE_ERROR);
 
     public static ExceptionDataWrapper SUCHKRITERIEN_UNVOLLSTAENDIG = new ExceptionDataWrapper(CODE_SUCHKRITERIEN_UNVOLLSTAENDIG,
             MSG_SUCHKRITERIEN_UNVOLLSTAENDIG);

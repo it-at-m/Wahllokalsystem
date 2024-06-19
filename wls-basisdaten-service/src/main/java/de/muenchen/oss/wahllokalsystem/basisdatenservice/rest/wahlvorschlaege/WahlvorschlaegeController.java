@@ -1,7 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlvorschlaege;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.aoueai.domain.Wahlvorschlaege;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlaege.WahlvorschlaegeService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege.WahlvorschlaegeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,13 +26,15 @@ public class WahlvorschlaegeController {
 
     private final WahlvorschlaegeService wahlvorschlaegeService;
 
-
     @Operation(description = "Laden der Wahlvorschlaege des Wahllokals {wahlbezirkID} für die Wahl {wahlID}.")
-    @ApiResponses( value = {
-            @ApiResponse(responseCode = "200", description = "OK", content =
-                    { @Content(mediaType = "application/json", schema =
-                    @Schema(implementation = Wahlvorschlaege.class)) })
-    })
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200", description = "OK",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WLSWahlvorschlaegeDTO.class)) }
+                    )
+            }
+    )
     @GetMapping("/{wahlID}/{wahlbezirkID}")
     public ResponseEntity<JSONObject> getWahlvorschlaege(@PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID) {
 

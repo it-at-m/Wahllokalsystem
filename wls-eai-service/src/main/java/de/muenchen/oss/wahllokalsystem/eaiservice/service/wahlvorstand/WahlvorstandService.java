@@ -58,7 +58,9 @@ public class WahlvorstandService {
         mitglied.setAnwesend(mitgliedUpdateData.anwesend());
     }
 
+    //CHECKSTYLE.OFF: AbbreviationAsWordInName - illegal match cause UUID should not be shortened
     private UUID convertIDToUUIDOrThrow(final String id) {
+        //CHECKSTYLE.ON: AbbreviationAsWordInName
         try {
             return UUID.fromString(id);
         } catch (final IllegalArgumentException illegalArgumentException) {

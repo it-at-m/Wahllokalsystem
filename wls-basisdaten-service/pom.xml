@@ -357,16 +357,14 @@
                             <modelPackage>de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.model</modelPackage>
 
                             <generateApiTests>false</generateApiTests>
-                            <generateApiDocumentation>false</generateApiDocumentation>
                             <generateModelTests>false</generateModelTests>
+                            <generateApiDocumentation>false</generateApiDocumentation>
                             <generateModelDocumentation>false</generateModelDocumentation>
-                            <generateSupportingFiles>false</generateSupportingFiles>
 
                             <configOptions>
                                 <hideGenerationTimestamp>false</hideGenerationTimestamp>
-                                <generateClientAsBean>false</generateClientAsBean>
                                 <legacyDiscriminatorBehavior>false</legacyDiscriminatorBehavior>
-                                <useSpringBoot3>true</useSpringBoot3>
+                                <generateClientAsBean>true</generateClientAsBean>
                                 <useJakartaEe>true</useJakartaEe>
                             </configOptions>
 

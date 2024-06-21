@@ -26,3 +26,5 @@ includes:
   - path: add-authorities-wahlvorbereitung-fortsetzungsuhrzeit.yml
   - path: add-authorities-wahlvorbereitung-eroeffnungsuhrzeit.yml
   - path: add-authorities-wahlvorbereitung-urnenwahlschliessungsuhrzeit.yml
+  - path: create-group-all-eai-authorities.yml
+  - path: add-authorities-eai-wahlvorstand.yml

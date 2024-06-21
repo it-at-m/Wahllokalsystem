@@ -36,8 +36,8 @@ Authorization: {{ token_type }} {{ auth_token }}
 GET {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende?wahlbezirkID=00000000-9999-0000-0000-000000000000
 Authorization: {{ token_type }} {{ auth_token }}
 
-### POST Update Wahlvorstand wbz4
-POST {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende
+### PUT Update Wahlvorstand wbz4
+PUT {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende/anwesenheit
 Authorization: {{ token_type }} {{ auth_token }}
 Content-Type: application/json
 
@@ -68,8 +68,8 @@ Content-Type: application/json
   ]
 }
 
-### POST Update - bezirkID fehlt
-POST {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende
+### PUT Update - bezirkID fehlt
+PUT {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende/anwesenheit
 Authorization: {{ token_type }} {{ auth_token }}
 Content-Type: application/json
 
@@ -99,8 +99,8 @@ Content-Type: application/json
   ]
 }
 
-### POST Update - anwesenheitBeginn fehlt
-POST {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende
+### PUT Update - anwesenheitBeginn fehlt
+PUT {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende/anwesenheit
 Authorization: {{ token_type }} {{ auth_token }}
 Content-Type: application/json
 
@@ -130,8 +130,8 @@ Content-Type: application/json
   ]
 }
 
-### POST Update - Identifikator fehlt
-POST {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende
+### PUT Update - Identifikator fehlt
+PUT {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende/anwesenheit
 Authorization: {{ token_type }} {{ auth_token }}
 Content-Type: application/json
 

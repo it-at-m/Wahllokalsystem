@@ -14,7 +14,7 @@ public class ExceptionConstants {
             MESSAGE_DATENALLGEMEIN_PARAMETER_FEHLEN);
 
     private static final String CODE_DATENALLGEMEIN_ID_NICHT_KONVERTIERBAR = "103";
-    public static final de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionDataWrapper ID_NICHT_KONVERTIERBAR = new de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionDataWrapper(
+    public static final ExceptionDataWrapper ID_NICHT_KONVERTIERBAR = new ExceptionDataWrapper(
             CODE_DATENALLGEMEIN_ID_NICHT_KONVERTIERBAR, "");
 
     /**

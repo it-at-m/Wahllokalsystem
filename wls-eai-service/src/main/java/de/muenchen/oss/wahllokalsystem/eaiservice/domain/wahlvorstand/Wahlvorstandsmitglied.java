@@ -33,7 +33,7 @@ public class Wahlvorstandsmitglied extends BaseEntity {
     @NotNull
     @ToString.Include
     @Enumerated(EnumType.STRING)
-    private WahlvorstandFunktion funktion;
+    private WahlvorstandsmitgliedsFunktion funktion;
 
     @ToString.Include
     private boolean anwesend;

@@ -8,9 +8,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.eaiservice.Authorities;
 import de.muenchen.oss.wahllokalsystem.eaiservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.Wahlvorstand;
-import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.WahlvorstandFunktion;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.WahlvorstandRepository;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.Wahlvorstandsmitglied;
+import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.WahlvorstandsmitgliedsFunktion;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandsaktualisierungDTO;
@@ -89,14 +89,14 @@ public class WahlvorstandControllerIntegrationTest {
         void dataFound() throws Exception {
             val wahlbezirkID1 = UUID.randomUUID();
             val wahlvorstand1 = new Wahlvorstand(wahlbezirkID1,
-                    Set.of(new Wahlvorstandsmitglied("vorname11", "nachname11", WahlvorstandFunktion.B, true, LocalDateTime.now()),
-                            new Wahlvorstandsmitglied("vorname12", "nachname12", WahlvorstandFunktion.SWB, false, LocalDateTime.now())));
+                    Set.of(new Wahlvorstandsmitglied("vorname11", "nachname11", WahlvorstandsmitgliedsFunktion.B, true, LocalDateTime.now()),
+                            new Wahlvorstandsmitglied("vorname12", "nachname12", WahlvorstandsmitgliedsFunktion.SWB, false, LocalDateTime.now())));
             val wahlvorstandToLoad = wahlvorstandRepository.save(wahlvorstand1);
 
             val wahlbezirkID2 = UUID.randomUUID();
             val wahlvorstand2 = new Wahlvorstand(wahlbezirkID2,
-                    Set.of(new Wahlvorstandsmitglied("vorname21", "nachname21", WahlvorstandFunktion.B, true, LocalDateTime.now()),
-                            new Wahlvorstandsmitglied("vorname22", "nachname22", WahlvorstandFunktion.SWB, false, LocalDateTime.now())));
+                    Set.of(new Wahlvorstandsmitglied("vorname21", "nachname21", WahlvorstandsmitgliedsFunktion.B, true, LocalDateTime.now()),
+                            new Wahlvorstandsmitglied("vorname22", "nachname22", WahlvorstandsmitgliedsFunktion.SWB, false, LocalDateTime.now())));
             wahlvorstandRepository.save(wahlvorstand2);
 
             val request = MockMvcRequestBuilders.get("/wahlvorstaende?wahlbezirkID=" + wahlvorstandToLoad.getWahlbezirkID());
@@ -133,9 +133,9 @@ public class WahlvorstandControllerIntegrationTest {
         void personsAreUpdated() throws Exception {
             val wahlbezirkID = UUID.randomUUID();
             val oldUpdatedDate = LocalDateTime.now().minusDays(1);
-            val mitglied1 = new Wahlvorstandsmitglied("vorname11", "nachname11", WahlvorstandFunktion.B, true, oldUpdatedDate);
-            val mitglied2 = new Wahlvorstandsmitglied("vorname12", "nachname12", WahlvorstandFunktion.SWB, false, oldUpdatedDate);
-            val mitglied3 = new Wahlvorstandsmitglied("vorname13", "nachname13", WahlvorstandFunktion.SWB, false, oldUpdatedDate);
+            val mitglied1 = new Wahlvorstandsmitglied("vorname11", "nachname11", WahlvorstandsmitgliedsFunktion.B, true, oldUpdatedDate);
+            val mitglied2 = new Wahlvorstandsmitglied("vorname12", "nachname12", WahlvorstandsmitgliedsFunktion.SWB, false, oldUpdatedDate);
+            val mitglied3 = new Wahlvorstandsmitglied("vorname13", "nachname13", WahlvorstandsmitgliedsFunktion.SWB, false, oldUpdatedDate);
             val wahlvorstand1 = new Wahlvorstand(wahlbezirkID,
                     Set.of(mitglied1, mitglied2, mitglied3));
             val wahlvorstandToUpdate = wahlvorstandRepository.save(wahlvorstand1);
@@ -150,11 +150,11 @@ public class WahlvorstandControllerIntegrationTest {
             api.perform(request).andExpect(status().isOk());
 
             val updatedEntity = wahlvorstandRepository.findById(wahlvorstandToUpdate.getId());
-            val expectedEntityMitglied1 = new Wahlvorstandsmitglied("vorname11", "nachname11", WahlvorstandFunktion.B, false, updateDateTime);
+            val expectedEntityMitglied1 = new Wahlvorstandsmitglied("vorname11", "nachname11", WahlvorstandsmitgliedsFunktion.B, false, updateDateTime);
             expectedEntityMitglied1.setId(mitglied1.getId());
-            val expectedEntityMitglied2 = new Wahlvorstandsmitglied("vorname12", "nachname12", WahlvorstandFunktion.SWB, true, updateDateTime);
+            val expectedEntityMitglied2 = new Wahlvorstandsmitglied("vorname12", "nachname12", WahlvorstandsmitgliedsFunktion.SWB, true, updateDateTime);
             expectedEntityMitglied2.setId(mitglied2.getId());
-            val expectedEntityMitglied3 = new Wahlvorstandsmitglied("vorname13", "nachname13", WahlvorstandFunktion.SWB, false, oldUpdatedDate);
+            val expectedEntityMitglied3 = new Wahlvorstandsmitglied("vorname13", "nachname13", WahlvorstandsmitgliedsFunktion.SWB, false, oldUpdatedDate);
             expectedEntityMitglied3.setId(mitglied3.getId());
             val expectedUpdatedEntity = new Wahlvorstand(wahlbezirkID, Set.of(expectedEntityMitglied1, expectedEntityMitglied2, expectedEntityMitglied3));
             expectedUpdatedEntity.setId(wahlvorstandToUpdate.getId());

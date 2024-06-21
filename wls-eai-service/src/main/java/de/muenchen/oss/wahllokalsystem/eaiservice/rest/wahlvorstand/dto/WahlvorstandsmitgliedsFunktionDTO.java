@@ -1,6 +1,6 @@
-package de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand;
+package de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto;
 
-public enum WahlvorstandFunktion {
+public enum WahlvorstandsmitgliedsFunktionDTO {
     W, //Wahlvorsteher*in
     SB, //Schriftführer*in
     SWB, //Stellvertretung Wahlvorsteher*in

@@ -1,9 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlvorstand;
 
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.Wahlvorstand;
-import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.WahlvorstandFunktion;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.WahlvorstandRepository;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.Wahlvorstandsmitglied;
+import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.WahlvorstandsmitgliedsFunktion;
 import de.muenchen.oss.wahllokalsystem.eaiservice.exception.NotFoundException;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandDTO;
@@ -109,10 +109,10 @@ class WahlvorstandServiceTest {
             val aktualisierung = new WahlvorstandsaktualisierungDTO(wahlbezirkID.toString(), mitgliederAktualisierung, LocalDateTime.now());
 
             val mockedEntityLastSavedDateTime = LocalDateTime.now().minusDays(1);
-            val mockedEntityMitglied1 = new Wahlvorstandsmitglied("", "", WahlvorstandFunktion.B, false, mockedEntityLastSavedDateTime);
+            val mockedEntityMitglied1 = new Wahlvorstandsmitglied("", "", WahlvorstandsmitgliedsFunktion.B, false, mockedEntityLastSavedDateTime);
             mockedEntityMitglied1.setId(UUID.fromString(mitglied1.identifikator()));
             // no mitglied2 is intended because request should match only a subset of existing data
-            val mockedEntityMitglied3 = new Wahlvorstandsmitglied("", "", WahlvorstandFunktion.SWB, true, mockedEntityLastSavedDateTime);
+            val mockedEntityMitglied3 = new Wahlvorstandsmitglied("", "", WahlvorstandsmitgliedsFunktion.SWB, true, mockedEntityLastSavedDateTime);
             mockedEntityMitglied3.setId(UUID.randomUUID());
             val mockedEntity = new Wahlvorstand(wahlbezirkID, Set.of(mockedEntityMitglied1, mockedEntityMitglied3));
 
@@ -124,9 +124,9 @@ class WahlvorstandServiceTest {
             Mockito.verify(wahlvorstandRepository).save(saveArgumentCaptor.capture());
 
             val capturedSavedArgument = saveArgumentCaptor.getValue();
-            val expectedMitglied1 = new Wahlvorstandsmitglied("", "", WahlvorstandFunktion.B, true, aktualisierung.anwesenheitBeginn());
+            val expectedMitglied1 = new Wahlvorstandsmitglied("", "", WahlvorstandsmitgliedsFunktion.B, true, aktualisierung.anwesenheitBeginn());
             expectedMitglied1.setId(UUID.fromString(mitglied1.identifikator()));
-            val expectedMitglied3 = new Wahlvorstandsmitglied("", "", WahlvorstandFunktion.SWB, true, mockedEntityLastSavedDateTime);
+            val expectedMitglied3 = new Wahlvorstandsmitglied("", "", WahlvorstandsmitgliedsFunktion.SWB, true, mockedEntityLastSavedDateTime);
             expectedMitglied3.setId(mockedEntityMitglied3.getId());
             val expectedSavedArgument = new Wahlvorstand(wahlbezirkID, Set.of(expectedMitglied1, expectedMitglied3));
             Assertions.assertThat(capturedSavedArgument).isEqualTo(expectedSavedArgument);

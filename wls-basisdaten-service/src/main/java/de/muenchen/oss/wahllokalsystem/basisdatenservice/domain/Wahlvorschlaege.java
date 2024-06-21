@@ -1,16 +1,20 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.aoueai.domain;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.OrderColumn;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,15 +22,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Wahlvorschlaege {
 
-    @Column(name = "wahlID")
+    @EmbeddedId
+    @JsonUnwrapped
     @NotNull
-    private String wahlID;
-
-    @Column(name = "wahlbezirkID")
-    @NotNull
-    private String wahlbezirkID;
+    private BezirkUndWahlID bezirkUndWahlID;
 
     @Column(name = "stimmzettelgebietID")
     @NotNull

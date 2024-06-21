@@ -1,9 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.aoueai.template.AoueaiServiceTemplate;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WLSWahlvorschlaege;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WLSWahlvorschlaegeRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlvorschlaegeRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlvorschlaege;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -20,8 +19,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class WahlvorschlaegeService {
 
-    private final WLSWahlvorschlaegeRepository wahlvorschlaegeRepository;
-    private final WahlvorschlaegeClientWLSMapper wahlvorschlaegeClientWLSMapper;
+    private final WahlvorschlaegeRepository wahlvorschlaegeRepository;
+    private final WahlvorschlaegeModelMapper wahlvorschlaegeModelMapper;
     private final WahlvorschlaegeValidator wahlvorschlaegeValidator;
     private final WahlvorschlaegeClient wahlvorschlaegeClient;
 
@@ -30,11 +29,11 @@ public class WahlvorschlaegeService {
     @PreAuthorize(
         "hasAuthority('Basisdaten_BUSINESSACTION_GetWahlvorschlaege')"
     )
-    public String getWahlvorschlaege(@P("wahlID") final String wahlID, @P("wahlbezirkID") final String wahlbezirkID) {
+    public WahlvorschlaegeModel getWahlvorschlaege(@P("wahlID") final String wahlID, @P("wahlbezirkID") final String wahlbezirkID) {
         log.debug("#getWahlvorschlaege wahlID {} wahlbezirkID {}", wahlID, wahlbezirkID);
 
         wahlvorschlaegeValidator.validWahlIdUndWahlbezirkIDOrThrow(wahlID, wahlbezirkID);
-        WLSWahlvorschlaege wlsWahlvorschlaege;
+        Wahlvorschlaege wahlvorschlaege;
         BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
         if (wahlvorschlaegeRepository.countByBezirkUndWahlID(bezirkUndWahlID) == 0) {
             log.debug("#getWahlvorschlaege: Für Wahlbezirk {} mit WahlID {} waren keine Wahlvorschlaege in der Datenbank", wahlbezirkID, wahlID);
@@ -43,8 +42,9 @@ public class WahlvorschlaegeService {
 
             try {
                 if (clientWahlvorschlaegeDTO == null) throw new IOException();
-                wlsWahlvorschlaege = wahlvorschlaegeClientWLSMapper.fromClientDTOtoWLSEntity(wahlvorschlaegeClient.getWahlvorschlaege(wahlID, wahlbezirkID));
-                wahlvorschlaegeRepository.save(wlsWahlvorschlaege);
+                wahlvorschlaege = wahlvorschlaegeModelMapper
+                        .fromClientWahlvorschlaegeDTOtoEntity(wahlvorschlaegeClient.getWahlvorschlaege(wahlID, wahlbezirkID));
+                wahlvorschlaegeRepository.save(wahlvorschlaege);
             } catch (JsonProcessingException e) {
                 throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARSE_ERROR);
             } catch (IOException e) {
@@ -54,7 +54,7 @@ public class WahlvorschlaegeService {
                 throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
             }
         }
-        return wahlvorschlaegeRepository.findById(bezirkUndWahlID).get().getWahlvorschlaegeAsJson();
+        return wahlvorschlaegeModelMapper.fromEntityToWahlvorschlaegeModel(wahlvorschlaegeRepository.findById(bezirkUndWahlID).get());
     }
 
 }

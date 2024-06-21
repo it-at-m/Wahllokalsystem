@@ -1,10 +1,10 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.aoueai.domain.Wahlvorschlag;
 import jakarta.validation.constraints.NotNull;
+import java.util.Set;
 import lombok.Builder;
 
 @Builder
-public record WahlvorschlaegeModel(@NotNull String wahlID, @NotNull String wahlbezirkID, @NotNull String stimmzettelgebietID, @NotNull java.util.Set<Wahlvorschlag> wahlvorschlaege) {
+public record WahlvorschlaegeModel(@NotNull String wahlID, @NotNull String wahlbezirkID, @NotNull String stimmzettelgebietID, @NotNull Set<WahlvorschlagModel> wahlvorschlaege) {
 
 }

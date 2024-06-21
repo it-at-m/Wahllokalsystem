@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.aoueai.domain;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

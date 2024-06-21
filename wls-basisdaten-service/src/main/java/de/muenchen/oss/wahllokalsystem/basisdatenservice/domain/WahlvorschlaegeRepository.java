@@ -12,21 +12,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 @PreAuthorize("hasAuthority('Basisdaten_READ_WLSWahlvorschlaege')")
 @Transactional
-public interface WLSWahlvorschlaegeRepository extends CrudRepository<WLSWahlvorschlaege, BezirkUndWahlID> {
+public interface WahlvorschlaegeRepository extends CrudRepository<Wahlvorschlaege, BezirkUndWahlID> {
 
     String CACHE = "WLSWAHLVORSCHLAEGE_CACHE";
 
     @Override
-    List<WLSWahlvorschlaege> findAll();
+    List<Wahlvorschlaege> findAll();
 
     @Override
     @Cacheable(value = CACHE, key = "#p0")
-    Optional<WLSWahlvorschlaege> findById(BezirkUndWahlID bezirkUndWahlID);
+    Optional<Wahlvorschlaege> findById(BezirkUndWahlID bezirkUndWahlID);
 
     @Override
     @CachePut(value = CACHE, key = "#p0.bezirkUndWahlID")
     @PreAuthorize("hasAuthority('Basisdaten_WRITE_WLSWahlvorschlaege')")
-    <S extends WLSWahlvorschlaege> S save(S wLSWahlvorschlaege);
+    <S extends Wahlvorschlaege> S save(S wahlvorschlaege);
 
     @Override
     @CacheEvict(value = CACHE, key = "#p0")
@@ -36,12 +36,12 @@ public interface WLSWahlvorschlaegeRepository extends CrudRepository<WLSWahlvors
     @Override
     @CacheEvict(value = CACHE, key = "#p0.bezirkUndWahlID")
     @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSWahlvorschlaege')")
-    void delete(WLSWahlvorschlaege entity);
+    void delete(Wahlvorschlaege entity);
 
     @Override
     @CacheEvict(value = CACHE, allEntries = true)
     @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSWahlvorschlaege')")
-    void deleteAll(Iterable<? extends WLSWahlvorschlaege> entities);
+    void deleteAll(Iterable<? extends Wahlvorschlaege> entities);
 
     @Override
     @CacheEvict(value = CACHE, allEntries = true)

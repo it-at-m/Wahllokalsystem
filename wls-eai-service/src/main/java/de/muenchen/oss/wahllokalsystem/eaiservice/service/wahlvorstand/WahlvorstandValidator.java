@@ -19,7 +19,7 @@ public class WahlvorstandValidator {
         }
     }
 
-    public void valideSaveAnwesenheitDataOrThrow(final WahlvorstandsaktualisierungDTO saveAnwesenheitData) {
+    public void validateSaveAnwesenheitDataOrThrow(final WahlvorstandsaktualisierungDTO saveAnwesenheitData) {
         if (saveAnwesenheitData == null) {
             throw exceptionFactory.createFachlicheWlsException(
                     de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN);

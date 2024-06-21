@@ -37,7 +37,7 @@ public class WahlvorstandService {
 
     @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_SaveAnwesenheit')")
     public void setAnwesenheit(final WahlvorstandsaktualisierungDTO aktualisierung) {
-        wahlvorstandValidator.valideSaveAnwesenheitDataOrThrow(aktualisierung);
+        wahlvorstandValidator.validateSaveAnwesenheitDataOrThrow(aktualisierung);
 
         val wahlvorstandToUpdate = findByWahlbezirkIDOrThrow(convertIDToUUIDOrThrow(aktualisierung.wahlbezirkID()));
         updateAnwesenheitOfWahlvorstand(aktualisierung, wahlvorstandToUpdate);

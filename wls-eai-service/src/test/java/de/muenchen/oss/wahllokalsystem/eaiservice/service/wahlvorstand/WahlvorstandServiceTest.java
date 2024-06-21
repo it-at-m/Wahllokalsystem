@@ -154,7 +154,7 @@ class WahlvorstandServiceTest {
 
             val mockedValidationException = new RuntimeException("validation failed");
 
-            Mockito.doThrow(mockedValidationException).when(wahlvorstandValidator).valideSaveAnwesenheitDataOrThrow(aktualisierung);
+            Mockito.doThrow(mockedValidationException).when(wahlvorstandValidator).validateSaveAnwesenheitDataOrThrow(aktualisierung);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setAnwesenheit(aktualisierung)).isSameAs(mockedValidationException);
         }

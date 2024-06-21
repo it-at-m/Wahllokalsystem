@@ -65,13 +65,13 @@ class WahlvorstandValidatorTest {
     }
 
     @Nested
-    class ValideSaveAnwesenheitDataOrThrow {
+    class ValidateSaveAnwesenheitDataOrThrow {
 
         @Test
         void noExceptionWhenAktualisierungIsValid() {
             val validDTO = initValidAktualisierung().build();
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.valideSaveAnwesenheitDataOrThrow(validDTO));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validateSaveAnwesenheitDataOrThrow(validDTO));
         }
 
         @Test
@@ -81,7 +81,7 @@ class WahlvorstandValidatorTest {
                     de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN))
                     .thenReturn(mockedValidationException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideSaveAnwesenheitDataOrThrow(null)).isSameAs(mockedValidationException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validateSaveAnwesenheitDataOrThrow(null)).isSameAs(mockedValidationException);
         }
 
         @Test
@@ -92,7 +92,7 @@ class WahlvorstandValidatorTest {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SAVEANWESENHEIT_BEZIRKID_FEHLT))
                     .thenReturn(mockedValidationException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideSaveAnwesenheitDataOrThrow(invalidDTO)).isSameAs(mockedValidationException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validateSaveAnwesenheitDataOrThrow(invalidDTO)).isSameAs(mockedValidationException);
         }
 
         @Test
@@ -103,7 +103,7 @@ class WahlvorstandValidatorTest {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SAVEANWESENHEIT_BEZIRKID_FEHLT))
                     .thenReturn(mockedValidationException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideSaveAnwesenheitDataOrThrow(invalidDTO)).isSameAs(mockedValidationException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validateSaveAnwesenheitDataOrThrow(invalidDTO)).isSameAs(mockedValidationException);
         }
 
         @Test
@@ -114,7 +114,7 @@ class WahlvorstandValidatorTest {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SAVEANWESENHEIT_BEZIRKID_FEHLT))
                     .thenReturn(mockedValidationException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideSaveAnwesenheitDataOrThrow(invalidDTO)).isSameAs(mockedValidationException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validateSaveAnwesenheitDataOrThrow(invalidDTO)).isSameAs(mockedValidationException);
         }
 
         @Test
@@ -125,7 +125,7 @@ class WahlvorstandValidatorTest {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SAVEANWESENHEIT_ANWESENHEITBEGINN_FEHLT))
                     .thenReturn(mockedValidationException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideSaveAnwesenheitDataOrThrow(invalidDTO)).isSameAs(mockedValidationException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validateSaveAnwesenheitDataOrThrow(invalidDTO)).isSameAs(mockedValidationException);
 
         }
 
@@ -141,7 +141,7 @@ class WahlvorstandValidatorTest {
                 Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SAVEANWESENHEIT_IDENTIFIKATOR_FEHLT))
                         .thenReturn(mockedValidationException);
 
-                Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideSaveAnwesenheitDataOrThrow(invalidDTO))
+                Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validateSaveAnwesenheitDataOrThrow(invalidDTO))
                         .isSameAs(mockedValidationException);
             }
 
@@ -154,7 +154,7 @@ class WahlvorstandValidatorTest {
                 Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SAVEANWESENHEIT_IDENTIFIKATOR_FEHLT))
                         .thenReturn(mockedValidationException);
 
-                Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideSaveAnwesenheitDataOrThrow(invalidDTO))
+                Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validateSaveAnwesenheitDataOrThrow(invalidDTO))
                         .isSameAs(mockedValidationException);
             }
 
@@ -167,7 +167,7 @@ class WahlvorstandValidatorTest {
                 Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SAVEANWESENHEIT_IDENTIFIKATOR_FEHLT))
                         .thenReturn(mockedValidationException);
 
-                Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideSaveAnwesenheitDataOrThrow(invalidDTO))
+                Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validateSaveAnwesenheitDataOrThrow(invalidDTO))
                         .isSameAs(mockedValidationException);
             }
         }

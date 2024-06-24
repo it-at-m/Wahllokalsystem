@@ -18,8 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class KonfigurationModelValidatorTest {
 
-    private static final String SERVICE_ID = "serviceID";
-
     @Mock
     ExceptionFactory exceptionFactory;
 
@@ -37,7 +35,7 @@ class KonfigurationModelValidatorTest {
 
         @Test
         void exceptionOnNullKey() {
-            val expectedException = FachlicheWlsException.withCode("102").inService(SERVICE_ID).buildWithMessage("");
+            val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETKONFIGURATION_PARAMETER_UNVOLLSTAENDIG))
                     .thenReturn(expectedException);
 
@@ -57,7 +55,7 @@ class KonfigurationModelValidatorTest {
 
         @Test
         void exceptionWhenModelIsNull() {
-            val expectedException = FachlicheWlsException.withCode("100").inService(SERVICE_ID).buildWithMessage("");
+            val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTKONFIGURATION_PARAMETER_UNVOLLSTAENDIG))
                     .thenReturn(expectedException);
 
@@ -68,7 +66,7 @@ class KonfigurationModelValidatorTest {
         void exceptionWhenSchluesselIsNull() {
             val invalidModel = initValidModel().schluessel(null).build();
 
-            val expectedException = FachlicheWlsException.withCode("100").inService(SERVICE_ID).buildWithMessage("");
+            val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTKONFIGURATION_PARAMETER_UNVOLLSTAENDIG))
                     .thenReturn(expectedException);
 

@@ -37,6 +37,7 @@
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
         <org.springdoc.version>2.5.0</org.springdoc.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+        <wls.common.version>1.1.0</wls.common.version>
     </properties>
 
     <dependencyManagement>
@@ -109,7 +110,7 @@
         <dependency>
             <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
             <artifactId>exception</artifactId>
-            <version>1.0.0</version>
+            <version>${wls.common.version}</version>
         </dependency>
 
         <!-- json etc. -->
@@ -202,6 +203,12 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>testing</artifactId>
+            <version>${wls.common.version}</version>
             <scope>test</scope>
         </dependency>
 

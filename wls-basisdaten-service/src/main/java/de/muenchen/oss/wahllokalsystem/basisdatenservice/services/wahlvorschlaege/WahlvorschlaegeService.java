@@ -35,7 +35,7 @@ public class WahlvorschlaegeService {
         wahlvorschlaegeValidator.validWahlIdUndWahlbezirkIDOrThrow(wahlID, wahlbezirkID);
         Wahlvorschlaege wahlvorschlaege;
         BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
-        if (wahlvorschlaegeRepository.countByBezirkUndWahlID(bezirkUndWahlID) == 0) {
+        if (!wahlvorschlaegeRepository.existsById(bezirkUndWahlID)) {
             log.debug("#getWahlvorschlaege: Für Wahlbezirk {} mit WahlID {} waren keine Wahlvorschlaege in der Datenbank", wahlbezirkID, wahlID);
 
             val clientWahlvorschlaegeDTO = wahlvorschlaegeClient.getWahlvorschlaege(wahlID, wahlbezirkID);

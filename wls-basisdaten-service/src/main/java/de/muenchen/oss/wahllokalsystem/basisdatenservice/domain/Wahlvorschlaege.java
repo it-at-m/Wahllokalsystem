@@ -8,6 +8,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.OrderColumn;
@@ -18,6 +19,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Entity
 @Embeddable
 @Data
 @NoArgsConstructor
@@ -26,7 +28,6 @@ import lombok.NoArgsConstructor;
 public class Wahlvorschlaege {
 
     @EmbeddedId
-    @JsonUnwrapped
     @NotNull
     private BezirkUndWahlID bezirkUndWahlID;
 

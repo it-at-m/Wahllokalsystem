@@ -39,6 +39,6 @@ public class WahlvorschlaegeController {
 
         val result = wahlvorschlaegeDTOMapper.fromWahlvorschlaegeModelToWLSDTO(
                 wahlvorschlaegeService.getWahlvorschlaege(wahlID, wahlbezirkID));
-        return new ResponseEntity<>(result, ((result != null) ? HttpStatus.OK : HttpStatus.NO_CONTENT));
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

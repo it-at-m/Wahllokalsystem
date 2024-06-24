@@ -24,6 +24,10 @@ security:
   oauth2:
     resource.user-info-uri: http://kubernetes.docker.internal:8100/auth/realms/${realm}/protocol/openid-connect/userinfo
 
+service:
+  info:
+    oid: WLS-BASISDATEN
+
 
 # Define the local keycloak realm here
 realm: wls_realm

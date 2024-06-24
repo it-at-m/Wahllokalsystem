@@ -11,12 +11,15 @@ import org.mapstruct.Named;
 @Mapper
 public interface WahlvorschlaegeDTOMapper {
 
-    @Mapping(source = "wahlvorschlaege", target = "wahlvorschlaege", qualifiedByName = "toWLSDTOSet")
+    @Mapping(source = "wahlvorschlaege", target = "wahlvorschlaege", qualifiedByName = "fromModelToWLSWahlvorschlagDTOSet")
     WahlvorschlaegeDTO fromWahlvorschlaegeModelToWLSDTO(WahlvorschlaegeModel wahlvorschlaegeModel);
 
     @IterableMapping(qualifiedByName = "fromWahlvorschlagModelToWLSDTO")
-    Set<WahlvorschlagDTO> toWLSDTOSet(Set<WahlvorschlagModel> wahlvorschlagModels);
+    @Named("fromModelToWLSWahlvorschlagDTOSet")
+    Set<WahlvorschlagDTO> fromSetOfModelsToWLSWahlvorschlagDTOSet(Set<WahlvorschlagModel> wahlvorschlagModels);
 
     @Named("fromWahlvorschlagModelToWLSDTO")
     WahlvorschlagDTO fromWahlvorschlagModelToWLSDTO(WahlvorschlagModel wahlvorschlagModel);
+
+
 }

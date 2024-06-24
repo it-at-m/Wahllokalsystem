@@ -1,7 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege;
 
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.model.KandidatDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.model.WahlvorschlaegeDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.model.WahlvorschlagDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Kandidat;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlvorschlaege;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlvorschlag;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -27,32 +29,44 @@ public interface WahlvorschlaegeModelMapper {
         return entity;
     }
 
-    @IterableMapping(qualifiedByName = "fromWahlvorschlagModeltoEntity")
+    @IterableMapping(qualifiedByName = "fromWahlvorschlagModelToEntity")
     Set<Wahlvorschlag> fromSetOfWahlvorschlagModelToSetOfEntity(Set<WahlvorschlagModel> wahlvorschlagModels);
 
-    @Named("fromWahlvorschlagModeltoEntity")
-    Wahlvorschlag fromClientWahlvorschlagDTOtoEntity(WahlvorschlagModel wahlvorschlagModel);
+    @Named("fromWahlvorschlagModelToEntity")
+    Wahlvorschlag fromWahlvorschlagModelToEntity(WahlvorschlagModel wahlvorschlagModel);
+
+
+    Kandidat fromKandidatModelToKandidatEntity(KandidatModel kandidatModel);
 
     // RemoteClientDTO to Entity
 
+    @Mapping(source="wahlbezirkID", target="bezirkUndWahlID.wahlbezirkID")
+    @Mapping(source="wahlID", target="bezirkUndWahlID.wahlID")
     @Mapping(source = "wahlvorschlaege", target = "wahlvorschlaege", qualifiedByName = "fromClientDTOSetToEntitySet")
     Wahlvorschlaege fromClientWahlvorschlaegeDTOtoEntity(WahlvorschlaegeDTO entity);
 
     @IterableMapping(qualifiedByName = "fromClientWahlvorschlagDTOtoEntity")
+    @Named("fromClientDTOSetToEntitySet")
     Set<Wahlvorschlag> fromClientDTOSetToEntitySet(Set<WahlvorschlagDTO> wahlvorschlagDTOS);
 
     @Named("fromClientWahlvorschlagDTOtoEntity")
     Wahlvorschlag fromClientWahlvorschlagDTOtoEntity(WahlvorschlagDTO wahlvorschlagDTO);
 
-    // Entity to Model
+    Kandidat fromKandidatDTOToKandidatEntity(KandidatDTO kandidatDTO);
 
-    @Mapping(source = "wahlvorschlaege", target = "wahlvorschlaege", qualifiedByName = "toModelSet")
+    // Entity to Model
+    @Mapping(source="bezirkUndWahlID.wahlbezirkID", target="wahlbezirkID")
+    @Mapping(source="bezirkUndWahlID.wahlID", target="wahlID")
+    @Mapping(source = "wahlvorschlaege", target = "wahlvorschlaege", qualifiedByName = "fromSetOfWahlvorschlagEntityToSetOfModel")
     WahlvorschlaegeModel fromEntityToWahlvorschlaegeModel(Wahlvorschlaege entity);
 
     @IterableMapping(qualifiedByName = "fromEntityToWahlvorschlagModel")
-    Set<WahlvorschlagModel> toModelSet(Set<Wahlvorschlag> entityList);
+    @Named("fromSetOfWahlvorschlagEntityToSetOfModel")
+    Set<WahlvorschlagModel> fromSetOfWahlvorschlagEntityToSetOfModel(Set<Wahlvorschlag> entityList);
 
     @Named("fromEntityToWahlvorschlagModel")
     WahlvorschlagModel fromEntityToWahlvorschlagModel(Wahlvorschlag wahlvorschlagEntity);
+
+    KandidatModel fromKandidatToKandidatModel(Kandidat kandidat);
 
 }

@@ -3,7 +3,7 @@ package de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfigurati
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.SecurityUtils;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;

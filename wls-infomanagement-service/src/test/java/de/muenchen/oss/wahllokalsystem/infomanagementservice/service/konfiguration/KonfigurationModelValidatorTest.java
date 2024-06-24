@@ -1,18 +1,30 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration;
 
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationKonfigKey;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationSetModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 class KonfigurationModelValidatorTest {
 
     private static final String SERVICE_ID = "serviceID";
 
-    private final KonfigurationModelValidator unitUnderTest = new KonfigurationModelValidator(SERVICE_ID);
+    @Mock
+    ExceptionFactory exceptionFactory;
+
+    @InjectMocks
+    KonfigurationModelValidator unitUnderTest;
 
     @Nested
     class ValidOrThrowGetKonfigurationByKey {
@@ -25,12 +37,11 @@ class KonfigurationModelValidatorTest {
 
         @Test
         void exceptionOnNullKey() {
-            val exceptionThrown = Assertions.catchException(() -> unitUnderTest.validOrThrowGetKonfigurationByKey(null));
-
             val expectedException = FachlicheWlsException.withCode("102").inService(SERVICE_ID).buildWithMessage("");
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETKONFIGURATION_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(expectedException);
 
-            Assertions.assertThat(exceptionThrown).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedException);
-            Assertions.assertThat(exceptionThrown.getMessage()).isNotNull();
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validOrThrowGetKonfigurationByKey(null)).isSameAs(expectedException);
         }
     }
 
@@ -46,24 +57,22 @@ class KonfigurationModelValidatorTest {
 
         @Test
         void exceptionWhenModelIsNull() {
-            val exceptionThrown = Assertions.catchException(() -> unitUnderTest.validOrThrowSetKonfiguration(null));
-
             val expectedException = FachlicheWlsException.withCode("100").inService(SERVICE_ID).buildWithMessage("");
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTKONFIGURATION_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(expectedException);
 
-            Assertions.assertThat(exceptionThrown).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedException);
-            Assertions.assertThat(exceptionThrown.getMessage()).isNotNull();
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validOrThrowSetKonfiguration(null)).isSameAs(expectedException);
         }
 
         @Test
         void exceptionWhenSchluesselIsNull() {
             val invalidModel = initValidModel().schluessel(null).build();
 
-            val exceptionThrown = Assertions.catchException(() -> unitUnderTest.validOrThrowSetKonfiguration(invalidModel));
-
             val expectedException = FachlicheWlsException.withCode("100").inService(SERVICE_ID).buildWithMessage("");
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTKONFIGURATION_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(expectedException);
 
-            Assertions.assertThat(exceptionThrown).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedException);
-            Assertions.assertThat(exceptionThrown.getMessage()).isNotNull();
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validOrThrowSetKonfiguration(invalidModel)).isSameAs(expectedException);
         }
 
         private KonfigurationSetModel.KonfigurationSetModelBuilder initValidModel() {

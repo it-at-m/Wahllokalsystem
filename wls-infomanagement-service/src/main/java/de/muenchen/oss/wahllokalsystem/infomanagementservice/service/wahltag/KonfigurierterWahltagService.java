@@ -55,7 +55,7 @@ public class KonfigurierterWahltagService {
             konfigurierterWahltagRepository.deleteById(wahltagID);
         } catch (Exception e) {
             log.error("#deleteKonfigurierterWahltag undeleteable: " + e);
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.DELETE_KONFIGURIERTERWAHLTAG_NOT_DELETEABLE);
+            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.DELETE_KONFIGURIERTERWAHLTAG_NOT_DELETEABLE);
         }
     }
 

@@ -4,8 +4,9 @@ import static org.mockito.ArgumentMatchers.any;
 
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag.KonfigurierterWahltag;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag.KonfigurierterWahltagRepository;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Optional;
@@ -23,10 +24,8 @@ import org.springframework.data.domain.Sort;
 @ExtendWith(MockitoExtension.class)
 class KonfigurierterWahltagServiceTest {
 
-    private static final String SERVICDE_ID = "serviceID";
-
     @Mock
-    ServiceIDFormatter serviceIDFormatter;
+    ExceptionFactory exceptionFactory;
 
     @Mock
     KonfigurierterWahltagRepository konfigurierterWahltagRepository;
@@ -153,17 +152,16 @@ class KonfigurierterWahltagServiceTest {
             val wahltagID = "wahltagID";
 
             val mockedThrownException = new RuntimeException("on delete exception");
+            val mockedExceptionFactoryWlsException = TechnischeWlsException.withCode("").buildWithMessage("");
             val mockedModelAsEntity = new KonfigurierterWahltag();
             mockedModelAsEntity.setWahltagID(wahltagID);
 
             Mockito.doThrow(mockedThrownException).when(konfigurierterWahltagRepository).deleteById(wahltagID);
-            Mockito.when(serviceIDFormatter.getId()).thenReturn(SERVICDE_ID);
-
-            val expectedException = FachlicheWlsException.withCode("105").inService(SERVICDE_ID)
-                    .buildWithMessage("deleteKonfigurierterWahltag: Der konfigurierte Wahltag konnte nicht gelöscht werden.");
+            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.DELETE_KONFIGURIERTERWAHLTAG_NOT_DELETEABLE))
+                    .thenReturn(mockedExceptionFactoryWlsException);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.deleteKonfigurierterWahltag(wahltagID))
-                    .usingRecursiveComparison().isEqualTo(expectedException);
+                    .isSameAs(mockedExceptionFactoryWlsException);
         }
     }
 

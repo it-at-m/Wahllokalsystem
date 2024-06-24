@@ -37,6 +37,7 @@ server:
     include-stacktrace: never
     whitelabel:
       enabled: false
+  max-http-request-header-size: 32KB
 
 service:
   info:

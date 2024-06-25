@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -12,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @PreAuthorize("hasAuthority('Basisdaten_READ_WLSWahlvorschlaege')")
 @Transactional
-public interface WahlvorschlaegeRepository extends CrudRepository<Wahlvorschlaege, BezirkUndWahlID> {
+public interface WahlvorschlaegeRepository extends CrudRepository<Wahlvorschlaege, UUID> {
 
     String CACHE = "WLSWAHLVORSCHLAEGE_CACHE";
 
@@ -21,7 +22,9 @@ public interface WahlvorschlaegeRepository extends CrudRepository<Wahlvorschlaeg
 
     @Override
     @Cacheable(value = CACHE, key = "#p0")
-    Optional<Wahlvorschlaege> findById(BezirkUndWahlID bezirkUndWahlID);
+    Optional<Wahlvorschlaege> findById(UUID bezirkUndWahlID);
+
+    Optional<Wahlvorschlaege> findByBezirkUndWahlID(BezirkUndWahlID bezirkUndWahlID);
 
     @Override
     @CachePut(value = CACHE, key = "#p0.bezirkUndWahlID")
@@ -31,7 +34,7 @@ public interface WahlvorschlaegeRepository extends CrudRepository<Wahlvorschlaeg
     @Override
     @CacheEvict(value = CACHE, key = "#p0")
     @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSWahlvorschlaege')")
-    void deleteById(BezirkUndWahlID bezirkUndWahlID);
+    void deleteById(UUID bezirkUndWahlID);
 
     @Override
     @CacheEvict(value = CACHE, key = "#p0.bezirkUndWahlID")

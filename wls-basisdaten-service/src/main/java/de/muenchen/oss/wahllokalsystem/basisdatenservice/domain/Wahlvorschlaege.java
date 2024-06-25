@@ -1,53 +1,60 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
 
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import static java.sql.Types.VARCHAR;
+
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.AttributeOverrides;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.OrderColumn;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.UuidGenerator;
 
 @Entity
 @Embeddable
-@Data
+@Getter
+@Setter
+@ToString(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Wahlvorschlaege {
 
-    @EmbeddedId
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @UuidGenerator
+    @JdbcTypeCode(VARCHAR)
+    private UUID id;
+
+    @Embedded
+    @NaturalId
     @NotNull
+    @ToString.Include
     private BezirkUndWahlID bezirkUndWahlID;
 
-    @Column(name = "stimmzettelgebietID")
     @NotNull
+    @ToString.Include
     private String stimmzettelgebietID;
 
-    @OrderColumn(name = "order_index")
-    @JoinTable(name = "Wahlvorschlaege_Wahlvorschlaege", joinColumns = { @JoinColumn(name = "wahlvorschlaege_oid") })
-    @ElementCollection
-    @AttributeOverrides(
-        {
-                @AttributeOverride(name = "identifikator", column = @Column(name = "wahlvorschlaege_identifikator")),
-                @AttributeOverride(name = "ordnungszahl", column = @Column(name = "wahlvorschlaege_ordnungszahl")),
-                @AttributeOverride(name = "kurzname", column = @Column(name = "wahlvorschlaege_kurzname")),
-                @AttributeOverride(name = "erhaeltStimmen", column = @Column(name = "wahlvorschlaege_erhaeltstimmen")),
-                @AttributeOverride(name = "kandidaten", column = @Column(name = "wahlvorschlaege_kandidaten"))
-        }
-    )
+    @OneToMany(mappedBy = "wahlvorschlaeage", orphanRemoval = true)
     @NotNull
     @Size(min = 1)
     private java.util.Set<Wahlvorschlag> wahlvorschlaege = new java.util.LinkedHashSet<>();
+
+    public void addWahlvorschlag(final Wahlvorschlag wahlvorschlag) {
+        wahlvorschlag.setWahlvorschlaeage(this);
+        wahlvorschlaege.add(wahlvorschlag);
+    }
 }

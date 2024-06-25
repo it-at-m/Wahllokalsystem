@@ -1,52 +1,69 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
 
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.AttributeOverrides;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.OrderColumn;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import static java.sql.Types.VARCHAR;
 
-@Embeddable
-@Data
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotNull;
+import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.UuidGenerator;
+
+@Entity
+@Getter
+@Setter
+@ToString(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class Wahlvorschlag {
 
-    @Column(name = "identifikator")
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @UuidGenerator
+    @JdbcTypeCode(VARCHAR)
+    private UUID id;
+
+    //    @Id
+    @NaturalId
     @NotNull
+    @ToString.Include
     private String identifikator;
 
-    @Column(name = "ordnungszahl")
+    @ManyToOne
     @NotNull
+    @JoinColumn(name = "wahlvorschlaegeID")
+    @EqualsAndHashCode.Exclude
+    private Wahlvorschlaege wahlvorschlaeage;
+
+    @NotNull
+    @ToString.Include
     private long ordnungszahl;
 
-    @Column(name = "kurzname")
     @NotNull
     private String kurzname;
 
-    @Column(name = "erhaeltStimmen")
     @NotNull
+    @ToString.Include
     private boolean erhaeltStimmen;
 
-    @OrderColumn(name = "order_index")
-    @JoinTable(name = "Wahlvorschlag_Kandidaten", joinColumns = { @JoinColumn(name = "wahlvorschlag_oid") })
-    @ElementCollection
-    @AttributeOverrides(
-        {
-                @AttributeOverride(name = "identifikator", column = @Column(name = "kandidaten_identifikator")),
-                @AttributeOverride(name = "name", column = @Column(name = "kandidaten_name")),
-                @AttributeOverride(name = "listenposition", column = @Column(name = "kandidaten_listenposition")),
-                @AttributeOverride(name = "direktkandidat", column = @Column(name = "kandidaten_direktkandidat")),
-                @AttributeOverride(name = "tabellenSpalteInNiederschrift", column = @Column(name = "kandidaten_tabellenspalteinniederschrift")),
-                @AttributeOverride(name = "einzelbewerber", column = @Column(name = "kandidaten_einzelbewerber"))
-        }
-    )
+    @OneToMany(mappedBy = "wahlvorschlag", orphanRemoval = true)
+    @NotNull
     private java.util.Set<Kandidat> kandidaten = new java.util.LinkedHashSet<>();
+
+    public void addKandidat(final Kandidat kandidat) {
+        kandidat.setWahlvorschlag(this);
+        kandidaten.add(kandidat);
+    }
 }

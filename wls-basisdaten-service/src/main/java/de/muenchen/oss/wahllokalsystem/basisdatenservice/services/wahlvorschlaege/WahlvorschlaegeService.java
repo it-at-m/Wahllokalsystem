@@ -31,7 +31,7 @@ public class WahlvorschlaegeService {
     private final ExceptionFactory exceptionFactory;
 
     @PreAuthorize(
-            "hasAuthority('Basisdaten_BUSINESSACTION_GetWahlvorschlaege')"
+        "hasAuthority('Basisdaten_BUSINESSACTION_GetWahlvorschlaege')"
     )
     public WahlvorschlaegeModel getWahlvorschlaege(@P("wahlID") final String wahlID, @P("wahlbezirkID") final String wahlbezirkID) {
         log.debug("#getWahlvorschlaege wahlID {} wahlbezirkID {}", wahlID, wahlbezirkID);

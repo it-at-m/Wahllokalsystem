@@ -21,5 +21,4 @@ public interface WahlvorschlaegeDTOMapper {
     @Named("fromWahlvorschlagModelToWLSDTO")
     WahlvorschlagDTO fromWahlvorschlagModelToWLSDTO(WahlvorschlagModel wahlvorschlagModel);
 
-
 }

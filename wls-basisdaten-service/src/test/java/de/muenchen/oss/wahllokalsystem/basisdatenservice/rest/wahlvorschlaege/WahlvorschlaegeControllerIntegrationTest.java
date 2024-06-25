@@ -2,11 +2,11 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlvorschlaege;
 
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Kandidat;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlvorschlaege;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlvorschlag;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege.WahlvorschlaegeModelMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege.WahlvorschlaegeValidator;
@@ -62,7 +62,10 @@ public class WahlvorschlaegeControllerIntegrationTest {
     class GetWahlvorschlaege {
 
         @Test
-        @WithMockUserAsJwt(authorities = { Authorities.SERVICE_GET_WAHLVORSCHLAEGE, Authorities.REPOSITORY_READ_WAHLVORSCHLAEGE, Authorities.REPOSITORY_WRITE_WAHLVORSCHLAEGE })
+        @WithMockUserAsJwt(
+                authorities = { Authorities.SERVICE_GET_WAHLVORSCHLAEGE, Authorities.REPOSITORY_READ_WAHLVORSCHLAEGE,
+                        Authorities.REPOSITORY_WRITE_WAHLVORSCHLAEGE }
+        )
         void emptyResponse() throws Exception {
             val request = MockMvcRequestBuilders.get("/businessActions/wahlvorschlaege/wahlID1/wahlbezirkID1");
 
@@ -73,13 +76,13 @@ public class WahlvorschlaegeControllerIntegrationTest {
 
         @Test
         @WithMockUserAsJwt(
-                authorities = { Authorities.SERVICE_GET_WAHLVORSCHLAEGE, Authorities.REPOSITORY_READ_WAHLVORSCHLAEGE, Authorities.REPOSITORY_WRITE_WAHLVORSCHLAEGE }
+                authorities = { Authorities.SERVICE_GET_WAHLVORSCHLAEGE, Authorities.REPOSITORY_READ_WAHLVORSCHLAEGE,
+                        Authorities.REPOSITORY_WRITE_WAHLVORSCHLAEGE }
         )
         void dataFound() throws Exception {
             val wahlvorschlaege1 = createWahlvorschlaege("wahlID1", "wahlbezirkID1", "stimmzettelgebietID1", 1L);
             val wahlvorschlaege2 = createWahlvorschlaege("wahlID2", "wahlbezirkID2", "stimmzettelgebietID2", 2L);
             val wahlvorschlaegeToFind = createWahlvorschlaege("wahlIDToFind", "wahlbezirkID1", "stimmzettelgebietIDToFind", 1L);
-            
 
             wahlvorschlaegeRepository.save(wahlvorschlaege1);
             wahlvorschlaegeRepository.save(wahlvorschlaegeToFind);
@@ -91,15 +94,12 @@ public class WahlvorschlaegeControllerIntegrationTest {
             val responseBody = objectMapper.readValue(response.getResponse().getContentAsString(), WahlvorschlaegeDTO.class);
 
             val expectedResponseBody = new WahlvorschlaegeDTO(
-                        wahlvorschlaegeToFind.getBezirkUndWahlID().getWahlID(),
-                        wahlvorschlaegeToFind.getBezirkUndWahlID().getWahlbezirkID(),
-                        wahlvorschlaegeToFind.getStimmzettelgebietID(),
-                        dtoMapper.fromSetOfModelsToWLSWahlvorschlagDTOSet(
-                                modelMapper.fromSetOfWahlvorschlagEntityToSetOfModel(
-                                        wahlvorschlaegeToFind.getWahlvorschlaege()
-                                )
-                        )
-                    );
+                    wahlvorschlaegeToFind.getBezirkUndWahlID().getWahlID(),
+                    wahlvorschlaegeToFind.getBezirkUndWahlID().getWahlbezirkID(),
+                    wahlvorschlaegeToFind.getStimmzettelgebietID(),
+                    dtoMapper.fromSetOfModelsToWLSWahlvorschlagDTOSet(
+                            modelMapper.fromSetOfWahlvorschlagEntityToSetOfModel(
+                                    wahlvorschlaegeToFind.getWahlvorschlaege())));
 
             Assertions.assertThat(responseBody).isEqualTo(expectedResponseBody);
         }
@@ -116,7 +116,7 @@ public class WahlvorschlaegeControllerIntegrationTest {
                     createSetOfKandidat(identifikatorWahlvorschlag));
             setOfWahlvorschlag.add(wahlvorschlag);
         }
-        return new Wahlvorschlaege(new BezirkUndWahlID(wahlID,wahlbezirkID), stimmzettelgebietID, setOfWahlvorschlag);
+        return new Wahlvorschlaege(new BezirkUndWahlID(wahlID, wahlbezirkID), stimmzettelgebietID, setOfWahlvorschlag);
     }
 
     private Set<Kandidat> createSetOfKandidat(String praefixWahlvorschlag) {

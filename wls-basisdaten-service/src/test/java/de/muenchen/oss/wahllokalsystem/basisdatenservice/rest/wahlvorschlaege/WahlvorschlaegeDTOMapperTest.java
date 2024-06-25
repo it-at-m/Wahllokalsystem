@@ -65,8 +65,8 @@ class WahlvorschlaegeDTOMapperTest {
 
         @Test
         void isMappedToWahlvorschlaegeDTO() {
-            val modelInput = createWahlvorschlaegeModel("wahlID","wahlbezirkID","stimmzettelgebietID", 1L);
-            val dtoExpected = createWahlvorschlaegeDTO("wahlID","wahlbezirkID","stimmzettelgebietID", 1L);
+            val modelInput = createWahlvorschlaegeModel("wahlID", "wahlbezirkID", "stimmzettelgebietID", 1L);
+            val dtoExpected = createWahlvorschlaegeDTO("wahlID", "wahlbezirkID", "stimmzettelgebietID", 1L);
 
             val result = unitUnderTest.fromWahlvorschlaegeModelToWLSDTO(modelInput);
             Assertions.assertThat(result).isEqualTo(dtoExpected);

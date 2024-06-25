@@ -8,12 +8,13 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlvorschlaege;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlvorschlag;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Set;
+import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-@Mapper
+@Mapper(collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
 public interface WahlvorschlaegeModelMapper {
 
     // RemoteClientDTO to Entity

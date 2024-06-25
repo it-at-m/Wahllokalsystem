@@ -6,7 +6,6 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.model.Wahlv
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Kandidat;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlvorschlaege;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlvorschlag;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Set;
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.IterableMapping;
@@ -19,23 +18,19 @@ public interface WahlvorschlaegeModelMapper {
 
     // RemoteClientDTO to Entity
 
-    @Mapping(source="wahlbezirkID", target="bezirkUndWahlID.wahlbezirkID")
-    @Mapping(source="wahlID", target="bezirkUndWahlID.wahlID")
-    @Mapping(source = "wahlvorschlaege", target = "wahlvorschlaege", qualifiedByName = "fromClientDTOSetToEntitySet")
+    @Mapping(source = "wahlbezirkID", target = "bezirkUndWahlID.wahlbezirkID")
+    @Mapping(source = "wahlID", target = "bezirkUndWahlID.wahlID")
     Wahlvorschlaege fromClientWahlvorschlaegeDTOtoEntity(WahlvorschlaegeDTO entity);
 
-    @IterableMapping(qualifiedByName = "fromClientWahlvorschlagDTOtoEntity")
-    @Named("fromClientDTOSetToEntitySet")
-    Set<Wahlvorschlag> fromClientDTOSetToEntitySet(Set<WahlvorschlagDTO> wahlvorschlagDTOS);
-
-    @Named("fromClientWahlvorschlagDTOtoEntity")
+    @Mapping(target = "wahlvorschlaeage", ignore = true)
     Wahlvorschlag fromClientWahlvorschlagDTOtoEntity(WahlvorschlagDTO wahlvorschlagDTO);
 
+    @Mapping(target = "wahlvorschlag", ignore = true)
     Kandidat fromKandidatDTOToKandidatEntity(KandidatDTO kandidatDTO);
 
     // Entity to Model
-    @Mapping(source="bezirkUndWahlID.wahlbezirkID", target="wahlbezirkID")
-    @Mapping(source="bezirkUndWahlID.wahlID", target="wahlID")
+    @Mapping(source = "bezirkUndWahlID.wahlbezirkID", target = "wahlbezirkID")
+    @Mapping(source = "bezirkUndWahlID.wahlID", target = "wahlID")
     @Mapping(source = "wahlvorschlaege", target = "wahlvorschlaege", qualifiedByName = "fromSetOfWahlvorschlagEntityToSetOfModel")
     WahlvorschlaegeModel fromEntityToWahlvorschlaegeModel(Wahlvorschlaege entity);
 

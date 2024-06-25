@@ -1,0 +1,21 @@
+id: add authorities eai wahlvorstand
+author: MrSebastian
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: aoueai_BUSINESSACTION_LoadWahlvorstand
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allEaiAuthorities
+      role: aoueai_BUSINESSACTION_LoadWahlvorstand
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: aoueai_BUSINESSACTION_SaveAnwesenheit
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allEaiAuthorities
+      role: aoueai_BUSINESSACTION_SaveAnwesenheit
+      clientId: ${SSO_CLIENT_ID}

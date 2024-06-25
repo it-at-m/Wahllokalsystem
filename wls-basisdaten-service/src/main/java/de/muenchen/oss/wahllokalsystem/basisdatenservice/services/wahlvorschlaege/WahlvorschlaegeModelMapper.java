@@ -16,28 +16,6 @@ import org.mapstruct.Named;
 @Mapper
 public interface WahlvorschlaegeModelMapper {
 
-    // Model to Entity
-
-    default Wahlvorschlaege fromModeltoEntity(WahlvorschlaegeModel wahlvorschlaegeModel) {
-
-        Wahlvorschlaege entity = new Wahlvorschlaege();
-
-        entity.setBezirkUndWahlID(new BezirkUndWahlID(wahlvorschlaegeModel.wahlbezirkID(), wahlvorschlaegeModel.wahlID()));
-        entity.setStimmzettelgebietID(wahlvorschlaegeModel.stimmzettelgebietID());
-        entity.setWahlvorschlaege(fromSetOfWahlvorschlagModelToSetOfEntity(wahlvorschlaegeModel.wahlvorschlaege()));
-
-        return entity;
-    }
-
-    @IterableMapping(qualifiedByName = "fromWahlvorschlagModelToEntity")
-    Set<Wahlvorschlag> fromSetOfWahlvorschlagModelToSetOfEntity(Set<WahlvorschlagModel> wahlvorschlagModels);
-
-    @Named("fromWahlvorschlagModelToEntity")
-    Wahlvorschlag fromWahlvorschlagModelToEntity(WahlvorschlagModel wahlvorschlagModel);
-
-
-    Kandidat fromKandidatModelToKandidatEntity(KandidatModel kandidatModel);
-
     // RemoteClientDTO to Entity
 
     @Mapping(source="wahlbezirkID", target="bezirkUndWahlID.wahlbezirkID")

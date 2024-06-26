@@ -26,5 +26,15 @@ Authorization: {{ token_type }} {{ auth_token }}
 Content-Type: application/json
 
 {
-  "fortsetzungsUhrzeit": "2024-06-10T17:05:33.505"
+    "urnenAnzahl": [
+      {
+        "anzahl": 1,
+        "urneVersiegelt": true,
+        "wahlID": "wahlID1"
+      },
+      {
+        "wahlID": "wahlID2",
+        "urneVersiegelt": false,
+        "anzahl": 13
+      }
 }

@@ -51,8 +51,4 @@ public interface WahlvorschlaegeRepository extends CrudRepository<Wahlvorschlaeg
     @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSWahlvorschlaege')")
     void deleteAll();
 
-    void deleteAllByBezirkUndWahlID_WahlID(String wahlID);
-
-    int countByBezirkUndWahlID(BezirkUndWahlID id);
-
 }

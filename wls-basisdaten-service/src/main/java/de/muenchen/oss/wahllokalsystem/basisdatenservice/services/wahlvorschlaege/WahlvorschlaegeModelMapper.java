@@ -20,12 +20,15 @@ public interface WahlvorschlaegeModelMapper {
 
     @Mapping(source = "wahlbezirkID", target = "bezirkUndWahlID.wahlbezirkID")
     @Mapping(source = "wahlID", target = "bezirkUndWahlID.wahlID")
+    @Mapping(target = "id", ignore = true)
     Wahlvorschlaege fromClientWahlvorschlaegeDTOtoEntity(WahlvorschlaegeDTO entity);
 
     @Mapping(target = "wahlvorschlaeage", ignore = true)
+    @Mapping(target = "id", ignore = true)
     Wahlvorschlag fromClientWahlvorschlagDTOtoEntity(WahlvorschlagDTO wahlvorschlagDTO);
 
     @Mapping(target = "wahlvorschlag", ignore = true)
+    @Mapping(target = "id", ignore = true)
     Kandidat fromKandidatDTOToKandidatEntity(KandidatDTO kandidatDTO);
 
     // Entity to Model

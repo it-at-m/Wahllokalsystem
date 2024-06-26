@@ -2,12 +2,14 @@ package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.briefwah
 
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.TestConstants;
-import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.Wahlurne;
+import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.common.WahlurneModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.testdaten.WahlurneTestdatenfactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 import lombok.val;
@@ -93,8 +95,8 @@ public class BriefwahlvorbereitungSecurityTest {
             SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_POST_BRIEFWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
-            List<Wahlurne> urnenanzahl = List.of(WahlurneTestdatenfactory.initValid("1234").build());
-            val modelToSet = new BriefwahlvorbereitungModel(wahlbezirkID, urnenanzahl);
+            List<WahlurneModel> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValidModel("1234").build());
+            val modelToSet = new BriefwahlvorbereitungModel(wahlbezirkID, urnenanzahl1);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
@@ -106,8 +108,7 @@ public class BriefwahlvorbereitungSecurityTest {
             SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_POST_BRIEFWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
-            List<Wahlurne> urnenanzahl = List.of(WahlurneTestdatenfactory.initValid("1234").build());
-            val modelToSet = new BriefwahlvorbereitungModel(wahlbezirkID, urnenanzahl);
+            val modelToSet = new BriefwahlvorbereitungModel(wahlbezirkID, Collections.emptyList());
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
 
@@ -120,8 +121,7 @@ public class BriefwahlvorbereitungSecurityTest {
             SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_REPO_BRIEFWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
-            List<Wahlurne> urnenanzahl = List.of(WahlurneTestdatenfactory.initValid("1234").build());
-            val modelToSet = new BriefwahlvorbereitungModel(wahlbezirkID, urnenanzahl);
+            val modelToSet = new BriefwahlvorbereitungModel(wahlbezirkID, Collections.emptyList());
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
@@ -131,11 +131,11 @@ public class BriefwahlvorbereitungSecurityTest {
 
         @Test
         void wlsExceptionOnRepoWriteAuthorityMissing() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_GET_BRIEFWAHLVORBEREITUNG);
+            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_POST_BRIEFWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
-            List<Wahlurne> urnenanzahl = List.of(WahlurneTestdatenfactory.initValid("1234").build());
-            val modelToSet = new BriefwahlvorbereitungModel(wahlbezirkID, urnenanzahl);
+            List<WahlurneModel> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValidModel("1234").build());
+            val modelToSet = new BriefwahlvorbereitungModel(wahlbezirkID, urnenanzahl1);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 

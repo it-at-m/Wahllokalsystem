@@ -25,5 +25,5 @@ includes:
   - path: add-missing-repository-read-authorities.yml
   - path: add-authorities-wahlvorbereitung-fortsetzungsuhrzeit.yml
   - path: add-authorities-wahlvorbereitung-eroeffnungsuhrzeit.yml
-  - path: add-authorities-wahlvorbereitung-briefwahlvorbereitung.yml
   - path: add-authorities-wahlvorbereitung-urnenwahlschliessungsuhrzeit.yml
+  - path: add-authorities-wahlvorbereitung-briefwahlvorbereitung.yml

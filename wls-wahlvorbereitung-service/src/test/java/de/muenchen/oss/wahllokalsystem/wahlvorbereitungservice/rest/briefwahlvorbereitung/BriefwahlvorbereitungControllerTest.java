@@ -2,14 +2,11 @@ package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.briefwahlvo
 
 import static org.mockito.ArgumentMatchers.eq;
 
-import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.Wahlurne;
-
-import java.util.List;
+import java.util.Collections;
 import java.util.Optional;
 
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.briefwahlvorbereitung.BriefwahlvorbereitungModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.briefwahlvorbereitung.BriefwahlvorbereitungService;
-import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.testdaten.WahlurneTestdatenfactory;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -35,10 +32,9 @@ public class BriefwahlvorbereitungControllerTest {
     @Test
     void getDataFromService() {
         val wahlbezirkID = "wahlbezirkID";
-        List<Wahlurne> urnenanzahl = List.of(WahlurneTestdatenfactory.initValid("1234").build());
 
-        val mockedServiceOptionalBody = new BriefwahlvorbereitungModel(wahlbezirkID, urnenanzahl);
-        val mockedMappedServiceResponseAsDTO = new BriefwahlvorbereitungDTO(wahlbezirkID, urnenanzahl);
+        val mockedServiceOptionalBody = new BriefwahlvorbereitungModel(wahlbezirkID, Collections.emptyList());
+        val mockedMappedServiceResponseAsDTO = new BriefwahlvorbereitungDTO(wahlbezirkID, Collections.emptyList());
 
         Mockito.when(briefwahlvorbereitungService.getBriefwahlvorbereitung(wahlbezirkID)).thenReturn(Optional.of(mockedServiceOptionalBody));
         Mockito.when(briefwahlvorbereitungDTOMapper.toDTO(mockedServiceOptionalBody)).thenReturn(mockedMappedServiceResponseAsDTO);
@@ -64,10 +60,9 @@ public class BriefwahlvorbereitungControllerTest {
     @Test
     void requestIsMappedAndSendToService() {
         val wahlbezirkID = "wahlbezirkID";
-        List<Wahlurne> urnenanzahl = List.of(WahlurneTestdatenfactory.initValid("1234").build());
-        val requestBody = new BriefwahlvorbereitungWriteDTO(urnenanzahl);
+        val requestBody = new BriefwahlvorbereitungWriteDTO(Collections.emptyList());
 
-        val mockedMappedRequest = new BriefwahlvorbereitungModel(wahlbezirkID, urnenanzahl);
+        val mockedMappedRequest = new BriefwahlvorbereitungModel(wahlbezirkID, Collections.emptyList());
 
         Mockito.when(briefwahlvorbereitungDTOMapper.toModel(eq(wahlbezirkID), eq(requestBody))).thenReturn(mockedMappedRequest);
 

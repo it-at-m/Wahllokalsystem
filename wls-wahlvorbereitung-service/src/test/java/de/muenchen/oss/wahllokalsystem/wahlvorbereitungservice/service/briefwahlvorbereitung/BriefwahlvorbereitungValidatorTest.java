@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.briefwahlvorbereitung;
 
-import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.Wahlurne;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.exception.ExceptionFactory;
+import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.common.WahlurneModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.testdaten.WahlurneTestdatenfactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import java.util.List;
@@ -102,7 +102,7 @@ class BriefwahlvorbereitungValidatorTest {
         }
 
         private BriefwahlvorbereitungModel.BriefwahlvorbereitungModelBuilder initValid() {
-            List<Wahlurne> urnenanzahl = List.of(WahlurneTestdatenfactory.initValid("1234").build());
+            List<WahlurneModel> urnenanzahl = List.of(WahlurneTestdatenfactory.initValidModel("1234").build());
             return BriefwahlvorbereitungModel.builder().wahlbezirkID("wahlbezirkID").urnenAnzahl(urnenanzahl);
         }
     }

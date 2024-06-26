@@ -1,10 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.briefwahlvorbereitung;
 
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.Briefwahlvorbereitung;
-import java.util.List;
 
-import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.Wahlurne;
-import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.testdaten.WahlurneTestdatenfactory;
+import java.util.Collections;
+
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -24,12 +23,11 @@ class BriefwahlvorbereitungModelMapperTest {
         @Test
         void isMapped() {
             val wahlbezirkID = "wahlbezirkID";
-            List<Wahlurne> urnenanzahl = List.of(WahlurneTestdatenfactory.initValid("1234").build());
-            val entityToMap = new Briefwahlvorbereitung(wahlbezirkID, urnenanzahl);
+            val entityToMap = new Briefwahlvorbereitung(wahlbezirkID, Collections.emptyList());
 
             val result = unitUnderTest.toModel(entityToMap);
 
-            val expecetedResult = new BriefwahlvorbereitungModel(wahlbezirkID, urnenanzahl);
+            val expecetedResult = new BriefwahlvorbereitungModel(wahlbezirkID, Collections.emptyList());
 
             Assertions.assertThat(result).isEqualTo(expecetedResult);
         }
@@ -41,13 +39,12 @@ class BriefwahlvorbereitungModelMapperTest {
         @Test
         void isMapped() {
             val wahlbezirkID = "wahlbezirkID";
-            List<Wahlurne> urnenanzahl = List.of(WahlurneTestdatenfactory.initValid("1234").build());
 
-            val modelToMap = new BriefwahlvorbereitungModel(wahlbezirkID, urnenanzahl);
+            val modelToMap = new BriefwahlvorbereitungModel(wahlbezirkID, Collections.emptyList());
 
             val result = unitUnderTest.toEntity(modelToMap);
 
-            val expectedResult = new Briefwahlvorbereitung(wahlbezirkID, urnenanzahl);
+            val expectedResult = new Briefwahlvorbereitung(wahlbezirkID, Collections.emptyList());
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }

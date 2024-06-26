@@ -19,7 +19,7 @@ public class BriefwahlvorbereitungValidator {
     }
 
     public void validModelToSetOrThrow(final BriefwahlvorbereitungModel modelToValidate) {
-        if (modelToValidate == null || StringUtils.isEmpty(modelToValidate.wahlbezirkID()) || modelToValidate.urnenAnzahl() == null) {
+        if (modelToValidate == null || StringUtils.isEmpty(modelToValidate.wahlbezirkID()) || modelToValidate.urnenAnzahl() == null || modelToValidate.urnenAnzahl().isEmpty()) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG);
         }
     }

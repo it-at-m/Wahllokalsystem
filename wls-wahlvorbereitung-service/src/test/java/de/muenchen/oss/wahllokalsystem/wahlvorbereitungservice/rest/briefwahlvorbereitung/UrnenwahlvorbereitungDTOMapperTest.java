@@ -1,11 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.briefwahlvorbereitung;
 
-import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.Wahlurne;
-
-import java.util.List;
+import java.util.Collections;
 
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.briefwahlvorbereitung.BriefwahlvorbereitungModel;
-import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.testdaten.WahlurneTestdatenfactory;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -25,11 +22,10 @@ class BriefwahlvorbereitungDTOMapperTest {
         @Test
         void isMapped() {
             val wahlbezirkID = "wahlbezirkID";
-            List<Wahlurne> urnenanzahl = List.of(WahlurneTestdatenfactory.initValid("1234").build());
-            val modelToMap = new BriefwahlvorbereitungModel(wahlbezirkID, urnenanzahl);
+            val modelToMap = new BriefwahlvorbereitungModel(wahlbezirkID, Collections.emptyList());
 
             val result = unitUnderTest.toDTO(modelToMap);
-            val expectedResult = new BriefwahlvorbereitungDTO(wahlbezirkID, urnenanzahl);
+            val expectedResult = new BriefwahlvorbereitungDTO(wahlbezirkID, Collections.emptyList());
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
@@ -40,13 +36,12 @@ class BriefwahlvorbereitungDTOMapperTest {
 
         @Test
         void isMapped() {
-            List<Wahlurne> urnenanzahl = List.of(WahlurneTestdatenfactory.initValid("1234").build());
-            val dtoToMap = new BriefwahlvorbereitungWriteDTO(urnenanzahl);
+            val dtoToMap = new BriefwahlvorbereitungWriteDTO(Collections.emptyList());
             val wahlbezirkIDToMap = "wahlbezirkID";
 
             val result = unitUnderTest.toModel(wahlbezirkIDToMap, dtoToMap);
 
-            val expectedResult = new BriefwahlvorbereitungModel(wahlbezirkIDToMap, urnenanzahl);
+            val expectedResult = new BriefwahlvorbereitungModel(wahlbezirkIDToMap, Collections.emptyList());
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }

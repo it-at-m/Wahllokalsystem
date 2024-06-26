@@ -3,21 +3,21 @@ author: GerhardPx
 realm: ${SSO_REALM}
 changes:
   - addRole:
-      name: Wahlvorbereitung_BUSINESSACTION_Briefwahlvorbereitung
+      name: Wahlvorbereitung_BUSINESSACTION_GetBriefwahlvorbereitung
       clientRole: true
       clientId: ${SSO_CLIENT_ID}
   - assignRoleToGroup:
       group: allWahlvorbereitungAuthorities
-      role: Wahlvorbereitung_BUSINESSACTION_Briefwahlvorbereitung
+      role: Wahlvorbereitung_BUSINESSACTION_GetBriefwahlvorbereitung
       clientId: ${SSO_CLIENT_ID}
 
   - addRole:
-      name: Wahlvorbereitung_READ_Briefwahlvorbereitung
+      name: Wahlvorbereitung_BUSINESSACTION_PostBriefwahlvorbereitung
       clientRole: true
       clientId: ${SSO_CLIENT_ID}
   - assignRoleToGroup:
       group: allWahlvorbereitungAuthorities
-      role: Wahlvorbereitung_READ_Briefwahlvorbereitung
+      role: Wahlvorbereitung_BUSINESSACTION_PostBriefwahlvorbereitung
       clientId: ${SSO_CLIENT_ID}
 
   - addRole:

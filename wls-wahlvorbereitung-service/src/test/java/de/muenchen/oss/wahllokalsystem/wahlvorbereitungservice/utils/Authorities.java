@@ -14,7 +14,8 @@ public class Authorities {
     public static final String SERVICE_GET_EROEFFNUNGSUHRZEIT = "Wahlvorbereitung_BUSINESSACTION_GetEroeffnungsuhrzeit";
     public static final String SERVICE_POST_EROEFFNUNGSUHRZEIT = "Wahlvorbereitung_BUSINESSACTION_PostEroeffnungsuhrzeit";
     public static final String SERVICE_FORTSETZUNGSUHRZEIT = "Wahlvorbereitung_BUSINESSACTION_FortsetzungsUhrzeit";
-    public static final String SERVICE_BRIEFWAHLVORBEREITUNG = "Wahlvorbereitung_BUSINESSACTION_Briefwahlvorbereitung";
+    public static final String SERVICE_GET_BRIEFWAHLVORBEREITUNG = "Wahlvorbereitung_BUSINESSACTION_GetBriefwahlvorbereitung";
+    public static final String SERVICE_POST_BRIEFWAHLVORBEREITUNG = "Wahlvorbereitung_BUSINESSACTION_PostBriefwahlvorbereitung";
     public static final String SERVICE_GET_URNENWAHLSCHLIESSUNGSUHRZEIT = "Wahlvorbereitung_BUSINESSACTION_GetUrnenwahlSchliessungsuhrzeit";
     public static final String SERVICE_POST_URNENWAHLSCHLIESSUNGSUHRZEIT = "Wahlvorbereitung_BUSINESSACTION_PostUrnenwahlSchliessungsuhrzeit";
 
@@ -112,13 +113,13 @@ public class Authorities {
     };
 
     public static final String[] ALL_AUTHORITIES_POST_BRIEFWAHLVORBEREITUNG = {
-            SERVICE_BRIEFWAHLVORBEREITUNG,
+            SERVICE_POST_BRIEFWAHLVORBEREITUNG,
             REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG,
             REPOSITORY_READ_BRIEFWAHLVORBEREITUNG
     };
 
     public static final String[] ALL_AUTHORITIES_GET_BRIEFWAHLVORBEREITUNG = {
-            SERVICE_BRIEFWAHLVORBEREITUNG,
+            SERVICE_GET_BRIEFWAHLVORBEREITUNG,
             REPOSITORY_READ_BRIEFWAHLVORBEREITUNG
     };
 

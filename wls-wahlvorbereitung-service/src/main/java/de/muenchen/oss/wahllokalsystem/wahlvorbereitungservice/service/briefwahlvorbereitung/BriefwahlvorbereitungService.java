@@ -22,7 +22,7 @@ public class BriefwahlvorbereitungService {
     private final ExceptionFactory exceptionFactory;
 
     @PreAuthorize(
-        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_Briefwahlvorbereitung')"
+        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_GetBriefwahlvorbereitung')"
                 + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
     )
     public Optional<BriefwahlvorbereitungModel> getBriefwahlvorbereitung(@P("wahlbezirkID") final String wahlbezirkID) {
@@ -39,7 +39,7 @@ public class BriefwahlvorbereitungService {
     }
 
     @PreAuthorize(
-        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_Briefwahlvorbereitung')"
+        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_PostBriefwahlvorbereitung')"
                 + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#briefwahlvorbereitungToSet.wahlbezirkID(), authentication)"
     )
     public void setBriefwahlvorbereitung(@P("briefwahlvorbereitungToSet") final BriefwahlvorbereitungModel briefwahlvorbereitungToSet) {
@@ -50,7 +50,7 @@ public class BriefwahlvorbereitungService {
 
         try {
             briefwahlvorbereitungRepository.save(briefwahlvorbereitungModelMapper.toEntity(briefwahlvorbereitungToSet));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.error("Fehler beim speichern: ", e);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
         }

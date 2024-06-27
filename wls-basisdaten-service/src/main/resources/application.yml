@@ -5,6 +5,7 @@ spring:
     group:
       local:
         - db-h2
+        - dummy.clients
   flyway:
     locations:
       - classpath:db/migrations/{vendor}

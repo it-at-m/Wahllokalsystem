@@ -8,11 +8,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface KandidatRepository extends CrudRepository<Kandidat, UUID> {
 
     @Override
-    @PreAuthorize("hasAuthority('Basisdaten_SAVE_Kandidat')")
+    @PreAuthorize("hasAuthority('Basisdaten_WRITE_Kandidat')")
     <S extends Kandidat> S save(S entity);
 
     @Override
-    @PreAuthorize("hasAuthority('Basisdaten_SAVE_Kandidat')")
+    @PreAuthorize("hasAuthority('Basisdaten_WRITE_Kandidat')")
     <S extends Kandidat> Iterable<S> saveAll(Iterable<S> entities);
 
     @Override

@@ -131,7 +131,7 @@ public class BriefwahlvorbereitungSecurityTest {
 
         @Test
         void wlsExceptionOnRepoWriteAuthorityMissing() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_POST_BRIEFWAHLVORBEREITUNG);
+            SecurityUtils.runAs(Authorities.SERVICE_POST_BRIEFWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
             List<WahlurneModel> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValidModel("1234").build());

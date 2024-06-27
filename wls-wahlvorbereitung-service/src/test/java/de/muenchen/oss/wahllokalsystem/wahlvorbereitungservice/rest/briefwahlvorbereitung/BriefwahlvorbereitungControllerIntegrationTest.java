@@ -21,7 +21,6 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExcept
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.Profiles;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.List;
 
 import lombok.val;
@@ -150,7 +149,8 @@ public class BriefwahlvorbereitungControllerIntegrationTest {
 
             Assertions.assertThat(briefwahlvorbereitungFromRepo1).usingRecursiveComparison().isEqualTo(expectedBriefwahlvorbereitung1);
 
-            val writeDto2 = new BriefwahlvorbereitungWriteDTO(Collections.emptyList());
+            List<WahlurneDTO> urnenanzahl2 = List.of(WahlurneTestdatenfactory.initValidDTO("1234").build());
+            val writeDto2 = new BriefwahlvorbereitungWriteDTO(urnenanzahl2);
             val request2 = buildPostRequest(wahlbezirkID, writeDto2);
 
             mockMvc.perform(request2).andExpect(status().isCreated());

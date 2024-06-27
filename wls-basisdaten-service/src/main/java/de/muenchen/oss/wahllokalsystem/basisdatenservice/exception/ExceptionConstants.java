@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.exception;
 
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionDataWrapper;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionKonstanten;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -28,5 +29,10 @@ public class ExceptionConstants {
     public static ExceptionDataWrapper PARAMS_UNVOLLSTAENDIG = new ExceptionDataWrapper(CODE_PARAMS_UNVOLLSTAENDIG, MSG_PARAMS_UNVOLLSTAENDIG);
 
     public static ExceptionDataWrapper UNSAVEABLE = new ExceptionDataWrapper(CODE_UNSAVEABLE, MSG_UNSAVEABLE);
+
+    public static ExceptionDataWrapper NULL_FROM_CLIENT = new ExceptionDataWrapper(ExceptionKonstanten.CODE_ENTITY_NOT_FOUND, "not found");
+
+    public static ExceptionDataWrapper FAILED_COMMUNICATION_WITH_EAI = new ExceptionDataWrapper("100",
+            "Bei der Kommunikation mit dem Aoueai-Service ist ein Fehler aufgetreten. Es konnten daher keine Daten geladen werden.");
 
 }

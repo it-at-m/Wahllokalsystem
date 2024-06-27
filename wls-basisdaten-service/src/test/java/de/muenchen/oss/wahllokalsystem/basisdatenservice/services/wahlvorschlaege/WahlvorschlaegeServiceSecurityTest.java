@@ -9,10 +9,8 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.model.Wahlv
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.model.WahlvorschlagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
-import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Stream;
 import lombok.val;
@@ -70,7 +68,7 @@ public class WahlvorschlaegeServiceSecurityTest {
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getMissingAuthoritiesVariationsThatProducesAccessDenied")
+        @MethodSource("getMissingAuthoritiesVariations")
         void missingAuthorityCausesFailWithAccessDenied(final ArgumentsAccessor argumentsAccessor) throws Exception {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
@@ -87,36 +85,8 @@ public class WahlvorschlaegeServiceSecurityTest {
                             AccessDeniedException.class);
         }
 
-        private static Stream<Arguments> getMissingAuthoritiesVariationsThatProducesAccessDenied() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
-                    new String[] { Authorities.REPOSITORY_READ_WAHLVORSCHLAEGE, Authorities.SERVICE_GET_WAHLVORSCHLAEGE });
-        }
-
-        @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getMissingAuthoritiesVariationsThatProducesWlsException")
-        void missingAuthorityCausesFailWithWlsException(final ArgumentsAccessor argumentsAccessor) throws Exception {
-            val authoritiesForReadAndServiceAccess = new String[] { Authorities.REPOSITORY_READ_WAHLVORSCHLAEGE, Authorities.SERVICE_GET_WAHLVORSCHLAEGE };
-            val authoritiesToRunWith = Stream.concat(Arrays.stream(authoritiesForReadAndServiceAccess), Arrays.stream(argumentsAccessor.get(0, String[].class)))
-                    .toArray(String[]::new);
-            SecurityUtils.runWith(authoritiesToRunWith);
-
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-
-            val eaiWahlvorschlaege = createClientWahlvorschlaegeDTO();
-            WireMock.stubFor(WireMock.get("/vorschlaege/wahl/" + wahlID + "/" + wahlbezirkID)
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(eaiWahlvorschlaege))));
-
-            Assertions.assertThatException().isThrownBy(() -> wahlvorschlaegeService.getWahlvorschlaege(new BezirkUndWahlID(wahlID, wahlbezirkID)))
-                    .isInstanceOf(
-                            WlsException.class);
-        }
-
-        private static Stream<Arguments> getMissingAuthoritiesVariationsThatProducesWlsException() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
-                    new String[] { Authorities.REPOSITORY_WRITE_WAHLVORSCHLAEGE, Authorities.REPOSITORY_WRITE_WAHLVORSCHLAG,
-                            Authorities.REPOSITORY_WRITE_KANDIDAT });
+        private static Stream<Arguments> getMissingAuthoritiesVariations() {
+            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_DELETE_WAHLVORSCHLAEGE);
         }
 
         private WahlvorschlaegeDTO createClientWahlvorschlaegeDTO() {

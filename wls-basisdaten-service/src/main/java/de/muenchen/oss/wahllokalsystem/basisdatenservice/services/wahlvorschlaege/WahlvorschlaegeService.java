@@ -4,14 +4,13 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.KandidatReposito
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlvorschlaege;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlvorschlagRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,44 +24,39 @@ public class WahlvorschlaegeService {
     private final WahlvorschlaegeValidator wahlvorschlaegeValidator;
     private final WahlvorschlaegeClient wahlvorschlaegeClient;
 
-    private final ExceptionFactory exceptionFactory;
-
     @PreAuthorize(
         "hasAuthority('Basisdaten_BUSINESSACTION_GetWahlvorschlaege')"
     )
+    @Transactional
     public WahlvorschlaegeModel getWahlvorschlaege(final BezirkUndWahlID bezirkUndWahlID) {
         log.debug("#getWahlvorschlaege bezirkUndWahlID > {}", bezirkUndWahlID);
 
         wahlvorschlaegeValidator.validWahlIdUndWahlbezirkIDOrThrow(bezirkUndWahlID);
         val wahlvorschlaegeFromRepo = wahlvorschlaegeRepository.findByBezirkUndWahlID(bezirkUndWahlID);
         if (wahlvorschlaegeFromRepo.isEmpty()) {
-            val savedWahlvorschlaege = importAndSaveWahlvorschlaege(bezirkUndWahlID);
-            return wahlvorschlaegeModelMapper.toModel(savedWahlvorschlaege);
+            log.debug("#getWahlvorschlaege: Für BezirkUndWahlID {} waren keine Wahlvorschlaege in der Datenbank", bezirkUndWahlID);
+            val importedWahlvorschlaegeModel = wahlvorschlaegeClient.getWahlvorschlaege(bezirkUndWahlID);
+            try {
+                val savedWahlvorschlaege = persistWahlvorschlagModel(importedWahlvorschlaegeModel);
+                return wahlvorschlaegeModelMapper.toModel(savedWahlvorschlaege);
+            } catch (final Exception exception) {
+                log.error("#getWahlvorschlaege: Fehler beim Cachen", exception);
+                return importedWahlvorschlaegeModel; // an exception on saving does prevent sending a response. We can use the imported object
+            }
         } else {
             return wahlvorschlaegeModelMapper.toModel(wahlvorschlaegeFromRepo.get());
         }
     }
 
-    private Wahlvorschlaege importAndSaveWahlvorschlaege(BezirkUndWahlID bezirkUndWahlID) {
-        log.debug("#getWahlvorschlaege: Für BezirkUndWahlID {} waren keine Wahlvorschlaege in der Datenbank", bezirkUndWahlID);
-        val clientWahlvorschlaegeDTO = wahlvorschlaegeClient.getWahlvorschlaege(bezirkUndWahlID);
-        try {
-            val entityToCreate = wahlvorschlaegeModelMapper.toEntity(clientWahlvorschlaegeDTO);
-            return persistWahlvorschlagEntity(entityToCreate);
-        } catch (RuntimeException e) {
-            log.error("#getWahlvorschlaege: Fehler beim Cachen", e);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
-        }
-    }
-
-    protected Wahlvorschlaege persistWahlvorschlagEntity(final Wahlvorschlaege wahlvorschlaege) {
-        wahlvorschlaegeRepository.save(wahlvorschlaege);
-        wahlvorschlaege.getWahlvorschlaege().forEach(wahlvorschlag -> {
+    protected Wahlvorschlaege persistWahlvorschlagModel(final WahlvorschlaegeModel wahlvorschlaegeModel) {
+        val entityToCreate = wahlvorschlaegeModelMapper.toEntity(wahlvorschlaegeModel);
+        val createdEntity = wahlvorschlaegeRepository.save(entityToCreate);
+        entityToCreate.getWahlvorschlaege().forEach(wahlvorschlag -> {
             wahlvorschlagRepository.save(wahlvorschlag);
             kandidatRepository.saveAll(wahlvorschlag.getKandidaten());
         });
 
-        return wahlvorschlaege;
+        return createdEntity;
     }
 
 }

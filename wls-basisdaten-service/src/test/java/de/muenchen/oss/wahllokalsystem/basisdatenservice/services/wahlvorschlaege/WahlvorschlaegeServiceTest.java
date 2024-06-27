@@ -9,9 +9,6 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlvorschlaege;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlvorschlag;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlvorschlagRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Optional;
 import java.util.Set;
@@ -41,8 +38,6 @@ class WahlvorschlaegeServiceTest {
     WahlvorschlaegeValidator wahlvorschlaegeValidator;
     @Mock
     WahlvorschlaegeClient wahlvorschlaegeClient;
-    @Mock
-    ExceptionFactory exceptionFactory;
 
     @InjectMocks
     WahlvorschlaegeService unitUnderTest;
@@ -78,6 +73,7 @@ class WahlvorschlaegeServiceTest {
             val mockedMappedSavedEntity = WahlvorschlaegeModel.builder().build();
 
             Mockito.when(wahlvorschlaegeRepository.findByBezirkUndWahlID(wahlUndBezirkID)).thenReturn(Optional.empty());
+            Mockito.when(wahlvorschlaegeRepository.save(mockedMappedEntity)).thenReturn(mockedMappedEntity);
             Mockito.when(wahlvorschlaegeClient.getWahlvorschlaege(wahlUndBezirkID)).thenReturn(mockedClientResponse);
             Mockito.when(wahlvorschlaegeModelMapper.toEntity(mockedClientResponse)).thenReturn(mockedMappedEntity);
             Mockito.when(wahlvorschlaegeModelMapper.toModel(mockedMappedEntity)).thenReturn(mockedMappedSavedEntity);
@@ -136,69 +132,23 @@ class WahlvorschlaegeServiceTest {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlvorschlaege(wahlUndBezirkID)).isSameAs(mockedClientException);
         }
 
-        @Nested
-        class PersistingExceptionProducesWlsException {
+        @Test
+        void persistingExceptionDoesntPreventFromResultObject() {
+            val wahlID = "wahlID";
+            val wahlbezirkID = "wahlbezirkID";
+            val wahlUndBezirkID = new BezirkUndWahlID(wahlID, wahlbezirkID);
 
-            @Test
-            void onExceptionOfWahlvorschlaegeRepository() {
-                val wahlID = "wahlID";
-                val wahlbezirkID = "wahlbezirkID";
-                val wahlUndBezirkID = new BezirkUndWahlID(wahlID, wahlbezirkID);
+            val mockedWahlvorschlaegeModel = WahlvorschlaegeModel.builder().build();
+            val mockedWahlvorschlaegeEntity = new Wahlvorschlaege();
+            val mockedPersistingException = new RuntimeException("persisting failed");
 
-                val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("");
-                val mockedWahlvorschlaegeModel = WahlvorschlaegeModel.builder().build();
-                val mockedWahlvorschlaegeEntity = new Wahlvorschlaege();
-                val mockedPersistingException = new RuntimeException("persisting failed");
+            Mockito.when(wahlvorschlaegeClient.getWahlvorschlaege(wahlUndBezirkID)).thenReturn(mockedWahlvorschlaegeModel);
+            Mockito.when(wahlvorschlaegeModelMapper.toEntity(mockedWahlvorschlaegeModel)).thenReturn(mockedWahlvorschlaegeEntity);
+            Mockito.doThrow(mockedPersistingException).when(wahlvorschlaegeRepository).save(mockedWahlvorschlaegeEntity);
 
-                Mockito.when(wahlvorschlaegeClient.getWahlvorschlaege(wahlUndBezirkID)).thenReturn(mockedWahlvorschlaegeModel);
-                Mockito.when(wahlvorschlaegeModelMapper.toEntity(mockedWahlvorschlaegeModel)).thenReturn(mockedWahlvorschlaegeEntity);
-                Mockito.doThrow(mockedPersistingException).when(wahlvorschlaegeRepository).save(mockedWahlvorschlaegeEntity);
-                Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE)).thenReturn(mockedWlsException);
+            val result = unitUnderTest.getWahlvorschlaege(wahlUndBezirkID);
 
-                Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlvorschlaege(wahlUndBezirkID)).isSameAs(mockedWlsException);
-            }
-
-            @Test
-            void onExceptionOfWahlvorschlagRepository() {
-                val wahlID = "wahlID";
-                val wahlbezirkID = "wahlbezirkID";
-                val wahlUndBezirkID = new BezirkUndWahlID(wahlID, wahlbezirkID);
-
-                val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("");
-                val mockedWahlvorschlaegeModel = WahlvorschlaegeModel.builder().build();
-                val mockedWahlvorschlaegeEntity = new Wahlvorschlaege();
-                mockedWahlvorschlaegeEntity.setWahlvorschlaege(Set.of(new Wahlvorschlag()));
-                val mockedPersistingException = new RuntimeException("persisting failed");
-
-                Mockito.when(wahlvorschlaegeClient.getWahlvorschlaege(wahlUndBezirkID)).thenReturn(mockedWahlvorschlaegeModel);
-                Mockito.when(wahlvorschlaegeModelMapper.toEntity(mockedWahlvorschlaegeModel)).thenReturn(mockedWahlvorschlaegeEntity);
-                Mockito.doThrow(mockedPersistingException).when(wahlvorschlagRepository).save(any());
-                Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE)).thenReturn(mockedWlsException);
-
-                Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlvorschlaege(wahlUndBezirkID)).isSameAs(mockedWlsException);
-            }
-
-            @Test
-            void onExceptionOfKandidatRepository() {
-                val wahlID = "wahlID";
-                val wahlbezirkID = "wahlbezirkID";
-                val wahlUndBezirkID = new BezirkUndWahlID(wahlID, wahlbezirkID);
-
-                val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("");
-                val mockedWahlvorschlaegeModel = WahlvorschlaegeModel.builder().build();
-                val mockedWahlvorschlaegeEntity = new Wahlvorschlaege();
-                val mockedWahlvorschlagEntity = new Wahlvorschlag();
-                mockedWahlvorschlagEntity.setKandidaten(Set.of(new Kandidat()));
-                mockedWahlvorschlaegeEntity.setWahlvorschlaege(Set.of(mockedWahlvorschlagEntity));
-                val mockedPersistingException = new RuntimeException("persisting failed");
-
-                Mockito.when(wahlvorschlaegeClient.getWahlvorschlaege(wahlUndBezirkID)).thenReturn(mockedWahlvorschlaegeModel);
-                Mockito.when(wahlvorschlaegeModelMapper.toEntity(mockedWahlvorschlaegeModel)).thenReturn(mockedWahlvorschlaegeEntity);
-                Mockito.doThrow(mockedPersistingException).when(kandidatRepository).saveAll(any());
-                Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE)).thenReturn(mockedWlsException);
-
-                Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlvorschlaege(wahlUndBezirkID)).isSameAs(mockedWlsException);
-            }
+            Assertions.assertThat(result).isSameAs(mockedWahlvorschlaegeModel);
         }
 
     }

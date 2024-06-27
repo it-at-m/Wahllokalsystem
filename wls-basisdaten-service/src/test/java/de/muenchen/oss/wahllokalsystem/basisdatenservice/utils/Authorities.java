@@ -12,9 +12,20 @@ public class Authorities {
     public static final String REPOSITORY_DELETE_WAHLVORSCHLAEGE = "Basisdaten_DELETE_WLSWahlvorschlaege";
     public static final String REPOSITORY_WRITE_WAHLVORSCHLAEGE = "Basisdaten_WRITE_WLSWahlvorschlaege";
 
+    public static final String REPOSITORY_READ_WAHLVORSCHLAG = "Basisdaten_READ_Wahlvorschlag";
+    public static final String REPOSITORY_WRITE_WAHLVORSCHLAG = "Basisdaten_WRITE_Wahlvorschlag";
+    public static final String REPOSITORY_DELETE_WAHLVORSCHLAG = "Basisdaten_DELETE_Wahlvorschlag";
+
+    public static final String REPOSITORY_READ_KANDIDAT = "Basisdaten_READ_Kandidat";
+    public static final String REPOSITORY_WRITE_KANDIDAT = "Basisdaten_WRITE_Kandidat";
+    public static final String REPOSITORY_DELETE_KANDIDAT = "Basisdaten_DELETE_Kandidat";
+
     public static final String[] ALL_AUTHORITIES_GET_WAHLVORSCHLAEGE = new String[] {
             SERVICE_GET_WAHLVORSCHLAEGE,
-            REPOSITORY_READ_WAHLVORSCHLAEGE
+            REPOSITORY_READ_WAHLVORSCHLAEGE,
+            REPOSITORY_WRITE_WAHLVORSCHLAEGE,
+            REPOSITORY_WRITE_WAHLVORSCHLAG,
+            REPOSITORY_WRITE_KANDIDAT
     };
     public static final String[] ALL_AUTHORITIES_SET_WAHLVORSCHLAEGE = new String[] {
             SERVICE_GET_WAHLVORSCHLAEGE,

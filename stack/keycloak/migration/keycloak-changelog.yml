@@ -28,3 +28,5 @@ includes:
   - path: add-authorities-wahlvorbereitung-urnenwahlschliessungsuhrzeit.yml
   - path: create-group-all-eai-authorities.yml
   - path: add-authorities-eai-wahlvorstand.yml
+  - path: create-group-all-basisdaten-authorities.yml
+  - path: add-authorities-basisdaten-wahlvorschlaege.yml

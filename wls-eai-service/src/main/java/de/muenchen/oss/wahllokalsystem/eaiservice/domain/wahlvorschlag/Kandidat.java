@@ -21,10 +21,6 @@ public class Kandidat extends BaseEntity {
 
     @NotNull
     @ToString.Include
-    String identifikator;
-
-    @NotNull
-    @ToString.Include
     String name;
 
     @NotNull

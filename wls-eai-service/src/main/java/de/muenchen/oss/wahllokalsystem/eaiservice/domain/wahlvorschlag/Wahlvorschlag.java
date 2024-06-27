@@ -23,9 +23,6 @@ import lombok.ToString;
 public class Wahlvorschlag extends BaseEntity {
 
     @NotNull
-    private String identifikator;
-
-    @NotNull
     private long ordnungszahl;
 
     @NotNull

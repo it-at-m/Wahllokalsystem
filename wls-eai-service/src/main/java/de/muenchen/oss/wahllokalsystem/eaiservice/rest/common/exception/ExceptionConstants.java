@@ -11,11 +11,11 @@ public class ExceptionConstants {
     private static final String CODE_DATENALLGEMEIN_PARAMETER_FEHLEN = "102";
     private static final String MESSAGE_DATENALLGEMEIN_PARAMETER_FEHLEN = "Anfrage ist ungueltig da notwendige Anfragedaten fehlen";
     public static final ExceptionDataWrapper DATENALLGEMEIN_PARAMETER_FEHLEN = new ExceptionDataWrapper(CODE_DATENALLGEMEIN_PARAMETER_FEHLEN,
-            MESSAGE_DATENALLGEMEIN_PARAMETER_FEHLEN);
+        MESSAGE_DATENALLGEMEIN_PARAMETER_FEHLEN);
 
     private static final String CODE_DATENALLGEMEIN_ID_NICHT_KONVERTIERBAR = "103";
     public static final ExceptionDataWrapper ID_NICHT_KONVERTIERBAR = new ExceptionDataWrapper(
-            CODE_DATENALLGEMEIN_ID_NICHT_KONVERTIERBAR, "");
+        CODE_DATENALLGEMEIN_ID_NICHT_KONVERTIERBAR, "ID nicht konvertierbar");
 
     /**
      * @throws IllegalAccessException when constructor is used

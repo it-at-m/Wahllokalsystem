@@ -28,3 +28,4 @@ includes:
   - path: add-authorities-wahlvorbereitung-urnenwahlschliessungsuhrzeit.yml
   - path: create-group-all-eai-authorities.yml
   - path: add-authorities-eai-wahlvorstand.yml
+  - path: add-authorities-eai-wahlvorschlag.yml

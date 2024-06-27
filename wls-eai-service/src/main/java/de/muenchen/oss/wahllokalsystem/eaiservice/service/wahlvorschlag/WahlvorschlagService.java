@@ -2,7 +2,6 @@ package de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlvorschlag;
 
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorschlag.Wahlvorschlaege;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorschlag.WahlvorschlagRepository;
-import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.Wahlvorstand;
 import de.muenchen.oss.wahllokalsystem.eaiservice.exception.NotFoundException;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.dto.WahlvorschlaegeDTO;
@@ -25,12 +24,10 @@ public class WahlvorschlagService {
 
     private final WahlvorschlagValidator wahlvorschlagValidator;
 
-    @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadWahlvorschlag')")
+    @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadWahlvorschlaege')")
     public WahlvorschlaegeDTO getWahlvorschlaegeForWahlAndWahlbezirk(final String wahlID, final String wahlbezirkID) {
         wahlvorschlagValidator.validateWahlbezirkIDOrThrow(wahlbezirkID);
         wahlvorschlagValidator.validateWahlIDOrThrow(wahlID);
-        //val wahlUUID = convertIDToUUIDOrThrow(wahlID);
-        //val wahlbezirkUUID = convertIDToUUIDOrThrow(wahlbezirkID);
         val wahlvorschlaege = findByWahlbezirkIDAndWahlIDOrThrow(wahlbezirkID, wahlID);
         return wahlvorschlagMapper.toDTO(wahlvorschlaege);
     }
@@ -47,7 +44,7 @@ public class WahlvorschlagService {
 
     private Wahlvorschlaege findByWahlbezirkIDAndWahlIDOrThrow(final String wahlbezirkID, final String wahlID) {
         return wahlvorschlagRepository.findFirstByWahlbezirkIDAndWahlID(wahlbezirkID, wahlID)
-            .orElseThrow(() -> new NotFoundException(convertIDToUUIDOrThrow(wahlbezirkID), Wahlvorstand.class));
+            .orElseThrow(() -> new NotFoundException(convertIDToUUIDOrThrow(wahlbezirkID), Wahlvorschlaege.class));
     }
 
 }

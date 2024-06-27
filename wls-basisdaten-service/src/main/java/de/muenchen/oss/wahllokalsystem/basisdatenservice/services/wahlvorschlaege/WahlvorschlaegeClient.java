@@ -1,18 +1,19 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.api.WahlvorschlagControllerApi;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.model.WahlvorschlaegeDTO;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 
-@Component
-@RequiredArgsConstructor
-public class WahlvorschlaegeClient {
+public interface WahlvorschlaegeClient {
 
-    private final WahlvorschlagControllerApi wahlvorschlagControllerApi;
-
-    public WahlvorschlaegeDTO getWahlvorschlaege(String wahlID, String wahlbezirkID) {
-        return wahlvorschlagControllerApi.loadWahlvorschlaege(wahlID, wahlbezirkID);
-    }
+    /**
+     * @param bezirkUndWahlID Reference for requestes Wahlvorschlaege
+     * @return Model with Wahlvorschlaegen
+     * @throws WlsException
+     *             {@link de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException} if
+     *             return would be null
+     *             {@link de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException}
+     *             if there were trouble during communication
+     */
+    WahlvorschlaegeModel getWahlvorschlaege(BezirkUndWahlID bezirkUndWahlID) throws WlsException;
 
 }

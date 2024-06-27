@@ -1,0 +1,15 @@
+id: create group allEaiAuthorities and link wls_all*
+author: MrSebastian
+realm: ${SSO_REALM}
+changes:
+  - addGroup:
+      name: allEaiAuthorities
+  - assignGroup:
+      user: wls_all
+      group: allEaiAuthorities
+  - assignGroup:
+      user: wls_all_uwb
+      group: allEaiAuthorities
+  - assignGroup:
+      user: wls_all_bwb
+      group: allEaiAuthorities

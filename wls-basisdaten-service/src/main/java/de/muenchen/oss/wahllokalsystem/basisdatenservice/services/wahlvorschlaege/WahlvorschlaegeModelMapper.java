@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
 public interface WahlvorschlaegeModelMapper {
-    
+
     @Mapping(target = "id", ignore = true)
     Wahlvorschlaege toEntity(WahlvorschlaegeModel wahlvorschlaegeModel);
 

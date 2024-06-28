@@ -5,6 +5,8 @@ import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.exception.Excepti
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.common.WahlurneModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.testdaten.WahlurneTestdatenfactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
+
+import java.util.Collections;
 import java.util.List;
 
 import lombok.val;
@@ -94,6 +96,16 @@ class BriefwahlvorbereitungValidatorTest {
         @Test
         void exceptionWhenAnzahlUrnenIsNull() {
             val invalidModel = initValid().urnenAnzahl(null).build();
+
+            val mockedFactoryException = FachlicheWlsException.withCode("000").buildWithMessage("error");
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG)).thenReturn(mockedFactoryException);
+
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(invalidModel)).isSameAs(mockedFactoryException);
+        }
+
+        @Test
+        void exceptionWhenAnzahlUrnenIsEmpty() {
+            val invalidModel = initValid().urnenAnzahl(Collections.emptyList()).build();
 
             val mockedFactoryException = FachlicheWlsException.withCode("000").buildWithMessage("error");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG)).thenReturn(mockedFactoryException);

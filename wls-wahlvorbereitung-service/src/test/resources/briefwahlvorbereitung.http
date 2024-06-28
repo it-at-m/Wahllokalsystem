@@ -37,4 +37,5 @@ Content-Type: application/json
         "urneVersiegelt": false,
         "anzahl": 13
       }
+    ]
 }

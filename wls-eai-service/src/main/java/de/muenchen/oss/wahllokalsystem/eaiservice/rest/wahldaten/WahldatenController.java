@@ -28,7 +28,7 @@ public class WahldatenController {
     @GetMapping("wahlbezirke/{wahlbezirkID}/wahlberechtigte")
     @ResponseStatus(HttpStatus.OK)
     public List<WahlberechtigteDTO> loadWahlberechtigte(@PathVariable("wahlbezirkID") String wahlbezirkID) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return wahldatenService.getWahlberechtigte(wahlbezirkID);
     }
 
     @GetMapping("wahltage")

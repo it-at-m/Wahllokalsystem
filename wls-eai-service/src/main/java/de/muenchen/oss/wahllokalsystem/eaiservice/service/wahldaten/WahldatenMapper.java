@@ -4,6 +4,7 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.Wahl;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.Wahlbezirk;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.Wahltag;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlberechtigteDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlbezirkDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahltagDTO;
 import org.mapstruct.Mapper;
@@ -24,4 +25,8 @@ public interface WahldatenMapper {
     @Mapping(target = "wahlID", source = "wahl.id")
     @Mapping(target = "wahlnummer", source = "wahl.nummer")
     WahlbezirkDTO toDTO(Wahlbezirk wahlbezirk);
+
+    @Mapping(target = "wahlID", source = "wahl.id")
+    @Mapping(target = "wahlbezirkID", source = "id")
+    WahlberechtigteDTO toWahlberechtigteDTO(Wahlbezirk wahlbezirk);
 }

@@ -5,8 +5,10 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.WahlbezirkRep
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.Wahltag;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.WahltageRepository;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlberechtigteDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlbezirkDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahltagDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.service.IDConverter;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -20,6 +22,8 @@ import org.springframework.stereotype.Service;
 public class WahldatenService {
 
     private final WahldatenMapper wahldatenMapper;
+
+    private final IDConverter idConverter;
 
     private final WahltageRepository wahltageRepository;
 
@@ -39,8 +43,15 @@ public class WahldatenService {
 
     @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadWahlbezirke')")
     public Set<WahlbezirkDTO> getWahlbezirke(final LocalDate wahltag, final String nummer) {
-        return wahlbezirkRepository.findWahlbezirkeWithWahlAndWahltagForDateAndNummer(wahltag, nummer).stream().map(wahldatenMapper::toDTO)
+        return wahlbezirkRepository.findWahlbezirkeWithWahlAndWahltagById(wahltag, nummer).stream().map(wahldatenMapper::toDTO)
                 .collect(Collectors.toSet());
+    }
+
+    @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadWahlberechtigte')")
+    public List<WahlberechtigteDTO> getWahlberechtigte(final String wahlbezirkID) {
+        return wahlbezirkRepository.findWahlbezirkeWithWahlAndWahltagById(idConverter.convertIDToUUIDOrThrow(wahlbezirkID)).stream()
+                .map(wahldatenMapper::toWahlberechtigteDTO)
+                .toList();
     }
 
     private List<Wahltag> getWahltageIncludingSince(LocalDate wahltageIncludingSince) {

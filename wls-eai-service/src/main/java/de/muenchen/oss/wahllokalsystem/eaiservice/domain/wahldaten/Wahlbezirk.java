@@ -19,7 +19,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString(onlyExplicitlyIncluded = true)
 public class Wahlbezirk extends BaseEntity {
-    
+
     @NotNull
     @Enumerated(EnumType.STRING)
     private WahlbezirkArtDTO wahlbezirkArt;
@@ -31,4 +31,10 @@ public class Wahlbezirk extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "wahlID")
     private Wahl wahl;
+
+    private long a1;
+
+    private long a2;
+
+    private long a3;
 }

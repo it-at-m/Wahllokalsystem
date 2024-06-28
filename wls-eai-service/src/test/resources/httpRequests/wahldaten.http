@@ -34,3 +34,9 @@ GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlen?forDate=2020-03-15&withNummer=0
 
 ### get wahlen on day without elections
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlen?forDate=2034-06-09&withNummer=0
+
+### get wahlbezirke EU-Wahl
+GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirk?forDate=2024-06-09&withNummer=0
+
+### get wahlbezirke Kommunalwahl (empty response)
+GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirk?forDate=2020-03-15&withNummer=0

@@ -1,7 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.service.wahldaten;
 
+import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.WahlRepository;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.Wahltag;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.WahltageRepository;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahltagDTO;
 import java.time.LocalDate;
 import java.util.List;
@@ -19,9 +21,16 @@ public class WahldatenService {
 
     private final WahltageRepository wahltageRepository;
 
+    private final WahlRepository wahlRepository;
+
     @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadWahltage')")
     public Set<WahltagDTO> getWahltage(LocalDate wahltageIncludingSince) {
         return getWahltageIncludingSince(wahltageIncludingSince).stream().map(wahldatenMapper::toDTO).collect(Collectors.toSet());
+    }
+
+    @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadWahlen')")
+    public Set<WahlDTO> getWahlen(final LocalDate wahltag, final String nummer) {
+        return wahlRepository.findByWahltagTagAndNummer(wahltag, nummer).stream().map(wahldatenMapper::toDTO).collect(Collectors.toSet());
     }
 
     private List<Wahltag> getWahltageIncludingSince(LocalDate wahltageIncludingSince) {

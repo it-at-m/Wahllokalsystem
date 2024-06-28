@@ -1,9 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten;
 
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.BasisdatenDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlberechtigteDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlbezirkeDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlenDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahltagDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.service.wahldaten.WahldatenService;
 import java.time.LocalDate;
@@ -45,8 +45,8 @@ public class WahldatenController {
 
     @GetMapping("wahlen")
     @ResponseStatus(HttpStatus.OK)
-    public WahlenDTO loadWahlen(@RequestParam("forDate") LocalDate wahltag, @RequestParam("withNummer") String nummer) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Set<WahlDTO> loadWahlen(@RequestParam("forDate") LocalDate wahltag, @RequestParam("withNummer") String nummer) {
+        return wahldatenService.getWahlen(wahltag, nummer);
     }
 
     @GetMapping("basisdaten")

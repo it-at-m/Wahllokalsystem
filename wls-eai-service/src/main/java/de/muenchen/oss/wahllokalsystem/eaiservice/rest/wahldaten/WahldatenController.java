@@ -4,9 +4,12 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.BasisdatenD
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlberechtigteDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlbezirkeDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlenDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahltageDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahltagDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.service.wahldaten.WahldatenService;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/wahldaten")
+@RequiredArgsConstructor
 public class WahldatenController {
+
+    private final WahldatenService wahldatenService;
 
     @GetMapping("wahlbezirke/{wahlbezirkID}/wahlberechtigte")
     @ResponseStatus(HttpStatus.OK)
@@ -27,8 +33,8 @@ public class WahldatenController {
 
     @GetMapping("wahltage")
     @ResponseStatus(HttpStatus.OK)
-    public WahltageDTO loadWahltageSinceIncluding(@RequestParam("includingSince") LocalDate tag) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Set<WahltagDTO> loadWahltageSinceIncluding(@RequestParam("includingSince") LocalDate tag) {
+        return wahldatenService.getWahltage(tag);
     }
 
     @GetMapping("wahlbezirk")

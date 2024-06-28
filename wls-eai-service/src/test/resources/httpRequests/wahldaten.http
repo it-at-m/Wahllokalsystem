@@ -25,3 +25,12 @@ GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahltage?includingSince=2000-01-01
 
 ### get Wahltag no hits
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahltage?includingSince=3024-01-01
+
+### get wahlen on EU-Wahl-Tag
+GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlen?forDate=2024-06-09&withNummer=0
+
+### get wahlen on Kommunalwahl-Tag
+GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlen?forDate=2020-03-15&withNummer=0
+
+### get wahlen on day without elections
+GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlen?forDate=2034-06-09&withNummer=0

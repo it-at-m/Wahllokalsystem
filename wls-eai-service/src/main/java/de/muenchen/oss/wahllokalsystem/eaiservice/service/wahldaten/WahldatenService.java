@@ -4,6 +4,9 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.WahlRepositor
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.WahlbezirkRepository;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.Wahltag;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.WahltageRepository;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.BasisdatenDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.BasisstrukturdatenDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.StimmzettelgebietDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlberechtigteDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlbezirkDTO;
@@ -14,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +56,18 @@ public class WahldatenService {
         return wahlbezirkRepository.findWahlbezirkeWithWahlAndWahltagById(idConverter.convertIDToUUIDOrThrow(wahlbezirkID)).stream()
                 .map(wahldatenMapper::toWahlberechtigteDTO)
                 .toList();
+    }
+
+    @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadBasisdaten')")
+    public BasisdatenDTO getBasisdaten(final LocalDate wahltag, final String nummer) {
+        val basisstrukturdaten = Set.of(new BasisstrukturdatenDTO(null, null, null, null));
+        val wahlen = getWahlen(wahltag, nummer);
+        val wahlbezirke = getWahlbezirke(wahltag, nummer);
+        //TODO stimmzettelgebiet liegt in der Struktur zwischen Wahl und Wahlbezirk
+        //wahl -1..n-> gebiet -1..-> bezirk
+        val stimmzettelgebiete = Set.of(new StimmzettelgebietDTO(null, null, null, null, null));
+
+        return new BasisdatenDTO(basisstrukturdaten, wahlen, wahlbezirke, stimmzettelgebiete);
     }
 
     private List<Wahltag> getWahltageIncludingSince(LocalDate wahltageIncludingSince) {

@@ -40,3 +40,15 @@ GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirk?forDate=2024-06-09&withNummer
 
 ### get wahlbezirke Kommunalwahl (empty response)
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirk?forDate=2020-03-15&withNummer=0
+
+### get wahlberechtigte wahlbezirk-1
+GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirke/00000000-0000-0000-0000-000000000001/wahlberechtigte
+
+### get wahlberechtigte wahlbezirk-2
+GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirke/00000000-0000-0000-0000-000000000002/wahlberechtigte
+
+### get wahlberechtigte wahlbezirk-3
+GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirke/00000000-0000-0000-0000-000000000003/wahlberechtigte
+
+### get wahlberechtigte wahlbezirk-4
+GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirke/00000000-0000-0000-0000-000000000004/wahlberechtigte

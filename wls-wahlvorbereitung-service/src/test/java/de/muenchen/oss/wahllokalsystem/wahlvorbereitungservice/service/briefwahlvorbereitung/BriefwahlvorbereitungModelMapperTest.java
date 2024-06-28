@@ -2,8 +2,11 @@ package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.briefwah
 
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.Briefwahlvorbereitung;
 
-import java.util.Collections;
+import java.util.List;
 
+import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.Wahlurne;
+import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.common.WahlurneModel;
+import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.testdaten.WahlurneTestdatenfactory;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -23,11 +26,12 @@ class BriefwahlvorbereitungModelMapperTest {
         @Test
         void isMapped() {
             val wahlbezirkID = "wahlbezirkID";
-            val entityToMap = new Briefwahlvorbereitung(wahlbezirkID, Collections.emptyList());
+            List<Wahlurne> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValid("1234").build());
+            val entityToMap = new Briefwahlvorbereitung(wahlbezirkID, urnenanzahl1);
 
             val result = unitUnderTest.toModel(entityToMap);
 
-            val expecetedResult = new BriefwahlvorbereitungModel(wahlbezirkID, Collections.emptyList());
+            val expecetedResult = new BriefwahlvorbereitungModel(wahlbezirkID, List.of(new WahlurneModel("1234", 1, true)));
 
             Assertions.assertThat(result).isEqualTo(expecetedResult);
         }
@@ -39,12 +43,12 @@ class BriefwahlvorbereitungModelMapperTest {
         @Test
         void isMapped() {
             val wahlbezirkID = "wahlbezirkID";
-
-            val modelToMap = new BriefwahlvorbereitungModel(wahlbezirkID, Collections.emptyList());
+            List<WahlurneModel> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValidModel("1234").build());
+            val modelToMap = new BriefwahlvorbereitungModel(wahlbezirkID, urnenanzahl1);
 
             val result = unitUnderTest.toEntity(modelToMap);
 
-            val expectedResult = new Briefwahlvorbereitung(wahlbezirkID, Collections.emptyList());
+            val expectedResult = new Briefwahlvorbereitung(wahlbezirkID, List.of(new Wahlurne("1234", 0, null)));
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }

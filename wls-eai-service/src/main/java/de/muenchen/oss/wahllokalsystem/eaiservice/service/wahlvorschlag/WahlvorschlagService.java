@@ -2,7 +2,7 @@ package de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlvorschlag;
 
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorschlag.Wahlvorschlaege;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorschlag.WahlvorschlagRepository;
-import de.muenchen.oss.wahllokalsystem.eaiservice.exception.NotFoundException;
+import de.muenchen.oss.wahllokalsystem.eaiservice.exception.NoSearchResultFoundException;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.dto.WahlvorschlaegeDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
@@ -44,7 +44,7 @@ public class WahlvorschlagService {
 
     private Wahlvorschlaege findByWahlbezirkIDAndWahlIDOrThrow(final String wahlbezirkID, final String wahlID) {
         return wahlvorschlagRepository.findFirstByWahlbezirkIDAndWahlID(wahlbezirkID, wahlID)
-            .orElseThrow(() -> new NotFoundException(convertIDToUUIDOrThrow(wahlbezirkID), Wahlvorschlaege.class));
+            .orElseThrow(() -> new NoSearchResultFoundException(Wahlvorschlaege.class, wahlbezirkID, wahlID));
     }
 
 }

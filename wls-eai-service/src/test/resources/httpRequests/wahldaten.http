@@ -1,0 +1,27 @@
+### get token for user wls_all
+POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+password = test &
+grant_type = password &
+client_secret = top-secret &
+client_id = wls &
+username = wls_all
+
+> {%
+    client.global.set("auth_token", response.body.access_token);
+    client.global.set("token_type", response.body.token_type);
+%}
+
+### get userinfo with auth_token
+GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
+Authorization: {{ token_type }} {{ auth_token }}
+
+### get Wahltag EU-Wahl
+GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahltage?includingSince=2024-01-01
+
+### get Wahltag since 2000
+GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahltage?includingSince=2000-01-01
+
+### get Wahltag no hits
+GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahltage?includingSince=3024-01-01

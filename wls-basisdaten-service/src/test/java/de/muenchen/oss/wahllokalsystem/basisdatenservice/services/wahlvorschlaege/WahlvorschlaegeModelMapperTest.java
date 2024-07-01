@@ -16,25 +16,25 @@ class WahlvorschlaegeModelMapperTest {
 
     @Test
     void modelIsMappedToEntity() {
-        val modelToMap = createWahlvorschlagModel();
+        val modelToMap = createWahlvorschlaegeModel();
 
         val result = unitUnderTest.toEntity(modelToMap);
 
-        val expectedResult = createWahlvorschlagEntity();
+        val expectedResult = createWahlvorschlaegeEntity();
         Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 
     @Test
     void entityIsMappedToModel() {
-        val entityToMap = createWahlvorschlagEntity();
+        val entityToMap = createWahlvorschlaegeEntity();
 
         val result = unitUnderTest.toModel(entityToMap);
-        val expectedResult = createWahlvorschlagModel();
+        val expectedResult = createWahlvorschlaegeModel();
 
         Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 
-    private Wahlvorschlaege createWahlvorschlagEntity() {
+    private Wahlvorschlaege createWahlvorschlaegeEntity() {
         val entity = new Wahlvorschlaege(null, new BezirkUndWahlID("wahlID", "wahlbezirkID"), "stimmzettelgebietID",
                 null);
         val wahlvorschlag1 = new Wahlvorschlag(null, "id1", entity, 1L, "kurzname1", true, null);
@@ -52,7 +52,7 @@ class WahlvorschlaegeModelMapperTest {
         return entity;
     }
 
-    private WahlvorschlaegeModel createWahlvorschlagModel() {
+    private WahlvorschlaegeModel createWahlvorschlaegeModel() {
         return new WahlvorschlaegeModel(new BezirkUndWahlID("wahlID", "wahlbezirkID"), "stimmzettelgebietID",
                 Set.of(
                         new WahlvorschlagModel("id1", 1L, "kurzname1", true, Set.of(

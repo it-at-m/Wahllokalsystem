@@ -36,7 +36,7 @@
         <!-- Version muss mit der in den spring-boot-dependencies bereitgestellten Lombok-Version übereinstimmen -->
         <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
-        <org.springdoc.version>2.5.0</org.springdoc.version>
+        <org.springdoc.version>2.6.0</org.springdoc.version>
     </properties>
 
     <dependencyManagement>

@@ -1,12 +1,12 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.service.wahldaten;
 
+import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.StimmzettelgebietRepository;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.WahlRepository;
+import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.Wahlbezirk;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.WahlbezirkRepository;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.Wahltag;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.WahltageRepository;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.BasisdatenDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.BasisstrukturdatenDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.StimmzettelgebietDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlberechtigteDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlbezirkDTO;
@@ -35,6 +35,8 @@ public class WahldatenService {
 
     private final WahlbezirkRepository wahlbezirkRepository;
 
+    private final StimmzettelgebietRepository stimmzettelgebietRepository;
+
     @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadWahltage')")
     public Set<WahltagDTO> getWahltage(LocalDate wahltageIncludingSince) {
         return getWahltageIncludingSince(wahltageIncludingSince).stream().map(wahldatenMapper::toDTO).collect(Collectors.toSet());
@@ -47,27 +49,32 @@ public class WahldatenService {
 
     @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadWahlbezirke')")
     public Set<WahlbezirkDTO> getWahlbezirke(final LocalDate wahltag, final String nummer) {
-        return wahlbezirkRepository.findWahlbezirkeWithWahlAndWahltagById(wahltag, nummer).stream().map(wahldatenMapper::toDTO)
+        return findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagById(wahltag, nummer).stream().map(wahldatenMapper::toDTO)
                 .collect(Collectors.toSet());
     }
 
     @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadWahlberechtigte')")
     public List<WahlberechtigteDTO> getWahlberechtigte(final String wahlbezirkID) {
-        return wahlbezirkRepository.findWahlbezirkeWithWahlAndWahltagById(idConverter.convertIDToUUIDOrThrow(wahlbezirkID)).stream()
+        return wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagById(idConverter.convertIDToUUIDOrThrow(wahlbezirkID)).stream()
                 .map(wahldatenMapper::toWahlberechtigteDTO)
                 .toList();
     }
 
     @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadBasisdaten')")
     public BasisdatenDTO getBasisdaten(final LocalDate wahltag, final String nummer) {
-        val basisstrukturdaten = Set.of(new BasisstrukturdatenDTO(null, null, null, null));
+        val wahlbezirkeWithParentEntities = findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagById(wahltag, nummer);
+
+        val basisstrukturdaten = wahlbezirkeWithParentEntities.stream().map(wahldatenMapper::toBasisstrukturdatenDTO).collect(Collectors.toSet());
         val wahlen = getWahlen(wahltag, nummer);
-        val wahlbezirke = getWahlbezirke(wahltag, nummer);
-        //TODO stimmzettelgebiet liegt in der Struktur zwischen Wahl und Wahlbezirk
-        //wahl -1..n-> gebiet -1..-> bezirk
-        val stimmzettelgebiete = Set.of(new StimmzettelgebietDTO(null, null, null, null, null));
+        val wahlbezirke = wahlbezirkeWithParentEntities.stream().map(wahldatenMapper::toDTO).collect(Collectors.toSet());
+        val stimmzettelgebiete = stimmzettelgebietRepository.findByWahlWahltagTagAndWahlNummer(wahltag, nummer).stream().map(wahldatenMapper::toDTO).collect(
+                Collectors.toSet());
 
         return new BasisdatenDTO(basisstrukturdaten, wahlen, wahlbezirke, stimmzettelgebiete);
+    }
+
+    private List<Wahlbezirk> findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagById(final LocalDate wahltag, final String nummer) {
+        return wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagById(wahltag, nummer);
     }
 
     private List<Wahltag> getWahltageIncludingSince(LocalDate wahltageIncludingSince) {

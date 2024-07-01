@@ -9,9 +9,9 @@ import org.springframework.data.repository.query.Param;
 
 public interface WahlbezirkRepository extends CrudRepository<Wahlbezirk, UUID> {
 
-    @Query("SELECT wb FROM Wahlbezirk wb JOIN FETCH wb.wahl w JOIN FETCH w.wahltag t WHERE t.tag = (:wahltag) AND w.nummer = (:nummer)")
-    List<Wahlbezirk> findWahlbezirkeWithWahlAndWahltagById(@Param("wahltag") LocalDate wahltag, @Param("nummer") String nummer);
+    @Query("SELECT wb FROM Wahlbezirk wb JOIN FETCH wb.stimmzettelgebiet sg JOIN FETCH sg.wahl w JOIN FETCH w.wahltag t WHERE t.tag = (:wahltag) AND w.nummer = (:nummer)")
+    List<Wahlbezirk> findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagById(@Param("wahltag") LocalDate wahltag, @Param("nummer") String nummer);
 
-    @Query("SELECT wb FROM Wahlbezirk wb JOIN FETCH wb.wahl w JOIN FETCH w.wahltag t WHERE wb.id = (:wahlbezirkID)")
-    List<Wahlbezirk> findWahlbezirkeWithWahlAndWahltagById(@Param("wahlbezirkID") UUID wahlbezirkID);
+    @Query("SELECT wb FROM Wahlbezirk wb JOIN FETCH wb.stimmzettelgebiet sg JOIN FETCH sg.wahl w JOIN FETCH w.wahltag t WHERE wb.id = (:wahlbezirkID)")
+    List<Wahlbezirk> findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagById(@Param("wahlbezirkID") UUID wahlbezirkID);
 }

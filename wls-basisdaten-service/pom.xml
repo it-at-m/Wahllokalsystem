@@ -37,7 +37,7 @@
         <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
-        <org.springdoc.version>2.5.0</org.springdoc.version>
+        <org.springdoc.version>2.6.0</org.springdoc.version>
         <wls.common.version>1.1.0</wls.common.version>
     </properties>
 
@@ -381,25 +381,23 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.eai.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.eai.0.0.1-RC1.json</inputSpec>
 
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
 
-                            <apiPackage>de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.api</apiPackage>
-                            <modelPackage>de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.model</modelPackage>
+                            <apiPackage>${groupId}.basisdatenservice.eai.aou.client</apiPackage>
+                            <modelPackage>${groupId}.basisdatenservice.eai.aou.model</modelPackage>
 
                             <generateApiTests>false</generateApiTests>
-                            <generateApiDocumentation>false</generateApiDocumentation>
                             <generateModelTests>false</generateModelTests>
+                            <generateApiDocumentation>false</generateApiDocumentation>
                             <generateModelDocumentation>false</generateModelDocumentation>
-                            <generateSupportingFiles>false</generateSupportingFiles>
 
                             <configOptions>
                                 <hideGenerationTimestamp>false</hideGenerationTimestamp>
-                                <generateClientAsBean>false</generateClientAsBean>
                                 <legacyDiscriminatorBehavior>false</legacyDiscriminatorBehavior>
-                                <useSpringBoot3>true</useSpringBoot3>
+                                <generateClientAsBean>true</generateClientAsBean>
                                 <useJakartaEe>true</useJakartaEe>
                             </configOptions>
 

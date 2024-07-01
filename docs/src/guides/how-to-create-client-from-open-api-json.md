@@ -118,29 +118,34 @@ Damit der generierte Client verwendet werden kann, muss dem Spring-Context noch 
 
 ```java
 
-@Bean
-public RestTemplate restTemplate(final WlsResponseErrorHandler wlsResponseErrorHandler) {
-    val restTemplate = new RestTemplate();
+@Configuration
+public class ClientConfiguration {
 
-    /* definieren des Errorhandlers für Antworten vom externen Service */
-    restTemplate.setErrorHandler(wlsResponseErrorHandler);
-    /* Ergänzen eines Interceptors um den Bearer-Token an den nächsten Service weiter zu geben */
-    restTemplate.getInterceptors().add((request, body, execution) -> {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
+    @Bean
+    public RestTemplate restTemplate(final WlsResponseErrorHandler wlsResponseErrorHandler) {
+        val restTemplate = new RestTemplate();
+
+        /* definieren des Errorhandlers für Antworten vom externen Service */
+        restTemplate.setErrorHandler(wlsResponseErrorHandler);
+        /* Ergänzen eines Interceptors um den Bearer-Token an den nächsten Service weiter zu geben */
+        restTemplate.getInterceptors().add((request, body, execution) -> {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null) {
+                return execution.execute(request, body);
+            }
+
+            if (!(authentication.getCredentials() instanceof AbstractOAuth2Token)) {
+                return execution.execute(request, body);
+            }
+
+            val token = (AbstractOAuth2Token) authentication.getCredentials();
+            request.getHeaders().setBearerAuth(token.getTokenValue());
             return execution.execute(request, body);
-        }
+        });
 
-        if (!(authentication.getCredentials() instanceof AbstractOAuth2Token)) {
-            return execution.execute(request, body);
-        }
+        return restTemplate;
+    }
 
-        val token = (AbstractOAuth2Token) authentication.getCredentials();
-        request.getHeaders().setBearerAuth(token.getTokenValue());
-        return execution.execute(request, body);
-    });
-
-    return restTemplate;
 }
 ```
 

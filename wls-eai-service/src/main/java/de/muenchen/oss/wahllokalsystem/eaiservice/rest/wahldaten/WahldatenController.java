@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/wahldaten")
+@RequestMapping(WahldatenController.WAHLDATEN_REQUEST_MAPPING)
 @RequiredArgsConstructor
 public class WahldatenController {
+
+    public static final String WAHLDATEN_REQUEST_MAPPING = "/wahldaten";
 
     private final WahldatenService wahldatenService;
 

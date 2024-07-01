@@ -55,7 +55,8 @@ class BroadcastServiceTest {
         void broadcastFailsIfWahlbezirkIDsNull() {
             String broadcastMessage = "Dies ist eine Broadcast-Nachricht";
             BroadcastMessageDTO m1 = new BroadcastMessageDTO(null, broadcastMessage);
-            Mockito.when(exceptionFactory.createFachlicheWlsException(BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG)).thenReturn(FachlicheWlsException.withCode("150").buildWithMessage("Das Object BroadcastMessage ist nicht vollständig."));
+            Mockito.when(exceptionFactory.createFachlicheWlsException(BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(FachlicheWlsException.withCode("150").buildWithMessage("Das Object BroadcastMessage ist nicht vollständig."));
 
             Assertions.assertThatExceptionOfType(FachlicheWlsException.class)
                     .isThrownBy(() -> broadcastService.broadcast(m1))
@@ -67,7 +68,8 @@ class BroadcastServiceTest {
         void broadcastFailsIfNachrichtNull() {
             List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
             BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, null);
-            Mockito.when(exceptionFactory.createFachlicheWlsException(BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG)).thenReturn(FachlicheWlsException.withCode("150").buildWithMessage("Das Object BroadcastMessage ist nicht vollständig."));
+            Mockito.when(exceptionFactory.createFachlicheWlsException(BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(FachlicheWlsException.withCode("150").buildWithMessage("Das Object BroadcastMessage ist nicht vollständig."));
 
             Assertions.assertThatExceptionOfType(FachlicheWlsException.class)
                     .isThrownBy(() -> broadcastService.broadcast(m1))
@@ -80,7 +82,8 @@ class BroadcastServiceTest {
             List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
             String broadcastMessage = "";
             BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, broadcastMessage);
-            Mockito.when(exceptionFactory.createFachlicheWlsException(BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG)).thenReturn(FachlicheWlsException.withCode("150").buildWithMessage("Das Object BroadcastMessage ist nicht vollständig."));
+            Mockito.when(exceptionFactory.createFachlicheWlsException(BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(FachlicheWlsException.withCode("150").buildWithMessage("Das Object BroadcastMessage ist nicht vollständig."));
 
             Assertions.assertThatExceptionOfType(FachlicheWlsException.class)
                     .isThrownBy(() -> broadcastService.broadcast(m1))
@@ -94,7 +97,8 @@ class BroadcastServiceTest {
             List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
             String broadcastMessage = "   ";
             BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, broadcastMessage);
-            Mockito.when(exceptionFactory.createFachlicheWlsException(BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG)).thenReturn(FachlicheWlsException.withCode("150").buildWithMessage("Das Object BroadcastMessage ist nicht vollständig."));
+            Mockito.when(exceptionFactory.createFachlicheWlsException(BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(FachlicheWlsException.withCode("150").buildWithMessage("Das Object BroadcastMessage ist nicht vollständig."));
 
             Assertions.assertThatExceptionOfType(FachlicheWlsException.class)
                     .isThrownBy(() -> broadcastService.broadcast(m1))
@@ -112,7 +116,8 @@ class BroadcastServiceTest {
             String wahlbezirkID = "987";
             Mockito.when(messageRepo.findFirstByWahlbezirkIDOrderByEmpfangsZeit(wahlbezirkID)).thenReturn(Optional.empty());
             val mockedExceptionFactoryWlsException = FachlicheWlsException.withCode("204").buildWithMessage("No message found");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(new ExceptionDataWrapper(ExceptionKonstanten.CODE_ENTITY_NOT_FOUND, "No message found"))).thenReturn(mockedExceptionFactoryWlsException);
+            Mockito.when(exceptionFactory.createFachlicheWlsException(new ExceptionDataWrapper(ExceptionKonstanten.CODE_ENTITY_NOT_FOUND, "No message found")))
+                    .thenReturn(mockedExceptionFactoryWlsException);
 
             Assertions.assertThatExceptionOfType(FachlicheWlsException.class)
                     .isThrownBy(() -> broadcastService.getOldestMessage(wahlbezirkID))
@@ -179,7 +184,9 @@ class BroadcastServiceTest {
         @Test
         void deleteParamBlank() {
             val mockedExceptionFactoryWlsException = FachlicheWlsException.withCode("105").buildWithMessage("nachrichtID is blank or empty");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(new ExceptionDataWrapper(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG, "nachrichtID is blank or empty"))).thenReturn(mockedExceptionFactoryWlsException);
+            Mockito.when(exceptionFactory.createFachlicheWlsException(
+                    new ExceptionDataWrapper(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG, "nachrichtID is blank or empty")))
+                    .thenReturn(mockedExceptionFactoryWlsException);
 
             String nachrichtID = "   ";
             Assertions.assertThatExceptionOfType(FachlicheWlsException.class)
@@ -190,7 +197,9 @@ class BroadcastServiceTest {
         @Test
         void deleteParamEmpty() {
             val mockedExceptionFactoryWlsException = FachlicheWlsException.withCode("105").buildWithMessage("nachrichtID is blank or empty");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(new ExceptionDataWrapper(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG, "nachrichtID is blank or empty"))).thenReturn(mockedExceptionFactoryWlsException);
+            Mockito.when(exceptionFactory.createFachlicheWlsException(
+                    new ExceptionDataWrapper(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG, "nachrichtID is blank or empty")))
+                    .thenReturn(mockedExceptionFactoryWlsException);
 
             String nachrichtID = "";
             Assertions.assertThatExceptionOfType(FachlicheWlsException.class)
@@ -201,7 +210,9 @@ class BroadcastServiceTest {
         @Test
         void deleteParamNull() {
             val mockedExceptionFactoryWlsException = FachlicheWlsException.withCode("105").buildWithMessage("nachrichtID is blank or empty");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(new ExceptionDataWrapper(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG, "nachrichtID is blank or empty"))).thenReturn(mockedExceptionFactoryWlsException);
+            Mockito.when(exceptionFactory.createFachlicheWlsException(
+                    new ExceptionDataWrapper(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG, "nachrichtID is blank or empty")))
+                    .thenReturn(mockedExceptionFactoryWlsException);
 
             Assertions.assertThatExceptionOfType(FachlicheWlsException.class)
                     .isThrownBy(() -> broadcastService.deleteMessage(null))

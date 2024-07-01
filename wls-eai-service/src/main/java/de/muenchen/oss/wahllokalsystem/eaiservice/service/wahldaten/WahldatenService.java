@@ -12,7 +12,6 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.Wahlberecht
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlbezirkDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahltagDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.service.IDConverter;
-import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -64,7 +63,7 @@ public class WahldatenService {
     }
 
     @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadBasisdaten')")
-    public BasisdatenDTO getBasisdaten(final LocalDate wahltag, @NotBlank(message = "X101") final String nummer) {
+    public BasisdatenDTO getBasisdaten(final LocalDate wahltag, final String nummer) {
         val wahlbezirkeWithParentEntities = findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagById(wahltag, nummer);
 
         val basisstrukturdaten = wahlbezirkeWithParentEntities.stream().map(wahldatenMapper::toBasisstrukturdatenDTO).collect(Collectors.toSet());

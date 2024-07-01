@@ -49,9 +49,9 @@ Für jeden zu erzeugenden Client mus ein `execution`-Element definiert werden.
 
         <!-- Package in dem die Clients der jeweiligen Controller erzeugt werden -->
         <!-- Hier wird das Package für Zugriff auf den EAI-Service innerhalb des Basisdatenservices definiert -->
-        <apiPackage>de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.api</apiPackage>
+        <apiPackage>${groupId}.basisdatenservice.eai.aou.client</apiPackage>
         <!-- Package in das die Datenklassen erzeugt werden -->
-        <modelPackage>de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.model</modelPackage>
+        <modelPackage>${groupId}.basisdatenservice.eai.aou.model</modelPackage>
 
         <!-- Weitere Klassen als Grundlagen für zusätzliche Tests sind nicht erforderlich-->
         <generateApiTests>false</generateApiTests>

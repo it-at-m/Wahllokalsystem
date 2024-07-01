@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.ApiClient;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.ApiClient;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

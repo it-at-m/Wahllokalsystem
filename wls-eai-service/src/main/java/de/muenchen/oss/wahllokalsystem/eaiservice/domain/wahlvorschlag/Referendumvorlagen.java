@@ -24,6 +24,12 @@ import lombok.ToString;
 public class Referendumvorlagen extends BaseEntity {
 
     @NotNull
+    String wahlbezirkID;
+
+    @NotNull
+    String wahlID;
+
+    @NotNull
     private String stimmzettelgebietID;
 
     @OneToMany(cascade = CascadeType.ALL)

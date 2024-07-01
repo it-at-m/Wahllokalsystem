@@ -10,4 +10,11 @@ changes:
       group: allEaiAuthorities
       role: aoueai_BUSINESSACTION_LoadWahlvorschlaege
       clientId: ${SSO_CLIENT_ID}
-
+  - addRole:
+      name: aoueai_BUSINESSACTION_LoadReferendumvorlagen
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allEaiAuthorities
+      role: aoueai_BUSINESSACTION_LoadReferendumvorlagen
+      clientId: ${SSO_CLIENT_ID}

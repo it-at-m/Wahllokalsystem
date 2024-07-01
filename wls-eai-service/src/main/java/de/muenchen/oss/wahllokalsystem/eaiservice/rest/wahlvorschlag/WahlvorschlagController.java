@@ -24,7 +24,7 @@ public class WahlvorschlagController {
     @GetMapping("referendum/{wahlID}/{wahlbezirkID}")
     @ResponseStatus(HttpStatus.OK)
     public ReferendumvorlagenDTO loadReferendumvorlagen(@PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return wahlvorschlagService.getReferendumvorlagenForWahlAndWahlbezirk(wahlID, wahlbezirkID);
     }
 
     @GetMapping("wahl/{wahlID}/{wahlbezirkID}")

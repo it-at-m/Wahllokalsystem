@@ -39,6 +39,8 @@ CREATE TABLE kandidat
 CREATE TABLE referendumvorlagen
 (
     id                    VARCHAR2(36) NOT NULL,
+    wahlbezirkID          VARCHAR2(36) NOT NULL,
+    wahlID                VARCHAR2(36) NOT NULL,
     stimmzettelgebietID   VARCHAR2(36) NOT NULL,
 
     PRIMARY KEY (id)

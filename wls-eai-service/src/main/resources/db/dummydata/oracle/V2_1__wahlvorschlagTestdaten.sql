@@ -1,5 +1,5 @@
 INSERT INTO wahlvorschlaege
-VALUES ('00000000-0000-0000-0000-000000000001', 'wahlbezirkID', 'wahlID', 'stimmzettelgebietID_007');
+VALUES ('00000000-0000-0000-0000-000000000001', 'wahlbezirkID', 'wahlID', 'stimmzettelgebietID');
 
 INSERT INTO wahlvorschlag
 VALUES ('00000000-0000-0000-0001-000000000001', 1, 'Die Besten', 1,
@@ -60,7 +60,7 @@ VALUES ('00000000-0000-0000-0001-000000000015', 'Reagan', 5, 1, 25, 1,
 
 
 INSERT INTO referendumvorlagen
-VALUES ('00000000-0000-0000-0002-000000000001', 'stimmzettelgebietID');
+VALUES ('00000000-0000-0000-0002-000000000001', 'wahlbezirkID', 'wahlID', 'stimmzettelgebietID');
 
 INSERT INTO referendumvorlage
 VALUES ('00000000-0000-0002-0002-000000000001', 'wahlvorschlagID', 1, 'kurzname1', 'frage1',

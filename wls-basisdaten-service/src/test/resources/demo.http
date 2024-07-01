@@ -17,6 +17,6 @@ username = wls_all
 GET http://kubernetes.docker.internal:8100/auth/realms/wls_realm/protocol/openid-connect/userinfo
 Authorization: {{ token_type }} {{ auth_token }}
 
-### Demo für client zu EAI
+### Demo für client zu EAI - will result in 500 als long as eai is not implemented (not implemented yet)
 GET http://localhost:39151/demo
 Authorization: {{ token_type }} {{ auth_token }}

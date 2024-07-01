@@ -10,3 +10,39 @@ changes:
       group: allEaiAuthorities
       role: aoueai_BUSINESSACTION_LoadWahltage
       clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: aoueai_BUSINESSACTION_LoadWahlen
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allEaiAuthorities
+      role: aoueai_BUSINESSACTION_LoadWahlen
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: aoueai_BUSINESSACTION_LoadWahlbezirke
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allEaiAuthorities
+      role: aoueai_BUSINESSACTION_LoadWahlbezirke
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: aoueai_BUSINESSACTION_LoadWahlberechtigte
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allEaiAuthorities
+      role: aoueai_BUSINESSACTION_LoadWahlberechtigte
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: aoueai_BUSINESSACTION_LoadBasisdaten
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allEaiAuthorities
+      role: aoueai_BUSINESSACTION_LoadBasisdaten
+      clientId: ${SSO_CLIENT_ID}

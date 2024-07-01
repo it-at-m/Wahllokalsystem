@@ -11,9 +11,9 @@ CREATE TABLE wahlvorschlaege
 CREATE TABLE wahlvorschlag
 (
     id                  VARCHAR2(36)  NOT NULL,
-    ordnungszahl        NUMBER(19, 0) NOT NULL,
+    ordnungszahl        BIGINT        NOT NULL,
     kurzname            VARCHAR2(255) NOT NULL,
-    erhaeltStimmen      NUMBER(1)     NOT NULL,
+    erhaeltStimmen      BOOLEAN       NOT NULL,
     wahlvorschlaegeid   VARCHAR2(36)  NOT NULL,
 
     FOREIGN KEY (wahlvorschlaegeid) REFERENCES wahlvorschlaege (id),
@@ -25,10 +25,10 @@ CREATE TABLE kandidat
 (
     id                            VARCHAR2(36)  NOT NULL,
     name                          VARCHAR2(255) NOT NULL,
-    listenposition                NUMBER(19, 0) NOT NULL,
-    direktkandidat                NUMBER(1)     NOT NULL,
-    tabellenSpalteInNiederschrift NUMBER(19, 0) NOT NULL,
-    einzelbewerber                NUMBER(1)     NOT NULL,
+    listenposition                BIGINT        NOT NULL,
+    direktkandidat                BOOLEAN       NOT NULL,
+    tabellenSpalteInNiederschrift BIGINT        NOT NULL,
+    einzelbewerber                BOOLEAN       NOT NULL,
     wahlvorschlagID               VARCHAR2(36)  NOT NULL,
 
     FOREIGN KEY (wahlvorschlagID) REFERENCES wahlvorschlag (id),
@@ -48,7 +48,7 @@ CREATE TABLE referendumvorlage
 (
     id                    VARCHAR2(36)  NOT NULL,
     wahlvorschlagID       VARCHAR2(36)  NOT NULL,
-    ordnungszahl          NUMBER(19, 0) NOT NULL,
+    ordnungszahl          BIGINT        NOT NULL,
     kurzname              VARCHAR2(255) NOT NULL,
     frage                 VARCHAR2(255) NOT NULL,
     referendumvorlagenid  VARCHAR2(36)  NOT NULL,
@@ -62,8 +62,8 @@ CREATE TABLE referendumoption
 (
     id                    VARCHAR2(36) NOT NULL,
     name                  VARCHAR2(36) NOT NULL,
-    position              NUMBER(19, 0) NOT NULL,
-    referendumvorlageid   VARCHAR2(36)  NOT NULL,
+    position              BIGINT       NOT NULL,
+    referendumvorlageid   VARCHAR2(36) NOT NULL,
 
     FOREIGN KEY (referendumvorlageid) REFERENCES referendumvorlage (id),
 

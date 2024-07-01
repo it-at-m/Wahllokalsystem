@@ -17,7 +17,7 @@ GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
 Authorization: {{ token_type }} {{ auth_token }}
 
 ### GET Wahlvorschlaege
-GET {{ WLS_EAI_SERVICE_URL }}/vorschlaege/wahl/wahlID_007/wahlbezirkID_007
+GET {{ WLS_EAI_SERVICE_URL }}/vorschlaege/wahl/wahlID/wahlbezirkID
 Authorization: {{ token_type }} {{ auth_token }}
 
 ### GET Wahlvorschlaege not found

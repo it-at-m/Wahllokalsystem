@@ -33,5 +33,5 @@ public class Wahlvorschlag extends BaseEntity {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "wahlvorschlagid")
-    private java.util.Set<Kandidat> kandidaten = new java.util.LinkedHashSet<>();
+    private java.util.Set<Kandidat> kandidaten;
 }

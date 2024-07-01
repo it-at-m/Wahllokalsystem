@@ -44,7 +44,7 @@ public class WahlvorschlagService {
 
     private Wahlvorschlaege findByWahlbezirkIDAndWahlIDOrThrow(final String wahlbezirkID, final String wahlID) {
         return wahlvorschlagRepository.findFirstByWahlbezirkIDAndWahlID(wahlbezirkID, wahlID)
-            .orElseThrow(() -> new NoSearchResultFoundException(Wahlvorschlaege.class, wahlbezirkID, wahlID));
+                .orElseThrow(() -> new NoSearchResultFoundException(Wahlvorschlaege.class, wahlbezirkID, wahlID));
     }
 
 }

@@ -52,3 +52,12 @@ GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirke/00000000-0000-0000-0000-0000
 
 ### get wahlberechtigte wahlbezirk-4
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirke/00000000-0000-0000-0000-000000000004/wahlberechtigte
+
+### get Basistrukturdaten on EU-Wahl-Tag
+GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/basisdaten?forDate=2024-06-09&withNummer=0
+
+### get Basistrukturdaten on Kommunalwahl-Tag
+GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/basisdaten?forDate=2020-03-15&withNummer=0
+
+### get Basistrukturdaten on day without elections
+GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/basisdaten?forDate=2034-06-09&withNummer=0

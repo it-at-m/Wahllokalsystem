@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.model.KandidatDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.model.WahlvorschlaegeDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.model.WahlvorschlagDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.KandidatDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlaegeDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege.KandidatModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege.WahlvorschlaegeModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege.WahlvorschlagModel;

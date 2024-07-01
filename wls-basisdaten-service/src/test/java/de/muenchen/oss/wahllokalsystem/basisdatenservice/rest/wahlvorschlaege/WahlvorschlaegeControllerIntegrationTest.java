@@ -8,11 +8,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.WahlvorschlaegeClientMapper;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.model.KandidatDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.model.WahlvorschlagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.KandidatRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlvorschlagRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.KandidatDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege.WahlvorschlaegeModelMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege.WahlvorschlaegeValidator;
@@ -179,22 +179,22 @@ public class WahlvorschlaegeControllerIntegrationTest {
         }
     }
 
-    private de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.model.WahlvorschlaegeDTO createClientWahlvorschlaegeDTO(final String wahlID,
+    private de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlaegeDTO createClientWahlvorschlaegeDTO(final String wahlID,
             final String wahlbezirkID) {
         val stimmzettelgebietID = "stimmzettelgebietID";
 
-        val clientWahlvorschlaegeDTO = new de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.model.WahlvorschlaegeDTO();
+        val clientWahlvorschlaegeDTO = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlaegeDTO();
         clientWahlvorschlaegeDTO.setStimmzettelgebietID(stimmzettelgebietID);
         clientWahlvorschlaegeDTO.setWahlID(wahlID);
         clientWahlvorschlaegeDTO.setWahlbezirkID(wahlbezirkID);
 
-        val wahlvorschlag1 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.model.WahlvorschlagDTO();
+        val wahlvorschlag1 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlagDTO();
         wahlvorschlag1.setErhaeltStimmen(true);
         wahlvorschlag1.setIdentifikator("identifikator1");
         wahlvorschlag1.setKurzname("kurzname1");
         wahlvorschlag1.setOrdnungszahl(1L);
 
-        val kandidat11 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.model.KandidatDTO();
+        val kandidat11 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.KandidatDTO();
         kandidat11.setIdentifikator("kandidat11");
         kandidat11.setDirektkandidat(true);
         kandidat11.setEinzelbewerber(true);
@@ -202,7 +202,7 @@ public class WahlvorschlaegeControllerIntegrationTest {
         kandidat11.setListenposition(1L);
         kandidat11.setTabellenSpalteInNiederschrift(1L);
 
-        val kandidat12 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.model.KandidatDTO();
+        val kandidat12 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.KandidatDTO();
         kandidat12.setIdentifikator("kandidat12");
         kandidat12.setDirektkandidat(false);
         kandidat12.setEinzelbewerber(false);
@@ -217,7 +217,7 @@ public class WahlvorschlaegeControllerIntegrationTest {
         wahlvorschlag2.setKurzname("kurzname2");
         wahlvorschlag2.setOrdnungszahl(2L);
 
-        val kandidat21 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.eai.model.KandidatDTO();
+        val kandidat21 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.KandidatDTO();
         kandidat21.setIdentifikator("kandidat21");
         kandidat21.setDirektkandidat(true);
         kandidat21.setEinzelbewerber(true);

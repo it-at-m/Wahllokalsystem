@@ -9,8 +9,8 @@ public class ExceptionConstants {
     public static final ExceptionDataWrapper LOADBASISDATEN_NUMMER_FEHLT = new ExceptionDataWrapper("001_1", "Es ist keine Wahlnummer angegeben");
 
     //loadWahlberechtigte
-    public static final String CODE_LOADWAHLBERECHTIGTE_SUCHKRITERIEN_UNVOLLSTAENDIG = "001";
-    public static final String MESSAGE_LOADWAHLBERECHTIGTE_SUCHKRITERIEN_UNVOLLSTAENDIG = "Wahlberechtigtenkriterien sind nicht vollständig";
+    public static final ExceptionDataWrapper LOADWAHLBERECHTIGTE_SUCHKRITERIEN_UNVOLLSTAENDIG = new ExceptionDataWrapper("001",
+            "Wahlberechtigtenkriterien sind nicht vollständig");
 
     //loadWahltage
     public static final ExceptionDataWrapper LOADWAHLTAGE_TAG_FEHLT = new ExceptionDataWrapper("001", "Es ist kein Tag definiert");

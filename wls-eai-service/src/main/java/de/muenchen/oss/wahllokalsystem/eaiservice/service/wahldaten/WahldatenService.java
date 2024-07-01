@@ -29,6 +29,8 @@ public class WahldatenService {
 
     private final WahldatenMapper wahldatenMapper;
 
+    private final WahldatenValidator wahldatenValidator;
+
     private final IDConverter idConverter;
 
     private final WahltageRepository wahltageRepository;
@@ -41,22 +43,30 @@ public class WahldatenService {
 
     @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadWahltage')")
     public Set<WahltagDTO> getWahltage(LocalDate wahltageIncludingSince) {
+        wahldatenValidator.validGetWahltageParameterOrThrow(wahltageIncludingSince);
+
         return getWahltageIncludingSince(wahltageIncludingSince).stream().map(wahldatenMapper::toDTO).collect(Collectors.toSet());
     }
 
     @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadWahlen')")
     public Set<WahlDTO> getWahlen(final LocalDate wahltag, final String nummer) {
+        wahldatenValidator.validGetWahlenParameterOrThrow(wahltag, nummer);
+
         return wahlRepository.findByWahltagTagAndNummer(wahltag, nummer).stream().map(wahldatenMapper::toDTO).collect(Collectors.toSet());
     }
 
     @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadWahlbezirke')")
     public Set<WahlbezirkDTO> getWahlbezirke(final LocalDate wahltag, final String nummer) {
+        wahldatenValidator.validGetWahlbezirkeParameterOrThrow(wahltag, nummer);
+
         return findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagById(wahltag, nummer).stream().map(wahldatenMapper::toDTO)
                 .collect(Collectors.toSet());
     }
 
     @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadWahlberechtigte')")
     public List<WahlberechtigteDTO> getWahlberechtigte(final String wahlbezirkID) {
+        wahldatenValidator.validGetWahlberechtigteParameterOrThrow(wahlbezirkID);
+
         return wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagById(idConverter.convertIDToUUIDOrThrow(wahlbezirkID)).stream()
                 .map(wahldatenMapper::toWahlberechtigteDTO)
                 .toList();
@@ -64,6 +74,8 @@ public class WahldatenService {
 
     @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadBasisdaten')")
     public BasisdatenDTO getBasisdaten(final LocalDate wahltag, final String nummer) {
+        wahldatenValidator.validGetBasisdatenParameterOrThrow(wahltag, nummer);
+
         val wahlbezirkeWithParentEntities = findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagById(wahltag, nummer);
 
         val basisstrukturdaten = wahlbezirkeWithParentEntities.stream().map(wahldatenMapper::toBasisstrukturdatenDTO).collect(Collectors.toSet());

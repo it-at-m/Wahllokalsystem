@@ -28,14 +28,14 @@ class WahlvorschlaegeDTOMapperTest {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
 
-            val modelInput = createWahlvorschlagModel(wahlID, wahlbezirkID);
-            val dtoExpected = createWahlvorschlagDTO(wahlID, wahlbezirkID);
+            val modelInput = createWahlvorschlaegeModel(wahlID, wahlbezirkID);
+            val dtoExpected = createWahlvorschlaegeDTO(wahlID, wahlbezirkID);
 
             val result = unitUnderTest.toDTO(modelInput);
             Assertions.assertThat(result).isEqualTo(dtoExpected);
         }
 
-        private WahlvorschlaegeDTO createWahlvorschlagDTO(final String wahlID, final String wahlbezirkID) {
+        private WahlvorschlaegeDTO createWahlvorschlaegeDTO(final String wahlID, final String wahlbezirkID) {
             return new WahlvorschlaegeDTO(wahlID, wahlbezirkID, "stimmzettelgebietID",
                     Set.of(
                             new WahlvorschlagDTO("id1", 1L, "kurzname1", true, Set.of(
@@ -46,7 +46,7 @@ class WahlvorschlaegeDTOMapperTest {
                                     new KandidatDTO("kandidatID4", "name4", 2L, false, 2L, false)))));
         }
 
-        private WahlvorschlaegeModel createWahlvorschlagModel(final String wahlID, final String wahlbezirkID) {
+        private WahlvorschlaegeModel createWahlvorschlaegeModel(final String wahlID, final String wahlbezirkID) {
             return new WahlvorschlaegeModel(new BezirkUndWahlID(wahlID, wahlbezirkID), "stimmzettelgebietID",
                     Set.of(
                             new WahlvorschlagModel("id1", 1L, "kurzname1", true, Set.of(

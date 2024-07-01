@@ -153,10 +153,16 @@ Wie zu erkennen ist, wird für das RestTemplate ein ErrorHandler benötigt, wobe
 aus `wls-common:exception` verwenden. Eine entsprechende Bean muss ebenfalls noch dem Spring-Context hinzugefügt werden:
 
 ```java
+@Configuration
+public class ClientConfiguration {
+    
+    //other configurations like the restTemplate bean factory method
 
-@Bean
-public WlsResponseErrorHandler wlsResponseErrorHandler(final ObjectMapper objectMapper) {
-    return new WlsResponseErrorHandler(objectMapper);
+    @Bean
+    public WlsResponseErrorHandler wlsResponseErrorHandler(final ObjectMapper objectMapper) {
+        return new WlsResponseErrorHandler(objectMapper);
+    }
+    
 }
 ```
 

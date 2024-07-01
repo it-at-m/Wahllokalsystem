@@ -5,36 +5,27 @@ import de.muenchen.oss.wahllokalsystem.broadcastservice.domain.MessageRepository
 import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.MessageDTO;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.util.BroadcastExceptionKonstanten;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionKonstanten;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
+@Slf4j
+@RequiredArgsConstructor
 public class BroadcastService {
 
-    @Autowired
     private final MessageRepository messageRepo;
 
-    @Autowired
     private final BroadcastMapper broadcastMapper;
 
-    public BroadcastService(MessageRepository messageRepo, BroadcastMapper broadcastMapper) {
-        this.messageRepo = messageRepo;
-        this.broadcastMapper = broadcastMapper;
-    }
-
-    @Value("${service.info.oid}")
-    private String serviceOid;
+    private final ExceptionFactory exceptionFactory;
 
     @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_Broadcast')")
     public void broadcast(final BroadcastMessageDTO messageToBroadcast) {
@@ -42,8 +33,7 @@ public class BroadcastService {
 
         if (null == messageToBroadcast || null == messageToBroadcast.wahlbezirkIDs() || messageToBroadcast.wahlbezirkIDs().size() <= 0
                 || StringUtils.isEmpty(messageToBroadcast.nachricht()) || StringUtils.isBlank(messageToBroadcast.nachricht())) {
-            throw FachlicheWlsException.withCode(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG).inService(serviceOid)
-                    .buildWithMessage("Das Object BroadcastMessage ist nicht vollständig.");
+            throw exceptionFactory.createFachlicheWlsException(BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG);
         }
 
         List<Message> messagesToSave = broadcastMapper.fromBroadcastMessageDTOtoListOfMessages(messageToBroadcast, LocalDateTime.now());
@@ -52,18 +42,17 @@ public class BroadcastService {
     }
 
     @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_GetMessage')")
-    public MessageDTO getOldestMessage(String wahlbezirkID) throws FachlicheWlsException {
+    public MessageDTO getOldestMessage(String wahlbezirkID) {
         log.debug("#nachrichtenAbrufen wahlbezirkID {} length {}", wahlbezirkID, wahlbezirkID.length());
 
         if (StringUtils.isEmpty(wahlbezirkID) || StringUtils.isBlank(wahlbezirkID)) {
-            throw FachlicheWlsException.withCode(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG).inService(serviceOid)
-                    .buildWithMessage("wahlbezirkID is blank or empty");
+            throw exceptionFactory.createFachlicheWlsException(BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG_EMPTY_WAHLBEZIRKID);
         }
 
         val message = messageRepo.findFirstByWahlbezirkIDOrderByEmpfangsZeit(wahlbezirkID);
 
         if (message.isEmpty()) {
-            throw FachlicheWlsException.withCode(ExceptionKonstanten.CODE_ENTITY_NOT_FOUND).inService(serviceOid).buildWithMessage("No message found");
+            throw exceptionFactory.createFachlicheWlsException(BroadcastExceptionKonstanten.BROADCAST_ENTITY_NOT_FOUND);
         }
 
         return broadcastMapper.toDto(message.get());
@@ -72,16 +61,14 @@ public class BroadcastService {
     @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_MessageRead')")
     public void deleteMessage(String nachrichtID) { //TODO UUID als Parameter
         if (StringUtils.isEmpty(nachrichtID) || StringUtils.isBlank(nachrichtID)) {
-            throw FachlicheWlsException.withCode(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG)
-                    .buildWithMessage("nachrichtID is blank or empty");
+            throw exceptionFactory.createFachlicheWlsException(BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG_EMPTY_NACHRICHTID);
         }
 
         try {
             UUID nachrichtUUID = java.util.UUID.fromString(nachrichtID);
             messageRepo.deleteById(nachrichtUUID);
         } catch (IllegalArgumentException e) {
-            throw FachlicheWlsException.withCode(BroadcastExceptionKonstanten.CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG).inService(serviceOid)
-                    .buildWithMessage("Nachricht-UUID bad format");
+            throw exceptionFactory.createFachlicheWlsException(BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG_BAD_FORMAT_UUID);
         }
     }
 

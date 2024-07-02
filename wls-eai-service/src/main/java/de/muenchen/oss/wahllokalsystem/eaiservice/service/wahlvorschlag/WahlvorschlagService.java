@@ -45,7 +45,7 @@ public class WahlvorschlagService {
     public ReferendumvorlagenDTO getReferendumvorlagenForWahlAndWahlbezirk(final String wahlID, final String wahlbezirkID) {
         wahlvorschlagValidator.validateWahlbezirkIDOrThrow(wahlbezirkID);
         wahlvorschlagValidator.validateWahlIDOrThrow(wahlID);
-        val referendumvorlagen = findReferendumvorlagenForWahlAndWahlbezirkOrThrow(wahlbezirkID, wahlID);
+        val referendumvorlagen = findReferendumvorlagenForWahlAndWahlbezirkOrThrow(wahlID, wahlbezirkID);
         return wahlvorschlagMapper.toDTO(referendumvorlagen);
     }
 

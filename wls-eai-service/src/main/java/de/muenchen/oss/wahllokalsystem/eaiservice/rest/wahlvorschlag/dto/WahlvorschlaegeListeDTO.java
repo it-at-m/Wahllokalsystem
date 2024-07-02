@@ -5,5 +5,5 @@ import jakarta.validation.constraints.Size;
 import java.util.Set;
 
 public record WahlvorschlaegeListeDTO(@NotNull String wahltag, @NotNull String wahlID,
-                                      @NotNull @Size(min = 1) Set<WahlvorschlaegeDTO> wahlvorschlaege) {
+                                      @NotNull @Size(min = 1) Set<WahlvorschlaegeDTO> wahlvorschlaegeliste) {
 }

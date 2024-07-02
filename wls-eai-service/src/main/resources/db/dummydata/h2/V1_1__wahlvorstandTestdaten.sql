@@ -1,6 +1,6 @@
 INSERT INTO wahlvorstand (id, wahlbezirkID)
 VALUES ('00000000-0000-0000-0001-000000000001', '00000000-0000-0000-0000-000000000001');
-INSERT INTO wahlvorstandsmitglied (id, vorname, nachname, funktion, anwesend, wahlvorstandID, anwesenheitUpdatedOn) (id, vorname, nachname, funktion, anwesend, wahlvorstandID, anwesenheitUpdatedOn)
+INSERT INTO wahlvorstandsmitglied (id, vorname, nachname, funktion, anwesend, wahlvorstandID, anwesenheitUpdatedOn)
 VALUES ('00000000-0000-0000-0001-000000000001', 'Homer', 'Simpson', 'W', false, '00000000-0000-0000-0001-000000000001',
         null);
 INSERT INTO wahlvorstandsmitglied (id, vorname, nachname, funktion, anwesend, wahlvorstandID, anwesenheitUpdatedOn)

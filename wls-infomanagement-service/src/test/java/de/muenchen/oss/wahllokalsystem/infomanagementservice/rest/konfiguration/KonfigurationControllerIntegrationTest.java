@@ -16,10 +16,10 @@ import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration.
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration.dto.KonfigurationSetDTO;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationModelValidator;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.WithMockUserAsJwt;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;

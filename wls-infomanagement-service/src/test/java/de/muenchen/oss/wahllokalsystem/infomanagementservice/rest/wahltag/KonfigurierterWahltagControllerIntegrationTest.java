@@ -10,7 +10,7 @@ import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag.Konf
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.wahltag.KonfigurierterWahltagRepository;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.wahltag.KonfigurierterWahltagValidator;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.SecurityUtils;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.LocalDate;
 import lombok.val;
 import org.assertj.core.api.Assertions;

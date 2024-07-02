@@ -36,6 +36,6 @@ public class WahlvorschlagController {
     @GetMapping("wahl/{wahlID}/liste")
     @ResponseStatus(HttpStatus.OK)
     public WahlvorschlaegeListeDTO loadWahlvorschlaegeListe(@RequestParam("forDate") LocalDate wahltag, @PathVariable("wahlID") String wahlID) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return wahlvorschlagService.getWahlvorschlaegeListeForWahltagAndWahlID(wahltag, wahlID);
     }
 }

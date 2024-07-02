@@ -1,9 +1,21 @@
+CREATE TABLE wahlvorschlaegeliste
+(
+    id                 VARCHAR2(36) NOT NULL,
+    wahltag            TIMESTAMP    NOT NULL,
+    wahlID             VARCHAR2(36) NOT NULL,
+
+    PRIMARY KEY (id)
+);
+
 CREATE TABLE wahlvorschlaege
 (
-    id                  VARCHAR2(36) NOT NULL,
-    wahlbezirkID        VARCHAR2(36) NOT NULL,
-    wahlID              VARCHAR2(36) NOT NULL,
-    stimmzettelgebietID VARCHAR2(36) NOT NULL,
+    id                       VARCHAR2(36) NOT NULL,
+    wahlbezirkID             VARCHAR2(36) NOT NULL,
+    wahlID                   VARCHAR2(36) NOT NULL,
+    stimmzettelgebietID      VARCHAR2(36) NOT NULL,
+    wahlvorschlaegelisteid   VARCHAR2(36)  NOT NULL,
+
+    FOREIGN KEY (wahlvorschlaegelisteid) REFERENCES wahlvorschlaegeliste (id),
 
     PRIMARY KEY (id)
 );

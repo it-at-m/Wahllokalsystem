@@ -5,12 +5,14 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorschlag.Referendu
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorschlag.Referendumvorlage;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorschlag.Referendumvorlagen;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorschlag.Wahlvorschlaege;
+import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorschlag.WahlvorschlaegeListe;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorschlag.Wahlvorschlag;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.dto.KandidatDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.dto.ReferendumoptionDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.dto.ReferendumvorlageDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.dto.ReferendumvorlagenDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.dto.WahlvorschlaegeDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.dto.WahlvorschlaegeListeDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.dto.WahlvorschlagDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -18,7 +20,9 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface WahlvorschlagMapper {
 
-    WahlvorschlaegeDTO toDTO(Wahlvorschlaege wahlvorstand);
+    WahlvorschlaegeListeDTO toDTO(WahlvorschlaegeListe wahlvorschlaegeListe);
+
+    WahlvorschlaegeDTO toDTO(Wahlvorschlaege wahlvorschlaege);
 
     @Mapping(target = "identifikator", source = "id")
     WahlvorschlagDTO toDTO(Wahlvorschlag wahlvorschlag);
@@ -31,4 +35,5 @@ public interface WahlvorschlagMapper {
     ReferendumvorlageDTO toDTO(Referendumvorlage referendumvorlage);
 
     ReferendumoptionDTO toDTO(Referendumoption referendumoption);
+
 }

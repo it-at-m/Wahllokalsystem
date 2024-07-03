@@ -29,13 +29,13 @@ public class WahldatenValidator {
         }
     }
 
-    public void validGetWahlbezirkeParameterOrThrow(final LocalDate wahltag, final String wahlbezirkID) {
+    public void validGetWahlbezirkeParameterOrThrow(final LocalDate wahltag, final String nummer) {
         if (wahltag == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLEBZIRKE_WAHLTAG_FEHLT);
         }
 
-        if (wahlbezirkID == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLEBZIRKE_WAHLTAG_FEHLT);
+        if (nummer == null) {
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLEBZIRKE_NUMMER_FEHLT);
         }
     }
 

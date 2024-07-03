@@ -3,16 +3,10 @@ package de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlvorschlag;
 import de.muenchen.oss.wahllokalsystem.eaiservice.Authorities;
 import de.muenchen.oss.wahllokalsystem.eaiservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.eaiservice.TestConstants;
-import de.muenchen.oss.wahllokalsystem.eaiservice.exception.NotFoundException;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandsaktualisierungDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandsmitgliedAktualisierungDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlvorstand.WahlvorstandService;
+import de.muenchen.oss.wahllokalsystem.eaiservice.exception.NoSearchResultFoundException;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
-import java.time.LocalDateTime;
-import java.util.Set;
-import java.util.UUID;
+import java.time.LocalDate;
 import java.util.stream.Stream;
-import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -25,23 +19,23 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ActiveProfiles;
 
-// TODO all
 @SpringBootTest(classes = MicroServiceApplication.class)
 @ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
 public class WahlvorschlagServiceSecurityTest {
 
     @Autowired
-    WahlvorstandService wahlvorstandService;
+    WahlvorschlagService wahlvorschlagService;
 
     @Nested
-    class GetWahlvorstandForWahlbezirk {
+    class GetWahlvorschlaegeForWahlAndWahlbezirk {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GETWAHLVORSTANDFORWAHLBEZIRK);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GETWAHLVORSCHLAEGE);
 
-            Assertions.assertThatException().isThrownBy(() -> wahlvorstandService.getWahlvorstandForWahlbezirk(UUID.randomUUID().toString())).isInstanceOf(
-                NotFoundException.class);
+            Assertions.assertThatException().isThrownBy(() -> wahlvorschlagService.getWahlvorschlaegeForWahlAndWahlbezirk("wahlID", "wahlbezirkID"))
+                .isInstanceOf(
+                    NoSearchResultFoundException.class);
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")
@@ -49,7 +43,7 @@ public class WahlvorschlagServiceSecurityTest {
         void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
-            Assertions.assertThatThrownBy(() -> wahlvorstandService.getWahlvorstandForWahlbezirk(UUID.randomUUID().toString()))
+            Assertions.assertThatThrownBy(() -> wahlvorschlagService.getWahlvorschlaegeForWahlAndWahlbezirk("wahlID", "wahlbezirkID"))
                 .isInstanceOf(AccessDeniedException.class);
         }
 
@@ -59,16 +53,16 @@ public class WahlvorschlagServiceSecurityTest {
     }
 
     @Nested
-    class SetAnwesenheit {
+    class GetWahlvorschlaegeListeForWahltagAndWahlID {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORIRITES_SETANWESENHEIT);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GETWAHLVORSCHLAEGELISTE);
 
-            val aktualisierung = new WahlvorstandsaktualisierungDTO(UUID.randomUUID().toString(),
-                Set.of(new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), false)), LocalDateTime.now());
-
-            Assertions.assertThatException().isThrownBy(() -> wahlvorstandService.setAnwesenheit(aktualisierung)).isInstanceOf(NotFoundException.class);
+            Assertions.assertThatException()
+                .isThrownBy(() -> wahlvorschlagService.getWahlvorschlaegeListeForWahltagAndWahlID(LocalDate.of(2024, 10, 10), "wahlID"))
+                .isInstanceOf(
+                    NoSearchResultFoundException.class);
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")
@@ -76,17 +70,40 @@ public class WahlvorschlagServiceSecurityTest {
         void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
-            val aktualisierung = new WahlvorstandsaktualisierungDTO(UUID.randomUUID().toString(),
-                Set.of(new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), false)), LocalDateTime.now());
-
-            Assertions.assertThatThrownBy(() -> wahlvorstandService.setAnwesenheit(aktualisierung))
+            Assertions.assertThatThrownBy(() -> wahlvorschlagService.getWahlvorschlaegeListeForWahltagAndWahlID(LocalDate.of(2024, 10, 10), "wahlID"))
                 .isInstanceOf(AccessDeniedException.class);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORIRITES_SETANWESENHEIT);
+            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GETWAHLVORSCHLAEGELISTE);
+        }
+    }
+
+    @Nested
+    class GetReferendumvorlagenForWahlAndWahlbezirk {
+
+        @Test
+        void accessGranted() {
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GETREFERENDUMVORLAGEN);
+
+            Assertions.assertThatException()
+                .isThrownBy(() -> wahlvorschlagService.getReferendumvorlagenForWahlAndWahlbezirk("wahlID", "wahlbezirkID"))
+                .isInstanceOf(
+                    NoSearchResultFoundException.class);
         }
 
+        @ParameterizedTest(name = "{index} - {1} missing")
+        @MethodSource("getMissingAuthoritiesVariations")
+        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
+            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
+
+            Assertions.assertThatThrownBy(() -> wahlvorschlagService.getReferendumvorlagenForWahlAndWahlbezirk("wahlID", "wahlbezirkID"))
+                .isInstanceOf(AccessDeniedException.class);
+        }
+
+        private static Stream<Arguments> getMissingAuthoritiesVariations() {
+            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GETREFERENDUMVORLAGEN);
+        }
     }
 
 }

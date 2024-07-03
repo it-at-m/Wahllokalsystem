@@ -4,6 +4,7 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.MicroServiceApplication;
 import java.time.LocalDate;
 import lombok.val;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,13 @@ class StimmzettelgebietRepositoryTest {
 
     @Autowired
     StimmzettelgebietRepository stimmzettelgebietRepository;
+
+    @AfterEach
+    void tearDown() {
+        stimmzettelgebietRepository.deleteAll();
+        wahlRepository.deleteAll();
+        wahltageRepository.deleteAll();
+    }
 
     @Nested
     class FindByWahlWahltagTagAndWahlNummer {

@@ -22,6 +22,7 @@ class WahlRepositoryTest {
     @AfterEach
     void tearDown() {
         wahlRepository.deleteAll();
+        wahltageRepository.deleteAll();
     }
 
     @Nested

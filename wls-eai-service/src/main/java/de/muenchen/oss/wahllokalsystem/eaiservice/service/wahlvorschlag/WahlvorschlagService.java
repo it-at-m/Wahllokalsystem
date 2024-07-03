@@ -68,6 +68,6 @@ public class WahlvorschlagService {
 
     private WahlvorschlaegeListe findWahlvorschlaegeListeForWahltagAndWahlOrThrow(LocalDate wahltag, String wahlID) {
         return wahlvorschlaegeListeRepository.findFirstByWahltagAndWahlID(wahltag, wahlID)
-            .orElseThrow(() -> new NoSearchResultFoundException(Referendumvorlagen.class, wahltag, wahlID));
+            .orElseThrow(() -> new NoSearchResultFoundException(WahlvorschlaegeListe.class, wahltag, wahlID));
     }
 }

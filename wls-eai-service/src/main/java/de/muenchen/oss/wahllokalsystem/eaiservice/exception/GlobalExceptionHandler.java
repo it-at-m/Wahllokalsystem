@@ -44,12 +44,12 @@ public class GlobalExceptionHandler extends AbstractExceptionHandler {
     public WlsExceptionDTO handleThrowable(final MissingServletRequestParameterException missingRequestParameter,
             final ServletWebRequest webRequest) {
         val requestParameterName = missingRequestParameter.getParameterName();
-        val servletPath = webRequest.getRequest().getServletPath();
+        val requestURI = webRequest.getRequest().getRequestURI();
 
         log.info("missing request parameter -> {}", requestParameterName);
-        log.info("path > {}", servletPath);
+        log.info("path > {}", requestURI);
 
-        return missingRequestParameterExceptionDataWrapperMapper.getExceptionDataWrapperForMissingRequestParameterByName(servletPath, requestParameterName)
+        return missingRequestParameterExceptionDataWrapperMapper.getExceptionDataWrapperForMissingRequestParameterByName(requestURI, requestParameterName)
                 .map(this::createFachlicheWlsExceptionDTO).orElseGet(this::createGenericMissingParameterExceptionDTO);
     }
 

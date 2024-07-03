@@ -34,8 +34,8 @@ public class WahlvorschlagServiceSecurityTest {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GETWAHLVORSCHLAEGE);
 
             Assertions.assertThatException().isThrownBy(() -> wahlvorschlagService.getWahlvorschlaegeForWahlAndWahlbezirk("wahlID", "wahlbezirkID"))
-                .isInstanceOf(
-                    NoSearchResultFoundException.class);
+                    .isInstanceOf(
+                            NoSearchResultFoundException.class);
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")
@@ -44,7 +44,7 @@ public class WahlvorschlagServiceSecurityTest {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatThrownBy(() -> wahlvorschlagService.getWahlvorschlaegeForWahlAndWahlbezirk("wahlID", "wahlbezirkID"))
-                .isInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
@@ -60,9 +60,9 @@ public class WahlvorschlagServiceSecurityTest {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GETWAHLVORSCHLAEGELISTE);
 
             Assertions.assertThatException()
-                .isThrownBy(() -> wahlvorschlagService.getWahlvorschlaegeListeForWahltagAndWahlID(LocalDate.of(2024, 10, 10), "wahlID"))
-                .isInstanceOf(
-                    NoSearchResultFoundException.class);
+                    .isThrownBy(() -> wahlvorschlagService.getWahlvorschlaegeListeForWahltagAndWahlID(LocalDate.of(2024, 10, 10), "wahlID"))
+                    .isInstanceOf(
+                            NoSearchResultFoundException.class);
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")
@@ -71,7 +71,7 @@ public class WahlvorschlagServiceSecurityTest {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatThrownBy(() -> wahlvorschlagService.getWahlvorschlaegeListeForWahltagAndWahlID(LocalDate.of(2024, 10, 10), "wahlID"))
-                .isInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
@@ -87,9 +87,9 @@ public class WahlvorschlagServiceSecurityTest {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GETREFERENDUMVORLAGEN);
 
             Assertions.assertThatException()
-                .isThrownBy(() -> wahlvorschlagService.getReferendumvorlagenForWahlAndWahlbezirk("wahlID", "wahlbezirkID"))
-                .isInstanceOf(
-                    NoSearchResultFoundException.class);
+                    .isThrownBy(() -> wahlvorschlagService.getReferendumvorlagenForWahlAndWahlbezirk("wahlID", "wahlbezirkID"))
+                    .isInstanceOf(
+                            NoSearchResultFoundException.class);
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")
@@ -98,7 +98,7 @@ public class WahlvorschlagServiceSecurityTest {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatThrownBy(() -> wahlvorschlagService.getReferendumvorlagenForWahlAndWahlbezirk("wahlID", "wahlbezirkID"))
-                .isInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {

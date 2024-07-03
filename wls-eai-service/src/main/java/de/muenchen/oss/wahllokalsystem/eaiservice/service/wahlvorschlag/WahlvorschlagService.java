@@ -58,16 +58,16 @@ public class WahlvorschlagService {
 
     private Wahlvorschlaege findWahlvorschlaegeForWahlAndWahlbezirkOrThrow(final String wahlbezirkID, final String wahlID) {
         return wahlvorschlagRepository.findFirstByWahlbezirkIDAndWahlID(wahlbezirkID, wahlID)
-            .orElseThrow(() -> new NoSearchResultFoundException(Wahlvorschlaege.class, wahlbezirkID, wahlID));
+                .orElseThrow(() -> new NoSearchResultFoundException(Wahlvorschlaege.class, wahlbezirkID, wahlID));
     }
 
     private Referendumvorlagen findReferendumvorlagenForWahlAndWahlbezirkOrThrow(final String wahlID, final String wahlbezirkID) {
         return referendumvorlagenRepository.findFirstByWahlbezirkIDAndWahlID(wahlbezirkID, wahlID)
-            .orElseThrow(() -> new NoSearchResultFoundException(Referendumvorlagen.class, wahlbezirkID, wahlID));
+                .orElseThrow(() -> new NoSearchResultFoundException(Referendumvorlagen.class, wahlbezirkID, wahlID));
     }
 
     private WahlvorschlaegeListe findWahlvorschlaegeListeForWahltagAndWahlOrThrow(LocalDate wahltag, String wahlID) {
         return wahlvorschlaegeListeRepository.findFirstByWahltagAndWahlID(wahltag, wahlID)
-            .orElseThrow(() -> new NoSearchResultFoundException(WahlvorschlaegeListe.class, wahltag, wahlID));
+                .orElseThrow(() -> new NoSearchResultFoundException(WahlvorschlaegeListe.class, wahltag, wahlID));
     }
 }

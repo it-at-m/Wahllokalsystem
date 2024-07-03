@@ -1,5 +1,5 @@
 INSERT INTO wahlvorschlaegeliste (id, wahltag, wahlID)
-VALUES ('00000001-0000-0000-0000-000000000001', TO_TIMESTAMP('10-10-2024', 'MM-DD-YYYY'), 'wahlID');
+VALUES ('00000001-0000-0000-0000-000000000001', '2024-10-10', 'wahlID');
 
 INSERT INTO wahlvorschlaege (id, wahlbezirkID, wahlID, stimmzettelgebietID, wahlvorschlaegelisteid)
 VALUES ('00000000-0000-0000-0000-000000000001', 'wahlbezirkID', 'wahlID', 'stimmzettelgebietID',
@@ -65,24 +65,21 @@ INSERT INTO kandidat (id, name, listenposition, direktkandidat, tabellenSpalteIn
 VALUES ('00000000-0000-0000-0001-000000000012', 'Clinton', 2, false, 11, false,
         '00000000-0000-0000-0001-000000000003');
 INSERT INTO kandidat (id, name, listenposition, direktkandidat, tabellenSpalteInNiederschrift, einzelbewerber,
-                      wahlvorschlagID) (id, name, listenposition, direktkandidat, tabellenSpalteInNiederschrift, einzelbewerber,
                       wahlvorschlagID)
 VALUES ('00000000-0000-0000-0001-000000000013', 'Biden', 3, false, 15, false,
         '00000000-0000-0000-0001-000000000003');
 INSERT INTO kandidat (id, name, listenposition, direktkandidat, tabellenSpalteInNiederschrift, einzelbewerber,
-                      wahlvorschlagID) (id, name, listenposition, direktkandidat, tabellenSpalteInNiederschrift, einzelbewerber,
                       wahlvorschlagID)
 VALUES ('00000000-0000-0000-0001-000000000014', 'Lincoln', 4, false, 16, true,
         '00000000-0000-0000-0001-000000000003');
 INSERT INTO kandidat (id, name, listenposition, direktkandidat, tabellenSpalteInNiederschrift, einzelbewerber,
-                      wahlvorschlagID) (id, name, listenposition, direktkandidat, tabellenSpalteInNiederschrift, einzelbewerber,
                       wahlvorschlagID)
 VALUES ('00000000-0000-0000-0001-000000000015', 'Reagan', 5, true, 25, true,
         '00000000-0000-0000-0001-000000000003');
 
 
 INSERT INTO referendumvorlagen (id, wahlbezirkID, wahlID, stimmzettelgebietID)
-VALUES ('00000000-0000-0000-0002-000000000001', 'stimmzettelgebietID');
+VALUES ('00000000-0000-0000-0002-000000000001', 'wahlbezirkID', 'wahlID', 'stimmzettelgebietID');
 
 INSERT INTO referendumvorlage (id, wahlvorschlagID, ordnungszahl, kurzname, frage, referendumvorlagenid)
 VALUES ('00000000-0000-0002-0002-000000000001', 'wahlvorschlagID', 1, 'kurzname1', 'frage1',

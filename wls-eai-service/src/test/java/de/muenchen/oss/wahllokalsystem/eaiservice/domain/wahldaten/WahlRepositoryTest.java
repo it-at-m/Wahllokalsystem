@@ -37,11 +37,11 @@ class WahlRepositoryTest {
             val wahltag3 = wahltageRepository.save(new Wahltag(wahltag.plusDays(1), "", nummer));
             val wahltag4 = wahltageRepository.save(new Wahltag(wahltag, "", nummer + "x"));
 
-            val wahl1ToFind = wahlRepository.save(new Wahl("wahl1", Wahlart.BTW, wahltag1, ""));
-            val wahl2ToFind = wahlRepository.save(new Wahl("wahl2", Wahlart.BTW, wahltag1, ""));
-            wahlRepository.save(new Wahl("", Wahlart.BTW, wahltag2, ""));
-            wahlRepository.save(new Wahl("", Wahlart.BTW, wahltag3, ""));
-            wahlRepository.save(new Wahl("", Wahlart.BTW, wahltag4, ""));
+            val wahl1ToFind = wahlRepository.save(new Wahl("wahl1", Wahlart.BTW, wahltag1));
+            val wahl2ToFind = wahlRepository.save(new Wahl("wahl2", Wahlart.BTW, wahltag1));
+            wahlRepository.save(new Wahl("", Wahlart.BTW, wahltag2));
+            wahlRepository.save(new Wahl("", Wahlart.BTW, wahltag3));
+            wahlRepository.save(new Wahl("", Wahlart.BTW, wahltag4));
 
             val result = wahlRepository.findByWahltagTagAndWahltagNummer(wahltag, nummer);
 

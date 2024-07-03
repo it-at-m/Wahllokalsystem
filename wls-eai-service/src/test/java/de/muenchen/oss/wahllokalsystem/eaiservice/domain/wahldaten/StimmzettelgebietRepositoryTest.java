@@ -34,10 +34,10 @@ class StimmzettelgebietRepositoryTest {
             val wahltag3 = wahltageRepository.save(new Wahltag(wahltag.plusDays(1), "", nummer));
             val wahltag4 = wahltageRepository.save(new Wahltag(wahltag, "", nummer + "x"));
 
-            val wahl1 = wahlRepository.save(new Wahl("", Wahlart.BTW, wahltag1, ""));
-            val wahl2 = wahlRepository.save(new Wahl("", Wahlart.BTW, wahltag2, ""));
-            val wahl3 = wahlRepository.save(new Wahl("", Wahlart.BTW, wahltag3, ""));
-            val wahl4 = wahlRepository.save(new Wahl("", Wahlart.BTW, wahltag4, ""));
+            val wahl1 = wahlRepository.save(new Wahl("", Wahlart.BTW, wahltag1));
+            val wahl2 = wahlRepository.save(new Wahl("", Wahlart.BTW, wahltag2));
+            val wahl3 = wahlRepository.save(new Wahl("", Wahlart.BTW, wahltag3));
+            val wahl4 = wahlRepository.save(new Wahl("", Wahlart.BTW, wahltag4));
 
             val sgz1ToFind = stimmzettelgebietRepository.save(new Stimmzettelgebiet("sgz1", "", Stimmzettelgebietsart.SK, wahl1));
             val sgz2ToFind = stimmzettelgebietRepository.save(new Stimmzettelgebiet("sgz2", "", Stimmzettelgebietsart.SK, wahl1));

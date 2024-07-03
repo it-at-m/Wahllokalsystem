@@ -21,12 +21,13 @@ public interface WahldatenMapper {
 
     @Mapping(target = "identifikator", source = "id")
     @Mapping(target = "wahltag", source = "wahltag.tag")
+    @Mapping(target = "nummer", source = "wahltag.nummer")
     WahlDTO toDTO(Wahl wahl);
 
     @Mapping(target = "identifikator", source = "id")
     @Mapping(target = "wahltag", source = "stimmzettelgebiet.wahl.wahltag.tag")
     @Mapping(target = "wahlID", source = "stimmzettelgebiet.wahl.id")
-    @Mapping(target = "wahlnummer", source = "stimmzettelgebiet.wahl.nummer")
+    @Mapping(target = "wahlnummer", source = "stimmzettelgebiet.wahl.wahltag.nummer")
     WahlbezirkDTO toDTO(Wahlbezirk wahlbezirk);
 
     @Mapping(target = "identifikator", source = "id")

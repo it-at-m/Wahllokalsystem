@@ -90,7 +90,7 @@ public class WahldatenControllerIntegrationTest {
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLBERECHTIGTE)
         void dataFound() throws Exception {
             val wahltag = wahltageRepository.save(new Wahltag(LocalDate.now(), "beschreibung wahltag", "nummer"));
-            val wahl = wahlRepository.save(new Wahl("wahl", Wahlart.BTW, wahltag, "1"));
+            val wahl = wahlRepository.save(new Wahl("wahl", Wahlart.BTW, wahltag));
             val stimmzettelgebiet = stimmzettelgebietRepository.save(new Stimmzettelgebiet("sgz1", "sgz1", Stimmzettelgebietsart.SK, wahl));
             val wahlbezirkToFind = wahlbezirkRepository.save(new Wahlbezirk(WahlbezirkArtDTO.UWB, "nummer", stimmzettelgebiet, 10, 11, 12));
 
@@ -198,7 +198,7 @@ public class WahldatenControllerIntegrationTest {
             val wahltag1 = wahltageRepository.save(new Wahltag(LocalDate.parse(wahltagDate), "wahltag1", "1"));
             wahltageRepository.save(new Wahltag(LocalDate.parse(wahltagDate), "wahltag2", "2"));
 
-            val wahl = wahlRepository.save(new Wahl("wahl", Wahlart.BTW, wahltag1, "nummer"));
+            val wahl = wahlRepository.save(new Wahl("wahl", Wahlart.BTW, wahltag1));
             val stimmzettelgebiet = stimmzettelgebietRepository.save(new Stimmzettelgebiet("nummer", "name", Stimmzettelgebietsart.SK, wahl));
 
             val wahlbezirk1 = wahlbezirkRepository.save(new Wahlbezirk(WahlbezirkArtDTO.UWB, "wbz1", stimmzettelgebiet, 0, 0, 0));
@@ -269,9 +269,9 @@ public class WahldatenControllerIntegrationTest {
             val wahltag1 = wahltageRepository.save(new Wahltag(LocalDate.parse(wahltagDate), "wahltag1", "1"));
             val wahltag2 = wahltageRepository.save(new Wahltag(LocalDate.parse(wahltagDate), "wahltag2", "2"));
 
-            val wahl1ToFind = wahlRepository.save(new Wahl("wahl1", Wahlart.BTW, wahltag1, "nummer"));
-            val wahl2ToFind = wahlRepository.save(new Wahl("wahl2", Wahlart.BTW, wahltag1, "nummer"));
-            wahlRepository.save(new Wahl("wahl", Wahlart.BTW, wahltag2, "nummer"));
+            val wahl1ToFind = wahlRepository.save(new Wahl("wahl1", Wahlart.BTW, wahltag1));
+            val wahl2ToFind = wahlRepository.save(new Wahl("wahl2", Wahlart.BTW, wahltag1));
+            wahlRepository.save(new Wahl("wahl", Wahlart.BTW, wahltag2));
 
             val request = get(WahldatenController.WAHLDATEN_REQUEST_MAPPING + "/wahlen?forDate=" + wahltagDate + "&withNummer=" + nummerToFind);
 
@@ -337,7 +337,7 @@ public class WahldatenControllerIntegrationTest {
             val nummerToFind = "1";
 
             val wahltag = wahltageRepository.save(new Wahltag(LocalDate.parse(wahltagDateToFind), "beschreibung wahltag", nummerToFind));
-            val wahl = wahlRepository.save(new Wahl("wahl", Wahlart.BTW, wahltag, "1"));
+            val wahl = wahlRepository.save(new Wahl("wahl", Wahlart.BTW, wahltag));
             val stimmzettelgebiet = stimmzettelgebietRepository.save(new Stimmzettelgebiet("sgz1", "sgz1", Stimmzettelgebietsart.SK, wahl));
             val wahlbezirkToFind = wahlbezirkRepository.save(new Wahlbezirk(WahlbezirkArtDTO.UWB, "nummer", stimmzettelgebiet, 10, 11, 12));
 

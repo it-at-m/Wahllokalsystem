@@ -34,7 +34,4 @@ public class Wahl extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "wahltagID")
     private Wahltag wahltag;
-
-    @NotNull
-    private String nummer;
 }

@@ -1,10 +1,10 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag;
 
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.WahlvorstandController;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandsaktualisierungDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlvorstand.WahlvorstandService;
-import java.time.LocalDateTime;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.dto.ReferendumvorlagenDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.dto.WahlvorschlaegeDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.dto.WahlvorschlaegeListeDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlvorschlag.WahlvorschlagService;
+import java.time.LocalDate;
 import java.util.Collections;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -16,38 +16,64 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-// TODO all
 @ExtendWith(MockitoExtension.class)
 class WahlvorschlagControllerTest {
 
     @Mock
-    WahlvorstandService wahlvorstandService;
+    WahlvorschlagService wahlvorschlagService;
 
     @InjectMocks
-    WahlvorstandController unitUnderTest;
+    WahlvorschlagController unitUnderTest;
 
     @Nested
-    class LoadWahlvorstand {
+    class LoadWahlvorschlaege {
 
         @Test
         void gotDataFromService() {
             val wahlbezirkID = "wahlbezirkID";
-            val wahlvorstandFromService = new WahlvorstandDTO("wahlbezirkID", Collections.emptySet());
+            val wahlID = "wahlID";
+            val stimmzettelgebietID = "stimmzettelgebietID";
 
-            Mockito.when(wahlvorstandService.getWahlvorstandForWahlbezirk(wahlbezirkID)).thenReturn(wahlvorstandFromService);
+            val wahlvorschlaegeFromService = new WahlvorschlaegeDTO(wahlbezirkID, wahlID, stimmzettelgebietID, Collections.emptySet());
 
-            Assertions.assertThat(unitUnderTest.loadWahlvorstand(wahlbezirkID)).isSameAs(wahlvorstandFromService);
+            Mockito.when(wahlvorschlagService.getWahlvorschlaegeForWahlAndWahlbezirk(wahlID, wahlbezirkID)).thenReturn(wahlvorschlaegeFromService);
+
+            Assertions.assertThat(unitUnderTest.loadWahlvorschlaege(wahlID, wahlbezirkID)).isSameAs(wahlvorschlaegeFromService);
         }
 
     }
 
-    @Test
-    void saveAnwesenheit() {
-        val updateData = new WahlvorstandsaktualisierungDTO("id", Collections.emptySet(), LocalDateTime.now());
+    @Nested
+    class LoadReferendumvorlagen {
 
-        unitUnderTest.saveAnwesenheit(updateData);
+        @Test
+        void gotDataFromService() {
+            val wahlbezirkID = "wahlbezirkID";
+            val wahlID = "wahlID";
+            val stimmzettelgebietID = "stimmzettelgebietID";
 
-        Mockito.verify(wahlvorstandService).setAnwesenheit(updateData);
+            val referendumVorlagenFromService = new ReferendumvorlagenDTO(wahlbezirkID, wahlID, stimmzettelgebietID, Collections.emptySet());
+
+            Mockito.when(wahlvorschlagService.getReferendumvorlagenForWahlAndWahlbezirk(wahlID, wahlbezirkID)).thenReturn(referendumVorlagenFromService);
+
+            Assertions.assertThat(unitUnderTest.loadReferendumvorlagen(wahlID, wahlbezirkID)).isSameAs(referendumVorlagenFromService);
+        }
+    }
+
+    @Nested
+    class LoadWahlvorschlaegeListe {
+
+        @Test
+        void gotDataFromService() {
+            val wahltag = LocalDate.of(2024, 10, 10);
+            val wahlID = "wahlID";
+
+            val wahlvorschlaegeListeFromService = new WahlvorschlaegeListeDTO(wahltag.toString(), wahlID, Collections.emptySet());
+
+            Mockito.when(wahlvorschlagService.getWahlvorschlaegeListeForWahltagAndWahlID(wahltag, wahlID)).thenReturn(wahlvorschlaegeListeFromService);
+
+            Assertions.assertThat(unitUnderTest.loadWahlvorschlaegeListe(wahltag, wahlID)).isSameAs(wahlvorschlaegeListeFromService);
+        }
     }
 
 }

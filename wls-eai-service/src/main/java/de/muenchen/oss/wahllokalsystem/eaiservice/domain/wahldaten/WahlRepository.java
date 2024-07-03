@@ -7,5 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface WahlRepository extends CrudRepository<Wahl, UUID> {
 
-    List<Wahl> findByWahltagTagAndNummer(LocalDate wahltag, String nummer);
+    List<Wahl> findByWahltagTagAndWahltagNummer(LocalDate wahltag, String nummer);
 }

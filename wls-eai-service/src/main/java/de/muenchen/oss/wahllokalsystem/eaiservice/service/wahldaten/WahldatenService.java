@@ -52,7 +52,7 @@ public class WahldatenService {
     public Set<WahlDTO> getWahlen(final LocalDate wahltag, final String nummer) {
         wahldatenValidator.validGetWahlenParameterOrThrow(wahltag, nummer);
 
-        return wahlRepository.findByWahltagTagAndNummer(wahltag, nummer).stream().map(wahldatenMapper::toDTO).collect(Collectors.toSet());
+        return wahlRepository.findByWahltagTagAndWahltagNummer(wahltag, nummer).stream().map(wahldatenMapper::toDTO).collect(Collectors.toSet());
     }
 
     @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadWahlbezirke')")
@@ -81,8 +81,9 @@ public class WahldatenService {
         val basisstrukturdaten = wahlbezirkeWithParentEntities.stream().map(wahldatenMapper::toBasisstrukturdatenDTO).collect(Collectors.toSet());
         val wahlen = getWahlen(wahltag, nummer);
         val wahlbezirke = wahlbezirkeWithParentEntities.stream().map(wahldatenMapper::toDTO).collect(Collectors.toSet());
-        val stimmzettelgebiete = stimmzettelgebietRepository.findByWahlWahltagTagAndWahlNummer(wahltag, nummer).stream().map(wahldatenMapper::toDTO).collect(
-                Collectors.toSet());
+        val stimmzettelgebiete = stimmzettelgebietRepository.findByWahlWahltagTagAndWahlWahltagNummer(wahltag, nummer).stream().map(wahldatenMapper::toDTO)
+                .collect(
+                        Collectors.toSet());
 
         return new BasisdatenDTO(basisstrukturdaten, wahlen, wahlbezirke, stimmzettelgebiete);
     }

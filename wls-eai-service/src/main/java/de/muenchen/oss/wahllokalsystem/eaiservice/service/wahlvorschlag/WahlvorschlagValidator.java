@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlvorschlag;
 
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;

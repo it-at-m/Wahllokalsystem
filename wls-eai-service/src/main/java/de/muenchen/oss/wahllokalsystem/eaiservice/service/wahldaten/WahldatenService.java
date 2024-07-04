@@ -67,7 +67,8 @@ public class WahldatenService {
     public List<WahlberechtigteDTO> getWahlberechtigte(final String wahlbezirkID) {
         wahldatenValidator.validGetWahlberechtigteParameterOrThrow(wahlbezirkID);
 
-        return wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagById(idConverter.convertIDToUUIDOrThrow(wahlbezirkID)).stream()
+        return wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByID(idConverter.convertIDToUUIDOrThrow(wahlbezirkID))
+                .stream()
                 .map(wahldatenMapper::toWahlberechtigteDTO)
                 .toList();
     }
@@ -89,7 +90,7 @@ public class WahldatenService {
     }
 
     private List<Wahlbezirk> findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagById(final LocalDate wahltag, final String nummer) {
-        return wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagById(wahltag, nummer);
+        return wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByWahltagAndNummer(wahltag, nummer);
     }
 
     private List<Wahltag> getWahltageIncludingSince(LocalDate wahltageIncludingSince) {

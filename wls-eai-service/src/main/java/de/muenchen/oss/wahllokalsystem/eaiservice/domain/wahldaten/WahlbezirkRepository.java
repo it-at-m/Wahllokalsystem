@@ -12,8 +12,9 @@ public interface WahlbezirkRepository extends CrudRepository<Wahlbezirk, UUID> {
     @Query(
         "SELECT wb FROM Wahlbezirk wb JOIN FETCH wb.stimmzettelgebiet sg JOIN FETCH sg.wahl w JOIN FETCH w.wahltag t WHERE t.tag = (:wahltag) AND t.nummer = (:nummer)"
     )
-    List<Wahlbezirk> findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagById(@Param("wahltag") LocalDate wahltag, @Param("nummer") String nummer);
+    List<Wahlbezirk> findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByWahltagAndNummer(@Param("wahltag") LocalDate wahltag,
+            @Param("nummer") String nummer);
 
     @Query("SELECT wb FROM Wahlbezirk wb JOIN FETCH wb.stimmzettelgebiet sg JOIN FETCH sg.wahl w JOIN FETCH w.wahltag t WHERE wb.id = (:wahlbezirkID)")
-    List<Wahlbezirk> findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagById(@Param("wahlbezirkID") UUID wahlbezirkID);
+    List<Wahlbezirk> findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByID(@Param("wahlbezirkID") UUID wahlbezirkID);
 }

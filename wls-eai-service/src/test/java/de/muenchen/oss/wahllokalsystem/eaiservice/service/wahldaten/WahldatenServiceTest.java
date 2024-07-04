@@ -157,7 +157,7 @@ class WahldatenServiceTest {
             val mockedRepoEntity = new Wahlbezirk();
             val mockedMappedEntity = WahlbezirkDTO.builder().build();
 
-            Mockito.when(wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagById(eq(wahltag), eq(nummer)))
+            Mockito.when(wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByWahltagAndNummer(eq(wahltag), eq(nummer)))
                     .thenReturn(List.of(mockedRepoEntity));
             Mockito.when(wahldatenMapper.toDTO(mockedRepoEntity)).thenReturn(mockedMappedEntity);
 
@@ -171,7 +171,7 @@ class WahldatenServiceTest {
             val wahltag = LocalDate.now();
             val nummer = "nummer";
 
-            Mockito.when(wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagById(eq(wahltag), eq(nummer)))
+            Mockito.when(wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByWahltagAndNummer(eq(wahltag), eq(nummer)))
                     .thenReturn(Collections.emptyList());
 
             val result = unitUnderTest.getWahlbezirke(wahltag, nummer);
@@ -205,7 +205,7 @@ class WahldatenServiceTest {
             val mockedMappedEntityAsWahlberechtigte = WahlberechtigteDTO.builder().build();
 
             Mockito.when(idConverter.convertIDToUUIDOrThrow(wahlbezirkID)).thenReturn(mockedWahlbezirkAsUUID);
-            Mockito.when(wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagById(mockedWahlbezirkAsUUID))
+            Mockito.when(wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByID(mockedWahlbezirkAsUUID))
                     .thenReturn(List.of(mockedRepoEntity));
             Mockito.when(wahldatenMapper.toWahlberechtigteDTO(mockedRepoEntity)).thenReturn(mockedMappedEntityAsWahlberechtigte);
 
@@ -221,7 +221,7 @@ class WahldatenServiceTest {
             val mockedWahlbezirkAsUUID = UUID.randomUUID();
 
             Mockito.when(idConverter.convertIDToUUIDOrThrow(wahlbezirkID)).thenReturn(mockedWahlbezirkAsUUID);
-            Mockito.when(wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagById(mockedWahlbezirkAsUUID))
+            Mockito.when(wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByID(mockedWahlbezirkAsUUID))
                     .thenReturn(Collections.emptyList());
 
             val result = unitUnderTest.getWahlberechtigte(wahlbezirkID);
@@ -258,7 +258,7 @@ class WahldatenServiceTest {
             val mockedRepoStimmzettelgebiet = new Stimmzettelgebiet();
             val mockedRepoStimmzettelgebietMappedToDTO = StimmzettelgebietDTO.builder().build();
 
-            Mockito.when(wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagById(eq(wahltag), eq(nummer)))
+            Mockito.when(wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByWahltagAndNummer(eq(wahltag), eq(nummer)))
                     .thenReturn(List.of(mockedRepoWahlbezirk));
             Mockito.when(wahlRepository.findByWahltagTagAndWahltagNummer(eq(wahltag), eq(nummer))).thenReturn(List.of(mockedRepoWahl));
             Mockito.when(stimmzettelgebietRepository.findByWahlWahltagTagAndWahlWahltagNummer(eq(wahltag), eq(nummer)))
@@ -280,7 +280,7 @@ class WahldatenServiceTest {
             val wahltag = LocalDate.now();
             val nummer = "nummer";
 
-            Mockito.when(wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagById(eq(wahltag), eq(nummer)))
+            Mockito.when(wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByWahltagAndNummer(eq(wahltag), eq(nummer)))
                     .thenReturn(Collections.emptyList());
             Mockito.when(wahlRepository.findByWahltagTagAndWahltagNummer(eq(wahltag), eq(nummer))).thenReturn(Collections.emptyList());
             Mockito.when(stimmzettelgebietRepository.findByWahlWahltagTagAndWahlWahltagNummer(eq(wahltag), eq(nummer))).thenReturn(Collections.emptyList());

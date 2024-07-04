@@ -1,7 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten;
 
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.BaseEntity;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlbezirkArtDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -26,7 +25,7 @@ public class Wahlbezirk extends BaseEntity {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private WahlbezirkArtDTO wahlbezirkArt;
+    private WahlbezirkArt wahlbezirkArt;
 
     @NotNull
     private String nummer;

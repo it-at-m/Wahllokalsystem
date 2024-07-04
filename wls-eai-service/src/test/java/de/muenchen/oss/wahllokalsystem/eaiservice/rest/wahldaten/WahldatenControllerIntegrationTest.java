@@ -14,6 +14,7 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.Wahl;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.WahlRepository;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.Wahlart;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.Wahlbezirk;
+import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.WahlbezirkArt;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.WahlbezirkRepository;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.Wahltag;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.WahltageRepository;
@@ -21,7 +22,6 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.BasisdatenDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlberechtigteDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlbezirkArtDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlbezirkDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahltagDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.service.wahldaten.WahldatenMapper;
@@ -92,9 +92,9 @@ public class WahldatenControllerIntegrationTest {
             val wahltag = wahltageRepository.save(new Wahltag(LocalDate.now(), "beschreibung wahltag", "nummer"));
             val wahl = wahlRepository.save(new Wahl("wahl", Wahlart.BTW, wahltag));
             val stimmzettelgebiet = stimmzettelgebietRepository.save(new Stimmzettelgebiet("sgz1", "sgz1", Stimmzettelgebietsart.SK, wahl));
-            val wahlbezirkToFind = wahlbezirkRepository.save(new Wahlbezirk(WahlbezirkArtDTO.UWB, "nummer", stimmzettelgebiet, 10, 11, 12));
+            val wahlbezirkToFind = wahlbezirkRepository.save(new Wahlbezirk(WahlbezirkArt.UWB, "nummer", stimmzettelgebiet, 10, 11, 12));
 
-            wahlbezirkRepository.save(new Wahlbezirk(WahlbezirkArtDTO.UWB, "nummer", stimmzettelgebiet, 10, 11, 12));
+            wahlbezirkRepository.save(new Wahlbezirk(WahlbezirkArt.UWB, "nummer", stimmzettelgebiet, 10, 11, 12));
 
             val request = get(WahldatenController.WAHLDATEN_REQUEST_MAPPING + "/wahlbezirke/" + wahlbezirkToFind.getId() + "/wahlberechtigte");
 
@@ -201,8 +201,8 @@ public class WahldatenControllerIntegrationTest {
             val wahl = wahlRepository.save(new Wahl("wahl", Wahlart.BTW, wahltag1));
             val stimmzettelgebiet = stimmzettelgebietRepository.save(new Stimmzettelgebiet("nummer", "name", Stimmzettelgebietsart.SK, wahl));
 
-            val wahlbezirk1 = wahlbezirkRepository.save(new Wahlbezirk(WahlbezirkArtDTO.UWB, "wbz1", stimmzettelgebiet, 0, 0, 0));
-            val wahlbezirk2 = wahlbezirkRepository.save(new Wahlbezirk(WahlbezirkArtDTO.BWB, "wbz2", stimmzettelgebiet, 0, 0, 0));
+            val wahlbezirk1 = wahlbezirkRepository.save(new Wahlbezirk(WahlbezirkArt.UWB, "wbz1", stimmzettelgebiet, 0, 0, 0));
+            val wahlbezirk2 = wahlbezirkRepository.save(new Wahlbezirk(WahlbezirkArt.BWB, "wbz2", stimmzettelgebiet, 0, 0, 0));
 
             val request = get(WahldatenController.WAHLDATEN_REQUEST_MAPPING + "/wahlbezirk?forDate=" + wahltagDate + "&withNummer=" + nummerToFind);
 
@@ -339,7 +339,7 @@ public class WahldatenControllerIntegrationTest {
             val wahltag = wahltageRepository.save(new Wahltag(LocalDate.parse(wahltagDateToFind), "beschreibung wahltag", nummerToFind));
             val wahl = wahlRepository.save(new Wahl("wahl", Wahlart.BTW, wahltag));
             val stimmzettelgebiet = stimmzettelgebietRepository.save(new Stimmzettelgebiet("sgz1", "sgz1", Stimmzettelgebietsart.SK, wahl));
-            val wahlbezirkToFind = wahlbezirkRepository.save(new Wahlbezirk(WahlbezirkArtDTO.UWB, "nummer", stimmzettelgebiet, 10, 11, 12));
+            val wahlbezirkToFind = wahlbezirkRepository.save(new Wahlbezirk(WahlbezirkArt.UWB, "nummer", stimmzettelgebiet, 10, 11, 12));
 
             val request = get(WahldatenController.WAHLDATEN_REQUEST_MAPPING + "/basisdaten?forDate=" + wahltagDateToFind + "&withNummer=" + nummerToFind);
 

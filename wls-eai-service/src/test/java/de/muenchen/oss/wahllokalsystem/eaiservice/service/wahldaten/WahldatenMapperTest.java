@@ -5,6 +5,7 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.Stimmzettelge
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.Wahl;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.Wahlart;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.Wahlbezirk;
+import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.WahlbezirkArt;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.Wahltag;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.dto.WahlartDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.BasisstrukturdatenDTO;
@@ -72,7 +73,7 @@ class WahldatenMapperTest {
 
             val wahlForWahlbezirk = new Wahl(null, null, new Wahltag(wahltag, null, wahltagnummer));
             wahlForWahlbezirk.setId(wahlID);
-            val entityToMap = new Wahlbezirk(WahlbezirkArtDTO.UWB, wahlbezirkNummer, new Stimmzettelgebiet(null, null, null, wahlForWahlbezirk), 0, 0, 0);
+            val entityToMap = new Wahlbezirk(WahlbezirkArt.UWB, wahlbezirkNummer, new Stimmzettelgebiet(null, null, null, wahlForWahlbezirk), 0, 0, 0);
             entityToMap.setId(wahlbezirkID);
 
             val result = unitUnderTest.toDTO(entityToMap);

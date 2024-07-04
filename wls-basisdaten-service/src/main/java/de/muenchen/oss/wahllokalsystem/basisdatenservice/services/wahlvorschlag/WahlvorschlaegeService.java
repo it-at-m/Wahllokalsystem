@@ -25,7 +25,7 @@ public class WahlvorschlaegeService {
     private final WahlvorschlaegeClient wahlvorschlaegeClient;
 
     @PreAuthorize(
-            "hasAuthority('Basisdaten_BUSINESSACTION_GetWahlvorschlaege')"
+        "hasAuthority('Basisdaten_BUSINESSACTION_GetWahlvorschlaege')"
     )
     @Transactional
     public WahlvorschlaegeModel getWahlvorschlaege(final BezirkUndWahlID bezirkUndWahlID) {

@@ -19,8 +19,8 @@ public class DummyClientImpl implements WahlvorschlaegeClient {
     public WahlvorschlaegeModel getWahlvorschlaege(BezirkUndWahlID bezirkUndWahlID) {
         return new WahlvorschlaegeModel(bezirkUndWahlID, "stimmzettelgebiedID",
                 Set.of(new WahlvorschlagModel(UUID.randomUUID().toString(), 1L, "kurzname1", true,
-                                Set.of(new KandidatModel(UUID.randomUUID().toString(), "kandidat11", 1L, true, 1L, true),
-                                        new KandidatModel(UUID.randomUUID().toString(), "kandidat21", 2L, false, 1L, false))),
+                        Set.of(new KandidatModel(UUID.randomUUID().toString(), "kandidat11", 1L, true, 1L, true),
+                                new KandidatModel(UUID.randomUUID().toString(), "kandidat21", 2L, false, 1L, false))),
                         new WahlvorschlagModel(UUID.randomUUID().toString(), 2L, "kurzname2", true,
                                 Set.of(new KandidatModel(UUID.randomUUID().toString(), "kandidat21", 1L, true, 1L, true),
                                         new KandidatModel(UUID.randomUUID().toString(), "kandidat22", 2L, false, 1L, false)))));

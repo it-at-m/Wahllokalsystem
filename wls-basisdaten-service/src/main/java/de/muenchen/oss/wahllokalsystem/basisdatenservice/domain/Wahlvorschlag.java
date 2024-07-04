@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -61,7 +62,7 @@ public class Wahlvorschlag {
 
     @OneToMany(mappedBy = "wahlvorschlag", orphanRemoval = true)
     @NotNull
-    private Set<Kandidat> kandidaten = new java.util.LinkedHashSet<>();
+    private Set<Kandidat> kandidaten = new LinkedHashSet<>();
 
     public void addKandidat(final Kandidat kandidat) {
         kandidat.setWahlvorschlag(this);

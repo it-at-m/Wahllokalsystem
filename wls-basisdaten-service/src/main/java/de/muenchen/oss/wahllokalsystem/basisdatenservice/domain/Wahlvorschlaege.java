@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -52,7 +53,7 @@ public class Wahlvorschlaege {
     @OneToMany(mappedBy = "wahlvorschlaeage", orphanRemoval = true)
     @NotNull
     @Size(min = 1)
-    private Set<Wahlvorschlag> wahlvorschlaege = new java.util.LinkedHashSet<>();
+    private Set<Wahlvorschlag> wahlvorschlaege = new LinkedHashSet<>();
 
     public void addWahlvorschlag(final Wahlvorschlag wahlvorschlag) {
         wahlvorschlag.setWahlvorschlaeage(this);

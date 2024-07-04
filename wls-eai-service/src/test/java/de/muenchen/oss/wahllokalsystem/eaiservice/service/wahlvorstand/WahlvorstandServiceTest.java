@@ -174,7 +174,7 @@ class WahlvorstandServiceTest {
             Mockito.doThrow(idConverterException).when(idConverter).convertIDToUUIDOrThrow(wahlbezirkID);
 
             Assertions.assertThatException().isThrownBy(
-                            () -> unitUnderTest.setAnwesenheit(new WahlvorstandsaktualisierungDTO(wahlbezirkID, Collections.emptySet(), LocalDateTime.now())))
+                    () -> unitUnderTest.setAnwesenheit(new WahlvorstandsaktualisierungDTO(wahlbezirkID, Collections.emptySet(), LocalDateTime.now())))
                     .isSameAs(idConverterException);
         }
     }

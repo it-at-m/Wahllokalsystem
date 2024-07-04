@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class, properties = "spring.datasource.url=jdbc:h2:mem:wls-eai-service-dummydata")
-@ActiveProfiles({ "local", "db-oracle", "db-h2", "no-security", "db-dummydata" })
+@ActiveProfiles({ "db-h2", "db-dummydata" })
 class MicroServiceApplicationDummyDataIntegrationTest {
 
     @Autowired

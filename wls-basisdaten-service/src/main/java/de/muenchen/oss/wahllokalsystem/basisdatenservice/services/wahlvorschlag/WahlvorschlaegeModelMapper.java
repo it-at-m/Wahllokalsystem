@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Kandidat;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlvorschlaege;

@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;

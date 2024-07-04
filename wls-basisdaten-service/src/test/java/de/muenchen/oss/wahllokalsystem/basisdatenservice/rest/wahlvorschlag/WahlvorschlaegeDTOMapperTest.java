@@ -1,8 +1,8 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlvorschlaege;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlvorschlag;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege.KandidatModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege.WahlvorschlaegeModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege.WahlvorschlagModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.KandidatModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlagModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Set;
 import lombok.val;

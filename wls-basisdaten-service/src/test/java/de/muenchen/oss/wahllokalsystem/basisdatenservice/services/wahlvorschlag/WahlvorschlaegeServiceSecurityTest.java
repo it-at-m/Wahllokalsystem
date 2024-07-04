@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;

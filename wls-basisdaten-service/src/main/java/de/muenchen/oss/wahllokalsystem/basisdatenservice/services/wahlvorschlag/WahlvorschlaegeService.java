@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.KandidatRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlvorschlaege;
@@ -25,7 +25,7 @@ public class WahlvorschlaegeService {
     private final WahlvorschlaegeClient wahlvorschlaegeClient;
 
     @PreAuthorize(
-        "hasAuthority('Basisdaten_BUSINESSACTION_GetWahlvorschlaege')"
+            "hasAuthority('Basisdaten_BUSINESSACTION_GetWahlvorschlaege')"
     )
     @Transactional
     public WahlvorschlaegeModel getWahlvorschlaege(final BezirkUndWahlID bezirkUndWahlID) {

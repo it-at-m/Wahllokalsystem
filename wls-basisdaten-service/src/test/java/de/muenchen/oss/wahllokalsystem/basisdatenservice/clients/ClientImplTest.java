@@ -6,7 +6,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.client.WahlvorschlagControllerApi;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlaegeDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege.WahlvorschlaegeModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;

@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlvorschlaege;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlvorschlag;
 
 import jakarta.validation.constraints.NotNull;
 

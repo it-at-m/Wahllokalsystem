@@ -1,6 +1,6 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlvorschlaege;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlvorschlag;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege.WahlvorschlaegeService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

@@ -3,9 +3,9 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.KandidatDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlaegeDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlagDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege.KandidatModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege.WahlvorschlaegeModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlaege.WahlvorschlagModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.KandidatModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlagModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Set;
 import lombok.val;
@@ -85,8 +85,8 @@ class WahlvorschlaegeClientMapperTest {
             val result = unitUnderTest.toModel(dtoToMap);
 
             val expectedWahlvorschlaege = Set.of(new WahlvorschlagModel("identifikator1", 1L, "kurzname1", true, Set.of(
-                    new KandidatModel("kandidat11", "name11", 1L, true, 1L, true),
-                    new KandidatModel("kandidat12", "name12", 2L, false, 2L, false))),
+                            new KandidatModel("kandidat11", "name11", 1L, true, 1L, true),
+                            new KandidatModel("kandidat12", "name12", 2L, false, 2L, false))),
                     new WahlvorschlagModel("identifikator2", 2L, "kurzname2", false, Set.of(
                             new KandidatModel("kandidat21", "name21", 3L, true, 3L, true),
                             new KandidatModel("kandidat22", "name22", 4L, false, 4L, false))));

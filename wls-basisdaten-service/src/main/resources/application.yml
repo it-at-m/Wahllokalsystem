@@ -5,6 +5,7 @@ spring:
     group:
       local:
         - db-h2
+        - dummy.clients
   flyway:
     locations:
       - classpath:db/migrations/{vendor}
@@ -23,6 +24,10 @@ security:
   logging.requests: all
   oauth2:
     resource.user-info-uri: http://kubernetes.docker.internal:8100/auth/realms/${realm}/protocol/openid-connect/userinfo
+
+service:
+  info:
+    oid: WLS-BASISDATEN
 
 
 # Define the local keycloak realm here

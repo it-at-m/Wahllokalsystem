@@ -35,6 +35,7 @@ public class Referendumvorlage extends BaseEntity {
     private String kurzname;
 
     @NotNull
+    @ToString.Include
     private String frage;
 
     @OneToMany(cascade = CascadeType.ALL)

@@ -32,7 +32,7 @@ public class Stimmzettelgebiet extends BaseEntity {
     @NotNull
     @Enumerated(EnumType.STRING)
     @ToString.Include
-    private Stimmzettelgebietsart stimmzettelgebietart;
+    private Stimmzettelgebietsart stimmzettelgebietsart;
 
     @NotNull
     @ManyToOne

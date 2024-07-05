@@ -9,5 +9,5 @@ public record StimmzettelgebietDTO(String identifikator,
                                    String nummer,
                                    String name,
                                    LocalDate wahltag,
-                                   @NotNull StimmzettelgebietsartDTO stimmzettelgebietart) {
+                                   @NotNull StimmzettelgebietsartDTO stimmzettelgebietsart) {
 }

@@ -32,4 +32,7 @@ public interface WahlvorschlagMapper {
 
     ReferendumvorlagenDTO toDTO(Referendumvorlagen referendumvorlagen);
 
+    ReferendumvorlageDTO toDTO(Referendumvorlage referendumvorlage);
+
+    ReferendumoptionDTO toDTO(Referendumoption referendumoption);
 }

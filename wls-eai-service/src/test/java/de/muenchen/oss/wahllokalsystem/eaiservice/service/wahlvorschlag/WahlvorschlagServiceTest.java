@@ -41,9 +41,6 @@ class WahlvorschlagServiceTest {
     @Mock
     WahlvorschlagMapper wahlvorschlagMapper;
 
-    @Mock
-    WahlvorschlagValidator wahlvorschlagValidator;
-
     @InjectMocks
     WahlvorschlagService unitUnderTest;
 

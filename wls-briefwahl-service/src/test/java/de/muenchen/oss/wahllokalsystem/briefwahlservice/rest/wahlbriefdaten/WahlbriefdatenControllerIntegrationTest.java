@@ -12,8 +12,8 @@ import de.muenchen.oss.wahllokalsystem.briefwahlservice.domain.Wahlbriefdaten;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.domain.WahlbriefdatenRepository;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.service.wahlbriefdaten.WahlbriefdatenModelMapper;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.test.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.briefwahlservice.test.utils.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.Profiles;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.val;
@@ -51,7 +51,7 @@ public class WahlbriefdatenControllerIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        SecurityUtils.runAs("", "", Authorities.REPOSITORY_DELETE_WAHLBRIEFDATEN);
+        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_WAHLBRIEFDATEN);
         wahlbriefdatenRepository.deleteAll();
     }
 
@@ -106,7 +106,7 @@ public class WahlbriefdatenControllerIntegrationTest {
                     .content(objectMapper.writeValueAsString(requestBody));
             api.perform(request).andExpect(status().isOk());
 
-            SecurityUtils.runAs("", "", Authorities.REPOSITORY_READ_WAHLBRIEFDATEN);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHLBRIEFDATEN);
             val entityFromRepo = wahlbriefdatenRepository.findById(wahlbezirkID).get();
 
             val expectedSavedEntity = wahlbriefdatenModelMapper.toEntity(wahlbriefdatenDTOMapper.toModel(wahlbezirkID, requestBody));
@@ -129,7 +129,7 @@ public class WahlbriefdatenControllerIntegrationTest {
                     .content(objectMapper.writeValueAsString(requestBody));
             api.perform(request).andExpect(status().isOk());
 
-            SecurityUtils.runAs("", "", Authorities.REPOSITORY_READ_WAHLBRIEFDATEN);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHLBRIEFDATEN);
             val entityFromRepo = wahlbriefdatenRepository.findById(wahlbezirkID).get();
 
             val expectedSavedEntity = wahlbriefdatenModelMapper.toEntity(wahlbriefdatenDTOMapper.toModel(wahlbezirkID, requestBody));

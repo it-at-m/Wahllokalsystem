@@ -3,8 +3,8 @@ package de.muenchen.oss.wahllokalsystem.briefwahlservice.service.beanstandetewah
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.test.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.briefwahlservice.test.utils.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.Stream;
@@ -29,9 +29,6 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
 public class BeanstandeteWahlbriefeSecurityTest {
 
-    private final String TESTUSER = "testuser";
-    private final String TESTUSER_PASSWORD = "secret";
-
     @MockBean(name = "bezirkIdPermisionEvaluator")
     BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
@@ -52,7 +49,7 @@ public class BeanstandeteWahlbriefeSecurityTest {
             val waehlerverzeichnummer = 13L;
             val beanstandeteWahlbriefeReference = new BeanstandeteWahlbriefeReference(wahlbezirkID, waehlerverzeichnummer);
 
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.ALL_AUTHORITIES_GET_BEANSTANDETE_WAHLBRIEFE);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_BEANSTANDETE_WAHLBRIEFE);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
             beanstandeteWahlbriefeService.getBeanstandeteWahlbriefe(beanstandeteWahlbriefeReference);
@@ -64,7 +61,7 @@ public class BeanstandeteWahlbriefeSecurityTest {
             val waehlerverzeichnummer = 13L;
             val beanstandeteWahlbriefeReference = new BeanstandeteWahlbriefeReference(wahlbezirkID, waehlerverzeichnummer);
 
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.ALL_AUTHORITIES_GET_BEANSTANDETE_WAHLBRIEFE);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_BEANSTANDETE_WAHLBRIEFE);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
 
             Assertions.assertThatThrownBy(() -> beanstandeteWahlbriefeService.getBeanstandeteWahlbriefe(beanstandeteWahlbriefeReference))
@@ -74,7 +71,7 @@ public class BeanstandeteWahlbriefeSecurityTest {
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
         void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, argumentsAccessor.get(0, String[].class));
+            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val wahlbezirkID = "wahlbezirkID";
             val waehlerverzeichnummer = 13L;
@@ -105,7 +102,7 @@ public class BeanstandeteWahlbriefeSecurityTest {
             val waehlerverzeichnummer = 13L;
             val beanstandeteWahlbriefeModel = new BeanstandeteWahlbriefeModel(wahlbezirkID, waehlerverzeichnummer, new HashMap<>());
 
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.ALL_AUTHORITIES_ADD_BEANSTANDETE_WAHLBRIEFE);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_ADD_BEANSTANDETE_WAHLBRIEFE);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
             beanstandeteWahlbriefeService.setBeanstandeteWahlbriefe(beanstandeteWahlbriefeModel);
@@ -117,7 +114,7 @@ public class BeanstandeteWahlbriefeSecurityTest {
             val waehlerverzeichnummer = 13L;
             val beanstandeteWahlbriefeModel = new BeanstandeteWahlbriefeModel(wahlbezirkID, waehlerverzeichnummer, new HashMap<>());
 
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.ALL_AUTHORITIES_ADD_BEANSTANDETE_WAHLBRIEFE);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_ADD_BEANSTANDETE_WAHLBRIEFE);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
 
             Assertions.assertThatThrownBy(() -> beanstandeteWahlbriefeService.setBeanstandeteWahlbriefe(beanstandeteWahlbriefeModel))
@@ -131,7 +128,7 @@ public class BeanstandeteWahlbriefeSecurityTest {
             val waehlerverzeichnummer = 13L;
             val beanstandeteWahlbriefeModel = new BeanstandeteWahlbriefeModel(wahlbezirkID, waehlerverzeichnummer, new HashMap<>());
 
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, argumentsAccessor.get(0, String[].class));
+            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
             Assertions.assertThatThrownBy(() -> beanstandeteWahlbriefeService.setBeanstandeteWahlbriefe(beanstandeteWahlbriefeModel))

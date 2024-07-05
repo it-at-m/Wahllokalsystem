@@ -3,8 +3,8 @@ package de.muenchen.oss.wahllokalsystem.briefwahlservice.service.wahlbriefdaten;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.test.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.briefwahlservice.test.utils.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.Arrays;
 import java.util.stream.Stream;
 import lombok.val;
@@ -28,9 +28,6 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
 public class WahlbriefdatenSecurityTest {
 
-    private final String TESTUSER = "testuser";
-    private final String TESTUSER_PASSWORD = "secret";
-
     @MockBean(name = "bezirkIdPermisionEvaluator")
     BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
@@ -47,7 +44,7 @@ public class WahlbriefdatenSecurityTest {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.ALL_AUTHORITIES_GET_WAHLBRIEFDATEN);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLBRIEFDATEN);
 
             val wahlbezirkID = "wahlbezirkID";
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
@@ -57,7 +54,7 @@ public class WahlbriefdatenSecurityTest {
 
         @Test
         void bezirkIDPermissionEvaluatorFailed() {
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.ALL_AUTHORITIES_GET_WAHLBRIEFDATEN);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLBRIEFDATEN);
 
             val wahlbezirkID = "wahlbezirkID";
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
@@ -69,7 +66,7 @@ public class WahlbriefdatenSecurityTest {
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
         void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, argumentsAccessor.get(0, String[].class));
+            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val wahlbezirkID = "wahlbezirkID";
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
@@ -94,7 +91,7 @@ public class WahlbriefdatenSecurityTest {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.ALL_AUTHORITIES_SET_WAHLBRIEFDATEN);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_WAHLBRIEFDATEN);
 
             val wahlbezirkID = "wahlbezirkID";
             val wahlbriefdatenToSet = new WahlbriefdatenModel(wahlbezirkID, null, null, null, null, null);
@@ -106,7 +103,7 @@ public class WahlbriefdatenSecurityTest {
 
         @Test
         void bezirkIDPermissionEvaluatorFailed() {
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, Authorities.ALL_AUTHORITIES_SET_WAHLBRIEFDATEN);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_WAHLBRIEFDATEN);
 
             val wahlbezirkID = "wahlbezirkID";
             val wahlbriefdatenToSet = new WahlbriefdatenModel(wahlbezirkID, null, null, null, null, null);
@@ -120,7 +117,7 @@ public class WahlbriefdatenSecurityTest {
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
         void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
-            SecurityUtils.runAs(TESTUSER, TESTUSER_PASSWORD, argumentsAccessor.get(0, String[].class));
+            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val wahlbezirkID = "wahlbezirkID";
             val wahlbriefdatenToSet = new WahlbriefdatenModel(wahlbezirkID, null, null, null, null, null);

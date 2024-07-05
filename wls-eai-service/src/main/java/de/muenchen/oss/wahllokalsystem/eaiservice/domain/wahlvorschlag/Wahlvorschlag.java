@@ -35,6 +35,6 @@ public class Wahlvorschlag extends BaseEntity {
     private boolean erhaeltStimmen;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "wahlvorschlagid")
+    @JoinColumn(name = "wahlvorschlagID")
     private java.util.Set<Kandidat> kandidaten;
 }

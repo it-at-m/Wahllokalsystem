@@ -40,9 +40,6 @@ class WahlvorschlagServiceTest {
     WahlvorschlaegeListeRepository wahlvorschlaegeListeRepository;
 
     @Mock
-    ExceptionFactory exceptionFactory;
-
-    @Mock
     WahlvorschlagMapper wahlvorschlagMapper;
 
     @Mock

@@ -24,12 +24,15 @@ import lombok.ToString;
 public class Wahlvorschlaege extends BaseEntity {
 
     @NotNull
+    @ToString.Include
     String wahlbezirkID;
 
     @NotNull
+    @ToString.Include
     String wahlID;
 
     @NotNull
+    @ToString.Include
     String stimmzettelgebietID;
 
     @OneToMany(cascade = CascadeType.ALL)

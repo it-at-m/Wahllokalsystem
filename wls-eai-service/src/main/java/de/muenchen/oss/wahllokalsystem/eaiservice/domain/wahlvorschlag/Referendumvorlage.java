@@ -27,12 +27,15 @@ public class Referendumvorlage extends BaseEntity {
     private String wahlvorschlagID;
 
     @NotNull
+    @ToString.Include
     private long ordnungszahl;
 
     @NotNull
+    @ToString.Include
     private String kurzname;
 
     @NotNull
+    @ToString.Include
     private String frage;
 
     @OneToMany(cascade = CascadeType.ALL)

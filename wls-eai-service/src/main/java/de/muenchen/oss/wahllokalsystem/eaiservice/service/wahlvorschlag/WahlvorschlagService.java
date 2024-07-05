@@ -27,8 +27,6 @@ public class WahlvorschlagService {
 
     private final ReferendumvorlagenRepository referendumvorlagenRepository;
 
-    private final ExceptionFactory exceptionFactory;
-
     private final WahlvorschlagMapper wahlvorschlagMapper;
 
     private final WahlvorschlagValidator wahlvorschlagValidator;

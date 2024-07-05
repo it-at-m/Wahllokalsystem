@@ -31,11 +31,11 @@ public class WahldatenValidator {
 
     public void validGetWahlbezirkeParameterOrThrow(final LocalDate wahltag, final String nummer) {
         if (wahltag == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLEBZIRKE_WAHLTAG_FEHLT);
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLBEZIRKE_WAHLTAG_FEHLT);
         }
 
         if (nummer == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLEBZIRKE_NUMMER_FEHLT);
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLBEZIRKE_NUMMER_FEHLT);
         }
     }
 

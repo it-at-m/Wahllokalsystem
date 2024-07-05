@@ -235,8 +235,8 @@ public class WahldatenControllerIntegrationTest {
             val responseBodyAsWlsException = objectMapper.readValue(response.getResponse().getContentAsString(StandardCharsets.UTF_8), WlsExceptionDTO.class);
 
             val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F,
-                    ExceptionConstants.LOADWAHLEBZIRKE_NUMMER_FEHLT.code(), serviceID,
-                    ExceptionConstants.LOADWAHLEBZIRKE_NUMMER_FEHLT.message());
+                    ExceptionConstants.LOADWAHLBEZIRKE_NUMMER_FEHLT.code(), serviceID,
+                    ExceptionConstants.LOADWAHLBEZIRKE_NUMMER_FEHLT.message());
 
             Assertions.assertThat(responseBodyAsWlsException).isEqualTo(expectedWlsExceptionDTO);
         }
@@ -250,8 +250,8 @@ public class WahldatenControllerIntegrationTest {
             val responseBodyAsWlsException = objectMapper.readValue(response.getResponse().getContentAsString(StandardCharsets.UTF_8), WlsExceptionDTO.class);
 
             val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F,
-                    ExceptionConstants.LOADWAHLEBZIRKE_WAHLTAG_FEHLT.code(), serviceID,
-                    ExceptionConstants.LOADWAHLEBZIRKE_WAHLTAG_FEHLT.message());
+                    ExceptionConstants.LOADWAHLBEZIRKE_WAHLTAG_FEHLT.code(), serviceID,
+                    ExceptionConstants.LOADWAHLBEZIRKE_WAHLTAG_FEHLT.message());
 
             Assertions.assertThat(responseBodyAsWlsException).isEqualTo(expectedWlsExceptionDTO);
         }

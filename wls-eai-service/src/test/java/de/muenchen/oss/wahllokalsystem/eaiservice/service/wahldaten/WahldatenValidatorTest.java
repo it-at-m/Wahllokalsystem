@@ -81,7 +81,7 @@ class WahldatenValidatorTest {
         void exceptionWhenWahltagIsNull() {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLEBZIRKE_WAHLTAG_FEHLT)).thenReturn(mockedWlsException);
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLBEZIRKE_WAHLTAG_FEHLT)).thenReturn(mockedWlsException);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validGetWahlbezirkeParameterOrThrow(null, "")).isSameAs(mockedWlsException);
         }
@@ -90,7 +90,7 @@ class WahldatenValidatorTest {
         void exceptionWhenNummerIsNull() {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLEBZIRKE_NUMMER_FEHLT)).thenReturn(mockedWlsException);
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLBEZIRKE_NUMMER_FEHLT)).thenReturn(mockedWlsException);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validGetWahlbezirkeParameterOrThrow(LocalDate.now(), null))
                     .isSameAs(mockedWlsException);

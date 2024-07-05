@@ -20,8 +20,8 @@ public class MissingRequestParameterExceptionDataWrapperMapper {
 
     {
         addExceptionDataWrapper("includingSince", WAHLDATEN_SERVLET_PATH + "/wahltage", ExceptionConstants.LOADWAHLTAGE_TAG_FEHLT);
-        addExceptionDataWrapper("forDate", WAHLDATEN_SERVLET_PATH + "/wahlbezirk", ExceptionConstants.LOADWAHLEBZIRKE_WAHLTAG_FEHLT);
-        addExceptionDataWrapper("withNummer", WAHLDATEN_SERVLET_PATH + "/wahlbezirk", ExceptionConstants.LOADWAHLEBZIRKE_NUMMER_FEHLT);
+        addExceptionDataWrapper("forDate", WAHLDATEN_SERVLET_PATH + "/wahlbezirk", ExceptionConstants.LOADWAHLBEZIRKE_WAHLTAG_FEHLT);
+        addExceptionDataWrapper("withNummer", WAHLDATEN_SERVLET_PATH + "/wahlbezirk", ExceptionConstants.LOADWAHLBEZIRKE_NUMMER_FEHLT);
         addExceptionDataWrapper("forDate", WAHLDATEN_SERVLET_PATH + "/wahlen", ExceptionConstants.LOADWAHLEN_WAHLTAG_FEHLT);
         addExceptionDataWrapper("withNummer", WAHLDATEN_SERVLET_PATH + "/wahlen", ExceptionConstants.LOADWAHLEN_NUMMER_FEHLT);
         addExceptionDataWrapper("forDate", WAHLDATEN_SERVLET_PATH + "/basisdaten", ExceptionConstants.LOADBASISDATEN_TAG_FEHLT);

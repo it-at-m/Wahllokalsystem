@@ -16,8 +16,8 @@ public class ExceptionConstants {
     public static final ExceptionDataWrapper LOADWAHLTAGE_TAG_FEHLT = new ExceptionDataWrapper("001", "Es ist kein Tag definiert");
 
     //loadWahlbezirke
-    public static final ExceptionDataWrapper LOADWAHLEBZIRKE_WAHLTAG_FEHLT = new ExceptionDataWrapper("001", "Es ist kein Wahltag angegeben");
-    public static final ExceptionDataWrapper LOADWAHLEBZIRKE_NUMMER_FEHLT = new ExceptionDataWrapper("001_1", "Es ist keine Wahltag-Nummer angegeben");
+    public static final ExceptionDataWrapper LOADWAHLBEZIRKE_WAHLTAG_FEHLT = new ExceptionDataWrapper("001", "Es ist kein Wahltag angegeben");
+    public static final ExceptionDataWrapper LOADWAHLBEZIRKE_NUMMER_FEHLT = new ExceptionDataWrapper("001_1", "Es ist keine Wahltag-Nummer angegeben");
 
     //loadWahlen
     public static final ExceptionDataWrapper LOADWAHLEN_WAHLTAG_FEHLT = new ExceptionDataWrapper("001", "Es ist kein Wahltag angegeben");

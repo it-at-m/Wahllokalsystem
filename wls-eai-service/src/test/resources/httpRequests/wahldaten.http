@@ -19,45 +19,60 @@ Authorization: {{ token_type }} {{ auth_token }}
 
 ### get Wahltag EU-Wahl
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahltage?includingSince=2024-01-01
+Authorization: {{ token_type }} {{ auth_token }}
 
 ### get Wahltag since 2000
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahltage?includingSince=2000-01-01
+Authorization: {{ token_type }} {{ auth_token }}
 
 ### get Wahltag no hits
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahltage?includingSince=3024-01-01
+Authorization: {{ token_type }} {{ auth_token }}
 
 ### get wahlen on EU-Wahl-Tag
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlen?forDate=2024-06-09&withNummer=0
+Authorization: {{ token_type }} {{ auth_token }}
 
 ### get wahlen on Kommunalwahl-Tag
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlen?forDate=2020-03-15&withNummer=0
+Authorization: {{ token_type }} {{ auth_token }}
 
 ### get wahlen on day without elections
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlen?forDate=2034-06-09&withNummer=0
+Authorization: {{ token_type }} {{ auth_token }}
 
 ### get wahlbezirke EU-Wahl
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirk?forDate=2024-06-09&withNummer=0
+Authorization: {{ token_type }} {{ auth_token }}
 
 ### get wahlbezirke Kommunalwahl (empty response)
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirk?forDate=2020-03-15&withNummer=0
+Authorization: {{ token_type }} {{ auth_token }}
 
 ### get wahlberechtigte wahlbezirk-1
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirke/00000000-0000-0000-0000-000000000001/wahlberechtigte
+Authorization: {{ token_type }} {{ auth_token }}
 
 ### get wahlberechtigte wahlbezirk-2
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirke/00000000-0000-0000-0000-000000000002/wahlberechtigte
+Authorization: {{ token_type }} {{ auth_token }}
 
 ### get wahlberechtigte wahlbezirk-3
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirke/00000000-0000-0000-0000-000000000003/wahlberechtigte
+Authorization: {{ token_type }} {{ auth_token }}
 
 ### get wahlberechtigte wahlbezirk-4
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirke/00000000-0000-0000-0000-000000000004/wahlberechtigte
+Authorization: {{ token_type }} {{ auth_token }}
 
 ### get Basistrukturdaten on EU-Wahl-Tag
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/basisdaten?forDate=2024-06-09&withNummer=0
+Authorization: {{ token_type }} {{ auth_token }}
 
 ### get Basistrukturdaten on Kommunalwahl-Tag
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/basisdaten?forDate=2020-03-15&withNummer=0
+Authorization: {{ token_type }} {{ auth_token }}
 
 ### get Basistrukturdaten on day without elections
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/basisdaten?forDate=2034-06-09&withNummer=0
+Authorization: {{ token_type }} {{ auth_token }}

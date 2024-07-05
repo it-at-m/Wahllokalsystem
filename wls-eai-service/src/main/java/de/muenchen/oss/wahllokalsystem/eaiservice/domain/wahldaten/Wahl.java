@@ -18,15 +18,17 @@ import lombok.ToString;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
-@ToString(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Wahl extends BaseEntity {
 
     @NotNull
+    @ToString.Include
     private String name;
 
     @NotNull
+    @ToString.Include
     @Enumerated(EnumType.STRING)
     private Wahlart wahlart;
 

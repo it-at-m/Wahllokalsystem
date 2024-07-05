@@ -15,7 +15,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
-@ToString(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Wahltag extends BaseEntity {

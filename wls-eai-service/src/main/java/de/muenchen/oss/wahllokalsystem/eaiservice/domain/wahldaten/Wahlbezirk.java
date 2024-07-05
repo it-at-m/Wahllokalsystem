@@ -18,16 +18,18 @@ import lombok.ToString;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
-@ToString(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Wahlbezirk extends BaseEntity {
 
     @NotNull
+    @ToString.Include
     @Enumerated(EnumType.STRING)
     private WahlbezirkArt wahlbezirkArt;
 
     @NotNull
+    @ToString.Include
     private String nummer;
 
     @NotNull
@@ -35,9 +37,12 @@ public class Wahlbezirk extends BaseEntity {
     @JoinColumn(name = "stimmzettelgebietID")
     private Stimmzettelgebiet stimmzettelgebiet;
 
+    @ToString.Include
     private long a1;
 
+    @ToString.Include
     private long a2;
 
+    @ToString.Include
     private long a3;
 }

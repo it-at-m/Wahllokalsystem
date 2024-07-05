@@ -34,7 +34,7 @@ public class GlobalExceptionHandler extends AbstractExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<Void> handleNoSearchResultFoundException(final NoSearchResultFoundException noSearchResultFoundException) {
         log.debug("no search result of {} found for search parameter {}", noSearchResultFoundException.getNotFoundEntityClass(),
-            noSearchResultFoundException.getSearchParameter());
+                noSearchResultFoundException.getSearchParameter());
         return ResponseEntity.notFound().build();
     }
 

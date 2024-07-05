@@ -20,6 +20,7 @@ import lombok.ToString;
 public class Referendumoption extends BaseEntity {
 
     @NotNull
+    @ToString.Include
     private String name;
 
     @NotNull

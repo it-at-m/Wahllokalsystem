@@ -32,6 +32,7 @@ public class Referendumvorlagen extends BaseEntity {
     String wahlID;
 
     @NotNull
+    @ToString.Include
     private String stimmzettelgebietID;
 
     @OneToMany(cascade = CascadeType.ALL)

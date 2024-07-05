@@ -26,9 +26,9 @@ CREATE TABLE wahlvorschlag
     ordnungszahl             NUMBER(19, 0) NOT NULL,
     kurzname                 VARCHAR2(255) NOT NULL,
     erhaeltStimmen           NUMBER(1)     NOT NULL,
-    wahlvorschlaegeid        VARCHAR2(36)  NOT NULL,
+    wahlvorschlaegeID        VARCHAR2(36)  NOT NULL,
 
-    FOREIGN KEY (wahlvorschlaegeid) REFERENCES wahlvorschlaege (id),
+    FOREIGN KEY (wahlvorschlaegeID) REFERENCES wahlvorschlaege (id),
 
     PRIMARY KEY (id)
 );

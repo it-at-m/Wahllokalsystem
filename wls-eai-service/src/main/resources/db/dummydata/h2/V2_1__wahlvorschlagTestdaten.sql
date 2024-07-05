@@ -5,7 +5,7 @@ INSERT INTO wahlvorschlaege (id, wahlbezirkID, wahlID, stimmzettelgebietID, wahl
 VALUES ('00000000-0000-0000-0000-000000000001', 'wahlbezirkID', 'wahlID', 'stimmzettelgebietID',
         '00000001-0000-0000-0000-000000000001');
 
-INSERT INTO wahlvorschlag (id, ordnungszahl, kurzname, erhaeltStimmen, wahlvorschlaegeid)
+INSERT INTO wahlvorschlag (id, ordnungszahl, kurzname, erhaeltStimmen, wahlvorschlaegeID)
 VALUES ('00000000-0000-0000-0001-000000000001', 1, 'Die Besten', true,
         '00000000-0000-0000-0000-000000000001');
 INSERT INTO kandidat (id, name, listenposition, direktkandidat, tabellenSpalteInNiederschrift, einzelbewerber,
@@ -29,7 +29,7 @@ INSERT INTO kandidat (id, name, listenposition, direktkandidat, tabellenSpalteIn
 VALUES ('00000000-0000-0000-0001-000000000005', 'Cool', 5, true, 25, true,
         '00000000-0000-0000-0001-000000000001');
 
-INSERT INTO wahlvorschlag (id, ordnungszahl, kurzname, erhaeltStimmen, wahlvorschlaegeid)
+INSERT INTO wahlvorschlag (id, ordnungszahl, kurzname, erhaeltStimmen, wahlvorschlaegeID)
 VALUES ('00000000-0000-0000-0001-000000000002', 2, 'Die Zweitbesten', true,
         '00000000-0000-0000-0000-000000000001');
 INSERT INTO kandidat (id, name, listenposition, direktkandidat, tabellenSpalteInNiederschrift, einzelbewerber,
@@ -53,7 +53,7 @@ INSERT INTO kandidat (id, name, listenposition, direktkandidat, tabellenSpalteIn
 VALUES ('00000000-0000-0000-0001-000000000010', 'Reagan', 5, true, 25, true,
         '00000000-0000-0000-0001-000000000002');
 
-INSERT INTO wahlvorschlag (id, ordnungszahl, kurzname, erhaeltStimmen, wahlvorschlaegeid)
+INSERT INTO wahlvorschlag (id, ordnungszahl, kurzname, erhaeltStimmen, wahlvorschlaegeID)
 VALUES ('00000000-0000-0000-0001-000000000003', 3, 'Die Drittbesten', true,
         '00000000-0000-0000-0000-000000000001');
 INSERT INTO kandidat (id, name, listenposition, direktkandidat, tabellenSpalteInNiederschrift, einzelbewerber,

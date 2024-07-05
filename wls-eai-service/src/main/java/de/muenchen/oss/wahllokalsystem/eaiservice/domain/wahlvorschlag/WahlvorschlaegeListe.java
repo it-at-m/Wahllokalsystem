@@ -33,6 +33,6 @@ public class WahlvorschlaegeListe extends BaseEntity {
     String wahlID;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "wahlvorschlaegelisteid")
+    @JoinColumn(name = "wahlvorschlaegelisteID")
     Set<Wahlvorschlaege> wahlvorschlaegeliste;
 }

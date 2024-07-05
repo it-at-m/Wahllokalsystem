@@ -13,9 +13,9 @@ CREATE TABLE wahlvorschlaege
     wahlbezirkID             VARCHAR2(36) NOT NULL,
     wahlID                   VARCHAR2(36) NOT NULL,
     stimmzettelgebietID      VARCHAR2(36) NOT NULL,
-    wahlvorschlaegelisteid   VARCHAR2(36)  NOT NULL,
+    wahlvorschlaegelisteID   VARCHAR2(36)  NOT NULL,
 
-    FOREIGN KEY (wahlvorschlaegelisteid) REFERENCES wahlvorschlaegeliste (id),
+    FOREIGN KEY (wahlvorschlaegelisteID) REFERENCES wahlvorschlaegeliste (id),
 
     PRIMARY KEY (id)
 );
@@ -65,9 +65,9 @@ CREATE TABLE referendumvorlage
     ordnungszahl          BIGINT        NOT NULL,
     kurzname              VARCHAR2(255) NOT NULL,
     frage                 VARCHAR2(255) NOT NULL,
-    referendumvorlagenid  VARCHAR2(36)  NOT NULL,
+    referendumvorlagenID  VARCHAR2(36)  NOT NULL,
 
-    FOREIGN KEY (referendumvorlagenid) REFERENCES referendumvorlagen (id),
+    FOREIGN KEY (referendumvorlagenID) REFERENCES referendumvorlagen (id),
 
     PRIMARY KEY (id)
 );

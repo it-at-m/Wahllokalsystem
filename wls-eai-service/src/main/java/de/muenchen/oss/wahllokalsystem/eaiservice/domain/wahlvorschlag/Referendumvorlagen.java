@@ -36,6 +36,6 @@ public class Referendumvorlagen extends BaseEntity {
     private String stimmzettelgebietID;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "referendumvorlagenid")
+    @JoinColumn(name = "referendumvorlagenID")
     private Set<Referendumvorlage> referendumvorlagen;
 }

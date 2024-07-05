@@ -31,6 +31,7 @@ public class Referendumvorlage extends BaseEntity {
     private long ordnungszahl;
 
     @NotNull
+    @ToString.Include
     private String kurzname;
 
     @NotNull

@@ -28,6 +28,7 @@ public class Referendumvorlagen extends BaseEntity {
     String wahlbezirkID;
 
     @NotNull
+    @ToString.Include
     String wahlID;
 
     @NotNull

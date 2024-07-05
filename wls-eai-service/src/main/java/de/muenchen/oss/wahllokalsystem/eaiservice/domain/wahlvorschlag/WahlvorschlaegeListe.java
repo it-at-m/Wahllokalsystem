@@ -25,9 +25,11 @@ import lombok.ToString;
 public class WahlvorschlaegeListe extends BaseEntity {
 
     @NotNull
+    @ToString.Include
     LocalDate wahltag;
 
     @NotNull
+    @ToString.Include
     String wahlID;
 
     @OneToMany(cascade = CascadeType.ALL)

@@ -31,3 +31,4 @@ includes:
   - path: add-authorities-wahlvorbereitung-briefwahlvorbereitung.yml
   - path: create-group-all-basisdaten-authorities.yml
   - path: add-authorities-basisdaten-wahlvorschlaege.yml
+  - path: add-authorities-eai-wahldaten.yml

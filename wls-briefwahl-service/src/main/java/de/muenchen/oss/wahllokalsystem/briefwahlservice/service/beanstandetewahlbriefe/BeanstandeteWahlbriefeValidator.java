@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.briefwahlservice.service.beanstandetewahlbriefe;
 
-import de.muenchen.oss.wahllokalsystem.briefwahlservice.exception.ExceptionDataWrapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionDataWrapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;

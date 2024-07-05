@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.briefwahlservice.exception;
 
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionDataWrapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

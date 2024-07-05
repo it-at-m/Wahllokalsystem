@@ -1,7 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.briefwahlservice.service.beanstandetewahlbriefe;
 
+import de.muenchen.oss.wahllokalsystem.briefwahlservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.HashMap;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -17,7 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class BeanstandeteWahlbriefeValidatorTest {
 
     @Mock
-    ServiceIDFormatter serviceIDFormatter;
+    ExceptionFactory exceptionFactory;
 
     @InjectMocks
     BeanstandeteWahlbriefeValidator unitUnderTest;
@@ -31,80 +32,51 @@ class BeanstandeteWahlbriefeValidatorTest {
         void exceptionOnWahlbezirkIDIsNull() {
             val invalidReference = getValidReference().wahlbezirkID(null).build();
 
-            val serviceId = "serviceID";
-            Mockito.when(serviceIDFormatter.getId()).thenReturn(serviceId);
+            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETBEANSTANDETEWAHLBRIEFE_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
 
-            val expectedException = FachlicheWlsException.withCode(EXPECTED_CODE).inService(serviceId).buildWithMessage("");
-
-            val exceptionThrown = org.junit.jupiter.api.Assertions.assertThrowsExactly(FachlicheWlsException.class,
-                    () -> unitUnderTest.valideReferenceOrThrow(invalidReference));
-
-            Assertions.assertThat(exceptionThrown).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedException);
-            Assertions.assertThat(exceptionThrown.getMessage()).isNotNull();
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideReferenceOrThrow(invalidReference)).isSameAs(mockedWlsException);
         }
 
         @Test
         void exceptionOnWahlbezirkIDIsEmptyString() {
             val invalidReference = getValidReference().wahlbezirkID("").build();
+            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETBEANSTANDETEWAHLBRIEFE_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
 
-            val serviceId = "serviceID";
-            Mockito.when(serviceIDFormatter.getId()).thenReturn(serviceId);
-
-            val expectedException = FachlicheWlsException.withCode(EXPECTED_CODE).inService(serviceId).buildWithMessage("");
-
-            val exceptionThrown = org.junit.jupiter.api.Assertions.assertThrowsExactly(FachlicheWlsException.class,
-                    () -> unitUnderTest.valideReferenceOrThrow(invalidReference));
-
-            Assertions.assertThat(exceptionThrown).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedException);
-            Assertions.assertThat(exceptionThrown.getMessage()).isNotNull();
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideReferenceOrThrow(invalidReference)).isSameAs(mockedWlsException);
         }
 
         @Test
         void exceptionOnWahlbezirkIsBlankString() {
             val invalidReference = getValidReference().wahlbezirkID("   ").build();
+            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETBEANSTANDETEWAHLBRIEFE_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
 
-            val serviceId = "serviceID";
-            Mockito.when(serviceIDFormatter.getId()).thenReturn(serviceId);
-
-            val expectedException = FachlicheWlsException.withCode(EXPECTED_CODE).inService(serviceId).buildWithMessage("");
-
-            val exceptionThrown = org.junit.jupiter.api.Assertions.assertThrowsExactly(FachlicheWlsException.class,
-                    () -> unitUnderTest.valideReferenceOrThrow(invalidReference));
-
-            Assertions.assertThat(exceptionThrown).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedException);
-            Assertions.assertThat(exceptionThrown.getMessage()).isNotNull();
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideReferenceOrThrow(invalidReference)).isSameAs(mockedWlsException);
         }
 
         @Test
         void excepionOnWaehlerverzeichnisnummerIsNull() {
             val invalidReference = getValidReference().waehlerverzeichnisNummer(null).build();
+            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETBEANSTANDETEWAHLBRIEFE_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
 
-            val serviceId = "serviceID";
-            Mockito.when(serviceIDFormatter.getId()).thenReturn(serviceId);
-
-            val expectedException = FachlicheWlsException.withCode(EXPECTED_CODE).inService(serviceId).buildWithMessage("");
-
-            val exceptionThrown = org.junit.jupiter.api.Assertions.assertThrowsExactly(FachlicheWlsException.class,
-                    () -> unitUnderTest.valideReferenceOrThrow(invalidReference));
-
-            Assertions.assertThat(exceptionThrown).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedException);
-            Assertions.assertThat(exceptionThrown.getMessage()).isNotNull();
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideReferenceOrThrow(invalidReference)).isSameAs(mockedWlsException);
         }
 
         @Test
         void exceptionOnWaehlerverzeichnisnummerIsZero() {
             val invalidReference = getValidReference().waehlerverzeichnisNummer(0L).build();
+            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETBEANSTANDETEWAHLBRIEFE_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
 
-            val serviceId = "serviceID";
-            Mockito.when(serviceIDFormatter.getId()).thenReturn(serviceId);
-
-            val expectedException = FachlicheWlsException.withCode(EXPECTED_CODE).inService(serviceId).buildWithMessage("");
-
-            val exceptionThrown = org.junit.jupiter.api.Assertions.assertThrowsExactly(FachlicheWlsException.class,
-                    () -> unitUnderTest.valideReferenceOrThrow(invalidReference));
-
-            Assertions.assertThat(exceptionThrown).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedException);
-            Assertions.assertThat(exceptionThrown.getMessage()).isNotNull();
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideReferenceOrThrow(invalidReference)).isSameAs(mockedWlsException);
         }
 
         @Test
@@ -129,96 +101,66 @@ class BeanstandeteWahlbriefeValidatorTest {
         void exceptionOnBeanstandeteWahlbriefeIsNull() {
             val invalidModel = getValidModel().beanstandeteWahlbriefe(null).build();
 
-            val serviceId = "serviceID";
-            Mockito.when(serviceIDFormatter.getId()).thenReturn(serviceId);
+            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTBEANSTANDETEWAHLBRIEFE_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
 
-            val expectedException = FachlicheWlsException.withCode(EXPECTED_CODE).inService(serviceId).buildWithMessage("");
-
-            val exceptionThrown = org.junit.jupiter.api.Assertions.assertThrowsExactly(FachlicheWlsException.class,
-                    () -> unitUnderTest.valideModelOrThrow(invalidModel));
-
-            Assertions.assertThat(exceptionThrown).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedException);
-            Assertions.assertThat(exceptionThrown.getMessage()).isNotNull();
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideModelOrThrow(invalidModel)).isSameAs(mockedWlsException);
         }
 
         @Test
         void exceptionOnWahlbezirkIDIsNull() {
             val invalidModel = getValidModel().wahlbezirkID(null).build();
 
-            val serviceId = "serviceID";
-            Mockito.when(serviceIDFormatter.getId()).thenReturn(serviceId);
+            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTBEANSTANDETEWAHLBRIEFE_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
 
-            val expectedException = FachlicheWlsException.withCode(EXPECTED_CODE).inService(serviceId).buildWithMessage("");
-
-            val exceptionThrown = org.junit.jupiter.api.Assertions.assertThrowsExactly(FachlicheWlsException.class,
-                    () -> unitUnderTest.valideModelOrThrow(invalidModel));
-
-            Assertions.assertThat(exceptionThrown).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedException);
-            Assertions.assertThat(exceptionThrown.getMessage()).isNotNull();
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideModelOrThrow(invalidModel)).isSameAs(mockedWlsException);
         }
 
         @Test
         void exceptionOnWahlbezirkIDIsEmptyString() {
             val invalidModel = getValidModel().wahlbezirkID("").build();
 
-            val serviceId = "serviceID";
-            Mockito.when(serviceIDFormatter.getId()).thenReturn(serviceId);
+            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTBEANSTANDETEWAHLBRIEFE_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
 
-            val expectedException = FachlicheWlsException.withCode(EXPECTED_CODE).inService(serviceId).buildWithMessage("");
-
-            val exceptionThrown = org.junit.jupiter.api.Assertions.assertThrowsExactly(FachlicheWlsException.class,
-                    () -> unitUnderTest.valideModelOrThrow(invalidModel));
-
-            Assertions.assertThat(exceptionThrown).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedException);
-            Assertions.assertThat(exceptionThrown.getMessage()).isNotNull();
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideModelOrThrow(invalidModel)).isSameAs(mockedWlsException);
         }
 
         @Test
         void exceptionOnWahlbezirkIDIsBlankString() {
             val invalidModel = getValidModel().wahlbezirkID("   ").build();
 
-            val serviceId = "serviceID";
-            Mockito.when(serviceIDFormatter.getId()).thenReturn(serviceId);
+            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTBEANSTANDETEWAHLBRIEFE_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
 
-            val expectedException = FachlicheWlsException.withCode(EXPECTED_CODE).inService(serviceId).buildWithMessage("");
-
-            val exceptionThrown = org.junit.jupiter.api.Assertions.assertThrowsExactly(FachlicheWlsException.class,
-                    () -> unitUnderTest.valideModelOrThrow(invalidModel));
-
-            Assertions.assertThat(exceptionThrown).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedException);
-            Assertions.assertThat(exceptionThrown.getMessage()).isNotNull();
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideModelOrThrow(invalidModel)).isSameAs(mockedWlsException);
         }
 
         @Test
         void exceptionOnWaehlerverzeichnisNummerIsNull() {
             val invalidModel = getValidModel().waehlerverzeichnisNummer(null).build();
 
-            val serviceId = "serviceID";
-            Mockito.when(serviceIDFormatter.getId()).thenReturn(serviceId);
+            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTBEANSTANDETEWAHLBRIEFE_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
 
-            val expectedException = FachlicheWlsException.withCode(EXPECTED_CODE).inService(serviceId).buildWithMessage("");
-
-            val exceptionThrown = org.junit.jupiter.api.Assertions.assertThrowsExactly(FachlicheWlsException.class,
-                    () -> unitUnderTest.valideModelOrThrow(invalidModel));
-
-            Assertions.assertThat(exceptionThrown).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedException);
-            Assertions.assertThat(exceptionThrown.getMessage()).isNotNull();
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideModelOrThrow(invalidModel)).isSameAs(mockedWlsException);
         }
 
         @Test
         void exceptionOnWaehlerverzeichnisNummerIsZero() {
             val invalidModel = getValidModel().waehlerverzeichnisNummer(0L).build();
 
-            val serviceId = "serviceID";
-            Mockito.when(serviceIDFormatter.getId()).thenReturn(serviceId);
+            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTBEANSTANDETEWAHLBRIEFE_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
 
-            val expectedException = FachlicheWlsException.withCode(EXPECTED_CODE).inService(serviceId).buildWithMessage("");
-
-            val exceptionThrown = org.junit.jupiter.api.Assertions.assertThrowsExactly(FachlicheWlsException.class,
-                    () -> unitUnderTest.valideModelOrThrow(invalidModel));
-
-            Assertions.assertThat(exceptionThrown).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedException);
-            Assertions.assertThat(exceptionThrown.getMessage()).isNotNull();
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideModelOrThrow(invalidModel)).isSameAs(mockedWlsException);
         }
 
         @Test

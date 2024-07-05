@@ -18,4 +18,8 @@ public class ExceptionConstants {
     public static final ExceptionDataWrapper POSTWAHLBRIEFDATEN_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper(
             CODE_POSTWAHLBRIEFDATEN_PARAMETER_UNVOLLSTAENDIG, MSG_POSTWAHLBRIEFDATEN_PARAMETER_UNVOLLSTAENDIG);
 
+    public static final ExceptionDataWrapper GETBEANSTANDETEWAHLBRIEFE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("100",
+            "getBeanstandeteWahlbriefe: Suchkriterien unvollständig.");
+    public static final ExceptionDataWrapper POSTBEANSTANDETEWAHLBRIEFE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("101",
+            "postBeanstandeteWahlbriefe: Suchkriterien unvollständig.");
 }

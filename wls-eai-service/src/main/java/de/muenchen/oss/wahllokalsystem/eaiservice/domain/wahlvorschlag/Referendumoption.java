@@ -24,5 +24,6 @@ public class Referendumoption extends BaseEntity {
     private String name;
 
     @NotNull
+    @ToString.Include
     private Long position;
 }

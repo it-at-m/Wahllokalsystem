@@ -26,8 +26,6 @@ class BeanstandeteWahlbriefeValidatorTest {
     @Nested
     class ValideReferenceOrThrow {
 
-        private final String EXPECTED_CODE = "100";
-
         @Test
         void exceptionOnWahlbezirkIDIsNull() {
             val invalidReference = getValidReference().wahlbezirkID(null).build();
@@ -94,8 +92,6 @@ class BeanstandeteWahlbriefeValidatorTest {
 
     @Nested
     class ValideModelOrThrow {
-
-        private final String EXPECTED_CODE = "101";
 
         @Test
         void exceptionOnBeanstandeteWahlbriefeIsNull() {

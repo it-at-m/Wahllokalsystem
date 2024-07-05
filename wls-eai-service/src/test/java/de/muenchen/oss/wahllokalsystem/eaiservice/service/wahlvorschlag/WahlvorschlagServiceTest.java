@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 @ExtendWith(MockitoExtension.class)
 class WahlvorschlagServiceTest {
 
-    private static final Logger log = LoggerFactory.getLogger(WahlvorschlagServiceTest.class);
     @Mock
     WahlvorschlagRepository wahlvorschlagRepository;
 

@@ -24,6 +24,7 @@ import lombok.ToString;
 public class Referendumvorlagen extends BaseEntity {
 
     @NotNull
+    @ToString.Include
     String wahlbezirkID;
 
     @NotNull

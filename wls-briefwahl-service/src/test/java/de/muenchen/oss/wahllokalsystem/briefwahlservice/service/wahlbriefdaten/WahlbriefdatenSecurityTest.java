@@ -5,7 +5,6 @@ import de.muenchen.oss.wahllokalsystem.briefwahlservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.test.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
-import java.util.Arrays;
 import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -76,12 +75,7 @@ public class WahlbriefdatenSecurityTest {
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
-            val requiredAuthorities = Authorities.ALL_AUTHORITIES_GET_WAHLBRIEFDATEN;
-            return Arrays.stream(requiredAuthorities)
-                    .map(authorityToRemove ->
-                    //remove one authority from all required authorities
-                    Arguments.of(Arrays.stream(requiredAuthorities)
-                            .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_WAHLBRIEFDATEN);
         }
 
     }
@@ -129,12 +123,7 @@ public class WahlbriefdatenSecurityTest {
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
-            val requiredAuthorities = Authorities.ALL_AUTHORITIES_SET_WAHLBRIEFDATEN;
-            return Arrays.stream(requiredAuthorities)
-                    .map(authorityToRemove ->
-                    //remove one authority from all required authorities
-                    Arguments.of(Arrays.stream(requiredAuthorities)
-                            .filter(authority -> !authority.equals(authorityToRemove)).toArray(String[]::new), authorityToRemove));
+            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_SET_WAHLBRIEFDATEN);
         }
     }
 }

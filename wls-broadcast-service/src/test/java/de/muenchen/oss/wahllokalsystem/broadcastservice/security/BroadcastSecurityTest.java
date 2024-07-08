@@ -3,7 +3,6 @@ package de.muenchen.oss.wahllokalsystem.broadcastservice.security;
 import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_TEST_PROFILE;
 
 import de.muenchen.oss.wahllokalsystem.broadcastservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.service.BroadcastService;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.Authorities;
@@ -18,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
@@ -45,10 +43,7 @@ public class BroadcastSecurityTest {
 
         @Test
         void accessDenied_dummyRolle() {
-            SecurityContextHolder.getContext().setAuthentication(
-                    new UsernamePasswordAuthenticationToken(TestConstants.TESTUSER, TestConstants.TESTPASSWORD,
-                            AuthorityUtils.createAuthorityList("ROLE_DUMMY")));
-
+            SecurityUtils.runWith(AuthorityUtils.createAuthorityList("ROLE_DUMMY").toString());
             Assertions.assertThatExceptionOfType(AccessDeniedException.class)
                     .isThrownBy(() -> broadcastService.broadcast(null)).withMessageStartingWith("Access Denied");
         }
@@ -94,10 +89,7 @@ public class BroadcastSecurityTest {
 
         @Test
         void accessDenied() {
-            SecurityContextHolder.getContext().setAuthentication(
-                    new UsernamePasswordAuthenticationToken(TestConstants.TESTUSER, TestConstants.TESTPASSWORD,
-                            AuthorityUtils.createAuthorityList("ROLE_DUMMY")));
-
+            SecurityUtils.runWith(AuthorityUtils.createAuthorityList("ROLE_DUMMY").toString());
             Assertions.assertThatExceptionOfType(AccessDeniedException.class)
                     .isThrownBy(() -> broadcastService.getOldestMessage(null))
                     .withMessageStartingWith("Access Denied");
@@ -124,10 +116,7 @@ public class BroadcastSecurityTest {
 
         @Test
         void accessDenied() {
-            SecurityContextHolder.getContext().setAuthentication(
-                    new UsernamePasswordAuthenticationToken(TestConstants.TESTUSER, TestConstants.TESTPASSWORD,
-                            AuthorityUtils.createAuthorityList("ROLE_DUMMY")));
-
+            SecurityUtils.runWith(AuthorityUtils.createAuthorityList("ROLE_DUMMY").toString());
             Assertions.assertThatExceptionOfType(AccessDeniedException.class)
                     .isThrownBy(() -> broadcastService.deleteMessage(null))
                     .withMessageStartingWith("Access Denied");

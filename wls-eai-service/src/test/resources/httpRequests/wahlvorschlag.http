@@ -20,19 +20,19 @@ Authorization: {{ token_type }} {{ auth_token }}
 GET {{ WLS_EAI_SERVICE_URL }}/vorschlaege/wahl/wahlID/wahlbezirkID
 Authorization: {{ token_type }} {{ auth_token }}
 
-### GET Wahlvorschlaege not found
-GET {{ WLS_EAI_SERVICE_URL }}/vorschlaege/wahl/wahlID_4711/wahlbezirkID_4711
+### GET Wahlvorschlaege with non existing 'wahlID' and 'wahlbezirkID' not found
+GET {{ WLS_EAI_SERVICE_URL }}/vorschlaege/wahl/wahlID_X/wahlbezirkID_X
 Authorization: {{ token_type }} {{ auth_token }}
 
 ### GET Wahlvorschlaegeliste
 GET {{ WLS_EAI_SERVICE_URL }}/vorschlaege/wahl/wahlID/liste?forDate=2024-10-10
 Authorization: {{ token_type }} {{ auth_token }}
 
-### GET Wahlvorschlaegeliste not found
-GET {{ WLS_EAI_SERVICE_URL }}/vorschlaege/wahl/wahlID_4711/liste?forDate=2024-10-10
+### GET Wahlvorschlaegeliste for non existing 'wahlID' not found
+GET {{ WLS_EAI_SERVICE_URL }}/vorschlaege/wahl/wahlID_X/liste?forDate=2024-10-10
 Authorization: {{ token_type }} {{ auth_token }}
 
-### GET Wahlvorschlaegeliste not found
+### GET Wahlvorschlaegeliste for non existing 'forDate'not found
 GET {{ WLS_EAI_SERVICE_URL }}/vorschlaege/wahl/wahlID/liste?forDate=2024-10-11
 Authorization: {{ token_type }} {{ auth_token }}
 
@@ -40,10 +40,10 @@ Authorization: {{ token_type }} {{ auth_token }}
 GET {{ WLS_EAI_SERVICE_URL }}/vorschlaege/referendum/wahlID/wahlbezirkID
 Authorization: {{ token_type }} {{ auth_token }}
 
-### GET Referendumvorlagen not found
+### GET Referendumvorlagen for non existing 'wahlID' not found
 GET {{ WLS_EAI_SERVICE_URL }}/vorschlaege/referendum/wahlID_X/wahlbezirkID
 Authorization: {{ token_type }} {{ auth_token }}
 
-### GET Referendumvorlagen
+### GET Referendumvorlagen for non existing 'wahlbezirkID' not found
 GET {{ WLS_EAI_SERVICE_URL }}/vorschlaege/referendum/wahlID/wahlbezirkID_X
 Authorization: {{ token_type }} {{ auth_token }}

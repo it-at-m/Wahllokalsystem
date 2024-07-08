@@ -12,10 +12,10 @@ import de.muenchen.oss.wahllokalsystem.briefwahlservice.common.beanstandetewahlb
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.domain.BeanstandeteWahlbriefe;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.domain.BeanstandeteWahlbriefeRepository;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.test.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.briefwahlservice.test.utils.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.Map;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -49,7 +49,7 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
 
         @AfterEach
         void setup() {
-            SecurityUtils.runAs("", "", Authorities.REPOSITORY_DELETE_BEANSTANDETE_WAHLBRIEFE);
+            SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_BEANSTANDETE_WAHLBRIEFE);
             beanstandeteWahlbriefeRepository.deleteAll();
         }
 
@@ -122,7 +122,7 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
 
         @AfterEach
         void setup() {
-            SecurityUtils.runAs("", "", Authorities.REPOSITORY_DELETE_BEANSTANDETE_WAHLBRIEFE);
+            SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_BEANSTANDETE_WAHLBRIEFE);
             beanstandeteWahlbriefeRepository.deleteAll();
         }
 
@@ -165,7 +165,7 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
 
             api.perform(request).andExpect(status().isOk());
 
-            SecurityUtils.runAs("", "", Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE);
             val repoResponse = beanstandeteWahlbriefeRepository.findById(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer))
                     .orElseThrow();
 

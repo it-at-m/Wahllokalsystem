@@ -4,25 +4,27 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionDataWr
 
 public class ExceptionConstants {
 
+    public static final String CODE_WAHLID_FEHLT = "001";
+    public static final String MESSAGE_WAHLID_FEHLT = "Die WahlID fehlt";
+
+    public static final String CODE_BEZIRKID_FEHLT = "002";
+    public static final String MESSAGE_BEZIRKID_FEHLT = "Die BezirkID fehlt";
+
     //loadWahlvorschlaege
-    public static final String CODE_LOADWAHLVORSCHLAEGE_WAHLID_FEHLT = "001";
-    public static final String MESSAGE_LOADWAHLVORSCHLAEGE_WAHLID_FEHLT = "Die WahlID fehlt";
-    public static final String CODE_LOADWAHLVORSCHLAEGE_BEZIRKID_FEHLT = "002";
-    public static final String MESSAGE_LOADWAHLVORSCHLAEGE_BEZIRKID_FEHLT = "Die BezirkID fehlt";
-    private static final String CODE_LOADWAHLVORSCHLAEGE_SUCHKRITERIEN_UNVOLLSTAENDIG = "005";
-    private static final String MESSAGE_LOADWAHLVORSCHLAEGE_SUCHKRITERIEN_UNVOLLSTAENDIG = "Wahlvorschlaegekriterien sind nicht vollstaendig";
-    public static final ExceptionDataWrapper LOADWAHLVORSCHLAEGE_SUCHKRITERIEN_UNVOLLSTAENDIG = new ExceptionDataWrapper(
-            CODE_LOADWAHLVORSCHLAEGE_SUCHKRITERIEN_UNVOLLSTAENDIG, MESSAGE_LOADWAHLVORSCHLAEGE_SUCHKRITERIEN_UNVOLLSTAENDIG);
+    public static final ExceptionDataWrapper LOADWAHLVORSCHLAEGE_WAHLID_FEHLT = new ExceptionDataWrapper(
+            CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
+    public static final ExceptionDataWrapper LOADWAHLVORSCHLAEGE_BEZIRKID_FEHLT = new ExceptionDataWrapper(
+            CODE_BEZIRKID_FEHLT, MESSAGE_BEZIRKID_FEHLT);
 
     //loadWahlvorschlaegeListe
-    public static final String CODE_LOADWAHLVORSCHLAEGELISTE_WAHLID_FEHLT = "001";
-    public static final String MESSAGE_LOADWAHLVORSCHLAEGELISTE_WAHLID_FEHLT = "Die WahlID fehlt";
+    public static final ExceptionDataWrapper LOADWAHLVORSCHLAEGELISTE_WAHLID_FEHLT = new ExceptionDataWrapper(
+            CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
 
     //loadReferendumvorlagen
-    public static final String CODE_LOADREFERENDUMVORLAGEN_WAHLBEZIRKID_FEHLT = "001";
-    public static final String MESSAGE_LOADREFERENDUMVORLAGEN_WAHLBEZIRKID_FEHLT = "Die WahlbezirkID fehlt";
-    public static final String CODE_LOADREFERENDUMVORLAGEN_WAHLID_FEHLT = "002";
-    public static final String MESSAGE_LOADREFERENDUMVORLAGEN_WAHLID_FEHLT = "Die WahlID fehlt";
+    public static final ExceptionDataWrapper LOADREFERENDUMVORLAGEN_WAHLBEZIRKID_FEHLT = new ExceptionDataWrapper(
+            CODE_BEZIRKID_FEHLT, MESSAGE_BEZIRKID_FEHLT);
+    public static final ExceptionDataWrapper LOADREFERENDUMVORLAGEN_WAHLID_FEHLT = new ExceptionDataWrapper(
+            CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
 
     /**
      * @throws IllegalAccessException when constructor is used

@@ -14,13 +14,13 @@ public class WahlvorschlagValidator {
 
     public void validateWahlbezirkIDOrThrow(final String wahlbezirkID) {
         if (StringUtils.isBlank(wahlbezirkID)) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLVORSCHLAEGE_SUCHKRITERIEN_UNVOLLSTAENDIG);
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLVORSCHLAEGE_BEZIRKID_FEHLT);
         }
     }
 
     public void validateWahlIDOrThrow(final String wahlID) {
         if (StringUtils.isBlank(wahlID)) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLVORSCHLAEGE_SUCHKRITERIEN_UNVOLLSTAENDIG);
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLVORSCHLAEGE_WAHLID_FEHLT);
         }
     }
 }

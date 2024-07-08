@@ -124,32 +124,32 @@ public class WahlvorschlagControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLVORSCHLAEGE)
-        void wlsExceptionOnInvalidWahlbezirkIDFormat() throws Exception {
+        void wlsExceptionOnMissingWahlbezirkID() throws Exception {
 
             val request = MockMvcRequestBuilders.get("/vorschlaege/wahl/wahlID/ ");
 
             val response = api.perform(request).andExpect(status().isBadRequest()).andReturn();
             val wlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
 
-            val expectedWlsException = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.LOADWAHLVORSCHLAEGE_SUCHKRITERIEN_UNVOLLSTAENDIG.code(),
+            val expectedWlsException = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.LOADWAHLVORSCHLAEGE_BEZIRKID_FEHLT.code(),
                     serviceInfoOid,
-                    ExceptionConstants.LOADWAHLVORSCHLAEGE_SUCHKRITERIEN_UNVOLLSTAENDIG.message());
+                    ExceptionConstants.LOADWAHLVORSCHLAEGE_BEZIRKID_FEHLT.message());
 
             Assertions.assertThat(wlsExceptionDTO).isEqualTo(expectedWlsException);
         }
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLVORSCHLAEGE)
-        void wlsExceptionOnInvalidWahlIDFormat() throws Exception {
+        void wlsExceptionOnMissingWahlID() throws Exception {
 
             val request = MockMvcRequestBuilders.get("/vorschlaege/wahl/ /wahlbezirkID");
 
             val response = api.perform(request).andExpect(status().isBadRequest()).andReturn();
             val wlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
 
-            val expectedWlsException = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.LOADWAHLVORSCHLAEGE_SUCHKRITERIEN_UNVOLLSTAENDIG.code(),
+            val expectedWlsException = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.LOADWAHLVORSCHLAEGE_WAHLID_FEHLT.code(),
                     serviceInfoOid,
-                    ExceptionConstants.LOADWAHLVORSCHLAEGE_SUCHKRITERIEN_UNVOLLSTAENDIG.message());
+                    ExceptionConstants.LOADWAHLVORSCHLAEGE_WAHLID_FEHLT.message());
 
             Assertions.assertThat(wlsExceptionDTO).isEqualTo(expectedWlsException);
         }
@@ -206,6 +206,25 @@ public class WahlvorschlagControllerIntegrationTest {
 
             Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseDTO);
         }
+
+        @Test
+        @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLVORSCHLAEGELISTE)
+        void wlsExceptionOnMissingWahlID() throws Exception {
+            val wahlID = " ";
+            val forDate = "2024-10-10";
+
+            val request = MockMvcRequestBuilders.get("/vorschlaege/wahl/" + wahlID + "/liste?forDate=" + forDate);
+
+            val response = api.perform(request).andExpect(status().isBadRequest()).andReturn();
+            val wlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
+
+            val expectedWlsException = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.LOADWAHLVORSCHLAEGELISTE_WAHLID_FEHLT.code(),
+                    serviceInfoOid,
+                    ExceptionConstants.LOADWAHLVORSCHLAEGELISTE_WAHLID_FEHLT.message());
+
+            Assertions.assertThat(wlsExceptionDTO).isEqualTo(expectedWlsException);
+
+        }
     }
 
     @Nested
@@ -219,34 +238,71 @@ public class WahlvorschlagControllerIntegrationTest {
 
             Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
         }
+
+        @Test
+        @WithMockUser(authorities = Authorities.SERVICE_LOAD_REFERENDUMVORLAGEN)
+        @Transactional
+        void dataFound() throws Exception {
+            val referendumoption1 = new Referendumoption("Optionsname1", 1L);
+            val referendumoption2 = new Referendumoption("Optionsname2", 2L);
+            val referendumvorlage1 = new Referendumvorlage("wahlvorschlagID1", 1, "referendum1", "Warum ist die Banane krumm?",
+                    Set.of(referendumoption1, referendumoption2));
+
+            val referendumoption3 = new Referendumoption("Optionsname3", 3L);
+            val referendumoption4 = new Referendumoption("Optionsname4", 4L);
+            val referendumvorlage2 = new Referendumvorlage("wahlvorschlagID2", 1, "referendum1", "Ist die Erde eine Scheibe?",
+                    Set.of(referendumoption3, referendumoption4));
+
+            val referendumvorlagen = new Referendumvorlagen("wahlbezirkID", "wahlID", "stimmzettelgebietID", Set.of(referendumvorlage1, referendumvorlage2));
+            val referendumvorlagenToLoad = referendumvorlagenRepository.save(referendumvorlagen);
+
+            val request = MockMvcRequestBuilders.get(
+                    "/vorschlaege/referendum/" + referendumvorlagenToLoad.getWahlID() + "/" + referendumvorlagenToLoad.getWahlbezirkID());
+
+            val response = api.perform(request).andExpect(status().isOk()).andReturn();
+            val responseBodyAsDTO = objectMapper.readValue(response.getResponse().getContentAsString(), ReferendumvorlagenDTO.class);
+
+            val expectedResponseDTO = wahlvorschlagMapper.toDTO(referendumvorlagenToLoad);
+
+            Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseDTO);
+        }
+
+        @Test
+        @WithMockUser(authorities = Authorities.SERVICE_LOAD_REFERENDUMVORLAGEN)
+        void wlsExceptionOnMissingWahlID() throws Exception {
+            val wahlID = " ";
+            val wahlbezirkID = "wahlbezirkID";
+
+            val request = MockMvcRequestBuilders.get("/vorschlaege/referendum/" + wahlID + "/" + wahlbezirkID);
+
+            val response = api.perform(request).andExpect(status().isBadRequest()).andReturn();
+            val wlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
+
+            val expectedWlsException = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.LOADREFERENDUMVORLAGEN_WAHLID_FEHLT.code(),
+                    serviceInfoOid,
+                    ExceptionConstants.LOADREFERENDUMVORLAGEN_WAHLID_FEHLT.message());
+
+            Assertions.assertThat(wlsExceptionDTO).isEqualTo(expectedWlsException);
+
+        }
+
+        @Test
+        @WithMockUser(authorities = Authorities.SERVICE_LOAD_REFERENDUMVORLAGEN)
+        void wlsExceptionOnMissingWahlbezirk() throws Exception {
+            val wahlID = "wahlID";
+            val wahlbezirkID = " ";
+
+            val request = MockMvcRequestBuilders.get("/vorschlaege/referendum/" + wahlID + "/" + wahlbezirkID);
+
+            val response = api.perform(request).andExpect(status().isBadRequest()).andReturn();
+            val wlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
+
+            val expectedWlsException = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.LOADREFERENDUMVORLAGEN_WAHLBEZIRKID_FEHLT.code(),
+                    serviceInfoOid,
+                    ExceptionConstants.LOADREFERENDUMVORLAGEN_WAHLBEZIRKID_FEHLT.message());
+
+            Assertions.assertThat(wlsExceptionDTO).isEqualTo(expectedWlsException);
+
+        }
     }
-
-    @Test
-    @WithMockUser(authorities = Authorities.SERVICE_LOAD_REFERENDUMVORLAGEN)
-    @Transactional
-    void dataFound() throws Exception {
-        val referendumoption1 = new Referendumoption("Optionsname1", 1L);
-        val referendumoption2 = new Referendumoption("Optionsname2", 2L);
-        val referendumvorlage1 = new Referendumvorlage("wahlvorschlagID1", 1, "referendum1", "Warum ist die Banane krumm?",
-                Set.of(referendumoption1, referendumoption2));
-
-        val referendumoption3 = new Referendumoption("Optionsname3", 3L);
-        val referendumoption4 = new Referendumoption("Optionsname4", 4L);
-        val referendumvorlage2 = new Referendumvorlage("wahlvorschlagID2", 1, "referendum1", "Ist die Erde eine Scheibe?",
-                Set.of(referendumoption3, referendumoption4));
-
-        val referendumvorlagen = new Referendumvorlagen("wahlbezirkID", "wahlID", "stimmzettelgebietID", Set.of(referendumvorlage1, referendumvorlage2));
-        val referendumvorlagenToLoad = referendumvorlagenRepository.save(referendumvorlagen);
-
-        val request = MockMvcRequestBuilders.get(
-                "/vorschlaege/referendum/" + referendumvorlagenToLoad.getWahlID() + "/" + referendumvorlagenToLoad.getWahlbezirkID());
-
-        val response = api.perform(request).andExpect(status().isOk()).andReturn();
-        val responseBodyAsDTO = objectMapper.readValue(response.getResponse().getContentAsString(), ReferendumvorlagenDTO.class);
-
-        val expectedResponseDTO = wahlvorschlagMapper.toDTO(referendumvorlagenToLoad);
-
-        Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseDTO);
-    }
-
 }

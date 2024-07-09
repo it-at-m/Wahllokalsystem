@@ -7,8 +7,8 @@ import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguratio
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationKonfigKey;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationSetModel;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.Arrays;
 import java.util.stream.Stream;
 import lombok.val;

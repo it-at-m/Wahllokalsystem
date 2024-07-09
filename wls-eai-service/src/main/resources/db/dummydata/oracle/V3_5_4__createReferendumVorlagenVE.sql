@@ -5,7 +5,7 @@ VALUES ('00000000-0000-0000-0000-000000000005', '00000000-0000-0000-0000-0000000
         '00000001-0000-0000-0000-000000000002');
 
 INSERT INTO wahlvorschlag (id, ordnungszahl, kurzname, erhaeltStimmen, wahlvorschlaegeID)
-VALUES ('00000000-0000-0000-0001-000000000013', 1, 'Vorschlag für Refendum', true,
+VALUES ('00000000-0000-0000-0001-000000000013', 1, 'Vorschlag für Refendum', 1,
         '00000000-0000-0000-0000-000000000005');
 
 

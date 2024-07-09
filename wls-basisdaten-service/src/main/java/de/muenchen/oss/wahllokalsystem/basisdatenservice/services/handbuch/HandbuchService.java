@@ -5,6 +5,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.HandbuchReposito
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagIdUndWahlbezirksart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -24,15 +25,17 @@ public class HandbuchService {
     private final ExceptionFactory exceptionFactory;
 
     public byte[] getHandbuch(final HandbuchReferenceModel handbuchReference) {
-        log.info("#getHandbuch > reference > {}", handbuchReference);
+        log.info("#getHandbuch - handbuchReference > {}", handbuchReference);
 
         handbuchValidator.validHandbuchReferenceOrThrow(handbuchReference);
         val handbuchID = handbuchModelMapper.toEntityID(handbuchReference);
 
-        return findByIDOrThrowNoData(handbuchID).getHandbuch();
+        val handbuchData = findByIDOrThrowNoData(handbuchID).getHandbuch();
+        return Arrays.copyOf(handbuchData, handbuchData.length);
     }
 
     public void setHandbuch(final HandbuchWriteModel handbuchWriteModel) {
+        log.info("postHandbuch - handbuchWriteModel> {}", handbuchWriteModel);
         handbuchValidator.validHandbuchWriteModelOrThrow(handbuchWriteModel);
         val entityToSave = handbuchModelMapper.toEntity(handbuchWriteModel);
         try {

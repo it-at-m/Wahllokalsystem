@@ -13,3 +13,7 @@ values ('00000000-0000-0000-0000-000000000003', 'BWB', 'Wahlbezirk 3', '00000000
 INSERT INTO wahlbezirk (id, wahlbezirkArt, nummer, stimmzettelgebietID, a1, a2, a3)
 values ('00000000-0000-0000-0000-000000000004', 'UWB', 'Wahlbezirk 4', '00000000-0000-0000-0000-000000000004', 42, 5,
         3);
+
+INSERT INTO wahlbezirk (id, wahlbezirkArt, nummer, stimmzettelgebietID, a1, a2, a3)
+values ('00000000-0000-0000-0000-000000000005', 'UWB', 'Wahlbezirk 4', '00000000-0000-0000-0000-000000000005', 42, 5,
+        3);

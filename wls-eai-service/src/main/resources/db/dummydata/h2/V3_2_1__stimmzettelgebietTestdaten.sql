@@ -10,3 +10,7 @@ values ('00000000-0000-0000-0000-000000000003', '103', 'Stimmzettelgebiet 103', 
 INSERT INTO stimmzettelgebiet (id, nummer, name, stimmzettelgebietsart, wahlID)
 values ('00000000-0000-0000-0000-000000000004', '104', 'Stimmzettelgebiet 104', 'SK',
         '00000000-0000-0000-0000-000000000001');
+
+INSERT INTO stimmzettelgebiet (id, nummer, name, stimmzettelgebietsart, wahlID)
+values ('00000000-0000-0000-0000-000000000005', '101', 'VE-SZG-1', 'SK',
+        '00000000-0000-0000-0000-000000000005');

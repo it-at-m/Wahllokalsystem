@@ -7,6 +7,7 @@ import de.muenchen.oss.wahllokalsystem.infomanagementservice.common.security.Aut
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.common.security.JWTHandler;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.Konfiguration;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.KonfigurationRepository;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KennbuchstabenListenModel;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationKonfigKey;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationModel;
@@ -14,7 +15,7 @@ import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfigurati
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.WahlbezirkArt;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -50,7 +51,7 @@ class KonfigurationServiceTest {
     KonfigurationModelValidator konfigurationModelValidator;
 
     @Mock
-    ServiceIDFormatter serviceIDFormatter;
+    ExceptionFactory exceptionFactory;
 
     @Mock
     JWTHandler jwtHandler;
@@ -222,20 +223,17 @@ class KonfigurationServiceTest {
             val konfigurationSetModel = KonfigurationSetModel.builder().build();
 
             val mockedRepositoryException = new IllegalArgumentException("i cant saved");
+            val mockedExceptionFactoryWlsException = TechnischeWlsException.withCode("").buildWithMessage("");
             val mockedKonfigurationEntity = new Konfiguration();
-            val mockedServiceID = "serviceID";
 
             Mockito.doNothing().when(konfigurationModelValidator).validOrThrowSetKonfiguration(konfigurationSetModel);
             Mockito.when(konfigurationModelMapper.toEntity(konfigurationSetModel)).thenReturn(mockedKonfigurationEntity);
             Mockito.when(konfigurationRepository.save(mockedKonfigurationEntity)).thenThrow(mockedRepositoryException);
-            Mockito.when(serviceIDFormatter.getId()).thenReturn(mockedServiceID);
+            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTKONFIGURATION_NOT_SAVEABLE))
+                    .thenReturn(mockedExceptionFactoryWlsException);
 
-            val exceptionThrown = Assertions.catchException(() -> unitUnderTest.setKonfiguration(konfigurationSetModel));
-
-            val expectedException = TechnischeWlsException.withCode("101").inService(mockedServiceID).buildWithMessage("");
-
-            Assertions.assertThat(exceptionThrown).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedException);
-            Assertions.assertThat(exceptionThrown.getMessage()).isNotNull();
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setKonfiguration(konfigurationSetModel))
+                    .isSameAs(mockedExceptionFactoryWlsException);
         }
     }
 
@@ -285,17 +283,13 @@ class KonfigurationServiceTest {
 
         @Test
         void exceptionWhenNoKennbuchtabenFoundInRepo() {
-            val mockedServiceID = "serviceID";
+            val mockedExceptionFactoryWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
-            Mockito.when(serviceIDFormatter.getId()).thenReturn(mockedServiceID);
             Mockito.when(konfigurationRepository.findById("KENNBUCHSTABEN")).thenReturn(Optional.empty());
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETKENNBUCHSTABENLISTEN_KONFIGURATION_NOT_FOUND))
+                    .thenReturn(mockedExceptionFactoryWlsException);
 
-            val exceptionThrown = Assertions.catchException(() -> unitUnderTest.getKennbuchstabenListen());
-
-            val expectedException = FachlicheWlsException.withCode("103").inService(mockedServiceID).buildWithMessage("");
-
-            Assertions.assertThat(exceptionThrown).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedException);
-            Assertions.assertThat(exceptionThrown.getMessage()).isNotNull();
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getKennbuchstabenListen()).isSameAs(mockedExceptionFactoryWlsException);
 
         }
     }

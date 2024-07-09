@@ -2,6 +2,7 @@ import {withMermaid} from "vitepress-plugin-mermaid"
 
 const PATH_TECHNIK = '/technik/';
 const PATH_FEATURES = '/features/';
+const PATH_GUIDES = '/guides/';
 
 // https://vitepress.dev/reference/site-config
 export default withMermaid({
@@ -16,6 +17,7 @@ export default withMermaid({
             {text: 'Home', link: '/'},
             {text: 'About', link: '/about/'},
             {text: 'Features', link: '/features/'},
+            {text: 'Guides', link: PATH_GUIDES},
             {text: 'Technik', link: PATH_TECHNIK}
         ],
 
@@ -53,6 +55,9 @@ export default withMermaid({
                 {text: 'Wahlvorstand-Service', link: `${PATH_FEATURES}wahlvorstand-service/`},
                 {text: 'Ergebnismeldung-Service', link: `${PATH_FEATURES}ergebnismeldung-service/`},
                 {text: 'Auth-Service', link: `${PATH_FEATURES}auth-service/`},
+            ],
+            [PATH_GUIDES]: [
+                {text: 'API-Client generieren', link: `${PATH_GUIDES}how-to-create-client-from-open-api-json.md`}
             ]
         },
 

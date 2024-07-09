@@ -5,11 +5,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeService;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -21,6 +26,9 @@ class SecurityConfigurationTest {
 
     @Autowired
     MockMvc api;
+
+    @MockBean
+    WahlvorschlaegeService wahlvorschlaegeService;
 
     @Test
     void accessSecuredResourceRootThenUnauthorized() throws Exception {
@@ -62,6 +70,22 @@ class SecurityConfigurationTest {
     void accessUnsecuredResourceSwaggerUiThenOk() throws Exception {
         api.perform(get("/swagger-ui/index.html"))
                 .andExpect(status().isOk());
+    }
+
+    @Nested
+    class Wahlvorschlaege {
+
+        @Test
+        @WithAnonymousUser
+        void accessGetWahlvorstaendeUnauthorizedThenUnauthorized() throws Exception {
+            api.perform(get("/businessActions/wahlvorschlaege/wahlID/wahlbezirkID")).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessGetWahlvorstaendeUnauthorizedThenOk() throws Exception {
+            api.perform(get("/businessActions/wahlvorschlaege/wahlID/wahlbezirkID")).andExpect(status().isOk());
+        }
     }
 
 }

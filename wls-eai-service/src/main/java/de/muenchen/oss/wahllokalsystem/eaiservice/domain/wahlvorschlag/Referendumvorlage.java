@@ -24,6 +24,7 @@ import lombok.ToString;
 public class Referendumvorlage extends BaseEntity {
 
     @NotNull
+    @ToString.Include
     private String wahlvorschlagID;
 
     @NotNull

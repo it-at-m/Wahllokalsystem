@@ -69,15 +69,6 @@ public class WahlvorschlagControllerIntegrationTest {
     @Autowired
     WahlvorschlagMapper wahlvorschlagMapper;
 
-    @Autowired
-    WahlvorschlagService wahlvorschlagService;
-
-    @Autowired
-    ExceptionFactory exceptionFactory;
-
-    @Autowired
-    EntityManager entityManager;
-
     @AfterEach
     void tearDown() {
         wahlvorschlagRepository.deleteAll();

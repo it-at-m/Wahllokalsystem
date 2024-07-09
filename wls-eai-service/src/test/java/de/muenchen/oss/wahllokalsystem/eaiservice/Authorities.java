@@ -8,6 +8,9 @@ public class Authorities {
 
     public static final String SERVICE_LOAD_WAHLVORSTAND = "aoueai_BUSINESSACTION_LoadWahlvorstand";
     public static final String SERVICE_SAVE_ANWESENHEIT = "aoueai_BUSINESSACTION_SaveAnwesenheit";
+    public static final String SERVICE_LOAD_WAHLVORSCHLAEGE = "aoueai_BUSINESSACTION_LoadWahlvorschlaege";
+    public static final String SERVICE_LOAD_WAHLVORSCHLAEGELISTE = "aoueai_BUSINESSACTION_LoadWahlvorschlaegeListe";
+    public static final String SERVICE_LOAD_REFERENDUMVORLAGEN = "aoueai_BUSINESSACTION_LoadReferendumvorlagen";
 
     public static final String SERVICE_LOAD_WAHLBERECHTIGTE = "aoueai_BUSINESSACTION_LoadWahlberechtigte";
     public static final String SERVICE_LOAD_WAHLTAGE = "aoueai_BUSINESSACTION_LoadWahltage";
@@ -20,5 +23,14 @@ public class Authorities {
     };
     public static final String[] ALL_AUTHORIRITES_SETANWESENHEIT = {
             SERVICE_SAVE_ANWESENHEIT
+    };
+    public static final String[] ALL_AUTHORITIES_GETWAHLVORSCHLAEGE = {
+            SERVICE_LOAD_WAHLVORSCHLAEGE,
+    };
+    public static final String[] ALL_AUTHORITIES_GETWAHLVORSCHLAEGELISTE = {
+            SERVICE_LOAD_WAHLVORSCHLAEGELISTE,
+    };
+    public static final String[] ALL_AUTHORITIES_GETREFERENDUMVORLAGEN = {
+            SERVICE_LOAD_REFERENDUMVORLAGEN,
     };
 }

@@ -1,0 +1,49 @@
+POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+password = test &
+grant_type = password &
+client_secret = top-secret &
+client_id = wls &
+username = wls_all
+
+> {%
+    client.global.set("auth_token", response.body.access_token);
+    client.global.set("token_type", response.body.token_type);
+%}
+
+### get userinfo with auth_token
+GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
+Authorization: {{ token_type }} {{ auth_token }}
+
+### GET Wahlvorschlaege
+GET {{ WLS_EAI_SERVICE_URL }}/vorschlaege/wahl/wahlID/wahlbezirkID
+Authorization: {{ token_type }} {{ auth_token }}
+
+### GET Wahlvorschlaege with non existing 'wahlID' and 'wahlbezirkID' not found
+GET {{ WLS_EAI_SERVICE_URL }}/vorschlaege/wahl/wahlID_X/wahlbezirkID_X
+Authorization: {{ token_type }} {{ auth_token }}
+
+### GET Wahlvorschlaegeliste
+GET {{ WLS_EAI_SERVICE_URL }}/vorschlaege/wahl/wahlID/liste?forDate=2024-10-10
+Authorization: {{ token_type }} {{ auth_token }}
+
+### GET Wahlvorschlaegeliste for non existing 'wahlID' not found
+GET {{ WLS_EAI_SERVICE_URL }}/vorschlaege/wahl/wahlID_X/liste?forDate=2024-10-10
+Authorization: {{ token_type }} {{ auth_token }}
+
+### GET Wahlvorschlaegeliste for non existing 'forDate'not found
+GET {{ WLS_EAI_SERVICE_URL }}/vorschlaege/wahl/wahlID/liste?forDate=2024-10-11
+Authorization: {{ token_type }} {{ auth_token }}
+
+### GET Referendumvorlagen
+GET {{ WLS_EAI_SERVICE_URL }}/vorschlaege/referendum/wahlID/wahlbezirkID
+Authorization: {{ token_type }} {{ auth_token }}
+
+### GET Referendumvorlagen for non existing 'wahlID' not found
+GET {{ WLS_EAI_SERVICE_URL }}/vorschlaege/referendum/wahlID_X/wahlbezirkID
+Authorization: {{ token_type }} {{ auth_token }}
+
+### GET Referendumvorlagen for non existing 'wahlbezirkID' not found
+GET {{ WLS_EAI_SERVICE_URL }}/vorschlaege/referendum/wahlID/wahlbezirkID_X
+Authorization: {{ token_type }} {{ auth_token }}

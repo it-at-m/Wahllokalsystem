@@ -15,7 +15,7 @@ public class ExceptionConstants {
 
     private static final String CODE_DATENALLGEMEIN_ID_NICHT_KONVERTIERBAR = "103";
     public static final ExceptionDataWrapper ID_NICHT_KONVERTIERBAR = new ExceptionDataWrapper(
-            CODE_DATENALLGEMEIN_ID_NICHT_KONVERTIERBAR, "");
+            CODE_DATENALLGEMEIN_ID_NICHT_KONVERTIERBAR, "ID nicht konvertierbar");
 
     /**
      * @throws IllegalAccessException when constructor is used

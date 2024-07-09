@@ -102,11 +102,11 @@ public class WahlvorschlagControllerIntegrationTest {
         void dataFound() throws Exception {
 
             val wahlvorschlag1 = new Wahlvorschlag(1, "wahlvorschlag1", true, Set.of(
-                new Kandidat("name1", 1, false, 1, false),
-                new Kandidat("name2", 2, true, 2, true)));
+                    new Kandidat("name1", 1, false, 1, false),
+                    new Kandidat("name2", 2, true, 2, true)));
             val wahlvorschlag2 = new Wahlvorschlag(1, "wahlvorschlag2", true, Set.of(
-                new Kandidat("name3", 1, false, 1, false),
-                new Kandidat("name4", 2, true, 2, true)));
+                    new Kandidat("name3", 1, false, 1, false),
+                    new Kandidat("name4", 2, true, 2, true)));
 
             val wahlvorschlaege1 = new Wahlvorschlaege("wahlbezirkID", "wahlID", "stimmzettelgebietID", Set.of(wahlvorschlag1, wahlvorschlag2));
 
@@ -132,8 +132,8 @@ public class WahlvorschlagControllerIntegrationTest {
             val wlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
 
             val expectedWlsException = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.LOADWAHLVORSCHLAEGE_BEZIRKID_FEHLT.code(),
-                serviceInfoOid,
-                ExceptionConstants.LOADWAHLVORSCHLAEGE_BEZIRKID_FEHLT.message());
+                    serviceInfoOid,
+                    ExceptionConstants.LOADWAHLVORSCHLAEGE_BEZIRKID_FEHLT.message());
 
             Assertions.assertThat(wlsExceptionDTO).isEqualTo(expectedWlsException);
         }
@@ -148,8 +148,8 @@ public class WahlvorschlagControllerIntegrationTest {
             val wlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
 
             val expectedWlsException = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.LOADWAHLVORSCHLAEGE_WAHLID_FEHLT.code(),
-                serviceInfoOid,
-                ExceptionConstants.LOADWAHLVORSCHLAEGE_WAHLID_FEHLT.message());
+                    serviceInfoOid,
+                    ExceptionConstants.LOADWAHLVORSCHLAEGE_WAHLID_FEHLT.message());
 
             Assertions.assertThat(wlsExceptionDTO).isEqualTo(expectedWlsException);
         }
@@ -178,19 +178,19 @@ public class WahlvorschlagControllerIntegrationTest {
             val forDate = LocalDate.of(2024, 10, 10);
 
             val wahlvorschlag1 = new Wahlvorschlag(1, "wahlvorschlag1", true, Set.of(
-                new Kandidat("name1", 1, false, 1, false),
-                new Kandidat("name2", 2, true, 2, true)));
+                    new Kandidat("name1", 1, false, 1, false),
+                    new Kandidat("name2", 2, true, 2, true)));
             val wahlvorschlag2 = new Wahlvorschlag(1, "wahlvorschlag2", true, Set.of(
-                new Kandidat("name3", 1, false, 1, false),
-                new Kandidat("name4", 2, true, 2, true)));
+                    new Kandidat("name3", 1, false, 1, false),
+                    new Kandidat("name4", 2, true, 2, true)));
             val wahlvorschlaege1 = new Wahlvorschlaege("wahlbezirkID1", "wahlID1", "stimmzettelgebietID1", Set.of(wahlvorschlag1, wahlvorschlag2));
 
             val wahlvorschlag3 = new Wahlvorschlag(1, "wahlvorschlag1", true, Set.of(
-                new Kandidat("name5", 1, false, 1, false),
-                new Kandidat("name6", 2, true, 2, true)));
+                    new Kandidat("name5", 1, false, 1, false),
+                    new Kandidat("name6", 2, true, 2, true)));
             val wahlvorschlag4 = new Wahlvorschlag(1, "wahlvorschlag2", true, Set.of(
-                new Kandidat("name7", 1, false, 1, false),
-                new Kandidat("name8", 2, true, 2, true)));
+                    new Kandidat("name7", 1, false, 1, false),
+                    new Kandidat("name8", 2, true, 2, true)));
             val wahlvorschlaege2 = new Wahlvorschlaege("wahlbezirkID2", "wahlID1", "stimmzettelgebietID2", Set.of(wahlvorschlag3, wahlvorschlag4));
 
             val wahlvorschlaegeListe = new WahlvorschlaegeListe(forDate, wahlID, Set.of(wahlvorschlaege1, wahlvorschlaege2));
@@ -219,8 +219,8 @@ public class WahlvorschlagControllerIntegrationTest {
             val wlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
 
             val expectedWlsException = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.LOADWAHLVORSCHLAEGELISTE_WAHLID_FEHLT.code(),
-                serviceInfoOid,
-                ExceptionConstants.LOADWAHLVORSCHLAEGELISTE_WAHLID_FEHLT.message());
+                    serviceInfoOid,
+                    ExceptionConstants.LOADWAHLVORSCHLAEGELISTE_WAHLID_FEHLT.message());
 
             Assertions.assertThat(wlsExceptionDTO).isEqualTo(expectedWlsException);
 
@@ -246,18 +246,18 @@ public class WahlvorschlagControllerIntegrationTest {
             val referendumoption1 = new Referendumoption("Optionsname1", 1L);
             val referendumoption2 = new Referendumoption("Optionsname2", 2L);
             val referendumvorlage1 = new Referendumvorlage("wahlvorschlagID1", 1, "referendum1", "Warum ist die Banane krumm?",
-                Set.of(referendumoption1, referendumoption2));
+                    Set.of(referendumoption1, referendumoption2));
 
             val referendumoption3 = new Referendumoption("Optionsname3", 3L);
             val referendumoption4 = new Referendumoption("Optionsname4", 4L);
             val referendumvorlage2 = new Referendumvorlage("wahlvorschlagID2", 1, "referendum1", "Ist die Erde eine Scheibe?",
-                Set.of(referendumoption3, referendumoption4));
+                    Set.of(referendumoption3, referendumoption4));
 
             val referendumvorlagen = new Referendumvorlagen("wahlbezirkID", "wahlID", "stimmzettelgebietID", Set.of(referendumvorlage1, referendumvorlage2));
             val referendumvorlagenToLoad = referendumvorlagenRepository.save(referendumvorlagen);
 
             val request = MockMvcRequestBuilders.get(
-                "/vorschlaege/referendum/" + referendumvorlagenToLoad.getWahlID() + "/" + referendumvorlagenToLoad.getWahlbezirkID());
+                    "/vorschlaege/referendum/" + referendumvorlagenToLoad.getWahlID() + "/" + referendumvorlagenToLoad.getWahlbezirkID());
 
             val response = api.perform(request).andExpect(status().isOk()).andReturn();
             val responseBodyAsDTO = objectMapper.readValue(response.getResponse().getContentAsString(), ReferendumvorlagenDTO.class);
@@ -279,8 +279,8 @@ public class WahlvorschlagControllerIntegrationTest {
             val wlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
 
             val expectedWlsException = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.LOADREFERENDUMVORLAGEN_WAHLID_FEHLT.code(),
-                serviceInfoOid,
-                ExceptionConstants.LOADREFERENDUMVORLAGEN_WAHLID_FEHLT.message());
+                    serviceInfoOid,
+                    ExceptionConstants.LOADREFERENDUMVORLAGEN_WAHLID_FEHLT.message());
 
             Assertions.assertThat(wlsExceptionDTO).isEqualTo(expectedWlsException);
 
@@ -298,8 +298,8 @@ public class WahlvorschlagControllerIntegrationTest {
             val wlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
 
             val expectedWlsException = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.LOADREFERENDUMVORLAGEN_WAHLBEZIRKID_FEHLT.code(),
-                serviceInfoOid,
-                ExceptionConstants.LOADREFERENDUMVORLAGEN_WAHLBEZIRKID_FEHLT.message());
+                    serviceInfoOid,
+                    ExceptionConstants.LOADREFERENDUMVORLAGEN_WAHLBEZIRKID_FEHLT.message());
 
             Assertions.assertThat(wlsExceptionDTO).isEqualTo(expectedWlsException);
 

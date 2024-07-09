@@ -12,19 +12,19 @@ public class ExceptionConstants {
 
     //loadWahlvorschlaege
     public static final ExceptionDataWrapper LOADWAHLVORSCHLAEGE_WAHLID_FEHLT = new ExceptionDataWrapper(
-        CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
+            CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
     public static final ExceptionDataWrapper LOADWAHLVORSCHLAEGE_BEZIRKID_FEHLT = new ExceptionDataWrapper(
-        CODE_BEZIRKID_FEHLT, MESSAGE_BEZIRKID_FEHLT);
+            CODE_BEZIRKID_FEHLT, MESSAGE_BEZIRKID_FEHLT);
 
     //loadWahlvorschlaegeListe
     public static final ExceptionDataWrapper LOADWAHLVORSCHLAEGELISTE_WAHLID_FEHLT = new ExceptionDataWrapper(
-        CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
+            CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
 
     //loadReferendumvorlagen
     public static final ExceptionDataWrapper LOADREFERENDUMVORLAGEN_WAHLBEZIRKID_FEHLT = new ExceptionDataWrapper(
-        CODE_BEZIRKID_FEHLT, MESSAGE_BEZIRKID_FEHLT);
+            CODE_BEZIRKID_FEHLT, MESSAGE_BEZIRKID_FEHLT);
     public static final ExceptionDataWrapper LOADREFERENDUMVORLAGEN_WAHLID_FEHLT = new ExceptionDataWrapper(
-        CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
+            CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
 
     /**
      * @throws IllegalAccessException when constructor is used

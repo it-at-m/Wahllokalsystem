@@ -70,7 +70,7 @@ class WahlvorschlagServiceTest {
             Mockito.when(wahlvorschlagRepository.findFirstByWahlbezirkIDAndWahlID(wahlbezirkID, wahlID)).thenReturn(Optional.empty());
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlvorschlaegeForWahlAndWahlbezirk(wahlID, wahlbezirkID))
-                .usingRecursiveComparison().isEqualTo(new NoSearchResultFoundException(Wahlvorschlaege.class, wahlbezirkID, wahlID));
+                    .usingRecursiveComparison().isEqualTo(new NoSearchResultFoundException(Wahlvorschlaege.class, wahlbezirkID, wahlID));
         }
 
     }
@@ -101,7 +101,7 @@ class WahlvorschlagServiceTest {
             Mockito.when(wahlvorschlaegeListeRepository.findFirstByWahltagAndWahlID(wahltag, wahlID)).thenReturn(Optional.empty());
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlvorschlaegeListeForWahltagAndWahlID(wahltag, wahlID))
-                .usingRecursiveComparison().isEqualTo(new NoSearchResultFoundException(WahlvorschlaegeListe.class, wahltag, wahlID));
+                    .usingRecursiveComparison().isEqualTo(new NoSearchResultFoundException(WahlvorschlaegeListe.class, wahltag, wahlID));
         }
 
     }
@@ -132,7 +132,7 @@ class WahlvorschlagServiceTest {
             Mockito.when(referendumvorlagenRepository.findFirstByWahlbezirkIDAndWahlID(wahlbezirkID, wahlID)).thenReturn(Optional.empty());
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getReferendumvorlagenForWahlAndWahlbezirk(wahlID, wahlbezirkID))
-                .usingRecursiveComparison().isEqualTo(new NoSearchResultFoundException(Referendumvorlagen.class, wahlbezirkID, wahlID));
+                    .usingRecursiveComparison().isEqualTo(new NoSearchResultFoundException(Referendumvorlagen.class, wahlbezirkID, wahlID));
         }
 
     }

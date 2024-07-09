@@ -35,7 +35,7 @@ class WahlvorschlagValidatorTest {
         void exceptionWhenWahlbezirkIDIsNUll() {
             val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLVORSCHLAEGE_BEZIRKID_FEHLT))
-                .thenReturn(mockedFachlicheWlsException);
+                    .thenReturn(mockedFachlicheWlsException);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validateWahlbezirkIDOrThrow(null)).isSameAs(mockedFachlicheWlsException);
         }
@@ -44,7 +44,7 @@ class WahlvorschlagValidatorTest {
         void exceptionWhenWahlbezirkIDIsEmptyString() {
             val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLVORSCHLAEGE_BEZIRKID_FEHLT))
-                .thenReturn(mockedFachlicheWlsException);
+                    .thenReturn(mockedFachlicheWlsException);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validateWahlbezirkIDOrThrow("")).isSameAs(mockedFachlicheWlsException);
         }
@@ -53,7 +53,7 @@ class WahlvorschlagValidatorTest {
         void exceptionWhenWahlbezirkIDIsBlankString() {
             val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLVORSCHLAEGE_BEZIRKID_FEHLT))
-                .thenReturn(mockedFachlicheWlsException);
+                    .thenReturn(mockedFachlicheWlsException);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validateWahlbezirkIDOrThrow("   ")).isSameAs(mockedFachlicheWlsException);
         }
@@ -71,7 +71,7 @@ class WahlvorschlagValidatorTest {
         void exceptionWhenWahlIDIsNUll() {
             val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLVORSCHLAEGE_WAHLID_FEHLT))
-                .thenReturn(mockedFachlicheWlsException);
+                    .thenReturn(mockedFachlicheWlsException);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validateWahlIDOrThrow(null)).isSameAs(mockedFachlicheWlsException);
         }
@@ -80,7 +80,7 @@ class WahlvorschlagValidatorTest {
         void exceptionWhenWahlIDIsEmptyString() {
             val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLVORSCHLAEGE_WAHLID_FEHLT))
-                .thenReturn(mockedFachlicheWlsException);
+                    .thenReturn(mockedFachlicheWlsException);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validateWahlIDOrThrow("")).isSameAs(mockedFachlicheWlsException);
         }
@@ -89,7 +89,7 @@ class WahlvorschlagValidatorTest {
         void exceptionWhenWahlIDIsBlankString() {
             val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLVORSCHLAEGE_WAHLID_FEHLT))
-                .thenReturn(mockedFachlicheWlsException);
+                    .thenReturn(mockedFachlicheWlsException);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validateWahlIDOrThrow("   ")).isSameAs(mockedFachlicheWlsException);
         }

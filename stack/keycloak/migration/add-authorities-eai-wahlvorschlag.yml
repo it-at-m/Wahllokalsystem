@@ -1,4 +1,4 @@
-id: add authorities eai wahlvorstand
+id: add authorities eai wahlvorschlag
 author: dragonfly28
 realm: ${SSO_REALM}
 changes:

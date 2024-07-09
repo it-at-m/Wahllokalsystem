@@ -52,7 +52,7 @@ class WahlvorschlagControllerTest {
             val wahlID = "wahlID";
             val stimmzettelgebietID = "stimmzettelgebietID";
 
-            val referendumVorlagenFromService = new ReferendumvorlagenDTO(wahlbezirkID, wahlID, stimmzettelgebietID, Collections.emptySet());
+            val referendumVorlagenFromService = new ReferendumvorlagenDTO(wahlbezirkID, Collections.emptySet());
 
             Mockito.when(wahlvorschlagService.getReferendumvorlagenForWahlAndWahlbezirk(wahlID, wahlbezirkID)).thenReturn(referendumVorlagenFromService);
 
@@ -68,7 +68,7 @@ class WahlvorschlagControllerTest {
             val wahltag = LocalDate.of(2024, 10, 10);
             val wahlID = "wahlID";
 
-            val wahlvorschlaegeListeFromService = new WahlvorschlaegeListeDTO(wahltag.toString(), wahlID, Collections.emptySet());
+            val wahlvorschlaegeListeFromService = new WahlvorschlaegeListeDTO(wahlID, Collections.emptySet());
 
             Mockito.when(wahlvorschlagService.getWahlvorschlaegeListeForWahltagAndWahlID(wahltag, wahlID)).thenReturn(wahlvorschlaegeListeFromService);
 

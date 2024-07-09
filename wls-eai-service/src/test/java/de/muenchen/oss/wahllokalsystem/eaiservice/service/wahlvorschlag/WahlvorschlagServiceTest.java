@@ -84,7 +84,7 @@ class WahlvorschlagServiceTest {
             val wahlID = "wahlID";
 
             val mockedEntity = new WahlvorschlaegeListe(wahltag, wahlID, Collections.emptySet());
-            val mockedMappedEntity = new WahlvorschlaegeListeDTO(wahltag.toString(), wahlID, Collections.emptySet());
+            val mockedMappedEntity = new WahlvorschlaegeListeDTO(wahlID, Collections.emptySet());
             Mockito.when(wahlvorschlaegeListeRepository.findFirstByWahltagAndWahlID(wahltag, wahlID)).thenReturn(Optional.of(mockedEntity));
             Mockito.when(wahlvorschlagMapper.toDTO(mockedEntity)).thenReturn(mockedMappedEntity);
 
@@ -115,7 +115,7 @@ class WahlvorschlagServiceTest {
             val wahlID = "wahlID";
 
             val mockedEntity = new Referendumvorlagen("wahlbezirkID", "wahlID", "stimmzettelgebietID", Collections.emptySet());
-            val mockedMappedEntity = new ReferendumvorlagenDTO(wahlbezirkID, wahlID, "stimmzettelgebietID", Collections.emptySet());
+            val mockedMappedEntity = new ReferendumvorlagenDTO("stimmzettelgebietID", Collections.emptySet());
             Mockito.when(referendumvorlagenRepository.findFirstByWahlbezirkIDAndWahlID(wahlbezirkID, wahlID)).thenReturn(Optional.of(mockedEntity));
             Mockito.when(wahlvorschlagMapper.toDTO(mockedEntity)).thenReturn(mockedMappedEntity);
 

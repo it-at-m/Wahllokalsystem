@@ -137,7 +137,7 @@ class WahlvorschlagMapperTest {
                     wahlvorschlaege.getStimmzettelgebietID(),
                     Set.of(expectedWahlvorschlag1, expectedWahlvorschlag2));
 
-            val expectedResult = new WahlvorschlaegeListeDTO(wahlvorschlaegeListe.getWahltag().toString(), wahlvorschlaegeListe.getWahlID(),
+            val expectedResult = new WahlvorschlaegeListeDTO(wahlvorschlaegeListe.getWahlID(),
                     Set.of(expectedWahlvorschlaege));
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
@@ -214,8 +214,8 @@ class WahlvorschlagMapperTest {
                     referendumvorlage2.getKurzname(),
                     referendumvorlage2.getFrage(), expectedReferendumoptionen2);
 
-            val expectedResult = new ReferendumvorlagenDTO(entityToMap.getWahlbezirkID(), entityToMap.getWahlID(),
-                    entityToMap.getStimmzettelgebietID(), Set.of(expectedReferendumvorlage1, expectedReferendumvorlage2));
+            val expectedResult = new ReferendumvorlagenDTO(entityToMap.getStimmzettelgebietID(),
+                    Set.of(expectedReferendumvorlage1, expectedReferendumvorlage2));
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }

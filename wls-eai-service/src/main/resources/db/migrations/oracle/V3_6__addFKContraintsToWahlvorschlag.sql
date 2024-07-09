@@ -13,6 +13,4 @@ ALTER TABLE referendumvorlagen
 ALTER TABLE referendumvorlagen
     ADD FOREIGN KEY (wahlID) REFERENCES wahl (id);
 ALTER TABLE referendumvorlagen
-    ADD FOREIGN KEY (wahlbezirkID) REFERENCES wahlbezirk (id);
-ALTER TABLE referendumvorlagen
     ADD FOREIGN KEY (stimmzettelgebietID) REFERENCES stimmzettelgebiet (id);

@@ -26,6 +26,25 @@ public class ExceptionConstants {
     public static final ExceptionDataWrapper LOADREFERENDUMVORLAGEN_WAHLID_FEHLT = new ExceptionDataWrapper(
             CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
 
+    //loadBasisdaten
+    public static final ExceptionDataWrapper LOADBASISDATEN_TAG_FEHLT = new ExceptionDataWrapper("001", "Es ist kein Tag definiert");
+    public static final ExceptionDataWrapper LOADBASISDATEN_NUMMER_FEHLT = new ExceptionDataWrapper("001_1", "Es ist keine Wahlnummer angegeben");
+
+    //loadWahlberechtigte
+    public static final ExceptionDataWrapper LOADWAHLBERECHTIGTE_SUCHKRITERIEN_UNVOLLSTAENDIG = new ExceptionDataWrapper("001",
+            "Wahlberechtigtenkriterien sind nicht vollständig");
+
+    //loadWahltage
+    public static final ExceptionDataWrapper LOADWAHLTAGE_TAG_FEHLT = new ExceptionDataWrapper("001", "Es ist kein Tag definiert");
+
+    //loadWahlbezirke
+    public static final ExceptionDataWrapper LOADWAHLBEZIRKE_WAHLTAG_FEHLT = new ExceptionDataWrapper("001", "Es ist kein Wahltag angegeben");
+    public static final ExceptionDataWrapper LOADWAHLBEZIRKE_NUMMER_FEHLT = new ExceptionDataWrapper("001_1", "Es ist keine Wahltag-Nummer angegeben");
+
+    //loadWahlen
+    public static final ExceptionDataWrapper LOADWAHLEN_WAHLTAG_FEHLT = new ExceptionDataWrapper("001", "Es ist kein Wahltag angegeben");
+    public static final ExceptionDataWrapper LOADWAHLEN_NUMMER_FEHLT = new ExceptionDataWrapper("001_1", "Es ist keine Wahlnummer angegeben");
+
     /**
      * @throws IllegalAccessException when constructor is used
      */

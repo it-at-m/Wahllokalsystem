@@ -32,4 +32,4 @@ includes:
   - path: create-group-all-basisdaten-authorities.yml
   - path: add-authorities-basisdaten-wahlvorschlaege.yml
   - path: add-authorities-eai-wahlvorschlag.yml
-
+  - path: add-authorities-eai-wahldaten.yml

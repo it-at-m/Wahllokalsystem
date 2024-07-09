@@ -12,6 +12,12 @@ public class Authorities {
     public static final String SERVICE_LOAD_WAHLVORSCHLAEGELISTE = "aoueai_BUSINESSACTION_LoadWahlvorschlaegeListe";
     public static final String SERVICE_LOAD_REFERENDUMVORLAGEN = "aoueai_BUSINESSACTION_LoadReferendumvorlagen";
 
+    public static final String SERVICE_LOAD_WAHLBERECHTIGTE = "aoueai_BUSINESSACTION_LoadWahlberechtigte";
+    public static final String SERVICE_LOAD_WAHLTAGE = "aoueai_BUSINESSACTION_LoadWahltage";
+    public static final String SERVICE_LOAD_WAHLBEZIRKE = "aoueai_BUSINESSACTION_LoadWahlbezirke";
+    public static final String SERVICE_LOAD_WAHLEN = "aoueai_BUSINESSACTION_LoadWahlen";
+    public static final String SERVICE_LOAD_BASISDATEN = "aoueai_BUSINESSACTION_LoadBasisdaten";
+
     public static final String[] ALL_AUTHORITIES_GETWAHLVORSTANDFORWAHLBEZIRK = {
             SERVICE_LOAD_WAHLVORSTAND
     };

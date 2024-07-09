@@ -21,11 +21,8 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.dto.Referen
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.dto.WahlvorschlaegeDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.dto.WahlvorschlaegeListeDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlvorschlag.WahlvorschlagMapper;
-import de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlvorschlag.WahlvorschlagService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
-import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.Set;
 import lombok.val;
@@ -91,7 +88,6 @@ public class WahlvorschlagControllerIntegrationTest {
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLVORSCHLAEGE)
         @Transactional
         void dataFound() throws Exception {
-
             val wahlvorschlag1 = new Wahlvorschlag(1, "wahlvorschlag1", true, Set.of(
                     new Kandidat("name1", 1, false, 1, false),
                     new Kandidat("name2", 2, true, 2, true)));

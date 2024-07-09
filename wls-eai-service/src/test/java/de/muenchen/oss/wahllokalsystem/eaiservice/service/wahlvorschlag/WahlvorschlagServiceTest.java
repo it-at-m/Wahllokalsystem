@@ -70,7 +70,7 @@ class WahlvorschlagServiceTest {
             Mockito.when(wahlvorschlagRepository.findFirstByWahlbezirkIDAndWahlID(wahlbezirkID, wahlID)).thenReturn(Optional.empty());
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlvorschlaegeForWahlAndWahlbezirk(wahlID, wahlbezirkID))
-                    .usingRecursiveComparison().isEqualTo(new NoSearchResultFoundException(Wahlvorschlaege.class, wahlbezirkID, wahlID));
+                .usingRecursiveComparison().isEqualTo(new NoSearchResultFoundException(Wahlvorschlaege.class, wahlbezirkID, wahlID));
         }
 
     }
@@ -84,7 +84,7 @@ class WahlvorschlagServiceTest {
             val wahlID = "wahlID";
 
             val mockedEntity = new WahlvorschlaegeListe(wahltag, wahlID, Collections.emptySet());
-            val mockedMappedEntity = new WahlvorschlaegeListeDTO(wahltag.toString(), wahlID, Collections.emptySet());
+            val mockedMappedEntity = new WahlvorschlaegeListeDTO(wahlID, Collections.emptySet());
             Mockito.when(wahlvorschlaegeListeRepository.findFirstByWahltagAndWahlID(wahltag, wahlID)).thenReturn(Optional.of(mockedEntity));
             Mockito.when(wahlvorschlagMapper.toDTO(mockedEntity)).thenReturn(mockedMappedEntity);
 
@@ -101,7 +101,7 @@ class WahlvorschlagServiceTest {
             Mockito.when(wahlvorschlaegeListeRepository.findFirstByWahltagAndWahlID(wahltag, wahlID)).thenReturn(Optional.empty());
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlvorschlaegeListeForWahltagAndWahlID(wahltag, wahlID))
-                    .usingRecursiveComparison().isEqualTo(new NoSearchResultFoundException(WahlvorschlaegeListe.class, wahltag, wahlID));
+                .usingRecursiveComparison().isEqualTo(new NoSearchResultFoundException(WahlvorschlaegeListe.class, wahltag, wahlID));
         }
 
     }
@@ -115,7 +115,7 @@ class WahlvorschlagServiceTest {
             val wahlID = "wahlID";
 
             val mockedEntity = new Referendumvorlagen("wahlbezirkID", "wahlID", "stimmzettelgebietID", Collections.emptySet());
-            val mockedMappedEntity = new ReferendumvorlagenDTO(wahlbezirkID, wahlID, "stimmzettelgebietID", Collections.emptySet());
+            val mockedMappedEntity = new ReferendumvorlagenDTO("stimmzettelgebietID", Collections.emptySet());
             Mockito.when(referendumvorlagenRepository.findFirstByWahlbezirkIDAndWahlID(wahlbezirkID, wahlID)).thenReturn(Optional.of(mockedEntity));
             Mockito.when(wahlvorschlagMapper.toDTO(mockedEntity)).thenReturn(mockedMappedEntity);
 
@@ -132,7 +132,7 @@ class WahlvorschlagServiceTest {
             Mockito.when(referendumvorlagenRepository.findFirstByWahlbezirkIDAndWahlID(wahlbezirkID, wahlID)).thenReturn(Optional.empty());
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getReferendumvorlagenForWahlAndWahlbezirk(wahlID, wahlbezirkID))
-                    .usingRecursiveComparison().isEqualTo(new NoSearchResultFoundException(Referendumvorlagen.class, wahlbezirkID, wahlID));
+                .usingRecursiveComparison().isEqualTo(new NoSearchResultFoundException(Referendumvorlagen.class, wahlbezirkID, wahlID));
         }
 
     }

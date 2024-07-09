@@ -9,6 +9,7 @@ import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,6 +25,7 @@ public class HandbuchService {
 
     private final ExceptionFactory exceptionFactory;
 
+    @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetHandbuch')")
     public byte[] getHandbuch(final HandbuchReferenceModel handbuchReference) {
         log.info("#getHandbuch - handbuchReference > {}", handbuchReference);
 
@@ -34,6 +36,7 @@ public class HandbuchService {
         return Arrays.copyOf(handbuchData, handbuchData.length);
     }
 
+    @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_PostHandbuch')")
     public void setHandbuch(final HandbuchWriteModel handbuchWriteModel) {
         log.info("postHandbuch - handbuchWriteModel> {}", handbuchWriteModel);
         handbuchValidator.validHandbuchWriteModelOrThrow(handbuchWriteModel);

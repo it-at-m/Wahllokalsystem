@@ -1,0 +1,28 @@
+id: add authorities eai wahlvorstand
+author: dragonfly28
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: aoueai_BUSINESSACTION_LoadWahlvorschlaege
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allEaiAuthorities
+      role: aoueai_BUSINESSACTION_LoadWahlvorschlaege
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: aoueai_BUSINESSACTION_LoadWahlvorschlaegeListe
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allEaiAuthorities
+      role: aoueai_BUSINESSACTION_LoadWahlvorschlaegeListe
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: aoueai_BUSINESSACTION_LoadReferendumvorlagen
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allEaiAuthorities
+      role: aoueai_BUSINESSACTION_LoadReferendumvorlagen
+      clientId: ${SSO_CLIENT_ID}

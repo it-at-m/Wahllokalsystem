@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, TestConstants.SPRING_NO_SECURITY_PROFILE, "db-h2", "db-dummydata" })
+@SpringBootTest(classes = MicroServiceApplication.class, properties = "spring.datasource.url=jdbc:h2:mem:wls-eai-service-dummydata")
+@ActiveProfiles({ "db-h2", "db-dummydata" })
 class MicroServiceApplicationDummyDataIntegrationTest {
 
     @Autowired

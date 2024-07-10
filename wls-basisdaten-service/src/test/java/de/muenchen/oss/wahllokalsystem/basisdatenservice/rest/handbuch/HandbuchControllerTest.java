@@ -2,10 +2,14 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.handbuch;
 
 import static org.mockito.ArgumentMatchers.eq;
 
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch.HandbuchReferenceModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch.HandbuchService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch.HandbuchWriteModel;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -77,17 +81,31 @@ class HandbuchControllerTest {
             final HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
             val servletRequest = new DefaultMultipartHttpServletRequest(httpServletRequest, multiPartFiles, null, null);
 
-            unitUnderTest.setHandbuch(null, null, servletRequest);
+            val mockedHandbuchReferenceModel = HandbuchReferenceModel.builder().build();
+            val mockedHandbuchWriteModel = HandbuchWriteModel.builder().build();
+
+            Mockito.when(handbuchDTOMapper.toModel(eq("wahltagID"), eq(WahlbezirkArtDTO.UWB))).thenReturn(mockedHandbuchReferenceModel);
+            Mockito.when(handbuchDTOMapper.toModel(eq(mockedHandbuchReferenceModel), eq(fileContent))).thenReturn(mockedHandbuchWriteModel);
+
+            unitUnderTest.setHandbuch("wahltagID", WahlbezirkArtDTO.UWB, servletRequest);
+
+            Mockito.verify(handbuchService).setHandbuch(mockedHandbuchWriteModel);
         }
 
         @Test
         void exceptionWhenRequestHasNoAttachment() {
+            val multiPartFiles = new LinkedMultiValueMap<String, MultipartFile>();
+            multiPartFiles.put("key", Collections.emptyList());
+            final HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
+            val servletRequest = new DefaultMultipartHttpServletRequest(httpServletRequest, multiPartFiles, null, null);
 
-        }
+            val mockedTechnischeWlsException = TechnischeWlsException.withCode("").buildWithMessage("");
 
-        @Test
-        void anyServiceExceptionIsMappedToTechnischeWlsException() {
+            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTHANDBUCH_SPEICHERN_NICHT_ERFOLGREICH))
+                    .thenReturn(mockedTechnischeWlsException);
 
+            Assertions.assertThatThrownBy(() -> unitUnderTest.setHandbuch("wahltagID", WahlbezirkArtDTO.UWB, servletRequest))
+                    .isSameAs(mockedTechnischeWlsException);
         }
     }
 

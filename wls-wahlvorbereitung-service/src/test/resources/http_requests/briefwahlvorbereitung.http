@@ -1,4 +1,4 @@
-POST http://localhost:8100/auth/realms/wls_realm/protocol/openid-connect/token
+POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 
 password = test &
@@ -13,18 +13,29 @@ username = wls_all
 %}
 
 ### get userinfo with auth_token
-GET http://localhost:8100/auth/realms/wls_realm/protocol/openid-connect/userinfo
+GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
 Authorization: {{ token_type }} {{ auth_token }}
 
 ### GET wbzID-1
-GET http://localhost:39150/businessActions/fortsetzungsUhrzeit/wbzID-1
+GET {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/briefwahlvorbereitung/wbzID-1
 Authorization: {{ token_type }} {{ auth_token }}
 
 ### POST wbzID-1
-POST http://localhost:39150/businessActions/fortsetzungsUhrzeit/wbzID-1
+POST {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/briefwahlvorbereitung/wbzID-1
 Authorization: {{ token_type }} {{ auth_token }}
 Content-Type: application/json
 
 {
-  "fortsetzungsUhrzeit": "2024-06-10T17:05:33.505"
+  "urnenAnzahl": [
+    {
+      "anzahl": 1,
+      "urneVersiegelt": true,
+      "wahlID": "wahlID1"
+    },
+    {
+      "wahlID": "wahlID2",
+      "urneVersiegelt": false,
+      "anzahl": 13
+    }
+  ]
 }

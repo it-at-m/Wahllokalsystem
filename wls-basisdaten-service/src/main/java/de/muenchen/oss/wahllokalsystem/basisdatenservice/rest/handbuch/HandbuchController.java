@@ -41,7 +41,7 @@ public class HandbuchController {
     }
 
     @PostMapping("{wahltagID}/{wahlbezirksart}")
-    public void getHandbuch(@PathVariable("wahltagID") String wahltagID, @PathVariable("wahlbezirksart") WahlbezirkArtDTO wahlbezirkArtDTO,
+    public void setHandbuch(@PathVariable("wahltagID") String wahltagID, @PathVariable("wahlbezirksart") WahlbezirkArtDTO wahlbezirkArtDTO,
             final MultipartHttpServletRequest request) {
         try {
             val handbuchData = getHandbuchFromRequest(request);

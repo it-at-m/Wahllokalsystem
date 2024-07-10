@@ -1,10 +1,14 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration;
 
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch.HandbuchService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -29,6 +33,9 @@ class SecurityConfigurationTest {
 
     @MockBean
     WahlvorschlaegeService wahlvorschlaegeService;
+
+    @MockBean
+    HandbuchService handbuchService;
 
     @Test
     void accessSecuredResourceRootThenUnauthorized() throws Exception {
@@ -85,6 +92,34 @@ class SecurityConfigurationTest {
         @WithMockUser
         void accessGetWahlvorstaendeUnauthorizedThenOk() throws Exception {
             api.perform(get("/businessActions/wahlvorschlaege/wahlID/wahlbezirkID")).andExpect(status().isOk());
+        }
+    }
+
+    @Nested
+    class Handbuch {
+
+        @Test
+        @WithAnonymousUser
+        void accessGetHandbuchUnauthorizedThenUnauthorized() throws Exception {
+            api.perform(get("/businessActions/handbuch/wahlID/UWB")).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessGetHandbuchUnauthorizedThenOk() throws Exception {
+            api.perform(get("/businessActions/handbuch/wahlID/UWB")).andExpect(status().isOk());
+        }
+
+        @Test
+        @WithAnonymousUser
+        void accessPostHandbuchUnauthorizedThenUnauthorized() throws Exception {
+            api.perform(post("/businessActions/handbuch/wahlID/UWB").with(csrf())).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessPostHandbuchUnauthorizedThenOk() throws Exception {
+            api.perform(multipart("/businessActions/handbuch/wahlID/UWB").file("manual", "content".getBytes()).with(csrf())).andExpect(status().isOk());
         }
     }
 

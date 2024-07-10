@@ -1,4 +1,4 @@
-POST http://localhost:8100/auth/realms/wls_realm/protocol/openid-connect/token
+POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 
 password = test &
@@ -13,15 +13,15 @@ username = wls_all
 %}
 
 ### get userinfo with auth_token
-GET http://localhost:8100/auth/realms/wls_realm/protocol/openid-connect/userinfo
+GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
 Authorization: {{ token_type }} {{ auth_token }}
 
 ### GET wbzID-1
-GET http://localhost:39150/businessActions/unterbrechungsUhrzeit/wbzID-1
+GET {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/unterbrechungsUhrzeit/wbzID-1
 Authorization: {{ token_type }} {{ auth_token }}
 
 ### POST wbzID-1
-POST http://localhost:39150/businessActions/unterbrechungsUhrzeit/wbzID-1
+POST {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/unterbrechungsUhrzeit/wbzID-1
 Authorization: {{ token_type }} {{ auth_token }}
 Content-Type: application/json
 

@@ -2,7 +2,12 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.handbuch;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch.HandbuchService;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +39,19 @@ public class HandbuchController {
     private final HandbuchDTOMapper handbuchDTOMapper;
 
     @GetMapping("{wahltagID}/{wahlbezirksart}")
+    @Operation(
+            description = "Abrufen des Handbuches für eine Wahl für eine bestimmte Wahlbezirksart",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "500", description = "Handbuch ist nicht abrufbar. Entweder fehlt es oder es gab technische Probleme",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400", description = "Anfrageparameter sind fehlerhaft",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
+                    )
+            }
+    )
     public ResponseEntity<byte[]> getHandbuch(@PathVariable("wahltagID") String wahltagID,
             @PathVariable("wahlbezirksart") WahlbezirkArtDTO wahlbezirkArtDTO) {
         val handbuchData = handbuchService.getHandbuch(handbuchDTOMapper.toModel(wahltagID, wahlbezirkArtDTO));
@@ -41,6 +59,16 @@ public class HandbuchController {
     }
 
     @PostMapping("{wahltagID}/{wahlbezirksart}")
+    @Operation(
+            description = "Speichern eines Handbuches für eine Wahl für eine bestimmte Wahlbezirksart",
+            responses = {
+                    @ApiResponse(responseCode = "500", description = "Handbuch nicht speicherbar"),
+                    @ApiResponse(
+                            responseCode = "400", description = "Anfrageparameter sind fehlerhaft",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
+                    )
+            }
+    )
     public void setHandbuch(@PathVariable("wahltagID") String wahltagID, @PathVariable("wahlbezirksart") WahlbezirkArtDTO wahlbezirkArtDTO,
             final MultipartHttpServletRequest request) {
         try {

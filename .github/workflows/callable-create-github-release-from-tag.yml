@@ -39,14 +39,14 @@ jobs:
           distribution: 'temurin'
 
       - name: build jar without tests
-        run: mvn -B -ntp -DskipTests package -f ${{ inputs.service }}/pom.xml
+        run: mvn -B -ntp -DskipTests verify -f ${{ inputs.service }}/pom.xml
 
       - name: Create GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v2
         with:
-          files: "${{ github.event.inputs.service }}/target/*.jar\n${{ github.event.inputs.service }}/target/openapi.json"
-          tag_name: ${{ github.event.inputs.service }}/${{ github.event.inputs.release-version }}
+          files: ${{ inputs.files }}
+          tag_name: ${{ inputs.tag }}
           draft: false
           prerelease: false
           generate_release_notes: false

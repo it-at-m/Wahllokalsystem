@@ -40,7 +40,7 @@ public class HandbuchController {
 
     @GetMapping("{wahltagID}/{wahlbezirksart}")
     @Operation(
-            description = "Abrufen des Handbuches für eine Wahl für eine bestimmte Wahlbezirksart",
+            description = "Abrufen des Handbuches einer Wahl für eine bestimmte Wahlbezirksart",
             responses = {
                     @ApiResponse(
                             responseCode = "500", description = "Handbuch ist nicht abrufbar. Entweder fehlt es oder es gab technische Probleme",
@@ -60,9 +60,9 @@ public class HandbuchController {
 
     @PostMapping("{wahltagID}/{wahlbezirksart}")
     @Operation(
-            description = "Speichern eines Handbuches für eine Wahl für eine bestimmte Wahlbezirksart",
+            description = "Speichern eines Handbuches einer Wahl für eine bestimmte Wahlbezirksart",
             responses = {
-                    @ApiResponse(responseCode = "500", description = "Handbuch nicht speicherbar"),
+                    @ApiResponse(responseCode = "500", description = "Handbuch kann nicht gespeichert werden"),
                     @ApiResponse(
                             responseCode = "400", description = "Anfrageparameter sind fehlerhaft",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))

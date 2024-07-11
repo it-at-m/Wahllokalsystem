@@ -33,3 +33,4 @@ includes:
   - path: add-authorities-basisdaten-wahlvorschlaege.yml
   - path: add-authorities-eai-wahlvorschlag.yml
   - path: add-authorities-eai-wahldaten.yml
+  - path: add-authorities-basisdaten-handbuch.yml

@@ -12,10 +12,10 @@ import de.muenchen.oss.wahllokalsystem.broadcastservice.domain.MessageRepository
 import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.service.BroadcastMapper;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.util.BroadcastExceptionKonstanten;
-import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.BroadcastSecurityUtils;
+import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.Authorities;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.Testdaten;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
-import jakarta.servlet.ServletException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -87,7 +87,7 @@ public class BroadcastIntegrationTest {
                 .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
 
-        BroadcastSecurityUtils.grantFullAccess();
+        SecurityUtils.runWith(Authorities.getAllAuthorities());
         messageRepository.deleteAll();
     }
 

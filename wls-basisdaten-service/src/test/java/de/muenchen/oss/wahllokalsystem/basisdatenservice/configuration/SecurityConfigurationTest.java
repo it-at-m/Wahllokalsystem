@@ -106,7 +106,7 @@ class SecurityConfigurationTest {
 
         @Test
         @WithMockUser
-        void accessGetHandbuchUnauthorizedThenOk() throws Exception {
+        void accessGetHandbuchAuthorizedThenOk() throws Exception {
             api.perform(get("/businessActions/handbuch/wahlID/UWB")).andExpect(status().isOk());
         }
 
@@ -118,7 +118,7 @@ class SecurityConfigurationTest {
 
         @Test
         @WithMockUser
-        void accessPostHandbuchUnauthorizedThenOk() throws Exception {
+        void accessPostHandbuchAuthorizedThenOk() throws Exception {
             api.perform(multipart("/businessActions/handbuch/wahlID/UWB").file("manual", "content".getBytes()).with(csrf())).andExpect(status().isOk());
         }
     }

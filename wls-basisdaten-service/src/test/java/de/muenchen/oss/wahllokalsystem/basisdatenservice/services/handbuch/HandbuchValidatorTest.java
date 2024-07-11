@@ -144,7 +144,6 @@ class HandbuchValidatorTest {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTHANDBUCH_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedWlsException);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.validHandbuchWriteModelOrThrow(invalidModel)).isSameAs(mockedWlsException);
-
         }
 
         @Test

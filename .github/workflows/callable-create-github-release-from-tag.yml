@@ -45,8 +45,8 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v2
         with:
-          files: ${{ inputs.files }}
-          tag_name: ${{ inputs.tag }}
+          files: "${{ github.event.inputs.service }}/target/*.jar\n${{ github.event.inputs.service }}/target/openapi.json"
+          tag_name: ${{ github.event.inputs.service }}/${{ github.event.inputs.release-version }}
           draft: false
           prerelease: false
           generate_release_notes: false

@@ -37,15 +37,6 @@ jobs:
           -DdevelopmentVersion=${{ github.event.inputs.development-version }} 
           -Dtag=${{ github.event.inputs.service }}/${{ github.event.inputs.release-version }}
           -Darguments="-DskipTests"
-      - name: Create GitHub Release
-        id: create_release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: "${{ github.event.inputs.service }}/target/*.jar\n${{ github.event.inputs.service }}/target/openapi.json"
-          tag_name: ${{ github.event.inputs.service }}/${{ github.event.inputs.release-version }}
-          draft: false
-          prerelease: false
-          generate_release_notes: false
 
   build-github-release:
     permissions:

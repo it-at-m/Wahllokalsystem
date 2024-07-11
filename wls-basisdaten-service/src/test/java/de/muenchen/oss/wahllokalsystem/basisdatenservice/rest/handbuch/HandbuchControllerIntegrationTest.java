@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
-public class HandbuchControllerIntegretionTest {
+public class HandbuchControllerIntegrationTest {
 
     @Value("${service.info.oid}")
     String serviceOid;

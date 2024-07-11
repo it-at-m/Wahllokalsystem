@@ -43,8 +43,7 @@ class WahltageClientMapperTest {
             wahltag3.setTag(LocalDate.now().plusMonths(1));
 
             dtoToMap.setWahltage(Set.of(
-                    wahltag3, wahltag2, wahltag1
-            ));
+                    wahltag3, wahltag2, wahltag1));
 
             Assertions.assertThat(dtoToMap).hasNoNullFieldsOrProperties();
             Assertions.assertThat(dtoToMap.getWahltage()).size().isPositive();
@@ -52,22 +51,18 @@ class WahltageClientMapperTest {
             val result = unitUnderTest.toWahltageModel(dtoToMap);
 
             val expectedWahltage = List.of(
-                        new WahltagModel("identifikatorWahltag1",
-                                LocalDate.now().minusMonths(2),
-                                "beschreibungWahltag1",
-                                "nummerWahltag1"
-                        ),
-                        new WahltagModel("identifikatorWahltag2",
-                                LocalDate.now().minusMonths(1),
-                                "beschreibungWahltag2",
-                                "nummerWahltag2"
-                        ),
-                        new WahltagModel("identifikatorWahltag3",
-                                LocalDate.now().plusMonths(1),
-                                "beschreibungWahltag3",
-                                "nummerWahltag3"
-                        )
-                    );
+                    new WahltagModel("identifikatorWahltag1",
+                            LocalDate.now().minusMonths(2),
+                            "beschreibungWahltag1",
+                            "nummerWahltag1"),
+                    new WahltagModel("identifikatorWahltag2",
+                            LocalDate.now().minusMonths(1),
+                            "beschreibungWahltag2",
+                            "nummerWahltag2"),
+                    new WahltagModel("identifikatorWahltag3",
+                            LocalDate.now().plusMonths(1),
+                            "beschreibungWahltag3",
+                            "nummerWahltag3"));
 
             val expectedResult = new WahltageModel(expectedWahltage);
 
@@ -93,10 +88,9 @@ class WahltageClientMapperTest {
 
             val expectedWahltag = new WahltagModel(
                     "identifikatorWahltag1",
-                            LocalDate.now().minusMonths(2),
-                            "beschreibungWahltag1",
-                            "nummerWahltag1"
-                    );
+                    LocalDate.now().minusMonths(2),
+                    "beschreibungWahltag1",
+                    "nummerWahltag1");
 
             Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedWahltag);
         }
@@ -129,8 +123,7 @@ class WahltageClientMapperTest {
             wahltag3.setTag(LocalDate.now().plusMonths(1));
 
             dtoToMap.setWahltage(Set.of(
-                    wahltag1, wahltag2, wahltag3
-            ));
+                    wahltag1, wahltag2, wahltag3));
 
             Assertions.assertThat(dtoToMap).hasNoNullFieldsOrProperties();
             Assertions.assertThat(dtoToMap.getWahltage()).size().isPositive();
@@ -141,19 +134,15 @@ class WahltageClientMapperTest {
                     new WahltagModel("identifikatorWahltag1",
                             LocalDate.now().minusMonths(2),
                             "beschreibungWahltag1",
-                            "nummerWahltag1"
-                    ),
+                            "nummerWahltag1"),
                     new WahltagModel("identifikatorWahltag2",
                             LocalDate.now().minusMonths(1),
                             "beschreibungWahltag2",
-                            "nummerWahltag2"
-                    ),
+                            "nummerWahltag2"),
                     new WahltagModel("identifikatorWahltag3",
                             LocalDate.now().plusMonths(1),
                             "beschreibungWahltag3",
-                            "nummerWahltag3"
-                    )
-            );
+                            "nummerWahltag3"));
 
             Assertions.assertThat(result).containsExactlyInAnyOrderElementsOf(expectedWahltage);
         }

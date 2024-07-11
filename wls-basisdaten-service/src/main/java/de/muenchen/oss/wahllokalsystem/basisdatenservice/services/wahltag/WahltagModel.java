@@ -7,8 +7,8 @@ import lombok.Builder;
 @Builder
 public record WahltagModel(@NotNull String wahltagID,
                            @NotNull LocalDate wahltag,
-                           @NotNull String beschreibung,
-                           @NotNull String nummer
+                           String beschreibung,
+                           String nummer
 ) {
 
 }

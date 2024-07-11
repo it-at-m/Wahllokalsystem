@@ -42,7 +42,7 @@ class WahltageClientImplTest {
             val testDate = LocalDate.now().minusMonths(3);
 
             val mockedClientResponse = new WahltageDTO();
-            val mockedMappedClientResponse = List.of(WahltagModel.builder().build()) ;
+            val mockedMappedClientResponse = List.of(WahltagModel.builder().build());
 
             Mockito.when(wahldatenControllerApi.loadWahltageSinceIncluding(testDate))
                     .thenReturn(mockedClientResponse);

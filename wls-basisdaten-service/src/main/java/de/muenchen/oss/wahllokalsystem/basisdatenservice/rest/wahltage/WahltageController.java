@@ -30,15 +30,14 @@ public class WahltageController {
             value = {
                     @ApiResponse(
                             responseCode = "200", description = "OK",
-                            content = { @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema( implementation = WahltagDTO.class))) }
+                            content = { @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = WahltagDTO.class))) }
                     )
             }
     )
     @GetMapping
     public ResponseEntity<List<WahltagDTO>> getWahltage() {
         return new ResponseEntity<>(
-                    wahltageDTOMapper.fromListOfWahltagModelToListOfWahltagDTO(wahltageService.getWahltage()),
-                    HttpStatus.OK
-        );
+                wahltageDTOMapper.fromListOfWahltagModelToListOfWahltagDTO(wahltageService.getWahltage()),
+                HttpStatus.OK);
     }
 }

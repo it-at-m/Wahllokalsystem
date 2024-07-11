@@ -11,8 +11,6 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface WahltageClientMapper {
 
-    List<WahltagModel> fromListOfRemoteWahltagDTOtoListOfWahltagModel(List<WahltagDTO> wahltagDTOList);
-
     @Mapping(target = "wahltagModels", source = "wahltage")
     WahltageModel toWahltageModel(WahltageDTO wahltageDTO);
 

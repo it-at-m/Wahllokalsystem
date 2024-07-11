@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +21,10 @@ public class HandbuchValidator {
 
     public void validHandbuchWriteModelOrThrow(final HandbuchWriteModel handbuchWriteModel) {
         if (handbuchWriteModel == null || handbuchWriteModel.handbuchReferenceModel() == null || StringUtils.isBlank(
-                handbuchWriteModel.handbuchReferenceModel().wahltagID()) || handbuchWriteModel.handbuchReferenceModel().wahlbezirksart() == null) {
+                handbuchWriteModel.handbuchReferenceModel().wahltagID())
+                || handbuchWriteModel.handbuchReferenceModel()
+                        .wahlbezirksart() == null
+                || ArrayUtils.isEmpty(handbuchWriteModel.handbuchData())) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTHANDBUCH_PARAMETER_UNVOLLSTAENDIG);
         }
     }

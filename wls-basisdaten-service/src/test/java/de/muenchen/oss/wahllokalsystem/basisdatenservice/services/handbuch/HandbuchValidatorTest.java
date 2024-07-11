@@ -147,8 +147,26 @@ class HandbuchValidatorTest {
 
         }
 
+        @Test
+        void exceptionWhenHandbuchDataIsNull() {
+            val invalidModel = initValidModel().handbuchData(new byte[0]).build();
+
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTHANDBUCH_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedWlsException);
+
+            Assertions.assertThatThrownBy(() -> unitUnderTest.validHandbuchWriteModelOrThrow(invalidModel)).isSameAs(mockedWlsException);
+        }
+
+        @Test
+        void exceptionWhenHandbuchDataHasZeroLength() {
+            val invalidModel = initValidModel().handbuchData(new byte[0]).build();
+
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTHANDBUCH_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedWlsException);
+
+            Assertions.assertThatThrownBy(() -> unitUnderTest.validHandbuchWriteModelOrThrow(invalidModel)).isSameAs(mockedWlsException);
+        }
+
         private HandbuchWriteModel.HandbuchWriteModelBuilder initValidModel() {
-            return HandbuchWriteModel.builder().handbuchReferenceModel(initValidHandbuchReferenceModel().build());
+            return HandbuchWriteModel.builder().handbuchReferenceModel(initValidHandbuchReferenceModel().build()).handbuchData("text".getBytes());
         }
 
         private HandbuchReferenceModel.HandbuchReferenceModelBuilder initValidHandbuchReferenceModel() {

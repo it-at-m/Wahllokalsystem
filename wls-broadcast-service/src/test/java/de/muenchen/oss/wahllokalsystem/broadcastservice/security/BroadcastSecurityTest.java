@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -43,7 +42,7 @@ public class BroadcastSecurityTest {
 
         @Test
         void accessDenied_dummyRolle() {
-            SecurityUtils.runWith(AuthorityUtils.createAuthorityList("ROLE_DUMMY").toString());
+            SecurityUtils.runWith("ROLE_DUMMY");
             Assertions.assertThatExceptionOfType(AccessDeniedException.class)
                     .isThrownBy(() -> broadcastService.broadcast(null)).withMessageStartingWith("Access Denied");
         }
@@ -89,7 +88,7 @@ public class BroadcastSecurityTest {
 
         @Test
         void accessDenied() {
-            SecurityUtils.runWith(AuthorityUtils.createAuthorityList("ROLE_DUMMY").toString());
+            SecurityUtils.runWith("ROLE_DUMMY");
             Assertions.assertThatExceptionOfType(AccessDeniedException.class)
                     .isThrownBy(() -> broadcastService.getOldestMessage(null))
                     .withMessageStartingWith("Access Denied");
@@ -116,7 +115,7 @@ public class BroadcastSecurityTest {
 
         @Test
         void accessDenied() {
-            SecurityUtils.runWith(AuthorityUtils.createAuthorityList("ROLE_DUMMY").toString());
+            SecurityUtils.runWith("ROLE_DUMMY");
             Assertions.assertThatExceptionOfType(AccessDeniedException.class)
                     .isThrownBy(() -> broadcastService.deleteMessage(null))
                     .withMessageStartingWith("Access Denied");

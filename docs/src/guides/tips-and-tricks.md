@@ -18,7 +18,7 @@ z.B. nur die Tabellen `handbuch`, `kandidat` oder `wahlvorschlag` sehen.
 
 </details>
 
-Mit dem User `system` kann man auf alle Schemata zugreifen und hat und somit Zugriff auf alle Tabellen für alle
+Mit dem User `system` kann man auf alle Schemata zugreifen und hat somit Zugriff auf alle Tabellen aller
 Services. Das Passwort ist der Wert von `ORACLE_PASSWORD` aus dem `docker-compose.yml`-File. Dort sind auch die
 Verbindungsdaten enthalten die man zum Einrichten des Zugriffs benötigt.
 

@@ -3,9 +3,9 @@ name: dispatch build github container image
 on:
   workflow_dispatch:
     inputs:
-      git-ref:
+      tag:
         required: false
-        description: 'optional: branch/tag/ref to use for build; default: github.ref'
+        description: 'optional: gittag'
       service:
         required: true
         type: choice
@@ -29,5 +29,5 @@ jobs:
     uses:
       ./.github/workflows/callable-create-github-container-image.yml
     with:
-      tag: ${{ github.event.inputs.git-ref }}
+      tag: ${{ github.event.inputs.tag }}
       service: ${{ github.event.inputs.service }}

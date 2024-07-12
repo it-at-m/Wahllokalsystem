@@ -13,10 +13,10 @@ import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.Fortsetzun
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.fortsetzungsuhrzeit.FortsetzungsUhrzeitModelMapper;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.Profiles;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -57,7 +57,7 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        SecurityUtils.runAs(Authorities.REPOSITORY_DELETE_FORTSETZUNGSUHRZEIT);
+        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_FORTSETZUNGSUHRZEIT);
         fortsetzungsUhrzeitRepository.deleteAll();
     }
 
@@ -119,7 +119,7 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
 
             mockMvc.perform(request).andExpect(status().isCreated());
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT);
             val fortsetzungsUhrzeitFromRepo = fortsetzungsUhrzeitRepository.findById(wahlbezirkID).get();
             val expectedFortsetzungsUhrzeit = fortsetzungsUhrzeitModelMapper.toEntity(fortsetzungsUhrzeitDTOMapper.toModel(wahlbezirkID, writeDto));
 
@@ -136,7 +136,7 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
             val request1 = buildPostRequest(wahlbezirkID, writeDto1);
 
             mockMvc.perform(request1).andExpect(status().isCreated());
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT);
             val fortsetzungsUhrzeitFromRepo1 = fortsetzungsUhrzeitRepository.findById(wahlbezirkID).get();
             val expectedFortsetzungsUhrzeit1 = fortsetzungsUhrzeitModelMapper.toEntity(fortsetzungsUhrzeitDTOMapper.toModel(wahlbezirkID, writeDto1));
 
@@ -147,7 +147,7 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
 
             mockMvc.perform(request2).andExpect(status().isCreated());
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT);
             val fortsetzungsUhrzeitFromRepo2 = fortsetzungsUhrzeitRepository.findById(wahlbezirkID).get();
             val expectedFortsetzungsUhrzeit2 = fortsetzungsUhrzeitModelMapper.toEntity(fortsetzungsUhrzeitDTOMapper.toModel(wahlbezirkID, writeDto2));
 
@@ -166,7 +166,7 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
             val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
             val exceptionBodyFromResponse = objectMapper.readValue(response.getResponse().getContentAsString(StandardCharsets.UTF_8), WlsExceptionDTO.class);
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT);
             Assertions.assertThat(fortsetzungsUhrzeitRepository.findById(wahlbezirkID)).isEmpty();
 
             val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.PARAMS_UNVOLLSTAENDIG.code(), "WLS-WAHLVORBEREITUNG",
@@ -187,7 +187,7 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
             val response = mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
             val exceptionBodyFromResponse = objectMapper.readValue(response.getResponse().getContentAsString(StandardCharsets.UTF_8), WlsExceptionDTO.class);
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT);
             Assertions.assertThat(fortsetzungsUhrzeitRepository.findById(wahlbezirkID)).isEmpty();
 
             val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionConstants.UNSAVEABLE.code(), "WLS-WAHLVORBEREITUNG",

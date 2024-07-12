@@ -4,11 +4,10 @@ import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.MicroServiceAppli
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.common.WahlurneModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.testdaten.WahlurneTestdatenfactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
-
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
@@ -49,7 +48,7 @@ public class BriefwahlvorbereitungSecurityTest {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_GET_BRIEFWAHLVORBEREITUNG);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_BRIEFWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
 
@@ -60,7 +59,7 @@ public class BriefwahlvorbereitungSecurityTest {
 
         @Test
         void bezirkIDPermissionEvaluatorFailed() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_GET_BRIEFWAHLVORBEREITUNG);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_BRIEFWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
 
@@ -73,7 +72,7 @@ public class BriefwahlvorbereitungSecurityTest {
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getAuthoritiesVariations")
         void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
-            SecurityUtils.runAs(argumentsAccessor.get(0, String[].class));
+            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val wahlbezirkID = "wahlbezirkID";
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
@@ -92,7 +91,7 @@ public class BriefwahlvorbereitungSecurityTest {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_POST_BRIEFWAHLVORBEREITUNG);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_BRIEFWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
             List<WahlurneModel> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValidModel("1234").build());
@@ -105,7 +104,7 @@ public class BriefwahlvorbereitungSecurityTest {
 
         @Test
         void bezirkIDPermissionEvaluatorFailed() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_POST_BRIEFWAHLVORBEREITUNG);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_BRIEFWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
             val modelToSet = new BriefwahlvorbereitungModel(wahlbezirkID, Collections.emptyList());
@@ -118,7 +117,7 @@ public class BriefwahlvorbereitungSecurityTest {
 
         @Test
         void accessDeniedOnServiceAuthorityMissing() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_REPO_BRIEFWAHLVORBEREITUNG);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_REPO_BRIEFWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
             val modelToSet = new BriefwahlvorbereitungModel(wahlbezirkID, Collections.emptyList());
@@ -131,7 +130,7 @@ public class BriefwahlvorbereitungSecurityTest {
 
         @Test
         void wlsExceptionOnRepoWriteAuthorityMissing() {
-            SecurityUtils.runAs(Authorities.SERVICE_POST_BRIEFWAHLVORBEREITUNG);
+            SecurityUtils.runWith(Authorities.SERVICE_POST_BRIEFWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
             List<WahlurneModel> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValidModel("1234").build());

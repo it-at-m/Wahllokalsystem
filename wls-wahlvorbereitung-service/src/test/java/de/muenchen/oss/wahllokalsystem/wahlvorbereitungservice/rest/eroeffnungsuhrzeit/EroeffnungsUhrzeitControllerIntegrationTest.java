@@ -4,6 +4,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.TestConstants;
@@ -12,10 +13,10 @@ import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.Eroeffnung
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.eroeffnungsuhrzeit.EroeffnungsUhrzeitModelMapper;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.Profiles;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -56,7 +57,7 @@ public class EroeffnungsUhrzeitControllerIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        SecurityUtils.runAs(Authorities.REPOSITORY_DELETE_EROEFFNUNGSUHRZEIT);
+        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_EROEFFNUNGSUHRZEIT);
         eroeffnungsUhrzeitRepository.deleteAll();
     }
 
@@ -118,7 +119,7 @@ public class EroeffnungsUhrzeitControllerIntegrationTest {
 
             mockMvc.perform(request).andExpect(status().isCreated());
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_EROEFFNUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_EROEFFNUNGSUHRZEIT);
             val eroeffnungsUhrzeitFromRepo = eroeffnungsUhrzeitRepository.findById(wahlbezirkID).get();
             val expectedEroeffnungsUhrzeit = eroeffnungsUhrzeitModelMapper.toEntity(eroeffnungsUhrzeitDTOMapper.toModel(wahlbezirkID, writeDto));
 
@@ -135,7 +136,7 @@ public class EroeffnungsUhrzeitControllerIntegrationTest {
             val request1 = buildPostRequest(wahlbezirkID, writeDto1);
 
             mockMvc.perform(request1).andExpect(status().isCreated());
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_EROEFFNUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_EROEFFNUNGSUHRZEIT);
             val eroeffnungsUhrzeitFromRepo1 = eroeffnungsUhrzeitRepository.findById(wahlbezirkID).get();
             val expectedEroeffnungsUhrzeit1 = eroeffnungsUhrzeitModelMapper.toEntity(eroeffnungsUhrzeitDTOMapper.toModel(wahlbezirkID, writeDto1));
 
@@ -146,7 +147,7 @@ public class EroeffnungsUhrzeitControllerIntegrationTest {
 
             mockMvc.perform(request2).andExpect(status().isCreated());
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_EROEFFNUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_EROEFFNUNGSUHRZEIT);
             val eroeffnungsUhrzeitFromRepo2 = eroeffnungsUhrzeitRepository.findById(wahlbezirkID).get();
             val expectedEroeffnungsUhrzeit2 = eroeffnungsUhrzeitModelMapper.toEntity(eroeffnungsUhrzeitDTOMapper.toModel(wahlbezirkID, writeDto2));
 
@@ -165,7 +166,7 @@ public class EroeffnungsUhrzeitControllerIntegrationTest {
             val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
             val exceptionBodyFromResponse = objectMapper.readValue(response.getResponse().getContentAsString(StandardCharsets.UTF_8), WlsExceptionDTO.class);
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_EROEFFNUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_EROEFFNUNGSUHRZEIT);
             Assertions.assertThat(eroeffnungsUhrzeitRepository.findById(wahlbezirkID)).isEmpty();
 
             val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.PARAMS_UNVOLLSTAENDIG.code(), "WLS-WAHLVORBEREITUNG",
@@ -186,7 +187,7 @@ public class EroeffnungsUhrzeitControllerIntegrationTest {
             val response = mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
             val exceptionBodyFromRepsonse = objectMapper.readValue(response.getResponse().getContentAsString(StandardCharsets.UTF_8), WlsExceptionDTO.class);
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_EROEFFNUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_EROEFFNUNGSUHRZEIT);
             Assertions.assertThat(eroeffnungsUhrzeitRepository.findById(wahlbezirkID)).isEmpty();
 
             val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionConstants.UNSAVEABLE.code(), "WLS-WAHLVORBEREITUNG",

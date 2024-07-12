@@ -27,6 +27,6 @@ Verbindungsdaten enthalten die man zum Einrichten des Zugriffs benötigt.
 <summary>Screenshot</summary>
 
 ![Tabellen zu allen Services sind verfügbar](/tipsAndTricks/MutlipleSchemasAccessible.png)  
-*so sieht man doch nur die Tabellen zum Basisdatenservice*
+*Zugriff auf alle Tabellen der verschiedenen Schemata*
 
 </details>

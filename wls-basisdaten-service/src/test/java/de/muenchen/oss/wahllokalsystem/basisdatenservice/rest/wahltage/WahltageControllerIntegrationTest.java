@@ -92,7 +92,7 @@ public class WahltageControllerIntegrationTest {
 
             String requestDate = LocalDate.now().minusMonths(3).toString();
 
-            val eaiWahltage = createClientWahltageDTO(LocalDate.now().minusMonths(3), false);
+            val eaiWahltage = createClientWahltageDTO(false);
             WireMock.stubFor(WireMock.get("/wahldaten/wahltage?includingSince=" + requestDate)
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(eaiWahltage))));
@@ -115,7 +115,7 @@ public class WahltageControllerIntegrationTest {
 
             String requestDate = LocalDate.now().minusMonths(3).toString();
 
-            val eaiWahltage = createClientWahltageDTO(LocalDate.now().minusMonths(3), false);
+            val eaiWahltage = createClientWahltageDTO(false);
             WireMock.stubFor(WireMock.get("/wahldaten/wahltage?includingSince=" + requestDate)
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(eaiWahltage))));
@@ -138,7 +138,7 @@ public class WahltageControllerIntegrationTest {
         void loadFromRemoteFirstAndThanUpdateRepository() throws Exception {
             val entitiesToFindInRepository = modelMapper
                     .fromWahltagModelToWahltagEntityList(wahltageClientMapper
-                            .fromRemoteClientWahltageDTOtoListOfWahltagModel(createClientWahltageDTO(LocalDate.now().minusMonths(3), true)));
+                            .fromRemoteClientWahltageDTOtoListOfWahltagModel(createClientWahltageDTO(true)));
             val savedEntitiesInRepository_1 = wahltagRepository.saveAll(entitiesToFindInRepository);
 
             val request = MockMvcRequestBuilders.get("/businessActions/wahltage");
@@ -152,12 +152,12 @@ public class WahltageControllerIntegrationTest {
             val expectedResponseBody_1 = dtoMapper.fromListOfWahltagModelToListOfWahltagDTO(
                     modelMapper.fromWahltagEntityToWahltagModelList((List<Wahltag>) savedEntitiesInRepository_1));
 
-            Assertions.assertThat(new ArrayList(Arrays.asList(responseBodyAsListOfDTOs)))
+            Assertions.assertThat(new ArrayList<>(Arrays.asList(responseBodyAsListOfDTOs)))
                     .usingRecursiveComparison().ignoringCollectionOrder()
                     .ignoringFields("beschreibung")
                     .isEqualTo(expectedResponseBody_1);
 
-            Assertions.assertThat(new ArrayList(Arrays.asList(responseBodyAsListOfDTOs)))
+            Assertions.assertThat(new ArrayList<>(Arrays.asList(responseBodyAsListOfDTOs)))
                     .usingRecursiveComparison().ignoringCollectionOrder()
                     .isNotEqualTo(expectedResponseBody_1);
 
@@ -187,8 +187,7 @@ public class WahltageControllerIntegrationTest {
         }
     }
 
-    private de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltageDTO createClientWahltageDTO(LocalDate sinceTag,
-            boolean differentAsInDummyClient) {
+    private de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltageDTO createClientWahltageDTO(boolean differentAsInDummyClient) {
 
         val clientWahltageDTO = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltageDTO();
 

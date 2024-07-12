@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag;
 
-import static org.junit.jupiter.api.Assertions.*;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahltag;
 import java.time.LocalDate;
 import java.util.List;
@@ -66,9 +65,7 @@ class WahltagModelMapperTest {
         val wahltag2 = new Wahltag("identifikatorWahltag2", LocalDate.now().minusMonths(1), "beschreibungWahltag2", "nummerWahltag2");
         val wahltag3 = new Wahltag("identifikatorWahltag3", LocalDate.now().plusMonths(1), "beschreibungWahltag3", "nummerWahltag3");
 
-        val wahltagEntities = List.of(wahltag1, wahltag2, wahltag3);
-
-        return wahltagEntities;
+        return List.of(wahltag1, wahltag2, wahltag3);
     }
 
     private List<WahltagModel> createWahltagModelList() {
@@ -76,8 +73,6 @@ class WahltagModelMapperTest {
         val wahltag2 = new WahltagModel("identifikatorWahltag2", LocalDate.now().minusMonths(1), "beschreibungWahltag2", "nummerWahltag2");
         val wahltag3 = new WahltagModel("identifikatorWahltag3", LocalDate.now().plusMonths(1), "beschreibungWahltag3", "nummerWahltag3");
 
-        val wahltagModels = List.of(wahltag1, wahltag2, wahltag3);
-
-        return wahltagModels;
+        return List.of(wahltag1, wahltag2, wahltag3);
     }
 }

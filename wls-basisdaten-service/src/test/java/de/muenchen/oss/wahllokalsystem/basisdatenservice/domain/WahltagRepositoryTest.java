@@ -32,7 +32,7 @@ class WahltagRepositoryTest {
     private WahltagRepository repository;
 
     @AfterEach
-    void tearDown() throws Exception {
+    void tearDown() {
         repository.deleteAll();
     }
 
@@ -71,8 +71,8 @@ class WahltagRepositoryTest {
 
         wahltageToSave.sort(
                 Comparator
-                        .comparing((Wahltag w) -> w.getWahltag())
-                        .thenComparing((Wahltag w) -> w.getWahltag()));
+                        .comparing(Wahltag::getWahltag)
+                        .thenComparing(Wahltag::getWahltag));
 
         Assertions.assertThat(wahltageToSave).isEqualTo(foundWahltage);
     }
@@ -83,7 +83,6 @@ class WahltagRepositoryTest {
         val wahltag3 = new Wahltag(pIndex + "_identifikatorWahltag3", LocalDate.now().plusMonths(1), "beschreibungWahltag3", "nummerWahltag3");
         val wahltag2 = new Wahltag(pIndex + "_identifikatorWahltag2", LocalDate.now().minusMonths(1), "beschreibungWahltag2", "nummerWahltag2");
 
-        List<Wahltag> myModifiableList = Arrays.asList(wahltag4, wahltag1, wahltag3, wahltag2);
-        return myModifiableList;
+        return Arrays.asList(wahltag4, wahltag1, wahltag3, wahltag2);
     }
 }

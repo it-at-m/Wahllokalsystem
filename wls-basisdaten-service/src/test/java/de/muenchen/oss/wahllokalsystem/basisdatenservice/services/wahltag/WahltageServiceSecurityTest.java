@@ -5,15 +5,9 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlvorschlaegeRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.KandidatDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltageDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlaegeDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlagDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.LocalDate;
 import java.util.Set;
@@ -64,7 +58,7 @@ public class WahltageServiceSecurityTest {
             String requestDate = LocalDate.now().minusMonths(3).toString();
             val eaiWahltage = createClientWahltageDTO();
 
-            WireMock.stubFor(WireMock.get("/wahldaten/wahltage?includingAfter=" + requestDate)
+            WireMock.stubFor(WireMock.get("/wahldaten/wahltage?includingSince=" + requestDate)
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(eaiWahltage))));
 
@@ -79,7 +73,7 @@ public class WahltageServiceSecurityTest {
             String requestDate = LocalDate.now().minusMonths(3).toString();
             val eaiWahltage = createClientWahltageDTO();
 
-            WireMock.stubFor(WireMock.get("/wahldaten/wahltage?includingAfter=" + requestDate)
+            WireMock.stubFor(WireMock.get("/wahldaten/wahltage?includingSince=" + requestDate)
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(eaiWahltage))));
 

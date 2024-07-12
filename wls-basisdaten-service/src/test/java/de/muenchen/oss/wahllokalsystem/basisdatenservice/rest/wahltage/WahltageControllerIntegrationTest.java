@@ -93,7 +93,7 @@ public class WahltageControllerIntegrationTest {
             String requestDate = LocalDate.now().minusMonths(3).toString();
 
             val eaiWahltage = createClientWahltageDTO(LocalDate.now().minusMonths(3), false);
-            WireMock.stubFor(WireMock.get("/wahldaten/wahltage?includingAfter=" + requestDate)
+            WireMock.stubFor(WireMock.get("/wahldaten/wahltage?includingSince=" + requestDate)
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(eaiWahltage))));
 
@@ -116,7 +116,7 @@ public class WahltageControllerIntegrationTest {
             String requestDate = LocalDate.now().minusMonths(3).toString();
 
             val eaiWahltage = createClientWahltageDTO(LocalDate.now().minusMonths(3), false);
-            WireMock.stubFor(WireMock.get("/wahldaten/wahltage?includingAfter=" + requestDate)
+            WireMock.stubFor(WireMock.get("/wahldaten/wahltage?includingSince=" + requestDate)
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(eaiWahltage))));
 
@@ -172,7 +172,7 @@ public class WahltageControllerIntegrationTest {
 
             String requestDate = LocalDate.now().minusMonths(3).toString();
 
-            WireMock.stubFor(WireMock.get("/wahldaten/wahltage?includingAfter=" + requestDate)
+            WireMock.stubFor(WireMock.get("/wahldaten/wahltage?includingSince=" + requestDate)
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.NOT_FOUND.value())));
 
             val request = MockMvcRequestBuilders.get("/businessActions/wahltage");

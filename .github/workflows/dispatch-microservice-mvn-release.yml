@@ -48,7 +48,7 @@ jobs:
     with:
       tag: ${{ github.event.inputs.service }}/${{ github.event.inputs.release-version }}
       service: ${{ github.event.inputs.service }}
-      files: ${{ inputs.service }}/target/*.jar
+      files: "${{ github.event.inputs.service }}/target/*.jar\n${{ github.event.inputs.service }}/target/openapi.json"
 
   build-github-container-image:
     permissions:

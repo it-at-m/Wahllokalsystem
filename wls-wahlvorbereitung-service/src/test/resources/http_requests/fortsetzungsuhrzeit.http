@@ -1,0 +1,30 @@
+POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+password = test &
+grant_type = password &
+client_secret = top-secret &
+client_id = wls &
+username = wls_all
+
+> {%
+    client.global.set("auth_token", response.body.access_token);
+    client.global.set("token_type", response.body.token_type);
+%}
+
+### get userinfo with auth_token
+GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
+Authorization: {{ token_type }} {{ auth_token }}
+
+### GET wbzID-1
+GET {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/fortsetzungsUhrzeit/wbzID-1
+Authorization: {{ token_type }} {{ auth_token }}
+
+### POST wbzID-1
+POST {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/fortsetzungsUhrzeit/wbzID-1
+Authorization: {{ token_type }} {{ auth_token }}
+Content-Type: application/json
+
+{
+  "fortsetzungsUhrzeit": "2024-06-10T17:05:33.505"
+}

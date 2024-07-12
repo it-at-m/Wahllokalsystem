@@ -39,7 +39,7 @@ jobs:
           distribution: 'temurin'
 
       - name: build jar without tests
-        run: mvn -B -ntp -DskipTests package -f ${{ inputs.service }}/pom.xml
+        run: mvn -B -ntp -DskipTests verify -f ${{ inputs.service }}/pom.xml
 
       - name: Create GitHub Release
         id: create_release

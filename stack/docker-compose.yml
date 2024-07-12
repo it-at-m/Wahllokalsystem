@@ -14,8 +14,9 @@ services:
       - SPRING_DATASOURCE_URL=${WLS_BROADCAST_SERVICE_DB_URL}
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${WLS_BROADCAST_SERVICE_KEYCLOAK_URL}/certs
       - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${WLS_BROADCAST_SERVICE_KEYCLOAK_URL}/userinfo
+      - SERVER_PORT=8080
     ports:
-      - 8200:39146
+      - 8200:8080
     networks:
       - services
       - keycloak
@@ -32,8 +33,9 @@ services:
       - SPRING_DATASOURCE_URL=${WLS_INFOMANAGEMENT_SERVICE_DB_URL}
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${WLS_INFOMANAGEMENT_SERVICE_KEYCLOAK_URL}/certs
       - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${WLS_INFOMANAGEMENT_SERVICE_KEYCLOAK_URL}/userinfo
+      - SERVER_PORT=8080
     ports:
-      - 8201:39146
+      - 8201:8080
     networks:
       - services
       - keycloak
@@ -50,8 +52,47 @@ services:
       - SPRING_DATASOURCE_URL=${WLS_BRIEFWAHL_SERVICE_DB_URL}
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${WLS_BRIEFWAHL_SERVICE_KEYCLOAK_URL}/certs
       - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${WLS_BRIEFWAHL_SERVICE_KEYCLOAK_URL}/userinfo
+      - SERVER_PORT=8080
     ports:
-      - 8202:39146
+      - 8202:8080
+    networks:
+      - services
+      - keycloak
+
+  wls-wahlvorbereitung-service:
+    container_name: wls-wahlvorbereitung-service
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-wahlvorbereitung-service:latest
+    depends_on:
+      - wls-db-oracle
+    env_file:
+      - .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=${WLS_WAHLVORBEREITUNG_SERVICE_PROFILE}
+      - SPRING_DATASOURCE_URL=${WLS_WAHLVORBEREITUNG_SERVICE_DB_URL}
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${WLS_WAHLVORBEREITUNG_SERVICE_KEYCLOAK_URL}/certs
+      - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${WLS_WAHLVORBEREITUNG_SERVICE_KEYCLOAK_URL}/userinfo
+      - SERVER_PORT=8080
+    ports:
+      - 8203:8080
+    networks:
+      - services
+      - keycloak
+
+  wls-eai-service:
+    container_name: wls-eai-service
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-eai-service:latest
+    depends_on:
+      - wls-db-oracle
+    env_file:
+      - .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=${WLS_EAI_SERVICE_PROFILE}
+      - SPRING_DATASOURCE_URL=${WLS_EAI_SERVICE_DB_URL}
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${WLS_EAI_SERVICE_KEYCLOAK_URL}/certs
+      - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${WLS_EAI_SERVICE_KEYCLOAK_URL}/userinfo
+      - SERVER_PORT=8080
+    ports:
+      - 8300:8080
     networks:
       - services
       - keycloak

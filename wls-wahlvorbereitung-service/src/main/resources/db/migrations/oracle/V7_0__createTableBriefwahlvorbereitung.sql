@@ -8,7 +8,7 @@ create table BWVorbereitung_Urnen
 (
     vorbereitung_wahlbezirkID varchar(1000) not null,
     wahlid                    varchar(1000) not null,
-    anzahl                    BIGINT        not null,
+    anzahl                    NUMBER(19, 0) not null,
     urneversiegelt            NUMBER(1),
     constraint fk_Briefwahlvorbereitung
         foreign key (vorbereitung_wahlbezirkID)

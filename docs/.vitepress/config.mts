@@ -57,7 +57,8 @@ export default withMermaid({
                 {text: 'Auth-Service', link: `${PATH_FEATURES}auth-service/`},
             ],
             [PATH_GUIDES]: [
-                {text: 'API-Client generieren', link: `${PATH_GUIDES}how-to-create-client-from-open-api-json.md`}
+                {text: 'API-Client generieren', link: `${PATH_GUIDES}how-to-create-client-from-open-api-json.md`},
+                {text: 'Tips und Tricks', link: `${PATH_GUIDES}tips-and-tricks.md`},
             ]
         },
 

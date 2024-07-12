@@ -3,9 +3,6 @@ name: dispatch build github container image
 on:
   workflow_dispatch:
     inputs:
-      tag:
-        required: false
-        description: 'optional: gittag'
       service:
         required: true
         type: choice
@@ -21,6 +18,9 @@ on:
           - wls-monitoring-service
           - wls-wahlvorbereitung-service
           - wls-wahlvorstand-service
+      tag:
+        required: false
+        description: 'optional: gittag'
 
 jobs:
   build-github-container-image:

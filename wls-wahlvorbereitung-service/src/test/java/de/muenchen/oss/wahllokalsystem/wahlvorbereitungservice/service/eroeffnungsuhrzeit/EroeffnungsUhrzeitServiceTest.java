@@ -2,11 +2,12 @@ package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.eroeffnu
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
+
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.EroeffnungsUhrzeit;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.EroeffnungsUhrzeitRepository;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.exception.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;

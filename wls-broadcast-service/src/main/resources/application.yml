@@ -13,7 +13,7 @@ spring:
       - classpath:db/migrations/{vendor}
   h2.console.enabled: false
 
-  # Spring JPA
+  # OAuth-Security
   security:
     oauth2:
       resourceserver:

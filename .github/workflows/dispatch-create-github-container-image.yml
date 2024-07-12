@@ -26,8 +26,6 @@ jobs:
   build-github-container-image:
     permissions:
       packages: write
-    needs:
-      - run-mvn-release-prepare
     uses:
       ./.github/workflows/callable-create-github-container-image.yml
     with:

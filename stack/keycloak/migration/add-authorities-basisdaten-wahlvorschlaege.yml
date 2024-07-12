@@ -1,0 +1,87 @@
+id: add authorities basisdaten wahlvorschlaege
+author: MrSebastian
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: Basisdaten_BUSINESSACTION_GetWahlvorschlaege
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_BUSINESSACTION_GetWahlvorschlaege
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Basisdaten_READ_WLSWahlvorschlaege
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_READ_WLSWahlvorschlaege
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Basisdaten_WRITE_WLSWahlvorschlaege
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_WRITE_WLSWahlvorschlaege
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Basisdaten_DELETE_WLSWahlvorschlaege
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_DELETE_WLSWahlvorschlaege
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Basisdaten_READ_Wahlvorschlag
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_READ_Wahlvorschlag
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Basisdaten_WRITE_Wahlvorschlag
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_WRITE_Wahlvorschlag
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Basisdaten_DELETE_Wahlvorschlag
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_DELETE_Wahlvorschlag
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Basisdaten_READ_Kandidat
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_READ_Kandidat
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Basisdaten_WRITE_Kandidat
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_WRITE_Kandidat
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Basisdaten_DELETE_Kandidat
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_DELETE_Kandidat
+      clientId: ${SSO_CLIENT_ID}

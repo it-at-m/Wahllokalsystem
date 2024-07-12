@@ -4,11 +4,10 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.Wahlvorsta
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.WahlvorstandRepository;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.Wahlvorstandsmitglied;
 import de.muenchen.oss.wahllokalsystem.eaiservice.exception.NotFoundException;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandsaktualisierungDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandsmitgliedAktualisierungDTO;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import de.muenchen.oss.wahllokalsystem.eaiservice.service.IDConverter;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -22,16 +21,16 @@ public class WahlvorstandService {
 
     private final WahlvorstandRepository wahlvorstandRepository;
 
-    private final ExceptionFactory exceptionFactory;
-
     private final WahlvorstandMapper wahlvorstandMapper;
 
     private final WahlvorstandValidator wahlvorstandValidator;
 
+    private final IDConverter idConverter;
+
     @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadWahlvorstand')")
     public WahlvorstandDTO getWahlvorstandForWahlbezirk(final String wahlbezirkID) {
         wahlvorstandValidator.validateWahlbezirkIDOrThrow(wahlbezirkID);
-        val wahlbezirkUUID = convertIDToUUIDOrThrow(wahlbezirkID);
+        val wahlbezirkUUID = idConverter.convertIDToUUIDOrThrow(wahlbezirkID);
         return wahlvorstandMapper.toDTO(findByWahlbezirkIDOrThrow(wahlbezirkUUID));
     }
 
@@ -39,7 +38,7 @@ public class WahlvorstandService {
     public void setAnwesenheit(final WahlvorstandsaktualisierungDTO aktualisierung) {
         wahlvorstandValidator.validateSaveAnwesenheitDataOrThrow(aktualisierung);
 
-        val wahlvorstandToUpdate = findByWahlbezirkIDOrThrow(convertIDToUUIDOrThrow(aktualisierung.wahlbezirkID()));
+        val wahlvorstandToUpdate = findByWahlbezirkIDOrThrow(idConverter.convertIDToUUIDOrThrow(aktualisierung.wahlbezirkID()));
         updateAnwesenheitOfWahlvorstand(aktualisierung, wahlvorstandToUpdate);
         wahlvorstandRepository.save(wahlvorstandToUpdate);
     }
@@ -56,16 +55,6 @@ public class WahlvorstandService {
             Wahlvorstandsmitglied mitglied) {
         mitglied.setAnwesenheitUpdatedOn(timeOfUpdate);
         mitglied.setAnwesend(mitgliedUpdateData.anwesend());
-    }
-
-    //CHECKSTYLE.OFF: AbbreviationAsWordInName - illegal match cause UUID should not be shortened
-    private UUID convertIDToUUIDOrThrow(final String id) {
-        //CHECKSTYLE.ON: AbbreviationAsWordInName
-        try {
-            return UUID.fromString(id);
-        } catch (final IllegalArgumentException illegalArgumentException) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.ID_NICHT_KONVERTIERBAR);
-        }
     }
 
     private Wahlvorstand findByWahlbezirkIDOrThrow(final UUID wahlbezirkID) {

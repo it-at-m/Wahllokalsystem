@@ -9,9 +9,7 @@ import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfigurati
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationModel;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationSetModel;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.WahlbezirkArt;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import jakarta.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.List;
@@ -41,7 +39,7 @@ public class KonfigurationService {
 
     private final Collection<AuthenticationHandler> authenticationHandlers;
 
-    private final ServiceIDFormatter serviceIDFormatter;
+    private final ExceptionFactory exceptionFactory;
 
     @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_GetKonfiguration')")
     public Optional<KonfigurationModel> getKonfiguration(@NotNull final KonfigurationKonfigKey konfigurationKonfigKey) {
@@ -94,17 +92,14 @@ public class KonfigurationService {
             konfigurationRepository.save(entityToSave);
         } catch (final Exception onSaveException) {
             log.error("#setKonfiguration unsaveable: ", onSaveException);
-            throw TechnischeWlsException.withCode(ExceptionConstants.POSTKONFIGURATION_NOT_SAVEABLE.code()).inService(serviceIDFormatter.getId())
-                    .buildWithMessage(ExceptionConstants.POSTKONFIGURATION_NOT_SAVEABLE.message());
+            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTKONFIGURATION_NOT_SAVEABLE);
         }
     }
 
     @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_GetKennbuchstabenListen')")
     public KennbuchstabenListenModel getKennbuchstabenListen() {
         val kennbuchstaben = konfigurationRepository.findById(KONFIGURATION_KEY_KENNBUCHSTABEN).orElseThrow(
-                () -> FachlicheWlsException.withCode(ExceptionConstants.GETKENNBUCHSTABENLISTEN_KONFIGURATION_NOT_FOUND.code())
-                        .inService(serviceIDFormatter.getId())
-                        .buildWithMessage(ExceptionConstants.GETKENNBUCHSTABENLISTEN_KONFIGURATION_NOT_FOUND.message()));
+                () -> exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETKENNBUCHSTABENLISTEN_KONFIGURATION_NOT_FOUND));
 
         return konfigurationModelMapper.toKennbuchstabenListenModel(kennbuchstaben.getWert());
     }

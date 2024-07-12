@@ -33,7 +33,8 @@ See the [open issues](https://github.com/it-at-m/Wahllokalsystem/issues) for a f
 
 ## Documentation
 
-*comming soon during the development*
+We use [VitePress](https://vitepress.dev/) for our documentation. The sources for the documentation is also part of
+this repository. After building the documentation is accessible via https://it-at-m.github.io/Wahllokalsystem/.
 
 ## Contributing
 

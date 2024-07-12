@@ -9,5 +9,5 @@ public record ReferendumvorlageDTO(@NotNull String wahlvorschlagID,
                                    @Schema(requiredMode = Schema.RequiredMode.REQUIRED) long ordnungszahl,
                                    @NotNull String kurzname,
                                    @NotNull String frage,
-                                   @NotNull @Size(min = 1) Set<ReferendumoptionDTO> referendumoption) {
+                                   @NotNull @Size(min = 1) Set<ReferendumoptionDTO> referendumoptionen) {
 }

@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.briefwahlservice.service.wahlbriefdaten;
 
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.briefwahlservice.exception.ExceptionFactory;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;

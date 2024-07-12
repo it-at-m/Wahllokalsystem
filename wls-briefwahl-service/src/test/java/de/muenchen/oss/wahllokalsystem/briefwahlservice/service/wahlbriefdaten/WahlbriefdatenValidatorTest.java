@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.briefwahlservice.service.wahlbriefdaten;
 
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.briefwahlservice.exception.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;

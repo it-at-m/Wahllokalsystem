@@ -14,7 +14,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>3.3.0</spring.boot.version>
+        <spring.boot.version>3.3.1</spring.boot.version>
         <spring.cloud.version>2023.0.2</spring.cloud.version>
         <logstash.encoder>7.4</logstash.encoder>
         <apache.commons.collections4>4.4</apache.commons.collections4>
@@ -37,6 +37,7 @@
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
         <org.springdoc.version>2.6.0</org.springdoc.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+        <wls.common.version>1.1.0</wls.common.version>
     </properties>
 
     <dependencyManagement>
@@ -159,7 +160,7 @@
         <dependency>
             <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
             <artifactId>security</artifactId>
-            <version>1.0.0</version>
+            <version>${wls.common.version}</version>
         </dependency>
 
         <!-- Other -->
@@ -202,6 +203,12 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>testing</artifactId>
+            <version>${wls.common.version}</version>
             <scope>test</scope>
         </dependency>
 

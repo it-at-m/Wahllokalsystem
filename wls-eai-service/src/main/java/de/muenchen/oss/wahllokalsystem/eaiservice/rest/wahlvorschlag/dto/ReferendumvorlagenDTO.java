@@ -5,5 +5,5 @@ import jakarta.validation.constraints.Size;
 import java.util.Set;
 
 public record ReferendumvorlagenDTO(@NotNull String stimmzettelgebietID,
-                                    @NotNull @Size(min = 1) Set<ReferendumvorlageDTO> referendumvorlage) {
+                                    @NotNull @Size(min = 1) Set<ReferendumvorlageDTO> referendumvorlagen) {
 }

@@ -1,0 +1,25 @@
+app:
+  clients:
+    eai:
+      basePath: http://localhost:${wiremock.server.port}/
+
+spring:
+  # Spring JPA
+  h2.console.enabled: true
+  jpa:
+    database: H2
+    hibernate:
+      # always drop and create the db should be the best
+      # configuration for local (development) mode. this
+      # is also the default, that spring offers by convention.
+      # but here explicite:
+      ddl-auto: validate
+      naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    # Logging for database operation
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+wiremock:
+  server:
+    port: 0

@@ -5,9 +5,10 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionDataWr
 public class ExceptionConstants {
     //loadWahlvorstand
     private static final String CODE_LOADWAHLVORSTAND_SUCHKRITERIEN_UNVOLLSTAENDIG = "001";
-    private static final String MESSAGE_LOADWAHLVORSTAND_SUCHKRITERIEN_UNVOLLSTAENDIG = "Wahlvorstandskriterien sind nicht vollständig";
+    private static final String MESSAGE_LOADWAHLVORSTAND_SUCHKRITERIEN_UNVOLLSTAENDIG = "Wahlvorstandskriterien sind nicht vollstaendig";
     public static final ExceptionDataWrapper LOADWAHLVORSTAND_SUCHKRITERIEN_UNVOLLSTAENDIG = new ExceptionDataWrapper(
             CODE_LOADWAHLVORSTAND_SUCHKRITERIEN_UNVOLLSTAENDIG, MESSAGE_LOADWAHLVORSTAND_SUCHKRITERIEN_UNVOLLSTAENDIG);
+
     //saveAnwesenheit
     private static final String CODE_SAVEANWESENHEIT_IDENTIFIKATOR_FEHLT = "002";
     private static final String MESSAGE_SAVEANWESENHEIT_IDENTIFIKATOR_FEHLT = "Mindestens ein Identifikator für eine Aktualisierung fehlt";

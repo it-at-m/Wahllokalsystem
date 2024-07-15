@@ -7,6 +7,8 @@
     "renovate"
   ],
   "ignoreDeps": [
-    "org.projectlombok:lombok"
+    "org.projectlombok:lombok",
+    "quay.io/keycloak/keycloak"
+    //#248 https://github.com/it-at-m/Wahllokalsystem/issues/248#issuecomment-2228404217
   ]
 }

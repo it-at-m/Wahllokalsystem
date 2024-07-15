@@ -1,0 +1,33 @@
+name: dispatch build github container image
+
+on:
+  workflow_dispatch:
+    inputs:
+      service:
+        required: true
+        type: choice
+        description: service/directory to build (wls-broadcast-service, ...)
+        options:
+          - wls-auth-service
+          - wls-basisdaten-service
+          - wls-briefwahl-service
+          - wls-broadcast-service
+          - wls-eai-service
+          - wls-ergebnismeldung-service
+          - wls-infomanagement-service
+          - wls-monitoring-service
+          - wls-wahlvorbereitung-service
+          - wls-wahlvorstand-service
+      tag:
+        required: false
+        description: 'optional: gittag'
+
+jobs:
+  build-github-container-image:
+    permissions:
+      packages: write
+    uses:
+      ./.github/workflows/callable-create-github-container-image.yml
+    with:
+      tag: ${{ github.event.inputs.tag }}
+      service: ${{ github.event.inputs.service }}

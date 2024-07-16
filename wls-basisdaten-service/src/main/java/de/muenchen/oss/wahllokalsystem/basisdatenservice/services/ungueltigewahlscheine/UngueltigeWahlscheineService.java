@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UngueltigeWahlscheineService {
 
-    private final UngueltigeWahlscheineRepository repository;
-
     private final UngueltigeWahlscheineModelMapper ungueltigeWahlscheineModelMapper;
 
     private final UngueltigeWahlscheineValidator ungueltigeWahlscheineValidator;
@@ -32,7 +30,7 @@ public class UngueltigeWahlscheineService {
         ungueltigeWahlscheineValidator.validUngueltigeWahlscheineReferenceOrThrow(ungueltigeWahlscheineReferenceModel);
 
         val entityId = ungueltigeWahlscheineModelMapper.toID(ungueltigeWahlscheineReferenceModel);
-        val entity = repository.findById(entityId);
+        val entity = ungueltigeWahlscheineRepository.findById(entityId);
 
         if (entity.isEmpty()) {
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_KEINE_DATEN);

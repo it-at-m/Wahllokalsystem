@@ -18,60 +18,6 @@ class WahltageClientMapperTest {
     private final WahltageClientMapper unitUnderTest = Mappers.getMapper(WahltageClientMapper.class);
 
     @Nested
-    class ToWahltageModel {
-
-        @Test
-        void isMapped() {
-            val dtoToMap = new WahltageDTO();
-
-            val wahltag1 = new WahltagDTO();
-            wahltag1.setIdentifikator("identifikatorWahltag1");
-            wahltag1.setBeschreibung("beschreibungWahltag1");
-            wahltag1.setNummer("nummerWahltag1");
-            wahltag1.setTag(LocalDate.now().minusMonths(2));
-
-            val wahltag2 = new WahltagDTO();
-            wahltag2.setIdentifikator("identifikatorWahltag2");
-            wahltag2.setBeschreibung("beschreibungWahltag2");
-            wahltag2.setNummer("nummerWahltag2");
-            wahltag2.setTag(LocalDate.now().minusMonths(1));
-
-            val wahltag3 = new WahltagDTO();
-            wahltag3.setIdentifikator("identifikatorWahltag3");
-            wahltag3.setBeschreibung("beschreibungWahltag3");
-            wahltag3.setNummer("nummerWahltag3");
-            wahltag3.setTag(LocalDate.now().plusMonths(1));
-
-            dtoToMap.setWahltage(Set.of(
-                    wahltag3, wahltag2, wahltag1));
-
-            Assertions.assertThat(dtoToMap).hasNoNullFieldsOrProperties();
-            Assertions.assertThat(dtoToMap.getWahltage()).size().isPositive();
-
-            val result = unitUnderTest.toWahltageModel(dtoToMap);
-
-            val expectedWahltage = List.of(
-                    new WahltagModel("identifikatorWahltag1",
-                            LocalDate.now().minusMonths(2),
-                            "beschreibungWahltag1",
-                            "nummerWahltag1"),
-                    new WahltagModel("identifikatorWahltag2",
-                            LocalDate.now().minusMonths(1),
-                            "beschreibungWahltag2",
-                            "nummerWahltag2"),
-                    new WahltagModel("identifikatorWahltag3",
-                            LocalDate.now().plusMonths(1),
-                            "beschreibungWahltag3",
-                            "nummerWahltag3"));
-
-            val expectedResult = new WahltageModel(expectedWahltage);
-
-            Assertions.assertThat(result.wahltagModels()).containsExactlyInAnyOrderElementsOf(expectedResult.wahltagModels());
-        }
-
-    }
-
-    @Nested
     class ToWahltagModel {
 
         @Test

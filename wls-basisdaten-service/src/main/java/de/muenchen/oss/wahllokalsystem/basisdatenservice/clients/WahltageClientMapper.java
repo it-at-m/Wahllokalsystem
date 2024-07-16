@@ -11,9 +11,6 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface WahltageClientMapper {
 
-    @Mapping(target = "wahltagModels", source = "wahltage")
-    WahltageModel toWahltageModel(WahltageDTO wahltageDTO);
-
     @Mapping(target = "wahltagID", source = "identifikator")
     @Mapping(target = "wahltag", source = "tag")
     WahltagModel toWahltagModel(WahltagDTO wahltagDTO);

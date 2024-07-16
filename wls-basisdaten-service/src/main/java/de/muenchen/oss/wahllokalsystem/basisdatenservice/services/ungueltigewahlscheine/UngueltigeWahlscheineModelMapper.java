@@ -8,7 +8,7 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface UngueltigeWahlscheineModelMapper {
 
-    WahltagIdUndWahlbezirksart toID(UngueltigeWahlscheineReference ungueltigeWahlscheineReference);
+    WahltagIdUndWahlbezirksart toID(UngueltigeWahlscheineReferenceModel ungueltigeWahlscheineReferenceModel);
 
     @Mapping(target = "wahltagIdUndWahlbezirksart.wahltagID", source = "ungueltigeWahlscheineReference.wahltagID")
     @Mapping(target = "wahltagIdUndWahlbezirksart.wahlbezirksart", source = "ungueltigeWahlscheineReference.wahlbezirksart")

@@ -25,13 +25,13 @@ public class UngueltigeWahlscheineService {
     private final UngueltigeWahlscheineRepository ungueltigeWahlscheineRepository;
 
     @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetUngueltigews')")
-    public byte[] getUngueltigeWahlscheine(final UngueltigeWahlscheineReference ungueltigeWahlscheineReference) {
+    public byte[] getUngueltigeWahlscheine(final UngueltigeWahlscheineReferenceModel ungueltigeWahlscheineReferenceModel) {
         log.info("#getUngueltigews");
-        log.debug("#getUngueltigews getUngueltigews {}", ungueltigeWahlscheineReference);
+        log.debug("#getUngueltigews getUngueltigews {}", ungueltigeWahlscheineReferenceModel);
 
-        ungueltigeWahlscheineValidator.validUngueltigeWahlscheineReferenceOrThrow(ungueltigeWahlscheineReference);
+        ungueltigeWahlscheineValidator.validUngueltigeWahlscheineReferenceOrThrow(ungueltigeWahlscheineReferenceModel);
 
-        val entityId = ungueltigeWahlscheineModelMapper.toID(ungueltigeWahlscheineReference);
+        val entityId = ungueltigeWahlscheineModelMapper.toID(ungueltigeWahlscheineReferenceModel);
         val entity = repository.findById(entityId);
 
         if (entity.isEmpty()) {

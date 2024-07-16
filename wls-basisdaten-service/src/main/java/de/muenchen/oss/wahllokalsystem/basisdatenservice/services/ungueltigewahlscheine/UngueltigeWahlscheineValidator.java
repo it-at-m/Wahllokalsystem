@@ -12,17 +12,17 @@ public class UngueltigeWahlscheineValidator {
 
     private final ExceptionFactory exceptionFactory;
 
-    public void validUngueltigeWahlscheineReferenceOrThrow(final UngueltigeWahlscheineReference ungueltigeWahlscheineReference) {
-        if (ungueltigeWahlscheineReference == null || StringUtils.isBlank(
-                ungueltigeWahlscheineReference.wahltagID()) || ungueltigeWahlscheineReference.wahlbezirksart() == null) {
+    public void validUngueltigeWahlscheineReferenceOrThrow(final UngueltigeWahlscheineReferenceModel ungueltigeWahlscheineReferenceModel) {
+        if (ungueltigeWahlscheineReferenceModel == null || StringUtils.isBlank(
+                ungueltigeWahlscheineReferenceModel.wahltagID()) || ungueltigeWahlscheineReferenceModel.wahlbezirksart() == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG);
         }
     }
 
     public void validUngueltigeWahlscheineWriteModelOrThrow(final UngueltigeWahlscheineWriteModel ungueltigeWahlscheineWriteModel) {
-        if (ungueltigeWahlscheineWriteModel == null || ungueltigeWahlscheineWriteModel.ungueltigeWahlscheineReference() == null || StringUtils.isBlank(
-                ungueltigeWahlscheineWriteModel.ungueltigeWahlscheineReference()
-                        .wahltagID()) || ungueltigeWahlscheineWriteModel.ungueltigeWahlscheineReference()
+        if (ungueltigeWahlscheineWriteModel == null || ungueltigeWahlscheineWriteModel.ungueltigeWahlscheineReferenceModel() == null || StringUtils.isBlank(
+                ungueltigeWahlscheineWriteModel.ungueltigeWahlscheineReferenceModel()
+                        .wahltagID()) || ungueltigeWahlscheineWriteModel.ungueltigeWahlscheineReferenceModel()
                 .wahlbezirksart() == null || ungueltigeWahlscheineWriteModel.ungueltigeWahlscheineData() == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTUNGUELTIGEWS_PARAMETER_UNVOLLSTAENDIG);
         }

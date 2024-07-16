@@ -2,6 +2,6 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.ungueltigewah
 
 import jakarta.validation.constraints.NotNull;
 
-public record UngueltigeWahlscheineWriteModel(@NotNull UngueltigeWahlscheineReference ungueltigeWahlscheineReference,
+public record UngueltigeWahlscheineWriteModel(@NotNull UngueltigeWahlscheineReferenceModel ungueltigeWahlscheineReferenceModel,
                                               @NotNull byte[] ungueltigeWahlscheineData) {
 }

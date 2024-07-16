@@ -40,7 +40,6 @@ public class Wahltag {
     @ToString.Include
     private LocalDate wahltag;
 
-    @Column(name = "beschreibung")
     @Size(max = 1024)
     @ToString.Include
     private String beschreibung;

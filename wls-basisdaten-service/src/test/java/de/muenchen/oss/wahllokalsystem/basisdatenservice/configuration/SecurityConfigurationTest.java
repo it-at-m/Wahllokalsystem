@@ -106,18 +106,22 @@ class SecurityConfigurationTest {
         @WithAnonymousUser
         void accessGetWahltageUnauthorizedThenUnauthorized() throws Exception {
             api.perform(get("/businessActions/wahltage")).andExpect(status().isUnauthorized());
-    class Handbuch {
-
-        @Test
-        @WithAnonymousUser
-        void accessGetHandbuchUnauthorizedThenUnauthorized() throws Exception {
-            api.perform(get("/businessActions/handbuch/wahlID/UWB")).andExpect(status().isUnauthorized());
         }
 
         @Test
         @WithMockUser
         void accessGetWahltageUnauthorizedThenOk() throws Exception {
             api.perform(get("/businessActions/wahltage")).andExpect(status().isOk());
+        }
+    }
+
+    @Nested
+    class Handbuch {
+
+        @Test
+        @WithAnonymousUser
+        void accessGetHandbuchUnauthorizedThenUnauthorized() throws Exception {
+            api.perform(get("/businessActions/handbuch/wahlID/UWB")).andExpect(status().isUnauthorized());
         }
 
         @Test

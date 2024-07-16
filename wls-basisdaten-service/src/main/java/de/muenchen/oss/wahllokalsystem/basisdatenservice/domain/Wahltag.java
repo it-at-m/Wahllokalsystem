@@ -33,9 +33,6 @@ public class Wahltag {
     @ToString.Include
     private String wahltagID;
 
-    @Column(name = "wahltag")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
     @NotNull
     @ToString.Include
     private LocalDate wahltag;

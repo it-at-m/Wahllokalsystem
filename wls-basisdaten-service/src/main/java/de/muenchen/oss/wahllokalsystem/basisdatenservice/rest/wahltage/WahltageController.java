@@ -26,14 +26,6 @@ public class WahltageController {
     private final WahltageDTOMapper wahltageDTOMapper;
 
     @Operation(description = "Laden der Liste der Wahltage, bei denen das Datum bis 3 Monate in die Vergangenheit reicht")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "OK",
-                            content = { @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = WahltagDTO.class))) }
-                    )
-            }
-    )
     @GetMapping
     public ResponseEntity<List<WahltagDTO>> getWahltage() {
         return new ResponseEntity<>(

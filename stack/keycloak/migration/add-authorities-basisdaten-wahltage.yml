@@ -1,4 +1,4 @@
-id: add authorities basisdaten wahlvorschlaege
+id: add authorities basisdaten wahltage
 author: Nic12345678
 realm: ${SSO_REALM}
 changes:

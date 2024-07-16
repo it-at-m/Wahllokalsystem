@@ -42,7 +42,6 @@ class WahltageDTOMapperTest {
         }
 
         private List<WahltagModel> createClientWahltagModels() {
-
             val wahltag1 = new WahltagModel("identifikatorWahltag1", LocalDate.now().minusMonths(2), "beschreibungWahltag1", "nummerWahltag1");
             val wahltag2 = new WahltagModel("identifikatorWahltag2", LocalDate.now().minusMonths(1), "beschreibungWahltag2", "nummerWahltag2");
             val wahltag3 = new WahltagModel("identifikatorWahltag3", LocalDate.now().plusMonths(1), "beschreibungWahltag3", "nummerWahltag3");

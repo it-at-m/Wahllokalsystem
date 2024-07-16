@@ -3,7 +3,7 @@ spring:
   datasource:
     username: sa
     password:
-    url: jdbc:h2:mem:wls-auth-service
+    url: jdbc:h2:mem:wls-vorfaelleundvorkommnisse-service
   flyway:
     enabled: true
   jpa:

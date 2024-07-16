@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
-    <artifactId>wls-auth-service</artifactId>
+    <artifactId>wls-vorfaelleundvorkommnisse-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>wls_auth_service</name>
+    <name>wls_vorfaelleundvorkommnisse_service</name>
 
     <properties>
         <java.version>17</java.version>

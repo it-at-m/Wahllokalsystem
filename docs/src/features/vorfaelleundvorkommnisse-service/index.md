@@ -1,6 +1,6 @@
 # Vorfälle und Vorkommnisse-Service
 
-Service zum erfassen und einsehen von Vorfällen und Vorkommnissen.
+Service zum Erfassen und Einsehen von Ereignissen: Vorfälle (während der Stimmabgabe von 8:00 bis 18:00 Uhr) und Vorkommnisse (während der Auszählung)
 
 ## Abhängigkeiten
 

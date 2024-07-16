@@ -15,7 +15,7 @@ public interface WahltageClientMapper {
     @Mapping(target = "wahltag", source = "tag")
     WahltagModel toWahltagModel(WahltagDTO wahltagDTO);
 
-    default List<WahltagModel> fromRemoteClientWahltageDTOtoListOfWahltagModel(WahltageDTO wahltageDTO) {
+    default List<WahltagModel> fromRemoteClientWahltageDTOtoListOfWahltagModel(final WahltageDTO wahltageDTO) {
         return wahltageDTO.getWahltage().stream().map(this::toWahltagModel).toList();
     }
 }

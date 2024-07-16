@@ -21,7 +21,7 @@ z.B. nur die Tabellen `handbuch`, `kandidat` oder `wahlvorschlag` sehen.
 Mit dem User `system` kann man auf alle Schemata zugreifen und hat somit Zugriff auf alle Tabellen aller
 Services. Das Passwort ist der Wert von `ORACLE_PASSWORD` aus dem `docker-compose.yml`-File. Dort sind auch die
 Verbindungsdaten enthalten die man zum Einrichten des Zugriffs benötigt.
-
+Mit IntelliJ kann man bei den Properties der entsprechenden Datasource unter dem Reiter 'Schemas' auswählen, welche Schemata man zusätzlich angezeigt haben möchte. Per Default ist nur das Schema SYSTEM zu sehen.
 <details>
 
 <summary>Screenshot</summary>

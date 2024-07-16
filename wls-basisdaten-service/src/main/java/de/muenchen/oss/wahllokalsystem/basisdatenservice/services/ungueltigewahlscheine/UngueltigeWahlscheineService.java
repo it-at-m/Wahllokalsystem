@@ -37,7 +37,7 @@ public class UngueltigeWahlscheineService {
         if (entity.isEmpty()) {
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_KEINE_DATEN);
         } else {
-            val ungueltigeWahlscheineData = entity.get().getUngueltigews();
+            val ungueltigeWahlscheineData = entity.get().getUngueltigeWahlscheine();
             return Arrays.copyOf(ungueltigeWahlscheineData, ungueltigeWahlscheineData.length);
         }
     }

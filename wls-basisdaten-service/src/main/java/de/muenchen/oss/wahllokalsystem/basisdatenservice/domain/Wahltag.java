@@ -28,7 +28,6 @@ import org.springframework.stereotype.Indexed;
 public class Wahltag {
 
     @Id
-    @Column(name = "wahltagID")
     @NotNull
     @Size(max = 1024)
     @ToString.Include

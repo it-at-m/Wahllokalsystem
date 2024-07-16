@@ -32,9 +32,9 @@ class WahltageServiceTest {
 
         @Test
         void dataIsLoadedFromRemoteEvenIfExistingInRepoAndRepoIsUpdated() {
-            List<Wahltag> mockedListOfEntities = createWahltagList("2");
-            List<WahltagModel> mockedClientResponse = createWahltagModelList("2");
-            List<WahltagModel> mockedMappedSavedEntities = createWahltagModelList("2");
+            val mockedListOfEntities = createWahltagList("2");
+            val mockedClientResponse = createWahltagModelList("2");
+            val mockedMappedSavedEntities = createWahltagModelList("2");
 
             Mockito.when(wahltageClient.getWahltage(LocalDate.now().minusMonths(3))).thenReturn(mockedClientResponse);
             Mockito.when(wahltagModelMapper.fromWahltagModelToWahltagEntityList(mockedClientResponse)).thenReturn(mockedListOfEntities);

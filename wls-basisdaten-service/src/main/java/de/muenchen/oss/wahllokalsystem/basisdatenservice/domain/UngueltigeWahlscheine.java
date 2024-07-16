@@ -28,5 +28,5 @@ public class UngueltigeWahlscheine {
     @Column(name = "ungueltigews")
     @NotNull
     @Lob
-    private byte[] ungueltigews;
+    private byte[] ungueltigeWahlscheine;
 }

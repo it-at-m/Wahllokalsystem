@@ -6,6 +6,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Handbuch;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.HandbuchRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagIdUndWahlbezirksart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.Optional;

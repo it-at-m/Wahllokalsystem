@@ -44,7 +44,6 @@ public class Wahltag {
     @ToString.Include
     private String beschreibung;
 
-    @Column(name = "nummer")
     @Size(max = 1024)
     @ToString.Include
     private String nummer;

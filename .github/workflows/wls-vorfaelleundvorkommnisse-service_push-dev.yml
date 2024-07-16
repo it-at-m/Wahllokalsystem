@@ -1,0 +1,18 @@
+name: build push dev vorfaelleundvorkommnisse-service
+
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - 'wls-vorfaelleundvorkommnisse-service/**'
+      - '.github/workflows/wls-vorfaelleundvorkommnisse-service_push-dev.yml'
+
+jobs:
+  build-github-container-image:
+    permissions:
+      packages: write
+    uses:
+      ./.github/workflows/callable-create-github-container-image.yml
+    with:
+      service: 'wls-vorfaelleundvorkommnisse-service'

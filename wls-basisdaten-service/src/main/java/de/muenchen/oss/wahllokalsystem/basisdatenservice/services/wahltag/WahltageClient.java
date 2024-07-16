@@ -15,6 +15,6 @@ public interface WahltageClient {
      *             {@link de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException}
      *             if there were trouble during communication
      */
-    List<WahltagModel> getWahltage(LocalDate tag) throws WlsException;
+    List<WahltagModel> getWahltage(final LocalDate tag) throws WlsException;
 
 }

@@ -6,10 +6,10 @@ import static org.mockito.ArgumentMatchers.eq;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -48,7 +48,7 @@ public class WaehlerverzeichnisServiceSecurityTest {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_GET_WAEHLERVERZEICHNIS);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAEHLERVERZEICHNIS);
 
             val waehlerverzeichnisReference = new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 89L);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(waehlerverzeichnisReference.getWahlbezirkID()), any())).thenReturn(true);
@@ -58,7 +58,7 @@ public class WaehlerverzeichnisServiceSecurityTest {
 
         @Test
         void bezirkIDPermissionEvaluatorFailed() {
-            SecurityUtils.runAs(Authorities.SERVICE_GET_WAEHLERVERZEICHNIS);
+            SecurityUtils.runWith(Authorities.SERVICE_GET_WAEHLERVERZEICHNIS);
 
             val waehlerverzeichnisReference = new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 89L);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(waehlerverzeichnisReference.getWahlbezirkID()), any())).thenReturn(false);
@@ -69,7 +69,7 @@ public class WaehlerverzeichnisServiceSecurityTest {
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
         void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
-            SecurityUtils.runAs(argumentsAccessor.get(0, String[].class));
+            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val waehlerverzeichnisReference = new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 89L);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(waehlerverzeichnisReference.getWahlbezirkID()), any())).thenReturn(true);
@@ -87,7 +87,7 @@ public class WaehlerverzeichnisServiceSecurityTest {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_POST_WAEHLERVERZEICHNIS);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_WAEHLERVERZEICHNIS);
 
             val modelToSet = new WaehlerverzeichnisModel(new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 233L), true, true, false, true);
 
@@ -96,7 +96,7 @@ public class WaehlerverzeichnisServiceSecurityTest {
 
         @Test
         void acccessDeniedOnMissingServiceAuthority() {
-            SecurityUtils.runAs(Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS);
+            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS);
 
             val modelToSet = new WaehlerverzeichnisModel(new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 233L), true, true, false, true);
 
@@ -105,7 +105,7 @@ public class WaehlerverzeichnisServiceSecurityTest {
 
         @Test
         void wlsExceptionOnMissingRepositoryWriteAuthority() {
-            SecurityUtils.runAs(Authorities.SERVICE_POST_WAEHLERVERZEICHNIS);
+            SecurityUtils.runWith(Authorities.SERVICE_POST_WAEHLERVERZEICHNIS);
 
             val modelToSet = new WaehlerverzeichnisModel(new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 233L), true, true, false, true);
 

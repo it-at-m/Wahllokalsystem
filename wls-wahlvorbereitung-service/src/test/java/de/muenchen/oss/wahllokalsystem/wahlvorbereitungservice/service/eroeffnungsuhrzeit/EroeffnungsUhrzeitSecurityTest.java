@@ -3,9 +3,9 @@ package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.eroeffnu
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -46,7 +46,7 @@ public class EroeffnungsUhrzeitSecurityTest {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_GET_EROEFFNUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_EROEFFNUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
 
@@ -57,7 +57,7 @@ public class EroeffnungsUhrzeitSecurityTest {
 
         @Test
         void bezirkIDPermissionEvaluatorFailed() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_GET_EROEFFNUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_EROEFFNUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
 
@@ -70,7 +70,7 @@ public class EroeffnungsUhrzeitSecurityTest {
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getAuthoritiesVariations")
         void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
-            SecurityUtils.runAs(argumentsAccessor.get(0, String[].class));
+            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val wahlbezirkID = "wahlbezirkID";
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
@@ -89,7 +89,7 @@ public class EroeffnungsUhrzeitSecurityTest {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_POST_EROEFFNUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_EROEFFNUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
             val modelToSet = new EroeffnungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
@@ -101,7 +101,7 @@ public class EroeffnungsUhrzeitSecurityTest {
 
         @Test
         void bezirkIDPermissionEvaluatorFailed() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_POST_EROEFFNUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_EROEFFNUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
             val modelToSet = new EroeffnungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
@@ -114,7 +114,7 @@ public class EroeffnungsUhrzeitSecurityTest {
 
         @Test
         void accessDeniedOnServiceAuthorityMissing() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_REPO_EROEFFNUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_REPO_EROEFFNUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
             val modelToSet = new EroeffnungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
@@ -131,7 +131,7 @@ public class EroeffnungsUhrzeitSecurityTest {
                     .filter(auth -> !auth.equals(Authorities.REPOSITORY_WRITE_EROEFFNUNGSUHRZEIT))
                     .toArray(String[]::new);
 
-            SecurityUtils.runAs(ALL_AUTHORITIES_POST_EROEFFNUNGSUHRZEIT_WHITHOUT_REPO_WRITE);
+            SecurityUtils.runWith(ALL_AUTHORITIES_POST_EROEFFNUNGSUHRZEIT_WHITHOUT_REPO_WRITE);
 
             val wahlbezirkID = "wahlbezirkID";
             val modelToSet = new EroeffnungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());

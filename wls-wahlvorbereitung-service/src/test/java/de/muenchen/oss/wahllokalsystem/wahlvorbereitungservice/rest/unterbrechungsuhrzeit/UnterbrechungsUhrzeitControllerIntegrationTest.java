@@ -13,10 +13,10 @@ import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.Unterbrech
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.unterbrechungsuhrzeit.UnterbrechungsUhrzeitModelMapper;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.Profiles;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -57,7 +57,7 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        SecurityUtils.runAs(Authorities.REPOSITORY_DELETE_UNTERBRECHUNGSUHRZEIT);
+        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_UNTERBRECHUNGSUHRZEIT);
         unterbrechungsUhrzeitRepository.deleteAll();
     }
 
@@ -119,7 +119,7 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
 
             mockMvc.perform(request).andExpect(status().isCreated());
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT);
             val unterbrechungsUhrzeitFromRepo = unterbrechungsUhrzeitRepository.findById(wahlbezirkID).get();
             val expectedUnterbrechungsUhrzeit = unterbrechungsUhrzeitModelMapper.toEntity(unterbrechungsUhrzeitDTOMapper.toModel(wahlbezirkID, writeDto));
 
@@ -136,7 +136,7 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
             val request1 = buildPostRequest(wahlbezirkID, writeDto1);
 
             mockMvc.perform(request1).andExpect(status().isCreated());
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT);
             val unterbrechungsUhrzeitFromRepo1 = unterbrechungsUhrzeitRepository.findById(wahlbezirkID).get();
             val expectedUnterbrechungsUhrzeit1 = unterbrechungsUhrzeitModelMapper.toEntity(unterbrechungsUhrzeitDTOMapper.toModel(wahlbezirkID, writeDto1));
 
@@ -147,7 +147,7 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
 
             mockMvc.perform(request2).andExpect(status().isCreated());
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT);
             val unterbrechungsUhrzeitFromRepo2 = unterbrechungsUhrzeitRepository.findById(wahlbezirkID).get();
             val expectedUnterbrechungsUhrzeit2 = unterbrechungsUhrzeitModelMapper.toEntity(unterbrechungsUhrzeitDTOMapper.toModel(wahlbezirkID, writeDto2));
 
@@ -166,7 +166,7 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
             val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
             val exceptionBodyFromResponse = objectMapper.readValue(response.getResponse().getContentAsString(StandardCharsets.UTF_8), WlsExceptionDTO.class);
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT);
             Assertions.assertThat(unterbrechungsUhrzeitRepository.findById(wahlbezirkID)).isEmpty();
 
             val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.PARAMS_UNVOLLSTAENDIG.code(), "WLS-WAHLVORBEREITUNG",
@@ -187,7 +187,7 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
             val response = mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
             val exceptionBodyFromRepsonse = objectMapper.readValue(response.getResponse().getContentAsString(StandardCharsets.UTF_8), WlsExceptionDTO.class);
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT);
             Assertions.assertThat(unterbrechungsUhrzeitRepository.findById(wahlbezirkID)).isEmpty();
 
             val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionConstants.UNSAVEABLE.code(), "WLS-WAHLVORBEREITUNG",

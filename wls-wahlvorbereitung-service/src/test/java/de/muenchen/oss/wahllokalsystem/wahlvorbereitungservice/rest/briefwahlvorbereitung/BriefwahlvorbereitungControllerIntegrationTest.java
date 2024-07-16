@@ -15,14 +15,13 @@ import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.exception.Excepti
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.common.WahlurneDTO;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.briefwahlvorbereitung.BriefwahlvorbereitungModelMapper;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.testdaten.WahlurneTestdatenfactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.Profiles;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
@@ -60,7 +59,7 @@ public class BriefwahlvorbereitungControllerIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        SecurityUtils.runAs(Authorities.REPOSITORY_DELETE_BRIEFWAHLVORBEREITUNG);
+        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_BRIEFWAHLVORBEREITUNG);
         briefwahlvorbereitungRepository.deleteAll();
     }
 
@@ -125,7 +124,7 @@ public class BriefwahlvorbereitungControllerIntegrationTest {
 
             mockMvc.perform(request).andExpect(status().isCreated());
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG);
             val briefwahlvorbereitungFromRepo = briefwahlvorbereitungRepository.findById(wahlbezirkID).get();
             val expectedBriefwahlvorbereitung = briefwahlvorbereitungModelMapper.toEntity(briefwahlvorbereitungDTOMapper.toModel(wahlbezirkID, writeDto));
 
@@ -143,7 +142,7 @@ public class BriefwahlvorbereitungControllerIntegrationTest {
             val request1 = buildPostRequest(wahlbezirkID, writeDto1);
 
             mockMvc.perform(request1).andExpect(status().isCreated());
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG);
             val briefwahlvorbereitungFromRepo1 = briefwahlvorbereitungRepository.findById(wahlbezirkID).get();
             val expectedBriefwahlvorbereitung1 = briefwahlvorbereitungModelMapper.toEntity(briefwahlvorbereitungDTOMapper.toModel(wahlbezirkID, writeDto1));
 
@@ -155,7 +154,7 @@ public class BriefwahlvorbereitungControllerIntegrationTest {
 
             mockMvc.perform(request2).andExpect(status().isCreated());
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG);
             val briefwahlvorbereitungFromRepo2 = briefwahlvorbereitungRepository.findById(wahlbezirkID).get();
             val expectedBriefwahlvorbereitung2 = briefwahlvorbereitungModelMapper.toEntity(briefwahlvorbereitungDTOMapper.toModel(wahlbezirkID, writeDto2));
 
@@ -174,7 +173,7 @@ public class BriefwahlvorbereitungControllerIntegrationTest {
             val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
             val exceptionBodyFromResponse = objectMapper.readValue(response.getResponse().getContentAsString(StandardCharsets.UTF_8), WlsExceptionDTO.class);
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG);
             Assertions.assertThat(briefwahlvorbereitungRepository.findById(wahlbezirkID)).isEmpty();
 
             val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.PARAMS_UNVOLLSTAENDIG.code(), "WLS-WAHLVORBEREITUNG",
@@ -196,7 +195,7 @@ public class BriefwahlvorbereitungControllerIntegrationTest {
             val response = mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
             val exceptionBodyFromResponse = objectMapper.readValue(response.getResponse().getContentAsString(StandardCharsets.UTF_8), WlsExceptionDTO.class);
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG);
             Assertions.assertThat(briefwahlvorbereitungRepository.findById(wahlbezirkID)).isEmpty();
 
             val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionConstants.UNSAVEABLE.code(), "WLS-WAHLVORBEREITUNG",

@@ -14,11 +14,11 @@ import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.Wahlurne;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.urnenwahlvorbereitung.UrnenwahlvorbereitungModelMapper;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.testdaten.UrnenwahlVorbereitungTestdatenfactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.Profiles;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
@@ -59,7 +59,7 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        SecurityUtils.runAs(Authorities.REPOSITORY_DELETE_URNENWAHLVORBEREITUNG);
+        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_URNENWAHLVORBEREITUNG);
         urnenwahlVorbereitungRepository.deleteAll();
     }
 
@@ -118,7 +118,7 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
 
             mockMvc.perform(request).andExpect(status().isCreated());
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
             val vorbereitungFromRepo = urnenwahlVorbereitungRepository.findById(wahlbezirkID).get();
 
             val expectedVorbereitung = urnenwahlvorbereitungModelMapper.toEntity(urnenwahlvorbereitungDTOMapper.toModel(wahlbezirkID, requestBody));
@@ -142,7 +142,7 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
 
             mockMvc.perform(request).andExpect(status().isCreated());
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
             val vorbereitungFromRepo = urnenwahlVorbereitungRepository.findById(wahlbezirkID).get();
 
             val expectedVorbereitung = urnenwahlvorbereitungModelMapper.toEntity(urnenwahlvorbereitungDTOMapper.toModel(wahlbezirkID, requestBody));
@@ -161,7 +161,7 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
             val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
             val exceptionBodyFromRepsonse = objectMapper.readValue(response.getResponse().getContentAsString(StandardCharsets.UTF_8), WlsExceptionDTO.class);
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
             Assertions.assertThat(urnenwahlVorbereitungRepository.findById(wahlbezirkID)).isEmpty();
 
             val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.PARAMS_UNVOLLSTAENDIG.code(), "WLS-WAHLVORBEREITUNG",
@@ -180,7 +180,7 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
             val response = mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
             val exceptionBodyFromRepsonse = objectMapper.readValue(response.getResponse().getContentAsString(StandardCharsets.UTF_8), WlsExceptionDTO.class);
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
             Assertions.assertThat(urnenwahlVorbereitungRepository.findById(wahlbezirkID)).isEmpty();
 
             val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionConstants.UNSAVEABLE.code(), "WLS-WAHLVORBEREITUNG",

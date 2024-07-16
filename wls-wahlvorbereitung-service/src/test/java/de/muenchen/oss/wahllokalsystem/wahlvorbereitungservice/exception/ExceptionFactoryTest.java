@@ -1,6 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.exception;
 
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionDataWrapper;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import lombok.val;
 import org.assertj.core.api.Assertions;

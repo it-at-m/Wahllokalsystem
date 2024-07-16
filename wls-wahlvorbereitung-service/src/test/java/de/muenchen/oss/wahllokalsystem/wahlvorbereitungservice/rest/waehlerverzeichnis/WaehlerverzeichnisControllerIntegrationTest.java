@@ -12,15 +12,15 @@ import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.Waehlerverzeichnis;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.WaehlerverzeichnisRepository;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.exception.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.waehlerverzeichnis.WaehlerverzeichnisModelMapper;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.waehlerverzeichnis.WaehlerverzeichnisValidator;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.Profiles;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import lombok.val;
@@ -66,7 +66,7 @@ public class WaehlerverzeichnisControllerIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        SecurityUtils.runAs(Authorities.REPOSITORY_DELETE_WAEHLERVERZEICHNIS);
+        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_WAEHLERVERZEICHNIS);
         waehlerverzeichnisRepository.deleteAll();
     }
 
@@ -85,7 +85,7 @@ public class WaehlerverzeichnisControllerIntegrationTest {
 
             mockMvc.perform(request).andExpect(status().isCreated());
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS);
             val savedWaehlerverzeichnis = waehlerverzeichnisRepository.findById(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer))
                     .get();
             val expectedWaehlerverzeichnis = new Waehlerverzeichnis(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
@@ -110,7 +110,7 @@ public class WaehlerverzeichnisControllerIntegrationTest {
 
             mockMvc.perform(request).andExpect(status().isCreated());
 
-            SecurityUtils.runAs(Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS);
             val savedWaehlerverzeichnis = waehlerverzeichnisRepository.findById(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer))
                     .get();
             val expectedWaehlerverzeichnis = new Waehlerverzeichnis(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),

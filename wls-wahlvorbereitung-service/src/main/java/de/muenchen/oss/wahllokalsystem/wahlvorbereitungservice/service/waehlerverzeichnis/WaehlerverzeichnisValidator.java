@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.waehlerverzeichnis;
 
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.exception.ExceptionFactory;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

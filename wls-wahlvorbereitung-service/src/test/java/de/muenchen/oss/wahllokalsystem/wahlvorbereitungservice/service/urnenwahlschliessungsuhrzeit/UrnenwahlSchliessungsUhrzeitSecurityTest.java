@@ -3,9 +3,9 @@ package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.urnenwah
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
 import lombok.val;
@@ -45,7 +45,7 @@ public class UrnenwahlSchliessungsUhrzeitSecurityTest {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_GET_URNENWAHLSCHLIESSUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_URNENWAHLSCHLIESSUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
 
@@ -56,7 +56,7 @@ public class UrnenwahlSchliessungsUhrzeitSecurityTest {
 
         @Test
         void bezirkIDPermissionEvaluatorFailed() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_GET_URNENWAHLSCHLIESSUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_URNENWAHLSCHLIESSUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
 
@@ -69,7 +69,7 @@ public class UrnenwahlSchliessungsUhrzeitSecurityTest {
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getAuthoritiesVariations")
         void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
-            SecurityUtils.runAs(argumentsAccessor.get(0, String[].class));
+            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val wahlbezirkID = "wahlbezirkID";
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
@@ -88,7 +88,7 @@ public class UrnenwahlSchliessungsUhrzeitSecurityTest {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_POST_URNENWAHLSCHLIESSUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_URNENWAHLSCHLIESSUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
             val modelToSet = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
@@ -100,7 +100,7 @@ public class UrnenwahlSchliessungsUhrzeitSecurityTest {
 
         @Test
         void bezirkIDPermissionEvaluatorFailed() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_POST_URNENWAHLSCHLIESSUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_URNENWAHLSCHLIESSUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
             val modelToSet = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
@@ -113,7 +113,7 @@ public class UrnenwahlSchliessungsUhrzeitSecurityTest {
 
         @Test
         void accessDeniedOnServiceAuthorityMissing() {
-            SecurityUtils.runAs(Authorities.ALL_AUTHORITIES_REPO_URNENWAHLSCHLIESSUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_REPO_URNENWAHLSCHLIESSUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
             val modelToSet = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
@@ -126,7 +126,7 @@ public class UrnenwahlSchliessungsUhrzeitSecurityTest {
 
         @Test
         void wlsExceptionOnRepoWriteAuthorityMissing() {
-            SecurityUtils.runAs(Authorities.SERVICE_POST_URNENWAHLSCHLIESSUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.SERVICE_POST_URNENWAHLSCHLIESSUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
             val modelToSet = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());

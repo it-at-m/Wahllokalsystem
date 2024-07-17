@@ -38,7 +38,6 @@ class WahltageServiceTest {
 
             Mockito.when(wahltageClient.getWahltage(LocalDate.now().minusMonths(3))).thenReturn(mockedClientResponse);
             Mockito.when(wahltagModelMapper.fromWahltagModelToWahltagEntityList(mockedClientResponse)).thenReturn(mockedListOfEntities);
-            Mockito.when(wahltagRepository.saveAll(mockedListOfEntities)).thenReturn(mockedListOfEntities);
             Mockito.when(wahltagRepository.findAllByOrderByWahltagAsc()).thenReturn(mockedListOfEntities);
             Mockito.when(wahltagModelMapper.fromWahltagEntityToWahltagModelList(mockedListOfEntities)).thenReturn(mockedMappedSavedEntities);
 

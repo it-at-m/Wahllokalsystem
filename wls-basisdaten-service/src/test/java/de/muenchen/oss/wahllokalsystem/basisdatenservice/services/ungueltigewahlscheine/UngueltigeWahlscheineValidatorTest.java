@@ -87,7 +87,6 @@ class UngueltigeWahlscheineValidatorTest {
         private UngueltigeWahlscheineReferenceModel.UngueltigeWahlscheineReferenceModelBuilder initValidModel() {
             return UngueltigeWahlscheineReferenceModel.builder().wahltagID("wahltagID").wahlbezirksart(WahlbezirkArtModel.UWB);
         }
-
     }
 
     @Nested
@@ -179,6 +178,5 @@ class UngueltigeWahlscheineValidatorTest {
             return UngueltigeWahlscheineWriteModel.builder().ungueltigeWahlscheineReferenceModel(initValidReferenceModel().build())
                     .ungueltigeWahlscheineData("data".getBytes());
         }
-
     }
 }

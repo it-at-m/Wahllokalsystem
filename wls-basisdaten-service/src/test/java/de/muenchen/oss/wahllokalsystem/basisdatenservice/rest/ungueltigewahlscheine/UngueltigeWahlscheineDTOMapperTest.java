@@ -52,7 +52,6 @@ class UngueltigeWahlscheineDTOMapperTest {
                 val expectedResult = new UngueltigeWahlscheineWriteModel(referenceModel, data);
                 Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
             }
-
         }
     }
 

@@ -95,7 +95,6 @@ public class UngueltigeWahlscheineControllerIntegrationTest {
 
             Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
         }
-
     }
 
     @Nested

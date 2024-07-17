@@ -72,7 +72,6 @@ class UngueltigeWahlscheineControllerTest {
 
             Assertions.assertThat(result).isEqualTo(mockedFileMapperResponse);
         }
-
     }
 
     @Nested

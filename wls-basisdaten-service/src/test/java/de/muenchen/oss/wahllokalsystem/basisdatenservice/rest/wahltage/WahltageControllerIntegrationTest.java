@@ -113,7 +113,7 @@ public class WahltageControllerIntegrationTest {
         @Transactional
         void externalDataIsPersisted() throws Exception {
 
-            String requestDate = LocalDate.now().minusMonths(3).toString();
+            val requestDate = LocalDate.now().minusMonths(3).toString();
 
             val eaiWahltage = createClientWahltageDTO(false);
             WireMock.stubFor(WireMock.get("/wahldaten/wahltage?includingSince=" + requestDate)

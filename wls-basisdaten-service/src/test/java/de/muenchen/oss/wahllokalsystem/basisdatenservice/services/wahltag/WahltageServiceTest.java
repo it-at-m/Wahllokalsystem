@@ -47,18 +47,18 @@ class WahltageServiceTest {
 
         }
 
-        private List<Wahltag> createWahltagList(String pIndex) {
-            val wahltag1 = new Wahltag(pIndex + "_identifikatorWahltag1", LocalDate.now().minusMonths(2), "beschreibungWahltag1", "nummerWahltag1");
-            val wahltag2 = new Wahltag(pIndex + "_identifikatorWahltag2", LocalDate.now().minusMonths(1), "beschreibungWahltag2", "nummerWahltag2");
-            val wahltag3 = new Wahltag(pIndex + "_identifikatorWahltag3", LocalDate.now().plusMonths(1), "beschreibungWahltag3", "nummerWahltag3");
+        private List<Wahltag> createWahltagList(String wahltagIDPrefix) {
+            val wahltag1 = new Wahltag(wahltagIDPrefix + "_identifikatorWahltag1", LocalDate.now().minusMonths(2), "beschreibungWahltag1", "nummerWahltag1");
+            val wahltag2 = new Wahltag(wahltagIDPrefix + "_identifikatorWahltag2", LocalDate.now().minusMonths(1), "beschreibungWahltag2", "nummerWahltag2");
+            val wahltag3 = new Wahltag(wahltagIDPrefix + "_identifikatorWahltag3", LocalDate.now().plusMonths(1), "beschreibungWahltag3", "nummerWahltag3");
 
             return List.of(wahltag1, wahltag2, wahltag3);
         }
 
-        private List<WahltagModel> createWahltagModelList(String pIndex) {
-            val wahltag1 = new WahltagModel(pIndex + "_identifikatorWahltag1", LocalDate.now().minusMonths(2), "beschreibungWahltag1", "nummerWahltag1");
-            val wahltag2 = new WahltagModel(pIndex + "_identifikatorWahltag2", LocalDate.now().minusMonths(1), "beschreibungWahltag2", "nummerWahltag2");
-            val wahltag3 = new WahltagModel(pIndex + "_identifikatorWahltag3", LocalDate.now().plusMonths(1), "beschreibungWahltag3", "nummerWahltag3");
+        private List<WahltagModel> createWahltagModelList(String wahltagIDPrefix) {
+            val wahltag1 = new WahltagModel(wahltagIDPrefix + "_identifikatorWahltag1", LocalDate.now().minusMonths(2), "beschreibungWahltag1", "nummerWahltag1");
+            val wahltag2 = new WahltagModel(wahltagIDPrefix + "_identifikatorWahltag2", LocalDate.now().minusMonths(1), "beschreibungWahltag2", "nummerWahltag2");
+            val wahltag3 = new WahltagModel(wahltagIDPrefix + "_identifikatorWahltag3", LocalDate.now().plusMonths(1), "beschreibungWahltag3", "nummerWahltag3");
 
             return List.of(wahltag1, wahltag2, wahltag3);
         }

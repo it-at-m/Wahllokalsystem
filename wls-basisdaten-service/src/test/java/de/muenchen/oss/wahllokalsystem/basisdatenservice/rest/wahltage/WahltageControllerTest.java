@@ -46,7 +46,7 @@ class WahltageControllerTest {
 
             val result = wahltageController.getWahltage();
 
-            Assertions.assertThat(result.getBody()).isEqualTo(wahltagDTOs);
+            Assertions.assertThat(result).isEqualTo(wahltagDTOs);
         }
     }
 }

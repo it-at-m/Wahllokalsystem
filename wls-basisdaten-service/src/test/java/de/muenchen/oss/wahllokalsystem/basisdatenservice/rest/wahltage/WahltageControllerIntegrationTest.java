@@ -187,25 +187,25 @@ public class WahltageControllerIntegrationTest {
         }
     }
 
-    private de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltageDTO createClientWahltageDTO(boolean differentAsInDummyClient) {
+    private de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltageDTO createClientWahltageDTO(boolean pDifferentValueBeschreibungAsInDummyClient) {
 
         val clientWahltageDTO = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltageDTO();
 
         val wahltag1 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO();
         wahltag1.setIdentifikator("identifikatorWahltag1");
-        wahltag1.setBeschreibung((differentAsInDummyClient) ? "diff_beschreibungWahltag1" : "beschreibungWahltag1");
+        wahltag1.setBeschreibung((pDifferentValueBeschreibungAsInDummyClient) ? "diff_beschreibungWahltag1" : "beschreibungWahltag1");
         wahltag1.setNummer("nummerWahltag1");
         wahltag1.setTag(LocalDate.now().minusMonths(2));
 
         val wahltag2 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO();
         wahltag2.setIdentifikator("identifikatorWahltag2");
-        wahltag2.setBeschreibung((differentAsInDummyClient) ? "diff_beschreibungWahltag2" : "beschreibungWahltag2");
+        wahltag2.setBeschreibung((pDifferentValueBeschreibungAsInDummyClient) ? "diff_beschreibungWahltag2" : "beschreibungWahltag2");
         wahltag2.setNummer("nummerWahltag2");
         wahltag2.setTag(LocalDate.now().minusMonths(1));
 
         val wahltag3 = new WahltagDTO();
         wahltag3.setIdentifikator("identifikatorWahltag3");
-        wahltag3.setBeschreibung((differentAsInDummyClient) ? "diff_beschreibungWahltag3" : "beschreibungWahltag3");
+        wahltag3.setBeschreibung((pDifferentValueBeschreibungAsInDummyClient) ? "diff_beschreibungWahltag3" : "beschreibungWahltag3");
         wahltag3.setNummer("nummerWahltag3");
         wahltag3.setTag(LocalDate.now().plusMonths(1));
 
@@ -214,5 +214,4 @@ public class WahltageControllerIntegrationTest {
 
         return clientWahltageDTO;
     }
-
 }

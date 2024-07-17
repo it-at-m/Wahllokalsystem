@@ -88,7 +88,7 @@ class SecurityConfigurationTest {
 
         @Test
         @WithAnonymousUser
-        void accessGetWahlvorschlaegeUnauthorizedThenUnauthorized() throws Exception {
+        void accessGetWahlvorstaendeUnauthorizedThenUnauthorized() throws Exception {
             api.perform(get("/businessActions/wahlvorschlaege/wahlID/wahlbezirkID")).andExpect(status().isUnauthorized());
         }
 

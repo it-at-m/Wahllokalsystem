@@ -55,8 +55,8 @@ public class UngueltigeWahlscheineController {
                     )
             }
     )
-    public ResponseEntity<byte[]> getUngueltigeWahlscheine(@PathVariable("wahltagID") String wahltagID,
-            @PathVariable("wahlbezirksart") WahlbezirkArtDTO wahlbezirkArtDTO) {
+    public ResponseEntity<byte[]> getUngueltigeWahlscheine(@PathVariable("wahltagID") final String wahltagID,
+            @PathVariable("wahlbezirksart") final WahlbezirkArtDTO wahlbezirkArtDTO) {
         val ungueltigeWahlscheineData = ungueltigeWahlscheineService.getUngueltigeWahlscheine(
                 ungueltigeWahlscheineDTOMapper.toModel(wahltagID, wahlbezirkArtDTO));
 
@@ -77,8 +77,8 @@ public class UngueltigeWahlscheineController {
                     )
             }
     )
-    public void setUngueltigeWahlscheine(@PathVariable("wahltagID") String wahltagID,
-            @PathVariable("wahlbezirksart") WahlbezirkArtDTO wahlbezirkArtDTO, final MultipartHttpServletRequest request) {
+    public void setUngueltigeWahlscheine(@PathVariable("wahltagID") final String wahltagID,
+            @PathVariable("wahlbezirksart") final WahlbezirkArtDTO wahlbezirkArtDTO, final MultipartHttpServletRequest request) {
         try {
             val requestContent = fileMapper.fromRequest(request);
             val ungueltigeWahlscheineWriteModel = ungueltigeWahlscheineDTOMapper.toModel(ungueltigeWahlscheineDTOMapper.toModel(wahltagID, wahlbezirkArtDTO),

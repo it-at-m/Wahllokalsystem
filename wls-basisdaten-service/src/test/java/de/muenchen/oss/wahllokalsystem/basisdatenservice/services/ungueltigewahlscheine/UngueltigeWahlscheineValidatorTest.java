@@ -44,7 +44,7 @@ class UngueltigeWahlscheineValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahtlagIDIsNull() {
+        void exceptionWhenWahltagIDIsNull() {
             val invalidModel = initValidModel().wahltagID(null).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG))
@@ -55,7 +55,7 @@ class UngueltigeWahlscheineValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahtlagIDIsEmpty() {
+        void exceptionWhenWahltagIDIsEmpty() {
             val invalidModel = initValidModel().wahltagID("").build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG))
@@ -75,7 +75,7 @@ class UngueltigeWahlscheineValidatorTest {
         }
 
         @Test
-        void exceptionWheWahlbezirkartIsNull() {
+        void exceptionWheWahlbezirksartIsNull() {
             val invalidModel = initValidModel().wahlbezirksart(null).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG))
@@ -120,7 +120,7 @@ class UngueltigeWahlscheineValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahtlagIDIsNull() {
+        void exceptionWhenWahltagIDIsNull() {
             val invalidModel = initValidModel().ungueltigeWahlscheineReferenceModel(initValidReferenceModel().wahltagID(null).build()).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTUNGUELTIGEWS_PARAMETER_UNVOLLSTAENDIG))
@@ -131,7 +131,7 @@ class UngueltigeWahlscheineValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahtlagIDIsEmpty() {
+        void exceptionWhenWahltagIDIsEmpty() {
             val invalidModel = initValidModel().ungueltigeWahlscheineReferenceModel(initValidReferenceModel().wahltagID("").build()).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTUNGUELTIGEWS_PARAMETER_UNVOLLSTAENDIG))
@@ -151,7 +151,7 @@ class UngueltigeWahlscheineValidatorTest {
         }
 
         @Test
-        void exceptionWheWahlbezirkartIsNull() {
+        void exceptionWheWahlbezirksartIsNull() {
             val invalidModel = initValidModel().ungueltigeWahlscheineReferenceModel(initValidReferenceModel().wahlbezirksart(null).build()).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTUNGUELTIGEWS_PARAMETER_UNVOLLSTAENDIG))

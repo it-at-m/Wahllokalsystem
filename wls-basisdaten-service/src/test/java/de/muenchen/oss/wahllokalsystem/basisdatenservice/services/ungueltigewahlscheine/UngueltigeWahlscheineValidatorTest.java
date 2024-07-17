@@ -111,6 +111,16 @@ class UngueltigeWahlscheineValidatorTest {
         }
 
         @Test
+        void exceptionWhenReferenceModelIsNull() {
+            val invalidModel = initValidModel().ungueltigeWahlscheineReferenceModel(null).build();
+
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTUNGUELTIGEWS_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
+
+            Assertions.assertThatThrownBy(() -> unitUnderTest.validUngueltigeWahlscheineWriteModelOrThrow(invalidModel)).isSameAs(mockedWlsException);
+        }
+
+        @Test
         void exceptionWhenWahtlagIDIsNull() {
             val invalidModel = initValidModel().ungueltigeWahlscheineReferenceModel(initValidReferenceModel().wahltagID(null).build()).build();
 

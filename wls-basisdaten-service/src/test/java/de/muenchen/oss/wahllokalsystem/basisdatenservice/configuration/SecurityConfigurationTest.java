@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch.HandbuchService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.ungueltigewahlscheine.UngueltigeWahlscheineService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,9 @@ class SecurityConfigurationTest {
 
     @MockBean
     HandbuchService handbuchService;
+
+    @MockBean
+    UngueltigeWahlscheineService ungueltigeWahlscheineService;
 
     @Test
     void accessSecuredResourceRootThenUnauthorized() throws Exception {
@@ -120,6 +124,34 @@ class SecurityConfigurationTest {
         @WithMockUser
         void accessPostHandbuchAuthorizedThenOk() throws Exception {
             api.perform(multipart("/businessActions/handbuch/wahlID/UWB").file("manual", "content".getBytes()).with(csrf())).andExpect(status().isOk());
+        }
+    }
+
+    @Nested
+    class UngueltigeWahlscheine {
+
+        @Test
+        @WithAnonymousUser
+        void accessGetUngueltigeWahlscheineUnauthorizedThenUnauthorized() throws Exception {
+            api.perform(get("/businessActions/ungueltigews/wahlID/UWB")).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessGetUngueltigeWahlscheineAuthorizedThenOk() throws Exception {
+            api.perform(get("/businessActions/ungueltigews/wahlID/UWB")).andExpect(status().isOk());
+        }
+
+        @Test
+        @WithAnonymousUser
+        void accessPostUngueltigeWahlscheineUnauthorizedThenUnauthorized() throws Exception {
+            api.perform(post("/businessActions/ungueltigews/wahlID/UWB").with(csrf())).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessPostUngueltigeWahlscheineAuthorizedThenOk() throws Exception {
+            api.perform(multipart("/businessActions/ungueltigews/wahlID/UWB").file("manual", "content".getBytes()).with(csrf())).andExpect(status().isOk());
         }
     }
 

@@ -71,7 +71,7 @@ class WahltageClientMapperTest {
                     wahltag1, wahltag2, wahltag3));
 
             Assertions.assertThat(dtoToMap).hasNoNullFieldsOrProperties();
-            Assertions.assertThat(dtoToMap.getWahltage()).size().isPositive();
+            Assertions.assertThat(dtoToMap.getWahltage()).size().isEqualTo(3);
 
             val result = unitUnderTest.fromRemoteClientWahltageDTOtoListOfWahltagModel(dtoToMap);
 

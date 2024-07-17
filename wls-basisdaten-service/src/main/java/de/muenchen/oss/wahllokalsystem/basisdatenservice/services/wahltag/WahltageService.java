@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ public class WahltageService {
     )
     public List<WahltagModel> getWahltage() {
         log.info("#getWahltage");
-        List<WahltagModel> wahltage = wahltageClient.getWahltage(LocalDate.now().minusMonths(3));
+        val wahltage = wahltageClient.getWahltage(LocalDate.now().minusMonths(3));
         wahltagRepository.saveAll(wahltagModelMapper.fromWahltagModelToWahltagEntityList(wahltage));
         return wahltagModelMapper.fromWahltagEntityToWahltagModelList(wahltagRepository.findAllByOrderByWahltagAsc());
     }

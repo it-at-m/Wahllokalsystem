@@ -25,7 +25,7 @@ public class WahltageController {
     private final WahltageService wahltageService;
     private final WahltageDTOMapper wahltageDTOMapper;
 
-    @Operation(description = "Laden der Liste der Wahltage, bei denen das Datum bis 3 Monate in die Vergangenheit reicht")
+    @Operation(description = "Laden der Liste der Wahltage, aufsteigend sortiert nach Wahltag-Datum und nicht länger als 3 Monate in der Vergangenheit.")
     @GetMapping
     public ResponseEntity<List<WahltagDTO>> getWahltage() {
         return new ResponseEntity<>(

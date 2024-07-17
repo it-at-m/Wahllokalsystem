@@ -31,12 +31,12 @@ class WahltageControllerTest {
         @Test
         void serviceIsCalledAndObjectsAreMapped() {
 
-            List<WahltagModel> wahltagModels = List.of(
+            val wahltagModels = List.of(
                     WahltagModel.builder().build(),
                     WahltagModel.builder().build(),
                     WahltagModel.builder().build());
 
-            List<WahltagDTO> wahltagDTOs = List.of(
+            val wahltagDTOs = List.of(
                     WahltagDTO.builder().build(),
                     WahltagDTO.builder().build(),
                     WahltagDTO.builder().build());

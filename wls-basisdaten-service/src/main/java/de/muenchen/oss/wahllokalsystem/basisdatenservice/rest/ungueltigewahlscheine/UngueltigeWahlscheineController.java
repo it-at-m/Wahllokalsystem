@@ -5,7 +5,12 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.FileMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.FileResponseEntityModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.WahlbezirkArtDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.ungueltigewahlscheine.UngueltigeWahlscheineService;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -37,6 +42,19 @@ public class UngueltigeWahlscheineController {
     private final ExceptionFactory exceptionFactory;
 
     @GetMapping("{wahltagID}/{wahlbezirksart}")
+    @Operation(
+            description = "Abrufen der ungueltigen Wahlscheiner eines Wahltages für eine bestimmte Wahlbezirksart. Kommen als Anhang im csv-Format mit den Spalten Nachname, Vorname und Nummer",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "500", description = "Ungueltige Wahlscheine sind nicht abrufbar. Entweder fehlt es oder es gab technische Probleme",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400", description = "Anfrageparameter sind fehlerhaft",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
+                    )
+            }
+    )
     public ResponseEntity<byte[]> getUngueltigeWahlscheine(@PathVariable("wahltagID") String wahltagID,
             @PathVariable("wahlbezirksart") WahlbezirkArtDTO wahlbezirkArtDTO) {
         val ungueltigeWahlscheineData = ungueltigeWahlscheineService.getUngueltigeWahlscheine(
@@ -49,6 +67,16 @@ public class UngueltigeWahlscheineController {
     }
 
     @PostMapping("{wahltagID}/{wahlbezirksart}")
+    @Operation(
+            description = "Speichern der ungueltigen Wahlscheine eines Wahltages für eine bestimmte Wahlbezirksart",
+            responses = {
+                    @ApiResponse(responseCode = "500", description = "ungueltige Wahlscheine konnten nicht gespeichert werden"),
+                    @ApiResponse(
+                            responseCode = "400", description = "Anfrageparameter sind fehlerhaft",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
+                    )
+            }
+    )
     public void setUngueltigeWahlscheine(@PathVariable("wahltagID") String wahltagID,
             @PathVariable("wahlbezirksart") WahlbezirkArtDTO wahlbezirkArtDTO, final MultipartHttpServletRequest request) {
         try {

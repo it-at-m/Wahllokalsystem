@@ -67,11 +67,13 @@ class WahltageClientImplTest {
         }
 
         @Test
-        void controllerApiExceptionIsMapped(){
+        void controllerApiExceptionIsMapped() {
             val testDate = LocalDate.now().minusMonths(3);
-            val mockedException = TechnischeWlsException.withCode("100").buildWithMessage("Bei der Kommunikation mit dem Aoueai-Service ist ein Fehler aufgetreten. Es konnten daher keine Daten geladen werden.");
+            val mockedException = TechnischeWlsException.withCode("100")
+                    .buildWithMessage("Bei der Kommunikation mit dem Aoueai-Service ist ein Fehler aufgetreten. Es konnten daher keine Daten geladen werden.");
 
-            Mockito.when(wahldatenControllerApi.loadWahltageSinceIncluding(any())).thenThrow(new RestClientException("error occurs while attempting to invoke the API"));
+            Mockito.when(wahldatenControllerApi.loadWahltageSinceIncluding(any()))
+                    .thenThrow(new RestClientException("error occurs while attempting to invoke the API"));
             Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI)).thenThrow(mockedException);
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahltage(testDate)).isSameAs(mockedException);
         }

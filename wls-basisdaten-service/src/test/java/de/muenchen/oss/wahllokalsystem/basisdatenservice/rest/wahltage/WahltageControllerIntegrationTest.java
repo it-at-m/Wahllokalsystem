@@ -187,7 +187,8 @@ public class WahltageControllerIntegrationTest {
         }
     }
 
-    private de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltageDTO createClientWahltageDTO(boolean pDifferentValueBeschreibungAsInDummyClient) {
+    private de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltageDTO createClientWahltageDTO(
+            boolean pDifferentValueBeschreibungAsInDummyClient) {
 
         val clientWahltageDTO = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltageDTO();
 

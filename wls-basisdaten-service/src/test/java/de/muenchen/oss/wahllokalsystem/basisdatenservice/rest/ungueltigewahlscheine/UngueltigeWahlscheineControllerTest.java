@@ -102,7 +102,7 @@ class UngueltigeWahlscheineControllerTest {
             val wahltagID = "wahltagID";
             final HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
             val servletRequest = new DefaultMultipartHttpServletRequest(httpServletRequest);
-            
+
             val mockedFileMapperIOException = new IOException("ioException of fileMapper");
             val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("");
 

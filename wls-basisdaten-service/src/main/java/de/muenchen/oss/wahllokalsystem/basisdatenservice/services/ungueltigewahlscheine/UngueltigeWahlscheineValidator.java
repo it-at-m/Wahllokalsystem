@@ -22,8 +22,10 @@ public class UngueltigeWahlscheineValidator {
     public void validUngueltigeWahlscheineWriteModelOrThrow(final UngueltigeWahlscheineWriteModel ungueltigeWahlscheineWriteModel) {
         if (ungueltigeWahlscheineWriteModel == null || ungueltigeWahlscheineWriteModel.ungueltigeWahlscheineReferenceModel() == null || StringUtils.isBlank(
                 ungueltigeWahlscheineWriteModel.ungueltigeWahlscheineReferenceModel()
-                        .wahltagID()) || ungueltigeWahlscheineWriteModel.ungueltigeWahlscheineReferenceModel()
-                .wahlbezirksart() == null || ungueltigeWahlscheineWriteModel.ungueltigeWahlscheineData() == null) {
+                        .wahltagID())
+                || ungueltigeWahlscheineWriteModel.ungueltigeWahlscheineReferenceModel()
+                        .wahlbezirksart() == null
+                || ungueltigeWahlscheineWriteModel.ungueltigeWahlscheineData() == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTUNGUELTIGEWS_PARAMETER_UNVOLLSTAENDIG);
         }
     }

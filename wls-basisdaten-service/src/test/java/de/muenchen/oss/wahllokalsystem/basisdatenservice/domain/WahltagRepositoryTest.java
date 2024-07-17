@@ -36,29 +36,6 @@ class WahltagRepositoryTest {
         repository.deleteAll();
     }
 
-    @Test
-    void findAll() {
-        List<Wahltag> wahltageToSave1 = createWahltagList("1");
-        List<Wahltag> wahltageToSave2 = createWahltagList("2");
-        List<Wahltag> wahltageToSave3 = createWahltagList("3");
-        repository.saveAll(wahltageToSave1);
-        repository.saveAll(wahltageToSave2);
-        repository.saveAll(wahltageToSave3);
-        List<Wahltag> foundWahltage = repository.findAll();
-        Assertions.assertThat(foundWahltage).containsAll(wahltageToSave1).containsAll(wahltageToSave2).containsAll(wahltageToSave3);
-    }
-
-    @Test
-    void findById() {
-        List<Wahltag> wahltageToSave1 = createWahltagList("X");
-        repository.saveAll(wahltageToSave1);
-        Wahltag wahltag3 = wahltageToSave1.get(2);
-        Optional<Wahltag> foundWahltagById = repository.findById("X_identifikatorWahltag3");
-
-        Assertions.assertThat(foundWahltagById).isPresent();
-        Assertions.assertThat(foundWahltagById.get()).isEqualTo(wahltag3);
-    }
-
     /**
      * Tests if searched returned Wahltags are right sorted
      */

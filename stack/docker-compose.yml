@@ -120,7 +120,7 @@ services:
 
   wls-init-keycloak:
     container_name: wls-init-keycloak
-    image: klg71/keycloakmigration
+    image: klg71/keycloakmigration:0.2.61
     depends_on:
       - wls-keycloak
     env_file:

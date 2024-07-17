@@ -170,7 +170,7 @@ public class WahltageControllerIntegrationTest {
         @Test
         void technischeWlsExceptionWhenNoExternalDataFound() throws Exception {
 
-            String requestDate = LocalDate.now().minusMonths(3).toString();
+            val requestDate = LocalDate.now().minusMonths(3).toString();
 
             WireMock.stubFor(WireMock.get("/wahldaten/wahltage?includingSince=" + requestDate)
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.NOT_FOUND.value())));

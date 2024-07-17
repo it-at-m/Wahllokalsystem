@@ -5,7 +5,6 @@ import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SP
 
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
@@ -17,8 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(
         classes = { MicroServiceApplication.class },
@@ -40,7 +37,6 @@ class WahltagRepositoryTest {
      * Tests if searched returned Wahltags are right sorted
      */
     @Test
-    @Transactional(propagation = Propagation.REQUIRED, noRollbackFor = Exception.class)
     void findAllByOrderByWahltagAsc() {
         List<Wahltag> wahltageToSave = createWahltagList("1");
         repository.saveAll(wahltageToSave);

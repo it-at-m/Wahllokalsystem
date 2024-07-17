@@ -28,25 +28,19 @@ import org.springframework.stereotype.Indexed;
 public class Wahltag {
 
     @Id
-    @Column(name = "wahltagID")
     @NotNull
     @Size(max = 1024)
     @ToString.Include
     private String wahltagID;
 
-    @Column(name = "wahltag")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
     @NotNull
     @ToString.Include
     private LocalDate wahltag;
 
-    @Column(name = "beschreibung")
     @Size(max = 1024)
     @ToString.Include
     private String beschreibung;
 
-    @Column(name = "nummer")
     @Size(max = 1024)
     @ToString.Include
     private String nummer;

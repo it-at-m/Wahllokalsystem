@@ -35,9 +35,7 @@ class WahltageDTOMapperTest {
             val wahltag2 = new WahltagDTO("identifikatorWahltag2", LocalDate.now().minusMonths(1), "beschreibungWahltag2", "nummerWahltag2");
             val wahltag3 = new WahltagDTO("identifikatorWahltag3", LocalDate.now().plusMonths(1), "beschreibungWahltag3", "nummerWahltag3");
 
-            val wahltageDTOs = List.of(wahltag1, wahltag2, wahltag3);
-
-            return wahltageDTOs;
+            return List.of(wahltag1, wahltag2, wahltag3);
         }
 
         private List<WahltagModel> createClientWahltagModels() {
@@ -45,9 +43,7 @@ class WahltageDTOMapperTest {
             val wahltag2 = new WahltagModel("identifikatorWahltag2", LocalDate.now().minusMonths(1), "beschreibungWahltag2", "nummerWahltag2");
             val wahltag3 = new WahltagModel("identifikatorWahltag3", LocalDate.now().plusMonths(1), "beschreibungWahltag3", "nummerWahltag3");
 
-            val wahltagModels = List.of(wahltag1, wahltag2, wahltag3);
-
-            return wahltagModels;
+            return List.of(wahltag1, wahltag2, wahltag3);
         }
     }
 }

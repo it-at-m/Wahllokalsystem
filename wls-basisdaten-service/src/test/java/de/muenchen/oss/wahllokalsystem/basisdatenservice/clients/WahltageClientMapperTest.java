@@ -3,7 +3,6 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltageDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageModel;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;

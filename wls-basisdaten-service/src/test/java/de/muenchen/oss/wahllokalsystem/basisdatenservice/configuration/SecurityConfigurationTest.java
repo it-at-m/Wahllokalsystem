@@ -37,7 +37,7 @@ class SecurityConfigurationTest {
 
     @MockBean
     WahltageService wahltageService;
-  
+
     @MockBean
     HandbuchService handbuchService;
 

@@ -13,26 +13,6 @@ class WahltagModelMapperTest {
     private final WahltagModelMapper unitUnderTest = Mappers.getMapper(WahltagModelMapper.class);
 
     @Test
-    void toEntity() {
-        val modelToMap = createWahltagModel();
-
-        val result = unitUnderTest.toEntity(modelToMap);
-
-        val expectedResult = createWahltagEntity();
-        Assertions.assertThat(result).isEqualTo(expectedResult);
-    }
-
-    @Test
-    void toModel() {
-        val entityToMap = createWahltagEntity();
-
-        val result = unitUnderTest.toModel(entityToMap);
-
-        val expectedResult = createWahltagModel();
-        Assertions.assertThat(result).isEqualTo(expectedResult);
-    }
-
-    @Test
     void fromWahltagModelToWahltagEntityList() {
         val modelsToMap = createWahltagModelList();
 

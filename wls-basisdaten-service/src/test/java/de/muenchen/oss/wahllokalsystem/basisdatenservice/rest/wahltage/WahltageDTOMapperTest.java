@@ -23,7 +23,6 @@ class WahltageDTOMapperTest {
 
         @Test
         void isMappedToDTO() {
-
             val modelsInput = createClientWahltagModels();
             val dtosExpected = createClientWahltagDTOs();
 

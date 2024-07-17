@@ -30,7 +30,6 @@ class WahltageControllerTest {
 
         @Test
         void serviceIsCalledAndObjectsAreMapped() {
-
             val wahltagModels = List.of(
                     WahltagModel.builder().build(),
                     WahltagModel.builder().build(),

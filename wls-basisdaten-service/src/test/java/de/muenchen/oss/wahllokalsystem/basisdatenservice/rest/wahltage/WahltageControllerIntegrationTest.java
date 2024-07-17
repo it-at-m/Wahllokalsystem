@@ -89,7 +89,6 @@ public class WahltageControllerIntegrationTest {
 
         @Test
         void loadedFromExternal() throws Exception {
-
             val requestDate = LocalDate.now().minusMonths(3).toString();
 
             val eaiWahltage = createClientWahltageDTO(false);
@@ -112,7 +111,6 @@ public class WahltageControllerIntegrationTest {
         @Test
         @Transactional
         void externalDataIsPersisted() throws Exception {
-
             val requestDate = LocalDate.now().minusMonths(3).toString();
 
             val eaiWahltage = createClientWahltageDTO(false);
@@ -169,7 +167,6 @@ public class WahltageControllerIntegrationTest {
 
         @Test
         void technischeWlsExceptionWhenNoExternalDataFound() throws Exception {
-
             val requestDate = LocalDate.now().minusMonths(3).toString();
 
             WireMock.stubFor(WireMock.get("/wahldaten/wahltage?includingSince=" + requestDate)
@@ -189,7 +186,6 @@ public class WahltageControllerIntegrationTest {
 
     private de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltageDTO createClientWahltageDTO(
             boolean pDifferentValueBeschreibungAsInDummyClient) {
-
         val clientWahltageDTO = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltageDTO();
 
         val wahltag1 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO();

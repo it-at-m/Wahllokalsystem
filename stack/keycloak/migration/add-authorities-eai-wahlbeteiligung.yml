@@ -1,0 +1,12 @@
+id: add authorities eai wahlbeteiligung
+author: dragonfly28
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: aoueai_BUSINESSACTION_SaveWahlbeteiligung
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allEaiAuthorities
+      role: aoueai_BUSINESSACTION_SaveWahlbeteiligung
+      clientId: ${SSO_CLIENT_ID}

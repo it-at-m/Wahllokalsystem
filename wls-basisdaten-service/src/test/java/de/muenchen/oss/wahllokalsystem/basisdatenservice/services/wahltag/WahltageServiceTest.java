@@ -56,9 +56,12 @@ class WahltageServiceTest {
         }
 
         private List<WahltagModel> createWahltagModelList(String wahltagIDPrefix) {
-            val wahltag1 = new WahltagModel(wahltagIDPrefix + "_identifikatorWahltag1", LocalDate.now().minusMonths(2), "beschreibungWahltag1", "nummerWahltag1");
-            val wahltag2 = new WahltagModel(wahltagIDPrefix + "_identifikatorWahltag2", LocalDate.now().minusMonths(1), "beschreibungWahltag2", "nummerWahltag2");
-            val wahltag3 = new WahltagModel(wahltagIDPrefix + "_identifikatorWahltag3", LocalDate.now().plusMonths(1), "beschreibungWahltag3", "nummerWahltag3");
+            val wahltag1 = new WahltagModel(wahltagIDPrefix + "_identifikatorWahltag1", LocalDate.now().minusMonths(2), "beschreibungWahltag1",
+                    "nummerWahltag1");
+            val wahltag2 = new WahltagModel(wahltagIDPrefix + "_identifikatorWahltag2", LocalDate.now().minusMonths(1), "beschreibungWahltag2",
+                    "nummerWahltag2");
+            val wahltag3 = new WahltagModel(wahltagIDPrefix + "_identifikatorWahltag3", LocalDate.now().plusMonths(1), "beschreibungWahltag3",
+                    "nummerWahltag3");
 
             return List.of(wahltag1, wahltag2, wahltag3);
         }

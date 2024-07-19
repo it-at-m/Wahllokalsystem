@@ -38,7 +38,7 @@ class WahltagRepositoryTest {
      */
     @Test
     void findAllByOrderByWahltagAsc() {
-        List<Wahltag> wahltageToSave = createWahltagList("1");
+        List<Wahltag> wahltageToSave = createWahltagList();
         repository.saveAll(wahltageToSave);
         List<Wahltag> foundWahltage = repository.findAllByOrderByWahltagAsc();
 
@@ -50,11 +50,11 @@ class WahltagRepositoryTest {
         Assertions.assertThat(wahltageToSave).isEqualTo(foundWahltage);
     }
 
-    private List<Wahltag> createWahltagList(String pIndex) {
-        val wahltag4 = new Wahltag(pIndex + "_identifikatorWahltag4", LocalDate.now().plusMonths(5), "beschreibungWahltag4", "nummerWahltag4");
-        val wahltag1 = new Wahltag(pIndex + "_identifikatorWahltag1", LocalDate.now().minusMonths(2), "beschreibungWahltag1", "nummerWahltag1");
-        val wahltag3 = new Wahltag(pIndex + "_identifikatorWahltag3", LocalDate.now().plusMonths(1), "beschreibungWahltag3", "nummerWahltag3");
-        val wahltag2 = new Wahltag(pIndex + "_identifikatorWahltag2", LocalDate.now().minusMonths(1), "beschreibungWahltag2", "nummerWahltag2");
+    private List<Wahltag> createWahltagList() {
+        val wahltag4 = new Wahltag("_identifikatorWahltag4", LocalDate.now().plusMonths(5), "beschreibungWahltag4", "nummerWahltag4");
+        val wahltag1 = new Wahltag("_identifikatorWahltag1", LocalDate.now().minusMonths(2), "beschreibungWahltag1", "nummerWahltag1");
+        val wahltag3 = new Wahltag("_identifikatorWahltag3", LocalDate.now().plusMonths(1), "beschreibungWahltag3", "nummerWahltag3");
+        val wahltag2 = new Wahltag("_identifikatorWahltag2", LocalDate.now().minusMonths(1), "beschreibungWahltag2", "nummerWahltag2");
 
         return Arrays.asList(wahltag4, wahltag1, wahltag3, wahltag2);
     }

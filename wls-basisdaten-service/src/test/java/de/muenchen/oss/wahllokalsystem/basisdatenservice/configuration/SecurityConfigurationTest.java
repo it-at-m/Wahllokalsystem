@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch.HandbuchService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.ungueltigewahlscheine.UngueltigeWahlscheineService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeService;
@@ -34,6 +35,9 @@ class SecurityConfigurationTest {
 
     @MockBean
     WahlvorschlaegeService wahlvorschlaegeService;
+
+    @MockBean
+    WahltageService wahltageService;
 
     @MockBean
     HandbuchService handbuchService;
@@ -94,8 +98,24 @@ class SecurityConfigurationTest {
 
         @Test
         @WithMockUser
-        void accessGetWahlvorstaendeUnauthorizedThenOk() throws Exception {
+        void accessGetWahlvorschlaegeUnauthorizedThenOk() throws Exception {
             api.perform(get("/businessActions/wahlvorschlaege/wahlID/wahlbezirkID")).andExpect(status().isOk());
+        }
+    }
+
+    @Nested
+    class Wahltage {
+
+        @Test
+        @WithAnonymousUser
+        void accessGetWahltageUnauthorizedThenUnauthorized() throws Exception {
+            api.perform(get("/businessActions/wahltage")).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessGetWahltageUnauthorizedThenOk() throws Exception {
+            api.perform(get("/businessActions/wahltage")).andExpect(status().isOk());
         }
     }
 

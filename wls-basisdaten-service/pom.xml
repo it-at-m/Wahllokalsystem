@@ -15,13 +15,13 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>3.3.1</spring.boot.version>
-        <spring.cloud.version>2023.0.2</spring.cloud.version>
+        <spring.boot.version>3.3.2</spring.boot.version>
+        <spring.cloud.version>2023.0.3</spring.cloud.version>
         <logstash.encoder>7.4</logstash.encoder>
         <apache.commons.collections4>4.4</apache.commons.collections4>
         <apache.commons.csv>1.11.0</apache.commons.csv>
         <apache.commons.io>2.16.1</apache.commons.io>
-        <apache.commons.lang3>3.14.0</apache.commons.lang3>
+        <apache.commons.lang3>3.15.0</apache.commons.lang3>
         <apache.commons.text>1.12.0</apache.commons.text>
         <apache.commons.validator>1.9.0</apache.commons.validator>
         <!-- SonarQube -->
@@ -30,7 +30,7 @@
         <jacoco.version>0.8.12</jacoco.version>
         <!-- Plugins -->
         <maven-scm-plugin.version>1.13.0</maven-scm-plugin.version>
-        <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
         <maven.resources.plugin.version>3.3.1</maven.resources.plugin.version>
         <!-- Version muss mit der in den spring-boot-dependencies bereitgestellten Lombok-Version übereinstimmen -->
@@ -385,7 +385,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>7.6.0</version>
+                <version>7.7.0</version>
                 <executions>
                     <execution>
                         <id>generateEAI</id>
@@ -393,13 +393,13 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.eai.0.0.1-RC1.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.eai.0.1.0.json</inputSpec>
 
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
 
-                            <apiPackage>${groupId}.basisdatenservice.eai.aou.client</apiPackage>
-                            <modelPackage>${groupId}.basisdatenservice.eai.aou.model</modelPackage>
+                            <apiPackage>${project.groupId}.basisdatenservice.eai.aou.client</apiPackage>
+                            <modelPackage>${project.groupId}.basisdatenservice.eai.aou.model</modelPackage>
 
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>

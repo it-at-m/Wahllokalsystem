@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
 @RequiredArgsConstructor
 @Slf4j
-public class ClientImpl implements WahlvorschlaegeClient {
+public class WahlvorschlaegeClientImpl implements WahlvorschlaegeClient {
 
     private final ExceptionFactory exceptionFactory;
 

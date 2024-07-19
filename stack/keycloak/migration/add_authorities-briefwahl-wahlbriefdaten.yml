@@ -7,7 +7,7 @@ changes:
       clientRole: true
       clientId: ${SSO_CLIENT_ID}
   - assignRoleToGroup:
-      group: allWahlvorbereitungAuthorities
+      group: allBriefwahlAuthorities
       role: Briefwahl_BUSINESSACTION_GetWahlbriefdaten
       clientId: ${SSO_CLIENT_ID}
 
@@ -16,7 +16,7 @@ changes:
       clientRole: true
       clientId: ${SSO_CLIENT_ID}
   - assignRoleToGroup:
-      group: allWahlvorbereitungAuthorities
+      group: allBriefwahlAuthorities
       role: Briefwahl_BUSINESSACTION_PostWahlbriefdaten
       clientId: ${SSO_CLIENT_ID}
 
@@ -25,7 +25,7 @@ changes:
       clientRole: true
       clientId: ${SSO_CLIENT_ID}
   - assignRoleToGroup:
-      group: allWahlvorbereitungAuthorities
+      group: allBriefwahlAuthorities
       role: Briefwahl_WRITE_Wahlbriefdaten
       clientId: ${SSO_CLIENT_ID}
 
@@ -34,6 +34,6 @@ changes:
       clientRole: true
       clientId: ${SSO_CLIENT_ID}
   - assignRoleToGroup:
-      group: allWahlvorbereitungAuthorities
+      group: allBriefwahlAuthorities
       role: Briefwahl_DELETE_Wahlbriefdaten
       clientId: ${SSO_CLIENT_ID}

@@ -398,8 +398,8 @@
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
 
-                            <apiPackage>${groupId}.basisdatenservice.eai.aou.client</apiPackage>
-                            <modelPackage>${groupId}.basisdatenservice.eai.aou.model</modelPackage>
+                            <apiPackage>${project.groupId}.basisdatenservice.eai.aou.client</apiPackage>
+                            <modelPackage>${project.groupId}.basisdatenservice.eai.aou.model</modelPackage>
 
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>

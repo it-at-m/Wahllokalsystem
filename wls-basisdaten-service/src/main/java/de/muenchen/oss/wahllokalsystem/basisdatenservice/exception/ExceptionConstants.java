@@ -33,7 +33,8 @@ public class ExceptionConstants {
 
     public static ExceptionDataWrapper GETUNGUELTIGEWAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("331",
             "getUngueltigews: Suchkriterien unvollständig.");
-    public static ExceptionDataWrapper GETUNGUELTIGEWAHLSCHEINE_KEINE_DATEN = new ExceptionDataWrapper("332", "Die Ungueltigews konnte nicht geladen werden.");
+    public static ExceptionDataWrapper GETUNGUELTIGEWAHLSCHEINE_KEINE_DATEN = new ExceptionDataWrapper("332",
+            "Die ungueltigen Wahlscheine konnte nicht geladen werden.");
 
     public static ExceptionDataWrapper POSTUNGUELTIGEWS_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("345",
             "postUngueltigews: Suchkriterien unvollständig.");

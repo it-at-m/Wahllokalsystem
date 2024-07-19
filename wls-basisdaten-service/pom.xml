@@ -393,7 +393,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.eai.0.0.1-RC1.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.eai.0.1.0.json</inputSpec>
 
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>

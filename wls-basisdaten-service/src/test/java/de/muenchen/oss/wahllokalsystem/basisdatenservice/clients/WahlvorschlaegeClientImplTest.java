@@ -21,7 +21,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class ClientImplTest {
+class WahlvorschlaegeClientImplTest {
 
     @Mock
     ExceptionFactory exceptionFactory;
@@ -33,7 +33,7 @@ class ClientImplTest {
     WahlvorschlaegeClientMapper wahlvorschlaegeClientMapper;
 
     @InjectMocks
-    ClientImpl unitUnderTest;
+    WahlvorschlaegeClientImpl unitUnderTest;
 
     @Nested
     class GetWahlvorschlaege {

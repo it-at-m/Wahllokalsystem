@@ -30,7 +30,7 @@ public class UngueltigeWahlscheineController {
 
     private static final String UNGUELTIGE_WAHLSCHEINE_FILE_CONTENT_TYPE = "text/csv";
 
-    @Value("${service.config.ungueltigewahlscheine.filenamesuffix:Ungueltigews.csv}")
+    @Value("${app.config.ungueltigewahlscheine.filenamesuffix:Ungueltigews.csv}")
     String ungueltigeWahlscheineFileNameSuffix;
 
     private final UngueltigeWahlscheineService ungueltigeWahlscheineService;

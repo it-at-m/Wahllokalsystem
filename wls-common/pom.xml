@@ -24,7 +24,7 @@
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.boot.version>3.3.2</spring.boot.version>
-        <spring.cloud.version>2023.0.2</spring.cloud.version>
+        <spring.cloud.version>2023.0.3</spring.cloud.version>
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
         <!-- Version muss mit der in den spring-boot-dependencies bereitgestellten Lombok-Version übereinstimmen -->
         <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>

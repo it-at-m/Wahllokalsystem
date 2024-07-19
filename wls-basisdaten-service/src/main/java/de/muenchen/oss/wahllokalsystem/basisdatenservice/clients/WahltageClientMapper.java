@@ -1,9 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltageDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
 import java.util.List;
+import java.util.Set;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -14,7 +14,5 @@ public interface WahltageClientMapper {
     @Mapping(target = "wahltag", source = "tag")
     WahltagModel toWahltagModel(WahltagDTO wahltagDTO);
 
-    default List<WahltagModel> fromRemoteClientWahltageDTOtoListOfWahltagModel(final WahltageDTO wahltageDTO) {
-        return wahltageDTO.getWahltage().stream().map(this::toWahltagModel).toList();
-    }
+    List<WahltagModel> fromRemoteClientSetOfWahltagDTOtoListOfWahltagModel(Set<WahltagDTO> wahltageDTO);
 }

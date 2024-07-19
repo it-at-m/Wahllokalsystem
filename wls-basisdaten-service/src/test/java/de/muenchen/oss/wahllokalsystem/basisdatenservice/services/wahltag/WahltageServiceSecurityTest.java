@@ -6,7 +6,6 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltageDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.LocalDate;
@@ -86,8 +85,7 @@ public class WahltageServiceSecurityTest {
             return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_DELETE_WAHLTAGE);
         }
 
-        private WahltageDTO createClientWahltageDTO() {
-            val dto = new WahltageDTO();
+        private Set<WahltagDTO> createClientWahltageDTO() {
             val wahltag1 = new WahltagDTO();
             wahltag1.setIdentifikator("identifikatorWahltag1");
             wahltag1.setBeschreibung("beschreibungWahltag1");
@@ -106,9 +104,7 @@ public class WahltageServiceSecurityTest {
             wahltag3.setNummer("nummerWahltag3");
             wahltag3.setTag(LocalDate.now().plusMonths(1));
 
-            dto.setWahltage(Set.of(wahltag3, wahltag2, wahltag1));
-
-            return dto;
+            return Set.of(wahltag3, wahltag2, wahltag1);
         }
     }
 }

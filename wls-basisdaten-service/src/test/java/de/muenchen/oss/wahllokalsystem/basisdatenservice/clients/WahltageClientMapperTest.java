@@ -1,7 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltageDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
 import java.time.LocalDate;
 import java.util.List;
@@ -47,8 +46,6 @@ class WahltageClientMapperTest {
 
         @Test
         void isMapped() {
-            val dtoToMap = new WahltageDTO();
-
             val wahltag1 = new WahltagDTO();
             wahltag1.setIdentifikator("identifikatorWahltag1");
             wahltag1.setBeschreibung("beschreibungWahltag1");
@@ -67,13 +64,12 @@ class WahltageClientMapperTest {
             wahltag3.setNummer("nummerWahltag3");
             wahltag3.setTag(LocalDate.now().plusMonths(1));
 
-            dtoToMap.setWahltage(Set.of(
-                    wahltag1, wahltag2, wahltag3));
+            val dtoToMap = Set.of(wahltag1, wahltag2, wahltag3);
 
-            Assertions.assertThat(dtoToMap).hasNoNullFieldsOrProperties();
-            Assertions.assertThat(dtoToMap.getWahltage()).size().isEqualTo(3);
+            Assertions.assertThat(dtoToMap).size().isEqualTo(3);
+            dtoToMap.forEach(wahltag -> Assertions.assertThat(wahltag).hasNoNullFieldsOrProperties());
 
-            val result = unitUnderTest.fromRemoteClientWahltageDTOtoListOfWahltagModel(dtoToMap);
+            val result = unitUnderTest.fromRemoteClientSetOfWahltagDTOtoListOfWahltagModel(dtoToMap);
 
             val expectedWahltage = List.of(
                     new WahltagModel("identifikatorWahltag1",

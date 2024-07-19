@@ -103,7 +103,7 @@ public class WahltageControllerIntegrationTest {
                     de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahltage.WahltagDTO[].class);
 
             val expectedResponseBody = dtoMapper
-                    .fromListOfWahltagModelToListOfWahltagDTO(wahltageClientMapper.fromRemoteClientWahltageDTOtoListOfWahltagModel(eaiWahltage));
+                    .fromListOfWahltagModelToListOfWahltagDTO(wahltageClientMapper.fromRemoteClientSetOfWahltagDTOtoListOfWahltagModel(eaiWahltage));
 
             Assertions.assertThat(responseBodyAsDTO).containsExactlyInAnyOrderElementsOf(expectedResponseBody);
         }
@@ -125,7 +125,7 @@ public class WahltageControllerIntegrationTest {
             val dataFromRepo = wahltagRepository.findAllByOrderByWahltagAsc();
 
             val expectedListOfData = modelMapper.fromWahltagModelToWahltagEntityList(
-                    wahltageClientMapper.fromRemoteClientWahltageDTOtoListOfWahltagModel(eaiWahltage));
+                    wahltageClientMapper.fromRemoteClientSetOfWahltagDTOtoListOfWahltagModel(eaiWahltage));
 
             Assertions.assertThat(dataFromRepo)
                     .usingRecursiveComparison().ignoringCollectionOrder()
@@ -136,7 +136,7 @@ public class WahltageControllerIntegrationTest {
         void loadFromRemoteFirstAndThanUpdateRepository() throws Exception {
             val entitiesToFindInRepository = modelMapper
                     .fromWahltagModelToWahltagEntityList(wahltageClientMapper
-                            .fromRemoteClientWahltageDTOtoListOfWahltagModel(createClientWahltageDTO(true)));
+                            .fromRemoteClientSetOfWahltagDTOtoListOfWahltagModel(createClientWahltageDTO(true)));
             val savedEntitiesInRepository_1 = wahltagRepository.saveAll(entitiesToFindInRepository);
 
             val request = MockMvcRequestBuilders.get("/businessActions/wahltage");
@@ -184,9 +184,8 @@ public class WahltageControllerIntegrationTest {
         }
     }
 
-    private de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltageDTO createClientWahltageDTO(
+    private Set<de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO> createClientWahltageDTO(
             boolean beschreibungPartPreNumber) {
-        val clientWahltageDTO = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltageDTO();
 
         val wahltag1 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO();
         wahltag1.setIdentifikator("identifikatorWahltag1");
@@ -206,9 +205,6 @@ public class WahltageControllerIntegrationTest {
         wahltag3.setNummer("nummerWahltag3");
         wahltag3.setTag(LocalDate.now().plusMonths(1));
 
-        val wahltage = Set.of(wahltag1, wahltag2, wahltag3);
-        clientWahltageDTO.setWahltage(wahltage);
-
-        return clientWahltageDTO;
+        return Set.of(wahltag1, wahltag2, wahltag3);
     }
 }

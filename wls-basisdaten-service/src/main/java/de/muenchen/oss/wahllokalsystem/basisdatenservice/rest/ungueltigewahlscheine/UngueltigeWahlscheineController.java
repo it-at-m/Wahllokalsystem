@@ -43,7 +43,7 @@ public class UngueltigeWahlscheineController {
 
     @GetMapping("{wahltagID}/{wahlbezirksart}")
     @Operation(
-            description = "Abrufen der ungueltigen Wahlscheiner eines Wahltages für eine bestimmte Wahlbezirksart. Kommen als Anhang im csv-Format mit den Spalten Nachname, Vorname und Nummer",
+            description = "Abrufen der ungueltigen Wahlscheine eines Wahltages für eine bestimmte Wahlbezirksart. Kommen als Anhang im csv-Format mit den Spalten Nachname, Vorname und Nummer",
             responses = {
                     @ApiResponse(
                             responseCode = "500", description = "Ungueltige Wahlscheine sind nicht abrufbar. Entweder fehlt es oder es gab technische Probleme",

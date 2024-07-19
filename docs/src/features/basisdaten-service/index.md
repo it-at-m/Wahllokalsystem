@@ -8,7 +8,7 @@ Service zur Bereitstellung folgender Basisdaten:
 - Wahlvorschläge
 - Kopfdaten
 - Handbuch
-- ungültige Wahlscheine
+- Ungültige Wahlscheine
 
 Wahlen, Wahlbezirke und Kopfdaten können in der Service-Datenbank gespeichert werden.
 

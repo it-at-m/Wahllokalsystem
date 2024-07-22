@@ -58,7 +58,7 @@ public class WahlbeteiligungSecurityTest {
             val modelToSet = new WahlbeteiligungsMeldungDTO(wahlID, wahlbezirkID, anzahlWaehler, meldeZeitpunkt);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.saveWahlbeteiligung(modelToSet))
-                .isInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
     }
 }

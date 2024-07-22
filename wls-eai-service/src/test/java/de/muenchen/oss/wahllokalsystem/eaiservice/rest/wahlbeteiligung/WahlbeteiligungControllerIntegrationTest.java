@@ -84,7 +84,7 @@ public class WahlbeteiligungControllerIntegrationTest {
 
             val requestBody = new WahlbeteiligungsMeldungDTO(wahlID, wahlbezirkID, anzahlWaehler, meldeZeitpunkt);
             val request = MockMvcRequestBuilders.post("/wahlbeteiligung").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
-                objectMapper.writeValueAsString(requestBody));
+                    objectMapper.writeValueAsString(requestBody));
 
             val response = api.perform(request).andExpect(status().isOk()).andReturn();
 
@@ -92,8 +92,8 @@ public class WahlbeteiligungControllerIntegrationTest {
 
             Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
 
-            val expectedSavedWahlbeteiligung = new Wahlbeteiligung(requestBody.wahlID(), requestBody.wahlbezirkID()
-                , requestBody.anzahlWaehler(), requestBody.meldeZeitpunkt());
+            val expectedSavedWahlbeteiligung = new Wahlbeteiligung(requestBody.wahlID(), requestBody.wahlbezirkID(), requestBody.anzahlWaehler(),
+                    requestBody.meldeZeitpunkt());
 
             Assertions.assertThat(savedWahlbeteiligung.getWahlID()).isEqualTo(expectedSavedWahlbeteiligung.getWahlID());
             Assertions.assertThat(savedWahlbeteiligung.getWahlbezirkID()).isEqualTo(expectedSavedWahlbeteiligung.getWahlbezirkID());
@@ -112,7 +112,7 @@ public class WahlbeteiligungControllerIntegrationTest {
 
             val requestBody = new WahlbeteiligungsMeldungDTO(null, wahlbezirkID, anzahlWaehler, meldeZeitpunkt);
             val request = MockMvcRequestBuilders.post("/wahlbeteiligung").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
-                objectMapper.writeValueAsString(requestBody));
+                    objectMapper.writeValueAsString(requestBody));
 
             val mockedExceptionMessage = "mocked null pointer exception";
             val mockedValidationException = new NullPointerException(mockedExceptionMessage);

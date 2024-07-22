@@ -21,18 +21,18 @@ public class Authorities {
     public static final String SERVICE_SAVE_WAHLBETEILIGUNG = "aoueai_BUSINESSACTION_SaveWahlbeteiligung";
 
     public static final String[] ALL_AUTHORITIES_GETWAHLVORSTANDFORWAHLBEZIRK = {
-        SERVICE_LOAD_WAHLVORSTAND
+            SERVICE_LOAD_WAHLVORSTAND
     };
     public static final String[] ALL_AUTHORIRITES_SETANWESENHEIT = {
-        SERVICE_SAVE_ANWESENHEIT
+            SERVICE_SAVE_ANWESENHEIT
     };
     public static final String[] ALL_AUTHORITIES_GETWAHLVORSCHLAEGE = {
-        SERVICE_LOAD_WAHLVORSCHLAEGE,
+            SERVICE_LOAD_WAHLVORSCHLAEGE,
     };
     public static final String[] ALL_AUTHORITIES_GETWAHLVORSCHLAEGELISTE = {
-        SERVICE_LOAD_WAHLVORSCHLAEGELISTE,
+            SERVICE_LOAD_WAHLVORSCHLAEGELISTE,
     };
     public static final String[] ALL_AUTHORITIES_GETREFERENDUMVORLAGEN = {
-        SERVICE_LOAD_REFERENDUMVORLAGEN,
+            SERVICE_LOAD_REFERENDUMVORLAGEN,
     };
 }

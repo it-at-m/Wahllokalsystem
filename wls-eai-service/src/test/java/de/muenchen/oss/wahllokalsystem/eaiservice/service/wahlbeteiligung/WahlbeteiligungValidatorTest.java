@@ -65,7 +65,7 @@ class WahlbeteiligungValidatorTest {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SAVEWAHLBETEILIGUNG_WAHLBEZIRKID_FEHLT))
-                .thenReturn(mockedWlsException);
+                    .thenReturn(mockedWlsException);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.validDTOToSetOrThrow(dtoToValidate)).isSameAs(mockedWlsException);
         }
@@ -81,7 +81,7 @@ class WahlbeteiligungValidatorTest {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SAVEWAHLBETEILIGUNG_MELDEZEITPUNKT_FEHLT))
-                .thenReturn(mockedWlsException);
+                    .thenReturn(mockedWlsException);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.validDTOToSetOrThrow(dtoToValidate)).isSameAs(mockedWlsException);
         }

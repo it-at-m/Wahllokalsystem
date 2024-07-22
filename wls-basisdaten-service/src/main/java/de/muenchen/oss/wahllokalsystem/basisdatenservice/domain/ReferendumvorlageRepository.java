@@ -27,6 +27,11 @@ public interface ReferendumvorlageRepository extends CrudRepository<Referendumvo
     <S extends Referendumvorlage> S save(S wLSReferendumvorschlaege);
 
     @Override
+    @CacheEvict(value = CACHE, allEntries = true)
+    @PreAuthorize("hasAuthority('Basisdaten_WRITE_Referendumvorlage')")
+    <S extends Referendumvorlage> Iterable<S> saveAll(Iterable<S> wLSReferendumvorschlaege);
+
+    @Override
     @CacheEvict(value = CACHE, key = "#p0")
     @PreAuthorize("hasAuthority('Basisdaten_DELETE_Referendumvorlage')")
     void deleteById(UUID referendumvorlageId);

@@ -42,7 +42,7 @@ class ReferendumvorlageModelMapperTest {
 
             val entityToMap = new Referendumvorlagen(new BezirkUndWahlID(wahlID, wahlbezirkID), stimmzettelgebietID,
                     Set.of(new Referendumvorlage(null, null, "wahlvorschlagID1", 1L, "kurzname1", "frage1",
-                                    Set.of(new Referendumoption("option11", "optionsName11", 1L), new Referendumoption("option12", "optionsName12", 2L))),
+                            Set.of(new Referendumoption("option11", "optionsName11", 1L), new Referendumoption("option12", "optionsName12", 2L))),
                             new Referendumvorlage(null, null, "wahlvorschlagID2", 2L, "kurzname2", "frage2",
                                     Set.of(new Referendumoption("option21", "optionsName21", 3L), new Referendumoption("option22", "optionsName22", 4L)))));
 
@@ -50,8 +50,8 @@ class ReferendumvorlageModelMapperTest {
 
             val expectedResult = new ReferendumvorlagenModel(stimmzettelgebietID,
                     Set.of(new ReferendumvorlageModel("wahlvorschlagID1", 1L, "kurzname1", "frage1",
-                                    Set.of(new ReferendumoptionModel("option11", "optionsName11", 1L),
-                                            new ReferendumoptionModel("option12", "optionsName12", 2L))),
+                            Set.of(new ReferendumoptionModel("option11", "optionsName11", 1L),
+                                    new ReferendumoptionModel("option12", "optionsName12", 2L))),
                             new ReferendumvorlageModel("wahlvorschlagID2", 2L, "kurzname2", "frage2",
                                     Set.of(new ReferendumoptionModel("option21", "optionsName21", 3L),
                                             new ReferendumoptionModel("option22", "optionsName22", 4L)))));
@@ -72,8 +72,8 @@ class ReferendumvorlageModelMapperTest {
 
                 val modelToMap = new ReferendumvorlagenModel(stimmzettelgebietID,
                         Set.of(new ReferendumvorlageModel("wahlvorschlagID1", 1L, "kurzname1", "frage1",
-                                        Set.of(new ReferendumoptionModel("option11", "optionsName11", 1L),
-                                                new ReferendumoptionModel("option12", "optionsName12", 2L))),
+                                Set.of(new ReferendumoptionModel("option11", "optionsName11", 1L),
+                                        new ReferendumoptionModel("option12", "optionsName12", 2L))),
                                 new ReferendumvorlageModel("wahlvorschlagID2", 2L, "kurzname2", "frage2",
                                         Set.of(new ReferendumoptionModel("option21", "optionsName21", 3L),
                                                 new ReferendumoptionModel("option22", "optionsName22", 4L)))));
@@ -83,7 +83,7 @@ class ReferendumvorlageModelMapperTest {
 
                 val expectedResult = new Referendumvorlagen(bezirkUndWahlID, stimmzettelgebietID,
                         Set.of(new Referendumvorlage(null, null, "wahlvorschlagID1", 1L, "kurzname1", "frage1",
-                                        Set.of(new Referendumoption("option11", "optionsName11", 1L), new Referendumoption("option12", "optionsName12", 2L))),
+                                Set.of(new Referendumoption("option11", "optionsName11", 1L), new Referendumoption("option12", "optionsName12", 2L))),
                                 new Referendumvorlage(null, null, "wahlvorschlagID2", 2L, "kurzname2", "frage2",
                                         Set.of(new Referendumoption("option21", "optionsName21", 3L), new Referendumoption("option22", "optionsName22", 4L)))));
                 Assertions.assertThat(result).isEqualTo(expectedResult);

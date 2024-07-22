@@ -9,7 +9,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-@PreAuthorize("hasAuthority('Basisdaten_READ_WLSReferendumvorschlaege')")
+@PreAuthorize("hasAuthority('Basisdaten_READ_Referendumvorlagen')")
 public interface ReferendumvorlagenRepository extends CrudRepository<Referendumvorlagen, BezirkUndWahlID> {
 
     String CACHE = "WLSREFERENDUMVORSCHLAEGE_CACHE";
@@ -23,26 +23,26 @@ public interface ReferendumvorlagenRepository extends CrudRepository<Referendumv
 
     @Override
     @CachePut(value = CACHE, key = "#p0.bezirkUndWahlID")
-    @PreAuthorize("hasAuthority('Basisdaten_WRITE_WLSReferendumvorschlaege')")
+    @PreAuthorize("hasAuthority('Basisdaten_WRITE_Referendumvorlagen')")
     <S extends Referendumvorlagen> S save(S wLSReferendumvorschlaege);
 
     @Override
     @CacheEvict(value = CACHE, key = "#p0")
-    @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSReferendumvorschlaege')")
+    @PreAuthorize("hasAuthority('Basisdaten_DELETE_Referendumvorlagen')")
     void deleteById(BezirkUndWahlID referendumvorlageId);
 
     @Override
     @CacheEvict(value = CACHE, key = "#p0.bezirkUndWahlID")
-    @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSReferendumvorschlaege')")
+    @PreAuthorize("hasAuthority('Basisdaten_DELETE_Referendumvorlagen')")
     void delete(Referendumvorlagen entity);
 
     @Override
     @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSReferendumvorschlaege')")
+    @PreAuthorize("hasAuthority('Basisdaten_DELETE_Referendumvorlagen')")
     void deleteAll(Iterable<? extends Referendumvorlagen> entities);
 
     @Override
     @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSReferendumvorschlaege')")
+    @PreAuthorize("hasAuthority('Basisdaten_DELETE_Referendumvorlagen')")
     void deleteAll();
 }

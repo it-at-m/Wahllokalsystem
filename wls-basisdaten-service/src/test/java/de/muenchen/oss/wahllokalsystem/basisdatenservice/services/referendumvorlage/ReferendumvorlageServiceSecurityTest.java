@@ -134,9 +134,9 @@ public class ReferendumvorlageServiceSecurityTest {
             vorlage.setKurzname("kurzname");
             vorlage.setOrdnungszahl(1L);
             vorlage.setWahlvorschlagID("wahlvorschlagID");
-            vorlage.setReferendumoption(Set.of(referendumOption));
+            vorlage.setReferendumoptionen(Set.of(referendumOption));
 
-            dto.setReferendumvorlage(Set.of(vorlage));
+            dto.setReferendumvorlagen(Set.of(vorlage));
 
             return dto;
         }

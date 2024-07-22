@@ -10,9 +10,9 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface ReferendumvorlagenClientMapper {
 
-    @Mapping(target = "referendumvorlagen", source = "referendumvorlage")
+    @Mapping(target = "referendumvorlagen", source = "referendumvorlagen")
     ReferendumvorlagenModel toModel(ReferendumvorlagenDTO referendumvorlagenDTO);
 
-    @Mapping(target = "referendumoptionen", source = "referendumoption")
+    @Mapping(target = "referendumoptionen", source = "referendumoptionen")
     ReferendumvorlageModel toModel(ReferendumvorlageDTO referendumvorlageDTO);
 }

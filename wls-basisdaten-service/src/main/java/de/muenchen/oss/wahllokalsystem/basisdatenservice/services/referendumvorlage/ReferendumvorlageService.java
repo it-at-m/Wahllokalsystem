@@ -6,6 +6,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Referendumvorlag
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +23,7 @@ public class ReferendumvorlageService {
     private final ReferendumvorlageRepository referendumvorlageRepository;
     private final ReferendumvorlagenRepository referendumvorlagenRepository;
 
+    @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetReferendumvorlagen')")
     public ReferendumvorlagenModel loadReferendumvorlagen(final ReferendumvorlagenReferenceModel referendumvorlagenReferenceModel) {
         log.info("#getReferendumvorlagen");
 

@@ -67,3 +67,6 @@ app:
   clients:
     eai:
       basePath: http://localhost:39146
+  config:
+    ungueltigewahlscheine:
+      filenamesuffix: Ungueltigews.csv

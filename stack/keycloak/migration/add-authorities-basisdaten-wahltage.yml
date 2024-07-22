@@ -1,0 +1,37 @@
+id: add authorities basisdaten wahltage
+author: Nic12345678
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: Basisdaten_BUSINESSACTION_GetWahltage
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_BUSINESSACTION_GetWahltage
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Basisdaten_READ_Wahltag
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_READ_Wahltag
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Basisdaten_WRITE_Wahltag
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_WRITE_Wahltag
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Basisdaten_DELETE_Wahltag
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_DELETE_Wahltag
+      clientId: ${SSO_CLIENT_ID}

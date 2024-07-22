@@ -8,8 +8,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch.HandbuchService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlage.ReferendumvorlageService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.ungueltigewahlscheine.UngueltigeWahlscheineService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -36,7 +38,13 @@ class SecurityConfigurationTest {
     WahlvorschlaegeService wahlvorschlaegeService;
 
     @MockBean
+    WahltageService wahltageService;
+
+    @MockBean
     HandbuchService handbuchService;
+
+    @MockBean
+    UngueltigeWahlscheineService ungueltigeWahlscheineService;
 
     @MockBean
     ReferendumvorlageService referendumvorlageService;
@@ -94,8 +102,24 @@ class SecurityConfigurationTest {
 
         @Test
         @WithMockUser
-        void accessGetWahlvorstaendeUnauthorizedThenOk() throws Exception {
+        void accessGetWahlvorschlaegeUnauthorizedThenOk() throws Exception {
             api.perform(get("/businessActions/wahlvorschlaege/wahlID/wahlbezirkID")).andExpect(status().isOk());
+        }
+    }
+
+    @Nested
+    class Wahltage {
+
+        @Test
+        @WithAnonymousUser
+        void accessGetWahltageUnauthorizedThenUnauthorized() throws Exception {
+            api.perform(get("/businessActions/wahltage")).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessGetWahltageUnauthorizedThenOk() throws Exception {
+            api.perform(get("/businessActions/wahltage")).andExpect(status().isOk());
         }
     }
 
@@ -124,6 +148,34 @@ class SecurityConfigurationTest {
         @WithMockUser
         void accessPostHandbuchAuthorizedThenOk() throws Exception {
             api.perform(multipart("/businessActions/handbuch/wahlID/UWB").file("manual", "content".getBytes()).with(csrf())).andExpect(status().isOk());
+        }
+    }
+
+    @Nested
+    class UngueltigeWahlscheine {
+
+        @Test
+        @WithAnonymousUser
+        void accessGetUngueltigeWahlscheineUnauthorizedThenUnauthorized() throws Exception {
+            api.perform(get("/businessActions/ungueltigews/wahlID/UWB")).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessGetUngueltigeWahlscheineAuthorizedThenOk() throws Exception {
+            api.perform(get("/businessActions/ungueltigews/wahlID/UWB")).andExpect(status().isOk());
+        }
+
+        @Test
+        @WithAnonymousUser
+        void accessPostUngueltigeWahlscheineUnauthorizedThenUnauthorized() throws Exception {
+            api.perform(post("/businessActions/ungueltigews/wahlID/UWB").with(csrf())).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessPostUngueltigeWahlscheineAuthorizedThenOk() throws Exception {
+            api.perform(multipart("/businessActions/ungueltigews/wahlID/UWB").file("manual", "content".getBytes()).with(csrf())).andExpect(status().isOk());
         }
     }
 

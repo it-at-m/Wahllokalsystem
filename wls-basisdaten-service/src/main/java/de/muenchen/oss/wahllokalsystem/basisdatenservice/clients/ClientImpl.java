@@ -2,8 +2,12 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.client.WahlvorschlagControllerApi;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.ReferendumvorlagenDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlaegeDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlage.ReferendumvorlagenClient;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlage.ReferendumvorlagenModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlage.ReferendumvorlagenReferenceModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
@@ -17,12 +21,13 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
 @RequiredArgsConstructor
 @Slf4j
-public class ClientImpl implements WahlvorschlaegeClient {
+public class ClientImpl implements WahlvorschlaegeClient, ReferendumvorlagenClient {
 
     private final ExceptionFactory exceptionFactory;
 
     private final WahlvorschlagControllerApi wahlvorschlagControllerApi;
     private final WahlvorschlaegeClientMapper wahlvorschlaegeClientMapper;
+    private final ReferendumvorlagenClientMapper referendumvorlagenClientMapper;
 
     @Override
     public WahlvorschlaegeModel getWahlvorschlaege(final BezirkUndWahlID bezirkUndWahlID) {
@@ -38,5 +43,21 @@ public class ClientImpl implements WahlvorschlaegeClient {
         }
 
         return wahlvorschlaegeClientMapper.toModel(wahlvorschlaege);
+    }
+
+    @Override
+    public ReferendumvorlagenModel getReferendumvorlagen(ReferendumvorlagenReferenceModel referendumvorlagenReferenceModel) {
+        final ReferendumvorlagenDTO referendumvorlagen;
+        try {
+            referendumvorlagen = wahlvorschlagControllerApi.loadReferendumvorlagen(referendumvorlagenReferenceModel.wahlID(),
+                    referendumvorlagenReferenceModel.wahlbezirkID());
+        } catch (final Exception exception) {
+            log.info("exception on loadrefendumvorlagen from external", exception);
+            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
+        }
+        if (referendumvorlagen == null) {
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.NULL_FROM_CLIENT);
+        }
+        return referendumvorlagenClientMapper.toModel(referendumvorlagen);
     }
 }

@@ -13,7 +13,7 @@ public class WahlbeteiligungValidator {
 
     private final ExceptionFactory exceptionFactory;
 
-    public void validModelToSetOrThrow(WahlbeteiligungsMeldungDTO wahlbeteiligungToSet) {
+    public void validDTOToSetOrThrow(WahlbeteiligungsMeldungDTO wahlbeteiligungToSet) {
         if (wahlbeteiligungToSet == null) {
             throw exceptionFactory.createFachlicheWlsException(
                 de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN);

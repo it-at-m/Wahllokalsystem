@@ -24,7 +24,7 @@ public class WahlbeteiligungService {
 
         log.debug("#saveWahlbeteiligung");
 
-        wahlbeteiligungValidator.validModelToSetOrThrow(wahlbeteiligungToSet);
+        wahlbeteiligungValidator.validDTOToSetOrThrow(wahlbeteiligungToSet);
 
         wahlbeteiligungRepository.save(wahlbeteiligungMapper.toEntity(wahlbeteiligungToSet));
 

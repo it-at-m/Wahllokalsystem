@@ -116,7 +116,7 @@ public class WahlbeteiligungControllerIntegrationTest {
 
             val mockedExceptionMessage = "mocked null pointer exception";
             val mockedValidationException = new NullPointerException(mockedExceptionMessage);
-            Mockito.doThrow(mockedValidationException).when(wahlbeteiligungValidator).validModelToSetOrThrow(any());
+            Mockito.doThrow(mockedValidationException).when(wahlbeteiligungValidator).validDTOToSetOrThrow(any());
 
             val response = api.perform(request).andExpect(status().isInternalServerError()).andReturn();
             val responseBodyDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);

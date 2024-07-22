@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch.HandbuchService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlage.ReferendumvorlageService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,9 @@ class SecurityConfigurationTest {
 
     @MockBean
     HandbuchService handbuchService;
+
+    @MockBean
+    ReferendumvorlageService referendumvorlageService;
 
     @Test
     void accessSecuredResourceRootThenUnauthorized() throws Exception {
@@ -120,6 +124,22 @@ class SecurityConfigurationTest {
         @WithMockUser
         void accessPostHandbuchAuthorizedThenOk() throws Exception {
             api.perform(multipart("/businessActions/handbuch/wahlID/UWB").file("manual", "content".getBytes()).with(csrf())).andExpect(status().isOk());
+        }
+    }
+
+    @Nested
+    class Referendumvorlagen {
+
+        @Test
+        @WithAnonymousUser
+        void accessGetReferendumvorlagenUnauthorizedThenUnauthorized() throws Exception {
+            api.perform(get("/businessActions/referendumvorlagen/wahlID/wahlbezirkID")).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessGetReferendumvorlagenUnauthorizedThenOk() throws Exception {
+            api.perform(get("/businessActions/referendumvorlagen/wahlID/wahlbezirkID")).andExpect(status().isOk());
         }
     }
 

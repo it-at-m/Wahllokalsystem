@@ -31,4 +31,7 @@ public class ExceptionConstants {
     public static ExceptionDataWrapper POSTHANDBUCH_SPEICHERN_NICHT_ERFOLGREICH = new ExceptionDataWrapper("316",
             "postHandbuch: Das speichern des Handbuches war nicht erfolgreich.");
 
+    public static ExceptionDataWrapper GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("308",
+            "getReferendumvorlagen: Suchkriterien unvollständig.");
+
 }

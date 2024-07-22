@@ -43,7 +43,11 @@ public class ReferendumvorlageService {
     }
 
     private void saveReferendumvorlagen(final Referendumvorlagen referendumvorlagenToSave) {
-        referendumvorlagenRepository.save(referendumvorlagenToSave);
-        referendumvorlageRepository.saveAll(referendumvorlagenToSave.getReferendumvorlagen());
+        try {
+            referendumvorlagenRepository.save(referendumvorlagenToSave);
+            referendumvorlageRepository.saveAll(referendumvorlagenToSave.getReferendumvorlagen());
+        } catch (final Exception e) {
+            log.error("#getReferendumvorlagen: Fehler beim Cachen", e);
+        }
     }
 }

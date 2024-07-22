@@ -9,6 +9,8 @@ public class Authorities {
     public static final String SERVICE_GET_WAHLVORSCHLAEGE = "Basisdaten_BUSINESSACTION_GetWahlvorschlaege";
     public static final String SERVICE_GET_WAHLTAGE = "Basisdaten_BUSINESSACTION_GetWahltage";
 
+    public static final String SERVICE_RESET_WAHLEN = "Basisdaten_BUSINESSACTION_ResetWahlen";
+
     public static final String SERVICE_GET_HANDBUCH = "Basisdaten_BUSINESSACTION_GetHandbuch";
     public static final String SERVICE_POST_HANDBUCH = "Basisdaten_BUSINESSACTION_PostHandbuch";
 
@@ -31,6 +33,10 @@ public class Authorities {
     public static final String REPOSITORY_READ_HANDBUCH = "Basisdaten_READ_Handbuch";
     public static final String REPOSITORY_WRITE_HANDBUCH = "Basisdaten_WRITE_Handbuch";
     public static final String REPOSITORY_DELETE_HANDBUCH = "Basisdaten_DELETE_Handbuch";
+
+    public static final String REPOSITORY_READ_WAHL = "Basisdaten_READ_Wahl";
+    public static final String REPOSITORY_WRITE_WAHL = "Basisdaten_WRITE_Wahl";
+    public static final String REPOSITORY_DELETE_WAHL = "Basisdaten_DELETE_Wahl";
 
     public static final String[] ALL_AUTHORITIES_GET_WAHLVORSCHLAEGE = new String[] {
             SERVICE_GET_WAHLVORSCHLAEGE,
@@ -70,6 +76,12 @@ public class Authorities {
 
     public static final String[] ALL_AUTHORITIES_DELETE_WAHLTAGE = new String[] {
             REPOSITORY_DELETE_WAHLTAG
+    };
+
+    public static final String[] ALL_AUTHORITIES_RESET_WAHLEN = new String[] {
+            SERVICE_RESET_WAHLEN,
+            REPOSITORY_READ_WAHL,
+            REPOSITORY_WRITE_WAHL
     };
 
 }

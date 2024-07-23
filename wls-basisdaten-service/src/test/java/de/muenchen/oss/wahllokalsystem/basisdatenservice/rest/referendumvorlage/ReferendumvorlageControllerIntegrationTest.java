@@ -129,11 +129,6 @@ public class ReferendumvorlageControllerIntegrationTest {
         }
 
         @Test
-        void noExceptionWhenSaveOfImportedFailed() throws Exception {
-
-        }
-
-        @Test
         void technischeWlsExceptionWhenNoDataFoundExternal() throws Exception {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";

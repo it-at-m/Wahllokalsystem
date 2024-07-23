@@ -1,25 +1,28 @@
 CREATE TABLE referendumvorlagen
 (
+    id                  VARCHAR2(36)   NOT NULL,
     wahlID              VARCHAR2(1000) NOT NULL,
     wahlbezirkID        VARCHAR2(1000) NOT NULL,
     stimmzettelgebietID VARCHAR2(1000) NOT NULL,
 
-    PRIMARY KEY (wahlID, wahlbezirkID)
+    UNIQUE (wahlID, wahlbezirkID),
+
+    PRIMARY KEY (id)
 
 );
 
 CREATE TABLE referendumvorlage
 (
-    id              VARCHAR2(36)   NOT NULL,
-    wahlvorschlagID VARCHAR2(1000) NOT NULL,
-    ordnungszahl    BIGINT         NOT NULL,
-    kurzname        VARCHAR2(1000) NOT NULL,
-    frage           VARCHAR2(1000) NOT NULL,
+    id                   VARCHAR2(36)   NOT NULL,
+    wahlvorschlagID      VARCHAR2(1000) NOT NULL,
+    ordnungszahl         BIGINT         NOT NULL,
+    kurzname             VARCHAR2(1000) NOT NULL,
+    frage                VARCHAR2(1000) NOT NULL,
 
-    wahlID          VARCHAR2(1000) NOT NULL,
-    wahlbezirkID    VARCHAR2(1000) NOT NULL,
+    referendumvorlagenID VARCHAR2(36)   NOT NULL,
 
-    FOREIGN KEY (wahlID, wahlbezirkID) REFERENCES referendumvorlagen (wahlID, wahlbezirkID),
+
+    FOREIGN KEY (referendumvorlagenID) REFERENCES referendumvorlagen (id),
 
     PRIMARY KEY (id)
 );

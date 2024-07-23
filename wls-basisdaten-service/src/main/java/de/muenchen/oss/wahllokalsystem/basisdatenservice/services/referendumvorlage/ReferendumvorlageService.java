@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvor
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ReferendumvorlageRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Referendumvorlagen;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ReferendumvorlagenRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -24,13 +25,14 @@ public class ReferendumvorlageService {
     private final ReferendumvorlagenRepository referendumvorlagenRepository;
 
     @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetReferendumvorlagen')")
+    @Transactional
     public ReferendumvorlagenModel loadReferendumvorlagen(final ReferendumvorlagenReferenceModel referendumvorlagenReferenceModel) {
         log.info("#getReferendumvorlagen");
 
         referendumvorlageValidator.validReferumvorlageReferenceModelOrThrow(referendumvorlagenReferenceModel);
 
         val referendumBezirkUndWahlID = referendumvorlageModelMapper.toBezirkUndWahlID(referendumvorlagenReferenceModel);
-        val existingReferendumvorlagen = referendumvorlagenRepository.findById(referendumBezirkUndWahlID);
+        val existingReferendumvorlagen = referendumvorlagenRepository.findByBezirkUndWahlID(referendumBezirkUndWahlID);
 
         if (existingReferendumvorlagen.isEmpty()) {
             val importedReferendumvorlagen = referendumvorlagenClient.getReferendumvorlagen(referendumvorlagenReferenceModel);

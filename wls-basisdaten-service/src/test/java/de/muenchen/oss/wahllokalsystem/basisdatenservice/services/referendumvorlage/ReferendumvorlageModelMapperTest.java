@@ -5,6 +5,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Referendumvorlag
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Referendumvorlagen;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Set;
+import java.util.UUID;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -40,7 +41,7 @@ class ReferendumvorlageModelMapperTest {
             val wahlbezirkID = "wahlbezirkID";
             val stimmzettelgebietID = "stimmzettelgebietID";
 
-            val entityToMap = new Referendumvorlagen(new BezirkUndWahlID(wahlID, wahlbezirkID), stimmzettelgebietID,
+            val entityToMap = new Referendumvorlagen(UUID.randomUUID(), new BezirkUndWahlID(wahlID, wahlbezirkID), stimmzettelgebietID,
                     Set.of(new Referendumvorlage(null, null, "wahlvorschlagID1", 1L, "kurzname1", "frage1",
                             Set.of(new Referendumoption("option11", "optionsName11", 1L), new Referendumoption("option12", "optionsName12", 2L))),
                             new Referendumvorlage(null, null, "wahlvorschlagID2", 2L, "kurzname2", "frage2",
@@ -81,7 +82,7 @@ class ReferendumvorlageModelMapperTest {
 
                 val result = unitUnderTest.toEntity(modelToMap, bezirkUndWahlID);
 
-                val expectedResult = new Referendumvorlagen(bezirkUndWahlID, stimmzettelgebietID,
+                val expectedResult = new Referendumvorlagen(null, bezirkUndWahlID, stimmzettelgebietID,
                         Set.of(new Referendumvorlage(null, null, "wahlvorschlagID1", 1L, "kurzname1", "frage1",
                                 Set.of(new Referendumoption("option11", "optionsName11", 1L), new Referendumoption("option12", "optionsName12", 2L))),
                                 new Referendumvorlage(null, null, "wahlvorschlagID2", 2L, "kurzname2", "frage2",

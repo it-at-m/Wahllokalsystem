@@ -14,6 +14,7 @@ public interface ReferendumvorlageModelMapper {
 
     ReferendumvorlagenModel toModel(Referendumvorlagen entity);
 
+    @Mapping(target = "id", ignore = true)
     Referendumvorlagen toEntity(ReferendumvorlagenModel model, BezirkUndWahlID bezirkUndWahlID);
 
     @Mapping(target = "id", ignore = true)

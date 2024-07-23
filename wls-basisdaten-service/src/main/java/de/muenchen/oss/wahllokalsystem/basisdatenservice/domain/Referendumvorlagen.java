@@ -1,18 +1,26 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
 
+import static java.sql.Types.VARCHAR;
+
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
-import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.UuidGenerator;
 
 @Entity
 @Getter
@@ -23,7 +31,15 @@ import lombok.ToString;
 @AllArgsConstructor
 public class Referendumvorlagen {
 
-    @EmbeddedId
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @UuidGenerator
+    @JdbcTypeCode(VARCHAR)
+    @ToString.Include
+    private UUID id;
+
+    @NaturalId
+    @Embedded
     private BezirkUndWahlID bezirkUndWahlID;
 
     @NotNull

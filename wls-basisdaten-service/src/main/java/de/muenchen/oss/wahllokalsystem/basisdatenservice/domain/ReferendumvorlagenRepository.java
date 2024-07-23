@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -10,7 +11,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 @PreAuthorize("hasAuthority('Basisdaten_READ_Referendumvorlagen')")
-public interface ReferendumvorlagenRepository extends CrudRepository<Referendumvorlagen, BezirkUndWahlID> {
+public interface ReferendumvorlagenRepository extends CrudRepository<Referendumvorlagen, UUID> {
 
     String CACHE = "WLSREFERENDUMVORSCHLAEGE_CACHE";
 
@@ -19,7 +20,9 @@ public interface ReferendumvorlagenRepository extends CrudRepository<Referendumv
 
     @Override
     @Cacheable(value = CACHE, key = "#p0")
-    Optional<Referendumvorlagen> findById(BezirkUndWahlID referendumvorlageId);
+    Optional<Referendumvorlagen> findById(UUID referendumvorlageId);
+
+    Optional<Referendumvorlagen> findByBezirkUndWahlID(BezirkUndWahlID bezirkUndWahlID);
 
     @Override
     @CachePut(value = CACHE, key = "#p0.bezirkUndWahlID")
@@ -29,7 +32,7 @@ public interface ReferendumvorlagenRepository extends CrudRepository<Referendumv
     @Override
     @CacheEvict(value = CACHE, key = "#p0")
     @PreAuthorize("hasAuthority('Basisdaten_DELETE_Referendumvorlagen')")
-    void deleteById(BezirkUndWahlID referendumvorlageId);
+    void deleteById(UUID referendumvorlageId);
 
     @Override
     @CacheEvict(value = CACHE, key = "#p0.bezirkUndWahlID")

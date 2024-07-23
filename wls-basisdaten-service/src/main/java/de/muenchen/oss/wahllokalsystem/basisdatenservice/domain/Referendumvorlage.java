@@ -8,7 +8,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinColumns;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import java.util.Set;
@@ -39,12 +38,7 @@ public class Referendumvorlage {
     private UUID id;
 
     @ManyToOne
-    @JoinColumns(
-        {
-                @JoinColumn(name = "wahlID"),
-                @JoinColumn(name = "wahlbezirkID")
-        }
-    )
+    @JoinColumn(name = "referendumvorlagenID")
     @EqualsAndHashCode.Exclude
     private Referendumvorlagen referendumvorlagen;
 

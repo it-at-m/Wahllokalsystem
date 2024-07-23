@@ -19,3 +19,4 @@ Authorization: {{ token_type }} {{ auth_token }}
 
 ### get vorlagen
 GET {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/referendumvorlagen/wahl1/wbz1
+Authorization: {{ token_type }} {{ auth_token }}

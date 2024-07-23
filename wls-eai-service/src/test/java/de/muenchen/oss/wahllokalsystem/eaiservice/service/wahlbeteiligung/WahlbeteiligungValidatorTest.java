@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlbeteiligung;
 
+import de.muenchen.oss.wahllokalsystem.eaiservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlbeteiligung.dto.WahlbeteiligungsMeldungDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlbeteiligung.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.time.LocalDateTime;

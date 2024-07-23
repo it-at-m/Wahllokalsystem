@@ -45,6 +45,22 @@ public class ExceptionConstants {
     public static final ExceptionDataWrapper LOADWAHLEN_WAHLTAG_FEHLT = new ExceptionDataWrapper("001", "Es ist kein Wahltag angegeben");
     public static final ExceptionDataWrapper LOADWAHLEN_NUMMER_FEHLT = new ExceptionDataWrapper("001_1", "Es ist keine Wahlnummer angegeben");
 
+    //saveWahlbeteiligung
+    public static final String CODE_SAVEWAHLBETEILIGUNG_WAHLBEZIRKID_FEHLT = "001";
+    public static final String MESSAGE_SAVEWAHLBETEILIGUNG_WAHLBEZIRKID_FEHLT = "Die WahlbezirkID fehlt";
+    public static final ExceptionDataWrapper SAVEWAHLBETEILIGUNG_WAHLBEZIRKID_FEHLT = new ExceptionDataWrapper(CODE_SAVEWAHLBETEILIGUNG_WAHLBEZIRKID_FEHLT,
+            MESSAGE_SAVEWAHLBETEILIGUNG_WAHLBEZIRKID_FEHLT);
+
+    public static final String CODE_SAVEWAHLBETEILIGUNG_WAHLID_FEHLT = "002";
+    public static final String MESSAGE_SAVEWAHLBETEILIGUNG_WAHLID_FEHLT = "Die WahlID fehlt";
+    public static final ExceptionDataWrapper SAVEWAHLBETEILIGUNG_WAHLID_FEHLT = new ExceptionDataWrapper(CODE_SAVEWAHLBETEILIGUNG_WAHLID_FEHLT,
+            MESSAGE_SAVEWAHLBETEILIGUNG_WAHLID_FEHLT);
+
+    public static final String CODE_SAVEWAHLBETEILIGUNG_MELDEZEITPUNKT_FEHLT = "003";
+    public static final String MESSAGE_SAVEWAHLBETEILIGUNG_MELDEZEITPUNKT_FEHLT = "Der Meldezeitpunkt fehlt";
+    public static final ExceptionDataWrapper SAVEWAHLBETEILIGUNG_MELDEZEITPUNKT_FEHLT = new ExceptionDataWrapper(CODE_SAVEWAHLBETEILIGUNG_MELDEZEITPUNKT_FEHLT,
+            MESSAGE_SAVEWAHLBETEILIGUNG_MELDEZEITPUNKT_FEHLT);
+
     /**
      * @throws IllegalAccessException when constructor is used
      */

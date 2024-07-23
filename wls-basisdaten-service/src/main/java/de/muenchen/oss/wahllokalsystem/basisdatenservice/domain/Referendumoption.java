@@ -19,10 +19,13 @@ import lombok.ToString;
 public class Referendumoption {
 
     @NotNull
+    @ToString.Include
     private String id;
 
     @NotNull
+    @ToString.Include
     private String name;
 
+    @ToString.Include
     private Long position;
 }

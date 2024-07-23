@@ -70,7 +70,8 @@ public class ReferendumvorlageServiceSecurityTest {
                             HttpStatus.OK.value()).withBody(objectMapper.writeValueAsBytes(eaiReferendumvorschlage))));
 
             Assertions.assertThatNoException()
-                    .isThrownBy(() -> referendumvorlageService.loadReferendumvorlagen(new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID)));
+                    .isThrownBy(
+                            () -> referendumvorlageService.getReferendumvorlagen(new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID)));
             //we have to check is data is stores because access denied exceptions are caught too
             SecurityUtils.runWith(Authorities.REPOSITORY_READ_REFERENDUMVORLAGEN);
             Assertions.assertThat(referendumvorlagenRepository.count()).isEqualTo(1);
@@ -84,7 +85,8 @@ public class ReferendumvorlageServiceSecurityTest {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
 
-            Assertions.assertThatThrownBy(() -> referendumvorlageService.loadReferendumvorlagen(new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID)))
+            Assertions.assertThatThrownBy(
+                    () -> referendumvorlageService.getReferendumvorlagen(new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID)))
                     .isInstanceOf(
                             AccessDeniedException.class);
             //we have to check is data is stores because access denied exceptions are caught too
@@ -105,7 +107,8 @@ public class ReferendumvorlageServiceSecurityTest {
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(
                             HttpStatus.OK.value()).withBody(objectMapper.writeValueAsBytes(eaiReferendumvorschlage))));
 
-            Assertions.assertThatThrownBy(() -> referendumvorlageService.loadReferendumvorlagen(new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID)))
+            Assertions.assertThatThrownBy(
+                    () -> referendumvorlageService.getReferendumvorlagen(new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID)))
                     .isInstanceOf(
                             AccessDeniedException.class);
             //we have to check is data is stores because access denied exceptions are caught too

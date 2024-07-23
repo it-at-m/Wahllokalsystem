@@ -42,7 +42,7 @@ class ReferendumvorlageControllerTest {
 
             Mockito.when(referendumvorlagenDTOMapper.toModel(eq(wahlbezirkID), eq(wahlID))).thenReturn(mockedReferenceModel);
             Mockito.when(referendumvorlagenDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
-            Mockito.when(referendumvorlageService.loadReferendumvorlagen(mockedReferenceModel)).thenReturn(mockedServiceResponse);
+            Mockito.when(referendumvorlageService.getReferendumvorlagen(mockedReferenceModel)).thenReturn(mockedServiceResponse);
 
             val result = unitUnderTest.getReferendumvorlagen(wahlID, wahlbezirkID);
 

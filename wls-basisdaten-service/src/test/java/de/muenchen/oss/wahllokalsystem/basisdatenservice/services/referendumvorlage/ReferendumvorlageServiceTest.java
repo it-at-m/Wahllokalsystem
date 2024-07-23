@@ -78,7 +78,7 @@ class ReferendumvorlageServiceTest {
             Mockito.when(referendumvorlagenRepository.findByBezirkUndWahlID(mockedBezirkUndWahlID)).thenReturn(Optional.empty());
             Mockito.when(referendumvorlagenClient.getReferendumvorlagen(referendumvorlagenReference)).thenReturn(mockedClientRerefendumvorlagenModel);
 
-            val result = unitUnderTest.loadReferendumvorlagen(referendumvorlagenReference);
+            val result = unitUnderTest.getReferendumvorlagen(referendumvorlagenReference);
 
             Assertions.assertThat(result).isEqualTo(mockedClientRerefendumvorlagenModel);
 
@@ -100,7 +100,7 @@ class ReferendumvorlageServiceTest {
             Mockito.when(referendumvorlageModelMapper.toModel(mockedRepoEntity)).thenReturn(mockedRepoEntityAsModel);
             Mockito.when(referendumvorlagenRepository.findByBezirkUndWahlID(mockedBezirkUndWahlID)).thenReturn(Optional.of(mockedRepoEntity));
 
-            val result = unitUnderTest.loadReferendumvorlagen(referendumvorlagenReference);
+            val result = unitUnderTest.getReferendumvorlagen(referendumvorlagenReference);
 
             Assertions.assertThat(result).isEqualTo(mockedRepoEntityAsModel);
             Mockito.verifyNoMoreInteractions(referendumvorlageRepository, referendumvorlagenRepository, referendumvorlagenClient);
@@ -125,7 +125,7 @@ class ReferendumvorlageServiceTest {
             Mockito.when(referendumvorlagenClient.getReferendumvorlagen(referendumvorlagenReference)).thenReturn(mockedClientRerefendumvorlagenModel);
             Mockito.doThrow(mockedRepoException).when(referendumvorlagenRepository).save(mockedMappendModelAsEntity);
 
-            val result = unitUnderTest.loadReferendumvorlagen(referendumvorlagenReference);
+            val result = unitUnderTest.getReferendumvorlagen(referendumvorlagenReference);
 
             Assertions.assertThat(result).isEqualTo(mockedClientRerefendumvorlagenModel);
 

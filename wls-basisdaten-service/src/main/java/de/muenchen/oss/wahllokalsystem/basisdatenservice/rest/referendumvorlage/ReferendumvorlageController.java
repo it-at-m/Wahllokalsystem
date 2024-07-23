@@ -41,6 +41,7 @@ public class ReferendumvorlageController {
     )
     @GetMapping("{wahlID}/{wahlbezirkID}")
     public ReferendumvorlagenDTO getReferendumvorlagen(@PathVariable("wahlID") final String wahlID, @PathVariable("wahlbezirkID") final String wahlbezirkID) {
-        return referendumvorlagenDTOMapper.toDTO(referendumvorlageService.loadReferendumvorlagen(referendumvorlagenDTOMapper.toModel(wahlbezirkID, wahlID)));
+        return referendumvorlagenDTOMapper.toDTO(
+                referendumvorlageService.getReferendumvorlagen(referendumvorlagenDTOMapper.toModel(wahlbezirkID, wahlID)));
     }
 }

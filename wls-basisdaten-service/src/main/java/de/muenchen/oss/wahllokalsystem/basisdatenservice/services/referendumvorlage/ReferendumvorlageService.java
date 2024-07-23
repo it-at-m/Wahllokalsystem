@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvor
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.ReferendumvorlageRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.Referendumvorlagen;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.ReferendumvorlagenRepository;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -27,7 +28,7 @@ public class ReferendumvorlageService {
     private final TransactionTemplate transactionTemplate;
 
     @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetReferendumvorlagen')")
-    public ReferendumvorlagenModel loadReferendumvorlagen(final ReferendumvorlagenReferenceModel referendumvorlagenReferenceModel) {
+    public ReferendumvorlagenModel getReferendumvorlagen(final ReferendumvorlagenReferenceModel referendumvorlagenReferenceModel) {
         log.info("#getReferendumvorlagen");
 
         referendumvorlageValidator.validReferumvorlageReferenceModelOrThrow(referendumvorlagenReferenceModel);
@@ -36,15 +37,20 @@ public class ReferendumvorlageService {
         val existingReferendumvorlagen = referendumvorlagenRepository.findByBezirkUndWahlID(referendumBezirkUndWahlID);
 
         if (existingReferendumvorlagen.isEmpty()) {
-            val importedReferendumvorlagen = referendumvorlagenClient.getReferendumvorlagen(referendumvorlagenReferenceModel);
-
-            val entitiesToSave = referendumvorlageModelMapper.toEntity(importedReferendumvorlagen, referendumBezirkUndWahlID);
-            saveReferendumvorlagen(entitiesToSave);
-
-            return importedReferendumvorlagen;
+            return cacheReferendumvorlagen(referendumvorlagenReferenceModel, referendumBezirkUndWahlID);
         } else {
             return referendumvorlageModelMapper.toModel(existingReferendumvorlagen.get());
         }
+    }
+
+    private ReferendumvorlagenModel cacheReferendumvorlagen(ReferendumvorlagenReferenceModel referendumvorlagenReferenceModel,
+            BezirkUndWahlID referendumBezirkUndWahlID) {
+        val importedReferendumvorlagen = referendumvorlagenClient.getReferendumvorlagen(referendumvorlagenReferenceModel);
+
+        val entitiesToSave = referendumvorlageModelMapper.toEntity(importedReferendumvorlagen, referendumBezirkUndWahlID);
+        saveReferendumvorlagen(entitiesToSave);
+
+        return importedReferendumvorlagen;
     }
 
     private void saveReferendumvorlagen(final Referendumvorlagen referendumvorlagenToSave) {

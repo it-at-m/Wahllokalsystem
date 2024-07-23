@@ -34,4 +34,6 @@ includes:
   - path: add-authorities-eai-wahlvorschlag.yml
   - path: add-authorities-eai-wahldaten.yml
   - path: add-authorities-basisdaten-handbuch.yml
+  - path: add-authorities-basisdaten-wahltage.yml
+  - path: add-authorities-basisdaten-ungueltigewahlscheine.yml
   - path: add-authorities-eai-wahlbeteiligung.yml

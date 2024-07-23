@@ -31,4 +31,14 @@ public class ExceptionConstants {
     public static ExceptionDataWrapper POSTHANDBUCH_SPEICHERN_NICHT_ERFOLGREICH = new ExceptionDataWrapper("316",
             "postHandbuch: Das speichern des Handbuches war nicht erfolgreich.");
 
+    public static ExceptionDataWrapper GETUNGUELTIGEWAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("331",
+            "getUngueltigews: Suchkriterien unvollständig.");
+    public static ExceptionDataWrapper GETUNGUELTIGEWAHLSCHEINE_KEINE_DATEN = new ExceptionDataWrapper("332",
+            "Die ungueltigen Wahlscheine konnte nicht geladen werden.");
+
+    public static ExceptionDataWrapper POSTUNGUELTIGEWS_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("345",
+            "postUngueltigews: Suchkriterien unvollständig.");
+    public static ExceptionDataWrapper POSTUNGUELTIGEWS_SPEICHERN_NICHT_ERFOLGREICH = new ExceptionDataWrapper("346",
+            "postUngueltigews: Das speichern der ungueltigen Wahlscheine war nicht erfolgreich.");
+
 }

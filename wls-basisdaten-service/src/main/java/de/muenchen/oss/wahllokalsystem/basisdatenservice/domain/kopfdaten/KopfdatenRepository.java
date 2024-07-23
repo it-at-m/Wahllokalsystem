@@ -7,10 +7,11 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 
-@NoRepositoryBean
+@PreAuthorize("hasAuthority('Basisdaten_READ_Kopfdaten')")
+@Transactional
 public interface KopfdatenRepository extends CrudRepository<Kopfdaten, BezirkUndWahlID> {
 
     String CACHE = "KOPFDATEN_CACHE";

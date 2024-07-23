@@ -1,6 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.handbuch;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.FileMapper;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.FileResponseEntityModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.WahlbezirkArtDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch.HandbuchService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
@@ -13,8 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 @Slf4j
 public class HandbuchController {
 
+    private static final String HANDBUCH_FILE_CONTENT_TYPE = "application/pdf";
+
     @Value("${service.config.manual.filenamesuffix:Handbuch.pdf}")
     String manualFileNameSuffix;
 
@@ -37,6 +40,8 @@ public class HandbuchController {
     private final ExceptionFactory exceptionFactory;
 
     private final HandbuchDTOMapper handbuchDTOMapper;
+
+    private final FileMapper fileMapper;
 
     @GetMapping("{wahltagID}/{wahlbezirksart}")
     @Operation(
@@ -55,7 +60,9 @@ public class HandbuchController {
     public ResponseEntity<byte[]> getHandbuch(@PathVariable("wahltagID") String wahltagID,
             @PathVariable("wahlbezirksart") WahlbezirkArtDTO wahlbezirkArtDTO) {
         val handbuchData = handbuchService.getHandbuch(handbuchDTOMapper.toModel(wahltagID, wahlbezirkArtDTO));
-        return createPDFResponse(handbuchData, wahlbezirkArtDTO);
+
+        val attachmentFilename = wahlbezirkArtDTO + manualFileNameSuffix;
+        return fileMapper.toResponseEntity(new FileResponseEntityModel(handbuchData, HANDBUCH_FILE_CONTENT_TYPE, attachmentFilename));
     }
 
     @PostMapping("{wahltagID}/{wahlbezirksart}")
@@ -72,31 +79,11 @@ public class HandbuchController {
     public void setHandbuch(@PathVariable("wahltagID") String wahltagID, @PathVariable("wahlbezirksart") WahlbezirkArtDTO wahlbezirkArtDTO,
             final MultipartHttpServletRequest request) {
         try {
-            val handbuchData = getHandbuchFromRequest(request);
+            val handbuchData = fileMapper.fromRequest(request);
             val modelToSet = handbuchDTOMapper.toModel(handbuchDTOMapper.toModel(wahltagID, wahlbezirkArtDTO), handbuchData);
             handbuchService.setHandbuch(modelToSet);
         } catch (final IOException e) {
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTHANDBUCH_SPEICHERN_NICHT_ERFOLGREICH);
         }
-    }
-
-    private byte[] getHandbuchFromRequest(final MultipartHttpServletRequest request) throws IOException {
-        val fileName = request.getFileNames().next();
-        log.debug("using filename > {}", fileName);
-        val file = request.getFile(fileName);
-
-        if (file == null) {
-            throw new IOException("No file was uploaded");
-        }
-
-        return file.getBytes();
-    }
-
-    private ResponseEntity<byte[]> createPDFResponse(final byte[] responseBody, final WahlbezirkArtDTO wahlbezirkArtDTO) {
-        val responseHeaders = new HttpHeaders();
-        responseHeaders.add(HttpHeaders.CONTENT_TYPE, "application/pdf");
-        responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + wahlbezirkArtDTO + manualFileNameSuffix);
-
-        return new ResponseEntity<>(responseBody, responseHeaders, HttpStatus.OK);
     }
 }

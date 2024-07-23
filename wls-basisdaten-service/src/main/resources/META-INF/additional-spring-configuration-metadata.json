@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "app.config.ungueltigewahlscheine.filenamesuffix",
+      "type": "java.lang.String",
+      "description": "Dateinamenssuffix für die ungueltigen Wahlscheine"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import lombok.val;

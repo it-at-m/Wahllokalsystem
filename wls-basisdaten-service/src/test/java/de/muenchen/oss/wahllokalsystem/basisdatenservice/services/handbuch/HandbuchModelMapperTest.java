@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Handbuch;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlbezirkArt;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagIdUndWahlbezirksart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;

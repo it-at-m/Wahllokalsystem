@@ -14,6 +14,9 @@ public class Authorities {
     public static final String SERVICE_GET_HANDBUCH = "Basisdaten_BUSINESSACTION_GetHandbuch";
     public static final String SERVICE_POST_HANDBUCH = "Basisdaten_BUSINESSACTION_PostHandbuch";
 
+    public static final String SERVICE_GET_UNGUELTIGEWAHLSCHEINE = "Basisdaten_BUSINESSACTION_GetUngueltigews";
+    public static final String SERVICE_POST_UNGUELTIGEWAHLSCHEINE = "Basisdaten_BUSINESSACTION_PostUngueltigews";
+
     public static final String REPOSITORY_READ_WAHLVORSCHLAEGE = "Basisdaten_READ_WLSWahlvorschlaege";
     public static final String REPOSITORY_DELETE_WAHLVORSCHLAEGE = "Basisdaten_DELETE_WLSWahlvorschlaege";
     public static final String REPOSITORY_WRITE_WAHLVORSCHLAEGE = "Basisdaten_WRITE_WLSWahlvorschlaege";
@@ -37,6 +40,10 @@ public class Authorities {
     public static final String REPOSITORY_READ_WAHL = "Basisdaten_READ_Wahl";
     public static final String REPOSITORY_WRITE_WAHL = "Basisdaten_WRITE_Wahl";
     public static final String REPOSITORY_DELETE_WAHL = "Basisdaten_DELETE_Wahl";
+  
+    public static final String REPOSITORY_READ_UNGUELTIGEWAHLSCHEINE = "Basisdaten_READ_Ungueltigews";
+    public static final String REPOSITORY_WRITE_UNGUELTIGEWAHLSCHEINE = "Basisdaten_WRITE_Ungueltigews";
+    public static final String REPOSITORY_DELETE_UNGUELTIGEWAHLSCHEINE = "Basisdaten_DELETE_Ungueltigews";
 
     public static final String[] ALL_AUTHORITIES_GET_WAHLVORSCHLAEGE = new String[] {
             SERVICE_GET_WAHLVORSCHLAEGE,
@@ -82,6 +89,16 @@ public class Authorities {
             SERVICE_RESET_WAHLEN,
             REPOSITORY_READ_WAHL,
             REPOSITORY_WRITE_WAHL
+    };
+  
+    public static final String[] ALL_AUTHORITIES_GET_UNGUELTIGEWAHLSCHEINE = {
+            SERVICE_GET_UNGUELTIGEWAHLSCHEINE,
+            REPOSITORY_READ_UNGUELTIGEWAHLSCHEINE
+    };
+  
+    public static final String[] ALL_AUTHORITIES_POST_UNGUELTIGEWAHLSCHEINE = {
+            SERVICE_POST_UNGUELTIGEWAHLSCHEINE,
+            REPOSITORY_WRITE_UNGUELTIGEWAHLSCHEINE
     };
 
 }

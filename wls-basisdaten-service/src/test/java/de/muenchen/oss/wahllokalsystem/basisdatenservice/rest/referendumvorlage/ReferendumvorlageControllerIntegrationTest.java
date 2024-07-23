@@ -25,6 +25,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlI
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import jakarta.transaction.Transactional;
 import java.util.Set;
+import javax.annotation.Nullable;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -90,9 +91,7 @@ public class ReferendumvorlageControllerIntegrationTest {
             val wahlbezirkID = "wahlbezirkID";
 
             val eaiReferendumvorschlage = createClientReferendumvorlagenDTO();
-            WireMock.stubFor(WireMock.get("/vorschlaege/referendum/" + wahlID + "/" + wahlbezirkID)
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(
-                            HttpStatus.OK.value()).withBody(objectMapper.writeValueAsBytes(eaiReferendumvorschlage))));
+            defineStubForGetReferendumvorlage(eaiReferendumvorschlage, wahlID, wahlbezirkID, HttpStatus.OK);
 
             val request = MockMvcRequestBuilders.get("/businessActions/referendumvorlagen/" + wahlID + "/" + wahlbezirkID);
 
@@ -110,9 +109,7 @@ public class ReferendumvorlageControllerIntegrationTest {
             val wahlbezirkID = "wahlbezirkID";
 
             val eaiReferendumvorschlage = createClientReferendumvorlagenDTO();
-            WireMock.stubFor(WireMock.get("/vorschlaege/referendum/" + wahlID + "/" + wahlbezirkID)
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(
-                            HttpStatus.OK.value()).withBody(objectMapper.writeValueAsBytes(eaiReferendumvorschlage))));
+            defineStubForGetReferendumvorlage(eaiReferendumvorschlage, wahlID, wahlbezirkID, HttpStatus.OK);
 
             val request = MockMvcRequestBuilders.get("/businessActions/referendumvorlagen/" + wahlID + "/" + wahlbezirkID);
 
@@ -133,9 +130,7 @@ public class ReferendumvorlageControllerIntegrationTest {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
 
-            WireMock.stubFor(WireMock.get("/vorschlaege/referendum/" + wahlID + "/" + wahlbezirkID)
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(
-                            HttpStatus.OK.value())));
+            defineStubForGetReferendumvorlage(null, wahlID, wahlbezirkID, HttpStatus.OK);
 
             val request = MockMvcRequestBuilders.get("/businessActions/referendumvorlagen/" + wahlID + "/" + wahlbezirkID);
 
@@ -150,9 +145,7 @@ public class ReferendumvorlageControllerIntegrationTest {
             val wahlbezirkID = "wahlbezirkID";
 
             val eaiReferendumvorschlage = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WlsExceptionDTO();
-            WireMock.stubFor(WireMock.get("/vorschlaege/referendum/" + wahlID + "/" + wahlbezirkID)
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(
-                            HttpStatus.INTERNAL_SERVER_ERROR.value()).withBody(objectMapper.writeValueAsBytes(eaiReferendumvorschlage))));
+            defineStubForGetReferendumvorlage(eaiReferendumvorschlage, wahlID, wahlbezirkID, HttpStatus.INSUFFICIENT_STORAGE);
 
             val request = MockMvcRequestBuilders.get("/businessActions/referendumvorlagen/" + wahlID + "/" + wahlbezirkID);
 
@@ -192,9 +185,7 @@ public class ReferendumvorlageControllerIntegrationTest {
             val wahlbezirkID = "wahlbezirkID";
 
             val eaiReferendumvorschlage = createClientReferendumvorlagenDTO();
-            WireMock.stubFor(WireMock.get("/vorschlaege/referendum/" + wahlID + "/" + wahlbezirkID)
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(
-                            HttpStatus.OK.value()).withBody(objectMapper.writeValueAsBytes(eaiReferendumvorschlage))));
+            defineStubForGetReferendumvorlage(eaiReferendumvorschlage, wahlID, wahlbezirkID, HttpStatus.OK);
 
             val mockedSaveAllException = new RuntimeException("save all failed");
             Mockito.doThrow(mockedSaveAllException).when(referendumvorlageRepository).saveAll(any());
@@ -231,6 +222,21 @@ public class ReferendumvorlageControllerIntegrationTest {
             dto.setReferendumvorlagen(Set.of(vorlage));
 
             return dto;
+        }
+
+        private void defineStubForGetReferendumvorlage(
+                @Nullable final Object wiremockPayload, final String wahlID,
+                final String wahlbezirkID,
+                final HttpStatus httpStatus) throws Exception {
+            val wireMockResponse = WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(
+                    httpStatus.value());
+
+            if (wireMockResponse != null) {
+                wireMockResponse.withBody(objectMapper.writeValueAsBytes(wiremockPayload));
+            }
+
+            WireMock.stubFor(WireMock.get("/vorschlaege/referendum/" + wahlID + "/" + wahlbezirkID)
+                    .willReturn(wireMockResponse));
         }
     }
 }

@@ -40,7 +40,7 @@ public class Authorities {
     public static final String REPOSITORY_READ_WAHL = "Basisdaten_READ_Wahl";
     public static final String REPOSITORY_WRITE_WAHL = "Basisdaten_WRITE_Wahl";
     public static final String REPOSITORY_DELETE_WAHL = "Basisdaten_DELETE_Wahl";
-  
+
     public static final String REPOSITORY_READ_UNGUELTIGEWAHLSCHEINE = "Basisdaten_READ_Ungueltigews";
     public static final String REPOSITORY_WRITE_UNGUELTIGEWAHLSCHEINE = "Basisdaten_WRITE_Ungueltigews";
     public static final String REPOSITORY_DELETE_UNGUELTIGEWAHLSCHEINE = "Basisdaten_DELETE_Ungueltigews";
@@ -90,12 +90,12 @@ public class Authorities {
             REPOSITORY_READ_WAHL,
             REPOSITORY_WRITE_WAHL
     };
-  
+
     public static final String[] ALL_AUTHORITIES_GET_UNGUELTIGEWAHLSCHEINE = {
             SERVICE_GET_UNGUELTIGEWAHLSCHEINE,
             REPOSITORY_READ_UNGUELTIGEWAHLSCHEINE
     };
-  
+
     public static final String[] ALL_AUTHORITIES_POST_UNGUELTIGEWAHLSCHEINE = {
             SERVICE_POST_UNGUELTIGEWAHLSCHEINE,
             REPOSITORY_WRITE_UNGUELTIGEWAHLSCHEINE

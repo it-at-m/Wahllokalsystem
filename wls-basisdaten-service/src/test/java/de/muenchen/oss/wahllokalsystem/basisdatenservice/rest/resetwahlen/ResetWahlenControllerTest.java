@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.resetwahlen;
 
-
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.ResetWahlenController;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.resetwahlen.ResetWahlenService;
 import lombok.val;

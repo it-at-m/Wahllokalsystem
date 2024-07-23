@@ -42,7 +42,7 @@ public class Wahl {
 
     @NotNull
     @Min((long) 1.0)
-    private long waehlerverzeichnisNummer;
+    private long waehlerverzeichnisnummer;
 
     @NotNull
     @ToString.Include

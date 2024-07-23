@@ -2,6 +2,8 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.resetwahlen;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Farbe;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,17 +17,24 @@ public class ResetWahlenService {
 
     private final WahlRepository wahlRepository;
 
+    private final ExceptionFactory exceptionFactory;
+
     @PreAuthorize(
         "hasAuthority('Basisdaten_BUSINESSACTION_ResetWahlen')"
     )
     public void resetWahlen() {
         log.info("#resetWahlen");
-        wahlRepository.saveAll(wahlRepository.findAll().stream()
-                .peek(wahl -> {
-                    wahl.setFarbe(new Farbe(0, 0, 0));
-                    wahl.setReihenfolge(0);
-                    wahl.setWaehlerverzeichnisNummer(1);
-                })
-                .collect(Collectors.toList()));
+        try {
+            wahlRepository.saveAll(
+                    wahlRepository.findAll().stream()
+                            .peek(wahl -> {
+                                wahl.setFarbe(new Farbe(0, 0, 0));
+                                wahl.setReihenfolge(0);
+                                wahl.setWaehlerverzeichnisnummer(1);
+                            })
+                            .collect(Collectors.toList()));
+        } catch (final Exception e) {
+            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.RESET_WAHLEN_NICHT_ERFOLGREICH);
+        }
     }
 }

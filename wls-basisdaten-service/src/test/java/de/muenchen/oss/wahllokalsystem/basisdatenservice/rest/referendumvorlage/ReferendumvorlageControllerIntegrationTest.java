@@ -49,6 +49,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
 public class ReferendumvorlageControllerIntegrationTest {
 
+    public static final String BUSINESS_ACTIONS_REFERENDUMVORLAGEN = "/businessActions/referendumvorlagen/";
+
     @Value("${service.info.oid}")
     String serviceOid;
 
@@ -93,7 +95,7 @@ public class ReferendumvorlageControllerIntegrationTest {
             val eaiReferendumvorschlage = createClientReferendumvorlagenDTO();
             defineStubForGetReferendumvorlage(eaiReferendumvorschlage, wahlID, wahlbezirkID, HttpStatus.OK);
 
-            val request = MockMvcRequestBuilders.get("/businessActions/referendumvorlagen/" + wahlID + "/" + wahlbezirkID);
+            val request = MockMvcRequestBuilders.get(BUSINESS_ACTIONS_REFERENDUMVORLAGEN + wahlID + "/" + wahlbezirkID);
 
             val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
             val responseBodyAsDTO = objectMapper.readValue(response.getResponse().getContentAsByteArray(), ReferendumvorlagenDTO.class);
@@ -111,7 +113,7 @@ public class ReferendumvorlageControllerIntegrationTest {
             val eaiReferendumvorschlage = createClientReferendumvorlagenDTO();
             defineStubForGetReferendumvorlage(eaiReferendumvorschlage, wahlID, wahlbezirkID, HttpStatus.OK);
 
-            val request = MockMvcRequestBuilders.get("/businessActions/referendumvorlagen/" + wahlID + "/" + wahlbezirkID);
+            val request = MockMvcRequestBuilders.get(BUSINESS_ACTIONS_REFERENDUMVORLAGEN + wahlID + "/" + wahlbezirkID);
 
             mockMvc.perform(request).andExpect(status().isOk());
 
@@ -132,7 +134,7 @@ public class ReferendumvorlageControllerIntegrationTest {
 
             defineStubForGetReferendumvorlage(null, wahlID, wahlbezirkID, HttpStatus.OK);
 
-            val request = MockMvcRequestBuilders.get("/businessActions/referendumvorlagen/" + wahlID + "/" + wahlbezirkID);
+            val request = MockMvcRequestBuilders.get(BUSINESS_ACTIONS_REFERENDUMVORLAGEN + wahlID + "/" + wahlbezirkID);
 
             val response = mockMvc.perform(request).andExpect(status().isNoContent()).andReturn();
 
@@ -147,7 +149,7 @@ public class ReferendumvorlageControllerIntegrationTest {
             val eaiReferendumvorschlage = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WlsExceptionDTO();
             defineStubForGetReferendumvorlage(eaiReferendumvorschlage, wahlID, wahlbezirkID, HttpStatus.INSUFFICIENT_STORAGE);
 
-            val request = MockMvcRequestBuilders.get("/businessActions/referendumvorlagen/" + wahlID + "/" + wahlbezirkID);
+            val request = MockMvcRequestBuilders.get(BUSINESS_ACTIONS_REFERENDUMVORLAGEN + wahlID + "/" + wahlbezirkID);
 
             val response = mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
             val responseBodyAsDTO = objectMapper.readValue(response.getResponse().getContentAsByteArray(), WlsExceptionDTO.class);
@@ -170,7 +172,7 @@ public class ReferendumvorlageControllerIntegrationTest {
             Mockito.doThrow(mockedValidationException).when(referendumvorlageValidator)
                     .validReferumvorlageReferenceModelOrThrow(new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID));
 
-            val request = MockMvcRequestBuilders.get("/businessActions/referendumvorlagen/" + wahlID + "/" + wahlbezirkID);
+            val request = MockMvcRequestBuilders.get(BUSINESS_ACTIONS_REFERENDUMVORLAGEN + wahlID + "/" + wahlbezirkID);
 
             val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
             val responseBodyAsDTO = objectMapper.readValue(response.getResponse().getContentAsByteArray(), WlsExceptionDTO.class);
@@ -190,7 +192,7 @@ public class ReferendumvorlageControllerIntegrationTest {
             val mockedSaveAllException = new RuntimeException("save all failed");
             Mockito.doThrow(mockedSaveAllException).when(referendumvorlageRepository).saveAll(any());
 
-            val request = MockMvcRequestBuilders.get("/businessActions/referendumvorlagen/" + wahlID + "/" + wahlbezirkID);
+            val request = MockMvcRequestBuilders.get(BUSINESS_ACTIONS_REFERENDUMVORLAGEN + wahlID + "/" + wahlbezirkID);
 
             val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
             val responseBodyAsDTO = objectMapper.readValue(response.getResponse().getContentAsByteArray(), ReferendumvorlagenDTO.class);

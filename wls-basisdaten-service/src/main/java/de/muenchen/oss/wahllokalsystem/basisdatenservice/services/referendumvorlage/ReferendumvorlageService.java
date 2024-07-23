@@ -3,12 +3,12 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvor
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ReferendumvorlageRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Referendumvorlagen;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ReferendumvorlagenRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 
 @Service
 @RequiredArgsConstructor
@@ -24,8 +24,9 @@ public class ReferendumvorlageService {
     private final ReferendumvorlageRepository referendumvorlageRepository;
     private final ReferendumvorlagenRepository referendumvorlagenRepository;
 
+    private final TransactionTemplate transactionTemplate;
+
     @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetReferendumvorlagen')")
-    @Transactional
     public ReferendumvorlagenModel loadReferendumvorlagen(final ReferendumvorlagenReferenceModel referendumvorlagenReferenceModel) {
         log.info("#getReferendumvorlagen");
 
@@ -48,8 +49,10 @@ public class ReferendumvorlageService {
 
     private void saveReferendumvorlagen(final Referendumvorlagen referendumvorlagenToSave) {
         try {
-            referendumvorlagenRepository.save(referendumvorlagenToSave);
-            referendumvorlageRepository.saveAll(referendumvorlagenToSave.getReferendumvorlagen());
+            transactionTemplate.executeWithoutResult(transactionStatus -> {
+                referendumvorlagenRepository.save(referendumvorlagenToSave);
+                referendumvorlageRepository.saveAll(referendumvorlagenToSave.getReferendumvorlagen());
+            });
         } catch (final Exception e) {
             log.error("#getReferendumvorlagen: Fehler beim Cachen", e);
         }

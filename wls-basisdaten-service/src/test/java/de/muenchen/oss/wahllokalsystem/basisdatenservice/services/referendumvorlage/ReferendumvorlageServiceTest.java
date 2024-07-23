@@ -11,6 +11,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlI
 import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Consumer;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -20,7 +21,11 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.transaction.TransactionException;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionTemplate;
 
 @ExtendWith(MockitoExtension.class)
 class ReferendumvorlageServiceTest {
@@ -39,6 +44,14 @@ class ReferendumvorlageServiceTest {
 
     @Mock
     ReferendumvorlagenRepository referendumvorlagenRepository;
+
+    @Spy
+    TransactionTemplate transactionTemplate = new TransactionTemplate() {
+        @Override
+        public void executeWithoutResult(Consumer<TransactionStatus> action) throws TransactionException {
+            action.accept(Mockito.mock(TransactionStatus.class));
+        }
+    };
 
     @InjectMocks
     ReferendumvorlageService unitUnderTest;

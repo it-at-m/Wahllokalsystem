@@ -35,3 +35,4 @@ includes:
   - path: add-authorities-eai-wahldaten.yml
   - path: add-authorities-basisdaten-handbuch.yml
   - path: add-authorities-basisdaten-wahltage.yml
+  - path: add-authorities-basisdaten-resetwahlen.yml

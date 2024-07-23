@@ -3,9 +3,9 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvor
 import static org.mockito.ArgumentMatchers.eq;
 
 import ch.qos.logback.classic.Level;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ReferendumvorlageRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Referendumvorlagen;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ReferendumvorlagenRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.ReferendumvorlageRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.Referendumvorlagen;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.ReferendumvorlagenRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.LoggerExtension;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Collections;

@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlage;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ReferendumvorlageRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Referendumvorlagen;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ReferendumvorlagenRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.ReferendumvorlageRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.Referendumvorlagen;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.ReferendumvorlagenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;

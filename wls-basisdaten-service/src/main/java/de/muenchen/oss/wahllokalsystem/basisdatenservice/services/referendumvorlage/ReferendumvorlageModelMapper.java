@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlage;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Referendumvorlage;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Referendumvorlagen;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.Referendumvorlage;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.Referendumvorlagen;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;

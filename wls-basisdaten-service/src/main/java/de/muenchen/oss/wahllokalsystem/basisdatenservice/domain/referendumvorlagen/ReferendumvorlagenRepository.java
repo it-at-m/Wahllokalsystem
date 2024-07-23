@@ -20,19 +20,19 @@ public interface ReferendumvorlagenRepository extends CrudRepository<Referendumv
 
     @Override
     @Cacheable(value = CACHE, key = "#p0")
-    Optional<Referendumvorlagen> findById(UUID referendumvorlageId);
+    Optional<Referendumvorlagen> findById(UUID referendumvorlagenId);
 
     Optional<Referendumvorlagen> findByBezirkUndWahlID(BezirkUndWahlID bezirkUndWahlID);
 
     @Override
     @CachePut(value = CACHE, key = "#p0.bezirkUndWahlID")
     @PreAuthorize("hasAuthority('Basisdaten_WRITE_Referendumvorlagen')")
-    <S extends Referendumvorlagen> S save(S wLSReferendumvorschlaege);
+    <S extends Referendumvorlagen> S save(S entity);
 
     @Override
     @CacheEvict(value = CACHE, key = "#p0")
     @PreAuthorize("hasAuthority('Basisdaten_DELETE_Referendumvorlagen')")
-    void deleteById(UUID referendumvorlageId);
+    void deleteById(UUID referendumvorlagenId);
 
     @Override
     @CacheEvict(value = CACHE, key = "#p0.bezirkUndWahlID")

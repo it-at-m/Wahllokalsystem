@@ -24,12 +24,12 @@ public interface ReferendumvorlageRepository extends CrudRepository<Referendumvo
     @Override
     @CachePut(value = CACHE, key = "#p0.bezirkUndWahlID")
     @PreAuthorize("hasAuthority('Basisdaten_WRITE_Referendumvorlage')")
-    <S extends Referendumvorlage> S save(S wLSReferendumvorschlaege);
+    <S extends Referendumvorlage> S save(S entity);
 
     @Override
     @CacheEvict(value = CACHE, allEntries = true)
     @PreAuthorize("hasAuthority('Basisdaten_WRITE_Referendumvorlage')")
-    <S extends Referendumvorlage> Iterable<S> saveAll(Iterable<S> wLSReferendumvorschlaege);
+    <S extends Referendumvorlage> Iterable<S> saveAll(Iterable<S> entities);
 
     @Override
     @CacheEvict(value = CACHE, key = "#p0")

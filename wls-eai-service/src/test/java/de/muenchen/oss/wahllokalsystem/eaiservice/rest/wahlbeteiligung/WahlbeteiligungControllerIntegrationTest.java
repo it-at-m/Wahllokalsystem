@@ -95,10 +95,7 @@ public class WahlbeteiligungControllerIntegrationTest {
             val expectedSavedWahlbeteiligung = new Wahlbeteiligung(requestBody.wahlID(), requestBody.wahlbezirkID(), requestBody.anzahlWaehler(),
                     requestBody.meldeZeitpunkt());
 
-            Assertions.assertThat(savedWahlbeteiligung.getWahlID()).isEqualTo(expectedSavedWahlbeteiligung.getWahlID());
-            Assertions.assertThat(savedWahlbeteiligung.getWahlbezirkID()).isEqualTo(expectedSavedWahlbeteiligung.getWahlbezirkID());
-            Assertions.assertThat(savedWahlbeteiligung.getAnzahlWaehler()).isEqualTo(expectedSavedWahlbeteiligung.getAnzahlWaehler());
-            Assertions.assertThat(savedWahlbeteiligung.getMeldeZeitpunkt()).isEqualTo(expectedSavedWahlbeteiligung.getMeldeZeitpunkt());
+            Assertions.assertThat(savedWahlbeteiligung).usingRecursiveComparison().ignoringFields("id").isEqualTo(expectedSavedWahlbeteiligung);
         }
 
         @Test

@@ -12,19 +12,19 @@ public class ExceptionConstants {
 
     //loadWahlvorschlaege
     public static final ExceptionDataWrapper LOADWAHLVORSCHLAEGE_WAHLID_FEHLT = new ExceptionDataWrapper(
-            CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
+        CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
     public static final ExceptionDataWrapper LOADWAHLVORSCHLAEGE_BEZIRKID_FEHLT = new ExceptionDataWrapper(
-            CODE_BEZIRKID_FEHLT, MESSAGE_BEZIRKID_FEHLT);
+        CODE_BEZIRKID_FEHLT, MESSAGE_BEZIRKID_FEHLT);
 
     //loadWahlvorschlaegeListe
     public static final ExceptionDataWrapper LOADWAHLVORSCHLAEGELISTE_WAHLID_FEHLT = new ExceptionDataWrapper(
-            CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
+        CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
 
     //loadReferendumvorlagen
     public static final ExceptionDataWrapper LOADREFERENDUMVORLAGEN_WAHLBEZIRKID_FEHLT = new ExceptionDataWrapper(
-            CODE_BEZIRKID_FEHLT, MESSAGE_BEZIRKID_FEHLT);
+        CODE_BEZIRKID_FEHLT, MESSAGE_BEZIRKID_FEHLT);
     public static final ExceptionDataWrapper LOADREFERENDUMVORLAGEN_WAHLID_FEHLT = new ExceptionDataWrapper(
-            CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
+        CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
 
     //loadBasisdaten
     public static final ExceptionDataWrapper LOADBASISDATEN_TAG_FEHLT = new ExceptionDataWrapper("001", "Es ist kein Tag definiert");
@@ -32,7 +32,7 @@ public class ExceptionConstants {
 
     //loadWahlberechtigte
     public static final ExceptionDataWrapper LOADWAHLBERECHTIGTE_SUCHKRITERIEN_UNVOLLSTAENDIG = new ExceptionDataWrapper("001",
-            "Wahlberechtigtenkriterien sind nicht vollständig");
+        "Wahlberechtigtenkriterien sind nicht vollständig");
 
     //loadWahltage
     public static final ExceptionDataWrapper LOADWAHLTAGE_TAG_FEHLT = new ExceptionDataWrapper("001", "Es ist kein Tag definiert");
@@ -46,20 +46,9 @@ public class ExceptionConstants {
     public static final ExceptionDataWrapper LOADWAHLEN_NUMMER_FEHLT = new ExceptionDataWrapper("001_1", "Es ist keine Wahlnummer angegeben");
 
     //saveWahlbeteiligung
-    public static final String CODE_SAVEWAHLBETEILIGUNG_WAHLBEZIRKID_FEHLT = "001";
-    public static final String MESSAGE_SAVEWAHLBETEILIGUNG_WAHLBEZIRKID_FEHLT = "Die WahlbezirkID fehlt";
-    public static final ExceptionDataWrapper SAVEWAHLBETEILIGUNG_WAHLBEZIRKID_FEHLT = new ExceptionDataWrapper(CODE_SAVEWAHLBETEILIGUNG_WAHLBEZIRKID_FEHLT,
-            MESSAGE_SAVEWAHLBETEILIGUNG_WAHLBEZIRKID_FEHLT);
-
-    public static final String CODE_SAVEWAHLBETEILIGUNG_WAHLID_FEHLT = "002";
-    public static final String MESSAGE_SAVEWAHLBETEILIGUNG_WAHLID_FEHLT = "Die WahlID fehlt";
-    public static final ExceptionDataWrapper SAVEWAHLBETEILIGUNG_WAHLID_FEHLT = new ExceptionDataWrapper(CODE_SAVEWAHLBETEILIGUNG_WAHLID_FEHLT,
-            MESSAGE_SAVEWAHLBETEILIGUNG_WAHLID_FEHLT);
-
-    public static final String CODE_SAVEWAHLBETEILIGUNG_MELDEZEITPUNKT_FEHLT = "003";
-    public static final String MESSAGE_SAVEWAHLBETEILIGUNG_MELDEZEITPUNKT_FEHLT = "Der Meldezeitpunkt fehlt";
-    public static final ExceptionDataWrapper SAVEWAHLBETEILIGUNG_MELDEZEITPUNKT_FEHLT = new ExceptionDataWrapper(CODE_SAVEWAHLBETEILIGUNG_MELDEZEITPUNKT_FEHLT,
-            MESSAGE_SAVEWAHLBETEILIGUNG_MELDEZEITPUNKT_FEHLT);
+    public static final ExceptionDataWrapper SAVEWAHLBETEILIGUNG_WAHLBEZIRKID_FEHLT = new ExceptionDataWrapper(CODE_BEZIRKID_FEHLT, MESSAGE_BEZIRKID_FEHLT);
+    public static final ExceptionDataWrapper SAVEWAHLBETEILIGUNG_WAHLID_FEHLT = new ExceptionDataWrapper(CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
+    public static final ExceptionDataWrapper SAVEWAHLBETEILIGUNG_MELDEZEITPUNKT_FEHLT = new ExceptionDataWrapper("003", "Der Meldezeitpunkt fehlt");
 
     /**
      * @throws IllegalAccessException when constructor is used

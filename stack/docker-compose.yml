@@ -114,7 +114,7 @@ services:
       - KC_DB_URL=jdbc:postgresql://wls-db-postgres-keycloak:5432/${KEYCLOAK_DB}
       - KC_DB_USERNAME=${KEYCLOAK_DB_USER}
       - KC_DB_PASSWORD=${KEYCLOAK_DB_PASSWORD}
-      - KC_HTTP_RELATIVE_PATH=auth
+      - KC_HTTP_RELATIVE_PATH=${KEYCLOAK_RELATIV_PATH}
     volumes:
       - './keycloak/import:/opt/keycloak/data/import'
     ports:

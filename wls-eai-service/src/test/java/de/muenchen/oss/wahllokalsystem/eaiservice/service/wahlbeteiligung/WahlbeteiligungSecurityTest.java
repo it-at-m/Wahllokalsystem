@@ -47,8 +47,8 @@ public class WahlbeteiligungSecurityTest {
         }
 
         @Test
-        void accessDeniedOnServiceWithWrongAuthority() {
-            SecurityUtils.runWith(Authorities.SERVICE_LOAD_WAHLEN);
+        void accessDeniedOnServiceWithoutAuthority() {
+            SecurityUtils.runWith();
 
             val wahlID = "wahlID1";
             val wahlbezirkID = "00000000-0000-0000-0000-000000000001";

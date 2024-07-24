@@ -53,6 +53,5 @@ class WahlbeteiligungServiceTest {
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.saveWahlbeteiligung(modelToSave)).isSameAs(mockedValidationException);
         }
-
     }
 }

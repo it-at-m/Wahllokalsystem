@@ -36,7 +36,6 @@ class WahlbeteiligungMapperTest {
 
         @Test
         void ofWahlbeteiligungsMeldungDTO() {
-            val id = UUID.randomUUID();
             val wahlID = "wahlID1";
             val wahlbezirkID = "00000000-0000-0000-0000-000000000001";
             val anzahlWaehler = 150;

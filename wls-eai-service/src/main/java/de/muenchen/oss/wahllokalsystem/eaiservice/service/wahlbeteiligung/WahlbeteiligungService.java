@@ -21,12 +21,10 @@ public class WahlbeteiligungService {
 
     @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_SaveWahlbeteiligung')")
     public void saveWahlbeteiligung(@P("wahlbeteiligungToSet") final WahlbeteiligungsMeldungDTO wahlbeteiligungToSet) {
-
         log.debug("#saveWahlbeteiligung");
 
         wahlbeteiligungValidator.validDTOToSetOrThrow(wahlbeteiligungToSet);
 
         wahlbeteiligungRepository.save(wahlbeteiligungMapper.toEntity(wahlbeteiligungToSet));
-
     }
 }

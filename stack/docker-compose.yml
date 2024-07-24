@@ -130,9 +130,10 @@ services:
     env_file:
       - .env
     environment:
-      - ADMIN_USER=${KEYCLOAK_ADMIN}
-      - ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
-      - BASEURL=${SSO_BASE_URL} # uses internal docker network to access the keycloak via its back channel port
+      - ADMIN_USER=${KEYCLOAK_MIGRATION_USER}
+      - ADMIN_PASSWORD=${KEYCLOAK_MIGRATION_USER_PASSWORD}
+      - BASEURL=${KEYCLOAK_MIGRATION_BASE_URL} # uses internal docker network to access the keycloak via its back channel port
+      - LOGIN_REALM=${SSO_REALM}
       - WAIT_FOR_KEYCLOAK=true
       - KEYCLOAK_CHANGELOG=/migration/keycloak-changelog.yml
     volumes:

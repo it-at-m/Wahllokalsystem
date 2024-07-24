@@ -18,6 +18,8 @@ public class Authorities {
     public static final String SERVICE_LOAD_WAHLEN = "aoueai_BUSINESSACTION_LoadWahlen";
     public static final String SERVICE_LOAD_BASISDATEN = "aoueai_BUSINESSACTION_LoadBasisdaten";
 
+    public static final String SERVICE_SAVE_WAHLBETEILIGUNG = "aoueai_BUSINESSACTION_SaveWahlbeteiligung";
+
     public static final String[] ALL_AUTHORITIES_GETWAHLVORSTANDFORWAHLBEZIRK = {
             SERVICE_LOAD_WAHLVORSTAND
     };

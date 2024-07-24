@@ -25,13 +25,11 @@ class WahlbeteiligungControllerTest {
 
         @Test
         void serviceIsCalled() {
-
             val wahlbeteiligungsMeldungDTO = WahlbeteiligungsMeldungDTO.builder().build();
 
             unitUnderTest.saveWahlbeteiligung(wahlbeteiligungsMeldungDTO);
 
             Mockito.verify(wahlbeteiligungService).saveWahlbeteiligung(wahlbeteiligungsMeldungDTO);
         }
-
     }
 }

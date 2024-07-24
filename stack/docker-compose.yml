@@ -100,9 +100,10 @@ services:
   ## Keycloak
   wls-keycloak:
     container_name: wls-keycloak
-    image: quay.io/keycloak/keycloak:20.0.5
+    image: quay.io/keycloak/keycloak:25.0.2
     command:
-      - start-dev --http-relative-path /auth
+      - start-dev
+      - '--import-realm'
     depends_on:
       - wls-db-postgres-keycloak
     environment:
@@ -113,6 +114,9 @@ services:
       - KC_DB_URL=jdbc:postgresql://wls-db-postgres-keycloak:5432/${KEYCLOAK_DB}
       - KC_DB_USERNAME=${KEYCLOAK_DB_USER}
       - KC_DB_PASSWORD=${KEYCLOAK_DB_PASSWORD}
+      - KC_HTTP_RELATIVE_PATH=auth
+    volumes:
+      - './keycloak/import:/opt/keycloak/data/import'
     ports:
       - 8100:8080
     networks:

@@ -23,8 +23,8 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>3.3.1</spring.boot.version>
-        <spring.cloud.version>2023.0.2</spring.cloud.version>
+        <spring.boot.version>3.3.2</spring.boot.version>
+        <spring.cloud.version>2023.0.3</spring.cloud.version>
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
         <!-- Version muss mit der in den spring-boot-dependencies bereitgestellten Lombok-Version übereinstimmen -->
         <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>
@@ -196,7 +196,7 @@
                 <plugin>
                     <groupId>org.sonatype.central</groupId>
                     <artifactId>central-publishing-maven-plugin</artifactId>
-                    <version>0.4.0</version>
+                    <version>0.5.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -247,7 +247,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.8.0</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>

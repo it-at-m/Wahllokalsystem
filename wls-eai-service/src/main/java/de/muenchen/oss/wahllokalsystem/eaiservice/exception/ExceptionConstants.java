@@ -45,6 +45,11 @@ public class ExceptionConstants {
     public static final ExceptionDataWrapper LOADWAHLEN_WAHLTAG_FEHLT = new ExceptionDataWrapper("001", "Es ist kein Wahltag angegeben");
     public static final ExceptionDataWrapper LOADWAHLEN_NUMMER_FEHLT = new ExceptionDataWrapper("001_1", "Es ist keine Wahlnummer angegeben");
 
+    //saveWahlbeteiligung
+    public static final ExceptionDataWrapper SAVEWAHLBETEILIGUNG_WAHLBEZIRKID_FEHLT = new ExceptionDataWrapper(CODE_BEZIRKID_FEHLT, MESSAGE_BEZIRKID_FEHLT);
+    public static final ExceptionDataWrapper SAVEWAHLBETEILIGUNG_WAHLID_FEHLT = new ExceptionDataWrapper(CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
+    public static final ExceptionDataWrapper SAVEWAHLBETEILIGUNG_MELDEZEITPUNKT_FEHLT = new ExceptionDataWrapper("003", "Der Meldezeitpunkt fehlt");
+
     /**
      * @throws IllegalAccessException when constructor is used
      */

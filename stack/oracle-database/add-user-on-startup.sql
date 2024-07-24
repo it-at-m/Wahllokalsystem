@@ -43,3 +43,7 @@ GRANT CONNECT, RESOURCE, CREATE SESSION TO wls_ergebnismeldung_service;
 -- add user for wls-auth-service
 CREATE USER wls_auth_service IDENTIFIED BY secret QUOTA UNLIMITED ON USERS;
 GRANT CONNECT, RESOURCE, CREATE SESSION TO wls_auth_service;
+
+-- add user for wls-vorfaelleundvorkommnisse-service
+CREATE USER wls_vorfaelleundvorkommnisse_service IDENTIFIED BY secret QUOTA UNLIMITED ON USERS;
+GRANT CONNECT, RESOURCE, CREATE SESSION TO wls_vorfaelleundvorkommnisse_service;

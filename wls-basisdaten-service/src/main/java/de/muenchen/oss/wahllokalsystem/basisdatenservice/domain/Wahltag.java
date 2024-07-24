@@ -11,38 +11,37 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.stereotype.Indexed;
 
 @Entity
 @Indexed
-@Table(name = "Wahltag")
 @Data
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "Wahltag")
 public class Wahltag {
 
     @Id
-    @Column(name = "wahltagID")
     @NotNull
     @Size(max = 1024)
+    @ToString.Include
     private String wahltagID;
 
-
-    @Column(name = "wahltag")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
     @NotNull
+    @ToString.Include
     private LocalDate wahltag;
 
-
-    @Column(name = "beschreibung")
     @Size(max = 1024)
+    @ToString.Include
     private String beschreibung;
 
-    @Column(name = "nummer")
     @Size(max = 1024)
+    @ToString.Include
     private String nummer;
-    @Id
-    private Long id;
 }
-
-

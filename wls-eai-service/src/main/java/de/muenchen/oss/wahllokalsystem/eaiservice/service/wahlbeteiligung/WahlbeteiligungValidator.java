@@ -16,7 +16,7 @@ public class WahlbeteiligungValidator {
     public void validDTOToSetOrThrow(WahlbeteiligungsMeldungDTO wahlbeteiligungToSet) {
         if (wahlbeteiligungToSet == null) {
             throw exceptionFactory.createFachlicheWlsException(
-                    de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN);
+                de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN);
         }
 
         if (StringUtils.isBlank(wahlbeteiligungToSet.wahlbezirkID())) {
@@ -27,7 +27,7 @@ public class WahlbeteiligungValidator {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.SAVEWAHLBETEILIGUNG_WAHLID_FEHLT);
         }
 
-        if (wahlbeteiligungToSet.meldeZeitpunkt() == null || StringUtils.isBlank(wahlbeteiligungToSet.meldeZeitpunkt().toString())) {
+        if (wahlbeteiligungToSet.meldeZeitpunkt() == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.SAVEWAHLBETEILIGUNG_MELDEZEITPUNKT_FEHLT);
         }
     }

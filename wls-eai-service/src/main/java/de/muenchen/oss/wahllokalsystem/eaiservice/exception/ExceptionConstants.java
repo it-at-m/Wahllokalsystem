@@ -12,19 +12,19 @@ public class ExceptionConstants {
 
     //loadWahlvorschlaege
     public static final ExceptionDataWrapper LOADWAHLVORSCHLAEGE_WAHLID_FEHLT = new ExceptionDataWrapper(
-        CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
+            CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
     public static final ExceptionDataWrapper LOADWAHLVORSCHLAEGE_BEZIRKID_FEHLT = new ExceptionDataWrapper(
-        CODE_BEZIRKID_FEHLT, MESSAGE_BEZIRKID_FEHLT);
+            CODE_BEZIRKID_FEHLT, MESSAGE_BEZIRKID_FEHLT);
 
     //loadWahlvorschlaegeListe
     public static final ExceptionDataWrapper LOADWAHLVORSCHLAEGELISTE_WAHLID_FEHLT = new ExceptionDataWrapper(
-        CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
+            CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
 
     //loadReferendumvorlagen
     public static final ExceptionDataWrapper LOADREFERENDUMVORLAGEN_WAHLBEZIRKID_FEHLT = new ExceptionDataWrapper(
-        CODE_BEZIRKID_FEHLT, MESSAGE_BEZIRKID_FEHLT);
+            CODE_BEZIRKID_FEHLT, MESSAGE_BEZIRKID_FEHLT);
     public static final ExceptionDataWrapper LOADREFERENDUMVORLAGEN_WAHLID_FEHLT = new ExceptionDataWrapper(
-        CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
+            CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
 
     //loadBasisdaten
     public static final ExceptionDataWrapper LOADBASISDATEN_TAG_FEHLT = new ExceptionDataWrapper("001", "Es ist kein Tag definiert");
@@ -32,7 +32,7 @@ public class ExceptionConstants {
 
     //loadWahlberechtigte
     public static final ExceptionDataWrapper LOADWAHLBERECHTIGTE_SUCHKRITERIEN_UNVOLLSTAENDIG = new ExceptionDataWrapper("001",
-        "Wahlberechtigtenkriterien sind nicht vollständig");
+            "Wahlberechtigtenkriterien sind nicht vollständig");
 
     //loadWahltage
     public static final ExceptionDataWrapper LOADWAHLTAGE_TAG_FEHLT = new ExceptionDataWrapper("001", "Es ist kein Tag definiert");

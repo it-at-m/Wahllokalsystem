@@ -29,15 +29,12 @@ public class Wahl {
     @Id
     @NotNull
     @Size(max = 1024)
-    @ToString.Include
     private String wahlID;
 
     @Size(max = 255)
-    @ToString.Include
     private String name;
 
     @NotNull
-    @ToString.Include
     private long reihenfolge;
 
     @NotNull
@@ -45,7 +42,6 @@ public class Wahl {
     private long waehlerverzeichnisnummer;
 
     @NotNull
-    @ToString.Include
     private LocalDate wahltag;
 
     @Enumerated(EnumType.STRING)
@@ -56,6 +52,5 @@ public class Wahl {
     private Farbe farbe;
 
     @Size(max = 255)
-    @ToString.Include
     private String nummer;
 }

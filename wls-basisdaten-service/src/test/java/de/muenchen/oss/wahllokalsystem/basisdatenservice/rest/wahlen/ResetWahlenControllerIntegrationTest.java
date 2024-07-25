@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.resetwahlen;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen;
 
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
@@ -61,14 +61,14 @@ public class ResetWahlenControllerIntegrationTest {
         @Test
         void existingWahlenAreReplaced() throws Exception {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL);
-            val oldRepositoryWahlen = createWahlEntities(false);
+            val oldRepositoryWahlen = createWahlEntities();
             wahlRepository.saveAll(oldRepositoryWahlen);
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_RESET_WAHLEN);
             val request = MockMvcRequestBuilders.post("/businessActions/resetWahlen");
             mockMvc.perform(request).andExpect(status().isOk());
 
-            val expectedResetedWahlen = createWahlEntities(true);
+            val expectedResetedWahlen = createWahlEntities().stream().map((ResetWahlenControllerIntegrationTest.this::resetWahl)).toList();
 
             SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHL);
             val savedWahlen = wahlRepository.findAll();
@@ -77,7 +77,7 @@ public class ResetWahlenControllerIntegrationTest {
         }
     }
 
-    private List<Wahl> createWahlEntities(boolean returnResetedWahlen) {
+    private List<Wahl> createWahlEntities() {
         val wahl1 = new Wahl();
         wahl1.setWahlID("wahlid1");
         wahl1.setName("wahl1");
@@ -108,7 +108,7 @@ public class ResetWahlenControllerIntegrationTest {
         wahl3.setWaehlerverzeichnisnummer(3);
         wahl3.setWahltag(LocalDate.now().plusMonths(3));
 
-        return (returnResetedWahlen) ? List.of(resetWahl(wahl1), resetWahl(wahl2), resetWahl(wahl3)) : List.of(wahl1, wahl2, wahl3);
+        return List.of(wahl1, wahl2, wahl3);
     }
 
     private Wahl resetWahl(Wahl wahl) {

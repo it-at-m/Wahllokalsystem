@@ -45,20 +45,20 @@ public class Authorities {
     public static final String REPOSITORY_WRITE_UNGUELTIGEWAHLSCHEINE = "Basisdaten_WRITE_Ungueltigews";
     public static final String REPOSITORY_DELETE_UNGUELTIGEWAHLSCHEINE = "Basisdaten_DELETE_Ungueltigews";
 
-    public static final String[] ALL_AUTHORITIES_GET_WAHLVORSCHLAEGE = new String[] {
+    public static final String[] ALL_AUTHORITIES_GET_WAHLVORSCHLAEGE = {
             SERVICE_GET_WAHLVORSCHLAEGE,
             REPOSITORY_READ_WAHLVORSCHLAEGE,
             REPOSITORY_WRITE_WAHLVORSCHLAEGE,
             REPOSITORY_WRITE_WAHLVORSCHLAG,
             REPOSITORY_WRITE_KANDIDAT
     };
-    public static final String[] ALL_AUTHORITIES_SET_WAHLVORSCHLAEGE = new String[] {
+    public static final String[] ALL_AUTHORITIES_SET_WAHLVORSCHLAEGE = {
             SERVICE_GET_WAHLVORSCHLAEGE,
             REPOSITORY_READ_WAHLVORSCHLAEGE,
             REPOSITORY_WRITE_WAHLVORSCHLAEGE
     };
 
-    public static final String[] ALL_AUTHORITIES_DELETE_WAHLVORSCHLAEGE = new String[] {
+    public static final String[] ALL_AUTHORITIES_DELETE_WAHLVORSCHLAEGE = {
             REPOSITORY_DELETE_WAHLVORSCHLAEGE
     };
     public static final String[] ALL_AUTHORITIES_GET_HANDBUCH = {
@@ -70,22 +70,22 @@ public class Authorities {
             REPOSITORY_WRITE_HANDBUCH
     };
 
-    public static final String[] ALL_AUTHORITIES_GET_WAHLTAGE = new String[] {
+    public static final String[] ALL_AUTHORITIES_GET_WAHLTAGE = {
             SERVICE_GET_WAHLTAGE,
             REPOSITORY_READ_WAHLTAG,
             REPOSITORY_WRITE_WAHLTAG
     };
-    public static final String[] ALL_AUTHORITIES_SET_WAHLTAGE = new String[] {
+    public static final String[] ALL_AUTHORITIES_SET_WAHLTAGE = {
             SERVICE_GET_WAHLTAGE,
             REPOSITORY_READ_WAHLTAG,
             REPOSITORY_WRITE_WAHLTAG
     };
 
-    public static final String[] ALL_AUTHORITIES_DELETE_WAHLTAGE = new String[] {
+    public static final String[] ALL_AUTHORITIES_DELETE_WAHLTAGE = {
             REPOSITORY_DELETE_WAHLTAG
     };
 
-    public static final String[] ALL_AUTHORITIES_RESET_WAHLEN = new String[] {
+    public static final String[] ALL_AUTHORITIES_RESET_WAHLEN = {
             SERVICE_RESET_WAHLEN,
             REPOSITORY_READ_WAHL,
             REPOSITORY_WRITE_WAHL

@@ -33,17 +33,17 @@ class ResetWahlenServiceTest {
         void dataSuccessfullyReseted() {
             ArgumentCaptor<List<Wahl>> reqCaptor = ArgumentCaptor.forClass(List.class);
 
-            val wahlenToReset = createWahlEntities(false);
+            val wahlenToReset = createWahlEntities();
             Mockito.when(wahlRepository.findAll()).thenReturn(wahlenToReset);
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.resetWahlen());
 
-            val resetedWahlen = createWahlEntities(true);
+            val resetedWahlen = createWahlEntities().stream().map(this::resetWahl).toList();
 
             Mockito.verify(wahlRepository).saveAll(reqCaptor.capture());
             Assertions.assertThat(reqCaptor.getValue()).containsExactlyInAnyOrderElementsOf(resetedWahlen);
         }
 
-        private List<Wahl> createWahlEntities(boolean returnResetedWahlen) {
+        private List<Wahl> createWahlEntities() {
             val wahl1 = new Wahl();
             wahl1.setWahlID("wahlid1");
             wahl1.setName("wahl1");
@@ -74,7 +74,7 @@ class ResetWahlenServiceTest {
             wahl3.setWaehlerverzeichnisnummer(3);
             wahl3.setWahltag(LocalDate.now().plusMonths(3));
 
-            return (returnResetedWahlen) ? List.of(resetWahl(wahl1), resetWahl(wahl2), resetWahl(wahl3)) : List.of(wahl1, wahl2, wahl3);
+            return List.of(wahl1, wahl2, wahl3);
         }
 
         private Wahl resetWahl(Wahl wahl) {

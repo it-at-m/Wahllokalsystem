@@ -41,7 +41,7 @@ public class ResetWahlenServiceSecurityTest {
 
         @Test
         void accessDeniedWhenServiceAuthoritiyIsMissing() {
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHL, Authorities.REPOSITORY_WRITE_WAHL, Authorities.REPOSITORY_DELETE_WAHL);
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHL, Authorities.REPOSITORY_WRITE_WAHL);
             Assertions.assertThatThrownBy(() -> resetWahlenService.resetWahlen()).isInstanceOf(AccessDeniedException.class);
         }
 

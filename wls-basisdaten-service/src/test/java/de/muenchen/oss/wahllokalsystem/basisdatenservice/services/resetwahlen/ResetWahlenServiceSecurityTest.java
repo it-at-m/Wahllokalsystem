@@ -5,10 +5,19 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.WahlReposit
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
@@ -45,10 +54,21 @@ public class ResetWahlenServiceSecurityTest {
             Assertions.assertThatThrownBy(() -> resetWahlenService.resetWahlen()).isInstanceOf(AccessDeniedException.class);
         }
 
-        @Test
-        void technischeWlsExceptionWhenRepoAuthorityIsMissing() {
-            SecurityUtils.runWith(Authorities.SERVICE_RESET_WAHLEN);
+        @ParameterizedTest(name = "{index} - {1} missing")
+        @MethodSource("getMissingRepoAuthoritiesVariations")
+        void technischeWlsExceptionWhenRepoAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) {
+            ArrayList<String> mList = new ArrayList<>(Arrays.asList(argumentsAccessor.get(0, String[].class)));
+            mList.add(Authorities.SERVICE_RESET_WAHLEN);
+            String[] strArray = new String[mList.size()];
+            for(int i = 0; i < mList.size(); i++) {
+                strArray[i] = mList.get(i);
+            }
+            SecurityUtils.runWith(strArray);
             Assertions.assertThatThrownBy(() -> resetWahlenService.resetWahlen()).isInstanceOf(TechnischeWlsException.class);
+        }
+
+        private static Stream<Arguments> getMissingRepoAuthoritiesVariations() {
+            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(new String[]{Authorities.REPOSITORY_WRITE_WAHL, Authorities.REPOSITORY_READ_WAHL});
         }
     }
 }

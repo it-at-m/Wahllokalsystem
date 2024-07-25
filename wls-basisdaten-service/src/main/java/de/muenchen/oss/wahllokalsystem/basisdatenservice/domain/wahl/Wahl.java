@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl;
 
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;

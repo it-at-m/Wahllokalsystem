@@ -1,9 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.resetwahlen;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Farbe;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahl;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Farbe;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahl;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.WahlRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.val;

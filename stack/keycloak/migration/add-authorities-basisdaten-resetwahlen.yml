@@ -1,4 +1,4 @@
-id: add authorities basisdaten resetwahlen
+id: add authorities basisdaten wahlen
 author: Nic12345678
 realm: ${SSO_REALM}
 changes:

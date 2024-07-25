@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.resetwahlen;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.WahlRepository;
@@ -22,10 +22,10 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-public class ResetWahlenServiceSecurityTest {
+public class WahlenServiceSecurityTest {
 
     @Autowired
-    ResetWahlenService resetWahlenService;
+    WahlenService wahlenService;
 
     @Autowired
     WahlRepository wahlRepository;
@@ -43,13 +43,13 @@ public class ResetWahlenServiceSecurityTest {
         @Test
         void accessGranted() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_RESET_WAHLEN);
-            Assertions.assertThatNoException().isThrownBy(() -> resetWahlenService.resetWahlen());
+            Assertions.assertThatNoException().isThrownBy(() -> wahlenService.resetWahlen());
         }
 
         @Test
         void accessDeniedWhenServiceAuthoritiyIsMissing() {
             SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHL, Authorities.REPOSITORY_WRITE_WAHL);
-            Assertions.assertThatThrownBy(() -> resetWahlenService.resetWahlen()).isInstanceOf(AccessDeniedException.class);
+            Assertions.assertThatThrownBy(() -> wahlenService.resetWahlen()).isInstanceOf(AccessDeniedException.class);
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")
@@ -58,15 +58,16 @@ public class ResetWahlenServiceSecurityTest {
             ArrayList<String> mList = new ArrayList<>(Arrays.asList(argumentsAccessor.get(0, String[].class)));
             mList.add(Authorities.SERVICE_RESET_WAHLEN);
             String[] strArray = new String[mList.size()];
-            for(int i = 0; i < mList.size(); i++) {
+            for (int i = 0; i < mList.size(); i++) {
                 strArray[i] = mList.get(i);
             }
             SecurityUtils.runWith(strArray);
-            Assertions.assertThatThrownBy(() -> resetWahlenService.resetWahlen()).isInstanceOf(TechnischeWlsException.class);
+            Assertions.assertThatThrownBy(() -> wahlenService.resetWahlen()).isInstanceOf(TechnischeWlsException.class);
         }
 
         private static Stream<Arguments> getMissingRepoAuthoritiesVariations() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(new String[]{Authorities.REPOSITORY_WRITE_WAHL, Authorities.REPOSITORY_READ_WAHL});
+            return SecurityUtils
+                    .buildArgumentsForMissingAuthoritiesVariations(new String[] { Authorities.REPOSITORY_WRITE_WAHL, Authorities.REPOSITORY_READ_WAHL });
         }
     }
 }

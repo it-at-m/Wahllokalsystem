@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.resetwahlen;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Farbe;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahl;
@@ -18,13 +18,13 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class ResetWahlenServiceTest {
+class WahlenServiceTest {
 
     @Mock
     WahlRepository wahlRepository;
 
     @InjectMocks
-    ResetWahlenService unitUnderTest;
+    WahlenService unitUnderTest;
 
     @Nested
     class ResetWahlen {

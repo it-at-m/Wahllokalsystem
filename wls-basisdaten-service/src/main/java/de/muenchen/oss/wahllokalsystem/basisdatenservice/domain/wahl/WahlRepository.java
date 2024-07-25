@@ -8,10 +8,8 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 
 @PreAuthorize("hasAuthority('Basisdaten_READ_Wahl')")
-@Transactional
 public interface WahlRepository extends CrudRepository<Wahl, String> {
 
     String CACHE = "WAHL_CACHE";

@@ -15,17 +15,17 @@ import lombok.NoArgsConstructor;
 public class Farbe {
 
     @NotNull
-    @Min((long) 0.0)
-    @Max((long) 255.0)
+    @Min(0)
+    @Max(255)
     private long r;
 
     @NotNull
-    @Min((long) 0.0)
-    @Max((long) 255.0)
+    @Min(0)
+    @Max(255)
     private long g;
 
     @NotNull
-    @Min((long) 0.0)
-    @Max((long) 255.0)
+    @Min(0)
+    @Max(255)
     private long b;
 }

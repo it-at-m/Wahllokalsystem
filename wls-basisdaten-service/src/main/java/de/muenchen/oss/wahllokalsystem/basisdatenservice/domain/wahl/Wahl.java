@@ -41,7 +41,7 @@ public class Wahl {
     private long reihenfolge;
 
     @NotNull
-    @Min((long) 1.0)
+    @Min(1)
     private long waehlerverzeichnisnummer;
 
     @NotNull

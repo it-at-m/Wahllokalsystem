@@ -5,6 +5,6 @@ import java.util.List;
 
 public interface WahlClient {
 
-    List<WahlModel> getWahlen() throws WlsException;
+    List<WahlModel> getWahlen(java.time.LocalDate wahltag, String nummer) throws WlsException;
 
 }

@@ -1,17 +1,19 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahl;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahl;
+import java.util.List;
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 @Mapper(collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
 public interface WahlModelMapper {
 
-    @Mapping(target = "wahl", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    Wahl toEntity(WahlModel wahlModel);
+    List<Wahl> toEntity(List <WahlModel> wahlModel);
 
-    WahlModel toModel(Wahl entity);
+    List <WahlModel> toModel(List <Wahl> entity);
+
+    Wahl toEntity (WahlModel wahlModel);
+
+    Wahl toModel (Wahl entity);
 
 }

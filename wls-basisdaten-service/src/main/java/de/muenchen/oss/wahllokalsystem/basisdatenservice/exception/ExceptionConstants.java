@@ -41,4 +41,7 @@ public class ExceptionConstants {
     public static ExceptionDataWrapper POSTUNGUELTIGEWS_SPEICHERN_NICHT_ERFOLGREICH = new ExceptionDataWrapper("346",
             "postUngueltigews: Das speichern der ungueltigen Wahlscheine war nicht erfolgreich.");
 
+    public static ExceptionDataWrapper WAHL_SPEICHERN_FEHLGESCHLAGEN = new ExceptionDataWrapper("351",
+            "postUngueltigeWahl: Das Speichern der Wahl ist fehlgeschlagen");
+
 }

@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.referendumvorlage;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.referendumvorlagen;
 
 import jakarta.validation.constraints.NotNull;
 

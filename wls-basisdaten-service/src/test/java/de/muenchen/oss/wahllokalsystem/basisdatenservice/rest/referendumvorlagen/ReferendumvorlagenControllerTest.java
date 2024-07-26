@@ -2,9 +2,9 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.referendumvorlage
 
 import static org.mockito.ArgumentMatchers.eq;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlageService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenReferenceModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenService;
 import java.util.Collections;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -17,16 +17,16 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class ReferendumvorlageControllerTest {
+class ReferendumvorlagenControllerTest {
 
     @Mock
-    ReferendumvorlageService referendumvorlageService;
+    ReferendumvorlagenService referendumvorlagenService;
 
     @Mock
     ReferendumvorlagenDTOMapper referendumvorlagenDTOMapper;
 
     @InjectMocks
-    ReferendumvorlageController unitUnderTest;
+    ReferendumvorlagenController unitUnderTest;
 
     @Nested
     class GetReferendumvorlagen {
@@ -42,7 +42,7 @@ class ReferendumvorlageControllerTest {
 
             Mockito.when(referendumvorlagenDTOMapper.toModel(eq(wahlbezirkID), eq(wahlID))).thenReturn(mockedReferenceModel);
             Mockito.when(referendumvorlagenDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
-            Mockito.when(referendumvorlageService.getReferendumvorlagen(mockedReferenceModel)).thenReturn(mockedServiceResponse);
+            Mockito.when(referendumvorlagenService.getReferendumvorlagen(mockedReferenceModel)).thenReturn(mockedServiceResponse);
 
             val result = unitUnderTest.getReferendumvorlagen(wahlID, wahlbezirkID);
 

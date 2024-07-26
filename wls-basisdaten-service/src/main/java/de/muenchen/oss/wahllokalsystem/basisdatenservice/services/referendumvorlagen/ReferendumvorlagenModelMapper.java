@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
-public interface ReferendumvorlageModelMapper {
+public interface ReferendumvorlagenModelMapper {
 
     BezirkUndWahlID toBezirkUndWahlID(ReferendumvorlagenReferenceModel referendumvorlagenReferenceModel);
 

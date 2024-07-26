@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.referendumvorlagen;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlageService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/businessActions/referendumvorlagen")
 @RequiredArgsConstructor
-public class ReferendumvorlageController {
+public class ReferendumvorlagenController {
 
-    private final ReferendumvorlageService referendumvorlageService;
+    private final ReferendumvorlagenService referendumvorlagenService;
 
     private final ReferendumvorlagenDTOMapper referendumvorlagenDTOMapper;
 
@@ -42,6 +42,6 @@ public class ReferendumvorlageController {
     @GetMapping("{wahlID}/{wahlbezirkID}")
     public ReferendumvorlagenDTO getReferendumvorlagen(@PathVariable("wahlID") final String wahlID, @PathVariable("wahlbezirkID") final String wahlbezirkID) {
         return referendumvorlagenDTOMapper.toDTO(
-                referendumvorlageService.getReferendumvorlagen(referendumvorlagenDTOMapper.toModel(wahlbezirkID, wahlID)));
+                referendumvorlagenService.getReferendumvorlagen(referendumvorlagenDTOMapper.toModel(wahlbezirkID, wahlID)));
     }
 }

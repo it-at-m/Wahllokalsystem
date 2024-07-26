@@ -14,11 +14,11 @@ import org.springframework.transaction.support.TransactionTemplate;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ReferendumvorlageService {
+public class ReferendumvorlagenService {
 
-    private final ReferendumvorlageValidator referendumvorlageValidator;
+    private final ReferendumvorlagenValidator referendumvorlagenValidator;
 
-    private final ReferendumvorlageModelMapper referendumvorlageModelMapper;
+    private final ReferendumvorlagenModelMapper referendumvorlagenModelMapper;
 
     private final ReferendumvorlagenClient referendumvorlagenClient;
 
@@ -31,15 +31,15 @@ public class ReferendumvorlageService {
     public ReferendumvorlagenModel getReferendumvorlagen(final ReferendumvorlagenReferenceModel referendumvorlagenReferenceModel) {
         log.info("#getReferendumvorlagen");
 
-        referendumvorlageValidator.validReferumvorlageReferenceModelOrThrow(referendumvorlagenReferenceModel);
+        referendumvorlagenValidator.validReferumvorlageReferenceModelOrThrow(referendumvorlagenReferenceModel);
 
-        val referendumBezirkUndWahlID = referendumvorlageModelMapper.toBezirkUndWahlID(referendumvorlagenReferenceModel);
+        val referendumBezirkUndWahlID = referendumvorlagenModelMapper.toBezirkUndWahlID(referendumvorlagenReferenceModel);
         val existingReferendumvorlagen = referendumvorlagenRepository.findByBezirkUndWahlID(referendumBezirkUndWahlID);
 
         if (existingReferendumvorlagen.isEmpty()) {
             return cacheReferendumvorlagen(referendumvorlagenReferenceModel, referendumBezirkUndWahlID);
         } else {
-            return referendumvorlageModelMapper.toModel(existingReferendumvorlagen.get());
+            return referendumvorlagenModelMapper.toModel(existingReferendumvorlagen.get());
         }
     }
 
@@ -47,7 +47,7 @@ public class ReferendumvorlageService {
             BezirkUndWahlID referendumBezirkUndWahlID) {
         val importedReferendumvorlagen = referendumvorlagenClient.getReferendumvorlagen(referendumvorlagenReferenceModel);
 
-        val entitiesToSave = referendumvorlageModelMapper.toEntity(importedReferendumvorlagen, referendumBezirkUndWahlID);
+        val entitiesToSave = referendumvorlagenModelMapper.toEntity(importedReferendumvorlagen, referendumBezirkUndWahlID);
         saveReferendumvorlagen(entitiesToSave);
 
         return importedReferendumvorlagen;

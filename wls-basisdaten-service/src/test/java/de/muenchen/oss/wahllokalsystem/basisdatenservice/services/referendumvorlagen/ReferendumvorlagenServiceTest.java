@@ -28,13 +28,13 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionTemplate;
 
 @ExtendWith(MockitoExtension.class)
-class ReferendumvorlageServiceTest {
+class ReferendumvorlagenServiceTest {
 
     @Mock
-    ReferendumvorlageValidator referendumvorlageValidator;
+    ReferendumvorlagenValidator referendumvorlagenValidator;
 
     @Mock
-    ReferendumvorlageModelMapper referendumvorlageModelMapper;
+    ReferendumvorlagenModelMapper referendumvorlagenModelMapper;
 
     @Mock
     ReferendumvorlagenClient referendumvorlagenClient;
@@ -54,7 +54,7 @@ class ReferendumvorlageServiceTest {
     };
 
     @InjectMocks
-    ReferendumvorlageService unitUnderTest;
+    ReferendumvorlagenService unitUnderTest;
 
     @RegisterExtension
     public LoggerExtension loggerExtension = new LoggerExtension();
@@ -72,8 +72,8 @@ class ReferendumvorlageServiceTest {
             val mockedClientRerefendumvorlagenModel = new ReferendumvorlagenModel("szgID", Collections.emptySet());
             val mockedMappendModelAsEntity = new Referendumvorlagen(UUID.randomUUID(), mockedBezirkUndWahlID, "szgID", Collections.emptySet());
 
-            Mockito.when(referendumvorlageModelMapper.toBezirkUndWahlID(referendumvorlagenReference)).thenReturn(mockedBezirkUndWahlID);
-            Mockito.when(referendumvorlageModelMapper.toEntity(eq(mockedClientRerefendumvorlagenModel), eq(mockedBezirkUndWahlID)))
+            Mockito.when(referendumvorlagenModelMapper.toBezirkUndWahlID(referendumvorlagenReference)).thenReturn(mockedBezirkUndWahlID);
+            Mockito.when(referendumvorlagenModelMapper.toEntity(eq(mockedClientRerefendumvorlagenModel), eq(mockedBezirkUndWahlID)))
                     .thenReturn(mockedMappendModelAsEntity);
             Mockito.when(referendumvorlagenRepository.findByBezirkUndWahlID(mockedBezirkUndWahlID)).thenReturn(Optional.empty());
             Mockito.when(referendumvorlagenClient.getReferendumvorlagen(referendumvorlagenReference)).thenReturn(mockedClientRerefendumvorlagenModel);
@@ -96,8 +96,8 @@ class ReferendumvorlageServiceTest {
             val mockedRepoEntity = new Referendumvorlagen(UUID.randomUUID(), mockedBezirkUndWahlID, "szgID", Collections.emptySet());
             val mockedRepoEntityAsModel = new ReferendumvorlagenModel("szgID", Collections.emptySet());
 
-            Mockito.when(referendumvorlageModelMapper.toBezirkUndWahlID(referendumvorlagenReference)).thenReturn(mockedBezirkUndWahlID);
-            Mockito.when(referendumvorlageModelMapper.toModel(mockedRepoEntity)).thenReturn(mockedRepoEntityAsModel);
+            Mockito.when(referendumvorlagenModelMapper.toBezirkUndWahlID(referendumvorlagenReference)).thenReturn(mockedBezirkUndWahlID);
+            Mockito.when(referendumvorlagenModelMapper.toModel(mockedRepoEntity)).thenReturn(mockedRepoEntityAsModel);
             Mockito.when(referendumvorlagenRepository.findByBezirkUndWahlID(mockedBezirkUndWahlID)).thenReturn(Optional.of(mockedRepoEntity));
 
             val result = unitUnderTest.getReferendumvorlagen(referendumvorlagenReference);
@@ -118,8 +118,8 @@ class ReferendumvorlageServiceTest {
             val mockedMappendModelAsEntity = new Referendumvorlagen(UUID.randomUUID(), mockedBezirkUndWahlID, "szgID", Collections.emptySet());
             val mockedRepoException = new RuntimeException("saving failed");
 
-            Mockito.when(referendumvorlageModelMapper.toBezirkUndWahlID(referendumvorlagenReference)).thenReturn(mockedBezirkUndWahlID);
-            Mockito.when(referendumvorlageModelMapper.toEntity(eq(mockedClientRerefendumvorlagenModel), eq(mockedBezirkUndWahlID)))
+            Mockito.when(referendumvorlagenModelMapper.toBezirkUndWahlID(referendumvorlagenReference)).thenReturn(mockedBezirkUndWahlID);
+            Mockito.when(referendumvorlagenModelMapper.toEntity(eq(mockedClientRerefendumvorlagenModel), eq(mockedBezirkUndWahlID)))
                     .thenReturn(mockedMappendModelAsEntity);
             Mockito.when(referendumvorlagenRepository.findByBezirkUndWahlID(mockedBezirkUndWahlID)).thenReturn(Optional.empty());
             Mockito.when(referendumvorlagenClient.getReferendumvorlagen(referendumvorlagenReference)).thenReturn(mockedClientRerefendumvorlagenModel);

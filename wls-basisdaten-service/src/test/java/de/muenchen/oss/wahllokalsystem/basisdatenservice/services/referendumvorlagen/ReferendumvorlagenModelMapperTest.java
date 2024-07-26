@@ -12,9 +12,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
-class ReferendumvorlageModelMapperTest {
+class ReferendumvorlagenModelMapperTest {
 
-    private final ReferendumvorlageModelMapper unitUnderTest = Mappers.getMapper(ReferendumvorlageModelMapper.class);
+    private final ReferendumvorlagenModelMapper unitUnderTest = Mappers.getMapper(ReferendumvorlagenModelMapper.class);
 
     @Nested
     class ToBezirkUndWahlID {

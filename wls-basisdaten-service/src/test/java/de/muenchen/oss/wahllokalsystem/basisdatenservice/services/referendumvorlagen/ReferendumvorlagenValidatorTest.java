@@ -14,13 +14,13 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class ReferendumvorlageValidatorTest {
+class ReferendumvorlagenValidatorTest {
 
     @Mock
     ExceptionFactory exceptionFactory;
 
     @InjectMocks
-    ReferendumvorlageValidator unitUnderTest;
+    ReferendumvorlagenValidator unitUnderTest;
 
     @Nested
     class ValidReferumvorlageReferenceModelOrThrow {

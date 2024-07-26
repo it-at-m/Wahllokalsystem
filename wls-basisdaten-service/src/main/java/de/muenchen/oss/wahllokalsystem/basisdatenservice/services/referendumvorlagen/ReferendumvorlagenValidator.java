@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ReferendumvorlageValidator {
+public class ReferendumvorlagenValidator {
 
     private final ExceptionFactory exceptionFactory;
 

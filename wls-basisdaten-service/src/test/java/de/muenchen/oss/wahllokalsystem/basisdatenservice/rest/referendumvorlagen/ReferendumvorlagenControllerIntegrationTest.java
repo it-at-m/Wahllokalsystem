@@ -14,9 +14,9 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlag
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.ReferendumoptionDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.ReferendumvorlageDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlageModelMapper;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlageValidator;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenModelMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenReferenceModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenValidator;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
@@ -47,7 +47,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @AutoConfigureMockMvc
 @AutoConfigureWireMock
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
-public class ReferendumvorlageControllerIntegrationTest {
+public class ReferendumvorlagenControllerIntegrationTest {
 
     public static final String BUSINESS_ACTIONS_REFERENDUMVORLAGEN = "/businessActions/referendumvorlagen/";
 
@@ -70,13 +70,13 @@ public class ReferendumvorlageControllerIntegrationTest {
     ReferendumvorlagenClientMapper referendumvorlagenClientMapper;
 
     @Autowired
-    ReferendumvorlageModelMapper referendumvorlageModelMapper;
+    ReferendumvorlagenModelMapper referendumvorlagenModelMapper;
 
     @Autowired
     ReferendumvorlagenDTOMapper referendumvorlagenDTOMapper;
 
     @SpyBean
-    ReferendumvorlageValidator referendumvorlageValidator;
+    ReferendumvorlagenValidator referendumvorlagenValidator;
 
     @AfterEach
     void tearDown() {
@@ -119,7 +119,7 @@ public class ReferendumvorlageControllerIntegrationTest {
 
             val referendumvorlagenEntity = referendumvorlagenRepository.findByBezirkUndWahlID(new BezirkUndWahlID(wahlID, wahlbezirkID)).get();
 
-            val expectedEntity = referendumvorlageModelMapper.toEntity(referendumvorlagenClientMapper.toModel(eaiReferendumvorschlage),
+            val expectedEntity = referendumvorlagenModelMapper.toEntity(referendumvorlagenClientMapper.toModel(eaiReferendumvorschlage),
                     new BezirkUndWahlID(wahlID, wahlbezirkID));
             val ignoreableFieldOfIdsAndParenEntityRefs = new String[] { "id", "referendumvorlagen.id", "referendumvorlagen.referendumvorlagen" };
             Assertions.assertThat(referendumvorlagenEntity).usingRecursiveComparison().ignoringCollectionOrder()
@@ -169,7 +169,7 @@ public class ReferendumvorlageControllerIntegrationTest {
             val mockedWlsExceptionService = "mockedServiceID";
             val mockedValidationException = FachlicheWlsException.withCode(mockedWlsExceptionCode).inService(mockedWlsExceptionService)
                     .buildWithMessage(mockedWlsExceptionMessage);
-            Mockito.doThrow(mockedValidationException).when(referendumvorlageValidator)
+            Mockito.doThrow(mockedValidationException).when(referendumvorlagenValidator)
                     .validReferumvorlageReferenceModelOrThrow(new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID));
 
             val request = MockMvcRequestBuilders.get(BUSINESS_ACTIONS_REFERENDUMVORLAGEN + wahlID + "/" + wahlbezirkID);

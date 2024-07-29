@@ -10,7 +10,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class ResetWahlenControllerTest {
+class WahlenControllerTest {
 
     @Mock
     WahlenService wahlenService;

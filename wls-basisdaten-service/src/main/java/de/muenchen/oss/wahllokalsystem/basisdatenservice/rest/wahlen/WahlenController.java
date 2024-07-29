@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/businessActions/resetWahlen")
 @RequiredArgsConstructor
 @Slf4j
-public class ResetWahlenController {
+public class WahlenController {
 
     private final WahlenService wahlenService;
 

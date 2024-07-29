@@ -33,7 +33,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @AutoConfigureMockMvc
 @AutoConfigureWireMock
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
-public class ResetWahlenControllerIntegrationTest {
+public class WahlenControllerIntegrationTest {
 
     @Value("${service.info.oid}")
     String serviceID;
@@ -68,7 +68,7 @@ public class ResetWahlenControllerIntegrationTest {
             val request = MockMvcRequestBuilders.post("/businessActions/resetWahlen");
             mockMvc.perform(request).andExpect(status().isOk());
 
-            val expectedResetedWahlen = createWahlEntities().stream().map((ResetWahlenControllerIntegrationTest.this::resetWahl)).toList();
+            val expectedResetedWahlen = createWahlEntities().stream().map((WahlenControllerIntegrationTest.this::resetWahl)).toList();
 
             SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHL);
             val savedWahlen = wahlRepository.findAll();

@@ -1,7 +1,7 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahl;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Farbe;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Farbe;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart;
 import jakarta.validation.constraints.NotNull;
 
 public record WahlModel(@NotNull String name,

@@ -1,11 +1,5 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,16 +9,17 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.stereotype.Indexed;
 
 @Entity
-@Embeddable
+@Indexed
 @Data
-@ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
@@ -32,35 +27,23 @@ import lombok.ToString;
 public class Wahl {
 
     @Id
-    @Column(name = "wahlID")
     @NotNull
     @Size(max = 1024)
     private String wahlID;
 
-
-    @Column(name = "name")
-    @NotNull
     @Size(max = 255)
     private String name;
 
-
-    @Column(name = "reihenfolge")
     @NotNull
     private long reihenfolge;
 
-
-    @Column(name = "waehlerverzeichnisNummer")
     @NotNull
-    @Min((long) 1.0)
-    private long waehlerverzeichnisNummer;
+    @Min(1)
+    private long waehlerverzeichnisnummer;
 
-    @Column(name = "wahltag")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
     @NotNull
-    private java.time.LocalDate wahltag;
+    private LocalDate wahltag;
 
-    @Column(name = "wahlart")
     @Enumerated(EnumType.STRING)
     @NotNull
     private Wahlart wahlart;
@@ -68,8 +51,6 @@ public class Wahl {
     @Embedded
     private Farbe farbe;
 
-    @Column(name = "nummer")
     @Size(max = 255)
     private String nummer;
 }
-

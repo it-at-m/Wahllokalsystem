@@ -2,10 +2,10 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.client.WahldatenControllerApi;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahl.WahlDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahl.WahlClient;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahl.WahlModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenClient;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.List;
 import java.util.Set;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
 @RequiredArgsConstructor
 @Slf4j
-public class WahlClientImpl implements WahlClient {
+public class WahlenClientImpl implements WahlenClient {
 
     private final ExceptionFactory exceptionFactory;
 
@@ -26,18 +26,17 @@ public class WahlClientImpl implements WahlClient {
     private final WahlClientMapper wahlClientMapper;
 
     @Override
-    public List<WahlModel> getWahlen(java.time.LocalDate wahltag, String nummer) {
-        final Set <WahlDTO> wahlDTO;
+    public List<WahlModel> getWahlen(java.time.LocalDate wahltag, String wahltagNummer) {
+        final Set <WahlDTO> wahlDTOs;
         try {
-            wahlDTO = (Set<WahlDTO>) wahldatenControllerApi.loadWahlen(wahltag, nummer);
+            wahlDTOs = wahldatenControllerApi.loadWahlen(wahltag, wahltagNummer);
         } catch (final Exception exception) {
             log.info("exception on loadwahl from external", exception);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
         }
-        if (wahlDTO == null) {
+        if (wahlDTOs == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.NULL_FROM_CLIENT);
         }
-
-        return wahlClientMapper.fromRemoteClientSetOfWahlDTOtoListOfWahlModel(wahlDTO);
+        return wahlClientMapper.fromRemoteClientSetOfWahlDTOtoListOfWahlModel(wahlDTOs);
     }
 }

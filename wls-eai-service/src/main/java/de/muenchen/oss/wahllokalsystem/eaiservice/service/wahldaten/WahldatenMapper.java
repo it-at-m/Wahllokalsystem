@@ -25,21 +25,21 @@ public interface WahldatenMapper {
     WahlDTO toDTO(Wahl wahl);
 
     @Mapping(target = "identifikator", source = "id")
-    @Mapping(target = "wahltag", source = "stimmzettelgebiet.wahl.wahltag.tag")
-    @Mapping(target = "wahlID", source = "stimmzettelgebiet.wahl.id")
-    @Mapping(target = "wahlnummer", source = "stimmzettelgebiet.wahl.wahltag.nummer")
+    @Mapping(target = "wahltag", source = "stimmzettelgebiet.wahlen.wahltag.tag")
+    @Mapping(target = "wahlID", source = "stimmzettelgebiet.wahlen.id")
+    @Mapping(target = "wahlnummer", source = "stimmzettelgebiet.wahlen.wahltag.nummer")
     WahlbezirkDTO toDTO(Wahlbezirk wahlbezirk);
 
     @Mapping(target = "identifikator", source = "id")
-    @Mapping(target = "wahltag", source = "wahl.wahltag.tag")
+    @Mapping(target = "wahltag", source = "wahlen.wahltag.tag")
     StimmzettelgebietDTO toDTO(Stimmzettelgebiet stimmzettelgebiet);
 
-    @Mapping(target = "wahlID", source = "stimmzettelgebiet.wahl.id")
+    @Mapping(target = "wahlID", source = "stimmzettelgebiet.wahlen.id")
     @Mapping(target = "wahlbezirkID", source = "id")
     WahlberechtigteDTO toWahlberechtigteDTO(Wahlbezirk wahlbezirk);
 
-    @Mapping(target = "wahlID", source = "stimmzettelgebiet.wahl.id")
-    @Mapping(target = "wahltag", source = "stimmzettelgebiet.wahl.wahltag.tag")
+    @Mapping(target = "wahlID", source = "stimmzettelgebiet.wahlen.id")
+    @Mapping(target = "wahltag", source = "stimmzettelgebiet.wahlen.wahltag.tag")
     @Mapping(target = "wahlbezirkID", source = "id")
     @Mapping(target = "stimmzettelgebietID", source = "stimmzettelgebiet.id")
     BasisstrukturdatenDTO toBasisstrukturdatenDTO(Wahlbezirk wahlbezirk);

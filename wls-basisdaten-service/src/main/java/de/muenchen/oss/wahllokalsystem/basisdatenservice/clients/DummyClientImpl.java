@@ -1,12 +1,12 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
-import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlart.BTW;
-import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlart.EUW;
-import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlart.LTW;
+import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart.BTW;
+import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart.EUW;
+import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart.LTW;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration.Profiles;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Farbe;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahl.WahlClient;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahl.WahlModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Farbe;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenClient;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.KandidatModel;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Profile(Profiles.DUMMY_CLIENTS)
-public class DummyClientImpl implements WahlvorschlaegeClient, WahltageClient, WahlClient {
+public class DummyClientImpl implements WahlvorschlaegeClient, WahltageClient, WahlenClient {
 
     @Override
     public WahlvorschlaegeModel getWahlvorschlaege(BezirkUndWahlID bezirkUndWahlID) {
@@ -47,10 +47,10 @@ public class DummyClientImpl implements WahlvorschlaegeClient, WahltageClient, W
     }
 
     @Override
-    public List<WahlModel> getWahlen(LocalDate wahltag, String nummer) throws WlsException {
+    public List<WahlModel> getWahlen(LocalDate wahltag, String wahltagNummer) throws WlsException {
         return List.of(
-                new WahlModel("wahl1", "0", 1, LocalDate.now().plusMonths(2), BTW, new Farbe(), nummer),
-                new WahlModel("wahl2", "1", 2, LocalDate.now().minusMonths(2), EUW, new Farbe(), nummer),
-                new WahlModel("wahl3", "2", 3, LocalDate.now().plusMonths(1), LTW, new Farbe(), nummer));
+                new WahlModel("wahl1", "0", 1, wahltag, BTW, new Farbe(), "0"),
+                new WahlModel("wahl2", "1", 2, wahltag, EUW, new Farbe(), "1"),
+                new WahlModel("wahl3", "2", 3, wahltag, LTW, new Farbe(), "2"));
     }
 }

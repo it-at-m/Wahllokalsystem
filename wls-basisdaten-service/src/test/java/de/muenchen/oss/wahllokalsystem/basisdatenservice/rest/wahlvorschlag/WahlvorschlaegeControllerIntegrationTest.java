@@ -96,7 +96,7 @@ public class WahlvorschlaegeControllerIntegrationTest {
             val wahlbezirkID = "wahlbezirkID";
 
             val eaiWahlvorschlaege = createClientWahlvorschlaegeDTO(wahlID, wahlbezirkID);
-            WireMock.stubFor(WireMock.get("/vorschlaege/wahl/" + wahlID + "/" + wahlbezirkID)
+            WireMock.stubFor(WireMock.get("/vorschlaege/wahlen/" + wahlID + "/" + wahlbezirkID)
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(eaiWahlvorschlaege))));
 
@@ -117,7 +117,7 @@ public class WahlvorschlaegeControllerIntegrationTest {
             val wahlbezirkID = "wahlbezirkID";
 
             val eaiWahlvorschlaege = createClientWahlvorschlaegeDTO(wahlID, wahlbezirkID);
-            WireMock.stubFor(WireMock.get("/vorschlaege/wahl/" + wahlID + "/" + wahlbezirkID)
+            WireMock.stubFor(WireMock.get("/vorschlaege/wahlen/" + wahlID + "/" + wahlbezirkID)
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(eaiWahlvorschlaege))));
 
@@ -164,7 +164,7 @@ public class WahlvorschlaegeControllerIntegrationTest {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
 
-            WireMock.stubFor(WireMock.get("/vorschlaege/wahl/" + wahlID + "/" + wahlbezirkID)
+            WireMock.stubFor(WireMock.get("/vorschlaege/wahlen/" + wahlID + "/" + wahlbezirkID)
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.NOT_FOUND.value())));
 
             val request = MockMvcRequestBuilders.get("/businessActions/wahlvorschlaege/" + wahlID + "/" + wahlbezirkID);

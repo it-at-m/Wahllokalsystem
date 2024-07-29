@@ -44,4 +44,9 @@ public class ExceptionConstants {
     public static ExceptionDataWrapper WAHL_SPEICHERN_FEHLGESCHLAGEN = new ExceptionDataWrapper("351",
             "postUngueltigeWahl: Das Speichern der Wahl ist fehlgeschlagen");
 
+    public static ExceptionDataWrapper CODE_GETWAHLEN_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("314",
+            "getWahlen: Der Wahltag zu den gesuchten Wahlen existiert nicht.");
+    public static ExceptionDataWrapper CODE_GETWAHLBEZIRKE_NO_WAHLTAG = new ExceptionDataWrapper("313",
+            "getWahlen: Es wurde kein Wahltag zu dieser WahltagID gefunden. Bitte legen Sie die Basisdaten an.");
+
 }

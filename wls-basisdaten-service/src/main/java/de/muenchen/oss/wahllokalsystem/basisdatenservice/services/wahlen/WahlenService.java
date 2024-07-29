@@ -36,10 +36,9 @@ public class WahlenService {
         }
     }
 
-    private Wahl resetWahl(final Wahl wahl) {
+    private void resetWahl(final Wahl wahl) {
         wahl.setFarbe(new Farbe(0, 0, 0));
         wahl.setReihenfolge(0);
         wahl.setWaehlerverzeichnisnummer(1);
-        return wahl;
     }
 }

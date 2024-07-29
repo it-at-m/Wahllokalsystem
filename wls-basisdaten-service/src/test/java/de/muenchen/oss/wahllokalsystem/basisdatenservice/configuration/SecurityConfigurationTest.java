@@ -8,9 +8,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch.HandbuchService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.ungueltigewahlscheine.UngueltigeWahlscheineService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -44,6 +45,9 @@ class SecurityConfigurationTest {
 
     @MockBean
     UngueltigeWahlscheineService ungueltigeWahlscheineService;
+
+    @MockBean
+    ReferendumvorlagenService referendumvorlagenService;
 
     @Test
     void accessSecuredResourceRootThenUnauthorized() throws Exception {
@@ -172,6 +176,22 @@ class SecurityConfigurationTest {
         @WithMockUser
         void accessPostUngueltigeWahlscheineAuthorizedThenOk() throws Exception {
             api.perform(multipart("/businessActions/ungueltigews/wahlID/UWB").file("manual", "content".getBytes()).with(csrf())).andExpect(status().isOk());
+        }
+    }
+
+    @Nested
+    class Referendumvorlagen {
+
+        @Test
+        @WithAnonymousUser
+        void accessGetReferendumvorlagenUnauthorizedThenUnauthorized() throws Exception {
+            api.perform(get("/businessActions/referendumvorlagen/wahlID/wahlbezirkID")).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void accessGetReferendumvorlagenAuthorizedThenOk() throws Exception {
+            api.perform(get("/businessActions/referendumvorlagen/wahlID/wahlbezirkID")).andExpect(status().isOk());
         }
     }
 

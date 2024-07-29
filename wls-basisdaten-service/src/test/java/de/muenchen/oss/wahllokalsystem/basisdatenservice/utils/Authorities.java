@@ -17,6 +17,8 @@ public class Authorities {
     public static final String SERVICE_GET_UNGUELTIGEWAHLSCHEINE = "Basisdaten_BUSINESSACTION_GetUngueltigews";
     public static final String SERVICE_POST_UNGUELTIGEWAHLSCHEINE = "Basisdaten_BUSINESSACTION_PostUngueltigews";
 
+    public static final String SERVICE_GET_REFERENDUMVORLAGEN = "Basisdaten_BUSINESSACTION_GetReferendumvorlagen";
+
     public static final String REPOSITORY_READ_WAHLVORSCHLAEGE = "Basisdaten_READ_WLSWahlvorschlaege";
     public static final String REPOSITORY_DELETE_WAHLVORSCHLAEGE = "Basisdaten_DELETE_WLSWahlvorschlaege";
     public static final String REPOSITORY_WRITE_WAHLVORSCHLAEGE = "Basisdaten_WRITE_WLSWahlvorschlaege";
@@ -45,7 +47,15 @@ public class Authorities {
     public static final String REPOSITORY_WRITE_UNGUELTIGEWAHLSCHEINE = "Basisdaten_WRITE_Ungueltigews";
     public static final String REPOSITORY_DELETE_UNGUELTIGEWAHLSCHEINE = "Basisdaten_DELETE_Ungueltigews";
 
-    public static final String[] ALL_AUTHORITIES_GET_WAHLVORSCHLAEGE = {
+    public static final String REPOSITORY_READ_REFERENDUMVORLAGEN = "Basisdaten_READ_Referendumvorlagen";
+    public static final String REPOSITORY_WRITE_REFERENDUMVORLAGEN = "Basisdaten_WRITE_Referendumvorlagen";
+    public static final String REPOSITORY_DELETE_REFERENDUMVORLAGEN = "Basisdaten_DELETE_Referendumvorlagen";
+
+    public static final String REPOSITORY_READ_REFERENDUMVORLAGE = "Basisdaten_READ_Referendumvorlage";
+    public static final String REPOSITORY_WRITE_REFERENDUMVORLAGE = "Basisdaten_WRITE_Referendumvorlage";
+    public static final String REPOSITORY_DELETE_REFERENDUMVORLAGE = "Basisdaten_DELETE_Referendumvorlage";
+
+    public static final String[] ALL_AUTHORITIES_GET_WAHLVORSCHLAEGE = new String[] {
             SERVICE_GET_WAHLVORSCHLAEGE,
             REPOSITORY_READ_WAHLVORSCHLAEGE,
             REPOSITORY_WRITE_WAHLVORSCHLAEGE,
@@ -99,6 +109,13 @@ public class Authorities {
     public static final String[] ALL_AUTHORITIES_POST_UNGUELTIGEWAHLSCHEINE = {
             SERVICE_POST_UNGUELTIGEWAHLSCHEINE,
             REPOSITORY_WRITE_UNGUELTIGEWAHLSCHEINE
+    };
+
+    public static final String[] ALL_AUTHORITIES_GET_REFERENDUMVORLAGEN = {
+            SERVICE_GET_REFERENDUMVORLAGEN,
+            REPOSITORY_READ_REFERENDUMVORLAGEN,
+            REPOSITORY_WRITE_REFERENDUMVORLAGEN,
+            REPOSITORY_WRITE_REFERENDUMVORLAGE
     };
 
 }

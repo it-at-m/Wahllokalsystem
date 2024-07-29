@@ -5,9 +5,8 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.WahlReposit
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.stream.Stream;
+import org.apache.commons.lang3.ArrayUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -55,13 +54,7 @@ public class WahlenServiceSecurityTest {
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingRepoAuthoritiesVariations")
         void technischeWlsExceptionWhenRepoAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) {
-            ArrayList<String> mList = new ArrayList<>(Arrays.asList(argumentsAccessor.get(0, String[].class)));
-            mList.add(Authorities.SERVICE_RESET_WAHLEN);
-            String[] strArray = new String[mList.size()];
-            for (int i = 0; i < mList.size(); i++) {
-                strArray[i] = mList.get(i);
-            }
-            SecurityUtils.runWith(strArray);
+            SecurityUtils.runWith(ArrayUtils.add(argumentsAccessor.get(0, String[].class), Authorities.SERVICE_RESET_WAHLEN));
             Assertions.assertThatThrownBy(() -> wahlenService.resetWahlen()).isInstanceOf(TechnischeWlsException.class);
         }
 

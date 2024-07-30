@@ -35,7 +35,7 @@ changes:
       clientId: ${SSO_CLIENT_ID}
   - assignRoleToGroup:
       group: allBasisdatenAuthorities
-      role: Basisdaten_READ_Wahlen
+      role: Basisdaten_READ_Wahl
       clientId: ${SSO_CLIENT_ID}
 
   - addRole:

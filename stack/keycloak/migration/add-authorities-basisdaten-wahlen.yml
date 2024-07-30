@@ -1,7 +1,25 @@
 id: add authorities basisdaten wahlen
-author: Nic12345678
+author: GerhardPx
 realm: ${SSO_REALM}
 changes:
+  - addRole:
+      name: Basisdaten_BUSINESSACTION_GetWahlen
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_BUSINESSACTION_GetWahlen
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Basisdaten_BUSINESSACTION_PostWahlen
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_BUSINESSACTION_PostWahlen
+      clientId: ${SSO_CLIENT_ID}
+
   - addRole:
       name: Basisdaten_BUSINESSACTION_ResetWahlen
       clientRole: true
@@ -17,8 +35,9 @@ changes:
       clientId: ${SSO_CLIENT_ID}
   - assignRoleToGroup:
       group: allBasisdatenAuthorities
-      role: Basisdaten_READ_Wahl
+      role: Basisdaten_READ_Wahlen
       clientId: ${SSO_CLIENT_ID}
+
   - addRole:
       name: Basisdaten_WRITE_Wahl
       clientRole: true
@@ -27,6 +46,7 @@ changes:
       group: allBasisdatenAuthorities
       role: Basisdaten_WRITE_Wahl
       clientId: ${SSO_CLIENT_ID}
+
   - addRole:
       name: Basisdaten_DELETE_Wahl
       clientRole: true
@@ -35,3 +55,4 @@ changes:
       group: allBasisdatenAuthorities
       role: Basisdaten_DELETE_Wahl
       clientId: ${SSO_CLIENT_ID}
+

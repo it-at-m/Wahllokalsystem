@@ -11,6 +11,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,6 +27,7 @@ public class KopfdatenService {
     private final WahldatenClient wahldatenClient;
     private final ExceptionFactory exceptionFactory;
 
+    @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetKopfdaten')")
     public KopfdatenModel getKopfdaten(BezirkUndWahlID bezirkUndWahlID) {
         log.info("getKopfdaten");
 

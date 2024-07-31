@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration.Profiles;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.infomanagement.model.KonfigurierterWahltagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KonfigurierterWahltagClient;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KonfigurierterWahltagModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.KandidatModel;
@@ -15,7 +15,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import lombok.val;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -44,11 +43,8 @@ public class DummyClientImpl implements WahlvorschlaegeClient, WahltageClient, K
     }
 
     @Override
-    public KonfigurierterWahltagDTO getKonfigurierterWahltag() throws WlsException {
-        val wahltagDTO = new KonfigurierterWahltagDTO();
-        wahltagDTO.setWahltag(LocalDate.now().plusMonths(1));
-        wahltagDTO.setWahltagID("wahltagID1");
-        wahltagDTO.setWahltagStatus(KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
-        return wahltagDTO;
+    public KonfigurierterWahltagModel getKonfigurierterWahltag() throws WlsException {
+
+        return new KonfigurierterWahltagModel(LocalDate.now().plusMonths(1), "wahltagID1", true, "1");
     }
 }

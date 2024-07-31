@@ -31,4 +31,14 @@ class DummyClientImplTest {
             Assertions.assertThat(result).size().isPositive();
         }
     }
+
+    @Nested
+    class GetWahlen {
+
+        @Test
+        void resultIsAnArrayWithPositiveSize() {
+            val result = unitUnderTest.getWahlen(LocalDate.now(), "0");
+            Assertions.assertThat(result).size().isPositive();
+        }
+    }
 }

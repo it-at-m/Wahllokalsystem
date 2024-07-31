@@ -60,7 +60,7 @@ public class WahlvorschlaegeServiceSecurityTest {
             val wahlbezirkID = "wahlbezirkID";
 
             val eaiWahlvorschlaege = createClientWahlvorschlaegeDTO();
-            WireMock.stubFor(WireMock.get("/vorschlaege/wahlen/" + wahlID + "/" + wahlbezirkID)
+            WireMock.stubFor(WireMock.get("/vorschlaege/wahl/" + wahlID + "/" + wahlbezirkID)
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(eaiWahlvorschlaege))));
 
@@ -76,7 +76,7 @@ public class WahlvorschlaegeServiceSecurityTest {
             val wahlbezirkID = "wahlbezirkID";
 
             val eaiWahlvorschlaege = createClientWahlvorschlaegeDTO();
-            WireMock.stubFor(WireMock.get("/vorschlaege/wahlen/" + wahlID + "/" + wahlbezirkID)
+            WireMock.stubFor(WireMock.get("/vorschlaege/wahl/" + wahlID + "/" + wahlbezirkID)
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(eaiWahlvorschlaege))));
 

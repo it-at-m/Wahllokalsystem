@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -18,8 +19,9 @@ public interface WahltagRepository extends CrudRepository<Wahltag, String> {
     @Override
     List<Wahltag> findAll();
 
+    @Override
     @Cacheable(value = CACHE, key = "#p0")
-    void findById(UUID wahltagID);
+    Optional<Wahltag> findById(String wahltagID);
 
     @Override
     @CachePut(value = CACHE, key = "#p0.wahltagID")

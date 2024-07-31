@@ -1,16 +1,15 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Farbe;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahl;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.WahlRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
-import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class WahlService {
+public class WahlenService {
 
     private final WahlRepository wahlRepository;
 
@@ -35,7 +34,7 @@ public class WahlService {
     @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetWahlen')")
     @Transactional(readOnly = true)
     public List<WahlModel> getWahlen(String wahltagID) {
-        wahlenValidator.validWahltagIDParamOrThrow(wahltagID);
+        wahlenValidator.validWahltagIDParamOrThrow(wahltagID, HttpMethod.GET);
         val wahltag = wahltagRepository.findById(wahltagID);
         wahlenValidator.validateWahltagForSearchingWahltagID(wahltag);
 
@@ -47,19 +46,16 @@ public class WahlService {
         return wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(wahlRepository.findByWahltagOrderByReihenfolge(wahltag.get().getWahltag()));
     }
 
+    @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_PostWahlen')")
+    @Transactional
     public void postWahlen(String wahltagID, List<WahlModel> wahlen) {
         log.info("#postWahlen");
-
-//        if (Strings.isNullOrEmpty(wahltagID) || wahlen == null || wahlen.isEmpty()) {
-//            throw WlsExceptionFactory.build(ExceptionKonstanten.CODE_POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG);
-//        }
-//
-//        try {
-//            wahlRepository.save(wahlen);
-//        } catch (Exception e) {
-//            LOGGER.error("#postWahlen: Die Wahlen konnten aufgrund eines Fehlers nicht gespeichert werden {}", e);
-//            throw WlsExceptionFactory.build(ExceptionKonstanten.CODE_POSTWAHLEN_UNSAVEABLE);
-//        }
+        wahlenValidator.validWahltagIDParamOrThrow(wahltagID, HttpMethod.POST);
+        try {
+            wahlRepository.saveAll(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(wahlen));
+        } catch (Exception e) {
+            log.error("#postWahlen: Die Wahlen konnten aufgrund eines Fehlers nicht gespeichert werden {}:", e);
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_POSTWAHLEN_UNSAVEABLE);
+        }
     }
-
 }

@@ -9,18 +9,12 @@ import org.mapstruct.Mapper;
 @Mapper(collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
 public interface WahlModelMapper {
 
-    List<Wahl> toEntity(List <WahlModel> wahlModel);
+    Wahl toEntity(WahlModel wahlModel);
 
-    List <WahlModel> toModel(List <Wahl> entity);
+    Wahl toModel(Wahl entity);
 
-    Wahl toEntity (WahlModel wahlModel);
+    List<Wahl> fromListOfWahlModeltoListOfWahlEntities(List<WahlModel> wahlModelList);
 
-    Wahl toModel (Wahl entity);
-
-    List<Wahl> fromListOfRemoteWahlDTOtoListOfWahlEntities(List <WahlDTO> wahlDTOList);
-
-    List<Wahl> fromListOfWahlModeltoListOfWahlEntities(List <WahlModel> wahlModelList);
-
-    List<WahlModel> fromListOfWahlEntityToListOfWahlModel(List <Wahl> wahlEntityList);
+    List<WahlModel> fromListOfWahlEntityToListOfWahlModel(List<Wahl> wahlEntityList);
 
 }

@@ -5,9 +5,15 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlMod
 import java.util.List;
 import java.util.Set;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper
-public interface WahlClientMapper {
+public interface WahlenClientMapper {
+
+    @Mapping(target = "reihenfolge", ignore = true)
+    @Mapping(target = "waehlerverzeichnisnummer", ignore = true)
+    @Mapping(target = "farbe", ignore = true)
+    @Mapping(target = "wahlID", source="identifikator")
     WahlModel toModel(WahlDTO wahlDTO);
 
     List<WahlModel> fromRemoteClientSetOfWahlDTOtoListOfWahlModel(Set<WahlDTO> wahlDTO);

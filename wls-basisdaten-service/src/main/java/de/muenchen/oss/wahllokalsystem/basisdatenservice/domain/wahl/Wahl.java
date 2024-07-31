@@ -37,7 +37,6 @@ public class Wahl {
     @NotNull
     private long reihenfolge;
 
-    @NotNull
     @Min(1)
     private long waehlerverzeichnisnummer;
 

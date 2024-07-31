@@ -23,7 +23,7 @@ public class WahlenClientImpl implements WahlenClient {
     private final ExceptionFactory exceptionFactory;
 
     private final WahldatenControllerApi wahldatenControllerApi;
-    private final WahlClientMapper wahlClientMapper;
+    private final WahlenClientMapper wahlenClientMapper;
 
     @Override
     public List<WahlModel> getWahlen(java.time.LocalDate wahltag, String wahltagNummer) {
@@ -37,6 +37,6 @@ public class WahlenClientImpl implements WahlenClient {
         if (wahlDTOs == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.NULL_FROM_CLIENT);
         }
-        return wahlClientMapper.fromRemoteClientSetOfWahlDTOtoListOfWahlModel(wahlDTOs);
+        return wahlenClientMapper.fromRemoteClientSetOfWahlDTOtoListOfWahlModel(wahlDTOs);
     }
 }

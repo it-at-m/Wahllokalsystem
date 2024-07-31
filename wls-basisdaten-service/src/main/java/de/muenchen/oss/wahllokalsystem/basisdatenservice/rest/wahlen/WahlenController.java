@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class WahlenController {
 
-    private final WahlService wahlService;
+    private final WahlenService wahlenService;
 
     private final WahlDTOMapper wahlDTOMapper;
 
@@ -41,7 +41,7 @@ public class WahlenController {
     )
     @GetMapping("/{wahltagID}")
     public List<WahlDTO> getWahlen(@PathVariable("wahltagID") String wahltagID) {
-        return wahlDTOMapper.fromListOfWahlModelToListOfWahlDTO(wahlService.getWahlen(wahltagID));
+        return wahlDTOMapper.fromListOfWahlModelToListOfWahlDTO(wahlenService.getWahlen(wahltagID));
     }
 
 
@@ -58,7 +58,7 @@ public class WahlenController {
     )
     @ResponseStatus(HttpStatus.OK)
     public void postWahlen(@PathVariable("wahltagID") String wahltagID, @RequestBody List<WahlDTO> wahlDTOs) {
-        wahlService.postWahlen(wahltagID, wahlDTOMapper.fromListOfWahlDTOtoListOfWahlModel(wahlDTOs));
+        wahlenService.postWahlen(wahltagID, wahlDTOMapper.fromListOfWahlDTOtoListOfWahlModel(wahlDTOs));
     }
 
 }

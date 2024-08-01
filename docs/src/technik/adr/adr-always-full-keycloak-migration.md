@@ -23,7 +23,7 @@ Gruppenzuordnung einer Rolle zu entfernen ([Issue - 361](https://github.com/it-a
 Daher wurde das [Thema](https://github.com/it-at-m/Wahllokalsystem/issues/248) erneut eröffnet.
 
 Die Beschreibung für den [Import](https://www.keycloak.org/server/containers#_importing_a_realm_on_startup) eines Realms
-bei start haben wir später gefunden. Die Option `Unmanaged Attributes` in den Realmsettings, ermöglichte es Userattribute
+beim Start haben wir später gefunden. Die Option `Unmanaged Attributes` in den Realmsettings, ermöglichte es Userattribute
 zu verwenden.
 
 ## Entscheidung

@@ -10,7 +10,7 @@ Initiator für eine genauere Betrachtung von Keycloak und Keycloakmigration war 
 von Version 20 auf 24. Diese wurde zuerst auch durchgeführt (siehe [PR - 241](https://github.com/it-at-m/Wahllokalsystem/pull/241)),
 musste aber aufgrund von Inkompatibilitäten mit unseren Migrationsskripten wieder durch
 [PR - 231](https://github.com/it-at-m/Wahllokalsystem/pull/231) zurückgenommen werden.
-Zum Zeitpunkt der Rücknahme war nicht bekannt wie man mit den Userattributen, `wahlbezirk_art`, die wir eingefügen wollten,
+Zum Zeitpunkt der Rücknahme war nicht bekannt wie man mit den Userattributen, `wahlbezirk_art`, die wir einfügen wollten,
 umgehen konnte. In diesem Zusammenhang viel auch auf, dass im Unterschied zur Version 20, mit der Version keine
 Deltamigration mehr möglich war.
 

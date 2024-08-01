@@ -44,7 +44,7 @@ export default withMermaid({
                             link: `${PATH_TECHNIK}adr/adr002-controller-service-datamodels`
                         },
                         {
-                            text: 'Immer vollständiger Migration nach Keycloak',
+                            text: 'Vollständige Migration nach Keycloak',
                             link: `${PATH_TECHNIK}adr/adr-always-full-keycloak-migration`
                         }
                     ]

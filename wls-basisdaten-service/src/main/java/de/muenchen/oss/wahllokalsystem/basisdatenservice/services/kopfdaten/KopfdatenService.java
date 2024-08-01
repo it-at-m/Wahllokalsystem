@@ -7,6 +7,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Kopfda
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,9 +48,10 @@ public class KopfdatenService {
 
             List<Wahltag> wahltage = wahltagRepository.findAllByOrderByWahltagAsc();
             Wahltag searchedWahltag = wahltage.stream().filter(w -> w.getWahltagID().equals(bezirkUndWahlID.getWahlID())).findAny().orElse(null);
-            String wahlNummer = ((null != searchedWahltag) ? searchedWahltag.getNummer() : konfigurierterWahltagModel.nummer());
 
-            BasisdatenModel basisdatenModel = wahldatenClient.loadBasisdaten(searchedWahltag.getWahltag(), wahlNummer);
+            LocalDate wahlTag = ((null != searchedWahltag) ? searchedWahltag.getWahltag() : konfigurierterWahltagModel.wahltag());
+            String wahlNummer = ((null != searchedWahltag) ? searchedWahltag.getNummer() : konfigurierterWahltagModel.nummer());
+            BasisdatenModel basisdatenModel = wahldatenClient.loadBasisdaten(wahlTag, wahlNummer);
 
             kopfdatenEntity = initKopfdata(bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID(), basisdatenModel);
         }

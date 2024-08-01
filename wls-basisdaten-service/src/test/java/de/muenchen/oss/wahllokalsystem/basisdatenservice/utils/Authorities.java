@@ -45,6 +45,9 @@ public class Authorities {
     public static final String REPOSITORY_WRITE_KOPFDATEN = "Basisdaten_WRITE_Kopfdaten";
     public static final String REPOSITORY_DELETE_KOPFDATEN = "Basisdaten_DELETE_Kopfdaten";
 
+    public static final String S2S_INFOMANAGEMENT_SERVICE_GET_KONFIGURIERTERWAHLTAG = "Infomanagement_BUSINESSACTION_GetKonfigurierterWahltag";
+    public static final String S2S_INFOMANAGEMENT_REPOSITORY_READ_KONFIGURIERTERWAHLTAG = "Infomanagement_READ_KonfigurierterWahltag";
+
     public static final String[] ALL_AUTHORITIES_GET_WAHLVORSCHLAEGE = new String[] {
         SERVICE_GET_WAHLVORSCHLAEGE,
         REPOSITORY_READ_WAHLVORSCHLAEGE,
@@ -99,5 +102,12 @@ public class Authorities {
         REPOSITORY_READ_KOPFDATEN,
         REPOSITORY_WRITE_KOPFDATEN,
         REPOSITORY_DELETE_KOPFDATEN
+    };
+
+    public static final String[] ALL_AUTHORITIES_READ_KOPFDATEN = {
+        SERVICE_GET_KOPFDATEN,
+        REPOSITORY_READ_KOPFDATEN,
+        S2S_INFOMANAGEMENT_SERVICE_GET_KONFIGURIERTERWAHLTAG,
+        S2S_INFOMANAGEMENT_REPOSITORY_READ_KONFIGURIERTERWAHLTAG
     };
 }

@@ -32,7 +32,7 @@ public class WahlenService {
     private final WahlenValidator wahlenValidator;
 
     @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetWahlen')")
-    @Transactional(readOnly = true)
+    @Transactional
     public List<WahlModel> getWahlen(String wahltagID) {
         wahlenValidator.validWahltagIDParamOrThrow(wahltagID, HttpMethod.GET);
         val wahltag = wahltagRepository.findById(wahltagID);
@@ -40,10 +40,15 @@ public class WahlenService {
 
         if(wahlRepository.countByWahltag(wahltag.get().getWahltag()) == 0){
             log.error("#getWahlen: Für wahltagID {} waren keine Wahlen in der Datenbank", wahltagID);
-            List<Wahl> wahlEntities =  wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(wahlenClient.getWahlen(wahltag.get().getWahltag(), wahltag.get().getNummer()));
+            var thewahlen = wahlenClient.getWahlen(wahltag.get().getWahltag(), wahltag.get().getNummer());
+            List<Wahl> wahlEntities =  wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(thewahlen);
+            var a = true;
             wahlRepository.saveAll(wahlEntities);
         }
-        return wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(wahlRepository.findByWahltagOrderByReihenfolge(wahltag.get().getWahltag()));
+        var allInRepo = wahlRepository.findAll();
+        var foundInRepo = wahlRepository.findByWahltagOrderByReihenfolge(wahltag.get().getWahltag());
+        var res = wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(foundInRepo);
+        return res;
     }
 
     @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_PostWahlen')")

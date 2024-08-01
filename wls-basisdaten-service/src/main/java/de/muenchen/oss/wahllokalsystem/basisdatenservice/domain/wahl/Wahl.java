@@ -34,10 +34,10 @@ public class Wahl {
     @Size(max = 255)
     private String name;
 
-    @NotNull
+    @Min(0)
     private long reihenfolge;
 
-    @Min(1)
+    @Min(0)
     private long waehlerverzeichnisnummer;
 
     @NotNull

@@ -25,12 +25,12 @@ class KopfdatenDTOMapperTest {
         void isMappedToDTO() {
 
             val kopfdatenModel = new KopfdatenModel(new BezirkUndWahlID("wahlID1", "wahlbezirkID1"),
-                "LHM", StimmzettelgebietsartModel.SK, "szgNummer1", "szgName1",
-                "wahlName1", "wbzNummer1");
+                    "LHM", StimmzettelgebietsartModel.SK, "szgNummer1", "szgName1",
+                    "wahlName1", "wbzNummer1");
 
             val dtoExpected = new KopfdatenDTO("wahlID1", "wahlbezirkID1", "LHM",
-                StimmzettelgebietsartDTO.SK, "szgNummer1", "szgName1",
-                "wahlName1", "wbzNummer1");
+                    StimmzettelgebietsartDTO.SK, "szgNummer1", "szgName1",
+                    "wahlName1", "wbzNummer1");
 
             val result = unitUnderTest.toDTO(kopfdatenModel);
             Assertions.assertThat(result).isEqualTo(dtoExpected);

@@ -23,7 +23,7 @@ public class KopfdatenController {
     @GetMapping("/{wahlID}/{wahlbezirkID}")
     public KopfdatenDTO getKopfdaten(@PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID) {
         return kopfdatenDTOMapper.toDTO(
-            kopfdatenService.getKopfdaten(new BezirkUndWahlID(wahlID, wahlbezirkID)));
+                kopfdatenService.getKopfdaten(new BezirkUndWahlID(wahlID, wahlbezirkID)));
     }
 
 }

@@ -12,4 +12,3 @@ public record WahlModel(@NotNull String identifikator,
                         @NotNull LocalDate wahltag,
                         @NotNull String nummer) {
 }
-

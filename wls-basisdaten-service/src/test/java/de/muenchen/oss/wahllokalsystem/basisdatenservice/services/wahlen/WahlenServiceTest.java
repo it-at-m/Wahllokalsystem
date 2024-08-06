@@ -52,9 +52,9 @@ class WahlenServiceTest {
     class GetWahlen {
 
         @Test
-        void ifRepoDataFoundThanReturnsRepoDataAndMakesNoCallToRemoteClient(){
+        void ifRepoDataFoundThanReturnsRepoDataAndMakesNoCallToRemoteClient() {
             val numberOfWahlenInRepo = 3;
-            var searchingForWahltag = new Wahltag("wahltagID",LocalDate.now(),"beschreibung1", "1" );
+            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung1", "1");
             Optional<Wahltag> mOp = Optional.of(searchingForWahltag);
             List<Wahl> mockedListOfEntities = createWahlEntities();
             List<WahlModel> mockedListOfModels = createWahlModels("");
@@ -65,23 +65,23 @@ class WahlenServiceTest {
             Mockito.when(wahltagRepository.findById("wahltagID")).thenReturn(Optional.of(searchingForWahltag));
             Mockito.when(wahlRepository.countByWahltag(searchingForWahltag.getWahltag())).thenReturn(numberOfWahlenInRepo);
             Mockito.when(wahlRepository.findByWahltagOrderByReihenfolge(searchingForWahltag.getWahltag())).thenReturn(mockedListOfEntities);
-            Mockito.lenient().when(wahlenClient.getWahlen(searchingForWahltag.getWahltag(), searchingForWahltag.getNummer())).thenReturn(mockedListOfModelsIfClientCall);
+            Mockito.lenient().when(wahlenClient.getWahlen(searchingForWahltag.getWahltag(), searchingForWahltag.getNummer()))
+                    .thenReturn(mockedListOfModelsIfClientCall);
             Mockito.lenient().when(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(mockedListOfModelsIfClientCall)).thenReturn(mockedListOfEntities);
             Mockito.when(wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(mockedListOfEntities)).thenReturn(mockedListOfModels);
             val expectedResult = wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(mockedListOfEntities);
 
             val result = unitUnderTest.getWahlen("wahltagID");
-            Assertions.assertThatCode(()->unitUnderTest.getWahlen("wahltagID")).doesNotThrowAnyException();
+            Assertions.assertThatCode(() -> unitUnderTest.getWahlen("wahltagID")).doesNotThrowAnyException();
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
 
         @Test
-        void ifRepoDataNotFoundThanReturnsRemoteClientData(){
+        void ifRepoDataNotFoundThanReturnsRemoteClientData() {
             val numberOfWahlenInRepo = 0;
-            var searchingForWahltag = new Wahltag("wahltagID",LocalDate.now(),"beschreibung1", "1" );
+            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung1", "1");
             Optional<Wahltag> mOp = Optional.of(searchingForWahltag);
             List<Wahl> mockedListOfEntities = createWahlEntities();
-            List<WahlModel> mockedListOfModels = createWahlModels("");
             List<WahlModel> mockedListOfModelsIfClientCall = createWahlModels("clientPraefix");
             Mockito.doNothing().when(wahlenValidator).validWahltagIDParamOrThrow("wahltagID", HttpMethod.GET);
             Mockito.doNothing().when(wahlenValidator).validateWahltagForSearchingWahltagID(mOp);
@@ -89,14 +89,14 @@ class WahlenServiceTest {
             Mockito.when(wahltagRepository.findById("wahltagID")).thenReturn(Optional.of(searchingForWahltag));
             Mockito.when(wahlRepository.countByWahltag(searchingForWahltag.getWahltag())).thenReturn(numberOfWahlenInRepo);
             Mockito.when(wahlRepository.findByWahltagOrderByReihenfolge(searchingForWahltag.getWahltag())).thenReturn(mockedListOfEntities);
-            Mockito.lenient().when(wahlenClient.getWahlen(searchingForWahltag.getWahltag(), searchingForWahltag.getNummer())).thenReturn(mockedListOfModelsIfClientCall);
+            Mockito.lenient().when(wahlenClient.getWahlen(searchingForWahltag.getWahltag(), searchingForWahltag.getNummer()))
+                    .thenReturn(mockedListOfModelsIfClientCall);
             Mockito.lenient().when(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(mockedListOfModelsIfClientCall)).thenReturn(mockedListOfEntities);
             Mockito.when(wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(mockedListOfEntities)).thenReturn(mockedListOfModelsIfClientCall);
-            val expectedResult = mockedListOfModelsIfClientCall;
 
             val result = unitUnderTest.getWahlen("wahltagID");
-            Assertions.assertThatCode(()->unitUnderTest.getWahlen("wahltagID")).doesNotThrowAnyException();
-            Assertions.assertThat(result).isEqualTo(expectedResult);
+            Assertions.assertThatCode(() -> unitUnderTest.getWahlen("wahltagID")).doesNotThrowAnyException();
+            Assertions.assertThat(result).isEqualTo(mockedListOfModelsIfClientCall);
         }
     }
 
@@ -105,20 +105,20 @@ class WahlenServiceTest {
 
         @Test
         void dataSaved() {
-            var searchingForWahltag = new Wahltag("wahltagID",LocalDate.now(),"beschreibung1", "1" );
+            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung1", "1");
             List<WahlModel> mockedListOfModels = createWahlModels("");
             List<Wahl> mockedListOfEntities = createWahlEntities();
 
             Mockito.when(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(mockedListOfModels)).thenReturn(mockedListOfEntities);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postWahlen(searchingForWahltag.getWahltagID(),mockedListOfModels));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postWahlen(searchingForWahltag.getWahltagID(), mockedListOfModels));
             Mockito.verify(wahlenValidator).validWahltagIDParamOrThrow(searchingForWahltag.getWahltagID(), HttpMethod.POST);
             Mockito.verify(wahlRepository).saveAll(mockedListOfEntities);
         }
 
         @Test
         void wlsExceptionWhenSavingFailed() {
-            var searchingForWahltag = new Wahltag("wahltagID",LocalDate.now(),"beschreibung1", "1" );
+            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung1", "1");
             List<WahlModel> mockedListOfModels = createWahlModels("");
             List<Wahl> mockedListOfEntities = createWahlEntities();
 
@@ -133,6 +133,7 @@ class WahlenServiceTest {
             Assertions.assertThatThrownBy(() -> unitUnderTest.postWahlen(searchingForWahltag.getWahltagID(), mockedListOfModels)).isSameAs(mockedWlsException);
         }
     }
+
     private List<Wahl> createWahlEntities() {
         Wahl wahl1 = new Wahl();
         wahl1.setWahlID("wahlid1");
@@ -163,7 +164,7 @@ class WahlenServiceTest {
         wahl3.setReihenfolge(3);
         wahl3.setWaehlerverzeichnisnummer(3);
         wahl3.setWahltag(LocalDate.now().plusMonths(3));
-        List<Wahl> lw = new ArrayList<Wahl>();
+        List<Wahl> lw = new ArrayList<>();
         lw.add(wahl1);
         lw.add(wahl2);
         lw.add(wahl3);
@@ -172,18 +173,15 @@ class WahlenServiceTest {
     }
 
     private List<WahlModel> createWahlModels(final String clientPraefix) {
-        WahlModel wahl1 =
-                new WahlModel("wahlid1", clientPraefix + "wahl1", 1L,
-                        1L, LocalDate.now().plusMonths(1),
-                        Wahlart.BAW, new Farbe(1, 1, 1), "0");
-        WahlModel wahl2 =
-                new WahlModel("wahlid2", clientPraefix + "wahl2", 2L,
-                        2L, LocalDate.now().plusMonths(2),
-                        Wahlart.LTW, new Farbe(2, 2, 2), "1");
-        WahlModel wahl3 =
-                new WahlModel("wahlid3", clientPraefix + "wahl3", 3L,
-                        3L, LocalDate.now().plusMonths(3),
-                        Wahlart.LTW, new Farbe(3, 3, 3), "2");
+        WahlModel wahl1 = new WahlModel("wahlid1", clientPraefix + "wahl1", 1L,
+                1L, LocalDate.now().plusMonths(1),
+                Wahlart.BAW, new Farbe(1, 1, 1), "0");
+        WahlModel wahl2 = new WahlModel("wahlid2", clientPraefix + "wahl2", 2L,
+                2L, LocalDate.now().plusMonths(2),
+                Wahlart.LTW, new Farbe(2, 2, 2), "1");
+        WahlModel wahl3 = new WahlModel("wahlid3", clientPraefix + "wahl3", 3L,
+                3L, LocalDate.now().plusMonths(3),
+                Wahlart.LTW, new Farbe(3, 3, 3), "2");
         List<WahlModel> lw = new ArrayList<>();
         lw.add(wahl1);
         lw.add(wahl2);

@@ -47,7 +47,7 @@ class WahlenClientImplTest {
             val mockedClientResponse = createClientWahlenDTO();
             val mockedMappedClientResponse = List.of(WahlModel.builder().build());
 
-            Mockito.when(wahldatenControllerApi.loadWahlen(testDate,"1"))
+            Mockito.when(wahldatenControllerApi.loadWahlen(testDate, "1"))
                     .thenReturn(mockedClientResponse);
             Mockito.when(wahlenClientMapper.fromRemoteClientSetOfWahlDTOtoListOfWahlModel(mockedClientResponse))
                     .thenReturn(mockedMappedClientResponse);
@@ -61,7 +61,7 @@ class WahlenClientImplTest {
         void exceptionWhenClientResponseIsNull() {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
-            Mockito.when(wahldatenControllerApi.loadWahlen(any(),any())).thenReturn(null);
+            Mockito.when(wahldatenControllerApi.loadWahlen(any(), any())).thenReturn(null);
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.NULL_FROM_CLIENT)).thenReturn(mockedWlsException);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlen(LocalDate.now(), "1")).isSameAs(mockedWlsException);
@@ -73,7 +73,7 @@ class WahlenClientImplTest {
             val mockedException = TechnischeWlsException.withCode("100")
                     .buildWithMessage("Bei der Kommunikation mit dem Aoueai-Service ist ein Fehler aufgetreten. Es konnten daher keine Daten geladen werden.");
 
-            Mockito.when(wahldatenControllerApi.loadWahlen(any(),any()))
+            Mockito.when(wahldatenControllerApi.loadWahlen(any(), any()))
                     .thenThrow(new RestClientException("error occurs while attempting to invoke the API"));
             Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI)).thenThrow(mockedException);
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlen(testDate, "1")).isSameAs(mockedException);

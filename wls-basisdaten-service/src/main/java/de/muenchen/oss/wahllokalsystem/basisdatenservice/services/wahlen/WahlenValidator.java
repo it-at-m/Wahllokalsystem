@@ -17,9 +17,9 @@ public class WahlenValidator {
 
     public void validWahltagIDParamOrThrow(final String wahltagID, HttpMethod httpMethod) {
         if (wahltagID == null || StringUtils.isBlank(wahltagID) || StringUtils.isEmpty(wahltagID)) {
-            switch (httpMethod.toString()){
-                case "GET" -> throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_GETWAHLEN_PARAMETER_UNVOLLSTAENDIG);
-                case "POST" -> throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG);
+            switch (httpMethod.toString()) {
+            case "GET" -> throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_GETWAHLEN_PARAMETER_UNVOLLSTAENDIG);
+            case "POST" -> throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG);
             }
         }
     }

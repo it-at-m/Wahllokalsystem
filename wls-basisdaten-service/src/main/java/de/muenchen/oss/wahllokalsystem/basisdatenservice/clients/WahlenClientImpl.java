@@ -27,7 +27,7 @@ public class WahlenClientImpl implements WahlenClient {
 
     @Override
     public List<WahlModel> getWahlen(java.time.LocalDate wahltag, String wahltagNummer) {
-        final Set <WahlDTO> wahlDTOs;
+        final Set<WahlDTO> wahlDTOs;
         try {
             wahlDTOs = wahldatenControllerApi.loadWahlen(wahltag, wahltagNummer);
         } catch (final Exception exception) {

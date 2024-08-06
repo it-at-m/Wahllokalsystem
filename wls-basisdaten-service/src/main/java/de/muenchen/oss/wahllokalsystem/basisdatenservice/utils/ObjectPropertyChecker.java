@@ -7,10 +7,10 @@ import java.util.List;
 
 public class ObjectPropertyChecker {
 
-    public static Boolean objectHasProperty(Object obj, String propertyName){
+    public static Boolean objectHasProperty(Object obj, String propertyName) {
         List<Field> properties = getAllFields(obj);
-        for(Field field : properties){
-            if(field.getName().equalsIgnoreCase(propertyName)){
+        for (Field field : properties) {
+            if (field.getName().equalsIgnoreCase(propertyName)) {
                 return true;
             }
         }
@@ -21,8 +21,8 @@ public class ObjectPropertyChecker {
         return theObjectInstance.getClass().getField(propertyName).get(propertyName);
     }
 
-    private static List<Field> getAllFields(Object obj){
-        List<Field> fields = new ArrayList<Field>();
+    private static List<Field> getAllFields(Object obj) {
+        List<Field> fields = new ArrayList<>();
         getAllFieldsRecursive(fields, obj.getClass());
         return fields;
     }

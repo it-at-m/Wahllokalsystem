@@ -52,7 +52,7 @@ class WahlRepositoryTest {
     }
 
     @Test
-    void countByWahltag(){
+    void countByWahltag() {
         val wahlenToSave = createWahlenList();
         repository.saveAll(wahlenToSave);
         val allFoundWahl = repository.findAll();

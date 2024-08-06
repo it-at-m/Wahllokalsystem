@@ -8,7 +8,8 @@ public interface WahlenClient {
 
     /**
      * @param wahltag The Request Wahltag - Reference for requested Wahlen
-     * @param wahltagNummer The Number of the Wahltag, it could exist more then one Wahltag at same day if more elections on the day
+     * @param wahltagNummer The Number of the Wahltag, it could exist more then one Wahltag at same day
+     *            if more elections on the day
      * @return List<WahltagModel>
      * @throws WlsException
      *             {@link de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException} if

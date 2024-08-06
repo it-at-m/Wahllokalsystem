@@ -49,8 +49,8 @@ public class DummyClientImpl implements WahlvorschlaegeClient, WahltageClient, W
     @Override
     public List<WahlModel> getWahlen(LocalDate wahltag, String wahltagNummer) throws WlsException {
         return List.of(
-                new WahlModel("wahl1", "0", 1L, 1L, wahltag, BTW, new Farbe(0,1,2),"1"),
-                new WahlModel("wahl2", "1", 2L, 1L, wahltag, EUW, new Farbe(3,4,5), "1"),
-                new WahlModel("wahl3", "2", 3L, 1L, wahltag, LTW, new Farbe(6,7,8), "1"));
+                new WahlModel("wahl1", "0", 1L, 1L, wahltag, BTW, new Farbe(0, 1, 2), "1"),
+                new WahlModel("wahl2", "1", 2L, 1L, wahltag, EUW, new Farbe(3, 4, 5), "1"),
+                new WahlModel("wahl3", "2", 3L, 1L, wahltag, LTW, new Farbe(6, 7, 8), "1"));
     }
 }

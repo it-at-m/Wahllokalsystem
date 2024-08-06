@@ -35,7 +35,7 @@ public class WahlenController {
             value = {
                     @ApiResponse(
                             responseCode = "200", description = "OK",
-                            content = { @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema( implementation = WahlDTO.class))) }
+                            content = { @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = WahlDTO.class))) }
                     )
             }
     )
@@ -43,7 +43,6 @@ public class WahlenController {
     public List<WahlDTO> getWahlen(@PathVariable("wahltagID") String wahltagID) {
         return wahlDTOMapper.fromListOfWahlModelToListOfWahlDTO(wahlenService.getWahlen(wahltagID));
     }
-
 
     @PostMapping("{wahltagID}")
     @Operation(

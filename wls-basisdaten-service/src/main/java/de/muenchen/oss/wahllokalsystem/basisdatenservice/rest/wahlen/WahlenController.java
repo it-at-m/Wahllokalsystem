@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/businessActions/wahlen")
+@RequestMapping("/businessActions/")
 @RequiredArgsConstructor
 @Slf4j
 public class WahlenController {
@@ -39,12 +39,12 @@ public class WahlenController {
                     )
             }
     )
-    @GetMapping("/{wahltagID}")
+    @GetMapping("wahlen/{wahltagID}")
     public List<WahlDTO> getWahlen(@PathVariable("wahltagID") String wahltagID) {
         return wahlDTOMapper.fromListOfWahlModelToListOfWahlDTO(wahlenService.getWahlen(wahltagID));
     }
 
-    @PostMapping("{wahltagID}")
+    @PostMapping("wahlen/{wahltagID}")
     @Operation(
             description = "Speichern einer Liste von Wahlen.",
             responses = {
@@ -58,6 +58,20 @@ public class WahlenController {
     @ResponseStatus(HttpStatus.OK)
     public void postWahlen(@PathVariable("wahltagID") String wahltagID, @RequestBody List<WahlDTO> wahlDTOs) {
         wahlenService.postWahlen(wahltagID, wahlDTOMapper.fromListOfWahlDTOtoListOfWahlModel(wahlDTOs));
+    }
+
+    @Operation(
+            description = "Setzt die Attribute Farbe, Reihenfolge und Waehlerverzeichnis der vorhandenen Wahlen auf die Standardwerte.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Die Wahlen wurden zurückgesetzt."
+                    )
+            }
+    )
+    @PostMapping("resetWahlen/")
+    @ResponseStatus(HttpStatus.OK)
+    public void resetWahlen() {
+        wahlenService.resetWahlen();
     }
 
 }

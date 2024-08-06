@@ -12,6 +12,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.WahlReposit
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -138,7 +139,35 @@ public class WahlenServiceSecurityTest {
                     FachlicheWlsException.class);
         }
     }
+    
+    @Nested
+    class ResetWahlen {
 
+        @Test
+        void accessGranted() {
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_RESET_WAHLEN);
+            Assertions.assertThatNoException().isThrownBy(() -> wahlenService.resetWahlen());
+        }
+
+        @Test
+        void accessDeniedWhenServiceAuthoritiyIsMissing() {
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHL, Authorities.REPOSITORY_WRITE_WAHL);
+            Assertions.assertThatThrownBy(() -> wahlenService.resetWahlen()).isInstanceOf(AccessDeniedException.class);
+        }
+
+        @ParameterizedTest(name = "{index} - {1} missing")
+        @MethodSource("getMissingRepoAuthoritiesVariations")
+        void technischeWlsExceptionWhenRepoAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) {
+            SecurityUtils.runWith(ArrayUtils.add(argumentsAccessor.get(0, String[].class), Authorities.SERVICE_RESET_WAHLEN));
+            Assertions.assertThatThrownBy(() -> wahlenService.resetWahlen()).isInstanceOf(TechnischeWlsException.class);
+        }
+
+        private static Stream<Arguments> getMissingRepoAuthoritiesVariations() {
+            return SecurityUtils
+                    .buildArgumentsForMissingAuthoritiesVariations(new String[] { Authorities.REPOSITORY_WRITE_WAHL, Authorities.REPOSITORY_READ_WAHL });
+        }
+    }
+  
     private List<Wahl> createWahlEntities() {
         Wahl wahl1 = new Wahl();
         wahl1.setWahlID("wahlid1");
@@ -193,5 +222,4 @@ public class WahlenServiceSecurityTest {
         lw.add(wahl3);
         return lw;
     }
-
 }

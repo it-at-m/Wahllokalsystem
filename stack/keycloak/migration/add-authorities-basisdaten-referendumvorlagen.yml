@@ -1,57 +1,66 @@
-id: add authorities basisdaten wahlen
-author: GerhardPx
+id: add authorities basisdaten referendumvorlagen
+author: MrSebastian
 realm: ${SSO_REALM}
 changes:
   - addRole:
-      name: Basisdaten_BUSINESSACTION_GetWahlen
+      name: Basisdaten_BUSINESSACTION_GetReferendumvorlagen
       clientRole: true
       clientId: ${SSO_CLIENT_ID}
   - assignRoleToGroup:
       group: allBasisdatenAuthorities
-      role: Basisdaten_BUSINESSACTION_GetWahlen
+      role: Basisdaten_BUSINESSACTION_GetReferendumvorlagen
       clientId: ${SSO_CLIENT_ID}
 
   - addRole:
-      name: Basisdaten_BUSINESSACTION_PostWahlen
+      name: Basisdaten_READ_Referendumvorlagen
       clientRole: true
       clientId: ${SSO_CLIENT_ID}
   - assignRoleToGroup:
       group: allBasisdatenAuthorities
-      role: Basisdaten_BUSINESSACTION_PostWahlen
+      role: Basisdaten_READ_Referendumvorlagen
       clientId: ${SSO_CLIENT_ID}
 
   - addRole:
-      name: Basisdaten_BUSINESSACTION_ResetWahlen
+      name: Basisdaten_WRITE_Referendumvorlagen
       clientRole: true
       clientId: ${SSO_CLIENT_ID}
   - assignRoleToGroup:
       group: allBasisdatenAuthorities
-      role: Basisdaten_BUSINESSACTION_ResetWahlen
+      role: Basisdaten_WRITE_Referendumvorlagen
       clientId: ${SSO_CLIENT_ID}
 
   - addRole:
-      name: Basisdaten_READ_Wahl
+      name: Basisdaten_DELETE_Referendumvorlagen
       clientRole: true
       clientId: ${SSO_CLIENT_ID}
   - assignRoleToGroup:
       group: allBasisdatenAuthorities
-      role: Basisdaten_READ_Wahl
+      role: Basisdaten_DELETE_Referendumvorlagen
       clientId: ${SSO_CLIENT_ID}
 
   - addRole:
-      name: Basisdaten_WRITE_Wahl
+      name: Basisdaten_READ_Referendumvorlage
       clientRole: true
       clientId: ${SSO_CLIENT_ID}
   - assignRoleToGroup:
       group: allBasisdatenAuthorities
-      role: Basisdaten_WRITE_Wahl
+      role: Basisdaten_READ_Referendumvorlage
       clientId: ${SSO_CLIENT_ID}
 
   - addRole:
-      name: Basisdaten_DELETE_Wahl
+      name: Basisdaten_WRITE_Referendumvorlage
       clientRole: true
       clientId: ${SSO_CLIENT_ID}
   - assignRoleToGroup:
       group: allBasisdatenAuthorities
-      role: Basisdaten_DELETE_Wahl
+      role: Basisdaten_WRITE_Referendumvorlage
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Basisdaten_DELETE_Referendumvorlage
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_DELETE_Referendumvorlage
       clientId: ${SSO_CLIENT_ID}

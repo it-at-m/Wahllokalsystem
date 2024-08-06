@@ -254,6 +254,28 @@ public class WahlenControllerIntegrationTest {
         }
     }
 
+    @Nested
+    class ResetWahlen {
+
+        @Test
+        void existingWahlenAreReplaced() throws Exception {
+            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL);
+            val oldRepositoryWahlen = createWahlEntities();
+            wahlRepository.saveAll(oldRepositoryWahlen);
+
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_RESET_WAHLEN);
+            val request = MockMvcRequestBuilders.post("/businessActions/resetWahlen");
+            mockMvc.perform(request).andExpect(status().isOk());
+
+            val expectedResetedWahlen = createWahlEntities().stream().map((WahlenControllerIntegrationTest.this::resetWahl)).toList();
+
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHL);
+            val savedWahlen = wahlRepository.findAll();
+
+            Assertions.assertThat(savedWahlen).isEqualTo(expectedResetedWahlen);
+        }
+    }
+
     private Set<WahlDTO> createClientSetOfWahlDTO(Wahltag searchingForWahltag) {
         val wahl1 = new WahlDTO();
         wahl1.setIdentifikator("wahlid1");
@@ -288,5 +310,46 @@ public class WahlenControllerIntegrationTest {
                 Wahlart.BAW, new Farbe(1, 1, 1), "3");
 
         return Stream.of(wahl1, wahl2, wahl3).filter(wahl -> (wahl.wahltag().equals(searchingForWahltag.getWahltag()))).collect(Collectors.toList());
+    }
+
+    private List<Wahl> createWahlEntities() {
+        val wahl1 = new Wahl();
+        wahl1.setWahlID("wahlid1");
+        wahl1.setName("wahl1");
+        wahl1.setNummer("0");
+        wahl1.setFarbe(new Farbe(1, 1, 1));
+        wahl1.setWahlart(Wahlart.BAW);
+        wahl1.setReihenfolge(1);
+        wahl1.setWaehlerverzeichnisnummer(1);
+        wahl1.setWahltag(LocalDate.now().plusMonths(1));
+
+        val wahl2 = new Wahl();
+        wahl2.setWahlID("wahlid2");
+        wahl2.setName("wahl2");
+        wahl2.setNummer("1");
+        wahl2.setFarbe(new Farbe(2, 2, 2));
+        wahl2.setWahlart(Wahlart.LTW);
+        wahl2.setReihenfolge(2);
+        wahl2.setWaehlerverzeichnisnummer(2);
+        wahl2.setWahltag(LocalDate.now().plusMonths(2));
+
+        val wahl3 = new Wahl();
+        wahl3.setWahlID("wahlid3");
+        wahl3.setName("wahl3");
+        wahl3.setNummer("2");
+        wahl3.setFarbe(new Farbe(3, 3, 3));
+        wahl3.setWahlart(Wahlart.EUW);
+        wahl3.setReihenfolge(3);
+        wahl3.setWaehlerverzeichnisnummer(3);
+        wahl3.setWahltag(LocalDate.now().plusMonths(3));
+
+        return List.of(wahl1, wahl2, wahl3);
+    }
+
+    private Wahl resetWahl(Wahl wahl) {
+        wahl.setFarbe(new Farbe(0, 0, 0));
+        wahl.setReihenfolge(0);
+        wahl.setWaehlerverzeichnisnummer(1);
+        return wahl;
     }
 }

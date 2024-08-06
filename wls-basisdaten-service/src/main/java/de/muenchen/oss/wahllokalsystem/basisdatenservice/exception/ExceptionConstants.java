@@ -30,6 +30,8 @@ public class ExceptionConstants {
     public static ExceptionDataWrapper POSTHANDBUCH_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("315", "postHandbuch: Suchkriterien unvollständig.");
     public static ExceptionDataWrapper POSTHANDBUCH_SPEICHERN_NICHT_ERFOLGREICH = new ExceptionDataWrapper("316",
             "postHandbuch: Das speichern des Handbuches war nicht erfolgreich.");
+    public static ExceptionDataWrapper RESET_WAHLEN_NICHT_ERFOLGREICH = new ExceptionDataWrapper("317",
+            "resetWahlen: Das Zurücksetzen der Wahlen war nicht erfolgreich.");
 
     public static ExceptionDataWrapper GETUNGUELTIGEWAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("331",
             "getUngueltigews: Suchkriterien unvollständig.");
@@ -40,6 +42,9 @@ public class ExceptionConstants {
             "postUngueltigews: Suchkriterien unvollständig.");
     public static ExceptionDataWrapper POSTUNGUELTIGEWS_SPEICHERN_NICHT_ERFOLGREICH = new ExceptionDataWrapper("346",
             "postUngueltigews: Das speichern der ungueltigen Wahlscheine war nicht erfolgreich.");
+  
+    public static ExceptionDataWrapper GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("308",
+            "getReferendumvorlagen: Suchkriterien unvollständig.");
 
     public static ExceptionDataWrapper WAHL_SPEICHERN_FEHLGESCHLAGEN = new ExceptionDataWrapper("351",
             "postUngueltigeWahl: Das Speichern der Wahl ist fehlgeschlagen");
@@ -52,5 +57,4 @@ public class ExceptionConstants {
             "postWahlen: Die Wahlen konnten nicht gespeichert werden.");
     public static ExceptionDataWrapper CODE_GETWAHLBEZIRKE_NO_WAHLTAG = new ExceptionDataWrapper("313",
             "getWahlen: Es wurde kein Wahltag zu dieser WahltagID gefunden. Bitte legen Sie die Basisdaten an.");
-
 }

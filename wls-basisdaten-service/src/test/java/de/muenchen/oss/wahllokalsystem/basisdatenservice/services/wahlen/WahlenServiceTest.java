@@ -18,6 +18,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -47,7 +48,7 @@ class WahlenServiceTest {
 
     @Mock
     ExceptionFactory exceptionFactory;
-
+    
     @Nested
     class GetWahlen {
 
@@ -133,6 +134,24 @@ class WahlenServiceTest {
             Assertions.assertThatThrownBy(() -> unitUnderTest.postWahlen(searchingForWahltag.getWahltagID(), mockedListOfModels)).isSameAs(mockedWlsException);
         }
     }
+  
+    @Nested
+    class ResetWahlen {
+
+       @Test
+        void dataSuccessfullyReseted() {
+            ArgumentCaptor<List<Wahl>> reqCaptor = ArgumentCaptor.forClass(List.class);
+
+            val wahlenToReset = createWahlEntities();
+            Mockito.when(wahlRepository.findAll()).thenReturn(wahlenToReset);
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.resetWahlen());
+
+            val resetedWahlen = createWahlEntities().stream().map(this::resetWahl).toList();
+
+            Mockito.verify(wahlRepository).saveAll(reqCaptor.capture());
+            Assertions.assertThat(reqCaptor.getValue()).containsExactlyInAnyOrderElementsOf(resetedWahlen);
+        }
+    }
 
     private List<Wahl> createWahlEntities() {
         Wahl wahl1 = new Wahl();
@@ -189,4 +208,11 @@ class WahlenServiceTest {
         return lw;
     }
 
+    private Wahl resetWahl(Wahl wahl) {
+        wahl.setFarbe(new Farbe(0, 0, 0));
+        wahl.setReihenfolge(0);
+        wahl.setWaehlerverzeichnisnummer(1);
+        return wahl;
+    }
+    
 }

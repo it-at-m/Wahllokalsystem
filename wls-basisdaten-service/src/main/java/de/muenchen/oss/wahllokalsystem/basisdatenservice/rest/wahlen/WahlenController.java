@@ -68,7 +68,7 @@ public class WahlenController {
                     )
             }
     )
-    @PostMapping("resetWahlen/")
+    @PostMapping("/resetWahlen")
     @ResponseStatus(HttpStatus.OK)
     public void resetWahlen() {
         wahlenService.resetWahlen();

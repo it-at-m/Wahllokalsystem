@@ -151,6 +151,13 @@ class WahlenServiceTest {
             Mockito.verify(wahlRepository).saveAll(reqCaptor.capture());
             Assertions.assertThat(reqCaptor.getValue()).containsExactlyInAnyOrderElementsOf(resetedWahlen);
         }
+
+        private Wahl resetWahl(Wahl wahl) {
+            wahl.setFarbe(new Farbe(0, 0, 0));
+            wahl.setReihenfolge(0);
+            wahl.setWaehlerverzeichnisnummer(1);
+            return wahl;
+        }
     }
 
     private List<Wahl> createWahlEntities() {
@@ -208,11 +215,4 @@ class WahlenServiceTest {
         return lw;
     }
 
-    private Wahl resetWahl(Wahl wahl) {
-        wahl.setFarbe(new Farbe(0, 0, 0));
-        wahl.setReihenfolge(0);
-        wahl.setWaehlerverzeichnisnummer(1);
-        return wahl;
-    }
-    
 }

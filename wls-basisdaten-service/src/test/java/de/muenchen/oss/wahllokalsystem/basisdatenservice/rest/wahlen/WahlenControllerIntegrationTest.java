@@ -263,9 +263,9 @@ public class WahlenControllerIntegrationTest {
             val oldRepositoryWahlen = createWahlEntities();
             wahlRepository.saveAll(oldRepositoryWahlen);
 
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_RESET_WAHLEN);
+            SecurityUtils.runWith(Authorities.SERVICE_RESET_WAHLEN, Authorities.REPOSITORY_READ_WAHL);
             val request = MockMvcRequestBuilders.post("/businessActions/resetWahlen");
-            mockMvc.perform(request).andExpect(status().isOk());
+            api.perform(request).andExpect(status().isOk());
 
             val expectedResetedWahlen = createWahlEntities().stream().map((WahlenControllerIntegrationTest.this::resetWahl)).toList();
 

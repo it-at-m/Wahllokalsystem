@@ -1,40 +1,29 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen;
 
-import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
-import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
-import com.github.tomakehurst.wiremock.client.WireMock;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahltag;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Farbe;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahl;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.WahlRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpMethod;
-import org.springframework.test.context.ActiveProfiles;
 
-//@SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-//@AutoConfigureWireMock
-//@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
 @ExtendWith(MockitoExtension.class)
 class WahlenServiceTest {
 
@@ -50,87 +39,100 @@ class WahlenServiceTest {
     @Mock
     WahlModelMapper wahlModelMapper;
 
+    @Mock
+    WahlenClient wahlenClient;
+
     @InjectMocks
     WahlenService unitUnderTest;
 
-//    @BeforeEach
-//    void setup() {
-//        WireMock.resetAllRequests();
-//    }
+    @Mock
+    ExceptionFactory exceptionFactory;
 
     @Nested
     class GetWahlen {
 
         @Test
         void ifRepoDataFoundThanReturnsRepoDataAndMakesNoCallToRemoteClient(){
-//            SecurityUtils.runWith(
-//                    Authorities.REPOSITORY_READ_WAHLTAG, Authorities.REPOSITORY_READ_WAHL, Authorities.SERVICE_GET_WAHLEN);
+            val numberOfWahlenInRepo = 3;
             var searchingForWahltag = new Wahltag("wahltagID",LocalDate.now(),"beschreibung1", "1" );
             Optional<Wahltag> mOp = Optional.of(searchingForWahltag);
             List<Wahl> mockedListOfEntities = createWahlEntities();
+            List<WahlModel> mockedListOfModels = createWahlModels("");
+            List<WahlModel> mockedListOfModelsIfClientCall = createWahlModels("clientPraefix");
             Mockito.doNothing().when(wahlenValidator).validWahltagIDParamOrThrow("wahltagID", HttpMethod.GET);
             Mockito.doNothing().when(wahlenValidator).validateWahltagForSearchingWahltagID(mOp);
 
             Mockito.when(wahltagRepository.findById("wahltagID")).thenReturn(Optional.of(searchingForWahltag));
-            Mockito.when(wahlRepository.countByWahltag(searchingForWahltag.getWahltag())).thenReturn(3);
+            Mockito.when(wahlRepository.countByWahltag(searchingForWahltag.getWahltag())).thenReturn(numberOfWahlenInRepo);
+            Mockito.when(wahlRepository.findByWahltagOrderByReihenfolge(searchingForWahltag.getWahltag())).thenReturn(mockedListOfEntities);
+            Mockito.lenient().when(wahlenClient.getWahlen(searchingForWahltag.getWahltag(), searchingForWahltag.getNummer())).thenReturn(mockedListOfModelsIfClientCall);
+            Mockito.lenient().when(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(mockedListOfModelsIfClientCall)).thenReturn(mockedListOfEntities);
+            Mockito.when(wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(mockedListOfEntities)).thenReturn(mockedListOfModels);
+            val expectedResult = wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(mockedListOfEntities);
 
             val result = unitUnderTest.getWahlen("wahltagID");
-            //Assertions.assertThatCode(()->unitUnderTest.getWahlen("wahltagID"))
-              //      .doesNotThrowAnyException();
-
-            val expectedResult = wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(mockedListOfEntities);
-            //warum ist expectedResult size 0???????????????????
-
+            Assertions.assertThatCode(()->unitUnderTest.getWahlen("wahltagID")).doesNotThrowAnyException();
             Assertions.assertThat(result).isEqualTo(expectedResult);
-            //WireMock.verify(0, WireMock.anyRequestedFor(WireMock.anyUrl()));
-
         }
 
         @Test
-        void dataIsLoadedFromRemoteEvenIfExistingInRepoAndRepoIsUpdated() {
-//            val mockedListOfEntities = createWahlEntities();
-//            val mockedClientResponse = createWahltagModelList("2");
-//            val mockedMappedSavedEntities = createWahltagModelList("2");
-//
-//            Mockito.when(wahltageClient.getWahltage(LocalDate.now().minusMonths(3))).thenReturn(mockedClientResponse);
-//            Mockito.when(wahltagModelMapper.fromWahltagModelToWahltagEntityList(mockedClientResponse)).thenReturn(mockedListOfEntities);
-//            Mockito.when(wahltagRepository.findAllByOrderByWahltagAsc()).thenReturn(mockedListOfEntities);
-//            Mockito.when(wahltagModelMapper.fromWahltagEntityToWahltagModelList(mockedListOfEntities)).thenReturn(mockedMappedSavedEntities);
-//
-//            val result = unitUnderTest.getWahltage();
-//            Assertions.assertThat(result).isSameAs(mockedMappedSavedEntities);
-//            Mockito.verify(wahltagRepository).saveAll(mockedListOfEntities);
+        void ifRepoDataNotFoundThanReturnsRemoteClientData(){
+            val numberOfWahlenInRepo = 0;
+            var searchingForWahltag = new Wahltag("wahltagID",LocalDate.now(),"beschreibung1", "1" );
+            Optional<Wahltag> mOp = Optional.of(searchingForWahltag);
+            List<Wahl> mockedListOfEntities = createWahlEntities();
+            List<WahlModel> mockedListOfModels = createWahlModels("");
+            List<WahlModel> mockedListOfModelsIfClientCall = createWahlModels("clientPraefix");
+            Mockito.doNothing().when(wahlenValidator).validWahltagIDParamOrThrow("wahltagID", HttpMethod.GET);
+            Mockito.doNothing().when(wahlenValidator).validateWahltagForSearchingWahltagID(mOp);
 
+            Mockito.when(wahltagRepository.findById("wahltagID")).thenReturn(Optional.of(searchingForWahltag));
+            Mockito.when(wahlRepository.countByWahltag(searchingForWahltag.getWahltag())).thenReturn(numberOfWahlenInRepo);
+            Mockito.when(wahlRepository.findByWahltagOrderByReihenfolge(searchingForWahltag.getWahltag())).thenReturn(mockedListOfEntities);
+            Mockito.lenient().when(wahlenClient.getWahlen(searchingForWahltag.getWahltag(), searchingForWahltag.getNummer())).thenReturn(mockedListOfModelsIfClientCall);
+            Mockito.lenient().when(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(mockedListOfModelsIfClientCall)).thenReturn(mockedListOfEntities);
+            Mockito.when(wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(mockedListOfEntities)).thenReturn(mockedListOfModelsIfClientCall);
+            val expectedResult = mockedListOfModelsIfClientCall;
+
+            val result = unitUnderTest.getWahlen("wahltagID");
+            Assertions.assertThatCode(()->unitUnderTest.getWahlen("wahltagID")).doesNotThrowAnyException();
+            Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
 
     @Nested
-    class ResetWahlen {
+    class PostWahlen {
 
         @Test
-        void dataSuccessfullyReseted() {
-//            ArgumentCaptor<List<Wahl>> reqCaptor = ArgumentCaptor.forClass(List.class);
-//
-//            val wahlenToReset = createWahlEntities();
-//            Mockito.when(wahlRepository.findAll()).thenReturn(wahlenToReset);
-//            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.resetWahlen());
-//
-//            val resetedWahlen = createWahlEntities().stream().map(this::resetWahl).toList();
-//
-//            Mockito.verify(wahlRepository).saveAll(reqCaptor.capture());
-//            Assertions.assertThat(reqCaptor.getValue()).containsExactlyInAnyOrderElementsOf(resetedWahlen);
+        void dataSaved() {
+            var searchingForWahltag = new Wahltag("wahltagID",LocalDate.now(),"beschreibung1", "1" );
+            List<WahlModel> mockedListOfModels = createWahlModels("");
+            List<Wahl> mockedListOfEntities = createWahlEntities();
+
+            Mockito.when(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(mockedListOfModels)).thenReturn(mockedListOfEntities);
+
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postWahlen(searchingForWahltag.getWahltagID(),mockedListOfModels));
+            Mockito.verify(wahlenValidator).validWahltagIDParamOrThrow(searchingForWahltag.getWahltagID(), HttpMethod.POST);
+            Mockito.verify(wahlRepository).saveAll(mockedListOfEntities);
         }
 
+        @Test
+        void wlsExceptionWhenSavingFailed() {
+            var searchingForWahltag = new Wahltag("wahltagID",LocalDate.now(),"beschreibung1", "1" );
+            List<WahlModel> mockedListOfModels = createWahlModels("");
+            List<Wahl> mockedListOfEntities = createWahlEntities();
 
+            val mockedRepoSaveException = new RuntimeException("saving failed");
+            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
-        private Wahl resetWahl(Wahl wahl) {
-            wahl.setFarbe(new Farbe(0, 0, 0));
-            wahl.setReihenfolge(0);
-            wahl.setWaehlerverzeichnisnummer(1);
-            return wahl;
+            Mockito.when(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(mockedListOfModels)).thenReturn(mockedListOfEntities);
+            Mockito.doThrow(mockedRepoSaveException).when(wahlRepository).saveAll(mockedListOfEntities);
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_POSTWAHLEN_UNSAVEABLE))
+                    .thenReturn(mockedWlsException);
+
+            Assertions.assertThatThrownBy(() -> unitUnderTest.postWahlen(searchingForWahltag.getWahltagID(), mockedListOfModels)).isSameAs(mockedWlsException);
         }
     }
-
     private List<Wahl> createWahlEntities() {
         Wahl wahl1 = new Wahl();
         wahl1.setWahlID("wahlid1");
@@ -166,7 +168,27 @@ class WahlenServiceTest {
         lw.add(wahl2);
         lw.add(wahl3);
 
-        return lw;//List.of(wahl1, wahl2, wahl3);
+        return lw;
+    }
+
+    private List<WahlModel> createWahlModels(final String clientPraefix) {
+        WahlModel wahl1 =
+                new WahlModel("wahlid1", clientPraefix + "wahl1", 1L,
+                        1L, LocalDate.now().plusMonths(1),
+                        Wahlart.BAW, new Farbe(1, 1, 1), "0");
+        WahlModel wahl2 =
+                new WahlModel("wahlid2", clientPraefix + "wahl2", 2L,
+                        2L, LocalDate.now().plusMonths(2),
+                        Wahlart.LTW, new Farbe(2, 2, 2), "1");
+        WahlModel wahl3 =
+                new WahlModel("wahlid3", clientPraefix + "wahl3", 3L,
+                        3L, LocalDate.now().plusMonths(3),
+                        Wahlart.LTW, new Farbe(3, 3, 3), "2");
+        List<WahlModel> lw = new ArrayList<>();
+        lw.add(wahl1);
+        lw.add(wahl2);
+        lw.add(wahl3);
+        return lw;
     }
 
 }

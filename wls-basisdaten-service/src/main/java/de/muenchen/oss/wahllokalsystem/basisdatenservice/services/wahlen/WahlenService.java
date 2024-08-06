@@ -39,7 +39,7 @@ public class WahlenService {
         wahlenValidator.validateWahltagForSearchingWahltagID(wahltag);
 
         if(wahlRepository.countByWahltag(wahltag.get().getWahltag()) == 0){
-            log.error("#getWahlen: Für wahltagID {} waren keine Wahlen in der Datenbank", wahltagID);
+            log.info("#getWahlen: Für wahltagID {} waren keine Wahlen in der Datenbank", wahltagID);
             List<Wahl> wahlEntities =  wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(wahlenClient.getWahlen(wahltag.get().getWahltag(), wahltag.get().getNummer()));
             wahlRepository.saveAll(wahlEntities);
         }

@@ -121,7 +121,7 @@ public class Authorities {
             REPOSITORY_WRITE_WAHL,
             REPOSITORY_DELETE_WAHL
     };
-  
+
     public static final String[] ALL_AUTHORITIES_GET_REFERENDUMVORLAGEN = {
             SERVICE_GET_REFERENDUMVORLAGEN,
             REPOSITORY_READ_REFERENDUMVORLAGEN,

@@ -42,7 +42,7 @@ public class ExceptionConstants {
             "postUngueltigews: Suchkriterien unvollständig.");
     public static ExceptionDataWrapper POSTUNGUELTIGEWS_SPEICHERN_NICHT_ERFOLGREICH = new ExceptionDataWrapper("346",
             "postUngueltigews: Das speichern der ungueltigen Wahlscheine war nicht erfolgreich.");
-  
+
     public static ExceptionDataWrapper GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("308",
             "getReferendumvorlagen: Suchkriterien unvollständig.");
 

@@ -37,8 +37,8 @@ class WahlenControllerTest {
             Assertions.assertThatCode(() -> wahlenService.postWahlen("wahltagIDTest", theWahlModelList)).doesNotThrowAnyException();
             Mockito.verify(wahlenService).postWahlen("wahltagIDTest", theWahlModelList);
         }
-    } 
-  
+    }
+
     @Nested
     class ResetWahlen {
 

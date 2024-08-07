@@ -139,7 +139,7 @@ public class WahlenServiceSecurityTest {
                     FachlicheWlsException.class);
         }
     }
-    
+
     @Nested
     class ResetWahlen {
 
@@ -167,7 +167,7 @@ public class WahlenServiceSecurityTest {
                     .buildArgumentsForMissingAuthoritiesVariations(new String[] { Authorities.REPOSITORY_WRITE_WAHL, Authorities.REPOSITORY_READ_WAHL });
         }
     }
-  
+
     private List<Wahl> createWahlEntities() {
         Wahl wahl1 = new Wahl();
         wahl1.setWahlID("wahlid1");

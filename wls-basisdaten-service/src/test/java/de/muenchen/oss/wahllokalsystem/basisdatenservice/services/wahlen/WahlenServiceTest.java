@@ -48,7 +48,7 @@ class WahlenServiceTest {
 
     @Mock
     ExceptionFactory exceptionFactory;
-    
+
     @Nested
     class GetWahlen {
 
@@ -134,11 +134,11 @@ class WahlenServiceTest {
             Assertions.assertThatThrownBy(() -> unitUnderTest.postWahlen(searchingForWahltag.getWahltagID(), mockedListOfModels)).isSameAs(mockedWlsException);
         }
     }
-  
+
     @Nested
     class ResetWahlen {
 
-       @Test
+        @Test
         void dataSuccessfullyReseted() {
             ArgumentCaptor<List<Wahl>> reqCaptor = ArgumentCaptor.forClass(List.class);
 

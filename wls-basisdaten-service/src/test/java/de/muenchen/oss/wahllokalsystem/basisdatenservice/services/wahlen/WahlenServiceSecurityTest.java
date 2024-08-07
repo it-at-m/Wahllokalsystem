@@ -78,7 +78,7 @@ public class WahlenServiceSecurityTest {
         @Test
         void accessDeniedWhenServiceAuthoritiyIsMissing() {
             SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHL, Authorities.REPOSITORY_WRITE_WAHL);
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung1", "1");
+            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung9", "1");
             Assertions.assertThatThrownBy(() -> wahlenService.getWahlen(searchingForWahltag.getWahltagID())).isInstanceOf(AccessDeniedException.class);
         }
 
@@ -86,7 +86,7 @@ public class WahlenServiceSecurityTest {
         @MethodSource("getMissingAuthoritiesVariations")
         void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) throws Exception {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHLTAG, Authorities.REPOSITORY_WRITE_WAHL);
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung1", "1");
+            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung10", "1");
             wahltagRepository.save(searchingForWahltag);
             val mockedListOfEntities = createWahlEntities();
             wahlRepository.saveAll(mockedListOfEntities);
@@ -116,7 +116,7 @@ public class WahlenServiceSecurityTest {
         @Test
         void accessGranted() {
             SecurityUtils.runWith(Authorities.SERVICE_POST_WAHLEN, Authorities.REPOSITORY_WRITE_WAHL);
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung1", "1");
+            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung11", "1");
             List<WahlModel> mockedListOfModels = createWahlModels();
             Assertions.assertThatNoException().isThrownBy(() -> wahlenService.postWahlen(searchingForWahltag.getWahltagID(), mockedListOfModels));
         }
@@ -124,7 +124,7 @@ public class WahlenServiceSecurityTest {
         @Test
         void accessDeniedWhenServiceAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL);
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung1", "1");
+            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung12", "1");
             List<WahlModel> mockedListOfModels = createWahlModels();
             Assertions.assertThatThrownBy(() -> wahlenService.postWahlen(searchingForWahltag.getWahltagID(), mockedListOfModels))
                     .isInstanceOf(AccessDeniedException.class);
@@ -133,7 +133,7 @@ public class WahlenServiceSecurityTest {
         @Test
         void fachlicheWlsExceptionWhenRepoAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.SERVICE_POST_WAHLEN);
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung1", "1");
+            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung13", "1");
             List<WahlModel> mockedListOfModels = createWahlModels();
             Assertions.assertThatThrownBy(() -> wahlenService.postWahlen(searchingForWahltag.getWahltagID(), mockedListOfModels)).isInstanceOf(
                     FachlicheWlsException.class);

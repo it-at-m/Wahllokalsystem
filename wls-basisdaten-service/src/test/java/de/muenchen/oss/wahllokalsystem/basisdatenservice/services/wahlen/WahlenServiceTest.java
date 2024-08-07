@@ -55,7 +55,7 @@ class WahlenServiceTest {
         @Test
         void ifRepoDataFoundThanReturnsRepoDataAndMakesNoCallToRemoteClient() {
             val numberOfWahlenInRepo = 3;
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung1", "1");
+            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung14", "1");
             Optional<Wahltag> mOp = Optional.of(searchingForWahltag);
             List<Wahl> mockedListOfEntities = createWahlEntities();
             List<WahlModel> mockedListOfModels = createWahlModels("");
@@ -80,7 +80,7 @@ class WahlenServiceTest {
         @Test
         void ifRepoDataNotFoundThanReturnsRemoteClientData() {
             val numberOfWahlenInRepo = 0;
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung1", "1");
+            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung15", "1");
             Optional<Wahltag> mOp = Optional.of(searchingForWahltag);
             List<Wahl> mockedListOfEntities = createWahlEntities();
             List<WahlModel> mockedListOfModelsIfClientCall = createWahlModels("clientPraefix");
@@ -106,7 +106,7 @@ class WahlenServiceTest {
 
         @Test
         void dataSaved() {
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung1", "1");
+            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung16", "1");
             List<WahlModel> mockedListOfModels = createWahlModels("");
             List<Wahl> mockedListOfEntities = createWahlEntities();
 
@@ -119,7 +119,7 @@ class WahlenServiceTest {
 
         @Test
         void wlsExceptionWhenSavingFailed() {
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung1", "1");
+            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung17", "1");
             List<WahlModel> mockedListOfModels = createWahlModels("");
             List<Wahl> mockedListOfEntities = createWahlEntities();
 

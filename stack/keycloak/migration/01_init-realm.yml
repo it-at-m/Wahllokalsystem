@@ -1,9 +1,0 @@
-id: init_realm
-author: MrSebastian
-changes:
-  - addRealm:
-      name: ${SSO_REALM}
-
-  - addClientScope:
-      realm: ${SSO_REALM}
-      name: openid

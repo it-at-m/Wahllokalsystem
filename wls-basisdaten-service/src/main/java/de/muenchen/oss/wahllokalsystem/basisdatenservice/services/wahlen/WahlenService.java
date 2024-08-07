@@ -1,9 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen;
 
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Farbe;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahl;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.WahlRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.List;

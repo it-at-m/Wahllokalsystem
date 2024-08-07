@@ -3,18 +3,16 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart.BTW;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart.EUW;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart.LTW;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration.Profiles;
 
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration.Profiles;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Farbe;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumoptionModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlageModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenReferenceModel;
-
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Farbe;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
-
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.KandidatModel;

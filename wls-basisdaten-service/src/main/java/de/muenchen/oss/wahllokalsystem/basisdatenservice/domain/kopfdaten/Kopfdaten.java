@@ -24,31 +24,24 @@ public class Kopfdaten {
 
     @EmbeddedId
     @NotNull
-    @ToString.Include
     private BezirkUndWahlID bezirkUndWahlID;
 
     @NotNull
-    @ToString.Include
     private String gemeinde;
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    @ToString.Include
     private Stimmzettelgebietsart stimmzettelgebietsart;
 
     @NotNull
-    @ToString.Include
     private String stimmzettelgebietsnummer;
 
     @NotNull
-    @ToString.Include
     private String stimmzettelgebietsname;
 
     @NotNull
-    @ToString.Include
     private String wahlname;
 
     @NotNull
-    @ToString.Include
     private String wahlbezirknummer;
 }

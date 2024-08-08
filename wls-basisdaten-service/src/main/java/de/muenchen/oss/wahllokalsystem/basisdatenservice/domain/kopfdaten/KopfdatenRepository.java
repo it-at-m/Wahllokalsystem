@@ -47,4 +47,7 @@ public interface KopfdatenRepository extends CrudRepository<Kopfdaten, BezirkUnd
     @CacheEvict(value = CACHE, allEntries = true)
     @PreAuthorize("hasAuthority('Basisdaten_DELETE_Kopfdaten')")
     void deleteAll();
+
+    @PreAuthorize("hasAuthority('Basisdaten_DELETE_Kopfdaten')")
+    void deleteAllByBezirkUndWahlID_WahlID(String wahlID);
 }

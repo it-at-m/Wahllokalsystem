@@ -1,8 +1,18 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration.Profiles;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Farbe;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.StimmzettelgebietsartModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisdatenModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisstrukturdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KonfigurierterWahltagClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KonfigurierterWahltagModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.StimmzettelgebietModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.WahlbezirkModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.WahldatenClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.KandidatModel;
@@ -20,7 +30,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Profile(Profiles.DUMMY_CLIENTS)
-public class DummyClientImpl implements WahlvorschlaegeClient, WahltageClient, KonfigurierterWahltagClient {
+public class DummyClientImpl implements WahlvorschlaegeClient, WahltageClient, KonfigurierterWahltagClient, WahldatenClient {
 
     @Override
     public WahlvorschlaegeModel getWahlvorschlaege(BezirkUndWahlID bezirkUndWahlID) {
@@ -46,5 +56,34 @@ public class DummyClientImpl implements WahlvorschlaegeClient, WahltageClient, K
     public KonfigurierterWahltagModel getKonfigurierterWahltag() throws WlsException {
 
         return new KonfigurierterWahltagModel(LocalDate.now().plusMonths(1), "wahltagID1", true, "1");
+    }
+
+    @Override
+    public BasisdatenModel loadBasisdaten(LocalDate forDate, String withNummer) throws WlsException {
+
+        return new BasisdatenModel(
+                Set.of(new BasisstrukturdatenModel("wahlID1","szgID", "wahlbezirkID1_1", forDate),
+                        new BasisstrukturdatenModel("wahlID1","szgID", "wahlbezirkID1_2", forDate),
+                        new BasisstrukturdatenModel("wahlID1","szgID", "wahlbezirkID2_1", forDate),
+                        new BasisstrukturdatenModel("wahlID2","szgID", "wahlbezirkID2_2", forDate),
+                        new BasisstrukturdatenModel("wahlID2","szgIDOther", "wahlbezirkID2_2", forDate)
+                ),
+                Set.of(
+                        new WahlModel("wahlID1", "0", 1L, 1L, forDate, Wahlart.BTW, new Farbe(0, 1, 2), "1"),
+                        new WahlModel("wahlID2", "1", 2L, 1L, forDate, Wahlart.EUW, new Farbe(3, 4, 5), "1")
+                ),
+                Set.of(
+                        new WahlbezirkModel("wahlbezirkID1_1", WahlbezirkArtModel.UWB, "1201", forDate, "0", "wahlID1"),
+                        new WahlbezirkModel("wahlbezirkID1_2", WahlbezirkArtModel.BWB, "1251", forDate, "0", "wahlID1"),
+                        new WahlbezirkModel("wahlbezirkID2_1", WahlbezirkArtModel.UWB, "1202", forDate, "0", "wahlID1"),
+                        new WahlbezirkModel("wahlbezirkID2_2", WahlbezirkArtModel.BWB, "1252", forDate, "0", "wahlID1"),
+                        new WahlbezirkModel("wahlbezirkID2_2", WahlbezirkArtModel.BWB, "1252", forDate, "0", "wahlID2")
+
+                ),
+                Set.of(
+                        new StimmzettelgebietModel("szgID", "120", "Munich", forDate, StimmzettelgebietsartModel.SG),
+                        new StimmzettelgebietModel("szgIDOther", "920", "Munich", forDate, StimmzettelgebietsartModel.SB)
+                )
+        );
     }
 }

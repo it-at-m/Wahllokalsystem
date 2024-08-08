@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Kopfdaten;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.KopfdatenRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import lombok.val;
@@ -32,7 +33,7 @@ public class InitializeKopfdaten {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.INITIALIZE_KOPFDATEN_NO_BASISSTRUKTURDATEN);
 
         WahlModel wahl = basisdaten.wahlen().stream()
-                .filter(w -> w.identifikator().equals(wahlID))
+                .filter(w -> w.wahlID().equals(wahlID))
                 .findAny().orElse(null);
 
         WahlbezirkModel wahlbezirk = basisdaten.wahlbezirke().stream()
@@ -51,7 +52,7 @@ public class InitializeKopfdaten {
 
     private Kopfdaten createKopfdaten(WahlModel wahl, WahlbezirkModel wahlbezirk, StimmzettelgebietModel stimmzettelgebiet) {
 
-        val bezirkUndWahlID = new BezirkUndWahlID(wahl.identifikator(), wahlbezirk.identifikator());
+        val bezirkUndWahlID = new BezirkUndWahlID(wahl.wahlID(), wahlbezirk.identifikator());
         val gemeinde = "LHM";
 
         KopfdatenModel kopfdaten = new KopfdatenModel(

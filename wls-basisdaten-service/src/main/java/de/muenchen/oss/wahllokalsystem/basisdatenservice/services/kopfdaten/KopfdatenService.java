@@ -1,15 +1,10 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahltag;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Kopfdaten;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.KopfdatenRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahl;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.WahlRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
-import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class KopfdatenService extends InitializeKopfdaten{
 
     private final KopfdatenValidator kopfdatenValidator;
-
-    private final WahltagRepository wahltagRepository;
     private final WahlRepository wahlRepository;
     private final KonfigurierterWahltagClient konfigurierterWahltagClient;
     private final WahldatenClient wahldatenClient;

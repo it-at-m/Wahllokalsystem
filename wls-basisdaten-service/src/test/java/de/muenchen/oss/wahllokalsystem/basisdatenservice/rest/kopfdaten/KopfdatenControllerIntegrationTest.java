@@ -88,8 +88,8 @@ public class KopfdatenControllerIntegrationTest {
             // mock infomanagement konfigurierterWahltag
             KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = createClientKonfigurierterWahltagDTO();
             WireMock.stubFor(WireMock.get("/businessActions/konfigurierterWahltag")
-                .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                    .withBody(objectMapper.writeValueAsBytes(infomanagementKonfigurierterWahltag))));
+                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
+                            .withBody(objectMapper.writeValueAsBytes(infomanagementKonfigurierterWahltag))));
 
             // mock repository wahltage
             val mockedListOfEntities = createWahltagList("1");
@@ -98,8 +98,8 @@ public class KopfdatenControllerIntegrationTest {
             // mock EAI basisdaten
             BasisdatenDTO eaiBasisdaten = createClientBasisdatenDTO();
             WireMock.stubFor(WireMock.get("/wahldaten/basisdaten?forDate=" + LocalDate.now().plusMonths(1) + "&withNummer=nummerWahltag3")
-                .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                    .withBody(objectMapper.writeValueAsBytes(eaiBasisdaten))));
+                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
+                            .withBody(objectMapper.writeValueAsBytes(eaiBasisdaten))));
 
             val wahlID = "1_identifikatorWahltag3";
             val wahlbezirkID = "wahlbezirkID1";
@@ -107,7 +107,7 @@ public class KopfdatenControllerIntegrationTest {
 
             val responseFromController = api.perform(request).andExpect(status().isOk()).andReturn();
             val responseBodyAsDTO = objectMapper.readValue(responseFromController.getResponse().getContentAsString(),
-                de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.kopfdaten.KopfdatenDTO.class);
+                    de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.kopfdaten.KopfdatenDTO.class);
 
             val expectedResponse = createKopfdatenDTO();
             Assertions.assertThat(responseBodyAsDTO).isNotNull();
@@ -117,15 +117,14 @@ public class KopfdatenControllerIntegrationTest {
 
     private KopfdatenDTO createKopfdatenDTO() {
         return new KopfdatenDTO(
-            "1_identifikatorWahltag3",
-            "wahlbezirkID1",
-            "LHM",
-            StimmzettelgebietsartDTO.SK,
-            "szgNummer1",
-            "szg1",
-            "Bundestagswahl",
-            "wahlNummer1"
-        );
+                "1_identifikatorWahltag3",
+                "wahlbezirkID1",
+                "LHM",
+                StimmzettelgebietsartDTO.SK,
+                "szgNummer1",
+                "szg1",
+                "Bundestagswahl",
+                "wahlNummer1");
     }
 
     private List<Wahltag> createWahltagList(String wahltagIDPrefix) {

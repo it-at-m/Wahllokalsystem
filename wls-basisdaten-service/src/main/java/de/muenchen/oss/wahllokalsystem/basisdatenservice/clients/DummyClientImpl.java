@@ -62,7 +62,7 @@ public class DummyClientImpl implements WahlvorschlaegeClient, WahltageClient, R
 
     @Override
     public ReferendumvorlagenModel getReferendumvorlagen(ReferendumvorlagenReferenceModel referendumvorlagenReferenceModel) {
-        return new ReferendumvorlagenModel("stimmzettelgebiedID", Set.of(new ReferendumvorlageModel("wahlvorschlagID1", 1L, "kurzname1", "frage1",
+        return new ReferendumvorlagenModel("stimmzettelgebietID", Set.of(new ReferendumvorlageModel("wahlvorschlagID1", 1L, "kurzname1", "frage1",
                 Set.of(new ReferendumoptionModel("optionID11", "option11", 1L), new ReferendumoptionModel("optionID12", "option12", 2L))),
                 new ReferendumvorlageModel("wahlvorschlagID2", 2L, "kurzname2", "frage2",
                         Set.of(new ReferendumoptionModel("optionID21", "option21", 1L), new ReferendumoptionModel("optionID22", "option22", 2L)))));

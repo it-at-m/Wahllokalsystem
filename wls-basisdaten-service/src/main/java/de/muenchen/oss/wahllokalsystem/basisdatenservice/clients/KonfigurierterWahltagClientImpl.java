@@ -31,7 +31,7 @@ public class KonfigurierterWahltagClientImpl implements KonfigurierterWahltagCli
             konfigurierterWahltagDTO = konfigurierterWahltagControllerApi.getKonfigurierterWahltag();
         } catch (final Exception exception) {
             log.info("exception on getKonfigurierterWahltag from external", exception);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.NULL_FROM_CLIENT);
+            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_SERVICE);
         }
         if (konfigurierterWahltagDTO == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETKOPFDATEN_NO_KONFIGURIERTERWAHLTAG);

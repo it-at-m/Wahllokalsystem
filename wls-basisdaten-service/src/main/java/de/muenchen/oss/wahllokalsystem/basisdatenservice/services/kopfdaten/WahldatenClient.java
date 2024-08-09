@@ -6,6 +6,8 @@ import java.time.LocalDate;
 public interface WahldatenClient {
 
     /**
+     * @param forDate the date of the election
+     * @param withNummer the number of the "Wahltermin" same with number of the "Wahltag"
      * @return BasisdatenDTO
      * @throws WlsException
      *             {@link de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException} if

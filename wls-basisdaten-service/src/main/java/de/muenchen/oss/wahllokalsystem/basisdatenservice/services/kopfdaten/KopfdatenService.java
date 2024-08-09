@@ -15,13 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class KopfdatenService extends InitializeKopfdaten{
+public class KopfdatenService extends InitializeKopfdaten {
 
     private final KopfdatenValidator kopfdatenValidator;
     private final WahlRepository wahlRepository;
     private final KonfigurierterWahltagClient konfigurierterWahltagClient;
     private final WahldatenClient wahldatenClient;
-
 
     @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetKopfdaten')")
     @Transactional
@@ -44,7 +43,7 @@ public class KopfdatenService extends InitializeKopfdaten{
 
             List<Wahl> wahlen = wahlRepository.findByWahltagOrderByReihenfolge(konfigurierterWahltagModel.wahltag());
             Wahl searchedWahl = wahlen.stream().filter(w -> w.getWahlID().equals(bezirkUndWahlID.getWahlID())).findAny().orElse(null);
-            String wahlNummer = ((null != searchedWahl)? searchedWahl.getNummer(): konfigurierterWahltagModel.nummer());
+            String wahlNummer = ((null != searchedWahl) ? searchedWahl.getNummer() : konfigurierterWahltagModel.nummer());
 
             BasisdatenModel basisdatenModel = wahldatenClient.loadBasisdaten(konfigurierterWahltagModel.wahltag(), wahlNummer);
 

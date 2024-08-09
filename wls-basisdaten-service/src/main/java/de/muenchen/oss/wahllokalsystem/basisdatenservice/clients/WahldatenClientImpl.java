@@ -25,14 +25,14 @@ public class WahldatenClientImpl implements WahldatenClient {
     private final WahldatenClientMapper wahldatenClientMapper;
 
     @Override
-    public BasisdatenModel loadBasisdaten(LocalDate forDate, String withNummer) throws WlsException {
+    public BasisdatenModel loadBasisdaten(LocalDate forDate, String wahlterminNummer) throws WlsException {
 
         final BasisdatenDTO basisdatenDTO;
         try {
-            basisdatenDTO = wahldatenControllerApi.loadBasisdaten(forDate, withNummer);
+            basisdatenDTO = wahldatenControllerApi.loadBasisdaten(forDate, wahlterminNummer);
         } catch (final Exception exception) {
             log.info("exception on getBasisdaten from external", exception);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_SERVICE);
+            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
         }
         if (basisdatenDTO == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETKOPFDATEN_NO_BASISDATEN);

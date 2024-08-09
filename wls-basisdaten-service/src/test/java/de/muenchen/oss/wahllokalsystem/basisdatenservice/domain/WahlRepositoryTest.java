@@ -51,6 +51,22 @@ class WahlRepositoryTest {
         Assertions.assertThat(foundWahlen).isEqualTo(expectedWahlen);
     }
 
+    @Test
+    void countByWahltag() {
+        val wahlenToSave = createWahlenList();
+        repository.saveAll(wahlenToSave);
+        val allFoundWahl = repository.findAll();
+        Assertions.assertThat(allFoundWahl.size()).isEqualTo(4);
+
+        val wahltagToFind = LocalDate.now().minusMonths(1);
+        val foundNumberOfWahlByWahltag = repository.countByWahltag(wahltagToFind);
+        Assertions.assertThat(foundNumberOfWahlByWahltag).isEqualTo(3);
+
+        val wahltagToFind_0 = LocalDate.now().minusMonths(99);
+        val foundNumberOfWahlByWahltag_0 = repository.countByWahltag(wahltagToFind_0);
+        Assertions.assertThat(foundNumberOfWahlByWahltag_0).isEqualTo(0);
+    }
+
     private List<Wahl> createWahlenList() {
         val wahl1 = new Wahl("wahlID1", "name1", 3L, 1L, LocalDate.now().minusMonths(1), Wahlart.BAW, new Farbe(1, 1, 1), "1");
         val wahl2 = new Wahl("wahlID2", "name2", 2L, 2L, LocalDate.now().plusMonths(1), Wahlart.EUW, new Farbe(2, 2, 2), "2");

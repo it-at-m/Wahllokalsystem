@@ -46,4 +46,15 @@ public class ExceptionConstants {
     public static ExceptionDataWrapper GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("308",
             "getReferendumvorlagen: Suchkriterien unvollständig.");
 
+    public static ExceptionDataWrapper WAHL_SPEICHERN_FEHLGESCHLAGEN = new ExceptionDataWrapper("351",
+            "postUngueltigeWahl: Das Speichern der Wahl ist fehlgeschlagen");
+
+    public static ExceptionDataWrapper CODE_GETWAHLEN_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("314",
+            "getWahlen: Der Wahltag zu den gesuchten Wahlen existiert nicht.");
+    public static ExceptionDataWrapper CODE_POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("317",
+            "postWahlen: Suchkriterien unvollständig. Die wahltagID ist leer oder null.");
+    public static ExceptionDataWrapper CODE_POSTWAHLEN_UNSAVEABLE = new ExceptionDataWrapper("318",
+            "postWahlen: Die Wahlen konnten nicht gespeichert werden.");
+    public static ExceptionDataWrapper CODE_GETWAHLBEZIRKE_NO_WAHLTAG = new ExceptionDataWrapper("313",
+            "getWahlen: Es wurde kein Wahltag zu dieser WahltagID gefunden. Bitte legen Sie die Basisdaten an.");
 }

@@ -2,13 +2,11 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.client.WahldatenControllerApi;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageClient;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -20,26 +18,25 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
 @RequiredArgsConstructor
 @Slf4j
-public class WahltageClientImpl implements WahltageClient {
+public class WahlenClientImpl implements WahlenClient {
 
     private final ExceptionFactory exceptionFactory;
 
     private final WahldatenControllerApi wahldatenControllerApi;
-    private final WahltageClientMapper wahltageClientMapper;
+    private final WahlenClientMapper wahlenClientMapper;
 
     @Override
-    public List<WahltagModel> getWahltage(LocalDate tag) throws WlsException {
-
-        final Set<WahltagDTO> wahltageDTO;
+    public List<WahlModel> getWahlen(java.time.LocalDate wahltag, String wahltagNummer) {
+        final Set<WahlDTO> wahlDTOs;
         try {
-            wahltageDTO = (Set<WahltagDTO>) wahldatenControllerApi.loadWahltageSinceIncluding(tag);
+            wahlDTOs = wahldatenControllerApi.loadWahlen(wahltag, wahltagNummer);
         } catch (final Exception exception) {
-            log.info("exception on loadwahltage from external", exception);
+            log.info("exception on loadwahl from external", exception);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
         }
-        if (wahltageDTO == null) {
+        if (wahlDTOs == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.NULL_FROM_CLIENT);
         }
-        return wahltageClientMapper.fromRemoteClientSetOfWahltagDTOtoListOfWahltagModel(wahltageDTO);
+        return wahlenClientMapper.fromRemoteClientSetOfWahlDTOtoListOfWahlModel(wahlDTOs);
     }
 }

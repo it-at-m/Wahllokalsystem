@@ -59,13 +59,13 @@ class WahldatenClientMapperTest {
 
             val result = unitUnderTest.fromRemoteClientDTOToModel(basisdatenDTO);
 
-            val expecteBasisdaten = MockDataFactory.createBasisdatenModel(LocalDate.now());
+            val expectedBasisdaten = MockDataFactory.createBasisdatenModel(LocalDate.now());
 
-            Assertions.assertThat(result.basisstrukturdaten()).containsExactlyInAnyOrderElementsOf(expecteBasisdaten.basisstrukturdaten());
+            Assertions.assertThat(result.basisstrukturdaten()).containsExactlyInAnyOrderElementsOf(expectedBasisdaten.basisstrukturdaten());
             Assertions.assertThat(result.wahlen()).usingRecursiveComparison().ignoringCollectionOrder()
-                    .ignoringFields("reihenfolge", "waehlerverzeichnisnummer", "farbe").isEqualTo(expecteBasisdaten.wahlen());
-            Assertions.assertThat(result.wahlbezirke()).containsExactlyInAnyOrderElementsOf(expecteBasisdaten.wahlbezirke());
-            Assertions.assertThat(result.stimmzettelgebiete()).containsExactlyInAnyOrderElementsOf(expecteBasisdaten.stimmzettelgebiete());
+                    .ignoringFields("reihenfolge", "waehlerverzeichnisnummer", "farbe").isEqualTo(expectedBasisdaten.wahlen());
+            Assertions.assertThat(result.wahlbezirke()).containsExactlyInAnyOrderElementsOf(expectedBasisdaten.wahlbezirke());
+            Assertions.assertThat(result.stimmzettelgebiete()).containsExactlyInAnyOrderElementsOf(expectedBasisdaten.stimmzettelgebiete());
         }
     }
 }

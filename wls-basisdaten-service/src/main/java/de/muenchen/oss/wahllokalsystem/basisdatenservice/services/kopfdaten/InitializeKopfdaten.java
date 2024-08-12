@@ -38,7 +38,7 @@ public class InitializeKopfdaten {
                 .findAny().orElse(null);
 
         WahlbezirkModel wahlbezirk = basisdaten.wahlbezirke().stream()
-                .filter(w -> w.identifikator().equals(wahlbezirkID))
+                .filter(w -> w.identifikator().equals(wahlbezirkID) && w.wahlID().equals(wahlID))
                 .findAny().orElse(null);
 
         StimmzettelgebietModel stimmzettelgebiet = basisdaten.stimmzettelgebiete().stream()

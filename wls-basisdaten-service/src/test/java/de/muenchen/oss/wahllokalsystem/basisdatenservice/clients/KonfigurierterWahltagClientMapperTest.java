@@ -23,9 +23,9 @@ class KonfigurierterWahltagClientMapperTest {
 
             val result = unitUnderTest.fromRemoteClientDTOToModel(konfigurierterWahltagDTO);
 
-            val expecteKonfigurieterWahltag = MockDataFactory.createClientKonfigurierterWahltagModel(LocalDate.now().plusMonths(1));
+            val expectedKonfigurieterWahltag = MockDataFactory.createClientKonfigurierterWahltagModel(LocalDate.now().plusMonths(1));
 
-            Assertions.assertThat(result).isEqualTo(expecteKonfigurieterWahltag);
+            Assertions.assertThat(result).isEqualTo(expectedKonfigurieterWahltag);
         }
     }
 }

@@ -1,37 +1,34 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Kopfdaten;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.KopfdatenRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.springframework.beans.factory.annotation.Autowired;
 
+@RequiredArgsConstructor
 public class InitializeKopfdaten {
 
-    @Autowired
-    ExceptionFactory exceptionFactory;
+    private final ExceptionFactory exceptionFactory;
 
-    @Autowired
-    KopfdatenModelMapper kopfdatenModelMapper;
 
-    @Autowired
-    KopfdatenRepository kopfdatenRepository;
+    //To Do: Speichern ins Repo durch die Aufrufer die das benötigen
+    // es wird jetzt Model zurückgegeben und nicht Entity, Mapping in Service/Aufrufer
+//    protected void initKopfdaten(BasisdatenModel basisdatenModel) {
+//        basisdatenModel.basisstrukturdaten()
+//                .forEach(basisstrukturdaten -> {
+//                    initKopfdata(basisstrukturdaten.wahlID(), basisstrukturdaten.wahlbezirkID(), basisdatenModel);
+//                });
+//    }
 
-    protected void initKopfdaten(BasisdatenModel basisdatenModel) {
-        basisdatenModel.basisstrukturdaten()
-                .forEach(basisstrukturdaten -> initKopfdata(basisstrukturdaten.wahlID(), basisstrukturdaten.wahlbezirkID(), basisdatenModel));
-    }
-
-    protected Kopfdaten initKopfdata(String wahlID, String wahlbezirkID, BasisdatenModel basisdaten) {
+    protected KopfdatenModel initKopfdata(String wahlID, String wahlbezirkID, BasisdatenModel basisdaten) {
         BasisstrukturdatenModel basisstrukturdaten = basisdaten.basisstrukturdaten().stream()
                 .filter(b -> b.wahlID().equals(wahlID) && b.wahlbezirkID().equals(wahlbezirkID))
                 .findAny().orElse(null);
 
         if (basisstrukturdaten == null)
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.INITIALIZE_KOPFDATEN_NO_BASISSTRUKTURDATEN);
+             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.INITIALIZE_KOPFDATEN_NO_BASISSTRUKTURDATEN);
 
         WahlModel wahl = basisdaten.wahlen().stream()
                 .filter(w -> w.wahlID().equals(wahlID))
@@ -51,12 +48,12 @@ public class InitializeKopfdaten {
         return createKopfdaten(wahl, wahlbezirk, stimmzettelgebiet);
     }
 
-    private Kopfdaten createKopfdaten(WahlModel wahl, WahlbezirkModel wahlbezirk, StimmzettelgebietModel stimmzettelgebiet) {
+    private KopfdatenModel createKopfdaten(WahlModel wahl, WahlbezirkModel wahlbezirk, StimmzettelgebietModel stimmzettelgebiet) {
 
         val bezirkUndWahlID = new BezirkUndWahlID(wahl.wahlID(), wahlbezirk.identifikator());
         val gemeinde = "LHM";
 
-        KopfdatenModel kopfdaten = new KopfdatenModel(
+        return new KopfdatenModel(
                 bezirkUndWahlID,
                 gemeinde,
                 stimmzettelgebiet.stimmzettelgebietsart(),
@@ -64,10 +61,5 @@ public class InitializeKopfdaten {
                 stimmzettelgebiet.name(),
                 wahl.name(),
                 wahlbezirk.nummer());
-
-        val kopfdatenEntity = kopfdatenModelMapper.toEntity(kopfdaten);
-        kopfdatenRepository.save(kopfdatenEntity);
-
-        return kopfdatenEntity;
     }
 }

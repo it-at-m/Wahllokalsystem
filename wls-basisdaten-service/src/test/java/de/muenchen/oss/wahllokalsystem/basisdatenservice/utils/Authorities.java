@@ -108,6 +108,11 @@ public class Authorities {
             REPOSITORY_DELETE_KOPFDATEN
     };
 
+    public static final String[] ALL_AUTHORITIES_READ_KOPFDATEN_IF_DATA_EXISTS_IN_REPO = {
+            SERVICE_GET_KOPFDATEN,
+            REPOSITORY_READ_KOPFDATEN
+    };
+
     public static final String[] ALL_AUTHORITIES_READ_KOPFDATEN = {
             SERVICE_GET_KOPFDATEN,
             REPOSITORY_READ_KOPFDATEN,

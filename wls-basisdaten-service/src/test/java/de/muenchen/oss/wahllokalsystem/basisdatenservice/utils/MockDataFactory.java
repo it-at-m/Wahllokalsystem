@@ -19,6 +19,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.Wahlbez
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisstrukturdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KonfigurierterWahltagModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KopfdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.StimmzettelgebietModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.WahlbezirkModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
@@ -40,6 +41,18 @@ public class MockDataFactory {
                 szGebietsName,
                 wahlname,
                 wahlbezirkNummer);
+    }
+
+    public static KopfdatenModel createKopfdatenModelFor(String wahlID, String wahlbezirkID, StimmzettelgebietsartModel szga, String szGebietsNummer, String szGebietsName, String wahlname, String wahlbezirkNummer) {
+        return new KopfdatenModel(
+                new BezirkUndWahlID(wahlID, wahlbezirkID),
+                "LHM",
+                szga,
+                szGebietsNummer,
+                szGebietsName,
+                wahlname,
+                wahlbezirkNummer
+                );
     }
 
     public static Kopfdaten createKopfdatenEntityFor(String wahlID, String wahlbezirkID, Stimmzettelgebietsart szga, String szGebietsName, String szGebietsNummer, String wahlname, String wahlbezirkNummer) {

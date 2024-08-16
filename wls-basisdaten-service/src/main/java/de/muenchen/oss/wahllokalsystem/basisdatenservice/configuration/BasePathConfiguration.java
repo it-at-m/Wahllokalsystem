@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.ApiClient;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,10 +12,15 @@ public class BasePathConfiguration {
     @Value("${app.clients.eai.basePath}")
     String eaiBasePath;
 
-    private final ApiClient eaiApiClient;
+    @Value("${app.clients.infomanagement.basePath}")
+    String infomanagementBasePath;
+
+    private final de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.ApiClient eaiApiClient;
+    private final de.muenchen.oss.wahllokalsystem.basisdatenservice.infomanagement.ApiClient infomanagementApiClient;
 
     @PostConstruct
     public void updateBasePaths() {
         eaiApiClient.setBasePath(eaiBasePath);
+        infomanagementApiClient.setBasePath(infomanagementBasePath);
     }
 }

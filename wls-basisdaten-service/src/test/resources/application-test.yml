@@ -2,6 +2,8 @@ app:
   clients:
     eai:
       basePath: http://localhost:${wiremock.server.port}/
+    infomanagement:
+      basePath: http://localhost:${wiremock.server.port}/
 
 spring:
   # Spring JPA

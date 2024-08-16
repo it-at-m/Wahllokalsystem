@@ -24,6 +24,9 @@ public class ExceptionConstants {
     public static ExceptionDataWrapper FAILED_COMMUNICATION_WITH_EAI = new ExceptionDataWrapper("100",
             "Bei der Kommunikation mit dem Aoueai-Service ist ein Fehler aufgetreten. Es konnten daher keine Daten geladen werden.");
 
+    public static ExceptionDataWrapper FAILED_COMMUNICATION_WITH_SERVICE = new ExceptionDataWrapper("101",
+            "Bei der Kommunikation mit einem anderen Service ist ein Fehler aufgetreten.");
+
     public static ExceptionDataWrapper GETHANDBUCH_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("301", "getHandbuch: Suchkriterien unvollständig.");
     public static ExceptionDataWrapper GETHANDBUCH_KEINE_DATEN = new ExceptionDataWrapper("302", "Das Handbuch konnte nicht geladen werden.");
 
@@ -57,4 +60,16 @@ public class ExceptionConstants {
             "postWahlen: Die Wahlen konnten nicht gespeichert werden.");
     public static ExceptionDataWrapper CODE_GETWAHLBEZIRKE_NO_WAHLTAG = new ExceptionDataWrapper("313",
             "getWahlen: Es wurde kein Wahltag zu dieser WahltagID gefunden. Bitte legen Sie die Basisdaten an.");
+
+    public static final ExceptionDataWrapper GETKOPFDATEN_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("303",
+            "getKopfdaten: Suchkriterien unvollständig.");
+    public static final ExceptionDataWrapper GETKOPFDATEN_NO_KONFIGURIERTERWAHLTAG = new ExceptionDataWrapper("304",
+            "getKopfdaten: Es wurde kein KonfigurierterWahltag gefunden.");
+    public static final ExceptionDataWrapper GETKOPFDATEN_NO_BASISDATEN = new ExceptionDataWrapper("305", "getKopfdaten: Es wurden keine Basisdaten gefunden.");
+    public static final ExceptionDataWrapper INITIALIZE_KOPFDATEN_NO_BASISSTRUKTURDATEN = new ExceptionDataWrapper("322",
+            "initializeKopfdaten: Es wurden keine Basisstrukturdaten gefunden.");
+    public static final ExceptionDataWrapper INITIALIZE_KOPFDATEN_NO_WAHL_WAHLBEZIRK_STIMMZETTELGEBIET = new ExceptionDataWrapper("321",
+            "initializeKopfdaten: Die vorhandenen Daten führen zu keinem richtigen Ergebnis, bitte überprüfen Sie die IVU Konfiguration");
+    public static final ExceptionDataWrapper INITIALIZE_KOPFDATEN_BASISDATEN_DATA_INCONSISTENTCY = new ExceptionDataWrapper("323",
+            "BasisdatenValidierung: Es gab Inkonsistenzen in den Bestandteilen der Basisdaten. Basisstrukturdaten, Wahlen, Wahlbezirke, Stimmzettelgebiete konnten nicht eindeutig einander zugeordnet werden.");
 }

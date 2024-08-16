@@ -11,7 +11,7 @@ public record WahlModel(@NotNull String wahlID,
                         @NotNull String name,
                         @NotNull Long reihenfolge,
                         @NotNull Long waehlerverzeichnisnummer,
-                        @NotNull java.time.LocalDate wahltag,
+                        @NotNull LocalDate wahltag,
                         @NotNull Wahlart wahlart,
                         Farbe farbe,
                         String nummer

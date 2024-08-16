@@ -38,3 +38,4 @@ includes:
   - path: add-authorities-eai-wahlbeteiligung.yml
   - path: add-authorities-basisdaten-referendumvorlagen.yml
   - path: add-authorities-basisdaten-wahlen.yml
+  - path: add-authorities-basisdaten-kopfdaten.yml

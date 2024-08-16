@@ -51,7 +51,7 @@ class KopfdatenServiceTest {
         void dataIsLoadedFromRemoteIfNotExistingInRepo() {
             val bezirkUndWahlId = new BezirkUndWahlID("wahlID1", "wahlbezirkID1_1");
             val forDate = LocalDate.now().plusMonths(1);
-            val mockedKonfigurierterWahltagFromClient = MockDataFactory.createClientKonfigurierterWahltagModel(forDate);
+            val mockedKonfigurierterWahltagFromClient = MockDataFactory.createClientKonfigurierterWahltagModel(forDate, true);
             val mockedBasisdatenModelFromClient = MockDataFactory.createBasisdatenModel(mockedKonfigurierterWahltagFromClient.wahltag());
 
             val expectedKopfdatenFromClient = MockDataFactory.createKopfdatenModelFor("wahlID1", "wahlbezirkID1_1",
@@ -78,7 +78,7 @@ class KopfdatenServiceTest {
                     Stimmzettelgebietsart.SG, "Munich-Repo", "120",
                     "Bundestagswahl", "1201");
 
-            val mockedKonfigurierterWahltagFromClient = MockDataFactory.createClientKonfigurierterWahltagModel(forDate);
+            val mockedKonfigurierterWahltagFromClient = MockDataFactory.createClientKonfigurierterWahltagModel(forDate, true);
             val mockedBasisdatenModelFromClient = MockDataFactory.createBasisdatenModel(mockedKonfigurierterWahltagFromClient.wahltag());
 
             val expectedKopfdaten = MockDataFactory.createKopfdatenModelFor("wahlID1", "wahlbezirkID1_1",
@@ -106,7 +106,7 @@ class KopfdatenServiceTest {
         void throwsFachlicheWlsExceptionIfBasisdataPartialEmptyOrNotConsistent() {
             val bezirkUndWahlId = new BezirkUndWahlID("wahlID99", "wahlbezirkID1_99");
             val forDate = LocalDate.now().plusMonths(1);
-            val mockedKonfigurierterWahltagFromClient = MockDataFactory.createClientKonfigurierterWahltagModel(forDate);
+            val mockedKonfigurierterWahltagFromClient = MockDataFactory.createClientKonfigurierterWahltagModel(forDate, true);
             val mockedBasisdatenModelFromClient = MockDataFactory.createBasisdatenModel(mockedKonfigurierterWahltagFromClient.wahltag());
 
             Mockito.when(kopfdatenRepository.findById(bezirkUndWahlId)).thenReturn(Optional.ofNullable(null));

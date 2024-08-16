@@ -82,7 +82,8 @@ public class KopfdatenControllerIntegrationTest {
         @Test
         void loadedFromExternal() throws Exception {
             // mock infomanagement konfigurierterWahltag
-            KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1), KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
+            KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
             WireMock.stubFor(WireMock.get("/businessActions/konfigurierterWahltag")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(infomanagementKonfigurierterWahltag))));
@@ -113,7 +114,8 @@ public class KopfdatenControllerIntegrationTest {
         @Transactional
         void externalDataIsPersisted() throws Exception {
             // mock infomanagement konfigurierterWahltag
-            KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1), KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
+            KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
             WireMock.stubFor(WireMock.get("/businessActions/konfigurierterWahltag")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(infomanagementKonfigurierterWahltag))));
@@ -192,7 +194,8 @@ public class KopfdatenControllerIntegrationTest {
             kopfdatenRepository.deleteAll();
 
             // mock infomanagement konfigurierterWahltag
-            KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1), KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
+            KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
             WireMock.stubFor(WireMock.get("/businessActions/konfigurierterWahltag")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(infomanagementKonfigurierterWahltag))));
@@ -223,7 +226,8 @@ public class KopfdatenControllerIntegrationTest {
 
         @Test
         void technischeWlsExceptionWhenFailedCommunicationWithInfomanagementClient() throws Exception {
-            KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1), KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
+            KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
 
             WireMock.stubFor(WireMock.get("/businessActions/konfigurierterWahltag")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.NOT_FOUND.value())));
@@ -245,7 +249,8 @@ public class KopfdatenControllerIntegrationTest {
 
         @Test
         void technischeWlsExceptionWhenFailedComunicationWithEaiAndKopfdatenNotFound() throws Exception {
-            KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1), KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
+            KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
 
             WireMock.stubFor(WireMock.get("/businessActions/konfigurierterWahltag")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
@@ -268,7 +273,8 @@ public class KopfdatenControllerIntegrationTest {
 
         @Test
         void fachlicheWlsExceptionWhenNoKonfigurierterWahltagNoContent() throws Exception {
-            KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1), KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
+            KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
 
             WireMock.stubFor(WireMock.get("/businessActions/konfigurierterWahltag")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.NO_CONTENT.value())));
@@ -290,7 +296,8 @@ public class KopfdatenControllerIntegrationTest {
 
         @Test
         void fachlichecheWlsExceptionWhenKopfdatenNoContent() throws Exception {
-            KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1), KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
+            KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
 
             WireMock.stubFor(WireMock.get("/businessActions/konfigurierterWahltag")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())

@@ -58,7 +58,8 @@ public class KopfdatenServiceSecurityTest {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_READ_KOPFDATEN);
 
             // mock infomanagement konfigurierterWahltag
-            KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1), KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
+            KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
             WireMock.stubFor(WireMock.get("/businessActions/konfigurierterWahltag")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(infomanagementKonfigurierterWahltag))));
@@ -80,7 +81,8 @@ public class KopfdatenServiceSecurityTest {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
             emptyTheRepository();
             // mock infomanagement konfigurierterWahltag
-            KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1), KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
+            KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
             WireMock.stubFor(WireMock.get("/businessActions/konfigurierterWahltag")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(infomanagementKonfigurierterWahltag))));
@@ -114,7 +116,8 @@ public class KopfdatenServiceSecurityTest {
             writeDataToRepository();
 
             // mock infomanagement konfigurierterWahltag
-            KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1), KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
+            KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
             WireMock.stubFor(WireMock.get("/businessActions/konfigurierterWahltag")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(infomanagementKonfigurierterWahltag))));

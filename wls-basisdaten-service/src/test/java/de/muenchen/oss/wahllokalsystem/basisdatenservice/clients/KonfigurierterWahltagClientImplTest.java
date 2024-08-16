@@ -40,7 +40,8 @@ class KonfigurierterWahltagClientImplTest {
 
         @Test
         void clientResponseIsMapped() {
-            val mockedClientResponse = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1), KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
+            val mockedClientResponse = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
             val mockedMappedClientResponse = KonfigurierterWahltagModel.builder().build();
 
             Mockito.when(konfigurierterWahltagControllerApi.getKonfigurierterWahltag())

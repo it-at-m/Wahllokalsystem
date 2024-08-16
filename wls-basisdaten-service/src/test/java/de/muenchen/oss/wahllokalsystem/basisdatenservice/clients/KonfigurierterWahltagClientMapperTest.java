@@ -18,7 +18,8 @@ class KonfigurierterWahltagClientMapperTest {
 
         @Test
         void isMappedIfStatusAktive() {
-            val konfigurierterWahltagDTO = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1), KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
+            val konfigurierterWahltagDTO = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
 
             Assertions.assertThat(konfigurierterWahltagDTO).hasNoNullFieldsOrProperties();
 
@@ -31,7 +32,8 @@ class KonfigurierterWahltagClientMapperTest {
 
         @Test
         void isMappedIfStatusInaktive() {
-            val konfigurierterWahltagDTO = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1), KonfigurierterWahltagDTO.WahltagStatusEnum.INAKTIV);
+            val konfigurierterWahltagDTO = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.INAKTIV);
 
             Assertions.assertThat(konfigurierterWahltagDTO).hasNoNullFieldsOrProperties();
 

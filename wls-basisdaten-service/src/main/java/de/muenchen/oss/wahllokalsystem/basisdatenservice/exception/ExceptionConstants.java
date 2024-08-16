@@ -33,6 +33,8 @@ public class ExceptionConstants {
     public static ExceptionDataWrapper POSTHANDBUCH_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("315", "postHandbuch: Suchkriterien unvollständig.");
     public static ExceptionDataWrapper POSTHANDBUCH_SPEICHERN_NICHT_ERFOLGREICH = new ExceptionDataWrapper("316",
             "postHandbuch: Das speichern des Handbuches war nicht erfolgreich.");
+    public static ExceptionDataWrapper RESET_WAHLEN_NICHT_ERFOLGREICH = new ExceptionDataWrapper("317",
+            "resetWahlen: Das Zurücksetzen der Wahlen war nicht erfolgreich.");
 
     public static ExceptionDataWrapper GETUNGUELTIGEWAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("331",
             "getUngueltigews: Suchkriterien unvollständig.");
@@ -44,6 +46,21 @@ public class ExceptionConstants {
     public static ExceptionDataWrapper POSTUNGUELTIGEWS_SPEICHERN_NICHT_ERFOLGREICH = new ExceptionDataWrapper("346",
             "postUngueltigews: Das speichern der ungueltigen Wahlscheine war nicht erfolgreich.");
 
+    public static ExceptionDataWrapper GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("308",
+            "getReferendumvorlagen: Suchkriterien unvollständig.");
+
+    public static ExceptionDataWrapper WAHL_SPEICHERN_FEHLGESCHLAGEN = new ExceptionDataWrapper("351",
+            "postUngueltigeWahl: Das Speichern der Wahl ist fehlgeschlagen");
+
+    public static ExceptionDataWrapper CODE_GETWAHLEN_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("314",
+            "getWahlen: Der Wahltag zu den gesuchten Wahlen existiert nicht.");
+    public static ExceptionDataWrapper CODE_POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("317",
+            "postWahlen: Suchkriterien unvollständig. Die wahltagID ist leer oder null.");
+    public static ExceptionDataWrapper CODE_POSTWAHLEN_UNSAVEABLE = new ExceptionDataWrapper("318",
+            "postWahlen: Die Wahlen konnten nicht gespeichert werden.");
+    public static ExceptionDataWrapper CODE_GETWAHLBEZIRKE_NO_WAHLTAG = new ExceptionDataWrapper("313",
+            "getWahlen: Es wurde kein Wahltag zu dieser WahltagID gefunden. Bitte legen Sie die Basisdaten an.");
+  
     public static final ExceptionDataWrapper GETKOPFDATEN_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("303",
             "getKopfdaten: Suchkriterien unvollständig.");
     public static final ExceptionDataWrapper GETKOPFDATEN_NO_KONFIGURIERTERWAHLTAG = new ExceptionDataWrapper("304",
@@ -55,5 +72,4 @@ public class ExceptionConstants {
             "initializeKopfdaten: Die vorhanden Daten führen zu keinem richtigen Ergebnis, bitte überprüfen sie die IVU Konfiguration");
     public static final ExceptionDataWrapper INITIALIZE_KOPFDATEN_BASISDATEN_DATA_INCONSISTENTCY = new ExceptionDataWrapper("323",
             "BasisdatenValidierung: Es gab Inkonsistenzen in den Bestandteilen der Basisdaten. Basisstrukturdaten, Wahlen, Wahlbezirke, Stimmzettelgebiete konnten nicht eindeutig einander zugeordnetwerden.");
-
 }

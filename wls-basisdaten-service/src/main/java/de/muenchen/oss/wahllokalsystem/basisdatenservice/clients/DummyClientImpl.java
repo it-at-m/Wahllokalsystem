@@ -1,5 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
+import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart.BTW;
+import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart.EUW;
+import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart.LTW;
+
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Farbe;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart;
@@ -12,7 +16,13 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.Konf
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.StimmzettelgebietModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.WahlbezirkModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.WahldatenClient;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumoptionModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlageModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenClient;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenReferenceModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.KandidatModel;
@@ -30,7 +40,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Profile(Profiles.DUMMY_CLIENTS)
-public class DummyClientImpl implements WahlvorschlaegeClient, WahltageClient, KonfigurierterWahltagClient, WahldatenClient {
+public class DummyClientImpl implements WahlvorschlaegeClient, WahltageClient, ReferendumvorlagenClient, WahlenClient, KonfigurierterWahltagClient, WahldatenClient {
 
     @Override
     public WahlvorschlaegeModel getWahlvorschlaege(BezirkUndWahlID bezirkUndWahlID) {
@@ -52,9 +62,23 @@ public class DummyClientImpl implements WahlvorschlaegeClient, WahltageClient, K
                 new WahltagModel("wahltagID2", LocalDate.now().minusMonths(1), "Beschreibung Wahltag 2", "1"));
     }
 
+    public List<WahlModel> getWahlen(LocalDate wahltag, String wahltagNummer) throws WlsException {
+        return List.of(
+                new WahlModel("wahl1", "0", 1L, 1L, wahltag, BTW, new Farbe(0, 1, 2), "1"),
+                new WahlModel("wahl2", "1", 2L, 1L, wahltag, EUW, new Farbe(3, 4, 5), "1"),
+                new WahlModel("wahl3", "2", 3L, 1L, wahltag, LTW, new Farbe(6, 7, 8), "1"));
+    }
+
+    @Override
+    public ReferendumvorlagenModel getReferendumvorlagen(ReferendumvorlagenReferenceModel referendumvorlagenReferenceModel) {
+        return new ReferendumvorlagenModel("stimmzettelgebietID", Set.of(new ReferendumvorlageModel("wahlvorschlagID1", 1L, "kurzname1", "frage1",
+                Set.of(new ReferendumoptionModel("optionID11", "option11", 1L), new ReferendumoptionModel("optionID12", "option12", 2L))),
+                new ReferendumvorlageModel("wahlvorschlagID2", 2L, "kurzname2", "frage2",
+                        Set.of(new ReferendumoptionModel("optionID21", "option21", 1L), new ReferendumoptionModel("optionID22", "option22", 2L)))));
+    }
+  
     @Override
     public KonfigurierterWahltagModel getKonfigurierterWahltag() throws WlsException {
-
         return new KonfigurierterWahltagModel(LocalDate.now().plusMonths(1), "wahltagID1", true, "1");
     }
 

@@ -33,6 +33,7 @@ class DummyClientImplTest {
         }
     }
 
+    @Nested
     class GetWahlen {
 
         @Test
@@ -41,8 +42,8 @@ class DummyClientImplTest {
             Assertions.assertThat(result).size().isPositive();
         }
     }
-  
-     @Nested
+
+    @Nested
     class LoadBasisdaten {
 
         @Test

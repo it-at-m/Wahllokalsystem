@@ -40,7 +40,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Profile(Profiles.DUMMY_CLIENTS)
-public class DummyClientImpl implements WahlvorschlaegeClient, WahltageClient, ReferendumvorlagenClient, WahlenClient, KonfigurierterWahltagClient, WahldatenClient {
+public class DummyClientImpl
+        implements WahlvorschlaegeClient, WahltageClient, ReferendumvorlagenClient, WahlenClient, KonfigurierterWahltagClient, WahldatenClient {
 
     @Override
     public WahlvorschlaegeModel getWahlvorschlaege(BezirkUndWahlID bezirkUndWahlID) {
@@ -76,7 +77,7 @@ public class DummyClientImpl implements WahlvorschlaegeClient, WahltageClient, R
                 new ReferendumvorlageModel("wahlvorschlagID2", 2L, "kurzname2", "frage2",
                         Set.of(new ReferendumoptionModel("optionID21", "option21", 1L), new ReferendumoptionModel("optionID22", "option22", 2L)))));
     }
-  
+
     @Override
     public KonfigurierterWahltagModel getKonfigurierterWahltag() throws WlsException {
         return new KonfigurierterWahltagModel(LocalDate.now().plusMonths(1), "wahltagID1", true, "1");

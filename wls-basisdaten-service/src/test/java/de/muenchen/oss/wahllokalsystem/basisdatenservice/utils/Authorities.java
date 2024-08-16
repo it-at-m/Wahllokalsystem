@@ -20,7 +20,7 @@ public class Authorities {
     public static final String SERVICE_POST_UNGUELTIGEWAHLSCHEINE = "Basisdaten_BUSINESSACTION_PostUngueltigews";
 
     public static final String SERVICE_GET_KOPFDATEN = "Basisdaten_BUSINESSACTION_GetKopfdaten";
-  
+
     public static final String SERVICE_GET_REFERENDUMVORLAGEN = "Basisdaten_BUSINESSACTION_GetReferendumvorlagen";
 
     public static final String REPOSITORY_READ_WAHLVORSCHLAEGE = "Basisdaten_READ_WLSWahlvorschlaege";
@@ -58,7 +58,7 @@ public class Authorities {
     public static final String REPOSITORY_READ_REFERENDUMVORLAGE = "Basisdaten_READ_Referendumvorlage";
     public static final String REPOSITORY_WRITE_REFERENDUMVORLAGE = "Basisdaten_WRITE_Referendumvorlage";
     public static final String REPOSITORY_DELETE_REFERENDUMVORLAGE = "Basisdaten_DELETE_Referendumvorlage";
-  
+
     public static final String REPOSITORY_READ_KOPFDATEN = "Basisdaten_READ_Kopfdaten";
     public static final String REPOSITORY_WRITE_KOPFDATEN = "Basisdaten_WRITE_Kopfdaten";
     public static final String REPOSITORY_DELETE_KOPFDATEN = "Basisdaten_DELETE_Kopfdaten";
@@ -141,7 +141,7 @@ public class Authorities {
             REPOSITORY_WRITE_REFERENDUMVORLAGEN,
             REPOSITORY_WRITE_REFERENDUMVORLAGE
     };
-    
+
     public static final String[] ALL_AUTHORITIES_DELETE_KOPFDATEN = {
             SERVICE_GET_KOPFDATEN,
             REPOSITORY_READ_KOPFDATEN,
@@ -172,5 +172,5 @@ public class Authorities {
             S2S_INFOMANAGEMENT_REPOSITORY_READ_KONFIGURIERTERWAHLTAG,
             S2S_INFOMANAGEMENT_REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
             S2S_INFOMANAGEMENT_REPOSITORY_DELETE_KONFIGURIERTERWAHLTAG
-     };
+    };
 }

@@ -60,7 +60,7 @@ public class ExceptionConstants {
             "postWahlen: Die Wahlen konnten nicht gespeichert werden.");
     public static ExceptionDataWrapper CODE_GETWAHLBEZIRKE_NO_WAHLTAG = new ExceptionDataWrapper("313",
             "getWahlen: Es wurde kein Wahltag zu dieser WahltagID gefunden. Bitte legen Sie die Basisdaten an.");
-  
+
     public static final ExceptionDataWrapper GETKOPFDATEN_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("303",
             "getKopfdaten: Suchkriterien unvollständig.");
     public static final ExceptionDataWrapper GETKOPFDATEN_NO_KONFIGURIERTERWAHLTAG = new ExceptionDataWrapper("304",

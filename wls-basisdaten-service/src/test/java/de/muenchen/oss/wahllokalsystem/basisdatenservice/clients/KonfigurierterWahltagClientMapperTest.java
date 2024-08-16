@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.infomanagement.model.KonfigurierterWahltagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.MockDataFactory;
 import java.time.LocalDate;
 import lombok.val;
@@ -16,14 +17,29 @@ class KonfigurierterWahltagClientMapperTest {
     class FromRemoteClientDTOToModel {
 
         @Test
-        void isMapped() {
-            val konfigurierterWahltagDTO = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1));
+        void isMappedIfStatusAktive() {
+            val konfigurierterWahltagDTO = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
 
             Assertions.assertThat(konfigurierterWahltagDTO).hasNoNullFieldsOrProperties();
 
             val result = unitUnderTest.fromRemoteClientDTOToModel(konfigurierterWahltagDTO);
 
-            val expectedKonfigurieterWahltag = MockDataFactory.createClientKonfigurierterWahltagModel(LocalDate.now().plusMonths(1));
+            val expectedKonfigurieterWahltag = MockDataFactory.createClientKonfigurierterWahltagModel(LocalDate.now().plusMonths(1), true);
+
+            Assertions.assertThat(result).isEqualTo(expectedKonfigurieterWahltag);
+        }
+
+        @Test
+        void isMappedIfStatusInaktive() {
+            val konfigurierterWahltagDTO = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.INAKTIV);
+
+            Assertions.assertThat(konfigurierterWahltagDTO).hasNoNullFieldsOrProperties();
+
+            val result = unitUnderTest.fromRemoteClientDTOToModel(konfigurierterWahltagDTO);
+
+            val expectedKonfigurieterWahltag = MockDataFactory.createClientKonfigurierterWahltagModel(LocalDate.now().plusMonths(1), false);
 
             Assertions.assertThat(result).isEqualTo(expectedKonfigurieterWahltag);
         }

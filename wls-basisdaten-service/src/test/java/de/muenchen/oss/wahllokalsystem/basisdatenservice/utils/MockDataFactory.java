@@ -202,18 +202,18 @@ public class MockDataFactory {
         return basisdatenDTO;
     }
 
-    public static KonfigurierterWahltagDTO createClientKonfigurierterWahltagDTO(LocalDate forDate) {
+    public static KonfigurierterWahltagDTO createClientKonfigurierterWahltagDTO(LocalDate forDate, KonfigurierterWahltagDTO.WahltagStatusEnum status) {
         val konfigurierterWahltagDTO = new KonfigurierterWahltagDTO();
         konfigurierterWahltagDTO.setWahltag(forDate);
         konfigurierterWahltagDTO.setWahltagID("wahltagID1");
-        konfigurierterWahltagDTO.setWahltagStatus(KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
+        konfigurierterWahltagDTO.setWahltagStatus(status);
         konfigurierterWahltagDTO.setNummer("nummerWahltag");
 
         return konfigurierterWahltagDTO;
     }
 
-    public static KonfigurierterWahltagModel createClientKonfigurierterWahltagModel(LocalDate forDate) {
-        return new KonfigurierterWahltagModel(forDate, "wahltagID1", true, "nummerWahltag");
+    public static KonfigurierterWahltagModel createClientKonfigurierterWahltagModel(LocalDate forDate, Boolean isWahltagActive) {
+        return new KonfigurierterWahltagModel(forDate, "wahltagID1", isWahltagActive, "nummerWahltag");
     }
 
     private List<Wahltag> createWahltagList(String wahltagIDPrefix) {

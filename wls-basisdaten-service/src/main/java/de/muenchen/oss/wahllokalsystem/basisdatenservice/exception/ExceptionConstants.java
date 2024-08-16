@@ -69,7 +69,7 @@ public class ExceptionConstants {
     public static final ExceptionDataWrapper INITIALIZE_KOPFDATEN_NO_BASISSTRUKTURDATEN = new ExceptionDataWrapper("322",
             "initializeKopfdaten: Es wurden keine Basisstrukturdaten gefunden.");
     public static final ExceptionDataWrapper INITIALIZE_KOPFDATEN_NO_WAHL_WAHLBEZIRK_STIMMZETTELGEBIET = new ExceptionDataWrapper("321",
-            "initializeKopfdaten: Die vorhanden Daten führen zu keinem richtigen Ergebnis, bitte überprüfen sie die IVU Konfiguration");
+            "initializeKopfdaten: Die vorhandenen Daten führen zu keinem richtigen Ergebnis, bitte überprüfen Sie die IVU Konfiguration");
     public static final ExceptionDataWrapper INITIALIZE_KOPFDATEN_BASISDATEN_DATA_INCONSISTENTCY = new ExceptionDataWrapper("323",
             "BasisdatenValidierung: Es gab Inkonsistenzen in den Bestandteilen der Basisdaten. Basisstrukturdaten, Wahlen, Wahlbezirke, Stimmzettelgebiete konnten nicht eindeutig einander zugeordnetwerden.");
 }

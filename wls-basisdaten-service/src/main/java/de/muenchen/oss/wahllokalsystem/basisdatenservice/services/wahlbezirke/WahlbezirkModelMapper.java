@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
 public interface WahlbezirkModelMapper {
@@ -18,6 +19,8 @@ public interface WahlbezirkModelMapper {
 
     WahlbezirkModel fromEntitytoModel(Wahlbezirk entity);
 
+    @Mapping(source="identifikator", target="wahlbezirkID")
+    @Mapping(source="wahlbezirkArt", target="wahlbezirkart")
     Wahlbezirk fromDTOtoEntity(WahlbezirkDTO dto);
 
     List<Wahlbezirk> fromListOfWahlbezirkModeltoListOfWahlbezirkEntities(List<WahlbezirkModel> wahlbezirkModelList);

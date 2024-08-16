@@ -152,7 +152,7 @@ class BasisdatenValidatorTest {
             val valideBasisdaten = MockDataFactory.createBasisdatenModel(LocalDate.now());
 
             Set<WahlbezirkModel> moreWahlbezirke = new ImmutableSet.Builder<WahlbezirkModel>()
-                    .add(WahlbezirkModel.builder().identifikator("wahlbezirk999").wahlID("wahlID987").build())
+                    .add(WahlbezirkModel.builder().wahlbezirkID("wahlbezirk999").wahlID("wahlID987").build())
                     .addAll(valideBasisdaten.wahlbezirke())
                     .build();
             val invalideWahlbezirke = BasisdatenModel.builder()

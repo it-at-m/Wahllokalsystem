@@ -22,19 +22,12 @@ public class KopfdatenService {
     private final KopfdatenModelMapper kopfdatenModelMapper;
     private final ExceptionFactory exceptionFactory;
 
-
-
-
     @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetKopfdaten')")
     @Transactional
     public KopfdatenModel getKopfdaten(BezirkUndWahlID bezirkUndWahlID) {
-        log.info("getKopfdaten");
-
         final KopfdatenModel kopfdatenModel;
 
         kopfdatenValidator.validWahlIdUndWahlbezirkIDOrThrow(bezirkUndWahlID);
-        final InitializeKopfdaten kopfDataInitializer = new InitializeKopfdaten(exceptionFactory);
-
 
         val kopfdaten = kopfdatenRepository.findById(bezirkUndWahlID);
 
@@ -43,6 +36,7 @@ public class KopfdatenService {
         } else {
             log.error("#getKopfdaten: Für Wahlbezirk {} mit WahlID {} waren keine Kopfdaten in der Datenbank", bezirkUndWahlID.getWahlbezirkID(),
                     bezirkUndWahlID.getWahlID());
+            final InitializeKopfdaten kopfDataInitializer = new InitializeKopfdaten(exceptionFactory);
             KonfigurierterWahltagModel konfigurierterWahltagModel = konfigurierterWahltagClient.getKonfigurierterWahltag();
             BasisdatenModel basisdatenModel = wahldatenClient.loadBasisdaten(konfigurierterWahltagModel.wahltag(), konfigurierterWahltagModel.nummer());
             kopfdatenModel = kopfDataInitializer.initKopfdata(bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID(), basisdatenModel);

@@ -12,15 +12,12 @@ public class InitializeKopfdaten {
 
     private final ExceptionFactory exceptionFactory;
 
-
-    //To Do: Speichern ins Repo durch die Aufrufer die das benötigen
-    // es wird jetzt Model zurückgegeben und nicht Entity, Mapping in Service/Aufrufer
-//    protected void initKopfdaten(BasisdatenModel basisdatenModel) {
-//        basisdatenModel.basisstrukturdaten()
-//                .forEach(basisstrukturdaten -> {
-//                    initKopfdata(basisstrukturdaten.wahlID(), basisstrukturdaten.wahlbezirkID(), basisdatenModel);
-//                });
-//    }
+    protected void initKopfdaten(BasisdatenModel basisdatenModel) {
+        basisdatenModel.basisstrukturdaten()
+                .forEach(basisstrukturdaten -> {
+                    initKopfdata(basisstrukturdaten.wahlID(), basisstrukturdaten.wahlbezirkID(), basisdatenModel);
+                });
+    }
 
     protected KopfdatenModel initKopfdata(String wahlID, String wahlbezirkID, BasisdatenModel basisdaten) {
         BasisstrukturdatenModel basisstrukturdaten = basisdaten.basisstrukturdaten().stream()
@@ -28,7 +25,7 @@ public class InitializeKopfdaten {
                 .findAny().orElse(null);
 
         if (basisstrukturdaten == null)
-             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.INITIALIZE_KOPFDATEN_NO_BASISSTRUKTURDATEN);
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.INITIALIZE_KOPFDATEN_NO_BASISSTRUKTURDATEN);
 
         WahlModel wahl = basisdaten.wahlen().stream()
                 .filter(w -> w.wahlID().equals(wahlID))

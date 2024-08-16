@@ -105,7 +105,7 @@ class BasisdatenValidatorTest {
         }
 
         @Test
-        void exceptioIfNotforEveryBasistrutkturdatenCorespondingAtLeastOneWahlOneWahlbezirkAndOneStimmzettelgebiet(){
+        void exceptioIfNotforEveryBasistrutkturdatenCorespondingAtLeastOneWahlOneWahlbezirkAndOneStimmzettelgebiet() {
             val valideBasisdaten = MockDataFactory.createBasisdatenModel(LocalDate.now());
             Set<BasisstrukturdatenModel> moreBasisstrukturdaten = new ImmutableSet.Builder<BasisstrukturdatenModel>()
                     .add(BasisstrukturdatenModel.builder().wahlID("wahlID999").build())
@@ -126,7 +126,7 @@ class BasisdatenValidatorTest {
         }
 
         @Test
-        void exceptioIfNotforEveryWahlCorespondingAtLeastOneBasistrutkturdatenAndOneWahlbezirk(){
+        void exceptioIfNotforEveryWahlCorespondingAtLeastOneBasistrutkturdatenAndOneWahlbezirk() {
             val valideBasisdaten = MockDataFactory.createBasisdatenModel(LocalDate.now());
 
             Set<WahlModel> moreWahlen = new ImmutableSet.Builder<WahlModel>()
@@ -147,7 +147,7 @@ class BasisdatenValidatorTest {
         }
 
         @Test
-        void exceptioIfNotforEveryWahlbezirkCorespondingAtLeastOneBasistrutkturdatenAndOneWahl(){
+        void exceptioIfNotforEveryWahlbezirkCorespondingAtLeastOneBasistrutkturdatenAndOneWahl() {
             val valideBasisdaten = MockDataFactory.createBasisdatenModel(LocalDate.now());
 
             Set<WahlbezirkModel> moreWahlbezirke = new ImmutableSet.Builder<WahlbezirkModel>()
@@ -168,7 +168,7 @@ class BasisdatenValidatorTest {
         }
 
         @Test
-        void exceptioIfNotforEveryStimmzettelgebietCorespondingAtLeastOneBasistrutkturdaten(){
+        void exceptioIfNotforEveryStimmzettelgebietCorespondingAtLeastOneBasistrutkturdaten() {
             val valideBasisdaten = MockDataFactory.createBasisdatenModel(LocalDate.now());
 
             Set<StimmzettelgebietModel> moreStimmzettelGebiete = new ImmutableSet.Builder<StimmzettelgebietModel>()

@@ -121,7 +121,8 @@ public class KopfdatenControllerIntegrationTest {
                             .withBody(objectMapper.writeValueAsBytes(infomanagementKonfigurierterWahltag))));
             // mock eai getBasisdaten
             BasisdatenDTO eaiBasisdaten = MockDataFactory.createClientBasisdatenDTO(LocalDate.now().plusMonths(1));
-            WireMock.stubFor(WireMock.get("/wahldaten/basisdaten?forDate=" + LocalDate.now().plusMonths(1) + "&withNummer=" + infomanagementKonfigurierterWahltag.getNummer())
+            WireMock.stubFor(WireMock
+                    .get("/wahldaten/basisdaten?forDate=" + LocalDate.now().plusMonths(1) + "&withNummer=" + infomanagementKonfigurierterWahltag.getNummer())
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(eaiBasisdaten))));
 
@@ -144,7 +145,7 @@ public class KopfdatenControllerIntegrationTest {
                     "Bundestagswahl", "1202");
 
             api.perform(request1).andExpect(status().isOk());
-            List<Kopfdaten> dataFromRepo = (List<Kopfdaten>) kopfdatenRepository.findAllById(List.of(new BezirkUndWahlID("wahlID1", "wahlbezirkID1_1") ));
+            List<Kopfdaten> dataFromRepo = (List<Kopfdaten>) kopfdatenRepository.findAllById(List.of(new BezirkUndWahlID("wahlID1", "wahlbezirkID1_1")));
             val expectedListOfData1 = List.of(expectedKopfdaten1);
             Assertions.assertThat(dataFromRepo)
                     .usingRecursiveComparison().ignoringCollectionOrder()
@@ -152,7 +153,7 @@ public class KopfdatenControllerIntegrationTest {
             kopfdatenRepository.deleteAll();
 
             api.perform(request2).andExpect(status().isOk());
-            dataFromRepo = (List<Kopfdaten>) kopfdatenRepository.findAllById(List.of( new BezirkUndWahlID("wahlID2", "wahlbezirkID2_1") ));
+            dataFromRepo = (List<Kopfdaten>) kopfdatenRepository.findAllById(List.of(new BezirkUndWahlID("wahlID2", "wahlbezirkID2_1")));
             val expectedListOfData2 = List.of(expectedKopfdaten2);
             Assertions.assertThat(dataFromRepo)
                     .usingRecursiveComparison().ignoringCollectionOrder()
@@ -160,7 +161,7 @@ public class KopfdatenControllerIntegrationTest {
             kopfdatenRepository.deleteAll();
 
             api.perform(request3).andExpect(status().isOk());
-            dataFromRepo = (List<Kopfdaten>) kopfdatenRepository.findAllById(List.of( new BezirkUndWahlID("wahlID1", "wahlbezirkID2_1") ));
+            dataFromRepo = (List<Kopfdaten>) kopfdatenRepository.findAllById(List.of(new BezirkUndWahlID("wahlID1", "wahlbezirkID2_1")));
             val expectedListOfData3 = List.of(expectedKopfdaten3);
 
             Assertions.assertThat(dataFromRepo)
@@ -179,7 +180,7 @@ public class KopfdatenControllerIntegrationTest {
                     "Bundestagswahl", "1202");
             kopfdatenRepository.saveAll(List.of(kopfdatenEntity1, kopfdatenEntity2));
 
-            val request = MockMvcRequestBuilders.get("/businessActions/kopfdaten/wahlID1/wahlbezirkID1_1" );
+            val request = MockMvcRequestBuilders.get("/businessActions/kopfdaten/wahlID1/wahlbezirkID1_1");
 
             val responseFromController_1 = api.perform(request).andExpect(status().isOk()).andReturn();
             val responseBodyAsDTO_1 = objectMapper.readValue(responseFromController_1.getResponse().getContentAsString(),
@@ -199,7 +200,8 @@ public class KopfdatenControllerIntegrationTest {
                             .withBody(objectMapper.writeValueAsBytes(infomanagementKonfigurierterWahltag))));
             // mock eai getBasisdaten
             BasisdatenDTO eaiBasisdaten = MockDataFactory.createClientBasisdatenDTO(LocalDate.now().plusMonths(1));
-            WireMock.stubFor(WireMock.get("/wahldaten/basisdaten?forDate=" + LocalDate.now().plusMonths(1) + "&withNummer=" + infomanagementKonfigurierterWahltag.getNummer())
+            WireMock.stubFor(WireMock
+                    .get("/wahldaten/basisdaten?forDate=" + LocalDate.now().plusMonths(1) + "&withNummer=" + infomanagementKonfigurierterWahltag.getNummer())
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(eaiBasisdaten))));
 
@@ -228,11 +230,11 @@ public class KopfdatenControllerIntegrationTest {
             WireMock.stubFor(WireMock.get("/businessActions/konfigurierterWahltag")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.NOT_FOUND.value())));
 
-            WireMock.stubFor(WireMock.get("/wahldaten/basisdaten?forDate=" + LocalDate.now().plusMonths(1) + "&withNummer=" + infomanagementKonfigurierterWahltag.getNummer())
+            WireMock.stubFor(WireMock
+                    .get("/wahldaten/basisdaten?forDate=" + LocalDate.now().plusMonths(1) + "&withNummer=" + infomanagementKonfigurierterWahltag.getNummer())
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.NOT_FOUND.value())));
 
-
-            val request = MockMvcRequestBuilders.get("/businessActions/kopfdaten/wahlID1/wahlbezirkID1_1" );
+            val request = MockMvcRequestBuilders.get("/businessActions/kopfdaten/wahlID1/wahlbezirkID1_1");
 
             val response = api.perform(request).andExpect(status().isInternalServerError()).andReturn();
             val responseBodyAsWlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
@@ -251,10 +253,11 @@ public class KopfdatenControllerIntegrationTest {
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(infomanagementKonfigurierterWahltag))));
 
-            WireMock.stubFor(WireMock.get("/wahldaten/basisdaten?forDate=" + LocalDate.now().plusMonths(1) + "&withNummer=" + infomanagementKonfigurierterWahltag.getNummer())
+            WireMock.stubFor(WireMock
+                    .get("/wahldaten/basisdaten?forDate=" + LocalDate.now().plusMonths(1) + "&withNummer=" + infomanagementKonfigurierterWahltag.getNummer())
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.NOT_FOUND.value())));
 
-            val request = MockMvcRequestBuilders.get("/businessActions/kopfdaten/wahlID1/wahlbezirkID1_1" );
+            val request = MockMvcRequestBuilders.get("/businessActions/kopfdaten/wahlID1/wahlbezirkID1_1");
 
             val response = api.perform(request).andExpect(status().isInternalServerError()).andReturn();
             val responseBodyAsWlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
@@ -272,11 +275,11 @@ public class KopfdatenControllerIntegrationTest {
             WireMock.stubFor(WireMock.get("/businessActions/konfigurierterWahltag")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.NO_CONTENT.value())));
 
-            WireMock.stubFor(WireMock.get("/wahldaten/basisdaten?forDate=" + LocalDate.now().plusMonths(1) + "&withNummer=" + infomanagementKonfigurierterWahltag.getNummer())
+            WireMock.stubFor(WireMock
+                    .get("/wahldaten/basisdaten?forDate=" + LocalDate.now().plusMonths(1) + "&withNummer=" + infomanagementKonfigurierterWahltag.getNummer())
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.NOT_FOUND.value())));
 
-
-            val request = MockMvcRequestBuilders.get("/businessActions/kopfdaten/wahlID1/wahlbezirkID1_1" );
+            val request = MockMvcRequestBuilders.get("/businessActions/kopfdaten/wahlID1/wahlbezirkID1_1");
 
             val response = api.perform(request).andExpect(status().isBadRequest()).andReturn();
             val responseBodyAsWlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
@@ -295,10 +298,11 @@ public class KopfdatenControllerIntegrationTest {
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(infomanagementKonfigurierterWahltag))));
 
-            WireMock.stubFor(WireMock.get("/wahldaten/basisdaten?forDate=" + LocalDate.now().plusMonths(1) + "&withNummer=" + infomanagementKonfigurierterWahltag.getNummer())
+            WireMock.stubFor(WireMock
+                    .get("/wahldaten/basisdaten?forDate=" + LocalDate.now().plusMonths(1) + "&withNummer=" + infomanagementKonfigurierterWahltag.getNummer())
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.NO_CONTENT.value())));
 
-            val request = MockMvcRequestBuilders.get("/businessActions/kopfdaten/wahlID1/wahlbezirkID1_1" );
+            val request = MockMvcRequestBuilders.get("/businessActions/kopfdaten/wahlID1/wahlbezirkID1_1");
 
             val response = api.perform(request).andExpect(status().isBadRequest()).andReturn();
             val responseBodyAsWlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);

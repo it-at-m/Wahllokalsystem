@@ -25,10 +25,10 @@ class KopfdatenModelMapperTest {
         val result = unitUnderTest.fromListOfEntitiesToListOfModels(entitiesToMap);
 
         val kopfdatenModel1 = MockDataFactory.createKopfdatenModelFor("wahlID1", "wahlbezirkID1_1",
-                StimmzettelgebietsartModel.SG, "120","Munich1",
+                StimmzettelgebietsartModel.SG, "120", "Munich1",
                 "Bundestagswahl", "1201");
         val kopfdatenModel2 = MockDataFactory.createKopfdatenModelFor("wahlID2", "wahlbezirkID1_2",
-                StimmzettelgebietsartModel.SG, "121","Munich2",
+                StimmzettelgebietsartModel.SG, "121", "Munich2",
                 "Bundestagswahl", "1202");
         val expectedResult = List.of(kopfdatenModel1, kopfdatenModel2);
 
@@ -36,23 +36,23 @@ class KopfdatenModelMapperTest {
     }
 
     @Test
-    void toModel(){
+    void toModel() {
         val kopfdatenEntity1 = MockDataFactory.createKopfdatenEntityFor("wahlID1", "wahlbezirkID1_1",
                 Stimmzettelgebietsart.SG, "Munich1", "120",
                 "Bundestagswahl", "1201");
         val result = unitUnderTest.toModel(kopfdatenEntity1);
 
         val kopfdatenModel1 = MockDataFactory.createKopfdatenModelFor("wahlID1", "wahlbezirkID1_1",
-                StimmzettelgebietsartModel.SG, "120","Munich1",
+                StimmzettelgebietsartModel.SG, "120", "Munich1",
                 "Bundestagswahl", "1201");
 
         Assertions.assertThat(result).isEqualTo(kopfdatenModel1);
     }
 
     @Test
-    void toEntity(){
+    void toEntity() {
         val kopfdatenModel1 = MockDataFactory.createKopfdatenModelFor("wahlID1", "wahlbezirkID1_1",
-                StimmzettelgebietsartModel.SG, "120","Munich1",
+                StimmzettelgebietsartModel.SG, "120", "Munich1",
                 "Bundestagswahl", "1201");
         val result = unitUnderTest.toEntity(kopfdatenModel1);
 

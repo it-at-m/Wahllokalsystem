@@ -31,7 +31,8 @@ import lombok.val;
 
 public class MockDataFactory {
 
-    public static KopfdatenDTO createControllerKopfdatenDTO(String wahlID, String wahlbezirkID, StimmzettelgebietsartDTO szgaDTO, String szGebietsNummer, String szGebietsName, String wahlname, String wahlbezirkNummer) {
+    public static KopfdatenDTO createControllerKopfdatenDTO(String wahlID, String wahlbezirkID, StimmzettelgebietsartDTO szgaDTO, String szGebietsNummer,
+            String szGebietsName, String wahlname, String wahlbezirkNummer) {
         return new KopfdatenDTO(
                 wahlID,
                 wahlbezirkID,
@@ -43,7 +44,8 @@ public class MockDataFactory {
                 wahlbezirkNummer);
     }
 
-    public static KopfdatenModel createKopfdatenModelFor(String wahlID, String wahlbezirkID, StimmzettelgebietsartModel szga, String szGebietsNummer, String szGebietsName, String wahlname, String wahlbezirkNummer) {
+    public static KopfdatenModel createKopfdatenModelFor(String wahlID, String wahlbezirkID, StimmzettelgebietsartModel szga, String szGebietsNummer,
+            String szGebietsName, String wahlname, String wahlbezirkNummer) {
         return new KopfdatenModel(
                 new BezirkUndWahlID(wahlID, wahlbezirkID),
                 "LHM",
@@ -51,11 +53,11 @@ public class MockDataFactory {
                 szGebietsNummer,
                 szGebietsName,
                 wahlname,
-                wahlbezirkNummer
-                );
+                wahlbezirkNummer);
     }
 
-    public static Kopfdaten createKopfdatenEntityFor(String wahlID, String wahlbezirkID, Stimmzettelgebietsart szga, String szGebietsName, String szGebietsNummer, String wahlname, String wahlbezirkNummer) {
+    public static Kopfdaten createKopfdatenEntityFor(String wahlID, String wahlbezirkID, Stimmzettelgebietsart szga, String szGebietsName,
+            String szGebietsNummer, String wahlname, String wahlbezirkNummer) {
         Kopfdaten kopfdaten = new Kopfdaten();
         kopfdaten.setBezirkUndWahlID(new BezirkUndWahlID(wahlID, wahlbezirkID));
         kopfdaten.setGemeinde("LHM");

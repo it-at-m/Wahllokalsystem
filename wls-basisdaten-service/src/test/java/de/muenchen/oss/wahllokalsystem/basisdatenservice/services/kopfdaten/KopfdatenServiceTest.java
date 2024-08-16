@@ -55,7 +55,7 @@ class KopfdatenServiceTest {
             val mockedBasisdatenModelFromClient = MockDataFactory.createBasisdatenModel(mockedKonfigurierterWahltagFromClient.wahltag());
 
             val expectedKopfdatenFromClient = MockDataFactory.createKopfdatenModelFor("wahlID1", "wahlbezirkID1_1",
-                    StimmzettelgebietsartModel.SG, "120","Munich",
+                    StimmzettelgebietsartModel.SG, "120", "Munich",
                     "Bundestagswahl", "1201");
 
             Mockito.when(kopfdatenRepository.findById(bezirkUndWahlId)).thenReturn(Optional.ofNullable(null));
@@ -75,24 +75,25 @@ class KopfdatenServiceTest {
             val forDate = LocalDate.now().plusMonths(1);
 
             val kopfdatenEntityInRepo = MockDataFactory.createKopfdatenEntityFor("wahlID1", "wahlbezirkID1_1",
-                            Stimmzettelgebietsart.SG, "Munich-Repo", "120",
-                            "Bundestagswahl", "1201");
+                    Stimmzettelgebietsart.SG, "Munich-Repo", "120",
+                    "Bundestagswahl", "1201");
 
             val mockedKonfigurierterWahltagFromClient = MockDataFactory.createClientKonfigurierterWahltagModel(forDate);
             val mockedBasisdatenModelFromClient = MockDataFactory.createBasisdatenModel(mockedKonfigurierterWahltagFromClient.wahltag());
 
             val expectedKopfdaten = MockDataFactory.createKopfdatenModelFor("wahlID1", "wahlbezirkID1_1",
-                    StimmzettelgebietsartModel.SG, "120","Munich-Repo",
+                    StimmzettelgebietsartModel.SG, "120", "Munich-Repo",
                     "Bundestagswahl", "1201");
 
             val notExpectedRemoteKopfdaten = MockDataFactory.createKopfdatenModelFor("wahlID1", "wahlbezirkID1_1",
-                    StimmzettelgebietsartModel.SG, "120","Munich",
+                    StimmzettelgebietsartModel.SG, "120", "Munich",
                     "Bundestagswahl", "1201");
 
             Mockito.when(kopfdatenRepository.findById(bezirkUndWahlId)).thenReturn(Optional.of(kopfdatenEntityInRepo));
             Mockito.when(kopfdatenModelMapper.toModel(kopfdatenEntityInRepo)).thenReturn(expectedKopfdaten);
             Mockito.lenient().when(konfigurierterWahltagClient.getKonfigurierterWahltag()).thenReturn(mockedKonfigurierterWahltagFromClient);
-            Mockito.lenient().when(wahldatenClient.loadBasisdaten(mockedKonfigurierterWahltagFromClient.wahltag(), mockedKonfigurierterWahltagFromClient.nummer()))
+            Mockito.lenient()
+                    .when(wahldatenClient.loadBasisdaten(mockedKonfigurierterWahltagFromClient.wahltag(), mockedKonfigurierterWahltagFromClient.nummer()))
                     .thenReturn(mockedBasisdatenModelFromClient);
 
             val result = unitUnderTest.getKopfdaten(bezirkUndWahlId);
@@ -102,7 +103,7 @@ class KopfdatenServiceTest {
         }
 
         @Test
-        void throwsFachlicheWlsExceptionIfBasisdataPartialEmptyOrNotConsistent(){
+        void throwsFachlicheWlsExceptionIfBasisdataPartialEmptyOrNotConsistent() {
             val bezirkUndWahlId = new BezirkUndWahlID("wahlID99", "wahlbezirkID1_99");
             val forDate = LocalDate.now().plusMonths(1);
             val mockedKonfigurierterWahltagFromClient = MockDataFactory.createClientKonfigurierterWahltagModel(forDate);
@@ -114,8 +115,10 @@ class KopfdatenServiceTest {
             Mockito.when(wahldatenClient.loadBasisdaten(mockedKonfigurierterWahltagFromClient.wahltag(), mockedKonfigurierterWahltagFromClient.nummer()))
                     .thenReturn(mockedBasisdatenModelFromClient);
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.INITIALIZE_KOPFDATEN_NO_BASISSTRUKTURDATEN)).thenReturn(mockedWlsException);
-            Mockito.lenient().when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.INITIALIZE_KOPFDATEN_NO_WAHL_WAHLBEZIRK_STIMMZETTELGEBIET)).thenReturn(mockedWlsException);
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.INITIALIZE_KOPFDATEN_NO_BASISSTRUKTURDATEN))
+                    .thenReturn(mockedWlsException);
+            Mockito.lenient().when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.INITIALIZE_KOPFDATEN_NO_WAHL_WAHLBEZIRK_STIMMZETTELGEBIET))
+                    .thenReturn(mockedWlsException);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.getKopfdaten(bezirkUndWahlId)).isInstanceOf(FachlicheWlsException.class);
         }

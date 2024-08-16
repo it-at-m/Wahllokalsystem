@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
 import jakarta.validation.constraints.NotNull;

@@ -14,6 +14,8 @@ public class ExceptionConstants {
     private static final String CODE_UNSAVEABLE = "903";
     private static final String MSG_UNSAVEABLE = "Fehler beim speichern: Daten konnten nicht gespeichert werden.";
 
+    private static final String CODE_NO_DATA_WAHLBEZIRK = "402";
+
     public static ExceptionDataWrapper SUCHKRITERIEN_UNVOLLSTAENDIG = new ExceptionDataWrapper(CODE_SUCHKRITERIEN_UNVOLLSTAENDIG,
             MSG_SUCHKRITERIEN_UNVOLLSTAENDIG);
 
@@ -58,8 +60,11 @@ public class ExceptionConstants {
             "postWahlen: Suchkriterien unvollständig. Die wahltagID ist leer oder null.");
     public static ExceptionDataWrapper CODE_POSTWAHLEN_UNSAVEABLE = new ExceptionDataWrapper("318",
             "postWahlen: Die Wahlen konnten nicht gespeichert werden.");
+
+    public static ExceptionDataWrapper CODE_GETWAHLBEZIRKE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("312",
+            "getWahlbezirke: Suchkriterien unvollständig. Die wahltagID ist leer oder null.");
     public static ExceptionDataWrapper CODE_GETWAHLBEZIRKE_NO_WAHLTAG = new ExceptionDataWrapper("313",
-            "getWahlen: Es wurde kein Wahltag zu dieser WahltagID gefunden. Bitte legen Sie die Basisdaten an.");
+            "Es wurde kein Wahltag zu dieser WahltagID gefunden. Bitte legen Sie die Basisdaten an.");
 
     public static final ExceptionDataWrapper GETKOPFDATEN_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("303",
             "getKopfdaten: Suchkriterien unvollständig.");
@@ -72,4 +77,5 @@ public class ExceptionConstants {
             "initializeKopfdaten: Die vorhanden Daten führen zu keinem richtigen Ergebnis, bitte überprüfen sie die IVU Konfiguration");
     public static final ExceptionDataWrapper INITIALIZE_KOPFDATEN_BASISDATEN_DATA_INCONSISTENTCY = new ExceptionDataWrapper("323",
             "BasisdatenValidierung: Es gab Inkonsistenzen in den Bestandteilen der Basisdaten. Basisstrukturdaten, Wahlen, Wahlbezirke, Stimmzettelgebiete konnten nicht eindeutig einander zugeordnetwerden.");
+    public static final ExceptionDataWrapper GETWAHLBEZIRKE_NO_DATA = new ExceptionDataWrapper(CODE_NO_DATA_WAHLBEZIRK, "getKopfdaten: Es wurden keine Basisdaten gefunden.");
 }

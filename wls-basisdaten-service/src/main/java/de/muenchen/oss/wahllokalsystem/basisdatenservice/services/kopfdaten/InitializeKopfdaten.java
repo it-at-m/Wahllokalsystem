@@ -33,7 +33,7 @@ public class InitializeKopfdaten {
                 .findAny().orElse(null);
 
         WahlbezirkModel wahlbezirk = basisdaten.wahlbezirke().stream()
-                .filter(w -> w.identifikator().equals(wahlbezirkID) && w.wahlID().equals(wahlID))
+                .filter(w -> w.wahlbezirkID().equals(wahlbezirkID) && w.wahlID().equals(wahlID))
                 .findAny().orElse(null);
 
         StimmzettelgebietModel stimmzettelgebiet = basisdaten.stimmzettelgebiete().stream()
@@ -48,7 +48,7 @@ public class InitializeKopfdaten {
 
     private KopfdatenModel createKopfdaten(WahlModel wahl, WahlbezirkModel wahlbezirk, StimmzettelgebietModel stimmzettelgebiet) {
 
-        val bezirkUndWahlID = new BezirkUndWahlID(wahl.wahlID(), wahlbezirk.identifikator());
+        val bezirkUndWahlID = new BezirkUndWahlID(wahl.wahlID(), wahlbezirk.wahlbezirkID());
         val gemeinde = "LHM";
 
         return new KopfdatenModel(

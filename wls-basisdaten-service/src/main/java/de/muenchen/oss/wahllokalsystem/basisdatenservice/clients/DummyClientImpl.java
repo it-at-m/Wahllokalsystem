@@ -21,6 +21,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorl
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenReferenceModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkeClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
@@ -41,7 +42,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Profile(Profiles.DUMMY_CLIENTS)
 public class DummyClientImpl
-        implements WahlvorschlaegeClient, WahltageClient, ReferendumvorlagenClient, WahlenClient, KonfigurierterWahltagClient, WahldatenClient {
+        implements WahlvorschlaegeClient, WahltageClient, ReferendumvorlagenClient, WahlenClient, KonfigurierterWahltagClient, WahldatenClient,
+        WahlbezirkeClient {
 
     @Override
     public WahlvorschlaegeModel getWahlvorschlaege(BezirkUndWahlID bezirkUndWahlID) {
@@ -106,5 +108,15 @@ public class DummyClientImpl
                 Set.of(
                         new StimmzettelgebietModel("szgID", "120", "Munich", forDate, StimmzettelgebietsartModel.SG),
                         new StimmzettelgebietModel("szgIDOther", "920", "Munich Center", forDate, StimmzettelgebietsartModel.SB)));
+    }
+
+    @Override
+    public Set<WahlbezirkModel> loadWahlbezirke(LocalDate forDate, String withNummer) throws WlsException {
+        return Set.of(
+                new WahlbezirkModel("wahlbezirkID1_1", WahlbezirkArtModel.UWB, "1201", forDate, "0", "wahlID1"),
+                new WahlbezirkModel("wahlbezirkID1_2", WahlbezirkArtModel.BWB, "1251", forDate, "0", "wahlID1"),
+                new WahlbezirkModel("wahlbezirkID2_1", WahlbezirkArtModel.UWB, "1202", forDate, "0", "wahlID1"),
+                new WahlbezirkModel("wahlbezirkID2_2", WahlbezirkArtModel.BWB, "1252", forDate, "0", "wahlID1"),
+                new WahlbezirkModel("wahlbezirkID2_2", WahlbezirkArtModel.BWB, "1252", forDate, "1", "wahlID2"));
     }
 }

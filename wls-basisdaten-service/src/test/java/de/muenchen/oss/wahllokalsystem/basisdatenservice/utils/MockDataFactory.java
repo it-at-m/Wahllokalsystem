@@ -1,5 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.utils;
 
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlbezirk;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlbezirkArt;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahltag;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Kopfdaten;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Stimmzettelgebietsart;
@@ -14,6 +16,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.Wahlbezir
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.infomanagement.model.KonfigurierterWahltagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.kopfdaten.KopfdatenDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.kopfdaten.StimmzettelgebietsartDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlbezirke.WahlbezirkartDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.StimmzettelgebietsartModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisdatenModel;
@@ -216,7 +219,7 @@ public class MockDataFactory {
         return new KonfigurierterWahltagModel(forDate, "wahltagID1", isWahltagActive, "nummerWahltag");
     }
 
-    private List<Wahltag> createWahltagList(String wahltagIDPrefix) {
+    public static List<Wahltag> createWahltagList(String wahltagIDPrefix) {
         val wahltag1 = new Wahltag(wahltagIDPrefix + "_identifikatorWahltag1", LocalDate.now().minusMonths(2), "beschreibungWahltag1", "nummerWahltag1");
         val wahltag2 = new Wahltag(wahltagIDPrefix + "_identifikatorWahltag2", LocalDate.now().minusMonths(1), "beschreibungWahltag2", "nummerWahltag2");
         val wahltag3 = new Wahltag(wahltagIDPrefix + "_identifikatorWahltag3", LocalDate.now().plusMonths(1), "beschreibungWahltag3", "nummerWahltag3");
@@ -224,7 +227,7 @@ public class MockDataFactory {
         return List.of(wahltag1, wahltag2, wahltag3);
     }
 
-    private List<Wahl> createWahlEntityList() {
+    public static List<Wahl> createWahlEntityList() {
         val wahl1 = new Wahl();
         wahl1.setWahlID("wahlID1");
         wahl1.setName("wahl1");
@@ -256,5 +259,119 @@ public class MockDataFactory {
         wahl3.setWahltag(LocalDate.now().plusMonths(3));
 
         return List.of(wahl1, wahl2, wahl3);
+    }
+
+    public static Set<WahlbezirkDTO> createSetOfClientWahlbezirkDTO(LocalDate aDate) {
+        val wahlbezirk1 = new WahlbezirkDTO();
+        wahlbezirk1.setIdentifikator("wahlbezirkID1_1");
+        wahlbezirk1.setWahlbezirkArt(WahlbezirkDTO.WahlbezirkArtEnum.UWB);
+        wahlbezirk1.setNummer("1201");
+        wahlbezirk1.setWahltag(aDate);
+        wahlbezirk1.setWahlnummer("0");
+        wahlbezirk1.setWahlID("wahlID1");
+
+        val wahlbezirk2 = new WahlbezirkDTO();
+        wahlbezirk2.setIdentifikator("wahlbezirkID1_2");
+        wahlbezirk2.setWahlbezirkArt(WahlbezirkDTO.WahlbezirkArtEnum.BWB);
+        wahlbezirk2.setNummer("1251");
+        wahlbezirk2.setWahltag(aDate);
+        wahlbezirk2.setWahlnummer("0");
+        wahlbezirk2.setWahlID("wahlID1");
+
+        val wahlbezirk3 = new WahlbezirkDTO();
+        wahlbezirk3.setIdentifikator("wahlbezirkID2_2");
+        wahlbezirk3.setWahlbezirkArt(WahlbezirkDTO.WahlbezirkArtEnum.BWB);
+        wahlbezirk3.setNummer("1252");
+        wahlbezirk3.setWahltag(aDate);
+        wahlbezirk3.setWahlnummer("0");
+        wahlbezirk3.setWahlID("wahlID1");
+
+        val wahlbezirk4 = new WahlbezirkDTO();
+        wahlbezirk4.setIdentifikator("wahlbezirkID2_1");
+        wahlbezirk4.setWahlbezirkArt(WahlbezirkDTO.WahlbezirkArtEnum.BWB);
+        wahlbezirk4.setNummer("1252");
+        wahlbezirk4.setWahltag(aDate);
+        wahlbezirk4.setWahlnummer("1");
+        wahlbezirk4.setWahlID("wahlID2");
+
+        return Set.of(wahlbezirk1, wahlbezirk2, wahlbezirk3, wahlbezirk4);
+    }
+
+    public static List<Wahlbezirk> createListOfWahlbezirkEntity(String praefix, LocalDate aDate) {
+        val wahlbezirk1 = new Wahlbezirk();
+        wahlbezirk1.setWahlbezirkID(praefix + "wahlbezirkID1_1");
+        wahlbezirk1.setWahlbezirkart(WahlbezirkArt.UWB);
+        wahlbezirk1.setNummer("1201");
+        wahlbezirk1.setWahltag(aDate);
+        wahlbezirk1.setWahlnummer("0");
+        wahlbezirk1.setWahlID("wahlID1");
+
+        val wahlbezirk2 = new Wahlbezirk();
+        wahlbezirk2.setWahlbezirkID(praefix + "wahlbezirkID1_2");
+        wahlbezirk2.setWahlbezirkart(WahlbezirkArt.BWB);
+        wahlbezirk2.setNummer("1251");
+        wahlbezirk2.setWahltag(aDate);
+        wahlbezirk2.setWahlnummer("0");
+        wahlbezirk2.setWahlID("wahlID1");
+
+        val wahlbezirk3 = new Wahlbezirk();
+        wahlbezirk3.setWahlbezirkID(praefix + "wahlbezirkID2_1");
+        wahlbezirk3.setWahlbezirkart(WahlbezirkArt.UWB);
+        wahlbezirk3.setNummer("1202");
+        wahlbezirk3.setWahltag(aDate);
+        wahlbezirk3.setWahlnummer("0");
+        wahlbezirk3.setWahlID("wahlID1");
+
+        val wahlbezirk4 = new Wahlbezirk();
+        wahlbezirk4.setWahlbezirkID(praefix + "wahlbezirkID2_2");
+        wahlbezirk4.setWahlbezirkart(WahlbezirkArt.BWB);
+        wahlbezirk4.setNummer("1252");
+        wahlbezirk4.setWahltag(aDate);
+        wahlbezirk4.setWahlnummer("0");
+        wahlbezirk4.setWahlID("wahlID1");
+
+        return List.of(wahlbezirk1, wahlbezirk2, wahlbezirk3, wahlbezirk4);
+    }
+
+    public static List<WahlbezirkModel> createListOfWahlbezirkModel(String praefix, LocalDate forDate) {
+        return List.of(
+                new WahlbezirkModel(praefix + "wahlbezirkID1_1", WahlbezirkArtModel.UWB, "1201", forDate, "0", "wahlID1"),
+                new WahlbezirkModel(praefix + "wahlbezirkID1_2", WahlbezirkArtModel.BWB, "1251", forDate, "0", "wahlID1"),
+                new WahlbezirkModel(praefix + "wahlbezirkID2_1", WahlbezirkArtModel.UWB, "1202", forDate, "0", "wahlID1"),
+                new WahlbezirkModel(praefix + "wahlbezirkID2_2", WahlbezirkArtModel.BWB, "1252", forDate, "0", "wahlID1"));
+    }
+
+    public static List<de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlbezirke.WahlbezirkDTO> createWlsWahlbezirkDTOs(final String praefix,
+            final LocalDate forDate) {
+        val wahlbezirk1 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlbezirke.WahlbezirkDTO(
+                praefix + "wahlbezirkID1_1",
+                forDate,
+                "1201",
+                WahlbezirkartDTO.UWB,
+                "0",
+                "wahlID1");
+        val wahlbezirk2 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlbezirke.WahlbezirkDTO(
+                praefix + "wahlbezirkID1_2",
+                forDate,
+                "1251",
+                WahlbezirkartDTO.BWB,
+                "0",
+                "wahlID1");
+        val wahlbezirk3 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlbezirke.WahlbezirkDTO(
+                praefix + "wahlbezirkID2_1",
+                forDate,
+                "1202",
+                WahlbezirkartDTO.UWB,
+                "0",
+                "wahlID1");
+        val wahlbezirk4 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlbezirke.WahlbezirkDTO(
+                praefix + "wahlbezirkID2_2",
+                forDate,
+                "1252",
+                WahlbezirkartDTO.BWB,
+                "0",
+                "wahlID1");
+
+        return List.of(wahlbezirk1, wahlbezirk2, wahlbezirk3, wahlbezirk4);
     }
 }

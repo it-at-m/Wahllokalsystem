@@ -42,19 +42,16 @@ public class WahlbezirkeService {
 
         Optional<Wahltag> wahltag = wahltagRepository.findById(wahltagID);
         wahlbezirkeValidator.validateWahltagForSearchingWahltagID(wahltag);
-        if(wahltag.isPresent()) {
+        if (wahltag.isPresent()) {
             val wahltagObjekt = wahltag.get();
-            if( wahlbezirkRepository.countByWahltag(wahltagObjekt.getWahltag()) == 0 ){
+            if (wahlbezirkRepository.countByWahltag(wahltagObjekt.getWahltag()) == 0) {
                 log.error("#getWahlbezirke: Für wahltagID {} waren keine Wahlbezirke in der Datenbank", wahltagID);
                 wahlbezirkRepository.saveAll(
                         wahlbezirkModelMapper.fromListOfWahlbezirkModeltoListOfWahlbezirkEntities(
                                 wahlbezirkModelMapper.toWahlbezirkModelListMergedWithWahlenInfo(
                                         wahlbezirkeClient.loadWahlbezirke(wahltagObjekt.getWahltag(), wahltagObjekt.getNummer()),
                                         wahlRepository.findByWahltagOrderByReihenfolge(wahltagObjekt.getWahltag()),
-                                        exceptionFactory
-                                )
-                        )
-                );
+                                        exceptionFactory)));
             }
             return wahlbezirkModelMapper.fromListOfWahlbezirkEntityToListOfWahlbezirkModel(wahlbezirkRepository.findByWahltag(wahltagObjekt.getWahltag()));
         } else {

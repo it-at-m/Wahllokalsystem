@@ -261,6 +261,12 @@ public class MockDataFactory {
         return List.of(wahl1, wahl2, wahl3);
     }
 
+    public static List<WahlModel> createWahlModelList(final String praefix, final LocalDate forDate) {
+        return List.of(
+                new WahlModel(praefix + "wahlID1", "Bundestagswahl", 1L, 1L, forDate, Wahlart.BTW, new Farbe(0, 1, 2), "0"),
+                new WahlModel(praefix + "wahlID2", "Europawahl", 2L, 1L, forDate, Wahlart.EUW, new Farbe(3, 4, 5), "1"));
+    }
+
     public static Set<WahlbezirkDTO> createSetOfClientWahlbezirkDTO(LocalDate aDate) {
         val wahlbezirk1 = new WahlbezirkDTO();
         wahlbezirk1.setIdentifikator("wahlbezirkID1_1");
@@ -335,6 +341,14 @@ public class MockDataFactory {
 
     public static List<WahlbezirkModel> createListOfWahlbezirkModel(String praefix, LocalDate forDate) {
         return List.of(
+                new WahlbezirkModel(praefix + "wahlbezirkID1_1", WahlbezirkArtModel.UWB, "1201", forDate, "0", "wahlID1"),
+                new WahlbezirkModel(praefix + "wahlbezirkID1_2", WahlbezirkArtModel.BWB, "1251", forDate, "0", "wahlID1"),
+                new WahlbezirkModel(praefix + "wahlbezirkID2_1", WahlbezirkArtModel.UWB, "1202", forDate, "0", "wahlID1"),
+                new WahlbezirkModel(praefix + "wahlbezirkID2_2", WahlbezirkArtModel.BWB, "1252", forDate, "0", "wahlID1"));
+    }
+
+    public static Set<WahlbezirkModel> createSetOfWahlbezirkModel(String praefix, LocalDate forDate) {
+        return Set.of(
                 new WahlbezirkModel(praefix + "wahlbezirkID1_1", WahlbezirkArtModel.UWB, "1201", forDate, "0", "wahlID1"),
                 new WahlbezirkModel(praefix + "wahlbezirkID1_2", WahlbezirkArtModel.BWB, "1251", forDate, "0", "wahlID1"),
                 new WahlbezirkModel(praefix + "wahlbezirkID2_1", WahlbezirkArtModel.UWB, "1202", forDate, "0", "wahlID1"),

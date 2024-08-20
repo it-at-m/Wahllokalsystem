@@ -78,5 +78,5 @@ public class ExceptionConstants {
     public static final ExceptionDataWrapper INITIALIZE_KOPFDATEN_BASISDATEN_DATA_INCONSISTENTCY = new ExceptionDataWrapper("323",
             "BasisdatenValidierung: Es gab Inkonsistenzen in den Bestandteilen der Basisdaten. Basisstrukturdaten, Wahlen, Wahlbezirke, Stimmzettelgebiete konnten nicht eindeutig einander zugeordnetwerden.");
     public static final ExceptionDataWrapper GETWAHLBEZIRKE_NO_DATA = new ExceptionDataWrapper(CODE_NO_DATA_WAHLBEZIRK,
-            "getKopfdaten: Es wurden keine Basisdaten gefunden.");
+            "Es wurden keine Wahlbezirke gefunden.");
 }

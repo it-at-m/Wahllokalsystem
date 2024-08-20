@@ -13,6 +13,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagRepositor
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.WahlRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkModelMapper;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModelMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.MockDataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
@@ -63,6 +64,9 @@ public class WahlbezirkeControllerIntegrationTest {
 
     @Autowired
     WahlbezirkeClientMapper wahlbezirkeClientMapper;
+
+    @Autowired
+    WahlModelMapper wahlModelMapper;
 
     @Autowired
     WahlbezirkRepository wahlbezirkRepository;
@@ -119,7 +123,7 @@ public class WahlbezirkeControllerIntegrationTest {
 
                             wahlbezirkModelMapper.toWahlbezirkModelListMergedWithWahlenInfo(
                                     wahlbezirkeClientMapper.fromRemoteSetOfDTOsToSetOfModels(eaiWahlbezirke),
-                                    wahlRepository.findByWahltagOrderByReihenfolge(forWahltagDate),
+                                    wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(wahlRepository.findByWahltagOrderByReihenfolge(forWahltagDate)),
                                     exceptionFactory));
 
             Assertions.assertThat(responseBodyAsDTO).containsExactlyInAnyOrderElementsOf(expectedResponseBody);

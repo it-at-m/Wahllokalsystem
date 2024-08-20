@@ -5,6 +5,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahltag;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.WahlRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModelMapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +34,8 @@ public class WahlbezirkeService {
 
     private final WahlbezirkModelMapper wahlbezirkModelMapper;
 
+    private final WahlModelMapper wahlModelMapper;
+
     @PreAuthorize(
         "hasAuthority('Basisdaten_BUSINESSACTION_GetWahlbezirke')"
     )
@@ -50,7 +53,8 @@ public class WahlbezirkeService {
                         wahlbezirkModelMapper.fromListOfWahlbezirkModeltoListOfWahlbezirkEntities(
                                 wahlbezirkModelMapper.toWahlbezirkModelListMergedWithWahlenInfo(
                                         wahlbezirkeClient.loadWahlbezirke(wahltagObjekt.getWahltag(), wahltagObjekt.getNummer()),
-                                        wahlRepository.findByWahltagOrderByReihenfolge(wahltagObjekt.getWahltag()),
+                                        wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(
+                                                wahlRepository.findByWahltagOrderByReihenfolge(wahltagObjekt.getWahltag())),
                                         exceptionFactory)));
             }
             return wahlbezirkModelMapper.fromListOfWahlbezirkEntityToListOfWahlbezirkModel(wahlbezirkRepository.findByWahltag(wahltagObjekt.getWahltag()));

@@ -4,6 +4,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlbezirk;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahl;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlbezirkDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ public interface WahlbezirkModelMapper {
 
     List<WahlbezirkModel> fromListOfWahlbezirkEntityToListOfWahlbezirkModel(List<Wahlbezirk> wahlbezirkEntityList);
 
-    default List<WahlbezirkModel> toWahlbezirkModelListMergedWithWahlenInfo(Set<WahlbezirkModel> remoteWahlbezirke, List<Wahl> wahlen,
+    default List<WahlbezirkModel> toWahlbezirkModelListMergedWithWahlenInfo(Set<WahlbezirkModel> remoteWahlbezirke, List<WahlModel> wahlen,
             ExceptionFactory exceptionFactory) {
         if (remoteWahlbezirke == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBEZIRKE_NO_DATA);
@@ -32,9 +33,9 @@ public interface WahlbezirkModelMapper {
         List<Wahlbezirk> remoteList = this.fromListOfWahlbezirkModeltoListOfWahlbezirkEntities(remoteWahlbezirke.stream().toList());
         remoteList.forEach(wahlbezirk -> {
             if (null != wahlen) {
-                Wahl searchedWahl = wahlen.stream().filter(wahl -> wahlbezirk.getWahlnummer().equals(wahl.getNummer())).findFirst().orElse(null);
+                WahlModel searchedWahl = wahlen.stream().filter(wahl -> wahlbezirk.getWahlnummer().equals(wahl.nummer())).findFirst().orElse(null);
                 if (null != searchedWahl) {
-                    wahlbezirk.setWahlID(searchedWahl.getWahlID());
+                    wahlbezirk.setWahlID(searchedWahl.wahlID());
                 }
             }
             list.add(wahlbezirk);

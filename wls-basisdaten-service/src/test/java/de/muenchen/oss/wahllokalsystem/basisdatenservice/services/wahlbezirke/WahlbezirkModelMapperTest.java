@@ -71,9 +71,7 @@ class WahlbezirkModelMapperTest {
             val modelsToMap = MockDataFactory.createSetOfWahlbezirkModel("", LocalDate.now());
             List<Wahl> wahlen = MockDataFactory.createWahlEntityList();
             val aTestWahlID = "aRandomIDThatShouldBeTakenIntoWahlbezirkeToMergeWith";
-            wahlen.forEach((wahl) -> {
-                wahl.setWahlID(aTestWahlID);
-            });
+            wahlen.forEach((wahl) -> wahl.setWahlID(aTestWahlID));
             val wahlModels = wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(wahlen);
 
             val result = unitUnderTest.toWahlbezirkModelListMergedWithWahlenInfo(modelsToMap, wahlModels, exceptionFactory);

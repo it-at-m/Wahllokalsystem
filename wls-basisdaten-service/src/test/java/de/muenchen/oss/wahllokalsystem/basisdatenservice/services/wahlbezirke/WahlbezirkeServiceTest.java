@@ -54,7 +54,7 @@ class WahlbezirkeServiceTest {
         @Test
         void throwsFachlicheWlsExceptionIfNoWahltagPresentInRepository() {
             val wahltagID = "_identifikatorWahltag1";
-            Mockito.when(wahltagRepository.findById(wahltagID)).thenReturn(Optional.ofNullable(null));
+            Mockito.when(wahltagRepository.findById(wahltagID)).thenReturn(Optional.empty());
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_GETWAHLBEZIRKE_NO_WAHLTAG))
                     .thenReturn(mockedWlsException);
@@ -137,10 +137,8 @@ class WahlbezirkeServiceTest {
 
     private List<Wahlbezirk> buildWahlbezirEntitiesFromModels(List<WahlbezirkModel> remoteSetWahlbezirkeModels) {
         List<Wahlbezirk> remoteList = new ArrayList<>();
-        remoteSetWahlbezirkeModels.forEach((wbModel) -> {
-            remoteList.add(new Wahlbezirk(wbModel.wahlbezirkID(), wbModel.wahltag(), wbModel.nummer(), WahlbezirkArt.valueOf(wbModel.wahlbezirkart().name()),
-                    wbModel.wahlnummer(), wbModel.wahlID()));
-        });
+        remoteSetWahlbezirkeModels.forEach((wbModel) -> remoteList.add(new Wahlbezirk(wbModel.wahlbezirkID(), wbModel.wahltag(), wbModel.nummer(), WahlbezirkArt.valueOf(wbModel.wahlbezirkart().name()),
+                wbModel.wahlnummer(), wbModel.wahlID())));
         return remoteList;
     }
 
@@ -149,10 +147,8 @@ class WahlbezirkeServiceTest {
         List<Wahlbezirk> remoteList = buildWahlbezirEntitiesFromModels(remoteSetWahlbezirkeModels.stream().toList());
         remoteList.forEach(wahlbezirk -> {
             if (null != wahlModels) {
-                WahlModel searchedWahl = wahlModels.stream().filter(wahl -> wahlbezirk.getWahlnummer().equals(wahl.nummer())).findFirst().orElse(null);
-                if (null != searchedWahl) {
-                    wahlbezirk.setWahlID(searchedWahl.wahlID());
-                }
+                wahlModels.stream().filter(wahl -> wahlbezirk.getWahlnummer().equals(wahl.nummer())).findFirst()
+                        .ifPresent(searchedWahl -> wahlbezirk.setWahlID(searchedWahl.wahlID()));
             }
             responselist.add(wahlbezirk);
         });

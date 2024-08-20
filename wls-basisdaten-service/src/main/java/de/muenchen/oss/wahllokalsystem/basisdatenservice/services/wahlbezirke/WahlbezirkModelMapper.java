@@ -1,7 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlbezirk;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahl;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlbezirkDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;

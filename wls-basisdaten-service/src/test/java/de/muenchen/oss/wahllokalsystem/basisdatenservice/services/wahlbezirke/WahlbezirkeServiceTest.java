@@ -137,8 +137,9 @@ class WahlbezirkeServiceTest {
 
     private List<Wahlbezirk> buildWahlbezirEntitiesFromModels(List<WahlbezirkModel> remoteSetWahlbezirkeModels) {
         List<Wahlbezirk> remoteList = new ArrayList<>();
-        remoteSetWahlbezirkeModels.forEach((wbModel) -> remoteList.add(new Wahlbezirk(wbModel.wahlbezirkID(), wbModel.wahltag(), wbModel.nummer(), WahlbezirkArt.valueOf(wbModel.wahlbezirkart().name()),
-                wbModel.wahlnummer(), wbModel.wahlID())));
+        remoteSetWahlbezirkeModels.forEach((wbModel) -> remoteList
+                .add(new Wahlbezirk(wbModel.wahlbezirkID(), wbModel.wahltag(), wbModel.nummer(), WahlbezirkArt.valueOf(wbModel.wahlbezirkart().name()),
+                        wbModel.wahlnummer(), wbModel.wahlID())));
         return remoteList;
     }
 

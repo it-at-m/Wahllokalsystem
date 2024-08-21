@@ -39,3 +39,4 @@ includes:
   - path: add-authorities-basisdaten-referendumvorlagen.yml
   - path: add-authorities-basisdaten-wahlen.yml
   - path: add-authorities-basisdaten-kopfdaten.yml
+  - path: add-authorities-eai-ergebnismeldung

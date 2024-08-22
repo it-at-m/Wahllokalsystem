@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten;
 
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.KopfdatenRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
@@ -12,8 +13,10 @@ import lombok.val;
 public class InitializeKopfdaten {
 
     private final ExceptionFactory exceptionFactory;
+    private final KopfdatenRepository kopfdatenRepository;
+    private final KopfdatenModelMapper kopfdatenModelMapper;
 
-    protected void initKopfdaten(BasisdatenModel basisdatenModel) {
+    public void initKopfdaten(BasisdatenModel basisdatenModel) {
         basisdatenModel.basisstrukturdaten()
                 .forEach(basisstrukturdaten -> {
                     initKopfdata(basisstrukturdaten.wahlID(), basisstrukturdaten.wahlbezirkID(), basisdatenModel);
@@ -50,8 +53,7 @@ public class InitializeKopfdaten {
 
         val bezirkUndWahlID = new BezirkUndWahlID(wahl.wahlID(), wahlbezirk.wahlbezirkID());
         val gemeinde = "LHM";
-
-        return new KopfdatenModel(
+        val kopfdatenModel = new KopfdatenModel(
                 bezirkUndWahlID,
                 gemeinde,
                 stimmzettelgebiet.stimmzettelgebietsart(),
@@ -59,5 +61,7 @@ public class InitializeKopfdaten {
                 stimmzettelgebiet.name(),
                 wahl.name(),
                 wahlbezirk.nummer());
+        kopfdatenRepository.save(kopfdatenModelMapper.toEntity(kopfdatenModel));
+        return kopfdatenModel;
     }
 }

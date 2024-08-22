@@ -36,11 +36,10 @@ public class KopfdatenService {
         } else {
             log.error("#getKopfdaten: Für Wahlbezirk {} mit WahlID {} waren keine Kopfdaten in der Datenbank", bezirkUndWahlID.getWahlbezirkID(),
                     bezirkUndWahlID.getWahlID());
-            final InitializeKopfdaten kopfDataInitializer = new InitializeKopfdaten(exceptionFactory);
+            final InitializeKopfdaten kopfDataInitializer = new InitializeKopfdaten(exceptionFactory, kopfdatenRepository, kopfdatenModelMapper);
             KonfigurierterWahltagModel konfigurierterWahltagModel = konfigurierterWahltagClient.getKonfigurierterWahltag();
             BasisdatenModel basisdatenModel = wahldatenClient.loadBasisdaten(konfigurierterWahltagModel.wahltag(), konfigurierterWahltagModel.nummer());
             kopfdatenModel = kopfDataInitializer.initKopfdata(bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID(), basisdatenModel);
-            kopfdatenRepository.save(kopfdatenModelMapper.toEntity(kopfdatenModel));
         }
         return kopfdatenModel;
     }

@@ -21,6 +21,8 @@ public interface EreignisRepository extends CrudRepository<Ereignis, String> {
      * Name for the specific cache.
      */
     String CACHE = "EreignisCACHE";
+    static final String WRITE_EREIGNIS = "hasAuthority('VorfaelleUndVorkommnisse_WRITE_Ereignis')";
+    static final String DELETE_EREIGNIS = "hasAuthority('VorfaelleUndVorkommnisse_DELETE_Ereignis')";
 
     /**
      * Get all the Ereignis entities.
@@ -52,7 +54,7 @@ public interface EreignisRepository extends CrudRepository<Ereignis, String> {
      */
     @Override
     @CachePut(value = CACHE, key = "#p0.wahlbezirkID")
-    @PreAuthorize("hasAuthority('VorfaelleUndVorkommnisse_WRITE_Ereignis')")  // todo: warum kann man die nicht als konstanten übergeben?
+    @PreAuthorize(WRITE_EREIGNIS)
     <S extends Ereignis> S save(S ereignis);
 
     /**
@@ -62,7 +64,7 @@ public interface EreignisRepository extends CrudRepository<Ereignis, String> {
      */
     @Override
     @CacheEvict(value = CACHE, key = "#p0")
-    @PreAuthorize("hasAuthority('VorfaelleUndVorkommnisse_DELETE_Ereignis')")
+    @PreAuthorize(DELETE_EREIGNIS)
     void deleteById(String wahlbezirkID);
 
     /**
@@ -72,7 +74,7 @@ public interface EreignisRepository extends CrudRepository<Ereignis, String> {
      */
     @Override
     @CacheEvict(value = CACHE, key = "#p0.wahlbezirkID")
-    @PreAuthorize("hasAuthority('VorfaelleUndVorkommnisse_DELETE_Ereignis')")
+    @PreAuthorize(DELETE_EREIGNIS)
     void delete(Ereignis entity);
 
     /**
@@ -82,7 +84,7 @@ public interface EreignisRepository extends CrudRepository<Ereignis, String> {
      */
     @Override
     @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('VorfaelleUndVorkommnisse_DELETE_Ereignis')")
+    @PreAuthorize(DELETE_EREIGNIS)
     void deleteAll(Iterable<? extends Ereignis> entities);
 
     /**
@@ -90,6 +92,6 @@ public interface EreignisRepository extends CrudRepository<Ereignis, String> {
      */
     @Override
     @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('VorfaelleUndVorkommnisse_DELETE_Ereignis')")
+    @PreAuthorize(DELETE_EREIGNIS)
     void deleteAll();
 }

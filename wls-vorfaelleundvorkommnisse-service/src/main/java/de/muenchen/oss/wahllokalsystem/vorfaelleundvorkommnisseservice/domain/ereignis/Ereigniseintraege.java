@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.Objects;
+import lombok.Data;
 
 /**
  * This class represents Ereigniseintraege.
@@ -24,10 +24,11 @@ import java.util.Objects;
  * </p>
  */
 @Embeddable
-@Getter // von mir
-@Setter // von mir
-@NoArgsConstructor  // von mir
-@AllArgsConstructor // von mir
+@Getter
+@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Ereigniseintraege {
 
     @Column(name="beschreibung")
@@ -43,31 +44,5 @@ public class Ereigniseintraege {
     @Enumerated(EnumType.STRING)
     @NotNull
     private Ereignisart ereignisart;
-
-    // todo: wann und wo werden diese funktionen verwendet?
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Ereigniseintraege)) return false;
-        Ereigniseintraege ereignis = (Ereigniseintraege) o;
-        return Objects.equals(beschreibung, ereignis.beschreibung) &&
-                Objects.equals(uhrzeit, ereignis.uhrzeit) &&
-                ereignisart == ereignis.ereignisart;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(beschreibung, uhrzeit, ereignisart);
-    }
-
-    @Override
-    public String toString() {
-        return "Ereigniseintraege_{" +
-                "beschreibung='" + beschreibung + '\'' +
-                ", uhrzeit=" + uhrzeit +
-                ", ereignisart=" + ereignisart +
-                '}';
-    }
-
 
 }

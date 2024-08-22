@@ -9,9 +9,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-// übernommen aus https://git.muenchen.de/wahlagenda2017/wls-service-vorfaelleundvorkommnisse/-/blob/master/src/main/java/de/muenchen/wls/vorfaelleundvorkommnisse/service/gen/rest/Generated_Ereignisse_Repository.java?ref_type=heads
-// und https://git.muenchen.de/wahlagenda2017/wls-service-vorfaelleundvorkommnisse/-/blob/master/src/main/java/de/muenchen/wls/vorfaelleundvorkommnisse/service/rest/Ereignisse_Repository.java?ref_type=heads
-
 /**
  * Provides a Repository for a {@link Ereignis}. This Repository can be exported as a REST Resource.
  * <p>
@@ -20,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
  * <a href="http://docs.spring.io/spring-data/rest/docs/current/reference/html/">here</a>.
  * </p>
  */
+// todo: kommentare löschen
 @NoRepositoryBean   // todo: was macht das?
 @PreAuthorize("hasAuthority('VorfaelleUndVorkommnisse_READ_Ereignisse')")
 public interface EreignisRepository extends CrudRepository<Ereignis, String> {

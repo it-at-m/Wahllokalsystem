@@ -15,7 +15,7 @@ public class GlobalExceptionHandler extends AbstractExceptionHandler {
 
     private final ServiceIDFormatter serviceIDFormatter;
 
-    // todo: warum serviceIDFormatter rot?
+    // todo: could not autowire fehlermeldung bei dtoMapper ignorieren weil bei anderen auch?
     public GlobalExceptionHandler(final ServiceIDFormatter serviceIDFormatter, final DTOMapper dtoMapper) {
         super(dtoMapper);
         this.serviceIDFormatter = serviceIDFormatter;

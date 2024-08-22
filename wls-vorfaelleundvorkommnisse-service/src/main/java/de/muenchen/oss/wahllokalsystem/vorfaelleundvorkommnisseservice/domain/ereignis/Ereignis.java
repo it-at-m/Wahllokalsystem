@@ -11,8 +11,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Indexed;
 
-// übernommen aus https://git.muenchen.de/wahlagenda2017/wls-service-vorfaelleundvorkommnisse/-/blob/master/src/main/java/de/muenchen/wls/vorfaelleundvorkommnisse/service/gen/domain/Ereignisse_.java?ref_type=heads
-
 @Entity
 @Indexed
 @Data

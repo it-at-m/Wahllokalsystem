@@ -18,9 +18,7 @@ public class InitializeKopfdaten {
 
     public void initKopfdaten(BasisdatenModel basisdatenModel) {
         basisdatenModel.basisstrukturdaten()
-                .forEach(basisstrukturdaten -> {
-                    initKopfdata(basisstrukturdaten.wahlID(), basisstrukturdaten.wahlbezirkID(), basisdatenModel);
-                });
+                .forEach(basisstrukturdaten -> initKopfdata(basisstrukturdaten.wahlID(), basisstrukturdaten.wahlbezirkID(), basisdatenModel));
     }
 
     protected KopfdatenModel initKopfdata(String wahlID, String wahlbezirkID, BasisdatenModel basisdaten) {

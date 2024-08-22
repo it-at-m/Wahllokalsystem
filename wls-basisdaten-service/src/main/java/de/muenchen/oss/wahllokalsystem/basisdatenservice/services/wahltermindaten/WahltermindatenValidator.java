@@ -2,9 +2,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltermindat
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahltag;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpMethod;

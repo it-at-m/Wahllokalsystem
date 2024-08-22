@@ -14,6 +14,7 @@ public class ExceptionConstants {
     private static final String CODE_UNSAVEABLE = "903";
     private static final String MSG_UNSAVEABLE = "Fehler beim speichern: Daten konnten nicht gespeichert werden.";
 
+    private static final String CODE_NO_DATA_BASISDATEN = "401";
     private static final String CODE_NO_DATA_WAHLBEZIRK = "402";
 
     public static ExceptionDataWrapper SUCHKRITERIEN_UNVOLLSTAENDIG = new ExceptionDataWrapper(CODE_SUCHKRITERIEN_UNVOLLSTAENDIG,
@@ -79,4 +80,18 @@ public class ExceptionConstants {
             "BasisdatenValidierung: Es gab Inkonsistenzen in den Bestandteilen der Basisdaten. Basisstrukturdaten, Wahlen, Wahlbezirke, Stimmzettelgebiete konnten nicht eindeutig einander zugeordnetwerden.");
     public static final ExceptionDataWrapper GETWAHLBEZIRKE_NO_DATA = new ExceptionDataWrapper(CODE_NO_DATA_WAHLBEZIRK,
             "Es wurden keine Wahlbezirke gefunden.");
+
+    public static ExceptionDataWrapper CODE_PUTWAHLTERMINDATEN_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("319",
+            "putWahltermindaten: Suchkriterien unvollständig.");
+    public static ExceptionDataWrapper CODE_DELETEWAHLTERMINDATEN_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("306",
+            "deleteWahltermindaten: Suchkriterien unvollständig.");
+    public static ExceptionDataWrapper CODE_PUTWAHLTERMINDATEN_NO_WAHLTAG = new ExceptionDataWrapper("320",
+            "putWahltermindaten: Es wurde kein Wahltag zu dieser WahltagID gefunden. Bitte überprüfen sie Konfiguration im Remote-System nach der EAI.");
+    public static ExceptionDataWrapper CODE_DELETEWAHLTERMINDATEN_LOESCHEN_UNVOLLSTAENDIG = new ExceptionDataWrapper("307",
+            "deleteWahltermindaten: Die Wahltermindaten konnten aufgrund eines Fehlers nicht vollstaendig geloescht werden.");
+
+    public static final ExceptionDataWrapper GET_BASISDATEN_NO_DATA = new ExceptionDataWrapper(CODE_NO_DATA_BASISDATEN,
+            "Es wurden keine Basisdaten gefunden.");
+
+
 }

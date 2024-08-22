@@ -40,7 +40,7 @@ public class BasisdatenValidator {
     private boolean forEveryBasistrutkturdatenCorespondingAtLeastOneWahlOneWahlbezirkAndOneStimmzettelgebiet(BasisdatenModel basisdatenModel) {
         return basisdatenModel.basisstrukturdaten().stream().allMatch(
                 (bsd) -> basisdatenModel.wahlen().stream().anyMatch(wahl -> wahl.wahlID().equals(bsd.wahlID())) &&
-                        basisdatenModel.wahlbezirke().stream().anyMatch(wbz -> wbz.identifikator().equals(bsd.wahlbezirkID())) &&
+                        basisdatenModel.wahlbezirke().stream().anyMatch(wbz -> wbz.wahlbezirkID().equals(bsd.wahlbezirkID())) &&
                         basisdatenModel.stimmzettelgebiete().stream().anyMatch(szg -> szg.identifikator().equals(bsd.stimmzettelgebietID())));
     }
 
@@ -52,7 +52,7 @@ public class BasisdatenValidator {
 
     private boolean forEveryWahlbezirkCorespondingAtLeastOneBasistrutkturdatenAndOneWahl(BasisdatenModel basisdatenModel) {
         return basisdatenModel.wahlbezirke().stream().allMatch(
-                (wbz) -> basisdatenModel.basisstrukturdaten().stream().anyMatch(bsd -> bsd.wahlbezirkID().equals(wbz.identifikator())) &&
+                (wbz) -> basisdatenModel.basisstrukturdaten().stream().anyMatch(bsd -> bsd.wahlbezirkID().equals(wbz.wahlbezirkID())) &&
                         basisdatenModel.wahlen().stream().anyMatch(w -> w.wahlID().equals(wbz.wahlID())));
     }
 

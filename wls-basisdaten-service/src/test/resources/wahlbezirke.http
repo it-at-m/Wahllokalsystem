@@ -17,6 +17,12 @@ username = wls_all
 GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
 Authorization: {{ token_type }} {{ auth_token }}
 
+### Get Wahlbezirke - working with dummy.client
+## If No Wahltag for requested wahltagID than "Es wurde kein Wahltag zu dieser WahltagID gefunden. Bitte legen Sie die Basisdaten an."
+## To create a Wahltag go to next call
+GET {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/wahlbezirke/wahltagID1
+Authorization: {{ token_type }} {{ auth_token }}
+
 ### Get Wahltage - working with dummy.client
 GET {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/wahltage
 Authorization: {{ token_type }} {{ auth_token }}

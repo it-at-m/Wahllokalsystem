@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten;
 
 import com.google.common.collect.ImmutableSet;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.MockDataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
@@ -151,7 +152,7 @@ class BasisdatenValidatorTest {
             val valideBasisdaten = MockDataFactory.createBasisdatenModel(LocalDate.now());
 
             Set<WahlbezirkModel> moreWahlbezirke = new ImmutableSet.Builder<WahlbezirkModel>()
-                    .add(WahlbezirkModel.builder().identifikator("wahlbezirk999").wahlID("wahlID987").build())
+                    .add(WahlbezirkModel.builder().wahlbezirkID("wahlbezirk999").wahlID("wahlID987").build())
                     .addAll(valideBasisdaten.wahlbezirke())
                     .build();
             val invalideWahlbezirke = BasisdatenModel.builder()

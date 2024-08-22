@@ -1,12 +1,10 @@
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis;
 
-import java.util.List;
 import java.util.Optional;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
@@ -17,8 +15,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
  * <a href="http://docs.spring.io/spring-data/rest/docs/current/reference/html/">here</a>.
  * </p>
  */
-// todo: kommentare löschen
-@NoRepositoryBean   // todo: was macht das?
 @PreAuthorize("hasAuthority('VorfaelleUndVorkommnisse_READ_Ereignisse')")
 public interface EreignisRepository extends CrudRepository<Ereignis, String> {
     /**
@@ -32,7 +28,7 @@ public interface EreignisRepository extends CrudRepository<Ereignis, String> {
      * @return an Iterable of the Ereignis entities with the same Tenancy.
      */
     @Override
-    List<Ereignis> findAll();   // todo: oder Iterable?
+    Iterable<Ereignis> findAll();
 
     /**
      * Get one specific Ereignis by its unique oid.
@@ -41,7 +37,7 @@ public interface EreignisRepository extends CrudRepository<Ereignis, String> {
      * @return The Ereignis with the requested oid.
      */
     @Override
-    @Cacheable(value = CACHE, key = "#p0") // #p0 bedeutet, dass der parameter durch das erste argument der methode (also `String key`) ersetzt wird ?
+    @Cacheable(value = CACHE, key = "#p0")
     Optional<Ereignis> findById(String wahlbezirkID);
 
     /**
@@ -55,9 +51,9 @@ public interface EreignisRepository extends CrudRepository<Ereignis, String> {
      * @return the saved Ereignis.
      */
     @Override
-    @CachePut(value = CACHE, key = "#p0.wahlbezirkID")  // #p0 wird ersetzt durch das übergebene Argument `ereignis` und wahlbezirkID ist eine variable eines ereignisses die als key verwendet werden kann
+    @CachePut(value = CACHE, key = "#p0.wahlbezirkID")
     @PreAuthorize("hasAuthority('VorfaelleUndVorkommnisse_WRITE_Ereignis')")  // todo: warum kann man die nicht als konstanten übergeben?
-    <S extends Ereignis> S save(S ereignis); // Die generische Schreibweise <S extends Ereignis> bedeutet, dass S ein beliebiges Subtyp von Ereignis sein kann.
+    <S extends Ereignis> S save(S ereignis);
 
     /**
      * Delete the Ereignis by a specified oid.
@@ -65,7 +61,7 @@ public interface EreignisRepository extends CrudRepository<Ereignis, String> {
      * @param wahlbezirkID the unique oid of the Ereignis that will be deleted.
      */
     @Override
-    @CacheEvict(value = CACHE, key = "#p0") // cacheEvict bedeutet, dass ein eintrag wieder aus dem cache gelöscht wird
+    @CacheEvict(value = CACHE, key = "#p0")
     @PreAuthorize("hasAuthority('VorfaelleUndVorkommnisse_DELETE_Ereignis')")
     void deleteById(String wahlbezirkID);
 

@@ -46,7 +46,7 @@ public class Ereigniseintraege {
 
     // todo: wann und wo werden diese funktionen verwendet?
     @Override
-    public boolean equals(Object o) {   // testet ob ein übergebenes objekt vom typ ereigniseintraege ist?
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Ereigniseintraege)) return false;
         Ereigniseintraege ereignis = (Ereigniseintraege) o;

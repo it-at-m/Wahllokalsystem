@@ -28,6 +28,6 @@ public class Ereignis {
     private boolean keineVorkommnisse = false;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    private java.util.List<Ereigniseintraege> ereigniseintraege = new java.util.ArrayList<>();     // todo: was soll hier passieren?
+    private java.util.List<Ereigniseintraege> ereigniseintraege = new java.util.ArrayList<>();
 
 }

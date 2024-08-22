@@ -21,16 +21,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class EreignisService {
 
-    private final EreignisRepository ereignisRepository;    // todo: rot wegen @norepositorybean in der ereignisrepository klasse
+    private final EreignisRepository ereignisRepository;
     private final ExceptionFactory exceptionFactory;
     private final EreignisModelMapper ereignisModelMapper;
 
     /**
      * This BusinessAction's purpose is: Laden der Ereignisse It returns one Ereignis.
      */
-    @Transactional  // todo: was macht die annotation? brauche ich die? (übernommen vom WahlenService)
+    @Transactional
     @PreAuthorize("hasAuthority('VorfaelleUndVorkommnisse_BUSINESSACTION_GetEreignisse')" + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
-    public Optional<EreignisModel> getEreignis(@P("wahlbezirkID") final String wahlbezirkID) {  // todo: was macht das p?
+    public Optional<EreignisModel> getEreignis(@P("wahlbezirkID") final String wahlbezirkID) {
         log.info("#getEreignis");
         if (Strings.isNullOrEmpty(wahlbezirkID)) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETEREIGNIS_SUCHKRITERIEN_UNVOLLSTAENDIG);

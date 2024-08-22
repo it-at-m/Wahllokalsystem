@@ -23,7 +23,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
                 "de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice"
         }
 )
-// todo: springbootapplication statt @enableautoconfig, @config und @componentscan ? --> https://stackoverflow.com/questions/33619532/configuration-using-annotation-springbootapplication
 @SpringBootApplication(scanBasePackages = {
         "org.springframework.data.jpa.convert.threeten",
         "de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice",

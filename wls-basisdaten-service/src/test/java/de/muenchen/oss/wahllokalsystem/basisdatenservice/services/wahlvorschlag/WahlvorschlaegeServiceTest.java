@@ -82,10 +82,6 @@ class WahlvorschlaegeServiceTest {
 
             Assertions.assertThat(result).isSameAs(mockedMappedSavedEntity);
             Mockito.verify(wahlvorschlaegeRepository).save(mockedMappedEntity);
-            Mockito.verify(wahlvorschlagRepository).save(mockedWahlvorschlagEntity1);
-            Mockito.verify(wahlvorschlagRepository).save(mockedWahlvorschlagEntity2);
-            Mockito.verify(kandidatRepository).saveAll(mockedWahlvorschlagEntity1.getKandidaten());
-            Mockito.verify(kandidatRepository).saveAll(mockedWahlvorschlagEntity2.getKandidaten());
         }
 
         @Test

@@ -93,9 +93,9 @@ public class WahltermindatenService {
         wahlIDs.forEach((wahlID) -> {
             kopfdatenRepository.deleteAllByBezirkUndWahlID_WahlID(wahlID);
             wahlRepository.deleteById(wahlID);
-            //To Test if "orphanRemoval= true" aus dem Repository funktioniert, also ob auch jeder entsprechende Wahlvorschlag gelöscht wird
+            //ToDo: Test if "orphanRemoval= true" aus dem Repository funktioniert, also ob auch jeder entsprechende Wahlvorschlag gelöscht wird
             wahlvorschlaegeRepository.deleteAllByBezirkUndWahlID_WahlID(wahlID);
-            //To Test if "orphanRemoval= true" aus dem Repository funktioniert
+            //ToDo: Test if "orphanRemoval= true" aus dem Repository funktioniert
             referendumvorlagenRepository.deleteAllByBezirkUndWahlID_WahlID(wahlID);
         });
     }

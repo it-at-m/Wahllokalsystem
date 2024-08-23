@@ -57,7 +57,7 @@ public class ReferendumvorlagenService {
         try {
             transactionTemplate.executeWithoutResult(transactionStatus -> {
                 referendumvorlagenRepository.save(referendumvorlagenToSave);
-                referendumvorlageRepository.saveAll(referendumvorlagenToSave.getReferendumvorlagen());
+                //referendumvorlageRepository.saveAll(referendumvorlagenToSave.getReferendumvorlagen());
             });
         } catch (final Exception e) {
             log.error("#getReferendumvorlagen: Fehler beim Cachen", e);

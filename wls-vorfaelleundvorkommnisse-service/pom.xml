@@ -36,7 +36,9 @@
         <!-- Version muss mit der in den spring-boot-dependencies bereitgestellten Lombok-Version übereinstimmen -->
         <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
+        <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
         <org.springdoc.version>2.6.0</org.springdoc.version>
+        <wls.common.version>1.1.0</wls.common.version>
     </properties>
 
     <dependencyManagement>
@@ -77,13 +79,6 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!-- wls-common -->
-        <dependency>
-            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
-            <artifactId>exception</artifactId>
-            <version>1.1.0</version>
-        </dependency>
-
         <!-- Caching -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -110,6 +105,18 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-jose</artifactId>
+        </dependency>
+
+        <!-- wls-common -->
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>exception</artifactId>
+            <version>${wls.common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>security</artifactId>
+            <version>${wls.common.version}</version>
         </dependency>
 
         <!-- json etc. -->
@@ -178,8 +185,8 @@
             <version>${org.springdoc.version}</version>
         </dependency>
         <dependency>
-            <artifactId>spring-data-rest-webmvc</artifactId>
             <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-rest-webmvc</artifactId>
             <version>2.5.0.RELEASE</version>
         </dependency>
 
@@ -212,6 +219,12 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>testing</artifactId>
+            <version>${wls.common.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -280,8 +293,13 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Mapping -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
+        </dependency>
     </dependencies>
-
 
     <scm>
         <url>https://github.com/it-at-m/Wahllokalsystem</url>
@@ -289,7 +307,6 @@
         <developerConnection>scm:git:https://github.com/it-at-m/Wahllokalsystem.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
-
 
     <build>
         <resources>
@@ -346,11 +363,24 @@
                             <version>${org.projectlombok.lombok.version}</version>
                         </path>
                         <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${org.mapstruct.version}</version>
+                        </path>
+                        <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok-mapstruct-binding</artifactId>
                             <version>${org.projectlombok.mapstructbinding.version}</version>
                         </path>
                     </annotationProcessorPaths>
+                    <compilerArgs>
+                        <compilerArg>
+                            -Amapstruct.defaultComponentModel=spring
+                        </compilerArg>
+                        <compilerArg>
+                            -Amapstruct.unmappedTargetPolicy=ERROR
+                        </compilerArg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>

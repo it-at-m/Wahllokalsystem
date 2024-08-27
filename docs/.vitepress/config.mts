@@ -43,6 +43,10 @@ export default withMermaid({
                             text: 'Shared/Separated Datenmodell',
                             link: `${PATH_TECHNIK}adr/adr002-controller-service-datamodels`
                         },
+                        {
+                            text: 'Vollständige Migration nach Keycloak',
+                            link: `${PATH_TECHNIK}adr/adr-always-full-keycloak-migration`
+                        }
                     ]
                 }
             ],

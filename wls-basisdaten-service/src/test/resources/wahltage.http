@@ -17,6 +17,6 @@ username = wls_all
 GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
 Authorization: {{ token_type }} {{ auth_token }}
 
-### Get Basisdaten - working with dummy.client
+### Get Wahltage - working with dummy.client
 GET {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/wahltage
 Authorization: {{ token_type }} {{ auth_token }}

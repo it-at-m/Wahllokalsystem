@@ -7,10 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.WahltageClientMapper;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.KandidatRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahltag;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlvorschlagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModelMapper;
@@ -66,12 +64,6 @@ public class WahltageControllerIntegrationTest {
 
     @Autowired
     WahltagRepository wahltagRepository;
-
-    @Autowired
-    WahlvorschlagRepository wahlvorschlagRepository;
-
-    @Autowired
-    KandidatRepository kandidatRepository;
 
     @AfterEach
     void tearDown() {

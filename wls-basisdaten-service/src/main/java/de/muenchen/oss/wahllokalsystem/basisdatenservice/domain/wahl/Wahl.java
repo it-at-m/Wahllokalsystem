@@ -14,7 +14,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.springframework.stereotype.Indexed;
 
 @Entity
@@ -34,11 +33,10 @@ public class Wahl {
     @Size(max = 255)
     private String name;
 
-    @NotNull
+    @Min(0)
     private long reihenfolge;
 
-    @NotNull
-    @Min(1)
+    @Min(0)
     private long waehlerverzeichnisnummer;
 
     @NotNull

@@ -32,7 +32,7 @@ public class WahltageClientImpl implements WahltageClient {
 
         final Set<WahltagDTO> wahltageDTO;
         try {
-            wahltageDTO = wahldatenControllerApi.loadWahltageSinceIncluding(tag);
+            wahltageDTO = (Set<WahltagDTO>) wahldatenControllerApi.loadWahltageSinceIncluding(tag);
         } catch (final Exception exception) {
             log.info("exception on loadwahltage from external", exception);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);

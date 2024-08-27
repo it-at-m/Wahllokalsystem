@@ -2,7 +2,6 @@
 # Source: https://github.com/mayope/keycloakmigration
 
 includes:
-  - path: 01_init-realm.yml
   - path: 02_add-client-wls.yml
   - path: 03_add-user-keycloak-test.yml
   - path: 04_add-broadcast-authorities.yml
@@ -39,4 +38,6 @@ includes:
   - path: add-authorities-eai-wahlbeteiligung.yml
   - path: add-authorities-basisdaten-referendumvorlagen.yml
   - path: add-authorities-basisdaten-wahlen.yml
+  - path: add-authorities-basisdaten-kopfdaten.yml
+  - path: add-authorities-basisdaten-wahlbezirke.yml
   - path: add-authorities-vorfaelleundvorkommnisse.yml

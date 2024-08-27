@@ -51,4 +51,6 @@ public interface WahlRepository extends CrudRepository<Wahl, String> {
     void deleteAll();
 
     List<Wahl> findByWahltagOrderByReihenfolge(LocalDate wahltag);
+
+    int countByWahltag(LocalDate wahltag);
 }

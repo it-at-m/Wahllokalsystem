@@ -1,12 +1,12 @@
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service;
 
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereignis;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereignisse;
 import org.mapstruct.Mapper;
 
 @Mapper
 public interface EreignisModelMapper {
 
-    EreignisModel toModel(final Ereignis entity);
+    EreignisModel toModel(final Ereignisse entity);
 
-    Ereignis toEntity(final EreignisModel model);
+    Ereignisse toEntity(final EreignisModel model);
 }

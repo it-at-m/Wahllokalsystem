@@ -23,7 +23,7 @@ public class Ereigniseintrag {
     @Column
     @Size(max=1024)
     @Id
-    private String ereignisse_wahlbezirkID;
+    private String eintragID;
 
     @Column(name="beschreibung")
     @Size(max=1024)
@@ -38,8 +38,8 @@ public class Ereigniseintrag {
     private Ereignisart ereignisart;
 
     @ManyToOne
-    @JoinColumn(name = "ereignisseID")
+    @JoinColumn(name = "fk_wahlbezirkID")
     @EqualsAndHashCode.Exclude
-    private Ereignisse ereignisse;
+    private Ereignisse fk_wahlbezirkID;
 
 }

@@ -9,14 +9,14 @@ create Table Ereignisse
 
 create Table Ereigniseintrag
 (
-    ereignisse_wahlbezirkID       VARCHAR(1024),
+    eintragID                     VARCHAR(1024),
     beschreibung                  VARCHAR(1024),
     uhrzeit                       TIMESTAMP,
     ereignisart                   VARCHAR(255)  NOT NULL,
 
-    ereignisseID                  VARCHAR(1024) NOT NULL,
+    fk_wahlbezirkID               VARCHAR(1024) NOT NULL,
 
-    FOREIGN KEY (ereignisseID) REFERENCES ereignisse (wahlbezirkID),
+    FOREIGN KEY (fk_wahlbezirkID) REFERENCES ereignisse (wahlbezirkID),
 
-    PRIMARY KEY (ereignisse_wahlbezirkID)
+    PRIMARY KEY (eintragID)
 );

@@ -24,7 +24,7 @@ public class Ereignisse {
 
     private boolean keineVorkommnisse = false;
 
-    @OneToMany(mappedBy = "ereignisse", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "fk_wahlbezirkID", orphanRemoval = true, cascade = CascadeType.ALL)
     private java.util.List<Ereigniseintrag> ereigniseintrag = new java.util.ArrayList<>();
 
 }

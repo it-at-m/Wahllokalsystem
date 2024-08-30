@@ -65,6 +65,7 @@ public class DummyClientImpl
                 new WahltagModel("wahltagID2", LocalDate.now().minusMonths(1), "Beschreibung Wahltag 2", "1"));
     }
 
+    @Override
     public List<WahlModel> getWahlen(LocalDate wahltag, String wahltagNummer) throws WlsException {
         return List.of(
                 new WahlModel("wahl1", "0", 1L, 1L, wahltag, BTW, new Farbe(0, 1, 2), "1"),

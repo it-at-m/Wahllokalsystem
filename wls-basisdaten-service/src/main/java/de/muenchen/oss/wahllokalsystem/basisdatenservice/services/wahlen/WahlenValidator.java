@@ -15,6 +15,12 @@ public class WahlenValidator {
 
     private final ExceptionFactory exceptionFactory;
 
+    public void validWahlenCriteriaOrThrow(final String wahltagID) {
+        if (StringUtils.isBlank(wahltagID)) {
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_GETWAHLEN_PARAMETER_UNVOLLSTAENDIG);
+        }
+    }
+
     public void validWahltagIDParamOrThrow(final String wahltagID, HttpMethod httpMethod) {
         if (wahltagID == null || StringUtils.isBlank(wahltagID) || StringUtils.isEmpty(wahltagID)) {
             switch (httpMethod.toString()) {

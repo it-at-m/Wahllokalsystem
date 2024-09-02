@@ -35,7 +35,7 @@ public class WahlenService {
     @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetWahlen')")
     @Transactional
     public List<WahlModel> getWahlen(String wahltagID) {
-        wahlenValidator.validWahltagIDParamOrThrow(wahltagID, HttpMethod.GET);
+        wahlenValidator.validWahlenCriteriaOrThrow(wahltagID);
         val wahltag = wahltagRepository.findById(wahltagID);
         wahlenValidator.validateWahltagForSearchingWahltagID(wahltag);
 

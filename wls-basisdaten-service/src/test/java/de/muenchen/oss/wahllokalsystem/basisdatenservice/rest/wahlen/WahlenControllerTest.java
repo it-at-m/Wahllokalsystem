@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenWriteModel;
 import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -34,8 +35,8 @@ class WahlenControllerTest {
         @Test
         void serviceIsCalledWithoutExceptions() {
             val theWahlModelList = List.of(WahlModel.builder().build(), WahlModel.builder().build());
-            Assertions.assertThatCode(() -> wahlenService.postWahlen("wahltagIDTest", theWahlModelList)).doesNotThrowAnyException();
-            Mockito.verify(wahlenService).postWahlen("wahltagIDTest", theWahlModelList);
+            Assertions.assertThatCode(() -> wahlenService.postWahlen(new WahlenWriteModel("wahltagIDTest", theWahlModelList))).doesNotThrowAnyException();
+            Mockito.verify(wahlenService).postWahlen(new WahlenWriteModel("wahltagIDTest", theWahlModelList));
         }
     }
 

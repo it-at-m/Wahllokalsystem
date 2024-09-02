@@ -10,7 +10,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +36,8 @@ public class WahlenService {
     public List<WahlModel> getWahlen(String wahltagID) {
         wahlenValidator.validWahlenCriteriaOrThrow(wahltagID);
         val wahltag = wahltagRepository.findById(wahltagID);
-        wahlenValidator.validateWahltagForSearchingWahltagID(wahltag);
+
+        wahlenValidator.validateWahltagForSearchingWahltagID(wahltag); //TODO sollte Teil des Services werden
 
         if (wahlRepository.countByWahltag(wahltag.get().getWahltag()) == 0) {
             log.info("#getWahlen: Für wahltagID {} waren keine Wahlen in der Datenbank", wahltagID);
@@ -50,11 +50,11 @@ public class WahlenService {
 
     @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_PostWahlen')")
     @Transactional
-    public void postWahlen(String wahltagID, List<WahlModel> wahlen) {
+    public void postWahlen(final WahlenWriteModel wahlenWriteModel) {
         log.info("#postWahlen");
-        wahlenValidator.validWahltagIDParamOrThrow(wahltagID, HttpMethod.POST);
+        wahlenValidator.validWahlenWriteModelOrThrow(wahlenWriteModel);
         try {
-            wahlRepository.saveAll(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(wahlen));
+            wahlRepository.saveAll(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(wahlenWriteModel.wahlen()));
         } catch (Exception e) {
             log.error("#postWahlen: Die Wahlen konnten aufgrund eines Fehlers nicht gespeichert werden {}:", e);
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_POSTWAHLEN_UNSAVEABLE);

@@ -23,7 +23,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpMethod;
 
 @ExtendWith(MockitoExtension.class)
 class WahlenServiceTest {
@@ -60,7 +59,7 @@ class WahlenServiceTest {
             List<Wahl> mockedListOfEntities = createWahlEntities();
             List<WahlModel> mockedListOfModels = createWahlModels("");
             List<WahlModel> mockedListOfModelsIfClientCall = createWahlModels("clientPraefix");
-            Mockito.doNothing().when(wahlenValidator).validWahltagIDParamOrThrow("wahltagID", HttpMethod.GET);
+            Mockito.doNothing().when(wahlenValidator).validWahlenCriteriaOrThrow("wahltagID");
             Mockito.doNothing().when(wahlenValidator).validateWahltagForSearchingWahltagID(mOp);
 
             Mockito.when(wahltagRepository.findById("wahltagID")).thenReturn(Optional.of(searchingForWahltag));
@@ -84,7 +83,7 @@ class WahlenServiceTest {
             Optional<Wahltag> mOp = Optional.of(searchingForWahltag);
             List<Wahl> mockedListOfEntities = createWahlEntities();
             List<WahlModel> mockedListOfModelsIfClientCall = createWahlModels("clientPraefix");
-            Mockito.doNothing().when(wahlenValidator).validWahltagIDParamOrThrow("wahltagID", HttpMethod.GET);
+            Mockito.doNothing().when(wahlenValidator).validWahlenCriteriaOrThrow("wahltagID");
             Mockito.doNothing().when(wahlenValidator).validateWahltagForSearchingWahltagID(mOp);
 
             Mockito.when(wahltagRepository.findById("wahltagID")).thenReturn(Optional.of(searchingForWahltag));
@@ -106,22 +105,24 @@ class WahlenServiceTest {
 
         @Test
         void dataSaved() {
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung16", "1");
+            val wahltagID = "wahltagID";
             List<WahlModel> mockedListOfModels = createWahlModels("");
             List<Wahl> mockedListOfEntities = createWahlEntities();
+            val wahlenToWrite = new WahlenWriteModel(wahltagID, mockedListOfModels);
 
             Mockito.when(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(mockedListOfModels)).thenReturn(mockedListOfEntities);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postWahlen(searchingForWahltag.getWahltagID(), mockedListOfModels));
-            Mockito.verify(wahlenValidator).validWahltagIDParamOrThrow(searchingForWahltag.getWahltagID(), HttpMethod.POST);
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postWahlen(wahlenToWrite));
+            Mockito.verify(wahlenValidator).validWahlenWriteModelOrThrow(new WahlenWriteModel(wahltagID, mockedListOfModels));
             Mockito.verify(wahlRepository).saveAll(mockedListOfEntities);
         }
 
         @Test
         void wlsExceptionWhenSavingFailed() {
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung17", "1");
+            val wahltagID = "wahltagID";
             List<WahlModel> mockedListOfModels = createWahlModels("");
             List<Wahl> mockedListOfEntities = createWahlEntities();
+            val wahlenToWrite = new WahlenWriteModel(wahltagID, mockedListOfModels);
 
             val mockedRepoSaveException = new RuntimeException("saving failed");
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
@@ -131,7 +132,7 @@ class WahlenServiceTest {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_POSTWAHLEN_UNSAVEABLE))
                     .thenReturn(mockedWlsException);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.postWahlen(searchingForWahltag.getWahltagID(), mockedListOfModels)).isSameAs(mockedWlsException);
+            Assertions.assertThatThrownBy(() -> unitUnderTest.postWahlen(wahlenToWrite)).isSameAs(mockedWlsException);
         }
     }
 

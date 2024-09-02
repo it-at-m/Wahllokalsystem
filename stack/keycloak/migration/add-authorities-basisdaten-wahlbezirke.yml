@@ -1,0 +1,55 @@
+id: add authorities basisdaten wahlbezirke
+author: Nic12345678
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: Basisdaten_BUSINESSACTION_GetWahlbezirke
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_BUSINESSACTION_GetWahlbezirke
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Basisdaten_READ_Wahltag
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_READ_Wahltag
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Basisdaten_READ_Wahl
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_READ_Wahl
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Basisdaten_READ_Wahlbezirk
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_READ_Wahlbezirk
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Basisdaten_WRITE_Wahlbezirk
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_WRITE_Wahlbezirk
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Basisdaten_DELETE_Wahlbezirk
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_DELETE_Wahlbezirk
+      clientId: ${SSO_CLIENT_ID}

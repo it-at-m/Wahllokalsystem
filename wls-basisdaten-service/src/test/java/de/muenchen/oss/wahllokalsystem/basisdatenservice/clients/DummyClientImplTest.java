@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisdatenModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.StimmzettelgebietModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDate;
 import lombok.val;
@@ -62,7 +63,7 @@ class DummyClientImplTest {
             val result = unitUnderTest.loadBasisdaten(LocalDate.now(), "0");
             result.basisstrukturdaten().forEach((bsd) -> {
                 Assertions.assertThat(result.wahlen()).anyMatch(w -> w.wahlID().equals(bsd.wahlID()));
-                Assertions.assertThat(result.wahlbezirke()).anyMatch(wbz -> wbz.identifikator().equals(bsd.wahlbezirkID()));
+                Assertions.assertThat(result.wahlbezirke()).anyMatch(wbz -> wbz.wahlbezirkID().equals(bsd.wahlbezirkID()));
                 Assertions.assertThat(result.stimmzettelgebiete()).anyMatch(szg -> szg.identifikator().equals(bsd.stimmzettelgebietID()));
             });
         }
@@ -80,7 +81,7 @@ class DummyClientImplTest {
         void forEveryWahlbezirkCorespondingAtLeastOneBasistrutkturdatenAndOneWahl() {
             val result = unitUnderTest.loadBasisdaten(LocalDate.now(), "0");
             result.wahlbezirke().forEach((wbz) -> {
-                Assertions.assertThat(result.basisstrukturdaten()).anyMatch(bsd -> bsd.wahlbezirkID().equals(wbz.identifikator()));
+                Assertions.assertThat(result.basisstrukturdaten()).anyMatch(bsd -> bsd.wahlbezirkID().equals(wbz.wahlbezirkID()));
                 Assertions.assertThat(result.wahlen()).anyMatch(wahl -> wahl.wahlID().equals(wbz.wahlID()));
             });
         }
@@ -88,9 +89,9 @@ class DummyClientImplTest {
         @Test
         void forEveryStimmzettelgebietCorespondingAtLeastOneBasistrutkturdaten() {
             val result = unitUnderTest.loadBasisdaten(LocalDate.now(), "0");
-            result.stimmzettelgebiete().forEach((szg) -> {
+            for (StimmzettelgebietModel szg : result.stimmzettelgebiete()) {
                 Assertions.assertThat(result.basisstrukturdaten()).anyMatch(bsd -> bsd.stimmzettelgebietID().equals(szg.identifikator()));
-            });
+            }
         }
 
         @Test
@@ -112,6 +113,16 @@ class DummyClientImplTest {
             val result = unitUnderTest.getKonfigurierterWahltag();
             Assertions.assertThat(result).hasNoNullFieldsOrProperties();
             Assertions.assertThat(result.active()).isTrue();
+        }
+    }
+
+    @Nested
+    class LoadWahlbezirke {
+
+        @Test
+        void resultIsAnArrayWithPositiveSize() {
+            val result = unitUnderTest.loadWahlbezirke(LocalDate.now(), "0");
+            Assertions.assertThat(result).size().isPositive();
         }
     }
 }

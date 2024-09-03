@@ -46,9 +46,3 @@ changes:
       group: allVorfaelleUndVorkommnisseAuthorities
       role: VorfaelleUndVorkommnisse_DELETE_Ereignis
       clientId: ${SSO_CLIENT_ID}
-
-
-
-
-
-

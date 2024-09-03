@@ -18,7 +18,6 @@ public class EreignisModelMapperTest {
         val ereignisEntity = TestdataFactory.createEreignisEntityWithData("", true, true, ereigniseintrag);
         val ereignisModelFromEntity = TestdataFactory.createEreignisModelFromEntity(ereignisEntity);
 
-
         val result = unitUnderTest.toModel(ereignisEntity);
 
         Assertions.assertThat(result).isEqualTo(ereignisModelFromEntity);

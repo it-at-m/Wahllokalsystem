@@ -31,5 +31,4 @@ public class Ereigniseintrag {
     @Enumerated(EnumType.STRING)
     @NotNull
     private Ereignisart ereignisart;
-
 }

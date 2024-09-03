@@ -15,5 +15,4 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public enum AuthoritiesEnum {
     WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_READ_THEENTITY, WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_WRITE_THEENTITY, WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_DELETE_THEENTITY,
     // add your authorities here and also add these new authorities to sso-authorisation.json.
-
 }

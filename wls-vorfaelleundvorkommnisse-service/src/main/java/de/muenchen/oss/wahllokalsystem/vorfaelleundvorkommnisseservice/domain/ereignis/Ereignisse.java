@@ -27,5 +27,4 @@ public class Ereignisse {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "Ereigniseintrag", joinColumns = @JoinColumn(name = "fk_wahlbezirkID"))
     private java.util.List<Ereigniseintrag> ereigniseintrag = new java.util.ArrayList<>();
-
 }

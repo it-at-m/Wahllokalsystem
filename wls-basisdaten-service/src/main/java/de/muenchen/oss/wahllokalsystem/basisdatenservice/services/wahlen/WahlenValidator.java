@@ -15,13 +15,13 @@ public class WahlenValidator {
 
     public void validWahlenCriteriaOrThrow(final String wahltagID) {
         if (StringUtils.isBlank(wahltagID)) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_GETWAHLEN_PARAMETER_UNVOLLSTAENDIG);
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLEN_PARAMETER_UNVOLLSTAENDIG);
         }
     }
 
     public void validWahlenWriteModelOrThrow(final WahlenWriteModel wahlenWriteModel) {
         if (wahlenWriteModel == null || StringUtils.isBlank(wahlenWriteModel.wahltagID()) || CollectionUtils.isEmpty(wahlenWriteModel.wahlen())) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG);
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG);
         }
     }
 

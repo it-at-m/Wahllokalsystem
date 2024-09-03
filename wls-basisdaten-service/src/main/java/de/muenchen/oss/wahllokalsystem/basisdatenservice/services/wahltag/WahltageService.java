@@ -44,6 +44,6 @@ public class WahltageService {
 
     private Wahltag getWahltagByIDOrThrow(final String wahltagID) {
         return wahltagRepository.findById(wahltagID)
-                .orElseThrow(() -> exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_GETWAHLBEZIRKE_NO_WAHLTAG));
+                .orElseThrow(() -> exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBEZIRKE_NO_WAHLTAG));
     }
 }

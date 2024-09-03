@@ -36,7 +36,7 @@ class WahlenValidatorTest {
         void exceptionWhenCriteriaIsNull() {
             val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
 
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_GETWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.validWahlenCriteriaOrThrow(null)).isSameAs(mockedException);
         }
@@ -45,7 +45,7 @@ class WahlenValidatorTest {
         void exceptionWhenCriteriaIsEmpty() {
             val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
 
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_GETWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.validWahlenCriteriaOrThrow("")).isSameAs(mockedException);
         }
@@ -54,7 +54,7 @@ class WahlenValidatorTest {
         void exceptionWhenCriteriaIsBlank() {
             val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
 
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_GETWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.validWahlenCriteriaOrThrow("   ")).isSameAs(mockedException);
         }
@@ -74,7 +74,7 @@ class WahlenValidatorTest {
         void exceptionWhenWahltagIDIsNull() {
             val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
 
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
 
             val invalidModel = new WahlenWriteModel(null, List.of(createEmptyWahlModel()));
 
@@ -85,7 +85,7 @@ class WahlenValidatorTest {
         void exceptionWhenWahltagIDIsEmpty() {
             val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
 
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
 
             val invalidModel = new WahlenWriteModel("", List.of(createEmptyWahlModel()));
 
@@ -96,7 +96,7 @@ class WahlenValidatorTest {
         void exceptionWhenWahltagIDIsBlank() {
             val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
 
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
 
             val invalidModel = new WahlenWriteModel("   ", List.of(createEmptyWahlModel()));
 
@@ -107,7 +107,7 @@ class WahlenValidatorTest {
         void exceptionWhenWahlenIsNull() {
             val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
 
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
 
             val invalidModel = new WahlenWriteModel("wahltagID", null);
 
@@ -118,7 +118,7 @@ class WahlenValidatorTest {
         void exceptionWhenWahlenIsEmpty() {
             val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
 
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
 
             val invalidModel = new WahlenWriteModel("wahltagID", Collections.emptyList());
 

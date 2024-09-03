@@ -98,7 +98,7 @@ class WahltageServiceTest {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(wahltagRepository.findById(wahltagID)).thenReturn(Optional.empty());
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_GETWAHLBEZIRKE_NO_WAHLTAG)).thenReturn(mockedWlsException);
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBEZIRKE_NO_WAHLTAG)).thenReturn(mockedWlsException);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahltagByID(wahltagID)).isSameAs(mockedWlsException);
         }

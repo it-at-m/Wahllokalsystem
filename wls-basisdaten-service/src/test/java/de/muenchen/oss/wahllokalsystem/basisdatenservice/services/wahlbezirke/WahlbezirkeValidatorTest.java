@@ -64,7 +64,7 @@ class WahlbezirkeValidatorTest {
             val noWahltagRequestParam = MockDataFactory.createWahltagList("").stream().findFirst();
             noWahltagRequestParam.ifPresent(wahltag -> wahltag.setWahltag(null));
 
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_GETWAHLBEZIRKE_NO_WAHLTAG))
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBEZIRKE_NO_WAHLTAG))
                     .thenReturn(mockedWlsException);
             Assertions.assertThatThrownBy(() -> unitUnderTest.validateWahltagForSearchingWahltagID(emptyRequestParam)).isSameAs(mockedWlsException);
             Assertions.assertThatThrownBy(() -> unitUnderTest.validateWahltagForSearchingWahltagID(noWahltagRequestParam)).isSameAs(mockedWlsException);

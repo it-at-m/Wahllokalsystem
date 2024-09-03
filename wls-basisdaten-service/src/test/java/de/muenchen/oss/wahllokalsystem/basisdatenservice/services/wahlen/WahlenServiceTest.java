@@ -120,7 +120,7 @@ class WahlenServiceTest {
 
             Mockito.when(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(mockedListOfModels)).thenReturn(mockedListOfEntities);
             Mockito.doThrow(mockedRepoSaveException).when(wahlRepository).saveAll(mockedListOfEntities);
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_POSTWAHLEN_UNSAVEABLE))
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTWAHLEN_UNSAVEABLE))
                     .thenReturn(mockedWlsException);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.postWahlen(wahlenToWrite)).isSameAs(mockedWlsException);

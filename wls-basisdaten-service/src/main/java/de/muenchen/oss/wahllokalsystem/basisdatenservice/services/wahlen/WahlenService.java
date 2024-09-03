@@ -57,7 +57,7 @@ public class WahlenService {
             wahlRepository.saveAll(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(wahlenWriteModel.wahlen()));
         } catch (Exception e) {
             log.error("#postWahlen: Die Wahlen konnten aufgrund eines Fehlers nicht gespeichert werden:", e);
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_POSTWAHLEN_UNSAVEABLE);
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTWAHLEN_UNSAVEABLE);
         }
     }
 

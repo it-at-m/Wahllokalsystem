@@ -75,13 +75,6 @@ public class WahlenServiceSecurityTest {
             Assertions.assertThatNoException().isThrownBy(() -> wahlenService.getWahlen(searchingForWahltag.getWahltagID()));
         }
 
-        @Test
-        void accessDeniedWhenServiceAuthoritiyIsMissing() {
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHL, Authorities.REPOSITORY_WRITE_WAHL);
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung9", "1");
-            Assertions.assertThatThrownBy(() -> wahlenService.getWahlen(searchingForWahltag.getWahltagID())).isInstanceOf(AccessDeniedException.class);
-        }
-
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
         void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) throws Exception {

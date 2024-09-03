@@ -62,7 +62,7 @@ public class WahlenService {
     }
 
     @PreAuthorize(
-            "hasAuthority('Basisdaten_BUSINESSACTION_ResetWahlen')"
+        "hasAuthority('Basisdaten_BUSINESSACTION_ResetWahlen')"
     )
     @Transactional
     public void resetWahlen() {

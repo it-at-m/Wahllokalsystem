@@ -58,22 +58,20 @@ class WahlenServiceTest {
             Optional<Wahltag> mOp = Optional.of(searchingForWahltag);
             List<Wahl> mockedListOfEntities = createWahlEntities();
             List<WahlModel> mockedListOfModels = createWahlModels("");
-            List<WahlModel> mockedListOfModelsIfClientCall = createWahlModels("clientPraefix");
             Mockito.doNothing().when(wahlenValidator).validWahlenCriteriaOrThrow("wahltagID");
             Mockito.doNothing().when(wahlenValidator).validateWahltagForSearchingWahltagID(mOp);
 
             Mockito.when(wahltagRepository.findById("wahltagID")).thenReturn(Optional.of(searchingForWahltag));
             Mockito.when(wahlRepository.countByWahltag(searchingForWahltag.getWahltag())).thenReturn(numberOfWahlenInRepo);
             Mockito.when(wahlRepository.findByWahltagOrderByReihenfolge(searchingForWahltag.getWahltag())).thenReturn(mockedListOfEntities);
-            Mockito.lenient().when(wahlenClient.getWahlen(new WahltagWithNummer(searchingForWahltag.getWahltag(), searchingForWahltag.getNummer())))
-                    .thenReturn(mockedListOfModelsIfClientCall);
-            Mockito.lenient().when(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(mockedListOfModelsIfClientCall)).thenReturn(mockedListOfEntities);
             Mockito.when(wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(mockedListOfEntities)).thenReturn(mockedListOfModels);
             val expectedResult = wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(mockedListOfEntities);
 
             val result = unitUnderTest.getWahlen("wahltagID");
             Assertions.assertThatCode(() -> unitUnderTest.getWahlen("wahltagID")).doesNotThrowAnyException();
             Assertions.assertThat(result).isEqualTo(expectedResult);
+
+            Mockito.verifyNoInteractions(wahlenClient);
         }
 
         @Test

@@ -141,6 +141,12 @@ public class Authorities {
             REPOSITORY_DELETE_WAHL
     };
 
+    public static final String[] ALL_AUTHORITIES_GET_WAHLEN = {
+            SERVICE_GET_WAHLEN,
+            REPOSITORY_READ_WAHL,
+            REPOSITORY_READ_WAHLTAG
+    };
+
     public static final String[] ALL_AUTHORITIES_GET_REFERENDUMVORLAGEN = {
             SERVICE_GET_REFERENDUMVORLAGEN,
             REPOSITORY_READ_REFERENDUMVORLAGEN,

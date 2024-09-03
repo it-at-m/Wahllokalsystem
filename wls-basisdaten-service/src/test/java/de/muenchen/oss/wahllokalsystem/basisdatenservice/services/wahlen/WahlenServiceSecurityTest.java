@@ -70,8 +70,7 @@ public class WahlenServiceSecurityTest {
             List<Wahl> mockedListOfEntities = createWahlEntities();
             wahltagRepository.save(searchingForWahltag);
             wahlRepository.saveAll(mockedListOfEntities);
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHLTAG, Authorities.SERVICE_GET_WAHLEN, Authorities.REPOSITORY_READ_WAHL,
-                    Authorities.REPOSITORY_WRITE_WAHL);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLEN);
             Assertions.assertThatNoException().isThrownBy(() -> wahlenService.getWahlen(searchingForWahltag.getWahltagID()));
         }
 
@@ -98,8 +97,7 @@ public class WahlenServiceSecurityTest {
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
             return SecurityUtils
-                    .buildArgumentsForMissingAuthoritiesVariations(
-                            new String[] { Authorities.SERVICE_GET_WAHLEN, Authorities.REPOSITORY_READ_WAHL, Authorities.REPOSITORY_WRITE_WAHL });
+                    .buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_WAHLEN);
         }
     }
 

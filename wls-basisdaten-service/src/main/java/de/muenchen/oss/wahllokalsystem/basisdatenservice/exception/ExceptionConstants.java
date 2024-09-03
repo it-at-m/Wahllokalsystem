@@ -51,9 +51,6 @@ public class ExceptionConstants {
     public static ExceptionDataWrapper GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("308",
             "getReferendumvorlagen: Suchkriterien unvollständig.");
 
-    public static ExceptionDataWrapper WAHL_SPEICHERN_FEHLGESCHLAGEN = new ExceptionDataWrapper("351",
-            "postUngueltigeWahl: Das Speichern der Wahl ist fehlgeschlagen");
-
     public static ExceptionDataWrapper CODE_GETWAHLEN_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("314",
             "getWahlen: Der Wahltag zu den gesuchten Wahlen existiert nicht.");
     public static ExceptionDataWrapper CODE_POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("317",

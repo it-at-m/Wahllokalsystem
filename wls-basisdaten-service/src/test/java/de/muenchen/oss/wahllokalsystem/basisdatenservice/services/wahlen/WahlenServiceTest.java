@@ -65,7 +65,7 @@ class WahlenServiceTest {
             Mockito.when(wahltagRepository.findById("wahltagID")).thenReturn(Optional.of(searchingForWahltag));
             Mockito.when(wahlRepository.countByWahltag(searchingForWahltag.getWahltag())).thenReturn(numberOfWahlenInRepo);
             Mockito.when(wahlRepository.findByWahltagOrderByReihenfolge(searchingForWahltag.getWahltag())).thenReturn(mockedListOfEntities);
-            Mockito.lenient().when(wahlenClient.getWahlen(searchingForWahltag.getWahltag(), searchingForWahltag.getNummer()))
+            Mockito.lenient().when(wahlenClient.getWahlen(new WahltagWithNummer(searchingForWahltag.getWahltag(), searchingForWahltag.getNummer())))
                     .thenReturn(mockedListOfModelsIfClientCall);
             Mockito.lenient().when(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(mockedListOfModelsIfClientCall)).thenReturn(mockedListOfEntities);
             Mockito.when(wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(mockedListOfEntities)).thenReturn(mockedListOfModels);
@@ -89,7 +89,7 @@ class WahlenServiceTest {
             Mockito.when(wahltagRepository.findById("wahltagID")).thenReturn(Optional.of(searchingForWahltag));
             Mockito.when(wahlRepository.countByWahltag(searchingForWahltag.getWahltag())).thenReturn(numberOfWahlenInRepo);
             Mockito.when(wahlRepository.findByWahltagOrderByReihenfolge(searchingForWahltag.getWahltag())).thenReturn(mockedListOfEntities);
-            Mockito.lenient().when(wahlenClient.getWahlen(searchingForWahltag.getWahltag(), searchingForWahltag.getNummer()))
+            Mockito.lenient().when(wahlenClient.getWahlen(new WahltagWithNummer(searchingForWahltag.getWahltag(), searchingForWahltag.getNummer())))
                     .thenReturn(mockedListOfModelsIfClientCall);
             Mockito.lenient().when(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(mockedListOfModelsIfClientCall)).thenReturn(mockedListOfEntities);
             Mockito.when(wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(mockedListOfEntities)).thenReturn(mockedListOfModelsIfClientCall);

@@ -38,11 +38,13 @@ public class WahlenService {
         val wahltag = wahltagRepository.findById(wahltagID);
 
         wahlenValidator.validateWahltagForSearchingWahltagID(wahltag); //TODO sollte Teil des Services werden
+        val wahltagValue = wahltag.get();
 
-        if (wahlRepository.countByWahltag(wahltag.get().getWahltag()) == 0) {
+        if (wahlRepository.countByWahltag(wahltagValue.getWahltag()) == 0) {
             log.info("#getWahlen: Für wahltagID {} waren keine Wahlen in der Datenbank", wahltagID);
             List<Wahl> wahlEntities = wahlModelMapper
-                    .fromListOfWahlModeltoListOfWahlEntities(wahlenClient.getWahlen(wahltag.get().getWahltag(), wahltag.get().getNummer()));
+                    .fromListOfWahlModeltoListOfWahlEntities(
+                            wahlenClient.getWahlen(new WahltagWithNummer(wahltagValue.getWahltag(), wahltagValue.getNummer())));
             wahlRepository.saveAll(wahlEntities);
         }
         return wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(wahlRepository.findByWahltagOrderByReihenfolge(wahltag.get().getWahltag()));

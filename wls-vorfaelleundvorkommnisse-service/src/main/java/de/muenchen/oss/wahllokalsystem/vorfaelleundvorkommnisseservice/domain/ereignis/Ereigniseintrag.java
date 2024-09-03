@@ -12,18 +12,13 @@ import lombok.*;
  * The entity's content will be loaded according to the reference variable.
  * </p>
  */
-@Entity
+@Embeddable
 @Getter
 @Setter
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Ereigniseintrag {
-
-    @Column
-    @Size(max=1024)
-    @Id
-    private String eintragID;
 
     @Column(name="beschreibung")
     @Size(max=1024)
@@ -36,10 +31,5 @@ public class Ereigniseintrag {
     @Enumerated(EnumType.STRING)
     @NotNull
     private Ereignisart ereignisart;
-
-    @ManyToOne
-    @JoinColumn(name = "fk_wahlbezirkID")
-    @EqualsAndHashCode.Exclude
-    private Ereignisse fk_wahlbezirkID;
 
 }

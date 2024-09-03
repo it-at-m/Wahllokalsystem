@@ -11,8 +11,8 @@ import org.mapstruct.Mapping;
 @Mapper(imports = Farbe.class)
 public interface WahlenClientMapper {
 
-    @Mapping(target = "waehlerverzeichnisnummer", constant = "0l")
-    @Mapping(target = "reihenfolge", constant = "0l")
+    @Mapping(target = "waehlerverzeichnisnummer", constant = "1l")
+    @Mapping(target = "reihenfolge", constant = "1l")
     @Mapping(target = "farbe", expression = "java(new Farbe(0, 0, 0))")
     @Mapping(target = "wahlID", source = "identifikator")
     WahlModel toModel(WahlDTO wahlDTO);

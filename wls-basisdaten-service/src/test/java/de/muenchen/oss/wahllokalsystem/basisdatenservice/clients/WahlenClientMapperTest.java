@@ -37,8 +37,8 @@ class WahlenClientMapperTest {
             val expectedWahl = new WahlModel(
                     "identifikatorWahl1",
                     "nameWahl1",
-                    0L,
-                    0L,
+                    1L,
+                    1L,
                     aNowMoment,
                     Wahlart.BAW,
                     new Farbe(0, 0, 0),
@@ -85,8 +85,8 @@ class WahlenClientMapperTest {
                     new WahlModel(
                             "identifikatorWahl1",
                             "nameWahl1",
-                            0L,
-                            0L,
+                            1L,
+                            1L,
                             LocalDate.now(),
                             Wahlart.BAW,
                             new Farbe(0, 0, 0),
@@ -94,8 +94,8 @@ class WahlenClientMapperTest {
                     new WahlModel(
                             "identifikatorWahl2",
                             "nameWahl2",
-                            0L,
-                            0L,
+                            1L,
+                            1L,
                             LocalDate.now(),
                             Wahlart.BAW,
                             new Farbe(0, 0, 0),
@@ -103,8 +103,8 @@ class WahlenClientMapperTest {
                     new WahlModel(
                             "identifikatorWahl3",
                             "nameWahl3",
-                            0L,
-                            0L,
+                            1L,
+                            1L,
                             LocalDate.now(),
                             Wahlart.BAW,
                             new Farbe(0, 0, 0),

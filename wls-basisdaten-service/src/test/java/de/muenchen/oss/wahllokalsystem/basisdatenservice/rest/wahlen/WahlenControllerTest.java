@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -19,13 +20,28 @@ class WahlenControllerTest {
     @Mock
     WahlenService wahlenService;
 
+    @Mock
+    WahlDTOMapper wahlDTOMapper;
+
+    @InjectMocks
+    WahlenController unitUnderTest;
+
     @Nested
     class GetWahlen {
 
         @Test
         void serviceIsCalledWithoutExceptions() {
-            Assertions.assertThatCode(() -> wahlenService.getWahlen("wahltagIDTest")).doesNotThrowAnyException();
-            Mockito.verify(wahlenService).getWahlen("wahltagIDTest");
+            val wahltagID = "wahltagID";
+
+            val mockedServiceResponse = List.of(Mockito.mock(WahlModel.class), Mockito.mock(WahlModel.class));
+            val mockedMappedServiceResponse = List.of(Mockito.mock(WahlDTO.class), Mockito.mock(WahlDTO.class));
+
+            Mockito.when(wahlenService.getWahlen(wahltagID)).thenReturn(mockedServiceResponse);
+            Mockito.when(wahlDTOMapper.fromListOfWahlModelToListOfWahlDTO(mockedServiceResponse)).thenReturn(mockedMappedServiceResponse);
+
+            val result = unitUnderTest.getWahlen(wahltagID);
+
+            Assertions.assertThat(result).isSameAs(mockedMappedServiceResponse);
         }
     }
 
@@ -34,9 +50,16 @@ class WahlenControllerTest {
 
         @Test
         void serviceIsCalledWithoutExceptions() {
-            val theWahlModelList = List.of(WahlModel.builder().build(), WahlModel.builder().build());
-            Assertions.assertThatCode(() -> wahlenService.postWahlen(new WahlenWriteModel("wahltagIDTest", theWahlModelList))).doesNotThrowAnyException();
-            Mockito.verify(wahlenService).postWahlen(new WahlenWriteModel("wahltagIDTest", theWahlModelList));
+            val wahltagID = "wahltagID";
+            val requestBody = List.of(Mockito.mock(WahlDTO.class));
+
+            val mockedMappedRequest = List.of(Mockito.mock(WahlModel.class));
+
+            Mockito.when(wahlDTOMapper.fromListOfWahlDTOtoListOfWahlModel(requestBody)).thenReturn(mockedMappedRequest);
+
+            unitUnderTest.postWahlen(wahltagID, requestBody);
+
+            Mockito.verify(wahlenService).postWahlen(new WahlenWriteModel(wahltagID, mockedMappedRequest));
         }
     }
 
@@ -45,7 +68,8 @@ class WahlenControllerTest {
 
         @Test
         void serviceIsCalledWithoutExceptions() {
-            Assertions.assertThatCode(() -> wahlenService.resetWahlen()).doesNotThrowAnyException();
+            unitUnderTest.resetWahlen();
+
             Mockito.verify(wahlenService).resetWahlen();
         }
     }

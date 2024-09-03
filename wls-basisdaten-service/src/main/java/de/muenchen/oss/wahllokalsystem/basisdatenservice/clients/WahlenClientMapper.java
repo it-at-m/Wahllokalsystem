@@ -8,12 +8,9 @@ import java.util.Set;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface WahlenClientMapper {
-
-    WahlenClientMapper INSTANCE = Mappers.getMapper(WahlenClientMapper.class);
 
     @Mapping(target = "waehlerverzeichnisnummer", source = ".", qualifiedByName = "setWZeroIfNotExisting")
     @Mapping(target = "reihenfolge", source = ".", qualifiedByName = "setRZeroIfNotExisting")

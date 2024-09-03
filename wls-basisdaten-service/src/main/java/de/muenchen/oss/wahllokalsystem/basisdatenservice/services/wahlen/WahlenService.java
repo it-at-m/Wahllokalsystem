@@ -38,7 +38,7 @@ public class WahlenService {
 
         val wahltagValue = wahltageService.getWahltagByID(wahltagID);
 
-        if (wahlRepository.countByWahltag(wahltagValue.getWahltag()) == 0) {
+        if (!wahlRepository.existsByWahltag(wahltagValue.wahltag())) {
             log.info("#getWahlen: Für wahltagID {} waren keine Wahlen in der Datenbank", wahltagID);
             List<Wahl> wahlEntities = wahlModelMapper
                     .fromListOfWahlModeltoListOfWahlEntities(

@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service;
 
-import com.google.common.base.Strings;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.EreignisRepository;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
@@ -24,6 +23,7 @@ public class EreignisService {
     private final EreignisRepository ereignisRepository;
     private final ExceptionFactory exceptionFactory;
     private final EreignisModelMapper ereignisModelMapper;
+    private final EreignisValidator ereignisValidator;
 
     static final String GET_EREIGNIS = "hasAuthority('VorfaelleUndVorkommnisse_BUSINESSACTION_GetEreignisse')";
     static final String POST_EREIGNIS = "hasAuthority('VorfaelleUndVorkommnisse_BUSINESSACTION_PostEreignisse')";
@@ -35,9 +35,7 @@ public class EreignisService {
     @PreAuthorize(GET_EREIGNIS + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
     public Optional<EreignisModel> getEreignis(@P("wahlbezirkID") final String wahlbezirkID) {
         log.info("#getEreignis");
-        if (Strings.isNullOrEmpty(wahlbezirkID)) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETEREIGNIS_SUCHKRITERIEN_UNVOLLSTAENDIG);
-        }
+        ereignisValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
         return ereignisRepository.findById(wahlbezirkID).map(ereignisModelMapper::toModel);
     }
 
@@ -47,11 +45,7 @@ public class EreignisService {
     @PreAuthorize(POST_EREIGNIS + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param?.wahlbezirkID, authentication)")
     public void postEreignis(@P("param") EreignisModel ereignis) {
         log.info("#postEreignis");
-        if (ereignis == null || Strings.isNullOrEmpty(ereignis.wahlbezirkID())) {
-           log.warn("#postEreignis: Parameter unvollständig");
-           throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTEREIGNIS_PARAMS_UNVOLLSTAENDIG);
-        }
-
+        ereignisValidator.validEreignisAndWahlbezirkIDOrThrow(ereignis);
         try {
             ereignisRepository.save(ereignisModelMapper.toEntity(ereignis));
         } catch (Exception e) {

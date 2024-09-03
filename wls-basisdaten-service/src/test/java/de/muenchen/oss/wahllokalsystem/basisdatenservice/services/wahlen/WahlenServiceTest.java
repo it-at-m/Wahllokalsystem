@@ -1,18 +1,17 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahltag;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Farbe;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahl;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.WahlRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -31,7 +30,7 @@ class WahlenServiceTest {
     WahlRepository wahlRepository;
 
     @Mock
-    WahltagRepository wahltagRepository;
+    WahltageService wahltageService;
 
     @Mock
     WahlenValidator wahlenValidator;
@@ -53,17 +52,14 @@ class WahlenServiceTest {
 
         @Test
         void ifRepoDataFoundThanReturnsRepoDataAndMakesNoCallToRemoteClient() {
-            val numberOfWahlenInRepo = 3;
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung14", "1");
-            Optional<Wahltag> mOp = Optional.of(searchingForWahltag);
+            var searchingForWahltag = new WahltagModel("wahltagID", LocalDate.now(), "beschreibung14", "1");
             List<Wahl> mockedListOfEntities = createWahlEntities();
             List<WahlModel> mockedListOfModels = createWahlModels("");
             Mockito.doNothing().when(wahlenValidator).validWahlenCriteriaOrThrow("wahltagID");
-            Mockito.doNothing().when(wahlenValidator).validateWahltagForSearchingWahltagID(mOp);
 
-            Mockito.when(wahltagRepository.findById("wahltagID")).thenReturn(Optional.of(searchingForWahltag));
-            Mockito.when(wahlRepository.countByWahltag(searchingForWahltag.getWahltag())).thenReturn(numberOfWahlenInRepo);
-            Mockito.when(wahlRepository.findByWahltagOrderByReihenfolge(searchingForWahltag.getWahltag())).thenReturn(mockedListOfEntities);
+            Mockito.when(wahltageService.getWahltagByID("wahltagID")).thenReturn(searchingForWahltag);
+            Mockito.when(wahlRepository.existsByWahltag(searchingForWahltag.wahltag())).thenReturn(true);
+            Mockito.when(wahlRepository.findByWahltagOrderByReihenfolge(searchingForWahltag.wahltag())).thenReturn(mockedListOfEntities);
             Mockito.when(wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(mockedListOfEntities)).thenReturn(mockedListOfModels);
             val expectedResult = wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(mockedListOfEntities);
 
@@ -76,18 +72,15 @@ class WahlenServiceTest {
 
         @Test
         void ifRepoDataNotFoundThanReturnsRemoteClientData() {
-            val numberOfWahlenInRepo = 0;
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung15", "1");
-            Optional<Wahltag> mOp = Optional.of(searchingForWahltag);
+            var searchingForWahltag = new WahltagModel("wahltagID", LocalDate.now(), "beschreibung15", "1");
             List<Wahl> mockedListOfEntities = createWahlEntities();
             List<WahlModel> mockedListOfModelsIfClientCall = createWahlModels("clientPraefix");
             Mockito.doNothing().when(wahlenValidator).validWahlenCriteriaOrThrow("wahltagID");
-            Mockito.doNothing().when(wahlenValidator).validateWahltagForSearchingWahltagID(mOp);
 
-            Mockito.when(wahltagRepository.findById("wahltagID")).thenReturn(Optional.of(searchingForWahltag));
-            Mockito.when(wahlRepository.countByWahltag(searchingForWahltag.getWahltag())).thenReturn(numberOfWahlenInRepo);
-            Mockito.when(wahlRepository.findByWahltagOrderByReihenfolge(searchingForWahltag.getWahltag())).thenReturn(mockedListOfEntities);
-            Mockito.when(wahlenClient.getWahlen(new WahltagWithNummer(searchingForWahltag.getWahltag(), searchingForWahltag.getNummer())))
+            Mockito.when(wahltageService.getWahltagByID("wahltagID")).thenReturn(searchingForWahltag);
+            Mockito.when(wahlRepository.existsByWahltag(searchingForWahltag.wahltag())).thenReturn(false);
+            Mockito.when(wahlRepository.findByWahltagOrderByReihenfolge(searchingForWahltag.wahltag())).thenReturn(mockedListOfEntities);
+            Mockito.when(wahlenClient.getWahlen(new WahltagWithNummer(searchingForWahltag.wahltag(), searchingForWahltag.nummer())))
                     .thenReturn(mockedListOfModelsIfClientCall);
             Mockito.when(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(mockedListOfModelsIfClientCall)).thenReturn(mockedListOfEntities);
             Mockito.when(wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(mockedListOfEntities)).thenReturn(mockedListOfModelsIfClientCall);

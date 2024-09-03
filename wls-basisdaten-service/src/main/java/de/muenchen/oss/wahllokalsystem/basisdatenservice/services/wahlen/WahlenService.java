@@ -1,10 +1,10 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Farbe;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahl;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.WahlRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class WahlenService {
 
     private final WahlRepository wahlRepository;
 
-    private final WahltagRepository wahltagRepository;
+    private final WahltageService wahltageService;
 
     private final ExceptionFactory exceptionFactory;
 
@@ -35,19 +35,17 @@ public class WahlenService {
     @Transactional
     public List<WahlModel> getWahlen(String wahltagID) {
         wahlenValidator.validWahlenCriteriaOrThrow(wahltagID);
-        val wahltag = wahltagRepository.findById(wahltagID);
 
-        wahlenValidator.validateWahltagForSearchingWahltagID(wahltag); //TODO sollte Teil des Services werden
-        val wahltagValue = wahltag.get();
+        val wahltagValue = wahltageService.getWahltagByID(wahltagID);
 
         if (wahlRepository.countByWahltag(wahltagValue.getWahltag()) == 0) {
             log.info("#getWahlen: Für wahltagID {} waren keine Wahlen in der Datenbank", wahltagID);
             List<Wahl> wahlEntities = wahlModelMapper
                     .fromListOfWahlModeltoListOfWahlEntities(
-                            wahlenClient.getWahlen(new WahltagWithNummer(wahltagValue.getWahltag(), wahltagValue.getNummer())));
+                            wahlenClient.getWahlen(new WahltagWithNummer(wahltagValue.wahltag(), wahltagValue.nummer())));
             wahlRepository.saveAll(wahlEntities);
         }
-        return wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(wahlRepository.findByWahltagOrderByReihenfolge(wahltag.get().getWahltag()));
+        return wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(wahlRepository.findByWahltagOrderByReihenfolge(wahltagValue.wahltag()));
     }
 
     @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_PostWahlen')")

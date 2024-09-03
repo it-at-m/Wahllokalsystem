@@ -1,9 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahltag;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -24,12 +22,6 @@ public class WahlenValidator {
     public void validWahlenWriteModelOrThrow(final WahlenWriteModel wahlenWriteModel) {
         if (wahlenWriteModel == null || StringUtils.isBlank(wahlenWriteModel.wahltagID()) || CollectionUtils.isEmpty(wahlenWriteModel.wahlen())) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG);
-        }
-    }
-
-    public void validateWahltagForSearchingWahltagID(final Optional<Wahltag> wahltag) {
-        if (wahltag.isEmpty() || null == wahltag.get().getWahltag()) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_GETWAHLBEZIRKE_NO_WAHLTAG);
         }
     }
 

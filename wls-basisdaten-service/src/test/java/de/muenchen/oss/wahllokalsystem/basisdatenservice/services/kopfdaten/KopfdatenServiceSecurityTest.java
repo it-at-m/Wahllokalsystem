@@ -79,7 +79,6 @@ public class KopfdatenServiceSecurityTest {
         @MethodSource("getMissingAuthoritiesVariationsRepoEmpty")
         void missingAuthorityCausesFailWithAccessDeniedCaseEmptyRepo(final ArgumentsAccessor argumentsAccessor) throws Exception {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
-            emptyTheRepository();
             // mock infomanagement konfigurierterWahltag
             KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
                     KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
@@ -102,11 +101,6 @@ public class KopfdatenServiceSecurityTest {
 
         private static Stream<Arguments> getMissingAuthoritiesVariationsRepoEmpty() {
             return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_READ_KOPFDATEN);
-        }
-
-        private void emptyTheRepository() {
-            SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_KOPFDATEN);
-            kopfdatenRepository.deleteAll();
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")

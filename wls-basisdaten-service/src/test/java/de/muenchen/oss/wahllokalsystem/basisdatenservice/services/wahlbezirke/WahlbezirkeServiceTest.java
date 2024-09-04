@@ -56,7 +56,7 @@ class WahlbezirkeServiceTest {
             val wahltagID = "_identifikatorWahltag1";
             Mockito.when(wahltagRepository.findById(wahltagID)).thenReturn(Optional.empty());
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_GETWAHLBEZIRKE_NO_WAHLTAG))
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBEZIRKE_NO_WAHLTAG))
                     .thenReturn(mockedWlsException);
             Assertions.assertThatThrownBy(() -> unitUnderTest.getWahlbezirke(wahltagID)).isInstanceOf(FachlicheWlsException.class);
             Mockito.verify(wahlbezirkeValidator).validWahltagIDParamOrThrow(wahltagID);

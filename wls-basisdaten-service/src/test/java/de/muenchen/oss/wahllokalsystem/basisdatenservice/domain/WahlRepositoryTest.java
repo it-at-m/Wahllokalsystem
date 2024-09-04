@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
 
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
+
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Farbe;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahl;
@@ -17,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,20 +53,42 @@ class WahlRepositoryTest {
         Assertions.assertThat(foundWahlen).isEqualTo(expectedWahlen);
     }
 
-    @Test
-    void countByWahltag() {
-        val wahlenToSave = createWahlenList();
-        repository.saveAll(wahlenToSave);
-        val allFoundWahl = repository.findAll();
-        Assertions.assertThat(allFoundWahl.size()).isEqualTo(4);
+    @Nested
+    class ExistsByWahltag {
 
-        val wahltagToFind = LocalDate.now().minusMonths(1);
-        val foundNumberOfWahlByWahltag = repository.countByWahltag(wahltagToFind);
-        Assertions.assertThat(foundNumberOfWahlByWahltag).isEqualTo(3);
+        @Test
+        void trueWhenOneWahltagExists() {
+            val wahltagDateToFind = LocalDate.of(2024, 9, 3);
+            val wahlenToSave = List.of(
+                    new Wahl("wahltagID1", "name1", 1, 1, wahltagDateToFind, Wahlart.BTW, null, "1"),
+                    new Wahl("wahltagID2", "name2", 1, 1, wahltagDateToFind.plusDays(1), Wahlart.BTW, null, "1"));
+            repository.saveAll(wahlenToSave);
 
-        val wahltagToFind_0 = LocalDate.now().minusMonths(99);
-        val foundNumberOfWahlByWahltag_0 = repository.countByWahltag(wahltagToFind_0);
-        Assertions.assertThat(foundNumberOfWahlByWahltag_0).isEqualTo(0);
+            Assertions.assertThat(repository.existsByWahltag(wahltagDateToFind)).isTrue();
+        }
+
+        @Test
+        void trueWhenMoreThanOneWahltagExists() {
+            val wahltagDateToFind = LocalDate.of(2024, 9, 3);
+            val wahlenToSave = List.of(
+                    new Wahl("wahltagID1", "name1", 1, 1, wahltagDateToFind, Wahlart.BTW, null, "1"),
+                    new Wahl("wahltagID11", "name11", 2, 2, wahltagDateToFind, Wahlart.BTW, null, "2"),
+                    new Wahl("wahltagID2", "name2", 1, 1, wahltagDateToFind.plusDays(1), Wahlart.BTW, null, "1"));
+            repository.saveAll(wahlenToSave);
+
+            Assertions.assertThat(repository.existsByWahltag(wahltagDateToFind)).isTrue();
+        }
+
+        @Test
+        void falseWhenNoWahltagExists() {
+            val wahltagDateToFind = LocalDate.of(2024, 9, 3);
+            val wahlenToSave = List.of(
+                    new Wahl("wahltagID1", "name1", 1, 1, wahltagDateToFind.minusDays(1), Wahlart.BTW, null, "1"),
+                    new Wahl("wahltagID2", "name2", 1, 1, wahltagDateToFind.plusDays(1), Wahlart.BTW, null, "1"));
+            repository.saveAll(wahlenToSave);
+
+            Assertions.assertThat(repository.existsByWahltag(wahltagDateToFind)).isFalse();
+        }
     }
 
     private List<Wahl> createWahlenList() {

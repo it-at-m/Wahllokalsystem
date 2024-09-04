@@ -52,5 +52,5 @@ public interface WahlRepository extends CrudRepository<Wahl, String> {
 
     List<Wahl> findByWahltagOrderByReihenfolge(LocalDate wahltag);
 
-    int countByWahltag(LocalDate wahltag);
+    boolean existsByWahltag(LocalDate wahltag);
 }

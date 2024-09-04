@@ -12,6 +12,15 @@ changes:
       clientId: ${SSO_CLIENT_ID}
 
   - addRole:
+      name: Basisdaten_BUSINESSACTION_GetWahltag
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_BUSINESSACTION_GetWahltag
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
       name: Basisdaten_READ_Wahltag
       clientRole: true
       clientId: ${SSO_CLIENT_ID}

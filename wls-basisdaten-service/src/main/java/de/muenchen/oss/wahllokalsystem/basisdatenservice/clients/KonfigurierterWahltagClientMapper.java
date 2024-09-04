@@ -12,11 +12,9 @@ public interface KonfigurierterWahltagClientMapper {
     KonfigurierterWahltagModel fromRemoteClientDTOToModel(KonfigurierterWahltagDTO konfigurierterWahltagDTO);
 
     default boolean mapWahltagStatusEnumStringToModelBoolean(KonfigurierterWahltagDTO.WahltagStatusEnum wahltagStatus) {
-        if (wahltagStatus.equals(KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV)) {
-            return true;
-        } else if (wahltagStatus.equals(KonfigurierterWahltagDTO.WahltagStatusEnum.INAKTIV)) {
-            return false;
-        }
-        return false;
+        return switch (wahltagStatus) {
+            case AKTIV -> true;
+            case INAKTIV -> false;
+        };
     }
 }

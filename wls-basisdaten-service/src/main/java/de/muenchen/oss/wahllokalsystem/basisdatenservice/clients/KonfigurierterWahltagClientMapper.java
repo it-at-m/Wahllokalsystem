@@ -13,8 +13,8 @@ public interface KonfigurierterWahltagClientMapper {
 
     default boolean mapWahltagStatusEnumStringToModelBoolean(KonfigurierterWahltagDTO.WahltagStatusEnum wahltagStatus) {
         return switch (wahltagStatus) {
-            case AKTIV -> true;
-            case INAKTIV -> false;
+        case AKTIV -> true;
+        case INAKTIV -> false;
         };
     }
 }

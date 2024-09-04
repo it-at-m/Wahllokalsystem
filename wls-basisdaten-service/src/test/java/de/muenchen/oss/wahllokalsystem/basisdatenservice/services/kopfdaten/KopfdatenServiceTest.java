@@ -4,6 +4,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Kopfda
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Stimmzettelgebietsart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.StimmzettelgebietsartModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahltagWithNummer;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.MockDataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
@@ -61,7 +62,8 @@ class KopfdatenServiceTest {
             Mockito.when(kopfdatenRepository.findById(bezirkUndWahlId)).thenReturn(Optional.ofNullable(null));
             Mockito.lenient().when(kopfdatenModelMapper.toModel(null)).thenReturn(null);
             Mockito.when(konfigurierterWahltagClient.getKonfigurierterWahltag()).thenReturn(mockedKonfigurierterWahltagFromClient);
-            Mockito.when(wahldatenClient.loadBasisdaten(mockedKonfigurierterWahltagFromClient.wahltag(), mockedKonfigurierterWahltagFromClient.nummer()))
+            Mockito.when(wahldatenClient.loadBasisdaten(
+                    new WahltagWithNummer(mockedKonfigurierterWahltagFromClient.wahltag(), mockedKonfigurierterWahltagFromClient.nummer())))
                     .thenReturn(mockedBasisdatenModelFromClient);
 
             val result = unitUnderTest.getKopfdaten(bezirkUndWahlId);
@@ -93,7 +95,8 @@ class KopfdatenServiceTest {
             Mockito.when(kopfdatenModelMapper.toModel(kopfdatenEntityInRepo)).thenReturn(expectedKopfdaten);
             Mockito.lenient().when(konfigurierterWahltagClient.getKonfigurierterWahltag()).thenReturn(mockedKonfigurierterWahltagFromClient);
             Mockito.lenient()
-                    .when(wahldatenClient.loadBasisdaten(mockedKonfigurierterWahltagFromClient.wahltag(), mockedKonfigurierterWahltagFromClient.nummer()))
+                    .when(wahldatenClient.loadBasisdaten(
+                            new WahltagWithNummer(mockedKonfigurierterWahltagFromClient.wahltag(), mockedKonfigurierterWahltagFromClient.nummer())))
                     .thenReturn(mockedBasisdatenModelFromClient);
 
             val result = unitUnderTest.getKopfdaten(bezirkUndWahlId);
@@ -112,7 +115,8 @@ class KopfdatenServiceTest {
             Mockito.when(kopfdatenRepository.findById(bezirkUndWahlId)).thenReturn(Optional.ofNullable(null));
             Mockito.lenient().when(kopfdatenModelMapper.toModel(null)).thenReturn(null);
             Mockito.when(konfigurierterWahltagClient.getKonfigurierterWahltag()).thenReturn(mockedKonfigurierterWahltagFromClient);
-            Mockito.when(wahldatenClient.loadBasisdaten(mockedKonfigurierterWahltagFromClient.wahltag(), mockedKonfigurierterWahltagFromClient.nummer()))
+            Mockito.when(wahldatenClient.loadBasisdaten(
+                    new WahltagWithNummer(mockedKonfigurierterWahltagFromClient.wahltag(), mockedKonfigurierterWahltagFromClient.nummer())))
                     .thenReturn(mockedBasisdatenModelFromClient);
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.INITIALIZE_KOPFDATEN_NO_BASISSTRUKTURDATEN))

@@ -4,15 +4,13 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.infomanagement.mode
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KonfigurierterWahltagModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 
 @Mapper
 public interface KonfigurierterWahltagClientMapper {
 
-    @Mapping(target = "active", source = "wahltagStatus", qualifiedByName = "mapWahltagStatusEnumStringToModelBoolean")
+    @Mapping(target = "active", source = "wahltagStatus")
     KonfigurierterWahltagModel fromRemoteClientDTOToModel(KonfigurierterWahltagDTO konfigurierterWahltagDTO);
 
-    @Named("mapWahltagStatusEnumStringToModelBoolean")
     default boolean mapWahltagStatusEnumStringToModelBoolean(KonfigurierterWahltagDTO.WahltagStatusEnum wahltagStatus) {
         if (wahltagStatus.equals(KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV)) {
             return true;

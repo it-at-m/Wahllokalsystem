@@ -47,6 +47,10 @@ public class MockDataFactory {
                 wahlbezirkNummer);
     }
 
+    public static KopfdatenModel createKopfdatenModelFor(String wahlID, String wahlbezirkID) {
+        return createKopfdatenModelFor(wahlID, wahlbezirkID, null, null, null, null, null);
+    }
+
     public static KopfdatenModel createKopfdatenModelFor(String wahlID, String wahlbezirkID, StimmzettelgebietsartModel szga, String szGebietsNummer,
             String szGebietsName, String wahlname, String wahlbezirkNummer) {
         return new KopfdatenModel(
@@ -57,6 +61,10 @@ public class MockDataFactory {
                 szGebietsName,
                 wahlname,
                 wahlbezirkNummer);
+    }
+
+    public static Kopfdaten createKopfdatenEntityFor(String wahlID, String wahlbezirkID) {
+        return createKopfdatenEntityFor(wahlID, wahlbezirkID, null, null, null, null, null);
     }
 
     public static Kopfdaten createKopfdatenEntityFor(String wahlID, String wahlbezirkID, Stimmzettelgebietsart szga, String szGebietsName,

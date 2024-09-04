@@ -13,7 +13,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.Basisstru
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.StimmzettelgebietDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlbezirkDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.infomanagement.model.KonfigurierterWahltagDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.kopfdaten.KopfdatenDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.kopfdaten.StimmzettelgebietsartDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlbezirke.WahlbezirkartDTO;

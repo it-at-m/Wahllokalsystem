@@ -32,6 +32,21 @@ class WahltagModelMapperTest {
         Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 
+    @Test
+    void toModel() {
+        val wahltagID = "wahltagID";
+        val wahltag = LocalDate.now();
+        val beschreibung = "beschreibung";
+        val nummer = "nummer";
+        val entityToMap = new Wahltag(wahltagID, wahltag, beschreibung, nummer);
+
+        val result = unitUnderTest.toModel(entityToMap);
+
+        val expectedResult = new WahltagModel(wahltagID, wahltag, beschreibung, nummer);
+
+        Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+
     private List<Wahltag> createWahltagList() {
         val wahltag1 = new Wahltag("identifikatorWahltag1", LocalDate.now().minusMonths(2), "beschreibungWahltag1", "nummerWahltag1");
         val wahltag2 = new Wahltag("identifikatorWahltag2", LocalDate.now().minusMonths(1), "beschreibungWahltag2", "nummerWahltag2");

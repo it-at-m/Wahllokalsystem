@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.ereignis;
 
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereigniseintrag;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereignisart;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisModelMapper;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.TestdataFactory;
 import lombok.val;
@@ -14,8 +14,8 @@ public class EreignisModelMapperTest {
 
     @Test
     void toModel() {
-        java.util.List<Ereigniseintrag> ereigniseintrag = new java.util.ArrayList<>();
-        val ereignisEntity = TestdataFactory.createEreignisEntityWithData("", true, true, ereigniseintrag);
+        java.time.LocalDateTime uhrzeit = java.time.LocalDateTime.now();
+        val ereignisEntity = TestdataFactory.createEreignisEntityWithData("", "", uhrzeit, Ereignisart.VORFALL);
         val ereignisModelFromEntity = TestdataFactory.createEreignisModelFromEntity(ereignisEntity);
 
         val result = unitUnderTest.toModel(ereignisEntity);
@@ -25,8 +25,8 @@ public class EreignisModelMapperTest {
 
     @Test
     void toEntity() {
-        java.util.List<Ereigniseintrag> ereigniseintrag = new java.util.ArrayList<>();
-        val ereignisModel = TestdataFactory.createEreignisModelWithData("", true, true, ereigniseintrag);
+        java.time.LocalDateTime uhrzeit = java.time.LocalDateTime.now();
+        val ereignisModel = TestdataFactory.createEreignisModelWithData("", "", uhrzeit, Ereignisart.VORFALL);
         val ereignisEntityFromModel = TestdataFactory.createEreignisEntityFromModel(ereignisModel);
 
         val result = unitUnderTest.toEntity(ereignisModel);

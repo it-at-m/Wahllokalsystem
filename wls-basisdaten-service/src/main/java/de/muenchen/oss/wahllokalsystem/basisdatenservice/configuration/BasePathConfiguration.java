@@ -16,7 +16,7 @@ public class BasePathConfiguration {
     String infomanagementBasePath;
 
     private final de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.ApiClient eaiApiClient;
-    private final de.muenchen.oss.wahllokalsystem.basisdatenservice.infomanagement.ApiClient infomanagementApiClient;
+    private final de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.infomanagement.ApiClient infomanagementApiClient;
 
     @PostConstruct
     public void updateBasePaths() {

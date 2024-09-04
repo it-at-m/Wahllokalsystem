@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
- * Provides a Repository for a {@link Ereignisse}. This Repository can be exported as a REST Resource.
+ * Provides a Repository for a {@link Ereignis}. This Repository can be exported as a REST Resource.
  * <p>
  * The Repository handles CRUD Operations. Every Operation is secured and takes care of the tenancy.
  * For specific Documentation on how the generated REST point behaves, please consider the Spring Data Rest Reference
@@ -16,7 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
  * </p>
  */
 @PreAuthorize("hasAuthority('VorfaelleUndVorkommnisse_READ_Ereignisse')")
-public interface EreignisRepository extends CrudRepository<Ereignisse, String> {
+public interface EreignisRepository extends CrudRepository<Ereignis, String> {
     /**
      * Name for the specific cache.
      */
@@ -30,7 +30,7 @@ public interface EreignisRepository extends CrudRepository<Ereignisse, String> {
      * @return an Iterable of the Ereignis entities with the same Tenancy.
      */
     @Override
-    Iterable<Ereignisse> findAll();
+    Iterable<Ereignis> findAll();
 
     /**
      * Get one specific Ereignis by its unique oid.
@@ -40,7 +40,7 @@ public interface EreignisRepository extends CrudRepository<Ereignisse, String> {
      */
     @Override
     @Cacheable(value = CACHE, key = "#p0")
-    Optional<Ereignisse> findById(String wahlbezirkID);
+    Optional<Ereignis> findById(String wahlbezirkID);
 
     /**
      * Create or update a Ereignis.
@@ -55,7 +55,7 @@ public interface EreignisRepository extends CrudRepository<Ereignisse, String> {
     @Override
     @CachePut(value = CACHE, key = "#p0.wahlbezirkID")
     @PreAuthorize(WRITE_EREIGNIS)
-    <S extends Ereignisse> S save(S ereignis);
+    <S extends Ereignis> S save(S ereignis);
 
     /**
      * Delete the Ereignis by a specified oid.
@@ -75,7 +75,7 @@ public interface EreignisRepository extends CrudRepository<Ereignisse, String> {
     @Override
     @CacheEvict(value = CACHE, key = "#p0.wahlbezirkID")
     @PreAuthorize(DELETE_EREIGNIS)
-    void delete(Ereignisse entity);
+    void delete(Ereignis entity);
 
     /**
      * Delete multiple Ereignis entities by their oid.
@@ -85,7 +85,7 @@ public interface EreignisRepository extends CrudRepository<Ereignisse, String> {
     @Override
     @CacheEvict(value = CACHE, allEntries = true)
     @PreAuthorize(DELETE_EREIGNIS)
-    void deleteAll(Iterable<? extends Ereignisse> entities);
+    void deleteAll(Iterable<? extends Ereignis> entities);
 
     /**
      * Delete all Ereignis entities.

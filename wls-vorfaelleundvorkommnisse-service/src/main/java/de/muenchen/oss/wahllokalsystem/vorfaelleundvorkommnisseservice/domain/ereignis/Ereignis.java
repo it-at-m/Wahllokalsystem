@@ -1,30 +1,38 @@
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Indexed;
 
 @Entity
 @Indexed
+@Getter
+@Setter
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Ereignisse {
+public class Ereignis {
 
     @Id
     @NotNull
     @Size(max = 1024)
     private String wahlbezirkID;
 
-    private boolean keineVorfaelle = false;
+    @Size(max=1024)
+    private String beschreibung;
 
-    private boolean keineVorkommnisse = false;
+    private java.time.LocalDateTime uhrzeit;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "Ereigniseintrag", joinColumns = @JoinColumn(name = "fk_wahlbezirkID"))
-    private java.util.List<Ereigniseintrag> ereigniseintrag = new java.util.ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private Ereignisart ereignisart;
 }

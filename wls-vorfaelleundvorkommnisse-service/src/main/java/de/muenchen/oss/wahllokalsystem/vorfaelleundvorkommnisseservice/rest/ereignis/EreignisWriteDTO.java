@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis;
 
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereigniseintrag;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereignisart;
 
-public record EreignisWriteDTO(Boolean keineVorfaelle,
-                               Boolean keineVorkommnisse,
-                               java.util.List<Ereigniseintrag> ereigniseintrag) {
+public record EreignisWriteDTO(String beschreibung,
+                               java.time.LocalDateTime uhrzeit,
+                               Ereignisart ereignisart) {
 }

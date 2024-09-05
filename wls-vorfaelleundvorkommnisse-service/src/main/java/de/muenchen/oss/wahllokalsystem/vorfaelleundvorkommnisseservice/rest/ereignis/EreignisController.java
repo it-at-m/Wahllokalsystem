@@ -25,8 +25,9 @@ public class EreignisController {
 
     EreignisService ereignisService;
 
-    public EreignisController(EreignisDTOMapper ereignisDTOMapper) {
+    public EreignisController(EreignisDTOMapper ereignisDTOMapper, EreignisService ereignisService) {
         this.ereignisDTOMapper = ereignisDTOMapper;
+        this.ereignisService = ereignisService;
     }
 
     /**

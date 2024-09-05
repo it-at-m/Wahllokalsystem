@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereignis;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereignisart;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis.EreignisDTO;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis.EreignisWriteDTO;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisModel;
 
 public class TestdataFactory {
@@ -37,6 +38,10 @@ public class TestdataFactory {
         return new EreignisModel(ereignisDTO.wahlbezirkID(), ereignisDTO.beschreibung(), ereignisDTO.uhrzeit(), ereignisDTO.ereignisart());
     }
 
+    public static EreignisModel createEreignisModelFromWriteDTO(EreignisWriteDTO ereignisWriteDTO, String wahlbezirkID) {
+        return new EreignisModel(wahlbezirkID, ereignisWriteDTO.beschreibung(), ereignisWriteDTO.uhrzeit(), ereignisWriteDTO.ereignisart());
+    }
+
     // DTOs
     public static EreignisDTO createEreignisDTOWithNoData() {
         return new EreignisDTO(null, null, null, null);
@@ -48,5 +53,14 @@ public class TestdataFactory {
 
     public static EreignisDTO createEreignisDTOFromModel(EreignisModel ereignisModel) {
         return new EreignisDTO(ereignisModel.wahlbezirkID(), ereignisModel.beschreibung(), ereignisModel.uhrzeit(), ereignisModel.ereignisart());
+    }
+
+    // WriteDTOs
+    public static EreignisWriteDTO createEreignisWriteDTOWithNoData() {
+        return new EreignisWriteDTO(null, null, null);
+    }
+
+    public static EreignisWriteDTO createEreignisWriteDTOWithData(String beschreibung, java.time.LocalDateTime uhrzeit, Ereignisart ereignisart) {
+        return new EreignisWriteDTO(beschreibung, uhrzeit, ereignisart);
     }
 }

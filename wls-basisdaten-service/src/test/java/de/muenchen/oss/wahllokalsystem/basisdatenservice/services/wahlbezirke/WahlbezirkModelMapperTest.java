@@ -27,7 +27,7 @@ class WahlbezirkModelMapperTest {
     ExceptionFactory exceptionFactory;
 
     @Test
-    void fromListOfWahlbezirkModeltoListOfWahlbezirkEntities() {
+    void fromListOfWahlbezirkModelToListOfWahlbezirkEntities() {
         val modelsToMap = MockDataFactory.createListOfWahlbezirkModel("", LocalDate.now());
 
         val result = unitUnderTest.fromListOfWahlbezirkModeltoListOfWahlbezirkEntities(modelsToMap);

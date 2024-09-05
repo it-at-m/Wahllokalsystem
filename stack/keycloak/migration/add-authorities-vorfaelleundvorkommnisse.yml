@@ -30,19 +30,19 @@ changes:
       clientId: ${SSO_CLIENT_ID}
 
   - addRole:
-      name: VorfaelleUndVorkommnisse_WRITE_Ereignis
+      name: VorfaelleUndVorkommnisse_WRITE_Ereignisse
       clientRole: true
       clientId: ${SSO_CLIENT_ID}
   - assignRoleToGroup:
       group: allVorfaelleUndVorkommnisseAuthorities
-      role: VorfaelleUndVorkommnisse_WRITE_Ereignis
+      role: VorfaelleUndVorkommnisse_WRITE_Ereignisse
       clientId: ${SSO_CLIENT_ID}
 
   - addRole:
-      name: VorfaelleUndVorkommnisse_DELETE_Ereignis
+      name: VorfaelleUndVorkommnisse_DELETE_Ereignisse
       clientRole: true
       clientId: ${SSO_CLIENT_ID}
   - assignRoleToGroup:
       group: allVorfaelleUndVorkommnisseAuthorities
-      role: VorfaelleUndVorkommnisse_DELETE_Ereignis
+      role: VorfaelleUndVorkommnisse_DELETE_Ereignisse
       clientId: ${SSO_CLIENT_ID}

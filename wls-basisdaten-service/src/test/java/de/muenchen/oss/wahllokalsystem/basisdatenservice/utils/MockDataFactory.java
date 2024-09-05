@@ -30,6 +30,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlI
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import lombok.val;
 
 public class MockDataFactory {
@@ -309,6 +310,10 @@ public class MockDataFactory {
         wahlbezirk4.setWahlID("wahlID2");
 
         return Set.of(wahlbezirk1, wahlbezirk2, wahlbezirk3, wahlbezirk4);
+    }
+
+    public static Wahlbezirk createWahlbezirkEntity(final LocalDate wahltagDate) {
+        return new Wahlbezirk(UUID.randomUUID().toString(), wahltagDate, "nummer", WahlbezirkArt.UWB, "nummer", "wahlID");
     }
 
     public static List<Wahlbezirk> createListOfWahlbezirkEntity(String praefix, LocalDate aDate) {

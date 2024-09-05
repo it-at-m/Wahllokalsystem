@@ -61,7 +61,7 @@ class WahlbezirkeServiceTest {
             val mergedWahlbezirkEntitiesFromRepo = buildWahlbezirEntitiesFromModels(mergedWahlbezirkeWithWahlen);
 
             Mockito.when(wahltageService.getWahltagByID(wahltagID)).thenReturn(wahltag);
-            Mockito.when(wahlbezirkRepository.countByWahltag(wahltag.wahltag())).thenReturn(0);
+            Mockito.when(wahlbezirkRepository.existsByWahltag(wahltag.wahltag())).thenReturn(false);
             Mockito.when(wahlbezirkeClient.loadWahlbezirke(wahltag.wahltag(), wahltag.nummer()))
                     .thenReturn(mockedwahlbezirkeModelFromClient);
             Mockito.when(wahlenService.getExistingWahlenOrderedByReihenfolge(wahltagID)).thenReturn(wahlen);
@@ -92,7 +92,7 @@ class WahlbezirkeServiceTest {
             val notExpectedMergedWahlbezirkeWithWahlen = mergeWahlbezirkeWithWahlen(notExpectedMockedwahlbezirkeModelFromClient, notExpectedWahlModels);
 
             Mockito.when(wahltageService.getWahltagByID(wahltagID)).thenReturn(wahltag);
-            Mockito.when(wahlbezirkRepository.countByWahltag(wahltag.wahltag())).thenReturn(3);
+            Mockito.when(wahlbezirkRepository.existsByWahltag(wahltag.wahltag())).thenReturn(true);
 
             Mockito.when(wahlbezirkRepository.findByWahltag(wahltag.wahltag())).thenReturn(mergedWahlbezirkEntitiesFromRepo);
             Mockito.when(wahlbezirkModelMapper.fromListOfWahlbezirkEntityToListOfWahlbezirkModel(mergedWahlbezirkEntitiesFromRepo))

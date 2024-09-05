@@ -38,7 +38,7 @@ public class WahlbezirkeService {
         wahlbezirkeValidator.validWahltagIDParamOrThrow(wahltagID);
 
         val wahltag = wahltageService.getWahltagByID(wahltagID);
-        if (wahlbezirkRepository.countByWahltag(wahltag.wahltag()) == 0) {
+        if (!wahlbezirkRepository.existsByWahltag(wahltag.wahltag())) {
             log.error("#getWahlbezirke: Für wahltagID {} waren keine Wahlbezirke in der Datenbank", wahltagID);
             val wahlbezirkeOfWahltag = wahlbezirkeClient.loadWahlbezirke(wahltag.wahltag(), wahltag.nummer());
             val wahlbezirkeAsEntities = wahlbezirkModelMapper.fromListOfWahlbezirkModeltoListOfWahlbezirkEntities(wahlbezirkeOfWahltag);

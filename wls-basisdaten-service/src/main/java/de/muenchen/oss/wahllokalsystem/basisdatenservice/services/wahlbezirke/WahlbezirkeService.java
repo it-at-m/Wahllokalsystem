@@ -7,7 +7,6 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagRepositor
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahl;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.WahlRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModelMapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.Collection;
 import java.util.List;
@@ -36,8 +35,6 @@ public class WahlbezirkeService {
     private final ExceptionFactory exceptionFactory;
 
     private final WahlbezirkModelMapper wahlbezirkModelMapper;
-
-    private final WahlModelMapper wahlModelMapper;
 
     @PreAuthorize(
         "hasAuthority('Basisdaten_BUSINESSACTION_GetWahlbezirke')"

@@ -8,7 +8,6 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.WahlReposit
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModelMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.MockDataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
@@ -40,8 +39,6 @@ class WahlbezirkeServiceTest {
     WahlbezirkRepository wahlbezirkRepository;
     @Mock
     WahlbezirkModelMapper wahlbezirkModelMapper;
-    @Mock
-    WahlModelMapper wahlModelMapper;
     @Mock
     WahlbezirkeClient wahlbezirkeClient;
 

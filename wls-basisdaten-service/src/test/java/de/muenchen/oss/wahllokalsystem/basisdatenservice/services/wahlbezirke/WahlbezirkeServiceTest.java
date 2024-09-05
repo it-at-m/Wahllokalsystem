@@ -9,7 +9,6 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenS
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.MockDataFactory;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +31,6 @@ class WahlbezirkeServiceTest {
     WahltageService wahltageService;
     @Mock
     WahlenService wahlenService;
-    @Mock
-    ExceptionFactory exceptionFactory;
     @Mock
     WahlbezirkRepository wahlbezirkRepository;
     @Mock

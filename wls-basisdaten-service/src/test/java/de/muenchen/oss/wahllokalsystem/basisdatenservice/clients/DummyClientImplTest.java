@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.StimmzettelgebietModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahltagWithNummer;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -51,7 +50,6 @@ class DummyClientImplTest {
         @Test
         void resultHasRightTypeAndAllPropertiesContainingData() {
             val result = unitUnderTest.loadBasisdaten(new WahltagWithNummer(LocalDate.now(), "0"));
-            Assertions.assertThat(result).isInstanceOf(BasisdatenModel.class);
             Assertions.assertThat(result).hasNoNullFieldsOrProperties();
             Assertions.assertThat(result.basisstrukturdaten()).isNotEmpty();
             Assertions.assertThat(result.wahlen()).isNotEmpty();

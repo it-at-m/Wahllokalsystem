@@ -97,7 +97,6 @@ class WahlbezirkeServiceTest {
             val wahltag = MockDataFactory.createWahltagList("").stream().filter((wtg) -> wtg.getWahltagID().equals(wahltagID)).findFirst();
             val mockedwahlbezirkeModelFromClient = MockDataFactory.createSetOfWahlbezirkModel("", wahltag.get().getWahltag());
             val notExpectedMockedwahlbezirkeModelFromClient = MockDataFactory.createSetOfWahlbezirkModel("NotExpected", wahltag.get().getWahltag());
-            val wahlen = MockDataFactory.createWahlEntityList().stream().filter((wahl) -> wahl.getWahltag().equals(wahltag.get().getWahltag())).toList();
             val wahlModels = MockDataFactory.createWahlModelList("", wahltag.get().getWahltag()).stream()
                     .filter((wahl) -> wahl.wahltag().equals(wahltag.get().getWahltag())).toList();
             val notExpectedWahlModels = MockDataFactory.createWahlModelList("NotExpected", wahltag.get().getWahltag()).stream()
@@ -109,11 +108,6 @@ class WahlbezirkeServiceTest {
 
             Mockito.when(wahltagRepository.findById(wahltagID)).thenReturn(wahltag);
             Mockito.when(wahlbezirkRepository.countByWahltag(wahltag.get().getWahltag())).thenReturn(3);
-
-            Mockito.lenient().when(wahlbezirkeClient.loadWahlbezirke(wahltag.get().getWahltag(), wahltag.get().getNummer()))
-                    .thenReturn(notExpectedMockedwahlbezirkeModelFromClient);
-            Mockito.lenient().when(wahlRepository.findByWahltagOrderByReihenfolge(wahltag.get().getWahltag())).thenReturn(wahlen);
-            Mockito.lenient().when(wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(wahlen)).thenReturn(notExpectedWahlModels);
 
             Mockito.when(wahlbezirkRepository.findByWahltag(wahltag.get().getWahltag())).thenReturn(mergedWahlbezirkEntitiesFromRepo);
             Mockito.when(wahlbezirkModelMapper.fromListOfWahlbezirkEntityToListOfWahlbezirkModel(mergedWahlbezirkEntitiesFromRepo))

@@ -34,14 +34,27 @@ class WahlbezirkeValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlIDisNullOrEmptyOrBlank() {
-            val requestParam2 = "";
-            val requestParam3 = "     ";
+        void exceptionWhenWahltagIDIsNull() {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_GETWAHLBEZIRKE_PARAMETER_UNVOLLSTAENDIG))
                     .thenReturn(mockedWlsException);
+
             Assertions.assertThatThrownBy(() -> unitUnderTest.validWahltagIDParamOrThrow(null)).isSameAs(mockedWlsException);
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validWahltagIDParamOrThrow(requestParam2)).isSameAs(mockedWlsException);
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validWahltagIDParamOrThrow(requestParam3)).isSameAs(mockedWlsException);
+        }
+
+        @Test
+        void exceptionWhenWahltagIDIsEmpty() {
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_GETWAHLBEZIRKE_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
+
+            Assertions.assertThatThrownBy(() -> unitUnderTest.validWahltagIDParamOrThrow("")).isSameAs(mockedWlsException);
+        }
+
+        @Test
+        void exceptionWhenWahltagIDIsBlank() {
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_GETWAHLBEZIRKE_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
+
+            Assertions.assertThatThrownBy(() -> unitUnderTest.validWahltagIDParamOrThrow("   ")).isSameAs(mockedWlsException);
         }
     }
 }

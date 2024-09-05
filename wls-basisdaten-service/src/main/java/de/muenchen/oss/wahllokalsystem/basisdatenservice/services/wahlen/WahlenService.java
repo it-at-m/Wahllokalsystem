@@ -48,6 +48,12 @@ public class WahlenService {
         return wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(wahlRepository.findByWahltagOrderByReihenfolge(wahltagValue.wahltag()));
     }
 
+    @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetWahlen')")
+    public List<WahlModel> getExistingWahlenOrderedByReihenfolge(final String wahltagID) {
+        val wahltagValue = wahltageService.getWahltagByID(wahltagID);
+        return wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(wahlRepository.findByWahltagOrderByReihenfolge(wahltagValue.wahltag()));
+    }
+
     @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_PostWahlen')")
     @Transactional
     public void postWahlen(final WahlenWriteModel wahlenWriteModel) {

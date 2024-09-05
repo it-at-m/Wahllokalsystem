@@ -1,7 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.MockDataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import lombok.val;
@@ -43,31 +42,6 @@ class WahlbezirkeValidatorTest {
             Assertions.assertThatThrownBy(() -> unitUnderTest.validWahltagIDParamOrThrow(null)).isSameAs(mockedWlsException);
             Assertions.assertThatThrownBy(() -> unitUnderTest.validWahltagIDParamOrThrow(requestParam2)).isSameAs(mockedWlsException);
             Assertions.assertThatThrownBy(() -> unitUnderTest.validWahltagIDParamOrThrow(requestParam3)).isSameAs(mockedWlsException);
-        }
-    }
-
-    @Nested
-    class ValidateWahltagForSearchingWahltagID {
-
-        final FachlicheWlsException mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-
-        @Test
-        void noExceptionWhenRequestParamIsValid() {
-            val requestParam = MockDataFactory.createWahltagList("").stream().findFirst();
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validateWahltagForSearchingWahltagID(requestParam));
-        }
-
-        @Test
-        void exceptionWhenWahlIDisEmptyOrHasNoWahltagProperty() {
-            val emptyRequestParam = MockDataFactory.createWahltagList("").stream().filter((wtg) -> wtg.getWahltagID().equals("somethingThatNotExists"))
-                    .findFirst();
-            val noWahltagRequestParam = MockDataFactory.createWahltagList("").stream().findFirst();
-            noWahltagRequestParam.ifPresent(wahltag -> wahltag.setWahltag(null));
-
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBEZIRKE_NO_WAHLTAG))
-                    .thenReturn(mockedWlsException);
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validateWahltagForSearchingWahltagID(emptyRequestParam)).isSameAs(mockedWlsException);
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validateWahltagForSearchingWahltagID(noWahltagRequestParam)).isSameAs(mockedWlsException);
         }
     }
 }

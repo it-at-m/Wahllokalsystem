@@ -188,6 +188,8 @@ public class Authorities {
 
     public static final String[] ALL_AUTHORITIES_GET_WAHLBEZIRKE = {
             SERVICE_GET_WAHLBEZIRKE,
+            SERVICE_GET_WAHLTAG,
+            SERVICE_GET_WAHLEN,
             REPOSITORY_READ_WAHLTAG,
             REPOSITORY_READ_WAHL,
             REPOSITORY_READ_WAHLBEZIRK,

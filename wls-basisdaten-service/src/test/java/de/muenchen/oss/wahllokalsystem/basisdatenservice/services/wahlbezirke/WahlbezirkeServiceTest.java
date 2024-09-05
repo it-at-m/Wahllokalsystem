@@ -79,9 +79,6 @@ class WahlbezirkeServiceTest {
             Mockito.when(wahlbezirkeClient.loadWahlbezirke(wahltag.get().getWahltag(), wahltag.get().getNummer()))
                     .thenReturn(mockedwahlbezirkeModelFromClient);
             Mockito.when(wahlRepository.findByWahltagOrderByReihenfolge(wahltag.get().getWahltag())).thenReturn(wahlen);
-            Mockito.when(wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(wahlen)).thenReturn(wahlModels);
-            Mockito.when(wahlbezirkModelMapper.toWahlbezirkModelListMergedWithWahlenInfo(mockedwahlbezirkeModelFromClient, wahlModels, exceptionFactory))
-                    .thenReturn(mergedWahlbezirkeWithWahlen);
             Mockito.when(wahlbezirkRepository.findByWahltag(wahltag.get().getWahltag())).thenReturn(mergedWahlbezirkEntitiesFromRepo);
             Mockito.when(wahlbezirkModelMapper.fromListOfWahlbezirkEntityToListOfWahlbezirkModel(mergedWahlbezirkEntitiesFromRepo))
                     .thenReturn(mergedWahlbezirkeWithWahlen);
@@ -117,10 +114,6 @@ class WahlbezirkeServiceTest {
                     .thenReturn(notExpectedMockedwahlbezirkeModelFromClient);
             Mockito.lenient().when(wahlRepository.findByWahltagOrderByReihenfolge(wahltag.get().getWahltag())).thenReturn(wahlen);
             Mockito.lenient().when(wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(wahlen)).thenReturn(notExpectedWahlModels);
-            Mockito.lenient()
-                    .when(wahlbezirkModelMapper.toWahlbezirkModelListMergedWithWahlenInfo(notExpectedMockedwahlbezirkeModelFromClient, notExpectedWahlModels,
-                            exceptionFactory))
-                    .thenReturn(mergedWahlbezirkeWithWahlen);
 
             Mockito.when(wahlbezirkRepository.findByWahltag(wahltag.get().getWahltag())).thenReturn(mergedWahlbezirkEntitiesFromRepo);
             Mockito.when(wahlbezirkModelMapper.fromListOfWahlbezirkEntityToListOfWahlbezirkModel(mergedWahlbezirkEntitiesFromRepo))

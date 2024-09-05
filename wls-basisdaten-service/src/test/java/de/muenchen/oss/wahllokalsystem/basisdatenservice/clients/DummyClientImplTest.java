@@ -53,10 +53,10 @@ class DummyClientImplTest {
             val result = unitUnderTest.loadBasisdaten(new WahltagWithNummer(LocalDate.now(), "0"));
             Assertions.assertThat(result).isInstanceOf(BasisdatenModel.class);
             Assertions.assertThat(result).hasNoNullFieldsOrProperties();
-            Assertions.assertThat(result.basisstrukturdaten()).size().isPositive();
-            Assertions.assertThat(result.wahlen()).size().isPositive();
-            Assertions.assertThat(result.wahlbezirke()).size().isPositive();
-            Assertions.assertThat(result.stimmzettelgebiete()).size().isPositive();
+            Assertions.assertThat(result.basisstrukturdaten()).isNotEmpty();
+            Assertions.assertThat(result.wahlen()).isNotEmpty();
+            Assertions.assertThat(result.wahlbezirke()).isNotEmpty();
+            Assertions.assertThat(result.stimmzettelgebiete()).isNotEmpty();
         }
 
         @Test
@@ -123,7 +123,7 @@ class DummyClientImplTest {
         @Test
         void resultIsAnArrayWithPositiveSize() {
             val result = unitUnderTest.loadWahlbezirke(LocalDate.now(), "0");
-            Assertions.assertThat(result).size().isPositive();
+            Assertions.assertThat(result).isNotEmpty();
         }
     }
 }

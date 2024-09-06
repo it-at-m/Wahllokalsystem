@@ -3,10 +3,8 @@ package de.muenchen.oss.wahllokalsystem.eaiservice.domain.ergebnismeldung;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode
 @Embeddable
 public class BWerte {
 

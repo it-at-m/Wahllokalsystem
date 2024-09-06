@@ -50,6 +50,10 @@ public class ExceptionConstants {
     public static final ExceptionDataWrapper SAVEWAHLBETEILIGUNG_WAHLID_FEHLT = new ExceptionDataWrapper(CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
     public static final ExceptionDataWrapper SAVEWAHLBETEILIGUNG_MELDEZEITPUNKT_FEHLT = new ExceptionDataWrapper("003", "Der Meldezeitpunkt fehlt");
 
+    //saveErgebnismeldung
+    public static final ExceptionDataWrapper SAVEWAHLERGEBNISMELDUNG_WAHLBEZIRKID_FEHLT = new ExceptionDataWrapper("001", "Die WahkbezirkID fehlt");
+    public static final ExceptionDataWrapper SAVEWAHLERGEBNISMELDUNG_WAHLID_FEHLT = new ExceptionDataWrapper(CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
+
     /**
      * @throws IllegalAccessException when constructor is used
      */

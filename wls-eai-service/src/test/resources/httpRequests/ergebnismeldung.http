@@ -1,0 +1,89 @@
+POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+password = test &
+grant_type = password &
+client_secret = top-secret &
+client_id = wls &
+username = wls_all
+
+> {%
+    client.global.set("auth_token", response.body.access_token);
+    client.global.set("token_type", response.body.token_type);
+%}
+
+### get userinfo with auth_token
+GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
+Authorization: {{ token_type }} {{ auth_token }}
+
+### POST Create - Set Ergebnismeldung
+POST {{ WLS_EAI_SERVICE_URL }}/ergebnismeldung
+Authorization: {{ token_type }} {{ auth_token }}
+Content-Type: application/json
+
+{
+  "wahlID": "wahlID1",
+  "wahlbezirkID": "00000000-0000-0000-0000-000000000001",
+  "meldungsart": "NIEDERSCHRIFT",
+  "aWerte": {
+    "a1": null
+  },
+  "bWerte": {
+    "b1": null
+  },
+  "wahlbriefeWerte": {
+    "zurueckgewiesenGesamt": null
+  },
+  "ungueltigeStimmzettels": [],
+  "ungueltigeStimmzettelAnzahl": null,
+  "ergebnisse": [],
+  "wahlart": "BTW"
+}
+
+### POST Create - Error: Set Ergebnismeldung without wahlID
+POST {{ WLS_EAI_SERVICE_URL }}/ergebnismeldung
+Authorization: {{ token_type }} {{ auth_token }}
+Content-Type: application/json
+
+{
+  "wahlID": "",
+  "wahlbezirkID": "00000000-0000-0000-0000-000000000001",
+  "meldungsart": "NIEDERSCHRIFT",
+  "aWerte": {
+    "a1": null
+  },
+  "bWerte": {
+    "b1": null
+  },
+  "wahlbriefeWerte": {
+    "zurueckgewiesenGesamt": null
+  },
+  "ungueltigeStimmzettels": [],
+  "ungueltigeStimmzettelAnzahl": null,
+  "ergebnisse": [],
+  "wahlart": "BTW"
+}
+
+### POST Create - Error: Set Ergebnismeldung without wahlbezirkID
+POST {{ WLS_EAI_SERVICE_URL }}/ergebnismeldung
+Authorization: {{ token_type }} {{ auth_token }}
+Content-Type: application/json
+
+{
+  "wahlID": "wahlID1",
+  "wahlbezirkID": "",
+  "meldungsart": "NIEDERSCHRIFT",
+  "aWerte": {
+    "a1": null
+  },
+  "bWerte": {
+    "b1": null
+  },
+  "wahlbriefeWerte": {
+    "zurueckgewiesenGesamt": null
+  },
+  "ungueltigeStimmzettels": [],
+  "ungueltigeStimmzettelAnzahl": null,
+  "ergebnisse": [],
+  "wahlart": "BTW"
+}

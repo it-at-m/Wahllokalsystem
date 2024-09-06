@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis;
+package de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung;
 
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.service.ergebnismeldung.ErgebnismeldungService;
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/wahlergebnis")
+@RequestMapping("/ergebnismeldung")
 @RequiredArgsConstructor
-public class WahlergebnisController {
+public class ErgebnismeldungController {
 
     private final ErgebnismeldungService ergebnismeldungService;
 

@@ -10,7 +10,3 @@ Der Service hat keine Abhängigkeiten zu anderen Services.
 
 - Verwalten und Übermitteln von Vorfällen und Vorkommnissen
 - Laden und Anzeigen besonderer Ereignisse
-
-### Relationsdiagramm
-
-![Image with ereignisse ERM](/vorfaelleUndVorkommnisse/erm_ereignisse.png)  

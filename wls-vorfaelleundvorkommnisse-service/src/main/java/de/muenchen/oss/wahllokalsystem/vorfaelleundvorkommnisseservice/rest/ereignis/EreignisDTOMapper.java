@@ -9,5 +9,4 @@ public interface EreignisDTOMapper {
     EreignisDTO toDTO(EreignisModel model);
 
     EreignisModel toModel(String wahlbezirkID, EreignisWriteDTO dto);
-
 }

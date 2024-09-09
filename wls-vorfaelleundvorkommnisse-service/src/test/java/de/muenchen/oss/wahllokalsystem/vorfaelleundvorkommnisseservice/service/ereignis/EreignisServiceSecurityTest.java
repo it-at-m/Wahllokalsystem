@@ -128,7 +128,6 @@ public class EreignisServiceSecurityTest {
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignis(ereignisModel)).isInstanceOf(TechnischeWlsException.class);
-
         }
     }
 }

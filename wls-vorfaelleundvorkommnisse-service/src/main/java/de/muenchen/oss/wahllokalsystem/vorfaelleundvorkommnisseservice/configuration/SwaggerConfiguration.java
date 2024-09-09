@@ -31,7 +31,7 @@ public class SwaggerConfiguration {
                 .info(
                         new Info().title("Vorfälle und Vorkommnisse Service")
                                 .version(version)
-                                .contact(new Contact().name("Your Name").email("Your E-Mail-Address"))) // todo: wessen daten trage ich da ein?
+                                .contact(new Contact().name("Your Name").email("Your E-Mail-Address")))
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .components(
                         new Components()

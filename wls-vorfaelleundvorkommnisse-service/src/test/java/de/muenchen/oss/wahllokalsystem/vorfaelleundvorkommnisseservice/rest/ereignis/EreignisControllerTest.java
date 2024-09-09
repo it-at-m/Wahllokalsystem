@@ -42,7 +42,6 @@ public class EreignisControllerTest {
             Mockito.when(ereignisDTOMapper.toDTO(ereignisModel)).thenReturn(ereignisDTO);
 
             val result = unitUnderTest.getEreignis(wahlbezirkID);
-
             Assertions.assertThat(result.getBody()).isEqualTo(ereignisDTO);
             Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         }
@@ -60,7 +59,6 @@ public class EreignisControllerTest {
             Mockito.when(ereignisDTOMapper.toModel(wahlbezirkID, ereignisWriteDTO)).thenReturn(ereignisModel);
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postEreignis(wahlbezirkID, ereignisWriteDTO));
-
             Mockito.verify(ereignisService).postEreignis(ereignisModel);
         }
     }

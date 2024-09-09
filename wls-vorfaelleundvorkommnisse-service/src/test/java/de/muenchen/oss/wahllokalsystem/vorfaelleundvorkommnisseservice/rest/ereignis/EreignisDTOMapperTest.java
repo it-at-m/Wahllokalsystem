@@ -9,7 +9,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.time.LocalDateTime;
 
-public class EreignisDTOMapperTest {
+class EreignisDTOMapperTest {
 
     private final EreignisDTOMapper unitUnderTest = Mappers.getMapper(EreignisDTOMapper.class);
 
@@ -34,7 +34,6 @@ public class EreignisDTOMapperTest {
         val expectedEreignisModel = TestdataFactory.createEreignisModelFromWriteDTO(ereignisWriteDTO, wahlbezirkID);
 
         val result = unitUnderTest.toModel(wahlbezirkID, ereignisWriteDTO);
-
         Assertions.assertThat(result).isEqualTo(expectedEreignisModel);
     }
 }

@@ -8,30 +8,27 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
-public class EreignisModelMapperTest {
+import java.time.LocalDateTime;
+
+class EreignisModelMapperTest {
 
     private final EreignisModelMapper unitUnderTest = Mappers.getMapper(EreignisModelMapper.class);
 
     @Test
     void toModel() {
-        java.time.LocalDateTime uhrzeit = java.time.LocalDateTime.now();
-        val ereignisEntity = TestdataFactory.createEreignisEntityWithData("", "", uhrzeit, Ereignisart.VORFALL);
+        val ereignisEntity = TestdataFactory.createEreignisEntityWithData("", "", LocalDateTime.now(), Ereignisart.VORFALL);
         val ereignisModelFromEntity = TestdataFactory.createEreignisModelFromEntity(ereignisEntity);
 
         val result = unitUnderTest.toModel(ereignisEntity);
-
         Assertions.assertThat(result).isEqualTo(ereignisModelFromEntity);
     }
 
     @Test
     void toEntity() {
-        java.time.LocalDateTime uhrzeit = java.time.LocalDateTime.now();
-        val ereignisModel = TestdataFactory.createEreignisModelWithData("", "", uhrzeit, Ereignisart.VORFALL);
+        val ereignisModel = TestdataFactory.createEreignisModelWithData("", "", LocalDateTime.now(), Ereignisart.VORFALL);
         val ereignisEntityFromModel = TestdataFactory.createEreignisEntityFromModel(ereignisModel);
 
         val result = unitUnderTest.toEntity(ereignisModel);
-
         Assertions.assertThat(result).isEqualTo(ereignisEntityFromModel);
     }
-
 }

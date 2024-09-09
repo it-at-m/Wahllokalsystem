@@ -81,11 +81,10 @@ public class EreignisControllerIntegrationTest {
             val ereignisToLoad = ereignisModelMapper.toModel(savedEreignis);
 
             val request = MockMvcRequestBuilders.get("/businessActions/ereignisse/wahlbezirkID");
-
             val response = api.perform(request).andExpect(status().isOk()).andReturn();
+
             val responseBodyAsDTO = objectMapper.readValue(response.getResponse().getContentAsString(), EreignisDTO.class);
             val expectedResponseDTO = ereignisDTOMapper.toDTO(ereignisToLoad);
-
             Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseDTO);
         }
     }
@@ -99,10 +98,11 @@ public class EreignisControllerIntegrationTest {
             val wahlbezirkID = "wahlbezirkID";
             val ereignisWriteDTO = TestdataFactory.createEreignisWriteDTOWithData("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL);
             val request = createPostWithBody(wahlbezirkID, ereignisWriteDTO);
+
             val response = api.perform(request).andExpect(status().isOk()).andReturn();
             SecurityUtils.runWith(Authorities.REPOSITORY_READ_EREIGNISSE);
-            val savedEreignis = ereignisRepository.findById(wahlbezirkID).get();
 
+            val savedEreignis = ereignisRepository.findById(wahlbezirkID).get();
             Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
             val expectedSavedEreignis = new Ereignis(wahlbezirkID, ereignisWriteDTO.beschreibung(), ereignisWriteDTO.uhrzeit(), ereignisWriteDTO.ereignisart());
             Assertions.assertThat(savedEreignis).isEqualTo(expectedSavedEreignis);
@@ -117,11 +117,10 @@ public class EreignisControllerIntegrationTest {
 
             val ereignisToOverride = TestdataFactory.createEreignisEntityWithData(wahlbezirkID, "beschreibung", LocalDateTime.now(), Ereignisart.VORFALL);
             ereignisRepository.save(ereignisToOverride);
-
             api.perform(request).andExpect(status().isOk());
             SecurityUtils.runWith(Authorities.REPOSITORY_READ_EREIGNISSE);
-            val savedEreignis = ereignisRepository.findById(wahlbezirkID).get();
 
+            val savedEreignis = ereignisRepository.findById(wahlbezirkID).get();
             val expectedSavedEreignis = new Ereignis(wahlbezirkID, ereignisWriteDTO.beschreibung(), ereignisWriteDTO.uhrzeit(), ereignisWriteDTO.ereignisart());
             Assertions.assertThat(savedEreignis).isEqualTo(expectedSavedEreignis);
 
@@ -133,5 +132,4 @@ public class EreignisControllerIntegrationTest {
                     .content(objectMapper.writeValueAsString(ereignisWriteDTO));
         }
     }
-
 }

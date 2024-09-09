@@ -184,12 +184,6 @@
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${org.springdoc.version}</version>
         </dependency>
-        <!-- todo: wofür brauche ich diese dependency? wenn die drin ist startet der service nicht!
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-rest-webmvc</artifactId>
-            <version>2.5.0.RELEASE</version>
-        </dependency>-->
 
         <!-- Validation -->
         <dependency>

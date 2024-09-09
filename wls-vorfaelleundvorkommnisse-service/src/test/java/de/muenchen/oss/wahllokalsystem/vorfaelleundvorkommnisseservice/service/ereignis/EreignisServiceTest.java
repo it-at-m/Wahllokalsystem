@@ -53,7 +53,6 @@ public class EreignisServiceTest {
             Mockito.when(ereignisModelMapper.toModel(mockedEntity_ereignisse)).thenReturn(mockedEntity_ereignisModel);
 
             val result = unitUnderTest.getEreignis(wahlbezirkID);
-
             Assertions.assertThat(result).isEqualTo(Optional.of(mockedEntity_ereignisModel));
         }
 
@@ -64,7 +63,6 @@ public class EreignisServiceTest {
             Mockito.when(ereignisRepository.findById(wahlbezirkID)).thenReturn(Optional.empty());
 
             val result = unitUnderTest.getEreignis(wahlbezirkID);
-
             Assertions.assertThat(result).isEmpty();
         }
     }

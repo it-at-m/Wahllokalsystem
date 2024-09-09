@@ -22,7 +22,7 @@ public class WahlbezirkeValidator {
 
     public void validateWahltagForSearchingWahltagID(final Optional<Wahltag> wahltag) {
         if (wahltag.isEmpty() || null == wahltag.get().getWahltag()) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_GETWAHLBEZIRKE_NO_WAHLTAG);
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBEZIRKE_NO_WAHLTAG);
         }
     }
 

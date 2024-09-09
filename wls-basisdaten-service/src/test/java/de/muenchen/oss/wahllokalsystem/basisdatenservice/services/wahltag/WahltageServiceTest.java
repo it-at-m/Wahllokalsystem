@@ -1,11 +1,15 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag;
 
-import org.assertj.core.api.Assertions;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahltag;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import lombok.val;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +27,9 @@ class WahltageServiceTest {
     WahltagModelMapper wahltagModelMapper;
     @Mock
     WahltageClient wahltageClient;
+
+    @Mock
+    ExceptionFactory exceptionFactory;
 
     @InjectMocks
     WahltageService unitUnderTest;
@@ -64,6 +71,36 @@ class WahltageServiceTest {
                     "nummerWahltag3");
 
             return List.of(wahltag1, wahltag2, wahltag3);
+        }
+    }
+
+    @Nested
+    class GetWahltagById {
+
+        @Test
+        void wahltagFound() {
+            val wahltagID = "wahltagID";
+
+            val mockedRepoResponse = new Wahltag();
+            val mockedMappedRepoResponse = new WahltagModel(wahltagID, LocalDate.now(), null, null);
+
+            Mockito.when(wahltagRepository.findById(wahltagID)).thenReturn(Optional.of(mockedRepoResponse));
+            Mockito.when(wahltagModelMapper.toModel(mockedRepoResponse)).thenReturn(mockedMappedRepoResponse);
+
+            Assertions.assertThat(unitUnderTest.getWahltagByID(wahltagID)).isSameAs(mockedMappedRepoResponse);
+        }
+
+        @Test
+        void exceptionWhenNotFound() {
+            val wahltagID = "wahltagID";
+
+            val mockedRepoResponse = new Wahltag();
+            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+
+            Mockito.when(wahltagRepository.findById(wahltagID)).thenReturn(Optional.empty());
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBEZIRKE_NO_WAHLTAG)).thenReturn(mockedWlsException);
+
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahltagByID(wahltagID)).isSameAs(mockedWlsException);
         }
     }
 }

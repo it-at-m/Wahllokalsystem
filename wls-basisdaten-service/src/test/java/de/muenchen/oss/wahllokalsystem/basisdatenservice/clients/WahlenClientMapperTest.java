@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Farbe;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
@@ -36,11 +37,11 @@ class WahlenClientMapperTest {
             val expectedWahl = new WahlModel(
                     "identifikatorWahl1",
                     "nameWahl1",
-                    0L,
-                    0L,
+                    1L,
+                    1L,
                     aNowMoment,
                     Wahlart.BAW,
-                    null,
+                    new Farbe(0, 0, 0),
                     "nummerWahl1");
 
             Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedWahl);
@@ -84,29 +85,29 @@ class WahlenClientMapperTest {
                     new WahlModel(
                             "identifikatorWahl1",
                             "nameWahl1",
-                            0L,
-                            0L,
+                            1L,
+                            1L,
                             LocalDate.now(),
                             Wahlart.BAW,
-                            null,
+                            new Farbe(0, 0, 0),
                             "nummerWahl1"),
                     new WahlModel(
                             "identifikatorWahl2",
                             "nameWahl2",
-                            0L,
-                            0L,
+                            1L,
+                            1L,
                             LocalDate.now(),
                             Wahlart.BAW,
-                            null,
+                            new Farbe(0, 0, 0),
                             "nummerWahl2"),
                     new WahlModel(
                             "identifikatorWahl3",
                             "nameWahl3",
-                            0L,
-                            0L,
+                            1L,
+                            1L,
                             LocalDate.now(),
                             Wahlart.BAW,
-                            null,
+                            new Farbe(0, 0, 0),
                             "nummerWahl3"));
 
             Assertions.assertThat(result).containsExactlyInAnyOrderElementsOf(expectedWahltage);

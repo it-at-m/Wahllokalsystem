@@ -26,12 +26,14 @@ public class TestdataFactory {
         return new EreignisModel(null, null, null, null);
     }
 
-    public static EreignisModel createEreignisModelWithData(String wahlbezirkID, String beschreibung, java.time.LocalDateTime uhrzeit, Ereignisart ereignisart) {
+    public static EreignisModel createEreignisModelWithData(String wahlbezirkID, String beschreibung, java.time.LocalDateTime uhrzeit,
+            Ereignisart ereignisart) {
         return new EreignisModel(wahlbezirkID, beschreibung, uhrzeit, ereignisart);
     }
 
     public static EreignisModel createEreignisModelFromEntity(Ereignis ereignisEntity) {
-        return new EreignisModel(ereignisEntity.getWahlbezirkID(), ereignisEntity.getBeschreibung(), ereignisEntity.getUhrzeit(), ereignisEntity.getEreignisart());
+        return new EreignisModel(ereignisEntity.getWahlbezirkID(), ereignisEntity.getBeschreibung(), ereignisEntity.getUhrzeit(),
+                ereignisEntity.getEreignisart());
     }
 
     public static EreignisModel createEreignisModelFromDTO(EreignisDTO ereignisDTO) {

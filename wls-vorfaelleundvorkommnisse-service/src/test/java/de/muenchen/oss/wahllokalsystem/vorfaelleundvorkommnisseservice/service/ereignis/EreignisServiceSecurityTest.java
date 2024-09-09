@@ -44,7 +44,9 @@ public class EreignisServiceSecurityTest {
     EreignisRepository ereignisRepository;
 
     @BeforeEach
-    void setup() { SecurityContextHolder.clearContext(); }
+    void setup() {
+        SecurityContextHolder.clearContext();
+    }
 
     @Nested
     class GetEreignis {

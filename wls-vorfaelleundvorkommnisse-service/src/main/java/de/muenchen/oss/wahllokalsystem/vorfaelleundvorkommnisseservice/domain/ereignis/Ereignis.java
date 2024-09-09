@@ -27,7 +27,7 @@ public class Ereignis {
     @Size(max = 1024)
     private String wahlbezirkID;
 
-    @Size(max=1024)
+    @Size(max = 1024)
     private String beschreibung;
 
     private java.time.LocalDateTime uhrzeit;

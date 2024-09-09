@@ -23,12 +23,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
                 "de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice"
         }
 )
-@SpringBootApplication(scanBasePackages = {
-        "org.springframework.data.jpa.convert.threeten",
-        "de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice",
-        "de.muenchen.oss.wahllokalsystem.wls.common.exception",
-        "de.muenchen.oss.wahllokalsystem.wls.common.security"
-    }
+@SpringBootApplication(
+        scanBasePackages = {
+                "org.springframework.data.jpa.convert.threeten",
+                "de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice",
+                "de.muenchen.oss.wahllokalsystem.wls.common.exception",
+                "de.muenchen.oss.wahllokalsystem.wls.common.security"
+        }
 )
 public class MicroServiceApplication {
 

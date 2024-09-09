@@ -40,7 +40,7 @@ public class EreignisController {
      * This BusinessAction's purpose is: Laden der besonderen Ereignisse
      * It returns one Ereignis.
      */
-    @Operation(description = "Laden der Ereignisses des Wahllokals {wahlbezirkID}")
+    @Operation(description = "Laden der Ereignisse des Wahllokals {wahlbezirkID}")
     @ApiResponses(
             value = {
                     @ApiResponse(
@@ -65,7 +65,7 @@ public class EreignisController {
     /**
      * This BusinessAction's purpose is: Speichern von besonderen Ereignissen
      */
-    @Operation(description = "Speichern der Ereignisses des Wahllokals {wahlbezirkID}")
+    @Operation(description = "Speichern der Ereignisse des Wahllokals {wahlbezirkID}")
     @ApiResponses(
             value = {
                     @ApiResponse(

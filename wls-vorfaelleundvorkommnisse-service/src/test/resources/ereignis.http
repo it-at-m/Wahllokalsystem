@@ -25,3 +25,9 @@ Authorization: {{ token_type }} {{ auth_token }}
 POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}//businessActions/ereignisse/wahlbezirkID
 Authorization: {{ token_type }} {{ auth_token }}
 Content-Type: application/json
+
+{
+  "beschreibung": "beschreibung",
+  "uhrzeit": "2024-06-09T23:59:12.123",
+  "ereignisart": "VORFALL"
+}

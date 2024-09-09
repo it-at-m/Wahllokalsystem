@@ -6,17 +6,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.stereotype.Indexed;
 
 @Entity
 @Indexed
-@Getter
-@Setter
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,7 +27,7 @@ public class Ereignis {
     @Size(max = 1024)
     private String beschreibung;
 
-    private java.time.LocalDateTime uhrzeit;
+    private LocalDateTime uhrzeit;
 
     @Enumerated(EnumType.STRING)
     @NotNull

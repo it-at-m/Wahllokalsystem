@@ -12,24 +12,6 @@ changes:
       clientId: ${SSO_CLIENT_ID}
 
   - addRole:
-      name: Basisdaten_READ_Wahltag
-      clientRole: true
-      clientId: ${SSO_CLIENT_ID}
-  - assignRoleToGroup:
-      group: allBasisdatenAuthorities
-      role: Basisdaten_READ_Wahltag
-      clientId: ${SSO_CLIENT_ID}
-
-  - addRole:
-      name: Basisdaten_READ_Wahl
-      clientRole: true
-      clientId: ${SSO_CLIENT_ID}
-  - assignRoleToGroup:
-      group: allBasisdatenAuthorities
-      role: Basisdaten_READ_Wahl
-      clientId: ${SSO_CLIENT_ID}
-
-  - addRole:
       name: Basisdaten_READ_Wahlbezirk
       clientRole: true
       clientId: ${SSO_CLIENT_ID}

@@ -33,12 +33,17 @@ class WahltagModelMapperTest {
     }
 
     @Test
-    void isMappingCorrectFromModelToEntity(){
-        val modelToMap = createWahltagModelList().get(0);
+    void toModel() {
+        val wahltagID = "wahltagID";
+        val wahltag = LocalDate.now();
+        val beschreibung = "beschreibung";
+        val nummer = "nummer";
+        val entityToMap = new Wahltag(wahltagID, wahltag, beschreibung, nummer);
 
-        val result = unitUnderTest.toEntity(modelToMap);
+        val result = unitUnderTest.toModel(entityToMap);
 
-        val expectedResult = createWahltagList().get(0);
+        val expectedResult = new WahltagModel(wahltagID, wahltag, beschreibung, nummer);
+
         Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 

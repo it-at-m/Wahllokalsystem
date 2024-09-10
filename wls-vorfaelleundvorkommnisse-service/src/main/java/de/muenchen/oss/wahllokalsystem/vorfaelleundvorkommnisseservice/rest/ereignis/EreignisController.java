@@ -41,7 +41,7 @@ public class EreignisController {
             value = {
                     @ApiResponse(
                             responseCode = "200", description = "OK",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = EreignisDTO.class)) }
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WahlbezirkEreignisseDTO.class)) }
                     ),
                     @ApiResponse(
                             responseCode = "500", description = "Probleme bei der Kommunikation mit dem externen System von dem die Daten importiert werden",
@@ -54,7 +54,7 @@ public class EreignisController {
             }
     )
     @GetMapping("/ereignisse/{wahlbezirkID}")
-    public ResponseEntity<EreignisDTO> getEreignis(@PathVariable("wahlbezirkID") String wahlbezirkID) {
+    public ResponseEntity<WahlbezirkEreignisseDTO> getEreignis(@PathVariable("wahlbezirkID") String wahlbezirkID) {
         val ereignisFromService = ereignisService.getEreignis(wahlbezirkID);
         return withBodyOrNoContent(ereignisFromService.map(ereignisDTOMapper::toDTO));
     }
@@ -67,7 +67,7 @@ public class EreignisController {
             value = {
                     @ApiResponse(
                             responseCode = "200", description = "OK",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = EreignisDTO.class)) }
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WahlbezirkEreignisseDTO.class)) }
                     ),
                     @ApiResponse(
                             responseCode = "500", description = "Probleme bei der Kommunikation mit dem externen System von dem die Daten importiert werden",
@@ -78,8 +78,8 @@ public class EreignisController {
     @PostMapping("/ereignisse/{wahlbezirkID}")
     @ResponseStatus(HttpStatus.OK)
     public void postEreignis(@PathVariable("wahlbezirkID") String wahlbezirkID,
-            @RequestBody EreignisWriteDTO ereignisBody) {
-        ereignisService.postEreignis(ereignisDTOMapper.toModel(wahlbezirkID, ereignisBody));
+            @RequestBody EreignisseWriteDTO ereignisseBody) {
+        ereignisService.postEreignis(ereignisDTOMapper.toModel(wahlbezirkID, ereignisseBody));
     }
 
     private <T> ResponseEntity<T> withBodyOrNoContent(final Optional<T> optionalBody) {

@@ -1,12 +1,13 @@
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis;
 
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisModel;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisseModel;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisseWriteModel;
 import org.mapstruct.Mapper;
 
 @Mapper
 public interface EreignisDTOMapper {
 
-    EreignisDTO toDTO(EreignisModel model);
+    WahlbezirkEreignisseDTO toDTO(EreignisseModel model);
 
-    EreignisModel toModel(String wahlbezirkID, EreignisWriteDTO dto);
+    EreignisseWriteModel toModel(String wahlbezirkID, EreignisseWriteDTO dto);
 }

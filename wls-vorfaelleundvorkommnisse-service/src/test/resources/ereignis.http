@@ -21,13 +21,71 @@ Authorization: {{ token_type }} {{ auth_token }}
 GET {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}//businessActions/ereignisse/wahlbezirkID
 Authorization: {{ token_type }} {{ auth_token }}
 
-### POST Ereignisse
+### POST Ereignisse nur Vorkommnisse
 POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}//businessActions/ereignisse/wahlbezirkID
 Authorization: {{ token_type }} {{ auth_token }}
 Content-Type: application/json
 
 {
-  "beschreibung": "beschreibung",
-  "uhrzeit": "2024-06-09T23:59:12.123",
-  "ereignisart": "VORFALL"
+  "ereigniseintraege": [
+    {
+      "beschreibung": "beschreibung",
+      "uhrzeit": "2024-06-09T23:59:12.123",
+      "ereignisart": "VORKOMMNIS"
+    },
+    {
+      "beschreibung": "beschreibung",
+      "uhrzeit": "2024-06-09T23:59:12.123",
+      "ereignisart": "VORKOMMNIS"
+    }
+  ]
+}
+
+### POST Ereignisse nur Vorfälle
+POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}//businessActions/ereignisse/wahlbezirkID
+Authorization: {{ token_type }} {{ auth_token }}
+Content-Type: application/json
+
+{
+  "ereigniseintraege": [
+    {
+      "beschreibung": "beschreibung",
+      "uhrzeit": "2024-06-09T23:59:12.123",
+      "ereignisart": "VORFALL"
+    },
+    {
+      "beschreibung": "beschreibung",
+      "uhrzeit": "2024-06-09T23:59:12.123",
+      "ereignisart": "VORFALL"
+    }
+  ]
+}
+
+### POST Ereignisse gemischt
+POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}//businessActions/ereignisse/wahlbezirkID
+Authorization: {{ token_type }} {{ auth_token }}
+Content-Type: application/json
+
+{
+  "ereigniseintraege": [
+    {
+      "beschreibung": "beschreibung",
+      "uhrzeit": "2024-06-09T23:59:12.123",
+      "ereignisart": "VORFALL"
+    },
+    {
+      "beschreibung": "beschreibung",
+      "uhrzeit": "2024-06-09T23:59:12.123",
+      "ereignisart": "VORKOMMNIS"
+    }
+  ]
+}
+
+### POST Ereignisse leer
+POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}//businessActions/ereignisse/wahlbezirkID
+Authorization: {{ token_type }} {{ auth_token }}
+Content-Type: application/json
+
+{
+  "ereigniseintraege": []
 }

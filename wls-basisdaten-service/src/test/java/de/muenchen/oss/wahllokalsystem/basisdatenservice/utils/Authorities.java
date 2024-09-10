@@ -172,8 +172,6 @@ public class Authorities {
             SERVICE_GET_KOPFDATEN,
             REPOSITORY_READ_KOPFDATEN,
             REPOSITORY_WRITE_KOPFDATEN,
-            S2S_INFOMANAGEMENT_SERVICE_GET_KONFIGURIERTERWAHLTAG,
-            S2S_INFOMANAGEMENT_REPOSITORY_READ_KONFIGURIERTERWAHLTAG
     };
 
     public static final String[] ALL_AUTHORITIES_KOPFDATEN = {
@@ -190,6 +188,8 @@ public class Authorities {
 
     public static final String[] ALL_AUTHORITIES_GET_WAHLBEZIRKE = {
             SERVICE_GET_WAHLBEZIRKE,
+            SERVICE_GET_WAHLTAG,
+            SERVICE_GET_WAHLEN,
             REPOSITORY_READ_WAHLTAG,
             REPOSITORY_READ_WAHL,
             REPOSITORY_READ_WAHLBEZIRK,

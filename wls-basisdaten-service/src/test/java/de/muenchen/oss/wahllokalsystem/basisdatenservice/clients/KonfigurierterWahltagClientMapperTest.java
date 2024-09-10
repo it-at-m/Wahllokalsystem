@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.infomanagement.model.KonfigurierterWahltagDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.MockDataFactory;
 import java.time.LocalDate;
 import lombok.val;
@@ -17,7 +17,7 @@ class KonfigurierterWahltagClientMapperTest {
     class FromRemoteClientDTOToModel {
 
         @Test
-        void isMappedIfStatusAktive() {
+        void isMappedWithStatusAktive() {
             val konfigurierterWahltagDTO = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
                     KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
 
@@ -31,7 +31,7 @@ class KonfigurierterWahltagClientMapperTest {
         }
 
         @Test
-        void isMappedIfStatusInaktive() {
+        void isMappedWithStatusInaktive() {
             val konfigurierterWahltagDTO = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
                     KonfigurierterWahltagDTO.WahltagStatusEnum.INAKTIV);
 

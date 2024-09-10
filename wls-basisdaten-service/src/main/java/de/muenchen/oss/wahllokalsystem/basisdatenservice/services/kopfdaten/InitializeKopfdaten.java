@@ -7,8 +7,10 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactor
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
+@Component
 public class InitializeKopfdaten {
 
     private final ExceptionFactory exceptionFactory;

@@ -1,14 +1,12 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke;
 
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlbezirk;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlbezirkRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahltag;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.WahlRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModelMapper;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageService;
+import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -22,19 +20,15 @@ public class WahlbezirkeService {
 
     private final WahlbezirkRepository wahlbezirkRepository;
 
-    private final WahlRepository wahlRepository;
+    private final WahlenService wahlenService;
 
-    private final WahltagRepository wahltagRepository;
+    private final WahltageService wahltageService;
 
     private final WahlbezirkeValidator wahlbezirkeValidator;
 
     private final WahlbezirkeClient wahlbezirkeClient;
 
-    private final ExceptionFactory exceptionFactory;
-
     private final WahlbezirkModelMapper wahlbezirkModelMapper;
-
-    private final WahlModelMapper wahlModelMapper;
 
     @PreAuthorize(
         "hasAuthority('Basisdaten_BUSINESSACTION_GetWahlbezirke')"
@@ -43,23 +37,24 @@ public class WahlbezirkeService {
         log.info("#getWahlbezirke");
         wahlbezirkeValidator.validWahltagIDParamOrThrow(wahltagID);
 
-        Optional<Wahltag> wahltag = wahltagRepository.findById(wahltagID);
-        wahlbezirkeValidator.validateWahltagForSearchingWahltagID(wahltag);
-        if (wahltag.isPresent()) {
-            val wahltagObjekt = wahltag.get();
-            if (wahlbezirkRepository.countByWahltag(wahltagObjekt.getWahltag()) == 0) {
-                log.error("#getWahlbezirke: Für wahltagID {} waren keine Wahlbezirke in der Datenbank", wahltagID);
-                wahlbezirkRepository.saveAll(
-                        wahlbezirkModelMapper.fromListOfWahlbezirkModeltoListOfWahlbezirkEntities(
-                                wahlbezirkModelMapper.toWahlbezirkModelListMergedWithWahlenInfo(
-                                        wahlbezirkeClient.loadWahlbezirke(wahltagObjekt.getWahltag(), wahltagObjekt.getNummer()),
-                                        wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(
-                                                wahlRepository.findByWahltagOrderByReihenfolge(wahltagObjekt.getWahltag())),
-                                        exceptionFactory)));
-            }
-            return wahlbezirkModelMapper.fromListOfWahlbezirkEntityToListOfWahlbezirkModel(wahlbezirkRepository.findByWahltag(wahltagObjekt.getWahltag()));
-        } else {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBEZIRKE_NO_WAHLTAG);
+        val wahltag = wahltageService.getWahltagByID(wahltagID);
+        if (!wahlbezirkRepository.existsByWahltag(wahltag.wahltag())) {
+            log.error("#getWahlbezirke: Für wahltagID {} waren keine Wahlbezirke in der Datenbank", wahltagID);
+            val wahlbezirkeOfWahltag = wahlbezirkeClient.loadWahlbezirke(wahltag.wahltag(), wahltag.nummer());
+            val wahlbezirkeAsEntities = wahlbezirkModelMapper.fromListOfWahlbezirkModeltoListOfWahlbezirkEntities(wahlbezirkeOfWahltag);
+
+            val wahlenOfWahltag = wahlenService.getExistingWahlenOrderedByReihenfolge(wahltagID);
+            wahlbezirkeAsEntities.forEach(wahlbezirk -> linkFirstMatchingWahl(wahlbezirk, wahlenOfWahltag));
+
+            wahlbezirkRepository.saveAll(wahlbezirkeAsEntities);
+        }
+        return wahlbezirkModelMapper.fromListOfWahlbezirkEntityToListOfWahlbezirkModel(wahlbezirkRepository.findByWahltag(wahltag.wahltag()));
+    }
+
+    private void linkFirstMatchingWahl(final Wahlbezirk wahlbezirk, final Collection<WahlModel> wahlen) {
+        val searchedWahl = wahlen.stream().filter(wahl -> wahlbezirk.getWahlnummer().equals(wahl.nummer())).findFirst().orElse(null);
+        if (null != searchedWahl) {
+            wahlbezirk.setWahlID(searchedWahl.wahlID());
         }
     }
 }

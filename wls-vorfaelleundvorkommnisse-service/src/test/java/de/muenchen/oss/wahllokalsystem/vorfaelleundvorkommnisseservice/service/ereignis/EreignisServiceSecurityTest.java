@@ -4,6 +4,7 @@ import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.MicroServ
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.EreignisRepository;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereignisart;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisModel;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisService;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.TestdataFactory;
@@ -28,6 +29,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
@@ -93,32 +96,38 @@ public class EreignisServiceSecurityTest {
         @Test
         void accessGranted() {
             val wahlbezirkID = "wahlbezirkID";
-            val ereignisModel = TestdataFactory.createEreignisModelWithData(wahlbezirkID, "beschreibung", LocalDateTime.now(), Ereignisart.VORFALL);
+            List<EreignisModel> ereignisModelList = new ArrayList<>();
+            ereignisModelList.add(TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
+            val ereignisseWriteModel = TestdataFactory.createEreignisseWriteModelWithData(wahlbezirkID, ereignisModelList);
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_EREIGNISSE);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postEreignis(ereignisModel));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postEreignis(ereignisseWriteModel));
         }
 
         @Test
         void bezirkIDPermissionEvaluatorFailed() {
             val wahlbezirkID = "wahlbezirkID";
-            val ereignisModel = TestdataFactory.createEreignisModelWithData(wahlbezirkID, "beschreibung", LocalDateTime.now(), Ereignisart.VORFALL);
+            List<EreignisModel> ereignisModelList = new ArrayList<>();
+            ereignisModelList.add(TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
+            val ereignisseWriteModel = TestdataFactory.createEreignisseWriteModelWithData(wahlbezirkID, ereignisModelList);
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_EREIGNISSE);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignis(ereignisModel)).isInstanceOf(AccessDeniedException.class);
+            Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignis(ereignisseWriteModel)).isInstanceOf(AccessDeniedException.class);
         }
 
         @Test
         void accessDeniedWhenServiceAuthoritiyIsMissing() {
             SecurityUtils.runWith(Authorities.ALL_REPO_AUTHORITIES_SET_EREIGNISSE);
+            val wahlbezirkID = "wahlbezirkID";
+            List<EreignisModel> ereignisModelList = new ArrayList<>();
+            ereignisModelList.add(TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
+            val ereignisseWriteModel = TestdataFactory.createEreignisseWriteModelWithData(wahlbezirkID, ereignisModelList);
 
-            val ereignisModel = TestdataFactory.createEreignisModelWithData("wahlbezirkID", "beschreibung", LocalDateTime.now(), Ereignisart.VORFALL);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignis(ereignisModel)).isInstanceOf(AccessDeniedException.class);
+            Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignis(ereignisseWriteModel)).isInstanceOf(AccessDeniedException.class);
         }
 
         @Test
@@ -126,10 +135,12 @@ public class EreignisServiceSecurityTest {
             SecurityUtils.runWith(Authorities.ALL_SERVICE_AUTHORITIES_SET_EREIGNISSE);
 
             val wahlbezirkID = "wahlbezirkID";
-            val ereignisModel = TestdataFactory.createEreignisModelWithData(wahlbezirkID, "beschreibung", LocalDateTime.now(), Ereignisart.VORFALL);
+            List<EreignisModel> ereignisModelList = new ArrayList<>();
+            ereignisModelList.add(TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
+            val ereignisseWriteModel = TestdataFactory.createEreignisseWriteModelWithData(wahlbezirkID, ereignisModelList);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignis(ereignisModel)).isInstanceOf(TechnischeWlsException.class);
+            Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignis(ereignisseWriteModel)).isInstanceOf(TechnischeWlsException.class);
         }
     }
 }

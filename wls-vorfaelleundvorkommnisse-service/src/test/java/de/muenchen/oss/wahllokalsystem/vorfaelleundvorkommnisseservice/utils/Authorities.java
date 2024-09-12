@@ -26,6 +26,7 @@ public class Authorities {
             ALL_SERVICE_AUTHORITIES_GET_EREIGNISSE);
 
     public static final String[] ALL_REPO_AUTHORITIES_SET_EREIGNISSE = {
+            REPOSITORY_DELETE_EREIGNISSE,
             REPOSITORY_WRITE_EREIGNISSE
     };
 

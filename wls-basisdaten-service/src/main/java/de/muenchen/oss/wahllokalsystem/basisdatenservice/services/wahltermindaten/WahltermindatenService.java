@@ -59,22 +59,24 @@ public class WahltermindatenService {
         log.info("#putWahltermindaten");
         wahltermindatenValidator.validWahltagIDParamOrThrow(wahltagID, HttpMethod.PUT);
         val wahltagModel = wahltageService.getWahltage().stream()
-                    .filter(w -> w.wahltagID().equals(wahltagID))
-                    .findAny().orElse(null);
+                .filter(w -> w.wahltagID().equals(wahltagID))
+                .findAny().orElse(null);
         wahltermindatenValidator.validateWahltagForSearchingWahltagID(wahltagModelMapper.toEntity(wahltagModel), HttpMethod.PUT);
-        assert wahltagModel != null;
+
         val basisdatenModel = wahldatenClient.loadBasisdaten(wahltagModel.wahltag(), wahltagModel.nummer());
-        if (null == basisdatenModel) { throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_BASISDATEN_NO_DATA);}
+        if (null == basisdatenModel) {
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_BASISDATEN_NO_DATA);
+        }
         val wahlModels = initWahlen(wahltagModel);
         val wahlbezirkModels = initWahlbezirke(wahltagModel, wahlModels);
         final InitializeKopfdaten kopfDataInitializer = new InitializeKopfdaten(exceptionFactory, kopfdatenRepository, kopfdatenModelMapper);
         kopfDataInitializer.initKopfdaten(basisdatenModel);
 
-        // ToDo in next Issue
+        // ToDo: add async classes, adapt EAI client, improve async handlöing?
         // Async
-//        asyncRequests.getAsyncProgress().reset(wahltag.getWahltag(), wahltag.getNummer());
-//        asyncRequests.initWahlvorschlaege(wahlen, wahlbezirke);
-//        asyncRequests.initReferendumvorlagen(wahlen, wahlbezirke);
+        //        asyncRequests.getAsyncProgress().reset(wahltag.getWahltag(), wahltag.getNummer());
+        //        asyncRequests.initWahlvorschlaege(wahlen, wahlbezirke);
+        //        asyncRequests.initReferendumvorlagen(wahlen, wahlbezirke);
 
     }
 
@@ -85,7 +87,7 @@ public class WahltermindatenService {
         wahltermindatenValidator.validWahltagIDParamOrThrow(wahltagID, HttpMethod.DELETE);
         val wahltag = wahltagRepository.findById(wahltagID).orElse(null);
         wahltermindatenValidator.validateWahltagForSearchingWahltagID(wahltag, HttpMethod.DELETE);
-        assert wahltag != null;
+
         val basisstrukturdaten = wahldatenClient.loadBasisdaten(wahltag.getWahltag(), wahltag.getNummer()).basisstrukturdaten();
         val wahlIDs = basisstrukturdaten.stream().map(BasisstrukturdatenModel::wahlID).toList();
 
@@ -102,16 +104,14 @@ public class WahltermindatenService {
 
     private List<WahlModel> initWahlen(WahltagModel wahltag) {
         val wahlen = wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(
-            wahldatenClient.loadBasisdaten(wahltag.wahltag(), wahltag.nummer()).wahlen().stream().toList()
-        );
+                wahldatenClient.loadBasisdaten(wahltag.wahltag(), wahltag.nummer()).wahlen().stream().toList());
         wahlRepository.saveAll(wahlen);
         return wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(wahlen);
     }
 
     private List<WahlbezirkModel> initWahlbezirke(WahltagModel wahltagModel, List<WahlModel> wahlModels) {
         val wahlbezirke = wahlbezirkModelMapper.fromListOfWahlbezirkModeltoListOfWahlbezirkEntities(
-            wahlbezirkeClient.loadWahlbezirke(wahltagModel.wahltag(), wahltagModel.nummer()).stream().toList()
-        );
+                wahlbezirkeClient.loadWahlbezirke(wahltagModel.wahltag(), wahltagModel.nummer()).stream().toList());
         wahlbezirkRepository.saveAll(wahlbezirke);
         return wahlbezirkModelMapper.fromListOfWahlbezirkEntityToListOfWahlbezirkModel(wahlbezirke);
     }

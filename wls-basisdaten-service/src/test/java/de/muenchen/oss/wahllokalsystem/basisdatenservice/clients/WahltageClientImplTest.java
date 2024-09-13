@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
 import static org.mockito.ArgumentMatchers.any;
+
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.client.WahldatenControllerApi;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
@@ -48,9 +49,9 @@ class WahltageClientImplTest {
             val mockedMappedClientResponse = List.of(WahltagModel.builder().build());
 
             Mockito.when(wahldatenControllerApi.loadWahltageSinceIncluding(testDate))
-                    .thenReturn(mockedClientResponse);
+                .thenReturn(mockedClientResponse);
             Mockito.when(wahltageClientMapper.fromRemoteClientSetOfWahltagDTOtoListOfWahltagModel(mockedClientResponse))
-                    .thenReturn(mockedMappedClientResponse);
+                .thenReturn(mockedMappedClientResponse);
 
             val result = unitUnderTest.getWahltage(testDate);
 
@@ -71,16 +72,15 @@ class WahltageClientImplTest {
         void controllerApiExceptionIsMapped() {
             val testDate = LocalDate.now().minusMonths(3);
             val mockedException = TechnischeWlsException.withCode("100")
-                    .buildWithMessage("Bei der Kommunikation mit dem Aoueai-Service ist ein Fehler aufgetreten. Es konnten daher keine Daten geladen werden.");
+                .buildWithMessage("Bei der Kommunikation mit dem Aoueai-Service ist ein Fehler aufgetreten. Es konnten daher keine Daten geladen werden.");
 
             Mockito.when(wahldatenControllerApi.loadWahltageSinceIncluding(any()))
-                    .thenThrow(new RestClientException("error occurs while attempting to invoke the API"));
+                .thenThrow(new RestClientException("error occurs while attempting to invoke the API"));
             Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI)).thenThrow(mockedException);
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahltage(testDate)).isSameAs(mockedException);
         }
 
         private Set<de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO> createClientWahltageDTO() {
-
             val wahltag1 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO();
             wahltag1.setIdentifikator("identifikatorWahltag1");
             wahltag1.setBeschreibung("beschreibungWahltag1");

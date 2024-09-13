@@ -23,8 +23,8 @@ class EreignisModelMapperTest {
     class ToModel {
 
         @Test
-        void toModel() {
-            val ereignisEntity = TestdataFactory.createEreignisEntityWithData("wahlbezirkID", "beschreibung", LocalDateTime.now(), Ereignisart.VORFALL);
+        void should_return_EreignisModel_when_given_EreignisEntity() {
+            val ereignisEntity = TestdataFactory.createEreignisEntityWithData("wahlbezirkID", Ereignisart.VORFALL);
             val ereignisModelFromEntity = TestdataFactory.createEreignisModelFromEntity(ereignisEntity);
 
             val result = unitUnderTest.toModel(ereignisEntity);
@@ -32,7 +32,7 @@ class EreignisModelMapperTest {
         }
 
         @Test
-        void toEreignisseModel() {
+        void should_return_EreignisseModel_when_given_wahlbezirkID_keineVorfaelle_keineVorkommnisse_and_listOfEreignisModel() {
             val wahlbezirkID = "wahlbezirkID";
             val keineVorfaelle = true;
             val keineVorkommnisse = false;
@@ -50,7 +50,7 @@ class EreignisModelMapperTest {
     class ToEntity {
 
         @Test
-        void toEntity() {
+        void should_return_EreignisEntity_when_given_wahlbezirkID_and_EreignisModel() {
             val wahlbezirkID = "wahlbezirkID";
             val ereignisModel = TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now(), Ereignisart.VORFALL);
             val ereignisEntityFromModel = TestdataFactory.createEreignisEntityFromModel(ereignisModel, wahlbezirkID);
@@ -60,7 +60,7 @@ class EreignisModelMapperTest {
         }
 
         @Test
-        void toEntityList() {
+        void should_return_list_of_EreignisEntities_when_given_EreignisseWriteModel() {
             val wahlbezirkID = "wahlbezirkID";
             List<EreignisModel> listOfEreignisModel = new ArrayList<>();
             val model1 = TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now(), Ereignisart.VORFALL);

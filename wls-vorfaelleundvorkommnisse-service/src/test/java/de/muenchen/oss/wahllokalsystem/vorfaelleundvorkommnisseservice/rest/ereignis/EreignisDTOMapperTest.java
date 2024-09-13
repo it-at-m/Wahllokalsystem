@@ -21,7 +21,7 @@ class EreignisDTOMapperTest {
     }
 
     @Test
-    void toDTO() {
+    void should_return_WahlbezirkEreignisseDTO_when_given_EreignisseModel() {
         List<EreignisModel> listOfEreignisModel = new ArrayList<>();
         listOfEreignisModel.add(TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now(), Ereignisart.VORFALL));
         listOfEreignisModel.add(TestdataFactory.createEreignisModelWithData("beschreibung2", LocalDateTime.now(), Ereignisart.VORKOMMNIS));
@@ -33,7 +33,7 @@ class EreignisDTOMapperTest {
     }
 
     @Test
-    void toModel() {
+    void should_return_EreignisseModel_when_given_EreignisseWriteDTO() {
         val wahlbezirkID = "wahlbezirkID";
         List<EreignisDTO> listOfEreignisDto = new ArrayList<>();
         listOfEreignisDto.add(TestdataFactory.createEreignisDtoWithData("beschreibung", LocalDateTime.now(), Ereignisart.VORFALL));

@@ -36,7 +36,7 @@ public class EreignisRepositoryTest {
         @WithMockUser(
                 authorities = { Authorities.REPOSITORY_DELETE_EREIGNISSE, Authorities.REPOSITORY_WRITE_EREIGNISSE, Authorities.REPOSITORY_READ_EREIGNISSE }
         )
-        void findByWahlbezirkID() {
+        void should_return_list_of_ereignis_entities_when_given_valid_wahlbezirkid() {
             val wahlbezirkID = "wahlbezirkID";
             val wahlbezirkID2 = "newWahlbezirkID";
             List<Ereignis> ereignisList1 = new ArrayList<>();
@@ -64,7 +64,7 @@ public class EreignisRepositoryTest {
         @WithMockUser(
                 authorities = { Authorities.REPOSITORY_DELETE_EREIGNISSE, Authorities.REPOSITORY_WRITE_EREIGNISSE, Authorities.REPOSITORY_READ_EREIGNISSE }
         )
-        void deleteByWahlbezirkID() {
+        void should_delete_all_ereignis_entities_with_matching_wahlbezirkid_when_given_valid_wahlbezirkid() {
             val wahlbezirkID = "wahlbezirkID";
             List<Ereignis> ereignisList = new ArrayList<>();
             ereignisList.add(TestdataFactory.createEreignisEntityWithData(wahlbezirkID, "beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));

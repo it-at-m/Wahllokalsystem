@@ -55,7 +55,7 @@ public class EreignisServiceSecurityTest {
     class GetEreignis {
 
         @Test
-        void accessGranted() {
+        void should_not_throw_exception_when_given_all_authorities() {
             val wahlbezirkID = "wahlbezirkID";
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_EREIGNISSE);
@@ -65,7 +65,7 @@ public class EreignisServiceSecurityTest {
         }
 
         @Test
-        void bezirkIDPermissionEvaluatorFailed() {
+        void should_throw_AccessDeniedException_when_bezirkIDPermissionEvaluator_missing() {
             val wahlbezirkID = "wahlbezirkID";
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_EREIGNISSE);
@@ -76,7 +76,7 @@ public class EreignisServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
+        void should_throw_AccessDeniedException_when_any_authority_missing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val wahlbezirkID = "wahlbezirkID";
@@ -94,7 +94,7 @@ public class EreignisServiceSecurityTest {
     class SetEreignis {
 
         @Test
-        void accessGranted() {
+        void should_not_throw_exception_when_given_all_authorities() {
             val wahlbezirkID = "wahlbezirkID";
             List<EreignisModel> ereignisModelList = new ArrayList<>();
             ereignisModelList.add(TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
@@ -107,7 +107,7 @@ public class EreignisServiceSecurityTest {
         }
 
         @Test
-        void bezirkIDPermissionEvaluatorFailed() {
+        void should_throw_AccessDeniedException_when_bezirkIDPermissionEvaluator_missing() {
             val wahlbezirkID = "wahlbezirkID";
             List<EreignisModel> ereignisModelList = new ArrayList<>();
             ereignisModelList.add(TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
@@ -120,7 +120,7 @@ public class EreignisServiceSecurityTest {
         }
 
         @Test
-        void accessDeniedWhenServiceAuthoritiyIsMissing() {
+        void should_throw_AccessDeniedException_when_service_authorities_missing() {
             SecurityUtils.runWith(Authorities.ALL_REPO_AUTHORITIES_SET_EREIGNISSE);
             val wahlbezirkID = "wahlbezirkID";
             List<EreignisModel> ereignisModelList = new ArrayList<>();
@@ -131,7 +131,7 @@ public class EreignisServiceSecurityTest {
         }
 
         @Test
-        void technischeWlsExceptionWhenRepoAuthorityIsMissing() {
+        void should_throw_TechnischeWlsException_when_repository_authorities_missing() {
             SecurityUtils.runWith(Authorities.ALL_SERVICE_AUTHORITIES_SET_EREIGNISSE);
 
             val wahlbezirkID = "wahlbezirkID";

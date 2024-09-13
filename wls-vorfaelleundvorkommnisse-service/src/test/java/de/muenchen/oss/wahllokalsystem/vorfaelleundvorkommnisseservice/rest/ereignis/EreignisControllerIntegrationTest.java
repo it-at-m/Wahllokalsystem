@@ -66,7 +66,7 @@ public class EreignisControllerIntegrationTest {
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_GET_EREIGNISSE, Authorities.REPOSITORY_READ_EREIGNISSE })
         @Transactional
-        void noDataFound() throws Exception {
+        void should_return_empty_response_when_no_data_found() throws Exception {
             val request = MockMvcRequestBuilders.get("/businessActions/ereignisse/wahlbezirkID");
             val response = api.perform(request).andExpect(status().isNoContent()).andReturn();
 
@@ -76,7 +76,7 @@ public class EreignisControllerIntegrationTest {
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_GET_EREIGNISSE, Authorities.REPOSITORY_READ_EREIGNISSE, Authorities.REPOSITORY_WRITE_EREIGNISSE })
         @Transactional
-        void dataFound() throws Exception {
+        void should_return_WahlbezirkEreignisseDTO_when_data_found() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             List<EreignisModel> ereignisModelList = new ArrayList<>();
             ereignisModelList.add(TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
@@ -99,7 +99,7 @@ public class EreignisControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_POST_EREIGNISSE, Authorities.REPOSITORY_DELETE_EREIGNISSE, Authorities.REPOSITORY_WRITE_EREIGNISSE })
-        void newDataSuccessfullySaved() throws Exception {
+        void should_return_list_of_ereignis_entities_when_new_data_successfully_saved() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             List<EreignisDTO> ereignisDtoList = new ArrayList<>();
             ereignisDtoList.add(TestdataFactory.createEreignisDtoWithData("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
@@ -126,7 +126,7 @@ public class EreignisControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_POST_EREIGNISSE, Authorities.REPOSITORY_DELETE_EREIGNISSE, Authorities.REPOSITORY_WRITE_EREIGNISSE })
-        void oldDataOverriden() throws Exception {
+        void should_override_old_list_of_ereignis_entities_when_new_data_successfully_saved() throws Exception {
             // create ereignisse
             val wahlbezirkID = "wahlbezirkID";
             List<EreignisModel> ereignisModelList = new ArrayList<>();

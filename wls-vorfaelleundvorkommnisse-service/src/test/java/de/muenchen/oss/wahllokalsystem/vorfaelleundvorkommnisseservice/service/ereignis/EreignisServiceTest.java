@@ -48,7 +48,7 @@ public class EreignisServiceTest {
     class GetEreignisse {
 
         @Test
-        void foundData() {
+        void should_return_EreignisseModel_when_given_valid_wahlbezirkid() {
             val wahlbezirkID = "wahlbezirkID";
             val keineVorfaelle = false;
             val keineVorkommnisse = true;
@@ -68,7 +68,7 @@ public class EreignisServiceTest {
         }
 
         @Test
-        void foundNoData() {
+        void should_return_empty_response_when_no_data_found() {
             val wahlbezirkID = "wahlbezirkID";
 
             Mockito.when(ereignisRepository.findByWahlbezirkID(wahlbezirkID)).thenReturn(Collections.emptyList());
@@ -82,7 +82,7 @@ public class EreignisServiceTest {
     class SetEreignisse {
 
         @Test
-        void postData() {
+        void should_not_throw_Exception_when_new_data_is_saved() {
             val wahlbezirkID = "wahlbezirkID";
             List<EreignisModel> ereignisModelList = new ArrayList<>();
             ereignisModelList.add(TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
@@ -99,7 +99,7 @@ public class EreignisServiceTest {
         }
 
         @Test
-        void wlsExceptionWhenSavingFailed() {
+        void should_throw_WlsException_when_saving_failed() {
             val wahlbezirkID = "wahlbezirkID";
             List<EreignisModel> ereignisModelList = new ArrayList<>();
             ereignisModelList.add(TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));

@@ -35,7 +35,7 @@ public class EreignisControllerTest {
     class GetEreignisse {
 
         @Test
-        void serviceCalled() {
+        void should_return_WahlbezirkEreignisseDTO_when_given_valid_wahlbezirkid() {
             val wahlbezirkID = "wahlbezirkID";
             boolean keineVorfaelle = false;
             boolean keineVorkommnisse = true;
@@ -58,7 +58,7 @@ public class EreignisControllerTest {
     class PostEreignisse {
 
         @Test
-        void serviceCalled() {
+        void should_not_throw_Exception_when_new_data_is_saved() {
             val wahlbezirkID = "wahlbezirkID";
             List<EreignisDTO> ereignisDtoList = new ArrayList<>();
             ereignisDtoList.add(TestdataFactory.createEreignisDtoWithData("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));

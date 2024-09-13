@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
 
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
+
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Kopfdaten;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.KopfdatenRepository;
@@ -20,8 +21,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
-        classes = { MicroServiceApplication.class },
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+    classes = { MicroServiceApplication.class },
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
 @Slf4j
@@ -38,7 +39,7 @@ class KopfdatenRepositoryTest {
     @Test
     public void kopfdatenRepositorySave() {
         val original = MockDataFactory.createKopfdatenEntityFor("wahlID1", "wahlbezirkID1",
-                Stimmzettelgebietsart.SG, "101", "München-Hadern", "Bundestagswahl", "1901");
+            Stimmzettelgebietsart.SG, "101", "München-Hadern", "Bundestagswahl", "1901");
 
         kopfdatenRepository.save(original);
         Optional<Kopfdaten> persisted = kopfdatenRepository.findById(new BezirkUndWahlID("wahlID1", "wahlbezirkID1"));
@@ -47,13 +48,12 @@ class KopfdatenRepositoryTest {
 
     @Test
     public void kopfdatenRepositoryDeleteAllByBezirkUndWahlID_WahlID() {
-
         val kopfdaten_1 = MockDataFactory.createKopfdatenEntityFor("wahlID1", "wahlbezirkID1",
-                Stimmzettelgebietsart.SG, "101", "München-Hadern", "Landtagswahl", "1901");
+            Stimmzettelgebietsart.SG, "101", "München-Hadern", "Landtagswahl", "1901");
         val kopfdaten_2 = MockDataFactory.createKopfdatenEntityFor("wahlID1", "wahlbezirkID2",
-                Stimmzettelgebietsart.SG, "101", "München-Hadern", "Landtagswahl", "1901");
+            Stimmzettelgebietsart.SG, "101", "München-Hadern", "Landtagswahl", "1901");
         val kopfdaten_3 = MockDataFactory.createKopfdatenEntityFor("wahlID2", "wahlbezirkID3",
-                Stimmzettelgebietsart.SG, "101", "München-Hadern", "Landtagswahl", "1901");
+            Stimmzettelgebietsart.SG, "101", "München-Hadern", "Landtagswahl", "1901");
 
         kopfdatenRepository.save(kopfdaten_1);
         kopfdatenRepository.save(kopfdaten_2);

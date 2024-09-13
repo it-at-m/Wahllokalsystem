@@ -15,7 +15,7 @@ class EreignisDTOMapperTest {
     private final EreignisDTOMapper unitUnderTest = Mappers.getMapper(EreignisDTOMapper.class);
 
     @Test
-    void nullInNullOut() {
+    void should_return_null_when_given_null() {
         Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
     }
 

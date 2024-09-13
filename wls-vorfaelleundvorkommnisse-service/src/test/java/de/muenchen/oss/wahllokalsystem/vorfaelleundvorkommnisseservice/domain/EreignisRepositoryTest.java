@@ -48,8 +48,8 @@ public class EreignisRepositoryTest {
             val result = unitUnderTest.findByWahlbezirkID(wahlbezirkID);
 
             Assertions.assertThat(result.size()).isEqualTo(2);
-            Assertions.assertThat(result).filteredOn(ereignis -> ereignis.getWahlbezirkID().equals(wahlbezirkID));
-            Assertions.assertThat(result).noneMatch(ereignis -> ereignis.getWahlbezirkID().equals(wahlbezirkID2));
+            Assertions.assertThat(result).filteredOn(ereignis -> ereignis.getWahlbezirkID().equals(wahlbezirkID))
+                    .noneMatch(ereignis -> ereignis.getWahlbezirkID().equals(wahlbezirkID2));
         }
     }
 

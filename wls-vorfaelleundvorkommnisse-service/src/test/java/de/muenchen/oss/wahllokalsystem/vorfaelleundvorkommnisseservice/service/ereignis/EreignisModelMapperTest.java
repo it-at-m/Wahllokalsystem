@@ -8,7 +8,6 @@ import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.Tes
 import java.util.ArrayList;
 import java.util.List;
 import lombok.val;
-import org.apache.commons.collections.ArrayStack;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -62,14 +61,12 @@ class EreignisModelMapperTest {
         void should_return_list_of_EreignisEntities_when_given_EreignisseWriteModel() {
             val wahlbezirkID = "wahlbezirkID";
             List<EreignisModel> listOfEreignisModel = new ArrayList<>();
-            val model1 = TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now(), Ereignisart.VORFALL);
-            val model2 = TestdataFactory.createEreignisModelWithData("beschreibung2", LocalDateTime.now(), Ereignisart.VORKOMMNIS);
             val model1 = TestdataFactory.createEreignisModelWithData();
             val model2 = TestdataFactory.createEreignisModelWithData();
             listOfEreignisModel.add(model1);
             listOfEreignisModel.add(model2);
             val ereignisseWriteModel = TestdataFactory.createEreignisseWriteModelWithData(wahlbezirkID, listOfEreignisModel);
-            List<Ereignis> listOfEreignis = new ArrayStack();
+            List<Ereignis> listOfEreignis = new ArrayList<>();
             listOfEreignis.add(TestdataFactory.createEreignisEntityFromModel(model1, wahlbezirkID));
             listOfEreignis.add(TestdataFactory.createEreignisEntityFromModel(model2, wahlbezirkID));
 

@@ -7,7 +7,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.KopfdatenRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Stimmzettelgebietsart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.BasisdatenDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.infomanagement.model.KonfigurierterWahltagDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.MockDataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -79,7 +79,6 @@ public class KopfdatenServiceSecurityTest {
         @MethodSource("getMissingAuthoritiesVariationsRepoEmpty")
         void missingAuthorityCausesFailWithAccessDeniedCaseEmptyRepo(final ArgumentsAccessor argumentsAccessor) throws Exception {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
-            emptyTheRepository();
             // mock infomanagement konfigurierterWahltag
             KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
                     KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
@@ -102,11 +101,6 @@ public class KopfdatenServiceSecurityTest {
 
         private static Stream<Arguments> getMissingAuthoritiesVariationsRepoEmpty() {
             return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_READ_KOPFDATEN);
-        }
-
-        private void emptyTheRepository() {
-            SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_KOPFDATEN);
-            kopfdatenRepository.deleteAll();
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")

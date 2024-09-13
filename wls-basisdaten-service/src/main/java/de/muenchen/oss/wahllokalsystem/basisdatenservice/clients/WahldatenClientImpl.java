@@ -6,9 +6,9 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.Basisdate
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.WahldatenClient;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahltagWithNummer;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
-import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -25,11 +25,11 @@ public class WahldatenClientImpl implements WahldatenClient {
     private final WahldatenClientMapper wahldatenClientMapper;
 
     @Override
-    public BasisdatenModel loadBasisdaten(LocalDate forDate, String wahlterminNummer) throws WlsException {
+    public BasisdatenModel loadBasisdaten(WahltagWithNummer wahltagWithNummer) throws WlsException {
 
         final BasisdatenDTO basisdatenDTO;
         try {
-            basisdatenDTO = wahldatenControllerApi.loadBasisdaten(forDate, wahlterminNummer);
+            basisdatenDTO = wahldatenControllerApi.loadBasisdaten(wahltagWithNummer.wahltag(), wahltagWithNummer.wahltagNummer());
         } catch (final Exception exception) {
             log.info("exception on getBasisdaten from external", exception);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);

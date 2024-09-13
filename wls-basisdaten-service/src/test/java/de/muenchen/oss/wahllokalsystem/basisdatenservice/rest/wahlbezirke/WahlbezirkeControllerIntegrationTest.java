@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlbezirke;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
@@ -119,12 +120,7 @@ public class WahlbezirkeControllerIntegrationTest {
                     de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlbezirke.WahlbezirkDTO[].class);
 
             val expectedResponseBody = wahlbezirkDTOMapper
-                    .fromListOfWahlbezirkModelToListOfWahlbezirkDTO(
-
-                            wahlbezirkModelMapper.toWahlbezirkModelListMergedWithWahlenInfo(
-                                    wahlbezirkeClientMapper.fromRemoteSetOfDTOsToSetOfModels(eaiWahlbezirke),
-                                    wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(wahlRepository.findByWahltagOrderByReihenfolge(forWahltagDate)),
-                                    exceptionFactory));
+                    .fromListOfWahlbezirkModelToListOfWahlbezirkDTO(List.copyOf(wahlbezirkeClientMapper.fromRemoteSetOfDTOsToSetOfModels(eaiWahlbezirke)));
 
             Assertions.assertThat(responseBodyAsDTO).containsExactlyInAnyOrderElementsOf(expectedResponseBody);
         }

@@ -7,7 +7,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageService;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -116,11 +116,11 @@ class WahlenServiceTest {
             val wahlenToWrite = new WahlenWriteModel(wahltagID, mockedListOfModels);
 
             val mockedRepoSaveException = new RuntimeException("saving failed");
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+            val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(mockedListOfModels)).thenReturn(mockedListOfEntities);
             Mockito.doThrow(mockedRepoSaveException).when(wahlRepository).saveAll(mockedListOfEntities);
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTWAHLEN_UNSAVEABLE))
+            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTWAHLEN_UNSAVEABLE))
                     .thenReturn(mockedWlsException);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.postWahlen(wahlenToWrite)).isSameAs(mockedWlsException);

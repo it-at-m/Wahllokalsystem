@@ -3,7 +3,6 @@ package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ere
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereignisart;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisModel;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.TestdataFactory;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.val;
@@ -23,8 +22,8 @@ class EreignisDTOMapperTest {
     @Test
     void should_return_WahlbezirkEreignisseDTO_when_given_EreignisseModel() {
         List<EreignisModel> listOfEreignisModel = new ArrayList<>();
-        listOfEreignisModel.add(TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now(), Ereignisart.VORFALL));
-        listOfEreignisModel.add(TestdataFactory.createEreignisModelWithData("beschreibung2", LocalDateTime.now(), Ereignisart.VORKOMMNIS));
+        listOfEreignisModel.add(TestdataFactory.createEreignisModelWithEreignisart(Ereignisart.VORFALL));
+        listOfEreignisModel.add(TestdataFactory.createEreignisModelWithEreignisart(Ereignisart.VORKOMMNIS));
         val ereignisseModel = TestdataFactory.createEreignisseModelWithData("wahlbezirkID", false, false, listOfEreignisModel);
         val expectedEreignisseDTO = TestdataFactory.createWahlbezirkEreignisseDTOFromModel(ereignisseModel);
 
@@ -36,8 +35,8 @@ class EreignisDTOMapperTest {
     void should_return_EreignisseModel_when_given_EreignisseWriteDTO() {
         val wahlbezirkID = "wahlbezirkID";
         List<EreignisDTO> listOfEreignisDto = new ArrayList<>();
-        listOfEreignisDto.add(TestdataFactory.createEreignisDtoWithData("beschreibung", LocalDateTime.now(), Ereignisart.VORFALL));
-        listOfEreignisDto.add(TestdataFactory.createEreignisDtoWithData("beschreibung2", LocalDateTime.now(), Ereignisart.VORKOMMNIS));
+        listOfEreignisDto.add(TestdataFactory.createEreignisDtoWithData());
+        listOfEreignisDto.add(TestdataFactory.createEreignisDtoWithData());
         val ereignisseWriteDTO = TestdataFactory.createEreignisseWriteDTOWithData(listOfEreignisDto);
         val expectedEreignisModel = TestdataFactory.createEreignisseWriteModelFromDto(wahlbezirkID, ereignisseWriteDTO);
 

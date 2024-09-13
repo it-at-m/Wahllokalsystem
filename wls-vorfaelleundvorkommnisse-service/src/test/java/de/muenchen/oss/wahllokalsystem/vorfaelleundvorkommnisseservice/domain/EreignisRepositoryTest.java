@@ -3,10 +3,8 @@ package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereignis;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.EreignisRepository;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereignisart;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.TestdataFactory;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.val;
@@ -40,12 +38,10 @@ public class EreignisRepositoryTest {
             val wahlbezirkID = "wahlbezirkID";
             val wahlbezirkID2 = "newWahlbezirkID";
             List<Ereignis> ereignisList1 = new ArrayList<>();
-            ereignisList1.add(TestdataFactory.createEreignisEntityWithData(wahlbezirkID, "beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
-            ereignisList1
-                    .add(TestdataFactory.createEreignisEntityWithData(wahlbezirkID, "beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORKOMMNIS));
+            ereignisList1.add(TestdataFactory.createEreignisEntityWithData(wahlbezirkID));
+            ereignisList1.add(TestdataFactory.createEreignisEntityWithData(wahlbezirkID));
             List<Ereignis> ereignisList2 = new ArrayList<>();
-            ereignisList2
-                    .add(TestdataFactory.createEreignisEntityWithData(wahlbezirkID2, "beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
+            ereignisList2.add(TestdataFactory.createEreignisEntityWithData(wahlbezirkID2));
             unitUnderTest.saveAll(ereignisList1);
             unitUnderTest.saveAll(ereignisList2);
 
@@ -67,9 +63,8 @@ public class EreignisRepositoryTest {
         void should_delete_all_ereignis_entities_with_matching_wahlbezirkid_when_given_valid_wahlbezirkid() {
             val wahlbezirkID = "wahlbezirkID";
             List<Ereignis> ereignisList = new ArrayList<>();
-            ereignisList.add(TestdataFactory.createEreignisEntityWithData(wahlbezirkID, "beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
-            ereignisList
-                    .add(TestdataFactory.createEreignisEntityWithData(wahlbezirkID, "beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORKOMMNIS));
+            ereignisList.add(TestdataFactory.createEreignisEntityWithData(wahlbezirkID));
+            ereignisList.add(TestdataFactory.createEreignisEntityWithData(wahlbezirkID));
             unitUnderTest.saveAll(ereignisList);
 
             val savedEreignisse = unitUnderTest.findByWahlbezirkID(wahlbezirkID);

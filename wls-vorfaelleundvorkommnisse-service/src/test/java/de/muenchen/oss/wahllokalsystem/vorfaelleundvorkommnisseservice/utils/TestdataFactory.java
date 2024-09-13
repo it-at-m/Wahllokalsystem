@@ -15,12 +15,8 @@ import java.util.List;
 public class TestdataFactory {
 
     // Entities
-    public static Ereignis createEreignisEntityWithNoData() {
-        return new Ereignis(null, null, null, null);
-    }
-
-    public static Ereignis createEreignisEntityWithData(String wahlbezirkID, String beschreibung, LocalDateTime uhrzeit, Ereignisart ereignisart) {
-        return new Ereignis(wahlbezirkID, beschreibung, uhrzeit, ereignisart);
+    public static Ereignis createEreignisEntityWithData(String wahlbezirkID) {
+        return new Ereignis(wahlbezirkID, "beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL);
     }
 
     public static Ereignis createEreignisEntityFromModel(EreignisModel ereignisModel, String wahlbezirkID) {
@@ -38,16 +34,12 @@ public class TestdataFactory {
     }
 
     // Models
-    public static EreignisModel createEreignisModelWithNoData() {
-        return new EreignisModel(null, null, null);
+    public static EreignisModel createEreignisModelWithData() {
+        return new EreignisModel("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL);
     }
 
-    public static EreignisModel createEreignisModelWithData(String beschreibung, LocalDateTime uhrzeit, Ereignisart ereignisart) {
-        return new EreignisModel(beschreibung, uhrzeit, ereignisart);
-    }
-
-    public static EreignisseModel createEreignisseModelWithNoData() {
-        return new EreignisseModel(null, true, true, null);
+    public static EreignisModel createEreignisModelWithEreignisart(Ereignisart ereignisart) {
+        return new EreignisModel("beschreibung", LocalDateTime.now().withNano(0), ereignisart);
     }
 
     public static EreignisseModel createEreignisseModelWithData(String wahlbezirkID, boolean keineVorfaelle, boolean keineVorkommnisse,
@@ -73,16 +65,7 @@ public class TestdataFactory {
     }
 
     // DTOs
-    public static WahlbezirkEreignisseDTO createWahlbezirkEreignisseDTOWithNoData() {
-        return new WahlbezirkEreignisseDTO(null, true, true, null);
-    }
-
-    public static WahlbezirkEreignisseDTO createWahlbezirkEreignisseDTOWithData(String wahlbezirkID, boolean keineVorfaelle, boolean keineVorkommnisse,
-            List<EreignisDTO> ereignisDtoList) {
-        return new WahlbezirkEreignisseDTO(wahlbezirkID, keineVorfaelle, keineVorkommnisse, ereignisDtoList);
-    }
-
-    public static WahlbezirkEreignisseDTO createWahlbezirkEreignisseDTOFromModel(EreignisseModel ereignisseModel) {
+       public static WahlbezirkEreignisseDTO createWahlbezirkEreignisseDTOFromModel(EreignisseModel ereignisseModel) {
         List<EreignisDTO> ereignisDtoList = new ArrayList<>();
         for (EreignisModel ereignisModel : ereignisseModel.ereigniseintraege()) {
             EreignisDTO dto = new EreignisDTO(ereignisModel.beschreibung(), ereignisModel.uhrzeit(), ereignisModel.ereignisart());
@@ -92,19 +75,11 @@ public class TestdataFactory {
                 ereignisDtoList);
     }
 
-    public static EreignisseWriteDTO createEreignisseWriteDTOWithNoData() {
-        return new EreignisseWriteDTO(null);
-    }
-
     public static EreignisseWriteDTO createEreignisseWriteDTOWithData(List<EreignisDTO> ereignisDtoList) {
         return new EreignisseWriteDTO(ereignisDtoList);
     }
 
-    public static EreignisDTO createEreignisDtoWithNoData() {
-        return new EreignisDTO(null, null, null);
-    }
-
-    public static EreignisDTO createEreignisDtoWithData(String beschreibung, LocalDateTime uhrzeit, Ereignisart ereignisart) {
-        return new EreignisDTO(beschreibung, uhrzeit, ereignisart);
+    public static EreignisDTO createEreignisDtoWithData() {
+        return new EreignisDTO("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL);
     }
 }

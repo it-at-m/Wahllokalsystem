@@ -11,7 +11,6 @@ import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.E
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.TestdataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -52,10 +51,10 @@ public class EreignisServiceTest {
             val wahlbezirkID = "wahlbezirkID";
             val keineVorfaelle = false;
             val keineVorkommnisse = true;
-            val ereignis = TestdataFactory.createEreignisEntityWithData(wahlbezirkID, "beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL);
+            val ereignis = TestdataFactory.createEreignisEntityWithData(wahlbezirkID);
             val ereignisModel = TestdataFactory.createEreignisModelFromEntity(ereignis);
             List<EreignisModel> ereignisModelList = new ArrayList<>();
-            ereignisModelList.add(TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
+            ereignisModelList.add(TestdataFactory.createEreignisModelWithEreignisart(Ereignisart.VORFALL));
             val ereignisseModel = TestdataFactory.createEreignisseModelWithData(wahlbezirkID, keineVorfaelle, keineVorkommnisse, ereignisModelList);
 
             Mockito.doNothing().when(ereignisValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
@@ -85,7 +84,7 @@ public class EreignisServiceTest {
         void should_not_throw_Exception_when_new_data_is_saved() {
             val wahlbezirkID = "wahlbezirkID";
             List<EreignisModel> ereignisModelList = new ArrayList<>();
-            ereignisModelList.add(TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
+            ereignisModelList.add(TestdataFactory.createEreignisModelWithData());
             val ereignisseWriteModel = TestdataFactory.createEreignisseWriteModelWithData(wahlbezirkID, ereignisModelList);
             List<Ereignis> ereignisList = TestdataFactory.createEreignisEntityListFromModel(ereignisseWriteModel);
 
@@ -102,7 +101,7 @@ public class EreignisServiceTest {
         void should_throw_WlsException_when_saving_failed() {
             val wahlbezirkID = "wahlbezirkID";
             List<EreignisModel> ereignisModelList = new ArrayList<>();
-            ereignisModelList.add(TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
+            ereignisModelList.add(TestdataFactory.createEreignisModelWithData());
             val ereignisseWriteModel = TestdataFactory.createEreignisseWriteModelWithData(wahlbezirkID, ereignisModelList);
             List<Ereignis> ereignisList = TestdataFactory.createEreignisEntityListFromModel(ereignisseWriteModel);
 

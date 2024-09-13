@@ -11,7 +11,6 @@ import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.Aut
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.TestdataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.Profiles;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.val;
@@ -79,7 +78,7 @@ public class EreignisControllerIntegrationTest {
         void should_return_WahlbezirkEreignisseDTO_when_data_found() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             List<EreignisModel> ereignisModelList = new ArrayList<>();
-            ereignisModelList.add(TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
+            ereignisModelList.add(TestdataFactory.createEreignisModelWithEreignisart(Ereignisart.VORFALL));
             val ereignisseWriteModel = TestdataFactory.createEreignisseWriteModelWithData(wahlbezirkID, ereignisModelList);
             List<Ereignis> ereignisList = TestdataFactory.createEreignisEntityListFromModel(ereignisseWriteModel);
             ereignisRepository.saveAll(ereignisList);
@@ -102,9 +101,9 @@ public class EreignisControllerIntegrationTest {
         void should_return_list_of_ereignis_entities_when_new_data_successfully_saved() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             List<EreignisDTO> ereignisDtoList = new ArrayList<>();
-            ereignisDtoList.add(TestdataFactory.createEreignisDtoWithData("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
-            ereignisDtoList.add(TestdataFactory.createEreignisDtoWithData("beschreibung2", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
-            ereignisDtoList.add(TestdataFactory.createEreignisDtoWithData("beschreibung3", LocalDateTime.now().withNano(0), Ereignisart.VORKOMMNIS));
+            ereignisDtoList.add(TestdataFactory.createEreignisDtoWithData());
+            ereignisDtoList.add(TestdataFactory.createEreignisDtoWithData());
+            ereignisDtoList.add(TestdataFactory.createEreignisDtoWithData());
             val ereignisseWriteDto = TestdataFactory.createEreignisseWriteDTOWithData(ereignisDtoList);
 
             val request = createPostWithBody(wahlbezirkID, ereignisseWriteDto);
@@ -130,7 +129,7 @@ public class EreignisControllerIntegrationTest {
             // create ereignisse
             val wahlbezirkID = "wahlbezirkID";
             List<EreignisModel> ereignisModelList = new ArrayList<>();
-            ereignisModelList.add(TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
+            ereignisModelList.add(TestdataFactory.createEreignisModelWithData());
             val ereignisseWriteModel = TestdataFactory.createEreignisseWriteModelWithData(wahlbezirkID, ereignisModelList);
             List<Ereignis> ereignisListToOverride = TestdataFactory.createEreignisEntityListFromModel(ereignisseWriteModel);
             // save ereignisse
@@ -142,9 +141,9 @@ public class EreignisControllerIntegrationTest {
 
             // create new ereignisse
             List<EreignisDTO> ereignisDtoList = new ArrayList<>();
-            ereignisDtoList.add(TestdataFactory.createEreignisDtoWithData("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
-            ereignisDtoList.add(TestdataFactory.createEreignisDtoWithData("beschreibung2", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
-            ereignisDtoList.add(TestdataFactory.createEreignisDtoWithData("beschreibung3", LocalDateTime.now().withNano(0), Ereignisart.VORKOMMNIS));
+            ereignisDtoList.add(TestdataFactory.createEreignisDtoWithData());
+            ereignisDtoList.add(TestdataFactory.createEreignisDtoWithData());
+            ereignisDtoList.add(TestdataFactory.createEreignisDtoWithData());
             val ereignisseWriteDto = TestdataFactory.createEreignisseWriteDTOWithData(ereignisDtoList);
             // save new ereignisse and override old ereignisse
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_EREIGNISSE);

@@ -5,7 +5,6 @@ import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.er
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisModel;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisModelMapper;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.TestdataFactory;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.val;
@@ -24,7 +23,7 @@ class EreignisModelMapperTest {
 
         @Test
         void should_return_EreignisModel_when_given_EreignisEntity() {
-            val ereignisEntity = TestdataFactory.createEreignisEntityWithData("wahlbezirkID", Ereignisart.VORFALL);
+            val ereignisEntity = TestdataFactory.createEreignisEntityWithData("wahlbezirkID");
             val ereignisModelFromEntity = TestdataFactory.createEreignisModelFromEntity(ereignisEntity);
 
             val result = unitUnderTest.toModel(ereignisEntity);
@@ -37,8 +36,8 @@ class EreignisModelMapperTest {
             val keineVorfaelle = true;
             val keineVorkommnisse = false;
             List<EreignisModel> listOfEreignisModel = new ArrayList<>();
-            listOfEreignisModel.add(TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now(), Ereignisart.VORFALL));
-            listOfEreignisModel.add(TestdataFactory.createEreignisModelWithData("beschreibung2", LocalDateTime.now(), Ereignisart.VORKOMMNIS));
+            listOfEreignisModel.add(TestdataFactory.createEreignisModelWithEreignisart(Ereignisart.VORFALL));
+            listOfEreignisModel.add(TestdataFactory.createEreignisModelWithEreignisart(Ereignisart.VORKOMMNIS));
             val ereignisseModel = TestdataFactory.createEreignisseModelWithData(wahlbezirkID, keineVorfaelle, keineVorkommnisse, listOfEreignisModel);
 
             val result = unitUnderTest.toEreignisseModel(wahlbezirkID, keineVorfaelle, keineVorkommnisse, listOfEreignisModel);
@@ -52,7 +51,7 @@ class EreignisModelMapperTest {
         @Test
         void should_return_EreignisEntity_when_given_wahlbezirkID_and_EreignisModel() {
             val wahlbezirkID = "wahlbezirkID";
-            val ereignisModel = TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now(), Ereignisart.VORFALL);
+            val ereignisModel = TestdataFactory.createEreignisModelWithData();
             val ereignisEntityFromModel = TestdataFactory.createEreignisEntityFromModel(ereignisModel, wahlbezirkID);
 
             val result = unitUnderTest.toEntity(ereignisModel, wahlbezirkID);
@@ -65,6 +64,8 @@ class EreignisModelMapperTest {
             List<EreignisModel> listOfEreignisModel = new ArrayList<>();
             val model1 = TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now(), Ereignisart.VORFALL);
             val model2 = TestdataFactory.createEreignisModelWithData("beschreibung2", LocalDateTime.now(), Ereignisart.VORKOMMNIS);
+            val model1 = TestdataFactory.createEreignisModelWithData();
+            val model2 = TestdataFactory.createEreignisModelWithData();
             listOfEreignisModel.add(model1);
             listOfEreignisModel.add(model2);
             val ereignisseWriteModel = TestdataFactory.createEreignisseWriteModelWithData(wahlbezirkID, listOfEreignisModel);

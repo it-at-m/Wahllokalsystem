@@ -4,7 +4,6 @@ import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.er
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisModel;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisService;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.TestdataFactory;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +39,7 @@ public class EreignisControllerTest {
             boolean keineVorfaelle = false;
             boolean keineVorkommnisse = true;
             List<EreignisModel> ereignisModelList = new ArrayList<>();
-            ereignisModelList.add(TestdataFactory.createEreignisModelWithData("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
+            ereignisModelList.add(TestdataFactory.createEreignisModelWithEreignisart(Ereignisart.VORFALL));
             val ereignisseModel = TestdataFactory.createEreignisseModelWithData(wahlbezirkID, keineVorfaelle, keineVorkommnisse, ereignisModelList);
 
             val wahlbezirkEreignisseDto = TestdataFactory.createWahlbezirkEreignisseDTOFromModel(ereignisseModel);
@@ -61,7 +60,7 @@ public class EreignisControllerTest {
         void should_not_throw_Exception_when_new_data_is_saved() {
             val wahlbezirkID = "wahlbezirkID";
             List<EreignisDTO> ereignisDtoList = new ArrayList<>();
-            ereignisDtoList.add(TestdataFactory.createEreignisDtoWithData("beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL));
+            ereignisDtoList.add(TestdataFactory.createEreignisDtoWithData());
             val ereignisseWriteDto = TestdataFactory.createEreignisseWriteDTOWithData(ereignisDtoList);
 
             val ereignisseWriteModel = TestdataFactory.createEreignisseWriteModelFromDto(wahlbezirkID, ereignisseWriteDto);

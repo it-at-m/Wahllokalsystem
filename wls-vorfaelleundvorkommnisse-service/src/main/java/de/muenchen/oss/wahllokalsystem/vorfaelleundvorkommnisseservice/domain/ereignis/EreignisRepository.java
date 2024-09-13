@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Provides a Repository for a {@link Ereignis}. This Repository can be exported as a REST Resource.
@@ -64,5 +65,6 @@ public interface EreignisRepository extends CrudRepository<Ereignis, UUID> {
 
     @CacheEvict(value = CACHE, allEntries = true)
     @PreAuthorize(DELETE_EREIGNIS)
+    @Transactional
     void deleteByWahlbezirkID(String wahlbezirkID);
 }

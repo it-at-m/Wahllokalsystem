@@ -65,7 +65,7 @@ public class TestdataFactory {
     }
 
     // DTOs
-       public static WahlbezirkEreignisseDTO createWahlbezirkEreignisseDTOFromModel(EreignisseModel ereignisseModel) {
+    public static WahlbezirkEreignisseDTO createWahlbezirkEreignisseDTOFromModel(EreignisseModel ereignisseModel) {
         List<EreignisDTO> ereignisDtoList = new ArrayList<>();
         for (EreignisModel ereignisModel : ereignisseModel.ereigniseintraege()) {
             EreignisDTO dto = new EreignisDTO(ereignisModel.beschreibung(), ereignisModel.uhrzeit(), ereignisModel.ereignisart());

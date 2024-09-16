@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public record WlsExceptionDTO(@NotNull WlsExceptionCategory category, @NotNull String code, @NotNull String service, @NotNull String message) {
-
     public WlsExceptionDTO(final WlsExceptionCategory category, final String code, final String service, final String message) {
         this.category = Optional.ofNullable(category).orElseGet(() -> {
             log.warn("Category ist nicht enthalten");

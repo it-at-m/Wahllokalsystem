@@ -5,5 +5,4 @@ import java.time.LocalDateTime;
 
 public record UnterbrechungsUhrzeitDTO(@NotNull String wahlbezirkID,
                                        @NotNull LocalDateTime unterbrechungsUhrzeit) {
-
 }

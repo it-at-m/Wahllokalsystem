@@ -6,5 +6,4 @@ import lombok.Builder;
 
 @Builder
 public record UrnenwahlSchliessungsUhrzeitModel(@NotNull String wahlbezirkID, @NotNull LocalDateTime urnenwahlSchliessungsUhrzeit) {
-
 }

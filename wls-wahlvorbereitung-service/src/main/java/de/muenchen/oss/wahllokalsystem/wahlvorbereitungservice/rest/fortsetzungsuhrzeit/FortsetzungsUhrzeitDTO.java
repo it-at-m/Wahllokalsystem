@@ -5,5 +5,4 @@ import java.time.LocalDateTime;
 
 public record FortsetzungsUhrzeitDTO(@NotNull String wahlbezirkID,
                                      @NotNull LocalDateTime fortsetzungsUhrzeit) {
-
 }

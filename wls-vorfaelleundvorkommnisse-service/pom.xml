@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-vorfaelleundvorkommnisse-service</artifactId>
-    <version>0.0.1-beta</version>
+    <version>0.1.0-SNAPSHOT</version>
     <name>wls_vorfaelleundvorkommnisse_service</name>
 
     <properties>
@@ -299,7 +299,7 @@
         <url>https://github.com/it-at-m/Wahllokalsystem</url>
         <connection>scm:git:https://github.com/it-at-m/Wahllokalsystem.git</connection>
         <developerConnection>scm:git:https://github.com/it-at-m/Wahllokalsystem.git</developerConnection>
-        <tag>wls-vorfaelleundvorkommnisse-service/0.0.1-beta</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <build>

@@ -14,10 +14,6 @@ import java.util.List;
 
 public class TestdataFactory {
 
-    // Entities
-    public static Ereignis createEreignisEntityWithData(String wahlbezirkID) {
-        return new Ereignis(wahlbezirkID, "beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL);
-    }
     public class CreateEreignisEntity {
 
         public static Ereignis withData(String wahlbezirkID) {

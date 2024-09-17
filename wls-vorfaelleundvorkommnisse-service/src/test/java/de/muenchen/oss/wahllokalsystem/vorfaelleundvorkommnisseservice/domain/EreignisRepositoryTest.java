@@ -71,8 +71,8 @@ public class EreignisRepositoryTest {
             Assertions.assertThat(savedEreignisse.size()).isEqualTo(ereignisList.size());
 
             unitUnderTest.deleteByWahlbezirkID(wahlbezirkID);
-            val deletedEreignisse = unitUnderTest.findByWahlbezirkID(wahlbezirkID);
-            Assertions.assertThat(deletedEreignisse.size()).isZero();
+            val result = unitUnderTest.findByWahlbezirkID(wahlbezirkID);
+            Assertions.assertThat(result).isEmpty();
         }
     }
 }

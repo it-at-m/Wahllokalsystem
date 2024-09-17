@@ -51,6 +51,14 @@ public class EreignisControllerTest {
             Assertions.assertThat(result.getBody()).isEqualTo(wahlbezirkEreignisseDto);
             Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         }
+
+        @Test
+        void should_return_no_content_status_when_no_data_found() {
+            val wahlbezirkID = "wahlbezirkID";
+
+            val result = unitUnderTest.getEreignis(wahlbezirkID);
+            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        }
     }
 
     @Nested

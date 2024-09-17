@@ -75,7 +75,7 @@ public class EreignisControllerIntegrationTest {
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_GET_EREIGNISSE, Authorities.REPOSITORY_READ_EREIGNISSE, Authorities.REPOSITORY_WRITE_EREIGNISSE })
         @Transactional
-        void should_return_WahlbezirkEreignisseDTO_when_data_found() throws Exception {
+        void should_return_persisted_WahlbezirkEreignisseDTO_when_data_found() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             List<EreignisModel> ereignisModelList = new ArrayList<>();
             ereignisModelList.add(TestdataFactory.createEreignisModelWithEreignisart(Ereignisart.VORFALL));
@@ -98,7 +98,7 @@ public class EreignisControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_POST_EREIGNISSE, Authorities.REPOSITORY_DELETE_EREIGNISSE, Authorities.REPOSITORY_WRITE_EREIGNISSE })
-        void should_return_list_of_ereignis_entities_when_new_data_successfully_saved() throws Exception {
+        void should_save_list_of_ereignis_entities_when_new_data_successfully_saved() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             List<EreignisDTO> ereignisDtoList = new ArrayList<>();
             ereignisDtoList.add(TestdataFactory.createEreignisDtoWithData());
@@ -111,13 +111,10 @@ public class EreignisControllerIntegrationTest {
 
             SecurityUtils.runWith(Authorities.REPOSITORY_READ_EREIGNISSE);
             val savedEreignisse = ereignisRepository.findByWahlbezirkID(wahlbezirkID);
-            Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
 
-            List<Ereignis> expectedSavedEreignisse = new ArrayList<>();
-            for (EreignisDTO ereignisDto : ereignisseWriteDto.ereigniseintraege()) {
-                Ereignis ereignis = new Ereignis(wahlbezirkID, ereignisDto.beschreibung(), ereignisDto.uhrzeit(), ereignisDto.ereignisart());
-                expectedSavedEreignisse.add(ereignis);
-            }
+            val expectedSavedEreignisse = mockedEreignisseWriteDto.ereigniseintraege().stream()
+                    .map(ereignisDto -> new Ereignis(wahlbezirkID, ereignisDto.beschreibung(), ereignisDto.uhrzeit(), ereignisDto.ereignisart())).toList();
+            Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
             Assertions.assertThat(savedEreignisse.size()).isEqualTo(expectedSavedEreignisse.size());
             Assertions.assertThat(savedEreignisse).filteredOn(ereignis -> ereignis.getClass().equals(Ereignis.class))
                     .filteredOn(ereignis -> ereignis.getWahlbezirkID().equals(wahlbezirkID));
@@ -152,11 +149,8 @@ public class EreignisControllerIntegrationTest {
             // read new ereignisse
             SecurityUtils.runWith(Authorities.REPOSITORY_READ_EREIGNISSE);
             val savedEreignisse = ereignisRepository.findByWahlbezirkID(wahlbezirkID);
-            List<Ereignis> expectedSavedEreignisse = new ArrayList<>();
-            for (EreignisDTO ereignisDto : ereignisseWriteDto.ereigniseintraege()) {
-                Ereignis ereignis = new Ereignis(wahlbezirkID, ereignisDto.beschreibung(), ereignisDto.uhrzeit(), ereignisDto.ereignisart());
-                expectedSavedEreignisse.add(ereignis);
-            }
+            val expectedSavedEreignisse = mockedEreignisseWriteDto.ereigniseintraege().stream()
+                    .map(ereignisDto -> new Ereignis(wahlbezirkID, ereignisDto.beschreibung(), ereignisDto.uhrzeit(), ereignisDto.ereignisart())).toList();
             Assertions.assertThat(savedEreignisse.size()).isEqualTo(expectedSavedEreignisse.size());
 
         }

@@ -2,7 +2,6 @@ package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.
 
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.TestConstants;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.EreignisRepository;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisModel;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisService;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.Authorities;
@@ -40,9 +39,6 @@ public class EreignisServiceSecurityTest {
     @Autowired
     EreignisService unitUnderTest;
 
-    @Autowired
-    EreignisRepository ereignisRepository;
-
     @BeforeEach
     void setup() {
         SecurityContextHolder.clearContext();
@@ -62,7 +58,7 @@ public class EreignisServiceSecurityTest {
         }
 
         @Test
-        void should_throw_AccessDeniedException_when_bezirkIDPermissionEvaluator_missing() {
+        void should_throw_AccessDeniedException_when_bezirkIDPermissionEvaluator_returns_false() {
             val wahlbezirkID = "wahlbezirkID";
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_EREIGNISSE);
@@ -104,7 +100,7 @@ public class EreignisServiceSecurityTest {
         }
 
         @Test
-        void should_throw_AccessDeniedException_when_bezirkIDPermissionEvaluator_missing() {
+        void should_throw_AccessDeniedException_when_bezirkIDPermissionEvaluator_returns_false() {
             val wahlbezirkID = "wahlbezirkID";
             List<EreignisModel> ereignisModelList = new ArrayList<>();
             ereignisModelList.add(TestdataFactory.createEreignisModelWithData());

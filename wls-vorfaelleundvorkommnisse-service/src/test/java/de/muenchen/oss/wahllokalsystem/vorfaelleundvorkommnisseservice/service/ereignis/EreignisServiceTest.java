@@ -52,11 +52,13 @@ public class EreignisServiceTest {
             val mockedEreignis = TestdataFactory.CreateEreignisEntity.withData(wahlbezirkID);
             val mockedEreignisModel = TestdataFactory.CreateEreignisModel.fromEntity(mockedEreignis);
             val mockedEeignisModelList = List.of(TestdataFactory.CreateEreignisModel.withEreignisart(Ereignisart.VORFALL));
-            val expectedEreignisseModel = TestdataFactory.CreateEreignisseModel.withData(wahlbezirkID, keineVorfaelle, keineVorkommnisse, mockedEeignisModelList);
+            val expectedEreignisseModel = TestdataFactory.CreateEreignisseModel.withData(wahlbezirkID, keineVorfaelle, keineVorkommnisse,
+                    mockedEeignisModelList);
 
             Mockito.when(ereignisRepository.findByWahlbezirkID(wahlbezirkID)).thenReturn(List.of(mockedEreignis));
             Mockito.when(ereignisModelMapper.toModel(mockedEreignis)).thenReturn(mockedEreignisModel);
-            Mockito.when(ereignisModelMapper.toEreignisseModel(wahlbezirkID, keineVorfaelle, keineVorkommnisse, mockedEeignisModelList)).thenReturn(expectedEreignisseModel);
+            Mockito.when(ereignisModelMapper.toEreignisseModel(wahlbezirkID, keineVorfaelle, keineVorkommnisse, mockedEeignisModelList))
+                    .thenReturn(expectedEreignisseModel);
 
             val result = unitUnderTest.getEreignis(wahlbezirkID);
             Assertions.assertThat(result).isEqualTo(Optional.of(expectedEreignisseModel));

@@ -35,7 +35,8 @@ class EreignisModelMapperTest {
             val mockedListOfEreignisModel = List.of(
                     TestdataFactory.CreateEreignisModel.withEreignisart(Ereignisart.VORFALL),
                     TestdataFactory.CreateEreignisModel.withEreignisart(Ereignisart.VORKOMMNIS));
-            val expectedEreignisseModel = TestdataFactory.CreateEreignisseModel.withData(wahlbezirkID, keineVorfaelle, keineVorkommnisse, mockedListOfEreignisModel);
+            val expectedEreignisseModel = TestdataFactory.CreateEreignisseModel.withData(wahlbezirkID, keineVorfaelle, keineVorkommnisse,
+                    mockedListOfEreignisModel);
 
             val result = unitUnderTest.toEreignisseModel(wahlbezirkID, keineVorfaelle, keineVorkommnisse, mockedListOfEreignisModel);
             Assertions.assertThat(result).isEqualTo(expectedEreignisseModel);

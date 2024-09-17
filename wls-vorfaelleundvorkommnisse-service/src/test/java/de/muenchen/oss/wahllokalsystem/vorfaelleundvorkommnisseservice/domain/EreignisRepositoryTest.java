@@ -1,11 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain;
 
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereignis;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.EreignisRepository;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.TestdataFactory;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -37,19 +35,17 @@ public class EreignisRepositoryTest {
         void should_return_list_of_ereignis_entities_when_given_valid_wahlbezirkid() {
             val wahlbezirkID = "wahlbezirkID";
             val wahlbezirkID2 = "newWahlbezirkID";
-            List<Ereignis> ereignisList1 = new ArrayList<>();
-            ereignisList1.add(TestdataFactory.createEreignisEntityWithData(wahlbezirkID));
-            ereignisList1.add(TestdataFactory.createEreignisEntityWithData(wahlbezirkID));
-            List<Ereignis> ereignisList2 = new ArrayList<>();
-            ereignisList2.add(TestdataFactory.createEreignisEntityWithData(wahlbezirkID2));
-            unitUnderTest.saveAll(ereignisList1);
-            unitUnderTest.saveAll(ereignisList2);
+
+            val mockedEreignisList1 = List.of(
+                    TestdataFactory.CreateEreignisEntity.withData(wahlbezirkID),
+                    TestdataFactory.CreateEreignisEntity.withData(wahlbezirkID));
+            val mockedEreignisList2 = List.of(TestdataFactory.CreateEreignisEntity.withData(wahlbezirkID2));
+            unitUnderTest.saveAll(mockedEreignisList1);
+            unitUnderTest.saveAll(mockedEreignisList2);
 
             val result = unitUnderTest.findByWahlbezirkID(wahlbezirkID);
-
             Assertions.assertThat(result.size()).isEqualTo(2);
-            Assertions.assertThat(result).filteredOn(ereignis -> ereignis.getWahlbezirkID().equals(wahlbezirkID))
-                    .noneMatch(ereignis -> ereignis.getWahlbezirkID().equals(wahlbezirkID2));
+            Assertions.assertThat(result).noneMatch(ereignis -> ereignis.getWahlbezirkID().equals(wahlbezirkID2));
         }
     }
 
@@ -62,16 +58,17 @@ public class EreignisRepositoryTest {
         )
         void should_delete_all_ereignis_entities_with_matching_wahlbezirkid_when_given_valid_wahlbezirkid() {
             val wahlbezirkID = "wahlbezirkID";
-            List<Ereignis> ereignisList = new ArrayList<>();
-            ereignisList.add(TestdataFactory.createEreignisEntityWithData(wahlbezirkID));
-            ereignisList.add(TestdataFactory.createEreignisEntityWithData(wahlbezirkID));
-            unitUnderTest.saveAll(ereignisList);
+
+            val mockedEreignisList = List.of(
+                    TestdataFactory.CreateEreignisEntity.withData(wahlbezirkID),
+                    TestdataFactory.CreateEreignisEntity.withData(wahlbezirkID));
+            unitUnderTest.saveAll(mockedEreignisList);
 
             val savedEreignisse = unitUnderTest.findByWahlbezirkID(wahlbezirkID);
-            Assertions.assertThat(savedEreignisse.size()).isEqualTo(ereignisList.size());
-
             unitUnderTest.deleteByWahlbezirkID(wahlbezirkID);
+
             val result = unitUnderTest.findByWahlbezirkID(wahlbezirkID);
+            Assertions.assertThat(savedEreignisse.size()).isEqualTo(mockedEreignisList.size());
             Assertions.assertThat(result).isEmpty();
         }
     }

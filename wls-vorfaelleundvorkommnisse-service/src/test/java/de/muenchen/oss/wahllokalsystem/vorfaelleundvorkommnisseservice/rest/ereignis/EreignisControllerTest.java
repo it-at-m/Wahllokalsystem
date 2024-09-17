@@ -1,10 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis;
 
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereignisart;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisModel;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisService;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.TestdataFactory;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.val;
@@ -38,17 +36,17 @@ public class EreignisControllerTest {
             val wahlbezirkID = "wahlbezirkID";
             boolean keineVorfaelle = false;
             boolean keineVorkommnisse = true;
-            List<EreignisModel> ereignisModelList = new ArrayList<>();
-            ereignisModelList.add(TestdataFactory.createEreignisModelWithEreignisart(Ereignisart.VORFALL));
-            val ereignisseModel = TestdataFactory.createEreignisseModelWithData(wahlbezirkID, keineVorfaelle, keineVorkommnisse, ereignisModelList);
 
-            val wahlbezirkEreignisseDto = TestdataFactory.createWahlbezirkEreignisseDTOFromModel(ereignisseModel);
+            val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withEreignisart(Ereignisart.VORFALL));
+            val mockedEreignisseModel = TestdataFactory.CreateEreignisseModel.withData(wahlbezirkID, keineVorfaelle, keineVorkommnisse,
+                    mockedEreignisModelList);
+            val expectedWahlbezirkEreignisseDto = TestdataFactory.CreateWahlbezirkEreignisseDto.fromModel(mockedEreignisseModel);
 
-            Mockito.when(ereignisService.getEreignis(wahlbezirkID)).thenReturn(Optional.of(ereignisseModel));
-            Mockito.when(ereignisDTOMapper.toDTO(ereignisseModel)).thenReturn(wahlbezirkEreignisseDto);
+            Mockito.when(ereignisService.getEreignis(wahlbezirkID)).thenReturn(Optional.of(mockedEreignisseModel));
+            Mockito.when(ereignisDTOMapper.toDTO(mockedEreignisseModel)).thenReturn(expectedWahlbezirkEreignisseDto);
 
             val result = unitUnderTest.getEreignis(wahlbezirkID);
-            Assertions.assertThat(result.getBody()).isEqualTo(wahlbezirkEreignisseDto);
+            Assertions.assertThat(result.getBody()).isEqualTo(expectedWahlbezirkEreignisseDto);
             Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         }
 
@@ -65,18 +63,17 @@ public class EreignisControllerTest {
     class PostEreignisse {
 
         @Test
-        void should_not_throw_Exception_when_new_data_is_saved() {
+        void should_not_throw_exception_when_new_data_is_saved() {
             val wahlbezirkID = "wahlbezirkID";
-            List<EreignisDTO> ereignisDtoList = new ArrayList<>();
-            ereignisDtoList.add(TestdataFactory.createEreignisDtoWithData());
-            val ereignisseWriteDto = TestdataFactory.createEreignisseWriteDTOWithData(ereignisDtoList);
 
-            val ereignisseWriteModel = TestdataFactory.createEreignisseWriteModelFromDto(wahlbezirkID, ereignisseWriteDto);
+            val mockedEreignisDtoList = List.of(TestdataFactory.CreateEreignisDto.withData());
+            val mockedEreignisseWriteDto = TestdataFactory.CreateEreignisseWriteDto.withData(mockedEreignisDtoList);
+            val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.fromDto(wahlbezirkID, mockedEreignisseWriteDto);
 
-            Mockito.when(ereignisDTOMapper.toModel(wahlbezirkID, ereignisseWriteDto)).thenReturn(ereignisseWriteModel);
+            Mockito.when(ereignisDTOMapper.toModel(wahlbezirkID, mockedEreignisseWriteDto)).thenReturn(mockedEreignisseWriteModel);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postEreignis(wahlbezirkID, ereignisseWriteDto));
-            Mockito.verify(ereignisService).postEreignis(ereignisseWriteModel);
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postEreignis(wahlbezirkID, mockedEreignisseWriteDto));
+            Mockito.verify(ereignisService).postEreignis(mockedEreignisseWriteModel);
         }
     }
 }

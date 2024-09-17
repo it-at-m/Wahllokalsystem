@@ -27,14 +27,14 @@ public class UrnenwahlSchliessungsUhrzeitService {
                 + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
     )
     public Optional<UrnenwahlSchliessungsUhrzeitModel> getUrnenwahlSchliessungsUhrzeit(@P("wahlbezirkID") final String wahlbezirkID) {
-        log.debug("#getUrnenwahlSchliessungsUhrzeit");
+        log.debug("#getSchliessungsuhrzeit");
         log.debug("in: wahlbezirkID > {}", wahlbezirkID);
 
         urnenwahlSchliessungsUhrzeitValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
 
         val dataFromRepo = urnenwahlSchliessungsUhrzeitRepository.findById(wahlbezirkID);
 
-        log.debug("out: urnenwahlSchliessungsUhrzeit > {}", dataFromRepo.orElse(null));
+        log.debug("out: schliessungsuhrzeit > {}", dataFromRepo.orElse(null));
 
         return dataFromRepo.map(urnenwahlSchliessungsUhrzeitModelMapper::toModel);
     }
@@ -46,7 +46,7 @@ public class UrnenwahlSchliessungsUhrzeitService {
     public void setUrnenwahlSchliessungsUhrzeit(
             @P("urnenwahlSchliessungsUhrzeitToSet") final UrnenwahlSchliessungsUhrzeitModel urnenwahlSchliessungsUhrzeitToSet) {
         log.debug("#postUrnenwahlSchliessungsUhrzeit");
-        log.debug("in: urnenwahlSchliessungsUhrzeit > {}", urnenwahlSchliessungsUhrzeitToSet);
+        log.debug("in: schliessungsuhrzeit > {}", urnenwahlSchliessungsUhrzeitToSet);
 
         urnenwahlSchliessungsUhrzeitValidator.validModelToSetOrThrow(urnenwahlSchliessungsUhrzeitToSet);
 
@@ -57,7 +57,7 @@ public class UrnenwahlSchliessungsUhrzeitService {
             try {
                 MDC.put("eid", "EROEFFNUNG");
                 MDC.put("result", "0");
-                log.info("openingTime={}|", urnenwahlSchliessungsUhrzeitToSave.getUrnenwahlSchliessungsUhrzeit());
+                log.info("openingTime={}|", urnenwahlSchliessungsUhrzeitToSave.getSchliessungsuhrzeit());
             } finally {
                 MDC.remove("eid");
                 MDC.remove("result");

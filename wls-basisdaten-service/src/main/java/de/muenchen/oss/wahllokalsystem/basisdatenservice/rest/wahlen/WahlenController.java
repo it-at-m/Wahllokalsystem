@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenWriteModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -57,7 +58,7 @@ public class WahlenController {
     )
     @ResponseStatus(HttpStatus.OK)
     public void postWahlen(@PathVariable("wahltagID") String wahltagID, @RequestBody List<WahlDTO> wahlDTOs) {
-        wahlenService.postWahlen(wahltagID, wahlDTOMapper.fromListOfWahlDTOtoListOfWahlModel(wahlDTOs));
+        wahlenService.postWahlen(new WahlenWriteModel(wahltagID, wahlDTOMapper.fromListOfWahlDTOtoListOfWahlModel(wahlDTOs)));
     }
 
     @Operation(

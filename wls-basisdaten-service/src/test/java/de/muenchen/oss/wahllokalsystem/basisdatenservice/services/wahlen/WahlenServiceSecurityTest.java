@@ -70,16 +70,8 @@ public class WahlenServiceSecurityTest {
             List<Wahl> mockedListOfEntities = createWahlEntities();
             wahltagRepository.save(searchingForWahltag);
             wahlRepository.saveAll(mockedListOfEntities);
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHLTAG, Authorities.SERVICE_GET_WAHLEN, Authorities.REPOSITORY_READ_WAHL,
-                    Authorities.REPOSITORY_WRITE_WAHL);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLEN);
             Assertions.assertThatNoException().isThrownBy(() -> wahlenService.getWahlen(searchingForWahltag.getWahltagID()));
-        }
-
-        @Test
-        void accessDeniedWhenServiceAuthoritiyIsMissing() {
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHL, Authorities.REPOSITORY_WRITE_WAHL);
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung9", "1");
-            Assertions.assertThatThrownBy(() -> wahlenService.getWahlen(searchingForWahltag.getWahltagID())).isInstanceOf(AccessDeniedException.class);
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")
@@ -105,8 +97,7 @@ public class WahlenServiceSecurityTest {
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
             return SecurityUtils
-                    .buildArgumentsForMissingAuthoritiesVariations(
-                            new String[] { Authorities.SERVICE_GET_WAHLEN, Authorities.REPOSITORY_READ_WAHL, Authorities.REPOSITORY_WRITE_WAHL });
+                    .buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_WAHLEN);
         }
     }
 
@@ -116,26 +107,31 @@ public class WahlenServiceSecurityTest {
         @Test
         void accessGranted() {
             SecurityUtils.runWith(Authorities.SERVICE_POST_WAHLEN, Authorities.REPOSITORY_WRITE_WAHL);
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung11", "1");
+            val wahltagID = "wahltagID";
             List<WahlModel> mockedListOfModels = createWahlModels();
-            Assertions.assertThatNoException().isThrownBy(() -> wahlenService.postWahlen(searchingForWahltag.getWahltagID(), mockedListOfModels));
+            val wahlenToWrite = new WahlenWriteModel(wahltagID, mockedListOfModels);
+            Assertions.assertThatNoException().isThrownBy(() -> wahlenService.postWahlen(wahlenToWrite));
         }
 
         @Test
         void accessDeniedWhenServiceAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL);
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung12", "1");
+            val wahltagID = "wahltagID";
             List<WahlModel> mockedListOfModels = createWahlModels();
-            Assertions.assertThatThrownBy(() -> wahlenService.postWahlen(searchingForWahltag.getWahltagID(), mockedListOfModels))
+            val wahlenToWrite = new WahlenWriteModel(wahltagID, mockedListOfModels);
+
+            Assertions.assertThatThrownBy(() -> wahlenService.postWahlen(wahlenToWrite))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
         @Test
         void fachlicheWlsExceptionWhenRepoAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.SERVICE_POST_WAHLEN);
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung13", "1");
+            val wahltagID = "wahltagID";
             List<WahlModel> mockedListOfModels = createWahlModels();
-            Assertions.assertThatThrownBy(() -> wahlenService.postWahlen(searchingForWahltag.getWahltagID(), mockedListOfModels)).isInstanceOf(
+            val wahlenToWrite = new WahlenWriteModel(wahltagID, mockedListOfModels);
+
+            Assertions.assertThatThrownBy(() -> wahlenService.postWahlen(wahlenToWrite)).isInstanceOf(
                     FachlicheWlsException.class);
         }
     }

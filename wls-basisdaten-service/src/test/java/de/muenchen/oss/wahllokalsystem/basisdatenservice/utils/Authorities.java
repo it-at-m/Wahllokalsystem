@@ -8,6 +8,7 @@ public class Authorities {
 
     public static final String SERVICE_GET_WAHLVORSCHLAEGE = "Basisdaten_BUSINESSACTION_GetWahlvorschlaege";
     public static final String SERVICE_GET_WAHLTAGE = "Basisdaten_BUSINESSACTION_GetWahltage";
+    public static final String SERVICE_GET_WAHLTAG = "Basisdaten_BUSINESSACTION_GetWahltag";
 
     public static final String SERVICE_RESET_WAHLEN = "Basisdaten_BUSINESSACTION_ResetWahlen";
     public static final String SERVICE_GET_WAHLEN = "Basisdaten_BUSINESSACTION_GetWahlen";
@@ -139,6 +140,13 @@ public class Authorities {
             REPOSITORY_READ_WAHL,
             REPOSITORY_WRITE_WAHL,
             REPOSITORY_DELETE_WAHL
+    };
+
+    public static final String[] ALL_AUTHORITIES_GET_WAHLEN = {
+            SERVICE_GET_WAHLEN,
+            SERVICE_GET_WAHLTAG,
+            REPOSITORY_READ_WAHL,
+            REPOSITORY_READ_WAHLTAG
     };
 
     public static final String[] ALL_AUTHORITIES_GET_REFERENDUMVORLAGEN = {

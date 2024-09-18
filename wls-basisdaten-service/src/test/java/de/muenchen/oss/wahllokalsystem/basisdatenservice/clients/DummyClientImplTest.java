@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.StimmzettelgebietModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahltagWithNummer;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDate;
 import lombok.val;
@@ -39,7 +40,7 @@ class DummyClientImplTest {
 
         @Test
         void resultIsAnArrayWithPositiveSize() {
-            val result = unitUnderTest.getWahlen(LocalDate.now(), "0");
+            val result = unitUnderTest.getWahlen(new WahltagWithNummer(LocalDate.now(), "0"));
             Assertions.assertThat(result).size().isPositive();
         }
     }

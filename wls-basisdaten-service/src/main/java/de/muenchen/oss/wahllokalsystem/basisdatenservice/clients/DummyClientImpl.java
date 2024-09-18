@@ -24,6 +24,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.Wa
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkeClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenClient;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahltagWithNummer;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.KandidatModel;
@@ -66,11 +67,11 @@ public class DummyClientImpl
     }
 
     @Override
-    public List<WahlModel> getWahlen(LocalDate wahltag, String wahltagNummer) throws WlsException {
+    public List<WahlModel> getWahlen(final WahltagWithNummer wahltagWithNummer) throws WlsException {
         return List.of(
-                new WahlModel("wahl1", "0", 1L, 1L, wahltag, BTW, new Farbe(0, 1, 2), "1"),
-                new WahlModel("wahl2", "1", 2L, 1L, wahltag, EUW, new Farbe(3, 4, 5), "1"),
-                new WahlModel("wahl3", "2", 3L, 1L, wahltag, LTW, new Farbe(6, 7, 8), "1"));
+                new WahlModel("wahl1", "0", 1L, 1L, wahltagWithNummer.wahltag(), BTW, new Farbe(0, 1, 2), "1"),
+                new WahlModel("wahl2", "1", 2L, 1L, wahltagWithNummer.wahltag(), EUW, new Farbe(3, 4, 5), "1"),
+                new WahlModel("wahl3", "2", 3L, 1L, wahltagWithNummer.wahltag(), LTW, new Farbe(6, 7, 8), "1"));
     }
 
     @Override

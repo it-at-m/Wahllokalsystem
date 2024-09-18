@@ -6,6 +6,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenClient;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahltagWithNummer;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.List;
 import java.util.Set;
@@ -26,10 +27,10 @@ public class WahlenClientImpl implements WahlenClient {
     private final WahlenClientMapper wahlenClientMapper;
 
     @Override
-    public List<WahlModel> getWahlen(java.time.LocalDate wahltag, String wahltagNummer) {
+    public List<WahlModel> getWahlen(final WahltagWithNummer wahltagWithNummer) {
         final Set<WahlDTO> wahlDTOs;
         try {
-            wahlDTOs = wahldatenControllerApi.loadWahlen(wahltag, wahltagNummer);
+            wahlDTOs = wahldatenControllerApi.loadWahlen(wahltagWithNummer.wahltag(), wahltagWithNummer.wahltagNummer());
         } catch (final Exception exception) {
             log.info("exception on loadwahl from external", exception);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);

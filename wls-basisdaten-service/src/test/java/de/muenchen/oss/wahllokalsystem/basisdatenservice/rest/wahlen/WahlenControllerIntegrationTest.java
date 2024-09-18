@@ -4,10 +4,10 @@ import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SP
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
-
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.WahlenClientMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahltag;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagRepository;
@@ -234,8 +234,8 @@ public class WahlenControllerIntegrationTest {
             val response = api.perform(request).andExpect(status().isBadRequest()).andReturn();
             val responseBodyAsWlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsByteArray(), WlsExceptionDTO.class);
 
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.CODE_POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG.code(),
-                    serviceID, ExceptionConstants.CODE_POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG.message());
+            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG.code(),
+                    serviceID, ExceptionConstants.POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG.message());
 
             Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
         }

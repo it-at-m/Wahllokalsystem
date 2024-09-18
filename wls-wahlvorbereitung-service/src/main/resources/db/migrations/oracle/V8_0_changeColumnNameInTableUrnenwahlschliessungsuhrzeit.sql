@@ -1,1 +1,0 @@
-ALTER TABLE UrnenwahlSchliessungsUhrzeit ALTER COLUMN urnenwahlSchliessungsUhrzeit RENAME TO schliessungsuhrzeit;

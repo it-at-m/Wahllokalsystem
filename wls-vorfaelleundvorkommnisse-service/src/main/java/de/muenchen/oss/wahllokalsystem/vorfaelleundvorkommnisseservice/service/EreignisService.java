@@ -13,9 +13,6 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Provides a service to execute business-actions.
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -26,14 +23,11 @@ public class EreignisService {
     private final EreignisModelMapper ereignisModelMapper;
     private final EreignisValidator ereignisValidator;
 
-    static final String GET_EREIGNIS = "hasAuthority('VorfaelleUndVorkommnisse_BUSINESSACTION_GetEreignisse')";
-    static final String POST_EREIGNIS = "hasAuthority('VorfaelleUndVorkommnisse_BUSINESSACTION_PostEreignisse')";
+    static final String AUTHORITY_GET_EREIGNIS = "hasAuthority('VorfaelleUndVorkommnisse_BUSINESSACTION_GetEreignisse')";
+    static final String AUTHORITY_POST_EREIGNIS = "hasAuthority('VorfaelleUndVorkommnisse_BUSINESSACTION_PostEreignisse')";
 
-    /**
-     * This BusinessAction's purpose is: Laden der Ereignisse It returns one Ereignis.
-     */
-    @PreAuthorize(GET_EREIGNIS + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
-    public Optional<EreignisseModel> getEreignis(@P("wahlbezirkID") final String wahlbezirkID) {
+    @PreAuthorize(AUTHORITY_GET_EREIGNIS + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
+    public Optional<WahlbezirkEreignisseModel> getEreignis(@P("wahlbezirkID") final String wahlbezirkID) {
         log.info("#getEreignis");
         ereignisValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
 
@@ -50,11 +44,8 @@ public class EreignisService {
         }
     }
 
-    /**
-     * This BusinessAction's purpose is: Speichern von Ereignissen
-     */
     @Transactional
-    @PreAuthorize(POST_EREIGNIS + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param?.wahlbezirkID, authentication)")
+    @PreAuthorize(AUTHORITY_POST_EREIGNIS + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param?.wahlbezirkID, authentication)")
     public void postEreignis(@P("param") EreignisseWriteModel ereignisse) {
         log.info("#postEreignis");
         ereignisValidator.validEreignisAndWahlbezirkIDOrThrow(ereignisse);

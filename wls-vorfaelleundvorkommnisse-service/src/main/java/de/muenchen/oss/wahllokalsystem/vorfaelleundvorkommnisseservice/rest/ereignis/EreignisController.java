@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.Optional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,22 +20,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * This controller is responsible for mapping businessActions to REST-endpoints.
- */
 @RestController
-@AllArgsConstructor
-@RequestMapping(value = "/businessActions")
+@RequiredArgsConstructor
+@RequestMapping(value = "/businessActions/ereignisse")
 public class EreignisController {
 
-    EreignisDTOMapper ereignisDTOMapper;
+    private final EreignisDTOMapper ereignisDTOMapper;
 
-    EreignisService ereignisService;
+    private final EreignisService ereignisService;
 
-    /**
-     * This BusinessAction's purpose is: Laden der besonderen Ereignisse
-     * It returns one Ereignis.
-     */
     @Operation(description = "Laden der Ereignisse des Wahllokals {wahlbezirkID}")
     @ApiResponses(
             value = {
@@ -44,24 +37,25 @@ public class EreignisController {
                             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WahlbezirkEreignisseDTO.class)) }
                     ),
                     @ApiResponse(
-                            responseCode = "500", description = "Probleme bei der Kommunikation mit dem externen System von dem die Daten importiert werden",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
-                    ),
-                    @ApiResponse(
                             responseCode = "204", description = "Keine Daten vom Fremdsystem geliefert",
                             content = @Content(schema = @Schema())
+                    ),
+                    @ApiResponse(
+                            responseCode = "400", description = "Anfrageparameter sind fehlerhaft",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "500", description = "Probleme bei der Kommunikation mit dem externen System von dem die Daten importiert werden",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
                     )
             }
     )
-    @GetMapping("/ereignisse/{wahlbezirkID}")
+    @GetMapping("/{wahlbezirkID}")
     public ResponseEntity<WahlbezirkEreignisseDTO> getEreignis(@PathVariable("wahlbezirkID") String wahlbezirkID) {
         val ereignisFromService = ereignisService.getEreignis(wahlbezirkID);
-        return withBodyOrNoContent(ereignisFromService.map(ereignisDTOMapper::toDTO));
+        return returnsOkWithBodyOrNoContent(ereignisFromService.map(ereignisDTOMapper::toDTO));
     }
 
-    /**
-     * This BusinessAction's purpose is: Speichern von besonderen Ereignissen
-     */
     @Operation(description = "Speichern der Ereignisse des Wahllokals {wahlbezirkID}")
     @ApiResponses(
             value = {
@@ -70,19 +64,23 @@ public class EreignisController {
                             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WahlbezirkEreignisseDTO.class)) }
                     ),
                     @ApiResponse(
+                            responseCode = "400", description = "Anfrageparameter sind fehlerhaft",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
+                    ),
+                    @ApiResponse(
                             responseCode = "500", description = "Probleme bei der Kommunikation mit dem externen System von dem die Daten importiert werden",
                             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
                     )
             }
     )
-    @PostMapping("/ereignisse/{wahlbezirkID}")
+    @PostMapping("/{wahlbezirkID}")
     @ResponseStatus(HttpStatus.OK)
     public void postEreignis(@PathVariable("wahlbezirkID") String wahlbezirkID,
             @RequestBody EreignisseWriteDTO ereignisseBody) {
         ereignisService.postEreignis(ereignisDTOMapper.toModel(wahlbezirkID, ereignisseBody));
     }
 
-    private <T> ResponseEntity<T> withBodyOrNoContent(final Optional<T> optionalBody) {
+    private <T> ResponseEntity<T> returnsOkWithBodyOrNoContent(final Optional<T> optionalBody) {
         return optionalBody.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
     }
 }

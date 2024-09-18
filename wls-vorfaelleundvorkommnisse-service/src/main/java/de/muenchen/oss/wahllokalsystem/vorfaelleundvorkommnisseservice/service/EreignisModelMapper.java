@@ -13,7 +13,7 @@ public interface EreignisModelMapper {
     EreignisModel toModel(final Ereignis entity);
 
     @Mapping(target = "ereigniseintraege", source = "ereignisse")
-    EreignisseModel toEreignisseModel(final String wahlbezirkID, final boolean keineVorfaelle, final boolean keineVorkommnisse,
+    WahlbezirkEreignisseModel toEreignisseModel(final String wahlbezirkID, final boolean keineVorfaelle, final boolean keineVorkommnisse,
             final List<EreignisModel> ereignisse);
 
     // to Entity

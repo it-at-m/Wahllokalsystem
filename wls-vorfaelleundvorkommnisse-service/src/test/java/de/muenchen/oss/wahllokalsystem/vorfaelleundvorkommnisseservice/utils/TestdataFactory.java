@@ -6,7 +6,7 @@ import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.erei
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis.WahlbezirkEreignisseDTO;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis.EreignisDTO;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisModel;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisseModel;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.WahlbezirkEreignisseModel;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisseWriteModel;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -52,9 +52,9 @@ public class TestdataFactory {
 
     public class CreateEreignisseModel {
 
-        public static EreignisseModel withData(String wahlbezirkID, boolean keineVorfaelle, boolean keineVorkommnisse,
+        public static WahlbezirkEreignisseModel withData(String wahlbezirkID, boolean keineVorfaelle, boolean keineVorkommnisse,
                 List<EreignisModel> EreignisModelList) {
-            return new EreignisseModel(wahlbezirkID, keineVorfaelle, keineVorkommnisse, EreignisModelList);
+            return new WahlbezirkEreignisseModel(wahlbezirkID, keineVorfaelle, keineVorkommnisse, EreignisModelList);
         }
     }
 
@@ -87,7 +87,7 @@ public class TestdataFactory {
     }
 
     public class CreateWahlbezirkEreignisseDto {
-        public static WahlbezirkEreignisseDTO fromModel(EreignisseModel ereignisseModel) {
+        public static WahlbezirkEreignisseDTO fromModel(WahlbezirkEreignisseModel ereignisseModel) {
             List<EreignisDTO> ereignisDtoList = new ArrayList<>();
             for (EreignisModel ereignisModel : ereignisseModel.ereigniseintraege()) {
                 EreignisDTO dto = new EreignisDTO(ereignisModel.beschreibung(), ereignisModel.uhrzeit(), ereignisModel.ereignisart());

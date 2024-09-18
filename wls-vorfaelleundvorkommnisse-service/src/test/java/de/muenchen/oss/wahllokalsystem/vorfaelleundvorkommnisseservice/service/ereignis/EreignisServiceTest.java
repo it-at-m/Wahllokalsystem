@@ -82,10 +82,8 @@ public class EreignisServiceTest {
 
         @Test
         void should_not_throw_exception_when_new_data_is_saved() {
-            val wahlbezirkID = "wahlbezirkID";
-
             val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData());
-            val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData(wahlbezirkID, mockedEreignisModelList);
+            val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData("wahlbezirkID", mockedEreignisModelList);
             val mockedEreignisList = TestdataFactory.CreateEreignisEntity.listFromModel(mockedEreignisseWriteModel);
 
             Mockito.when(ereignisModelMapper.toEntity(mockedEreignisseWriteModel)).thenReturn(mockedEreignisList);
@@ -99,10 +97,8 @@ public class EreignisServiceTest {
 
         @Test
         void should_throw_WlsException_when_saving_failed() {
-            val wahlbezirkID = "wahlbezirkID";
-
             val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData());
-            val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData(wahlbezirkID, mockedEreignisModelList);
+            val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData("wahlbezirkID", mockedEreignisModelList);
             val mockedEreignisList = TestdataFactory.CreateEreignisEntity.listFromModel(mockedEreignisseWriteModel);
             val mockedRepoSaveException = new RuntimeException("saving failed");
             val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("");

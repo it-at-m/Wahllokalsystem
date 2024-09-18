@@ -15,9 +15,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UngueltigeStimmzettel {
 
-    @NotNull
-    private String id;
-
     @Column(name = "stimmenart")
     private String stimmenart;
 

@@ -15,9 +15,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Ergebnis {
 
-    @NotNull
-    private String id;
-
     @Column(name = "stimmenart")
     @NotNull
     private String stimmenart;

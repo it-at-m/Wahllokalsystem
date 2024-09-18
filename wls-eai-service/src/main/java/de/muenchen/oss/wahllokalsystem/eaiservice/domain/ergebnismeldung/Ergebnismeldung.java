@@ -4,7 +4,10 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.domain.BaseEntity;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.Wahlart;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.validation.constraints.NotNull;
 import java.util.Set;
@@ -26,24 +29,29 @@ public class Ergebnismeldung extends BaseEntity {
     @NotNull
     private String wahlID;
 
+    @Enumerated(EnumType.STRING)
     private Meldungsart meldungsart;
 
+    @Embedded
     private AWerte aWerte;
 
+    @Embedded
     private BWerte bWerte;
 
+    @Embedded
     private WahlbriefeWerte wahlbriefeWerte;
 
     @ElementCollection
-    @CollectionTable(name = "ungueltigeStimmzettel", joinColumns = @JoinColumn(name = "ungueltigeStimmzettelID"))
+    @CollectionTable(name = "ungueltigeStimmzettel", joinColumns = @JoinColumn(name = "ergebnismeldungID"))
     private Set<UngueltigeStimmzettel> ungueltigeStimmzettels;
 
     private Long ungueltigeStimmzettelAnzahl;
 
     @ElementCollection
-    @CollectionTable(name = "ergebnisse", joinColumns = @JoinColumn(name = "ergebnisseID"))
+    @CollectionTable(name = "ergebnisse", joinColumns = @JoinColumn(name = "ergebnismeldungID"))
     private Set<Ergebnis> ergebnisse;
 
+    @Enumerated(EnumType.STRING)
     private Wahlart wahlart;
 
 }

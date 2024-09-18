@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class ErgebnismeldungValidator {
+
     private final ExceptionFactory exceptionFactory;
 
     public void validDTOToSetOrThrow(ErgebnismeldungDTO ergebnismeldungToSet) {

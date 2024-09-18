@@ -1,6 +1,6 @@
 create table UrnenwahlSchliessungsUhrzeit
 (
-    wahlbezirkid        varchar(1000) not null,
-    schliessungsuhrzeit TIMESTAMP     not null,
+    wahlbezirkid                 varchar(1000) not null,
+    urnenwahlSchliessungsUhrzeit TIMESTAMP     not null,
     primary key (wahlbezirkid)
 );

@@ -125,14 +125,14 @@ public class WahlenServiceSecurityTest {
         }
 
         @Test
-        void fachlicheWlsExceptionWhenRepoAuthorityIsMissing() {
+        void technischeWlsExceptionWhenRepoAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.SERVICE_POST_WAHLEN);
             val wahltagID = "wahltagID";
             List<WahlModel> mockedListOfModels = createWahlModels();
             val wahlenToWrite = new WahlenWriteModel(wahltagID, mockedListOfModels);
 
             Assertions.assertThatThrownBy(() -> wahlenService.postWahlen(wahlenToWrite)).isInstanceOf(
-                    FachlicheWlsException.class);
+                    TechnischeWlsException.class);
         }
     }
 

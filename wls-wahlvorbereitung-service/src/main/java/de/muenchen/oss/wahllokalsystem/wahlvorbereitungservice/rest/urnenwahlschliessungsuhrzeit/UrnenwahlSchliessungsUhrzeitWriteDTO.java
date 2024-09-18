@@ -6,4 +6,5 @@ import lombok.Builder;
 
 @Builder
 public record UrnenwahlSchliessungsUhrzeitWriteDTO(@NotNull LocalDateTime urnenwahlSchliessungsUhrzeit) {
+    
 }

@@ -6,4 +6,5 @@ import lombok.Builder;
 
 @Builder
 public record EroeffnungsUhrzeitModel(@NotNull String wahlbezirkID, @NotNull LocalDateTime eroeffnungsuhrzeit) {
+
 }

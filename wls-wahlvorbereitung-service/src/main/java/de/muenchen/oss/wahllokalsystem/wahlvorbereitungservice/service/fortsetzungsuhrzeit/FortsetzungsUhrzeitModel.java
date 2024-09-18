@@ -6,4 +6,5 @@ import lombok.Builder;
 
 @Builder
 public record FortsetzungsUhrzeitModel(@NotNull String wahlbezirkID, @NotNull LocalDateTime fortsetzungsUhrzeit) {
+
 }

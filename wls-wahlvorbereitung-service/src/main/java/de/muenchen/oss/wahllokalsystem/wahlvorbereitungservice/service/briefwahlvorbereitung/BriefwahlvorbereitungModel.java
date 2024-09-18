@@ -6,4 +6,5 @@ import lombok.Builder;
 
 @Builder
 public record BriefwahlvorbereitungModel(@NotNull String wahlbezirkID, @NotNull java.util.List<WahlurneModel> urnenAnzahl) {
+
 }

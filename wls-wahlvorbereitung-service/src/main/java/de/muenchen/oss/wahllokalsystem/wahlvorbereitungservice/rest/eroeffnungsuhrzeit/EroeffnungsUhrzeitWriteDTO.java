@@ -6,4 +6,5 @@ import lombok.Builder;
 
 @Builder
 public record EroeffnungsUhrzeitWriteDTO(@NotNull LocalDateTime eroeffnungsuhrzeit) {
+    
 }

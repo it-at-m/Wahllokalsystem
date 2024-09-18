@@ -5,4 +5,5 @@ import java.time.LocalDateTime;
 
 public record UrnenwahlSchliessungsUhrzeitDTO(@NotNull String wahlbezirkID,
                                               @NotNull LocalDateTime urnenwahlSchliessungsUhrzeit) {
+
 }

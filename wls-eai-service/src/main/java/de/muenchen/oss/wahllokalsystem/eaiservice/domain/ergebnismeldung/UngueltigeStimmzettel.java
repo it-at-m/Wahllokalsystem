@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.domain.ergebnismeldung;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,14 +14,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UngueltigeStimmzettel {
 
-    @Column(name = "stimmenart")
     private String stimmenart;
 
-    @Column(name = "anzahl")
     private Long anzahl;
 
     @NotNull
-    @Column(name = "wahlvorschlagID")
     private String wahlvorschlagID;
 
 }

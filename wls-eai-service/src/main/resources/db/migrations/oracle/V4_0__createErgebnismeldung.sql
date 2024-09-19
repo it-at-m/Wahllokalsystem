@@ -4,16 +4,14 @@ CREATE TABLE ergebnismeldung
     wahlbezirkID                VARCHAR2(36)   NOT NULL,
     wahlID                      VARCHAR2(36)   NOT NULL,
     meldungsart                 VARCHAR2(36),
-    a1                      NUMBER,
-    a2    NUMBER,
-    b    NUMBER,
-    b1    NUMBER,
-    b2    NUMBER,
-    zurueckgewiesenGesamt NUMBER,
-    ungueltigeStimmzettel       CLOB  NOT NULL,
+    a1                          NUMBER,
+    a2                          NUMBER,
+    b                           NUMBER,
+    b1                          NUMBER,
+    b2                          NUMBER,
+    zurueckgewiesenGesamt       NUMBER,
     ungueltigeStimmzettelAnzahl NUMBER,
-    ergebnisse                  CLOB  NOT NULL,
-    wahlart                     VARCHAR2(36)   NOT NULL,
+    wahlart                     VARCHAR2(36),
 
     PRIMARY KEY (id)
 );

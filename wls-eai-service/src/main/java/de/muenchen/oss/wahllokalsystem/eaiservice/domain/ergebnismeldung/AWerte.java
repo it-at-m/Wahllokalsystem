@@ -11,7 +11,6 @@ public class AWerte {
     @Column(name = "a1")
     private Long a1;
 
-
     @Column(name = "a2")
     private Long a2;
 

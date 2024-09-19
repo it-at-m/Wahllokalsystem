@@ -15,7 +15,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE})
+@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
 public class ErgebnismeldungServiceSecurityTest {
 
     @Autowired
@@ -28,7 +28,9 @@ public class ErgebnismeldungServiceSecurityTest {
         void accessGranted() {
             SecurityUtils.runWith(Authorities.SERVICE_SAVE_ERGEBNISMELDUNG);
 
-            val ergebnismeldungToSave = ErgebnismeldungDTO.builder().wahlbezirkID("00000000-0000-0000-0000-000000000001").wahlID("wahlID1").meldungsart(null).aWerte(null).bWerte(null).wahlbriefeWerte(null).ungueltigeStimmzettels(null).ungueltigeStimmzettelAnzahl(null).ergebnisse(null).wahlart(null).build();
+            val ergebnismeldungToSave = ErgebnismeldungDTO.builder().wahlbezirkID("00000000-0000-0000-0000-000000000001").wahlID("wahlID1").meldungsart(null)
+                    .aWerte(null).bWerte(null).wahlbriefeWerte(null).ungueltigeStimmzettels(null).ungueltigeStimmzettelAnzahl(null).ergebnisse(null)
+                    .wahlart(null).build();
 
             Assertions.assertThatNoException().isThrownBy(() -> ergebnismeldungService.saveErgebnismeldung(ergebnismeldungToSave));
         }
@@ -37,7 +39,9 @@ public class ErgebnismeldungServiceSecurityTest {
         void anyMissingAuthorityCausesFail() {
             SecurityUtils.runWith();
 
-            val ergebnismeldungToSave = ErgebnismeldungDTO.builder().wahlbezirkID("00000000-0000-0000-0000-000000000001").wahlID("wahlID1").meldungsart(null).aWerte(null).bWerte(null).wahlbriefeWerte(null).ungueltigeStimmzettels(null).ungueltigeStimmzettelAnzahl(null).ergebnisse(null).wahlart(null).build();
+            val ergebnismeldungToSave = ErgebnismeldungDTO.builder().wahlbezirkID("00000000-0000-0000-0000-000000000001").wahlID("wahlID1").meldungsart(null)
+                    .aWerte(null).bWerte(null).wahlbriefeWerte(null).ungueltigeStimmzettels(null).ungueltigeStimmzettelAnzahl(null).ergebnisse(null)
+                    .wahlart(null).build();
 
             Assertions.assertThatException().isThrownBy(() -> ergebnismeldungService.saveErgebnismeldung(ergebnismeldungToSave))
                     .isInstanceOf(AccessDeniedException.class);

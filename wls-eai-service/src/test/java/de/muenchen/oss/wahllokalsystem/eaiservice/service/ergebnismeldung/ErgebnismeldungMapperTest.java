@@ -45,7 +45,8 @@ public class ErgebnismeldungMapperTest {
                     new ErgebnisDTO("test2", 6L, 4L, "wahlvorschlagID2", "kandidatID2"));
             val wahlart = WahlartDTO.BTW;
 
-            val entityToMap = new ErgebnismeldungDTO(wahlbezirkID, wahlID, meldungsart, aWerte, bWerte, wahlbriefeWerte, ungueltigeStimmzettelDTOList, ungueltigeStimmzettelAnzahl, ergebnisse, wahlart);
+            val entityToMap = new ErgebnismeldungDTO(wahlbezirkID, wahlID, meldungsart, aWerte, bWerte, wahlbriefeWerte, ungueltigeStimmzettelDTOList,
+                    ungueltigeStimmzettelAnzahl, ergebnisse, wahlart);
 
             val result = unitUnderTest.toEntity(entityToMap);
 

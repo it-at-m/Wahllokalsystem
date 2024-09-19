@@ -47,7 +47,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
+@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
 public class ErgebnismeldungControllerIntegrationTest {
 
     @Autowired
@@ -105,7 +105,6 @@ public class ErgebnismeldungControllerIntegrationTest {
 
             Assertions.assertThat(savedErgebnismeldung).usingRecursiveComparison().ignoringFields("id").isEqualTo(expectedSavedErgebnismeldung);
         }
-
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_SAVE_ERGEBNISMELDUNG)
@@ -176,7 +175,8 @@ public class ErgebnismeldungControllerIntegrationTest {
                     new ErgebnisDTO("test2", 6L, 4L, "wahlvorschlagID2", "kandidatID2"));
             val wahlart = WahlartDTO.BTW;
 
-            return new ErgebnismeldungDTO(wahlbezirkID, wahlID, meldungsart, aWerte, bWerte, wahlbriefeWerte, ungueltigeStimmzettelDTOList, ungueltigeStimmzettelAnzahl, ergebnisse, wahlart);
+            return new ErgebnismeldungDTO(wahlbezirkID, wahlID, meldungsart, aWerte, bWerte, wahlbriefeWerte, ungueltigeStimmzettelDTOList,
+                    ungueltigeStimmzettelAnzahl, ergebnisse, wahlart);
         }
 
     }

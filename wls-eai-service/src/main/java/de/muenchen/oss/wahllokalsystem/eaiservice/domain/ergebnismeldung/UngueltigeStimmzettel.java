@@ -22,4 +22,3 @@ public class UngueltigeStimmzettel {
     private String wahlvorschlagID;
 
 }
-

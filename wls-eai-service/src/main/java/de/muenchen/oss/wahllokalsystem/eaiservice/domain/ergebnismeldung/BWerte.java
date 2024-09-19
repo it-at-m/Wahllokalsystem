@@ -11,10 +11,8 @@ public class BWerte {
     @Column(name = "b")
     private Long b;
 
-
     @Column(name = "b1")
     private Long b1;
-
 
     @Column(name = "b2")
     private Long b2;

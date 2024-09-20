@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis;
 
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereignisart;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisartModel;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.TestdataFactory;
 import java.util.List;
 import lombok.val;
@@ -24,8 +24,8 @@ class EreignisDTOMapperTest {
         @Test
         void should_return_WahlbezirkEreignisseDTO_when_given_EreignisseModel() {
             val mockedListOfEreignisModel = List.of(
-                    TestdataFactory.CreateEreignisModel.withEreignisart(Ereignisart.VORFALL),
-                    TestdataFactory.CreateEreignisModel.withEreignisart(Ereignisart.VORKOMMNIS));
+                    TestdataFactory.CreateEreignisModel.withEreignisart(EreignisartModel.VORFALL),
+                    TestdataFactory.CreateEreignisModel.withEreignisart(EreignisartModel.VORKOMMNIS));
             val mockedEreignisseModel = TestdataFactory.CreateEreignisseModel.withData("wahlbezirkID", false, false, mockedListOfEreignisModel);
             val expectedEreignisseDTO = TestdataFactory.CreateWahlbezirkEreignisseDto.fromModel(mockedEreignisseModel);
 

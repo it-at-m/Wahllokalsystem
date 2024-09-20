@@ -30,5 +30,5 @@ public class Ereignis extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    private Ereignisart ereignisart;
+    private EreignisartEntity ereignisart;
 }

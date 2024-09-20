@@ -1,7 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service;
 
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.EreignisRepository;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereignisart;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.Optional;
@@ -36,8 +35,8 @@ public class EreignisService {
         if (ereignisModelListe.isEmpty()) {
             return Optional.empty();
         } else {
-            val keineVorfaelle = ereignisModelListe.stream().noneMatch(ereignis -> Ereignisart.VORFALL.equals(ereignis.ereignisart()));
-            val keineVorkommnisse = ereignisModelListe.stream().noneMatch(ereignis -> Ereignisart.VORKOMMNIS.equals(ereignis.ereignisart()));
+            val keineVorfaelle = ereignisModelListe.stream().noneMatch(ereignis -> EreignisartModel.VORFALL.equals(ereignis.ereignisart()));
+            val keineVorkommnisse = ereignisModelListe.stream().noneMatch(ereignis -> EreignisartModel.VORKOMMNIS.equals(ereignis.ereignisart()));
 
             val ereignisseModel = ereignisModelMapper.toEreignisseModel(wahlbezirkID, keineVorfaelle, keineVorkommnisse, ereignisModelListe);
             return Optional.of(ereignisseModel);

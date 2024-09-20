@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.ereignis;
 
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereignisart;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisModelMapper;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisartModel;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.TestdataFactory;
 import java.util.List;
 import lombok.val;
@@ -33,8 +33,8 @@ class EreignisModelMapperTest {
             val keineVorkommnisse = false;
 
             val mockedListOfEreignisModel = List.of(
-                    TestdataFactory.CreateEreignisModel.withEreignisart(Ereignisart.VORFALL),
-                    TestdataFactory.CreateEreignisModel.withEreignisart(Ereignisart.VORKOMMNIS));
+                    TestdataFactory.CreateEreignisModel.withEreignisart(EreignisartModel.VORFALL),
+                    TestdataFactory.CreateEreignisModel.withEreignisart(EreignisartModel.VORKOMMNIS));
             val expectedEreignisseModel = TestdataFactory.CreateEreignisseModel.withData(wahlbezirkID, keineVorfaelle, keineVorkommnisse,
                     mockedListOfEreignisModel);
 

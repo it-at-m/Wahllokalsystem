@@ -312,12 +312,16 @@ public class WahlenControllerIntegrationTest {
         return Set.of(wahl1, wahl2, wahl3).stream().filter(wahl -> (wahl.getWahltag().equals(searchingForWahltag.getWahltag()))).collect(Collectors.toSet());
     }
 
-    private List<de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO> createControllerListOfWahlDTO(Wahltag searchingForWahltag, final String namePraefix) {
-        val wahl1 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID1", namePraefix + "name1", 3L, 1L, searchingForWahltag.getWahltag(),
+    private List<de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO> createControllerListOfWahlDTO(Wahltag searchingForWahltag,
+            final String namePraefix) {
+        val wahl1 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID1", namePraefix + "name1", 3L, 1L,
+                searchingForWahltag.getWahltag(),
                 Wahlart.BAW, new Farbe(1, 1, 1), "1");
-        val wahl2 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID2", namePraefix + "name2", 3L, 1L, searchingForWahltag.getWahltag(),
+        val wahl2 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID2", namePraefix + "name2", 3L, 1L,
+                searchingForWahltag.getWahltag(),
                 Wahlart.BAW, new Farbe(1, 1, 1), "2");
-        val wahl3 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID3", namePraefix + "name3", 3L, 1L, LocalDate.now().plusMonths(2),
+        val wahl3 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID3", namePraefix + "name3", 3L, 1L,
+                LocalDate.now().plusMonths(2),
                 Wahlart.BAW, new Farbe(1, 1, 1), "3");
 
         return Stream.of(wahl1, wahl2, wahl3).filter(wahl -> (wahl.wahltag().equals(searchingForWahltag.getWahltag()))).collect(Collectors.toList());

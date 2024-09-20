@@ -127,7 +127,7 @@ class WahlenServiceTest {
         }
 
         @Test
-        void postingNewWahlenOverridesExistingWithSameId(){
+        void postingNewWahlenOverridesExistingWithSameId() {
             val wahltagID = "wahltagID";
             var searchingForWahltag = new WahltagModel(wahltagID, LocalDate.now().plusMonths(1), "beschreibung1", "1");
 

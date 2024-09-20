@@ -53,7 +53,7 @@ class WahlenServiceTest {
         @Test
         void ifRepoDataFoundThanReturnsRepoDataAndMakesNoCallToRemoteClient() {
             var searchingForWahltag = new WahltagModel("wahltagID", LocalDate.now(), "beschreibung14", "1");
-            List<Wahl> mockedListOfEntities = createWahlEntities();
+            List<Wahl> mockedListOfEntities = createWahlEntities("");
             List<WahlModel> mockedListOfModels = createWahlModels("");
             Mockito.doNothing().when(wahlenValidator).validWahlenCriteriaOrThrow("wahltagID");
 
@@ -73,7 +73,7 @@ class WahlenServiceTest {
         @Test
         void ifRepoDataNotFoundThanReturnsRemoteClientData() {
             var searchingForWahltag = new WahltagModel("wahltagID", LocalDate.now(), "beschreibung15", "1");
-            List<Wahl> mockedListOfEntities = createWahlEntities();
+            List<Wahl> mockedListOfEntities = createWahlEntities("");
             List<WahlModel> mockedListOfModelsIfClientCall = createWahlModels("clientPraefix");
             Mockito.doNothing().when(wahlenValidator).validWahlenCriteriaOrThrow("wahltagID");
 
@@ -98,7 +98,7 @@ class WahlenServiceTest {
         void dataSaved() {
             val wahltagID = "wahltagID";
             List<WahlModel> mockedListOfModels = createWahlModels("");
-            List<Wahl> mockedListOfEntities = createWahlEntities();
+            List<Wahl> mockedListOfEntities = createWahlEntities("");
             val wahlenToWrite = new WahlenWriteModel(wahltagID, mockedListOfModels);
 
             Mockito.when(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(mockedListOfModels)).thenReturn(mockedListOfEntities);
@@ -112,7 +112,7 @@ class WahlenServiceTest {
         void wlsExceptionWhenSavingFailed() {
             val wahltagID = "wahltagID";
             List<WahlModel> mockedListOfModels = createWahlModels("");
-            List<Wahl> mockedListOfEntities = createWahlEntities();
+            List<Wahl> mockedListOfEntities = createWahlEntities("");
             val wahlenToWrite = new WahlenWriteModel(wahltagID, mockedListOfModels);
 
             val mockedRepoSaveException = new RuntimeException("saving failed");
@@ -125,6 +125,48 @@ class WahlenServiceTest {
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.postWahlen(wahlenToWrite)).isSameAs(mockedWlsException);
         }
+
+        @Test
+        void postingNewWahlenOverridesExistingWithSameId(){
+            val wahltagID = "wahltagID";
+            var searchingForWahltag = new WahltagModel(wahltagID, LocalDate.now().plusMonths(1), "beschreibung1", "1");
+
+            List<WahlModel> mockedListOfModels_first = createWahlModels("first");
+            List<Wahl> mockedListOfEntities_first = createWahlEntities("first");
+            val wahlenToWrite_first = new WahlenWriteModel(wahltagID, mockedListOfModels_first);
+            Mockito.when(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(mockedListOfModels_first)).thenReturn(mockedListOfEntities_first);
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postWahlen(wahlenToWrite_first));
+            Mockito.verify(wahlenValidator).validWahlenWriteModelOrThrow(new WahlenWriteModel(wahltagID, mockedListOfModels_first));
+            Mockito.verify(wahlRepository).saveAll(mockedListOfEntities_first);
+            Mockito.doNothing().when(wahlenValidator).validWahlenCriteriaOrThrow(wahltagID);
+            Mockito.when(wahltageService.getWahltagByID(wahltagID)).thenReturn(searchingForWahltag);
+            Mockito.when(wahlRepository.existsByWahltag(searchingForWahltag.wahltag())).thenReturn(true);
+            Mockito.when(wahlRepository.findByWahltagOrderByReihenfolge(searchingForWahltag.wahltag())).thenReturn(mockedListOfEntities_first);
+            Mockito.when(wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(mockedListOfEntities_first)).thenReturn(mockedListOfModels_first);
+
+            val expectedResult_first = wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(mockedListOfEntities_first);
+            val result_first = unitUnderTest.getWahlen(wahltagID);
+            Assertions.assertThatCode(() -> unitUnderTest.getWahlen(wahltagID)).doesNotThrowAnyException();
+            Assertions.assertThat(result_first).isEqualTo(expectedResult_first);
+
+            List<WahlModel> mockedListOfModels_second = createWahlModels("second");
+            List<Wahl> mockedListOfEntities_second = createWahlEntities("second");
+            val wahlenToWrite_second = new WahlenWriteModel(wahltagID, mockedListOfModels_second);
+            Mockito.when(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(mockedListOfModels_second)).thenReturn(mockedListOfEntities_second);
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postWahlen(wahlenToWrite_second));
+            Mockito.verify(wahlenValidator).validWahlenWriteModelOrThrow(new WahlenWriteModel(wahltagID, mockedListOfModels_second));
+            Mockito.verify(wahlRepository).saveAll(mockedListOfEntities_second);
+
+            Mockito.when(wahlRepository.findByWahltagOrderByReihenfolge(searchingForWahltag.wahltag())).thenReturn(mockedListOfEntities_second);
+            Mockito.when(wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(mockedListOfEntities_second)).thenReturn(mockedListOfModels_second);
+
+            val expectedResult_second = wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(mockedListOfEntities_second);
+            val result_second = unitUnderTest.getWahlen(wahltagID);
+            Assertions.assertThatCode(() -> unitUnderTest.getWahlen(wahltagID)).doesNotThrowAnyException();
+            Assertions.assertThat(result_second).isEqualTo(expectedResult_second);
+
+            Mockito.verifyNoInteractions(wahlenClient);
+        }
     }
 
     @Nested
@@ -134,11 +176,11 @@ class WahlenServiceTest {
         void dataSuccessfullyReseted() {
             ArgumentCaptor<List<Wahl>> reqCaptor = ArgumentCaptor.forClass(List.class);
 
-            val wahlenToReset = createWahlEntities();
+            val wahlenToReset = createWahlEntities("");
             Mockito.when(wahlRepository.findAll()).thenReturn(wahlenToReset);
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.resetWahlen());
 
-            val resetedWahlen = createWahlEntities().stream().map(this::resetWahl).toList();
+            val resetedWahlen = createWahlEntities("").stream().map(this::resetWahl).toList();
 
             Mockito.verify(wahlRepository).saveAll(reqCaptor.capture());
             Assertions.assertThat(reqCaptor.getValue()).containsExactlyInAnyOrderElementsOf(resetedWahlen);
@@ -152,10 +194,10 @@ class WahlenServiceTest {
         }
     }
 
-    private List<Wahl> createWahlEntities() {
+    private List<Wahl> createWahlEntities(final String clientPraefix) {
         Wahl wahl1 = new Wahl();
         wahl1.setWahlID("wahlid1");
-        wahl1.setName("wahl1");
+        wahl1.setName(clientPraefix + "wahl1");
         wahl1.setNummer("0");
         wahl1.setFarbe(new Farbe(1, 1, 1));
         wahl1.setWahlart(Wahlart.BAW);
@@ -165,7 +207,7 @@ class WahlenServiceTest {
 
         Wahl wahl2 = new Wahl();
         wahl2.setWahlID("wahlid2");
-        wahl2.setName("wahl2");
+        wahl2.setName(clientPraefix + "wahl2");
         wahl2.setNummer("1");
         wahl2.setFarbe(new Farbe(2, 2, 2));
         wahl2.setWahlart(Wahlart.LTW);
@@ -175,7 +217,7 @@ class WahlenServiceTest {
 
         Wahl wahl3 = new Wahl();
         wahl3.setWahlID("wahlid3");
-        wahl3.setName("wahl3");
+        wahl3.setName(clientPraefix + "wahl3");
         wahl3.setNummer("2");
         wahl3.setFarbe(new Farbe(3, 3, 3));
         wahl3.setWahlart(Wahlart.EUW);

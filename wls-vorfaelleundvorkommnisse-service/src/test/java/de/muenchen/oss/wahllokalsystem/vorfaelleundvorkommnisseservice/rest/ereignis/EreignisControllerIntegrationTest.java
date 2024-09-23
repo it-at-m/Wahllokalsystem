@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereignis;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.EreignisRepository;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.EreignisartEntity;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisModelMapper;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisartModel;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.Authorities;
@@ -114,7 +113,7 @@ public class EreignisControllerIntegrationTest {
 
             val expectedSavedEreignisse = mockedEreignisseWriteDto.ereigniseintraege().stream()
                     .map(ereignisDto -> new Ereignis(wahlbezirkID, ereignisDto.beschreibung(), ereignisDto.uhrzeit(),
-                            EreignisartEntity.fromDto(ereignisDto.ereignisart())))
+                            TestdataFactory.MapEreignisart.ereignisartDtoToEreignisart(ereignisDto.ereignisart())))
                     .toList();
             Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
             Assertions.assertThat(savedEreignisse.size()).isEqualTo(expectedSavedEreignisse.size());
@@ -150,7 +149,7 @@ public class EreignisControllerIntegrationTest {
             val savedEreignisse = ereignisRepository.findByWahlbezirkID(wahlbezirkID);
             val expectedSavedEreignisse = mockedEreignisseWriteDto.ereigniseintraege().stream()
                     .map(ereignisDto -> new Ereignis(wahlbezirkID, ereignisDto.beschreibung(), ereignisDto.uhrzeit(),
-                            EreignisartEntity.fromDto(ereignisDto.ereignisart())))
+                            TestdataFactory.MapEreignisart.ereignisartDtoToEreignisart(ereignisDto.ereignisart())))
                     .toList();
             Assertions.assertThat(savedEreignisseBeforeOverridden.size()).isEqualTo(ereignisListToOverride.size());
             Assertions.assertThat(savedEreignisse.size()).isEqualTo(expectedSavedEreignisse.size());

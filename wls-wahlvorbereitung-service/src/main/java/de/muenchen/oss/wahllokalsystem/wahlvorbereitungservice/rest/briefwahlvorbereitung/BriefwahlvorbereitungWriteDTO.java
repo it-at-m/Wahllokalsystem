@@ -6,5 +6,5 @@ import lombok.Builder;
 
 @Builder
 public record BriefwahlvorbereitungWriteDTO(@NotNull java.util.List<WahlurneDTO> urnenAnzahl) {
-    
+
 }

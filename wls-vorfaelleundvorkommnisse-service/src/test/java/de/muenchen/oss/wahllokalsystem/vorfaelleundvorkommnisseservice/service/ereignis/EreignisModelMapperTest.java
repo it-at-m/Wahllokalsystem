@@ -18,7 +18,7 @@ class EreignisModelMapperTest {
     class ToModel {
 
         @Test
-        void should_return_EreignisModel_when_given_ereignis_entity() {
+        void should_returnEreignisModel_when_givenEreignisEntity() {
             val mockedEreignisEntity = TestdataFactory.CreateEreignisEntity.withData("wahlbezirkID");
             val expectedEreignisModel = TestdataFactory.CreateEreignisModel.fromEntity(mockedEreignisEntity);
 
@@ -27,7 +27,7 @@ class EreignisModelMapperTest {
         }
 
         @Test
-        void should_return_EreignisseModel_when_given_wahlbezirkID_keineVorfaelle_keineVorkommnisse_and_listOfEreignisModel() {
+        void should_returnEreignisseModel_when_givenWahlbezirkIDKeineVorfaelleKeineVorkommnisseAndListOfEreignisModel() {
             val wahlbezirkID = "wahlbezirkID";
             val keineVorfaelle = true;
             val keineVorkommnisse = false;
@@ -47,7 +47,7 @@ class EreignisModelMapperTest {
     class ToEntity {
 
         @Test
-        void should_return_ereignis_entity_when_given_wahlbezirkID_and_EreignisModel() {
+        void should_returnEreignisEntity_when_givenWahlbezirkIDAndEreignisModel() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedEreignisModel = TestdataFactory.CreateEreignisModel.withData();
@@ -58,7 +58,7 @@ class EreignisModelMapperTest {
         }
 
         @Test
-        void should_return_list_of_ereignis_entities_when_given_EreignisseWriteModel() {
+        void should_returnListOfEreignisEntities_when_givenEreignisseWriteModel() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedEreignisModel1 = TestdataFactory.CreateEreignisModel.withData();

@@ -32,7 +32,7 @@ public class EreignisControllerTest {
     class GetEreignisse {
 
         @Test
-        void should_return_WahlbezirkEreignisseDTO_when_given_valid_wahlbezirkid() {
+        void should_returnWahlbezirkEreignisseDTO_when_givenValidWahlbezirkid() {
             val wahlbezirkID = "wahlbezirkID";
             boolean keineVorfaelle = false;
             boolean keineVorkommnisse = true;
@@ -51,7 +51,7 @@ public class EreignisControllerTest {
         }
 
         @Test
-        void should_return_no_content_status_when_no_data_found() {
+        void should_returnNoContentStatus_when_noDataFound() {
             val wahlbezirkID = "wahlbezirkID";
 
             val result = unitUnderTest.getEreignis(wahlbezirkID);
@@ -63,7 +63,7 @@ public class EreignisControllerTest {
     class PostEreignisse {
 
         @Test
-        void should_not_throw_exception_when_new_data_is_saved() {
+        void should_notThrowException_when_newDataSaved() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedEreignisDtoList = List.of(TestdataFactory.CreateEreignisDto.withData());

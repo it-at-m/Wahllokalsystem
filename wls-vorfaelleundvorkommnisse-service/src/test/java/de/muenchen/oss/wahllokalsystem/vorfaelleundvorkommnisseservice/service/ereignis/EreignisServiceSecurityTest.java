@@ -47,7 +47,7 @@ public class EreignisServiceSecurityTest {
     class GetEreignis {
 
         @Test
-        void should_not_throw_exception_when_given_all_authorities() {
+        void should_notThrowException_when_givenAllAuthorities() {
             val wahlbezirkID = "wahlbezirkID";
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_EREIGNISSE);
@@ -57,7 +57,7 @@ public class EreignisServiceSecurityTest {
         }
 
         @Test
-        void should_throw_AccessDeniedException_when_bezirkIDPermissionEvaluator_returns_false() {
+        void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
             val wahlbezirkID = "wahlbezirkID";
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_EREIGNISSE);
@@ -68,7 +68,7 @@ public class EreignisServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void should_throw_AccessDeniedException_when_any_authority_missing(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val wahlbezirkID = "wahlbezirkID";
@@ -86,7 +86,7 @@ public class EreignisServiceSecurityTest {
     class SetEreignis {
 
         @Test
-        void should_not_throw_exception_when_given_all_authorities() {
+        void should_notThrowException_when_givenAllAuthorities() {
             val wahlbezirkID = "wahlbezirkID";
             val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData());
             val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData(wahlbezirkID, mockedEreignisModelList);
@@ -98,7 +98,7 @@ public class EreignisServiceSecurityTest {
         }
 
         @Test
-        void should_throw_AccessDeniedException_when_bezirkIDPermissionEvaluator_returns_false() {
+        void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
             val wahlbezirkID = "wahlbezirkID";
             val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData());
             val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData(wahlbezirkID, mockedEreignisModelList);
@@ -111,7 +111,7 @@ public class EreignisServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} {1} missing")
         @MethodSource("getMissingServiceAuthoritiesVariations")
-        void should_throw_AccessDeniedException_when_service_authorities_missing(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwAccessDeniedException_whenServiceAuthoritiesMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(ArrayUtils.addAll(Authorities.ALL_REPO_AUTHORITIES_SET_EREIGNISSE, argumentsAccessor.get(0, String[].class)));
             val wahlbezirkID = "wahlbezirkID";
             val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData());
@@ -126,7 +126,7 @@ public class EreignisServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} {1} missing")
         @MethodSource("getMissingRepositoryAuthoritiesVariations")
-        void should_throw_TechnischeWlsException_when_repository_authorities_missing(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwTechnischeWlsException_when_repositoryAuthoritiesMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(ArrayUtils.addAll(Authorities.ALL_SERVICE_AUTHORITIES_SET_EREIGNISSE, argumentsAccessor.get(0, String[].class)));
 
             val wahlbezirkID = "wahlbezirkID";

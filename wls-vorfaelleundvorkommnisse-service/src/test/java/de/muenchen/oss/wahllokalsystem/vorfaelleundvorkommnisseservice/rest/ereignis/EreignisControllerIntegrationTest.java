@@ -63,7 +63,7 @@ public class EreignisControllerIntegrationTest {
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_GET_EREIGNISSE, Authorities.REPOSITORY_READ_EREIGNISSE })
         @Transactional
-        void should_return_empty_response_when_no_data_found() throws Exception {
+        void should_returnEmptyResponse_when_noDataFound() throws Exception {
             val request = MockMvcRequestBuilders.get("/businessActions/ereignisse/wahlbezirkID");
             val response = api.perform(request).andExpect(status().isNoContent()).andReturn();
 
@@ -73,7 +73,7 @@ public class EreignisControllerIntegrationTest {
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_GET_EREIGNISSE, Authorities.REPOSITORY_READ_EREIGNISSE, Authorities.REPOSITORY_WRITE_EREIGNISSE })
         @Transactional
-        void should_return_persisted_WahlbezirkEreignisseDTO_when_data_found() throws Exception {
+        void should_returnPersistedWahlbezirkEreignisseDTO_when_dataFound() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withEreignisart(EreignisartModel.VORFALL));
@@ -96,7 +96,7 @@ public class EreignisControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_POST_EREIGNISSE, Authorities.REPOSITORY_DELETE_EREIGNISSE, Authorities.REPOSITORY_WRITE_EREIGNISSE })
-        void should_save_list_of_ereignis_entities_when_new_data_successfully_saved() throws Exception {
+        void should_saveListOfEreignisEntities_when_newDataSuccessfullySaved() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedEreignisDtoList = List.of(
@@ -124,7 +124,7 @@ public class EreignisControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_POST_EREIGNISSE, Authorities.REPOSITORY_DELETE_EREIGNISSE, Authorities.REPOSITORY_WRITE_EREIGNISSE })
-        void should_override_old_list_of_ereignis_entities_when_new_data_successfully_saved() throws Exception {
+        void should_overrideOldListOfEreignisEntities_when_newDataSuccessfullySaved() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData());

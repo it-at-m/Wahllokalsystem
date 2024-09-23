@@ -44,7 +44,7 @@ public class EreignisServiceTest {
     class GetEreignisse {
 
         @Test
-        void should_return_EreignisseModel_when_given_valid_wahlbezirkid() {
+        void should_returnEreignisseModel_when_givenValidWahlbezirkid() {
             val wahlbezirkID = "wahlbezirkID";
             val keineVorfaelle = false;
             val keineVorkommnisse = true;
@@ -67,7 +67,7 @@ public class EreignisServiceTest {
         }
 
         @Test
-        void should_return_empty_response_when_no_data_found() {
+        void should_returnEmptyResponse_when_noDataFound() {
             val wahlbezirkID = "wahlbezirkID";
 
             Mockito.when(ereignisRepository.findByWahlbezirkID(wahlbezirkID)).thenReturn(Collections.emptyList());
@@ -81,7 +81,7 @@ public class EreignisServiceTest {
     class SetEreignisse {
 
         @Test
-        void should_not_throw_exception_when_new_data_is_saved() {
+        void should_notThrowException_when_newDataIsSaved() {
             val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData());
             val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData("wahlbezirkID", mockedEreignisModelList);
             val mockedEreignisList = TestdataFactory.CreateEreignisEntity.listFromModel(mockedEreignisseWriteModel);
@@ -96,7 +96,7 @@ public class EreignisServiceTest {
         }
 
         @Test
-        void should_throw_WlsException_when_saving_failed() {
+        void should_throwWlsException_when_savingFailed() {
             val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData());
             val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData("wahlbezirkID", mockedEreignisModelList);
             val mockedEreignisList = TestdataFactory.CreateEreignisEntity.listFromModel(mockedEreignisseWriteModel);

@@ -17,12 +17,12 @@ class EreignisDTOMapperTest {
     class ToDto {
 
         @Test
-        void should_return_null_when_given_null() {
+        void should_returnNull_when_givenNull() {
             Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
         }
 
         @Test
-        void should_return_WahlbezirkEreignisseDTO_when_given_EreignisseModel() {
+        void should_returnWahlbezirkEreignisseDTO_when_givenEreignisseModel() {
             val mockedListOfEreignisModel = List.of(
                     TestdataFactory.CreateEreignisModel.withEreignisart(EreignisartModel.VORFALL),
                     TestdataFactory.CreateEreignisModel.withEreignisart(EreignisartModel.VORKOMMNIS));
@@ -38,7 +38,7 @@ class EreignisDTOMapperTest {
     class ToModel {
 
         @Test
-        void should_return_EreignisseModel_when_given_ereignisseWriteDTO() {
+        void should_returnEreignisseModel_when_givenEreignisseWriteDTO() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedListOfEreignisDto = List.of(

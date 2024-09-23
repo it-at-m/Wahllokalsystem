@@ -45,7 +45,7 @@ public class EreignisController {
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
                     ),
                     @ApiResponse(
-                            responseCode = "500", description = "Probleme bei der Kommunikation mit dem externen System von dem die Daten importiert werden",
+                            responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
                             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
                     )
             }
@@ -68,7 +68,7 @@ public class EreignisController {
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
                     ),
                     @ApiResponse(
-                            responseCode = "500", description = "Probleme bei der Kommunikation mit dem externen System von dem die Daten importiert werden",
+                            responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
                             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
                     )
             }

@@ -21,12 +21,12 @@ class UrnenwahlSchliessungsUhrzeitModelMapperTest {
         @Test
         void isMapped() {
             val wahlbezirkID = "wahlbezirkID";
-            val urnenwahlSchliessungsUhrzeit = LocalDateTime.now();
-            val entityToMap = new UrnenwahlSchliessungsUhrzeit(wahlbezirkID, urnenwahlSchliessungsUhrzeit);
+            val schliessungsuhrzeit = LocalDateTime.now();
+            val entityToMap = new UrnenwahlSchliessungsUhrzeit(wahlbezirkID, schliessungsuhrzeit);
 
             val result = unitUnderTest.toModel(entityToMap);
 
-            val expectedResult = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, urnenwahlSchliessungsUhrzeit);
+            val expectedResult = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, schliessungsuhrzeit);
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
@@ -38,13 +38,13 @@ class UrnenwahlSchliessungsUhrzeitModelMapperTest {
         @Test
         void isMapped() {
             val wahlbezirkID = "wahlbezirkID";
-            val urnenwahlSchliessungsUhrzeit = LocalDateTime.now();
+            val schliessungsuhrzeit = LocalDateTime.now();
 
-            val modelToMap = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, urnenwahlSchliessungsUhrzeit);
+            val modelToMap = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, schliessungsuhrzeit);
 
             val result = unitUnderTest.toEntity(modelToMap);
 
-            val expectedResult = new UrnenwahlSchliessungsUhrzeit(wahlbezirkID, urnenwahlSchliessungsUhrzeit);
+            val expectedResult = new UrnenwahlSchliessungsUhrzeit(wahlbezirkID, schliessungsuhrzeit);
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }

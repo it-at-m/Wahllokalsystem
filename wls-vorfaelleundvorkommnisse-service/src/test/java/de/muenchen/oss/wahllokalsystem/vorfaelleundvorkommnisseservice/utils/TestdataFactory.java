@@ -49,7 +49,7 @@ public class TestdataFactory {
         }
     }
 
-    public static class CreateEreignisseModel {
+    public static class CreateWahlbezirkEreignisseModel {
 
         public static WahlbezirkEreignisseModel withData(String wahlbezirkID, boolean keineVorfaelle, boolean keineVorkommnisse,
                 List<EreignisModel> ereignisModelList) {

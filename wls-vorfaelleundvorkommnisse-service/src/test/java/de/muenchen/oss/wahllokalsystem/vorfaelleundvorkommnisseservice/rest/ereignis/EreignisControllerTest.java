@@ -38,7 +38,7 @@ public class EreignisControllerTest {
             boolean keineVorkommnisse = true;
 
             val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withEreignisart(EreignisartModel.VORFALL));
-            val mockedEreignisseModel = TestdataFactory.CreateEreignisseModel.withData(wahlbezirkID, keineVorfaelle, keineVorkommnisse,
+            val mockedEreignisseModel = TestdataFactory.CreateWahlbezirkEreignisseModel.withData(wahlbezirkID, keineVorfaelle, keineVorkommnisse,
                     mockedEreignisModelList);
             val expectedWahlbezirkEreignisseDto = TestdataFactory.CreateWahlbezirkEreignisseDto.fromModel(mockedEreignisseModel);
 

@@ -26,7 +26,7 @@ class EreignisDTOMapperTest {
             val mockedListOfEreignisModel = List.of(
                     TestdataFactory.CreateEreignisModel.withEreignisart(EreignisartModel.VORFALL),
                     TestdataFactory.CreateEreignisModel.withEreignisart(EreignisartModel.VORKOMMNIS));
-            val mockedEreignisseModel = TestdataFactory.CreateEreignisseModel.withData("wahlbezirkID", false, false, mockedListOfEreignisModel);
+            val mockedEreignisseModel = TestdataFactory.CreateWahlbezirkEreignisseModel.withData("wahlbezirkID", false, false, mockedListOfEreignisModel);
             val expectedEreignisseDTO = TestdataFactory.CreateWahlbezirkEreignisseDto.fromModel(mockedEreignisseModel);
 
             val result = unitUnderTest.toDTO(mockedEreignisseModel);

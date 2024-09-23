@@ -17,61 +17,77 @@ class EreignisModelMapperTest {
     @Nested
     class ToModel {
 
-        @Test
-        void should_returnEreignisModel_when_givenEreignisEntity() {
-            val mockedEreignisEntity = TestdataFactory.CreateEreignisEntity.withData("wahlbezirkID");
-            val expectedEreignisModel = TestdataFactory.CreateEreignisModel.fromEntity(mockedEreignisEntity);
+        @Nested
+        class ToEreignisModel {
 
-            val result = unitUnderTest.toModel(mockedEreignisEntity);
-            Assertions.assertThat(result).isEqualTo(expectedEreignisModel);
+            @Test
+            void should_returnEreignisModel_when_givenEreignisEntity() {
+                val mockedEreignisEntity = TestdataFactory.CreateEreignisEntity.withData("wahlbezirkID");
+                val expectedEreignisModel = TestdataFactory.CreateEreignisModel.fromEntity(mockedEreignisEntity);
+
+                val result = unitUnderTest.toModel(mockedEreignisEntity);
+                Assertions.assertThat(result).isEqualTo(expectedEreignisModel);
+            }
         }
 
-        @Test
-        void should_returnEreignisseModel_when_givenWahlbezirkIDKeineVorfaelleKeineVorkommnisseAndListOfEreignisModel() {
-            val wahlbezirkID = "wahlbezirkID";
-            val keineVorfaelle = true;
-            val keineVorkommnisse = false;
+        @Nested
+        class ToWahlbezirkEreignisseModel {
 
-            val mockedListOfEreignisModel = List.of(
-                    TestdataFactory.CreateEreignisModel.withEreignisart(EreignisartModel.VORFALL),
-                    TestdataFactory.CreateEreignisModel.withEreignisart(EreignisartModel.VORKOMMNIS));
-            val expectedEreignisseModel = TestdataFactory.CreateEreignisseModel.withData(wahlbezirkID, keineVorfaelle, keineVorkommnisse,
-                    mockedListOfEreignisModel);
+            @Test
+            void should_returnWahlbezirkEreignisseModel_when_givenWahlbezirkIDKeineVorfaelleKeineVorkommnisseAndListOfEreignisModel() {
+                val wahlbezirkID = "wahlbezirkID";
+                val keineVorfaelle = true;
+                val keineVorkommnisse = false;
 
-            val result = unitUnderTest.toEreignisseModel(wahlbezirkID, keineVorfaelle, keineVorkommnisse, mockedListOfEreignisModel);
-            Assertions.assertThat(result).isEqualTo(expectedEreignisseModel);
+                val mockedListOfEreignisModel = List.of(
+                        TestdataFactory.CreateEreignisModel.withEreignisart(EreignisartModel.VORFALL),
+                        TestdataFactory.CreateEreignisModel.withEreignisart(EreignisartModel.VORKOMMNIS));
+                val expectedEreignisseModel = TestdataFactory.CreateWahlbezirkEreignisseModel.withData(wahlbezirkID, keineVorfaelle, keineVorkommnisse,
+                        mockedListOfEreignisModel);
+
+                val result = unitUnderTest.toEreignisseModel(wahlbezirkID, keineVorfaelle, keineVorkommnisse, mockedListOfEreignisModel);
+                Assertions.assertThat(result).isEqualTo(expectedEreignisseModel);
+            }
         }
     }
 
     @Nested
     class ToEntity {
 
-        @Test
-        void should_returnEreignisEntity_when_givenWahlbezirkIDAndEreignisModel() {
-            val wahlbezirkID = "wahlbezirkID";
+        @Nested
+        class ToEreignisEntity {
 
-            val mockedEreignisModel = TestdataFactory.CreateEreignisModel.withData();
-            val expectedEreignisEntity = TestdataFactory.CreateEreignisEntity.fromModel(mockedEreignisModel, wahlbezirkID);
+            @Test
+            void should_returnEreignisEntity_when_givenWahlbezirkIDAndEreignisModel() {
+                val wahlbezirkID = "wahlbezirkID";
 
-            val result = unitUnderTest.toEntity(mockedEreignisModel, wahlbezirkID);
-            Assertions.assertThat(result).isEqualTo(expectedEreignisEntity);
+                val mockedEreignisModel = TestdataFactory.CreateEreignisModel.withData();
+                val expectedEreignisEntity = TestdataFactory.CreateEreignisEntity.fromModel(mockedEreignisModel, wahlbezirkID);
+
+                val result = unitUnderTest.toEntity(mockedEreignisModel, wahlbezirkID);
+                Assertions.assertThat(result).isEqualTo(expectedEreignisEntity);
+            }
         }
 
-        @Test
-        void should_returnListOfEreignisEntities_when_givenEreignisseWriteModel() {
-            val wahlbezirkID = "wahlbezirkID";
 
-            val mockedEreignisModel1 = TestdataFactory.CreateEreignisModel.withData();
-            val mockedEreignisModel2 = TestdataFactory.CreateEreignisModel.withData();
-            val mockedListOfEreignisModel = List.of(mockedEreignisModel1, mockedEreignisModel2);
-            val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData(wahlbezirkID, mockedListOfEreignisModel);
-            val expectedListOfEreignis = List.of(
-                    TestdataFactory.CreateEreignisEntity.fromModel(mockedEreignisModel1, wahlbezirkID),
-                    TestdataFactory.CreateEreignisEntity.fromModel(mockedEreignisModel2, wahlbezirkID));
+        @Nested
+        class ToListOfEreignisEntity {
 
-            val result = unitUnderTest.toEntity(mockedEreignisseWriteModel);
-            Assertions.assertThat(result).isEqualTo(expectedListOfEreignis);
+            @Test
+            void should_returnListOfEreignisEntities_when_givenEreignisseWriteModel() {
+                val wahlbezirkID = "wahlbezirkID";
+
+                val mockedEreignisModel1 = TestdataFactory.CreateEreignisModel.withData();
+                val mockedEreignisModel2 = TestdataFactory.CreateEreignisModel.withData();
+                val mockedListOfEreignisModel = List.of(mockedEreignisModel1, mockedEreignisModel2);
+                val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData(wahlbezirkID, mockedListOfEreignisModel);
+                val expectedListOfEreignis = List.of(
+                        TestdataFactory.CreateEreignisEntity.fromModel(mockedEreignisModel1, wahlbezirkID),
+                        TestdataFactory.CreateEreignisEntity.fromModel(mockedEreignisModel2, wahlbezirkID));
+
+                val result = unitUnderTest.toEntity(mockedEreignisseWriteModel);
+                Assertions.assertThat(result).isEqualTo(expectedListOfEreignis);
+            }
         }
     }
-
 }

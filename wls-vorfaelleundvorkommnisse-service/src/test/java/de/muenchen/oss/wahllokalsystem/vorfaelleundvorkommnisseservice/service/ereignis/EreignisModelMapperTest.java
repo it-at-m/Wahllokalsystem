@@ -69,7 +69,6 @@ class EreignisModelMapperTest {
             }
         }
 
-
         @Nested
         class ToListOfEreignisEntity {
 

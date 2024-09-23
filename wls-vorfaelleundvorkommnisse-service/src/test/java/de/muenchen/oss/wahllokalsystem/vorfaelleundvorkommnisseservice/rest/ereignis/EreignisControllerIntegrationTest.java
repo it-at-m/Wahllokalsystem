@@ -118,8 +118,7 @@ public class EreignisControllerIntegrationTest {
             Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
             Assertions.assertThat(savedEreignisse.size()).isEqualTo(expectedSavedEreignisse.size());
             Assertions.assertThat(savedEreignisse).allSatisfy(ereignis -> {
-                Assertions.assertThat(ereignis.getClass().equals(Ereignis.class));
-                Assertions.assertThat(ereignis.getWahlbezirkID().equals(wahlbezirkID));
+                Assertions.assertThat(ereignis.getWahlbezirkID()).isEqualTo(wahlbezirkID);
             });
         }
 

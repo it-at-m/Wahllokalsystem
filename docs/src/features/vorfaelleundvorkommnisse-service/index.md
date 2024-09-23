@@ -10,3 +10,7 @@ Der Service hat keine Abhängigkeiten zu anderen Services.
 
 - Verwalten und Übermitteln von Vorfällen und Vorkommnissen
 - Laden und Anzeigen besonderer Ereignisse
+
+## Fachliches Datenmodell
+
+![Image of Ereignisse data model](/vorfaelleundvorkommnisse/fachliches_datenmodell_ereignisse.png) 

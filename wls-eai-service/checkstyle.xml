@@ -12,6 +12,10 @@
     <module name="BeforeExecutionExclusionFileFilter">
         <property name="fileNamePattern" value="module\-info\.java$"/>
     </module>
+    <module name="RegexpMultiline">
+        <property name="message" value="Blank line at start of method should be removed"/>
+        <property name="format" value="\(.*\)\s*\{\s*\n\s*\n"/>
+    </module>
 
     <module name="TreeWalker">
         <module name="SuppressionCommentFilter">

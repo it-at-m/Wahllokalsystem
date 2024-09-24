@@ -2,18 +2,16 @@ package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.
 
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.TestConstants;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.EreignisRepository;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisModel;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisService;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.TestdataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 import lombok.val;
+import org.apache.commons.lang3.ArrayUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -40,9 +38,6 @@ public class EreignisServiceSecurityTest {
     @Autowired
     EreignisService unitUnderTest;
 
-    @Autowired
-    EreignisRepository ereignisRepository;
-
     @BeforeEach
     void setup() {
         SecurityContextHolder.clearContext();
@@ -52,7 +47,7 @@ public class EreignisServiceSecurityTest {
     class GetEreignis {
 
         @Test
-        void should_not_throw_exception_when_given_all_authorities() {
+        void should_notThrowException_when_givenAllAuthorities() {
             val wahlbezirkID = "wahlbezirkID";
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_EREIGNISSE);
@@ -62,7 +57,7 @@ public class EreignisServiceSecurityTest {
         }
 
         @Test
-        void should_throw_AccessDeniedException_when_bezirkIDPermissionEvaluator_missing() {
+        void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
             val wahlbezirkID = "wahlbezirkID";
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_EREIGNISSE);
@@ -73,7 +68,7 @@ public class EreignisServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void should_throw_AccessDeniedException_when_any_authority_missing(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val wahlbezirkID = "wahlbezirkID";
@@ -91,53 +86,59 @@ public class EreignisServiceSecurityTest {
     class SetEreignis {
 
         @Test
-        void should_not_throw_exception_when_given_all_authorities() {
+        void should_notThrowException_when_givenAllAuthorities() {
             val wahlbezirkID = "wahlbezirkID";
-            List<EreignisModel> ereignisModelList = new ArrayList<>();
-            ereignisModelList.add(TestdataFactory.createEreignisModelWithData());
-            val ereignisseWriteModel = TestdataFactory.createEreignisseWriteModelWithData(wahlbezirkID, ereignisModelList);
+            val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData());
+            val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData(wahlbezirkID, mockedEreignisModelList);
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_EREIGNISSE);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postEreignis(ereignisseWriteModel));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postEreignis(mockedEreignisseWriteModel));
         }
 
         @Test
-        void should_throw_AccessDeniedException_when_bezirkIDPermissionEvaluator_missing() {
+        void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
             val wahlbezirkID = "wahlbezirkID";
-            List<EreignisModel> ereignisModelList = new ArrayList<>();
-            ereignisModelList.add(TestdataFactory.createEreignisModelWithData());
-            val ereignisseWriteModel = TestdataFactory.createEreignisseWriteModelWithData(wahlbezirkID, ereignisModelList);
+            val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData());
+            val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData(wahlbezirkID, mockedEreignisModelList);
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_EREIGNISSE);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignis(ereignisseWriteModel)).isInstanceOf(AccessDeniedException.class);
+            Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignis(mockedEreignisseWriteModel)).isInstanceOf(AccessDeniedException.class);
         }
 
-        @Test
-        void should_throw_AccessDeniedException_when_service_authorities_missing() {
-            SecurityUtils.runWith(Authorities.ALL_REPO_AUTHORITIES_SET_EREIGNISSE);
+        @ParameterizedTest(name = "{index} {1} missing")
+        @MethodSource("getMissingServiceAuthoritiesVariations")
+        void should_throwAccessDeniedException_whenServiceAuthoritiesMissing(final ArgumentsAccessor argumentsAccessor) {
+            SecurityUtils.runWith(ArrayUtils.addAll(Authorities.ALL_REPO_AUTHORITIES_SET_EREIGNISSE, argumentsAccessor.get(0, String[].class)));
             val wahlbezirkID = "wahlbezirkID";
-            List<EreignisModel> ereignisModelList = new ArrayList<>();
-            ereignisModelList.add(TestdataFactory.createEreignisModelWithData());
-            val ereignisseWriteModel = TestdataFactory.createEreignisseWriteModelWithData(wahlbezirkID, ereignisModelList);
+            val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData());
+            val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData(wahlbezirkID, mockedEreignisModelList);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignis(ereignisseWriteModel)).isInstanceOf(AccessDeniedException.class);
+            Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignis(mockedEreignisseWriteModel)).isInstanceOf(AccessDeniedException.class);
         }
 
-        @Test
-        void should_throw_TechnischeWlsException_when_repository_authorities_missing() {
-            SecurityUtils.runWith(Authorities.ALL_SERVICE_AUTHORITIES_SET_EREIGNISSE);
+        private static Stream<Arguments> getMissingServiceAuthoritiesVariations() {
+            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_SERVICE_AUTHORITIES_SET_EREIGNISSE);
+        }
+
+        @ParameterizedTest(name = "{index} {1} missing")
+        @MethodSource("getMissingRepositoryAuthoritiesVariations")
+        void should_throwTechnischeWlsException_when_repositoryAuthoritiesMissing(final ArgumentsAccessor argumentsAccessor) {
+            SecurityUtils.runWith(ArrayUtils.addAll(Authorities.ALL_SERVICE_AUTHORITIES_SET_EREIGNISSE, argumentsAccessor.get(0, String[].class)));
 
             val wahlbezirkID = "wahlbezirkID";
-            List<EreignisModel> ereignisModelList = new ArrayList<>();
-            ereignisModelList.add(TestdataFactory.createEreignisModelWithData());
-            val ereignisseWriteModel = TestdataFactory.createEreignisseWriteModelWithData(wahlbezirkID, ereignisModelList);
+            val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData());
+            val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData(wahlbezirkID, mockedEreignisModelList);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignis(ereignisseWriteModel)).isInstanceOf(TechnischeWlsException.class);
+            Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignis(mockedEreignisseWriteModel)).isInstanceOf(TechnischeWlsException.class);
+        }
+
+        private static Stream<Arguments> getMissingRepositoryAuthoritiesVariations() {
+            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_REPO_AUTHORITIES_SET_EREIGNISSE);
         }
     }
 }

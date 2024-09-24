@@ -19,7 +19,7 @@ public class UrnenwahlSchliessungsUhrzeitValidator {
     }
 
     public void validModelToSetOrThrow(final UrnenwahlSchliessungsUhrzeitModel modelToValidate) {
-        if (modelToValidate == null || StringUtils.isEmpty(modelToValidate.wahlbezirkID()) || modelToValidate.urnenwahlSchliessungsUhrzeit() == null) {
+        if (modelToValidate == null || StringUtils.isEmpty(modelToValidate.wahlbezirkID()) || modelToValidate.schliessungsuhrzeit() == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG);
         }
     }

@@ -90,7 +90,7 @@ class UrnenwahlSchliessungsUhrzeitValidatorTest {
 
         @Test
         void exceptionWhenUrnenwahlSchliessungsUhrzeitIsNull() {
-            val invalidModel = initValid().urnenwahlSchliessungsUhrzeit(null).build();
+            val invalidModel = initValid().schliessungsuhrzeit(null).build();
 
             val mockedFactoryException = FachlicheWlsException.withCode("000").buildWithMessage("error");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG)).thenReturn(mockedFactoryException);
@@ -99,7 +99,7 @@ class UrnenwahlSchliessungsUhrzeitValidatorTest {
         }
 
         private UrnenwahlSchliessungsUhrzeitModel.UrnenwahlSchliessungsUhrzeitModelBuilder initValid() {
-            return UrnenwahlSchliessungsUhrzeitModel.builder().wahlbezirkID("wahlbezirkID").urnenwahlSchliessungsUhrzeit(LocalDateTime.now());
+            return UrnenwahlSchliessungsUhrzeitModel.builder().wahlbezirkID("wahlbezirkID").schliessungsuhrzeit(LocalDateTime.now());
         }
     }
 

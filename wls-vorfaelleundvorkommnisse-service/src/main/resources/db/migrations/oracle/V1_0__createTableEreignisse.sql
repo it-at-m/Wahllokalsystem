@@ -1,4 +1,4 @@
-create TABLE Ereignis
+CREATE TABLE Ereignis
 (
     id                            VARCHAR(36) NOT NULL,
     wahlbezirkID                  VARCHAR(1024) NOT NULL,

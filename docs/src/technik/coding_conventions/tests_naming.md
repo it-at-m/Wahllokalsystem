@@ -31,19 +31,19 @@ public interface EreignisModelMapper {
 }
 ```
 
-```java 
+```java{2-3,5-6,11-12} 
 class EreignisModelMapperTest {
   @Nested
-  class ToEntity {     // Name der zu testenden Methode
+  class ToEntity {                      // Name der zu testenden Methode
     
      @Nested
-     class ToEreignisEntity {     // nested overload 1
+     class ToEreignisEntity {           // nested overload 1
          @Test
          void should_returnEreignis_when_givenEreignisModel() {}
      }
   
      @Nested
-     class ToListOfEreignisEntity {       // nested overload 2
+     class ToListOfEreignisEntity {     // nested overload 2
          @Test
          void should_returnListOfEreignis_when_givenEreignisseWriteModel() {}
      }

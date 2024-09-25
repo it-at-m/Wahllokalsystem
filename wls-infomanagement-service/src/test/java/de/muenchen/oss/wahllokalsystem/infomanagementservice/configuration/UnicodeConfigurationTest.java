@@ -61,6 +61,6 @@ class UnicodeConfigurationTest {
         // Check persisted entity contains a composed string via JPA repository.
         val konfiguration = konfigurationRepository.findById("WILLKOMMENSTEXT").orElseThrow();
         Assertions.assertThat(konfiguration.getBeschreibung()).isEqualTo(TEXT_ATTRIBUTE_COMPOSED);
-        Assertions.assertThat(konfigurationDTO.beschreibung()).hasSize(TEXT_ATTRIBUTE_COMPOSED.length());
+        Assertions.assertThat(konfiguration.getBeschreibung()).hasSize(TEXT_ATTRIBUTE_COMPOSED.length());
     }
 }

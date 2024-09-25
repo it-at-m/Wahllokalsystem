@@ -2,8 +2,13 @@
 
 ## Kontext
 
-Damit der Code übersichtlicher und einheitlicher ist, sollen Naming Conventions eingesetzt werden. Damit wird für Tests gewährleistet, dass deren Inhalt klar ist, ohne den Code lesen zu müssen.
-
+Aktuell gibt es keine Struktur oder Vorgaben bei der Benennung von Tests. Die meisten Namen sind sehr kurz gehalten und wenig aussagekräftig, wie zum Beispiel:
+````java
+void dataFound() {}
+void noDataFound() {}
+void serviceCalled() {}
+````
+Damit der Gesamtcode im Projekt übersichtlicher und einheitlicher ist, sollen Naming Conventions eingesetzt werden. Grundlage für die Einführung sind unter anderem auch sich wiederholende Tests mit gleichem Inhalt in den verschiedenen Services. So wird gewährleistet, dass deren Kontext schneller klar ist, ohne den Code lesen zu müssen und die Wartung und Erweiterung des Codes wird erleichtert.
 ## Entscheidung
 
 Die Bezeichnungen sollen dem Schema `should_<result>_when_<input>` folgen, wobei Result (= ExpectedBehavior, bzw. erwartetes Ergebnis) und Input (= StateUnderTest, bzw. zu testender Zustand) in CamelCase gehalten werden. Dem Schema entsprechend sind die Testnamen auch auf englisch zu formulieren.
@@ -20,18 +25,9 @@ void should_throwAccessDeniedException_whenAuthoritiesMissing() {}
 ```
 
 ##### Gruppierung überladener Methoden:
-Vereinfachter Pseudocode! Beispiel aus Vorfälle und Vorkommnisse Service
-```java
-@Mapper
-public interface EreignisModelMapper {
-
-  Ereignis toEntity(EreignisModel model);    
-    
-  List<Ereignis> toEntity(EreignisseWriteModel model);  
-}
-```
-
-```java{2-3,5-6,11-12} 
+Vereinfachter Pseudocode! Beispiel aus dem Vorfälle und Vorkommnisse Service.
+::: code-group
+```java{2-3,5-6,11-12} [MapperTest.java]
 class EreignisModelMapperTest {
   @Nested
   class ToEntity {                      // Name der zu testenden Methode
@@ -51,6 +47,16 @@ class EreignisModelMapperTest {
 }
 ```
 
+```java [Mapper.java]
+@Mapper
+public interface EreignisModelMapper {
+
+  Ereignis toEntity(EreignisModel model);    
+    
+  List<Ereignis> toEntity(EreignisseWriteModel model);  
+}
+```
+:::
 ## Konsequenzen
 
 ### positiv

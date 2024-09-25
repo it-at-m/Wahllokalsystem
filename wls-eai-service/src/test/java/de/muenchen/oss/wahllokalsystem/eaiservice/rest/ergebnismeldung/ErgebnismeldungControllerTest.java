@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung;
 
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.WahlergebnisController;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.service.ergebnismeldung.ErgebnismeldungService;
 import lombok.val;
@@ -18,7 +19,7 @@ class ErgebnismeldungControllerTest {
     ErgebnismeldungService ergebnismeldungService;
 
     @InjectMocks
-    ErgebnismeldungController unitUnderTest;
+    WahlergebnisController unitUnderTest;
 
     @Nested
     class SaveErgebnismeldung {

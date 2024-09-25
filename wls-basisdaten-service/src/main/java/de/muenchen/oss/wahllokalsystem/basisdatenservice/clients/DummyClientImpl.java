@@ -89,7 +89,6 @@ public class DummyClientImpl
 
     @Override
     public BasisdatenModel loadBasisdaten(WahltagWithNummer wahltagWithNummer) throws WlsException {
-
         return new BasisdatenModel(
                 Set.of(new BasisstrukturdatenModel("wahlID1", "szgID", "wahlbezirkID1_1", wahltagWithNummer.wahltag()),
                         new BasisstrukturdatenModel("wahlID1", "szgID", "wahlbezirkID1_2", wahltagWithNummer.wahltag()),

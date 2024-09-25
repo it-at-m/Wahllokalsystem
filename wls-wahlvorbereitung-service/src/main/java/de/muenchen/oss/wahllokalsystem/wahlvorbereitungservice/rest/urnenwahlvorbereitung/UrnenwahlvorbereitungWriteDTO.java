@@ -16,7 +16,7 @@ public record UrnenwahlvorbereitungWriteDTO(@Schema(requiredMode = Schema.Requir
                                             @NotNull @Size(min = 1) List<WahlurneDTO> urnenAnzahl) {
 
     public UrnenwahlvorbereitungWriteDTO(final long anzahlWahlkabinen, final long anzahlWahltische, final long anzahlNebenraeume,
-            final List<WahlurneDTO> urnenAnzahl) {
+        final List<WahlurneDTO> urnenAnzahl) {
         this.anzahlWahlkabinen = anzahlWahlkabinen;
         this.anzahlWahltische = anzahlWahltische;
         this.anzahlNebenraeume = anzahlNebenraeume;

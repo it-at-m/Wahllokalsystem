@@ -25,7 +25,6 @@ public class KonfigurierterWahltagClientImpl implements KonfigurierterWahltagCli
 
     @Override
     public KonfigurierterWahltagModel getKonfigurierterWahltag() throws WlsException {
-
         final KonfigurierterWahltagDTO konfigurierterWahltagDTO;
         try {
             konfigurierterWahltagDTO = konfigurierterWahltagControllerApi.getKonfigurierterWahltag();

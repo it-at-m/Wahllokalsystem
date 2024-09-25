@@ -50,49 +50,49 @@ public class ErgebnismeldungMapperTest {
 
             val result = unitUnderTest.toEntity(entityToMap);
 
-            val aWerte2 = new AWerte();
-            aWerte2.setA1(3L);
-            aWerte2.setA2(2L);
+            val expectedAWerte = new AWerte();
+            expectedAWerte.setA1(3L);
+            expectedAWerte.setA2(2L);
 
-            val bWerte2 = new BWerte();
-            bWerte2.setB(4L);
-            bWerte2.setB1(3L);
-            bWerte2.setB2(2L);
+            val expectedBWerte = new BWerte();
+            expectedBWerte.setB(4L);
+            expectedBWerte.setB1(3L);
+            expectedBWerte.setB2(2L);
 
-            val wahlbriefeWerte2 = new WahlbriefeWerte();
-            wahlbriefeWerte2.setZurueckgewiesenGesamt(3L);
+            val expectedWahlbriefeWerte = new WahlbriefeWerte();
+            expectedWahlbriefeWerte.setZurueckgewiesenGesamt(3L);
 
-            val ungueltigeStimmzettel2 = new UngueltigeStimmzettel();
-            ungueltigeStimmzettel2.setAnzahl(4L);
-            ungueltigeStimmzettel2.setStimmenart("test1");
-            ungueltigeStimmzettel2.setWahlvorschlagID("wahlvorschlagID1");
+            val expectedUngueltigeStimmzettel1 = new UngueltigeStimmzettel();
+            expectedUngueltigeStimmzettel1.setAnzahl(4L);
+            expectedUngueltigeStimmzettel1.setStimmenart("test1");
+            expectedUngueltigeStimmzettel1.setWahlvorschlagID("wahlvorschlagID1");
 
-            val ungueltigeStimmzettel3 = new UngueltigeStimmzettel();
-            ungueltigeStimmzettel3.setAnzahl(5L);
-            ungueltigeStimmzettel3.setStimmenart("test2");
-            ungueltigeStimmzettel3.setWahlvorschlagID("wahlvorschlagID2");
+            val expectedUngueltigeStimmzettel2 = new UngueltigeStimmzettel();
+            expectedUngueltigeStimmzettel2.setAnzahl(5L);
+            expectedUngueltigeStimmzettel2.setStimmenart("test2");
+            expectedUngueltigeStimmzettel2.setWahlvorschlagID("wahlvorschlagID2");
 
-            val ungueltigeStimmzettelList = Set.of(ungueltigeStimmzettel3,
-                    ungueltigeStimmzettel2);
-            val ergebnis1 = new Ergebnis();
-            val ergebnis2 = new Ergebnis();
+            val expectedUngueltigeStimmzettelList = Set.of(expectedUngueltigeStimmzettel2,
+                    expectedUngueltigeStimmzettel1);
+            val expectedErgebnis1 = new Ergebnis();
+            val expectedErgebnis2 = new Ergebnis();
 
-            ergebnis1.setStimmenart("test1");
-            ergebnis1.setWahlvorschlagsordnungszahl(5L);
-            ergebnis1.setErgebnis(3L);
-            ergebnis1.setKandidatID("kandidatID1");
-            ergebnis1.setWahlvorschlagID("wahlvorschlagID1");
+            expectedErgebnis1.setStimmenart("test1");
+            expectedErgebnis1.setWahlvorschlagsordnungszahl(5L);
+            expectedErgebnis1.setErgebnis(3L);
+            expectedErgebnis1.setKandidatID("kandidatID1");
+            expectedErgebnis1.setWahlvorschlagID("wahlvorschlagID1");
 
-            ergebnis2.setStimmenart("test2");
-            ergebnis2.setWahlvorschlagsordnungszahl(6L);
-            ergebnis2.setErgebnis(4L);
-            ergebnis2.setKandidatID("kandidatID2");
-            ergebnis2.setWahlvorschlagID("wahlvorschlagID2");
+            expectedErgebnis2.setStimmenart("test2");
+            expectedErgebnis2.setWahlvorschlagsordnungszahl(6L);
+            expectedErgebnis2.setErgebnis(4L);
+            expectedErgebnis2.setKandidatID("kandidatID2");
+            expectedErgebnis2.setWahlvorschlagID("wahlvorschlagID2");
 
-            val ergebnisse2 = Set.of(ergebnis2, ergebnis1);
+            val expectedErgebnisse = Set.of(expectedErgebnis2, expectedErgebnis1);
 
-            val expectedResult = new Ergebnismeldung(wahlbezirkID, wahlID, Meldungsart.NIEDERSCHRIFT, aWerte2,
-                    bWerte2, wahlbriefeWerte2, ungueltigeStimmzettelList, ungueltigeStimmzettelAnzahl, ergebnisse2, Wahlart.BTW);
+            val expectedResult = new Ergebnismeldung(wahlbezirkID, wahlID, Meldungsart.NIEDERSCHRIFT, expectedAWerte,
+                    expectedBWerte, expectedWahlbriefeWerte, expectedUngueltigeStimmzettelList, ungueltigeStimmzettelAnzahl, expectedErgebnisse, Wahlart.BTW);
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }

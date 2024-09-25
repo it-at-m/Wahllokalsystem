@@ -74,7 +74,6 @@ public class ErgebnismeldungControllerIntegrationTest {
         @WithMockUser(authorities = Authorities.SERVICE_SAVE_ERGEBNISMELDUNG)
         @Transactional
         void meldungIsSaved() throws Exception {
-
             val requestBody = getErgebnismeldungDTO();
             val request = MockMvcRequestBuilders.post("/ergebnismeldung").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
                     objectMapper.writeValueAsString(requestBody));
@@ -110,7 +109,6 @@ public class ErgebnismeldungControllerIntegrationTest {
         @WithMockUser(authorities = Authorities.SERVICE_SAVE_ERGEBNISMELDUNG)
         @Transactional
         void validationExceptionOccurredAndIsMapped() throws Exception {
-
             val requestBody = getErgebnismeldungDTO();
             val request = MockMvcRequestBuilders.post("/ergebnismeldung").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
                     objectMapper.writeValueAsString(requestBody));

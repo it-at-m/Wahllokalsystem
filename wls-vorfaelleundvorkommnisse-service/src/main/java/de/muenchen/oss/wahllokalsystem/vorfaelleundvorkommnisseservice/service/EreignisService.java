@@ -26,7 +26,7 @@ public class EreignisService {
         "hasAuthority('VorfaelleUndVorkommnisse_BUSINESSACTION_GetEreignisse')"
                 + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
     )
-    public Optional<WahlbezirkEreignisseModel> getEreignis(@P("wahlbezirkID") final String wahlbezirkID) {
+    public Optional<WahlbezirkEreignisseModel> getEreignisse(@P("wahlbezirkID") final String wahlbezirkID) {
         log.info("#getEreignis");
         ereignisValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
 
@@ -48,7 +48,7 @@ public class EreignisService {
         "hasAuthority('VorfaelleUndVorkommnisse_BUSINESSACTION_PostEreignisse')"
                 + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param?.wahlbezirkID, authentication)"
     )
-    public void postEreignis(@P("param") EreignisseWriteModel ereignisse) {
+    public void postEreignisse(@P("param") EreignisseWriteModel ereignisse) {
         log.info("#postEreignis");
         ereignisValidator.validEreignisAndWahlbezirkIDOrThrow(ereignisse);
         try {

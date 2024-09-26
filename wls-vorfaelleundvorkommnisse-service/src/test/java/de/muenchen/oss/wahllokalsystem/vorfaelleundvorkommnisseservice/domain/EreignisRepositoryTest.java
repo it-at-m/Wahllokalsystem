@@ -26,7 +26,7 @@ public class EreignisRepositoryTest {
     }
 
     @Nested
-    class GetEreignisse {
+    class FindByWahlbezirkID {
 
         @Test
         @WithMockUser(
@@ -50,7 +50,7 @@ public class EreignisRepositoryTest {
     }
 
     @Nested
-    class DeleteEreignisse {
+    class DeleteByWahlbezirkID {
 
         @Test
         @WithMockUser(

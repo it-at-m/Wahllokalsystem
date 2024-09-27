@@ -28,12 +28,12 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
-    classes = { MicroServiceApplication.class },
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    properties = {
-        "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
-        "refarch.gracefulshutdown.pre-wait-seconds=0"
-    }
+        classes = { MicroServiceApplication.class },
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = {
+                "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
+                "refarch.gracefulshutdown.pre-wait-seconds=0"
+        }
 )
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
 class UnicodeConfigurationTest {
@@ -80,8 +80,8 @@ class UnicodeConfigurationTest {
 
     private List<WahlDTO> createControllerListOfWahlDTO(Wahltag searchingForWahltag) {
         val wahl1 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID1", TEXT_ATTRIBUTE_DECOMPOSED, 3L, 1L,
-            searchingForWahltag.getWahltag(),
-            Wahlart.BAW, new Farbe(1, 1, 1), "1");
+                searchingForWahltag.getWahltag(),
+                Wahlart.BAW, new Farbe(1, 1, 1), "1");
 
         return Stream.of(wahl1).filter(wahl -> (wahl.wahltag().equals(searchingForWahltag.getWahltag()))).collect(Collectors.toList());
     }

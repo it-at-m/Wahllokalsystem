@@ -26,13 +26,13 @@ public class EreignisRepositoryTest {
     }
 
     @Nested
-    class GetEreignisse {
+    class FindByWahlbezirkID {
 
         @Test
         @WithMockUser(
                 authorities = { Authorities.REPOSITORY_DELETE_EREIGNISSE, Authorities.REPOSITORY_WRITE_EREIGNISSE, Authorities.REPOSITORY_READ_EREIGNISSE }
         )
-        void should_return_list_of_ereignis_entities_when_given_valid_wahlbezirkid() {
+        void should_returnListOfEreignisEntities_when_givenValidWahlbezirkid() {
             val wahlbezirkID = "wahlbezirkID";
             val wahlbezirkID2 = "newWahlbezirkID";
 
@@ -50,13 +50,13 @@ public class EreignisRepositoryTest {
     }
 
     @Nested
-    class DeleteEreignisse {
+    class DeleteByWahlbezirkID {
 
         @Test
         @WithMockUser(
                 authorities = { Authorities.REPOSITORY_DELETE_EREIGNISSE, Authorities.REPOSITORY_WRITE_EREIGNISSE, Authorities.REPOSITORY_READ_EREIGNISSE }
         )
-        void should_delete_all_ereignis_entities_with_matching_wahlbezirkid_when_given_valid_wahlbezirkid() {
+        void should_deleteAllEreignisEntitiesWithMatching_Wahlbezirkid_when_givenValidWahlbezirkid() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedEreignisList = List.of(

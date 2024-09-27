@@ -28,12 +28,12 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
-        classes = { MicroServiceApplication.class },
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = {
-                "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
-                "refarch.gracefulshutdown.pre-wait-seconds=0"
-        }
+    classes = { MicroServiceApplication.class },
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    properties = {
+        "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
+        "refarch.gracefulshutdown.pre-wait-seconds=0"
+    }
 )
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
 class UnicodeConfigurationTest {
@@ -68,20 +68,20 @@ class UnicodeConfigurationTest {
         wahltagRepository.save(searchingForWahltag);
         // create a list of Wahl with only one Wahl containing the TEXT_ATTRIBUTE_DECOMPOSED as 'name'
         val wahlDTOList = createControllerListOfWahlDTO(searchingForWahltag);
-        Assertions.assertThat(TEXT_ATTRIBUTE_DECOMPOSED.length()).isEqualTo(wahlDTOList.get(0).name().length());
+        Assertions.assertThat(wahlDTOList.get(0).name()).hasSize(TEXT_ATTRIBUTE_DECOMPOSED.length());
         // store list of Wahl
         testRestTemplate.postForEntity(URI.create(WAHLEN_ENDPOINT_URL + searchingForWahltag.getWahltagID()), wahlDTOList, Void.class);
 
         // Get the one and only Wahl from repo which now should contain a composed string in the 'name' attribute
         val wahl = wahlRepository.findById("wahlID1").orElseThrow();
         Assertions.assertThat(TEXT_ATTRIBUTE_COMPOSED).isEqualTo(wahl.getName());
-        Assertions.assertThat(TEXT_ATTRIBUTE_COMPOSED.length()).isEqualTo(wahl.getName().length());
+        Assertions.assertThat(wahl.getName()).hasSize(TEXT_ATTRIBUTE_COMPOSED.length());
     }
 
     private List<WahlDTO> createControllerListOfWahlDTO(Wahltag searchingForWahltag) {
         val wahl1 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID1", TEXT_ATTRIBUTE_DECOMPOSED, 3L, 1L,
-                searchingForWahltag.getWahltag(),
-                Wahlart.BAW, new Farbe(1, 1, 1), "1");
+            searchingForWahltag.getWahltag(),
+            Wahlart.BAW, new Farbe(1, 1, 1), "1");
 
         return Stream.of(wahl1).filter(wahl -> (wahl.wahltag().equals(searchingForWahltag.getWahltag()))).collect(Collectors.toList());
     }

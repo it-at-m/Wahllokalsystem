@@ -211,20 +211,20 @@ public class WahlenControllerIntegrationTest {
             wahltagRepository.save(searchingForWahltag);
             val oldData = createControllerListOfWahlDTO(searchingForWahltag, "");
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL, Authorities.SERVICE_POST_WAHLEN, Authorities.REPOSITORY_READ_WAHL);
-            val request_first = MockMvcRequestBuilders.post("/businessActions/wahlen/" + searchingForWahltag.getWahltagID()).with(csrf())
+            val requestFirst = MockMvcRequestBuilders.post("/businessActions/wahlen/" + searchingForWahltag.getWahltagID()).with(csrf())
                     .contentType(MediaType.APPLICATION_JSON).content(
                             objectMapper.writeValueAsString(oldData));
-            api.perform(request_first).andExpect(status().isOk());
+            api.perform(requestFirst).andExpect(status().isOk());
             val expectedPostedWahlen_old = wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(dtoMapper.fromListOfWahlDTOtoListOfWahlModel(oldData));
             val oldSavedWahlen = wahlRepository.findAll();
 
             Assertions.assertThat(oldSavedWahlen).isEqualTo(expectedPostedWahlen_old);
 
             val newWahlen = createControllerListOfWahlDTO(searchingForWahltag, "newWahlen");
-            val request_second = MockMvcRequestBuilders.post("/businessActions/wahlen/" + searchingForWahltag.getWahltagID()).with(csrf())
+            val requestSecond = MockMvcRequestBuilders.post("/businessActions/wahlen/" + searchingForWahltag.getWahltagID()).with(csrf())
                     .contentType(MediaType.APPLICATION_JSON).content(
                             objectMapper.writeValueAsString(newWahlen));
-            api.perform(request_second).andExpect(status().isOk());
+            api.perform(requestSecond).andExpect(status().isOk());
             val expectedPostedWahlen_new = wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(dtoMapper.fromListOfWahlDTOtoListOfWahlModel(newWahlen));
             val newSavedWahlen = wahlRepository.findAll();
 

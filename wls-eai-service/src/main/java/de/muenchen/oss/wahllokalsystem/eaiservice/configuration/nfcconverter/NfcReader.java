@@ -40,7 +40,6 @@ public class NfcReader extends Reader {
     }
 
     private void convert() {
-
         if (converted != null) {
             return;
         }

@@ -192,7 +192,6 @@ public class NfcRequest extends HttpServletRequestWrapper implements HttpServlet
 
     @Override
     public ServletInputStream getInputStream() throws IOException {
-
         final String encoding = getOriginalRequest().getCharacterEncoding();
 
         String content = null;

@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
 import static org.mockito.ArgumentMatchers.any;
+
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.client.WahldatenControllerApi;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
@@ -80,7 +81,6 @@ class WahltageClientImplTest {
         }
 
         private Set<de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO> createClientWahltageDTO() {
-
             val wahltag1 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO();
             wahltag1.setIdentifikator("identifikatorWahltag1");
             wahltag1.setBeschreibung("beschreibungWahltag1");

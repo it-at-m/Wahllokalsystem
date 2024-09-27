@@ -15,7 +15,7 @@ public record UrnenwahlvorbereitungDTO(@NotNull String wahlbezirkID,
                                        @NotNull @Size(min = 1) List<WahlurneDTO> urnenAnzahl) {
 
     public UrnenwahlvorbereitungDTO(final String wahlbezirkID, final long anzahlWahlkabinen, final long anzahlWahltische, final long anzahlNebenraeume,
-            final List<WahlurneDTO> urnenAnzahl) {
+        final List<WahlurneDTO> urnenAnzahl) {
         this.wahlbezirkID = wahlbezirkID;
         this.anzahlWahlkabinen = anzahlWahlkabinen;
         this.anzahlWahltische = anzahlWahltische;

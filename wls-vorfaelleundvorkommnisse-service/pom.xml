@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-vorfaelleundvorkommnisse-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.1-SNAPSHOT</version>
     <name>wls_vorfaelleundvorkommnisse_service</name>
 
     <properties>
@@ -15,7 +13,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>3.3.2</spring.boot.version>
+        <spring.boot.version>3.3.4</spring.boot.version>
         <spring.cloud.version>2023.0.3</spring.cloud.version>
         <logstash.encoder>7.4</logstash.encoder>
         <apache.commons.collections4>4.4</apache.commons.collections4>
@@ -36,7 +34,7 @@
         <!-- Version muss mit der in den spring-boot-dependencies bereitgestellten Lombok-Version übereinstimmen -->
         <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
-        <org.mapstruct.version>1.6.0</org.mapstruct.version>
+        <org.mapstruct.version>1.6.2</org.mapstruct.version>
         <org.springdoc.version>2.6.0</org.springdoc.version>
         <wls.common.version>1.1.0</wls.common.version>
     </properties>
@@ -437,8 +435,8 @@
                         <eclipse>
                             <file>itm-java-codeformat/java_codestyle_formatter.xml</file>
                         </eclipse>
-                        <trimTrailingWhitespace/>
-                        <endWithNewline/>
+                        <trimTrailingWhitespace />
+                        <endWithNewline />
                     </java>
                 </configuration>
                 <executions>

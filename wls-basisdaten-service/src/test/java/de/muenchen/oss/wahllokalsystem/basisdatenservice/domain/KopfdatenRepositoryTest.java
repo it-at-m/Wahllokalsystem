@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
 
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
+
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Kopfdaten;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.KopfdatenRepository;
@@ -47,7 +48,6 @@ class KopfdatenRepositoryTest {
 
     @Test
     public void kopfdatenRepositoryDeleteAllByBezirkUndWahlID_WahlID() {
-
         val kopfdaten_1 = MockDataFactory.createKopfdatenEntityFor("wahlID1", "wahlbezirkID1",
                 Stimmzettelgebietsart.SG, "101", "München-Hadern", "Landtagswahl", "1901");
         val kopfdaten_2 = MockDataFactory.createKopfdatenEntityFor("wahlID1", "wahlbezirkID2",

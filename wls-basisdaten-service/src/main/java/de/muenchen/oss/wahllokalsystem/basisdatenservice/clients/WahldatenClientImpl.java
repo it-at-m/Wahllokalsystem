@@ -26,7 +26,6 @@ public class WahldatenClientImpl implements WahldatenClient {
 
     @Override
     public BasisdatenModel loadBasisdaten(WahltagWithNummer wahltagWithNummer) throws WlsException {
-
         final BasisdatenDTO basisdatenDTO;
         try {
             basisdatenDTO = wahldatenControllerApi.loadBasisdaten(wahltagWithNummer.wahltag(), wahltagWithNummer.wahltagNummer());

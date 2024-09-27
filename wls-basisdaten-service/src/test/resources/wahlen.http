@@ -18,12 +18,18 @@ GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
 Authorization: {{ token_type }} {{ auth_token }}
 
 ### POST Wahlen
-## If you want to POST Wahlen to override existing Wahlen with the intention to find them later with getWahlen
-## please take account of the value of posted properties "wahltag", because getWahlen is searching by wahltagID and
-## the date of the wahltag corresponding to this wahltagID is the search parameter for the Wahl in Repo. If there is no
-## Wahl with this "wahltag", then you will recive the response from remote client, so you could think that the old Wahl
-## could have not been overwritten in the step before. Actualy they were replaced, but if they do not have the date of
-## the Wahltag, than indeed is the expected response, the response from remote client.
+## Hier wird das Datum des Wahltages mit der wahltagID1 gesetzt (today - 2 months) - siehe DummyClient
+< {%
+    const today = new Date();
+    let dd = today.getDate();
+    const mm = today.getMonth();
+    let yyyy_2MonthsBefore = (mm < 2) ? new Date().getFullYear() - 1 : new Date().getFullYear();
+    let mm_2MonthsBefore = (mm % 12) - 1;
+    if (dd < 10) dd = '0' + dd;
+    if (mm_2MonthsBefore < 10) mm_2MonthsBefore = '0' + mm_2MonthsBefore;
+    const dateOfWahltagID1 = ('"' + yyyy_2MonthsBefore + '-' + mm_2MonthsBefore + '-' + dd + '"');
+    request.variables.set("dateOfWahltagID1", dateOfWahltagID1);
+%}
 POST {{ WLS_BASISDATEN_SERVICE_URL }}//businessActions/wahlen/wahltagID1
 Authorization: {{ token_type }} {{ auth_token }}
 Content-Type: application/json
@@ -34,7 +40,7 @@ Content-Type: application/json
     "name": "aName_1",
     "reihenfolge": 1,
     "waehlerverzeichnisnummer": 1,
-    "wahltag": "2024-07-20",
+    "wahltag": {{ dateOfWahltagID1 }},
     "wahlart": "BTW",
     "farbe": {
       "r": 0,
@@ -48,7 +54,7 @@ Content-Type: application/json
     "name": "1",
     "reihenfolge": 2,
     "waehlerverzeichnisnummer": 1,
-    "wahltag": "2024-06-06",
+    "wahltag": {{ dateOfWahltagID1 }},
     "wahlart": "EUW",
     "farbe": {
       "r": 3,
@@ -62,7 +68,7 @@ Content-Type: application/json
     "name": "2-",
     "reihenfolge": 3,
     "waehlerverzeichnisnummer": 1,
-    "wahltag": "2024-06-06",
+    "wahltag": {{ dateOfWahltagID1 }},
     "wahlart": "LTW",
     "farbe": {
       "r": 6,

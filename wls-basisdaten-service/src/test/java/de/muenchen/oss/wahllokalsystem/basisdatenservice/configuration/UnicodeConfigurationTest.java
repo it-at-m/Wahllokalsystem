@@ -6,7 +6,6 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration;
 
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahltag;
@@ -21,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.val;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -68,14 +68,14 @@ class UnicodeConfigurationTest {
         wahltagRepository.save(searchingForWahltag);
         // create a list of Wahl with only one Wahl containing the TEXT_ATTRIBUTE_DECOMPOSED as 'name'
         val wahlDTOList = createControllerListOfWahlDTO(searchingForWahltag);
-        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), wahlDTOList.get(0).name().length());
+        Assertions.assertThat(TEXT_ATTRIBUTE_DECOMPOSED.length()).isEqualTo(wahlDTOList.get(0).name().length());
         // store list of Wahl
         testRestTemplate.postForEntity(URI.create(WAHLEN_ENDPOINT_URL + searchingForWahltag.getWahltagID()), wahlDTOList, Void.class);
 
         // Get the one and only Wahl from repo which now should contain a composed string in the 'name' attribute
         val wahl = wahlRepository.findById("wahlID1").orElseThrow();
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, wahl.getName());
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), wahl.getName().length());
+        Assertions.assertThat(TEXT_ATTRIBUTE_COMPOSED).isEqualTo(wahl.getName());
+        Assertions.assertThat(TEXT_ATTRIBUTE_COMPOSED.length()).isEqualTo(wahl.getName().length());
     }
 
     private List<WahlDTO> createControllerListOfWahlDTO(Wahltag searchingForWahltag) {

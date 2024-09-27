@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlaege;
 
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.List;

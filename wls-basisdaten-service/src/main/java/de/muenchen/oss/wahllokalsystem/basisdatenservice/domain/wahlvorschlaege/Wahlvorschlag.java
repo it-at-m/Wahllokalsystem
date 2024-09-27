@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlaege;
 
 import static java.sql.Types.VARCHAR;
 
@@ -7,7 +7,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -26,7 +29,7 @@ import org.hibernate.annotations.UuidGenerator;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class Kandidat {
+public class Wahlvorschlag {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -34,6 +37,7 @@ public class Kandidat {
     @JdbcTypeCode(VARCHAR)
     private UUID id;
 
+    //    @Id
     @NaturalId
     @NotNull
     @ToString.Include
@@ -41,27 +45,27 @@ public class Kandidat {
 
     @ManyToOne
     @NotNull
-    @JoinColumn(name = "wahlvorschlagID")
+    @JoinColumn(name = "wahlvorschlaegeID")
     @EqualsAndHashCode.Exclude
-    private Wahlvorschlag wahlvorschlag;
+    private Wahlvorschlaege wahlvorschlaeage;
 
     @NotNull
     @ToString.Include
-    private String name;
+    private long ordnungszahl;
+
+    @NotNull
+    private String kurzname;
 
     @NotNull
     @ToString.Include
-    private long listenposition;
+    private boolean erhaeltStimmen;
 
+    @OneToMany(mappedBy = "wahlvorschlag", orphanRemoval = true)
     @NotNull
-    @ToString.Include
-    private boolean direktkandidat;
+    private Set<Kandidat> kandidaten = new LinkedHashSet<>();
 
-    @NotNull
-    @ToString.Include
-    private long tabellenSpalteInNiederschrift;
-
-    @NotNull
-    @ToString.Include
-    private boolean einzelbewerber;
+    public void addKandidat(final Kandidat kandidat) {
+        kandidat.setWahlvorschlag(this);
+        kandidaten.add(kandidat);
+    }
 }

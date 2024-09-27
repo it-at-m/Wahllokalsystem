@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlvorschlaegeRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlaege.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.KandidatDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlaegeDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlagDTO;

@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

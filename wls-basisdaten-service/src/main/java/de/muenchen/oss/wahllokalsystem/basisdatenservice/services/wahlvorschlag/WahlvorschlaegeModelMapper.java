@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Kandidat;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlvorschlaege;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlvorschlag;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlaege.Kandidat;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlaege.Wahlvorschlaege;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlaege.Wahlvorschlag;
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

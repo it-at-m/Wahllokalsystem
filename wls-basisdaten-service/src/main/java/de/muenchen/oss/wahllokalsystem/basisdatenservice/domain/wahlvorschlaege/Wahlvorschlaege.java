@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlaege;
 
 import static java.sql.Types.VARCHAR;
 

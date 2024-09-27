@@ -1,5 +1,6 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ungueltigewahlscheine;
 
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagIdUndWahlbezirksart;
 import java.util.Optional;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;

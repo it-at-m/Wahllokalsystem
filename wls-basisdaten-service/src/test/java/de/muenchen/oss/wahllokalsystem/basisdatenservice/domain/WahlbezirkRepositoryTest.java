@@ -4,6 +4,8 @@ import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SP
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirk.Wahlbezirk;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirk.WahlbezirkRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.MockDataFactory;
 import java.time.LocalDate;
 import java.util.List;

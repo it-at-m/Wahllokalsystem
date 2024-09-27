@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlaege;
 
 import static java.sql.Types.VARCHAR;
 
@@ -7,10 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -29,7 +26,7 @@ import org.hibernate.annotations.UuidGenerator;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class Wahlvorschlag {
+public class Kandidat {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -37,7 +34,6 @@ public class Wahlvorschlag {
     @JdbcTypeCode(VARCHAR)
     private UUID id;
 
-    //    @Id
     @NaturalId
     @NotNull
     @ToString.Include
@@ -45,27 +41,27 @@ public class Wahlvorschlag {
 
     @ManyToOne
     @NotNull
-    @JoinColumn(name = "wahlvorschlaegeID")
+    @JoinColumn(name = "wahlvorschlagID")
     @EqualsAndHashCode.Exclude
-    private Wahlvorschlaege wahlvorschlaeage;
+    private Wahlvorschlag wahlvorschlag;
 
     @NotNull
     @ToString.Include
-    private long ordnungszahl;
-
-    @NotNull
-    private String kurzname;
+    private String name;
 
     @NotNull
     @ToString.Include
-    private boolean erhaeltStimmen;
+    private long listenposition;
 
-    @OneToMany(mappedBy = "wahlvorschlag", orphanRemoval = true)
     @NotNull
-    private Set<Kandidat> kandidaten = new LinkedHashSet<>();
+    @ToString.Include
+    private boolean direktkandidat;
 
-    public void addKandidat(final Kandidat kandidat) {
-        kandidat.setWahlvorschlag(this);
-        kandidaten.add(kandidat);
-    }
+    @NotNull
+    @ToString.Include
+    private long tabellenSpalteInNiederschrift;
+
+    @NotNull
+    @ToString.Include
+    private boolean einzelbewerber;
 }

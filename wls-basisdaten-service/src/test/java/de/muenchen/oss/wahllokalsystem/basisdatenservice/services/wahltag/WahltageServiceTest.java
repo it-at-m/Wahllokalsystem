@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahltag;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.Wahltag;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;

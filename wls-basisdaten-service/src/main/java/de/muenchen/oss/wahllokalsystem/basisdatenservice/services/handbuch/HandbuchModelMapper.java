@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Handbuch;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagIdUndWahlbezirksart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.handbuch.Handbuch;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagIdUndWahlbezirksart;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

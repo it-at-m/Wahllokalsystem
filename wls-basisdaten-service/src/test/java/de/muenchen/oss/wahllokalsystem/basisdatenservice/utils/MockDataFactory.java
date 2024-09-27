@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.utils;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlbezirk;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlbezirkArt;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahltag;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirk.Wahlbezirk;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahlbezirkArt;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.Wahltag;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Kopfdaten;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Stimmzettelgebietsart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Farbe;
@@ -14,9 +14,9 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.Stimmzett
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlbezirkDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.WahlbezirkArtDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.kopfdaten.KopfdatenDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.kopfdaten.StimmzettelgebietsartDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlbezirke.WahlbezirkartDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.StimmzettelgebietsartModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisdatenModel;
@@ -374,28 +374,28 @@ public class MockDataFactory {
                 praefix + "wahlbezirkID1_1",
                 forDate,
                 "1201",
-                WahlbezirkartDTO.UWB,
+                WahlbezirkArtDTO.UWB,
                 "0",
                 "wahlID1");
         val wahlbezirk2 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlbezirke.WahlbezirkDTO(
                 praefix + "wahlbezirkID1_2",
                 forDate,
                 "1251",
-                WahlbezirkartDTO.BWB,
+                WahlbezirkArtDTO.BWB,
                 "0",
                 "wahlID1");
         val wahlbezirk3 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlbezirke.WahlbezirkDTO(
                 praefix + "wahlbezirkID2_1",
                 forDate,
                 "1202",
-                WahlbezirkartDTO.UWB,
+                WahlbezirkArtDTO.UWB,
                 "0",
                 "wahlID1");
         val wahlbezirk4 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlbezirke.WahlbezirkDTO(
                 praefix + "wahlbezirkID2_2",
                 forDate,
                 "1252",
-                WahlbezirkartDTO.BWB,
+                WahlbezirkArtDTO.BWB,
                 "0",
                 "wahlID1");
 

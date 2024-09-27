@@ -1,8 +1,11 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ungueltigewahlscheine;
 
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagIdUndWahlbezirksart;
+import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -12,19 +15,23 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
+@Table(name = "Ungueltigews")
 @Getter
 @Setter
+@EqualsAndHashCode
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
-@ToString(onlyExplicitlyIncluded = true)
-public class Handbuch {
+public class UngueltigeWahlscheine {
 
+    // ========= //
+    // Variables //
+    // ========= //
     @EmbeddedId
-    @ToString.Include
     private WahltagIdUndWahlbezirksart wahltagIdUndWahlbezirksart;
 
+    @Column(name = "ungueltigews")
     @NotNull
     @Lob
-    private byte[] handbuch;
+    private byte[] ungueltigeWahlscheine;
 }

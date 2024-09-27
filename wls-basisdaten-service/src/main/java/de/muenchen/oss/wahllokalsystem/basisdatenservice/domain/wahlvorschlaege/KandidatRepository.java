@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlaege;
 
 import java.util.UUID;
 import org.springframework.data.repository.CrudRepository;

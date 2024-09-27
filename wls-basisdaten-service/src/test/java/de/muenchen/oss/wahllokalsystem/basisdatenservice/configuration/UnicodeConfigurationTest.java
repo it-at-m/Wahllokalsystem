@@ -8,8 +8,8 @@ import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SP
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahltag;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.Wahltag;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Farbe;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.WahlRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart;

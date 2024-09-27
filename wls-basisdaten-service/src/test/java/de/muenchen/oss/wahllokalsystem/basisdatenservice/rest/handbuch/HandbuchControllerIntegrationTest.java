@@ -5,10 +5,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Handbuch;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.HandbuchRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlbezirkArt;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagIdUndWahlbezirksart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.handbuch.Handbuch;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.handbuch.HandbuchRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahlbezirkArt;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagIdUndWahlbezirksart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;

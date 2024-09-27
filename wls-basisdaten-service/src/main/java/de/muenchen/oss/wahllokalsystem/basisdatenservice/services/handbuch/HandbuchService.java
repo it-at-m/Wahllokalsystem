@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Handbuch;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.HandbuchRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagIdUndWahlbezirksart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.handbuch.Handbuch;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.handbuch.HandbuchRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagIdUndWahlbezirksart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.Arrays;

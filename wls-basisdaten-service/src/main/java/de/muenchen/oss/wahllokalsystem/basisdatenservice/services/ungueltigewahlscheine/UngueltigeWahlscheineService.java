@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.ungueltigewahlscheine;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.UngueltigeWahlscheineRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ungueltigewahlscheine.UngueltigeWahlscheineRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.Arrays;

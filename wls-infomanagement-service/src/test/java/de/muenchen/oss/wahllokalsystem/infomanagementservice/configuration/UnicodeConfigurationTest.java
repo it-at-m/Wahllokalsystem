@@ -6,16 +6,15 @@ package de.muenchen.oss.wahllokalsystem.infomanagementservice.configuration;
 
 import static de.muenchen.oss.wahllokalsystem.infomanagementservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.infomanagementservice.TestConstants.SPRING_TEST_PROFILE;
-import static de.muenchen.oss.wahllokalsystem.infomanagementservice.TestConstants.TheEntityDto;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.TheEntity;
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.TheEntityRepository;
+
 import java.net.URI;
-import java.util.UUID;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.Disabled;
+
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.KonfigurationRepository;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration.dto.KonfigurationDTO;
+import lombok.val;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,7 +32,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
 class UnicodeConfigurationTest {
 
-    private static final String ENTITY_ENDPOINT_URL = "/theEntities";
+    private static final String ENTITY_ENDPOINT_URL = "/businessActions/konfiguration/WILLKOMMENSTEXT";
 
     /**
      * Decomposed string:
@@ -51,28 +50,17 @@ class UnicodeConfigurationTest {
     private TestRestTemplate testRestTemplate;
 
     @Autowired
-    private TheEntityRepository theEntityRepository;
+    private KonfigurationRepository konfigurationRepository;
 
     @Test
-    @Disabled
     void testForNfcNormalization() {
-        // Persist entity with decomposed string.
-        final TheEntityDto theEntityDto = new TheEntityDto();
-        theEntityDto.setTextAttribute(TEXT_ATTRIBUTE_DECOMPOSED);
-        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), theEntityDto.getTextAttribute().length());
-        final TheEntityDto response = testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), theEntityDto, TheEntityDto.class).getBody();
+        val konfigurationDTO = KonfigurationDTO.builder().schluessel("WILLKOMMENSTEXT").beschreibung(TEXT_ATTRIBUTE_DECOMPOSED).build();
 
-        // Check whether response contains a composed string.
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, response.getTextAttribute());
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), response.getTextAttribute().length());
-
-        // Extract uuid from self link.
-        final UUID uuid = UUID.fromString(StringUtils.substringAfterLast(response.getRequiredLink("self").getHref(), "/"));
-
+        Assertions.assertThat(konfigurationDTO.beschreibung()).hasSize(TEXT_ATTRIBUTE_DECOMPOSED.length());
+        testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), konfigurationDTO, Void.class);
         // Check persisted entity contains a composed string via JPA repository.
-        final TheEntity theEntity = theEntityRepository.findById(uuid).orElse(null);
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, theEntity.getTextAttribute());
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), theEntity.getTextAttribute().length());
+        val konfiguration = konfigurationRepository.findById("WILLKOMMENSTEXT").orElseThrow();
+        Assertions.assertThat(konfiguration.getBeschreibung()).isEqualTo(TEXT_ATTRIBUTE_COMPOSED);
+        Assertions.assertThat(konfiguration.getBeschreibung()).hasSize(TEXT_ATTRIBUTE_COMPOSED.length());
     }
-
 }

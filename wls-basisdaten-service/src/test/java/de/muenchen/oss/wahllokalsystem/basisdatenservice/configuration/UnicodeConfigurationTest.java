@@ -6,16 +6,21 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration;
 
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
-import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.TheEntityDto;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.TheEntity;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.TheEntityRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahltag;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Farbe;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.WahlRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO;
 import java.net.URI;
-import java.util.UUID;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.Disabled;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import lombok.val;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,7 +38,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
 class UnicodeConfigurationTest {
 
-    private static final String ENTITY_ENDPOINT_URL = "/theEntities";
+    private static final String WAHLEN_ENDPOINT_URL = "/businessActions/wahlen/";
 
     /**
      * Decomposed string: String "Ä-é" represented with unicode letters "A◌̈-e◌́"
@@ -49,28 +54,36 @@ class UnicodeConfigurationTest {
     private TestRestTemplate testRestTemplate;
 
     @Autowired
-    private TheEntityRepository theEntityRepository;
+    private WahlRepository wahlRepository;
+
+    @Autowired
+    WahltagRepository wahltagRepository;
 
     @Test
-    @Disabled
     void testForNfcNormalization() {
-        // Persist entity with decomposed string.
-        final TheEntityDto theEntityDto = new TheEntityDto();
-        theEntityDto.setTextAttribute(TEXT_ATTRIBUTE_DECOMPOSED);
-        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), theEntityDto.getTextAttribute().length());
-        final TheEntityDto response = testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), theEntityDto, TheEntityDto.class).getBody();
 
-        // Check whether response contains a composed string.
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, response.getTextAttribute());
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), response.getTextAttribute().length());
+        // Persist entity with decomposed string
+        // wahltag required for next step to store a list of wahlen
+        var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung5", "1");
+        wahltagRepository.save(searchingForWahltag);
+        // create a list of Wahl with only one Wahl containing the TEXT_ATTRIBUTE_DECOMPOSED as 'name'
+        val wahlDTOList = createControllerListOfWahlDTO(searchingForWahltag);
+        Assertions.assertThat(wahlDTOList.get(0).name()).hasSize(TEXT_ATTRIBUTE_DECOMPOSED.length());
+        // store list of Wahl
+        testRestTemplate.postForEntity(URI.create(WAHLEN_ENDPOINT_URL + searchingForWahltag.getWahltagID()), wahlDTOList, Void.class);
 
-        // Extract uuid from self link.
-        final UUID uuid = UUID.fromString(StringUtils.substringAfterLast(response.getRequiredLink("self").getHref(), "/"));
+        // Get the one and only Wahl from repo which now should contain a composed string in the 'name' attribute
+        val wahl = wahlRepository.findById("wahlID1").orElseThrow();
+        Assertions.assertThat(TEXT_ATTRIBUTE_COMPOSED).isEqualTo(wahl.getName());
+        Assertions.assertThat(wahl.getName()).hasSize(TEXT_ATTRIBUTE_COMPOSED.length());
+    }
 
-        // Check persisted entity contains a composed string via JPA repository.
-        final TheEntity theEntity = theEntityRepository.findById(uuid).orElse(null);
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, theEntity.getTextAttribute());
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), theEntity.getTextAttribute().length());
+    private List<WahlDTO> createControllerListOfWahlDTO(Wahltag searchingForWahltag) {
+        val wahl1 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID1", TEXT_ATTRIBUTE_DECOMPOSED, 3L, 1L,
+                searchingForWahltag.getWahltag(),
+                Wahlart.BAW, new Farbe(1, 1, 1), "1");
+
+        return Stream.of(wahl1).filter(wahl -> (wahl.wahltag().equals(searchingForWahltag.getWahltag()))).collect(Collectors.toList());
     }
 
 }

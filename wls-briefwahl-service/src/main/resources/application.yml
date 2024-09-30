@@ -31,7 +31,7 @@ realm: wls_realm
 
 server:
   shutdown: "graceful"
-  port: 39146
+  port: 8080
   error:
     include-exception: false
     include-stacktrace: never

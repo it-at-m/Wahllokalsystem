@@ -58,11 +58,15 @@ class UnicodeConfigurationTest {
         val waehlerVerzeichnisNummer = 1L;
         val key1 = "key1";
         val key2 = "key2";
-        val beanstandeteWahlbriefeDTO = createControllerBeanstandeteWahlbriefeDTO(wahlbezirkID, waehlerVerzeichnisNummer, key1, key2, TEXT_ATTRIBUTE_DECOMPOSED);
-        Assertions.assertThat((String)beanstandeteWahlbriefeDTO.beanstandeteWahlbriefe().keySet().toArray()[0]).hasSize(key1.length() + TEXT_ATTRIBUTE_DECOMPOSED.length());
-        Assertions.assertThat((String)beanstandeteWahlbriefeDTO.beanstandeteWahlbriefe().keySet().toArray()[1]).hasSize(key2.length() + TEXT_ATTRIBUTE_DECOMPOSED.length());
+        val beanstandeteWahlbriefeDTO = createControllerBeanstandeteWahlbriefeDTO(wahlbezirkID, waehlerVerzeichnisNummer, key1, key2,
+                TEXT_ATTRIBUTE_DECOMPOSED);
+        Assertions.assertThat((String) beanstandeteWahlbriefeDTO.beanstandeteWahlbriefe().keySet().toArray()[0])
+                .hasSize(key1.length() + TEXT_ATTRIBUTE_DECOMPOSED.length());
+        Assertions.assertThat((String) beanstandeteWahlbriefeDTO.beanstandeteWahlbriefe().keySet().toArray()[1])
+                .hasSize(key2.length() + TEXT_ATTRIBUTE_DECOMPOSED.length());
 
-        testRestTemplate.postForEntity(URI.create(BEANSTANDETE_WAHLBRIEFE_ENDPOINT_URL + wahlbezirkID + "/" + waehlerVerzeichnisNummer), beanstandeteWahlbriefeDTO, Void.class);
+        testRestTemplate.postForEntity(URI.create(BEANSTANDETE_WAHLBRIEFE_ENDPOINT_URL + wahlbezirkID + "/" + waehlerVerzeichnisNummer),
+                beanstandeteWahlbriefeDTO, Void.class);
 
         val beantstandeteWahlbriefeInRepo = Streamable.of(beanstandeteWahlbriefeRepository.findAll()).toList();
         Assertions.assertThat(beantstandeteWahlbriefeInRepo).hasSize(1);
@@ -70,11 +74,13 @@ class UnicodeConfigurationTest {
         Assertions.assertThat(beantstandeteWahlbriefeInRepo.get(0).getBeanstandeteWahlbriefe().keySet().toArray()[1]).isEqualTo(key2 + TEXT_ATTRIBUTE_COMPOSED);
     }
 
-    private BeanstandeteWahlbriefeDTO createControllerBeanstandeteWahlbriefeDTO(String wahlbezirkID, Long waehlerverzeichnisNummer, String key1, String key2, String textAttributeDecomposed) {
+    private BeanstandeteWahlbriefeDTO createControllerBeanstandeteWahlbriefeDTO(String wahlbezirkID, Long waehlerverzeichnisNummer, String key1, String key2,
+            String textAttributeDecomposed) {
         return new BeanstandeteWahlbriefeDTO(wahlbezirkID, waehlerverzeichnisNummer,
-                Map.of(key1 + textAttributeDecomposed, new Zurueckweisungsgrund[]{Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT, Zurueckweisungsgrund.GEGENSTAND_IM_UMSCHLAG},
-                        key2 + textAttributeDecomposed, new Zurueckweisungsgrund[]{Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT, Zurueckweisungsgrund.LOSE_STIMMZETTEL})
-        );
+                Map.of(key1 + textAttributeDecomposed,
+                        new Zurueckweisungsgrund[] { Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT, Zurueckweisungsgrund.GEGENSTAND_IM_UMSCHLAG },
+                        key2 + textAttributeDecomposed,
+                        new Zurueckweisungsgrund[] { Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT, Zurueckweisungsgrund.LOSE_STIMMZETTEL }));
     }
 
 }

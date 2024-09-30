@@ -5,12 +5,7 @@
 package de.muenchen.oss.wahllokalsystem.briefwahlservice;
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import org.springframework.hateoas.RepresentationModel;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TestConstants {

@@ -47,7 +47,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 public class ErgebnismeldungControllerIntegrationTest {
 
     @Autowired
@@ -80,27 +80,10 @@ public class ErgebnismeldungControllerIntegrationTest {
 
             val response = api.perform(request).andExpect(status().isOk()).andReturn();
 
-            val aWerte2 = new AWerte();
-            aWerte2.setA1(3L);
-            aWerte2.setA2(2L);
-
-            val bWerte2 = new BWerte();
-            bWerte2.setB(4L);
-            bWerte2.setB1(3L);
-            bWerte2.setB2(2L);
-
-            val wahlbriefeWerte2 = new WahlbriefeWerte();
-            wahlbriefeWerte2.setZurueckgewiesenGesamt(3L);
-
-            val ungueltigeStimmzettelList = getUngueltigeStimmzettels();
-            val ergebnisse2 = getErgebnis();
-
             val savedErgebnismeldung = ergebnismeldungRepository.findAll().iterator().next();
+            val expectedSavedErgebnismeldung = createExpectedData();
 
             Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
-
-            val expectedSavedErgebnismeldung = new Ergebnismeldung(requestBody.wahlbezirkID(), requestBody.wahlID(), Meldungsart.NIEDERSCHRIFT, aWerte2,
-                    bWerte2, wahlbriefeWerte2, ungueltigeStimmzettelList, requestBody.ungueltigeStimmzettelAnzahl(), ergebnisse2, Wahlart.BTW);
 
             Assertions.assertThat(savedErgebnismeldung).usingRecursiveComparison().ignoringFields("id").isEqualTo(expectedSavedErgebnismeldung);
         }
@@ -157,6 +140,30 @@ public class ErgebnismeldungControllerIntegrationTest {
             ergebnis2.setWahlvorschlagID("wahlvorschlagID2");
 
             return Set.of(ergebnis2, ergebnis1);
+        }
+
+        private Ergebnismeldung createExpectedData() {
+            val wahlID = "wahlID1";
+            val wahlbezirkID = "00000000-0000-0000-0000-000000000001";
+
+            val aWerte2 = new AWerte();
+            aWerte2.setA1(3L);
+            aWerte2.setA2(2L);
+
+            val bWerte2 = new BWerte();
+            bWerte2.setB(4L);
+            bWerte2.setB1(3L);
+            bWerte2.setB2(2L);
+
+            val wahlbriefeWerte2 = new WahlbriefeWerte();
+            wahlbriefeWerte2.setZurueckgewiesenGesamt(3L);
+
+            val ungueltigeStimmzettelList = getUngueltigeStimmzettels();
+            val ungueltigeStimmzettelAnzahl = 4L;
+            val ergebnisse2 = getErgebnis();
+
+            return new Ergebnismeldung(wahlbezirkID, wahlID, Meldungsart.NIEDERSCHRIFT, aWerte2,
+                    bWerte2, wahlbriefeWerte2, ungueltigeStimmzettelList, ungueltigeStimmzettelAnzahl, ergebnisse2, Wahlart.BTW);
         }
 
         private ErgebnismeldungDTO getErgebnismeldungDTO() {

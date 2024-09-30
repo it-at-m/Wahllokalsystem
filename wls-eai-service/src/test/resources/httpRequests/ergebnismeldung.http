@@ -26,17 +26,43 @@ Content-Type: application/json
   "wahlbezirkID": "00000000-0000-0000-0000-000000000001",
   "meldungsart": "NIEDERSCHRIFT",
   "aWerte": {
-    "a1": null
+    "a1": 3
   },
   "bWerte": {
-    "b1": null
+    "b1": 8
   },
   "wahlbriefeWerte": {
-    "zurueckgewiesenGesamt": null
+    "zurueckgewiesenGesamt": 2
   },
-  "ungueltigeStimmzettels": [],
-  "ungueltigeStimmzettelAnzahl": null,
-  "ergebnisse": [],
+  "ungueltigeStimmzettels": [
+    {
+      "stimmenart": "A",
+      "anzahl": 2,
+      "wahlvorschlagID": "123"
+    },
+    {
+      "stimmenart": "B",
+      "anzahl": 3,
+      "wahlvorschlagID": "234"
+    }
+  ],
+  "ungueltigeStimmzettelAnzahl": 4,
+  "ergebnisse": [
+    {
+      "stimmenart": "B",
+      "wahlvorschlagsordnungszahl": 5,
+      "ergebnis": 3,
+      "wahlvorschlagID": "1456",
+      "kandidatID": "654321"
+    },
+    {
+      "stimmenart": "A",
+      "wahlvorschlagsordnungszahl": 9,
+      "ergebnis": 2,
+      "wahlvorschlagID": "12450",
+      "kandidatID": "60154321"
+    }
+  ],
   "wahlart": "BTW"
 }
 
@@ -50,17 +76,43 @@ Content-Type: application/json
   "wahlbezirkID": "00000000-0000-0000-0000-000000000001",
   "meldungsart": "NIEDERSCHRIFT",
   "aWerte": {
-    "a1": null
+    "a1": 3
   },
   "bWerte": {
-    "b1": null
+    "b1": 8
   },
   "wahlbriefeWerte": {
-    "zurueckgewiesenGesamt": null
+    "zurueckgewiesenGesamt": 2
   },
-  "ungueltigeStimmzettels": [],
-  "ungueltigeStimmzettelAnzahl": null,
-  "ergebnisse": [],
+  "ungueltigeStimmzettels": [
+    {
+      "stimmenart": "A",
+      "anzahl": 2,
+      "wahlvorschlagID": "123"
+    },
+    {
+      "stimmenart": "B",
+      "anzahl": 3,
+      "wahlvorschlagID": "234"
+    }
+  ],
+  "ungueltigeStimmzettelAnzahl": 4,
+  "ergebnisse": [
+    {
+      "stimmenart": "B",
+      "wahlvorschlagsordnungszahl": 5,
+      "ergebnis": 3,
+      "wahlvorschlagID": "1456",
+      "kandidatID": "654321"
+    },
+    {
+      "stimmenart": "A",
+      "wahlvorschlagsordnungszahl": 9,
+      "ergebnis": 2,
+      "wahlvorschlagID": "12450",
+      "kandidatID": "60154321"
+    }
+  ],
   "wahlart": "BTW"
 }
 
@@ -74,16 +126,42 @@ Content-Type: application/json
   "wahlbezirkID": "",
   "meldungsart": "NIEDERSCHRIFT",
   "aWerte": {
-    "a1": null
+    "a1": 3
   },
   "bWerte": {
-    "b1": null
+    "b1": 8
   },
   "wahlbriefeWerte": {
-    "zurueckgewiesenGesamt": null
+    "zurueckgewiesenGesamt": 2
   },
-  "ungueltigeStimmzettels": [],
-  "ungueltigeStimmzettelAnzahl": null,
-  "ergebnisse": [],
+  "ungueltigeStimmzettels": [
+    {
+      "stimmenart": "A",
+      "anzahl": 2,
+      "wahlvorschlagID": "123"
+    },
+    {
+      "stimmenart": "B",
+      "anzahl": 3,
+      "wahlvorschlagID": "234"
+    }
+  ],
+  "ungueltigeStimmzettelAnzahl": 4,
+  "ergebnisse": [
+    {
+      "stimmenart": "B",
+      "wahlvorschlagsordnungszahl": 5,
+      "ergebnis": 3,
+      "wahlvorschlagID": "1456",
+      "kandidatID": "654321"
+    },
+    {
+      "stimmenart": "A",
+      "wahlvorschlagsordnungszahl": 9,
+      "ergebnis": 2,
+      "wahlvorschlagID": "12450",
+      "kandidatID": "60154321"
+    }
+  ],
   "wahlart": "BTW"
 }

@@ -51,8 +51,8 @@ public class EreignisController {
             }
     )
     @GetMapping("/{wahlbezirkID}")
-    public ResponseEntity<WahlbezirkEreignisseDTO> getEreignis(@PathVariable("wahlbezirkID") String wahlbezirkID) {
-        val ereignisFromService = ereignisService.getEreignis(wahlbezirkID);
+    public ResponseEntity<WahlbezirkEreignisseDTO> getEreignisse(@PathVariable("wahlbezirkID") String wahlbezirkID) {
+        val ereignisFromService = ereignisService.getEreignisse(wahlbezirkID);
         return okWithBodyOrNoContent(ereignisFromService.map(ereignisDTOMapper::toDTO));
     }
 
@@ -75,9 +75,9 @@ public class EreignisController {
     )
     @PostMapping("/{wahlbezirkID}")
     @ResponseStatus(HttpStatus.OK)
-    public void postEreignis(@PathVariable("wahlbezirkID") String wahlbezirkID,
+    public void postEreignisse(@PathVariable("wahlbezirkID") String wahlbezirkID,
             @RequestBody EreignisseWriteDTO ereignisseBody) {
-        ereignisService.postEreignis(ereignisDTOMapper.toModel(wahlbezirkID, ereignisseBody));
+        ereignisService.postEreignisse(ereignisDTOMapper.toModel(wahlbezirkID, ereignisseBody));
     }
 
     private <T> ResponseEntity<T> okWithBodyOrNoContent(final Optional<T> optionalBody) {

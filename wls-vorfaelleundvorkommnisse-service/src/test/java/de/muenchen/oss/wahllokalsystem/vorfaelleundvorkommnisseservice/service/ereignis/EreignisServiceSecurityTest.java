@@ -53,7 +53,7 @@ public class EreignisServiceSecurityTest {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_EREIGNISSE);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getEreignis(wahlbezirkID));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getEreignisse(wahlbezirkID));
         }
 
         @Test
@@ -63,7 +63,7 @@ public class EreignisServiceSecurityTest {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_EREIGNISSE);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.getEreignis(wahlbezirkID)).isInstanceOf(AccessDeniedException.class);
+            Assertions.assertThatThrownBy(() -> unitUnderTest.getEreignisse(wahlbezirkID)).isInstanceOf(AccessDeniedException.class);
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")
@@ -74,7 +74,7 @@ public class EreignisServiceSecurityTest {
             val wahlbezirkID = "wahlbezirkID";
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.getEreignis(wahlbezirkID)).isInstanceOf(AccessDeniedException.class);
+            Assertions.assertThatThrownBy(() -> unitUnderTest.getEreignisse(wahlbezirkID)).isInstanceOf(AccessDeniedException.class);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
@@ -94,7 +94,7 @@ public class EreignisServiceSecurityTest {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_EREIGNISSE);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postEreignis(mockedEreignisseWriteModel));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postEreignisse(mockedEreignisseWriteModel));
         }
 
         @Test
@@ -106,7 +106,7 @@ public class EreignisServiceSecurityTest {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_EREIGNISSE);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignis(mockedEreignisseWriteModel)).isInstanceOf(AccessDeniedException.class);
+            Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignisse(mockedEreignisseWriteModel)).isInstanceOf(AccessDeniedException.class);
         }
 
         @ParameterizedTest(name = "{index} {1} missing")
@@ -117,7 +117,7 @@ public class EreignisServiceSecurityTest {
             val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData());
             val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData(wahlbezirkID, mockedEreignisModelList);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignis(mockedEreignisseWriteModel)).isInstanceOf(AccessDeniedException.class);
+            Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignisse(mockedEreignisseWriteModel)).isInstanceOf(AccessDeniedException.class);
         }
 
         private static Stream<Arguments> getMissingServiceAuthoritiesVariations() {
@@ -134,7 +134,7 @@ public class EreignisServiceSecurityTest {
             val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData(wahlbezirkID, mockedEreignisModelList);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignis(mockedEreignisseWriteModel)).isInstanceOf(TechnischeWlsException.class);
+            Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignisse(mockedEreignisseWriteModel)).isInstanceOf(TechnischeWlsException.class);
         }
 
         private static Stream<Arguments> getMissingRepositoryAuthoritiesVariations() {

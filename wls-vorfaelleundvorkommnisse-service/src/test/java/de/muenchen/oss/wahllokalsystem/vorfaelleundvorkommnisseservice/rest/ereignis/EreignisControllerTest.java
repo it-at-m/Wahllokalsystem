@@ -42,10 +42,10 @@ public class EreignisControllerTest {
                     mockedEreignisModelList);
             val expectedWahlbezirkEreignisseDto = TestdataFactory.CreateWahlbezirkEreignisseDto.fromModel(mockedEreignisseModel);
 
-            Mockito.when(ereignisService.getEreignis(wahlbezirkID)).thenReturn(Optional.of(mockedEreignisseModel));
+            Mockito.when(ereignisService.getEreignisse(wahlbezirkID)).thenReturn(Optional.of(mockedEreignisseModel));
             Mockito.when(ereignisDTOMapper.toDTO(mockedEreignisseModel)).thenReturn(expectedWahlbezirkEreignisseDto);
 
-            val result = unitUnderTest.getEreignis(wahlbezirkID);
+            val result = unitUnderTest.getEreignisse(wahlbezirkID);
             Assertions.assertThat(result.getBody()).isEqualTo(expectedWahlbezirkEreignisseDto);
             Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         }
@@ -54,7 +54,7 @@ public class EreignisControllerTest {
         void should_returnNoContentStatus_when_noDataFound() {
             val wahlbezirkID = "wahlbezirkID";
 
-            val result = unitUnderTest.getEreignis(wahlbezirkID);
+            val result = unitUnderTest.getEreignisse(wahlbezirkID);
             Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         }
     }
@@ -72,8 +72,8 @@ public class EreignisControllerTest {
 
             Mockito.when(ereignisDTOMapper.toModel(wahlbezirkID, mockedEreignisseWriteDto)).thenReturn(mockedEreignisseWriteModel);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postEreignis(wahlbezirkID, mockedEreignisseWriteDto));
-            Mockito.verify(ereignisService).postEreignis(mockedEreignisseWriteModel);
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postEreignisse(wahlbezirkID, mockedEreignisseWriteDto));
+            Mockito.verify(ereignisService).postEreignisse(mockedEreignisseWriteModel);
         }
     }
 }

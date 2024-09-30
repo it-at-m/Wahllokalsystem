@@ -60,7 +60,7 @@ public class EreignisServiceTest {
             Mockito.when(ereignisModelMapper.toEreignisseModel(wahlbezirkID, keineVorfaelle, keineVorkommnisse, mockedEeignisModelList))
                     .thenReturn(expectedEreignisseModel);
 
-            val result = unitUnderTest.getEreignis(wahlbezirkID);
+            val result = unitUnderTest.getEreignisse(wahlbezirkID);
             Assertions.assertThat(result).isEqualTo(Optional.of(expectedEreignisseModel));
 
             Mockito.verify(ereignisValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
@@ -72,7 +72,7 @@ public class EreignisServiceTest {
 
             Mockito.when(ereignisRepository.findByWahlbezirkID(wahlbezirkID)).thenReturn(Collections.emptyList());
 
-            val result = unitUnderTest.getEreignis(wahlbezirkID);
+            val result = unitUnderTest.getEreignisse(wahlbezirkID);
             Assertions.assertThat(result).isEmpty();
         }
     }
@@ -88,7 +88,7 @@ public class EreignisServiceTest {
 
             Mockito.when(ereignisModelMapper.toEntity(mockedEreignisseWriteModel)).thenReturn(mockedEreignisList);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postEreignis(mockedEreignisseWriteModel));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postEreignisse(mockedEreignisseWriteModel));
 
             Mockito.verify(ereignisValidator).validEreignisAndWahlbezirkIDOrThrow(mockedEreignisseWriteModel);
             Mockito.verify(ereignisRepository).deleteByWahlbezirkID(mockedEreignisseWriteModel.wahlbezirkID());
@@ -107,7 +107,7 @@ public class EreignisServiceTest {
             Mockito.doThrow(mockedRepoSaveException).when(ereignisRepository).saveAll(mockedEreignisList);
             Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.SAVEEREIGNIS_UNSAVABLE)).thenReturn(mockedWlsException);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignis(mockedEreignisseWriteModel)).isSameAs(mockedWlsException);
+            Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignisse(mockedEreignisseWriteModel)).isSameAs(mockedWlsException);
         }
     }
 }

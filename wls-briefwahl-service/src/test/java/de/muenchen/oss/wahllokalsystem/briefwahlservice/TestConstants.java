@@ -19,15 +19,4 @@ public final class TestConstants {
 
     public static final String SPRING_NO_SECURITY_PROFILE = "no-security";
 
-    @NoArgsConstructor
-    @Getter
-    @Setter
-    @EqualsAndHashCode(callSuper = true)
-    @ToString(callSuper = true)
-    public static class TheEntityDto extends RepresentationModel {
-
-        private String textAttribute;
-
-    }
-
 }

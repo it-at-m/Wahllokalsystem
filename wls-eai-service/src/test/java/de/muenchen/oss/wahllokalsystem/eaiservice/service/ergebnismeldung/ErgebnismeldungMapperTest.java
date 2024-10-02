@@ -95,7 +95,8 @@ public class ErgebnismeldungMapperTest {
             val expectedErstellungszeit = LocalDate.of(2024, Month.JULY, 18).atStartOfDay();
 
             val expectedResult = new Ergebnismeldung(wahlbezirkID, wahlID, Meldungsart.NIEDERSCHRIFT, expectedAWerte,
-                    expectedBWerte, expectedWahlbriefeWerte, expectedUngueltigeStimmzettelList, ungueltigeStimmzettelAnzahl, expectedErgebnisse, Wahlart.BTW, expectedErstellungszeit);
+                    expectedBWerte, expectedWahlbriefeWerte, expectedUngueltigeStimmzettelList, ungueltigeStimmzettelAnzahl, expectedErgebnisse, Wahlart.BTW,
+                    expectedErstellungszeit);
 
             Assertions.assertThat(result).usingRecursiveComparison().ignoringFields("erstellungszeit").isEqualTo(expectedResult);
         }

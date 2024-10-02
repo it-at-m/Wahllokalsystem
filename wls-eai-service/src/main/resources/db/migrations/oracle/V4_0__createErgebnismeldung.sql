@@ -12,6 +12,7 @@ CREATE TABLE ergebnismeldung
     zurueckgewiesenGesamt       NUMBER,
     ungueltigeStimmzettelAnzahl NUMBER,
     wahlart                     VARCHAR2(36),
+    erstellungszeit            TIMESTAMP,
 
     PRIMARY KEY (id)
 );

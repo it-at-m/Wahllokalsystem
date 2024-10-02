@@ -26,10 +26,13 @@ Content-Type: application/json
   "wahlbezirkID": "00000000-0000-0000-0000-000000000001",
   "meldungsart": "NIEDERSCHRIFT",
   "aWerte": {
-    "a1": 3
+    "a1": 3,
+    "a2": 2
   },
   "bWerte": {
-    "b1": 8
+    "b": 1,
+    "b1": 8,
+    "b2": 65
   },
   "wahlbriefeWerte": {
     "zurueckgewiesenGesamt": 2

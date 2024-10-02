@@ -27,6 +27,8 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.Wahlbrie
 import de.muenchen.oss.wahllokalsystem.eaiservice.service.ergebnismeldung.ErgebnismeldungValidator;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Set;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -47,7 +49,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 public class ErgebnismeldungControllerIntegrationTest {
 
     @Autowired
@@ -85,7 +87,7 @@ public class ErgebnismeldungControllerIntegrationTest {
 
             Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
 
-            Assertions.assertThat(savedErgebnismeldung).usingRecursiveComparison().ignoringFields("id").isEqualTo(expectedSavedErgebnismeldung);
+            Assertions.assertThat(savedErgebnismeldung).usingRecursiveComparison().ignoringFields("id", "erstellungszeit").isEqualTo(expectedSavedErgebnismeldung);
         }
 
         @Test
@@ -161,9 +163,10 @@ public class ErgebnismeldungControllerIntegrationTest {
             val ungueltigeStimmzettelList = getUngueltigeStimmzettels();
             val ungueltigeStimmzettelAnzahl = 4L;
             val ergebnisse2 = getErgebnis();
+            val erstellungszeit = LocalDate.of(2024, Month.JULY, 18).atStartOfDay();
 
             return new Ergebnismeldung(wahlbezirkID, wahlID, Meldungsart.NIEDERSCHRIFT, aWerte2,
-                    bWerte2, wahlbriefeWerte2, ungueltigeStimmzettelList, ungueltigeStimmzettelAnzahl, ergebnisse2, Wahlart.BTW);
+                    bWerte2, wahlbriefeWerte2, ungueltigeStimmzettelList, ungueltigeStimmzettelAnzahl, ergebnisse2, Wahlart.BTW, erstellungszeit);
         }
 
         private ErgebnismeldungDTO getErgebnismeldungDTO() {

@@ -10,11 +10,13 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Data
@@ -53,5 +55,8 @@ public class Ergebnismeldung extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Wahlart wahlart;
+
+    @CreationTimestamp
+    private LocalDateTime erstellungszeit;
 
 }

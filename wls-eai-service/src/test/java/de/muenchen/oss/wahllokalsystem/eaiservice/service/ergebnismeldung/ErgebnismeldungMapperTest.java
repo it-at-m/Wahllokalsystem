@@ -16,6 +16,8 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.Ergebnis
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.MeldungsartDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.UngueltigeStimmzettelDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.WahlbriefeWerteDTO;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Set;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -90,11 +92,12 @@ public class ErgebnismeldungMapperTest {
             expectedErgebnis2.setWahlvorschlagID("wahlvorschlagID2");
 
             val expectedErgebnisse = Set.of(expectedErgebnis2, expectedErgebnis1);
+            val expectedErstellungszeit = LocalDate.of(2024, Month.JULY, 18).atStartOfDay();
 
             val expectedResult = new Ergebnismeldung(wahlbezirkID, wahlID, Meldungsart.NIEDERSCHRIFT, expectedAWerte,
-                    expectedBWerte, expectedWahlbriefeWerte, expectedUngueltigeStimmzettelList, ungueltigeStimmzettelAnzahl, expectedErgebnisse, Wahlart.BTW);
+                    expectedBWerte, expectedWahlbriefeWerte, expectedUngueltigeStimmzettelList, ungueltigeStimmzettelAnzahl, expectedErgebnisse, Wahlart.BTW, expectedErstellungszeit);
 
-            Assertions.assertThat(result).isEqualTo(expectedResult);
+            Assertions.assertThat(result).usingRecursiveComparison().ignoringFields("erstellungszeit").isEqualTo(expectedResult);
         }
 
     }

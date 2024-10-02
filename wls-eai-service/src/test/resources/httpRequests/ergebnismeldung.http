@@ -63,7 +63,8 @@ Content-Type: application/json
       "kandidatID": "60154321"
     }
   ],
-  "wahlart": "BTW"
+  "wahlart": "BTW",
+  "erstellungszeit": "2024-07-18T09:10:31.179Z"
 }
 
 ### POST Create - Error: Set Ergebnismeldung without wahlID
@@ -113,7 +114,8 @@ Content-Type: application/json
       "kandidatID": "60154321"
     }
   ],
-  "wahlart": "BTW"
+  "wahlart": "BTW",
+  "erstellungszeit": "2024-07-18T09:10:31.179Z"
 }
 
 ### POST Create - Error: Set Ergebnismeldung without wahlbezirkID
@@ -163,5 +165,6 @@ Content-Type: application/json
       "kandidatID": "60154321"
     }
   ],
-  "wahlart": "BTW"
+  "wahlart": "BTW",
+  "erstellungszeit": "2024-07-18T09:10:31.179Z"
 }

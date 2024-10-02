@@ -127,6 +127,7 @@ public class WahlbezirkeServiceSecurityTest {
             List<String> onlyNecessaryAuthorities = new ArrayList<>(Arrays.asList(Authorities.ALL_AUTHORITIES_GET_WAHLBEZIRKE));
             onlyNecessaryAuthorities.remove(Authorities.REPOSITORY_WRITE_WAHLBEZIRK);
             onlyNecessaryAuthorities.remove(Authorities.REPOSITORY_READ_WAHL);
+            onlyNecessaryAuthorities.remove(Authorities.SERVICE_GET_WAHLEN);
             return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(onlyNecessaryAuthorities.toArray(new String[0]));
         }
 

@@ -8,8 +8,10 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactor
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
+@Component
 public class InitializeKopfdaten {
 
     private final ExceptionFactory exceptionFactory;
@@ -48,7 +50,6 @@ public class InitializeKopfdaten {
     }
 
     private KopfdatenModel createKopfdaten(WahlModel wahl, WahlbezirkModel wahlbezirk, StimmzettelgebietModel stimmzettelgebiet) {
-
         val bezirkUndWahlID = new BezirkUndWahlID(wahl.wahlID(), wahlbezirk.wahlbezirkID());
         val gemeinde = "LHM";
         val kopfdatenModel = new KopfdatenModel(

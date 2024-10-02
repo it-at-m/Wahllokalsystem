@@ -22,5 +22,5 @@ public class UrnenwahlSchliessungsUhrzeit {
     private String wahlbezirkID;
 
     @NotNull
-    private java.time.LocalDateTime urnenwahlSchliessungsUhrzeit;
+    private java.time.LocalDateTime schliessungsuhrzeit;
 }

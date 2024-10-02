@@ -91,6 +91,24 @@ class WahlRepositoryTest {
         }
     }
 
+    @Test
+    void savingNewWahlenOverridesExistingWithSameId() {
+        repository.deleteAll();
+        val wahltagDateToFind = LocalDate.of(2024, 9, 3);
+        val wahlenToSave_First = List.of(
+                new Wahl("wahltagID1", "name1_first", 1, 1, wahltagDateToFind, Wahlart.BTW, null, "0"),
+                new Wahl("wahltagID2", "name2_first", 1, 1, wahltagDateToFind, Wahlart.BTW, null, "1"));
+        val wahlenToSave_Second = List.of(
+                new Wahl("wahltagID1", "name1_second", 1, 1, wahltagDateToFind.plusDays(1), Wahlart.BTW, null, "0"),
+                new Wahl("wahltagID2", "name2_second", 1, 1, wahltagDateToFind.minusDays(1), Wahlart.BTW, null, "1"));
+        repository.saveAll(wahlenToSave_First);
+        repository.saveAll(wahlenToSave_Second);
+
+        val foundWahlen = repository.findAll();
+
+        Assertions.assertThat(foundWahlen).containsExactlyInAnyOrderElementsOf(wahlenToSave_Second);
+    }
+
     private List<Wahl> createWahlenList() {
         val wahl1 = new Wahl("wahlID1", "name1", 3L, 1L, LocalDate.now().minusMonths(1), Wahlart.BAW, new Farbe(1, 1, 1), "1");
         val wahl2 = new Wahl("wahlID2", "name2", 2L, 2L, LocalDate.now().plusMonths(1), Wahlart.EUW, new Farbe(2, 2, 2), "2");

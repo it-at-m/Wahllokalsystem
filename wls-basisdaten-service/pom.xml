@@ -15,13 +15,13 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>3.3.2</spring.boot.version>
+        <spring.boot.version>3.3.4</spring.boot.version>
         <spring.cloud.version>2023.0.3</spring.cloud.version>
         <logstash.encoder>7.4</logstash.encoder>
         <apache.commons.collections4>4.4</apache.commons.collections4>
         <apache.commons.csv>1.11.0</apache.commons.csv>
-        <apache.commons.io>2.16.1</apache.commons.io>
-        <apache.commons.lang3>3.15.0</apache.commons.lang3>
+        <apache.commons.io>2.17.0</apache.commons.io>
+        <apache.commons.lang3>3.17.0</apache.commons.lang3>
         <apache.commons.text>1.12.0</apache.commons.text>
         <apache.commons.validator>1.9.0</apache.commons.validator>
         <!-- SonarQube -->
@@ -36,7 +36,7 @@
         <!-- Version muss mit der in den spring-boot-dependencies bereitgestellten Lombok-Version übereinstimmen -->
         <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
-        <org.mapstruct.version>1.6.0</org.mapstruct.version>
+        <org.mapstruct.version>1.6.2</org.mapstruct.version>
         <org.springdoc.version>2.6.0</org.springdoc.version>
         <wls.common.version>1.1.0</wls.common.version>
     </properties>
@@ -433,8 +433,8 @@
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
 
-                            <apiPackage>${project.groupId}.basisdatenservice.infomanagement.client</apiPackage>
-                            <modelPackage>${project.groupId}.basisdatenservice.infomanagement.model</modelPackage>
+                            <apiPackage>${project.groupId}.basisdatenservice.eai.infomanagement.client</apiPackage>
+                            <modelPackage>${project.groupId}.basisdatenservice.eai.infomanagement.model</modelPackage>
 
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>

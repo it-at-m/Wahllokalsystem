@@ -97,6 +97,25 @@ services:
       - services
       - keycloak
 
+  wls-vorfaelleundvorkommnisse-service:
+    container_name: wls-vorfaelleundvorkommnisse-service
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-vorfaelleundvorkommnisse-service:latest
+    depends_on:
+      - wls-db-oracle
+    env_file:
+      - .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=${WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_PROFILE}
+      - SPRING_DATASOURCE_URL=${WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_DB_URL}
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_KEYCLOAK_URL}/certs
+      - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_KEYCLOAK_URL}/userinfo
+      - SERVER_PORT=8080
+    ports:
+      - 8204:8080
+    networks:
+      - services
+      - keycloak
+
   ## Keycloak
   wls-keycloak:
     container_name: wls-keycloak
@@ -124,7 +143,7 @@ services:
 
   wls-init-keycloak:
     container_name: wls-init-keycloak
-    image: klg71/keycloakmigration:0.2.61
+    image: klg71/keycloakmigration:0.2.69
     depends_on:
       - wls-keycloak
     env_file:

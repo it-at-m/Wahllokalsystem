@@ -13,7 +13,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.Basisstru
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.StimmzettelgebietDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlbezirkDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.infomanagement.model.KonfigurierterWahltagDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.kopfdaten.KopfdatenDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.kopfdaten.StimmzettelgebietsartDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlbezirke.WahlbezirkartDTO;
@@ -30,6 +30,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlI
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import lombok.val;
 
 public class MockDataFactory {
@@ -47,6 +48,10 @@ public class MockDataFactory {
                 wahlbezirkNummer);
     }
 
+    public static KopfdatenModel createKopfdatenModelFor(String wahlID, String wahlbezirkID) {
+        return createKopfdatenModelFor(wahlID, wahlbezirkID, null, null, null, null, null);
+    }
+
     public static KopfdatenModel createKopfdatenModelFor(String wahlID, String wahlbezirkID, StimmzettelgebietsartModel szga, String szGebietsNummer,
             String szGebietsName, String wahlname, String wahlbezirkNummer) {
         return new KopfdatenModel(
@@ -57,6 +62,10 @@ public class MockDataFactory {
                 szGebietsName,
                 wahlname,
                 wahlbezirkNummer);
+    }
+
+    public static Kopfdaten createKopfdatenEntityFor(String wahlID, String wahlbezirkID) {
+        return createKopfdatenEntityFor(wahlID, wahlbezirkID, null, null, null, null, null);
     }
 
     public static Kopfdaten createKopfdatenEntityFor(String wahlID, String wahlbezirkID, Stimmzettelgebietsart szga, String szGebietsName,
@@ -301,6 +310,10 @@ public class MockDataFactory {
         wahlbezirk4.setWahlID("wahlID2");
 
         return Set.of(wahlbezirk1, wahlbezirk2, wahlbezirk3, wahlbezirk4);
+    }
+
+    public static Wahlbezirk createWahlbezirkEntity(final LocalDate wahltagDate) {
+        return new Wahlbezirk(UUID.randomUUID().toString(), wahltagDate, "nummer", WahlbezirkArt.UWB, "nummer", "wahlID");
     }
 
     public static List<Wahlbezirk> createListOfWahlbezirkEntity(String praefix, LocalDate aDate) {

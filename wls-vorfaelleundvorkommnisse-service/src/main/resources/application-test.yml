@@ -9,7 +9,7 @@ spring:
       # configuration for local (development) mode. this
       # is also the default, that spring offers by convention.
       # but here explicite:
-      ddl-auto: create-drop
+      ddl-auto: validate
       naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     # Logging for database operation
     show-sql: true

@@ -42,3 +42,4 @@ includes:
   - path: add-authorities-basisdaten-wahlbezirke.yml
   - path: create-group-all-vorfaelleundvorkommnisse-authorities.yml
   - path: add-authorities-vorfaelleundvorkommnisse.yml
+  - path: add-authorities-eai-ergebnismeldung.yml

@@ -20,6 +20,8 @@ public class Authorities {
 
     public static final String SERVICE_SAVE_WAHLBETEILIGUNG = "aoueai_BUSINESSACTION_SaveWahlbeteiligung";
 
+    public static final String SERVICE_SAVE_ERGEBNISMELDUNG = "aoueai_BUSINESSACTION_SaveErgebnismeldung";
+
     public static final String[] ALL_AUTHORITIES_GETWAHLVORSTANDFORWAHLBEZIRK = {
             SERVICE_LOAD_WAHLVORSTAND
     };

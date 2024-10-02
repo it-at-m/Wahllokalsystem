@@ -29,7 +29,6 @@ public class WahltageClientImpl implements WahltageClient {
 
     @Override
     public List<WahltagModel> getWahltage(LocalDate tag) throws WlsException {
-
         final Set<WahltagDTO> wahltageDTO;
         try {
             wahltageDTO = (Set<WahltagDTO>) wahldatenControllerApi.loadWahltageSinceIncluding(tag);

@@ -77,7 +77,7 @@ public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
             val wahlbezirkIDToFind = "123";
             val urnenwahlSchliessungsUhrzeitToFind = new UrnenwahlSchliessungsUhrzeit();
             urnenwahlSchliessungsUhrzeitToFind.setWahlbezirkID(wahlbezirkIDToFind);
-            urnenwahlSchliessungsUhrzeitToFind.setUrnenwahlSchliessungsUhrzeit(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
+            urnenwahlSchliessungsUhrzeitToFind.setSchliessungsuhrzeit(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
             urnenwahlSchliessungsUhrzeitRepository.save(urnenwahlSchliessungsUhrzeitToFind);
             val expectedResponseBody = urnenwahlSchliessungsUhrzeitDTOMapper.toDTO(
                     urnenwahlSchliessungsUhrzeitModelMapper.toModel(urnenwahlSchliessungsUhrzeitToFind));
@@ -102,7 +102,7 @@ public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
             val wahlbezirkIDNotEmpty = "456";
             val urnenwahlSchliessungsUhrzeitToFind = new UrnenwahlSchliessungsUhrzeit();
             urnenwahlSchliessungsUhrzeitToFind.setWahlbezirkID(wahlbezirkIDNotEmpty);
-            urnenwahlSchliessungsUhrzeitToFind.setUrnenwahlSchliessungsUhrzeit(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
+            urnenwahlSchliessungsUhrzeitToFind.setSchliessungsuhrzeit(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
             urnenwahlSchliessungsUhrzeitRepository.save(urnenwahlSchliessungsUhrzeitToFind);
 
             val request = get("/businessActions/urnenwahlSchliessungsUhrzeit/" + wahlbezirkIDEmpty);

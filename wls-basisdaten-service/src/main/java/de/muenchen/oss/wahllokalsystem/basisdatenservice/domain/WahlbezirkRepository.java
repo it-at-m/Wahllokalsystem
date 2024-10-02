@@ -19,7 +19,7 @@ public interface WahlbezirkRepository extends CrudRepository<Wahlbezirk, String>
     @PreAuthorize("hasAuthority('Basisdaten_DELETE_Wahlbezirk')")
     void deleteByWahltag(LocalDate wahltag);
 
-    int countByWahltag(LocalDate wahltag);
+    boolean existsByWahltag(LocalDate wahltag);
 
     List<Wahlbezirk> findByWahltag(LocalDate wahltag);
 

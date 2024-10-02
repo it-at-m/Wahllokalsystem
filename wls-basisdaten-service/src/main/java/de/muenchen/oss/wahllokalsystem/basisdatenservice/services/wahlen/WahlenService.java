@@ -48,6 +48,12 @@ public class WahlenService {
         return wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(wahlRepository.findByWahltagOrderByReihenfolge(wahltagValue.wahltag()));
     }
 
+    @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetWahlen')")
+    public List<WahlModel> getExistingWahlenOrderedByReihenfolge(final String wahltagID) {
+        val wahltagValue = wahltageService.getWahltagByID(wahltagID);
+        return wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(wahlRepository.findByWahltagOrderByReihenfolge(wahltagValue.wahltag()));
+    }
+
     @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_PostWahlen')")
     @Transactional
     public void postWahlen(final WahlenWriteModel wahlenWriteModel) {
@@ -57,7 +63,7 @@ public class WahlenService {
             wahlRepository.saveAll(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(wahlenWriteModel.wahlen()));
         } catch (Exception e) {
             log.error("#postWahlen: Die Wahlen konnten aufgrund eines Fehlers nicht gespeichert werden:", e);
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTWAHLEN_UNSAVEABLE);
+            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTWAHLEN_UNSAVEABLE);
         }
     }
 

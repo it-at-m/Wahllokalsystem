@@ -190,7 +190,7 @@ public class WahlenControllerIntegrationTest {
         void newDataIsSet() throws Exception {
             var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung5", "1");
             wahltagRepository.save(searchingForWahltag);
-            val newData = createControllerListOfWahlDTO(searchingForWahltag);
+            val newData = createControllerListOfWahlDTO(searchingForWahltag, "");
 
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL, Authorities.SERVICE_POST_WAHLEN);
             val request = MockMvcRequestBuilders.post("/businessActions/wahlen/" + searchingForWahltag.getWahltagID()).with(csrf())
@@ -209,24 +209,33 @@ public class WahlenControllerIntegrationTest {
         void existingWahlenAreReplaced() throws Exception {
             var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung6", "1");
             wahltagRepository.save(searchingForWahltag);
-            val newData = createControllerListOfWahlDTO(searchingForWahltag);
+            val oldData = createControllerListOfWahlDTO(searchingForWahltag, "");
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL, Authorities.SERVICE_POST_WAHLEN, Authorities.REPOSITORY_READ_WAHL);
-            val request = MockMvcRequestBuilders.post("/businessActions/wahlen/" + searchingForWahltag.getWahltagID()).with(csrf())
+            val requestFirst = MockMvcRequestBuilders.post("/businessActions/wahlen/" + searchingForWahltag.getWahltagID()).with(csrf())
                     .contentType(MediaType.APPLICATION_JSON).content(
-                            objectMapper.writeValueAsString(newData));
-            api.perform(request).andExpect(status().isOk());
-
-            val expectedPostedWahlen = wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(dtoMapper.fromListOfWahlDTOtoListOfWahlModel(newData));
+                            objectMapper.writeValueAsString(oldData));
+            api.perform(requestFirst).andExpect(status().isOk());
+            val expectedPostedWahlen_old = wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(dtoMapper.fromListOfWahlDTOtoListOfWahlModel(oldData));
             val oldSavedWahlen = wahlRepository.findAll();
 
-            Assertions.assertThat(oldSavedWahlen).isEqualTo(expectedPostedWahlen);
+            Assertions.assertThat(oldSavedWahlen).isEqualTo(expectedPostedWahlen_old);
+
+            val newWahlen = createControllerListOfWahlDTO(searchingForWahltag, "newWahlen");
+            val requestSecond = MockMvcRequestBuilders.post("/businessActions/wahlen/" + searchingForWahltag.getWahltagID()).with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                            objectMapper.writeValueAsString(newWahlen));
+            api.perform(requestSecond).andExpect(status().isOk());
+            val expectedPostedWahlen_new = wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(dtoMapper.fromListOfWahlDTOtoListOfWahlModel(newWahlen));
+            val newSavedWahlen = wahlRepository.findAll();
+
+            Assertions.assertThat(newSavedWahlen).isEqualTo(expectedPostedWahlen_new);
         }
 
         @Test
         void fachlicheWlsExceptionWhenRequestIsInvalid() throws Exception {
             var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung7", "1");
             wahltagRepository.save(searchingForWahltag);
-            val newData = createControllerListOfWahlDTO(searchingForWahltag);
+            val newData = createControllerListOfWahlDTO(searchingForWahltag, "");
 
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL, Authorities.SERVICE_POST_WAHLEN, Authorities.REPOSITORY_READ_WAHL);
             val request = MockMvcRequestBuilders.post("/businessActions/wahlen/" + "     ").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
@@ -260,7 +269,7 @@ public class WahlenControllerIntegrationTest {
     class ResetWahlen {
 
         @Test
-        void existingWahlenAreReplaced() throws Exception {
+        void existingWahlenAreReseted() throws Exception {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL);
             val oldRepositoryWahlen = createWahlEntities();
             wahlRepository.saveAll(oldRepositoryWahlen);
@@ -303,12 +312,16 @@ public class WahlenControllerIntegrationTest {
         return Set.of(wahl1, wahl2, wahl3).stream().filter(wahl -> (wahl.getWahltag().equals(searchingForWahltag.getWahltag()))).collect(Collectors.toSet());
     }
 
-    private List<de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO> createControllerListOfWahlDTO(Wahltag searchingForWahltag) {
-        val wahl1 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID1", "name1", 3L, 1L, searchingForWahltag.getWahltag(),
+    private List<de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO> createControllerListOfWahlDTO(Wahltag searchingForWahltag,
+            final String namePraefix) {
+        val wahl1 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID1", namePraefix + "name1", 3L, 1L,
+                searchingForWahltag.getWahltag(),
                 Wahlart.BAW, new Farbe(1, 1, 1), "1");
-        val wahl2 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID2", "name2", 3L, 1L, searchingForWahltag.getWahltag(),
+        val wahl2 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID2", namePraefix + "name2", 3L, 1L,
+                searchingForWahltag.getWahltag(),
                 Wahlart.BAW, new Farbe(1, 1, 1), "2");
-        val wahl3 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID3", "name3", 3L, 1L, LocalDate.now().plusMonths(2),
+        val wahl3 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID3", namePraefix + "name3", 3L, 1L,
+                LocalDate.now().plusMonths(2),
                 Wahlart.BAW, new Farbe(1, 1, 1), "3");
 
         return Stream.of(wahl1, wahl2, wahl3).filter(wahl -> (wahl.wahltag().equals(searchingForWahltag.getWahltag()))).collect(Collectors.toList());

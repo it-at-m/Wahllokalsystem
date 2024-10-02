@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.KopfdatenRepository;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahltagWithNummer;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ public class KopfdatenService {
     private final WahldatenClient wahldatenClient;
     private final KopfdatenRepository kopfdatenRepository;
     private final KopfdatenModelMapper kopfdatenModelMapper;
-    private final ExceptionFactory exceptionFactory;
+    private final InitializeKopfdaten kopfDataInitializer;
 
     @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetKopfdaten')")
     @Transactional
@@ -36,9 +36,9 @@ public class KopfdatenService {
         } else {
             log.error("#getKopfdaten: Für Wahlbezirk {} mit WahlID {} waren keine Kopfdaten in der Datenbank", bezirkUndWahlID.getWahlbezirkID(),
                     bezirkUndWahlID.getWahlID());
-            final InitializeKopfdaten kopfDataInitializer = new InitializeKopfdaten(exceptionFactory);
             KonfigurierterWahltagModel konfigurierterWahltagModel = konfigurierterWahltagClient.getKonfigurierterWahltag();
-            BasisdatenModel basisdatenModel = wahldatenClient.loadBasisdaten(konfigurierterWahltagModel.wahltag(), konfigurierterWahltagModel.nummer());
+            BasisdatenModel basisdatenModel = wahldatenClient.loadBasisdaten(
+                    new WahltagWithNummer(konfigurierterWahltagModel.wahltag(), konfigurierterWahltagModel.nummer()));
             kopfdatenModel = kopfDataInitializer.initKopfdata(bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID(), basisdatenModel);
             kopfdatenRepository.save(kopfdatenModelMapper.toEntity(kopfdatenModel));
         }

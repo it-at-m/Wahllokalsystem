@@ -47,7 +47,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
+@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
 public class ErgebnismeldungControllerIntegrationTest {
 
     @Autowired

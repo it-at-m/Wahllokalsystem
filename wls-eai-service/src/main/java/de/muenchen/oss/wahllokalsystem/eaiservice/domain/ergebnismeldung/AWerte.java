@@ -8,7 +8,7 @@ import lombok.Data;
 public class AWerte {
 
     private Long a1;
-    
+
     private Long a2;
 
 }

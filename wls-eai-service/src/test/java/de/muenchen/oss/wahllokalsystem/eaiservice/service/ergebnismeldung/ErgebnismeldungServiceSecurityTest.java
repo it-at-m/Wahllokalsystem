@@ -15,7 +15,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE})
+@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
 public class ErgebnismeldungServiceSecurityTest {
 
     @Autowired

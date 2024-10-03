@@ -76,7 +76,7 @@ public class AsyncWahltermindatenService {
         }
 
         basisdaten.wahlen().parallelStream()
-                .filter(wahl -> !Wahlart.VE.equals(wahl.wahlart()) && !Wahlart.BEB.equals(wahl.wahlart()))
+                .filter(wahl -> Wahlart.VE.equals(wahl.wahlart()) || Wahlart.BEB.equals(wahl.wahlart()))
                 .forEach(wahl -> basisdaten.wahlbezirke().parallelStream()
                         .forEach(wahlbezirk -> {
                             if (wahl.wahlID().equals(wahlbezirk.wahlID())) {

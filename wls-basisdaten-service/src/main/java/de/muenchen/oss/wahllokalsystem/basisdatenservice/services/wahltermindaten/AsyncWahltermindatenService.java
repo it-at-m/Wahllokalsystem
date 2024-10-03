@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,12 +45,16 @@ public class AsyncWahltermindatenService {
         asyncProgress.setWahlvorschlaegeTotal(basisdaten.wahlen().size() * basisdaten.wahlbezirke().size());
         asyncProgress.setWahlvorschlaegeLoadingActive(true);
 
+        val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+
         basisdaten.wahlen().parallelStream()
                 .filter(wahl -> !Wahlart.VE.equals(wahl.wahlart()) && !Wahlart.BEB.equals(wahl.wahlart()))
                 .forEach(wahl -> basisdaten.wahlbezirke().parallelStream()
                         .forEach(wahlbezirk -> {
                             if (wahl.wahlID().equals(wahlbezirk.wahlID())) {
+                                SecurityContextHolder.getContext().setAuthentication(currentAuthentication);
                                 loadAndPersistWahlvorschlaege(wahl.wahlID(), wahlbezirk.wahlbezirkID(), wahlbezirk.nummer());
+                                SecurityContextHolder.getContext().setAuthentication(null);
                             }
                         })
                 );
@@ -75,12 +80,16 @@ public class AsyncWahltermindatenService {
             asyncProgress.setReferendumLoadingActive(true);
         }
 
+        val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+
         basisdaten.wahlen().parallelStream()
                 .filter(wahl -> Wahlart.VE.equals(wahl.wahlart()) || Wahlart.BEB.equals(wahl.wahlart()))
                 .forEach(wahl -> basisdaten.wahlbezirke().parallelStream()
                         .forEach(wahlbezirk -> {
                             if (wahl.wahlID().equals(wahlbezirk.wahlID())) {
+                                SecurityContextHolder.getContext().setAuthentication(currentAuthentication);
                                 loadAndPersistReferendumvorlagen(wahl.wahlID(), wahlbezirk.wahlbezirkID(), wahlbezirk.nummer());
+                                SecurityContextHolder.getContext().setAuthentication(null);
                             }
                         })
                 );

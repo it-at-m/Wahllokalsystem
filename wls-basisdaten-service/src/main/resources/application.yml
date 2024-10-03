@@ -64,6 +64,10 @@ info.application.name: @project.artifactId@
 info.application.version: @project.version@
 
 app:
+  async:
+    corePoolSize: 2
+    maxPoolSize: 2
+    queueCapacity: 500
   clients:
     eai:
       basePath: http://localhost:39146

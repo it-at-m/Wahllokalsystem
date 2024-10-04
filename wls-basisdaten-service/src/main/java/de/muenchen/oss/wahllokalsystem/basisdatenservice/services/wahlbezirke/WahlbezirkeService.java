@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlbezirk;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlbezirkRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.Wahlbezirk;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.WahlbezirkRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageService;

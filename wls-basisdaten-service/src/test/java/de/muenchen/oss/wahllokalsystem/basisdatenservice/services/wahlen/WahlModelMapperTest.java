@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Farbe;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahl;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Farbe;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahl;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;

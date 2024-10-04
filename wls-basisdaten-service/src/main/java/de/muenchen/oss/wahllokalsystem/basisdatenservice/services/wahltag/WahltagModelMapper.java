@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahltag;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.Wahltag;
 import java.util.List;
 import org.mapstruct.Mapper;
 

@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen;
 
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.Max;

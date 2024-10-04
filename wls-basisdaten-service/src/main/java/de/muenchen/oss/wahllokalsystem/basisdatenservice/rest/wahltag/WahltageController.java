@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahltage;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahltag;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageService;
 import io.swagger.v3.oas.annotations.Operation;

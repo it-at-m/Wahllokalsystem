@@ -1,16 +1,14 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlaege;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag;
 
 import static java.sql.Types.VARCHAR;
 
-import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -25,14 +23,13 @@ import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
-@Embeddable
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class Wahlvorschlaege {
+public class Wahlvorschlag {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -40,23 +37,35 @@ public class Wahlvorschlaege {
     @JdbcTypeCode(VARCHAR)
     private UUID id;
 
-    @Embedded
+    //    @Id
     @NaturalId
     @NotNull
     @ToString.Include
-    private BezirkUndWahlID bezirkUndWahlID;
+    private String identifikator;
+
+    @ManyToOne
+    @NotNull
+    @JoinColumn(name = "wahlvorschlaegeID")
+    @EqualsAndHashCode.Exclude
+    private Wahlvorschlaege wahlvorschlaeage;
 
     @NotNull
     @ToString.Include
-    private String stimmzettelgebietID;
+    private long ordnungszahl;
 
-    @OneToMany(mappedBy = "wahlvorschlaeage", orphanRemoval = true)
     @NotNull
-    @Size(min = 1)
-    private Set<Wahlvorschlag> wahlvorschlaege = new LinkedHashSet<>();
+    private String kurzname;
 
-    public void addWahlvorschlag(final Wahlvorschlag wahlvorschlag) {
-        wahlvorschlag.setWahlvorschlaeage(this);
-        wahlvorschlaege.add(wahlvorschlag);
+    @NotNull
+    @ToString.Include
+    private boolean erhaeltStimmen;
+
+    @OneToMany(mappedBy = "wahlvorschlag", orphanRemoval = true)
+    @NotNull
+    private Set<Kandidat> kandidaten = new LinkedHashSet<>();
+
+    public void addKandidat(final Kandidat kandidat) {
+        kandidat.setWahlvorschlag(this);
+        kandidaten.add(kandidat);
     }
 }

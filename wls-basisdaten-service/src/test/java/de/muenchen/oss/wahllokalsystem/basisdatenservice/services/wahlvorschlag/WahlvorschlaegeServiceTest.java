@@ -3,12 +3,12 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlaege.Kandidat;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlaege.KandidatRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlaege.Wahlvorschlaege;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlaege.WahlvorschlaegeRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlaege.Wahlvorschlag;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlaege.WahlvorschlagRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.Kandidat;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.KandidatRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.Wahlvorschlaege;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlaegeRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.Wahlvorschlag;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlagRepository;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Optional;
 import java.util.Set;

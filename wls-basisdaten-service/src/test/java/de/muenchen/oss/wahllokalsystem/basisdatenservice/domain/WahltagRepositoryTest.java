@@ -3,8 +3,8 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.Wahltag;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.Wahltag;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.WahltagRepository;
 import java.time.LocalDate;
 import java.util.Arrays;
 import lombok.val;

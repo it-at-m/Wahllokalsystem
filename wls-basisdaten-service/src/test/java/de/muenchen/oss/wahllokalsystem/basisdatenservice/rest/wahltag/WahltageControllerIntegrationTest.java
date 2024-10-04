@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahltage;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahltag;
 
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.WahltageClientMapper;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.Wahltag;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.Wahltag;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModelMapper;
@@ -92,7 +92,7 @@ public class WahltageControllerIntegrationTest {
 
             val responseFromController = api.perform(request).andExpect(status().isOk()).andReturn();
             val responseBodyAsDTO = objectMapper.readValue(responseFromController.getResponse().getContentAsString(),
-                    de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahltage.WahltagDTO[].class);
+                    de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahltag.WahltagDTO[].class);
 
             val expectedResponseBody = dtoMapper
                     .fromListOfWahltagModelToListOfWahltagDTO(wahltageClientMapper.fromRemoteClientSetOfWahltagDTOtoListOfWahltagModel(eaiWahltage));
@@ -135,7 +135,7 @@ public class WahltageControllerIntegrationTest {
 
             val responseFromController = api.perform(request).andExpect(status().isOk()).andReturn();
             val responseBodyAsListOfDTOs = objectMapper.readValue(responseFromController.getResponse().getContentAsString(),
-                    de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahltage.WahltagDTO[].class);
+                    de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahltag.WahltagDTO[].class);
 
             WireMock.verify(1, WireMock.anyRequestedFor(WireMock.anyUrl()));
 

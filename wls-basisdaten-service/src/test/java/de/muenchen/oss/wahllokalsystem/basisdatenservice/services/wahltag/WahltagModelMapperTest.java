@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.Wahltag;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.Wahltag;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.val;

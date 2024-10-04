@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen;
 
 import java.time.LocalDate;
 import java.util.List;

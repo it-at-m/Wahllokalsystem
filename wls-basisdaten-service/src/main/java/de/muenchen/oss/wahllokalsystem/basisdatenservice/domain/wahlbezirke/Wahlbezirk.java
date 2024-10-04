@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirk;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahlbezirkArt;
 import jakarta.persistence.Entity;

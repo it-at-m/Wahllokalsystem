@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahltage;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahltag;
 
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;

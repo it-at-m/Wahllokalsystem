@@ -1,13 +1,18 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlaege;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag;
 
 import static java.sql.Types.VARCHAR;
 
+import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -20,13 +25,14 @@ import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
+@Embeddable
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class Kandidat {
+public class Wahlvorschlaege {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -34,34 +40,23 @@ public class Kandidat {
     @JdbcTypeCode(VARCHAR)
     private UUID id;
 
+    @Embedded
     @NaturalId
     @NotNull
     @ToString.Include
-    private String identifikator;
-
-    @ManyToOne
-    @NotNull
-    @JoinColumn(name = "wahlvorschlagID")
-    @EqualsAndHashCode.Exclude
-    private Wahlvorschlag wahlvorschlag;
+    private BezirkUndWahlID bezirkUndWahlID;
 
     @NotNull
     @ToString.Include
-    private String name;
+    private String stimmzettelgebietID;
 
+    @OneToMany(mappedBy = "wahlvorschlaeage", orphanRemoval = true)
     @NotNull
-    @ToString.Include
-    private long listenposition;
+    @Size(min = 1)
+    private Set<Wahlvorschlag> wahlvorschlaege = new LinkedHashSet<>();
 
-    @NotNull
-    @ToString.Include
-    private boolean direktkandidat;
-
-    @NotNull
-    @ToString.Include
-    private long tabellenSpalteInNiederschrift;
-
-    @NotNull
-    @ToString.Include
-    private boolean einzelbewerber;
+    public void addWahlvorschlag(final Wahlvorschlag wahlvorschlag) {
+        wahlvorschlag.setWahlvorschlaeage(this);
+        wahlvorschlaege.add(wahlvorschlag);
+    }
 }

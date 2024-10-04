@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag;
 
 import java.util.List;
 import java.util.Optional;

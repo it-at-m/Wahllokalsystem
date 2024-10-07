@@ -33,6 +33,9 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.WahlReposit
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.BasisdatenDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.BasisstrukturdatenDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.StimmzettelgebietDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlbezirkDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -132,9 +135,9 @@ public class WahltermindatenControllerIntegrationTest {
             wahlvorschlaegeToDelete = createWahlvorschlaegeToDelete(wahlbezirkeToDelete);
             referendumvorlagenToDelete = createReferendumvorlagenToDelete(wahlbezirkeToDelete);
 
-            setupWireMockForWahltagClient(wahltagForDelete, dateStringForDelete);
+            setupWireMockForWahltagClient(wahltagForDelete);
 
-            setupWireMockForWahlClient(wahlToDelete1.getWahlID(), wahlToDelete2.getWahlID(), dateStringForDelete, wahltagForDelete);
+            setupWireMockForWahlClient(wahlToDelete1.getWahlID(), wahlToDelete2.getWahlID());
         }
 
         @Test
@@ -249,25 +252,14 @@ public class WahltermindatenControllerIntegrationTest {
             Assertions.assertThat(kopfdatenRepository.count()).isEqualTo(kopfdatenToDelete.size());
         }
 
-        private void setupWireMockForWahlClient(String wahlToDeleteID1, String wahlToDeleteID2, String dateStringForDelete, Wahltag wahltagForDelete)
+        private void setupWireMockForWahlClient(String wahlToDeleteID1, String wahlToDeleteID2)
                 throws JsonProcessingException {
             val wahlclientResponse = new BasisdatenDTO().basisstrukturdaten(
                     Set.of(new BasisstrukturdatenDTO().wahlID(wahlToDeleteID1), new BasisstrukturdatenDTO().wahlID(wahlToDeleteID2)));
-            WireMock.stubFor(WireMock.get("/wahldaten/basisdaten?forDate=" + dateStringForDelete + "&withNummer=" + wahltagForDelete.getNummer())
+            WireMock.stubFor(WireMock.get(WireMock.urlPathMatching("/wahldaten/basisdaten"))
                     .willReturn(WireMock.aResponse()
                             .withHeader("Content-Type", "application/json")
                             .withBody(objectMapper.writeValueAsString(wahlclientResponse))
-                            .withStatus(HttpStatus.OK.value()))
-            );
-        }
-
-        private void setupWireMockForWahltagClient(Wahltag wahltagForDelete, String dateStringForDelete) throws JsonProcessingException {
-            val wahltagClientResponse = Set.of(new WahltagDTO().identifikator(wahltagForDelete.getWahltagID()).tag(LocalDate.parse(dateStringForDelete))
-                    .nummer(wahltagForDelete.getNummer()));
-            WireMock.stubFor(WireMock.get("/wahldaten/wahltage?includingSince=2024-07-07")
-                    .willReturn(WireMock.aResponse()
-                            .withHeader("Content-Type", "application/json")
-                            .withBody(objectMapper.writeValueAsString(wahltagClientResponse))
                             .withStatus(HttpStatus.OK.value()))
             );
         }
@@ -351,5 +343,97 @@ public class WahltermindatenControllerIntegrationTest {
 
             return referendumvorlagenRepository.save(referendumvorlagen);
         }
+    }
+
+    @Nested
+    class PutWahltermindaten {
+
+        @Test
+        void should_persistImportedData_when_wahltagIDIsValidWahltag() throws Exception {
+            val localDateOfWahltag = LocalDate.parse("2024-08-26");
+            val wahltagToGetWahltermindaten = new Wahltag("wahltagID", localDateOfWahltag, "", "1");
+
+            setupWireMockForWahltagClient(wahltagToGetWahltermindaten);
+
+            val basisstrukturdatenToImport = new BasisdatenDTO()
+                    .basisstrukturdaten(
+                            Set.of(
+                                    new BasisstrukturdatenDTO().wahlID("wahlID1").wahltag(localDateOfWahltag).wahlbezirkID("wahlbezirkID1_1")
+                                            .stimmzettelgebietID("sgzID1"),
+                                    new BasisstrukturdatenDTO().wahlID("wahlID1").wahltag(localDateOfWahltag).wahlbezirkID("wahlbezirkID1_2")
+                                            .stimmzettelgebietID("sgzID1"),
+                                    new BasisstrukturdatenDTO().wahlID("wahlID1").wahltag(localDateOfWahltag).wahlbezirkID("wahlbezirkID1_3")
+                                            .stimmzettelgebietID("sgzID1"),
+                                    new BasisstrukturdatenDTO().wahlID("wahlID2").wahltag(localDateOfWahltag).wahlbezirkID("wahlbezirkID2_1")
+                                            .stimmzettelgebietID("sgzID2"),
+                                    new BasisstrukturdatenDTO().wahlID("wahlID2").wahltag(localDateOfWahltag).wahlbezirkID("wahlbezirkID2_2")
+                                            .stimmzettelgebietID("sgzID2")
+                            )
+                    )
+                    .stimmzettelgebiete(
+                            Set.of(
+                                    new StimmzettelgebietDTO().wahltag(localDateOfWahltag).name("sgz1").identifikator("sgzID1").nummer("1")
+                                            .stimmzettelgebietsart(
+                                                    StimmzettelgebietDTO.StimmzettelgebietsartEnum.WK),
+                                    new StimmzettelgebietDTO().wahltag(localDateOfWahltag).name("sgz2").identifikator("sgzID2").nummer("2")
+                                            .stimmzettelgebietsart(
+                                                    StimmzettelgebietDTO.StimmzettelgebietsartEnum.WK)
+
+                            )
+                    )
+                    .wahlen(
+                            Set.of(
+                                    new WahlDTO().name("wahl 1").wahltag(localDateOfWahltag).identifikator("wahlID1").wahlart(WahlDTO.WahlartEnum.BTW)
+                                            .nummer("1"),
+                                    new WahlDTO().name("wahl 2").wahltag(localDateOfWahltag).identifikator("wahlID2").wahlart(WahlDTO.WahlartEnum.BTW)
+                                            .nummer("2")
+                            )
+                    )
+                    .wahlbezirke(
+                            Set.of(
+                                    new WahlbezirkDTO().wahltag(localDateOfWahltag).wahlID("wahlID1").identifikator("wahlbezirkID1_1").nummer("1_1")
+                                            .wahlnummer("1").wahlbezirkArt(
+                                                    WahlbezirkDTO.WahlbezirkArtEnum.UWB),
+                                    new WahlbezirkDTO().wahltag(localDateOfWahltag).wahlID("wahlID1").identifikator("wahlbezirkID1_2").nummer("1_2")
+                                            .wahlnummer("1").wahlbezirkArt(
+                                                    WahlbezirkDTO.WahlbezirkArtEnum.UWB),
+                                    new WahlbezirkDTO().wahltag(localDateOfWahltag).wahlID("wahlID1").identifikator("wahlbezirkID1_3").nummer("1_3")
+                                            .wahlnummer("1").wahlbezirkArt(
+                                                    WahlbezirkDTO.WahlbezirkArtEnum.UWB),
+                                    new WahlbezirkDTO().wahltag(localDateOfWahltag).wahlID("wahlID2").identifikator("wahlbezirkID2_1").nummer("2_1")
+                                            .wahlnummer("2").wahlbezirkArt(
+                                                    WahlbezirkDTO.WahlbezirkArtEnum.UWB),
+                                    new WahlbezirkDTO().wahltag(localDateOfWahltag).wahlID("wahlID2").identifikator("wahlbezirkID2_2").nummer("2_2")
+                                            .wahlnummer("2").wahlbezirkArt(
+                                                    WahlbezirkDTO.WahlbezirkArtEnum.UWB)
+                            )
+                    );
+
+            WireMock.stubFor(WireMock.get(WireMock.urlPathMatching("/wahldaten/basisdaten"))
+                    .willReturn(WireMock.aResponse()
+                            .withHeader("Content-Type", "application/json")
+                            .withBody(objectMapper.writeValueAsString(basisstrukturdatenToImport))
+                            .withStatus(HttpStatus.OK.value()))
+            );
+
+            val request = MockMvcRequestBuilders.put("/businessActions/wahltermindaten/" + wahltagToGetWahltermindaten.getWahltagID());
+            mockMvc.perform(request).andExpect(status().isOk());
+
+            Assertions.assertThat(kopfdatenRepository.count()).isEqualTo(5);
+            Assertions.assertThat(wahlbezirkRepository.count()).isEqualTo(5);
+            Assertions.assertThat(wahlRepository.count()).isEqualTo(2);
+
+        }
+    }
+
+    private void setupWireMockForWahltagClient(Wahltag wahltag) throws JsonProcessingException {
+        val wahltagClientResponse = Set.of(new WahltagDTO().identifikator(wahltag.getWahltagID()).tag(wahltag.getWahltag())
+                .nummer(wahltag.getNummer()));
+        WireMock.stubFor(WireMock.get(WireMock.urlPathMatching("/wahldaten/wahltage"))
+                .willReturn(WireMock.aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(objectMapper.writeValueAsString(wahltagClientResponse))
+                        .withStatus(HttpStatus.OK.value()))
+        );
     }
 }

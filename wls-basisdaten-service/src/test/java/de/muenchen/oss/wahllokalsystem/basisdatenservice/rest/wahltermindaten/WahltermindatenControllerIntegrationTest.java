@@ -260,8 +260,7 @@ public class WahltermindatenControllerIntegrationTest {
                     .willReturn(WireMock.aResponse()
                             .withHeader("Content-Type", "application/json")
                             .withBody(objectMapper.writeValueAsString(wahlclientResponse))
-                            .withStatus(HttpStatus.OK.value()))
-            );
+                            .withStatus(HttpStatus.OK.value())));
         }
 
         private Wahl createWahlToDelete(final String wahlID, final LocalDate wahltag) {
@@ -285,8 +284,7 @@ public class WahltermindatenControllerIntegrationTest {
             return wahlbezirke.stream()
                     .map(wahlbezirk -> kopfdatenRepository.save(
                             new Kopfdaten(new BezirkUndWahlID(wahlbezirk.getWahlID(), wahlbezirk.getWahlbezirkID()), "LHM", Stimmzettelgebietsart.WK, "1",
-                                    "SGZ 1_1", wahlbezirk.getWahlID(), wahlbezirk.getWahlbezirkID())
-                    ))
+                                    "SGZ 1_1", wahlbezirk.getWahlID(), wahlbezirk.getWahlbezirkID())))
                     .toList();
         }
 
@@ -367,9 +365,7 @@ public class WahltermindatenControllerIntegrationTest {
                                     new BasisstrukturdatenDTO().wahlID("wahlID2").wahltag(localDateOfWahltag).wahlbezirkID("wahlbezirkID2_1")
                                             .stimmzettelgebietID("sgzID2"),
                                     new BasisstrukturdatenDTO().wahlID("wahlID2").wahltag(localDateOfWahltag).wahlbezirkID("wahlbezirkID2_2")
-                                            .stimmzettelgebietID("sgzID2")
-                            )
-                    )
+                                            .stimmzettelgebietID("sgzID2")))
                     .stimmzettelgebiete(
                             Set.of(
                                     new StimmzettelgebietDTO().wahltag(localDateOfWahltag).name("sgz1").identifikator("sgzID1").nummer("1")
@@ -379,16 +375,13 @@ public class WahltermindatenControllerIntegrationTest {
                                             .stimmzettelgebietsart(
                                                     StimmzettelgebietDTO.StimmzettelgebietsartEnum.WK)
 
-                            )
-                    )
+                            ))
                     .wahlen(
                             Set.of(
                                     new WahlDTO().name("wahl 1").wahltag(localDateOfWahltag).identifikator("wahlID1").wahlart(WahlDTO.WahlartEnum.BTW)
                                             .nummer("1"),
                                     new WahlDTO().name("wahl 2").wahltag(localDateOfWahltag).identifikator("wahlID2").wahlart(WahlDTO.WahlartEnum.BTW)
-                                            .nummer("2")
-                            )
-                    )
+                                            .nummer("2")))
                     .wahlbezirke(
                             Set.of(
                                     new WahlbezirkDTO().wahltag(localDateOfWahltag).wahlID("wahlID1").identifikator("wahlbezirkID1_1").nummer("1_1")
@@ -405,16 +398,13 @@ public class WahltermindatenControllerIntegrationTest {
                                                     WahlbezirkDTO.WahlbezirkArtEnum.UWB),
                                     new WahlbezirkDTO().wahltag(localDateOfWahltag).wahlID("wahlID2").identifikator("wahlbezirkID2_2").nummer("2_2")
                                             .wahlnummer("2").wahlbezirkArt(
-                                                    WahlbezirkDTO.WahlbezirkArtEnum.UWB)
-                            )
-                    );
+                                                    WahlbezirkDTO.WahlbezirkArtEnum.UWB)));
 
             WireMock.stubFor(WireMock.get(WireMock.urlPathMatching("/wahldaten/basisdaten"))
                     .willReturn(WireMock.aResponse()
                             .withHeader("Content-Type", "application/json")
                             .withBody(objectMapper.writeValueAsString(basisstrukturdatenToImport))
-                            .withStatus(HttpStatus.OK.value()))
-            );
+                            .withStatus(HttpStatus.OK.value())));
 
             val request = MockMvcRequestBuilders.put("/businessActions/wahltermindaten/" + wahltagToGetWahltermindaten.getWahltagID());
             mockMvc.perform(request).andExpect(status().isOk());
@@ -433,7 +423,6 @@ public class WahltermindatenControllerIntegrationTest {
                 .willReturn(WireMock.aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBody(objectMapper.writeValueAsString(wahltagClientResponse))
-                        .withStatus(HttpStatus.OK.value()))
-        );
+                        .withStatus(HttpStatus.OK.value())));
     }
 }

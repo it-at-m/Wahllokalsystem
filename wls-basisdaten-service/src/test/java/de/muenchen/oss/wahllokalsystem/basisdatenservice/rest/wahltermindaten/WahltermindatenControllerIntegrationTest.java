@@ -51,7 +51,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -66,11 +65,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @AutoConfigureWireMock
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
 public class WahltermindatenControllerIntegrationTest {
-
-    public static final String BUSINESS_ACTIONS_REFERENDUMVORLAGEN = "/businessActions/referendumvorlagen/";
-
-    @Value("${service.info.oid}")
-    String serviceOid;
 
     @Autowired
     MockMvc mockMvc;

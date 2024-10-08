@@ -56,8 +56,7 @@ public class AsyncWahltermindatenService {
                                 loadAndPersistWahlvorschlaege(wahl.wahlID(), wahlbezirk.wahlbezirkID(), wahlbezirk.nummer());
                                 SecurityContextHolder.getContext().setAuthentication(null);
                             }
-                        })
-                );
+                        }));
     }
 
     private void loadAndPersistWahlvorschlaege(String wahlID, String wahlbezirk, String nummer) {
@@ -91,8 +90,7 @@ public class AsyncWahltermindatenService {
                                 loadAndPersistReferendumvorlagen(wahl.wahlID(), wahlbezirk.wahlbezirkID(), wahlbezirk.nummer());
                                 SecurityContextHolder.getContext().setAuthentication(null);
                             }
-                        })
-                );
+                        }));
     }
 
     private void loadAndPersistReferendumvorlagen(String wahlID, String wahlbezirk, String nummer) {

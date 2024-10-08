@@ -50,8 +50,8 @@ public class DummyClientImpl
     public WahlvorschlaegeModel getWahlvorschlaege(BezirkUndWahlID bezirkUndWahlID) {
         return new WahlvorschlaegeModel(bezirkUndWahlID, "stimmzettelgebiedID",
                 Set.of(new WahlvorschlagModel(UUID.randomUUID().toString(), 1L, "kurzname1", true,
-                                Set.of(new KandidatModel(UUID.randomUUID().toString(), "kandidat11", 1L, true, 1L, true),
-                                        new KandidatModel(UUID.randomUUID().toString(), "kandidat21", 2L, false, 1L, false))),
+                        Set.of(new KandidatModel(UUID.randomUUID().toString(), "kandidat11", 1L, true, 1L, true),
+                                new KandidatModel(UUID.randomUUID().toString(), "kandidat21", 2L, false, 1L, false))),
                         new WahlvorschlagModel(UUID.randomUUID().toString(), 2L, "kurzname2", true,
                                 Set.of(new KandidatModel(UUID.randomUUID().toString(), "kandidat21", 1L, true, 1L, true),
                                         new KandidatModel(UUID.randomUUID().toString(), "kandidat22", 2L, false, 1L, false)))));
@@ -77,8 +77,8 @@ public class DummyClientImpl
     @Override
     public ReferendumvorlagenModel getReferendumvorlagen(ReferendumvorlagenReferenceModel referendumvorlagenReferenceModel) {
         return new ReferendumvorlagenModel("stimmzettelgebietID", Set.of(new ReferendumvorlageModel("wahlvorschlagID1", 1L, "kurzname1", "frage1",
-                        Set.of(new ReferendumoptionModel("optionID11" + UUID.randomUUID(), "option11", 1L),
-                                new ReferendumoptionModel("optionID12" + UUID.randomUUID(), "option12", 2L))),
+                Set.of(new ReferendumoptionModel("optionID11" + UUID.randomUUID(), "option11", 1L),
+                        new ReferendumoptionModel("optionID12" + UUID.randomUUID(), "option12", 2L))),
                 new ReferendumvorlageModel("wahlvorschlagID2", 2L, "kurzname2", "frage2",
                         Set.of(new ReferendumoptionModel("optionID21" + UUID.randomUUID(), "option21", 1L),
                                 new ReferendumoptionModel("optionID22" + UUID.randomUUID(), "option22", 2L)))));

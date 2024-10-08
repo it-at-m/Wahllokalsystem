@@ -71,11 +71,6 @@ public class WahltermindatenService {
         kopfDataInitializer.initKopfdaten(basisdatenModel);
 
         asyncWahltermindatenService.initVorlagenAndVorschlaege(wahltagModel.wahltag(), wahltagModel.nummer(), basisdatenModel);
-        // ToDo: add async classes, adapt EAI client, improve async handlöing?
-        // Async
-        //        asyncRequests.getAsyncProgress().reset(wahltag.getWahltag(), wahltag.getNummer());
-        //        asyncRequests.initWahlvorschlaege(wahlen, wahlbezirke);
-        //        asyncRequests.initReferendumvorlagen(wahlen, wahlbezirke);
 
     }
 

@@ -49,6 +49,8 @@ public class WahltermindatenService {
     private final ReferendumvorlagenRepository referendumvorlagenRepository;
     private final InitializeKopfdaten kopfDataInitializer;
 
+    private final AsyncWahltermindatenService asyncWahltermindatenService;
+
     private final ExceptionFactory exceptionFactory;
 
     @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_PutWahltermindaten')")
@@ -68,6 +70,7 @@ public class WahltermindatenService {
         persistWahlbezirke(basisdatenModel.wahlbezirke(), basisdatenModel.wahlen());
         kopfDataInitializer.initKopfdaten(basisdatenModel);
 
+        asyncWahltermindatenService.initVorlagenAndVorschlaege(wahltagModel.wahltag(), wahltagModel.nummer(), basisdatenModel);
         // ToDo: add async classes, adapt EAI client, improve async handlöing?
         // Async
         //        asyncRequests.getAsyncProgress().reset(wahltag.getWahltag(), wahltag.getNummer());

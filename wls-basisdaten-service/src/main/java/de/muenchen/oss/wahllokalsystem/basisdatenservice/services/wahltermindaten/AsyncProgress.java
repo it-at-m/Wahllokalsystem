@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltermindaten;
 
-import jakarta.persistence.Embeddable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -9,8 +8,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
-@Embeddable
+@Component
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

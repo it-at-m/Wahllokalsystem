@@ -3,14 +3,14 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltermindat
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlbezirk;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlbezirkRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.KopfdatenRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.ReferendumvorlagenRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahl;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.WahlRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.Wahlbezirk;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.WahlbezirkRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahl;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.WahlRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisdatenModel;

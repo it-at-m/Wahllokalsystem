@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.ungueltigewahlscheine;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.UngueltigeWahlscheine;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlbezirkArt;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahltagIdUndWahlbezirksart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ungueltigewahlscheine.UngueltigeWahlscheine;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahlbezirkArt;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagIdUndWahlbezirksart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
 import lombok.val;
 import org.assertj.core.api.Assertions;

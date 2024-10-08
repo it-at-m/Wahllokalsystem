@@ -33,7 +33,7 @@ public class AsyncConfiguration {
     }
 
     @Bean
-    public DelegatingSecurityContextAsyncTaskExecutor taskExecutor(ThreadPoolTaskExecutor threadPoolTaskExecutor) {
+    public DelegatingSecurityContextAsyncTaskExecutor taskExecutor(final ThreadPoolTaskExecutor threadPoolTaskExecutor) {
         return new DelegatingSecurityContextAsyncTaskExecutor(threadPoolTaskExecutor);
     }
 }

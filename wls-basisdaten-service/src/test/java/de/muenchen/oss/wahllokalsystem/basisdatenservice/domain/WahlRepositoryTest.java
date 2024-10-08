@@ -4,10 +4,10 @@ import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SP
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Farbe;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahl;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.WahlRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Farbe;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahl;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.WahlRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Comparator;

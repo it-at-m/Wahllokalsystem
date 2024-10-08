@@ -2,7 +2,14 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
 
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
+
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.Kandidat;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.KandidatRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.Wahlvorschlaege;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlaegeRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.Wahlvorschlag;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlagRepository;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.HashSet;
 import java.util.Optional;
@@ -106,8 +113,8 @@ class WahlvorschlaegeRepositoryTest {
 
         val foundWahlvorschlaege_OfWahlID1 = wahlvorschlaegeRepository.findByBezirkUndWahlID(bezirkUndWahlID1);
         val foundWahlvorschlagChilds_Of_wahlID1 = foundWahlvorschlaege_OfWahlID1.get().getWahlvorschlaege();
-        val foundKandidatChildsOfAllWahlvorschlags_Of_wahlID1 = foundWahlvorschlaege_OfWahlID1.get().getWahlvorschlaege().stream().flatMap( wvorschlag -> wvorschlag.getKandidaten().stream());
-
+        val foundKandidatChildsOfAllWahlvorschlags_Of_wahlID1 = foundWahlvorschlaege_OfWahlID1.get().getWahlvorschlaege().stream()
+                .flatMap(wvorschlag -> wvorschlag.getKandidaten().stream());
 
         Assertions.assertThat(foundWahlvorschlagChilds_Of_wahlID1).containsExactlyInAnyOrderElementsOf(expectedWahlvorschlagChilds1);
         Assertions.assertThat(foundKandidatChildsOfAllWahlvorschlags_Of_wahlID1).containsExactlyInAnyOrderElementsOf(expectedAllKandidatChilds1);
@@ -120,7 +127,8 @@ class WahlvorschlaegeRepositoryTest {
 
         val foundWahlvorschlaege_OfWahlID2 = wahlvorschlaegeRepository.findByBezirkUndWahlID(bezirkUndWahlID2);
         val foundWahlvorschlagChilds_Of_wahlID2 = foundWahlvorschlaege_OfWahlID2.get().getWahlvorschlaege();
-        val foundKandidatChildsOfAllWahlvorschlags_Of_wahlID2 = foundWahlvorschlaege_OfWahlID2.get().getWahlvorschlaege().stream().flatMap( wvorschlag -> wvorschlag.getKandidaten().stream()).toList();
+        val foundKandidatChildsOfAllWahlvorschlags_Of_wahlID2 = foundWahlvorschlaege_OfWahlID2.get().getWahlvorschlaege().stream()
+                .flatMap(wvorschlag -> wvorschlag.getKandidaten().stream()).toList();
 
         Assertions.assertThat(foundWahlvorschlagChilds_Of_wahlID2).containsExactlyInAnyOrderElementsOf(expectedWahlvorschlagChilds2);
         Assertions.assertThat(foundKandidatChildsOfAllWahlvorschlags_Of_wahlID2).containsExactlyInAnyOrderElementsOf(expectedAllKandidatChilds2);

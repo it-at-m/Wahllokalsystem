@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Farbe;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Farbe;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
 import java.util.List;

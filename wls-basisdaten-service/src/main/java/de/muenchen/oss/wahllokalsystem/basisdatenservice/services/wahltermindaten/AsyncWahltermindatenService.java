@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltermindaten;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.ReferendumvorlagenRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenModelMapper;
@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,15 +45,18 @@ public class AsyncWahltermindatenService {
         asyncProgress.setWahlvorschlaegeTotal(basisdaten.wahlen().size() * basisdaten.wahlbezirke().size());
         asyncProgress.setWahlvorschlaegeLoadingActive(true);
 
+        val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+
         basisdaten.wahlen().parallelStream()
                 .filter(wahl -> !Wahlart.VE.equals(wahl.wahlart()) && !Wahlart.BEB.equals(wahl.wahlart()))
                 .forEach(wahl -> basisdaten.wahlbezirke().parallelStream()
                         .forEach(wahlbezirk -> {
                             if (wahl.wahlID().equals(wahlbezirk.wahlID())) {
+                                SecurityContextHolder.getContext().setAuthentication(currentAuthentication);
                                 loadAndPersistWahlvorschlaege(wahl.wahlID(), wahlbezirk.wahlbezirkID(), wahlbezirk.nummer());
+                                SecurityContextHolder.getContext().setAuthentication(null);
                             }
-                        })
-                );
+                        }));
     }
 
     private void loadAndPersistWahlvorschlaege(String wahlID, String wahlbezirk, String nummer) {
@@ -75,15 +79,18 @@ public class AsyncWahltermindatenService {
             asyncProgress.setReferendumLoadingActive(true);
         }
 
+        val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+
         basisdaten.wahlen().parallelStream()
                 .filter(wahl -> Wahlart.VE.equals(wahl.wahlart()) || Wahlart.BEB.equals(wahl.wahlart()))
                 .forEach(wahl -> basisdaten.wahlbezirke().parallelStream()
                         .forEach(wahlbezirk -> {
                             if (wahl.wahlID().equals(wahlbezirk.wahlID())) {
+                                SecurityContextHolder.getContext().setAuthentication(currentAuthentication);
                                 loadAndPersistReferendumvorlagen(wahl.wahlID(), wahlbezirk.wahlbezirkID(), wahlbezirk.nummer());
+                                SecurityContextHolder.getContext().setAuthentication(null);
                             }
-                        })
-                );
+                        }));
     }
 
     private void loadAndPersistReferendumvorlagen(String wahlID, String wahlbezirk, String nummer) {

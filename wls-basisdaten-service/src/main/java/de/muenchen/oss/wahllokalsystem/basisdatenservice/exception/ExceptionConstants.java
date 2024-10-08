@@ -90,5 +90,4 @@ public class ExceptionConstants {
     public static final ExceptionDataWrapper GET_BASISDATEN_NO_DATA = new ExceptionDataWrapper(CODE_NO_DATA_BASISDATEN,
             "Es wurden keine Basisdaten gefunden.");
 
-
 }

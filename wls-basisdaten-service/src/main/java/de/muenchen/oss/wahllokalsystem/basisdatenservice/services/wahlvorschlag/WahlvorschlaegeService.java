@@ -1,9 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.KandidatRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlvorschlaege;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlvorschlaegeRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlvorschlagRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.KandidatRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.Wahlvorschlaege;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlaegeRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlagRepository;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -3,43 +3,60 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahltermindaten;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.ReferendumvorlagenClientMapper;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.KandidatRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlvorschlaegeRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlvorschlagRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.WahldatenClientMapper;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahlbezirkArt;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Kopfdaten;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.KopfdatenRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Stimmzettelgebietsart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.Referendumoption;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.Referendumvorlage;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.ReferendumvorlageRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.Referendumvorlagen;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.ReferendumvorlagenRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.KandidatDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.ReferendumoptionDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.ReferendumvorlageDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlagDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.referendumvorlagen.ReferendumvorlagenDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.referendumvorlagen.ReferendumvorlagenDTOMapper;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenModelMapper;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenReferenceModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenValidator;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.Wahlbezirk;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.WahlbezirkRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahl;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.WahlRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.Wahltag;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.WahltagRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.Kandidat;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.KandidatRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.Wahlvorschlaege;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlaegeRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.Wahlvorschlag;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlagRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.BasisdatenDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.BasisstrukturdatenDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.StimmzettelgebietDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlbezirkDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltermindaten.AsyncWahltermindatenService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
-import jakarta.transaction.Transactional;
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import javax.annotation.Nullable;
+import java.util.UUID;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -55,204 +72,370 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
 public class WahltermindatenControllerIntegrationTest {
 
-    public static final String BUSINESS_ACTIONS_REFERENDUMVORLAGEN = "/businessActions/referendumvorlagen/";
-
-    @Value("${service.info.oid}")
-    String serviceOid;
-
     @Autowired
     MockMvc mockMvc;
 
     @Autowired
     ObjectMapper objectMapper;
 
-    @Autowired
+    @SpyBean
     WahlvorschlaegeRepository wahlvorschlaegeRepository;
     @Autowired
     WahlvorschlagRepository wahlvorschlagRepository;
     @Autowired
     KandidatRepository kandidatRepository;
 
-    @Autowired
+    @SpyBean
     ReferendumvorlagenRepository referendumvorlagenRepository;
     @Autowired
     ReferendumvorlageRepository referendumvorlageRepository;
 
-    @Autowired
-    ReferendumvorlagenClientMapper referendumvorlagenClientMapper;
-
-    @Autowired
-    ReferendumvorlagenModelMapper referendumvorlagenModelMapper;
-
-    @Autowired
-    ReferendumvorlagenDTOMapper referendumvorlagenDTOMapper;
+    @SpyBean
+    WahlRepository wahlRepository;
+    @SpyBean
+    WahlbezirkRepository wahlbezirkRepository;
+    @SpyBean
+    KopfdatenRepository kopfdatenRepository;
 
     @SpyBean
-    ReferendumvorlagenValidator referendumvorlagenValidator;
+    AsyncWahltermindatenService asyncWahltermindatenService;
+
+    @Autowired
+    private WahltagRepository wahltagRepository;
+
+    @Autowired
+    WahldatenClientMapper wahldatenClientMapper;
 
     @AfterEach
     void tearDown() {
-        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_REFERENDUMVORLAGEN, Authorities.REPOSITORY_DELETE_WAHLVORSCHLAEGE);
+        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_REFERENDUMVORLAGEN, Authorities.REPOSITORY_DELETE_WAHLVORSCHLAEGE,
+                Authorities.REPOSITORY_DELETE_WAHL, Authorities.REPOSITORY_DELETE_WAHLBEZIRK);
         wahlvorschlaegeRepository.deleteAll();
         referendumvorlagenRepository.deleteAll();
+        wahlbezirkRepository.deleteAll();
+        wahlRepository.deleteAll();
+        kopfdatenRepository.deleteAll();
     }
 
     @Nested
     class DeleteWahltermindaten {
 
+        private String dateStringForDelete;
+        private LocalDate localDateForDelete;
+        private Wahltag wahltagForDelete;
+        private Wahl wahlToDelete1;
+        private Wahl wahlToDelete2;
+        private Collection<Wahlbezirk> wahlbezirkeToDelete;
+        private Collection<Kopfdaten> kopfdatenToDelete;
+        private Collection<Wahlvorschlaege> wahlvorschlaegeToDelete;
+        private Collection<Referendumvorlagen> referendumvorlagenToDelete;
+
+        @BeforeEach
+        void setup() throws Exception {
+            //Data that should be deleted after call
+            dateStringForDelete = "2013-01-01";
+            localDateForDelete = LocalDate.parse(dateStringForDelete);
+            wahltagForDelete = wahltagRepository.save(new Wahltag("wahltagForDelete", LocalDate.parse(dateStringForDelete), null, "12"));
+
+            wahlToDelete1 = createWahlToDelete("wahlToDelete1", localDateForDelete);
+            wahlToDelete2 = createWahlToDelete("wahlToDelete2", localDateForDelete);
+            wahlbezirkeToDelete = createWahlbezirkeToDelete(localDateForDelete, wahlToDelete1.getWahlID(), wahlToDelete2.getWahlID());
+            kopfdatenToDelete = createKopfdatenToDelete(wahlbezirkeToDelete);
+            wahlvorschlaegeToDelete = createWahlvorschlaegeToDelete(wahlbezirkeToDelete);
+            referendumvorlagenToDelete = createReferendumvorlagenToDelete(wahlbezirkeToDelete);
+
+            setupWireMockForWahltagClient(wahltagForDelete);
+
+            setupWireMockForWahlClient(wahlToDelete1.getWahlID(), wahlToDelete2.getWahlID());
+        }
+
         @Test
-        @Transactional
-        void deletesReferendumvorlagenAndAllChildren_onlyForGivenWahlID() throws Exception {
-            val wahlID_1 = "wahlID_1";
-            val wahlbezirkID = "wahlbezirkID";
-            val wahlID_2 = "wahlID_2";
+        void should_deleteWahlenAndWahlbezirkeOnWahlenOfWahltag_when_wahltagIDIsGiven() throws Exception {
+            //Data that should be kept after the call
+            val localDateForDataToKeep = LocalDate.parse("2024-10-07");
+            val wahlToKeep = wahlRepository.save(new Wahl(UUID.randomUUID().toString(), "wahlToKeep", 1, 1, localDateForDataToKeep, Wahlart.BTW, null, "1"));
+            val wahlbezirkToKeep = wahlbezirkRepository.save(
+                    new Wahlbezirk("wahlbezirkToKeep", localDateForDataToKeep, "1", WahlbezirkArt.UWB, "1", wahlToKeep.getWahlID()));
+            val wahlvorschlaegeToKeep = createWahlvorschlaege(wahlToKeep.getWahlID(), wahlbezirkToKeep.getWahlbezirkID(), "3");
+            val referendumvorlagenToKeep = createReferendunvorlagen(wahlToKeep.getWahlID(), wahlbezirkToKeep.getWahlbezirkID(), "3");
+            val kopfdatenToKeep = kopfdatenRepository.save(
+                    new Kopfdaten(new BezirkUndWahlID(wahlToKeep.getWahlID(), wahlbezirkToKeep.getWahlbezirkID()), "LHM", Stimmzettelgebietsart.WK, "3",
+                            "SHZ to keep", wahlToKeep.getName(), wahlbezirkToKeep.getNummer()));
 
-            val eaiReferendumvorschlage1 = createClientReferendumvorlagenDTO("szgID1");
-            defineStubForGetReferendumvorlage(eaiReferendumvorschlage1, wahlID_1, wahlbezirkID, HttpStatus.OK);
-            val eaiReferendumvorschlage2 = createClientReferendumvorlagenDTO("szgID2");
-            defineStubForGetReferendumvorlage(eaiReferendumvorschlage2, wahlID_2, wahlbezirkID, HttpStatus.OK);
+            val request = MockMvcRequestBuilders.delete("/businessActions/wahltermindaten/" + wahltagForDelete.getWahltagID());
+            mockMvc.perform(request).andExpect(status().isOk());
 
-            val request_1 = MockMvcRequestBuilders.get(BUSINESS_ACTIONS_REFERENDUMVORLAGEN + wahlID_1 + "/" + wahlbezirkID);
-            mockMvc.perform(request_1).andExpect(status().isOk());
-            val request_2 = MockMvcRequestBuilders.get(BUSINESS_ACTIONS_REFERENDUMVORLAGEN + wahlID_2 + "/" + wahlbezirkID);
-            mockMvc.perform(request_2).andExpect(status().isOk());
+            //verify data to keep are not deleted
+            Assertions.assertThat(wahlRepository.findById(wahlToKeep.getWahlID())).isPresent();
+            Assertions.assertThat(wahlbezirkRepository.findById(wahlbezirkToKeep.getWahlbezirkID())).isPresent();
+            Assertions.assertThat(wahlvorschlaegeRepository.findById(wahlvorschlaegeToKeep.getId())).isPresent();
+            Assertions.assertThat(referendumvorlagenRepository.findById(referendumvorlagenToKeep.getId())).isPresent();
+            Assertions.assertThat(kopfdatenRepository.findById(kopfdatenToKeep.getBezirkUndWahlID())).isPresent();
 
-            val referendumvorlagenEntity_1 = referendumvorlagenRepository.findByBezirkUndWahlID(new BezirkUndWahlID(wahlID_1, wahlbezirkID)).get();
-            val savedSubEntities_1_inRepo = referendumvorlagenEntity_1.getReferendumvorlagen();
-            Assertions.assertThat(savedSubEntities_1_inRepo.size()).isEqualTo(eaiReferendumvorschlage1.getReferendumvorlagen().size());
-
-            val referendumvorlagenEntity_2 = referendumvorlagenRepository.findByBezirkUndWahlID(new BezirkUndWahlID(wahlID_2, wahlbezirkID)).get();
-            val savedSubEntities_2_inRepo = referendumvorlagenEntity_2.getReferendumvorlagen();
-            Assertions.assertThat(savedSubEntities_2_inRepo.size()).isEqualTo(eaiReferendumvorschlage2.getReferendumvorlagen().size());
-
-            Assertions.assertThat(referendumvorlageRepository.findAll().size()).isEqualTo(savedSubEntities_2_inRepo.size() + savedSubEntities_2_inRepo.size());
-
-            referendumvorlagenRepository.deleteAllByBezirkUndWahlID_WahlID(wahlID_1);
-
-            val foundSubEntities_afterDelete_InRepo = referendumvorlageRepository.findAll();
-
-            Assertions.assertThat(foundSubEntities_afterDelete_InRepo).containsExactlyInAnyOrderElementsOf(savedSubEntities_2_inRepo);
+            //verify no additional data exists
+            val expectedCountWahlvorschlaeg = wahlvorschlaegeToKeep.getWahlvorschlaege().size();
+            val expectedCountKandidaten = (Long) wahlvorschlaegeToKeep.getWahlvorschlaege().stream()
+                    .map(vorschlag -> vorschlag.getKandidaten().size())
+                    .mapToLong(Integer::longValue).sum();
+            val expectedCountReferendumvorlage = referendumvorlagenToKeep.getReferendumvorlagen().size();
+            Assertions.assertThat(wahlRepository.count()).isEqualTo(1);
+            Assertions.assertThat(wahlbezirkRepository.count()).isEqualTo(1);
+            Assertions.assertThat(wahlvorschlaegeRepository.count()).isEqualTo(1);
+            Assertions.assertThat(wahlvorschlagRepository.count()).isEqualTo(expectedCountWahlvorschlaeg);
+            Assertions.assertThat(kandidatRepository.count()).isEqualTo(expectedCountKandidaten);
+            Assertions.assertThat(referendumvorlagenRepository.count()).isEqualTo(1);
+            Assertions.assertThat(referendumvorlageRepository.count()).isEqualTo(expectedCountReferendumvorlage);
+            Assertions.assertThat(kopfdatenRepository.count()).isEqualTo(1);
         }
 
+        @Test
+        void should_keepAllExistingData_when_deleteOfWahlbezirkeFailed() throws Exception {
+            Mockito.doThrow(new RuntimeException("test transactional")).when(wahlbezirkRepository).deleteByWahltag(any());
 
-        private de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.ReferendumvorlagenDTO createClientReferendumvorlagenDTO(final String stimmzettelgebietID) {
-            val dto = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.ReferendumvorlagenDTO();
+            val request = MockMvcRequestBuilders.delete("/businessActions/wahltermindaten/" + wahltagForDelete.getWahltagID());
+            mockMvc.perform(request).andExpect(status().isInternalServerError());
 
-            dto.setStimmzettelgebietID(stimmzettelgebietID);
-
-            val referendumOption1_1 = new ReferendumoptionDTO();
-            referendumOption1_1.setId("optionID1_1" + stimmzettelgebietID);
-            referendumOption1_1.setName("optionName1_1");
-            referendumOption1_1.setPosition(1L);
-
-            val referendumOption1_2 = new ReferendumoptionDTO();
-            referendumOption1_2.setId("optionID1_2" + stimmzettelgebietID);
-            referendumOption1_2.setName("optionName1_2");
-            referendumOption1_2.setPosition(1L);
-
-            val vorlage1 = new ReferendumvorlageDTO();
-            vorlage1.setFrage("frage");
-            vorlage1.setKurzname("kurzname_1");
-            vorlage1.setOrdnungszahl(1L);
-            vorlage1.setWahlvorschlagID("wahlvorschlagID");
-            vorlage1.setReferendumoptionen(Set.of(referendumOption1_1, referendumOption1_2));
-
-            val referendumOption2_1 = new ReferendumoptionDTO();
-            referendumOption2_1.setId("optionID2_1" + stimmzettelgebietID);
-            referendumOption2_1.setName("optionName2_1");
-            referendumOption2_1.setPosition(1L);
-
-            val referendumOption2_2 = new ReferendumoptionDTO();
-            referendumOption2_2.setId("optionID2_2" + stimmzettelgebietID);
-            referendumOption2_2.setName("optionName2_2");
-            referendumOption2_2.setPosition(1L);
-
-            val vorlage2 = new ReferendumvorlageDTO();
-            vorlage2.setFrage("frage");
-            vorlage2.setKurzname("kurzname_2");
-            vorlage2.setOrdnungszahl(1L);
-            vorlage2.setWahlvorschlagID("wahlvorschlagID");
-            vorlage2.setReferendumoptionen(Set.of(referendumOption2_1, referendumOption2_2));
-
-            dto.setReferendumvorlagen(Set.of(vorlage1, vorlage2));
-
-            return dto;
+            verifyNoDataForDeletionIsDeleted(wahlvorschlaegeToDelete, referendumvorlagenToDelete, wahlbezirkeToDelete, kopfdatenToDelete);
         }
 
-        private void defineStubForGetReferendumvorlage(
-                @Nullable final Object wiremockPayload, final String wahlID,
-                final String wahlbezirkID,
-                final HttpStatus httpStatus) throws Exception {
-            val wireMockResponse = WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(
-                    httpStatus.value());
+        @Test
+        void should_keepAllExistingData_when_deleteOfKopfdatenFailed() throws Exception {
+            Mockito.doThrow(new RuntimeException("test transactional")).when(kopfdatenRepository).deleteAllByBezirkUndWahlID_WahlID(any());
 
-            if (wireMockResponse != null) {
-                wireMockResponse.withBody(objectMapper.writeValueAsBytes(wiremockPayload));
-            }
+            val request = MockMvcRequestBuilders.delete("/businessActions/wahltermindaten/" + wahltagForDelete.getWahltagID());
+            mockMvc.perform(request).andExpect(status().isInternalServerError());
 
-            WireMock.stubFor(WireMock.get("/vorschlaege/referendum/" + wahlID + "/" + wahlbezirkID)
-                    .willReturn(wireMockResponse));
+            verifyNoDataForDeletionIsDeleted(wahlvorschlaegeToDelete, referendumvorlagenToDelete, wahlbezirkeToDelete, kopfdatenToDelete);
+        }
+
+        @Test
+        void should_keepAllExistingData_when_deleteOfWahlenFailed() throws Exception {
+            Mockito.doThrow(new RuntimeException("test transactional")).when(wahlRepository).deleteById(any());
+
+            val request = MockMvcRequestBuilders.delete("/businessActions/wahltermindaten/" + wahltagForDelete.getWahltagID());
+            mockMvc.perform(request).andExpect(status().isInternalServerError());
+
+            verifyNoDataForDeletionIsDeleted(wahlvorschlaegeToDelete, referendumvorlagenToDelete, wahlbezirkeToDelete, kopfdatenToDelete);
+        }
+
+        @Test
+        void should_keepAllExistingData_when_deleteOfWahlvorschlaegeFailed() throws Exception {
+            Mockito.doThrow(new RuntimeException("test transactional")).when(wahlvorschlaegeRepository).deleteAllByBezirkUndWahlID_WahlID(any());
+
+            val request = MockMvcRequestBuilders.delete("/businessActions/wahltermindaten/" + wahltagForDelete.getWahltagID());
+            mockMvc.perform(request).andExpect(status().isInternalServerError());
+
+            verifyNoDataForDeletionIsDeleted(wahlvorschlaegeToDelete, referendumvorlagenToDelete, wahlbezirkeToDelete, kopfdatenToDelete);
+        }
+
+        @Test
+        void should_keepAllExistingData_when_deleteOfReferendumvorlagenFailed() throws Exception {
+            Mockito.doThrow(new RuntimeException("test transactional")).when(referendumvorlagenRepository).deleteAllByBezirkUndWahlID_WahlID(any());
+
+            val request = MockMvcRequestBuilders.delete("/businessActions/wahltermindaten/" + wahltagForDelete.getWahltagID());
+            mockMvc.perform(request).andExpect(status().isInternalServerError());
+
+            verifyNoDataForDeletionIsDeleted(wahlvorschlaegeToDelete, referendumvorlagenToDelete, wahlbezirkeToDelete, kopfdatenToDelete);
+        }
+
+        private void verifyNoDataForDeletionIsDeleted(Collection<Wahlvorschlaege> wahlvorschlaegeToDelete,
+                Collection<Referendumvorlagen> referendumvorlagenToDelete,
+                Collection<Wahlbezirk> wahlbezirkeToDelete, Collection<Kopfdaten> kopfdatenToDelete) {
+            val expectedCountWahlvorschlaeg = wahlvorschlaegeToDelete.stream().map(wahlvorschlaege -> wahlvorschlaege.getWahlvorschlaege().size())
+                    .mapToLong(Integer::longValue)
+                    .sum();
+            val expectedCountKandidaten = wahlvorschlaegeToDelete.stream()
+                    .flatMap(wahlvorschlaege -> wahlvorschlaege.getWahlvorschlaege().stream())
+                    .mapToLong(wahlvorschlag -> wahlvorschlag.getKandidaten().size())
+                    .sum();
+            val expectedCountReferendumvorlage = referendumvorlagenToDelete.stream()
+                    .mapToLong(referendumvorlagen -> referendumvorlagen.getReferendumvorlagen().size())
+                    .sum();
+            Assertions.assertThat(wahlRepository.count()).isEqualTo(2);
+            Assertions.assertThat(wahlbezirkRepository.count()).isEqualTo(wahlbezirkeToDelete.size());
+            Assertions.assertThat(wahlvorschlaegeRepository.count()).isEqualTo(wahlvorschlaegeToDelete.size());
+            Assertions.assertThat(wahlvorschlagRepository.count()).isEqualTo(expectedCountWahlvorschlaeg);
+            Assertions.assertThat(kandidatRepository.count()).isEqualTo(expectedCountKandidaten);
+            Assertions.assertThat(referendumvorlagenRepository.count()).isEqualTo(referendumvorlagenToDelete.size());
+            Assertions.assertThat(referendumvorlageRepository.count()).isEqualTo(expectedCountReferendumvorlage);
+            Assertions.assertThat(kopfdatenRepository.count()).isEqualTo(kopfdatenToDelete.size());
+        }
+
+        private void setupWireMockForWahlClient(String wahlToDeleteID1, String wahlToDeleteID2)
+                throws JsonProcessingException {
+            val wahlclientResponse = new BasisdatenDTO().basisstrukturdaten(
+                    Set.of(new BasisstrukturdatenDTO().wahlID(wahlToDeleteID1), new BasisstrukturdatenDTO().wahlID(wahlToDeleteID2)));
+            WireMock.stubFor(WireMock.get(WireMock.urlPathMatching("/wahldaten/basisdaten"))
+                    .willReturn(WireMock.aResponse()
+                            .withHeader("Content-Type", "application/json")
+                            .withBody(objectMapper.writeValueAsString(wahlclientResponse))
+                            .withStatus(HttpStatus.OK.value())));
+        }
+
+        private Wahl createWahlToDelete(final String wahlID, final LocalDate wahltag) {
+            return wahlRepository.save(new Wahl(wahlID, wahlID, 1, 1, wahltag, Wahlart.BTW, null, "1"));
+        }
+
+        private Collection<Wahlbezirk> createWahlbezirkeToDelete(final LocalDate wahltagDate, final String wahlToDeleteID1, final String wahlToDeleteID2) {
+            val wahlbezirk1ToDeleteWahl1 = wahlbezirkRepository.save(
+                    new Wahlbezirk("wbz1_1", wahltagDate, "1", WahlbezirkArt.UWB, "1", wahlToDeleteID1));
+            val wahlbezirk2ToDeleteWahl1 = wahlbezirkRepository.save(
+                    new Wahlbezirk("wbz1_2", wahltagDate, "2", WahlbezirkArt.UWB, "1", wahlToDeleteID1));
+            val wahlbezirk1ToDeleteWahl2 = wahlbezirkRepository.save(
+                    new Wahlbezirk("wbz2_1", wahltagDate, "1", WahlbezirkArt.UWB, "2", wahlToDeleteID2));
+            val wahlbezirk2ToDeleteWahl2 = wahlbezirkRepository.save(
+                    new Wahlbezirk("wbz2_2", wahltagDate, "2", WahlbezirkArt.UWB, "2", wahlToDeleteID2));
+
+            return List.of(wahlbezirk1ToDeleteWahl1, wahlbezirk2ToDeleteWahl1, wahlbezirk1ToDeleteWahl2, wahlbezirk2ToDeleteWahl2);
+        }
+
+        private Collection<Kopfdaten> createKopfdatenToDelete(final Collection<Wahlbezirk> wahlbezirke) {
+            return wahlbezirke.stream()
+                    .map(wahlbezirk -> kopfdatenRepository.save(
+                            new Kopfdaten(new BezirkUndWahlID(wahlbezirk.getWahlID(), wahlbezirk.getWahlbezirkID()), "LHM", Stimmzettelgebietsart.WK, "1",
+                                    "SGZ 1_1", wahlbezirk.getWahlID(), wahlbezirk.getWahlbezirkID())))
+                    .toList();
+        }
+
+        private Collection<Wahlvorschlaege> createWahlvorschlaegeToDelete(final Collection<Wahlbezirk> wahlbezirke) {
+            return wahlbezirke.stream()
+                    .map(wahlbezirk -> createWahlvorschlaege(wahlbezirk.getWahlID(), wahlbezirk.getWahlbezirkID(), wahlbezirk.getNummer()))
+                    .toList();
+        }
+
+        private Collection<Referendumvorlagen> createReferendumvorlagenToDelete(final Collection<Wahlbezirk> wahlbezirke) {
+            return wahlbezirke.stream()
+                    .map(wahlbezirk -> createReferendunvorlagen(wahlbezirk.getWahlID(), wahlbezirk.getWahlbezirkID(), wahlbezirk.getNummer()))
+                    .toList();
+        }
+
+        private Wahlvorschlaege createWahlvorschlaege(final String wahlID, final String wahlbezirkID, final String stimmzettelgebietID) {
+            val wahlvorschlaege = new Wahlvorschlaege(UUID.randomUUID(), new BezirkUndWahlID(wahlID, wahlbezirkID), stimmzettelgebietID, new HashSet<>());
+
+            val wahlvorschlag1 = new Wahlvorschlag(UUID.randomUUID(), UUID.randomUUID().toString(), wahlvorschlaege, 1L, wahlID + wahlbezirkID, true,
+                    new HashSet<>());
+            wahlvorschlaege.addWahlvorschlag(wahlvorschlag1);
+            val kandidat1Vorschlag1 = new Kandidat(UUID.randomUUID(), UUID.randomUUID().toString(), wahlvorschlag1, "kandidat1", 1, false, 1L, false);
+            wahlvorschlag1.addKandidat(kandidat1Vorschlag1);
+            val kandidat2Vorschlag1 = new Kandidat(UUID.randomUUID(), UUID.randomUUID().toString(), wahlvorschlag1, "kandidat1", 1, false, 1L, false);
+            wahlvorschlag1.addKandidat(kandidat2Vorschlag1);
+
+            val wahlvorschlag2 = new Wahlvorschlag(UUID.randomUUID(), UUID.randomUUID().toString(), wahlvorschlaege, 1L, wahlID + wahlbezirkID, true,
+                    new HashSet<>());
+            wahlvorschlaege.addWahlvorschlag(wahlvorschlag2);
+            val kandidat1Vorschlag2 = new Kandidat(UUID.randomUUID(), UUID.randomUUID().toString(), wahlvorschlag2, "kandidat1", 1, false, 1L, false);
+            wahlvorschlag2.addKandidat(kandidat1Vorschlag2);
+            val kandidat2Vorschlag2 = new Kandidat(UUID.randomUUID(), UUID.randomUUID().toString(), wahlvorschlag2, "kandidat1", 1, false, 1L, false);
+            wahlvorschlag2.addKandidat(kandidat2Vorschlag2);
+
+            return wahlvorschlaegeRepository.save(wahlvorschlaege);
+        }
+
+        private Referendumvorlagen createReferendunvorlagen(final String wahlID, final String wahlbezirkID, final String stimmzettelgebietID) {
+            val referendumvorlagen = new Referendumvorlagen(UUID.randomUUID(), new BezirkUndWahlID(wahlID, wahlbezirkID), stimmzettelgebietID, new HashSet<>());
+
+            val referendumvorlage1 = new Referendumvorlage(UUID.randomUUID(), referendumvorlagen, "1", 1L, wahlID + wahlbezirkID, "Frage 1", new HashSet<>());
+            referendumvorlagen.addReferendumvorlage(referendumvorlage1);
+            val referendumOption1Vorlage1 = new Referendumoption(UUID.randomUUID().toString(), "Option 1", 1L);
+            referendumvorlage1.getReferendumoptionen().add(referendumOption1Vorlage1);
+            val referendumOption2Vorlage1 = new Referendumoption(UUID.randomUUID().toString(), "Option 2", 1L);
+            referendumvorlage1.getReferendumoptionen().add(referendumOption2Vorlage1);
+
+            val referendumvorlage2 = new Referendumvorlage(UUID.randomUUID(), referendumvorlagen, "1", 1L, wahlID + wahlbezirkID, "Frage 1", new HashSet<>());
+            referendumvorlagen.addReferendumvorlage(referendumvorlage2);
+            val referendumOption1Vorlage2 = new Referendumoption(UUID.randomUUID().toString(), "Option 1", 1L);
+            referendumvorlage1.getReferendumoptionen().add(referendumOption1Vorlage2);
+            val referendumOption2Vorlage2 = new Referendumoption(UUID.randomUUID().toString(), "Option 2", 1L);
+            referendumvorlage1.getReferendumoptionen().add(referendumOption2Vorlage2);
+
+            return referendumvorlagenRepository.save(referendumvorlagen);
         }
     }
 
-    private de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlaegeDTO createClientWahlvorschlaegeDTO(final String wahlID,
-            final String wahlbezirkID) {
-        val stimmzettelgebietID = "stimmzettelgebietID";
+    @Nested
+    class PutWahltermindaten {
 
-        val clientWahlvorschlaegeDTO = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlaegeDTO();
-        clientWahlvorschlaegeDTO.setStimmzettelgebietID(stimmzettelgebietID);
-        clientWahlvorschlaegeDTO.setWahlID(wahlID);
-        clientWahlvorschlaegeDTO.setWahlbezirkID(wahlbezirkID);
+        @Test
+        void should_persistImportedData_when_wahltagIDIsValidWahltag() throws Exception {
+            val localDateOfWahltag = LocalDate.parse("2024-08-26");
+            val wahltagToGetWahltermindaten = new Wahltag("wahltagID", localDateOfWahltag, "", "1");
 
-        val wahlvorschlag1 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlagDTO();
-        wahlvorschlag1.setErhaeltStimmen(true);
-        wahlvorschlag1.setIdentifikator("identifikator1");
-        wahlvorschlag1.setKurzname("kurzname1");
-        wahlvorschlag1.setOrdnungszahl(1L);
+            setupWireMockForWahltagClient(wahltagToGetWahltermindaten);
 
-        val kandidat11 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.KandidatDTO();
-        kandidat11.setIdentifikator("kandidat11");
-        kandidat11.setDirektkandidat(true);
-        kandidat11.setEinzelbewerber(true);
-        kandidat11.setName("name11");
-        kandidat11.setListenposition(1L);
-        kandidat11.setTabellenSpalteInNiederschrift(1L);
+            val basisstrukturdatenToImport = new BasisdatenDTO()
+                    .basisstrukturdaten(
+                            Set.of(
+                                    new BasisstrukturdatenDTO().wahlID("wahlID1").wahltag(localDateOfWahltag).wahlbezirkID("wahlbezirkID1_1")
+                                            .stimmzettelgebietID("sgzID1"),
+                                    new BasisstrukturdatenDTO().wahlID("wahlID1").wahltag(localDateOfWahltag).wahlbezirkID("wahlbezirkID1_2")
+                                            .stimmzettelgebietID("sgzID1"),
+                                    new BasisstrukturdatenDTO().wahlID("wahlID1").wahltag(localDateOfWahltag).wahlbezirkID("wahlbezirkID1_3")
+                                            .stimmzettelgebietID("sgzID1"),
+                                    new BasisstrukturdatenDTO().wahlID("wahlID2").wahltag(localDateOfWahltag).wahlbezirkID("wahlbezirkID2_1")
+                                            .stimmzettelgebietID("sgzID2"),
+                                    new BasisstrukturdatenDTO().wahlID("wahlID2").wahltag(localDateOfWahltag).wahlbezirkID("wahlbezirkID2_2")
+                                            .stimmzettelgebietID("sgzID2")))
+                    .stimmzettelgebiete(
+                            Set.of(
+                                    new StimmzettelgebietDTO().wahltag(localDateOfWahltag).name("sgz1").identifikator("sgzID1").nummer("1")
+                                            .stimmzettelgebietsart(
+                                                    StimmzettelgebietDTO.StimmzettelgebietsartEnum.WK),
+                                    new StimmzettelgebietDTO().wahltag(localDateOfWahltag).name("sgz2").identifikator("sgzID2").nummer("2")
+                                            .stimmzettelgebietsart(
+                                                    StimmzettelgebietDTO.StimmzettelgebietsartEnum.WK)
 
-        val kandidat12 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.KandidatDTO();
-        kandidat12.setIdentifikator("kandidat12");
-        kandidat12.setDirektkandidat(false);
-        kandidat12.setEinzelbewerber(false);
-        kandidat12.setName("name12");
-        kandidat12.setListenposition(2L);
-        kandidat12.setTabellenSpalteInNiederschrift(2L);
-        wahlvorschlag1.setKandidaten(Set.of(kandidat11, kandidat12));
+                            ))
+                    .wahlen(
+                            Set.of(
+                                    new WahlDTO().name("wahl 1").wahltag(localDateOfWahltag).identifikator("wahlID1").wahlart(WahlDTO.WahlartEnum.BTW)
+                                            .nummer("1"),
+                                    new WahlDTO().name("wahl 2").wahltag(localDateOfWahltag).identifikator("wahlID2").wahlart(WahlDTO.WahlartEnum.BTW)
+                                            .nummer("2")))
+                    .wahlbezirke(
+                            Set.of(
+                                    new WahlbezirkDTO().wahltag(localDateOfWahltag).wahlID("wahlID1").identifikator("wahlbezirkID1_1").nummer("1_1")
+                                            .wahlnummer("1").wahlbezirkArt(
+                                                    WahlbezirkDTO.WahlbezirkArtEnum.UWB),
+                                    new WahlbezirkDTO().wahltag(localDateOfWahltag).wahlID("wahlID1").identifikator("wahlbezirkID1_2").nummer("1_2")
+                                            .wahlnummer("1").wahlbezirkArt(
+                                                    WahlbezirkDTO.WahlbezirkArtEnum.UWB),
+                                    new WahlbezirkDTO().wahltag(localDateOfWahltag).wahlID("wahlID1").identifikator("wahlbezirkID1_3").nummer("1_3")
+                                            .wahlnummer("1").wahlbezirkArt(
+                                                    WahlbezirkDTO.WahlbezirkArtEnum.UWB),
+                                    new WahlbezirkDTO().wahltag(localDateOfWahltag).wahlID("wahlID2").identifikator("wahlbezirkID2_1").nummer("2_1")
+                                            .wahlnummer("2").wahlbezirkArt(
+                                                    WahlbezirkDTO.WahlbezirkArtEnum.UWB),
+                                    new WahlbezirkDTO().wahltag(localDateOfWahltag).wahlID("wahlID2").identifikator("wahlbezirkID2_2").nummer("2_2")
+                                            .wahlnummer("2").wahlbezirkArt(
+                                                    WahlbezirkDTO.WahlbezirkArtEnum.UWB)));
 
-        val wahlvorschlag2 = new WahlvorschlagDTO();
-        wahlvorschlag2.setErhaeltStimmen(false);
-        wahlvorschlag2.setIdentifikator("identifikator2");
-        wahlvorschlag2.setKurzname("kurzname2");
-        wahlvorschlag2.setOrdnungszahl(2L);
+            WireMock.stubFor(WireMock.get(WireMock.urlPathMatching("/wahldaten/basisdaten"))
+                    .willReturn(WireMock.aResponse()
+                            .withHeader("Content-Type", "application/json")
+                            .withBody(objectMapper.writeValueAsString(basisstrukturdatenToImport))
+                            .withStatus(HttpStatus.OK.value())));
 
-        val kandidat21 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.KandidatDTO();
-        kandidat21.setIdentifikator("kandidat21");
-        kandidat21.setDirektkandidat(true);
-        kandidat21.setEinzelbewerber(true);
-        kandidat21.setName("name21");
-        kandidat21.setListenposition(3L);
-        kandidat21.setTabellenSpalteInNiederschrift(3L);
+            val request = MockMvcRequestBuilders.put("/businessActions/wahltermindaten/" + wahltagToGetWahltermindaten.getWahltagID());
+            mockMvc.perform(request).andExpect(status().isOk());
 
-        val kandidat22 = new KandidatDTO();
-        kandidat22.setIdentifikator("kandidat22");
-        kandidat22.setDirektkandidat(false);
-        kandidat22.setEinzelbewerber(false);
-        kandidat22.setName("name22");
-        kandidat22.setListenposition(4L);
-        kandidat22.setTabellenSpalteInNiederschrift(4L);
-        wahlvorschlag2.setKandidaten(Set.of(kandidat21, kandidat22));
+            Assertions.assertThat(kopfdatenRepository.count()).isEqualTo(5);
+            Assertions.assertThat(wahlbezirkRepository.count()).isEqualTo(5);
+            Assertions.assertThat(wahlRepository.count()).isEqualTo(2);
 
-        val wahlvorschlaege = Set.of(wahlvorschlag1, wahlvorschlag2);
-        clientWahlvorschlaegeDTO.setWahlvorschlaege(wahlvorschlaege);
+            val expectedBasisdatenModel = wahldatenClientMapper.fromRemoteClientDTOToModel(basisstrukturdatenToImport);
+            Mockito.verify(asyncWahltermindatenService)
+                    .initVorlagenAndVorschlaege(eq(wahltagToGetWahltermindaten.getWahltag()), eq(wahltagToGetWahltermindaten.getNummer()),
+                            eq(expectedBasisdatenModel));
+        }
+    }
 
-        return clientWahlvorschlaegeDTO;
+    private void setupWireMockForWahltagClient(Wahltag wahltag) throws JsonProcessingException {
+        val wahltagClientResponse = Set.of(new WahltagDTO().identifikator(wahltag.getWahltagID()).tag(wahltag.getWahltag())
+                .nummer(wahltag.getNummer()));
+        WireMock.stubFor(WireMock.get(WireMock.urlPathMatching("/wahldaten/wahltage"))
+                .willReturn(WireMock.aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(objectMapper.writeValueAsString(wahltagClientResponse))
+                        .withStatus(HttpStatus.OK.value())));
     }
 }

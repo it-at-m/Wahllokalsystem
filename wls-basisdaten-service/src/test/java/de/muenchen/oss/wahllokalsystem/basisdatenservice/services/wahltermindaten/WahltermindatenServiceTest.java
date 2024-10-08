@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltermindaten;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlbezirk;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.WahlbezirkRepository;
@@ -81,6 +82,9 @@ class WahltermindatenServiceTest {
     @Mock
     ExceptionFactory exceptionFactory;
 
+    @Mock
+    AsyncWahltermindatenService asyncWahltermindatenService;
+
     @InjectMocks
     WahltermindatenService unitUnderTest;
 
@@ -154,6 +158,8 @@ class WahltermindatenServiceTest {
             Mockito.verify(wahlRepository).saveAll(mockedWahlenMappedAsEntity);
             Mockito.verify(wahlbezirkRepository).saveAll(wahlbezirkEntitiesCaptor.capture());
             Mockito.verify(kopfDataInitializer).initKopfdaten(mockedWahldatenClientResponse);
+            Mockito.verify(asyncWahltermindatenService)
+                    .initVorlagenAndVorschlaege(eq(mockedMatchingWahltag.wahltag()), eq(mockedMatchingWahltag.nummer()), eq(mockedWahldatenClientResponse));
 
             Assertions.assertThat(wahlbezirkEntitiesCaptor.getAllValues().size()).isEqualTo(1);
             Assertions.assertThat(wahlbezirkEntitiesCaptor.getValue()).containsOnly(

@@ -3,12 +3,14 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahltermindaten;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.WahldatenClientMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Kandidat;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.KandidatRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.Wahlbezirk;
@@ -37,6 +39,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.Stimmzett
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlbezirkDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltermindaten.AsyncWahltermindatenService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
@@ -94,8 +97,14 @@ public class WahltermindatenControllerIntegrationTest {
     @SpyBean
     KopfdatenRepository kopfdatenRepository;
 
+    @SpyBean
+    AsyncWahltermindatenService asyncWahltermindatenService;
+
     @Autowired
     private WahltagRepository wahltagRepository;
+
+    @Autowired
+    WahldatenClientMapper wahldatenClientMapper;
 
     @AfterEach
     void tearDown() {
@@ -413,6 +422,10 @@ public class WahltermindatenControllerIntegrationTest {
             Assertions.assertThat(wahlbezirkRepository.count()).isEqualTo(5);
             Assertions.assertThat(wahlRepository.count()).isEqualTo(2);
 
+            val expectedBasisdatenModel = wahldatenClientMapper.fromRemoteClientDTOToModel(basisstrukturdatenToImport);
+            Mockito.verify(asyncWahltermindatenService)
+                    .initVorlagenAndVorschlaege(eq(wahltagToGetWahltermindaten.getWahltag()), eq(wahltagToGetWahltermindaten.getNummer()),
+                            eq(expectedBasisdatenModel));
         }
     }
 

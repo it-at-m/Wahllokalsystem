@@ -103,7 +103,7 @@ public class AsyncWahltermindatenService {
         } catch (final Exception e) {
             log.info("#initReferendumvorlage: Fehler bei initReferendumvorlage -> möglicherweise richtiges Verhalten; Fehler:", e);
         } finally {
-            asyncProgress.incWahlvorschlaegeFinished();
+            asyncProgress.incReferendumVorlagenFinished();
         }
     }
 }

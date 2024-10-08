@@ -1,12 +1,12 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
-import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart.BTW;
-import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart.EUW;
-import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart.LTW;
+import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart.BTW;
+import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart.EUW;
+import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart.LTW;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration.Profiles;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Farbe;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahl.Wahlart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Farbe;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.StimmzettelgebietsartModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisdatenModel;

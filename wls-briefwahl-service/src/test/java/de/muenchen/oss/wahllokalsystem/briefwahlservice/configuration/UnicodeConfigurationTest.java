@@ -6,20 +6,20 @@ package de.muenchen.oss.wahllokalsystem.briefwahlservice.configuration;
 
 import static de.muenchen.oss.wahllokalsystem.briefwahlservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.briefwahlservice.TestConstants.SPRING_TEST_PROFILE;
-import static de.muenchen.oss.wahllokalsystem.briefwahlservice.TestConstants.TheEntityDto;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.briefwahlservice.domain.TheEntity;
-import de.muenchen.oss.wahllokalsystem.briefwahlservice.rest.TheEntityRepository;
+import de.muenchen.oss.wahllokalsystem.briefwahlservice.common.beanstandetewahlbriefe.Zurueckweisungsgrund;
+import de.muenchen.oss.wahllokalsystem.briefwahlservice.domain.BeanstandeteWahlbriefeRepository;
+import de.muenchen.oss.wahllokalsystem.briefwahlservice.rest.beanstandetewahlbriefe.BeanstandeteWahlbriefeDTO;
 import java.net.URI;
-import java.util.UUID;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.Disabled;
+import java.util.Map;
+import lombok.val;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.data.util.Streamable;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
@@ -33,7 +33,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
 class UnicodeConfigurationTest {
 
-    private static final String ENTITY_ENDPOINT_URL = "/theEntities";
+    private static final String BEANSTANDETE_WAHLBRIEFE_ENDPOINT_URL = "/businessActions/beanstandeteWahlbriefe/";
 
     /**
      * Decomposed string: String "Ä-é" represented with unicode letters "A◌̈-e◌́"
@@ -49,28 +49,38 @@ class UnicodeConfigurationTest {
     private TestRestTemplate testRestTemplate;
 
     @Autowired
-    private TheEntityRepository theEntityRepository;
+    private BeanstandeteWahlbriefeRepository beanstandeteWahlbriefeRepository;
 
     @Test
-    @Disabled
     void testForNfcNormalization() {
         // Persist entity with decomposed string.
-        final TheEntityDto theEntityDto = new TheEntityDto();
-        theEntityDto.setTextAttribute(TEXT_ATTRIBUTE_DECOMPOSED);
-        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), theEntityDto.getTextAttribute().length());
-        final TheEntityDto response = testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), theEntityDto, TheEntityDto.class).getBody();
+        val wahlbezirkID = "wahlbezirkID";
+        val waehlerVerzeichnisNummer = 1L;
+        val key1 = "key1";
+        val key2 = "key2";
+        val beanstandeteWahlbriefeDTO = createControllerBeanstandeteWahlbriefeDTO(wahlbezirkID, waehlerVerzeichnisNummer, key1, key2,
+                TEXT_ATTRIBUTE_DECOMPOSED);
+        Assertions.assertThat((String) beanstandeteWahlbriefeDTO.beanstandeteWahlbriefe().keySet().toArray()[0])
+                .hasSize(key1.length() + TEXT_ATTRIBUTE_DECOMPOSED.length());
+        Assertions.assertThat((String) beanstandeteWahlbriefeDTO.beanstandeteWahlbriefe().keySet().toArray()[1])
+                .hasSize(key2.length() + TEXT_ATTRIBUTE_DECOMPOSED.length());
 
-        // Check whether response contains a composed string.
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, response.getTextAttribute());
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), response.getTextAttribute().length());
+        testRestTemplate.postForEntity(URI.create(BEANSTANDETE_WAHLBRIEFE_ENDPOINT_URL + wahlbezirkID + "/" + waehlerVerzeichnisNummer),
+                beanstandeteWahlbriefeDTO, Void.class);
 
-        // Extract uuid from self link.
-        final UUID uuid = UUID.fromString(StringUtils.substringAfterLast(response.getRequiredLink("self").getHref(), "/"));
+        val beantstandeteWahlbriefeInRepo = Streamable.of(beanstandeteWahlbriefeRepository.findAll()).toList();
+        Assertions.assertThat(beantstandeteWahlbriefeInRepo).hasSize(1);
+        Assertions.assertThat(beantstandeteWahlbriefeInRepo.get(0).getBeanstandeteWahlbriefe().keySet().toArray()[0]).isEqualTo(key1 + TEXT_ATTRIBUTE_COMPOSED);
+        Assertions.assertThat(beantstandeteWahlbriefeInRepo.get(0).getBeanstandeteWahlbriefe().keySet().toArray()[1]).isEqualTo(key2 + TEXT_ATTRIBUTE_COMPOSED);
+    }
 
-        // Check persisted entity contains a composed string via JPA repository.
-        final TheEntity theEntity = theEntityRepository.findById(uuid).orElse(null);
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, theEntity.getTextAttribute());
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), theEntity.getTextAttribute().length());
+    private BeanstandeteWahlbriefeDTO createControllerBeanstandeteWahlbriefeDTO(String wahlbezirkID, Long waehlerverzeichnisNummer, String key1, String key2,
+            String textAttributeDecomposed) {
+        return new BeanstandeteWahlbriefeDTO(wahlbezirkID, waehlerverzeichnisNummer,
+                Map.of(key1 + textAttributeDecomposed,
+                        new Zurueckweisungsgrund[] { Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT, Zurueckweisungsgrund.GEGENSTAND_IM_UMSCHLAG },
+                        key2 + textAttributeDecomposed,
+                        new Zurueckweisungsgrund[] { Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT, Zurueckweisungsgrund.LOSE_STIMMZETTEL }));
     }
 
 }

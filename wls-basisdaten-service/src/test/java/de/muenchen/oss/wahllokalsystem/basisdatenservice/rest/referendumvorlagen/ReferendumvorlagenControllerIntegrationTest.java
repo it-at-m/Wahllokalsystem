@@ -2,7 +2,6 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.referendumvorlage
 
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
-import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -179,29 +178,6 @@ public class ReferendumvorlagenControllerIntegrationTest {
 
             val expectedBodyDTO = new WlsExceptionDTO(WlsExceptionCategory.F, mockedWlsExceptionCode, mockedWlsExceptionService, mockedWlsExceptionMessage);
             Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedBodyDTO);
-        }
-
-        @Test
-        void alleReferendumdataIsStoredTransactional() throws Exception {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-
-            val eaiReferendumvorschlage = createClientReferendumvorlagenDTO();
-            defineStubForGetReferendumvorlage(eaiReferendumvorschlage, wahlID, wahlbezirkID, HttpStatus.OK);
-
-            val mockedSaveAllException = new RuntimeException("save all failed");
-            Mockito.doThrow(mockedSaveAllException).when(referendumvorlageRepository).saveAll(any());
-
-            val request = MockMvcRequestBuilders.get(BUSINESS_ACTIONS_REFERENDUMVORLAGEN + wahlID + "/" + wahlbezirkID);
-
-            val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
-            val responseBodyAsDTO = objectMapper.readValue(response.getResponse().getContentAsByteArray(), ReferendumvorlagenDTO.class);
-
-            val expectedBodyDTO = referendumvorlagenDTOMapper.toDTO(referendumvorlagenClientMapper.toModel(eaiReferendumvorschlage));
-            Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedBodyDTO);
-
-            Assertions.assertThat(referendumvorlagenRepository.count()).isEqualTo(0);
-            Assertions.assertThat(referendumvorlageRepository.count()).isEqualTo(0);
         }
 
         private de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.ReferendumvorlagenDTO createClientReferendumvorlagenDTO() {

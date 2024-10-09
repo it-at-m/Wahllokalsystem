@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag;
 import static java.sql.Types.VARCHAR;
 
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -50,7 +51,7 @@ public class Wahlvorschlaege {
     @ToString.Include
     private String stimmzettelgebietID;
 
-    @OneToMany(mappedBy = "wahlvorschlaeage", orphanRemoval = true)
+    @OneToMany(mappedBy = "wahlvorschlaeage", orphanRemoval = true, cascade = CascadeType.PERSIST)
     @NotNull
     @Size(min = 1)
     private Set<Wahlvorschlag> wahlvorschlaege = new LinkedHashSet<>();

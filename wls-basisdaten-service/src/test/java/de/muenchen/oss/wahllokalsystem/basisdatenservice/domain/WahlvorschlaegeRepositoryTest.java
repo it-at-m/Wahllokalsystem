@@ -10,6 +10,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.Wa
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.Wahlvorschlag;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlagRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.PersistingUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.HashSet;
 import lombok.extern.slf4j.Slf4j;
@@ -58,10 +59,13 @@ class WahlvorschlaegeRepositoryTest {
             val wahlIDToDelete = "wahlID";
 
             val wahlvorschlaegeToKeep = transactionTemplate.execute(status -> {
-                persistWahlvorschlaege(createWahlvorschlaegeWithKandidatenWithBezirkAndWahlID("wahlbezirk1", wahlIDToDelete));
-                persistWahlvorschlaege(createWahlvorschlaegeWithKandidatenWithBezirkAndWahlID("wahlbezirk2", wahlIDToDelete));
+                PersistingUtils.persistWahlvorschlaege(wahlvorschlaegeRepository, wahlvorschlagRepository, kandidatRepository,
+                        createWahlvorschlaegeWithKandidatenWithBezirkAndWahlID("wahlbezirk1", wahlIDToDelete));
+                PersistingUtils.persistWahlvorschlaege(wahlvorschlaegeRepository, wahlvorschlagRepository, kandidatRepository,
+                        createWahlvorschlaegeWithKandidatenWithBezirkAndWahlID("wahlbezirk2", wahlIDToDelete));
 
-                return persistWahlvorschlaege(createWahlvorschlaegeWithKandidatenWithBezirkAndWahlID("wahlbezirk1", "wahlIDToKeep"));
+                return PersistingUtils.persistWahlvorschlaege(wahlvorschlaegeRepository, wahlvorschlagRepository, kandidatRepository,
+                        createWahlvorschlaegeWithKandidatenWithBezirkAndWahlID("wahlbezirk1", "wahlIDToKeep"));
             });
 
             wahlvorschlaegeRepository.deleteAllByBezirkUndWahlID_WahlID(wahlIDToDelete);
@@ -80,16 +84,6 @@ class WahlvorschlaegeRepositoryTest {
             Assertions.assertThat(kandidatRepository.count()).isEqualTo(expectedCountKandidaten);
             wahlvorschlaegeToKeep.getWahlvorschlaege().stream().flatMap(wahlvorschlag -> wahlvorschlag.getKandidaten().stream())
                     .forEach(kandidat -> Assertions.assertThat(kandidatRepository.existsById(kandidat.getId())).isTrue());
-        }
-
-        private Wahlvorschlaege persistWahlvorschlaege(final Wahlvorschlaege wahlvorschlaegeToPersist) {
-            val createdEntity = wahlvorschlaegeRepository.save(wahlvorschlaegeToPersist);
-            wahlvorschlaegeToPersist.getWahlvorschlaege().forEach(wahlvorschlag -> {
-                wahlvorschlagRepository.save(wahlvorschlag);
-                kandidatRepository.saveAll(wahlvorschlag.getKandidaten());
-            });
-
-            return createdEntity;
         }
 
         private Wahlvorschlaege createWahlvorschlaegeWithKandidatenWithBezirkAndWahlID(final String wahlbezirkID, final String wahlID) {

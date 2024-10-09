@@ -41,7 +41,7 @@ public class WaehlerverzeichnisController extends AbstractController {
     public ResponseEntity<WaehlerverzeichnisDTO> getWaehlerverzeichnis(@PathVariable("wahlbezirkID") final String wahlbezirkID,
             @PathVariable("wvzNummer") final long wvzNummer) {
         val waehlerverzeichnisModel = waehlerverzeichnisService.getWaehlerverzeichnis(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, wvzNummer));
-        return withBodyOrNoContent(waehlerverzeichnisModel.map(waehlerverzeichnisDTOMapper::toDto));
+        return okWithBodyOrNoContent(waehlerverzeichnisModel.map(waehlerverzeichnisDTOMapper::toDto));
     }
 
 }

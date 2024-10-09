@@ -28,7 +28,7 @@ public class BriefwahlvorbereitungController extends AbstractController {
     public ResponseEntity<BriefwahlvorbereitungDTO> getBriefwahlvorbereitung(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
         val briefwahlvorbereitungModel = briefwahlvorbereitungService.getBriefwahlvorbereitung(wahlbezirkID);
 
-        return withBodyOrNoContent(briefwahlvorbereitungModel.map(briefwahlvorbereitungDTOMapper::toDTO));
+        return okWithBodyOrNoContent(briefwahlvorbereitungModel.map(briefwahlvorbereitungDTOMapper::toDTO));
     }
 
     @Operation(description = "Aktualisiert die Wahlvorbereitungsdaten des Briefwahllokals {wahlbezirkID}")

@@ -28,7 +28,7 @@ public class EroeffnungsUhrzeitController extends AbstractController {
     public ResponseEntity<EroeffnungsUhrzeitDTO> getEroeffnungsuhrzeit(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
         val eroeffnungsuhrzeitModel = eroeffnungsuhrzeitService.getEroeffnungsUhrzeit(wahlbezirkID);
 
-        return withBodyOrNoContent(eroeffnungsuhrzeitModel.map(EroeffnungsuhrzeitDTOMapper::toDTO));
+        return okWithBodyOrNoContent(eroeffnungsuhrzeitModel.map(EroeffnungsuhrzeitDTOMapper::toDTO));
     }
 
     @Operation(description = "Aktualisiert die Eroeffnungsuhrzeit des Wahllokals {wahlbezirkID}")

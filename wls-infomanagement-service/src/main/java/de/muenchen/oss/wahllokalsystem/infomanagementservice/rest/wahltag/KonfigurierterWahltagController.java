@@ -29,7 +29,7 @@ public class KonfigurierterWahltagController {
     @GetMapping(value = KONFIGURIERTER_WAHLTAG_PATH)
     public ResponseEntity<KonfigurierterWahltagDTO> getKonfigurierterWahltag() {
         val konfigurierterWahltagDTO = mapper.toDTO(konfigurierterWahltagService.getKonfigurierterWahltag());
-        return withBodyOrNoContent(konfigurierterWahltagDTO);
+        return okWithBodyOrNoContent(konfigurierterWahltagDTO);
     }
 
     @PostMapping(value = KONFIGURIERTER_WAHLTAG_PATH)
@@ -45,16 +45,16 @@ public class KonfigurierterWahltagController {
     @GetMapping(value = KONFIGURIERTE_WAHLTAGE_PATH)
     public ResponseEntity<List<KonfigurierterWahltagDTO>> getKonfigurierteWahltage() {
         List<KonfigurierterWahltagDTO> konfigurierteWahltageDTO = mapper.toDTOList(konfigurierterWahltagService.getKonfigurierteWahltage());
-        return withBodyOrNoContent(konfigurierteWahltageDTO);
+        return okWithBodyOrNoContent(konfigurierteWahltageDTO);
     }
 
     @GetMapping(value = LOGIN_CHECK_PATH + "/{wahltagID}")
     public ResponseEntity<Boolean> isWahltagActive(@PathVariable("wahltagID") String wahltagID) {
         boolean result = konfigurierterWahltagService.isWahltagActive(wahltagID);
-        return withBodyOrNoContent(result);
+        return okWithBodyOrNoContent(result);
     }
 
-    private <T> ResponseEntity<T> withBodyOrNoContent(final T body) {
+    private <T> ResponseEntity<T> okWithBodyOrNoContent(final T body) {
         if (body == null) {
             return ResponseEntity.noContent().build();
         } else {

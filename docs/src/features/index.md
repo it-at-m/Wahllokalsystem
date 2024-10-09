@@ -52,7 +52,7 @@ Der Inhalt eines Stimmzettels bestimmt aber seine Zugehörigkeit zum Wahlkreis u
 
 ![Wahlkreise in der Landeshauptstadt München](pictures/Wahlkreiskarte_BTW2025.png)
 
-[Mehrere Informationen zur Bundestagswahl](https://stadt.muenchen.de/infos/bundestagswahlen.html)
+[Mehr Informationen zur Bundestagswahl](https://stadt.muenchen.de/infos/bundestagswahlen.html)
 
 #### Landtagswahl
 
@@ -65,12 +65,12 @@ Der Inhalt eines Stimmzettels bestimmt aber seine Zugehörigkeit zum Stimmkreis 
 
 ![Stimmkreiskarte in der Landeshauptstadt München](pictures/Stimmkreiskarte_LTW_V1.jpg)
 
-[Mehrere Informationen zur Landtagswahl.](https://stadt.muenchen.de/infos/landtagswahlen-und-bezirkswahlen-teil-ii.html)
+[Mehr Informationen zur Landtagswahl.](https://stadt.muenchen.de/infos/landtagswahlen-und-bezirkswahlen-teil-ii.html)
 
 #### Europawahl
 
 `Stimmzettelgebiet` - ist die Bundesrepublik Deutschland. Für das ganze Gebiet der Stadt München mit ihren 25 Stadtbezirken, jeweils mehrere Wahlbezirke/Stimmbezirke umfassend, gibt es also ein einziges Stimmzettelgebiet.
 Jedes Wahllokal befindet sich geografisch auch in einem der 25 Stadtbezirke der Landeshauptstadt München. Der Inhalt eines Stimmzettels ist in allen Wahllokalen der Landeshauptstadt München identsich.
 
-[Mehrere Informationen zur Europawahl](https://stadt.muenchen.de/infos/europawahlen.html)
+[Mehr Informationen zur Europawahl](https://stadt.muenchen.de/infos/europawahlen.html)
 

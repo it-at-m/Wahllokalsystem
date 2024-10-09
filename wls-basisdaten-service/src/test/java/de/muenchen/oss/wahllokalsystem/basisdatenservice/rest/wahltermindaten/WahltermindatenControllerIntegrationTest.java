@@ -41,6 +41,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.Wahlbezir
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltermindaten.AsyncWahltermindatenService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.PersistingUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.LocalDate;
@@ -310,45 +311,45 @@ public class WahltermindatenControllerIntegrationTest {
         }
 
         private Wahlvorschlaege createWahlvorschlaege(final String wahlID, final String wahlbezirkID, final String stimmzettelgebietID) {
-            val wahlvorschlaege = new Wahlvorschlaege(UUID.randomUUID(), new BezirkUndWahlID(wahlID, wahlbezirkID), stimmzettelgebietID, new HashSet<>());
+            val wahlvorschlaege = new Wahlvorschlaege(null, new BezirkUndWahlID(wahlID, wahlbezirkID), stimmzettelgebietID, new HashSet<>());
 
-            val wahlvorschlag1 = new Wahlvorschlag(UUID.randomUUID(), UUID.randomUUID().toString(), wahlvorschlaege, 1L, wahlID + wahlbezirkID, true,
+            val wahlvorschlag1 = new Wahlvorschlag(null, UUID.randomUUID().toString(), wahlvorschlaege, 1L, wahlID + wahlbezirkID, true,
                     new HashSet<>());
             wahlvorschlaege.addWahlvorschlag(wahlvorschlag1);
-            val kandidat1Vorschlag1 = new Kandidat(UUID.randomUUID(), UUID.randomUUID().toString(), wahlvorschlag1, "kandidat1", 1, false, 1L, false);
+            val kandidat1Vorschlag1 = new Kandidat(null, UUID.randomUUID().toString(), wahlvorschlag1, "kandidat1", 1, false, 1L, false);
             wahlvorschlag1.addKandidat(kandidat1Vorschlag1);
-            val kandidat2Vorschlag1 = new Kandidat(UUID.randomUUID(), UUID.randomUUID().toString(), wahlvorschlag1, "kandidat1", 1, false, 1L, false);
+            val kandidat2Vorschlag1 = new Kandidat(null, UUID.randomUUID().toString(), wahlvorschlag1, "kandidat1", 1, false, 1L, false);
             wahlvorschlag1.addKandidat(kandidat2Vorschlag1);
 
-            val wahlvorschlag2 = new Wahlvorschlag(UUID.randomUUID(), UUID.randomUUID().toString(), wahlvorschlaege, 1L, wahlID + wahlbezirkID, true,
+            val wahlvorschlag2 = new Wahlvorschlag(null, UUID.randomUUID().toString(), wahlvorschlaege, 1L, wahlID + wahlbezirkID, true,
                     new HashSet<>());
             wahlvorschlaege.addWahlvorschlag(wahlvorschlag2);
-            val kandidat1Vorschlag2 = new Kandidat(UUID.randomUUID(), UUID.randomUUID().toString(), wahlvorschlag2, "kandidat1", 1, false, 1L, false);
+            val kandidat1Vorschlag2 = new Kandidat(null, UUID.randomUUID().toString(), wahlvorschlag2, "kandidat1", 1, false, 1L, false);
             wahlvorschlag2.addKandidat(kandidat1Vorschlag2);
-            val kandidat2Vorschlag2 = new Kandidat(UUID.randomUUID(), UUID.randomUUID().toString(), wahlvorschlag2, "kandidat1", 1, false, 1L, false);
+            val kandidat2Vorschlag2 = new Kandidat(null, UUID.randomUUID().toString(), wahlvorschlag2, "kandidat1", 1, false, 1L, false);
             wahlvorschlag2.addKandidat(kandidat2Vorschlag2);
 
-            return wahlvorschlaegeRepository.save(wahlvorschlaege);
+            return PersistingUtils.persistWahlvorschlaege(wahlvorschlaegeRepository, wahlvorschlagRepository, kandidatRepository, wahlvorschlaege);
         }
 
         private Referendumvorlagen createReferendunvorlagen(final String wahlID, final String wahlbezirkID, final String stimmzettelgebietID) {
-            val referendumvorlagen = new Referendumvorlagen(UUID.randomUUID(), new BezirkUndWahlID(wahlID, wahlbezirkID), stimmzettelgebietID, new HashSet<>());
+            val referendumvorlagen = new Referendumvorlagen(null, new BezirkUndWahlID(wahlID, wahlbezirkID), stimmzettelgebietID, new HashSet<>());
 
-            val referendumvorlage1 = new Referendumvorlage(UUID.randomUUID(), referendumvorlagen, "1", 1L, wahlID + wahlbezirkID, "Frage 1", new HashSet<>());
+            val referendumvorlage1 = new Referendumvorlage(null, referendumvorlagen, "1", 1L, wahlID + wahlbezirkID, "Frage 1", new HashSet<>());
             referendumvorlagen.addReferendumvorlage(referendumvorlage1);
             val referendumOption1Vorlage1 = new Referendumoption(UUID.randomUUID().toString(), "Option 1", 1L);
             referendumvorlage1.getReferendumoptionen().add(referendumOption1Vorlage1);
             val referendumOption2Vorlage1 = new Referendumoption(UUID.randomUUID().toString(), "Option 2", 1L);
             referendumvorlage1.getReferendumoptionen().add(referendumOption2Vorlage1);
 
-            val referendumvorlage2 = new Referendumvorlage(UUID.randomUUID(), referendumvorlagen, "1", 1L, wahlID + wahlbezirkID, "Frage 1", new HashSet<>());
+            val referendumvorlage2 = new Referendumvorlage(null, referendumvorlagen, "1", 1L, wahlID + wahlbezirkID, "Frage 1", new HashSet<>());
             referendumvorlagen.addReferendumvorlage(referendumvorlage2);
             val referendumOption1Vorlage2 = new Referendumoption(UUID.randomUUID().toString(), "Option 1", 1L);
             referendumvorlage1.getReferendumoptionen().add(referendumOption1Vorlage2);
             val referendumOption2Vorlage2 = new Referendumoption(UUID.randomUUID().toString(), "Option 2", 1L);
             referendumvorlage1.getReferendumoptionen().add(referendumOption2Vorlage2);
 
-            return referendumvorlagenRepository.save(referendumvorlagen);
+            return PersistingUtils.persistReferendumvorlagen(referendumvorlagenRepository, referendumvorlageRepository, referendumvorlagen);
         }
     }
 

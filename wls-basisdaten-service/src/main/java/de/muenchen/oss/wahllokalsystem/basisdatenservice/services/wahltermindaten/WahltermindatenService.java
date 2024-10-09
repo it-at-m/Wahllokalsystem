@@ -9,6 +9,8 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.Wa
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisstrukturdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.InitializeKopfdaten;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KopfdatenModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KopfdatenModelMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.WahldatenClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkModelMapper;
@@ -41,6 +43,7 @@ public class WahltermindatenService {
 
     private final WahlModelMapper wahlModelMapper;
     private final WahlbezirkModelMapper wahlbezirkModelMapper;
+    private final KopfdatenModelMapper kopfdatenModelMapper;
 
     private final WahlRepository wahlRepository;
     private final WahlbezirkRepository wahlbezirkRepository;
@@ -68,7 +71,7 @@ public class WahltermindatenService {
 
         persistWahlen(basisdatenModel.wahlen().stream().toList());
         persistWahlbezirke(basisdatenModel.wahlbezirke(), basisdatenModel.wahlen());
-        kopfDataInitializer.initKopfdaten(basisdatenModel);
+        persistKopfdaten(kopfDataInitializer.initKopfdaten(basisdatenModel));
 
         asyncWahltermindatenService.initVorlagenAndVorschlaege(wahltagModel.wahltag(), wahltagModel.nummer(), basisdatenModel);
 
@@ -99,6 +102,11 @@ public class WahltermindatenService {
                 .filter(w -> w.wahltagID().equals(wahltagID))
                 .findAny();
         return wahltagModel.orElseThrow(wlsExceptionSupplier);
+    }
+
+    private void persistKopfdaten(List<KopfdatenModel> kopfdatenModels) {
+        val kopfdatenEntities = kopfdatenModels.stream().map(kopfdatenModelMapper::toEntity).toList();
+        kopfdatenRepository.saveAll(kopfdatenEntities);
     }
 
     private void persistWahlen(final List<WahlModel> wahlModelIterable) {

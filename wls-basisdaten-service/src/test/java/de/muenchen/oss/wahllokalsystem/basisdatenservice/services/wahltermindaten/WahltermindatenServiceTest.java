@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltermindat
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Kopfdaten;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.KopfdatenRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.ReferendumvorlagenRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.Wahlbezirk;
@@ -16,6 +17,8 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.Wahlbez
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisstrukturdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.InitializeKopfdaten;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KopfdatenModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KopfdatenModelMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.WahldatenClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkModelMapper;
@@ -60,6 +63,9 @@ class WahltermindatenServiceTest {
 
     @Mock
     WahlbezirkModelMapper wahlbezirkModelMapper;
+
+    @Mock
+    KopfdatenModelMapper kopfdatenModelMapper;
 
     @Mock
     WahlRepository wahlRepository;
@@ -146,20 +152,24 @@ class WahltermindatenServiceTest {
             val mockedWahldatenClientResponse = createMockedBasisdatenModel(mockedDataWahltag);
             val mockedWahlenMappedAsEntity = List.of(createWahlWithNummer("1"), createWahlWithNummer("2"));
             val mockedWahlbezirkeMappedAsEntity = Set.of(createWahlbezirkWithWahlnummer("1"), createWahlbezirkWithWahlnummer("2"));
+            val mockedKopfdatenListen = List.of(KopfdatenModel.builder().build(), KopfdatenModel.builder().build());
+            val mockedKopfdatenMappedAsEntity = new Kopfdaten();
 
             Mockito.when(wahltageService.getWahltage()).thenReturn(mockedWahltageServiceResponse);
             Mockito.when(wahldatenClient.loadBasisdaten(new WahltagWithNummer(mockedMatchingWahltag.wahltag(), mockedMatchingWahltag.nummer())))
                     .thenReturn(mockedWahldatenClientResponse);
             Mockito.when(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(any())).thenReturn(mockedWahlenMappedAsEntity);
             Mockito.when(wahlbezirkModelMapper.fromListOfWahlbezirkModeltoListOfWahlbezirkEntities(any())).thenReturn(mockedWahlbezirkeMappedAsEntity);
+            Mockito.when(kopfDataInitializer.initKopfdaten(mockedWahldatenClientResponse)).thenReturn(mockedKopfdatenListen);
+            Mockito.when(kopfdatenModelMapper.toEntity(any())).thenReturn(mockedKopfdatenMappedAsEntity);
 
             unitUnderTest.putWahltermindaten(wahltagID);
 
             Mockito.verify(wahlRepository).saveAll(mockedWahlenMappedAsEntity);
             Mockito.verify(wahlbezirkRepository).saveAll(wahlbezirkEntitiesCaptor.capture());
-            Mockito.verify(kopfDataInitializer).initKopfdaten(mockedWahldatenClientResponse);
             Mockito.verify(asyncWahltermindatenService)
                     .initVorlagenAndVorschlaege(eq(mockedMatchingWahltag.wahltag()), eq(mockedMatchingWahltag.nummer()), eq(mockedWahldatenClientResponse));
+            Mockito.verify(kopfdatenRepository).saveAll(List.of(mockedKopfdatenMappedAsEntity, mockedKopfdatenMappedAsEntity));
 
             Assertions.assertThat(wahlbezirkEntitiesCaptor.getAllValues().size()).isEqualTo(1);
             Assertions.assertThat(wahlbezirkEntitiesCaptor.getValue()).containsOnly(

@@ -105,7 +105,7 @@ public class ReferendumvorlagenControllerIntegrationTest {
 
         @Test
         @Transactional
-        void returnExistingDataWithoutImport() throws Exception {
+        void should_persistData_when_importedViaClient() throws Exception {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
 

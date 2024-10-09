@@ -50,7 +50,13 @@ public class WahlvorschlaegeService {
 
     protected Wahlvorschlaege persistWahlvorschlagModel(final WahlvorschlaegeModel wahlvorschlaegeModel) {
         val entityToCreate = wahlvorschlaegeModelMapper.toEntity(wahlvorschlaegeModel);
-        return wahlvorschlaegeRepository.save(entityToCreate);
+        val createdEntity = wahlvorschlaegeRepository.save(entityToCreate);
+        entityToCreate.getWahlvorschlaege().forEach(wahlvorschlag -> {
+            wahlvorschlagRepository.save(wahlvorschlag);
+            kandidatRepository.saveAll(wahlvorschlag.getKandidaten());
+        });
+
+        return createdEntity;
     }
 
 }

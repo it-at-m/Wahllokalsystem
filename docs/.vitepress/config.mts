@@ -50,6 +50,10 @@ export default withMermaid({
                         {
                             text: 'Vollständige Migration nach Keycloak',
                             link: `${PATH_TECHNIK}adr/adr-always-full-keycloak-migration`
+                        },
+                        {
+                            text: 'Auslagern von Authority Strings',
+                            link: `${PATH_TECHNIK}adr/adr-auslagerung-authority-strings`
                         }
                     ]
                 }

@@ -16,7 +16,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionCons
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisstrukturdatenModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.InitializeKopfdaten;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KopfdatenMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KopfdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KopfdatenModelMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.WahldatenClient;
@@ -83,7 +83,7 @@ class WahltermindatenServiceTest {
     ReferendumvorlagenRepository referendumvorlagenRepository;
 
     @Mock
-    InitializeKopfdaten kopfDataInitializer;
+    KopfdatenMapper kopfDataInitializer;
 
     @Mock
     ExceptionFactory exceptionFactory;

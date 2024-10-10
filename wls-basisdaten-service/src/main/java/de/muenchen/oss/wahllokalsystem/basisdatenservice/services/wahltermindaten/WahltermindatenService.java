@@ -8,7 +8,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.WahlRepos
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisstrukturdatenModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.InitializeKopfdaten;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KopfdatenMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KopfdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KopfdatenModelMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.WahldatenClient;
@@ -50,7 +50,7 @@ public class WahltermindatenService {
     private final KopfdatenRepository kopfdatenRepository;
     private final WahlvorschlaegeRepository wahlvorschlaegeRepository;
     private final ReferendumvorlagenRepository referendumvorlagenRepository;
-    private final InitializeKopfdaten kopfDataInitializer;
+    private final KopfdatenMapper kopfDataInitializer;
 
     private final AsyncWahltermindatenService asyncWahltermindatenService;
 

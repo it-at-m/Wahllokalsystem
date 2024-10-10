@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class InitializeKopfdaten {
+public class KopfdatenMapper {
 
     private final ExceptionFactory exceptionFactory;
 

@@ -20,7 +20,7 @@ public class KopfdatenService {
     private final WahldatenClient wahldatenClient;
     private final KopfdatenRepository kopfdatenRepository;
     private final KopfdatenModelMapper kopfdatenModelMapper;
-    private final InitializeKopfdaten kopfDataInitializer;
+    private final KopfdatenMapper kopfDataInitializer;
 
     @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetKopfdaten')")
     @Transactional

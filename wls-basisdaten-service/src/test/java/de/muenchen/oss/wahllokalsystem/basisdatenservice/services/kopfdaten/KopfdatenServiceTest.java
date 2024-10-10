@@ -33,7 +33,7 @@ class KopfdatenServiceTest {
     KopfdatenValidator kopfdatenValidator;
 
     @Mock
-    InitializeKopfdaten initializeKopfdaten;
+    KopfdatenMapper kopfdatenMapper;
 
     @Mock
     WahldatenClient wahldatenClient;
@@ -62,9 +62,9 @@ class KopfdatenServiceTest {
             Mockito.when(kopfdatenModelMapper.toEntity(mockedKopfdatenModelByInitializer)).thenReturn(mockedKopfdatenModelMappedToEntity);
             Mockito.when(konfigurierterWahltagClient.getKonfigurierterWahltag()).thenReturn(mockedKonfigurierterWahltagFromClient);
             Mockito.when(wahldatenClient.loadBasisdaten(
-                    new WahltagWithNummer(mockedKonfigurierterWahltagFromClient.wahltag(), mockedKonfigurierterWahltagFromClient.nummer())))
+                            new WahltagWithNummer(mockedKonfigurierterWahltagFromClient.wahltag(), mockedKonfigurierterWahltagFromClient.nummer())))
                     .thenReturn(mockedBasisdatenModelFromClient);
-            Mockito.when(initializeKopfdaten.initKopfdata(wahlID, wahlbezrkID, mockedBasisdatenModelFromClient)).thenReturn(mockedKopfdatenModelByInitializer);
+            Mockito.when(kopfdatenMapper.initKopfdata(wahlID, wahlbezrkID, mockedBasisdatenModelFromClient)).thenReturn(mockedKopfdatenModelByInitializer);
 
             val result = unitUnderTest.getKopfdaten(bezirkUndWahlId);
             Assertions.assertThat(result).isEqualTo(mockedKopfdatenModelByInitializer);

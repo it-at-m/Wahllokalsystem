@@ -74,7 +74,6 @@ public class WahltermindatenService {
         persistKopfdaten(kopfDataInitializer.initKopfdaten(basisdatenModel));
 
         asyncWahltermindatenService.initVorlagenAndVorschlaege(wahltagModel.wahltag(), wahltagModel.nummer(), basisdatenModel);
-
     }
 
     @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_DeleteWahltermindaten')")

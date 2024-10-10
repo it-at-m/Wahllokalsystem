@@ -46,7 +46,7 @@ dem gleichen Wahltermin zugeteilt und somit in gemeinsamen Wahllokalen organisie
 Die Landeshauptstadt München hat 4 Wahlkreise: 217 - München Nord, 218 - München Ost, 219 - München Süd und 220 - 
 München-West/Mitte. In jedem Wahlkreis gibt es dann mehrere Wahlbezirke (Wahllokale), diese haben in einem Wahlkreis den gleichen Stimmzettel. 
 Jedes Wahllokal befindet sich geografisch auch in einem der 25 Stadtbezirke der Landeshauptstadt München. 
-Der Inhalt eines Stimmzettels bestimmt aber seine Zugehörigkeit zum Wahlkreis und nicht zum Stadtbezirk.
+Der Inhalt eines Stimmzettels bestimmt sich aus der Zugehörigkeit zum Wahlkreis und nicht zum Stadtbezirk.
 
 ##### Beispiel Bundestagswahl
 

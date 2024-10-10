@@ -25,7 +25,7 @@ public class BeanstandeteWahlbriefeController {
             @PathVariable("waehlerverzeichnisNummer") Long waehlerverzeichnisNummer) {
         val referenceModel = beanstandeteWahlbriefeDTOMapper.toReferenceModel(wahlbezirkID, waehlerverzeichnisNummer);
         val beanstandeteWahlbriefeFromService = beanstandeteWahlbriefeDTOMapper.toDTO(beanstandeteWahlbriefeService.getBeanstandeteWahlbriefe(referenceModel));
-        return withBodyOrNoContent(beanstandeteWahlbriefeFromService);
+        return okWithBodyOrNoContent(beanstandeteWahlbriefeFromService);
     }
 
     @PostMapping("{wahlbezirkID}/{waehlerverzeichnisNummer}")
@@ -36,7 +36,7 @@ public class BeanstandeteWahlbriefeController {
         beanstandeteWahlbriefeService.setBeanstandeteWahlbriefe(createModel);
     }
 
-    private <T> ResponseEntity<T> withBodyOrNoContent(final T body) {
+    private <T> ResponseEntity<T> okWithBodyOrNoContent(final T body) {
         if (body == null) {
             return ResponseEntity.noContent().build();
         } else {

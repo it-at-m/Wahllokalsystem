@@ -35,6 +35,7 @@ classDiagram
     Wahltermindaten --> Referendumvorlagen : uses
     
     class Wahltermindaten {
+        <<virtual>>
         LocalDate wahltag
  }
 ```

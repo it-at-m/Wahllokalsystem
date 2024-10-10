@@ -114,9 +114,6 @@ class AsyncWahltermindatenServiceTest {
             val wahltagNummer = "wahltagNummer";
             val basisdatenModel = createBasisdatenModelWith2WahlenAnd2WahlbezirkeForEachWahl(wahltagDate, Wahlart.BTW);
 
-            val mockedWahlvorschlaegeClientResponse = WahlvorschlaegeModel.builder().build();
-            val mockedWahlvorschlaegeModelMappedAsEntity = new Wahlvorschlaege();
-
             Mockito.doThrow(new RuntimeException("getting data from client failed")).when(wahlvorschlaegeClient).getWahlvorschlaege(any());
 
             unitUnderTest.initVorlagenAndVorschlaege(new WahltagWithNummer(wahltagDate, wahltagNummer), basisdatenModel);

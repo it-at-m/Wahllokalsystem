@@ -96,7 +96,7 @@ public class WahltermindatenService {
     }
 
     private WahltagModel getWahltagByIdOrThrow(final String wahltagID, final Supplier<FachlicheWlsException> wlsExceptionSupplier) {
-        val wahltagModel = wahltageService.getWahltage().stream() //TODO wie wäre es mit getOptionalById oder findById aus dem WahltageService?
+        val wahltagModel = wahltageService.getWahltage().stream()
                 .filter(w -> w.wahltagID().equals(wahltagID))
                 .findAny();
         return wahltagModel.orElseThrow(wlsExceptionSupplier);

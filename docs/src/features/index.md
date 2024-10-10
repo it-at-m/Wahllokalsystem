@@ -10,7 +10,7 @@ Die Relationen zwischen den fachlichen Elementen können sich von Wahl zu Wahl u
 Diese Unterschiede sind Ausfluß der gesetzlichen Grundlage der entsprechenden Wahl, sowie des örtlichen 
 Kommunal- und/oder Landes- Wahlrechts.
 
-![Datenmodell:](pictures/vermutetesFachlichesDatenmodell_20241008.png)
+![Datenmodell:](../public/fachlichesDatenmodell/vermutetesFachlichesDatenmodell_20241008.png)
 
 `Wahltermin` - ein Datum an dem eine Wahl oder auch mehrere Wahlen oder Abstimmungen im
 gleichen Wahllokal starten. Diese enden in der Regel auch am gleichen Tag, es gibt aber auch
@@ -50,7 +50,7 @@ Der Inhalt eines Stimmzettels bestimmt sich aus der Zugehörigkeit zum Wahlkreis
 
 ##### Beispiel Bundestagswahl
 
-![Wahlkreise in der Landeshauptstadt München](pictures/Wahlkreiskarte_BTW2025.png)
+![Wahlkreise in der Landeshauptstadt München](../public/fachlichesDatenmodell/Wahlkreiskarte_BTW2025.png)
 
 [Mehr Informationen zur Bundestagswahl](https://stadt.muenchen.de/infos/bundestagswahlen.html)
 
@@ -63,7 +63,7 @@ Der Inhalt eines Stimmzettels bestimmt aber seine Zugehörigkeit zum Stimmkreis 
 
 ##### Beispiel Landtagswahl
 
-![Stimmkreiskarte in der Landeshauptstadt München](pictures/Stimmkreiskarte_LTW_V1.jpg)
+![Stimmkreiskarte in der Landeshauptstadt München](../public/fachlichesDatenmodell/Stimmkreiskarte_LTW_V1.jpg)
 
 [Mehr Informationen zur Landtagswahl.](https://stadt.muenchen.de/infos/landtagswahlen-und-bezirkswahlen-teil-ii.html)
 

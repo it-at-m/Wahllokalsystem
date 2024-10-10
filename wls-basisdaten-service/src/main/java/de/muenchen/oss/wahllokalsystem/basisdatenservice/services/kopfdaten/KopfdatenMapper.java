@@ -51,6 +51,7 @@ public class KopfdatenMapper {
     private KopfdatenModel createKopfdaten(WahlModel wahl, WahlbezirkModel wahlbezirk, StimmzettelgebietModel stimmzettelgebiet) {
         val bezirkUndWahlID = new BezirkUndWahlID(wahl.wahlID(), wahlbezirk.wahlbezirkID());
         val gemeinde = "LHM";
+
         return new KopfdatenModel(
                 bezirkUndWahlID,
                 gemeinde,

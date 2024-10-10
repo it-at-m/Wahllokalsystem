@@ -31,7 +31,7 @@ dem gleichen Wahltermin zugeteilt und somit in gemeinsamen Wahllokalen organisie
 
 `Vorlage` - entspricht einer Frage / einem Thema eines Volks- oder Bürgerentscheides;
 
-`Wahlbezirk` - auch als Stimmbezirk bezeichnet, entspricht einem Wahllokal (Wahlraum), geführt von einem Wahlvorstand an einem Wahltisch.
+`Wahlbezirk` - auch als Stimmbezirk bezeichnet, entspricht einem Wahllokal (Wahlraum), geführt von einem Wahlvorstand.
 
 
 [Quellen und mehr Informationen](https://stadt.muenchen.de/rathaus/politik/wahlen.html)

@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltermindat
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.ReferendumvorlagenRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlaegeRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahltagWithNummer;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenModelMapper;
@@ -10,7 +11,6 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorl
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeModelMapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
-import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -35,8 +35,8 @@ public class AsyncWahltermindatenService {
     private final ReferendumvorlagenModelMapper referendumvorlagenModelMapper;
 
     @Async
-    public void initVorlagenAndVorschlaege(final LocalDate wahltag, final String wahltagNummmer, final BasisdatenModel basisdaten) {
-        asyncProgress.reset(wahltag, wahltagNummmer);
+    public void initVorlagenAndVorschlaege(final WahltagWithNummer wahltagWithNummer, final BasisdatenModel basisdaten) {
+        asyncProgress.reset(wahltagWithNummer.wahltag(), wahltagWithNummer.wahltagNummer());
         initWahlvorschlaege(basisdaten);
         initReferendumvorlagen(basisdaten);
     }

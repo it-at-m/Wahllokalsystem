@@ -7,6 +7,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.Wahl
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.WahlRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahltagWithNummer;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisstrukturdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KopfdatenMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KopfdatenModel;
@@ -16,7 +17,6 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.Wa
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkModelMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModelMapper;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahltagWithNummer;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
@@ -62,8 +62,8 @@ public class WahltermindatenService {
         wahltermindatenValidator.validateParameterToInitWahltermindaten(wahltagID);
         val wahltagModel = getWahltagByIdOrThrow(wahltagID,
                 () -> exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_PUTWAHLTERMINDATEN_NO_WAHLTAG));
-
-        val basisdatenModel = wahldatenClient.loadBasisdaten(new WahltagWithNummer(wahltagModel.wahltag(), wahltagModel.nummer()));
+        val wahltagWithNummer = new WahltagWithNummer(wahltagModel.wahltag(), wahltagModel.nummer());
+        val basisdatenModel = wahldatenClient.loadBasisdaten(wahltagWithNummer);
         if (null == basisdatenModel) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_BASISDATEN_NO_DATA);
         }
@@ -72,7 +72,7 @@ public class WahltermindatenService {
         persistWahlbezirke(basisdatenModel.wahlbezirke(), basisdatenModel.wahlen());
         persistKopfdaten(kopfDataInitializer.initKopfdaten(basisdatenModel));
 
-        asyncWahltermindatenService.initVorlagenAndVorschlaege(wahltagModel.wahltag(), wahltagModel.nummer(), basisdatenModel);
+        asyncWahltermindatenService.initVorlagenAndVorschlaege(wahltagWithNummer, basisdatenModel);
     }
 
     @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_DeleteWahltermindaten')")

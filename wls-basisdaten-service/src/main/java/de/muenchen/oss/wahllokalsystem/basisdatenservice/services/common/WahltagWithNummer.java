@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common;
 
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;

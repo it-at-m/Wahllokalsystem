@@ -34,11 +34,9 @@ export default withMermaid({
                     text: 'Getting Started', link: `${PATH_TECHNIK}get_started/`
                 },
                 {text: 'Entwicklungsumgebung', link: `${PATH_TECHNIK}development/`},
-                {
-                    text: 'Coding Conventions', link: `${PATH_CODING_CONVENTIONS}`, collapsed: true, items: [
+                {text: 'Coding Conventions', link: `${PATH_CODING_CONVENTIONS}`, collapsed: true, items: [
                         {text: 'Naming Convention - Testing', link: `${PATH_CODING_CONVENTIONS}tests_naming`}
-                    ]
-                },
+                    ]},
                 {
                     text: 'Adr', link: `${PATH_ADR}`, collapsed: true, items: [
                         {text: 'Renovate - ignoriere lombok', link: `${PATH_ADR}adr001-renovate-ignore-lombok`},

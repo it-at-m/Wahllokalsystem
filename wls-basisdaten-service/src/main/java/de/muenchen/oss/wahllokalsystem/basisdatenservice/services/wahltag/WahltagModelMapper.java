@@ -7,8 +7,6 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface WahltagModelMapper {
 
-    Wahltag toEntity(WahltagModel wahltagModel);
-
     WahltagModel toModel(Wahltag wahltag);
 
     List<WahltagModel> fromWahltagEntityToWahltagModelList(List<Wahltag> entities);

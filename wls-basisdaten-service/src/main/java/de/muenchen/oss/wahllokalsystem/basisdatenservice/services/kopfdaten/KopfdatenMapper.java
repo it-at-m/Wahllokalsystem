@@ -1,26 +1,25 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.KopfdatenRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class InitializeKopfdaten {
+public class KopfdatenMapper {
 
     private final ExceptionFactory exceptionFactory;
-    private final KopfdatenRepository kopfdatenRepository;
-    private final KopfdatenModelMapper kopfdatenModelMapper;
 
-    public void initKopfdaten(BasisdatenModel basisdatenModel) {
-        basisdatenModel.basisstrukturdaten()
-                .forEach(basisstrukturdaten -> initKopfdata(basisstrukturdaten.wahlID(), basisstrukturdaten.wahlbezirkID(), basisdatenModel));
+    public List<KopfdatenModel> initKopfdaten(BasisdatenModel basisdatenModel) {
+        return basisdatenModel.basisstrukturdaten()
+                .stream().map(basisstrukturdaten -> initKopfdata(basisstrukturdaten.wahlID(), basisstrukturdaten.wahlbezirkID(), basisdatenModel))
+                .toList();
     }
 
     protected KopfdatenModel initKopfdata(String wahlID, String wahlbezirkID, BasisdatenModel basisdaten) {
@@ -52,7 +51,8 @@ public class InitializeKopfdaten {
     private KopfdatenModel createKopfdaten(WahlModel wahl, WahlbezirkModel wahlbezirk, StimmzettelgebietModel stimmzettelgebiet) {
         val bezirkUndWahlID = new BezirkUndWahlID(wahl.wahlID(), wahlbezirk.wahlbezirkID());
         val gemeinde = "LHM";
-        val kopfdatenModel = new KopfdatenModel(
+
+        return new KopfdatenModel(
                 bezirkUndWahlID,
                 gemeinde,
                 stimmzettelgebiet.stimmzettelgebietsart(),
@@ -60,7 +60,5 @@ public class InitializeKopfdaten {
                 stimmzettelgebiet.name(),
                 wahl.name(),
                 wahlbezirk.nummer());
-        kopfdatenRepository.save(kopfdatenModelMapper.toEntity(kopfdatenModel));
-        return kopfdatenModel;
     }
 }

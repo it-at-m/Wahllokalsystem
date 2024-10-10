@@ -21,10 +21,18 @@ Authorization: {{ token_type }} {{ auth_token }}
 PUT {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/wahltermindaten/wahltagID1
 Authorization: {{ token_type }} {{ auth_token }}
 
-### Get Import Progress
-GET {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/asyncProgress
+### Put Wahltermindaten - failed cause wahltagID does not exist
+PUT {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/wahltermindaten/wahltagIDThatDoesNotExist
 Authorization: {{ token_type }} {{ auth_token }}
 
 ### Delete Wahltermindaten
 DELETE {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/wahltermindaten/wahltagID1
+Authorization: {{ token_type }} {{ auth_token }}
+
+### Delete Wahltermindaten - failed cause wahltagID does not exist
+DELETE {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/wahltermindaten/wahltagIDThatDoesNotExist
+Authorization: {{ token_type }} {{ auth_token }}
+
+### Get Import Progress
+GET {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/asyncProgress
 Authorization: {{ token_type }} {{ auth_token }}

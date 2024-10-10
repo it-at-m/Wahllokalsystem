@@ -8,7 +8,9 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.WahlRepos
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisstrukturdatenModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.InitializeKopfdaten;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KopfdatenMapper;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KopfdatenModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KopfdatenModelMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.WahldatenClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkModelMapper;
@@ -32,7 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-//TODO create Issue for Phase 3: this Service is a fassade for other services: wahlen, wahlbezirke, ...
 public class WahltermindatenService {
 
     private final WahltermindatenValidator wahltermindatenValidator;
@@ -41,13 +42,14 @@ public class WahltermindatenService {
 
     private final WahlModelMapper wahlModelMapper;
     private final WahlbezirkModelMapper wahlbezirkModelMapper;
+    private final KopfdatenModelMapper kopfdatenModelMapper;
 
     private final WahlRepository wahlRepository;
     private final WahlbezirkRepository wahlbezirkRepository;
     private final KopfdatenRepository kopfdatenRepository;
     private final WahlvorschlaegeRepository wahlvorschlaegeRepository;
     private final ReferendumvorlagenRepository referendumvorlagenRepository;
-    private final InitializeKopfdaten kopfDataInitializer;
+    private final KopfdatenMapper kopfDataInitializer;
 
     private final AsyncWahltermindatenService asyncWahltermindatenService;
 
@@ -68,10 +70,9 @@ public class WahltermindatenService {
 
         persistWahlen(basisdatenModel.wahlen().stream().toList());
         persistWahlbezirke(basisdatenModel.wahlbezirke(), basisdatenModel.wahlen());
-        kopfDataInitializer.initKopfdaten(basisdatenModel);
+        persistKopfdaten(kopfDataInitializer.initKopfdaten(basisdatenModel));
 
         asyncWahltermindatenService.initVorlagenAndVorschlaege(wahltagModel.wahltag(), wahltagModel.nummer(), basisdatenModel);
-
     }
 
     @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_DeleteWahltermindaten')")
@@ -95,10 +96,15 @@ public class WahltermindatenService {
     }
 
     private WahltagModel getWahltagByIdOrThrow(final String wahltagID, final Supplier<FachlicheWlsException> wlsExceptionSupplier) {
-        val wahltagModel = wahltageService.getWahltage().stream() //TODO wie wäre es mit getOptionalById oder findById aus dem WahltageService?
+        val wahltagModel = wahltageService.getWahltage().stream()
                 .filter(w -> w.wahltagID().equals(wahltagID))
                 .findAny();
         return wahltagModel.orElseThrow(wlsExceptionSupplier);
+    }
+
+    private void persistKopfdaten(List<KopfdatenModel> kopfdatenModels) {
+        val kopfdatenEntities = kopfdatenModels.stream().map(kopfdatenModelMapper::toEntity).toList();
+        kopfdatenRepository.saveAll(kopfdatenEntities);
     }
 
     private void persistWahlen(final List<WahlModel> wahlModelIterable) {

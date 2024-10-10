@@ -46,7 +46,7 @@ public class Referendumvorlagen {
     @NotNull
     private String stimmzettelgebietID;
 
-    @OneToMany(mappedBy = "referendumvorlagen", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "referendumvorlagen", orphanRemoval = true, cascade = CascadeType.PERSIST)
     @NotNull
     private Set<Referendumvorlage> referendumvorlagen = new HashSet<>();
 

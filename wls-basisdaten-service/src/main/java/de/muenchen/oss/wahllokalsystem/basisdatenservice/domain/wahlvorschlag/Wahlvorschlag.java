@@ -61,7 +61,7 @@ public class Wahlvorschlag {
     @ToString.Include
     private boolean erhaeltStimmen;
 
-    @OneToMany(mappedBy = "wahlvorschlag", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "wahlvorschlag", orphanRemoval = true, cascade = CascadeType.PERSIST)
     @NotNull
     private Set<Kandidat> kandidaten = new LinkedHashSet<>();
 

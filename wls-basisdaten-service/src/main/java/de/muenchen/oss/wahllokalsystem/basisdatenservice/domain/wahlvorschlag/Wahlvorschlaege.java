@@ -51,7 +51,7 @@ public class Wahlvorschlaege {
     @ToString.Include
     private String stimmzettelgebietID;
 
-    @OneToMany(mappedBy = "wahlvorschlaeage", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "wahlvorschlaeage", orphanRemoval = true, cascade = CascadeType.PERSIST)
     @NotNull
     @Size(min = 1)
     private Set<Wahlvorschlag> wahlvorschlaege = new LinkedHashSet<>();

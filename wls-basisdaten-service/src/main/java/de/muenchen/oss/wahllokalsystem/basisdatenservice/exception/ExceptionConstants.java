@@ -14,7 +14,6 @@ public class ExceptionConstants {
     private static final String CODE_UNSAVEABLE = "903";
     private static final String MSG_UNSAVEABLE = "Fehler beim speichern: Daten konnten nicht gespeichert werden.";
 
-    private static final String CODE_NO_DATA_BASISDATEN = "401";
     private static final String CODE_NO_DATA_WAHLBEZIRK = "402";
 
     public static ExceptionDataWrapper SUCHKRITERIEN_UNVOLLSTAENDIG = new ExceptionDataWrapper(CODE_SUCHKRITERIEN_UNVOLLSTAENDIG,
@@ -87,7 +86,7 @@ public class ExceptionConstants {
     public static ExceptionDataWrapper CODE_DELETEWAHLTERMINDATEN_LOESCHEN_UNVOLLSTAENDIG = new ExceptionDataWrapper("307",
             "deleteWahltermindaten: Die Wahltermindaten konnten aufgrund eines Fehlers nicht vollstaendig geloescht werden.");
 
-    public static final ExceptionDataWrapper GET_BASISDATEN_NO_DATA = new ExceptionDataWrapper(CODE_NO_DATA_BASISDATEN,
+    public static final ExceptionDataWrapper GET_BASISDATEN_NO_DATA = new ExceptionDataWrapper("401",
             "Es wurden keine Basisdaten gefunden.");
 
 }

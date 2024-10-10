@@ -310,38 +310,38 @@ public class WahltermindatenControllerIntegrationTest {
         }
 
         private Wahlvorschlaege createWahlvorschlaege(final String wahlID, final String wahlbezirkID, final String stimmzettelgebietID) {
-            val wahlvorschlaege = new Wahlvorschlaege(UUID.randomUUID(), new BezirkUndWahlID(wahlID, wahlbezirkID), stimmzettelgebietID, new HashSet<>());
+            val wahlvorschlaege = new Wahlvorschlaege(null, new BezirkUndWahlID(wahlID, wahlbezirkID), stimmzettelgebietID, new HashSet<>());
 
-            val wahlvorschlag1 = new Wahlvorschlag(UUID.randomUUID(), UUID.randomUUID().toString(), wahlvorschlaege, 1L, wahlID + wahlbezirkID, true,
+            val wahlvorschlag1 = new Wahlvorschlag(null, UUID.randomUUID().toString(), wahlvorschlaege, 1L, wahlID + wahlbezirkID, true,
                     new HashSet<>());
             wahlvorschlaege.addWahlvorschlag(wahlvorschlag1);
-            val kandidat1Vorschlag1 = new Kandidat(UUID.randomUUID(), UUID.randomUUID().toString(), wahlvorschlag1, "kandidat1", 1, false, 1L, false);
+            val kandidat1Vorschlag1 = new Kandidat(null, UUID.randomUUID().toString(), wahlvorschlag1, "kandidat1", 1, false, 1L, false);
             wahlvorschlag1.addKandidat(kandidat1Vorschlag1);
-            val kandidat2Vorschlag1 = new Kandidat(UUID.randomUUID(), UUID.randomUUID().toString(), wahlvorschlag1, "kandidat1", 1, false, 1L, false);
+            val kandidat2Vorschlag1 = new Kandidat(null, UUID.randomUUID().toString(), wahlvorschlag1, "kandidat1", 1, false, 1L, false);
             wahlvorschlag1.addKandidat(kandidat2Vorschlag1);
 
-            val wahlvorschlag2 = new Wahlvorschlag(UUID.randomUUID(), UUID.randomUUID().toString(), wahlvorschlaege, 1L, wahlID + wahlbezirkID, true,
+            val wahlvorschlag2 = new Wahlvorschlag(null, UUID.randomUUID().toString(), wahlvorschlaege, 1L, wahlID + wahlbezirkID, true,
                     new HashSet<>());
             wahlvorschlaege.addWahlvorschlag(wahlvorschlag2);
-            val kandidat1Vorschlag2 = new Kandidat(UUID.randomUUID(), UUID.randomUUID().toString(), wahlvorschlag2, "kandidat1", 1, false, 1L, false);
+            val kandidat1Vorschlag2 = new Kandidat(null, UUID.randomUUID().toString(), wahlvorschlag2, "kandidat1", 1, false, 1L, false);
             wahlvorschlag2.addKandidat(kandidat1Vorschlag2);
-            val kandidat2Vorschlag2 = new Kandidat(UUID.randomUUID(), UUID.randomUUID().toString(), wahlvorschlag2, "kandidat1", 1, false, 1L, false);
+            val kandidat2Vorschlag2 = new Kandidat(null, UUID.randomUUID().toString(), wahlvorschlag2, "kandidat1", 1, false, 1L, false);
             wahlvorschlag2.addKandidat(kandidat2Vorschlag2);
 
             return wahlvorschlaegeRepository.save(wahlvorschlaege);
         }
 
         private Referendumvorlagen createReferendunvorlagen(final String wahlID, final String wahlbezirkID, final String stimmzettelgebietID) {
-            val referendumvorlagen = new Referendumvorlagen(UUID.randomUUID(), new BezirkUndWahlID(wahlID, wahlbezirkID), stimmzettelgebietID, new HashSet<>());
+            val referendumvorlagen = new Referendumvorlagen(null, new BezirkUndWahlID(wahlID, wahlbezirkID), stimmzettelgebietID, new HashSet<>());
 
-            val referendumvorlage1 = new Referendumvorlage(UUID.randomUUID(), referendumvorlagen, "1", 1L, wahlID + wahlbezirkID, "Frage 1", new HashSet<>());
+            val referendumvorlage1 = new Referendumvorlage(null, referendumvorlagen, "1", 1L, wahlID + wahlbezirkID, "Frage 1", new HashSet<>());
             referendumvorlagen.addReferendumvorlage(referendumvorlage1);
             val referendumOption1Vorlage1 = new Referendumoption(UUID.randomUUID().toString(), "Option 1", 1L);
             referendumvorlage1.getReferendumoptionen().add(referendumOption1Vorlage1);
             val referendumOption2Vorlage1 = new Referendumoption(UUID.randomUUID().toString(), "Option 2", 1L);
             referendumvorlage1.getReferendumoptionen().add(referendumOption2Vorlage1);
 
-            val referendumvorlage2 = new Referendumvorlage(UUID.randomUUID(), referendumvorlagen, "1", 1L, wahlID + wahlbezirkID, "Frage 1", new HashSet<>());
+            val referendumvorlage2 = new Referendumvorlage(null, referendumvorlagen, "1", 1L, wahlID + wahlbezirkID, "Frage 1", new HashSet<>());
             referendumvorlagen.addReferendumvorlage(referendumvorlage2);
             val referendumOption1Vorlage2 = new Referendumoption(UUID.randomUUID().toString(), "Option 1", 1L);
             referendumvorlage1.getReferendumoptionen().add(referendumOption1Vorlage2);
@@ -362,7 +362,29 @@ public class WahltermindatenControllerIntegrationTest {
 
             setupWireMockForWahltagClient(wahltagToGetWahltermindaten);
 
-            val basisstrukturdatenToImport = new BasisdatenDTO()
+            val basisstrukturdatenToImport = createBasisdatenDTO(localDateOfWahltag);
+
+            WireMock.stubFor(WireMock.get(WireMock.urlPathMatching("/wahldaten/basisdaten"))
+                    .willReturn(WireMock.aResponse()
+                            .withHeader("Content-Type", "application/json")
+                            .withBody(objectMapper.writeValueAsString(basisstrukturdatenToImport))
+                            .withStatus(HttpStatus.OK.value())));
+
+            val request = MockMvcRequestBuilders.put("/businessActions/wahltermindaten/" + wahltagToGetWahltermindaten.getWahltagID());
+            mockMvc.perform(request).andExpect(status().isOk());
+
+            Assertions.assertThat(kopfdatenRepository.count()).isEqualTo(5);
+            Assertions.assertThat(wahlbezirkRepository.count()).isEqualTo(5);
+            Assertions.assertThat(wahlRepository.count()).isEqualTo(2);
+
+            val expectedBasisdatenModel = wahldatenClientMapper.fromRemoteClientDTOToModel(basisstrukturdatenToImport);
+            Mockito.verify(asyncWahltermindatenService)
+                    .initVorlagenAndVorschlaege(eq(wahltagToGetWahltermindaten.getWahltag()), eq(wahltagToGetWahltermindaten.getNummer()),
+                            eq(expectedBasisdatenModel));
+        }
+
+        private static BasisdatenDTO createBasisdatenDTO(LocalDate localDateOfWahltag) {
+            return new BasisdatenDTO()
                     .basisstrukturdaten(
                             Set.of(
                                     new BasisstrukturdatenDTO().wahlID("wahlID1").wahltag(localDateOfWahltag).wahlbezirkID("wahlbezirkID1_1")
@@ -408,24 +430,6 @@ public class WahltermindatenControllerIntegrationTest {
                                     new WahlbezirkDTO().wahltag(localDateOfWahltag).wahlID("wahlID2").identifikator("wahlbezirkID2_2").nummer("2_2")
                                             .wahlnummer("2").wahlbezirkArt(
                                                     WahlbezirkDTO.WahlbezirkArtEnum.UWB)));
-
-            WireMock.stubFor(WireMock.get(WireMock.urlPathMatching("/wahldaten/basisdaten"))
-                    .willReturn(WireMock.aResponse()
-                            .withHeader("Content-Type", "application/json")
-                            .withBody(objectMapper.writeValueAsString(basisstrukturdatenToImport))
-                            .withStatus(HttpStatus.OK.value())));
-
-            val request = MockMvcRequestBuilders.put("/businessActions/wahltermindaten/" + wahltagToGetWahltermindaten.getWahltagID());
-            mockMvc.perform(request).andExpect(status().isOk());
-
-            Assertions.assertThat(kopfdatenRepository.count()).isEqualTo(5);
-            Assertions.assertThat(wahlbezirkRepository.count()).isEqualTo(5);
-            Assertions.assertThat(wahlRepository.count()).isEqualTo(2);
-
-            val expectedBasisdatenModel = wahldatenClientMapper.fromRemoteClientDTOToModel(basisstrukturdatenToImport);
-            Mockito.verify(asyncWahltermindatenService)
-                    .initVorlagenAndVorschlaege(eq(wahltagToGetWahltermindaten.getWahltag()), eq(wahltagToGetWahltermindaten.getNummer()),
-                            eq(expectedBasisdatenModel));
         }
     }
 

@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
 
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
+
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.Referendumoption;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.Referendumvorlage;
@@ -10,17 +11,17 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlag
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.ReferendumvorlagenRepository;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 @SpringBootTest(
         classes = { MicroServiceApplication.class },
@@ -36,121 +37,61 @@ class ReferendumvorlagenRepositoryTest {
     @Autowired
     private ReferendumvorlageRepository referendumvorlageRepository;
 
+    @Autowired
+    private TransactionTemplate transactionTemplate;
+
     @AfterEach
     void tearDown() {
         referendumvorlageRepository.deleteAll();
         referendumvorlagenRepository.deleteAll();
     }
 
-    @Test
-    @Transactional
-    public void referendumvorlagenRepositorySave() {
-        val wahlID = "wahlID";
-        val wahlbezirkID = "wahlbezirkID";
-        val referendumvorlagenEntity = createReferendumvorlagenEntity(wahlID, wahlbezirkID);
-        val bezirkUndWahlID = referendumvorlagenEntity.getBezirkUndWahlID();
+    @Nested
+    class DeleteAllByBezirkUndWahlID_WahlID {
 
-        referendumvorlagenRepository.save(referendumvorlagenEntity);
+        @Test
+        void should_removeReferendumvorlagenAndChildren_when_wahlIdMatches() {
+            val wahlIDToDelete = "wahlID";
 
-        Optional<Referendumvorlagen> persistedReferendumvorlagen = referendumvorlagenRepository.findByBezirkUndWahlID(bezirkUndWahlID);
+            val referendumvorlagenToKeep = transactionTemplate.execute(status -> {
+                referendumvorlagenRepository.save(createReferendumvorlagenWithBezirkAndWahlID("wahlbezirk1", wahlIDToDelete));
+                referendumvorlagenRepository.save(createReferendumvorlagenWithBezirkAndWahlID("wahlbezirk2", wahlIDToDelete));
 
-        Assertions.assertThat(referendumvorlagenEntity).isEqualTo(persistedReferendumvorlagen.get());
-    }
+                return referendumvorlagenRepository.save(createReferendumvorlagenWithBezirkAndWahlID("wahlbezirk1", "wahlIDToKeep"));
+            });
 
-    @Test
-    @Transactional
-    public void savingParentReferendumvorlagenIsAutomaticallySavingReferendumvorlageChilds() {
-        val wahlID = "wahlID";
-        val wahlbezirkID = "wahlbezirkID";
-        val referendumvorlagenEntity = createReferendumvorlagenEntity(wahlID, wahlbezirkID);
+            transactionTemplate.executeWithoutResult(status -> referendumvorlagenRepository.deleteAllByBezirkUndWahlID_WahlID(wahlIDToDelete));
 
-        val expectedReferendumvorlageChilds = referendumvorlagenEntity.getReferendumvorlagen();
+            Assertions.assertThat(referendumvorlagenRepository.count()).isEqualTo(1);
+            Assertions.assertThat(referendumvorlagenRepository.existsById(referendumvorlagenToKeep.getId())).isTrue();
 
-        Set<Referendumoption> expectedAllReferendumoptionChilds = new HashSet<>();
-        for (Referendumvorlage expectedReferendumvorlageChild : expectedReferendumvorlageChilds) {
-            expectedAllReferendumoptionChilds.addAll(expectedReferendumvorlageChild.getReferendumoptionen());
+            Assertions.assertThat(referendumvorlageRepository.count()).isEqualTo(referendumvorlagenToKeep.getReferendumvorlagen().size());
+            referendumvorlagenToKeep.getReferendumvorlagen()
+                    .forEach(referendumvorlage -> Assertions.assertThat(referendumvorlageRepository.existsById(referendumvorlage.getId())).isTrue());
         }
 
-        referendumvorlagenRepository.save(referendumvorlagenEntity);
+        private Referendumvorlagen createReferendumvorlagenWithBezirkAndWahlID(final String wahlbezirkID, final String wahlID) {
+            val referendumvorlagen = new Referendumvorlagen();
 
-        val foundReferendumvorlageChilds = referendumvorlageRepository.findAll();
-        val foundReferendumoptionChildsOfAllReferendumvorlages = foundReferendumvorlageChilds.stream()
-                .flatMap(rvorlage -> rvorlage.getReferendumoptionen().stream()).toList();
+            referendumvorlagen.setBezirkUndWahlID(new BezirkUndWahlID(wahlID, wahlbezirkID));
+            referendumvorlagen.setStimmzettelgebietID(wahlID);
 
-        Assertions.assertThat(foundReferendumvorlageChilds).containsExactlyInAnyOrderElementsOf(expectedReferendumvorlageChilds);
-        Assertions.assertThat(foundReferendumoptionChildsOfAllReferendumvorlages).containsExactlyInAnyOrderElementsOf(expectedAllReferendumoptionChilds);
-    }
+            referendumvorlagen.setReferendumvorlagen(new HashSet<>());
+            val referendumvorlage1 = new Referendumvorlage(null, null, UUID.randomUUID().toString(), 1L, "", "", new HashSet<>());
+            referendumvorlagen.addReferendumvorlage(referendumvorlage1);
+            val referendumvorlage2 = new Referendumvorlage(null, null, UUID.randomUUID().toString(), 1L, "", "", new HashSet<>());
+            referendumvorlagen.addReferendumvorlage(referendumvorlage2);
 
-    @Test
-    @Transactional
-    public void method_deleteAllByBezirkUndWahlID_WahlID_doesNotDeleteElementsWithOtherWahlIDButSameWahlbezirkID() {
-        Assertions.assertThat(referendumvorlagenRepository.findAll()).isEmpty();
-        Assertions.assertThat(referendumvorlageRepository.findAll()).isEmpty();
+            val referendumoption1Vorlage1 = new Referendumoption(UUID.randomUUID().toString(), "", null);
+            referendumvorlage1.getReferendumoptionen().add(referendumoption1Vorlage1);
+            val referendumoption2Vorlage1 = new Referendumoption(UUID.randomUUID().toString(), "", null);
+            referendumvorlage1.getReferendumoptionen().add(referendumoption2Vorlage1);
+            val referendumoption1Vorlage2 = new Referendumoption(UUID.randomUUID().toString(), "", null);
+            referendumvorlage2.getReferendumoptionen().add(referendumoption1Vorlage2);
+            val referendumoption2Vorlage2 = new Referendumoption(UUID.randomUUID().toString(), "", null);
+            referendumvorlage2.getReferendumoptionen().add(referendumoption2Vorlage2);
 
-        val wahlID_1 = "wahlID_1";
-        val wahlbezirkID = "wahlbezirkID";
-        val wahlID_2 = "wahlID_2";
-
-        val referendumvorlagenEntity1 = createReferendumvorlagenEntity(wahlID_1, wahlbezirkID);
-        val bezirkUndWahlID1 = referendumvorlagenEntity1.getBezirkUndWahlID();
-        val referendumvorlagenEntity2 = createReferendumvorlagenEntity(wahlID_2, wahlbezirkID);
-        val bezirkUndWahlID2 = referendumvorlagenEntity2.getBezirkUndWahlID();
-
-        referendumvorlagenRepository.save(referendumvorlagenEntity1);
-        referendumvorlagenRepository.save(referendumvorlagenEntity2);
-
-        val expectedReferendumvorlageChilds1 = referendumvorlagenEntity1.getReferendumvorlagen();
-        Set<Referendumoption> expectedAllReferendumoptionChilds1 = new HashSet<>();
-        for (Referendumvorlage expectedReferendumvorlageChild : expectedReferendumvorlageChilds1) {
-            expectedAllReferendumoptionChilds1.addAll(expectedReferendumvorlageChild.getReferendumoptionen());
+            return referendumvorlagen;
         }
-
-        val foundReferendumvorlagen_OfWahlID1 = referendumvorlagenRepository.findByBezirkUndWahlID(bezirkUndWahlID1);
-        val foundReferendumvorlageChilds_Of_wahlID1 = foundReferendumvorlagen_OfWahlID1.get().getReferendumvorlagen();
-        val foundReferendumoptionChildsOfAllReferendumvorlages_Of_wahlID1 = foundReferendumvorlagen_OfWahlID1.get().getReferendumvorlagen().stream()
-                .flatMap(rvorlage -> rvorlage.getReferendumoptionen().stream());
-
-        Assertions.assertThat(foundReferendumvorlageChilds_Of_wahlID1).containsExactlyInAnyOrderElementsOf(expectedReferendumvorlageChilds1);
-        Assertions.assertThat(foundReferendumoptionChildsOfAllReferendumvorlages_Of_wahlID1)
-                .containsExactlyInAnyOrderElementsOf(expectedAllReferendumoptionChilds1);
-
-        val expectedReferendumvorlageChilds2 = referendumvorlagenEntity2.getReferendumvorlagen();
-        Set<Referendumoption> expectedAllReferendumoptionChilds2 = new HashSet<>();
-        for (Referendumvorlage expectedReferendumvorlageChild : expectedReferendumvorlageChilds2) {
-            expectedAllReferendumoptionChilds2.addAll(expectedReferendumvorlageChild.getReferendumoptionen());
-        }
-
-        val foundReferendumvorlagen_OfWahlID2 = referendumvorlagenRepository.findByBezirkUndWahlID(bezirkUndWahlID2);
-        val foundReferendumvorlageChilds_Of_wahlID2 = foundReferendumvorlagen_OfWahlID2.get().getReferendumvorlagen();
-        val foundReferendumoptionChildsOfAllReferendumvorlages_Of_wahlID2 = foundReferendumvorlagen_OfWahlID2.get().getReferendumvorlagen().stream()
-                .flatMap(rvorlage -> rvorlage.getReferendumoptionen().stream()).toList();
-
-        Assertions.assertThat(foundReferendumvorlageChilds_Of_wahlID2).containsExactlyInAnyOrderElementsOf(expectedReferendumvorlageChilds2);
-        Assertions.assertThat(foundReferendumoptionChildsOfAllReferendumvorlages_Of_wahlID2)
-                .containsExactlyInAnyOrderElementsOf(expectedAllReferendumoptionChilds2);
-
-        referendumvorlagenRepository.deleteAllByBezirkUndWahlID_WahlID(wahlID_1);
-
-        val allRemainingReferendumvorlagen = referendumvorlagenRepository.findAll();
-        val allRemainingReferendumvorlages = referendumvorlageRepository.findAll();
-        val allRemainingReferendumoption = allRemainingReferendumvorlages.stream().flatMap(rvorlage -> rvorlage.getReferendumoptionen().stream()).toList();
-
-        Assertions.assertThat(allRemainingReferendumvorlagen).containsExactlyInAnyOrderElementsOf(foundReferendumvorlagen_OfWahlID2.stream().toList());
-        Assertions.assertThat(allRemainingReferendumvorlages).containsExactlyInAnyOrderElementsOf(foundReferendumvorlageChilds_Of_wahlID2);
-        Assertions.assertThat(allRemainingReferendumoption).containsExactlyInAnyOrderElementsOf(foundReferendumoptionChildsOfAllReferendumvorlages_Of_wahlID2);
-    }
-
-    private Referendumvorlagen createReferendumvorlagenEntity(final String wahlID, final String wahlbezirkID) {
-        val stimmzettelgebietID = "stimmzettelgebietID";
-        val bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
-        val entity = new Referendumvorlagen(null, bezirkUndWahlID, stimmzettelgebietID, null);
-        val referendumvorlage_1 = new Referendumvorlage(null, entity, "wahlvorschlagID1", 1L, "kurzname1", "frage1",
-                Set.of(new Referendumoption("option11" + wahlID + wahlbezirkID, "optionsName11", 1L),
-                        new Referendumoption("option12" + wahlID + wahlbezirkID, "optionsName12", 2L)));
-        val referendumvorlage_2 = new Referendumvorlage(null, entity, "wahlvorschlagID2", 2L, "kurzname2", "frage2",
-                Set.of(new Referendumoption("option21" + wahlID + wahlbezirkID, "optionsName21", 3L),
-                        new Referendumoption("option22" + wahlID + wahlbezirkID, "optionsName22", 4L)));
-        entity.setReferendumvorlagen(Set.of(referendumvorlage_1, referendumvorlage_2));
-        return entity;
     }
 }

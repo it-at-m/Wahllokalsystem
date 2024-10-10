@@ -65,4 +65,8 @@ Alle Konfigurationsparameter beginnen mit `service.config`
 | Name | Beschreibung                                      | Default |
 | ---- |---------------------------------------------------| ------- |
 | ungueltigewahlscheine.filenamesuffix | Dateinamenssuffix für die ungueltigen Wahlscheine | Ungueltigews.csv | 
-| manual.filenamesuffix | Dateinamenssuffix für das Handbuch | Handbuch.pdf | 
+| manual.filenamesuffix | Dateinamenssuffix für das Handbuch              | Handbuch.pdf | 
+| async.corePoolSize | core Poolsize von ThreadPoolTaskExecutor        | 2 |
+| async.maxPoolSize | max Poolsize von ThreadPoolTaskExecutor         | 2 |
+| async.queueCapacity | Kapazität für Queue von ThreadPoolTaskExecutor  | 500 |
+| async.threadNamePrefix | Prefix für Threads von  ThreadPoolTaskExecutor  | taskExecutor- |

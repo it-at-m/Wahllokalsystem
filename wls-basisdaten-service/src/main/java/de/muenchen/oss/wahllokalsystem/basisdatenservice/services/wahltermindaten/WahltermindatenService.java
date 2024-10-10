@@ -34,7 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-//TODO create Issue for Phase 3: this Service is a fassade for other services: wahlen, wahlbezirke, ...
 public class WahltermindatenService {
 
     private final WahltermindatenValidator wahltermindatenValidator;

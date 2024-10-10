@@ -138,7 +138,6 @@ class WahltermindatenServiceTest {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_BASISDATEN_NO_DATA)).thenReturn(mockedWlsException);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.putWahltermindaten(wahltagID)).isSameAs(mockedWlsException);
-
         }
 
         @Test

@@ -10,7 +10,6 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.Wa
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.Wahlvorschlag;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlagRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.PersistingUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.HashSet;
 import lombok.extern.slf4j.Slf4j;
@@ -59,13 +58,10 @@ class WahlvorschlaegeRepositoryTest {
             val wahlIDToDelete = "wahlID";
 
             val wahlvorschlaegeToKeep = transactionTemplate.execute(status -> {
-                PersistingUtils.persistWahlvorschlaege(wahlvorschlaegeRepository, wahlvorschlagRepository, kandidatRepository,
-                        createWahlvorschlaegeWithKandidatenWithBezirkAndWahlID("wahlbezirk1", wahlIDToDelete));
-                PersistingUtils.persistWahlvorschlaege(wahlvorschlaegeRepository, wahlvorschlagRepository, kandidatRepository,
-                        createWahlvorschlaegeWithKandidatenWithBezirkAndWahlID("wahlbezirk2", wahlIDToDelete));
+                wahlvorschlaegeRepository.save(createWahlvorschlaegeWithKandidatenWithBezirkAndWahlID("wahlbezirk1", wahlIDToDelete));
+                wahlvorschlaegeRepository.save(createWahlvorschlaegeWithKandidatenWithBezirkAndWahlID("wahlbezirk2", wahlIDToDelete));
 
-                return PersistingUtils.persistWahlvorschlaege(wahlvorschlaegeRepository, wahlvorschlagRepository, kandidatRepository,
-                        createWahlvorschlaegeWithKandidatenWithBezirkAndWahlID("wahlbezirk1", "wahlIDToKeep"));
+                return wahlvorschlaegeRepository.save(createWahlvorschlaegeWithKandidatenWithBezirkAndWahlID("wahlbezirk1", "wahlIDToKeep"));
             });
 
             wahlvorschlaegeRepository.deleteAllByBezirkUndWahlID_WahlID(wahlIDToDelete);

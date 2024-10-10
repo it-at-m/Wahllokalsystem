@@ -9,7 +9,6 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlag
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.ReferendumvorlageRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.Referendumvorlagen;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.ReferendumvorlagenRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.PersistingUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.HashSet;
 import java.util.UUID;
@@ -55,13 +54,10 @@ class ReferendumvorlagenRepositoryTest {
             val wahlIDToDelete = "wahlID";
 
             val referendumvorlagenToKeep = transactionTemplate.execute(status -> {
-                PersistingUtils.persistReferendumvorlagen(referendumvorlagenRepository, referendumvorlageRepository,
-                        createReferendumvorlagenWithBezirkAndWahlID("wahlbezirk1", wahlIDToDelete));
-                PersistingUtils.persistReferendumvorlagen(referendumvorlagenRepository, referendumvorlageRepository,
-                        createReferendumvorlagenWithBezirkAndWahlID("wahlbezirk2", wahlIDToDelete));
+                referendumvorlagenRepository.save(createReferendumvorlagenWithBezirkAndWahlID("wahlbezirk1", wahlIDToDelete));
+                referendumvorlagenRepository.save(createReferendumvorlagenWithBezirkAndWahlID("wahlbezirk2", wahlIDToDelete));
 
-                return PersistingUtils.persistReferendumvorlagen(referendumvorlagenRepository, referendumvorlageRepository,
-                        createReferendumvorlagenWithBezirkAndWahlID("wahlbezirk1", "wahlIDToKeep"));
+                return referendumvorlagenRepository.save(createReferendumvorlagenWithBezirkAndWahlID("wahlbezirk1", "wahlIDToKeep"));
             });
 
             transactionTemplate.executeWithoutResult(status -> referendumvorlagenRepository.deleteAllByBezirkUndWahlID_WahlID(wahlIDToDelete));

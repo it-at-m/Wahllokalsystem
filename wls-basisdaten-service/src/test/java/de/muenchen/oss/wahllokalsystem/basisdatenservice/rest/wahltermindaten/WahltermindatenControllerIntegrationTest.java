@@ -41,7 +41,6 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.Wahlbezir
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltermindaten.AsyncWahltermindatenService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.PersistingUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.LocalDate;
@@ -329,7 +328,7 @@ public class WahltermindatenControllerIntegrationTest {
             val kandidat2Vorschlag2 = new Kandidat(null, UUID.randomUUID().toString(), wahlvorschlag2, "kandidat1", 1, false, 1L, false);
             wahlvorschlag2.addKandidat(kandidat2Vorschlag2);
 
-            return PersistingUtils.persistWahlvorschlaege(wahlvorschlaegeRepository, wahlvorschlagRepository, kandidatRepository, wahlvorschlaege);
+            return wahlvorschlaegeRepository.save(wahlvorschlaege);
         }
 
         private Referendumvorlagen createReferendunvorlagen(final String wahlID, final String wahlbezirkID, final String stimmzettelgebietID) {
@@ -349,7 +348,7 @@ public class WahltermindatenControllerIntegrationTest {
             val referendumOption2Vorlage2 = new Referendumoption(UUID.randomUUID().toString(), "Option 2", 1L);
             referendumvorlage1.getReferendumoptionen().add(referendumOption2Vorlage2);
 
-            return PersistingUtils.persistReferendumvorlagen(referendumvorlagenRepository, referendumvorlageRepository, referendumvorlagen);
+            return referendumvorlagenRepository.save(referendumvorlagen);
         }
     }
 

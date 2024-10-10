@@ -58,6 +58,44 @@ Wahltermindaten sind eine virtuelle Zusammenfassung von Daten zu einem Wahltermi
 Über den Service können diese Daten für einen Wahltag erstellt und gelöscht werden. Die zu erstellenden Daten
 werden von dem EAI-Service importiert.
 
+### Ablauf des Imports
+
+```mermaid
+
+sequenceDiagram
+    
+    box BasisdatenService
+        participant WahltermindatenService
+        participant WahltagService
+        participant AsyncWahltermindatenService
+    end
+    box EAIService
+        participant Basisdaten
+        participant Wahlvorschlaege
+        participant Referendumvorlagen
+    end
+    
+    WahltermindatenService ->>+ WahltagService: request für Wahltag mit ID
+    WahltagService -->>- WahltermindatenService: Wahltag
+    
+    WahltermindatenService ->>+ Basisdaten : request Basisdaten für Wahltag
+    Basisdaten -->>- WahltermindatenService : Basisdaten
+    
+    WahltermindatenService ->> WahltermindatenService : Speichere Wahlen aus Basisdaten    
+    WahltermindatenService ->> WahltermindatenService : Speicher Wahlbezirke der Basisdaten
+    WahltermindatenService ->> WahltermindatenService : Speicher Kopfdaten der Basisdaten
+    
+    WahltermindatenService -->> AsyncWahltermindatenService : Starte Initialisierung der<br>Wahlvorschläge und Referendumvorlagen
+    
+    AsyncWahltermindatenService ->>+ Wahlvorschlaege : lade request Wahlvorschläge für Bezirke der Wahlen
+    Wahlvorschlaege -->>- AsyncWahltermindatenService : Wahlvorschläge
+    AsyncWahltermindatenService ->> AsyncWahltermindatenService : speichere Wahlvorschläge
+
+    AsyncWahltermindatenService ->>+ Referendumvorlagen : request Referendumvorlagen für Bezirke der Wahlen
+    Referendumvorlagen -->>- AsyncWahltermindatenService : Referendumvorlagen
+    AsyncWahltermindatenService ->> AsyncWahltermindatenService : speichere Referendumvorlagen
+```
+
 ## Konfigurationsparameter
 
 Alle Konfigurationsparameter beginnen mit `service.config`

@@ -362,7 +362,29 @@ public class WahltermindatenControllerIntegrationTest {
 
             setupWireMockForWahltagClient(wahltagToGetWahltermindaten);
 
-            val basisstrukturdatenToImport = new BasisdatenDTO()
+            val basisstrukturdatenToImport = createBasisdatenDTO(localDateOfWahltag);
+
+            WireMock.stubFor(WireMock.get(WireMock.urlPathMatching("/wahldaten/basisdaten"))
+                    .willReturn(WireMock.aResponse()
+                            .withHeader("Content-Type", "application/json")
+                            .withBody(objectMapper.writeValueAsString(basisstrukturdatenToImport))
+                            .withStatus(HttpStatus.OK.value())));
+
+            val request = MockMvcRequestBuilders.put("/businessActions/wahltermindaten/" + wahltagToGetWahltermindaten.getWahltagID());
+            mockMvc.perform(request).andExpect(status().isOk());
+
+            Assertions.assertThat(kopfdatenRepository.count()).isEqualTo(5);
+            Assertions.assertThat(wahlbezirkRepository.count()).isEqualTo(5);
+            Assertions.assertThat(wahlRepository.count()).isEqualTo(2);
+
+            val expectedBasisdatenModel = wahldatenClientMapper.fromRemoteClientDTOToModel(basisstrukturdatenToImport);
+            Mockito.verify(asyncWahltermindatenService)
+                    .initVorlagenAndVorschlaege(eq(wahltagToGetWahltermindaten.getWahltag()), eq(wahltagToGetWahltermindaten.getNummer()),
+                            eq(expectedBasisdatenModel));
+        }
+
+        private static BasisdatenDTO createBasisdatenDTO(LocalDate localDateOfWahltag) {
+            return new BasisdatenDTO()
                     .basisstrukturdaten(
                             Set.of(
                                     new BasisstrukturdatenDTO().wahlID("wahlID1").wahltag(localDateOfWahltag).wahlbezirkID("wahlbezirkID1_1")
@@ -408,24 +430,6 @@ public class WahltermindatenControllerIntegrationTest {
                                     new WahlbezirkDTO().wahltag(localDateOfWahltag).wahlID("wahlID2").identifikator("wahlbezirkID2_2").nummer("2_2")
                                             .wahlnummer("2").wahlbezirkArt(
                                                     WahlbezirkDTO.WahlbezirkArtEnum.UWB)));
-
-            WireMock.stubFor(WireMock.get(WireMock.urlPathMatching("/wahldaten/basisdaten"))
-                    .willReturn(WireMock.aResponse()
-                            .withHeader("Content-Type", "application/json")
-                            .withBody(objectMapper.writeValueAsString(basisstrukturdatenToImport))
-                            .withStatus(HttpStatus.OK.value())));
-
-            val request = MockMvcRequestBuilders.put("/businessActions/wahltermindaten/" + wahltagToGetWahltermindaten.getWahltagID());
-            mockMvc.perform(request).andExpect(status().isOk());
-
-            Assertions.assertThat(kopfdatenRepository.count()).isEqualTo(5);
-            Assertions.assertThat(wahlbezirkRepository.count()).isEqualTo(5);
-            Assertions.assertThat(wahlRepository.count()).isEqualTo(2);
-
-            val expectedBasisdatenModel = wahldatenClientMapper.fromRemoteClientDTOToModel(basisstrukturdatenToImport);
-            Mockito.verify(asyncWahltermindatenService)
-                    .initVorlagenAndVorschlaege(eq(wahltagToGetWahltermindaten.getWahltag()), eq(wahltagToGetWahltermindaten.getNummer()),
-                            eq(expectedBasisdatenModel));
         }
     }
 

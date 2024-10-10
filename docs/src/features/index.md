@@ -18,9 +18,9 @@ In der Praxis, auch wenn dies seltener der Fall ist, können am gleichen Tag sog
 Wahltermine stattfinden. Diese Notwendigkeit entsteht, wenn sich die berechtigten Wählergruppen
 am gleichen Tag in den rechtlichen Grundlagen ihrer Wahlberechtigung stark unterscheiden,
 um fehlerhaftes Aufteilen, Ausfüllen und Vermischung der Stimmzettel unterschidlicher
-Wählergruppen zu vermeiden. Zum Beispiel, eine Migrationsbeiratswahl bei der Bürger mit
-unterschiedlichen Staatsangehörigkeiten wahlberechtigt sind, wird aus dem oberen Hintergrund im Unterschied zu einer
-Bundestagswahl in einem getrennten Wahllokal mit dediziertem Wahlvorstand / Wahltisch organisiert.
+Wählergruppen zu vermeiden. Zum Beispiel wird eine Migrationsbeiratswahl, bei der Bürger mit
+unterschiedlichen Staatsangehörigkeiten wahlberechtigt sind, im Unterschied zu einer
+Bundestagswahl in separaten Wahlbezirken organisiert.
 
 Wenn aber am gleichen Datum eine Bundestagswahl und ein Bürgerentscheid stattfinden, können diese 
 dem gleichen Wahltermin zugeteilt und somit in gemeinsamen Wahllokalen organisiert werden. 

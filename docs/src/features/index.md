@@ -6,9 +6,8 @@ Für jeden Service gibt es eine separate Beschreibung zu dessen Aufgaben und Fun
 
 ## Fachliches Datenmodell
 
-Die Relationen zwischen den fachlichen Elementen können sich von Wahl zu Wahl unterscheiden.
-Diese Unterschiede sind Ausfluß der gesetzlichen Grundlage der entsprechenden Wahl, sowie des örtlichen 
-Kommunal- und/oder Landes- Wahlrechts.
+Das folgende Datenmodell wurde mit Betrachtung der gesetzlichen Grundlage verschiedener Wahlen, sowie des örtlichen 
+Kommunal- und/oder Landes- Wahlrechts erstellt.
 
 ![Datenmodell:](../public/fachlichesDatenmodell/vermutetesFachlichesDatenmodell_20241008.png)
 

@@ -27,10 +27,10 @@ public class AsyncConfiguration {
     @Bean
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
         val executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(2);
-        executor.setMaxPoolSize(2);
-        executor.setQueueCapacity(500);
-        executor.setThreadNamePrefix("asyncTaskExecutor-");
+        executor.setCorePoolSize(corePoolSize);
+        executor.setMaxPoolSize(maxPoolSize);
+        executor.setQueueCapacity(queueCapacity);
+        executor.setThreadNamePrefix(threadNamePrefix);
         executor.initialize();
         return executor;
     }

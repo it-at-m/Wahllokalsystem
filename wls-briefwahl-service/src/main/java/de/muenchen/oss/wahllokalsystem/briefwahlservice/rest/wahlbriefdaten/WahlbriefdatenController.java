@@ -27,7 +27,7 @@ public class WahlbriefdatenController {
     public ResponseEntity<WahlbriefdatenDTO> getWahlbriefdaten(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
         val wahlbriefdatenFromService = wahlbriefdatenService.getWahlbriefdaten(wahlbezirkID);
 
-        return withBodyOrNoContent(wahlbriefdatenFromService.map(wahlbriefdatenDTOMapper::toDTO));
+        return okWithBodyOrNoContent(wahlbriefdatenFromService.map(wahlbriefdatenDTOMapper::toDTO));
     }
 
     @PostMapping("{wahlbezirkID}")
@@ -37,7 +37,7 @@ public class WahlbriefdatenController {
         wahlbriefdatenService.setWahlbriefdaten(wahlbriefdatenDTOMapper.toModel(wahlbezirkID, wahlbriefdaten));
     }
 
-    private <T> ResponseEntity<T> withBodyOrNoContent(final Optional<T> optionalBody) {
+    private <T> ResponseEntity<T> okWithBodyOrNoContent(final Optional<T> optionalBody) {
         return optionalBody.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
     }
 }

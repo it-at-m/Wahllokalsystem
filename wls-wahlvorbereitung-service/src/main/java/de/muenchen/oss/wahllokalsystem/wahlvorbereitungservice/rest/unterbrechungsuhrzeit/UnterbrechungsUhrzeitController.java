@@ -28,7 +28,7 @@ public class UnterbrechungsUhrzeitController extends AbstractController {
     public ResponseEntity<UnterbrechungsUhrzeitDTO> getUnterbrechungsuhrzeit(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
         val unterbrechungsuhrzeitModel = unterbrechungsuhrzeitService.getUnterbrechungsUhrzeit(wahlbezirkID);
 
-        return withBodyOrNoContent(unterbrechungsuhrzeitModel.map(UnterbrechungsuhrzeitDTOMapper::toDTO));
+        return okWithBodyOrNoContent(unterbrechungsuhrzeitModel.map(UnterbrechungsuhrzeitDTOMapper::toDTO));
     }
 
     @Operation(description = "Aktualisiert die Unterbrechungsuhrzeit des Urnenwahllokals {wahlbezirkID}")

@@ -2,6 +2,7 @@ import {withMermaid} from "vitepress-plugin-mermaid"
 
 const PATH_TECHNIK = '/technik/';
 const PATH_CODING_CONVENTIONS = PATH_TECHNIK + 'coding_conventions/';
+const PATH_ADR = PATH_TECHNIK + 'adr/';
 const PATH_FEATURES = '/features/';
 const PATH_GUIDES = '/guides/';
 
@@ -37,19 +38,23 @@ export default withMermaid({
                         {text: 'Naming Convention - Testing', link: `${PATH_CODING_CONVENTIONS}tests_naming`}
                     ]},
                 {
-                    text: 'Adr', link: `${PATH_TECHNIK}adr/`, collapsed: true, items: [
-                        {text: 'Renovate - ignoriere lombok', link: `${PATH_TECHNIK}adr/adr001-renovate-ignore-lombok`},
+                    text: 'Adr', link: `${PATH_ADR}`, collapsed: true, items: [
+                        {text: 'Renovate - ignoriere lombok', link: `${PATH_ADR}adr001-renovate-ignore-lombok`},
                         {
                             text: 'Verbesserung Einstiegsfreundlichkeit',
-                            link: `${PATH_TECHNIK}adr/adr-improve-getting-started-of-services`
+                            link: `${PATH_ADR}adr-improve-getting-started-of-services`
                         },
                         {
                             text: 'Shared/Separated Datenmodell',
-                            link: `${PATH_TECHNIK}adr/adr002-controller-service-datamodels`
+                            link: `${PATH_ADR}adr002-controller-service-datamodels`
                         },
                         {
                             text: 'Vollständige Migration nach Keycloak',
-                            link: `${PATH_TECHNIK}adr/adr-always-full-keycloak-migration`
+                            link: `${PATH_ADR}adr-always-full-keycloak-migration`
+                        },
+                        {
+                            text: 'Auslagern von Authority Strings',
+                            link: `${PATH_ADR}adr-auslagerung-authority-strings`
                         }
                     ]
                 }

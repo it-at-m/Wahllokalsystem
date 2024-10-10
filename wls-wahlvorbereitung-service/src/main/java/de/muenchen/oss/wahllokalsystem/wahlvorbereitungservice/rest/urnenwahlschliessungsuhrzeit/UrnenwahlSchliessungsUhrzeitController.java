@@ -28,7 +28,7 @@ public class UrnenwahlSchliessungsUhrzeitController extends AbstractController {
     public ResponseEntity<UrnenwahlSchliessungsUhrzeitDTO> getUrnenwahlSchliessungsUhrzeit(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
         val urnenwahlSchliessungsUhrzeitModel = urnenwahlSchliessungsUhrzeitService.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID);
 
-        return withBodyOrNoContent(urnenwahlSchliessungsUhrzeitModel.map(urnenwahlSchliessungsUhrzeitDTOMapper::toDTO));
+        return okWithBodyOrNoContent(urnenwahlSchliessungsUhrzeitModel.map(urnenwahlSchliessungsUhrzeitDTOMapper::toDTO));
     }
 
     @Operation(description = "Aktualisiert die Urnenwahlschliessungsuhrzeit des Urnenwahllokals {wahlbezirkID}")

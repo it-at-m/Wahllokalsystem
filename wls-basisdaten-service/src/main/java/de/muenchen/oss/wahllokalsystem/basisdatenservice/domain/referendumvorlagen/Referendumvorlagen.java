@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorla
 import static java.sql.Types.VARCHAR;
 
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -45,7 +46,7 @@ public class Referendumvorlagen {
     @NotNull
     private String stimmzettelgebietID;
 
-    @OneToMany(mappedBy = "referendumvorlagen", orphanRemoval = true)
+    @OneToMany(mappedBy = "referendumvorlagen", orphanRemoval = true, cascade = CascadeType.PERSIST)
     @NotNull
     private Set<Referendumvorlage> referendumvorlagen = new HashSet<>();
 

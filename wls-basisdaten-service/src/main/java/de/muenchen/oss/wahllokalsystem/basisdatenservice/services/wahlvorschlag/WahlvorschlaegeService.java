@@ -1,7 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.KandidatRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.Wahlvorschlaege;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlagRepository;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -37,7 +36,7 @@ public class WahlvorschlaegeService {
             log.debug("#getWahlvorschlaege: Für BezirkUndWahlID {} waren keine Wahlvorschlaege in der Datenbank", bezirkUndWahlID);
             val importedWahlvorschlaegeModel = wahlvorschlaegeClient.getWahlvorschlaege(bezirkUndWahlID);
             try {
-                val savedWahlvorschlaege = persistWahlvorschlagModel(importedWahlvorschlaegeModel);
+                val savedWahlvorschlaege = wahlvorschlaegeRepository.save(wahlvorschlaegeModelMapper.toEntity(importedWahlvorschlaegeModel));
                 return wahlvorschlaegeModelMapper.toModel(savedWahlvorschlaege);
             } catch (final Exception exception) {
                 log.error("#getWahlvorschlaege: Fehler beim Cachen", exception);
@@ -46,17 +45,6 @@ public class WahlvorschlaegeService {
         } else {
             return wahlvorschlaegeModelMapper.toModel(wahlvorschlaegeFromRepo.get());
         }
-    }
-
-    protected Wahlvorschlaege persistWahlvorschlagModel(final WahlvorschlaegeModel wahlvorschlaegeModel) {
-        val entityToCreate = wahlvorschlaegeModelMapper.toEntity(wahlvorschlaegeModel);
-        val createdEntity = wahlvorschlaegeRepository.save(entityToCreate);
-        entityToCreate.getWahlvorschlaege().forEach(wahlvorschlag -> {
-            wahlvorschlagRepository.save(wahlvorschlag);
-            kandidatRepository.saveAll(wahlvorschlag.getKandidaten());
-        });
-
-        return createdEntity;
     }
 
 }

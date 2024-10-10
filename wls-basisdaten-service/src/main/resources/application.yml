@@ -68,6 +68,7 @@ app:
     corePoolSize: 2
     maxPoolSize: 2
     queueCapacity: 500
+    threadNamePrefix: "taskExecutor-"
   clients:
     eai:
       basePath: http://localhost:39146

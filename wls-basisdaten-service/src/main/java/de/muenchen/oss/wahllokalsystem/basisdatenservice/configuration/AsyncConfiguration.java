@@ -21,6 +21,9 @@ public class AsyncConfiguration {
     @Value("${app.async.queueCapacity}")
     public int queueCapacity;
 
+    @Value("${app.async.threadNamePrefix}")
+    public String threadNamePrefix;
+
     @Bean
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
         val executor = new ThreadPoolTaskExecutor();

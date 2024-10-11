@@ -1,0 +1,34 @@
+### Get token wls_all
+POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+password = test &
+grant_type = password &
+client_secret = top-secret &
+client_id = wls &
+username = wls_all
+
+> {%
+    client.global.set("auth_token", response.body.access_token);
+    client.global.set("token_type", response.body.token_type);
+%}
+
+### get userinfo with auth_token
+GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
+Authorization: {{ token_type }} {{ auth_token }}
+
+### Put Wahltermindaten
+PUT {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/wahltermindaten/wahltagID1
+Authorization: {{ token_type }} {{ auth_token }}
+
+### Put Wahltermindaten - failed cause wahltagID does not exist
+PUT {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/wahltermindaten/wahltagIDThatDoesNotExist
+Authorization: {{ token_type }} {{ auth_token }}
+
+### Delete Wahltermindaten
+DELETE {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/wahltermindaten/wahltagID1
+Authorization: {{ token_type }} {{ auth_token }}
+
+### Delete Wahltermindaten - failed cause wahltagID does not exist
+DELETE {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/wahltermindaten/wahltagIDThatDoesNotExist
+Authorization: {{ token_type }} {{ auth_token }}

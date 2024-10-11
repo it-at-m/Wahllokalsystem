@@ -26,6 +26,9 @@ public class Authorities {
 
     public static final String SERVICE_GET_WAHLBEZIRKE = "Basisdaten_BUSINESSACTION_GetWahlbezirke";
 
+    public static final String SERVICE_PUT_WAHLTERMINDATEN = "Basisdaten_BUSINESSACTION_PutWahltermindaten";
+    public static final String SERVICE_DELETE_WAHLTERMINDATEN = "Basisdaten_BUSINESSACTION_DeleteWahltermindaten";
+
     public static final String REPOSITORY_READ_WAHLVORSCHLAEGE = "Basisdaten_READ_WLSWahlvorschlaege";
     public static final String REPOSITORY_DELETE_WAHLVORSCHLAEGE = "Basisdaten_DELETE_WLSWahlvorschlaege";
     public static final String REPOSITORY_WRITE_WAHLVORSCHLAEGE = "Basisdaten_WRITE_WLSWahlvorschlaege";
@@ -194,5 +197,36 @@ public class Authorities {
             REPOSITORY_READ_WAHL,
             REPOSITORY_READ_WAHLBEZIRK,
             REPOSITORY_WRITE_WAHLBEZIRK,
+    };
+
+    public static final String[] ALL_AUTHORITIES_PUT_WAHLTERMINDATEN_THAT_GOT_NOT_CATCHED_ON_MISSING = {
+            SERVICE_PUT_WAHLTERMINDATEN,
+
+            SERVICE_GET_WAHLTAGE,
+            REPOSITORY_WRITE_WAHLTAG,
+            REPOSITORY_READ_WAHLTAG,
+
+            REPOSITORY_WRITE_WAHL,
+            REPOSITORY_WRITE_WAHLBEZIRK,
+            REPOSITORY_READ_KOPFDATEN
+    };
+
+    public static final String[] ALL_AUTHORITIES_PUT_WAHLTERMINDATEN_THAT_GOT_CATCHED_ON_MISSING = {
+            REPOSITORY_WRITE_WAHLVORSCHLAEGE,
+            REPOSITORY_WRITE_REFERENDUMVORLAGEN
+    };
+
+    public static final String[] ALL_AUTHORITIES_DELETE_WAHLTERMINDTEN = {
+            SERVICE_DELETE_WAHLTERMINDATEN,
+
+            SERVICE_GET_WAHLTAGE,
+            REPOSITORY_WRITE_WAHLTAG,
+            REPOSITORY_READ_WAHLTAG,
+
+            REPOSITORY_DELETE_WAHLBEZIRK,
+            REPOSITORY_DELETE_WAHL,
+            REPOSITORY_DELETE_KOPFDATEN,
+            REPOSITORY_DELETE_WAHLVORSCHLAEGE,
+            REPOSITORY_DELETE_REFERENDUMVORLAGEN
     };
 }

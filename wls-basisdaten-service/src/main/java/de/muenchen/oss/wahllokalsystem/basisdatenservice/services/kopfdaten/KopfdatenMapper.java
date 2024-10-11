@@ -5,21 +5,21 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.Wa
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class InitializeKopfdaten {
+public class KopfdatenMapper {
 
     private final ExceptionFactory exceptionFactory;
 
-    protected void initKopfdaten(BasisdatenModel basisdatenModel) {
-        basisdatenModel.basisstrukturdaten()
-                .forEach(basisstrukturdaten -> {
-                    initKopfdata(basisstrukturdaten.wahlID(), basisstrukturdaten.wahlbezirkID(), basisdatenModel);
-                });
+    public List<KopfdatenModel> initKopfdaten(BasisdatenModel basisdatenModel) {
+        return basisdatenModel.basisstrukturdaten()
+                .stream().map(basisstrukturdaten -> initKopfdata(basisstrukturdaten.wahlID(), basisstrukturdaten.wahlbezirkID(), basisdatenModel))
+                .toList();
     }
 
     protected KopfdatenModel initKopfdata(String wahlID, String wahlbezirkID, BasisdatenModel basisdaten) {

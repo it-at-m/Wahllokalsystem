@@ -20,7 +20,7 @@ public class AsyncProgressController {
             description = "Abrufen des Fortschrittes bei der Importierung der Wahltermindaten.",
             responses = {
                     @ApiResponse(
-                            responseCode = "200", description = "Die Wahltermindaten werden angelegt."
+                            responseCode = "200", description = "Importfortschritt wurde geliefert."
                     )
             }
     )

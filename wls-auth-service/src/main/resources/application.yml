@@ -57,6 +57,10 @@ management:
 info.application.name: @project.artifactId@
 info.application.version: @project.version@
 
+service:
+  info:
+    oid: AUTH-SERVICE
+
 serviceauth:
   crypto:
     encryptionPrefix: "ENCRYPTED:"

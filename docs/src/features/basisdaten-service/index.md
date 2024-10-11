@@ -96,6 +96,10 @@ sequenceDiagram
     AsyncWahltermindatenService ->> AsyncWahltermindatenService : speichere Referendumvorlagen
 ```
 
+### Fortschritt
+
+Der aktuelle Stand des Imports kann über die API gerufen werden.
+
 ## Konfigurationsparameter
 
 Alle Konfigurationsparameter beginnen mit `service.config`

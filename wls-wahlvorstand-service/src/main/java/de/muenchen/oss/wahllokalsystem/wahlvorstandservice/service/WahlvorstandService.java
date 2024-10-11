@@ -1,8 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service;
 
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.clients.basisdaten.Wahl;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.clients.basisdaten.Wahlart;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.clients.basisdaten.Wahlbezirksart;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.model.Wahlart;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.common.security.AuthenticationHandler;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.Funktion;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.Wahlvorstand;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.WahlvorstandRepository;
@@ -10,23 +9,28 @@ import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.Wahlvorstandsm
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.mapping.BWBFunktionsnamenmapping;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.mapping.UWBFunktionsamenMapping;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.model.WahlbezirkArt;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class WahlvorstandService {
+
+    private static final WahlbezirkArt WAHLBEZIRK_ART_FALLBACK = WahlbezirkArt.UWB;
+    private static final String WAHLBEZIRK_ART_USER_DETAIL_KEY = "wahlbezirksArt";
 
     private final WahlvorstandRepository wahlvorstandRepository;
     private final WahlvorstandValidator wahlvorstandValidator;
@@ -34,20 +38,22 @@ public class WahlvorstandService {
     private final WahlvorstandModelMapper wahlvorstandModelMapper;
     private final ExceptionFactory exceptionFactory;
     private final KonfigurierterWahltagClient konfigurierterWahltagClient;
-    private final EaiClient eaiClient;
-    private final BasisdatenClient basisdatenClient;
+    private final WahlvorstandEaiClient wahlvorstandEaiClient;
+    private final WahlenClient wahlenClient;
 
     private final UWBFunktionsamenMapping uwbNamenMapping;
     private final BWBFunktionsnamenmapping bwbNamenMapping;
 
+    private final Collection<AuthenticationHandler> authenticationHandlers;
+
 
     @PreAuthorize("hasAuthority('Wahlvorstand_BUSINESSACTION_GetWahlvorstand')"
             + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
-    public Wahlvorstand getWahlvorstand(@P("wahlbezirkID") final String wahlbezirkID) {
+    public WahlvorstandModel getWahlvorstand(@P("wahlbezirkID") final String wahlbezirkID) {
         log.info("#getWahlvorstand");
         wahlvorstandValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
 
-        return wahlvorstandRepository.findByWahlbezirkID(wahlbezirkID);
+        return wahlvorstandModelMapper.toModel(wahlvorstandRepository.findByWahlbezirkID(wahlbezirkID));
     }
 
     @PreAuthorize("hasAuthority('Wahlvorstand_BUSINESSACTION_PostWahlvorstand')")
@@ -63,24 +69,22 @@ public class WahlvorstandService {
         }
 
         KonfigurierterWahltagModel wahltagModel = konfigurierterWahltagClient.getKonfigurierterWahltag();
-        eaiClient.postWahlvorstand(wahlvorstandModelMapper.toEntity(wahlvorstandModel), wahltagModel.wahltag());
+        wahlvorstandEaiClient.postWahlvorstand(wahlvorstandModelMapper.toEntity(wahlvorstandModel), wahltagModel.wahltag());
     }
 
     @PreAuthorize("hasAuthority('Wahlvorstand_BUSINESSACTION_UpdateWahlvorstand')")
-    public Wahlvorstand updateWahlvorstand(@P("wahlbezirkID") final String wahlbezirkID) {
+    public WahlvorstandModel updateWahlvorstand(@P("wahlbezirkID") final String wahlbezirkID) {
         log.info("#updateWahlvorstand");
         wahlvorstandValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
 
         KonfigurierterWahltagModel wahltagModel = konfigurierterWahltagClient.getKonfigurierterWahltag();
-        Wahlvorstand wahlvorstand = eaiClient.getWahlvorstand(wahlbezirkID, wahltagModel.wahltag());
+        // todo: warum ist das rot
+        Wahlvorstand wahlvorstand = wahlvorstandEaiClient.getWahlvorstand(wahlbezirkID, wahltagModel.wahltag());
 
-        return persistWahlvorstand(wahlvorstand, wahltagModel);
+        return wahlvorstandModelMapper.toModel(persistWahlvorstand(wahlvorstand, wahltagModel));
     }
 
-
-
-    // ---------------------- //
-    public Wahlvorstand getFallbackWahlvorstand(String wahlbezirkID) {
+    public WahlvorstandModel getFallbackWahlvorstand(String wahlbezirkID) {
         Wahlvorstand fallbackWahlvorstand = new Wahlvorstand();
         fallbackWahlvorstand.setWahlbezirkID(wahlbezirkID);
 
@@ -94,7 +98,7 @@ public class WahlvorstandService {
         });
 
         KonfigurierterWahltagModel wahltagModel = konfigurierterWahltagClient.getKonfigurierterWahltag();
-        return persistWahlvorstand(fallbackWahlvorstand, wahltagModel);
+        return wahlvorstandModelMapper.toModel(persistWahlvorstand(fallbackWahlvorstand, wahltagModel));
     }
 
     private Wahlvorstand persistWahlvorstand(Wahlvorstand wahlvorstand, KonfigurierterWahltagModel wahltagModel) {
@@ -141,17 +145,18 @@ public class WahlvorstandService {
         // ---------------------------------------------------------------------
         // Principal -> wahlbezirksart
         // ---------------------------------------------------------------------
-        Wahlbezirksart wahlbezirksart = getWahlbezirkart();
+        WahlbezirkArt wahlbezirkArt = getWahlbezirkArt();
 
         // ---------------------------------------------------------------------
         // BasisdatenService -> zuerstAuszuzählendeWahl
         // ---------------------------------------------------------------------
-        List<Wahl> wahlen = basisdatenClient.getWahlen(wahltagModel.wahltagID());
+        // todo: datentyp klären
+        List<WahlModel> wahlen = wahlenClient.getWahlen(wahltagModel.wahltagID());
         if (wahlen == null) throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.BASISDATEN_ANTWORT_NULL);
-        Wahlart zuerstAuszuzaehlendeWahl = wahlen.get(0).getWahlart();
+        Wahlart zuerstAuszuzaehlendeWahl = wahlen.get(0).wahlart();
 
         List<Wahlvorstandsmitglied> collect = wahlvorstand.getWahlvorstandsmitglieder().stream()
-                .map(mitglied -> populateWahlvorstandsmitgliedFunktionsnameOnline(mitglied, zuerstAuszuzaehlendeWahl, wahlbezirksart))
+                .map(mitglied -> populateWahlvorstandsmitgliedFunktionsnameOnline(mitglied, zuerstAuszuzaehlendeWahl, wahlbezirkArt))
                 .toList();
 
         wahlvorstand.getWahlvorstandsmitglieder().clear();
@@ -160,11 +165,11 @@ public class WahlvorstandService {
     }
 
     private Wahlvorstandsmitglied populateWahlvorstandsmitgliedFunktionsnameOnline(Wahlvorstandsmitglied
-            mitglied, Wahlart wahlart, Wahlbezirksart wahlbezirksart) {
+            mitglied, Wahlart wahlart, WahlbezirkArt wahlbezirkArt) {
         StringBuilder funktionsBuilder = new StringBuilder();
         String thisFunktion = "";
 
-        if (wahlbezirksart.equals(Wahlbezirksart.UWB)) {
+        if (wahlbezirkArt.equals(WahlbezirkArt.UWB)) {
             Map<String, Map<String, String>> uwbMappings = uwbNamenMapping.getUwbFunktion();
             if (uwbMappings != null) {
                 Map<String, String> wahlartMapping = uwbMappings.get(wahlart.name());
@@ -172,7 +177,7 @@ public class WahlvorstandService {
                     thisFunktion = wahlartMapping.get(mitglied.getFunktion().name());
                 }
             }
-        } else if (wahlbezirksart.equals(Wahlbezirksart.BWB)) {
+        } else if (wahlbezirkArt.equals(WahlbezirkArt.BWB)) {
             Map<String, Map<String, String>> bwbMappings = bwbNamenMapping.getBwbFunktion();
             if (bwbMappings != null) {
                 Map<String, String> wahlartMapping = bwbMappings.get(wahlart.name());
@@ -182,7 +187,7 @@ public class WahlvorstandService {
             }
         }
 
-        if (thisFunktion == null || thisFunktion.equals("")) {
+        if (thisFunktion == null || thisFunktion.isEmpty()) {
             funktionsBuilder.append(mitglied.getFunktion());
         } else {
             funktionsBuilder.append(thisFunktion);
@@ -192,8 +197,19 @@ public class WahlvorstandService {
         return mitglied;
     }
 
-    private Wahlbezirksart getWahlbezirkart() {
-        Map details = (Map) ((OAuth2Authentication) SecurityContextHolder.getContext().getAuthentication()).getUserAuthentication().getDetails();
-        return Wahlbezirksart.valueOf((String) details.get("wahlbezirksArt"));
+    private WahlbezirkArt getWahlbezirkArt() {
+        val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+        val authenticationHandler = authenticationHandlers.stream().filter(handler -> handler.canHandle(currentAuthentication)).findFirst();
+        if (authenticationHandler.isPresent()) {
+            val wahlbezirkOfUser = authenticationHandler.get().getDetail(WAHLBEZIRK_ART_USER_DETAIL_KEY, currentAuthentication);
+            return wahlbezirkOfUser.map(WahlbezirkArt::valueOf).orElseGet(() -> {
+                log.error("#getKonfiguration Error: Wahlbezirkart konnte nicht erkannt werden. UWB wurde als Standardwert angenommen");
+                return WAHLBEZIRK_ART_FALLBACK;
+            });
+        } else {
+            log.error("kein handler für authentication class {} vorhanden. Verwende Wahlbezirksart-Fallback {}", currentAuthentication.getClass(),
+                    WAHLBEZIRK_ART_FALLBACK);
+            return WAHLBEZIRK_ART_FALLBACK;
+        }
     }
 }

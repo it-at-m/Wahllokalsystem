@@ -7,10 +7,10 @@ public class ExceptionConstants {
     public static final ExceptionDataWrapper KOMMUNIKATIONSFEHLER_MIT_AOUEAI = new ExceptionDataWrapper("100",
             "Bei der Kommunikation mit dem Aoueai-Service ist ein Fehler aufgetreten.");
     public static final ExceptionDataWrapper AOUEAI_WAHLVORSTAND_NULL = new ExceptionDataWrapper("101",
-            "Der Wahlvorstand des Aoueai-Service ist null.");   // fachlich (todo kommentar löschen)
+            "Der Wahlvorstand des Aoueai-Service ist null.");
 
     public static final ExceptionDataWrapper KOMMUNIKATIONSFEHLER_MIT_BASISDATEN = new ExceptionDataWrapper("200",
-            "Bei der Kommunikation mit dem Basisdaten-Service ist ein Fehler aufgetreten.");
+            "Bei der Kommunikation mit dem Basisdaten-Service ist ein Fehler aufgetreten.");    // technisch (todo kommentar löschen)
     public static final ExceptionDataWrapper BASISDATEN_ANTWORT_NULL = new ExceptionDataWrapper("201",
             "Die Antwort des Basisdaten-Service ist null.");
 

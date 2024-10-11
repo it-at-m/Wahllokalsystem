@@ -7,4 +7,6 @@ import org.mapstruct.Mapper;
 public interface WahlvorstandModelMapper {
 
     Wahlvorstand toEntity(final WahlvorstandModel wahlvorstandModel);
+
+    WahlvorstandModel toModel(final Wahlvorstand wahlvorstand);
 }

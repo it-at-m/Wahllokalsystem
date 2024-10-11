@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Wahlvorstandsmitglied {
 
-    @Id     // todo: stimmt das? alternativ muss ich `extends BaseEntity`an die Klasse hängen aber die soll ja im anschluss entfernt werden
+    @Id
     @NotNull
     @Size(max = 1024)
     private String identifikator;

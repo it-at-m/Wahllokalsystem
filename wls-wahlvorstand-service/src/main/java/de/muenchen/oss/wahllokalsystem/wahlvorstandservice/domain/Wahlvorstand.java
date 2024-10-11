@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -25,5 +27,5 @@ public class Wahlvorstand {
     @NotNull
     @Size(min = 1)
     @OneToMany(mappedBy = "wahlvorstand", orphanRemoval = true)
-    private java.util.List<Wahlvorstandsmitglied> wahlvorstandsmitglieder = new java.util.ArrayList<>();
+    private List<Wahlvorstandsmitglied> wahlvorstandsmitglieder = new ArrayList<>();
 }

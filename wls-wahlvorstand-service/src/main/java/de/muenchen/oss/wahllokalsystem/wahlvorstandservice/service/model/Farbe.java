@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.clients.basisdaten;
+package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.model;
 
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.Max;

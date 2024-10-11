@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.clients.basisdaten;
+package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

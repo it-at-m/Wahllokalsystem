@@ -5,6 +5,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahl;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.WahlRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahltagWithNummer;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;

@@ -9,6 +9,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Farbe;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.StimmzettelgebietsartModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahltagWithNummer;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisstrukturdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KonfigurierterWahltagClient;
@@ -24,7 +25,6 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.Wa
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkeClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenClient;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahltagWithNummer;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.KandidatModel;

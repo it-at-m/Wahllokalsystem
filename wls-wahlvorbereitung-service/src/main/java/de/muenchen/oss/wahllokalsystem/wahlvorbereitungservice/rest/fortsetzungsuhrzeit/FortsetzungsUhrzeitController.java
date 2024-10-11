@@ -28,7 +28,7 @@ public class FortsetzungsUhrzeitController extends AbstractController {
     public ResponseEntity<FortsetzungsUhrzeitDTO> getFortsetzungsUhrzeit(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
         val fortsetzungsUhrzeitModel = fortsetzungsUhrzeitService.getFortsetzungsUhrzeit(wahlbezirkID);
 
-        return withBodyOrNoContent(fortsetzungsUhrzeitModel.map(fortsetzungsUhrzeitDTOMapper::toDTO));
+        return okWithBodyOrNoContent(fortsetzungsUhrzeitModel.map(fortsetzungsUhrzeitDTOMapper::toDTO));
     }
 
     @Operation(description = "Aktualisiert die FortsetzungsUhrzeit des Urnenwahllokals {wahlbezirkID}")

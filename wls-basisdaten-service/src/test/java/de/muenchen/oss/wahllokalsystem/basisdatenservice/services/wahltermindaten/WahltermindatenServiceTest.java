@@ -14,6 +14,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahltagWithNummer;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisstrukturdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KopfdatenMapper;
@@ -24,7 +25,6 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.Wa
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkModelMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModelMapper;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahltagWithNummer;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
@@ -167,7 +167,8 @@ class WahltermindatenServiceTest {
             Mockito.verify(wahlRepository).saveAll(mockedWahlenMappedAsEntity);
             Mockito.verify(wahlbezirkRepository).saveAll(wahlbezirkEntitiesCaptor.capture());
             Mockito.verify(asyncWahltermindatenService)
-                    .initVorlagenAndVorschlaege(eq(mockedMatchingWahltag.wahltag()), eq(mockedMatchingWahltag.nummer()), eq(mockedWahldatenClientResponse));
+                    .initVorlagenAndVorschlaege(eq(new WahltagWithNummer(mockedMatchingWahltag.wahltag(), mockedMatchingWahltag.nummer())),
+                            eq(mockedWahldatenClientResponse));
             Mockito.verify(kopfdatenRepository).saveAll(List.of(mockedKopfdatenMappedAsEntity, mockedKopfdatenMappedAsEntity));
 
             Assertions.assertThat(wahlbezirkEntitiesCaptor.getAllValues().size()).isEqualTo(1);

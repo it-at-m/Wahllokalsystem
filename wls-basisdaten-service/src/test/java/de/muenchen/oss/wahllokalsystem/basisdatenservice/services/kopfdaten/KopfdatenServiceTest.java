@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.KopfdatenRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Stimmzettelgebietsart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.StimmzettelgebietsartModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahltagWithNummer;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahltagWithNummer;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.MockDataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDate;

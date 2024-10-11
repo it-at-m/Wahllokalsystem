@@ -28,7 +28,7 @@ public class UrnenwahlvorbereitungController extends AbstractController {
     public ResponseEntity<UrnenwahlvorbereitungDTO> getUrnenwahlVorbereitung(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
         val urnenwahlvorbereitungModel = urnenwahlvorbereitungService.getUrnenwahlvorbereitung(wahlbezirkID);
 
-        return withBodyOrNoContent(urnenwahlvorbereitungModel.map(urnenwahlvorbereitungDTOMapper::toDTO));
+        return okWithBodyOrNoContent(urnenwahlvorbereitungModel.map(urnenwahlvorbereitungDTOMapper::toDTO));
     }
 
     @Operation(description = "Aktualisiert die Wahlvorbereitungsdaten des Urnenwahllokals {wahlbezirkID}")

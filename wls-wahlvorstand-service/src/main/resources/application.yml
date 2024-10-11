@@ -57,3 +57,12 @@ management:
       enabled: true
 info.application.name: @project.artifactId@
 info.application.version: @project.version@
+
+app:
+  clients:
+    eai:
+      basePath: http://localhost:39149
+    infomanagement:
+      basePath: http://localhost:39148
+    basisdaten:
+      basePath: http://localhost:39151

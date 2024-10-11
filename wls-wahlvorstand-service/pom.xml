@@ -174,6 +174,11 @@
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${org.springdoc.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.6</version>
+        </dependency>
 
         <!-- Validation -->
         <dependency>
@@ -368,6 +373,119 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.7.0</version>
+                <executions>
+                    <execution>
+                        <id>generateEAI</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.eai.0.3.0.json</inputSpec>
+
+                            <generatorName>java</generatorName>
+                            <library>resttemplate</library>
+
+                            <apiPackage>${project.groupId}.wahlvorstandservice.eai.aou.client</apiPackage>
+                            <modelPackage>${project.groupId}.wahlvorstandservice.eai.aou.model</modelPackage>
+
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+
+                            <configOptions>
+                                <hideGenerationTimestamp>false</hideGenerationTimestamp>
+                                <legacyDiscriminatorBehavior>false</legacyDiscriminatorBehavior>
+                                <generateClientAsBean>true</generateClientAsBean>
+                                <useJakartaEe>true</useJakartaEe>
+                            </configOptions>
+
+                            <globalProperties>
+                                <supportingFiles>
+                                    BaseApi.java,ApiClient.java,JavaTimeFormatter.java,Authentication.java,OAuth.java,ApiKeyAuth.java,HttpBasicAuth.java,HttpBearerAuth.java,RFC3339DateFormat.java
+                                </supportingFiles>
+                            </globalProperties>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generateInfomanagement</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>
+                                ${project.basedir}/src/main/resources/openapis/openapi.infomanagement.0.2.0.json
+                            </inputSpec>
+
+                            <generatorName>java</generatorName>
+                            <library>resttemplate</library>
+
+                            <apiPackage>${project.groupId}.wahlvorstandservice.eai.infomanagement.client</apiPackage>
+                            <modelPackage>${project.groupId}.wahlvorstandservice.eai.infomanagement.model</modelPackage>
+
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+
+                            <configOptions>
+                                <hideGenerationTimestamp>false</hideGenerationTimestamp>
+                                <legacyDiscriminatorBehavior>false</legacyDiscriminatorBehavior>
+                                <generateClientAsBean>true</generateClientAsBean>
+                                <useJakartaEe>true</useJakartaEe>
+                            </configOptions>
+
+                            <globalProperties>
+                                <supportingFiles>
+                                    BaseApi.java,ApiClient.java,JavaTimeFormatter.java,Authentication.java,OAuth.java,ApiKeyAuth.java,HttpBasicAuth.java,HttpBearerAuth.java,RFC3339DateFormat.java
+                                </supportingFiles>
+                            </globalProperties>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generateBasisdaten</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>
+                                ${project.basedir}/src/main/resources/openapis/openapi.basisdaten.0.0.1.json
+                            </inputSpec>
+
+                            <generatorName>java</generatorName>
+                            <library>resttemplate</library>
+
+                            <apiPackage>${project.groupId}.wahlvorstandservice.eai.basisdaten.client</apiPackage>
+                            <modelPackage>${project.groupId}.wahlvorstandservice.eai.basisdaten.model</modelPackage>
+
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+
+                            <configOptions>
+                                <hideGenerationTimestamp>false</hideGenerationTimestamp>
+                                <legacyDiscriminatorBehavior>false</legacyDiscriminatorBehavior>
+                                <generateClientAsBean>true</generateClientAsBean>
+                                <useJakartaEe>true</useJakartaEe>
+                            </configOptions>
+
+                            <globalProperties>
+                                <supportingFiles>
+                                    BaseApi.java,ApiClient.java,JavaTimeFormatter.java,Authentication.java,OAuth.java,ApiKeyAuth.java,HttpBasicAuth.java,HttpBearerAuth.java,RFC3339DateFormat.java
+                                </supportingFiles>
+                            </globalProperties>
+                        </configuration>
+                    </execution>
+
+                </executions>
+            </plugin>
+
             <plugin>
                 <artifactId>maven-scm-plugin</artifactId>
                 <version>${maven-scm-plugin.version}</version>

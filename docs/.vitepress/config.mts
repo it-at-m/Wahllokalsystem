@@ -78,7 +78,11 @@ export default withMermaid({
 
         socialLinks: [
             {icon: 'github', link: 'https://github.com/it-at-m/Wahllokalsystem/'}
-        ]
+        ],
+
+        search: {
+            provider: 'local'
+        }
     },
     mermaidPlugin: {
         class: "mermaid my-class", // set additional css classes for parent container

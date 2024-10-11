@@ -10,8 +10,6 @@ import static de.muenchen.oss.wahllokalsystem.monitoringservice.TestConstants.Th
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.muenchen.oss.wahllokalsystem.monitoringservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.monitoringservice.domain.TheEntity;
-import de.muenchen.oss.wahllokalsystem.monitoringservice.rest.TheEntityRepository;
 import java.net.URI;
 import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
@@ -23,12 +21,12 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
-        classes = { MicroServiceApplication.class },
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = {
-                "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
-                "refarch.gracefulshutdown.pre-wait-seconds=0"
-        }
+    classes = { MicroServiceApplication.class },
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    properties = {
+        "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
+        "refarch.gracefulshutdown.pre-wait-seconds=0"
+    }
 )
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
 class UnicodeConfigurationTest {
@@ -48,9 +46,6 @@ class UnicodeConfigurationTest {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
-    @Autowired
-    private TheEntityRepository theEntityRepository;
-
     @Test
     @Disabled
     void testForNfcNormalization() {
@@ -68,9 +63,9 @@ class UnicodeConfigurationTest {
         final UUID uuid = UUID.fromString(StringUtils.substringAfterLast(response.getRequiredLink("self").getHref(), "/"));
 
         // Check persisted entity contains a composed string via JPA repository.
-        final TheEntity theEntity = theEntityRepository.findById(uuid).orElse(null);
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, theEntity.getTextAttribute());
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), theEntity.getTextAttribute().length());
+        //final Waehleranzahl theEntity = theEntityRepository.findById(uuid).orElse(null);
+        //assertEquals(TEXT_ATTRIBUTE_COMPOSED, theEntity.getTextAttribute());
+        //assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), theEntity.getTextAttribute().length());
     }
 
 }

@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.NaturalId;
 
 @Entity
 @Data
@@ -22,6 +23,7 @@ import lombok.ToString;
 public class Authority extends BaseEntity {
 
     @ToString.Exclude
+    @NaturalId
     private String authority;
 
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.REFRESH }, fetch = FetchType.EAGER)

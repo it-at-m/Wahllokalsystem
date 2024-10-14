@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.NaturalId;
 
 @Entity
 @Data
@@ -19,6 +20,7 @@ import lombok.ToString;
 @ToString(onlyExplicitlyIncluded = true)
 public class LoginAttempt extends BaseEntity {
 
+    @NaturalId
     @NotNull
     @Pattern(regexp = "[a-zA-Z0-9_\\.-]*")
     @Size(min = 1)

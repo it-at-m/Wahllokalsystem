@@ -19,6 +19,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.NaturalId;
 
 @Entity
 @Table(name = "Wlsuser") //user as table names is already in use by h2
@@ -29,6 +30,7 @@ import lombok.ToString;
 @ToString(onlyExplicitlyIncluded = true)
 public class User extends BaseEntity {
 
+    @NaturalId
     @NotNull
     @Size(min = 1)
     @ToString.Include

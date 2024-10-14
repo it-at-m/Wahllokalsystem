@@ -30,7 +30,7 @@ CREATE TABLE LoginAttempt
 CREATE TABLE Authority
 (
     id        VARCHAR(36),
-    authority VARCHAR(255),
+    authority VARCHAR(255) UNIQUE,
 
     PRIMARY KEY (id)
 );

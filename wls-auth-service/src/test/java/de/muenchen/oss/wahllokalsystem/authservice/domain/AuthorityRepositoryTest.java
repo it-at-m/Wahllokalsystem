@@ -48,7 +48,6 @@ class AuthorityRepositoryTest {
 
             Assertions.assertThat(findByResult).isEmpty();
         }
-
     }
 
     private Authority createAuthorityWithAuthorityName(final String authorityName) {

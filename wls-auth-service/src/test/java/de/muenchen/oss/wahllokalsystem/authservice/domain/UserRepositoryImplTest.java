@@ -68,7 +68,6 @@ class UserRepositoryImplTest {
 
             Mockito.verify(userRepository, times(0)).saveAll(any());
         }
-
     }
 
     @Nested
@@ -131,7 +130,6 @@ class UserRepositoryImplTest {
 
             Assertions.assertThat(unitUnderTest.findByWahltagID(wahltagID)).isEmpty();
         }
-
     }
 
     @Nested

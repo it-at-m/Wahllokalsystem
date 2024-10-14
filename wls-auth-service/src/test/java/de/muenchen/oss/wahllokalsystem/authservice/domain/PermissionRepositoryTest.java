@@ -42,7 +42,6 @@ class PermissionRepositoryTest {
 
             Assertions.assertThat(findByResult).isEmpty();
         }
-
     }
 
     private Permission createPermissionWithPermission(final String permission) {
@@ -52,7 +51,5 @@ class PermissionRepositoryTest {
 
         return permissionObject;
     }
-
-    ;
 
 }

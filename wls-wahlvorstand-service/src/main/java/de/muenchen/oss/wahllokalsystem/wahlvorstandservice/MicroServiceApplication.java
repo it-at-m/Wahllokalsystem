@@ -5,22 +5,14 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorstandservice;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
  * Application class for starting the micro-service.
  */
-@Configuration
-@ComponentScan(
-        basePackages = {
-                "org.springframework.data.jpa.convert.threeten",
-                "de.muenchen.oss.wahllokalsystem.wahlvorstandservice"
-        }
-)
+
 @EntityScan(
         basePackages = {
                 "org.springframework.data.jpa.convert.threeten",
@@ -32,7 +24,14 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
                 "de.muenchen.oss.wahllokalsystem.wahlvorstandservice"
         }
 )
-@EnableAutoConfiguration
+@SpringBootApplication(
+        scanBasePackages = {
+                "org.springframework.data.jpa.convert.threeten",
+                "de.muenchen.oss.wahllokalsystem.wahlvorstandservice",
+                "de.muenchen.oss.wahllokalsystem.wls.common.exception",
+                "de.muenchen.oss.wahllokalsystem.wls.common.security"
+        }
+)
 public class MicroServiceApplication {
 
     public static void main(String[] args) {

@@ -79,12 +79,10 @@ public class UserService {
     public Optional<LoginAttemptModel> getUserAttempts(String username) {
         log.debug("getUserAttempts({})", username);
 
-        val user = userRepository.findByUsername(username)
-                .orElseThrow(
-                        () -> {
-                            log.warn("No user found for given username.");
-                            return new IllegalArgumentException("User with username " + username + " not found.");
-                        });
+        if (!userRepository.exists(username)) {
+            log.warn("No user found for given username.");
+            throw new IllegalArgumentException("User with username " + username + " not found.");
+        }
 
         return loginAttemptRepository.findByUsername(username).map(loginAttemptModelMapper::toModel);
     }

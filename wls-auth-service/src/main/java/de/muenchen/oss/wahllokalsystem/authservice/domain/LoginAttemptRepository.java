@@ -8,26 +8,4 @@ public interface LoginAttemptRepository extends CrudRepository<LoginAttempt, UUI
 
     Optional<LoginAttempt> findFirstByUsername(String username);
 
-    @Override
-    Iterable<LoginAttempt> findAll();
-
-    @Override
-    Optional<LoginAttempt> findById(UUID oid);
-
-    @SuppressWarnings("unchecked")
-    @Override
-    LoginAttempt save(LoginAttempt loginAttempts);
-
-    @Override
-    void deleteById(UUID oid);
-
-    @Override
-    void delete(LoginAttempt entity);
-
-    @Override
-    void deleteAll(Iterable<? extends LoginAttempt> entities);
-
-    @Override
-    void deleteAll();
-
 }

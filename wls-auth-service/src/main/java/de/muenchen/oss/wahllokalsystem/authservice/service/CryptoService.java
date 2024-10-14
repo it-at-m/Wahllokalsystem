@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class EncryptionService {
+public class CryptoService {
 
     private final EncryptionBuilder encryptionBuilder;
 

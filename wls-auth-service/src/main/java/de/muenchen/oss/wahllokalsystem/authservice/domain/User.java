@@ -2,6 +2,8 @@ package de.muenchen.oss.wahllokalsystem.authservice.domain;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -18,7 +20,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Table(name = "SECUSERS")
+@Table(name = "Wlsuser") //user as table names is already in use by h2
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -56,13 +58,14 @@ public class User extends BaseEntity { //TODO Issue: da der Username nur einmal 
     private String wahlbezirkNummer;
 
     @ToString.Include
+    @Enumerated(EnumType.STRING)
     private Wahlbezirksart wahlbezirksArt;
 
     @ToString.Include
     private String pin;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinTable(name = "secusers_secauthorities", joinColumns = { @JoinColumn(name = "user_oid") }, inverseJoinColumns = { @JoinColumn(name = "authority_oid") })
+    @JoinTable(name = "Secusers_Secauthorities", joinColumns = { @JoinColumn(name = "user_oid") }, inverseJoinColumns = { @JoinColumn(name = "authority_oid") })
     private Set<Authority> authorities;
 
     @ToString.Include

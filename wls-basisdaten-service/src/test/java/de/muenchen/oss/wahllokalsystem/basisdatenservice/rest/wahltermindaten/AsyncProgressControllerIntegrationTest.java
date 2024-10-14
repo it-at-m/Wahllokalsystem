@@ -44,8 +44,8 @@ class AsyncProgressControllerIntegrationTest {
             val request = MockMvcRequestBuilders.get("/businessActions/asyncProgress");
             val mockMvcPerform = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
 
-            val responseBodyAsAsycProgressDTO = objectMapper.readValue(mockMvcPerform.getResponse().getContentAsString(), AsyncProgressDTO.class);
-            Assertions.assertThat(responseBodyAsAsycProgressDTO).isEqualTo(expectedAsyncProgressDTO);
+            val responseBodyAsAsyncProgressDTO = objectMapper.readValue(mockMvcPerform.getResponse().getContentAsString(), AsyncProgressDTO.class);
+            Assertions.assertThat(responseBodyAsAsyncProgressDTO).isEqualTo(expectedAsyncProgressDTO);
         }
 
         private AsyncProgressDTO setupAsyncProgressStateAndReturnExpectedDTO() {

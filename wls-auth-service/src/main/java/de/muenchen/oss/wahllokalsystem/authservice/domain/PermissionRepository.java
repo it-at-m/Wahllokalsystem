@@ -28,5 +28,5 @@ public interface PermissionRepository extends CrudRepository<Permission, UUID> {
     @Override
     void deleteAll();
 
-    Permission findByPermission(String permission);
+    Optional<Permission> findByPermission(String permission);
 }

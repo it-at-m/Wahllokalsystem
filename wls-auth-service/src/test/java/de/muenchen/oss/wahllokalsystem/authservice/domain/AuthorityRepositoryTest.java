@@ -31,22 +31,22 @@ class AuthorityRepositoryTest {
 
         @Test
         @Transactional
-        void should_returnAuthority_when_foundByAuthority() {
+        void should_returnOptionalWithAuthority_when_foundByAuthority() {
             val authorityString = "authorityToFind";
             val authorityToGet = authorityRepository.save(createAuthorityWithAuthorityName(authorityString));
 
             val findByResult = authorityRepository.findByAuthority(authorityString);
 
-            Assertions.assertThat(findByResult).isEqualTo(authorityToGet);
+            Assertions.assertThat(findByResult.get()).isEqualTo(authorityToGet);
         }
 
         @Test
-        void should_returnNull_when_notFoundByAuthority() {
+        void should_returnEmptyOptional_when_notFoundByAuthority() {
             authorityRepository.save(createAuthorityWithAuthorityName(UUID.randomUUID().toString()));
 
             val findByResult = authorityRepository.findByAuthority(UUID.randomUUID().toString());
 
-            Assertions.assertThat(findByResult).isNull();
+            Assertions.assertThat(findByResult).isEmpty();
         }
 
     }

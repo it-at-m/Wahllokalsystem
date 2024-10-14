@@ -27,20 +27,20 @@ class PermissionRepositoryTest {
     class FindByPermission {
 
         @Test
-        void should_returnPermission_when_found() {
+        void should_returnOptionalWithPermission_when_found() {
             val permissionString = "permission";
             val permissionToFind = permissionRepository.save(createPermissionWithPermission(permissionString));
 
             val findByResult = permissionRepository.findByPermission(permissionString);
 
-            Assertions.assertThat(findByResult).isEqualTo(permissionToFind);
+            Assertions.assertThat(findByResult.get()).isEqualTo(permissionToFind);
         }
 
         @Test
-        void should_returnNull_when_notFound() {
+        void should_returnEmptyOptional_when_notFound() {
             val findByResult = permissionRepository.findByPermission("not-found");
 
-            Assertions.assertThat(findByResult).isNull();
+            Assertions.assertThat(findByResult).isEmpty();
         }
 
     }

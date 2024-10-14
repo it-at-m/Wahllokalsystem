@@ -12,7 +12,6 @@ public interface AuthorityRepository extends CrudRepository<Authority, UUID> {
     @Override
     Optional<Authority> findById(UUID oid);
 
-    @SuppressWarnings("unchecked")
     @Override
     Authority save(Authority Authority);
 

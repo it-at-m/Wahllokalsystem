@@ -319,6 +319,12 @@
                         <goals>
                             <goal>start</goal>
                         </goals>
+                        <configuration>
+                            <environmentVariables>
+                                <SPRING_PROFILES_ACTIVE>db-h2</SPRING_PROFILES_ACTIVE>
+                                <SERVICEAUTH.CRYPTO.KEY>secret</SERVICEAUTH.CRYPTO.KEY>
+                            </environmentVariables>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>post-integration-test</id>

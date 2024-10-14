@@ -1,4 +1,4 @@
-CREATE TABLE referendumvorlagen
+CREATE TABLE Referendumvorlagen
 (
     id                  VARCHAR2(36)   NOT NULL,
     wahlID              VARCHAR2(1000) NOT NULL,
@@ -8,10 +8,9 @@ CREATE TABLE referendumvorlagen
     UNIQUE (wahlID, wahlbezirkID),
 
     PRIMARY KEY (id)
-
 );
 
-CREATE TABLE referendumvorlage
+CREATE TABLE Referendumvorlage
 (
     id                   VARCHAR2(36)   NOT NULL,
     wahlvorschlagID      VARCHAR2(1000) NOT NULL,
@@ -22,12 +21,12 @@ CREATE TABLE referendumvorlage
     referendumvorlagenID VARCHAR2(36)   NOT NULL,
 
 
-    FOREIGN KEY (referendumvorlagenID) REFERENCES referendumvorlagen (id),
+    FOREIGN KEY (referendumvorlagenID) REFERENCES Referendumvorlagen(id),
 
     PRIMARY KEY (id)
 );
 
-CREATE TABLE referendumoption
+CREATE TABLE Referendumoption
 (
     id                  VARCHAR2(1000) NOT NULL,
     name                VARCHAR2(1000) NOT NULL,
@@ -35,5 +34,5 @@ CREATE TABLE referendumoption
     referendumvorlageID VARCHAR2(36)   NOT NULL,
 
     UNIQUE (id),
-    FOREIGN KEY (referendumvorlageID) REFERENCES referendumvorlage (id)
+    FOREIGN KEY (referendumvorlageID) REFERENCES Referendumvorlage(id)
 );

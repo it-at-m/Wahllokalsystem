@@ -5,7 +5,7 @@ CREATE TABLE Wahlbezirk
     nummer          VARCHAR(255) NOT NULL,
     wahlbezirkart   VARCHAR(255) NOT NULL,
     wahlnummer      VARCHAR(255),
-    wahlid          VARCHAR(255),
+    wahlID          VARCHAR(255),
 
     PRIMARY KEY (wahlbezirkID)
 );

@@ -1,11 +1,11 @@
-CREATE TABLE wahlvorschlaege
+CREATE TABLE Wahlvorschlaege
 (
     id                  VARCHAR(255) NOT NULL,
-    stimmzettelgebietid VARCHAR(255) NOT NULL,
+    stimmzettelgebietID VARCHAR(255) NOT NULL,
     wahlID              VARCHAR(255) NOT NULL,
     wahlbezirkID        VARCHAR(255) NOT NULL,
 
-    unique (wahlID, wahlbezirkID),
+    UNIQUE (wahlID, wahlbezirkID),
 
     PRIMARY KEY (id)
 );
@@ -19,11 +19,11 @@ CREATE TABLE Wahlvorschlag
     erhaeltStimmen    NUMBER       NOT NULL,
     wahlvorschlaegeID VARCHAR(255) NOT NULL,
 
-    unique (identifikator),
+    UNIQUE (identifikator),
 
-    foreign key (wahlvorschlaegeID) REFERENCES wahlvorschlaege (id),
+    FOREIGN KEY (wahlvorschlaegeID) REFERENCES Wahlvorschlaege(id),
 
-    primary key (id)
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE Kandidat
@@ -37,9 +37,9 @@ CREATE TABLE Kandidat
     einzelbewerber                NUMBER       NOT NULL,
     wahlvorschlagID               VARCHAR(255) NOT NULL,
 
-    unique (identifikator),
+    UNIQUE (identifikator),
 
-    foreign key (wahlvorschlagID) REFERENCES Wahlvorschlag (id),
+    FOREIGN KEY (wahlvorschlagID) REFERENCES Wahlvorschlag(id),
 
-    primary key (id)
+    PRIMARY KEY (id)
 )

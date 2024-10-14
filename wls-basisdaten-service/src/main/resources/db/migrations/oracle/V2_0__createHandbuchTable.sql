@@ -1,8 +1,8 @@
 CREATE TABLE Handbuch
 (
-    wahltagID      VARCHAR(1024) not null,
-    wahlbezirksart VARCHAR(255)  not null,
-    handbuch       blob          not null,
+    wahltagID      VARCHAR(1024) NOT NULL,
+    wahlbezirksart VARCHAR(255)  NOT NULL,
+    handbuch       BLOB          NOT NULL,
 
-    primary key (wahltagID, wahlbezirksart)
+    PRIMARY KEY (wahltagID, wahlbezirksart)
 );

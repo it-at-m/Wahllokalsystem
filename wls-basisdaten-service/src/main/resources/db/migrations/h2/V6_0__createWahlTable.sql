@@ -1,15 +1,15 @@
-create table Wahl
+CREATE TABLE Wahl
 (
-    wahlid                      varchar(1024) not null,
-    name                        varchar(255) not null,
-    reihenfolge                 bigint not null,
-    waehlerverzeichnisnummer    bigint not null,
-    wahltag                     datetime not null,
-    wahlart                     varchar(255) not null,
-    r                           bigint,
-    g                           bigint,
-    b                           bigint,
-    nummer                      varchar(255) not null,
+    wahlID                      VARCHAR(1024) NOT NULL,
+    name                        VARCHAR(255) NOT NULL,
+    reihenfolge                 BIGINT NOT NULL,
+    waehlerverzeichnisnummer    BIGINT NOT NULL,
+    wahltag                     DATETIME NOT NULL,
+    wahlart                     VARCHAR(255) NOT NULL,
+    r                           BIGINT,
+    g                           BIGINT,
+    b                           BIGINT,
+    nummer                      VARCHAR(255) NOT NULL,
 
-    primary key (wahlid)
+    PRIMARY KEY (wahlID)
 );

@@ -1,1 +1,1 @@
-DROP TABLE theEntity
+DROP TABLE TheEntity

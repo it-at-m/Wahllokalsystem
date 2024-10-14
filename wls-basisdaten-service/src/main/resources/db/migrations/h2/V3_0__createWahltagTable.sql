@@ -1,4 +1,4 @@
-CREATE TABLE wahltag
+CREATE TABLE Wahltag
 (
     wahltagID           VARCHAR(1024) NOT NULL,
     wahltag             TIMESTAMP NOT NULL,

@@ -1,5 +1,5 @@
-CREATE TABLE theEntity
+CREATE TABLE TheEntity
 (
-    id            varchar2(36) NOT NULL primary key,
-    textAttribute varchar2(8)  NOT NULL
+    id            VARCHAR2(36) NOT NULL PRIMARY KEY,
+    textAttribute VARCHAR2(8)  NOT NULL
 )

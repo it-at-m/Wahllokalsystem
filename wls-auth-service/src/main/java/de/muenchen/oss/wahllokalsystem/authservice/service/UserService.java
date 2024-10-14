@@ -2,7 +2,7 @@ package de.muenchen.oss.wahllokalsystem.authservice.service;
 
 import de.muenchen.oss.wahllokalsystem.authservice.domain.LoginAttempt;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.LoginAttemptRepository;
-import de.muenchen.oss.wahllokalsystem.authservice.domain.UserRepositoryCryptoFacade;
+import de.muenchen.oss.wahllokalsystem.authservice.domain.UserRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class UserService {
 
-    private final UserRepositoryCryptoFacade userRepository;
+    private final UserRepository userRepository;
 
     private final LoginAttemptRepository loginAttemptRepository;
 
@@ -92,5 +92,10 @@ public class UserService {
 
     public boolean doesUserExist(final String username) {
         return userRepository.findByUsername(username).isPresent();
+    }
+
+    public boolean isLocked(final String username) {
+        val user = userRepository.findByUsername(username);
+        return user.filter(value -> !value.isAccountNonLocked()).isPresent();
     }
 }

@@ -3,44 +3,20 @@ package de.muenchen.oss.wahllokalsystem.authservice.domain;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 
-public interface UserRepository extends CrudRepository<User, UUID> {
+public interface UserRepository {
 
-    @Override
-    Collection<User> findAll();
+    Optional<User> findByUsername(final String username);
 
-    @Override
-    Optional<User> findById(UUID oid);
+    Collection<User> findByWahltagID(final String wahltagID);
 
-    @Override
-    User save(User User);
+    Optional<User> findById(final UUID oid);
 
-    @Override
-    void deleteById(UUID oid);
+    boolean exists(final String username);
 
-    @Override
-    void delete(User entity);
+    User save(final User user);
 
-    @Override
-    void deleteAll(Iterable<? extends User> entities);
+    Iterable<User> saveAll(final Iterable<User> users);
 
-    @Override
-    void deleteAll();
-
-    boolean existsByUsername(String username);
-
-    Optional<User> findByUsername(String username);
-
-    Optional<User> findFirstByUsername(String username);
-
-    long countUsersByUsername(String username);
-
-    @Query("select count(u) from User u where u.username = :username and u.accountNonLocked = false")
-    long countUsersLockedByUsername(String username);
-
-    void deleteUsersByWahltagID(String wahltagID);
-
-    Collection<User> findByWahltagID(String wahltagID);
+    void deleteUsersByWahltagID(final String wahltagid);
 }

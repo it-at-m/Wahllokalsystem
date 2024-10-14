@@ -13,18 +13,20 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
 @Slf4j
-public class UserRepositoryCryptoFacade {
+public class UserRepositoryCryptoFacade implements UserRepository {
 
     private static final int FIVE_MINUTES_IN_MILLIS = 5 * 60 * 1000; //TODO Issue: um dies Konfigurierbar zu machen
 
     private final EncryptionService encryptionService;
-    private final UserRepository userRepository;
+    private final CrudUserRepository userRepository;
 
     @PostConstruct
     @Transactional
@@ -39,12 +41,6 @@ public class UserRepositoryCryptoFacade {
         log.info("SCHEDULED: Encrypting any newly added unencrypted user names...");
         encryptUsernames();
         log.info("SCHEDULED: Done encrypting any newly added unencrypted user names.");
-    }
-
-    public Optional<User> findFirstByUsername(final String username) {
-        String encryptedUsername = encryptionService.encrypt(username);
-        val findFirstByUsername = userRepository.findFirstByUsername(encryptedUsername);
-        return findFirstByUsername.map(this::decrypt);
     }
 
     public Collection<User> findByWahltagID(final String wahltagID) {
@@ -77,14 +73,14 @@ public class UserRepositoryCryptoFacade {
         return userRepository.findByUsername(encrypted).map(this::decrypt);
     }
 
-    public long countUsersByUsername(final String username) {
-        String encryptedUsername = encryptionService.encrypt(username);
-        return userRepository.countUsersByUsername(encryptedUsername);
+    public boolean exists(final String username) {
+        val encryptedUsername = encryptionService.encrypt(username);
+        return userRepository.existsByUsername(encryptedUsername);
     }
 
-    public long countUsersLockedByUsername(final String username) {
-        val encrypted = encryptionService.encrypt(username);
-        return userRepository.countUsersLockedByUsername(encrypted);
+    public boolean isLocked(final String username) {
+        val encryptedUsername = encryptionService.encrypt(username);
+        return userRepository.countUsersLockedByUsername(encryptedUsername) > 0;
     }
 
     public void deleteUsersByWahltagID(final String wahltagid) {
@@ -125,4 +121,21 @@ public class UserRepositoryCryptoFacade {
     private List<User> decrypt(final Collection<User> users) {
         return users.stream().map(this::decrypt).toList();
     }
+}
+
+interface CrudUserRepository extends CrudRepository<User, UUID> {
+
+    @Override
+    Collection<User> findAll();
+
+    Optional<User> findByUsername(String username);
+
+    boolean existsByUsername(String username);
+
+    @Query("select count(u) from User u where u.username = :username and u.accountNonLocked = false")
+    long countUsersLockedByUsername(String username);
+
+    void deleteUsersByWahltagID(String wahltagID);
+
+    Collection<User> findByWahltagID(String wahltagID);
 }

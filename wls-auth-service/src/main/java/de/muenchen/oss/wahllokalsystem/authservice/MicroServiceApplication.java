@@ -18,7 +18,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan(
         basePackages = {
                 "org.springframework.data.jpa.convert.threeten",
-                "de.muenchen.oss.wahllokalsystem.authservice"
+                "de.muenchen.oss.wahllokalsystem.authservice",
+                "de.muenchen.oss.wahllokalsystem.wls.common.exception"
         }
 )
 @EntityScan(

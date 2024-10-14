@@ -64,3 +64,4 @@ service:
 serviceauth:
   crypto:
     encryptionPrefix: "ENCRYPTED:"
+  maxLoginAttempts: 5

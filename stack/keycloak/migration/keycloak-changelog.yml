@@ -44,3 +44,5 @@ includes:
   - path: add-authorities-vorfaelleundvorkommnisse.yml
   - path: add-authorities-eai-ergebnismeldung.yml
   - path: add-authorities-basisdaten-wahltermindaten.yml
+  - path: add-authorities-wahlvorstand.yml
+  - path: create-group-all-wahlvorstand-authorities.yml

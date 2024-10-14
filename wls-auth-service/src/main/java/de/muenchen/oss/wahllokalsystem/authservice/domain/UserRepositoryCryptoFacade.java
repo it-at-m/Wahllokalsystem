@@ -117,7 +117,7 @@ public class UserRepositoryCryptoFacade {
         val username = user.getUsername();
         log.debug("decrypting user <{}>...", username);
         if (username != null) {
-            encryptionService.decrypt(username);
+            user.setUsername(encryptionService.decrypt(username));
         }
         return user;
     }

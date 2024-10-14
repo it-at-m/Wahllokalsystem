@@ -36,6 +36,7 @@
         <!-- Version muss mit der in den spring-boot-dependencies bereitgestellten Lombok-Version übereinstimmen -->
         <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
+        <org.mapstruct.version>1.6.2</org.mapstruct.version>
         <org.springdoc.version>2.6.0</org.springdoc.version>
     </properties>
 
@@ -174,6 +175,13 @@
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
+        </dependency>
+
+        <!-- Mapping -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
         </dependency>
 
         <!-- Testing -->
@@ -329,11 +337,24 @@
                             <version>${org.projectlombok.lombok.version}</version>
                         </path>
                         <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${org.mapstruct.version}</version>
+                        </path>
+                        <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok-mapstruct-binding</artifactId>
                             <version>${org.projectlombok.mapstructbinding.version}</version>
                         </path>
                     </annotationProcessorPaths>
+                    <compilerArgs>
+                        <compilerArg>
+                            -Amapstruct.defaultComponentModel=spring
+                        </compilerArg>
+                        <compilerArg>
+                            -Amapstruct.unmappedTargetPolicy=ERROR
+                        </compilerArg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>

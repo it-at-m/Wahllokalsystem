@@ -16,16 +16,18 @@ import java.time.LocalDate;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
 @Table(name = "Wlsuser") //user as table names is already in use by h2
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(onlyExplicitlyIncluded = true)
-public class User extends BaseEntity { //TODO Issue: da der Username nur einmal vorhanden sein darf könnten wir ihn auch zur ID machen
+public class User extends BaseEntity {
 
     @NotNull
     @Size(min = 1)

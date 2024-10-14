@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Component
 @Slf4j
-public class UserRepositoryCryptoFacade implements UserRepository {
+public class UserRepositoryImpl implements UserRepository {
 
     private static final int FIVE_MINUTES_IN_MILLIS = 5 * 60 * 1000; //TODO Issue: um dies Konfigurierbar zu machen
 

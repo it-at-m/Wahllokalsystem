@@ -8,5 +8,11 @@ Tabellennamen und Properties zu vereinheitlichen.
 
 ## Entscheidung
 
-Nachdem ein Renaming der migration-scripts gemäß Recherche möglich ist, werden die Skripte aller Services refactored.
-Alle zukünftigen table names und properties sollen in Uppercase geschrieben werden.
+Nachdem ein Renaming der migration-scripts gemäß Recherche möglich ist, werden die Skripte aller Services refactored:
+Syntax in Uppcase, Tabellenname in CamelCase und die Properties in lowercase.
+Beispiel:
+CREATE TABLE Wahlbezirk
+(
+id VARCHAR2(36) NOT NULL,
+wahlbezirkArt VARCHAR2(3)  NOT NULL
+)

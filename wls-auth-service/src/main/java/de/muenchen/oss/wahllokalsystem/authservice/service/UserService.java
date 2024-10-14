@@ -35,7 +35,7 @@ public class UserService {
             return new IllegalArgumentException("User with username " + username + " not found.");
         });
 
-        val foundUserLoginAttempt = loginAttemptRepository.findFirstByUsername(username);
+        val foundUserLoginAttempt = loginAttemptRepository.findByUsername(username);
         if (foundUserLoginAttempt.isEmpty()) {
             val newUserLoginAttempt = new LoginAttempt();
             newUserLoginAttempt.setUsername(username);
@@ -64,7 +64,7 @@ public class UserService {
             return new IllegalArgumentException("User with username " + username + " not found.");
         });
 
-        val foundUserLoginAttempt = loginAttemptRepository.findFirstByUsername(username);
+        val foundUserLoginAttempt = loginAttemptRepository.findByUsername(username);
         if (foundUserLoginAttempt.isPresent()) {
             log.debug("Execute reset LoginAttempts for user!");
             user.setAccountNonLocked(true);
@@ -87,7 +87,7 @@ public class UserService {
                             return new IllegalArgumentException("User with username " + username + " not found.");
                         });
 
-        return loginAttemptRepository.findFirstByUsername(username).map(loginAttemptModelMapper::toModel);
+        return loginAttemptRepository.findByUsername(username).map(loginAttemptModelMapper::toModel);
     }
 
     public boolean doesUserExist(final String username) {

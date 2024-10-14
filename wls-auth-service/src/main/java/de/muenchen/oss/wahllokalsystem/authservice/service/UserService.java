@@ -82,7 +82,7 @@ public class UserService {
         LoginAttempt attempts = null;
         val user = userRepository.findByUsername(username)
                 .orElseThrow(
-                        () -> { //TODO Issue - wie wäre es mit EAGER-Loading über einen Request. Dazu muss aber der User mit den Attemps 0..N verbunden werden
+                        () -> {
                             log.warn("No user found for given username.");
                             return new IllegalArgumentException("User with username " + username + " not found.");
                         });

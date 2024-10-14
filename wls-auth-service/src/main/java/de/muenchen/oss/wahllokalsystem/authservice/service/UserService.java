@@ -79,7 +79,6 @@ public class UserService {
     public Optional<LoginAttemptModel> getUserAttempts(String username) {
         log.debug("getUserAttempts({})", username);
 
-        LoginAttempt attempts = null;
         val user = userRepository.findByUsername(username)
                 .orElseThrow(
                         () -> {

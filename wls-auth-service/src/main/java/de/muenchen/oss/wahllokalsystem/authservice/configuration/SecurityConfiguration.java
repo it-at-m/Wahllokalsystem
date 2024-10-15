@@ -15,6 +15,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -38,26 +42,46 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests.requestMatchers(
-                        // allow access to /actuator/info
-                        AntPathRequestMatcher.antMatcher("/actuator/info"),
-                        // allow access to /actuator/health for OpenShift Health Check
-                        AntPathRequestMatcher.antMatcher("/actuator/health"),
-                        // allow access to /actuator/health/liveness for OpenShift Liveness Check
-                        AntPathRequestMatcher.antMatcher("/actuator/health/liveness"),
-                        // allow access to /actuator/health/readiness for OpenShift Readiness Check
-                        AntPathRequestMatcher.antMatcher("/actuator/health/readiness"),
-                        // allow access to /actuator/metrics for Prometheus monitoring in OpenShift
-                        AntPathRequestMatcher.antMatcher("/actuator/metrics"),
-                        AntPathRequestMatcher.antMatcher("/v3/api-docs/**"),
-                        AntPathRequestMatcher.antMatcher("/swagger-ui/**"))
-                        .permitAll())
-                .authorizeHttpRequests((requests) -> requests.requestMatchers("/**")
-                        .authenticated())
-                .oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer -> httpSecurityOAuth2ResourceServerConfigurer
-                        .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(new JwtUserInfoAuthenticationConverter(
-                                new UserInfoAuthoritiesService(userInfoUri, restTemplateBuilder)))));
+                                // allow access to /actuator/info
+                                AntPathRequestMatcher.antMatcher("/actuator/info"),
+                                // allow access to /actuator/health for OpenShift Health Check
+                                AntPathRequestMatcher.antMatcher("/actuator/health"),
+                                // allow access to /actuator/health/liveness for OpenShift Liveness Check
+                                AntPathRequestMatcher.antMatcher("/actuator/health/liveness"),
+                                // allow access to /actuator/health/readiness for OpenShift Readiness Check
+                                AntPathRequestMatcher.antMatcher("/actuator/health/readiness"),
+                                // allow access to /actuator/metrics for Prometheus monitoring in OpenShift
+                                AntPathRequestMatcher.antMatcher("/actuator/metrics"),
+                                AntPathRequestMatcher.antMatcher("/v3/api-docs/**"),
+                                AntPathRequestMatcher.antMatcher("/swagger-ui/**"),
+                                AntPathRequestMatcher.antMatcher("/"),
+                                AntPathRequestMatcher.antMatcher("/home")
+                        )
+                        .permitAll()
+                        .anyRequest().authenticated())
+                //                .authorizeHttpRequests((requests) -> requests.requestMatchers("/**")
+                //                        .authenticated())
+                //                .oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer -> httpSecurityOAuth2ResourceServerConfigurer
+                //                        .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(new JwtUserInfoAuthenticationConverter(
+                //                                new UserInfoAuthoritiesService(userInfoUri, restTemplateBuilder)))))
+                //                .formLogin(
+                //                        httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer.loginPage("/login.html").failureUrl("/login-error.html").permitAll())
+
+                .formLogin((form) -> form
+                        .loginPage("/login")
+                        .permitAll()
+                )
+                .logout((logout) -> logout.permitAll());
+        ;
 
         return http.build();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        UserDetails user = User.withDefaultPasswordEncoder().username("user").password("password").roles("USER").build();
+
+        return new InMemoryUserDetailsManager(user);
     }
 
 }

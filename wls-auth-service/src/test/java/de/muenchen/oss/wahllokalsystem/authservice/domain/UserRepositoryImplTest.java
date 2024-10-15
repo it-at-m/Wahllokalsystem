@@ -152,7 +152,6 @@ class UserRepositoryImplTest {
 
         @Test
         void should_returnEmptyOptional_when_foundNoUser() {
-
             val oid = UUID.randomUUID();
 
             Mockito.when(userRepository.findById(oid)).thenReturn(Optional.empty());

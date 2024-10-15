@@ -229,4 +229,19 @@ class SecurityConfigurationTest {
         }
     }
 
+    @Nested
+    class AsyncProgress {
+        @Test
+        @WithAnonymousUser
+        void should_denyAccess_when_requestWithAnonymousUser() throws Exception {
+            api.perform(get("/businessActions/asyncProgress")).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void should_permitAccess_when_requestWithAuthorizedUser() throws Exception {
+            api.perform(get("/businessActions/asyncProgress")).andExpect(status().isOk());
+        }
+    }
+
 }

@@ -5,7 +5,9 @@ import de.muenchen.oss.wahllokalsystem.authservice.domain.LoginAttemptRepository
 import de.muenchen.oss.wahllokalsystem.authservice.domain.UserRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +26,8 @@ public class UserService {
     private final LoginAttemptModelMapper loginAttemptModelMapper;
 
     @Value("${serviceauth.maxLoginAttempts}")
+    @Getter
+    @Setter
     private int maxLoginAttempts;
 
     @Transactional

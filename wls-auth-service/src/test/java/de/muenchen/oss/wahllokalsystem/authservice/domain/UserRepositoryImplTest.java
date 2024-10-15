@@ -90,7 +90,7 @@ class UserRepositoryImplTest {
         }
 
         @Test
-        void should_saveEmptyList_when_usernameIsAlreadyEncrypted() {
+        void should_notSaveEmptyList_when_usernameIsAlreadyEncrypted() {
             val mockedUsersFromRepo = List.of(createUserWithUsername("user1"), createUserWithUsername("user2"));
 
             Mockito.when(userRepository.findAll()).thenReturn(mockedUsersFromRepo);

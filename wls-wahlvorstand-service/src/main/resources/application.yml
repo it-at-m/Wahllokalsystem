@@ -69,3 +69,142 @@ app:
       basePath: http://localhost:39148
     basisdaten:
       basePath: http://localhost:39151
+
+
+# todo: ggf auslagern in eigenes file und dann einbinden über profiles include
+---
+uwbFunktion:
+  BTW:
+    W: "Wahlvorsteher*in"
+    SB: "Schriftführer*in"
+    SWB: "Stellvertretung Wahlvorsteher*in"
+    SSB: "Stellvertretung Schriftführer*in"
+    B: "Beisitzer*in"
+  BEB:
+    W: "Wahlvorsteher*in"
+    SB: ${uwbFunktion.BTW.SB}
+    SWB: "Stellvertretung Wahlvorsteher*in"
+    SSB: ${uwbFunktion.BTW.SSB}
+    B: ${uwbFunktion.BTW.B}
+  BAW:
+    W: ${uwbFunktion.BTW.W}
+    SB: ${uwbFunktion.BTW.SB}
+    SWB: "Stellvertretung Wahlvorsteher*in"
+    SSB: "Stellvertretung Schriftführer*in"
+    B: ${uwbFunktion.BTW.B}
+  BZW:
+    W: ${uwbFunktion.BTW.W}
+    SB: ${uwbFunktion.BTW.SB}
+    SWB: ${uwbFunktion.BTW.SWB}
+    SSB: ${uwbFunktion.BTW.SSB}
+    B: ${uwbFunktion.BTW.B}
+  EUW:
+    W: ${uwbFunktion.BTW.W}
+    SB: ${uwbFunktion.BTW.SB}
+    SWB: ${uwbFunktion.BTW.SWB}
+    SSB: ${uwbFunktion.BTW.SSB}
+    B: ${uwbFunktion.BTW.B}
+  LTW:
+    W: ${uwbFunktion.BTW.W}
+    SB: ${uwbFunktion.BTW.SB}
+    SWB: ${uwbFunktion.BTW.SWB}
+    SSB: ${uwbFunktion.BTW.SSB}
+    B: ${uwbFunktion.BTW.B}
+  MBW:
+    W: ${uwbFunktion.BTW.W}
+    SB: ${uwbFunktion.BTW.SB}
+    SWB: ${uwbFunktion.BTW.SWB}
+    SSB: ${uwbFunktion.BTW.SSB}
+    B: ${uwbFunktion.BTW.B}
+  OBW:
+    W: ${uwbFunktion.BTW.W}
+    SB: ${uwbFunktion.BTW.SB}
+    SWB: ${uwbFunktion.BAW.SWB}
+    SSB: ${uwbFunktion.BAW.SSB}
+    B: ${uwbFunktion.BTW.B}
+  SRW:
+    W: ${uwbFunktion.BTW.W}
+    SB: ${uwbFunktion.BTW.SB}
+    SWB: ${uwbFunktion.BAW.SWB}
+    SSB: ${uwbFunktion.BAW.SSB}
+    B: ${uwbFunktion.BTW.B}
+  SVW:
+    W: ${uwbFunktion.BTW.W}
+    SB: ${uwbFunktion.BTW.SB}
+    SWB: ${uwbFunktion.BAW.SWB}
+    SSB: ${uwbFunktion.BAW.SSB}
+    B: ${uwbFunktion.BTW.B}
+  VE:
+    W: ${uwbFunktion.BTW.W}
+    SB: ${uwbFunktion.BTW.SB}
+    SWB: ${uwbFunktion.BTW.SWB}
+    SSB: ${uwbFunktion.BTW.SSB}
+    B: ${uwbFunktion.BTW.B}
+
+bwbFunktion:
+  BTW:
+    W: ${uwbFunktion.BTW.W}
+    SB: ${uwbFunktion.BTW.SB}
+    SWB: ${uwbFunktion.BTW.SWB}
+    SSB: ${uwbFunktion.BTW.SSB}
+    B: ${uwbFunktion.BTW.B}
+  BEB:
+    W: "Briefwahlvorsteher*in"
+    SB: ${uwbFunktion.BEB.SB}
+    SWB: "Stellvertretung Briefwahlvorsteher*in"
+    SSB: ${uwbFunktion.BEB.SSB}
+    B: ${uwbFunktion.BEB.B}
+  BAW:
+    W: ${uwbFunktion.BAW.W}
+    SB: ${uwbFunktion.BAW.SB}
+    SWB: ${uwbFunktion.BAW.SWB}
+    SSB: ${uwbFunktion.BAW.SSB}
+    B: ${uwbFunktion.BAW.B}
+  BZW:
+    W: ${uwbFunktion.BZW.W}
+    SB: ${uwbFunktion.BZW.SB}
+    SWB: ${uwbFunktion.BZW.SWB}
+    SSB: ${uwbFunktion.BZW.SSB}
+    B: ${uwbFunktion.BZW.B}
+  EUW:
+    W: ${uwbFunktion.EUW.W}
+    SB: ${uwbFunktion.EUW.SB}
+    SWB: ${uwbFunktion.EUW.SWB}
+    SSB: ${uwbFunktion.EUW.SSB}
+    B: ${uwbFunktion.EUW.B}
+  LTW:
+    W: ${uwbFunktion.LTW.W}
+    SB: ${uwbFunktion.LTW.SB}
+    SWB: ${uwbFunktion.LTW.SWB}
+    SSB: ${uwbFunktion.LTW.SSB}
+    B: ${uwbFunktion.LTW.B}
+  MBW:
+    W: ${uwbFunktion.MBW.W}
+    SB: ${uwbFunktion.MBW.SB}
+    SWB: ${uwbFunktion.MBW.SWB}
+    SSB: ${uwbFunktion.MBW.SSB}
+    B: ${uwbFunktion.MBW.B}
+  OBW:
+    W: ${uwbFunktion.OBW.W}
+    SB: ${uwbFunktion.OBW.SB}
+    SWB: ${uwbFunktion.OBW.SWB}
+    SSB: ${uwbFunktion.OBW.SSB}
+    B: ${uwbFunktion.OBW.B}
+  SRW:
+    W: ${uwbFunktion.SRW.W}
+    SB: ${uwbFunktion.SRW.SB}
+    SWB: ${uwbFunktion.SRW.SWB}
+    SSB: ${uwbFunktion.SRW.SSB}
+    B: ${uwbFunktion.SRW.B}
+  SVW:
+    W: ${uwbFunktion.SVW.W}
+    SB: ${uwbFunktion.SVW.SB}
+    SWB: ${uwbFunktion.SVW.SWB}
+    SSB: ${uwbFunktion.SVW.SSB}
+    B: ${uwbFunktion.SVW.B}
+  VE:
+    W: ${uwbFunktion.VE.W}
+    SB: ${uwbFunktion.VE.SB}
+    SWB: ${uwbFunktion.VE.SWB}
+    SSB: ${uwbFunktion.VE.SSB}
+    B: ${uwbFunktion.VE.B}

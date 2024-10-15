@@ -41,7 +41,7 @@ class UserServiceTest {
     ArgumentCaptor<User> userCaptor;
 
     @Nested
-    class updateFailAttempts {
+    class UpdateFailAttempts {
 
         @Test
         void should_throwExceptionWithUsername_when_userWithUsernameDoesNotExist() {
@@ -129,7 +129,7 @@ class UserServiceTest {
     }
 
     @Nested
-    class resetFailAttempts {
+    class ResetFailAttempts {
 
         @Test
         void should_throwExceptionWithUsername_when_userWithUsernameDoesNotExist() {
@@ -178,7 +178,7 @@ class UserServiceTest {
     }
 
     @Nested
-    class getUserAttempts {
+    class GetUserAttempts {
 
         @Test
         void should_returnLoginAttemptModel_when_userAndAttemptExistsForThatUsername() {
@@ -221,7 +221,7 @@ class UserServiceTest {
     }
 
     @Nested
-    class doesUserExist {
+    class DoesUserExist {
 
         @Test
         void should_returnTrue_when_userExists() {

@@ -272,7 +272,6 @@ class UserRepositoryImplTest {
             val encryptedUsername = "encryptedUsername";
 
             Mockito.when(cryptoService.encrypt(username)).thenReturn(encryptedUsername);
-
             Mockito.when(userRepository.findByUsername(encryptedUsername)).thenReturn(Optional.empty());
 
             val result = unitUnderTest.findByUsername(username);

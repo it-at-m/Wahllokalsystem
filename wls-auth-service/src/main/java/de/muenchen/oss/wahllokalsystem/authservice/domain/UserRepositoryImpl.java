@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class UserRepositoryImpl implements UserRepository {
 
-    private static final int FIVE_MINUTES_IN_MILLIS = 5 * 60 * 1000; //TODO Issue: um dies Konfigurierbar zu machen
+    private static final int FIVE_MINUTES_IN_MILLIS = 5 * 60 * 1000;
 
     private final CryptoService cryptoService;
     private final CrudUserRepository userRepository;

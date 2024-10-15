@@ -78,25 +78,6 @@ services:
       - services
       - keycloak
 
-  wls-eai-service:
-    container_name: wls-eai-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-eai-service:latest
-    depends_on:
-      - wls-db-oracle
-    env_file:
-      - .env
-    environment:
-      - SPRING_PROFILES_ACTIVE=${WLS_EAI_SERVICE_PROFILE}
-      - SPRING_DATASOURCE_URL=${WLS_EAI_SERVICE_DB_URL}
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${WLS_EAI_SERVICE_KEYCLOAK_URL}/certs
-      - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${WLS_EAI_SERVICE_KEYCLOAK_URL}/userinfo
-      - SERVER_PORT=8080
-    ports:
-      - 8300:8080
-    networks:
-      - services
-      - keycloak
-
   wls-vorfaelleundvorkommnisse-service:
     container_name: wls-vorfaelleundvorkommnisse-service
     image: ghcr.io/it-at-m/wahllokalsystem-wls-vorfaelleundvorkommnisse-service:latest
@@ -112,6 +93,44 @@ services:
       - SERVER_PORT=8080
     ports:
       - 8204:8080
+    networks:
+      - services
+      - keycloak
+
+  wls-basisdaten-service:
+    container_name: wls-basisdaten-service
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-basisdaten-service:latest
+    depends_on:
+      - wls-db-oracle
+    env_file:
+      - .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=${WLS_BASISDATEN_SERVICE_PROFILE}
+      - SPRING_DATASOURCE_URL=${WLS_BASISDATEN_SERVICE_DB_URL}
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${WLS_BASISDATEN_SERVICE_KEYCLOAK_URL}/certs
+      - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${WLS_BASISDATEN_SERVICE_KEYCLOAK_URL}/userinfo
+      - SERVER_PORT=8080
+    ports:
+      - 8205:8080
+    networks:
+      - services
+      - keycloak
+
+  wls-eai-service:
+    container_name: wls-eai-service
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-eai-service:latest
+    depends_on:
+      - wls-db-oracle
+    env_file:
+      - .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=${WLS_EAI_SERVICE_PROFILE}
+      - SPRING_DATASOURCE_URL=${WLS_EAI_SERVICE_DB_URL}
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${WLS_EAI_SERVICE_KEYCLOAK_URL}/certs
+      - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${WLS_EAI_SERVICE_KEYCLOAK_URL}/userinfo
+      - SERVER_PORT=8080
+    ports:
+      - 8300:8080
     networks:
       - services
       - keycloak

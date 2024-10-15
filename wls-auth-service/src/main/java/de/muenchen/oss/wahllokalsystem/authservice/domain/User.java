@@ -22,7 +22,7 @@ import lombok.ToString;
 import org.hibernate.annotations.NaturalId;
 
 @Entity
-@Table(name = "Wlsuser") //user as table names is already in use by h2
+@Table(name = "Wlsuser") //user as table name is already in use by h2
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor

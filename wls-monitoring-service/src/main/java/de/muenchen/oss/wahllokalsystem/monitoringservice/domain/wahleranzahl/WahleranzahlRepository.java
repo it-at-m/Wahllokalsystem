@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+@PreAuthorize("hasAuthority('Monitoring_READ_Waehleranzahl')")
 public interface WahleranzahlRepository extends CrudRepository<Waehleranzahl, BezirkUndWahlID> {
 
     String CACHE = "WAEHLERANZAHL_CACHE";
@@ -43,4 +44,7 @@ public interface WahleranzahlRepository extends CrudRepository<Waehleranzahl, Be
     @CacheEvict(value = CACHE, allEntries = true)
     @PreAuthorize("hasAuthority('Monitoring_DELETE_Waehleranzahl')")
     void deleteAll();
+
+    Waehleranzahl findFirstByBezirkUndWahlIDOrderByUhrzeitDesc(BezirkUndWahlID bezirkUndWahlID);
+
 }

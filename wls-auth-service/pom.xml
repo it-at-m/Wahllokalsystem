@@ -76,12 +76,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-
-        <!-- Spring -->
         <dependency>
-            <groupId>org.thymeleaf</groupId>
-            <artifactId>thymeleaf-spring6</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
+
+<!--        &lt;!&ndash; Spring &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.thymeleaf</groupId>-->
+<!--            <artifactId>thymeleaf-spring6</artifactId>-->
+<!--        </dependency>-->
 
         <!-- Caching -->
         <dependency>
@@ -286,6 +290,12 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
+            <resource>
+                <directory>${project.build.directory}/generated-resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources-non-filtered</directory>
+            </resource>
         </resources>
         <pluginManagement>
             <plugins>
@@ -293,6 +303,26 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>${maven.resources.plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <!-- Serves *only* to filter the wro.xml so it can get an absolute
+                                path for the project -->
+                            <id>copy-resources</id>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <configuration>
+                                <outputDirectory>${basedir}/target/wro</outputDirectory>
+                                <resources>
+                                    <resource>
+                                        <directory>src/main/wro</directory>
+                                        <filtering>true</filtering>
+                                    </resource>
+                                </resources>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -465,6 +495,44 @@
                     <outputFileName>openapi.json</outputFileName>
                     <outputDir>${project.build.directory}</outputDir>
                 </configuration>
+            </plugin>
+
+
+            <plugin>
+                <groupId>ro.isdc.wro4j</groupId>
+                <artifactId>wro4j-maven-plugin</artifactId>
+                <version>2.1.1</version>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory
+                    </wroManagerFactory>
+                    <cssDestinationFolder>${project.build.directory}/generated-resources/public/css
+                    </cssDestinationFolder>
+                    <jsDestinationFolder>${project.build.directory}/generated-resources/public/js</jsDestinationFolder>
+                    <wroFile>${project.build.directory}/wro/wro.xml</wroFile>
+                    <extraConfigFile>${basedir}/src/main/wro/wro.properties</extraConfigFile>
+                    <contextFolder>${basedir}/src/main/wro</contextFolder>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.webjars</groupId>
+                        <artifactId>jquery</artifactId>
+                        <version>3.7.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.webjars</groupId>
+                        <artifactId>bootstrap</artifactId>
+                        <version>5.3.3</version>
+                        <type>pom</type>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

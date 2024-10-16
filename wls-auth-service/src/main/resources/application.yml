@@ -36,6 +36,8 @@ server:
     include-stacktrace: never
     whitelabel:
       enabled: false
+#  servlet:
+#    context-path: /uaa
 
 # Config for spring actuator endpoints
 management:

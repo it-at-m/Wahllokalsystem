@@ -1,0 +1,7 @@
+<groups xmlns="http://www.isdc.ro/wro">
+    <group name="wro">
+        <css>file:${project.basedir}/src/main/wro/style.css</css>
+        <js>webjar:jquery/3.7.1/jquery.min.js</js>
+    </group>
+</groups>
+

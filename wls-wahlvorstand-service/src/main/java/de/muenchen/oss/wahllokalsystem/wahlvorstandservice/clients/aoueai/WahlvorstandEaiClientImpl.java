@@ -7,12 +7,12 @@ import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.exception.ExceptionCo
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.aoueaiClient.WahlvorstandEaiClient;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.aoueaiClient.WahlvorstandModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
 
 @Slf4j
 @Component
@@ -38,5 +38,15 @@ public class WahlvorstandEaiClientImpl implements WahlvorstandEaiClient {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.AOUEAI_WAHLVORSTAND_NULL);
         }
         return wahlvorstandClientMapper.toModel(wahlvorstandDTO);
+    }
+
+    @Override
+    public void postWahlvorstand(WahlvorstandModel wahlvorstand) {
+        val aktualisierungsDTO = wahlvorstandClientMapper.toWahlvorstandsaktualisierungDTO(wahlvorstand);
+        try {
+            wahlvorstandControllerApi.saveAnwesenheit(aktualisierungsDTO);
+        } catch (Exception e) {
+            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_AOUEAI);
+        }
     }
 }

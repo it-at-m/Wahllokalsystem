@@ -16,6 +16,12 @@ import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.mapping.BWBFunktionsnamenMapping;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.mapping.UWBFunktionsnamenMapping;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -23,11 +29,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -66,8 +67,22 @@ public class WahlvorstandService {
         return persistWahlvorstand(wahlvorstand, konfigurierterWahltagModel);
     }
 
+    @PreAuthorize("hasAuthority('Wahlvorstand_BUSINESSACTION_PostWahlvorstand')")
+    public void postWahlvorstand(@P("param") WahlvorstandModel wahlvorstandModel) {
+        log.info("#postWahlvorstand");
+        wahlvorstandValidator.validWahlvorstandAndWahlbezirkIDOrThrow(wahlvorstandModel);
+
+        try {
+            wahlvorstandRepository.save(wahlvorstandModelMapper.toEntity(wahlvorstandModel));
+        } catch (Exception e) {
+            log.error("#postWahlvorstand unsaveable: " + e);
+            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTWAHLVORSTAND_NOT_SAVEABLE);
+        }
+        wahlvorstandEaiClient.postWahlvorstand(wahlvorstandModel);
+    }
+
     public WahlvorstandModel getFallbackWahlvorstand(String wahlbezirkID) {
-        WahlvorstandModel fallbackWahlvorstand = WahlvorstandModel.builder().wahlbezirkID(wahlbezirkID).build();
+        WahlvorstandModel fallbackWahlvorstand = WahlvorstandModel.builder().wahlbezirkID(wahlbezirkID).wahlvorstandsmitglieder(new ArrayList<>()).build();
 
         Arrays.stream(FunktionModel.values()).forEach(funktion -> {
             WahlvorstandsmitgliedModel mitglied = WahlvorstandsmitgliedModel.builder()
@@ -153,12 +168,12 @@ public class WahlvorstandService {
 
     private String getFunktion(WahlbezirkArt wahlbezirkArt, Wahlvorstandsmitglied mitglied, Wahlart wahlart) {
         String funktion = "";
-        Map<String, Map<String, String>> mappings = null;
-        if (wahlbezirkArt.equals(WahlbezirkArt.UWB)) {
-            mappings = uwbNamenMapping.getUwbFunktion();
-        } else if (wahlbezirkArt.equals(WahlbezirkArt.BWB)) {
-            mappings = bwbNamenMapping.getBwbFunktion();
-        }
+
+        // todo: sollte man das auslagern? kann man in dem zug auch die ..FunktionsmaenMapping Klassen zusammenführen oder funktioniert das dann nicht mehr?
+        Map<WahlbezirkArt, Map<String, Map<String, String>>> funktionsMap = new EnumMap<>(WahlbezirkArt.class);
+        funktionsMap.put(WahlbezirkArt.UWB, uwbNamenMapping.getUwbFunktion());
+        funktionsMap.put(WahlbezirkArt.BWB, bwbNamenMapping.getBwbFunktion());
+        Map<String, Map<String, String>> mappings = funktionsMap.get(wahlbezirkArt);
 
         if (mappings != null) {
             Map<String, String> wahlartMapping = mappings.get(wahlart.name());

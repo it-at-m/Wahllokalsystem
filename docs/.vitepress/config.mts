@@ -3,8 +3,8 @@ import {withMermaid} from "vitepress-plugin-mermaid"
 const PATH_TECHNIK = '/technik/';
 const PATH_CODING_CONVENTIONS = PATH_TECHNIK + 'coding_conventions/';
 const PATH_ADR = PATH_TECHNIK + 'adr/';
+const PATH_GUIDES = PATH_TECHNIK + '/guides/';
 const PATH_FEATURES = '/features/';
-const PATH_GUIDES = '/guides/';
 
 // https://vitepress.dev/reference/site-config
 export default withMermaid({
@@ -16,10 +16,8 @@ export default withMermaid({
     themeConfig: {
         // https://vitepress.dev/reference/default-theme-config
         nav: [
-            {text: 'Home', link: '/'},
             {text: 'About', link: '/about/'},
-            {text: 'Features', link: '/features/'},
-            {text: 'Guides', link: PATH_GUIDES},
+            {text: 'Services', link: '/features/'},
             {text: 'Technik', link: PATH_TECHNIK}
         ],
 
@@ -34,6 +32,12 @@ export default withMermaid({
                     text: 'Getting Started', link: `${PATH_TECHNIK}get_started/`
                 },
                 {text: 'Entwicklungsumgebung', link: `${PATH_TECHNIK}development/`},
+                {
+                    text: 'Guides', link: `${PATH_GUIDES}`, collapsed: false, items: [
+                        {text: 'API-Client generieren', link: `${PATH_GUIDES}how-to-create-client-from-open-api-json.md`},
+                        {text: 'Tips und Tricks', link: `${PATH_GUIDES}tips-and-tricks.md`},
+                    ]
+                },
                 {
                     text: 'Coding Conventions', link: `${PATH_CODING_CONVENTIONS}`, collapsed: true, items: [
                         {text: 'Naming Convention - Testing', link: `${PATH_CODING_CONVENTIONS}tests_naming`},
@@ -73,10 +77,6 @@ export default withMermaid({
                 {text: 'Auth-Service', link: `${PATH_FEATURES}auth-service/`},
                 {text: 'Vorfälle und Vorkommnisse-Service', link: `${PATH_FEATURES}vorfaelleundvorkommnisse-service/`},
             ],
-            [PATH_GUIDES]: [
-                {text: 'API-Client generieren', link: `${PATH_GUIDES}how-to-create-client-from-open-api-json.md`},
-                {text: 'Tips und Tricks', link: `${PATH_GUIDES}tips-and-tricks.md`},
-            ]
         },
 
         socialLinks: [

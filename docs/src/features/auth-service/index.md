@@ -2,6 +2,10 @@
 
 Zuständig für die Authentifizierung und Verwaltung der Rechte der User des Systems.
 
+Der Service stellt auch die Loginmaske zur Verfügung. Dazu wird [Freemarker](https://freemarker.apache.org/index.html)
+verwendet. Mittels [wro4j](https://github.com/wro4j/wro4j) werden JavaScript Ressource (jquery und Bootstrap)
+zur Verfügung gestellt. Im Projekt sind zusätzliche Ressourcen im Ordner `resources-non-filtered` hinterlegt.
+
 ## Abhängigkeiten
 
 - Infomanagement-Service

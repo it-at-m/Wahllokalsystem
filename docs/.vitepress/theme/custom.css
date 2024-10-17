@@ -1,0 +1,6 @@
+/* .vitepress/theme/custom.css */
+
+.VPNavBarMenu a.active {
+    background-color: #f1f1f1f1;
+    border-radius: 15px;
+}

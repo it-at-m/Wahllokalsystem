@@ -18,8 +18,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
-    classes = { MicroServiceApplication.class },
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+        classes = { MicroServiceApplication.class },
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
 @Slf4j

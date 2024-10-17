@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.monitoringservice.service.waehleranzahl;
 
-unneeded import de.muenchen.oss.wahllokalsystem.monitoringservice.domain.waehleranzahl.Waehleranzahl;
+import de.muenchen.oss.wahllokalsystem.monitoringservice.domain.waehleranzahl.Waehleranzahl;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.domain.waehleranzahl.WaehleranzahlRepository;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
@@ -27,7 +27,7 @@ public class WaehleranzahlService {
 
     private Waehleranzahl getWahltagByIDOrThrow(final BezirkUndWahlID bezirkUndWahlID) {
         return waehleranzahlRepository.findById(bezirkUndWahlID)
-            .orElseThrow(() -> exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBETEILIGUNG_SUCHKRITERIEN_UNVOLLSTAENDIG));
+                .orElseThrow(() -> exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBETEILIGUNG_SUCHKRITERIEN_UNVOLLSTAENDIG));
     }
 
     public void postWahlbeteiligung(WaehleranzahlModel waehleranzahl) {

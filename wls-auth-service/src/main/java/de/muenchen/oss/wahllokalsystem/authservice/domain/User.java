@@ -1,0 +1,77 @@
+package de.muenchen.oss.wahllokalsystem.authservice.domain;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import java.time.LocalDate;
+import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.hibernate.annotations.NaturalId;
+
+@Entity
+@Table(name = "Wlsuser") //user as table name is already in use by h2
+@Data
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString(onlyExplicitlyIncluded = true)
+public class User extends BaseEntity {
+
+    @NaturalId
+    @NotNull
+    @Size(min = 1)
+    @ToString.Include
+    private String username;
+
+    @ToString.Include
+    private String password;
+
+    @Email
+    @ToString.Include
+    private String email;
+
+    @ToString.Include
+    private boolean userEnabled;
+
+    @ToString.Include
+    private boolean accountNonLocked;
+
+    @ToString.Include
+    private String wahltagID;
+
+    @ToString.Include
+    private LocalDate wahltag;
+
+    @ToString.Include
+    private String wahlbezirkID;
+
+    @ToString.Include
+    private String wahlbezirkNummer;
+
+    @ToString.Include
+    @Enumerated(EnumType.STRING)
+    private Wahlbezirksart wahlbezirksArt;
+
+    @ToString.Include
+    private String pin;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "Secusers_Secauthorities", joinColumns = { @JoinColumn(name = "user_oid") }, inverseJoinColumns = { @JoinColumn(name = "authority_oid") })
+    private Set<Authority> authorities;
+
+    @ToString.Include
+    private String wbid_wahlnummer;
+}

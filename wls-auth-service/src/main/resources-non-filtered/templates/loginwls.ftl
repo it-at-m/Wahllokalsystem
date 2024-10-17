@@ -40,7 +40,7 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-sm-6 col-md-4 col-md-offset-4" id="login-form">
-                    <h3>Wahllokalsystem abc</h3>
+                    <h3>Wahllokalsystem</h3>
                     <h4>${willkommensnachricht}</h4>
                     <form role="form" action="login" method="post">
                         <div class="material-form-input">

@@ -16,7 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.boot.version>3.3.4</spring.boot.version>
         <spring.cloud.version>2023.0.3</spring.cloud.version>
-        <logstash.encoder>7.4</logstash.encoder>
+        <logstash.encoder>8.0</logstash.encoder>
         <apache.commons.collections4>4.4</apache.commons.collections4>
         <apache.commons.csv>1.11.0</apache.commons.csv>
         <apache.commons.io>2.17.0</apache.commons.io>

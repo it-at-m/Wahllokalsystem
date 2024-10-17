@@ -83,12 +83,6 @@
             <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
 
-<!--        &lt;!&ndash; Spring &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.thymeleaf</groupId>-->
-<!--            <artifactId>thymeleaf-spring6</artifactId>-->
-<!--        </dependency>-->
-
         <!-- Caching -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

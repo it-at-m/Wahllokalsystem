@@ -38,6 +38,7 @@
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
         <org.mapstruct.version>1.6.2</org.mapstruct.version>
         <org.springdoc.version>2.6.0</org.springdoc.version>
+        <wls.common.version>1.1.0</wls.common.version>
     </properties>
 
     <dependencyManagement>
@@ -180,6 +181,18 @@
             <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
             <artifactId>security</artifactId>
             <version>1.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.6</version>
+        </dependency>
+
+        <!-- wls-common -->
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>security</artifactId>
+            <version>${wls.common.version}</version>
         </dependency>
 
         <!-- Validation -->
@@ -527,6 +540,46 @@
                     <outputFileName>openapi.json</outputFileName>
                     <outputDir>${project.build.directory}</outputDir>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.7.0</version>
+                <executions>
+                    <execution>
+                        <id>generateInfomanagement</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.infomanagement.0.2.0.json</inputSpec>
+
+                            <generatorName>java</generatorName>
+                            <library>resttemplate</library>
+
+                            <apiPackage>${project.groupId}.authservice.eai.infomanagement.client</apiPackage>
+                            <modelPackage>${project.groupId}.authservice.eai.infomanagement.model</modelPackage>
+
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+
+                            <configOptions>
+                                <hideGenerationTimestamp>false</hideGenerationTimestamp>
+                                <legacyDiscriminatorBehavior>false</legacyDiscriminatorBehavior>
+                                <generateClientAsBean>true</generateClientAsBean>
+                                <useJakartaEe>true</useJakartaEe>
+                            </configOptions>
+
+                            <globalProperties>
+                                <supportingFiles>
+                                    BaseApi.java,ApiClient.java,JavaTimeFormatter.java,Authentication.java,OAuth.java,ApiKeyAuth.java,HttpBasicAuth.java,HttpBearerAuth.java,RFC3339DateFormat.java
+                                </supportingFiles>
+                            </globalProperties>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
 

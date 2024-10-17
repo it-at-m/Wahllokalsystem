@@ -1,7 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.authservice.rest;
 
+import de.muenchen.oss.wahllokalsystem.authservice.service.LoginService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -11,8 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
+@RequiredArgsConstructor
 @Slf4j
 public class LoginController {
+
+    private final LoginService loginService;
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView login(HttpServletRequest request, HttpServletResponse response) {
@@ -43,7 +48,7 @@ public class LoginController {
     }
 
     private void setupLoginWLS(final ModelAndView modelAndView) {
-        modelAndView.addObject("willkommensnachricht", "hello world");
+        modelAndView.addObject("willkommensnachricht", loginService.getWelcomeMessage());
         modelAndView.setViewName("loginwls");
     }
 }

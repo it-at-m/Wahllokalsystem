@@ -5,6 +5,7 @@ spring:
     group:
       local:
         - db-h2
+        - dummy.clients
   flyway:
     locations:
       - classpath:db/migrations/{vendor}
@@ -65,3 +66,10 @@ serviceauth:
   crypto:
     encryptionPrefix: "ENCRYPTED:"
   maxLoginAttempts: 5
+  clients:
+    infomanagement:
+      basepath: http://localhost:39146
+      configkey:
+        welcomeMessage: WILLKOMMENSTEXT
+  welcomemessage:
+    default: "Willkommen zur Wahl!"

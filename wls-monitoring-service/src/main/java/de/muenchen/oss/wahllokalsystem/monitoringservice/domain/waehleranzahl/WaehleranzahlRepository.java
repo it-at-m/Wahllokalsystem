@@ -44,7 +44,4 @@ public interface WaehleranzahlRepository extends CrudRepository<Waehleranzahl, B
     @CacheEvict(value = CACHE, allEntries = true)
     @PreAuthorize("hasAuthority('Monitoring_DELETE_Waehleranzahl')")
     void deleteAll();
-
-    Waehleranzahl findFirstByBezirkUndWahlIDOrderByUhrzeitDesc(BezirkUndWahlID bezirkUndWahlID);
-
 }

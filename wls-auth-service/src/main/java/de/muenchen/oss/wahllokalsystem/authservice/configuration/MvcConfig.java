@@ -20,11 +20,4 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/**").addResourceLocations("classpath:/public/");
     }
 
-    //    @Bean
-    //    public FreeMarkerConfigurer freeMarkerConfigurer() {
-    //        FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
-    //        configurer.setTemplateLoaderPath("/templates");
-    //        return configurer;
-    //    }
-
 }

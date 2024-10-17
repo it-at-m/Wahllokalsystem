@@ -29,9 +29,9 @@ class SecurityConfigurationTest {
     }
 
     @Test
-    void accessSecuredResourceActuatorThenFound() throws Exception {
+    void accessSecuredResourceActuatorThenUnauthorized() throws Exception {
         api.perform(get("/actuator"))
-                .andExpect(status().isFound());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test

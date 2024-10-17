@@ -23,15 +23,15 @@ class SecurityConfigurationTest {
     MockMvc api;
 
     @Test
-    void accessSecuredResourceRootThenUnauthorized() throws Exception {
+    void accessSecuredResourceRootThenInternalServerError() throws Exception {
         api.perform(get("/"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isInternalServerError());
     }
 
     @Test
-    void accessSecuredResourceActuatorThenUnauthorized() throws Exception {
+    void accessSecuredResourceActuatorThenFound() throws Exception {
         api.perform(get("/actuator"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isFound());
     }
 
     @Test

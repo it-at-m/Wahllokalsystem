@@ -60,14 +60,9 @@ public class SecurityConfiguration {
                         AntPathRequestMatcher.antMatcher("/js/*"))
                         .permitAll()
                         .anyRequest().authenticated())
-                //                .authorizeHttpRequests((requests) -> requests.requestMatchers("/**")
-                //                        .authenticated())
-                //                .oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer -> httpSecurityOAuth2ResourceServerConfigurer
-                //                        .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(new JwtUserInfoAuthenticationConverter(
-                //                                new UserInfoAuthoritiesService(userInfoUri, restTemplateBuilder)))))
-                //                .formLogin(
-                //                        httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer.loginPage("/login.html").failureUrl("/login-error.html").permitAll())
-
+                .oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer -> httpSecurityOAuth2ResourceServerConfigurer
+                        .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(new JwtUserInfoAuthenticationConverter(
+                                new UserInfoAuthoritiesService(userInfoUri, restTemplateBuilder)))))
                 .formLogin((form) -> form
                         .loginPage("/login")
                         .permitAll())

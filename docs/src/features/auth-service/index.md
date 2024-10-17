@@ -4,7 +4,7 @@ Zuständig für die Authentifizierung und Verwaltung der Rechte der User des Sys
 
 ## Abhängigkeiten
 
-Der Service hat keine Abhängigkeiten zu anderen Services.
+- Infomanagement-Service
 
 ## Datenmodell
 

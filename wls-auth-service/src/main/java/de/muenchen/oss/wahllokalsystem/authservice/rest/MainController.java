@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("demo")
 public class MainController {
 
+    private final String WLS_VIEW = "loginwls";
+
     @GetMapping
     public String hanelGetMapping() {
         return "we got it - yeah";

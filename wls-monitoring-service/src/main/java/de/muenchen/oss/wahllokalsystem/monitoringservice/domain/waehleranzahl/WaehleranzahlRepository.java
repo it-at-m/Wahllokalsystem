@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.monitoringservice.domain.wahleranzahl;
+package de.muenchen.oss.wahllokalsystem.monitoringservice.domain.waehleranzahl;
 
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Optional;
@@ -9,7 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 @PreAuthorize("hasAuthority('Monitoring_READ_Waehleranzahl')")
-public interface WahleranzahlRepository extends CrudRepository<Waehleranzahl, BezirkUndWahlID> {
+public interface WaehleranzahlRepository extends CrudRepository<Waehleranzahl, BezirkUndWahlID> {
 
     String CACHE = "WAEHLERANZAHL_CACHE";
 

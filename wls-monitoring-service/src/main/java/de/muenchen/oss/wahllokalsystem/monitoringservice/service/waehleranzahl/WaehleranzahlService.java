@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.monitoringservice.service.waehleranzahl;
 
-import de.muenchen.oss.wahllokalsystem.monitoringservice.domain.wahleranzahl.WahleranzahlRepository;
+import de.muenchen.oss.wahllokalsystem.monitoringservice.domain.waehleranzahl.WaehleranzahlRepository;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -14,9 +14,10 @@ import org.springframework.stereotype.Service;
 public class WaehleranzahlService {
 
     private final WaehleranzahlValidator waehleranzahlValidator;
-    private final WahleranzahlRepository waehleranzahlRepository;
+    private final WaehleranzahlRepository waehleranzahlRepository;
     private final WaehleranzahlModelMapper waehleranzahlModelMapper;
     private final ExceptionFactory exceptionFactory;
+    private final WaehleranzahlClient waehleranzahlClient;
 
     public WaehleranzahlModel getWahlbeteiligung(BezirkUndWahlID bezirkUndWahlID) {
 
@@ -25,9 +26,6 @@ public class WaehleranzahlService {
         return waehleranzahlModelMapper.toModel(waehleranzahlRepository.findFirstByBezirkUndWahlIDOrderByUhrzeitDesc(bezirkUndWahlID));
     }
 
-    /**
-     * This BusinessAction's purpose is: Speichern und Weiterleiten der Wahlbeteiligung.
-     */
     public void postWahlbeteiligung(WaehleranzahlModel waehleranzahl) {
 
         waehleranzahlValidator.validWaehleranzahlSetModel(waehleranzahl);
@@ -39,8 +37,6 @@ public class WaehleranzahlService {
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTWAHLBETEILIGUNG_UNSAVEABLE);
         }
 
-        //
-        //        waehleranzahl.setBezirkUndWahlID(new BezirkUndWahlID(waehleranzahl.getBezirkUndWahlID().getWahlbezirkID(), null));
-        //        aoueaiTemplate.saveWahlbeteiligung(getWahlbeteiligungsMeldung_(waehleranzahl));
+        waehleranzahlClient.postWahlbeteiligung(waehleranzahl);
     }
 }

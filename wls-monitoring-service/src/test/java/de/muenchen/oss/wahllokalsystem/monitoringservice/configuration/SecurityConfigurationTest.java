@@ -39,43 +39,43 @@ class SecurityConfigurationTest {
     @Test
     void accessSecuredResourceRootThenUnauthorized() throws Exception {
         api.perform(get("/"))
-            .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
     void accessSecuredResourceActuatorThenUnauthorized() throws Exception {
         api.perform(get("/actuator"))
-            .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
     void accessUnsecuredResourceActuatorHealthThenOk() throws Exception {
         api.perform(get("/actuator/health"))
-            .andExpect(status().isOk());
+                .andExpect(status().isOk());
     }
 
     @Test
     void accessUnsecuredResourceActuatorInfoThenOk() throws Exception {
         api.perform(get("/actuator/info"))
-            .andExpect(status().isOk());
+                .andExpect(status().isOk());
     }
 
     @Test
     void accessUnsecuredResourceActuatorMetricsThenOk() throws Exception {
         api.perform(get("/actuator/metrics"))
-            .andExpect(status().isOk());
+                .andExpect(status().isOk());
     }
 
     @Test
     void accessUnsecuredResourceV3ApiDocsThenOk() throws Exception {
         api.perform(get("/v3/api-docs"))
-            .andExpect(status().isOk());
+                .andExpect(status().isOk());
     }
 
     @Test
     void accessUnsecuredResourceSwaggerUiThenOk() throws Exception {
         api.perform(get("/swagger-ui/index.html"))
-            .andExpect(status().isOk());
+                .andExpect(status().isOk());
     }
 
     @Nested

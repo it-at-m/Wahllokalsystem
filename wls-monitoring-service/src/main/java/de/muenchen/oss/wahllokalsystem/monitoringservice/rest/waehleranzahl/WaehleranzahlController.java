@@ -26,7 +26,7 @@ public class WaehleranzahlController {
     @GetMapping("/{wahlID}/{wahlbezirkID}")
     WaehleranzahlDTO getWahlbeteiligung(@PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID) {
         return waehleranzahlDTOMapper.toDTO(
-            waehleranzahlService.getWahlbeteiligung(new BezirkUndWahlID(wahlID, wahlbezirkID)));
+                waehleranzahlService.getWahlbeteiligung(new BezirkUndWahlID(wahlID, wahlbezirkID)));
     }
 
     /**
@@ -35,7 +35,7 @@ public class WaehleranzahlController {
     @Operation(description = "Speichern und Weiterleiten der Wahlbeteiligung für die Wahl {wahlID} für den Wahlbezirk {wahlbezirkID}.")
     @PostMapping("/{wahlID}/{wahlbezirkID}")
     public void postWahlbeteiligung(@PathVariable("wahlbezirkID") String wahlbezirkID, @PathVariable("wahlID") String wahlID,
-        @RequestBody WaehleranzahlDTO waehleranzahl) {
+            @RequestBody WaehleranzahlDTO waehleranzahl) {
         log.info("postWahlbeteiligung {}", wahlbezirkID);
 
         val waehleranzahlSetModel = waehleranzahlDTOMapper.toSetModel(new BezirkUndWahlID(wahlID, wahlbezirkID), waehleranzahl);

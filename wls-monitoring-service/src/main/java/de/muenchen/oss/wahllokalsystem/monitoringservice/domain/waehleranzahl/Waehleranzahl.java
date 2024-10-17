@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.monitoringservice.domain.wahleranzahl;
+package de.muenchen.oss.wahllokalsystem.monitoringservice.domain.waehleranzahl;
 
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import jakarta.persistence.Embeddable;
@@ -34,5 +34,3 @@ public class Waehleranzahl {
     private java.time.LocalDateTime uhrzeit;
 
 }
-
-

@@ -15,6 +15,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -49,15 +53,30 @@ public class SecurityConfiguration {
                         // allow access to /actuator/metrics for Prometheus monitoring in OpenShift
                         AntPathRequestMatcher.antMatcher("/actuator/metrics"),
                         AntPathRequestMatcher.antMatcher("/v3/api-docs/**"),
-                        AntPathRequestMatcher.antMatcher("/swagger-ui/**"))
-                        .permitAll())
-                .authorizeHttpRequests((requests) -> requests.requestMatchers("/**")
-                        .authenticated())
+                        AntPathRequestMatcher.antMatcher("/swagger-ui/**"),
+                        AntPathRequestMatcher.antMatcher("/"),
+                        AntPathRequestMatcher.antMatcher("/home"),
+                        AntPathRequestMatcher.antMatcher("/css/*"),
+                        AntPathRequestMatcher.antMatcher("/js/*"))
+                        .permitAll()
+                        .anyRequest().authenticated())
                 .oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer -> httpSecurityOAuth2ResourceServerConfigurer
                         .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(new JwtUserInfoAuthenticationConverter(
-                                new UserInfoAuthoritiesService(userInfoUri, restTemplateBuilder)))));
+                                new UserInfoAuthoritiesService(userInfoUri, restTemplateBuilder)))))
+                .formLogin((form) -> form
+                        .loginPage("/login")
+                        .permitAll())
+                .logout((logout) -> logout.permitAll());
+        ;
 
         return http.build();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        UserDetails user = User.withDefaultPasswordEncoder().username("user").password("password").roles("USER").build();
+
+        return new InMemoryUserDetailsManager(user);
     }
 
 }

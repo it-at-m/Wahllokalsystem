@@ -36,7 +36,7 @@ public class InfomanagementServiceClient implements WelcomeClient {
         try {
             konfigurationDTO = getKonfigurationKeyUnauthorized(konfigKeyWelcomeMessage);
         } catch (final Exception e) {
-            log.warn("Fehler <{}> bei Abruf der Willkommensnachricht. Nutze Fallback;: {}", e.getMessage(), defaultWelcomeMessage);
+            log.warn("Fehler <{}> bei Abruf der Willkommensnachricht. Nutze Fallback: {}", e.getMessage(), defaultWelcomeMessage);
             return defaultWelcomeMessage;
         }
 

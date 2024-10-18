@@ -42,43 +42,43 @@ class SecurityConfigurationTest {
     @Test
     void accessSecuredResourceRootThenUnauthorized() throws Exception {
         api.perform(get("/"))
-                .andExpect(status().isUnauthorized());
+            .andExpect(status().isUnauthorized());
     }
 
     @Test
     void accessSecuredResourceActuatorThenUnauthorized() throws Exception {
         api.perform(get("/actuator"))
-                .andExpect(status().isUnauthorized());
+            .andExpect(status().isUnauthorized());
     }
 
     @Test
     void accessUnsecuredResourceActuatorHealthThenOk() throws Exception {
         api.perform(get("/actuator/health"))
-                .andExpect(status().isOk());
+            .andExpect(status().isOk());
     }
 
     @Test
     void accessUnsecuredResourceActuatorInfoThenOk() throws Exception {
         api.perform(get("/actuator/info"))
-                .andExpect(status().isOk());
+            .andExpect(status().isOk());
     }
 
     @Test
     void accessUnsecuredResourceActuatorMetricsThenOk() throws Exception {
         api.perform(get("/actuator/metrics"))
-                .andExpect(status().isOk());
+            .andExpect(status().isOk());
     }
 
     @Test
     void accessUnsecuredResourceV3ApiDocsThenOk() throws Exception {
         api.perform(get("/v3/api-docs"))
-                .andExpect(status().isOk());
+            .andExpect(status().isOk());
     }
 
     @Test
     void accessUnsecuredResourceSwaggerUiThenOk() throws Exception {
         api.perform(get("/swagger-ui/index.html"))
-                .andExpect(status().isOk());
+            .andExpect(status().isOk());
     }
 
     @Nested
@@ -86,28 +86,28 @@ class SecurityConfigurationTest {
 
         @Test
         @WithAnonymousUser
-        void get_should_return401Unauthorized_when_UnauthorizedAnonymousUser() throws Exception {
+        void should_return401Unauthorized_when_GetWithUnauthorizedAnonymousUser() throws Exception {
             api.perform(get("/businessActions/wahlbeteiligung/wahlID/wahlbezirkID")).andExpect(status().isUnauthorized());
         }
 
         @Test
         @WithMockUser
-        void get_should_return200OK_when_AuthorizedMockUser() throws Exception {
+        void should_return200OK_when_GetWithAuthorizedMockUser() throws Exception {
             api.perform(get("/businessActions/wahlbeteiligung/wahlID/wahlbezirkID")).andExpect(status().isOk());
         }
 
         @Test
         @WithAnonymousUser
-        void post_should_return401Unauthorized_when_UnauthorizedAnonymousUser() throws Exception {
+        void should_return401Unauthorized_when_PostWithUnauthorizedAnonymousUser() throws Exception {
             api.perform(post("/businessActions/wahlbeteiligung/wahlID/wahlbezirkID").with(csrf())).andExpect(status().isUnauthorized());
         }
 
         @Test
         @WithMockUser
-        void post_should_return200OK_when_AuthorizedMockUser() throws Exception {
+        void should_return200OK_when_PostWithAuthorizedMockUser() throws Exception {
             val requestBody = new WaehleranzahlDTO(null, null, null, null);
             val request = post("/businessActions/wahlbeteiligung/wahlID/wahlbezirkID").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
-                    objectMapper.writeValueAsString(requestBody));
+                objectMapper.writeValueAsString(requestBody));
 
             api.perform(request).andExpect(status().isOk());
         }

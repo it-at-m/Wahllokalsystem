@@ -2,9 +2,6 @@ package de.muenchen.oss.wahllokalsystem.monitoringservice.service.waehleranzahl;
 
 import de.muenchen.oss.wahllokalsystem.monitoringservice.domain.waehleranzahl.Waehleranzahl;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.domain.waehleranzahl.WaehleranzahlRepository;
-import de.muenchen.oss.wahllokalsystem.monitoringservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDateTime;
@@ -50,20 +47,17 @@ public class WaehleranzahlServiceTest {
             Mockito.when(waehleranzahlRepository.findById(bezirkUndWahlID)).thenReturn(Optional.of(mockedRepoResponse));
             Mockito.when(waehleranzahlModelMapper.toModel(mockedRepoResponse)).thenReturn(mockedMappedRepoResponse);
 
-            Assertions.assertThat(unitUnderTest.getWahlbeteiligung(bezirkUndWahlID)).isSameAs(mockedMappedRepoResponse);
+            Assertions.assertThat(unitUnderTest.getWahlbeteiligung(bezirkUndWahlID).get()).isSameAs(mockedMappedRepoResponse);
         }
 
         @Test
-        void should_returnException_when_RepoDataNotFound() {
+        void should_returnEmptyResult_when_RepoDataNotFound() {
             BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID("wahlID01", "wahlbezirkID01");
 
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-
             Mockito.when(waehleranzahlRepository.findById(bezirkUndWahlID)).thenReturn(Optional.empty());
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBETEILIGUNG_SUCHKRITERIEN_UNVOLLSTAENDIG))
-                    .thenReturn(mockedWlsException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlbeteiligung(bezirkUndWahlID)).isSameAs(mockedWlsException);
+            val result = unitUnderTest.getWahlbeteiligung(bezirkUndWahlID);
+            Assertions.assertThat(result).isEmpty();
         }
     }
 
@@ -93,24 +87,6 @@ public class WaehleranzahlServiceTest {
             Mockito.doThrow(mockedValidatorException).when(waehleranzahlValidator).validWaehleranzahlSetModel(waehleranzahlSetModel);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.postWahlbeteiligung(waehleranzahlSetModel)).isSameAs(mockedValidatorException);
-        }
-
-        @Test
-        void should_handleRepoExceptionAndthrowTechnischeException_when_saveInRepoFails() {
-            val waehleranzahlSetModel = WaehleranzahlModel.builder().build();
-
-            val mockedRepositoryException = new IllegalArgumentException("i cant saved");
-            val mockedExceptionFactoryWlsException = TechnischeWlsException.withCode("").buildWithMessage("");
-            val mockedKonfigurationEntity = new Waehleranzahl();
-
-            Mockito.doNothing().when(waehleranzahlValidator).validWaehleranzahlSetModel(waehleranzahlSetModel);
-            Mockito.when(waehleranzahlModelMapper.toEntity(waehleranzahlSetModel)).thenReturn(mockedKonfigurationEntity);
-            Mockito.when(waehleranzahlRepository.save(mockedKonfigurationEntity)).thenThrow(mockedRepositoryException);
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTWAHLBETEILIGUNG_UNSAVEABLE))
-                    .thenReturn(mockedExceptionFactoryWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postWahlbeteiligung(waehleranzahlSetModel))
-                    .isSameAs(mockedExceptionFactoryWlsException);
         }
     }
 }

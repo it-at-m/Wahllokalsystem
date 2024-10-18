@@ -10,6 +10,7 @@ public class ExceptionConstants {
     //waehleranzahl
     public static final ExceptionDataWrapper GETWAHLBETEILIGUNG_SUCHKRITERIEN_UNVOLLSTAENDIG = new ExceptionDataWrapper("102",
             "Fehler in getWahlbeteiligung(): Parameter unvollstaendig.");
+    public static ExceptionDataWrapper GETWAHLBETEILIGUNG_KEINE_DATEN = new ExceptionDataWrapper("302", "Die Wahlbeteiligung konnte nicht geladen werden.");
     public static final ExceptionDataWrapper POSTWAHLBETEILIGUNG_UNSAVEABLE = new ExceptionDataWrapper("101",
             "Fehler in postWahlbeteiligung():  Waehleranzahl konnte nicht gespeichert werden.");
 

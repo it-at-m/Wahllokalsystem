@@ -7,6 +7,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactor
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,6 +21,7 @@ public class WaehleranzahlService {
     private final ExceptionFactory exceptionFactory;
     private final WaehleranzahlClient waehleranzahlClient;
 
+    @PreAuthorize("hasAuthority('Monitoring_BUSINESSACTION_GetWahlbeteiligung')")
     public WaehleranzahlModel getWahlbeteiligung(BezirkUndWahlID bezirkUndWahlID) {
         waehleranzahlValidator.validWahlIdUndWahlbezirkIDOrThrow(bezirkUndWahlID);
         return waehleranzahlModelMapper.toModel(getWahltagByIDOrThrow(bezirkUndWahlID));
@@ -27,20 +29,19 @@ public class WaehleranzahlService {
 
     private Waehleranzahl getWahltagByIDOrThrow(final BezirkUndWahlID bezirkUndWahlID) {
         return waehleranzahlRepository.findById(bezirkUndWahlID)
-                .orElseThrow(() -> exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBETEILIGUNG_SUCHKRITERIEN_UNVOLLSTAENDIG));
+                .orElseThrow(() -> exceptionFactory.createTechnischeWlsException(ExceptionConstants.GETWAHLBETEILIGUNG_KEINE_DATEN));
     }
 
+    @PreAuthorize("hasAuthority('Monitoring_BUSINESSACTION_PostWahlbeteiligung')")
     public void postWahlbeteiligung(WaehleranzahlModel waehleranzahl) {
-
         waehleranzahlValidator.validWaehleranzahlSetModel(waehleranzahl);
 
         try {
             waehleranzahlRepository.save(waehleranzahlModelMapper.toEntity(waehleranzahl));
         } catch (Exception e) {
             log.error("#postWahlbeteiligung: Die Wahlen konnten aufgrund eines Fehlers nicht gespeichert werden:", e);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTWAHLBETEILIGUNG_UNSAVEABLE);
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTWAHLBETEILIGUNG_UNSAVEABLE);
         }
-
         waehleranzahlClient.postWahlbeteiligung(waehleranzahl);
     }
 }

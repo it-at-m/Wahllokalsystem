@@ -29,9 +29,6 @@ public class WaehleranzahlController {
                 waehleranzahlService.getWahlbeteiligung(new BezirkUndWahlID(wahlID, wahlbezirkID)));
     }
 
-    /**
-     * This BusinessAction's purpose is: Speichern und Weiterleiten der Wahlbeteiligung.
-     */
     @Operation(description = "Speichern und Weiterleiten der Wahlbeteiligung für die Wahl {wahlID} für den Wahlbezirk {wahlbezirkID}.")
     @PostMapping("/{wahlID}/{wahlbezirkID}")
     public void postWahlbeteiligung(@PathVariable("wahlbezirkID") String wahlbezirkID, @PathVariable("wahlID") String wahlID,

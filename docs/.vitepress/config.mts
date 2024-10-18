@@ -72,6 +72,7 @@ export default withMermaid({
                 {text: 'Ergebnismeldung-Service', link: `${PATH_FEATURES}ergebnismeldung-service/`},
                 {text: 'Auth-Service', link: `${PATH_FEATURES}auth-service/`},
                 {text: 'Vorfälle und Vorkommnisse-Service', link: `${PATH_FEATURES}vorfaelleundvorkommnisse-service/`},
+                {text: 'Admin-Service', link: `${PATH_FEATURES}admin-service/`},
             ],
             [PATH_GUIDES]: [
                 {text: 'API-Client generieren', link: `${PATH_GUIDES}how-to-create-client-from-open-api-json.md`},

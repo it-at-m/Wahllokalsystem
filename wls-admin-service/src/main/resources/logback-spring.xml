@@ -14,8 +14,7 @@
         <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
             <encoder>
                 <pattern>
-                    %date{yyyy.MM.dd HH:mm:ss.SSS} | ${springAppName} | TraceId: %X{traceId:-} | SpanId: %X{spanId:-}] |
-                    %level | [%thread] | %logger{0} | [%file : %line] - %msg%n
+                    %date{yyyy.MM.dd HH:mm:ss.SSS} | ${springAppName} | TraceId: %X{traceId:-} | SpanId: %X{spanId:-}] | %level | [%thread] | %logger{0} | [%file : %line] - %msg%n
                 </pattern>
             </encoder>
         </appender>
@@ -24,30 +23,30 @@
         <logger name="de.muenchen.oss.wahllokalsystem.adminservice"
                 level="debug"
                 additivity="false">
-            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="STDOUT" />
         </logger>
 
         <logger name="de.muenchen.allgemein"
                 level="debug"
                 additivity="false">
-            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="STDOUT" />
         </logger>
 
         <logger name="org.springframework.cache"
                 level="trace"
                 additivity="false">
-            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="STDOUT" />
         </logger>
 
         <logger name="org.springframework.web"
                 level="debug"
                 additivity="false">
-            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="STDOUT" />
         </logger>
 
         <!-- Logger usage -->
         <root level="info">
-            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="STDOUT" />
         </root>
 
     </springProfile>
@@ -64,19 +63,19 @@
                         <!-- the pattern that defines what to include -->
                         <pattern>
                             {
-                            "timestamp" : "%date{yyyy-MM-dd'T'HH:mm:ss.SSS}",
-                            "appName" : "${springAppName}",
-                            "TraceId" : "%mdc{traceId}",
-                            "SpanId" : "%mdc{spanId}",
-                            "X-Span-Export" : "%mdc{X-Span-Export}",
-                            "thread" : "%thread",
-                            "level" : "%level",
-                            "logger": "%logger",
-                            "location" : {
-                            "fileName" : "%file",
-                            "line" : "%line"
-                            },
-                            "message": "%message"
+                                "timestamp" : "%date{yyyy-MM-dd'T'HH:mm:ss.SSS}",
+                                "appName" : "${springAppName}",
+                                "TraceId" : "%mdc{traceId}",
+                                "SpanId" : "%mdc{spanId}",
+                                "X-Span-Export" : "%mdc{X-Span-Export}",
+                                "thread" : "%thread",
+                                "level" : "%level",
+                                "logger": "%logger",
+                                "location" : {
+                                    "fileName" : "%file",
+                                    "line" : "%line"
+                                },
+                                "message": "%message"
                             }
                         </pattern>
                     </pattern>
@@ -88,24 +87,24 @@
         <logger name="de.muenchen.oss.wahllokalsystem.adminservice"
                 level="info"
                 additivity="false">
-            <appender-ref ref="JSON_STDOUT"/>
+            <appender-ref ref="JSON_STDOUT" />
         </logger>
 
         <logger name="de.muenchen.allgemein"
                 level="info"
                 additivity="false">
-            <appender-ref ref="JSON_STDOUT"/>
+            <appender-ref ref="JSON_STDOUT" />
         </logger>
 
         <logger name="org.springframework.web"
                 level="info"
                 additivity="false">
-            <appender-ref ref="JSON_STDOUT"/>
+            <appender-ref ref="JSON_STDOUT" />
         </logger>
 
         <!-- Logger usage -->
         <root level="info">
-            <appender-ref ref="JSON_STDOUT"/>
+            <appender-ref ref="JSON_STDOUT" />
         </root>
 
     </springProfile>

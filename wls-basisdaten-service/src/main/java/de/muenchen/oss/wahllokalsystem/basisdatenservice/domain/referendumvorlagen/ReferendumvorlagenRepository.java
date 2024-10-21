@@ -48,4 +48,7 @@ public interface ReferendumvorlagenRepository extends CrudRepository<Referendumv
     @CacheEvict(value = CACHE, allEntries = true)
     @PreAuthorize("hasAuthority('Basisdaten_DELETE_Referendumvorlagen')")
     void deleteAll();
+
+    @PreAuthorize("hasAuthority('Basisdaten_DELETE_Referendumvorlagen')")
+    void deleteAllByBezirkUndWahlID_WahlID(String wahlID);
 }

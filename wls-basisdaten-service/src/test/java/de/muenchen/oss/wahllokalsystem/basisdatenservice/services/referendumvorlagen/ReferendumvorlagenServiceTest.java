@@ -3,7 +3,6 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvor
 import static org.mockito.ArgumentMatchers.eq;
 
 import ch.qos.logback.classic.Level;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.ReferendumvorlageRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.Referendumvorlagen;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.ReferendumvorlagenRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.LoggerExtension;
@@ -11,7 +10,6 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlI
 import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Consumer;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -21,11 +19,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.transaction.TransactionException;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionTemplate;
 
 @ExtendWith(MockitoExtension.class)
 class ReferendumvorlagenServiceTest {
@@ -40,18 +34,7 @@ class ReferendumvorlagenServiceTest {
     ReferendumvorlagenClient referendumvorlagenClient;
 
     @Mock
-    ReferendumvorlageRepository referendumvorlageRepository;
-
-    @Mock
     ReferendumvorlagenRepository referendumvorlagenRepository;
-
-    @Spy
-    TransactionTemplate transactionTemplate = new TransactionTemplate() {
-        @Override
-        public void executeWithoutResult(Consumer<TransactionStatus> action) throws TransactionException {
-            action.accept(Mockito.mock(TransactionStatus.class));
-        }
-    };
 
     @InjectMocks
     ReferendumvorlagenService unitUnderTest;
@@ -83,7 +66,6 @@ class ReferendumvorlagenServiceTest {
             Assertions.assertThat(result).isEqualTo(mockedClientRerefendumvorlagenModel);
 
             Mockito.verify(referendumvorlagenRepository).save(mockedMappendModelAsEntity);
-            Mockito.verify(referendumvorlageRepository).saveAll(Collections.emptySet());
         }
 
         @Test
@@ -103,7 +85,7 @@ class ReferendumvorlagenServiceTest {
             val result = unitUnderTest.getReferendumvorlagen(referendumvorlagenReference);
 
             Assertions.assertThat(result).isEqualTo(mockedRepoEntityAsModel);
-            Mockito.verifyNoMoreInteractions(referendumvorlageRepository, referendumvorlagenRepository, referendumvorlagenClient);
+            Mockito.verifyNoMoreInteractions(referendumvorlagenRepository, referendumvorlagenClient);
             Assertions.assertThat(loggerExtension.getLoggedEventsStream().filter(event -> event.getLevel() == Level.ERROR).count()).isEqualTo(0);
         }
 
@@ -129,7 +111,7 @@ class ReferendumvorlagenServiceTest {
 
             Assertions.assertThat(result).isEqualTo(mockedClientRerefendumvorlagenModel);
 
-            Mockito.verifyNoMoreInteractions(referendumvorlageRepository, referendumvorlagenRepository);
+            Mockito.verifyNoMoreInteractions(referendumvorlagenRepository);
             Assertions.assertThat(loggerExtension.getLoggedEventsStream().filter(event -> event.getLevel() == Level.ERROR).count()).isEqualTo(1);
         }
     }

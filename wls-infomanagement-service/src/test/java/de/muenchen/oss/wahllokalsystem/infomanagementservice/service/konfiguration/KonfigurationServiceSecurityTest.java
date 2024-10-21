@@ -1,7 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration;
 
-import static org.springframework.security.core.context.SecurityContextHolder.clearContext;
-
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.Konfiguration;
@@ -27,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
@@ -44,7 +43,7 @@ public class KonfigurationServiceSecurityTest {
 
     @BeforeEach
     void setup() {
-        clearContext();
+        SecurityContextHolder.clearContext();
     }
 
     @AfterEach
@@ -69,7 +68,7 @@ public class KonfigurationServiceSecurityTest {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatThrownBy(() -> konfigurationService.getKonfiguration(KonfigurationKonfigKey.WILLKOMMENSTEXT))
-                .isInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
@@ -92,23 +91,23 @@ public class KonfigurationServiceSecurityTest {
         @Test
         void accessDeniedOnMissingServiceAuthority() {
             SecurityUtils.runWith(
-                removeAuthority(Authorities.ALL_AUTHORITIES_SET_KONFIGURATION, Authorities.SERVICE_POST_KONFIGURATION));
+                    removeAuthority(Authorities.ALL_AUTHORITIES_SET_KONFIGURATION, Authorities.SERVICE_POST_KONFIGURATION));
 
             val konfigurationSetModel = new KonfigurationSetModel("schluessel", "wert", "beschreibung", "standwert");
 
             Assertions.assertThatThrownBy(() -> konfigurationService.setKonfiguration(konfigurationSetModel))
-                .isInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         @Test
         void wlsExceptionOnMissingWriteAuthority() {
             SecurityUtils.runWith(
-                removeAuthority(Authorities.ALL_AUTHORITIES_SET_KONFIGURATION, Authorities.REPOSITORY_WRITE_KONFIGURATION));
+                    removeAuthority(Authorities.ALL_AUTHORITIES_SET_KONFIGURATION, Authorities.REPOSITORY_WRITE_KONFIGURATION));
 
             val konfigurationSetModel = new KonfigurationSetModel("schluessel", "wert", "beschreibung", "standwert");
 
             Assertions.assertThatThrownBy(() -> konfigurationService.setKonfiguration(konfigurationSetModel))
-                .isInstanceOf(TechnischeWlsException.class);
+                    .isInstanceOf(TechnischeWlsException.class);
         }
 
         private String[] removeAuthority(final String[] authorities, final String authorityToRemove) {
@@ -133,7 +132,7 @@ public class KonfigurationServiceSecurityTest {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatThrownBy(() -> konfigurationService.getAllKonfigurations())
-                .isInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
@@ -163,7 +162,7 @@ public class KonfigurationServiceSecurityTest {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatThrownBy(() -> konfigurationService.getKennbuchstabenListen())
-                .isInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
@@ -175,7 +174,7 @@ public class KonfigurationServiceSecurityTest {
     class GetKonfigurationUnauthorized {
         @Test
         void accessGranted() {
-            clearContext();
+            SecurityContextHolder.clearContext();
 
             Assertions.assertThatNoException().isThrownBy(() -> konfigurationService.getKonfigurationUnauthorized(KonfigurationKonfigKey.WILLKOMMENSTEXT));
         }

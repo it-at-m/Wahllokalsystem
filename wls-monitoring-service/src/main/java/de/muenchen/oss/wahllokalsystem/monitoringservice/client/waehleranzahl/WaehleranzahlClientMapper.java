@@ -7,7 +7,6 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 
 @Mapper
 public interface WaehleranzahlClientMapper {
@@ -16,10 +15,9 @@ public interface WaehleranzahlClientMapper {
 
     @Mapping(target = "wahlID", source = "bezirkUndWahlID.wahlID")
     @Mapping(target = "wahlbezirkID", source = "bezirkUndWahlID.wahlbezirkID")
-    @Mapping(target = "meldeZeitpunkt", source = "uhrzeit", qualifiedByName = "localDateTimeToOffsetDateTime")
+    @Mapping(target = "meldeZeitpunkt", source = "uhrzeit")
     WahlbeteiligungsMeldungDTO fromModelToRemoteClientDTO(WaehleranzahlModel waehleranzahlModel);
 
-    @Named("localDateTimeToOffsetDateTime")
     default OffsetDateTime localDateTimeToOffsetDateTime(LocalDateTime localDateTime) {
         return localDateTime.atOffset(DEFAULT_ZONE);
     }

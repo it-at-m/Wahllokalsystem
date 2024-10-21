@@ -43,3 +43,5 @@ includes:
   - path: create-group-all-vorfaelleundvorkommnisse-authorities.yml
   - path: add-authorities-vorfaelleundvorkommnisse.yml
   - path: add-authorities-eai-ergebnismeldung.yml
+  - path: create-group-all-monitoring-authorities.yml
+  - path: add-authorities-monitoring-waehleranzahl.yml

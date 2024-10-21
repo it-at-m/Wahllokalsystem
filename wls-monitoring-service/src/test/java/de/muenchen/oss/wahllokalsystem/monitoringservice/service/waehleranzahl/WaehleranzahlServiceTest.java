@@ -65,28 +65,16 @@ public class WaehleranzahlServiceTest {
     class PostWahlbeteiligung {
 
         @Test
-        void should_notThrowExceptionAndSaveDataInRepo_when_ValidModelIsGiven() {
+        void should_notThrowExceptionAndSaveDataInRepo_when_ModelIsGiven() {
 
             val waehleranzahlSetModel = WaehleranzahlModel.builder().build();
             val mockedKonfigurationEntity = new Waehleranzahl();
 
-            Mockito.doNothing().when(waehleranzahlValidator).validWaehleranzahlSetModel(waehleranzahlSetModel);
             Mockito.when(waehleranzahlModelMapper.toEntity(waehleranzahlSetModel)).thenReturn(mockedKonfigurationEntity);
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postWahlbeteiligung(waehleranzahlSetModel));
 
             Mockito.verify(waehleranzahlRepository).save(mockedKonfigurationEntity);
-        }
-
-        @Test
-        void should_throwUnhandledExceptionFromValidation_when_validationFails() {
-            val waehleranzahlSetModel = WaehleranzahlModel.builder().build();
-
-            val mockedValidatorException = new IllegalArgumentException("WRONG!!!");
-
-            Mockito.doThrow(mockedValidatorException).when(waehleranzahlValidator).validWaehleranzahlSetModel(waehleranzahlSetModel);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.postWahlbeteiligung(waehleranzahlSetModel)).isSameAs(mockedValidatorException);
         }
     }
 }

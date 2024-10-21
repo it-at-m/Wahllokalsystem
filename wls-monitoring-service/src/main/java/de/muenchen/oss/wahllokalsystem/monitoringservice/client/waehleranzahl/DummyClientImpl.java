@@ -6,7 +6,6 @@ import de.muenchen.oss.wahllokalsystem.monitoringservice.service.waehleranzahl.W
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -16,12 +15,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class DummyClientImpl implements WaehleranzahlClient {
 
-    private final WaehleranzahlClientMapper waehleranzahlClientMapper;
-
     @Override
     public void postWahlbeteiligung(WaehleranzahlModel waehleranzahlModel) throws WlsException {
-
-        val wahlbeteiligungsMeldungDTO = waehleranzahlClientMapper.toDTO(waehleranzahlModel);
-        log.info("Dummy client postWahlbeteiligung() called instead of EAI with: " + wahlbeteiligungsMeldungDTO);
+        log.info("Dummy client postWahlbeteiligung() called instead of EAI with: {}", waehleranzahlModel);
     }
 }

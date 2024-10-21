@@ -32,13 +32,11 @@ public class WaehleranzahlService {
 
     @PreAuthorize("hasAuthority('Monitoring_BUSINESSACTION_PostWahlbeteiligung')")
     public void postWahlbeteiligung(WaehleranzahlModel waehleranzahl) {
-        waehleranzahlValidator.validWaehleranzahlSetModel(waehleranzahl);
-
         try {
             waehleranzahlRepository.save(waehleranzahlModelMapper.toEntity(waehleranzahl));
         } catch (Exception e) {
             log.error("#postWahlbeteiligung: Die Wahlen konnten aufgrund eines Fehlers nicht gespeichert werden:", e);
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTWAHLBETEILIGUNG_UNSAVEABLE);
+            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTWAHLBETEILIGUNG_UNSAVEABLE);
         }
         waehleranzahlClient.postWahlbeteiligung(waehleranzahl);
     }

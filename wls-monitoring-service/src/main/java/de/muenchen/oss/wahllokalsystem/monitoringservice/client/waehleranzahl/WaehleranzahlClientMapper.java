@@ -17,7 +17,7 @@ public interface WaehleranzahlClientMapper {
     @Mapping(target = "wahlID", source = "bezirkUndWahlID.wahlID")
     @Mapping(target = "wahlbezirkID", source = "bezirkUndWahlID.wahlbezirkID")
     @Mapping(target = "meldeZeitpunkt", source = "uhrzeit", qualifiedByName = "localDateTimeToOffsetDateTime")
-    WahlbeteiligungsMeldungDTO toDTO(WaehleranzahlModel waehleranzahlModel);
+    WahlbeteiligungsMeldungDTO fromModelToRemoteClientDTO(WaehleranzahlModel waehleranzahlModel);
 
     @Named("localDateTimeToOffsetDateTime")
     default OffsetDateTime localDateTimeToOffsetDateTime(LocalDateTime localDateTime) {

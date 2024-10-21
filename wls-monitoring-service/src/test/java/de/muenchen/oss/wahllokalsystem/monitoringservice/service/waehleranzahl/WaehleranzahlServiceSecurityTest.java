@@ -10,7 +10,7 @@ import de.muenchen.oss.wahllokalsystem.monitoringservice.domain.waehleranzahl.Wa
 import de.muenchen.oss.wahllokalsystem.monitoringservice.domain.waehleranzahl.WaehleranzahlRepository;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.rest.waehleranzahl.WaehleranzahlDTOMapper;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.LocalDateTime;
@@ -128,7 +128,7 @@ public class WaehleranzahlServiceSecurityTest {
         }
 
         @Test
-        void should_FailWithFachlicheWlsException_when_RepoAuthorityIsMissing() throws Exception {
+        void should_FailWithTechnischeWlsException_when_RepoAuthorityIsMissing() throws Exception {
             SecurityUtils.runWith(Authorities.SERVICE_POST_WAEHLERANZAHL);
 
             String wahlID = "wahlID01";
@@ -141,7 +141,7 @@ public class WaehleranzahlServiceSecurityTest {
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(waehleranzahlDTO))));
 
-            Assertions.assertThatThrownBy(() -> waehleranzahlService.postWahlbeteiligung(waehleranzahlToSave)).isInstanceOf(FachlicheWlsException.class);
+            Assertions.assertThatThrownBy(() -> waehleranzahlService.postWahlbeteiligung(waehleranzahlToSave)).isInstanceOf(TechnischeWlsException.class);
         }
 
     }

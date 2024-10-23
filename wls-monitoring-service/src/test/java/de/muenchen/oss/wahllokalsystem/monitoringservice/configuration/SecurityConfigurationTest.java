@@ -92,8 +92,8 @@ class SecurityConfigurationTest {
 
         @Test
         @WithMockUser
-        void should_return200OK_when_GetWithAuthorizedMockUser() throws Exception {
-            api.perform(get("/businessActions/wahlbeteiligung/wahlID/wahlbezirkID")).andExpect(status().isOk());
+        void should_return204NoContent_when_getWithAuthorizedMockUser() throws Exception {
+            api.perform(get("/businessActions/wahlbeteiligung/wahlID/wahlbezirkID")).andExpect(status().isNoContent());
         }
 
         @Test

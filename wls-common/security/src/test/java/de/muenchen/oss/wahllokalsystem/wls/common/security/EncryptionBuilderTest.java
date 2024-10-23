@@ -6,6 +6,9 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.testultils.LoggerExte
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -51,7 +54,7 @@ class EncryptionBuilderTest {
         }
 
         @Test
-        void throwBadPadding() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+        void throwBadPadding() {
             val aByte = new byte[16];
             val random = new SecureRandom();
             random.nextBytes(aByte);
@@ -85,6 +88,21 @@ class EncryptionBuilderTest {
             val aByte = new byte[16];
             val unitUnderTest = new EncryptionBuilder(aByte, formatter);
             Assertions.assertThat(unitUnderTest.encryptValue(null)).isNull();
+        }
+
+        @Test
+        void throwBadPadding() throws IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+            val aByte = new byte[16];
+            val unitUnderTest = new EncryptionBuilder(aByte, formatter);
+
+            val mockedBadPaddingException = new BadPaddingException("BadPaddingTest");
+
+            val mockedCypherBuilder = Mockito.mock(CipherBuilder.class);
+            val mockedCipher = Mockito.mock(Cipher.class);
+            val mockedSecret = Mockito.mock(byte[].class);
+            Mockito.when(mockedCypherBuilder.createEncryptionCipher(mockedSecret)).thenReturn(mockedCipher);
+            Mockito.when(mockedCypherBuilder.createEncryptionCipher(mockedSecret).doFinal(aByte)).thenThrow(mockedBadPaddingException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.encryptValue("1"));
         }
     }
 }

@@ -1,0 +1,5 @@
+package de.muenchen.oss.wahllokalsystem.monitoringservice.service.wahllokalzustand;
+
+public enum WahllokalZustandOperation {
+    POST_LASTSEEN, POST_LETZTEABMELDUNG, POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT, POST_SCHNELLMELDUNG_DRUCKUHRZEIT, POST_NIEDERSCHRIFT_SENDUNGSUHRZEIT, POST_NIEDERSCHRIFT_DRUCKUHRZEIT
+}

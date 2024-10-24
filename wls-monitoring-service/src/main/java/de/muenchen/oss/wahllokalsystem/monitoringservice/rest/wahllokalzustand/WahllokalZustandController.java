@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.monitoringservice.rest.wahllokalzustand;
 
-import de.muenchen.oss.wahllokalsystem.monitoringservice.service.wahllokalzustand.SendungsdatenModel;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.service.wahllokalzustand.WahllokalZustandService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,18 +27,17 @@ public class WahllokalZustandController {
 
     private final SendungsdatenDTOMapper sendungsdatenDTOMapper;
     private final DruckdatenDTOMapper druckdatenDTOMapper;
-    private final WahllokalZustandDTOMapper wahllokalZustandDTOMapper;
 
     @PostMapping(LAST_SEEN)
     @Async
-    public void postLastSeen(@PathVariable("wahlbezirkID") String wahlbezirkID) {
+    public void postLastSeen(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
         log.info("postLastSeen {}", wahlbezirkID);
         wahllokalZustandService.postLastSeen(wahlbezirkID);
     }
 
     @PostMapping(LAST_LOGOUT)
     @Async
-    public void postLetzteAbmeldung(@PathVariable("wahlbezirkID") String wahlbezirkID) {
+    public void postLetzteAbmeldung(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
         log.info("postLetzteAbmeldung {}", wahlbezirkID);
         wahllokalZustandService.postLetzteAbmeldung(wahlbezirkID);
     }

@@ -1,10 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.security;
 
+import java.util.Optional;
 import org.springframework.security.core.Authentication;
 
-import java.util.Optional;
-
-// todo: ist das im richtigen package?
 public interface AuthenticationHandler {
 
     boolean canHandle(Authentication authentication);

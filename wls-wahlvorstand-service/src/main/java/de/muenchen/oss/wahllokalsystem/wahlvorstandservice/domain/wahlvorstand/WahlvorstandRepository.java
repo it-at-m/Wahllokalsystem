@@ -1,13 +1,11 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand;
 
+import java.util.UUID;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 @PreAuthorize("hasAuthority('Wahlvorstand_READ_Wahlvorstand')")
 public interface WahlvorstandRepository extends CrudRepository<Wahlvorstand, UUID> {
@@ -44,9 +42,4 @@ public interface WahlvorstandRepository extends CrudRepository<Wahlvorstand, UUI
     @CacheEvict(value = CACHE, allEntries = true)
     @PreAuthorize("hasAuthority('Wahlvorstand_DELETE_Wahlvorstand')")
     void deleteAll();
-
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Wahlvorstand_DELETE_Wahlvorstand')")
-    @Transactional
-    void deleteByWahlbezirkID(String wahlbezirkID);
 }

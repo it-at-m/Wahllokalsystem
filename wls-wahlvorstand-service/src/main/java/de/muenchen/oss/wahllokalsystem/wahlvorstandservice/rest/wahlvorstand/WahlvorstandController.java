@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand;
 
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlvorstandModelMapper;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlvorstandService;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.aoueaiClient.WahlvorstandModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
@@ -23,13 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/businessActions")
+@RequestMapping(value = "/businessActions/wahlvorstand")
 public class WahlvorstandController {
 
-    private final String WAHLVORSTAND_PATH = "/wahlvorstand/{wahlbezirkID}";
-
     private final WahlvorstandService wahlvorstandService;
-    private final WahlvorstandModelMapper wahlvorstandModelMapper;
     private final WahlvorstandDTOMapper wahlvorstandDTOMapper;
 
     @Operation(description = "Laden des Wahlvorstandes")
@@ -49,7 +45,7 @@ public class WahlvorstandController {
                     )
             }
     )
-    @GetMapping(WAHLVORSTAND_PATH)
+    @GetMapping("/{wahlbezirkID}")
     public ResponseEntity<WahlvorstandDTO> getWahlvorstand(
             @RequestHeader(value = "forceupdate", required = false) String forceUpdate,
             @PathVariable("wahlbezirkID") String wahlbezirkID) {
@@ -88,7 +84,7 @@ public class WahlvorstandController {
                     )
             }
     )
-    @PostMapping(WAHLVORSTAND_PATH)
+    @PostMapping("/{wahlbezirkID}")
     public ResponseEntity<?> postWahlvorstand(@PathVariable("wahlbezirkID") String wahlbezirkID, @RequestBody WahlvorstandDTO wahlvorstandBody) {
         // todo: parameter wahlbezirkid ist unused
         // Wenn Fallback-Daten gesendet werden, bestätigen!

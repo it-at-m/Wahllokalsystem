@@ -30,8 +30,7 @@ public class WahllokalZustandClientImpl implements WahllokalZustandClient {
         try {
             wahllokalzustandControllerApi.saveWahllokalZustand(wahllokalZustandDTO);
         } catch (final Exception exception) {
-            log.info("exception on postWahllokalZustand from external", exception);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
+            log.info("Wahllokalzustand nicht gesendet. Exception: {}", exception.getMessage());
         }
     }
 }

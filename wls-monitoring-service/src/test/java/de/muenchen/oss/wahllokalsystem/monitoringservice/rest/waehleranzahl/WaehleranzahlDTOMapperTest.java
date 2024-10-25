@@ -22,11 +22,6 @@ class WaehleranzahlDTOMapperTest {
         }
 
         @Test
-        void should_returnNull_when_dtoIsNull() {
-            Assertions.assertThat(unitUnderTest.toSetModel(null, null)).isNull();
-        }
-
-        @Test
         void should_mapModelToDto_when_ModelIsNotNull() {
             String wahlID = "wahlID01";
             String wahlbezirkID = "wahlbezirkID01";
@@ -39,6 +34,16 @@ class WaehleranzahlDTOMapperTest {
 
             val result = unitUnderTest.toDTO(modelInput);
             Assertions.assertThat(result).isEqualTo(dtoExpected);
+        }
+
+    }
+
+    @Nested
+    class ToSetModel {
+
+        @Test
+        void should_returnNull_when_dtoIsNull() {
+            Assertions.assertThat(unitUnderTest.toSetModel(null, null)).isNull();
         }
 
         @Test
@@ -55,5 +60,6 @@ class WaehleranzahlDTOMapperTest {
             val result = unitUnderTest.toSetModel(bezirkUndWahlID, dtoInput);
             Assertions.assertThat(result).isEqualTo(modelExpected);
         }
+
     }
 }

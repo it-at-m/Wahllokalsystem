@@ -13,7 +13,7 @@ public interface WaehleranzahlClientMapper {
 
     ZoneOffset DEFAULT_ZONE = ZoneOffset.UTC;
 
-    @Mapping(target = "wahlID", source = "bezirkUndWahlID.wahlID")
+    @Mapping(target = "wahlID", ignore = true)
     @Mapping(target = "wahlbezirkID", source = "bezirkUndWahlID.wahlbezirkID")
     @Mapping(target = "meldeZeitpunkt", source = "uhrzeit")
     WahlbeteiligungsMeldungDTO fromModelToRemoteClientDTO(WaehleranzahlModel waehleranzahlModel);

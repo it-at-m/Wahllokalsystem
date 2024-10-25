@@ -10,7 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.monitoringservice.client.waehleranzahl.WaehleranzahlClientMapper;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.domain.waehleranzahl.Waehleranzahl;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.domain.waehleranzahl.WaehleranzahlRepository;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.exception.ExceptionConstants;
@@ -24,7 +23,6 @@ import java.time.LocalDateTime;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -112,7 +110,7 @@ public class WaehleranzahlControllerIntegrationTest {
         }
 
         @Nested
-        class PostBriefwahlvorbereitung {
+        class PostWahlbeteiligung {
 
             @Test
             @WithMockUser(authorities = { Authorities.SERVICE_GET_WAEHLERANZAHL, Authorities.REPOSITORY_READ_WAEHLERANZAHL })

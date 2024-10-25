@@ -66,4 +66,4 @@ info.application.version: @project.version@
 app:
   clients:
     eai:
-      basePath: http://localhost:39146
+      basePath: http://localhost:39149

@@ -17,7 +17,7 @@ class WaehleranzahlModelMapperTest {
         val wahlID = "wahlID01";
         val wahlbezirkID = "wahlbezirkID01";
         BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
-        val anzahlWaehler = 99L;
+        val anzahlWaehler = 99;
         LocalDateTime uhrzeit = LocalDateTime.now();
         val waehleranzahlEntity = new Waehleranzahl(bezirkUndWahlID, anzahlWaehler, uhrzeit);
 
@@ -33,7 +33,7 @@ class WaehleranzahlModelMapperTest {
         val wahlID = "wahlID01";
         val wahlbezirkID = "wahlbezirkID01";
         BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
-        val anzahlWaehler = 99L;
+        val anzahlWaehler = 99;
         LocalDateTime uhrzeit = LocalDateTime.now();
         val waehleranzahlModel = new WaehleranzahlModel(bezirkUndWahlID, anzahlWaehler, uhrzeit);
 

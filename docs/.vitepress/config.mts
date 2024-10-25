@@ -4,7 +4,7 @@ const PATH_TECHNIK = '/technik/';
 const PATH_CODING_CONVENTIONS = PATH_TECHNIK + 'coding_conventions/';
 const PATH_ADR = PATH_TECHNIK + 'adr/';
 const PATH_GUIDES = PATH_TECHNIK + '/guides/';
-const PATH_FEATURES = '/features/';
+const PATH_SERVICES = '/services/';
 
 // https://vitepress.dev/reference/site-config
 export default withMermaid({
@@ -17,7 +17,7 @@ export default withMermaid({
         // https://vitepress.dev/reference/default-theme-config
         nav: [
             {text: 'About', link: '/about/'},
-            {text: 'Services', link: '/features/'},
+            {text: 'Services', link: '/services/'},
             {text: 'Technik', link: PATH_TECHNIK}
         ],
 
@@ -33,7 +33,7 @@ export default withMermaid({
                 },
                 {text: 'Entwicklungsumgebung', link: `${PATH_TECHNIK}development/`},
                 {
-                    text: 'Guides', link: `${PATH_GUIDES}`, collapsed: false, items: [
+                    text: 'Guides', link: `${PATH_GUIDES}`, collapsed: true, items: [
                         {text: 'API-Client generieren', link: `${PATH_GUIDES}how-to-create-client-from-open-api-json.md`},
                         {text: 'Tips und Tricks', link: `${PATH_GUIDES}tips-and-tricks.md`},
                     ]
@@ -66,16 +66,16 @@ export default withMermaid({
                     ]
                 }
             ],
-            [PATH_FEATURES]: [
-                {text: 'Briefwahl-Service', link: `${PATH_FEATURES}briefwahl-service/`},
-                {text: 'Infomanagement-Service', link: `${PATH_FEATURES}infomanagement-service/`},
-                {text: 'EAI-Service', link: `${PATH_FEATURES}eai-service/`},
-                {text: 'Basisdaten-Service', link: `${PATH_FEATURES}basisdaten-service/`},
-                {text: 'Monitoring-Service', link: `${PATH_FEATURES}monitoring-service/`},
-                {text: 'Wahlvorstand-Service', link: `${PATH_FEATURES}wahlvorstand-service/`},
-                {text: 'Ergebnismeldung-Service', link: `${PATH_FEATURES}ergebnismeldung-service/`},
-                {text: 'Auth-Service', link: `${PATH_FEATURES}auth-service/`},
-                {text: 'Vorfälle und Vorkommnisse-Service', link: `${PATH_FEATURES}vorfaelleundvorkommnisse-service/`},
+            [PATH_SERVICES]: [
+                {text: 'Briefwahl-Service', link: `${PATH_SERVICES}briefwahl-service/`},
+                {text: 'Infomanagement-Service', link: `${PATH_SERVICES}infomanagement-service/`},
+                {text: 'EAI-Service', link: `${PATH_SERVICES}eai-service/`},
+                {text: 'Basisdaten-Service', link: `${PATH_SERVICES}basisdaten-service/`},
+                {text: 'Monitoring-Service', link: `${PATH_SERVICES}monitoring-service/`},
+                {text: 'Wahlvorstand-Service', link: `${PATH_SERVICES}wahlvorstand-service/`},
+                {text: 'Ergebnismeldung-Service', link: `${PATH_SERVICES}ergebnismeldung-service/`},
+                {text: 'Auth-Service', link: `${PATH_SERVICES}auth-service/`},
+                {text: 'Vorfälle und Vorkommnisse-Service', link: `${PATH_SERVICES}vorfaelleundvorkommnisse-service/`},
             ],
         },
 

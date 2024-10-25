@@ -1,7 +1,6 @@
 // .vitepress/theme/index.ts
 import type {Theme} from "vitepress";
 import DefaultTheme from "vitepress/theme";
-import './custom.css'
 
 import status from "../components/adr/status.vue";
 import statusOverview from "../components/adr/status/overview.vue";

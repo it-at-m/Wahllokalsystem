@@ -20,6 +20,6 @@ public interface WahllokalZustandClientMapper {
 
     @Named("localDateTimeToOffsetDateTime")
     default OffsetDateTime localDateTimeToOffsetDateTime(LocalDateTime localDateTime) {
-        return localDateTime.atOffset(DEFAULT_ZONE);
+        return (null != localDateTime) ? localDateTime.atOffset(DEFAULT_ZONE) : null;
     }
 }

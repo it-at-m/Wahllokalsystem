@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class WahllokalZustandService {
 
-    private final ExceptionFactory exceptionFactory;
     private final WahllokalZustandClient wahllokalZustandClient;
     private final WahllokalZustandValidator wahllokalZustandValidator;
 
@@ -37,7 +36,6 @@ public class WahllokalZustandService {
         wahllokalZustandValidator.validSendungsdatenModel(sendungsdatenModel, WahllokalZustandOperation.POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT);
         wahllokalZustandClient.postWahllokalZustand(
                 WahllokalZustandModel.builder()
-                        .wahlID(sendungsdatenModel.bezirkUndWahlID().getWahlID())
                         .wahlbezirkID(sendungsdatenModel.bezirkUndWahlID().getWahlbezirkID())
                         .druckzustaende(
                                 Set.of(
@@ -53,7 +51,6 @@ public class WahllokalZustandService {
         wahllokalZustandValidator.validDruckdatenModel(druckdatenModel, WahllokalZustandOperation.POST_SCHNELLMELDUNG_DRUCKUHRZEIT);
         wahllokalZustandClient.postWahllokalZustand(
                 WahllokalZustandModel.builder()
-                        .wahlID(druckdatenModel.bezirkUndWahlID().getWahlID())
                         .wahlbezirkID(druckdatenModel.bezirkUndWahlID().getWahlbezirkID())
                         .druckzustaende(
                                 Set.of(
@@ -69,7 +66,6 @@ public class WahllokalZustandService {
         wahllokalZustandValidator.validSendungsdatenModel(sendungsdatenModel, WahllokalZustandOperation.POST_NIEDERSCHRIFT_SENDUNGSUHRZEIT);
         wahllokalZustandClient.postWahllokalZustand(
                 WahllokalZustandModel.builder()
-                        .wahlID(sendungsdatenModel.bezirkUndWahlID().getWahlID())
                         .wahlbezirkID(sendungsdatenModel.bezirkUndWahlID().getWahlbezirkID())
                         .druckzustaende(
                                 Set.of(
@@ -85,7 +81,6 @@ public class WahllokalZustandService {
         wahllokalZustandValidator.validDruckdatenModel(druckdatenModel, WahllokalZustandOperation.POST_NIEDERSCHRIFT_DRUCKUHRZEIT);
         wahllokalZustandClient.postWahllokalZustand(
                 WahllokalZustandModel.builder()
-                        .wahlID(druckdatenModel.bezirkUndWahlID().getWahlID())
                         .wahlbezirkID(druckdatenModel.bezirkUndWahlID().getWahlbezirkID())
                         .druckzustaende(
                                 Set.of(

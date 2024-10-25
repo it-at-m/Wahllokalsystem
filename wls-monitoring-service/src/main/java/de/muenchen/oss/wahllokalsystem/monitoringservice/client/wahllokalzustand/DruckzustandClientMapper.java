@@ -22,6 +22,6 @@ public interface DruckzustandClientMapper {
 
     @Named("druckzustandLocalDateTimeToOffsetDateTime")
     default OffsetDateTime druckzustandLocalDateTimeToOffsetDateTime(LocalDateTime localDateTime) {
-        return localDateTime.atOffset(DEFAULT_ZONE);
+        return (null != localDateTime) ? localDateTime.atOffset(DEFAULT_ZONE) : null;
     }
 }

@@ -14,9 +14,9 @@ public class ExceptionConstants {
     public static final ExceptionDataWrapper POSTWAHLBETEILIGUNG_UNSAVEABLE = new ExceptionDataWrapper("101",
             "Fehler in postWahlbeteiligung():  Waehleranzahl konnte nicht gespeichert werden.");
 
-    public static final ExceptionDataWrapper POST_LASTSEEN_SUCHKRITERIEN_UNVOLLSTAENDIG = new ExceptionDataWrapper("10§",
+    public static final ExceptionDataWrapper POST_LASTSEEN_SUCHKRITERIEN_UNVOLLSTAENDIG = new ExceptionDataWrapper("103",
             "Fehler in postLastSeen():  Parameter unvollstaendig.");
-    public static final ExceptionDataWrapper POST_LETZTEABMELDUNG_SUCHKRITERIEN_UNVOLLSTAENDIG = new ExceptionDataWrapper("10$",
+    public static final ExceptionDataWrapper POST_LETZTEABMELDUNG_SUCHKRITERIEN_UNVOLLSTAENDIG = new ExceptionDataWrapper("104",
             "Fehler in postLetzteAbmeldung():  Parameter unvollstaendig.");
     public static final ExceptionDataWrapper POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG = new ExceptionDataWrapper("108",
             "Fehler in postSchnellmeldungSendungsuhrzeit():  Parameter unvollstaendig.");

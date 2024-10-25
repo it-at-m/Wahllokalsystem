@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.monitoringservice.rest.wahllokalzustand;
 
 import de.muenchen.oss.wahllokalsystem.monitoringservice.service.wahllokalzustand.WahllokalZustandService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -28,6 +29,9 @@ public class WahllokalZustandController {
     private final SendungsdatenDTOMapper sendungsdatenDTOMapper;
     private final DruckdatenDTOMapper druckdatenDTOMapper;
 
+    @Operation(
+            description = "Empfängt die HeartBeat-Request - als Bestätigung der bestehenden Online-Verbindung aus dem Wahlbezirk {wahlbezirkID}, generiert die Empfangs-Uhrzeit, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
+    )
     @PostMapping(LAST_SEEN)
     @Async
     public void postLastSeen(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
@@ -35,6 +39,9 @@ public class WahllokalZustandController {
         wahllokalZustandService.postLastSeen(wahlbezirkID);
     }
 
+    @Operation(
+            description = "Empfängt die Request als Nachricht über die letzte Abmeldung des Wahlbezirks {wahlbezirkID}, generiert die Empfangs-Uhrzeit, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
+    )
     @PostMapping(LAST_LOGOUT)
     @Async
     public void postLetzteAbmeldung(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
@@ -42,6 +49,9 @@ public class WahllokalZustandController {
         wahllokalZustandService.postLetzteAbmeldung(wahlbezirkID);
     }
 
+    @Operation(
+            description = "Empfängt die Daten über die Sendungsuhrzeit {SendungsdatenDTO.sendungsuhrzeit} der Schnellmeldung  aus dem Wahlbezirk {SendungsdatenDTO.bezirkUndWahlID.wahlbezirkID} für die Wahl {SendungsdatenDTO.bezirkUndWahlID.wahlID}, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
+    )
     @PostMapping(SCHNELLMELDUNG_SENDUNGSUHRZEIT)
     @Async
     public void postSchnellmeldungsSendungsuhrzeit(@RequestBody SendungsdatenDTO sendungsdatenDTO) {
@@ -49,6 +59,9 @@ public class WahllokalZustandController {
         wahllokalZustandService.postSchnellmeldungSendungsuhrzeit(sendungsdatenDTOMapper.toSendungsdatenModel(sendungsdatenDTO));
     }
 
+    @Operation(
+            description = "Empfängt die Daten über die Druckuhrzeit {DruckdatenDTO.druckuhrzeit} der Schnellmeldung  aus dem Wahlbezirk {DruckdatenDTO.bezirkUndWahlID.wahlbezirkID} für die Wahl {DruckdatenDTO.bezirkUndWahlID.wahlID}, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
+    )
     @PostMapping(SCHNELLMELDUNG_DRUCKUHRZEIT)
     @Async
     public void postSchnellmeldungDruckuhrzeit(@RequestBody DruckdatenDTO druckdatenDTO) {
@@ -56,6 +69,9 @@ public class WahllokalZustandController {
         wahllokalZustandService.postSchnellmeldungDruckuhrzeit(druckdatenDTOMapper.toDruckdatenModel(druckdatenDTO));
     }
 
+    @Operation(
+            description = "Empfängt die Daten über die Sendungsuhrzeit {SendungsdatenDTO.sendungsuhrzeit} der Niederschrift  aus dem Wahlbezirk {SendungsdatenDTO.bezirkUndWahlID.wahlbezirkID} für die Wahl {SendungsdatenDTO.bezirkUndWahlID.wahlID}, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
+    )
     @PostMapping(NIEDERSCHRIFT_SENDUNGSUHRZEIT)
     @Async
     public void postNiederschriftSendungsuhrzeit(@RequestBody SendungsdatenDTO sendungsdatenDTO) {
@@ -63,6 +79,9 @@ public class WahllokalZustandController {
         wahllokalZustandService.postNiederschriftSendungsuhrzeit(sendungsdatenDTOMapper.toSendungsdatenModel(sendungsdatenDTO));
     }
 
+    @Operation(
+            description = "Empfängt die Daten über die Druckuhrzeit {DruckdatenDTO.druckuhrzeit} der Niederschrift  aus dem Wahlbezirk {DruckdatenDTO.bezirkUndWahlID.wahlbezirkID} für die Wahl {DruckdatenDTO.bezirkUndWahlID.wahlID}, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
+    )
     @PostMapping(NIEDERSCHRIFT_DRUCKUHRZEIT)
     @Async
     public void postNiederschriftDruckuhrzeit(@RequestBody DruckdatenDTO druckdatenDTO) {

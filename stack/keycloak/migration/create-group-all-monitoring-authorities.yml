@@ -1,9 +1,15 @@
-id: create group allEaiAuthorities and link wls_all*
-author: MrSebastian
+id: create group allMonitoringAuthorities and link wls_all*
+author: dragonfly28
 realm: ${SSO_REALM}
 changes:
   - addGroup:
       name: allMonitoringAuthorities
   - assignGroup:
       user: wls_all
+      group: allMonitoringAuthorities
+  - assignGroup:
+      user: wls_all_uwb
+      group: allMonitoringAuthorities
+  - assignGroup:
+      user: wls_all_bwb
       group: allMonitoringAuthorities

@@ -21,4 +21,4 @@ Dazu gibt es zahlreiche Regeln und Konsistenzprüfungen, die dem Wahlvorstand Fe
 
 Das Wahlamt kann über das System den Wahlbezirken wichtige Informationen zukommen lassen.
 
-🚧 Eine detaillierte Beschreibung aller [Funktionen](/features/) folgt im Laufe der Veröffentlichung.
+🚧 Eine detaillierte Beschreibung aller [Funktionen](/services/) folgt im Laufe der Veröffentlichung.

@@ -6,8 +6,6 @@ import lombok.Builder;
 
 @Builder
 public record WaehleranzahlDTO(
-    @NotNull String wahlID,
-    @NotNull String wahlbezirkID,
     @NotNull Long anzahlWaehler,
     @NotNull LocalDateTime uhrzeit) {
 }

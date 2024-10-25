@@ -35,7 +35,7 @@ class WaehleranzahlDTOMapperTest {
             BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
 
             val modelInput = new WaehleranzahlModel(bezirkUndWahlID, anzahlWaehler, uhrzeit);
-            val dtoExpected = new WaehleranzahlDTO(wahlID, wahlbezirkID, anzahlWaehler, uhrzeit);
+            val dtoExpected = new WaehleranzahlDTO(anzahlWaehler, uhrzeit);
 
             val result = unitUnderTest.toDTO(modelInput);
             Assertions.assertThat(result).isEqualTo(dtoExpected);
@@ -49,7 +49,7 @@ class WaehleranzahlDTOMapperTest {
             LocalDateTime uhrzeit = LocalDateTime.now();
             BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
 
-            val dtoInput = new WaehleranzahlDTO(wahlID, wahlbezirkID, anzahlWaehler, uhrzeit);
+            val dtoInput = new WaehleranzahlDTO(anzahlWaehler, uhrzeit);
             val modelExpected = new WaehleranzahlModel(bezirkUndWahlID, anzahlWaehler, uhrzeit);
 
             val result = unitUnderTest.toSetModel(bezirkUndWahlID, dtoInput);

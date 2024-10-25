@@ -105,7 +105,7 @@ class SecurityConfigurationTest {
         @Test
         @WithMockUser
         void should_return200OK_when_postWithAuthorizedMockUser() throws Exception {
-            val requestBody = new WaehleranzahlDTO(null, null, null, null);
+            val requestBody = new WaehleranzahlDTO(null, null);
             val request = post("/businessActions/wahlbeteiligung/wahlID/wahlbezirkID").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
                     objectMapper.writeValueAsString(requestBody));
 

@@ -121,7 +121,7 @@ public class WaehleranzahlControllerIntegrationTest {
                 val anzahlWaehler_1 = 99L;
                 val uhrzeit_1 = LocalDateTime.parse("2024-09-13T12:11:21.343");
 
-                val waehleranzahlDTO_1 = new WaehleranzahlDTO(wahlID, wahlbezirkID, anzahlWaehler_1, uhrzeit_1);
+                val waehleranzahlDTO_1 = new WaehleranzahlDTO(anzahlWaehler_1, uhrzeit_1);
 
                 WireMock.stubFor(WireMock.post("/wahlbeteiligung")
                         .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
@@ -139,7 +139,7 @@ public class WaehleranzahlControllerIntegrationTest {
                 // Overwrite existing data
                 val anzahlWaehler_2 = 55L;
                 val uhrzeit_2 = LocalDateTime.parse("2024-09-13T12:11:21.666");
-                val waehleranzahlDTO_2 = new WaehleranzahlDTO(wahlID, wahlbezirkID, anzahlWaehler_2, uhrzeit_2);
+                val waehleranzahlDTO_2 = new WaehleranzahlDTO(anzahlWaehler_2, uhrzeit_2);
 
                 val request_2 = buildPostRequest(wahlID, wahlbezirkID, waehleranzahlDTO_2);
                 api.perform(request_2).andExpect(status().isOk()).andReturn();
@@ -159,7 +159,7 @@ public class WaehleranzahlControllerIntegrationTest {
             val wahlbezirkID = "wahlbezirkID01";
             val anzahlWaehler = 99L;
             val uhrzeit = LocalDateTime.parse("2024-09-13T12:11:21.343");
-            val waehleranzahlDTO = new WaehleranzahlDTO(wahlID, wahlbezirkID, anzahlWaehler, uhrzeit);
+            val waehleranzahlDTO = new WaehleranzahlDTO(anzahlWaehler, uhrzeit);
 
             val request = MockMvcRequestBuilders.post("/businessActions/wahlbeteiligung/" + wahlID + "/" + wahlbezirkID).with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)

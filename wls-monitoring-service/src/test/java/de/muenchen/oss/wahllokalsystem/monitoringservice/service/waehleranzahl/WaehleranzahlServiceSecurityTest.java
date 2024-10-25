@@ -68,7 +68,7 @@ public class WaehleranzahlServiceSecurityTest {
     class GetWahlbeteiligung {
 
         @Test
-        void should_grantAccessAndThrowNoException_when_AuthoritiesAreValid() {
+        void should_grantAccessAndThrowNoException_when_authoritiesAreValid() {
             BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID("wahlID01", "wahlbezirkID01");
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAEHLERANZAHL);
             waehleranzahlRepository.save(new Waehleranzahl(bezirkUndWahlID, 99, LocalDateTime.now()));
@@ -80,7 +80,7 @@ public class WaehleranzahlServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void should_FailWithAccessDeniedException_when_AnyAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) {
+        void should_failWithAccessDeniedException_when_anyAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
             BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID("wahlID01", "wahlbezirkID01");
             Assertions.assertThatThrownBy(() -> waehleranzahlService.getWahlbeteiligung(bezirkUndWahlID)).isInstanceOf(AccessDeniedException.class);
@@ -95,7 +95,7 @@ public class WaehleranzahlServiceSecurityTest {
     class PostWahlbeteiligung {
 
         @Test
-        void should_grantAccessAndThrowNoException_when_AuthoritiesAreValid() throws Exception {
+        void should_grantAccessAndThrowNoException_when_authoritiesAreValid() throws Exception {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_WAEHLERANZAHL);
             String wahlID = "wahlID01";
             String wahlbezirkID = "wahlbezirkID01";
@@ -111,7 +111,7 @@ public class WaehleranzahlServiceSecurityTest {
         }
 
         @Test
-        void should_FailWithAccessDeniedException_when_ServiceAuthorityIsMissing() throws Exception {
+        void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() throws Exception {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAEHLERANZAHL);
 
             String wahlID = "wahlID01";
@@ -128,7 +128,7 @@ public class WaehleranzahlServiceSecurityTest {
         }
 
         @Test
-        void should_FailWithTechnischeWlsException_when_RepoAuthorityIsMissing() throws Exception {
+        void should_failWithTechnischeWlsException_when_repoAuthorityIsMissing() throws Exception {
             SecurityUtils.runWith(Authorities.SERVICE_POST_WAEHLERANZAHL);
 
             String wahlID = "wahlID01";

@@ -37,7 +37,7 @@ public class WaehleranzahlServiceTest {
     class GetWahlbeteiligung {
 
         @Test
-        void should_returnRepoData_when_RepoDataFound() {
+        void should_returnRepoData_when_repoDataFound() {
             BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID("wahlID01", "wahlbezirkID01");
 
             val mockedRepoResponse = new Waehleranzahl();
@@ -51,7 +51,7 @@ public class WaehleranzahlServiceTest {
         }
 
         @Test
-        void should_returnEmptyResult_when_RepoDataNotFound() {
+        void should_returnEmptyResult_when_repoDataNotFound() {
             BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID("wahlID01", "wahlbezirkID01");
 
             Mockito.when(waehleranzahlRepository.findById(bezirkUndWahlID)).thenReturn(Optional.empty());
@@ -66,7 +66,6 @@ public class WaehleranzahlServiceTest {
 
         @Test
         void should_notThrowExceptionAndSaveDataInRepo_when_ModelIsGiven() {
-
             val waehleranzahlSetModel = WaehleranzahlModel.builder().build();
             val mockedKonfigurationEntity = new Waehleranzahl();
 

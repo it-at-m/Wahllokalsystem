@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 
 @ExtendWith(MockitoExtension.class)
 public class WaehleranzahlControllerTest {
+
     @Mock
     WaehleranzahlService waehleranzahlService;
 
@@ -30,7 +31,7 @@ public class WaehleranzahlControllerTest {
     class GetWahlbeteiligung {
 
         @Test
-        void should_returnHttp204AndBodyIsNull_when_serviceIsCalledWithNoData() {
+        void should_returnHttp204AndBodyIsNull_when_serviceIsReturnsNoData() {
             String wahlID = "wahlID01";
             String wahlbezirkID = "wahlbezirkID01";
             BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);

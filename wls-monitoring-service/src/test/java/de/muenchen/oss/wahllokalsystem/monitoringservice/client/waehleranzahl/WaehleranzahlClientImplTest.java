@@ -39,7 +39,6 @@ class WaehleranzahlClientImplTest {
 
         @Test
         void should_callEaiApiWithDTO_when_clientIsCalledWithModel() {
-
             val waehleranzahlModel = new WaehleranzahlModel(new BezirkUndWahlID("wahlID01", "wahlbezirkID01"), 99L, LocalDateTime.now());
             val mockedWahlbeteiligungsMeldungDTO = createWahlbeteiligungsMeldungDTO();
             Mockito.when(waehleranzahlClientMapper.fromModelToRemoteClientDTO(waehleranzahlModel)).thenReturn(mockedWahlbeteiligungsMeldungDTO);
@@ -50,7 +49,6 @@ class WaehleranzahlClientImplTest {
 
         @Test
         void should_throwTechnischeWlsException_when_eaiApiThrowsAnyException() {
-
             val waehleranzahlModel = new WaehleranzahlModel(new BezirkUndWahlID("wahlID01", "wahlbezirkID01"), 99L, LocalDateTime.now());
             val mockedWahlbeteiligungsMeldungDTO = createWahlbeteiligungsMeldungDTO();
             Mockito.when(waehleranzahlClientMapper.fromModelToRemoteClientDTO(waehleranzahlModel)).thenReturn(mockedWahlbeteiligungsMeldungDTO);

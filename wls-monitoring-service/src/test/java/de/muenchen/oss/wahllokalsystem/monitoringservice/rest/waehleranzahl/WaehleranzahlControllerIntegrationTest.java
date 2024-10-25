@@ -64,9 +64,6 @@ public class WaehleranzahlControllerIntegrationTest {
     WaehleranzahlModelMapper waehleranzahlModelMapper;
 
     @Autowired
-    WaehleranzahlClientMapper waehleranzahlClientMapper;
-
-    @Autowired
     MockMvc api;
 
     @Autowired
@@ -78,17 +75,12 @@ public class WaehleranzahlControllerIntegrationTest {
         waehleranzahlRepository.deleteAll();
     }
 
-    @BeforeEach
-    void setup() {
-        WireMock.resetAllRequests();
-    }
-
     @Nested
     class GetWahlbeteiligung {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_GET_WAEHLERANZAHL, Authorities.REPOSITORY_READ_WAEHLERANZAHL })
-        void should_returnEmptyResponse_when_NoDataFound() throws Exception {
+        void should_returnEmptyResponse_when_noDataFound() throws Exception {
             val wahlID = "wahlID01";
             val wahlbezirkID = "wahlbezirkID01";
             val request = MockMvcRequestBuilders.get("/businessActions/wahlbeteiligung/" + wahlID + "/" + wahlbezirkID);
@@ -100,7 +92,7 @@ public class WaehleranzahlControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_GET_WAEHLERANZAHL, Authorities.REPOSITORY_READ_WAEHLERANZAHL })
-        void should_returnOkAndData_when_DataFound() throws Exception {
+        void should_returnOkAndData_when_dataFound() throws Exception {
             val wahlID = "wahlID01";
             val wahlbezirkID = "wahlbezirkID01";
             val bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
@@ -121,9 +113,10 @@ public class WaehleranzahlControllerIntegrationTest {
 
         @Nested
         class PostBriefwahlvorbereitung {
+
             @Test
             @WithMockUser(authorities = { Authorities.SERVICE_GET_WAEHLERANZAHL, Authorities.REPOSITORY_READ_WAEHLERANZAHL })
-            void should_overwriteExistingData_when_NewDataIsStoredWithSameID() throws Exception {
+            void should_overwriteExistingData_when_newDataIsStoredWithSameID() throws Exception {
                 val wahlID = "wahlID01";
                 val wahlbezirkID = "wahlbezirkID01";
                 val bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);

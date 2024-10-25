@@ -25,7 +25,7 @@ public class WaehleranzahlClientImpl implements WaehleranzahlClient {
     private final WaehleranzahlClientMapper waehleranzahlClientMapper;
 
     @Override
-    public void postWahlbeteiligung(WaehleranzahlModel waehleranzahlModel) throws WlsException {
+    public void postWahlbeteiligung(final WaehleranzahlModel waehleranzahlModel) throws WlsException {
         val wahlbeteiligungsMeldungDTO = waehleranzahlClientMapper.fromModelToRemoteClientDTO(waehleranzahlModel);
         try {
             wahlbeteiligungControllerApi.saveWahlbeteiligung(wahlbeteiligungsMeldungDTO);

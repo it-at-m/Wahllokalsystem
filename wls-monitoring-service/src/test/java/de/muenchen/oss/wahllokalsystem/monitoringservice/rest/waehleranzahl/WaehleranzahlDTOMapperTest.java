@@ -17,12 +17,12 @@ class WaehleranzahlDTOMapperTest {
     class ToDTO {
 
         @Test
-        void should_returnNull_when_ModelIsNull() {
+        void should_returnNull_when_modelIsNull() {
             Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
         }
 
         @Test
-        void should_returnNull_when_DTOIsNull() {
+        void should_returnNull_when_dtoIsNull() {
             Assertions.assertThat(unitUnderTest.toSetModel(null, null)).isNull();
         }
 

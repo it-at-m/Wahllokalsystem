@@ -13,14 +13,12 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Embeddable
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Waehleranzahl {
 
     @EmbeddedId

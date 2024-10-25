@@ -16,22 +16,22 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  */
 @Configuration
 @ComponentScan(
-    basePackages = {
-        "org.springframework.data.jpa.convert.threeten",
-        "de.muenchen.oss.wahllokalsystem.monitoringservice",
-        "de.muenchen.oss.wahllokalsystem.wls.common.exception",
-    }
+        basePackages = {
+                "org.springframework.data.jpa.convert.threeten",
+                "de.muenchen.oss.wahllokalsystem.monitoringservice",
+                "de.muenchen.oss.wahllokalsystem.wls.common.exception",
+        }
 )
 @EntityScan(
-    basePackages = {
-        "org.springframework.data.jpa.convert.threeten",
-        "de.muenchen.oss.wahllokalsystem.monitoringservice"
-    }
+        basePackages = {
+                "org.springframework.data.jpa.convert.threeten",
+                "de.muenchen.oss.wahllokalsystem.monitoringservice"
+        }
 )
 @EnableJpaRepositories(
-    basePackages = {
-        "de.muenchen.oss.wahllokalsystem.monitoringservice"
-    }
+        basePackages = {
+                "de.muenchen.oss.wahllokalsystem.monitoringservice"
+        }
 )
 @EnableAutoConfiguration
 public class MicroServiceApplication {

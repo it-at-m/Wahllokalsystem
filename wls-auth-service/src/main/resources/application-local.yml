@@ -1,2 +1,6 @@
 server:
   port: 39152
+
+serviceauth:
+  crypto:
+    key: "please change me"

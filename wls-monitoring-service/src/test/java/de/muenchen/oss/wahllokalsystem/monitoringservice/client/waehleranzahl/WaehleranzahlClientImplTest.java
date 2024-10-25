@@ -2,10 +2,7 @@ package de.muenchen.oss.wahllokalsystem.monitoringservice.client.waehleranzahl;
 
 import de.muenchen.oss.wahllokalsystem.monitoringservice.eai.aou.client.WahlbeteiligungControllerApi;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.eai.aou.model.WahlbeteiligungsMeldungDTO;
-import de.muenchen.oss.wahllokalsystem.monitoringservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.service.waehleranzahl.WaehleranzahlModel;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -21,9 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class WaehleranzahlClientImplTest {
-
-    @Mock
-    ExceptionFactory exceptionFactory;
 
     @Mock
     WahlbeteiligungControllerApi wahlbeteiligungControllerApi;
@@ -48,18 +42,15 @@ class WaehleranzahlClientImplTest {
         }
 
         @Test
-        void should_throwTechnischeWlsException_when_eaiApiThrowsAnyException() {
+        void should_notThrowException_when_eaiApiThrowsAnyException() {
             val waehleranzahlModel = new WaehleranzahlModel(new BezirkUndWahlID("wahlID01", "wahlbezirkID01"), 99L, LocalDateTime.now());
             val mockedWahlbeteiligungsMeldungDTO = createWahlbeteiligungsMeldungDTO();
             Mockito.when(waehleranzahlClientMapper.fromModelToRemoteClientDTO(waehleranzahlModel)).thenReturn(mockedWahlbeteiligungsMeldungDTO);
 
-            val mockedWlsException = TechnischeWlsException.withCode("007").buildWithMessage("Dummy-Msg");
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI)).thenReturn(mockedWlsException);
-
             val mockedApiException = new IllegalArgumentException("Nix-Connect");
             Mockito.doThrow(mockedApiException).when(wahlbeteiligungControllerApi).saveWahlbeteiligung(mockedWahlbeteiligungsMeldungDTO);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.postWahlbeteiligung(waehleranzahlModel)).isSameAs(mockedWlsException);
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postWahlbeteiligung(waehleranzahlModel));
         }
 
         private WahlbeteiligungsMeldungDTO createWahlbeteiligungsMeldungDTO() {

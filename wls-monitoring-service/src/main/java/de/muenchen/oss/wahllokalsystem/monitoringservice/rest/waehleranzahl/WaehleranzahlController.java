@@ -35,7 +35,7 @@ public class WaehleranzahlController extends AbstractController {
     @Operation(description = "Speichern und Weiterleiten der Wahlbeteiligung für die Wahl {wahlID} für den Wahlbezirk {wahlbezirkID}.")
     @PostMapping("/{wahlID}/{wahlbezirkID}")
     public void postWahlbeteiligung(@PathVariable("wahlbezirkID") String wahlbezirkID, @PathVariable("wahlID") String wahlID,
-        @RequestBody WaehleranzahlDTO waehleranzahl) {
+            @RequestBody WaehleranzahlDTO waehleranzahl) {
         log.info("postWahlbeteiligung {}", wahlbezirkID);
 
         val waehleranzahlSetModel = waehleranzahlDTOMapper.toSetModel(new BezirkUndWahlID(wahlID, wahlbezirkID), waehleranzahl);

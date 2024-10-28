@@ -131,8 +131,8 @@ public class WaehleranzahlControllerIntegrationTest {
                 val waehleranzahlDTO_1 = new WaehleranzahlDTO(wahlID, wahlbezirkID, anzahlWaehler_1, uhrzeit_1);
 
                 WireMock.stubFor(WireMock.post("/wahlbeteiligung")
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                        .withBody(objectMapper.writeValueAsBytes(waehleranzahlDTO_1))));
+                        .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
+                                .withBody(objectMapper.writeValueAsBytes(waehleranzahlDTO_1))));
 
                 val request_1 = buildPostRequest(wahlID, wahlbezirkID, waehleranzahlDTO_1);
                 api.perform(request_1).andExpect(status().isOk()).andReturn();
@@ -170,22 +170,22 @@ public class WaehleranzahlControllerIntegrationTest {
             val waehleranzahlDTO = new WaehleranzahlDTO(wahlID, wahlbezirkID, anzahlWaehler, uhrzeit);
 
             val request = MockMvcRequestBuilders.post("/businessActions/wahlbeteiligung/" + wahlID + "/" + wahlbezirkID).with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(
-                    objectMapper.writeValueAsString(waehleranzahlDTO));
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(
+                            objectMapper.writeValueAsString(waehleranzahlDTO));
             val response = api.perform(request).andExpect(status().isNotFound()).andReturn();
 
             val responseBodyAsWlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsByteArray(), WlsExceptionDTO.class);
 
             val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.POSTWAHLBETEILIGUNG_UNSAVEABLE.code(),
-                serviceID, ExceptionConstants.POSTWAHLBETEILIGUNG_UNSAVEABLE.message());
+                    serviceID, ExceptionConstants.POSTWAHLBETEILIGUNG_UNSAVEABLE.message());
 
             Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
         }
 
         private RequestBuilder buildPostRequest(final String wahlID, final String wahlbezirkID, final WaehleranzahlDTO requestBody) throws Exception {
             return post("/businessActions/wahlbeteiligung/" + wahlID + "/" + wahlbezirkID).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
-                objectMapper.writeValueAsString(requestBody));
+                    objectMapper.writeValueAsString(requestBody));
         }
     }
 }

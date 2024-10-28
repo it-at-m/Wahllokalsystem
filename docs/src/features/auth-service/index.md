@@ -11,8 +11,8 @@ Der Service hat keine Abhängigkeiten zu anderen Services.
 ```mermaid
 
 erDiagram
-    User 1--0+ Authority : hat
-    Authority 1--0+ Permission : hat
+    User 1+--0+ Authority : hat
+    Authority 1+--0+ Permission : hat
     User 1--|o LoginAttempt : unternahm
     
     User {

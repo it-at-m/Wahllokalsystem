@@ -4,11 +4,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.Kandidat;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.KandidatRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.Wahlvorschlaege;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.Wahlvorschlag;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlagRepository;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Optional;
 import java.util.Set;
@@ -28,10 +26,6 @@ class WahlvorschlaegeServiceTest {
 
     @Mock
     WahlvorschlaegeRepository wahlvorschlaegeRepository;
-    @Mock
-    WahlvorschlagRepository wahlvorschlagRepository;
-    @Mock
-    KandidatRepository kandidatRepository;
     @Mock
     WahlvorschlaegeModelMapper wahlvorschlaegeModelMapper;
     @Mock
@@ -82,10 +76,6 @@ class WahlvorschlaegeServiceTest {
 
             Assertions.assertThat(result).isSameAs(mockedMappedSavedEntity);
             Mockito.verify(wahlvorschlaegeRepository).save(mockedMappedEntity);
-            Mockito.verify(wahlvorschlagRepository).save(mockedWahlvorschlagEntity1);
-            Mockito.verify(wahlvorschlagRepository).save(mockedWahlvorschlagEntity2);
-            Mockito.verify(kandidatRepository).saveAll(mockedWahlvorschlagEntity1.getKandidaten());
-            Mockito.verify(kandidatRepository).saveAll(mockedWahlvorschlagEntity2.getKandidaten());
         }
 
         @Test

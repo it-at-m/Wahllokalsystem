@@ -9,6 +9,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Farbe;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.StimmzettelgebietsartModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahltagWithNummer;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisstrukturdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KonfigurierterWahltagClient;
@@ -24,7 +25,6 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.Wa
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkeClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenClient;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahltagWithNummer;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.KandidatModel;
@@ -77,9 +77,11 @@ public class DummyClientImpl
     @Override
     public ReferendumvorlagenModel getReferendumvorlagen(ReferendumvorlagenReferenceModel referendumvorlagenReferenceModel) {
         return new ReferendumvorlagenModel("stimmzettelgebietID", Set.of(new ReferendumvorlageModel("wahlvorschlagID1", 1L, "kurzname1", "frage1",
-                Set.of(new ReferendumoptionModel("optionID11", "option11", 1L), new ReferendumoptionModel("optionID12", "option12", 2L))),
+                Set.of(new ReferendumoptionModel("optionID11" + UUID.randomUUID(), "option11", 1L),
+                        new ReferendumoptionModel("optionID12" + UUID.randomUUID(), "option12", 2L))),
                 new ReferendumvorlageModel("wahlvorschlagID2", 2L, "kurzname2", "frage2",
-                        Set.of(new ReferendumoptionModel("optionID21", "option21", 1L), new ReferendumoptionModel("optionID22", "option22", 2L)))));
+                        Set.of(new ReferendumoptionModel("optionID21" + UUID.randomUUID(), "option21", 1L),
+                                new ReferendumoptionModel("optionID22" + UUID.randomUUID(), "option22", 2L)))));
     }
 
     @Override

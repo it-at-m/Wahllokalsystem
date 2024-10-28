@@ -69,7 +69,7 @@ public class KonfigurationServiceSecurityTest {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatThrownBy(() -> konfigurationService.getKonfiguration(KonfigurationKonfigKey.WILLKOMMENSTEXT))
-                .isInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
@@ -92,23 +92,23 @@ public class KonfigurationServiceSecurityTest {
         @Test
         void accessDeniedOnMissingServiceAuthority() {
             SecurityUtils.runWith(
-                removeAuthority(Authorities.ALL_AUTHORITIES_SET_KONFIGURATION, Authorities.SERVICE_POST_KONFIGURATION));
+                    removeAuthority(Authorities.ALL_AUTHORITIES_SET_KONFIGURATION, Authorities.SERVICE_POST_KONFIGURATION));
 
             val konfigurationSetModel = new KonfigurationSetModel("schluessel", "wert", "beschreibung", "standwert");
 
             Assertions.assertThatThrownBy(() -> konfigurationService.setKonfiguration(konfigurationSetModel))
-                .isInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         @Test
         void wlsExceptionOnMissingWriteAuthority() {
             SecurityUtils.runWith(
-                removeAuthority(Authorities.ALL_AUTHORITIES_SET_KONFIGURATION, Authorities.REPOSITORY_WRITE_KONFIGURATION));
+                    removeAuthority(Authorities.ALL_AUTHORITIES_SET_KONFIGURATION, Authorities.REPOSITORY_WRITE_KONFIGURATION));
 
             val konfigurationSetModel = new KonfigurationSetModel("schluessel", "wert", "beschreibung", "standwert");
 
             Assertions.assertThatThrownBy(() -> konfigurationService.setKonfiguration(konfigurationSetModel))
-                .isInstanceOf(TechnischeWlsException.class);
+                    .isInstanceOf(TechnischeWlsException.class);
         }
 
         private String[] removeAuthority(final String[] authorities, final String authorityToRemove) {
@@ -133,7 +133,7 @@ public class KonfigurationServiceSecurityTest {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatThrownBy(() -> konfigurationService.getAllKonfigurations())
-                .isInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
@@ -163,7 +163,7 @@ public class KonfigurationServiceSecurityTest {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatThrownBy(() -> konfigurationService.getKennbuchstabenListen())
-                .isInstanceOf(AccessDeniedException.class);
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {

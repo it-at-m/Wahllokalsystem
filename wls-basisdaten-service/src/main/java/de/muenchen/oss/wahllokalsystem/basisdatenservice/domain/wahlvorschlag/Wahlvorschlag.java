@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag;
 
 import static java.sql.Types.VARCHAR;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -60,7 +61,7 @@ public class Wahlvorschlag {
     @ToString.Include
     private boolean erhaeltStimmen;
 
-    @OneToMany(mappedBy = "wahlvorschlag", orphanRemoval = true)
+    @OneToMany(mappedBy = "wahlvorschlag", orphanRemoval = true, cascade = CascadeType.PERSIST)
     @NotNull
     private Set<Kandidat> kandidaten = new LinkedHashSet<>();
 

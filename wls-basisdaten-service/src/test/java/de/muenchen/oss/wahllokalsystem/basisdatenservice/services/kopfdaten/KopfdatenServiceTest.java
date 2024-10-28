@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.KopfdatenRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Stimmzettelgebietsart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.StimmzettelgebietsartModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahltagWithNummer;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahltagWithNummer;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.MockDataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDate;
@@ -33,7 +33,7 @@ class KopfdatenServiceTest {
     KopfdatenValidator kopfdatenValidator;
 
     @Mock
-    InitializeKopfdaten initializeKopfdaten;
+    KopfdatenMapper kopfdatenMapper;
 
     @Mock
     WahldatenClient wahldatenClient;
@@ -64,7 +64,7 @@ class KopfdatenServiceTest {
             Mockito.when(wahldatenClient.loadBasisdaten(
                     new WahltagWithNummer(mockedKonfigurierterWahltagFromClient.wahltag(), mockedKonfigurierterWahltagFromClient.nummer())))
                     .thenReturn(mockedBasisdatenModelFromClient);
-            Mockito.when(initializeKopfdaten.initKopfdata(wahlID, wahlbezrkID, mockedBasisdatenModelFromClient)).thenReturn(mockedKopfdatenModelByInitializer);
+            Mockito.when(kopfdatenMapper.initKopfdata(wahlID, wahlbezrkID, mockedBasisdatenModelFromClient)).thenReturn(mockedKopfdatenModelByInitializer);
 
             val result = unitUnderTest.getKopfdaten(bezirkUndWahlId);
             Assertions.assertThat(result).isEqualTo(mockedKopfdatenModelByInitializer);

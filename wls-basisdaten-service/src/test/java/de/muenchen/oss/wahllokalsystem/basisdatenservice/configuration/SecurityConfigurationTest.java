@@ -2,9 +2,11 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration;
 
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
@@ -12,6 +14,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch.Handb
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.ungueltigewahlscheine.UngueltigeWahlscheineService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltermindaten.WahltermindatenService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -48,6 +51,9 @@ class SecurityConfigurationTest {
 
     @MockBean
     ReferendumvorlagenService referendumvorlagenService;
+
+    @MockBean
+    WahltermindatenService wahltermindatenService;
 
     @Test
     void accessSecuredResourceRootThenUnauthorized() throws Exception {
@@ -192,6 +198,49 @@ class SecurityConfigurationTest {
         @WithMockUser
         void accessGetReferendumvorlagenAuthorizedThenOk() throws Exception {
             api.perform(get("/businessActions/referendumvorlagen/wahlID/wahlbezirkID")).andExpect(status().isOk());
+        }
+    }
+
+    @Nested
+    class Wahltermindaten {
+
+        @Test
+        @WithAnonymousUser
+        void should_denyAccess_when_accessingUnauthorizedViaGet() throws Exception {
+            api.perform(put("/businessActions/wahltermindaten/wahlID").with(csrf())).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void should_permitAccess_when_accessingAuthorizedViaGet() throws Exception {
+            api.perform(put("/businessActions/wahltermindaten/wahlID").with(csrf())).andExpect(status().isOk());
+        }
+
+        @Test
+        @WithAnonymousUser
+        void should_denyAccess_when_accessingUnauthorizedViaDelete() throws Exception {
+            api.perform(delete("/businessActions/wahltermindaten/wahlID").with(csrf())).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void should_permitAccess_when_accessingAuthorizedDelete() throws Exception {
+            api.perform(delete("/businessActions/wahltermindaten/wahlID").with(csrf())).andExpect(status().isOk());
+        }
+    }
+
+    @Nested
+    class AsyncProgress {
+        @Test
+        @WithAnonymousUser
+        void should_denyAccess_when_requestWithAnonymousUser() throws Exception {
+            api.perform(get("/businessActions/asyncProgress")).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void should_permitAccess_when_requestWithAuthorizedUser() throws Exception {
+            api.perform(get("/businessActions/asyncProgress")).andExpect(status().isOk());
         }
     }
 

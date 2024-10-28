@@ -20,8 +20,7 @@ public class WahllokalZustandValidator {
         if (null == wahlbezirkID || StringUtils.isEmpty(wahlbezirkID) || StringUtils.isBlank(wahlbezirkID)) {
             switch (zustandOperation) {
             case POST_LASTSEEN -> throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_LASTSEEN_SUCHKRITERIEN_UNVOLLSTAENDIG);
-            case POST_LETZTEABMELDUNG ->
-                throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_LETZTEABMELDUNG_SUCHKRITERIEN_UNVOLLSTAENDIG);
+            case POST_LETZTEABMELDUNG -> throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_LETZTEABMELDUNG_SUCHKRITERIEN_UNVOLLSTAENDIG);
             default -> throw exceptionFactory.createFachlicheWlsException((ExceptionConstants.DEFAULT_WAHLLOKALZUSTAND_EXCEPTION_SUCHKRITERIEN_UNVOLLSTAENDIG));
             }
         }
@@ -46,28 +45,34 @@ public class WahllokalZustandValidator {
     }
 
     public void validSendungsdatenModel(SendungsdatenModel sendungsdatenModel, WahllokalZustandOperation zustandOperation) {
-        if (null == sendungsdatenModel) {
-            switch (zustandOperation) {
-            case POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT ->
-                throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG);
-            case POST_NIEDERSCHRIFT_SENDUNGSUHRZEIT ->
-                throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_NIEDERSCHRIFT_SENDUNGSUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG);
-            default -> throw exceptionFactory.createFachlicheWlsException((ExceptionConstants.DEFAULT_WAHLLOKALZUSTAND_EXCEPTION_SUCHKRITERIEN_UNVOLLSTAENDIG));
+        switch (zustandOperation) {
+            case POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT -> {
+                if (null == sendungsdatenModel) {
+                    throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG);
+                } else validWahlIdUndWahlbezirkIDOrThrow(sendungsdatenModel.bezirkUndWahlID(), zustandOperation);
             }
+            case POST_NIEDERSCHRIFT_SENDUNGSUHRZEIT -> {
+                if (null == sendungsdatenModel) {
+                    throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_NIEDERSCHRIFT_SENDUNGSUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG);
+                } else validWahlIdUndWahlbezirkIDOrThrow(sendungsdatenModel.bezirkUndWahlID(), zustandOperation);
+            }
+            default -> throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.DEFAULT_WAHLLOKALZUSTAND_EXCEPTION_SUCHKRITERIEN_UNVOLLSTAENDIG);
         }
-        validWahlIdUndWahlbezirkIDOrThrow(sendungsdatenModel.bezirkUndWahlID(), zustandOperation);
     }
 
     public void validDruckdatenModel(DruckdatenModel druckdatenModel, WahllokalZustandOperation zustandOperation) throws WlsException {
-        if (null == druckdatenModel) {
-            switch (zustandOperation) {
-            case POST_SCHNELLMELDUNG_DRUCKUHRZEIT ->
+        switch (zustandOperation) {
+        case POST_SCHNELLMELDUNG_DRUCKUHRZEIT -> {
+            if (null == druckdatenModel) {
                 throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_SCHNELLMELDUNG_DRUCKUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG);
-            case POST_NIEDERSCHRIFT_DRUCKUHRZEIT ->
-                throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_NIEDERSCHRIFT_DRUCKUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG);
-            default -> throw exceptionFactory.createFachlicheWlsException((ExceptionConstants.DEFAULT_WAHLLOKALZUSTAND_EXCEPTION_SUCHKRITERIEN_UNVOLLSTAENDIG));
-            }
+            } else validWahlIdUndWahlbezirkIDOrThrow(druckdatenModel.bezirkUndWahlID(), zustandOperation);
         }
-        validWahlIdUndWahlbezirkIDOrThrow(druckdatenModel.bezirkUndWahlID(), zustandOperation);
+        case POST_NIEDERSCHRIFT_DRUCKUHRZEIT -> {
+            if (null == druckdatenModel) {
+                throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_NIEDERSCHRIFT_DRUCKUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG);
+            } else validWahlIdUndWahlbezirkIDOrThrow(druckdatenModel.bezirkUndWahlID(), zustandOperation);
+        }
+        default -> throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.DEFAULT_WAHLLOKALZUSTAND_EXCEPTION_SUCHKRITERIEN_UNVOLLSTAENDIG);
+        }
     }
 }

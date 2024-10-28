@@ -82,7 +82,7 @@ class WahllokalZustandControllerIntegrationTest {
             val response_1 = mockMvc.perform(request_1).andExpect(status().isBadRequest()).andReturn();
             val responseBodyAsWlsExceptionDTO_1 = objectMapper.readValue(response_1.getResponse().getContentAsString(), WlsExceptionDTO.class);
 
-            val request_2 = MockMvcRequestBuilders.post("/businessActions/letzteAbmeldung/" + "").with(csrf());
+            val request_2 = MockMvcRequestBuilders.post("/businessActions/letzteAbmeldung/").with(csrf());
             val response_2 = mockMvc.perform(request_2).andExpect(status().isInternalServerError()).andReturn();
             val responseBodyAsWlsExceptionDTO_2 = objectMapper.readValue(response_2.getResponse().getContentAsString(), WlsExceptionDTO.class);
 

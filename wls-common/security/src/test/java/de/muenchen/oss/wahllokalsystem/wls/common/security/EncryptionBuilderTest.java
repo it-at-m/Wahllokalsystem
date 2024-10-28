@@ -35,21 +35,21 @@ class EncryptionBuilderTest {
         @Test
         void sucessful() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
             val aByte = new byte[16];
-            val unitUnderTest = new EncryptionBuilder(aByte, formatter);
+            val unitUnderTest = new EncryptionBuilder(aByte, formatter, new CipherBuilder());
             Assertions.assertThat(unitUnderTest.decryptValue("Efl8HLaoqguJ-CkS4r_m_QFD22PuZrDN_59pkXaAFR4=")).isEqualTo("376526723AFDAB3D");
         }
 
         @Test
         void emptyValue() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
             val aByte = new byte[16];
-            val unitUnderTest = new EncryptionBuilder(aByte, formatter);
+            val unitUnderTest = new EncryptionBuilder(aByte, formatter, new CipherBuilder());
             Assertions.assertThat(unitUnderTest.decryptValue("")).isEmpty();
         }
 
         @Test
         void valueIsNull() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
             val aByte = new byte[16];
-            val unitUnderTest = new EncryptionBuilder(aByte, formatter);
+            val unitUnderTest = new EncryptionBuilder(aByte, formatter, new CipherBuilder());
             Assertions.assertThat(unitUnderTest.decryptValue(null)).isNull();
         }
 
@@ -58,7 +58,7 @@ class EncryptionBuilderTest {
             val aByte = new byte[16];
             val random = new SecureRandom();
             random.nextBytes(aByte);
-            val unitUnderTest = new EncryptionBuilder(aByte, formatter);
+            val unitUnderTest = new EncryptionBuilder(aByte, formatter, new CipherBuilder());
             Mockito.when(formatter.getId()).thenReturn("1234");
             Assertions.assertThatThrownBy(() -> unitUnderTest.decryptValue("Efl8HLaoqguJ-CkS4r_m_QFD22PuZrDN_59pkXaAFR4=")).isExactlyInstanceOf(
                     TechnischeWlsException.class).hasMessageContaining("Problem bei Referenzierung/Dereferenzierung von Objekt-Referenzen");
@@ -72,37 +72,36 @@ class EncryptionBuilderTest {
         @Test
         void successful() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
             val aByte = new byte[16];
-            val unitUnderTest = new EncryptionBuilder(aByte, formatter);
+            val unitUnderTest = new EncryptionBuilder(aByte, formatter, new CipherBuilder());
             Assertions.assertThat(unitUnderTest.encryptValue("376526723AFDAB3D")).isEqualTo("Efl8HLaoqguJ-CkS4r_m_QFD22PuZrDN_59pkXaAFR4=");
         }
 
         @Test
         void emptyValue() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
             val aByte = new byte[16];
-            val unitUnderTest = new EncryptionBuilder(aByte, formatter);
+            val unitUnderTest = new EncryptionBuilder(aByte, formatter, new CipherBuilder());
             Assertions.assertThat(unitUnderTest.encryptValue("")).isEmpty();
         }
 
         @Test
         void valueIsNull() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
             val aByte = new byte[16];
-            val unitUnderTest = new EncryptionBuilder(aByte, formatter);
+            val unitUnderTest = new EncryptionBuilder(aByte, formatter, new CipherBuilder());
             Assertions.assertThat(unitUnderTest.encryptValue(null)).isNull();
         }
 
         @Test
         void throwBadPadding() throws IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
-            val aByte = new byte[16];
-            val unitUnderTest = new EncryptionBuilder(aByte, formatter);
+            val aSecret = "mySecret".getBytes();
+            val mockedCypherBuilder = Mockito.mock(CipherBuilder.class);
+            val unitUnderTest = new EncryptionBuilder(aSecret, formatter, mockedCypherBuilder);
+            String value = "test";
 
             val mockedBadPaddingException = new BadPaddingException("BadPaddingTest");
-
-            val mockedCypherBuilder = Mockito.mock(CipherBuilder.class);
             val mockedCipher = Mockito.mock(Cipher.class);
-            val mockedSecret = Mockito.mock(byte[].class);
-            Mockito.when(mockedCypherBuilder.createEncryptionCipher(mockedSecret)).thenReturn(mockedCipher);
-            Mockito.when(mockedCypherBuilder.createEncryptionCipher(mockedSecret).doFinal(aByte)).thenThrow(mockedBadPaddingException);
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.encryptValue("1"));
+            Mockito.when(mockedCypherBuilder.createEncryptionCipher(aSecret)).thenReturn(mockedCipher);
+            Mockito.when(mockedCypherBuilder.createEncryptionCipher(aSecret).doFinal(value.getBytes())).thenThrow(mockedBadPaddingException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.encryptValue(value));
         }
     }
 }

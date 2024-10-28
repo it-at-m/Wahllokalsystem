@@ -20,16 +20,16 @@ public class EncryptionBuilder {
     private static final Logger log = LoggerFactory.getLogger(EncryptionBuilder.class);
     private static ServiceIDFormatter formatter;
     private static final String technischeExceptionKonstante = "S";
-
+    private final CipherBuilder cipherBuilder;
     private final byte[] aSecretFinal;
 
-    public EncryptionBuilder(byte[] aSecretfinal, ServiceIDFormatter formatter) {
+    public EncryptionBuilder(byte[] aSecretfinal, ServiceIDFormatter formatter, CipherBuilder cipherBuilder) {
         EncryptionBuilder.formatter = formatter;
         this.aSecretFinal = aSecretfinal;
+        this.cipherBuilder = cipherBuilder;
     }
 
     public String decryptValue(String value) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
-        CipherBuilder cipherBuilder = new CipherBuilder();
         if (value != null && !value.isEmpty()) {
             try {
                 val decode = Base64.getUrlDecoder().decode(value.getBytes());
@@ -45,7 +45,6 @@ public class EncryptionBuilder {
     }
 
     public String encryptValue(String value) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
-        CipherBuilder cipherBuilder = new CipherBuilder();
         if (value != null && !value.isEmpty()) {
             try {
                 val finalized = cipherBuilder.createEncryptionCipher(aSecretFinal).doFinal(value.getBytes());

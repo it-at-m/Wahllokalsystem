@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.monitoringservice.client.wahllokalzustand;
 
+import de.muenchen.oss.wahllokalsystem.monitoringservice.client.common.*;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.eai.aou.model.DruckzustandDTO;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.eai.aou.model.WahllokalZustandDTO;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.service.wahllokalzustand.DruckzustandModel;
@@ -16,11 +17,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = { WahllokalZustandClientMapperImpl.class, DruckzustandClientMapperImpl.class })
+@SpringBootTest(classes = { WahllokalZustandClientMapperImpl.class, DruckzustandClientMapperImpl.class, de.muenchen.oss.wahllokalsystem.monitoringservice.client.common.TimeStampMapperImpl.class })
 class WahllokalZustandClientMapperTest {
 
     @Autowired
-    private WahllokalZustandClientMapper unitUnderTest;// = Mappers.getMapper(WahllokalZustandClientMapper.class);
+    private WahllokalZustandClientMapper unitUnderTest;
 
     @Nested
     class ToDTO {

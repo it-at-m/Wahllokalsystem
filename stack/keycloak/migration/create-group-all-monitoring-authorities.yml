@@ -1,5 +1,5 @@
 id: create group allMonitoringAuthorities and link wls_all*
-author: MrSebastian
+author: Nic12345678
 realm: ${SSO_REALM}
 changes:
   - addGroup:

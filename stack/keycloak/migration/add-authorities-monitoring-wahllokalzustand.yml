@@ -1,5 +1,5 @@
 id: add authorities monitoring wahllokalzustand
-author: GerhardPx
+author: Nic12345678
 realm: ${SSO_REALM}
 changes:
   - addRole:

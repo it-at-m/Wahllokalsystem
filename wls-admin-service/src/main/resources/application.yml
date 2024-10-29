@@ -1,0 +1,59 @@
+spring:
+  application.name: @project.artifactId@
+  banner.location: banner.txt
+  profiles:
+    group:
+      local:
+        - db-h2
+  flyway:
+    locations:
+      - classpath:db/migrations/{vendor}
+  h2.console.enabled: false
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://kubernetes.docker.internal:8100/auth/realms/${realm}/protocol/openid-connect/certs
+
+
+
+security:
+  # possible values: none, all, changing (With changing, only changing requests such as POST, PUT, DELETE are logged)
+  logging.requests: all
+  oauth2:
+    resource.user-info-uri: http://kubernetes.docker.internal:8100/auth/realms/${realm}/protocol/openid-connect/userinfo
+
+
+# Define the local keycloak realm here
+realm: wls_realm
+
+server:
+  shutdown: "graceful"
+  port: 8080
+  error:
+    include-exception: false
+    include-stacktrace: never
+    whitelabel:
+      enabled: false
+  max-http-request-header-size: 32KB
+
+# Config for spring actuator endpoints
+management:
+  server.port: ${server.port}
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: health, info, prometheus, livenessstate, readinessstate
+      path-mapping:
+        prometheus: metrics
+  endpoint:
+    health.enabled: true
+    info.enabled: true
+    prometheus.enabled: true
+  info:
+    env:
+      enabled: true
+info.application.name: @project.artifactId@
+info.application.version: @project.version@

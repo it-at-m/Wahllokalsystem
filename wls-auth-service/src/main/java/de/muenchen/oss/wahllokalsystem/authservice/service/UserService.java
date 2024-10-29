@@ -145,7 +145,8 @@ public class UserService {
     public String generateWahllokalBenutzer(UsersOfWahltagModel usersOfWahltag) {
         val authorityWahlvorstand = authorityRepository.findByAuthority(WAHLVORSTAND_AUTHORITY_NAME).orElseThrow(() -> new HttpServerErrorException(
                 HttpStatus.INTERNAL_SERVER_ERROR,
-                "Keine Authority <" + WAHLVORSTAND_AUTHORITY_NAME + "> gefunden, kann keine Benutzer für Wahltag-ID <" + usersOfWahltag.wahltagID() + "> anlegen"));
+                "Keine Authority <" + WAHLVORSTAND_AUTHORITY_NAME + "> gefunden, kann keine Benutzer für Wahltag-ID <" + usersOfWahltag.wahltagID()
+                        + "> anlegen"));
 
         deleteWahllokalBenutzer(usersOfWahltag.wahltagID());
 

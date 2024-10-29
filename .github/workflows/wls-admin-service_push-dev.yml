@@ -1,4 +1,4 @@
-name: build push dev ergebnismeldung-service
+name: build push dev admin-service
 
 on:
   push:

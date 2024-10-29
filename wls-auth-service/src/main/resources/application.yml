@@ -65,3 +65,12 @@ serviceauth:
   crypto:
     encryptionPrefix: "ENCRYPTED:"
   maxLoginAttempts: 5
+  user:
+    anzahlPinBloecke: 4
+    countCharsPrefix: 6
+    countNumbersPin: 4
+    csv:
+      eol: "\r\n"
+    authority:
+      wahlvorstand: WLS_WAHLVORSTAND
+    pinChars: "23456789abcdefghjkmnpqrstuvwxyz"

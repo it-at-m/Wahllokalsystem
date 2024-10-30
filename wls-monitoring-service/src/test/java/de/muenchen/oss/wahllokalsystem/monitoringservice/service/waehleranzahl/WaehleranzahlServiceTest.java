@@ -2,7 +2,6 @@ package de.muenchen.oss.wahllokalsystem.monitoringservice.service.waehleranzahl;
 
 import de.muenchen.oss.wahllokalsystem.monitoringservice.domain.waehleranzahl.Waehleranzahl;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.domain.waehleranzahl.WaehleranzahlRepository;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -27,8 +26,6 @@ public class WaehleranzahlServiceTest {
     WaehleranzahlValidator waehleranzahlValidator;
     @Mock
     WaehleranzahlClient waehleranzahlClient;
-    @Mock
-    ExceptionFactory exceptionFactory;
 
     @InjectMocks
     WaehleranzahlService unitUnderTest;
@@ -65,7 +62,7 @@ public class WaehleranzahlServiceTest {
     class PostWahlbeteiligung {
 
         @Test
-        void should_notThrowExceptionAndSaveDataInRepo_when_ModelIsGiven() {
+        void should_notThrowExceptionAndSaveDataInRepo_when_modelIsGiven() {
             val waehleranzahlSetModel = WaehleranzahlModel.builder().build();
             val mockedKonfigurationEntity = new Waehleranzahl();
 

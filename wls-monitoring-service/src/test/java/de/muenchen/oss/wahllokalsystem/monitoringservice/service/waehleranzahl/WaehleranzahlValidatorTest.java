@@ -28,19 +28,19 @@ class WaehleranzahlValidatorTest {
         private final FachlicheWlsException mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
         @Test
-        void noExceptionWhenValid() {
+        void should_throwNoException_when_valid() {
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(new BezirkUndWahlID("wahlID", "wahlbezirkID")));
         }
 
         @Test
-        void exceptionWhenParameterIsNull() {
+        void should_throwException_when_parameterIsNull() {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBETEILIGUNG_SUCHKRITERIEN_UNVOLLSTAENDIG))
                     .thenReturn(mockedFachlicheWlsException);
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(null)).isSameAs(mockedFachlicheWlsException);
         }
 
         @Test
-        void exceptionWhenWahlIDIsNull() {
+        void should_throwException_when_wahlIDIsNull() {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBETEILIGUNG_SUCHKRITERIEN_UNVOLLSTAENDIG))
                     .thenReturn(mockedFachlicheWlsException);
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(new BezirkUndWahlID(null, "wahlbezirkID")))
@@ -48,7 +48,7 @@ class WaehleranzahlValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlIDIsEmptyString() {
+        void should_throwException_when_wahlIDIsEmptyString() {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBETEILIGUNG_SUCHKRITERIEN_UNVOLLSTAENDIG))
                     .thenReturn(mockedFachlicheWlsException);
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(new BezirkUndWahlID("", "wahlbezirkID")))
@@ -56,7 +56,7 @@ class WaehleranzahlValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDIsNull() {
+        void should_throwException_when_wahlbezirkIDIsNull() {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBETEILIGUNG_SUCHKRITERIEN_UNVOLLSTAENDIG))
                     .thenReturn(mockedFachlicheWlsException);
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(new BezirkUndWahlID("wahlID", null)))
@@ -64,7 +64,7 @@ class WaehleranzahlValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDIsEmptyString() {
+        void should_throwException_when_wahlbezirkIDIsEmptyString() {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBETEILIGUNG_SUCHKRITERIEN_UNVOLLSTAENDIG))
                     .thenReturn(mockedFachlicheWlsException);
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(new BezirkUndWahlID("wahlID", "")))

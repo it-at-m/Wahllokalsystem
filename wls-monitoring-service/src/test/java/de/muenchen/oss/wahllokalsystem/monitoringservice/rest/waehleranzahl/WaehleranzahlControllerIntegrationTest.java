@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.domain.waehleranzahl.Waehleranzahl;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.domain.waehleranzahl.WaehleranzahlRepository;
@@ -32,7 +31,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -99,13 +97,13 @@ public class WaehleranzahlControllerIntegrationTest {
 
             val waehleranzahlToFind = new Waehleranzahl(bezirkUndWahlID, anzahlWaehler, uhrzeit);
             waehleranzahlRepository.save(waehleranzahlToFind);
-            val expectedResponseBody = waehleranzahlDTOMapper.toDTO(waehleranzahlModelMapper.toModel(waehleranzahlToFind));
 
             val request = MockMvcRequestBuilders.get("/businessActions/wahlbeteiligung/" + wahlID + "/" + wahlbezirkID);
 
             val response = api.perform(request).andExpect(status().isOk()).andReturn();
             val responseBodyAsDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WaehleranzahlDTO.class);
 
+            val expectedResponseBody = waehleranzahlDTOMapper.toDTO(waehleranzahlModelMapper.toModel(waehleranzahlToFind));
             Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseBody);
         }
 
@@ -121,22 +119,11 @@ public class WaehleranzahlControllerIntegrationTest {
                 val anzahlWaehler_1 = 99L;
                 val uhrzeit_1 = LocalDateTime.parse("2024-09-13T12:11:21.343");
 
-                val waehleranzahlDTO_1 = new WaehleranzahlDTO(anzahlWaehler_1, uhrzeit_1);
+                // store data with bezirkUndWahlID
+                val waehleranzahlToFind = new Waehleranzahl(bezirkUndWahlID, anzahlWaehler_1, uhrzeit_1);
+                waehleranzahlRepository.save(waehleranzahlToFind);
 
-                WireMock.stubFor(WireMock.post("/wahlbeteiligung")
-                        .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                                .withBody(objectMapper.writeValueAsBytes(waehleranzahlDTO_1))));
-
-                val request_1 = buildPostRequest(wahlID, wahlbezirkID, waehleranzahlDTO_1);
-                api.perform(request_1).andExpect(status().isOk()).andReturn();
-
-                SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAEHLERANZAHL);
-                val waehleranzahlFromRepo_1 = waehleranzahlRepository.findById(bezirkUndWahlID).get();
-                val expectedWaehleranzahl_1 = waehleranzahlModelMapper.toEntity(waehleranzahlDTOMapper.toSetModel(bezirkUndWahlID, waehleranzahlDTO_1));
-
-                Assertions.assertThat(waehleranzahlFromRepo_1).usingRecursiveComparison().isEqualTo(expectedWaehleranzahl_1);
-
-                // Overwrite existing data
+                // Overwrite existing data with same bezirkUndWahlID
                 val anzahlWaehler_2 = 55L;
                 val uhrzeit_2 = LocalDateTime.parse("2024-09-13T12:11:21.666");
                 val waehleranzahlDTO_2 = new WaehleranzahlDTO(anzahlWaehler_2, uhrzeit_2);

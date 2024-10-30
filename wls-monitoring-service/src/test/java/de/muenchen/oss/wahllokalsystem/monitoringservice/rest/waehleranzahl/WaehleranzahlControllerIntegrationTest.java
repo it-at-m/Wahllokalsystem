@@ -13,11 +13,9 @@ import de.muenchen.oss.wahllokalsystem.monitoringservice.domain.waehleranzahl.Wa
 import de.muenchen.oss.wahllokalsystem.monitoringservice.domain.waehleranzahl.WaehleranzahlRepository;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.service.waehleranzahl.WaehleranzahlModelMapper;
-import de.muenchen.oss.wahllokalsystem.monitoringservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
-import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.LocalDateTime;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -32,7 +30,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -67,7 +64,6 @@ public class WaehleranzahlControllerIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_WAEHLERANZAHL);
         waehleranzahlRepository.deleteAll();
     }
 
@@ -75,7 +71,6 @@ public class WaehleranzahlControllerIntegrationTest {
     class GetWahlbeteiligung {
 
         @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_GET_WAEHLERANZAHL, Authorities.REPOSITORY_READ_WAEHLERANZAHL })
         void should_returnEmptyResponse_when_noDataFound() throws Exception {
             val wahlID = "wahlID01";
             val wahlbezirkID = "wahlbezirkID01";
@@ -87,7 +82,6 @@ public class WaehleranzahlControllerIntegrationTest {
         }
 
         @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_GET_WAEHLERANZAHL, Authorities.REPOSITORY_READ_WAEHLERANZAHL })
         void should_returnOkAndData_when_dataFound() throws Exception {
             val wahlID = "wahlID01";
             val wahlbezirkID = "wahlbezirkID01";
@@ -111,7 +105,6 @@ public class WaehleranzahlControllerIntegrationTest {
         class PostWahlbeteiligung {
 
             @Test
-            @WithMockUser(authorities = { Authorities.SERVICE_GET_WAEHLERANZAHL, Authorities.REPOSITORY_READ_WAEHLERANZAHL })
             void should_overwriteExistingData_when_newDataIsStoredWithSameID() throws Exception {
                 val wahlID = "wahlID01";
                 val wahlbezirkID = "wahlbezirkID01";
@@ -131,7 +124,6 @@ public class WaehleranzahlControllerIntegrationTest {
                 val request_2 = buildPostRequest(wahlID, wahlbezirkID, waehleranzahlDTO_2);
                 api.perform(request_2).andExpect(status().isOk()).andReturn();
 
-                SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAEHLERANZAHL);
                 val waehleranzahlFromRepo_2 = waehleranzahlRepository.findById(bezirkUndWahlID).get();
                 val expectedWaehleranzahl_2 = waehleranzahlModelMapper.toEntity(waehleranzahlDTOMapper.toSetModel(bezirkUndWahlID, waehleranzahlDTO_2));
 
@@ -140,8 +132,7 @@ public class WaehleranzahlControllerIntegrationTest {
         }
 
         @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_GET_WAEHLERANZAHL, Authorities.REPOSITORY_READ_WAEHLERANZAHL })
-        void should_throwTechnischeWlsException_when_requestIsInvalid() throws Exception {
+        void should_throwTechnischeWlsException_when_saveInDBFails() throws Exception {
             val wahlID = "_   ";
             val wahlbezirkID = "wahlbezirkID01";
             val anzahlWaehler = 99L;

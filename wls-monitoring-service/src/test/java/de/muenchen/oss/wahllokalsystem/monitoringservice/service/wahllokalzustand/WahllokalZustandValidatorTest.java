@@ -1,23 +1,18 @@
 package de.muenchen.oss.wahllokalsystem.monitoringservice.service.wahllokalzustand;
 
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class WahllokalZustandValidatorTest {
 
     private final FachlicheWlsException mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-
-    @Mock
-    ExceptionFactory exceptionFactory;
 
     @InjectMocks
     WahllokalZustandValidator unitUnderTest;

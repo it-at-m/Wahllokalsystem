@@ -1,7 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.monitoringservice.rest.wahllokalzustand;
 
 import de.muenchen.oss.wahllokalsystem.monitoringservice.service.wahllokalzustand.WahllokalZustandService;
-import lombok.val;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

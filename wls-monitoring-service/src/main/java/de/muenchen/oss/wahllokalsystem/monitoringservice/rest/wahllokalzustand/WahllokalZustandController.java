@@ -4,7 +4,6 @@ import de.muenchen.oss.wahllokalsystem.monitoringservice.service.wahllokalzustan
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class WahllokalZustandController {
 
     private final WahllokalZustandService wahllokalZustandService;
-    private final SendungsdatenDTOMapper sendungsdatenDTOMapper;
-    private final DruckdatenDTOMapper druckdatenDTOMapper;
 
     @Operation(
             description = "Empfängt die HeartBeat-Request - als Bestätigung der bestehenden Online-Verbindung aus dem Wahlbezirk {wahlbezirkID}, generiert die Empfangs-Uhrzeit, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
@@ -45,7 +42,7 @@ public class WahllokalZustandController {
     @PostMapping("/schnellmeldungSendungsuhrzeit")
     public void postSchnellmeldungsSendungsuhrzeit(@RequestBody SendungsdatenDTO sendungsdatenDTO) {
         log.info("postSchnellmeldungsSendungsuhrzeit {}", sendungsdatenDTO);
-        wahllokalZustandService.postSchnellmeldungSendungsuhrzeit(sendungsdatenDTOMapper.toSendungsdatenModel(sendungsdatenDTO));
+        wahllokalZustandService.postSchnellmeldungSendungsuhrzeit(sendungsdatenDTO.bezirkUndWahlID(), sendungsdatenDTO.sendungsuhrzeit());
     }
 
     @Operation(
@@ -54,7 +51,7 @@ public class WahllokalZustandController {
     @PostMapping("/schnellmeldungDruckuhrzeit")
     public void postSchnellmeldungDruckuhrzeit(@RequestBody DruckdatenDTO druckdatenDTO) {
         log.info("postSchnellmeldungDruckuhrzeit {}", druckdatenDTO);
-        wahllokalZustandService.postSchnellmeldungDruckuhrzeit(druckdatenDTOMapper.toDruckdatenModel(druckdatenDTO));
+        wahllokalZustandService.postSchnellmeldungDruckuhrzeit(druckdatenDTO.bezirkUndWahlID(), druckdatenDTO.druckuhrzeit());
     }
 
     @Operation(
@@ -63,7 +60,7 @@ public class WahllokalZustandController {
     @PostMapping("/niederschriftSendungsuhrzeit")
     public void postNiederschriftSendungsuhrzeit(@RequestBody SendungsdatenDTO sendungsdatenDTO) {
         log.info("postNiederschriftSendungsuhrzeit {}", sendungsdatenDTO);
-        wahllokalZustandService.postNiederschriftSendungsuhrzeit(sendungsdatenDTOMapper.toSendungsdatenModel(sendungsdatenDTO));
+        wahllokalZustandService.postNiederschriftSendungsuhrzeit(sendungsdatenDTO.bezirkUndWahlID(), sendungsdatenDTO.sendungsuhrzeit());
     }
 
     @Operation(
@@ -72,7 +69,6 @@ public class WahllokalZustandController {
     @PostMapping("/niederschriftDruckuhrzeit")
     public void postNiederschriftDruckuhrzeit(@RequestBody DruckdatenDTO druckdatenDTO) {
         log.info("postNiederschriftDruckuhrzeit {}", druckdatenDTO);
-        wahllokalZustandService.postNiederschriftDruckuhrzeit(druckdatenDTOMapper.toDruckdatenModel(druckdatenDTO));
+        wahllokalZustandService.postNiederschriftDruckuhrzeit(druckdatenDTO.bezirkUndWahlID(), druckdatenDTO.druckuhrzeit());
     }
-
 }

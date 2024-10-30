@@ -1,6 +1,10 @@
 package de.muenchen.oss.wahllokalsystem.monitoringservice.service.wahllokalzustand;
 
+import de.muenchen.oss.wahllokalsystem.monitoringservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -8,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -17,6 +22,8 @@ class WahllokalZustandServiceTest {
     WahllokalZustandValidator wahllokalZustandValidator;
     @Mock
     WahllokalZustandClient wahllokalZustandClient;
+    @Mock
+    ExceptionFactory exceptionFactory;
 
     @InjectMocks
     WahllokalZustandService unitUnderTest;
@@ -25,9 +32,12 @@ class WahllokalZustandServiceTest {
     class PostLastSeen {
 
         @Test
-        void should_notThrowException_when_ModelIsGiven() {
-            val wahllokalZustandModel = WahllokalZustandModel.builder().build();
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postLastSeen(wahllokalZustandModel.wahlbezirkID()));
+        void should_notThrowException_when_wahlbezirkIDIsGiven() {
+            val wahlbezirkID = "wahlbezirkID";
+            val mockedWlsException = FachlicheWlsException.withCode("123").buildWithMessage("Abc");
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_LASTSEEN_SUCHKRITERIEN_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postLastSeen(wahlbezirkID));
         }
     }
 
@@ -35,9 +45,12 @@ class WahllokalZustandServiceTest {
     class PostLetzteAbmeldung {
 
         @Test
-        void should_notThrowException_when_ModelIsGiven() {
-            val wahllokalZustandModel = WahllokalZustandModel.builder().build();
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postLetzteAbmeldung(wahllokalZustandModel.wahlbezirkID()));
+        void should_notThrowException_when_wahlbezirkIDIsGiven() {
+            val wahlbezirkID = "wahlbezirkID";
+            val mockedWlsException = FachlicheWlsException.withCode("123").buildWithMessage("Abc");
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_LETZTEABMELDUNG_SUCHKRITERIEN_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postLetzteAbmeldung(wahlbezirkID));
         }
     }
 
@@ -45,9 +58,14 @@ class WahllokalZustandServiceTest {
     class PostSchnellmeldungSendungsuhrzeit {
 
         @Test
-        void should_notThrowException_when_ModelIsGiven() {
-            val sendungsdatenModel = SendungsdatenModel.builder().bezirkUndWahlID(new BezirkUndWahlID("wahlID", "wahlbezirkID")).build();
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postSchnellmeldungSendungsuhrzeit(sendungsdatenModel));
+        void should_notThrowException_when_bezirkUndWahlIDIsGiven() {
+            val wahlID = "wahlID";
+            val wahlbezirkID = "wahlbezirkID";
+            val mockedWlsException = FachlicheWlsException.withCode("123").buildWithMessage("Abc");
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
+            Assertions.assertThatNoException()
+                    .isThrownBy(() -> unitUnderTest.postSchnellmeldungSendungsuhrzeit(new BezirkUndWahlID(wahlID, wahlbezirkID), null));
         }
     }
 
@@ -55,9 +73,13 @@ class WahllokalZustandServiceTest {
     class PostSchnellmeldungDruckuhrzeit {
 
         @Test
-        void should_notThrowException_when_ModelIsGiven() {
-            val druckdatenModel = DruckdatenModel.builder().bezirkUndWahlID(new BezirkUndWahlID("wahlID", "wahlbezirkID")).build();
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postSchnellmeldungDruckuhrzeit(druckdatenModel));
+        void should_notThrowException_when_bezirkUndWahlIDIsGiven() {
+            val wahlID = "wahlID";
+            val wahlbezirkID = "wahlbezirkID";
+            val mockedWlsException = FachlicheWlsException.withCode("123").buildWithMessage("Abc");
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_SCHNELLMELDUNG_DRUCKUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postSchnellmeldungDruckuhrzeit(new BezirkUndWahlID(wahlID, wahlbezirkID), null));
         }
     }
 
@@ -65,9 +87,14 @@ class WahllokalZustandServiceTest {
     class PostNiederschriftSendungsuhrzeit {
 
         @Test
-        void should_notThrowException_when_ModelIsGiven() {
-            val sendungsdatenModel = SendungsdatenModel.builder().bezirkUndWahlID(new BezirkUndWahlID("wahlID", "wahlbezirkID")).build();
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postNiederschriftSendungsuhrzeit(sendungsdatenModel));
+        void should_notThrowException_when_bezirkUndWahlIDIsGiven() {
+            val wahlID = "wahlID";
+            val wahlbezirkID = "wahlbezirkID";
+            val mockedWlsException = FachlicheWlsException.withCode("123").buildWithMessage("Abc");
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_NIEDERSCHRIFT_SENDUNGSUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
+            Assertions.assertThatNoException()
+                    .isThrownBy(() -> unitUnderTest.postNiederschriftSendungsuhrzeit(new BezirkUndWahlID(wahlID, wahlbezirkID), null));
         }
     }
 
@@ -75,19 +102,13 @@ class WahllokalZustandServiceTest {
     class PostNiederschriftDruckuhrzeit {
 
         @Test
-        void should_notThrowException_when_ModelIsGiven() {
-            val druckdatenModel = DruckdatenModel.builder().bezirkUndWahlID(new BezirkUndWahlID("wahlID", "wahlbezirkID")).build();
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postNiederschriftDruckuhrzeit(druckdatenModel));
-        }
-    }
-
-    @Nested
-    class PostTestExceptions {
-
-        @Test
-        void should_notThrowException_when_ModelIsGiven() {
-            val druckdatenModel = DruckdatenModel.builder().bezirkUndWahlID(new BezirkUndWahlID("wahlID", "wahlbezirkID")).build();
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postNiederschriftDruckuhrzeit(druckdatenModel));
+        void should_notThrowException_when_bezirkUndWahlIDIsGiven() {
+            val wahlID = "wahlID";
+            val wahlbezirkID = "wahlbezirkID";
+            val mockedWlsException = FachlicheWlsException.withCode("123").buildWithMessage("Abc");
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_NIEDERSCHRIFT_DRUCKUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postNiederschriftDruckuhrzeit(new BezirkUndWahlID(wahlID, wahlbezirkID), null));
         }
     }
 }

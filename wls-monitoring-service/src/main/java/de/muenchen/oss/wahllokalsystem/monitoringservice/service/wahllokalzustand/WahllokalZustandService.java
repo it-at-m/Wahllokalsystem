@@ -1,11 +1,11 @@
 package de.muenchen.oss.wahllokalsystem.monitoringservice.service.wahllokalzustand;
 
+import de.muenchen.oss.wahllokalsystem.monitoringservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDateTime;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -14,81 +14,49 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class WahllokalZustandService {
 
-    private final WahllokalZustandClient wahllokalZustandClient;
+    private final ExceptionFactory exceptionFactory;
     private final WahllokalZustandValidator wahllokalZustandValidator;
+    private final WahllokalZustandClient wahllokalZustandClient;
 
     @PreAuthorize("hasAuthority('Monitoring_BUSINESSACTION_PostLastSeen')")
     public void postLastSeen(final String wahlbezirkID) {
-        wahllokalZustandValidator.validWahlbezirkIDOrThrow(wahlbezirkID, WahllokalZustandOperation.POST_LASTSEEN);
-        val wahllokalZustand = WahllokalZustandModel.builder().zuletztGesehen(LocalDateTime.now()).wahlbezirkID(wahlbezirkID).build();
-        wahllokalZustandClient.postWahllokalZustand(wahllokalZustand);
+        wahllokalZustandValidator.validWahlbezirkIDOrThrow(wahlbezirkID,
+                exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_LASTSEEN_SUCHKRITERIEN_UNVOLLSTAENDIG));
+        wahllokalZustandClient.postLastSeen(wahlbezirkID, LocalDateTime.now());
     }
 
     @PreAuthorize("hasAuthority('Monitoring_BUSINESSACTION_PostLetzteAbmeldung')")
     public void postLetzteAbmeldung(final String wahlbezirkID) {
-        wahllokalZustandValidator.validWahlbezirkIDOrThrow(wahlbezirkID, WahllokalZustandOperation.POST_LETZTEABMELDUNG);
-        val wahllokalZustand = WahllokalZustandModel.builder().letzteAbmeldung(LocalDateTime.now()).wahlbezirkID(wahlbezirkID).build();
-        wahllokalZustandClient.postWahllokalZustand(wahllokalZustand);
+        wahllokalZustandValidator.validWahlbezirkIDOrThrow(wahlbezirkID,
+                exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_LETZTEABMELDUNG_SUCHKRITERIEN_UNVOLLSTAENDIG));
+        wahllokalZustandClient.postLetzteAbmeldung(wahlbezirkID, LocalDateTime.now());
     }
 
     @PreAuthorize("hasAuthority('Monitoring_BUSINESSACTION_PostSchnellmeldungSendungsuhrzeit')")
-    public void postSchnellmeldungSendungsuhrzeit(SendungsdatenModel sendungsdatenModel) {
-        wahllokalZustandValidator.validSendungsdatenModel(sendungsdatenModel, WahllokalZustandOperation.POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT);
-        wahllokalZustandClient.postWahllokalZustand(
-                WahllokalZustandModel.builder()
-                        .wahlbezirkID(sendungsdatenModel.bezirkUndWahlID().getWahlbezirkID())
-                        .druckzustaende(
-                                Set.of(
-                                        DruckzustandModel.builder()
-                                                .wahlID(sendungsdatenModel.bezirkUndWahlID().getWahlID())
-                                                .schnellmeldungSendenUhrzeit(sendungsdatenModel.sendungsuhrzeit())
-                                                .build()))
-                        .build());
+    public void postSchnellmeldungSendungsuhrzeit(final BezirkUndWahlID bezirkUndWahlID, final LocalDateTime schnellmeldungsSendungsuhrzeit) {
+        wahllokalZustandValidator.validWahlIdUndWahlbezirkIDOrThrow(bezirkUndWahlID,
+                exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG));
+        wahllokalZustandClient.postSchnellmeldungSendungsuhrzeit(bezirkUndWahlID, schnellmeldungsSendungsuhrzeit);
     }
 
     @PreAuthorize("hasAuthority('Monitoring_BUSINESSACTION_PostSchnellmeldungDruckuhrzeit')")
-    public void postSchnellmeldungDruckuhrzeit(DruckdatenModel druckdatenModel) {
-        wahllokalZustandValidator.validDruckdatenModel(druckdatenModel, WahllokalZustandOperation.POST_SCHNELLMELDUNG_DRUCKUHRZEIT);
-        wahllokalZustandClient.postWahllokalZustand(
-                WahllokalZustandModel.builder()
-                        .wahlbezirkID(druckdatenModel.bezirkUndWahlID().getWahlbezirkID())
-                        .druckzustaende(
-                                Set.of(
-                                        DruckzustandModel.builder()
-                                                .wahlID(druckdatenModel.bezirkUndWahlID().getWahlID())
-                                                .schnellmeldungDruckUhrzeit(druckdatenModel.druckuhrzeit())
-                                                .build()))
-                        .build());
+    public void postSchnellmeldungDruckuhrzeit(final BezirkUndWahlID bezirkUndWahlID, final LocalDateTime schnellmeldungsDruckuhrzeit) {
+        wahllokalZustandValidator.validWahlIdUndWahlbezirkIDOrThrow(bezirkUndWahlID,
+                exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_SCHNELLMELDUNG_DRUCKUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG));
+        wahllokalZustandClient.postSchnellmeldungDruckuhrzeit(bezirkUndWahlID, schnellmeldungsDruckuhrzeit);
     }
 
     @PreAuthorize("hasAuthority('Monitoring_BUSINESSACTION_PostNiederschriftSendungsuhrzeit')")
-    public void postNiederschriftSendungsuhrzeit(SendungsdatenModel sendungsdatenModel) {
-        wahllokalZustandValidator.validSendungsdatenModel(sendungsdatenModel, WahllokalZustandOperation.POST_NIEDERSCHRIFT_SENDUNGSUHRZEIT);
-        wahllokalZustandClient.postWahllokalZustand(
-                WahllokalZustandModel.builder()
-                        .wahlbezirkID(sendungsdatenModel.bezirkUndWahlID().getWahlbezirkID())
-                        .druckzustaende(
-                                Set.of(
-                                        DruckzustandModel.builder()
-                                                .wahlID(sendungsdatenModel.bezirkUndWahlID().getWahlID())
-                                                .niederschriftSendenUhrzeit(sendungsdatenModel.sendungsuhrzeit())
-                                                .build()))
-                        .build());
+    public void postNiederschriftSendungsuhrzeit(final BezirkUndWahlID bezirkUndWahlID, final LocalDateTime niederschriftSendungsuhrzeit) {
+        wahllokalZustandValidator.validWahlIdUndWahlbezirkIDOrThrow(bezirkUndWahlID,
+                exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_NIEDERSCHRIFT_SENDUNGSUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG));
+        wahllokalZustandClient.postNiederschriftSendungsuhrzeit(bezirkUndWahlID, niederschriftSendungsuhrzeit);
     }
 
     @PreAuthorize("hasAuthority('Monitoring_BUSINESSACTION_PostNiederschriftDruckuhrzeit')")
-    public void postNiederschriftDruckuhrzeit(DruckdatenModel druckdatenModel) {
-        wahllokalZustandValidator.validDruckdatenModel(druckdatenModel, WahllokalZustandOperation.POST_NIEDERSCHRIFT_DRUCKUHRZEIT);
-        wahllokalZustandClient.postWahllokalZustand(
-                WahllokalZustandModel.builder()
-                        .wahlbezirkID(druckdatenModel.bezirkUndWahlID().getWahlbezirkID())
-                        .druckzustaende(
-                                Set.of(
-                                        DruckzustandModel.builder()
-                                                .wahlID(druckdatenModel.bezirkUndWahlID().getWahlID())
-                                                .niederschriftDruckUhrzeit(druckdatenModel.druckuhrzeit())
-                                                .build()))
-                        .build());
+    public void postNiederschriftDruckuhrzeit(final BezirkUndWahlID bezirkUndWahlID, final LocalDateTime niederschriftDruckuhrzeit) {
+        wahllokalZustandValidator.validWahlIdUndWahlbezirkIDOrThrow(bezirkUndWahlID,
+                exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_NIEDERSCHRIFT_DRUCKUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG));
+        wahllokalZustandClient.postNiederschriftDruckuhrzeit(bezirkUndWahlID, niederschriftDruckuhrzeit);
     }
-
 }

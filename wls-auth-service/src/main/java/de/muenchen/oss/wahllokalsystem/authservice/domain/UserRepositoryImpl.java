@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.StreamSupport;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -58,8 +59,7 @@ public class UserRepositoryImpl implements UserRepository {
 
         val savedUsers = userRepository.saveAll(users);
 
-        savedUsers.forEach(this::decrypt);
-        return savedUsers;
+        return StreamSupport.stream(savedUsers.spliterator(), false).map(this::decrypt).toList();
     }
 
     public User save(final User user) {
@@ -110,12 +110,14 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     private User decrypt(User user) {
-        val username = user.getUsername();
+        val decryptedUser = User.flatCopyOf(user);
+
+        val username = decryptedUser.getUsername();
         log.debug("decrypting user <{}>...", username);
         if (username != null) {
-            user.setUsername(cryptoService.decrypt(username));
+            decryptedUser.setUsername(cryptoService.decrypt(username));
         }
-        return user;
+        return decryptedUser;
     }
 
     private List<User> decrypt(final Collection<User> users) {

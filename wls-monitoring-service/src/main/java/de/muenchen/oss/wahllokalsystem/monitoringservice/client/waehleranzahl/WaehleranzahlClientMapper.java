@@ -4,7 +4,8 @@ import de.muenchen.oss.wahllokalsystem.monitoringservice.eai.aou.model.Wahlbetei
 import de.muenchen.oss.wahllokalsystem.monitoringservice.service.waehleranzahl.WaehleranzahlModel;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
+import lombok.val;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

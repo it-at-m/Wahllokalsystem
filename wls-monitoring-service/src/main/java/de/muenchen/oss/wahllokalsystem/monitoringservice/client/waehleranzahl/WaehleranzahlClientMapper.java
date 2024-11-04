@@ -19,6 +19,11 @@ public interface WaehleranzahlClientMapper {
     WahlbeteiligungsMeldungDTO fromModelToRemoteClientDTO(WaehleranzahlModel waehleranzahlModel);
 
     default OffsetDateTime localDateTimeToOffsetDateTime(LocalDateTime localDateTime) {
-        return localDateTime.atOffset(DEFAULT_ZONE);
+        return localDateTimeToOffsetDateTime(localDateTime, DEFAULT_ZONE_ID);
+    }
+
+    default OffsetDateTime localDateTimeToOffsetDateTime(LocalDateTime localDateTime, ZoneId zoneId) {
+        val zoneOffset = zoneId.getRules().getOffset(localDateTime);
+        return localDateTime.atOffset(zoneOffset);
     }
 }

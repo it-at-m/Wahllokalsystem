@@ -14,7 +14,6 @@ import java.util.stream.StreamSupport;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -138,7 +137,6 @@ interface CrudUserRepository extends CrudRepository<User, UUID> {
     @Query("select count(u) from User u where u.username = :username and u.accountNonLocked = false")
     long countUsersLockedByUsername(String username);
 
-    @Modifying
     void deleteUsersByWahltagID(String wahltagID);
 
     Collection<User> findByWahltagID(String wahltagID);

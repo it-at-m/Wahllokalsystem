@@ -13,11 +13,11 @@ class WaehleranzahlModelMapperTest {
     private final WaehleranzahlModelMapper unitUnderTest = Mappers.getMapper(WaehleranzahlModelMapper.class);
 
     @Test
-    void should_returnEqualWaehleranzahlModel_when_WaehleranzahlIsMapped() {
+    void should_returnEqualWaehleranzahlModel_when_waehleranzahlIsMapped() {
         val wahlID = "wahlID01";
         val wahlbezirkID = "wahlbezirkID01";
         BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
-        val anzahlWaehler = 99L;
+        val anzahlWaehler = 99;
         LocalDateTime uhrzeit = LocalDateTime.now();
         val waehleranzahlEntity = new Waehleranzahl(bezirkUndWahlID, anzahlWaehler, uhrzeit);
 
@@ -29,11 +29,11 @@ class WaehleranzahlModelMapperTest {
     }
 
     @Test
-    void should_returnEqualWaehleranzahl_when_WaehleranzahlModelIsMapped() {
+    void should_returnEqualWaehleranzahl_when_waehleranzahlModelIsMapped() {
         val wahlID = "wahlID01";
         val wahlbezirkID = "wahlbezirkID01";
         BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
-        val anzahlWaehler = 99L;
+        val anzahlWaehler = 99;
         LocalDateTime uhrzeit = LocalDateTime.now();
         val waehleranzahlModel = new WaehleranzahlModel(bezirkUndWahlID, anzahlWaehler, uhrzeit);
 

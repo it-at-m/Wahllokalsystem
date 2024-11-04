@@ -45,4 +45,5 @@ includes:
   - path: add-authorities-eai-ergebnismeldung.yml
   - path: add-authorities-basisdaten-wahltermindaten.yml
   - path: create-group-all-monitoring-authorities.yml
+  - path: add-authorities-monitoring-waehleranzahl.yml
   - path: add-authorities-monitoring-wahllokalzustand.yml

@@ -2,7 +2,6 @@ package de.muenchen.oss.wahllokalsystem.monitoringservice.service.waehleranzahl;
 
 import de.muenchen.oss.wahllokalsystem.monitoringservice.domain.waehleranzahl.Waehleranzahl;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.domain.waehleranzahl.WaehleranzahlRepository;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -27,8 +26,6 @@ public class WaehleranzahlServiceTest {
     WaehleranzahlValidator waehleranzahlValidator;
     @Mock
     WaehleranzahlClient waehleranzahlClient;
-    @Mock
-    ExceptionFactory exceptionFactory;
 
     @InjectMocks
     WaehleranzahlService unitUnderTest;
@@ -37,7 +34,7 @@ public class WaehleranzahlServiceTest {
     class GetWahlbeteiligung {
 
         @Test
-        void should_returnRepoData_when_RepoDataFound() {
+        void should_returnRepoData_when_repoDataFound() {
             BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID("wahlID01", "wahlbezirkID01");
 
             val mockedRepoResponse = new Waehleranzahl();
@@ -51,7 +48,7 @@ public class WaehleranzahlServiceTest {
         }
 
         @Test
-        void should_returnEmptyResult_when_RepoDataNotFound() {
+        void should_returnEmptyResult_when_repoDataNotFound() {
             BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID("wahlID01", "wahlbezirkID01");
 
             Mockito.when(waehleranzahlRepository.findById(bezirkUndWahlID)).thenReturn(Optional.empty());
@@ -65,28 +62,16 @@ public class WaehleranzahlServiceTest {
     class PostWahlbeteiligung {
 
         @Test
-        void should_notThrowExceptionAndSaveDataInRepo_when_ValidModelIsGiven() {
-
+        void should_notThrowExceptionAndSaveDataInRepo_when_modelIsGiven() {
             val waehleranzahlSetModel = WaehleranzahlModel.builder().build();
             val mockedKonfigurationEntity = new Waehleranzahl();
 
-            Mockito.doNothing().when(waehleranzahlValidator).validWaehleranzahlSetModel(waehleranzahlSetModel);
             Mockito.when(waehleranzahlModelMapper.toEntity(waehleranzahlSetModel)).thenReturn(mockedKonfigurationEntity);
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postWahlbeteiligung(waehleranzahlSetModel));
 
+            Mockito.verify(waehleranzahlClient).postWahlbeteiligung(waehleranzahlSetModel);
             Mockito.verify(waehleranzahlRepository).save(mockedKonfigurationEntity);
-        }
-
-        @Test
-        void should_throwUnhandledExceptionFromValidation_when_validationFails() {
-            val waehleranzahlSetModel = WaehleranzahlModel.builder().build();
-
-            val mockedValidatorException = new IllegalArgumentException("WRONG!!!");
-
-            Mockito.doThrow(mockedValidatorException).when(waehleranzahlValidator).validWaehleranzahlSetModel(waehleranzahlSetModel);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.postWahlbeteiligung(waehleranzahlSetModel)).isSameAs(mockedValidatorException);
         }
     }
 }

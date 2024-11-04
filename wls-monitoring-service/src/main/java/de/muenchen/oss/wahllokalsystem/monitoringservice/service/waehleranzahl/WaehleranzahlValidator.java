@@ -19,8 +19,4 @@ public class WaehleranzahlValidator {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBETEILIGUNG_SUCHKRITERIEN_UNVOLLSTAENDIG);
         }
     }
-
-    public void validWaehleranzahlSetModel(WaehleranzahlModel waehleranzahl) {
-        validWahlIdUndWahlbezirkIDOrThrow(waehleranzahl.bezirkUndWahlID());
-    }
 }

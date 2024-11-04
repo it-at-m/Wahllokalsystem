@@ -26,7 +26,7 @@ public class WaehleranzahlController extends AbstractController {
 
     @Operation(description = "Laden der zuvor gespeicherten Wahlbeteiligung für die Wahl {wahlID} für den Wahlbezirk {wahlbezirkID}.")
     @GetMapping("/{wahlID}/{wahlbezirkID}")
-    ResponseEntity<WaehleranzahlDTO> getWahlbeteiligung(@PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID) {
+    ResponseEntity<WaehleranzahlDTO> getWahlbeteiligung(@PathVariable("wahlID") final String wahlID, @PathVariable("wahlbezirkID") final String wahlbezirkID) {
         val waehleranzahlModel = waehleranzahlService.getWahlbeteiligung(new BezirkUndWahlID(wahlID, wahlbezirkID));
 
         return okWithBodyOrNoContent(waehleranzahlModel.map(waehleranzahlDTOMapper::toDTO));
@@ -34,7 +34,7 @@ public class WaehleranzahlController extends AbstractController {
 
     @Operation(description = "Speichern und Weiterleiten der Wahlbeteiligung für die Wahl {wahlID} für den Wahlbezirk {wahlbezirkID}.")
     @PostMapping("/{wahlID}/{wahlbezirkID}")
-    public void postWahlbeteiligung(@PathVariable("wahlbezirkID") String wahlbezirkID, @PathVariable("wahlID") String wahlID,
+    public void postWahlbeteiligung(@PathVariable("wahlbezirkID") final String wahlbezirkID, @PathVariable("wahlID") final String wahlID,
             @RequestBody WaehleranzahlDTO waehleranzahl) {
         log.info("postWahlbeteiligung {}", wahlbezirkID);
 

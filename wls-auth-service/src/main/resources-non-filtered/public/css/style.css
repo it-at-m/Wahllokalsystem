@@ -1,0 +1,238 @@
+* {
+  box-sizing: border-box;
+}
+*:before, *:after {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #eeeeee;
+  margin: 0;
+}
+
+.vertical-center {
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
+
+  display: flex;
+  align-items: center;
+}
+
+h3 {
+  margin: 0;
+}
+
+a {
+  color: #999;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #1dabb8;
+}
+
+input {
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+input:focus {
+  outline: none;
+}
+
+.clearfix {
+  *zoom: 1;
+}
+.clearfix:before, .clearfix:after {
+  content: ' ';
+  display: table;
+}
+.clearfix:after {
+  clear: both;
+}
+
+/* ---------- LOGIN-FORM ---------- */
+
+#login-form {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  border-radius: 5px; /* 5px rounded corners */
+  background: #fff;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+#login-form h3 {
+  border-radius: 5px 5px 0px 0px;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #d0d0d0;
+  font-size: 14px;
+  padding: 20px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+#login-form h4 {
+  padding: 8px 16px;
+}
+
+form {
+  padding: 0px 16px;
+}
+
+.info {
+  background: #e5e5e5;
+  border-radius: 50%;
+  display: inline-block;
+  height: 20px;
+  line-height: 20px;
+  margin: 0 10px 0 0;
+  text-align: center;
+  width: 20px;
+}
+
+.material-button {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 4px;
+    padding: 0 16px;
+    min-width: 64px;
+    height: 36px;
+    vertical-align: middle;
+    text-align: center;
+    text-overflow: ellipsis;
+    color: rgb(var(--pure-material-onprimary-rgb, 255, 255, 255));
+    background-color: #546e7a;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 36px;
+    overflow: hidden;
+    outline: none;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+
+.material-button::-moz-focus-inner {
+    border: none;
+}
+
+/* Overlay */
+.material-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgb(var(--pure-material-onprimary-rgb, 255, 255, 255));
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+/* Ripple */
+.material-button::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    border-radius: 50%;
+    padding: 50%;
+    width: 32px; /* Safari */
+    height: 32px; /* Safari */
+    background-color: rgb(var(--pure-material-onprimary-rgb, 255, 255, 255));
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+    transition: opacity 1s, transform 0.5s;
+}
+
+/* Hover, Focus */
+.material-button:hover,
+.material-button:focus {
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
+}
+
+.material-button:hover::before {
+    opacity: 0.08;
+}
+
+.material-button:focus::before {
+    opacity: 0.24;
+}
+
+.material-button:hover:focus::before {
+    opacity: 0.3;
+}
+
+/* Active */
+.material-button:active {
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.material-button:active::after {
+  opacity: 0.32;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0s;
+}
+
+.material-form-input {
+  width: 100%;
+}
+
+.material-label {
+  color: rgba(0, 0, 0, 0.54);
+  font-weight: 100 !important;
+  position:relative;
+  display:block;
+  width:100%;
+  min-height: 15px;
+}
+
+.material-input {
+  transition: border-bottom 300ms ease-in-out;
+  position:absolute;
+  top: 15px;
+  height: 30px;
+  width:100%;
+  font-size: 16px;
+  border:0;
+  border-bottom:1px solid grey;
+  outline:none;
+  padding: 0;
+  margin: 0;
+  color: black;
+}
+
+.material-input:focus,
+.material-input:valid {
+  border-bottom:2px solid rgba(0, 0, 0, 0.54);
+}
+
+.material-input:invalid {
+  box-shadow: none;
+}
+
+.material-input:-moz-ui-invalid {
+   border-bottom: 2px solid #F44336;
+ }
+
+ .material-input:-moz-ui-invalid + .material-placeholder {
+   color: #F44336;
+ }
+
+.material-placeholder {
+  transition: color 300ms ease-in-out;
+  position:absolute;
+  display:block;
+  font-size: 16px;
+  width:100%;
+  cursor:text;
+  top:0;
+  cursor:inherit;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.54);
+}

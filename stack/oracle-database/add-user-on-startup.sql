@@ -47,3 +47,7 @@ GRANT CONNECT, RESOURCE, CREATE SESSION TO wls_auth_service;
 -- add user for wls-vorfaelleundvorkommnisse-service
 CREATE USER wls_vorfaelleundvorkommnisse_service IDENTIFIED BY secret QUOTA UNLIMITED ON USERS;
 GRANT CONNECT, RESOURCE, CREATE SESSION TO wls_vorfaelleundvorkommnisse_service;
+
+-- add user for wls-admin-service
+CREATE USER wls_admin_service IDENTIFIED BY secret QUOTA UNLIMITED ON USERS;
+GRANT CONNECT, RESOURCE, CREATE SESSION TO wls_admin_service;

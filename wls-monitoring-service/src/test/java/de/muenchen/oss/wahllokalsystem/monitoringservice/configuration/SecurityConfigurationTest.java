@@ -92,7 +92,7 @@ class SecurityConfigurationTest {
 
         @Test
         @WithAnonymousUser
-        void should_return401Unauthorized_when_GetWithUnauthorizedAnonymousUser() throws Exception {
+        void should_return401Unauthorized_when_getWithUnauthorizedAnonymousUser() throws Exception {
             api.perform(get("/businessActions/wahlbeteiligung/wahlID/wahlbezirkID")).andExpect(status().isUnauthorized());
         }
 
@@ -104,14 +104,14 @@ class SecurityConfigurationTest {
 
         @Test
         @WithAnonymousUser
-        void should_return401Unauthorized_when_PostWithUnauthorizedAnonymousUser() throws Exception {
+        void should_return401Unauthorized_when_postWithUnauthorizedAnonymousUser() throws Exception {
             api.perform(post("/businessActions/wahlbeteiligung/wahlID/wahlbezirkID").with(csrf())).andExpect(status().isUnauthorized());
         }
 
         @Test
         @WithMockUser
-        void should_return200OK_when_PostWithAuthorizedMockUser() throws Exception {
-            val requestBody = new WaehleranzahlDTO(null, null, null, null);
+        void should_return200OK_when_postWithAuthorizedMockUser() throws Exception {
+            val requestBody = new WaehleranzahlDTO(null, null);
             val request = post("/businessActions/wahlbeteiligung/wahlID/wahlbezirkID").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
                     objectMapper.writeValueAsString(requestBody));
 

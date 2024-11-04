@@ -17,13 +17,8 @@ class WaehleranzahlDTOMapperTest {
     class ToDTO {
 
         @Test
-        void should_returnNull_when_ModelIsNull() {
+        void should_returnNull_when_modelIsNull() {
             Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
-        }
-
-        @Test
-        void should_returnNull_when_DTOIsNull() {
-            Assertions.assertThat(unitUnderTest.toSetModel(null, null)).isNull();
         }
 
         @Test
@@ -35,10 +30,20 @@ class WaehleranzahlDTOMapperTest {
             BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
 
             val modelInput = new WaehleranzahlModel(bezirkUndWahlID, anzahlWaehler, uhrzeit);
-            val dtoExpected = new WaehleranzahlDTO(wahlID, wahlbezirkID, anzahlWaehler, uhrzeit);
+            val dtoExpected = new WaehleranzahlDTO(anzahlWaehler, uhrzeit);
 
             val result = unitUnderTest.toDTO(modelInput);
             Assertions.assertThat(result).isEqualTo(dtoExpected);
+        }
+
+    }
+
+    @Nested
+    class ToSetModel {
+
+        @Test
+        void should_returnNull_when_dtoIsNull() {
+            Assertions.assertThat(unitUnderTest.toSetModel(null, null)).isNull();
         }
 
         @Test
@@ -49,11 +54,12 @@ class WaehleranzahlDTOMapperTest {
             LocalDateTime uhrzeit = LocalDateTime.now();
             BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
 
-            val dtoInput = new WaehleranzahlDTO(wahlID, wahlbezirkID, anzahlWaehler, uhrzeit);
+            val dtoInput = new WaehleranzahlDTO(anzahlWaehler, uhrzeit);
             val modelExpected = new WaehleranzahlModel(bezirkUndWahlID, anzahlWaehler, uhrzeit);
 
             val result = unitUnderTest.toSetModel(bezirkUndWahlID, dtoInput);
             Assertions.assertThat(result).isEqualTo(modelExpected);
         }
+
     }
 }

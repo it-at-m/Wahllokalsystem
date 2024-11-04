@@ -8,6 +8,6 @@ import lombok.Builder;
 @Builder
 public record WaehleranzahlModel(
     @NotNull BezirkUndWahlID bezirkUndWahlID,
-    @NotNull Long anzahlWaehler,
+    @NotNull long anzahlWaehler,
     @NotNull LocalDateTime uhrzeit) {
 }

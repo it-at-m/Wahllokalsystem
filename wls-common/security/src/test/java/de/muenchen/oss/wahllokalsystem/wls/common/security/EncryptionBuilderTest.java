@@ -27,7 +27,6 @@ class EncryptionBuilderTest {
     @InjectMocks
     EncryptionBuilder unitUnderTest;
 
-
     @Nested
     class DecryptValue {
 

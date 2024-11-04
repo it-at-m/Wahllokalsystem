@@ -27,9 +27,7 @@ public class DummyClientImpl implements WaehleranzahlClient, WahllokalZustandCli
 
     @Override
     public void postWahlbeteiligung(WaehleranzahlModel waehleranzahlModel) throws WlsException {
-
-        val wahlbeteiligungsMeldungDTO = waehleranzahlClientMapper.toDTO(waehleranzahlModel);
-        log.info("Dummy client postWahlbeteiligung() called instead of EAI with: " + wahlbeteiligungsMeldungDTO);
+        log.info("Dummy client postWahlbeteiligung() called instead of EAI with: {}", waehleranzahlModel);
     }
 
     @Override

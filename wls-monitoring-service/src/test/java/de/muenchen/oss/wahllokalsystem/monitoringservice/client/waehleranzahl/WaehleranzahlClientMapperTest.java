@@ -36,4 +36,33 @@ public class WaehleranzahlClientMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedWahlbeteiligungsMeldungDTO);
         }
     }
+
+    @Nested
+    class LocalDateTimeToOffsetDateTime {
+
+        @Nested
+        class WithZoneIdWithDaylightSavingTime {
+
+            @Test
+            void should_useSummerSeasonOffset_when_mapping() {
+                val localDateTime = LocalDateTime.parse("2024-06-12T12:13:14.567");
+                val zoneID = ZoneId.of("Europe/Berlin");
+
+                val result = unitUnderTest.localDateTimeToOffsetDateTime(localDateTime, zoneID);
+
+                val expectedResult = OffsetDateTime.of(localDateTime, ZoneOffset.ofHours(2));
+                Assertions.assertThat(result).isEqualTo(expectedResult);
+            }
+
+            @Test
+            void should_useWinterSeasonOffset_when_mapping() {
+                val localDateTime = LocalDateTime.parse("2024-11-12T12:13:14.567");
+                val zoneID = ZoneId.of("Europe/Berlin");
+                val result = unitUnderTest.localDateTimeToOffsetDateTime(localDateTime, zoneID);
+
+                val expectedResult = OffsetDateTime.of(localDateTime, ZoneOffset.ofHours(1));
+                Assertions.assertThat(result).isEqualTo(expectedResult);
+            }
+        }
+    }
 }

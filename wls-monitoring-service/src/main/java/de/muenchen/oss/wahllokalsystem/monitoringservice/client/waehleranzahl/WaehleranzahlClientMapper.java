@@ -11,7 +11,7 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface WaehleranzahlClientMapper {
 
-    ZoneOffset DEFAULT_ZONE = ZoneOffset.UTC;
+    ZoneId DEFAULT_ZONE_ID = ZoneId.systemDefault();
 
     @Mapping(target = "wahlID", ignore = true)
     @Mapping(target = "wahlbezirkID", source = "bezirkUndWahlID.wahlbezirkID")

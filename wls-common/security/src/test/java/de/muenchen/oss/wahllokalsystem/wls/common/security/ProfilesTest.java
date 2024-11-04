@@ -13,7 +13,7 @@ class ProfilesTest {
 
     @SpringBootTest(
             classes = { TestConfiguration.class, AESEncryptionConfiguration.class, EncryptionBuilder.class, ServiceIDFormatter.class },
-            properties = {"app.crypto.key = 770A8A65DA156D24EE2A093277530142", "service.info.oid=My app name"}
+            properties = { "app.crypto.key = 770A8A65DA156D24EE2A093277530142", "service.info.oid=My app name" }
     )
     @ActiveProfiles(Profiles.NO_BEZIRKS_ID_CHECK)
     @Nested
@@ -30,7 +30,7 @@ class ProfilesTest {
 
     @SpringBootTest(
             classes = { TestConfiguration.class, AESEncryptionConfiguration.class, EncryptionBuilder.class, ServiceIDFormatter.class },
-            properties = {"app.crypto.key = 770A8A65DA156D24EE2A093277530142", "service.info.oid=My app name"}
+            properties = { "app.crypto.key = 770A8A65DA156D24EE2A093277530142", "service.info.oid=My app name" }
     )
     @Nested
     class NoSpecialProfile {

@@ -217,16 +217,6 @@ class UserRepositoryImplIntegrationTest {
             Assertions.assertThat(authorityRepository.count()).isEqualTo(1);
             Assertions.assertThat(permissionRepository.count()).isEqualTo(3);
         }
-
-        private User createUser(final String username, final String wahltagID, final Authority authority) {
-            val user = new User();
-
-            user.setUsername(username);
-            user.setWahltagID(wahltagID);
-            user.setAuthorities(Set.of(authority));
-
-            return user;
-        }
     }
 
     private User createUser(final String encryptedUsername) {
@@ -237,6 +227,16 @@ class UserRepositoryImplIntegrationTest {
         val user = new User();
         user.setUsername(encryptedUsername);
         user.setWahltagID(wahltagID);
+
+        return user;
+    }
+
+    private User createUser(final String username, final String wahltagID, final Authority authority) {
+        val user = new User();
+
+        user.setUsername(username);
+        user.setWahltagID(wahltagID);
+        user.setAuthorities(Set.of(authority));
 
         return user;
     }

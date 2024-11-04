@@ -6,7 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = {AESEncryptionConfiguration.class, EncryptionBuilder.class, ServiceIDFormatter.class}, properties = {"app.crypto.key = 770A8A65DA156D24EE2A093277530142"})
+@SpringBootTest(
+        classes = {AESEncryptionConfiguration.class, EncryptionBuilder.class, ServiceIDFormatter.class},
+        properties = {"app.crypto.key = 770A8A65DA156D24EE2A093277530142"}
+)
 class EncryptionBuilderIntegrationTest {
 
     @Autowired

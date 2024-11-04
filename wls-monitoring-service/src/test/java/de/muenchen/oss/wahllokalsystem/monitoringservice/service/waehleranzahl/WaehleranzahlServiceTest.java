@@ -70,6 +70,7 @@ public class WaehleranzahlServiceTest {
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postWahlbeteiligung(waehleranzahlSetModel));
 
+            Mockito.verify(waehleranzahlClient).postWahlbeteiligung(waehleranzahlSetModel);
             Mockito.verify(waehleranzahlRepository).save(mockedKonfigurationEntity);
         }
     }

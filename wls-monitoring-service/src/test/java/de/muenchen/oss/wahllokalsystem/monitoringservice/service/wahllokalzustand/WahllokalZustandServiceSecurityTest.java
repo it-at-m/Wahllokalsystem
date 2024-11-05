@@ -62,17 +62,13 @@ public class WahllokalZustandServiceSecurityTest {
         }
 
         @Test
-        void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() throws Exception {
+        void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.SERVICE_POST_LAST_LOGOUT);
             String wahlbezirkID = "wahlbezirkID01";
 
             val wahllokalZustandDTO = new WahllokalZustandDTO();
             wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
             wahllokalZustandDTO.setZuletztGesehen(OffsetDateTime.now());
-
-            WireMock.stubFor(WireMock.post("/wahllokalzustand")
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
 
             Assertions.assertThatThrownBy(() -> wahllokalZustandService.postLastSeen(wahlbezirkID)).isInstanceOf(AccessDeniedException.class);
         }
@@ -98,17 +94,13 @@ public class WahllokalZustandServiceSecurityTest {
         }
 
         @Test
-        void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() throws Exception {
+        void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
             String wahlbezirkID = "wahlbezirkID01";
 
             val wahllokalZustandDTO = new WahllokalZustandDTO();
             wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
             wahllokalZustandDTO.setZuletztGesehen(OffsetDateTime.now());
-
-            WireMock.stubFor(WireMock.post("/wahllokalzustand")
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
 
             Assertions.assertThatThrownBy(() -> wahllokalZustandService.postLetzteAbmeldung(wahlbezirkID)).isInstanceOf(AccessDeniedException.class);
         }
@@ -140,7 +132,7 @@ public class WahllokalZustandServiceSecurityTest {
         }
 
         @Test
-        void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() throws Exception {
+        void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
@@ -151,10 +143,6 @@ public class WahllokalZustandServiceSecurityTest {
             val wahllokalZustandDTO = new WahllokalZustandDTO();
             wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
             wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
-
-            WireMock.stubFor(WireMock.post("/wahllokalzustand")
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
 
             Assertions
                     .assertThatThrownBy(
@@ -188,7 +176,7 @@ public class WahllokalZustandServiceSecurityTest {
         }
 
         @Test
-        void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() throws Exception {
+        void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
@@ -199,10 +187,6 @@ public class WahllokalZustandServiceSecurityTest {
             val wahllokalZustandDTO = new WahllokalZustandDTO();
             wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
             wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
-
-            WireMock.stubFor(WireMock.post("/wahllokalzustand")
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
 
             Assertions
                     .assertThatThrownBy(
@@ -241,7 +225,7 @@ public class WahllokalZustandServiceSecurityTest {
         }
 
         @Test
-        void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() throws Exception {
+        void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
 
             val wahlID = "wahlID";
@@ -253,10 +237,6 @@ public class WahllokalZustandServiceSecurityTest {
             val wahllokalZustandDTO = new WahllokalZustandDTO();
             wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
             wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
-
-            WireMock.stubFor(WireMock.post("/wahllokalzustand")
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
 
             Assertions
                     .assertThatThrownBy(
@@ -291,7 +271,7 @@ public class WahllokalZustandServiceSecurityTest {
         }
 
         @Test
-        void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() throws Exception {
+        void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
 
             val wahlID = "wahlID";
@@ -303,10 +283,6 @@ public class WahllokalZustandServiceSecurityTest {
             val wahllokalZustandDTO = new WahllokalZustandDTO();
             wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
             wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
-
-            WireMock.stubFor(WireMock.post("/wahllokalzustand")
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
 
             Assertions
                     .assertThatThrownBy(

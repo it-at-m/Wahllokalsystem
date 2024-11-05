@@ -53,6 +53,13 @@ class WahllokalZustandControllerIntegrationTest {
     class PostLastSeen {
 
         @Test
+        void should_notThrowAnyException_when_requestParamValid() throws Exception {
+            SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
+            val request_1 = MockMvcRequestBuilders.post("/businessActions/lastSeen/" + "validWahlbezirkID").with(csrf());
+            Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request_1));
+        }
+
+        @Test
         void should_throwWlsException_when_requestParamsAreInvalid() throws Exception {
             SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
             val request_1 = MockMvcRequestBuilders.post("/businessActions/lastSeen/" + "  ").with(csrf());
@@ -74,6 +81,13 @@ class WahllokalZustandControllerIntegrationTest {
 
     @Nested
     class PostLetzteAbmeldung {
+
+        @Test
+        void should_notThrowAnyException_when_requestParamValid() throws Exception {
+            SecurityUtils.runWith(Authorities.SERVICE_POST_LAST_LOGOUT);
+            val request_1 = MockMvcRequestBuilders.post("/businessActions/letzteAbmeldung/" + "validWahlbezirkID").with(csrf());
+            Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request_1));
+        }
 
         @Test
         void should_throwWlsException_when_requestParamsAreInvalid() throws Exception {
@@ -98,6 +112,16 @@ class WahllokalZustandControllerIntegrationTest {
 
     @Nested
     class PostSchnellmeldungsSendungsuhrzeit {
+
+        @Test
+        void should_notThrowAnyException_when_requestParamValid() throws Exception {
+            SecurityUtils.runWith(Authorities.SERVICE_POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT);
+            val sendungsDatenDTO_valid = createSendungsdatenDTO("wahlID","wahlbezirkID");
+            val request_valid_param= MockMvcRequestBuilders.post("/businessActions/schnellmeldungSendungsuhrzeit").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                            objectMapper.writeValueAsString(sendungsDatenDTO_valid));
+            Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request_valid_param));
+        }
 
         @Test
         void should_throwWlsException_when_requestParamsAreInvalid() throws Exception {
@@ -146,6 +170,16 @@ class WahllokalZustandControllerIntegrationTest {
     class PostSchnellmeldungDruckuhrzeit {
 
         @Test
+        void should_notThrowAnyException_when_requestParamValid() throws Exception {
+            SecurityUtils.runWith(Authorities.SERVICE_POST_SCHNELLMELDUNG_DRUCKUHRZEIT);
+            val druckDatenDTO_valid = createSendungsdatenDTO("wahlID","wahlbezirkID");
+            val request_valid_param= MockMvcRequestBuilders.post("/businessActions/schnellmeldungDruckuhrzeit").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                            objectMapper.writeValueAsString(druckDatenDTO_valid));
+            Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request_valid_param));
+        }
+
+        @Test
         void should_throwWlsException_when_requestParamsAreInvalid() throws Exception {
             SecurityUtils.runWith(Authorities.SERVICE_POST_SCHNELLMELDUNG_DRUCKUHRZEIT);
             val druckDatenDTO_wahlID_blank = createDruckdatenDTO("  ", "wahlbezirkID");
@@ -192,6 +226,16 @@ class WahllokalZustandControllerIntegrationTest {
     class PostNiederschriftSendungsuhrzeit {
 
         @Test
+        void should_notThrowAnyException_when_requestParamValid() throws Exception {
+            SecurityUtils.runWith(Authorities.SERVICE_POST_NIEDERSCHRIFT_SENDUNGSUHRZEIT);
+            val sendungsDatenDTO_valid = createSendungsdatenDTO("wahlID","wahlbezirkID");
+            val request_valid_param= MockMvcRequestBuilders.post("/businessActions/niederschriftSendungsuhrzeit").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                            objectMapper.writeValueAsString(sendungsDatenDTO_valid));
+            Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request_valid_param));
+        }
+
+        @Test
         void should_throwWlsException_when_requestParamsAreInvalid() throws Exception {
             SecurityUtils.runWith(Authorities.SERVICE_POST_NIEDERSCHRIFT_SENDUNGSUHRZEIT);
             val sendungsDatenDTO_wahlID_blank = createSendungsdatenDTO("  ", "wahlbezirkID");
@@ -236,6 +280,16 @@ class WahllokalZustandControllerIntegrationTest {
 
     @Nested
     class PostNiederschriftDruckuhrzeit {
+
+        @Test
+        void should_notThrowAnyException_when_requestParamValid() throws Exception {
+            SecurityUtils.runWith(Authorities.SERVICE_POST_NIEDERSCHRIFT_DRUCKUHRZEIT);
+            val druckDatenDTO_valid = createSendungsdatenDTO("wahlID","wahlbezirkID");
+            val request_valid_param= MockMvcRequestBuilders.post("/businessActions/niederschriftSendungsuhrzeit").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                            objectMapper.writeValueAsString(druckDatenDTO_valid));
+            Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request_valid_param));
+        }
 
         @Test
         void should_throwWlsException_when_requestParamsAreInvalid() throws Exception {

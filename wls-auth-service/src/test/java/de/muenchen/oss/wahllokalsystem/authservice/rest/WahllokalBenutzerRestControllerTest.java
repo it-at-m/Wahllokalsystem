@@ -64,7 +64,7 @@ class WahllokalBenutzerRestControllerTest {
 
             val result = unitUnderTest.createAndExportWahllokalBenutzer(wahltagID, List.of(wahllokalUser));
 
-            val expectedResult = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mockedServiceException.getMessage());
+            val expectedResult = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("createAndExportWahllokalBenutzer error");
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
@@ -94,7 +94,7 @@ class WahllokalBenutzerRestControllerTest {
 
             val result = unitUnderTest.exportWahllokalBenutzer(wahltagID);
 
-            val expectedResult = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mockedServiceException.getMessage());
+            val expectedResult = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("exportWahllokalBenutzer error");
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
 

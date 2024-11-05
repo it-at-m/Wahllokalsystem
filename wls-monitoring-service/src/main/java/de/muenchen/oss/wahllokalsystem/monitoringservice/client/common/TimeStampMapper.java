@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import org.mapstruct.Mapper;
-import org.mapstruct.Named;
 
 @Mapper
 public interface TimeStampMapper {

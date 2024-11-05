@@ -24,11 +24,6 @@ public class DummyClientImpl implements WaehleranzahlClient, WahllokalZustandCli
         log.info("Dummy client postWahlbeteiligung() called instead of EAI with: {}", waehleranzahlModel);
     }
 
-
-    private void postWahllokalZustand(WahllokalZustandDTO wahllokalZustandDTO) throws WlsException {
-        log.info("Dummy client postWahllokalZustand() called instead of EAI with: " + wahllokalZustandDTO);
-    }
-
     @Override
     public void postLastSeen(String wahlbezirkID, LocalDateTime zuletztGesehen) throws WlsException {
         log.info("Dummy client postLastSeen() called instead of EAI with: " + wahlbezirkID + " zuletztGesehen:" + zuletztGesehen);

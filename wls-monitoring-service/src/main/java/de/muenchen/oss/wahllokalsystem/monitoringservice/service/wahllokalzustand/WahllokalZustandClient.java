@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.monitoringservice.service.wahllokalzustand;
 
-import de.muenchen.oss.wahllokalsystem.monitoringservice.eai.aou.model.WahllokalZustandDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;

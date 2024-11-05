@@ -26,8 +26,6 @@ public class ExceptionConstants {
             "Fehler in postNiederschriftSendungsuhrzeit():  Parameter unvollstaendig.");
     public static final ExceptionDataWrapper POST_NIEDERSCHRIFT_DRUCKUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG = new ExceptionDataWrapper("105",
             "Fehler in postNiederschriftDruckuhrzeit():  Parameter unvollstaendig.");
-    public static final ExceptionDataWrapper DEFAULT_WAHLLOKALZUSTAND_EXCEPTION_SUCHKRITERIEN_UNVOLLSTAENDIG = new ExceptionDataWrapper("108",
-            "Nicht zurodnerbarer Fehler in Wahllokalzustand-Service:  Parameter unvollstaendig.");
 
     public static ExceptionDataWrapper FAILED_COMMUNICATION_WITH_EAI = new ExceptionDataWrapper("100",
             "Bei der Kommunikation mit dem Aoueai-Service ist ein Fehler aufgetreten. Es konnten daher keine Daten geladen werden.");

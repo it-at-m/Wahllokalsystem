@@ -47,7 +47,7 @@ class WahllokalZustandControllerTest {
         @Test
         void should_notThrowException_when_serviceIsCalled() {
             val requestBody = Mockito.mock(SendungsdatenDTO.class);
-            unitUnderTest.postSchnellmeldungsSendungsuhrzeit(requestBody);
+            unitUnderTest.postSchnellmeldungSendungsuhrzeit(requestBody);
             Mockito.verify(wahllokalZustandService).postSchnellmeldungSendungsuhrzeit(requestBody.bezirkUndWahlID(), requestBody.sendungsuhrzeit());
         }
     }

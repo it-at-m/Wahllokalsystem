@@ -40,8 +40,8 @@ public class WahllokalZustandController {
             description = "Empfängt die Daten über die Sendungsuhrzeit der Schnellmeldung, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
     )
     @PostMapping("/schnellmeldungSendungsuhrzeit")
-    public void postSchnellmeldungsSendungsuhrzeit(@RequestBody SendungsdatenDTO sendungsdatenDTO) {
-        log.info("postSchnellmeldungsSendungsuhrzeit {}", sendungsdatenDTO);
+    public void postSchnellmeldungSendungsuhrzeit(@RequestBody SendungsdatenDTO sendungsdatenDTO) {
+        log.info("postSchnellmeldungSendungsuhrzeit {}", sendungsdatenDTO);
         wahllokalZustandService.postSchnellmeldungSendungsuhrzeit(sendungsdatenDTO.bezirkUndWahlID(), sendungsdatenDTO.sendungsuhrzeit());
     }
 

@@ -51,7 +51,7 @@ public class WahllokalBenutzerRestController {
             return new ResponseEntity<>(s, HttpStatus.CREATED);
         } catch (Exception e) {
             log.error("#exportWahllokalBenutzer error: ", e);
-            return new ResponseEntity<>("#exportWahllokalBenutzer error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("exportWahllokalBenutzer error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

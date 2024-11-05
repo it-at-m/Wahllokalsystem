@@ -11,7 +11,6 @@ public interface TimeStampMapper {
 
     ZoneOffset DEFAULT_ZONE = ZoneOffset.UTC;
 
-    @Named("localDateTimeToOffsetDateTime")
     default OffsetDateTime localDateTimeToOffsetDateTime(LocalDateTime localDateTime) {
         return (null != localDateTime) ? localDateTime.atOffset(DEFAULT_ZONE) : null;
     }

@@ -228,7 +228,7 @@ class WahllokalZustandClientImplTest {
     class PostNiederschriftDruckuhrzeit {
 
         @Test
-        void should_callEaiApiWithDTO_when_clientIsCalledWithBezirUndWahlIDAndUhrzeit() {
+        void should_callEaiApiWithDTO_when_clientIsCalledWithBezirkUndWahlIDAndUhrzeit() {
             val wahlID = "wahlID01";
             val wahlbezirkID = "wahlbezirkID01";
             val zeitpunkt = LocalDateTime.now();

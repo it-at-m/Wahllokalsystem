@@ -81,3 +81,9 @@ Alle Konfigurationsparameter beginnen mit dem Prefix `serviceauth`
 | clients.infomanagement.basepath | URL zum Infomanagement-Service | `http://localhost:39146` |
 | clients.infomanagement.configkey.welcomeMessage | Schlüssel für Konfiguration der Willkommensnachricht | WILLKOMMENSTEXT |
 | serviceauth.welcomemessage.default | Standartd Willkommensnachricht falls die definierte Willkommensnachricht nicht geladen werden kann | Willkommen zur Wahl! |
+| user.csv.eol | Zeilenendezeichen für CSV-Exporte | \r\n |
+| user.authority.wahlvorstand | Rolle die einem Wahlvorstandsbenutzer zugeordnet werden soll | WLS_WAHLVORSTAND |
+| user.anzahlPinBloecke | Anzahl der Blöcke einer Pin | 4 |
+| user.countNumbersPin | Anzahl der Zeichen je Pin-Block | 4 |
+| user.pinChars | Set an Zeichen die für die Pin zum Einsatz kommen können | 23456789abcdefghjkmnpqrstuvwxyz |
+| user.countCharsPrefix | Anzahl an Zeichen für den Prefix des Benutzernamens eines erzeugten Benutzers | 6 |

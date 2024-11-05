@@ -124,39 +124,87 @@ class SecurityConfigurationTest {
 
         @Test
         @WithAnonymousUser
-        void should_return401Unauthorized_when_postWithUnauthorizedAnonymousUser() throws Exception {
+        void should_return401Unauthorized_when_postlastSeenWithUnauthorizedAnonymousUser() throws Exception {
             api.perform(post("/businessActions/lastSeen/wahlbezirkID").with(csrf())).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithAnonymousUser
+        void should_return401Unauthorized_when_postletzteAbmeldungWithUnauthorizedAnonymousUser() throws Exception {
             api.perform(post("/businessActions/letzteAbmeldung/wahlbezirkID").with(csrf())).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithAnonymousUser
+        void should_return401Unauthorized_when_postschnellmeldungSendungsuhrzeitWithUnauthorizedAnonymousUser() throws Exception {
             api.perform(post("/businessActions/schnellmeldungSendungsuhrzeit").with(csrf())).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithAnonymousUser
+        void should_return401Unauthorized_when_postschnellmeldungDruckuhrzeitWithUnauthorizedAnonymousUser() throws Exception {
             api.perform(post("/businessActions/schnellmeldungDruckuhrzeit").with(csrf())).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithAnonymousUser
+        void should_return401Unauthorized_when_postniederschriftSendungsuhrzeitWithUnauthorizedAnonymousUser() throws Exception {
             api.perform(post("/businessActions/niederschriftSendungsuhrzeit").with(csrf())).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithAnonymousUser
+        void should_return401Unauthorized_when_postniederschriftDruckuhrzeitWithUnauthorizedAnonymousUser() throws Exception {
             api.perform(post("/businessActions/niederschriftDruckuhrzeit").with(csrf())).andExpect(status().isUnauthorized());
         }
 
         @Test
         @WithMockUser
-        void should_return200OK_when_postWithAuthorizedMockUser() throws Exception {
+        void should_return200OK_when_postlastSeenWithAuthorizedMockUser() throws Exception {
             api.perform(post("/businessActions/lastSeen/wahlbezirkID").with(csrf())).andExpect(status().isOk());
+        }
+
+        @Test
+        @WithMockUser
+        void should_return200OK_when_postletzteAbmeldungWithAuthorizedMockUser() throws Exception {
             api.perform(post("/businessActions/letzteAbmeldung/wahlbezirkID").with(csrf())).andExpect(status().isOk());
+        }
 
+        @Test
+        @WithMockUser
+        void should_return200OK_when_postschnellmeldungSendungsuhrzeitWithAuthorizedMockUser() throws Exception {
             val requestBodyOfSendungsdaten = new SendungsdatenDTO(null, null);
-            val requestBodyOfDruckdaten = new DruckdatenDTO(null, null);
-
             val requestSchnellmeldungSendungsuhrzeit = post("/businessActions/schnellmeldungSendungsuhrzeit").with(csrf())
                     .contentType(MediaType.APPLICATION_JSON).content(
                             objectMapper.writeValueAsString(requestBodyOfSendungsdaten));
             api.perform(requestSchnellmeldungSendungsuhrzeit).andExpect(status().isOk());
+        }
+
+        @Test
+        @WithMockUser
+        void should_return200OK_when_postschnellmeldungDruckuhrzeitWithAuthorizedMockUser() throws Exception {
+            val requestBodyOfDruckdaten = new DruckdatenDTO(null, null);
 
             val requestSchnellmeldungDruckuhrzeit = post("/businessActions/schnellmeldungDruckuhrzeit").with(csrf()).contentType(MediaType.APPLICATION_JSON)
                     .content(
                             objectMapper.writeValueAsString(requestBodyOfDruckdaten));
             api.perform(requestSchnellmeldungDruckuhrzeit).andExpect(status().isOk());
+        }
 
+        @Test
+        @WithMockUser
+        void should_return200OK_when_postniederschriftSendungsuhrzeitWithAuthorizedMockUser() throws Exception {
+            val requestBodyOfSendungsdaten = new SendungsdatenDTO(null, null);
             val requestNiederschriftSendungsuhrzeit = post("/businessActions/niederschriftSendungsuhrzeit").with(csrf()).contentType(MediaType.APPLICATION_JSON)
                     .content(
                             objectMapper.writeValueAsString(requestBodyOfSendungsdaten));
             api.perform(requestNiederschriftSendungsuhrzeit).andExpect(status().isOk());
+        }
 
+        @Test
+        @WithMockUser
+        void should_return200OK_when_postniederschriftDruckuhrzeitWithAuthorizedMockUser() throws Exception {
+            val requestBodyOfDruckdaten = new DruckdatenDTO(null, null);
             val requestNiederschriftDruckuhrzeit = post("/businessActions/niederschriftDruckuhrzeit").with(csrf()).contentType(MediaType.APPLICATION_JSON)
                     .content(
                             objectMapper.writeValueAsString(requestBodyOfDruckdaten));

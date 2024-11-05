@@ -26,20 +26,20 @@ class WahllokalZustandValidatorTest {
         }
 
         @Test
-        void should_throwFachlicheWlsException_when_wahlbezirkIdIsNull() {
+        void should_throwGivenException_when_wahlbezirkIdIsNull() {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlbezirkIDOrThrow(null, mockedFachlicheWlsException))
                     .isSameAs(mockedFachlicheWlsException);
 
         }
 
         @Test
-        void should_throwFachlicheWlsException_when_wahlbezirkIdIsBlank() {
+        void should_throwGivenException_when_wahlbezirkIdIsBlank() {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlbezirkIDOrThrow("   ", mockedFachlicheWlsException))
                     .isSameAs(mockedFachlicheWlsException);
         }
 
         @Test
-        void should_throwFachlicheWlsException_when_wahlbezirkIdIsEmpty() {
+        void should_throwGivenException_when_wahlbezirkIdIsEmpty() {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlbezirkIDOrThrow("", mockedFachlicheWlsException))
                     .isSameAs(mockedFachlicheWlsException);
         }
@@ -55,21 +55,21 @@ class WahllokalZustandValidatorTest {
         }
 
         @Test
-        void should_throwFachlicheWlsException_when_paramBezirkUndWahlIdIsNull() {
+        void should_throwGivenException_when_paramBezirkUndWahlIdIsNull() {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(null, mockedFachlicheWlsException))
                     .isSameAs(mockedFachlicheWlsException);
 
         }
 
         @Test
-        void should_throwFachlicheWlsException_when_wahlIdIsNull() {
+        void should_throwGivenException_when_wahlIdIsNull() {
             Assertions.assertThatException()
                     .isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(new BezirkUndWahlID(null, "wahlbezirkID01"), mockedFachlicheWlsException))
                     .isSameAs(mockedFachlicheWlsException);
         }
 
         @Test
-        void should_throwFachlicheWlsException_when_wahlIdIsBlank() {
+        void should_throwGivenException_when_wahlIdIsBlank() {
             Assertions.assertThatException()
                     .isThrownBy(
                             () -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(new BezirkUndWahlID("   ", "wahlbezirkID01"), mockedFachlicheWlsException))
@@ -77,28 +77,28 @@ class WahllokalZustandValidatorTest {
         }
 
         @Test
-        void should_throwFachlicheWlsException_when_wahlIdIsEmpty() {
+        void should_throwGivenException_when_wahlIdIsEmpty() {
             Assertions.assertThatException()
                     .isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(new BezirkUndWahlID("", "wahlbezirkID01"), mockedFachlicheWlsException))
                     .isSameAs(mockedFachlicheWlsException);
         }
 
         @Test
-        void should_throwFachlicheWlsException_when_wahlbezirkIdIsNull() {
+        void should_throwGivenException_when_wahlbezirkIdIsNull() {
             Assertions.assertThatException()
                     .isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(new BezirkUndWahlID("wahlID01", null), mockedFachlicheWlsException))
                     .isSameAs(mockedFachlicheWlsException);
         }
 
         @Test
-        void should_throwFachlicheWlsException_when_wahlbezirkIdIsBlank() {
+        void should_throwGivenException_when_wahlbezirkIdIsBlank() {
             Assertions.assertThatException()
                     .isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(new BezirkUndWahlID("wahlID01", "   "), mockedFachlicheWlsException))
                     .isSameAs(mockedFachlicheWlsException);
         }
 
         @Test
-        void should_throwFachlicheWlsException_when_wahlbezirkIdIsEmpty() {
+        void should_throwGivenException_when_wahlbezirkIdIsEmpty() {
             Assertions.assertThatException()
                     .isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(new BezirkUndWahlID("wahlID01", ""), mockedFachlicheWlsException))
                     .isSameAs(mockedFachlicheWlsException);

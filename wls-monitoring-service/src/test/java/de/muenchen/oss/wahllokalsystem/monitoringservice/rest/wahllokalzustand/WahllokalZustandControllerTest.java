@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.monitoringservice.rest.wahllokalzustand;
 
 import de.muenchen.oss.wahllokalsystem.monitoringservice.service.wahllokalzustand.WahllokalZustandService;
+import lombok.val;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,63 +41,47 @@ class WahllokalZustandControllerTest {
         }
     }
 
-    //    @Nested
-    //    class PostSchnellmeldungsSendungsuhrzeit {
-    //
-    //        @Test
-    //        void should_notThrowException_when_serviceIsCalled() {
-    //            val requestBody = Mockito.mock(SendungsdatenDTO.class);
-    //            val mockedSendungsdatenModel = Mockito.mock(SendungsdatenModel.class);
-    //
-    //            Mockito.when(sendungsdatenDTOMapper.toSendungsdatenModel(requestBody)).thenReturn(mockedSendungsdatenModel);
-    //
-    //            unitUnderTest.postSchnellmeldungsSendungsuhrzeit(requestBody);
-    //            Mockito.verify(wahllokalZustandService).postSchnellmeldungSendungsuhrzeit(mockedSendungsdatenModel);
-    //        }
-    //    }
-    //
-    //    @Nested
-    //    class PostSchnellmeldungDruckuhrzeit {
-    //
-    //        @Test
-    //        void should_notThrowException_when_serviceIsCalled() {
-    //            val requestBody = Mockito.mock(DruckdatenDTO.class);
-    //            val mockedDruckdatenModel = Mockito.mock(DruckdatenModel.class);
-    //
-    //            Mockito.when(druckdatenDTOMapper.toDruckdatenModel(requestBody)).thenReturn(mockedDruckdatenModel);
-    //
-    //            unitUnderTest.postSchnellmeldungDruckuhrzeit(requestBody);
-    //            Mockito.verify(wahllokalZustandService).postSchnellmeldungDruckuhrzeit(mockedDruckdatenModel);
-    //        }
-    //    }
-    //
-    //    @Nested
-    //    class PostNiederschriftSendungsuhrzeit {
-    //
-    //        @Test
-    //        void should_notThrowException_when_serviceIsCalled() {
-    //            val requestBody = Mockito.mock(SendungsdatenDTO.class);
-    //            val mockedSendungsdatenModel = Mockito.mock(SendungsdatenModel.class);
-    //
-    //            Mockito.when(sendungsdatenDTOMapper.toSendungsdatenModel(requestBody)).thenReturn(mockedSendungsdatenModel);
-    //
-    //            unitUnderTest.postNiederschriftSendungsuhrzeit(requestBody);
-    //            Mockito.verify(wahllokalZustandService).postNiederschriftSendungsuhrzeit(mockedSendungsdatenModel);
-    //        }
-    //    }
-    //
-    //    @Nested
-    //    class PostNiederschriftDruckuhrzeit {
-    //
-    //        @Test
-    //        void should_notThrowException_when_serviceIsCalled() {
-    //            val requestBody = Mockito.mock(DruckdatenDTO.class);
-    //            val mockedDruckdatenModel = Mockito.mock(DruckdatenModel.class);
-    //
-    //            Mockito.when(druckdatenDTOMapper.toDruckdatenModel(requestBody)).thenReturn(mockedDruckdatenModel);
-    //
-    //            unitUnderTest.postNiederschriftDruckuhrzeit(requestBody);
-    //            Mockito.verify(wahllokalZustandService).postNiederschriftDruckuhrzeit(mockedDruckdatenModel);
-    //        }
-    //    }
+    @Nested
+    class PostSchnellmeldungsSendungsuhrzeit {
+
+        @Test
+        void should_notThrowException_when_serviceIsCalled() {
+            val requestBody = Mockito.mock(SendungsdatenDTO.class);
+            unitUnderTest.postSchnellmeldungsSendungsuhrzeit(requestBody);
+            Mockito.verify(wahllokalZustandService).postSchnellmeldungSendungsuhrzeit(requestBody.bezirkUndWahlID(), requestBody.sendungsuhrzeit());
+        }
+    }
+
+    @Nested
+    class PostSchnellmeldungDruckuhrzeit {
+
+        @Test
+        void should_notThrowException_when_serviceIsCalled() {
+            val requestBody = Mockito.mock(DruckdatenDTO.class);
+            unitUnderTest.postSchnellmeldungDruckuhrzeit(requestBody);
+            Mockito.verify(wahllokalZustandService).postSchnellmeldungDruckuhrzeit(requestBody.bezirkUndWahlID(), requestBody.druckuhrzeit());
+        }
+    }
+
+    @Nested
+    class PostNiederschriftSendungsuhrzeit {
+
+        @Test
+        void should_notThrowException_when_serviceIsCalled() {
+            val requestBody = Mockito.mock(SendungsdatenDTO.class);
+            unitUnderTest.postNiederschriftSendungsuhrzeit(requestBody);
+            Mockito.verify(wahllokalZustandService).postNiederschriftSendungsuhrzeit(requestBody.bezirkUndWahlID(), requestBody.sendungsuhrzeit());
+        }
+    }
+
+    @Nested
+    class PostNiederschriftDruckuhrzeit {
+
+        @Test
+        void should_notThrowException_when_serviceIsCalled() {
+            val requestBody = Mockito.mock(DruckdatenDTO.class);
+            unitUnderTest.postNiederschriftDruckuhrzeit(requestBody);
+            Mockito.verify(wahllokalZustandService).postNiederschriftDruckuhrzeit(requestBody.bezirkUndWahlID(), requestBody.druckuhrzeit());
+        }
+    }
 }

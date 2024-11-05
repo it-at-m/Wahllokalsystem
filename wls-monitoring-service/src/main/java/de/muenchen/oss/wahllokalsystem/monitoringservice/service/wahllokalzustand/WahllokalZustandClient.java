@@ -9,15 +9,6 @@ import java.time.LocalDateTime;
 public interface WahllokalZustandClient {
 
     /**
-     * @param wahllokalZustandDTO references a specific state of the voting room for a wahlId,
-     *            wahlbezirkID and time. At least one of the time Properties must be not null.
-     * @throws WlsException
-     *             {@link TechnischeWlsException}
-     *             if there were trouble during communication
-     */
-    void postWahllokalZustand(final WahllokalZustandDTO wahllokalZustandDTO) throws WlsException;
-
-    /**
      *
      * @param wahlbezirkID the id of the election room;
      * @param zuletztGesehen containing the information about the last time the election room was

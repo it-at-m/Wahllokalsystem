@@ -9,6 +9,8 @@ import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mapstruct.factory.Mappers;
 
 class UserDTOMapperTest {
@@ -32,6 +34,18 @@ class UserDTOMapperTest {
 
             val expectedResult = new UsersOfWahltagModel(wahltagID,
                     List.of(new WahllokalUserInfoModel(wahlbezirknummer, wahltag, wahlbezirkID, WahlbezirksartModel.UWB, wbidWahlnummer)));
+            Assertions.assertThat(result).isEqualTo(expectedResult);
+        }
+
+        @ParameterizedTest
+        @EnumSource(WahlbezirksartDTO.class)
+        void should_returnModelEnumValueWithSameValueAsDTO_when_givenAnyWahlbezirkArtDTOEnumValue(final WahlbezirksartDTO wahlbezirksartDTO) {
+            val dtoToMap = new WahllokalUserInfoDTO(null, null, null, wahlbezirksartDTO, null);
+
+            val result = unitUnderTest.toModel(null, List.of(dtoToMap));
+
+            val expectedResult = new UsersOfWahltagModel(null,
+                    List.of(new WahllokalUserInfoModel(null, null, null, WahlbezirksartModel.valueOf(wahlbezirksartDTO.name()), null)));
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }

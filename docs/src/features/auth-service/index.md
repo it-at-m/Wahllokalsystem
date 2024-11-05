@@ -49,7 +49,9 @@ erDiagram
 > [!IMPORTANT]
 > Der Benutzername liegt in der Datenbank nur verschlüsselt vor.
  
-## Login
+## Prozesse
+
+### Login
 
 ```mermaid
 
@@ -68,6 +70,16 @@ sequenceDiagram
     
     AuthService->>-User : LoginView
 ```
+
+### Erstellung der Benutzer
+
+> [!IMPORTANT]
+> Damit Benutzer angelegt werden können muss die definierte Authority vorhanden sein die den Benutzern zugewiesen werden soll.
+
+Der Service erzeugt für eine Liste an Wahlbezirken eines Wahltermins (`wahltagID`) Benutzer. Dabei werden der
+Benutzername und die PIN zufällig erzeugt.
+
+Die Benutzer die zuvor für den Wahltermin vorhanden waren werden gelöscht.
 
 ## Konfigrationsparameter
 

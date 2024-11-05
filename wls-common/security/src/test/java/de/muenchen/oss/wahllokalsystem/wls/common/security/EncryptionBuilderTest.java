@@ -31,7 +31,7 @@ class EncryptionBuilderTest {
     class DecryptValue {
 
         @Test
-        void sucessful() throws IllegalBlockSizeException, BadPaddingException {
+        void successful() throws IllegalBlockSizeException, BadPaddingException {
             Mockito.when(cipher.doFinal("376526723AFDAB3D".getBytes())).thenReturn("mockedText".getBytes());
             Assertions.assertThat(unitUnderTest.decryptValue("Mzc2NTI2NzIzQUZEQUIzRA==")).isEqualTo("mockedText");
         }

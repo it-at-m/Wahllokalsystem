@@ -351,7 +351,7 @@ class UserServiceTest {
             val user1 = new WahllokalUserInfoModel("101", LocalDate.now(), "wbzID1", WahlbezirksartModel.UWB, "1_1");
             val usersOfWahltag = new UsersOfWahltagModel(wahltagID, List.of(user1));
 
-            unitUnderTest.WAHLVORSTAND_AUTHORITY_NAME = "WahlvorstandAuthorityName";
+            unitUnderTest.wahlvorstandAuthorityName = "WahlvorstandAuthorityName";
 
             Mockito.when(authorityRepository.findByAuthority("WahlvorstandAuthorityName")).thenReturn(Optional.empty());
 
@@ -367,7 +367,7 @@ class UserServiceTest {
             val user1 = new WahllokalUserInfoModel("101", LocalDate.now(), "wbzID1", WahlbezirksartModel.UWB, "1_1");
             val usersOfWahltag = new UsersOfWahltagModel(wahltagID, List.of(user1));
 
-            unitUnderTest.WAHLVORSTAND_AUTHORITY_NAME = "WahlvorstandAuthorityName";
+            unitUnderTest.wahlvorstandAuthorityName = "WahlvorstandAuthorityName";
 
             val mockedAuthority = new Authority();
             Mockito.when(authorityRepository.findByAuthority("WahlvorstandAuthorityName")).thenReturn(Optional.of(mockedAuthority));
@@ -384,7 +384,7 @@ class UserServiceTest {
             val user2 = new WahllokalUserInfoModel("102", LocalDate.now(), "wbzID2", WahlbezirksartModel.UWB, "1_2");
             val usersOfWahltag = new UsersOfWahltagModel(wahltagID, List.of(user1, user2));
 
-            unitUnderTest.WAHLVORSTAND_AUTHORITY_NAME = "WahlvorstandAuthorityName";
+            unitUnderTest.wahlvorstandAuthorityName = "WahlvorstandAuthorityName";
             unitUnderTest.EOL = ";";
 
             val mockedAuthority = new Authority();

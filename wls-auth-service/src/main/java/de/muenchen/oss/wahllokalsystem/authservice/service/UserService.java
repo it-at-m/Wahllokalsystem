@@ -32,7 +32,7 @@ public class UserService {
     String EOL = "\r\n";
 
     @Value("${serviceauth.user.authority.wahlvorstand}")
-    String WAHLVORSTAND_AUTHORITY_NAME = "WLS_WAHLVORSTAND";
+    String wahlvorstandAuthorityName = "WLS_WAHLVORSTAND";
 
     @Value("${serviceauth.user.anzahlPinBloecke}")
     int anzahlPinBloecke;
@@ -143,9 +143,9 @@ public class UserService {
 
     @Transactional
     public String generateWahllokalBenutzer(UsersOfWahltagModel usersOfWahltag) {
-        val authorityWahlvorstand = authorityRepository.findByAuthority(WAHLVORSTAND_AUTHORITY_NAME).orElseThrow(() -> new HttpServerErrorException(
+        val authorityWahlvorstand = authorityRepository.findByAuthority(wahlvorstandAuthorityName).orElseThrow(() -> new HttpServerErrorException(
                 HttpStatus.INTERNAL_SERVER_ERROR,
-                "Keine Authority <" + WAHLVORSTAND_AUTHORITY_NAME + "> gefunden, kann keine Benutzer für Wahltag-ID <" + usersOfWahltag.wahltagID()
+                "Keine Authority <" + wahlvorstandAuthorityName + "> gefunden, kann keine Benutzer für Wahltag-ID <" + usersOfWahltag.wahltagID()
                         + "> anlegen"));
 
         deleteWahllokalBenutzer(usersOfWahltag.wahltagID());

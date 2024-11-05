@@ -27,8 +27,7 @@ public class WahllokalZustandClientImpl implements WahllokalZustandClient {
     private final WahllokalzustandControllerApi wahllokalzustandControllerApi;
     private final TimeStampMapper timeStampMapper;
 
-    @Override
-    public void postWahllokalZustand(WahllokalZustandDTO wahllokalZustandDTO) throws WlsException {
+    private void postWahllokalZustand(WahllokalZustandDTO wahllokalZustandDTO) throws WlsException {
         try {
             wahllokalzustandControllerApi.saveWahllokalZustand(wahllokalZustandDTO);
         } catch (final Exception exception) {

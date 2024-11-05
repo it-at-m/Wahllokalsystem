@@ -1,8 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.monitoringservice.client.common;
 
-import de.muenchen.oss.wahllokalsystem.monitoringservice.client.waehleranzahl.WaehleranzahlClientMapper;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.configuration.Profiles;
-import de.muenchen.oss.wahllokalsystem.monitoringservice.eai.aou.model.DruckzustandDTO;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.eai.aou.model.WahllokalZustandDTO;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.service.waehleranzahl.WaehleranzahlClient;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.service.waehleranzahl.WaehleranzahlModel;
@@ -12,7 +10,6 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlI
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -21,9 +18,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class DummyClientImpl implements WaehleranzahlClient, WahllokalZustandClient {
-
-    private final WaehleranzahlClientMapper waehleranzahlClientMapper;
-    private final TimeStampMapper timeStampMapper;
 
     @Override
     public void postWahlbeteiligung(WaehleranzahlModel waehleranzahlModel) throws WlsException {

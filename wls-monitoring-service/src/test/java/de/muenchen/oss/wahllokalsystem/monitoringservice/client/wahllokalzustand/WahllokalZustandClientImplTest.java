@@ -262,37 +262,6 @@ class WahllokalZustandClientImplTest {
         }
     }
 
-    @Nested
-    class PostWahllokalZustand {
-
-        @Test
-        void should_callEaiApiWithDTO_when_clientIsCalledWithModel() {
-            val wahlID = "wahlID01";
-            val wahlbezirkID = "wahlbezirkID01";
-            val zeitpunkt = OffsetDateTime.now();
-
-            val mockedWahllokalzustandDTO = createWahllokalZustandDTO("emptyDTO", wahlID, wahlbezirkID, zeitpunkt);
-
-            unitUnderTest.postWahllokalZustand(mockedWahllokalzustandDTO);
-            Mockito.verify(wahllokalzustandControllerApi).saveWahllokalZustand(mockedWahllokalzustandDTO);
-        }
-
-        @Test
-        void should_throwTechnischeWlsException_when_eaiApiThrowsAnyException() {
-            val zeitpunkt = OffsetDateTime.now();
-            val mockedWahllokalZustandDTO = createWahllokalZustandDTO("emptyDTO", "wahlID", "wahlbezirkID", zeitpunkt);
-
-            val mockedWlsException = TechnischeWlsException.withCode("007").buildWithMessage("Dummy-Msg");
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI)).thenReturn(mockedWlsException);
-
-            val mockedApiException = new IllegalArgumentException("Nix-Connect");
-            Mockito.doThrow(mockedApiException).when(wahllokalzustandControllerApi).saveWahllokalZustand(mockedWahllokalZustandDTO);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.postWahllokalZustand(mockedWahllokalZustandDTO)).isSameAs(mockedWlsException);
-        }
-
-    }
-
     private WahllokalZustandDTO createWahllokalZustandDTO(final String wahllokalZustandOperation, final String wahlID,
             final String wahlbezirkID, OffsetDateTime zeitpunkt) {
         return switch (wahllokalZustandOperation) {

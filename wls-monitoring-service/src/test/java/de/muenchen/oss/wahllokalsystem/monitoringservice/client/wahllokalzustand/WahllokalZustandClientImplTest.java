@@ -46,11 +46,11 @@ class WahllokalZustandClientImplTest {
             val zeitpunkt = LocalDateTime.now();
             val zeitpunktOffset = OffsetDateTime.now();
 
-            val mockedWahllokalzustandDTO = createWahllokalZustandDTO_POST_LASTSEEN(wahlID, wahlbezirkID, zeitpunktOffset);
+            val expectedWahllokalzustandDTO = createWahllokalZustandDTO_POST_LASTSEEN(wahlID, wahlbezirkID, zeitpunktOffset);
             Mockito.when(timeStampMapper.localDateTimeToOffsetDateTime(zeitpunkt)).thenReturn(zeitpunktOffset);
 
             unitUnderTest.postLastSeen(wahlbezirkID, zeitpunkt);
-            Mockito.verify(wahllokalzustandControllerApi).saveWahllokalZustand(mockedWahllokalzustandDTO);
+            Mockito.verify(wahllokalzustandControllerApi).saveWahllokalZustand(expectedWahllokalzustandDTO);
         }
 
         @Test
@@ -83,11 +83,11 @@ class WahllokalZustandClientImplTest {
             val zeitpunkt = LocalDateTime.now();
             val zeitpunktOffset = OffsetDateTime.now();
 
-            val mockedWahllokalzustandDTO = createWahllokalZustandDTO_POST_LETZTEABMELDUNG(wahlID, wahlbezirkID, zeitpunktOffset);
+            val expectedWahllokalzustandDTO = createWahllokalZustandDTO_POST_LETZTEABMELDUNG(wahlID, wahlbezirkID, zeitpunktOffset);
             Mockito.when(timeStampMapper.localDateTimeToOffsetDateTime(zeitpunkt)).thenReturn(zeitpunktOffset);
 
             unitUnderTest.postLetzteAbmeldung(wahlbezirkID, zeitpunkt);
-            Mockito.verify(wahllokalzustandControllerApi).saveWahllokalZustand(mockedWahllokalzustandDTO);
+            Mockito.verify(wahllokalzustandControllerApi).saveWahllokalZustand(expectedWahllokalzustandDTO);
         }
 
         @Test
@@ -120,11 +120,11 @@ class WahllokalZustandClientImplTest {
             val zeitpunkt = LocalDateTime.now();
             val zeitpunktOffset = OffsetDateTime.now();
 
-            val mockedWahllokalzustandDTO = createWahllokalZustandDTO_POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT(wahlID, wahlbezirkID, zeitpunktOffset);
+            val expectedWahllokalzustandDTO = createWahllokalZustandDTO_POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT(wahlID, wahlbezirkID, zeitpunktOffset);
             Mockito.when(timeStampMapper.localDateTimeToOffsetDateTime(zeitpunkt)).thenReturn(zeitpunktOffset);
 
             unitUnderTest.postSchnellmeldungSendungsuhrzeit(new BezirkUndWahlID(wahlID, wahlbezirkID), zeitpunkt);
-            Mockito.verify(wahllokalzustandControllerApi).saveWahllokalZustand(mockedWahllokalzustandDTO);
+            Mockito.verify(wahllokalzustandControllerApi).saveWahllokalZustand(expectedWahllokalzustandDTO);
         }
 
         @Test
@@ -158,11 +158,11 @@ class WahllokalZustandClientImplTest {
             val zeitpunkt = LocalDateTime.now();
             val zeitpunktOffset = OffsetDateTime.now();
 
-            val mockedWahllokalzustandDTO = createWahllokalZustandDTO_POST_SCHNELLMELDUNG_DRUCKUHRZEIT(wahlID, wahlbezirkID, zeitpunktOffset);
+            val expectedWahllokalzustandDTO = createWahllokalZustandDTO_POST_SCHNELLMELDUNG_DRUCKUHRZEIT(wahlID, wahlbezirkID, zeitpunktOffset);
             Mockito.when(timeStampMapper.localDateTimeToOffsetDateTime(zeitpunkt)).thenReturn(zeitpunktOffset);
 
             unitUnderTest.postSchnellmeldungDruckuhrzeit(new BezirkUndWahlID(wahlID, wahlbezirkID), zeitpunkt);
-            Mockito.verify(wahllokalzustandControllerApi).saveWahllokalZustand(mockedWahllokalzustandDTO);
+            Mockito.verify(wahllokalzustandControllerApi).saveWahllokalZustand(expectedWahllokalzustandDTO);
         }
 
         @Test
@@ -196,11 +196,11 @@ class WahllokalZustandClientImplTest {
             val zeitpunkt = LocalDateTime.now();
             val zeitpunktOffset = OffsetDateTime.now();
 
-            val mockedWahllokalzustandDTO = createWahllokalZustandDTO_POST_NIEDERSCHRIFT_SENDUNGSUHRZEIT(wahlID, wahlbezirkID, zeitpunktOffset);
+            val expectedWahllokalzustandDTO = createWahllokalZustandDTO_POST_NIEDERSCHRIFT_SENDUNGSUHRZEIT(wahlID, wahlbezirkID, zeitpunktOffset);
             Mockito.when(timeStampMapper.localDateTimeToOffsetDateTime(zeitpunkt)).thenReturn(zeitpunktOffset);
 
             unitUnderTest.postNiederschriftSendungsuhrzeit(new BezirkUndWahlID(wahlID, wahlbezirkID), zeitpunkt);
-            Mockito.verify(wahllokalzustandControllerApi).saveWahllokalZustand(mockedWahllokalzustandDTO);
+            Mockito.verify(wahllokalzustandControllerApi).saveWahllokalZustand(expectedWahllokalzustandDTO);
         }
 
         @Test
@@ -234,11 +234,11 @@ class WahllokalZustandClientImplTest {
             val zeitpunkt = LocalDateTime.now();
             val zeitpunktOffset = OffsetDateTime.now();
 
-            val mockedWahllokalzustandDTO = createWahllokalZustandDTO_POST_NIEDERSCHRIFT_DRUCKUHRZEIT(wahlID, wahlbezirkID, zeitpunktOffset);
+            val expectedWahllokalzustandDTO = createWahllokalZustandDTO_POST_NIEDERSCHRIFT_DRUCKUHRZEIT(wahlID, wahlbezirkID, zeitpunktOffset);
             Mockito.when(timeStampMapper.localDateTimeToOffsetDateTime(zeitpunkt)).thenReturn(zeitpunktOffset);
 
             unitUnderTest.postNiederschriftDruckuhrzeit(new BezirkUndWahlID(wahlID, wahlbezirkID), zeitpunkt);
-            Mockito.verify(wahllokalzustandControllerApi).saveWahllokalZustand(mockedWahllokalzustandDTO);
+            Mockito.verify(wahllokalzustandControllerApi).saveWahllokalZustand(expectedWahllokalzustandDTO);
         }
 
         @Test

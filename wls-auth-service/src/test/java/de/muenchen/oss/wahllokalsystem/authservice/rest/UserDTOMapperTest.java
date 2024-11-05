@@ -19,7 +19,7 @@ class UserDTOMapperTest {
     class ToModel {
 
         @Test
-        void toModel() {
+        void should_returnModel_when_givenDTO() {
             val wahltagID = "wahltagID";
             val wahlbezirknummer = "wahlbezirknummer";
             val wahltag = LocalDate.now();

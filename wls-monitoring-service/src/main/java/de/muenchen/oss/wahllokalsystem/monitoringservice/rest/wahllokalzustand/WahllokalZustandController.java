@@ -19,7 +19,7 @@ public class WahllokalZustandController {
     private final WahllokalZustandService wahllokalZustandService;
 
     @Operation(
-            description = "Empfängt die HeartBeat-Request - als Bestätigung der bestehenden Online-Verbindung aus dem Wahlbezirk {wahlbezirkID}, generiert die Empfangs-Uhrzeit, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
+            description = "Letzte Anwesenheit des Wahlbezirks {wahlbezirkID}. Generiert die Empfangs-Uhrzeit, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
     )
     @PostMapping("/lastSeen/{wahlbezirkID}")
     public void postLastSeen(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
@@ -37,7 +37,7 @@ public class WahllokalZustandController {
     }
 
     @Operation(
-            description = "Empfängt die Daten über die Sendungsuhrzeit {SendungsdatenDTO.sendungsuhrzeit} der Schnellmeldung  aus dem Wahlbezirk {SendungsdatenDTO.bezirkUndWahlID.wahlbezirkID} für die Wahl {SendungsdatenDTO.bezirkUndWahlID.wahlID}, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
+            description = "Empfängt die Daten über die Sendungsuhrzeit der Schnellmeldung, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
     )
     @PostMapping("/schnellmeldungSendungsuhrzeit")
     public void postSchnellmeldungsSendungsuhrzeit(@RequestBody SendungsdatenDTO sendungsdatenDTO) {
@@ -46,7 +46,7 @@ public class WahllokalZustandController {
     }
 
     @Operation(
-            description = "Empfängt die Daten über die Druckuhrzeit {DruckdatenDTO.druckuhrzeit} der Schnellmeldung  aus dem Wahlbezirk {DruckdatenDTO.bezirkUndWahlID.wahlbezirkID} für die Wahl {DruckdatenDTO.bezirkUndWahlID.wahlID}, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
+            description = "Empfängt die Daten über die Druckuhrzeit der Schnellmeldung, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
     )
     @PostMapping("/schnellmeldungDruckuhrzeit")
     public void postSchnellmeldungDruckuhrzeit(@RequestBody DruckdatenDTO druckdatenDTO) {
@@ -55,7 +55,7 @@ public class WahllokalZustandController {
     }
 
     @Operation(
-            description = "Empfängt die Daten über die Sendungsuhrzeit {SendungsdatenDTO.sendungsuhrzeit} der Niederschrift  aus dem Wahlbezirk {SendungsdatenDTO.bezirkUndWahlID.wahlbezirkID} für die Wahl {SendungsdatenDTO.bezirkUndWahlID.wahlID}, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
+            description = "Empfängt die Daten über die Sendungsuhrzeit der Niederschrift, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
     )
     @PostMapping("/niederschriftSendungsuhrzeit")
     public void postNiederschriftSendungsuhrzeit(@RequestBody SendungsdatenDTO sendungsdatenDTO) {
@@ -64,7 +64,7 @@ public class WahllokalZustandController {
     }
 
     @Operation(
-            description = "Empfängt die Daten über die Druckuhrzeit {DruckdatenDTO.druckuhrzeit} der Niederschrift  aus dem Wahlbezirk {DruckdatenDTO.bezirkUndWahlID.wahlbezirkID} für die Wahl {DruckdatenDTO.bezirkUndWahlID.wahlID}, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
+            description = "Empfängt die Daten über die Druckuhrzeit der Niederschrift, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
     )
     @PostMapping("/niederschriftDruckuhrzeit")
     public void postNiederschriftDruckuhrzeit(@RequestBody DruckdatenDTO druckdatenDTO) {

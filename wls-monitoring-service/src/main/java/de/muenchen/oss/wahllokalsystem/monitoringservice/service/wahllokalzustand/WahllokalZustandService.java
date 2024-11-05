@@ -33,10 +33,10 @@ public class WahllokalZustandService {
     }
 
     @PreAuthorize("hasAuthority('Monitoring_BUSINESSACTION_PostSchnellmeldungSendungsuhrzeit')")
-    public void postSchnellmeldungSendungsuhrzeit(final BezirkUndWahlID bezirkUndWahlID, final LocalDateTime schnellmeldungsSendungsuhrzeit) {
+    public void postSchnellmeldungSendungsuhrzeit(final BezirkUndWahlID bezirkUndWahlID, final LocalDateTime schnellmeldungSendungsuhrzeit) {
         wahllokalZustandValidator.validWahlIdUndWahlbezirkIDOrThrow(bezirkUndWahlID,
                 exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG));
-        wahllokalZustandClient.postSchnellmeldungSendungsuhrzeit(bezirkUndWahlID, schnellmeldungsSendungsuhrzeit);
+        wahllokalZustandClient.postSchnellmeldungSendungsuhrzeit(bezirkUndWahlID, schnellmeldungSendungsuhrzeit);
     }
 
     @PreAuthorize("hasAuthority('Monitoring_BUSINESSACTION_PostSchnellmeldungDruckuhrzeit')")

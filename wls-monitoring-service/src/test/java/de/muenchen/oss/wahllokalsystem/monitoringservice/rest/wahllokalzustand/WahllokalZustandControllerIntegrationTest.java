@@ -109,8 +109,8 @@ class WahllokalZustandControllerIntegrationTest {
 
         @Test
         void should_notThrowAnyException_when_requestParamValid() throws Exception {
-            val sendungsDatenDTO_valid = createSendungsdatenDTO("wahlID","wahlbezirkID");
-            val request_valid_param= MockMvcRequestBuilders.post("/businessActions/schnellmeldungSendungsuhrzeit").with(csrf())
+            val sendungsDatenDTO_valid = createSendungsdatenDTO("wahlID", "wahlbezirkID");
+            val request_valid_param = MockMvcRequestBuilders.post("/businessActions/schnellmeldungSendungsuhrzeit").with(csrf())
                     .contentType(MediaType.APPLICATION_JSON).content(
                             objectMapper.writeValueAsString(sendungsDatenDTO_valid));
             Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request_valid_param));
@@ -163,8 +163,8 @@ class WahllokalZustandControllerIntegrationTest {
 
         @Test
         void should_notThrowAnyException_when_requestParamValid() throws Exception {
-            val druckDatenDTO_valid = createSendungsdatenDTO("wahlID","wahlbezirkID");
-            val request_valid_param= MockMvcRequestBuilders.post("/businessActions/schnellmeldungDruckuhrzeit").with(csrf())
+            val druckDatenDTO_valid = createSendungsdatenDTO("wahlID", "wahlbezirkID");
+            val request_valid_param = MockMvcRequestBuilders.post("/businessActions/schnellmeldungDruckuhrzeit").with(csrf())
                     .contentType(MediaType.APPLICATION_JSON).content(
                             objectMapper.writeValueAsString(druckDatenDTO_valid));
             Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request_valid_param));
@@ -217,8 +217,8 @@ class WahllokalZustandControllerIntegrationTest {
 
         @Test
         void should_notThrowAnyException_when_requestParamValid() throws Exception {
-            val sendungsDatenDTO_valid = createSendungsdatenDTO("wahlID","wahlbezirkID");
-            val request_valid_param= MockMvcRequestBuilders.post("/businessActions/niederschriftSendungsuhrzeit").with(csrf())
+            val sendungsDatenDTO_valid = createSendungsdatenDTO("wahlID", "wahlbezirkID");
+            val request_valid_param = MockMvcRequestBuilders.post("/businessActions/niederschriftSendungsuhrzeit").with(csrf())
                     .contentType(MediaType.APPLICATION_JSON).content(
                             objectMapper.writeValueAsString(sendungsDatenDTO_valid));
             Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request_valid_param));
@@ -271,8 +271,8 @@ class WahllokalZustandControllerIntegrationTest {
 
         @Test
         void should_notThrowAnyException_when_requestParamValid() throws Exception {
-            val druckDatenDTO_valid = createSendungsdatenDTO("wahlID","wahlbezirkID");
-            val request_valid_param= MockMvcRequestBuilders.post("/businessActions/niederschriftSendungsuhrzeit").with(csrf())
+            val druckDatenDTO_valid = createSendungsdatenDTO("wahlID", "wahlbezirkID");
+            val request_valid_param = MockMvcRequestBuilders.post("/businessActions/niederschriftSendungsuhrzeit").with(csrf())
                     .contentType(MediaType.APPLICATION_JSON).content(
                             objectMapper.writeValueAsString(druckDatenDTO_valid));
             Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request_valid_param));

@@ -270,41 +270,41 @@ class WahllokalZustandClientImplTest {
     private WahllokalZustandDTO createWahllokalZustandDTO_POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT(final String wahlID,
             final String wahlbezirkID, OffsetDateTime zeitpunkt) {
         return new WahllokalZustandDTO().wahlbezirkID(wahlbezirkID)
-                    .druckzustaende(
-                            Set.of(
-                                    new DruckzustandDTO()
-                                            .wahlID(wahlID)
-                                            .schnellmeldungSendenUhrzeit(zeitpunkt)));
+                .druckzustaende(
+                        Set.of(
+                                new DruckzustandDTO()
+                                        .wahlID(wahlID)
+                                        .schnellmeldungSendenUhrzeit(zeitpunkt)));
     }
 
     private WahllokalZustandDTO createWahllokalZustandDTO_POST_SCHNELLMELDUNG_DRUCKUHRZEIT(final String wahlID,
             final String wahlbezirkID, OffsetDateTime zeitpunkt) {
         return new WahllokalZustandDTO().wahlbezirkID(wahlbezirkID)
-                    .druckzustaende(
-                            Set.of(
-                                    new DruckzustandDTO()
-                                            .wahlID(wahlID)
-                                            .schnellmeldungDruckUhrzeit(zeitpunkt)));
+                .druckzustaende(
+                        Set.of(
+                                new DruckzustandDTO()
+                                        .wahlID(wahlID)
+                                        .schnellmeldungDruckUhrzeit(zeitpunkt)));
     }
 
     private WahllokalZustandDTO createWahllokalZustandDTO_POST_NIEDERSCHRIFT_SENDUNGSUHRZEIT(final String wahlID,
             final String wahlbezirkID, OffsetDateTime zeitpunkt) {
         return new WahllokalZustandDTO().wahlbezirkID(wahlbezirkID)
-                    .druckzustaende(
-                            Set.of(
-                                    new DruckzustandDTO()
-                                            .wahlID(wahlID)
-                                            .niederschriftSendenUhrzeit(zeitpunkt)));
+                .druckzustaende(
+                        Set.of(
+                                new DruckzustandDTO()
+                                        .wahlID(wahlID)
+                                        .niederschriftSendenUhrzeit(zeitpunkt)));
     }
 
     private WahllokalZustandDTO createWahllokalZustandDTO_POST_NIEDERSCHRIFT_DRUCKUHRZEIT(final String wahlID,
             final String wahlbezirkID, OffsetDateTime zeitpunkt) {
         return new WahllokalZustandDTO().wahlbezirkID(wahlbezirkID)
-                    .druckzustaende(
-                            Set.of(
-                                    new DruckzustandDTO()
-                                            .wahlID(wahlID)
-                                            .niederschriftDruckUhrzeit(zeitpunkt)));
+                .druckzustaende(
+                        Set.of(
+                                new DruckzustandDTO()
+                                        .wahlID(wahlID)
+                                        .niederschriftDruckUhrzeit(zeitpunkt)));
     }
 
 }

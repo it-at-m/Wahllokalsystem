@@ -1,7 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.monitoringservice.client.common;
 
 import de.muenchen.oss.wahllokalsystem.monitoringservice.configuration.Profiles;
-import de.muenchen.oss.wahllokalsystem.monitoringservice.eai.aou.model.WahllokalZustandDTO;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.service.waehleranzahl.WaehleranzahlClient;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.service.waehleranzahl.WaehleranzahlModel;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.service.wahllokalzustand.WahllokalZustandClient;
@@ -37,21 +36,25 @@ public class DummyClientImpl implements WaehleranzahlClient, WahllokalZustandCli
     @Override
     public void postSchnellmeldungSendungsuhrzeit(BezirkUndWahlID bezirkUndWahlID, LocalDateTime schnellmeldungSendungsuhrzeit)
             throws WlsException {
-        log.info("Dummy client postSchnellmeldungSendungsuhrzeit() called instead of EAI with: " + bezirkUndWahlID + " schnellmeldungSendungsuhrzeit:" + schnellmeldungSendungsuhrzeit);
+        log.info("Dummy client postSchnellmeldungSendungsuhrzeit() called instead of EAI with: " + bezirkUndWahlID + " schnellmeldungSendungsuhrzeit:"
+                + schnellmeldungSendungsuhrzeit);
     }
 
     @Override
     public void postSchnellmeldungDruckuhrzeit(BezirkUndWahlID bezirkUndWahlID, LocalDateTime schnellmeldungDruckuhrzeit) throws WlsException {
-        log.info("Dummy client postSchnellmeldungDruckuhrzeit() called instead of EAI with: " + bezirkUndWahlID + " schnellmeldungDruckuhrzeit:" + schnellmeldungDruckuhrzeit);
+        log.info("Dummy client postSchnellmeldungDruckuhrzeit() called instead of EAI with: " + bezirkUndWahlID + " schnellmeldungDruckuhrzeit:"
+                + schnellmeldungDruckuhrzeit);
     }
 
     @Override
     public void postNiederschriftSendungsuhrzeit(BezirkUndWahlID bezirkUndWahlID, LocalDateTime niederschriftSendungsuhrzeit) throws WlsException {
-        log.info("Dummy client postNiederschriftSendungsuhrzeit() called instead of EAI with: " + bezirkUndWahlID + " niederschriftSendungsuhrzeit:" + niederschriftSendungsuhrzeit);
+        log.info("Dummy client postNiederschriftSendungsuhrzeit() called instead of EAI with: " + bezirkUndWahlID + " niederschriftSendungsuhrzeit:"
+                + niederschriftSendungsuhrzeit);
     }
 
     @Override
     public void postNiederschriftDruckuhrzeit(BezirkUndWahlID bezirkUndWahlID, LocalDateTime niederschriftDruckuhrzeit) throws WlsException {
-        log.info("Dummy client postNiederschriftDruckuhrzeit() called instead of EAI with: " + bezirkUndWahlID + " niederschriftDruckuhrzeit:" + niederschriftDruckuhrzeit);
+        log.info("Dummy client postNiederschriftDruckuhrzeit() called instead of EAI with: " + bezirkUndWahlID + " niederschriftDruckuhrzeit:"
+                + niederschriftDruckuhrzeit);
     }
 }

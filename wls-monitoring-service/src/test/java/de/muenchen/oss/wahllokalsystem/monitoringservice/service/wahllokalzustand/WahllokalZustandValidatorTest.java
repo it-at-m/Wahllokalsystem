@@ -19,7 +19,7 @@ class WahllokalZustandValidatorTest {
 
     @Nested
     class ValidWahlbezirkIDOrThrow {
-    
+
         @Test
         void should_notThrowAnyException_when_wahlbezirkIdIsNotNullOrBlankOrEmpty() {
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahlbezirkIDOrThrow("wahlbezirkID", mockedFachlicheWlsException));

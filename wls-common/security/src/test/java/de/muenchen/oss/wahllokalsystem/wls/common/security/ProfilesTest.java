@@ -41,7 +41,7 @@ class ProfilesTest {
         }
     }
 
-    @SpringBootApplication (
+    @SpringBootApplication(
             scanBasePackages = {
                     "de.muenchen.oss.wahllokalsystem.wls.common.security",
                     "de.muenchen.oss.wahllokalsystem.wls.common.exception"

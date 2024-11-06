@@ -47,6 +47,7 @@ class WahllokalZustandValidatorTest {
 
     @Nested
     class ValidWahlIdUndWahlbezirkIDOrThrow {
+    
         @Test
         void should_notThrowAnyException_when_wahlIdAndWahlbezirkIdAreNotNullOrBlankOrEmpty() {
             Assertions.assertThatNoException()

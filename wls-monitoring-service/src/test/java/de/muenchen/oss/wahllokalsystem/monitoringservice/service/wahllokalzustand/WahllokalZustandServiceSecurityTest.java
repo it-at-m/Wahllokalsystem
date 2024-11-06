@@ -153,6 +153,7 @@ public class WahllokalZustandServiceSecurityTest {
 
     @Nested
     class PostSchnellmeldungDruckuhrzeit {
+    
         @Test
         void should_grantAccessAndThrowNoException_when_authoritiesAreValid() throws Exception {
             SecurityUtils.runWith(Authorities.SERVICE_POST_SCHNELLMELDUNG_DRUCKUHRZEIT);

@@ -57,7 +57,8 @@ public class SecurityConfiguration {
                         AntPathRequestMatcher.antMatcher("/"),
                         AntPathRequestMatcher.antMatcher("/home"),
                         AntPathRequestMatcher.antMatcher("/css/*"),
-                        AntPathRequestMatcher.antMatcher("/js/*"))
+                        AntPathRequestMatcher.antMatcher("/js/*"),
+                        AntPathRequestMatcher.antMatcher("/h2-console/**"))
                         .permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer -> httpSecurityOAuth2ResourceServerConfigurer

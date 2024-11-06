@@ -1,5 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.security;
 
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.testultils.LoggerExtension;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -23,6 +25,9 @@ class EncryptionBuilderTest {
 
     @Mock
     Cipher cipher;
+
+    @Mock
+    ServiceIDFormatter formatter;
 
     @InjectMocks
     EncryptionBuilder unitUnderTest;
@@ -49,8 +54,21 @@ class EncryptionBuilderTest {
         @Test
         void throwBadPadding() throws IllegalBlockSizeException, BadPaddingException {
             val mockedBadPaddingException = new BadPaddingException("MockedBadPadding");
+            Mockito.when(formatter.getId()).thenReturn("1");
             Mockito.when(cipher.doFinal("376526723AFDAB3D".getBytes())).thenThrow(mockedBadPaddingException);
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.decryptValue("Mzc2NTI2NzIzQUZEQUIzRA=="));
+
+            Assertions.assertThatThrownBy(() -> unitUnderTest.decryptValue("Mzc2NTI2NzIzQUZEQUIzRA=="))
+                    .isInstanceOf(TechnischeWlsException.class);
+        }
+
+        @Test
+        void throwIllegalBlockSize() throws IllegalBlockSizeException, BadPaddingException {
+            val mockedIllegalBlockSizeException = new IllegalBlockSizeException("MockedIllegalBlockSize");
+            Mockito.when(formatter.getId()).thenReturn("1");
+            Mockito.when(cipher.doFinal("376526723AFDAB3D".getBytes())).thenThrow(mockedIllegalBlockSizeException);
+
+            Assertions.assertThatThrownBy(() -> unitUnderTest.decryptValue("Mzc2NTI2NzIzQUZEQUIzRA=="))
+                    .isInstanceOf(TechnischeWlsException.class);
         }
     }
 
@@ -76,8 +94,21 @@ class EncryptionBuilderTest {
         @Test
         void throwBadPadding() throws IllegalBlockSizeException, BadPaddingException {
             val mockedBadPaddingException = new BadPaddingException("MockedBadPadding");
+            Mockito.when(formatter.getId()).thenReturn("1");
             Mockito.when(cipher.doFinal("Mzc2NTI2NzIzQUZEQUIzRA==".getBytes())).thenThrow(mockedBadPaddingException);
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.decryptValue("376526723AFDAB3D"));
+
+            Assertions.assertThatThrownBy(() -> unitUnderTest.encryptValue("Mzc2NTI2NzIzQUZEQUIzRA=="))
+                    .isInstanceOf(TechnischeWlsException.class);
+        }
+
+        @Test
+        void throwIllegalBlockSize() throws IllegalBlockSizeException, BadPaddingException {
+            val mockedIllegalBlockSizeException = new IllegalBlockSizeException("MockedIllegalBlockSize");
+            Mockito.when(formatter.getId()).thenReturn("1");
+            Mockito.when(cipher.doFinal("Mzc2NTI2NzIzQUZEQUIzRA==".getBytes())).thenThrow(mockedIllegalBlockSizeException);
+
+            Assertions.assertThatThrownBy(() -> unitUnderTest.encryptValue("Mzc2NTI2NzIzQUZEQUIzRA=="))
+                    .isInstanceOf(TechnischeWlsException.class);
         }
     }
 }

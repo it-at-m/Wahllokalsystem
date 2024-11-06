@@ -1,7 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration;
 
-import static org.springframework.security.core.context.SecurityContextHolder.clearContext;
-
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.Konfiguration;
@@ -27,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
@@ -44,7 +43,7 @@ public class KonfigurationServiceSecurityTest {
 
     @BeforeEach
     void setup() {
-        clearContext();
+        SecurityContextHolder.clearContext();
     }
 
     @AfterEach
@@ -175,7 +174,7 @@ public class KonfigurationServiceSecurityTest {
     class GetKonfigurationUnauthorized {
         @Test
         void accessGranted() {
-            clearContext();
+            SecurityContextHolder.clearContext();
 
             Assertions.assertThatNoException().isThrownBy(() -> konfigurationService.getKonfigurationUnauthorized(KonfigurationKonfigKey.WILLKOMMENSTEXT));
         }

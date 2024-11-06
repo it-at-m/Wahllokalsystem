@@ -26,8 +26,8 @@ public class AESEncryptionConfiguration {
     @Bean
     Cipher decryptionCipher() throws Exception {
         val secret = new SecretKeySpec(key.getBytes(), 0, 16, AES);
-        val encryptCipher = Cipher.getInstance(AES);
-        encryptCipher.init(Cipher.DECRYPT_MODE, secret);
-        return encryptCipher;
+        val decryptCipher = Cipher.getInstance(AES);
+        decryptCipher.init(Cipher.DECRYPT_MODE, secret);
+        return decryptCipher;
     }
 }

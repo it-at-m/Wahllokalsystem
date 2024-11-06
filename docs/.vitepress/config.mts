@@ -76,6 +76,7 @@ export default withMermaid({
                 {text: 'Ergebnismeldung-Service', link: `${PATH_SERVICES}ergebnismeldung-service/`},
                 {text: 'Auth-Service', link: `${PATH_SERVICES}auth-service/`},
                 {text: 'Vorfälle und Vorkommnisse-Service', link: `${PATH_SERVICES}vorfaelleundvorkommnisse-service/`},
+                {text: 'Admin-Service', link: `${PATH_SERVICES}admin-service/`},
             ],
         },
 

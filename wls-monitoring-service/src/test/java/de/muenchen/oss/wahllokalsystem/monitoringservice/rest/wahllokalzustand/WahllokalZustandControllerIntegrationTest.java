@@ -52,26 +52,20 @@ class WahllokalZustandControllerIntegrationTest {
 
         @Test
         void should_notThrowAnyException_when_requestParamValid() {
-            val request_1 = MockMvcRequestBuilders.post("/businessActions/lastSeen/" + "validWahlbezirkID").with(csrf());
-            Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request_1));
+            val request = MockMvcRequestBuilders.post("/businessActions/lastSeen/" + "validWahlbezirkID").with(csrf());
+            Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request));
         }
 
         @Test
         void should_throwWlsException_when_requestParamsAreInvalid() throws Exception {
-            val request_1 = MockMvcRequestBuilders.post("/businessActions/lastSeen/" + "  ").with(csrf());
-            val response_1 = mockMvc.perform(request_1).andExpect(status().isBadRequest()).andReturn();
-            val responseBodyAsWlsExceptionDTO_1 = objectMapper.readValue(response_1.getResponse().getContentAsString(), WlsExceptionDTO.class);
+            val request = MockMvcRequestBuilders.post("/businessActions/lastSeen/" + "  ").with(csrf());
+            val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
+            val responseBodyAsWlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
 
-            val request_2 = MockMvcRequestBuilders.post("/businessActions/lastSeen/" + "").with(csrf());
-            val response_2 = mockMvc.perform(request_2).andExpect(status().isInternalServerError()).andReturn();
-            val responseBodyAsWlsExceptionDTO_2 = objectMapper.readValue(response_2.getResponse().getContentAsString(), WlsExceptionDTO.class);
-
-            val expectedWlsExceptionDTO_1 = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.POST_LASTSEEN_SUCHKRITERIEN_UNVOLLSTAENDIG.code(),
+            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.POST_LASTSEEN_SUCHKRITERIEN_UNVOLLSTAENDIG.code(),
                     serviceID, ExceptionConstants.POST_LASTSEEN_SUCHKRITERIEN_UNVOLLSTAENDIG.message());
-            val expectedWlsExceptionDTO_2 = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionKonstanten.CODE_ALLGEMEIN_UNBEKANNT, "WLS-MONITORING", "");
 
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO_1).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedWlsExceptionDTO_1);
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO_2).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedWlsExceptionDTO_2);
+            Assertions.assertThat(responseBodyAsWlsExceptionDTO).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedWlsExceptionDTO);
         }
     }
 
@@ -80,27 +74,19 @@ class WahllokalZustandControllerIntegrationTest {
 
         @Test
         void should_notThrowAnyException_when_requestParamValid() {
-            val request_1 = MockMvcRequestBuilders.post("/businessActions/letzteAbmeldung/" + "validWahlbezirkID").with(csrf());
-            Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request_1));
+            val request = MockMvcRequestBuilders.post("/businessActions/letzteAbmeldung/" + "validWahlbezirkID").with(csrf());
+            Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request));
         }
 
         @Test
         void should_throwWlsException_when_requestParamsAreInvalid() throws Exception {
-            val request_1 = MockMvcRequestBuilders.post("/businessActions/letzteAbmeldung/" + "  ").with(csrf());
-            val response_1 = mockMvc.perform(request_1).andExpect(status().isBadRequest()).andReturn();
-            val responseBodyAsWlsExceptionDTO_1 = objectMapper.readValue(response_1.getResponse().getContentAsString(), WlsExceptionDTO.class);
+            val request = MockMvcRequestBuilders.post("/businessActions/letzteAbmeldung/").with(csrf());
+            val response = mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
+            val responseBodyAsWlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
 
-            val request_2 = MockMvcRequestBuilders.post("/businessActions/letzteAbmeldung/").with(csrf());
-            val response_2 = mockMvc.perform(request_2).andExpect(status().isInternalServerError()).andReturn();
-            val responseBodyAsWlsExceptionDTO_2 = objectMapper.readValue(response_2.getResponse().getContentAsString(), WlsExceptionDTO.class);
+            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionKonstanten.CODE_ALLGEMEIN_UNBEKANNT, "WLS-MONITORING", "");
 
-            val expectedWlsExceptionDTO_1 = new WlsExceptionDTO(WlsExceptionCategory.F,
-                    ExceptionConstants.POST_LETZTEABMELDUNG_SUCHKRITERIEN_UNVOLLSTAENDIG.code(),
-                    serviceID, ExceptionConstants.POST_LETZTEABMELDUNG_SUCHKRITERIEN_UNVOLLSTAENDIG.message());
-            val expectedWlsExceptionDTO_2 = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionKonstanten.CODE_ALLGEMEIN_UNBEKANNT, "WLS-MONITORING", "");
-
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO_1).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedWlsExceptionDTO_1);
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO_2).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedWlsExceptionDTO_2);
+            Assertions.assertThat(responseBodyAsWlsExceptionDTO).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedWlsExceptionDTO);
         }
     }
 
@@ -117,42 +103,17 @@ class WahllokalZustandControllerIntegrationTest {
         }
 
         @Test
-        void should_throwWlsException_when_requestParamsAreInvalid() throws Exception {
-            val sendungsDatenDTO_wahlID_blank = createSendungsdatenDTO("  ", "wahlbezirkID");
-            val sendungsDatenDTO_wahlbezirkID_empty = createSendungsdatenDTO("wahlID", "");
-
-            val request_wahlID_blank = MockMvcRequestBuilders.post("/businessActions/schnellmeldungSendungsuhrzeit").with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON).content(
-                            objectMapper.writeValueAsString(sendungsDatenDTO_wahlID_blank));
-            val request_wahlbezirkID_empty = MockMvcRequestBuilders.post("/businessActions/schnellmeldungSendungsuhrzeit").with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON).content(
-                            objectMapper.writeValueAsString(sendungsDatenDTO_wahlbezirkID_empty));
+        void should_throwWlsException_when_requestParamIsInvalid() throws Exception {
             val request_sendungsDatenNull = MockMvcRequestBuilders.post("/businessActions/schnellmeldungSendungsuhrzeit").with(csrf())
                     .contentType(MediaType.APPLICATION_JSON).content(
                             objectMapper.writeValueAsString(null));
-
-            val response_wahlID_blank = mockMvc.perform(request_wahlID_blank).andExpect(status().isBadRequest()).andReturn();
-            val responseBodyAsWlsExceptionDTO_wahlID_blank = objectMapper.readValue(response_wahlID_blank.getResponse().getContentAsString(),
-                    WlsExceptionDTO.class);
-
-            val response_wahlbezirkID_empty = mockMvc.perform(request_wahlbezirkID_empty).andExpect(status().isBadRequest()).andReturn();
-            val responseBodyAsWlsExceptionDTO_wahlbezirkID_empty = objectMapper.readValue(response_wahlbezirkID_empty.getResponse().getContentAsString(),
-                    WlsExceptionDTO.class);
-
             val response_sendungsDatenNull = mockMvc.perform(request_sendungsDatenNull).andExpect(status().isBadRequest()).andReturn();
             val responseBodyAsWlsExceptionDTO_sendungsDatenNull = objectMapper.readValue(response_sendungsDatenNull.getResponse().getContentAsString(),
                     WlsExceptionDTO.class);
 
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F,
-                    ExceptionConstants.POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG.code(),
-                    serviceID, ExceptionConstants.POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG.message());
             val expectedWlsExceptionDTO_sendungsDatenNull = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionKonstanten.CODE_HTTP_MESSAGE_NOT_READABLE,
                     serviceID, "");
 
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO_wahlID_blank).usingRecursiveComparison().ignoringFields("message")
-                    .isEqualTo(expectedWlsExceptionDTO);
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO_wahlbezirkID_empty).usingRecursiveComparison().ignoringFields("message")
-                    .isEqualTo(expectedWlsExceptionDTO);
             Assertions.assertThat(responseBodyAsWlsExceptionDTO_sendungsDatenNull).usingRecursiveComparison().ignoringFields("message")
                     .isEqualTo(expectedWlsExceptionDTO_sendungsDatenNull);
         }
@@ -171,42 +132,18 @@ class WahllokalZustandControllerIntegrationTest {
         }
 
         @Test
-        void should_throwWlsException_when_requestParamsAreInvalid() throws Exception {
-            val druckDatenDTO_wahlID_blank = createDruckdatenDTO("  ", "wahlbezirkID");
-            val druckDatenDTO_wahlbezirkID_empty = createDruckdatenDTO("wahlID", "");
-
-            val request_wahlID_blank = MockMvcRequestBuilders.post("/businessActions/schnellmeldungDruckuhrzeit").with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON).content(
-                            objectMapper.writeValueAsString(druckDatenDTO_wahlID_blank));
-            val request_wahlbezirkID_empty = MockMvcRequestBuilders.post("/businessActions/schnellmeldungDruckuhrzeit").with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON).content(
-                            objectMapper.writeValueAsString(druckDatenDTO_wahlbezirkID_empty));
+        void should_throwWlsException_when_requestParamIsInvalid() throws Exception {
             val request_druckDatenNull = MockMvcRequestBuilders.post("/businessActions/schnellmeldungDruckuhrzeit").with(csrf())
                     .contentType(MediaType.APPLICATION_JSON).content(
                             objectMapper.writeValueAsString(null));
-
-            val response_wahlID_blank = mockMvc.perform(request_wahlID_blank).andExpect(status().isBadRequest()).andReturn();
-            val responseBodyAsWlsExceptionDTO_wahlID_blank = objectMapper.readValue(response_wahlID_blank.getResponse().getContentAsString(),
-                    WlsExceptionDTO.class);
-
-            val response_wahlbezirkID_empty = mockMvc.perform(request_wahlbezirkID_empty).andExpect(status().isBadRequest()).andReturn();
-            val responseBodyAsWlsExceptionDTO_wahlbezirkID_empty = objectMapper.readValue(response_wahlbezirkID_empty.getResponse().getContentAsString(),
-                    WlsExceptionDTO.class);
 
             val response_druckDatenNull = mockMvc.perform(request_druckDatenNull).andExpect(status().isBadRequest()).andReturn();
             val responseBodyAsWlsExceptionDTO_druckDatenNull = objectMapper.readValue(response_druckDatenNull.getResponse().getContentAsString(),
                     WlsExceptionDTO.class);
 
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F,
-                    ExceptionConstants.POST_SCHNELLMELDUNG_DRUCKUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG.code(),
-                    serviceID, ExceptionConstants.POST_SCHNELLMELDUNG_DRUCKUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG.message());
             val expectedWlsExceptionDTO_druckDatenNull = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionKonstanten.CODE_HTTP_MESSAGE_NOT_READABLE,
                     serviceID, "");
 
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO_wahlID_blank).usingRecursiveComparison().ignoringFields("message")
-                    .isEqualTo(expectedWlsExceptionDTO);
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO_wahlbezirkID_empty).usingRecursiveComparison().ignoringFields("message")
-                    .isEqualTo(expectedWlsExceptionDTO);
             Assertions.assertThat(responseBodyAsWlsExceptionDTO_druckDatenNull).usingRecursiveComparison().ignoringFields("message")
                     .isEqualTo(expectedWlsExceptionDTO_druckDatenNull);
         }
@@ -227,42 +164,21 @@ class WahllokalZustandControllerIntegrationTest {
         @Test
         void should_throwWlsException_when_requestParamsAreInvalid() throws Exception {
             val sendungsDatenDTO_wahlID_blank = createSendungsdatenDTO("  ", "wahlbezirkID");
-            val sendungsDatenDTO_wahlbezirkID_empty = createSendungsdatenDTO("wahlID", "");
 
             val request_wahlID_blank = MockMvcRequestBuilders.post("/businessActions/niederschriftSendungsuhrzeit").with(csrf())
                     .contentType(MediaType.APPLICATION_JSON).content(
                             objectMapper.writeValueAsString(sendungsDatenDTO_wahlID_blank));
-            val request_wahlbezirkID_empty = MockMvcRequestBuilders.post("/businessActions/niederschriftSendungsuhrzeit").with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON).content(
-                            objectMapper.writeValueAsString(sendungsDatenDTO_wahlbezirkID_empty));
-            val request_sendungsDatenNull = MockMvcRequestBuilders.post("/businessActions/niederschriftSendungsuhrzeit").with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON).content(
-                            objectMapper.writeValueAsString(null));
 
             val response_wahlID_blank = mockMvc.perform(request_wahlID_blank).andExpect(status().isBadRequest()).andReturn();
             val responseBodyAsWlsExceptionDTO_wahlID_blank = objectMapper.readValue(response_wahlID_blank.getResponse().getContentAsString(),
                     WlsExceptionDTO.class);
 
-            val response_wahlbezirkID_empty = mockMvc.perform(request_wahlbezirkID_empty).andExpect(status().isBadRequest()).andReturn();
-            val responseBodyAsWlsExceptionDTO_wahlbezirkID_empty = objectMapper.readValue(response_wahlbezirkID_empty.getResponse().getContentAsString(),
-                    WlsExceptionDTO.class);
-
-            val response_sendungsDatenNull = mockMvc.perform(request_sendungsDatenNull).andExpect(status().isBadRequest()).andReturn();
-            val responseBodyAsWlsExceptionDTO_sendungsDatenNull = objectMapper.readValue(response_sendungsDatenNull.getResponse().getContentAsString(),
-                    WlsExceptionDTO.class);
-
             val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F,
                     ExceptionConstants.POST_NIEDERSCHRIFT_SENDUNGSUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG.code(),
                     serviceID, ExceptionConstants.POST_NIEDERSCHRIFT_SENDUNGSUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG.message());
-            val expectedWlsExceptionDTO_sendungsDatenNull = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionKonstanten.CODE_HTTP_MESSAGE_NOT_READABLE,
-                    serviceID, "");
 
             Assertions.assertThat(responseBodyAsWlsExceptionDTO_wahlID_blank).usingRecursiveComparison().ignoringFields("message")
                     .isEqualTo(expectedWlsExceptionDTO);
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO_wahlbezirkID_empty).usingRecursiveComparison().ignoringFields("message")
-                    .isEqualTo(expectedWlsExceptionDTO);
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO_sendungsDatenNull).usingRecursiveComparison().ignoringFields("message")
-                    .isEqualTo(expectedWlsExceptionDTO_sendungsDatenNull);
         }
     }
 
@@ -280,43 +196,21 @@ class WahllokalZustandControllerIntegrationTest {
 
         @Test
         void should_throwWlsException_when_requestParamsAreInvalid() throws Exception {
-            val druckDatenDTO_wahlID_blank = createDruckdatenDTO("  ", "wahlbezirkID");
             val druckDatenDTO_wahlbezirkID_empty = createDruckdatenDTO("wahlID", "");
-
-            val request_wahlID_blank = MockMvcRequestBuilders.post("/businessActions/niederschriftDruckuhrzeit").with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON).content(
-                            objectMapper.writeValueAsString(druckDatenDTO_wahlID_blank));
             val request_wahlbezirkID_empty = MockMvcRequestBuilders.post("/businessActions/niederschriftDruckuhrzeit").with(csrf())
                     .contentType(MediaType.APPLICATION_JSON).content(
                             objectMapper.writeValueAsString(druckDatenDTO_wahlbezirkID_empty));
-            val request_druckDatenNull = MockMvcRequestBuilders.post("/businessActions/niederschriftDruckuhrzeit").with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON).content(
-                            objectMapper.writeValueAsString(null));
-
-            val response_wahlID_blank = mockMvc.perform(request_wahlID_blank).andExpect(status().isBadRequest()).andReturn();
-            val responseBodyAsWlsExceptionDTO_wahlID_blank = objectMapper.readValue(response_wahlID_blank.getResponse().getContentAsString(),
-                    WlsExceptionDTO.class);
 
             val response_wahlbezirkID_empty = mockMvc.perform(request_wahlbezirkID_empty).andExpect(status().isBadRequest()).andReturn();
             val responseBodyAsWlsExceptionDTO_wahlbezirkID_empty = objectMapper.readValue(response_wahlbezirkID_empty.getResponse().getContentAsString(),
                     WlsExceptionDTO.class);
 
-            val response_druckDatenNull = mockMvc.perform(request_druckDatenNull).andExpect(status().isBadRequest()).andReturn();
-            val responseBodyAsWlsExceptionDTO_druckDatenNull = objectMapper.readValue(response_druckDatenNull.getResponse().getContentAsString(),
-                    WlsExceptionDTO.class);
-
             val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F,
                     ExceptionConstants.POST_NIEDERSCHRIFT_DRUCKUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG.code(),
                     serviceID, ExceptionConstants.POST_NIEDERSCHRIFT_DRUCKUHRZEIT_SUCHKRITERIEN_UNVOLLSTAENDIG.message());
-            val expectedWlsExceptionDTO_druckDatenNull = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionKonstanten.CODE_HTTP_MESSAGE_NOT_READABLE,
-                    serviceID, "");
 
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO_wahlID_blank).usingRecursiveComparison().ignoringFields("message")
-                    .isEqualTo(expectedWlsExceptionDTO);
             Assertions.assertThat(responseBodyAsWlsExceptionDTO_wahlbezirkID_empty).usingRecursiveComparison().ignoringFields("message")
                     .isEqualTo(expectedWlsExceptionDTO);
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO_druckDatenNull).usingRecursiveComparison().ignoringFields("message")
-                    .isEqualTo(expectedWlsExceptionDTO_druckDatenNull);
         }
 
     }

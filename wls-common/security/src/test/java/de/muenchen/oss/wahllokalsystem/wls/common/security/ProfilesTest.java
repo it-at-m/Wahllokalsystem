@@ -41,10 +41,12 @@ class ProfilesTest {
         }
     }
 
-    @SpringBootApplication (scanBasePackages = {
-            "de.muenchen.oss.wahllokalsystem.wls.common.security",
-            "de.muenchen.oss.wahllokalsystem.wls.common.exception"
-    }) //all BezirkIDPermissionEvaluator impl classes should be found
+    @SpringBootApplication (
+            scanBasePackages = {
+                    "de.muenchen.oss.wahllokalsystem.wls.common.security",
+                    "de.muenchen.oss.wahllokalsystem.wls.common.exception"
+            }
+    ) //all BezirkIDPermissionEvaluator impl classes should be found
     public static class TestConfiguration {
 
     }

@@ -42,12 +42,11 @@ class WahllokalZustandClientImplTest {
 
         @Test
         void should_callEaiApiWithDTO_when_clientIsCalledWithWahlbezirkIDAndUhrzeit() {
-            val wahlID = "wahlID01";
             val wahlbezirkID = "wahlbezirkID01";
             val zeitpunkt = LocalDateTime.now();
             val zeitpunktOffset = OffsetDateTime.now();
 
-            val expectedWahllokalzustandDTO = createWahllokalZustandDTO_POST_LASTSEEN(wahlID, wahlbezirkID, zeitpunktOffset);
+            val expectedWahllokalzustandDTO = createWahllokalZustandDTO_POST_LASTSEEN(wahlbezirkID, zeitpunktOffset);
             Mockito.when(timeStampMapper.localDateTimeToOffsetDateTime(zeitpunkt)).thenReturn(zeitpunktOffset);
 
             unitUnderTest.postLastSeen(wahlbezirkID, zeitpunkt);
@@ -56,7 +55,6 @@ class WahllokalZustandClientImplTest {
 
         @Test
         void should_throwTechnischeWlsException_when_eaiApiThrowsAnyException() {
-            val wahlID = "wahlID01";
             val wahlbezirkID = "wahlbezirkID01";
             val zeitpunkt = LocalDateTime.now();
             val zeitpunktOffset = OffsetDateTime.now();
@@ -78,12 +76,11 @@ class WahllokalZustandClientImplTest {
 
         @Test
         void should_callEaiApiWithDTO_when_clientIsCalledWithWahlbezirkIDAndUhrzeit() {
-            val wahlID = "wahlID01";
             val wahlbezirkID = "wahlbezirkID01";
             val zeitpunkt = LocalDateTime.now();
             val zeitpunktOffset = OffsetDateTime.now();
 
-            val expectedWahllokalzustandDTO = createWahllokalZustandDTO_POST_LETZTEABMELDUNG(wahlID, wahlbezirkID, zeitpunktOffset);
+            val expectedWahllokalzustandDTO = createWahllokalZustandDTO_POST_LETZTEABMELDUNG(wahlbezirkID, zeitpunktOffset);
             Mockito.when(timeStampMapper.localDateTimeToOffsetDateTime(zeitpunkt)).thenReturn(zeitpunktOffset);
 
             unitUnderTest.postLetzteAbmeldung(wahlbezirkID, zeitpunkt);
@@ -92,7 +89,6 @@ class WahllokalZustandClientImplTest {
 
         @Test
         void should_throwTechnischeWlsException_when_eaiApiThrowsAnyException() {
-            val wahlID = "wahlID01";
             val wahlbezirkID = "wahlbezirkID01";
             val zeitpunkt = LocalDateTime.now();
             val zeitpunktOffset = OffsetDateTime.now();
@@ -257,13 +253,11 @@ class WahllokalZustandClientImplTest {
         }
     }
 
-    private WahllokalZustandDTO createWahllokalZustandDTO_POST_LASTSEEN(final String wahlID,
-            final String wahlbezirkID, OffsetDateTime zeitpunkt) {
+    private WahllokalZustandDTO createWahllokalZustandDTO_POST_LASTSEEN(final String wahlbezirkID, OffsetDateTime zeitpunkt) {
         return new WahllokalZustandDTO().wahlbezirkID(wahlbezirkID).zuletztGesehen(zeitpunkt);
     }
 
-    private WahllokalZustandDTO createWahllokalZustandDTO_POST_LETZTEABMELDUNG(final String wahlID,
-            final String wahlbezirkID, OffsetDateTime zeitpunkt) {
+    private WahllokalZustandDTO createWahllokalZustandDTO_POST_LETZTEABMELDUNG(final String wahlbezirkID, OffsetDateTime zeitpunkt) {
         return new WahllokalZustandDTO().wahlbezirkID(wahlbezirkID).letzteAbmeldung(zeitpunkt);
     }
 

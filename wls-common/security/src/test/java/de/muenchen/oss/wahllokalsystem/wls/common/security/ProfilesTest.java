@@ -10,7 +10,9 @@ import org.springframework.test.context.ActiveProfiles;
 
 class ProfilesTest {
 
-    @SpringBootTest(classes = TestConfiguration.class)
+    @SpringBootTest(
+            properties = { "app.crypto.key = 770A8A65DA156D24EE2A093277530142", "service.info.oid=My app name" }
+    )
     @ActiveProfiles(Profiles.NO_BEZIRKS_ID_CHECK)
     @Nested
     class NoBezirksIdCheck {
@@ -24,7 +26,9 @@ class ProfilesTest {
         }
     }
 
-    @SpringBootTest(classes = TestConfiguration.class)
+    @SpringBootTest(
+            properties = { "app.crypto.key = 770A8A65DA156D24EE2A093277530142", "service.info.oid=My app name" }
+    )
     @Nested
     class NoSpecialProfile {
 
@@ -37,7 +41,12 @@ class ProfilesTest {
         }
     }
 
-    @SpringBootApplication //all BezirkIDPermissionEvaluator impl classes should be found
+    @SpringBootApplication(
+            scanBasePackages = {
+                    "de.muenchen.oss.wahllokalsystem.wls.common.security",
+                    "de.muenchen.oss.wahllokalsystem.wls.common.exception"
+            }
+    ) //all BezirkIDPermissionEvaluator impl classes should be found
     public static class TestConfiguration {
 
     }

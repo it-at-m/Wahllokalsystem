@@ -1,23 +1,35 @@
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis;
 
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.BaseEntity;
+import static java.sql.Types.VARCHAR;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.UuidGenerator;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class Ereignis extends BaseEntity {
+@EqualsAndHashCode
+public class Ereignis {
+
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @UuidGenerator
+    @JdbcTypeCode(VARCHAR)
+    private UUID id;
 
     @NotNull
     @Size(max = 1024)

@@ -6,16 +6,17 @@ package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.configur
 
 import static de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.TestConstants.SPRING_TEST_PROFILE;
-import static de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.TestConstants.TheEntityDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.TheEntity;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.TheEntityRepository;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.EreignisRepository;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis.EreignisDTO;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis.EreignisartDTO;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis.EreignisseWriteDTO;
 import java.net.URI;
-import java.util.UUID;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.Disabled;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,7 +34,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
 class UnicodeConfigurationTest {
 
-    private static final String ENTITY_ENDPOINT_URL = "/theEntities";
+    private static final String ENTITY_ENDPOINT_URL = "/businessActions/ereignisse/";
 
     /**
      * Decomposed string: String "Ä-é" represented with unicode letters "A◌̈-e◌́"
@@ -49,28 +50,24 @@ class UnicodeConfigurationTest {
     private TestRestTemplate testRestTemplate;
 
     @Autowired
-    private TheEntityRepository theEntityRepository;
+    private EreignisRepository ereignisRepository;
 
     @Test
-    @Disabled
     void testForNfcNormalization() {
         // Persist entity with decomposed string.
-        final TheEntityDto theEntityDto = new TheEntityDto();
-        theEntityDto.setTextAttribute(TEXT_ATTRIBUTE_DECOMPOSED);
-        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), theEntityDto.getTextAttribute().length());
-        final TheEntityDto response = testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), theEntityDto, TheEntityDto.class).getBody();
+        val wahlbezirkID = "wahlbezirkID01";
+        // create a list of Ereignisse with only one Ereignis containing the TEXT_ATTRIBUTE_DECOMPOSED as 'beschreibung'
+        val ereignisDTO = new EreignisDTO(TEXT_ATTRIBUTE_DECOMPOSED, LocalDateTime.now().withNano(0), EreignisartDTO.VORFALL);
+        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), ereignisDTO.beschreibung().length());
+        val ereignisseWriteDTO = new EreignisseWriteDTO(Arrays.asList(ereignisDTO));
 
-        // Check whether response contains a composed string.
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, response.getTextAttribute());
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), response.getTextAttribute().length());
-
-        // Extract uuid from self link.
-        final UUID uuid = UUID.fromString(StringUtils.substringAfterLast(response.getRequiredLink("self").getHref(), "/"));
+        // store list of Ereignisse
+        testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL + wahlbezirkID), ereignisseWriteDTO,
+                Void.class);
 
         // Check persisted entity contains a composed string via JPA repository.
-        final TheEntity theEntity = theEntityRepository.findById(uuid).orElse(null);
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, theEntity.getTextAttribute());
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), theEntity.getTextAttribute().length());
+        val ereignis = ereignisRepository.findByWahlbezirkID(wahlbezirkID);
+        assertEquals(TEXT_ATTRIBUTE_COMPOSED, ereignis.get(0).getBeschreibung());
+        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), ereignis.get(0).getBeschreibung().length());
     }
-
 }

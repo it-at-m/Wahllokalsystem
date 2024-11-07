@@ -1,5 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis;
 
+import static de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.TestConstants.SPRING_TEST_PROFILE;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereignis;
@@ -26,10 +30,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
-
-import static de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.TestConstants.SPRING_TEST_PROFILE;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
@@ -112,7 +112,7 @@ public class EreignisControllerIntegrationTest {
             val savedEreignisse = ereignisRepository.findByWahlbezirkID(wahlbezirkID);
 
             val expectedSavedEreignisse = mockedEreignisseWriteDto.ereigniseintraege().stream()
-                    .map(ereignisDto -> new Ereignis(wahlbezirkID, ereignisDto.beschreibung(), ereignisDto.uhrzeit(),
+                    .map(ereignisDto -> new Ereignis(null, wahlbezirkID, ereignisDto.beschreibung(), ereignisDto.uhrzeit(),
                             TestdataFactory.MapEreignisart.ereignisartDtoToEreignisart(ereignisDto.ereignisart())))
                     .toList();
             Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
@@ -147,7 +147,7 @@ public class EreignisControllerIntegrationTest {
             SecurityUtils.runWith(Authorities.REPOSITORY_READ_EREIGNISSE);
             val savedEreignisse = ereignisRepository.findByWahlbezirkID(wahlbezirkID);
             val expectedSavedEreignisse = mockedEreignisseWriteDto.ereigniseintraege().stream()
-                    .map(ereignisDto -> new Ereignis(wahlbezirkID, ereignisDto.beschreibung(), ereignisDto.uhrzeit(),
+                    .map(ereignisDto -> new Ereignis(null, wahlbezirkID, ereignisDto.beschreibung(), ereignisDto.uhrzeit(),
                             TestdataFactory.MapEreignisart.ereignisartDtoToEreignisart(ereignisDto.ereignisart())))
                     .toList();
             Assertions.assertThat(savedEreignisseBeforeOverridden.size()).isEqualTo(ereignisListToOverride.size());

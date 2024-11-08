@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand;
 
-import java.util.UUID;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -8,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 @PreAuthorize("hasAuthority('Wahlvorstand_READ_Wahlvorstand')")
-public interface WahlvorstandRepository extends CrudRepository<Wahlvorstand, UUID> {
+public interface WahlvorstandRepository extends CrudRepository<Wahlvorstand, String> {
 
     String CACHE = "WAHLVORSTAND_CACHE";
 
@@ -26,7 +25,7 @@ public interface WahlvorstandRepository extends CrudRepository<Wahlvorstand, UUI
     @Override
     @CacheEvict(value = CACHE, key = "#p0")
     @PreAuthorize("hasAuthority('Wahlvorstand_DELETE_Wahlvorstand')")
-    void deleteById(UUID id);
+    void deleteById(String id);
 
     @Override
     @CacheEvict(value = CACHE, key = "#p0.wahlbezirkID")

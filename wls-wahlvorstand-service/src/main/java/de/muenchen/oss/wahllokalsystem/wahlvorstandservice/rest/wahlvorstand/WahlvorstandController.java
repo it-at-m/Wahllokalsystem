@@ -85,8 +85,7 @@ public class WahlvorstandController {
             }
     )
     @PostMapping("/{wahlbezirkID}")
-    public ResponseEntity<?> postWahlvorstand(@PathVariable("wahlbezirkID") String wahlbezirkID, @RequestBody WahlvorstandDTO wahlvorstandBody) {
-        // todo: parameter wahlbezirkid ist unused
+    public ResponseEntity<?> postWahlvorstand(@RequestBody WahlvorstandDTO wahlvorstandBody) {
         // Wenn Fallback-Daten gesendet werden, bestätigen!
         if (wahlvorstandBody.wahlvorstandsmitglieder().get(0).identifikator().startsWith("FALLBACK_")) {
             return new ResponseEntity<>(HttpStatus.OK);

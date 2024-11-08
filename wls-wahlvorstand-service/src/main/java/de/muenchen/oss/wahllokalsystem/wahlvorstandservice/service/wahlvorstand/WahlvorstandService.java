@@ -29,6 +29,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -67,6 +68,7 @@ public class WahlvorstandService {
         return persistWahlvorstand(wahlvorstand, konfigurierterWahltagModel);
     }
 
+    @Transactional
     @PreAuthorize("hasAuthority('Wahlvorstand_BUSINESSACTION_PostWahlvorstand')")
     public void postWahlvorstand(@P("param") WahlvorstandModel wahlvorstandModel) {
         log.info("#postWahlvorstand");
@@ -75,7 +77,7 @@ public class WahlvorstandService {
         try {
             wahlvorstandRepository.save(wahlvorstandModelMapper.toEntity(wahlvorstandModel));
         } catch (Exception e) {
-            log.error("#postWahlvorstand unsaveable: " + e);
+            log.error("#postWahlvorstand unsaveable: ", e);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTWAHLVORSTAND_NOT_SAVEABLE);
         }
         wahlvorstandEaiClient.postWahlvorstand(wahlvorstandModel);
@@ -188,7 +190,7 @@ public class WahlvorstandService {
         val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
         val authenticationHandler = authenticationHandlers.stream().filter(handler -> handler.canHandle(currentAuthentication)).findFirst();
         if (authenticationHandler.isPresent()) {
-            val wahlbezirkOfUser = authenticationHandler.get().getDetail("wahlbezirksArt", currentAuthentication); // todo: stimmt "wahlbezirksArt"?
+            val wahlbezirkOfUser = authenticationHandler.get().getDetail("wahlbezirksArt", currentAuthentication);
             return wahlbezirkOfUser.map(WahlbezirkArt::valueOf).orElseGet(() -> {
                 log.error("#getKonfiguration Error: Wahlbezirkart konnte nicht erkannt werden. UWB wurde als Standardwert angenommen");
                 return WAHLBEZIRK_ART_FALLBACK;

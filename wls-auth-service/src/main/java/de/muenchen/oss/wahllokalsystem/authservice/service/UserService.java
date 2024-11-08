@@ -25,10 +25,13 @@ public class UserService {
 
     private final LoginAttemptModelMapper loginAttemptModelMapper;
 
+    private final UserModelMapper userModelMapper;
+
     @Value("${serviceauth.maxLoginAttempts}")
     @Getter
     @Setter
     private int maxLoginAttempts;
+    private boolean present;
 
     @Transactional
     public void updateFailAttempts(final String username) {
@@ -92,11 +95,16 @@ public class UserService {
     }
 
     public boolean doesUserExist(final String username) {
-        return userRepository.findByUsername(username).isPresent();
+        return present;
     }
 
     public boolean isLocked(final String username) {
         val user = userRepository.findByUsername(username);
         return user.filter(value -> !value.isAccountNonLocked()).isPresent();
+    }
+
+    public Optional<UserModel> getUser(String name) {
+        val user = userRepository.findByUsername(name);
+        return user.map(userModelMapper::toModel);
     }
 }

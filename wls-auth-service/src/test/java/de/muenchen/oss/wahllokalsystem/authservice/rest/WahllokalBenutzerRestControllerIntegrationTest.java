@@ -99,7 +99,7 @@ class WahllokalBenutzerRestControllerIntegrationTest {
         }
 
         @Test
-        void should_replaceOldUsers_when_usersAreGiven() throws Exception {
+        void should_deleteOldUsersAndPersistNewUsers_when_UsersAreGiven() throws Exception {
             val wahltagID = "wahltagID";
 
             val oldUser1 = new User();

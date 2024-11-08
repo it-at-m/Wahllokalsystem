@@ -52,7 +52,7 @@ class WahllokalBenutzerRestControllerTest {
         }
 
         @Test
-        void should_internalServerErrorResponse_when_exceptionInServiceOccurred() {
+        void should_returnInternalServerErrorResponse_when_exceptionInServiceOccurred() {
             val wahltagID = "wahltagID";
             val wahllokalUser = new WahllokalUserInfoDTO("wahlbezirknummer", LocalDate.now(), "wbzID", WahlbezirksartDTO.UWB, "nummer");
 
@@ -73,7 +73,7 @@ class WahllokalBenutzerRestControllerTest {
     class ExportWahllokalBenutzer {
 
         @Test
-        void should_returnCreatedResponseWithUsersAsStringOfService_when_serviceWorkedSuccessfully() {
+        void should_returnCreatedResponseWithExistingUsersAsString_when_serviceWorkedSuccessfully() {
             val wahltagID = "wahltagID";
 
             val mockedServiceResponse = "exported users";
@@ -86,7 +86,7 @@ class WahllokalBenutzerRestControllerTest {
         }
 
         @Test
-        void should_internalServerErrorResponse_when_exceptionInServiceOccurred() {
+        void should_returnInternalServerErrorResponse_when_exceptionInServiceOccurred() {
             val wahltagID = "wahltagID";
 
             val mockedServiceException = new RuntimeException("mocked exception");

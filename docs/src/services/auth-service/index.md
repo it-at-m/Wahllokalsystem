@@ -81,7 +81,7 @@ Benutzername und die PIN zufällig erzeugt.
 
 Die Benutzer die zuvor für den Wahltermin vorhanden waren werden gelöscht.
 
-## Konfigrationsparameter
+## Konfigurationsparameter
 
 Alle Konfigurationsparameter beginnen mit dem Prefix `service.config`
 

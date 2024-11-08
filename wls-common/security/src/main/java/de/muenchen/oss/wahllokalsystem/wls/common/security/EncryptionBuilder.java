@@ -26,8 +26,8 @@ public class EncryptionBuilder {
     private final Cipher decryptionCipher;
 
     public EncryptionBuilder(ServiceIDFormatter formatter,
-            @Qualifier("encryptionCipher") Cipher encryptionCipher,
-            @Qualifier("decryptionCipher") Cipher decryptionCipher) {
+                             @Qualifier("encryptionCipher") Cipher encryptionCipher,
+                             @Qualifier("decryptionCipher") Cipher decryptionCipher) {
         this.formatter = formatter;
         this.encryptionCipher = encryptionCipher;
         this.decryptionCipher = decryptionCipher;
@@ -42,7 +42,7 @@ public class EncryptionBuilder {
             } catch (IllegalBlockSizeException | BadPaddingException e) {
                 log.error("Unable to decrypt the given value <" + value + "> as of an " + e.getClass().getSimpleName() + ". Using direct object reference!", e);
                 throw TechnischeWlsException.withCode(technischeExceptionKonstante).inService(formatter.getId())
-                        .buildWithMessage("Problem bei Referenzierung/Dereferenzierung von Objekt-Referenzen");
+                        .buildWithMessage("Exception" + " " + technischeExceptionKonstante + ":Problem bei Referenzierung/Dereferenzierung von Objekt-Referenzen");
             }
         }
         return value;
@@ -56,7 +56,7 @@ public class EncryptionBuilder {
             } catch (IllegalBlockSizeException | BadPaddingException e) {
                 log.error("Unable to encrypt the given value <" + value + "> as of an " + e.getClass().getSimpleName() + ". Using direct object reference!", e);
                 throw TechnischeWlsException.withCode(technischeExceptionKonstante).inService(formatter.getId())
-                        .buildWithMessage("Problem bei Referenzierung/Dereferenzierung von Objekt-Referenzen");
+                        .buildWithMessage("Exception" + " " + technischeExceptionKonstante + ":Problem bei Referenzierung/Dereferenzierung von Objekt-Referenzen");
             }
         }
         return value;

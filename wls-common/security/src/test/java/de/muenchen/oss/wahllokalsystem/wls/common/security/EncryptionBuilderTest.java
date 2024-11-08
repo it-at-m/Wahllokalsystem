@@ -70,6 +70,16 @@ class EncryptionBuilderTest {
             Assertions.assertThatThrownBy(() -> unitUnderTest.decryptValue("Mzc2NTI2NzIzQUZEQUIzRA=="))
                     .isInstanceOf(TechnischeWlsException.class);
         }
+
+        @Test
+        void correctExceptionCodeIsThrown() throws IllegalBlockSizeException, BadPaddingException {
+            val mockedIllegalBlockSizeException = new IllegalBlockSizeException("MockedIllegalBlockSize");
+            Mockito.when(formatter.getId()).thenReturn("1");
+            Mockito.when(cipher.doFinal("376526723AFDAB3D".getBytes())).thenThrow(mockedIllegalBlockSizeException);
+
+            Assertions.assertThatThrownBy(() -> unitUnderTest.decryptValue("Mzc2NTI2NzIzQUZEQUIzRA=="))
+                    .hasMessageContaining("399");
+        }
     }
 
     @Nested
@@ -109,6 +119,16 @@ class EncryptionBuilderTest {
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.encryptValue("Mzc2NTI2NzIzQUZEQUIzRA=="))
                     .isInstanceOf(TechnischeWlsException.class);
+        }
+
+        @Test
+        void correctExceptionCodeIsThrown() throws IllegalBlockSizeException, BadPaddingException {
+            val mockedIllegalBlockSizeException = new IllegalBlockSizeException("MockedIllegalBlockSize");
+            Mockito.when(formatter.getId()).thenReturn("1");
+            Mockito.when(cipher.doFinal("Mzc2NTI2NzIzQUZEQUIzRA==".getBytes())).thenThrow(mockedIllegalBlockSizeException);
+
+            Assertions.assertThatThrownBy(() -> unitUnderTest.encryptValue("Mzc2NTI2NzIzQUZEQUIzRA=="))
+                    .hasMessageContaining("399");
         }
     }
 }

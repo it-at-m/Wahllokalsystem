@@ -73,3 +73,9 @@ serviceauth:
         welcomeMessage: WILLKOMMENSTEXT
   welcomemessage:
     default: "Willkommen zur Wahl!"
+  ldap:
+    userDn:
+    userDnPassword:
+    contextSource:
+    userSearchBase:
+    userSearchFilter:

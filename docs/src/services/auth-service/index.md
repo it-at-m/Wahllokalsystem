@@ -71,7 +71,7 @@ sequenceDiagram
 
 ## Konfigrationsparameter
 
-Alle Konfigurationsparameter beginnen mit dem Prefix `serviceauth`
+Alle Konfigurationsparameter beginnen mit dem Prefix `service.config`
 
 | Name                    | Beschreibung                                                                           | Default |
 |-------------------------|----------------------------------------------------------------------------------------| ------- |

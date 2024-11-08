@@ -13,8 +13,7 @@ import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.basisdatenClient.WahlenClient;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.infomanagementClient.KonfigurierterWahltagClient;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.infomanagementClient.KonfigurierterWahltagModel;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.mapping.BWBFunktionsnamenMapping;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.mapping.UWBFunktionsnamenMapping;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.mapping.FunktionsnamenMapping;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,8 +42,7 @@ public class WahlvorstandService {
     private final KonfigurierterWahltagClient konfigurierterWahltagClient;
     private final WahlenClient wahlenClient;
     private final ExceptionFactory exceptionFactory;
-    private final UWBFunktionsnamenMapping uwbNamenMapping;
-    private final BWBFunktionsnamenMapping bwbNamenMapping;
+    private final FunktionsnamenMapping namenMapping;
     private final Collection<AuthenticationHandler> authenticationHandlers;
 
     private static final WahlbezirkArt WAHLBEZIRK_ART_FALLBACK = WahlbezirkArt.UWB;
@@ -170,12 +168,7 @@ public class WahlvorstandService {
 
     private String getFunktion(WahlbezirkArt wahlbezirkArt, Wahlvorstandsmitglied mitglied, Wahlart wahlart) {
         String funktion = "";
-
-        // todo: sollte man das auslagern? kann man in dem zug auch die ..FunktionsmaenMapping Klassen zusammenführen oder funktioniert das dann nicht mehr?
-        Map<WahlbezirkArt, Map<String, Map<String, String>>> funktionsMap = new EnumMap<>(WahlbezirkArt.class);
-        funktionsMap.put(WahlbezirkArt.UWB, uwbNamenMapping.getUwbFunktion());
-        funktionsMap.put(WahlbezirkArt.BWB, bwbNamenMapping.getBwbFunktion());
-        Map<String, Map<String, String>> mappings = funktionsMap.get(wahlbezirkArt);
+        val mappings = getMappings(wahlbezirkArt);
 
         if (mappings != null) {
             Map<String, String> wahlartMapping = mappings.get(wahlart.name());
@@ -184,6 +177,13 @@ public class WahlvorstandService {
             }
         }
         return funktion;
+    }
+
+    private Map<String, Map<String, String>> getMappings(WahlbezirkArt wahlbezirkArt) {
+        Map<WahlbezirkArt, Map<String, Map<String, String>>> funktionsMap = new EnumMap<>(WahlbezirkArt.class);
+        funktionsMap.put(WahlbezirkArt.UWB, namenMapping.getUwbFunktion());
+        funktionsMap.put(WahlbezirkArt.BWB, namenMapping.getBwbFunktion());
+        return funktionsMap.get(wahlbezirkArt);
     }
 
     private WahlbezirkArt getWahlbezirkArt() {

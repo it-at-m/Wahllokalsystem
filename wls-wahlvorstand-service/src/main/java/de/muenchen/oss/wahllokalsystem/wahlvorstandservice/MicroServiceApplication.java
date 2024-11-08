@@ -4,8 +4,7 @@
  */
 package de.muenchen.oss.wahllokalsystem.wahlvorstandservice;
 
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.mapping.BWBFunktionsnamenMapping;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.mapping.UWBFunktionsnamenMapping;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.mapping.FunktionsnamenMapping;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -44,13 +43,7 @@ public class MicroServiceApplication {
 
     @Bean
     @ConfigurationProperties
-    public UWBFunktionsnamenMapping uwbFunktionsnamenMapping() {
-        return new UWBFunktionsnamenMapping();
-    }
-
-    @Bean
-    @ConfigurationProperties
-    public BWBFunktionsnamenMapping bwbFunktionsnamenMapping() {
-        return new BWBFunktionsnamenMapping();
+    public FunktionsnamenMapping funktionsnamenMapping() {
+        return new FunktionsnamenMapping();
     }
 }

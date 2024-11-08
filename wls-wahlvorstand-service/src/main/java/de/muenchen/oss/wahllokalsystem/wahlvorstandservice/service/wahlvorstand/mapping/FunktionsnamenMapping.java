@@ -2,11 +2,13 @@ package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand
 
 import java.util.HashMap;
 import java.util.Map;
+import lombok.Getter;
 
-public class UWBFunktionsnamenMapping {
+@Getter
+public class FunktionsnamenMapping {
+
+    private final Map<String, Map<String, String>> bwbFunktion = new HashMap<>();
+
     private final Map<String, Map<String, String>> uwbFunktion = new HashMap<>();
 
-    public Map<String, Map<String, String>> getUwbFunktion() {
-        return uwbFunktion;
-    }
 }

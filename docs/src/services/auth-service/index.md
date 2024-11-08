@@ -76,6 +76,10 @@ sequenceDiagram
 > [!IMPORTANT]
 > Damit Benutzer angelegt werden können muss die definierte Authority vorhanden sein die den Benutzern zugewiesen werden soll.
 
+> [!NOTE]
+> Wird der Service mit dem Profil `db-dummydata` gestartet werden Testdaten erzeugt, welche die notwendige Authority umfasst.
+> Im regulären Betrieb werden die Authority sowie Permission mittels Skript erzeugt.
+
 Der Service erzeugt für eine Liste an Wahlbezirken eines Wahltermins (`wahltagID`) Benutzer. Dabei werden der
 Benutzername und die PIN zufällig erzeugt.
 

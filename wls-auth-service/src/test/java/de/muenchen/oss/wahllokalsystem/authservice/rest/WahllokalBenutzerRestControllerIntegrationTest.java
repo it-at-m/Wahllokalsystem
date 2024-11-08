@@ -32,7 +32,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 @SpringBootTest(
         classes = MicroServiceApplication.class,
-        properties = { "serviceauth.crypto.key=secret", "serviceauth.user.authority.wahlvorstand=" + PROP_USER_AUTHORITY_WAHLVORSTAND }
+        properties = { "service.config.crypto.key=secret", "service.config.user.authority.wahlvorstand=" + PROP_USER_AUTHORITY_WAHLVORSTAND }
 )
 @AutoConfigureMockMvc
 @ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, TestConstants.SPRING_NO_SECURITY_PROFILE })

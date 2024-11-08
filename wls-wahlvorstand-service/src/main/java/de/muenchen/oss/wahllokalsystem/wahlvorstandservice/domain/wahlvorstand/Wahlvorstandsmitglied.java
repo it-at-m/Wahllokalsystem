@@ -16,22 +16,22 @@ import lombok.NoArgsConstructor;
 public class Wahlvorstandsmitglied {
 
     @NotNull
-    @Size(max=1024)
+    @Size(max = 1024)
     private String identifikator;
 
     @NotNull
-    @Size(max=255)
+    @Size(max = 255)
     private String familienname;
 
     @NotNull
-    @Size(max=255)
+    @Size(max = 255)
     private String vorname;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     private Funktion funktion;
 
-    @Size(max=255)
+    @Size(max = 255)
     private String funktionsname;
 
     @NotNull

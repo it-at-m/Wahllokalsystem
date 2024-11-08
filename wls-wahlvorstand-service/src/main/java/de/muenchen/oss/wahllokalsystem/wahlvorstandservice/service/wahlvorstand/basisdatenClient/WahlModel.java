@@ -1,7 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.basisdatenClient;
 
 import jakarta.validation.constraints.NotNull;
-
 import java.time.LocalDate;
 
 public record WahlModel(@NotNull String wahlID,

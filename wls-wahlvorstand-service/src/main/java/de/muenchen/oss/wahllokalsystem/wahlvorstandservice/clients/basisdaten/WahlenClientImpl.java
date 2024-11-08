@@ -9,13 +9,12 @@ import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.infomanagementClient.KonfigurierterWahltagModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @Component

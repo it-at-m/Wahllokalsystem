@@ -13,15 +13,18 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler extends AbstractExceptionHandler {
     private final ServiceIDFormatter serviceIDFormatter;
+
     public GlobalExceptionHandler(final ServiceIDFormatter serviceIDFormatter, final DTOMapper dtoMapper) {
         super(dtoMapper);
         this.serviceIDFormatter = serviceIDFormatter;
     }
+
     @ExceptionHandler
     public ResponseEntity<WlsExceptionDTO> handleThrowables(final Throwable throwable) {
         log.info("handling throwable", throwable);
         return createResponse(getWahlExceptionDTO(throwable));
     }
+
     @Override
     protected String getService() {
         return serviceIDFormatter.getId();

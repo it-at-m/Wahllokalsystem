@@ -26,8 +26,8 @@ public class EncryptionBuilder {
     private final Cipher decryptionCipher;
 
     public EncryptionBuilder(ServiceIDFormatter formatter,
-                             @Qualifier("encryptionCipher") Cipher encryptionCipher,
-                             @Qualifier("decryptionCipher") Cipher decryptionCipher) {
+            @Qualifier("encryptionCipher") Cipher encryptionCipher,
+            @Qualifier("decryptionCipher") Cipher decryptionCipher) {
         this.formatter = formatter;
         this.encryptionCipher = encryptionCipher;
         this.decryptionCipher = decryptionCipher;

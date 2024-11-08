@@ -25,3 +25,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
+wiremock:
+  server:
+    port: 0

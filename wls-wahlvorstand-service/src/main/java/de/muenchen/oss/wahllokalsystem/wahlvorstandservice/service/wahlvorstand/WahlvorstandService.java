@@ -70,7 +70,7 @@ public class WahlvorstandService {
     @PreAuthorize("hasAuthority('Wahlvorstand_BUSINESSACTION_PostWahlvorstand')")
     public void postWahlvorstand(@P("param") WahlvorstandModel wahlvorstandModel) {
         log.info("#postWahlvorstand");
-        wahlvorstandValidator.validWahlvorstandAndWahlbezirkIDOrThrow(wahlvorstandModel);
+        wahlvorstandValidator.validWahlvorstandOrThrow(wahlvorstandModel);
 
         try {
             wahlvorstandRepository.save(wahlvorstandModelMapper.toEntity(wahlvorstandModel));

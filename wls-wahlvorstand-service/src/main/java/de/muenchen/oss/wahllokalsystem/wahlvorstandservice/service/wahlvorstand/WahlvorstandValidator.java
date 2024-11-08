@@ -20,7 +20,7 @@ public class WahlvorstandValidator {
         }
     }
 
-    public void validWahlvorstandAndWahlbezirkIDOrThrow(final WahlvorstandModel wahlvorstand) {
+    public void validWahlvorstandOrThrow(final WahlvorstandModel wahlvorstand) {
         if (wahlvorstand == null || StringUtils.isBlank(wahlvorstand.wahlbezirkID())) {
             log.warn("#postEreignis: Parameter unvollständig");
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTWAHLVORSTAND_PARAMETER_UNVOLLSTAENDIG);

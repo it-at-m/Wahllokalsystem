@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.security;
 
-import de.muenchen.oss.wahllokalsystem.wls.common.security.testultils.LoggerExtension;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.LoggerExtension;
 import java.util.HashMap;
 import lombok.val;
 import org.assertj.core.api.Assertions;

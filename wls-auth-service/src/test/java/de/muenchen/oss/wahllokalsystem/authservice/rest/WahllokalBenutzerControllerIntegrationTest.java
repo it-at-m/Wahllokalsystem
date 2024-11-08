@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.authservice.rest;
 
-import static de.muenchen.oss.wahllokalsystem.authservice.rest.WahllokalBenutzerRestControllerIntegrationTest.PROP_USER_AUTHORITY_WAHLVORSTAND;
+import static de.muenchen.oss.wahllokalsystem.authservice.rest.WahllokalBenutzerControllerIntegrationTest.PROP_USER_AUTHORITY_WAHLVORSTAND;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,7 +36,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 )
 @AutoConfigureMockMvc
 @ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, TestConstants.SPRING_NO_SECURITY_PROFILE })
-class WahllokalBenutzerRestControllerIntegrationTest {
+class WahllokalBenutzerControllerIntegrationTest {
 
     public static final String PROP_USER_AUTHORITY_WAHLVORSTAND = "WLS_USER_AUTHORITY_WAHLVORSTAND";
 

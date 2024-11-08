@@ -20,7 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @ExtendWith(MockitoExtension.class)
-class WahllokalBenutzerRestControllerTest {
+class WahllokalBenutzerControllerTest {
 
     @Mock
     UserDTOMapper userDTOMapper;
@@ -29,7 +29,7 @@ class WahllokalBenutzerRestControllerTest {
     UserService userService;
 
     @InjectMocks
-    WahllokalBenutzerRestController unitUnderTest;
+    WahllokalBenutzerController unitUnderTest;
 
     @Nested
     class CreateAndExportWahllokalBenutzer {

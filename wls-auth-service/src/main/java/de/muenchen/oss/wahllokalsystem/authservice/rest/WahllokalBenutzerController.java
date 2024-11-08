@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class WahllokalBenutzerRestController {
+public class WahllokalBenutzerController {
 
     private final UserDTOMapper userDTOMapper;
 

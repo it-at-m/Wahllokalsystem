@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 public class EncryptionBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(EncryptionBuilder.class);
-    private static final String technischeExceptionKonstante = "S";
+    private static final String technischeExceptionKonstante = "399";
 
     private final ServiceIDFormatter formatter;
     private final Cipher encryptionCipher;

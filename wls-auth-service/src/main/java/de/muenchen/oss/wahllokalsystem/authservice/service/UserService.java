@@ -28,22 +28,22 @@ import org.springframework.web.client.HttpServerErrorException;
 @PreAuthorize("hasAuthority('ROLE_ADMIN_ADMIN')")
 public class UserService {
 
-    @Value("${serviceauth.user.csv.eol}")
+    @Value("${service.config.user.csv.eol}")
     String EOL = "\r\n";
 
-    @Value("${serviceauth.user.authority.wahlvorstand}")
+    @Value("${service.config.user.authority.wahlvorstand}")
     String wahlvorstandAuthorityName = "WLS_WAHLVORSTAND";
 
-    @Value("${serviceauth.user.anzahlPinBloecke}")
+    @Value("${service.config.user.anzahlPinBloecke}")
     int anzahlPinBloecke;
 
-    @Value("${serviceauth.user.pinChars}")
+    @Value("${service.config.user.pinChars}")
     String pinChars;
 
-    @Value("${serviceauth.user.countCharsPrefix}")
+    @Value("${service.config.user.countCharsPrefix}")
     int countCharsPrefix;
 
-    @Value("${serviceauth.user.countNumbersPin}")
+    @Value("${service.config.user.countNumbersPin}")
     int countNumbersPin;
 
     private final UserRepository userRepository;
@@ -56,7 +56,7 @@ public class UserService {
 
     private final UserModelMapper userModelMapper;
 
-    @Value("${serviceauth.maxLoginAttempts}")
+    @Value("${service.config.maxLoginAttempts}")
     @Getter
     @Setter
     private int maxLoginAttempts;

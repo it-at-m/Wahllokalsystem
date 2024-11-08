@@ -21,4 +21,12 @@ public class Authorities {
             SERVICE_POST_WAEHLERANZAHL,
             REPOSITORY_WRITE_WAEHLERANZAHL
     };
+
+    public static final String SERVICE_POST_LASTSEEN = "Monitoring_BUSINESSACTION_PostLastSeen";
+    public static final String SERVICE_POST_LAST_LOGOUT = "Monitoring_BUSINESSACTION_PostLetzteAbmeldung";
+    public static final String SERVICE_POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT = "Monitoring_BUSINESSACTION_PostSchnellmeldungSendungsuhrzeit";
+    public static final String SERVICE_POST_SCHNELLMELDUNG_DRUCKUHRZEIT = "Monitoring_BUSINESSACTION_PostSchnellmeldungDruckuhrzeit";
+    public static final String SERVICE_POST_NIEDERSCHRIFT_SENDUNGSUHRZEIT = "Monitoring_BUSINESSACTION_PostNiederschriftSendungsuhrzeit";
+    public static final String SERVICE_POST_NIEDERSCHRIFT_DRUCKUHRZEIT = "Monitoring_BUSINESSACTION_PostNiederschriftDruckuhrzeit";
+
 }

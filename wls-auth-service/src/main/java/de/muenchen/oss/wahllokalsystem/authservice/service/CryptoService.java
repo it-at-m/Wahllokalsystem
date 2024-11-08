@@ -14,7 +14,7 @@ public class CryptoService {
 
     private final EncryptionBuilder encryptionBuilder;
 
-    @Value("${serviceauth.crypto.encryptionPrefix}")
+    @Value("${service.config.crypto.encryptionPrefix}")
     private String encryptedPrefix = "";
 
     public boolean isEncrypted(final String value) {

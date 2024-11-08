@@ -83,7 +83,7 @@ Die Benutzer die zuvor für den Wahltermin vorhanden waren werden gelöscht.
 
 ## Konfigrationsparameter
 
-Alle Konfigurationsparameter beginnen mit dem Prefix `serviceauth`
+Alle Konfigurationsparameter beginnen mit dem Prefix `service.config`
 
 | Name                    | Beschreibung                                                                           | Default |
 |-------------------------|----------------------------------------------------------------------------------------| ------- |

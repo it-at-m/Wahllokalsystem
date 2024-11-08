@@ -25,7 +25,6 @@ import org.springframework.web.client.HttpServerErrorException;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@PreAuthorize("hasAuthority('ROLE_ADMIN_ADMIN')")
 public class UserService {
 
     @Value("${service.config.user.csv.eol}")
@@ -132,16 +131,19 @@ public class UserService {
     }
 
     @Transactional
+    @PreAuthorize("hasAuthority('ROLE_ADMIN_ADMIN')")
     public void deleteWahllokalBenutzer(String wahltagid) {
         userRepository.deleteUsersByWahltagID(wahltagid);
     }
 
     @Transactional
+    @PreAuthorize("hasAuthority('ROLE_ADMIN_ADMIN')")
     public String exportWahllokalBenutzer(String wahltagID) {
         return usersToCSVString(userRepository.findByWahltagID(wahltagID));
     }
 
     @Transactional
+    @PreAuthorize("hasAuthority('ROLE_ADMIN_ADMIN')")
     public String generateWahllokalBenutzer(UsersOfWahltagModel usersOfWahltag) {
         val authorityWahlvorstand = authorityRepository.findByAuthority(wahlvorstandAuthorityName).orElseThrow(() -> new HttpServerErrorException(
                 HttpStatus.INTERNAL_SERVER_ERROR,

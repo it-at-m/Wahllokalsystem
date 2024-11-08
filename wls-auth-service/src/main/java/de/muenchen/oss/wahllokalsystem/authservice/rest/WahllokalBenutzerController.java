@@ -22,7 +22,7 @@ public class WahllokalBenutzerController {
 
     private final UserDTOMapper userDTOMapper;
 
-    private final UserService wahllokalBenutzerService;
+    private final UserService userService;
 
     @Operation(
             description = "Generiert Wahllokalbenutzer zum angegebenen Wahltag. Für jeden Benutzer der angelegt werden soll, muss eine WahllokalUserInfo im Body vorhanden sein. Als Antwort wird eine CSV-Liste mit den generierten Benutzernamen zurückgegeben."
@@ -33,7 +33,7 @@ public class WahllokalBenutzerController {
             @RequestBody List<WahllokalUserInfoDTO> wahllokalUserInfo) {
         log.info("Erstelle Benutzer für Wahltag-ID <{}>.", wahltagID);
         try {
-            String s = wahllokalBenutzerService.generateWahllokalBenutzer(userDTOMapper.toModel(wahltagID, wahllokalUserInfo));
+            String s = userService.generateWahllokalBenutzer(userDTOMapper.toModel(wahltagID, wahllokalUserInfo));
             return new ResponseEntity<>(s, HttpStatus.CREATED);
         } catch (Exception e) {
             log.error("#createAndExportWahllokalBenutzer error: ", e);
@@ -47,7 +47,7 @@ public class WahllokalBenutzerController {
     public ResponseEntity<String> exportWahllokalBenutzer(@PathVariable("wahltagID") String wahltagID) {
         log.info("Exportiere Benutzer für Wahltag-ID <{}>.", wahltagID);
         try {
-            String s = wahllokalBenutzerService.exportWahllokalBenutzer(wahltagID);
+            String s = userService.exportWahllokalBenutzer(wahltagID);
             return new ResponseEntity<>(s, HttpStatus.CREATED);
         } catch (Exception e) {
             log.error("#exportWahllokalBenutzer error: ", e);
@@ -59,6 +59,6 @@ public class WahllokalBenutzerController {
     @DeleteMapping(value = "/deleteWahllokalbenutzer/{wahltagID}")
     public void deleteWahllokalBenutzer(@PathVariable("wahltagID") String wahltagID) {
         log.info("Lösche Benutzer für Wahltag-ID <{}>.", wahltagID);
-        wahllokalBenutzerService.deleteWahllokalBenutzer(wahltagID);
+        userService.deleteWahllokalBenutzer(wahltagID);
     }
 }

@@ -424,7 +424,7 @@ class UserServiceTest {
         @Test
         void should_createUsername_when_creatingUserEntity() {
             unitUnderTest.wahlvorstandAuthorityName = "WahlvorstandAuthorityName";
-            unitUnderTest.pinChars = "0123456789";
+            unitUnderTest.prefixChars = "0123456789";
             unitUnderTest.countCharsPrefix = 6;
 
             val wahltagID = "wahltagID";

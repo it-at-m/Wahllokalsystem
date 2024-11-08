@@ -97,5 +97,5 @@ Alle Konfigurationsparameter beginnen mit dem Prefix `service.config`
 | user.authority.wahlvorstand | Rolle die einem Wahlvorstandsbenutzer zugeordnet werden soll | WLS_WAHLVORSTAND |
 | user.anzahlPinBloecke | Anzahl der Blöcke einer Pin | 4 |
 | user.countNumbersPin | Anzahl der Zeichen je Pin-Block | 4 |
-| user.pinChars | Set an Zeichen die für die Pin zum Einsatz kommen können | 23456789abcdefghjkmnpqrstuvwxyz |
+| user.prefixChars | Set an Zeichen die für die Pin zum Einsatz kommen können | 23456789abcdefghjkmnpqrstuvwxyz |
 | user.countCharsPrefix | Anzahl an Zeichen für den Prefix des Benutzernamens eines erzeugten Benutzers | 6 |

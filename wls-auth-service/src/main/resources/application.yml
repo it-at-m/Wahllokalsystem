@@ -79,6 +79,6 @@ service:
         eol: "\r\n"
       authority:
         wahlvorstand: WLS_WAHLVORSTAND
-      pinChars: "23456789abcdefghjkmnpqrstuvwxyz"
+      prefixChars: "23456789abcdefghjkmnpqrstuvwxyz"
   info:
     oid: AUTH-SERVICE

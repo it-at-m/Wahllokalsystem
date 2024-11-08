@@ -36,8 +36,8 @@ public class UserService {
     @Value("${service.config.user.anzahlPinBloecke}")
     int anzahlPinBloecke;
 
-    @Value("${service.config.user.pinChars}")
-    String pinChars;
+    @Value("${service.config.user.prefixChars}")
+    String prefixChars;
 
     @Value("${service.config.user.countCharsPrefix}")
     int countCharsPrefix;
@@ -170,7 +170,7 @@ public class UserService {
     }
 
     private String generateName(final String wahlbezirkNummer) {
-        val randomPrefix = RandomStringUtils.secure().next(countCharsPrefix, pinChars).toLowerCase();
+        val randomPrefix = RandomStringUtils.secure().next(countCharsPrefix, prefixChars).toLowerCase();
         return randomPrefix + "-" + wahlbezirkNummer;
     }
 

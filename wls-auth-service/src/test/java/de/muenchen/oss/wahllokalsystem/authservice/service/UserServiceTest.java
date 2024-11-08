@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.authservice.service;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 
 import de.muenchen.oss.wahllokalsystem.authservice.domain.Authority;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.AuthorityRepository;
@@ -397,6 +398,48 @@ class UserServiceTest {
 
             val expectedResult = "user1;user2";
             Assertions.assertThat(result).isEqualTo(expectedResult);
+        }
+
+        @Test
+        void should_createPin_when_creatingUserEntity() {
+            unitUnderTest.wahlvorstandAuthorityName = "WahlvorstandAuthorityName";
+            unitUnderTest.countNumbersPin = 4;
+            unitUnderTest.anzahlPinBloecke = 3;
+
+            val wahltagID = "wahltagID";
+            val user1 = new WahllokalUserInfoModel("101", LocalDate.now(), "wbzID1", WahlbezirksartModel.UWB, "1_1");
+            val usersOfWahltag = new UsersOfWahltagModel(wahltagID, List.of(user1));
+
+            val mockedAuthority = new Authority();
+            Mockito.when(authorityRepository.findByAuthority("WahlvorstandAuthorityName")).thenReturn(Optional.of(mockedAuthority));
+
+            unitUnderTest.generateWahllokalBenutzer(usersOfWahltag);
+
+            val pinCaptor = ArgumentCaptor.forClass(String.class);
+            Mockito.verify(userModelMapper).toUser(eq(wahltagID), eq(user1), any(), pinCaptor.capture(), any());
+
+            Assertions.assertThat(pinCaptor.getValue()).matches("\\d\\d\\d\\d-\\d\\d\\d\\d-\\d\\d\\d\\d");
+        }
+
+        @Test
+        void should_createUsername_when_creatingUserEntity() {
+            unitUnderTest.wahlvorstandAuthorityName = "WahlvorstandAuthorityName";
+            unitUnderTest.pinChars = "0123456789";
+            unitUnderTest.countCharsPrefix = 6;
+
+            val wahltagID = "wahltagID";
+            val user1 = new WahllokalUserInfoModel("101", LocalDate.now(), "wbzID1", WahlbezirksartModel.UWB, "1_1");
+            val usersOfWahltag = new UsersOfWahltagModel(wahltagID, List.of(user1));
+
+            val mockedAuthority = new Authority();
+            Mockito.when(authorityRepository.findByAuthority("WahlvorstandAuthorityName")).thenReturn(Optional.of(mockedAuthority));
+
+            unitUnderTest.generateWahllokalBenutzer(usersOfWahltag);
+
+            val usernameCaptor = ArgumentCaptor.forClass(String.class);
+            Mockito.verify(userModelMapper).toUser(eq(wahltagID), eq(user1), any(), any(), usernameCaptor.capture());
+
+            Assertions.assertThat(usernameCaptor.getValue()).matches("\\d\\d\\d\\d\\d\\d-" + user1.wahlbezirknummer());
         }
 
     }

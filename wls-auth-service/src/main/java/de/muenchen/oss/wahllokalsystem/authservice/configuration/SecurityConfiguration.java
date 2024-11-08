@@ -58,6 +58,7 @@ public class SecurityConfiguration {
                         AntPathRequestMatcher.antMatcher("/home"),
                         AntPathRequestMatcher.antMatcher("/css/*"),
                         AntPathRequestMatcher.antMatcher("/js/*"),
+                                AntPathRequestMatcher.antMatcher("/h2-console/"),
                         AntPathRequestMatcher.antMatcher("/h2-console/**"))
                         .permitAll()
                         .anyRequest().authenticated())

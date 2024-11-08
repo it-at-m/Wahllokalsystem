@@ -99,7 +99,7 @@ class WahllokalBenutzerControllerIntegrationTest {
         }
 
         @Test
-        void should_deleteOldUsersAndPersistNewUsers_when_UsersAreGiven() throws Exception {
+        void should_deleteOldUsersWithWahltagIDAndPersistNewUsers_when_UsersAreGiven() throws Exception {
             val wahltagID = "wahltagID";
 
             val oldUser1 = new User();
@@ -111,6 +111,11 @@ class WahllokalBenutzerControllerIntegrationTest {
             oldUser2.setUsername("oldUser2");
             oldUser2.setWahltagID(wahltagID);
             val oldUser2Saved = userRepository.save(oldUser2);
+
+            val oldUserToKeep = new User();
+            oldUserToKeep.setUsername("userToKeep");
+            oldUserToKeep.setWahltagID("other" + wahltagID);
+            val oldUserToKeepSaved = userRepository.save(oldUserToKeep);
 
             val wahltag = LocalDate.now();
             val user1 = new WahllokalUserInfoDTO("1", wahltag, "wbzID1", WahlbezirksartDTO.UWB, "1_1");
@@ -126,9 +131,10 @@ class WahllokalBenutzerControllerIntegrationTest {
 
             final List<User> persistedUsers = (List) entityManager.createQuery("SELECT u FROM User u").getResultList();
 
-            Assertions.assertThat(persistedUsers).hasSize(2);
+            Assertions.assertThat(persistedUsers).hasSize(3);
             Assertions.assertThat(userRepository.exists(oldUser1Saved.getUsername())).isFalse();
             Assertions.assertThat(userRepository.exists(oldUser2Saved.getUsername())).isFalse();
+            Assertions.assertThat(userRepository.exists(oldUserToKeepSaved.getUsername())).isTrue();
         }
 
     }

@@ -19,7 +19,7 @@ public class TestDataFactory {
         public static Wahlvorstand withData() {
             List<Wahlvorstandsmitglied> wahlvorstandsmitgliedList = new ArrayList<>();
             wahlvorstandsmitgliedList.add(CreateWahlvorstandsmitgliedEntity.withData());
-            return new Wahlvorstand("wahlbezirkID", LocalDateTime.now(), wahlvorstandsmitgliedList);
+            return new Wahlvorstand("wahlbezirkID", LocalDateTime.now().withNano(0), wahlvorstandsmitgliedList);
         }
 
         public static Wahlvorstand fromModel(WahlvorstandModel model) {
@@ -51,7 +51,7 @@ public class TestDataFactory {
             List<WahlvorstandsmitgliedModel> wahlvorstandsmitgliedModelList = new ArrayList<>();
             wahlvorstandsmitgliedModelList.add(CreateWahlvorstandsmitgliedModel.withData());
 
-            return new WahlvorstandModel("wahlbezirkID", LocalDateTime.now(), wahlvorstandsmitgliedModelList);
+            return new WahlvorstandModel("wahlbezirkID", LocalDateTime.now().withNano(0), wahlvorstandsmitgliedModelList);
         }
     }
 
@@ -62,14 +62,17 @@ public class TestDataFactory {
         }
     }
 
-    public static class CreateFromCient {
+    public static class CreateFromClient {
 
         public static KonfigurierterWahltagModel konfigurierterWahltagModel() {
             return new KonfigurierterWahltagModel(LocalDate.now(), "wahltagID", true, "wahltagNummer");
         }
 
-        public static WahlvorstandModel wahlvorstandModel() {
-            return CreateWahlvorstandModel.withData();
+        public static WahlvorstandModel wahlvorstandModel(String wahlbezirkID) {
+            List<WahlvorstandsmitgliedModel> wahlvorstandsmitgliedModelList = new ArrayList<>();
+            wahlvorstandsmitgliedModelList.add(CreateWahlvorstandsmitgliedModel.withData());
+
+            return new WahlvorstandModel(wahlbezirkID, LocalDateTime.now().withNano(0), wahlvorstandsmitgliedModelList);
         }
     }
 

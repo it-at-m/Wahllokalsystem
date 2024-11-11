@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-@Component(value = "bezirkIdPermisionEvaluator")
+@Component(value = "bezirkIdPermissionEvaluator")
 @Profile("!" + Profiles.NO_BEZIRKS_ID_CHECK)
 public class BezirkIDPermissionEvaluatorImpl implements BezirkIDPermissionEvaluator {
 

@@ -3,6 +3,12 @@ app:
     eai:
       basePath: http://localhost:${wiremock.server.port}/
 
+security:
+  # possible values: none, all, changing (With changing, only changing requests such as POST, PUT, DELETE are logged)
+  logging.requests: all
+  oauth2:
+    resource.user-info-uri: http://localhost:${wiremock.server.port}/userinfo
+
 spring:
   # Spring JPA
   h2.console.enabled: true
@@ -20,6 +26,13 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:${wiremock.server.port}/certs
+          
 wiremock:
   server:
     port: 0

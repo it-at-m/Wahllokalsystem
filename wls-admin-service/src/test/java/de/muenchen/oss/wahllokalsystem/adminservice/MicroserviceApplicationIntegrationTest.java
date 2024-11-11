@@ -37,7 +37,7 @@ public class MicroserviceApplicationIntegrationTest {
 
             val headers = new HttpHeaders();
             headers.add("Authorization", "Bearer " + tokenToSend);
-            val request = new RequestEntity<>(headers, HttpMethod.POST, new URI("http://localhost:" + port + "/businessActions/resetWahlen"));
+            val request = new RequestEntity<>(headers, HttpMethod.POST, new URI("http://localhost:" + port + "/endpoint/does/not/matter"));
 
             val result = restTemplate.exchange(request, Void.class);
 

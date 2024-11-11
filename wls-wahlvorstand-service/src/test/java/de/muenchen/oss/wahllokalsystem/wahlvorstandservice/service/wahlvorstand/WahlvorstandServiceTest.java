@@ -7,6 +7,7 @@ import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.utils.TestDataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -51,7 +52,7 @@ public class WahlvorstandServiceTest {
             val mockedWahlvorstand = TestDataFactory.CreateWahlvorstandEntity.withData();
             val expectedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.fromEntity(mockedWahlvorstand);
 
-            Mockito.when(wahlvorstandRepository.findByWahlbezirkID(wahlbezirkID)).thenReturn(mockedWahlvorstand);
+            Mockito.when(wahlvorstandRepository.findById(wahlbezirkID)).thenReturn(Optional.of(mockedWahlvorstand));
             Mockito.when(wahlvorstandModelMapper.toModel(mockedWahlvorstand)).thenReturn(expectedWahlvorstandModel);
 
             val result = unitUnderTest.getWahlvorstand(wahlbezirkID);
@@ -64,7 +65,7 @@ public class WahlvorstandServiceTest {
         void should_returnNull_when_noDataFound() {
             val wahlbezirkID = "wahlbezirkID";
 
-            Mockito.when(wahlvorstandRepository.findByWahlbezirkID(wahlbezirkID)).thenReturn(null);
+            Mockito.when(wahlvorstandRepository.findById(wahlbezirkID)).thenReturn(null);
 
             val result = unitUnderTest.getWahlvorstand(wahlbezirkID);
             Assertions.assertThat(result).isNull();
@@ -78,7 +79,6 @@ public class WahlvorstandServiceTest {
         void should_updateWahlvorstandAndReturnWahlvorstandModel_when_givenValidWahlbezirkID() {
             val wahlbezirkID = "wahlbezirkID";
 
-            // in updateWahlvorstand
             val mockedKonfigurierterWahltagFromClient = TestDataFactory.CreateFromClient.konfigurierterWahltagModel();
             val mockedWahlvorstandModelFromClient = TestDataFactory.CreateFromClient.wahlvorstandModel(wahlbezirkID);
             val expectedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.withData();
@@ -86,9 +86,8 @@ public class WahlvorstandServiceTest {
             Mockito.when(wahlvorstandEaiClient.getWahlvorstand(wahlbezirkID, mockedKonfigurierterWahltagFromClient.wahltag()))
                     .thenReturn(mockedWahlvorstandModelFromClient);
 
-            // in persistWahlvorstand
             val mockedWahlvorstand = TestDataFactory.CreateWahlvorstandEntity.withData();
-            Mockito.when(wahlvorstandRepository.findByWahlbezirkID(wahlbezirkID)).thenReturn(mockedWahlvorstand);
+            Mockito.when(wahlvorstandRepository.findById(wahlbezirkID)).thenReturn(Optional.of(mockedWahlvorstand));
             Mockito.when(wahlvorstandModelMapper.toEntity(mockedWahlvorstandModelFromClient)).thenReturn(mockedWahlvorstand);
 
             val result = unitUnderTest.updateWahlvorstand(wahlbezirkID);

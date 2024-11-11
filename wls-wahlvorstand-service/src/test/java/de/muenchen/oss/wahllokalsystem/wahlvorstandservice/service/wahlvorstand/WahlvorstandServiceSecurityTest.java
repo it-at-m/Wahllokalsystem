@@ -1,7 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand;
 
+import static de.muenchen.oss.wahllokalsystem.wahlvorstandservice.TestConstants.SPRING_TEST_PROFILE;
+import static de.muenchen.oss.wahllokalsystem.wahlvorstandservice.configuration.Profiles.DUMMY_CLIENTS;
+
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.utils.TestDataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
@@ -27,7 +29,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, TestConstants.DUMMY_CLIENTS })
+@ActiveProfiles({ SPRING_TEST_PROFILE, DUMMY_CLIENTS })
 public class WahlvorstandServiceSecurityTest {
 
     @MockBean(name = "bezirkIdPermisionEvaluator")
@@ -81,7 +83,6 @@ public class WahlvorstandServiceSecurityTest {
     }
 
     @Nested
-    @ActiveProfiles(TestConstants.DUMMY_CLIENTS)
     class SetWahlvorstand {
 
         @Test

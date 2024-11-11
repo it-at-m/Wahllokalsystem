@@ -54,7 +54,7 @@ public class WahlvorstandService {
     public WahlvorstandModel getWahlvorstand(@P("wahlbezirkID") final String wahlbezirkID) {
         log.info("#getWahlvorstand");
         wahlvorstandValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
-        return wahlvorstandModelMapper.toModel(wahlvorstandRepository.findByWahlbezirkID(wahlbezirkID));
+        return wahlvorstandModelMapper.toModel(wahlvorstandRepository.findById(wahlbezirkID).get());
     }
 
     @PreAuthorize("hasAuthority('Wahlvorstand_BUSINESSACTION_UpdateWahlvorstand')")
@@ -103,7 +103,7 @@ public class WahlvorstandService {
             return null;
         }
 
-        Wahlvorstand wahlvorstandDB = wahlvorstandRepository.findByWahlbezirkID(wahlvorstand.wahlbezirkID());
+        Wahlvorstand wahlvorstandDB = wahlvorstandRepository.findById(wahlvorstand.wahlbezirkID()).get();
         if (wahlvorstandDB != null) {
             try {
                 wahlvorstandRepository.save(populateFunktionsnameOffline(wahlvorstandModelMapper.toEntity(wahlvorstand), wahlvorstandDB));

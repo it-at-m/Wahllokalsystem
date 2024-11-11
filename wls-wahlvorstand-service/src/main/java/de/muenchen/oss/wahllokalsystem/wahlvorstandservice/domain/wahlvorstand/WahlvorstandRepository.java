@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand;
 
+import java.util.Optional;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -14,8 +15,9 @@ public interface WahlvorstandRepository extends CrudRepository<Wahlvorstand, Str
     @Override
     Iterable<Wahlvorstand> findAll();
 
+    @Override
     @Cacheable(value = CACHE, key = "#p0")
-    Wahlvorstand findByWahlbezirkID(String wahlbezirkID);
+    Optional<Wahlvorstand> findById(String wahlbezirkID);
 
     @Override
     @CachePut(value = CACHE, key = "#p0.wahlbezirkID")

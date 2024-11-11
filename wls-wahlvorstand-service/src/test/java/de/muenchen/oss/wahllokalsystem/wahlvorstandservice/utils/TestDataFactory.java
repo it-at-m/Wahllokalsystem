@@ -3,6 +3,9 @@ package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.utils;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.Funktion;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.Wahlvorstand;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.Wahlvorstandsmitglied;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand.FunktionDTO;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand.WahlvorstandDTO;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand.WahlvorstandsmitgliedDTO;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.FunktionModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlvorstandsmitgliedModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.aoueaiClient.WahlvorstandModel;
@@ -10,6 +13,7 @@ import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TestDataFactory {
@@ -53,12 +57,72 @@ public class TestDataFactory {
 
             return new WahlvorstandModel("wahlbezirkID", LocalDateTime.now().withNano(0), wahlvorstandsmitgliedModelList);
         }
+
+        public static WahlvorstandModel fromDto(WahlvorstandDTO wahlvorstandDto) {
+            List<WahlvorstandsmitgliedModel> wahlvorstandsmitgliedModelList = wahlvorstandDto.wahlvorstandsmitglieder().stream().map(mitglied -> new WahlvorstandsmitgliedModel(
+                    mitglied.identifikator(), mitglied.familienname(), mitglied.vorname(), MapFunktion.funktionDtoToFunktionModel(mitglied.funktion()), mitglied.funktionsname(), mitglied.anwesend()))
+                    .toList();
+
+            return new WahlvorstandModel(wahlvorstandDto.wahlbezirkID(), wahlvorstandDto.anwesenheitBeginn(), wahlvorstandsmitgliedModelList);
+        }
+
+        public static WahlvorstandModel fallback(String wahlbezirkID) {
+            WahlvorstandModel fallbackWahlvorstand = WahlvorstandModel.builder().wahlbezirkID(wahlbezirkID).wahlvorstandsmitglieder(new ArrayList<>()).build();
+            Arrays.stream(FunktionModel.values()).forEach(funktion -> {
+                WahlvorstandsmitgliedModel mitglied = WahlvorstandsmitgliedModel.builder()
+                        .identifikator("FALLBACK_" + funktion + wahlbezirkID)
+                        .funktion(funktion)
+                        .familienname("______________")
+                        .vorname("______________")
+                        .build();
+                fallbackWahlvorstand.wahlvorstandsmitglieder().add(mitglied);
+            });
+            return fallbackWahlvorstand;
+        }
     }
 
     public static class CreateWahlvorstandsmitgliedModel {
 
         public static WahlvorstandsmitgliedModel withData() {
             return new WahlvorstandsmitgliedModel("id", "familienname", "vorname", FunktionModel.B, "funktionsname", true);
+        }
+    }
+
+    public static class CreateWahlvorstandDto {
+
+        public static WahlvorstandDTO withData() {
+            List<WahlvorstandsmitgliedDTO> wahlvorstandsmitgliedDtoList = new ArrayList<>();
+            wahlvorstandsmitgliedDtoList.add(CreateWahlvorstandsmitgliedDto.withData());
+
+            return new WahlvorstandDTO("wahlbezirkID", LocalDateTime.now().withNano(0), wahlvorstandsmitgliedDtoList);
+        }
+
+        public static WahlvorstandDTO fromModel(WahlvorstandModel model) {
+            List<WahlvorstandsmitgliedDTO> wahlvorstandsmitgliedDtoList = model.wahlvorstandsmitglieder().stream().map(mitglied -> new WahlvorstandsmitgliedDTO(
+                    mitglied.identifikator(), mitglied.familienname(), mitglied.vorname(), MapFunktion.funktionModelToFunktionDto(mitglied.funktion()), mitglied.funktionsname(), mitglied.anwesend()))
+                    .toList();
+            return new WahlvorstandDTO(model.wahlbezirkID(), model.anwesenheitBeginn(), wahlvorstandsmitgliedDtoList);
+        }
+
+        public static WahlvorstandDTO fallback(String wahlbezirkID) {
+            WahlvorstandDTO fallbackWahlvorstand = WahlvorstandDTO.builder().wahlbezirkID(wahlbezirkID).wahlvorstandsmitglieder(new ArrayList<>()).build();
+            Arrays.stream(FunktionDTO.values()).forEach(funktion -> {
+                WahlvorstandsmitgliedDTO mitglied = WahlvorstandsmitgliedDTO.builder()
+                        .identifikator("FALLBACK_" + funktion + wahlbezirkID)
+                        .funktion(funktion)
+                        .familienname("______________")
+                        .vorname("______________")
+                        .build();
+                fallbackWahlvorstand.wahlvorstandsmitglieder().add(mitglied);
+            });
+            return fallbackWahlvorstand;
+        }
+    }
+
+    public static class CreateWahlvorstandsmitgliedDto {
+
+        public static WahlvorstandsmitgliedDTO withData() {
+            return new WahlvorstandsmitgliedDTO("id", "familienname", "vorname", FunktionDTO.SSB, "funktionsname", true);
         }
     }
 
@@ -111,6 +175,26 @@ public class TestDataFactory {
             case SWB -> FunktionModel.SWB;
             case SSB -> FunktionModel.SSB;
             case B -> FunktionModel.B;
+            };
+        }
+
+        public static FunktionDTO funktionModelToFunktionDto(FunktionModel funktionModel) {
+            return switch (funktionModel) {
+                case W -> FunktionDTO.W;
+                case SB -> FunktionDTO.SB;
+                case SWB -> FunktionDTO.SWB;
+                case SSB -> FunktionDTO.SSB;
+                case B -> FunktionDTO.B;
+            };
+        }
+
+        public static FunktionModel funktionDtoToFunktionModel(FunktionDTO funktionDto) {
+            return switch (funktionDto) {
+                case W -> FunktionModel.W;
+                case SB -> FunktionModel.SB;
+                case SWB -> FunktionModel.SWB;
+                case SSB -> FunktionModel.SSB;
+                case B -> FunktionModel.B;
             };
         }
     }

@@ -19,8 +19,6 @@ public final class TestConstants {
 
     public static final String SPRING_NO_SECURITY_PROFILE = "no-security";
 
-    public static final String DUMMY_CLIENTS = "dummy.clients";
-
     @NoArgsConstructor
     @Getter
     @Setter

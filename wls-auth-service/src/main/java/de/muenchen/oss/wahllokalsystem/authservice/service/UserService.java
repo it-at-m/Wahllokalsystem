@@ -25,7 +25,7 @@ public class UserService {
 
     private final LoginAttemptModelMapper loginAttemptModelMapper;
 
-    @Value("${serviceauth.maxLoginAttempts}")
+    @Value("${service.config.maxLoginAttempts}")
     @Getter
     @Setter
     private int maxLoginAttempts;

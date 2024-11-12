@@ -4,8 +4,8 @@ import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.configuration.Profile
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.eai.aou.client.WahlvorstandControllerApi;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.eai.aou.model.WahlvorstandDTO;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.aoueaiClient.WahlvorstandEaiClient;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.aoueaiClient.WahlvorstandModel;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlvorstandEaiClient;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlvorstandModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;

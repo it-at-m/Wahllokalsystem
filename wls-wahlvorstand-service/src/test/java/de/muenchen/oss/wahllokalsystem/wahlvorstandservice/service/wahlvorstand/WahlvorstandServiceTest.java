@@ -54,7 +54,7 @@ public class WahlvorstandServiceTest {
             Mockito.when(wahlvorstandModelMapper.toModel(mockedWahlvorstand)).thenReturn(expectedWahlvorstandModel);
 
             val result = unitUnderTest.getWahlvorstand(wahlbezirkID);
-            Assertions.assertThat(result).isEqualTo(expectedWahlvorstandModel);
+            Assertions.assertThat(result).isEqualTo(Optional.of(expectedWahlvorstandModel));
 
             Mockito.verify(wahlvorstandValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
         }
@@ -63,10 +63,10 @@ public class WahlvorstandServiceTest {
         void should_returnNull_when_noDataFound() {
             val wahlbezirkID = "wahlbezirkID";
 
-            Mockito.when(wahlvorstandRepository.findById(wahlbezirkID)).thenReturn(null);
+            Mockito.when(wahlvorstandRepository.findById(wahlbezirkID)).thenReturn(Optional.empty());
 
             val result = unitUnderTest.getWahlvorstand(wahlbezirkID);
-            Assertions.assertThat(result).isNull();
+            Assertions.assertThat(result).isEmpty();
         }
     }
 
@@ -89,7 +89,7 @@ public class WahlvorstandServiceTest {
             Mockito.when(wahlvorstandModelMapper.toEntity(mockedWahlvorstandModelFromClient)).thenReturn(mockedWahlvorstand);
 
             val result = unitUnderTest.updateWahlvorstand(wahlbezirkID);
-            Assertions.assertThat(result).isEqualTo(expectedWahlvorstandModel);
+            Assertions.assertThat(result).isEqualTo(Optional.of(expectedWahlvorstandModel));
 
             Mockito.verify(wahlvorstandValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
             Mockito.verify(wahlvorstandRepository).save(mockedWahlvorstand);

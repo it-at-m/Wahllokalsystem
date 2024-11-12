@@ -95,10 +95,10 @@ public class WahlvorstandService {
             return null;
         }
 
-        Wahlvorstand wahlvorstandDB = wahlvorstandRepository.findById(wahlvorstand.wahlbezirkID()).get();
-        if (wahlvorstandDB != null) {
+        val wahlvorstandDB = wahlvorstandRepository.findById(wahlvorstand.wahlbezirkID());
+        if (wahlvorstandDB.isPresent()) {
             try {
-                wahlvorstandRepository.save(populateFunktionsnameOffline(wahlvorstandModelMapper.toEntity(wahlvorstand), wahlvorstandDB));
+                wahlvorstandRepository.save(populateFunktionsnameOffline(wahlvorstandModelMapper.toEntity(wahlvorstand), wahlvorstandDB.get()));
             } catch (IllegalStateException ex) {
                 wahlvorstandRepository.save(populateFunktionsnameOnline(wahlvorstandModelMapper.toEntity(wahlvorstand), konfigurierterWahltagModel));
             }

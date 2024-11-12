@@ -66,7 +66,7 @@ public class WahlvorstandControllerTest {
             val mockedFallbackWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.fallback(wahlbezirkID);
             val expectedWahlvorstandDto = TestDataFactory.CreateWahlvorstandDto.fromModel(mockedFallbackWahlvorstandModel);
 
-            Mockito.when(wahlvorstandService.getWahlvorstand(wahlbezirkID)).thenReturn(null);
+            Mockito.when(wahlvorstandService.getWahlvorstand(wahlbezirkID)).thenReturn(Optional.empty());
             Mockito.when(wahlvorstandService.getFallbackWahlvorstand(wahlbezirkID)).thenReturn(Optional.of(mockedFallbackWahlvorstandModel));
             Mockito.when(wahlvorstandDTOMapper.toDTO(mockedFallbackWahlvorstandModel)).thenReturn(expectedWahlvorstandDto);
 

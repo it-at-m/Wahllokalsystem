@@ -29,7 +29,7 @@ public class UserController {
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     @Transactional(readOnly = true)
-    @Cacheable(value = CacheConfig.USER_CACHE, key = "#user.getName()")
+    @Cacheable(value = CacheConfig.USER_CACHE, key = "#a0.getName()")
     public ResponseEntity<UserDTO> user(Principal user) {
         log.debug("user info for '{}' called.", user.getName());
         val userServiceModel = userService.getUser(user.getName());

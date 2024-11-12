@@ -50,17 +50,17 @@ public class WahlvorstandController {
             @RequestHeader(value = "forceupdate", required = false) String forceUpdate,
             @PathVariable("wahlbezirkID") String wahlbezirkID) {
 
-        WahlvorstandModel result;
+        Optional<WahlvorstandModel> result;
 
         if (forceUpdate != null && forceUpdate.equals("true")) {
             result = wahlvorstandService.updateWahlvorstand(wahlbezirkID);
         } else {
             result = wahlvorstandService.getWahlvorstand(wahlbezirkID);
         }
-        if (result == null) {
+        if (result.isEmpty()) {
             result = wahlvorstandService.getFallbackWahlvorstand(wahlbezirkID);
         }
-        return okWithBodyOrNoContent(Optional.of(wahlvorstandDTOMapper.toDTO(result)));
+        return okWithBodyOrNoContent(result.map(wahlvorstandDTOMapper::toDTO));
     }
 
     private <T> ResponseEntity<T> okWithBodyOrNoContent(final Optional<T> optionalBody) {

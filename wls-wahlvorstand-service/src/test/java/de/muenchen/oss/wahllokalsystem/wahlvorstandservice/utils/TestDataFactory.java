@@ -97,6 +97,13 @@ public class TestDataFactory {
             return new WahlvorstandDTO("wahlbezirkID", LocalDateTime.now().withNano(0), wahlvorstandsmitgliedDtoList);
         }
 
+        public static WahlvorstandDTO withWahlbezirkID(String wahlbezirkID) {
+            List<WahlvorstandsmitgliedDTO> wahlvorstandsmitgliedDtoList = new ArrayList<>();
+            wahlvorstandsmitgliedDtoList.add(CreateWahlvorstandsmitgliedDto.withData());
+
+            return new WahlvorstandDTO(wahlbezirkID, LocalDateTime.now().withNano(0), wahlvorstandsmitgliedDtoList);
+        }
+
         public static WahlvorstandDTO fromModel(WahlvorstandModel model) {
             List<WahlvorstandsmitgliedDTO> wahlvorstandsmitgliedDtoList = model.wahlvorstandsmitglieder().stream().map(mitglied -> new WahlvorstandsmitgliedDTO(
                     mitglied.identifikator(), mitglied.familienname(), mitglied.vorname(), MapFunktion.funktionModelToFunktionDto(mitglied.funktion()), mitglied.funktionsname(), mitglied.anwesend()))
@@ -137,6 +144,13 @@ public class TestDataFactory {
             wahlvorstandsmitgliedModelList.add(CreateWahlvorstandsmitgliedModel.withData());
 
             return new WahlvorstandModel(wahlbezirkID, LocalDateTime.now().withNano(0), wahlvorstandsmitgliedModelList);
+        }
+
+        public static WahlvorstandDTO wahlvorstandDTO() {
+            List<WahlvorstandsmitgliedDTO> wahlvorstandsmitgliedDtoList = new ArrayList<>();
+            wahlvorstandsmitgliedDtoList.add(CreateWahlvorstandsmitgliedDto.withData());
+
+            return new WahlvorstandDTO("wahlbezirkID", LocalDateTime.now().withNano(0), wahlvorstandsmitgliedDtoList);
         }
     }
 

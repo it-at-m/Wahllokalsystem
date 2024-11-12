@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -51,19 +52,19 @@ public class WahlvorstandService {
         "hasAuthority('Wahlvorstand_BUSINESSACTION_GetWahlvorstand')"
                 + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
     )
-    public WahlvorstandModel getWahlvorstand(@P("wahlbezirkID") final String wahlbezirkID) {
+    public Optional<WahlvorstandModel> getWahlvorstand(@P("wahlbezirkID") final String wahlbezirkID) {
         log.info("#getWahlvorstand");
         wahlvorstandValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
-        return wahlvorstandModelMapper.toModel(wahlvorstandRepository.findById(wahlbezirkID).get());
+        return wahlvorstandRepository.findById(wahlbezirkID).map(wahlvorstandModelMapper::toModel);
     }
 
     @PreAuthorize("hasAuthority('Wahlvorstand_BUSINESSACTION_UpdateWahlvorstand')")
-    public WahlvorstandModel updateWahlvorstand(@P("wahlbezirkID") final String wahlbezirkID) {
+    public Optional<WahlvorstandModel> updateWahlvorstand(@P("wahlbezirkID") final String wahlbezirkID) {
         log.info("#updateWahlvorstand");
         wahlvorstandValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
         KonfigurierterWahltagModel konfigurierterWahltagModel = konfigurierterWahltagClient.getKonfigurierterWahltag();
         WahlvorstandModel wahlvorstand = wahlvorstandEaiClient.getWahlvorstand(wahlbezirkID, konfigurierterWahltagModel.wahltag());
-        return persistWahlvorstand(wahlvorstand, konfigurierterWahltagModel);
+        return Optional.of(persistWahlvorstand(wahlvorstand, konfigurierterWahltagModel));
     }
 
     @Transactional
@@ -81,7 +82,7 @@ public class WahlvorstandService {
         wahlvorstandEaiClient.postWahlvorstand(wahlvorstandModel);
     }
 
-    public WahlvorstandModel getFallbackWahlvorstand(String wahlbezirkID) {
+    public Optional<WahlvorstandModel> getFallbackWahlvorstand(String wahlbezirkID) {
         WahlvorstandModel fallbackWahlvorstand = WahlvorstandModel.builder().wahlbezirkID(wahlbezirkID).wahlvorstandsmitglieder(new ArrayList<>()).build();
 
         Arrays.stream(FunktionModel.values()).forEach(funktion -> {
@@ -95,7 +96,7 @@ public class WahlvorstandService {
         });
 
         KonfigurierterWahltagModel konfigurierterWahltagModel = konfigurierterWahltagClient.getKonfigurierterWahltag();
-        return persistWahlvorstand(fallbackWahlvorstand, konfigurierterWahltagModel);
+        return Optional.of(persistWahlvorstand(fallbackWahlvorstand, konfigurierterWahltagModel));
     }
 
     private WahlvorstandModel persistWahlvorstand(WahlvorstandModel wahlvorstand, KonfigurierterWahltagModel konfigurierterWahltagModel) {

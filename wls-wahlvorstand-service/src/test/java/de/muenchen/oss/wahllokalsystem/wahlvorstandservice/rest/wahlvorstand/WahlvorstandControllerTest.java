@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand;
 
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlvorstandService;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.utils.TestDataFactory;
+import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -35,7 +36,7 @@ public class WahlvorstandControllerTest {
             val mockedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.withData();
             val expectedWahlvorstandDto = TestDataFactory.CreateWahlvorstandDto.fromModel(mockedWahlvorstandModel);
 
-            Mockito.when(wahlvorstandService.getWahlvorstand(wahlbezirkID)).thenReturn(mockedWahlvorstandModel);
+            Mockito.when(wahlvorstandService.getWahlvorstand(wahlbezirkID)).thenReturn(Optional.of(mockedWahlvorstandModel));
             Mockito.when(wahlvorstandDTOMapper.toDTO(mockedWahlvorstandModel)).thenReturn(expectedWahlvorstandDto);
 
             val result = unitUnderTest.getWahlvorstand(forceUpdate, wahlbezirkID);
@@ -50,7 +51,7 @@ public class WahlvorstandControllerTest {
             val mockedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.withData();
             val expectedWahlvorstandDto = TestDataFactory.CreateWahlvorstandDto.fromModel(mockedWahlvorstandModel);
 
-            Mockito.when(wahlvorstandService.updateWahlvorstand(wahlbezirkID)).thenReturn(mockedWahlvorstandModel);
+            Mockito.when(wahlvorstandService.updateWahlvorstand(wahlbezirkID)).thenReturn(Optional.of(mockedWahlvorstandModel));
             Mockito.when(wahlvorstandDTOMapper.toDTO(mockedWahlvorstandModel)).thenReturn(expectedWahlvorstandDto);
 
             val result = unitUnderTest.getWahlvorstand(forceUpdate, wahlbezirkID);
@@ -66,7 +67,7 @@ public class WahlvorstandControllerTest {
             val expectedWahlvorstandDto = TestDataFactory.CreateWahlvorstandDto.fromModel(mockedFallbackWahlvorstandModel);
 
             Mockito.when(wahlvorstandService.getWahlvorstand(wahlbezirkID)).thenReturn(null);
-            Mockito.when(wahlvorstandService.getFallbackWahlvorstand(wahlbezirkID)).thenReturn(mockedFallbackWahlvorstandModel);
+            Mockito.when(wahlvorstandService.getFallbackWahlvorstand(wahlbezirkID)).thenReturn(Optional.of(mockedFallbackWahlvorstandModel));
             Mockito.when(wahlvorstandDTOMapper.toDTO(mockedFallbackWahlvorstandModel)).thenReturn(expectedWahlvorstandDto);
 
             val result = unitUnderTest.getWahlvorstand(forceUpdate, wahlbezirkID);

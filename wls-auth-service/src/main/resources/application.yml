@@ -59,23 +59,22 @@ info.application.name: @project.artifactId@
 info.application.version: @project.version@
 
 service:
+  config:
+    crypto:
+      encryptionPrefix: "ENCRYPTED:"
+    maxLoginAttempts: 5
+    clients:
+      infomanagement:
+        basepath: http://localhost:39146
+        configkey:
+          welcomeMessage: WILLKOMMENSTEXT
+    ldap:
+      userDn:
+      userDnPassword:
+      contextSource:
+      userSearchBase:
+      userSearchFilter:
+    welcomemessage:
+      default: "Willkommen zur Wahl!"
   info:
     oid: AUTH-SERVICE
-
-serviceauth:
-  crypto:
-    encryptionPrefix: "ENCRYPTED:"
-  maxLoginAttempts: 5
-  clients:
-    infomanagement:
-      basepath: http://localhost:39146
-      configkey:
-        welcomeMessage: WILLKOMMENSTEXT
-  welcomemessage:
-    default: "Willkommen zur Wahl!"
-  ldap:
-    userDn:
-    userDnPassword:
-    contextSource:
-    userSearchBase:
-    userSearchFilter:

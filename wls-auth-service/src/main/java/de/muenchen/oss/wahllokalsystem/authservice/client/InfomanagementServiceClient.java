@@ -24,10 +24,10 @@ public class InfomanagementServiceClient implements WelcomeClient {
 
     private final KonfigurationControllerApi konfigurationControllerApi;
 
-    @Value("${serviceauth.clients.infomanagement.configkey.welcomeMessage}")
+    @Value("${service.config.clients.infomanagement.configkey.welcomeMessage}")
     String konfigKeyWelcomeMessage;
 
-    @Value("${serviceauth.welcomemessage.default}")
+    @Value("${service.config.welcomemessage.default}")
     String defaultWelcomeMessage;
 
     @Override

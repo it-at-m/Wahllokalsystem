@@ -1,0 +1,16 @@
+package de.muenchen.oss.wahllokalsystem.monitoringservice.client.common;
+
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import org.mapstruct.Mapper;
+
+@Mapper
+public interface TimeStampMapper {
+
+    ZoneOffset DEFAULT_ZONE = ZoneOffset.UTC;
+
+    default OffsetDateTime localDateTimeToOffsetDateTime(LocalDateTime localDateTime) {
+        return (null != localDateTime) ? localDateTime.atOffset(DEFAULT_ZONE) : null;
+    }
+}

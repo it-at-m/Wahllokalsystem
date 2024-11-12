@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "serviceauth.ldap", ignoreUnknownFields = true)
+@ConfigurationProperties(prefix = "service.config.ldap", ignoreUnknownFields = true)
 @Data
 public class ServiceAuthLdapProperties {
 

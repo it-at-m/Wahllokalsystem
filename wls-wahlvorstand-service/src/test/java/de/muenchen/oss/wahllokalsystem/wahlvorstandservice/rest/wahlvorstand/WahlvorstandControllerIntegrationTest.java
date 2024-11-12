@@ -83,11 +83,11 @@ public class WahlvorstandControllerIntegrationTest {
             WireMock.stubFor(WireMock.get("/wahldaten/wahlen?forDate=" + searchingForWahltag + "&withNummer=nummerWahltag")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
                             .withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsString(eaiWahlvorstand))));
+                            .withBody(objectMapper.writeValueAsBytes(eaiWahlen))));
 
             val request = MockMvcRequestBuilders.get("/businessActions/wahlvorstand/wahlbezirkID");
-            val response = api.perform(request).andExpect(status().isNoContent()).andReturn();
-            Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
+            val response = api.perform(request).andExpect(status().isOk()).andReturn();
+            Assertions.assertThat(response.getResponse().getContentAsString()).contains("FALLBACK");
         }
 
         @Test

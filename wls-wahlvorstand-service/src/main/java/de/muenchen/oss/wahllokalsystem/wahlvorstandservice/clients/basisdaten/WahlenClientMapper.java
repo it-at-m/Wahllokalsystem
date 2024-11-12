@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.clients.basisdaten;
 
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.eai.aou.model.WahlDTO;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.basisdatenClient.Farbe;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.basisdatenClient.WahlModel;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.Farbe;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlModel;
 import java.util.List;
 import java.util.Set;
 import org.mapstruct.Mapper;

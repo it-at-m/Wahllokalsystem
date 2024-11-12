@@ -4,9 +4,9 @@ import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.configuration.Profile
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.eai.aou.client.WahldatenControllerApi;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.eai.aou.model.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.basisdatenClient.WahlModel;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.basisdatenClient.WahlenClient;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.infomanagementClient.KonfigurierterWahltagModel;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.KonfigurierterWahltagModel;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlModel;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlenClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.List;

@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.aoueaiClient;
+package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand;
 
 import java.time.LocalDate;
 

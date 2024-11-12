@@ -4,7 +4,7 @@
  */
 package de.muenchen.oss.wahllokalsystem.wahlvorstandservice;
 
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.mapping.FunktionsnamenMapping;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.FunktionsnamenMapping;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;

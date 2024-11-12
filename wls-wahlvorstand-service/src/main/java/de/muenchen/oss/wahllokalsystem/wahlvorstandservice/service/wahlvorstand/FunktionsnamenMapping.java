@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.mapping;
+package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand;
 
 import java.util.HashMap;
 import java.util.Map;

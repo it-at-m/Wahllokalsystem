@@ -1,6 +1,5 @@
-package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.aoueaiClient;
+package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand;
 
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlvorstandsmitgliedModel;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;

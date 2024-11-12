@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.clients.infomanagement;
 
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.infomanagementClient.KonfigurierterWahltagModel;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.KonfigurierterWahltagModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

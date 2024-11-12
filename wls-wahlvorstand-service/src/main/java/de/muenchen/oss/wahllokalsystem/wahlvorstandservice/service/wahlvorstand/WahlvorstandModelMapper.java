@@ -2,7 +2,6 @@ package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand
 
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.Wahlvorstand;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.Wahlvorstandsmitglied;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.aoueaiClient.WahlvorstandModel;
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
 

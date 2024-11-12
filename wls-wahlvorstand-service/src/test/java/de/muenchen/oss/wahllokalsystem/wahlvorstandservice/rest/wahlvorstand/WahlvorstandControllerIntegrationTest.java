@@ -10,10 +10,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.WahlvorstandRepository;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.Farbe;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlModel;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.Wahlart;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlvorstandModelMapper;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.utils.TestDataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -64,9 +71,16 @@ public class WahlvorstandControllerIntegrationTest {
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_GET_WAHLVORSTAND, Authorities.SERVICE_UPDATE_WAHLVORSTAND, Authorities.REPOSITORY_READ_WAHLVORSTAND })
         @Transactional
-        void should_returnNoContent_when_noDataFound() throws Exception {
-            val eaiWahlvorstand = TestDataFactory.CreateFromClient.wahlvorstandDTO();
-            WireMock.stubFor(WireMock.get("/businessActions/wahlvorstand/wahlbezirkID")
+        void should_returnFallbackWahlvorstand_when_noDataFound() throws Exception {
+            val infomanagementKonfigurierterWahltag = TestDataFactory.CreateFromClient.konfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
+            WireMock.stubFor(WireMock.get("/businessActions/konfigurierterWahltag")
+                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
+                            .withBody(objectMapper.writeValueAsBytes(infomanagementKonfigurierterWahltag))));
+
+            var searchingForWahltag = infomanagementKonfigurierterWahltag.getWahltag();
+            val eaiWahlen = createWahlModels();
+            WireMock.stubFor(WireMock.get("/wahldaten/wahlen?forDate=" + searchingForWahltag + "&withNummer=nummerWahltag")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
                             .withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsString(eaiWahlvorstand))));
@@ -88,6 +102,23 @@ public class WahlvorstandControllerIntegrationTest {
 
             val expectedResponseDTO = wahlvorstandDTOMapper.toDTO(mockedWahlvorstandModel);
             Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseDTO);
+        }
+
+        private List<WahlModel> createWahlModels() {
+            WahlModel wahl1 = new WahlModel("wahlid1", "wahl1", 1L,
+                    1L, LocalDate.now().plusMonths(1),
+                    Wahlart.BAW, new Farbe(1, 1, 1), "0");
+            WahlModel wahl2 = new WahlModel("wahlid2", "wahl2", 2L,
+                    2L, LocalDate.now().plusMonths(2),
+                    Wahlart.LTW, new Farbe(2, 2, 2), "1");
+            WahlModel wahl3 = new WahlModel("wahlid3", "wahl3", 3L,
+                    3L, LocalDate.now().plusMonths(3),
+                    Wahlart.LTW, new Farbe(3, 3, 3), "2");
+            List<WahlModel> lw = new ArrayList<>();
+            lw.add(wahl1);
+            lw.add(wahl2);
+            lw.add(wahl3);
+            return lw;
         }
     }
 

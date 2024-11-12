@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.utils;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.Funktion;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.Wahlvorstand;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.Wahlvorstandsmitglied;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand.FunktionDTO;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand.WahlvorstandDTO;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand.WahlvorstandsmitgliedDTO;
@@ -142,18 +143,21 @@ public class TestDataFactory {
             return new KonfigurierterWahltagModel(LocalDate.now(), "wahltagID", true, "wahltagNummer");
         }
 
+        public static KonfigurierterWahltagDTO konfigurierterWahltagDTO(LocalDate forDate, KonfigurierterWahltagDTO.WahltagStatusEnum status) {
+            KonfigurierterWahltagDTO konfigurierterWahltagDTO = new KonfigurierterWahltagDTO();
+            konfigurierterWahltagDTO.setWahltag(forDate);
+            konfigurierterWahltagDTO.setWahltagID("wahltagID1");
+            konfigurierterWahltagDTO.setWahltagStatus(status);
+            konfigurierterWahltagDTO.setNummer("nummerWahltag");
+
+            return konfigurierterWahltagDTO;
+        }
+
         public static WahlvorstandModel wahlvorstandModel(String wahlbezirkID) {
             List<WahlvorstandsmitgliedModel> wahlvorstandsmitgliedModelList = new ArrayList<>();
             wahlvorstandsmitgliedModelList.add(CreateWahlvorstandsmitgliedModel.withData());
 
             return new WahlvorstandModel(wahlbezirkID, LocalDateTime.now().withNano(0), wahlvorstandsmitgliedModelList);
-        }
-
-        public static WahlvorstandDTO wahlvorstandDTO() {
-            List<WahlvorstandsmitgliedDTO> wahlvorstandsmitgliedDtoList = new ArrayList<>();
-            wahlvorstandsmitgliedDtoList.add(CreateWahlvorstandsmitgliedDto.withData());
-
-            return new WahlvorstandDTO("wahlbezirkID", LocalDateTime.now().withNano(0), wahlvorstandsmitgliedDtoList);
         }
     }
 

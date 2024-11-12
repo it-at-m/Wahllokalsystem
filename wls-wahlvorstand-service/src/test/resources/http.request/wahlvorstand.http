@@ -32,8 +32,8 @@ username = wls_all_uwb
 GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
 Authorization: {{ token_type }} {{ auth_token }}
 
-### GET wahlvorstand - working with dummy.client
-GET {{ WLS_WAHLVORSTAND_SERVICE_URL }}/businessActions/wahlvorstand/wahlbezirkID
+### GET wahlvorstand fallback - working with dummy.client
+GET {{ WLS_WAHLVORSTAND_SERVICE_URL }}/businessActions/wahlvorstand/wahlbezirkID1
 Authorization: {{ token_type }} {{ auth_token }}
 
 ### POST wahlvorstand
@@ -63,3 +63,7 @@ Content-Type: application/json
     }
   ]
 }
+
+### GET wahlvorstand - working with dummy.client
+GET {{ WLS_WAHLVORSTAND_SERVICE_URL }}/businessActions/wahlvorstand/wahlbezirkID
+Authorization: {{ token_type }} {{ auth_token }}

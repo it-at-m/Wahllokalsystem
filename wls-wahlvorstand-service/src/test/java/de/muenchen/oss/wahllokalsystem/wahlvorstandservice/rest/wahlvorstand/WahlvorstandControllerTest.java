@@ -32,7 +32,7 @@ public class WahlvorstandControllerTest {
         @Test
         void should_returnWahlvorstandDTO_when_givenValidWahlbezirkIdAndForceUpdateIsFalse() {
             val wahlbezirkID = "wahlbezirkID";
-            val forceUpdate = "false";
+            val forceUpdate = false;
             val mockedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.withData();
             val expectedWahlvorstandDto = TestDataFactory.CreateWahlvorstandDto.fromModel(mockedWahlvorstandModel);
 
@@ -47,7 +47,7 @@ public class WahlvorstandControllerTest {
         @Test
         void should_returnWahlvorstandDTO_when_givenValidWahlbezirkIdAndForceUpdateIsTrue() {
             val wahlbezirkID = "wahlbezirkID";
-            val forceUpdate = "true";
+            val forceUpdate = true;
             val mockedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.withData();
             val expectedWahlvorstandDto = TestDataFactory.CreateWahlvorstandDto.fromModel(mockedWahlvorstandModel);
 
@@ -62,7 +62,7 @@ public class WahlvorstandControllerTest {
         @Test
         void should_returnFallbackWahlvorstandDTO_when_WahlvorstandDoesNotExist() {
             val wahlbezirkID = "wahlbezirkID";
-            val forceUpdate = "false";
+            val forceUpdate = false;
             val mockedFallbackWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.fallback(wahlbezirkID);
             val expectedWahlvorstandDto = TestDataFactory.CreateWahlvorstandDto.fromModel(mockedFallbackWahlvorstandModel);
 

@@ -16,12 +16,12 @@ public interface WahlvorstandClientMapper {
 
     ZoneId ZONE_ID = ZoneId.systemDefault();
 
-    @Mapping(target = "anwesenheitBeginn", ignore = true) // todo: darf das ignoriert werden?
+    @Mapping(target = "anwesenheitBeginn", ignore = true)
     @Mapping(target = "wahlvorstandsmitglieder", source = "mitglieder")
     WahlvorstandModel toModel(WahlvorstandDTO wahlvorstandDTO);
 
     @Mapping(target = "familienname", source = "nachname")
-    @Mapping(target = "funktionsname", ignore = true) // todo: darf das ignoriert werden?
+    @Mapping(target = "funktionsname", ignore = true)
     WahlvorstandsmitgliedModel toModel(WahlvorstandsmitgliedDTO wahlvorstandsmitgliedDTO);
 
     @Mapping(target = "mitglieder", source = "wahlvorstandsmitglieder")

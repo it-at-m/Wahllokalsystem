@@ -47,12 +47,12 @@ public class WahlvorstandController {
     )
     @GetMapping("/{wahlbezirkID}")
     public ResponseEntity<WahlvorstandDTO> getWahlvorstand(
-            @RequestHeader(value = "forceupdate", required = false) String forceUpdate,
+            @RequestHeader(value = "forceupdate", required = false) Boolean forceUpdate,
             @PathVariable("wahlbezirkID") String wahlbezirkID) {
 
         Optional<WahlvorstandModel> result;
 
-        if (forceUpdate != null && forceUpdate.equals("true")) {
+        if (Boolean.TRUE.equals(forceUpdate)) {
             result = wahlvorstandService.updateWahlvorstand(wahlbezirkID);
         } else {
             result = wahlvorstandService.getWahlvorstand(wahlbezirkID);

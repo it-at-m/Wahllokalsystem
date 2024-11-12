@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@Profile(Profiles.DUMMY_CLIENTS) // todo: das profil dürfte hier eigentlich nicht manuell hinzugefügt werden
+@Profile(Profiles.DUMMY_CLIENTS)
 public class DummyClientImpl implements WahlvorstandEaiClient, WahlenClient, KonfigurierterWahltagClient {
     @Override
     public WahlvorstandModel getWahlvorstand(String wahlbezirkID, LocalDate wahltag) {

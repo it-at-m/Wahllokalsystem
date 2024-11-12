@@ -95,7 +95,9 @@ public class WahlvorstandControllerIntegrationTest {
     class PostWahlvorstand {
 
         @Test
-        @WithMockUser(authorities = {Authorities.SERVICE_POST_WAHLVORSTAND, Authorities.REPOSITORY_DELETE_WAHLVORSTAND, Authorities.REPOSITORY_WRITE_WAHLVORSTAND })
+        @WithMockUser(
+                authorities = { Authorities.SERVICE_POST_WAHLVORSTAND, Authorities.REPOSITORY_DELETE_WAHLVORSTAND, Authorities.REPOSITORY_WRITE_WAHLVORSTAND }
+        )
         void should_saveWahlvorstand_when_newDataSuccessfullySaved() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             val mockedWahlvorstandDTO = TestDataFactory.CreateWahlvorstandDto.withWahlbezirkID(wahlbezirkID);
@@ -114,7 +116,9 @@ public class WahlvorstandControllerIntegrationTest {
         }
 
         @Test
-        @WithMockUser(authorities = {Authorities.SERVICE_POST_WAHLVORSTAND, Authorities.REPOSITORY_DELETE_WAHLVORSTAND, Authorities.REPOSITORY_WRITE_WAHLVORSTAND })
+        @WithMockUser(
+                authorities = { Authorities.SERVICE_POST_WAHLVORSTAND, Authorities.REPOSITORY_DELETE_WAHLVORSTAND, Authorities.REPOSITORY_WRITE_WAHLVORSTAND }
+        )
         void should_overrideOldWahlvorstand_when_newDataSuccessfullySaved() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
 

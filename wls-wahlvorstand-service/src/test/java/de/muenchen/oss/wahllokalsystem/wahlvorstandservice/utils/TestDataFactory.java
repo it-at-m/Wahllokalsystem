@@ -59,8 +59,10 @@ public class TestDataFactory {
         }
 
         public static WahlvorstandModel fromDto(WahlvorstandDTO wahlvorstandDto) {
-            List<WahlvorstandsmitgliedModel> wahlvorstandsmitgliedModelList = wahlvorstandDto.wahlvorstandsmitglieder().stream().map(mitglied -> new WahlvorstandsmitgliedModel(
-                    mitglied.identifikator(), mitglied.familienname(), mitglied.vorname(), MapFunktion.funktionDtoToFunktionModel(mitglied.funktion()), mitglied.funktionsname(), mitglied.anwesend()))
+            List<WahlvorstandsmitgliedModel> wahlvorstandsmitgliedModelList = wahlvorstandDto.wahlvorstandsmitglieder().stream()
+                    .map(mitglied -> new WahlvorstandsmitgliedModel(
+                            mitglied.identifikator(), mitglied.familienname(), mitglied.vorname(), MapFunktion.funktionDtoToFunktionModel(mitglied.funktion()),
+                            mitglied.funktionsname(), mitglied.anwesend()))
                     .toList();
 
             return new WahlvorstandModel(wahlvorstandDto.wahlbezirkID(), wahlvorstandDto.anwesenheitBeginn(), wahlvorstandsmitgliedModelList);
@@ -106,7 +108,8 @@ public class TestDataFactory {
 
         public static WahlvorstandDTO fromModel(WahlvorstandModel model) {
             List<WahlvorstandsmitgliedDTO> wahlvorstandsmitgliedDtoList = model.wahlvorstandsmitglieder().stream().map(mitglied -> new WahlvorstandsmitgliedDTO(
-                    mitglied.identifikator(), mitglied.familienname(), mitglied.vorname(), MapFunktion.funktionModelToFunktionDto(mitglied.funktion()), mitglied.funktionsname(), mitglied.anwesend()))
+                    mitglied.identifikator(), mitglied.familienname(), mitglied.vorname(), MapFunktion.funktionModelToFunktionDto(mitglied.funktion()),
+                    mitglied.funktionsname(), mitglied.anwesend()))
                     .toList();
             return new WahlvorstandDTO(model.wahlbezirkID(), model.anwesenheitBeginn(), wahlvorstandsmitgliedDtoList);
         }
@@ -194,21 +197,21 @@ public class TestDataFactory {
 
         public static FunktionDTO funktionModelToFunktionDto(FunktionModel funktionModel) {
             return switch (funktionModel) {
-                case W -> FunktionDTO.W;
-                case SB -> FunktionDTO.SB;
-                case SWB -> FunktionDTO.SWB;
-                case SSB -> FunktionDTO.SSB;
-                case B -> FunktionDTO.B;
+            case W -> FunktionDTO.W;
+            case SB -> FunktionDTO.SB;
+            case SWB -> FunktionDTO.SWB;
+            case SSB -> FunktionDTO.SSB;
+            case B -> FunktionDTO.B;
             };
         }
 
         public static FunktionModel funktionDtoToFunktionModel(FunktionDTO funktionDto) {
             return switch (funktionDto) {
-                case W -> FunktionModel.W;
-                case SB -> FunktionModel.SB;
-                case SWB -> FunktionModel.SWB;
-                case SSB -> FunktionModel.SSB;
-                case B -> FunktionModel.B;
+            case W -> FunktionModel.W;
+            case SB -> FunktionModel.SB;
+            case SWB -> FunktionModel.SWB;
+            case SSB -> FunktionModel.SSB;
+            case B -> FunktionModel.B;
             };
         }
     }

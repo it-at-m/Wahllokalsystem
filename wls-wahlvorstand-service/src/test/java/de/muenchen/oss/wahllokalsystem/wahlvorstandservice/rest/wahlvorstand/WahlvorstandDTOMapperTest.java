@@ -37,7 +37,6 @@ public class WahlvorstandDTOMapperTest {
             Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
         }
 
-
         @Test
         void should_returnWahlvorstandModel_when_givenWahlvorstandDTO() {
             val mockedWahlvorstandDTO = TestDataFactory.CreateWahlvorstandDto.withData();

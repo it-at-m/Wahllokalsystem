@@ -48,7 +48,7 @@ erDiagram
 
 > [!IMPORTANT]
 > Der Benutzername liegt in der Datenbank nur verschlüsselt vor.
- 
+
 ## Login
 
 ```mermaid
@@ -73,11 +73,16 @@ sequenceDiagram
 
 Alle Konfigurationsparameter beginnen mit dem Prefix `service.config`
 
-| Name                    | Beschreibung                                                                           | Default |
-|-------------------------|----------------------------------------------------------------------------------------| ------- |
-| crypto.encryptionPrefix | String vor dem verschlüssten Wert. Auf diese Weise sind verschlüsselte Werte erkennbar | ENCRYPTED: |
-| crypto.key              | Schlüssel zum ver- und entschlüsseln                                                   | |
-| maxLoginAttempts        | Maximale Anzahl an Fehlersuchen bis der Account gesperrt wird.                         | 5 |
-| clients.infomanagement.basepath | URL zum Infomanagement-Service | `http://localhost:39146` |
-| clients.infomanagement.configkey.welcomeMessage | Schlüssel für Konfiguration der Willkommensnachricht | WILLKOMMENSTEXT |
-| serviceauth.welcomemessage.default | Standartd Willkommensnachricht falls die definierte Willkommensnachricht nicht geladen werden kann | Willkommen zur Wahl! |
+| Name                                            | Beschreibung                                                                                       | Default                  |
+|-------------------------------------------------|----------------------------------------------------------------------------------------------------|--------------------------|
+| crypto.encryptionPrefix                         | String vor dem verschlüssten Wert. Auf diese Weise sind verschlüsselte Werte erkennbar             | ENCRYPTED:               |
+| crypto.key                                      | Schlüssel zum ver- und entschlüsseln                                                               |                          |
+| maxLoginAttempts                                | Maximale Anzahl an Fehlersuchen bis der Account gesperrt wird.                                     | 5                        |
+| clients.infomanagement.basepath                 | URL zum Infomanagement-Service                                                                     | `http://localhost:39146` |
+| clients.infomanagement.configkey.welcomeMessage | Schlüssel für Konfiguration der Willkommensnachricht                                               | WILLKOMMENSTEXT          |
+| serviceauth.welcomemessage.default              | Standartd Willkommensnachricht falls die definierte Willkommensnachricht nicht geladen werden kann | Willkommen zur Wahl!     |
+| ldap.userDn                                     | Username zur Authentifizierung am LDAP-Server                                                      |                          |
+| ldap.userDnPassword                             | Passwort zur Authentifizierung am LDAP-Server                                                      |                          |
+| ldap.contextSource                              | Url zum LDAP-Server, z.B. `ldaps://my-ldap-server.de:636`                                          |                          |
+| ldap.userSearchBase                             | Basispfad für Suche, z.b. `o=myOrg,c=de`                                                           |                          |
+| ldap.userSearchFilter                           | Filter für Suche, z.B. `(uid={0})`                                                                 |                          |

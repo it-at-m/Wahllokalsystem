@@ -72,8 +72,8 @@ service:
       userDn:
       userDnPassword:
       contextSource:
-      userSearchBase:
-      userSearchFilter:
+      userSearchBase: ou=people
+      userSearchFilter: uid={0}
     welcomemessage:
       default: "Willkommen zur Wahl!"
   info:

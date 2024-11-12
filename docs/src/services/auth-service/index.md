@@ -84,5 +84,5 @@ Alle Konfigurationsparameter beginnen mit dem Prefix `service.config`
 | ldap.userDn                                     | Username zur Authentifizierung am LDAP-Server                                                      |                          |
 | ldap.userDnPassword                             | Passwort zur Authentifizierung am LDAP-Server                                                      |                          |
 | ldap.contextSource                              | Url zum LDAP-Server, z.B. `ldaps://my-ldap-server.de:636`                                          |                          |
-| ldap.userSearchBase                             | Basispfad für Suche, z.b. `o=myOrg,c=de`                                                           |                          |
-| ldap.userSearchFilter                           | Filter für Suche, z.B. `(uid={0})`                                                                 |                          |
+| ldap.userSearchBase                             | Basispfad für Suche, z.b. `o=myOrg,c=de`                                                           | ou=people                |
+| ldap.userSearchFilter                           | Filter für Suche, z.B. `(uid={0})`                                                                 | uid={0}                  |

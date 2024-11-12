@@ -30,7 +30,7 @@ import org.springframework.test.context.ActiveProfiles;
                 "refarch.gracefulshutdown.pre-wait-seconds=0"
         }
 )
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
+@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE, Profiles.DUMMY_CLIENTS })
 class UnicodeConfigurationTest {
 
     private static final String ENTITY_ENDPOINT_URL = "/theEntities";

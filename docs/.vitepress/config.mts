@@ -3,8 +3,8 @@ import {withMermaid} from "vitepress-plugin-mermaid"
 const PATH_TECHNIK = '/technik/';
 const PATH_CODING_CONVENTIONS = PATH_TECHNIK + 'coding_conventions/';
 const PATH_ADR = PATH_TECHNIK + 'adr/';
-const PATH_FEATURES = '/features/';
-const PATH_GUIDES = '/guides/';
+const PATH_GUIDES = PATH_TECHNIK + '/guides/';
+const PATH_SERVICES = '/services/';
 
 // https://vitepress.dev/reference/site-config
 export default withMermaid({
@@ -16,10 +16,8 @@ export default withMermaid({
     themeConfig: {
         // https://vitepress.dev/reference/default-theme-config
         nav: [
-            {text: 'Home', link: '/'},
             {text: 'About', link: '/about/'},
-            {text: 'Features', link: '/features/'},
-            {text: 'Guides', link: PATH_GUIDES},
+            {text: 'Services', link: '/services/'},
             {text: 'Technik', link: PATH_TECHNIK}
         ],
 
@@ -34,9 +32,18 @@ export default withMermaid({
                     text: 'Getting Started', link: `${PATH_TECHNIK}get_started/`
                 },
                 {text: 'Entwicklungsumgebung', link: `${PATH_TECHNIK}development/`},
-                {text: 'Coding Conventions', link: `${PATH_CODING_CONVENTIONS}`, collapsed: true, items: [
-                        {text: 'Naming Convention - Testing', link: `${PATH_CODING_CONVENTIONS}tests_naming`}
-                    ]},
+                {
+                    text: 'Guides', link: `${PATH_GUIDES}`, collapsed: true, items: [
+                        {text: 'API-Client generieren', link: `${PATH_GUIDES}how-to-create-client-from-open-api-json.md`},
+                        {text: 'Tips und Tricks', link: `${PATH_GUIDES}tips-and-tricks.md`},
+                    ]
+                },
+                {
+                    text: 'Coding Conventions', link: `${PATH_CODING_CONVENTIONS}`, collapsed: true, items: [
+                        {text: 'Naming Convention - Testing', link: `${PATH_CODING_CONVENTIONS}tests_naming`},
+                        {text: 'Naming Convention - Database', link: `${PATH_CODING_CONVENTIONS}db_naming`}
+                    ]
+                },
                 {
                     text: 'Adr', link: `${PATH_ADR}`, collapsed: true, items: [
                         {text: 'Renovate - ignoriere lombok', link: `${PATH_ADR}adr001-renovate-ignore-lombok`},
@@ -59,21 +66,18 @@ export default withMermaid({
                     ]
                 }
             ],
-            [PATH_FEATURES]: [
-                {text: 'Briefwahl-Service', link: `${PATH_FEATURES}briefwahl-service/`},
-                {text: 'Infomanagement-Service', link: `${PATH_FEATURES}infomanagement-service/`},
-                {text: 'EAI-Service', link: `${PATH_FEATURES}eai-service/`},
-                {text: 'Basisdaten-Service', link: `${PATH_FEATURES}basisdaten-service/`},
-                {text: 'Monitoring-Service', link: `${PATH_FEATURES}monitoring-service/`},
-                {text: 'Wahlvorstand-Service', link: `${PATH_FEATURES}wahlvorstand-service/`},
-                {text: 'Ergebnismeldung-Service', link: `${PATH_FEATURES}ergebnismeldung-service/`},
-                {text: 'Auth-Service', link: `${PATH_FEATURES}auth-service/`},
-                {text: 'Vorfälle und Vorkommnisse-Service', link: `${PATH_FEATURES}vorfaelleundvorkommnisse-service/`},
+            [PATH_SERVICES]: [
+                {text: 'Briefwahl-Service', link: `${PATH_SERVICES}briefwahl-service/`},
+                {text: 'Infomanagement-Service', link: `${PATH_SERVICES}infomanagement-service/`},
+                {text: 'EAI-Service', link: `${PATH_SERVICES}eai-service/`},
+                {text: 'Basisdaten-Service', link: `${PATH_SERVICES}basisdaten-service/`},
+                {text: 'Monitoring-Service', link: `${PATH_SERVICES}monitoring-service/`},
+                {text: 'Wahlvorstand-Service', link: `${PATH_SERVICES}wahlvorstand-service/`},
+                {text: 'Ergebnismeldung-Service', link: `${PATH_SERVICES}ergebnismeldung-service/`},
+                {text: 'Auth-Service', link: `${PATH_SERVICES}auth-service/`},
+                {text: 'Vorfälle und Vorkommnisse-Service', link: `${PATH_SERVICES}vorfaelleundvorkommnisse-service/`},
+                {text: 'Admin-Service', link: `${PATH_SERVICES}admin-service/`},
             ],
-            [PATH_GUIDES]: [
-                {text: 'API-Client generieren', link: `${PATH_GUIDES}how-to-create-client-from-open-api-json.md`},
-                {text: 'Tips und Tricks', link: `${PATH_GUIDES}tips-and-tricks.md`},
-            ]
         },
 
         socialLinks: [

@@ -41,7 +41,6 @@ class CustomLdapAuthoritiesPopulatorTest {
 
             val expectedResult = List.of(new SimpleGrantedAuthority("auth1"), new SimpleGrantedAuthority("auth2"));
             Assertions.assertThat(result).usingRecursiveComparison().ignoringCollectionOrder().isEqualTo(expectedResult);
-
         }
 
         @Test

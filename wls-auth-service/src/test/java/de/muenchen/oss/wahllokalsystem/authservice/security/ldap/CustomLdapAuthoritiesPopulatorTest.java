@@ -49,7 +49,7 @@ class CustomLdapAuthoritiesPopulatorTest {
             val username = "username";
 
             Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
-            
+
             val result = unitUnderTest.getGrantedAuthorities(null, username);
 
             Assertions.assertThat(result).isEmpty();

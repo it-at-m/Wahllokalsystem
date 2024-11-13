@@ -2,7 +2,7 @@ package de.muenchen.oss.wahllokalsystem.wls.common.security;
 
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.testultils.LoggerExtension;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.LoggerExtension;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;

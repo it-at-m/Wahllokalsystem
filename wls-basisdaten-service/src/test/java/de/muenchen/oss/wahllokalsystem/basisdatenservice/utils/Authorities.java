@@ -80,7 +80,7 @@ public class Authorities {
     public static final String S2S_INFOMANAGEMENT_REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG = "Infomanagement_WRITE_KonfigurierterWahltag";
     public static final String S2S_INFOMANAGEMENT_REPOSITORY_DELETE_KONFIGURIERTERWAHLTAG = "Infomanagement_DELETE_KonfigurierterWahltag";
 
-    public static final String[] ALL_AUTHORITIES_GET_WAHLVORSCHLAEGE = new String[] {
+    public static final String[] ALL_AUTHORITIES_GET_WAHLVORSCHLAEGE = new String[]{
             SERVICE_GET_WAHLVORSCHLAEGE,
             REPOSITORY_READ_WAHLVORSCHLAEGE,
             REPOSITORY_WRITE_WAHLVORSCHLAEGE,
@@ -208,7 +208,7 @@ public class Authorities {
 
             REPOSITORY_WRITE_WAHL,
             REPOSITORY_WRITE_WAHLBEZIRK,
-            REPOSITORY_READ_KOPFDATEN
+            REPOSITORY_WRITE_KOPFDATEN
     };
 
     public static final String[] ALL_AUTHORITIES_PUT_WAHLTERMINDATEN_THAT_GOT_CATCHED_ON_MISSING = {

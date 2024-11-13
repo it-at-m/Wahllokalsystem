@@ -1,3 +1,7 @@
+security:
+  oauth2:
+    resource.user-info-uri: http://localhost:${wiremock.server.port}/userinfo
+
 spring:
 
   # Spring JPA
@@ -16,3 +20,14 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:${wiremock.server.port}/certs
+
+wiremock:
+  server:
+    port: 0
+

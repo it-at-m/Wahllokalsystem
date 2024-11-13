@@ -37,6 +37,7 @@ server:
     include-stacktrace: never
     whitelabel:
       enabled: false
+  max-http-request-header-size: 32KB
 
 # Config for spring actuator endpoints
 management:
@@ -76,5 +77,14 @@ service:
       userSearchFilter: uid={0}
     welcomemessage:
       default: "Willkommen zur Wahl!"
+    user:
+      anzahlPinBloecke: 4
+      countCharsPrefix: 6
+      countNumbersPin: 4
+      csv:
+        eol: "\r\n"
+      authority:
+        wahlvorstand: WLS_WAHLVORSTAND
+      prefixChars: "23456789abcdefghjkmnpqrstuvwxyz"
   info:
     oid: AUTH-SERVICE

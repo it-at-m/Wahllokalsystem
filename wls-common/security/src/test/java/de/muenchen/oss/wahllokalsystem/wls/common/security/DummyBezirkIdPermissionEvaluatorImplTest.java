@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.security;
 
-import de.muenchen.oss.wahllokalsystem.wls.common.security.testultils.LoggerExtension;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.LoggerExtension;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

@@ -49,7 +49,9 @@ erDiagram
 > [!IMPORTANT]
 > Der Benutzername liegt in der Datenbank nur verschlüsselt vor.
  
-## Login
+## Prozesse
+
+### Login
 
 ```mermaid
 
@@ -69,7 +71,21 @@ sequenceDiagram
     AuthService->>-User : LoginView
 ```
 
-## Konfigrationsparameter
+### Erstellung der Benutzer
+
+> [!IMPORTANT]
+> Damit Benutzer angelegt werden können muss die definierte Authority vorhanden sein die den Benutzern zugewiesen werden soll.
+
+> [!NOTE]
+> Wird der Service mit dem Profil `db-dummydata` gestartet werden Testdaten erzeugt, welche die notwendige Authority umfasst.
+> Im regulären Betrieb werden die Authority sowie Permission mittels Skript erzeugt.
+
+Der Service erzeugt für eine Liste an Wahlbezirken eines Wahltermins (`wahltagID`) Benutzer. Dabei werden der
+Benutzername und die PIN zufällig erzeugt.
+
+Die Benutzer die zuvor für den Wahltermin vorhanden waren werden gelöscht.
+
+## Konfigurationsparameter
 
 Alle Konfigurationsparameter beginnen mit dem Prefix `service.config`
 
@@ -85,4 +101,4 @@ Alle Konfigurationsparameter beginnen mit dem Prefix `service.config`
 | ldap.userDnPassword                             | Passwort zur Authentifizierung am LDAP-Server                                                      |                          |
 | ldap.contextSource                              | Url zum LDAP-Server, z.B. `ldaps://my-ldap-server.de:636`                                          |                          |
 | ldap.userSearchBase                             | Basispfad für Suche, z.b. `o=myOrg,c=de`                                                           | ou=people                |
-| ldap.userSearchFilter                           | Filter für Suche, z.B. `(uid={0})`                                                                 | uid={0}                  |
+| ldap.userSearchFilter                           | Filter für Suche, z.B. `(uid={0})`                                                                 | `uid={0}`                |

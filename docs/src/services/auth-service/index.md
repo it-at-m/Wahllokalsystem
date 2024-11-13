@@ -49,7 +49,9 @@ erDiagram
 > [!IMPORTANT]
 > Der Benutzername liegt in der Datenbank nur verschlüsselt vor.
  
-## Login
+## Prozesse
+
+### Login
 
 ```mermaid
 
@@ -69,7 +71,21 @@ sequenceDiagram
     AuthService->>-User : LoginView
 ```
 
-## Konfigrationsparameter
+### Erstellung der Benutzer
+
+> [!IMPORTANT]
+> Damit Benutzer angelegt werden können muss die definierte Authority vorhanden sein die den Benutzern zugewiesen werden soll.
+
+> [!NOTE]
+> Wird der Service mit dem Profil `db-dummydata` gestartet werden Testdaten erzeugt, welche die notwendige Authority umfasst.
+> Im regulären Betrieb werden die Authority sowie Permission mittels Skript erzeugt.
+
+Der Service erzeugt für eine Liste an Wahlbezirken eines Wahltermins (`wahltagID`) Benutzer. Dabei werden der
+Benutzername und die PIN zufällig erzeugt.
+
+Die Benutzer die zuvor für den Wahltermin vorhanden waren werden gelöscht.
+
+## Konfigurationsparameter
 
 Alle Konfigurationsparameter beginnen mit dem Prefix `service.config`
 
@@ -81,3 +97,9 @@ Alle Konfigurationsparameter beginnen mit dem Prefix `service.config`
 | clients.infomanagement.basepath | URL zum Infomanagement-Service | `http://localhost:39146` |
 | clients.infomanagement.configkey.welcomeMessage | Schlüssel für Konfiguration der Willkommensnachricht | WILLKOMMENSTEXT |
 | serviceauth.welcomemessage.default | Standartd Willkommensnachricht falls die definierte Willkommensnachricht nicht geladen werden kann | Willkommen zur Wahl! |
+| user.csv.eol | Zeilenendezeichen für CSV-Exporte | \r\n |
+| user.authority.wahlvorstand | Rolle die einem Wahlvorstandsbenutzer zugeordnet werden soll | WLS_WAHLVORSTAND |
+| user.anzahlPinBloecke | Anzahl der Blöcke einer Pin | 4 |
+| user.countNumbersPin | Anzahl der Zeichen je Pin-Block | 4 |
+| user.prefixChars | Set an Zeichen die für die Pin zum Einsatz kommen können | 23456789abcdefghjkmnpqrstuvwxyz |
+| user.countCharsPrefix | Anzahl an Zeichen für den Prefix des Benutzernamens eines erzeugten Benutzers | 6 |

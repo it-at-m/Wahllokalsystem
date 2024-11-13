@@ -4,8 +4,10 @@ import de.muenchen.oss.wahllokalsystem.authservice.domain.LoginAttempt;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.LoginAttemptRepository;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.User;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.UserRepository;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -31,6 +33,9 @@ class UserServiceTest {
     @Mock
     LoginAttemptModelMapper loginAttemptModelMapper;
 
+    @Mock
+    UserModelMapper userModelMapper;
+
     @InjectMocks
     UserService unitUnderTest;
 
@@ -50,7 +55,7 @@ class UserServiceTest {
             Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.updateFailAttempts(username)).isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining(username);
+                .hasMessageContaining(username);
         }
 
         @Test
@@ -138,7 +143,7 @@ class UserServiceTest {
             Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.resetFailAttempts(username)).isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining(username);
+                .hasMessageContaining(username);
         }
 
         @Test
@@ -203,7 +208,7 @@ class UserServiceTest {
             Mockito.when(userRepository.exists(username)).thenReturn(false);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.getUserAttempts(username)).isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining(username);
+                .hasMessageContaining(username);
         }
 
         @Test
@@ -281,6 +286,24 @@ class UserServiceTest {
         }
     }
 
+    @Nested
+    class GetUser {
+
+        @Test
+        void should_returnUserModel_when_userExistsForGivenUsername() {
+            val username = "Hansi";
+            val mockedUser = new User();
+            val mockedUserModel = createUserModel();
+
+            Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockedUser));
+            Mockito.when(userModelMapper.toModel(mockedUser)).thenReturn(mockedUserModel);
+
+            val result = unitUnderTest.getUser(username);
+
+            Assertions.assertThat(result.get()).isEqualTo(mockedUserModel);
+        }
+    }
+
     private User createUserWithNonLocked(final boolean nonLocked) {
         val user = new User();
 
@@ -293,4 +316,19 @@ class UserServiceTest {
         return new LoginAttemptModel(UUID.randomUUID(), "", 0, LocalDateTime.now());
     }
 
+    private UserModel createUserModel() {
+        val username = "Hansi";
+        val email = "hansi@nixda.com";
+        val userEnabled = true;
+        val wahltagID = "wahltagID";
+        val wahltag = LocalDate.now();
+        val wahlbezirkID = "wahlbezirkID";
+        val wahlbezirkNummer = "wahlbezirkNummer";
+        val wahlbezirksArt = WahlbezirksartModel.BWB;
+        val pin = "123";
+        val authorities = Set.of("auth1", "auth2");
+        val wbid_wahlnummer = "wbid_wahlnummer";
+        return new UserModel(username, email, userEnabled, wahltagID, wahltag, wahlbezirkID, wahlbezirkNummer,
+            wahlbezirksArt, pin, authorities, wbid_wahlnummer);
+    }
 }

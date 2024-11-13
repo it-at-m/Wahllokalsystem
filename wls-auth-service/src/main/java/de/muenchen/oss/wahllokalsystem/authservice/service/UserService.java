@@ -27,11 +27,10 @@ public class UserService {
 
     private final UserModelMapper userModelMapper;
 
-    @Value("${serviceauth.maxLoginAttempts}")
+    @Value("${service.config.maxLoginAttempts}")
     @Getter
     @Setter
     private int maxLoginAttempts;
-    private boolean present;
 
     @Transactional
     public void updateFailAttempts(final String username) {
@@ -95,7 +94,7 @@ public class UserService {
     }
 
     public boolean doesUserExist(final String username) {
-        return present;
+        return userRepository.findByUsername(username).isPresent();
     }
 
     public boolean isLocked(final String username) {

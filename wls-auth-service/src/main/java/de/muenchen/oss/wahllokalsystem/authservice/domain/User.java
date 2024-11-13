@@ -4,7 +4,6 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -19,6 +18,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.val;
 import org.hibernate.annotations.NaturalId;
 
 @Entity
@@ -29,6 +29,15 @@ import org.hibernate.annotations.NaturalId;
 @AllArgsConstructor
 @ToString(onlyExplicitlyIncluded = true)
 public class User extends BaseEntity {
+
+    public static User flatCopyOf(final User user) {
+        val copy = new User(user.getUsername(), user.getPassword(), user.getEmail(), user.isUserEnabled(), user.isAccountNonLocked(), user.getWahltagID(),
+                user.getWahltag(), user.getWahlbezirkID(), user.getWahlbezirkNummer(), user.getWahlbezirksArt(), user.getPin(), user.getAuthorities(),
+                user.getWbid_wahlnummer());
+        copy.setId(user.getId());
+
+        return copy;
+    }
 
     @NaturalId
     @NotNull
@@ -68,7 +77,7 @@ public class User extends BaseEntity {
     @ToString.Include
     private String pin;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "Secusers_Secauthorities", joinColumns = { @JoinColumn(name = "user_oid") }, inverseJoinColumns = { @JoinColumn(name = "authority_oid") })
     private Set<Authority> authorities;
 

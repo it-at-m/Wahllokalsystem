@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.wls.common.exception.testutils;
+package de.muenchen.oss.wahllokalsystem.wls.common.testing;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;

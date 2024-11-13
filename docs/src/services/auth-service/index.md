@@ -48,7 +48,7 @@ erDiagram
 
 > [!IMPORTANT]
 > Der Benutzername liegt in der Datenbank nur verschlüsselt vor.
-
+ 
 ## Login
 
 ```mermaid

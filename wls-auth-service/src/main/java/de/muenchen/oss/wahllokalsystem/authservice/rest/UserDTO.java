@@ -18,5 +18,3 @@ public record UserDTO(@NotNull String username,
                       @NotNull Set<String> authorities,
                       @NotNull String wbid_wahlnummer) {
 }
-
-

@@ -1,11 +1,14 @@
 package de.muenchen.oss.wahllokalsystem.authservice.rest;
 
 import static de.muenchen.oss.wahllokalsystem.authservice.TestConstants.SPRING_TEST_PROFILE;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.CacheConfig;
+import de.muenchen.oss.wahllokalsystem.authservice.domain.LoginAttempt;
+import de.muenchen.oss.wahllokalsystem.authservice.domain.LoginAttemptRepository;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.User;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.UserRepository;
 import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
@@ -44,6 +47,9 @@ public class UserControllerIntegrationTest {
     UserRepository userRepository;
 
     @Autowired
+    LoginAttemptRepository loginAttemptRepository;
+
+    @Autowired
     TransactionTemplate transactionTemplate;
 
     @Autowired
@@ -55,7 +61,6 @@ public class UserControllerIntegrationTest {
     @AfterEach
     void tearDown() {
         cacheManager.getCache(CacheConfig.USER_CACHE).clear();
-        SecurityUtils.runWith(Authorities.CONTROLLER_UNLOCK_USER);
         transactionTemplate.executeWithoutResult(status -> {
             SecurityUtils.runWith(Authorities.CONTROLLER_UNLOCK_USER);
             userRepository.deleteUsersByWahltagID("wahltagID");
@@ -113,6 +118,43 @@ public class UserControllerIntegrationTest {
     @Nested
     class UnlockUser {
 
+        @WithMockUser()
+        @Test
+        void should_failWith500AndIllegalArgumentException_whenUserNotFound() throws Exception {
+            SecurityUtils.runWith(Authorities.CONTROLLER_UNLOCK_USER);
+            val userName = "Hansi";
+            val request = MockMvcRequestBuilders.post("/user" + "/" + userName + "/unlock").with(csrf());
+
+            val response = api.perform(request).andExpect(status().isInternalServerError()).andReturn();
+
+            val expectedException = new IllegalArgumentException("User with username " + userName + " not found.");
+            Assertions.assertThat(response.getResolvedException()).isInstanceOf(expectedException.getClass());
+            Assertions.assertThat(response.getResolvedException().getMessage()).isEqualTo(expectedException.getMessage());
+        }
+
+        @WithMockUser
+        @Test
+        void should_unlockUser_whenUserFound() throws Exception {
+            SecurityUtils.runWith(Authorities.CONTROLLER_UNLOCK_USER);
+
+            val userName = "Hansi";
+            val accountNonLocked = false;
+            userRepository.save(new User(userName, null, null, true, accountNonLocked, "wahltagID", null, null, null, null, null, null, null));
+            loginAttemptRepository.save(createLoginAttemptWithUsername(userName));
+
+            val request = MockMvcRequestBuilders.post("/user" + "/" + userName + "/unlock").with(csrf());
+            api.perform(request).andExpect(status().isOk());
+
+            val hansi = userRepository.findByUsername(userName);
+            Assertions.assertThat(hansi).isNotNull();
+            Assertions.assertThat(hansi.get().isAccountNonLocked()).isTrue();
+        }
+
+        private LoginAttempt createLoginAttemptWithUsername(final String username) {
+            val loginAttempt = new LoginAttempt();
+            loginAttempt.setUsername(username);
+            return loginAttempt;
+        }
     }
 
 }

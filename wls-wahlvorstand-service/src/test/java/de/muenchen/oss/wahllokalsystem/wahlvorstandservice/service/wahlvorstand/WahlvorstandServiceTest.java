@@ -126,5 +126,13 @@ public class WahlvorstandServiceTest {
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.postWahlvorstand(mockedWahlvorstandModel)).isSameAs(mockedWlsException);
         }
+
+        @Test
+        void should_notSaveWahlvorstand_when_givenWahlvorstandWithFallbackData() {
+            val mockedWahlvorstandFallbackModel = TestDataFactory.CreateWahlvorstandModel.fallback("wahlbezirkID");
+
+            unitUnderTest.postWahlvorstand(mockedWahlvorstandFallbackModel);
+            Mockito.verify(wahlvorstandRepository, Mockito.never()).save(wahlvorstandModelMapper.toEntity(mockedWahlvorstandFallbackModel));
+        }
     }
 }

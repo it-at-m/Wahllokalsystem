@@ -89,12 +89,5 @@ public class WahlvorstandControllerTest {
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postWahlvorstand(mockedWahlvorstandDto));
             Mockito.verify(wahlvorstandService).postWahlvorstand(mockedWahlvorstandModel);
         }
-
-        @Test
-        void should_notThrowException_when_fallbackDataSaved() {
-            val mockedWahlvorstandFallbackDto = TestDataFactory.CreateWahlvorstandDto.fallback("wahlbezirkID");
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postWahlvorstand(mockedWahlvorstandFallbackDto));
-        }
     }
 }

@@ -38,6 +38,7 @@ public class WahlvorstandService {
     private final Collection<AuthenticationHandler> authenticationHandlers;
 
     private static final WahlbezirkArt WAHLBEZIRK_ART_FALLBACK = WahlbezirkArt.UWB;
+    private static final String FALLBACK_STRING = "FALLBACK_";
 
     @PreAuthorize(
         "hasAuthority('Wahlvorstand_BUSINESSACTION_GetWahlvorstand')"
@@ -64,13 +65,17 @@ public class WahlvorstandService {
         log.info("#postWahlvorstand");
         wahlvorstandValidator.validWahlvorstandOrThrow(wahlvorstandModel);
 
-        try {
-            wahlvorstandRepository.save(wahlvorstandModelMapper.toEntity(wahlvorstandModel));
-        } catch (Exception e) {
-            log.error("#postWahlvorstand unsaveable: ", e);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTWAHLVORSTAND_NOT_SAVEABLE);
+        if (wahlvorstandModel.wahlvorstandsmitglieder().get(0).identifikator().startsWith(FALLBACK_STRING)) {
+            log.info("Fallback-Daten vorhanden. Wahlvorstand wird nicht gespeichert.");
+        } else {
+            try {
+                wahlvorstandRepository.save(wahlvorstandModelMapper.toEntity(wahlvorstandModel));
+            } catch (Exception e) {
+                log.error("#postWahlvorstand unsaveable: ", e);
+                throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTWAHLVORSTAND_NOT_SAVEABLE);
+            }
+            wahlvorstandEaiClient.postWahlvorstand(wahlvorstandModel);
         }
-        wahlvorstandEaiClient.postWahlvorstand(wahlvorstandModel);
     }
 
     public Optional<WahlvorstandModel> getFallbackWahlvorstand(String wahlbezirkID) {
@@ -78,7 +83,7 @@ public class WahlvorstandService {
 
         Arrays.stream(FunktionModel.values()).forEach(funktion -> {
             WahlvorstandsmitgliedModel mitglied = WahlvorstandsmitgliedModel.builder()
-                    .identifikator("FALLBACK_" + funktion + wahlbezirkID)
+                    .identifikator(FALLBACK_STRING + funktion + wahlbezirkID)
                     .funktion(funktion)
                     .familienname("______________")
                     .vorname("______________")

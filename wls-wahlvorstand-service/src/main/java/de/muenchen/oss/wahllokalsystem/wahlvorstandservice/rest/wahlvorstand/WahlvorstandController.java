@@ -86,11 +86,6 @@ public class WahlvorstandController {
     )
     @PostMapping("/{wahlbezirkID}")
     public ResponseEntity<?> postWahlvorstand(@RequestBody WahlvorstandDTO wahlvorstandBody) {
-        // Wenn Fallback-Daten gesendet werden, bestätigen!
-        if (wahlvorstandBody.wahlvorstandsmitglieder().get(0).identifikator().startsWith("FALLBACK_")) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-
         wahlvorstandService.postWahlvorstand(wahlvorstandDTOMapper.toModel(wahlvorstandBody));
         return new ResponseEntity<>(HttpStatus.OK);
     }

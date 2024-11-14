@@ -97,7 +97,7 @@ public class WahlvorstandServiceTest {
     }
 
     @Nested
-    class SetWahlvorstand {
+    class PostWahlvorstand {
 
         @Test
         void should_notThrowException_when_newDataIsSaved() {

@@ -171,6 +171,19 @@ class UserRepositoryImplIntegrationTest {
 
             Assertions.assertThat(savedUser).allSatisfy(user -> Assertions.assertThat(user.getUsername()).isEqualTo(USERNAME_UNENCRYPTED));
         }
+
+        @Test
+        void should_throwException_whenMultipleUsersHaveSameName() {
+            val user1 = new User();
+            user1.setUsername(USERNAME_UNENCRYPTED);
+            val user2 = new User();
+            user2.setUsername(USERNAME_UNENCRYPTED);
+
+            val userToSaveWithSameUsername = new User();
+            userToSaveWithSameUsername.setUsername(USERNAME_UNENCRYPTED);
+            Assertions.assertThatException().isThrownBy(() -> transactionTemplate.execute(status -> userRepository.saveAll(List.of(user1, user2))))
+                    .isInstanceOf(DataIntegrityViolationException.class);
+        }
     }
 
     @Nested

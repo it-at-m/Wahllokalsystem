@@ -9,11 +9,16 @@ import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
@@ -47,33 +52,21 @@ public class BroadcastSecurityTest {
                     .isThrownBy(() -> broadcastService.broadcast(null)).withMessageStartingWith("Access Denied");
         }
 
-        @Test
-        void accessDenied_missingOneAuthority_BROADCAST_WRITE_MESSAGE() {
-            SecurityUtils.runWith(Authorities.BROADCAST_BUSINESSACTION_BROADCAST);
+        @ParameterizedTest(name = "{index} - {1} missing")
+        @MethodSource("getMissingAuthoritiesVariations")
+        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
+            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
             BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, "I should fail");
             Assertions.assertThatExceptionOfType(AccessDeniedException.class)
                     .isThrownBy(() -> broadcastService.broadcast(m1))
                     .withMessageStartingWith("Access Denied");
-
-        }
-
-        @Test
-        void accessDenied_missingOneAuthority_BROADCAST_BUSINESSACTION_BROADCAST() {
-            List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
-            BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, "I should fail");
-            SecurityUtils.runWith(Authorities.BROADCAST_WRITE_MESSAGE);
-
-            Assertions.assertThatExceptionOfType(AccessDeniedException.class)
-                    .isThrownBy(() -> broadcastService.broadcast(m1))
-                    .withMessageStartingWith("Access Denied");
-
         }
 
         @Test
         void accessPositive() {
-            SecurityUtils.runWith(Authorities.BROADCAST_BUSINESSACTION_BROADCAST, Authorities.BROADCAST_WRITE_MESSAGE);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_BROADCAST);
             List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
             BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, "I should have access");
 
@@ -81,6 +74,9 @@ public class BroadcastSecurityTest {
                     .doesNotThrowAnyException();
         }
 
+        private static Stream<Arguments> getMissingAuthoritiesVariations() {
+            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_POST_BROADCAST);
+        }
     }
 
     @Nested
@@ -94,18 +90,23 @@ public class BroadcastSecurityTest {
                     .withMessageStartingWith("Access Denied");
         }
 
-        @Test
-        void accessDenied_missing_Role_BROADCAST_BUSINESSACTION_NACHRICHTABRUFEN() {
-            SecurityUtils.runWith(Authorities.BROADCAST_BUSINESSACTION_BROADCAST);
+        @ParameterizedTest(name = "{index} - {1} missing")
+        @MethodSource("getMissingAuthoritiesVariations")
+        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
+            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatExceptionOfType(AccessDeniedException.class)
                     .isThrownBy(() -> broadcastService.getOldestMessage("wahlbezirkId"))
                     .withMessageStartingWith("Access Denied");
         }
 
+        private static Stream<Arguments> getMissingAuthoritiesVariations() {
+            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_BROADCAST);
+        }
+
         @Test
         void accessPositiveTest_Role_BROADCAST_BUSINESSACTION_NACHRICHTABRUFEN() {
-            SecurityUtils.runWith(Authorities.BROADCAST_BUSINESSACTION_NACHRICHTABRUFEN, Authorities.BROADCAST_READ_MESSAGE);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_BROADCAST);
             Assertions.assertThatThrownBy(() -> broadcastService.getOldestMessage("wahlbezirkId")).isNotInstanceOf(AccessDeniedException.class);
         }
     }
@@ -121,31 +122,25 @@ public class BroadcastSecurityTest {
                     .withMessageStartingWith("Access Denied");
         }
 
-        @Test
-        void accessDenied_missing_Role_BROADCAST_DELETE_MESSAGE() {
-            SecurityUtils.runWith(Authorities.BROADCAST_BUSINESSACTION_NACHRICHTGELESEN);
+        @ParameterizedTest(name = "{index} - {1} missing")
+        @MethodSource("getMissingAuthoritiesVariations")
+        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
+            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
             Assertions.assertThatExceptionOfType(AccessDeniedException.class)
                     .isThrownBy(() -> broadcastService.deleteMessage("1-2-3-4-5"))
                     .withMessageStartingWith("Access Denied");
-
-        }
-
-        @Test
-        void accessDenied_missing_Role_BROADCAST_BUSINESSACTION_NACHRICHTGELESEN() {
-            SecurityUtils.runWith(Authorities.BROADCAST_DELETE_MESSAGE);
-            Assertions.assertThatExceptionOfType(AccessDeniedException.class)
-                    .isThrownBy(() -> broadcastService.deleteMessage("1-2-3-4-5"))
-                    .withMessageStartingWith("Access Denied");
-
         }
 
         @Test
         void accessPositive() {
-            SecurityUtils.runWith(Authorities.BROADCAST_BUSINESSACTION_NACHRICHTGELESEN, Authorities.BROADCAST_DELETE_MESSAGE);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_DELETE_BROADCAST);
             Assertions.assertThatCode(() -> broadcastService.deleteMessage("1-2-3-4-5"))
                     .doesNotThrowAnyException();
         }
 
+        private static Stream<Arguments> getMissingAuthoritiesVariations() {
+            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_DELETE_BROADCAST);
+        }
     }
 
 }

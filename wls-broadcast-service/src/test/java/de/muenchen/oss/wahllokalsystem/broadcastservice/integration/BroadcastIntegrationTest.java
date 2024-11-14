@@ -2,9 +2,10 @@ package de.muenchen.oss.wahllokalsystem.broadcastservice.integration;
 
 import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_TEST_PROFILE;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.domain.Message;
@@ -13,9 +14,9 @@ import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO
 import de.muenchen.oss.wahllokalsystem.broadcastservice.service.BroadcastMapper;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.util.BroadcastExceptionKonstanten;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.Testdaten;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -87,7 +88,7 @@ public class BroadcastIntegrationTest {
                 .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
 
-        SecurityUtils.runWith(Authorities.getAllAuthorities());
+        SecurityUtils.runWith(Authorities.ALL_BROADCAST_AUTHORITIES);
         messageRepository.deleteAll();
     }
 

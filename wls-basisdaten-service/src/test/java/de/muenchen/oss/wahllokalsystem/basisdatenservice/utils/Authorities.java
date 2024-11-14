@@ -208,7 +208,7 @@ public class Authorities {
 
             REPOSITORY_WRITE_WAHL,
             REPOSITORY_WRITE_WAHLBEZIRK,
-            REPOSITORY_READ_KOPFDATEN
+            REPOSITORY_WRITE_KOPFDATEN
     };
 
     public static final String[] ALL_AUTHORITIES_PUT_WAHLTERMINDATEN_THAT_GOT_CATCHED_ON_MISSING = {

@@ -132,7 +132,7 @@ class UserRepositoryImplIntegrationTest {
         }
 
         @Test
-        void should_throwException_whenUserWithUsernameAlreadyExists() {
+        void should_throwException_when_userWithUsernameAlreadyExists() {
             val userToSave = new User();
             userToSave.setUsername(USERNAME_UNENCRYPTED);
 
@@ -173,7 +173,7 @@ class UserRepositoryImplIntegrationTest {
         }
 
         @Test
-        void should_throwException_whenMultipleUsersHaveSameName() {
+        void should_throwException_when_multipleUsersHaveSameName() {
             val user1 = new User();
             user1.setUsername(USERNAME_UNENCRYPTED);
             val user2 = new User();

@@ -43,10 +43,10 @@ public class BroadcastSecurityTest {
     }
 
     @Nested
-    class BroadcastTest {
+    class Broadcast {
 
         @Test
-        void accessDenied_dummyRolle() {
+        void should_throwAccessDeniedException_when_runWithDummyRole() {
             SecurityUtils.runWith("ROLE_DUMMY");
             Assertions.assertThatExceptionOfType(AccessDeniedException.class)
                     .isThrownBy(() -> broadcastService.broadcast(null)).withMessageStartingWith("Access Denied");
@@ -65,7 +65,7 @@ public class BroadcastSecurityTest {
         }
 
         @Test
-        void accessPositive() {
+        void should_notThrowException_when_givenAllAuthorities() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_BROADCAST);
             List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
             BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, "I should have access");
@@ -80,10 +80,10 @@ public class BroadcastSecurityTest {
     }
 
     @Nested
-    class GetMessageTest {
+    class GetOldestMessage {
 
         @Test
-        void accessDenied() {
+        void should_throwAccessDeniedException_when_runWithDummyRole() {
             SecurityUtils.runWith("ROLE_DUMMY");
             Assertions.assertThatExceptionOfType(AccessDeniedException.class)
                     .isThrownBy(() -> broadcastService.getOldestMessage(null))
@@ -105,17 +105,17 @@ public class BroadcastSecurityTest {
         }
 
         @Test
-        void accessPositiveTest_Role_BROADCAST_BUSINESSACTION_NACHRICHTABRUFEN() {
+        void should_notThrowException_when_givenAllAuthorities() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_BROADCAST);
             Assertions.assertThatThrownBy(() -> broadcastService.getOldestMessage("wahlbezirkId")).isNotInstanceOf(AccessDeniedException.class);
         }
     }
 
     @Nested
-    class DeleteTest {
+    class DeleteMessage {
 
         @Test
-        void accessDenied() {
+        void should_throwAccessDeniedException_when_runWithDummyRole() {
             SecurityUtils.runWith("ROLE_DUMMY");
             Assertions.assertThatExceptionOfType(AccessDeniedException.class)
                     .isThrownBy(() -> broadcastService.deleteMessage(null))
@@ -132,7 +132,7 @@ public class BroadcastSecurityTest {
         }
 
         @Test
-        void accessPositive() {
+        void should_notThrowException_when_givenAllAuthorities() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_DELETE_BROADCAST);
             Assertions.assertThatCode(() -> broadcastService.deleteMessage("1-2-3-4-5"))
                     .doesNotThrowAnyException();
@@ -142,5 +142,4 @@ public class BroadcastSecurityTest {
             return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_DELETE_BROADCAST);
         }
     }
-
 }

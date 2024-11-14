@@ -29,6 +29,10 @@ public interface KopfdatenRepository extends CrudRepository<Kopfdaten, BezirkUnd
     <S extends Kopfdaten> S save(S kopfdaten);
 
     @Override
+    @PreAuthorize("hasAuthority('Basisdaten_WRITE_Kopfdaten')")
+    <S extends Kopfdaten> Iterable<S> saveAll(Iterable<S> iterable);
+
+    @Override
     @CacheEvict(value = CACHE, key = "#p0")
     @PreAuthorize("hasAuthority('Basisdaten_DELETE_Kopfdaten')")
     void deleteById(BezirkUndWahlID bezirkUndWahlID);

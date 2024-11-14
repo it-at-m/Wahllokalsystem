@@ -1,12 +1,12 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.clients;
 
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.configuration.Profiles;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.Farbe;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.FarbeModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.FunktionModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.KonfigurierterWahltagClient;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.KonfigurierterWahltagModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlModel;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.Wahlart;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlartModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlenClient;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlvorstandEaiClient;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlvorstandModel;
@@ -39,9 +39,9 @@ public class DummyClientImpl implements WahlvorstandEaiClient, WahlenClient, Kon
     @Override
     public List<WahlModel> getWahlen(KonfigurierterWahltagModel wahltag) throws WlsException {
         return List.of(
-                new WahlModel("wahl1", "remoteWahl 0", 1L, 1L, wahltag.wahltag(), Wahlart.BTW, new Farbe(0, 1, 2), "1"),
-                new WahlModel("wahl2", "remoteWahl 1", 2L, 1L, wahltag.wahltag(), Wahlart.EUW, new Farbe(3, 4, 5), "1"),
-                new WahlModel("wahl3", "remoteWahl 2", 3L, 1L, wahltag.wahltag(), Wahlart.LTW, new Farbe(6, 7, 8), "1"));
+                new WahlModel("wahl1", "remoteWahl 0", 1L, 1L, wahltag.wahltag(), WahlartModel.BTW, new FarbeModel(0, 1, 2), "1"),
+                new WahlModel("wahl2", "remoteWahl 1", 2L, 1L, wahltag.wahltag(), WahlartModel.EUW, new FarbeModel(3, 4, 5), "1"),
+                new WahlModel("wahl3", "remoteWahl 2", 3L, 1L, wahltag.wahltag(), WahlartModel.LTW, new FarbeModel(6, 7, 8), "1"));
     }
 
     @Override

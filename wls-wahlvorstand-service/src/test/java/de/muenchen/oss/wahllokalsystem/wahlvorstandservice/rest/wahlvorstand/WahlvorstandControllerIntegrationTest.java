@@ -11,9 +11,9 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.WahlvorstandRepository;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.Farbe;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.FarbeModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlModel;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.Wahlart;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlartModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlvorstandModelMapper;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.utils.TestDataFactory;
@@ -107,13 +107,13 @@ public class WahlvorstandControllerIntegrationTest {
         private List<WahlModel> createWahlModels() {
             WahlModel wahl1 = new WahlModel("wahlid1", "wahl1", 1L,
                     1L, LocalDate.now().plusMonths(1),
-                    Wahlart.BAW, new Farbe(1, 1, 1), "0");
+                    WahlartModel.BAW, new FarbeModel(1, 1, 1), "0");
             WahlModel wahl2 = new WahlModel("wahlid2", "wahl2", 2L,
                     2L, LocalDate.now().plusMonths(2),
-                    Wahlart.LTW, new Farbe(2, 2, 2), "1");
+                    WahlartModel.LTW, new FarbeModel(2, 2, 2), "1");
             WahlModel wahl3 = new WahlModel("wahlid3", "wahl3", 3L,
                     3L, LocalDate.now().plusMonths(3),
-                    Wahlart.LTW, new Farbe(3, 3, 3), "2");
+                    WahlartModel.LTW, new FarbeModel(3, 3, 3), "2");
             List<WahlModel> lw = new ArrayList<>();
             lw.add(wahl1);
             lw.add(wahl2);

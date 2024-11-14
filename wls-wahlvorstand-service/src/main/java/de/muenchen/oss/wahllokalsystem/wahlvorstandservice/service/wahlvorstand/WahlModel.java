@@ -8,7 +8,7 @@ public record WahlModel(@NotNull String wahlID,
                         @NotNull Long reihenfolge,
                         @NotNull Long waehlerverzeichnisnummer,
                         @NotNull LocalDate wahltag,
-                        @NotNull Wahlart wahlart,
-                        Farbe farbe,
+                        @NotNull WahlartModel wahlart,
+                        FarbeModel farbe,
                         String nummer) {
 }

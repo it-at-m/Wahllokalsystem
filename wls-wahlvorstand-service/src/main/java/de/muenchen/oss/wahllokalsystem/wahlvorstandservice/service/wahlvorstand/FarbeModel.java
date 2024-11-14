@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Embeddable
 @NoArgsConstructor
-public class Farbe {
+public class FarbeModel {
 
     @NotNull
     @Min((long) 0.0)

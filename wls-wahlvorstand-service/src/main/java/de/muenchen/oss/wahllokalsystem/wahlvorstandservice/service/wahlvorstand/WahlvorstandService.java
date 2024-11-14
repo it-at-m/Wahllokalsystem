@@ -37,7 +37,7 @@ public class WahlvorstandService {
     private final FunktionsnamenMapping namenMapping;
     private final Collection<AuthenticationHandler> authenticationHandlers;
 
-    private static final WahlbezirkArt WAHLBEZIRK_ART_FALLBACK = WahlbezirkArt.UWB;
+    private static final WahlbezirkArtModel WAHLBEZIRK_ART_FALLBACK = WahlbezirkArtModel.UWB;
     private static final String FALLBACK_STRING = "FALLBACK_";
 
     @PreAuthorize(
@@ -136,11 +136,11 @@ public class WahlvorstandService {
     }
 
     private Wahlvorstand populateFunktionsnameOnline(Wahlvorstand wahlvorstand, KonfigurierterWahltagModel wahltagModel) {
-        WahlbezirkArt wahlbezirkArt = getWahlbezirkArt();
+        WahlbezirkArtModel wahlbezirkArt = getWahlbezirkArt();
 
         List<WahlModel> wahlen = wahlenClient.getWahlen(wahltagModel);
         if (wahlen == null) throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.BASISDATEN_ANTWORT_NULL);
-        Wahlart zuerstAuszuzaehlendeWahl = wahlen.get(0).wahlart();
+        WahlartModel zuerstAuszuzaehlendeWahl = wahlen.get(0).wahlart();
 
         List<Wahlvorstandsmitglied> collect = wahlvorstand.getWahlvorstandsmitglieder().stream()
                 .map(mitglied -> populateWahlvorstandsmitgliedFunktionsnameOnline(mitglied, zuerstAuszuzaehlendeWahl, wahlbezirkArt))
@@ -151,7 +151,7 @@ public class WahlvorstandService {
     }
 
     private Wahlvorstandsmitglied populateWahlvorstandsmitgliedFunktionsnameOnline(
-            Wahlvorstandsmitglied mitglied, Wahlart wahlart, WahlbezirkArt wahlbezirkArt) {
+            Wahlvorstandsmitglied mitglied, WahlartModel wahlart, WahlbezirkArtModel wahlbezirkArt) {
         StringBuilder funktionsBuilder = new StringBuilder();
         String thisFunktion = getFunktion(wahlbezirkArt, mitglied, wahlart);
         if (thisFunktion == null || thisFunktion.isEmpty()) {
@@ -163,7 +163,7 @@ public class WahlvorstandService {
         return mitglied;
     }
 
-    private String getFunktion(WahlbezirkArt wahlbezirkArt, Wahlvorstandsmitglied mitglied, Wahlart wahlart) {
+    private String getFunktion(WahlbezirkArtModel wahlbezirkArt, Wahlvorstandsmitglied mitglied, WahlartModel wahlart) {
         String funktion = "";
         val mappings = getMappings(wahlbezirkArt);
 
@@ -176,19 +176,19 @@ public class WahlvorstandService {
         return funktion;
     }
 
-    private Map<String, Map<String, String>> getMappings(WahlbezirkArt wahlbezirkArt) {
-        Map<WahlbezirkArt, Map<String, Map<String, String>>> funktionsMap = new EnumMap<>(WahlbezirkArt.class);
-        funktionsMap.put(WahlbezirkArt.UWB, namenMapping.getUwbFunktion());
-        funktionsMap.put(WahlbezirkArt.BWB, namenMapping.getBwbFunktion());
+    private Map<String, Map<String, String>> getMappings(WahlbezirkArtModel wahlbezirkArt) {
+        Map<WahlbezirkArtModel, Map<String, Map<String, String>>> funktionsMap = new EnumMap<>(WahlbezirkArtModel.class);
+        funktionsMap.put(WahlbezirkArtModel.UWB, namenMapping.getUwbFunktion());
+        funktionsMap.put(WahlbezirkArtModel.BWB, namenMapping.getBwbFunktion());
         return funktionsMap.get(wahlbezirkArt);
     }
 
-    private WahlbezirkArt getWahlbezirkArt() {
+    private WahlbezirkArtModel getWahlbezirkArt() {
         val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
         val authenticationHandler = authenticationHandlers.stream().filter(handler -> handler.canHandle(currentAuthentication)).findFirst();
         if (authenticationHandler.isPresent()) {
             val wahlbezirkOfUser = authenticationHandler.get().getDetail("wahlbezirksArt", currentAuthentication);
-            return wahlbezirkOfUser.map(WahlbezirkArt::valueOf).orElseGet(() -> {
+            return wahlbezirkOfUser.map(WahlbezirkArtModel::valueOf).orElseGet(() -> {
                 log.error("#getKonfiguration Error: Wahlbezirkart konnte nicht erkannt werden. UWB wurde als Standardwert angenommen");
                 return WAHLBEZIRK_ART_FALLBACK;
             });

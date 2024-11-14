@@ -274,7 +274,7 @@ class UserRepositoryImplIntegrationTest {
 
             val savedSavedUnencryptedUser = transactionTemplate.execute(status -> crudUserRepository.save(userToEncrypt));
 
-            transactionTemplate.executeWithoutResult(status -> userRepository.onSchedule());
+            transactionTemplate.executeWithoutResult(status -> userRepository.onInit());
 
             val userAfterEncryption = crudUserRepository.findById(savedSavedUnencryptedUser.getId()).get();
 

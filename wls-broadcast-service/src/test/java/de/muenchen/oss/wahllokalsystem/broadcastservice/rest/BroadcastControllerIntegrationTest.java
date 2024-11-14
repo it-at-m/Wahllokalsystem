@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.broadcastservice.integration;
+package de.muenchen.oss.wahllokalsystem.broadcastservice.rest;
 
 import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_TEST_PROFILE;
@@ -10,10 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.domain.Message;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.domain.MessageRepository;
-import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.util.BroadcastExceptionKonstanten;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.Testdaten;
+import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.TestdataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.LocalDateTime;
@@ -43,7 +42,7 @@ import org.springframework.web.context.WebApplicationContext;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
-public class BroadcastIntegrationTest {
+public class BroadcastControllerIntegrationTest {
 
     @Autowired
     WebApplicationContext context;
@@ -94,11 +93,11 @@ public class BroadcastIntegrationTest {
 
         @Test
         void should_sendBroadcastMessage_whenMessageSuccessfullySaved() throws Exception {
-            log.debug("#BroadcastIntegrationTest");
+            log.debug("#BroadcastControllerIntegrationTest");
             MockHttpServletResponse result;
             result = mvc.perform(
                     post(BROADCAST_URL)
-                            .content(Testdaten.asJsonString(BROADCAST_MESSAGE_DTO, objectMapper))
+                            .content(TestdataFactory.asJsonString(BROADCAST_MESSAGE_DTO, objectMapper))
                             .contentType(MediaType.APPLICATION_JSON_UTF8)
                             .accept(MediaType.APPLICATION_JSON))
                     .andReturn().getResponse();
@@ -112,7 +111,7 @@ public class BroadcastIntegrationTest {
         void should_throwFachlicheWlsException_when_givenWahlbezirkIdIsNull() throws Exception {
             final BroadcastMessageDTO bmDTOIncomplete1 = new BroadcastMessageDTO(null, "Das ist ein Test");
             mvc.perform(post(BROADCAST_URL)
-                    .content(Testdaten.asJsonString(bmDTOIncomplete1, objectMapper))
+                    .content(TestdataFactory.asJsonString(bmDTOIncomplete1, objectMapper))
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isBadRequest())
@@ -131,7 +130,7 @@ public class BroadcastIntegrationTest {
         void should_throwFachlicheWlsException_when_givenMessageIsNull() throws Exception {
             final BroadcastMessageDTO bmDTOIncomplete2 = new BroadcastMessageDTO(Arrays.asList("1", "2", "3", "4"), null);
             mvc.perform(post(BROADCAST_URL)
-                    .content(Testdaten.asJsonString(bmDTOIncomplete2, objectMapper))
+                    .content(TestdataFactory.asJsonString(bmDTOIncomplete2, objectMapper))
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isBadRequest())
@@ -153,7 +152,7 @@ public class BroadcastIntegrationTest {
         @Test
         void should_returnBroadcastMessageWithNoException_when_givenWahlbezirkId() throws Exception {
             log.debug("#GetMessageIntegrationTest");
-            messageRepository.save(Testdaten.createMessage("123", "Das ist ein Test", LocalDateTime.now()));
+            messageRepository.save(TestdataFactory.CreateMessageEntity.withCustomParams("123", "Das ist ein Test", LocalDateTime.now()));
             MockHttpServletResponse result = mvc.perform(
                     get(GETMESSAGE_URL + "123")
                             .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -217,14 +216,15 @@ public class BroadcastIntegrationTest {
     class DeleteMessage {
 
         @Test
-        void should_throwNoException_when_givenValidWahlbezirkID() throws Exception {
+        void should_notThrowException_when_givenValidWahlbezirkID() throws Exception {
             log.debug("#deleteIntegrationTest");
 
-            Message message = Testdaten.createMessage("123", "Das ist ein Test", LocalDateTime.now());
+            Message message = TestdataFactory.CreateMessageEntity.withCustomParams("123", "Das ist ein Test", LocalDateTime.now());
             messageRepository.save(message);
 
-            List<Message> foundMessages = ((List<Message>) messageRepository
-                    .findAll()).stream().filter((m) -> m.getWahlbezirkID().equals("123")).toList();
+            List<Message> foundMessages = ((List<Message>) messageRepository.findAll())
+                    .stream().filter((m) -> m.getWahlbezirkID().equals("123"))
+                    .toList();
             Message foundMessage = foundMessages.stream().findFirst().get();
             Assertions.assertThat(foundMessage).isNotNull();
 

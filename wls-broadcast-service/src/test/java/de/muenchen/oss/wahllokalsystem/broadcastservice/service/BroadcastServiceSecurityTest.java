@@ -1,10 +1,9 @@
-package de.muenchen.oss.wahllokalsystem.broadcastservice.security;
+package de.muenchen.oss.wahllokalsystem.broadcastservice.service;
 
 import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_TEST_PROFILE;
 
 import de.muenchen.oss.wahllokalsystem.broadcastservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO;
-import de.muenchen.oss.wahllokalsystem.broadcastservice.service.BroadcastService;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.Arrays;
@@ -31,7 +30,7 @@ import org.springframework.test.context.ActiveProfiles;
 )
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
 @Slf4j
-public class BroadcastSecurityTest {
+public class BroadcastServiceSecurityTest {
 
     @Autowired
     BroadcastService broadcastService;

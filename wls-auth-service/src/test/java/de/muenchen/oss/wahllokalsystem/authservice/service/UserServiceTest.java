@@ -67,7 +67,7 @@ class UserServiceTest {
             Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.updateFailAttempts(username)).isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining(username);
+                    .hasMessageContaining(username);
         }
 
         @Test
@@ -155,7 +155,7 @@ class UserServiceTest {
             Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.resetFailAttempts(username)).isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining(username);
+                    .hasMessageContaining(username);
         }
 
         @Test
@@ -220,7 +220,7 @@ class UserServiceTest {
             Mockito.when(userRepository.exists(username)).thenReturn(false);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.getUserAttempts(username)).isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining(username);
+                    .hasMessageContaining(username);
         }
 
         @Test
@@ -496,6 +496,6 @@ class UserServiceTest {
         val authorities = Set.of("auth1", "auth2");
         val wbid_wahlnummer = "wbid_wahlnummer";
         return new UserModel(username, email, userEnabled, wahltagID, wahltag, wahlbezirkID, wahlbezirkNummer,
-            wahlbezirksArt, pin, authorities, wbid_wahlnummer);
+                wahlbezirksArt, pin, authorities, wbid_wahlnummer);
     }
 }

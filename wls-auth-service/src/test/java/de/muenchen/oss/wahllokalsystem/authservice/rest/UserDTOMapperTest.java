@@ -38,12 +38,12 @@ class UserDTOMapperTest {
             val authorities = Set.of("auth1", "auth2");
             val wbid_wahlnummer = "wbid_wahlnummer";
             val modelToMap = new UserModel(username, email, userEnabled, wahltagID, wahltag, wahlbezirkID, wahlbezirkNummer,
-                wahlbezirksArt, pin, authorities, wbid_wahlnummer);
+                    wahlbezirksArt, pin, authorities, wbid_wahlnummer);
 
             val result = unitUnderTest.toDTO(modelToMap);
 
             val expectedResult = new UserDTO(username, email, userEnabled, wahltagID, wahltag, wahlbezirkID, wahlbezirkNummer,
-                WahlbezirksartDTO.BWB, pin, authorities, wbid_wahlnummer);
+                    WahlbezirksartDTO.BWB, pin, authorities, wbid_wahlnummer);
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
@@ -64,7 +64,7 @@ class UserDTOMapperTest {
             val result = unitUnderTest.toModel(wahltagID, List.of(user1));
 
             val expectedResult = new UsersOfWahltagModel(wahltagID,
-                List.of(new WahllokalUserInfoModel(wahlbezirknummer, wahltag, wahlbezirkID, WahlbezirksartModel.UWB, wbidWahlnummer)));
+                    List.of(new WahllokalUserInfoModel(wahlbezirknummer, wahltag, wahlbezirkID, WahlbezirksartModel.UWB, wbidWahlnummer)));
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
 
@@ -76,7 +76,7 @@ class UserDTOMapperTest {
             val result = unitUnderTest.toModel(null, List.of(dtoToMap));
 
             val expectedResult = new UsersOfWahltagModel(null,
-                List.of(new WahllokalUserInfoModel(null, null, null, WahlbezirksartModel.valueOf(wahlbezirksartDTO.name()), null)));
+                    List.of(new WahllokalUserInfoModel(null, null, null, WahlbezirksartModel.valueOf(wahlbezirksartDTO.name()), null)));
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }

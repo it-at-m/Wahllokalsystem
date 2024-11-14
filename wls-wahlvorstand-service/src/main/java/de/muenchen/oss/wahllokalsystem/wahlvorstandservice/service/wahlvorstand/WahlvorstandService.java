@@ -34,7 +34,7 @@ public class WahlvorstandService {
     private final KonfigurierterWahltagClient konfigurierterWahltagClient;
     private final WahlenClient wahlenClient;
     private final ExceptionFactory exceptionFactory;
-    private final FunktionsnamenMapping namenMapping;
+    private final FunktionsnamenMappingProperties namenMapping;
     private final Collection<AuthenticationHandler> authenticationHandlers;
 
     private static final WahlbezirkArtModel WAHLBEZIRK_ART_FALLBACK = WahlbezirkArtModel.UWB;

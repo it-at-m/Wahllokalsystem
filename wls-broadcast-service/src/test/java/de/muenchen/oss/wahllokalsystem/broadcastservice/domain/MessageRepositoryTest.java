@@ -77,7 +77,7 @@ class MessageRepositoryTest {
 
             //Actual - Found
             Optional<Message> optionalFoundMessage = repository.findFirstByWahlbezirkIDOrderByEmpfangsZeit(searchedWahlbezirkID);
-            Assertions.assertThat(optionalFoundMessage.get()).isEqualTo(sentMessage);
+            Assertions.assertThat(optionalFoundMessage).contains(sentMessage);
         }
 
         private List<Message> mapForTestsFromBroadcastMessageDTO_toListOfMessages(BroadcastMessageDTO messageToBroadcast, LocalDateTime now) {
@@ -108,8 +108,7 @@ class MessageRepositoryTest {
             // check
             Message persisted = repository.findById(original.getOid()).orElse(null);
 
-            Assertions.assertThat(persisted).isNotNull();
-            Assertions.assertThat(persisted).isEqualTo(original);
+            Assertions.assertThat(persisted).isNotNull().isEqualTo(original);
 
             repository.deleteById(original.getOid());
 

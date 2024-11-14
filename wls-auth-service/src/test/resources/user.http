@@ -21,6 +21,6 @@ Authorization: {{ token_type }} {{ auth_token }}
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: {{ token_type }} {{ auth_token }}
 
-### unlock user "wls_test"
+### unlock user "wls_test"; dummy data are prepared that this works for the first time only
 POST {{ WLS_AUTH_SERVICE }}/user/wls_test/unlock
 Authorization: {{ token_type }} {{ auth_token }}

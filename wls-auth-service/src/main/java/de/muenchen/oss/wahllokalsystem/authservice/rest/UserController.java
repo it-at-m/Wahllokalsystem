@@ -9,15 +9,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
@@ -29,10 +28,10 @@ public class UserController {
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     @Transactional(readOnly = true)
     @Cacheable(value = CacheConfig.USER_CACHE, key = "#a0.getName()")
-    public ResponseEntity<UserDTO> user(Principal user) {
+    public UserDTO user(Principal user) {
         log.debug("user info for '{}' called.", user.getName());
         val userServiceModel = userService.getUser(user.getName());
-        return userServiceModel.map(userModel -> ResponseEntity.ok(userDTOMapper.toDTO(userModel))).orElseGet(() -> ResponseEntity.ok().build());
+        return userServiceModel.map(userDTOMapper::toDTO).orElse(null);
     }
 
     @RequestMapping(value = "/user/{username}/unlock", method = POST)

@@ -22,8 +22,6 @@ class UserDTOMapperTest {
     @Nested
     class ToDTO {
 
-        UserDTOMapper unitUnderTest = Mappers.getMapper(UserDTOMapper.class);
-
         @Test
         void should_returnDTO_when_givenModel() {
             val username = "Hansi";

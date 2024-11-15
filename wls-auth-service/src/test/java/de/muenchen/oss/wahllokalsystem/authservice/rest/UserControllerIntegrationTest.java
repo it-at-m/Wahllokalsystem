@@ -72,18 +72,17 @@ public class UserControllerIntegrationTest {
 
         @WithMockUser(username = "Hansi")
         @Test
-        void should_returnNoContent_whenNoUserFound() throws Exception {
+        void should_returnNoContent_when_noUserFound() throws Exception {
             val request = MockMvcRequestBuilders.get("/user");
             api.perform(request).andExpect(status().isNoContent());
         }
 
         @WithMockUser(username = "Hansi")
         @Test
-        void should_returnUserDTO_whenUserFound() throws Exception {
+        void should_returnUserDTO_when_userFound() throws Exception {
             userRepository.save(new User("Hansi", null, null, true, true, "wahltagID", null, null, null, null, null, null, null));
 
             val request = MockMvcRequestBuilders.get("/user");
-            api.perform(request).andExpect(status().isOk());
 
             val response = api.perform(request).andExpect(status().isOk()).andReturn();
             val responseBody = objectMapper.readValue(response.getResponse().getContentAsString(), UserDTO.class);
@@ -94,7 +93,7 @@ public class UserControllerIntegrationTest {
 
         @WithMockUser(username = "Hansi")
         @Test
-        void should_cacheUser_whenControllerIsCalledMoreThanOnce() throws Exception {
+        void should_cacheUser_when_controllerIsCalledMoreThanOnce() throws Exception {
             userRepository.save(new User("Hansi", null, null, true, true, "wahltagID", null, null, null, null, null, null, null));
 
             val request = MockMvcRequestBuilders.get("/user");
@@ -120,10 +119,10 @@ public class UserControllerIntegrationTest {
 
         @WithMockUser()
         @Test
-        void should_failWith500AndIllegalArgumentException_whenUserNotFound() throws Exception {
+        void should_failWith500AndIllegalArgumentException_when_userNotFound() throws Exception {
             SecurityUtils.runWith(Authorities.CONTROLLER_UNLOCK_USER);
             val userName = "Hansi";
-            val request = MockMvcRequestBuilders.post("/user" + "/" + userName + "/unlock").with(csrf());
+            val request = MockMvcRequestBuilders.post("/user/" + userName + "/unlock").with(csrf());
 
             val response = api.perform(request).andExpect(status().isInternalServerError()).andReturn();
 
@@ -134,7 +133,7 @@ public class UserControllerIntegrationTest {
 
         @WithMockUser
         @Test
-        void should_unlockUser_whenUserFound() throws Exception {
+        void should_unlockUser_when_userFound() throws Exception {
             SecurityUtils.runWith(Authorities.CONTROLLER_UNLOCK_USER);
 
             val userName = "Hansi";
@@ -142,7 +141,7 @@ public class UserControllerIntegrationTest {
             userRepository.save(new User(userName, null, null, true, accountNonLocked, "wahltagID", null, null, null, null, null, null, null));
             loginAttemptRepository.save(createLoginAttemptWithUsername(userName));
 
-            val request = MockMvcRequestBuilders.post("/user" + "/" + userName + "/unlock").with(csrf());
+            val request = MockMvcRequestBuilders.post("/user/" + userName + "/unlock").with(csrf());
             api.perform(request).andExpect(status().isOk());
 
             val hansi = userRepository.findByUsername(userName);

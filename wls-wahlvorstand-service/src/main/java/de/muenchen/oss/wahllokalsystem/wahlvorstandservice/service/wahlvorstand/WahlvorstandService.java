@@ -9,7 +9,6 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactor
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -166,7 +165,7 @@ public class WahlvorstandService {
 
     private String getFunktion(WahlbezirkArtModel wahlbezirkArt, Wahlvorstandsmitglied mitglied, WahlartModel wahlart) {
         String funktion = "";
-        val mappings = getMappings(wahlbezirkArt);
+        val mappings = namenMapping.getMapping().get(wahlbezirkArt);
 
         if (mappings != null) {
             Map<String, String> wahlartMapping = mappings.get(wahlart.name());
@@ -175,13 +174,6 @@ public class WahlvorstandService {
             }
         }
         return funktion;
-    }
-
-    private Map<String, Map<String, String>> getMappings(WahlbezirkArtModel wahlbezirkArt) {
-        Map<WahlbezirkArtModel, Map<String, Map<String, String>>> funktionsMap = new EnumMap<>(WahlbezirkArtModel.class);
-        funktionsMap.put(WahlbezirkArtModel.UWB, namenMapping.getUwbFunktion());
-        funktionsMap.put(WahlbezirkArtModel.BWB, namenMapping.getBwbFunktion());
-        return funktionsMap.get(wahlbezirkArt);
     }
 
     private WahlbezirkArtModel getWahlbezirkArtOfAuthenticaton() {

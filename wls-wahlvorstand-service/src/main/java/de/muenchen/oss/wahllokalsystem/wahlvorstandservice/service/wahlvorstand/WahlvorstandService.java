@@ -137,14 +137,14 @@ public class WahlvorstandService {
     }
 
     private Wahlvorstand populateFunktionsnameOnline(Wahlvorstand wahlvorstand, KonfigurierterWahltagModel wahltagModel) {
-        val wahlbezirkArt = getWahlbezirkArt();
+        val wahlbezirkArt = getWahlbezirkArtOfAuthenticaton();
 
         val wahlen = wahlenClient.getWahlen(wahltagModel);
         if (wahlen == null) throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.BASISDATEN_ANTWORT_NULL);
-        val zuerstAuszuzaehlendeWahl = wahlen.get(0).wahlart();
+        val zuerstAuszuzaehlendeWahlArt = wahlen.get(0).wahlart();
 
         val collect = wahlvorstand.getWahlvorstandsmitglieder().stream()
-                .map(mitglied -> populateWahlvorstandsmitgliedFunktionsnameOnline(mitglied, zuerstAuszuzaehlendeWahl, wahlbezirkArt))
+                .map(mitglied -> populateWahlvorstandsmitgliedFunktionsnameOnline(mitglied, zuerstAuszuzaehlendeWahlArt, wahlbezirkArt))
                 .toList();
         wahlvorstand.getWahlvorstandsmitglieder().clear();
         wahlvorstand.getWahlvorstandsmitglieder().addAll(collect);
@@ -184,7 +184,7 @@ public class WahlvorstandService {
         return funktionsMap.get(wahlbezirkArt);
     }
 
-    private WahlbezirkArtModel getWahlbezirkArt() {
+    private WahlbezirkArtModel getWahlbezirkArtOfAuthenticaton() {
         val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
         val authenticationHandler = authenticationHandlers.stream().filter(handler -> handler.canHandle(currentAuthentication)).findFirst();
         if (authenticationHandler.isPresent()) {

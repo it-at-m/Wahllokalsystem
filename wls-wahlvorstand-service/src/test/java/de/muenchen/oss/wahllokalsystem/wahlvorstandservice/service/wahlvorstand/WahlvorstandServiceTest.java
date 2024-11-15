@@ -104,9 +104,11 @@ public class WahlvorstandServiceTest {
             Mockito.when(konfigurierterWahltagClient.getKonfigurierterWahltag()).thenReturn(mockedKonfigurierterWahltagFromClient);
             Mockito.when(wahlvorstandEaiClient.getWahlvorstand(wahlbezirkID, mockedKonfigurierterWahltagFromClient.wahltag()))
                     .thenReturn(null);
+            val mockedWahlvorstand = TestDataFactory.CreateWahlvorstandEntity.withData();
 
             val result = unitUnderTest.updateWahlvorstand(wahlbezirkID);
             Assertions.assertThat(result).isEmpty();
+            Mockito.verify(wahlvorstandRepository, Mockito.never()).save(mockedWahlvorstand);
         }
 
         @Test
@@ -118,9 +120,12 @@ public class WahlvorstandServiceTest {
             Mockito.when(konfigurierterWahltagClient.getKonfigurierterWahltag()).thenReturn(mockedKonfigurierterWahltagFromClient);
             Mockito.when(wahlvorstandEaiClient.getWahlvorstand(wahlbezirkID, mockedKonfigurierterWahltagFromClient.wahltag()))
                     .thenReturn(mockedWahlvorstandModelFromClient);
+            val mockedWahlvorstand = TestDataFactory.CreateWahlvorstandEntity.withData();
+
 
             val result = unitUnderTest.updateWahlvorstand(wahlbezirkID);
             Assertions.assertThat(result).isEmpty();
+            Mockito.verify(wahlvorstandRepository, Mockito.never()).save(mockedWahlvorstand);
         }
 
         @Test

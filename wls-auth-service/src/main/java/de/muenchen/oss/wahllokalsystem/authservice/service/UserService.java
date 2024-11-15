@@ -90,7 +90,6 @@ public class UserService {
     }
 
     @Transactional
-    @PreAuthorize("hasAuthority('ROLE_ADMIN_ADMIN')")
     public void resetFailAttempts(String username) {
         log.debug("resetFailAttempts({})", username);
 

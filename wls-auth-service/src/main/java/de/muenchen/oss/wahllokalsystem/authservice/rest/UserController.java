@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +36,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user/{username}/unlock", method = POST)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN_ADMIN')")
     @Transactional
     public void unlockUser(@PathVariable("username") String username) {
         log.info("unlockUser for '{}' called.", username);

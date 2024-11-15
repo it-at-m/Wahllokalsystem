@@ -3,13 +3,13 @@ package de.muenchen.oss.wahllokalsystem.broadcastservice.configuration;
 import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import de.muenchen.oss.wahllokalsystem.broadcastservice.MicroServiceApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -23,45 +23,44 @@ class SecuringWebAppTest {
     MockMvc api;
 
     @Test
-    void accessSecuredResourceRootThenUnauthorized() throws Exception {
+    void should_returnStatusUnauthorized_when_accessingSecuredResourceRoot() throws Exception {
         api.perform(get("/"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void accessSecuredResourceActuatorThenUnauthorized() throws Exception {
+    void should_returnStatusUnauthorized_when_accessingSecuredResourceActuator() throws Exception {
         api.perform(get("/actuator"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void accessUnsecuredResourceActuatorHealthThenOk() throws Exception {
+    void should_returnStatusOk_when_accessingUnsecuredResourceActuatorHealth() throws Exception {
         api.perform(get("/actuator/health"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void accessUnsecuredResourceActuatorInfoThenOk() throws Exception {
+    void should_returnStatusOk_when_accessingUnsecuredResourceActuatorInfo() throws Exception {
         api.perform(get("/actuator/info"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void accessUnsecuredResourceActuatorMetricsThenOk() throws Exception {
+    void should_returnStatusOk_when_accessingUnsecuredResourceActuatorMetrics() throws Exception {
         api.perform(get("/actuator/metrics"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void accessUnsecuredResourceV3ApiDocsThenOk() throws Exception {
+    void should_returnStatusOk_when_accessingUnsecuredResourceV3ApiDocs() throws Exception {
         api.perform(get("/v3/api-docs"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void accessUnsecuredResourceSwaggerUiThenOk() throws Exception {
+    void should_returnStatusOk_when_accessingUnsecuredResourceSwaggerUi() throws Exception {
         api.perform(get("/swagger-ui/index.html"))
                 .andExpect(status().isOk());
     }
-
 }

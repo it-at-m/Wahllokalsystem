@@ -32,7 +32,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.support.TransactionTemplate;
 
-@SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
 public class UserControllerIntegrationTest {
@@ -62,7 +62,7 @@ public class UserControllerIntegrationTest {
     void tearDown() {
         cacheManager.getCache(CacheConfig.USER_CACHE).clear();
         transactionTemplate.executeWithoutResult(status -> {
-            SecurityUtils.runWith(Authorities.CONTROLLER_UNLOCK_USER);
+            SecurityUtils.runWith(Authorities.SERVICE_UNLOCK_USER);
             userRepository.deleteUsersByWahltagID("wahltagID");
         });
     }
@@ -72,9 +72,9 @@ public class UserControllerIntegrationTest {
 
         @WithMockUser(username = "Hansi")
         @Test
-        void should_returnNoContent_when_noUserFound() throws Exception {
+        void should_returnOK_when_noUserFound() throws Exception {
             val request = MockMvcRequestBuilders.get("/user");
-            api.perform(request).andExpect(status().isNoContent());
+            api.perform(request).andExpect(status().isOk());
         }
 
         @WithMockUser(username = "Hansi")
@@ -117,10 +117,9 @@ public class UserControllerIntegrationTest {
     @Nested
     class UnlockUser {
 
-        @WithMockUser()
+        @WithMockUser(authorities = Authorities.SERVICE_UNLOCK_USER)
         @Test
         void should_failWith500AndIllegalArgumentException_when_userNotFound() throws Exception {
-            SecurityUtils.runWith(Authorities.CONTROLLER_UNLOCK_USER);
             val userName = "Hansi";
             val request = MockMvcRequestBuilders.post("/user/" + userName + "/unlock").with(csrf());
 
@@ -131,11 +130,9 @@ public class UserControllerIntegrationTest {
             Assertions.assertThat(response.getResolvedException().getMessage()).isEqualTo(expectedException.getMessage());
         }
 
-        @WithMockUser
+        @WithMockUser(authorities = Authorities.SERVICE_UNLOCK_USER)
         @Test
         void should_unlockUser_when_userFound() throws Exception {
-            SecurityUtils.runWith(Authorities.CONTROLLER_UNLOCK_USER);
-
             val userName = "Hansi";
             val accountNonLocked = false;
             userRepository.save(new User(userName, null, null, true, accountNonLocked, "wahltagID", null, null, null, null, null, null, null));

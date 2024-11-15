@@ -71,7 +71,7 @@ class UserControllerTest {
         }
 
         @Test
-        void should_fail_when_serviceWasNotSuccessful() {
+        void should_failWithIllegalArgumentException_when_serviceWasNotSuccessful() {
             val username = "Hansi";
             Mockito.doThrow(new IllegalArgumentException("User with username " + username + " not found.")).when(userService).resetFailAttempts(username);
 

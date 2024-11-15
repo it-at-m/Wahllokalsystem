@@ -56,7 +56,7 @@ class UserInfoAuthoritiesServiceTest {
     class LoadAuthorities {
 
         @Test
-        void buildAuthoritiesFromTemplateResponseWithCollection() {
+        void should_loadAuthoritiesFromTemplate_when_givenAsCollection() {
             val jwtTokenValue = "myTokenValue";
 
             val expectedRequestHeaders = new HttpHeaders();
@@ -87,7 +87,7 @@ class UserInfoAuthoritiesServiceTest {
         }
 
         @Test
-        void buildAuthoritiesFromTemplateResponseWithArray() {
+        void should_loadAuthoritiesFromTemplate_when_givenAsArray() {
             val jwtTokenValue = "myTokenValue";
 
             val expectedRequestHeaders = new HttpHeaders();
@@ -118,7 +118,7 @@ class UserInfoAuthoritiesServiceTest {
         }
 
         @Test
-        void buildAuthoritiesFromTemplateResponseWithUnhandledDataStructure() {
+        void should_returnEmptyList_when_givenAsUnhandledDataStructure() {
             val jwtTokenValue = "myTokenValue";
 
             val expectedRequestHeaders = new HttpHeaders();
@@ -141,7 +141,7 @@ class UserInfoAuthoritiesServiceTest {
         }
 
         @Test
-        void buildAuthoritiesFromTemplateResponseWithoutAuthoritiesClaim() {
+        void should_returnEmptyList_when_noAuthoritiesFound() {
             val jwtTokenValue = "myTokenValue";
 
             val expectedRequestHeaders = new HttpHeaders();
@@ -161,7 +161,7 @@ class UserInfoAuthoritiesServiceTest {
         }
 
         @Test
-        void errorWhileLoadingViaTemplate() {
+        void should_returnEmptyList_when_errorThrownWhileLoadingViaTemplate() {
             val jwtTokenValue = "myTokenValue";
 
             val expectedRequestHeaders = new HttpHeaders();
@@ -178,7 +178,7 @@ class UserInfoAuthoritiesServiceTest {
         }
 
         @Test
-        void loadedAuthoritiesAsPlacedInCache() {
+        void should_loadAuthoritiesFromCache_when_givenValidJwtToken() {
             val jwtSubject = "subject";
             val jwtTokenValue = "myTokenValue";
             val jwtForCachMethodCall = Mockito.mock(Jwt.class);

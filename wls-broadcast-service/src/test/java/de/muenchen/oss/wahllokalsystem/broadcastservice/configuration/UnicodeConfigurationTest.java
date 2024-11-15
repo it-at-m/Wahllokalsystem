@@ -4,9 +4,14 @@
  */
 package de.muenchen.oss.wahllokalsystem.broadcastservice.configuration;
 
+import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
+import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_TEST_PROFILE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import de.muenchen.oss.wahllokalsystem.broadcastservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.domain.MessageRepository;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -17,12 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.net.URI;
-
-import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_TEST_PROFILE;
-import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(
         classes = { MicroServiceApplication.class },
@@ -53,7 +52,7 @@ class UnicodeConfigurationTest {
     private MessageRepository messageRepository;
 
     @Test
-    void testForNfcNormalization() {
+    void should_returnComposedString_when_givenDecomposedString() {
         List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
         val broadcastMessageDTO = new BroadcastMessageDTO(wahlbezirke, TEXT_ATTRIBUTE_DECOMPOSED);
 
@@ -64,5 +63,4 @@ class UnicodeConfigurationTest {
         Assertions.assertThat(message.getNachricht()).isEqualTo(TEXT_ATTRIBUTE_COMPOSED);
         assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), message.getNachricht().length());
     }
-
 }

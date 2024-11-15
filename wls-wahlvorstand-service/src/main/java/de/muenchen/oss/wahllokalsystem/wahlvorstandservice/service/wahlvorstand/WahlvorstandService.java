@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -55,8 +54,8 @@ public class WahlvorstandService {
     public Optional<WahlvorstandModel> updateWahlvorstand(@P("wahlbezirkID") final String wahlbezirkID) {
         log.info("#updateWahlvorstand");
         wahlvorstandValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
-        KonfigurierterWahltagModel konfigurierterWahltagModel = konfigurierterWahltagClient.getKonfigurierterWahltag();
-        WahlvorstandModel wahlvorstand = wahlvorstandEaiClient.getWahlvorstand(wahlbezirkID, konfigurierterWahltagModel.wahltag());
+        val konfigurierterWahltagModel = konfigurierterWahltagClient.getKonfigurierterWahltag();
+        val wahlvorstand = wahlvorstandEaiClient.getWahlvorstand(wahlbezirkID, konfigurierterWahltagModel.wahltag());
         return Optional.ofNullable(persistWahlvorstand(wahlvorstand, konfigurierterWahltagModel));
     }
 
@@ -79,8 +78,9 @@ public class WahlvorstandService {
         }
     }
 
+    @PreAuthorize("hasAuthority('Wahlvorstand_BUSINESSACTION_UpdateWahlvorstand')")
     public Optional<WahlvorstandModel> getFallbackWahlvorstand(String wahlbezirkID) {
-        WahlvorstandModel fallbackWahlvorstand = WahlvorstandModel.builder().wahlbezirkID(wahlbezirkID).wahlvorstandsmitglieder(new ArrayList<>()).build();
+        val fallbackWahlvorstand = WahlvorstandModel.builder().wahlbezirkID(wahlbezirkID).wahlvorstandsmitglieder(new ArrayList<>()).build();
 
         Arrays.stream(FunktionModel.values()).forEach(funktion -> {
             WahlvorstandsmitgliedModel mitglied = WahlvorstandsmitgliedModel.builder()
@@ -92,7 +92,7 @@ public class WahlvorstandService {
             fallbackWahlvorstand.wahlvorstandsmitglieder().add(mitglied);
         });
 
-        KonfigurierterWahltagModel konfigurierterWahltagModel = konfigurierterWahltagClient.getKonfigurierterWahltag();
+        val konfigurierterWahltagModel = konfigurierterWahltagClient.getKonfigurierterWahltag();
         return Optional.of(persistWahlvorstand(fallbackWahlvorstand, konfigurierterWahltagModel));
     }
 
@@ -115,7 +115,7 @@ public class WahlvorstandService {
     }
 
     private Wahlvorstand populateFunktionsnameOffline(Wahlvorstand wahlvorstand, Wahlvorstand wahlvorstandDB) throws IllegalStateException {
-        List<Wahlvorstandsmitglied> collect = wahlvorstand.getWahlvorstandsmitglieder().stream()
+        val collect = wahlvorstand.getWahlvorstandsmitglieder().stream()
                 .map(mitglied -> populateWahlvorstandsmitgliedFunktionsnameOffline(mitglied, wahlvorstandDB))
                 .toList();
         wahlvorstand.setWahlvorstandsmitglieder(collect);
@@ -124,7 +124,7 @@ public class WahlvorstandService {
 
     private Wahlvorstandsmitglied populateWahlvorstandsmitgliedFunktionsnameOffline(Wahlvorstandsmitglied mitglied, Wahlvorstand wahlvorstandDB)
             throws IllegalStateException {
-        Wahlvorstandsmitglied mitgliedDB = wahlvorstandDB.getWahlvorstandsmitglieder().stream()
+        val mitgliedDB = wahlvorstandDB.getWahlvorstandsmitglieder().stream()
                 .filter(wahlvorstandsmitglied -> wahlvorstandsmitglied.getFunktion().equals(mitglied.getFunktion()))
                 .findFirst()
                 .orElse(null);
@@ -137,13 +137,13 @@ public class WahlvorstandService {
     }
 
     private Wahlvorstand populateFunktionsnameOnline(Wahlvorstand wahlvorstand, KonfigurierterWahltagModel wahltagModel) {
-        WahlbezirkArtModel wahlbezirkArt = getWahlbezirkArt();
+        val wahlbezirkArt = getWahlbezirkArt();
 
-        List<WahlModel> wahlen = wahlenClient.getWahlen(wahltagModel);
+        val wahlen = wahlenClient.getWahlen(wahltagModel);
         if (wahlen == null) throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.BASISDATEN_ANTWORT_NULL);
-        WahlartModel zuerstAuszuzaehlendeWahl = wahlen.get(0).wahlart();
+        val zuerstAuszuzaehlendeWahl = wahlen.get(0).wahlart();
 
-        List<Wahlvorstandsmitglied> collect = wahlvorstand.getWahlvorstandsmitglieder().stream()
+        val collect = wahlvorstand.getWahlvorstandsmitglieder().stream()
                 .map(mitglied -> populateWahlvorstandsmitgliedFunktionsnameOnline(mitglied, zuerstAuszuzaehlendeWahl, wahlbezirkArt))
                 .toList();
         wahlvorstand.getWahlvorstandsmitglieder().clear();
@@ -153,8 +153,8 @@ public class WahlvorstandService {
 
     private Wahlvorstandsmitglied populateWahlvorstandsmitgliedFunktionsnameOnline(
             Wahlvorstandsmitglied mitglied, WahlartModel wahlart, WahlbezirkArtModel wahlbezirkArt) {
-        StringBuilder funktionsBuilder = new StringBuilder();
-        String thisFunktion = getFunktion(wahlbezirkArt, mitglied, wahlart);
+        val funktionsBuilder = new StringBuilder();
+        val thisFunktion = getFunktion(wahlbezirkArt, mitglied, wahlart);
         if (thisFunktion == null || thisFunktion.isEmpty()) {
             funktionsBuilder.append(mitglied.getFunktion());
         } else {

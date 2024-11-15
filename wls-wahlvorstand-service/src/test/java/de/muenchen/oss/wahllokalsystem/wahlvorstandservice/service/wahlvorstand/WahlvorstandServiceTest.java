@@ -122,7 +122,6 @@ public class WahlvorstandServiceTest {
                     .thenReturn(mockedWahlvorstandModelFromClient);
             val mockedWahlvorstand = TestDataFactory.CreateWahlvorstandEntity.withData();
 
-
             val result = unitUnderTest.updateWahlvorstand(wahlbezirkID);
             Assertions.assertThat(result).isEmpty();
             Mockito.verify(wahlvorstandRepository, Mockito.never()).save(mockedWahlvorstand);

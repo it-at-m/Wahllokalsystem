@@ -5,6 +5,7 @@ import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.exception.ExceptionCo
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.utils.TestDataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import java.util.Collections;
 import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -93,6 +94,48 @@ public class WahlvorstandServiceTest {
 
             Mockito.verify(wahlvorstandValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
             Mockito.verify(wahlvorstandRepository).save(mockedWahlvorstand);
+        }
+
+        @Test
+        void should_notSaveWahlvorstand_when_givenWahlvorstandIsNull() {
+            val wahlbezirkID = "wahlbezirkID";
+
+            val mockedKonfigurierterWahltagFromClient = TestDataFactory.CreateFromClient.konfigurierterWahltagModel();
+            Mockito.when(konfigurierterWahltagClient.getKonfigurierterWahltag()).thenReturn(mockedKonfigurierterWahltagFromClient);
+            Mockito.when(wahlvorstandEaiClient.getWahlvorstand(wahlbezirkID, mockedKonfigurierterWahltagFromClient.wahltag()))
+                    .thenReturn(null);
+
+            val result = unitUnderTest.updateWahlvorstand(wahlbezirkID);
+            Assertions.assertThat(result).isEmpty();
+        }
+
+        @Test
+        void should_notSaveWahlvorstand_when_givenWahlvorstandsMitgliederIsEmpty() {
+            val wahlbezirkID = "wahlbezirkID";
+
+            val mockedKonfigurierterWahltagFromClient = TestDataFactory.CreateFromClient.konfigurierterWahltagModel();
+            val mockedWahlvorstandModelFromClient = TestDataFactory.CreateFromClient.wahlvorstandModelWithCustomMembers(wahlbezirkID, Collections.emptyList());
+            Mockito.when(konfigurierterWahltagClient.getKonfigurierterWahltag()).thenReturn(mockedKonfigurierterWahltagFromClient);
+            Mockito.when(wahlvorstandEaiClient.getWahlvorstand(wahlbezirkID, mockedKonfigurierterWahltagFromClient.wahltag()))
+                    .thenReturn(mockedWahlvorstandModelFromClient);
+
+            val result = unitUnderTest.updateWahlvorstand(wahlbezirkID);
+            Assertions.assertThat(result).isEmpty();
+        }
+
+        @Test
+        void should_notThrowNullPointerException_when_givenWahlvorstandsMitgliederIsNull() {
+            val wahlbezirkID = "wahlbezirkID";
+
+            val mockedKonfigurierterWahltagFromClient = TestDataFactory.CreateFromClient.konfigurierterWahltagModel();
+            val mockedWahlvorstandModelFromClient = TestDataFactory.CreateFromClient.wahlvorstandModelWithCustomMembers(wahlbezirkID, null);
+            Mockito.when(konfigurierterWahltagClient.getKonfigurierterWahltag()).thenReturn(mockedKonfigurierterWahltagFromClient);
+            Mockito.when(wahlvorstandEaiClient.getWahlvorstand(wahlbezirkID, mockedKonfigurierterWahltagFromClient.wahltag()))
+                    .thenReturn(mockedWahlvorstandModelFromClient);
+
+            val result = unitUnderTest.updateWahlvorstand(wahlbezirkID);
+            Assertions.assertThat(result).isEmpty();
+            Assertions.assertThatCode(() -> unitUnderTest.updateWahlvorstand(wahlbezirkID)).doesNotThrowAnyException();
         }
     }
 

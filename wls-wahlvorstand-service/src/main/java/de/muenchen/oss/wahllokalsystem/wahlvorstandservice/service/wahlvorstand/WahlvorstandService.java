@@ -16,6 +16,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
@@ -56,7 +57,7 @@ public class WahlvorstandService {
         wahlvorstandValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
         KonfigurierterWahltagModel konfigurierterWahltagModel = konfigurierterWahltagClient.getKonfigurierterWahltag();
         WahlvorstandModel wahlvorstand = wahlvorstandEaiClient.getWahlvorstand(wahlbezirkID, konfigurierterWahltagModel.wahltag());
-        return Optional.of(persistWahlvorstand(wahlvorstand, konfigurierterWahltagModel));
+        return Optional.ofNullable(persistWahlvorstand(wahlvorstand, konfigurierterWahltagModel));
     }
 
     @Transactional
@@ -96,7 +97,7 @@ public class WahlvorstandService {
     }
 
     private WahlvorstandModel persistWahlvorstand(WahlvorstandModel wahlvorstand, KonfigurierterWahltagModel konfigurierterWahltagModel) {
-        if (wahlvorstand == null || wahlvorstand.wahlvorstandsmitglieder().isEmpty()) {
+        if (wahlvorstand == null || CollectionUtils.isEmpty(wahlvorstand.wahlvorstandsmitglieder())) {
             return null;
         }
 

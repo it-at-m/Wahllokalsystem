@@ -159,6 +159,10 @@ public class TestDataFactory {
 
             return new WahlvorstandModel(wahlbezirkID, LocalDateTime.now().withNano(0), wahlvorstandsmitgliedModelList);
         }
+
+        public static WahlvorstandModel wahlvorstandModelWithCustomMembers(String wahlbezirkID, List<WahlvorstandsmitgliedModel> mitglieder) {
+            return new WahlvorstandModel(wahlbezirkID, LocalDateTime.now().withNano(0), mitglieder);
+        }
     }
 
     public static class MapWahlvorstandsmitglied {

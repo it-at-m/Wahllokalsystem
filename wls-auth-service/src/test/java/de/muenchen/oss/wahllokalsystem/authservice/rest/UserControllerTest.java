@@ -46,13 +46,13 @@ class UserControllerTest {
         }
 
         @Test
-        void should_returnNoContentAndEmptyBody_when_exceptionInServiceOccurred() {
+        void should_returnOKAndNullBody_when_exceptionInServiceOccurred() {
             val mockedPrincipalParameter = Mockito.mock(Principal.class);
             Mockito.when(userService.getUser(mockedPrincipalParameter.getName())).thenReturn(Optional.empty());
 
             val result = unitUnderTest.user(mockedPrincipalParameter);
 
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
             Assertions.assertThat(result.getBody()).isNull();
         }
     }
@@ -65,10 +65,9 @@ class UserControllerTest {
             val username = "Hansi";
             Mockito.doNothing().when(userService).resetFailAttempts(username);
 
-            val result = unitUnderTest.unlockUser(username);
+            unitUnderTest.unlockUser(username);
 
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-            Assertions.assertThat(result.getBody()).isNull();
+            Mockito.verify(userService).resetFailAttempts(username);
         }
 
         @Test

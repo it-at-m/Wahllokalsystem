@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,14 +31,13 @@ public class UserController {
     public ResponseEntity<UserDTO> user(Principal user) {
         log.debug("user info for '{}' called.", user.getName());
         val userServiceModel = userService.getUser(user.getName());
-        return userServiceModel.map(userModel -> ResponseEntity.ok(userDTOMapper.toDTO(userModel))).orElseGet(() -> ResponseEntity.noContent().build());
+        return userServiceModel.map(userModel -> ResponseEntity.ok(userDTOMapper.toDTO(userModel))).orElseGet(() -> ResponseEntity.ok().build());
     }
 
     @RequestMapping(value = "/user/{username}/unlock", method = POST)
     @Transactional
-    public ResponseEntity<?> unlockUser(@PathVariable("username") String username) {
+    public void unlockUser(@PathVariable("username") String username) {
         log.info("unlockUser for '{}' called.", username);
         userService.resetFailAttempts(username);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

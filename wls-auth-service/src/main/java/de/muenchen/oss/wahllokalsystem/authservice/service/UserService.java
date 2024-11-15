@@ -147,16 +147,16 @@ public class UserService {
     @PreAuthorize("hasAuthority('ROLE_ADMIN_ADMIN')")
     public String generateWahllokalBenutzer(UsersOfWahltagModel usersOfWahltag) {
         val authorityWahlvorstand = authorityRepository.findByAuthority(wahlvorstandAuthorityName).orElseThrow(() -> new HttpServerErrorException(
-            HttpStatus.INTERNAL_SERVER_ERROR,
-            "Keine Authority <" + wahlvorstandAuthorityName + "> gefunden, kann keine Benutzer für Wahltag-ID <" + usersOfWahltag.wahltagID()
-                + "> anlegen"));
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Keine Authority <" + wahlvorstandAuthorityName + "> gefunden, kann keine Benutzer für Wahltag-ID <" + usersOfWahltag.wahltagID()
+                        + "> anlegen"));
 
         deleteWahllokalBenutzer(usersOfWahltag.wahltagID());
 
         val newUserAuthorities = Set.of(authorityWahlvorstand);
         val newUsers = usersOfWahltag.users().stream()
-            .map(user -> userModelMapper.toUser(usersOfWahltag.wahltagID(), user, newUserAuthorities, generatePin(), generateName(user.wahlbezirknummer())))
-            .toList();
+                .map(user -> userModelMapper.toUser(usersOfWahltag.wahltagID(), user, newUserAuthorities, generatePin(), generateName(user.wahlbezirknummer())))
+                .toList();
         val persistedUsers = userRepository.saveAll(newUsers);
         return usersToCSVString(persistedUsers);
     }
@@ -182,8 +182,8 @@ public class UserService {
 
     private String usersToCSVString(Iterable<User> users) {
         return StreamSupport.stream(users.spliterator(), false)
-            .map(User::getUsername)
-            .reduce((s, s2) -> s + EOL + s2)
-            .orElse("Keine Nutzer zum angegebenen Wahltag gefunden.");
+                .map(User::getUsername)
+                .reduce((s, s2) -> s + EOL + s2)
+                .orElse("Keine Nutzer zum angegebenen Wahltag gefunden.");
     }
 }

@@ -33,10 +33,10 @@ public class WahlenClientImpl implements WahlenClient {
             wahlDTOs = wahldatenControllerApi.loadWahlen(wahltag.wahltag(), wahltag.nummer());
         } catch (final Exception exception) {
             log.info("exception on loadwahl from external", exception);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_AOUEAI);
+            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
         }
         if (wahlDTOs == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.AOUEAI_WAHLVORSTAND_NULL);
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.BASISDATEN_ANTWORT_NULL);
         }
         return wahlenClientMapper.fromRemoteClientSetOfWahlDTOtoListOfWahlModel(wahlDTOs);
     }

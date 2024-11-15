@@ -92,7 +92,7 @@ public class BroadcastControllerIntegrationTest {
     class Broadcast {
 
         @Test
-        void should_sendBroadcastMessage_whenMessageSuccessfullySaved() throws Exception {
+        void should_sendBroadcastMessage_when_messageSuccessfullySaved() throws Exception {
             log.debug("#BroadcastControllerIntegrationTest");
             MockHttpServletResponse result;
             result = mvc.perform(
@@ -150,7 +150,7 @@ public class BroadcastControllerIntegrationTest {
     class GetOldestMessage {
 
         @Test
-        void should_returnBroadcastMessageWithNoException_when_givenWahlbezirkId() throws Exception {
+        void should_returnBroadcastMessage_when_givenWahlbezirkId() throws Exception {
             log.debug("#GetMessageIntegrationTest");
             messageRepository.save(TestdataFactory.CreateMessageEntity.withCustomParams("123", "Das ist ein Test", LocalDateTime.now()));
             MockHttpServletResponse result = mvc.perform(

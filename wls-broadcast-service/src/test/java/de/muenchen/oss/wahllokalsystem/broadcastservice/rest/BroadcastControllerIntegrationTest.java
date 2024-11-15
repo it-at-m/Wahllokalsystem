@@ -92,7 +92,7 @@ public class BroadcastControllerIntegrationTest {
     class Broadcast {
 
         @Test
-        void should_sendBroadcastMessage_whenMessageSuccessfullySaved() throws Exception {
+        void should_sendBroadcastMessage_when_messageSuccessfullySaved() throws Exception {
             log.debug("#BroadcastControllerIntegrationTest");
             MockHttpServletResponse result;
             result = mvc.perform(

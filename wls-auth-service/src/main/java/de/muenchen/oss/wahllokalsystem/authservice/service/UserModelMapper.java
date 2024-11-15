@@ -9,6 +9,15 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface UserModelMapper {
 
+    UserModel toModel(User user);
+
+    default String toModel(Authority authority) {
+        if (authority == null) {
+            return null;
+        }
+        return authority.getAuthority();
+    }
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "password", constant = "dummy")
     @Mapping(target = "email", constant = "dummy@dummy.local")

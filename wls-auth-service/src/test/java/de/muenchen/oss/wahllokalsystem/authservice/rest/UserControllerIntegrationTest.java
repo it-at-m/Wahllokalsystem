@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.CacheConfig;
+import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.LoginAttempt;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.LoginAttemptRepository;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.User;
@@ -34,7 +35,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
+@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS })
 public class UserControllerIntegrationTest {
 
     @Autowired

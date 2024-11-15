@@ -1,21 +1,23 @@
 spring:
   application.name: @project.artifactId@
   banner.location: banner.txt
+  flyway:
+    locations:
+      - classpath:db/migrations/{vendor}
+  h2.console.enabled: true
   profiles:
     group:
       local:
         - db-h2
         - dummy.clients
-  flyway:
-    locations:
-      - classpath:db/migrations/{vendor}
-  h2.console.enabled: false
-
   security:
     oauth2:
       resourceserver:
         jwt:
           jwk-set-uri: http://kubernetes.docker.internal:8100/auth/realms/${realm}/protocol/openid-connect/certs
+  session:
+    jdbc:
+      table-name: SPRING_SESSION
 
 
 
@@ -37,6 +39,14 @@ server:
     include-stacktrace: never
     whitelabel:
       enabled: false
+  servlet:
+    session:
+      timeout: 259200
+      tracking-modes: 'cookie'
+      cookie:
+        max-age: -1
+        http-only: true
+        secure: false
 
 # Config for spring actuator endpoints
 management:

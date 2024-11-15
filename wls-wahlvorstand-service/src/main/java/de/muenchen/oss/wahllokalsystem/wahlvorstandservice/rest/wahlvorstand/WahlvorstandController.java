@@ -63,10 +63,6 @@ public class WahlvorstandController {
         return okWithBodyOrNoContent(result.map(wahlvorstandDTOMapper::toDTO));
     }
 
-    private <T> ResponseEntity<T> okWithBodyOrNoContent(final Optional<T> optionalBody) {
-        return optionalBody.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
-    }
-
     @Operation(description = "Aktualisieren des Wahlvorstandes")
     @ApiResponses(
             value = {
@@ -88,5 +84,9 @@ public class WahlvorstandController {
     public ResponseEntity<?> postWahlvorstand(@RequestBody WahlvorstandDTO wahlvorstandBody) {
         wahlvorstandService.postWahlvorstand(wahlvorstandDTOMapper.toModel(wahlvorstandBody));
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private <T> ResponseEntity<T> okWithBodyOrNoContent(final Optional<T> optionalBody) {
+        return optionalBody.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
     }
 }

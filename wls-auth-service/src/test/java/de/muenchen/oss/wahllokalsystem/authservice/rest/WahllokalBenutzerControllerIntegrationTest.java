@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.authservice.TestConstants;
+import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.Authority;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.AuthorityRepository;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.PermissionRepository;
@@ -35,7 +36,7 @@ import org.springframework.transaction.support.TransactionTemplate;
         properties = { "service.config.crypto.key=secret", "service.config.user.authority.wahlvorstand=" + PROP_USER_AUTHORITY_WAHLVORSTAND }
 )
 @AutoConfigureMockMvc
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, TestConstants.SPRING_NO_SECURITY_PROFILE })
+@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, TestConstants.SPRING_NO_SECURITY_PROFILE, Profiles.DUMMY_CLIENTS })
 class WahllokalBenutzerControllerIntegrationTest {
 
     public static final String PROP_USER_AUTHORITY_WAHLVORSTAND = "WLS_USER_AUTHORITY_WAHLVORSTAND";

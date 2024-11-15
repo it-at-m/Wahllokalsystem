@@ -99,6 +99,10 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-ldap</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-client</artifactId>
         </dependency>
@@ -109,6 +113,16 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-jose</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-ldap</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.unboundid</groupId>
+            <artifactId>unboundid-ldapsdk</artifactId>
+            <version>6.0.11</version>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- json etc. -->
@@ -292,6 +306,10 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-ldap</artifactId>
+        </dependency>
 
     </dependencies>
 
@@ -364,7 +382,7 @@
                         </goals>
                         <configuration>
                             <environmentVariables>
-                                <SPRING_PROFILES_ACTIVE>db-h2</SPRING_PROFILES_ACTIVE>
+                                <SPRING_PROFILES_ACTIVE>db-h2,dummy.clients</SPRING_PROFILES_ACTIVE>
                                 <SERVICEAUTH.CRYPTO.KEY>secret</SERVICEAUTH.CRYPTO.KEY>
                             </environmentVariables>
                         </configuration>

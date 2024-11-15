@@ -11,7 +11,6 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.WahlvorstandRepository;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.FarbeModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlartModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlvorstandModelMapper;
@@ -105,15 +104,9 @@ public class WahlvorstandControllerIntegrationTest {
         }
 
         private List<WahlModel> createWahlModels() {
-            WahlModel wahl1 = new WahlModel("wahlid1", "wahl1", 1L,
-                    1L, LocalDate.now().plusMonths(1),
-                    WahlartModel.BAW, new FarbeModel(1, 1, 1), "0");
-            WahlModel wahl2 = new WahlModel("wahlid2", "wahl2", 2L,
-                    2L, LocalDate.now().plusMonths(2),
-                    WahlartModel.LTW, new FarbeModel(2, 2, 2), "1");
-            WahlModel wahl3 = new WahlModel("wahlid3", "wahl3", 3L,
-                    3L, LocalDate.now().plusMonths(3),
-                    WahlartModel.LTW, new FarbeModel(3, 3, 3), "2");
+            WahlModel wahl1 = new WahlModel(1L, WahlartModel.BAW);
+            WahlModel wahl2 = new WahlModel(2L, WahlartModel.LTW);
+            WahlModel wahl3 = new WahlModel(3L, WahlartModel.LTW);
             List<WahlModel> lw = new ArrayList<>();
             lw.add(wahl1);
             lw.add(wahl2);

@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.authservice.domain;
 
 import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.authservice.TestConstants;
+import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
 import jakarta.persistence.EntityManager;
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.support.TransactionTemplate;
 
 @SpringBootTest(classes = MicroServiceApplication.class, properties = { "serviceauth.crypto.key=secret" })
-@ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
+@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS })
 class UserRepositoryImplIntegrationTest {
 
     private static final String USERNAME_UNENCRYPTED = "username";

@@ -69,6 +69,12 @@ service:
         basepath: http://localhost:39146
         configkey:
           welcomeMessage: WILLKOMMENSTEXT
+    ldap:
+      userDn:
+      userDnPassword:
+      contextSource:
+      userSearchBase: ou=people
+      userSearchFilter: uid={0}
     welcomemessage:
       default: "Willkommen zur Wahl!"
     user:

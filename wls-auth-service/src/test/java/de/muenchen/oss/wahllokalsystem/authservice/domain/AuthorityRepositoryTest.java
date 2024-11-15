@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.authservice.domain;
 
 import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.authservice.TestConstants;
+import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
 import java.util.Collections;
 import java.util.UUID;
 import lombok.val;
@@ -15,7 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
+@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS })
 class AuthorityRepositoryTest {
 
     @Autowired

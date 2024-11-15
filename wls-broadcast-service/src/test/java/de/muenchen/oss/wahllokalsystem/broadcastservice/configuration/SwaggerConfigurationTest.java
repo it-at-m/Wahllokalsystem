@@ -1,9 +1,9 @@
-package de.muenchen.oss.wahllokalsystem.authservice.configuration;
+package de.muenchen.oss.wahllokalsystem.broadcastservice.configuration;
 
-import static de.muenchen.oss.wahllokalsystem.authservice.TestConstants.SPRING_TEST_PROFILE;
+import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_TEST_PROFILE;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.broadcastservice.MicroServiceApplication;
 import lombok.Data;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureObservability
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS })
+@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
 class SwaggerConfigurationTest {
 
     @Autowired
@@ -34,7 +34,7 @@ class SwaggerConfigurationTest {
     String version;
 
     @Test
-    void versionIsSetInDoc() throws Exception {
+    void should_returnVersion_when_setInApiDoc() throws Exception {
         val request = MockMvcRequestBuilders.get("/v3/api-docs/public-apis").contentType(MediaType.APPLICATION_JSON);
 
         val response = mockMvc.perform(request).andReturn();
@@ -55,5 +55,4 @@ class SwaggerConfigurationTest {
             private String version;
         }
     }
-
 }

@@ -3,15 +3,16 @@ package de.muenchen.oss.wahllokalsystem.broadcastservice.domain;
 import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_TEST_PROFILE;
 
-import java.time.LocalDateTime;
-import org.assertj.core.api.Assertions;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,83 +34,89 @@ class MessageRepositoryTest {
     /**
      * Tests if searched saved Message from many is the first found
      */
-    @Test
-    @Transactional(propagation = Propagation.REQUIRED, noRollbackFor = Exception.class)
-    void findFirstByWahlbezirkIDOrderByEmpfangsZeit_FirstMessageIsFound() {
+    @Nested
+    class FindFirstByWahlbezirkIDOrderByEmpfangsZeit {
 
-        List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
-        String searchedWahlbezirkID = "3";
+        @Test
+        @Transactional(propagation = Propagation.REQUIRED, noRollbackFor = Exception.class)
+        void should_returnFirstMessageOfAllFoundMessages_when_givenValidWahlbezirkId() {
 
-        BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_1");
-        BroadcastMessageDTO m2 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_2");
-        BroadcastMessageDTO m3 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_3");
-        BroadcastMessageDTO m4 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_4");
-        BroadcastMessageDTO m5 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_5");
+            List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
+            String searchedWahlbezirkID = "3";
 
-        List<Message> messagesToSend1 = mapForTestsFromBroadcastMessageDTO_toListOfMessages(m1, LocalDateTime.now());
-        List<Message> messagesToSend2 = mapForTestsFromBroadcastMessageDTO_toListOfMessages(m2, LocalDateTime.now());
-        List<Message> messagesToSend3 = mapForTestsFromBroadcastMessageDTO_toListOfMessages(m3, LocalDateTime.now());
-        List<Message> messagesToSend4 = mapForTestsFromBroadcastMessageDTO_toListOfMessages(m4, LocalDateTime.now());
-        List<Message> messagesToSend5 = mapForTestsFromBroadcastMessageDTO_toListOfMessages(m5, LocalDateTime.now());
+            BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_1");
+            BroadcastMessageDTO m2 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_2");
+            BroadcastMessageDTO m3 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_3");
+            BroadcastMessageDTO m4 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_4");
+            BroadcastMessageDTO m5 = new BroadcastMessageDTO(wahlbezirke, "Ich bin Nachricht_5");
 
-        repository.saveAll(messagesToSend1);
-        repository.saveAll(messagesToSend2);
-        repository.saveAll(messagesToSend3);
-        repository.saveAll(messagesToSend4);
-        repository.saveAll(messagesToSend5);
+            List<Message> messagesToSend1 = mapForTestsFromBroadcastMessageDTO_toListOfMessages(m1, LocalDateTime.now());
+            List<Message> messagesToSend2 = mapForTestsFromBroadcastMessageDTO_toListOfMessages(m2, LocalDateTime.now());
+            List<Message> messagesToSend3 = mapForTestsFromBroadcastMessageDTO_toListOfMessages(m3, LocalDateTime.now());
+            List<Message> messagesToSend4 = mapForTestsFromBroadcastMessageDTO_toListOfMessages(m4, LocalDateTime.now());
+            List<Message> messagesToSend5 = mapForTestsFromBroadcastMessageDTO_toListOfMessages(m5, LocalDateTime.now());
 
-        //Expected -sent Message
-        List<Message> allMessages = (List<Message>) repository.findAll();
-        allMessages.sort(
-                Comparator
-                        .comparing((Message m) -> m.getEmpfangsZeit().toLocalDate())
-                        .reversed()
-                        .thenComparing((Message m) -> m.getEmpfangsZeit().toLocalTime()));
+            repository.saveAll(messagesToSend1);
+            repository.saveAll(messagesToSend2);
+            repository.saveAll(messagesToSend3);
+            repository.saveAll(messagesToSend4);
+            repository.saveAll(messagesToSend5);
 
-        Message sentMessage = allMessages.stream()
-                .filter(mes -> mes.getWahlbezirkID().equals(searchedWahlbezirkID))
-                .findFirst()
-                .get();
+            //Expected -sent Message
+            List<Message> allMessages = (List<Message>) repository.findAll();
+            allMessages.sort(
+                    Comparator
+                            .comparing((Message m) -> m.getEmpfangsZeit().toLocalDate())
+                            .reversed()
+                            .thenComparing((Message m) -> m.getEmpfangsZeit().toLocalTime()));
 
-        //Actual - Found
-        Optional<Message> optionalFoundMessage = repository.findFirstByWahlbezirkIDOrderByEmpfangsZeit(searchedWahlbezirkID);
-        Assertions.assertThat(optionalFoundMessage.get()).isEqualTo(sentMessage);
+            Message sentMessage = allMessages.stream()
+                    .filter(mes -> mes.getWahlbezirkID().equals(searchedWahlbezirkID))
+                    .findFirst()
+                    .get();
+
+            //Actual - Found
+            Optional<Message> optionalFoundMessage = repository.findFirstByWahlbezirkIDOrderByEmpfangsZeit(searchedWahlbezirkID);
+            Assertions.assertThat(optionalFoundMessage).contains(sentMessage);
+        }
+
+        private List<Message> mapForTestsFromBroadcastMessageDTO_toListOfMessages(BroadcastMessageDTO messageToBroadcast, LocalDateTime now) {
+            return messageToBroadcast.wahlbezirkIDs().stream().map(wahlbezirkId -> {
+                Message message = new Message();
+                message.setWahlbezirkID(wahlbezirkId);
+                message.setEmpfangsZeit(now);
+                message.setNachricht(messageToBroadcast.nachricht());
+                return message;
+            }).toList();
+        }
     }
 
-    @Test
-    @Transactional(propagation = Propagation.REQUIRED, noRollbackFor = Exception.class)
-    void testDeleteById() {
+    @Nested
+    class DeleteById {
 
-        String originalNachricht = "Test Nachricht";
-        // initialize
-        Message original = new Message();
-        original.setNachricht(originalNachricht);
+        @Test
+        @Transactional(propagation = Propagation.REQUIRED, noRollbackFor = Exception.class)
+        void should_returnNull_when_broadcastMessageWithUUIDDeleted() {
 
-        // persist
-        original = repository.save(original);
-        // check
-        Message persisted = repository.findById(original.getOid()).orElse(null);
+            String originalNachricht = "Test Nachricht";
+            // initialize
+            Message original = new Message();
+            original.setNachricht(originalNachricht);
 
-        Assertions.assertThat(persisted).isNotNull();
-        Assertions.assertThat(persisted).isEqualTo(original);
+            // persist
+            original = repository.save(original);
+            // check
+            Message persisted = repository.findById(original.getOid()).orElse(null);
 
-        repository.deleteById(original.getOid());
+            Assertions.assertThat(persisted).isNotNull().isEqualTo(original);
 
-        Message foundMessage;
+            repository.deleteById(original.getOid());
 
-        foundMessage = repository.findById(original.getOid()).orElse(null);
+            Message foundMessage;
 
-        Assertions.assertThat(foundMessage).isNull();
+            foundMessage = repository.findById(original.getOid()).orElse(null);
+
+            Assertions.assertThat(foundMessage).isNull();
+        }
     }
-
-    private List<Message> mapForTestsFromBroadcastMessageDTO_toListOfMessages(BroadcastMessageDTO messageToBroadcast, LocalDateTime now) {
-        return messageToBroadcast.wahlbezirkIDs().stream().map(wahlbezirkId -> {
-            Message message = new Message();
-            message.setWahlbezirkID(wahlbezirkId);
-            message.setEmpfangsZeit(now);
-            message.setNachricht(messageToBroadcast.nachricht());
-            return message;
-        }).toList();
-    }
-
 }

@@ -98,17 +98,6 @@ public class WahlvorstandControllerIntegrationTest {
             val expectedResponseDTO = wahlvorstandDTOMapper.toDTO(mockedWahlvorstandModel);
             Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseDTO);
         }
-
-        private List<WahlModel> createWahlModels() {
-            WahlModel wahl1 = new WahlModel(1L, WahlartModel.BAW);
-            WahlModel wahl2 = new WahlModel(2L, WahlartModel.LTW);
-            WahlModel wahl3 = new WahlModel(3L, WahlartModel.LTW);
-            List<WahlModel> lw = new ArrayList<>();
-            lw.add(wahl1);
-            lw.add(wahl2);
-            lw.add(wahl3);
-            return lw;
-        }
     }
 
     @Nested

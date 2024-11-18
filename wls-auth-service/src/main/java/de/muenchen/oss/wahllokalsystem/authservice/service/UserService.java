@@ -160,6 +160,11 @@ public class UserService {
         return usersToCSVString(persistedUsers);
     }
 
+    public Optional<UserModel> getUser(String name) {
+        val user = userRepository.findByUsername(name);
+        return user.map(userModelMapper::toModel);
+    }
+
     private String generatePin() {
         val pinBuilder = new StringBuilder();
         for (int i = 0; i < anzahlPinBloecke; i++) {

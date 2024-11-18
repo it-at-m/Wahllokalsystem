@@ -8,10 +8,10 @@ import java.util.UUID;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
-class MessageTest {
+class MessageValidationTest {
 
     @Nested
     class ValidationTest {
@@ -20,7 +20,7 @@ class MessageTest {
         private final Validator validator = factory.getValidator();
 
         @Test
-        void allRequiredFieldsAreSet() {
+        void should_succeedValidation_when_allRequiredFieldsAreSet() {
             val message = createMessageWithAllRequiredData();
 
             val validationResult = validator.validate(message);
@@ -29,7 +29,7 @@ class MessageTest {
         }
 
         @Test
-        void failurOnWahlbezirkIdIsMissing() {
+        void should_failValidation_when_wahlbezirkIdMissing() {
             val message = createMessageWithAllRequiredData();
             message.setWahlbezirkID(null);
 
@@ -39,7 +39,7 @@ class MessageTest {
         }
 
         @Test
-        void failurOnWahlbezirkIdIsMoreThan1024Chars() {
+        void should_failValidation_when_wahlbezirkIdLargerThan1024Chars() {
             val message = createMessageWithAllRequiredData();
             String myString = " ".repeat(1025);
             message.setWahlbezirkID(myString);
@@ -50,7 +50,7 @@ class MessageTest {
         }
 
         @Test
-        void failurOnNachrichtIsNull() {
+        void should_failValidation_when_messageIsNull() {
             val message = createMessageWithAllRequiredData();
             message.setNachricht(null);
 
@@ -60,7 +60,7 @@ class MessageTest {
         }
 
         @Test
-        void failurOnNachrichtIsMoreThan1024Chars() {
+        void should_failValidation_when_messageLargerThan1024Chars() {
             val message = createMessageWithAllRequiredData();
             String myString = " ".repeat(1025);
             message.setNachricht(myString);
@@ -71,7 +71,7 @@ class MessageTest {
         }
 
         @Test
-        void failurOnEmpfangszeitIsNull() {
+        void should_failValidation_when_messageEmpfangsZeitIsNull() {
             val message = createMessageWithAllRequiredData();
             message.setEmpfangsZeit(null);
 
@@ -81,7 +81,7 @@ class MessageTest {
         }
 
         @Test
-        void successOn1024CharsOnWahlbezirkId() {
+        void should_succeedValidation_when_wahlbezirkIdHas1024Chars() {
             val message = createMessageWithAllRequiredData();
             message.setWahlbezirkID(StringUtils.left("", 1024));
 
@@ -91,7 +91,7 @@ class MessageTest {
         }
 
         @Test
-        void successOn1024CharsOnNachricht() {
+        void should_succeedValidation_when_messageHas1024Chars() {
             val message = createMessageWithAllRequiredData();
             message.setNachricht(StringUtils.left("", 1024));
 

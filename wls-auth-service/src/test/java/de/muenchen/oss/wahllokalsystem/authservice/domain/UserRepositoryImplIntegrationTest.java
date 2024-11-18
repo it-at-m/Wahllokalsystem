@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.authservice.domain;
 
 import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.authservice.TestConstants;
+import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
 import jakarta.persistence.EntityManager;
 import java.util.Collections;
 import java.util.List;
@@ -14,11 +15,12 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.support.TransactionTemplate;
 
 @SpringBootTest(classes = MicroServiceApplication.class, properties = { "serviceauth.crypto.key=secret" })
-@ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
+@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS })
 class UserRepositoryImplIntegrationTest {
 
     private static final String USERNAME_UNENCRYPTED = "username";
@@ -129,6 +131,19 @@ class UserRepositoryImplIntegrationTest {
 
             Assertions.assertThat(savedUser.getUsername()).isEqualTo(USERNAME_UNENCRYPTED);
         }
+
+        @Test
+        void should_throwException_when_userWithUsernameAlreadyExists() {
+            val userToSave = new User();
+            userToSave.setUsername(USERNAME_UNENCRYPTED);
+
+            transactionTemplate.execute(status -> userRepository.save(userToSave));
+
+            val userToSaveWithSameUsername = new User();
+            userToSaveWithSameUsername.setUsername(USERNAME_UNENCRYPTED);
+            Assertions.assertThatException().isThrownBy(() -> transactionTemplate.execute(status -> userRepository.save(userToSaveWithSameUsername)))
+                    .isInstanceOf(DataIntegrityViolationException.class);
+        }
     }
 
     @Nested
@@ -156,6 +171,19 @@ class UserRepositoryImplIntegrationTest {
             val savedUser = transactionTemplate.execute(status -> userRepository.saveAll(List.of(userToSave)));
 
             Assertions.assertThat(savedUser).allSatisfy(user -> Assertions.assertThat(user.getUsername()).isEqualTo(USERNAME_UNENCRYPTED));
+        }
+
+        @Test
+        void should_throwException_when_multipleUsersHaveSameName() {
+            val user1 = new User();
+            user1.setUsername(USERNAME_UNENCRYPTED);
+            val user2 = new User();
+            user2.setUsername(USERNAME_UNENCRYPTED);
+
+            val userToSaveWithSameUsername = new User();
+            userToSaveWithSameUsername.setUsername(USERNAME_UNENCRYPTED);
+            Assertions.assertThatException().isThrownBy(() -> transactionTemplate.execute(status -> userRepository.saveAll(List.of(user1, user2))))
+                    .isInstanceOf(DataIntegrityViolationException.class);
         }
     }
 
@@ -216,6 +244,42 @@ class UserRepositoryImplIntegrationTest {
             Assertions.assertThat(savedUsers).allSatisfy(user -> Assertions.assertThat(crudUserRepository.existsById(user.getId())).isFalse());
             Assertions.assertThat(authorityRepository.count()).isEqualTo(1);
             Assertions.assertThat(permissionRepository.count()).isEqualTo(3);
+        }
+    }
+
+    @Nested
+    class OnSchedule {
+
+        @Test
+        void should_encryptExistingUsers_when_usersExists() {
+            val wahltagID = "wahltagID";
+            val userToEncrypt = createUser(USERNAME_UNENCRYPTED, wahltagID);
+
+            val savedSavedUnencryptedUser = transactionTemplate.execute(status -> crudUserRepository.save(userToEncrypt));
+
+            transactionTemplate.executeWithoutResult(status -> userRepository.onSchedule());
+
+            val userAfterEncryption = crudUserRepository.findById(savedSavedUnencryptedUser.getId()).get();
+
+            Assertions.assertThat(userAfterEncryption.getUsername()).isEqualTo(USERNAME_ENCRYPTED);
+        }
+    }
+
+    @Nested
+    class OnInit {
+
+        @Test
+        void should_encryptExistingUsers_when_usersExists() {
+            val wahltagID = "wahltagID";
+            val userToEncrypt = createUser(USERNAME_UNENCRYPTED, wahltagID);
+
+            val savedSavedUnencryptedUser = transactionTemplate.execute(status -> crudUserRepository.save(userToEncrypt));
+
+            transactionTemplate.executeWithoutResult(status -> userRepository.onInit());
+
+            val userAfterEncryption = crudUserRepository.findById(savedSavedUnencryptedUser.getId()).get();
+
+            Assertions.assertThat(userAfterEncryption.getUsername()).isEqualTo(USERNAME_ENCRYPTED);
         }
     }
 

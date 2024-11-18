@@ -36,7 +36,7 @@ public class BroadcastService {
             throw exceptionFactory.createFachlicheWlsException(BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG);
         }
 
-        List<Message> messagesToSave = broadcastMapper.fromBroadcastMessageDTOtoListOfMessages(messageToBroadcast, LocalDateTime.now());
+        List<Message> messagesToSave = broadcastMapper.toListOfMessageEntity(messageToBroadcast, LocalDateTime.now());
 
         messageRepo.saveAll(messagesToSave);
     }

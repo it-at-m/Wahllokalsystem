@@ -19,7 +19,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.val;
-import org.hibernate.annotations.NaturalId;
 
 @Entity
 @Table(name = "Wlsuser") //user as table name is already in use by h2
@@ -39,7 +38,6 @@ public class User extends BaseEntity {
         return copy;
     }
 
-    @NaturalId
     @NotNull
     @Size(min = 1)
     @ToString.Include

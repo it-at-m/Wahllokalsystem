@@ -3,8 +3,11 @@ package de.muenchen.oss.wahllokalsystem.authservice.service;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.Authority;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.User;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Mapper
 public interface UserModelMapper {
@@ -26,4 +29,19 @@ public interface UserModelMapper {
     @Mapping(target = "wahlbezirkNummer", source = "wahllokalUserInfoModel.wahlbezirknummer")
     @Mapping(target = "wahlbezirksArt", source = "wahllokalUserInfoModel.wahlbezirksart")
     User toUser(String wahltagID, WahllokalUserInfoModel wahllokalUserInfoModel, Set<Authority> authorities, String pin, String username);
+
+    default org.springframework.security.core.userdetails.User toStringSecurityUser(User user) {
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(),
+                true,
+                true,
+                true,
+                user.isAccountNonLocked(),
+                authoritiesToGrantedAuthorities(user.getAuthorities()));
+    }
+
+    default Set<GrantedAuthority> authoritiesToGrantedAuthorities(final Set<Authority> authorities) {
+        return authorities.stream().map(authority -> new SimpleGrantedAuthority(authority.getAuthority())).collect(Collectors.toSet());
+    }
 }

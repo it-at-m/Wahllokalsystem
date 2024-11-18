@@ -32,7 +32,7 @@ public class DummyClientImpl implements WahlvorstandEaiClient, WahlenClient, Kon
 
     @Override
     public void postWahlvorstand(WahlvorstandModel wahlvorstand) {
-        log.info(wahlvorstand.toString());
+        log.info("Dummy client postWahlvorstand() called instead of EAI with: {}", wahlvorstand);
     }
 
     @Override

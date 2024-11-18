@@ -36,11 +36,6 @@ Authorization: {{ token_type }} {{ auth_token }}
 GET {{ WLS_WAHLVORSTAND_SERVICE_URL }}/businessActions/wahlvorstand/wahlbezirkID1
 Authorization: {{ token_type }} {{ auth_token }}
 
-### GET wahlvorstand forceUpdate=true - working with dummy.client
-GET {{ WLS_WAHLVORSTAND_SERVICE_URL }}/businessActions/wahlvorstand/wahlbezirkID1
-Authorization: {{ token_type }} {{ auth_token }}
-ForceUpdate: true
-
 ### POST wahlvorstand
 POST {{ WLS_WAHLVORSTAND_SERVICE_URL }}/businessActions/wahlvorstand/wahlbezirkID
 Authorization: {{ token_type }} {{ auth_token }}
@@ -72,3 +67,8 @@ Content-Type: application/json
 ### GET wahlvorstand - working with dummy.client
 GET {{ WLS_WAHLVORSTAND_SERVICE_URL }}/businessActions/wahlvorstand/wahlbezirkID
 Authorization: {{ token_type }} {{ auth_token }}
+
+### GET wahlvorstand forceUpdate=true - working with dummy.client
+GET {{ WLS_WAHLVORSTAND_SERVICE_URL }}/businessActions/wahlvorstand/wahlbezirkID
+Authorization: {{ token_type }} {{ auth_token }}
+ForceUpdate: true

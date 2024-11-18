@@ -2,12 +2,17 @@ package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand;
 
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlvorstandService;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.utils.TestDataFactory;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -29,10 +34,11 @@ public class WahlvorstandControllerTest {
     @Nested
     class GetWahlvorstand {
 
-        @Test
-        void should_returnWahlvorstandDTO_when_givenValidWahlbezirkIdAndForceUpdateIsFalse() {
+        @ParameterizedTest(name = "{index} - forceUpdate is {0}")
+        @MethodSource("getForceUpdateHeaderVariations")
+        void should_returnWahlvorstandDTO_when_givenValidWahlbezirkIdAndForceUpdateIsFalseorNull(final ArgumentsAccessor argumentsAccessor) {
             val wahlbezirkID = "wahlbezirkID";
-            val forceUpdate = false;
+            val forceUpdate = argumentsAccessor.get(0, Boolean.class);
             val mockedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.withData();
             val expectedWahlvorstandDto = TestDataFactory.CreateWahlvorstandDto.fromModel(mockedWahlvorstandModel);
 
@@ -73,6 +79,10 @@ public class WahlvorstandControllerTest {
             val result = unitUnderTest.getWahlvorstand(forceUpdate, wahlbezirkID);
             Assertions.assertThat(result.getBody()).isEqualTo(expectedWahlvorstandDto);
             Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        }
+
+        private static List<Boolean> getForceUpdateHeaderVariations() {
+            return Arrays.asList(false, null);
         }
     }
 

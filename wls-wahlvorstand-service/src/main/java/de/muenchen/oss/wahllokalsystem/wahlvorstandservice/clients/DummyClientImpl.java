@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 public class DummyClientImpl implements WahlvorstandEaiClient, WahlenClient, KonfigurierterWahltagClient {
     @Override
     public WahlvorstandModel getWahlvorstand(String wahlbezirkID, LocalDate wahltag) {
-        return new WahlvorstandModel("wahlbezirkID", LocalDateTime.now(), List.of(
+        return new WahlvorstandModel(wahlbezirkID, LocalDateTime.now(), List.of(
                 new WahlvorstandsmitgliedModel("id1", "müller", "max", FunktionModel.B, "Beisitzer*in", true),
                 new WahlvorstandsmitgliedModel("id2", "meier", "max", FunktionModel.W, "Wahlvorsteher*in", true),
                 new WahlvorstandsmitgliedModel("id3", "mustermann", "max", FunktionModel.SWB, "Stellvertretung Wahlvorsteher*in", true)));

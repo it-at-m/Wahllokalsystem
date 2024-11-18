@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.clients.aoueai.WahlvorstandClientMapper;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.WahlvorstandRepository;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlvorstandModelMapper;
@@ -50,6 +51,9 @@ public class WahlvorstandControllerIntegrationTest {
 
     @Autowired
     WahlvorstandDTOMapper wahlvorstandDTOMapper;
+
+    @Autowired
+    WahlvorstandClientMapper wahlvorstandClientMapper;
 
     @Autowired
     WahlvorstandModelMapper wahlvorstandModelMapper;
@@ -96,6 +100,35 @@ public class WahlvorstandControllerIntegrationTest {
             val responseBodyAsDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WahlvorstandDTO.class);
 
             val expectedResponseDTO = wahlvorstandDTOMapper.toDTO(mockedWahlvorstandModel);
+            Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseDTO);
+        }
+
+        @Test
+        void should_updateWahlvorstand_when_forceUpdateParamIsTrue() throws Exception {
+            val wahlbezirkID = "wahlbezirkID";
+            val infomanagementKonfigurierterWahltag = TestDataFactory.CreateFromClient.konfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
+            WireMock.stubFor(WireMock.get("/businessActions/konfigurierterWahltag")
+                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
+                            .withBody(objectMapper.writeValueAsBytes(infomanagementKonfigurierterWahltag))));
+            var searchingForWahltag = infomanagementKonfigurierterWahltag.getWahltag();
+            val eaiWahlen = TestDataFactory.CreateFromClient.wahlModelList();
+            WireMock.stubFor(WireMock.get("/wahldaten/wahlen?forDate=" + searchingForWahltag + "&withNummer=nummerWahltag")
+                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
+                            .withStatus(HttpStatus.OK.value())
+                            .withBody(objectMapper.writeValueAsBytes(eaiWahlen))));
+            val eaiWahlvorstandDto = TestDataFactory.CreateFromClient.wahlvorstandDto(wahlbezirkID);
+            WireMock.stubFor(WireMock.get("/wahlvorstaende?wahlbezirkID=" + wahlbezirkID)
+                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
+                            .withBody(objectMapper.writeValueAsBytes(eaiWahlvorstandDto))));
+
+            val request = MockMvcRequestBuilders
+                    .get("/businessActions/wahlvorstand/" + wahlbezirkID)
+                    .header("forceUpdate", true);
+            val response = api.perform(request).andExpect(status().isOk()).andReturn();
+            val responseBodyAsDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WahlvorstandDTO.class);
+
+            val expectedResponseDTO = wahlvorstandDTOMapper.toDTO(wahlvorstandClientMapper.toModel(eaiWahlvorstandDto));
             Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseDTO);
         }
     }

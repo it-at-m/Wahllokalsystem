@@ -132,13 +132,7 @@ public class TestDataFactory {
         }
 
         public static KonfigurierterWahltagDTO konfigurierterWahltagDTO(LocalDate forDate, KonfigurierterWahltagDTO.WahltagStatusEnum status) {
-            KonfigurierterWahltagDTO konfigurierterWahltagDTO = new KonfigurierterWahltagDTO();
-            konfigurierterWahltagDTO.setWahltag(forDate);
-            konfigurierterWahltagDTO.setWahltagID("wahltagID1");
-            konfigurierterWahltagDTO.setWahltagStatus(status);
-            konfigurierterWahltagDTO.setNummer("nummerWahltag");
-
-            return konfigurierterWahltagDTO;
+            return new KonfigurierterWahltagDTO().wahltag(forDate).wahltagID("wahltagID1").wahltagStatus(status).nummer("nummerWahltag");
         }
 
         public static WahlvorstandModel wahlvorstandModel(String wahlbezirkID) {
@@ -150,6 +144,13 @@ public class TestDataFactory {
 
         public static WahlvorstandModel wahlvorstandModelWithCustomMembers(String wahlbezirkID, List<WahlvorstandsmitgliedModel> mitglieder) {
             return new WahlvorstandModel(wahlbezirkID, LocalDateTime.now().withNano(0), mitglieder);
+        }
+
+        public static de.muenchen.oss.wahllokalsystem.wahlvorstandservice.eai.aou.model.WahlvorstandDTO wahlvorstandDto(String wahlbezirkID) {
+            return new de.muenchen.oss.wahllokalsystem.wahlvorstandservice.eai.aou.model.WahlvorstandDTO()
+                    .wahlbezirkID(wahlbezirkID)
+                    .addMitgliederItem(new de.muenchen.oss.wahllokalsystem.wahlvorstandservice.eai.aou.model.WahlvorstandsmitgliedDTO()
+                            .funktion(de.muenchen.oss.wahllokalsystem.wahlvorstandservice.eai.aou.model.WahlvorstandsmitgliedDTO.FunktionEnum.SB));
         }
 
         public static List<WahlModel> wahlModelList() {

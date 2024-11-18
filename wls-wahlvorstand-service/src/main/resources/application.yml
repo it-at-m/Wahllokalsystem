@@ -6,6 +6,7 @@ spring:
       local:
         - db-h2
         - dummy.clients
+        - dummy.nobezirkid.check
     include: funktionsnamen
   flyway:
     locations:

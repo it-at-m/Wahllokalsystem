@@ -4,6 +4,7 @@
  */
 package de.muenchen.oss.wahllokalsystem.authservice.configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -20,6 +23,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Profile("no-security")
 @EnableWebSecurity
 public class NoSecurityConfiguration {
+
+//    @Autowired
+//    private SessionRegistry sessionRegistry;
 
     @Bean
     WebSecurityCustomizer ignoringCustomizer() {
@@ -37,9 +43,15 @@ public class NoSecurityConfiguration {
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .anyRequest()
                         .permitAll())
-                .csrf(AbstractHttpConfigurer::disable);
+                .csrf(AbstractHttpConfigurer::disable)
+                //.sessionManagement()
+                //.sessionFixation().migrateSession().maximumSessions(1)
+                //.sessionRegistry(sessionRegistry);
+                ;
         // @formatter:on
         return http.build();
     }
+
+
 
 }

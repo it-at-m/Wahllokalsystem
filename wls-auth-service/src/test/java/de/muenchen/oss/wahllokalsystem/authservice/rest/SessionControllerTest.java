@@ -41,7 +41,7 @@ import org.springframework.util.MultiValueMap;
             "spring.datasource.url=jdbc:h2:mem:wls-auth-service;DB_CLOSE_ON_EXIT=FALSE",
             "refarch.gracefulshutdown.pre-wait-seconds=0"
         })
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
+@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SessionControllerTest {
 
@@ -106,6 +106,12 @@ class SessionControllerTest {
         Assertions.assertThat(result)
                 .isNotEmpty();
         assertEquals(1, getSessionIdsFromDatabase().size());
+//        val sessionsResult = this.testRestTemplate.getForObject(
+//                "http://localhost:" + port + "/oauthsessions/", List.class);
+//
+////        Assertions.assertThat(sessionsResult)
+////                .isNotEmpty();
+
     }
 
     @Test

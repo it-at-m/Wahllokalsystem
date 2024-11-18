@@ -4,8 +4,10 @@ import java.util.EnumMap;
 import java.util.Map;
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 @Getter
+@Component
 @ConfigurationProperties
 public class FunktionsnamenMappingProperties {
 

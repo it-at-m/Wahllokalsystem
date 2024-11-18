@@ -61,7 +61,7 @@ public class WahlvorstandServiceTest {
         }
 
         @Test
-        void should_returnNull_when_noDataFound() {
+        void should_returnEmptyOptional_when_noDataFound() {
             val wahlbezirkID = "wahlbezirkID";
 
             Mockito.when(wahlvorstandRepository.findById(wahlbezirkID)).thenReturn(Optional.empty());

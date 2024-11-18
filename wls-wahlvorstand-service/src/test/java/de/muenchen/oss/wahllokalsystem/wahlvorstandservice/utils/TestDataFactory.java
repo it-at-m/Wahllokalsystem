@@ -9,6 +9,8 @@ import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand.Wah
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand.WahlvorstandsmitgliedDTO;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.FunktionModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.KonfigurierterWahltagModel;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlModel;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlartModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlvorstandModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlvorstandsmitgliedModel;
 import java.time.LocalDate;
@@ -114,20 +116,6 @@ public class TestDataFactory {
                     .toList();
             return new WahlvorstandDTO(model.wahlbezirkID(), model.anwesenheitBeginn(), wahlvorstandsmitgliedDtoList);
         }
-
-        public static WahlvorstandDTO fallback(String wahlbezirkID) {
-            WahlvorstandDTO fallbackWahlvorstand = WahlvorstandDTO.builder().wahlbezirkID(wahlbezirkID).wahlvorstandsmitglieder(new ArrayList<>()).build();
-            Arrays.stream(FunktionDTO.values()).forEach(funktion -> {
-                WahlvorstandsmitgliedDTO mitglied = WahlvorstandsmitgliedDTO.builder()
-                        .identifikator("FALLBACK_" + funktion + wahlbezirkID)
-                        .funktion(funktion)
-                        .familienname("______________")
-                        .vorname("______________")
-                        .build();
-                fallbackWahlvorstand.wahlvorstandsmitglieder().add(mitglied);
-            });
-            return fallbackWahlvorstand;
-        }
     }
 
     public static class CreateWahlvorstandsmitgliedDto {
@@ -162,6 +150,17 @@ public class TestDataFactory {
 
         public static WahlvorstandModel wahlvorstandModelWithCustomMembers(String wahlbezirkID, List<WahlvorstandsmitgliedModel> mitglieder) {
             return new WahlvorstandModel(wahlbezirkID, LocalDateTime.now().withNano(0), mitglieder);
+        }
+
+        public static List<WahlModel> wahlModelList() {
+            WahlModel wahl1 = new WahlModel(1L, WahlartModel.BAW);
+            WahlModel wahl2 = new WahlModel(2L, WahlartModel.LTW);
+            WahlModel wahl3 = new WahlModel(3L, WahlartModel.LTW);
+            List<WahlModel> lw = new ArrayList<>();
+            lw.add(wahl1);
+            lw.add(wahl2);
+            lw.add(wahl3);
+            return lw;
         }
     }
 

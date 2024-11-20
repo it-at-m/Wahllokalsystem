@@ -76,7 +76,7 @@ class SecurityConfigurationTest {
     }
 
     @Test
-    void should_returnStatusOk_when_accessingUnsecuredResourceV3ApiDocs () throws Exception {
+    void should_returnStatusOk_when_accessingUnsecuredResourceV3ApiDocs() throws Exception {
         api.perform(get("/v3/api-docs"))
                 .andExpect(status().isOk());
     }

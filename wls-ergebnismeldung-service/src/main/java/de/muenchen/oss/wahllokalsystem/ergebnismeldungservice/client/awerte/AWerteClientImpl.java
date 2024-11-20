@@ -1,0 +1,43 @@
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.awerte;
+
+import de.muenchen.oss.wahllokalsystem.ergebnismeldung.eai.aou.client.WahldatenControllerApi;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldung.eai.aou.model.WahlberechtigteDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration.Profiles;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteClient;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteModel;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
+
+@Component
+@Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
+@RequiredArgsConstructor
+@Slf4j
+public class AWerteClientImpl implements AWerteClient {
+
+    private final ExceptionFactory exceptionFactory;
+
+    private final WahldatenControllerApi wahldatenControllerApi;
+
+    private final AWerteClientMapper aWerteClientMapper;
+
+    @Override
+    public List<AWerteModel> getAWerte(final String wahlbezirkID) {
+        final List<WahlberechtigteDTO> wahlberechtigteDTOSet;
+        try {
+            wahlberechtigteDTOSet = wahldatenControllerApi.loadWahlberechtigte(wahlbezirkID);
+        } catch (final Exception exception) {
+            log.info("exception on getAWerte from external", exception);
+            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
+        }
+        if (wahlberechtigteDTOSet == null) {
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.NULL_FROM_CLIENT);
+        }
+
+        return aWerteClientMapper.fromRemoteClientSetOfWahlberechtigteDtoToListOfAWerteModel(wahlberechtigteDTOSet);
+    }
+}

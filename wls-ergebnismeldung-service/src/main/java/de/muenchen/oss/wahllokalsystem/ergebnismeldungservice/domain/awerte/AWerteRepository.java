@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.awerte;
 
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -17,6 +18,9 @@ public interface AWerteRepository extends CrudRepository<AWerte, BezirkUndWahlID
     @Cacheable(value = CACHE, key = "#p0")
     @PreAuthorize("hasAuthority('Ergebnismeldung_READ_AWerte')")
     Optional<AWerte> findById(BezirkUndWahlID bezirkUndWahlID);
+
+    @PreAuthorize("hasAuthority('Ergebnismeldung_READ_AWerte') OR hasAuthority('Admin_BUSINESSACTION_LoadWahltermindaten')")
+    List<AWerte> findByBezirkUndWahlID_WahlbezirkID(String wahlbezirkID);
 
     @Override
     @CachePut(value = CACHE, key = "#p0.bezirkUndWahlID")

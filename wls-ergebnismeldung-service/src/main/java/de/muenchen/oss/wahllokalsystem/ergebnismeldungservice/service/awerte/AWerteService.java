@@ -6,6 +6,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactor
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +24,7 @@ public class AWerteService {
 
     private final ExceptionFactory exceptionFactory;
 
+    @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetAWerte') OR hasAuthority('Admin_BUSINESSACTION_LoadWahltermindaten')")
     public List<AWerteModel> getAWerte(String wahlbezirkID) {
         log.info("#getAWerte for wahlbezirkID={}", wahlbezirkID);
 

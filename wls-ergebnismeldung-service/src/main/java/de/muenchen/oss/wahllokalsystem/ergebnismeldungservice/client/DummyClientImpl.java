@@ -18,9 +18,7 @@ public class DummyClientImpl
     public List<AWerteModel> getAWerte(final String wahlbezirkID) throws WlsException {
         if (wahlbezirkID.equals("wahlbezirkID")) {
             return List.of(
-                new AWerteModel(new BezirkUndWahlID("wahlID", "wahlbezirkID"), 25L, 26L),
-                new AWerteModel(new BezirkUndWahlID("wahlID", "wahlbezirkID"), 35L, 36L),
-                new AWerteModel(new BezirkUndWahlID("wahlID", "wahlbezirkID"), 45L, 46L));
+                new AWerteModel(new BezirkUndWahlID("wahlID", "wahlbezirkID"), 25L, 26L));
         } else {
             return List.of();
         }

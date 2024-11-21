@@ -81,8 +81,9 @@ class UserInfoAuthoritiesServiceTest {
 
             val authorities = unitUnderTest.loadAuthorities(jwt);
 
-            Assertions.assertThat(authorities).hasSize(claimAuthorityValues.size());
-            Assertions.assertThat(authorities).containsAll(expectedAuthorities);
+            Assertions.assertThat(authorities)
+                    .hasSize(claimAuthorityValues.size())
+                    .containsAll(expectedAuthorities);
         }
 
         @Test
@@ -111,8 +112,9 @@ class UserInfoAuthoritiesServiceTest {
 
             val authorities = unitUnderTest.loadAuthorities(jwt);
 
-            Assertions.assertThat(authorities).hasSize(claimAuthorityValues.length);
-            Assertions.assertThat(authorities).containsAll(expctedAuthorities);
+            Assertions.assertThat(authorities)
+                    .hasSize(claimAuthorityValues.length)
+                    .containsAll(expctedAuthorities);
         }
 
         @Test
@@ -206,8 +208,9 @@ class UserInfoAuthoritiesServiceTest {
 
             val authoritiesThatShouldComeFromCache = unitUnderTest.loadAuthorities(jwtForCachMethodCall);
 
-            Assertions.assertThat(authorities).hasSize(claimAuthorityValues.size());
-            Assertions.assertThat(authorities).containsAll(expectedAuthorities);
+            Assertions.assertThat(authorities)
+                    .hasSize(claimAuthorityValues.size())
+                    .containsAll(expectedAuthorities);
             Assertions.assertThat(authoritiesThatShouldComeFromCache).isSameAs(authorities);
 
             Mockito.verify(restTemplate, Mockito.times(1)).exchange(userInfoUri, HttpMethod.GET, expectedRequestEntity, Map.class);

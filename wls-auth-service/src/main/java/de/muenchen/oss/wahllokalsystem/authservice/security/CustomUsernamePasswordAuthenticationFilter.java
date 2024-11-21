@@ -44,19 +44,19 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
     private static final String ROLE_LOGIN_WLS_WAHLLOKAL = "WLS_WAHLVORSTAND";
 
     @Value("${service.config.oauth2.clients.wahllokalgui.id}")
-    private String wahllokalguiClientId;
+    String wahllokalguiClientId;
 
     @Value("${service.config.oauth2.clients.admingui.id}")
-    private String adminguiClientId;
+    String adminguiClientId;
 
     @Value("${service.config.maxLoginAttempts}")
-    private int maxLoginAttempts;
+    int maxLoginAttempts;
 
     @Value("${service.config.falscheLoginZeitstrafe}")
-    private int falscheLoginZeitstrafe;
+    int falscheLoginZeitstrafeInMinutes;
 
     @Value("${service.config.loginCheckMessage}")
-    private String loginCheckMessage;
+    String loginCheckMessage;
 
     private final UserService userService;
 
@@ -163,7 +163,7 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
     }
 
     private String getSperredauer(final LocalDateTime lastLoginAttempt) {
-        val endOfLoginBan = lastLoginAttempt.plusMinutes(falscheLoginZeitstrafe);
+        val endOfLoginBan = lastLoginAttempt.plusMinutes(falscheLoginZeitstrafeInMinutes);
         var now = LocalDateTime.now();
 
         long minutes = now.until(endOfLoginBan, ChronoUnit.MINUTES) % MINUTES_PER_HOUR;
@@ -191,7 +191,7 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
     }
 
     private boolean isPenaltyOver(LocalDateTime lastLoginAttempt) {
-        return lastLoginAttempt.plusMinutes(falscheLoginZeitstrafe).isBefore(LocalDateTime.now());
+        return lastLoginAttempt.plusMinutes(falscheLoginZeitstrafeInMinutes).isBefore(LocalDateTime.now());
     }
 
     private void logUserCustom(String result, String message, String username) {

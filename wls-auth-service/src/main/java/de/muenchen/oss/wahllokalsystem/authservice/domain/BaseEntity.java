@@ -4,20 +4,19 @@
  */
 package de.muenchen.oss.wahllokalsystem.authservice.domain;
 
-import static java.sql.Types.VARCHAR;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import java.io.Serializable;
-import java.util.UUID;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.JdbcTypeCode;
+
+import java.io.Serializable;
+import java.util.Objects;
+import java.util.UUID;
+
+import static java.sql.Types.VARCHAR;
 
 @MappedSuperclass
 @NoArgsConstructor
@@ -35,4 +34,17 @@ public abstract class BaseEntity implements Cloneable, Serializable {
     @JdbcTypeCode(VARCHAR)
     private UUID id;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass() || id == null) return false;
+
+        val that = (BaseEntity) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 42;
+    }
 }

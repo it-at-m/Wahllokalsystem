@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.awerte;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldung.eai.aou.client.WahldatenControllerApi;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldung.eai.aou.model.WahlberechtigteDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration.Profiles;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.client.WahldatenControllerApi;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.WahlberechtigteDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteClient;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteModel;
@@ -38,6 +38,6 @@ public class AWerteClientImpl implements AWerteClient {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.NULL_FROM_CLIENT);
         }
 
-        return aWerteClientMapper.fromRemoteClientSetOfWahlberechtigteDtoToListOfAWerteModel(wahlberechtigteDTOSet);
+        return aWerteClientMapper.fromRemoteClientListOfWahlberechtigteDtoToListOfAWerteModel(wahlberechtigteDTOSet);
     }
 }

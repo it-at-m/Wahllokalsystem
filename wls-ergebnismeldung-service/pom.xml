@@ -398,8 +398,8 @@
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
 
-                            <apiPackage>${project.groupId}.ergebnismeldung.eai.aou.client</apiPackage>
-                            <modelPackage>${project.groupId}.ergebnismeldung.eai.aou.model</modelPackage>
+                            <apiPackage>${project.groupId}.ergebnismeldungservice.eai.aou.client</apiPackage>
+                            <modelPackage>${project.groupId}.ergebnismeldungservice.eai.aou.model</modelPackage>
 
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>

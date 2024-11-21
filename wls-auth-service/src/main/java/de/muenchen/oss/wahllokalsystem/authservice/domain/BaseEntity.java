@@ -4,19 +4,22 @@
  */
 package de.muenchen.oss.wahllokalsystem.authservice.domain;
 
+import static java.sql.Types.VARCHAR;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.JdbcTypeCode;
-
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
-
-import static java.sql.Types.VARCHAR;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.val;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.JdbcTypeCode;
 
 @MappedSuperclass
 @NoArgsConstructor

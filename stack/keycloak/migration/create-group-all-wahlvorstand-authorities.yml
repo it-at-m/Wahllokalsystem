@@ -1,0 +1,15 @@
+id: create group allWahlvorstandAuthorities and link wls_all*
+author: vjohnslhm
+realm: ${SSO_REALM}
+changes:
+  - addGroup:
+      name: allWahlvorstandAuthorities
+  - assignGroup:
+      user: wls_all
+      group: allWahlvorstandAuthorities
+  - assignGroup:
+      user: wls_all_uwb
+      group: allWahlvorstandAuthorities
+  - assignGroup:
+      user: wls_all_bwb
+      group: allWahlvorstandAuthorities

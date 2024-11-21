@@ -68,6 +68,7 @@ public class SecurityConfiguration {
                         .loginPage("/login")
                         .permitAll())
                 .logout((logout) -> logout.permitAll())
+                .securityContext(securityContext -> securityContext.requireExplicitSave(false))
                 .addFilterBefore(customUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         ;
 

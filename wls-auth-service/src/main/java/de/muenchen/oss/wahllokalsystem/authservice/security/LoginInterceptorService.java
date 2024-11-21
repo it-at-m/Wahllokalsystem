@@ -52,7 +52,8 @@ public class LoginInterceptorService {
             val nowIsBeforeOrEqualLatestLoginWhenLatestExists = legalLoginInterval.latestLogin() == null || !now.isAfter(legalLoginInterval.latestLogin());
             if (!nowIsAfterOrEqualEarliestLoginWhenEarliestExists || !nowIsBeforeOrEqualLatestLoginWhenLatestExists) {
                 throw new DisabledException(
-                        "Login ausßerhalb der gültigen Login-Zeiten zwischen " + legalLoginInterval.earliestLogin() + " und " + legalLoginInterval.latestLogin() + ".");
+                        "Login ausßerhalb der gültigen Login-Zeiten zwischen " + legalLoginInterval.earliestLogin() + " und " + legalLoginInterval.latestLogin()
+                                + ".");
             }
         } catch (final WlsException wlsException) {
             log.warn("Login wird erlaubt, jedoch war das Abrufen der Frühesten/Spätesten Loginuhrzeit nicht möglich. Fehlermeldung: {}",

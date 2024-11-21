@@ -77,8 +77,7 @@ public class InfomanagementServiceClient implements WelcomeClient, LoginTimeClie
             return LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
         } catch (final DateTimeParseException e1) {
             throw new DateTimeException(
-                    "Unable to construct a time or a date-time from the given configuration (\"" + dateTimeString + "\")."
-            );
+                    "Unable to construct a time or a date-time from the given configuration (\"" + dateTimeString + "\").");
         }
     }
 

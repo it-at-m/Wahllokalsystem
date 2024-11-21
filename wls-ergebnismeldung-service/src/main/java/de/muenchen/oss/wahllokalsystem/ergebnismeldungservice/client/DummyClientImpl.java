@@ -12,14 +12,18 @@ import org.springframework.stereotype.Component;
 @Component
 @Profile(Profiles.DUMMY_CLIENTS)
 public class DummyClientImpl
-        implements AWerteClient {
+    implements AWerteClient {
 
     @Override
     public List<AWerteModel> getAWerte(final String wahlbezirkID) throws WlsException {
-        return List.of(
+        if (wahlbezirkID.equals("wahlbezirkID")) {
+            return List.of(
                 new AWerteModel(new BezirkUndWahlID("wahlID", "wahlbezirkID"), 25L, 26L),
                 new AWerteModel(new BezirkUndWahlID("wahlID", "wahlbezirkID"), 35L, 36L),
                 new AWerteModel(new BezirkUndWahlID("wahlID", "wahlbezirkID"), 45L, 46L));
+        } else {
+            return List.of();
+        }
     }
 
 }

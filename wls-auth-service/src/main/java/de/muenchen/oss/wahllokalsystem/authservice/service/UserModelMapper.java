@@ -2,8 +2,10 @@ package de.muenchen.oss.wahllokalsystem.authservice.service;
 
 import de.muenchen.oss.wahllokalsystem.authservice.domain.Authority;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.User;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,7 +35,7 @@ public interface UserModelMapper {
     default org.springframework.security.core.userdetails.User toStringSecurityUser(User user) {
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
-                user.getPassword(),
+                Optional.ofNullable(user.getPassword()).orElse(StringUtils.EMPTY),
                 true,
                 true,
                 true,

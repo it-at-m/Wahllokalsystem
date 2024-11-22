@@ -4,7 +4,6 @@
  */
 package de.muenchen.oss.wahllokalsystem.authservice.configuration;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.SecurityFilterChain;
@@ -44,9 +42,7 @@ public class NoSecurityConfiguration {
                         .anyRequest()
                         .permitAll())
                 .sessionManagement(c ->
-                        c
-                                //.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // das führt dazu, dass man PRINCIPAL_NAME in der Tabelle SPRING_SESSION als unbekannt sieht, obwohl er im sprinRegistry bekannt ist .. k.Ahnung
-                                .sessionFixation().migrateSession()
+                        c.sessionFixation().migrateSession()
                                 .maximumSessions(1)
                                 .expiredUrl("/login")
                                 .maxSessionsPreventsLogin(false)
@@ -66,8 +62,5 @@ public class NoSecurityConfiguration {
     SessionRegistry sessionRegistry() {
         return new SessionRegistryImpl();
     }
-
-
-
 
 }

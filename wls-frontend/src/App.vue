@@ -37,11 +37,6 @@
           cols="3"
           class="d-flex align-center justify-end"
         >
-          <app-switcher
-            v-if="appswitcherBaseUrl"
-            :base-url="appswitcherBaseUrl"
-            :tags="['global']"
-          />
           <v-btn
             variant="text"
             icon
@@ -74,10 +69,9 @@
 </template>
 
 <script setup lang="ts">
-import { mdiMagnify } from "@mdi/js";
-import { AppSwitcher } from "@muenchen/appswitcher-vue";
-import { useToggle } from "@vueuse/core";
-import { onMounted, ref } from "vue";
+import {mdiMagnify} from "@mdi/js";
+import {useToggle} from "@vueuse/core";
+import {onMounted, ref} from "vue";
 import {
   VApp,
   VAppBar,
@@ -96,16 +90,15 @@ import {
   VToolbarTitle,
 } from "vuetify/components";
 
-import { getUser } from "@/api/user-client";
+import {getUser} from "@/api/user-client";
 import Ad2ImageAvatar from "@/components/common/Ad2ImageAvatar.vue";
 import TheSnackbar from "@/components/TheSnackbar.vue";
-import { APPSWITCHER_URL, ROUTES_GETSTARTED } from "@/constants";
-import { useSnackbarStore } from "@/stores/snackbar";
-import { useUserStore } from "@/stores/user";
-import User, { UserLocalDevelopment } from "@/types/User";
+import {ROUTES_GETSTARTED} from "@/constants";
+import {useSnackbarStore} from "@/stores/snackbar";
+import {useUserStore} from "@/stores/user";
+import User, {UserLocalDevelopment} from "@/types/User";
 
 const query = ref<string>("");
-const appswitcherBaseUrl = APPSWITCHER_URL;
 
 const snackbarStore = useSnackbarStore();
 const userStore = useUserStore();

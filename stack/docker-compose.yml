@@ -250,29 +250,14 @@ services:
       - keycloak
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    healthcheck: &healthcheck
+    healthcheck:
       interval: 30s
       timeout: 60s
       retries: 3
       start_period: 60s
       test: [ "CMD-SHELL", "curl http://localhost:8080/actuator/health/liveness" ]
-    security_opt: &security_settings
+    security_opt:
       - no-new-privileges:true
-
-  appswitcher-server:
-    image: ghcr.io/it-at-m/appswitcher-server:1.1.1@sha256:db333ba06620b3b45f730651c95a0969942bf839bcb74695b5b6875d365a6f08
-    environment:
-      - SPRING_WEB_RESOURCES_STATIC_LOCATIONS=file:/workspace/static
-    ports:
-      - "8084:8080"
-    volumes:
-      - "./appswitcher-server/application.yml:/workspace/config/application.yml"
-      - "./appswitcher-server/static:/workspace/static"
-    healthcheck:
-      <<: *healthcheck
-      test: [ "CMD-SHELL", "curl http://localhost:8080/actuator/health/liveness" ]
-    security_opt: *security_settings
-
 
 networks:
   internal:

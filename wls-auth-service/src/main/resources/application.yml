@@ -71,6 +71,7 @@ service:
           welcomeMessage: WILLKOMMENSTEXT
           fruehesterLogin: FRUEHESTE_LOGIN_UHRZEIT
           spaetesterLogin: SPAETESTE_LOGIN_UHRZEIT
+        dateformat: dd.MM.yyyy HH:mm
     falscheLoginZeitstrafe: 10
     ldap:
       userDn:

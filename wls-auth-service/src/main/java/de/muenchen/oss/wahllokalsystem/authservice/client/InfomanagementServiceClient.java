@@ -43,6 +43,9 @@ public class InfomanagementServiceClient implements WelcomeClient, LoginTimeClie
     @Value("${service.config.welcomemessage.default}")
     String defaultWelcomeMessage;
 
+    @Value("${service.config.clients.infomanagement.dateformat}")
+    String konfigDateFormat;
+
     @Override
     public String getWelcomeMessage() {
         final KonfigurationDTO konfigurationDTO;
@@ -74,7 +77,7 @@ public class InfomanagementServiceClient implements WelcomeClient, LoginTimeClie
         }
 
         try {
-            return LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+            return LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern(konfigDateFormat));
         } catch (final DateTimeParseException e1) {
             throw new DateTimeException(
                     "Unable to construct a time or a date-time from the given configuration (\"" + dateTimeString + "\").");

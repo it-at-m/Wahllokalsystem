@@ -41,6 +41,7 @@ class InfomanagementServiceClientTest {
 
     @BeforeEach
     void setup() {
+        unitUnderTest.konfigDateFormat = KONFIG_DATETIME_FORMAT;
         unitUnderTest.konfigKeyWelcomeMessage = konfigKeyWelcomeMessage;
         unitUnderTest.konfigKeyFruehesterLogin = KONFIG_KEY_EARLIEST_LOGIN;
         unitUnderTest.konfigKeySpaetesterLogin = KONFIG_KEY_LATEST_LOGIN;

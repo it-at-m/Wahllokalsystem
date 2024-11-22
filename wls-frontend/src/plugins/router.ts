@@ -1,7 +1,7 @@
 // Composables
 import {createRouter, createWebHashHistory} from "vue-router";
 
-import {ROUTES_404, ROUTES_GETSTARTED, ROUTES_HOME, ROUTES_NEWROUTE} from "@/constants";
+import {ROUTES_GETSTARTED, ROUTES_HOME, ROUTES_NEWROUTE, ROUTES_NOTFOUND} from "@/constants";
 import GetStartedView from "@/views/GetStartedView.vue";
 import HomeView from "@/views/HomeView.vue";
 import NewRouteView from "@/views/NewRouteView.vue";
@@ -25,11 +25,10 @@ const routes = [
     component: NewRouteView,
   },
   {
-    path: "/404",
-    name: ROUTES_404,
+    path: "/:catchAll(.*)*",
+    name: ROUTES_NOTFOUND,
     component: Error404View,
-  },
-  { path: "/:catchAll(.*)*", redirect: "/" }, // CatchAll route
+  }, // CatchAll route
 ];
 
 const router = createRouter({

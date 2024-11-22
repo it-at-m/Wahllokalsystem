@@ -104,7 +104,7 @@ import {
 import {getUser} from "@/api/user-client";
 import Ad2ImageAvatar from "@/components/common/Ad2ImageAvatar.vue";
 import TheSnackbar from "@/components/TheSnackbar.vue";
-import {APPSWITCHER_URL, ROUTES_GETSTARTED} from "@/constants";
+import {APPSWITCHER_URL, ROUTES_GETSTARTED, ROUTES_NEWROUTE} from "@/constants";
 import {useSnackbarStore} from "@/stores/snackbar";
 import {useUserStore} from "@/stores/user";
 import User, {UserLocalDevelopment} from "@/types/User";

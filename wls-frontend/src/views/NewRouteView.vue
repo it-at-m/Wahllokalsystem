@@ -1,13 +1,25 @@
-<script setup lang="ts">
-
-</script>
-
 <template>
-  <h2>You found a new View!</h2>
+  <v-container>
+    <v-row class="text-center">
+      <h2>You found a new View!</h2>
 
-  <h3>What about a <a href="/nonexistant_route"> route that does not exist</a>?</h3>
+      <p>Route back <router-link :to="{ name: ROUTES_HOME }"> Home </router-link></p>
+      <p>What about a <router-link to="/nonexistant-route"> route that does not exist</router-link>?</p>
+      <p>Route to external Link
+        <a
+            href="https://it-at-m.github.io/Wahllokalsystem/"
+            target="_blank"
+            rel="noopener noreferrer"
+        >WLS-Doku</a
+        >
+      </p>
+    </v-row>
+
+
+  </v-container>
 </template>
 
-<style scoped>
-
-</style>
+<script setup lang="ts">
+import {VContainer} from "vuetify/components";
+import {ROUTES_HOME} from "@/constants";
+</script>

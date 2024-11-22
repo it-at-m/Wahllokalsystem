@@ -11,12 +11,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.val;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.JdbcTypeCode;
 
@@ -25,7 +26,6 @@ import org.hibernate.annotations.JdbcTypeCode;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 public abstract class BaseEntity implements Cloneable, Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -37,4 +37,17 @@ public abstract class BaseEntity implements Cloneable, Serializable {
     @JdbcTypeCode(VARCHAR)
     private UUID id;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass() || id == null) return false;
+
+        val that = (BaseEntity) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 42;
+    }
 }

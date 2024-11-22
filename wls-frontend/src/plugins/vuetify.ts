@@ -1,7 +1,7 @@
 import "vuetify/styles";
 
-import { createVuetify } from "vuetify";
-import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
+import {createVuetify} from "vuetify";
+import {aliases, mdi} from "vuetify/iconsets/mdi-svg";
 
 export default createVuetify({
   icons: {
@@ -15,7 +15,7 @@ export default createVuetify({
     themes: {
       light: {
         colors: {
-          primary: "#333333",
+          primary: "#546e7a",
           secondary: "#FFCC00",
           accent: "#7BA4D9",
           success: "#69BE28",

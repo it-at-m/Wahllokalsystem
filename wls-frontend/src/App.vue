@@ -10,29 +10,15 @@
           <v-app-bar-nav-icon @click.stop="toggleDrawer()" />
           <router-link to="/">
             <v-toolbar-title class="font-weight-bold">
-              <span class="text-white">RefArch-</span>
-              <span class="text-secondary">Kick</span>
-              <span class="text-white">Starter</span>
+              <span class="text-white">WLS</span>
+
             </v-toolbar-title>
           </router-link>
         </v-col>
         <v-col
           cols="6"
           class="d-flex align-center justify-center"
-        >
-          <v-text-field
-            id="searchField"
-            v-model="query"
-            flat
-            variant="solo-inverted"
-            hide-details
-            label="Suche"
-            clearable
-            :prepend-inner-icon="mdiMagnify"
-            theme="dark"
-            @keyup.enter="search"
-          />
-        </v-col>
+        ></v-col>
         <v-col
           cols="3"
           class="d-flex align-center justify-end"
@@ -51,9 +37,7 @@
     </v-app-bar>
     <v-navigation-drawer v-model="drawer">
       <v-list>
-        <v-list-item :to="{ name: ROUTES_GETSTARTED }">
-          <v-list-item-title>Get started</v-list-item-title>
-        </v-list-item>
+        <v-list-item />
       </v-list>
     </v-navigation-drawer>
     <v-main>
@@ -69,9 +53,8 @@
 </template>
 
 <script setup lang="ts">
-import {mdiMagnify} from "@mdi/js";
 import {useToggle} from "@vueuse/core";
-import {onMounted, ref} from "vue";
+import {onMounted} from "vue";
 import {
   VApp,
   VAppBar,
@@ -82,23 +65,18 @@ import {
   VFadeTransition,
   VList,
   VListItem,
-  VListItemTitle,
   VMain,
   VNavigationDrawer,
   VRow,
-  VTextField,
   VToolbarTitle,
 } from "vuetify/components";
 
 import {getUser} from "@/api/user-client";
 import Ad2ImageAvatar from "@/components/common/Ad2ImageAvatar.vue";
 import TheSnackbar from "@/components/TheSnackbar.vue";
-import {ROUTES_GETSTARTED} from "@/constants";
 import {useSnackbarStore} from "@/stores/snackbar";
 import {useUserStore} from "@/stores/user";
 import User, {UserLocalDevelopment} from "@/types/User";
-
-const query = ref<string>("");
 
 const snackbarStore = useSnackbarStore();
 const userStore = useUserStore();
@@ -122,18 +100,6 @@ function loadUser(): void {
         userStore.setUser(null);
       }
     });
-}
-
-/**
- * Navigates to the page with the search results and sends an event to trigger further searches.
- */
-
-async function search(): Promise<void> {
-  if (query.value !== "" && query.value !== null) {
-    snackbarStore.showMessage({
-      message: "Sie haben nach " + query.value + " gesucht. ;)",
-    });
-  }
 }
 </script>
 

@@ -1,0 +1,53 @@
+### get token for keycloak_test
+POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+password = test &
+grant_type = password &
+client_secret = top-secret &
+client_id = wls &
+username = keycloak_test
+
+> {%
+    client.global.set("auth_token", response.body.access_token);
+    client.global.set("token_type", response.body.token_type);
+%}
+
+### get token for wls_all
+POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+password = test &
+grant_type = password &
+client_secret = top-secret &
+client_id = wls &
+username = wls_all
+
+> {%
+    client.global.set("auth_token", response.body.access_token);
+    client.global.set("token_type", response.body.token_type);
+%}
+
+### get userinfo with auth_token
+GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
+Authorization: {{ token_type }} {{ auth_token }}
+
+### Create Session via Get on login Page
+GET {{ WLS_AUTH_SERVICE_URL }}/login
+Authorization: {{ token_type }} {{ auth_token }}
+
+### Read all Sessions
+GET {{ WLS_AUTH_SERVICE_URL }}/oauthsessions/
+Authorization: {{ token_type }} {{ auth_token }}
+
+#> {%
+#    client.global.set("sessionid", response.body.sessions[0].sessionId);
+#%}
+
+#### Kill the Session with sessionID, put hier a sessionid from last get request
+< {%
+    client.global.set("sessionid", "37621853-6655-4af8-af48-4525b4c017bd");
+%}
+POST  {{ WLS_AUTH_SERVICE_URL }}/oauthsessions/{{sessionid}}/invalidate
+Authorization: {{ token_type }} {{ auth_token }}
+

@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.authservice.client;
 
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
-import de.muenchen.oss.wahllokalsystem.authservice.security.LegalLoginInterval;
+import de.muenchen.oss.wahllokalsystem.authservice.security.LegalLoginIntervalModel;
 import de.muenchen.oss.wahllokalsystem.authservice.security.LoginTimeClient;
 import de.muenchen.oss.wahllokalsystem.authservice.service.WahltagClient;
 import de.muenchen.oss.wahllokalsystem.authservice.service.WelcomeClient;
@@ -19,8 +19,8 @@ public class DummyClient implements WelcomeClient, LoginTimeClient, WahltagClien
     }
 
     @Override
-    public LegalLoginInterval getLegalLoginInterval() {
-        return new LegalLoginInterval(LocalDateTime.MIN, LocalDateTime.MAX);
+    public LegalLoginIntervalModel getLegalLoginInterval() {
+        return new LegalLoginIntervalModel(LocalDateTime.MIN, LocalDateTime.MAX);
     }
 
     @Override

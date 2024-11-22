@@ -4,7 +4,7 @@ import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.authservice.eai.infomanagement.client.KonfigurationControllerApi;
 import de.muenchen.oss.wahllokalsystem.authservice.eai.infomanagement.model.KonfigurationDTO;
 import de.muenchen.oss.wahllokalsystem.authservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.authservice.security.LegalLoginInterval;
+import de.muenchen.oss.wahllokalsystem.authservice.security.LegalLoginIntervalModel;
 import de.muenchen.oss.wahllokalsystem.authservice.security.LoginTimeClient;
 import de.muenchen.oss.wahllokalsystem.authservice.service.WelcomeClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
@@ -64,11 +64,11 @@ public class InfomanagementServiceClient implements WelcomeClient, LoginTimeClie
     }
 
     @Override
-    public LegalLoginInterval getLegalLoginInterval() {
+    public LegalLoginIntervalModel getLegalLoginInterval() {
         val fruehesterLogin = getKonfigurationKeyUnauthorized(konfigKeyFruehesterLogin).getWert();
         val spaetesterLogin = getKonfigurationKeyUnauthorized(konfigKeySpaetesterLogin).getWert();
 
-        return new LegalLoginInterval(parseToDateTime(fruehesterLogin), parseToDateTime(spaetesterLogin));
+        return new LegalLoginIntervalModel(parseToDateTime(fruehesterLogin), parseToDateTime(spaetesterLogin));
     }
 
     private LocalDateTime parseToDateTime(final String dateTimeString) {

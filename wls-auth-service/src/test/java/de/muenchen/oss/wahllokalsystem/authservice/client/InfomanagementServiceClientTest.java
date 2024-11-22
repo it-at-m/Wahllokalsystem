@@ -3,7 +3,7 @@ package de.muenchen.oss.wahllokalsystem.authservice.client;
 import de.muenchen.oss.wahllokalsystem.authservice.eai.infomanagement.client.KonfigurationControllerApi;
 import de.muenchen.oss.wahllokalsystem.authservice.eai.infomanagement.model.KonfigurationDTO;
 import de.muenchen.oss.wahllokalsystem.authservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.authservice.security.LegalLoginInterval;
+import de.muenchen.oss.wahllokalsystem.authservice.security.LegalLoginIntervalModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.time.DateTimeException;
@@ -109,7 +109,7 @@ class InfomanagementServiceClientTest {
 
             val result = unitUnderTest.getLegalLoginInterval();
 
-            val expectedResult = new LegalLoginInterval(LocalDateTime.parse(earliestLoginDatetime, DateTimeFormatter.ofPattern(KONFIG_DATETIME_FORMAT)),
+            val expectedResult = new LegalLoginIntervalModel(LocalDateTime.parse(earliestLoginDatetime, DateTimeFormatter.ofPattern(KONFIG_DATETIME_FORMAT)),
                     LocalDateTime.parse(latestLoginDatetime, DateTimeFormatter.ofPattern(KONFIG_DATETIME_FORMAT)));
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }

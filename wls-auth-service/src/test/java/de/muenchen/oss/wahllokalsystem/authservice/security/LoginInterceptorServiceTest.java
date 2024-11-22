@@ -58,7 +58,7 @@ class LoginInterceptorServiceTest {
             val ldapUserDetails = new TestLdapUserDetails(username, "WAHLVORSTAND");
 
             val mockedUserModelFromUserService = createUserModel(wahltagID, "WLS_WAHLVORSTAND");
-            val mockedLegalLoginInterval = new LegalLoginInterval(LocalDateTime.now().minusYears(1), LocalDateTime.now().plusYears(1));
+            val mockedLegalLoginInterval = new LegalLoginIntervalModel(LocalDateTime.now().minusYears(1), LocalDateTime.now().plusYears(1));
 
             Mockito.when(wahltagClient.isWahltagActive(wahltagID)).thenReturn(false);
             Mockito.when(userService.getUser(username)).thenReturn(Optional.of(mockedUserModelFromUserService));
@@ -74,7 +74,7 @@ class LoginInterceptorServiceTest {
             val ldapUserDetails = new TestLdapUserDetails(username, "WAHLVORSTAND");
 
             val mockedUserModelFromUserService = createUserModel(wahltagID, "WLS_WAHLVORSTAND");
-            val mockedLegalLoginInterval = new LegalLoginInterval(LocalDateTime.now().minusYears(1), LocalDateTime.now().minusMinutes(1));
+            val mockedLegalLoginInterval = new LegalLoginIntervalModel(LocalDateTime.now().minusYears(1), LocalDateTime.now().minusMinutes(1));
 
             Mockito.when(wahltagClient.isWahltagActive(wahltagID)).thenReturn(true);
             Mockito.when(userService.getUser(username)).thenReturn(Optional.of(mockedUserModelFromUserService));
@@ -91,7 +91,7 @@ class LoginInterceptorServiceTest {
             val ldapUserDetails = new TestLdapUserDetails(username, "WAHLVORSTAND");
 
             val mockedUserModelFromUserService = createUserModel(wahltagID, "WLS_WAHLVORSTAND");
-            val mockedLegalLoginInterval = new LegalLoginInterval(LocalDateTime.now().plusMinutes(1), LocalDateTime.now().plusYears(1));
+            val mockedLegalLoginInterval = new LegalLoginIntervalModel(LocalDateTime.now().plusMinutes(1), LocalDateTime.now().plusYears(1));
 
             Mockito.when(wahltagClient.isWahltagActive(wahltagID)).thenReturn(true);
             Mockito.when(userService.getUser(username)).thenReturn(Optional.of(mockedUserModelFromUserService));

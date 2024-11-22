@@ -75,11 +75,11 @@ public class LoginInterceptorService {
         return true;
     }
 
-    public boolean hasWahllokalAuthority(Collection<String> authorities) {
+    private boolean hasWahllokalAuthority(Collection<String> authorities) {
         return authorities.stream().anyMatch(ROLE_LOGIN_WLS_WAHLLOKAL::equals);
     }
 
-    protected boolean isLoginTimeToCheck(LdapUserDetails principal) {
+    private boolean isLoginTimeToCheck(LdapUserDetails principal) {
         for (GrantedAuthority eAuthority : principal.getAuthorities()) {
             if (eAuthority.getAuthority().toLowerCase().contains(WAHLVORSTAND_AUTHORITY)
                     || eAuthority.getAuthority().toLowerCase().contains(MONITORING_AUTHORITY)) {

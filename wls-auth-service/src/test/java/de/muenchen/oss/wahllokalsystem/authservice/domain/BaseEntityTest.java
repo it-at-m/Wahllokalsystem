@@ -34,7 +34,7 @@ class BaseEntityTest {
     class Equals {
 
         @Test
-        void should_beEqual_when_idOfObjectAreEqualButOtherPropertiesNot() {
+        void should_beEqual_when_idsOfObjectsAreEqualButOtherPropertiesNot() {
             val baseEntity1 = new BaseEntityWrapper("textOfEntity1");
             baseEntity1.setId(UUID.fromString(UUID_STRING_1));
 

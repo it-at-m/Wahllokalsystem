@@ -110,9 +110,8 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
             loginInterceptorService.validateLoginOrThrow(principal);
             logUserCustom("0", "benutzername=" + username + "|message=Der Benutzer hat sich erfolgreich am System angemeldet|", username);
             super.successfulAuthentication(request, response, chain, authResult);
-
         } catch (AuthenticationException e) {
-            log.error("Authentication error: " + e.getMessage(), e);
+            log.error("Authentication error: {}", e.getMessage(), e);
             unsuccessfulAuthentication(request, response, e);
         }
     }

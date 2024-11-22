@@ -76,7 +76,6 @@ sequenceDiagram
 ```mermaid
 
 sequenceDiagram
-
     autonumber
     
     actor User

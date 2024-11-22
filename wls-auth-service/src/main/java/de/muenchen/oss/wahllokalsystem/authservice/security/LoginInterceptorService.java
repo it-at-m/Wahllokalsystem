@@ -59,7 +59,6 @@ public class LoginInterceptorService {
             log.warn("Login wird erlaubt, jedoch war das Abrufen der Frühesten/Spätesten Loginuhrzeit nicht möglich. Fehlermeldung: {}",
                     wlsException.getMessage(), wlsException);
         }
-
     }
 
     private boolean isUserOfActiveElectionDay(LdapUserDetails principal) {

@@ -1,7 +1,7 @@
 // Composables
-import {createRouter, createWebHashHistory} from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 
-import {ROUTES_HOME} from "@/constants";
+import { ROUTES_HOME } from "@/constants";
 import HomeView from "@/views/HomeView.vue";
 
 const routes = [

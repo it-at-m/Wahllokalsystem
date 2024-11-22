@@ -1,7 +1,6 @@
 <template>
   <v-container>
     <v-row class="text-center">
-
       <v-col class="mb-4">
         <h1 class="text-h3 font-weight-bold mb-3">
           Willkommen beim Wahllokalsystem
@@ -16,11 +15,11 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref} from "vue";
-import {VCol, VContainer, VRow} from "vuetify/components";
+import { onMounted, ref } from "vue";
+import { VCol, VContainer, VRow } from "vuetify/components";
 
-import {checkHealth} from "@/api/health-client";
-import {useSnackbarStore} from "@/stores/snackbar";
+import { checkHealth } from "@/api/health-client";
+import { useSnackbarStore } from "@/stores/snackbar";
 import HealthState from "@/types/HealthState";
 
 const snackbarStore = useSnackbarStore();

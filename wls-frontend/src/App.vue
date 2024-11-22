@@ -11,7 +11,6 @@
           <router-link to="/">
             <v-toolbar-title class="font-weight-bold">
               <span class="text-white">WLS</span>
-
             </v-toolbar-title>
           </router-link>
         </v-col>
@@ -53,8 +52,8 @@
 </template>
 
 <script setup lang="ts">
-import {useToggle} from "@vueuse/core";
-import {onMounted} from "vue";
+import { useToggle } from "@vueuse/core";
+import { onMounted } from "vue";
 import {
   VApp,
   VAppBar,
@@ -71,12 +70,12 @@ import {
   VToolbarTitle,
 } from "vuetify/components";
 
-import {getUser} from "@/api/user-client";
+import { getUser } from "@/api/user-client";
 import Ad2ImageAvatar from "@/components/common/Ad2ImageAvatar.vue";
 import TheSnackbar from "@/components/TheSnackbar.vue";
-import {useSnackbarStore} from "@/stores/snackbar";
-import {useUserStore} from "@/stores/user";
-import User, {UserLocalDevelopment} from "@/types/User";
+import { useSnackbarStore } from "@/stores/snackbar";
+import { useUserStore } from "@/stores/user";
+import User, { UserLocalDevelopment } from "@/types/User";
 
 const snackbarStore = useSnackbarStore();
 const userStore = useUserStore();

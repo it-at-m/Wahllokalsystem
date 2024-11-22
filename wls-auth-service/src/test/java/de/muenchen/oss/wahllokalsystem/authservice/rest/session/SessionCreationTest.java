@@ -2,7 +2,6 @@ package de.muenchen.oss.wahllokalsystem.authservice.rest.session;
 
 import static de.muenchen.oss.wahllokalsystem.authservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.junit.jupiter.api.Assertions.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
 import java.net.URI;
 import java.sql.Connection;

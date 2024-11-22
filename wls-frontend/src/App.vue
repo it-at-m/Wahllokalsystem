@@ -60,6 +60,11 @@
           <v-list-item-title>Get started</v-list-item-title>
         </v-list-item>
       </v-list>
+      <v-list>
+        <v-list-item :to="{ name: ROUTES_NEWROUTE }">
+          <v-list-item-title>Test out Routing</v-list-item-title>
+        </v-list-item>
+      </v-list>
     </v-navigation-drawer>
     <v-main>
       <v-container fluid>
@@ -74,10 +79,10 @@
 </template>
 
 <script setup lang="ts">
-import { mdiMagnify } from "@mdi/js";
-import { AppSwitcher } from "@muenchen/appswitcher-vue";
-import { useToggle } from "@vueuse/core";
-import { onMounted, ref } from "vue";
+import {mdiMagnify} from "@mdi/js";
+import {AppSwitcher} from "@muenchen/appswitcher-vue";
+import {useToggle} from "@vueuse/core";
+import {onMounted, ref} from "vue";
 import {
   VApp,
   VAppBar,
@@ -96,13 +101,13 @@ import {
   VToolbarTitle,
 } from "vuetify/components";
 
-import { getUser } from "@/api/user-client";
+import {getUser} from "@/api/user-client";
 import Ad2ImageAvatar from "@/components/common/Ad2ImageAvatar.vue";
 import TheSnackbar from "@/components/TheSnackbar.vue";
-import { APPSWITCHER_URL, ROUTES_GETSTARTED } from "@/constants";
-import { useSnackbarStore } from "@/stores/snackbar";
-import { useUserStore } from "@/stores/user";
-import User, { UserLocalDevelopment } from "@/types/User";
+import {APPSWITCHER_URL, ROUTES_GETSTARTED} from "@/constants";
+import {useSnackbarStore} from "@/stores/snackbar";
+import {useUserStore} from "@/stores/user";
+import User, {UserLocalDevelopment} from "@/types/User";
 
 const query = ref<string>("");
 const appswitcherBaseUrl = APPSWITCHER_URL;

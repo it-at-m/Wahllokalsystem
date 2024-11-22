@@ -1,27 +1,27 @@
 package de.muenchen.oss.wahllokalsystem.authservice.rest;
 
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.OAuthServerSession;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.OAuthServerSessions;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
+import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,66 +29,86 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class SessionController {
 
-    //SessionRegistry sessionRegistry;
+    @Autowired
+    SessionRegistry sessionRegistry;
 
-    //@GetMapping("/loginwls")
-    @RequestMapping(value = "/loginwls", method = RequestMethod.GET)
-    public String index(Model model, HttpSession session) {
-        session.setAttribute("TestAttr-Spring_Session-Table", "remove_me");
-        return "loginwls";
+    /**
+     * Is needed for explicit deleting Jdbc-Session from Table SPRING_SESSION, necessary because removing Session from @v{ sessionRegistry } does not delete it from Database
+     */
+    @Autowired
+    JdbcIndexedSessionRepository jdbcSessionRepository;
+
+    /**
+     * Lists all sessions which are not expired.
+     *
+     * @return OAuthServerSessions which contains a list of OAuthServerSession (sessionId and
+     *         username)
+     */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN_ADMIN')")
+    @GetMapping(value = "/oauthsessions/")
+    public ResponseEntity<OAuthServerSessions> listActiveSessions() {
+        log.info("listActiveSessions");
+
+        OAuthServerSessions allSessionInformation = new OAuthServerSessions();
+        List<OAuthServerSession> sessions = new ArrayList<>();
+
+        sessionRegistry.getAllPrincipals().forEach(
+                principal -> sessionRegistry.getAllSessions(principal, false).forEach(currSessionInfo -> {
+                    log.info("Princupal is instanceof" + principal.getClass().getName());
+                    OAuthServerSession currSession = new OAuthServerSession();
+                    if (principal instanceof String) {
+                        currSession.setUsername((String) principal);
+                        log.info("PrincipalName String:" + principal);
+                    } else if (principal instanceof org.springframework.security.core.userdetails.User) {
+                        currSession.setUsername(((org.springframework.security.core.userdetails.User) principal).getUsername());
+                        log.info("PrincipalName org.springframework.security.core.userdetails.User:" + ((org.springframework.security.core.userdetails.User) principal).getUsername());
+                    } else if (principal instanceof Principal) {
+                        currSession.setUsername(((Principal) principal).getName());
+                            log.info("PrincipalName Principal:" + ((Principal) principal).getName());
+                    } else if (principal instanceof LdapUserDetailsImpl) {
+                        currSession.setUsername(((LdapUserDetailsImpl) principal).getUsername());
+                            log.info("PrincipalName LdapUserDetailsImpl:" + ((LdapUserDetailsImpl) principal).getUsername());
+                    } else  {
+                        currSession.setUsername("<unknown>");
+                            log.info("PrincipalName:" + "<unknown>");
+                    }
+                    currSession.setSessionId(currSessionInfo.getSessionId());
+                    sessions.add(currSession);
+                }));
+
+        allSessionInformation.setSessions(sessions);
+        return new ResponseEntity<>(allSessionInformation, OK);
     }
 
-    @PostMapping("/savecolor")
-    public String saveMessage(@RequestParam("color") String color, HttpServletRequest request, Principal principal){
-        List<String> favoriteColors
-                = getFavColors(request.getSession());
-        if (!StringUtils.isEmpty(color)) {
-            favoriteColors.add(color);
-            request.getSession().
-                    setAttribute("TeatAttr-Spring_Session_Attributes-Table", favoriteColors);
+    /**
+     * Kills sessions which are not expired.
+     *
+     * @param sessionID SessionId of session to kill.
+     * @return HTTP ok if session was killed successfully, HTTP 404 if session to kill was not found
+     *         or session was expired.
+     */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN_ADMIN')")
+    @RequestMapping(value = "/oauthsessions/{sessionID}/invalidate", method = POST)
+    public ResponseEntity<?> killSession(@PathVariable("sessionID") String sessionID) {
+        log.info("Attempt to kill session with id {}", sessionID);
+        HttpStatus httpStatus = OK;
+        sessionRegistry.getAllPrincipals().forEach(
+                principal -> sessionRegistry.getAllSessions(principal, false).forEach(currSessionInfo ->  {
+                    log.info("Principal is instanceof" + principal.getClass().getName() + " name: " + principal.toString());
+                    val sessId = currSessionInfo.getSessionId();
+                    val prncp = currSessionInfo.getPrincipal();
+                }));
+        SessionInformation sessionInformation = sessionRegistry.getSessionInformation(sessionID);
+
+        if (sessionInformation != null && !sessionInformation.isExpired()) {
+            log.info("Killing session with id {}", sessionID + " principal: " + sessionInformation.getPrincipal());
+            sessionInformation.expireNow();
+            jdbcSessionRepository.deleteById(sessionID);
+        } else {
+            log.info("Session with id {} not found.", sessionID);
+            httpStatus = NOT_FOUND;
         }
-//        sessionRegistry.getAllPrincipals().forEach(pr ->{
-//            log.info("one found {}", pr.toString());
-//        });
-        return "redirect:/loginwls";
+        return new ResponseEntity<>(httpStatus);
     }
 
-    //@PreAuthorize("hasAuthority(" + ROLE_SESSION_MANAGEMENT + ")")
-//    @RequestMapping(value = "/oauthsessions/", method = GET)
-//    public ResponseEntity<OAuthServerSessions> listActiveSessions() {
-//        log.info("listActiveSessions");
-//
-//        OAuthServerSessions allSessionInformation = new OAuthServerSessions();
-//        List<OAuthServerSession> sessions = new ArrayList<>();
-//
-//        sessionRegistry.getAllPrincipals().stream().forEach(
-//                principal -> sessionRegistry.getAllSessions(principal, false).stream().forEach(currSessionInfo -> {
-//                    OAuthServerSession currSession = new OAuthServerSession();
-////                    if (principal instanceof UserInfo) {
-////                        currSession.setUsername(((UserInfo) principal).getUsername());
-////                    } else
-//                        if (principal instanceof Principal) {
-//                        currSession.setUsername(((Principal) principal).getName());
-////                    } else if (principal instanceof LdapUserDetailsImpl) {
-////                        currSession.setUsername(((LdapUserDetailsImpl) principal).getUsername());
-//                    } else if (principal instanceof String) {
-//                        currSession.setUsername((String) principal);
-//                    } else {
-//                        currSession.setUsername("<unknown>");
-//                    }
-//                    currSession.setSessionId(currSessionInfo.getSessionId());
-//                    sessions.add(currSession);
-//                }));
-//
-//        allSessionInformation.setSessions(sessions);
-//        return new ResponseEntity<>(allSessionInformation, OK);
-//    }
-
-    private List<String> getFavColors(HttpSession session) {
-        List<String> favoriteColors = (List<String>) session.getAttribute("TeatAttr-Spring_Session_Attributes-Table");
-        if (favoriteColors == null) {
-            favoriteColors = new ArrayList<>();
-        }
-        return favoriteColors;
-    }
 }

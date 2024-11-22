@@ -17,8 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
-    classes = { MicroServiceApplication.class },
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+        classes = { MicroServiceApplication.class },
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
 @Slf4j
@@ -40,10 +40,10 @@ class AWerteRepositoryTest {
             val wahlbezirkIdToFind = "wahlbezirkID1";
             val aWerteToFind = new AWerte(new BezirkUndWahlID("wahlID1", wahlbezirkIdToFind), 2, 3L);
             val aWerteToSave = List.of(
-                aWerteToFind,
-                new AWerte(new BezirkUndWahlID("wahlID1", "wahlbezirkID2"), 5, 6L),
-                new AWerte(new BezirkUndWahlID("wahlID1", "wahlbezirkID3"), 10, 11L),
-                new AWerte(new BezirkUndWahlID("wahlID1", "wahlbezirkID4"), 15, 16L)
+                    aWerteToFind,
+                    new AWerte(new BezirkUndWahlID("wahlID1", "wahlbezirkID2"), 5, 6L),
+                    new AWerte(new BezirkUndWahlID("wahlID1", "wahlbezirkID3"), 10, 11L),
+                    new AWerte(new BezirkUndWahlID("wahlID1", "wahlbezirkID4"), 15, 16L)
 
             );
 
@@ -59,12 +59,11 @@ class AWerteRepositoryTest {
     void should_returnAWerteForDifferentWahlIDs_when_wahlbezirkIDIsGiven() {
         val wahlbezirkIDToFind = "wahlbezirkID";
         val aWerteToSave = List.of(
-            new AWerte(new BezirkUndWahlID("wahlID1", wahlbezirkIDToFind), 2, 3L),
-            new AWerte(new BezirkUndWahlID("wahlID1", "wahlbezirkID2"), 4, 5L),
-            new AWerte(new BezirkUndWahlID("wahlID1", "wahlbezirkID3"), 5, 6L),
-            new AWerte(new BezirkUndWahlID("wahlID2", wahlbezirkIDToFind), 6, 7L),
-            new AWerte(new BezirkUndWahlID("wahlID3", wahlbezirkIDToFind), 7, 8L)
-        );
+                new AWerte(new BezirkUndWahlID("wahlID1", wahlbezirkIDToFind), 2, 3L),
+                new AWerte(new BezirkUndWahlID("wahlID1", "wahlbezirkID2"), 4, 5L),
+                new AWerte(new BezirkUndWahlID("wahlID1", "wahlbezirkID3"), 5, 6L),
+                new AWerte(new BezirkUndWahlID("wahlID2", wahlbezirkIDToFind), 6, 7L),
+                new AWerte(new BezirkUndWahlID("wahlID3", wahlbezirkIDToFind), 7, 8L));
 
         repository.saveAll(aWerteToSave);
 
@@ -72,4 +71,3 @@ class AWerteRepositoryTest {
         Assertions.assertThat(result).hasSize(3);
     }
 }
-

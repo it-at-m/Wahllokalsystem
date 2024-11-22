@@ -76,17 +76,17 @@ public class AWerteControllerIntegrationTest {
             val wahlbezirkID = "wahlbezirkID1";
             val eaiWahlberechtigte = createClientListOfAWahlberechtigteDTO(wahlbezirkID);
             WireMock.stubFor(WireMock.get("/wahldaten/wahlbezirke/" + wahlbezirkID + "/wahlberechtigte")
-                .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
-                    .withStatus(HttpStatus.OK.value())
-                    .withBody(objectMapper.writeValueAsBytes(eaiWahlberechtigte))));
+                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
+                            .withStatus(HttpStatus.OK.value())
+                            .withBody(objectMapper.writeValueAsBytes(eaiWahlberechtigte))));
 
             val request = MockMvcRequestBuilders.get("/businessActions/awerte/" + wahlbezirkID);
             val response = api.perform(request).andExpect(status().isOk()).andReturn();
 
             val responseBodyAsDTO = objectMapper.readValue(response.getResponse().getContentAsString(),
-                de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.awerte.AWerteDTO[].class);
+                    de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.awerte.AWerteDTO[].class);
             val expectedResponseBody = aWerteDTOMapper
-                .fromListOfAWerteModelToListOfAWerteDTO(aWerteClientMapper.fromRemoteClientListOfWahlberechtigteDtoToListOfAWerteModel(eaiWahlberechtigte));
+                    .fromListOfAWerteModelToListOfAWerteDTO(aWerteClientMapper.fromRemoteClientListOfWahlberechtigteDtoToListOfAWerteModel(eaiWahlberechtigte));
 
             Assertions.assertThat(responseBodyAsDTO).containsExactlyInAnyOrderElementsOf(expectedResponseBody);
         }
@@ -96,16 +96,16 @@ public class AWerteControllerIntegrationTest {
             val wahlbezirkID = "wahlbezirkID1";
             val eaiWahlberechtigte = createClientListOfAWahlberechtigteDTO(wahlbezirkID);
             WireMock.stubFor(WireMock.get("/wahldaten/wahlbezirke/" + wahlbezirkID + "/wahlberechtigte")
-                .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
-                    .withStatus(HttpStatus.OK.value())
-                    .withBody(objectMapper.writeValueAsBytes(eaiWahlberechtigte))));
+                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
+                            .withStatus(HttpStatus.OK.value())
+                            .withBody(objectMapper.writeValueAsBytes(eaiWahlberechtigte))));
 
             val request = MockMvcRequestBuilders.get("/businessActions/awerte/" + wahlbezirkID);
             api.perform(request).andExpect(status().isOk()).andReturn();
 
             val aWerteFromRepo = awerteRepository.findByBezirkUndWahlID_WahlbezirkID(wahlbezirkID);
             val expectedEntities = aWerteModelMapper.fromListOfAWerteModeltoListOfAWerteEntity(
-                aWerteClientMapper.fromRemoteClientListOfWahlberechtigteDtoToListOfAWerteModel(eaiWahlberechtigte));
+                    aWerteClientMapper.fromRemoteClientListOfWahlberechtigteDtoToListOfAWerteModel(eaiWahlberechtigte));
 
             Assertions.assertThat(aWerteFromRepo).usingRecursiveComparison().isEqualTo(expectedEntities);
         }

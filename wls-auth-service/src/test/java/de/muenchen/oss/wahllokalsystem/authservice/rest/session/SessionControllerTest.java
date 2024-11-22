@@ -25,12 +25,10 @@ import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.session.SessionInformation;
@@ -58,7 +56,7 @@ class SessionControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    private Connection conn = DriverManager.getConnection("jdbc:h2:mem:wls-auth-service", "sa", "");
+    private final Connection conn = DriverManager.getConnection("jdbc:h2:mem:wls-auth-service", "sa", "");
 
     @Autowired
     SessionRegistry sessionRegistry;
@@ -70,7 +68,7 @@ class SessionControllerTest {
     record ColumnNameContentPair(String columnName, Object columnContent) { }
 
     @BeforeEach
-    public void setup() throws SQLException {
+    public void setup() {
         SecurityUtils.runWith(Authorities.ROLE_SESSION_MANAGEMENT);
     }
 
@@ -225,7 +223,7 @@ class SessionControllerTest {
             s2.setString((i + 1), columnNameContentPairs.get(i).columnContent.toString());
         }
         s2.addBatch();
-        log.info("statement: " + s2.toString());
+        log.info("statement: " + s2);
         s2.executeBatch();
         return new SessionInformation(columnNameContentPairs.get(6).columnContent, columnNameContentPairs.get(1).columnContent.toString(), new Date((long)columnNameContentPairs.get(3).columnContent));
     }

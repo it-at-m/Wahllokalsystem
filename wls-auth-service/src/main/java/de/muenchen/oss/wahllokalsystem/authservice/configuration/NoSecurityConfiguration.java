@@ -56,7 +56,7 @@ public class NoSecurityConfiguration {
 
     /**
      * Necessary for starting Application with no-security profile, Bean will be needed on loading the SessionController
-     * @return
+     * @return the sessionRegistry-Bean
      */
     @Bean
     SessionRegistry sessionRegistry() {

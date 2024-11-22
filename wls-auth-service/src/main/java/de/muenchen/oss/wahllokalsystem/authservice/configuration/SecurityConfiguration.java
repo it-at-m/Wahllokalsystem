@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.User;
@@ -85,8 +85,7 @@ public class SecurityConfiguration {
                                 .maxSessionsPreventsLogin(false)
                                 .sessionRegistry(sessionRegistry())
                 )
-                .logout((logout) -> logout.permitAll());
-        ;
+                .logout(LogoutConfigurer::permitAll);
 
         return http.build();
     }

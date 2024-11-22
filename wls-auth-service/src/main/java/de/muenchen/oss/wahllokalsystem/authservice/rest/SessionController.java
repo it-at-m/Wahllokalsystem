@@ -92,14 +92,7 @@ public class SessionController {
     public ResponseEntity<?> killSession(@PathVariable("sessionID") String sessionID) {
         log.info("Attempt to kill session with id {}", sessionID);
         HttpStatus httpStatus = OK;
-        sessionRegistry.getAllPrincipals().forEach(
-                principal -> sessionRegistry.getAllSessions(principal, false).forEach(currSessionInfo ->  {
-                    log.info("Principal is instanceof" + principal.getClass().getName() + " name: " + principal.toString());
-                    val sessId = currSessionInfo.getSessionId();
-                    val prncp = currSessionInfo.getPrincipal();
-                }));
         SessionInformation sessionInformation = sessionRegistry.getSessionInformation(sessionID);
-
         if (sessionInformation != null && !sessionInformation.isExpired()) {
             log.info("Killing session with id {}", sessionID + " principal: " + sessionInformation.getPrincipal());
             sessionInformation.expireNow();

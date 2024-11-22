@@ -4,8 +4,6 @@ import static de.muenchen.oss.wahllokalsystem.authservice.TestConstants.SPRING_T
 import static org.junit.jupiter.api.Assertions.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.authservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.net.URI;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -48,7 +45,7 @@ class SessionCreationTest {
 
     TestRestTemplate testRestTemplate = new TestRestTemplate();
 
-    private Connection conn = DriverManager.getConnection("jdbc:h2:mem:wls-auth-service", "sa", "");
+    private final Connection conn = DriverManager.getConnection("jdbc:h2:mem:wls-auth-service", "sa", "");
 
     @Autowired
     SessionRegistry sessionRegistry;
@@ -76,7 +73,7 @@ class SessionCreationTest {
     }
 
     @Test
-    public void when_logingInn_sessionIsCreated_inDatabase_and_inSessionRegistry() throws SQLException, JsonProcessingException {
+    public void when_logingInn_sessionIsCreated_inDatabase_and_inSessionRegistry() throws SQLException {
         //Get Form and extract csrfToken
         val formLoginRequest = new RequestEntity<>(HttpMethod.GET, URI.create("http://localhost:" + port + "/login"));
         val formLoginResponse = testRestTemplate.exchange(formLoginRequest, String.class);
@@ -103,7 +100,7 @@ class SessionCreationTest {
     }
 
     @Test
-    public void when_callingLogin_csrfSessionAttributeIsCreated() throws SQLException, JsonProcessingException {
+    public void when_callingLogin_csrfSessionAttributeIsCreated() throws SQLException {
         val formLoginRequest = new RequestEntity<>(HttpMethod.GET, URI.create("http://localhost:" + port + "/login"));
         this.testRestTemplate.exchange(formLoginRequest, String.class);
         val sessionAttributesFromDB = SessionUtils.getSessionAttributeBytesFromDb(conn);

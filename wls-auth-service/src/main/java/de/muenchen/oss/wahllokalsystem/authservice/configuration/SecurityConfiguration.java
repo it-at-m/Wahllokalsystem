@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.User;
@@ -22,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
@@ -36,6 +38,9 @@ public class SecurityConfiguration {
 
     @Autowired
     private RestTemplateBuilder restTemplateBuilder;
+
+//    @Autowired
+//    private SessionRegistry sessionRegistry;
 
     @Value("${security.oauth2.resource.user-info-uri}")
     private String userInfoUri;
@@ -54,6 +59,7 @@ public class SecurityConfiguration {
                         AntPathRequestMatcher.antMatcher("/actuator/health/readiness"),
                         // allow access to /actuator/metrics for Prometheus monitoring in OpenShift
                         AntPathRequestMatcher.antMatcher("/actuator/metrics"),
+                                AntPathRequestMatcher.antMatcher("/actuator/sessions/**"),
                         AntPathRequestMatcher.antMatcher("/v3/api-docs/**"),
                         AntPathRequestMatcher.antMatcher("/swagger-ui/**"),
                         AntPathRequestMatcher.antMatcher("/"),
@@ -64,12 +70,21 @@ public class SecurityConfiguration {
                         AntPathRequestMatcher.antMatcher("/h2-console/**"))
                         .permitAll()
                         .anyRequest().authenticated())
+
                 .oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer -> httpSecurityOAuth2ResourceServerConfigurer
                         .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(new JwtUserInfoAuthenticationConverter(
                                 new UserInfoAuthoritiesService(userInfoUri, restTemplateBuilder)))))
                 .formLogin((form) -> form
                         .loginPage("/login")
                         .permitAll())
+                .sessionManagement(c ->
+                        c
+                                .sessionFixation().migrateSession()
+                                .maximumSessions(1)
+                                .expiredUrl("/login")
+                                .maxSessionsPreventsLogin(false)
+                                .sessionRegistry(sessionRegistry())
+                )
                 .logout((logout) -> logout.permitAll());
         ;
 
@@ -86,6 +101,11 @@ public class SecurityConfiguration {
     @Bean
     public SessionRegistry sessionRegistry() {
         return new SessionRegistryImpl();
+    }
+
+    @Bean
+    public ConcurrentSessionControlAuthenticationStrategy concurrentSessionControlAuthenticationStrategy() {
+        return new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry());
     }
 
 }

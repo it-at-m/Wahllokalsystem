@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.SecurityFilterChain;
@@ -24,8 +25,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class NoSecurityConfiguration {
 
-//    @Autowired
-//    private SessionRegistry sessionRegistry;
+
 
     @Bean
     WebSecurityCustomizer ignoringCustomizer() {
@@ -43,14 +43,30 @@ public class NoSecurityConfiguration {
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .anyRequest()
                         .permitAll())
-                .csrf(AbstractHttpConfigurer::disable)
-                //.sessionManagement()
-                //.sessionFixation().migrateSession().maximumSessions(1)
-                //.sessionRegistry(sessionRegistry);
-                ;
+                .sessionManagement(c ->
+                        c
+                                //.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // das führt dazu, dass man PRINCIPAL_NAME in der Tabelle SPRING_SESSION als unbekannt sieht, obwohl er im sprinRegistry bekannt ist .. k.Ahnung
+                                .sessionFixation().migrateSession()
+                                .maximumSessions(1)
+                                .expiredUrl("/login")
+                                .maxSessionsPreventsLogin(false)
+                                .sessionRegistry(sessionRegistry()
+                                )
+                )
+                .csrf(AbstractHttpConfigurer::disable);
         // @formatter:on
         return http.build();
     }
+
+    /**
+     * Necessary for starting Application with no-security profile, Bean will be needed on loading the SessionController
+     * @return
+     */
+    @Bean
+    SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
+
 
 
 

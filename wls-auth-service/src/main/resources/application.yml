@@ -4,7 +4,7 @@ spring:
   flyway:
     locations:
       - classpath:db/migrations/{vendor}
-  h2.console.enabled: true
+  h2.console.enabled: false
   profiles:
     group:
       local:

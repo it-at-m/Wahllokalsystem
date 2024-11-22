@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.authservice.service;
 
 import de.muenchen.oss.wahllokalsystem.authservice.domain.Authority;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.User;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -44,6 +45,9 @@ public interface UserModelMapper {
     }
 
     default Set<GrantedAuthority> authoritiesToGrantedAuthorities(final Set<Authority> authorities) {
+        if (authorities == null) {
+            return Collections.emptySet();
+        }
         return authorities.stream().map(authority -> new SimpleGrantedAuthority(authority.getAuthority())).collect(Collectors.toSet());
     }
 }

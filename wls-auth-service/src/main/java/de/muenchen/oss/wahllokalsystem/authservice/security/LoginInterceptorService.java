@@ -21,7 +21,7 @@ public class LoginInterceptorService {
 
     private static final String MONITORING_AUTHORITY = "MONITORING".toLowerCase();
     private static final String WAHLVORSTAND_AUTHORITY = "WAHLVORSTAND".toLowerCase();
-    private static final String ROLE_LOGIN_WLS_WAHLLOKAL = "WLS_WAHLVORSTAND"; //TODO mit der Konfiguration im UserService zusammenbringen
+    private static final String ROLE_LOGIN_WLS_WAHLLOKAL = "WLS_WAHLVORSTAND";
 
     @Value("${service.config.loginCheckMessage}")
     private String loginCheckMessage;

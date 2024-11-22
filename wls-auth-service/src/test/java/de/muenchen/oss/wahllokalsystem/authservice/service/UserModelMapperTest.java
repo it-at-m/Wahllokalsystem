@@ -78,4 +78,24 @@ class UserModelMapperTest {
         }
     }
 
+    @Nested
+    class AuthoritiesToGrantedAuthorities {
+
+        @Test
+        void should_returnSetOfGrantedAuthorities_when_setOfAuthoritiesIsGiven() {
+            val authoritiesToMap = Set.of(new Authority("authority1", Collections.emptySet(), Collections.emptySet()),
+                    new Authority("authority2", Collections.emptySet(), Collections.emptySet()));
+
+            val result = unitUnderTest.authoritiesToGrantedAuthorities(authoritiesToMap);
+
+            val expectedResult = Set.of(new SimpleGrantedAuthority("authority1"), new SimpleGrantedAuthority("authority2"));
+            Assertions.assertThat(result).isEqualTo(expectedResult);
+        }
+
+        @Test
+        void should_returnEmptySet_when_parameterIsNull() {
+            Assertions.assertThat(unitUnderTest.authoritiesToGrantedAuthorities(null)).isEmpty();
+        }
+    }
+
 }

@@ -58,7 +58,6 @@ class LoginInterceptorServiceTest {
             val ldapUserDetails = new TestLdapUserDetails(username, "WAHLVORSTAND");
 
             val mockedUserModelFromUserService = createUserModel(wahltagID, "WLS_WAHLVORSTAND");
-            val mockedLegalLoginInterval = new LegalLoginIntervalModel(LocalDateTime.now().minusYears(1), LocalDateTime.now().plusYears(1));
 
             Mockito.when(wahltagClient.isWahltagActive(wahltagID)).thenReturn(false);
             Mockito.when(userService.getUser(username)).thenReturn(Optional.of(mockedUserModelFromUserService));

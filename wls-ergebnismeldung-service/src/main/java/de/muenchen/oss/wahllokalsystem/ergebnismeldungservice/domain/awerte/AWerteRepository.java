@@ -28,6 +28,10 @@ public interface AWerteRepository extends CrudRepository<AWerte, BezirkUndWahlID
     <S extends AWerte> S save(S aWerte);
 
     @Override
+    @PreAuthorize("hasAuthority('Ergebnismeldung_WRITE_AWerte') OR hasAuthority('Admin_BUSINESSACTION_LoadWahltermindaten')")
+    <S extends AWerte> Iterable<S> saveAll(Iterable<S> entities);
+
+    @Override
     @CacheEvict(value = CACHE, key = "#p0")
     @PreAuthorize("hasAuthority('Monitoring_DELETE_Waehleranzahl')")
     void deleteById(BezirkUndWahlID bezirkUndWahlID);

@@ -5,6 +5,7 @@
         <h1 class="text-h3 font-weight-bold mb-3">
           Willkommen beim Wahllokalsystem
         </h1>
+        <v-icon icon="$home" size="large"></v-icon>
         <p>
           Das API-Gateway ist:
           <span :class="status">{{ status }}</span>
@@ -15,11 +16,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { VCol, VContainer, VRow } from "vuetify/components";
+import {onMounted, ref} from "vue";
+import {VCol, VContainer, VIcon, VRow} from "vuetify/components";
 
-import { checkHealth } from "@/api/health-client";
-import { useSnackbarStore } from "@/stores/snackbar";
+import {checkHealth} from "@/api/health-client";
+import {useSnackbarStore} from "@/stores/snackbar";
 import HealthState from "@/types/HealthState";
 
 const snackbarStore = useSnackbarStore();

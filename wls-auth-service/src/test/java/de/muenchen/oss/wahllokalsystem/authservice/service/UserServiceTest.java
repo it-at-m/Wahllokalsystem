@@ -84,7 +84,7 @@ class UserServiceTest {
             Mockito.verify(loginAttemptRepository).save(loginAttemptCaptor.capture());
 
             val expectedLoginAttempt = new LoginAttempt(username, 1, null);
-            Assertions.assertThat(loginAttemptCaptor.getValue()).isEqualTo(expectedLoginAttempt);
+            Assertions.assertThat(loginAttemptCaptor.getValue()).usingRecursiveComparison().isEqualTo(expectedLoginAttempt);
 
         }
 

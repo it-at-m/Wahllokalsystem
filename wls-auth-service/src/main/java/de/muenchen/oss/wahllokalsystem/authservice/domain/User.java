@@ -14,16 +14,16 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.Set;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.val;
 
 @Entity
 @Table(name = "Wlsuser") //user as table name is already in use by h2
-@Data
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(onlyExplicitlyIncluded = true)

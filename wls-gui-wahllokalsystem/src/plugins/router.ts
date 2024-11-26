@@ -1,10 +1,10 @@
 // Composables
-import {createRouter, createWebHashHistory} from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 
-import { ROUTES_HOME, ROUTES_NEWROUTE, ROUTES_NOTFOUND} from "@/constants";
+import { ROUTES_HOME, ROUTES_NEWROUTE, ROUTES_NOTFOUND } from "@/constants";
+import Error404View from "@/views/Error404View.vue";
 import HomeView from "@/views/HomeView.vue";
 import NewRouteView from "@/views/NewRouteView.vue";
-import Error404View from "@/views/Error404View.vue";
 
 const routes = [
   {

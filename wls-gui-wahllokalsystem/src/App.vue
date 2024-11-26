@@ -76,13 +76,13 @@ import {
   VToolbarTitle,
 } from "vuetify/components";
 
-import {getUser} from "@/api/user-client";
+import { getUser } from "@/api/user-client";
 import Ad2ImageAvatar from "@/components/common/Ad2ImageAvatar.vue";
 import TheSnackbar from "@/components/TheSnackbar.vue";
-import { ROUTES_NEWROUTE} from "@/constants";
-import {useSnackbarStore} from "@/stores/snackbar";
-import {useUserStore} from "@/stores/user";
-import User, {UserLocalDevelopment} from "@/types/User";
+import { ROUTES_NEWROUTE } from "@/constants";
+import { useSnackbarStore } from "@/stores/snackbar";
+import { useUserStore } from "@/stores/user";
+import User, { UserLocalDevelopment } from "@/types/User";
 
 const snackbarStore = useSnackbarStore();
 const userStore = useUserStore();

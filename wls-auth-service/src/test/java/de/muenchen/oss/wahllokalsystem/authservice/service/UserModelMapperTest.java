@@ -31,7 +31,7 @@ class UserModelMapperTest {
 
             val expectedResult = new User(username, "dummy", "dummy@dummy.local", false, true, wahltagID, userInfo.wahltag(), userInfo.wahlbezirkID(),
                     userInfo.wahlbezirknummer(), Wahlbezirksart.UWB, pin, authoritiesToLink, userInfo.wbid_wahlnummer());
-            Assertions.assertThat(result).isEqualTo(expectedResult);
+            Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
         }
 
         private WahllokalUserInfoModel createWahlbezirksartModelWithAllDataSet(final WahlbezirksartModel wahlbezirkArt) {

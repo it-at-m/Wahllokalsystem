@@ -12,7 +12,7 @@ public interface BroadcastMapper {
 
     MessageDTO toDto(Message entityToMap);
 
-    default List<Message> fromBroadcastMessageDTOtoListOfMessages(BroadcastMessageDTO messageToBroadcast, LocalDateTime now) {
+    default List<Message> toListOfMessageEntity(BroadcastMessageDTO messageToBroadcast, LocalDateTime now) {
         return messageToBroadcast.wahlbezirkIDs().stream().map(wahlbezirkId -> {
             Message message = new Message();
             message.setWahlbezirkID(wahlbezirkId);

@@ -1,0 +1,45 @@
+### Get demo - init of login
+# @no-cookie-jar
+# @no-redirect
+GET http://localhost:39152/demo
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+
+> {%
+    const jSessionID = response.headers.valueOf("Set-Cookie").match('(.*);.*')[1];
+    client.global.set("jSessionID", jSessionID);
+    console.log(`jSessionID > ${jSessionID}`)
+
+%}
+
+### Get Login Form
+# @no-cookie-jar
+GET http://localhost:39152/login
+Cookie: {{ jSessionID }}
+
+> {%
+    const csrf = response.body.match('<input .* id="csrf_token".*\n?.*value=\"(.*)\".*\/>')[1];
+    console.log(`csrf > ${csrf}`);
+    client.global.set("csrfToken", csrf);
+%}
+
+### Login with user:password
+# @no-cookie-jar
+# @no-redirect
+POST http://localhost:39152/login
+Content-Type: application/x-www-form-urlencoded
+Cookie: {{ jSessionID }}
+
+username = user &
+password = password &
+_csrf = {{ csrfToken }}
+
+> {%
+    const jSessionID = response.headers.valueOf("Set-Cookie").match('(.*);.*')[1];
+    client.global.set("jSessionID", jSessionID);
+    console.log(`jSessionID > ${jSessionID}`)
+%}
+
+### Get demo
+# @no-cookie-jar
+GET http://localhost:39152/demo
+Cookie: {{ jSessionID }}

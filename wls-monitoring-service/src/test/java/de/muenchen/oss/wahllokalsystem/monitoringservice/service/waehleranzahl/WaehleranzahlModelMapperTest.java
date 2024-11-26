@@ -5,6 +5,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlI
 import java.time.LocalDateTime;
 import lombok.val;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
@@ -12,35 +13,43 @@ class WaehleranzahlModelMapperTest {
 
     private final WaehleranzahlModelMapper unitUnderTest = Mappers.getMapper(WaehleranzahlModelMapper.class);
 
-    @Test
-    void should_returnEqualWaehleranzahlModel_when_waehleranzahlIsMapped() {
-        val wahlID = "wahlID01";
-        val wahlbezirkID = "wahlbezirkID01";
-        BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
-        val anzahlWaehler = 99;
-        LocalDateTime uhrzeit = LocalDateTime.now();
-        val waehleranzahlEntity = new Waehleranzahl(bezirkUndWahlID, anzahlWaehler, uhrzeit);
+    @Nested
+    class ToModel {
 
-        val waehleranzahlModel = unitUnderTest.toModel(waehleranzahlEntity);
+        @Test
+        void should_returnEqualWaehleranzahlModel_when_waehleranzahlIsMapped() {
+            val wahlID = "wahlID01";
+            val wahlbezirkID = "wahlbezirkID01";
+            BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
+            val anzahlWaehler = 99;
+            LocalDateTime uhrzeit = LocalDateTime.now();
+            val waehleranzahlEntity = new Waehleranzahl(bezirkUndWahlID, anzahlWaehler, uhrzeit);
 
-        val expectedResult = new WaehleranzahlModel(bezirkUndWahlID, anzahlWaehler, uhrzeit);
+            val waehleranzahlModel = unitUnderTest.toModel(waehleranzahlEntity);
 
-        Assertions.assertThat(waehleranzahlModel).isEqualTo(expectedResult);
+            val expectedResult = new WaehleranzahlModel(bezirkUndWahlID, anzahlWaehler, uhrzeit);
+
+            Assertions.assertThat(waehleranzahlModel).isEqualTo(expectedResult);
+        }
     }
 
-    @Test
-    void should_returnEqualWaehleranzahl_when_waehleranzahlModelIsMapped() {
-        val wahlID = "wahlID01";
-        val wahlbezirkID = "wahlbezirkID01";
-        BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
-        val anzahlWaehler = 99;
-        LocalDateTime uhrzeit = LocalDateTime.now();
-        val waehleranzahlModel = new WaehleranzahlModel(bezirkUndWahlID, anzahlWaehler, uhrzeit);
+    @Nested
+    class ToEntity {
 
-        val waehleranzahlEntity = unitUnderTest.toEntity(waehleranzahlModel);
+        @Test
+        void should_returnEqualWaehleranzahl_when_waehleranzahlModelIsMapped() {
+            val wahlID = "wahlID01";
+            val wahlbezirkID = "wahlbezirkID01";
+            BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
+            val anzahlWaehler = 99;
+            LocalDateTime uhrzeit = LocalDateTime.now();
+            val waehleranzahlModel = new WaehleranzahlModel(bezirkUndWahlID, anzahlWaehler, uhrzeit);
 
-        val expectedResult = new Waehleranzahl(bezirkUndWahlID, anzahlWaehler, uhrzeit);
+            val waehleranzahlEntity = unitUnderTest.toEntity(waehleranzahlModel);
 
-        Assertions.assertThat(waehleranzahlEntity).isEqualTo(expectedResult);
+            val expectedResult = new Waehleranzahl(bezirkUndWahlID, anzahlWaehler, uhrzeit);
+
+            Assertions.assertThat(waehleranzahlEntity).isEqualTo(expectedResult);
+        }
     }
 }

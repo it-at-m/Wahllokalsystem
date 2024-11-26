@@ -15,7 +15,7 @@ changes:
       clientId: ${SSO_CLIENT_ID}
       name: user_name
       userAttribute: user_name
-      claimName: user_name
+      claimName: sub
       addToUserInfo: true
       addToAccessToken: true
 

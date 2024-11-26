@@ -1,0 +1,57 @@
+id: add authorities wahlvorstand
+author: vjohnslhm
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: Wahlvorstand_BUSINESSACTION_GetWahlvorstand
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorstandAuthorities
+      role: Wahlvorstand_BUSINESSACTION_GetWahlvorstand
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Wahlvorstand_BUSINESSACTION_PostWahlvorstand
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorstandAuthorities
+      role: Wahlvorstand_BUSINESSACTION_PostWahlvorstand
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Wahlvorstand_BUSINESSACTION_UpdateWahlvorstand
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorstandAuthorities
+      role: Wahlvorstand_BUSINESSACTION_UpdateWahlvorstand
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Wahlvorstand_READ_Wahlvorstand
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorstandAuthorities
+      role: Wahlvorstand_READ_Wahlvorstand
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Wahlvorstand_WRITE_Wahlvorstand
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorstandAuthorities
+      role: Wahlvorstand_WRITE_Wahlvorstand
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Wahlvorstand_DELETE_Wahlvorstand
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorstandAuthorities
+      role: Wahlvorstand_DELETE_Wahlvorstand
+      clientId: ${SSO_CLIENT_ID}

@@ -70,17 +70,31 @@ info.application.name: @project.artifactId@
 info.application.version: @project.version@
 
 service:
+  config:
+    crypto:
+      encryptionPrefix: "ENCRYPTED:"
+    maxLoginAttempts: 5
+    clients:
+      infomanagement:
+        basepath: http://localhost:39146
+        configkey:
+          welcomeMessage: WILLKOMMENSTEXT
+    ldap:
+      userDn:
+      userDnPassword:
+      contextSource:
+      userSearchBase: ou=people
+      userSearchFilter: uid={0}
+    welcomemessage:
+      default: "Willkommen zur Wahl!"
+    user:
+      anzahlPinBloecke: 4
+      countCharsPrefix: 6
+      countNumbersPin: 4
+      csv:
+        eol: "\r\n"
+      authority:
+        wahlvorstand: WLS_WAHLVORSTAND
+      prefixChars: "23456789abcdefghjkmnpqrstuvwxyz"
   info:
     oid: AUTH-SERVICE
-
-serviceauth:
-  crypto:
-    encryptionPrefix: "ENCRYPTED:"
-  maxLoginAttempts: 5
-  clients:
-    infomanagement:
-      basepath: http://localhost:39146
-      configkey:
-        welcomeMessage: WILLKOMMENSTEXT
-  welcomemessage:
-    default: "Willkommen zur Wahl!"

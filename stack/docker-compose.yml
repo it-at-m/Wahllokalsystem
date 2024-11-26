@@ -116,6 +116,25 @@ services:
       - services
       - keycloak
 
+  wls-monitoring-service:
+    container_name: wls-monitoring-service
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-monitoring-service:latest
+    depends_on:
+      - wls-db-oracle
+    env_file:
+      - .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=${WLS_MONITORING_SERVICE_PROFILE}
+      - SPRING_DATASOURCE_URL=${WLS_MONITORING_SERVICE_DB_URL}
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${WLS_MONITORING_SERVICE_KEYCLOAK_URL}/certs
+      - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${WLS_MONITORING_SERVICE_KEYCLOAK_URL}/userinfo
+      - SERVER_PORT=8080
+    ports:
+      - 8206:8080
+    networks:
+      - services
+      - keycloak
+
   wls-eai-service:
     container_name: wls-eai-service
     image: ghcr.io/it-at-m/wahllokalsystem-wls-eai-service:latest
@@ -201,6 +220,44 @@ services:
       - './oracle-database:/container-entrypoint-startdb.d'
     networks:
       - services
+
+  refarch-gateway:
+    image: ghcr.io/it-at-m/refarch/refarch-gateway:1.3.1@sha256:702d063d7141bb79af0107956b699c7771d0a91128f7622bdadc771911b94fca
+    depends_on:
+      wls-init-keycloak:
+        condition: service_completed_successfully
+    ports:
+      - "8083:8080"
+    environment:
+      - ALLOWED_ORIGINS_PUBLIC=http://localhost:*
+      - ALLOWED_ORIGINS_CLIENTS=http://localhost:*
+      - SPRING_CLOUD_GATEWAY_ROUTES_0_ID=sso
+      - SPRING_CLOUD_GATEWAY_ROUTES_0_URI=http://kubernetes.docker.internal:8100/
+      - SPRING_CLOUD_GATEWAY_ROUTES_0_PREDICATES_0=Path=/api/sso/userinfo
+      - SPRING_CLOUD_GATEWAY_ROUTES_0_FILTERS_0=RewritePath=/api/sso/userinfo, /${KEYCLOAK_RELATIV_PATH}/realms/${SSO_REALM}/protocol/openid-connect/userinfo
+      - SPRING_CLOUD_GATEWAY_ROUTES_1_ID=backend
+      - SPRING_CLOUD_GATEWAY_ROUTES_1_URI=http://host.docker.internal:39146/
+      - SPRING_CLOUD_GATEWAY_ROUTES_1_PREDICATES_0=Path=/api/backend-service/**
+      - SPRING_CLOUD_GATEWAY_ROUTES_1_FILTERS_0=RewritePath=/api/backend-service/(?<urlsegments>.*), /$\{urlsegments}
+      - SPRING_PROFILES_ACTIVE=hazelcast-local
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://kubernetes.docker.internal:8100/${KEYCLOAK_RELATIV_PATH}/realms/${SSO_REALM}
+      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_SSO_ISSUERURI=$${spring.security.oauth2.resourceserver.jwt.issuer-uri}
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_PROVIDER=sso
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_CLIENTID=${SSO_CLIENT_ID}
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_CLIENTSECRET=${SSO_CLIENT_SECRET}
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_SCOPE=profile, openid
+    networks:
+      - keycloak
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      interval: 30s
+      timeout: 60s
+      retries: 3
+      start_period: 60s
+      test: [ "CMD-SHELL", "curl http://localhost:8080/actuator/health/liveness" ]
+    security_opt:
+      - no-new-privileges:true
 
 networks:
   internal:

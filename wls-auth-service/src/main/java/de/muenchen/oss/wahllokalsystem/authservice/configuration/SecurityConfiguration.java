@@ -39,9 +39,6 @@ public class SecurityConfiguration {
     @Autowired
     private RestTemplateBuilder restTemplateBuilder;
 
-    //    @Autowired
-    //    private SessionRegistry sessionRegistry;
-
     @Value("${security.oauth2.resource.user-info-uri}")
     private String userInfoUri;
 
@@ -102,5 +99,4 @@ public class SecurityConfiguration {
     public ConcurrentSessionControlAuthenticationStrategy concurrentSessionControlAuthenticationStrategy() {
         return new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry());
     }
-
 }

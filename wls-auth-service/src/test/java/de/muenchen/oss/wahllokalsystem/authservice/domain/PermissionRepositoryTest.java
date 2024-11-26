@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.authservice.domain;
 
 import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.authservice.TestConstants;
+import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -12,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
+@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS })
 class PermissionRepositoryTest {
 
     @Autowired
@@ -33,7 +34,7 @@ class PermissionRepositoryTest {
 
             val findByResult = permissionRepository.findByPermission(permissionString);
 
-            Assertions.assertThat(findByResult.get()).isEqualTo(permissionToFind);
+            Assertions.assertThat(findByResult.get()).usingRecursiveComparison().isEqualTo(permissionToFind);
         }
 
         @Test

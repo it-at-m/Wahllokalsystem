@@ -13,8 +13,14 @@ public class Authorities {
     public static final String REPOSITORY_DELETE_AWERTE = "Ergebnismeldung_DELETE_AWerte";
     public static final String REPOSITORY_WRITE_AWERTE = "Ergebnismeldung_WRITE_AWerte";
 
-    public static final String[] ALL_AUTHORITIES_GET_AWERTE = new String[] {
+    public static final String[] ALL_AUTHORITIES_1_GET_AWERTE = new String[] {
         SERVICE_GET_AWERTE,
+        REPOSITORY_READ_AWERTE,
+        REPOSITORY_WRITE_AWERTE
+    };
+
+    public static final String[] ALL_AUTHORITIES_2_GET_AWERTE = new String[] {
+        ADMIN_LOADWAHLTERMINDATEN,
         REPOSITORY_READ_AWERTE,
         REPOSITORY_WRITE_AWERTE
     };

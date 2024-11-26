@@ -71,12 +71,17 @@ class SessionControllerTest {
     }
 
     @BeforeEach
-    public void setup() {
+    public void setUp() throws SQLException {
+        purgeSessions();
         SecurityUtils.runWith(Authorities.ROLE_SESSION_MANAGEMENT);
     }
 
     @AfterEach
     public void tearDown() throws SQLException {
+        purgeSessions();
+    }
+
+    private void purgeSessions() throws SQLException {
         Statement stat = conn.createStatement();
         stat.execute("DELETE SPRING_SESSION_ATTRIBUTES");
         stat.execute("DELETE SPRING_SESSION");

@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -56,8 +57,17 @@ class SessionCreationTest {
     SessionCreationTest() throws SQLException {
     }
 
+    @BeforeEach
+    public void setUp() throws SQLException {
+        purgeSessions();
+    }
+
     @AfterEach
     public void tearDown() throws SQLException {
+        purgeSessions();
+    }
+
+    private void purgeSessions() throws SQLException {
         Statement stat = conn.createStatement();
         stat.execute("DELETE SPRING_SESSION_ATTRIBUTES");
         stat.execute("DELETE SPRING_SESSION");

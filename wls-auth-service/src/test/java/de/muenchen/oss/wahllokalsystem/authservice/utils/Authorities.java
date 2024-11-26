@@ -8,5 +8,4 @@ public class Authorities {
 
     public static final String ROLE_SESSION_MANAGEMENT = "ROLE_ADMIN_ADMIN";
 
-
 }

@@ -20,15 +20,14 @@ public class SessionUtils {
         return result;
     }
 
-    public static HashMap<String,byte[]> getSessionAttributeBytesFromDb(final Connection conn) throws SQLException {
-        HashMap<String,byte[]> result = new HashMap<>();
+    public static HashMap<String, byte[]> getSessionAttributeBytesFromDb(final Connection conn) throws SQLException {
+        HashMap<String, byte[]> result = new HashMap<>();
         ResultSet rs = getResultSet(conn,
                 "SELECT * FROM SPRING_SESSION_ATTRIBUTES");
 
         while (rs.next()) {
             result.put(
-                    rs.getString("ATTRIBUTE_NAME"), rs.getBytes("ATTRIBUTE_BYTES")
-            );
+                    rs.getString("ATTRIBUTE_NAME"), rs.getBytes("ATTRIBUTE_BYTES"));
         }
         return result;
     }

@@ -23,8 +23,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class NoSecurityConfiguration {
 
-
-
     @Bean
     WebSecurityCustomizer ignoringCustomizer() {
         return (web) -> web
@@ -55,7 +53,9 @@ public class NoSecurityConfiguration {
     }
 
     /**
-     * Necessary for starting Application with no-security profile, Bean will be needed on loading the SessionController
+     * Necessary for starting Application with no-security profile, Bean will be needed on loading the
+     * SessionController
+     *
      * @return the sessionRegistry-Bean
      */
     @Bean

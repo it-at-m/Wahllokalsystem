@@ -39,8 +39,8 @@ public class SecurityConfiguration {
     @Autowired
     private RestTemplateBuilder restTemplateBuilder;
 
-//    @Autowired
-//    private SessionRegistry sessionRegistry;
+    //    @Autowired
+    //    private SessionRegistry sessionRegistry;
 
     @Value("${security.oauth2.resource.user-info-uri}")
     private String userInfoUri;
@@ -59,7 +59,7 @@ public class SecurityConfiguration {
                         AntPathRequestMatcher.antMatcher("/actuator/health/readiness"),
                         // allow access to /actuator/metrics for Prometheus monitoring in OpenShift
                         AntPathRequestMatcher.antMatcher("/actuator/metrics"),
-                                AntPathRequestMatcher.antMatcher("/actuator/sessions/**"),
+                        AntPathRequestMatcher.antMatcher("/actuator/sessions/**"),
                         AntPathRequestMatcher.antMatcher("/v3/api-docs/**"),
                         AntPathRequestMatcher.antMatcher("/swagger-ui/**"),
                         AntPathRequestMatcher.antMatcher("/"),
@@ -75,14 +75,12 @@ public class SecurityConfiguration {
                 .formLogin((form) -> form
                         .loginPage("/login")
                         .permitAll())
-                .sessionManagement(c ->
-                        c
-                                .sessionFixation().migrateSession()
-                                .maximumSessions(1)
-                                .expiredUrl("/login")
-                                .maxSessionsPreventsLogin(false)
-                                .sessionRegistry(sessionRegistry())
-                )
+                .sessionManagement(c -> c
+                        .sessionFixation().migrateSession()
+                        .maximumSessions(1)
+                        .expiredUrl("/login")
+                        .maxSessionsPreventsLogin(false)
+                        .sessionRegistry(sessionRegistry()))
                 .logout(LogoutConfigurer::permitAll);
 
         return http.build();

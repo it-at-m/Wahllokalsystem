@@ -31,9 +31,10 @@ import org.springframework.test.context.ActiveProfiles;
         classes = { MicroServiceApplication.class },
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
-            "spring.datasource.url=jdbc:h2:mem:wls-auth-service;DB_CLOSE_ON_EXIT=FALSE",
-            "refarch.gracefulshutdown.pre-wait-seconds=0"
-        })
+                "spring.datasource.url=jdbc:h2:mem:wls-auth-service;DB_CLOSE_ON_EXIT=FALSE",
+                "refarch.gracefulshutdown.pre-wait-seconds=0"
+        }
+)
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
 @AutoConfigureMockMvc
 @Slf4j
@@ -104,7 +105,7 @@ class SessionCreationTest {
         this.testRestTemplate.exchange(formLoginRequest, String.class);
         val sessionAttributesFromDB = SessionUtils.getSessionAttributeBytesFromDb(conn);
         assertEquals(1, sessionAttributesFromDB.size());
-        String firstAttributesKey = (String)sessionAttributesFromDB.keySet().toArray()[0];
+        String firstAttributesKey = (String) sessionAttributesFromDB.keySet().toArray()[0];
         Assertions.assertThat(firstAttributesKey).endsWith("CSRF_TOKEN");
     }
 

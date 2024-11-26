@@ -36,9 +36,6 @@
     </v-app-bar>
     <v-navigation-drawer v-model="drawer">
       <v-list>
-        <v-list-item />
-      </v-list>
-      <v-list>
         <v-list-item :to="{ name: ROUTES_NEWROUTE }">
           <v-list-item-title>Test out Routing</v-list-item-title>
         </v-list-item>

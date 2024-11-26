@@ -1,18 +1,14 @@
 <template>
   <v-container>
     <v-row class="text-center">
-      <v-col cols="12">
-        <v-img
-          src="@/assets/logo.png"
-          class="my-3"
-          height="200"
-        />
-      </v-col>
-
       <v-col class="mb-4">
         <h1 class="text-h3 font-weight-bold mb-3">
-          Willkommen beim refarch-frontend von it@M
+          Willkommen beim Wahllokalsystem
         </h1>
+        <v-icon
+          icon="$home"
+          size="large"
+        ></v-icon>
         <p>
           Das API-Gateway ist:
           <span :class="status">{{ status }}</span>
@@ -24,7 +20,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { VCol, VContainer, VImg, VRow } from "vuetify/components";
+import { VCol, VContainer, VIcon, VRow } from "vuetify/components";
 
 import { checkHealth } from "@/api/health-client";
 import { useSnackbarStore } from "@/stores/snackbar";

@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
 import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,18 +55,15 @@ public class SessionController {
 
         sessionRegistry.getAllPrincipals().forEach(
                 principal -> sessionRegistry.getAllSessions(principal, false).forEach(currSessionInfo -> {
-                    log.info("Principal is instanceof" + principal.getClass().getName());
                     OAuthServerSession currSession = new OAuthServerSession();
                     if (principal instanceof String) {
                         currSession.setUsername((String) principal);
-                        log.info("PrincipalName String:" + principal);
                     } else if (principal instanceof org.springframework.security.core.userdetails.User) {
                         currSession.setUsername(((org.springframework.security.core.userdetails.User) principal).getUsername());
-                        log.info("PrincipalName org.springframework.security.core.userdetails.User:"
-                                + ((org.springframework.security.core.userdetails.User) principal).getUsername());
                     } else if (principal instanceof Principal) {
                         currSession.setUsername(((Principal) principal).getName());
-                        log.info("PrincipalName Principal:" + ((Principal) principal).getName());
+                    } else if (principal instanceof LdapUserDetailsImpl) {
+                        currSession.setUsername(((LdapUserDetailsImpl) principal).getUsername());
                     } else {
                         try {
                             currSession.setUsername((String) principal.getClass().getMethod("getUsername").invoke(principal));

@@ -1,4 +1,6 @@
 export const ROUTES_HOME = "home";
+export const ROUTES_NEWROUTE = "newroute";
+export const ROUTES_NOTFOUND = "404";
 
 export const AD2IMAGE_URL = import.meta.env.VITE_AD2IMAGE_URL;
 

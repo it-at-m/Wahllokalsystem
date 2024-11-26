@@ -38,6 +38,11 @@
       <v-list>
         <v-list-item />
       </v-list>
+      <v-list>
+        <v-list-item :to="{ name: ROUTES_NEWROUTE }">
+          <v-list-item-title>Test out Routing</v-list-item-title>
+        </v-list-item>
+      </v-list>
     </v-navigation-drawer>
     <v-main>
       <v-container fluid>
@@ -64,18 +69,20 @@ import {
   VFadeTransition,
   VList,
   VListItem,
+  VListItemTitle,
   VMain,
   VNavigationDrawer,
   VRow,
   VToolbarTitle,
 } from "vuetify/components";
 
-import { getUser } from "@/api/user-client";
+import {getUser} from "@/api/user-client";
 import Ad2ImageAvatar from "@/components/common/Ad2ImageAvatar.vue";
 import TheSnackbar from "@/components/TheSnackbar.vue";
-import { useSnackbarStore } from "@/stores/snackbar";
-import { useUserStore } from "@/stores/user";
-import User, { UserLocalDevelopment } from "@/types/User";
+import { ROUTES_NEWROUTE} from "@/constants";
+import {useSnackbarStore} from "@/stores/snackbar";
+import {useUserStore} from "@/stores/user";
+import User, {UserLocalDevelopment} from "@/types/User";
 
 const snackbarStore = useSnackbarStore();
 const userStore = useUserStore();

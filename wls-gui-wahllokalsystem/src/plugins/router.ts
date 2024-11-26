@@ -1,8 +1,10 @@
 // Composables
-import { createRouter, createWebHashHistory } from "vue-router";
+import {createRouter, createWebHashHistory} from "vue-router";
 
-import { ROUTES_HOME } from "@/constants";
+import { ROUTES_HOME, ROUTES_NEWROUTE, ROUTES_NOTFOUND} from "@/constants";
 import HomeView from "@/views/HomeView.vue";
+import NewRouteView from "@/views/NewRouteView.vue";
+import Error404View from "@/views/Error404View.vue";
 
 const routes = [
   {
@@ -11,7 +13,16 @@ const routes = [
     component: HomeView,
     meta: {},
   },
-  { path: "/:catchAll(.*)*", redirect: "/" }, // CatchAll route
+  {
+    path: "/newroute",
+    name: ROUTES_NEWROUTE,
+    component: NewRouteView,
+  },
+  {
+    path: "/:catchAll(.*)*",
+    name: ROUTES_NOTFOUND,
+    component: Error404View,
+  }, // CatchAll route
 ];
 
 const router = createRouter({

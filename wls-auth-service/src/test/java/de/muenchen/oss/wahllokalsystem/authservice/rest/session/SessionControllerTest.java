@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.OAuthServerSessions;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.sql.Connection;
@@ -46,7 +47,7 @@ import de.muenchen.oss.wahllokalsystem.authservice.utils.Authorities;
                 "refarch.gracefulshutdown.pre-wait-seconds=0"
         }
 )
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
+@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS })
 @AutoConfigureMockMvc
 @Slf4j
 class SessionControllerTest {

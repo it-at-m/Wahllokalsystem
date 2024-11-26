@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.authservice.rest.session;
 import static de.muenchen.oss.wahllokalsystem.authservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.junit.jupiter.api.Assertions.*;
 import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
 import java.net.URI;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -35,7 +36,7 @@ import org.springframework.test.context.ActiveProfiles;
                 "refarch.gracefulshutdown.pre-wait-seconds=0"
         }
 )
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
+@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS })
 @AutoConfigureMockMvc
 @Slf4j
 class SessionCreationTest {

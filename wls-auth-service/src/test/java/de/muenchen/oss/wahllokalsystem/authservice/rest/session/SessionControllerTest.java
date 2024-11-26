@@ -90,7 +90,7 @@ class SessionControllerTest {
     }
 
     @Test
-    public void when_sessionsCreated_sessionsWillBeFound() throws Exception {
+    public void should_findSessions_when_sessionsCreated() throws Exception {
         val session1 = createSpringSession_inDB_and_inSessionRegistry_forUser(1, "user1");
         val session2 = createSpringSession_inDB_and_inSessionRegistry_forUser(2, "user2");
         val session3 = createSpringSession_inDB_and_inSessionRegistry_forUser(3, "user3");
@@ -106,7 +106,7 @@ class SessionControllerTest {
 
     @Test
     @WithUserDetails
-    public void when_killingSession_theSessionWillBeKilled() throws Exception {
+    public void should_killSession_when_killingSessionCalled() throws Exception {
         val session1 = createSpringSession_inDB_and_inSessionRegistry_forUser(1, "user1");
         val session2 = createSpringSession_inDB_and_inSessionRegistry_forUser(2, "user2");
         val session3 = createSpringSession_inDB_and_inSessionRegistry_forUser(3, "user3");

@@ -76,7 +76,7 @@ class SessionCreationTest {
     }
 
     @Test
-    public void when_noSessionsInDB_noSessionsWillBeFound() throws SQLException {
+    public void should_notFindSessions_when_noSessionsInDB() throws SQLException {
         assertEquals(
                 0, SessionUtils.getSessionIdsFromDatabase(conn).size());
         assertEquals(
@@ -84,7 +84,7 @@ class SessionCreationTest {
     }
 
     @Test
-    public void when_logingInn_sessionIsCreated_inDatabase_and_inSessionRegistry() throws SQLException {
+    public void should_createSessionInDatabaseAndInSessionRegistry_when_logingInn() throws SQLException {
         //Get Form and extract csrfToken
         val formLoginRequest = new RequestEntity<>(HttpMethod.GET, URI.create("http://localhost:" + port + "/login"));
         val formLoginResponse = testRestTemplate.exchange(formLoginRequest, String.class);
@@ -111,7 +111,7 @@ class SessionCreationTest {
     }
 
     @Test
-    public void when_callingLogin_csrfSessionAttributeIsCreated() throws SQLException {
+    public void should_createCsrfSessionAttribute_when_callingLogin() throws SQLException {
         val formLoginRequest = new RequestEntity<>(HttpMethod.GET, URI.create("http://localhost:" + port + "/login"));
         this.testRestTemplate.exchange(formLoginRequest, String.class);
         val sessionAttributesFromDB = SessionUtils.getSessionAttributeBytesFromDb(conn);

@@ -56,7 +56,7 @@ class UserInfoAuthoritiesServiceTest {
     class LoadAuthorities {
 
         @Test
-        void buildAuthoritiesFromTemplateResponseWithCollection() {
+        void should_loadAuthoritiesFromTemplate_when_givenAsCollection() {
             val jwtTokenValue = "myTokenValue";
 
             val expectedRequestHeaders = new HttpHeaders();
@@ -81,12 +81,13 @@ class UserInfoAuthoritiesServiceTest {
 
             val authorities = unitUnderTest.loadAuthorities(jwt);
 
-            Assertions.assertThat(authorities).hasSize(claimAuthorityValues.size());
-            Assertions.assertThat(authorities).containsAll(expectedAuthorities);
+            Assertions.assertThat(authorities)
+                    .hasSize(claimAuthorityValues.size())
+                    .containsAll(expectedAuthorities);
         }
 
         @Test
-        void buildAuthoritiesFromTemplateResponseWithArray() {
+        void should_loadAuthoritiesFromTemplate_when_givenAsArray() {
             val jwtTokenValue = "myTokenValue";
 
             val expectedRequestHeaders = new HttpHeaders();
@@ -111,12 +112,13 @@ class UserInfoAuthoritiesServiceTest {
 
             val authorities = unitUnderTest.loadAuthorities(jwt);
 
-            Assertions.assertThat(authorities).hasSize(claimAuthorityValues.length);
-            Assertions.assertThat(authorities).containsAll(expctedAuthorities);
+            Assertions.assertThat(authorities)
+                    .hasSize(claimAuthorityValues.length)
+                    .containsAll(expctedAuthorities);
         }
 
         @Test
-        void buildAuthoritiesFromTemplateResponseWithUnhandledDataStructure() {
+        void should_returnEmptyList_when_givenAsUnhandledDataStructure() {
             val jwtTokenValue = "myTokenValue";
 
             val expectedRequestHeaders = new HttpHeaders();
@@ -139,7 +141,7 @@ class UserInfoAuthoritiesServiceTest {
         }
 
         @Test
-        void buildAuthoritiesFromTemplateResponseWithoutAuthoritiesClaim() {
+        void should_returnEmptyList_when_noAuthoritiesFound() {
             val jwtTokenValue = "myTokenValue";
 
             val expectedRequestHeaders = new HttpHeaders();
@@ -159,7 +161,7 @@ class UserInfoAuthoritiesServiceTest {
         }
 
         @Test
-        void errorWhileLoadingViaTemplate() {
+        void should_returnEmptyList_when_errorThrownWhileLoadingViaTemplate() {
             val jwtTokenValue = "myTokenValue";
 
             val expectedRequestHeaders = new HttpHeaders();
@@ -176,7 +178,7 @@ class UserInfoAuthoritiesServiceTest {
         }
 
         @Test
-        void loadedAuthoritiesAsPlacedInCache() {
+        void should_loadAuthoritiesFromCache_when_givenValidJwtToken() {
             val jwtSubject = "subject";
             val jwtTokenValue = "myTokenValue";
             val jwtForCachMethodCall = Mockito.mock(Jwt.class);
@@ -206,8 +208,9 @@ class UserInfoAuthoritiesServiceTest {
 
             val authoritiesThatShouldComeFromCache = unitUnderTest.loadAuthorities(jwtForCachMethodCall);
 
-            Assertions.assertThat(authorities).hasSize(claimAuthorityValues.size());
-            Assertions.assertThat(authorities).containsAll(expectedAuthorities);
+            Assertions.assertThat(authorities)
+                    .hasSize(claimAuthorityValues.size())
+                    .containsAll(expectedAuthorities);
             Assertions.assertThat(authoritiesThatShouldComeFromCache).isSameAs(authorities);
 
             Mockito.verify(restTemplate, Mockito.times(1)).exchange(userInfoUri, HttpMethod.GET, expectedRequestEntity, Map.class);

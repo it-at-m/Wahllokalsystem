@@ -24,12 +24,12 @@
       </p>
       <p>
         Back
-        <a
-          href="#"
+        <v-btn
+          variant="text"
           @click="previousPage"
         >
-          to previous Site</a
-        >
+          to previous Site
+        </v-btn>
       </p>
       <p>
         Route to external Link

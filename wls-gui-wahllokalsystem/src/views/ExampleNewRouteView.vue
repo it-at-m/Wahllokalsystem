@@ -25,10 +25,11 @@
       <p>
         Back
         <v-btn
-          variant="text"
+          class="text-none px-1"
+          density="compact"
+          color="primary"
           @click="previousPage"
-        >
-          to previous Site
+          >to previous Site
         </v-btn>
       </p>
       <p>
@@ -77,6 +78,10 @@ import router from "@/plugins/router";
 let textinput = ref("defaultId");
 
 function previousPage() {
-  router.go(-1);
+  if (window.history.length > 1) {
+    router.go(-1);
+  } else {
+    router.push(ROUTES_HOME); // Fallback to home route
+  }
 }
 </script>

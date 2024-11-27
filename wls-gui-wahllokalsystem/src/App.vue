@@ -22,6 +22,16 @@
           cols="3"
           class="d-flex align-center justify-end"
         >
+          <router-link :to="{ name: ROUTES_NEWROUTE }">
+            <v-btn
+              icon="$routes"
+              variant="text"
+              density="comfortable"
+              size="x-large"
+              color="white"
+            >
+            </v-btn>
+          </router-link>
           <v-btn
             variant="text"
             icon
@@ -36,9 +46,7 @@
     </v-app-bar>
     <v-navigation-drawer v-model="drawer">
       <v-list>
-        <v-list-item :to="{ name: ROUTES_NEWROUTE }">
-          <v-list-item-title>Test out Routing</v-list-item-title>
-        </v-list-item>
+        <v-list-item />
       </v-list>
     </v-navigation-drawer>
     <v-main>
@@ -66,7 +74,6 @@ import {
   VFadeTransition,
   VList,
   VListItem,
-  VListItemTitle,
   VMain,
   VNavigationDrawer,
   VRow,

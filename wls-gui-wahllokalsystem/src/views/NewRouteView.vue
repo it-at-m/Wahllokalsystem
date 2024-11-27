@@ -1,16 +1,18 @@
 <template>
   <v-container>
-    <v-row class="text-center">
+    <v-col class="text-center">
       <h2>You found a new View!</h2>
 
       <p>
-        Route back <router-link :to="{ name: ROUTES_HOME }"> Home </router-link>
+        Route back
+        <router-link :to="{ name: ROUTES_HOME }"> Home</router-link>
       </p>
       <p>
         What about a
         <router-link to="/nonexistant-route">
-          route that does not exist</router-link
-        >?
+          route that does not exist
+        </router-link>
+        ?
       </p>
       <p>
         Route to external Link
@@ -21,12 +23,12 @@
           >WLS-Doku</a
         >
       </p>
-    </v-row>
+    </v-col>
   </v-container>
 </template>
 
 <script setup lang="ts">
-import { VContainer } from "vuetify/components";
+import { VCol, VContainer } from "vuetify/components";
 
 import { ROUTES_HOME } from "@/constants";
 </script>

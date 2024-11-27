@@ -1,8 +1,12 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte;
 
+import static org.mockito.Mockito.times;
+
+import ch.qos.logback.classic.Level;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.awerte.AWerte;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.awerte.AWerteRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.LoggerExtension;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -12,6 +16,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -19,6 +24,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class AWerteServiceTest {
+
+    @Mock
+    AsyncProgress asyncProgress;
 
     @Mock
     AWerteRepository aWerteRepository;
@@ -32,11 +40,14 @@ class AWerteServiceTest {
     @Mock
     AWerteClient aWerteClient;
 
-    @InjectMocks
-    AWerteService unitUnderTest;
-
     @Mock
     ExceptionFactory exceptionFactory;
+
+    @RegisterExtension
+    public LoggerExtension loggerExtension = new LoggerExtension();
+
+    @InjectMocks
+    AWerteService unitUnderTest;
 
     @Nested
     class GetAWerte {
@@ -94,9 +105,49 @@ class AWerteServiceTest {
             Mockito.when(aWerteRepository.findByBezirkUndWahlID_WahlbezirkID(wahlbezirkID)).thenReturn(null);
             Mockito.when(aWerteModelMapper.fromListOfAWerteEntityToListOfAWerteModel(null)).thenReturn(null);
             Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.GETAWERTE_UNSAVEABLE))
-                    .thenReturn(mockedWlsException);
+                .thenReturn(mockedWlsException);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.getAWerte(wahlbezirkID)).isSameAs(mockedWlsException);
+        }
+    }
+
+    @Nested
+    class InitialiseAWerte {
+
+        @Test
+        void should_notFailAndSaveInDB_when_clientDataFound() {
+            val wahlbezirkID1 = "wahlbezirkID1";
+            val aWerteModelListFromClient1 = createListOfAWerteModels(wahlbezirkID1);
+            val wahlbezirkID2 = "wahlbezirkID2";
+            val aWerteModelListFromClient2 = createListOfAWerteModels(wahlbezirkID2);
+            val wahlbezirkID3 = "wahlbezirkID3";
+            val aWerteModelListFromClient3 = createListOfAWerteModels(wahlbezirkID3);
+            val wahlbezirkIDs = List.of(wahlbezirkID1, wahlbezirkID2, wahlbezirkID3);
+            Mockito.when(aWerteClient.getAWerte(wahlbezirkID1)).thenReturn(aWerteModelListFromClient1);
+            Mockito.when(aWerteClient.getAWerte(wahlbezirkID2)).thenReturn(aWerteModelListFromClient2);
+            Mockito.when(aWerteClient.getAWerte(wahlbezirkID3)).thenReturn(aWerteModelListFromClient3);
+
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.initialiseAWerte(wahlbezirkIDs));
+            Mockito.verify(aWerteRepository, times(3)).saveAll(Mockito.any());
+        }
+
+        @Test
+        void should_notFailAndLogError_when_clientDataFoundAndRepoFails() {
+            val wahlbezirkID1 = "wahlbezirkID1";
+            val aWerteModelListFromClient1 = createListOfAWerteModels(wahlbezirkID1);
+            val wahlbezirkID2 = "wahlbezirkID2";
+            val aWerteModelListFromClient2 = createListOfAWerteModels(wahlbezirkID2);
+            val wahlbezirkID3 = "wahlbezirkID3";
+            val aWerteModelListFromClient3 = createListOfAWerteModels(wahlbezirkID3);
+            val wahlbezirkIDs = List.of(wahlbezirkID1, wahlbezirkID2, wahlbezirkID3);
+            Mockito.when(aWerteClient.getAWerte(wahlbezirkID1)).thenReturn(aWerteModelListFromClient1);
+            Mockito.when(aWerteClient.getAWerte(wahlbezirkID2)).thenReturn(aWerteModelListFromClient2);
+            Mockito.when(aWerteClient.getAWerte(wahlbezirkID3)).thenReturn(aWerteModelListFromClient3);
+            Mockito.when(aWerteRepository.saveAll(Mockito.any())).thenThrow(new RuntimeException());
+
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.initialiseAWerte(wahlbezirkIDs));
+            Mockito.verify(aWerteRepository, times(3)).saveAll(Mockito.any());
+            Assertions.assertThat(loggerExtension.getLoggedEventsStream().filter(event -> event.getLevel() == Level.ERROR).count()).isEqualTo(3);
         }
     }
 

@@ -22,16 +22,26 @@
           cols="3"
           class="d-flex align-center justify-end"
         >
-          <router-link :to="{ name: EXAMPLE_ROUTES_NEWROUTE }">
-            <v-btn
-              icon="$routes"
-              variant="text"
-              density="comfortable"
-              size="x-large"
-              color="white"
-            >
-            </v-btn>
-          </router-link>
+          <v-tooltip
+            location="bottom"
+            text="Routing Examples"
+          >
+            <template v-slot:activator="{ props }">
+              <router-link
+                v-bind="props"
+                :to="{ name: EXAMPLE_ROUTES_NEWROUTE }"
+              >
+                <v-btn
+                  icon="$routes"
+                  variant="text"
+                  density="comfortable"
+                  size="x-large"
+                  color="white"
+                >
+                </v-btn>
+              </router-link>
+            </template>
+          </v-tooltip>
           <v-btn
             variant="text"
             icon
@@ -78,6 +88,7 @@ import {
   VNavigationDrawer,
   VRow,
   VToolbarTitle,
+  VTooltip,
 } from "vuetify/components";
 
 import { getUser } from "@/api/user-client";

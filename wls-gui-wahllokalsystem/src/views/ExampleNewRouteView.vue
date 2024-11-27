@@ -2,10 +2,18 @@
   <v-container>
     <v-col class="text-center">
       <h2>You found a new View!</h2>
-
       <p>
-        Route back
-        <router-link :to="{ name: ROUTES_HOME }"> Home</router-link>
+        Route back Home
+        <router-link :to="{ name: ROUTES_HOME }">via text</router-link>
+        or
+        <router-link :to="{ name: ROUTES_HOME }">
+          <v-btn
+            color="primary"
+            density="compact"
+          >
+            via Button</v-btn
+          >
+        </router-link>
       </p>
       <p>
         What about a
@@ -61,9 +69,13 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { VCard, VCol, VContainer, VTextField } from "vuetify/components";
+import { VBtn, VCard, VCol, VContainer, VTextField } from "vuetify/components";
 
-import { EXAMPLE_ROUTES_DYNAMIC, ROUTES_HOME } from "@/constants";
+import {
+  EXAMPLE_ROUTES_DYNAMIC,
+  EXAMPLE_ROUTES_NEWROUTE,
+  ROUTES_HOME,
+} from "@/constants";
 import router from "@/plugins/router";
 
 let textinput = ref("defaultId");

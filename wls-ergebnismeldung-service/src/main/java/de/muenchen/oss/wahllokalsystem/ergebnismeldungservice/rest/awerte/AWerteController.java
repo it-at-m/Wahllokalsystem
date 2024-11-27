@@ -38,7 +38,7 @@ public class AWerteController {
 
     @Operation(description = "Asynchrones initialisieren aller A-Werte für die gegebenen Wahlbezirk-IDs.")
     @PostMapping("/awerte/init")
-    @ResponseStatus(code = HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)
     public void initialiseAWerte(@RequestBody List<String> wahlbezirkIDs) {
         aWerteService.initialiseAWerte(wahlbezirkIDs);
     }

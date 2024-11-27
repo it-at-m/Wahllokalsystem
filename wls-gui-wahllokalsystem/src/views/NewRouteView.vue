@@ -18,7 +18,7 @@
         Back
         <a
           href="#"
-          @click.prevent="previousPage"
+          @click="previousPage"
         >
           to previous Site</a
         >

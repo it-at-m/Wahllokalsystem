@@ -58,4 +58,17 @@ class AWerteControllerTest {
             Assertions.assertThat(result.getBody()).isNull();
         }
     }
+
+    @Nested
+    class InitialiseAWerte {
+
+        @Test
+        void should_notThrowException_when_serviceIsCalled() {
+            val requestBody = List.of("wahlbezirkID1", "wahlbezirkID2", "wahlbezirkID3");
+
+            unitUnderTest.initialiseAWerte(requestBody);
+
+            Mockito.verify(awerteService).initialiseAWerte(requestBody);
+        }
+    }
 }

@@ -26,7 +26,7 @@
             location="bottom"
             text="Routing Examples"
           >
-            <template v-slot:activator="{ props }">
+            <template #activator="{ props }">
               <router-link
                 v-bind="props"
                 :to="{ name: EXAMPLE_ROUTES_NEWROUTE }"

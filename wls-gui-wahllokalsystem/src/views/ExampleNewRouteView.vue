@@ -11,8 +11,8 @@
             color="primary"
             density="compact"
           >
-            via Button</v-btn
-          >
+            via Button
+          </v-btn>
         </router-link>
       </p>
       <p>
@@ -47,9 +47,9 @@
       >
         <v-col>
           <v-text-field
+            v-model="textinput"
             clearable
             label="ID"
-            v-model="textinput"
           ></v-text-field>
           <p>
             Dynamic Route
@@ -71,11 +71,7 @@
 import { ref } from "vue";
 import { VBtn, VCard, VCol, VContainer, VTextField } from "vuetify/components";
 
-import {
-  EXAMPLE_ROUTES_DYNAMIC,
-  EXAMPLE_ROUTES_NEWROUTE,
-  ROUTES_HOME,
-} from "@/constants";
+import { EXAMPLE_ROUTES_DYNAMIC, ROUTES_HOME } from "@/constants";
 import router from "@/plugins/router";
 
 let textinput = ref("defaultId");

@@ -15,6 +15,15 @@
         ?
       </p>
       <p>
+        Back
+        <a
+          href="#"
+          @click.prevent="previousPage"
+        >
+          to previous Site</a
+        >
+      </p>
+      <p>
         Route to external Link
         <a
           href="https://it-at-m.github.io/Wahllokalsystem/"
@@ -31,4 +40,9 @@
 import { VCol, VContainer } from "vuetify/components";
 
 import { ROUTES_HOME } from "@/constants";
+import router from "@/plugins/router";
+
+function previousPage() {
+  router.go(-1);
+}
 </script>

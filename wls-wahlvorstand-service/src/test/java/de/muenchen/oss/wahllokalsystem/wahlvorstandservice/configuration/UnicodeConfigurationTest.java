@@ -53,7 +53,7 @@ class UnicodeConfigurationTest {
 
     @Test
     @Disabled
-    void testForNfcNormalization() {
+    void should_returnComposedString_when_givenDecomposedString() {
         // Persist entity with decomposed string.
         final TheEntityDto theEntityDto = new TheEntityDto();
         theEntityDto.setTextAttribute(TEXT_ATTRIBUTE_DECOMPOSED);

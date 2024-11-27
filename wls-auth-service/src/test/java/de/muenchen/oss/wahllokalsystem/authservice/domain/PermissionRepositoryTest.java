@@ -34,7 +34,7 @@ class PermissionRepositoryTest {
 
             val findByResult = permissionRepository.findByPermission(permissionString);
 
-            Assertions.assertThat(findByResult.get()).isEqualTo(permissionToFind);
+            Assertions.assertThat(findByResult.get()).usingRecursiveComparison().isEqualTo(permissionToFind);
         }
 
         @Test

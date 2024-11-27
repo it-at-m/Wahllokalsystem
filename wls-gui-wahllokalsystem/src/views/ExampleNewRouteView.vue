@@ -32,15 +32,41 @@
           >WLS-Doku</a
         >
       </p>
+      <v-card
+        class="mx-auto mt-5"
+        title="Dynamic Routing"
+        width="300"
+      >
+        <v-col>
+          <v-text-field
+            clearable
+            label="ID"
+            v-model="textinput"
+          ></v-text-field>
+          <p>
+            Dynamic Route
+            <router-link
+              :to="{
+                name: EXAMPLE_ROUTES_DYNAMIC,
+                params: { wahlid: textinput },
+              }"
+              >to element with specific ID
+            </router-link>
+          </p>
+        </v-col>
+      </v-card>
     </v-col>
   </v-container>
 </template>
 
 <script setup lang="ts">
-import { VCol, VContainer } from "vuetify/components";
+import { ref } from "vue";
+import { VCard, VCol, VContainer, VTextField } from "vuetify/components";
 
-import { ROUTES_HOME } from "@/constants";
+import { EXAMPLE_ROUTES_DYNAMIC, ROUTES_HOME } from "@/constants";
 import router from "@/plugins/router";
+
+let textinput = ref("defaultId");
 
 function previousPage() {
   router.go(-1);

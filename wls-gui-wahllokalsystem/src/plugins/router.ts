@@ -1,7 +1,9 @@
 // Composables
 import { createRouter, createWebHashHistory } from "vue-router";
 
+import ExampleDynamicComponent from "@/components/ExampleDynamicComponent.vue";
 import {
+  EXAMPLE_ROUTES_DYNAMIC,
   EXAMPLE_ROUTES_NEWROUTE,
   EXAMPLE_ROUTES_NOTFOUND,
   ROUTES_HOME,
@@ -21,6 +23,11 @@ const routes = [
     path: "/newroute",
     name: EXAMPLE_ROUTES_NEWROUTE,
     component: ExampleNewRouteView,
+  },
+  {
+    path: "/dynamic/:wahlid",
+    name: EXAMPLE_ROUTES_DYNAMIC,
+    component: ExampleDynamicComponent,
   },
   {
     path: "/:catchAll(.*)*",

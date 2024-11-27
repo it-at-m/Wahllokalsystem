@@ -32,7 +32,7 @@ public class EreignisRepositoryTest {
 
         @Test
         @WithMockUser(
-                authorities = {Authorities.REPOSITORY_DELETE_EREIGNISSE, Authorities.REPOSITORY_WRITE_EREIGNISSE, Authorities.REPOSITORY_READ_EREIGNISSE}
+                authorities = { Authorities.REPOSITORY_DELETE_EREIGNISSE, Authorities.REPOSITORY_WRITE_EREIGNISSE, Authorities.REPOSITORY_READ_EREIGNISSE }
         )
         void should_returnListOfEreignisEntities_when_givenValidWahlbezirkid() {
             val wahlbezirkID = "wahlbezirkID";
@@ -56,7 +56,7 @@ public class EreignisRepositoryTest {
 
         @Test
         @WithMockUser(
-                authorities = {Authorities.REPOSITORY_DELETE_EREIGNISSE, Authorities.REPOSITORY_WRITE_EREIGNISSE, Authorities.REPOSITORY_READ_EREIGNISSE}
+                authorities = { Authorities.REPOSITORY_DELETE_EREIGNISSE, Authorities.REPOSITORY_WRITE_EREIGNISSE, Authorities.REPOSITORY_READ_EREIGNISSE }
         )
         void should_deleteAllEreignisEntitiesWithMatchingWahlbezirkid_when_givenValidWahlbezirkid() {
             val wahlbezirkID = "wahlbezirkID";

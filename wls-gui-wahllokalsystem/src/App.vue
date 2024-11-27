@@ -22,7 +22,7 @@
           cols="3"
           class="d-flex align-center justify-end"
         >
-          <router-link :to="{ name: ROUTES_NEWROUTE }">
+          <router-link :to="{ name: EXAMPLE_ROUTES_NEWROUTE }">
             <v-btn
               icon="$routes"
               variant="text"
@@ -83,7 +83,7 @@ import {
 import { getUser } from "@/api/user-client";
 import Ad2ImageAvatar from "@/components/common/Ad2ImageAvatar.vue";
 import TheSnackbar from "@/components/TheSnackbar.vue";
-import { ROUTES_NEWROUTE } from "@/constants";
+import { EXAMPLE_ROUTES_NEWROUTE } from "@/constants";
 import { useSnackbarStore } from "@/stores/snackbar";
 import { useUserStore } from "@/stores/user";
 import User, { UserLocalDevelopment } from "@/types/User";

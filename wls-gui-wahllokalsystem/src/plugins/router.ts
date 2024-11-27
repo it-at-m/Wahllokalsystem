@@ -1,10 +1,14 @@
 // Composables
 import { createRouter, createWebHashHistory } from "vue-router";
 
-import { ROUTES_HOME, ROUTES_NEWROUTE, ROUTES_NOTFOUND } from "@/constants";
-import Error404View from "@/views/Error404View.vue";
+import {
+  EXAMPLE_ROUTES_NEWROUTE,
+  EXAMPLE_ROUTES_NOTFOUND,
+  ROUTES_HOME,
+} from "@/constants";
+import ExampleError404View from "@/views/ExampleError404View.vue";
+import ExampleNewRouteView from "@/views/ExampleNewRouteView.vue";
 import HomeView from "@/views/HomeView.vue";
-import NewRouteView from "@/views/NewRouteView.vue";
 
 const routes = [
   {
@@ -15,13 +19,13 @@ const routes = [
   },
   {
     path: "/newroute",
-    name: ROUTES_NEWROUTE,
-    component: NewRouteView,
+    name: EXAMPLE_ROUTES_NEWROUTE,
+    component: ExampleNewRouteView,
   },
   {
     path: "/:catchAll(.*)*",
-    name: ROUTES_NOTFOUND,
-    component: Error404View,
+    name: EXAMPLE_ROUTES_NOTFOUND,
+    component: ExampleError404View,
   }, // CatchAll route
 ];
 

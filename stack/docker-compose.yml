@@ -239,6 +239,9 @@ services:
       - SPRING_CLOUD_GATEWAY_ROUTES_1_URI=http://host.docker.internal:39146/
       - SPRING_CLOUD_GATEWAY_ROUTES_1_PREDICATES_0=Path=/api/backend-service/**
       - SPRING_CLOUD_GATEWAY_ROUTES_1_FILTERS_0=RewritePath=/api/backend-service/(?<urlsegments>.*), /$\{urlsegments}
+      - SPRING_CLOUD_GATEWAY_ROUTES_2_ID=frontend
+      - SPRING_CLOUD_GATEWAY_ROUTES_2_URI=http://kubernetes.docker.internal:8400/
+      - SPRING_CLOUD_GATEWAY_ROUTES_2_PREDICATES_0=Path=/**
       - SPRING_PROFILES_ACTIVE=hazelcast-local
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://kubernetes.docker.internal:8100/${KEYCLOAK_RELATIV_PATH}/realms/${SSO_REALM}
       - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_SSO_ISSUERURI=$${spring.security.oauth2.resourceserver.jwt.issuer-uri}
@@ -250,6 +253,7 @@ services:
       - keycloak
     extra_hosts:
       - "host.docker.internal:host-gateway"
+      - "kubernetes.docker.internal:host-gateway"
     healthcheck:
       interval: 30s
       timeout: 60s

@@ -10,6 +10,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.LoggerExtens
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import java.util.Base64;
 import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -121,6 +122,23 @@ class AWerteServiceTest {
             val wahlbezirkID2 = "wahlbezirkID2";
             val aWerteModelListFromClient2 = createListOfAWerteModels(wahlbezirkID2);
             val wahlbezirkID3 = "wahlbezirkID3";
+            val aWerteModelListFromClient3 = createListOfAWerteModels(wahlbezirkID3);
+            val wahlbezirkIDs = List.of(wahlbezirkID1, wahlbezirkID2, wahlbezirkID3);
+            Mockito.when(aWerteClient.getAWerte(wahlbezirkID1)).thenReturn(aWerteModelListFromClient1);
+            Mockito.when(aWerteClient.getAWerte(wahlbezirkID2)).thenReturn(aWerteModelListFromClient2);
+            Mockito.when(aWerteClient.getAWerte(wahlbezirkID3)).thenReturn(aWerteModelListFromClient3);
+
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.initialiseAWerte(wahlbezirkIDs));
+            Mockito.verify(aWerteRepository, times(3)).saveAll(Mockito.any());
+        }
+
+        @Test
+        void should_notFailAndSaveInDB_when_base64ClientDataFound() {
+            val wahlbezirkID1 = Base64.getEncoder().encodeToString("WAHLBEZIRK-1410\",\"wahlterminId".getBytes());
+            val aWerteModelListFromClient1 = createListOfAWerteModels(wahlbezirkID1);
+            val wahlbezirkID2 = Base64.getEncoder().encodeToString("WAHLBEZIRK-1411\",\"wahlterminId".getBytes());
+            val aWerteModelListFromClient2 = createListOfAWerteModels(wahlbezirkID2);
+            val wahlbezirkID3 = Base64.getEncoder().encodeToString("WAHLBEZIRK-1412\",\"wahlterminId".getBytes());
             val aWerteModelListFromClient3 = createListOfAWerteModels(wahlbezirkID3);
             val wahlbezirkIDs = List.of(wahlbezirkID1, wahlbezirkID2, wahlbezirkID3);
             Mockito.when(aWerteClient.getAWerte(wahlbezirkID1)).thenReturn(aWerteModelListFromClient1);

@@ -67,6 +67,7 @@ public class AWerteService {
             int i = 0; i < wahlbezirkIDs.size(); i++) {
             final String wbzID = wahlbezirkIDs.get(i);
             try {
+                // improve this, see issue #596
                 try {
                     String s = new String(Base64.getDecoder().decode(wbzID.getBytes()));
                     Matcher m = pattern.matcher(s);

@@ -131,4 +131,41 @@ class AWerteServiceSecurityTest {
             return List.of(wb1, wb2, wb3);
         }
     }
+
+    @Nested
+    class InitialiseAWerte {
+
+        @AfterEach
+        void tearDown() {
+            SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_AWERTE);
+            aWerteRepository.deleteAll();
+        }
+
+        @Test
+        void should_grantAccessAndThrowNoException_when_authority1IsValid() throws Exception {
+            SecurityUtils.runWith(Authorities.ADMIN_LOADWAHLTERMINDATEN);
+
+            val wahlbezirkID = "wahlbezirkID";
+            val wahlbezirkIDList = List.of(wahlbezirkID);
+            val eaiWahlberechtigte = getAWerteForWahlbezirkID(wahlbezirkID);
+
+            WireMock.stubFor(WireMock.get("/wahldaten/wahlbezirke/" + wahlbezirkID + "/wahlberechtigte")
+                .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
+                    .withBody(objectMapper.writeValueAsBytes(eaiWahlberechtigte))));
+
+            Assertions.assertThatNoException().isThrownBy(() -> aWerteService.initialiseAWerte(wahlbezirkIDList));
+            Assertions.assertThat(loggerExtension.getLoggedEventsStream().filter(event -> event.getLevel() == Level.ERROR).count()).isEqualTo(0);
+        }
+
+        private List<WahlberechtigteDTO> getAWerteForWahlbezirkID(String wahlbezirkID) {
+            val wb1 = new WahlberechtigteDTO();
+            wb1.setWahlbezirkID(wahlbezirkID);
+            wb1.setWahlID("wahlID");
+            wb1.setA1(2L);
+            wb1.setA2(3L);
+            wb1.setA3(5L);
+            return List.of(wb1);
+        }
+    }
+
 }

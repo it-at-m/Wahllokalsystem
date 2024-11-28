@@ -29,20 +29,20 @@ flowchart LR
 
 ### Benutzer
 
-| Name | Passwort | Beschreibung                                                          |
-| --- | --- |-----------------------------------------------------------------------|
-| keycloak_test | test | Ein Benutzer ohne weitere Rechte                                      |
-| wls_all | test | Ein Benutzer mit allen Rechten                                        |
-| wls_all_bwb | test | Ein Benutzer mit allen Rechten mit der WahlbezirksArt BWB (Briefwahl) |
-| wls_all_uwb | test | Ein Benutzer mit allen Rechten mit der WahlbezirksArt UWB (Urnenwahl) |                 
+| Name          | Passwort | Beschreibung                                                          |
+|---------------|----------|-----------------------------------------------------------------------|
+| keycloak_test | test     | Ein Benutzer ohne weitere Rechte                                      |
+| wls_all       | test     | Ein Benutzer mit allen Rechten                                        |
+| wls_all_bwb   | test     | Ein Benutzer mit allen Rechten mit der WahlbezirksArt BWB (Briefwahl) |
+| wls_all_uwb   | test     | Ein Benutzer mit allen Rechten mit der WahlbezirksArt UWB (Urnenwahl) |                 
 
 ### Migration
 
 Alle Konfigurationselemente, wie zum Beispiel User, Rollen und Client, werden automatisiert erstellt. Der Realm wird
 beim Start von Keycloak importiert. Alle weiteren Elemente werden durch den `init-keycloak`-Container erstellt.
 
-Im Rahmen der Migration werden immer alle Elemente erstellt. Daher ist notwendig, dass zuvor alte Elemente gelöscht wurden.
-Somit ergeben sich folgende Schritte bei der Migration:
+Im Rahmen der Migration werden immer alle Elemente erstellt. Daher ist notwendig, dass zuvor alte Elemente gelöscht
+wurden. Somit ergeben sich folgende Schritte bei der Migration:
 
 - alten Realm löschen
 - Realm anlegen
@@ -93,34 +93,38 @@ Es kann für den jeweiligen Nutzer ein Token geholt werden. Außerdem ist die An
 Jeder Service bekommt einen eigenen Benutzer für die Datenbank. Die Zugriffs-URL ist für alle Services gleich:
 `jdbc:oracle:thin:@//localhost:1521/XEPDB1`
 
-Neben dem Standardbenutzer der auf alles zugreifen kann (siehe `docker-compose.yml`) müssen alle weiteren Benutzer über `stack/add-user-on-startup.sql` erstellt werden.
+Neben dem Standardbenutzer der auf alles zugreifen kann (siehe `docker-compose.yml`) müssen alle weiteren Benutzer über
+`stack/add-user-on-startup.sql` erstellt werden.
 
 Dabei sollte auf folgendes Schema geachtet werden:
+
 - Benutzername: \<Name des Services\>
 - Passwort: secret
 
 ## Starten des Frontend
 
-Nachdem das Frontend in der IDE und das ApiGateway über Docker gestartet wurde, kann es klassisch über `http://localhost:8081/` 
-aufgerufen werden. Allerdings befindet sich die Oberfläche dann in einer Ladeschleife und man sieht nur einen flackernden Bildschirm. 
-Um diese Schleife zu umgehen gibt es zwei Möglichkeiten:
+Nachdem das Frontend in der IDE und das ApiGateway über Docker gestartet wurde, kann es über `http://localhost:8400/`
+aufgerufen werden. Allerdings befindet sich die Oberfläche dann in einer Ladeschleife und man sieht nur einen
+flackernden Bildschirm. Um diese Schleife zu umgehen, gibt es zwei Möglichkeiten:
 
 ### 1. Anmeldung bei Keycloak
-Eine Möglichkeit, die Ladeschleife zu umgehen, ist es, sich lokal mit dem `keycloak_test` user anzumelden. 
-Nachdem das Frontend über die IDE gestartet wurde, muss die URL `http://localhost:8083/` mit dem Port `8083` aufgerufen werden, 
-um auf die Keycloak Seite zu kommen. Dort muss sich mit dem ["keycloak_test"-User](#benutzer) angemeldet werden. 
-Nach der Anmeldung kann der Port `8081` wieder aufgerufen werden und die Ladeschleife ist weg.
+
+Eine Möglichkeit, die Ladeschleife zu umgehen, ist es, sich lokal mit einem der [keycloak-user](#benutzer) anzumelden.
+Nachdem das Frontend über die IDE gestartet wurde, muss die URL `http://localhost:8083/` mit dem Port `8083` aufgerufen
+werden, um auf die Keycloak Seite zu kommen. Nach der Anmeldung wird man automatisch auf den Port `8400` weitergeleitet
+und die Ladeschleife ist weg.
 
 > [!NOTE]
 > Der Anmeldevorgang muss jedes Mal wiederholt werden, sobald das ApiGateway neu gestartet wird.
 
 ### 2. `no-security`-Profil
+
 Die zweite Möglichkeit ist es, das ApiGateway mit dem `no-security`-Profil zu starten.
-Dazu muss im `/stack/docker-compose.yml` File beim Service refarch-gateway unter environment in der Zeile 
-`- SPRING_PROFILES_ACTIVE=hazelcast-local` das Profil `no-security` hinzugefügt werden. Damit die Änderung wirksam wird, 
+Dazu muss im `/stack/docker-compose.yml` File beim Service refarch-gateway unter environment in der Zeile
+`- SPRING_PROFILES_ACTIVE=hazelcast-local` das Profil `no-security` hinzugefügt werden. Damit die Änderung wirksam wird,
 sollte der Container in Docker einmal komplett gelöscht und über das `docker-compose.yml` File neu gestartet werden.
 
 > [!IMPORTANT]
-> Bei dieser Variante ist es wichtig, dass die Änderung im `docker-compose.yml` File nicht gepusht wird, weil alle anderen Container 
-> mit security laufen und das `no-security`-Profil nur für die Entwicklung benötigt wird.
+> Bei dieser Variante ist es wichtig, dass die Änderung im `docker-compose.yml` File nicht gepusht wird, weil alle
+> anderen Container mit security laufen und das `no-security`-Profil nur für die Entwicklung benötigt wird.
 

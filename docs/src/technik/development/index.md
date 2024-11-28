@@ -8,6 +8,7 @@ flowchart LR
     subgraph Dev-PC 
         subgraph IDE 
             wlsService
+            frontend_gui[gui_wahllokalsystem]
         end
         
         subgraph Docker 
@@ -15,13 +16,23 @@ flowchart LR
             keycloakDB[db-postgres-keycloak]
             keycloakInit[init-keycloak]
             oracleDB[Oracle DB]
+            apiGateway[API Gateway]
+            backendServiceN[Backend Service N]
         end
 
-        wlsService ---|OAuth2| keycloak
-        wlsService --->|persisting|oracleDB
+        apiGateway --->|forwards request| keycloak
+        apiGateway --->|forwards request| backendServiceN
+
+        backendServiceN --->|accesses| oracleDB
+        backendServiceN --->|OAuth2| keycloak
+
+        frontend_gui --->|request| apiGateway
 
         keycloak-->|persisting| keycloakDB
         keycloakInit-->|setup of| keycloak
+
+        wlsService ---|OAuth2| keycloak
+        wlsService --->|persisting|oracleDB
     end
 ```
 

@@ -1,7 +1,8 @@
 // Composables
 import { createRouter, createWebHashHistory } from "vue-router";
 
-import { ROUTES_HOME } from "@/constants";
+import { EXAMPLE_ROUTES_BACKEND, ROUTES_HOME } from "@/constants";
+import ExampleBackendCommunicationView from "@/views/ExampleBackendCommunicationView.vue";
 import HomeView from "@/views/HomeView.vue";
 
 const routes = [
@@ -9,6 +10,12 @@ const routes = [
     path: "/",
     name: ROUTES_HOME,
     component: HomeView,
+    meta: {},
+  },
+  {
+    path: "/talk-to-backend",
+    name: EXAMPLE_ROUTES_BACKEND,
+    component: ExampleBackendCommunicationView,
     meta: {},
   },
   { path: "/:catchAll(.*)*", redirect: "/" }, // CatchAll route

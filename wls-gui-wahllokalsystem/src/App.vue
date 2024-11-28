@@ -22,6 +22,26 @@
           cols="3"
           class="d-flex align-center justify-end"
         >
+          <v-tooltip
+            location="bottom"
+            text="Backend Communication Examples"
+          >
+            <template #activator="{ props }">
+              <router-link
+                v-bind="props"
+                :to="{ name: EXAMPLE_ROUTES_BACKEND }"
+              >
+                <v-btn
+                  icon="$messageText"
+                  variant="text"
+                  density="comfortable"
+                  size="x-large"
+                  color="white"
+                >
+                </v-btn>
+              </router-link>
+            </template>
+          </v-tooltip>
           <v-btn
             variant="text"
             icon
@@ -68,11 +88,13 @@ import {
   VNavigationDrawer,
   VRow,
   VToolbarTitle,
+  VTooltip,
 } from "vuetify/components";
 
 import { getUser } from "@/api/user-client";
 import Ad2ImageAvatar from "@/components/common/Ad2ImageAvatar.vue";
 import TheSnackbar from "@/components/TheSnackbar.vue";
+import { EXAMPLE_ROUTES_BACKEND } from "@/constants";
 import { useSnackbarStore } from "@/stores/snackbar";
 import { useUserStore } from "@/stores/user";
 import User, { UserLocalDevelopment } from "@/types/User";

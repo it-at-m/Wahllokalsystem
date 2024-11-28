@@ -1,4 +1,5 @@
 export const ROUTES_HOME = "home";
+export const EXAMPLE_ROUTES_BACKEND = "talk-to-backend";
 
 export const AD2IMAGE_URL = import.meta.env.VITE_AD2IMAGE_URL;
 

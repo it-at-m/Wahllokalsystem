@@ -58,8 +58,8 @@ class AWerteServiceSecurityTest {
             val eaiWahlberechtigte = createListOfWahlberechtigteDTO();
 
             WireMock.stubFor(WireMock.get("/wahldaten/wahlbezirke/" + wahlbezirkID + "/wahlberechtigte")
-                .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                    .withBody(objectMapper.writeValueAsBytes(eaiWahlberechtigte))));
+                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
+                            .withBody(objectMapper.writeValueAsBytes(eaiWahlberechtigte))));
 
             Assertions.assertThatNoException().isThrownBy(() -> aWerteService.getAWerte(wahlbezirkID));
             Assertions.assertThat(loggerExtension.getLoggedEventsStream().filter(event -> event.getLevel() == Level.ERROR).count()).isEqualTo(0);
@@ -73,8 +73,8 @@ class AWerteServiceSecurityTest {
             val eaiWahlberechtigte = createListOfWahlberechtigteDTO();
 
             WireMock.stubFor(WireMock.get("/wahldaten/wahlbezirke/" + wahlbezirkID + "/wahlberechtigte")
-                .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                    .withBody(objectMapper.writeValueAsBytes(eaiWahlberechtigte))));
+                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
+                            .withBody(objectMapper.writeValueAsBytes(eaiWahlberechtigte))));
 
             Assertions.assertThatNoException().isThrownBy(() -> aWerteService.getAWerte(wahlbezirkID));
             Assertions.assertThat(loggerExtension.getLoggedEventsStream().filter(event -> event.getLevel() == Level.ERROR).count()).isEqualTo(0);
@@ -88,8 +88,8 @@ class AWerteServiceSecurityTest {
             val eaiWahlberechtigte = createListOfWahlberechtigteDTO();
 
             WireMock.stubFor(WireMock.get("/wahldaten/wahlbezirke/" + wahlbezirkID + "/wahlberechtigte")
-                .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                    .withBody(objectMapper.writeValueAsBytes(eaiWahlberechtigte))));
+                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
+                            .withBody(objectMapper.writeValueAsBytes(eaiWahlberechtigte))));
 
             val result = aWerteService.getAWerte(wahlbezirkID);
 
@@ -103,8 +103,8 @@ class AWerteServiceSecurityTest {
             val eaiWahlberechtigte = createListOfWahlberechtigteDTO();
 
             WireMock.stubFor(WireMock.get("/wahldaten/wahlbezirke/" + wahlbezirkID + "/wahlberechtigte")
-                .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                    .withBody(objectMapper.writeValueAsBytes(eaiWahlberechtigte))));
+                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
+                            .withBody(objectMapper.writeValueAsBytes(eaiWahlberechtigte))));
 
             Assertions.assertThatThrownBy(() -> aWerteService.getAWerte(wahlbezirkID)).isInstanceOf(AccessDeniedException.class);
         }
@@ -150,8 +150,8 @@ class AWerteServiceSecurityTest {
             val eaiWahlberechtigte = getAWerteForWahlbezirkID(wahlbezirkID);
 
             WireMock.stubFor(WireMock.get("/wahldaten/wahlbezirke/" + wahlbezirkID + "/wahlberechtigte")
-                .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                    .withBody(objectMapper.writeValueAsBytes(eaiWahlberechtigte))));
+                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
+                            .withBody(objectMapper.writeValueAsBytes(eaiWahlberechtigte))));
 
             Assertions.assertThatNoException().isThrownBy(() -> aWerteService.initialiseAWerte(wahlbezirkIDList));
             Assertions.assertThat(loggerExtension.getLoggedEventsStream().filter(event -> event.getLevel() == Level.ERROR).count()).isEqualTo(0);

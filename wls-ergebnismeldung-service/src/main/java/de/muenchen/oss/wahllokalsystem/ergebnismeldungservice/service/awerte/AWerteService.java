@@ -63,8 +63,7 @@ public class AWerteService {
     public void initialiseAWerte(List<String> wahlbezirkIDs) {
         log.info("Initialisier A-Werte für {} Wahllokale", wahlbezirkIDs.size());
         asyncProgress.reset(wahlbezirkIDs.size());
-        for (
-            int i = 0; i < wahlbezirkIDs.size(); i++) {
+        for (int i = 0; i < wahlbezirkIDs.size(); i++) {
             final String wbzID = wahlbezirkIDs.get(i);
             try {
                 // improve this, see issue #596
@@ -85,7 +84,7 @@ public class AWerteService {
             } catch (Exception e) {
                 e.printStackTrace();
                 log.info("A-Werte für Wahllokal {} konnten nicht geladen werden: {}. ({}/{})", wbzID, e.getMessage(),
-                    i + 1, wahlbezirkIDs.size());
+                        i + 1, wahlbezirkIDs.size());
             }
         }
         asyncProgress.setAWerteLoadingActive(false);

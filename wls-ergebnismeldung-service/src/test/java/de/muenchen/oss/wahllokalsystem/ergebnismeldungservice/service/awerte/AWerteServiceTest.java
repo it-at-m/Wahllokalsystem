@@ -106,7 +106,7 @@ class AWerteServiceTest {
             Mockito.when(aWerteRepository.findByBezirkUndWahlID_WahlbezirkID(wahlbezirkID)).thenReturn(null);
             Mockito.when(aWerteModelMapper.fromListOfAWerteEntityToListOfAWerteModel(null)).thenReturn(null);
             Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.GETAWERTE_UNSAVEABLE))
-                .thenReturn(mockedWlsException);
+                    .thenReturn(mockedWlsException);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.getAWerte(wahlbezirkID)).isSameAs(mockedWlsException);
         }

@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 public class ExceptionConstants {
 
     public static ExceptionDataWrapper FAILED_COMMUNICATION_WITH_EAI = new ExceptionDataWrapper("100",
-        "Bei der Kommunikation mit dem Aoueai-Service ist ein Fehler aufgetreten. Es konnten daher keine Daten geladen werden.");
+            "Bei der Kommunikation mit dem Aoueai-Service ist ein Fehler aufgetreten. Es konnten daher keine Daten geladen werden.");
 
     public static ExceptionDataWrapper NULL_FROM_CLIENT = new ExceptionDataWrapper(ExceptionKonstanten.CODE_ENTITY_NOT_FOUND, "not found");
 
     public static ExceptionDataWrapper GETAWERTE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("600",
-        "getAWerte: Parameter unvollstaendig");
+            "getAWerte: Parameter unvollstaendig");
 
     public static ExceptionDataWrapper GETAWERTE_UNSAVEABLE = new ExceptionDataWrapper("601",
-        "getAWerte: Die AWerte aus der IVU konnten nicht gespeichert werden.");
+            "getAWerte: Die AWerte aus der IVU konnten nicht gespeichert werden.");
 }

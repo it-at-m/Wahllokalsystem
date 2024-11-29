@@ -170,7 +170,7 @@ public class UserService {
     @Transactional
     public UserDetails getUserDetails(final String username) throws UsernameNotFoundException {
         val user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(String.format("User %S not found!", username)));
-        return userModelMapper.toStringSecurityUser(user);
+        return userModelMapper.toSpringSecurityUser(user);
     }
 
     private String generatePin() {

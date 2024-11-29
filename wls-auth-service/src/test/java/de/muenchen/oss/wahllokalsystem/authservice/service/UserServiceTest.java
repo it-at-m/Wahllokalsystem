@@ -475,7 +475,7 @@ class UserServiceTest {
             val mockedUserMappedToUserDetails = new org.springframework.security.core.userdetails.User(username, "", Collections.emptyList());
 
             Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockedUser));
-            Mockito.when(userModelMapper.toStringSecurityUser(mockedUser)).thenReturn(mockedUserMappedToUserDetails);
+            Mockito.when(userModelMapper.toSpringSecurityUser(mockedUser)).thenReturn(mockedUserMappedToUserDetails);
 
             val result = unitUnderTest.getUserDetails(username);
 

@@ -43,7 +43,7 @@ class UserModelMapperTest {
     }
 
     @Nested
-    class ToStringSecurityUser {
+    class ToSpringSecurityUser {
 
         @Test
         void should_mapToUser_when_allTargetRequiredPropertiesAreGiven() {
@@ -57,7 +57,7 @@ class UserModelMapperTest {
             userTopMap.setAuthorities(Set.of(new Authority("authority1", Collections.emptySet(), Collections.emptySet()),
                     new Authority("authority2", Collections.emptySet(), Collections.emptySet())));
 
-            val result = unitUnderTest.toStringSecurityUser(userTopMap);
+            val result = unitUnderTest.toSpringSecurityUser(userTopMap);
 
             val expectedAuthorities = Set.of(new SimpleGrantedAuthority("authority1"), new SimpleGrantedAuthority("authority2"));
             val expectedResult = new org.springframework.security.core.userdetails.User(username, password, true, true, true, true, expectedAuthorities);
@@ -72,7 +72,7 @@ class UserModelMapperTest {
             userTopMap.setPassword(null);
             userTopMap.setAuthorities(Collections.emptySet());
 
-            val result = unitUnderTest.toStringSecurityUser(userTopMap);
+            val result = unitUnderTest.toSpringSecurityUser(userTopMap);
 
             Assertions.assertThat(result.getPassword()).isEmpty();
         }

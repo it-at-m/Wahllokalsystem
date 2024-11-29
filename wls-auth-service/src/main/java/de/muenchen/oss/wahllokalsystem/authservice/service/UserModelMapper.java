@@ -33,7 +33,7 @@ public interface UserModelMapper {
     @Mapping(target = "wahlbezirksArt", source = "wahllokalUserInfoModel.wahlbezirksart")
     User toUser(String wahltagID, WahllokalUserInfoModel wahllokalUserInfoModel, Set<Authority> authorities, String pin, String username);
 
-    default org.springframework.security.core.userdetails.User toStringSecurityUser(User user) {
+    default org.springframework.security.core.userdetails.User toSpringSecurityUser(User user) {
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 Optional.ofNullable(user.getPassword()).orElse(StringUtils.EMPTY),

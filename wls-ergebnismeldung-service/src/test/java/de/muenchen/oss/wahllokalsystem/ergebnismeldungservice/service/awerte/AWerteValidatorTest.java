@@ -26,12 +26,12 @@ class AWerteValidatorTest {
     class ValidWahlbezirkIDParamOrThrow {
 
         @Test
-        void noExceptionWhenCriteriaIsValid() {
+        void should_notThrowException_when_criteriaIsValid() {
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahlbezirkIDParamOrThrow("validWahlbezirkID"));
         }
 
         @Test
-        void exceptionWhenCriteriaIsNull() {
+        void should_throwException_when_criteriaIsNull() {
             val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETAWERTE_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
 
@@ -39,7 +39,7 @@ class AWerteValidatorTest {
         }
 
         @Test
-        void exceptionWhenCriteriaIsEmpty() {
+        void should_throwException_when_criteriaIsEmpty() {
             val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETAWERTE_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
 
@@ -47,7 +47,7 @@ class AWerteValidatorTest {
         }
 
         @Test
-        void exceptionWhenCriteriaIsBlank() {
+        void should_throwException_when_criteriaIsBlank() {
             val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETAWERTE_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
 

@@ -13,7 +13,7 @@ class AsyncProgressTest {
     class IncAWerteFinished {
 
         @Test
-        void should_increaseNumberOfaWerteFinishedAndLoadingIsNotActive_when_called() {
+        void should_increaseNumberOfaWerteFinishedAndLoadingIsNotActive_when_biggerOrEqualThanAWerteTotal() {
             val numberOfFinishedBeforeCall = unitUnderTest.getAWerteFinished();
             unitUnderTest.reset(0);
             unitUnderTest.incAWerteFinished();
@@ -24,7 +24,7 @@ class AsyncProgressTest {
         }
 
         @Test
-        void should_increaseNumberOfaWerteFinishedAndIsLoadingActive_when_called() {
+        void should_increaseNumberOfaWerteFinishedAndIsLoadingActive_when_smallerThanAWerteTotal() {
             val numberOfFinishedBeforeCall = unitUnderTest.getAWerteFinished();
             unitUnderTest.reset(5);
             unitUnderTest.incAWerteFinished();

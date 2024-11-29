@@ -74,9 +74,7 @@ public class SecurityConfiguration {
                 .exceptionHandling((exceptions) -> exceptions
                         .defaultAuthenticationEntryPointFor(
                                 new LoginUrlAuthenticationEntryPoint("/login"),
-                                new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
-                        )
-                )
+                                new MediaTypeRequestMatcher(MediaType.TEXT_HTML)))
                 .oauth2ResourceServer((resourceServer) -> resourceServer
                         .jwt(Customizer.withDefaults()));
 
@@ -88,22 +86,22 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests.requestMatchers(
-                                // allow access to /actuator/info
-                                AntPathRequestMatcher.antMatcher("/actuator/info"),
-                                // allow access to /actuator/health for OpenShift Health Check
-                                AntPathRequestMatcher.antMatcher("/actuator/health"),
-                                // allow access to /actuator/health/liveness for OpenShift Liveness Check
-                                AntPathRequestMatcher.antMatcher("/actuator/health/liveness"),
-                                // allow access to /actuator/health/readiness for OpenShift Readiness Check
-                                AntPathRequestMatcher.antMatcher("/actuator/health/readiness"),
-                                // allow access to /actuator/metrics for Prometheus monitoring in OpenShift
-                                AntPathRequestMatcher.antMatcher("/actuator/metrics"),
-                                AntPathRequestMatcher.antMatcher("/v3/api-docs/**"),
-                                AntPathRequestMatcher.antMatcher("/swagger-ui/**"),
-                                AntPathRequestMatcher.antMatcher("/"),
-                                AntPathRequestMatcher.antMatcher("/home"),
-                                AntPathRequestMatcher.antMatcher("/css/*"),
-                                AntPathRequestMatcher.antMatcher("/js/*"))
+                        // allow access to /actuator/info
+                        AntPathRequestMatcher.antMatcher("/actuator/info"),
+                        // allow access to /actuator/health for OpenShift Health Check
+                        AntPathRequestMatcher.antMatcher("/actuator/health"),
+                        // allow access to /actuator/health/liveness for OpenShift Liveness Check
+                        AntPathRequestMatcher.antMatcher("/actuator/health/liveness"),
+                        // allow access to /actuator/health/readiness for OpenShift Readiness Check
+                        AntPathRequestMatcher.antMatcher("/actuator/health/readiness"),
+                        // allow access to /actuator/metrics for Prometheus monitoring in OpenShift
+                        AntPathRequestMatcher.antMatcher("/actuator/metrics"),
+                        AntPathRequestMatcher.antMatcher("/v3/api-docs/**"),
+                        AntPathRequestMatcher.antMatcher("/swagger-ui/**"),
+                        AntPathRequestMatcher.antMatcher("/"),
+                        AntPathRequestMatcher.antMatcher("/home"),
+                        AntPathRequestMatcher.antMatcher("/css/*"),
+                        AntPathRequestMatcher.antMatcher("/js/*"))
                         .permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer -> httpSecurityOAuth2ResourceServerConfigurer

@@ -165,7 +165,8 @@ class LdapConfigurationTest {
             val restrictedResourceRequestHeaders = new HttpHeaders();
             restrictedResourceRequestHeaders.set(HttpHeaders.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8");
             val restrictedResourceRequest = new RequestEntity<>(restrictedResourceRequestHeaders, HttpMethod.GET, URI.create(
-                    getHost() + "/oauth2/authorize?" + wahllokalGui + "&response_type=code&client_id=" + clientID + "&scope=openid&redirect_uri=" + redirectURI));
+                    getHost() + "/oauth2/authorize?" + wahllokalGui + "&response_type=code&client_id=" + clientID + "&scope=openid&redirect_uri="
+                            + redirectURI));
             val restrictedResourceResponse = restTemplate.exchange(restrictedResourceRequest, String.class);
             Assertions.assertThat(restrictedResourceResponse.getStatusCode()).isEqualTo(HttpStatus.FOUND);
 

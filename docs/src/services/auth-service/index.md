@@ -94,13 +94,13 @@ sequenceDiagram
 1. Der Nutzer fragt eine Resources an die eine Authentifizierung erfordert
 1. Client wird zum Login-Formular weitergeleitet
 1. Der Nutzer loggt sich mit Benutzername und Password ein
-1. Über LDAP wird verifiziert, ob der Benutzername vorhanden ist und seine Password korrekt ist
+1. Über LDAP wird verifiziert, ob der Benutzername vorhanden ist und sein Password korrekt ist
 1. es werden weitere Regeln geprüft die für ein erfolgreiches Login notwendig sind
-   1. Ist der Nutzer nicht gesperrt
+   1. Ist der Nutzer gesperrt?
    1. Falls der Nutzer gesperrt ist, muss die Sperre abgelaufen sein
    1. darf der Nutzer sich nur innerhalb einer bestimmten Zeitspanne einloggen wird der Zeitraum validiert
    1. erfolgte der Login über eine erlaubte Anwendung (Prüfung der clientID)
-1. Der Nutzer wird an die ursprüngliche angefragte geschützte Resource weitergeleitet
+1. Der Nutzer wird an die ursprünglich angefragte, geschützte Resource weitergeleitet
 
 > [!NOTE]
 > Nutzer des Wahllokalsystems dürfen sich nur innerhalb einer bestimmten Zeit anmelden. Nutzer des Admin-Tools
@@ -108,7 +108,7 @@ sequenceDiagram
 > bestimmt.
 
 > [!NOTE]
-> Ein erfolgreiche Login setzte alle vorherigen Loginversuche zurück
+> Ein erfolgreicher Login setzt alle vorherigen Loginversuche zurück
 
 ### Erstellung der Benutzer
 

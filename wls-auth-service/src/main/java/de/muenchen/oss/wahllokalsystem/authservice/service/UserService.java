@@ -18,6 +18,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpServerErrorException;
@@ -163,6 +165,12 @@ public class UserService {
     public Optional<UserModel> getUser(String name) {
         val user = userRepository.findByUsername(name);
         return user.map(userModelMapper::toModel);
+    }
+
+    @Transactional
+    public UserDetails getUserDetails(final String username) throws UsernameNotFoundException {
+        val user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(String.format("User %S not found!", username)));
+        return userModelMapper.toSpringSecurityUser(user);
     }
 
     private String generatePin() {

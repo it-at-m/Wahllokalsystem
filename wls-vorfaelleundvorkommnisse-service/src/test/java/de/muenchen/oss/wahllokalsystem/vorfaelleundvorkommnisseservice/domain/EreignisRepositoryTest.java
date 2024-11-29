@@ -4,7 +4,9 @@ import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.MicroServ
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.EreignisRepository;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.TestdataFactory;
+
 import java.util.List;
+
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -56,7 +58,7 @@ public class EreignisRepositoryTest {
         @WithMockUser(
                 authorities = { Authorities.REPOSITORY_DELETE_EREIGNISSE, Authorities.REPOSITORY_WRITE_EREIGNISSE, Authorities.REPOSITORY_READ_EREIGNISSE }
         )
-        void should_deleteAllEreignisEntitiesWithMatching_Wahlbezirkid_when_givenValidWahlbezirkid() {
+        void should_deleteAllEreignisEntitiesWithMatchingWahlbezirkid_when_givenValidWahlbezirkid() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedEreignisList = List.of(

@@ -79,12 +79,24 @@ service:
         basepath: http://localhost:39146
         configkey:
           welcomeMessage: WILLKOMMENSTEXT
+          fruehesterLogin: FRUEHESTE_LOGIN_UHRZEIT
+          spaetesterLogin: SPAETESTE_LOGIN_UHRZEIT
+        dateformat: dd.MM.yyyy HH:mm
+    falscheLoginZeitstrafe: 10
     ldap:
       userDn:
       userDnPassword:
       contextSource:
       userSearchBase: ou=people
       userSearchFilter: uid={0}
+    loginCheckMessage: notInActiveElectionDay
+    oauth2:
+      clients:
+        wahllokalgui:
+          id: wahllokalgui
+        admingui:
+          id: admingui
+
     welcomemessage:
       default: "Willkommen zur Wahl!"
     user:

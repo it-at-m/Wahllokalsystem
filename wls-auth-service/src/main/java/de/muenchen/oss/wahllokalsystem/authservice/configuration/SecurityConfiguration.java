@@ -4,6 +4,7 @@
  */
 package de.muenchen.oss.wahllokalsystem.authservice.configuration;
 
+import de.muenchen.oss.wahllokalsystem.authservice.security.CustomUsernamePasswordAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
@@ -24,6 +25,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
@@ -38,6 +40,9 @@ public class SecurityConfiguration {
 
     @Autowired
     private RestTemplateBuilder restTemplateBuilder;
+
+    @Autowired
+    private CustomUsernamePasswordAuthenticationFilter customUsernamePasswordAuthenticationFilter;
 
     @Value("${security.oauth2.resource.user-info-uri}")
     private String userInfoUri;
@@ -78,7 +83,9 @@ public class SecurityConfiguration {
                         .expiredUrl("/login")
                         .maxSessionsPreventsLogin(false)
                         .sessionRegistry(sessionRegistry()))
-                .logout(LogoutConfigurer::permitAll);
+                .logout((logout) -> logout.permitAll())
+                .securityContext(securityContext -> securityContext.requireExplicitSave(false))
+                .addFilterBefore(customUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

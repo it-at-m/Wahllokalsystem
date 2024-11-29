@@ -62,6 +62,10 @@ export default withMermaid({
                         {
                             text: 'Auslagern von Authority Strings',
                             link: `${PATH_ADR}adr-auslagerung-authority-strings`
+                        },
+                        {
+                            text: 'Frontend-Refarch-Template',
+                            link: `${PATH_ADR}adr-frontend-template`
                         }
                     ]
                 }

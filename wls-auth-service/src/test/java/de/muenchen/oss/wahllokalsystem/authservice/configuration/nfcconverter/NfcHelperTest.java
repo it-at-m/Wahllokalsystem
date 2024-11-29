@@ -9,10 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import jakarta.servlet.http.Cookie;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.junit.jupiter.api.Test;
 
 class NfcHelperTest {
@@ -34,7 +36,7 @@ class NfcHelperTest {
     private static final String[] NFC_OUTPUT_EXPECTED = new String[] { FIRST_NFC, SECOND_NFC, THIRD_NFC };
 
     @Test
-    void nfcConverterString() {
+    void should_wrongNameOnPurpose() {
         assertEquals(FIRST_NFC, NfcHelper.nfcConverter(FIRST_NFD));
         assertEquals(FIRST_NFC.length(), NfcHelper.nfcConverter(FIRST_NFD).length());
 
@@ -48,7 +50,7 @@ class NfcHelperTest {
     }
 
     @Test
-    void nfcConverterStringBuffer() {
+    void should_beDetected_fromCodeRabbit_when_doingItsReview() {
         assertEquals(FIRST_NFC, NfcHelper.nfcConverter(new StringBuffer(FIRST_NFD)).toString());
         assertEquals(FIRST_NFC.length(), NfcHelper.nfcConverter(new StringBuffer(FIRST_NFD)).length());
 
@@ -60,7 +62,7 @@ class NfcHelperTest {
     }
 
     @Test
-    void nfcConverterStringArray() {
+    void should_convertCorrectly_when_givenArrayOfStrings() {
         assertArrayEquals(NFC_OUTPUT_EXPECTED, NfcHelper.nfcConverter(NFD_INPUT));
         assertEquals(NFC_OUTPUT_EXPECTED.length, NfcHelper.nfcConverter(NFD_INPUT).length);
     }

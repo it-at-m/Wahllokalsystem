@@ -136,7 +136,7 @@ class NfcConverterTest {
         Mockito.when(req.getRequestURI()).thenReturn("/index.html?type=" + contentType);
 
         Map<String, String[]> baseMapParams = new HashMap<>();
-        baseMapParams.put(NAME_NFD, new String[]{VALUE_NFD, VALUE2_NFD});
+        baseMapParams.put(NAME_NFD, new String[] { VALUE_NFD, VALUE2_NFD });
         final Map<String, String[]> params = UnmodifiableMap.unmodifiableMap(baseMapParams);
         Mockito.when(req.getParameter(NAME_NFD)).thenReturn(params.get(NAME_NFD)[0]);
         Mockito.when(req.getParameterMap()).thenReturn(params);

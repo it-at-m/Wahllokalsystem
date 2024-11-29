@@ -13,10 +13,11 @@ import de.muenchen.oss.wahllokalsystem.authservice.security.CustomUsernamePasswo
 import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.SecureRandom;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -56,6 +57,9 @@ public class SecurityConfiguration {
 
     @Autowired
     private UserService userService;
+
+    @Value("${service.config.oauth2.jwk.rsa.init.seed}")
+    String rsaKeyPairSeed;
 
     @Bean
     @Order(1)
@@ -127,17 +131,17 @@ public class SecurityConfiguration {
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
         RSAKey rsaKey = new RSAKey.Builder(publicKey)
                 .privateKey(privateKey)
-                .keyID(UUID.randomUUID().toString())
+                .keyID("keyID")
                 .build();
         JWKSet jwkSet = new JWKSet(rsaKey);
         return new ImmutableJWKSet<>(jwkSet);
     }
 
-    private static KeyPair generateRsaKey() {
+    private KeyPair generateRsaKey() {
         KeyPair keyPair;
         try {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            keyPairGenerator.initialize(2048);
+            keyPairGenerator.initialize(2048, new SecureRandom(rsaKeyPairSeed.getBytes()));
             keyPair = keyPairGenerator.generateKeyPair();
         } catch (Exception ex) {
             throw new IllegalStateException(ex);

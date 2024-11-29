@@ -147,3 +147,4 @@ Alle Konfigurationsparameter beginnen mit dem Prefix `service.config`
 | ldap.userSearchFilter                            | Filter für Suche, z.B. `(uid={0})`                                                                 | `uid={0}`                |
 | oauth2.clients.wahllokalgui.id                   | ID des Client der Wahllokal-Anwendung                                                              | wahllokalgui             |
 | oauth2.clients.admingui.id                       | ID des Client der Admintool-Anwendung                                                              | admingui                 |
+| oauth2.jwk.rsa.init.seed                         | Seed für RSA-Schlüsselpaar. Gleiche Seeds sorgen für gleiche Ergebnisse                            |                          |

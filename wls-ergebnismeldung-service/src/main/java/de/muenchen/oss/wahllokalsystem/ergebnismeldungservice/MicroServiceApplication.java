@@ -19,8 +19,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         basePackages = {
                 "org.springframework.data.jpa.convert.threeten",
                 "de.muenchen.oss.wahllokalsystem.ergebnismeldungservice",
-                "de.muenchen.oss.wahllokalsystem.wls.common.exception",
-                "de.muenchen.oss.wahllokalsystem.wls.common.security"
+                "de.muenchen.oss.wahllokalsystem.wls.common.exception"
         }
 )
 @EntityScan(

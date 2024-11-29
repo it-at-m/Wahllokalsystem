@@ -116,6 +116,23 @@ class LoginInterceptorServiceTest {
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails));
         }
 
+        @Test
+        void should_notThrowException_when_infomanagementClientThrowsExceptionOnWahltagIsActiveCheck() {
+            val wahltagID = "wahltagID";
+            val username = "username";
+            val ldapUserDetails = new TestLdapUserDetails(username, "WAHLVORSTAND");
+
+            val mockedUserModelFromUserService = createUserModel(wahltagID, "WLS_WAHLVORSTAND");
+            val mockedWahltagClientIsWahltagActiveException = InfrastrukturelleWlsException.withCode("").buildWithMessage("checking wahltag is active failed");
+            val mockedLegalLoginInterval = new LegalLoginIntervalModel(LocalDateTime.now().minusYears(1), LocalDateTime.now().plusYears(1));
+
+            Mockito.doThrow(mockedWahltagClientIsWahltagActiveException).when(wahltagClient).isWahltagActive(wahltagID);
+            Mockito.when(userService.getUser(username)).thenReturn(Optional.of(mockedUserModelFromUserService));
+            Mockito.when(loginTimeClient.getLegalLoginInterval()).thenReturn(mockedLegalLoginInterval);
+
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails));
+        }
+
         private UserModel createUserModel(final String wahltagID, final String... authorities) {
             return new UserModel("", "", true, wahltagID, LocalDate.now(), "", "", WahlbezirksartModel.UWB, "", Set.of(authorities), "");
         }

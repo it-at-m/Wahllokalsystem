@@ -1,4 +1,4 @@
-app:
+service:
   clients:
     eai:
       basePath: http://localhost:${wiremock.server.port}/

@@ -15,3 +15,5 @@ CREATE TABLE oauth2_registered_client
     token_settings                varchar(2000)                           NOT NULL,
     PRIMARY KEY (id)
 );
+
+CREATE UNIQUE INDEX idx_oauth2_client_id ON oauth2_registered_client (client_id);

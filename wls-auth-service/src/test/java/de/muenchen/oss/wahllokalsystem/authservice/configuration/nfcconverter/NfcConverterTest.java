@@ -14,6 +14,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -27,6 +28,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.collections4.list.UnmodifiableList;
 import org.apache.commons.collections4.map.UnmodifiableMap;
 import org.apache.commons.io.IOUtils;
@@ -76,7 +78,7 @@ class NfcConverterTest {
     // Test, das Request mit konfigriertem ContentType auf NFC normalisiert wird.
     //
     @Test
-    void testFilterIfContenttypeInWhitelist() throws ServletException, IOException {
+    void should_executeFilter_when_contenttypeInWhitelist() throws ServletException, IOException {
         mockRequest("text/plain");
 
         filter.setContentTypes("text/plain;text/html;application/json");
@@ -105,7 +107,7 @@ class NfcConverterTest {
     // auf NFC normalisiert wird.
     //
     @Test
-    void testSkipFilterIfContenttypeNotInWhitelist() throws ServletException, IOException {
+    void should_skipFilter_when_contenttypeNotInWhitelist() throws ServletException, IOException {
         mockRequest("application/postscript");
 
         filter.setContentTypes("text/plain;text/html");
@@ -134,7 +136,7 @@ class NfcConverterTest {
         Mockito.when(req.getRequestURI()).thenReturn("/index.html?type=" + contentType);
 
         Map<String, String[]> baseMapParams = new HashMap<>();
-        baseMapParams.put(NAME_NFD, new String[] { VALUE_NFD, VALUE2_NFD });
+        baseMapParams.put(NAME_NFD, new String[]{VALUE_NFD, VALUE2_NFD});
         final Map<String, String[]> params = UnmodifiableMap.unmodifiableMap(baseMapParams);
         Mockito.when(req.getParameter(NAME_NFD)).thenReturn(params.get(NAME_NFD)[0]);
         Mockito.when(req.getParameterMap()).thenReturn(params);

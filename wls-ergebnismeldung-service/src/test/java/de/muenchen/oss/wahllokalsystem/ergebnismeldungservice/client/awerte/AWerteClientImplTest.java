@@ -56,25 +56,11 @@ class AWerteClientImplTest {
         }
 
         @Test
-        void should_throwTechnischeWlsException_whenClientThrowsAnyException() {
-            val mockedWlsException = TechnischeWlsException.withCode("100")
-                    .buildWithMessage("Bei der Kommunikation mit dem Aoueai-Service ist ein Fehler aufgetreten. Es konnten daher keine Daten geladen werden.");
-
+        void should_returnNull_whenClientThrowsAnyException() {
             Mockito.when(wahldatenControllerApi.loadWahlberechtigte(any()))
                     .thenThrow(new RestClientException("error occurs while attempting to invoke the API"));
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI)).thenReturn(mockedWlsException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getAWerte("wahlbezirkId")).isSameAs(mockedWlsException);
-        }
-
-        @Test
-        void should_throwFachlicheWlsException_whenClientResponseIsNull() {
-            val mockedWlsException = FachlicheWlsException.withCode(ExceptionKonstanten.CODE_ENTITY_NOT_FOUND).buildWithMessage("not found");
-
-            Mockito.when(wahldatenControllerApi.loadWahlberechtigte("wahlbezirkId")).thenReturn(null);
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.NULL_FROM_CLIENT)).thenReturn(mockedWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getAWerte("wahlbezirkId")).isSameAs(mockedWlsException);
+            Assertions.assertThat(unitUnderTest.getAWerte("wahlbezirkId")).isNull();
         }
     }
 

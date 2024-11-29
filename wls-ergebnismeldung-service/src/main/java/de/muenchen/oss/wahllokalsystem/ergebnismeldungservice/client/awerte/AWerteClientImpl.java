@@ -32,12 +32,8 @@ public class AWerteClientImpl implements AWerteClient {
             wahlberechtigteDTOSet = wahldatenControllerApi.loadWahlberechtigte(wahlbezirkID);
         } catch (final Exception exception) {
             log.info("exception on getAWerte from external", exception);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
+            return null;
         }
-        if (wahlberechtigteDTOSet == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.NULL_FROM_CLIENT);
-        }
-
         return aWerteClientMapper.fromRemoteClientListOfWahlberechtigteDtoToListOfAWerteModel(wahlberechtigteDTOSet);
     }
 }

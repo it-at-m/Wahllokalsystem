@@ -4,33 +4,29 @@
  */
 package de.muenchen.oss.wahllokalsystem.authservice.configuration;
 
+import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
+import java.util.Collection;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
-/**
- * Ein custom {@link JwtAuthenticationConverter}, der die Authorities mittels
- * {@link UserInfoAuthoritiesService} vom /userinfo Endpoint des OIDC Providers
- * bezieht.
- */
+@RequiredArgsConstructor
 public class JwtUserInfoAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 
-    private final UserInfoAuthoritiesService userInfoService;
-
-    /**
-     * Erzeugt eine neue Instanz von {@link JwtUserInfoAuthenticationConverter}.
-     *
-     * @param userInfoService ein {@link UserInfoAuthoritiesService}
-     */
-    public JwtUserInfoAuthenticationConverter(UserInfoAuthoritiesService userInfoService) {
-        this.userInfoService = userInfoService;
-    }
+    private final UserService userService;
 
     @Override
     public AbstractAuthenticationToken convert(Jwt source) {
-        return new JwtAuthenticationToken(source, this.userInfoService.loadAuthorities(source));
+        return new JwtAuthenticationToken(source, loadAuthorities(source));
+    }
+
+    private Collection<? extends GrantedAuthority> loadAuthorities(Jwt jwt) {
+        val userDetails = userService.getUserDetails(jwt.getSubject());
+        return userDetails.getAuthorities();
     }
 
 }

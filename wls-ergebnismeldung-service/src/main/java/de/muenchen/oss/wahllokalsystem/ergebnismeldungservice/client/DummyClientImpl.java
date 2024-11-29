@@ -5,6 +5,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWe
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,7 @@ public class DummyClientImpl
             return List.of(
                     new AWerteModel(new BezirkUndWahlID("wahlID", "wahlbezirkID"), 25L, 26L));
         } else {
-            return List.of();
+            return Collections.emptyList();
         }
     }
 

@@ -2,8 +2,9 @@ package de.muenchen.oss.wahllokalsystem.authservice.configuration;
 
 import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
 import java.time.Instant;
-import java.util.Collections;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -32,7 +33,8 @@ class JwtUserInfoAuthenticationConverterTest {
         @Test
         void should_jwtAuthenticationTokenWithAuthorities_when_convertingJwt() {
             val username = "username";
-            val jwt = new Jwt(username, Instant.now(), Instant.now(), Collections.emptyMap(), Collections.emptyMap());
+            val now = Instant.now();
+            val jwt = new Jwt("tokenValue", now, now.plus(30, ChronoUnit.DAYS), Map.of("key1", "value1"), Map.of("sub", username));
 
             val mockedUserAuthorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
             val mockedUserDetails = new User(username, "password", mockedUserAuthorities);
@@ -41,7 +43,7 @@ class JwtUserInfoAuthenticationConverterTest {
 
             val result = unitUnderTest.convert(jwt);
 
-            Assertions.assertThat(result.getAuthorities()).isSameAs(mockedUserAuthorities);
+            Assertions.assertThat(result.getAuthorities()).isEqualTo(mockedUserAuthorities);
         }
     }
 }

@@ -17,5 +17,5 @@ public class ExceptionConstants {
             "getAWerte: Parameter unvollstaendig");
 
     public static ExceptionDataWrapper GETAWERTE_UNSAVEABLE = new ExceptionDataWrapper("601",
-            "getAWerte: Die AWerte aus der IVU konnten nicht gespeichert werden.");
+            "getAWerte: Die AWerte vom Client konnten nicht gespeichert werden.");
 }

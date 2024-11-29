@@ -47,7 +47,7 @@ public class AWerteService {
                 log.error("#getAWerte unsaveable: " + e.getMessage(), e);
             }
         } else {
-            log.info("Liefere 'alte' A-Werte, weil WAS keine Antwort liefern konnte.");
+            log.info("Liefere 'alte' A-Werte, weil der Client keine Antwort liefern konnte.");
             aWerteList = aWerteModelMapper.fromListOfAWerteEntityToListOfAWerteModel(aWerteRepository.findByBezirkUndWahlID_WahlbezirkID(wahlbezirkID));
 
             if (aWerteList == null || aWerteList.isEmpty()) {

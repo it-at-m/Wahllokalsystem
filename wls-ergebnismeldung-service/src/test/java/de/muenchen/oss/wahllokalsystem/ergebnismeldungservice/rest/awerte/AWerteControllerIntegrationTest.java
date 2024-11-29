@@ -21,7 +21,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
@@ -35,9 +34,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @AutoConfigureWireMock
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
 public class AWerteControllerIntegrationTest {
-
-    @Value("${service.info.oid}")
-    String serviceID;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -72,7 +68,7 @@ public class AWerteControllerIntegrationTest {
     class GetAWerte {
 
         @Test
-        void should_returnAWerteListFromEAI_when_DataFound() throws Exception {
+        void should_returnAWerteListFromEAI_when_dataFound() throws Exception {
             val wahlbezirkID = "wahlbezirkID1";
             val eaiWahlberechtigte = createClientListOfAWahlberechtigteDTO(wahlbezirkID);
             WireMock.stubFor(WireMock.get("/wahldaten/wahlbezirke/" + wahlbezirkID + "/wahlberechtigte")
@@ -92,7 +88,7 @@ public class AWerteControllerIntegrationTest {
         }
 
         @Test
-        void should_saveAWerteListFromEAIToRepo_when_DataFound() throws Exception {
+        void should_saveAWerteListFromEAIToRepo_when_dataFound() throws Exception {
             val wahlbezirkID = "wahlbezirkID1";
             val eaiWahlberechtigte = createClientListOfAWahlberechtigteDTO(wahlbezirkID);
             WireMock.stubFor(WireMock.get("/wahldaten/wahlbezirke/" + wahlbezirkID + "/wahlberechtigte")

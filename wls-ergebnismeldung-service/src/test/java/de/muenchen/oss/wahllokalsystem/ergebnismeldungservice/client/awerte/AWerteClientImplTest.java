@@ -4,12 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.client.WahldatenControllerApi;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.WahlberechtigteDTO;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteModel;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionKonstanten;
 import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -24,9 +19,6 @@ import org.springframework.web.client.RestClientException;
 
 @ExtendWith(MockitoExtension.class)
 class AWerteClientImplTest {
-
-    @Mock
-    ExceptionFactory exceptionFactory;
 
     @Mock
     WahldatenControllerApi wahldatenControllerApi;
@@ -56,7 +48,7 @@ class AWerteClientImplTest {
         }
 
         @Test
-        void should_returnNull_whenClientThrowsAnyException() {
+        void should_returnNull_when_ClientThrowsAnyException() {
             Mockito.when(wahldatenControllerApi.loadWahlberechtigte(any()))
                     .thenThrow(new RestClientException("error occurs while attempting to invoke the API"));
 

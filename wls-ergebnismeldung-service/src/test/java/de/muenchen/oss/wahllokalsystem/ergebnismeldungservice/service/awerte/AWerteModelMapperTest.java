@@ -13,7 +13,7 @@ class AWerteModelMapperTest {
     private final AWerteModelMapper unitUnderTest = Mappers.getMapper(AWerteModelMapper.class);
 
     @Test
-    void fromListOfAWerteModeltoListOfAWerteEntity() {
+    void should_returnListOfAWerteEntity_when_listOfAWerteModelIsGiven() {
         val wahlbezirkID = "wahlbezirkID";
         val modelsToMap = createListOfAWerteModels(wahlbezirkID);
 
@@ -24,7 +24,7 @@ class AWerteModelMapperTest {
     }
 
     @Test
-    void fromListOfAWerteEntityToListOfAWerteModel() {
+    void should_return_listOfAWerteModel_when_listOfAWerteEntityIsGiven() {
         val wahlbezirkID = "wahlbezirkID";
         val entitiesToMap = createListOfAWerteEntities(wahlbezirkID);
 

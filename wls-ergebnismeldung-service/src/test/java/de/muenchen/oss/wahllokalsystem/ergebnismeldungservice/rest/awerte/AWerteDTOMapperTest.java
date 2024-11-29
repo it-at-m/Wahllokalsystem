@@ -17,7 +17,7 @@ class AWerteDTOMapperTest {
     class FromListOfAWerteModelToListOfAWerteDTO {
 
         @Test
-        void should_returnNull_whenNullIsGiven() {
+        void should_returnNull_when_nullIsGiven() {
             Assertions.assertThat(unitUnderTest.fromListOfAWerteModelToListOfAWerteDTO(null)).isNull();
         }
 

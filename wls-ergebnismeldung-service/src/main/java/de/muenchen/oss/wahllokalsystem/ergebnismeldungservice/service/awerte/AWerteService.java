@@ -51,7 +51,7 @@ public class AWerteService {
             aWerteList = aWerteModelMapper.fromListOfAWerteEntityToListOfAWerteModel(aWerteRepository.findByBezirkUndWahlID_WahlbezirkID(wahlbezirkID));
 
             if (aWerteList == null || aWerteList.isEmpty()) {
-                log.error("#getAWerte Keine Daten aus WAS erhalten und keine gespeicherten A-Werte vorhanden!");
+                log.error("#getAWerte Keine Daten erhalten und keine gespeicherten A-Werte vorhanden!");
                 throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.GETAWERTE_UNSAVEABLE);
             }
         }

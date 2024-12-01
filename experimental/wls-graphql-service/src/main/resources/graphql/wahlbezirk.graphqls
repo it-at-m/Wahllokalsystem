@@ -1,0 +1,27 @@
+type Wahlbezirk {
+    id: ID!
+    wahltagDate: Date!
+    nummer: Int!
+    art: WahlbezirkArt!
+    latestBroadcastMessage: BroadcastMessage
+}
+
+type BroadcastMessage {
+    id: ID!
+    message: String
+}
+
+enum WahlbezirkArt {
+    UWB,
+    BWB
+}
+
+scalar Date
+
+type Query {
+    wahlbezirk(id: ID!): Wahlbezirk!
+}
+
+type Mutation {
+    broadcastMessage(wahlbezirkIDs: [ID]!, messages: [String]!): Int!
+}

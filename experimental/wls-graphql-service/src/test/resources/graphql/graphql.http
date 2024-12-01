@@ -1,0 +1,38 @@
+### query wahlbezirk by ID
+GRAPHQL http://localhost:8080/graphql
+Content-Type: application/graphql
+
+query{
+    wahlbezirk(id: "8450f778-754e-4da1-b238-bdfaac223e16") {
+        id,
+        wahltagDate
+    }
+}
+
+### query wahlbezirk by ID with latest broadcast message
+GRAPHQL http://localhost:8080/graphql
+Content-Type: application/graphql
+
+query{
+    wahlbezirk(id: "8450f778-754e-4da1-b238-bdfaac223e16") {
+        id,
+        wahltagDate,
+        latestBroadcastMessage
+    }
+}
+
+### submit messages to broadcast
+GRAPHQL http://localhost:8080/graphql
+
+mutation {
+    broadcastMessage(messages: [
+        "hallo",
+        "world",
+        "wie gehts?"
+    ],
+        wahlbezirkIDs: [
+            "8450f778-754e-4da1-b238-bdfaac223e16",
+            "8450f778-754e-4da1-b238-bdfaac223e17",
+            "8450f778-754e-4da1-b238-bdfaac223e18"
+        ])
+}

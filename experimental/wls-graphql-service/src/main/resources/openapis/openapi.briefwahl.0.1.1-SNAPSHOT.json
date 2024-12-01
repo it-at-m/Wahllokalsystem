@@ -1,0 +1,267 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Briefwahl Service",
+    "contact": {
+      "name": "Your Name",
+      "email": "Your E-Mail-Address"
+    },
+    "version": "0.1.1-SNAPSHOT"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/businessActions/wahlbriefdaten/{wahlbezirkID}": {
+      "get": {
+        "tags": [
+          "wahlbriefdaten-controller"
+        ],
+        "operationId": "getWahlbriefdaten",
+        "parameters": [
+          {
+            "name": "wahlbezirkID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/WahlbriefdatenDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "wahlbriefdaten-controller"
+        ],
+        "operationId": "postWahlbriefdaten",
+        "parameters": [
+          {
+            "name": "wahlbezirkID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WahlbriefdatenWriteDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/businessActions/beanstandeteWahlbriefe/{wahlbezirkID}/{waehlerverzeichnisNummer}": {
+      "get": {
+        "tags": [
+          "beanstandete-wahlbriefe-controller"
+        ],
+        "operationId": "getBeanstandeteWahlbriefe",
+        "parameters": [
+          {
+            "name": "wahlbezirkID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "waehlerverzeichnisNummer",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BeanstandeteWahlbriefeDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "beanstandete-wahlbriefe-controller"
+        ],
+        "operationId": "setBeanstandeteWahlbriefe",
+        "parameters": [
+          {
+            "name": "wahlbezirkID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "waehlerverzeichnisNummer",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BeanstandeteWahlbriefeCreateDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "beanstandeteWahlbriefeProperty": {
+        "title": "beanstandeteWahlbriefe as Map<String, Zurueckweisungsgrund_[]>",
+        "type": "object",
+        "example": "{'BZW_2018' : ['NICHT_WAHLBERECHTIGT', 'UMSCHLAG_FEHLT', 'LOSE_STIMMZETTEL', 'ZUGELASSEN', 'GEGENSTAND_IM_UMSCHLAG', 'KEIN_ORIGINAL_SCHEIN'],'LTW_2018' : ['WAHLBRIEF_UND_UMSCHLAG_OFFEN', 'UNTERSCHRIFT_FEHLT', 'UMSCHLAG_NICHT_AMTLICH','UMSCHLAG_GEFAEHRDET_WAHLGEHEIMNIS', 'SCHEINE_UNGLEICH_UMSCHLAEGE', 'SCHEIN_UNGUELTIG'] }"
+      },
+      "WahlbriefdatenWriteDTO": {
+        "type": "object",
+        "properties": {
+          "wahlbriefe": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "verzeichnisseUngueltige": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nachtraege": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nachtraeglichUeberbrachte": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "zeitNachtraeglichUeberbrachte": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "BeanstandeteWahlbriefeCreateDTO": {
+        "required": [
+          "beanstandeteWahlbriefe"
+        ],
+        "type": "object",
+        "properties": {
+          "beanstandeteWahlbriefe": {
+            "$ref": "#/components/schemas/beanstandeteWahlbriefeProperty"
+          }
+        }
+      },
+      "WahlbriefdatenDTO": {
+        "required": [
+          "wahlbezirkID"
+        ],
+        "type": "object",
+        "properties": {
+          "wahlbezirkID": {
+            "type": "string"
+          },
+          "wahlbriefe": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "verzeichnisseUngueltige": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nachtraege": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nachtraeglichUeberbrachte": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "zeitNachtraeglichUeberbrachte": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "BeanstandeteWahlbriefeDTO": {
+        "required": [
+          "beanstandeteWahlbriefe",
+          "waehlerverzeichnisNummer",
+          "wahlbezirkID"
+        ],
+        "type": "object",
+        "properties": {
+          "wahlbezirkID": {
+            "type": "string"
+          },
+          "waehlerverzeichnisNummer": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "beanstandeteWahlbriefe": {
+            "$ref": "#/components/schemas/beanstandeteWahlbriefeProperty"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

@@ -1,0 +1,230 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Wahlvorstand Service",
+    "contact": {
+      "name": "Your Name",
+      "email": "Your E-Mail-Address"
+    },
+    "version": "0.0.1-SNAPSHOT"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:39155",
+      "description": "Generated server url"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/businessActions/wahlvorstand/{wahlbezirkID}": {
+      "get": {
+        "tags": [
+          "wahlvorstand-controller"
+        ],
+        "description": "Laden des Wahlvorstandes",
+        "operationId": "getWahlvorstand",
+        "parameters": [
+          {
+            "name": "forceupdate",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "wahlbezirkID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Probleme bei der Verarbeitung der Anfrage",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Anfrageparameter sind fehlerhaft",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WahlvorstandDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "wahlvorstand-controller"
+        ],
+        "description": "Aktualisieren des Wahlvorstandes",
+        "operationId": "postWahlvorstand",
+        "parameters": [
+          {
+            "name": "wahlbezirkID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WahlvorstandDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Probleme bei der Verarbeitung der Anfrage",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Anfrageparameter sind fehlerhaft",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WahlvorstandDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "WahlvorstandDTO": {
+        "type": "object",
+        "properties": {
+          "wahlbezirkID": {
+            "type": "string"
+          },
+          "anwesenheitBeginn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "wahlvorstandsmitglieder": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WahlvorstandsmitgliedDTO"
+            }
+          }
+        }
+      },
+      "WahlvorstandsmitgliedDTO": {
+        "type": "object",
+        "properties": {
+          "identifikator": {
+            "type": "string"
+          },
+          "familienname": {
+            "type": "string"
+          },
+          "vorname": {
+            "type": "string"
+          },
+          "funktion": {
+            "type": "string",
+            "enum": [
+              "W",
+              "SB",
+              "SWB",
+              "SSB",
+              "B"
+            ]
+          },
+          "funktionsname": {
+            "type": "string"
+          },
+          "anwesend": {
+            "type": "boolean"
+          }
+        }
+      },
+      "WlsExceptionDTO": {
+        "required": [
+          "category",
+          "code",
+          "message",
+          "service"
+        ],
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "F",
+              "T",
+              "S",
+              "I"
+            ]
+          },
+          "code": {
+            "type": "string"
+          },
+          "service": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

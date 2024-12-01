@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: wls-graphql-service
+
+service:
+  info:
+    oid: WlsGraphQL-Service
+  config:
+    clients:
+      basisdaten:
+        basePath: http://localhost:39151
+      briefwahl:
+        basePath: http://localhost:39147
+      broadcast:
+        basePath: http://localhost:39146
+      infomanagement:
+        basePath: http://localhost:39148
+      monitoring:
+        basePath: http://localhost:39154
+      vorfaelle:
+        basePath: http://localhost:39156
+      wahlvorbereitung:
+        basePath: http://localhost:39150

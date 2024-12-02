@@ -36,7 +36,7 @@ class AWerteClientMapperTest {
     }
 
     @Nested
-    class fromRemoteClientListOfWahlberechtigteDtoToListOfAWerteModel {
+    class FromRemoteClientListOfWahlberechtigteDtoToListOfAWerteModel {
 
         @Test
         void should_returnMappedListOfAWerteModel_when_listOfWahlberechtigteDtoisGiven() {

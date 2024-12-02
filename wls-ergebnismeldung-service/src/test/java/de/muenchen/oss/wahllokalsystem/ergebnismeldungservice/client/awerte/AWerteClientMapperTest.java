@@ -15,7 +15,7 @@ class AWerteClientMapperTest {
     private final AWerteClientMapper unitUnderTest = Mappers.getMapper(AWerteClientMapper.class);
 
     @Nested
-    class fromRemoteClientWahlberechtigteDtoToAWerteModel {
+    class FromRemoteClientWahlberechtigteDtoToAWerteModel {
 
         @Test
         void should_returnMappedAWerteModel_when_wahlberechtigteDtoisGiven() {

@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,8 +29,7 @@ public class AWerteController {
     @Operation(description = "Laden der AWerte für den Wahlbezirk {wahlbezirkID}.")
     @GetMapping("/awerte/{wahlbezirkID}")
     public ResponseEntity<List<AWerteDTO>> getAWerte(@PathVariable("wahlbezirkID") String wahlbezirkID) {
-        List<AWerteDTO> result = awerteDTOMapper.fromListOfAWerteModelToListOfAWerteDTO(aWerteService.getAWerte(wahlbezirkID));
-
+        val result = awerteDTOMapper.fromListOfAWerteModelToListOfAWerteDTO(aWerteService.getAWerte(wahlbezirkID));
         if (result == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

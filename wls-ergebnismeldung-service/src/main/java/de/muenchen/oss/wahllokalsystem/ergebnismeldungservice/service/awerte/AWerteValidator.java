@@ -13,7 +13,7 @@ public class AWerteValidator {
     private final ExceptionFactory exceptionFactory;
 
     public void validWahlbezirkIDParamOrThrow(final String wahlbezirkID) {
-        if (wahlbezirkID == null || StringUtils.isBlank(wahlbezirkID) || StringUtils.isEmpty(wahlbezirkID)) {
+        if (StringUtils.isBlank(wahlbezirkID)) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETAWERTE_PARAMETER_UNVOLLSTAENDIG);
         }
     }

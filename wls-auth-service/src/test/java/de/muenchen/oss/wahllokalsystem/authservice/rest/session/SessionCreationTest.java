@@ -43,24 +43,29 @@ class SessionCreationTest {
 
     private static final String LOGIN_ENDPOINT = "/login";
 
-    TestRestTemplate testRestTemplate = new TestRestTemplate();
+    @Autowired
+    TestRestTemplate testRestTemplate;
 
-    private final Connection conn = DriverManager.getConnection("jdbc:h2:mem:wls-auth-service", "sa", "");
+    private Connection conn;
 
     @Autowired
     SessionRegistry sessionRegistry;
 
-    SessionCreationTest() throws SQLException {
+    SessionCreationTest() {
     }
 
     @BeforeEach
     public void setUp() throws SQLException {
+        conn = DriverManager.getConnection("jdbc:h2:mem:wls-auth-service", "sa", "");
         purgeSessions();
     }
 
     @AfterEach
     public void tearDown() throws SQLException {
         purgeSessions();
+        if (conn != null && !conn.isClosed()) {
+            conn.close();
+        }
     }
 
     private void purgeSessions() throws SQLException {

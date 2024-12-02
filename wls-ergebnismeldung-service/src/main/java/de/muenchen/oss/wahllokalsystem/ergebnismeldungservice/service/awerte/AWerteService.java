@@ -68,12 +68,12 @@ public class AWerteService {
             try {
                 // improve this, see issue #596
                 try {
-                    String s = new String(Base64.getDecoder().decode(wbzID.getBytes()));
-                    Matcher m = pattern.matcher(s);
-                    if (m.find()) {
-                        asyncProgress.setAWerteNext(m.group(1));
+                    String decodedWbzID = new String(Base64.getDecoder().decode(wbzID.getBytes()));
+                    Matcher wbzIdMatcher = pattern.matcher(decodedWbzID);
+                    if (wbzIdMatcher.find()) {
+                        asyncProgress.setAWerteNext(wbzIdMatcher.group(1));
                     } else {
-                        asyncProgress.setAWerteNext(s);
+                        asyncProgress.setAWerteNext(decodedWbzID);
                     }
                 } catch (Exception e) {
                     asyncProgress.setAWerteNext(wbzID);

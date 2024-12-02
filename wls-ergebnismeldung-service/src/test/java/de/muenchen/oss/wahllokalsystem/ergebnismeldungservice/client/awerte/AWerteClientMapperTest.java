@@ -52,29 +52,28 @@ class AWerteClientMapperTest {
             val expectedAWerteList = List.of(awm1, awm2, awm3);
 
             Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedAWerteList);
-            Assertions.assertThat(result).containsExactlyInAnyOrderElementsOf(expectedAWerteList);
         }
     }
 
     private List<WahlberechtigteDTO> createListOfWahlberechtigteDTO() {
-        val wb1 = new WahlberechtigteDTO();
-        wb1.setWahlbezirkID("wahlbezirkID1");
-        wb1.setWahlID("wahlID");
-        wb1.setA1(2L);
-        wb1.setA2(3L);
-        wb1.setA3(5L);
-        val wb2 = new WahlberechtigteDTO();
-        wb2.setWahlbezirkID("wahlbezirkID2");
-        wb2.setWahlID("wahlID");
-        wb2.setA1(3L);
-        wb2.setA2(4L);
-        wb2.setA3(7L);
-        val wb3 = new WahlberechtigteDTO();
-        wb3.setWahlbezirkID("wahlbezirkID3");
-        wb3.setWahlID("wahlID");
-        wb3.setA1(4L);
-        wb3.setA2(5L);
-        wb3.setA3(9L);
-        return List.of(wb1, wb2, wb3);
+        val wahlberechtigteDTO1 = new WahlberechtigteDTO();
+        wahlberechtigteDTO1.setWahlbezirkID("wahlbezirkID1");
+        wahlberechtigteDTO1.setWahlID("wahlID");
+        wahlberechtigteDTO1.setA1(2L);
+        wahlberechtigteDTO1.setA2(3L);
+        wahlberechtigteDTO1.setA3(5L);
+        val wahlberechtigteDTO2 = new WahlberechtigteDTO();
+        wahlberechtigteDTO2.setWahlbezirkID("wahlbezirkID2");
+        wahlberechtigteDTO2.setWahlID("wahlID");
+        wahlberechtigteDTO2.setA1(3L);
+        wahlberechtigteDTO2.setA2(4L);
+        wahlberechtigteDTO2.setA3(7L);
+        val wahlberechtigteDTO3 = new WahlberechtigteDTO();
+        wahlberechtigteDTO3.setWahlbezirkID("wahlbezirkID3");
+        wahlberechtigteDTO3.setWahlID("wahlID");
+        wahlberechtigteDTO3.setA1(4L);
+        wahlberechtigteDTO3.setA2(5L);
+        wahlberechtigteDTO3.setA3(9L);
+        return List.of(wahlberechtigteDTO1, wahlberechtigteDTO2, wahlberechtigteDTO3);
     }
 }

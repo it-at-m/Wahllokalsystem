@@ -29,15 +29,18 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class SessionController {
 
-    @Autowired
     SessionRegistry sessionRegistry;
 
     /**
      * Is needed for explicit deleting Jdbc-Session from Table SPRING_SESSION, necessary because
      * removing Session from @v{ sessionRegistry } does not delete it from Database
      */
-    @Autowired
     JdbcIndexedSessionRepository jdbcSessionRepository;
+
+    public SessionController(SessionRegistry sessionRegistry, JdbcIndexedSessionRepository jdbcSessionRepository) {
+        this.sessionRegistry = sessionRegistry;
+        this.jdbcSessionRepository = jdbcSessionRepository;
+    }
 
     /**
      * Lists all sessions which are not expired.
@@ -94,7 +97,7 @@ public class SessionController {
         HttpStatus httpStatus = OK;
         SessionInformation sessionInformation = sessionRegistry.getSessionInformation(sessionID);
         if (sessionInformation != null && !sessionInformation.isExpired()) {
-            log.info("Killing session with id {}", sessionID + " principal: " + sessionInformation.getPrincipal());
+            log.info("Killing session with id: {} principal: {}", sessionID, sessionInformation.getPrincipal());
             sessionInformation.expireNow();
             jdbcSessionRepository.deleteById(sessionID);
         } else {

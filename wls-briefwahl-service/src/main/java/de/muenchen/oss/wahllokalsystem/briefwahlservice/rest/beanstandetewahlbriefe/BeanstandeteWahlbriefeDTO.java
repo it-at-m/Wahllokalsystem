@@ -1,11 +1,13 @@
 package de.muenchen.oss.wahllokalsystem.briefwahlservice.rest.beanstandetewahlbriefe;
 
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.common.beanstandetewahlbriefe.Zurueckweisungsgrund;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import java.util.Map;
 import lombok.Builder;
 
 @Builder
 public record BeanstandeteWahlbriefeDTO(@NotNull String wahlbezirkID, @NotNull Long waehlerverzeichnisNummer,
+                                        @Schema(enumAsRef = true)
                                         @NotNull Map<String, Zurueckweisungsgrund[]> beanstandeteWahlbriefe) {
 }

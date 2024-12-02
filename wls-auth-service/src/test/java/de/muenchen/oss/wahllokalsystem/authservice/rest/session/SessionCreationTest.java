@@ -72,6 +72,7 @@ class SessionCreationTest {
                 0, SessionTestUtils.getSessionIdsFromDatabase(conn).size());
         assertEquals(
                 0, SessionTestUtils.getSessionAttributeBytesFromDb(conn).size());
+        assertTrue(sessionRegistry.getAllPrincipals().isEmpty(), "Session registry should be empty");
     }
 
     @Test

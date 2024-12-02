@@ -58,7 +58,7 @@ class SessionControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    private final Connection conn = DriverManager.getConnection("jdbc:h2:mem:wls-auth-service", "sa", "");
+    private Connection conn;
 
     @Autowired
     SessionRegistry sessionRegistry;
@@ -72,6 +72,7 @@ class SessionControllerTest {
 
     @BeforeEach
     public void setUp() throws SQLException {
+        conn = DriverManager.getConnection("jdbc:h2:mem:wls-auth-service", "sa", "");
         purgeSessions();
         SecurityUtils.runWith(Authorities.ROLE_ADMIN);
     }
@@ -79,12 +80,16 @@ class SessionControllerTest {
     @AfterEach
     public void tearDown() throws SQLException {
         purgeSessions();
+        if (conn != null && !conn.isClosed()) {
+            conn.close();
+        }
     }
 
     private void purgeSessions() throws SQLException {
-        Statement stat = conn.createStatement();
-        stat.execute("DELETE SPRING_SESSION_ATTRIBUTES");
-        stat.execute("DELETE SPRING_SESSION");
+        try (Statement stat = conn.createStatement()) {
+            stat.execute("DELETE SPRING_SESSION_ATTRIBUTES");
+            stat.execute("DELETE SPRING_SESSION");
+        }
         sessionRegistry.getAllPrincipals().forEach(p -> sessionRegistry.getAllSessions(p, true)
                 .forEach(s -> sessionRegistry.removeSessionInformation(s.getSessionId())));
     }
@@ -215,18 +220,19 @@ class SessionControllerTest {
                 valuesStatementPart.append("?,");
             }
         }
-        PreparedStatement s2 = conn.prepareStatement(
-                "INSERT INTO " + tableName + " ("
-                        + columnStatementPart
-                        + ") VALUES ("
-                        + valuesStatementPart
-                        + ")");
-        for (int i = 0; i < columnNameContentPairs.size(); i++) {
-            s2.setString((i + 1), columnNameContentPairs.get(i).columnContent.toString());
+        try (PreparedStatement s2 = conn.prepareStatement(
+        "INSERT INTO " + tableName + " ("
+                + columnStatementPart
+                + ") VALUES ("
+                + valuesStatementPart
+                + ")")) {
+            for (int i = 0; i < columnNameContentPairs.size(); i++) {
+                s2.setString((i + 1), columnNameContentPairs.get(i).columnContent.toString());
+            }
+            s2.addBatch();
+            log.info("statement: " + s2);
+            s2.executeBatch();
         }
-        s2.addBatch();
-        log.info("statement: " + s2);
-        s2.executeBatch();
         return new SessionInformation(columnNameContentPairs.get(6).columnContent, columnNameContentPairs.get(1).columnContent.toString(),
                 new Date((long) columnNameContentPairs.get(3).columnContent));
     }

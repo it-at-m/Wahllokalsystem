@@ -6,7 +6,7 @@ spring:
   datasource:
     username: sa
     password:
-    url: jdbc:h2:mem:wls-auth-service
+    url: jdbc:h2:mem:wls-auth-service;DB_CLOSE_ON_EXIT=FALSE
   flyway:
     enabled: true
   jpa:
@@ -20,3 +20,4 @@ spring:
     # Enable SQL logging for test environment only
     show-sql: true
 
+refarch.gracefulshutdown.pre-wait-seconds: 0

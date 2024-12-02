@@ -35,8 +35,13 @@ import org.springframework.test.context.ActiveProfiles;
 @Slf4j
 class SessionCreationTest {
 
+    private static final String TABLE_SESSION_ATTRIBUTES = "SPRING_SESSION_ATTRIBUTES";
+    private static final String TABLE_SESSIONS = "SPRING_SESSION";
+
     @LocalServerPort
     private int port;
+
+    private static final String LOGIN_ENDPOINT = "/login";
 
     TestRestTemplate testRestTemplate = new TestRestTemplate();
 
@@ -59,9 +64,10 @@ class SessionCreationTest {
     }
 
     private void purgeSessions() throws SQLException {
-        Statement stat = conn.createStatement();
-        stat.execute("DELETE SPRING_SESSION_ATTRIBUTES");
-        stat.execute("DELETE SPRING_SESSION");
+        try (Statement stat = conn.createStatement()) {
+            stat.execute("DELETE " + TABLE_SESSION_ATTRIBUTES);
+            stat.execute("DELETE " + TABLE_SESSIONS);
+        }
         sessionRegistry.getAllPrincipals().forEach(p -> sessionRegistry.getAllSessions(p, true)
                 .forEach(s -> sessionRegistry.removeSessionInformation(s.getSessionId())));
     }
@@ -77,7 +83,7 @@ class SessionCreationTest {
 
     @Test
     public void should_createSession_when_callingLoginController() throws SQLException {
-        val formLoginRequest = new RequestEntity<>(HttpMethod.GET, URI.create("http://localhost:" + port + "/login"));
+        val formLoginRequest = new RequestEntity<>(HttpMethod.GET, URI.create("http://localhost:" + port + LOGIN_ENDPOINT));
         val formLoginResponse = testRestTemplate.exchange(formLoginRequest, String.class);
 
         Assertions.assertThat(formLoginResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -88,11 +94,15 @@ class SessionCreationTest {
 
     @Test
     public void should_createCsrfSessionAttribute_when_callingLogin() throws SQLException {
-        val formLoginRequest = new RequestEntity<>(HttpMethod.GET, URI.create("http://localhost:" + port + "/login"));
+        val formLoginRequest = new RequestEntity<>(HttpMethod.GET, URI.create("http://localhost:" + port + LOGIN_ENDPOINT));
         this.testRestTemplate.exchange(formLoginRequest, String.class);
         val sessionAttributesFromDB = SessionTestUtils.getSessionAttributeBytesFromDb(conn);
         assertEquals(1, sessionAttributesFromDB.size());
         String firstAttributesKey = (String) sessionAttributesFromDB.keySet().toArray()[0];
         Assertions.assertThat(firstAttributesKey).endsWith("CSRF_TOKEN");
+        // Verify CSRF token format and properties
+        byte[] tokenBytes = sessionAttributesFromDB.get(firstAttributesKey);
+        assertNotNull(tokenBytes, "CSRF token should not be null");
+        assertTrue(tokenBytes.length > 0, "CSRF token should not be empty");
     }
 }

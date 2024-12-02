@@ -5,6 +5,7 @@ const PATH_CODING_CONVENTIONS = PATH_TECHNIK + 'coding_conventions/';
 const PATH_ADR = PATH_TECHNIK + 'adr/';
 const PATH_GUIDES = PATH_TECHNIK + '/guides/';
 const PATH_SERVICES = '/services/';
+const PATH_SYSSPEC = PATH_TECHNIK + "systemspecification/";
 
 // https://vitepress.dev/reference/site-config
 export default withMermaid({
@@ -43,6 +44,17 @@ export default withMermaid({
                         {text: 'Naming Convention - Testing', link: `${PATH_CODING_CONVENTIONS}tests_naming`},
                         {text: 'Naming Convention - Database', link: `${PATH_CODING_CONVENTIONS}db_naming`}
                     ]
+                },
+                {
+                    text: "Systemspezifikation",
+                    link: `${PATH_SYSSPEC}`,
+                    collapsed: true,
+                    items: [
+                        {
+                            text: "Sicherheit",
+                            link: `${PATH_SYSSPEC}security`,
+                        },
+                    ],
                 },
                 {
                     text: 'Adr', link: `${PATH_ADR}`, collapsed: true, items: [

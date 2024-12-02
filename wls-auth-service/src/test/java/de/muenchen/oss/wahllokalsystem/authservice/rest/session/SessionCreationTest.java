@@ -73,9 +73,9 @@ class SessionCreationTest {
     @Test
     public void should_notFindSessions_when_noSessionsInDB() throws SQLException {
         assertEquals(
-                0, SessionUtils.getSessionIdsFromDatabase(conn).size());
+                0, SessionTestUtils.getSessionIdsFromDatabase(conn).size());
         assertEquals(
-                0, SessionUtils.getSessionAttributeBytesFromDb(conn).size());
+                0, SessionTestUtils.getSessionAttributeBytesFromDb(conn).size());
     }
 
     @Test
@@ -85,7 +85,7 @@ class SessionCreationTest {
 
         Assertions.assertThat(formLoginResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        val sessionIdsFromDB = SessionUtils.getSessionIdsFromDatabase(conn);
+        val sessionIdsFromDB = SessionTestUtils.getSessionIdsFromDatabase(conn);
         assertEquals(1, sessionIdsFromDB.size());
     }
 
@@ -93,7 +93,7 @@ class SessionCreationTest {
     public void should_createCsrfSessionAttribute_when_callingLogin() throws SQLException {
         val formLoginRequest = new RequestEntity<>(HttpMethod.GET, URI.create("http://localhost:" + port + "/login"));
         this.testRestTemplate.exchange(formLoginRequest, String.class);
-        val sessionAttributesFromDB = SessionUtils.getSessionAttributeBytesFromDb(conn);
+        val sessionAttributesFromDB = SessionTestUtils.getSessionAttributeBytesFromDb(conn);
         assertEquals(1, sessionAttributesFromDB.size());
         String firstAttributesKey = (String) sessionAttributesFromDB.keySet().toArray()[0];
         Assertions.assertThat(firstAttributesKey).endsWith("CSRF_TOKEN");

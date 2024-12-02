@@ -8,7 +8,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class SessionUtils {
+/**
+ * Test utility class for managing session-related database operations in tests.
+ * Provides methods to retrieve session IDs and attributes from the Spring Session tables.
+ */
+public class SessionTestUtils {
     public static List<String> getSessionIdsFromDatabase(final Connection conn) throws SQLException {
         List<String> result = new ArrayList<>();
         ResultSet rs = getResultSet(conn,

@@ -119,7 +119,7 @@ class SessionControllerTest {
                 || session.getUsername().equals(session2.getPrincipal())
                 || session.getUsername().equals(session3.getPrincipal())).hasSize(3);
         //confirmation sessions are present in Database
-        Assertions.assertThat(SessionUtils.getSessionIdsFromDatabase(conn)).filteredOn(sessionId -> sessionId.equals(session1.getSessionId())
+        Assertions.assertThat(SessionTestUtils.getSessionIdsFromDatabase(conn)).filteredOn(sessionId -> sessionId.equals(session1.getSessionId())
                 || sessionId.equals(session2.getSessionId())
                 || sessionId.equals(session3.getSessionId())).hasSize(3);
 
@@ -136,7 +136,7 @@ class SessionControllerTest {
                 || session.getUsername().equals(session2.getPrincipal())
                 || session.getUsername().equals(session3.getPrincipal())).hasSize(2);
         //session killed in Database
-        Assertions.assertThat(SessionUtils.getSessionIdsFromDatabase(conn)).filteredOn(sessionId -> sessionId.equals(session1.getSessionId())
+        Assertions.assertThat(SessionTestUtils.getSessionIdsFromDatabase(conn)).filteredOn(sessionId -> sessionId.equals(session1.getSessionId())
                 || sessionId.equals(session2.getSessionId())
                 || sessionId.equals(session3.getSessionId())).hasSize(2);
     }

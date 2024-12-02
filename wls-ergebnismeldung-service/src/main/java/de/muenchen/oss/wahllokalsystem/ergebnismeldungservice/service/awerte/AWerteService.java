@@ -61,7 +61,7 @@ public class AWerteService {
     @Async
     @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_LoadWahltermindaten')")
     public void initialiseAWerte(List<String> wahlbezirkIDs) {
-        log.info("Initialisier A-Werte für {} Wahllokale", wahlbezirkIDs.size());
+        log.info("Initialisiere A-Werte für {} Wahllokale", wahlbezirkIDs.size());
         asyncProgress.reset(wahlbezirkIDs.size());
         for (int i = 0; i < wahlbezirkIDs.size(); i++) {
             final String wbzID = wahlbezirkIDs.get(i);

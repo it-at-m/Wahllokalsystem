@@ -73,7 +73,7 @@ class SessionControllerTest {
     @BeforeEach
     public void setUp() throws SQLException {
         purgeSessions();
-        SecurityUtils.runWith(Authorities.ROLE_SESSION_MANAGEMENT);
+        SecurityUtils.runWith(Authorities.ROLE_ADMIN);
     }
 
     @AfterEach

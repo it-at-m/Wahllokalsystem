@@ -70,7 +70,7 @@ public class UserControllerIntegrationTest {
     void tearDown() {
         cacheManager.getCache(CacheConfig.USER_CACHE).clear();
         transactionTemplate.executeWithoutResult(status -> {
-            SecurityUtils.runWith(Authorities.SERVICE_UNLOCK_USER);
+            SecurityUtils.runWith(Authorities.ROLE_ADMIN);
             userRepository.deleteUsersByWahltagID("wahltagID");
         });
     }
@@ -132,7 +132,7 @@ public class UserControllerIntegrationTest {
     @Nested
     class UnlockUser {
 
-        @WithMockUser(authorities = Authorities.SERVICE_UNLOCK_USER)
+        @WithMockUser(authorities = Authorities.ROLE_ADMIN)
         @Test
         void should_failWith500AndIllegalArgumentException_when_userNotFound() throws Exception {
             val userName = "Hansi";
@@ -145,7 +145,7 @@ public class UserControllerIntegrationTest {
             Assertions.assertThat(response.getResolvedException().getMessage()).isEqualTo(expectedException.getMessage());
         }
 
-        @WithMockUser(authorities = Authorities.SERVICE_UNLOCK_USER)
+        @WithMockUser(authorities = Authorities.ROLE_ADMIN)
         @Test
         void should_unlockUser_when_userFound() throws Exception {
             val userName = "Hansi";

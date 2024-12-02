@@ -11,6 +11,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 class UserModelMapperTest {
 
@@ -38,6 +39,62 @@ class UserModelMapperTest {
             val userInfoModel = new WahllokalUserInfoModel("wahlbezirkNummer", LocalDate.now(), "wahlbezirkID", wahlbezirkArt, "wbid_wahlnummer");
             Assertions.assertThat(userInfoModel).hasNoNullFieldsOrProperties();
             return userInfoModel;
+        }
+    }
+
+    @Nested
+    class ToSpringSecurityUser {
+
+        @Test
+        void should_mapToUser_when_allTargetRequiredPropertiesAreGiven() {
+            val username = "username";
+            val password = "password";
+
+            val userTopMap = new User();
+            userTopMap.setUsername(username);
+            userTopMap.setPassword(password);
+            userTopMap.setAccountNonLocked(true);
+            userTopMap.setAuthorities(Set.of(new Authority("authority1", Collections.emptySet(), Collections.emptySet()),
+                    new Authority("authority2", Collections.emptySet(), Collections.emptySet())));
+
+            val result = unitUnderTest.toSpringSecurityUser(userTopMap);
+
+            val expectedAuthorities = Set.of(new SimpleGrantedAuthority("authority1"), new SimpleGrantedAuthority("authority2"));
+            val expectedResult = new org.springframework.security.core.userdetails.User(username, password, true, true, true, true, expectedAuthorities);
+
+            Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
+        }
+
+        @Test
+        void should_mapToUserWithEmptyStringForPassword_when_userPasswordIsNull() {
+            val userTopMap = new User();
+            userTopMap.setUsername("username");
+            userTopMap.setPassword(null);
+            userTopMap.setAuthorities(Collections.emptySet());
+
+            val result = unitUnderTest.toSpringSecurityUser(userTopMap);
+
+            Assertions.assertThat(result.getPassword()).isEmpty();
+        }
+    }
+
+    @Nested
+    class AuthoritiesToGrantedAuthorities {
+
+        @Test
+        void should_returnSetOfGrantedAuthorities_when_setOfAuthoritiesIsGiven() {
+            val authoritiesToMap = Set.of(new Authority("authority1", Collections.emptySet(), Collections.emptySet()),
+                    new Authority("authority2", Collections.emptySet(), Collections.emptySet()));
+
+            val result = unitUnderTest.authoritiesToGrantedAuthorities(authoritiesToMap);
+
+            val expectedResult = Set.of(new SimpleGrantedAuthority("authority1"), new SimpleGrantedAuthority("authority2"));
+            Assertions.assertThat(result).isEqualTo(expectedResult);
+        }
+
+        @Test
+        void should_returnEmptySet_when_parameterIsNull() {
+            Assertions.assertThat(unitUnderTest.authoritiesToGrantedAuthorities(null)).isEmpty();
         }
     }
 

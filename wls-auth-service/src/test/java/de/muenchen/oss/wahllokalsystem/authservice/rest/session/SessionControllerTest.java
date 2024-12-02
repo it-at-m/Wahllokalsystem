@@ -221,11 +221,11 @@ class SessionControllerTest {
             }
         }
         try (PreparedStatement s2 = conn.prepareStatement(
-        "INSERT INTO " + tableName + " ("
-                + columnStatementPart
-                + ") VALUES ("
-                + valuesStatementPart
-                + ")")) {
+                "INSERT INTO " + tableName + " ("
+                        + columnStatementPart
+                        + ") VALUES ("
+                        + valuesStatementPart
+                        + ")")) {
             for (int i = 0; i < columnNameContentPairs.size(); i++) {
                 s2.setString((i + 1), columnNameContentPairs.get(i).columnContent.toString());
             }

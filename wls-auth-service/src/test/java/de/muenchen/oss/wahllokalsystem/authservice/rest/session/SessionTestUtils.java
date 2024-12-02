@@ -20,7 +20,7 @@ public class SessionTestUtils {
         }
         List<String> result = new ArrayList<>();
         try (Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM SPRING_SESSION")) {
+                ResultSet rs = stmt.executeQuery("SELECT * FROM SPRING_SESSION")) {
             while (rs.next()) {
                 result.add(rs.getString("SESSION_ID"));
             }
@@ -34,7 +34,7 @@ public class SessionTestUtils {
         }
         Map<String, byte[]> result = new HashMap<>();
         try (Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT ATTRIBUTE_NAME, ATTRIBUTE_BYTES FROM SPRING_SESSION_ATTRIBUTES")) {
+                ResultSet rs = stmt.executeQuery("SELECT ATTRIBUTE_NAME, ATTRIBUTE_BYTES FROM SPRING_SESSION_ATTRIBUTES")) {
             while (rs.next()) {
                 result.put(rs.getString("ATTRIBUTE_NAME"), rs.getBytes("ATTRIBUTE_BYTES"));
             }

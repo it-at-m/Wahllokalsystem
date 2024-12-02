@@ -6,6 +6,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import de.muenchen.oss.wahllokalsystem.authservice.domain.OAuthServerSession;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.OAuthServerSessions;
+import java.lang.reflect.InvocationTargetException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,9 +68,9 @@ public class SessionController {
                     } else {
                         try {
                             currSession.setUsername((String) principal.getClass().getMethod("getUsername").invoke(principal));
-                        } catch (Exception e) {
+                        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                             currSession.setUsername("<unknown>");
-                            log.info("PrincipalName:" + "<unknown>");
+                            log.warn("Failed to retrieve username via reflection for principal class {}.", principal.getClass().getName(), e);
                         }
                     }
                     currSession.setSessionId(currSessionInfo.getSessionId());

@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,8 +13,6 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @Builder
 public class AsyncProgress {
-
-    public static final Logger LOG = LoggerFactory.getLogger(AsyncProgress.class);
 
     private LocalDateTime lastStartTime;
     private LocalDateTime lastFinishTime = LocalDateTime.now();

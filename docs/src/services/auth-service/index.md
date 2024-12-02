@@ -73,39 +73,12 @@ sequenceDiagram
 
 ### Login
 
-```mermaid
-
-sequenceDiagram
-    autonumber
-    
-    actor User
-    
-    User->>+AuthService : Anfrage an geschützte Ressource
-    AuthService->>-User : Weiterleitung an Login
-    
-    User->>+AuthService : Übermittlung Logindaten
-    
-    AuthService->>LDAP : Prüfung Userlogin via BIND
-    AuthService->>AuthService : Sicherstellen dass User sich anmelden darf
-    
-    AuthService->>-User : Weiterleitung an geschützte Ressource
-```
-
-1. Der Nutzer fragt eine Resources an die eine Authentifizierung erfordert
-1. Client wird zum Login-Formular weitergeleitet
-1. Der Nutzer loggt sich mit Benutzername und Password ein
-1. Über LDAP wird verifiziert, ob der Benutzername vorhanden ist und sein Password korrekt ist
-1. es werden weitere Regeln geprüft die für ein erfolgreiches Login notwendig sind
-   1. Ist der Nutzer gesperrt?
-   1. Falls der Nutzer gesperrt ist, muss die Sperre abgelaufen sein
-   1. darf der Nutzer sich nur innerhalb einer bestimmten Zeitspanne einloggen wird der Zeitraum validiert
-   1. erfolgte der Login über eine erlaubte Anwendung (Prüfung der clientID)
-1. Der Nutzer wird an die ursprünglich angefragte, geschützte Resource weitergeleitet
-
-> [!NOTE]
-> Nutzer des Wahllokalsystems dürfen sich nur innerhalb einer bestimmten Zeit anmelden. Nutzer des Admin-Tools
-> dürfen sich zu jeder Zeit anmelden. Um welche Art eines Nutzers es sich handelt, wird anhand von Authorities
-> bestimmt.
+Damit ein Benutzer sind anmelden darf müssen zum einen die Logindaten entsprechend LDAP korrekt sein.
+Des Weiteren müssen folgende Regeln beachtet werden:
+1. Ist der Nutzer gesperrt?
+1. Falls der Nutzer gesperrt ist, muss die Sperre abgelaufen sein
+1. darf der Nutzer sich nur innerhalb einer bestimmten Zeitspanne einloggen wird der Zeitraum validiert
+1. erfolgte der Login über eine erlaubte Anwendung (Prüfung der clientID)
 
 > [!NOTE]
 > Ein erfolgreicher Login setzt alle vorherigen Loginversuche zurück

@@ -17,4 +17,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
+    # Enable SQL logging for test environment only
     show-sql: true
+

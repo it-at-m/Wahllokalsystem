@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class BasePathConfiguration {
 
-    @Value("${service.clients.eai.basePath}")
+    @Value("${service.config.clients.eai.basePath}")
     String eaiBasePath;
 
-    @Value("${service.clients.infomanagement.basePath}")
+    @Value("${service.config.clients.infomanagement.basePath}")
     String infomanagementBasePath;
 
     private final de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.ApiClient eaiApiClient;

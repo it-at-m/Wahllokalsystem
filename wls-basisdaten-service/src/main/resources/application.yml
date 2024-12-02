@@ -71,8 +71,8 @@ service:
       maxPoolSize: 2
       queueCapacity: 500
       threadNamePrefix: "taskExecutor-"
-  clients:
-    eai:
-      basePath: http://localhost:39149
-    infomanagement:
-      basePath: http://localhost:39148
+    clients:
+      eai:
+        basePath: http://localhost:39149
+      infomanagement:
+        basePath: http://localhost:39148

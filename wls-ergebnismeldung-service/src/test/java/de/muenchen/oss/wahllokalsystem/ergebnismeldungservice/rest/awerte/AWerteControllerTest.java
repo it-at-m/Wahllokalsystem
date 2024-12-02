@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.awerte;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteService;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -33,7 +34,7 @@ class AWerteControllerTest {
         void should_returnHttp200AndData_when_dataIsFound() {
             val wahlbezirkID = "wahlbezirkID01";
             val mockedServiceModel = List.of(new AWerteModel(null, 0, null));
-            val mockedMappedServiceDTO = List.of(new AWerteDTO(null, null, 0, null));
+            val mockedMappedServiceDTO = List.of(new AWerteDTO(new BezirkUndWahlID(null, null), 0, null));
 
             Mockito.when(awerteService.getAWerte(wahlbezirkID)).thenReturn(mockedServiceModel);
             Mockito.when(awerteDTOMapper.fromListOfAWerteModelToListOfAWerteDTO(mockedServiceModel)).thenReturn(mockedMappedServiceDTO);

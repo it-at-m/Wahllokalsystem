@@ -31,9 +31,9 @@ class AWerteDTOMapperTest {
         }
 
         private List<AWerteDTO> createListOfAWerteDTO() {
-            val aWert1 = new AWerteDTO("wahlID1", "wahlbezirkID", 2, 3L);
-            val aWert2 = new AWerteDTO("wahlID2", "wahlbezirkID", 4, 5L);
-            val aWert3 = new AWerteDTO("wahlID3", "wahlbezirkID", 5, 6L);
+            val aWert1 = new AWerteDTO(new BezirkUndWahlID("wahlID1", "wahlbezirkID"), 2, 3L);
+            val aWert2 = new AWerteDTO(new BezirkUndWahlID("wahlID2", "wahlbezirkID"), 4, 5L);
+            val aWert3 = new AWerteDTO(new BezirkUndWahlID("wahlID3", "wahlbezirkID"), 5, 6L);
             return List.of(aWert1, aWert2, aWert3);
         }
 

@@ -158,7 +158,7 @@ class SessionControllerTest {
      */
     public SessionInformation createSpringSession_inDB_and_inSessionRegistry_forUser(int mockSessionNumber, final String username) throws SQLException {
         val timeNow = LocalDateTime.now();
-        ZoneOffset zoneOffSet = ZoneId.of("Europe/Berlin").getRules().getOffset(timeNow);
+        ZoneOffset zoneOffset = ZoneId.of("Europe/Berlin").getRules().getOffset(timeNow);
         val maxInactiveIntervalMillis = 259200;
         val session_primary_ID = UUID.fromString("0001777" + mockSessionNumber + "-" + "888" + mockSessionNumber + "-" + "888" + mockSessionNumber + "-" + "888"
                 + mockSessionNumber + "-" + "11111111888" + mockSessionNumber);
@@ -171,10 +171,10 @@ class SessionControllerTest {
         List<ColumnNameContentPair> pairs_session = createListColumnNameContentPairs(
                 session_primary_ID,
                 sessionID,
-                creationTimeSession.toInstant(zoneOffSet).toEpochMilli(),
-                lastAccessTimeSession.toInstant(zoneOffSet).toEpochMilli(),
+                creationTimeSession.toInstant(zoneOffset).toEpochMilli(),
+                lastAccessTimeSession.toInstant(zoneOffset).toEpochMilli(),
                 maxInactiveIntervalMillis,
-                expiryTimeSession.toInstant(zoneOffSet).toEpochMilli(),
+                expiryTimeSession.toInstant(zoneOffset).toEpochMilli(),
                 username);
 
         val createdDB_Session = writeIntoTable("SPRING_SESSION", pairs_session);

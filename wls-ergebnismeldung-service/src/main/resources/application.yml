@@ -60,8 +60,9 @@ info.application.name: @project.artifactId@
 info.application.version: @project.version@
 
 service:
-  clients:
-    eai:
-      basePath: http://localhost:39149
+  config:
+    clients:
+      eai:
+        basePath: http://localhost:39149
   info:
     oid: WLS-ERGEBNISMELDUNG

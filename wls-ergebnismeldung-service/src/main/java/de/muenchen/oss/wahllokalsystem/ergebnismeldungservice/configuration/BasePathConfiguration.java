@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class BasePathConfiguration {
 
-    @Value("${service.clients.eai.basePath}")
+    @Value("${service.config.clients.eai.basePath}")
     String eaiBasePath;
 
     private final ApiClient eaiApiClient;

@@ -150,7 +150,7 @@ class AWerteServiceTest {
         }
 
         @Test
-        void should_notFailAndLogError_when_clientDataFoundAndRepoFails() {
+        void should_notFailButLogError_when_clientDataFoundAndRepoFails() {
             val wahlbezirkID1 = "wahlbezirkID1";
             val aWerteModelListFromClient1 = createListOfAWerteModels(wahlbezirkID1);
             val wahlbezirkID2 = "wahlbezirkID2";

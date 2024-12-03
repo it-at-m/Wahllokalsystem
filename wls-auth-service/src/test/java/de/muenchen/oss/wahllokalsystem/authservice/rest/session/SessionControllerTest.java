@@ -34,7 +34,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import de.muenchen.oss.wahllokalsystem.authservice.utils.Authorities;
@@ -110,7 +109,6 @@ class SessionControllerTest {
     }
 
     @Test
-    @WithUserDetails
     public void should_killSession_when_killingSessionCalled() throws Exception {
         val session1 = createSpringSession_inDB_and_inSessionRegistry_forUser(1, "user1");
         val session2 = createSpringSession_inDB_and_inSessionRegistry_forUser(2, "user2");

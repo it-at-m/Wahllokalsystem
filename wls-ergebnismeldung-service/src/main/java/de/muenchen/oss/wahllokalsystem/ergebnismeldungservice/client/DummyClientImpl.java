@@ -16,9 +16,8 @@ public class DummyClientImpl
 
     @Override
     public List<AWerteModel> getAWerte(final String wahlbezirkID) throws WlsException {
-            return List.of(
-                    new AWerteModel(new BezirkUndWahlID("wahlID01", wahlbezirkID), 25L, 26L)
-            );
+        return List.of(
+                new AWerteModel(new BezirkUndWahlID("wahlID01", wahlbezirkID), 25L, 26L));
     }
 
 }

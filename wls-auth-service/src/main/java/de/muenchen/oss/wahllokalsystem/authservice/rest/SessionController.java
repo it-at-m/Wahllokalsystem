@@ -95,7 +95,11 @@ public class SessionController {
         HttpStatus httpStatus = OK;
         SessionInformation sessionInformation = sessionRegistry.getSessionInformation(sessionID);
         if (sessionInformation != null && !sessionInformation.isExpired()) {
-            log.info("Killing session with id: {} principal: {}", sessionID, sessionInformation.getPrincipal());
+            if (sessionInformation.getPrincipal() != null) {
+                log.info("Killing session with id: {} principal: {}", sessionID, sessionInformation.getPrincipal());
+            } else {
+                log.info("Killing session with id: {} principal is null", sessionID);
+            }
             sessionInformation.expireNow();
             jdbcSessionRepository.deleteById(sessionID);
         } else {

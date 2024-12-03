@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureObservability
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS})
 class SwaggerConfigurationTest {
 
     @Autowired
@@ -34,7 +34,7 @@ class SwaggerConfigurationTest {
     String version;
 
     @Test
-    void versionIsSetInDoc() throws Exception {
+    void should_returnVersion_when_setInApiDoc() throws Exception {
         val request = MockMvcRequestBuilders.get("/v3/api-docs/public-apis").contentType(MediaType.APPLICATION_JSON);
 
         val response = mockMvc.perform(request).andReturn();

@@ -16,50 +16,50 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureObservability
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS})
 class SecurityConfigurationTest {
 
     @Autowired
     MockMvc api;
 
     @Test
-    void accessSecuredResourceRootThenInternalServerError() throws Exception {
+    void should_returnStatusUnauthorized_when_accessingSecuredResourceRoot() throws Exception {
         api.perform(get("/"))
                 .andExpect(status().isInternalServerError());
     }
 
     @Test
-    void accessSecuredResourceActuatorThenUnauthorized() throws Exception {
+    void should_returnStatusUnauthorized_when_accessingSecuredResourceActuator() throws Exception {
         api.perform(get("/actuator"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void accessUnsecuredResourceActuatorHealthThenOk() throws Exception {
+    void should_returnStatusOk_when_accessingUnsecuredResourceActuatorHealth() throws Exception {
         api.perform(get("/actuator/health"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void accessUnsecuredResourceActuatorInfoThenOk() throws Exception {
+    void should_returnStatusOk_when_accessingUnsecuredResourceActuatorInfo() throws Exception {
         api.perform(get("/actuator/info"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void accessUnsecuredResourceActuatorMetricsThenOk() throws Exception {
+    void should_returnStatusOk_when_accessingUnsecuredResourceActuatorMetrics() throws Exception {
         api.perform(get("/actuator/metrics"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void accessUnsecuredResourceV3ApiDocsThenOk() throws Exception {
+    void should_returnStatusOk_when_accessingUnsecuredResourceV3ApiDocs() throws Exception {
         api.perform(get("/v3/api-docs"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void accessUnsecuredResourceSwaggerUiThenOk() throws Exception {
+    void should_returnStatusOk_when_accessingUnsecuredResourceSwaggerUi() throws Exception {
         api.perform(get("/swagger-ui/index.html"))
                 .andExpect(status().isOk());
     }

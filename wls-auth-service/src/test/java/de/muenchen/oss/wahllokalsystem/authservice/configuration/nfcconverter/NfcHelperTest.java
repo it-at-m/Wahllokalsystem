@@ -31,12 +31,12 @@ class NfcHelperTest {
 
     private static final String THIRD_NFC = "\u1e69";
 
-    private static final String[] NFD_INPUT = new String[] { FIRST_NFD, SECOND_NFD, THIRD_NFD };
+    private static final String[] NFD_INPUT = new String[]{FIRST_NFD, SECOND_NFD, THIRD_NFD};
 
-    private static final String[] NFC_OUTPUT_EXPECTED = new String[] { FIRST_NFC, SECOND_NFC, THIRD_NFC };
+    private static final String[] NFC_OUTPUT_EXPECTED = new String[]{FIRST_NFC, SECOND_NFC, THIRD_NFC};
 
     @Test
-    void should_wrongNameOnPurpose() {
+    void should_convertCorrectly_when_givenString() {
         assertEquals(FIRST_NFC, NfcHelper.nfcConverter(FIRST_NFD));
         assertEquals(FIRST_NFC.length(), NfcHelper.nfcConverter(FIRST_NFD).length());
 
@@ -50,7 +50,7 @@ class NfcHelperTest {
     }
 
     @Test
-    void should_beDetected_fromCodeRabbit_when_doingItsReview() {
+    void should_convertCorrectly_when_givenStringBuffer() {
         assertEquals(FIRST_NFC, NfcHelper.nfcConverter(new StringBuffer(FIRST_NFD)).toString());
         assertEquals(FIRST_NFC.length(), NfcHelper.nfcConverter(new StringBuffer(FIRST_NFD)).length());
 
@@ -68,7 +68,7 @@ class NfcHelperTest {
     }
 
     @Test
-    void nfcConverterMapOfStrings() {
+    void should_convertCorrectly_when_givenMapOfStrings() {
         final Map<String, String[]> nfdInput = new HashMap<>();
         nfdInput.put(FIRST_NFD, NFD_INPUT);
         nfdInput.put(SECOND_NFD, NFD_INPUT);
@@ -82,7 +82,7 @@ class NfcHelperTest {
     }
 
     @Test
-    void nfcConverterCookie() {
+    void should_convertCorrectly_when_givenCookie() {
         final Cookie nfcCookie = NfcHelper.nfcConverter(createNfdCookie());
 
         assertEquals(NfcConverterTest.TOKEN, nfcCookie.getName());
@@ -92,7 +92,7 @@ class NfcHelperTest {
     }
 
     @Test
-    void nfcConverterCookieWithoutDomain() {
+    void should_convertCorrectly_when_givenCookieWithoutDomain() {
         final Cookie cookieToConvert = createNfdCookie();
         cookieToConvert.setDomain(null);
         final Cookie nfcCookie = NfcHelper.nfcConverter(cookieToConvert);
@@ -104,7 +104,7 @@ class NfcHelperTest {
     }
 
     @Test
-    void nfcConverterCookieArray() {
+    void should_convertCorrectly_when_givenArrayOfCookies() {
         final Cookie[] nfdCookies = Collections.nCopies(3, createNfdCookie()).toArray(new Cookie[3]);
         final Cookie[] nfcCookies = NfcHelper.nfcConverter(nfdCookies);
         Arrays.asList(nfcCookies).forEach(nfcCookie -> {
@@ -116,7 +116,7 @@ class NfcHelperTest {
     }
 
     @Test
-    void nfcConverterCookieArrayNullReturnNull() {
+    void should_returnNull_when_givenEmptyArrayOfCookies() {
         assertNull(NfcHelper.nfcConverter((Cookie[]) null));
     }
 

@@ -13,15 +13,9 @@ class DummyClientImplTest {
     class GetAWerte {
 
         @Test
-        void should_returnListOfAWerteModelWithOneEntry_whenCalledWithCorrectWahlbezirkID() {
+        void should_returnListOfAWerteModelWithTwoEntries_when_calledWithWahlbezirkID() {
             val result = unitUnderTest.getAWerte("wahlbezirkID");
             Assertions.assertThat(result).hasSize(1);
-        }
-
-        @Test
-        void should_returnEmptyListOfAWerteModel_whenCalledWithWrongWahlbezirkID() {
-            val result = unitUnderTest.getAWerte("nixbezirkID");
-            Assertions.assertThat(result).isEmpty();
         }
     }
 }

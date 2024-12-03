@@ -155,6 +155,13 @@
             <artifactId>hibernate-jpamodelgen</artifactId>
         </dependency>
 
+        <!-- wls-common -->
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>exception</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+
         <!-- Other -->
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
@@ -164,6 +171,11 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${org.springdoc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.6</version>
         </dependency>
 
         <!-- Validation -->
@@ -336,6 +348,62 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.5.0</version>
+                <configuration>
+                    <generatorName>java</generatorName>
+                    <library>resttemplate</library>
+
+                    <!-- Weitere Klassen als Grundlagen für zusätzliche Tests sind nicht erforderlich-->
+                    <generateApiTests>false</generateApiTests>
+                    <generateModelTests>false</generateModelTests>
+                    <!-- Die zusätzliche Generierung der Dokumentation ist nicht erforderlich.
+                    Das JavaDoc der Klassen enthält bereits die Dokumentation -->
+                    <generateApiDocumentation>false</generateApiDocumentation>
+                    <generateModelDocumentation>false</generateModelDocumentation>
+
+                    <configOptions>
+                        <!-- Fügt einen Zeitstempel mit dem Zeitpunkt der Generierung bei den Klassen ein -->
+                        <hideGenerationTimestamp>false</hideGenerationTimestamp>
+                        <!-- Empfohlen laut Doku -->
+                        <legacyDiscriminatorBehavior>false</legacyDiscriminatorBehavior>
+                        <!-- der Client wird mit @Component annotiert -->
+                        <generateClientAsBean>true</generateClientAsBean>
+                        <!-- damit da jakarta-Package verwendet wird -->
+                        <useJakartaEe>true</useJakartaEe>
+                    </configOptions>
+
+                    <globalProperties>
+                        <!-- zusätzliche Klassen, die notwendig sind damit die Clients korrekt arbeiten können -->
+                        <supportingFiles>
+                            BaseApi.java,ApiClient.java,JavaTimeFormatter.java,Authentication.java,OAuth.java,ApiKeyAuth.java,HttpBasicAuth.java,HttpBearerAuth.java,RFC3339DateFormat.java
+                        </supportingFiles>
+                    </globalProperties>
+                </configuration>
+                <executions>
+                    <execution>
+                        <!-- wenn mehrere Clients erzeugt werden muss jede execution eine eindeutige ID haben -->
+                        <id>generateMonitoring</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Pfad zur JSON-Datei mit der OpenAPI-Beschreibung -->
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.monitoring.0.1.0.json</inputSpec>
+
+                            <!-- Package in dem die Clients der jeweiligen Controller erzeugt werden -->
+                            <!-- Hier wird das Package für Zugriff auf den EAI-Service innerhalb des Basisdatenservices definiert -->
+                            <apiPackage>${groupId}.ergebnismeldungservice.eai.monitoring.client</apiPackage>
+                            <!-- Package in das die Datenklassen erzeugt werden -->
+                            <modelPackage>${groupId}.ergebnismeldungservice.eai.monitoring.model</modelPackage>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <artifactId>maven-scm-plugin</artifactId>
                 <version>${maven-scm-plugin.version}</version>

@@ -38,6 +38,12 @@ server:
       enabled: false
   max-http-request-header-size: 32KB
 
+service:
+  config:
+    clients:
+      monitoring:
+        basePath: http://localhost:39154
+
 # Config for spring actuator endpoints
 management:
   server.port: ${server.port}

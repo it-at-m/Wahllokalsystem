@@ -22,14 +22,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
-        classes = {MicroServiceApplication.class},
+        classes = { MicroServiceApplication.class },
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
                 "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
                 "refarch.gracefulshutdown.pre-wait-seconds=0"
         }
 )
-@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE, Profiles.DUMMY_CLIENTS})
+@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE, Profiles.DUMMY_CLIENTS })
 class CacheControlConfigurationTest {
 
     private static final String ENTITY_ENDPOINT_URL = "/theEntities";

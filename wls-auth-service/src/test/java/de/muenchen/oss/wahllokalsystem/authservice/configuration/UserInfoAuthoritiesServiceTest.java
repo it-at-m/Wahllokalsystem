@@ -97,7 +97,7 @@ class UserInfoAuthoritiesServiceTest {
             val authority1 = "auth1";
             val authority2 = "auth2";
             val authority3 = "auth3";
-            val claimAuthorityValues = new String[]{authority1, authority2, authority3};
+            val claimAuthorityValues = new String[] { authority1, authority2, authority3 };
 
             val responseEntityBody = new HashMap<String, Object>();
             responseEntityBody.put(RESPONSEBODY_MAP_KEY_CLAIM_AUTHORITIES, claimAuthorityValues);

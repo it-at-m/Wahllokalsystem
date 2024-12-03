@@ -68,5 +68,8 @@ class AWerteRepositoryTest {
 
         val result = repository.findByBezirkUndWahlID_WahlbezirkID(wahlbezirkIDToFind);
         Assertions.assertThat(result).hasSize(3);
+        Assertions.assertThat(result).allSatisfy(aWert -> {
+            Assertions.assertThat(aWert.getBezirkUndWahlID().getWahlbezirkID()).isEqualTo(wahlbezirkIDToFind);
+        });
     }
 }

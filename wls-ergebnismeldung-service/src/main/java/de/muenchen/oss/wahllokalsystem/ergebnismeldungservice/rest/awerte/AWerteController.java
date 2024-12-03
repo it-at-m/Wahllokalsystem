@@ -1,7 +1,13 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.awerte;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteService;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +33,22 @@ public class AWerteController {
     private final AWerteDTOMapper awerteDTOMapper;
 
     @Operation(description = "Laden der AWerte für den Wahlbezirk {wahlbezirkID}.")
+    @ApiResponses(
+        value = {
+            @ApiResponse(
+                responseCode = "200", description = "OK",
+                content = { @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AWerteDTO.class))) }
+            ),
+            @ApiResponse(
+                responseCode = "204", description = "Keine Daten vom Fremdsystem geliefert",
+                content = @Content(schema = @Schema())
+            ),
+            @ApiResponse(
+                responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
+                content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
+            )
+        }
+    )
     @GetMapping("/awerte/{wahlbezirkID}")
     public ResponseEntity<List<AWerteDTO>> getAWerte(@PathVariable("wahlbezirkID") String wahlbezirkID) {
         val result = awerteDTOMapper.fromListOfAWerteModelToListOfAWerteDTO(aWerteService.getAWerte(wahlbezirkID));
@@ -37,6 +59,18 @@ public class AWerteController {
     }
 
     @Operation(description = "Asynchrones initialisieren aller A-Werte für die gegebenen Wahlbezirk-IDs.")
+    @ApiResponses(
+        value = {
+            @ApiResponse(
+                responseCode = "200", description = "OK",
+                content = @Content(schema = @Schema())
+            ),
+            @ApiResponse(
+                responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
+                content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
+            )
+        }
+    )
     @PostMapping("/awerte/init")
     @ResponseStatus(HttpStatus.OK)
     public void initialiseAWerte(@RequestBody List<String> wahlbezirkIDs) {

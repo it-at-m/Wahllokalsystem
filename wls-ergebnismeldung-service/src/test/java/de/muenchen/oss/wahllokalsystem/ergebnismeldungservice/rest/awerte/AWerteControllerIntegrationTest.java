@@ -100,7 +100,7 @@ public class AWerteControllerIntegrationTest {
             val wahlbezirkIDs = List.of("wahlbezirkID1", "wahlbezirkID2", "wahlbezirkID3");
 
             val request = MockMvcRequestBuilders.post("/businessActions/awerte/init").contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(wahlbezirkIDs));
+                    .content(objectMapper.writeValueAsString(wahlbezirkIDs));
             api.perform(request).andExpect(status().isOk()).andReturn();
 
             for (String wahlbezirkID : wahlbezirkIDs) {

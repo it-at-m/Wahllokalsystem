@@ -149,8 +149,8 @@ class AWerteServiceSecurityTest {
             val eaiWahlberechtigte = getAWerteForWahlbezirkID(wahlbezirkID);
 
             WireMock.stubFor(WireMock.get("/wahldaten/wahlbezirke/" + wahlbezirkID + "/wahlberechtigte")
-                .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                    .withBody(objectMapper.writeValueAsBytes(eaiWahlberechtigte))));
+                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
+                            .withBody(objectMapper.writeValueAsBytes(eaiWahlberechtigte))));
 
             Assertions.assertThatThrownBy(() -> aWerteService.initialiseAWerte(wahlbezirkIDList)).isInstanceOf(AccessDeniedException.class);
         }

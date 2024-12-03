@@ -9,7 +9,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-@PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetAWerte') OR hasAuthority('Admin_BUSINESSACTION_LoadWahltermindaten')")
+@PreAuthorize("hasAuthority('Ergebnismeldung_READ_AWerte') OR hasAuthority('Admin_BUSINESSACTION_LoadWahltermindaten')")
 public interface AWerteRepository extends CrudRepository<AWerte, BezirkUndWahlID> {
 
     String CACHE = "AWERTE_CACHE";
@@ -19,7 +19,6 @@ public interface AWerteRepository extends CrudRepository<AWerte, BezirkUndWahlID
     @PreAuthorize("hasAuthority('Ergebnismeldung_READ_AWerte')")
     Optional<AWerte> findById(BezirkUndWahlID bezirkUndWahlID);
 
-    @PreAuthorize("hasAuthority('Ergebnismeldung_READ_AWerte') OR hasAuthority('Admin_BUSINESSACTION_LoadWahltermindaten')")
     List<AWerte> findByBezirkUndWahlID_WahlbezirkID(String wahlbezirkID);
 
     @Override
@@ -33,7 +32,7 @@ public interface AWerteRepository extends CrudRepository<AWerte, BezirkUndWahlID
 
     @Override
     @CacheEvict(value = CACHE, key = "#p0")
-    @PreAuthorize("hasAuthority('Monitoring_DELETE_Waehleranzahl')")
+    @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_AWerte')")
     void deleteById(BezirkUndWahlID bezirkUndWahlID);
 
     @Override

@@ -5,6 +5,7 @@ spring:
     group:
       local:
         - db-h2
+        - dummy.clients
   flyway:
     locations:
       - classpath:db/migrations/{vendor}
@@ -39,6 +40,8 @@ server:
   max-http-request-header-size: 32KB
 
 service:
+  info:
+    oid: WLS-ERGEBNISMELDUNG
   config:
     clients:
       monitoring:

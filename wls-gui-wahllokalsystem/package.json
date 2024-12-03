@@ -7,7 +7,7 @@
     "node": ">=20 <=22"
   },
   "scripts": {
-    "dev": "set NODE_OPTIONS=--max-http-header-size=64000 && vite",
+    "dev": "set NODE_OPTIONS=--max-http-header-size=32000 && vite",
     "test": "vitest run",
     "build": "vue-tsc --build --force && vite build",
     "preview": "vite preview",

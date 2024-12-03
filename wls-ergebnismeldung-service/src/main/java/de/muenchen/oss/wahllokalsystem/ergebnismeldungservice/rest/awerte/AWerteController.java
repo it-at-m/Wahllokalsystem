@@ -34,20 +34,20 @@ public class AWerteController {
 
     @Operation(description = "Laden der AWerte für den Wahlbezirk {wahlbezirkID}.")
     @ApiResponses(
-        value = {
-            @ApiResponse(
-                responseCode = "200", description = "OK",
-                content = { @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AWerteDTO.class))) }
-            ),
-            @ApiResponse(
-                responseCode = "204", description = "Keine Daten vom Fremdsystem geliefert",
-                content = @Content(schema = @Schema())
-            ),
-            @ApiResponse(
-                responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
-                content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
-            )
-        }
+            value = {
+                    @ApiResponse(
+                            responseCode = "200", description = "OK",
+                            content = { @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AWerteDTO.class))) }
+                    ),
+                    @ApiResponse(
+                            responseCode = "204", description = "Keine Daten vom Fremdsystem geliefert",
+                            content = @Content(schema = @Schema())
+                    ),
+                    @ApiResponse(
+                            responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
+                    )
+            }
     )
     @GetMapping("/awerte/{wahlbezirkID}")
     public ResponseEntity<List<AWerteDTO>> getAWerte(@PathVariable("wahlbezirkID") String wahlbezirkID) {
@@ -60,16 +60,16 @@ public class AWerteController {
 
     @Operation(description = "Asynchrones initialisieren aller A-Werte für die gegebenen Wahlbezirk-IDs.")
     @ApiResponses(
-        value = {
-            @ApiResponse(
-                responseCode = "200", description = "OK",
-                content = @Content(schema = @Schema())
-            ),
-            @ApiResponse(
-                responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
-                content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
-            )
-        }
+            value = {
+                    @ApiResponse(
+                            responseCode = "200", description = "OK",
+                            content = @Content(schema = @Schema())
+                    ),
+                    @ApiResponse(
+                            responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
+                    )
+            }
     )
     @PostMapping("/awerte/init")
     @ResponseStatus(HttpStatus.OK)

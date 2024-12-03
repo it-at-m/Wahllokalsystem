@@ -32,7 +32,7 @@ public class AWerteController {
 
     private final AWerteDTOMapper awerteDTOMapper;
 
-    @Operation(description = "Laden der AWerte für den Wahlbezirk {wahlbezirkID}.")
+    @Operation(description = "Laden der Wahlberechtigten (A-Werte) für den Wahlbezirk {wahlbezirkID}.")
     @ApiResponses(
             value = {
                     @ApiResponse(

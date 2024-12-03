@@ -4,12 +4,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 
 import de.muenchen.oss.wahllokalsystem.authservice.service.CryptoService;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.StreamSupport;
+
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -123,7 +125,7 @@ class UserRepositoryImplTest {
         }
 
         @Test
-        void should_returnEmptyListwhen_foundNoUsers() {
+        void should_returnEmptyList_when_foundNoUsers() {
             val wahltagID = "wahltagID";
 
             Mockito.when(userRepository.findByWahltagID(wahltagID)).thenReturn(Collections.emptyList());

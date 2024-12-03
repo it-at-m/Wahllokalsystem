@@ -5,6 +5,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlI
 import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
@@ -12,26 +13,32 @@ class AWerteModelMapperTest {
 
     private final AWerteModelMapper unitUnderTest = Mappers.getMapper(AWerteModelMapper.class);
 
-    @Test
-    void should_returnListOfAWerteEntity_when_listOfAWerteModelIsGiven() {
-        val wahlbezirkID = "wahlbezirkID";
-        val modelsToMap = createListOfAWerteModels(wahlbezirkID);
+    @Nested
+    class FromListOfAWerteModeltoListOfAWerteEntity {
+        @Test
+        void should_returnListOfAWerteEntity_when_listOfAWerteModelIsGiven() {
+            val wahlbezirkID = "wahlbezirkID";
+            val modelsToMap = createListOfAWerteModels(wahlbezirkID);
 
-        val result = unitUnderTest.fromListOfAWerteModeltoListOfAWerteEntity(modelsToMap);
+            val result = unitUnderTest.fromListOfAWerteModeltoListOfAWerteEntity(modelsToMap);
 
-        val expectedResult = createListOfAWerteEntities(wahlbezirkID);
-        Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
+            val expectedResult = createListOfAWerteEntities(wahlbezirkID);
+            Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
+        }
     }
 
-    @Test
-    void should_return_listOfAWerteModel_when_listOfAWerteEntityIsGiven() {
-        val wahlbezirkID = "wahlbezirkID";
-        val entitiesToMap = createListOfAWerteEntities(wahlbezirkID);
+    @Nested
+    class FromListOfAWerteEntityToListOfAWerteModel {
+        @Test
+        void should_return_listOfAWerteModel_when_listOfAWerteEntityIsGiven() {
+            val wahlbezirkID = "wahlbezirkID";
+            val entitiesToMap = createListOfAWerteEntities(wahlbezirkID);
 
-        val result = unitUnderTest.fromListOfAWerteEntityToListOfAWerteModel(entitiesToMap);
+            val result = unitUnderTest.fromListOfAWerteEntityToListOfAWerteModel(entitiesToMap);
 
-        val expectedResult = createListOfAWerteModels(wahlbezirkID);
-        Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
+            val expectedResult = createListOfAWerteModels(wahlbezirkID);
+            Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
+        }
     }
 
     private List<AWerte> createListOfAWerteEntities(String wahlbezirkID) {

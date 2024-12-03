@@ -403,6 +403,15 @@
                         <useJakartaEe>true</useJakartaEe>
                     </configOptions>
 
+                    <!-- #611 -->
+                    <typeMappings>
+                        <typeMapping>OffsetDateTime=java.time.LocalDateTime</typeMapping>
+                    </typeMappings>
+                    <importMappings>
+                        <importMapping>java.time.OffsetDateTime=java.time.LocalDateTime</importMapping>
+                    </importMappings>
+
+
                     <globalProperties>
                         <!-- zusätzliche Klassen, die notwendig sind damit die Clients korrekt arbeiten können -->
                         <supportingFiles>

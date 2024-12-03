@@ -52,24 +52,25 @@ class AWerteRepositoryTest {
             Assertions.assertThat(result).hasSize(1);
             Assertions.assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(aWerteToFind);
         }
-    }
 
-    @Test
-    void should_returnAWerteForDifferentWahlIDs_when_wahlbezirkIDIsGiven() {
-        val wahlbezirkIDToFind = "wahlbezirkID";
-        val aWerteToSave = List.of(
-                new AWerte(new BezirkUndWahlID("wahlID1", wahlbezirkIDToFind), 2, 3L),
-                new AWerte(new BezirkUndWahlID("wahlID1", "wahlbezirkID2"), 4, 5L),
-                new AWerte(new BezirkUndWahlID("wahlID1", "wahlbezirkID3"), 5, 6L),
-                new AWerte(new BezirkUndWahlID("wahlID2", wahlbezirkIDToFind), 6, 7L),
-                new AWerte(new BezirkUndWahlID("wahlID3", wahlbezirkIDToFind), 7, 8L));
+        @Test
+        void should_returnAWerteForDifferentWahlIDs_when_wahlbezirkIDIsGiven() {
+            val wahlbezirkIDToFind = "wahlbezirkID";
+            val aWerteToSave = List.of(
+                    new AWerte(new BezirkUndWahlID("wahlID1", wahlbezirkIDToFind), 2, 3L),
+                    new AWerte(new BezirkUndWahlID("wahlID1", "wahlbezirkID2"), 4, 5L),
+                    new AWerte(new BezirkUndWahlID("wahlID1", "wahlbezirkID3"), 5, 6L),
+                    new AWerte(new BezirkUndWahlID("wahlID2", wahlbezirkIDToFind), 6, 7L),
+                    new AWerte(new BezirkUndWahlID("wahlID3", wahlbezirkIDToFind), 7, 8L));
 
-        repository.saveAll(aWerteToSave);
+            repository.saveAll(aWerteToSave);
 
-        val result = repository.findByBezirkUndWahlID_WahlbezirkID(wahlbezirkIDToFind);
-        Assertions.assertThat(result).hasSize(3);
-        Assertions.assertThat(result).allSatisfy(aWert -> {
-            Assertions.assertThat(aWert.getBezirkUndWahlID().getWahlbezirkID()).isEqualTo(wahlbezirkIDToFind);
-        });
+            val result = repository.findByBezirkUndWahlID_WahlbezirkID(wahlbezirkIDToFind);
+            Assertions.assertThat(result).hasSize(3);
+            Assertions.assertThat(result).allSatisfy(aWert -> {
+                Assertions.assertThat(aWert.getBezirkUndWahlID().getWahlbezirkID()).isEqualTo(wahlbezirkIDToFind);
+            });
+        }
+
     }
 }

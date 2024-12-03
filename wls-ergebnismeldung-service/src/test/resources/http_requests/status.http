@@ -1,0 +1,25 @@
+### GET status wahlID/wahlbezirkID
+GET http://localhost:39153/businessActions/status/wahlID/wahlbezirkID
+
+### POST status
+POST http://localhost:39153/businessActions/status/wahlID/wahlbezirkID
+Content-Type: application/json
+
+{
+  "bezirkUndWahlID": {
+    "wahlID": "wahlID",
+    "wahlbezirkID": "wahlbezirkID"
+  },
+  "niederschrift": {
+    "gedruckt": true,
+    "sendeuhrzeit": "2024-12-03T11:12:13",
+    "uebermittelt": true,
+    "validierungsstatus": "VALIDE"
+  },
+  "schnellmeldung": {
+    "validierungsstatus": "VALIDE",
+    "uebermittelt": false,
+    "sendeuhrzeit": "2024-12-03T09:10:11",
+    "gedruckt": true
+  }
+}

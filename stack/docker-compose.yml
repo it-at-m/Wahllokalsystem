@@ -226,12 +226,14 @@ services:
     depends_on:
       wls-init-keycloak:
         condition: service_completed_successfully
+    env_file:
+      - .env
     ports:
       - "8083:8080"
     environment:
       - ALLOWED_ORIGINS_PUBLIC=http://localhost:*
       - ALLOWED_ORIGINS_CLIENTS=http://localhost:*
-      - SPRING_CONFIG_ADDITIONAL_LOCATION=${SPRING_CLOUD_GATEWAY_ROUTES}
+      - SPRING_CONFIG_ADDITIONAL_LOCATION=/config/application-routes.yml
       - SPRING_PROFILES_ACTIVE=hazelcast-local
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://kubernetes.docker.internal:8100/${KEYCLOAK_RELATIV_PATH}/realms/${SSO_REALM}
       - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_SSO_ISSUERURI=$${spring.security.oauth2.resourceserver.jwt.issuer-uri}

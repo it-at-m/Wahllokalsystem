@@ -51,8 +51,8 @@ class AWerteServiceSecurityTest {
         }
 
         @Test
-        void should_grantAccessAndThrowNoException_when_authority1IsValid() throws Exception {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_1_GET_AWERTE);
+        void should_grantAccessAndThrowNoException_when_AllAuthoritiesUserGetAWerteIsValid() throws Exception {
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_USER_GET_AWERTE);
 
             val wahlbezirkID = "wahlbezirkID";
             val eaiWahlberechtigte = createListOfWahlberechtigteDTO();
@@ -66,8 +66,8 @@ class AWerteServiceSecurityTest {
         }
 
         @Test
-        void should_grantAccessAndThrowNoException_when_authority2IsValid() throws Exception {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_2_GET_AWERTE);
+        void should_grantAccessAndThrowNoException_when_allAuthoritiesAdminGetAwerteIsValid() throws Exception {
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_ADMIN_GET_AWERTE);
 
             val wahlbezirkID = "wahlbezirkID";
             val eaiWahlberechtigte = createListOfWahlberechtigteDTO();
@@ -81,7 +81,7 @@ class AWerteServiceSecurityTest {
         }
 
         @Test
-        void should_logErrorAndThrowNoException_when_dBSaveAuthorityIsMissing() throws Exception {
+        void should_logErrorAndThrowNoException_when_repositorySaveAWerteAuthorityIsMissing() throws Exception {
             SecurityUtils.runWith(Authorities.SERVICE_GET_AWERTE);
 
             val wahlbezirkID = "wahlbezirkID";
@@ -91,7 +91,7 @@ class AWerteServiceSecurityTest {
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(eaiWahlberechtigte))));
 
-            val result = aWerteService.getAWerte(wahlbezirkID);
+            aWerteService.getAWerte(wahlbezirkID);
 
             Assertions.assertThat(loggerExtension.getLoggedEventsStream().filter(event -> event.getLevel() == Level.ERROR).count()).isEqualTo(1);
         }
@@ -142,7 +142,21 @@ class AWerteServiceSecurityTest {
         }
 
         @Test
-        void should_grantAccessAndThrowNoException_when_authority1IsValid() throws Exception {
+        void should_failWithAccessDeniedException_when_adminLoadwahltermindatenAuthorityIsMissing() throws Exception {
+            SecurityUtils.runWith();
+            val wahlbezirkID = "wahlbezirkID";
+            val wahlbezirkIDList = List.of(wahlbezirkID);
+            val eaiWahlberechtigte = getAWerteForWahlbezirkID(wahlbezirkID);
+
+            WireMock.stubFor(WireMock.get("/wahldaten/wahlbezirke/" + wahlbezirkID + "/wahlberechtigte")
+                .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
+                    .withBody(objectMapper.writeValueAsBytes(eaiWahlberechtigte))));
+
+            Assertions.assertThatThrownBy(() -> aWerteService.initialiseAWerte(wahlbezirkIDList)).isInstanceOf(AccessDeniedException.class);
+        }
+
+        @Test
+        void should_grantAccessAndThrowNoException_when_adminLoadwahltermindatenAuthorityIsValid() throws Exception {
             SecurityUtils.runWith(Authorities.ADMIN_LOADWAHLTERMINDATEN);
 
             val wahlbezirkID = "wahlbezirkID";

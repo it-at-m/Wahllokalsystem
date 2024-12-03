@@ -7,10 +7,6 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface AWerteModelMapper {
 
-    AWerte toEntity(AWerteModel wahlModel);
-
-    AWerteModel toModel(AWerte entity);
-
     List<AWerte> fromListOfAWerteModeltoListOfAWerteEntity(List<AWerteModel> aWerteModelList);
 
     List<AWerteModel> fromListOfAWerteEntityToListOfAWerteModel(List<AWerte> aWerteEntityList);

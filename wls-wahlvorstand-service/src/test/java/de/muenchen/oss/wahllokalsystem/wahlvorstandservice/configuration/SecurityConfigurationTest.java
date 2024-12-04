@@ -3,7 +3,6 @@ package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.configuration;
 import static de.muenchen.oss.wahllokalsystem.wahlvorstandservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.MicroServiceApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureObservability
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 class SecurityConfigurationTest {
 
     @Autowired
@@ -31,6 +30,12 @@ class SecurityConfigurationTest {
     @Test
     void should_returnStatusUnauthorized_when_accessingSecuredResourceActuator() throws Exception {
         api.perform(get("/actuator"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void should_returnStatusUnauthorized_when_acessingBusinessActionsWahlvorstand() throws Exception {
+        api.perform(get("/businessActions/wahlvorstand"))
                 .andExpect(status().isUnauthorized());
     }
 

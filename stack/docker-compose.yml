@@ -246,7 +246,6 @@ services:
     networks:
       - keycloak
     extra_hosts:
-      - "host.docker.internal:host-gateway"
       - "kubernetes.docker.internal:host-gateway"
     healthcheck:
       interval: 30s

@@ -242,7 +242,7 @@ services:
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_CLIENTSECRET=${SSO_CLIENT_SECRET}
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_SCOPE=profile, openid
     volumes:
-      - './config:/config'
+      - './gateway_config:/config'
     networks:
       - keycloak
     extra_hosts:

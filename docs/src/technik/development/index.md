@@ -123,12 +123,12 @@ Nachdem das Frontend in der IDE und das ApiGateway über Docker gestartet wurde,
 aufgerufen werden. Allerdings befindet sich die Oberfläche dann in einer Ladeschleife und man sieht nur einen
 flackernden Bildschirm. Um diese Schleife während der Entwicklung zu umgehen, gibt es zwei Möglichkeiten:
 
-### 1. Anmeldung bei Keycloak
+### 1. Starten über das Gateway + Keycloak-Anmeldung
 
 Eine Möglichkeit, die Ladeschleife zu umgehen, ist es, sich lokal mit einem der [Keycloak-User](#benutzer) anzumelden.
 Nachdem das Frontend über die IDE gestartet wurde, muss die URL `http://localhost:8083/` mit dem Port `8083` aufgerufen
-werden, um auf die Keycloak Seite zu kommen. Nach der Anmeldung wird man automatisch auf den Port `8400` weitergeleitet
-und die Ladeschleife ist weg.
+werden, um auf die Keycloak Seite zu kommen. Nach der Anmeldung bleibt man auf dem Port `8083`, wird aber vom Gateway
+zum Frontend weitergeleitet und die Ladeschleife ist weg.
 
 > [!NOTE]
 > Der Anmeldevorgang muss jedes Mal wiederholt werden, sobald das ApiGateway neu gestartet wird.

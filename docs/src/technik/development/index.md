@@ -28,11 +28,11 @@ flowchart LR
 
         frontend_gui --->|request| apiGateway
 
-        keycloak-->|persisting| keycloakDB
+        keycloak-->|accesses| keycloakDB
         keycloakInit-->|setup of| keycloak
 
         wlsService ---|OAuth2| keycloak
-        wlsService --->|persisting|oracleDB
+        wlsService --->|accesses|oracleDB
     end
 ```
 

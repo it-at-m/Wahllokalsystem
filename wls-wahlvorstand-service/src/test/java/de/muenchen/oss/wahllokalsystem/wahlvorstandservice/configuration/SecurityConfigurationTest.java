@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureObservability
-@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
+@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
 class SecurityConfigurationTest {
 
     @Autowired

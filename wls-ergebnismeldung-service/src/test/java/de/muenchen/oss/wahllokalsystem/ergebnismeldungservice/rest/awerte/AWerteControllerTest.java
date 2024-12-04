@@ -44,20 +44,6 @@ class AWerteControllerTest {
             Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
             Assertions.assertThat(result.getBody()).isSameAs(mockedMappedServiceDTO);
         }
-
-        @Test
-        void should_returnHttp204AndBodyIsNull_when_serviceReturnsNull() {
-            val wahlbezirkID = "wahlbezirkID01";
-            val mockedServiceModel = List.of(new AWerteModel(null, 0, null));
-
-            Mockito.when(awerteService.getAWerte(wahlbezirkID)).thenReturn(mockedServiceModel);
-            Mockito.when(awerteDTOMapper.fromListOfAWerteModelToListOfAWerteDTO(mockedServiceModel)).thenReturn(null);
-
-            val result = unitUnderTest.getAWerte(wahlbezirkID);
-
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-            Assertions.assertThat(result.getBody()).isNull();
-        }
     }
 
     @Nested

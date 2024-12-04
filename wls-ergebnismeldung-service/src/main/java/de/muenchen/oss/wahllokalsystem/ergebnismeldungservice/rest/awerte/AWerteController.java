@@ -40,10 +40,6 @@ public class AWerteController {
                             content = { @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AWerteDTO.class))) }
                     ),
                     @ApiResponse(
-                            responseCode = "204", description = "Keine Daten vom Fremdsystem geliefert",
-                            content = @Content(schema = @Schema())
-                    ),
-                    @ApiResponse(
                             responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
                             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
                     )
@@ -52,9 +48,6 @@ public class AWerteController {
     @GetMapping("/awerte/{wahlbezirkID}")
     public ResponseEntity<List<AWerteDTO>> getAWerte(@PathVariable("wahlbezirkID") String wahlbezirkID) {
         val result = awerteDTOMapper.fromListOfAWerteModelToListOfAWerteDTO(aWerteService.getAWerte(wahlbezirkID));
-        if (result == null) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

@@ -39,7 +39,7 @@ class AWerteClientMapperTest {
     class FromRemoteClientListOfWahlberechtigteDtoToListOfAWerteModel {
 
         @Test
-        void should_returnMappedListOfAWerteModel_when_listOfWahlberechtigteDtoisGiven() {
+        void should_returnMappedListOfAWerteModel_when_listOfWahlberechtigteDtoIsGiven() {
             val wbDtoList = createListOfWahlberechtigteDTO();
             Assertions.assertThat(wbDtoList).size().isEqualTo(3);
             wbDtoList.forEach(wahlberechtigte -> Assertions.assertThat(wahlberechtigte).hasNoNullFieldsOrProperties());

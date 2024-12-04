@@ -102,6 +102,8 @@ public class AWerteControllerIntegrationTest {
             val request = MockMvcRequestBuilders.post("/businessActions/awerte/init").contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(wahlbezirkIDs));
             api.perform(request).andExpect(status().isOk()).andReturn();
+            // make sure that async work is done
+            Thread.sleep(500);
 
             for (String wahlbezirkID : wahlbezirkIDs) {
                 val aWerteFromRepo = awerteRepository.findByBezirkUndWahlID_WahlbezirkID(wahlbezirkID);

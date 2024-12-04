@@ -60,9 +60,14 @@ info.application.name: @project.artifactId@
 info.application.version: @project.version@
 
 service:
+  info:
+    oid: WLS-ERGEBNISMELDUNG
   config:
+    async:
+      corePoolSize: 2
+      maxPoolSize: 2
+      queueCapacity: 500
+      threadNamePrefix: "taskExecutor-"
     clients:
       eai:
         basePath: http://localhost:39149
-  info:
-    oid: WLS-ERGEBNISMELDUNG

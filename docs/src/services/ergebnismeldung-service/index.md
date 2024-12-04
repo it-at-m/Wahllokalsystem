@@ -25,7 +25,6 @@ Sie teilen sich auf in die Anzahl an Wahlberechtigten die keinen Wahlschein erha
 und in die Anzahl an Wahlberechtigten die einen Wahlschein erhalten haben und deshalb einen W-Vermerk im 
 Wählerverzeichnis besitzen (A2).
 
-
 - Wenn über die EAI im externen Wahlsystem Daten gefunden werden, dann werden diese im lokalen Repository gespeichert
 und zurück gegeben.
 - Sofern über die EAI im externen Wahlsystem keine Daten gefunden werden können, wird versucht auf 'alte' A-Werte im 

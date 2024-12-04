@@ -18,7 +18,7 @@ class AWerteClientMapperTest {
     class FromRemoteClientWahlberechtigteDtoToAWerteModel {
 
         @Test
-        void should_returnMappedAWerteModel_when_wahlberechtigteDtoisGiven() {
+        void should_returnMappedAWerteModel_when_wahlberechtigteDtoIsGiven() {
             val dtoToMap = new WahlberechtigteDTO();
             dtoToMap.setWahlbezirkID("wahlbezirkID");
             dtoToMap.setWahlID("wahlID");

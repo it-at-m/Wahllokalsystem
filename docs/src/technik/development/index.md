@@ -28,11 +28,11 @@ flowchart LR
 
         frontend_gui --->|request| apiGateway
 
-        keycloak-->|persisting| keycloakDB
+        keycloak-->|accesses| keycloakDB
         keycloakInit-->|setup of| keycloak
 
         wlsService ---|OAuth2| keycloak
-        wlsService --->|persisting|oracleDB
+        wlsService --->|accesses|oracleDB
     end
 ```
 
@@ -121,7 +121,7 @@ der Standard Befehl angepasst in `"dev": "set NODE_OPTIONS=--max-http-header-siz
 
 Nachdem das Frontend in der IDE und das ApiGateway über Docker gestartet wurde, kann es über `http://localhost:8400/`
 aufgerufen werden. Allerdings befindet sich die Oberfläche dann in einer Ladeschleife und man sieht nur einen
-flackernden Bildschirm. Um diese Schleife zu umgehen, gibt es zwei Möglichkeiten:
+flackernden Bildschirm. Um diese Schleife während der Entwicklung zu umgehen, gibt es zwei Möglichkeiten:
 
 ### 1. Anmeldung bei Keycloak
 
@@ -140,7 +140,7 @@ Dazu muss im `/stack/docker-compose.yml` File beim Service refarch-gateway unter
 `- SPRING_PROFILES_ACTIVE=hazelcast-local` das Profil `no-security` hinzugefügt werden. Damit die Änderung wirksam wird,
 sollte der Container in Docker einmal komplett gelöscht und über das `docker-compose.yml` File neu gestartet werden.
 
-> [!IMPORTANT]
+> [!WARNING]
 > Bei dieser Variante ist es wichtig, dass die Änderung im `docker-compose.yml` File nicht gepusht wird, weil alle
 > anderen Container mit security laufen und das `no-security`-Profil nur für die Entwicklung benötigt wird.
 

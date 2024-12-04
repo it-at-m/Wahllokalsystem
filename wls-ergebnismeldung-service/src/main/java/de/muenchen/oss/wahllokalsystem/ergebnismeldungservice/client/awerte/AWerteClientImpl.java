@@ -3,10 +3,8 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.awerte;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.client.WahldatenControllerApi;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.WahlberechtigteDTO;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteClient;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteModel;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +16,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class AWerteClientImpl implements AWerteClient {
-
-    private final ExceptionFactory exceptionFactory;
 
     private final WahldatenControllerApi wahldatenControllerApi;
 

@@ -7,6 +7,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ExceptionConstants {
 
+    public static ExceptionDataWrapper GETAWERTE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("600",
+            "getAWerte: Parameter unvollstaendig");
+    public static ExceptionDataWrapper GETAWERTE_UNSAVEABLE = new ExceptionDataWrapper("601",
+            "getAWerte: Die AWerte vom Client konnten nicht gespeichert werden.");
+
     public static final ExceptionDataWrapper GET_STATUS_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("606", "getStatus: Parameter unvollstaendig");
     public static final ExceptionDataWrapper POST_STATUS_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("607", "postStatus: Parameter unvollstaendig");
     public static final ExceptionDataWrapper STATUS_UNSAVEABLE = new ExceptionDataWrapper("622", "postStatus: Der Status konnte nicht gespeichtert werden.");

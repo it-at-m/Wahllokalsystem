@@ -79,6 +79,13 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+        <!-- wls-common -->
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>exception</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+
         <!-- Caching -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -164,18 +171,6 @@
             <artifactId>hibernate-jpamodelgen</artifactId>
         </dependency>
 
-        <!-- wls-common -->
-        <dependency>
-            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
-            <artifactId>exception</artifactId>
-            <version>${wls.common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
-            <artifactId>security</artifactId>
-            <version>${wls.common.version}</version>
-        </dependency>
-
         <!-- Other -->
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
@@ -190,6 +185,13 @@
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
             <version>0.2.6</version>
+        </dependency>
+
+        <!-- wls-common -->
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>security</artifactId>
+            <version>${wls.common.version}</version>
         </dependency>
 
         <!-- Validation -->
@@ -214,6 +216,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-contract-stub-runner</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
@@ -221,6 +228,12 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>testing</artifactId>
+            <version>${wls.common.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -379,7 +392,8 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>7.5.0</version>
+                <version>7.9.0</version>
+
                 <configuration>
                     <generatorName>java</generatorName>
                     <library>resttemplate</library>
@@ -421,19 +435,27 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <id>generateEAI</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.eai.0.3.0.json</inputSpec>
+
+                            <apiPackage>${project.groupId}.ergebnismeldungservice.eai.aou.client</apiPackage>
+                            <modelPackage>${project.groupId}.ergebnismeldungservice.eai.aou.model</modelPackage>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <!-- wenn mehrere Clients erzeugt werden muss jede execution eine eindeutige ID haben -->
                         <id>generateMonitoring</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <!-- Pfad zur JSON-Datei mit der OpenAPI-Beschreibung -->
                             <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.monitoring.0.1.0.json</inputSpec>
 
-                            <!-- Package in dem die Clients der jeweiligen Controller erzeugt werden -->
-                            <!-- Hier wird das Package für Zugriff auf den EAI-Service innerhalb des Basisdatenservices definiert -->
                             <apiPackage>${groupId}.ergebnismeldungservice.eai.monitoring.client</apiPackage>
-                            <!-- Package in das die Datenklassen erzeugt werden -->
                             <modelPackage>${groupId}.ergebnismeldungservice.eai.monitoring.model</modelPackage>
                         </configuration>
                     </execution>
@@ -452,7 +474,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <argLine>${surefireArgLine}  -Dfile.encoding=${project.build.sourceEncoding}</argLine>
+                    <argLine>${surefireArgLine} -Dfile.encoding=${project.build.sourceEncoding}</argLine>
                 </configuration>
             </plugin>
 
@@ -472,10 +494,10 @@
                             <goal>prepare-agent</goal>
                         </goals>
                         <configuration>
-                           <append>true</append>
-                           <destFile>${sonar.jacoco.reportPath}</destFile>
-                           <!-- Sets the VM argument line used when unit tests are run. -->
-                           <propertyName>surefireArgLine</propertyName>
+                            <append>true</append>
+                            <destFile>${sonar.jacoco.reportPath}</destFile>
+                            <!-- Sets the VM argument line used when unit tests are run. -->
+                            <propertyName>surefireArgLine</propertyName>
                         </configuration>
                     </execution>
                     <execution>

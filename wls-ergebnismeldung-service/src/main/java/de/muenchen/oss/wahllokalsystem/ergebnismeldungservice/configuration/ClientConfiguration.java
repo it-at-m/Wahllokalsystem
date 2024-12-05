@@ -13,8 +13,6 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class ClientConfiguration {
 
-    //other configurations like the restTemplate bean factory method
-
     @Bean
     public WlsResponseErrorHandler wlsResponseErrorHandler(final ObjectMapper objectMapper) {
         return new WlsResponseErrorHandler(objectMapper);
@@ -24,9 +22,7 @@ public class ClientConfiguration {
     public RestTemplate restTemplate(final WlsResponseErrorHandler wlsResponseErrorHandler) {
         val restTemplate = new RestTemplate();
 
-        /* definieren des Errorhandlers für Antworten vom externen Service */
         restTemplate.setErrorHandler(wlsResponseErrorHandler);
-        /* Ergänzen eines Interceptors um den Bearer-Token an den nächsten Service weiter zu geben */
         restTemplate.getInterceptors().add((request, body, execution) -> {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication == null) {
@@ -44,5 +40,4 @@ public class ClientConfiguration {
 
         return restTemplate;
     }
-
 }

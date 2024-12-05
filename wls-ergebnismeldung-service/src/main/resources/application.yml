@@ -39,14 +39,6 @@ server:
       enabled: false
   max-http-request-header-size: 32KB
 
-service:
-  info:
-    oid: WLS-ERGEBNISMELDUNG
-  config:
-    clients:
-      monitoring:
-        basePath: http://localhost:39154
-
 # Config for spring actuator endpoints
 management:
   server.port: ${server.port}
@@ -66,3 +58,18 @@ management:
       enabled: true
 info.application.name: @project.artifactId@
 info.application.version: @project.version@
+
+service:
+  info:
+    oid: WLS-ERGEBNISMELDUNG
+  config:
+    async:
+      corePoolSize: 2
+      maxPoolSize: 2
+      queueCapacity: 500
+      threadNamePrefix: "taskExecutor-"
+    clients:
+      eai:
+        basePath: http://localhost:39149
+      monitoring:
+        basePath: http://localhost:39154

@@ -51,3 +51,5 @@ includes:
   - path: add-authorities-auth.yml
   - path: create-group-all-wahlvorstand-authorities.yml
   - path: add-authorities-wahlvorstand.yml
+  - path: create-group-all-ergebnismeldung-authorities.yml
+  - path: add-authorities-ergebnismeldung-awerte.yml

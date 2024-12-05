@@ -53,7 +53,7 @@ class LdapConfigurationTest {
     AuthorityRepository authorityRepository;
 
     @Autowired
-    private RegisteredClientRepository registeredClientRepository;
+    RegisteredClientRepository registeredClientRepository;
 
     @Autowired
     TransactionTemplate transactionTemplate;
@@ -207,9 +207,9 @@ class LdapConfigurationTest {
             tokenRequestHeaders.add("Cookie", restrictedResourceRequestSessionID);
             val tokenRequestBody = "grant_type=authorization_code&code=" + code + "&redirect_uri=" + redirectURI;
             val tokenRequest = new RequestEntity<>(tokenRequestBody, tokenRequestHeaders, HttpMethod.POST, URI.create(getHost() + "/oauth2/token"));
-            val tokenRespone = restTemplate.exchange(tokenRequest, String.class);
+            val tokenResponse = restTemplate.exchange(tokenRequest, String.class);
 
-            val token = objectMapper.readValue(tokenRespone.getBody(), Token.class).getAccess_token();
+            val token = objectMapper.readValue(tokenResponse.getBody(), Token.class).getAccess_token();
 
             //user endpoint
             val userRequestHeaders = new HttpHeaders();
@@ -217,8 +217,6 @@ class LdapConfigurationTest {
             val userRequest = new RequestEntity<>(userRequestHeaders, HttpMethod.GET, URI.create(getHost() + "/user"));
             val userResponse = restTemplate.exchange(userRequest, UserDTO.class);
             Assertions.assertThat(userResponse.getBody().authorities()).containsExactly("WLS_WAHLVORSTAND");
-
-            System.out.println(tokenRespone.getStatusCode());
         }
 
         private String getHost() {

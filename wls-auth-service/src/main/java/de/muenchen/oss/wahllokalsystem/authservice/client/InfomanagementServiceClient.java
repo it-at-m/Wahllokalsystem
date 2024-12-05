@@ -4,11 +4,18 @@ import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.authservice.eai.infomanagement.client.KonfigurationControllerApi;
 import de.muenchen.oss.wahllokalsystem.authservice.eai.infomanagement.model.KonfigurationDTO;
 import de.muenchen.oss.wahllokalsystem.authservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.authservice.security.LegalLoginIntervalModel;
+import de.muenchen.oss.wahllokalsystem.authservice.security.LoginTimeClient;
 import de.muenchen.oss.wahllokalsystem.authservice.service.WelcomeClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -18,7 +25,7 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
 @RequiredArgsConstructor
 @Slf4j
-public class InfomanagementServiceClient implements WelcomeClient {
+public class InfomanagementServiceClient implements WelcomeClient, LoginTimeClient {
 
     private final ExceptionFactory exceptionFactory;
 
@@ -27,8 +34,17 @@ public class InfomanagementServiceClient implements WelcomeClient {
     @Value("${service.config.clients.infomanagement.configkey.welcomeMessage}")
     String konfigKeyWelcomeMessage;
 
+    @Value("${service.config.clients.infomanagement.configkey.fruehesterLogin}")
+    String konfigKeyFruehesterLogin;
+
+    @Value("${service.config.clients.infomanagement.configkey.spaetesterLogin}")
+    String konfigKeySpaetesterLogin;
+
     @Value("${service.config.welcomemessage.default}")
     String defaultWelcomeMessage;
+
+    @Value("${service.config.clients.infomanagement.dateformat}")
+    String konfigDateFormat;
 
     @Override
     public String getWelcomeMessage() {
@@ -44,6 +60,27 @@ public class InfomanagementServiceClient implements WelcomeClient {
             return defaultWelcomeMessage;
         } else {
             return getValueOrDefault(konfigurationDTO);
+        }
+    }
+
+    @Override
+    public LegalLoginIntervalModel getLegalLoginInterval() {
+        val fruehesterLogin = getKonfigurationKeyUnauthorized(konfigKeyFruehesterLogin).getWert();
+        val spaetesterLogin = getKonfigurationKeyUnauthorized(konfigKeySpaetesterLogin).getWert();
+
+        return new LegalLoginIntervalModel(parseToDateTime(fruehesterLogin), parseToDateTime(spaetesterLogin));
+    }
+
+    private LocalDateTime parseToDateTime(final String dateTimeString) {
+        if (dateTimeString == null) {
+            return null;
+        }
+
+        try {
+            return LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern(konfigDateFormat));
+        } catch (final DateTimeParseException e1) {
+            throw new DateTimeException(
+                    "Unable to construct a time or a date-time from the given configuration (\"" + dateTimeString + "\").");
         }
     }
 

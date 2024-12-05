@@ -34,7 +34,7 @@ class LoginAttemptRepositoryTest {
 
             val findByResult = loginAttemptRepository.findByUsername(username);
 
-            Assertions.assertThat(findByResult.get()).isEqualTo(loginAttemptToFind);
+            Assertions.assertThat(findByResult.get()).usingRecursiveComparison().isEqualTo(loginAttemptToFind);
         }
 
         @Test

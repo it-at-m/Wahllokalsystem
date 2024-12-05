@@ -53,7 +53,7 @@ class UnicodeConfigurationTest {
     private EreignisRepository ereignisRepository;
 
     @Test
-    void testForNfcNormalization() {
+    void should_returnComposedString_when_givenDecomposedString() {
         // Persist entity with decomposed string.
         val wahlbezirkID = "wahlbezirkID01";
         // create a list of Ereignisse with only one Ereignis containing the TEXT_ATTRIBUTE_DECOMPOSED as 'beschreibung'

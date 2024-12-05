@@ -28,6 +28,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.client.HttpServerErrorException;
 
 @ExtendWith(MockitoExtension.class)
@@ -84,7 +85,7 @@ class UserServiceTest {
             Mockito.verify(loginAttemptRepository).save(loginAttemptCaptor.capture());
 
             val expectedLoginAttempt = new LoginAttempt(username, 1, null);
-            Assertions.assertThat(loginAttemptCaptor.getValue()).isEqualTo(expectedLoginAttempt);
+            Assertions.assertThat(loginAttemptCaptor.getValue()).usingRecursiveComparison().isEqualTo(expectedLoginAttempt);
 
         }
 
@@ -461,6 +462,36 @@ class UserServiceTest {
             Assertions.assertThat(usernameCaptor.getValue()).matches("\\d\\d\\d\\d\\d\\d-" + user1.wahlbezirknummer());
         }
 
+    }
+
+    @Nested
+    class GetUserDetails {
+
+        @Test
+        void should_returnUserDetails_when_userIstFoundByName() {
+            val username = "username";
+
+            val mockedUser = new User();
+            val mockedUserMappedToUserDetails = new org.springframework.security.core.userdetails.User(username, "", Collections.emptyList());
+
+            Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockedUser));
+            Mockito.when(userModelMapper.toSpringSecurityUser(mockedUser)).thenReturn(mockedUserMappedToUserDetails);
+
+            val result = unitUnderTest.getUserDetails(username);
+
+            Assertions.assertThat(result).isSameAs(mockedUserMappedToUserDetails);
+        }
+
+        @Test
+        void should_throwUserNotFoundException_when_userNotFound() {
+            val username = "username";
+
+            Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+
+            Assertions.assertThatThrownBy(() -> unitUnderTest.getUserDetails(username))
+                    .isInstanceOf(UsernameNotFoundException.class)
+                    .hasMessageContaining(username.toUpperCase());
+        }
     }
 
     private User createUserWithNonLocked(final boolean nonLocked) {

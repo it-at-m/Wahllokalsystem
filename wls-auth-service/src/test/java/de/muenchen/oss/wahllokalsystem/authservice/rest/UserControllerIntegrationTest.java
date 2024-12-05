@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.CacheConfig;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
+import de.muenchen.oss.wahllokalsystem.authservice.domain.Authority;
+import de.muenchen.oss.wahllokalsystem.authservice.domain.AuthorityRepository;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.LoginAttempt;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.LoginAttemptRepository;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.User;
@@ -16,6 +18,8 @@ import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
 import de.muenchen.oss.wahllokalsystem.authservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -51,6 +55,9 @@ public class UserControllerIntegrationTest {
     LoginAttemptRepository loginAttemptRepository;
 
     @Autowired
+    AuthorityRepository authorityRepository;
+
+    @Autowired
     TransactionTemplate transactionTemplate;
 
     @Autowired
@@ -81,13 +88,20 @@ public class UserControllerIntegrationTest {
         @WithMockUser(username = "Hansi")
         @Test
         void should_returnUserDTO_when_userFound() throws Exception {
-            userRepository.save(new User("Hansi", null, null, true, true, "wahltagID", null, null, null, null, null, null, null));
+            val testauthorityName = "testauthority";
+            transactionTemplate.executeWithoutResult(status -> {
+                val authorityToSave = new Authority(testauthorityName, Collections.emptySet(), Collections.emptySet());
+                val authoritySaved = authorityRepository.save(authorityToSave);
+                val userToSave = new User("Hansi", null, null, true, true, "wahltagID", null, null, null, null, null, new HashSet<>(Set.of(authoritySaved)),
+                        null);
+                userRepository.save(userToSave);
+            });
 
             val request = MockMvcRequestBuilders.get("/user");
 
             val response = api.perform(request).andExpect(status().isOk()).andReturn();
             val responseBody = objectMapper.readValue(response.getResponse().getContentAsString(), UserDTO.class);
-            val expectedResponseBody = new UserDTO("Hansi", null, true, "wahltagID", null, null, null, null, null, Collections.emptySet(), null);
+            val expectedResponseBody = new UserDTO("Hansi", null, true, "wahltagID", null, null, null, null, null, Set.of(testauthorityName), null);
 
             Assertions.assertThat(responseBody).isEqualTo(expectedResponseBody);
         }

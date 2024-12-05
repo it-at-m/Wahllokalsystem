@@ -31,7 +31,7 @@ class JwtUserInfoAuthenticationConverterTest {
     class Convert {
 
         @Test
-        void should_jwtAuthenticationTokenWithAuthorities_when_convertingJwt() {
+        void should_returnJwtAuthenticationTokenWithAuthorities_when_convertingGivenJwt() {
             val username = "username";
             val now = Instant.now();
             val jwt = new Jwt("tokenValue", now, now.plus(30, ChronoUnit.DAYS), Map.of("key1", "value1"), Map.of("sub", username));
@@ -43,6 +43,7 @@ class JwtUserInfoAuthenticationConverterTest {
 
             val result = unitUnderTest.convert(jwt);
 
+Assertions.assertThat(result).isInstanceOf(JwtAuthenticationToken.class);
             Assertions.assertThat(result.getAuthorities()).isEqualTo(mockedUserAuthorities);
         }
     }

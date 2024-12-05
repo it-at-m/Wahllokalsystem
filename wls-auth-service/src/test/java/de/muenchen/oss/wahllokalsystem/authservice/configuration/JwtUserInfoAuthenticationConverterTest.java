@@ -44,7 +44,7 @@ class JwtUserInfoAuthenticationConverterTest {
 
             val result = unitUnderTest.convert(jwt);
 
-Assertions.assertThat(result).isInstanceOf(JwtAuthenticationToken.class);
+            Assertions.assertThat(result).isInstanceOf(JwtAuthenticationToken.class);
             Assertions.assertThat(result.getAuthorities()).isEqualTo(mockedUserAuthorities);
         }
     }

@@ -1,0 +1,87 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: sso
+          uri: http://kubernetes.docker.internal:8100/
+          predicates:
+            - Path=/api/sso/userinfo
+          filters:
+            - RewritePath=/api/sso/userinfo, /${KEYCLOAK_RELATIV_PATH}/realms/${SSO_REALM}/protocol/openid-connect/userinfo
+        - id: admin-service
+          uri: http://kubernetes.docker.internal:39157/
+          predicates:
+            - Path=/api/admin-service/**
+          filters:
+            - RewritePath=/api/admin-service/(?<urlsegments>.*), /$\{urlsegments}
+        - id: auth-service
+          uri: http://kubernetes.docker.internal:39152/
+          predicates:
+            - Path=/api/auth-service/**
+          filters:
+            - RewritePath=/api/auth-service/(?<urlsegments>.*), /$\{urlsegments}
+        - id: basisdaten-service
+          uri: http://kubernetes.docker.internal:39151/
+          predicates:
+            - Path=/api/basisdaten-service/**
+          filters:
+            - RewritePath=/api/basisdaten-service/(?<urlsegments>.*), /$\{urlsegments}
+        - id: briefwahl-service
+          uri: http://kubernetes.docker.internal:39147/
+          predicates:
+            - Path=/api/briefwahl-service/**
+          filters:
+            - RewritePath=/api/briefwahl-service/(?<urlsegments>.*), /$\{urlsegments}
+        - id: broadcast-service
+          uri: http://kubernetes.docker.internal:39146/
+          predicates:
+            - Path=/api/broadcast-service/**
+          filters:
+            - RewritePath=/api/broadcast-service/(?<urlsegments>.*), /$\{urlsegments}
+        - id: eai-service
+          uri: http://kubernetes.docker.internal:39149/
+          predicates:
+            - Path=/api/eai-service/**
+          filters:
+            - RewritePath=/api/eai-service/(?<urlsegments>.*), /$\{urlsegments}
+        - id: ergebnismeldung-service
+          uri: http://kubernetes.docker.internal:39153/
+          predicates:
+            - Path=/api/ergebnismeldung-service/**
+          filters:
+            - RewritePath=/api/ergebnismeldung-service/(?<urlsegments>.*), /$\{urlsegments}
+        - id: infomanagement-service
+          uri: http://kubernetes.docker.internal:39148/
+          predicates:
+            - Path=/api/infomanagement-service/**
+          filters:
+            - RewritePath=/api/infomanagement-service/(?<urlsegments>.*), /$\{urlsegments}
+        - id: monitoring-service
+          uri: http://kubernetes.docker.internal:39154/
+          predicates:
+            - Path=/api/monitoring-service/**
+          filters:
+            - RewritePath=/api/monitoring-service/(?<urlsegments>.*), /$\{urlsegments}
+        - id: vorfaelleundvorkommnisse-service
+          uri: http://kubernetes.docker.internal:39156/
+          predicates:
+            - Path=/api/vorfaelleundvorkommnisse-service/**
+          filters:
+            - RewritePath=/api/vorfaelleundvorkommnisse-service/(?<urlsegments>.*), /$\{urlsegments}
+        - id: wahlvorbereitung-service
+          uri: http://kubernetes.docker.internal:39150/
+          predicates:
+            - Path=/api/wahlvorbereitung-service/**
+          filters:
+            - RewritePath=/api/wahlvorbereitung-service/(?<urlsegments>.*), /$\{urlsegments}
+        - id: wahlvorstand-service
+          uri: http://kubernetes.docker.internal:39155/
+          predicates:
+            - Path=/api/wahlvorstand-service/**
+          filters:
+            - RewritePath=/api/wahlvorstand-service/(?<urlsegments>.*), /$\{urlsegments}
+          # frontend has to be the last route to be sure it does not override other routes with path=/**
+        - id: frontend
+          uri: http://kubernetes.docker.internal:8400/
+          predicates:
+            - Path=/**

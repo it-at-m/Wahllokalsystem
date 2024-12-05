@@ -83,10 +83,22 @@ export function patchConfig(body: any): RequestInit {
  */
 export function defaultResponseHandler(
   response: Response,
-  errorMessage = "Es ist ein unbekannter Fehler aufgetreten."
+  errorMessage = "Es ist ein Fehler im ResponseHandler aufgetreten."
 ): void {
+  /*  // todo: no content sollte vermutlich woanders aufgefangen werden und nicht hier
+            if (response.status === 204) {
+              throw new ApiError({
+                level: STATUS_INDICATORS.INFO,
+                message: "Es konnten keine Daten gefunden werden. (204)",
+              });
+            }*/
   if (!response.ok) {
-    if (response.status === 403) {
+    if (response.status === 400) {
+      throw new ApiError({
+        level: STATUS_INDICATORS.ERROR,
+        message: "WLS Exception",
+      });
+    } else if (response.status === 403) {
       throw new ApiError({
         level: STATUS_INDICATORS.ERROR,
         message:
@@ -108,13 +120,14 @@ export function defaultResponseHandler(
  * @param error The error object from fetch command
  * @param errorMessage The error message to be included in the ApiError object.
  */
+// wird sowohl bei ablehnung von fetch (promise rejected), als auch bei einem fehler im responsehandler ausgeführt
 export function defaultCatchHandler(
   error: Error,
-  errorMessage = "Es ist ein unbekannter Fehler aufgetreten."
+  errorMessage = "Es ist ein Fehler im CatchHandler aufgetreten."
 ): PromiseLike<never> {
   throw new ApiError({
     level: STATUS_INDICATORS.WARNING,
-    message: errorMessage,
+    message: errorMessage + " " + error,
   });
 }
 

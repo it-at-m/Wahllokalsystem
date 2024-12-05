@@ -3,58 +3,77 @@
     <v-col class="text-center">
       <h2>This view shows how communication with backend-services will work</h2>
     </v-col>
-    <v-col class="text-center">
-      <v-btn @click="getApi"> make api call</v-btn>
-    </v-col>
-    <v-col>
-      <pre v-if="elements"> {{ elements }} </pre>
-      <p v-else>{{ error }}</p>
-    </v-col>
+    <v-responsive class="mx-auto">
+      <v-col class="text-center">
+        <v-text-field
+          class="ml-auto mr-auto"
+          width="350"
+          v-model="messageInput"
+          clearable
+          label="ID"
+        ></v-text-field>
+        <v-btn @click="postMessage(['wbz-1', 'wbz-2'])"
+          >post message with fetch utils
+        </v-btn>
+        <p v-if="errorPostFetch">{{ errorPostFetch }}</p>
+        <br />
+        <br />
+        <v-btn @click="getMessage('wbz-1')">get message with fetch utils</v-btn>
+        <pre v-if="messageFetch"> {{ messageFetch }} </pre>
+        <p v-if="errorGetFetch">{{ errorGetFetch }}</p>
+      </v-col>
+    </v-responsive>
   </v-container>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { VBtn, VCol, VContainer } from "vuetify/components";
+import type BroadcastMessageToRead from "@/types/BroadcastMessageToRead";
 
+import { ref } from "vue";
+import {
+  VBtn,
+  VCol,
+  VContainer,
+  VResponsive,
+  VTextField,
+} from "vuetify/components";
+
+import {
+  broadcastMessageRead,
+  getBroadcastMessage,
+  postBroadcastMessage,
+} from "@/api/broadcast-client";
+import { STATUS_INDICATORS } from "@/constants";
 import { useSnackbarStore } from "@/stores/snackbar";
 
 const snackbarStore = useSnackbarStore();
-const elements = ref(null);
-const error = ref("");
+const messageInput = ref("Broadcast Message");
+const messageFetch = ref("Click Button to Load Message");
+const errorGetFetch = ref("");
+const errorPostFetch = ref("");
+let messageFetchId = "";
 
-const GET_BROADCAST = "/api/broadcast-service/businessActions/getMessage/wbz-1";
-const GET_WAHLVORSTAND =
-  "/api/wahlvorstand-service/businessActions/wahlvorstand/wahlbezirkID";
-
-function getApi() {
-  fetch(GET_BROADCAST)
-    .then((response) => {
-      if (response.status == 204) {
-        console.log(response);
-        throw new Error("Es konnten keine Daten gefunden werden. (204)");
-      }
-      if (!response.ok) {
-        switch (response.status) {
-          case 401:
-            throw new Error("Der Nutzer hat nicht die benötigten Rechte (401)");
-          case 404:
-            throw new Error("Ressource nicht gefunden (404)");
-          case 431:
-            throw new Error("Request Header Fields Too Large (431)");
-          case 500:
-            throw new Error("Interner Serverfehler (500)");
-          default:
-            throw new Error("Ein Fehler ist aufgetreten: ${response.status}");
-        }
-      }
-      console.log(response);
-      return response.json();
+function getMessage(wahlbezirkID: string) {
+  errorGetFetch.value = "";
+  messageFetch.value = "";
+  getBroadcastMessage(wahlbezirkID)
+    .then((content: BroadcastMessageToRead) => {
+      messageFetch.value = content.nachricht;
+      messageFetchId = content.oid;
+      broadcastMessageRead(messageFetchId);
     })
-    .then((data) => (elements.value = data))
-    .catch((err) => {
-      error.value = "Es gibt keine anzuzeigenden Daten";
-      snackbarStore.showMessage(err); // todo: show message as error not info
+    .catch((e) => {
+      errorGetFetch.value = e.message;
+      snackbarStore.showMessage({ message: e, level: STATUS_INDICATORS.ERROR });
     });
+}
+
+function postMessage(wahlbezirkIDs: string[]) {
+  errorPostFetch.value = "";
+  postBroadcastMessage(wahlbezirkIDs, messageInput.value).catch((e) => {
+    errorPostFetch.value = e.message;
+    snackbarStore.showMessage(e);
+  });
+  messageInput.value = "";
 }
 </script>

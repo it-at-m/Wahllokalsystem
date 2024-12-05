@@ -36,6 +36,8 @@ sequenceDiagram
     
     User->>+Gateway : Anfrage an geschützte Ressource mit Session
     Gateway->>+WlsServiceXYZ : mit Bearer-Token der Session
+    WlsServiceXYZ->>+AuthService : Anfrage nach Berechtigungen zu diesem Token
+    AuthService->>-WlsServiceXYZ : liefert die Rechte nach Validierung des Tokens
     WlsServiceXYZ->>-Gateway : Resource
     Gateway->>-User : Resource
 ```

@@ -3,7 +3,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.monitoring.client.WahllokalZustandControllerApi;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.StatusClient;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.sender.StatusClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;

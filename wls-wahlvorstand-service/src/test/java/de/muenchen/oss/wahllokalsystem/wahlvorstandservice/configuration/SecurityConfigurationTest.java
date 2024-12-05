@@ -1,19 +1,26 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.configuration;
 
 import static de.muenchen.oss.wahllokalsystem.wahlvorstandservice.TestConstants.SPRING_TEST_PROFILE;
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlvorstandService;
+import java.util.Optional;
+import lombok.val;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
@@ -23,6 +30,9 @@ class SecurityConfigurationTest {
 
     @Autowired
     MockMvc api;
+
+    @MockBean
+    private WahlvorstandService wahlvorstandService;
 
     @Test
     void should_returnStatusUnauthorized_when_accessingSecuredResourceRoot() throws Exception {
@@ -79,8 +89,11 @@ class SecurityConfigurationTest {
         @Test
         @WithMockUser
         void should_returnStatusNoContent_when_accessingBusinessActionsWahlvorstand() throws Exception {
-            api.perform(get("/businessActions/wahlvorstand/1"))
-                    .andExpect(status().isNoContent());
+            Mockito.when(wahlvorstandService.getWahlvorstand(any())).thenReturn(Optional.empty());
+
+            val request = MockMvcRequestBuilders.get("/businessActions/wahlvorstand/1");
+
+            api.perform(request).andExpect(status().isNoContent());
         }
     }
 

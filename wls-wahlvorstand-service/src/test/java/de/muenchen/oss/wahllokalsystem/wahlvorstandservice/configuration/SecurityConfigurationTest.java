@@ -4,11 +4,14 @@ import static de.muenchen.oss.wahllokalsystem.wahlvorstandservice.TestConstants.
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.MicroServiceApplication;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -30,12 +33,6 @@ class SecurityConfigurationTest {
     @Test
     void should_returnStatusUnauthorized_when_accessingSecuredResourceActuator() throws Exception {
         api.perform(get("/actuator"))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    void should_returnStatusUnauthorized_when_acessingBusinessActionsWahlvorstand() throws Exception {
-        api.perform(get("/businessActions/wahlvorstand"))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -67,6 +64,24 @@ class SecurityConfigurationTest {
     void should_returnStatusOk_when_accessingUnsecuredResourceSwaggerUi() throws Exception {
         api.perform(get("/swagger-ui/index.html"))
                 .andExpect(status().isOk());
+    }
+
+    @Nested
+    class Wahlvorstand {
+
+        @Test
+        @WithAnonymousUser
+        void should_returnStatusUnauthorized_when_accessingBusinessActionsWahlvorstand() throws Exception {
+            api.perform(get("/businessActions/wahlvorstand"))
+                    .andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void should_returnStatusNoContent_when_accessingBusinessActionsWahlvorstand() throws Exception {
+            api.perform(get("/businessActions/wahlvorstand/1"))
+                    .andExpect(status().isNoContent());
+        }
     }
 
 }

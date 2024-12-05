@@ -12,12 +12,13 @@ export const BROADCAST_API_URL = "/api/broadcast-service/businessActions/";
 export function getBroadcastMessage(
   wahlbezirkID: string
 ): Promise<BroadcastMessageToRead> {
-  return fetch(BROADCAST_API_URL + "getMessage/" + wahlbezirkID, getConfig())
-    .then((response) => {
-      defaultResponseHandler(response);
-      return response.json();
-    })
-    .catch(defaultCatchHandler);
+  return fetch(
+    BROADCAST_API_URL + "getMessage/" + wahlbezirkID,
+    getConfig()
+  ).then((response) => {
+    defaultResponseHandler(response);
+    return response.json();
+  });
 }
 
 export function postBroadcastMessage(
@@ -34,15 +35,13 @@ export function postBroadcastMessage(
     .catch(defaultCatchHandler);
 }
 
-export function broadcastMessageRead(nachrichtID: string) {
-  return fetch(
+export function broadcastMessageRead(nachrichtID: string): void {
+  fetch(
     BROADCAST_API_URL + "messageRead/" + nachrichtID,
     postConfig(nachrichtID)
   )
     .then((response) => {
       defaultResponseHandler(response);
-      console.log("message read ausgeführt");
-      return response.json();
     })
     .catch(defaultCatchHandler);
 }

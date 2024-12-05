@@ -85,13 +85,13 @@ export function defaultResponseHandler(
   response: Response,
   errorMessage = "Es ist ein Fehler im ResponseHandler aufgetreten."
 ): void {
-  /*  // todo: no content sollte vermutlich woanders aufgefangen werden und nicht hier
-            if (response.status === 204) {
-              throw new ApiError({
-                level: STATUS_INDICATORS.INFO,
-                message: "Es konnten keine Daten gefunden werden. (204)",
-              });
-            }*/
+  // todo: no content sollte vermutlich woanders aufgefangen werden und nicht hier weil es ein 2xx code ist
+  if (response.status === 204) {
+    throw new ApiError({
+      level: STATUS_INDICATORS.INFO,
+      message: "Es konnten keine Daten gefunden werden. (204)",
+    });
+  }
   if (!response.ok) {
     if (response.status === 400) {
       throw new ApiError({
@@ -127,7 +127,7 @@ export function defaultCatchHandler(
 ): PromiseLike<never> {
   throw new ApiError({
     level: STATUS_INDICATORS.WARNING,
-    message: errorMessage + " " + error,
+    message: error.name + ": " + error.message,
   });
 }
 

@@ -11,6 +11,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration.Prof
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.awerte.AWerteRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.WahlberechtigteDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteModelMapper;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AsyncAWerteService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.List;
@@ -19,9 +20,11 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -49,6 +52,9 @@ public class AWerteControllerIntegrationTest {
 
     @Autowired
     AWerteRepository awerteRepository;
+
+    @SpyBean
+    AsyncAWerteService asyncAWerteService;
 
     @AfterEach
     void tearDown() {
@@ -103,6 +109,7 @@ public class AWerteControllerIntegrationTest {
                     .content(objectMapper.writeValueAsString(wahlbezirkIDs));
 
             api.perform(request).andExpect(status().isOk()).andReturn();
+            Mockito.verify(asyncAWerteService).initialiseAWerte(wahlbezirkIDs);
         }
     }
 

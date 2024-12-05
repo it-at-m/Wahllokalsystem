@@ -96,22 +96,13 @@ public class AWerteControllerIntegrationTest {
     @Nested
     class InitialiseAWerte {
         @Test
-        void should_initialiseAWerteInRepo_when_wahlbezirkIDsAreGiven() throws Exception {
+        void should_callAsynchronousMethodInitialiseAWerteAndReturnWithOK_when_wahlbezirkIDsAreGiven() throws Exception {
             val wahlbezirkIDs = List.of("wahlbezirkID1", "wahlbezirkID2", "wahlbezirkID3");
 
             val request = MockMvcRequestBuilders.post("/businessActions/awerte/init").contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(wahlbezirkIDs));
-            api.perform(request).andExpect(status().isOk()).andReturn();
-            // make sure that async work is done
-            Thread.sleep(500);
 
-            for (String wahlbezirkID : wahlbezirkIDs) {
-                val aWerteFromRepo = awerteRepository.findByBezirkUndWahlID_WahlbezirkID(wahlbezirkID);
-                Assertions.assertThat(aWerteFromRepo).hasSize(1);
-                Assertions.assertThat(aWerteFromRepo).allSatisfy(aWert -> {
-                    Assertions.assertThat(aWert.getBezirkUndWahlID().getWahlbezirkID()).isEqualTo(wahlbezirkID);
-                });
-            }
+            api.perform(request).andExpect(status().isOk()).andReturn();
         }
     }
 

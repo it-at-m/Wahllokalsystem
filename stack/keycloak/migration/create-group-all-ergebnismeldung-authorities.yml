@@ -1,0 +1,15 @@
+id: create group allErgebnismeldungAuthorities and link wls_all*
+author: dragonfly28
+realm: ${SSO_REALM}
+changes:
+  - addGroup:
+      name: allErgebnismeldungAuthorities
+  - assignGroup:
+      user: wls_all
+      group: allErgebnismeldungAuthorities
+  - assignGroup:
+      user: wls_all_uwb
+      group: allErgebnismeldungAuthorities
+  - assignGroup:
+      user: wls_all_bwb
+      group: allErgebnismeldungAuthorities

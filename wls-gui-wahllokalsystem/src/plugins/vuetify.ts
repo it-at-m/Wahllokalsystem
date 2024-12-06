@@ -1,6 +1,6 @@
 import "vuetify/styles";
 
-import { mdiHome } from "@mdi/js";
+import { mdiHome, mdiRoutes } from "@mdi/js";
 import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
 
@@ -10,6 +10,7 @@ export default createVuetify({
     aliases: {
       ...aliases,
       home: mdiHome,
+      routes: mdiRoutes,
     },
     sets: {
       mdi,

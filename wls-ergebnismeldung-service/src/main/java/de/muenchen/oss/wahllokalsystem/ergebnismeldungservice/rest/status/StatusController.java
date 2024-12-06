@@ -57,8 +57,7 @@ public class StatusController {
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200", description = "Zustand erfolgreich gespeichert",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = StatusDTO.class)) }
+                            responseCode = "200", description = "Zustand erfolgreich gespeichert"
                     ),
                     @ApiResponse(
                             responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich",

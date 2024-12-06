@@ -21,7 +21,7 @@ class StatusDTOMapperTest {
     class ToDTO {
 
         @Test
-        void should_return_when_givenNull() {
+        void should_returnNull_when_givenNull() {
             Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
         }
 
@@ -57,7 +57,7 @@ class StatusDTOMapperTest {
     @Nested
     class ToModel {
         @Test
-        void should_return_when_givenNull() {
+        void should_returnNull_when_givenNull() {
             Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
         }
 

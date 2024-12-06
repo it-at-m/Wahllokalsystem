@@ -417,7 +417,6 @@
                         <importMapping>java.time.OffsetDateTime=java.time.LocalDateTime</importMapping>
                     </importMappings>
 
-
                     <globalProperties>
                         <supportingFiles>
                             BaseApi.java,ApiClient.java,JavaTimeFormatter.java,Authentication.java,OAuth.java,ApiKeyAuth.java,HttpBasicAuth.java,HttpBearerAuth.java,RFC3339DateFormat.java

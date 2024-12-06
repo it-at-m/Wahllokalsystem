@@ -115,8 +115,7 @@ class SchnellmeldungSendungsuhrzeitSenderTest {
                             "only new status - validierungsstatus is NICHT_VALIDIERT"),
                     Arguments.of(createStatusModelWithSchnellmeldung(createMeldungWithValidierungsstatus(null)),
                             createStatusModelWithSchnellmeldung(createMeldungWithValidierungsstatus(null)),
-                            "new and old - both with validierungsstatus null")
-            );
+                            "new and old - both with validierungsstatus null"));
         }
 
         private static StatusModel createStatusModelWithSchnellmeldung(final MeldungModel meldung) {

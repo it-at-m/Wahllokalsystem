@@ -56,8 +56,7 @@ class StatusValidatorTest {
                     Arguments.of(new BezirkUndWahlID("   ", "wahlbezirkID"), "wahlID is blank"),
                     Arguments.of(new BezirkUndWahlID("wahlID", null), "wahlbezirkID is null"),
                     Arguments.of(new BezirkUndWahlID("wahlID", ""), "wahlbezirkID is is empty"),
-                    Arguments.of(new BezirkUndWahlID("wahlID", "   "), "wahlbezirkID is blank")
-            );
+                    Arguments.of(new BezirkUndWahlID("wahlID", "   "), "wahlbezirkID is blank"));
         }
     }
 

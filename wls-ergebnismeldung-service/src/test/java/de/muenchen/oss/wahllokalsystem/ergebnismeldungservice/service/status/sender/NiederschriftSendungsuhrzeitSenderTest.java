@@ -115,8 +115,7 @@ class NiederschriftSendungsuhrzeitSenderTest {
                             "only new status - validierungsstatus is NICHT_VALIDIERT"),
                     Arguments.of(createStatusModelWithNiederschrift(createMeldungWithValidierungsstatus(null)),
                             createStatusModelWithNiederschrift(createMeldungWithValidierungsstatus(null)),
-                            "new and old - both with validierungsstatus null")
-            );
+                            "new and old - both with validierungsstatus null"));
         }
 
         private static StatusModel createStatusModelWithNiederschrift(final MeldungModel meldung) {

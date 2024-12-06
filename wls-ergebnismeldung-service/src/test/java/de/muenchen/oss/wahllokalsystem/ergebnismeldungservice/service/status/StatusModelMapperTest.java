@@ -48,8 +48,7 @@ class StatusModelMapperTest {
                     new MeldungModel(ValidierungsstatusModel.INVALIDE, schnellmeldung.isGedruckt(), schnellmeldung.getUebermittelt(),
                             schnellmeldung.getSendeuhrzeit()),
                     new MeldungModel(ValidierungsstatusModel.VALIDE, niederschrift.isGedruckt(), niederschrift.getUebermittelt(),
-                            niederschrift.getSendeuhrzeit())
-            );
+                            niederschrift.getSendeuhrzeit()));
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
 
@@ -68,8 +67,7 @@ class StatusModelMapperTest {
 
             val expectedResult = new StatusModel(null,
                     new MeldungModel(ValidierungsstatusModel.valueOf(validierungsstatus.name()), false, null, null),
-                    new MeldungModel(ValidierungsstatusModel.valueOf(validierungsstatus.name()), false, null, null)
-            );
+                    new MeldungModel(ValidierungsstatusModel.valueOf(validierungsstatus.name()), false, null, null));
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
@@ -86,8 +84,7 @@ class StatusModelMapperTest {
         void should_returnStatusEntity_when_givenStatusModel() {
             val statusModel = new StatusModel(new BezirkUndWahlID("wahlID", "wahlbezirkID"),
                     new MeldungModel(ValidierungsstatusModel.VALIDE, true, true, LocalDateTime.now()),
-                    new MeldungModel(ValidierungsstatusModel.INVALIDE, true, true, LocalDateTime.now().minusDays(1))
-            );
+                    new MeldungModel(ValidierungsstatusModel.INVALIDE, true, true, LocalDateTime.now().minusDays(1)));
 
             val result = unitUnderTest.toEntity(statusModel);
 
@@ -113,8 +110,7 @@ class StatusModelMapperTest {
         void should_mapToEnumWithSameName_when_givenModelValidierungsstatusEnumValue(final ValidierungsstatusModel validierungsstatus) {
             val statusModel = new StatusModel(null,
                     new MeldungModel(validierungsstatus, false, null, null),
-                    new MeldungModel(validierungsstatus, false, null, null)
-            );
+                    new MeldungModel(validierungsstatus, false, null, null));
 
             val result = unitUnderTest.toEntity(statusModel);
 

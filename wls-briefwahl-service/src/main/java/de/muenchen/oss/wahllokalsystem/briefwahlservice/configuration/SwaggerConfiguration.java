@@ -14,6 +14,25 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfiguration {
 
+    public static final String BEANSTANDETE_WAHLBRIEFE_EXAMPLE = "{\n" +
+            "    \"LTW_2018\": [\n" +
+            "      \"WAHLBRIEF_UND_UMSCHLAG_OFFEN\",\n" +
+            "      \"UNTERSCHRIFT_FEHLT\",\n" +
+            "      \"UMSCHLAG_NICHT_AMTLICH\",\n" +
+            "      \"UMSCHLAG_GEFAEHRDET_WAHLGEHEIMNIS\",\n" +
+            "      \"SCHEINE_UNGLEICH_UMSCHLAEGE\",\n" +
+            "      \"SCHEIN_UNGUELTIG\"\n" +
+            "    ],\n" +
+            "    \"BZW_2018\": [\n" +
+            "      \"NICHT_WAHLBERECHTIGT\",\n" +
+            "      \"UMSCHLAG_FEHLT\",\n" +
+            "      \"LOSE_STIMMZETTEL\",\n" +
+            "      \"ZUGELASSEN\",\n" +
+            "      \"GEGENSTAND_IM_UMSCHLAG\",\n" +
+            "      \"KEIN_ORIGINAL_SCHEIN\"\n" +
+            "    ]\n" +
+            "}";
+
     @Value("${info.application.version:unknown}")
     String version;
 

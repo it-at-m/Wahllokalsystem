@@ -144,7 +144,7 @@ class WahllokalBenutzerControllerIntegrationTest {
     class ExportWahllokalBenutzer {
 
         @Test
-        void should_returnStringWithUsernames_whenUsersFound() throws Exception {
+        void should_returnStringWithUsernames_when_usersFound() throws Exception {
             val wahltagIDToFind = "wahltagID";
             val wahltagIDNotToFind = "anotherWahltagID";
 

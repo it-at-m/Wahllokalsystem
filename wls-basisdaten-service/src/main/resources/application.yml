@@ -25,11 +25,6 @@ security:
   oauth2:
     resource.user-info-uri: http://kubernetes.docker.internal:8100/auth/realms/${realm}/protocol/openid-connect/userinfo
 
-service:
-  info:
-    oid: WLS-BASISDATEN
-
-
 # Define the local keycloak realm here
 realm: wls_realm
 
@@ -63,17 +58,21 @@ management:
 info.application.name: @project.artifactId@
 info.application.version: @project.version@
 
-app:
-  async:
-    corePoolSize: 2
-    maxPoolSize: 2
-    queueCapacity: 500
-    threadNamePrefix: "taskExecutor-"
-  clients:
-    eai:
-      basePath: http://localhost:39149
-    infomanagement:
-      basePath: http://localhost:39148
+service:
+  info:
+    oid: WLS-BASISDATEN
   config:
     ungueltigewahlscheine:
       filenamesuffix: Ungueltigews.csv
+    manual:
+      filenamesuffix: Handbuch.pdf
+    async:
+      corePoolSize: 2
+      maxPoolSize: 2
+      queueCapacity: 500
+      threadNamePrefix: "taskExecutor-"
+    clients:
+      eai:
+        basePath: http://localhost:39149
+      infomanagement:
+        basePath: http://localhost:39148

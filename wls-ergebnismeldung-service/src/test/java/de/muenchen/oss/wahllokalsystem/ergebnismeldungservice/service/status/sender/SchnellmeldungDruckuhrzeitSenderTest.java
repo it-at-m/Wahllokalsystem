@@ -69,7 +69,6 @@ class SchnellmeldungDruckuhrzeitSenderTest {
                     Arguments.of(createStatusModelWithSchnellmeldung(createMeldungWithGedrucktFlag(true)),
                             null,
                             "only new status - with gedruckt is true")
-
             );
         }
 
@@ -87,7 +86,6 @@ class SchnellmeldungDruckuhrzeitSenderTest {
                     Arguments.of(createStatusModelWithSchnellmeldung(createMeldungWithGedrucktFlag(false)),
                             null,
                             "only new status - with gedruckt is false")
-
             );
         }
 

@@ -110,7 +110,6 @@ public class StatusControllerIntegrationTest {
                     "WLS-ERGEBNISMELDUNG", ExceptionConstants.GET_STATUS_PARAMETER_UNVOLLSTAENDIG.message());
             Assertions.assertThat(receivedWlsException).isEqualTo(expectedWlsExceptionDTO);
         }
-
     }
 
     @Nested

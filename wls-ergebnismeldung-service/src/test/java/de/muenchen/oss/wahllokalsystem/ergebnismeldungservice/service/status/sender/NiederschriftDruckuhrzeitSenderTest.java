@@ -69,7 +69,6 @@ class NiederschriftDruckuhrzeitSenderTest {
                     Arguments.of(createStatusModelWithNiederschrift(createMeldungWithGedrucktFlag(true)),
                             null,
                             "only new status - with gedruckt is true")
-
             );
         }
 
@@ -87,7 +86,6 @@ class NiederschriftDruckuhrzeitSenderTest {
                     Arguments.of(createStatusModelWithNiederschrift(createMeldungWithGedrucktFlag(false)),
                             null,
                             "only new status - with gedruckt is false")
-
             );
         }
 

@@ -6,6 +6,7 @@ spring:
       local:
         - db-h2
         - dummy.clients
+        - dummy.nobezirkid.check
   flyway:
     locations:
       - classpath:db/migrations/{vendor}

@@ -21,7 +21,7 @@ Authorization: {{ token_type }} {{ auth_token }}
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/status/wahlID/wahlbezirkID
 Authorization: {{ token_type }} {{ auth_token }}
 
-### POST status
+### POST status with all done
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/status/wahlID/wahlbezirkID
 Content-Type: application/json
 Authorization: {{ token_type }} {{ auth_token }}
@@ -39,7 +39,7 @@ Authorization: {{ token_type }} {{ auth_token }}
   },
   "schnellmeldung": {
     "validierungsstatus": "VALIDE",
-    "uebermittelt": false,
+    "uebermittelt": true,
     "sendeuhrzeit": "2024-12-03T09:10:11",
     "gedruckt": true
   }

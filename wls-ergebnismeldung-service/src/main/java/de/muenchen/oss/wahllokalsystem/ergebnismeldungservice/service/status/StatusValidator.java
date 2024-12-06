@@ -14,14 +14,14 @@ public class StatusValidator {
 
     private final ExceptionFactory exceptionFactory;
 
-    public void valideBezirkUndWahlIdOrThrow(final BezirkUndWahlID bezirkUndWahlId, final FachlicheWlsException exceptionOnInvalid)
+    public void validBezirkUndWahlIdOrThrow(final BezirkUndWahlID bezirkUndWahlId, final FachlicheWlsException exceptionOnInvalid)
             throws FachlicheWlsException {
         if (bezirkUndWahlId == null || StringUtils.isBlank(bezirkUndWahlId.getWahlID()) || StringUtils.isBlank(bezirkUndWahlId.getWahlbezirkID())) {
             throw exceptionOnInvalid;
         }
     }
 
-    public void valideStatusOrThrow(final StatusModel status) {
+    public void validStatusOrThrow(final StatusModel status) {
         if (status == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_STATUS_PARAMETER_UNVOLLSTAENDIG);
         }

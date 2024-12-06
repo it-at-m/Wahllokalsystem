@@ -57,7 +57,7 @@ class StatusServiceTest {
 
             unitUnderTest.getStatus(id);
 
-            Mockito.verify(statusValidator).valideBezirkUndWahlIdOrThrow(eq(id), eq(mockedWlsException));
+            Mockito.verify(statusValidator).validBezirkUndWahlIdOrThrow(eq(id), eq(mockedWlsException));
         }
 
         @Test
@@ -101,7 +101,7 @@ class StatusServiceTest {
 
             unitUnderTest.setStatus(id, statusToSet);
 
-            Mockito.verify(statusValidator).valideBezirkUndWahlIdOrThrow(id, mockedWlsException);
+            Mockito.verify(statusValidator).validBezirkUndWahlIdOrThrow(id, mockedWlsException);
         }
 
         @Test
@@ -114,7 +114,7 @@ class StatusServiceTest {
 
             unitUnderTest.setStatus(id, statusToSet);
 
-            Mockito.verify(statusValidator).valideStatusOrThrow(statusToSet);
+            Mockito.verify(statusValidator).validStatusOrThrow(statusToSet);
         }
 
         @Test

@@ -29,7 +29,7 @@ class StatusValidatorTest {
     StatusValidator unitUnderTest;
 
     @Nested
-    class ValideBezirkUndWahlIdOrThrow {
+    class ValidBezirkUndWahlIdOrThrow {
 
         final FachlicheWlsException providedException = FachlicheWlsException.withCode("").buildWithMessage("sth failed");
 
@@ -37,14 +37,14 @@ class StatusValidatorTest {
         void should_notThrowException_when_bezirkUndWahlIDIsValid() {
             val id = new BezirkUndWahlID("wahlID", "wahlbezirkID");
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.valideBezirkUndWahlIdOrThrow(id, null));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validBezirkUndWahlIdOrThrow(id, null));
         }
 
         @ParameterizedTest(name = "provided exception when {1}")
         @MethodSource("invalidWahlbezirkArgumentsWithTestcaseNameAppendix")
         void should_throwProvidedException_when_bezirkUndWahlIdIsNotValid(final ArgumentsAccessor arguments) {
             Assertions.assertThatException()
-                    .isThrownBy(() -> unitUnderTest.valideBezirkUndWahlIdOrThrow(arguments.get(0, BezirkUndWahlID.class), providedException))
+                    .isThrownBy(() -> unitUnderTest.validBezirkUndWahlIdOrThrow(arguments.get(0, BezirkUndWahlID.class), providedException))
                     .isSameAs(providedException);
         }
 
@@ -61,13 +61,13 @@ class StatusValidatorTest {
     }
 
     @Nested
-    class ValideStatusOrThrow {
+    class ValidStatusOrThrow {
 
         @Test
         void should_notThrowException_when_statusIsEmptyButNotNull() {
             val statusModelToValidate = new StatusModel(null, null, null);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.valideStatusOrThrow(statusModelToValidate));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validStatusOrThrow(statusModelToValidate));
         }
 
         @Test
@@ -76,7 +76,7 @@ class StatusValidatorTest {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_STATUS_PARAMETER_UNVOLLSTAENDIG))
                     .thenReturn(mockedFachlicheWlsException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.valideStatusOrThrow(null)).isSameAs(mockedFachlicheWlsException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validStatusOrThrow(null)).isSameAs(mockedFachlicheWlsException);
         }
     }
 

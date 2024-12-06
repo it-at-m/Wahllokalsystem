@@ -29,7 +29,7 @@ public class StatusService {
     public Optional<StatusModel> getStatus(final BezirkUndWahlID id) {
         log.info("#getStatus");
 
-        statusValidator.valideBezirkUndWahlIdOrThrow(id,
+        statusValidator.validBezirkUndWahlIdOrThrow(id,
                 exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_STATUS_PARAMETER_UNVOLLSTAENDIG));
 
         val statusFromRepo = statusRepository.findById(id);
@@ -43,9 +43,9 @@ public class StatusService {
     public void setStatus(@P("param") final BezirkUndWahlID id, final StatusModel status) {
         log.info("#postStatus");
 
-        statusValidator.valideBezirkUndWahlIdOrThrow(id,
+        statusValidator.validBezirkUndWahlIdOrThrow(id,
                 exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_STATUS_PARAMETER_UNVOLLSTAENDIG));
-        statusValidator.valideStatusOrThrow(status);
+        statusValidator.validStatusOrThrow(status);
 
         val lastStatus = statusRepository.findById(id).map(statusModelMapper::toModel);
         monitoringSender.forEach(sender -> sender.submitStatus(id, status, lastStatus.orElse(null)));

@@ -1,24 +1,18 @@
 import {
-  defaultCatchHandler,
-  defaultResponseHandler,
+  catchHandler,
   getConfig,
   postConfig,
+  responseHandler,
 } from "@/api/fetch-utils";
-import BroadcastMessageToRead from "@/types/BroadcastMessageToRead";
 import BroadcastMessageToSend from "@/types/BroadcastMessageToSend";
 
 export const BROADCAST_API_URL = "/api/broadcast-service/businessActions/";
 
-export function getBroadcastMessage(
-  wahlbezirkID: string
-): Promise<BroadcastMessageToRead> {
+export function getBroadcastMessage(wahlbezirkID: string): Promise<Response> {
   return fetch(
     BROADCAST_API_URL + "getMessage/" + wahlbezirkID,
     getConfig()
-  ).then((response) => {
-    defaultResponseHandler(response);
-    return response.json();
-  });
+  ).then(responseHandler);
 }
 
 export function postBroadcastMessage(
@@ -29,19 +23,15 @@ export function postBroadcastMessage(
     BROADCAST_API_URL + "broadcast",
     postConfig(new BroadcastMessageToSend(wahlbezirkIDs, message))
   )
-    .then((response) => {
-      defaultResponseHandler(response);
-    })
-    .catch(defaultCatchHandler);
+    .then(responseHandler)
+    .catch(catchHandler);
 }
 
-export function broadcastMessageRead(nachrichtID: string): void {
-  fetch(
+export function broadcastMessageRead(nachrichtID: string): Promise<void> {
+  return fetch(
     BROADCAST_API_URL + "messageRead/" + nachrichtID,
     postConfig(nachrichtID)
   )
-    .then((response) => {
-      defaultResponseHandler(response);
-    })
-    .catch(defaultCatchHandler);
+    .then(responseHandler)
+    .catch(catchHandler);
 }

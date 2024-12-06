@@ -83,7 +83,7 @@ export function patchConfig(body: any): RequestInit {
  * @param response The response from the fetch command to be checked.
  * @param errorMessage The error message to be displayed for an HTTP code != 2xx.
  */
-export function defaultResponseHandler(
+/*export function defaultResponseHandler(
   response: Response,
   errorMessage = "Es ist ein Fehler im ResponseHandler aufgetreten."
 ): void {
@@ -120,7 +120,7 @@ export function defaultResponseHandler(
       message: errorMessage,
     });
   }
-}
+}*/
 
 /**
  * Default catch handler for all service requests.
@@ -128,7 +128,8 @@ export function defaultResponseHandler(
  * @param error The error object from fetch command
  * @param errorMessage The error message to be included in the ApiError object.
  */
-export function defaultCatchHandler(
+
+/*export function defaultCatchHandler(
   error: Error,
   errorMessage = "Es ist ein Fehler im CatchHandler aufgetreten."
 ): PromiseLike<never> {
@@ -136,6 +137,40 @@ export function defaultCatchHandler(
     level: STATUS_INDICATORS.WARNING,
     message: error.name + ": " + error.message,
   });
+}*/
+
+export function responseHandler(response: Response): Promise<Response> {
+  if (response.status === 204) {
+    throw new ApiError({
+      level: STATUS_INDICATORS.INFO,
+      message: "Es konnten keine Daten gefunden werden. (204)",
+    });
+  } else if (response.ok) {
+    return Promise.resolve(response);
+  } else {
+    return Promise.reject(response);
+  }
+}
+
+export function catchHandler(response: Response): Promise<any> {
+  if (response.status === 400) {
+    // 400 ist nicht immer eine wls exception..
+    return response.json().then((content: WLSException) => {
+      return Promise.reject(
+        new ApiError({
+          level: STATUS_INDICATORS.ERROR,
+          message: content.message,
+        })
+      );
+    });
+  } else {
+    return Promise.reject(
+      new ApiError({
+        level: STATUS_INDICATORS.ERROR,
+        message: "unbekannter fehler",
+      })
+    );
+  }
 }
 
 /**

@@ -1,6 +1,13 @@
 server:
   port: 39152
 
+service:
+  config:
+    oauth2:
+      jwk:
+        rsa:
+          init:
+            seed: change_me
 serviceauth:
   crypto:
     key: "please change me"

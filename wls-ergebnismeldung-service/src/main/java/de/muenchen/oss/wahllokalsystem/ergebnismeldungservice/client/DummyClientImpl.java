@@ -27,22 +27,22 @@ public class DummyClientImpl
     @Override
     public void postSchnellmeldungSendungsuhrzeit(BezirkUndWahlID bezirkUndWahlID, LocalDateTime schnellmeldungSendungsuhrzeit)
             throws WlsException {
-        log.info("postSchnellmeldungSendungsuhrzeit of {} on {}", bezirkUndWahlID, schnellmeldungSendungsuhrzeit);
+        log.info("dummy client postSchnellmeldungSendungsuhrzeit of {} on {} called instead of monitoring", bezirkUndWahlID, schnellmeldungSendungsuhrzeit);
     }
 
     @Override
     public void postSchnellmeldungDruckuhrzeit(BezirkUndWahlID bezirkUndWahlID, LocalDateTime schnellmeldungDruckuhrzeit) throws WlsException {
-        log.info("postSchnellmeldungDruckuhrzeit of {} on {}", bezirkUndWahlID, schnellmeldungDruckuhrzeit);
+        log.info("dummy client postSchnellmeldungDruckuhrzeit of {} on {} called instead of monitoring", bezirkUndWahlID, schnellmeldungDruckuhrzeit);
     }
 
     @Override
     public void postNiederschriftSendungsuhrzeit(BezirkUndWahlID bezirkUndWahlID, LocalDateTime niederschriftSendungsuhrzeit) throws WlsException {
-        log.info("postNiederschriftSendungsuhrzeit of {} on {}", bezirkUndWahlID, niederschriftSendungsuhrzeit);
+        log.info("dummy client postNiederschriftSendungsuhrzeit of {} on {} called instead of monitoring", bezirkUndWahlID, niederschriftSendungsuhrzeit);
     }
 
     @Override
     public void postNiederschriftDruckuhrzeit(BezirkUndWahlID bezirkUndWahlID, LocalDateTime niederschriftDruckuhrzeit) throws WlsException {
-        log.info("postNiederschriftDruckuhrzeit of {} on {}", bezirkUndWahlID, niederschriftDruckuhrzeit);
+        log.info("dummy client postNiederschriftDruckuhrzeit of {} on {} called instead of monitoring", bezirkUndWahlID, niederschriftDruckuhrzeit);
     }
 
 }

@@ -14,10 +14,10 @@ public class StatusValidator {
 
     private final ExceptionFactory exceptionFactory;
 
-    public void valideBezirkUndWahlIdOrThrow(final BezirkUndWahlID bezirkUndWahlId, final FachlicheWlsException exceptionToThrow)
+    public void valideBezirkUndWahlIdOrThrow(final BezirkUndWahlID bezirkUndWahlId, final FachlicheWlsException exceptionOnInvalid)
             throws FachlicheWlsException {
         if (bezirkUndWahlId == null || StringUtils.isBlank(bezirkUndWahlId.getWahlID()) || StringUtils.isBlank(bezirkUndWahlId.getWahlbezirkID())) {
-            throw exceptionToThrow;
+            throw exceptionOnInvalid;
         }
     }
 

@@ -14,7 +14,7 @@ public class SchnellmeldungDruckuhrzeitSender extends AbstractStatusMonitoringSe
 
     @Override
     public void submitStatus(BezirkUndWahlID id, StatusModel newStatus, StatusModel oldStatus) {
-        if (hasGedruckedChanged(newStatus, oldStatus) || (oldStatus == null && hasDruckuhrzeit(newStatus))) {
+        if (hasGedruckedChanged(newStatus, oldStatus) || (oldStatus == null && isGedruckt(newStatus))) {
             getMonitoringClient().postSchnellmeldungDruckuhrzeit(id, LocalDateTime.now());
         }
     }
@@ -27,7 +27,7 @@ public class SchnellmeldungDruckuhrzeitSender extends AbstractStatusMonitoringSe
         return newStatus.schnellmeldung().gedruckt() != oldStatus.schnellmeldung().gedruckt();
     }
 
-    private boolean hasDruckuhrzeit(final StatusModel status) {
+    private boolean isGedruckt(final StatusModel status) {
         return status.schnellmeldung() != null && status.schnellmeldung().gedruckt();
     }
 }

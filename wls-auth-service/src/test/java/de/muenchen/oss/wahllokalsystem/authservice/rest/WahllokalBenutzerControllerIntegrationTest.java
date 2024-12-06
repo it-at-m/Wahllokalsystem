@@ -14,11 +14,9 @@ import de.muenchen.oss.wahllokalsystem.authservice.domain.User;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.UserRepository;
 import de.muenchen.oss.wahllokalsystem.authservice.service.CryptoService;
 import jakarta.persistence.EntityManager;
-
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
-
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;

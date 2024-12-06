@@ -4,11 +4,9 @@ import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.authservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
 import jakarta.persistence.EntityManager;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
 import lombok.val;
 import org.apache.commons.collections4.IterableUtils;
 import org.assertj.core.api.Assertions;

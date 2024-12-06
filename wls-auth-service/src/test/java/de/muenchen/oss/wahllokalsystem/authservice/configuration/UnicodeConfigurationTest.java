@@ -12,10 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.TheEntity;
 import de.muenchen.oss.wahllokalsystem.authservice.rest.TheEntityRepository;
-
 import java.net.URI;
 import java.util.UUID;
-
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

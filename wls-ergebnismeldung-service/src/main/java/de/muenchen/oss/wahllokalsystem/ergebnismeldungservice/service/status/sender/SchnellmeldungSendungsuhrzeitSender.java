@@ -18,23 +18,23 @@ public class SchnellmeldungSendungsuhrzeitSender extends AbstractStatusMonitorin
     }
 
     @Override
-    public void submitStatus(BezirkUndWahlID id, StatusModel statusModel, StatusModel oldStatus) {
-        if (hasValidierungsstatusChange(statusModel, oldStatus) || (oldStatus == null && isSchnellmeldungNotInvalid(statusModel))) {
+    public void submitStatus(BezirkUndWahlID id, StatusModel newStatus, StatusModel oldStatus) {
+        if (hasValidierungsstatusChange(newStatus, oldStatus) || (oldStatus == null && isSchnellmeldungNotInvalid(newStatus))) {
             getMonitoringClient().postSchnellmeldungSendungsuhrzeit(id, LocalDateTime.now());
         }
     }
 
-    private boolean hasValidierungsstatusChange(final StatusModel statusModel, final StatusModel oldStatus) {
+    private boolean hasValidierungsstatusChange(final StatusModel newStatus, final StatusModel oldStatus) {
         if (oldStatus == null) {
             return false;
         }
 
-        if (oldStatus.schnellmeldung() == null || statusModel.schnellmeldung() == null) {
+        if (oldStatus.schnellmeldung() == null || newStatus.schnellmeldung() == null) {
             return false;
         }
 
-        return statusModel.schnellmeldung().validierungsstatus() != null && oldStatus.schnellmeldung().validierungsstatus() != null
-                && statusModel.schnellmeldung().validierungsstatus() != oldStatus.schnellmeldung().validierungsstatus();
+        return newStatus.schnellmeldung().validierungsstatus() != null && oldStatus.schnellmeldung().validierungsstatus() != null
+                && newStatus.schnellmeldung().validierungsstatus() != oldStatus.schnellmeldung().validierungsstatus();
     }
 
     private boolean isSchnellmeldungNotInvalid(final StatusModel statusModel) {

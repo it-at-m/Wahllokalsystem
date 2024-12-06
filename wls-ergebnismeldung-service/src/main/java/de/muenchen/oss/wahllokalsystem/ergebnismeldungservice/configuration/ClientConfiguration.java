@@ -29,11 +29,10 @@ public class ClientConfiguration {
                 return execution.execute(request, body);
             }
 
-            if (!(authentication.getCredentials() instanceof AbstractOAuth2Token)) {
+            if (!(authentication.getCredentials() instanceof AbstractOAuth2Token token)) {
                 return execution.execute(request, body);
             }
 
-            val token = (AbstractOAuth2Token) authentication.getCredentials();
             request.getHeaders().setBearerAuth(token.getTokenValue());
             return execution.execute(request, body);
         });

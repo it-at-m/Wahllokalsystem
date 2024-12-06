@@ -44,3 +44,25 @@ Authorization: {{ token_type }} {{ auth_token }}
     "gedruckt": true
   }
 }
+
+### POST status with schnellmeldung done
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/status/wahlID/wahlbezirkID
+Content-Type: application/json
+Authorization: {{ token_type }} {{ auth_token }}
+
+{
+  "bezirkUndWahlID": {
+    "wahlID": "wahlID",
+    "wahlbezirkID": "wahlbezirkID"
+  },
+  "niederschrift": {
+    "validierungsstatus": "NICHT_GESENDET",
+    "gedruckt": false
+  },
+  "schnellmeldung": {
+    "validierungsstatus": "VALIDE",
+    "uebermittelt": true,
+    "sendeuhrzeit": "2024-12-03T09:10:11",
+    "gedruckt": true
+  }
+}

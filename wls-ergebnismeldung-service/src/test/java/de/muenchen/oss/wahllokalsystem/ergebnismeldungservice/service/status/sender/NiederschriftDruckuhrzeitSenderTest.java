@@ -68,8 +68,7 @@ class NiederschriftDruckuhrzeitSenderTest {
                             "gedruckt flag changed from false to true"),
                     Arguments.of(createStatusModelWithNiederschrift(createMeldungWithGedrucktFlag(true)),
                             null,
-                            "only new status - with gedruckt is true")
-            );
+                            "only new status - with gedruckt is true"));
         }
 
         /**
@@ -85,8 +84,7 @@ class NiederschriftDruckuhrzeitSenderTest {
                             "new and old gedruckt flag is equals with true"),
                     Arguments.of(createStatusModelWithNiederschrift(createMeldungWithGedrucktFlag(false)),
                             null,
-                            "only new status - with gedruckt is false")
-            );
+                            "only new status - with gedruckt is false"));
         }
 
         private static StatusModel createStatusModelWithNiederschrift(final MeldungModel meldung) {

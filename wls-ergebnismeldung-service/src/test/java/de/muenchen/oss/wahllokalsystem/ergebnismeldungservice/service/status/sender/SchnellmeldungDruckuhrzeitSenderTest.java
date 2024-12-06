@@ -68,8 +68,7 @@ class SchnellmeldungDruckuhrzeitSenderTest {
                             "gedruckt flag changed from false to true"),
                     Arguments.of(createStatusModelWithSchnellmeldung(createMeldungWithGedrucktFlag(true)),
                             null,
-                            "only new status - with gedruckt is true")
-            );
+                            "only new status - with gedruckt is true"));
         }
 
         /**
@@ -85,8 +84,7 @@ class SchnellmeldungDruckuhrzeitSenderTest {
                             "new and old gedruckt flag is equals with true"),
                     Arguments.of(createStatusModelWithSchnellmeldung(createMeldungWithGedrucktFlag(false)),
                             null,
-                            "only new status - with gedruckt is false")
-            );
+                            "only new status - with gedruckt is false"));
         }
 
         private static StatusModel createStatusModelWithSchnellmeldung(final MeldungModel meldung) {

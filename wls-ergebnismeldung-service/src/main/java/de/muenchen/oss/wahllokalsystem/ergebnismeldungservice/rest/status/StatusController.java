@@ -35,7 +35,8 @@ public class StatusController {
                             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = StatusDTO.class)) }
                     ),
                     @ApiResponse(
-                            responseCode = "204", description = "Es existiert kein Zustand entsprechend der Kriterien"
+                            responseCode = "204", description = "Es existiert kein Zustand entsprechend der Kriterien",
+                            content = { @Content() }
                     ),
                     @ApiResponse(
                             responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich",

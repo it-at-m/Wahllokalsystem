@@ -1,8 +1,8 @@
 import {
-  catchHandler,
   getConfig,
   postConfig,
-  responseHandler,
+  wlsCatchHandler,
+  wlsResponseHandler,
 } from "@/api/fetch-utils";
 import BroadcastMessageToSend from "@/types/BroadcastMessageToSend";
 
@@ -12,26 +12,26 @@ export function getBroadcastMessage(wahlbezirkID: string): Promise<Response> {
   return fetch(
     BROADCAST_API_URL + "getMessage/" + wahlbezirkID,
     getConfig()
-  ).then(responseHandler);
+  ).then(wlsResponseHandler);
 }
 
 export function postBroadcastMessage(
   wahlbezirkIDs: string[],
   message: string
-): Promise<void> {
+): Promise<Response> {
   return fetch(
     BROADCAST_API_URL + "broadcast",
     postConfig(new BroadcastMessageToSend(wahlbezirkIDs, message))
   )
-    .then(responseHandler)
-    .catch(catchHandler);
+    .then(wlsResponseHandler)
+    .catch(wlsCatchHandler);
 }
 
-export function broadcastMessageRead(nachrichtID: string): Promise<void> {
+export function broadcastMessageRead(nachrichtID: string): Promise<Response> {
   return fetch(
     BROADCAST_API_URL + "messageRead/" + nachrichtID,
     postConfig(nachrichtID)
   )
-    .then(responseHandler)
-    .catch(catchHandler);
+    .then(wlsResponseHandler)
+    .catch(wlsCatchHandler);
 }

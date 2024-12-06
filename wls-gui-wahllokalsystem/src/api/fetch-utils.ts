@@ -83,30 +83,12 @@ export function patchConfig(body: any): RequestInit {
  * @param response The response from the fetch command to be checked.
  * @param errorMessage The error message to be displayed for an HTTP code != 2xx.
  */
-/*export function defaultResponseHandler(
+export function defaultResponseHandler(
   response: Response,
-  errorMessage = "Es ist ein Fehler im ResponseHandler aufgetreten."
+  errorMessage = "Es ist ein unbekannter Fehler aufgetreten."
 ): void {
-  // todo: no content sollte vermutlich woanders aufgefangen werden und nicht hier weil es ein 2xx code ist
-  if (response.status === 204) {
-    throw new ApiError({
-      level: STATUS_INDICATORS.INFO,
-      message: "Es konnten keine Daten gefunden werden. (204)",
-    });
-  }
   if (!response.ok) {
-    if (response.status === 400) {
-      let wlsMessage = "";
-      response.json().then((obj: WLSException) => {
-        wlsMessage = obj.message;
-        console.log("1. " + wlsMessage);
-      });
-      console.log("2. " + wlsMessage);
-      throw new ApiError({
-        level: STATUS_INDICATORS.ERROR,
-        message: "WLS Exception: " + wlsMessage,
-      });
-    } else if (response.status === 403) {
+    if (response.status === 403) {
       throw new ApiError({
         level: STATUS_INDICATORS.ERROR,
         message:
@@ -120,7 +102,7 @@ export function patchConfig(body: any): RequestInit {
       message: errorMessage,
     });
   }
-}*/
+}
 
 /**
  * Default catch handler for all service requests.
@@ -129,17 +111,17 @@ export function patchConfig(body: any): RequestInit {
  * @param errorMessage The error message to be included in the ApiError object.
  */
 
-/*export function defaultCatchHandler(
+export function defaultCatchHandler(
   error: Error,
-  errorMessage = "Es ist ein Fehler im CatchHandler aufgetreten."
+  errorMessage = "Es ist ein unbekannter Fehler aufgetreten."
 ): PromiseLike<never> {
   throw new ApiError({
     level: STATUS_INDICATORS.WARNING,
-    message: error.name + ": " + error.message,
+    message: errorMessage,
   });
-}*/
+}
 
-export function responseHandler(response: Response): Promise<Response> {
+export function wlsResponseHandler(response: Response): Promise<Response> {
   if (response.status === 204) {
     throw new ApiError({
       level: STATUS_INDICATORS.INFO,
@@ -152,7 +134,7 @@ export function responseHandler(response: Response): Promise<Response> {
   }
 }
 
-export function catchHandler(response: Response): Promise<any> {
+export function wlsCatchHandler(response: Response): PromiseLike<never> {
   if (response.status === 400) {
     // 400 ist nicht immer eine wls exception..
     return response.json().then((content: WLSException) => {

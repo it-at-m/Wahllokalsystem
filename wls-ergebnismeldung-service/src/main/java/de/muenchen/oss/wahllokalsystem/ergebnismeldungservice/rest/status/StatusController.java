@@ -27,7 +27,7 @@ public class StatusController {
     private final StatusService statusService;
     private final StatusDTOMapper statusDTOMapper;
 
-    @Operation(description = "Lesen des Bearbeitungsstatus bei der Ergebnisermittelung eines Wahlbezirkes für eine Wahl")
+    @Operation(description = "Lesen des Bearbeitungsstatus bei der Ergebnisermittlung eines Wahlbezirkes für eine Wahl")
     @ApiResponses(
             value = {
                     @ApiResponse(
@@ -54,7 +54,7 @@ public class StatusController {
         return okWithBodyOrNoContent(status.map(statusDTOMapper::toDTO));
     }
 
-    @Operation(description = "Setzen des Bearbeitungsstatus bei der Ergebnisermittelung eines Wahlbezirkes für eine Wahl")
+    @Operation(description = "Setzen des Bearbeitungsstatus bei der Ergebnisermittlung eines Wahlbezirkes für eine Wahl")
     @ApiResponses(
             value = {
                     @ApiResponse(

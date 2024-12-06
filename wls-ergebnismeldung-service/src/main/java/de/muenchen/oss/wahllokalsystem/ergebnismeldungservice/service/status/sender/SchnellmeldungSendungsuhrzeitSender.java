@@ -15,7 +15,7 @@ public class SchnellmeldungSendungsuhrzeitSender extends AbstractStatusMonitorin
 
     @Override
     public void submitStatus(BezirkUndWahlID id, StatusModel newStatus, StatusModel oldStatus) {
-        if (hasValidierungsstatusChanged(newStatus, oldStatus) || (oldStatus == null && isSchnellmeldungNotInvalid(newStatus))) {
+        if (hasValidierungsstatusChanged(newStatus, oldStatus) || (oldStatus == null && hasValidierungsstatusExceptNichtValidiert(newStatus))) {
             getMonitoringClient().postSchnellmeldungSendungsuhrzeit(id, LocalDateTime.now());
         }
     }
@@ -33,7 +33,7 @@ public class SchnellmeldungSendungsuhrzeitSender extends AbstractStatusMonitorin
                 && newStatus.schnellmeldung().validierungsstatus() != oldStatus.schnellmeldung().validierungsstatus();
     }
 
-    private boolean isSchnellmeldungNotInvalid(final StatusModel statusModel) {
+    private boolean hasValidierungsstatusExceptNichtValidiert(final StatusModel statusModel) {
         return statusModel.schnellmeldung() != null && statusModel.schnellmeldung().validierungsstatus() != null
                 && !ValidierungsstatusModel.NICHT_VALIDIERT.equals(statusModel.schnellmeldung().validierungsstatus());
     }

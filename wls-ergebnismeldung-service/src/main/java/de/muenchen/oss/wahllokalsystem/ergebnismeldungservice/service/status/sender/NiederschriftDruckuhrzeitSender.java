@@ -14,12 +14,12 @@ public class NiederschriftDruckuhrzeitSender extends AbstractStatusMonitoringSen
 
     @Override
     public void submitStatus(BezirkUndWahlID id, StatusModel newStatus, StatusModel oldStatus) {
-        if (hasDruckuhrzeitChanged(newStatus, oldStatus) || (oldStatus == null && isGedruckt(newStatus))) {
+        if (hasGedrucktChanged(newStatus, oldStatus) || (oldStatus == null && isGedruckt(newStatus))) {
             getMonitoringClient().postNiederschriftDruckuhrzeit(id, LocalDateTime.now());
         }
     }
 
-    private boolean hasDruckuhrzeitChanged(final StatusModel newStatus, final StatusModel oldStatus) {
+    private boolean hasGedrucktChanged(final StatusModel newStatus, final StatusModel oldStatus) {
         if (oldStatus == null) {
             return false;
         }

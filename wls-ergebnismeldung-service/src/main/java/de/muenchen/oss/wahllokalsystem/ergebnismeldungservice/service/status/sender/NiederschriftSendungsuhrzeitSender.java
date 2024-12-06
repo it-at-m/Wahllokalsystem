@@ -15,7 +15,7 @@ public class NiederschriftSendungsuhrzeitSender extends AbstractStatusMonitoring
 
     @Override
     public void submitStatus(BezirkUndWahlID id, StatusModel newStatus, StatusModel oldStatus) {
-        if (hasValidierungsstatusChanged(newStatus, oldStatus) || (oldStatus == null && hasAnyValidatedValidierungsstatus(newStatus))) {
+        if (hasValidierungsstatusChanged(newStatus, oldStatus) || (oldStatus == null && hasValidierungsstatusExceptNichtValidiert(newStatus))) {
             getMonitoringClient().postNiederschriftSendungsuhrzeit(id, LocalDateTime.now());
         }
     }
@@ -33,7 +33,7 @@ public class NiederschriftSendungsuhrzeitSender extends AbstractStatusMonitoring
                 && oldStatus.niederschrift().validierungsstatus() != newStatus.niederschrift().validierungsstatus();
     }
 
-    private boolean hasAnyValidatedValidierungsstatus(final StatusModel status) {
+    private boolean hasValidierungsstatusExceptNichtValidiert(final StatusModel status) {
         return status.niederschrift() != null &&
                 status.niederschrift().validierungsstatus() != null &&
                 !status.niederschrift().validierungsstatus().equals(ValidierungsstatusModel.NICHT_VALIDIERT);

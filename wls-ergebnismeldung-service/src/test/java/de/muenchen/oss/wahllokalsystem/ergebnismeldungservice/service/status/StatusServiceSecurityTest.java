@@ -46,7 +46,7 @@ class StatusServiceSecurityTest {
 
     @BeforeEach
     void setup() {
-        SecurityUtils.runWith(Authorities.REPPSITORY_DELETE_STATUS);
+        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_STATUS);
         statusRepository.deleteAll();
     }
 

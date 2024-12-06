@@ -17,8 +17,8 @@ public class Authorities {
     public static final String REPOSITORY_WRITE_AWERTE = "Ergebnismeldung_WRITE_AWerte";
 
     public static final String REPOSITORY_READ_STATUS = "Ergebnismeldung_READ_Status";
-    public static final String REPPSITORY_DELETE_STATUS = "Ergebnismeldung_DELETE_Status";
-    public static final String REPPSITORY_WRITE_STATUS = "Ergebnismeldung_WRITE_Status";
+    public static final String REPOSITORY_DELETE_STATUS = "Ergebnismeldung_DELETE_Status";
+    public static final String REPOSITORY_WRITE_STATUS = "Ergebnismeldung_WRITE_Status";
 
     public static final String[] ALL_AUTHORITIES_USER_GET_AWERTE = new String[] {
             SERVICE_GET_AWERTE,
@@ -38,7 +38,7 @@ public class Authorities {
     };
 
     public static final String[] ALL_AUTHORITIES_SET_STATUS_MISSING_WILL_RESULT_IN_WLS_EXCEPTION = new String[] {
-            REPPSITORY_WRITE_STATUS
+            REPOSITORY_WRITE_STATUS
     };
 
     public static final String[] ALL_AUTHORITIES_SET_STATUS_MISSING_WILL_RESULT_IN_ACCESS_DENIED = new String[] {

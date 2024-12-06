@@ -1,0 +1,46 @@
+id: add authorities ergebnismeldung status
+author: MrSebastian
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: Ergebnismeldung_BUSINESSACTION_GetStatus
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allErgebnismeldungAuthorities
+      role: Ergebnismeldung_BUSINESSACTION_GetStatus
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Ergebnismeldung_BUSINESSACTION_PostStatus
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allErgebnismeldungAuthorities
+      role: Ergebnismeldung_BUSINESSACTION_PostStatus
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Ergebnismeldung_READ_Status
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allErgebnismeldungAuthorities
+      role: Ergebnismeldung_READ_Status
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Ergebnismeldung_WRITE_Status
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allErgebnismeldungAuthorities
+      role: Ergebnismeldung_WRITE_Status
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Ergebnismeldung_DELETE_Status
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allErgebnismeldungAuthorities
+      role: Ergebnismeldung_DELETE_Status
+      clientId: ${SSO_CLIENT_ID}

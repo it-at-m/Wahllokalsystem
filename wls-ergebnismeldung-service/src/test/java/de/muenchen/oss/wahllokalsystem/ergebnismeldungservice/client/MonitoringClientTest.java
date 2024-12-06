@@ -44,7 +44,7 @@ class MonitoringClientTest {
             val uhrzeit = LocalDateTime.now();
 
             val mockedDTOToSend = Mockito.mock(SendungsdatenDTO.class);
-            Mockito.when(statusClientMapper.toSendungsdaten(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
+            Mockito.when(statusClientMapper.toSendungsdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
 
             unitUnderTest.postSchnellmeldungSendungsuhrzeit(bezirkUndWahlID, uhrzeit);
 
@@ -59,7 +59,7 @@ class MonitoringClientTest {
             val mockedDTOToSend = Mockito.mock(SendungsdatenDTO.class);
             val mockedApiWlsExcepton = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
 
-            Mockito.when(statusClientMapper.toSendungsdaten(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
+            Mockito.when(statusClientMapper.toSendungsdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
             Mockito.doThrow(mockedApiWlsExcepton).when(wahllokalZustandControllerApi).postSchnellmeldungSendungsuhrzeit(mockedDTOToSend);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postSchnellmeldungSendungsuhrzeit(bezirkUndWahlID, uhrzeit))
@@ -75,7 +75,7 @@ class MonitoringClientTest {
             val mockedApiException = new RuntimeException("api call failed");
             val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
 
-            Mockito.when(statusClientMapper.toSendungsdaten(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
+            Mockito.when(statusClientMapper.toSendungsdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
             Mockito.doThrow(mockedApiException).when(wahllokalZustandControllerApi).postSchnellmeldungSendungsuhrzeit(mockedDTOToSend);
             Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_MONITORING)).thenReturn(mockedWlsException);
 
@@ -93,7 +93,7 @@ class MonitoringClientTest {
             val uhrzeit = LocalDateTime.now();
 
             val mockedDTOToSend = Mockito.mock(DruckdatenDTO.class);
-            Mockito.when(statusClientMapper.toDruckdaten(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
+            Mockito.when(statusClientMapper.toDruckdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
 
             unitUnderTest.postSchnellmeldungDruckuhrzeit(bezirkUndWahlID, uhrzeit);
 
@@ -108,7 +108,7 @@ class MonitoringClientTest {
             val mockedDTOToSend = Mockito.mock(DruckdatenDTO.class);
             val mockedApiWlsExcepton = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
 
-            Mockito.when(statusClientMapper.toDruckdaten(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
+            Mockito.when(statusClientMapper.toDruckdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
             Mockito.doThrow(mockedApiWlsExcepton).when(wahllokalZustandControllerApi).postSchnellmeldungDruckuhrzeit(mockedDTOToSend);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postSchnellmeldungDruckuhrzeit(bezirkUndWahlID, uhrzeit))
@@ -124,7 +124,7 @@ class MonitoringClientTest {
             val mockedApiException = new RuntimeException("api call failed");
             val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
 
-            Mockito.when(statusClientMapper.toDruckdaten(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
+            Mockito.when(statusClientMapper.toDruckdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
             Mockito.doThrow(mockedApiException).when(wahllokalZustandControllerApi).postSchnellmeldungDruckuhrzeit(mockedDTOToSend);
             Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_MONITORING)).thenReturn(mockedWlsException);
 
@@ -142,7 +142,7 @@ class MonitoringClientTest {
             val uhrzeit = LocalDateTime.now();
 
             val mockedDTOToSend = Mockito.mock(SendungsdatenDTO.class);
-            Mockito.when(statusClientMapper.toSendungsdaten(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
+            Mockito.when(statusClientMapper.toSendungsdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
 
             unitUnderTest.postNiederschriftSendungsuhrzeit(bezirkUndWahlID, uhrzeit);
 
@@ -157,7 +157,7 @@ class MonitoringClientTest {
             val mockedDTOToSend = Mockito.mock(SendungsdatenDTO.class);
             val mockedApiWlsExcepton = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
 
-            Mockito.when(statusClientMapper.toSendungsdaten(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
+            Mockito.when(statusClientMapper.toSendungsdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
             Mockito.doThrow(mockedApiWlsExcepton).when(wahllokalZustandControllerApi).postNiederschriftSendungsuhrzeit(mockedDTOToSend);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postNiederschriftSendungsuhrzeit(bezirkUndWahlID, uhrzeit))
@@ -173,7 +173,7 @@ class MonitoringClientTest {
             val mockedApiException = new RuntimeException("api call failed");
             val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
 
-            Mockito.when(statusClientMapper.toSendungsdaten(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
+            Mockito.when(statusClientMapper.toSendungsdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
             Mockito.doThrow(mockedApiException).when(wahllokalZustandControllerApi).postNiederschriftSendungsuhrzeit(mockedDTOToSend);
             Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_MONITORING)).thenReturn(mockedWlsException);
 
@@ -191,7 +191,7 @@ class MonitoringClientTest {
             val uhrzeit = LocalDateTime.now();
 
             val mockedDTOToSend = Mockito.mock(DruckdatenDTO.class);
-            Mockito.when(statusClientMapper.toDruckdaten(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
+            Mockito.when(statusClientMapper.toDruckdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
 
             unitUnderTest.postNiederschriftDruckuhrzeit(bezirkUndWahlID, uhrzeit);
 
@@ -206,7 +206,7 @@ class MonitoringClientTest {
             val mockedDTOToSend = Mockito.mock(DruckdatenDTO.class);
             val mockedApiWlsExcepton = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
 
-            Mockito.when(statusClientMapper.toDruckdaten(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
+            Mockito.when(statusClientMapper.toDruckdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
             Mockito.doThrow(mockedApiWlsExcepton).when(wahllokalZustandControllerApi).postNiederschriftDruckuhrzeit(mockedDTOToSend);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postNiederschriftDruckuhrzeit(bezirkUndWahlID, uhrzeit))
@@ -222,7 +222,7 @@ class MonitoringClientTest {
             val mockedApiException = new RuntimeException("api call failed");
             val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
 
-            Mockito.when(statusClientMapper.toDruckdaten(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
+            Mockito.when(statusClientMapper.toDruckdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
             Mockito.doThrow(mockedApiException).when(wahllokalZustandControllerApi).postNiederschriftDruckuhrzeit(mockedDTOToSend);
             Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_MONITORING)).thenReturn(mockedWlsException);
 

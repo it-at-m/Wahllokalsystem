@@ -15,11 +15,11 @@ class StatusClientMapperTest {
     StatusClientMapper unitUnderTest = Mappers.getMapper(StatusClientMapper.class);
 
     @Nested
-    class ToDruckdaten {
+    class ToDruckdatenDTO {
 
         @Test
         void should_returnNull_when_nullIsGiven() {
-            Assertions.assertThat(unitUnderTest.toDruckdaten(null, null)).isNull();
+            Assertions.assertThat(unitUnderTest.toDruckdatenDTO(null, null)).isNull();
         }
 
         @Test
@@ -27,7 +27,7 @@ class StatusClientMapperTest {
             val dateTimeOfEvent = LocalDateTime.now();
             val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
 
-            val result = unitUnderTest.toDruckdaten(bezirkUndWahlID, dateTimeOfEvent);
+            val result = unitUnderTest.toDruckdatenDTO(bezirkUndWahlID, dateTimeOfEvent);
 
             val expectedResult = new DruckdatenDTO().bezirkUndWahlID(
                     new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.monitoring.model.BezirkUndWahlID().wahlbezirkID(
@@ -40,11 +40,11 @@ class StatusClientMapperTest {
     }
 
     @Nested
-    class ToSendungsdaten {
+    class ToSendungsdatenDTO {
 
         @Test
         void should_returnNull_when_nullIsGiven() {
-            Assertions.assertThat(unitUnderTest.toSendungsdaten(null, null)).isNull();
+            Assertions.assertThat(unitUnderTest.toSendungsdatenDTO(null, null)).isNull();
         }
 
         @Test
@@ -52,7 +52,7 @@ class StatusClientMapperTest {
             val dateTimeOfEvent = LocalDateTime.now();
             val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
 
-            val result = unitUnderTest.toSendungsdaten(bezirkUndWahlID, dateTimeOfEvent);
+            val result = unitUnderTest.toSendungsdatenDTO(bezirkUndWahlID, dateTimeOfEvent);
 
             val expectedResult = new SendungsdatenDTO().bezirkUndWahlID(
                     new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.monitoring.model.BezirkUndWahlID().wahlbezirkID(

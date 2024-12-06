@@ -11,8 +11,8 @@ import org.mapstruct.Mapping;
 public interface StatusClientMapper {
 
     @Mapping(target = "druckuhrzeit", source = "dateTimeOfEvent")
-    DruckdatenDTO toDruckdaten(BezirkUndWahlID bezirkUndWahlID, LocalDateTime dateTimeOfEvent);
+    DruckdatenDTO toDruckdatenDTO(BezirkUndWahlID bezirkUndWahlID, LocalDateTime dateTimeOfEvent);
 
     @Mapping(target = "sendungsuhrzeit", source = "dateTimeOfEvent")
-    SendungsdatenDTO toSendungsdaten(BezirkUndWahlID bezirkUndWahlID, LocalDateTime dateTimeOfEvent);
+    SendungsdatenDTO toSendungsdatenDTO(BezirkUndWahlID bezirkUndWahlID, LocalDateTime dateTimeOfEvent);
 }

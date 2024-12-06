@@ -27,25 +27,25 @@ public class MonitoringClient implements StatusClient {
     @Override
     public void postSchnellmeldungSendungsuhrzeit(BezirkUndWahlID bezirkUndWahlID, LocalDateTime schnellmeldungSendungsuhrzeit)
             throws WlsException {
-        val schnellmeldungGesendet = statusClientMapper.toSendungsdaten(bezirkUndWahlID, schnellmeldungSendungsuhrzeit);
+        val schnellmeldungGesendet = statusClientMapper.toSendungsdatenDTO(bezirkUndWahlID, schnellmeldungSendungsuhrzeit);
         callApiWithExceptionMapping(() -> wahllokalZustandControllerApi.postSchnellmeldungSendungsuhrzeit(schnellmeldungGesendet));
     }
 
     @Override
     public void postSchnellmeldungDruckuhrzeit(BezirkUndWahlID bezirkUndWahlID, LocalDateTime schnellmeldungDruckuhrzeit) throws WlsException {
-        val schellmeldungGedruckt = statusClientMapper.toDruckdaten(bezirkUndWahlID, schnellmeldungDruckuhrzeit);
+        val schellmeldungGedruckt = statusClientMapper.toDruckdatenDTO(bezirkUndWahlID, schnellmeldungDruckuhrzeit);
         callApiWithExceptionMapping(() -> wahllokalZustandControllerApi.postSchnellmeldungDruckuhrzeit(schellmeldungGedruckt));
     }
 
     @Override
     public void postNiederschriftSendungsuhrzeit(BezirkUndWahlID bezirkUndWahlID, LocalDateTime niederschriftSendungsuhrzeit) throws WlsException {
-        val niederschriftGesendet = statusClientMapper.toSendungsdaten(bezirkUndWahlID, niederschriftSendungsuhrzeit);
+        val niederschriftGesendet = statusClientMapper.toSendungsdatenDTO(bezirkUndWahlID, niederschriftSendungsuhrzeit);
         callApiWithExceptionMapping(() -> wahllokalZustandControllerApi.postNiederschriftSendungsuhrzeit(niederschriftGesendet));
     }
 
     @Override
     public void postNiederschriftDruckuhrzeit(BezirkUndWahlID bezirkUndWahlID, LocalDateTime niederschriftDruckuhrzeit) throws WlsException {
-        val niederschriftGedruckt = statusClientMapper.toDruckdaten(bezirkUndWahlID, niederschriftDruckuhrzeit);
+        val niederschriftGedruckt = statusClientMapper.toDruckdatenDTO(bezirkUndWahlID, niederschriftDruckuhrzeit);
         callApiWithExceptionMapping(() -> wahllokalZustandControllerApi.postNiederschriftDruckuhrzeit(niederschriftGedruckt));
     }
 

@@ -1,0 +1,46 @@
+id: add authorities ergebnismeldung awerte
+author: dragonfly28
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: Ergebnismeldung_BUSINESSACTION_GetAWerte
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allErgebnismeldungAuthorities
+      role: Ergebnismeldung_BUSINESSACTION_GetAWerte
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Admin_BUSINESSACTION_LoadWahltermindaten
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allErgebnismeldungAuthorities
+      role: Admin_BUSINESSACTION_LoadWahltermindaten
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Ergebnismeldung_READ_AWerte
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allErgebnismeldungAuthorities
+      role: Ergebnismeldung_READ_AWerte
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Ergebnismeldung_WRITE_AWerte
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allErgebnismeldungAuthorities
+      role: Ergebnismeldung_WRITE_AWerte
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Ergebnismeldung_DELETE_AWerte
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allErgebnismeldungAuthorities
+      role: Ergebnismeldung_DELETE_AWerte
+      clientId: ${SSO_CLIENT_ID}

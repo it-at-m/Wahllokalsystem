@@ -1,7 +1,7 @@
 ### Get demo - init of login
 # @no-cookie-jar
 # @no-redirect
-GET http://localhost:39152/demo
+GET http://localhost:39152/demo?wahllokalgui
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
 
 > {%

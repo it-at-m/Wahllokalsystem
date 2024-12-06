@@ -14,3 +14,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+service:
+  config:
+    oauth2:
+      jwk:
+        rsa:
+          init:
+            seed: change_me

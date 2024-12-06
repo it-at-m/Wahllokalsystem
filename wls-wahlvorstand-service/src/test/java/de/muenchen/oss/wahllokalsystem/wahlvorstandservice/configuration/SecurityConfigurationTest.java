@@ -1,17 +1,27 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.configuration;
 
 import static de.muenchen.oss.wahllokalsystem.wahlvorstandservice.TestConstants.SPRING_TEST_PROFILE;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand.WahlvorstandDTO;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlvorstandService;
+import lombok.val;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
@@ -21,6 +31,12 @@ class SecurityConfigurationTest {
 
     @Autowired
     MockMvc api;
+
+    @MockBean
+    private WahlvorstandService wahlvorstandService;
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     @Test
     void should_returnStatusUnauthorized_when_accessingSecuredResourceRoot() throws Exception {
@@ -62,6 +78,43 @@ class SecurityConfigurationTest {
     void should_returnStatusOk_when_accessingUnsecuredResourceSwaggerUi() throws Exception {
         api.perform(get("/swagger-ui/index.html"))
                 .andExpect(status().isOk());
+    }
+
+    @Nested
+    class Wahlvorstand {
+
+        @Test
+        @WithAnonymousUser
+        void should_returnStatusUnauthorized_when_accessingBusinessActionsWahlvorstand() throws Exception {
+            api.perform(get("/businessActions/wahlvorstand"))
+                    .andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void should_returnStatusNoContent_when_accessingBusinessActionsWahlvorstand() throws Exception {
+            val request = MockMvcRequestBuilders.get("/businessActions/wahlvorstand/1");
+
+            api.perform(request).andExpect(status().isNoContent());
+        }
+
+        @Test
+        @WithAnonymousUser
+        void should_returnStatusUnauthorized_when_postingBusinessActionsWahlvorstand() throws Exception {
+            val request = MockMvcRequestBuilders.post("/businessActions/wahlvorstand").with(csrf());
+
+            api.perform(request).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        @WithMockUser
+        void should_returnStatusOk_when_postingBusinessActionsWahlvorstand() throws Exception {
+            val requestBody = new WahlvorstandDTO("wahlbezirkID", null, null);
+            val request = MockMvcRequestBuilders.post("/businessActions/wahlvorstand/wahlbezirkID").with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestBody));
+
+            api.perform(request).andExpect(status().isOk());
+        }
     }
 
 }

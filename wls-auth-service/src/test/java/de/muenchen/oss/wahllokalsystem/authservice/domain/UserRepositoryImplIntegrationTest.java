@@ -222,7 +222,7 @@ class UserRepositoryImplIntegrationTest {
     class DeleteUsersByWahltagID {
 
         @Test
-        void should_do_sth() {
+        void should_deleteUsersWithWahltagIdButNotAuthoritiesOrPermissions_when_givenWahltagId() {
             val wahltagID = "wahltagID";
 
             val savedUsers = transactionTemplate.execute(status -> {

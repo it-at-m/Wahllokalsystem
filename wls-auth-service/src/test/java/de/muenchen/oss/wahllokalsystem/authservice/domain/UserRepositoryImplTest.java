@@ -123,7 +123,7 @@ class UserRepositoryImplTest {
         }
 
         @Test
-        void should_returnEmptyListwhen_foundNoUsers() {
+        void should_returnEmptyList_when_foundNoUsers() {
             val wahltagID = "wahltagID";
 
             Mockito.when(userRepository.findByWahltagID(wahltagID)).thenReturn(Collections.emptyList());

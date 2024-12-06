@@ -44,7 +44,7 @@ diese im lokalen Repository gespeichert.
 ### Update des Status der Ergebnisermittlung
 
 Bei der Auszählung (Ergebnisermittlung) wird zuerst eine Schnellmeldung vorbereitet. Den Abschluss der Auszählung
-bildet sie Niederschrift. Die Schnellmeldung und die Niederschrift können gedruckt und übermittelt werden.
+bildet die Niederschrift. Die Schnellmeldung und die Niederschrift können gedruckt und übermittelt werden.
 
 Welche Aktionen für die jeweiligen Dokumente bereits in einem Wahllokal vollzogen wurden, wird über den Status gepflegt.
 

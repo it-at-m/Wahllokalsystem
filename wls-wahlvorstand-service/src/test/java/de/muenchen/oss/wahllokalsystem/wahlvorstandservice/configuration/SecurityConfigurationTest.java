@@ -93,7 +93,7 @@ class SecurityConfigurationTest {
         @Test
         @WithMockUser
         void should_returnStatusNoContent_when_accessingBusinessActionsWahlvorstand() throws Exception {
-            val request = MockMvcRequestBuilders.get("/businessActions/wahlvorstand/1").with(csrf());;
+            val request = MockMvcRequestBuilders.get("/businessActions/wahlvorstand/1");
 
             api.perform(request).andExpect(status().isNoContent());
         }

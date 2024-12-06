@@ -30,9 +30,9 @@ class StatusClientMapperTest {
             val result = unitUnderTest.toDruckdatenDTO(bezirkUndWahlID, dateTimeOfEvent);
 
             val expectedResult = new DruckdatenDTO().bezirkUndWahlID(
-                            new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.monitoring.model.BezirkUndWahlID().wahlbezirkID(
-                                            bezirkUndWahlID.getWahlbezirkID())
-                                    .wahlID(bezirkUndWahlID.getWahlID()))
+                    new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.monitoring.model.BezirkUndWahlID().wahlbezirkID(
+                            bezirkUndWahlID.getWahlbezirkID())
+                            .wahlID(bezirkUndWahlID.getWahlID()))
                     .druckuhrzeit(dateTimeOfEvent);
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
@@ -55,9 +55,9 @@ class StatusClientMapperTest {
             val result = unitUnderTest.toSendungsdatenDTO(bezirkUndWahlID, dateTimeOfEvent);
 
             val expectedResult = new SendungsdatenDTO().bezirkUndWahlID(
-                            new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.monitoring.model.BezirkUndWahlID().wahlbezirkID(
-                                            bezirkUndWahlID.getWahlbezirkID())
-                                    .wahlID(bezirkUndWahlID.getWahlID()))
+                    new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.monitoring.model.BezirkUndWahlID().wahlbezirkID(
+                            bezirkUndWahlID.getWahlbezirkID())
+                            .wahlID(bezirkUndWahlID.getWahlID()))
                     .sendungsuhrzeit(dateTimeOfEvent);
 
             Assertions.assertThat(result).isEqualTo(expectedResult);

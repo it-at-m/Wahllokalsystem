@@ -110,7 +110,6 @@ export function defaultResponseHandler(
  * @param error The error object from fetch command
  * @param errorMessage The error message to be included in the ApiError object.
  */
-
 export function defaultCatchHandler(
   error: Error,
   errorMessage = "Es ist ein unbekannter Fehler aufgetreten."
@@ -122,21 +121,22 @@ export function defaultCatchHandler(
 }
 
 export function wlsResponseHandler(response: Response): Promise<Response> {
-  if (response.status === 204) {
-    throw new ApiError({
-      level: STATUS_INDICATORS.INFO,
-      message: "Es konnten keine Daten gefunden werden. (204)",
-    });
-  } else if (response.ok) {
-    return Promise.resolve(response);
-  } else {
+  if (!response.ok || response.status === 204) {
     return Promise.reject(response);
+  } else {
+    return Promise.resolve(response);
   }
 }
 
 export function wlsCatchHandler(response: Response): PromiseLike<never> {
+  if (response.status === 204) {
+    throw new ApiError({
+      level: STATUS_INDICATORS.INFO,
+      message: "Es konnten keine Daten gefunden werden",
+    });
+  }
   if (response.status === 400) {
-    // 400 ist nicht immer eine wls exception..
+    // 400 ist nicht immer eine wls exception.. zB wenn getMessage mit falscher API URL ausgeführt wird
     return response.json().then((content: WLSException) => {
       return Promise.reject(
         new ApiError({

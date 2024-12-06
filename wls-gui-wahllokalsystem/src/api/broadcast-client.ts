@@ -9,10 +9,9 @@ import BroadcastMessageToSend from "@/types/BroadcastMessageToSend";
 export const BROADCAST_API_URL = "/api/broadcast-service/businessActions/";
 
 export function getBroadcastMessage(wahlbezirkID: string): Promise<Response> {
-  return fetch(
-    BROADCAST_API_URL + "getMessage/" + wahlbezirkID,
-    getConfig()
-  ).then(wlsResponseHandler);
+  return fetch(BROADCAST_API_URL + "getMessage/" + wahlbezirkID, getConfig())
+    .then(wlsResponseHandler)
+    .catch(wlsCatchHandler);
 }
 
 export function postBroadcastMessage(

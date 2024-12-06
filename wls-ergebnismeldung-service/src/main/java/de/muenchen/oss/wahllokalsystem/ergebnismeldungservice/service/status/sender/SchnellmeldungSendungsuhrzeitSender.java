@@ -3,14 +3,18 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.se
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.ValidierungsstatusModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import io.micrometer.tracing.annotation.DefaultNewSpanParser;
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SchnellmeldungSendungsuhrzeitSender extends AbstractStatusMonitoringSender {
 
-    public SchnellmeldungSendungsuhrzeitSender(StatusClient monitoringClient) {
+    private final DefaultNewSpanParser newSpanParser;
+
+    public SchnellmeldungSendungsuhrzeitSender(StatusClient monitoringClient, DefaultNewSpanParser newSpanParser) {
         super(monitoringClient);
+        this.newSpanParser = newSpanParser;
     }
 
     @Override
@@ -24,6 +28,11 @@ public class SchnellmeldungSendungsuhrzeitSender extends AbstractStatusMonitorin
         if (oldStatus == null) {
             return false;
         }
+
+        if (oldStatus.schnellmeldung() == null || statusModel.schnellmeldung() == null) {
+            return false;
+        }
+
         return statusModel.schnellmeldung().validierungsstatus() != null && oldStatus.schnellmeldung().validierungsstatus() != null
                 && statusModel.schnellmeldung().validierungsstatus() != oldStatus.schnellmeldung().validierungsstatus();
     }

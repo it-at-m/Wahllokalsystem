@@ -24,6 +24,10 @@ public class SchnellmeldungDruckuhrzeitSender extends AbstractStatusMonitoringSe
             return false;
         }
 
+        if (oldStatus.schnellmeldung() == null || newStatus.schnellmeldung() == null) {
+            return false;
+        }
+
         return newStatus.schnellmeldung().gedruckt() != oldStatus.schnellmeldung().gedruckt();
     }
 

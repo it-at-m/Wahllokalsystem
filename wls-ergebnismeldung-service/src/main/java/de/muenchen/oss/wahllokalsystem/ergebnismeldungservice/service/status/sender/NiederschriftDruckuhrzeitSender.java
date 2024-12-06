@@ -24,6 +24,10 @@ public class NiederschriftDruckuhrzeitSender extends AbstractStatusMonitoringSen
             return false;
         }
 
+        if (oldStatus.niederschrift() == null || newStatus.niederschrift() == null) {
+            return false;
+        }
+
         return oldStatus.niederschrift().gedruckt() != newStatus.niederschrift().gedruckt();
     }
 

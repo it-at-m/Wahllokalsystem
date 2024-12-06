@@ -25,6 +25,10 @@ public class NiederschriftSendungsuhrzeitSender extends AbstractStatusMonitoring
             return false;
         }
 
+        if (oldStatus.niederschrift() == null || newStatus.niederschrift() == null) {
+            return false;
+        }
+
         return oldStatus.niederschrift().validierungsstatus() != null && newStatus.niederschrift().validierungsstatus() != null
                 && oldStatus.niederschrift().validierungsstatus() != newStatus.niederschrift().validierungsstatus();
     }

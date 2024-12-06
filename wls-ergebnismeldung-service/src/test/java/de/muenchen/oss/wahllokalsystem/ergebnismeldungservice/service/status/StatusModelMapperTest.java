@@ -123,5 +123,4 @@ class StatusModelMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

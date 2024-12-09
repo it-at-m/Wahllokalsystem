@@ -203,6 +203,9 @@ class SessionControllerTest {
     }
 
     private SessionInformation writeIntoTable(String tableName, List<ColumnNameContentPair> columnNameContentPairs) throws SQLException {
+        final int SESSION_ID_INDEX = 1;
+        final int LAST_ACCESS_TIME_INDEX = 3;
+        final int PRINCIPAL_NAME_INDEX = 6;
         StringBuilder columnStatementPart = new StringBuilder();
         StringBuilder valuesStatementPart = new StringBuilder();
         for (int i = 0; i < columnNameContentPairs.size(); i++) {
@@ -214,20 +217,20 @@ class SessionControllerTest {
                 valuesStatementPart.append("?,");
             }
         }
-        try (PreparedStatement s2 = conn.prepareStatement(
+        try (PreparedStatement insertStatement = conn.prepareStatement(
                 "INSERT INTO " + tableName + " ("
                         + columnStatementPart
                         + ") VALUES ("
                         + valuesStatementPart
                         + ")")) {
             for (int i = 0; i < columnNameContentPairs.size(); i++) {
-                s2.setString((i + 1), columnNameContentPairs.get(i).columnContent.toString());
+                insertStatement.setString((i + 1), columnNameContentPairs.get(i).columnContent.toString());
             }
-            s2.addBatch();
-            log.info("statement: " + s2);
-            s2.executeBatch();
+            insertStatement.addBatch();
+            log.info("statement: " + insertStatement);
+            insertStatement.executeBatch();
         }
-        return new SessionInformation(columnNameContentPairs.get(6).columnContent, columnNameContentPairs.get(1).columnContent.toString(),
-                new Date((long) columnNameContentPairs.get(3).columnContent));
+        return new SessionInformation(columnNameContentPairs.get(PRINCIPAL_NAME_INDEX).columnContent, columnNameContentPairs.get(SESSION_ID_INDEX).columnContent.toString(),
+                new Date((long) columnNameContentPairs.get(LAST_ACCESS_TIME_INDEX).columnContent));
     }
 }

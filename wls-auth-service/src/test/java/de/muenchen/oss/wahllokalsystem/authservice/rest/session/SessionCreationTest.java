@@ -1,7 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.authservice.rest.session;
 
 import static de.muenchen.oss.wahllokalsystem.authservice.TestConstants.SPRING_TEST_PROFILE;
-import static org.junit.jupiter.api.Assertions.*;
 import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
 import java.net.URI;
@@ -16,6 +15,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -41,6 +41,15 @@ class SessionCreationTest {
     @LocalServerPort
     private int port;
 
+    @Value("${spring.datasource.url}")
+    String dataSourceUrl;
+
+    @Value("${spring.datasource.username}")
+    String dataSourceUsername;
+
+    @Value("${spring.datasource.password}")
+    String dataSourcePassword;
+
     private static final String LOGIN_ENDPOINT = "/login";
 
     @Autowired
@@ -51,12 +60,9 @@ class SessionCreationTest {
     @Autowired
     SessionRegistry sessionRegistry;
 
-    SessionCreationTest() {
-    }
-
     @BeforeEach
     public void setUp() throws SQLException {
-        conn = DriverManager.getConnection("jdbc:h2:mem:wls-auth-service", "sa", "");
+        conn = DriverManager.getConnection(dataSourceUrl, dataSourceUsername, dataSourcePassword);
         purgeSessions();
     }
 
@@ -79,11 +85,9 @@ class SessionCreationTest {
 
     @Test
     public void should_notFindSessions_when_noSessionsInDB() throws SQLException {
-        assertEquals(
-                0, SessionTestUtils.getSessionIdsFromDatabase(conn).size());
-        assertEquals(
-                0, SessionTestUtils.getSessionAttributeBytesFromDb(conn).size());
-        assertTrue(sessionRegistry.getAllPrincipals().isEmpty(), "Session registry should be empty");
+        Assertions.assertThat(SessionTestUtils.getSessionIdsFromDatabase(conn).size()).isEqualTo(0);
+        Assertions.assertThat(SessionTestUtils.getSessionAttributeBytesFromDb(conn).size()).isEqualTo(0);
+        Assertions.assertThat(sessionRegistry.getAllPrincipals().isEmpty()).isTrue();
     }
 
     @Test
@@ -94,7 +98,7 @@ class SessionCreationTest {
         Assertions.assertThat(formLoginResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         val sessionIdsFromDB = SessionTestUtils.getSessionIdsFromDatabase(conn);
-        assertEquals(1, sessionIdsFromDB.size());
+        Assertions.assertThat(sessionIdsFromDB.size()).isEqualTo(1);
     }
 
     @Test
@@ -102,12 +106,12 @@ class SessionCreationTest {
         val formLoginRequest = new RequestEntity<>(HttpMethod.GET, URI.create("http://localhost:" + port + LOGIN_ENDPOINT));
         this.testRestTemplate.exchange(formLoginRequest, String.class);
         val sessionAttributesFromDB = SessionTestUtils.getSessionAttributeBytesFromDb(conn);
-        assertEquals(1, sessionAttributesFromDB.size());
+        Assertions.assertThat(sessionAttributesFromDB.size()).isEqualTo(1);
         String firstAttributesKey = (String) sessionAttributesFromDB.keySet().toArray()[0];
         Assertions.assertThat(firstAttributesKey).endsWith("CSRF_TOKEN");
         // Verify CSRF token format and properties
         byte[] tokenBytes = sessionAttributesFromDB.get(firstAttributesKey);
-        assertNotNull(tokenBytes, "CSRF token should not be null");
-        assertTrue(tokenBytes.length > 0, "CSRF token should not be empty");
+        Assertions.assertThat(tokenBytes).isNotNull();
+        Assertions.assertThat(tokenBytes.length).isGreaterThan(0);
     }
 }

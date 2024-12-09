@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.session.SessionRegistry;
@@ -24,13 +23,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class NoSecurityConfiguration {
 
     @Bean
-    WebSecurityCustomizer ignoringCustomizer() {
-        return (web) -> web
-                .ignoring().requestMatchers(PathRequest.toH2Console());
-    }
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, SessionRegistry sessionRegistry) throws Exception {
         // @formatter:off
         http
                 .headers(customizer -> customizer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
@@ -44,20 +37,13 @@ public class NoSecurityConfiguration {
                                 .maximumSessions(1)
                                 .expiredUrl("/login")
                                 .maxSessionsPreventsLogin(false)
-                                .sessionRegistry(sessionRegistry()
-                                )
+                                .sessionRegistry(sessionRegistry)
                 )
                 .csrf(AbstractHttpConfigurer::disable);
         // @formatter:on
         return http.build();
     }
 
-    /**
-     * Necessary for starting Application with no-security profile, Bean will be needed on loading the
-     * SessionController
-     *
-     * @return the sessionRegistry-Bean
-     */
     @Bean
     SessionRegistry sessionRegistry() {
         return new SessionRegistryImpl();

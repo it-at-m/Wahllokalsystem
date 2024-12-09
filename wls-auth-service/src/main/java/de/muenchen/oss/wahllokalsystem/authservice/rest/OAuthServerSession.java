@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.authservice.domain;
+package de.muenchen.oss.wahllokalsystem.authservice.rest;
 
 import lombok.Data;
 

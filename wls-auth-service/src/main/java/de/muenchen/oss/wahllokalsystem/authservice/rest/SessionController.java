@@ -4,8 +4,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-import de.muenchen.oss.wahllokalsystem.authservice.domain.OAuthServerSession;
-import de.muenchen.oss.wahllokalsystem.authservice.domain.OAuthServerSessions;
 import java.lang.reflect.InvocationTargetException;
 import java.security.Principal;
 import java.util.ArrayList;

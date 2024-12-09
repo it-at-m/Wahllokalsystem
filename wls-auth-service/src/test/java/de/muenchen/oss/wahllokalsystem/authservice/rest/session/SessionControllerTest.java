@@ -10,31 +10,24 @@ import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.authservice.rest.OAuthServerSessions;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
-import java.sql.Connection;
-import java.sql.DriverManager;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.session.Session;
+import org.springframework.session.SessionRepository;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import de.muenchen.oss.wahllokalsystem.authservice.utils.Authorities;
@@ -57,177 +50,83 @@ class SessionControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    private Connection conn;
-
-    @Value("${spring.datasource.url}")
-    String dataSourceUrl;
-
-    @Value("${spring.datasource.username}")
-    String dataSourceUsername;
-
-    @Value("${spring.datasource.password}")
-    String dataSourcePassword;
-
     @Autowired
     SessionRegistry sessionRegistry;
 
-    @Builder
-    record ColumnNameContentPair(String columnName, Object columnContent) {
-    }
+    @Autowired
+    SessionRepository sessionRepository;
 
     @BeforeEach
-    void setUp() throws SQLException {
-        conn = DriverManager.getConnection(dataSourceUrl, dataSourceUsername, dataSourcePassword);
+    void setUp() {
         purgeSessions();
         SecurityUtils.runWith(Authorities.ROLE_ADMIN);
     }
 
     @AfterEach
-    void tearDown() throws SQLException {
+    void tearDown() {
         purgeSessions();
-        if (conn != null && !conn.isClosed()) {
-            conn.close();
-        }
     }
 
-    private void purgeSessions() throws SQLException {
-        try (Statement stat = conn.createStatement()) {
-            stat.execute("DELETE SPRING_SESSION_ATTRIBUTES");
-            stat.execute("DELETE SPRING_SESSION");
-        }
+    private void purgeSessions() {
         sessionRegistry.getAllPrincipals().forEach(p -> sessionRegistry.getAllSessions(p, true)
                 .forEach(s -> sessionRegistry.removeSessionInformation(s.getSessionId())));
     }
 
-    @Test
-    void should_findSessions_when_sessionsCreated() throws Exception {
-        val session1 = createSpringSession_inDB_and_inSessionRegistry_forUser(1, "user1");
-        val session2 = createSpringSession_inDB_and_inSessionRegistry_forUser(2, "user2");
-        val session3 = createSpringSession_inDB_and_inSessionRegistry_forUser(3, "user3");
+    @Nested
+    class ListActiveSessions {
 
-        val response = api.perform(get("/oauthsessions/")).andExpect(status().isOk()).andReturn();
-        val responseBody = objectMapper.readValue(response.getResponse().getContentAsString(), OAuthServerSessions.class);
-        val foundSessions = responseBody.getSessions();
+        @Test
+        void should_findSessions_when_sessionsCreated() throws Exception {
+            val session1 = createSpringSessionForUser("user1");
+            val session2 = createSpringSessionForUser("user2");
+            val session3 = createSpringSessionForUser("user3");
 
-        Assertions.assertThat(foundSessions).filteredOn(session -> session.getUsername().equals(session1.getPrincipal())
-                || session.getUsername().equals(session2.getPrincipal())
-                || session.getUsername().equals(session3.getPrincipal())).hasSize(3);
+            val response = api.perform(get("/oauthsessions/")).andExpect(status().isOk()).andReturn();
+            val responseBody = objectMapper.readValue(response.getResponse().getContentAsString(), OAuthServerSessions.class);
+            val foundSessions = responseBody.getSessions();
+
+            Assertions.assertThat(foundSessions).filteredOn(session -> session.getUsername().equals(session1.getAttribute("PRINCIPAL_NAME"))
+                    || session.getUsername().equals(session2.getAttribute("PRINCIPAL_NAME"))
+                    || session.getUsername().equals(session3.getAttribute("PRINCIPAL_NAME"))).hasSize(3);
+        }
     }
 
-    @Test
-    void should_killSession_when_killingSessionCalled() throws Exception {
-        val session1 = createSpringSession_inDB_and_inSessionRegistry_forUser(1, "user1");
-        val session2 = createSpringSession_inDB_and_inSessionRegistry_forUser(2, "user2");
-        val session3 = createSpringSession_inDB_and_inSessionRegistry_forUser(3, "user3");
+    @Nested
+    class KillSession {
 
-        val response_readSessions = api.perform(get("/oauthsessions/")).andExpect(status().isOk()).andReturn();
-        val responseBody = objectMapper.readValue(response_readSessions.getResponse().getContentAsString(), OAuthServerSessions.class);
-        val foundSessions = responseBody.getSessions();
-        //killing session 2
-        val sessionIDToKill = foundSessions.stream().filter(session -> session.getUsername().equals(session2.getPrincipal())).findFirst().get().getSessionId();
-        val request_killSession = post("/oauthsessions/" + sessionIDToKill + "/invalidate").with(csrf());
-        api.perform(request_killSession).andExpect(status().isOk()).andReturn();
+        @Test
+        void should_killSession_when_killingSessionCalled() throws Exception {
+            val session1 = createSpringSessionForUser("user1");
+            val session2 = createSpringSessionForUser("user2");
+            val session3 = createSpringSessionForUser("user3");
 
-        val response_readSessions_afterKill = api.perform(get("/oauthsessions/")).andExpect(status().isOk()).andReturn();
-        val responseBody_afterKill = objectMapper.readValue(response_readSessions_afterKill.getResponse().getContentAsString(), OAuthServerSessions.class);
-        val foundSessions_afterKill = responseBody_afterKill.getSessions();
-        //session killed in sessionRegistry
-        Assertions.assertThat(foundSessions_afterKill).filteredOn(session -> session.getUsername().equals(session1.getPrincipal())
-                || session.getUsername().equals(session2.getPrincipal())
-                || session.getUsername().equals(session3.getPrincipal())).hasSize(2);
+            val responseReadSessions = api.perform(get("/oauthsessions/")).andExpect(status().isOk()).andReturn();
+            val responseBody = objectMapper.readValue(responseReadSessions.getResponse().getContentAsString(), OAuthServerSessions.class);
+            val foundSessions = responseBody.getSessions();
+            //killing session 2
+            val sessionIDToKill = foundSessions.stream().filter(session -> session.getUsername().equals(session2.getAttribute("PRINCIPAL_NAME"))).findFirst().get().getSessionId();
+            val requestKillSession = post("/oauthsessions/" + sessionIDToKill + "/invalidate").with(csrf());
+            api.perform(requestKillSession).andExpect(status().isOk()).andReturn();
+
+            val responseReadSessionsAfterKill = api.perform(get("/oauthsessions/")).andExpect(status().isOk()).andReturn();
+            val responseBodyAfterKill = objectMapper.readValue(responseReadSessionsAfterKill.getResponse().getContentAsString(), OAuthServerSessions.class);
+            val foundSessionsAfterKill = responseBodyAfterKill.getSessions();
+            //session killed in sessionRegistry
+            Assertions.assertThat(foundSessionsAfterKill).filteredOn(session -> session.getUsername().equals(session1.getAttribute("PRINCIPAL_NAME"))
+                    || session.getUsername().equals(session2.getAttribute("PRINCIPAL_NAME"))
+                    || session.getUsername().equals(session3.getAttribute("PRINCIPAL_NAME"))).hasSize(2);
+        }
     }
 
-    /**
-     * Creates a Session for the JDBC SPRING_SESSION table, saves it into table and register it on the
-     * sessionRegistry Bean.
-     * The manual registration in the Bean is necessary, because with the manual saving in the DB, we
-     * are skipping the sessionRegistry Bean and
-     * is our responsibility to do this registration manually.
-     * The usual way of creating sessions is through calling the Application-Controllers, which should
-     * register the session in sessionRegistry
-     * and write it into Database - but this has to be tested separately.
-     *
-     * @param mockSessionNumber - for variations in content of the sessionId and other elements
-     * @param username - the principal in the session
-     * @return the returned @link{SessionInformation} should be used on assertions and comparisons
-     * @throws SQLException - if writing in Database was not properly designed
-     */
-    private SessionInformation createSpringSession_inDB_and_inSessionRegistry_forUser(int mockSessionNumber, final String username) throws SQLException {
+    private Session createSpringSessionForUser(final String username) {
         val timeNow = LocalDateTime.now();
         ZoneOffset zoneOffset = ZoneId.of("Europe/Berlin").getRules().getOffset(timeNow);
-        val maxInactiveIntervalMillis = 259200;
-        val session_primary_ID = UUID.fromString("0001777" + mockSessionNumber + "-" + "888" + mockSessionNumber + "-" + "888" + mockSessionNumber + "-" + "888"
-                + mockSessionNumber + "-" + "11111111888" + mockSessionNumber);
-        val sessionID = UUID.fromString("0001888" + mockSessionNumber + "-" + "888" + mockSessionNumber + "-" + "888" + mockSessionNumber + "-" + "888"
-                + mockSessionNumber + "-" + "11111111888" + mockSessionNumber);
-        val creationTimeSession = timeNow.minusHours(10 - mockSessionNumber);
-        val lastAccessTimeSession = creationTimeSession.plusMinutes(10);
-        val expiryTimeSession = timeNow.plusMinutes(10);
-
-        List<ColumnNameContentPair> pairs_session = createListColumnNameContentPairs(
-                session_primary_ID,
-                sessionID,
-                creationTimeSession.toInstant(zoneOffset).toEpochMilli(),
-                lastAccessTimeSession.toInstant(zoneOffset).toEpochMilli(),
-                maxInactiveIntervalMillis,
-                expiryTimeSession.toInstant(zoneOffset).toEpochMilli(),
-                username);
-
-        val createdDB_Session = writeIntoTable("SPRING_SESSION", pairs_session);
-        if (createdDB_Session.getPrincipal() != null && !createdDB_Session.getSessionId().isEmpty()) {
-            sessionRegistry.registerNewSession(createdDB_Session.getSessionId(), createdDB_Session.getPrincipal());
-            return createdDB_Session;
-        } else throw new RuntimeException("create DB-Session error");
-    }
-
-    private List<ColumnNameContentPair> createListColumnNameContentPairs(
-            final UUID session_primary_ID,
-            final UUID sessionID,
-            final long creationTime,
-            final long lastAccessTime,
-            final long maxInactiveInterval,
-            final long expiryTime,
-            final String principalName) {
-
-        return List.of(
-                ColumnNameContentPair.builder().columnName("PRIMARY_ID").columnContent(session_primary_ID).build(),
-                ColumnNameContentPair.builder().columnName("SESSION_ID").columnContent(sessionID).build(),
-                ColumnNameContentPair.builder().columnName("CREATION_TIME").columnContent(creationTime).build(),
-                ColumnNameContentPair.builder().columnName("LAST_ACCESS_TIME").columnContent(lastAccessTime).build(),
-                ColumnNameContentPair.builder().columnName("MAX_INACTIVE_INTERVAL").columnContent(maxInactiveInterval).build(),
-                ColumnNameContentPair.builder().columnName("EXPIRY_TIME").columnContent(expiryTime).build(),
-                ColumnNameContentPair.builder().columnName("PRINCIPAL_NAME").columnContent(principalName).build());
-    }
-
-    private SessionInformation writeIntoTable(String tableName, List<ColumnNameContentPair> columnNameContentPairs) throws SQLException {
-        final int SESSION_ID_INDEX = 1;
-        final int LAST_ACCESS_TIME_INDEX = 3;
-        final int PRINCIPAL_NAME_INDEX = 6;
-        StringBuilder columnStatementPart = new StringBuilder();
-        StringBuilder valuesStatementPart = new StringBuilder();
-        for (int i = 0; i < columnNameContentPairs.size(); i++) {
-            if (i == columnNameContentPairs.size() - 1) {
-                columnStatementPart.append(columnNameContentPairs.get(i).columnName);
-                valuesStatementPart.append("?");
-            } else {
-                columnStatementPart.append(columnNameContentPairs.get(i).columnName).append(", ");
-                valuesStatementPart.append("?,");
-            }
-        }
-        try (PreparedStatement insertStatement = conn.prepareStatement(
-                "INSERT INTO " + tableName + " ("
-                        + columnStatementPart
-                        + ") VALUES ("
-                        + valuesStatementPart
-                        + ")")) {
-            for (int i = 0; i < columnNameContentPairs.size(); i++) {
-                insertStatement.setString((i + 1), columnNameContentPairs.get(i).columnContent.toString());
-            }
-            insertStatement.addBatch();
-            log.info("statement: " + insertStatement);
-            insertStatement.executeBatch();
-        }
-        return new SessionInformation(columnNameContentPairs.get(PRINCIPAL_NAME_INDEX).columnContent, columnNameContentPairs.get(SESSION_ID_INDEX).columnContent.toString(),
-                new Date((long) columnNameContentPairs.get(LAST_ACCESS_TIME_INDEX).columnContent));
+        val sessionToSave = sessionRepository.createSession();
+        sessionToSave.setLastAccessedTime(timeNow.minusHours(10).toInstant(zoneOffset));
+        sessionToSave.setAttribute("PRINCIPAL_NAME", username);
+        if (sessionToSave.getAttribute("PRINCIPAL_NAME") != null && !sessionToSave.getId().isEmpty()) {
+            sessionRegistry.registerNewSession(sessionToSave.getId(), sessionToSave.getAttribute("PRINCIPAL_NAME"));
+            return sessionToSave;
+        } else throw new RuntimeException("Create Session error");
     }
 }

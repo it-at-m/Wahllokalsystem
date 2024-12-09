@@ -17,7 +17,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
-import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,13 +29,6 @@ public class SessionController {
 
     @Autowired
     SessionRegistry sessionRegistry;
-
-    /**
-     * Is needed for explicit deleting Jdbc-Session from Table SPRING_SESSION, necessary because
-     * removing Session from @v{ sessionRegistry } does not delete it from Database
-     */
-    @Autowired
-    JdbcIndexedSessionRepository jdbcSessionRepository;
 
     /**
      * Lists all sessions which are not expired.
@@ -99,7 +91,6 @@ public class SessionController {
                 log.info("Killing session with id: {} principal is null", sessionID);
             }
             sessionInformation.expireNow();
-            jdbcSessionRepository.deleteById(sessionID);
         } else {
             log.info("Session with id {} not found.", sessionID);
             httpStatus = NOT_FOUND;

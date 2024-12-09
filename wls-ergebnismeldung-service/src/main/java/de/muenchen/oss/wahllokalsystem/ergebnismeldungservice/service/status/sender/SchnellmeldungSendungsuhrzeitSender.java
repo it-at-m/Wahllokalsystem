@@ -21,11 +21,7 @@ public class SchnellmeldungSendungsuhrzeitSender extends AbstractStatusMonitorin
     }
 
     private boolean hasValidierungsstatusChanged(final StatusModel newStatus, final StatusModel oldStatus) {
-        if (oldStatus == null) {
-            return false;
-        }
-
-        if (oldStatus.schnellmeldung() == null || newStatus.schnellmeldung() == null) {
+        if (oldStatus == null || oldStatus.schnellmeldung() == null || newStatus.schnellmeldung() == null) {
             return false;
         }
 

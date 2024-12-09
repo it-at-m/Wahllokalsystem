@@ -21,11 +21,7 @@ public class NiederschriftSendungsuhrzeitSender extends AbstractStatusMonitoring
     }
 
     private boolean hasValidierungsstatusChanged(final StatusModel newStatus, final StatusModel oldStatus) {
-        if (oldStatus == null) {
-            return false;
-        }
-
-        if (oldStatus.niederschrift() == null || newStatus.niederschrift() == null) {
+        if (oldStatus == null || oldStatus.niederschrift() == null || newStatus.niederschrift() == null) {
             return false;
         }
 

@@ -20,11 +20,7 @@ public class SchnellmeldungDruckuhrzeitSender extends AbstractStatusMonitoringSe
     }
 
     private boolean hasGedrucktChanged(final StatusModel newStatus, final StatusModel oldStatus) {
-        if (oldStatus == null) {
-            return false;
-        }
-
-        if (oldStatus.schnellmeldung() == null || newStatus.schnellmeldung() == null) {
+        if (oldStatus == null || oldStatus.schnellmeldung() == null || newStatus.schnellmeldung() == null) {
             return false;
         }
 

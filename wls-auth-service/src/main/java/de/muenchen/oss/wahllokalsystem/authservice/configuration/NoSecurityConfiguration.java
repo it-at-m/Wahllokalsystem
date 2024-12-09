@@ -32,8 +32,8 @@ public class NoSecurityConfiguration {
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .anyRequest()
                         .permitAll())
-                .sessionManagement(c ->
-                        c.sessionFixation().migrateSession()
+                .sessionManagement(customizer ->
+                        customizer.sessionFixation().migrateSession()
                                 .maximumSessions(1)
                                 .expiredUrl("/login")
                                 .maxSessionsPreventsLogin(false)

@@ -43,8 +43,10 @@ public class SecurityConfiguration {
     @Value("${security.oauth2.resource.user-info-uri}")
     private String userInfoUri;
 
+    private final String LOGIN_PATH = "/login";
+
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, SessionRegistry sessionRegistry) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests.requestMatchers(
                         // allow access to /actuator/info
@@ -70,14 +72,14 @@ public class SecurityConfiguration {
                         .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(new JwtUserInfoAuthenticationConverter(
                                 new UserInfoAuthoritiesService(userInfoUri, restTemplateBuilder)))))
                 .formLogin((form) -> form
-                        .loginPage("/login")
+                        .loginPage(LOGIN_PATH)
                         .permitAll())
-                .sessionManagement(c -> c
+                .sessionManagement(customizer -> customizer
                         .sessionFixation().migrateSession()
                         .maximumSessions(1)
-                        .expiredUrl("/login")
+                        .expiredUrl(LOGIN_PATH)
                         .maxSessionsPreventsLogin(false)
-                        .sessionRegistry(sessionRegistry()))
+                        .sessionRegistry(sessionRegistry))
                 .logout(LogoutConfigurer::permitAll)
                 .securityContext(securityContext -> securityContext.requireExplicitSave(false))
                 .addFilterBefore(customUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -91,7 +93,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public ConcurrentSessionControlAuthenticationStrategy concurrentSessionControlAuthenticationStrategy() {
-        return new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry());
+    public ConcurrentSessionControlAuthenticationStrategy concurrentSessionControlAuthenticationStrategy(SessionRegistry sessionRegistry) {
+        return new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry);
     }
 }

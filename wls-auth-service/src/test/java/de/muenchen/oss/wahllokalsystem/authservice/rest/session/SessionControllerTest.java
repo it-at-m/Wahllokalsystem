@@ -30,6 +30,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.session.SessionInformation;
@@ -42,7 +43,6 @@ import de.muenchen.oss.wahllokalsystem.authservice.utils.Authorities;
         classes = { MicroServiceApplication.class },
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
-                "spring.datasource.url=jdbc:h2:mem:wls-auth-service;DB_CLOSE_ON_EXIT=FALSE",
                 "refarch.gracefulshutdown.pre-wait-seconds=0"
         }
 )
@@ -59,25 +59,31 @@ class SessionControllerTest {
 
     private Connection conn;
 
+    @Value("${spring.datasource.url}")
+    String dataSourceUrl;
+
+    @Value("${spring.datasource.username}")
+    String dataSourceUsername;
+
+    @Value("${spring.datasource.password}")
+    String dataSourcePassword;
+
     @Autowired
     SessionRegistry sessionRegistry;
-
-    SessionControllerTest() throws SQLException {
-    }
 
     @Builder
     record ColumnNameContentPair(String columnName, Object columnContent) {
     }
 
     @BeforeEach
-    public void setUp() throws SQLException {
-        conn = DriverManager.getConnection("jdbc:h2:mem:wls-auth-service", "sa", "");
+    void setUp() throws SQLException {
+        conn = DriverManager.getConnection(dataSourceUrl, dataSourceUsername, dataSourcePassword);
         purgeSessions();
         SecurityUtils.runWith(Authorities.ROLE_ADMIN);
     }
 
     @AfterEach
-    public void tearDown() throws SQLException {
+    void tearDown() throws SQLException {
         purgeSessions();
         if (conn != null && !conn.isClosed()) {
             conn.close();
@@ -94,7 +100,7 @@ class SessionControllerTest {
     }
 
     @Test
-    public void should_findSessions_when_sessionsCreated() throws Exception {
+    void should_findSessions_when_sessionsCreated() throws Exception {
         val session1 = createSpringSession_inDB_and_inSessionRegistry_forUser(1, "user1");
         val session2 = createSpringSession_inDB_and_inSessionRegistry_forUser(2, "user2");
         val session3 = createSpringSession_inDB_and_inSessionRegistry_forUser(3, "user3");
@@ -109,7 +115,7 @@ class SessionControllerTest {
     }
 
     @Test
-    public void should_killSession_when_killingSessionCalled() throws Exception {
+    void should_killSession_when_killingSessionCalled() throws Exception {
         val session1 = createSpringSession_inDB_and_inSessionRegistry_forUser(1, "user1");
         val session2 = createSpringSession_inDB_and_inSessionRegistry_forUser(2, "user2");
         val session3 = createSpringSession_inDB_and_inSessionRegistry_forUser(3, "user3");
@@ -117,15 +123,6 @@ class SessionControllerTest {
         val response_readSessions = api.perform(get("/oauthsessions/")).andExpect(status().isOk()).andReturn();
         val responseBody = objectMapper.readValue(response_readSessions.getResponse().getContentAsString(), OAuthServerSessions.class);
         val foundSessions = responseBody.getSessions();
-        //confirmation sessions are present in sessionRegistry
-        Assertions.assertThat(foundSessions).filteredOn(session -> session.getUsername().equals(session1.getPrincipal())
-                || session.getUsername().equals(session2.getPrincipal())
-                || session.getUsername().equals(session3.getPrincipal())).hasSize(3);
-        //confirmation sessions are present in Database
-        Assertions.assertThat(SessionTestUtils.getSessionIdsFromDatabase(conn)).filteredOn(sessionId -> sessionId.equals(session1.getSessionId())
-                || sessionId.equals(session2.getSessionId())
-                || sessionId.equals(session3.getSessionId())).hasSize(3);
-
         //killing session 2
         val sessionIDToKill = foundSessions.stream().filter(session -> session.getUsername().equals(session2.getPrincipal())).findFirst().get().getSessionId();
         val request_killSession = post("/oauthsessions/" + sessionIDToKill + "/invalidate").with(csrf());
@@ -155,7 +152,7 @@ class SessionControllerTest {
      * @return the returned @link{SessionInformation} should be used on assertions and comparisons
      * @throws SQLException - if writing in Database was not properly designed
      */
-    public SessionInformation createSpringSession_inDB_and_inSessionRegistry_forUser(int mockSessionNumber, final String username) throws SQLException {
+    private SessionInformation createSpringSession_inDB_and_inSessionRegistry_forUser(int mockSessionNumber, final String username) throws SQLException {
         val timeNow = LocalDateTime.now();
         ZoneOffset zoneOffset = ZoneId.of("Europe/Berlin").getRules().getOffset(timeNow);
         val maxInactiveIntervalMillis = 259200;

@@ -104,7 +104,8 @@ class SessionControllerTest {
             val responseBody = objectMapper.readValue(responseReadSessions.getResponse().getContentAsString(), OAuthServerSessions.class);
             val foundSessions = responseBody.getSessions();
             //killing session 2
-            val sessionIDToKill = foundSessions.stream().filter(session -> session.getUsername().equals(session2.getAttribute("PRINCIPAL_NAME"))).findFirst().get().getSessionId();
+            val sessionIDToKill = foundSessions.stream().filter(session -> session.getUsername().equals(session2.getAttribute("PRINCIPAL_NAME"))).findFirst()
+                    .get().getSessionId();
             val requestKillSession = post("/oauthsessions/" + sessionIDToKill + "/invalidate").with(csrf());
             api.perform(requestKillSession).andExpect(status().isOk()).andReturn();
 

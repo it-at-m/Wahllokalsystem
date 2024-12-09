@@ -42,7 +42,7 @@ public class SessionService {
                         currSession.setUsername(principalLdap.getUsername());
                     } else if (principal instanceof Jwt principalJwt) {
                         currSession.setUsername(principalJwt.getSubject());
-                    }else {
+                    } else {
                         log.warn("Principal was not instance of expected datatypes, but is an Object of Class: {}.", principal.getClass().getName());
                         try {
                             currSession.setUsername((String) principal.getClass().getMethod("getUsername").invoke(principal));

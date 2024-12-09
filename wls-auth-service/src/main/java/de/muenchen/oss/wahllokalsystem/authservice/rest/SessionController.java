@@ -46,9 +46,7 @@ public class SessionController {
     @RequestMapping(value = "/oauthsessions/{sessionID}/invalidate", method = POST)
     public ResponseEntity<?> killSession(@PathVariable("sessionID") String sessionID) {
         log.info("Attempt to kill session with id {}", sessionID);
-        return sessionService.killSession(sessionID)?
-                new ResponseEntity<>(OK) :
-                new ResponseEntity<>(NOT_FOUND);
+        return sessionService.killSession(sessionID) ? new ResponseEntity<>(OK) : new ResponseEntity<>(NOT_FOUND);
     }
 
 }

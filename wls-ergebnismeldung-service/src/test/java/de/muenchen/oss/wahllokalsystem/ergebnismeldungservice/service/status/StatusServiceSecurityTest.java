@@ -151,5 +151,4 @@ class StatusServiceSecurityTest {
                     .buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_SET_STATUS_MISSING_WILL_RESULT_IN_WLS_EXCEPTION);
         }
     }
-
 }

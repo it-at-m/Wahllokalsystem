@@ -126,7 +126,5 @@ class NiederschriftSendungsuhrzeitSenderTest {
                 final ValidierungsstatusModel validierungsstatusModel) {
             return new MeldungModel(validierungsstatusModel, false, null, null);
         }
-
     }
-
 }

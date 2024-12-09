@@ -79,5 +79,4 @@ public class StatusController {
     private <T> ResponseEntity<T> okWithBodyOrNoContent(final Optional<T> body) {
         return body.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
     }
-
 }

@@ -94,7 +94,5 @@ class NiederschriftDruckuhrzeitSenderTest {
         private static MeldungModel createMeldungWithGedrucktFlag(final boolean isGedruckt) {
             return new MeldungModel(null, isGedruckt, null, null);
         }
-
     }
-
 }

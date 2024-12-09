@@ -95,5 +95,4 @@ class SchnellmeldungDruckuhrzeitSenderTest {
             return new MeldungModel(null, isGedruckt, null, null);
         }
     }
-
 }

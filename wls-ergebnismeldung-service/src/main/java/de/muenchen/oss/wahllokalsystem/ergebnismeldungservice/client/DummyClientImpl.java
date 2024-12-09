@@ -44,5 +44,4 @@ public class DummyClientImpl
     public void postNiederschriftDruckuhrzeit(BezirkUndWahlID bezirkUndWahlID, LocalDateTime niederschriftDruckuhrzeit) throws WlsException {
         log.info("dummy client postNiederschriftDruckuhrzeit of {} on {} called instead of monitoring", bezirkUndWahlID, niederschriftDruckuhrzeit);
     }
-
 }

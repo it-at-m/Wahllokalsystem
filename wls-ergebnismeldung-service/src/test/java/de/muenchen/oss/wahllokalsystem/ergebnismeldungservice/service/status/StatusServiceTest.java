@@ -173,5 +173,4 @@ class StatusServiceTest {
             return new StatusModel(id, null, null);
         }
     }
-
 }

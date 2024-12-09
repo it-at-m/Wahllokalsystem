@@ -79,5 +79,4 @@ class StatusValidatorTest {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validStatusOrThrow(null)).isSameAs(mockedFachlicheWlsException);
         }
     }
-
 }

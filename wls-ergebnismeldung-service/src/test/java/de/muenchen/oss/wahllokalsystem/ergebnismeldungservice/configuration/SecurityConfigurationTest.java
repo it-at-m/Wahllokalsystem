@@ -141,5 +141,4 @@ class SecurityConfigurationTest {
             Mockito.verify(statusService).setStatus(notNull(), notNull());
         }
     }
-
 }

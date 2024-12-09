@@ -126,7 +126,5 @@ class SchnellmeldungSendungsuhrzeitSenderTest {
                 final ValidierungsstatusModel validierungsstatusModel) {
             return new MeldungModel(validierungsstatusModel, false, null, null);
         }
-
     }
-
 }

@@ -17,11 +17,11 @@ username = wls_all
 GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
 Authorization: {{ token_type }} {{ auth_token }}
 
-### GET A-Werte (needs profile 'db-dummydata')
+### GET A-Werte (needs profile 'dummy.clients')
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/awerte/wahlbezirkID
 Authorization: {{ token_type }} {{ auth_token }}
 
-### Initialisiere A-Werte (needs profile 'db-dummydata', stores AWerte entity in local DB retrieved from DummyClient )
+### Initialisiere A-Werte (needs profile 'dummy.clients', stores AWerte entity in local DB retrieved from DummyClient )
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/awerte/init
 Authorization: {{ token_type }} {{ auth_token }}
 Content-Type: application/json

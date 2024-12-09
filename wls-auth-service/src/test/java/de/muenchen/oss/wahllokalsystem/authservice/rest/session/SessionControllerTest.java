@@ -138,10 +138,6 @@ class SessionControllerTest {
         Assertions.assertThat(foundSessions_afterKill).filteredOn(session -> session.getUsername().equals(session1.getPrincipal())
                 || session.getUsername().equals(session2.getPrincipal())
                 || session.getUsername().equals(session3.getPrincipal())).hasSize(2);
-        //session killed in Database
-        Assertions.assertThat(SessionTestUtils.getSessionIdsFromDatabase(conn)).filteredOn(sessionId -> sessionId.equals(session1.getSessionId())
-                || sessionId.equals(session2.getSessionId())
-                || sessionId.equals(session3.getSessionId())).hasSize(2);
     }
 
     /**

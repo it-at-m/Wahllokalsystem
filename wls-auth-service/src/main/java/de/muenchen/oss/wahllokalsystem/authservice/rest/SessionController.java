@@ -4,19 +4,12 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-import java.lang.reflect.InvocationTargetException;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
+import de.muenchen.oss.wahllokalsystem.authservice.service.SessionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.session.SessionInformation;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SessionController {
 
     @Autowired
-    SessionRegistry sessionRegistry;
+    SessionService sessionService;
 
     /**
      * Lists all sessions which are not expired.
@@ -39,36 +32,7 @@ public class SessionController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN_ADMIN')")
     @GetMapping(value = "/oauthsessions/")
     public ResponseEntity<OAuthServerSessions> listActiveSessions() {
-        log.info("listActiveSessions");
-
-        OAuthServerSessions allSessionInformation = new OAuthServerSessions();
-        List<OAuthServerSession> sessions = new ArrayList<>();
-
-        sessionRegistry.getAllPrincipals().forEach(
-                principal -> sessionRegistry.getAllSessions(principal, false).forEach(currSessionInfo -> {
-                    OAuthServerSession currSession = new OAuthServerSession();
-                    if (principal instanceof String) {
-                        currSession.setUsername((String) principal);
-                    } else if (principal instanceof org.springframework.security.core.userdetails.User) {
-                        currSession.setUsername(((org.springframework.security.core.userdetails.User) principal).getUsername());
-                    } else if (principal instanceof Principal) {
-                        currSession.setUsername(((Principal) principal).getName());
-                    } else if (principal instanceof LdapUserDetailsImpl) {
-                        currSession.setUsername(((LdapUserDetailsImpl) principal).getUsername());
-                    } else {
-                        try {
-                            currSession.setUsername((String) principal.getClass().getMethod("getUsername").invoke(principal));
-                        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                            currSession.setUsername("<unknown>");
-                            log.warn("Failed to retrieve username via reflection for principal class {}.", principal.getClass().getName(), e);
-                        }
-                    }
-                    currSession.setSessionId(currSessionInfo.getSessionId());
-                    sessions.add(currSession);
-                }));
-
-        allSessionInformation.setSessions(sessions);
-        return new ResponseEntity<>(allSessionInformation, OK);
+        return ResponseEntity.ok(sessionService.getActiveSessions());
     }
 
     /**
@@ -82,20 +46,9 @@ public class SessionController {
     @RequestMapping(value = "/oauthsessions/{sessionID}/invalidate", method = POST)
     public ResponseEntity<?> killSession(@PathVariable("sessionID") String sessionID) {
         log.info("Attempt to kill session with id {}", sessionID);
-        HttpStatus httpStatus = OK;
-        SessionInformation sessionInformation = sessionRegistry.getSessionInformation(sessionID);
-        if (sessionInformation != null && !sessionInformation.isExpired()) {
-            if (sessionInformation.getPrincipal() != null) {
-                log.info("Killing session with id: {} principal: {}", sessionID, sessionInformation.getPrincipal());
-            } else {
-                log.info("Killing session with id: {} principal is null", sessionID);
-            }
-            sessionInformation.expireNow();
-        } else {
-            log.info("Session with id {} not found.", sessionID);
-            httpStatus = NOT_FOUND;
-        }
-        return new ResponseEntity<>(httpStatus);
+        return sessionService.killSession(sessionID)?
+                new ResponseEntity<>(OK) :
+                new ResponseEntity<>(NOT_FOUND);
     }
 
 }

@@ -23,7 +23,7 @@ class StatusClientMapperTest {
         }
 
         @Test
-        void should_returnDruckdaten_when_dataIsGiven() {
+        void should_returnDruckdatenDTO_when_bezirkUndWahlIDAndLocalDateTimeIsGiven() {
             val dateTimeOfEvent = LocalDateTime.now();
             val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
 
@@ -48,7 +48,7 @@ class StatusClientMapperTest {
         }
 
         @Test
-        void should_returnSendungsdaten_when_dataIsGiven() {
+        void should_returnSendungsdatenDTO_when_bezirkUndWahlIDAndLocalDateTimeIsGiven() {
             val dateTimeOfEvent = LocalDateTime.now();
             val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
 

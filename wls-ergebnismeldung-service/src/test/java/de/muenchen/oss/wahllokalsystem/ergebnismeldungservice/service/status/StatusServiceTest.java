@@ -49,7 +49,7 @@ class StatusServiceTest {
     class GetStatus {
 
         @Test
-        void should_submitFachlichWlsExceptionForParameter_when_callingValidator() {
+        void should_submitFachlicheWlsExceptionForParameter_when_callingValidator() {
             val id = new BezirkUndWahlID();
 
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
@@ -92,7 +92,7 @@ class StatusServiceTest {
     class SetStatus {
 
         @Test
-        void should_submitFachlichWlsExceptionForParameter_when_callingValidator() {
+        void should_submitFachlicheWlsExceptionForParameter_when_callingValidator() {
             val id = new BezirkUndWahlID();
             val statusToSet = createStatusModel(id);
 

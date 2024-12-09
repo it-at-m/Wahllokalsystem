@@ -35,7 +35,7 @@ class NiederschriftSendungsuhrzeitSenderTest {
     class SubmitStatus {
 
         @ParameterizedTest
-        @MethodSource("anyValidierungsStatusExceptNICHT_VALIDIERT")
+        @MethodSource("anyValidierungsstatusExceptNICHT_VALIDIERT")
         void should_callStatusClientPostNiederschriftSendungsuhrzeit_when_onlyNewStatusIsGivenWithValidierungsstatusNotNICHT_VALIDIERT(
                 final ValidierungsstatusModel validierungsstatus) {
             val id = new BezirkUndWahlID();
@@ -48,7 +48,7 @@ class NiederschriftSendungsuhrzeitSenderTest {
 
         @ParameterizedTest(name = "validierungsstatus - old: {0} new: {1}")
         @MethodSource("pairsOfUnequalValidierungsstatus")
-        void should_callStatusClientPostNiederschriftSendungsuhrzeit_when_validierungsStatusChanged(final ArgumentsAccessor arguments) {
+        void should_callStatusClientPostNiederschriftSendungsuhrzeit_when_validierungsstatusChanged(final ArgumentsAccessor arguments) {
             val id = new BezirkUndWahlID();
             val newStatus = createStatusModelWithNiederschrift(
                     createMeldungWithValidierungsstatus(arguments.get(1, ValidierungsstatusModel.class)));
@@ -62,7 +62,7 @@ class NiederschriftSendungsuhrzeitSenderTest {
 
         @ParameterizedTest(name = "submit called cause {2}")
         @MethodSource("getArgumentsWhereSubmitIsNotCalledWithTestcaseNameAppendix")
-        void should_dontCallStatusClientPostNiederschriftSendungsuhrzeit_when_requirementsAreNotMet(final ArgumentsAccessor arguments) {
+        void should_notCallStatusClientPostNiederschriftSendungsuhrzeit_when_requirementsAreNotMet(final ArgumentsAccessor arguments) {
             val id = new BezirkUndWahlID();
             val newStatus = arguments.get(0, StatusModel.class);
             val oldStatus = arguments.get(1, StatusModel.class);
@@ -74,7 +74,7 @@ class NiederschriftSendungsuhrzeitSenderTest {
 
         @ParameterizedTest()
         @EnumSource(ValidierungsstatusModel.class)
-        void should_dontCallStatusClientPostNiederschriftSendungsuhrzeit_when_oldAndNewValidierungsstatusAreEqual(
+        void should_notCallStatusClientPostNiederschriftSendungsuhrzeit_when_oldAndNewValidierungsstatusAreEqual(
                 final ValidierungsstatusModel validierungsstatus) {
             val id = new BezirkUndWahlID();
             val newStatus = createStatusModelWithNiederschrift(createMeldungWithValidierungsstatus(validierungsstatus));
@@ -85,7 +85,7 @@ class NiederschriftSendungsuhrzeitSenderTest {
             Mockito.verifyNoInteractions(statusClient);
         }
 
-        public static Stream<Arguments> anyValidierungsStatusExceptNICHT_VALIDIERT() {
+        public static Stream<Arguments> anyValidierungsstatusExceptNICHT_VALIDIERT() {
             return Stream.of(ValidierungsstatusModel.values()).filter(validierungsstatus -> validierungsstatus != ValidierungsstatusModel.NICHT_VALIDIERT)
                     .map(Arguments::of);
         }

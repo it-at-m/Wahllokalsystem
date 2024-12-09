@@ -45,7 +45,7 @@ class SchnellmeldungDruckuhrzeitSenderTest {
 
         @ParameterizedTest(name = "submit called cause {2}")
         @MethodSource("getArgumentsWhereSubmitIsNotCalledWithTestcaseNameAppendix")
-        void should_dontCallStatusClientPostSchnellmeldungDruckuhrzeit_when_requirementsAreNotMet(final ArgumentsAccessor arguments) {
+        void should_notCallStatusClientPostSchnellmeldungDruckuhrzeit_when_requirementsAreNotMet(final ArgumentsAccessor arguments) {
             val id = new BezirkUndWahlID();
             val newStatus = arguments.get(0, StatusModel.class);
             val oldStatus = arguments.get(1, StatusModel.class);

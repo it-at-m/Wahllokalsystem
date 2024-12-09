@@ -1,5 +1,5 @@
 spring:
-  h2.console.enabled: true
+
   session:
     jdbc:
       table-name: SPRING_SESSION
@@ -9,15 +9,23 @@ spring:
     url: jdbc:h2:mem:wls-auth-service;DB_CLOSE_ON_EXIT=FALSE
   flyway:
     enabled: true
+  # Spring JPA
+  h2.console.enabled: true
   jpa:
     database: H2
     hibernate:
       ddl-auto: validate
       naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    # Logging for database operation
+    show-sql: true
     properties:
       hibernate:
         format_sql: true
-    # Enable SQL logging for test environment only
-    show-sql: true
 
-refarch.gracefulshutdown.pre-wait-seconds: 0
+service:
+  config:
+    oauth2:
+      jwk:
+        rsa:
+          init:
+            seed: change_me

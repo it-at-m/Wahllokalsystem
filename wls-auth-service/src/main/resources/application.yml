@@ -1,20 +1,15 @@
 spring:
   application.name: @project.artifactId@
   banner.location: banner.txt
-  flyway:
-    locations:
-      - classpath:db/migrations/{vendor}
-  h2.console.enabled: false
   profiles:
     group:
       local:
         - db-h2
         - dummy.clients
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: http://kubernetes.docker.internal:8100/auth/realms/${realm}/protocol/openid-connect/certs
+  flyway:
+    locations:
+      - classpath:db/migrations/{vendor}
+  h2.console.enabled: false
   session:
     jdbc:
       table-name: SPRING_SESSION
@@ -24,9 +19,6 @@ spring:
 security:
   # possible values: none, all, changing (With changing, only changing requests such as POST, PUT, DELETE are logged)
   logging.requests: all
-  oauth2:
-    resource.user-info-uri: http://kubernetes.docker.internal:8100/auth/realms/${realm}/protocol/openid-connect/userinfo
-
 
 # Define the local keycloak realm here
 realm: wls_realm

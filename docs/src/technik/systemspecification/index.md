@@ -1,0 +1,3 @@
+Systemspezifikation vom Wahllokalsystem
+
+🚧 im Aufbau ...

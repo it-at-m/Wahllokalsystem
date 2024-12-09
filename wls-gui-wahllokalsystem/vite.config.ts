@@ -1,10 +1,11 @@
-// Plugins
 import { fileURLToPath, URL } from "node:url";
 
 import vue from "@vitejs/plugin-vue";
 import UnpluginFonts from "unplugin-fonts/vite";
 import { defineConfig } from "vite";
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
+
+const serverPort = 8400;
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -30,10 +31,14 @@ export default defineConfig({
     }),
   ],
   server: {
-    port: 8081,
+    port: serverPort,
     proxy: {
       "/api": "http://localhost:8083",
       "/actuator": "http://localhost:8083",
+    },
+    host: true,
+    hmr: {
+      clientPort: serverPort,
     },
   },
   resolve: {

@@ -33,5 +33,4 @@ public class SchnellmeldungSendungsuhrzeitSender extends AbstractStatusMonitorin
         return statusModel.schnellmeldung() != null && statusModel.schnellmeldung().validierungsstatus() != null
                 && !ValidierungsstatusModel.NICHT_VALIDIERT.equals(statusModel.schnellmeldung().validierungsstatus());
     }
-
 }

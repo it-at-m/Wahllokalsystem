@@ -15,11 +15,11 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.status.Stat
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.status.Validierungsstatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusModelMapper;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.LocalDateTimeComparators;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoField;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -83,7 +83,10 @@ public class StatusControllerIntegrationTest {
 
             val expectedResult = statusDTOMapper.toDTO(statusModelMapper.toModel(entityToFind));
 
-            Assertions.assertThat(responseBodyAsDTO).usingRecursiveComparison().isEqualTo(expectedResult);
+            Assertions.assertThat(responseBodyAsDTO)
+                    .usingRecursiveComparison()
+                    .withComparatorForType(LocalDateTimeComparators.PRECISION_MILLISECONDS, LocalDateTime.class)
+                    .isEqualTo(expectedResult);
         }
 
         @Test
@@ -131,7 +134,10 @@ public class StatusControllerIntegrationTest {
 
             val entityFromRepo = statusRepository.findById(requestBody.bezirkUndWahlID()).get();
             val expectedEntity = statusModelMapper.toEntity(statusDTOMapper.toModel(requestBody));
-            Assertions.assertThat(entityFromRepo).isEqualTo(expectedEntity);
+            Assertions.assertThat(entityFromRepo)
+                    .usingRecursiveComparison()
+                    .withComparatorForType(LocalDateTimeComparators.PRECISION_MILLISECONDS, LocalDateTime.class)
+                    .isEqualTo(expectedEntity);
         }
 
         @Test
@@ -158,7 +164,10 @@ public class StatusControllerIntegrationTest {
 
             val entityFromRepo = statusRepository.findById(requestBody.bezirkUndWahlID()).get();
             val expectedEntity = statusModelMapper.toEntity(statusDTOMapper.toModel(requestBody));
-            Assertions.assertThat(entityFromRepo).isEqualTo(expectedEntity);
+            Assertions.assertThat(entityFromRepo)
+                    .usingRecursiveComparison()
+                    .withComparatorForType(LocalDateTimeComparators.PRECISION_MILLISECONDS, LocalDateTime.class)
+                    .isEqualTo(expectedEntity);
         }
 
         @Test
@@ -199,14 +208,14 @@ public class StatusControllerIntegrationTest {
         }
 
         private MeldungDTO createMeldungDTO() {
-            return new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now().with(ChronoField.MILLI_OF_SECOND, 123));
+            return new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now());
         }
     }
 
     private Meldung createMeldung() {
         val meldung = new Meldung();
 
-        meldung.setSendeuhrzeit(LocalDateTime.now().with(ChronoField.MILLI_OF_SECOND, 123)); //Controller only returns 3 digits
+        meldung.setSendeuhrzeit(LocalDateTime.now());
         meldung.setUebermittelt(true);
         meldung.setValidierungsstatus(Validierungsstatus.VALIDE);
         meldung.setGedruckt(true);

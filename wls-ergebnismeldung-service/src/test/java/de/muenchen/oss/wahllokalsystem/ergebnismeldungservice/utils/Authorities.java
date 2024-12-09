@@ -2,7 +2,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import wiremock.org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Authorities {

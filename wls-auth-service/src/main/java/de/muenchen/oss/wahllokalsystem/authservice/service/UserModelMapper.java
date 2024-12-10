@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.authservice.service;
 
 import de.muenchen.oss.wahllokalsystem.authservice.domain.Authority;
+import de.muenchen.oss.wahllokalsystem.authservice.domain.Permission;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.User;
 import java.util.Collections;
 import java.util.Optional;
@@ -17,11 +18,15 @@ public interface UserModelMapper {
 
     UserModel toModel(User user);
 
-    default String toModel(Authority authority) {
-        if (authority == null) {
+    default Set<String> permissionsOfAuthoritiesToAuthorities(Set<Authority> authorities) {
+        if (authorities == null) {
             return null;
         }
-        return authority.getAuthority();
+
+        return authorities.stream()
+                .flatMap(authority -> authority.getPermissions().stream())
+                .map(Permission::getPermission)
+                .collect(Collectors.toSet());
     }
 
     @Mapping(target = "id", ignore = true)

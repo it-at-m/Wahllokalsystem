@@ -135,6 +135,25 @@ services:
       - services
       - keycloak
 
+  wls-wahlvorstand-service:
+    container_name: wls-wahlvorstand-service
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-wahlvorstand-service:latest
+    depends_on:
+      - wls-db-oracle
+    env_file:
+      - .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=${WLS_WAHLVORSTAND_SERVICE_PROFILE}
+      - SPRING_DATASOURCE_URL=${WLS_WAHLVORSTAND_SERVICE_DB_URL}
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${WLS_WAHLVORSTAND_SERVICE_KEYCLOAK_URL}/certs
+      - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${WLS_WAHLVORSTAND_SERVICE_KEYCLOAK_URL}/userinfo
+      - SERVER_PORT=8080
+    ports:
+      - 8207:8080
+    networks:
+      - services
+      - keycloak
+
   wls-eai-service:
     container_name: wls-eai-service
     image: ghcr.io/it-at-m/wahllokalsystem-wls-eai-service:latest

@@ -1,13 +1,7 @@
-export class BroadcastMessageToRead {
-  oid: string;
-  wahlbezirkIDs: string[];
-  nachricht: string;
-
-  constructor(oid: string, wahlbezirkIDs: string[], nachricht: string) {
-    this.oid = oid;
-    this.wahlbezirkIDs = wahlbezirkIDs;
-    this.nachricht = nachricht;
-  }
+export interface BroadcastMessageToRead {
+  readonly oid: string;
+  readonly wahlbezirkIDs: string[];
+  readonly nachricht: string;
 }
 
 export class BroadcastMessageToSend {

@@ -32,6 +32,8 @@
 </template>
 
 <script setup lang="ts">
+import type { BroadcastMessageToRead } from "@/types/wls-types/BroadcastMessage";
+
 import { ref } from "vue";
 import {
   VBtn,
@@ -46,7 +48,6 @@ import {
   getBroadcastMessage,
   postBroadcastMessage,
 } from "@/api/wls-clients/broadcast-client";
-import { BroadcastMessageToRead } from "@/types/wls-types/BroadcastMessage";
 
 const messageInput = ref("Broadcast Message");
 const message = ref("");

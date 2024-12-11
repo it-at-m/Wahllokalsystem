@@ -28,29 +28,6 @@
         <p v-if="errorReadFetch">{{ errorReadFetch }}</p>
       </v-col>
     </v-responsive>
-    <v-responsive class="mx-auto">
-      <v-col class="text-center">
-        <h4>API Calls with axios():</h4>
-        <br />
-        <v-text-field
-          class="ml-auto mr-auto"
-          width="350"
-          v-model="messageInputAxios"
-          clearable
-          label="ID"
-        ></v-text-field>
-        <v-btn @click="postMessageAxios(['wbz-1', 'wbz-2'])"
-          >post message with axios
-        </v-btn>
-        <p v-if="errorPostAxios">{{ errorPostAxios }}</p>
-        <br />
-        <br />
-        <v-btn @click="getMessageAxios('wbz-1')">get message with axios</v-btn>
-        <pre v-if="messageAxios"> {{ messageAxios }} </pre>
-        <p v-if="errorGetAxios">{{ errorGetAxios }}</p>
-        <p v-if="errorReadAxios">{{ errorReadAxios }}</p>
-      </v-col>
-    </v-responsive>
   </v-container>
 </template>
 
@@ -67,11 +44,6 @@ import {
 } from "vuetify/components";
 
 import {
-  broadcastMessageReadAxios,
-  getBroadcastMessageAxios,
-  postBroadcastMessageAxios,
-} from "@/api/boradcast-client-axios";
-import {
   broadcastMessageRead,
   getBroadcastMessage,
   postBroadcastMessage,
@@ -86,13 +58,6 @@ const errorGetFetch = ref("");
 const errorPostFetch = ref("");
 const errorReadFetch = ref("");
 let messageIdFetch = "";
-
-const messageInputAxios = ref("Broadcast Message");
-const messageAxios = ref("Click Button to Load Message");
-const errorGetAxios = ref("");
-const errorPostAxios = ref("");
-const errorReadAxios = ref("");
-let messageIdAxios = "";
 
 function getMessageFetch(wahlbezirkID: string) {
   errorGetFetch.value = "";
@@ -122,34 +87,5 @@ function postMessageFetch(wahlbezirkIDs: string[]) {
     snackbarStore.showMessage({ message: e, level: STATUS_INDICATORS.ERROR });
   });
   messageInputFetch.value = "";
-}
-
-function getMessageAxios(wahlbezirkID: string) {
-  errorGetAxios.value = "";
-  messageAxios.value = "";
-  getBroadcastMessageAxios(wahlbezirkID)
-    .then((content: BroadcastMessageToRead) => {
-      messageAxios.value = content.nachricht;
-      messageIdAxios = content.oid;
-      broadcastMessageReadAxios(messageIdAxios).catch((e) => {
-        errorReadFetch.value =
-          "Es ist ein Fehler beim Lesen der Nachricht aufgetreten";
-      });
-    })
-    .catch((e) => {
-      errorGetAxios.value = e.message;
-      snackbarStore.showMessage({ message: e, level: STATUS_INDICATORS.ERROR });
-    });
-}
-
-function postMessageAxios(wahlbezirkIDs: string[]) {
-  errorPostAxios.value = "";
-  postBroadcastMessageAxios(wahlbezirkIDs, messageInputAxios.value).catch(
-    (e) => {
-      errorPostAxios.value = e.message;
-      snackbarStore.showMessage({ message: e, level: STATUS_INDICATORS.ERROR });
-    }
-  );
-  messageInputAxios.value = "";
 }
 </script>

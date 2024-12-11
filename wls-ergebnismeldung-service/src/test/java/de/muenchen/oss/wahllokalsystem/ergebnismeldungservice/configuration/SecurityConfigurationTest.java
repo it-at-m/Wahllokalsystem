@@ -141,4 +141,24 @@ class SecurityConfigurationTest {
             Mockito.verify(statusService).setStatus(notNull(), notNull());
         }
     }
+
+    @Nested
+    class AsyncProgress {
+
+        @WithAnonymousUser
+        @Test
+        void should_returnUnauthorized_when_callingGetAnonymous() throws Exception {
+            val request = MockMvcRequestBuilders.get("/businessActions/asyncProgress");
+
+            api.perform(request).andExpect(status().isUnauthorized());
+        }
+
+        @WithMockUser
+        @Test
+        void should_returnOk_when_callingAuthenticated() throws Exception {
+            val request = MockMvcRequestBuilders.get("/businessActions/asyncProgress");
+
+            api.perform(request).andExpect(status().isOk());
+        }
+    }
 }

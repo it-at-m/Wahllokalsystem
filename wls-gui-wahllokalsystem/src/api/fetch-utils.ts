@@ -136,22 +136,15 @@ export function wlsCatchHandler(response: Response): PromiseLike<never> {
     });
   }
   if (response.status === 400) {
-    // 400 ist nicht immer eine wls exception.. zB wenn getMessage mit falscher API URL ausgeführt wird
-    return response.json().then((content: WLSException) => {
-      return Promise.reject(
-        new ApiError({
-          level: STATUS_INDICATORS.ERROR,
-          message: content.message,
-        })
-      );
+    return response.json().then((content) => {
+      if (isWLSException(content)) {
+        return Promise.reject(new ApiError({ message: content.message }));
+      } else {
+        return Promise.reject(new ApiError({ message: "Error: Bad Request" }));
+      }
     });
   } else {
-    return Promise.reject(
-      new ApiError({
-        level: STATUS_INDICATORS.ERROR,
-        message: "unbekannter fehler",
-      })
-    );
+    return Promise.reject(new ApiError({ message: "unbekannter fehler" }));
   }
 }
 
@@ -179,4 +172,14 @@ function getXSRFToken(): string {
     "(^|;)\\s*" + "XSRF-TOKEN" + "\\s*=\\s*([^;]+)"
   );
   return (help ? help.pop() : "") as string;
+}
+
+function isWLSException(obj: any): obj is WLSException {
+  return (
+    obj &&
+    typeof obj.category === "string" &&
+    typeof obj.code === "string" &&
+    typeof obj.message === "string" &&
+    typeof obj.service === "string"
+  );
 }

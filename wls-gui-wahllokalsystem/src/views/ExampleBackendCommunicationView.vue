@@ -14,13 +14,13 @@
           clearable
           label="ID"
         ></v-text-field>
-        <v-btn @click="postMessageFetch(['wbz-1', 'wbz-2'])"
+        <v-btn @click="postMessage(['wbz-1', 'wbz-2'])"
           >post message with fetch utils
         </v-btn>
         <p v-if="errors.post">{{ errors.post }}</p>
         <br />
         <br />
-        <v-btn @click="getMessageFetch('wbz-1')"
+        <v-btn @click="getMessage('wbz-1')"
           >get message with fetch utils
         </v-btn>
         <pre v-if="message"> {{ message }} </pre>
@@ -46,17 +46,14 @@ import {
   getBroadcastMessage,
   postBroadcastMessage,
 } from "@/api/wls-clients/broadcast-client";
-import { STATUS_INDICATORS } from "@/constants";
-import { useSnackbarStore } from "@/stores/snackbar";
 import { BroadcastMessageToRead } from "@/types/wls-types/BroadcastMessage";
 
-const snackbarStore = useSnackbarStore();
 const messageInput = ref("Broadcast Message");
 const message = ref("");
 const errors = ref({ get: "", post: "", read: "" });
 let messageId = "";
 
-function getMessageFetch(wahlbezirkID: string) {
+function getMessage(wahlbezirkID: string) {
   errors.value.get = "";
   message.value = "";
   getBroadcastMessage(wahlbezirkID)
@@ -73,15 +70,13 @@ function getMessageFetch(wahlbezirkID: string) {
     })
     .catch((e) => {
       errors.value.get = e.message;
-      snackbarStore.showMessage({ message: e, level: STATUS_INDICATORS.ERROR });
     });
 }
 
-function postMessageFetch(wahlbezirkIDs: string[]) {
+function postMessage(wahlbezirkIDs: string[]) {
   errors.value.post = "";
   postBroadcastMessage(wahlbezirkIDs, messageInput.value).catch((e) => {
     errors.value.post = e.message;
-    snackbarStore.showMessage({ message: e, level: STATUS_INDICATORS.ERROR });
   });
   messageInput.value = "";
 }

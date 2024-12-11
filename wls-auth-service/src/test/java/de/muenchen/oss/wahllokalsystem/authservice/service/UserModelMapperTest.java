@@ -27,21 +27,21 @@ class UserModelMapperTest {
         }
 
         @Test
-        void should_returnModel_when_entiyIsGiven() {
+        void should_returnModel_when_entityIsGiven() {
             val authorities = Set.of(
                     new Authority("authority1", Set.of(new Permission("permission11"), new Permission("permission12")), Collections.emptySet()),
                     new Authority("authority2", Set.of(new Permission("permission21"), new Permission("permission22")), Collections.emptySet()));
-            val entiyToMap = new User("username", "password", "email", true, true, "wahltagID", LocalDate.now(), "wahlbezirkID", "wahlbezirkNummer",
+            val entityToMap = new User("username", "password", "email", true, true, "wahltagID", LocalDate.now(), "wahlbezirkID", "wahlbezirkNummer",
                     Wahlbezirksart.BWB, "pin", authorities, "wbdid_wahlnummer");
-            entiyToMap.getAuthorities().forEach(authority -> authority.setUsers(Set.of(entiyToMap)));
+            entityToMap.getAuthorities().forEach(authority -> authority.setUsers(Set.of(entityToMap)));
 
-            val result = unitUnderTest.toModel(entiyToMap);
+            val result = unitUnderTest.toModel(entityToMap);
 
             val expectedAuthorities = Set.of("permission11", "permission12", "permission21", "permission22");
-            val expectedResult = new UserModel(entiyToMap.getUsername(), entiyToMap.getEmail(), entiyToMap.isUserEnabled(), entiyToMap.getWahltagID(),
-                    entiyToMap.getWahltag(),
-                    entiyToMap.getWahlbezirkID(), entiyToMap.getWahlbezirkNummer(), WahlbezirksartModel.BWB, entiyToMap.getPin(), expectedAuthorities,
-                    entiyToMap.getWbid_wahlnummer());
+            val expectedResult = new UserModel(entityToMap.getUsername(), entityToMap.getEmail(), entityToMap.isUserEnabled(), entityToMap.getWahltagID(),
+                    entityToMap.getWahltag(),
+                    entityToMap.getWahlbezirkID(), entityToMap.getWahlbezirkNummer(), WahlbezirksartModel.BWB, entityToMap.getPin(), expectedAuthorities,
+                    entityToMap.getWbid_wahlnummer());
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }

@@ -40,14 +40,12 @@
           label="ID"
         ></v-text-field>
         <v-btn @click="postMessageAxios(['wbz-1', 'wbz-2'])"
-          >post message with fetch utils
+          >post message with axios
         </v-btn>
         <p v-if="errorPostAxios">{{ errorPostAxios }}</p>
         <br />
         <br />
-        <v-btn @click="getMessageAxios('wbz-1')"
-          >get message with fetch utils
-        </v-btn>
+        <v-btn @click="getMessageAxios('wbz-1')">get message with axios</v-btn>
         <pre v-if="messageAxios"> {{ messageAxios }} </pre>
         <p v-if="errorGetAxios">{{ errorGetAxios }}</p>
         <p v-if="errorReadAxios">{{ errorReadAxios }}</p>
@@ -68,6 +66,11 @@ import {
   VTextField,
 } from "vuetify/components";
 
+import {
+  broadcastMessageReadAxios,
+  getBroadcastMessageAxios,
+  postBroadcastMessageAxios,
+} from "@/api/boradcast-client-axios";
 import {
   broadcastMessageRead,
   getBroadcastMessage,
@@ -119,5 +122,34 @@ function postMessageFetch(wahlbezirkIDs: string[]) {
     snackbarStore.showMessage({ message: e, level: STATUS_INDICATORS.ERROR });
   });
   messageInputFetch.value = "";
+}
+
+function getMessageAxios(wahlbezirkID: string) {
+  errorGetAxios.value = "";
+  messageAxios.value = "";
+  getBroadcastMessageAxios(wahlbezirkID)
+    .then((content: BroadcastMessageToRead) => {
+      messageAxios.value = content.nachricht;
+      messageIdAxios = content.oid;
+      broadcastMessageReadAxios(messageIdAxios).catch((e) => {
+        errorReadFetch.value =
+          "Es ist ein Fehler beim Lesen der Nachricht aufgetreten";
+      });
+    })
+    .catch((e) => {
+      errorGetAxios.value = e.message;
+      snackbarStore.showMessage({ message: e, level: STATUS_INDICATORS.ERROR });
+    });
+}
+
+function postMessageAxios(wahlbezirkIDs: string[]) {
+  errorPostAxios.value = "";
+  postBroadcastMessageAxios(wahlbezirkIDs, messageInputAxios.value).catch(
+    (e) => {
+      errorPostAxios.value = e.message;
+      snackbarStore.showMessage({ message: e, level: STATUS_INDICATORS.ERROR });
+    }
+  );
+  messageInputAxios.value = "";
 }
 </script>

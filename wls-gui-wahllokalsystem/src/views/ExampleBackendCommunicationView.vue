@@ -54,24 +54,22 @@ const message = ref("");
 const errors = ref({ get: "", post: "", read: "" });
 let messageId = "";
 
-function getMessage(wahlbezirkID: string) {
+async function getMessage(wahlbezirkID: string) {
   errors.value.get = "";
   message.value = "";
-  getBroadcastMessage(wahlbezirkID)
-    .then((response) => {
-      return response.json();
-    })
-    .then((content: BroadcastMessageToRead) => {
-      message.value = content.nachricht;
-      messageId = content.oid;
-      broadcastMessageRead(messageId).catch((e) => {
-        errors.value.read =
-          "Es ist ein Fehler beim Lesen der Nachricht aufgetreten";
-      });
-    })
-    .catch((e) => {
-      errors.value.get = e.message;
+  try {
+    const response = await getBroadcastMessage(wahlbezirkID);
+    const content: BroadcastMessageToRead = await response.json();
+    message.value = content.nachricht;
+    messageId = content.oid;
+
+    await broadcastMessageRead(messageId).catch((e) => {
+      errors.value.read =
+        "Es ist ein Fehler beim Lesen der Nachricht aufgetreten";
     });
+  } catch (e) {
+    errors.value.get = (e as Error).message;
+  }
 }
 
 function postMessage(wahlbezirkIDs: string[]) {

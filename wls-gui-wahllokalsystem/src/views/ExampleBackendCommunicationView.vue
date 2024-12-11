@@ -5,27 +5,27 @@
     </v-col>
     <v-responsive class="mx-auto">
       <v-col class="text-center">
-        <h4>API Calls with fetch():</h4>
+        <h4>Get or Post a Broadcast message:</h4>
         <br />
         <v-text-field
           class="ml-auto mr-auto"
           width="350"
-          v-model="messageInputFetch"
+          v-model="messageInput"
           clearable
           label="ID"
         ></v-text-field>
         <v-btn @click="postMessageFetch(['wbz-1', 'wbz-2'])"
           >post message with fetch utils
         </v-btn>
-        <p v-if="errorPostFetch">{{ errorPostFetch }}</p>
+        <p v-if="errors.post">{{ errors.post }}</p>
         <br />
         <br />
         <v-btn @click="getMessageFetch('wbz-1')"
           >get message with fetch utils
         </v-btn>
-        <pre v-if="messageFetch"> {{ messageFetch }} </pre>
-        <p v-if="errorGetFetch">{{ errorGetFetch }}</p>
-        <p v-if="errorReadFetch">{{ errorReadFetch }}</p>
+        <pre v-if="message"> {{ message }} </pre>
+        <p v-if="errors.get">{{ errors.get }}</p>
+        <p v-if="errors.read">{{ errors.read }}</p>
       </v-col>
     </v-responsive>
   </v-container>
@@ -51,40 +51,38 @@ import { useSnackbarStore } from "@/stores/snackbar";
 import { BroadcastMessageToRead } from "@/types/wls-types/BroadcastMessage";
 
 const snackbarStore = useSnackbarStore();
-const messageInputFetch = ref("Broadcast Message");
-const messageFetch = ref("Click Button to Load Message");
-const errorGetFetch = ref("");
-const errorPostFetch = ref("");
-const errorReadFetch = ref("");
-let messageIdFetch = "";
+const messageInput = ref("Broadcast Message");
+const message = ref("");
+const errors = ref({ get: "", post: "", read: "" });
+let messageId = "";
 
 function getMessageFetch(wahlbezirkID: string) {
-  errorGetFetch.value = "";
-  messageFetch.value = "";
+  errors.value.get = "";
+  message.value = "";
   getBroadcastMessage(wahlbezirkID)
     .then((response) => {
       return response.json();
     })
     .then((content: BroadcastMessageToRead) => {
-      messageFetch.value = content.nachricht;
-      messageIdFetch = content.oid;
-      broadcastMessageRead(messageIdFetch).catch((e) => {
-        errorReadFetch.value =
+      message.value = content.nachricht;
+      messageId = content.oid;
+      broadcastMessageRead(messageId).catch((e) => {
+        errors.value.read =
           "Es ist ein Fehler beim Lesen der Nachricht aufgetreten";
       });
     })
     .catch((e) => {
-      errorGetFetch.value = e.message;
+      errors.value.get = e.message;
       snackbarStore.showMessage({ message: e, level: STATUS_INDICATORS.ERROR });
     });
 }
 
 function postMessageFetch(wahlbezirkIDs: string[]) {
-  errorPostFetch.value = "";
-  postBroadcastMessage(wahlbezirkIDs, messageInputFetch.value).catch((e) => {
-    errorPostFetch.value = e.message;
+  errors.value.post = "";
+  postBroadcastMessage(wahlbezirkIDs, messageInput.value).catch((e) => {
+    errors.value.post = e.message;
     snackbarStore.showMessage({ message: e, level: STATUS_INDICATORS.ERROR });
   });
-  messageInputFetch.value = "";
+  messageInput.value = "";
 }
 </script>

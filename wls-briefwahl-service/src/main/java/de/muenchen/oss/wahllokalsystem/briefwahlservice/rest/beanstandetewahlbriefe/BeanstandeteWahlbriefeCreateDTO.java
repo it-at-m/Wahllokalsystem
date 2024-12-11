@@ -9,5 +9,6 @@ import lombok.Builder;
 
 @Builder
 public record BeanstandeteWahlbriefeCreateDTO(
-        @Schema(ref = SwaggerConfiguration.SCHEMA_BEANSTANDETEWAHLBRIEFE_PROPERTY) @NotNull Map<String, Zurueckweisungsgrund[]> beanstandeteWahlbriefe) {
+        @Schema(enumAsRef = true, example = SwaggerConfiguration.BEANSTANDETE_WAHLBRIEFE_EXAMPLE)
+        @NotNull Map<String, Zurueckweisungsgrund[]> beanstandeteWahlbriefe) {
 }

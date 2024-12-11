@@ -82,6 +82,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-authorization-server</artifactId>
+        </dependency>
 
         <!-- Caching -->
         <dependency>
@@ -390,6 +394,7 @@
                             <environmentVariables>
                                 <SPRING_PROFILES_ACTIVE>db-h2,dummy.clients</SPRING_PROFILES_ACTIVE>
                                 <SERVICEAUTH.CRYPTO.KEY>secret</SERVICEAUTH.CRYPTO.KEY>
+                                <SERVICE.CONFIG.OAUTH2.JWK.RSA.INIT.SEED>seed</SERVICE.CONFIG.OAUTH2.JWK.RSA.INIT.SEED>
                             </environmentVariables>
                         </configuration>
                     </execution>

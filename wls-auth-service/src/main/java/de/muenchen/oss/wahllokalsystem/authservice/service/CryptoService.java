@@ -61,7 +61,7 @@ public class CryptoService {
                 val finalized = decryptionCipher.doFinal(decode);
                 return new String(finalized);
             } catch (IllegalBlockSizeException | BadPaddingException e) {
-                log.error("Unable to decrypt the given value <" + value + "> as of an " + e.getClass().getSimpleName() + ". Using direct object reference!", e);
+                log.error("Unable to decrypt the value due to " + e.getClass().getSimpleName() + ". Using direct object reference!", e);
                 throw TechnischeWlsException.withCode(ExceptionConstants.CRYPTO_EXCEPTION_CODE).inService(formatter.getId())
                         .buildWithMessage("Problem bei Referenzierung/Dereferenzierung von Objekt-Referenzen");
             }
@@ -75,7 +75,7 @@ public class CryptoService {
                 val finalized = encryptionCipher.doFinal(value.getBytes());
                 value = Base64.getUrlEncoder().encodeToString(finalized);
             } catch (IllegalBlockSizeException | BadPaddingException e) {
-                log.error("Unable to encrypt the given value <" + value + "> as of an " + e.getClass().getSimpleName() + ". Using direct object reference!", e);
+                log.error("Unable to encrypt the value due to " + e.getClass().getSimpleName() + ". Using direct object reference!", e);
                 throw TechnischeWlsException.withCode(ExceptionConstants.CRYPTO_EXCEPTION_CODE).inService(formatter.getId())
                         .buildWithMessage("Problem bei Referenzierung/Dereferenzierung von Objekt-Referenzen");
             }

@@ -1,4 +1,4 @@
-import type WLSException from "@/types/WLSException";
+import type WLSException from "@/types/wls-types/WLSException";
 
 import { ApiError } from "@/api/ApiError";
 import { STATUS_INDICATORS } from "@/constants";

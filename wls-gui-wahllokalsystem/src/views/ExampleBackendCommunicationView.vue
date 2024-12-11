@@ -32,8 +32,6 @@
 </template>
 
 <script setup lang="ts">
-import type BroadcastMessageToRead from "@/types/BroadcastMessageToRead";
-
 import { ref } from "vue";
 import {
   VBtn,
@@ -47,9 +45,10 @@ import {
   broadcastMessageRead,
   getBroadcastMessage,
   postBroadcastMessage,
-} from "@/api/broadcast-client";
+} from "@/api/wls-clients/broadcast-client";
 import { STATUS_INDICATORS } from "@/constants";
 import { useSnackbarStore } from "@/stores/snackbar";
+import { BroadcastMessageToRead } from "@/types/wls-types/BroadcastMessage";
 
 const snackbarStore = useSnackbarStore();
 const messageInputFetch = ref("Broadcast Message");

@@ -4,7 +4,7 @@ import {
   wlsCatchHandler,
   wlsResponseHandler,
 } from "@/api/fetch-utils";
-import BroadcastMessageToSend from "@/types/BroadcastMessageToSend";
+import { BroadcastMessageToSend } from "@/types/wls-types/BroadcastMessage";
 
 export const BROADCAST_API_URL = "/api/broadcast-service/businessActions/";
 

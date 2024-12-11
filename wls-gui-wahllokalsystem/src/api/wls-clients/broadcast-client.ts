@@ -6,10 +6,13 @@ import {
 } from "@/api/fetch-utils";
 import { BroadcastMessageToSend } from "@/types/wls-types/BroadcastMessage";
 
-export const BROADCAST_API_URL = "/api/broadcast-service/businessActions/";
+export const BROADCAST_API_URL = new URL(
+  "/api/broadcast-service/businessActions/",
+  window.location.origin
+).toString();
 
 export function getBroadcastMessage(wahlbezirkID: string): Promise<Response> {
-  return fetch(BROADCAST_API_URL + "getMessage/" + wahlbezirkID, getConfig())
+  return fetch(`${BROADCAST_API_URL}getMessage/` + wahlbezirkID, getConfig())
     .then(wlsResponseHandler)
     .catch(wlsCatchHandler);
 }
@@ -19,7 +22,7 @@ export function postBroadcastMessage(
   message: string
 ): Promise<Response> {
   return fetch(
-    BROADCAST_API_URL + "broadcast",
+    `${BROADCAST_API_URL}broadcast`,
     postConfig(new BroadcastMessageToSend(wahlbezirkIDs, message))
   )
     .then(wlsResponseHandler)
@@ -28,7 +31,7 @@ export function postBroadcastMessage(
 
 export function broadcastMessageRead(nachrichtID: string): Promise<Response> {
   return fetch(
-    BROADCAST_API_URL + "messageRead/" + nachrichtID,
+    `${BROADCAST_API_URL}messageRead/` + nachrichtID,
     postConfig(nachrichtID)
   )
     .then(wlsResponseHandler)

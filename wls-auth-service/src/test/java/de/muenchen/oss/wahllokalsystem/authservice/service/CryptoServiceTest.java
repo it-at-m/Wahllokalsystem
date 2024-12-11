@@ -84,7 +84,7 @@ class CryptoServiceTest {
         }
 
         @ParameterizedTest
-        @MethodSource("exceptionsMappedToWlsException")
+        @MethodSource("de.muenchen.oss.wahllokalsystem.authservice.service.CryptoServiceTest#exceptionsMappedToWlsException")
         void should_throwTechnischeWlsException_when_cipherThrowsException(final Exception exceptionThrownByCipher) throws Exception {
             val valueToEncrypt = "hello world";
 
@@ -103,12 +103,6 @@ class CryptoServiceTest {
                                 .isEqualTo(expectedException);
                         Assertions.assertThat(exception).hasNoNullFieldsOrProperties();
                     });
-        }
-
-        public static Stream<Arguments> exceptionsMappedToWlsException() {
-            val exceptions = Set.of(new IllegalBlockSizeException(), new BadPaddingException());
-
-            return exceptions.stream().map(exception -> Arguments.of(exception, exception.getClass().getName()));
         }
     }
 
@@ -135,7 +129,7 @@ class CryptoServiceTest {
         }
 
         @ParameterizedTest
-        @MethodSource("exceptionsMappedToWlsException")
+        @MethodSource("de.muenchen.oss.wahllokalsystem.authservice.service.CryptoServiceTest#exceptionsMappedToWlsException")
         void should_throwTechnischeWlsException_when_cipherThrowsException(final Exception exceptionThrownByCipher) throws Exception {
             val encryptedValue = "the encrypted value";
             val encryptedValueAsBase64WithPrefix = ENCRYPTION_PREFIX + Base64.getEncoder().encodeToString(encryptedValue.getBytes());
@@ -156,11 +150,11 @@ class CryptoServiceTest {
                         Assertions.assertThat(exception).hasNoNullFieldsOrProperties();
                     });
         }
+    }
 
-        public static Stream<Arguments> exceptionsMappedToWlsException() {
-            val exceptions = Set.of(new IllegalBlockSizeException(), new BadPaddingException());
+    public static Stream<Arguments> exceptionsMappedToWlsException() {
+        val exceptions = Set.of(new IllegalBlockSizeException(), new BadPaddingException());
 
-            return exceptions.stream().map(exception -> Arguments.of(exception, exception.getClass().getName()));
-        }
+        return exceptions.stream().map(exception -> Arguments.of(exception, exception.getClass().getName()));
     }
 }

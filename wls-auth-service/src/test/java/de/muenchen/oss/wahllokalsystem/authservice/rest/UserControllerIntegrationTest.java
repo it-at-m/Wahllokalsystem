@@ -12,6 +12,8 @@ import de.muenchen.oss.wahllokalsystem.authservice.domain.Authority;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.AuthorityRepository;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.LoginAttempt;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.LoginAttemptRepository;
+import de.muenchen.oss.wahllokalsystem.authservice.domain.Permission;
+import de.muenchen.oss.wahllokalsystem.authservice.domain.PermissionRepository;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.User;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.UserRepository;
 import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
@@ -58,6 +60,9 @@ public class UserControllerIntegrationTest {
     AuthorityRepository authorityRepository;
 
     @Autowired
+    PermissionRepository permissionRepository;
+
+    @Autowired
     TransactionTemplate transactionTemplate;
 
     @Autowired
@@ -72,6 +77,8 @@ public class UserControllerIntegrationTest {
         transactionTemplate.executeWithoutResult(status -> {
             SecurityUtils.runWith(Authorities.SERVICE_UNLOCK_USER);
             userRepository.deleteUsersByWahltagID("wahltagID");
+            authorityRepository.deleteAll();
+            permissionRepository.deleteAll();
         });
     }
 
@@ -90,7 +97,9 @@ public class UserControllerIntegrationTest {
         void should_returnUserDTO_when_userFound() throws Exception {
             val testauthorityName = "testauthority";
             transactionTemplate.executeWithoutResult(status -> {
-                val authorityToSave = new Authority(testauthorityName, Collections.emptySet(), Collections.emptySet());
+                val permission1Saved = permissionRepository.save(new Permission("permission1"));
+                val permission2Saved = permissionRepository.save(new Permission("permission2"));
+                val authorityToSave = new Authority(testauthorityName, new HashSet<>(Set.of(permission1Saved, permission2Saved)), Collections.emptySet());
                 val authoritySaved = authorityRepository.save(authorityToSave);
                 val userToSave = new User("Hansi", null, null, true, true, "wahltagID", null, null, null, null, null, new HashSet<>(Set.of(authoritySaved)),
                         null);
@@ -101,7 +110,7 @@ public class UserControllerIntegrationTest {
 
             val response = api.perform(request).andExpect(status().isOk()).andReturn();
             val responseBody = objectMapper.readValue(response.getResponse().getContentAsString(), UserDTO.class);
-            val expectedResponseBody = new UserDTO("Hansi", null, true, "wahltagID", null, null, null, null, null, Set.of(testauthorityName), null);
+            val expectedResponseBody = new UserDTO("Hansi", null, true, "wahltagID", null, null, null, null, null, Set.of("permission1", "permission2"), null);
 
             Assertions.assertThat(responseBody).isEqualTo(expectedResponseBody);
         }

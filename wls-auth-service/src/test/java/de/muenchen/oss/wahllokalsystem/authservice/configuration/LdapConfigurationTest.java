@@ -5,6 +5,8 @@ import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.authservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.Authority;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.AuthorityRepository;
+import de.muenchen.oss.wahllokalsystem.authservice.domain.Permission;
+import de.muenchen.oss.wahllokalsystem.authservice.domain.PermissionRepository;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.User;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.UserRepository;
 import de.muenchen.oss.wahllokalsystem.authservice.rest.UserDTO;
@@ -53,6 +55,9 @@ class LdapConfigurationTest {
     AuthorityRepository authorityRepository;
 
     @Autowired
+    PermissionRepository permissionRepository;
+
+    @Autowired
     RegisteredClientRepository registeredClientRepository;
 
     @Autowired
@@ -72,6 +77,7 @@ class LdapConfigurationTest {
     @BeforeEach
     void setup() {
         authorityRepository.deleteAll();
+        permissionRepository.deleteAll();
         userRepository.deleteUsersByWahltagID(WAHLTAG_ID);
     }
 
@@ -133,7 +139,8 @@ class LdapConfigurationTest {
             val username = "user";
 
             transactionTemplate.executeWithoutResult(status -> {
-                val authorityToSave = new Authority("WLS_WAHLVORSTAND", Collections.emptySet(), Collections.emptySet());
+                val savedPermission = permissionRepository.save(new Permission("permission"));
+                val authorityToSave = new Authority("WLS_WAHLVORSTAND", new HashSet<>(Set.of(savedPermission)), Collections.emptySet());
                 val authoritySaved = authorityRepository.save(authorityToSave);
                 val userToSave = new User(username, null, null, true, true, WAHLTAG_ID, null, null, null, null, null, new HashSet<>(Set.of(authoritySaved)),
                         null);
@@ -216,7 +223,7 @@ class LdapConfigurationTest {
             userRequestHeaders.add("Authorization", "Bearer " + token);
             val userRequest = new RequestEntity<>(userRequestHeaders, HttpMethod.GET, URI.create(getHost() + "/user"));
             val userResponse = restTemplate.exchange(userRequest, UserDTO.class);
-            Assertions.assertThat(userResponse.getBody().authorities()).containsExactly("WLS_WAHLVORSTAND");
+            Assertions.assertThat(userResponse.getBody().authorities()).containsExactly("permission");
         }
 
         private String getHost() {

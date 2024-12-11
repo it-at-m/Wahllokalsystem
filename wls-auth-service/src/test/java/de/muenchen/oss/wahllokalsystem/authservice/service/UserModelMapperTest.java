@@ -45,7 +45,6 @@ class UserModelMapperTest {
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
-
     }
 
     @Nested

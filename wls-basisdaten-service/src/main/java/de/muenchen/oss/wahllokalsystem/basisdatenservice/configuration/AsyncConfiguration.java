@@ -12,16 +12,16 @@ import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecu
 @Configuration
 public class AsyncConfiguration {
 
-    @Value("${app.async.corePoolSize}")
+    @Value("${service.config.async.corePoolSize}")
     public int corePoolSize;
 
-    @Value("${app.async.maxPoolSize}")
+    @Value("${service.config.async.maxPoolSize}")
     public int maxPoolSize;
 
-    @Value("${app.async.queueCapacity}")
+    @Value("${service.config.async.queueCapacity}")
     public int queueCapacity;
 
-    @Value("${app.async.threadNamePrefix}")
+    @Value("${service.config.async.threadNamePrefix}")
     public String threadNamePrefix;
 
     @Bean

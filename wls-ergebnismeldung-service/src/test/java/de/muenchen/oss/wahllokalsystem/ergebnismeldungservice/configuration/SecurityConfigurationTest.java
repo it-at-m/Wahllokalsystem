@@ -91,7 +91,7 @@ class SecurityConfigurationTest {
     class Status {
 
         @Nested
-        class getStatus {
+        class GetStatus {
 
             @WithAnonymousUser
             @Test

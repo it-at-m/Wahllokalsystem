@@ -2,18 +2,24 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.awerte;
 
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_TEST_PROFILE;
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AsyncProgress;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -33,6 +39,9 @@ public class AsyncProgressControllerIntegrationTest {
     AsyncProgress asyncProgress;
 
     @Autowired
+    ServiceIDFormatter serviceIDFormatter;
+
+    @SpyBean
     AsyncProgressDTOMapper asyncProgressDTOMapper;
 
     @Nested
@@ -50,6 +59,24 @@ public class AsyncProgressControllerIntegrationTest {
             val expectedAsyncProgress = asyncProgressDTOMapper.toDTO(asyncProgress);
 
             Assertions.assertThat(asyncProgressDTO).usingRecursiveComparison().isEqualTo(expectedAsyncProgress);
+        }
+
+        @Test
+        void should_returnHttpStatus500WithWlsException_when_anExceptionOccured() throws Exception {
+            val exceptionMessage = "mapping failed";
+            Mockito.when(asyncProgressDTOMapper.toDTO(any())).thenThrow(new RuntimeException(exceptionMessage));
+
+            val request = MockMvcRequestBuilders.get("/businessActions/asyncProgress");
+
+            val response = api.perform(request).andExpect(status().isInternalServerError()).andReturn().getResponse();
+            val responseAsWlsExceptionDTO = objectMapper.readValue(response.getContentAsString(), WlsExceptionDTO.class);
+
+            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T, "999", serviceIDFormatter.getId(), "");
+            Assertions.assertThat(responseAsWlsExceptionDTO)
+                    .usingRecursiveComparison()
+                    .ignoringFields("message")
+                    .isEqualTo(expectedWlsExceptionDTO);
+            Assertions.assertThat(responseAsWlsExceptionDTO.message()).contains(exceptionMessage);
         }
     }
 }

@@ -7,7 +7,7 @@
 
 <!-- Backend -->
 ### Backend ###
-- [ ] [Codingkonventions](https://it-at-m.github.io/Wahllokalsystem/technik/coding_conventions/) beachtet
+- [ ] [Codingconventions](https://it-at-m.github.io/Wahllokalsystem/technik/coding_conventions/) beachtet
 - [ ] Doku aktualisiert
 - [ ] Swagger-API vollständig
 - [ ] Unit-Tests gepflegt
@@ -20,6 +20,7 @@
 
 <!-- Frontend -->
 ### Frontend
+- [ ] [Codingconventions](https://it-at-m.github.io/Wahllokalsystem/technik/coding_conventions/) beachtet
 - [ ] Doku aktualisiert
 - [ ] Unit-Tests gepflegt
 - [ ] Komponententests gepflegt

@@ -6,6 +6,7 @@ spring:
       local:
         - db-h2
         - dummy.clients
+        - dummy.nobezirkid.check
   flyway:
     locations:
       - classpath:db/migrations/{vendor}
@@ -71,3 +72,5 @@ service:
     clients:
       eai:
         basePath: http://localhost:39149
+      monitoring:
+        basePath: http://localhost:39154

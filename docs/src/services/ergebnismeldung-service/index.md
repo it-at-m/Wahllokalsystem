@@ -40,3 +40,12 @@ diese im lokalen Repository gespeichert.
 - Bei Nichterfolg, wird geprüft ob im lokalen Repository wenigstens 'alte' A-Werte existieren.
 - Falls weder im externen Wahlsystem noch im lokalen Repository A-Werte gefunden werden
   liefert der Service einen Fehler. 
+
+### Update des Status der Ergebnisermittlung
+
+Bei der Auszählung (Ergebnisermittlung) wird zuerst eine Schnellmeldung vorbereitet. Den Abschluss der Auszählung
+bildet die Niederschrift. Die Schnellmeldung und die Niederschrift können gedruckt und übermittelt werden.
+
+Welche Aktionen für die jeweiligen Dokumente bereits in einem Wahllokal vollzogen wurden, wird über den Status gepflegt.
+
+Über Änderungen an dem Status wird auch der [Monitoring-Service](/services/monitoring-service/) informiert.

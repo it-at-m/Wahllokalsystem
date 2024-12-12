@@ -3,6 +3,8 @@ service:
     clients:
       eai:
         basePath: http://localhost:${wiremock.server.port}/
+      monitoring:
+        basePath: http://localhost:${wiremock.server.port}/
 
 spring:
 

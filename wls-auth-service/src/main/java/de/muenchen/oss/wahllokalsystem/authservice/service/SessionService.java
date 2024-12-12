@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
@@ -20,8 +19,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class SessionService {
 
-    @Autowired
-    SessionRegistry sessionRegistry;
+    private final SessionRegistry sessionRegistry;
 
     public OAuthServerSessions getActiveSessions() {
         log.info("getActiveSessions()");

@@ -2,11 +2,13 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabga
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.status.StatusRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusModelMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusValidator;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.sender.AbstractStatusMonitoringSender;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.models.StimmabgabevermerkeModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -24,21 +26,23 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class StimmabgabevermerkeService {
 
-//    private final StatusRepository statusRepository;
+    private final StimmabgabevermerkeModelMapper stimmabgabevermerkeModelMapper;
+    private final StimmabgabevermerkeRepository stimmabgabevermerkeRepository;
+    private final StimmabgabevermerkeValidator stimmabgabevermerkeValidator;
+    private final ExceptionFactory exceptionFactory;
+
+    //
 //    private final StatusModelMapper statusModelMapper;
-//    private final StatusValidator statusValidator;
+
 //    private final ExceptionFactory exceptionFactory;
 //    private final List<AbstractStatusMonitoringSender> monitoringSender;
 
     @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmabgabevermerke')")
-    public Stimmabgabevermerke getStimmabgabevermerke(final BezirkIDUndWaehlerverzeichnisNummer id) {
-//        log.info("#getStatus");
-//
-//        statusValidator.validBezirkUndWahlIdOrThrow(id,
-//                exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_STATUS_PARAMETER_UNVOLLSTAENDIG));
-//
-//        val statusFromRepo = statusRepository.findById(id);
-//        return statusFromRepo.map(statusModelMapper::toModel);
+    public Optional<StimmabgabevermerkeModel> getStimmabgabevermerke(final BezirkIDUndWaehlerverzeichnisNummer id) {
+        log.info("#getStimmabgabevermerke");
+        stimmabgabevermerkeValidator.validBezirkIDUndWaehlerverzeichnisnummerOrThrow(id, exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG));
+        val savFromRepository = stimmabgabevermerkeRepository.findById(id);
+        return savFromRepository.map(stimmabgabevermerkeModelMapper::toModel);
     }
 
     @PreAuthorize(

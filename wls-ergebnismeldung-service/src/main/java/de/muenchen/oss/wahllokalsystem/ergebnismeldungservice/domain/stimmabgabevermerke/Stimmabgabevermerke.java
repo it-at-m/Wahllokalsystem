@@ -3,7 +3,6 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgab
 import static java.sql.Types.VARCHAR;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;

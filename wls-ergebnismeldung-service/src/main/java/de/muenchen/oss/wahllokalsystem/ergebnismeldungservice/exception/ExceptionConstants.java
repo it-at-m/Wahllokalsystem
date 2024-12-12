@@ -19,4 +19,6 @@ public class ExceptionConstants {
 
     public static final ExceptionDataWrapper KOMMUNIKATIONSFEHLER_MIT_MONITORING = new ExceptionDataWrapper("100",
             "Bei der Kommunikation mit dem MonitoringService kam es zu einem Fehler.");
+
+    public static final ExceptionDataWrapper GET_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("608", "getStimmabgabevermerke: Parameter unvollstaendig");
 }

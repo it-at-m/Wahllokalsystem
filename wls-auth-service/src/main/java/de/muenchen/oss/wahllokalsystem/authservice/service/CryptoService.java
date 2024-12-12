@@ -63,7 +63,7 @@ public class CryptoService {
             } catch (IllegalBlockSizeException | BadPaddingException e) {
                 log.error("Unable to decrypt the value due to " + e.getClass().getSimpleName() + ". Using direct object reference!", e);
                 throw TechnischeWlsException.withCode(ExceptionConstants.CRYPTO_EXCEPTION_CODE).inService(formatter.getId())
-                        .buildWithMessage("Problem bei Referenzierung/Dereferenzierung von Objekt-Referenzen");
+                        .buildWithMessage("Problem bei der Entschlüsselung von Objekt-Referenzen");
             }
         }
         return value;
@@ -77,7 +77,7 @@ public class CryptoService {
             } catch (IllegalBlockSizeException | BadPaddingException e) {
                 log.error("Unable to encrypt the value due to " + e.getClass().getSimpleName() + ". Using direct object reference!", e);
                 throw TechnischeWlsException.withCode(ExceptionConstants.CRYPTO_EXCEPTION_CODE).inService(formatter.getId())
-                        .buildWithMessage("Problem bei Referenzierung/Dereferenzierung von Objekt-Referenzen");
+                        .buildWithMessage("Problem bei der Verschlüsselung von Objekt-Referenzen");
             }
         }
         return value;

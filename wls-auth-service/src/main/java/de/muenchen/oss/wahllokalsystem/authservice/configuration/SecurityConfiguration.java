@@ -56,6 +56,8 @@ import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 @Import(RestTemplateAutoConfiguration.class)
 public class SecurityConfiguration {
 
+    private final String LOGIN_PATH = "/login";
+
     @Autowired
     private CustomUsernamePasswordAuthenticationFilter customUsernamePasswordAuthenticationFilter;
 
@@ -77,15 +79,13 @@ public class SecurityConfiguration {
                 // authorization endpoint
                 .exceptionHandling((exceptions) -> exceptions
                         .defaultAuthenticationEntryPointFor(
-                                new LoginUrlAuthenticationEntryPoint("/login"),
+                                new LoginUrlAuthenticationEntryPoint(LOGIN_PATH),
                                 new MediaTypeRequestMatcher(MediaType.TEXT_HTML)))
                 .oauth2ResourceServer((resourceServer) -> resourceServer
                         .jwt(Customizer.withDefaults()));
 
         return http.build();
     }
-
-    private final String LOGIN_PATH = "/login";
 
     @Bean
     @Order(2)

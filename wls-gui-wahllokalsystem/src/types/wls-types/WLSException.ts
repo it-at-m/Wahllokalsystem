@@ -1,18 +1,18 @@
 export default class WLSException {
-  category: string;
-  code: string;
-  message: string;
-  service: string;
-
   constructor(
-    category: string,
-    code: string,
-    message: string,
-    service: string
-  ) {
-    this.category = category;
-    this.code = code;
-    this.message = message;
-    this.service = service;
+    public readonly category: string,
+    public readonly code: string,
+    public readonly message: string,
+    public readonly service: string
+  ) {}
+
+  static isWLSException(obj: any): obj is WLSException {
+    return (
+      obj &&
+      typeof obj.category === "string" &&
+      typeof obj.code === "string" &&
+      typeof obj.message === "string" &&
+      typeof obj.service === "string"
+    );
   }
 }

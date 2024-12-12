@@ -1,7 +1,6 @@
-import type WLSException from "@/types/wls-types/WLSException";
-
 import { ApiError } from "@/api/ApiError";
 import { STATUS_INDICATORS } from "@/constants";
+import WLSException from "@/types/wls-types/WLSException";
 
 /**
  * Returns a default GET-Config for fetch
@@ -137,7 +136,7 @@ export function wlsCatchHandler(response: Response): PromiseLike<never> {
   }
   if (response.status === 400) {
     return response.json().then((content) => {
-      if (isWLSException(content)) {
+      if (WLSException.isWLSException(content)) {
         return Promise.reject(new ApiError({ message: content.message }));
       } else {
         return Promise.reject(new ApiError({ message: "Error: Bad Request" }));
@@ -172,14 +171,4 @@ function getXSRFToken(): string {
     "(^|;)\\s*" + "XSRF-TOKEN" + "\\s*=\\s*([^;]+)"
   );
   return (help ? help.pop() : "") as string;
-}
-
-function isWLSException(obj: any): obj is WLSException {
-  return (
-    obj &&
-    typeof obj.category === "string" &&
-    typeof obj.code === "string" &&
-    typeof obj.message === "string" &&
-    typeof obj.service === "string"
-  );
 }

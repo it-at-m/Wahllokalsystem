@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import type { BroadcastMessageToRead } from "@/api/wls-clients/broadcast-service/BroadcastMessage";
+import type { BroadcastMessageToRead } from "@/api/wls-clients/broadcast-service/BroadcastMessageToRead";
 
 import { ref } from "vue";
 import {

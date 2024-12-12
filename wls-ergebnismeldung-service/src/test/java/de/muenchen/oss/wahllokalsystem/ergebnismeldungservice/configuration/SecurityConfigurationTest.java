@@ -91,7 +91,7 @@ class SecurityConfigurationTest {
     class Status {
 
         @Nested
-        class getStatus {
+        class GetStatus {
 
             @WithAnonymousUser
             @Test
@@ -111,34 +111,35 @@ class SecurityConfigurationTest {
                 Mockito.verify(statusService).getStatus(notNull());
             }
         }
-    }
 
-    @Nested
-    class PostStatus {
-        @WithAnonymousUser
-        @Test
-        void should_returnUnauthorized_when_callingAnonymous() throws Exception {
-            val requestBody = new StatusDTO(new BezirkUndWahlID("wahlID", "wahlbezirkID"),
-                    new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()),
-                    new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()));
-            val request = MockMvcRequestBuilders.post("/businessActions/status/wahlID/wahlbezirkID").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(requestBody));
+        @Nested
+        class PostStatus {
 
-            api.perform(request).andExpect(status().isUnauthorized());
-        }
+            @WithAnonymousUser
+            @Test
+            void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+                val requestBody = new StatusDTO(new BezirkUndWahlID("wahlID", "wahlbezirkID"),
+                        new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()),
+                        new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()));
+                val request = MockMvcRequestBuilders.post("/businessActions/status/wahlID/wahlbezirkID").with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestBody));
 
-        @WithMockUser
-        @Test
-        void should_returnNoContent_when_callingAuthenticated() throws Exception {
-            val requestBody = new StatusDTO(new BezirkUndWahlID("wahlID", "wahlbezirkID"),
-                    new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()),
-                    new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()));
-            val request = MockMvcRequestBuilders.post("/businessActions/status/wahlID/wahlbezirkID").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(requestBody));
+                api.perform(request).andExpect(status().isUnauthorized());
+            }
 
-            api.perform(request).andExpect(status().isOk());
+            @WithMockUser
+            @Test
+            void should_returnNoContent_when_callingAuthenticated() throws Exception {
+                val requestBody = new StatusDTO(new BezirkUndWahlID("wahlID", "wahlbezirkID"),
+                        new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()),
+                        new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()));
+                val request = MockMvcRequestBuilders.post("/businessActions/status/wahlID/wahlbezirkID").with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestBody));
 
-            Mockito.verify(statusService).setStatus(notNull(), notNull());
+                api.perform(request).andExpect(status().isOk());
+
+                Mockito.verify(statusService).setStatus(notNull(), notNull());
+            }
         }
     }
 }

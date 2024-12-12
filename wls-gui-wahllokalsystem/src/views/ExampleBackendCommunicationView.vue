@@ -8,9 +8,9 @@
         <h4>Get or Post a Broadcast message:</h4>
         <br />
         <v-text-field
+          v-model="messageInput"
           class="ml-auto mr-auto"
           width="350"
-          v-model="messageInput"
           clearable
           label="ID"
         ></v-text-field>

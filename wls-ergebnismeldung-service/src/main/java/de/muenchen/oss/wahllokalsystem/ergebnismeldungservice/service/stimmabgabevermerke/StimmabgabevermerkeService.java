@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.status.StatusRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusModelMapper;
@@ -30,7 +31,7 @@ public class StimmabgabevermerkeService {
 //    private final List<AbstractStatusMonitoringSender> monitoringSender;
 
     @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmabgabevermerke')")
-    public Optional<StatusModel> getStimmabgabevermerke(final BezirkIDUndWaehlerverzeichnisNummer id) {
+    public Stimmabgabevermerke getStimmabgabevermerke(final BezirkIDUndWaehlerverzeichnisNummer id) {
 //        log.info("#getStatus");
 //
 //        statusValidator.validBezirkUndWahlIdOrThrow(id,

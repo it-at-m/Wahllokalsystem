@@ -42,7 +42,7 @@ import de.muenchen.oss.wahllokalsystem.authservice.utils.Authorities;
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS })
 @AutoConfigureMockMvc
 @Slf4j
-class SessionControllerTest {
+class SessionControllerIntegrationTest {
 
     @Autowired
     MockMvc api;

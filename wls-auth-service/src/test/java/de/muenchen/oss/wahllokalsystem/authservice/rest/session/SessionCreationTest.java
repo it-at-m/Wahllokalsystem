@@ -35,6 +35,7 @@ import org.springframework.test.context.ActiveProfiles;
 @Slf4j
 class SessionCreationTest {
 
+    private static final String LOGIN_ENDPOINT = "/login";
     private static final String TABLE_SESSION_ATTRIBUTES = "SPRING_SESSION_ATTRIBUTES";
     private static final String TABLE_SESSIONS = "SPRING_SESSION";
 
@@ -49,8 +50,6 @@ class SessionCreationTest {
 
     @Value("${spring.datasource.password}")
     String dataSourcePassword;
-
-    private static final String LOGIN_ENDPOINT = "/login";
 
     @Autowired
     TestRestTemplate testRestTemplate;

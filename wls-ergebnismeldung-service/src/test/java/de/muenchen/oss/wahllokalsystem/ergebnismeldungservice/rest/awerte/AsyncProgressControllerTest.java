@@ -37,5 +37,4 @@ class AsyncProgressControllerTest {
             Assertions.assertThat(response).isEqualTo(mockedAsyncProgressAsDTO);
         }
     }
-
 }

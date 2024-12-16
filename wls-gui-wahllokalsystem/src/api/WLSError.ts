@@ -1,10 +1,10 @@
 import { STATUS_INDICATORS } from "@/constants";
 
 export default class WLSError extends Error {
-  level: string;
-  category: string;
-  code: string;
-  service: string;
+  readonly level: string;
+  readonly category: string;
+  readonly code: string;
+  readonly service: string;
 
   constructor({
     level = STATUS_INDICATORS.ERROR,

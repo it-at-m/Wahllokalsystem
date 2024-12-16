@@ -83,7 +83,7 @@ export function patchConfig(body: any): RequestInit {
  */
 export function defaultResponseHandler(
   response: Response,
-  errorMessage = "Es ist ein unbekannter Fehler aufgetreten." // todo: warum hier nochmal die message wenn im error schon ein default wert steht
+  errorMessage = "Es ist ein unbekannter Fehler aufgetreten."
 ): void {
   if (!response.ok) {
     if (response.status === 403) {
@@ -104,9 +104,9 @@ export function defaultResponseHandler(
 
 /**
  * Default catch handler for all service requests.
- * Currently only throws an ApiError // todo: api error ersetzen
+ * Currently only throws an WLSError
  * @param error The error object from fetch command
- * @param errorMessage The error message to be included in the ApiError object. // todo: api error ersetzen
+ * @param errorMessage The error message to be included in the WLSError object.
  */
 export function defaultCatchHandler(
   error: Error,
@@ -136,7 +136,6 @@ export function wlsCatchHandler(response: Response): PromiseLike<never> {
   if (response.status === 400) {
     return response.json().then((content) => {
       if (WLSError.isWLSException(content)) {
-        // todo: wird das noch benötigt, wenn es nur noch die wls exception gibt
         return Promise.reject(
           new WLSError({
             level: STATUS_INDICATORS.ERROR,

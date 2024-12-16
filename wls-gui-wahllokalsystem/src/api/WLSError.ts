@@ -1,6 +1,5 @@
 import { STATUS_INDICATORS } from "@/constants";
 
-// todo: umbenennen in WLSError?
 export default class WLSError extends Error {
   level: string;
   category: string;

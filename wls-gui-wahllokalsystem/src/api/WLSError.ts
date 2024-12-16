@@ -9,7 +9,7 @@ export default class WLSError extends Error {
   constructor({
     level = STATUS_INDICATORS.ERROR,
     message = "Ein unbekannter Fehler ist aufgetreten, bitte den Administrator informieren.",
-    category = "undefined",
+    category = "T",
     code = "undefined",
     service = "undefined",
   }: {

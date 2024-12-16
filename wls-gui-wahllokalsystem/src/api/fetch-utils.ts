@@ -91,6 +91,7 @@ export function defaultResponseHandler(
         level: STATUS_INDICATORS.ERROR,
         message:
           "Sie haben nicht die nötigen Rechte um diese Aktion durchzuführen.",
+        code: response.status.toString(),
       });
     } else if (response.type === "opaqueredirect") {
       location.reload();
@@ -98,6 +99,7 @@ export function defaultResponseHandler(
     throw new WLSError({
       level: STATUS_INDICATORS.WARNING,
       message: errorMessage,
+      code: response.status.toString(),
     });
   }
 }
@@ -131,6 +133,7 @@ export function wlsCatchHandler(response: Response): PromiseLike<never> {
     throw new WLSError({
       level: STATUS_INDICATORS.INFO,
       message: "Es konnten keine Daten gefunden werden",
+      code: response.status.toString(),
     });
   }
   if (response.status === 400) {
@@ -146,12 +149,20 @@ export function wlsCatchHandler(response: Response): PromiseLike<never> {
           })
         );
       } else {
-        return Promise.reject(new WLSError({ message: "Error: Bad Request" }));
+        return Promise.reject(
+          new WLSError({
+            message: "Error: Ungültige Anfrage",
+            code: response.status.toString(),
+          })
+        );
       }
     });
   } else {
     return Promise.reject(
-      new WLSError({ message: "Ein unbekannter Fehler ist aufgetreten" })
+      new WLSError({
+        message: "Ein unbekannter Fehler ist aufgetreten",
+        code: response.status.toString(),
+      })
     );
   }
 }

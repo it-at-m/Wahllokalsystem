@@ -6,6 +6,7 @@ export default class WLSException {
     public readonly service: string
   ) {}
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static isWLSException(obj: any): obj is WLSException {
     return (
       obj &&

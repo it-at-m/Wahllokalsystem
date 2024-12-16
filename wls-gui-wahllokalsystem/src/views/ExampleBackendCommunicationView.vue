@@ -63,6 +63,7 @@ async function getMessage(wahlbezirkID: string) {
     message.value = content.nachricht;
     messageId = content.oid;
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     await broadcastMessageRead(messageId).catch((e) => {
       errors.value.read =
         "Es ist ein Fehler beim Lesen der Nachricht aufgetreten";

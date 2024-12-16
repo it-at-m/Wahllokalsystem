@@ -1,6 +1,6 @@
 import { ApiError } from "@/api/ApiError";
+import WLSException from "@/api/WLSException";
 import { STATUS_INDICATORS } from "@/constants";
-import WLSException from "@/types/wls-types/WLSException";
 
 /**
  * Returns a default GET-Config for fetch

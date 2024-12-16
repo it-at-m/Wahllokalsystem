@@ -65,9 +65,9 @@ class WahlscheineValidatorTest {
 
         @Test
         void should_notThrowException_when_wahlscheineIsEmptyButNotNull() {
-            val statusModelToValidate = new WahlscheineModel(null, null);
+            val wahlscheineModelToValidate = new WahlscheineModel(null, null);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahlscheineOrThrow(statusModelToValidate));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahlscheineOrThrow(wahlscheineModelToValidate));
         }
 
         @Test

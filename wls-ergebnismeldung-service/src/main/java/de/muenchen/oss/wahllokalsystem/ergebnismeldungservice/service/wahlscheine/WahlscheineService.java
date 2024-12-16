@@ -29,8 +29,8 @@ public class WahlscheineService {
         wahlscheineValidator.validBezirkUndWahlIdOrThrow(id,
                 exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG));
 
-        val statusFromRepo = wahlscheineRepository.findById(id);
-        return statusFromRepo.map(wahlscheineModelMapper::toModel);
+        val wahlscheineFromRepo = wahlscheineRepository.findById(id);
+        return wahlscheineFromRepo.map(wahlscheineModelMapper::toModel);
     }
 
     @PreAuthorize(

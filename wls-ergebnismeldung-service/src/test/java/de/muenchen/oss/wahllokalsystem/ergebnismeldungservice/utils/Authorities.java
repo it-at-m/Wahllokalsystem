@@ -22,9 +22,9 @@ public class Authorities {
     public static final String REPOSITORY_DELETE_STATUS = "Ergebnismeldung_DELETE_Status";
     public static final String REPOSITORY_WRITE_STATUS = "Ergebnismeldung_WRITE_Status";
 
-    public static final String REPOSITORY_READ_WAHLSCHEINE = "Ergebnismeldung_READ_WAHLSCHEINE";
-    public static final String REPOSITORY_DELETE_WAHLSCHEINE = "Ergebnismeldung_DELETE_WAHLSCHEINE";
-    public static final String REPOSITORY_WRITE_WAHLSCHEINE = "Ergebnismeldung_WRITE_WAHLSCHEINE";
+    public static final String REPOSITORY_READ_WAHLSCHEINE = "Ergebnismeldung_READ_Wahlscheine";
+    public static final String REPOSITORY_DELETE_WAHLSCHEINE = "Ergebnismeldung_DELETE_Wahlscheine";
+    public static final String REPOSITORY_WRITE_WAHLSCHEINE = "Ergebnismeldung_WRITE_Wahlscheine";
 
     public static final String[] ALL_AUTHORITIES_USER_GET_AWERTE = new String[] {
             SERVICE_GET_AWERTE,

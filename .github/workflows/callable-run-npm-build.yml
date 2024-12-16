@@ -10,6 +10,9 @@ on:
 jobs:
   checkout-and-verify:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./wls-gui-wahllokalsystem
     steps:
       - uses: actions/checkout@v4
 

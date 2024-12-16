@@ -32,6 +32,11 @@ export default class WLSError extends Error {
     this.service = service;
   }
 
+  /**
+   * Type guard to check if an object is a WLSException
+   * @param obj - The object to check
+   * @returns True if the object has all required WLSEexception properties with correct types
+   */
   static isWLSException(obj: any): obj is WLSError {
     return (
       obj &&

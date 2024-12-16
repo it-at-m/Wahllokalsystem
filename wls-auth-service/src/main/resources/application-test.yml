@@ -17,6 +17,8 @@ spring:
 
 service:
   config:
+    crypto:
+      key: "please change me"
     oauth2:
       jwk:
         rsa:

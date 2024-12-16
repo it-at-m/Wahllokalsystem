@@ -1,7 +1,7 @@
 /**
  *
  */
-package de.muenchen.oss.wahllokalsystem.wls.common.security;
+package de.muenchen.oss.wahllokalsystem.authservice.security;
 
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;

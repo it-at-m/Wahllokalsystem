@@ -20,9 +20,10 @@ jobs:
           cache: npm
           cache-dependency-path: wls-gui-wahllokalsystem/package-lock.json
 
-      - name: Build with Node
-        run: |
-          npm ci
-          npm run build
-          npm run test:unit
-          npm run lint
+      - run: npm ci
+
+      - run: npm run build
+
+      - run: npm run test:unit
+
+      - run: npm run lint

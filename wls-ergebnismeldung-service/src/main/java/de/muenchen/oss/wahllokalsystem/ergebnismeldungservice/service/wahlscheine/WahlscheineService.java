@@ -42,7 +42,7 @@ public class WahlscheineService {
 
         wahlscheineValidator.validBezirkUndWahlIdOrThrow(id,
                 exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG));
-        wahlscheineValidator.validStatusOrThrow(wahlscheine);
+        wahlscheineValidator.validWahlscheineOrThrow(wahlscheine);
 
         try {
             wahlscheineRepository.save(wahlscheineModelMapper.toEntity(wahlscheine));

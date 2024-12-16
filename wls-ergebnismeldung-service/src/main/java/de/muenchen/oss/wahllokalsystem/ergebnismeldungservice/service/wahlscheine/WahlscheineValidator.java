@@ -21,9 +21,9 @@ public class WahlscheineValidator {
         }
     }
 
-    public void validStatusOrThrow(final WahlscheineModel wahlscheineModel) {
+    public void validWahlscheineOrThrow(final WahlscheineModel wahlscheineModel) {
         if (wahlscheineModel == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_STATUS_PARAMETER_UNVOLLSTAENDIG);
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG);
         }
     }
 }

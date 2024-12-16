@@ -1,5 +1,4 @@
-import { ApiError } from "@/api/ApiError";
-import WLSException from "@/api/WLSException";
+import WLSError from "@/api/WLSError";
 import { STATUS_INDICATORS } from "@/constants";
 
 /**
@@ -84,11 +83,11 @@ export function patchConfig(body: any): RequestInit {
  */
 export function defaultResponseHandler(
   response: Response,
-  errorMessage = "Es ist ein unbekannter Fehler aufgetreten."
+  errorMessage = "Es ist ein unbekannter Fehler aufgetreten." // todo: warum hier nochmal die message wenn im error schon ein default wert steht
 ): void {
   if (!response.ok) {
     if (response.status === 403) {
-      throw new ApiError({
+      throw new WLSError({
         level: STATUS_INDICATORS.ERROR,
         message:
           "Sie haben nicht die nötigen Rechte um diese Aktion durchzuführen.",
@@ -96,7 +95,7 @@ export function defaultResponseHandler(
     } else if (response.type === "opaqueredirect") {
       location.reload();
     }
-    throw new ApiError({
+    throw new WLSError({
       level: STATUS_INDICATORS.WARNING,
       message: errorMessage,
     });
@@ -105,15 +104,15 @@ export function defaultResponseHandler(
 
 /**
  * Default catch handler for all service requests.
- * Currently only throws an ApiError
+ * Currently only throws an ApiError // todo: api error ersetzen
  * @param error The error object from fetch command
- * @param errorMessage The error message to be included in the ApiError object.
+ * @param errorMessage The error message to be included in the ApiError object. // todo: api error ersetzen
  */
 export function defaultCatchHandler(
   error: Error,
   errorMessage = "Es ist ein unbekannter Fehler aufgetreten."
 ): PromiseLike<never> {
-  throw new ApiError({
+  throw new WLSError({
     level: STATUS_INDICATORS.WARNING,
     message: errorMessage,
   });
@@ -129,21 +128,32 @@ export function wlsResponseHandler(response: Response): Promise<Response> {
 
 export function wlsCatchHandler(response: Response): PromiseLike<never> {
   if (response.status === 204) {
-    throw new ApiError({
+    throw new WLSError({
       level: STATUS_INDICATORS.INFO,
       message: "Es konnten keine Daten gefunden werden",
     });
   }
   if (response.status === 400) {
     return response.json().then((content) => {
-      if (WLSException.isWLSException(content)) {
-        return Promise.reject(new ApiError({ message: content.message }));
+      if (WLSError.isWLSException(content)) {
+        // todo: wird das noch benötigt, wenn es nur noch die wls exception gibt
+        return Promise.reject(
+          new WLSError({
+            level: STATUS_INDICATORS.ERROR,
+            message: content.message,
+            category: content.category,
+            code: content.code,
+            service: content.service,
+          })
+        );
       } else {
-        return Promise.reject(new ApiError({ message: "Error: Bad Request" }));
+        return Promise.reject(new WLSError({ message: "Error: Bad Request" }));
       }
     });
   } else {
-    return Promise.reject(new ApiError({ message: "unbekannter fehler" }));
+    return Promise.reject(
+      new WLSError({ message: "Ein unbekannter Fehler ist aufgetreten" })
+    );
   }
 }
 

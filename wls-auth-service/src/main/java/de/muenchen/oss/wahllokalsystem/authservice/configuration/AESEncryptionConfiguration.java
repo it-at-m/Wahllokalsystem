@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.wls.common.security;
+package de.muenchen.oss.wahllokalsystem.authservice.configuration;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -12,7 +12,7 @@ public class AESEncryptionConfiguration {
 
     private static final String AES = "AES";
 
-    @Value("${app.crypto.key}")
+    @Value("${service.config.crypto.key}")
     String key;
 
     @Bean

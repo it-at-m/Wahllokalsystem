@@ -19,12 +19,12 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.support.TransactionTemplate;
 
-@SpringBootTest(classes = MicroServiceApplication.class, properties = { "serviceauth.crypto.key=secret" })
+@SpringBootTest(classes = MicroServiceApplication.class, properties = { "service.config.crypto.key=veryLongAndVerySaveKeyIHopeXXXabc123!!" })
 @ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS })
 class UserRepositoryImplIntegrationTest {
 
     private static final String USERNAME_UNENCRYPTED = "username";
-    private static final String USERNAME_ENCRYPTED = "ENCRYPTED:AcZZ7iVGyYoE-DTb9rNwgQ==";
+    private static final String USERNAME_ENCRYPTED = "ENCRYPTED:TLXm2wsx1kcDLHHU8ZWptQ==";
 
     @Autowired
     UserRepositoryImpl userRepository;

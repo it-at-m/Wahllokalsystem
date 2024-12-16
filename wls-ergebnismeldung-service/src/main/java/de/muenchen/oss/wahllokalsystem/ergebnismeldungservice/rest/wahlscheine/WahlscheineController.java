@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/businessActions//wahlscheine")
+@RequestMapping("/businessActions/wahlscheine")
 @RequiredArgsConstructor
 public class WahlscheineController {
 

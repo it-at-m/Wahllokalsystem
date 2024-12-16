@@ -47,6 +47,7 @@ class UserRepositoryImplIntegrationTest {
     void tearDown() {
         crudUserRepository.deleteAll();
         authorityRepository.deleteAll();
+        permissionRepository.deleteAll();
     }
 
     @Nested

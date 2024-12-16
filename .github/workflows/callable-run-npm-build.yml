@@ -14,9 +14,9 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up Node
-        uses: actions/setup-node@v3 # todo: version klären
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node }} #todo: woher kommt der wert?
+          node-version: 18
           cache: 'node'
           cache-dependency-path: '${{ inputs.package-dir }}/package.json'
 

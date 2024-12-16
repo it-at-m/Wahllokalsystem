@@ -1,0 +1,28 @@
+name: callable run npm build
+
+on:
+  workflow_call:
+    inputs:
+      package-dir:
+        required: true
+        type: string
+
+jobs:
+  checkout-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v3 # todo: version klären
+        with:
+          node-version: ${{ matrix.node }} #todo: woher kommt der wert?
+          cache: 'node'
+          cache-dependency-path: '${{ inputs.package-dir }}/package.json'
+
+      - name: Build with Node
+        run: |
+          npm ci
+          npm run build
+          npm run test:unit
+          npm run lint

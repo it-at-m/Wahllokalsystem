@@ -1,15 +1,70 @@
-# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
-language: "en-US"
-early_access: false
+# nur werte, die vom default abweichen werden hier aufgeführt.
 reviews:
-  profile: "chill"
-  request_changes_workflow: false
-  high_level_summary: true
-  poem: true
-  review_status: true
-  collapse_walkthrough: false
+  high_level_summary_placeholder: ''
+  auto_title_placeholder: ''
+  poem: false
+  collapse_walkthrough: true
+  changed_files_summary: false
+  sequence_diagrams: false
+  related_issues: false
+  related_prs: false
+  suggested_labels: false
+  suggested_reviewers: false
   auto_review:
-    enabled: true
-    drafts: false
+    auto_incremental_review: false
+  tools:
+    shellcheck:
+      enabled: false
+    ruff:
+      enabled: false
+    markdownlint:
+      enabled: false
+    github-checks:
+      enabled: false
+    languagetool:
+      enabled: false
+    biome:
+      enabled: false
+    hadolint:
+      enabled: false
+    swiftlint:
+      enabled: false
+    phpstan:
+      enabled: false
+    golangci-lint:
+      enabled: false
+    yamllint:
+      enabled: false
+    gitleaks:
+      enabled: false
+    checkov:
+      enabled: false
+    detekt:
+      enabled: false
+    eslint:
+      enabled: false
+    rubocop:
+      enabled: false
+    buf:
+      enabled: false
+    regal:
+      enabled: false
+    actionlint:
+      enabled: false
+    pmd:
+      enabled: false
+    cppcheck:
+      enabled: false
+    semgrep:
+      enabled: false
+    circleci:
+      enabled: false
 chat:
-  auto_reply: true
+  auto_reply: false
+knowledge_base:
+  learnings:
+    scope: local
+  issues:
+    scope: local
+  pull_requests:
+    scope: local

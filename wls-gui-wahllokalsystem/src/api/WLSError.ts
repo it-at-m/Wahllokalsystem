@@ -1,16 +1,18 @@
+import { ERROR_CATEGORY } from "@/api/wlsErrorCategories";
+
 export default class WLSError extends Error {
-  readonly category: string;
+  readonly category: ERROR_CATEGORY;
   readonly code: string;
   readonly service: string;
 
   constructor({
     message = "Ein unbekannter Fehler ist aufgetreten, bitte den Administrator informieren.",
-    category = "T",
+    category = ERROR_CATEGORY.TECHNICAL,
     code = "undefined",
     service = "undefined",
   }: {
     message?: string;
-    category?: string;
+    category?: ERROR_CATEGORY;
     code?: string;
     service?: string;
   }) {
@@ -34,7 +36,7 @@ export default class WLSError extends Error {
   static isWLSException(obj: any): obj is WLSError {
     return (
       obj &&
-      typeof obj.category === "string" &&
+      Object.values(ERROR_CATEGORY).includes(obj.category) &&
       typeof obj.code === "string" &&
       typeof obj.message === "string" &&
       typeof obj.service === "string"

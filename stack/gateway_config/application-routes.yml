@@ -7,7 +7,7 @@ spring:
           predicates:
             - Path=/api/sso/userinfo
           filters:
-            - RewritePath=/api/sso/userinfo, /${KEYCLOAK_RELATIV_PATH}/realms/${SSO_REALM}/protocol/openid-connect/userinfo
+            - RewritePath=/api/sso/userinfo, /user
         - id: admin-service
           uri: http://kubernetes.docker.internal:8209/
           predicates:

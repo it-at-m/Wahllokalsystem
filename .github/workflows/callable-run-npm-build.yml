@@ -25,11 +25,13 @@ jobs:
 
       - run: npm ci
 
-      - run: npm run build
+      - run: npm run lint
 
       - run: npm run test
 
-      - run: npm run lint
+      - run: npm run build
+
+
 
       - name: Upload build artifacts
         if: success()

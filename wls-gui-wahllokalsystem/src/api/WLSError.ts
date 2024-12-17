@@ -1,9 +1,9 @@
 import { ERROR_CATEGORY } from "@/api/wlsErrorCategories";
 
 export interface WLSError extends Error {
-  readonly category?: ERROR_CATEGORY;
-  readonly code?: string;
-  readonly service?: string;
+  category?: ERROR_CATEGORY;
+  code?: string;
+  service?: string;
 }
 
 /**
@@ -22,13 +22,12 @@ export function createDefaultWlsError({
   code?: string;
   service?: string;
 }): WLSError {
-  return {
-    name: "Default WlsError",
-    message: message,
-    category: category,
-    code: code,
-    service: service,
-  };
+  const error = new Error(message) as WLSError;
+  error.name = "Default WlsError";
+  error.category = category;
+  error.code = code;
+  error.service = service;
+  return error;
 }
 
 /**
@@ -37,13 +36,15 @@ export function createDefaultWlsError({
  * @returns the generated WLSError object from JSON data
  */
 export function generateWlsExceptionFromJson(content: any): WLSError {
-  return {
-    name: "WLS Exception",
-    message: content.message,
-    category: content.category,
-    code: content.code,
-    service: content.service,
-  };
+  if (!content?.message) {
+    throw new Error("Invalid content: message is required");
+  }
+  const error = new Error(content.message) as WLSError;
+  error.name = "WLS Exception";
+  error.category = content.category;
+  error.code = content.code;
+  error.service = content.service;
+  return error;
 }
 
 /**

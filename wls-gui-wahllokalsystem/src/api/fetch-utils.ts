@@ -133,43 +133,33 @@ export function wlsCatchHandler(response: Response): PromiseLike<never> {
   }
   if (response.status === 400) {
     return response.json().then((content) => {
-      if (WLSError.isWLSException(content)) {
-        return Promise.reject(
-          new WLSError({
+      const wlsError = WLSError.isWLSException(content)
+        ? new WLSError({
             message: content.message,
             category: content.category,
             code: content.code,
             service: content.service,
           })
-        );
-      } else {
-        return Promise.reject(
-          new WLSError({
-            message: "Error: Ungültige Anfrage",
+        : new WLSError({
+            message: "Ungültige Anfrage",
             code: response.status.toString(),
-          })
-        );
-      }
+          });
+      return Promise.reject(wlsError);
     });
   } else {
     return response.json().then((content) => {
-      if (WLSError.isWLSException(content)) {
-        return Promise.reject(
-          new WLSError({
+      const wlsError = WLSError.isWLSException(content)
+        ? new WLSError({
             message: content.message,
             category: content.category,
             code: content.code,
             service: content.service,
           })
-        );
-      } else {
-        return Promise.reject(
-          new WLSError({
+        : new WLSError({
             message: "Ein unbekannter Fehler ist aufgetreten",
             code: response.status.toString(),
-          })
-        );
-      }
+          });
+      return Promise.reject(wlsError);
     });
   }
 }

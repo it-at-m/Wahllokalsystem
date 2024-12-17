@@ -1,4 +1,4 @@
-# nur werte, die vom default abweichen werden hier aufgeführt.
+# only values that differ from default are listed here
 reviews:
   high_level_summary_placeholder: ''
   auto_title_placeholder: ''

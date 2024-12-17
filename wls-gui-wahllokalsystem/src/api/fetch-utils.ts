@@ -1,4 +1,8 @@
-import WLSError from "@/api/WLSError";
+import {
+  createDefaultWlsError,
+  generateWlsExceptionFromJson,
+  isWLSException,
+} from "@/api/WLSError";
 
 /**
  * Returns a default GET-Config for fetch
@@ -86,7 +90,7 @@ export function defaultResponseHandler(
 ): void {
   if (!response.ok) {
     if (response.status === 403) {
-      throw new WLSError({
+      throw createDefaultWlsError({
         message:
           "Sie haben nicht die nötigen Rechte um diese Aktion durchzuführen.",
         code: response.status.toString(),
@@ -94,7 +98,7 @@ export function defaultResponseHandler(
     } else if (response.type === "opaqueredirect") {
       location.reload();
     }
-    throw new WLSError({
+    throw createDefaultWlsError({
       message: errorMessage,
       code: response.status.toString(),
     });
@@ -111,7 +115,7 @@ export function defaultCatchHandler(
   error: Error,
   errorMessage = "Es ist ein unbekannter Fehler aufgetreten."
 ): PromiseLike<never> {
-  throw new WLSError({
+  throw createDefaultWlsError({
     message: errorMessage,
   });
 }
@@ -126,7 +130,7 @@ export function wlsResponseHandler(response: Response): Promise<Response> {
 
 export function wlsCatchHandler(response: Response): PromiseLike<never> {
   if (response.status === 204) {
-    throw new WLSError({
+    throw createDefaultWlsError({
       message: "Es konnten keine Daten gefunden werden",
       code: response.status.toString(),
     });
@@ -143,9 +147,9 @@ export function wlsCatchHandler(response: Response): PromiseLike<never> {
 
 function rejectWithWlsError(response: Response, nonWlsErrorMessage: string) {
   return response.json().then((content) => {
-    const wlsError = WLSError.isWLSException(content)
-      ? WLSError.generateWlsExceptionFromJson(content)
-      : new WLSError({
+    const wlsError = isWLSException(content)
+      ? generateWlsExceptionFromJson(content)
+      : createDefaultWlsError({
           message: nonWlsErrorMessage,
           code: response.status.toString(),
         });

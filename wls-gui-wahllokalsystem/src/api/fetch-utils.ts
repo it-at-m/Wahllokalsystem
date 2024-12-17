@@ -132,36 +132,30 @@ export function wlsCatchHandler(response: Response): PromiseLike<never> {
     });
   }
   if (response.status === 400) {
-    return response.json().then((content) => {
-      const wlsError = WLSError.isWLSException(content)
-        ? new WLSError({
-            message: content.message,
-            category: content.category,
-            code: content.code,
-            service: content.service,
-          })
-        : new WLSError({
-            message: "Ungültige Anfrage",
-            code: response.status.toString(),
-          });
-      return Promise.reject(wlsError);
-    });
+    return rejectWithWlsError(response, "Ungültige Anfrage");
   } else {
-    return response.json().then((content) => {
-      const wlsError = WLSError.isWLSException(content)
-        ? new WLSError({
-            message: content.message,
-            category: content.category,
-            code: content.code,
-            service: content.service,
-          })
-        : new WLSError({
-            message: "Ein unbekannter Fehler ist aufgetreten",
-            code: response.status.toString(),
-          });
-      return Promise.reject(wlsError);
-    });
+    return rejectWithWlsError(
+      response,
+      "Ein unbekannter Fehler ist aufgetreten"
+    );
   }
+}
+
+function rejectWithWlsError(response: Response, nonWlsErrorMessage: string) {
+  return response.json().then((content) => {
+    const wlsError = WLSError.isWLSException(content)
+      ? new WLSError({
+          message: content.message,
+          category: content.category,
+          code: content.code,
+          service: content.service,
+        })
+      : new WLSError({
+          message: nonWlsErrorMessage,
+          code: response.status.toString(),
+        });
+    return Promise.reject(wlsError);
+  });
 }
 
 /**

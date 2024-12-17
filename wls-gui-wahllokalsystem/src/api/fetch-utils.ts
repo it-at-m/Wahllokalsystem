@@ -1,5 +1,4 @@
 import WLSError from "@/api/WLSError";
-import { STATUS_INDICATORS } from "@/constants";
 
 /**
  * Returns a default GET-Config for fetch
@@ -88,7 +87,6 @@ export function defaultResponseHandler(
   if (!response.ok) {
     if (response.status === 403) {
       throw new WLSError({
-        level: STATUS_INDICATORS.ERROR,
         message:
           "Sie haben nicht die nötigen Rechte um diese Aktion durchzuführen.",
         code: response.status.toString(),
@@ -97,7 +95,6 @@ export function defaultResponseHandler(
       location.reload();
     }
     throw new WLSError({
-      level: STATUS_INDICATORS.WARNING,
       message: errorMessage,
       code: response.status.toString(),
     });
@@ -115,7 +112,6 @@ export function defaultCatchHandler(
   errorMessage = "Es ist ein unbekannter Fehler aufgetreten."
 ): PromiseLike<never> {
   throw new WLSError({
-    level: STATUS_INDICATORS.WARNING,
     message: errorMessage,
   });
 }
@@ -131,7 +127,6 @@ export function wlsResponseHandler(response: Response): Promise<Response> {
 export function wlsCatchHandler(response: Response): PromiseLike<never> {
   if (response.status === 204) {
     throw new WLSError({
-      level: STATUS_INDICATORS.INFO,
       message: "Es konnten keine Daten gefunden werden",
       code: response.status.toString(),
     });
@@ -141,7 +136,6 @@ export function wlsCatchHandler(response: Response): PromiseLike<never> {
       if (WLSError.isWLSException(content)) {
         return Promise.reject(
           new WLSError({
-            level: STATUS_INDICATORS.ERROR,
             message: content.message,
             category: content.category,
             code: content.code,

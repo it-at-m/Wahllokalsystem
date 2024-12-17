@@ -1,19 +1,14 @@
-import { STATUS_INDICATORS } from "@/constants";
-
 export default class WLSError extends Error {
-  readonly level: string;
   readonly category: string;
   readonly code: string;
   readonly service: string;
 
   constructor({
-    level = STATUS_INDICATORS.ERROR,
     message = "Ein unbekannter Fehler ist aufgetreten, bitte den Administrator informieren.",
     category = "T",
     code = "undefined",
     service = "undefined",
   }: {
-    level?: string;
     message?: string;
     category?: string;
     code?: string;
@@ -25,7 +20,6 @@ export default class WLSError extends Error {
     this.stack = new Error().stack;
 
     // User-defined information
-    this.level = level;
     this.message = message;
     this.category = category;
     this.code = code;

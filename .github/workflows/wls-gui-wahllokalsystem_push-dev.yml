@@ -13,6 +13,6 @@ jobs:
     permissions:
       packages: write
     uses:
-      ./.github/workflows/callable-create-github-container-image.yml
+      ./.github/workflows/callable-create-github-container-image-frontend.yml
     with:
       service: 'wls-gui-wahllokalsystem'

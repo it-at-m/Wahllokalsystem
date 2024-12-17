@@ -72,7 +72,7 @@ service:
     oauth2:
       clients:
         wahllokalgui:
-          id: wahllokalgui
+          id: wls
         admingui:
           id: admingui
 

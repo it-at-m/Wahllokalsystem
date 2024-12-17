@@ -30,12 +30,3 @@ jobs:
       - run: npm run test
 
       - run: npm run build
-
-
-
-      - name: Upload build artifacts
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: '${{ inputs.package-dir }}/dist'

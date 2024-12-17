@@ -15,7 +15,7 @@ public class WahlscheineValidator {
     private final ExceptionFactory exceptionFactory;
 
     public void validBezirkUndWahlIdOrThrow(final BezirkUndWahlID bezirkUndWahlId, final FachlicheWlsException exceptionOnInvalid)
-        throws FachlicheWlsException {
+            throws FachlicheWlsException {
         if (bezirkUndWahlId == null || StringUtils.isBlank(bezirkUndWahlId.getWahlID()) || StringUtils.isBlank(bezirkUndWahlId.getWahlbezirkID())) {
             throw exceptionOnInvalid;
         }

@@ -29,7 +29,7 @@ class WahlscheineDTOMapperTest {
 
             val result = unitUnderTest.toDTO(modelToMap);
 
-            val expectedResult = new WahlscheineDTO(new BezirkUndWahlID(wahlID, wahlbezirkID),stimmabgabevermerke);
+            val expectedResult = new WahlscheineDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), stimmabgabevermerke);
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }

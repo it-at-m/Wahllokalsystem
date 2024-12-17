@@ -79,8 +79,8 @@ public class WahlscheineControllerIntegrationTest {
             val expectedResult = wahlscheineDTOMapper.toDTO(wahlscheineModelMapper.toModel(entityToFind));
 
             Assertions.assertThat(responseBodyAsDTO)
-                .usingRecursiveComparison()
-                .isEqualTo(expectedResult);
+                    .usingRecursiveComparison()
+                    .isEqualTo(expectedResult);
         }
 
         @Test
@@ -104,7 +104,7 @@ public class WahlscheineControllerIntegrationTest {
             val receivedWlsException = objectMapper.readValue(response.getContentAsString(), WlsExceptionDTO.class);
 
             val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.GET_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG.code(),
-                "WLS-ERGEBNISMELDUNG", ExceptionConstants.GET_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG.message());
+                    "WLS-ERGEBNISMELDUNG", ExceptionConstants.GET_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG.message());
             Assertions.assertThat(receivedWlsException).isEqualTo(expectedWlsExceptionDTO);
         }
     }
@@ -120,8 +120,8 @@ public class WahlscheineControllerIntegrationTest {
             val requestBody = new WahlscheineDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), stimmabgabevermerke);
 
             val request = MockMvcRequestBuilders.post(buildWahlscheineURI(wahlID, wahlbezirkID)).with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestBody));
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestBody));
 
             WireMock.stubFor(WireMock.post(UrlPattern.ANY).willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value())));
 
@@ -130,8 +130,8 @@ public class WahlscheineControllerIntegrationTest {
             val entityFromRepo = wahlscheineRepository.findById(requestBody.bezirkUndWahlID()).get();
             val expectedEntity = wahlscheineModelMapper.toEntity(wahlscheineDTOMapper.toModel(requestBody));
             Assertions.assertThat(entityFromRepo)
-                .usingRecursiveComparison()
-                .isEqualTo(expectedEntity);
+                    .usingRecursiveComparison()
+                    .isEqualTo(expectedEntity);
         }
 
         @Test
@@ -142,8 +142,8 @@ public class WahlscheineControllerIntegrationTest {
             val requestBody = new WahlscheineDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), stimmabgabevermerke);
 
             val request = MockMvcRequestBuilders.post(buildWahlscheineURI(wahlID, wahlbezirkID)).with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestBody));
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestBody));
 
             val entityToReplace = new Wahlscheine(requestBody.bezirkUndWahlID(), 77L);
             Assertions.assertThat(entityToReplace).usingRecursiveComparison().isNotEqualTo(requestBody);
@@ -156,8 +156,8 @@ public class WahlscheineControllerIntegrationTest {
             val entityFromRepo = wahlscheineRepository.findById(requestBody.bezirkUndWahlID()).get();
             val expectedEntity = wahlscheineModelMapper.toEntity(wahlscheineDTOMapper.toModel(requestBody));
             Assertions.assertThat(entityFromRepo)
-                .usingRecursiveComparison()
-                .isEqualTo(expectedEntity);
+                    .usingRecursiveComparison()
+                    .isEqualTo(expectedEntity);
         }
 
         @Test
@@ -168,14 +168,14 @@ public class WahlscheineControllerIntegrationTest {
             val requestBody = new WahlscheineDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), stimmabgabevermerke);
 
             val request = MockMvcRequestBuilders.post(buildWahlscheineURI(wahlID, wahlbezirkID)).with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestBody));
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestBody));
 
             val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn().getResponse();
             val receivedWlsException = objectMapper.readValue(response.getContentAsString(), WlsExceptionDTO.class);
 
             val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.GET_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG.code(),
-                "WLS-ERGEBNISMELDUNG", ExceptionConstants.POST_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG.message());
+                    "WLS-ERGEBNISMELDUNG", ExceptionConstants.POST_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG.message());
             Assertions.assertThat(receivedWlsException).isEqualTo(expectedWlsExceptionDTO);
         }
     }

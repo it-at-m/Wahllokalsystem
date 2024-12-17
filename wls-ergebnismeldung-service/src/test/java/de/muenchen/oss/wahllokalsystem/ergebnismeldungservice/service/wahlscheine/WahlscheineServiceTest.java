@@ -35,8 +35,6 @@ class WahlscheineServiceTest {
     @Mock
     ExceptionFactory exceptionFactory;
 
-
-
     @InjectMocks
     WahlscheineService unitUnderTest;
 
@@ -48,7 +46,8 @@ class WahlscheineServiceTest {
             val id = new BezirkUndWahlID();
 
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedWlsException);
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
 
             unitUnderTest.getWahlscheine(id);
 
@@ -91,7 +90,8 @@ class WahlscheineServiceTest {
             val wahlscheineToSet = createWahlscheineModel(id);
 
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedWlsException);
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
 
             unitUnderTest.setWahlscheine(id, wahlscheineToSet);
 
@@ -104,7 +104,8 @@ class WahlscheineServiceTest {
             val wahlscheineToSet = createWahlscheineModel(id);
 
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedWlsException);
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(mockedWlsException);
 
             unitUnderTest.setWahlscheine(id, wahlscheineToSet);
 
@@ -136,7 +137,8 @@ class WahlscheineServiceTest {
 
             Mockito.when(wahlscheineModelMapper.toEntity(wahlscheineToSet)).thenReturn(mockedModelAsEntity);
             Mockito.doThrow(mockedRepositorySaveException).when(wahlscheineRepository).save(mockedModelAsEntity);
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.WAHLSCHEINE_UNSAVEABLE)).thenReturn(mockedExceptionFactoryWlsException);
+            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.WAHLSCHEINE_UNSAVEABLE))
+                    .thenReturn(mockedExceptionFactoryWlsException);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.setWahlscheine(id, wahlscheineToSet)).isSameAs(mockedExceptionFactoryWlsException);
         }

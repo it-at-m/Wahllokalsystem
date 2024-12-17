@@ -56,13 +56,13 @@ public class Authorities {
             ALL_AUTHORITIES_SET_STATUS_MISSING_WILL_RESULT_IN_WLS_EXCEPTION);
 
     public static final String[] ALL_AUTHORITIES_GET_WAHLSCHEINE = new String[] {
-        SERVICE_GET_WAHLSCHEINE,
-        REPOSITORY_READ_WAHLSCHEINE
+            SERVICE_GET_WAHLSCHEINE,
+            REPOSITORY_READ_WAHLSCHEINE
     };
 
     public static final String[] ALL_AUTHORITIES_SET_WAHLSCHEINE = new String[] {
-        SERVICE_SET_WAHLSCHEINE,
-        REPOSITORY_WRITE_WAHLSCHEINE
+            SERVICE_SET_WAHLSCHEINE,
+            REPOSITORY_WRITE_WAHLSCHEINE
     };
 
 }

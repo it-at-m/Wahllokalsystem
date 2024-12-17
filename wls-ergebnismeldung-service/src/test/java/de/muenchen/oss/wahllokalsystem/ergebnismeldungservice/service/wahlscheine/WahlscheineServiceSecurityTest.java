@@ -120,7 +120,7 @@ class WahlscheineServiceSecurityTest {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setWahlscheine(id, wahlscheineModel)).isInstanceOf(AccessDeniedException.class);
         }
 
-       @Test
+        @Test
         void should_throwTechnischeWlsException_when_repositoryWriteWahlscheineAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.SERVICE_SET_WAHLSCHEINE);
 
@@ -133,5 +133,5 @@ class WahlscheineServiceSecurityTest {
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setWahlscheine(id, wahlscheineModel)).isInstanceOf(TechnischeWlsException.class);
         }
-   }
+    }
 }

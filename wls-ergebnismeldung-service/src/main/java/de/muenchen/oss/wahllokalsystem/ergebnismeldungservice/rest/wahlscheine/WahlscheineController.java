@@ -29,24 +29,24 @@ public class WahlscheineController {
 
     @Operation(description = "Lesen der Anzahl an Stimmabgabevermerken eines Wahlbezirkes für eine Wahl")
     @ApiResponses(
-        value = {
-            @ApiResponse(
-                responseCode = "200", description = "Es existieren Stimmabgabevermerke",
-                content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WahlscheineDTO.class)) }
-            ),
-            @ApiResponse(
-                responseCode = "204", description = "Es existieren keine Stimmabgabevermerke zu den entsprechenden Kriterien",
-                content = { @Content() }
-            ),
-            @ApiResponse(
-                responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich",
-                content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
-            ),
-            @ApiResponse(
-                responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
-                content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
-            )
-        }
+            value = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Es existieren Stimmabgabevermerke",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WahlscheineDTO.class)) }
+                    ),
+                    @ApiResponse(
+                            responseCode = "204", description = "Es existieren keine Stimmabgabevermerke zu den entsprechenden Kriterien",
+                            content = { @Content() }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
+                    ),
+                    @ApiResponse(
+                            responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
+                    )
+            }
     )
     @GetMapping("{wahlID}/{wahlbezirkID}")
     public ResponseEntity<WahlscheineDTO> getWahlscheine(@PathVariable("wahlID") final String wahlID, @PathVariable("wahlbezirkID") final String wahlbezirkID) {
@@ -56,23 +56,23 @@ public class WahlscheineController {
 
     @Operation(description = "Setzen der Anzahl an Stimmabgabevermerken eines Wahlbezirkes für eine Wahl")
     @ApiResponses(
-        value = {
-            @ApiResponse(
-                responseCode = "200", description = "Stimmabgabevermerke erfolgreich gespeichert"
-            ),
-            @ApiResponse(
-                responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich",
-                content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
-            ),
-            @ApiResponse(
-                responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
-                content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
-            )
-        }
+            value = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Stimmabgabevermerke erfolgreich gespeichert"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
+                    ),
+                    @ApiResponse(
+                            responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
+                    )
+            }
     )
     @PostMapping("{wahlID}/{wahlbezirkID}")
     public void postWahlscheine(@PathVariable("wahlID") final String wahlID, @PathVariable("wahlbezirkID") final String wahlbezirkID,
-        @RequestBody final WahlscheineDTO wahlscheineDTO) {
+            @RequestBody final WahlscheineDTO wahlscheineDTO) {
         wahlscheineService.setWahlscheine(new BezirkUndWahlID(wahlID, wahlbezirkID), wahlscheineDTOMapper.toModel(wahlscheineDTO));
     }
 

@@ -144,12 +144,7 @@ export function wlsCatchHandler(response: Response): PromiseLike<never> {
 function rejectWithWlsError(response: Response, nonWlsErrorMessage: string) {
   return response.json().then((content) => {
     const wlsError = WLSError.isWLSException(content)
-      ? new WLSError({
-          message: content.message,
-          category: content.category,
-          code: content.code,
-          service: content.service,
-        })
+      ? WLSError.generateWlsExceptionFromJson(content)
       : new WLSError({
           message: nonWlsErrorMessage,
           code: response.status.toString(),

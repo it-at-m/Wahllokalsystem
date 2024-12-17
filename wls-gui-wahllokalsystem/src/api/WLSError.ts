@@ -42,4 +42,13 @@ export default class WLSError extends Error {
       typeof obj.service === "string"
     );
   }
+
+  static generateWlsExceptionFromJson(content: any): WLSError {
+    return new WLSError({
+      message: content.message,
+      category: content.category,
+      code: content.code,
+      service: content.service,
+    });
+  }
 }

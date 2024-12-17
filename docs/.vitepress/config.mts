@@ -28,34 +28,11 @@ export default withMermaid({
 
         sidebar: {
             [PATH_TECHNIK]: [
-                {text: 'Tools & Frameworks', link: `${PATH_TECHNIK}`},
+                {text: 'Entwicklungsumgebung', link: `${PATH_TECHNIK}development/`},
                 {
                     text: 'Getting Started', link: `${PATH_TECHNIK}get_started/`
                 },
-                {text: 'Entwicklungsumgebung', link: `${PATH_TECHNIK}development/`},
-                {
-                    text: 'Guides', link: `${PATH_GUIDES}`, collapsed: true, items: [
-                        {text: 'API-Client generieren', link: `${PATH_GUIDES}how-to-create-client-from-open-api-json.md`},
-                        {text: 'Tips und Tricks', link: `${PATH_GUIDES}tips-and-tricks.md`},
-                    ]
-                },
-                {
-                    text: 'Coding Conventions', link: `${PATH_CODING_CONVENTIONS}`, collapsed: true, items: [
-                        {text: 'Naming Convention - Testing', link: `${PATH_CODING_CONVENTIONS}tests_naming`},
-                        {text: 'Naming Convention - Database', link: `${PATH_CODING_CONVENTIONS}db_naming`}
-                    ]
-                },
-                {
-                    text: "Systemspezifikation",
-                    link: `${PATH_SYSSPEC}`,
-                    collapsed: true,
-                    items: [
-                        {
-                            text: "Sicherheit",
-                            link: `${PATH_SYSSPEC}security`,
-                        },
-                    ],
-                },
+                {text: 'Tools & Frameworks', link: `${PATH_TECHNIK}`},
                 {
                     text: 'Adr', link: `${PATH_ADR}`, collapsed: true, items: [
                         {text: 'Renovate - ignoriere lombok', link: `${PATH_ADR}adr001-renovate-ignore-lombok`},
@@ -80,19 +57,45 @@ export default withMermaid({
                             link: `${PATH_ADR}adr-frontend-template`
                         }
                     ]
+                },
+                {
+                    text: 'Coding Conventions', link: `${PATH_CODING_CONVENTIONS}`, collapsed: true, items: [
+                        {text: 'Naming Convention - Testing', link: `${PATH_CODING_CONVENTIONS}tests_naming`},
+                        {text: 'Naming Convention - Database', link: `${PATH_CODING_CONVENTIONS}db_naming`}
+                    ]
+                },
+                {
+                    text: 'Guides', link: `${PATH_GUIDES}`, collapsed: true, items: [
+                        {
+                            text: 'API-Client generieren',
+                            link: `${PATH_GUIDES}how-to-create-client-from-open-api-json.md`
+                        },
+                        {text: 'Tips und Tricks', link: `${PATH_GUIDES}tips-and-tricks.md`},
+                    ]
+                },
+                {
+                    text: "Systemspezifikation",
+                    link: `${PATH_SYSSPEC}`,
+                    collapsed: true,
+                    items: [
+                        {
+                            text: "Sicherheit",
+                            link: `${PATH_SYSSPEC}security`,
+                        },
+                    ],
                 }
             ],
             [PATH_SERVICES]: [
-                {text: 'Briefwahl-Service', link: `${PATH_SERVICES}briefwahl-service/`},
-                {text: 'Infomanagement-Service', link: `${PATH_SERVICES}infomanagement-service/`},
-                {text: 'EAI-Service', link: `${PATH_SERVICES}eai-service/`},
-                {text: 'Basisdaten-Service', link: `${PATH_SERVICES}basisdaten-service/`},
-                {text: 'Monitoring-Service', link: `${PATH_SERVICES}monitoring-service/`},
-                {text: 'Wahlvorstand-Service', link: `${PATH_SERVICES}wahlvorstand-service/`},
-                {text: 'Ergebnismeldung-Service', link: `${PATH_SERVICES}ergebnismeldung-service/`},
-                {text: 'Auth-Service', link: `${PATH_SERVICES}auth-service/`},
-                {text: 'Vorfälle und Vorkommnisse-Service', link: `${PATH_SERVICES}vorfaelleundvorkommnisse-service/`},
                 {text: 'Admin-Service', link: `${PATH_SERVICES}admin-service/`},
+                {text: 'Auth-Service', link: `${PATH_SERVICES}auth-service/`},
+                {text: 'Basisdaten-Service', link: `${PATH_SERVICES}basisdaten-service/`},
+                {text: 'Briefwahl-Service', link: `${PATH_SERVICES}briefwahl-service/`},
+                {text: 'EAI-Service', link: `${PATH_SERVICES}eai-service/`},
+                {text: 'Ergebnismeldung-Service', link: `${PATH_SERVICES}ergebnismeldung-service/`},
+                {text: 'Infomanagement-Service', link: `${PATH_SERVICES}infomanagement-service/`},
+                {text: 'Monitoring-Service', link: `${PATH_SERVICES}monitoring-service/`},
+                {text: 'Vorfälle und Vorkommnisse-Service', link: `${PATH_SERVICES}vorfaelleundvorkommnisse-service/`},
+                {text: 'Wahlvorstand-Service', link: `${PATH_SERVICES}wahlvorstand-service/`},
             ],
         },
 

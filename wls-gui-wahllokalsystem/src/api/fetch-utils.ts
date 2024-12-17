@@ -152,12 +152,25 @@ export function wlsCatchHandler(response: Response): PromiseLike<never> {
       }
     });
   } else {
-    return Promise.reject(
-      new WLSError({
-        message: "Ein unbekannter Fehler ist aufgetreten",
-        code: response.status.toString(),
-      })
-    );
+    return response.json().then((content) => {
+      if (WLSError.isWLSException(content)) {
+        return Promise.reject(
+          new WLSError({
+            message: content.message,
+            category: content.category,
+            code: content.code,
+            service: content.service,
+          })
+        );
+      } else {
+        return Promise.reject(
+          new WLSError({
+            message: "Ein unbekannter Fehler ist aufgetreten",
+            code: response.status.toString(),
+          })
+        );
+      }
+    });
   }
 }
 

@@ -36,9 +36,6 @@ export function createDefaultWlsError({
  * @returns the generated WLSError object from JSON data
  */
 export function generateWlsExceptionFromJson(content: any): WLSError {
-  if (!content?.message) {
-    throw new Error("Invalid content: message is required");
-  }
   const error = new Error(content.message) as WLSError;
   error.name = "WLS Exception";
   error.category = content.category;

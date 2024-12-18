@@ -17,7 +17,7 @@ public class ExceptionConstants {
     public static final ExceptionDataWrapper POST_STATUS_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("607", "postStatus: Parameter unvollstaendig");
     public static final ExceptionDataWrapper STATUS_UNSAVEABLE = new ExceptionDataWrapper("622", "postStatus: Der Status konnte nicht gespeichtert werden.");
 
-    public static final ExceptionDataWrapper GET_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("613",
+    public static final ExceptionDataWrapper GET_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("612",
             "getWahlscheine: Parameter unvollstaendig");
     public static final ExceptionDataWrapper POST_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("613",
             "postWahlscheine: Parameter unvollstaendig");

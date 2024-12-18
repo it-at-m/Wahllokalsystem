@@ -8,35 +8,51 @@ objectclass: top
 objectclass: organizationalUnit
 ou: people
 
-dn: uid=admin,ou=people,dc=springframework,dc=org
+dn: uid=wls_test,ou=people,dc=springframework,dc=org
 objectclass: top
 objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
-cn: Rod Johnson
-sn: Johnson
-uid: admin
-userPassword: password
+cn: wls_test
+sn: test
+uid: wls_test
+userPassword: test
 
-dn: uid=user,ou=people,dc=springframework,dc=org
+dn: uid=wls_all,ou=people,dc=springframework,dc=org
 objectclass: top
 objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
-cn: Dianne Emu
-sn: Emu
-uid: user
-userPassword: password
+cn: wls_all
+sn: all
+uid: wls_all
+userPassword: test
+
+dn: uid=wls_all_uwb,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: wls_all_uwb
+sn: uwb
+uid: wls_all_uwb
+userPassword: test
+
+dn: uid=wls_all_bwb,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: wls_all_bwb
+sn: bwb
+uid: wls_all_bwb
+userPassword: test
 
 dn: cn=user,ou=groups,dc=springframework,dc=org
 objectclass: top
 objectclass: groupOfNames
 cn: user
-member: uid=admin,ou=people,dc=springframework,dc=org
-member: uid=user,ou=people,dc=springframework,dc=org
-
-dn: cn=admin,ou=groups,dc=springframework,dc=org
-objectclass: top
-objectclass: groupOfNames
-cn: admin
-member: uid=admin,ou=people,dc=springframework,dc=org
+member: uid=wls_test,ou=people,dc=springframework,dc=org
+member: uid=wls_all,ou=people,dc=springframework,dc=org
+member: uid=wls_all_uwb,ou=people,dc=springframework,dc=org
+member: uid=wls_all_bwb,ou=people,dc=springframework,dc=org

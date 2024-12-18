@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ExceptionConstants {
 
+    public static final String CRYPTO_EXCEPTION_CODE = "399";
+
     public static ExceptionDataWrapper KOMMUNIKATIONSFEHLER_MIT_KONFIGSERVICE = new ExceptionDataWrapper(
             "100", "Bei der Kommunikation mit dem Konfigurationsservice kam es zu einem Fehler.");
 }

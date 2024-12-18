@@ -142,4 +142,24 @@ class SecurityConfigurationTest {
             }
         }
     }
+
+    @Nested
+    class AsyncProgress {
+
+        @WithAnonymousUser
+        @Test
+        void should_returnUnauthorized_when_callingGetAnonymous() throws Exception {
+            val request = MockMvcRequestBuilders.get("/businessActions/asyncProgress");
+
+            api.perform(request).andExpect(status().isUnauthorized());
+        }
+
+        @WithMockUser
+        @Test
+        void should_returnOk_when_callingAuthenticated() throws Exception {
+            val request = MockMvcRequestBuilders.get("/businessActions/asyncProgress");
+
+            api.perform(request).andExpect(status().isOk());
+        }
+    }
 }

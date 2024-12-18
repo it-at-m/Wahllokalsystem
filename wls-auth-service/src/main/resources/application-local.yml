@@ -3,11 +3,10 @@ server:
 
 service:
   config:
+    crypto:
+      key: "please change me"
     oauth2:
       jwk:
         rsa:
           init:
             seed: change_me
-serviceauth:
-  crypto:
-    key: "please change me"

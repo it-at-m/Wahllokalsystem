@@ -1,6 +1,8 @@
-import { ApiError } from "@/api/ApiError";
-import WLSException from "@/api/WLSException";
-import { STATUS_INDICATORS } from "@/constants";
+import { createDefaultWlsError } from "@/api/WLSError";
+import {
+  generateWlsExceptionFromJson,
+  isWLSException,
+} from "@/api/WLSException";
 
 /**
  * Returns a default GET-Config for fetch
@@ -88,33 +90,32 @@ export function defaultResponseHandler(
 ): void {
   if (!response.ok) {
     if (response.status === 403) {
-      throw new ApiError({
-        level: STATUS_INDICATORS.ERROR,
+      throw createDefaultWlsError({
         message:
           "Sie haben nicht die nötigen Rechte um diese Aktion durchzuführen.",
+        code: response.status.toString(),
       });
     } else if (response.type === "opaqueredirect") {
       location.reload();
     }
-    throw new ApiError({
-      level: STATUS_INDICATORS.WARNING,
+    throw createDefaultWlsError({
       message: errorMessage,
+      code: response.status.toString(),
     });
   }
 }
 
 /**
  * Default catch handler for all service requests.
- * Currently only throws an ApiError
+ * Currently only throws an WLSError
  * @param error The error object from fetch command
- * @param errorMessage The error message to be included in the ApiError object.
+ * @param errorMessage The error message to be included in the WLSError object.
  */
 export function defaultCatchHandler(
   error: Error,
   errorMessage = "Es ist ein unbekannter Fehler aufgetreten."
 ): PromiseLike<never> {
-  throw new ApiError({
-    level: STATUS_INDICATORS.WARNING,
+  throw createDefaultWlsError({
     message: errorMessage,
   });
 }
@@ -129,22 +130,41 @@ export function wlsResponseHandler(response: Response): Promise<Response> {
 
 export function wlsCatchHandler(response: Response): PromiseLike<never> {
   if (response.status === 204) {
-    throw new ApiError({
-      level: STATUS_INDICATORS.INFO,
+    throw createDefaultWlsError({
       message: "Es konnten keine Daten gefunden werden",
+      code: response.status.toString(),
     });
   }
   if (response.status === 400) {
-    return response.json().then((content) => {
-      if (WLSException.isWLSException(content)) {
-        return Promise.reject(new ApiError({ message: content.message }));
-      } else {
-        return Promise.reject(new ApiError({ message: "Error: Bad Request" }));
-      }
-    });
+    return rejectWithWlsError(response, "Ungültige Anfrage");
   } else {
-    return Promise.reject(new ApiError({ message: "unbekannter fehler" }));
+    return rejectWithWlsError(
+      response,
+      "Ein unbekannter Fehler ist aufgetreten"
+    );
   }
+}
+
+function rejectWithWlsError(response: Response, nonWlsErrorMessage: string) {
+  return response.text().then((raw) => {
+    try {
+      const content = JSON.parse(raw);
+      const wlsError = isWLSException(content)
+        ? generateWlsExceptionFromJson(content)
+        : createDefaultWlsError({
+            message: nonWlsErrorMessage,
+            code: response.status.toString(),
+          });
+      return Promise.reject(wlsError);
+    } catch {
+      return Promise.reject(
+        createDefaultWlsError({
+          message: nonWlsErrorMessage,
+          code: response.status.toString(),
+        })
+      );
+    }
+  });
 }
 
 /**

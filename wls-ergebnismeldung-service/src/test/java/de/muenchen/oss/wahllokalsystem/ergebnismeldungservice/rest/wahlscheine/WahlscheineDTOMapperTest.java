@@ -36,6 +36,7 @@ class WahlscheineDTOMapperTest {
 
     @Nested
     class ToModel {
+
         @Test
         void should_returnNull_when_givenNull() {
             Assertions.assertThat(unitUnderTest.toModel(null)).isNull();

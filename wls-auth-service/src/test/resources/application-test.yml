@@ -1,5 +1,12 @@
 spring:
 
+  session:
+    jdbc:
+      table-name: SPRING_SESSION
+  datasource:
+    username: sa
+    password:
+    url: jdbc:h2:mem:wls-auth-service
   flyway:
     enabled: true
   # Spring JPA

@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 import lombok.Data;
 import lombok.val;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -74,8 +75,8 @@ class LdapConfigurationTest {
 
     TestRestTemplate restTemplate = new TestRestTemplate();
 
-    @BeforeEach
-    void setup() {
+    @AfterEach
+    void tearDown() {
         authorityRepository.deleteAll();
         permissionRepository.deleteAll();
         userRepository.deleteUsersByWahltagID(WAHLTAG_ID);

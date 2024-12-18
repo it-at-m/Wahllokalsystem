@@ -4,5 +4,5 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlI
 import jakarta.validation.constraints.NotNull;
 
 public record WahlscheineModel(@NotNull BezirkUndWahlID bezirkUndWahlID,
-                               @NotNull Long stimmabgabevermerke){
+                               @NotNull Long stimmabgabevermerke) {
 }

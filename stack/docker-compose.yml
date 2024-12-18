@@ -211,6 +211,25 @@ services:
     security_opt:
       - no-new-privileges:true
 
+  wls-auth-service:
+    container_name: wls-auth-service
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-auth-service:latest
+    depends_on:
+      - wls-db-oracle
+    env_file:
+      - .env
+    environment:
+      - SERVICE_CONFIG_CRYPTO_KEY=please change me
+      - SERVICE_CONFIG_OAUTH2_CLIENTS_WAHLLOKALGUI_ID=${SSO_CLIENT_ID}
+      - SERVICE_CONFIG_OAUTH2_JWK_RSA_INIT_SEED=change_me
+      - SPRING_PROFILES_ACTIVE=${WLS_AUTH_SERVICE_PROFILE}
+      - SPRING_DATASOURCE_URL=${WLS_AUTH_SERVICE_DB_URL}
+      - SERVER_PORT=8080
+    ports:
+      - 8100:8080
+    networks:
+      - services
+
 networks:
   internal:
   services:

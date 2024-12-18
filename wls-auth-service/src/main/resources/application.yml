@@ -10,6 +10,11 @@ spring:
     locations:
       - classpath:db/migrations/{vendor}
   h2.console.enabled: false
+  session:
+    jdbc:
+      table-name: SPRING_SESSION
+
+
 
 security:
   # possible values: none, all, changing (With changing, only changing requests such as POST, PUT, DELETE are logged)
@@ -27,6 +32,14 @@ server:
     whitelabel:
       enabled: false
   max-http-request-header-size: 32KB
+  servlet:
+    session:
+      timeout: 259200
+      tracking-modes: 'cookie'
+      cookie:
+        max-age: -1
+        http-only: true
+        secure: false
 
 # Config for spring actuator endpoints
 management:

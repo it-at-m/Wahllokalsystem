@@ -146,14 +146,24 @@ export function wlsCatchHandler(response: Response): PromiseLike<never> {
 }
 
 function rejectWithWlsError(response: Response, nonWlsErrorMessage: string) {
-  return response.json().then((content) => {
-    const wlsError = isWLSException(content)
-      ? generateWlsExceptionFromJson(content)
-      : createDefaultWlsError({
+  return response.text().then((raw) => {
+    try {
+      let content = JSON.parse(raw);
+      const wlsError = isWLSException(content)
+        ? generateWlsExceptionFromJson(content)
+        : createDefaultWlsError({
+            message: nonWlsErrorMessage,
+            code: response.status.toString(),
+          });
+      return Promise.reject(wlsError);
+    } catch (e) {
+      return Promise.reject(
+        createDefaultWlsError({
           message: nonWlsErrorMessage,
           code: response.status.toString(),
-        });
-    return Promise.reject(wlsError);
+        })
+      );
+    }
   });
 }
 

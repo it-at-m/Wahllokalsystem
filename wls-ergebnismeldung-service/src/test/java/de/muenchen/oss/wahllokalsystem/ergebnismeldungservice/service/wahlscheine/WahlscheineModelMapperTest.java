@@ -22,9 +22,9 @@ class WahlscheineModelMapperTest {
 
         @Test
         void should_returnWahlscheineModel_when_givenWahlscheineEntity() {
-            val wahlscheineEntiy = new Wahlscheine(new BezirkUndWahlID("wahlID", "wahlbezirkID"), 33);
+            val wahlscheineEntity = new Wahlscheine(new BezirkUndWahlID("wahlID", "wahlbezirkID"), 33);
 
-            val result = unitUnderTest.toModel(wahlscheineEntiy);
+            val result = unitUnderTest.toModel(wahlscheineEntity);
 
             val expectedResult = new WahlscheineModel(
                     new BezirkUndWahlID("wahlID", "wahlbezirkID"), 33L);

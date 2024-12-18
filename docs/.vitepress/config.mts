@@ -22,6 +22,11 @@ export default withMermaid({
             {text: 'Technik', link: PATH_TECHNIK}
         ],
 
+        docFooter: {
+            prev: 'Vorherige Seite',
+            next: 'Nächste Seite'
+        },
+
         outline: {
             label: "Auf dieser Seite"
         },
@@ -104,7 +109,34 @@ export default withMermaid({
         ],
 
         search: {
-            provider: 'local'
+            provider: 'local',
+            options: {
+                locales: {
+                    root: {
+                        translations: {
+                            button: {
+                                buttonText: 'Suche',
+                                buttonAriaLabel: 'Suche'
+                            },
+                            modal: {
+                                displayDetails: 'Anzeigen',
+                                resetButtonTitle: 'Ersetzen',
+                                backButtonTitle: 'Schließen',
+                                noResultsText: 'Keine Ergebnisse',
+                                footer: {
+                                    selectText: 'Auswählen',
+                                    selectKeyAriaLabel: 'Eingeben',
+                                    navigateText: 'Navigieren',
+                                    navigateUpKeyAriaLabel: 'Oben',
+                                    navigateDownKeyAriaLabel: 'Unten',
+                                    closeText: 'Schließen',
+                                    closeKeyAriaLabel: 'Esc'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     mermaidPlugin: {

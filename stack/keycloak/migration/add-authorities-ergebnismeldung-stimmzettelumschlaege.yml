@@ -1,0 +1,46 @@
+id: add authorities ergebnismeldung stimmzettelumschlaege
+author: dragonfly28
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: Ergebnismeldung_BUSINESSACTION_GetStimmzettelumschlaege
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allErgebnismeldungAuthorities
+      role: Ergebnismeldung_BUSINESSACTION_GetStimmzettelumschlaege
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Ergebnismeldung_BUSINESSACTION_PostStimmzettelumschlaege
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allErgebnismeldungAuthorities
+      role: Ergebnismeldung_BUSINESSACTION_PostStimmzettelumschlaege
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Ergebnismeldung_READ_Stimmzettelumschlaege
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allErgebnismeldungAuthorities
+      role: Ergebnismeldung_READ_Stimmzettelumschlaege
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Ergebnismeldung_WRITE_Stimmzettelumschlaege
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allErgebnismeldungAuthorities
+      role: Ergebnismeldung_WRITE_Stimmzettelumschlaege
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Ergebnismeldung_DELETE_Stimmzettelumschlaege
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allErgebnismeldungAuthorities
+      role: Ergebnismeldung_DELETE_Stimmzettelumschlaege
+      clientId: ${SSO_CLIENT_ID}

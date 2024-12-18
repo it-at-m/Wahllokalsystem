@@ -13,6 +13,8 @@ public class Authorities {
     public static final String SERVICE_SET_STATUS = "Ergebnismeldung_BUSINESSACTION_PostStatus";
     public static final String SERVICE_GET_WAHLSCHEINE = "Ergebnismeldung_BUSINESSACTION_GetWahlscheine";
     public static final String SERVICE_SET_WAHLSCHEINE = "Ergebnismeldung_BUSINESSACTION_PostWahlscheine";
+    public static final String SERVICE_GET_STIMMZETTELUMSCHLAEGE = "Ergebnismeldung_BUSINESSACTION_GetStimmzettelumschlaege";
+    public static final String SERVICE_SET_STIMMZETTELUMSCHLAEGE = "Ergebnismeldung_BUSINESSACTION_PostStimmzettelumschlaege";
 
     public static final String REPOSITORY_READ_AWERTE = "Ergebnismeldung_READ_AWerte";
     public static final String REPOSITORY_DELETE_AWERTE = "Ergebnismeldung_DELETE_AWerte";
@@ -25,6 +27,10 @@ public class Authorities {
     public static final String REPOSITORY_READ_WAHLSCHEINE = "Ergebnismeldung_READ_Wahlscheine";
     public static final String REPOSITORY_DELETE_WAHLSCHEINE = "Ergebnismeldung_DELETE_Wahlscheine";
     public static final String REPOSITORY_WRITE_WAHLSCHEINE = "Ergebnismeldung_WRITE_Wahlscheine";
+
+    public static final String REPOSITORY_READ_STIMMZETTELUMSCHLAEGE = "Ergebnismeldung_READ_Stimmzettelumschlaege";
+    public static final String REPOSITORY_DELETE_STIMMZETTELUMSCHLAEGE = "Ergebnismeldung_DELETE_Stimmzettelumschlaege";
+    public static final String REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE = "Ergebnismeldung_WRITE_Stimmzettelumschlaege";
 
     public static final String[] ALL_AUTHORITIES_USER_GET_AWERTE = new String[] {
             SERVICE_GET_AWERTE,
@@ -63,6 +69,16 @@ public class Authorities {
     public static final String[] ALL_AUTHORITIES_SET_WAHLSCHEINE = new String[] {
             SERVICE_SET_WAHLSCHEINE,
             REPOSITORY_WRITE_WAHLSCHEINE
+    };
+
+    public static final String[] ALL_AUTHORITIES_GET_STIMMZETTELUMSCHLAEGE = new String[] {
+        SERVICE_GET_STIMMZETTELUMSCHLAEGE,
+        REPOSITORY_READ_STIMMZETTELUMSCHLAEGE
+    };
+
+    public static final String[] ALL_AUTHORITIES_SET_STIMMZETTELUMSCHLAEGE = new String[] {
+        SERVICE_SET_STIMMZETTELUMSCHLAEGE,
+        REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE
     };
 
 }

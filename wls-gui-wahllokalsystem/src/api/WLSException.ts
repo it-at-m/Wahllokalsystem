@@ -12,6 +12,7 @@ export default interface WLSException {
  * @param obj - The object to check
  * @returns True if the object has all required WLSException properties with correct types
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isWLSException(obj: any): obj is WLSException {
   return (
     obj &&
@@ -27,6 +28,7 @@ export function isWLSException(obj: any): obj is WLSException {
  * @param content - The JSON-object with all relevant information
  * @returns the generated WLSError object from JSON data
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function generateWlsExceptionFromJson(content: any): WLSException {
   return {
     category: content.category,

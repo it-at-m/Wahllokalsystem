@@ -27,7 +27,7 @@ public class WahlscheineController {
     private final WahlscheineService wahlscheineService;
     private final WahlscheineDTOMapper wahlscheineDTOMapper;
 
-    @Operation(description = "Lesen der Anzahl an Stimmabgabevermerken eines Wahlbezirkes für eine Wahl")
+    @Operation(description = "Lesen der Anzahl an Stimmabgabevermerken mit Wahlschein eines Wahlbezirkes für eine Wahl")
     @ApiResponses(
             value = {
                     @ApiResponse(

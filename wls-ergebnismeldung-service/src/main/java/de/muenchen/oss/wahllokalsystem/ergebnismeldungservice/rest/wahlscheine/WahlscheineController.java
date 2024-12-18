@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.wahlscheine;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.AbstractController;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.wahlscheine.WahlscheineService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -8,7 +9,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/businessActions/wahlscheine")
 @RequiredArgsConstructor
-public class WahlscheineController {
+public class WahlscheineController extends AbstractController {
 
     private final WahlscheineService wahlscheineService;
     private final WahlscheineDTOMapper wahlscheineDTOMapper;
@@ -74,9 +74,5 @@ public class WahlscheineController {
     public void postWahlscheine(@PathVariable("wahlID") final String wahlID, @PathVariable("wahlbezirkID") final String wahlbezirkID,
             @RequestBody final WahlscheineDTO wahlscheineDTO) {
         wahlscheineService.setWahlscheine(new BezirkUndWahlID(wahlID, wahlbezirkID), wahlscheineDTOMapper.toModel(wahlscheineDTO));
-    }
-
-    private <T> ResponseEntity<T> okWithBodyOrNoContent(final Optional<T> body) {
-        return body.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
     }
 }

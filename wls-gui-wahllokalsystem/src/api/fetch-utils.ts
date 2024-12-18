@@ -1,4 +1,5 @@
 import { ApiError } from "@/api/ApiError";
+import WLSException from "@/api/WLSException";
 import { STATUS_INDICATORS } from "@/constants";
 
 /**
@@ -116,6 +117,34 @@ export function defaultCatchHandler(
     level: STATUS_INDICATORS.WARNING,
     message: errorMessage,
   });
+}
+
+export function wlsResponseHandler(response: Response): Promise<Response> {
+  if (!response.ok || response.status === 204) {
+    return Promise.reject(response);
+  } else {
+    return Promise.resolve(response);
+  }
+}
+
+export function wlsCatchHandler(response: Response): PromiseLike<never> {
+  if (response.status === 204) {
+    throw new ApiError({
+      level: STATUS_INDICATORS.INFO,
+      message: "Es konnten keine Daten gefunden werden",
+    });
+  }
+  if (response.status === 400) {
+    return response.json().then((content) => {
+      if (WLSException.isWLSException(content)) {
+        return Promise.reject(new ApiError({ message: content.message }));
+      } else {
+        return Promise.reject(new ApiError({ message: "Error: Bad Request" }));
+      }
+    });
+  } else {
+    return Promise.reject(new ApiError({ message: "unbekannter fehler" }));
+  }
 }
 
 /**

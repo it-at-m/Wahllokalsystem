@@ -54,7 +54,7 @@ public class WahlscheineController {
         return okWithBodyOrNoContent(wahlscheine.map(wahlscheineDTOMapper::toDTO));
     }
 
-    @Operation(description = "Setzen der Anzahl an Stimmabgabevermerken eines Wahlbezirkes für eine Wahl")
+    @Operation(description = "Setzen der Anzahl an Stimmabgabevermerken mit Wahlschein eines Wahlbezirkes für eine Wahl")
     @ApiResponses(
             value = {
                     @ApiResponse(

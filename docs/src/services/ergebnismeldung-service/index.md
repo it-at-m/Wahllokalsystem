@@ -50,10 +50,10 @@ Welche Aktionen für die jeweiligen Dokumente bereits in einem Wahllokal vollzog
 
 Über Änderungen an dem Status wird auch der [Monitoring-Service](/services/monitoring-service/) informiert.
 
-### Lesen und Schreiben der Wahlberechtigten
+### Lesen und Schreiben von Stimmabgabevermerken
 
+####  Erfassung der Stimmabgaben mit Wahlschein
 Im Wählerverzeichnis wird bei einer Wahl durch den Schriftführer über den sogenannten "Stimmabgabevermerk" vermerkt,
-dass ein Wahlberechtigter seinen Stimmzettel in die Urne gelegt hat.
-
-Über das Lesen und Schreiben der Wahlberechtigten kann die aktuelle Anzahl an Stimmabgabevermerken an WLS übermittelt
+wenn ein Wahlberechtigter mit Wahlschein seinen Stimmzettel in die Urne gelegt hat.
+Über das Schreiben und Lesen der Wahlscheine kann die aktuelle Anzahl an Stimmabgabevermerken an WLS übermittelt
 bzw. ausgelesen werden.

@@ -19,7 +19,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExcept
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import lombok.val;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,8 +55,8 @@ public class WahlscheineControllerIntegrationTest {
     @Autowired
     MockMvc mockMvc;
 
-    @BeforeEach
-    void setup() {
+    @AfterEach
+    void tearDown() {
         wahlscheineRepository.deleteAll();
     }
 
@@ -174,7 +174,7 @@ public class WahlscheineControllerIntegrationTest {
             val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn().getResponse();
             val receivedWlsException = objectMapper.readValue(response.getContentAsString(), WlsExceptionDTO.class);
 
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.GET_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG.code(),
+            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.POST_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG.code(),
                     "WLS-ERGEBNISMELDUNG", ExceptionConstants.POST_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG.message());
             Assertions.assertThat(receivedWlsException).isEqualTo(expectedWlsExceptionDTO);
         }

@@ -1,12 +1,10 @@
 import { ERROR_CATEGORY } from "@/api/wlsErrorCategories";
 
-export default class WLSException {
-  constructor(
-    public readonly category: string,
-    public readonly code: string,
-    public readonly message: string,
-    public readonly service: string
-  ) {}
+export default interface WLSException {
+  category: ERROR_CATEGORY;
+  code: string;
+  message: string;
+  service: string;
 }
 
 /**
@@ -22,4 +20,18 @@ export function isWLSException(obj: any): obj is WLSException {
     typeof obj.message === "string" &&
     typeof obj.service === "string"
   );
+}
+
+/**
+ * Generates a WLSError instance from a JSON object.
+ * @param content - The JSON-object with all relevant information
+ * @returns the generated WLSError object from JSON data
+ */
+export function generateWlsExceptionFromJson(content: any): WLSException {
+  return {
+    category: content.category,
+    code: content.code,
+    message: content.message,
+    service: content.service,
+  };
 }

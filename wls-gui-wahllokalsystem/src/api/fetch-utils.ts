@@ -1,8 +1,8 @@
+import { createDefaultWlsError } from "@/api/WLSError";
 import {
-  createDefaultWlsError,
   generateWlsExceptionFromJson,
   isWLSException,
-} from "@/api/WLSError";
+} from "@/api/WLSException";
 
 /**
  * Returns a default GET-Config for fetch

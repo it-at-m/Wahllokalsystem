@@ -1,6 +1,6 @@
 import { ERROR_CATEGORY } from "@/api/wlsErrorCategories";
 
-export interface WLSError extends Error {
+export class WLSError extends Error {
   category?: ERROR_CATEGORY;
   code?: string;
   service?: string;
@@ -28,33 +28,4 @@ export function createDefaultWlsError({
   error.code = code;
   error.service = service;
   return error;
-}
-
-/**
- * Generates a WLSError instance from a JSON object.
- * @param content - The JSON-object with all relevant information
- * @returns the generated WLSError object from JSON data
- */
-export function generateWlsExceptionFromJson(content: any): WLSError {
-  const error = new Error(content.message) as WLSError;
-  error.name = "WLS Exception";
-  error.category = content.category;
-  error.code = content.code;
-  error.service = content.service;
-  return error;
-}
-
-/**
- * Type guard to check if an object is a WLSException
- * @param obj - The object to check
- * @returns True if the object has all required WLSException properties with correct types
- */
-export function isWLSException(obj: any): obj is WLSError {
-  return (
-    obj &&
-    Object.values(ERROR_CATEGORY).includes(obj.category) &&
-    typeof obj.code === "string" &&
-    typeof obj.message === "string" &&
-    typeof obj.service === "string"
-  );
 }

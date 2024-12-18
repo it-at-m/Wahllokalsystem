@@ -63,7 +63,7 @@ async function getMessage(wahlbezirkID: string) {
     message.value = content.nachricht;
     messageId = content.oid;
 
-    await broadcastMessageRead(messageId).catch((e) => {
+    await broadcastMessageRead(messageId).catch(() => {
       errors.value.read =
         "Es ist ein Fehler beim Lesen der Nachricht aufgetreten";
     });

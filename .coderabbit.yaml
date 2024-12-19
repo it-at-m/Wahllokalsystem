@@ -3,7 +3,6 @@ reviews:
   high_level_summary_placeholder: ''
   auto_title_placeholder: ''
   poem: false
-  collapse_walkthrough: true
   changed_files_summary: false
   sequence_diagrams: false
   related_issues: false

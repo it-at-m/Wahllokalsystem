@@ -54,27 +54,6 @@ export function putConfig(body: any): RequestInit {
 }
 
 /**
- * Returns a default PATCH-Config for fetch
- * If available, the version of the entity to be updated is included in this as an "If-Match" header.
- * @param body Optional body to be transferred
- */
-// eslint-disable-next-line
-export function patchConfig(body: any): RequestInit {
-  const headers = getHeaders();
-  if (body.version !== undefined) {
-    headers.append("If-Match", body.version);
-  }
-  return {
-    method: "PATCH",
-    body: body ? JSON.stringify(body) : undefined,
-    headers,
-    mode: "cors",
-    credentials: "same-origin",
-    redirect: "manual",
-  };
-}
-
-/**
  * Covers the default handling of a response. This includes:
  *
  * - Error with missing authorizations --> HTTP 403

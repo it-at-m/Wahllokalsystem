@@ -25,6 +25,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.core.task.SyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,6 +39,15 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @AutoConfigureMockMvc
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE, Profiles.DUMMY_CLIENTS })
 public class AWerteControllerIntegrationTest {
+
+    @Configuration
+    static class TestConfiguration {
+        @Primary
+        @Bean
+        public TaskExecutor syncTaskExecutor() {
+            return new SyncTaskExecutor();
+        }
+    }
 
     @Autowired
     ObjectMapper objectMapper;

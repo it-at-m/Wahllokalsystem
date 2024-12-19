@@ -12,6 +12,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -21,7 +23,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class NoSecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, SessionRegistry sessionRegistry) throws Exception {
         // @formatter:off
         http
                 .headers(customizer -> customizer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
@@ -30,9 +32,21 @@ public class NoSecurityConfiguration {
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .anyRequest()
                         .permitAll())
+                .sessionManagement(customizer ->
+                        customizer.sessionFixation().migrateSession()
+                                .maximumSessions(1)
+                                .expiredUrl("/login")
+                                .maxSessionsPreventsLogin(false)
+                                .sessionRegistry(sessionRegistry)
+                )
                 .csrf(AbstractHttpConfigurer::disable);
         // @formatter:on
         return http.build();
+    }
+
+    @Bean
+    SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
     }
 
 }

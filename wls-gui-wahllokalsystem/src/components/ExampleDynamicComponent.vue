@@ -3,9 +3,9 @@
     <p>This is a specific site for an element with ID: {{ wahlId }}</p>
     <p>
       <v-btn
-        @click="goBack"
         class="mt-2"
         color="primary"
+        @click="goBack"
       >
         Go Back and try another one
       </v-btn>

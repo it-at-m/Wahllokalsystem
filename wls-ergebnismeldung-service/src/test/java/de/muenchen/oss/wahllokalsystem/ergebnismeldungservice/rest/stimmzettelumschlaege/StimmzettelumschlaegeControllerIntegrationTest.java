@@ -130,8 +130,10 @@ public class StimmzettelumschlaegeControllerIntegrationTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(requestBody));
 
-            WireMock.stubFor(WireMock.post(UrlPattern.ANY).willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value())));
-
+            WireMock.stubFor(WireMock.post(WireMock.urlPathMatching("/businessActions/stimmzettelumschlaege/.*"))
+                    .willReturn(WireMock.aResponse()
+                            .withStatus(HttpStatus.OK.value())
+                            .withHeader("Content-Type", "application/json")));
             mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
 
             val entityFromRepo = stimmzettelumschlaegeRepository.findById(requestBody.bezirkUndWahlID()).get();

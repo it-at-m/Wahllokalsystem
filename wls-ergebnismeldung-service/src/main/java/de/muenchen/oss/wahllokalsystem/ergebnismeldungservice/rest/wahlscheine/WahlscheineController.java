@@ -1,7 +1,7 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.wahlscheine;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.AbstractController;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.wahlscheine.WahlscheineService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,22 +20,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/businessActions/status")
+@RequestMapping("/businessActions/wahlscheine")
 @RequiredArgsConstructor
-public class StatusController extends AbstractController {
+public class WahlscheineController extends AbstractController {
 
-    private final StatusService statusService;
-    private final StatusDTOMapper statusDTOMapper;
+    private final WahlscheineService wahlscheineService;
+    private final WahlscheineDTOMapper wahlscheineDTOMapper;
 
-    @Operation(description = "Lesen des Bearbeitungsstatus bei der Ergebnisermittlung eines Wahlbezirkes für eine Wahl")
+    @Operation(description = "Lesen der Anzahl an Stimmabgabevermerken mit Wahlschein eines Wahlbezirkes für eine Wahl")
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200", description = "Es existiert ein Zustand",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = StatusDTO.class)) }
+                            responseCode = "200", description = "Es existieren Stimmabgabevermerke",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WahlscheineDTO.class)) }
                     ),
                     @ApiResponse(
-                            responseCode = "204", description = "Es existiert kein Zustand entsprechend der Kriterien",
+                            responseCode = "204", description = "Es existieren keine Stimmabgabevermerke zu den entsprechenden Kriterien",
                             content = { @Content() }
                     ),
                     @ApiResponse(
@@ -49,16 +49,16 @@ public class StatusController extends AbstractController {
             }
     )
     @GetMapping("{wahlID}/{wahlbezirkID}")
-    public ResponseEntity<StatusDTO> getStatus(@PathVariable("wahlID") final String wahlID, @PathVariable("wahlbezirkID") final String wahlbezirkID) {
-        val status = statusService.getStatus(new BezirkUndWahlID(wahlID, wahlbezirkID));
-        return okWithBodyOrNoContent(status.map(statusDTOMapper::toDTO));
+    public ResponseEntity<WahlscheineDTO> getWahlscheine(@PathVariable("wahlID") final String wahlID, @PathVariable("wahlbezirkID") final String wahlbezirkID) {
+        val wahlscheine = wahlscheineService.getWahlscheine(new BezirkUndWahlID(wahlID, wahlbezirkID));
+        return okWithBodyOrNoContent(wahlscheine.map(wahlscheineDTOMapper::toDTO));
     }
 
-    @Operation(description = "Setzen des Bearbeitungsstatus bei der Ergebnisermittlung eines Wahlbezirkes für eine Wahl")
+    @Operation(description = "Setzen der Anzahl an Stimmabgabevermerken mit Wahlschein eines Wahlbezirkes für eine Wahl")
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200", description = "Zustand erfolgreich gespeichert"
+                            responseCode = "200", description = "Stimmabgabevermerke erfolgreich gespeichert"
                     ),
                     @ApiResponse(
                             responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich",
@@ -71,8 +71,8 @@ public class StatusController extends AbstractController {
             }
     )
     @PostMapping("{wahlID}/{wahlbezirkID}")
-    public void setStatus(@PathVariable("wahlID") final String wahlID, @PathVariable("wahlbezirkID") final String wahlbezirkID,
-            @RequestBody final StatusDTO statusDTO) {
-        statusService.setStatus(new BezirkUndWahlID(wahlID, wahlbezirkID), statusDTOMapper.toModel(statusDTO));
+    public void postWahlscheine(@PathVariable("wahlID") final String wahlID, @PathVariable("wahlbezirkID") final String wahlbezirkID,
+            @RequestBody final WahlscheineDTO wahlscheineDTO) {
+        wahlscheineService.setWahlscheine(new BezirkUndWahlID(wahlID, wahlbezirkID), wahlscheineDTOMapper.toModel(wahlscheineDTO));
     }
 }

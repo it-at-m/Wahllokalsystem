@@ -49,3 +49,11 @@ bildet die Niederschrift. Die Schnellmeldung und die Niederschrift können gedru
 Welche Aktionen für die jeweiligen Dokumente bereits in einem Wahllokal vollzogen wurden, wird über den Status gepflegt.
 
 Über Änderungen an dem Status wird auch der [Monitoring-Service](/services/monitoring-service/) informiert.
+
+### Lesen und Schreiben von Stimmabgabevermerken
+
+####  Erfassung der Stimmabgaben mit Wahlschein
+Im Wählerverzeichnis wird bei einer Wahl durch den Schriftführer über den sogenannten "Stimmabgabevermerk" vermerkt,
+wenn ein Wahlberechtigter mit Wahlschein seinen Stimmzettel in die Urne gelegt hat.
+Über das Schreiben und Lesen der Wahlscheine kann die aktuelle Anzahl an Stimmabgabevermerken an WLS übermittelt
+bzw. ausgelesen werden.

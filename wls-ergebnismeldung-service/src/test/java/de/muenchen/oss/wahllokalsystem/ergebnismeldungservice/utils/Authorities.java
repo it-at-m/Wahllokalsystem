@@ -13,6 +13,8 @@ public class Authorities {
     public static final String SERVICE_SET_STATUS = "Ergebnismeldung_BUSINESSACTION_PostStatus";
     public static final String SERVICE_GET_WAHLSCHEINE = "Ergebnismeldung_BUSINESSACTION_GetWahlscheine";
     public static final String SERVICE_SET_WAHLSCHEINE = "Ergebnismeldung_BUSINESSACTION_PostWahlscheine";
+    public static final String SERVICE_GET_BEGRUENDUNG = "Ergebnismeldung_BUSINESSACTION_GetBegruendung";
+    public static final String SERVICE_SET_BEGRUENDUNG = "Ergebnismeldung_BUSINESSACTION_PostBegruendung";
 
     public static final String REPOSITORY_READ_AWERTE = "Ergebnismeldung_READ_AWerte";
     public static final String REPOSITORY_DELETE_AWERTE = "Ergebnismeldung_DELETE_AWerte";
@@ -25,6 +27,11 @@ public class Authorities {
     public static final String REPOSITORY_READ_WAHLSCHEINE = "Ergebnismeldung_READ_Wahlscheine";
     public static final String REPOSITORY_DELETE_WAHLSCHEINE = "Ergebnismeldung_DELETE_Wahlscheine";
     public static final String REPOSITORY_WRITE_WAHLSCHEINE = "Ergebnismeldung_WRITE_Wahlscheine";
+
+    public static final String REPOSITORY_READ_BEGRUENDUNG = "Ergebnismeldung_READ_Begruendung";
+    public static final String REPOSITORY_DELETE_BEGRUENDUNG = "Ergebnismeldung_DELETE_Begruendung";
+    public static final String REPOSITORY_WRITE_BEGRUENDUNG = "Ergebnismeldung_WRITE_Begruendung";
+
 
     public static final String[] ALL_AUTHORITIES_USER_GET_AWERTE = new String[] {
             SERVICE_GET_AWERTE,
@@ -65,4 +72,21 @@ public class Authorities {
             REPOSITORY_WRITE_WAHLSCHEINE
     };
 
+
+    public static final String[] ALL_AUTHORITIES_GET_BEGRUENDUNG = new String[] {
+            REPOSITORY_READ_BEGRUENDUNG,
+            SERVICE_GET_BEGRUENDUNG
+    };
+
+    public static final String[] ALL_AUTHORITIES_SET_BEGRUENDUNG_MISSING_WILL_RESULT_IN_WLS_EXCEPTION = new String[] {
+            REPOSITORY_WRITE_BEGRUENDUNG
+    };
+
+    public static final String[] ALL_AUTHORITIES_SET_BEGRUENDUNG_MISSING_WILL_RESULT_IN_ACCESS_DENIED = new String[] {
+            REPOSITORY_READ_BEGRUENDUNG,
+            SERVICE_SET_BEGRUENDUNG
+    };
+
+    public static final String[] ALL_AUTHORITIES_SET_BEGRUENDUNG = ArrayUtils.addAll(ALL_AUTHORITIES_SET_BEGRUENDUNG_MISSING_WILL_RESULT_IN_ACCESS_DENIED,
+            ALL_AUTHORITIES_SET_BEGRUENDUNG_MISSING_WILL_RESULT_IN_WLS_EXCEPTION);
 }

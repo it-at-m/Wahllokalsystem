@@ -23,7 +23,7 @@ public class BegruendungValidator {
         }
     }
 
-    public void validModelOrThrow(final BegruendungModel begruendungToAdd) {
+    public void validModelOrThrow(final BegruendungModel begruendungToAdd) throws FachlicheWlsException {
         if (begruendungToAdd.grund1() == null && begruendungToAdd.grund2() == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG);
         }

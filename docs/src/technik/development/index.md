@@ -38,7 +38,7 @@ flowchart LR
 
 ## Services und Ports
 
-Übersicht über die Services und auf welchen Port im Standard lauschen:
+Übersicht über die Services und auf welchen Port sie im Standard lauschen:
 
 > [!IMPORTANT]
 > Diese Ports werden sowohl in der IDE als auch in Docker verwendet.

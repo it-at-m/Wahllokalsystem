@@ -32,6 +32,7 @@ class BegruendungDTOMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
+
     @Nested
     class ToEntity {
 

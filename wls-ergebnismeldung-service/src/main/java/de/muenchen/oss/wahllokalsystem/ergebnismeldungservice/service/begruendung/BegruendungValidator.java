@@ -15,10 +15,10 @@ public class BegruendungValidator {
 
     public void validReferenceOrThrow(final BegruendungReference begruendungReference) throws FachlicheWlsException {
         if (StringUtils.isBlank(
-                begruendungReference.wahlbezirkID())  ||
+                begruendungReference.wahlbezirkID()) ||
                 StringUtils.isBlank(
-                        begruendungReference.wahlID()
-                ) || begruendungReference.stapelart() == null) {
+                        begruendungReference.wahlID())
+                || begruendungReference.stapelart() == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG);
         }
     }

@@ -32,7 +32,6 @@ public class Authorities {
     public static final String REPOSITORY_DELETE_BEGRUENDUNG = "Ergebnismeldung_DELETE_Begruendung";
     public static final String REPOSITORY_WRITE_BEGRUENDUNG = "Ergebnismeldung_WRITE_Begruendung";
 
-
     public static final String[] ALL_AUTHORITIES_USER_GET_AWERTE = new String[] {
             SERVICE_GET_AWERTE,
             REPOSITORY_READ_AWERTE,
@@ -71,7 +70,6 @@ public class Authorities {
             SERVICE_SET_WAHLSCHEINE,
             REPOSITORY_WRITE_WAHLSCHEINE
     };
-
 
     public static final String[] ALL_AUTHORITIES_GET_BEGRUENDUNG = new String[] {
             REPOSITORY_READ_BEGRUENDUNG,

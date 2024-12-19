@@ -52,7 +52,7 @@ public class BegruendungControllerIntegrationTest {
         }
 
         @Test
-        @WithMockUser(authorities = {Authorities.SERVICE_GET_BEGRUENDUNG, Authorities.REPOSITORY_READ_BEGRUENDUNG})
+        @WithMockUser(authorities = { Authorities.SERVICE_GET_BEGRUENDUNG, Authorities.REPOSITORY_READ_BEGRUENDUNG })
         void emptyResponse() throws Exception {
             val request = get("/businessActions/begruendung/wahlbezirkID/21/LTW_BZW_A");
 
@@ -63,8 +63,8 @@ public class BegruendungControllerIntegrationTest {
 
         @Test
         @WithMockUser(
-                authorities = {Authorities.SERVICE_GET_BEGRUENDUNG, Authorities.REPOSITORY_READ_BEGRUENDUNG,
-                        Authorities.REPOSITORY_WRITE_BEGRUENDUNG}
+                authorities = { Authorities.SERVICE_GET_BEGRUENDUNG, Authorities.REPOSITORY_READ_BEGRUENDUNG,
+                        Authorities.REPOSITORY_WRITE_BEGRUENDUNG }
         )
         void dataFound() throws Exception {
             val wahlbezirkID1 = "wahlbezirkID1";

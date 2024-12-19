@@ -36,7 +36,7 @@ class BegruendungControllerTest {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
 
-            val begruendungReference = new BegruendungReference( wahlbezirkID, wahlID, Stapelart.LTW_BZW_A);
+            val begruendungReference = new BegruendungReference(wahlbezirkID, wahlID, Stapelart.LTW_BZW_A);
             val bezirkUndWahlIDStapelart = new BezirkUndWahlIDStapelart("wahlbezirkID", "wahlID", Stapelart.LTW_BZW_A);
             val mockedServiceResponse = new BegruendungModel("wahlbezirkID", "wahlID", Stapelart.LTW_BZW_A, null, null, true, true);
             val mockedServiceResponseAsDTO = new BegruendungDTO(bezirkUndWahlIDStapelart, null, null, true, true);

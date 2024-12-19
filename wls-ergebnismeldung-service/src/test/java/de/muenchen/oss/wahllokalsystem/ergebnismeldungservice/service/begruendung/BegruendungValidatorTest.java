@@ -31,7 +31,6 @@ class BegruendungValidatorTest {
     @Nested
     class ValidBezirkUndWahlIdStapelartOrThrow {
 
-
         @Test
         void should_notThrowException_when_bezirkUndWahlIDStapelartIsValid() {
             val id = new BegruendungReference("wahlID", "wahlbezirkID", Stapelart.LTW_BZW_A);
@@ -47,7 +46,7 @@ class BegruendungValidatorTest {
                     .thenReturn(mockedWlsException);
             Assertions.assertThatException()
                     .isThrownBy(() -> unitUnderTest.validReferenceOrThrow(arguments.get(0, BegruendungReference.class)))
-                            .isSameAs(mockedWlsException);
+                    .isSameAs(mockedWlsException);
         }
 
         public static Stream<Arguments> invalidWahlbezirkArgumentsWithTestcaseNameAppendix() {
@@ -80,7 +79,8 @@ class BegruendungValidatorTest {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG))
                     .thenReturn(mockedFachlicheWlsException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validModelOrThrow(begruendungModelModelToValidate)).isSameAs(mockedFachlicheWlsException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validModelOrThrow(begruendungModelModelToValidate))
+                    .isSameAs(mockedFachlicheWlsException);
         }
 
         @Test

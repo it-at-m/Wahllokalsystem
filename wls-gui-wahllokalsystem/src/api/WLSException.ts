@@ -1,18 +1,39 @@
-export default class WLSException {
-  constructor(
-    public readonly category: string,
-    public readonly code: string,
-    public readonly message: string,
-    public readonly service: string
-  ) {}
+import { ERROR_CATEGORY } from "@/api/wlsErrorCategories";
 
-  static isWLSException(obj: any): obj is WLSException {
-    return (
-      obj &&
-      typeof obj.category === "string" &&
-      typeof obj.code === "string" &&
-      typeof obj.message === "string" &&
-      typeof obj.service === "string"
-    );
-  }
+export default interface WLSException {
+  category: ERROR_CATEGORY;
+  code: string;
+  message: string;
+  service: string;
+}
+
+/**
+ * Type guard to check if an object is a WLSException
+ * @param obj - The object to check
+ * @returns True if the object has all required WLSException properties with correct types
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isWLSException(obj: any): obj is WLSException {
+  return (
+    obj &&
+    Object.values(ERROR_CATEGORY).includes(obj.category) &&
+    typeof obj.code === "string" &&
+    typeof obj.message === "string" &&
+    typeof obj.service === "string"
+  );
+}
+
+/**
+ * Generates a WLSError instance from a JSON object.
+ * @param content - The JSON-object with all relevant information
+ * @returns the generated WLSError object from JSON data
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function generateWlsExceptionFromJson(content: any): WLSException {
+  return {
+    category: content.category,
+    code: content.code,
+    message: content.message,
+    service: content.service,
+  };
 }

@@ -28,7 +28,8 @@ class StimmzettelumschlaegeModelMapperTest {
             val urneneroeffnungsUhrzeit = LocalDateTime.now();
             val anzahlWaehler = 47;
             val anzahlWaehler2 = 11;
-            val wahlscheineEntity = new Stimmzettelumschlaege(new BezirkUndWahlID(wahlID, wahlbezirkID), urneneroeffnungsUhrzeit, anzahlWaehler, (long) anzahlWaehler2);
+            val wahlscheineEntity = new Stimmzettelumschlaege(new BezirkUndWahlID(wahlID, wahlbezirkID), urneneroeffnungsUhrzeit, anzahlWaehler,
+                    (long) anzahlWaehler2);
 
             val result = unitUnderTest.toModel(wahlscheineEntity);
             val expectedResult = new StimmzettelumschlaegeModel(
@@ -53,10 +54,12 @@ class StimmzettelumschlaegeModelMapperTest {
             val urneneroeffnungsUhrzeit = LocalDateTime.now();
             val anzahlWaehler = 47;
             val anzahlWaehler2 = 11;
-            val wahlscheineModel = new StimmzettelumschlaegeModel(new BezirkUndWahlID(wahlID, wahlbezirkID), urneneroeffnungsUhrzeit, anzahlWaehler, anzahlWaehler2);
+            val wahlscheineModel = new StimmzettelumschlaegeModel(new BezirkUndWahlID(wahlID, wahlbezirkID), urneneroeffnungsUhrzeit, anzahlWaehler,
+                    anzahlWaehler2);
 
             val result = unitUnderTest.toEntity(wahlscheineModel);
-            val expectedResult = new Stimmzettelumschlaege(new BezirkUndWahlID(wahlID, wahlbezirkID), urneneroeffnungsUhrzeit, anzahlWaehler, (long) anzahlWaehler2);
+            val expectedResult = new Stimmzettelumschlaege(new BezirkUndWahlID(wahlID, wahlbezirkID), urneneroeffnungsUhrzeit, anzahlWaehler,
+                    (long) anzahlWaehler2);
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }

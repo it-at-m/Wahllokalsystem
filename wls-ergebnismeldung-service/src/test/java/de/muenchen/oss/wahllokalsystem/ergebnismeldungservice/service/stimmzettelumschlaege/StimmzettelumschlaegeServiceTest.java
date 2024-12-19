@@ -140,7 +140,8 @@ class StimmzettelumschlaegeServiceTest {
             Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.STIMMZETTELUMSCHLAEGE_UNSAVEABLE))
                     .thenReturn(mockedExceptionFactoryWlsException);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaegeToSet)).isSameAs(mockedExceptionFactoryWlsException);
+            Assertions.assertThatThrownBy(() -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaegeToSet))
+                    .isSameAs(mockedExceptionFactoryWlsException);
         }
 
         private StimmzettelumschlaegeModel createStimmzettelumschlaegeModel(final BezirkUndWahlID id) {

@@ -107,7 +107,8 @@ public class StimmzettelumschlaegeControllerIntegrationTest {
             val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn().getResponse();
             val receivedWlsException = objectMapper.readValue(response.getContentAsString(), WlsExceptionDTO.class);
 
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.GET_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG.code(),
+            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F,
+                    ExceptionConstants.GET_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG.code(),
                     "WLS-ERGEBNISMELDUNG", ExceptionConstants.GET_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG.message());
             Assertions.assertThat(receivedWlsException).isEqualTo(expectedWlsExceptionDTO);
         }
@@ -155,7 +156,8 @@ public class StimmzettelumschlaegeControllerIntegrationTest {
 
             val anzahlWaehlerToReplace = 8;
             val anzahlWaehler2ToReplace = 15L;
-            val entityToReplace = new Stimmzettelumschlaege(requestBody.bezirkUndWahlID(), requestBody.urneneroeffnungsUhrzeit(), anzahlWaehlerToReplace, anzahlWaehler2ToReplace);
+            val entityToReplace = new Stimmzettelumschlaege(requestBody.bezirkUndWahlID(), requestBody.urneneroeffnungsUhrzeit(), anzahlWaehlerToReplace,
+                    anzahlWaehler2ToReplace);
             Assertions.assertThat(entityToReplace).usingRecursiveComparison().isNotEqualTo(requestBody);
             stimmzettelumschlaegeRepository.save(entityToReplace);
 
@@ -186,7 +188,8 @@ public class StimmzettelumschlaegeControllerIntegrationTest {
             val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn().getResponse();
             val receivedWlsException = objectMapper.readValue(response.getContentAsString(), WlsExceptionDTO.class);
 
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.POST_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG.code(),
+            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F,
+                    ExceptionConstants.POST_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG.code(),
                     "WLS-ERGEBNISMELDUNG", ExceptionConstants.POST_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG.message());
             Assertions.assertThat(receivedWlsException).isEqualTo(expectedWlsExceptionDTO);
         }

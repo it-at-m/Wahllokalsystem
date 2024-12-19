@@ -33,7 +33,7 @@ class StimmzettelumschlaegeDTOMapperTest {
             val result = unitUnderTest.toDTO(modelToMap);
 
             val expectedResult = new StimmzettelumschlaegeDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), urneneroeffnungsUhrzeit, anzahlWaehler,
-                (long) anzahlWaehler2);
+                    (long) anzahlWaehler2);
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
@@ -54,12 +54,12 @@ class StimmzettelumschlaegeDTOMapperTest {
             val anzahlWaehler = 47;
             val anzahlWaehler2 = 11;
             val dtoToMap = new StimmzettelumschlaegeDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), urneneroeffnungsUhrzeit, anzahlWaehler,
-                (long) anzahlWaehler2);
+                    (long) anzahlWaehler2);
 
             val result = unitUnderTest.toModel(dtoToMap);
 
             val expectedResult = new StimmzettelumschlaegeModel(new BezirkUndWahlID(wahlID, wahlbezirkID), urneneroeffnungsUhrzeit, anzahlWaehler,
-                anzahlWaehler2);
+                    anzahlWaehler2);
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }

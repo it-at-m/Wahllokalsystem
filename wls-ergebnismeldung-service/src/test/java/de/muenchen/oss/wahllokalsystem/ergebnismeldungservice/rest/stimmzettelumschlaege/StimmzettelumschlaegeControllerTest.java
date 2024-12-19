@@ -38,8 +38,8 @@ class StimmzettelumschlaegeControllerTest {
             val wahlbezirkID = "wahlbezirkID";
 
             val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
-            val mockedServiceResponse = new StimmzettelumschlaegeModel(bezirkUndWahlID, null, 0,0);
-            val mockedServiceResponseAsDTO = new StimmzettelumschlaegeDTO(bezirkUndWahlID, null, 0,0L);
+            val mockedServiceResponse = new StimmzettelumschlaegeModel(bezirkUndWahlID, null, 0, 0);
+            val mockedServiceResponseAsDTO = new StimmzettelumschlaegeDTO(bezirkUndWahlID, null, 0, 0L);
 
             Mockito.when(stimmzettelumschlaegeService.getStimmzettelumschlaege(bezirkUndWahlID)).thenReturn(Optional.of(mockedServiceResponse));
             Mockito.when(stimmzettelumschlaegeDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
@@ -73,14 +73,15 @@ class StimmzettelumschlaegeControllerTest {
         void should_callServiceWithModel_when_calledWithData() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
-            val stimmzettelumschlaegeDTO = new StimmzettelumschlaegeDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), null, 0,0L);
+            val stimmzettelumschlaegeDTO = new StimmzettelumschlaegeDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), null, 0, 0L);
 
-            val mockedStimmzettelumschlaegeModel = new StimmzettelumschlaegeModel(new BezirkUndWahlID(wahlID, wahlbezirkID), null, 0,0);
+            val mockedStimmzettelumschlaegeModel = new StimmzettelumschlaegeModel(new BezirkUndWahlID(wahlID, wahlbezirkID), null, 0, 0);
             Mockito.when(stimmzettelumschlaegeDTOMapper.toModel(stimmzettelumschlaegeDTO)).thenReturn(mockedStimmzettelumschlaegeModel);
 
             unitUnderTest.postStimmzettelumschlaege(wahlID, wahlbezirkID, stimmzettelumschlaegeDTO);
 
-            Mockito.verify(stimmzettelumschlaegeService).setStimmzettelumschlaege(eq(new BezirkUndWahlID(wahlID, wahlbezirkID)), eq(mockedStimmzettelumschlaegeModel));
+            Mockito.verify(stimmzettelumschlaegeService).setStimmzettelumschlaege(eq(new BezirkUndWahlID(wahlID, wahlbezirkID)),
+                    eq(mockedStimmzettelumschlaegeModel));
         }
     }
 }

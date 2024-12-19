@@ -102,7 +102,8 @@ class StimmzettelumschlaegeServiceSecurityTest {
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(false);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaege)).isInstanceOf(AccessDeniedException.class);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaege))
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         @Test
@@ -115,7 +116,8 @@ class StimmzettelumschlaegeServiceSecurityTest {
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaege)).isInstanceOf(AccessDeniedException.class);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaege))
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         @Test
@@ -128,7 +130,8 @@ class StimmzettelumschlaegeServiceSecurityTest {
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaege)).isInstanceOf(TechnischeWlsException.class);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaege))
+                    .isInstanceOf(TechnischeWlsException.class);
         }
 
         private StimmzettelumschlaegeModel createStimmzettelumschlaegeModel(BezirkUndWahlID id) {

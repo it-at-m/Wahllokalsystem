@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain;
 
-public enum Stapelart  {
+public enum Stapelart {
     // Landtagswahl und Bezirkswahl-Stapel
     LTW_BZW_A, LTW_BZW_B, LTW_BZW_C_GUELTIG, LTW_BZW_C_UNGUELTIG, LTW_BZW_D, LTW_BZW_DII, LTW_BZW_E, LTW_BZW_F_GUELTIG, LTW_BZW_F_UNGUELTIG, LTW_BZW_G_KLEIN, LTW_BZW_G_GROSS, LTW_BZW_G_BEIDE,
     // Europawahl-Stapel
@@ -18,4 +18,3 @@ public enum Stapelart  {
     // Bundestagswahl-Stapeln
     BTW_A, BTW_B_I_GUELTIG, BTW_B_I_UNGUELTIG, BTW_B_II_GUELTIG, BTW_B_II_UNGUELTIG, BTW_C_UNGEKENNZEICHNET, BTW_C_LEER, BTW_D_I_GUELTIG, BTW_D_II_GUELTIG, BTW_D_I_UNGUELTIG, BTW_D_II_UNGUELTIG
 }
-

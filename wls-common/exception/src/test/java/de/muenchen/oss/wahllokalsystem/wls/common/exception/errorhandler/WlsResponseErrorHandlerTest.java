@@ -51,7 +51,7 @@ class WlsResponseErrorHandlerTest {
         }
 
         @Test
-        void should_createFachlicheWlsException_when_responseWlsExceptionDTOWithCategoryTechnisch() throws Exception {
+        void should_createTechnischeWlsException_when_responseWlsExceptionDTOWithCategoryTechnisch() throws Exception {
             val mockedResponseBody = new ByteArrayInputStream("mocked response body as stream".getBytes());
             Mockito.when(response.getBody()).thenReturn(mockedResponseBody);
 
@@ -64,7 +64,7 @@ class WlsResponseErrorHandlerTest {
         }
 
         @Test
-        void should_createFachlicheWlsException_when_responseWlsExceptionDTOWithCategorySecurity() throws Exception {
+        void should_createSicherheitsWlsException_when_responseWlsExceptionDTOWithCategorySecurity() throws Exception {
             val mockedResponseBody = new ByteArrayInputStream("mocked response body as stream".getBytes());
             Mockito.when(response.getBody()).thenReturn(mockedResponseBody);
 
@@ -77,7 +77,7 @@ class WlsResponseErrorHandlerTest {
         }
 
         @Test
-        void should_createFachlicheWlsException_when_responseWlsExceptionDTOWithCategoryInfrastructure() throws Exception {
+        void should_createInfrastrukturelleWlsException_when_responseWlsExceptionDTOWithCategoryInfrastructure() throws Exception {
             val mockedResponseBody = new ByteArrayInputStream("mocked response body as stream".getBytes());
             Mockito.when(response.getBody()).thenReturn(mockedResponseBody);
 

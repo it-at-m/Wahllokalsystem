@@ -19,12 +19,12 @@ class DTOMapperTest {
     class ToDTO {
 
         @Test
-        void nullInNullOut() {
+        void should_returnNull_when_nullIsGiven() {
             Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
         }
 
         @Test
-        void toDTO() {
+        void should_returnDTO_whenExceptionIsGiven() {
             val code = "089";
             val serviceName = "dto mapper test";
             val message = "lets check the mapping";
@@ -40,12 +40,12 @@ class DTOMapperTest {
 
     @ParameterizedTest(name = "expected: {0} input: {1}")
     @MethodSource
-    void toDTOCategory(final WlsExceptionCategory expectedResult,
+    void should_returnWlsExceptionCategory_when_restDTOCategoryIsGiven(final WlsExceptionCategory expectedResult,
             final de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionCategory categoryToMap) {
         Assertions.assertThat(unitUnderTest.toDTOCategory(categoryToMap)).isEqualTo(expectedResult);
     }
 
-    private static Stream<Arguments> toDTOCategory() {
+    private static Stream<Arguments> should_returnWlsExceptionCategory_when_restDTOCategoryIsGiven() {
         return Stream.of(
                 Arguments.of(WlsExceptionCategory.F, de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionCategory.FACHLICH),
                 Arguments.of(WlsExceptionCategory.I, de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionCategory.INFRASTRUKTUR),

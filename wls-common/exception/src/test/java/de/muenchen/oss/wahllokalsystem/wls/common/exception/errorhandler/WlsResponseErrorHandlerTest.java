@@ -38,7 +38,7 @@ class WlsResponseErrorHandlerTest {
     class HandleError {
 
         @Test
-        void fachlicheExceptionCreatedFromResponse() throws Exception {
+        void should_createFachlicheWlsException_when_responseWlsExceptionDTOWithCategoryFachlich() throws Exception {
             val mockedResponseBody = new ByteArrayInputStream("mocked response body as stream".getBytes());
             Mockito.when(response.getBody()).thenReturn(mockedResponseBody);
 
@@ -51,7 +51,7 @@ class WlsResponseErrorHandlerTest {
         }
 
         @Test
-        void technischeExceptionCreatedFromResponse() throws Exception {
+        void should_createFachlicheWlsException_when_responseWlsExceptionDTOWithCategoryTechnisch() throws Exception {
             val mockedResponseBody = new ByteArrayInputStream("mocked response body as stream".getBytes());
             Mockito.when(response.getBody()).thenReturn(mockedResponseBody);
 
@@ -64,7 +64,7 @@ class WlsResponseErrorHandlerTest {
         }
 
         @Test
-        void securityExceptionCreatedFromResponse() throws Exception {
+        void should_createFachlicheWlsException_when_responseWlsExceptionDTOWithCategorySecurity() throws Exception {
             val mockedResponseBody = new ByteArrayInputStream("mocked response body as stream".getBytes());
             Mockito.when(response.getBody()).thenReturn(mockedResponseBody);
 
@@ -77,7 +77,7 @@ class WlsResponseErrorHandlerTest {
         }
 
         @Test
-        void infrastrukturExceptionCreatedFromResponse() throws Exception {
+        void should_createFachlicheWlsException_when_responseWlsExceptionDTOWithCategoryInfrastructure() throws Exception {
             val mockedResponseBody = new ByteArrayInputStream("mocked response body as stream".getBytes());
             Mockito.when(response.getBody()).thenReturn(mockedResponseBody);
 
@@ -90,7 +90,7 @@ class WlsResponseErrorHandlerTest {
         }
 
         @Test
-        void exceptionDuringCreationOfExceptionFromResponse() throws Exception {
+        void should_unknownTechnischeWlsException_when_exceptionDuringCreationOfExceptionFromResponseOccurred() throws Exception {
             val exceptionThrownByMappingResponse = new IOException("something strange happened");
             Mockito.when(response.getBody()).thenThrow(exceptionThrownByMappingResponse);
 

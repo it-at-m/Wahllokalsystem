@@ -29,19 +29,19 @@ class BezirkIDPermissionEvaluatorImplTest {
     Authentication auth;
 
     @Nested
-    class TestTokenUserBezirkIdMatches {
+    class TokenUserBezirkIdMatches {
 
         @RegisterExtension
         public LoggerExtension loggerExtension = new LoggerExtension();
 
         @Test
-        void warnOnAuthenticationIsNull() {
+        void should_returnFalseAndCreateLogWarning_when_authenticationIsNull() {
             Assertions.assertThat(unitUnderTest.tokenUserBezirkIdMatches("1234", null)).isFalse();
             Assertions.assertThat(loggerExtension.getFormattedMessages()).contains("No authentication object for bezirkId=1234");
         }
 
         @Test
-        void errorWhileChecking() {
+        void should_returnFalseAndCreateLogError_when_errorWhileCheckingOccurred() {
             Mockito.when(auth.getPrincipal()).thenReturn("1234");
 
             Assertions.assertThat(unitUnderTest.tokenUserBezirkIdMatches("1234", auth)).isFalse();
@@ -49,7 +49,7 @@ class BezirkIDPermissionEvaluatorImplTest {
         }
 
         @Test
-        void bezirkIDMatchesFromToken() {
+        void should_returnTrue_when_bezirkIDMatchesFromToken() {
             val map = new HashMap<>();
             map.put("wahlbezirkid_wahlnummer", "1234");
             map.put("wahlbezirkID", "1234");
@@ -61,7 +61,7 @@ class BezirkIDPermissionEvaluatorImplTest {
         }
 
         @Test
-        void bezirkIDMatchesFromWahlBezirkID() {
+        void should_returnTrue_when_bezirkIDMatchesFromWahlBezirkID() {
             val map = new HashMap<>();
             map.put("wahlbezirkid_wahlnummer", "1234");
             map.put("wahlbezirkID", "4567");
@@ -73,7 +73,7 @@ class BezirkIDPermissionEvaluatorImplTest {
         }
 
         @Test
-        void bezirkIDIsNull() {
+        void should_returnFalse_when_bezirkIDIsNull() {
             val map = new HashMap<>();
             map.put("wahlbezirkid_wahlnummer", "1234");
             map.put("wahlbezirkID", "1234");
@@ -86,7 +86,7 @@ class BezirkIDPermissionEvaluatorImplTest {
         }
 
         @Test
-        void bezirkIDDoesNotMatch() {
+        void should_returnFalse_when_bezirkIDDoesNotMatch() {
             val map = new HashMap<>();
             map.put("wahlbezirkid_wahlnummer", null);
             map.put("wahlbezirkID", "1234");

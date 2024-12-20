@@ -15,7 +15,7 @@ class SecurityUtilsTest {
     class RunAs {
 
         @Test
-        void userAndPasswortAreSet() {
+        void should_setUserAndPasswortInSecurityContext_when_called() {
             val username = "username";
             val password = "password";
 
@@ -28,7 +28,7 @@ class SecurityUtilsTest {
         }
 
         @Test
-        void authoritiesAreSet() {
+        void should_setAuthoritiesInSecurityContext_when_called() {
             val authority1 = "authority1";
             val authority2 = "authority2";
             val authority3 = "authority3";
@@ -49,13 +49,13 @@ class SecurityUtilsTest {
         }
 
         @Test
-        void nullAuthorityFails() {
+        void should_throwIllegalArgumentException_when_authoritiyIsNull() {
             final String nullAuthority = null;
             Assertions.assertThatThrownBy(() -> SecurityUtils.runAs("", "", nullAuthority)).isInstanceOf(IllegalArgumentException.class);
         }
 
         @Test
-        void blankAuthorityFails() {
+        void should_throwIllegalArgumentException_when_authorityIsBlankString() {
             final String blankAuthority = "   ";
             Assertions.assertThatThrownBy(() -> SecurityUtils.runAs("", "", blankAuthority)).isInstanceOf(IllegalArgumentException.class);
         }
@@ -65,7 +65,7 @@ class SecurityUtilsTest {
     class RunWith {
 
         @Test
-        void defaultUserIsSet() {
+        void should_setDefaultUserInSecurityContext_when_called() {
             SecurityUtils.runWith("authority");
 
             val currentSecurityContext = SecurityContextHolder.getContext();
@@ -75,7 +75,7 @@ class SecurityUtilsTest {
         }
 
         @Test
-        void authoritiesAreSet() {
+        void should_setAuthoritiesInSecurityContext_when_authoritiesAreGiven() {
             val authority1 = "authority1";
             val authority2 = "authority2";
             val authority3 = "authority3";
@@ -96,13 +96,13 @@ class SecurityUtilsTest {
         }
 
         @Test
-        void nullAuthorityFails() {
+        void should_throwIllegalArgumentException_when_authorityIsNull() {
             final String nullAuthority = null;
             Assertions.assertThatThrownBy(() -> SecurityUtils.runWith(nullAuthority)).isInstanceOf(IllegalArgumentException.class);
         }
 
         @Test
-        void blankAuthorityFails() {
+        void should_throwIllegalArgumentException_when_authorityIsBlank() {
             final String blankAuthority = "   ";
             Assertions.assertThatThrownBy(() -> SecurityUtils.runWith(blankAuthority)).isInstanceOf(IllegalArgumentException.class);
         }
@@ -112,7 +112,7 @@ class SecurityUtilsTest {
     class BuildArgumentsForMissingAuthoritiesVariations {
 
         @Test
-        void buildVariantensForAuthoritiyList() {
+        void should_createStreamWithCombinationsOfAuthoritiesWithOneAuthorityMissingInEachCombination_when_AuthoritiesAreGiven() {
             val authority1 = "authority1";
             val authority2 = "authority2";
             val authority3 = "authority3";

@@ -12,11 +12,11 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettel
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelumschlaege.StimmzettelumschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelumschlaege.StimmzettelumschlaegeModelMapper;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.LocalDateTimeComparators;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -64,7 +64,7 @@ public class StimmzettelumschlaegeControllerIntegrationTest {
         void should_returnData_when_dataIsPresentInRepository() throws Exception {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
-            val urneneroeffnungsUhrzeit = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS);
+            val urneneroeffnungsUhrzeit = LocalDateTime.now();
             val anzahlWaehler = 47;
             val anzahlWaehler2 = 11L;
             val request = MockMvcRequestBuilders.get(buildStimmzettelumschlaegeURI(wahlID, wahlbezirkID));
@@ -79,6 +79,7 @@ public class StimmzettelumschlaegeControllerIntegrationTest {
 
             Assertions.assertThat(responseBodyAsDTO)
                     .usingRecursiveComparison()
+                    .withComparatorForType(LocalDateTimeComparators.PRECISION_MILLISECONDS, LocalDateTime.class)
                     .isEqualTo(expectedResult);
         }
 
@@ -116,7 +117,7 @@ public class StimmzettelumschlaegeControllerIntegrationTest {
         void should_persistData_when_noDataIsPresentInRepository() throws Exception {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
-            val urneneroeffnungsUhrzeit = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS);
+            val urneneroeffnungsUhrzeit = LocalDateTime.now();
             val anzahlWaehler = 47;
             val anzahlWaehler2 = 11L;
             val requestBody = new StimmzettelumschlaegeDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), urneneroeffnungsUhrzeit, anzahlWaehler, anzahlWaehler2);
@@ -131,6 +132,7 @@ public class StimmzettelumschlaegeControllerIntegrationTest {
             val expectedEntity = stimmzettelumschlaegeModelMapper.toEntity(stimmzettelumschlaegeDTOMapper.toModel(requestBody));
             Assertions.assertThat(entityFromRepo)
                     .usingRecursiveComparison()
+                    .withComparatorForType(LocalDateTimeComparators.PRECISION_MILLISECONDS, LocalDateTime.class)
                     .isEqualTo(expectedEntity);
         }
 
@@ -138,7 +140,7 @@ public class StimmzettelumschlaegeControllerIntegrationTest {
         void should_replaceOldData_when_dataIsPresentInRepository() throws Exception {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
-            val urneneroeffnungsUhrzeit = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS);
+            val urneneroeffnungsUhrzeit = LocalDateTime.now();
             val anzahlWaehler = 47;
             val anzahlWaehler2 = 11L;
             val requestBody = new StimmzettelumschlaegeDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), urneneroeffnungsUhrzeit, anzahlWaehler, anzahlWaehler2);
@@ -160,6 +162,7 @@ public class StimmzettelumschlaegeControllerIntegrationTest {
             val expectedEntity = stimmzettelumschlaegeModelMapper.toEntity(stimmzettelumschlaegeDTOMapper.toModel(requestBody));
             Assertions.assertThat(entityFromRepo)
                     .usingRecursiveComparison()
+                    .withComparatorForType(LocalDateTimeComparators.PRECISION_MILLISECONDS, LocalDateTime.class)
                     .isEqualTo(expectedEntity);
         }
 
@@ -167,7 +170,7 @@ public class StimmzettelumschlaegeControllerIntegrationTest {
         void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
             val wahlID = "    ";
             val wahlbezirkID = "wahlbezirkID";
-            val urneneroeffnungsUhrzeit = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS);
+            val urneneroeffnungsUhrzeit = LocalDateTime.now();
             val anzahlWaehler = 47;
             val anzahlWaehler2 = 11L;
             val requestBody = new StimmzettelumschlaegeDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), urneneroeffnungsUhrzeit, anzahlWaehler, anzahlWaehler2);

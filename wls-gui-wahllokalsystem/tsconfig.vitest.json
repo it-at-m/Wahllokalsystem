@@ -1,8 +1,20 @@
 {
   "extends": "./tsconfig.app.json",
-  "exclude": [], // explicitly reset exclusion
+  "include": [
+    "./**/*.spec.ts"
+  ],
+  "exclude": [],
+  // explicitly reset exclusion
   "compilerOptions": {
     "tsBuildInfoFile": "./cache/tsconfig.vitest.tsbuildinfo",
-    "types": ["node", "vitest/jsdom"]
+    "types": [
+      "node",
+      "vitest/jsdom"
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
   }
 }

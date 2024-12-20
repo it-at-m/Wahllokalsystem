@@ -7,8 +7,6 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.matching.UrlPattern;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelumschlaege.Stimmzettelumschlaege;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelumschlaege.StimmzettelumschlaegeRepository;
@@ -27,8 +25,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -36,7 +32,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
-@AutoConfigureWireMock
 @ActiveProfiles(
         profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE, NO_BEZIRKS_ID_CHECK }
 )
@@ -130,10 +125,6 @@ public class StimmzettelumschlaegeControllerIntegrationTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(requestBody));
 
-            WireMock.stubFor(WireMock.post(WireMock.urlPathMatching("/businessActions/stimmzettelumschlaege/.*"))
-                    .willReturn(WireMock.aResponse()
-                            .withStatus(HttpStatus.OK.value())
-                            .withHeader("Content-Type", "application/json")));
             mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
 
             val entityFromRepo = stimmzettelumschlaegeRepository.findById(requestBody.bezirkUndWahlID()).get();
@@ -162,8 +153,6 @@ public class StimmzettelumschlaegeControllerIntegrationTest {
                     anzahlWaehler2ToReplace);
             Assertions.assertThat(entityToReplace).usingRecursiveComparison().isNotEqualTo(requestBody);
             stimmzettelumschlaegeRepository.save(entityToReplace);
-
-            WireMock.stubFor(WireMock.post(UrlPattern.ANY).willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value())));
 
             mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
 

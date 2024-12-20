@@ -6,10 +6,6 @@ declare module "*.vue" {
   export default component;
 }
 
-interface ImportMetaEnv {
-  readonly VITE_AD2IMAGE_URL: string;
-}
-
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }

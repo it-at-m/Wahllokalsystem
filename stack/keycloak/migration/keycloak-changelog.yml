@@ -55,4 +55,5 @@ includes:
   - path: add-authorities-ergebnismeldung-awerte.yml
   - path: add-authorities-ergebnismeldung-status.yml
   - path: add-authorities-ergebnismeldung-wahlscheine.yml
+  - path: add-authorities-ergebnismeldung-begruendung.yml
   - path: add-authorities-ergebnismeldung-stimmzettelumschlaege.yml

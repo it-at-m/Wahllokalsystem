@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.begruendung;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.wahlscheine.WahlscheineDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungReference;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -81,8 +82,9 @@ public class BegruendungController {
     public void postBegruendung(@PathVariable("wahlbezirkID") String wahlbezirkID, @PathVariable("wahlID") String wahlID,
             @PathVariable("stapelart") Stapelart stapelart,
             @RequestBody BegruendungDTO begruendungDTO) {
-        val modelToSave = begruendungDTOMapper.toModel(begruendungDTO, wahlbezirkID, wahlID, stapelart);
-        begruendungService.postBegruendung(modelToSave);
+        val modelToSave = begruendungDTOMapper.toModel(begruendungDTO);
+        val referenceForModel = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
+        begruendungService.postBegruendung(modelToSave, referenceForModel);
     }
 
     private <T> ResponseEntity<T> okWithBodyOrNoContent(final T body) {

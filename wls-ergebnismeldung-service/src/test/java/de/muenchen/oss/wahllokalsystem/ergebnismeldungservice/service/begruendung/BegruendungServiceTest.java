@@ -86,12 +86,13 @@ class BegruendungServiceTest {
         @Test
         void should_returnFachlicheWlsException_when_BegruendungModelIsInvalid() {
             val invalidModel = BegruendungModel.builder().build();
+            val reference = BegruendungReference.builder().build();
 
             val exceptionToThrow = FachlicheWlsException.withCode("0815").buildWithMessage("upsi");
 
             Mockito.doThrow(exceptionToThrow).when(begruendungValidator).validModelOrThrow(invalidModel);
 
-            val exceptionThrown = Assertions.catchException(() -> unitUnderTest.postBegruendung(invalidModel));
+            val exceptionThrown = Assertions.catchException(() -> unitUnderTest.postBegruendung(invalidModel, reference));
 
             Assertions.assertThat(exceptionThrown).isSameAs(exceptionToThrow);
             Mockito.verify(begruendungRepository, Mockito.times(0)).save(Mockito.any());
@@ -100,13 +101,15 @@ class BegruendungServiceTest {
         @Test
         void should_saveBegruendung_when_called() {
             val model = BegruendungModel.builder().build();
+            val reference = BegruendungReference.builder().build();
 
             val mappedEntityOfModel = new Begruendung();
 
             Mockito.doNothing().when(begruendungValidator).validModelOrThrow(model);
+            Mockito.doNothing().when(begruendungValidator).validReferenceOrThrow(reference);
             Mockito.when(begruendungModelMapper.toEntity(model)).thenReturn(mappedEntityOfModel);
 
-            unitUnderTest.postBegruendung(model);
+            unitUnderTest.postBegruendung(model, reference);
 
             Mockito.verify(begruendungRepository).save(mappedEntityOfModel);
         }

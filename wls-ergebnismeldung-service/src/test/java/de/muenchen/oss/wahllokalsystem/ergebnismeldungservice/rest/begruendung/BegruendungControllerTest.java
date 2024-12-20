@@ -79,13 +79,15 @@ class BegruendungControllerTest {
             val wahlbezirkID = "wahlbezirkID";
             val stapelart = Stapelart.LTW_BZW_A;
             val begruendungDTO = new BegruendungDTO(new BezirkUndWahlIDStapelart(wahlbezirkID, wahlID, stapelart), null, null, true, true);
+            val begruendungReferce = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
 
             val mockedBegruendungModel = new BegruendungModel(wahlbezirkID, wahlID, stapelart, null, null, true, true);
-            Mockito.when(begruendungDTOMapper.toModel(begruendungDTO, wahlbezirkID, wahlID, stapelart)).thenReturn(mockedBegruendungModel);
+            Mockito.when(begruendungDTOMapper.toModel(begruendungDTO)).thenReturn(mockedBegruendungModel);
 
             unitUnderTest.postBegruendung(wahlbezirkID, wahlID, stapelart, begruendungDTO);
 
-            Mockito.verify(begruendungService).postBegruendung(new BegruendungModel(wahlbezirkID, wahlID, stapelart, null, null, true, true));
+            Mockito.verify(begruendungService).postBegruendung(new BegruendungModel(wahlbezirkID, wahlID, stapelart, null, null, true, true),
+                    begruendungReferce);
         }
     }
 }

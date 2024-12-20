@@ -43,9 +43,10 @@ public class BegruendungService {
         "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostBegruendung')"
                 + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
     )
-    public void postBegruendung(@P("param") @NotNull BegruendungModel begruendungToAdd) {
+    public void postBegruendung(@P("param") @NotNull BegruendungModel begruendungToAdd, BegruendungReference begruendungReference) {
         log.info("#postBegruendung");
         begruendungValidator.validModelOrThrow(begruendungToAdd);
+        begruendungValidator.validReferenceOrThrow(begruendungReference);
 
         try {
             begruendungRepository.save(begruendungModelMapper.toEntity(begruendungToAdd));

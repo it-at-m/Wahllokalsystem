@@ -22,14 +22,14 @@ class BegruendungDTOMapperTest {
 
             @Test
             void should_returnNull_when_givenNull() {
-                Assertions.assertThat(unitUnderTest.toModel(null, null, null, null)).isNull();
+                Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
             }
 
             @Test
             void should_returnBegruendungModel_when_givenBegruendungDTO() {
                 val begruendungDTO = new BegruendungDTO(new BezirkUndWahlIDStapelart("bezirkID", "wahlID", Stapelart.LTW_BZW_A), "grund1", "grund2", true,
                         true);
-                val result = unitUnderTest.toModel(begruendungDTO, "bezirkID", "wahlID", Stapelart.LTW_BZW_A);
+                val result = unitUnderTest.toModel(begruendungDTO);
 
                 val expectedResult = new BegruendungModel("bezirkID", "wahlID", Stapelart.LTW_BZW_A, "grund1", "grund2", true, true);
 

@@ -16,5 +16,8 @@ public interface BegruendungDTOMapper {
 
     BegruendungReference toReferenceModel(String wahlbezirkID, String wahlID, Stapelart stapelart);
 
-    BegruendungModel toModel(BegruendungDTO dto, String wahlbezirkID, String wahlID, Stapelart stapelart);
+    @Mapping(target = "wahlbezirkID", source = "bezirkUndWahlIDStapelart.wahlbezirkID")
+    @Mapping(target = "wahlID", source = "bezirkUndWahlIDStapelart.wahlID")
+    @Mapping(target = "stapelart", source = "bezirkUndWahlIDStapelart.stapelart")
+    BegruendungModel toModel(BegruendungDTO dto);
 }

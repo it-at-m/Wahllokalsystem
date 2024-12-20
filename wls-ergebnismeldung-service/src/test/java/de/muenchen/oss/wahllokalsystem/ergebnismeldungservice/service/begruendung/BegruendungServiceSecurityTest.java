@@ -88,23 +88,32 @@ class BegruendungServiceSecurityTest {
         @Test
         void should_getAccess_when_allRequiredAuthoritiesArePresent() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_BEGRUENDUNG);
+            val wahlbezirkID = "wahlbezirkID";
+            val wahlID = "wahlID";
+            val stapelart = Stapelart.LTW_BZW_A;
 
-            val newBegruendung = new BegruendungModel("wahlbezirkID", "wahlID", Stapelart.LTW_BZW_A, "grund1", "grund2", true, true);
+            val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelart, "grund1", "grund2", true, true);
+            val newBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
 
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq("wahlbezirkID"), notNull())).thenReturn(true);
+            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung, newBegruendungReference));
         }
 
         @Test
         void should_throwAccessDeniedException_when_allRequiredAthoritiesArePresentButBezirkIDEvaluatorReturnsFalse() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_BEGRUENDUNG);
+            val wahlbezirkID = "wahlbezirkID";
+            val wahlID = "wahlID";
+            val stapelart = Stapelart.LTW_BZW_A;
 
-            val newBegruendung = new BegruendungModel("wahlbezirkID", "wahlID", Stapelart.LTW_BZW_A, "grund1", "grund2", true, true);
+            val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelart, "grund1", "grund2", true, true);
+            val newBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
 
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq("wahlbezirkID"), notNull())).thenReturn(false);
+            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(false);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung)).isInstanceOf(AccessDeniedException.class);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung, newBegruendungReference))
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")
@@ -112,12 +121,17 @@ class BegruendungServiceSecurityTest {
         void should_throwAccessDeniedException_when_anyRequiredAuthorityIsMissing(final ArgumentsAccessor arguments) {
             SecurityUtils.runWith(
                     ArrayUtils.addAll(Authorities.ALL_AUTHORITIES_SET_BEGRUENDUNG_MISSING_WILL_RESULT_IN_ACCESS_DENIED, arguments.get(0, String[].class)));
+            val wahlbezirkID = "wahlbezirkID";
+            val wahlID = "wahlID";
+            val stapelart = Stapelart.LTW_BZW_A;
 
-            val newBegruendung = new BegruendungModel("wahlbezirkID", "wahlID", Stapelart.LTW_BZW_A, "grund1", "grund2", true, true);
+            val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelart, "grund1", "grund2", true, true);
+            val newBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
 
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq("wahlbezirkID"), notNull())).thenReturn(false);
+            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(false);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung)).isInstanceOf(AccessDeniedException.class);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung, newBegruendungReference))
+                    .isInstanceOf(AccessDeniedException.class);
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")
@@ -125,12 +139,17 @@ class BegruendungServiceSecurityTest {
         void should_throwTechnischeWlsException_when_anyRequiredAuthorityIsMissing(final ArgumentsAccessor arguments) {
             SecurityUtils.runWith(
                     ArrayUtils.addAll(Authorities.ALL_AUTHORITIES_SET_BEGRUENDUNG_MISSING_WILL_RESULT_IN_ACCESS_DENIED, arguments.get(0, String[].class)));
+            val wahlbezirkID = "wahlbezirkID";
+            val wahlID = "wahlID";
+            val stapelart = Stapelart.LTW_BZW_A;
 
-            val newBegruendung = new BegruendungModel("wahlbezirkID", "wahlID", Stapelart.LTW_BZW_A, "grund1", "grund2", true, true);
+            val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelart, "grund1", "grund2", true, true);
+            val newBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
 
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq("wahlbezirkID"), notNull())).thenReturn(true);
+            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung)).isInstanceOf(TechnischeWlsException.class);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung, newBegruendungReference))
+                    .isInstanceOf(TechnischeWlsException.class);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariationsThrowingAccessDenied() {

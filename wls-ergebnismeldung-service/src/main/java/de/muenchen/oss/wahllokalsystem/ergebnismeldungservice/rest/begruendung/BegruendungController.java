@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.begruendung;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.Stapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.wahlscheine.WahlscheineDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
@@ -82,7 +82,7 @@ public class BegruendungController {
             @PathVariable("stapelart") Stapelart stapelart,
             @RequestBody BegruendungDTO begruendungDTO) {
         val modelToSave = begruendungDTOMapper.toModel(begruendungDTO, wahlbezirkID, wahlID, stapelart);
-        begruendungService.setBegruendung(modelToSave);
+        begruendungService.postBegruendung(modelToSave);
     }
 
     private <T> ResponseEntity<T> okWithBodyOrNoContent(final T body) {

@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.Stapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
@@ -66,13 +66,13 @@ class BegruendungValidatorTest {
 
         @Test
         void should_notThrowException_when_begruendungIsEmptyButNotNull() {
-            val begruendungModelModelToValidate = new BegruendungModel("", "", Stapelart.LTW_BZW_A, "", "", true, true);
+            val begruendungModelToValidate = new BegruendungModel("", "", Stapelart.LTW_BZW_A, "", "", true, true);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validModelOrThrow(begruendungModelModelToValidate));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validModelOrThrow(begruendungModelToValidate));
         }
 
         @Test
-        void should_throwFachlicheWlsException_when_grundIsNull() {
+        void should_throwFachlicheWlsException_when_grundParamsAreNull() {
             val begruendungModelModelToValidate = new BegruendungModel("wahlbezirkID", "wahlID", Stapelart.LTW_BZW_A, null, null, true, true);
 
             val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("sth failed");

@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.Begruendung;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.BegruendungRepository;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.BezirkUndWahlIDStapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.Begruendung;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.BegruendungRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.BezirkUndWahlIDStapelart;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import java.util.Optional;
 import lombok.val;
@@ -79,11 +79,10 @@ class BegruendungServiceTest {
             Assertions.assertThat(exceptionThrown).isSameAs(exceptionToThrow);
             Mockito.verify(begruendungRepository, Mockito.times(0)).findById(Mockito.any());
         }
-
     }
 
     @Nested
-    class SetBegruendung {
+    class PostBegruendung {
         @Test
         void should_returnFachlicheWlsException_when_BegruendungModelIsInvalid() {
             val invalidModel = BegruendungModel.builder().build();
@@ -92,7 +91,7 @@ class BegruendungServiceTest {
 
             Mockito.doThrow(exceptionToThrow).when(begruendungValidator).validModelOrThrow(invalidModel);
 
-            val exceptionThrown = Assertions.catchException(() -> unitUnderTest.setBegruendung(invalidModel));
+            val exceptionThrown = Assertions.catchException(() -> unitUnderTest.postBegruendung(invalidModel));
 
             Assertions.assertThat(exceptionThrown).isSameAs(exceptionToThrow);
             Mockito.verify(begruendungRepository, Mockito.times(0)).save(Mockito.any());
@@ -107,7 +106,7 @@ class BegruendungServiceTest {
             Mockito.doNothing().when(begruendungValidator).validModelOrThrow(model);
             Mockito.when(begruendungModelMapper.toEntity(model)).thenReturn(mappedEntityOfModel);
 
-            unitUnderTest.setBegruendung(model);
+            unitUnderTest.postBegruendung(model);
 
             Mockito.verify(begruendungRepository).save(mappedEntityOfModel);
         }

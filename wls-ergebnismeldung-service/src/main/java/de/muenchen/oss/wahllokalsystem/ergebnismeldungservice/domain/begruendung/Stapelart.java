@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung;
 
 public enum Stapelart {
     // Landtagswahl und Bezirkswahl-Stapel

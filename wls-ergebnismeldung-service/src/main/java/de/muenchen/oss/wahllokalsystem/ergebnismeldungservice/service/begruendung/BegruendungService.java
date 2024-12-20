@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.Begruendung;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.BegruendungRepository;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.BezirkUndWahlIDStapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.Begruendung;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.BegruendungRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.BezirkUndWahlIDStapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import jakarta.validation.constraints.NotNull;
@@ -43,7 +43,7 @@ public class BegruendungService {
         "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostBegruendung')"
                 + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
     )
-    public void setBegruendung(@P("param") @NotNull BegruendungModel begruendungToAdd) {
+    public void postBegruendung(@P("param") @NotNull BegruendungModel begruendungToAdd) {
         log.info("#postBegruendung");
         begruendungValidator.validModelOrThrow(begruendungToAdd);
 
@@ -51,7 +51,7 @@ public class BegruendungService {
             begruendungRepository.save(begruendungModelMapper.toEntity(begruendungToAdd));
         } catch (Exception e) {
             log.error("#postStatus unsaveable:", e);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.STATUS_UNSAVEABLE);
+            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.BEGRUENDUNG_UNSAVEABLE);
         }
     }
 

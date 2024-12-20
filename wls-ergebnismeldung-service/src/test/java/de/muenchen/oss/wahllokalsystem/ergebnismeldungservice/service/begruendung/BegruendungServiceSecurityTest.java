@@ -5,8 +5,8 @@ import static org.mockito.ArgumentMatchers.notNull;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration.Profiles;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.BegruendungRepository;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.Stapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.BegruendungRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.begruendung.BegruendungDTOMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 import lombok.val;
 import org.apache.commons.lang3.ArrayUtils;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -46,8 +46,8 @@ class BegruendungServiceSecurityTest {
     @Autowired
     BegruendungDTOMapper begruendungDTOMapper;
 
-    @BeforeEach
-    void setup() {
+    @AfterEach
+    void tearDown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_BEGRUENDUNG);
         begruendungRepository.deleteAll();
     }
@@ -93,7 +93,7 @@ class BegruendungServiceSecurityTest {
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq("wahlbezirkID"), notNull())).thenReturn(true);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.setBegruendung(newBegruendung));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung));
         }
 
         @Test
@@ -104,7 +104,7 @@ class BegruendungServiceSecurityTest {
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq("wahlbezirkID"), notNull())).thenReturn(false);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setBegruendung(newBegruendung)).isInstanceOf(AccessDeniedException.class);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung)).isInstanceOf(AccessDeniedException.class);
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")
@@ -117,7 +117,7 @@ class BegruendungServiceSecurityTest {
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq("wahlbezirkID"), notNull())).thenReturn(false);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setBegruendung(newBegruendung)).isInstanceOf(AccessDeniedException.class);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung)).isInstanceOf(AccessDeniedException.class);
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")
@@ -130,7 +130,7 @@ class BegruendungServiceSecurityTest {
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq("wahlbezirkID"), notNull())).thenReturn(true);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setBegruendung(newBegruendung)).isInstanceOf(TechnischeWlsException.class);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung)).isInstanceOf(TechnischeWlsException.class);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariationsThrowingAccessDenied() {

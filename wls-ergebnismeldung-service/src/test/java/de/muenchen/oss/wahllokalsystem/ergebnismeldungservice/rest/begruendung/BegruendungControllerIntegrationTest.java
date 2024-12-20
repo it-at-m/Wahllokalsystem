@@ -7,10 +7,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.Begruendung;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.BegruendungRepository;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.BezirkUndWahlIDStapelart;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.Stapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.Begruendung;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.BegruendungRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.BezirkUndWahlIDStapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
@@ -46,14 +46,14 @@ public class BegruendungControllerIntegrationTest {
     class GetBegruendung {
 
         @AfterEach
-        void setup() {
+        void tearDown() {
             SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_BEGRUENDUNG);
             begruendungRepository.deleteAll();
         }
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_GET_BEGRUENDUNG, Authorities.REPOSITORY_READ_BEGRUENDUNG })
-        void emptyResponse() throws Exception {
+        void should_returnNoContent_when_NoDataIsPresent() throws Exception {
             val request = get("/businessActions/begruendung/wahlbezirkID/21/LTW_BZW_A");
 
             val response = api.perform(request).andExpect(status().isNoContent()).andReturn();
@@ -66,7 +66,7 @@ public class BegruendungControllerIntegrationTest {
                 authorities = { Authorities.SERVICE_GET_BEGRUENDUNG, Authorities.REPOSITORY_READ_BEGRUENDUNG,
                         Authorities.REPOSITORY_WRITE_BEGRUENDUNG }
         )
-        void dataFound() throws Exception {
+        void should_returnData_when_dataIsPresentInRepository() throws Exception {
             val wahlbezirkID1 = "wahlbezirkID1";
             val wahlbezirkID2 = "wahlbezirkID2";
 
@@ -106,17 +106,17 @@ public class BegruendungControllerIntegrationTest {
     }
 
     @Nested
-    class AddBegruendung {
+    class PostBegruendung {
 
         @AfterEach
-        void setup() {
+        void tearDown() {
             SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_BEGRUENDUNG);
             begruendungRepository.deleteAll();
         }
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_SET_BEGRUENDUNG, Authorities.REPOSITORY_WRITE_BEGRUENDUNG })
-        void wlsExceptionOnInvalidRequest() throws Exception {
+        void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
             val requestBody = BegruendungDTO.builder().build();
             val request = post("/businessActions/begruendung/wahlbezirkID/0/LTW_BZW_A").with(csrf()).contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(requestBody));
@@ -135,7 +135,7 @@ public class BegruendungControllerIntegrationTest {
                 authorities = { Authorities.SERVICE_SET_BEGRUENDUNG, Authorities.REPOSITORY_READ_BEGRUENDUNG,
                         Authorities.REPOSITORY_WRITE_BEGRUENDUNG }
         )
-        void dataAreSaved() throws Exception {
+        void should_persistData_when_noDataIsPresentInRepository() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
             val stapelart = Stapelart.LTW_BZW_A;
@@ -163,6 +163,5 @@ public class BegruendungControllerIntegrationTest {
 
             Assertions.assertThat(repoResponse).usingRecursiveComparison().isEqualTo(expectedRepoResponse);
         }
-
     }
 }

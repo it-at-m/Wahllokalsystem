@@ -1,5 +1,6 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung;
 
+import java.util.Optional;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.repository.CrudRepository;
@@ -14,6 +15,11 @@ public interface BegruendungRepository extends CrudRepository<Begruendung, Bezir
     @Override
     @NonNull
     Iterable<Begruendung> findAll();
+
+    @Override
+    @NonNull
+    @CacheEvict(value = CACHE, key = "#p0")
+    Optional<Begruendung> findById(@NonNull BezirkUndWahlIDStapelart id);
 
     @Override
     @CachePut(value = CACHE, key = "#p0.bezirkUndWahlIDStapelart")

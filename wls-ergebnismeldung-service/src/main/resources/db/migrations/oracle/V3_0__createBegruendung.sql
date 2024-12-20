@@ -1,11 +1,11 @@
 CREATE TABLE Begruendung
 (
-    wahlbezirkid        varchar(1024) not null,
-    wahlid              varchar(1024) not null,
-    stapelart           varchar(1024) not null,
-    grund1              varchar(1024) not null,
-    grund2              varchar(1024) not null,
-    nachzaehlung        NUMBER not null,
-    unstimmigkeiten     NUMBER not null,
-    primary key (wahlbezirkid, wahlid, stapelart)
+    wahlbezirkid        VARCHAR(1024) NOT NULL,
+    wahlid              VARCHAR(1024) NOT NULL,
+    stapelart           VARCHAR(1024) NOT NULL,
+    grund1              VARCHAR(1024) NOT NULL,
+    grund2              VARCHAR(1024) NOT NULL,
+    nachzaehlung        NUMBER NOT NULL,
+    unstimmigkeiten     NUMBER NOT NULL,
+    PRIMARY KEY (wahlbezirkid, wahlid, stapelart)
 );

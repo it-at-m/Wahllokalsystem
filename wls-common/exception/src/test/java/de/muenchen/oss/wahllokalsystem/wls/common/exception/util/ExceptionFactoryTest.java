@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import lombok.val;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,72 +27,88 @@ class ExceptionFactoryTest {
     @InjectMocks
     ExceptionFactory unitUnderTest;
 
-    @Test
-    void createFachlicheWlsException() {
-        val code = "0815";
-        val message = "Everything Everywhere All at Once";
-        val wrappedData = new ExceptionDataWrapper(code, message);
+    @Nested
+    class CreateFachlicheWlsException {
 
-        val serviceID = "serviceID";
-        Mockito.when(serviceIDFormatter.getId()).thenReturn(serviceID);
+        @Test
+        void should_createFachlicheWlsExceptionWithCodeAndMessage_when_parameterIsNotNull() {
+            val code = "0815";
+            val message = "Everything Everywhere All at Once";
+            val wrappedData = new ExceptionDataWrapper(code, message);
 
-        val result = unitUnderTest.createFachlicheWlsException(wrappedData);
+            val serviceID = "serviceID";
+            Mockito.when(serviceIDFormatter.getId()).thenReturn(serviceID);
 
-        val expectedResult = FachlicheWlsException.withCode(code).inService(serviceID).buildWithMessage(message);
+            val result = unitUnderTest.createFachlicheWlsException(wrappedData);
 
-        Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
+            val expectedResult = FachlicheWlsException.withCode(code).inService(serviceID).buildWithMessage(message);
+
+            Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
+        }
+    }
+
+    @Nested
+    class CreateTechnischeWlsException {
+
+        @Test
+        void should_createTechnischeWlsExceptionWithCodeAndMessage_when_parameterIsNotNull() {
+            val code = "0815";
+            val message = "Everything Everywhere All at Once";
+            val wrappedData = new ExceptionDataWrapper(code, message);
+
+            val serviceID = "serviceID";
+            Mockito.when(serviceIDFormatter.getId()).thenReturn(serviceID);
+
+            val result = unitUnderTest.createTechnischeWlsException(wrappedData);
+
+            val expectedResult = TechnischeWlsException.withCode(code).inService(serviceID).buildWithMessage(message);
+
+            Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
+        }
+    }
+
+    @Nested
+    class CreateInfrastrukturelleWlsException {
+
+        @Test
+        void should_createInfrastrukturelleWlsExceptionWithCodeAndMessage_when_parameterIsNotNull() {
+            val code = "0815";
+            val message = "Everything Everywhere All at Once";
+            val wrappedData = new ExceptionDataWrapper(code, message);
+
+            val serviceID = "serviceID";
+            Mockito.when(serviceIDFormatter.getId()).thenReturn(serviceID);
+
+            val result = unitUnderTest.createInfrastrukturelleWlsException(wrappedData);
+
+            val expectedResult = InfrastrukturelleWlsException.withCode(code).inService(serviceID).buildWithMessage(message);
+
+            Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
+        }
+    }
+
+    @Nested
+    class CreateSicherheitsWlsException {
+
+        @Test
+        void should_createSicherheitsWlsExceptionWithCodeAndMessage_when_parameterIsNotNull() {
+            val code = "0815";
+            val message = "Everything Everywhere All at Once";
+            val wrappedData = new ExceptionDataWrapper(code, message);
+
+            val serviceID = "serviceID";
+            Mockito.when(serviceIDFormatter.getId()).thenReturn(serviceID);
+
+            val result = unitUnderTest.createSicherheitsWlsException(wrappedData);
+
+            val expectedResult = SicherheitsWlsException.withCode(code).inService(serviceID).buildWithMessage(message);
+
+            Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
+        }
     }
 
     @Test
-    void createTechnischeWlsException() {
-        val code = "0815";
-        val message = "Everything Everywhere All at Once";
-        val wrappedData = new ExceptionDataWrapper(code, message);
-
-        val serviceID = "serviceID";
-        Mockito.when(serviceIDFormatter.getId()).thenReturn(serviceID);
-
-        val result = unitUnderTest.createTechnischeWlsException(wrappedData);
-
-        val expectedResult = TechnischeWlsException.withCode(code).inService(serviceID).buildWithMessage(message);
-
-        Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
-    }
-
-    @Test
-    void createInfrastrukturelleWlsException() {
-        val code = "0815";
-        val message = "Everything Everywhere All at Once";
-        val wrappedData = new ExceptionDataWrapper(code, message);
-
-        val serviceID = "serviceID";
-        Mockito.when(serviceIDFormatter.getId()).thenReturn(serviceID);
-
-        val result = unitUnderTest.createInfrastrukturelleWlsException(wrappedData);
-
-        val expectedResult = InfrastrukturelleWlsException.withCode(code).inService(serviceID).buildWithMessage(message);
-
-        Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
-    }
-
-    @Test
-    void createSicherheitsWlsException() {
-        val code = "0815";
-        val message = "Everything Everywhere All at Once";
-        val wrappedData = new ExceptionDataWrapper(code, message);
-
-        val serviceID = "serviceID";
-        Mockito.when(serviceIDFormatter.getId()).thenReturn(serviceID);
-
-        val result = unitUnderTest.createSicherheitsWlsException(wrappedData);
-
-        val expectedResult = SicherheitsWlsException.withCode(code).inService(serviceID).buildWithMessage(message);
-
-        Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
-    }
-
-    @Test
-    void verifyAllWlsExceptionsAreSupportedAndMethodSignaturesFollowsCommonDesign() {
+    void should_matchDesignForMethodSignaturesForAllWlsExceptions_when_developed() {
         val createMethodNamePrefix = "create";
         val permittedSubclassed = WlsException.class.getPermittedSubclasses();
         val createMethods = Arrays.stream(unitUnderTest.getClass().getMethods())

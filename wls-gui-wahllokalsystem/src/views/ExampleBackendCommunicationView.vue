@@ -79,4 +79,11 @@ function postMessage(wahlbezirkIDs: string[]) {
   });
   messageInput.value = "";
 }
+
+defineExpose({
+  message,
+  messageInput,
+  getMessage,
+  postMessage,
+});
 </script>

@@ -62,15 +62,6 @@
               </router-link>
             </template>
           </v-tooltip>
-          <v-btn
-            variant="text"
-            icon
-          >
-            <ad2-image-avatar
-              v-if="userStore.getUser !== null"
-              :username="userStore.getUser.username"
-            />
-          </v-btn>
         </v-col>
       </v-row>
     </v-app-bar>
@@ -112,7 +103,6 @@ import {
 } from "vuetify/components";
 
 import { getUser } from "@/api/user-client";
-import Ad2ImageAvatar from "@/components/common/Ad2ImageAvatar.vue";
 import TheSnackbar from "@/components/TheSnackbar.vue";
 import { EXAMPLE_ROUTES_BACKEND, EXAMPLE_ROUTES_NEWROUTE } from "@/constants";
 import { useUserStore } from "@/stores/user";

@@ -7,7 +7,6 @@ package de.muenchen.oss.wahllokalsystem.adminservice.configuration.nfcconverter;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import de.muenchen.oss.wahllokalsystem.adminservice.configuration.nfcconverter.NfcRequestFilter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletResponse;
@@ -77,7 +76,7 @@ class NfcConverterTest {
     // Test, das Request mit konfigriertem ContentType auf NFC normalisiert wird.
     //
     @Test
-    void testFilterIfContenttypeInWhitelist() throws ServletException, IOException {
+    void should_executeFilter_when_contenttypeInWhitelist() throws ServletException, IOException {
         mockRequest("text/plain");
 
         filter.setContentTypes("text/plain;text/html;application/json");
@@ -106,7 +105,7 @@ class NfcConverterTest {
     // auf NFC normalisiert wird.
     //
     @Test
-    void testSkipFilterIfContenttypeNotInWhitelist() throws ServletException, IOException {
+    void should_skipFilter_when_contenttypeNotInWhitelist() throws ServletException, IOException {
         mockRequest("application/postscript");
 
         filter.setContentTypes("text/plain;text/html");

@@ -31,6 +31,6 @@ public class ExceptionConstants {
             "getBegruendung: Parameter unvollständig.");
     public static final ExceptionDataWrapper POST_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("103",
             "postBegruendung: Parameter unvollständig.");
-    public static final ExceptionDataWrapper BEGRUENDUNG_UNSAVEABLE = new ExceptionDataWrapper("622",
+    public static final ExceptionDataWrapper BEGRUENDUNG_UNSAVEABLE = new ExceptionDataWrapper("624",
             "postStatus: Der Status konnte nicht gespeichert werden.");
 }

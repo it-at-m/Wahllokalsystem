@@ -27,7 +27,8 @@ class BegruendungDTOMapperTest {
 
             @Test
             void should_returnBegruendungModel_when_givenBegruendungDTO() {
-                val begruendungDTO = new BegruendungDTO(new BezirkUndWahlIDStapelart("bezirkID", "wahlID", Stapelart.LTW_BZW_A), "grund1", "grund2", true, true);
+                val begruendungDTO = new BegruendungDTO(new BezirkUndWahlIDStapelart("bezirkID", "wahlID", Stapelart.LTW_BZW_A), "grund1", "grund2", true,
+                        true);
                 val result = unitUnderTest.toModel(begruendungDTO, "bezirkID", "wahlID", Stapelart.LTW_BZW_A);
 
                 val expectedResult = new BegruendungModel("bezirkID", "wahlID", Stapelart.LTW_BZW_A, "grund1", "grund2", true, true);

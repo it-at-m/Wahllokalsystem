@@ -7,6 +7,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplic
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelumschlaege.StimmzettelumschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.WithMockUserAsJwt;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -42,8 +43,8 @@ class StimmzettelumschlaegeServiceSecurityTest {
     @Autowired
     StimmzettelumschlaegeRepository stimmzettelumschlaegeRepository;
 
-    @BeforeEach
-    void setup() {
+    @AfterEach
+    void tearDown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_STIMMZETTELUMSCHLAEGE);
         stimmzettelumschlaegeRepository.deleteAll();
     }
@@ -80,9 +81,11 @@ class StimmzettelumschlaegeServiceSecurityTest {
     class SetStimmzettelumschlaege {
 
         @Test
+        @WithMockUserAsJwt(
+                authorities = { Authorities.SERVICE_SET_STIMMZETTELUMSCHLAEGE, Authorities.REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE },
+                claimProperties = { "wahlbezirksArt=BWB" }
+        )
         void should_getAccess_when_allRequiredAuthoritiesArePresent() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_STIMMZETTELUMSCHLAEGE);
-
             val wahlbezirkID = "wahlbezirkID";
             val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
             val stimmzettelumschlaege = createStimmzettelumschlaegeModel(id);

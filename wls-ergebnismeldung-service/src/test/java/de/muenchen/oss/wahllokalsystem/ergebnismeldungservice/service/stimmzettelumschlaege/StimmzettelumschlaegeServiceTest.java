@@ -1,7 +1,10 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelumschlaege;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.common.security.AuthenticationHandler;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.common.security.JWTHandler;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelumschlaege.Stimmzettelumschlaege;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelumschlaege.StimmzettelumschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
@@ -9,15 +12,18 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsExceptio
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import java.util.ArrayList;
 import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,8 +41,20 @@ class StimmzettelumschlaegeServiceTest {
     @Mock
     ExceptionFactory exceptionFactory;
 
+    @Mock
+    JWTHandler jwtHandler;
+
+    @Spy
+    ArrayList<AuthenticationHandler> authenticationHandlers;
+
     @InjectMocks
     StimmzettelumschlaegeService unitUnderTest;
+
+    @BeforeEach
+    void setup() {
+        authenticationHandlers.clear();
+        authenticationHandlers.add(jwtHandler);
+    }
 
     @Nested
     class GetStimmzettelumschlaege {
@@ -84,18 +102,25 @@ class StimmzettelumschlaegeServiceTest {
     @Nested
     class SetStimmzettelumschlaege {
 
+        private static final String JWT_DETAIL_WAHLBEZIRKSART_KEY = "wahlbezirksArt";
+
         @Test
-        void should_submitFachlicheWlsExceptionForParameter_when_callingValidator() {
+        void should_callValidators_when_callingService() {
             val id = new BezirkUndWahlID();
             val stimmzettelumschlaegeToSet = createStimmzettelumschlaegeModel(id);
 
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
+            Mockito.when(jwtHandler.canHandle(any())).thenReturn(true);
+            Mockito.when(jwtHandler.getDetail(eq(JWT_DETAIL_WAHLBEZIRKSART_KEY), any())).thenReturn(Optional.of("BWB"));
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG))
                     .thenReturn(mockedWlsException);
 
             unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaegeToSet);
 
             Mockito.verify(stimmzettelumschlaegeValidator).validBezirkUndWahlIdOrThrow(id, mockedWlsException);
+            Mockito.verify(stimmzettelumschlaegeValidator).validStimmzettelumschlaegeOrThrow(stimmzettelumschlaegeToSet);
+            Mockito.verify(stimmzettelumschlaegeValidator).validHasBWBRequiredEroeffnungsUhrzeitOrThrow(eq(WahlbezirkArtModel.BWB),
+                    eq(stimmzettelumschlaegeToSet.urneneroeffnungsUhrzeit()));
         }
 
         @Test
@@ -104,6 +129,8 @@ class StimmzettelumschlaegeServiceTest {
             val stimmzettelumschlaegeToSet = createStimmzettelumschlaegeModel(id);
 
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
+            Mockito.when(jwtHandler.canHandle(any())).thenReturn(true);
+            Mockito.when(jwtHandler.getDetail(eq(JWT_DETAIL_WAHLBEZIRKSART_KEY), any())).thenReturn(Optional.of("BWB"));
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG))
                     .thenReturn(mockedWlsException);
 
@@ -119,6 +146,8 @@ class StimmzettelumschlaegeServiceTest {
 
             val mockedModelAsEntity = Mockito.mock(Stimmzettelumschlaege.class);
 
+            Mockito.when(jwtHandler.canHandle(any())).thenReturn(true);
+            Mockito.when(jwtHandler.getDetail(eq(JWT_DETAIL_WAHLBEZIRKSART_KEY), any())).thenReturn(Optional.of("BWB"));
             Mockito.when(stimmzettelumschlaegeModelMapper.toEntity(stimmzettelumschlaegeToSet)).thenReturn(mockedModelAsEntity);
 
             unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaegeToSet);
@@ -135,6 +164,8 @@ class StimmzettelumschlaegeServiceTest {
             val mockedRepositorySaveException = new RuntimeException("saving failed");
             val mockedExceptionFactoryWlsException = TechnischeWlsException.withCode("").buildWithMessage("save exception");
 
+            Mockito.when(jwtHandler.canHandle(any())).thenReturn(true);
+            Mockito.when(jwtHandler.getDetail(eq(JWT_DETAIL_WAHLBEZIRKSART_KEY), any())).thenReturn(Optional.of("BWB"));
             Mockito.when(stimmzettelumschlaegeModelMapper.toEntity(stimmzettelumschlaegeToSet)).thenReturn(mockedModelAsEntity);
             Mockito.doThrow(mockedRepositorySaveException).when(stimmzettelumschlaegeRepository).save(mockedModelAsEntity);
             Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.STIMMZETTELUMSCHLAEGE_UNSAVEABLE))

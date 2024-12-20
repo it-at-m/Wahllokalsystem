@@ -4,6 +4,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.Exceptio
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,12 @@ public class StimmzettelumschlaegeValidator {
 
     public void validStimmzettelumschlaegeOrThrow(final StimmzettelumschlaegeModel stimmzettelumschlaegeModel) {
         if (stimmzettelumschlaegeModel == null) {
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG);
+        }
+    }
+
+    public void validHasBWBRequiredEroeffnungsUhrzeitOrThrow(final WahlbezirkArtModel wahlbezirkArt, LocalDateTime urnenEroeffnungsUhrzeit) {
+        if (wahlbezirkArt.equals(WahlbezirkArtModel.BWB) && urnenEroeffnungsUhrzeit == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG);
         }
     }

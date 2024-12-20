@@ -32,6 +32,8 @@ public class ExceptionConstants {
             "postStimmzettelumschlaege: Parameter unvollstaendig");
     public static final ExceptionDataWrapper STIMMZETTELUMSCHLAEGE_UNSAVEABLE = new ExceptionDataWrapper("619",
             "postStimmzettelumschlaege: Die Stimmzettelumschlaege konnten nicht gespeichert werden.");
+    public static final ExceptionDataWrapper WAHLBEZIRKART_NOT_LOADABLE = new ExceptionDataWrapper("800",
+            "Die Wahlbezirkart des Principals konnte nicht geladen werden.");
 
     public static final ExceptionDataWrapper KOMMUNIKATIONSFEHLER_MIT_MONITORING = new ExceptionDataWrapper("100",
             "Bei der Kommunikation mit dem MonitoringService kam es zu einem Fehler.");

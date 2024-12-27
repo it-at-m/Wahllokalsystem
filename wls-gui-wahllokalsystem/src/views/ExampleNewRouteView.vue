@@ -75,7 +75,7 @@ import { VBtn, VCard, VCol, VContainer, VTextField } from "vuetify/components";
 import { EXAMPLE_ROUTES_DYNAMIC, ROUTES_HOME } from "@/constants";
 import router from "@/plugins/router";
 
-let textinput = ref("defaultId");
+const textinput = ref("defaultId");
 
 function previousPage() {
   if (window.history.length > 1) {

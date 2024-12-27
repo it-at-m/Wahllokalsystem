@@ -20,13 +20,13 @@ class DummyBezirkIdPermissionEvaluatorImplTest {
     private final DummyBezirkIdPermissionEvaluatorImpl unitUnderTest = new DummyBezirkIdPermissionEvaluatorImpl();
 
     @Nested
-    class TestTokenUserBezirkIdMatches {
+    class TokenUserBezirkIdMatches {
 
         @RegisterExtension
         public LoggerExtension loggerExtension = new LoggerExtension();
 
         @Test
-        void idMatches() {
+        void should_returnTrue_when_called() {
             Mockito.when(auth.getPrincipal()).thenReturn("1234");
             Assertions.assertThat(unitUnderTest.tokenUserBezirkIdMatches("1234", auth)).isTrue();
         }

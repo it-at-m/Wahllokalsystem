@@ -4,8 +4,6 @@ export const EXAMPLE_ROUTES_NOTFOUND = "404";
 export const EXAMPLE_ROUTES_DYNAMIC = "dynamic";
 export const EXAMPLE_ROUTES_BACKEND = "talk-to-backend";
 
-export const AD2IMAGE_URL = import.meta.env.VITE_AD2IMAGE_URL;
-
 export const SNACKBAR_DEFAULT_TIMEOUT = 5000;
 
 export const enum STATUS_INDICATORS {

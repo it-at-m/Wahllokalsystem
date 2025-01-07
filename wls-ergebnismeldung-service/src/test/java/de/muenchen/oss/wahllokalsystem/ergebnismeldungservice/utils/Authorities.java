@@ -33,7 +33,7 @@ public class Authorities {
     public static final String REPOSITORY_READ_BEGRUENDUNG = "Ergebnismeldung_READ_Begruendung";
     public static final String REPOSITORY_DELETE_BEGRUENDUNG = "Ergebnismeldung_DELETE_Begruendung";
     public static final String REPOSITORY_WRITE_BEGRUENDUNG = "Ergebnismeldung_WRITE_Begruendung";
-  
+
     public static final String REPOSITORY_READ_STIMMZETTELUMSCHLAEGE = "Ergebnismeldung_READ_Stimmzettelumschlaege";
     public static final String REPOSITORY_DELETE_STIMMZETTELUMSCHLAEGE = "Ergebnismeldung_DELETE_Stimmzettelumschlaege";
     public static final String REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE = "Ergebnismeldung_WRITE_Stimmzettelumschlaege";
@@ -93,7 +93,7 @@ public class Authorities {
 
     public static final String[] ALL_AUTHORITIES_SET_BEGRUENDUNG = ArrayUtils.addAll(ALL_AUTHORITIES_SET_BEGRUENDUNG_MISSING_WILL_RESULT_IN_ACCESS_DENIED,
             ALL_AUTHORITIES_SET_BEGRUENDUNG_MISSING_WILL_RESULT_IN_WLS_EXCEPTION);
-  
+
     public static final String[] ALL_AUTHORITIES_GET_STIMMZETTELUMSCHLAEGE = new String[] {
             SERVICE_GET_STIMMZETTELUMSCHLAEGE,
             REPOSITORY_READ_STIMMZETTELUMSCHLAEGE

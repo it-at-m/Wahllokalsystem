@@ -12,26 +12,23 @@ flowchart LR
         end
         
         subgraph Docker 
-            keycloak[Keycloak]
-            keycloakDB[db-postgres-keycloak]
-            keycloakInit[init-keycloak]
+            authService
             oracleDB[Oracle DB]
             apiGateway[API Gateway]
             backendServiceN[Backend Service N]
         end
 
-        apiGateway --->|forwards request| keycloak
         apiGateway --->|forwards request| backendServiceN
+        apiGateway --->|forwards request| authService
 
         backendServiceN --->|accesses| oracleDB
-        backendServiceN --->|OAuth2| keycloak
+        backendServiceN --->|OAuth2| authService
 
         frontend_gui --->|request| apiGateway
 
-        keycloak-->|accesses| keycloakDB
-        keycloakInit-->|setup of| keycloak
+        authService-->|accesses| oracleDB
 
-        wlsService ---|OAuth2| keycloak
+        wlsService ---|OAuth2| authService
         wlsService --->|accesses|oracleDB
     end
 ```

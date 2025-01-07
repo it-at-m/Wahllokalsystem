@@ -56,68 +56,14 @@ flowchart LR
 | Wahlvorbereitung                                                         | 8203 |
 | [Wahlvorstand](/services/wahlvorstand-service/)                          | 8207 |
 
-## Keycloak
-
-### Benutzer
+## Benutzer
 
 | Name          | Passwort | Beschreibung                                                          |
 |---------------|----------|-----------------------------------------------------------------------|
 | keycloak_test | test     | Ein Benutzer ohne weitere Rechte                                      |
 | wls_all       | test     | Ein Benutzer mit allen Rechten                                        |
 | wls_all_bwb   | test     | Ein Benutzer mit allen Rechten mit der WahlbezirksArt BWB (Briefwahl) |
-| wls_all_uwb   | test     | Ein Benutzer mit allen Rechten mit der WahlbezirksArt UWB (Urnenwahl) |                 
-
-### Migration
-
-Alle Konfigurationselemente, wie zum Beispiel User, Rollen und Client, werden automatisiert erstellt. Der Realm wird
-beim Start von Keycloak importiert. Alle weiteren Elemente werden durch den `init-keycloak`-Container erstellt.
-
-Im Rahmen der Migration werden immer alle Elemente erstellt. Daher ist notwendig, dass zuvor alte Elemente gelöscht
-wurden. Somit ergeben sich folgende Schritte bei der Migration:
-
-- alten Realm löschen
-- Realm anlegen
-- Migrieren von Client, Rolles und Usern
-
-#### Löschen des alten Realm
-
-Über die Weboberfläche kann der Realm gelöscht werden. Dazu ist der Realm `wls_realm` auszuwählen. Unter dem Menüpunkt
-`Realm settings` kann über die Action (Drop-Down im oberen rechter Bereich) `Delete` der Realm gelöscht werden.
-
-![Image with delete realm action](/keycloak/deleteRealmAction.png)  
-*Löschen des Realms über die Actions in den Realm Settings*
-
-#### Realm anlegen
-
-Um den Client, die Rollen und die User im nächsten Schritt anlegen zu können muss der Realm wieder angelegt werden.
-Dies erfolgt über den Import der Realmsettings. Dazu gibt es zwei Varianten
-
-**Variante 1 - Neustarten des Containers**
-
-Beim Starten des Containers wird der Realm importiert.
-
-**Variante 2 - Realm über Weboberfläche anlegen**
-
-Über die Weboberfläche kann ein neuer Realm angelegt werden. In der darauffolgenden Ansicht wird über `browse` das
-Konfigurationsfile ausgewählt und abschließend nach dem Klick auf `Create` wird der Realm angelegt.
-
-Die Datei `import-wls-realm.json` liegt im Pfad `stack/keycloak/import` des Projektes.
-
-![Image with create realm button](/keycloak/createRealmTrigger.png)  
-*Button zum Anlegen eines neues Realm im Dropdown der Realms*
-
-#### Ausführen von `wls-init-keycloak`
-
-Die abschließende Migration des Clients, der User, Gruppen und Rollen erfolgt durch den Container `wls-init-keycloak`.
-Dazu den Container starten. Nach Abschluss der Migration beendet sich der Container.
-
-![Image log of a wls init keycloak container run](/keycloak/exampleOfKeycloakmigrationRun.png)  
-*Auszug aus dem Log einer erfolgreich durchgeführten Migration*
-
-### Beispiel-Requests
-
-Im Soap-UI-Projekt (`DockerTest-soapui-project`) und `docker.keycloak.http` sind Beispielrequests vorhanden.
-Es kann für den jeweiligen Nutzer ein Token geholt werden. Außerdem ist die Anfrage an den UserInfo-Endpoint hinterlegt.
+| wls_all_uwb   | test     | Ein Benutzer mit allen Rechten mit der WahlbezirksArt UWB (Urnenwahl) |
 
 ## Datenbank
 
@@ -143,11 +89,11 @@ Nachdem das Frontend in der IDE und das ApiGateway über Docker gestartet wurde,
 aufgerufen werden. Allerdings befindet sich die Oberfläche dann in einer Ladeschleife und man sieht nur einen
 flackernden Bildschirm. Um diese Schleife während der Entwicklung zu umgehen, gibt es zwei Möglichkeiten:
 
-### 1. Starten über das Gateway + Keycloak-Anmeldung
+### 1. Starten über das Gateway + Authentifizierung
 
-Eine Möglichkeit, die Ladeschleife zu umgehen, ist es, sich lokal mit einem der [Keycloak-User](#benutzer) anzumelden.
+Eine Möglichkeit, die Ladeschleife zu umgehen, ist es, sich lokal mit einem der [User](#benutzer) anzumelden.
 Nachdem das Frontend über die IDE gestartet wurde, muss die URL `http://localhost:8083/` mit dem Port `8083` aufgerufen
-werden, um auf die Keycloak Seite zu kommen. Nach der Anmeldung bleibt man auf dem Port `8083`, wird aber vom Gateway
+werden, um auf die Login-Seite zu kommen. Nach der Anmeldung bleibt man auf dem Port `8083`, wird aber vom Gateway
 zum Frontend weitergeleitet und die Ladeschleife ist weg.
 
 > [!NOTE]

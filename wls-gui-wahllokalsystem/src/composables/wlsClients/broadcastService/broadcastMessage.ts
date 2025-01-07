@@ -48,12 +48,14 @@ export function useBroadcastMessage() {
     }
   }
 
-  function postMessage(wahlbezirkIDs: string[]) {
-    errors.value.post = "";
-    postBroadcastMessage(wahlbezirkIDs, messageInput.value).catch((e) => {
-      errors.value.post = e.message;
-    });
-    messageInput.value = "";
+  async function postMessage(wahlbezirkIDs: string[]) {
+    try {
+      errors.value.post = "";
+      await postBroadcastMessage(wahlbezirkIDs, messageInput.value);
+      messageInput.value = "";
+    } catch (e) {
+      errors.value.post = (e as Error).message;
+    }
   }
 
   return {

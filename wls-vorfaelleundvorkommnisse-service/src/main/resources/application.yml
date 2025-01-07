@@ -26,9 +26,6 @@ service:
   info:
     oid: WLS-VORFAELLEUNDVORKOMMNISSE
 
-# Define the local keycloak realm here
-realm: wls_realm
-
 server:
   shutdown: "graceful"
   port: 8080

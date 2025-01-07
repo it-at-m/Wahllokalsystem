@@ -32,9 +32,6 @@
 </template>
 
 <script setup lang="ts">
-import type { BroadcastMessageToRead } from "@/api/wls-clients/broadcast-service/BroadcastMessageToRead";
-
-import { ref } from "vue";
 import {
   VBtn,
   VCol,
@@ -43,47 +40,8 @@ import {
   VTextField,
 } from "vuetify/components";
 
-import {
-  broadcastMessageRead,
-  getBroadcastMessage,
-  postBroadcastMessage,
-} from "@/api/wls-clients/broadcast-service/broadcast-client";
+import { useBroadcastMessage } from "@/composables/wlsClients/broadcastService/broadcastMessage";
 
-const messageInput = ref("Broadcast Message");
-const message = ref("");
-const errors = ref({ get: "", post: "", read: "" });
-let messageId = "";
-
-async function getMessage(wahlbezirkID: string) {
-  errors.value.get = "";
-  message.value = "";
-  try {
-    const response = await getBroadcastMessage(wahlbezirkID);
-    const content: BroadcastMessageToRead = await response.json();
-    message.value = content.nachricht;
-    messageId = content.oid;
-
-    await broadcastMessageRead(messageId).catch(() => {
-      errors.value.read =
-        "Es ist ein Fehler beim Lesen der Nachricht aufgetreten";
-    });
-  } catch (e) {
-    errors.value.get = (e as Error).message;
-  }
-}
-
-function postMessage(wahlbezirkIDs: string[]) {
-  errors.value.post = "";
-  postBroadcastMessage(wahlbezirkIDs, messageInput.value).catch((e) => {
-    errors.value.post = e.message;
-  });
-  messageInput.value = "";
-}
-
-defineExpose({
-  message,
-  messageInput,
-  getMessage,
-  postMessage,
-});
+const { messageInput, message, errors, getMessage, postMessage } =
+  useBroadcastMessage();
 </script>

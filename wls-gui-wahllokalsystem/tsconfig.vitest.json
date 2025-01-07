@@ -1,22 +1,13 @@
 {
   "extends": "./tsconfig.app.json",
-  "include": [
-    "src/**/*.vue",
-    "src/**/*.ts",
-    "tests/**/*.spec.ts"
-  ],
   "exclude": [],
   // explicitly reset exclusion
   "compilerOptions": {
+    "composite": true,
     "tsBuildInfoFile": "./cache/tsconfig.vitest.tsbuildinfo",
     "types": [
       "node",
       "vitest/jsdom"
-    ],
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    }
+    ]
   }
 }

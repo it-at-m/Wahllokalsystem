@@ -20,7 +20,9 @@
         <p v-if="errors.post">{{ errors.post }}</p>
         <br />
         <br />
-        <v-btn @click="getMessage('wbz-1')"
+        <v-btn
+          class="get-message-btn"
+          @click="getMessage('wbz-1')"
           >get message with fetch utils
         </v-btn>
         <pre v-if="message"> {{ message }} </pre>

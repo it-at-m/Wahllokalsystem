@@ -17,6 +17,8 @@ services:
       - SERVER_PORT=8080
     ports:
       - 8200:8080
+    extra_hosts:
+      - "kubernetes.docker.internal:host-gateway"
     networks:
       - services
 
@@ -35,6 +37,8 @@ services:
       - SERVER_PORT=8080
     ports:
       - 8201:8080
+    extra_hosts:
+      - "kubernetes.docker.internal:host-gateway"
     networks:
       - services
 
@@ -53,6 +57,8 @@ services:
       - SERVER_PORT=8080
     ports:
       - 8202:8080
+    extra_hosts:
+      - "kubernetes.docker.internal:host-gateway"
     networks:
       - services
 
@@ -71,6 +77,8 @@ services:
       - SERVER_PORT=8080
     ports:
       - 8203:8080
+    extra_hosts:
+      - "kubernetes.docker.internal:host-gateway"
     networks:
       - services
 
@@ -89,6 +97,8 @@ services:
       - SERVER_PORT=8080
     ports:
       - 8204:8080
+    extra_hosts:
+      - "kubernetes.docker.internal:host-gateway"
     networks:
       - services
 
@@ -107,6 +117,8 @@ services:
       - SERVER_PORT=8080
     ports:
       - 8205:8080
+    extra_hosts:
+      - "kubernetes.docker.internal:host-gateway"
     networks:
       - services
 
@@ -125,6 +137,8 @@ services:
       - SERVER_PORT=8080
     ports:
       - 8206:8080
+    extra_hosts:
+      - "kubernetes.docker.internal:host-gateway"
     networks:
       - services
 
@@ -143,6 +157,8 @@ services:
       - SERVER_PORT=8080
     ports:
       - 8207:8080
+    extra_hosts:
+      - "kubernetes.docker.internal:host-gateway"
     networks:
       - services
 
@@ -161,6 +177,8 @@ services:
       - SERVER_PORT=8080
     ports:
       - 8300:8080
+    extra_hosts:
+      - "kubernetes.docker.internal:host-gateway"
     networks:
       - services
 

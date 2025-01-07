@@ -1,7 +1,9 @@
 {
   "extends": "./tsconfig.app.json",
   "include": [
-    "./**/*.spec.ts"
+    "src/**/*.vue",
+    "src/**/*.ts",
+    "tests/**/*.spec.ts"
   ],
   "exclude": [],
   // explicitly reset exclusion

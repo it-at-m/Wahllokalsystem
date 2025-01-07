@@ -24,7 +24,7 @@ Authorization: {{ token_type }} {{ auth_token }}
     let dd = today.getDate();
     const mm = today.getMonth();
     let yyyy_2MonthsBefore = (mm < 2) ? new Date().getFullYear() - 1 : new Date().getFullYear();
-    let mm_2MonthsBefore = (mm % 12) - 1;
+    let mm_2MonthsBefore = (mm < 2) ? (12 - (mm + 1)) : (mm % 12) - 2;
     if (dd < 10) dd = '0' + dd;
     if (mm_2MonthsBefore < 10) mm_2MonthsBefore = '0' + mm_2MonthsBefore;
     const dateOfWahltagID1 = ('"' + yyyy_2MonthsBefore + '-' + mm_2MonthsBefore + '-' + dd + '"');

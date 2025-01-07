@@ -29,8 +29,8 @@ POST http://localhost:8100/login
 Content-Type: application/x-www-form-urlencoded
 Cookie: {{ jSessionID }}
 
-username = user &
-password = password &
+username = wls_all &
+password = test &
 _csrf = {{ csrfToken }}
 
 > {%

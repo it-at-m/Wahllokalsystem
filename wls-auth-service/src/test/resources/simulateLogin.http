@@ -1,7 +1,7 @@
 ### Get demo - init of login
 # @no-cookie-jar
 # @no-redirect
-GET http://localhost:39152/demo?wahllokalgui
+GET http://localhost:8100/demo?wahllokalgui
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
 
 > {%
@@ -13,7 +13,7 @@ Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/w
 
 ### Get Login Form
 # @no-cookie-jar
-GET http://localhost:39152/login
+GET http://localhost:8100/login
 Cookie: {{ jSessionID }}
 
 > {%
@@ -25,7 +25,7 @@ Cookie: {{ jSessionID }}
 ### Login with user:password
 # @no-cookie-jar
 # @no-redirect
-POST http://localhost:39152/login
+POST http://localhost:8100/login
 Content-Type: application/x-www-form-urlencoded
 Cookie: {{ jSessionID }}
 
@@ -41,5 +41,5 @@ _csrf = {{ csrfToken }}
 
 ### Get demo
 # @no-cookie-jar
-GET http://localhost:39152/demo
+GET http://localhost:8100/demo
 Cookie: {{ jSessionID }}

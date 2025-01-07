@@ -21,7 +21,7 @@ class ProfilesTest {
         private BezirkIDPermissionEvaluator permissionEvaluator;
 
         @Test
-        void evaluatorIsInstanceOfDummyImpl() {
+        void should_haveDummyEvaluatorInContext_when_noBezirkIdCheckIsActive() {
             Assertions.assertThat(permissionEvaluator).isExactlyInstanceOf(DummyBezirkIdPermissionEvaluatorImpl.class);
         }
     }
@@ -36,7 +36,7 @@ class ProfilesTest {
         private BezirkIDPermissionEvaluator permissionEvaluator;
 
         @Test
-        void evaluatorIsInstanceOfBezirkIDPermissionEvaluator() {
+        void should_haveImplementationWithChecksInContext_when_noAdditionalProfilesAreActive() {
             Assertions.assertThat(permissionEvaluator).isExactlyInstanceOf(BezirkIDPermissionEvaluatorImpl.class);
         }
     }

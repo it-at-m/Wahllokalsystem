@@ -36,6 +36,29 @@ flowchart LR
     end
 ```
 
+## Services und Ports
+
+Übersicht über die Services und auf welchen Port sie im Standard lauschen:
+
+> [!IMPORTANT]
+> Diese Ports werden sowohl in der IDE als auch in Docker verwendet.
+> Beachten Sie, dass somit nur eine Instanz eines Services gleichzeitig laufen kann.
+
+| Service                                                                  | Port |
+|--------------------------------------------------------------------------|------|
+| [Admin](/services/admin-service/)                                        | 8209 |
+| [Auth](/services/auth-service/)                                          | 8100 |
+| [Basisdaten](/services/basisdaten-service/)                              | 8205 |
+| [Briefwahl](/services/briefwahl-service/)                                | 8202 |
+| Broadcast                                                                | 8200 |
+| [EAI](/services/eai-service/)                                            | 8300 |
+| [Ergebnismeldung](/services/ergebnismeldung-service/)                    | 8208 |
+| [Infomanagement](/services/infomanagement-service/)                      | 8201 |
+| [Monitoring](/services/monitoring-service/)                              | 8206 |
+| [Vorfälle und Vorkommnisse](/services/vorfaelleundvorkommnisse-service/) | 8204 |
+| Wahlvorbereitung                                                         | 8203 |
+| [Wahlvorstand](/services/wahlvorstand-service/)                          | 8207 |
+
 ## Keycloak
 
 ### Benutzer

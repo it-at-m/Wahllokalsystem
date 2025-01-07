@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.adminservice.domain.TheEntity;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,24 +33,28 @@ class TheEntityRepositoryTest {
     @Autowired
     private TheEntityRepository repository;
 
-    @Test
-    @Transactional(propagation = Propagation.REQUIRED, noRollbackFor = Exception.class)
-    void testSave() {
+    @Nested
+    class Save {
 
-        // Implement your logic here by replacing and/or extending the code
+        @Test
+        @Transactional(propagation = Propagation.REQUIRED, noRollbackFor = Exception.class)
+        void should_persistEntity_when_entityIsGiven() {
 
-        // initialize
-        TheEntity original = new TheEntity();
-        original.setTextAttribute("test");
+            // Implement your logic here by replacing and/or extending the code
 
-        // persist
-        original = repository.save(original);
+            // initialize
+            TheEntity original = new TheEntity();
+            original.setTextAttribute("test");
 
-        // check
-        TheEntity persisted = repository.findById(original.getId()).orElse(null);
-        assertNotNull(persisted);
-        assertEquals(original, persisted);
+            // persist
+            original = repository.save(original);
 
+            // check
+            TheEntity persisted = repository.findById(original.getId()).orElse(null);
+            assertNotNull(persisted);
+            assertEquals(original, persisted);
+
+        }
     }
 
 }

@@ -1,24 +1,10 @@
-POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
-Content-Type: application/x-www-form-urlencoded
-
-password = test &
-grant_type = password &
-client_secret = top-secret &
-client_id = wls &
-username = wls_all
-
-> {%
-    client.global.set("auth_token", response.body.access_token);
-    client.global.set("token_type", response.body.token_type);
-%}
-
 ### get userinfo with auth_token
-GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
-Authorization: {{ token_type }} {{ auth_token }}
+GET {{ WLS_AUTH_SERVICE }}/user
+Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST Create - Set Wahlbeteiligung
 POST {{ WLS_EAI_SERVICE_URL }}/wahlbeteiligung
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
@@ -30,7 +16,7 @@ Content-Type: application/json
 
 ### POST Create - Error: Set Wahlbeteiligung without wahlID
 POST {{ WLS_EAI_SERVICE_URL }}/wahlbeteiligung
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
@@ -42,7 +28,7 @@ Content-Type: application/json
 
 ### POST Create - Error: Set Wahlbeteiligung without wahlbezirkID
 POST {{ WLS_EAI_SERVICE_URL }}/wahlbeteiligung
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
@@ -54,7 +40,7 @@ Content-Type: application/json
 
 ### POST Create - Error: Set Wahlbeteiligung without meldeZeitpunkt
 POST {{ WLS_EAI_SERVICE_URL }}/wahlbeteiligung
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {

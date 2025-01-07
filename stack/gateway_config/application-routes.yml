@@ -8,6 +8,8 @@ spring:
             - Path=/api/sso/userinfo
           filters:
             - RewritePath=/api/sso/userinfo, /user
+            - RemoveRequestHeader=Cookie
+            - RemoveResponseHeader=Set-Cookie
         - id: admin-service
           uri: http://kubernetes.docker.internal:8209/
           predicates:
@@ -20,6 +22,8 @@ spring:
             - Path=/api/auth-service/**
           filters:
             - RewritePath=/api/auth-service/(?<urlsegments>.*), /$\{urlsegments}
+            - RemoveRequestHeader=Cookie
+            - RemoveResponseHeader=Set-Cookie
         - id: basisdaten-service
           uri: http://kubernetes.docker.internal:8205/
           predicates:

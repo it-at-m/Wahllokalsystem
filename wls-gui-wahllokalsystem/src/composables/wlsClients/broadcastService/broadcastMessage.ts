@@ -12,9 +12,9 @@ export function useBroadcastService() {
   const message = ref("");
   const messageInput = ref("Broadcast Message");
   const errors = ref({ get: "", post: "", read: "" });
-  let messageId = "";
 
   async function getMessage(wahlbezirkID: string) {
+    let messageId = "";
     errors.value.get = "";
     message.value = "";
     try {

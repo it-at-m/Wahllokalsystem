@@ -227,7 +227,6 @@ public class StimmzettelumschlaegeControllerIntegrationTest {
                     .withComparatorForType(LocalDateTimeComparators.PRECISION_MILLISECONDS, LocalDateTime.class)
                     .isEqualTo(expectedEntity);
         }
-
     }
 
     private String buildStimmzettelumschlaegeURI(final String wahlID, final String wahlbezirkID) {

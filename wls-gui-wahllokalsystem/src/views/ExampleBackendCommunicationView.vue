@@ -53,9 +53,7 @@ async function getBroadcastMessage(id: string) {
   errorToShow.value = "";
   messageToShow.value = "";
   const { message, error } = await getMessage(id);
-  if (error) {
-    errorToShow.value = error;
-  }
+  errorToShow.value = error;
   messageToShow.value = message;
 }
 
@@ -63,9 +61,7 @@ async function postBroadcastMessage(message: string, ids: string[]) {
   errorToShow.value = "";
   messageToShow.value = "";
   const { error } = await postMessage(message, ids);
-  if (error) {
-    errorToShow.value = error;
-  }
+  errorToShow.value = error;
   messageInput.value = "";
 }
 </script>

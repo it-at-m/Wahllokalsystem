@@ -13,9 +13,8 @@ export function useBroadcastService() {
     try {
       const response = await getBroadcastMessage(wahlbezirkID);
       const content: BroadcastMessageToRead = await response.json();
-      messageId = content.oid;
 
-      await broadcastMessageRead(messageId).catch(() => {
+      await broadcastMessageRead(content.oid).catch(() => {
         return {
           message: "",
           error: "Es ist ein Fehler beim Lesen der Nachricht aufgetreten",

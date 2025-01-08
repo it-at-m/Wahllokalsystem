@@ -22,7 +22,6 @@ spring:
         jwt:
           jwk-set-uri:
 
-
 # Define the keycloak consolidation realm here; default is "intrap"
 realm: intrap
 

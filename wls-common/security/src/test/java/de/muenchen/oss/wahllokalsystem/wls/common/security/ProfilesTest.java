@@ -35,6 +35,9 @@ class ProfilesTest {
         @Autowired
         private BezirkIDPermissionEvaluator permissionEvaluator;
 
+        @Autowired
+        private OAuth2TokenInterceptor oAuth2TokenInterceptor;
+
         @Test
         void should_haveImplementationWithChecksInContext_when_noAdditionalProfilesAreActive() {
             Assertions.assertThat(permissionEvaluator).isExactlyInstanceOf(BezirkIDPermissionEvaluatorImpl.class);

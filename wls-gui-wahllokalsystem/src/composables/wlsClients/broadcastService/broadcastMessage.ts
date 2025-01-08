@@ -8,7 +8,7 @@ import {
   postBroadcastMessage,
 } from "@/api/wls-clients/broadcast-service/broadcast-client";
 
-export function useBroadcastMessage() {
+export function useBroadcastService() {
   const message = ref("");
   const messageInput = ref("Broadcast Message");
   const errors = ref({ get: "", post: "", read: "" });

@@ -40,8 +40,8 @@ import {
   VTextField,
 } from "vuetify/components";
 
-import { useBroadcastMessage } from "@/composables/wlsClients/broadcastService/broadcastMessage";
+import { useBroadcastService } from "@/composables/wlsClients/broadcastService/broadcastMessage";
 
 const { messageInput, message, errors, getMessage, postMessage } =
-  useBroadcastMessage();
+  useBroadcastService();
 </script>

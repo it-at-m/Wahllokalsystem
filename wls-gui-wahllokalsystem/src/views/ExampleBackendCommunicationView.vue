@@ -14,7 +14,7 @@
           clearable
           label="ID"
         ></v-text-field>
-        <v-btn @click="postBroadcastMessage(['wbz-1', 'wbz-2'])"
+        <v-btn @click="postBroadcastMessage(messageInput, ['wbz-1', 'wbz-2'])"
           >post message with fetch utils
         </v-btn>
         <br />
@@ -43,8 +43,9 @@ import {
 
 import { useBroadcastService } from "@/composables/wlsClients/broadcastService/broadcastMessage";
 
-const { messageInput, getMessage, postMessage } = useBroadcastService();
+const { getMessage, postMessage } = useBroadcastService();
 
+const messageInput = ref("I am a message");
 const messageToShow = ref("");
 const errorToShow = ref("");
 
@@ -58,12 +59,13 @@ async function getBroadcastMessage(id: string) {
   messageToShow.value = message;
 }
 
-async function postBroadcastMessage(ids: string[]) {
+async function postBroadcastMessage(message: string, ids: string[]) {
   errorToShow.value = "";
   messageToShow.value = "";
-  const { error } = await postMessage(ids);
+  const { error } = await postMessage(message, ids);
   if (error) {
     errorToShow.value = error;
   }
+  messageInput.value = "";
 }
 </script>

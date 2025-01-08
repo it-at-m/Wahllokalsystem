@@ -1,7 +1,5 @@
 import type { BroadcastMessageToRead } from "@/api/wls-clients/broadcast-service/BroadcastMessageToRead";
 
-import { ref } from "vue";
-
 import {
   broadcastMessageRead,
   getBroadcastMessage,
@@ -9,8 +7,6 @@ import {
 } from "@/api/wls-clients/broadcast-service/broadcast-client";
 
 export function useBroadcastService() {
-  const messageInput = ref("Broadcast Message");
-
   async function getMessage(wahlbezirkID: string) {
     let messageId = "";
 
@@ -38,10 +34,9 @@ export function useBroadcastService() {
     }
   }
 
-  async function postMessage(wahlbezirkIDs: string[]) {
+  async function postMessage(message: string, wahlbezirkIDs: string[]) {
     try {
-      await postBroadcastMessage(wahlbezirkIDs, messageInput.value);
-      messageInput.value = "";
+      await postBroadcastMessage(wahlbezirkIDs, message);
       return { error: "" };
     } catch (e) {
       return { error: (e as Error).message };
@@ -49,7 +44,6 @@ export function useBroadcastService() {
   }
 
   return {
-    messageInput,
     getMessage,
     postMessage,
   };

@@ -1,19 +1,3 @@
-/**
- * A composable for managing broadcast messages in a Vue component.
- *
- * Provides reactive state and methods to fetch and post messages for a given electoral district.
- *
- * @returns {Ref<string>} message - The retrieved broadcast message.
- * @returns {Ref<string>} messageInput - The input message to be posted.
- * @returns {Ref<Object>} errors - Object containing error messages for each api call.
- *
- * @returns {Function} getMessage - Fetches the broadcast message for an electoral district.
- * @param {string} wahlbezirkID - The electoral district ID.
- *
- * @returns {Function} postMessage - Posts the input message to specified electoral district IDs.
- * @param {Array<string>} wahlbezirkIDs - The electoral district IDs for posting.
- */
-
 import type { BroadcastMessageToRead } from "@/api/wls-clients/broadcast-service/BroadcastMessageToRead";
 
 import { ref } from "vue";

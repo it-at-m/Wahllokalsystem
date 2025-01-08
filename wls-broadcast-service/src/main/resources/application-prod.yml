@@ -22,7 +22,6 @@ spring:
         jwt:
           jwk-set-uri:
 
-
 # Define the keycloak productive realm here
 realm: muenchen.de
 

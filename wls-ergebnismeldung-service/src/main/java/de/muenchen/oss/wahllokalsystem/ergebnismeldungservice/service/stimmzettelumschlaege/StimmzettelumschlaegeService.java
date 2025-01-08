@@ -49,7 +49,7 @@ public class StimmzettelumschlaegeService {
         stimmzettelumschlaegeValidator.validBezirkUndWahlIdOrThrow(id,
                 exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG));
         stimmzettelumschlaegeValidator.validStimmzettelumschlaegeOrThrow(stimmzettelumschlaege);
-        val wahlbezirkArtOfRequest = getWahlbezirkArt();
+        val wahlbezirkArtOfRequest = getWahlbezirkArtOfCurrentAuthentication();
         stimmzettelumschlaegeValidator.validHasBWBRequiredEroeffnungsUhrzeitOrThrow(wahlbezirkArtOfRequest, stimmzettelumschlaege.urneneroeffnungsUhrzeit());
 
         try {
@@ -60,14 +60,14 @@ public class StimmzettelumschlaegeService {
         }
     }
 
-    private WahlbezirkArtModel getWahlbezirkArt() {
+    private WahlbezirkArtModel getWahlbezirkArtOfCurrentAuthentication() {
         val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
         val authenticationHandler = authenticationHandlers.stream().filter(handler -> handler.canHandle(currentAuthentication)).findFirst();
         try {
             val wahlbezirkOfUser = authenticationHandler.get().getDetail(WAHLBEZIRK_ART_USER_DETAIL_KEY, currentAuthentication);
             return wahlbezirkOfUser.map(WahlbezirkArtModel::valueOf).get();
         } catch (Exception e) {
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.WAHLBEZIRKART_NOT_LOADABLE);
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.WAHLBEZIRKART_NOT_LOADABLE);
         }
     }
 }

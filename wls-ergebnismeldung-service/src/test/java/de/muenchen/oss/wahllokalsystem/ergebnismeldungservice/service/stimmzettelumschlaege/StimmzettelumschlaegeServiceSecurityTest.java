@@ -8,6 +8,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelumschlaege.StimmzettelumschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.WithMockUserAsJwt;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -124,9 +125,11 @@ class StimmzettelumschlaegeServiceSecurityTest {
         }
 
         @Test
+        @WithMockUserAsJwt(
+            authorities = { Authorities.SERVICE_SET_STIMMZETTELUMSCHLAEGE },
+            claimProperties = { "wahlbezirksArt=BWB" }
+        )
         void should_throwTechnischeWlsException_when_repositoryWriteStimmzettelumschlaegeAuthorityIsMissing() {
-            SecurityUtils.runWith(Authorities.SERVICE_SET_STIMMZETTELUMSCHLAEGE);
-
             val wahlbezirkID = "wahlbezirkID";
             val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
             val stimmzettelumschlaege = createStimmzettelumschlaegeModel(id);
@@ -135,6 +138,21 @@ class StimmzettelumschlaegeServiceSecurityTest {
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaege))
                     .isInstanceOf(TechnischeWlsException.class);
+        }
+
+        @Test
+        @WithMockUserAsJwt(
+            authorities = { Authorities.SERVICE_SET_STIMMZETTELUMSCHLAEGE, Authorities.REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE }
+        )
+        void should_throwFachlicheWlsException_when_claimPropertyWahlbezirksArtIsMissing() {
+            val wahlbezirkID = "wahlbezirkID";
+            val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
+            val stimmzettelumschlaege = createStimmzettelumschlaegeModel(id);
+
+            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
+
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaege))
+                .isInstanceOf(FachlicheWlsException.class);
         }
 
         private StimmzettelumschlaegeModel createStimmzettelumschlaegeModel(BezirkUndWahlID id) {

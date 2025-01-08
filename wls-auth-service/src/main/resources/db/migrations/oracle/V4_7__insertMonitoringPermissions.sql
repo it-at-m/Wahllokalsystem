@@ -1,4 +1,4 @@
--- waehleranzahl
+-- Waehleranzahl
 INSERT INTO Permission
 VALUES ('00000000-0000-0000-0007-000000000001', 'Monitoring_BUSINESSACTION_GetWahlbeteiligung');
 INSERT INTO Secauthorities_Secpermissions

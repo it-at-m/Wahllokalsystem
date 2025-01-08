@@ -1,3 +1,4 @@
+-- BeanstandeteWahlbriefe
 INSERT INTO Permission
 VALUES ('00000000-0000-0000-0003-000000000001', 'Briefwahl_BUSINESSACTION_GetBeanstandeteWahlbriefe');
 INSERT INTO Secauthorities_Secpermissions

@@ -1,4 +1,4 @@
--- awerte
+-- AWerte
 INSERT INTO Permission
 VALUES ('00000000-0000-0000-0005-000000000001', 'Ergebnismeldung_BUSINESSACTION_GetAWerte');
 INSERT INTO Secauthorities_Secpermissions
@@ -24,7 +24,7 @@ VALUES ('00000000-0000-0000-0005-000000000005', 'Ergebnismeldung_DELETE_AWerte')
 INSERT INTO Secauthorities_Secpermissions
 VALUES ('00000000-0000-0000-0001-000000000001', '00000000-0000-0000-0005-000000000005');
 
--- status
+-- Status
 INSERT INTO Permission
 VALUES ('00000000-0000-0000-0005-000000000006', 'Ergebnismeldung_BUSINESSACTION_GetStatus');
 INSERT INTO Secauthorities_Secpermissions
@@ -50,7 +50,7 @@ VALUES ('00000000-0000-0000-0005-000000000010', 'Ergebnismeldung_DELETE_Status')
 INSERT INTO Secauthorities_Secpermissions
 VALUES ('00000000-0000-0000-0001-000000000001', '00000000-0000-0000-0005-000000000010');
 
--- begruendung
+-- Begruendung
 INSERT INTO Permission
 VALUES ('00000000-0000-0000-0005-000000000011', 'Ergebnismeldung_BUSINESSACTION_GetBegruendung');
 INSERT INTO Secauthorities_Secpermissions
@@ -76,7 +76,7 @@ VALUES ('00000000-0000-0000-0005-000000000015', 'Ergebnismeldung_DELETE_Begruend
 INSERT INTO Secauthorities_Secpermissions
 VALUES ('00000000-0000-0000-0001-000000000001', '00000000-0000-0000-0005-000000000015');
 
--- wahlscheine
+-- Wahlscheine
 INSERT INTO Permission
 VALUES ('00000000-0000-0000-0005-000000000016', 'Ergebnismeldung_BUSINESSACTION_GetWahlscheine');
 INSERT INTO Secauthorities_Secpermissions

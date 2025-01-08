@@ -9,43 +9,47 @@ import {
 } from "@/api/wls-clients/broadcast-service/broadcast-client";
 
 export function useBroadcastService() {
-  const message = ref("");
   const messageInput = ref("Broadcast Message");
-  const errors = ref({ get: "", post: "", read: "" });
 
   async function getMessage(wahlbezirkID: string) {
     let messageId = "";
-    errors.value.get = "";
-    message.value = "";
+
     try {
       const response = await getBroadcastMessage(wahlbezirkID);
       const content: BroadcastMessageToRead = await response.json();
-      message.value = content.nachricht;
       messageId = content.oid;
 
       await broadcastMessageRead(messageId).catch(() => {
-        errors.value.read =
-          "Es ist ein Fehler beim Lesen der Nachricht aufgetreten";
+        return {
+          message: "",
+          error: "Es ist ein Fehler beim Lesen der Nachricht aufgetreten",
+        };
       });
+
+      return {
+        message: content.nachricht,
+        error: "",
+      };
     } catch (e) {
-      errors.value.get = (e as Error).message;
+      return {
+        message: "",
+        error: (e as Error).message,
+      };
     }
   }
 
   async function postMessage(wahlbezirkIDs: string[]) {
     try {
-      errors.value.post = "";
       await postBroadcastMessage(wahlbezirkIDs, messageInput.value);
       messageInput.value = "";
+      return { error: "" };
     } catch (e) {
-      errors.value.post = (e as Error).message;
+      return { error: (e as Error).message };
     }
   }
 
   return {
-    message,
     messageInput,
-    errors,
     getMessage,
     postMessage,
   };

@@ -15,6 +15,8 @@ public class Authorities {
     public static final String SERVICE_SET_WAHLSCHEINE = "Ergebnismeldung_BUSINESSACTION_PostWahlscheine";
     public static final String SERVICE_GET_BEGRUENDUNG = "Ergebnismeldung_BUSINESSACTION_GetBegruendung";
     public static final String SERVICE_SET_BEGRUENDUNG = "Ergebnismeldung_BUSINESSACTION_PostBegruendung";
+    public static final String SERVICE_GET_STIMMZETTELUMSCHLAEGE = "Ergebnismeldung_BUSINESSACTION_GetStimmzettelumschlaege";
+    public static final String SERVICE_SET_STIMMZETTELUMSCHLAEGE = "Ergebnismeldung_BUSINESSACTION_PostStimmzettelumschlaege";
 
     public static final String REPOSITORY_READ_AWERTE = "Ergebnismeldung_READ_AWerte";
     public static final String REPOSITORY_DELETE_AWERTE = "Ergebnismeldung_DELETE_AWerte";
@@ -31,6 +33,10 @@ public class Authorities {
     public static final String REPOSITORY_READ_BEGRUENDUNG = "Ergebnismeldung_READ_Begruendung";
     public static final String REPOSITORY_DELETE_BEGRUENDUNG = "Ergebnismeldung_DELETE_Begruendung";
     public static final String REPOSITORY_WRITE_BEGRUENDUNG = "Ergebnismeldung_WRITE_Begruendung";
+
+    public static final String REPOSITORY_READ_STIMMZETTELUMSCHLAEGE = "Ergebnismeldung_READ_Stimmzettelumschlaege";
+    public static final String REPOSITORY_DELETE_STIMMZETTELUMSCHLAEGE = "Ergebnismeldung_DELETE_Stimmzettelumschlaege";
+    public static final String REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE = "Ergebnismeldung_WRITE_Stimmzettelumschlaege";
 
     public static final String[] ALL_AUTHORITIES_USER_GET_AWERTE = new String[] {
             SERVICE_GET_AWERTE,
@@ -87,4 +93,14 @@ public class Authorities {
 
     public static final String[] ALL_AUTHORITIES_SET_BEGRUENDUNG = ArrayUtils.addAll(ALL_AUTHORITIES_SET_BEGRUENDUNG_MISSING_WILL_RESULT_IN_ACCESS_DENIED,
             ALL_AUTHORITIES_SET_BEGRUENDUNG_MISSING_WILL_RESULT_IN_WLS_EXCEPTION);
+
+    public static final String[] ALL_AUTHORITIES_GET_STIMMZETTELUMSCHLAEGE = new String[] {
+            SERVICE_GET_STIMMZETTELUMSCHLAEGE,
+            REPOSITORY_READ_STIMMZETTELUMSCHLAEGE
+    };
+
+    public static final String[] ALL_AUTHORITIES_SET_STIMMZETTELUMSCHLAEGE = new String[] {
+            SERVICE_SET_STIMMZETTELUMSCHLAEGE,
+            REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE
+    };
 }

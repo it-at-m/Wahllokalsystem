@@ -14,26 +14,24 @@
           clearable
           label="ID"
         ></v-text-field>
-        <v-btn @click="postMessage(['wbz-1', 'wbz-2'])"
+        <v-btn @click="postBroadcastMessage(messageInput, ['wbz-1', 'wbz-2'])"
           >post message with fetch utils
         </v-btn>
-        <p v-if="errors.post">{{ errors.post }}</p>
         <br />
         <br />
-        <v-btn @click="getMessage('wbz-1')"
+        <v-btn @click="getBroadcastMessage('wbz-1')"
           >get message with fetch utils
         </v-btn>
-        <pre v-if="message"> {{ message }} </pre>
-        <p v-if="errors.get">{{ errors.get }}</p>
-        <p v-if="errors.read">{{ errors.read }}</p>
+        <br />
+        <br />
+        <pre v-if="messageToShow"> {{ messageToShow }} </pre>
+        <p v-if="errorToShow">{{ errorToShow }}</p>
       </v-col>
     </v-responsive>
   </v-container>
 </template>
 
 <script setup lang="ts">
-import type { BroadcastMessageToRead } from "@/api/wls-clients/broadcast-service/BroadcastMessageToRead";
-
 import { ref } from "vue";
 import {
   VBtn,
@@ -43,40 +41,30 @@ import {
   VTextField,
 } from "vuetify/components";
 
-import {
-  broadcastMessageRead,
-  getBroadcastMessage,
-  postBroadcastMessage,
-} from "@/api/wls-clients/broadcast-service/broadcast-client";
+import { useBroadcastService } from "@/composables/wlsClients/broadcastService/useBroadcastService";
 
-const messageInput = ref("Broadcast Message");
-const message = ref("");
-const errors = ref({ get: "", post: "", read: "" });
-let messageId = "";
+const { getMessage, postMessage } = useBroadcastService();
 
-async function getMessage(wahlbezirkID: string) {
-  errors.value.get = "";
-  message.value = "";
-  try {
-    const response = await getBroadcastMessage(wahlbezirkID);
-    const content: BroadcastMessageToRead = await response.json();
-    message.value = content.nachricht;
-    messageId = content.oid;
+const messageInput = ref("I am a message");
+const messageToShow = ref("");
+const errorToShow = ref("");
 
-    await broadcastMessageRead(messageId).catch(() => {
-      errors.value.read =
-        "Es ist ein Fehler beim Lesen der Nachricht aufgetreten";
-    });
-  } catch (e) {
-    errors.value.get = (e as Error).message;
-  }
+async function getBroadcastMessage(id: string) {
+  clearDisplayedValues();
+  const { message, error } = await getMessage(id);
+  errorToShow.value = error;
+  messageToShow.value = message;
 }
 
-function postMessage(wahlbezirkIDs: string[]) {
-  errors.value.post = "";
-  postBroadcastMessage(wahlbezirkIDs, messageInput.value).catch((e) => {
-    errors.value.post = e.message;
-  });
+async function postBroadcastMessage(message: string, ids: string[]) {
+  clearDisplayedValues();
+  const { error } = await postMessage(message, ids);
+  errorToShow.value = error;
   messageInput.value = "";
+}
+
+function clearDisplayedValues() {
+  errorToShow.value = "";
+  messageToShow.value = "";
 }
 </script>

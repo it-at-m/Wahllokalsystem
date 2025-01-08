@@ -50,18 +50,21 @@ const messageToShow = ref("");
 const errorToShow = ref("");
 
 async function getBroadcastMessage(id: string) {
-  errorToShow.value = "";
-  messageToShow.value = "";
+  clearDisplayedValues();
   const { message, error } = await getMessage(id);
   errorToShow.value = error;
   messageToShow.value = message;
 }
 
 async function postBroadcastMessage(message: string, ids: string[]) {
-  errorToShow.value = "";
-  messageToShow.value = "";
+  clearDisplayedValues();
   const { error } = await postMessage(message, ids);
   errorToShow.value = error;
   messageInput.value = "";
+}
+
+function clearDisplayedValues() {
+  errorToShow.value = "";
+  messageToShow.value = "";
 }
 </script>

@@ -126,8 +126,8 @@ class StimmzettelumschlaegeServiceSecurityTest {
 
         @Test
         @WithMockUserAsJwt(
-            authorities = { Authorities.SERVICE_SET_STIMMZETTELUMSCHLAEGE },
-            claimProperties = { "wahlbezirksArt=BWB" }
+                authorities = { Authorities.SERVICE_SET_STIMMZETTELUMSCHLAEGE },
+                claimProperties = { "wahlbezirksArt=BWB" }
         )
         void should_throwTechnischeWlsException_when_repositoryWriteStimmzettelumschlaegeAuthorityIsMissing() {
             val wahlbezirkID = "wahlbezirkID";
@@ -142,7 +142,7 @@ class StimmzettelumschlaegeServiceSecurityTest {
 
         @Test
         @WithMockUserAsJwt(
-            authorities = { Authorities.SERVICE_SET_STIMMZETTELUMSCHLAEGE, Authorities.REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE }
+                authorities = { Authorities.SERVICE_SET_STIMMZETTELUMSCHLAEGE, Authorities.REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE }
         )
         void should_throwFachlicheWlsException_when_claimPropertyWahlbezirksArtIsMissing() {
             val wahlbezirkID = "wahlbezirkID";
@@ -152,7 +152,7 @@ class StimmzettelumschlaegeServiceSecurityTest {
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaege))
-                .isInstanceOf(FachlicheWlsException.class);
+                    .isInstanceOf(FachlicheWlsException.class);
         }
 
         private StimmzettelumschlaegeModel createStimmzettelumschlaegeModel(BezirkUndWahlID id) {

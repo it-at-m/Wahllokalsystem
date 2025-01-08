@@ -183,49 +183,49 @@ public class StimmzettelumschlaegeControllerIntegrationTest {
                     "WLS-ERGEBNISMELDUNG", ExceptionConstants.POST_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG.message());
             Assertions.assertThat(receivedWlsException).isEqualTo(expectedWlsExceptionDTO);
         }
-    }
 
-    @Nested
-    class PostStimmzettelumschlaegeWithExistingSetupData {
+        @Nested
+        class PostStimmzettelumschlaegeWithExistingSetupData {
 
-        private Stimmzettelumschlaege entityFromRepo;
+            private Stimmzettelumschlaege entityFromRepo;
 
-        @BeforeEach()
-        void setup() {
-            val entityToReplace = new Stimmzettelumschlaege(
-                    new BezirkUndWahlID("wahlID", "wahlbezirkID"),
-                    LocalDateTime.now(), 47, 11L);
-            entityFromRepo = stimmzettelumschlaegeRepository.save(entityToReplace);
-        }
+            @BeforeEach()
+            void setup() {
+                val entityToReplace = new Stimmzettelumschlaege(
+                        new BezirkUndWahlID("wahlID", "wahlbezirkID"),
+                        LocalDateTime.now(), 47, 11L);
+                entityFromRepo = stimmzettelumschlaegeRepository.save(entityToReplace);
+            }
 
-        @Test
-        @WithMockUserAsJwt(
-                authorities = { Authorities.SERVICE_SET_STIMMZETTELUMSCHLAEGE, Authorities.REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE },
-                claimProperties = { "wahlbezirksArt=BWB" }
-        )
-        void should_replaceOldData_when_dataIsPresentInRepository() throws Exception {
-            val urneneroeffnungsUhrzeit = LocalDateTime.now();
-            val anzahlWaehlerToReplace = 8;
-            val anzahlWaehler2ToReplace = 15L;
-            val requestBody = new StimmzettelumschlaegeDTO(new BezirkUndWahlID("wahlID", "wahlbezirkID"),
-                    urneneroeffnungsUhrzeit, anzahlWaehlerToReplace, anzahlWaehler2ToReplace);
+            @Test
+            @WithMockUserAsJwt(
+                    authorities = { Authorities.SERVICE_SET_STIMMZETTELUMSCHLAEGE, Authorities.REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE },
+                    claimProperties = { "wahlbezirksArt=BWB" }
+            )
+            void should_replaceOldData_when_dataIsPresentInRepository() throws Exception {
+                val urneneroeffnungsUhrzeit = LocalDateTime.now();
+                val anzahlWaehlerToReplace = 8;
+                val anzahlWaehler2ToReplace = 15L;
+                val requestBody = new StimmzettelumschlaegeDTO(new BezirkUndWahlID("wahlID", "wahlbezirkID"),
+                        urneneroeffnungsUhrzeit, anzahlWaehlerToReplace, anzahlWaehler2ToReplace);
 
-            val request = MockMvcRequestBuilders.post(buildStimmzettelumschlaegeURI("wahlID", "wahlbezirkID")).with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(requestBody));
+                val request = MockMvcRequestBuilders.post(buildStimmzettelumschlaegeURI("wahlID", "wahlbezirkID")).with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestBody));
 
-            Assertions.assertThat(entityFromRepo).usingRecursiveComparison().isNotEqualTo(requestBody);
+                Assertions.assertThat(entityFromRepo).usingRecursiveComparison().isNotEqualTo(requestBody);
 
-            mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
+                mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
 
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_STIMMZETTELUMSCHLAEGE);
-            val replacedEntityFromRepo = stimmzettelumschlaegeRepository.findById(requestBody.bezirkUndWahlID()).get();
+                SecurityUtils.runWith(Authorities.REPOSITORY_READ_STIMMZETTELUMSCHLAEGE);
+                val replacedEntityFromRepo = stimmzettelumschlaegeRepository.findById(requestBody.bezirkUndWahlID()).get();
 
-            val expectedEntity = stimmzettelumschlaegeModelMapper.toEntity(stimmzettelumschlaegeDTOMapper.toModel(requestBody));
-            Assertions.assertThat(replacedEntityFromRepo)
-                    .usingRecursiveComparison()
-                    .withComparatorForType(LocalDateTimeComparators.PRECISION_MILLISECONDS, LocalDateTime.class)
-                    .isEqualTo(expectedEntity);
+                val expectedEntity = stimmzettelumschlaegeModelMapper.toEntity(stimmzettelumschlaegeDTOMapper.toModel(requestBody));
+                Assertions.assertThat(replacedEntityFromRepo)
+                        .usingRecursiveComparison()
+                        .withComparatorForType(LocalDateTimeComparators.PRECISION_MILLISECONDS, LocalDateTime.class)
+                        .isEqualTo(expectedEntity);
+            }
         }
     }
 

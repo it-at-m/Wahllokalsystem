@@ -194,6 +194,7 @@ public class StimmzettelumschlaegeControllerIntegrationTest {
                 val entityToReplace = new Stimmzettelumschlaege(
                         new BezirkUndWahlID("wahlID", "wahlbezirkID"),
                         LocalDateTime.now(), 47, 11L);
+                //uses the security context created by the tests
                 entityFromRepo = stimmzettelumschlaegeRepository.save(entityToReplace);
             }
 

@@ -8,8 +8,6 @@ import {
 
 export function useBroadcastService() {
   async function getMessage(wahlbezirkID: string) {
-    let messageId = "";
-
     try {
       const response = await getBroadcastMessage(wahlbezirkID);
       const content: BroadcastMessageToRead = await response.json();

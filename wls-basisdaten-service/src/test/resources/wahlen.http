@@ -20,15 +20,10 @@ Authorization: {{ token_type }} {{ auth_token }}
 ### POST Wahlen
 ## Hier wird das Datum des Wahltages mit der wahltagID1 gesetzt (today - 2 months) - siehe DummyClient
 < {%
-    const today = new Date();
-    let dd = today.getDate();
-    const mm = today.getMonth();
-    let yyyy_2MonthsBefore = (mm < 2) ? new Date().getFullYear() - 1 : new Date().getFullYear();
-    let mm_2MonthsBefore = (mm < 2) ? (12 - (mm + 1)) : (mm % 12) - 2;
-    if (dd < 10) dd = '0' + dd;
-    if (mm_2MonthsBefore < 10) mm_2MonthsBefore = '0' + mm_2MonthsBefore;
-    const dateOfWahltagID1 = ('"' + yyyy_2MonthsBefore + '-' + mm_2MonthsBefore + '-' + dd + '"');
-    request.variables.set("dateOfWahltagID1", dateOfWahltagID1);
+    const wahltag = new Date();
+    wahltag.setMonth(wahltag.getMonth() - 2);
+    const wahltagAsDateString = wahltag.toJSON().substring(0, 10);
+    request.variables.set("dateOfWahltagID1", wahltagAsDateString);
 %}
 POST {{ WLS_BASISDATEN_SERVICE_URL }}//businessActions/wahlen/wahltagID1
 Authorization: {{ token_type }} {{ auth_token }}
@@ -40,7 +35,7 @@ Content-Type: application/json
     "name": "aName_1",
     "reihenfolge": 1,
     "waehlerverzeichnisnummer": 1,
-    "wahltag": {{ dateOfWahltagID1 }},
+    "wahltag": "{{ dateOfWahltagID1 }}",
     "wahlart": "BTW",
     "farbe": {
       "r": 0,
@@ -54,7 +49,7 @@ Content-Type: application/json
     "name": "1",
     "reihenfolge": 2,
     "waehlerverzeichnisnummer": 1,
-    "wahltag": {{ dateOfWahltagID1 }},
+    "wahltag": "{{ dateOfWahltagID1 }}",
     "wahlart": "EUW",
     "farbe": {
       "r": 3,
@@ -68,7 +63,7 @@ Content-Type: application/json
     "name": "2-",
     "reihenfolge": 3,
     "waehlerverzeichnisnummer": 1,
-    "wahltag": {{ dateOfWahltagID1 }},
+    "wahltag": "{{ dateOfWahltagID1 }}",
     "wahlart": "LTW",
     "farbe": {
       "r": 6,

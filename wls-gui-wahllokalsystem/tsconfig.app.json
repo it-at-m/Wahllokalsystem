@@ -11,9 +11,7 @@
     "composite": true,
     "tsBuildInfoFile": "./cache/tsconfig.app.tsbuildinfo",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     },
     "allowSyntheticDefaultImports": true
   }

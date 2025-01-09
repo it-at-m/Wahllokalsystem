@@ -5,9 +5,6 @@
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "./cache/tsconfig.vitest.tsbuildinfo",
-    "types": [
-      "node",
-      "vitest/jsdom"
-    ]
+    "types": ["node", "vitest/jsdom"]
   }
 }

@@ -14,26 +14,25 @@
           clearable
           label="ID"
         ></v-text-field>
-        <v-btn @click="postMessage(['wbz-1', 'wbz-2'])"
+        <v-btn @click="postBroadcastMessage(messageInput, ['wbz-1', 'wbz-2'])"
           >post message with fetch utils
         </v-btn>
-        <p v-if="errors.post">{{ errors.post }}</p>
         <br />
         <br />
-        <v-btn
-          class="get-message-btn"
-          @click="getMessage('wbz-1')"
+        <v-btn class="get-message-btn" @click="getBroadcastMessage('wbz-1')"
           >get message with fetch utils
         </v-btn>
-        <pre v-if="message"> {{ message }} </pre>
-        <p v-if="errors.get">{{ errors.get }}</p>
-        <p v-if="errors.read">{{ errors.read }}</p>
+        <br />
+        <br />
+        <pre v-if="messageToShow"> {{ messageToShow }} </pre>
+        <p v-if="errorToShow">{{ errorToShow }}</p>
       </v-col>
     </v-responsive>
   </v-container>
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import {
   VBtn,
   VCol,
@@ -42,8 +41,30 @@ import {
   VTextField,
 } from "vuetify/components";
 
-import { useBroadcastMessage } from "@/composables/wlsClients/broadcastService/broadcastMessage";
+import { useBroadcastService } from "@/composables/wlsClients/broadcastService/useBroadcastService";
 
-const { messageInput, message, errors, getMessage, postMessage } =
-  useBroadcastMessage();
+const { getMessage, postMessage } = useBroadcastService();
+
+const messageInput = ref("I am a message");
+const messageToShow = ref("");
+const errorToShow = ref("");
+
+async function getBroadcastMessage(id: string) {
+  clearDisplayedValues();
+  const { message, error } = await getMessage(id);
+  errorToShow.value = error;
+  messageToShow.value = message;
+}
+
+async function postBroadcastMessage(message: string, ids: string[]) {
+  clearDisplayedValues();
+  const { error } = await postMessage(message, ids);
+  errorToShow.value = error;
+  messageInput.value = "";
+}
+
+function clearDisplayedValues() {
+  errorToShow.value = "";
+  messageToShow.value = "";
+}
 </script>

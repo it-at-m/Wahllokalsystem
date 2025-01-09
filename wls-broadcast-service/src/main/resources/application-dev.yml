@@ -22,7 +22,6 @@ spring:
         jwt:
           jwk-set-uri:
 
-
 # Define the keycloak development realm here
 realm: <YOUR_DEV_REALM>
 

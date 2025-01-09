@@ -18,8 +18,6 @@ spring:
         jwt:
           jwk-set-uri: http://kubernetes.docker.internal:8100/oauth2/jwks
 
-
-
 security:
   # possible values: none, all, changing (With changing, only changing requests such as POST, PUT, DELETE are logged)
   logging.requests: all

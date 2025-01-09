@@ -19,7 +19,9 @@
         </v-btn>
         <br />
         <br />
-        <v-btn class="get-message-btn" @click="getBroadcastMessage('wbz-1')"
+        <v-btn
+          class="get-message-btn"
+          @click="getBroadcastMessage('wbz-1')"
           >get message with fetch utils
         </v-btn>
         <br />

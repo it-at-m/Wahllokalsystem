@@ -1,37 +1,17 @@
-### Get token wls_all
-POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
-Content-Type: application/x-www-form-urlencoded
-
-password = test &
-grant_type = password &
-client_secret = top-secret &
-client_id = wls &
-username = wls_all
-
-> {%
-    client.global.set("auth_token", response.body.access_token);
-    client.global.set("token_type", response.body.token_type);
-%}
-
 ### get userinfo with auth_token
-GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
-Authorization: {{ token_type }} {{ auth_token }}
+GET {{ WLS_AUTH_SERVICE }}/user
+Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST Wahlen
 ## Hier wird das Datum des Wahltages mit der wahltagID1 gesetzt (today - 2 months) - siehe DummyClient
 < {%
-    const today = new Date();
-    let dd = today.getDate();
-    const mm = today.getMonth();
-    let yyyy_2MonthsBefore = (mm < 2) ? new Date().getFullYear() - 1 : new Date().getFullYear();
-    let mm_2MonthsBefore = (mm % 12) - 1;
-    if (dd < 10) dd = '0' + dd;
-    if (mm_2MonthsBefore < 10) mm_2MonthsBefore = '0' + mm_2MonthsBefore;
-    const dateOfWahltagID1 = ('"' + yyyy_2MonthsBefore + '-' + mm_2MonthsBefore + '-' + dd + '"');
-    request.variables.set("dateOfWahltagID1", dateOfWahltagID1);
+    const wahltag = new Date();
+    wahltag.setMonth(wahltag.getMonth() - 2);
+    const wahltagAsDateString = wahltag.toJSON().substring(0, 10);
+    request.variables.set("dateOfWahltagID1", wahltagAsDateString);
 %}
 POST {{ WLS_BASISDATEN_SERVICE_URL }}//businessActions/wahlen/wahltagID1
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 [
@@ -40,7 +20,7 @@ Content-Type: application/json
     "name": "aName_1",
     "reihenfolge": 1,
     "waehlerverzeichnisnummer": 1,
-    "wahltag": {{ dateOfWahltagID1 }},
+    "wahltag": "{{ dateOfWahltagID1 }}",
     "wahlart": "BTW",
     "farbe": {
       "r": 0,
@@ -54,7 +34,7 @@ Content-Type: application/json
     "name": "1",
     "reihenfolge": 2,
     "waehlerverzeichnisnummer": 1,
-    "wahltag": {{ dateOfWahltagID1 }},
+    "wahltag": "{{ dateOfWahltagID1 }}",
     "wahlart": "EUW",
     "farbe": {
       "r": 3,
@@ -68,7 +48,7 @@ Content-Type: application/json
     "name": "2-",
     "reihenfolge": 3,
     "waehlerverzeichnisnummer": 1,
-    "wahltag": {{ dateOfWahltagID1 }},
+    "wahltag": "{{ dateOfWahltagID1 }}",
     "wahlart": "LTW",
     "farbe": {
       "r": 6,
@@ -81,4 +61,4 @@ Content-Type: application/json
 
 ### GET Wahlen
 GET {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/wahlen/wahltagID1
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}

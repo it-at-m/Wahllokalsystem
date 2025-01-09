@@ -1,33 +1,18 @@
-### get token for wls_all
-POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
-Content-Type: application/x-www-form-urlencoded
-
-password = test &
-grant_type = password &
-client_secret = top-secret &
-client_id = wls &
-username = wls_all
-
-> {%
-    client.global.set("auth_token", response.body.access_token);
-    client.global.set("token_type", response.body.token_type);
-%}
-
 ### get userinfo with auth_token
-GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
-Authorization: {{ token_type }} {{ auth_token }}
+GET {{ WLS_AUTH_SERVICE }}/user
+Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### get konfigurierter Wahltag
 GET {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurierterWahltag
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### get konfigurierte Wahltage
 GET {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurierteWahltage
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### post konfigurierter Wahltag EU-Wahl-24
 POST {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurierterWahltag
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
@@ -39,7 +24,7 @@ Content-Type: application/json
 
 ### POST konfigurierter Wahltag BTW-21
 POST {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurierterWahltag
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
@@ -51,7 +36,7 @@ Content-Type: application/json
 
 ### DELETE konfigurierter Wahltag BTW-21
 DELETE {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurierterWahltag/BTW-21
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### check is aktive
 GET {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/loginCheck/BTW-21

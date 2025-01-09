@@ -40,6 +40,9 @@ class ProfilesTest {
         private BezirkIDPermissionEvaluator permissionEvaluator;
 
         @Autowired
+        private OAuth2TokenInterceptor oAuth2TokenInterceptor;
+
+        @Autowired
         private Collection<AuthenticationDetailExtractor> authenticationDetailExtractors;
 
         @Test

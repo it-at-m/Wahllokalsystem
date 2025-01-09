@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   BROADCAST_API_URL,
+  broadcastMessageRead,
   getBroadcastMessage,
   postBroadcastMessage,
 } from "@/api/wls-clients/broadcast-service/broadcast-client";
@@ -99,5 +100,35 @@ describe("Broadcast Service API", () => {
         ).rejects.toThrow("Ungültige Anfrage");
       }
     );
+  });
+
+  describe("BroadcastMessageRead", () => {
+    it("should_postMessageReadStausSuccessfully_whenCalledWithCorrectParams", async () => {
+      const nachrichtID = "messageId123";
+      const mockedResponse = { error: null };
+      global.fetch = vi.fn(() =>
+        Promise.resolve(
+          new Response(JSON.stringify(mockedResponse), { status: 200 })
+        )
+      );
+      const response = await broadcastMessageRead(nachrichtID);
+      const result = await response.json();
+
+      expect(result).toEqual(mockedResponse);
+      expect(fetch).toHaveBeenCalledWith(
+        `${BROADCAST_API_URL}messageRead/${nachrichtID}`,
+        expect.anything()
+      );
+    });
+
+    it("should_throwWlsError_when_postingMessageReadStatusFailed", async () => {
+      global.fetch = vi.fn(() =>
+        Promise.resolve(new Response(null, { status: 400 }))
+      );
+
+      await expect(broadcastMessageRead("")).rejects.toThrow(
+        "Ungültige Anfrage"
+      );
+    });
   });
 });

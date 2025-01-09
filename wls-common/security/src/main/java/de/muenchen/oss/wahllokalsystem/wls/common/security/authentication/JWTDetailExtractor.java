@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 @Component
-public class JWTHandler implements AuthenticationHandler {
+public class JWTDetailExtractor implements AuthenticationDetailExtractor {
 
     @Override
     public boolean canHandle(final Authentication authentication) {

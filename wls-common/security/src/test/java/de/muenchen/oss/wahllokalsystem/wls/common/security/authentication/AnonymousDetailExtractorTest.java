@@ -9,9 +9,9 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-class AnonymousHandlerTest {
+class AnonymousDetailExtractorTest {
 
-    private final AnonymousHandler unitUnderTest = new AnonymousHandler();
+    private final AnonymousDetailExtractor unitUnderTest = new AnonymousDetailExtractor();
 
     @Nested
     class CanHandle {
@@ -69,7 +69,7 @@ class AnonymousHandlerTest {
         @Test
         void should_throwIllegalArgumentException_when_detailKeyIsNull() {
             Assertions.assertThatThrownBy(
-                    () -> unitUnderTest.getDetail(null, new AnonymousAuthenticationToken("key", "principal", List.of(new SimpleGrantedAuthority("role")))))
+                            () -> unitUnderTest.getDetail(null, new AnonymousAuthenticationToken("key", "principal", List.of(new SimpleGrantedAuthority("role")))))
                     .isInstanceOf(IllegalArgumentException.class);
         }
     }

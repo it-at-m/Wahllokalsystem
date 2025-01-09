@@ -10,7 +10,7 @@ import org.springframework.util.Assert;
 
 @Component
 @Profile(Profiles.NO_SECURITY)
-public class AnonymousHandler implements AuthenticationHandler {
+public class AnonymousDetailExtractor implements AuthenticationDetailExtractor {
 
     @Override
     public boolean canHandle(Authentication authentication) {

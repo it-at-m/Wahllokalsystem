@@ -10,6 +10,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
@@ -19,6 +20,11 @@ class JWTHandlerTest {
 
     @Nested
     class CanHandle {
+
+        @Test
+        void should_returnFalse_when_authenticationIsNull() {
+            Assertions.assertThat(unitUnderTest.canHandle(null)).isFalse();
+        }
 
         @Test
         void should_returnTrue_when_authenticationIsJwtAuthenticationToken() {
@@ -57,6 +63,13 @@ class JWTHandlerTest {
 
     @Nested
     class GetDetail {
+
+        @Test
+        void should_returnEmptyOptional_when_authenticationIsNotInstanceOfJwtAuthenticationToken() {
+            val result = unitUnderTest.getDetail("key", new UsernamePasswordAuthenticationToken("principal", "credentials"));
+
+            Assertions.assertThat(result).isEmpty();
+        }
 
         @Test
         void should_returnValues_when_claimWithKeyExists() {

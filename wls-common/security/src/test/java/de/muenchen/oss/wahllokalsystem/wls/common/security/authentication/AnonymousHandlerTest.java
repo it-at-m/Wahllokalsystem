@@ -17,6 +17,11 @@ class AnonymousHandlerTest {
     class CanHandle {
 
         @Test
+        void should_returnFalse_when_authenticationIsNull() {
+            Assertions.assertThat(unitUnderTest.canHandle(null)).isFalse();
+        }
+
+        @Test
         void should_returnTrue_when_authenticationIsAnonymousAuthenticationToken() {
             Assertions.assertThat(unitUnderTest.canHandle(new AnonymousAuthenticationToken("key", "principal", List.of(new SimpleGrantedAuthority("role")))))
                     .isTrue();

@@ -1,44 +1,30 @@
-POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
-Content-Type: application/x-www-form-urlencoded
-
-password = test &
-grant_type = password &
-client_secret = top-secret &
-client_id = wls &
-username = wls_all
-
-> {%
-    client.global.set("auth_token", response.body.access_token);
-    client.global.set("token_type", response.body.token_type);
-%}
-
 ### get userinfo with auth_token
-GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
-Authorization: {{ token_type }} {{ auth_token }}
+GET {{ WLS_AUTH_SERVICE }}/user
+Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### GET Wahlvorstand wbz1
 GET {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende?wahlbezirkID=00000000-0000-0000-0000-000000000001
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### GET Wahlvorstand wbz2
 GET {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende?wahlbezirkID=00000000-0000-0000-0000-000000000002
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### GET Wahlvorstand wbz3
 GET {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende?wahlbezirkID=00000000-0000-0000-0000-000000000003
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### GET Wahlvorstand wbz4
 GET {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende?wahlbezirkID=00000000-0000-0000-0000-000000000004
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### GET Wahlvorstand not found
 GET {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende?wahlbezirkID=00000000-9999-0000-0000-000000000000
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### PUT Update Wahlvorstand wbz4
 PUT {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende/anwesenheit
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
@@ -70,7 +56,7 @@ Content-Type: application/json
 
 ### PUT Update - bezirkID fehlt
 PUT {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende/anwesenheit
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
@@ -101,7 +87,7 @@ Content-Type: application/json
 
 ### PUT Update - anwesenheitBeginn fehlt
 PUT {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende/anwesenheit
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
@@ -132,7 +118,7 @@ Content-Type: application/json
 
 ### PUT Update - Identifikator fehlt
 PUT {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende/anwesenheit
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {

@@ -1,47 +1,32 @@
-### Get token wls_all
-POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
-Content-Type: application/x-www-form-urlencoded
-
-password = test &
-grant_type = password &
-client_secret = top-secret &
-client_id = wls &
-username = wls_all
-
-> {%
-    client.global.set("auth_token", response.body.access_token);
-    client.global.set("token_type", response.body.token_type);
-%}
-
 ### get userinfo with auth_token
-GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
-Authorization: {{ token_type }} {{ auth_token }}
+GET {{ WLS_AUTH_SERVICE }}/user
+Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST lastSeen
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/lastSeen/wahlbezirkID01
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST lastSeen - parameter invalid, expected "Parameter unvollstaendig"
 < {%
     request.variables.set("wahlbezirkID", "   ");
 %}
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/lastSeen/{{wahlbezirkID}}
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST letzteAbmeldung
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/letzteAbmeldung/wahlbezirkID01
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST letzteAbmeldung - parameter invalid, expected "Parameter unvollstaendig"
 < {%
     request.variables.set("wahlbezirkID", "   ");
 %}
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/letzteAbmeldung/{{wahlbezirkID}}
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST schnellmeldungSendungsuhrzeit
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/schnellmeldungSendungsuhrzeit
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
@@ -54,7 +39,7 @@ Content-Type: application/json
 
 ### POST schnellmeldungSendungsuhrzeit - parameter invalid, expected "Parameter unvollstaendig"
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/schnellmeldungSendungsuhrzeit
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
@@ -67,7 +52,7 @@ Content-Type: application/json
 
 ### POST schnellmeldungDruckuhrzeit
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/schnellmeldungDruckuhrzeit
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
@@ -80,7 +65,7 @@ Content-Type: application/json
 
 ### POST schnellmeldungDruckuhrzeit - parameter invalid, expected "Parameter unvollstaendig"
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/schnellmeldungDruckuhrzeit
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
@@ -93,7 +78,7 @@ Content-Type: application/json
 
 ### POST niederschriftSendungsuhrzeit
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/niederschriftSendungsuhrzeit
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
@@ -106,7 +91,7 @@ Content-Type: application/json
 
 ### POST niederschriftSendungsuhrzeit - parameter invalid, expected "Parameter unvollstaendig"
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/niederschriftSendungsuhrzeit
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
@@ -119,7 +104,7 @@ Content-Type: application/json
 
 ### POST niederschriftDruckuhrzeit
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/niederschriftDruckuhrzeit
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
@@ -132,7 +117,7 @@ Content-Type: application/json
 
 ### POST niederschriftDruckuhrzeit - parameter invalid, expected "Parameter unvollstaendig"
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/niederschriftDruckuhrzeit
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {

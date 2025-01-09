@@ -72,5 +72,4 @@ class OAuth2TokenInterceptorTest {
             Assertions.assertThat(body).isEmpty();
         }
     }
-
 }

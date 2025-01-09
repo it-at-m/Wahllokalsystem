@@ -22,8 +22,8 @@ class JWTHandlerTest {
     class CanHandle {
 
         @Test
-        void should_returnFalse_when_authenticationIsNull() {
-            Assertions.assertThat(unitUnderTest.canHandle(null)).isFalse();
+        void should_throwIllegalArgumentException_when_authenticationIsNull() {
+            Assertions.assertThatThrownBy(() -> unitUnderTest.canHandle(null)).isInstanceOf(IllegalArgumentException.class);
         }
 
         @Test
@@ -94,6 +94,20 @@ class JWTHandlerTest {
             val result = unitUnderTest.getDetail(detailKey, new JwtAuthenticationToken(jwt));
 
             Assertions.assertThat(result).isEmpty();
+        }
+
+        @Test
+        void should_throwsIllegalArgumentException_when_keyIsNull() {
+            val detailValue = "detailValue";
+
+            val jwt = createJWT(Map.of("detailKey", detailValue));
+
+            Assertions.assertThatThrownBy(() -> unitUnderTest.getDetail(null, new JwtAuthenticationToken(jwt))).isInstanceOf(IllegalArgumentException.class);
+        }
+
+        @Test
+        void should_throwsIllegalArgumentException_when_authenticationIsNull() {
+            Assertions.assertThatThrownBy(() -> unitUnderTest.getDetail("key", null)).isInstanceOf(IllegalArgumentException.class);
         }
     }
 

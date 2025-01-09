@@ -17,8 +17,8 @@ class AnonymousHandlerTest {
     class CanHandle {
 
         @Test
-        void should_returnFalse_when_authenticationIsNull() {
-            Assertions.assertThat(unitUnderTest.canHandle(null)).isFalse();
+        void should_throwIllegalArgumentException_when_authenticationIsNull() {
+            Assertions.assertThatThrownBy(() -> unitUnderTest.canHandle(null)).isInstanceOf(IllegalArgumentException.class);
         }
 
         @Test
@@ -59,6 +59,18 @@ class AnonymousHandlerTest {
             val result = unitUnderTest.getDetail("key", authentication);
 
             Assertions.assertThat(result).isEmpty();
+        }
+
+        @Test
+        void should_throwIllegalArgumentException_when_authenticationIsNull() {
+            Assertions.assertThatThrownBy(() -> unitUnderTest.getDetail("key", null)).isInstanceOf(IllegalArgumentException.class);
+        }
+
+        @Test
+        void should_throwIllegalArgumentException_when_detailKeyIsNull() {
+            Assertions.assertThatThrownBy(
+                    () -> unitUnderTest.getDetail(null, new AnonymousAuthenticationToken("key", "principal", List.of(new SimpleGrantedAuthority("role")))))
+                    .isInstanceOf(IllegalArgumentException.class);
         }
     }
 

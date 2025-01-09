@@ -14,7 +14,9 @@
           clearable
           label="ID"
         ></v-text-field>
-        <v-btn @click="postBroadcastMessage(messageInput, ['wbz-1', 'wbz-2'])"
+        <v-btn
+          class="post-message-btn"
+          @click="postBroadcastMessage(messageInput, ['wbz-1', 'wbz-2'])"
           >post message with fetch utils
         </v-btn>
         <br />

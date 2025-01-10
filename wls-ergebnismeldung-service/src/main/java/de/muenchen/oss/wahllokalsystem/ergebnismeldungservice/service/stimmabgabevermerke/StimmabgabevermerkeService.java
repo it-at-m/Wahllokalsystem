@@ -42,6 +42,8 @@ public class StimmabgabevermerkeService {
 
         stimmabgabevermerkeValidator.validBezirkIDUndWaehlerverzeichnisnummerOrThrow(id,
                 exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG));
+        stimmabgabevermerkeValidator.validStimmabgabevermerkeOrThrow(stimmabgabevermerkeModel);
+
         try {
             stimmabgabevermerkeRepository.save(stimmabgabevermerkeModelMapper.toEntity(stimmabgabevermerkeModel));
         } catch (Exception e) {

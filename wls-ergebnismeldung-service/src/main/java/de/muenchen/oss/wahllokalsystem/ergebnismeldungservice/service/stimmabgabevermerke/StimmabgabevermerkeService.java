@@ -1,18 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.status.StatusRepository;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusModelMapper;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusValidator;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.sender.AbstractStatusMonitoringSender;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.models.StimmabgabevermerkeModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,12 +22,6 @@ public class StimmabgabevermerkeService {
     private final StimmabgabevermerkeValidator stimmabgabevermerkeValidator;
     private final ExceptionFactory exceptionFactory;
 
-    //
-//    private final StatusModelMapper statusModelMapper;
-
-//    private final ExceptionFactory exceptionFactory;
-//    private final List<AbstractStatusMonitoringSender> monitoringSender;
-
     @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmabgabevermerke')")
     public Optional<StimmabgabevermerkeModel> getStimmabgabevermerke(final BezirkIDUndWaehlerverzeichnisNummer id) {
         log.info("#getStimmabgabevermerke");
@@ -46,24 +31,17 @@ public class StimmabgabevermerkeService {
     }
 
     @PreAuthorize(
-        "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostStatus')"
+        "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostStimmabgabevermerke')"
                 + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)"
     )
-    public void setStatus(@P("param") final BezirkUndWahlID id, final StatusModel status) {
-//        log.info("#postStatus");
-//
-//        statusValidator.validBezirkUndWahlIdOrThrow(id,
-//                exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_STATUS_PARAMETER_UNVOLLSTAENDIG));
-//        statusValidator.validStatusOrThrow(status);
-//
-//        val lastStatus = statusRepository.findById(id).map(statusModelMapper::toModel);
-//        monitoringSender.forEach(sender -> sender.submitStatus(id, status, lastStatus.orElse(null)));
-//
-//        try {
-//            statusRepository.save(statusModelMapper.toEntity(status));
-//        } catch (Exception e) {
-//            log.error("#postStatus unsaveable:", e);
-//            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.STATUS_UNSAVEABLE);
-//        }
+    public void postStimmabgabevermerke(@P("param") final BezirkIDUndWaehlerverzeichnisNummer id, final StimmabgabevermerkeModel stimmabgabevermerkeModel) {
+        log.info("#postStimmabgabevermerke");
+        stimmabgabevermerkeValidator.validBezirkIDUndWaehlerverzeichnisnummerOrThrow(id, exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG));
+        try{
+            stimmabgabevermerkeRepository.save(stimmabgabevermerkeModelMapper.toEntity(stimmabgabevermerkeModel));
+        } catch(Exception e){
+            log.error("#postStimmabgabevermerke unsaveable:", e);
+            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.STIMMABGABEVERMERKE_UNSAVEABLE);
+        }
     }
 }

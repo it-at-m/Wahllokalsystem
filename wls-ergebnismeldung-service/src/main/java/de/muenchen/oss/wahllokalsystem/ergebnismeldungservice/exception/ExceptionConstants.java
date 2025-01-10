@@ -21,4 +21,7 @@ public class ExceptionConstants {
             "Bei der Kommunikation mit dem MonitoringService kam es zu einem Fehler.");
 
     public static final ExceptionDataWrapper GET_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("608", "getStimmabgabevermerke: Parameter unvollstaendig");
+    public static final ExceptionDataWrapper POST_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("609", "postStimmabgabevermerke: Parameter unvollstaendig");
+    public static final ExceptionDataWrapper STIMMABGABEVERMERKE_UNSAVEABLE = new ExceptionDataWrapper("620", "postStimmabgabevermerke: Die Stimmabgabevermerke konnten nicht gespeichtert werden.");
+
 }

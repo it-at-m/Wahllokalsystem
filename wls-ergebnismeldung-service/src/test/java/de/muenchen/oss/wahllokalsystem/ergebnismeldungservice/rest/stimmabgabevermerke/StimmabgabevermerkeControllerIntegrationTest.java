@@ -18,9 +18,10 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabeve
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.dto.StimmabgabevermerkeDTOMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeModelMapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
+import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,7 @@ public class StimmabgabevermerkeControllerIntegrationTest {
     @Autowired
     MockMvc mockMvc;
 
-    @BeforeEach
+    @AfterEach
     void setup() {
         stimmabgabevermerkeRepository.deleteAll();
     }
@@ -75,7 +76,7 @@ public class StimmabgabevermerkeControllerIntegrationTest {
             val wahldaten = createWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
             entityToFind.setBezirkIDUndWaehlerverzeichnisNummer(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer));
             entityToFind.setAnzahlBlaetter(anzahlBlaetter);
-            entityToFind.addWahldaten(wahldaten);
+            entityToFind.getWahldaten().add(wahldaten);
 
             stimmabgabevermerkeRepository.save(entityToFind);
 
@@ -89,6 +90,15 @@ public class StimmabgabevermerkeControllerIntegrationTest {
                     .isEqualTo(expectedResult);
         }
 
+    }
+
+    @Nested
+    class PostStimmabgabevermerke {
+
+    }
+
+    private String buildStimmabgabevermerkeURI(final String wahlbezirkID, final Long waehlerverzeichnisNummer) {
+        return "/businessActions/stimmabgabevermerke/" + wahlbezirkID + "/" + waehlerverzeichnisNummer;
     }
 
     private Wahldaten createWahldaten(final String wahlbezirkID, final String wahlID, final Long waehlerverzeichnisNummer) {
@@ -107,15 +117,11 @@ public class StimmabgabevermerkeControllerIntegrationTest {
 
         val vermerk1 = new Vermerk();
         vermerk1.setBlattnummer(1L);
-        vermerk1.addStimmzettel(stimmzettel1);
-        vermerk1.addStimmzettel(stimmzettel2);
-        vermerk1.addStimmzettel(stimmzettel3);
+        vermerk1.getStimmzetteln().addAll(List.of(stimmzettel1, stimmzettel2, stimmzettel3));
 
         val vermerk2 = new Vermerk();
         vermerk2.setBlattnummer(2L);
-        vermerk2.addStimmzettel(stimmzettel1);
-        vermerk2.addStimmzettel(stimmzettel2);
-        vermerk2.addStimmzettel(stimmzettel3);
+        vermerk2.getStimmzetteln().addAll(List.of(stimmzettel1, stimmzettel2, stimmzettel3));
 
         val wahlschein1 = new EingenommenerWahlscheine();
         wahlschein1.setAnzahl(1);
@@ -129,21 +135,9 @@ public class StimmabgabevermerkeControllerIntegrationTest {
 
         emptyWahldaten
                 .setBezirkUndWahlIDUndWaehlerverzeichnisnummer(new BezirkUndWahlIDUndWaehlerverzeichnisnummer(wahlbezirkID, wahlID, waehlerverzeichnisNummer));
-        emptyWahldaten.addVermerk(vermerk1);
-        emptyWahldaten.addVermerk(vermerk2);
-        emptyWahldaten.addEingenommenerWahlschein(wahlschein1);
-        emptyWahldaten.addEingenommenerWahlschein(wahlschein2);
-        emptyWahldaten.addEingenommenerWahlschein(wahlschein3);
+        emptyWahldaten.getVermerke().addAll(List.of(vermerk1, vermerk2));
+        emptyWahldaten.getEingenommenewahlscheine().addAll(List.of(wahlschein1, wahlschein2, wahlschein3));
 
         return emptyWahldaten;
-    }
-
-    @Nested
-    class PostStimmabgabevermerke {
-
-    }
-
-    private String buildStimmabgabevermerkeURI(final String wahlbezirkID, final Long waehlerverzeichnisNummer) {
-        return "/businessActions/stimmabgabevermerke/" + wahlbezirkID + "/" + waehlerverzeichnisNummer;
     }
 }

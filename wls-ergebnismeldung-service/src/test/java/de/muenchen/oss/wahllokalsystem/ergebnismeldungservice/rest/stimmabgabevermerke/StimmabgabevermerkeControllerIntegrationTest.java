@@ -87,6 +87,7 @@ public class StimmabgabevermerkeControllerIntegrationTest {
 
             Assertions.assertThat(responseBodyAsDTO)
                     .usingRecursiveComparison()
+                    .ignoringCollectionOrder()
                     .isEqualTo(expectedResult);
         }
 

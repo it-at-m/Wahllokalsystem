@@ -18,9 +18,6 @@ describe("Beispiele und Erklärungen", () => {
 
   // wird einmal vor allen tests ausgeführt
   beforeAll(() => {
-    // warum zweimal createPinia()? (oben und hier) test läuft durch, wenn hier auskommentiert
-    // Antwort daniel: Before each könnte wichtig sein damit er für jeden Test ne neue Instanz hat. Das kann anders wo zu Problemen führen
-    // todo: grund für doppelten aufruf klären
     createPinia();
     // definition, dass vuetify benutzt wird
     createVuetify();
@@ -51,7 +48,7 @@ describe("Beispiele und Erklärungen", () => {
       global: {
         plugins: [pinia, vuetify],
       },
-      props: { message: message }, // todo: unterschied zwischen props und propsData klären
+      props: { message: message },
     });
 
     expect(wrapper.html()).toContain(message);
@@ -71,16 +68,5 @@ describe("Beispiele und Erklärungen", () => {
     // --> Wert + Struktur werden auf allen Ebenen verglichen (also zusätzlich Vergleich der Inhalte):
     expect(x).toEqual(y); // pass
     //expect(1).toEqual("1");   // fail, weil der datentyp nicht gleich ist: "AssertionError: expected 1 to deeply equal '1'"
-  });
-
-  // hinweis, wie auf funktionen und variablen aus komponenten zugegriffen werden kann
-  it("auf funktionen und variablen aus komponenten zugreifen", () => {
-    // damit alle Funktionen und Variablen aus der Component hier gefunden werden, müssen sie dort in defineExpose() aufgeführt sein!
-    // Wenn das vergessen wurde ist hier im Test der Wert undefined.
-    // defineExpose({       <-- in Component.vue
-    //     variable1,
-    //     methode2
-    // });
-    // expect(globalWrapper.vm.variable1).toBe("Hello World");   // fail, wenn in "Component.vue" defineExpose({}); nicht definiert ist und variable1 nicht übergeben wird
   });
 });

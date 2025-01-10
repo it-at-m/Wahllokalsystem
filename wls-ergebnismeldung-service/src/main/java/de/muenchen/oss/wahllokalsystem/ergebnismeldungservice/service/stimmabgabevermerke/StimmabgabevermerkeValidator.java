@@ -19,8 +19,7 @@ public class StimmabgabevermerkeValidator {
             final FachlicheWlsException exceptionOnInvalid)
             throws FachlicheWlsException {
         if (bezirkIDUndWaehlerverzeichnisNummer == null || StringUtils.isBlank(bezirkIDUndWaehlerverzeichnisNummer.getWahlbezirkID())
-                || (null == bezirkIDUndWaehlerverzeichnisNummer.getWaehlerverzeichnisNummer())
-                || (bezirkIDUndWaehlerverzeichnisNummer.getWaehlerverzeichnisNummer() < 0)) {
+                || (null == bezirkIDUndWaehlerverzeichnisNummer.getWaehlerverzeichnisNummer())) {
             throw exceptionOnInvalid;
         }
     }

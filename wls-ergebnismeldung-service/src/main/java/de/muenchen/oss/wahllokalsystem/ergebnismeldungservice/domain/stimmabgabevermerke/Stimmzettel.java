@@ -26,5 +26,6 @@ public class Stimmzettel {
 
     @NotNull
     @Enumerated(EnumType.STRING)
+    @ToString.Include
     private Stimmzettelart stimmzettelart;
 }

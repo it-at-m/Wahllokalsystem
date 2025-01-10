@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -16,12 +17,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
+@ToString(onlyExplicitlyIncluded = true)
 public class EingenommenerWahlscheine {
 
     @NotNull
+    @ToString.Include
     private long anzahl;
 
     @NotNull
     @Enumerated(EnumType.STRING)
+    @ToString.Include
     private Stimmzettelart stimmzettelart;
 }

@@ -40,6 +40,7 @@ public class Wahldaten {
     @GeneratedValue(generator = "uuid")
     @UuidGenerator
     @JdbcTypeCode(VARCHAR)
+    @ToString.Include
     private UUID id;
 
     @Embedded
@@ -51,11 +52,13 @@ public class Wahldaten {
     @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "wahldatenID", referencedColumnName = "id")
     @NotNull
+    @ToString.Include
     private Set<Vermerk> vermerke = new LinkedHashSet<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "EingenommeneWahlscheine", joinColumns = @JoinColumn(name = "wahldatenID", referencedColumnName = "id"))
     @NotNull
     @Size(min = 1)
+    @ToString.Include
     private Set<EingenommenerWahlscheine> eingenommenewahlscheine = new LinkedHashSet<>();
 }

@@ -34,6 +34,7 @@ public class Vermerk {
     @GeneratedValue(generator = "uuid")
     @UuidGenerator
     @JdbcTypeCode(VARCHAR)
+    @ToString.Include
     private UUID id;
 
     @NotNull
@@ -43,5 +44,6 @@ public class Vermerk {
     @ElementCollection
     @CollectionTable(name = "Stimmzettel", joinColumns = @JoinColumn(name = "vermerkID", referencedColumnName = "id"))
     @NotNull
+    @ToString.Include
     private Set<Stimmzettel> stimmzetteln = new LinkedHashSet<>();
 }

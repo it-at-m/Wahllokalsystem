@@ -14,9 +14,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
-class JWTDetailExtractorTest {
+class JWTDetailRetrieverTest {
 
-    private final JWTDetailExtractor unitUnderTest = new JWTDetailExtractor();
+    private final JWTDetailRetriever unitUnderTest = new JWTDetailRetriever();
 
     @Nested
     class CanHandle {

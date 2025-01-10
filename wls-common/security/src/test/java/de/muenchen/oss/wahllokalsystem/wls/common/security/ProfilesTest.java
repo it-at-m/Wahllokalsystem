@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.security;
 
-import de.muenchen.oss.wahllokalsystem.wls.common.security.authentication.AnonymousDetailExtractor;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.authentication.AuthenticationDetailExtractor;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.authentication.JWTDetailExtractor;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.authentication.AnonymousDetailRetriever;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.authentication.AuthDetailRetriever;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.authentication.JWTDetailRetriever;
 import java.util.Collection;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -43,7 +43,7 @@ class ProfilesTest {
         private OAuth2TokenInterceptor oAuth2TokenInterceptor;
 
         @Autowired
-        private Collection<AuthenticationDetailExtractor> authenticationDetailExtractors;
+        private Collection<AuthDetailRetriever> authDetailRetrievers;
 
         @Test
         void should_haveImplementationWithChecksInContext_when_noAdditionalProfilesAreActive() {
@@ -52,8 +52,8 @@ class ProfilesTest {
 
         @Test
         void should_findOnlyJwtHandlerAsAuthenticationHandler_when_contextIsInitalized() {
-            Assertions.assertThat(authenticationDetailExtractors).hasSize(1);
-            Assertions.assertThat(authenticationDetailExtractors).allMatch(handler -> handler instanceof JWTDetailExtractor);
+            Assertions.assertThat(authDetailRetrievers).hasSize(1);
+            Assertions.assertThat(authDetailRetrievers).allMatch(handler -> handler instanceof JWTDetailRetriever);
         }
     }
 
@@ -65,13 +65,13 @@ class ProfilesTest {
     class NoSecurityProfile {
 
         @Autowired
-        private Collection<AuthenticationDetailExtractor> authenticationDetailExtractors;
+        private Collection<AuthDetailRetriever> authDetailRetrievers;
 
         @Test
         void should_findJwtAndAnonymousHandler_when_contextIsInitialized() {
-            Assertions.assertThat(authenticationDetailExtractors).hasSize(2);
+            Assertions.assertThat(authDetailRetrievers).hasSize(2);
             Assertions.assertThat(
-                    authenticationDetailExtractors).allMatch(handler -> handler instanceof JWTDetailExtractor || handler instanceof AnonymousDetailExtractor);
+                    authDetailRetrievers).allMatch(handler -> handler instanceof JWTDetailRetriever || handler instanceof AnonymousDetailRetriever);
         }
 
     }

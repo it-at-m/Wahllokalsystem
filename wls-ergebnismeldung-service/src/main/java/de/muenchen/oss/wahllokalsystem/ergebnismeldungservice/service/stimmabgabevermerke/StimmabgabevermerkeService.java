@@ -25,10 +25,12 @@ public class StimmabgabevermerkeService {
     @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmabgabevermerke')")
     public Optional<StimmabgabevermerkeModel> getStimmabgabevermerke(final BezirkIDUndWaehlerverzeichnisNummer id) {
         log.info("#getStimmabgabevermerke");
+
         stimmabgabevermerkeValidator.validBezirkIDUndWaehlerverzeichnisnummerOrThrow(id,
                 exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG));
-        val savFromRepository = stimmabgabevermerkeRepository.findById(id);
-        return savFromRepository.map(stimmabgabevermerkeModelMapper::toModel);
+        val stimmabgabevermerke = stimmabgabevermerkeRepository.findById(id);
+
+        return stimmabgabevermerke.map(stimmabgabevermerkeModelMapper::toModel);
     }
 
     @PreAuthorize(
@@ -37,6 +39,7 @@ public class StimmabgabevermerkeService {
     )
     public void postStimmabgabevermerke(@P("param") final BezirkIDUndWaehlerverzeichnisNummer id, final StimmabgabevermerkeModel stimmabgabevermerkeModel) {
         log.info("#postStimmabgabevermerke");
+
         stimmabgabevermerkeValidator.validBezirkIDUndWaehlerverzeichnisnummerOrThrow(id,
                 exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG));
         try {

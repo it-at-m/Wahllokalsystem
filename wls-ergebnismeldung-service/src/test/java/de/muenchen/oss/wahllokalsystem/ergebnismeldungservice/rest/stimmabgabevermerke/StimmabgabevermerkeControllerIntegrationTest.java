@@ -19,6 +19,8 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabeve
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeModelMapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -27,6 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -94,6 +97,34 @@ public class StimmabgabevermerkeControllerIntegrationTest {
     @Nested
     class PostStimmabgabevermerke {
 
+        @Test
+        void should_persistData_when_dataIsSent() throws Exception {
+            val wahlbezirkID = "wahlbezirkID";
+            val waehlerverzeichnisNummer = 1L;
+            val anzahlBlaetter = 4711L;
+
+            val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID,
+                    waehlerverzeichnisNummer);
+            val expectedEntity = new Stimmabgabevermerke(id, anzahlBlaetter,
+                    Set.of(createWahldaten(wahlbezirkID, "wahlID1", waehlerverzeichnisNummer),
+                            createWahldaten(wahlbezirkID, "wahlID2", waehlerverzeichnisNummer)));
+
+            val requestBody = stimmabgabevermerkeDTOMapper.toStimmabgabevermerkeDTO(stimmabgabevermerkeModelMapper.toModel(expectedEntity));
+            val request = MockMvcRequestBuilders.post(buildStimmabgabevermerkeURI(wahlbezirkID, waehlerverzeichnisNummer))
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                            objectMapper.writeValueAsString(requestBody));
+
+            mockMvc.perform(request).andExpect(status().isOk());
+
+            val persistedEntity = stimmabgabevermerkeRepository.findById(id).get();
+
+            Assertions.assertThat(persistedEntity)
+                    .usingRecursiveComparison()
+                    .ignoringCollectionOrder()
+                    // expected object is not persistent -> has no UUIDs set
+                    .ignoringFieldsOfTypes(UUID.class)
+                    .isEqualTo(expectedEntity);
+        }
     }
 
     private String buildStimmabgabevermerkeURI(final String wahlbezirkID, final Long waehlerverzeichnisNummer) {

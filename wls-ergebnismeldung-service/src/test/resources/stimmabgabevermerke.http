@@ -1,0 +1,52 @@
+### get userinfo with auth_token
+GET {{ WLS_AUTH_SERVICE }}/user
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### POST stimmabgabevermerke
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/wahlbezirkID1/1
+Content-Type: application/json
+
+{
+  "wahlbezirkID": "wahlbezirkID1",
+  "waehlerverzeichnisNummer": 1,
+  "anzahlBlaetter": 2,
+  "wahldaten": [
+    {
+      "waehlerverzeichnisNummer": 1,
+      "wahlbezirkID": "wahlbezirkID1",
+      "wahlID": "wahlID1",
+      "eingenommenewahlscheine": [
+        {
+          "anzahl": 2,
+          "stimmzettelart": "KLEIN"
+        },
+        {
+          "anzahl": 4,
+          "stimmzettelart": "BEIDE"
+        },
+        {
+          "anzahl": 12,
+          "stimmzettelart": "GROSS"
+        }
+      ],
+      "vermerke": [
+        {
+          "blattnummer": 1,
+          "stimmzetteln": [
+            {
+              "anzahl": 1,
+              "stimmzettelart": "GROSS"
+            },
+            {
+              "anzahl": 1,
+              "stimmzettelart": "KLEIN"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+### Get stimmabgabevermerke wahlbezirkID1 wvznr1
+GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/wahlbezirkID1/1

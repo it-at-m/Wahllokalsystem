@@ -46,7 +46,7 @@ public class StimmabgabevermerkeService {
 
         try {
             stimmabgabevermerkeRepository.save(stimmabgabevermerkeModelMapper.toEntity(stimmabgabevermerkeModel));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.error("#postStimmabgabevermerke unsaveable:", e);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.STIMMABGABEVERMERKE_UNSAVEABLE);
         }

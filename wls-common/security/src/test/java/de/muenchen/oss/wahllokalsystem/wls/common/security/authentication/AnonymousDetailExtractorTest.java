@@ -69,7 +69,7 @@ class AnonymousDetailExtractorTest {
         @Test
         void should_throwIllegalArgumentException_when_detailKeyIsNull() {
             Assertions.assertThatThrownBy(
-                            () -> unitUnderTest.getDetail(null, new AnonymousAuthenticationToken("key", "principal", List.of(new SimpleGrantedAuthority("role")))))
+                    () -> unitUnderTest.getDetail(null, new AnonymousAuthenticationToken("key", "principal", List.of(new SimpleGrantedAuthority("role")))))
                     .isInstanceOf(IllegalArgumentException.class);
         }
     }

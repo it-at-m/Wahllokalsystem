@@ -8,6 +8,7 @@
         <h4>Get or Post a Broadcast message:</h4>
         <br />
         <v-text-field
+          data-test="messageInput"
           v-model="messageInput"
           class="ml-auto mr-auto"
           width="350"
@@ -15,21 +16,30 @@
           label="ID"
         ></v-text-field>
         <v-btn
-          class="post-message-btn"
+          data-test="postMessageBtn"
           @click="postBroadcastMessage(messageInput, ['wbz-1', 'wbz-2'])"
           >post message with fetch utils
         </v-btn>
         <br />
         <br />
         <v-btn
-          class="get-message-btn"
+          data-test="getMessageBtn"
           @click="getBroadcastMessage('wbz-1')"
           >get message with fetch utils
         </v-btn>
         <br />
         <br />
-        <pre v-if="messageToShow"> {{ messageToShow }} </pre>
-        <p v-if="errorToShow">{{ errorToShow }}</p>
+        <pre
+          data-test="messageToShow"
+          v-if="messageToShow"
+          >{{ messageToShow }}
+        </pre>
+        <p
+          data-test="errorToShow"
+          v-if="errorToShow"
+        >
+          {{ errorToShow }}
+        </p>
       </v-col>
     </v-responsive>
   </v-container>

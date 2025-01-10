@@ -9,19 +9,16 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class Stimmzettel {
+public class EingenommenerWahlscheine {
 
     @NotNull
-    @ToString.Include
     private long anzahl;
 
     @NotNull

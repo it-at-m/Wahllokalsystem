@@ -1,13 +1,13 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke;
 
 import static java.sql.Types.VARCHAR;
-import jakarta.persistence.CascadeType;
+
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -36,22 +36,12 @@ public class Vermerk {
     @JdbcTypeCode(VARCHAR)
     private UUID id;
 
-    @ManyToOne
-    @NotNull
-    @JoinColumn(name = "wahldatenID")
-    @EqualsAndHashCode.Exclude
-    private Wahldaten wahldaten;
-
     @NotNull
     @ToString.Include
     private long blattnummer;
 
-    @OneToMany(mappedBy = "vermerk", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @ElementCollection
+    @CollectionTable(name = "Stimmzettel", joinColumns = @JoinColumn(name = "vermerkID", referencedColumnName = "id"))
     @NotNull
     private Set<Stimmzettel> stimmzetteln = new LinkedHashSet<>();
-
-    public void addStimmzettel(final Stimmzettel stimmzettel) {
-        stimmzettel.setVermerk(this);
-        stimmzetteln.add(stimmzettel);
-    }
 }

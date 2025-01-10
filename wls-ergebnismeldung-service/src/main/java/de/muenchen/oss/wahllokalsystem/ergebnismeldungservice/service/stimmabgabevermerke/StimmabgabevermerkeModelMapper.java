@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.EingenommenerWahlschein;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.EingenommenerWahlscheine;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Vermerk;
@@ -14,22 +14,15 @@ public interface StimmabgabevermerkeModelMapper {
 
     StimmabgabevermerkeModel toModel(Stimmabgabevermerke entity);
 
-    @Mapping(target = "id", ignore = true)
     Stimmabgabevermerke toEntity(StimmabgabevermerkeModel model);
 
-    @Mapping(target = "stimmabgabevermerke", ignore = true)
     @Mapping(target = "id", ignore = true)
     Wahldaten toEntity(WahldatenModel wahldatenModel);
 
-    @Mapping(target = "wahldaten", ignore = true)
     @Mapping(target = "id", ignore = true)
     Vermerk toEntity(VermerkModel vermerkModel);
 
-    @Mapping(target = "wahldaten", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    EingenommenerWahlschein toEntity(EingenommenerWahlscheinModel eingenommenerWahlscheinModel);
+    EingenommenerWahlscheine toEntity(EingenommenerWahlscheinModel eingenommenerWahlscheinModel);
 
-    @Mapping(target = "vermerk", ignore = true)
-    @Mapping(target = "id", ignore = true)
     Stimmzettel toEntity(StimmzettelModel stimmzettelModel);
 }

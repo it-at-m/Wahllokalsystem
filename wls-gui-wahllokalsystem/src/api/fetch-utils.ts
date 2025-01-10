@@ -1,5 +1,8 @@
-import { ApiError } from "@/api/ApiError";
-import { STATUS_INDICATORS } from "@/constants";
+import { createDefaultWlsError } from "@/api/WLSError";
+import {
+  generateWlsExceptionFromJson,
+  isWLSException,
+} from "@/api/WLSException";
 
 /**
  * Returns a default GET-Config for fetch
@@ -51,27 +54,6 @@ export function putConfig(body: any): RequestInit {
 }
 
 /**
- * Returns a default PATCH-Config for fetch
- * If available, the version of the entity to be updated is included in this as an "If-Match" header.
- * @param body Optional body to be transferred
- */
-// eslint-disable-next-line
-export function patchConfig(body: any): RequestInit {
-  const headers = getHeaders();
-  if (body.version !== undefined) {
-    headers.append("If-Match", body.version);
-  }
-  return {
-    method: "PATCH",
-    body: body ? JSON.stringify(body) : undefined,
-    headers,
-    mode: "cors",
-    credentials: "same-origin",
-    redirect: "manual",
-  };
-}
-
-/**
  * Covers the default handling of a response. This includes:
  *
  * - Error with missing authorizations --> HTTP 403
@@ -87,34 +69,80 @@ export function defaultResponseHandler(
 ): void {
   if (!response.ok) {
     if (response.status === 403) {
-      throw new ApiError({
-        level: STATUS_INDICATORS.ERROR,
+      throw createDefaultWlsError({
         message:
           "Sie haben nicht die nötigen Rechte um diese Aktion durchzuführen.",
+        code: response.status.toString(),
       });
     } else if (response.type === "opaqueredirect") {
       location.reload();
     }
-    throw new ApiError({
-      level: STATUS_INDICATORS.WARNING,
+    throw createDefaultWlsError({
       message: errorMessage,
+      code: response.status.toString(),
     });
   }
 }
 
 /**
  * Default catch handler for all service requests.
- * Currently only throws an ApiError
+ * Currently only throws an WLSError
  * @param error The error object from fetch command
- * @param errorMessage The error message to be included in the ApiError object.
+ * @param errorMessage The error message to be included in the WLSError object.
  */
 export function defaultCatchHandler(
   error: Error,
   errorMessage = "Es ist ein unbekannter Fehler aufgetreten."
 ): PromiseLike<never> {
-  throw new ApiError({
-    level: STATUS_INDICATORS.WARNING,
+  throw createDefaultWlsError({
     message: errorMessage,
+  });
+}
+
+export function wlsResponseHandler(response: Response): Promise<Response> {
+  if (!response.ok || response.status === 204) {
+    return Promise.reject(response);
+  } else {
+    return Promise.resolve(response);
+  }
+}
+
+export function wlsCatchHandler(response: Response): PromiseLike<never> {
+  if (response.status === 204) {
+    throw createDefaultWlsError({
+      message: "Es konnten keine Daten gefunden werden",
+      code: response.status.toString(),
+    });
+  }
+  if (response.status === 400) {
+    return rejectWithWlsError(response, "Ungültige Anfrage");
+  } else {
+    return rejectWithWlsError(
+      response,
+      "Ein unbekannter Fehler ist aufgetreten"
+    );
+  }
+}
+
+function rejectWithWlsError(response: Response, nonWlsErrorMessage: string) {
+  return response.text().then((raw) => {
+    try {
+      const content = JSON.parse(raw);
+      const wlsError = isWLSException(content)
+        ? generateWlsExceptionFromJson(content)
+        : createDefaultWlsError({
+            message: nonWlsErrorMessage,
+            code: response.status.toString(),
+          });
+      return Promise.reject(wlsError);
+    } catch {
+      return Promise.reject(
+        createDefaultWlsError({
+          message: nonWlsErrorMessage,
+          code: response.status.toString(),
+        })
+      );
+    }
   });
 }
 

@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.AbstractController;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -8,7 +9,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/businessActions/status")
 @RequiredArgsConstructor
-public class StatusController {
+public class StatusController extends AbstractController {
 
     private final StatusService statusService;
     private final StatusDTOMapper statusDTOMapper;
@@ -74,9 +74,5 @@ public class StatusController {
     public void setStatus(@PathVariable("wahlID") final String wahlID, @PathVariable("wahlbezirkID") final String wahlbezirkID,
             @RequestBody final StatusDTO statusDTO) {
         statusService.setStatus(new BezirkUndWahlID(wahlID, wahlbezirkID), statusDTOMapper.toModel(statusDTO));
-    }
-
-    private <T> ResponseEntity<T> okWithBodyOrNoContent(final Optional<T> body) {
-        return body.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
     }
 }

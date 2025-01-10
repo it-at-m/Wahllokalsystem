@@ -1,0 +1,7 @@
+### get userinfo with auth_token
+GET {{ WLS_AUTH_SERVICE }}/user
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### GET AsyncPRogress
+GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/asyncProgress
+Authorization: Bearer {{$auth.token("auth-service")}}

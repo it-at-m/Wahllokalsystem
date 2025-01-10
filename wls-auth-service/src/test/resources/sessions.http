@@ -1,0 +1,20 @@
+### get userinfo with auth_token
+GET {{ SSO_URL }}/user
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### Create Session via Get on login Page
+GET {{ WLS_AUTH_SERVICE }}/login
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### Read all Sessions
+GET {{ WLS_AUTH_SERVICE }}/oauthsessions/
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+> {%
+    client.global.set("sessionid", response.body.sessions[0].sessionId);
+%}
+
+#### Kill the Session with sessionID - uses sessionid from last get request
+POST  {{ WLS_AUTH_SERVICE }}/oauthsessions/{{sessionid}}/invalidate
+Authorization: Bearer {{$auth.token("auth-service")}}
+

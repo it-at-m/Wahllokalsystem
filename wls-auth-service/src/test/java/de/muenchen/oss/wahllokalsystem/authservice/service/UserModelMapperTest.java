@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.authservice.service;
 
 import de.muenchen.oss.wahllokalsystem.authservice.domain.Authority;
+import de.muenchen.oss.wahllokalsystem.authservice.domain.Permission;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.User;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.Wahlbezirksart;
 import java.time.LocalDate;
@@ -16,6 +17,55 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 class UserModelMapperTest {
 
     UserModelMapper unitUnderTest = Mappers.getMapper(UserModelMapper.class);
+
+    @Nested
+    class ToModel {
+
+        @Test
+        void should_returnNull_when_nullIsGiven() {
+            Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
+        }
+
+        @Test
+        void should_returnModel_when_entityIsGiven() {
+            val authorities = Set.of(
+                    new Authority("authority1", Set.of(new Permission("permission11"), new Permission("permission12")), Collections.emptySet()),
+                    new Authority("authority2", Set.of(new Permission("permission21"), new Permission("permission22")), Collections.emptySet()));
+            val entityToMap = new User("username", "password", "email", true, true, "wahltagID", LocalDate.now(), "wahlbezirkID", "wahlbezirkNummer",
+                    Wahlbezirksart.BWB, "pin", authorities, "wbdid_wahlnummer");
+            entityToMap.getAuthorities().forEach(authority -> authority.setUsers(Set.of(entityToMap)));
+
+            val result = unitUnderTest.toModel(entityToMap);
+
+            val expectedAuthorities = Set.of("permission11", "permission12", "permission21", "permission22");
+            val expectedResult = new UserModel(entityToMap.getUsername(), entityToMap.getEmail(), entityToMap.isUserEnabled(), entityToMap.getWahltagID(),
+                    entityToMap.getWahltag(),
+                    entityToMap.getWahlbezirkID(), entityToMap.getWahlbezirkNummer(), WahlbezirksartModel.BWB, entityToMap.getPin(), expectedAuthorities,
+                    entityToMap.getWbid_wahlnummer());
+
+            Assertions.assertThat(result).isEqualTo(expectedResult);
+        }
+    }
+
+    @Nested
+    class PermissionsOfAuthoritiesToAuthorities {
+
+        @Test
+        void should_returnNull_when_nullIsGiven() {
+            Assertions.assertThat(unitUnderTest.permissionsOfAuthoritiesToAuthorities(null)).isNull();
+        }
+
+        @Test
+        void should_returnSetWithPermissions_when_authoritiesWithPermissionsAreGiven() {
+            val authorities = Set.of(
+                    new Authority("authority1", Set.of(new Permission("permission11"), new Permission("permission12")), Collections.emptySet()),
+                    new Authority("authority2", Set.of(new Permission("permission21"), new Permission("permission22")), Collections.emptySet()));
+
+            val result = unitUnderTest.permissionsOfAuthoritiesToAuthorities(authorities);
+
+            Assertions.assertThat(result).containsExactlyInAnyOrder("permission11", "permission12", "permission21", "permission22");
+        }
+    }
 
     @Nested
     class ToUser {

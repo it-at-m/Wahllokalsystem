@@ -1,0 +1,24 @@
+### get userinfo with auth_token
+GET {{ WLS_AUTH_SERVICE }}/user
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### GET Begruendung (needs profile 'dummy.clients')
+GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/wbz-1/1/LTW_BZW_A
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### Initialisiere Begruendung (needs profile 'dummy.clients', stores Begruendung entity in local DB retrieved from DummyClient )
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/wbz-1/1/LTW_BZW_A
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "bezirkUndWahlIDStapelart": {
+    "wahlbezirkID": "wahlbezirkID",
+    "wahlID": "wahlID",
+    "stapelart": "LTW_BZW_A"
+  },
+  "grund1": "grund1",
+  "grund2": "grund2",
+  "nachzaehlung": true,
+  "unstimmigkeiten": true
+}

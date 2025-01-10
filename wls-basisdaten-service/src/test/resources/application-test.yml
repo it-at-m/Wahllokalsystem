@@ -12,10 +12,6 @@ spring:
   jpa:
     database: H2
     hibernate:
-      # always drop and create the db should be the best
-      # configuration for local (development) mode. this
-      # is also the default, that spring offers by convention.
-      # but here explicite:
       ddl-auto: validate
       naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     # Logging for database operation

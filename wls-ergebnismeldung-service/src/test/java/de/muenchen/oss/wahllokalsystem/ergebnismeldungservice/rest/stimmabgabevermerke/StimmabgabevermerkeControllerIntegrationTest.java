@@ -55,7 +55,9 @@ public class StimmabgabevermerkeControllerIntegrationTest {
     MockMvc mockMvc;
 
     @BeforeEach
-    void setup() { stimmabgabevermerkeRepository.deleteAll(); }
+    void setup() {
+        stimmabgabevermerkeRepository.deleteAll();
+    }
 
     @Nested
     class GetStimmabgabevermerke {
@@ -67,7 +69,6 @@ public class StimmabgabevermerkeControllerIntegrationTest {
             val waehlerverzeichnisNummer = 1L;
             val anzahlBlaetter = 4711L;
             val request = MockMvcRequestBuilders.get(buildStimmabgabevermerkeURI(wahlbezirkID, waehlerverzeichnisNummer));
-
 
             val entityToFind = new Stimmabgabevermerke();
             val wahldaten = createWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
@@ -89,7 +90,7 @@ public class StimmabgabevermerkeControllerIntegrationTest {
 
     }
 
-    private Wahldaten createWahldaten(final String wahlbezirkID, final String wahlID, final Long waehlerverzeichnisNummer){
+    private Wahldaten createWahldaten(final String wahlbezirkID, final String wahlID, final Long waehlerverzeichnisNummer) {
         val emptyWahldaten = new Wahldaten();
         val stimmzettel1 = new Stimmzettel();
         stimmzettel1.setAnzahl(20);
@@ -109,7 +110,7 @@ public class StimmabgabevermerkeControllerIntegrationTest {
         vermerk1.addStimmzettel(stimmzettel2);
         vermerk1.addStimmzettel(stimmzettel3);
 
-        val vermerk2= new Vermerk();
+        val vermerk2 = new Vermerk();
         vermerk2.setBlattnummer(2L);
         vermerk2.addStimmzettel(stimmzettel1);
         vermerk2.addStimmzettel(stimmzettel2);
@@ -125,9 +126,13 @@ public class StimmabgabevermerkeControllerIntegrationTest {
         wahlschein3.setAnzahl(3);
         wahlschein3.setStimmzettelart(Stimmzettelart.BEIDE);
 
-        emptyWahldaten.setBezirkUndWahlIDUndWaehlerverzeichnisnummer(new BezirkUndWahlIDUndWaehlerverzeichnisnummer(wahlbezirkID, wahlID, waehlerverzeichnisNummer));
-        emptyWahldaten.addVermerk(vermerk1); emptyWahldaten.addVermerk(vermerk2);
-        emptyWahldaten.addEingenommenerWahlschein(wahlschein1); emptyWahldaten.addEingenommenerWahlschein(wahlschein2); emptyWahldaten.addEingenommenerWahlschein(wahlschein3);
+        emptyWahldaten
+                .setBezirkUndWahlIDUndWaehlerverzeichnisnummer(new BezirkUndWahlIDUndWaehlerverzeichnisnummer(wahlbezirkID, wahlID, waehlerverzeichnisNummer));
+        emptyWahldaten.addVermerk(vermerk1);
+        emptyWahldaten.addVermerk(vermerk2);
+        emptyWahldaten.addEingenommenerWahlschein(wahlschein1);
+        emptyWahldaten.addEingenommenerWahlschein(wahlschein2);
+        emptyWahldaten.addEingenommenerWahlschein(wahlschein3);
 
         return emptyWahldaten;
     }

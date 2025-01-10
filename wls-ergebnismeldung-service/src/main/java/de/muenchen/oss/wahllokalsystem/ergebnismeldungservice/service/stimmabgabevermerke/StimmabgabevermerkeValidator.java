@@ -15,9 +15,12 @@ public class StimmabgabevermerkeValidator {
 
     private final ExceptionFactory exceptionFactory;
 
-    public void validBezirkIDUndWaehlerverzeichnisnummerOrThrow(final BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer, final FachlicheWlsException exceptionOnInvalid)
+    public void validBezirkIDUndWaehlerverzeichnisnummerOrThrow(final BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer,
+            final FachlicheWlsException exceptionOnInvalid)
             throws FachlicheWlsException {
-        if (bezirkIDUndWaehlerverzeichnisNummer == null || StringUtils.isBlank(bezirkIDUndWaehlerverzeichnisNummer.getWahlbezirkID()) || (null == bezirkIDUndWaehlerverzeichnisNummer.getWaehlerverzeichnisNummer()) || (bezirkIDUndWaehlerverzeichnisNummer.getWaehlerverzeichnisNummer() < 0)) {
+        if (bezirkIDUndWaehlerverzeichnisNummer == null || StringUtils.isBlank(bezirkIDUndWaehlerverzeichnisNummer.getWahlbezirkID())
+                || (null == bezirkIDUndWaehlerverzeichnisNummer.getWaehlerverzeichnisNummer())
+                || (bezirkIDUndWaehlerverzeichnisNummer.getWaehlerverzeichnisNummer() < 0)) {
             throw exceptionOnInvalid;
         }
     }

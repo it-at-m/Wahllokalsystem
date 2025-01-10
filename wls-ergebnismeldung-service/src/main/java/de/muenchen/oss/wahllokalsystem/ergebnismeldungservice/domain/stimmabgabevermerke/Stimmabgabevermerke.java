@@ -8,7 +8,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -39,9 +41,10 @@ public class Stimmabgabevermerke {
     @NotNull
     private long anzahlBlaetter;
 
-    @OneToMany(mappedBy = "wahldaten", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "stimmabgabevermerke", orphanRemoval = true, cascade = CascadeType.PERSIST)
     @NotNull
-    private Set<Wahldaten> wahldaten = new HashSet<>();
+    @Size(min = 1)
+    private Set<Wahldaten> wahldaten = new LinkedHashSet<>();
 
     public void addWahldaten(final Wahldaten wahlDaten) {
         wahlDaten.setStimmabgabevermerke(this);

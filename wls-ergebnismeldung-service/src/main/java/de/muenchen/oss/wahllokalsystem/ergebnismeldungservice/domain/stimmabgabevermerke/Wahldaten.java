@@ -51,7 +51,7 @@ public class Wahldaten {
     @EqualsAndHashCode.Exclude
     private Stimmabgabevermerke stimmabgabevermerke;
 
-    @OneToMany(mappedBy = "vermerke", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "wahldaten", orphanRemoval = true, cascade = CascadeType.PERSIST)
     @NotNull
     private Set<Vermerk> vermerke = new LinkedHashSet<>();
 
@@ -60,7 +60,7 @@ public class Wahldaten {
         vermerke.add(vermerk);
     }
 
-    @OneToMany(mappedBy = "eingenommenewahlscheine", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "wahldaten", orphanRemoval = true, cascade = CascadeType.PERSIST)
     @NotNull
     @Size(min = 1)
     private Set<EingenommenerWahlschein> eingenommenewahlscheine = new LinkedHashSet<>();

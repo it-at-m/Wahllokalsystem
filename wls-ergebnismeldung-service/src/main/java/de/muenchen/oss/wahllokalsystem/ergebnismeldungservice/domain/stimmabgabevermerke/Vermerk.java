@@ -46,7 +46,7 @@ public class Vermerk {
     @ToString.Include
     private long blattnummer;
 
-    @OneToMany(mappedBy = "stimmzetteln", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "vermerk", orphanRemoval = true, cascade = CascadeType.PERSIST)
     @NotNull
     private Set<Stimmzettel> stimmzetteln = new LinkedHashSet<>();
 

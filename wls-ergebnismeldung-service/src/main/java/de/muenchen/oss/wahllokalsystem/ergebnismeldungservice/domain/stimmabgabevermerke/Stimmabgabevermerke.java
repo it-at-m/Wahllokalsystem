@@ -32,10 +32,10 @@ public class Stimmabgabevermerke {
 
     @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumns(
-            {
-                    @JoinColumn(name = "wahlbezirkID", referencedColumnName = "wahlbezirkID"),
-                    @JoinColumn(name = "waehlerverzeichnisNummer", referencedColumnName = "waehlerverzeichnisNummer")
-            }
+        {
+                @JoinColumn(name = "wahlbezirkID", referencedColumnName = "wahlbezirkID"),
+                @JoinColumn(name = "waehlerverzeichnisNummer", referencedColumnName = "waehlerverzeichnisNummer")
+        }
     )
     @NotNull
     @EqualsAndHashCode.Exclude

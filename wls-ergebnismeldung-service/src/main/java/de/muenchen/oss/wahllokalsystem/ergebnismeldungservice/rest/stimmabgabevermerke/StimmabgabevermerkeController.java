@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.AbstractController;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.dto.StimmabgabevermerkeDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.dto.StimmabgabevermerkeDTOMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeService;
@@ -10,7 +11,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +24,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/businessActions/stimmabgabevermerke")
 @RequiredArgsConstructor
-public class StimmabgabevermerkeController {
+public class StimmabgabevermerkeController extends AbstractController {
 
     private final StimmabgabevermerkeService stimmabgabevermerkeService;
     private final StimmabgabevermerkeDTOMapper stimmabgabevermerkeDTOMapper;
-
-
 
     @Operation(description = "Lesen der Stimmabgabevermerke eines Wahlbezirkes für die Wahl(en) eines Wählerverzeichnisses.")
     @ApiResponses(
@@ -56,7 +54,8 @@ public class StimmabgabevermerkeController {
     public ResponseEntity<StimmabgabevermerkeDTO> getStimmabgabevermerke(
             @PathVariable("wahlbezirkID") String wahlbezirkID,
             @PathVariable("waehlerverzeichnisNummer") Long waehlerverzeichnisNummer) {
-        val stimmabgabevermerke = stimmabgabevermerkeService.getStimmabgabevermerke(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer));
+        val stimmabgabevermerke = stimmabgabevermerkeService.getStimmabgabevermerke(
+                new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer));
         return okWithBodyOrNoContent(stimmabgabevermerke.map(stimmabgabevermerkeDTOMapper::toStimmabgabevermerkeDTO));
     }
 
@@ -76,18 +75,13 @@ public class StimmabgabevermerkeController {
                     )
             }
     )
-    @PostMapping("{wahlID}/{wahlbezirkID}")
+    @PostMapping("{wahlbezirkID}/{waehlerverzeichnisNummer}")
     public void postStimmabgabevermerke(
             @PathVariable("wahlbezirkID") final String wahlbezirkID,
             @PathVariable("waehlerverzeichnisNummer") final long waehlerverzeichnisNummer,
             @RequestBody final StimmabgabevermerkeDTO stimmabgabevermerkeDTO) {
         stimmabgabevermerkeService.postStimmabgabevermerke(
                 new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
-                stimmabgabevermerkeDTOMapper.toStimmabgabevermerkeModel(stimmabgabevermerkeDTO)
-        );
-    }
-
-    private <T> ResponseEntity<T> okWithBodyOrNoContent(final Optional<T> body) {
-        return body.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
+                stimmabgabevermerkeDTOMapper.toStimmabgabevermerkeModel(stimmabgabevermerkeDTO));
     }
 }

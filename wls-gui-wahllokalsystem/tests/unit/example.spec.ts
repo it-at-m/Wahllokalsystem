@@ -63,8 +63,8 @@ describe("Beispiele und Erklärungen", () => {
     // --> Wert + Typ müssen übereinstimmen:
     expect(1).toBe(1); // pass
     // .toBe vergleicht zwei Referenzobjekte und nicht deren Inhalte, daher:
-    let x = { a: 1 };
-    let y = { a: 1 };
+    const x = { a: 1 };
+    const y = { a: 1 };
     //expect(x).toBe(y);      // fail, weil es unterschiedliche Objekte sind: "AssertionError: expected { a: 1 } to be { a: 1 } // Object.is equality"
 
     // .toEqual führt eine tiefe Gleichheitsprüfung durch

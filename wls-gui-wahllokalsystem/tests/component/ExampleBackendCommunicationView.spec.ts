@@ -24,6 +24,7 @@ describe("ExampleBackendCommunicationView.vue", () => {
   let vuetify: ReturnType<typeof createVuetify>;
   // damit der wrapper nicht in jedem test erneut definiert werden muss, sondern nur einmal in beforeEach,
   // muss er hier global angelegt werden, damit die tests ihn auch erkennen
+  // eslint-disable-next-line
   let globalWrapper: any;
 
   beforeAll(() => {

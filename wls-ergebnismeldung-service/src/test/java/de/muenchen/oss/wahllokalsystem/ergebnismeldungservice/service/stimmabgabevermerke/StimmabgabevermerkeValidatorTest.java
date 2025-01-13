@@ -1,8 +1,10 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
+import java.util.Collections;
 import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -15,6 +17,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -74,6 +77,21 @@ class StimmabgabevermerkeValidatorTest {
     @Nested
     class ValidStimmabgabevermerkeOrThrow {
 
+        @Test
+        void should_notThrowAnyException_when_parameterIsValid() {
+            val stimmabgabevermerke = new StimmabgabevermerkeModel(new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 0L), 0L, Collections.emptySet());
+
+            underTest.validStimmabgabevermerkeOrThrow(stimmabgabevermerke);
+        }
+
+        @Test
+        void should_throwFachlicheWlsException_when_parameterIsNull() {
+            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_STATUS_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedWlsException);
+
+            Assertions.assertThatThrownBy(() -> underTest.validStimmabgabevermerkeOrThrow(null)).isSameAs(mockedWlsException);
+        }
     }
 
 }

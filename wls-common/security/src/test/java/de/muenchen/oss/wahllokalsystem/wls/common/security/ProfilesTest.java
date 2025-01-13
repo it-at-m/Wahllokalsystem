@@ -1,5 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.security;
 
+import de.muenchen.oss.wahllokalsystem.wls.common.security.authentication.AnonymousDetailRetriever;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.authentication.AuthDetailRetriever;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.authentication.JWTDetailRetriever;
+import java.util.Collection;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -38,10 +42,38 @@ class ProfilesTest {
         @Autowired
         private OAuth2TokenInterceptor oAuth2TokenInterceptor;
 
+        @Autowired
+        private Collection<AuthDetailRetriever> authDetailRetrievers;
+
         @Test
         void should_haveImplementationWithChecksInContext_when_noAdditionalProfilesAreActive() {
             Assertions.assertThat(permissionEvaluator).isExactlyInstanceOf(BezirkIDPermissionEvaluatorImpl.class);
         }
+
+        @Test
+        void should_findOnlyJwtHandlerAsAuthenticationHandler_when_contextIsInitalized() {
+            Assertions.assertThat(authDetailRetrievers).hasSize(1);
+            Assertions.assertThat(authDetailRetrievers).allMatch(handler -> handler instanceof JWTDetailRetriever);
+        }
+    }
+
+    @SpringBootTest(
+            properties = { "app.crypto.key = 770A8A65DA156D24EE2A093277530142", "service.info.oid=My app name" }
+    )
+    @ActiveProfiles(Profiles.NO_SECURITY)
+    @Nested
+    class NoSecurityProfile {
+
+        @Autowired
+        private Collection<AuthDetailRetriever> authDetailRetrievers;
+
+        @Test
+        void should_findJwtAndAnonymousHandler_when_contextIsInitialized() {
+            Assertions.assertThat(authDetailRetrievers).hasSize(2);
+            Assertions.assertThat(
+                    authDetailRetrievers).allMatch(handler -> handler instanceof JWTDetailRetriever || handler instanceof AnonymousDetailRetriever);
+        }
+
     }
 
     @SpringBootApplication(

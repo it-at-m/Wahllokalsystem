@@ -113,13 +113,13 @@ public class StimmabgabevermerkeDTOMapperTest {
             val result = unitUnderTest.toStimmabgabevermerkeDTO(modelToMap);
 
             Assertions.assertThat(result.wahldaten().stream().allMatch(
-                            (wahldatenModel) -> wahldatenModel.vermerke().stream().allMatch(
-                                    (vermerk) -> vermerk.stimmzetteln().stream().allMatch(
-                                            (sz) -> sz.stimmzettelart().name().equals(stimmzettelart.name())))))
+                    (wahldatenModel) -> wahldatenModel.vermerke().stream().allMatch(
+                            (vermerk) -> vermerk.stimmzetteln().stream().allMatch(
+                                    (sz) -> sz.stimmzettelart().name().equals(stimmzettelart.name())))))
                     .isTrue();
             Assertions.assertThat(result.wahldaten().stream().allMatch(
-                            (wahldatenModel) -> wahldatenModel.eingenommenewahlscheine().stream().allMatch(
-                                    (wahlschein) -> wahlschein.stimmzettelart().name().equals(stimmzettelart.name()))))
+                    (wahldatenModel) -> wahldatenModel.eingenommenewahlscheine().stream().allMatch(
+                            (wahlschein) -> wahlschein.stimmzettelart().name().equals(stimmzettelart.name()))))
                     .isTrue();
         }
     }
@@ -213,13 +213,13 @@ public class StimmabgabevermerkeDTOMapperTest {
             val result = unitUnderTest.toStimmabgabevermerkeModel(dtoToMap);
 
             Assertions.assertThat(result.wahldaten().stream().allMatch(
-                            (wahldatenDTO) -> wahldatenDTO.vermerke().stream().allMatch(
-                                    (vermerk) -> vermerk.stimmzetteln().stream().allMatch(
-                                            (sz) -> sz.stimmzettelart().name().equals(stimmzettelart.name())))))
+                    (wahldatenDTO) -> wahldatenDTO.vermerke().stream().allMatch(
+                            (vermerk) -> vermerk.stimmzetteln().stream().allMatch(
+                                    (sz) -> sz.stimmzettelart().name().equals(stimmzettelart.name())))))
                     .isTrue();
             Assertions.assertThat(result.wahldaten().stream().allMatch(
-                            (wahldatenDTO) -> wahldatenDTO.eingenommenewahlscheine().stream().allMatch(
-                                    (wahlschein) -> wahlschein.stimmzettelart().name().equals(stimmzettelart.name()))))
+                    (wahldatenDTO) -> wahldatenDTO.eingenommenewahlscheine().stream().allMatch(
+                            (wahlschein) -> wahlschein.stimmzettelart().name().equals(stimmzettelart.name()))))
                     .isTrue();
         }
     }

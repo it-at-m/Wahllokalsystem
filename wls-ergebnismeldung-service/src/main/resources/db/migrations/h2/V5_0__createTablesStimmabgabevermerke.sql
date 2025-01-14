@@ -9,10 +9,10 @@ CREATE TABLE Stimmabgabevermerke
 
 CREATE TABLE Wahldaten
 (
-    id                       VARCHAR(36),
+    id                       VARCHAR(36)   NOT NULL,
     wahlID                   VARCHAR(1024) NOT NULL,
     waehlerverzeichnisNummer BIGINT,
-    wahlbezirkID             VARCHAR(1024),
+    wahlbezirkID             VARCHAR(1024) NOT NULL,
 
     CONSTRAINT fk_Wd
         FOREIGN KEY (waehlerverzeichnisNummer, wahlbezirkID)
@@ -24,7 +24,7 @@ CREATE TABLE Wahldaten
 
 CREATE TABLE EingenommeneWahlscheine
 (
-    wahldatenID    VARCHAR(36),
+    wahldatenID    VARCHAR(36)  NOT NULL,
     anzahl         BIGINT       NOT NULL,
     stimmzettelart VARCHAR(255) NOT NULL,
 
@@ -36,9 +36,9 @@ CREATE TABLE EingenommeneWahlscheine
 
 CREATE TABLE Vermerk
 (
-    id          VARCHAR(36),
-    wahldatenID VARCHAR(36),
-    blattnummer BIGINT NOT NULL,
+    id          VARCHAR(36) NOT NULL,
+    wahldatenID VARCHAR(36) NOT NULL,
+    blattnummer BIGINT      NOT NULL,
 
     PRIMARY KEY (id),
 
@@ -50,7 +50,7 @@ CREATE TABLE Vermerk
 
 CREATE TABLE Stimmzettel
 (
-    vermerkID      VARCHAR(36),
+    vermerkID      VARCHAR(36)  NOT NULL,
     anzahl         BIGINT       NOT NULL,
     stimmzettelart VARCHAR(255) NOT NULL,
 

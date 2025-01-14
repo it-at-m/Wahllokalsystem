@@ -4,6 +4,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST stimmabgabevermerke
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/wahlbezirkID1/1
+Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
@@ -50,3 +51,4 @@ Content-Type: application/json
 
 ### Get stimmabgabevermerke wahlbezirkID1 wvznr1
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/wahlbezirkID1/1
+Authorization: Bearer {{$auth.token("auth-service")}}

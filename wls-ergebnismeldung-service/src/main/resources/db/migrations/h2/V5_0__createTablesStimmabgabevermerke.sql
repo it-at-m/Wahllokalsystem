@@ -1,7 +1,7 @@
 CREATE TABLE Stimmabgabevermerke
 (
     waehlerverzeichnisNummer BIGINT        NOT NULL,
-    wahlbezirkid             VARCHAR(1024) NOT NULL,
+    wahlbezirkID             VARCHAR(1024) NOT NULL,
     anzahlblaetter           BIGINT        NOT NULL,
 
     PRIMARY KEY (waehlerverzeichnisNummer, wahlbezirkid)
@@ -10,13 +10,13 @@ CREATE TABLE Stimmabgabevermerke
 CREATE TABLE Wahldaten
 (
     id                       VARCHAR(36),
-    wahlid                   VARCHAR(1024) NOT NULL,
+    wahlID                   VARCHAR(1024) NOT NULL,
     waehlerverzeichnisNummer BIGINT,
-    wahlbezirkid             VARCHAR(1024),
+    wahlbezirkID             VARCHAR(1024),
 
     CONSTRAINT fk_Wd
-        FOREIGN KEY (waehlerverzeichnisNummer, wahlbezirkid)
-            REFERENCES Stimmabgabevermerke (waehlerverzeichnisNummer, wahlbezirkid)
+        FOREIGN KEY (waehlerverzeichnisNummer, wahlbezirkID)
+            REFERENCES Stimmabgabevermerke (waehlerverzeichnisNummer, wahlbezirkID)
             ON DELETE CASCADE,
 
     PRIMARY KEY (id)

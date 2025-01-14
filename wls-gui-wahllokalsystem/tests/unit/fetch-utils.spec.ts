@@ -2,23 +2,13 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { wlsCatchHandler, wlsResponseHandler } from "@/api/fetch-utils";
 
-const { mockCreateDefaultWlsError } = vi.hoisted(() => ({
-  mockCreateDefaultWlsError: vi.fn(),
-}));
-
-vi.mock("@/api/WLSError", () => ({
-  createDefaultWlsError: mockCreateDefaultWlsError,
-}));
-
-/*const mockCreateDefaultWlsError = vi.fn();
-// hier wird vi.doMock eingesetzt, um das Hoisting-Problem zu umgehen.
+const mockCreateDefaultWlsError = vi.fn();
+// hier wird vi.doMock eingesetzt, um das Hoisting-Problem zu umgehen, dass vi.mock vor allen imports ausgeführt wird.
 // nur mit vi.mock() würde es die Fehlermeldung "Error: [vitest] There was an error when mocking a module. If you are using "vi.mock" factory, make sure there are no top level variables inside, since this call is hoisted to top of the file." geben
 // vi.doMock wird erst nach den Imports aufgerufen
-
 vi.doMock("@/api/WLSError", () => ({
   createDefaultWlsError: mockCreateDefaultWlsError,
-  rejectWithWlsError: vi.fn(),
-}));*/
+}));
 
 describe("WLS Fetch Utils", () => {
   afterEach(() => {

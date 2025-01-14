@@ -19,6 +19,8 @@ import ExampleBackendCommunicationView from "@/views/ExampleBackendCommunication
 // Mock für die Composable-Funktionen
 const mockGetMessage = vi.fn();
 const mockPostMessage = vi.fn();
+// vi.mock ist "hoisted" --> wird immer vor allen imports ausgeführt
+// ideal für die meisten mocks, da sie im gesamten testbereich verfügbar sind und global definiert werden können.
 vi.mock(
   "@/composables/wlsClients/broadcastService/useBroadcastService",
   () => ({
@@ -57,7 +59,8 @@ describe("ExampleBackendCommunicationView.vue", () => {
 
   describe("GetBroadcastMessage", () => {
     it("should_executeGetMessageFunction_when_buttonClicked", async () => {
-      // mocked den rückgabewert der composable methode
+      // definiert den rückgabewert der composable methode
+      // mockResolvedValueOnce wird speziell bei Promises und asynchronen FUnktionen eingesetzt
       mockGetMessage.mockResolvedValueOnce({
         message: "Sample message",
         error: null,

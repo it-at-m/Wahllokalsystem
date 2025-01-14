@@ -46,9 +46,7 @@ describe("WLS Fetch Utils", () => {
       const errorMessage = "Es konnten keine Daten gefunden werden";
 
       // definiert das verhalten der methode
-      mockCreateDefaultWlsError.mockResolvedValueOnce(() => {
-        new Error(errorMessage);
-      });
+      mockCreateDefaultWlsError.mockResolvedValueOnce(new Error(errorMessage));
 
       // expect(wlsCatchHandler()).toThrow ohne Arrow-Funktion wirft den fehler: "Error: Es konnten keine Daten gefunden werden",
       // weil die Funktion tatsächlich ausgeführt wird. Mit der Kapselung in die Arrow-Funktion kann der Test vorher erkennen, dass
@@ -62,9 +60,7 @@ describe("WLS Fetch Utils", () => {
       });
       const errorMessage = "Ungültige Anfrage";
 
-      mockCreateDefaultWlsError.mockResolvedValueOnce(() => {
-        new Error(errorMessage);
-      });
+      mockCreateDefaultWlsError.mockResolvedValueOnce(new Error(errorMessage));
 
       await expect(() => wlsCatchHandler(mockedResponse)).rejects.toThrow(
         errorMessage
@@ -84,9 +80,9 @@ describe("WLS Fetch Utils", () => {
       async ({ response }) => {
         const errorMessage = "Ein unbekannter Fehler ist aufgetreten";
 
-        mockCreateDefaultWlsError.mockResolvedValueOnce(() => {
-          new Error(errorMessage);
-        });
+        mockCreateDefaultWlsError.mockResolvedValueOnce(
+          new Error(errorMessage)
+        );
 
         await expect(() => wlsCatchHandler(response)).rejects.toThrow(
           errorMessage

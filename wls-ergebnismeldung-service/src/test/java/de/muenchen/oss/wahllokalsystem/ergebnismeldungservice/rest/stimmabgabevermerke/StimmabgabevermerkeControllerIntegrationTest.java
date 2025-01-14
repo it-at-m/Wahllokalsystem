@@ -91,6 +91,16 @@ public class StimmabgabevermerkeControllerIntegrationTest {
                     .ignoringCollectionOrder()
                     .isEqualTo(expectedResult);
         }
+
+        @Test
+        void should_returnBadRequest_when_requestIsInvalid() throws Exception {
+            val wahlbezirkID = "  ";
+            val waehlerverzeichnisNummer = 1L;
+
+            val request = MockMvcRequestBuilders.get(buildStimmabgabevermerkeURI(wahlbezirkID, waehlerverzeichnisNummer));
+
+            mockMvc.perform(request).andExpect(status().isBadRequest());
+        }
     }
 
     @Nested
@@ -123,6 +133,15 @@ public class StimmabgabevermerkeControllerIntegrationTest {
                     // expected object is not persistent -> has no UUIDs set
                     .ignoringFieldsOfTypes(UUID.class)
                     .isEqualTo(expectedEntity);
+        }
+
+        @Test
+        void should_returnBadRequest_when_requestIsInvalid() throws Exception {
+            val request = MockMvcRequestBuilders.post(buildStimmabgabevermerkeURI(" ", 0L));
+
+            mockMvc.perform(request).andExpect(status().isBadRequest());
+
+            Assertions.assertThat(stimmabgabevermerkeRepository.count()).isEqualTo(0);
         }
     }
 

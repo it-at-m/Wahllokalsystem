@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.EingenommenerWahlscheine;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.EingenommenerWahlschein;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmzettel;
@@ -152,13 +152,13 @@ public class StimmabgabevermerkeControllerIntegrationTest {
         vermerk2.setBlattnummer(2L);
         vermerk2.getStimmzetteln().addAll(List.of(stimmzettel1, stimmzettel2, stimmzettel3));
 
-        val wahlschein1 = new EingenommenerWahlscheine();
+        val wahlschein1 = new EingenommenerWahlschein();
         wahlschein1.setAnzahl(1);
         wahlschein1.setStimmzettelart(Stimmzettelart.KLEIN);
-        val wahlschein2 = new EingenommenerWahlscheine();
+        val wahlschein2 = new EingenommenerWahlschein();
         wahlschein2.setAnzahl(2);
         wahlschein2.setStimmzettelart(Stimmzettelart.GROSS);
-        val wahlschein3 = new EingenommenerWahlscheine();
+        val wahlschein3 = new EingenommenerWahlschein();
         wahlschein3.setAnzahl(3);
         wahlschein3.setStimmzettelart(Stimmzettelart.BEIDE);
 

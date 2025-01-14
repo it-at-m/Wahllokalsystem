@@ -18,7 +18,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Embeddable
 @ToString(onlyExplicitlyIncluded = true)
-public class EingenommenerWahlscheine {
+public class EingenommenerWahlschein {
 
     @NotNull
     @ToString.Include

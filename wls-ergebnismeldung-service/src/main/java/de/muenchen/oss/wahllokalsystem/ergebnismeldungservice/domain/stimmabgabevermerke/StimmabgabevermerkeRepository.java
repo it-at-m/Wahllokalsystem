@@ -23,11 +23,11 @@ public interface StimmabgabevermerkeRepository extends CrudRepository<Stimmabgab
 
     @Override
     @CachePut(value = CACHE, key = "#p0.bezirkIDUndWaehlerverzeichnisNummer")
-    @PreAuthorize("hasAuthority('Ergebnismeldung_READ_Stimmabgabevermerke')")
+    @PreAuthorize("hasAuthority('Ergebnismeldung_WRITE_Stimmabgabevermerke')")
     <S extends Stimmabgabevermerke> S save(S stimmabgabevermerke);
 
     @Override
-    @PreAuthorize("hasAuthority('Ergebnismeldung_READ_Stimmabgabevermerke')")
+    @PreAuthorize("hasAuthority('Ergebnismeldung_WRITE_Stimmabgabevermerke')")
     <S extends Stimmabgabevermerke> Iterable<S> saveAll(Iterable<S> entities);
 
     @Override

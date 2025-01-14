@@ -28,7 +28,7 @@ class StimmabgabevermerkeModelMapperTest {
 
         @Test
         void should_returnNull_when_nullIsGiven() {
-            Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
+            Assertions.assertThat(unitUnderTest.toModel((Stimmabgabevermerke) null)).isNull();
         }
 
         @Test
@@ -62,14 +62,14 @@ class StimmabgabevermerkeModelMapperTest {
             val result = unitUnderTest.toModel(entityToMap);
 
             val expectedWahldaten = Set.of(
-                    new WahldatenModel(new BezirkUndWahlIDUndWaehlerverzeichnisnummer("wbz1", "wahl1", 1L),
+                    new WahldatenModel("wbz1", "wahl1", 1L,
                             Set.of(new VermerkModel(1, Set.of(
                                     new StimmzettelModel(111L, StimmzettelartModel.KLEIN), new StimmzettelModel(112L, StimmzettelartModel.GROSS))),
                                     new VermerkModel(2, Set.of(
                                             new StimmzettelModel(121L, StimmzettelartModel.KLEIN), new StimmzettelModel(122L, StimmzettelartModel.GROSS)))),
                             Set.of(new EingenommenerWahlscheinModel(11, StimmzettelartModel.KLEIN),
                                     new EingenommenerWahlscheinModel(12, StimmzettelartModel.GROSS))),
-                    new WahldatenModel(new BezirkUndWahlIDUndWaehlerverzeichnisnummer("wbz1", "wahl2", 1L),
+                    new WahldatenModel("wbz1", "wahl2", 1L,
                             Set.of(new VermerkModel(1, Set.of(
                                     new StimmzettelModel(211L, StimmzettelartModel.KLEIN), new StimmzettelModel(212L, StimmzettelartModel.GROSS))),
                                     new VermerkModel(2, Set.of(
@@ -115,14 +115,14 @@ class StimmabgabevermerkeModelMapperTest {
                 val anzahlBlaetter = 12L;
 
                 val givenWahldaten = Set.of(
-                        new WahldatenModel(new BezirkUndWahlIDUndWaehlerverzeichnisnummer("wbz1", "wahl1", 1L),
+                        new WahldatenModel("wbz1", "wahl1", 1L,
                                 Set.of(new VermerkModel(1, Set.of(
                                         new StimmzettelModel(111L, StimmzettelartModel.KLEIN), new StimmzettelModel(112L, StimmzettelartModel.GROSS))),
                                         new VermerkModel(2, Set.of(
                                                 new StimmzettelModel(121L, StimmzettelartModel.KLEIN), new StimmzettelModel(122L, StimmzettelartModel.GROSS)))),
                                 Set.of(new EingenommenerWahlscheinModel(11, StimmzettelartModel.KLEIN),
                                         new EingenommenerWahlscheinModel(12, StimmzettelartModel.GROSS))),
-                        new WahldatenModel(new BezirkUndWahlIDUndWaehlerverzeichnisnummer("wbz1", "wahl2", 1L),
+                        new WahldatenModel("wbz1", "wahl2", 1L,
                                 Set.of(new VermerkModel(1, Set.of(
                                         new StimmzettelModel(211L, StimmzettelartModel.KLEIN), new StimmzettelModel(212L, StimmzettelartModel.GROSS))),
                                         new VermerkModel(2, Set.of(

@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.eq;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
@@ -151,7 +150,7 @@ public class StimmabgabevermerkeServiceSecurityTest {
             val eingenommeneWahlscheine = Set.of(new EingenommenerWahlscheinModel(0L, StimmzettelartModel.BEIDE));
 
             return new StimmabgabevermerkeModel(id, 0L, Set.of(
-                    new WahldatenModel(new BezirkUndWahlIDUndWaehlerverzeichnisnummer(id.getWahlbezirkID(), "wahlID", id.getWaehlerverzeichnisNummer()),
+                    new WahldatenModel(id.getWahlbezirkID(), "wahlID", id.getWaehlerverzeichnisNummer(),
                             Collections.emptySet(), eingenommeneWahlscheine)));
         }
     }

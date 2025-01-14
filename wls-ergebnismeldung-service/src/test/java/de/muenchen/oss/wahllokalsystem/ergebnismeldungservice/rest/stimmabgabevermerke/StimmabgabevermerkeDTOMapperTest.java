@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.dto.EingenommenerWahlscheinDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.dto.StimmabgabevermerkeDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.dto.StimmabgabevermerkeDTOMapper;
@@ -48,7 +47,7 @@ public class StimmabgabevermerkeDTOMapperTest {
                     anzahlBlaetter,
                     Set.of(
                             new WahldatenModel(
-                                    new BezirkUndWahlIDUndWaehlerverzeichnisnummer(wahlbezirkID, wahlID, waehlerverzeichnisNummer),
+                                    wahlbezirkID, wahlID, waehlerverzeichnisNummer,
                                     Set.of(
                                             new VermerkModel(2, Set.of(new StimmzettelModel(20, StimmzettelartModel.KLEIN))),
                                             new VermerkModel(2, Set.of(new StimmzettelModel(21, StimmzettelartModel.GROSS))),
@@ -105,7 +104,7 @@ public class StimmabgabevermerkeDTOMapperTest {
                     anzahlBlaetter,
                     Set.of(
                             new WahldatenModel(
-                                    new BezirkUndWahlIDUndWaehlerverzeichnisnummer(wahlbezirkID, wahlID, waehlerverzeichnisNummer),
+                                    wahlbezirkID, wahlID, waehlerverzeichnisNummer,
                                     Set.of(
                                             new VermerkModel(2, Set.of(new StimmzettelModel(20, stimmzettelart)))),
                                     Set.of(
@@ -172,7 +171,7 @@ public class StimmabgabevermerkeDTOMapperTest {
                     anzahlBlaetter,
                     Set.of(
                             new WahldatenModel(
-                                    new BezirkUndWahlIDUndWaehlerverzeichnisnummer(wahlbezirkID, wahlID, waehlerverzeichnisNummer),
+                                    wahlbezirkID, wahlID, waehlerverzeichnisNummer,
                                     Set.of(
                                             new VermerkModel(2, Set.of(new StimmzettelModel(20, StimmzettelartModel.KLEIN))),
                                             new VermerkModel(2, Set.of(new StimmzettelModel(21, StimmzettelartModel.GROSS))),

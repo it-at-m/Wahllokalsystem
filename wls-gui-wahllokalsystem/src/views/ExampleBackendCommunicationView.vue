@@ -8,8 +8,8 @@
         <h4>Get or Post a Broadcast message:</h4>
         <br />
         <v-text-field
-          data-test="messageInput"
           v-model="messageInput"
+          data-test="messageInput"
           class="ml-auto mr-auto"
           width="350"
           clearable
@@ -30,13 +30,13 @@
         <br />
         <br />
         <pre
-          data-test="messageToShow"
           v-if="messageToShow"
+          data-test="messageToShow"
           >{{ messageToShow }}
         </pre>
         <p
-          data-test="errorToShow"
           v-if="errorToShow"
+          data-test="errorToShow"
         >
           {{ errorToShow }}
         </p>

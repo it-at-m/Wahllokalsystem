@@ -50,7 +50,7 @@ describe("WLS Fetch Utils", () => {
         new Error(errorMessage);
       });
 
-      expect(mockCreateDefaultWlsError).toHaveBeenCalledOnce;
+      expect(mockCreateDefaultWlsError).toHaveBeenCalledOnce();
       // expect(wlsCatchHandler()).toThrow ohne Arrow-Funktion wirft den fehler: "Error: Es konnten keine Daten gefunden werden",
       // weil die Funktion tatsächlich ausgeführt wird. Mit der Kapselung in die Arrow-Funktion kann der Test vorher erkennen, dass
       // ein Fehler geworfen wird. Das expect-Statement führt dann die Funktion aus und überprüft, ob die erwartete Exception auftritt.
@@ -67,7 +67,7 @@ describe("WLS Fetch Utils", () => {
         new Error(errorMessage);
       });
 
-      expect(mockCreateDefaultWlsError).toHaveBeenCalledOnce;
+      expect(mockCreateDefaultWlsError).toHaveBeenCalledOnce();
       await expect(() => wlsCatchHandler(mockedResponse)).rejects.toThrow(
         errorMessage
       );
@@ -90,7 +90,7 @@ describe("WLS Fetch Utils", () => {
           new Error(errorMessage);
         });
 
-        expect(mockCreateDefaultWlsError).toHaveBeenCalledOnce;
+        expect(mockCreateDefaultWlsError).toHaveBeenCalledOnce();
         await expect(() => wlsCatchHandler(response)).rejects.toThrow(
           errorMessage
         );

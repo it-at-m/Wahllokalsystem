@@ -205,7 +205,7 @@ class SecurityConfigurationTest {
 
         @WithMockUser
         @Test
-        void should_returnNoContent_when_callingSetAuthenticated() throws Exception {
+        void should_returnOk_when_callingSetAuthenticated() throws Exception {
             val request = MockMvcRequestBuilders.post("/businessActions/stimmabgabevermerke/wbzID/1").with(csrf()).contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsBytes(new StimmabgabevermerkeDTO("wahlbezirkID", 0L, 1,
                             Set.of(new WahldatenDTO("wahlbezirkID", "wahlID", 0L, Collections.emptySet(), Collections.emptySet())))));

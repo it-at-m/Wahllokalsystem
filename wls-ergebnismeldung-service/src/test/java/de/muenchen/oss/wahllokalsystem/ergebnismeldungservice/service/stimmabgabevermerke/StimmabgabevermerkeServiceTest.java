@@ -86,7 +86,6 @@ class StimmabgabevermerkeServiceTest {
 
             Mockito.verify(stimmabgabevermerkeValidator)
                     .validBezirkIDUndWaehlerverzeichnisnummerOrThrow(eq(id), eq(mockedFachlicheWlsExceptionForIdValidation));
-
         }
     }
 
@@ -123,7 +122,6 @@ class StimmabgabevermerkeServiceTest {
             unitUnderTest.postStimmabgabevermerke(id, stimmabgabevermerke);
 
             Mockito.verify(stimmabgabevermerkeRepository).save(mockedMappedModelAsEntity);
-
         }
 
         @Test
@@ -144,5 +142,4 @@ class StimmabgabevermerkeServiceTest {
             Assertions.assertThatThrownBy(() -> unitUnderTest.postStimmabgabevermerke(id, stimmabgabevermerke)).isSameAs(mockedThrowWlsException);
         }
     }
-
 }

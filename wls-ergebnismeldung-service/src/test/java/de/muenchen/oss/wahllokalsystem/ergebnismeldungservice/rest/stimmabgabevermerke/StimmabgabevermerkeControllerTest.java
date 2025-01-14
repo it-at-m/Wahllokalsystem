@@ -1,10 +1,11 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke;
 
 import static org.mockito.ArgumentMatchers.eq;
+
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.dto.StimmabgabevermerkeDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.dto.StimmabgabevermerkeDTOMapper;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import java.util.Optional;
 import lombok.val;
@@ -68,7 +69,6 @@ public class StimmabgabevermerkeControllerTest {
             Assertions.assertThat(result.getBody()).isNull();
             Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         }
-
     }
 
     @Nested

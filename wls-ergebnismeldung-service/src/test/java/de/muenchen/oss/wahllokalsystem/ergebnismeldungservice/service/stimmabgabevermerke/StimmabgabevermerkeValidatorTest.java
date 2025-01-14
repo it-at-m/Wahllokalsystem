@@ -38,7 +38,6 @@ class StimmabgabevermerkeValidatorTest {
             val givenWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             underTest.validBezirkIDUndWaehlerverzeichnisnummerOrThrow(id, givenWlsException);
-
         }
 
         @Test
@@ -92,5 +91,4 @@ class StimmabgabevermerkeValidatorTest {
             Assertions.assertThatThrownBy(() -> underTest.validStimmabgabevermerkeOrThrow(null)).isSameAs(mockedWlsException);
         }
     }
-
 }

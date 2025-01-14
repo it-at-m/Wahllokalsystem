@@ -91,7 +91,6 @@ public class StimmabgabevermerkeControllerIntegrationTest {
                     .ignoringCollectionOrder()
                     .isEqualTo(expectedResult);
         }
-
     }
 
     @Nested

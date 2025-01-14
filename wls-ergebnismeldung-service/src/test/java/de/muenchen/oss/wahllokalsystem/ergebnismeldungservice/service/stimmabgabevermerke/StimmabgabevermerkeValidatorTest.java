@@ -69,8 +69,7 @@ class StimmabgabevermerkeValidatorTest {
         public static Stream<Arguments> argumentsToCheckBlankWahlbezirkID() {
             return Stream.of(Arguments.of(null, "is null"),
                     Arguments.of("", "is empty string"),
-                    Arguments.of("   ", "is blank string")
-            );
+                    Arguments.of("   ", "is blank string"));
         }
     }
 

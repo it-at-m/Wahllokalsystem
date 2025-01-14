@@ -17,6 +17,8 @@ public class Authorities {
     public static final String SERVICE_SET_BEGRUENDUNG = "Ergebnismeldung_BUSINESSACTION_PostBegruendung";
     public static final String SERVICE_GET_STIMMZETTELUMSCHLAEGE = "Ergebnismeldung_BUSINESSACTION_GetStimmzettelumschlaege";
     public static final String SERVICE_SET_STIMMZETTELUMSCHLAEGE = "Ergebnismeldung_BUSINESSACTION_PostStimmzettelumschlaege";
+    public static final String SERVICE_GET_STIMMABGABEVERMERKE = "Ergebnismeldung_BUSINESSACTION_GetStimmabgabevermerke";
+    public static final String SERVICE_SET_STIMMABGABEVERMERKE = "Ergebnismeldung_BUSINESSACTION_PostStimmabgabevermerke";
 
     public static final String REPOSITORY_READ_AWERTE = "Ergebnismeldung_READ_AWerte";
     public static final String REPOSITORY_DELETE_AWERTE = "Ergebnismeldung_DELETE_AWerte";
@@ -37,6 +39,10 @@ public class Authorities {
     public static final String REPOSITORY_READ_STIMMZETTELUMSCHLAEGE = "Ergebnismeldung_READ_Stimmzettelumschlaege";
     public static final String REPOSITORY_DELETE_STIMMZETTELUMSCHLAEGE = "Ergebnismeldung_DELETE_Stimmzettelumschlaege";
     public static final String REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE = "Ergebnismeldung_WRITE_Stimmzettelumschlaege";
+
+    public static final String REPOSITORY_DELETE_STIMMABGABEVERMEKE = "Ergebnismeldung_DELETE_Stimmabgabevermerke";
+    public static final String REPOSITORY_READ_STIMMABGABEVERMEKE = "Ergebnismeldung_READ_Stimmabgabevermerke";
+    public static final String REPOSITORY_WRITE_STIMMABGABEVERMEKE = "Ergebnismeldung_WRITE_Stimmabgabevermerke";
 
     public static final String[] ALL_AUTHORITIES_USER_GET_AWERTE = new String[] {
             SERVICE_GET_AWERTE,
@@ -102,5 +108,14 @@ public class Authorities {
     public static final String[] ALL_AUTHORITIES_SET_STIMMZETTELUMSCHLAEGE = new String[] {
             SERVICE_SET_STIMMZETTELUMSCHLAEGE,
             REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE
+    };
+
+    public static final String[] ALL_AUTHORITIES_GET_STIMMABGABEVERMEKE = new String[] {
+            REPOSITORY_READ_STIMMABGABEVERMEKE,
+            SERVICE_GET_STIMMABGABEVERMERKE
+    };
+    public static final String[] ALL_AUTHORITIES_SET_STIMMABGABEVERMEKE = new String[] {
+            REPOSITORY_WRITE_STIMMABGABEVERMEKE,
+            SERVICE_SET_STIMMABGABEVERMERKE
     };
 }

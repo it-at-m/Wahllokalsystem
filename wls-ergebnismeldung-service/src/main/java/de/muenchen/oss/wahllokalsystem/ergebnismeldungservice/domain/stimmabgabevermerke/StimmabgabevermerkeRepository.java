@@ -1,7 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke;
 
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -18,8 +17,6 @@ public interface StimmabgabevermerkeRepository extends CrudRepository<Stimmabgab
     @Cacheable(value = CACHE, key = "#p0")
     @PreAuthorize("hasAuthority('Ergebnismeldung_READ_Stimmabgabevermerke')")
     Optional<Stimmabgabevermerke> findById(BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer);
-
-    List<Stimmabgabevermerke> findByBezirkIDUndWaehlerverzeichnisNummer_WahlbezirkID(String wahlbezirkID);
 
     @Override
     @CachePut(value = CACHE, key = "#p0.bezirkIDUndWaehlerverzeichnisNummer")

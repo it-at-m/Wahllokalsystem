@@ -14,7 +14,7 @@ public interface StimmabgabevermerkeRepository extends CrudRepository<Stimmabgab
     String CACHE = "STIMMABGABEVERMERKE_CACHE";
 
     @Override
-    @Cacheable(value = CACHE, key = "#p0")
+    @Cacheable(value = CACHE, key = "#bezirkIDUndWaehlerverzeichnisNummer")
     @PreAuthorize("hasAuthority('Ergebnismeldung_READ_Stimmabgabevermerke')")
     Optional<Stimmabgabevermerke> findById(BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer);
 
@@ -28,7 +28,7 @@ public interface StimmabgabevermerkeRepository extends CrudRepository<Stimmabgab
     <S extends Stimmabgabevermerke> Iterable<S> saveAll(Iterable<S> entities);
 
     @Override
-    @CacheEvict(value = CACHE, key = "#p0")
+    @CacheEvict(value = CACHE, key = "#bezirkIDUndWaehlerverzeichnisNummer")
     @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_Stimmabgabevermerke')")
     void deleteById(BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer);
 

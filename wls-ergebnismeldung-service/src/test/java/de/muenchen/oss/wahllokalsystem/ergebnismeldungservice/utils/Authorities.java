@@ -40,9 +40,9 @@ public class Authorities {
     public static final String REPOSITORY_DELETE_STIMMZETTELUMSCHLAEGE = "Ergebnismeldung_DELETE_Stimmzettelumschlaege";
     public static final String REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE = "Ergebnismeldung_WRITE_Stimmzettelumschlaege";
 
-    public static final String REPOSITORY_DELETE_STIMMABGABEVERMEKE = "Ergebnismeldung_DELETE_Stimmabgabevermerke";
-    public static final String REPOSITORY_READ_STIMMABGABEVERMEKE = "Ergebnismeldung_READ_Stimmabgabevermerke";
-    public static final String REPOSITORY_WRITE_STIMMABGABEVERMEKE = "Ergebnismeldung_WRITE_Stimmabgabevermerke";
+    public static final String REPOSITORY_DELETE_STIMMABGABEVERMERKE = "Ergebnismeldung_DELETE_Stimmabgabevermerke";
+    public static final String REPOSITORY_READ_STIMMABGABEVERMERKE = "Ergebnismeldung_READ_Stimmabgabevermerke";
+    public static final String REPOSITORY_WRITE_STIMMABGABEVERMERKE = "Ergebnismeldung_WRITE_Stimmabgabevermerke";
 
     public static final String[] ALL_AUTHORITIES_USER_GET_AWERTE = new String[] {
             SERVICE_GET_AWERTE,
@@ -110,12 +110,12 @@ public class Authorities {
             REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE
     };
 
-    public static final String[] ALL_AUTHORITIES_GET_STIMMABGABEVERMEKE = new String[] {
-            REPOSITORY_READ_STIMMABGABEVERMEKE,
+    public static final String[] ALL_AUTHORITIES_GET_STIMMABGABEVERMERKE = new String[] {
+            REPOSITORY_READ_STIMMABGABEVERMERKE,
             SERVICE_GET_STIMMABGABEVERMERKE
     };
-    public static final String[] ALL_AUTHORITIES_SET_STIMMABGABEVERMEKE = new String[] {
-            REPOSITORY_WRITE_STIMMABGABEVERMEKE,
+    public static final String[] ALL_AUTHORITIES_SET_STIMMABGABEVERMERKE = new String[] {
+            REPOSITORY_WRITE_STIMMABGABEVERMERKE,
             SERVICE_SET_STIMMABGABEVERMERKE
     };
 }

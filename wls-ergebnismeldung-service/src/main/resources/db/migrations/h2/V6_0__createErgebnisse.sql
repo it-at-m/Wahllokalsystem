@@ -8,9 +8,9 @@ CREATE TABLE Ergebnisse
 
 CREATE TABLE Ergebnissammlung
 (
-    fk_wahlid                  VARCHAR(1024) not null,
-    fk_wahlbezirkid            VARCHAR(1024) not null,
-    fk_stapelart               VARCHAR(255)  not null,
+    fk_wahlid                  VARCHAR(1024) NOT NULL,
+    fk_wahlbezirkid            VARCHAR(1024) NOT NULL,
+    fk_stapelart               VARCHAR(255)  NOT NULL,
     wahlvorschlagid            VARCHAR(1024) NOT NULL,
     kandidatid                 VARCHAR(1024) NOT NULL,
     wahlvorschlagsordnungszahl BIGINT        NOT NULL,

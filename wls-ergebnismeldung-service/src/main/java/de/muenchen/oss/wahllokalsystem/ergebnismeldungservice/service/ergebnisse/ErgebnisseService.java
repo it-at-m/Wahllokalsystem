@@ -51,7 +51,7 @@ public class ErgebnisseService {
         try {
             ergebnisseRepository.save(ergebnisseModelMapper.toEntity(ergebnisseToAdd));
         } catch (Exception e) {
-            log.error("#postErgebnisse unsaveable:", e);
+            log.info("Logged attribute: {}={}", "ergebnisse", ergebnisseToAdd);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.ERGEBNISSE_UNSAVEABLE);
         }
     }

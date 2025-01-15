@@ -3,11 +3,11 @@ GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### GET Ergebnisse für wahlID, wahlbezirkID and stapelart
-GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/wbz-1/1/LTW_BZW_A
+GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/wahlbezirkID/wahlID/LTW_BZW_A
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### Initialisiere Ergebnisse
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/wbz-1/1/LTW_BZW_A
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/wahlbezirkID/wahlID/LTW_BZW_A
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
 

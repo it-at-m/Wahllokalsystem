@@ -27,8 +27,8 @@ public class ErgebnisseService {
     private final ExceptionFactory exceptionFactory;
 
     @PreAuthorize(
-            "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetErgebnisse')"
-                    + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
+        "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetErgebnisse')"
+                + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
     )
     public ErgebnisseModel getErgebnisse(@P("param") @NotNull final ErgebnisseReference ergebnisseReference) {
         log.info("#getErgebnisse");
@@ -40,8 +40,8 @@ public class ErgebnisseService {
     }
 
     @PreAuthorize(
-            "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostErgebnisse')"
-                    + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
+        "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostErgebnisse')"
+                + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
     )
     public void postErgebnisse(@P("param") @NotNull ErgebnisseModel ergebnisseToAdd, ErgebnisseReference ergebnisseReference) {
         log.info("#postErgebnisse");

@@ -49,15 +49,16 @@ public class AusdruckService {
     }
 
     @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetAusdruck')")
-    public AusdruckModel getAusdruck(WahlUndBezirkIDUndMeldungsart wahlUndBezirkIDUndMeldungsart) {
-        log.debug("Loading printout {}", wahlUndBezirkIDUndMeldungsart.getMeldungsart());
+    public AusdruckModel getAusdruck(WahlUndBezirkIDUndMeldungsart id) {
+        log.debug("Loading printout {}", id.getMeldungsart());
 
-        wahlUndBezirkIDUndMeldungsartValidator.validWahlUndBezirkIDUndMeldungsartOrThrow(wahlUndBezirkIDUndMeldungsart);
+        wahlUndBezirkIDUndMeldungsartValidator.validWahlUndBezirkIDUndMeldungsartOrThrow(id,
+            exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG));
 
-        Ausdruck result = ausdruckRepository.findOneByWahlUndBezirkIDUndMeldungsart(wahlUndBezirkIDUndMeldungsart);
+        Ausdruck result = ausdruckRepository.findOneByWahlUndBezirkIDUndMeldungsart(id);
 
         if (result == null) {
-            log.info("Printout not found for: {}", wahlUndBezirkIDUndMeldungsart);
+            log.info("Printout not found for: {}", id);
         }
         return ausdruckModelMapper.toModel(result);
     }

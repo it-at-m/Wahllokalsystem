@@ -30,8 +30,8 @@ public class Ergebnisse {
     @CollectionTable(
             name = "Ergebnissammlung", joinColumns =
             {
-                    @JoinColumn(name = "fk_wahlID"),
-                    @JoinColumn(name = "fk_wahlbezirkID"),
+                    @JoinColumn(name = "fk_wahlid"),
+                    @JoinColumn(name = "fk_wahlbezirkid"),
                     @JoinColumn(name = "fk_stapelart")
             }
     )

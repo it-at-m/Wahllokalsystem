@@ -1,4 +1,4 @@
-import type { BroadcastMessageToRead } from "@/api/wls-clients/broadcast-service/BroadcastMessageToRead";
+import type { MessageDTO } from "@/resources/generated-broadcast-api";
 
 import {
   broadcastMessageRead,
@@ -10,7 +10,7 @@ export function useBroadcastService() {
   async function getMessage(wahlbezirkID: string) {
     try {
       const response = await getBroadcastMessage(wahlbezirkID);
-      const content: BroadcastMessageToRead = await response.json();
+      const content: MessageDTO = await response.json();
 
       await broadcastMessageRead(content.oid).catch(() => {
         return {

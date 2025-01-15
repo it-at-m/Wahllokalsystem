@@ -67,7 +67,7 @@ public class AusdruckController {
         try {
             response.getWriter().print(result.content());
         } catch (IOException e) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_GETAUSDRUCK_PARAMETER_UNVOLLSTAENDIG);
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG);
         }
     }
 

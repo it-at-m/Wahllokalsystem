@@ -17,7 +17,7 @@ public class WahlUndBezirkIDUndMeldungsartValidator {
         if (StringUtils.isBlank(wahlUndBezirkIDUndMeldungsart.getWahlID()) ||
                 StringUtils.isBlank(wahlUndBezirkIDUndMeldungsart.getWahlbezirkID()) ||
                 wahlUndBezirkIDUndMeldungsart.getMeldungsart() == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_GETAUSDRUCK_PARAMETER_UNVOLLSTAENDIG);
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG);
         }
     }
 }

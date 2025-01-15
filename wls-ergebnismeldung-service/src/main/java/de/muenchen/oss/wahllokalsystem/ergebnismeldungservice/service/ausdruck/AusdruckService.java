@@ -41,7 +41,7 @@ public class AusdruckService {
         log.debug("Saving printout {}", ausdruck.wahlUndBezirkIDUndMeldungsart().getMeldungsart());
 
         if (!validator.validate(ausdruck).isEmpty()) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_SAVEAUSDRUCK_PARAMETER_UNVOLLSTAENDIG);
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG);
         }
 
         ausdruckRepository.save(ausdruckModelMapper.toEntity(ausdruck));

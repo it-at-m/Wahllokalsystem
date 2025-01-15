@@ -2,11 +2,10 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck;
 
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_TEST_PROFILE;
+import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.TimePrecisionComparators.INSTANT_PRECISION_MILLISECONDS;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Comparator;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -36,8 +35,6 @@ class AusdruckRepositoryTest {
     @Nested
     class findOneByWahlUndBezirkIDUndMeldungsart {
 
-        Comparator<Instant> instantComparator = Comparator.comparing(i -> i.truncatedTo(ChronoUnit.MILLIS));
-
         @Test
         void should_returnAusdruck_when_wahlUndBezirkIDUndMeldungsartIsGiven() {
             val wahlUndBezirkIDUndMeldungsart = new WahlUndBezirkIDUndMeldungsart("wahlbezirkID01", "wahlID01", Meldungsart.V1);
@@ -55,7 +52,8 @@ class AusdruckRepositoryTest {
 
             val result = repository.findOneByWahlUndBezirkIDUndMeldungsart(wahlUndBezirkIDUndMeldungsart);
             Assertions.assertThat(result).isNotNull();
-            Assertions.assertThat(result).usingRecursiveComparison().withComparatorForType(instantComparator, Instant.class).isEqualTo(ausdruckToFind);
+            Assertions.assertThat(result).usingRecursiveComparison().withComparatorForType(INSTANT_PRECISION_MILLISECONDS, Instant.class)
+                    .isEqualTo(ausdruckToFind);
         }
     }
 

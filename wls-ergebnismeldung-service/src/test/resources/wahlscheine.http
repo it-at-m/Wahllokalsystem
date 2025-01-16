@@ -1,0 +1,20 @@
+### get userinfo with auth_token
+GET {{ WLS_AUTH_SERVICE }}/user
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### GET wahlscheine ba wahlID and wahlbezirkID
+GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/wahlscheine/wahlID/wahlbezirkID
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### POST wahlscheine
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/wahlscheine/wahlID/wahlbezirkID
+Content-Type: application/json
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+{
+  "bezirkUndWahlID": {
+    "wahlID": "wahlID",
+    "wahlbezirkID": "wahlbezirkID"
+  },
+  "stimmabgabevermerke": 33
+}

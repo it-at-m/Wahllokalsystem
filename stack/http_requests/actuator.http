@@ -1,0 +1,32 @@
+### Get AuthService info
+GET {{WLS_AUTH_SERVICE}}/actuator/info
+
+### Get BasisdatenService info
+GET {{WLS_BASISDATEN_SERVICE_URL}}/actuator/info
+
+### Get BriefwahlService info
+GET {{WLS_BRIEFWAHL_SERVICE_URL}}/actuator/info
+
+### Get BroadcastService info
+GET {{WLS_BROADCAST_SERVICE_URL}}/actuator/info
+
+### Get EAIService info
+GET {{WLS_EAI_SERVICE_URL}}/actuator/info
+
+### Get ErgebnismeldungService info
+GET {{WLS_ERGEBNISMELDUNG_SERVICE_URL}}/actuator/info
+
+### Get InfomanagementService info
+GET {{WLS_INFOMANAGEMENT_SERVICE_URL}}/actuator/info
+
+### Get MonitoringService info
+GET {{WLS_MONITORING_SERVICE_URL}}/actuator/info
+
+### Get VorfaelleUndVorkommnisseService info
+GET {{WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL}}/actuator/info
+
+### Get WahlvorbereitungService info
+GET {{WLS_WAHLVORBEREITUNG_SERVICE_URL}}/actuator/info
+
+### Get WahlvorstandService info
+GET {{WLS_WAHLVORSTAND_SERVICE_URL}}/actuator/info

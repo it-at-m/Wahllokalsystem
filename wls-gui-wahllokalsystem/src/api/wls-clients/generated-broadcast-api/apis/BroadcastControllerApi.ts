@@ -12,196 +12,176 @@
  * Do not edit the class manually.
  */
 
-import type { BroadcastMessageDTO, MessageDTO } from "../models/index";
 
+import * as runtime from '../runtime';
+import type {
+  BroadcastMessageDTO,
+  MessageDTO,
+} from '../models/index';
 import {
-  BroadcastMessageDTOFromJSON,
-  BroadcastMessageDTOToJSON,
-  MessageDTOFromJSON,
-  MessageDTOToJSON,
-} from "../models/index";
-import * as runtime from "../runtime";
+    BroadcastMessageDTOFromJSON,
+    BroadcastMessageDTOToJSON,
+    MessageDTOFromJSON,
+    MessageDTOToJSON,
+} from '../models/index';
 
 export interface BroadcastRequest {
-  broadcastMessageDTO: BroadcastMessageDTO;
+    broadcastMessageDTO: BroadcastMessageDTO;
 }
 
 export interface DeleteMessageRequest {
-  nachrichtID: string;
+    nachrichtID: string;
 }
 
 export interface GetMessageRequest {
-  wahlbezirkID: string;
+    wahlbezirkID: string;
 }
 
 /**
- *
+ * 
  */
 export class BroadcastControllerApi extends runtime.BaseAPI {
-  /**
-   * Bietet einen Endpunkt an, der eine Nachricht für alle Wahlbezirke(Wahllokale) bereitstellt.
-   * Nachricht an alle senden
-   */
-  async broadcastRaw(
-    requestParameters: BroadcastRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters["broadcastMessageDTO"] == null) {
-      throw new runtime.RequiredError(
-        "broadcastMessageDTO",
-        'Required parameter "broadcastMessageDTO" was null or undefined when calling broadcast().'
-      );
+
+    /**
+     * Bietet einen Endpunkt an, der eine Nachricht für alle Wahlbezirke(Wahllokale) bereitstellt.
+     * Nachricht an alle senden
+     */
+    async broadcastRaw(requestParameters: BroadcastRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['broadcastMessageDTO'] == null) {
+            throw new runtime.RequiredError(
+                'broadcastMessageDTO',
+                'Required parameter "broadcastMessageDTO" was null or undefined when calling broadcast().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/businessActions/broadcast`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: BroadcastMessageDTOToJSON(requestParameters['broadcastMessageDTO']),
+        }, initOverrides);
+
+        if (response.status === 204) {
+            throw new runtime.WLSError(response, "Es konnten keine Daten gefunden werden", "T", response.status.toString())
+        }
+
+        return new runtime.VoidApiResponse(response);
     }
 
-    const queryParameters: any = {};
-
-    const headerParameters: runtime.HTTPHeaders = {};
-
-    headerParameters["Content-Type"] = "application/json";
-
-    if (this.configuration && this.configuration.accessToken) {
-      const token = this.configuration.accessToken;
-      const tokenString = await token("bearerAuth", []);
-
-      if (tokenString) {
-        headerParameters["Authorization"] = `Bearer ${tokenString}`;
-      }
-    }
-    const response = await this.request(
-      {
-        path: `/businessActions/broadcast`,
-        method: "POST",
-        headers: headerParameters,
-        query: queryParameters,
-        body: BroadcastMessageDTOToJSON(
-          requestParameters["broadcastMessageDTO"]
-        ),
-      },
-      initOverrides
-    );
-
-    return new runtime.VoidApiResponse(response);
-  }
-
-  /**
-   * Bietet einen Endpunkt an, der eine Nachricht für alle Wahlbezirke(Wahllokale) bereitstellt.
-   * Nachricht an alle senden
-   */
-  async broadcast(
-    requestParameters: BroadcastRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<void> {
-    await this.broadcastRaw(requestParameters, initOverrides);
-  }
-
-  /**
-   * Löscht die Nachricht mit der gegebenen ID, nachdem sie gelesen wurde. Es wird nur der dem entsprechenden Wahllokal zugewiesene Datenbankeintrag.
-   * Nachricht löschen
-   */
-  async deleteMessageRaw(
-    requestParameters: DeleteMessageRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters["nachrichtID"] == null) {
-      throw new runtime.RequiredError(
-        "nachrichtID",
-        'Required parameter "nachrichtID" was null or undefined when calling deleteMessage().'
-      );
+    /**
+     * Bietet einen Endpunkt an, der eine Nachricht für alle Wahlbezirke(Wahllokale) bereitstellt.
+     * Nachricht an alle senden
+     */
+    async broadcast(requestParameters: BroadcastRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.broadcastRaw(requestParameters, initOverrides);
     }
 
-    const queryParameters: any = {};
+    /**
+     * Löscht die Nachricht mit der gegebenen ID, nachdem sie gelesen wurde. Es wird nur der dem entsprechenden Wahllokal zugewiesene Datenbankeintrag.
+     * Nachricht löschen
+     */
+    async deleteMessageRaw(requestParameters: DeleteMessageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['nachrichtID'] == null) {
+            throw new runtime.RequiredError(
+                'nachrichtID',
+                'Required parameter "nachrichtID" was null or undefined when calling deleteMessage().'
+            );
+        }
 
-    const headerParameters: runtime.HTTPHeaders = {};
+        const queryParameters: any = {};
 
-    if (this.configuration && this.configuration.accessToken) {
-      const token = this.configuration.accessToken;
-      const tokenString = await token("bearerAuth", []);
+        const headerParameters: runtime.HTTPHeaders = {};
 
-      if (tokenString) {
-        headerParameters["Authorization"] = `Bearer ${tokenString}`;
-      }
-    }
-    const response = await this.request(
-      {
-        path: `/businessActions/messageRead/{nachrichtID}`.replace(
-          `{${"nachrichtID"}}`,
-          encodeURIComponent(String(requestParameters["nachrichtID"]))
-        ),
-        method: "POST",
-        headers: headerParameters,
-        query: queryParameters,
-      },
-      initOverrides
-    );
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
 
-    return new runtime.VoidApiResponse(response);
-  }
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/businessActions/messageRead/{nachrichtID}`.replace(`{${"nachrichtID"}}`, encodeURIComponent(String(requestParameters['nachrichtID']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
 
-  /**
-   * Löscht die Nachricht mit der gegebenen ID, nachdem sie gelesen wurde. Es wird nur der dem entsprechenden Wahllokal zugewiesene Datenbankeintrag.
-   * Nachricht löschen
-   */
-  async deleteMessage(
-    requestParameters: DeleteMessageRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<void> {
-    await this.deleteMessageRaw(requestParameters, initOverrides);
-  }
+        if (response.status === 204) {
+            throw new runtime.WLSError(response, "Es konnten keine Daten gefunden werden", "T", response.status.toString())
+        }
 
-  /**
-   * Sucht nach der ältesten Nachricht für die gegebene Wahlbezirk-Id und gibt diese zurück.
-   * Letzte Nachricht lesen
-   */
-  async getMessageRaw(
-    requestParameters: GetMessageRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<MessageDTO>> {
-    if (requestParameters["wahlbezirkID"] == null) {
-      throw new runtime.RequiredError(
-        "wahlbezirkID",
-        'Required parameter "wahlbezirkID" was null or undefined when calling getMessage().'
-      );
+        return new runtime.VoidApiResponse(response);
     }
 
-    const queryParameters: any = {};
-
-    const headerParameters: runtime.HTTPHeaders = {};
-
-    if (this.configuration && this.configuration.accessToken) {
-      const token = this.configuration.accessToken;
-      const tokenString = await token("bearerAuth", []);
-
-      if (tokenString) {
-        headerParameters["Authorization"] = `Bearer ${tokenString}`;
-      }
+    /**
+     * Löscht die Nachricht mit der gegebenen ID, nachdem sie gelesen wurde. Es wird nur der dem entsprechenden Wahllokal zugewiesene Datenbankeintrag.
+     * Nachricht löschen
+     */
+    async deleteMessage(requestParameters: DeleteMessageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.deleteMessageRaw(requestParameters, initOverrides);
     }
-    const response = await this.request(
-      {
-        path: `/businessActions/getMessage/{wahlbezirkID}`.replace(
-          `{${"wahlbezirkID"}}`,
-          encodeURIComponent(String(requestParameters["wahlbezirkID"]))
-        ),
-        method: "GET",
-        headers: headerParameters,
-        query: queryParameters,
-      },
-      initOverrides
-    );
 
-    return new runtime.JSONApiResponse(response, (jsonValue) =>
-      MessageDTOFromJSON(jsonValue)
-    );
-  }
+    /**
+     * Sucht nach der ältesten Nachricht für die gegebene Wahlbezirk-Id und gibt diese zurück.
+     * Letzte Nachricht lesen
+     */
+    async getMessageRaw(requestParameters: GetMessageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MessageDTO>> {
+        if (requestParameters['wahlbezirkID'] == null) {
+            throw new runtime.RequiredError(
+                'wahlbezirkID',
+                'Required parameter "wahlbezirkID" was null or undefined when calling getMessage().'
+            );
+        }
 
-  /**
-   * Sucht nach der ältesten Nachricht für die gegebene Wahlbezirk-Id und gibt diese zurück.
-   * Letzte Nachricht lesen
-   */
-  async getMessage(
-    requestParameters: GetMessageRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<MessageDTO> {
-    const response = await this.getMessageRaw(requestParameters, initOverrides);
-    return await response.value();
-  }
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/businessActions/getMessage/{wahlbezirkID}`.replace(`{${"wahlbezirkID"}}`, encodeURIComponent(String(requestParameters['wahlbezirkID']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        if (response.status === 204) {
+            throw new runtime.WLSError(response, "Es konnten keine Daten gefunden werden", "T", response.status.toString())
+        }
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => MessageDTOFromJSON(jsonValue));
+    }
+
+    /**
+     * Sucht nach der ältesten Nachricht für die gegebene Wahlbezirk-Id und gibt diese zurück.
+     * Letzte Nachricht lesen
+     */
+    async getMessage(requestParameters: GetMessageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MessageDTO> {
+        const response = await this.getMessageRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
 }

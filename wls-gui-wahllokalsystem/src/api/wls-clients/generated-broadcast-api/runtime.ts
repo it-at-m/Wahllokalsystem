@@ -158,6 +158,22 @@ export class BaseAPI {
     const response = await this.fetchApi(url, init);
     if (response && response.status >= 200 && response.status < 300) {
       return response;
+    } else if (response && response.status == 400) {
+      const raw = await response.text();
+      const content = JSON.parse(raw);
+      const wlsError = isWLSException(content)
+        ? generateWlsExceptionFromJson(content)
+        : createDefaultWlsError({
+            message: "Ungültige Anfrage",
+            code: response.status.toString(),
+          });
+      throw new WLSError(
+        response,
+        wlsError.message,
+        wlsError.category,
+        wlsError.code,
+        wlsError.service
+      );
     }
     throw new ResponseError(response, "Response returned an error code");
   }
@@ -333,6 +349,83 @@ export class RequiredError extends Error {
   ) {
     super(msg);
   }
+}
+
+export class WLSError extends Error {
+  override name: "WLSError" = "WLSError";
+  category?: string;
+  code?: string;
+  service?: string;
+
+  constructor(
+    public response: Response,
+    msg?: string,
+    category?: string,
+    code?: string,
+    service?: string
+  ) {
+    super(msg);
+    this.category = category;
+    this.code = code;
+    this.service = service;
+  }
+}
+
+export function createDefaultWlsError({
+  message = "Ein unbekannter Fehler ist aufgetreten",
+  category = "T",
+  code = "undefined",
+  service = "undefined",
+}: {
+  message?: string;
+  category?: string;
+  code?: string;
+  service?: string;
+}): WLSError {
+  const error = new Error(message) as WLSError;
+  error.name = "WLSError";
+  error.category = category;
+  error.code = code;
+  error.service = service;
+  return error;
+}
+
+export default interface WLSException {
+  category: string;
+  code: string;
+  message: string;
+  service: string;
+}
+
+/**
+ * Type guard to check if an object is a WLSException
+ * @param obj - The object to check
+ * @returns True if the object has all required WLSException properties with correct types
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isWLSException(obj: any): obj is WLSException {
+  return (
+    obj &&
+    typeof obj.category === "string" &&
+    typeof obj.code === "string" &&
+    typeof obj.message === "string" &&
+    typeof obj.service === "string"
+  );
+}
+
+/**
+ * Generates a WLSError instance from a JSON object.
+ * @param content - The JSON-object with all relevant information
+ * @returns the generated WLSError object from JSON data
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function generateWlsExceptionFromJson(content: any): WLSException {
+  return {
+    category: content.category,
+    code: content.code,
+    message: content.message,
+    service: content.service,
+  };
 }
 
 export const COLLECTION_FORMATS = {

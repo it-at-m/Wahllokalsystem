@@ -52,7 +52,7 @@ import { postConfig } from "@/api/fetch-utils";
 import {
   BroadcastControllerApi,
   Configuration,
-  ResponseError,
+  WLSError,
 } from "@/api/wls-clients/generated-broadcast-api";
 
 const messageInput = ref("I am a message");
@@ -72,8 +72,6 @@ async function getBroadcastMessage(wahlbezirkID: string) {
   broadcastCA
     .getMessage(getParams)
     .then((content) => {
-      // TODO: der 204 code kann nicht abgefangen werden, weil hier nicht ein response objekt sondern immer ein MessageDTO zurückgegeben wird
-      // ggf kann "getMessageRaw" in Zeile 193 ergänzt werden
       const nachrichtID = content.oid;
       const deleteParams: DeleteMessageRequest = { nachrichtID };
       broadcastCA.deleteMessage(deleteParams, postConfig()).catch(() => {
@@ -82,9 +80,8 @@ async function getBroadcastMessage(wahlbezirkID: string) {
       });
       messageToShow.value = content.nachricht;
     })
-    .catch((responseError: ResponseError) => {
-      console.log(responseError);
-      errorToShow.value = responseError.toString();
+    .catch((error: WLSError) => {
+      errorToShow.value = error.message;
     });
 }
 
@@ -104,9 +101,9 @@ async function postBroadcastMessage(
     .then(() => {
       errorToShow.value = "";
     })
-    .catch((responseError: ResponseError) => {
-      // todo: wls error zurückgeben (auch beim get!!)
-      errorToShow.value = responseError.toString();
+    .catch((error: WLSError) => {
+      errorToShow.value =
+        error.service + " - " + error.message + " (Code: " + error.code + ")";
     });
   messageInput.value = "";
 }

@@ -6,39 +6,113 @@ Im Projekt verwenden wir `checkstyle` und `spotless` um für einen möglichst ei
 Dazu haben wir Regeln definiert. Diese Regeln und deren Hinterlegung in der jeweiligen IDE ist
 [hier](https://github.com/it-at-m/itm-java-codeformat) beschrieben.
 
-## Workflows
+## Zusammenspiel IDE mit Docker
 
-### Pull-Requests
+```mermaid
+flowchart LR
+    
+    subgraph Dev-PC 
+        subgraph IDE 
+            wlsService
+            frontend_gui[gui_wahllokalsystem]
+        end
+        
+        subgraph Docker 
+            authService
+            oracleDB[Oracle DB]
+            apiGateway[API Gateway]
+            backendServiceN[Backend Service N]
+        end
 
-Mit der Erstellung eines Pull-Requests wird mittels Workflow geprüft das der Code funktional ist: `mvn verify`. Das bedeutet
-es werden die Tests ausgeführt und geprüft dass das Codestyle den Anforderungen entspricht.
+        apiGateway --->|forwards request| backendServiceN
+        apiGateway --->|forwards request| authService
 
-### Push auf Defaultbranch
+        backendServiceN --->|accesses| oracleDB
+        backendServiceN --->|OAuth2| authService
 
-Unser Defaultbranch ist `dev`. Mit einem Push auf den Branch wird bei den Backendservices ein Containerimages erzeugt
-das in der Github-Container-Registriy hinterlegt wird. Als Tag wird `latest-dev` verwendet.
+        frontend_gui --->|request| apiGateway
 
-### Namenskonventionen
+        authService-->|accesses| oracleDB
 
-❗ Ist zu beachten dass alle Workflows im Ordner `workflows` liegen müssen. Sie dürfen nicht auf unterordner aufgeteilt werden.
-Zur besseren Strukturierung in dem Ordner soll daher auf eine einheitliche Namenskonvention geachtet werden.
+        wlsService ---|OAuth2| authService
+        wlsService --->|accesses|oracleDB
+    end
+```
 
-- `callable-<kurzbeschreibung>.yml` ... [wiederverenbare Workflows](https://docs.github.com/de/actions/using-workflows/reusing-workflows)
-- `dispatch-<kurzbeschreibung>.yml` ... [manuell ausführbare workflows](https://docs.github.com/de/actions/using-workflows/manually-running-a-workflow)
-- `<service-namer>_<trigger>.yml` ... Workflows zu Jobs die durch ein bestimmtes Ereignis getriggert werden.
+## Services und Ports
 
-#### Beispiele
+Übersicht über die Services und auf welchen Port sie im Standard lauschen:
 
-##### `callable-<kurzbezeichnung>.yml`
+> [!IMPORTANT]
+> Diese Ports werden sowohl in der IDE als auch in Docker verwendet.
+> Beachten Sie, dass somit nur eine Instanz eines Services gleichzeitig laufen kann.
 
-`callable-create-github-container-image.yml` beinhaltet einen wiedervenbaren Workflow der ein Containerimage für Github erstellt.
+| Service                                                                  | Port |
+|--------------------------------------------------------------------------|------|
+| [Admin](/services/admin-service/)                                        | 8209 |
+| [Auth](/services/auth-service/)                                          | 8100 |
+| [Basisdaten](/services/basisdaten-service/)                              | 8205 |
+| [Briefwahl](/services/briefwahl-service/)                                | 8202 |
+| Broadcast                                                                | 8200 |
+| [EAI](/services/eai-service/)                                            | 8300 |
+| [Ergebnismeldung](/services/ergebnismeldung-service/)                    | 8208 |
+| [Infomanagement](/services/infomanagement-service/)                      | 8201 |
+| [Monitoring](/services/monitoring-service/)                              | 8206 |
+| [Vorfälle und Vorkommnisse](/services/vorfaelleundvorkommnisse-service/) | 8204 |
+| Wahlvorbereitung                                                         | 8203 |
+| [Wahlvorstand](/services/wahlvorstand-service/)                          | 8207 |
 
-##### `dispatch-<kurzbeschreibung>.yml`
+## Benutzer
 
-`dispatch-microservice-mvn-release.yml` ist ein Workflow der manuell getriggert wird ein Maven-Release eines Mikroservices durchzuführen.
+| Name        | Passwort | Beschreibung                                                          |
+|-------------|----------|-----------------------------------------------------------------------|
+| wls_test    | test     | Ein Benutzer ohne weitere Rechte                                      |
+| wls_all     | test     | Ein Benutzer mit allen Rechten                                        |
+| wls_all_bwb | test     | Ein Benutzer mit allen Rechten mit der WahlbezirksArt BWB (Briefwahl) |
+| wls_all_uwb | test     | Ein Benutzer mit allen Rechten mit der WahlbezirksArt UWB (Urnenwahl) |
 
-##### `<service-namer>_<trigger>.yml`
+## Datenbank
 
-`wls-broadcast-service_push-dev-yml` ist der Workflow zum `wls-broadcast-service` der bei einem `push` auf `dev` ausgeführt wird.
+Jeder Service bekommt einen eigenen Benutzer für die Datenbank. Die Zugriffs-URL ist für alle Services gleich:
+`jdbc:oracle:thin:@//localhost:1521/XEPDB1`
 
-`doc_pull-request.yml` ist der Workflow zur Dokumentation, der bei einem `pull request` ausgeführt wird.
+Neben dem Standardbenutzer der auf alles zugreifen kann (siehe `docker-compose.yml`) müssen alle weiteren Benutzer über
+`stack/add-user-on-startup.sql` erstellt werden.
+
+Dabei sollte auf folgendes Schema geachtet werden:
+
+- Benutzername: \<Name des Services\>
+- Passwort: secret
+
+## Starten des Frontend
+
+Standardmäßig wird das Frontend über den Befehl `"dev": "vite"` in der `package.json`-Datei gestartet. Da es im
+Wahllokalsystem so viele verschiedene Rollen gibt, ist die Standard Http-Request-Header-Size von 8KB nicht ausreichend
+und wurde in den Services auf 32KB angepasst. Damit das Frontend nun mit den Backend-Services kompatibel bleibt, wurde
+der Standard Befehl angepasst in `"dev": "set NODE_OPTIONS=--max-http-header-size=32000 && vite"`.
+
+Nachdem das Frontend in der IDE und das ApiGateway über Docker gestartet wurde, kann es über `http://localhost:8400/`
+aufgerufen werden. Allerdings befindet sich die Oberfläche dann in einer Ladeschleife und man sieht nur einen
+flackernden Bildschirm. Um diese Schleife während der Entwicklung zu umgehen, gibt es zwei Möglichkeiten:
+
+### 1. Starten über das Gateway + Authentifizierung
+
+Eine Möglichkeit, die Ladeschleife zu umgehen, ist es, sich lokal mit einem der [User](#benutzer) anzumelden.
+Nachdem das Frontend über die IDE gestartet wurde, muss die URL `http://localhost:8083/` mit dem Port `8083` aufgerufen
+werden, um auf die Login-Seite zu kommen. Nach der Anmeldung bleibt man auf dem Port `8083`, wird aber vom Gateway
+zum Frontend weitergeleitet und die Ladeschleife ist weg.
+
+> [!NOTE]
+> Der Anmeldevorgang muss jedes Mal wiederholt werden, sobald das ApiGateway neu gestartet wird.
+
+### 2. `no-security`-Profil
+
+Die zweite Möglichkeit ist es, das ApiGateway mit dem `no-security`-Profil zu starten.
+Dazu muss im `/stack/docker-compose.yml` File beim Service refarch-gateway unter environment in der Zeile
+`- SPRING_PROFILES_ACTIVE=hazelcast-local` das Profil `no-security` hinzugefügt werden. Damit die Änderung wirksam wird,
+sollte der Container in Docker einmal komplett gelöscht und über das `docker-compose.yml` File neu gestartet werden.
+
+> [!WARNING]
+> Bei dieser Variante ist es wichtig, dass die Änderung im `docker-compose.yml` File nicht gepusht wird, weil alle
+> anderen Container mit security laufen und das `no-security`-Profil nur für die Entwicklung benötigt wird.
+

@@ -6,6 +6,9 @@ hero:
   name: "Wahllokalsystem"
   text: "Datenerfassung am Wahltag"
   tagline: Beschreibung der Funktionalität und Technik
+  actions:
+    - text: Getting started
+      link: /technik/get_started
 
 ---
 

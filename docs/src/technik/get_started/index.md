@@ -73,16 +73,7 @@ flowchart LR
 
 ## Datenbank
 
-Jeder Service bekommt einen eigenen Benutzer für die Datenbank. Die Zugriffs-URL ist für alle Services gleich:
-`jdbc:oracle:thin:@//localhost:1521/XEPDB1`
-
-Neben dem Standardbenutzer der auf alles zugreifen kann (siehe `docker-compose.yml`) müssen alle weiteren Benutzer über
-`stack/add-user-on-startup.sql` erstellt werden.
-
-Dabei sollte auf folgendes Schema geachtet werden:
-
-- Benutzername: \<Name des Services\>
-- Passwort: secret
+Der Zugriff auf die Oracle-Datenbank ist [einzurichten](/technik/guides/db-access).
 
 ## Starten des Frontend
 

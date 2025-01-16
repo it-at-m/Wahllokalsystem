@@ -68,6 +68,8 @@ async function getBroadcastMessage(wahlbezirkID: string) {
   broadcastCA
     .getMessage(getParams)
     .then((content) => {
+      // TODO: der 204 code kann nicht abgefangen werden, weil hier nicht ein response objekt sondern immer ein MessageDTO zurückgegeben wird
+      // ggf kann "getMessageRaw" in Zeile 193 ergänzt werden
       const nachrichtID = content.oid;
       const deleteParams: DeleteMessageRequest = { nachrichtID };
       broadcastCA

@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse;
 
+import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -7,16 +8,21 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.matching.UrlPattern;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.BezirkUndWahlIDStapelart;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.Stapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.BezirkUndWahlIDStapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnis;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnisse;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.ErgebnisseRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseModelMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.LocalDateTimeComparators;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -26,14 +32,21 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, "dummy.nobezirkid.check" })
+@AutoConfigureWireMock
+@ActiveProfiles(
+        profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE,
+                de.muenchen.oss.wahllokalsystem.wls.common.security.Profiles.NO_BEZIRKS_ID_CHECK }
+)
 public class ErgebnisseControllerIntegrationTest {
 
     @Autowired
@@ -43,26 +56,25 @@ public class ErgebnisseControllerIntegrationTest {
     ObjectMapper objectMapper;
 
     @Autowired
+    ErgebnisseModelMapper ergebnisseModelMapper;
+
+    @Autowired
+    ErgebnisseDTOMapper ergebnisseDTOMapper;
+
+    @Autowired
     ErgebnisseRepository ergebnisseRepository;
+
+    @Autowired
+    MockMvc mockMvc;
+
+    @AfterEach
+    void tearDown() {
+        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_ERGEBNISSE);
+        ergebnisseRepository.deleteAll();
+    }
 
     @Nested
     class GetErgebnisse {
-
-        @AfterEach
-        void tearDown() {
-            SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_ERGEBNISSE);
-            ergebnisseRepository.deleteAll();
-        }
-
-        @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_GET_ERGEBNISSE, Authorities.REPOSITORY_READ_ERGEBNISSE })
-        void should_returnNoContent_when_NoDataIsPresent() throws Exception {
-            val request = get("/businessActions/ergebnisse/wahlbezirkID/21/LTW_BZW_A");
-
-            val response = api.perform(request).andExpect(status().isNoContent()).andReturn();
-
-            Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
-        }
 
         @Test
         @WithMockUser(
@@ -120,12 +132,6 @@ public class ErgebnisseControllerIntegrationTest {
     @Nested
     class PostErgebnisse {
 
-        @AfterEach
-        void tearDown() {
-            SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_ERGEBNISSE);
-            ergebnisseRepository.deleteAll();
-        }
-
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_SET_ERGEBNISSE, Authorities.REPOSITORY_WRITE_ERGEBNISSE })
         void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
@@ -172,6 +178,44 @@ public class ErgebnisseControllerIntegrationTest {
                     .orElseThrow();
 
             Assertions.assertThat(repoResponse).usingRecursiveComparison().isEqualTo(expectedRepoResponse);
+        }
+
+        @Test
+        @WithMockUser(
+                authorities = { Authorities.SERVICE_SET_ERGEBNISSE, Authorities.REPOSITORY_READ_ERGEBNISSE,
+                        Authorities.REPOSITORY_WRITE_ERGEBNISSE }
+        )
+        void should_replaceOldData_when_dataIsPresentInRepository() throws Exception {
+            val wahlID = "wahlID";
+            val wahlbezirkID = "wahlbezirkID";
+            val ergebnis1 = new Ergebnis(null, null, null, 1, null);
+            val newErgebnisList1 = new ArrayList<Ergebnis>();
+            newErgebnisList1.add(ergebnis1);
+
+            val requestBody = new ErgebnisseDTO(new BezirkUndWahlIDStapelart(wahlID, wahlbezirkID, Stapelart.LTW_BZW_A), newErgebnisList1);
+
+            val request = MockMvcRequestBuilders.post("/businessActions/ergebnisse/" + wahlID + "/" + wahlbezirkID + "/" + Stapelart.LTW_BZW_A).with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestBody));
+
+            val ergebnis2 = new Ergebnis(null, null, null, 2, null);
+            val newErgebnisList2 = new ArrayList<Ergebnis>();
+            newErgebnisList2.add(ergebnis2);
+
+            val entityToReplace = new Ergebnisse(requestBody.bezirkUndWahlIDStapelart(), newErgebnisList2);
+            Assertions.assertThat(entityToReplace).usingRecursiveComparison().isNotEqualTo(requestBody);
+            ergebnisseRepository.save(entityToReplace);
+
+            WireMock.stubFor(WireMock.post(UrlPattern.ANY).willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value())));
+
+            mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
+
+            val entityFromRepo = ergebnisseRepository.findById(requestBody.bezirkUndWahlIDStapelart()).get();
+            val expectedEntity = ergebnisseModelMapper.toEntity(ergebnisseDTOMapper.toModel(requestBody));
+            Assertions.assertThat(entityFromRepo)
+                    .usingRecursiveComparison()
+                    .withComparatorForType(LocalDateTimeComparators.PRECISION_MILLISECONDS, LocalDateTime.class)
+                    .isEqualTo(expectedEntity);
         }
     }
 }

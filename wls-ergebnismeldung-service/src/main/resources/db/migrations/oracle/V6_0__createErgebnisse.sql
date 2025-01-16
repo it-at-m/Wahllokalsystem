@@ -13,9 +13,9 @@ CREATE TABLE Ergebnissammlung
     fk_stapelart               VARCHAR(255)  NOT NULL,
     wahlvorschlagid            VARCHAR(1024) NOT NULL,
     kandidatid                 VARCHAR(1024) NOT NULL,
-    wahlvorschlagsordnungszahl NUMBER(19, 0) NOT NULL,
+    wahlvorschlagsordnungszahl NUMBER(19, 0),
     ergebnis                   NUMBER(19, 0) NOT NULL,
-    numindex                   NUMBER(19, 0) NOT NULL,
+    numindex                   NUMBER(19, 0),
     CONSTRAINT fk_Ergebnisse
         FOREIGN KEY (fk_wahlid, fk_wahlbezirkid, fk_stapelart)
             REFERENCES Ergebnisse (wahlid, wahlbezirkid, stapelart)

@@ -1,11 +1,11 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.BezirkUndWahlIDStapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.BezirkUndWahlIDStapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnisse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface ErgebnisseModelMapper {
 
     BezirkUndWahlIDStapelart toEmbeddedId(ErgebnisseReference reference);

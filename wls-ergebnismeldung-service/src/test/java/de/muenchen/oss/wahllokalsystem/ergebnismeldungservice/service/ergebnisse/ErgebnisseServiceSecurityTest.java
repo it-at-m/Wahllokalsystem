@@ -6,7 +6,7 @@ import static org.mockito.ArgumentMatchers.notNull;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration.Profiles;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.Stapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnis;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.ErgebnisseRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse.ErgebnisseDTOMapper;
@@ -103,7 +103,7 @@ class ErgebnisseServiceSecurityTest {
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postErgebnisse(newErgebnisse, newErgebnisseReference));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postErgebnisse(newErgebnisseReference, newErgebnisse));
         }
 
         @Test
@@ -119,7 +119,7 @@ class ErgebnisseServiceSecurityTest {
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(false);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postErgebnisse(newErgebnisse, newErgebnisseReference))
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postErgebnisse(newErgebnisseReference, newErgebnisse))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
@@ -138,7 +138,7 @@ class ErgebnisseServiceSecurityTest {
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(false);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postErgebnisse(newErgebnisse, newErgebnisseReference))
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postErgebnisse(newErgebnisseReference, newErgebnisse))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
@@ -151,13 +151,16 @@ class ErgebnisseServiceSecurityTest {
             val wahlID = "wahlID";
             val stapelart = Stapelart.LTW_BZW_A;
 
+            val ergebnis1 = new Ergebnis(null, null, null, 1, null);
             val newErgebnisList = new ArrayList<Ergebnis>();
+            newErgebnisList.add(ergebnis1);
+
             val newErgebnisse = new ErgebnisseModel(wahlbezirkID, wahlID, stapelart, newErgebnisList);
             val newErgebnisseReference = new ErgebnisseReference(wahlbezirkID, wahlID, stapelart);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postErgebnisse(newErgebnisse, newErgebnisseReference))
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postErgebnisse(newErgebnisseReference, newErgebnisse))
                     .isInstanceOf(TechnischeWlsException.class);
         }
 

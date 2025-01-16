@@ -11,6 +11,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplic
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.MeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.StatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.ValidierungsstatusDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDateTime;
@@ -38,6 +39,9 @@ class SecurityConfigurationTest {
 
     @MockBean
     StatusService statusService;
+
+    @MockBean
+    ErgebnisseService ergebnisseService;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -160,6 +164,24 @@ class SecurityConfigurationTest {
             val request = MockMvcRequestBuilders.get("/businessActions/asyncProgress");
 
             api.perform(request).andExpect(status().isOk());
+        }
+    }
+
+    @Nested
+    class Ergebnisse {
+
+        @Nested
+        class GetErgebnisse {
+
+            @WithMockUser
+            @Test
+            void should_returnNoContent_when_NoDataIsPresent() throws Exception {
+                val request = MockMvcRequestBuilders.get("/businessActions/ergebnisse/wahlID/wahlbezirkID/LTW_BZW_A");
+
+                api.perform(request).andExpect(status().isNoContent()).andReturn();
+
+                Mockito.verify(ergebnisseService).getErgebnisse(notNull());
+            }
         }
     }
 }

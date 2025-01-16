@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.Stapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
@@ -66,10 +66,15 @@ class ErgebnisseValidatorTest {
     class ValidErgebnisseOrThrow {
 
         @Test
-        void should_notThrowException_when_ergebnisseIsEmptyButNotNull() {
+        void should_throwException_when_ergebnisseIsEmpty() {
             val ergebnisseModelToValidate = new ErgebnisseModel("", "", Stapelart.LTW_BZW_A, Collections.emptyList());
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validModelOrThrow(ergebnisseModelToValidate));
+            val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("sth failed");
+            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG))
+                    .thenReturn(mockedFachlicheWlsException);
+
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validModelOrThrow(ergebnisseModelToValidate))
+                    .isSameAs(mockedFachlicheWlsException);
         }
 
         @Test

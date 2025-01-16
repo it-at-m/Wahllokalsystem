@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.Stapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.wahlscheine.WahlscheineDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseReference;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseService;
@@ -84,7 +84,7 @@ public class ErgebnisseController {
             @RequestBody ErgebnisseDTO ergebnisseDTO) {
         val modelToSave = ergebnisseDTOMapper.toModel(ergebnisseDTO);
         val referenceForModel = new ErgebnisseReference(wahlbezirkID, wahlID, stapelart);
-        ergebnisseService.postErgebnisse(modelToSave, referenceForModel);
+        ergebnisseService.postErgebnisse(referenceForModel, modelToSave);
     }
 
     private <T> ResponseEntity<T> okWithBodyOrNoContent(final T body) {

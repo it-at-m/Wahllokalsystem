@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.BezirkUndWahlIDStapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.BezirkUndWahlIDStapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnisse;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.ErgebnisseRepository;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
@@ -92,7 +92,7 @@ class ErgebnisseServiceTest {
 
             Mockito.doThrow(exceptionToThrow).when(ergebnisseValidator).validModelOrThrow(invalidModel);
 
-            val exceptionThrown = Assertions.catchException(() -> unitUnderTest.postErgebnisse(invalidModel, reference));
+            val exceptionThrown = Assertions.catchException(() -> unitUnderTest.postErgebnisse(reference, invalidModel));
 
             Assertions.assertThat(exceptionThrown).isSameAs(exceptionToThrow);
             Mockito.verify(ergebnisseRepository, Mockito.times(0)).save(Mockito.any());
@@ -109,7 +109,7 @@ class ErgebnisseServiceTest {
             Mockito.doNothing().when(ergebnisseValidator).validReferenceOrThrow(reference);
             Mockito.when(ergebnisseModelMapper.toEntity(model)).thenReturn(mappedEntityOfModel);
 
-            unitUnderTest.postErgebnisse(model, reference);
+            unitUnderTest.postErgebnisse(reference, model);
 
             Mockito.verify(ergebnisseRepository).save(mappedEntityOfModel);
         }

@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.BezirkUndWahlIDStapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.BezirkUndWahlIDStapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnisse;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.ErgebnisseRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
@@ -27,8 +27,8 @@ public class ErgebnisseService {
     private final ExceptionFactory exceptionFactory;
 
     @PreAuthorize(
-        "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetErgebnisse')"
-                + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
+            "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetErgebnisse')"
+                    + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
     )
     public ErgebnisseModel getErgebnisse(@P("param") @NotNull final ErgebnisseReference ergebnisseReference) {
         log.info("#getErgebnisse");
@@ -40,10 +40,10 @@ public class ErgebnisseService {
     }
 
     @PreAuthorize(
-        "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostErgebnisse')"
-                + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
+            "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostErgebnisse')"
+                    + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
     )
-    public void postErgebnisse(@P("param") @NotNull ErgebnisseModel ergebnisseToAdd, ErgebnisseReference ergebnisseReference) {
+    public void postErgebnisse(@P("param") final ErgebnisseReference ergebnisseReference, @NotNull final ErgebnisseModel ergebnisseToAdd) {
         log.info("#postErgebnisse");
         ergebnisseValidator.validModelOrThrow(ergebnisseToAdd);
         ergebnisseValidator.validReferenceOrThrow(ergebnisseReference);
@@ -51,8 +51,9 @@ public class ErgebnisseService {
         try {
             ergebnisseRepository.save(ergebnisseModelMapper.toEntity(ergebnisseToAdd));
         } catch (Exception e) {
-            log.info("Logged attribute: {}={}", "ergebnisse", ergebnisseToAdd);
+            log.error("#postStatus unsaveable:", e);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.ERGEBNISSE_UNSAVEABLE);
+
         }
     }
 

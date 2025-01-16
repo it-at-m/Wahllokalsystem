@@ -76,7 +76,7 @@ export default withMermaid({
                             text: 'API-Client generieren',
                             link: `${PATH_GUIDES}how-to-create-client-from-open-api-json.md`
                         },
-                        {text: 'Tips und Tricks', link: `${PATH_GUIDES}tips-and-tricks.md`},
+                        {text: 'Datenbankzugriff', link: `${PATH_GUIDES}db-access.md`},
                     ]
                 },
                 {

@@ -43,7 +43,7 @@ export default withMermaid({
                     ]
                 },
                 {
-                    text: 'Adr', link: `${PATH_ADR}`, collapsed: true, items: [
+                    text: 'Designentscheidungen', link: `${PATH_ADR}`, collapsed: true, items: [
                         {text: 'Renovate - ignoriere lombok', link: `${PATH_ADR}adr001-renovate-ignore-lombok`},
                         {
                             text: 'Verbesserung Einstiegsfreundlichkeit',

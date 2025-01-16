@@ -1,6 +1,7 @@
 import {withMermaid} from "vitepress-plugin-mermaid"
 
 const PATH_TECHNIK = '/technik/';
+const PATH_ECOSYSTEM = PATH_TECHNIK + '/ecosystem/';
 const PATH_CODING_CONVENTIONS = PATH_TECHNIK + 'naming_conventions/';
 const PATH_ADR = PATH_TECHNIK + 'adr/';
 const PATH_GUIDES = PATH_TECHNIK + '/guides/';
@@ -37,7 +38,11 @@ export default withMermaid({
                 {
                     text: 'Getting Started', link: `${PATH_TECHNIK}get_started/`
                 },
-                {text: 'Tools & Frameworks', link: `${PATH_TECHNIK}`},
+                {text: 'Ecosystem', collapsed: true, items: [
+                        {text: 'Tools & Frameworks', link: `${PATH_ECOSYSTEM}toolsAndFrameworks`},
+                        {text: 'Workflows', link: `${PATH_ECOSYSTEM}workflows`}
+                    ]
+                },
                 {
                     text: 'Adr', link: `${PATH_ADR}`, collapsed: true, items: [
                         {text: 'Renovate - ignoriere lombok', link: `${PATH_ADR}adr001-renovate-ignore-lombok`},

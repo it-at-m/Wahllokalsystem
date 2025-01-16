@@ -21,11 +21,8 @@ export function getConfig(): RequestInit {
  * @param body Optional body to be transferred
  */
 // eslint-disable-next-line
-export function postConfig(body: any): RequestInit {
+export function postConfig(): RequestInit {
   return {
-    method: "POST",
-    // durch die generierte API wird bereits ein korrekt formatierter JSON String übergeben und muss nicht mehr manuell umgewandelt werden
-    body: body, //? JSON.stringify(body) : undefined,
     headers: getHeaders(),
     mode: "cors",
     credentials: "same-origin",

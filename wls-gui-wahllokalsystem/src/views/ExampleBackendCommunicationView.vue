@@ -71,12 +71,10 @@ async function getBroadcastMessage(wahlbezirkID: string) {
       // ggf kann "getMessageRaw" in Zeile 193 ergänzt werden
       const nachrichtID = content.oid;
       const deleteParams: DeleteMessageRequest = { nachrichtID };
-      broadcastCA
-        .deleteMessage(deleteParams, postConfig(nachrichtID))
-        .catch(() => {
-          errorToShow.value =
-            "Es ist ein Fehler beim Lesen der Nachricht aufgetreten";
-        });
+      broadcastCA.deleteMessage(deleteParams, postConfig()).catch(() => {
+        errorToShow.value =
+          "Es ist ein Fehler beim Lesen der Nachricht aufgetreten";
+      });
       messageToShow.value = content.nachricht;
     })
     .catch((responseError: ResponseError) => {
@@ -97,8 +95,7 @@ async function postBroadcastMessage(
   } as BroadcastMessageDTO;
   const postParams: BroadcastRequest = { broadcastMessageDTO };
   broadcastCA
-    // TODO issue erstellen für phase 3, dass hier nicht 2x der body übergeben werden muss
-    .broadcast(postParams, postConfig(broadcastMessageDTO))
+    .broadcast(postParams, postConfig())
     .then(() => {
       errorToShow.value = "";
     })

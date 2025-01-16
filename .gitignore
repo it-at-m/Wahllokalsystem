@@ -6,3 +6,6 @@ node_modules
 /docs/.vitepress/cache/
 /docs/.vitepress/dist/
 /docs/node_modules/
+
+/wls-gui-wahllokalsystem/src/api/wls-clients/generated-broadcast-api/.openapi-generator
+/wls-gui-wahllokalsystem/src/api/wls-clients/**/.openapi-generator-ignore

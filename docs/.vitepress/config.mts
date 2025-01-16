@@ -35,7 +35,14 @@ export default withMermaid({
                 {text: 'Entwicklungsumgebung', link: `${PATH_TECHNIK}development/`},
                 {
                     text: 'Guides', link: `${PATH_GUIDES}`, collapsed: true, items: [
-                        {text: 'API-Client generieren', link: `${PATH_GUIDES}how-to-create-client-from-open-api-json.md`},
+                        {
+                            text: 'API-Client generieren',
+                            link: `${PATH_GUIDES}how-to-create-client-from-open-api-json.md`
+                        },
+                        {
+                            text: 'API-Client generieren FE',
+                            link: `${PATH_GUIDES}generate-client-from-openapi-json-frontend.md`
+                        },
                         {text: 'Tips und Tricks', link: `${PATH_GUIDES}tips-and-tricks.md`},
                     ]
                 },

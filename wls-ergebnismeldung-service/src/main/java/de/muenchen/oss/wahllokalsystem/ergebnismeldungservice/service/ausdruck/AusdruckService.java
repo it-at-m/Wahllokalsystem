@@ -53,7 +53,7 @@ public class AusdruckService {
         log.debug("Loading printout {}", id.getMeldungsart());
 
         wahlUndBezirkIDUndMeldungsartValidator.validWahlUndBezirkIDUndMeldungsartOrThrow(id,
-            exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG));
+                exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG));
 
         Ausdruck result = ausdruckRepository.findOneByWahlUndBezirkIDUndMeldungsart(id);
 

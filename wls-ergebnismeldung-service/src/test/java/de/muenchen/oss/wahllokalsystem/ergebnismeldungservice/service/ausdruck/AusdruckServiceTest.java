@@ -56,7 +56,7 @@ class AusdruckServiceTest {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG))
-                .thenReturn(mockedWlsException);
+                    .thenReturn(mockedWlsException);
 
             unitUnderTest.getAusdruck(id);
 
@@ -99,8 +99,9 @@ class AusdruckServiceTest {
             val ausdruckEntityList = createListOfAusdruckEntities(wahlID, wahlbezirkID, erstelltAm);
             val ausdruckModelList = createListOfAusdruckModels(wahlID, wahlbezirkID, erstelltAm);
 
-            Mockito.when(ausdruckRepository.findAllByWahlUndBezirkIDUndMeldungsart_WahlIDAndWahlUndBezirkIDUndMeldungsart_WahlbezirkID(wahlID, wahlbezirkID)).thenReturn(
-                ausdruckEntityList);
+            Mockito.when(ausdruckRepository.findAllByWahlUndBezirkIDUndMeldungsart_WahlIDAndWahlUndBezirkIDUndMeldungsart_WahlbezirkID(wahlID, wahlbezirkID))
+                    .thenReturn(
+                            ausdruckEntityList);
             Mockito.when(ausdruckModelMapper.toModelList(ausdruckEntityList)).thenReturn(ausdruckModelList);
 
             val result = unitUnderTest.getAll(wahlID, wahlbezirkID);
@@ -167,7 +168,7 @@ class AusdruckServiceTest {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("postAusdruck: Parameter unvollstaendig");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG))
-                .thenReturn(mockedWlsException);
+                    .thenReturn(mockedWlsException);
             Mockito.when(validator.validate(ausdruckModelToSave)).thenReturn(Set.of(new TestConstraintViolation()));
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.saveAusdruck(ausdruckModelToSave)).isSameAs(mockedWlsException);

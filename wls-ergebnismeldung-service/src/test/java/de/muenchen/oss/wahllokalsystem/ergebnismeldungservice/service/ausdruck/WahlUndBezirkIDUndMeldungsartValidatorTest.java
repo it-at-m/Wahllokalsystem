@@ -28,10 +28,11 @@ class WahlUndBezirkIDUndMeldungsartValidatorTest {
         @ParameterizedTest(name = "provided exception when {1}")
         @MethodSource("invalidWahlUndBezirkIDUndMeldungsartArgumentsWithTestcaseNameAppendix")
         void should_throwProvidedException_when_wahlUndBezirkIDUndIsNotValid(final ArgumentsAccessor arguments) {
-             Assertions.assertThatException()
+            Assertions.assertThatException()
                     .isThrownBy(
-                            () -> unitUnderTest.validWahlUndBezirkIDUndMeldungsartOrThrow(arguments.get(0, WahlUndBezirkIDUndMeldungsart.class), providedException))
-                .isSameAs(providedException);
+                            () -> unitUnderTest.validWahlUndBezirkIDUndMeldungsartOrThrow(arguments.get(0, WahlUndBezirkIDUndMeldungsart.class),
+                                    providedException))
+                    .isSameAs(providedException);
         }
 
         public static Stream<Arguments> invalidWahlUndBezirkIDUndMeldungsartArgumentsWithTestcaseNameAppendix() {

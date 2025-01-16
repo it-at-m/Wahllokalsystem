@@ -1,10 +1,11 @@
+import type { BroadcastMessageDTO } from "@/api/wls-clients/generated-broadcast-api";
+
 import {
   getConfig,
   postConfig,
   wlsCatchHandler,
   wlsResponseHandler,
 } from "@/api/fetch-utils";
-import BroadcastMessageToSend from "@/api/wls-clients/broadcast-service/BroadcastMessageToSend";
 
 export const BROADCAST_API_URL = new URL(
   "/api/broadcast-service/businessActions/",
@@ -19,11 +20,11 @@ export function getBroadcastMessage(wahlbezirkID: string): Promise<Response> {
 
 export function postBroadcastMessage(
   wahlbezirkIDs: string[],
-  message: string
+  nachricht: string
 ): Promise<Response> {
   return fetch(
     `${BROADCAST_API_URL}broadcast`,
-    postConfig(new BroadcastMessageToSend(wahlbezirkIDs, message))
+    postConfig({ wahlbezirkIDs, nachricht } as BroadcastMessageDTO)
   )
     .then(wlsResponseHandler)
     .catch(wlsCatchHandler);

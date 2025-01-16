@@ -86,9 +86,13 @@ async function getBroadcastMessage(wahlbezirkID: string) {
     });
 }
 
-async function postBroadcastMessage(message: string, ids: string[]) {
+async function postBroadcastMessage(
+  nachricht: string,
+  wahlbezirkIDs: string[]
+) {
   clearDisplayedValues();
   const { error } = await postMessage(message, ids);
+  const { error } = await postMessage(nachricht, wahlbezirkIDs);
   errorToShow.value = error;
   messageInput.value = "";
 }

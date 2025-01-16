@@ -32,6 +32,11 @@
 </template>
 
 <script setup lang="ts">
+import type {
+  DeleteMessageRequest,
+  GetMessageRequest,
+} from "@/api/wls-clients/generated-broadcast-api";
+
 import { ref } from "vue";
 import {
   VBtn,
@@ -41,19 +46,42 @@ import {
   VTextField,
 } from "vuetify/components";
 
+import { postConfig } from "@/api/fetch-utils";
+import {
+  BroadcastControllerApi,
+  ResponseError,
+} from "@/api/wls-clients/generated-broadcast-api";
 import { useBroadcastService } from "@/composables/wlsClients/broadcastService/useBroadcastService";
 
-const { getMessage, postMessage } = useBroadcastService();
+const { postMessage } = useBroadcastService();
 
 const messageInput = ref("I am a message");
 const messageToShow = ref("");
 const errorToShow = ref("");
 
-async function getBroadcastMessage(id: string) {
+const broadcastCA = new BroadcastControllerApi();
+
+async function getBroadcastMessage(wahlbezirkID: string) {
   clearDisplayedValues();
-  const { message, error } = await getMessage(id);
-  errorToShow.value = error;
-  messageToShow.value = message;
+
+  const getParams: GetMessageRequest = { wahlbezirkID };
+  broadcastCA
+    .getMessage(getParams)
+    .then((content) => {
+      const nachrichtID = content.oid;
+      const deleteParams: DeleteMessageRequest = { nachrichtID };
+      broadcastCA
+        .deleteMessage(deleteParams, postConfig(nachrichtID))
+        .catch(() => {
+          errorToShow.value =
+            "Es ist ein Fehler beim Lesen der Nachricht aufgetreten";
+        });
+      messageToShow.value = content.nachricht;
+    })
+    .catch((responseError: ResponseError) => {
+      console.log(responseError);
+      errorToShow.value = responseError.toString();
+    });
 }
 
 async function postBroadcastMessage(message: string, ids: string[]) {

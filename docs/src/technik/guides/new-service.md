@@ -4,7 +4,7 @@ Wenn ein neuer Microservice angelegt wird, sind dabei folgende Themen zu beachte
 
 ## Maven-Projekt anlegen
 
-Für den neuen Service wird ein Ordner parallel zu den anderen Service angelegt. Dabei auf das Namensschema achten:
+Für den neuen Service wird ein Ordner parallel zu den anderen Service angelegt. Dabei ist auf das Namensschema zu achten:
 `wls-<Domain>-service`
 
 In dem Ordner wird das Maven-Projekt eingerichtet. Dazu aus den [RefArch-Templates](https://github.com/it-at-m/refarch-templates)
@@ -48,7 +48,7 @@ Beispiel für `wls-broadcast-service`:
 
 # Routing im Gateway einrichten
 
-Damit das Frontend mit dem Service kommunizieren kann ist im Gateway eine Route einzurichten. Das Routing erfolgt mit
+Damit das Frontend mit dem Service kommunizieren kann, ist im Gateway eine neue Route einzurichten. Das Routing erfolgt mit
 dem Servicenamen.
 
 Beispiel:

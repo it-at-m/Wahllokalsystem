@@ -75,12 +75,9 @@ flowchart LR
 
 Der Zugriff auf die Oracle-Datenbank ist [einzurichten](/technik/guides/db-access).
 
-## Starten des Frontend
+## Starten des Frontends
 
-Standardmäßig wird das Frontend über den Befehl `"dev": "vite"` in der `package.json`-Datei gestartet. Da es im
-Wahllokalsystem so viele verschiedene Rollen gibt, ist die Standard Http-Request-Header-Size von 8KB nicht ausreichend
-und wurde in den Services auf 32KB angepasst. Damit das Frontend nun mit den Backend-Services kompatibel bleibt, wurde
-der Standard Befehl angepasst in `"dev": "set NODE_OPTIONS=--max-http-header-size=32000 && vite"`.
+Standardmäßig wird das Frontend über den Befehl `"dev": "vite"` in der `package.json`-Datei gestartet.
 
 Nachdem das Frontend in der IDE und das ApiGateway über Docker gestartet wurde, kann es über `http://localhost:8400/`
 aufgerufen werden. Allerdings befindet sich die Oberfläche dann in einer Ladeschleife und man sieht nur einen

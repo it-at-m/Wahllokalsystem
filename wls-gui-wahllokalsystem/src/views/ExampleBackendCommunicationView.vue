@@ -33,6 +33,8 @@
 
 <script setup lang="ts">
 import type {
+  BroadcastMessageDTO,
+  BroadcastRequest,
   DeleteMessageRequest,
   GetMessageRequest,
 } from "@/api/wls-clients/generated-broadcast-api";
@@ -51,9 +53,6 @@ import {
   BroadcastControllerApi,
   ResponseError,
 } from "@/api/wls-clients/generated-broadcast-api";
-import { useBroadcastService } from "@/composables/wlsClients/broadcastService/useBroadcastService";
-
-const { postMessage } = useBroadcastService();
 
 const messageInput = ref("I am a message");
 const messageToShow = ref("");
@@ -91,9 +90,22 @@ async function postBroadcastMessage(
   wahlbezirkIDs: string[]
 ) {
   clearDisplayedValues();
-  const { error } = await postMessage(message, ids);
-  const { error } = await postMessage(nachricht, wahlbezirkIDs);
-  errorToShow.value = error;
+
+  const broadcastMessageDTO = {
+    wahlbezirkIDs,
+    nachricht,
+  } as BroadcastMessageDTO;
+  const postParams: BroadcastRequest = { broadcastMessageDTO };
+  broadcastCA
+    // TODO issue erstellen für phase 3, dass hier nicht 2x der body übergeben werden muss
+    .broadcast(postParams, postConfig(broadcastMessageDTO))
+    .then(() => {
+      errorToShow.value = "";
+    })
+    .catch((responseError: ResponseError) => {
+      // todo: wls error zurückgeben (auch beim get!!)
+      errorToShow.value = responseError.toString();
+    });
   messageInput.value = "";
 }
 

@@ -24,7 +24,8 @@ export function getConfig(): RequestInit {
 export function postConfig(body: any): RequestInit {
   return {
     method: "POST",
-    body: body ? JSON.stringify(body) : undefined,
+    // durch die generierte API wird bereits ein korrekt formatierter JSON String übergeben und muss nicht mehr manuell umgewandelt werden
+    body: body, //? JSON.stringify(body) : undefined,
     headers: getHeaders(),
     mode: "cors",
     credentials: "same-origin",

@@ -1,7 +1,7 @@
 import {withMermaid} from "vitepress-plugin-mermaid"
 
 const PATH_TECHNIK = '/technik/';
-const PATH_CODING_CONVENTIONS = PATH_TECHNIK + 'coding_conventions/';
+const PATH_CODING_CONVENTIONS = PATH_TECHNIK + 'naming_conventions/';
 const PATH_ADR = PATH_TECHNIK + 'adr/';
 const PATH_GUIDES = PATH_TECHNIK + '/guides/';
 const PATH_SERVICES = '/services/';
@@ -64,9 +64,9 @@ export default withMermaid({
                     ]
                 },
                 {
-                    text: 'Coding Conventions', link: `${PATH_CODING_CONVENTIONS}`, collapsed: true, items: [
-                        {text: 'Naming Convention - Testing', link: `${PATH_CODING_CONVENTIONS}tests_naming`},
-                        {text: 'Naming Convention - Database', link: `${PATH_CODING_CONVENTIONS}db_naming`}
+                    text: 'Naming Conventions', link: `${PATH_CODING_CONVENTIONS}`, collapsed: true, items: [
+                        {text: 'Testing', link: `${PATH_CODING_CONVENTIONS}testing`},
+                        {text: 'Flyway', link: `${PATH_CODING_CONVENTIONS}flyway`}
                     ]
                 },
                 {

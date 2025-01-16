@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from "../../../resources/generated-broadcast-api/runtime";
+import { mapValues } from "../runtime";
 
 /**
  *

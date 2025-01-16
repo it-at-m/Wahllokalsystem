@@ -12,8 +12,7 @@
  * Do not edit the class manually.
  */
 
-// TODO: achtung: "8083" wurde manuell hinzugefügt, der generierte wert war "8080"
-export const BASE_PATH = "http://localhost:8083".replace(/\/+$/, "");
+export const BASE_PATH = "http://localhost:8080".replace(/\/+$/, "");
 
 export interface ConfigurationParameters {
   basePath?: string; // override base path

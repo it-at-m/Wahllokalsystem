@@ -12,14 +12,14 @@
  * Do not edit the class manually.
  */
 
-import type { BroadcastMessageDTO, MessageDTO } from "../models";
+import type { BroadcastMessageDTO, MessageDTO } from "../models/index";
 
 import {
   BroadcastMessageDTOFromJSON,
   BroadcastMessageDTOToJSON,
   MessageDTOFromJSON,
   MessageDTOToJSON,
-} from "../models";
+} from "../models/index";
 import * as runtime from "../runtime";
 
 export interface BroadcastRequest {
@@ -69,8 +69,7 @@ export class BroadcastControllerApi extends runtime.BaseAPI {
     }
     const response = await this.request(
       {
-        // TODO: achtung: "/api/broadcast-service" wurde manuell hinzugefügt
-        path: `/api/broadcast-service/businessActions/broadcast`,
+        path: `/businessActions/broadcast`,
         method: "POST",
         headers: headerParameters,
         query: queryParameters,
@@ -124,8 +123,7 @@ export class BroadcastControllerApi extends runtime.BaseAPI {
     }
     const response = await this.request(
       {
-        // TODO: achtung: "/api/broadcast-service" wurde manuell hinzugefügt
-        path: `/api/broadcast-service/businessActions/messageRead/{nachrichtID}`.replace(
+        path: `/businessActions/messageRead/{nachrichtID}`.replace(
           `{${"nachrichtID"}}`,
           encodeURIComponent(String(requestParameters["nachrichtID"]))
         ),
@@ -179,8 +177,7 @@ export class BroadcastControllerApi extends runtime.BaseAPI {
     }
     const response = await this.request(
       {
-        // TODO: achtung: "/api/broadcast-service" wurde manuell hinzugefügt, der generierte wert war "/businessActions/getMessage/{wahlbezirkID}"
-        path: `/api/broadcast-service/businessActions/getMessage/{wahlbezirkID}`.replace(
+        path: `/businessActions/getMessage/{wahlbezirkID}`.replace(
           `{${"wahlbezirkID"}}`,
           encodeURIComponent(String(requestParameters["wahlbezirkID"]))
         ),

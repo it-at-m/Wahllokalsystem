@@ -51,6 +51,7 @@ import {
 import { postConfig } from "@/api/fetch-utils";
 import {
   BroadcastControllerApi,
+  Configuration,
   ResponseError,
 } from "@/api/wls-clients/generated-broadcast-api";
 
@@ -58,7 +59,11 @@ const messageInput = ref("I am a message");
 const messageToShow = ref("");
 const errorToShow = ref("");
 
-const broadcastCA = new BroadcastControllerApi();
+const broadcastCA = new BroadcastControllerApi(
+  new Configuration({
+    basePath: "http://localhost:8083/api/broadcast-service",
+  })
+);
 
 async function getBroadcastMessage(wahlbezirkID: string) {
   clearDisplayedValues();

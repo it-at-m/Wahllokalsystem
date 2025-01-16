@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.eq;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.Ausdruck;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.AusdruckRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.Meldungsart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.WahlUndBezirkIDUndMeldungsart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
@@ -12,6 +13,8 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Path;
 import jakarta.validation.Validator;
 import jakarta.validation.metadata.ConstraintDescriptor;
+import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -61,7 +64,7 @@ class AusdruckServiceTest {
         }
 
         @Test
-        void should_returnAusdruckModel_when_ausdruckIsfoundInRepo() {
+        void should_returnAusdruckModel_when_ausdruckIsFoundInRepo() {
             val id = new WahlUndBezirkIDUndMeldungsart();
             val mockedMappedEntityAsModel = new AusdruckModel(id, null, null);
             val mockedEntity = new Ausdruck();
@@ -86,7 +89,75 @@ class AusdruckServiceTest {
     }
 
     @Nested
+    class GetAll {
+
+        @Test
+        void should_retrieveAllAusdruckeFromRepo_when_dataFound() {
+            val wahlID = "wahlID";
+            val wahlbezirkID = "wahlbezirkID";
+            val erstelltAm = Instant.now();
+            val ausdruckEntityList = createListOfAusdruckEntities(wahlID, wahlbezirkID, erstelltAm);
+            val ausdruckModelList = createListOfAusdruckModels(wahlID, wahlbezirkID, erstelltAm);
+
+            Mockito.when(ausdruckRepository.findAllByWahlUndBezirkIDUndMeldungsart_WahlIDAndWahlUndBezirkIDUndMeldungsart_WahlbezirkID(wahlID, wahlbezirkID)).thenReturn(
+                ausdruckEntityList);
+            Mockito.when(ausdruckModelMapper.toModelList(ausdruckEntityList)).thenReturn(ausdruckModelList);
+
+            val result = unitUnderTest.getAll(wahlID, wahlbezirkID);
+
+            Mockito.verify(ausdruckRepository).findAllByWahlUndBezirkIDUndMeldungsart_WahlIDAndWahlUndBezirkIDUndMeldungsart_WahlbezirkID(wahlID, wahlbezirkID);
+            Assertions.assertThat(result).isEqualTo(ausdruckModelList);
+        }
+
+        private List<AusdruckModel> createListOfAusdruckModels(String wahlbezirkID, String wahlID, Instant erstelltAm) {
+            val content = "Testausdruck";
+
+            val ausdruckModel1 = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V1), content, erstelltAm);
+            val ausdruckModel2 = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V3), content, erstelltAm);
+
+            return List.of(ausdruckModel1, ausdruckModel2);
+
+        }
+
+        private List<Ausdruck> createListOfAusdruckEntities(String wahlbezirkID, String wahlID, Instant erstelltAm) {
+            val content = "Testausdruck";
+
+            val ausdruckEntity1 = new Ausdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V1), content, erstelltAm);
+            val ausdruckEntity2 = new Ausdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V3), content, erstelltAm);
+
+            return List.of(ausdruckEntity1, ausdruckEntity2);
+        }
+    }
+
+    @Nested
     class SaveAusdruck {
+
+        @Test
+        void should_saveMappedAusdruckModel_when_called() {
+            val id = new WahlUndBezirkIDUndMeldungsart();
+            val ausdruckModelToSave = new AusdruckModel(id, null, null);
+            val mockedModelAsEntity = Mockito.mock(Ausdruck.class);
+
+            Mockito.when(ausdruckModelMapper.toEntity(ausdruckModelToSave)).thenReturn(mockedModelAsEntity);
+
+            unitUnderTest.saveAusdruck(ausdruckModelToSave);
+
+            Mockito.verify(ausdruckRepository).save(mockedModelAsEntity);
+        }
+
+        @Test
+        void should_throwRepositoryException_when_savingFailed() {
+            val id = new WahlUndBezirkIDUndMeldungsart();
+            val ausdruckModelToSave = new AusdruckModel(id, null, null);
+            val mockedModelAsEntity = Mockito.mock(Ausdruck.class);
+
+            val mockedRepositorySaveException = new RuntimeException("saving failed");
+
+            Mockito.when(ausdruckModelMapper.toEntity(ausdruckModelToSave)).thenReturn(mockedModelAsEntity);
+            Mockito.doThrow(mockedRepositorySaveException).when(ausdruckRepository).save(mockedModelAsEntity);
+
+            Assertions.assertThatThrownBy(() -> unitUnderTest.saveAusdruck(ausdruckModelToSave)).isSameAs(mockedRepositorySaveException);
+        }
 
         @Test
         void should_throwFachlicheWlsExceptionForParameter_when_callingValidator() {

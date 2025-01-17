@@ -15,7 +15,6 @@ public interface StimmabgabevermerkeRepository extends CrudRepository<Stimmabgab
 
     @Override
     @Cacheable(value = CACHE, key = "#bezirkIDUndWaehlerverzeichnisNummer")
-    @PreAuthorize("hasAuthority('Ergebnismeldung_READ_Stimmabgabevermerke')")
     Optional<Stimmabgabevermerke> findById(BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer);
 
     @Override

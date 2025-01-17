@@ -163,11 +163,11 @@ public class StimmabgabevermerkeControllerIntegrationTest {
 
         val vermerk1 = new Vermerk();
         vermerk1.setBlattnummer(1L);
-        vermerk1.getStimmzetteln().addAll(List.of(stimmzettel1, stimmzettel2, stimmzettel3));
+        vermerk1.getStimmzettel().addAll(List.of(stimmzettel1, stimmzettel2, stimmzettel3));
 
         val vermerk2 = new Vermerk();
         vermerk2.setBlattnummer(2L);
-        vermerk2.getStimmzetteln().addAll(List.of(stimmzettel1, stimmzettel2, stimmzettel3));
+        vermerk2.getStimmzettel().addAll(List.of(stimmzettel1, stimmzettel2, stimmzettel3));
 
         val wahlschein1 = new EingenommenerWahlschein();
         wahlschein1.setAnzahl(1);

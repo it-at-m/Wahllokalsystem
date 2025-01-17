@@ -5,6 +5,6 @@ import java.util.Set;
 
 public record VermerkModel(
         @NotNull long blattnummer,
-        @NotNull Set<StimmzettelModel> stimmzetteln
+        @NotNull Set<StimmzettelModel> stimmzettel
 ) {
 }

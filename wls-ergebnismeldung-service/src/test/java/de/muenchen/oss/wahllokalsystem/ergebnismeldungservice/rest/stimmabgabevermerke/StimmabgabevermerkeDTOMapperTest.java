@@ -107,7 +107,7 @@ public class StimmabgabevermerkeDTOMapperTest {
 
             Assertions.assertThat(result.wahldaten().stream().allMatch(
                     (wahldatenModel) -> wahldatenModel.vermerke().stream().allMatch(
-                            (vermerk) -> vermerk.stimmzetteln().stream().allMatch(
+                            (vermerk) -> vermerk.stimmzettel().stream().allMatch(
                                     (sz) -> sz.stimmzettelart().name().equals(stimmzettelart.name())))))
                     .isTrue();
             Assertions.assertThat(result.wahldaten().stream().allMatch(
@@ -207,7 +207,7 @@ public class StimmabgabevermerkeDTOMapperTest {
 
             Assertions.assertThat(result.wahldaten().stream().allMatch(
                     (wahldatenDTO) -> wahldatenDTO.vermerke().stream().allMatch(
-                            (vermerk) -> vermerk.stimmzetteln().stream().allMatch(
+                            (vermerk) -> vermerk.stimmzettel().stream().allMatch(
                                     (sz) -> sz.stimmzettelart().name().equals(stimmzettelart.name())))))
                     .isTrue();
             Assertions.assertThat(result.wahldaten().stream().allMatch(

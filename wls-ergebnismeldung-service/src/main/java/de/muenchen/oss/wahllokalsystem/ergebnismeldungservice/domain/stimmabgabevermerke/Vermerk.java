@@ -45,5 +45,5 @@ public class Vermerk {
     @CollectionTable(name = "Stimmzettel", joinColumns = @JoinColumn(name = "vermerkID", referencedColumnName = "id"))
     @NotNull
     @ToString.Include
-    private Set<Stimmzettel> stimmzetteln = new LinkedHashSet<>();
+    private Set<Stimmzettel> stimmzettel = new LinkedHashSet<>();
 }

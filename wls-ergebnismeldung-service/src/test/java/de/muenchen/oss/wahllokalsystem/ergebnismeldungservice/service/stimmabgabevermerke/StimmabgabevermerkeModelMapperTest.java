@@ -91,7 +91,7 @@ class StimmabgabevermerkeModelMapperTest {
 
             val result = unitUnderTest.toModel(entityToMap);
 
-            val mappedStimmzettelartModel = result.wahldaten().iterator().next().vermerke().iterator().next().stimmzetteln().iterator().next().stimmzettelart();
+            val mappedStimmzettelartModel = result.wahldaten().iterator().next().vermerke().iterator().next().stimmzettel().iterator().next().stimmzettelart();
             Assertions.assertThat(mappedStimmzettelartModel.name())
                     .isEqualTo(stimmzettelart.name());
         }
@@ -159,7 +159,7 @@ class StimmabgabevermerkeModelMapperTest {
 
                 val result = unitUnderTest.toEntity(vermerkToMap);
 
-                Assertions.assertThat(result.getStimmzetteln().iterator().next().getStimmzettelart().name()).isEqualTo(stimmzettelartModel.name());
+                Assertions.assertThat(result.getStimmzettel().iterator().next().getStimmzettelart().name()).isEqualTo(stimmzettelartModel.name());
             }
         }
     }

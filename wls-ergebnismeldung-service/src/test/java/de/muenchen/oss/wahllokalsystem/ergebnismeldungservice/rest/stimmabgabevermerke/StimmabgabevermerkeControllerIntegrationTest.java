@@ -15,6 +15,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabe
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Vermerk;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Wahldaten;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeModelMapper;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Testdaten;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import java.util.List;
 import java.util.Set;
@@ -131,6 +132,43 @@ public class StimmabgabevermerkeControllerIntegrationTest {
                     // expected object is not persistent -> has no UUIDs set
                     .ignoringFieldsOfTypes(UUID.class)
                     .isEqualTo(expectedEntity);
+        }
+
+        @Test
+        void should_replaceExistingData_when_dataIsSent() throws Exception {
+            val wahlbezirkID = "wahlbezirkID";
+            val waehlerverzeichnisNummer = 1L;
+            val anzahlBlaetter = 4711L;
+            val wahlID = "wahlID";
+
+            val entityToReplace = new Stimmabgabevermerke(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer), anzahlBlaetter + 1,
+                    Set.of(
+                            Testdaten.Wahldaten.createEntity(wahlbezirkID, wahlID, waehlerverzeichnisNummer)));
+            stimmabgabevermerkeRepository.save(entityToReplace);
+
+            val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID,
+                    waehlerverzeichnisNummer);
+            val expectedEntity = new Stimmabgabevermerke(id, anzahlBlaetter,
+                    Set.of(createWahldaten(wahlbezirkID, "wahlID1", waehlerverzeichnisNummer),
+                            createWahldaten(wahlbezirkID, "wahlID2", waehlerverzeichnisNummer)));
+
+            val requestBody = stimmabgabevermerkeDTOMapper.toStimmabgabevermerkeDTO(stimmabgabevermerkeModelMapper.toModel(expectedEntity));
+            val request = MockMvcRequestBuilders.post(buildStimmabgabevermerkeURI(wahlbezirkID, waehlerverzeichnisNummer))
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                            objectMapper.writeValueAsString(requestBody));
+
+            mockMvc.perform(request).andExpect(status().isOk());
+
+            val persistedEntity = stimmabgabevermerkeRepository.findById(id).get();
+
+            Assertions.assertThat(persistedEntity)
+                    .usingRecursiveComparison()
+                    .ignoringCollectionOrder()
+                    // expected object is not persistent -> has no UUIDs set
+                    .ignoringFieldsOfTypes(UUID.class)
+                    .isEqualTo(expectedEntity);
+
+            Assertions.assertThat(stimmabgabevermerkeRepository.count()).isEqualTo(1);
         }
 
         @Test

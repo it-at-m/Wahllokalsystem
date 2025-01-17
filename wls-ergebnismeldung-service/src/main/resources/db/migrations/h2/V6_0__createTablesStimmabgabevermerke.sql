@@ -1,58 +1,58 @@
 CREATE TABLE Stimmabgabevermerke
 (
-    waehlerverzeichnisNummer NUMBER(19, 0) NOT NULL,
+    waehlerverzeichnisNummer BIGINT        NOT NULL,
     wahlbezirkID             VARCHAR(1024) NOT NULL,
-    anzahlblaetter           NUMBER(19, 0) NOT NULL,
+    anzahlblaetter           BIGINT        NOT NULL,
 
-    PRIMARY KEY (waehlerverzeichnisNummer, wahlbezirkID)
+    PRIMARY KEY (waehlerverzeichnisNummer, wahlbezirkid)
 );
 
 CREATE TABLE Wahldaten
 (
     id                       VARCHAR(36)   NOT NULL,
     wahlID                   VARCHAR(1024) NOT NULL,
-    waehlerverzeichnisNummer NUMBER(19, 0),
-    wahlbezirkID             VARCHAR(1024) NOT NULL,
+    waehlerverzeichnisNummer BIGINT,
+    wahlbezirkID             VARCHAR(1024),
 
     CONSTRAINT fk_Wd
         FOREIGN KEY (waehlerverzeichnisNummer, wahlbezirkID)
             REFERENCES Stimmabgabevermerke (waehlerverzeichnisNummer, wahlbezirkID)
-                ON DELETE CASCADE,
+            ON DELETE CASCADE,
 
     PRIMARY KEY (id)
 );
 
 CREATE TABLE EingenommeneWahlscheine
 (
-    wahldatenID    VARCHAR(36)   NOT NULL,
-    anzahl         NUMBER(19, 0) NOT NULL,
-    stimmzettelart VARCHAR(255)  NOT NULL,
+    wahldatenID    VARCHAR(36)  NOT NULL,
+    anzahl         BIGINT       NOT NULL,
+    stimmzettelart VARCHAR(255) NOT NULL,
 
     CONSTRAINT fk_Wahldaten_ew
         FOREIGN KEY (wahldatenID)
             REFERENCES Wahldaten (id)
-                ON DELETE CASCADE
+            ON DELETE CASCADE
 );
 
 CREATE TABLE Vermerk
 (
-    id          VARCHAR(36)   NOT NULL,
-    wahldatenID VARCHAR(36)   NOT NULL,
-    blattnummer NUMBER(19, 0) NOT NULL,
+    id          VARCHAR(36) NOT NULL,
+    wahldatenid VARCHAR(36) NOT NULL,
+    blattnummer BIGINT      NOT NULL,
 
     PRIMARY KEY (id),
 
     CONSTRAINT fk_Wahldaten
-        FOREIGN KEY (wahldatenID)
+        FOREIGN KEY (wahldatenid)
             REFERENCES Wahldaten (id)
-                ON DELETE CASCADE
+            ON DELETE CASCADE
 );
 
 CREATE TABLE Stimmzettel
 (
-    vermerkID      VARCHAR(36)   NOT NULL,
-    anzahl         NUMBER(19, 0) NOT NULL,
-    stimmzettelart VARCHAR(255)  NOT NULL,
+    vermerkID      VARCHAR(36)  NOT NULL,
+    anzahl         BIGINT       NOT NULL,
+    stimmzettelart VARCHAR(255) NOT NULL,
 
     CONSTRAINT fk_Vermerke
         FOREIGN KEY (vermerkID)

@@ -49,10 +49,8 @@ public class Wahldaten {
     @ToString.Include
     private BezirkUndWahlIDUndWaehlerverzeichnisnummer bezirkUndWahlIDUndWaehlerverzeichnisnummer;
 
-    @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JoinColumn(name = "wahldatenID", referencedColumnName = "id")
+    @OneToMany(mappedBy = "wahldaten", orphanRemoval = true, cascade = CascadeType.ALL)
     @NotNull
-    @ToString.Include
     private Set<Vermerk> vermerke = new LinkedHashSet<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -61,4 +59,9 @@ public class Wahldaten {
     @Size(min = 1)
     @ToString.Include
     private Set<EingenommenerWahlschein> eingenommenewahlscheine = new LinkedHashSet<>();
+
+    public void addVermerk(Vermerk vermerk) {
+        vermerke.add(vermerk);
+        vermerk.setWahldaten(this);
+    }
 }

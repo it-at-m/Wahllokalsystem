@@ -58,7 +58,7 @@ class StimmabgabevermerkeModelMapperTest {
         @EnumSource(Stimmzettelart.class)
         void should_useStimmzettelartWithSameName_when_stimmzettelartModelIsGiven(final Stimmzettelart stimmzettelart) {
             val entityToMap = new Stimmabgabevermerke(new BezirkIDUndWaehlerverzeichnisNummer("", 0L), 0L,
-                    Set.of(new Wahldaten(null, null, Set.of(new Vermerk(UUID.randomUUID(), 0L, Set.of(new Stimmzettel(
+                    Set.of(new Wahldaten(null, null, Set.of(new Vermerk(UUID.randomUUID(), null, 0L, Set.of(new Stimmzettel(
                             0L, stimmzettelart)))), Collections.emptySet())));
 
             val result = unitUnderTest.toModel(entityToMap);

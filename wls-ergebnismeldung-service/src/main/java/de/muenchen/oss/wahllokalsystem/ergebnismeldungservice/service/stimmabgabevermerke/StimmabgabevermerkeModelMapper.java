@@ -3,10 +3,11 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabga
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Vermerk;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Wahldaten;
+import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper
+@Mapper(collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
 public interface StimmabgabevermerkeModelMapper {
 
     StimmabgabevermerkeModel toModel(Stimmabgabevermerke entity);
@@ -25,5 +26,6 @@ public interface StimmabgabevermerkeModelMapper {
     Wahldaten toEntity(WahldatenModel wahldatenModel);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "wahldaten", ignore = true)
     Vermerk toEntity(VermerkModel vermerkModel);
 }

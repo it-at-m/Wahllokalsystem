@@ -181,7 +181,7 @@ public class StimmabgabevermerkeControllerIntegrationTest {
 
         emptyWahldaten
                 .setBezirkUndWahlIDUndWaehlerverzeichnisnummer(new BezirkUndWahlIDUndWaehlerverzeichnisnummer(wahlbezirkID, wahlID, waehlerverzeichnisNummer));
-        emptyWahldaten.getVermerke().addAll(List.of(vermerk1, vermerk2));
+        List.of(vermerk1, vermerk2).forEach(emptyWahldaten::addVermerk);
         emptyWahldaten.getEingenommenewahlscheine().addAll(List.of(wahlschein1, wahlschein2, wahlschein3));
 
         return emptyWahldaten;

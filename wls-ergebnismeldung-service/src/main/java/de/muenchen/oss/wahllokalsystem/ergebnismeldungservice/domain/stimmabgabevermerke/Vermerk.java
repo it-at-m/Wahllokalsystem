@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -36,6 +37,12 @@ public class Vermerk {
     @JdbcTypeCode(VARCHAR)
     @ToString.Include
     private UUID id;
+
+    @ManyToOne
+    @JoinColumn(name = "wahldatenID")
+    @NotNull
+    @EqualsAndHashCode.Exclude
+    private Wahldaten wahldaten;
 
     @NotNull
     @ToString.Include

@@ -74,7 +74,8 @@ public class Testdaten {
                     Stimmzettel.createEntity(blattnummer * 10 + 1),
                     Stimmzettel.createEntity(blattnummer * 10 + 2));
 
-            return new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Vermerk(UUID.randomUUID(), blattnummer, stimmzettel);
+            return new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Vermerk(UUID.randomUUID(), null, blattnummer,
+                    stimmzettel);
         }
 
         public static VermerkDTO createDTO(@NotNull long blattnummer) {

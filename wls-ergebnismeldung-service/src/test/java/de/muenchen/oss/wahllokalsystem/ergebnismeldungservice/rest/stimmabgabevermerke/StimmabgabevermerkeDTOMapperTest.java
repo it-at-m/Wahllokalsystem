@@ -6,6 +6,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgab
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmzettelartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.VermerkModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.WahldatenModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Testdaten;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import java.util.Set;
 import lombok.val;
@@ -39,22 +40,8 @@ public class StimmabgabevermerkeDTOMapperTest {
                     new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
                     anzahlBlaetter,
                     Set.of(
-                            new WahldatenModel(
-                                    wahlbezirkID, wahlID, waehlerverzeichnisNummer,
-                                    Set.of(
-                                            new VermerkModel(2, Set.of(new StimmzettelModel(20, StimmzettelartModel.KLEIN))),
-                                            new VermerkModel(2, Set.of(new StimmzettelModel(21, StimmzettelartModel.GROSS))),
-                                            new VermerkModel(2, Set.of(new StimmzettelModel(22, StimmzettelartModel.BEIDE))),
-                                            new VermerkModel(3, Set.of(new StimmzettelModel(30, StimmzettelartModel.KLEIN))),
-                                            new VermerkModel(3, Set.of(new StimmzettelModel(31, StimmzettelartModel.GROSS))),
-                                            new VermerkModel(3, Set.of(new StimmzettelModel(32, StimmzettelartModel.BEIDE))),
-                                            new VermerkModel(4, Set.of(new StimmzettelModel(40, StimmzettelartModel.KLEIN))),
-                                            new VermerkModel(4, Set.of(new StimmzettelModel(41, StimmzettelartModel.GROSS))),
-                                            new VermerkModel(4, Set.of(new StimmzettelModel(42, StimmzettelartModel.BEIDE)))),
-                                    Set.of(
-                                            new EingenommenerWahlscheinModel(91, StimmzettelartModel.KLEIN),
-                                            new EingenommenerWahlscheinModel(92, StimmzettelartModel.GROSS),
-                                            new EingenommenerWahlscheinModel(93, StimmzettelartModel.BEIDE)))));
+                            Testdaten.Wahldaten.createModel(wahlbezirkID, wahlID, waehlerverzeichnisNummer),
+                            Testdaten.Wahldaten.createModel(wahlbezirkID, wahlID, waehlerverzeichnisNummer + 1)));
 
             val result = unitUnderTest.toStimmabgabevermerkeDTO(modelToMap);
 
@@ -63,24 +50,8 @@ public class StimmabgabevermerkeDTOMapperTest {
                     waehlerverzeichnisNummer,
                     anzahlBlaetter,
                     Set.of(
-                            new WahldatenDTO(
-                                    wahlbezirkID,
-                                    wahlID,
-                                    waehlerverzeichnisNummer,
-                                    Set.of(
-                                            new VermerkDTO(2, Set.of(new StimmzettelDTO(20, StimmzettelartDTO.KLEIN))),
-                                            new VermerkDTO(2, Set.of(new StimmzettelDTO(21, StimmzettelartDTO.GROSS))),
-                                            new VermerkDTO(2, Set.of(new StimmzettelDTO(22, StimmzettelartDTO.BEIDE))),
-                                            new VermerkDTO(3, Set.of(new StimmzettelDTO(30, StimmzettelartDTO.KLEIN))),
-                                            new VermerkDTO(3, Set.of(new StimmzettelDTO(31, StimmzettelartDTO.GROSS))),
-                                            new VermerkDTO(3, Set.of(new StimmzettelDTO(32, StimmzettelartDTO.BEIDE))),
-                                            new VermerkDTO(4, Set.of(new StimmzettelDTO(40, StimmzettelartDTO.KLEIN))),
-                                            new VermerkDTO(4, Set.of(new StimmzettelDTO(41, StimmzettelartDTO.GROSS))),
-                                            new VermerkDTO(4, Set.of(new StimmzettelDTO(42, StimmzettelartDTO.BEIDE)))),
-                                    Set.of(
-                                            new EingenommenerWahlscheinDTO(91, StimmzettelartDTO.KLEIN),
-                                            new EingenommenerWahlscheinDTO(92, StimmzettelartDTO.GROSS),
-                                            new EingenommenerWahlscheinDTO(93, StimmzettelartDTO.BEIDE)))));
+                            Testdaten.Wahldaten.createDTO(wahlbezirkID, wahlID, waehlerverzeichnisNummer),
+                            Testdaten.Wahldaten.createDTO(wahlbezirkID, wahlID, waehlerverzeichnisNummer + 1)));
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
 
@@ -137,24 +108,8 @@ public class StimmabgabevermerkeDTOMapperTest {
                     waehlerverzeichnisNummer,
                     anzahlBlaetter,
                     Set.of(
-                            new WahldatenDTO(
-                                    wahlbezirkID,
-                                    wahlID,
-                                    waehlerverzeichnisNummer,
-                                    Set.of(
-                                            new VermerkDTO(2, Set.of(new StimmzettelDTO(20, StimmzettelartDTO.KLEIN))),
-                                            new VermerkDTO(2, Set.of(new StimmzettelDTO(21, StimmzettelartDTO.GROSS))),
-                                            new VermerkDTO(2, Set.of(new StimmzettelDTO(22, StimmzettelartDTO.BEIDE))),
-                                            new VermerkDTO(3, Set.of(new StimmzettelDTO(30, StimmzettelartDTO.KLEIN))),
-                                            new VermerkDTO(3, Set.of(new StimmzettelDTO(31, StimmzettelartDTO.GROSS))),
-                                            new VermerkDTO(3, Set.of(new StimmzettelDTO(32, StimmzettelartDTO.BEIDE))),
-                                            new VermerkDTO(4, Set.of(new StimmzettelDTO(40, StimmzettelartDTO.KLEIN))),
-                                            new VermerkDTO(4, Set.of(new StimmzettelDTO(41, StimmzettelartDTO.GROSS))),
-                                            new VermerkDTO(4, Set.of(new StimmzettelDTO(42, StimmzettelartDTO.BEIDE)))),
-                                    Set.of(
-                                            new EingenommenerWahlscheinDTO(91, StimmzettelartDTO.KLEIN),
-                                            new EingenommenerWahlscheinDTO(92, StimmzettelartDTO.GROSS),
-                                            new EingenommenerWahlscheinDTO(93, StimmzettelartDTO.BEIDE)))));
+                            Testdaten.Wahldaten.createDTO(wahlbezirkID, wahlID, waehlerverzeichnisNummer),
+                            Testdaten.Wahldaten.createDTO(wahlbezirkID, wahlID, waehlerverzeichnisNummer + 1)));
 
             val result = unitUnderTest.toStimmabgabevermerkeModel(dtoToMap);
 
@@ -162,22 +117,8 @@ public class StimmabgabevermerkeDTOMapperTest {
                     new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
                     anzahlBlaetter,
                     Set.of(
-                            new WahldatenModel(
-                                    wahlbezirkID, wahlID, waehlerverzeichnisNummer,
-                                    Set.of(
-                                            new VermerkModel(2, Set.of(new StimmzettelModel(20, StimmzettelartModel.KLEIN))),
-                                            new VermerkModel(2, Set.of(new StimmzettelModel(21, StimmzettelartModel.GROSS))),
-                                            new VermerkModel(2, Set.of(new StimmzettelModel(22, StimmzettelartModel.BEIDE))),
-                                            new VermerkModel(3, Set.of(new StimmzettelModel(30, StimmzettelartModel.KLEIN))),
-                                            new VermerkModel(3, Set.of(new StimmzettelModel(31, StimmzettelartModel.GROSS))),
-                                            new VermerkModel(3, Set.of(new StimmzettelModel(32, StimmzettelartModel.BEIDE))),
-                                            new VermerkModel(4, Set.of(new StimmzettelModel(40, StimmzettelartModel.KLEIN))),
-                                            new VermerkModel(4, Set.of(new StimmzettelModel(41, StimmzettelartModel.GROSS))),
-                                            new VermerkModel(4, Set.of(new StimmzettelModel(42, StimmzettelartModel.BEIDE)))),
-                                    Set.of(
-                                            new EingenommenerWahlscheinModel(91, StimmzettelartModel.KLEIN),
-                                            new EingenommenerWahlscheinModel(92, StimmzettelartModel.GROSS),
-                                            new EingenommenerWahlscheinModel(93, StimmzettelartModel.BEIDE)))));
+                            Testdaten.Wahldaten.createModel(wahlbezirkID, wahlID, waehlerverzeichnisNummer),
+                            Testdaten.Wahldaten.createModel(wahlbezirkID, wahlID, waehlerverzeichnisNummer + 1)));
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
 

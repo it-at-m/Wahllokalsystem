@@ -26,3 +26,19 @@ Content-Type: application/json
   "nachzaehlung": true,
   "unstimmigkeiten": true
 }
+
+### Begründung ohne Grund 2
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/wbz-1/1/LTW_BZW_A
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "bezirkUndWahlIDStapelart": {
+    "wahlbezirkID": "wahlbezirkID",
+    "wahlID": "wahlID",
+    "stapelart": "LTW_BZW_A"
+  },
+  "grund1": "ohne Grund 2",
+  "nachzaehlung": true,
+  "unstimmigkeiten": true
+}

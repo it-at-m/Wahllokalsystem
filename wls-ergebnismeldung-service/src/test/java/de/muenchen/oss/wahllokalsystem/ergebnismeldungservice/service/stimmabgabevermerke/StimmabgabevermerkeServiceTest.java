@@ -1,7 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke;
 
-import static org.mockito.ArgumentMatchers.eq;
-
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
@@ -85,7 +83,7 @@ class StimmabgabevermerkeServiceTest {
             unitUnderTest.getStimmabgabevermerke(id);
 
             Mockito.verify(stimmabgabevermerkeValidator)
-                    .validBezirkIDUndWaehlerverzeichnisnummerOrThrow(eq(id), eq(mockedFachlicheWlsExceptionForIdValidation));
+                    .validBezirkIDUndWaehlerverzeichnisnummerOrThrow(id, mockedFachlicheWlsExceptionForIdValidation);
         }
     }
 

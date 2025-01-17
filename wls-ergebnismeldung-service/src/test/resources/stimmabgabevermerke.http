@@ -33,7 +33,7 @@ Content-Type: application/json
       "vermerke": [
         {
           "blattnummer": 1,
-          "stimmzetteln": [
+          "stimmzettel": [
             {
               "anzahl": 1,
               "stimmzettelart": "GROSS"

@@ -1,22 +1,2 @@
-# Technik vom WLS
-
-Welche Tools und Framework haben wir zur Entwicklung verwendet.
-
-## Tools
-
-- Github
-  - Sourcecodeverwaltung
-  - Continuous Integration
-  - Imageregistry
-- Zenhub
-  - Projektmanagement
-- Docker
-- SoapUI
-  - Beispielrequests 
-
-## Frameworks
-
-- Spring-Boot
-- Vue.js
-- Vuetify
-- VitePress
+Hier sind alle Informationen zum Ökosystem, Konventionen, Designentscheidungen und was für den Beginn der Entwicklung wichtig ist,
+zusammengetragen.

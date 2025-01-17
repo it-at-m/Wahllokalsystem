@@ -6,6 +6,10 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/wbz-1/1/LTW_BZW_A
 Authorization: Bearer {{$auth.token("auth-service")}}
 
+### GET Begruendung sent by POST
+GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/wahlbezirkID/wahlID/LTW_BZW_A
+Authorization: Bearer {{$auth.token("auth-service")}}
+
 ### Initialisiere Begruendung (needs profile 'dummy.clients', stores Begruendung entity in local DB retrieved from DummyClient )
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/wbz-1/1/LTW_BZW_A
 Authorization: Bearer {{$auth.token("auth-service")}}

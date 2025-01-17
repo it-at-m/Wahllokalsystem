@@ -31,7 +31,7 @@ public class StimmabgabevermerkeController extends AbstractController {
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200", description = "Es existierten Stimmabgabevermerke.",
+                            responseCode = "200", description = "Es existieren Stimmabgabevermerke.",
                             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = StimmabgabevermerkeDTO.class)) }
                     ),
                     @ApiResponse(

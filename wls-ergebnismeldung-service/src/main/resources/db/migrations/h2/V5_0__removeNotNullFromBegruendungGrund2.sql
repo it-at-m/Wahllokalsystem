@@ -1,0 +1,2 @@
+ALTER TABLE Begruendung
+    ALTER COLUMN grund2 VARCHAR(1024) NULL;

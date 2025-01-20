@@ -1,7 +1,8 @@
 import {withMermaid} from "vitepress-plugin-mermaid"
 
 const PATH_TECHNIK = '/technik/';
-const PATH_CODING_CONVENTIONS = PATH_TECHNIK + 'coding_conventions/';
+const PATH_ECOSYSTEM = PATH_TECHNIK + '/ecosystem/';
+const PATH_CODING_CONVENTIONS = PATH_TECHNIK + 'naming_conventions/';
 const PATH_ADR = PATH_TECHNIK + 'adr/';
 const PATH_GUIDES = PATH_TECHNIK + '/guides/';
 const PATH_SERVICES = '/services/';
@@ -22,42 +23,27 @@ export default withMermaid({
             {text: 'Technik', link: PATH_TECHNIK}
         ],
 
+        docFooter: {
+            prev: 'Vorherige Seite',
+            next: 'Nächste Seite'
+        },
+
         outline: {
             label: "Auf dieser Seite"
         },
 
         sidebar: {
             [PATH_TECHNIK]: [
-                {text: 'Tools & Frameworks', link: `${PATH_TECHNIK}`},
                 {
                     text: 'Getting Started', link: `${PATH_TECHNIK}get_started/`
                 },
-                {text: 'Entwicklungsumgebung', link: `${PATH_TECHNIK}development/`},
-                {
-                    text: 'Guides', link: `${PATH_GUIDES}`, collapsed: true, items: [
-                        {text: 'API-Client generieren', link: `${PATH_GUIDES}how-to-create-client-from-open-api-json.md`},
-                        {text: 'Tips und Tricks', link: `${PATH_GUIDES}tips-and-tricks.md`},
+                {text: 'Ecosystem', collapsed: true, items: [
+                        {text: 'Tools & Frameworks', link: `${PATH_ECOSYSTEM}toolsAndFrameworks`},
+                        {text: 'Workflows', link: `${PATH_ECOSYSTEM}workflows`}
                     ]
                 },
                 {
-                    text: 'Coding Conventions', link: `${PATH_CODING_CONVENTIONS}`, collapsed: true, items: [
-                        {text: 'Naming Convention - Testing', link: `${PATH_CODING_CONVENTIONS}tests_naming`},
-                        {text: 'Naming Convention - Database', link: `${PATH_CODING_CONVENTIONS}db_naming`}
-                    ]
-                },
-                {
-                    text: "Systemspezifikation",
-                    link: `${PATH_SYSSPEC}`,
-                    collapsed: true,
-                    items: [
-                        {
-                            text: "Sicherheit",
-                            link: `${PATH_SYSSPEC}security`,
-                        },
-                    ],
-                },
-                {
-                    text: 'Adr', link: `${PATH_ADR}`, collapsed: true, items: [
+                    text: 'Designentscheidungen', link: `${PATH_ADR}`, collapsed: true, items: [
                         {text: 'Renovate - ignoriere lombok', link: `${PATH_ADR}adr001-renovate-ignore-lombok`},
                         {
                             text: 'Verbesserung Einstiegsfreundlichkeit',
@@ -80,19 +66,47 @@ export default withMermaid({
                             link: `${PATH_ADR}adr-frontend-template`
                         }
                     ]
+                },
+                {
+                    text: 'Naming Conventions', link: `${PATH_CODING_CONVENTIONS}`, collapsed: true, items: [
+                        {text: 'Flyway', link: `${PATH_CODING_CONVENTIONS}flyway`},
+                        {text: 'Tests', link: `${PATH_CODING_CONVENTIONS}testing`},
+                        {text: 'Workflows', link: `${PATH_CODING_CONVENTIONS}workflows`}
+                    ]
+                },
+                {
+                    text: 'Guides', link: `${PATH_GUIDES}`, collapsed: true, items: [
+                        {
+                            text: 'API-Client generieren',
+                            link: `${PATH_GUIDES}how-to-create-client-from-open-api-json.md`
+                        },
+                        {text: 'Datenbankzugriff', link: `${PATH_GUIDES}db-access.md`},
+                        {text: 'Neuer Microservice', link: `${PATH_GUIDES}new-service.md`}
+                    ]
+                },
+                {
+                    text: "Systemspezifikation",
+                    link: `${PATH_SYSSPEC}`,
+                    collapsed: true,
+                    items: [
+                        {
+                            text: "Sicherheit",
+                            link: `${PATH_SYSSPEC}security`,
+                        },
+                    ],
                 }
             ],
             [PATH_SERVICES]: [
-                {text: 'Briefwahl-Service', link: `${PATH_SERVICES}briefwahl-service/`},
-                {text: 'Infomanagement-Service', link: `${PATH_SERVICES}infomanagement-service/`},
-                {text: 'EAI-Service', link: `${PATH_SERVICES}eai-service/`},
-                {text: 'Basisdaten-Service', link: `${PATH_SERVICES}basisdaten-service/`},
-                {text: 'Monitoring-Service', link: `${PATH_SERVICES}monitoring-service/`},
-                {text: 'Wahlvorstand-Service', link: `${PATH_SERVICES}wahlvorstand-service/`},
-                {text: 'Ergebnismeldung-Service', link: `${PATH_SERVICES}ergebnismeldung-service/`},
-                {text: 'Auth-Service', link: `${PATH_SERVICES}auth-service/`},
-                {text: 'Vorfälle und Vorkommnisse-Service', link: `${PATH_SERVICES}vorfaelleundvorkommnisse-service/`},
                 {text: 'Admin-Service', link: `${PATH_SERVICES}admin-service/`},
+                {text: 'Auth-Service', link: `${PATH_SERVICES}auth-service/`},
+                {text: 'Basisdaten-Service', link: `${PATH_SERVICES}basisdaten-service/`},
+                {text: 'Briefwahl-Service', link: `${PATH_SERVICES}briefwahl-service/`},
+                {text: 'EAI-Service', link: `${PATH_SERVICES}eai-service/`},
+                {text: 'Ergebnismeldung-Service', link: `${PATH_SERVICES}ergebnismeldung-service/`},
+                {text: 'Infomanagement-Service', link: `${PATH_SERVICES}infomanagement-service/`},
+                {text: 'Monitoring-Service', link: `${PATH_SERVICES}monitoring-service/`},
+                {text: 'Vorfälle und Vorkommnisse-Service', link: `${PATH_SERVICES}vorfaelleundvorkommnisse-service/`},
+                {text: 'Wahlvorstand-Service', link: `${PATH_SERVICES}wahlvorstand-service/`},
             ],
         },
 
@@ -101,7 +115,34 @@ export default withMermaid({
         ],
 
         search: {
-            provider: 'local'
+            provider: 'local',
+            options: {
+                locales: {
+                    root: {
+                        translations: {
+                            button: {
+                                buttonText: 'Suche',
+                                buttonAriaLabel: 'Suche'
+                            },
+                            modal: {
+                                displayDetails: 'Anzeigen',
+                                resetButtonTitle: 'Ersetzen',
+                                backButtonTitle: 'Schließen',
+                                noResultsText: 'Keine Ergebnisse',
+                                footer: {
+                                    selectText: 'Auswählen',
+                                    selectKeyAriaLabel: 'Eingeben',
+                                    navigateText: 'Navigieren',
+                                    navigateUpKeyAriaLabel: 'Oben',
+                                    navigateDownKeyAriaLabel: 'Unten',
+                                    closeText: 'Schließen',
+                                    closeKeyAriaLabel: 'Esc'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     mermaidPlugin: {

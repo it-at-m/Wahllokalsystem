@@ -7,7 +7,7 @@ Für jeden Service gibt es eine separate Beschreibung zu dessen Aufgaben und Fun
 ## Fachliches Datenmodell
 
 Das folgende Datenmodell wurde mit Betrachtung der gesetzlichen Grundlage verschiedener Wahlen, sowie des örtlichen 
-Kommunal- und/oder Landes- Wahlrechts erstellt.
+Kommunal- und/oder Landeswahlrechts erstellt.
 
 ![Datenmodell:](/fachlichesDatenmodell/vermutetesFachlichesDatenmodell_20241008.png)
 
@@ -41,9 +41,14 @@ dem gleichen Wahltermin zugeteilt und somit in gemeinsamen Wahllokalen organisie
 
 #### Bundestagswahl
 
-`Stimmzettelgebiet` - das im Model als solches bezeichnete Gebiet ist im Bundeswahlrecht der "Wahlkreis". 
-Die Landeshauptstadt München hat 4 Wahlkreise: 217 - München Nord, 218 - München Ost, 219 - München Süd und 220 - 
-München-West/Mitte. In jedem Wahlkreis gibt es dann mehrere Wahlbezirke (Wahllokale), diese haben in einem Wahlkreis den gleichen Stimmzettel. 
+`Stimmzettelgebiet` - das im Model bezeichnet Gebiet ist im Bundeswahlrecht der "Wahlkreis". 
+Die Landeshauptstadt München hat 4 Wahlkreise:
+- 217 - München Nord
+- 218 - München Ost
+- 219 - München Süd
+- 220 - München-West/Mitte.
+
+In jedem Wahlkreis gibt es dann mehrere Wahlbezirke (Wahllokale), diese haben in einem Wahlkreis den gleichen Stimmzettel. 
 Jedes Wahllokal befindet sich geografisch auch in einem der 25 Stadtbezirke der Landeshauptstadt München. 
 Der Inhalt eines Stimmzettels bestimmt sich aus der Zugehörigkeit zum Wahlkreis und nicht zum Stadtbezirk.
 

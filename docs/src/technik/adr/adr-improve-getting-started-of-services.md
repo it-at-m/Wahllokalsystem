@@ -41,5 +41,5 @@ Leichterer Einstieg für Dritte in die Anwendung weil nun ein Service ohne Anpas
 
 ### negativ
 
-Bei der Erstellung eines Services müssen weitere Regeln beachtet werden. Services die miteinander Kommunizieren müssen
+Bei der Erstellung eines Services müssen weitere Regeln beachtet werden. Services, die miteinander Kommunizieren, müssen
 aufeinander abgestimmt werden (z.B. beim Port). 

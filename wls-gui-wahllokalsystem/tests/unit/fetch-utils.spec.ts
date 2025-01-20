@@ -16,7 +16,8 @@ describe("WLS Fetch Utils", () => {
   });
 
   describe("WlsResponseHandler", () => {
-    // parametrized test, um verschiedene szenarien (response codes) zu testen
+    // Parametrized Test, um verschiedene Szenarien (response codes) zu testen
+    // mit `$variablenname` kann der entsprechende Parameter (response code) mit im Testnamen aufgenommen werden.
     it.each([
       { response: new Response(null, { status: 204 }) },
       { response: new Response('{"error": "unauthorized"}', { status: 401 }) },

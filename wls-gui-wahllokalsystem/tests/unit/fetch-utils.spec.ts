@@ -51,13 +51,17 @@ describe("fetch-utils.ts", () => {
       const errorMessage = "Es konnten keine Daten gefunden werden";
 
       // definiert das Verhalten der Methode
-      mockCreateDefaultWlsError.mockReturnValueOnce(new Error(errorMessage));
+      mockCreateDefaultWlsError.mockReturnValue(new Error(errorMessage));
 
       // `expect(wlsCatchHandler()).toThrow` ohne Arrow-Funktion wirft den Fehler: "Error: Es konnten keine Daten
       // gefunden werden", weil die Funktion tatsächlich ausgeführt wird. Mit der Kapselung in die Arrow-Funktion kann
       // der Test vorher erkennen, dass ein Fehler geworfen wird. Das expect-Statement führt dann die Funktion aus und
       // überprüft, ob die erwartete Exception auftritt.
       expect(() => wlsCatchHandler(mockedResponse)).toThrow(errorMessage);
+      expect(mockCreateDefaultWlsError).toHaveBeenCalledWith({
+        message: errorMessage,
+        code: mockedResponse.status.toString(),
+      });
     });
 
     it("should_throwWlsErrorWithBadRequestMessage_when_responseCodeIs400", async () => {
@@ -71,6 +75,10 @@ describe("fetch-utils.ts", () => {
       await expect(() => wlsCatchHandler(mockedResponse)).rejects.toThrow(
         errorMessage
       );
+      expect(mockCreateDefaultWlsError).toHaveBeenCalledWith({
+        message: errorMessage,
+        code: mockedResponse.status.toString(),
+      });
     });
 
     it.each([
@@ -91,6 +99,10 @@ describe("fetch-utils.ts", () => {
         await expect(() => wlsCatchHandler(response)).rejects.toThrow(
           errorMessage
         );
+        expect(mockCreateDefaultWlsError).toHaveBeenCalledWith({
+          message: errorMessage,
+          code: response.status.toString(),
+        });
       }
     );
   });

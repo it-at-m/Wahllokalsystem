@@ -45,10 +45,10 @@ public class ExceptionConstants {
     public static final ExceptionDataWrapper BEGRUENDUNG_UNSAVEABLE = new ExceptionDataWrapper("624",
             "postStatus: Der Status konnte nicht gespeichert werden.");
 
-    public static final ExceptionDataWrapper GET_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("625",
+    public static final ExceptionDataWrapper GET_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("614",
             "getErgebnisse: Parameter unvollständig.");
-    public static final ExceptionDataWrapper POST_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("626",
+    public static final ExceptionDataWrapper POST_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("615",
             "postErgebnisse: Parameter unvollständig.");
-    public static final ExceptionDataWrapper ERGEBNISSE_UNSAVEABLE = new ExceptionDataWrapper("627",
+    public static final ExceptionDataWrapper ERGEBNISSE_UNSAVEABLE = new ExceptionDataWrapper("621",
             "postErgebnisse: Die Ergebnisse konnten nicht gespeichert werden.");
 }

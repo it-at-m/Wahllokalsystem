@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.wahlscheine.WahlscheineDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.AbstractController;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseReference;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
@@ -25,18 +25,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/businessActions/ergebnisse")
 @RequiredArgsConstructor
-public class ErgebnisseController {
+public class ErgebnisseController extends AbstractController {
 
     private final ErgebnisseService ergebnisseService;
 
     private final ErgebnisseDTOMapper ergebnisseDTOMapper;
 
-    @Operation(description = "Lesen von Ergebnissen von einem Wahlbezirk für eine Wahl auf einem bestimmten Stapel")
+    @Operation(description = "Lesen von Ergebnissen von einem Wahlbezirk für eine Wahl von einem bestimmten Stapel")
     @ApiResponses(
             value = {
                     @ApiResponse(
                             responseCode = "200", description = "Es existieren Ergebnisse",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WahlscheineDTO.class)) }
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErgebnisseDTO.class)) }
                     ),
                     @ApiResponse(
                             responseCode = "204", description = "Es existieren keine Ergebnisse zu den entsprechenden Kriterien",
@@ -55,13 +55,11 @@ public class ErgebnisseController {
     @GetMapping("{wahlbezirkID}/{wahlID}/{stapelart}")
     public ResponseEntity<ErgebnisseDTO> getErgebnisse(@PathVariable("wahlbezirkID") String wahlbezirkID, @PathVariable("wahlID") String wahlID,
             @PathVariable("stapelart") Stapelart stapelart) {
-        val referenceModel = ergebnisseDTOMapper.toReferenceModel(wahlbezirkID, wahlID, stapelart);
-        val ergebnisseFromService = ergebnisseDTOMapper.toDTO(ergebnisseService.getErgebnisse(referenceModel));
-
-        return okWithBodyOrNoContent(ergebnisseFromService);
+        val ergebnisse = ergebnisseService.getErgebnisse(new ErgebnisseReference(wahlID, wahlbezirkID, stapelart));
+        return okWithBodyOrNoContent(ergebnisse.map(ergebnisseDTOMapper::toDTO));
     }
 
-    @Operation(description = "Setzen von Ergebnissen von einem Wahlbezirk für eine Wahl auf einem bestimmten Stapel")
+    @Operation(description = "Setzen von Ergebnissen von einem Wahlbezirk für eine Wahl für einen bestimmten Stapel")
     @ApiResponses(
             value = {
                     @ApiResponse(
@@ -85,13 +83,5 @@ public class ErgebnisseController {
         val modelToSave = ergebnisseDTOMapper.toModel(ergebnisseDTO);
         val referenceForModel = new ErgebnisseReference(wahlbezirkID, wahlID, stapelart);
         ergebnisseService.postErgebnisse(referenceForModel, modelToSave);
-    }
-
-    private <T> ResponseEntity<T> okWithBodyOrNoContent(final T body) {
-        if (body == null) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok(body);
-        }
     }
 }

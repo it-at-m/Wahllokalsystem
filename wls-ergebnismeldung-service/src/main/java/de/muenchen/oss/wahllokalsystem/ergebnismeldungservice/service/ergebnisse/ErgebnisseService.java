@@ -1,11 +1,10 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.BezirkUndWahlIDStapelart;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnisse;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.ErgebnisseRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import jakarta.validation.constraints.NotNull;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -30,13 +29,13 @@ public class ErgebnisseService {
             "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetErgebnisse')"
                     + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
     )
-    public ErgebnisseModel getErgebnisse(@P("param") @NotNull final ErgebnisseReference ergebnisseReference) {
-        log.info("#getErgebnisse");
+    public Optional<ErgebnisseModel> getErgebnisse(@P("param") @NotNull final ErgebnisseReference ergebnisseReference) {
+        log.info("#getStatus");
+
         ergebnisseValidator.validReferenceOrThrow(ergebnisseReference);
 
-        BezirkUndWahlIDStapelart id = ergebnisseModelMapper.toEmbeddedId(ergebnisseReference);
-        val ergebnisseFromRepo = getOrNull(id);
-        return ergebnisseFromRepo == null ? null : ergebnisseModelMapper.toModel(ergebnisseFromRepo);
+        val statusFromRepo = ergebnisseRepository.findById(ergebnisseModelMapper.toEmbeddedId(ergebnisseReference));
+        return statusFromRepo.map(ergebnisseModelMapper::toModel);
     }
 
     @PreAuthorize(
@@ -51,13 +50,9 @@ public class ErgebnisseService {
         try {
             ergebnisseRepository.save(ergebnisseModelMapper.toEntity(ergebnisseToAdd));
         } catch (Exception e) {
-            log.error("#postStatus unsaveable:", e);
+            log.error("#postErgebnisse unsaveable:", e);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.ERGEBNISSE_UNSAVEABLE);
 
         }
-    }
-
-    private Ergebnisse getOrNull(final BezirkUndWahlIDStapelart entityID) {
-        return ergebnisseRepository.findById(entityID).orElse(null);
     }
 }

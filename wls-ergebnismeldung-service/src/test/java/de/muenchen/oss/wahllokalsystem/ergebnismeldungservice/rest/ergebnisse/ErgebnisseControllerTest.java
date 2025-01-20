@@ -6,6 +6,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseReference;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseService;
 import java.util.Collections;
+import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -44,7 +45,7 @@ class ErgebnisseControllerTest {
             val mockedServiceResponseAsDTO = new ErgebnisseDTO(bezirkUndWahlIDStapelart, Collections.emptyList());
 
             Mockito.when(ergebnisseDTOMapper.toReferenceModel(wahlbezirkID, wahlID, stapelart)).thenReturn(mockedErgebnisseReference);
-            Mockito.when(ergebnisseService.getErgebnisse(mockedErgebnisseReference)).thenReturn(mockedServiceResponse);
+            Mockito.when(ergebnisseService.getErgebnisse(mockedErgebnisseReference)).thenReturn(Optional.of(mockedServiceResponse));
             Mockito.when(ergebnisseDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
 
             val result = unitUnderTest.getErgebnisse(wahlbezirkID, wahlID, stapelart);

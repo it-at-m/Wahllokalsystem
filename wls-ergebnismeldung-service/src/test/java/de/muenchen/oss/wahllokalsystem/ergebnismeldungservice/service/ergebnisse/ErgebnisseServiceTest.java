@@ -3,7 +3,9 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebniss
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.BezirkUndWahlIDStapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnisse;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.ErgebnisseRepository;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -30,22 +32,25 @@ class ErgebnisseServiceTest {
     @InjectMocks
     ErgebnisseService unitUnderTest;
 
+    @Mock
+    ExceptionFactory exceptionFactory;
+
     @Nested
     class GetErgebnisse {
 
         @Test
-        void should_returnNull_when_givenNull() {
+        void should_returnNull_when_RepoIsEmpty() {
             val reference = ErgebnisseReference.builder().build();
-
             val mappedEntityId = new BezirkUndWahlIDStapelart();
 
-            Mockito.doNothing().when(ergebnisseValidator).validReferenceOrThrow(reference);
             Mockito.when(ergebnisseModelMapper.toEmbeddedId(reference)).thenReturn(mappedEntityId);
             Mockito.when(ergebnisseRepository.findById(mappedEntityId)).thenReturn(Optional.empty());
 
             val result = unitUnderTest.getErgebnisse(reference);
 
             Assertions.assertThat(result).isNull();
+
+            Mockito.verify(ergebnisseValidator).validReferenceOrThrow(reference);
         }
 
         @Test
@@ -65,53 +70,51 @@ class ErgebnisseServiceTest {
 
             Assertions.assertThat(result).isSameAs(mappedEntity);
         }
-
-        @Test
-        void should_returnFachlicheWlsException_when_ErgebnisseIsInvalid() {
-            val reference = ErgebnisseReference.builder().build();
-
-            val exceptionToThrow = FachlicheWlsException.withCode("0815").buildWithMessage("upsi");
-
-            Mockito.doThrow(exceptionToThrow).when(ergebnisseValidator).validReferenceOrThrow(reference);
-
-            val exceptionThrown = Assertions.catchThrowable(() -> unitUnderTest.getErgebnisse(reference));
-
-            Assertions.assertThat(exceptionThrown).isSameAs(exceptionToThrow);
-            Mockito.verify(ergebnisseRepository, Mockito.times(0)).findById(Mockito.any());
-        }
     }
 
     @Nested
     class PostErgebnisse {
         @Test
-        void should_returnFachlicheWlsException_when_ErgebnisseModelIsInvalid() {
-            val invalidModel = ErgebnisseModel.builder().build();
+        void should_callValidator_when_posting() {
+
             val reference = ErgebnisseReference.builder().build();
+            val invalidModel = ErgebnisseModel.builder().build();
 
-            val exceptionToThrow = FachlicheWlsException.withCode("0815").buildWithMessage("upsi");
+            unitUnderTest.postErgebnisse(reference, invalidModel);
 
-            Mockito.doThrow(exceptionToThrow).when(ergebnisseValidator).validModelOrThrow(invalidModel);
-
-            val exceptionThrown = Assertions.catchException(() -> unitUnderTest.postErgebnisse(reference, invalidModel));
-
-            Assertions.assertThat(exceptionThrown).isSameAs(exceptionToThrow);
-            Mockito.verify(ergebnisseRepository, Mockito.times(0)).save(Mockito.any());
+            Mockito.verify(ergebnisseValidator).validModelOrThrow(invalidModel);
         }
 
         @Test
         void should_saveErgebnisse_when_called() {
             val model = ErgebnisseModel.builder().build();
             val reference = ErgebnisseReference.builder().build();
-
             val mappedEntityOfModel = new Ergebnisse();
-
-            Mockito.doNothing().when(ergebnisseValidator).validModelOrThrow(model);
-            Mockito.doNothing().when(ergebnisseValidator).validReferenceOrThrow(reference);
+            
             Mockito.when(ergebnisseModelMapper.toEntity(model)).thenReturn(mappedEntityOfModel);
 
             unitUnderTest.postErgebnisse(reference, model);
 
             Mockito.verify(ergebnisseRepository).save(mappedEntityOfModel);
+            Mockito.verify(ergebnisseValidator).validModelOrThrow(model);
+            Mockito.verify(ergebnisseValidator).validReferenceOrThrow(reference);
+        }
+
+        @Test
+        void should_throwTechnischeException_when_called() {
+            val model = ErgebnisseModel.builder().build();
+            val reference = ErgebnisseReference.builder().build();
+
+            val mockedModelAsEntity = Mockito.mock(Ergebnisse.class);
+            val mockedRepositorySaveException = new RuntimeException("saving failed");
+            val mockedExceptionFactoryWlsException = TechnischeWlsException.withCode("").buildWithMessage("save exception");
+
+            Mockito.when(ergebnisseModelMapper.toEntity(model)).thenReturn(mockedModelAsEntity);
+            Mockito.doThrow(mockedRepositorySaveException).when(ergebnisseRepository).save(mockedModelAsEntity);
+            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.ERGEBNISSE_UNSAVEABLE))
+                    .thenReturn(mockedExceptionFactoryWlsException);
+
+            Assertions.assertThatThrownBy(() -> unitUnderTest.postErgebnisse(reference, model)).isSameAs(mockedExceptionFactoryWlsException);
         }
     }
 }

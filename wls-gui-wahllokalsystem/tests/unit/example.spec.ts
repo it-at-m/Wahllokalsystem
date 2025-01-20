@@ -5,44 +5,45 @@ import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 
-import TheSnackbar from "@/components/TheSnackbar.vue"; // funktion oder klasse die getestet werden soll
+import TheSnackbar from "@/components/TheSnackbar.vue"; // Funktion oder Klasse die getestet werden soll
 
-// = state management bibliothek: zentrale verwaltung des zustands der anwendung und erleichterung der kommunikation zwischen komponenten
+// = state-management Bibliothek: zentrale Verwaltung des Zustands der Anwendung und Erleichterung der Kommunikation
+// zwischen Komponenten
 const pinia = createPinia();
 
-// describe ist wie klassenfunktion --> describe funktionen können geschachtelt werden, um tests zu gruppieren und ordnen
-// beschreibt, was getestet wird
+// `describe`-Funktionen können geschachtelt werden, um Tests zu gruppieren und ordnen. Es ist immer eine Top-Level
+// `describe`-Funktion notwendig.
 describe("Beispiele und Erklärungen", () => {
-  // initialisiert Variable, die hinterher vor jedem test zu einer vuetify instanz wird --> beforeEach()
+  // initialisiert Variable, die hinterher vor jedem Test zu einer vuetify-Instanz wird --> siehe `beforeEach()`
   let vuetify: ReturnType<typeof createVuetify>;
 
   // wird einmal vor allen Tests ausgeführt
   beforeAll(() => {
     createPinia();
-    // definition, dass vuetify benutzt wird
+    // Definition, dass vuetify benutzt wird
     createVuetify();
   });
 
-  //wird vor jedem test ausgeführt
+  // wird vor jedem Test ausgeführt
   beforeEach(() => {
-    // erstellt vuetify-bibliotheks-instanz, damit in den Tests die vue-Komponenten verwendet werden können
+    // erstellt vuetify-bibliotheks-Instanz, damit in den Tests die vue-Komponenten verwendet werden können
     vuetify = createVuetify({
       components,
       directives,
     });
   });
 
-  // test um zu testen ob tests funktionieren
+  // Test um zu testen ob Tests funktionieren
   it("true test", () => {
     expect(true).toBe(true);
   });
 
-  // it: einzelner test block mit beschreibung, was innerhalb des blocks getestet wird
+  // `it`: einzelner Test-Block mit Beschreibung, was innerhalb des Blocks getestet wird
   it("renders props.message when passed", () => {
-    // hier können weitere variablen mit const initialisiert werden,
-    // die anschließend im props teil übergeben werden, damit der expect teil sie findet
+    // hier können weitere Variablen mit const initialisiert werden,
+    // die anschließend im props-Teil übergeben werden, damit der expect-Teil sie findet
     const message = "Hello_World";
-    // wrapper ist ein objekt, das verschiedene methoden und props enthält, im bezug auf die übergebene komponente
+    // `wrapper` ist ein Objekt, das verschiedene Methoden und props enthält, im Bezug auf die übergebene Komponente
     // TheSnackbar ist die Komponente, die getestet werden soll
     const wrapper = shallowMount(TheSnackbar, {
       global: {
@@ -62,7 +63,8 @@ describe("Beispiele und Erklärungen", () => {
     // .toBe vergleicht zwei Referenzobjekte und nicht deren Inhalte, daher:
     const x = { a: 1 };
     const y = { a: 1 };
-    //expect(x).toBe(y);      // fail, weil es unterschiedliche Objekte sind: "AssertionError: expected { a: 1 } to be { a: 1 } // Object.is equality"
+    //expect(x).toBe(y); // fail, weil es unterschiedliche Objekte sind: "AssertionError: expected { a: 1 } to be
+    // { a: 1 } // Object.is equality"
 
     // .toEqual führt eine tiefe Gleichheitsprüfung durch
     // --> Wert + Struktur werden auf allen Ebenen verglichen (also zusätzlich Vergleich der Inhalte):

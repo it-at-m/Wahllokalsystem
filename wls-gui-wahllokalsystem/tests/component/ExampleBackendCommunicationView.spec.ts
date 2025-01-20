@@ -19,8 +19,8 @@ import ExampleBackendCommunicationView from "@/views/ExampleBackendCommunication
 // Mock für die Composable-Funktionen
 const mockGetMessage = vi.fn();
 const mockPostMessage = vi.fn();
-// vi.mock ist "hoisted" --> wird immer vor allen imports ausgeführt
-// ideal für die meisten mocks, da sie im gesamten testbereich verfügbar sind und global definiert werden können.
+// `vi.mock` ist "hoisted" --> wird immer vor allen Imports ausgeführt. Ideal für die meisten mocks, da sie im gesamten
+// Testbereich verfügbar sind und global definiert werden können.
 vi.mock(
   "@/composables/wlsClients/broadcastService/useBroadcastService",
   () => ({
@@ -32,7 +32,8 @@ vi.mock(
 );
 describe("ExampleBackendCommunicationView.vue", () => {
   let vuetify: ReturnType<typeof createVuetify>;
-  // damit der wrapper nicht in jedem test erneut definiert werden muss, sondern nur einmal in beforeEach, wird er hier global angelegt
+  // damit der Wrapper nicht in jedem Test erneut definiert werden muss, sondern nur einmal in `beforeEach`, wird er
+  // hier global angelegt
   let wrapper: VueWrapper;
 
   beforeAll(() => {
@@ -45,32 +46,33 @@ describe("ExampleBackendCommunicationView.vue", () => {
       components,
       directives,
     });
-    // hier mount statt shallowMount, damit die einzelnen Dom-Elemente später in den test gefunden werden können
-    // shallowmount würde die elemente innerhalb der zu testenden komponente "stubben" => es werden stattdessen placeholder gerendert
+    // Hier `mount` statt `shallowMount`, damit die einzelnen Dom-Elemente später in den Tests gefunden werden können.
+    // `shallowMount` würde die Elemente innerhalb der zu testenden Komponente "stubben"
+    // => es werden stattdessen Placeholder gerendert
     wrapper = mount(ExampleBackendCommunicationView, {
       global: { plugins: [pinia, vuetify] },
     });
-    // löscht die mocking-history
+    // Löscht die mocking-History
     vi.clearAllMocks();
   });
 
-  // ruft nach jedem test wrapper.destroy() auf
+  // Ruft nach jedem Test `wrapper.destroy()` auf
   enableAutoUnmount(afterEach);
 
   describe("GetBroadcastMessage", () => {
     it("should_executeGetMessageFunction_when_buttonClicked", async () => {
-      // definiert den rückgabewert der composable methode
-      // mockResolvedValueOnce wird speziell bei Promises und asynchronen FUnktionen eingesetzt
+      // Definiert den Rückgabewert der Composable-Methode
+      // `mockResolvedValueOnce` wird speziell bei Promises und asynchronen Funktionen eingesetzt
       mockGetMessage.mockResolvedValueOnce({
         message: "Sample message",
         error: null,
       });
 
-      // dom-elemente können in der vue komponente mit `data-test="name"` benannt
-      // und im test anschließend mit `wrapper.findComponent('[data-test="name"]')` gefunden werden
+      // Dom-Elemente können in der vue -Komponente mit `data-test="name"` benannt und im Test anschließend mit
+      // `wrapper.findComponent('[data-test="name"]')` gefunden werden.
       await wrapper
-        .findComponent('[data-test="getMessageBtn"]') // findComponent, weil `v-btn` eine Vue Componente ist
-        .trigger("click"); // löst das click-event aus
+        .findComponent('[data-test="getMessageBtn"]') // findComponent, weil `v-btn` eine vue-Komponente ist
+        .trigger("click"); // löst das click-Event aus
 
       expect(mockGetMessage).toHaveBeenCalled();
     });
@@ -86,7 +88,7 @@ describe("ExampleBackendCommunicationView.vue", () => {
         .findComponent('[data-test="getMessageBtn"]')
         .trigger("click");
 
-      // hier wird `find` statt `findComponent` verwendet, weil das dom-element <pre> keine vue komponente ist
+      // Hier wird `find` statt `findComponent` verwendet, weil das Dom-Element <pre> keine vue-Komponente ist
       expect(wrapper.find('[data-test="messageToShow"]').exists()).toBe(true);
       expect(wrapper.find('[data-test="messageToShow"]').html()).toContain(
         mockMessage

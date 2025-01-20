@@ -3,9 +3,10 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { wlsCatchHandler, wlsResponseHandler } from "@/api/fetch-utils";
 
 const mockCreateDefaultWlsError = vi.fn();
-// hier wird vi.doMock eingesetzt, um das Hoisting-Problem zu umgehen, dass vi.mock vor allen imports ausgeführt wird.
-// nur mit vi.mock() würde es die Fehlermeldung "Error: [vitest] There was an error when mocking a module. If you are using "vi.mock" factory, make sure there are no top level variables inside, since this call is hoisted to top of the file." geben
-// vi.doMock wird erst nach den Imports aufgerufen, bzw. genau dort ausgeführt, wo es im Code steht.
+// Hier wird `vi.doMock` eingesetzt, um das Hoisting-Problem zu umgehen, dass `vi.mock` vor allen Imports ausgeführt wird.
+// nur mit `vi.mock` würde es die Fehlermeldung "Error: [vitest] There was an error when mocking a module. If you are
+// using "vi.mock" factory, make sure there are no top level variables inside, since this call is hoisted to top of the
+// file." geben. `vi.doMock` wird erst nach den Imports aufgerufen, bzw. genau dort ausgeführt, wo es im Code steht.
 vi.doMock("@/api/WLSError", () => ({
   createDefaultWlsError: mockCreateDefaultWlsError,
 }));
@@ -16,8 +17,8 @@ describe("WLS Fetch Utils", () => {
   });
 
   describe("WlsResponseHandler", () => {
-    // Parametrized Test, um verschiedene Szenarien (response codes) zu testen
-    // mit `$variablenname` kann der entsprechende Parameter (response code) mit im Testnamen aufgenommen werden.
+    // Parametrized Test, um verschiedene Szenarien (response codes) zu testen. Mit `$variablenname` kann der
+    // entsprechende Parameter (response code) mit im Testnamen aufgenommen werden.
     it.each([
       { response: new Response(null, { status: 204 }) },
       { response: new Response('{"error": "unauthorized"}', { status: 401 }) },
@@ -49,9 +50,10 @@ describe("WLS Fetch Utils", () => {
       // definiert das Verhalten der Methode
       mockCreateDefaultWlsError.mockResolvedValueOnce(new Error(errorMessage));
 
-      // expect(wlsCatchHandler()).toThrow ohne Arrow-Funktion wirft den fehler: "Error: Es konnten keine Daten gefunden werden",
-      // weil die Funktion tatsächlich ausgeführt wird. Mit der Kapselung in die Arrow-Funktion kann der Test vorher erkennen, dass
-      // ein Fehler geworfen wird. Das expect-Statement führt dann die Funktion aus und überprüft, ob die erwartete Exception auftritt.
+      // `expect(wlsCatchHandler()).toThrow` ohne Arrow-Funktion wirft den Fehler: "Error: Es konnten keine Daten
+      // gefunden werden", weil die Funktion tatsächlich ausgeführt wird. Mit der Kapselung in die Arrow-Funktion kann
+      // der Test vorher erkennen, dass ein Fehler geworfen wird. Das expect-Statement führt dann die Funktion aus und
+      // überprüft, ob die erwartete Exception auftritt.
       expect(() => wlsCatchHandler(mockedResponse)).toThrow(errorMessage);
     });
 

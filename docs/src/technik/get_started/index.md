@@ -73,7 +73,7 @@ flowchart LR
 
 ## Datenbank
 
-Der Zugriff auf die Oracle-Datenbank ist [einzurichten](/technik/guides/db-access).
+Der Zugriff auf die Oracle-Datenbank über die IDE ist gemäß [dieser Anleitung](/technik/guides/db-access) einzurichten.
 
 ## Starten des Frontends
 

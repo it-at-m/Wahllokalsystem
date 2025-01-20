@@ -4,7 +4,7 @@ Wenn ein neuer Microservice angelegt wird, sind dabei folgende Themen zu beachte
 
 ## Maven-Projekt anlegen
 
-Für den neuen Service wird ein Ordner parallel zu den anderen Service angelegt. Dabei ist auf das Namensschema zu achten:
+Für den neuen Service wird ein Ordner parallel zu den anderen Services angelegt. Dabei ist auf das Namensschema zu achten:
 `wls-<Domain>-service`
 
 In dem Ordner wird das Maven-Projekt eingerichtet. Dazu aus den [RefArch-Templates](https://github.com/it-at-m/refarch-templates)
@@ -21,7 +21,7 @@ funktionsfähig zu bekommen.
 
 ### Update der Tests
 
-Im Projekte haben wir für das Naming unserer Tests [Konventionen](/technik/naming_conventions/testing) aufgestellt. Die bereitgestellten Tests des Templates
+Im Projekt haben wir für das Naming unserer Tests [Konventionen](/technik/naming_conventions/testing) aufgestellt. Die bereitgestellten Tests des Templates
 müssen entsprechend angepasst werden.
 
 ## Workflows einrichten
@@ -34,7 +34,7 @@ kopieren und die Trigger anzupassen.
 
 ## Datenbank einrichten
 
-Jeder Service bekommt einen eigenen Benutzer für die Datenbank. Die Zugriffs-URL ist für alle Services gleich:
+Jeder Service hat einen eigenen Benutzer für die Datenbank. Diese sind im File `stack/oracle-database/add-user-on-startup.sql` hinterlegt. Die Zugriffs-URL ist für alle Services gleich:
 `jdbc:oracle:thin:@//localhost:1521/XEPDB1`
 
 Dabei sollte auf folgendes Schema geachtet werden:
@@ -46,16 +46,16 @@ Beispiel für `wls-broadcast-service`:
 - Benutzername: `wls_broadcast_service`
 - Passwort: `secret`
 
-# Routing im Gateway einrichten
+## Routing im Gateway einrichten
 
 Damit das Frontend mit dem Service kommunizieren kann, ist im Gateway eine neue Route einzurichten. Das Routing erfolgt mit
 dem Servicenamen.
 
 Beispiel:
 
-Anfragen die anden Broadcast-Service gehen sollen beginnen im Path mit `/api/broadcast-service/`.
+Anfragen die an den Broadcast-Service gehen sollen beginnen im Path mit `/api/broadcast-service/`.
 
-# Pflege der Rechte im Auth-Service
+## Pflege der Rechte im Auth-Service
 
 Die Pflege der Rechte erfolgt in dem Auth-Service über Flyway-Files. Über `insert`-Statements werden die Rechte ergänzt
 und die Zuordnung zu den Rollen vorgenommen.

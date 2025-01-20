@@ -1,11 +1,11 @@
 # Workflows
 
-Mit [Workflows](https://docs.github.com/en/actions/writing-workflows) automatisieren wir Prozessen in der Entwicklung.
+Mit [Workflows](https://docs.github.com/en/actions/writing-workflows) automatisieren wir Prozesse in der Entwicklung.
 Wir sichern damit die Qualität und stellen Versionen bereit.
 
 ## Pull-Requests
 
-Mit der Erstellung eines Pull-Requests wird geprüft das der Code den Anforderungen und den Richtlinien entspricht.
+Mit der Erstellung eines Pull-Requests wird geprüft, dass der Code den Anforderungen und den Richtlinien entspricht.
 
 ````mermaid
 
@@ -90,7 +90,7 @@ Es gibt kein Output.
 
 ## Releasing
 
-Im Rahmen des Releasing werden getestet Versionen zur Verfügung gestellt.
+Im Rahmen des Releasing werden getestete Versionen zur Verfügung gestellt.
 
 ### Ablauf
 

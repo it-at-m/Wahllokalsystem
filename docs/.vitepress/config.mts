@@ -81,7 +81,7 @@ export default withMermaid({
                             link: `${PATH_GUIDES}how-to-create-client-from-open-api-json.md`
                         },
                         {text: 'Datenbankzugriff', link: `${PATH_GUIDES}db-access.md`},
-                        {text: 'Neuer Mikroservice', link: `${PATH_GUIDES}new-service.md`}
+                        {text: 'Neuer Microservice', link: `${PATH_GUIDES}new-service.md`}
                     ]
                 },
                 {

@@ -1,4 +1,4 @@
-# Auslagerung von Authority Strings
+# Auslagerung von Authoritystrings
 
 ## Status
 

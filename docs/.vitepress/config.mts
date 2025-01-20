@@ -1,7 +1,7 @@
 import {withMermaid} from "vitepress-plugin-mermaid"
 
 const PATH_TECHNIK = '/technik/';
-const PATH_ECOSYSTEM = PATH_TECHNIK + '/ecosystem/';
+const PATH_ECOSYSTEM = PATH_TECHNIK + 'ecosystem/';
 const PATH_NAMING_CONVENTIONS = PATH_TECHNIK + 'naming_conventions/';
 const PATH_ADR = PATH_TECHNIK + 'adr/';
 const PATH_GUIDES = PATH_TECHNIK + '/guides/';

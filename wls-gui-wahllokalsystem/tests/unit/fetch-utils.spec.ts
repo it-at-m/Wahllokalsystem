@@ -11,12 +11,12 @@ vi.doMock("@/api/WLSError", () => ({
   createDefaultWlsError: mockCreateDefaultWlsError,
 }));
 
-describe("WLS Fetch Utils", () => {
+describe("fetch-utils.ts", () => {
   afterEach(() => {
     vi.clearAllMocks();
   });
 
-  describe("WlsResponseHandler", () => {
+  describe("wlsResponseHandler", () => {
     // Parametrized Test, um verschiedene Szenarien (response codes) zu testen. Mit `$variablenname` kann der
     // entsprechende Parameter (response code) mit im Testnamen aufgenommen werden.
     it.each([
@@ -42,7 +42,7 @@ describe("WLS Fetch Utils", () => {
     });
   });
 
-  describe("WlsCatchHandler", () => {
+  describe("wlsCatchHandler", () => {
     it("should_throwWlsErrorWithNoContentMessage_when_responseCodeIs204", async () => {
       const mockedResponse = new Response(null, { status: 204 });
       const errorMessage = "Es konnten keine Daten gefunden werden";

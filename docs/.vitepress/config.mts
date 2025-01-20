@@ -20,7 +20,7 @@ export default withMermaid({
         nav: [
             {text: 'About', link: '/about/'},
             {text: 'Services', link: '/services/'},
-            {text: 'Technik', link: PATH_TECHNIK}
+            {text: 'Technik', link: `${PATH_TECHNIK}get_started`}
         ],
 
         docFooter: {

@@ -34,6 +34,46 @@ kopieren und die Trigger anzupassen.
 > [!IMPORTANT]
 > Beim Kopieren ist das [Namensschema](/technik/naming_conventions/workflows) zu beachten.
 
+::: code-group
+```yml {1,8-9,18} [wls-&lt;domain&gt;-service_push-dev.yml]
+name: build push dev <domain>-service
+
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - 'wls-<domain>-service/**'
+      - '.github/workflows/wls-<domain>-service_push-dev.yml'
+
+jobs:
+  build-github-container-image:
+    permissions:
+      packages: write
+    uses:
+      ./.github/workflows/callable-create-github-container-image.yml
+    with:
+      service: 'wls-<domain>-service'
+```
+
+```yml {1,6-7,14} [wls-&lt;domain&gt;-service_pull-request.yml]
+name: verify pull request <domain>-service
+
+on:
+  pull_request:
+    paths:
+      - 'wls-<domain>-service/**'
+      - '.github/workflows/wls-<domain>-service_pull-request.yml'
+
+jobs:
+  verify-pull-request:
+    uses:
+      ./.github/workflows/callable-run-mvn-verify.yml
+    with:
+      pom-dir: 'wls-<domain>-service'
+``` 
+:::
+
 ### Datenbank einrichten
 
 Jeder Service hat einen eigenen Benutzer für die Datenbank. Diese sind im File `stack/oracle-database/add-user-on-startup.sql` hinterlegt. Die Zugriffs-URL ist für alle Services gleich:

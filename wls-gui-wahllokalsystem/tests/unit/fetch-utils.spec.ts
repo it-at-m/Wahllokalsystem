@@ -2,12 +2,15 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { wlsCatchHandler, wlsResponseHandler } from "@/api/fetch-utils";
 
-const mockCreateDefaultWlsError = vi.fn();
-// Hier wird `vi.doMock` eingesetzt, um das Hoisting-Problem zu umgehen, dass `vi.mock` vor allen Imports ausgeführt wird.
-// nur mit `vi.mock` würde es die Fehlermeldung "Error: [vitest] There was an error when mocking a module. If you are
-// using "vi.mock" factory, make sure there are no top level variables inside, since this call is hoisted to top of the
-// file." geben. `vi.doMock` wird erst nach den Imports aufgerufen, bzw. genau dort ausgeführt, wo es im Code steht.
-vi.doMock("@/api/WLSError", () => ({
+// Da `vi.mock` vor allen Imports ausgeführt wird, gibt es die Fehlermeldung "Error: [vitest] There was an error when
+// mocking a module. If you are using "vi.mock" factory, make sure there are no top level variables inside, since this
+// call is hoisted to top of the file. Read more: https://vitest.dev/api/vi.html#vi-mock"." Um diese zu umgehen, werden
+// die gemockten Funktionen in `vi.hoisted` gelistet.
+const { mockCreateDefaultWlsError } = vi.hoisted(() => ({
+  mockCreateDefaultWlsError: vi.fn(),
+}));
+
+vi.mock("@/api/WLSError", () => ({
   createDefaultWlsError: mockCreateDefaultWlsError,
 }));
 
@@ -48,7 +51,7 @@ describe("fetch-utils.ts", () => {
       const errorMessage = "Es konnten keine Daten gefunden werden";
 
       // definiert das Verhalten der Methode
-      mockCreateDefaultWlsError.mockResolvedValueOnce(new Error(errorMessage));
+      mockCreateDefaultWlsError.mockReturnValueOnce(new Error(errorMessage));
 
       // `expect(wlsCatchHandler()).toThrow` ohne Arrow-Funktion wirft den Fehler: "Error: Es konnten keine Daten
       // gefunden werden", weil die Funktion tatsächlich ausgeführt wird. Mit der Kapselung in die Arrow-Funktion kann
@@ -63,7 +66,7 @@ describe("fetch-utils.ts", () => {
       });
       const errorMessage = "Ungültige Anfrage";
 
-      mockCreateDefaultWlsError.mockResolvedValueOnce(new Error(errorMessage));
+      mockCreateDefaultWlsError.mockReturnValueOnce(new Error(errorMessage));
 
       await expect(() => wlsCatchHandler(mockedResponse)).rejects.toThrow(
         errorMessage
@@ -83,9 +86,7 @@ describe("fetch-utils.ts", () => {
       async ({ response }) => {
         const errorMessage = "Ein unbekannter Fehler ist aufgetreten";
 
-        mockCreateDefaultWlsError.mockResolvedValueOnce(
-          new Error(errorMessage)
-        );
+        mockCreateDefaultWlsError.mockReturnValueOnce(new Error(errorMessage));
 
         await expect(() => wlsCatchHandler(response)).rejects.toThrow(
           errorMessage

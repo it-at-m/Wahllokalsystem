@@ -31,6 +31,9 @@ Jeder Microservice bekommt einen eigenen Port per Default, beginnend bei `39146`
 mit `39147` für den Briefwahlservice, `39148` für den Infomanagement-Service und `39149` für den EAI-Service. Weitere Services
 reihen sich entsprechend nachfolgend ein.
 
+> [!IMPORTANT]
+> Die aktuelle Übersicht der Ports gibt es [hier](/technik/get_started/#services-und-ports)
+
 ## Konsequenzen
 
 Die bereits erstellen Services müssen angepasst werden.

@@ -2,7 +2,7 @@ import {withMermaid} from "vitepress-plugin-mermaid"
 
 const PATH_TECHNIK = '/technik/';
 const PATH_ECOSYSTEM = PATH_TECHNIK + '/ecosystem/';
-const PATH_CODING_CONVENTIONS = PATH_TECHNIK + 'naming_conventions/';
+const PATH_NAMING_CONVENTIONS = PATH_TECHNIK + 'naming_conventions/';
 const PATH_ADR = PATH_TECHNIK + 'adr/';
 const PATH_GUIDES = PATH_TECHNIK + '/guides/';
 const PATH_SERVICES = '/services/';
@@ -68,10 +68,10 @@ export default withMermaid({
                     ]
                 },
                 {
-                    text: 'Naming Conventions', link: `${PATH_CODING_CONVENTIONS}`, collapsed: true, items: [
-                        {text: 'Flyway', link: `${PATH_CODING_CONVENTIONS}flyway`},
-                        {text: 'Tests', link: `${PATH_CODING_CONVENTIONS}testing`},
-                        {text: 'Workflows', link: `${PATH_CODING_CONVENTIONS}workflows`}
+                    text: 'Naming Conventions', link: `${PATH_NAMING_CONVENTIONS}`, collapsed: true, items: [
+                        {text: 'Flyway', link: `${PATH_NAMING_CONVENTIONS}flyway`},
+                        {text: 'Tests', link: `${PATH_NAMING_CONVENTIONS}testing`},
+                        {text: 'Workflows', link: `${PATH_NAMING_CONVENTIONS}workflows`}
                     ]
                 },
                 {

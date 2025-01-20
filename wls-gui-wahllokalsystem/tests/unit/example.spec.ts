@@ -13,10 +13,10 @@ const pinia = createPinia();
 // describe ist wie klassenfunktion --> describe funktionen können geschachtelt werden, um tests zu gruppieren und ordnen
 // beschreibt, was getestet wird
 describe("Beispiele und Erklärungen", () => {
-  // initialisiert variable, die hinterher vor jedem test zu einer vuetify instanz wird --> beforeEach()
+  // initialisiert Variable, die hinterher vor jedem test zu einer vuetify instanz wird --> beforeEach()
   let vuetify: ReturnType<typeof createVuetify>;
 
-  // wird einmal vor allen tests ausgeführt
+  // wird einmal vor allen Tests ausgeführt
   beforeAll(() => {
     createPinia();
     // definition, dass vuetify benutzt wird
@@ -25,7 +25,7 @@ describe("Beispiele und Erklärungen", () => {
 
   //wird vor jedem test ausgeführt
   beforeEach(() => {
-    // erstellt vuetify-bibliotheks-instanz, damit in den tests die vue komponenten verwendet werden können
+    // erstellt vuetify-bibliotheks-instanz, damit in den Tests die vue-Komponenten verwendet werden können
     vuetify = createVuetify({
       components,
       directives,
@@ -54,7 +54,7 @@ describe("Beispiele und Erklärungen", () => {
     expect(wrapper.html()).toContain(message);
   });
 
-  // beispieltest für das verständnis was der unterschied zwischen toBe und toEqual ist
+  // Beispieltest für das Verständnis was der Unterschied zwischen toBe und toEqual ist
   it(".toBe vs .toEqual", () => {
     // .toBe führt eine strikte Gleichheitsprüfung durch (===)
     // --> Wert + Typ müssen übereinstimmen:

@@ -45,7 +45,7 @@ describe("WLS Fetch Utils", () => {
       const mockedResponse = new Response(null, { status: 204 });
       const errorMessage = "Es konnten keine Daten gefunden werden";
 
-      // definiert das verhalten der methode
+      // definiert das Verhalten der Methode
       mockCreateDefaultWlsError.mockResolvedValueOnce(new Error(errorMessage));
 
       // expect(wlsCatchHandler()).toThrow ohne Arrow-Funktion wirft den fehler: "Error: Es konnten keine Daten gefunden werden",

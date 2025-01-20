@@ -1,7 +1,8 @@
 # Naming Convetions für Workflows
 
-❗ Ist zu beachten dass alle Workflows im Ordner `workflows` liegen müssen. Sie dürfen nicht auf unterordner aufgeteilt werden.
-Zur besseren Strukturierung in dem Ordner soll daher auf eine einheitliche Namenskonvention geachtet werden.
+> [!CAUTION]
+> Ist zu beachten dass alle Workflows im Ordner `workflows` liegen müssen. Sie dürfen nicht auf unterordner aufgeteilt werden.
+> Zur besseren Strukturierung in dem Ordner soll daher auf eine einheitliche Namenskonvention geachtet werden.
 
 - `callable-<kurzbeschreibung>.yml` ... [wiederverwendbare Workflows](https://docs.github.com/de/actions/using-workflows/reusing-workflows)
 - `dispatch-<kurzbeschreibung>.yml` ... [manuell ausführbare workflows](https://docs.github.com/de/actions/using-workflows/manually-running-a-workflow)

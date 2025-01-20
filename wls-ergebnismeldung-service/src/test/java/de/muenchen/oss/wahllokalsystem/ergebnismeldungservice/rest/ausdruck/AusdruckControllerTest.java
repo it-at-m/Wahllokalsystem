@@ -40,7 +40,7 @@ class AusdruckControllerTest {
     AusdruckController unitUnderTest;
 
     @Nested
-    class getHtmlAusdruck {
+    class getAusdruck {
 
         @Test
         void should_returnTextWithHttpStatusOk_when_serviceReturnsData() {
@@ -57,7 +57,7 @@ class AusdruckControllerTest {
             when(ausdruckService.getAusdruck(id)).thenReturn(mockedServiceResponse);
             when(ausdruckReadDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
 
-            val result = unitUnderTest.getHtmlAusdruck(wahlID, wahlbezirkID, meldungsArt);
+            val result = unitUnderTest.getAusdruck(wahlID, wahlbezirkID, meldungsArt);
 
             Assertions.assertThat(result.getBody()).isEqualTo(mockedServiceResponseAsDTO.content());
             Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -73,7 +73,7 @@ class AusdruckControllerTest {
             when(ausdruckService.getAusdruck(any())).thenReturn(null);
             when(ausdruckReadDTOMapper.toDTO(any())).thenReturn(null);
 
-            val result = unitUnderTest.getHtmlAusdruck(wahlID, wahlbezirkID, meldungsArt);
+            val result = unitUnderTest.getAusdruck(wahlID, wahlbezirkID, meldungsArt);
 
             Assertions.assertThat(result.getBody()).isNull();
             Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -81,7 +81,7 @@ class AusdruckControllerTest {
     }
 
     @Nested
-    class postHtmlAusdruck {
+    class postAusdruck {
 
         @Test
         void should_callServiceWithModel_when_calledWithData() {
@@ -101,7 +101,7 @@ class AusdruckControllerTest {
             val mockedAusdruckModel = new AusdruckModel(id, content, erstelltAm);
             when(ausdruckWriteDTOMapper.toModel(ausdruckWriteDTO, id, erstelltAm)).thenReturn(mockedAusdruckModel);
 
-            unitUnderTest.postHtmlAusdruck(wahlID, wahlbezirkID, meldungsArt, ausdruckWriteDTO);
+            unitUnderTest.postAusdruck(wahlID, wahlbezirkID, meldungsArt, ausdruckWriteDTO);
 
             Mockito.verify(ausdruckService).saveAusdruck((mockedAusdruckModel));
         }

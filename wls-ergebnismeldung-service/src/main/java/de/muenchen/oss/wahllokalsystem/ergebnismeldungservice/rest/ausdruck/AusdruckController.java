@@ -37,7 +37,7 @@ public class AusdruckController {
     }
 
     @PostMapping("{wahlID}/{wahlbezirkID}/{meldungsart}/html")
-    public ResponseEntity<?> postHtmlAusdruck(@PathVariable("wahlID") final String wahlID,
+    public ResponseEntity<?> postAusdruck(@PathVariable("wahlID") final String wahlID,
             @PathVariable("wahlbezirkID") final String wahlbezirkID, @PathVariable("meldungsart") final Meldungsart meldungsart,
             @RequestBody final AusdruckWriteDTO ausdruck) {
         AusdruckModel ausdruckModel = ausdruckWriteDTOMapper.toModel(ausdruck, new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart),
@@ -47,7 +47,7 @@ public class AusdruckController {
     }
 
     @GetMapping("{wahlID}/{wahlbezirkID}/{meldungsart}/html")
-    public ResponseEntity<String> getHtmlAusdruck(@PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID,
+    public ResponseEntity<String> getAusdruck(@PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID,
             @PathVariable("meldungsart") Meldungsart meldungsart) {
         AusdruckReadDTO result = ausdruckReadDTOMapper.toDTO(ausdruckService.getAusdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart)));
         if (result == null) {

@@ -66,7 +66,7 @@ class AusdruckServiceSecurityTest {
     }
 
     @Nested
-    class GetAll {
+    class GetAllAusdrucke {
 
         @Test
         void should_getAccess_when_requiredAuthorityIsPresent() {
@@ -75,7 +75,7 @@ class AusdruckServiceSecurityTest {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getAll(wahlID, wahlbezirkID));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getAllAusdrucke(wahlID, wahlbezirkID));
         }
 
         @Test
@@ -84,7 +84,7 @@ class AusdruckServiceSecurityTest {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getAll(wahlID, wahlbezirkID)).isInstanceOf(AccessDeniedException.class);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getAllAusdrucke(wahlID, wahlbezirkID)).isInstanceOf(AccessDeniedException.class);
         }
     }
 

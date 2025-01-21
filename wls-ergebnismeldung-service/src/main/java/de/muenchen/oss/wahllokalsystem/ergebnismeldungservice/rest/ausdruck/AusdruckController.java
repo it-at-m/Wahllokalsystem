@@ -61,7 +61,7 @@ public class AusdruckController {
     @GetMapping("{wahlID}/{wahlbezirkID}")
     public ResponseEntity<List<AusdruckReadDTO>> getAllAusdrucke(@PathVariable("wahlID") final String wahlID,
             @PathVariable("wahlbezirkID") final String wahlbezirkID) {
-        List<AusdruckReadDTO> res = ausdruckReadDTOMapper.fromListOfAusdruckModelToListOfAusdruckReadDTO(ausdruckService.getAll(wahlID, wahlbezirkID));
+        List<AusdruckReadDTO> res = ausdruckReadDTOMapper.fromListOfAusdruckModelToListOfAusdruckReadDTO(ausdruckService.getAllAusdrucke(wahlID, wahlbezirkID));
         return ResponseEntity.ok().body(res);
     }
 

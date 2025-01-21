@@ -29,7 +29,7 @@ public class AusdruckService {
     private final Validator validator;
 
     @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetAusdruck')")
-    public List<AusdruckModel> getAll(@NotBlank final String wahlID, @NotBlank final String wahlbezirkID) {
+    public List<AusdruckModel> getAllAusdrucke(@NotBlank final String wahlID, @NotBlank final String wahlbezirkID) {
         return ausdruckModelMapper.toModelList(
                 ausdruckRepository.findAllByWahlUndBezirkIDUndMeldungsart_WahlIDAndWahlUndBezirkIDUndMeldungsart_WahlbezirkID(wahlID, wahlbezirkID));
     }

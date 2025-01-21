@@ -89,7 +89,7 @@ class AusdruckServiceTest {
     }
 
     @Nested
-    class GetAll {
+    class GetAllAusdrucke {
 
         @Test
         void should_retrieveAllAusdruckeFromRepo_when_dataFound() {
@@ -104,7 +104,7 @@ class AusdruckServiceTest {
                             ausdruckEntityList);
             Mockito.when(ausdruckModelMapper.toModelList(ausdruckEntityList)).thenReturn(ausdruckModelList);
 
-            val result = unitUnderTest.getAll(wahlID, wahlbezirkID);
+            val result = unitUnderTest.getAllAusdrucke(wahlID, wahlbezirkID);
 
             Mockito.verify(ausdruckRepository).findAllByWahlUndBezirkIDUndMeldungsart_WahlIDAndWahlUndBezirkIDUndMeldungsart_WahlbezirkID(wahlID, wahlbezirkID);
             Assertions.assertThat(result).isEqualTo(ausdruckModelList);

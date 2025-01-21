@@ -124,7 +124,7 @@ class AusdruckControllerTest {
             val mockedMappedServiceDTO = List.of(new AusdruckReadDTO(wahlbezirkID, wahlID, Meldungsart.V1, content, erstelltAm),
                     new AusdruckReadDTO(wahlbezirkID, wahlID, Meldungsart.V3, content, erstelltAm));
 
-            Mockito.when(ausdruckService.getAll(wahlID, wahlbezirkID)).thenReturn(mockedServiceModel);
+            Mockito.when(ausdruckService.getAllAusdrucke(wahlID, wahlbezirkID)).thenReturn(mockedServiceModel);
             Mockito.when(ausdruckReadDTOMapper.fromListOfAusdruckModelToListOfAusdruckReadDTO(mockedServiceModel)).thenReturn(mockedMappedServiceDTO);
 
             val result = unitUnderTest.getAllAusdrucke(wahlID, wahlbezirkID);

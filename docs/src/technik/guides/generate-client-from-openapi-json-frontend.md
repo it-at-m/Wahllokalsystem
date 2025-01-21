@@ -7,12 +7,15 @@ Durch einen CLI-Befehl lässt sich aus der `openapi.json`-Datei das Datenmodell 
 ## Installation
 
 Anders als im Backend gibt es für das Frontend kein Plugin, um den Openapi Generator zu integrieren, sondern muss
-manuell über das Terminal ausgeführt werden.
-Mit diesem befehl kann der openapi-generator global auf dem Rechner installiert werden:
+manuell über das Terminal ausgeführt werden. Mit diesem Befehl kann der openapi-generator global auf dem Rechner 
+installiert werden:
 
 ```shell
 npm install @openapitools/openapi-generator-cli -g typescript-fetch
 ```
+
+<details>
+<summary>Errorhandling</summary>
 
 Sollte dabei diese Fehlermeldung auftauchen:
 ![img_1.png](img_1.png)
@@ -20,14 +23,10 @@ können die Schritte
 aus [diesem Stack-Beitrag](https://stackoverflow.com/questions/18088372/how-to-npm-install-global-not-as-root/59227497#59227497)
 befolgt werden.
 
-Anschließend kann im Terminal mit dem Befehl `openapi-generator-cli version` geprüft werden, ob die Installation
-erfolgreich war. Gegebenenfalls muss vorher noch der Befehl
+</details>
 
-```shell
-export HTTPS_PROXY="http://px-internetweb.muenchen.de:80"
-``` 
-
-im Terminal ausgeführt werden.
+Bei Bedarf muss zusätzlich noch der Proxy konfiguriert werden. Anschließend kann im Terminal mit dem Befehl 
+`openapi-generator-cli version` geprüft werden, ob die Installation erfolgreich war. 
 
 ## Individualisieren des Generators
 
@@ -50,8 +49,7 @@ dem die heruntergeladenen Files gespeichert werden sollen. Für das WLS wurden d
 `apis.mustache` angepasst, indem folgende Code-Zeilen hinzugefügt wurden:
 
 ::: code-group
-
-``` [runtime.mustache]
+```:line-numbers=123 [runtime.mustache (Teil 1)]
 protected async request(context: RequestOpts, initOverrides?: RequestInit | InitOverrideFunction): Promise<Response> {
     const { url, init } = await this.createFetchParams(context, initOverrides);
     const response = await this.fetchApi(url, init);
@@ -59,6 +57,12 @@ protected async request(context: RequestOpts, initOverrides?: RequestInit | Init
         return response;
     } else if (response && response.status == 400) {    // [!code ++]
       const raw = await response.text();    // [!code ++]
+      let content;  // [!code ++]
+      try {   // [!code ++]
+          content = JSON.parse(raw);  // [!code ++]
+      } catch (e) {  // [!code ++]
+          content = {};  // [!code ++]
+      }  // [!code ++]
       const content = JSON.parse(raw);  // [!code ++]
       const wlsError = isWLSException(content)  // [!code ++]
         ? generateWlsExceptionFromJson(content) // [!code ++]
@@ -76,16 +80,9 @@ protected async request(context: RequestOpts, initOverrides?: RequestInit | Init
     }
     throw new ResponseError(response, 'Response returned an error code');
 }
+```
 
-// (...)
-
-export class RequiredError extends Error {
-    override name: "RequiredError" = "RequiredError";
-    constructor(public field: string, msg?: string) {
-        super(msg);
-    }
-}
-
+```:line-numbers=291 [runtime.mustache (Teil 2)]
 export class WLSError extends Error {   // [!code ++]
   override name: "WLSError" = "WLSError";   // [!code ++]
   category?: string;   // [!code ++]
@@ -162,51 +159,9 @@ export function generateWlsExceptionFromJson(content: any): WLSException {   // 
     service: content.service,   // [!code ++]
   };   // [!code ++]
 }   // [!code ++]
-
-export const COLLECTION_FORMATS = {
-    csv: ",",
-    ssv: " ",
-    tsv: "\t",
-    pipes: "|",
-};
 ```
 
-``` [apis.mustache]
-{{/isArray}}
-{{/formParams}}
-{{/hasFormParams}}
-const response = await this.request({
-    path: `{{{path}}}`{{#pathParams}}.replace(`{${"{{baseName}}"}}`, encodeURIComponent(String(requestParameters['{{paramName}}']))){{/pathParams}},
-    method: '{{httpMethod}}',
-    headers: headerParameters,
-    query: queryParameters,
-    {{#hasBodyParam}}
-    {{#bodyParam}}
-    {{#isContainer}}
-    {{^withoutRuntimeChecks}}
-    body: requestParameters['{{paramName}}']{{#isArray}}{{#items}}{{^isPrimitiveType}}!.map({{datatype}}ToJSON){{/isPrimitiveType}}{{/items}}{{/isArray}},
-    {{/withoutRuntimeChecks}}
-    {{#withoutRuntimeChecks}}
-    body: requestParameters['{{paramName}}'],
-    {{/withoutRuntimeChecks}}
-    {{/isContainer}}
-    {{^isContainer}}
-    {{^isPrimitiveType}}
-    {{^withoutRuntimeChecks}}
-    body: {{dataType}}ToJSON(requestParameters['{{paramName}}']),
-    {{/withoutRuntimeChecks}}
-    {{#withoutRuntimeChecks}}
-    body: requestParameters['{{paramName}}'],
-    {{/withoutRuntimeChecks}}
-    {{/isPrimitiveType}}
-    {{#isPrimitiveType}}
-    body: requestParameters['{{paramName}}'] as any,
-    {{/isPrimitiveType}}
-    {{/isContainer}}
-    {{/bodyParam}}
-    {{/hasBodyParam}}
-    {{#hasFormParams}}
-    body: formParams,
+```:line-numbers=312 [apis.mustache]
     {{/hasFormParams}}
 }, initOverrides);
 
@@ -217,44 +172,7 @@ if (response.status === 204) {   // [!code ++]
 {{#returnType}}
 {{#isResponseFile}}
 return new runtime.BlobApiResponse(response);
-{{/isResponseFile}}
-{{^isResponseFile}}
-{{#returnTypeIsPrimitive}}
-{{#isMap}}
-return new runtime.JSONApiResponse<any>(response);
-{{/isMap}}
-{{#isArray}}
-return new runtime.JSONApiResponse<any>(response);
-{{/isArray}}
-{{#returnSimpleType}}
-if (this.isJsonMime(response.headers.get('content-type'))) {
-    return new runtime.JSONApiResponse<{{returnType}}>(response);
-} else {
-    return new runtime.TextApiResponse(response) as any;
-}
-{{/returnSimpleType}}
-{{/returnTypeIsPrimitive}}
-{{^returnTypeIsPrimitive}}
-{{#isArray}}
-return new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => {{#uniqueItems}}new Set({{/uniqueItems}}jsonValue.map({{returnBaseType}}FromJSON){{/withoutRuntimeChecks}}){{#uniqueItems}}){{/uniqueItems}};
-{{/isArray}}
-{{^isArray}}
-{{#isMap}}
-return new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => runtime.mapValues(jsonValue, {{returnBaseType}}FromJSON){{/withoutRuntimeChecks}});
-{{/isMap}}
-{{^isMap}}
-return new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => {{returnBaseType}}FromJSON(jsonValue){{/withoutRuntimeChecks}});
-{{/isMap}}
-{{/isArray}}
-{{/returnTypeIsPrimitive}}
-{{/isResponseFile}}
-{{/returnType}}
-{{^returnType}}
-return new runtime.VoidApiResponse(response);
-{{/returnType}}
-}
 ```
-
 :::
 
 ## Generierung des Codes
@@ -263,37 +181,58 @@ Im Terminal kann jetzt, wenn man sich innerhalb der `wls-gui-wahllokalsystem`-Di
 `openapi.json`-File mit folgendem Befehl der entsprechende Code generiert werden:
 
 ```shell
-openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.2.0.json -g typescript-fetch -o src/api/wls-clients/generated-broadcast-api --template-dir src/api/wls-clients/custom-openapi-template-files
+openapi-generator-cli generate -i src/resources/openapis/<openapi-file> -g typescript-fetch -o src/api/wls-clients/generated-<servicename>-api --template-dir src/api/wls-clients/custom-openapi-template-files
 ```
 
 - Das `-i` steht für Input und gibt den Ort an, an welchem das `openapi.json`-File gespeichert ist:
-  _"src/resources/openapis/openapi.broadcast.0.2.0.json"_
+  _"src/resources/openapis/\<openapi-file\>"_. `<openapi-file>` wird dabei durch das entsprechende
+  Release-File ersetzt. Beispiel: `openapi.broadcast.0.2.0.json`
 - Das `-o` steht für Output und gibt den Ort an, an welchem der generierte Code gespeichert werden soll:
-  _"src/api/wls-clients/generated-broadcast-api"_
+  _"src/api/wls-clients/generated-\<servicename\>-api"_. `<servicename>` wird dabei durch den entsprechenden
+  WLS-Service ersetzt. Beispiel: `generated-broadcast-api`
 - Das `--template-dir` sorgt dafür, dass die angepassten Templates bei der Generierung berücksichtigt werden und gibt
   den Ort an, an dem diese gespeichert sind: _"src/api/wls-clients/custom-openapi-template-files"_
 
+<details>
+<summary>Beispiel Broadcast-API</summary>
+
+Der komplette Befehl für die Generierung der Broadcast würde so aussehen:
+```shell
+openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.2.0.json -g typescript-fetch -o src/api/wls-clients/generated-broadcast-api --template-dir src/api/wls-clients/custom-openapi-template-files
+```
+
+</details>
+
 ## Nutzung des generierten Codes
 
-Es werden bei der Generierung unter anderem `**ControllerApi.ts`-Files und `**DTO.ts`-Files erstellt.
+Es werden bei der Generierung unter anderem `*ControllerApi.ts`-Files und `*DTO.ts`-Files erstellt.
 Am Beispiel vom Broadcast-Service wird gezeigt, wie der Code anschließend aufgerufen werden kann:
 
-Damit die korrekte URL hinterlegt wird, muss beim Erstellen jeder `**ControllerApi`-Instanz der `basePath` überschrieben
+Damit die korrekte URL hinterlegt wird, muss beim Erstellen jeder `*ControllerApi`-Instanz der `basePath` überschrieben
 werden:
 
-```javascript 
+::: code-group
+```typescript [Vue File]
 import {BroadcastControllerApi, Configuration} from "@/api/wls-clients/generated-broadcast-api";
+import {BROADCAST_SERVICE_API_URL} from "@/constants";
 
 const broadcastCA = new BroadcastControllerApi(
     new Configuration({
-        basePath: "http://localhost:8083/api/broadcast-service",
+      basePath: BROADCAST_SERVICE_API_URL,
     })
 );
 ```
 
+```typescript [constants.ts]
+const WLS_SERVICE_API_URL = "http://localhost:8083/api/";
+
+export const BROADCAST_SERVICE_API_URL = WLS_SERVICE_API_URL + "broadcast-service";
+```
+:::
+
 Die Fetch Aufrufe erfolgen dann zum Beispiel so:
 
-```javascript
+```typescript
 import type {DeleteMessageRequest, GetMessageRequest} from "@/api/wls-clients/generated-broadcast-api";
 import {WLSError} from "@/api/wls-clients/generated-broadcast-api";
 
@@ -316,12 +255,12 @@ broadcastCA
 Im Fall eines `400`er Codes in der Response, was in den meisten Fällen einer WlsException entspricht, können diese Werte
 dann wie folgt aufgerufen und weiterverarbeitet werden:
 
-```javascript
+```typescript
 broadcastCA
-    .then(xyz)
+    .then(/*xyz*/)
     .catch((error: WLSError) => {
         errorToShow.value = error.service + " - " + error.message + " (Code: " + error.code + ")";
     });
 ```
 
-Die Ausgabe wäre dann: `WLS-BROADCAST - Das Object BroadcastMessage ist nicht vollständig. (Code: 150)`
+Die Ausgabe wäre in diesem Beispiel: `WLS-BROADCAST - Das Object BroadcastMessage ist nicht vollständig. (Code: 150)`

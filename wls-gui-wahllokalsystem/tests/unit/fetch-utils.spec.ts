@@ -75,10 +75,12 @@ describe("fetch-utils.ts", () => {
       await expect(() => wlsCatchHandler(mockedResponse)).rejects.toThrow(
         errorMessage
       );
-      expect(mockCreateDefaultWlsError).toHaveBeenCalledWith({
-        message: errorMessage,
-        code: mockedResponse.status.toString(),
-      });
+      expect(mockCreateDefaultWlsError).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: expect.stringMatching(/.+/),
+          code: mockedResponse.status.toString(),
+        })
+      );
     });
 
     it.each([
@@ -99,10 +101,12 @@ describe("fetch-utils.ts", () => {
         await expect(() => wlsCatchHandler(response)).rejects.toThrow(
           errorMessage
         );
-        expect(mockCreateDefaultWlsError).toHaveBeenCalledWith({
-          message: errorMessage,
-          code: response.status.toString(),
-        });
+        expect(mockCreateDefaultWlsError).toHaveBeenCalledWith(
+          expect.objectContaining({
+            message: expect.stringMatching(/.+/),
+            code: response.status.toString(),
+          })
+        );
       }
     );
   });

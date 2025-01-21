@@ -33,7 +33,7 @@ class AusdruckRepositoryTest {
     }
 
     @Nested
-    class findOneByWahlUndBezirkIDUndMeldungsart {
+    class FindOneByWahlUndBezirkIDUndMeldungsart {
 
         @Test
         void should_returnAusdruck_when_wahlUndBezirkIDUndMeldungsartIsGiven() {
@@ -58,7 +58,7 @@ class AusdruckRepositoryTest {
     }
 
     @Nested
-    class findAllByWahlUndBezirkIDUndMeldungsart_WahlIDAndWahlUndBezirkIDUndMeldungsart_WahlbezirkID {
+    class FindAllByWahlUndBezirkIDUndMeldungsart_WahlIDAndWahlUndBezirkIDUndMeldungsart_WahlbezirkID {
 
         @Test
         void should_returnAusdruck_when_wahlUndBezirkIDUndMeldungsartIsGiven() {

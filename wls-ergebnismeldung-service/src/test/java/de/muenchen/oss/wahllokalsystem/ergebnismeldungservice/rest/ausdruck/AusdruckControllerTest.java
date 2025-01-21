@@ -41,7 +41,7 @@ class AusdruckControllerTest {
     AusdruckController unitUnderTest;
 
     @Nested
-    class getAusdruck {
+    class GetAusdruck {
 
         @Test
         void should_returnTextWithHttpStatusOk_when_serviceReturnsData() {
@@ -82,7 +82,7 @@ class AusdruckControllerTest {
     }
 
     @Nested
-    class postAusdruck {
+    class PostAusdruck {
 
         @Test
         void should_callServiceWithModel_when_calledWithData() {
@@ -110,7 +110,7 @@ class AusdruckControllerTest {
     }
 
     @Nested
-    class getAllAusdrucke {
+    class GetAllAusdrucke {
 
         @Test
         void should_returnHttpStatusOkAndData_when_dataIsFound() {

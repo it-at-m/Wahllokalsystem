@@ -1,34 +1,19 @@
-### Get token wls_all
-POST {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/token
-Content-Type: application/x-www-form-urlencoded
-
-password = test &
-grant_type = password &
-client_secret = top-secret &
-client_id = wls &
-username = wls_all
-
-> {%
-    client.global.set("auth_token", response.body.access_token);
-    client.global.set("token_type", response.body.token_type);
-%}
-
 ### get userinfo with auth_token
-GET {{ SSO_URL }}/auth/realms/wls_realm/protocol/openid-connect/userinfo
-Authorization: {{ token_type }} {{ auth_token }}
+GET {{ WLS_AUTH_SERVICE }}/user
+Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### GET Ausdruck for Meldungsart "V1" for wahlID and wahlbezirkID
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ausdruck/wahlID/wahlbezirkID/V1/html
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### GET all Ausdrucke for wahlID and wahlbezirkID
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ausdruck/wahlID/wahlbezirkID
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST Ausdruck for Meldungsart "V1" for wahlID and wahlbezirkID
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ausdruck/wahlID/wahlbezirkID/V1/html
 Content-Type: application/json
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 
 {
   "content": "Testcontent1"
@@ -37,7 +22,7 @@ Authorization: {{ token_type }} {{ auth_token }}
 ### POST Ausdruck for Meldungsart "V3" for wahlID and wahlbezirkID
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ausdruck/wahlID/wahlbezirkID/V3/html
 Content-Type: application/json
-Authorization: {{ token_type }} {{ auth_token }}
+Authorization: Bearer {{$auth.token("auth-service")}}
 
 {
   "content": "Testcontent2"

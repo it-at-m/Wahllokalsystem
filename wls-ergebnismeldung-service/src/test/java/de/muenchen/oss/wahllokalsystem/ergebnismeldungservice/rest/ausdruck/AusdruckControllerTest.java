@@ -11,6 +11,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.A
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
+import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -106,6 +107,31 @@ class AusdruckControllerTest {
             Mockito.verify(ausdruckService).saveAusdruck((mockedAusdruckModel));
         }
 
+    }
+
+    @Nested
+    class getAllAusdrucke {
+
+        @Test
+        void should_returnHttpStatusOkAndData_when_dataIsFound() {
+            val wahlID = "wahlID";
+            val wahlbezirkID = "wahlbezirkID";
+            val content = "Testcontent";
+            val erstelltAm = Instant.now();
+
+            val mockedServiceModel = List.of(new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V1), content, erstelltAm),
+                    new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V3), content, erstelltAm));
+            val mockedMappedServiceDTO = List.of(new AusdruckReadDTO(wahlbezirkID, wahlID, Meldungsart.V1, content, erstelltAm),
+                    new AusdruckReadDTO(wahlbezirkID, wahlID, Meldungsart.V3, content, erstelltAm));
+
+            Mockito.when(ausdruckService.getAll(wahlID, wahlbezirkID)).thenReturn(mockedServiceModel);
+            Mockito.when(ausdruckReadDTOMapper.fromListOfAusdruckModelToListOfAusdruckReadDTO(mockedServiceModel)).thenReturn(mockedMappedServiceDTO);
+
+            val result = unitUnderTest.getAllAusdrucke(wahlID, wahlbezirkID);
+
+            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+            Assertions.assertThat(result.getBody()).isSameAs(mockedMappedServiceDTO);
+        }
     }
 
 }

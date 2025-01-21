@@ -14,7 +14,7 @@
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.boot.version>3.3.5</spring.boot.version>
-        <spring.cloud.version>2023.0.4</spring.cloud.version>
+        <spring.cloud.version>2023.0.5</spring.cloud.version>
         <logstash.encoder>8.0</logstash.encoder>
         <apache.commons.collections4>4.4</apache.commons.collections4>
         <apache.commons.csv>1.12.0</apache.commons.csv>
@@ -154,7 +154,7 @@
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc11</artifactId>
-            <version>23.5.0.24.07</version>
+            <version>23.6.0.24.10</version>
         </dependency>
         <!-- Hibernate Model Gen for type safe criterias -->
         <dependency>
@@ -382,7 +382,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>7.7.0</version>
+                <version>7.10.0</version>
                 <executions>
                     <execution>
                         <id>generateEAI</id>
@@ -586,7 +586,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>10.20.1</version>
+                        <version>10.21.1</version>
                     </dependency>
                 </dependencies>
             </plugin>

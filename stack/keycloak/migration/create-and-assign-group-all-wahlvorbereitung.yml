@@ -1,9 +1,0 @@
-id: create group allWahlvorbereitungAuthorities
-author: MrSebastian
-realm: ${SSO_REALM}
-changes:
-  - addGroup:
-      name: allWahlvorbereitungAuthorities
-  - assignGroup:
-      user: wls_all
-      group: allWahlvorbereitungAuthorities

@@ -54,6 +54,7 @@ import {
   Configuration,
   WLSError,
 } from "@/api/wls-clients/generated-broadcast-api";
+import { BROADCAST_SERVICE_API_URL } from "@/constants";
 
 const messageInput = ref("I am a message");
 const messageToShow = ref("");
@@ -61,7 +62,7 @@ const errorToShow = ref("");
 
 const broadcastCA = new BroadcastControllerApi(
   new Configuration({
-    basePath: "http://localhost:8083/api/broadcast-service",
+    basePath: BROADCAST_SERVICE_API_URL,
   })
 );
 

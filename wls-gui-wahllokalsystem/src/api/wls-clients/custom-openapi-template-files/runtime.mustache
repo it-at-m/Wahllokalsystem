@@ -127,7 +127,12 @@ export class BaseAPI {
             return response;
         } else if (response && response.status == 400) {
           const raw = await response.text();
-          const content = JSON.parse(raw);
+             let content;
+             try {
+                 content = JSON.parse(raw);
+             } catch (e) {
+                 content = {};
+             }
           const wlsError = isWLSException(content)
             ? generateWlsExceptionFromJson(content)
             : createDefaultWlsError({
@@ -252,7 +257,7 @@ export class BaseAPI {
         next.middleware = this.middleware.slice();
         return next;
     }
-};
+}
 
 function isBlob(value: any): value is Blob {
     return typeof Blob !== 'undefined' && value instanceof Blob;

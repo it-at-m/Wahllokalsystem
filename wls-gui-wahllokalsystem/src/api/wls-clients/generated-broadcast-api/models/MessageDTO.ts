@@ -12,88 +12,82 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from "../runtime";
-
+import { mapValues } from '../runtime';
 /**
- *
+ * 
  * @export
  * @interface MessageDTO
  */
 export interface MessageDTO {
-  /**
-   *
-   * @type {string}
-   * @memberof MessageDTO
-   */
-  oid: string;
-  /**
-   *
-   * @type {string}
-   * @memberof MessageDTO
-   */
-  wahlbezirkID: string;
-  /**
-   *
-   * @type {string}
-   * @memberof MessageDTO
-   */
-  nachricht: string;
-  /**
-   *
-   * @type {Date}
-   * @memberof MessageDTO
-   */
-  empfangsZeit: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof MessageDTO
+     */
+    oid: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MessageDTO
+     */
+    wahlbezirkID: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MessageDTO
+     */
+    nachricht: string;
+    /**
+     * 
+     * @type {Date}
+     * @memberof MessageDTO
+     */
+    empfangsZeit: Date;
 }
 
 /**
  * Check if a given object implements the MessageDTO interface.
  */
 export function instanceOfMessageDTO(value: object): value is MessageDTO {
-  if (!("oid" in value) || value["oid"] === undefined) return false;
-  if (!("wahlbezirkID" in value) || value["wahlbezirkID"] === undefined)
-    return false;
-  if (!("nachricht" in value) || value["nachricht"] === undefined) return false;
-  if (!("empfangsZeit" in value) || value["empfangsZeit"] === undefined)
-    return false;
-  return true;
+    if (!('oid' in value) || value['oid'] === undefined) return false;
+    if (!('wahlbezirkID' in value) || value['wahlbezirkID'] === undefined) return false;
+    if (!('nachricht' in value) || value['nachricht'] === undefined) return false;
+    if (!('empfangsZeit' in value) || value['empfangsZeit'] === undefined) return false;
+    return true;
 }
 
 export function MessageDTOFromJSON(json: any): MessageDTO {
-  return MessageDTOFromJSONTyped(json, false);
+    return MessageDTOFromJSONTyped(json, false);
 }
 
-export function MessageDTOFromJSONTyped(
-  json: any,
-  ignoreDiscriminator: boolean
-): MessageDTO {
-  if (json == null) {
-    return json;
-  }
-  return {
-    oid: json["oid"],
-    wahlbezirkID: json["wahlbezirkID"],
-    nachricht: json["nachricht"],
-    empfangsZeit: new Date(json["empfangsZeit"]),
-  };
+export function MessageDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean): MessageDTO {
+    if (json == null) {
+        return json;
+    }
+    return {
+        
+        'oid': json['oid'],
+        'wahlbezirkID': json['wahlbezirkID'],
+        'nachricht': json['nachricht'],
+        'empfangsZeit': (new Date(json['empfangsZeit'])),
+    };
 }
 
 export function MessageDTOToJSON(json: any): MessageDTO {
-  return MessageDTOToJSONTyped(json, false);
+    return MessageDTOToJSONTyped(json, false);
 }
 
-export function MessageDTOToJSONTyped(
-  value?: MessageDTO | null,
-  ignoreDiscriminator: boolean = false
-): any {
-  if (value == null) {
-    return value;
-  }
+export function MessageDTOToJSONTyped(value?: MessageDTO | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
+    }
 
-  return {
-    oid: value["oid"],
-    wahlbezirkID: value["wahlbezirkID"],
-    nachricht: value["nachricht"],
-    empfangsZeit: value["empfangsZeit"].toISOString(),
-  };
+    return {
+        
+        'oid': value['oid'],
+        'wahlbezirkID': value['wahlbezirkID'],
+        'nachricht': value['nachricht'],
+        'empfangsZeit': ((value['empfangsZeit']).toISOString()),
+    };
 }
+

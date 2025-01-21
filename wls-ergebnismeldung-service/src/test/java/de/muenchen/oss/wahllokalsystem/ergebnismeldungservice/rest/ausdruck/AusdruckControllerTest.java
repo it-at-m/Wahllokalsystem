@@ -105,6 +105,8 @@ class AusdruckControllerTest {
             unitUnderTest.postAusdruck(wahlID, wahlbezirkID, meldungsArt, ausdruckWriteDTO);
 
             Mockito.verify(ausdruckService).saveAusdruck((mockedAusdruckModel));
+
+            mockedStatic.close();
         }
 
     }

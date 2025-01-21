@@ -126,6 +126,8 @@ public class AusdruckControllerIntegrationTest {
                     .usingRecursiveComparison()
                     .withComparatorForType(TimePrecisionComparators.INSTANT_PRECISION_MILLISECONDS, Instant.class)
                     .isEqualTo(entityToFind);
+
+            mockedStatic.close();
         }
 
         @Test

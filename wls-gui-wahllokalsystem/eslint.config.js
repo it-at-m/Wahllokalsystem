@@ -19,6 +19,7 @@ export default [
       "node_modules",
       "env.d.ts",
       "src/api/wls-clients/generated-*-api",
+      "src/resources/openapis",
     ],
   },
   {

@@ -4,6 +4,13 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.Me
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.WahlUndBezirkIDUndMeldungsart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckService;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.time.Instant;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +36,28 @@ public class AusdruckController {
 
     private final AusdruckWriteDTOMapper ausdruckWriteDTOMapper;
 
+    @Operation(description = "Lesen aller Ausdrucke für einen Wahlbezirk einer Wahl")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Es existiert ein Ausdruck",
+                            content = {
+                                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AusdruckReadDTO.class))) }
+                    ),
+                    @ApiResponse(
+                            responseCode = "204", description = "Es existiert kein Ausdruck zu den entsprechenden Kriterien",
+                            content = { @Content() }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
+                    ),
+                    @ApiResponse(
+                            responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
+                    )
+            }
+    )
     @GetMapping("{wahlID}/{wahlbezirkID}")
     public ResponseEntity<List<AusdruckReadDTO>> getAllAusdrucke(@PathVariable("wahlID") final String wahlID,
             @PathVariable("wahlbezirkID") final String wahlbezirkID) {
@@ -36,6 +65,22 @@ public class AusdruckController {
         return ResponseEntity.ok().body(res);
     }
 
+    @Operation(description = "Speichern eines Ausdrucks einer bestimmten Meldungsart für einen Wahlbezirk einer Wahl")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Ausdruck erfolgreich gespeichert"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
+                    ),
+                    @ApiResponse(
+                            responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
+                    )
+            }
+    )
     @PostMapping("{wahlID}/{wahlbezirkID}/{meldungsart}/html")
     public ResponseEntity<?> postAusdruck(@PathVariable("wahlID") final String wahlID,
             @PathVariable("wahlbezirkID") final String wahlbezirkID, @PathVariable("meldungsart") final Meldungsart meldungsart,
@@ -46,6 +91,27 @@ public class AusdruckController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(description = "Lesen eines Ausdrucks einer bestimmten Meldungsart für einen Wahlbezirk einer Wahl")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Es existiert ein Ausdruck",
+                            content = { @Content(mediaType = "text/html; charset=utf-8", schema = @Schema(implementation = AusdruckReadDTO.class)) }
+                    ),
+                    @ApiResponse(
+                            responseCode = "204", description = "Es existiert kein Ausdruck zu den entsprechenden Kriterien",
+                            content = { @Content() }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
+                    ),
+                    @ApiResponse(
+                            responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
+                    )
+            }
+    )
     @GetMapping("{wahlID}/{wahlbezirkID}/{meldungsart}/html")
     public ResponseEntity<String> getAusdruck(@PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID,
             @PathVariable("meldungsart") Meldungsart meldungsart) {

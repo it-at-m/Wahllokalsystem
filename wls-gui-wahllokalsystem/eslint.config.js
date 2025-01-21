@@ -13,7 +13,13 @@ export default [
   }),
   vuePrettierEslintConfigSkipFormatting,
   {
-    ignores: ["dist", "target", "node_modules", "env.d.ts"],
+    ignores: [
+      "dist",
+      "target",
+      "node_modules",
+      "env.d.ts",
+      "src/api/wls-clients/generated-*-api",
+    ],
   },
   {
     rules: {

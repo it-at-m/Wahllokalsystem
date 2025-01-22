@@ -319,12 +319,13 @@ export function createDefaultWlsError({
   code?: string;
   service?: string;
 }): WLSError {
-  const error = new Error(message) as WLSError;
-  error.name = "WLSError";
-  error.category = category;
-  error.code = code;
-  error.service = service;
-  return error;
+  return new WLSError(
+    new Response(),
+    message,
+    category,
+    code,
+    service
+  );
 }
 
 export interface WLSException {

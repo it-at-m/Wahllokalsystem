@@ -9,5 +9,5 @@ public class TimePrecisionComparators {
 
     public static final Comparator<LocalDateTime> LOCAL_DATE_TIME_PRECISION_MILLISECONDS = Comparator
             .comparing(dateTime -> dateTime.truncatedTo(ChronoUnit.MILLIS));
-    public static final Comparator<Instant> INSTANT_PRECISION_MILLISECONDS = Comparator.comparing(i -> i.truncatedTo(ChronoUnit.MILLIS));
+    public static final Comparator<Instant> INSTANT_PRECISION_MILLISECONDS = Comparator.comparing(instant -> instant.truncatedTo(ChronoUnit.MILLIS));
 }

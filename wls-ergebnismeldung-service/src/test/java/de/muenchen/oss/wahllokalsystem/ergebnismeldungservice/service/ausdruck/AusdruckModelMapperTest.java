@@ -88,7 +88,7 @@ class AusdruckModelMapperTest {
     }
 
     @Nested
-    class ToModelist {
+    class ToModelList {
         @Test
         void should_returnNull_when_givenNull() {
             Assertions.assertThat(unitUnderTest.toModelList(null)).isNull();
@@ -117,7 +117,7 @@ class AusdruckModelMapperTest {
 
     }
 
-    private List<Ausdruck> createListOfAusdruckEntities(Instant erstelltAm) {
+    private List<Ausdruck> createListOfAusdruckEntities(final Instant erstelltAm) {
         val wahlID = "wahlID";
         val content = "Testausdruck";
 

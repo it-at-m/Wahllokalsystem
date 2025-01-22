@@ -59,10 +59,13 @@ export function useBroadcastService() {
       await broadcastCA.broadcast(postParams, postConfig());
       return { error: "" };
     } catch (e) {
-      const error = e as WLSError;
-      const errorMessage =
-        error.service + " - " + error.message + " (Code: " + error.code + ")";
-      return { error: errorMessage };
+      if (e instanceof WLSError) {
+        const errorMessage =
+          e.service + " - " + e.message + " (Code: " + e.code + ")";
+        return { error: errorMessage };
+      } else {
+        return { error: "Fehler beim Senden der Broadcast Nachricht" };
+      }
     }
   }
 

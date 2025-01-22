@@ -193,7 +193,6 @@ public class AusdruckControllerIntegrationTest {
 
         @Test
         void should_returnData_when_dataIsPresentInRepository() throws Exception {
-
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val content = "Testausdruck";

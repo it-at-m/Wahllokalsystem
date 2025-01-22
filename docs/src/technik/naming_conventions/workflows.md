@@ -18,7 +18,7 @@
 
 `dispatch-microservice-mvn-release.yml` ist ein Workflow, der manuell getriggert wird um ein Maven-Release eines Mikroservices durchzuführen.
 
-### `<service-namer>_<trigger>.yml`
+### `<service-name>_<trigger>.yml`
 
 `wls-broadcast-service_push-dev-yml` ist der Workflow zum `wls-broadcast-service` der bei einem `push` auf `dev` ausgeführt wird.
 

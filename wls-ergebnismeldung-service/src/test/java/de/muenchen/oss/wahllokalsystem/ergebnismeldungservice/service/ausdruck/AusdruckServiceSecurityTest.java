@@ -58,7 +58,6 @@ class AusdruckServiceSecurityTest {
         @Test
         @WithMockUser
         void should_throwAccessDeniedException_when_serviceGetAusdruckAuthorityIsMissing() {
-
             val id = new WahlUndBezirkIDUndMeldungsart("wahlbezirkID", "wahlID", Meldungsart.V1);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getAusdruck(id)).isInstanceOf(AccessDeniedException.class);

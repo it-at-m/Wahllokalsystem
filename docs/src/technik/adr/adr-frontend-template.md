@@ -19,7 +19,7 @@ Es wurden damals im alten Code einige Anpassungen am Gateway vorgenommen. Zum Be
 User-Sessions in der Datenbank gespeichert und alle Daten wurden verschlüsselt übertragen.
 
 Entscheidungskriterium ist, ob diese Änderungen dem generierten ApiGateway-Image des Github-Templates hinzugefügt werden können oder nicht.
-Es steht allerdings noch nicht fest, inweiweit diese Einstellungen übernommen oder ggf. abgelöst werden können, daher wurde sich darauf geeinigt, 
+Es steht allerdings noch nicht fest, inwieweit diese Einstellungen übernommen oder ggf. abgelöst werden können, daher wurde sich darauf geeinigt, 
 vorerst mit dem Github-Template und dem generierten ApiGateway zu arbeiten. Sollten im Nachhinein doch noch Änderungen am Gateway vorgenommen werden müssen, 
 wird nicht auf das maven-Archetype-Template gewechselt, sondern der Source-Code des Images manuell zum Projekt hinzugefügt und angepasst.
 

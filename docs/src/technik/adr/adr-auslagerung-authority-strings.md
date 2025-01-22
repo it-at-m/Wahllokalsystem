@@ -1,4 +1,4 @@
-# Auslagerung von Authority Strings
+# Auslagerung von Authoritystrings
 
 ## Status
 
@@ -6,7 +6,7 @@
 
 ## Kontext
 
-Es stand die Überlegung im Raum, die in den Services verwendeten Authority Strings als Konstanten auszulagern.
+Es stand die Überlegung im Raum, die in den Services verwendeten Authoritystrings, als Konstanten auszulagern.
 Beispiel:
 
 ```java
@@ -19,11 +19,11 @@ String AUTHORITY_WRITE_EREIGNIS = "hasAuthority('VorfaelleUndVorkommnisse_WRITE_
 @PreAuthorize(AUTHORITY_WRITE_EREIGNIS)
 ```
 
-Dies hätte die Vorteile der Wiederverwendbarkeit, besseren Lesbarkeit und ggf. der Reduzierung von Errors durch Tippfehler, würde aber auf der Anderen Seite die Komplexität etwas erhöhen und zu ein paar mehr Codezeilen führen.
+Dies hätte die Vorteile der Wiederverwendbarkeit, besseren Lesbarkeit und ggf. der Reduzierung von Errors durch Tippfehler, würde aber auf der anderen Seite die Komplexität etwas erhöhen und zu ein paar mehr Codezeilen führen.
 
 ## Entscheidung
 
-In einer gemeinsamen Diskussion wurde Entschieden, die Auslagerung nicht vorzunehmen. Sie hat keinen signifikanten Vorteil, da die meisten Strings nur einmal verwendet werden. Der Aufwand, den bestehenden Code anzupassen kann nicht mit dem geringen Nutzen der Änderung gerechtfertigt werden.
+In einer gemeinsamen Diskussion wurde entschieden, die Auslagerung nicht vorzunehmen. Sie hat keinen signifikanten Vorteil, da die meisten Strings nur einmal verwendet werden. Der Aufwand, den bestehenden Code anzupassen kann nicht mit dem geringen Nutzen der Änderung gerechtfertigt werden.
 
 ## Konsequenzen
 

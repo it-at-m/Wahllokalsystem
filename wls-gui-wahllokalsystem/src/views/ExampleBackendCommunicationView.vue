@@ -9,23 +9,37 @@
         <br />
         <v-text-field
           v-model="messageInput"
+          data-test="messageInput"
           class="ml-auto mr-auto"
           width="350"
           clearable
           label="ID"
         ></v-text-field>
-        <v-btn @click="postBroadcastMessage(messageInput, ['wbz-1', 'wbz-2'])"
+        <v-btn
+          data-test="postMessageBtn"
+          @click="postBroadcastMessage(messageInput, ['wbz-1', 'wbz-2'])"
           >post message with fetch utils
         </v-btn>
         <br />
         <br />
-        <v-btn @click="getBroadcastMessage('wbz-1')"
+        <v-btn
+          data-test="getMessageBtn"
+          @click="getBroadcastMessage('wbz-1')"
           >get message with fetch utils
         </v-btn>
         <br />
         <br />
-        <pre v-if="messageToShow"> {{ messageToShow }} </pre>
-        <p v-if="errorToShow">{{ errorToShow }}</p>
+        <pre
+          v-if="messageToShow"
+          data-test="messageToShow"
+          >{{ messageToShow }}
+        </pre>
+        <p
+          v-if="errorToShow"
+          data-test="errorToShow"
+        >
+          {{ errorToShow }}
+        </p>
       </v-col>
     </v-responsive>
   </v-container>

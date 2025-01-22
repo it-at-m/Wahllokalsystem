@@ -6,6 +6,7 @@ die durch den Nutzer anhand von Masken erfasst werden.
 ## Abhängigkeiten
 
 Folgende Services werden benötigt:
+
 - Basisdaten-Service
 - Briefwahl-Service
 - EAI-Service
@@ -19,27 +20,29 @@ Folgende Services werden benötigt:
 - Verwalten von A- und B-Werten
 
 ### Abrufen von A-Werten (Wahlberechtigte)
+
 Die Methode `getAWerte()` liefert die A-Werte für eine bestimmte Wahlbezirk-ID.
 Die A-Werte repräsentieren die Anzahl der Wahl- bzw. Stimmberechtigten in einem Wahlbezirk.
 Sie teilen sich auf in die Anzahl an Wahlberechtigten, die keinen Wahlschein erhalten haben (A1)
-und in die Anzahl an Wahlberechtigten, die einen Wahlschein erhalten haben und deshalb einen W-Vermerk im 
+und in die Anzahl an Wahlberechtigten, die einen Wahlschein erhalten haben und deshalb einen W-Vermerk im
 Wählerverzeichnis besitzen (A2).
 
 - Wenn über die EAI im externen Wahlsystem Daten gefunden werden, dann werden diese im lokalen Repository gespeichert
-und zurück gegeben.
-- Sofern über die EAI im externen Wahlsystem keine Daten gefunden werden können, wird versucht auf 'alte' A-Werte im 
-lokalen Repository zuzugreifen.
+  und zurück gegeben.
+- Sofern über die EAI im externen Wahlsystem keine Daten gefunden werden können, wird versucht auf 'alte' A-Werte im
+  lokalen Repository zuzugreifen.
 - Falls weder im externen Wahlsystem noch im lokalen Repository A-Werte gefunden werden
-liefert der Service einen Fehler. 
+  liefert der Service einen Fehler.
 
 ### Initialisieren von A-Werten (Wahlberechtigte)
+
 Die Methode initialisiereAWerte() initialisiert die Wahlberechtigten (A-Werte) für eine Liste an Wahlbezirk-IDs.
 
 - Für jede Wahlbezirk-ID in der Liste wird über die EAI im externen Wahlsystem nach A-Werten gesucht. Bei Erfolg werden
-diese im lokalen Repository gespeichert.
+  diese im lokalen Repository gespeichert.
 - Bei Nichterfolg wird geprüft, ob im lokalen Repository wenigstens 'alte' A-Werte existieren.
 - Falls weder im externen Wahlsystem noch im lokalen Repository A-Werte gefunden werden
-  liefert der Service einen Fehler. 
+  liefert der Service einen Fehler.
 
 ### Update des Status der Ergebnisermittlung
 
@@ -52,13 +55,21 @@ Welche Aktionen für die jeweiligen Dokumente bereits in einem Wahllokal vollzog
 
 ### Lesen und Schreiben von Stimmabgabevermerken
 
-####  Erfassung der Stimmabgaben mit Wahlschein
+#### Erfassung der Stimmabgaben mit Wahlschein
+
 Im Wählerverzeichnis wird bei einer Wahl durch den Schriftführer über den sogenannten "Stimmabgabevermerk" vermerkt,
 wenn ein Wahlberechtigter mit Wahlschein seinen Stimmzettel in die Urne im Wahllokal gelegt hat.
 Über das Schreiben und Lesen der Wahlscheine kann die aktuelle Anzahl an Stimmabgabevermerken an WLS übermittelt
 bzw. ausgelesen werden.
 
 ### Erfassung der Anzahl an Stimmzettelumschlaegen
+
 Bei der Briefwahl zählt der Wahlvorstand die Stimmzettelumschlaege.
-Über das Schreiben und Lesen der Stimmzettelumschlaege kann die aktuelle Anzahl eines Wahlbezirkes für eine Wahl an WLS 
+Über das Schreiben und Lesen der Stimmzettelumschlaege kann die aktuelle Anzahl eines Wahlbezirkes für eine Wahl an WLS
 übermittelt bzw. ausgelesen werden.
+
+### Lesen und Schreiben von Ergebnissen
+
+Wahlergebnisse können gespeichert werden. Die Ergebnisse werden über ihren Wahlbezirk, ihre Wahl und den Stapel,
+auf dem sie liegen, ausgelesen.
+Es können auch die Ergebnisse von allen Stapeln einer Wahl in einem Wahlbezirk gelesen werden.

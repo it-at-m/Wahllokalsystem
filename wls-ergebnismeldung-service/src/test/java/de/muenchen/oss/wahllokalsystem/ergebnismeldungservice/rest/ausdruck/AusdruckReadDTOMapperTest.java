@@ -53,7 +53,7 @@ class AusdruckReadDTOMapperTest {
     }
 
     @Nested
-    class ToDTOList {
+    class FromListOfAusdruckModelToListOfAusdruckReadDTO {
         @Test
         void should_returnNull_when_givenNull() {
             Assertions.assertThat(unitUnderTest.fromListOfAusdruckModelToListOfAusdruckReadDTO(null)).isNull();

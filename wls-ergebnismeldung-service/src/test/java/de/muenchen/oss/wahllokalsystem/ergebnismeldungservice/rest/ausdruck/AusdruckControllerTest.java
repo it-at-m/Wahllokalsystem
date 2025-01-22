@@ -133,5 +133,4 @@ class AusdruckControllerTest {
             Assertions.assertThat(result.getBody()).isSameAs(mockedMappedServiceDTO);
         }
     }
-
 }

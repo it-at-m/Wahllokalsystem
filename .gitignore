@@ -8,4 +8,4 @@ node_modules
 /docs/node_modules/
 
 /wls-gui-wahllokalsystem/src/api/wls-clients/generated-*-api/.openapi-generator
-/wls-gui-wahllokalsystem/src/api/wls-clients/**/.openapi-generator-ignore
+/wls-gui-wahllokalsystem/src/api/wls-clients/generated-*-api/.openapi-generator-ignore

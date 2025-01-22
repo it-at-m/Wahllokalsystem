@@ -19,3 +19,4 @@ CREATE TABLE Wahlbezirk
 id VARCHAR2(36) NOT NULL,
 wahlbezirkArt VARCHAR2(3) NOT NULL
 )
+```

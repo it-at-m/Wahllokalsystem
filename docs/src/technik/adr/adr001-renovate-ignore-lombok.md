@@ -6,9 +6,9 @@
 
 ## Kontext
 
-Wir verwenden [Renovate](https://docs.renovatebot.com) um unsere Dependencies auf den aktuellen Stand zu halten. Renovate
+Wir verwenden [Renovate](https://docs.renovatebot.com), um unsere Dependencies auf den aktuellen Stand zu halten. Renovate
 erzeugt automatisch Pull-Requests mit Vorschlägen zu Anpassungen. Wir reviewen diese Vorschläge und nehmen diese entsprechend an.
-Das Dashboard mit einer Übersicht was alles verwaltet wird ist in einem [Issue](https://github.com/it-at-m/Wahllokalsystem/issues/1).
+Das Dashboard mit einer Übersicht, was alles verwaltet wird, ist in einem [Issue](https://github.com/it-at-m/Wahllokalsystem/issues/1).
 
 In unseren Services verwenden wir `lombok`. Die Dependency dafür kommt von Spring als managed dependency:
 
@@ -93,7 +93,7 @@ Wir lassen `renovate` `org.projectlombok:lombok` ignorieren. Updates von `lombok
 
 ### betrachtete Alternative
 
-Es wäre möglich die Pflege der Version im `annotationProcessorPaths` weg zu bekommen. Dazu müsste man an Stelle von
+Es wäre möglich die Pflege der Version im `annotationProcessorPaths` wegzubekommen. Dazu müsste man an Stelle von
 `annotationProcessorPaths` [`annotationProcessors` pflegen](https://projectlombok.org/contributing/lombok-execution-path) und dort die expliziten Klassen referenzieren. Kommt Mapstruct,
 hinzu muss `org.mapstruct:mapstruct-processor` als Dependency vorhanden sein.
 
@@ -114,4 +114,4 @@ Weniger Pull-Requests die gehandhabt werden müssen.
 
 Steigerung der Komplexität durch eine zusätzliche Konfiguration für eine Dependency. Ein Verweis in der Konfiguration auf diesen ADR ist nicht möglich.
 
-`lombok` wird in keinem Projekt mehr durch `renovate` gepflegt. Das halte ich für vertrebar da wir `lombok` immer im Kontext von `spring` verwenden.
+`lombok` wird in keinem Projekt mehr durch `renovate` gepflegt. Das halte ich für vertretbar, da wir `lombok` immer im Kontext von `spring` verwenden.

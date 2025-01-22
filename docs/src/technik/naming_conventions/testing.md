@@ -23,9 +23,8 @@ erwartetes Ergebnis) und Input (= StateUnderTest, bzw. zu testender Zustand) in 
 entsprechend sind die Testnamen auch auf Englisch zu formulieren.
 
 Wir haben uns darauf geeinigt, die zu testenden Methoden im Backend mit `@Nested`, und im Frontend mit
-`describe("xyz", () => {}` zu gruppieren. Im Fall von überladenen Methoden
-werden diese innerhalb der Methodenklasse zusätzlich verschachtelt und ebenfalls mit `@Nested` annotiert, oder in einen
-neuen `describe()`-Block eingeordnet.
+`describe("xyz", () => {}` zu gruppieren. Im Fall von überladenen Methoden werden diese innerhalb der Methodenklasse 
+zusätzlich verschachtelt und ebenfalls mit `@Nested` annotiert, oder in einen neuen `describe()`-Block eingeordnet.
 
 ### Beispiele
 
@@ -37,7 +36,7 @@ void should_throwAccessDeniedException_whenAuthoritiesMissing() {}
 ```
 
 ```typescript
-// Frontend: it("should_expectedResultInCamelCase_when_inputInCamelCase", () => {}
+// Frontend: it("should_expectedResultInCamelCase_when_inputInCamelCase", () => {});
 it("should_returnResolvedResponse_when_responseCodeIs200", () => {});
 it("should_executeGetMessageFunction_when_buttonClicked", () => {});
 it("should_clearMessageInput_when_messageHasBeenSent", () => {});
@@ -47,7 +46,6 @@ it("should_clearMessageInput_when_messageHasBeenSent", () => {});
 
 **Backend-Beispiel:** Vereinfachter Pseudocode! Beispiel aus dem Vorfälle und Vorkommnisse Service.
 ::: code-group
-
 ```java{2-3,5-6,11-12} [MapperTest.java]
 class EreignisModelMapperTest {
   @Nested
@@ -78,7 +76,6 @@ public interface EreignisModelMapper {
     List<Ereignis> toEntity(EreignisseWriteModel model);
 }
 ```
-
 :::
 
 ## Konsequenzen

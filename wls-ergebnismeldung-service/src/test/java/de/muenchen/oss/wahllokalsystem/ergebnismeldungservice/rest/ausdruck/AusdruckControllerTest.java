@@ -2,7 +2,6 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ausdruck;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.when;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.Meldungsart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.WahlUndBezirkIDUndMeldungsart;
@@ -55,8 +54,8 @@ class AusdruckControllerTest {
             val mockedServiceResponse = new AusdruckModel(id, content, erstelltAm);
             val mockedServiceResponseAsDTO = new AusdruckReadDTO(wahlbezirkID, wahlID, meldungsArt, content, erstelltAm);
 
-            when(ausdruckService.getAusdruck(id)).thenReturn(mockedServiceResponse);
-            when(ausdruckReadDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
+            Mockito.when(ausdruckService.getAusdruck(id)).thenReturn(mockedServiceResponse);
+            Mockito.when(ausdruckReadDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
 
             val result = unitUnderTest.getAusdruck(wahlID, wahlbezirkID, meldungsArt);
 
@@ -71,8 +70,8 @@ class AusdruckControllerTest {
             val wahlbezirkID = "wahlbezirkID";
             val meldungsArt = Meldungsart.V1;
 
-            when(ausdruckService.getAusdruck(any())).thenReturn(null);
-            when(ausdruckReadDTOMapper.toDTO(any())).thenReturn(null);
+            Mockito.when(ausdruckService.getAusdruck(any())).thenReturn(null);
+            Mockito.when(ausdruckReadDTOMapper.toDTO(any())).thenReturn(null);
 
             val result = unitUnderTest.getAusdruck(wahlID, wahlbezirkID, meldungsArt);
 
@@ -100,7 +99,7 @@ class AusdruckControllerTest {
             val ausdruckWriteDTO = new AusdruckWriteDTO(content);
 
             val mockedAusdruckModel = new AusdruckModel(id, content, erstelltAm);
-            when(ausdruckWriteDTOMapper.toModel(ausdruckWriteDTO, id, erstelltAm)).thenReturn(mockedAusdruckModel);
+            Mockito.when(ausdruckWriteDTOMapper.toModel(ausdruckWriteDTO, id, erstelltAm)).thenReturn(mockedAusdruckModel);
 
             unitUnderTest.postAusdruck(wahlID, wahlbezirkID, meldungsArt, ausdruckWriteDTO);
 

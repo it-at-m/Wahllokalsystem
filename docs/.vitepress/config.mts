@@ -34,7 +34,9 @@ export default withMermaid({
 
         sidebar: {
             [PATH_TECHNIK]: [
-                {text: 'Getting Started', link: `${PATH_TECHNIK}get_started/`},
+                {
+                    text: 'Getting Started', link: `${PATH_TECHNIK}get_started/`
+                },
                 {
                     text: 'Ecosystem', link: `${PATH_ECOSYSTEM}`, collapsed: true, items: [
                         {text: 'Tools & Frameworks', link: `${PATH_ECOSYSTEM}toolsAndFrameworks`},

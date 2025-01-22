@@ -338,7 +338,7 @@ export function createDefaultWlsError({
   return error;
 }
 
-export default interface WLSException {
+export interface WLSException {
   category: string;
   code: string;
   message: string;

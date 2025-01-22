@@ -51,3 +51,13 @@ management:
       enabled: true
 info.application.name: @project.artifactId@
 info.application.version: @project.version@
+
+service:
+  info:
+    oid: WLS-ERGEBNISMELDUNG
+  config:
+    clients:
+      auth:
+        basePath: "http://localhost:8100"
+      basisdaten:
+        basePath: "http://localhost:8205"

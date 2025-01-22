@@ -1,7 +1,12 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": ["env.d.ts", "declarations.d.ts", "src/**/*", "src/**/*.vue"],
-  "exclude": ["tests/**/*"],
+  "include": [
+    "env.d.ts",
+    "declarations.d.ts",
+    "src/**/*",
+    "src/**/*.vue",
+    "tests/**/*.ts"
+  ],
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "./cache/tsconfig.app.tsbuildinfo",

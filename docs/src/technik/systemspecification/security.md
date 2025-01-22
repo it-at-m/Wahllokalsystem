@@ -4,8 +4,8 @@
 
 Zur Authentifizierung wird OAuth2 mit dem Grant Type `authorization_code` verwenden.
 Dabei wird ein Token vom Authorization-Server ([`wls-auth-service`](/services/auth-service/)) ausgestellt.
-Der ausgestellt Token wird in der Session hinterlegt, die der Client verwenden soll. Anfragen an
-Services erfolgen mit der SessionsID an das Gatway, welches die Anfrage dann an den jeweiligen Service
+Der ausgestellte Token wird in der Session hinterlegt, die der Client verwenden soll. Anfragen an
+Services erfolgen mit der SessionsID an das Gateway, welches die Anfrage dann an den jeweiligen Service
 unter Verwendung des Bearer-Tokens weiterleiten.
 
 ```mermaid

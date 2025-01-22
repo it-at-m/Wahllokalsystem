@@ -115,15 +115,15 @@ public class AusdruckController {
     @GetMapping("{wahlID}/{wahlbezirkID}/{meldungsart}/html")
     public ResponseEntity<String> getAusdruck(@PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID,
             @PathVariable("meldungsart") Meldungsart meldungsart) {
-        AusdruckReadDTO result = ausdruckReadDTOMapper.toDTO(ausdruckService.getAusdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart)));
-        if (result == null) {
+        val ausdruckModel = ausdruckService.getAusdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart));
+
+        if (ausdruckModel.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            val result = ausdruckReadDTOMapper.toDTO(ausdruckModel.get());
+            val responseHeaders = new HttpHeaders();
+            responseHeaders.add(HttpHeaders.CONTENT_TYPE, "text/html; charset=utf-8");
+            return new ResponseEntity<>(result.content(), responseHeaders, HttpStatus.OK);
         }
-
-        val responseHeaders = new HttpHeaders();
-        responseHeaders.add(HttpHeaders.CONTENT_TYPE, "text/html; charset=utf-8");
-
-        return new ResponseEntity<>(result.content(), responseHeaders, HttpStatus.OK);
     }
-
 }

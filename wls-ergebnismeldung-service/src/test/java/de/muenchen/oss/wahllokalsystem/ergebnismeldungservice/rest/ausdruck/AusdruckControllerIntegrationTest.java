@@ -17,6 +17,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.TimePrecisio
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
+import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -83,7 +84,7 @@ public class AusdruckControllerIntegrationTest {
         }
 
         @Test
-        void should_returnNotFoundRequest_when_requestIsInvalid() throws Exception {
+        void should_returnNotFoundRequest_when_noDataIsPresentInRepository() throws Exception {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val meldungsart = Meldungsart.V1;
@@ -91,6 +92,14 @@ public class AusdruckControllerIntegrationTest {
             val request = MockMvcRequestBuilders.get(buildGetPostAusdruckURI(wahlID, wahlbezirkID, meldungsart));
 
             mockMvc.perform(request).andExpect(status().isNotFound());
+        }
+
+        @Test
+        void should_returnBadRequest_when_requestIsInvalid() throws Exception {
+
+            val request = MockMvcRequestBuilders.get(buildGetPostAusdruckURI(" ", " ", Meldungsart.V1));
+
+            mockMvc.perform(request).andExpect(status().isBadRequest());
         }
     }
 
@@ -120,12 +129,12 @@ public class AusdruckControllerIntegrationTest {
 
             mockMvc.perform(request).andExpect(status().isOk());
 
-            val persistedEntity = ausdruckRepository.findOneByWahlUndBezirkIDUndMeldungsart(idToFind);
+            val persistedEntity = ausdruckRepository.findById(idToFind);
 
             Assertions.assertThat(persistedEntity)
                     .usingRecursiveComparison()
                     .withComparatorForType(TimePrecisionComparators.INSTANT_PRECISION_MILLISECONDS, Instant.class)
-                    .isEqualTo(entityToFind);
+                    .isEqualTo(Optional.of(entityToFind));
 
             mockedStatic.close();
         }
@@ -143,37 +152,41 @@ public class AusdruckControllerIntegrationTest {
         }
 
         @Test
-        void should_returnInternalServerError_when_requestPathParameterWahlIDIsInvalid() throws Exception {
+        void should_returnBadRequest_when_requestPathParameterWahlIDIsBlank() throws Exception {
+            val wahlID = " ";
             val wahlbezirkID = "wahlbezirkID";
             val meldungsart = Meldungsart.V1;
             val content = "Testausdruck";
 
             val requestBody = new AusdruckWriteDTO(content);
-            val request = MockMvcRequestBuilders.post(buildGetPostAusdruckURI(" ", wahlbezirkID, meldungsart)).contentType(MediaType.APPLICATION_JSON).content(
-                    objectMapper.writeValueAsString(requestBody));
+            val request = MockMvcRequestBuilders.post(buildGetPostAusdruckURI(wahlID, wahlbezirkID, meldungsart)).contentType(MediaType.APPLICATION_JSON)
+                    .content(
+                            objectMapper.writeValueAsString(requestBody));
 
-            mockMvc.perform(request).andExpect(status().isInternalServerError());
+            mockMvc.perform(request).andExpect(status().isBadRequest());
 
             Assertions.assertThat(ausdruckRepository.count()).isEqualTo(0);
         }
 
         @Test
-        void should_returnInternalServerError_when_requestPathParameterWahlbezirkIDIsInvalid() throws Exception {
+        void should_returnBadRequest_when_requestPathParameterWahlbezirkIDIsBlank() throws Exception {
             val wahlID = "wahlID";
+            val wahlbezirkID = " ";
             val meldungsart = Meldungsart.V1;
             val content = "Testausdruck";
 
             val requestBody = new AusdruckWriteDTO(content);
-            val request = MockMvcRequestBuilders.post(buildGetPostAusdruckURI(wahlID, " ", meldungsart)).contentType(MediaType.APPLICATION_JSON).content(
-                    objectMapper.writeValueAsString(requestBody));
+            val request = MockMvcRequestBuilders.post(buildGetPostAusdruckURI(wahlID, wahlbezirkID, meldungsart)).contentType(MediaType.APPLICATION_JSON)
+                    .content(
+                            objectMapper.writeValueAsString(requestBody));
 
-            mockMvc.perform(request).andExpect(status().isInternalServerError());
+            mockMvc.perform(request).andExpect(status().isBadRequest());
 
             Assertions.assertThat(ausdruckRepository.count()).isEqualTo(0);
         }
 
         @Test
-        void should_returnInternalServerError_when_requestPathParameterWMeldungsartIDIsInvalid() throws Exception {
+        void should_returnInternalServerError_when_requestPathParameterMeldungsartIsNull() throws Exception {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val content = "Testausdruck";

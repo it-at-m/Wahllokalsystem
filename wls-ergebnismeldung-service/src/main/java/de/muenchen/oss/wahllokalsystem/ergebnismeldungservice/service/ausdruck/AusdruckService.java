@@ -8,6 +8,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactor
 import jakarta.validation.Validator;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.NotBlank;
@@ -49,17 +50,18 @@ public class AusdruckService {
     }
 
     @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetAusdruck')")
-    public AusdruckModel getAusdruck(WahlUndBezirkIDUndMeldungsart id) {
+    public Optional<AusdruckModel> getAusdruck(WahlUndBezirkIDUndMeldungsart id) {
         log.debug("Loading printout {}", id.getMeldungsart());
 
         wahlUndBezirkIDUndMeldungsartValidator.validWahlUndBezirkIDUndMeldungsartOrThrow(id,
                 exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG));
 
-        Ausdruck result = ausdruckRepository.findOneByWahlUndBezirkIDUndMeldungsart(id);
+        Optional<Ausdruck> result = ausdruckRepository.findById(id);
 
-        if (result == null) {
+        if (result.isEmpty()) {
             log.info("Printout not found for: {}", id);
         }
-        return ausdruckModelMapper.toModel(result);
+
+        return result.map(ausdruckModelMapper::toModel);
     }
 }

@@ -15,6 +15,7 @@ import jakarta.validation.Validator;
 import jakarta.validation.metadata.ConstraintDescriptor;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -69,22 +70,22 @@ class AusdruckServiceTest {
             val mockedMappedEntityAsModel = new AusdruckModel(id, null, null);
             val mockedEntity = new Ausdruck();
 
-            Mockito.when(ausdruckRepository.findOneByWahlUndBezirkIDUndMeldungsart(id)).thenReturn(mockedEntity);
+            Mockito.when(ausdruckRepository.findById(id)).thenReturn(Optional.of(mockedEntity));
             Mockito.when(ausdruckModelMapper.toModel(mockedEntity)).thenReturn(mockedMappedEntityAsModel);
 
             val result = unitUnderTest.getAusdruck(id);
 
-            Assertions.assertThat(result).isEqualTo(mockedMappedEntityAsModel);
+            Assertions.assertThat(result.get()).isEqualTo(mockedMappedEntityAsModel);
         }
 
         @Test
-        void should_returnNull_when_ausdruckIsNotFoundInRepo() {
+        void should_returnEmptyOptional_when_notFound() {
             val id = new WahlUndBezirkIDUndMeldungsart();
-            Mockito.when(ausdruckRepository.findOneByWahlUndBezirkIDUndMeldungsart(id)).thenReturn(null);
+            Mockito.when(ausdruckRepository.findById(id)).thenReturn(Optional.empty());
 
             val result = unitUnderTest.getAusdruck(id);
 
-            Assertions.assertThat(result).isNull();
+            Assertions.assertThat(result.isEmpty());
         }
     }
 

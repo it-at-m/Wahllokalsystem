@@ -11,6 +11,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -54,7 +55,7 @@ class AusdruckControllerTest {
             val mockedServiceResponse = new AusdruckModel(id, content, erstelltAm);
             val mockedServiceResponseAsDTO = new AusdruckReadDTO(wahlbezirkID, wahlID, meldungsArt, content, erstelltAm);
 
-            Mockito.when(ausdruckService.getAusdruck(id)).thenReturn(mockedServiceResponse);
+            Mockito.when(ausdruckService.getAusdruck(id)).thenReturn(Optional.of(mockedServiceResponse));
             Mockito.when(ausdruckReadDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
 
             val result = unitUnderTest.getAusdruck(wahlID, wahlbezirkID, meldungsArt);
@@ -65,13 +66,12 @@ class AusdruckControllerTest {
         }
 
         @Test
-        void should_returnNullWithHttpStatusNotFound_when_serviceReturnsNoData() {
+        void should_returnNullBodyWithHttpStatusNotFound_when_serviceReturnsEmtyOptional() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val meldungsArt = Meldungsart.V1;
 
-            Mockito.when(ausdruckService.getAusdruck(any())).thenReturn(null);
-            Mockito.when(ausdruckReadDTOMapper.toDTO(any())).thenReturn(null);
+            Mockito.when(ausdruckService.getAusdruck(any())).thenReturn(Optional.empty());
 
             val result = unitUnderTest.getAusdruck(wahlID, wahlbezirkID, meldungsArt);
 

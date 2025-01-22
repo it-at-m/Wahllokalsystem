@@ -7,6 +7,7 @@ import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.TimeP
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -33,12 +34,12 @@ class AusdruckRepositoryTest {
     }
 
     @Nested
-    class FindOneByWahlUndBezirkIDUndMeldungsart {
+    class FindByID {
 
         @Test
-        void should_returnAusdruck_when_wahlUndBezirkIDUndMeldungsartIsGiven() {
-            val wahlUndBezirkIDUndMeldungsart = new WahlUndBezirkIDUndMeldungsart("wahlbezirkID01", "wahlID01", Meldungsart.V1);
-            val ausdruckToFind = new Ausdruck(wahlUndBezirkIDUndMeldungsart, "Testcontent", Instant.now());
+        void should_returnData_when_IdIsGiven() {
+            val idToFind = new WahlUndBezirkIDUndMeldungsart("wahlbezirkID01", "wahlID01", Meldungsart.V1);
+            val ausdruckToFind = new Ausdruck(idToFind, "Testcontent", Instant.now());
             val ausdruckeToSave = List.of(
                     ausdruckToFind,
                     new Ausdruck(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID02", "wahlID01", Meldungsart.V1),
@@ -50,10 +51,10 @@ class AusdruckRepositoryTest {
 
             repository.saveAll(ausdruckeToSave);
 
-            val result = repository.findOneByWahlUndBezirkIDUndMeldungsart(wahlUndBezirkIDUndMeldungsart);
+            val result = repository.findById(idToFind);
             Assertions.assertThat(result).isNotNull();
             Assertions.assertThat(result).usingRecursiveComparison().withComparatorForType(INSTANT_PRECISION_MILLISECONDS, Instant.class)
-                    .isEqualTo(ausdruckToFind);
+                    .isEqualTo(Optional.of(ausdruckToFind));
         }
     }
 

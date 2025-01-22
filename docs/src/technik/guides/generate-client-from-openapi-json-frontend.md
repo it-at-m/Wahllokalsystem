@@ -7,7 +7,7 @@ Durch einen CLI-Befehl lässt sich aus der `openapi.json`-Datei das Datenmodell 
 ## Installation
 
 Anders als im Backend gibt es für das Frontend kein Plugin, um den Openapi Generator zu integrieren, sondern muss
-manuell über das Terminal ausgeführt werden. Mit diesem Befehl kann der openapi-generator global auf dem Rechner 
+als CLI Befehl ausgeführt werden. Mit diesem Befehl kann der openapi-generator global auf dem Rechner 
 installiert werden:
 
 ```shell
@@ -19,8 +19,8 @@ npm install @openapitools/openapi-generator-cli -g typescript-fetch
 
 Sollte dabei diese Fehlermeldung auftauchen:
 ![img_1.png](img_1.png)
-können die Schritte
-aus [diesem Stack-Beitrag](https://stackoverflow.com/questions/18088372/how-to-npm-install-global-not-as-root/59227497#59227497)
+können die Schritte aus 
+[diesem Stack-Beitrag](https://stackoverflow.com/questions/18088372/how-to-npm-install-global-not-as-root/59227497#59227497)
 befolgt werden.
 
 </details>
@@ -177,13 +177,17 @@ return new runtime.BlobApiResponse(response);
 
 ## Generierung des Codes
 
-Im Terminal kann jetzt, wenn man sich innerhalb der `wls-gui-wahllokalsystem`-Directory befindet, für jedes
+Es gibt zwei Möglichkeiten, den Befehl auszuführen, um den gewünschten Code generieren zu lassen.
+
+#### 1) Ausführen des Befehls im Terminal
+Im Terminal kann, wenn man sich innerhalb der `wls-gui-wahllokalsystem`-Directory befindet, für jedes
 `openapi.json`-File mit folgendem Befehl der entsprechende Code generiert werden:
 
 ```shell
 openapi-generator-cli generate -i src/resources/openapis/<openapi-file> -g typescript-fetch -o src/api/wls-clients/generated-<servicename>-api --template-dir src/api/wls-clients/custom-openapi-template-files
 ```
 
+Dabei gilt:
 - Das `-i` steht für Input und gibt den Ort an, an welchem das `openapi.json`-File gespeichert ist:
   _"src/resources/openapis/\<openapi-file\>"_. `<openapi-file>` wird dabei durch das entsprechende
   Release-File ersetzt. Beispiel: `openapi.broadcast.0.2.0.json`
@@ -193,15 +197,33 @@ openapi-generator-cli generate -i src/resources/openapis/<openapi-file> -g types
 - Das `--template-dir` sorgt dafür, dass die angepassten Templates bei der Generierung berücksichtigt werden und gibt
   den Ort an, an dem diese gespeichert sind: _"src/api/wls-clients/custom-openapi-template-files"_
 
-<details>
-<summary>Beispiel Broadcast-API</summary>
-
-Der komplette Befehl für die Generierung der Broadcast würde so aussehen:
+::: details Beispiel Broadcast-API
+Der komplette Befehl für die Generierung der Broadcast API über das Terminal würde so aussehen:
 ```shell
 openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.2.0.json -g typescript-fetch -o src/api/wls-clients/generated-broadcast-api --template-dir src/api/wls-clients/custom-openapi-template-files
 ```
+:::
 
-</details>
+#### 2) Ausführen des Skripts `gen:gen-<servicename>`
+
+In der `package.json` kann der oben genannte Befehl als Skript hinzugefügt werden. Das sieht dann so aus:
+
+```json
+ "scripts": {
+    "dev": "vite",
+    /* ... */
+    "gen:gen-<servicename>": "openapi-generator-cli generate -i src/resources/openapis/<openapi-file> -g typescript-fetch -o src/api/wls-clients/generated-<servicename>-api --template-dir src/api/wls-clients/custom-openapi-template-files" // [!code ++]
+  },
+```
+
+::: details Beispiel Broadcast-API
+Der komplette Befehl für die Generierung der Broadcast API über das `package.json`-File würde so aussehen:
+```json
+ "scripts": {
+    "gen:gen-broadcast": "openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.2.0.json -g typescript-fetch -o src/api/wls-clients/generated-broadcast-api --template-dir src/api/wls-clients/custom-openapi-template-files"
+  },
+```
+:::
 
 ## Nutzung des generierten Codes
 

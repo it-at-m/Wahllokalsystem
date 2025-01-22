@@ -88,7 +88,7 @@ class AusdruckModelMapperTest {
     }
 
     @Nested
-    class ToModelist {
+    class ToModelList {
         @Test
         void should_returnNull_when_givenNull() {
             Assertions.assertThat(unitUnderTest.toModelList(null)).isNull();

@@ -46,13 +46,6 @@
 </template>
 
 <script setup lang="ts">
-import type {
-  BroadcastMessageDTO,
-  BroadcastRequest,
-  DeleteMessageRequest,
-  GetMessageRequest,
-} from "@/api/wls-clients/generated-broadcast-api";
-
 import { ref } from "vue";
 import {
   VBtn,
@@ -62,64 +55,25 @@ import {
   VTextField,
 } from "vuetify/components";
 
-import { postConfig } from "@/api/fetch-utils";
-import {
-  BroadcastControllerApi,
-  Configuration,
-  WLSError,
-} from "@/api/wls-clients/generated-broadcast-api";
-import { BROADCAST_SERVICE_API_URL } from "@/constants";
+import { useBroadcastService } from "@/composables/wlsClients/broadcastService/useBroadcastService";
+
+const { getMessage, postMessage } = useBroadcastService();
 
 const messageInput = ref("I am a message");
 const messageToShow = ref("");
 const errorToShow = ref("");
 
-const broadcastCA = new BroadcastControllerApi(
-  new Configuration({
-    basePath: BROADCAST_SERVICE_API_URL,
-  })
-);
-
-async function getBroadcastMessage(wahlbezirkID: string) {
+async function getBroadcastMessage(id: string) {
   clearDisplayedValues();
-
-  const getParams: GetMessageRequest = { wahlbezirkID };
-  broadcastCA
-    .getMessage(getParams)
-    .then((content) => {
-      const nachrichtID = content.oid;
-      const deleteParams: DeleteMessageRequest = { nachrichtID };
-      broadcastCA.deleteMessage(deleteParams, postConfig()).catch(() => {
-        errorToShow.value =
-          "Es ist ein Fehler beim Lesen der Nachricht aufgetreten";
-      });
-      messageToShow.value = content.nachricht;
-    })
-    .catch((error: WLSError) => {
-      errorToShow.value = error.message;
-    });
+  const { message, error } = await getMessage(id);
+  errorToShow.value = error;
+  messageToShow.value = message;
 }
 
-async function postBroadcastMessage(
-  nachricht: string,
-  wahlbezirkIDs: string[]
-) {
+async function postBroadcastMessage(message: string, ids: string[]) {
   clearDisplayedValues();
-
-  const broadcastMessageDTO = {
-    wahlbezirkIDs,
-    nachricht,
-  } as BroadcastMessageDTO;
-  const postParams: BroadcastRequest = { broadcastMessageDTO };
-  broadcastCA
-    .broadcast(postParams, postConfig())
-    .then(() => {
-      errorToShow.value = "";
-    })
-    .catch((error: WLSError) => {
-      errorToShow.value =
-        error.service + " - " + error.message + " (Code: " + error.code + ")";
-    });
+  const { error } = await postMessage(message, ids);
+  errorToShow.value = error;
   messageInput.value = "";
 }
 

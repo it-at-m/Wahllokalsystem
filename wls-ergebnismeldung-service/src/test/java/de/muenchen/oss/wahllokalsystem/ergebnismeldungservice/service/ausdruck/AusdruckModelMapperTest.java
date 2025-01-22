@@ -117,7 +117,7 @@ class AusdruckModelMapperTest {
 
     }
 
-    private List<Ausdruck> createListOfAusdruckEntities(Instant erstelltAm) {
+    private List<Ausdruck> createListOfAusdruckEntities(final Instant erstelltAm) {
         val wahlID = "wahlID";
         val content = "Testausdruck";
 

@@ -42,7 +42,7 @@ classDiagram
 
 ## Handbuch
 
-In dem Service werden Handbücher verwaltet. Je Wahl und Wahlbezirkart kann ein Handbuch hinterlegt werden.
+In dem Service werden Handbücher verwaltet. Je Wahl und Wahlbezirksart kann ein Handbuch hinterlegt werden.
 
 Bei dem Handbuch soll es sich um ein PDF-Dokument handeln. 
 

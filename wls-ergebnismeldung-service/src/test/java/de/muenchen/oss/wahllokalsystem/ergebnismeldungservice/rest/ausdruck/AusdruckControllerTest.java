@@ -108,7 +108,6 @@ class AusdruckControllerTest {
 
             mockedStatic.close();
         }
-
     }
 
     @Nested

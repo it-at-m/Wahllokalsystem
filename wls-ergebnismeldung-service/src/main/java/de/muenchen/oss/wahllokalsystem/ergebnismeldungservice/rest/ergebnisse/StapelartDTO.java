@@ -1,6 +1,6 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse;
 
-public enum Stapelart {
+public enum StapelartDTO {
     // Landtagswahl und Bezirkswahl-Stapel
     LTW_BZW_A, LTW_BZW_B, LTW_BZW_C_GUELTIG, LTW_BZW_C_UNGUELTIG, LTW_BZW_D, LTW_BZW_DII, LTW_BZW_E, LTW_BZW_F_GUELTIG, LTW_BZW_F_UNGUELTIG, LTW_BZW_G_KLEIN, LTW_BZW_G_GROSS, LTW_BZW_G_BEIDE,
     // Europawahl-Stapel

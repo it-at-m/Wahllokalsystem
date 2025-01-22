@@ -31,10 +31,10 @@ public class Ergebnisse {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "Ergebnissammlung", joinColumns = {
-            @JoinColumn(name = "fk_wahlid", referencedColumnName = "wahlid"),
-            @JoinColumn(name = "fk_wahlbezirkid", referencedColumnName = "wahlbezirkid"),
-            @JoinColumn(name = "fk_stapelart", referencedColumnName = "stapelart")
-    }
+                    @JoinColumn(name = "fk_wahlid", referencedColumnName = "wahlid"),
+                    @JoinColumn(name = "fk_wahlbezirkid", referencedColumnName = "wahlbezirkid"),
+                    @JoinColumn(name = "fk_stapelart", referencedColumnName = "stapelart")
+            }
     )
     @NotNull
     @Size(min = 1)

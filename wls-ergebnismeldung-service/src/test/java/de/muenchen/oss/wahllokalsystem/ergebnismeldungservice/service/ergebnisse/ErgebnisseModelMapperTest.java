@@ -25,9 +25,11 @@ class ErgebnisseModelMapperTest {
 
         @Test
         void should_returnErgebnisseModel_when_givenErgebnisseEntity() {
-            val ergebnis1 = new Ergebnis(null, null, null, 1, null);
+            val ergebnis1 = new Ergebnis("wahlvorschlagID1", "kandidatID1", 1L, 1, 1L);
+            val ergebnis2 = new Ergebnis("wahlvorschlagID2", "kandidatID2", 2L, 1, 2L);
             val newErgebnisList = new ArrayList<Ergebnis>();
             newErgebnisList.add(ergebnis1);
+            newErgebnisList.add(ergebnis2);
             val ergebnisse = new Ergebnisse(new BezirkUndWahlIDStapelart("bezirkID", "wahlID", Stapelart.LTW_BZW_A), newErgebnisList);
             val result = unitUnderTest.toModel(ergebnisse);
 
@@ -42,9 +44,11 @@ class ErgebnisseModelMapperTest {
 
         @Test
         void should_returnErgebnisseEntity_when_givenErgebnisseModel() {
-            val ergebnis1 = new Ergebnis(null, null, null, 1, null);
+            val ergebnis1 = new Ergebnis("wahlvorschlagID1", "kandidatID1", 1L, 1, 1L);
+            val ergebnis2 = new Ergebnis("wahlvorschlagID2", "kandidatID2", 2L, 1, 2L);
             val newErgebnisList = new ArrayList<Ergebnis>();
             newErgebnisList.add(ergebnis1);
+            newErgebnisList.add(ergebnis2);
             val ergebnisseModel = new ErgebnisseModel("bezirkID", "wahlID", Stapelart.LTW_BZW_A, newErgebnisList);
             val result = unitUnderTest.toEntity(ergebnisseModel);
 

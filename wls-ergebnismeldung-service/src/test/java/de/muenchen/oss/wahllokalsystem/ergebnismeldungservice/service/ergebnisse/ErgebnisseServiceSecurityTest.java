@@ -86,7 +86,7 @@ class ErgebnisseServiceSecurityTest {
     }
 
     @Nested
-    class SetErgebnisse {
+    class PostErgebnisse {
 
         @Test
         void should_getAccess_when_allRequiredAuthoritiesArePresent() {

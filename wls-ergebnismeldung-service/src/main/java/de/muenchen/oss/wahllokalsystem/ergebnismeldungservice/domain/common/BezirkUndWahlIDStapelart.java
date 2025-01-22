@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
@@ -20,10 +21,12 @@ public class BezirkUndWahlIDStapelart implements Serializable {
 
     @NotNull
     @Size(max = 1024)
+    @Column(name = "wahlbezirkID")
     private String wahlbezirkID;
 
     @NotNull
     @Size(max = 1024)
+    @Column(name = "wahlID")
     private String wahlID;
 
     @Enumerated(EnumType.STRING)

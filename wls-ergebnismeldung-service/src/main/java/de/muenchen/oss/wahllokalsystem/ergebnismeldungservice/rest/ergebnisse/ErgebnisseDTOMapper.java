@@ -9,14 +9,14 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface ErgebnisseDTOMapper {
 
-    @Mapping(target = "wahlbezirkID", source = "bezirkUndWahlIDStapelart.wahlbezirkID")
-    @Mapping(target = "wahlID", source = "bezirkUndWahlIDStapelart.wahlID")
-    @Mapping(target = "stapelart", source = "bezirkUndWahlIDStapelart.stapelart")
+    @Mapping(target = "wahlbezirkID", source = "bezirkUndWahlIDStapelartDTO.wahlbezirkID")
+    @Mapping(target = "wahlID", source = "bezirkUndWahlIDStapelartDTO.wahlID")
+    @Mapping(target = "stapelart", source = "bezirkUndWahlIDStapelartDTO.stapelartDTO")
     ErgebnisseModel toModel(ErgebnisseDTO dto);
 
-    @Mapping(target = "bezirkUndWahlIDStapelart.wahlbezirkID", source = "wahlbezirkID")
-    @Mapping(target = "bezirkUndWahlIDStapelart.wahlID", source = "wahlID")
-    @Mapping(target = "bezirkUndWahlIDStapelart.stapelart", source = "stapelart")
+    @Mapping(target = "bezirkUndWahlIDStapelartDTO.wahlbezirkID", source = "wahlbezirkID")
+    @Mapping(target = "bezirkUndWahlIDStapelartDTO.wahlID", source = "wahlID")
+    @Mapping(target = "bezirkUndWahlIDStapelartDTO.stapelartDTO", source = "stapelart")
     ErgebnisseDTO toDTO(ErgebnisseModel entity);
 
     ErgebnisseReference toReferenceModel(String wahlbezirkID, String wahlID, Stapelart stapelart);

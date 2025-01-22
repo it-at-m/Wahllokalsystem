@@ -27,8 +27,8 @@ public class BegruendungService {
     private final ExceptionFactory exceptionFactory;
 
     @PreAuthorize(
-            "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetBegruendung')"
-                    + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
+        "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetBegruendung')"
+                + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
     )
     public BegruendungModel getBegruendung(@P("param") @NotNull final BegruendungReference begruendungReference) {
         log.info("#getBegruendung");
@@ -40,8 +40,8 @@ public class BegruendungService {
     }
 
     @PreAuthorize(
-            "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostBegruendung')"
-                    + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
+        "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostBegruendung')"
+                + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
     )
     public void postBegruendung(@P("param") @NotNull BegruendungModel begruendungToAdd, BegruendungReference begruendungReference) {
         log.info("#postBegruendung");

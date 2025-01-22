@@ -6,6 +6,10 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/wahlbezirkID/wahlID/LTW_BZW_A
 Authorization: Bearer {{$auth.token("auth-service")}}
 
+### GET alle Ergebnisse für wahlID und wahlbezirkID
+GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/wahlbezirkID/wahlID
+Authorization: Bearer {{$auth.token("auth-service")}}
+
 ### Initialisiere Ergebnisse
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/wahlbezirkID/wahlID/LTW_BZW_A
 Content-Type: application/json

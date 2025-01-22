@@ -190,6 +190,7 @@ public class AusdruckControllerIntegrationTest {
 
     @Nested
     class GetAllAusdrucke {
+
         @Test
         void should_returnData_when_dataIsPresentInRepository() throws Exception {
 

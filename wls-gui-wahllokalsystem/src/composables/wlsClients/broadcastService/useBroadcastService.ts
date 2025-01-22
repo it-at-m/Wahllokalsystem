@@ -29,12 +29,14 @@ export function useBroadcastService() {
       const nachrichtID = response.oid;
       const deleteParams: DeleteMessageRequest = { nachrichtID };
 
-      await broadcastCA.deleteMessage(deleteParams, postConfig()).catch(() => {
+      try {
+        await broadcastCA.deleteMessage(deleteParams, postConfig());
+      } catch {
         return {
           message: "",
           error: "Es ist ein Fehler beim Lesen der Nachricht aufgetreten",
         };
-      });
+      }
 
       return {
         message: response.nachricht,

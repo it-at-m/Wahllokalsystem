@@ -85,7 +85,7 @@ Es gibt kein Output.
 
 #### Mikroservice
 
-- Github-Imageregistry: https://github.com/orgs/it-at-m/packages?repo_name=Wahllokalsystem
+- [Github-Imageregistry][link-github-imageregistry]
     - das neue Image hat den Tag `latest-dev`
 
 ## Releasing
@@ -118,14 +118,18 @@ sequenceDiagram
 
 #### wls-common
 
-- Maven-Artefakte: https://central.sonatype.com/search?q=de.muenchen.oss.wahllokalsystem&sort=published
-- Github-Tag: https://github.com/it-at-m/Wahllokalsystem/tags
-- Github-Release: https://github.com/it-at-m/Wahllokalsystem/releases?q=wls-common&expanded=true
+- [Maven-Artefakte](https://central.sonatype.com/search?q=de.muenchen.oss.wahllokalsystem&sort=published)
+- [Github-Tag][link-github-tag]
+- [Github-Release][link-github-release]
 
 #### Mikroservice
 
-- Github-Tag: https://github.com/it-at-m/Wahllokalsystem/tags
-- Github-Release: https://github.com/it-at-m/Wahllokalsystem/releases
+- [Github-Tag][link-github-tag]
+- [Github-Release][link-github-release]
   - bei Backend-Services wird die openAPI-Spezifikation den Assets beigelegt 
-- Github-Imageregistry: https://github.com/orgs/it-at-m/packages?repo_name=Wahllokalsystem
+- [Github-Imageregistry][link-github-imageregistry]
   - das neue Image hat den Tag `latest` und bei Backend-Services zusätzliche Tags entsprechend der Version
+
+[link-github-tag]: https://github.com/it-at-m/Wahllokalsystem/tags
+[link-github-release]: https://github.com/it-at-m/Wahllokalsystem/releases
+[link-github-imageregistry]: https://github.com/orgs/it-at-m/packages?repo_name=Wahllokalsystem

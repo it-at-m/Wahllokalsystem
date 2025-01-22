@@ -1,6 +1,4 @@
-# Features
-
-🚧 in Progress
+# Services
 
 Für jeden Service gibt es eine separate Beschreibung zu dessen Aufgaben und Funktionen.
 
@@ -13,11 +11,11 @@ Kommunal- und/oder Landeswahlrechts erstellt.
 
 `Wahltermin` - ein Datum an dem eine Wahl oder auch mehrere Wahlen oder Abstimmungen im
 gleichen Wahllokal starten. Diese enden in der Regel auch am gleichen Tag, es gibt aber auch
-Wahltermine, die meherere Tage andauern, wie es bei der Kommunalwahl der Fall ist.
+Wahltermine, die mehrere Tage andauern, wie es bei der Kommunalwahl der Fall ist.
 In der Praxis, auch wenn dies seltener der Fall ist, können am gleichen Tag sogar mehrere
 Wahltermine stattfinden. Diese Notwendigkeit entsteht, wenn sich die berechtigten Wählergruppen
 am gleichen Tag in den rechtlichen Grundlagen ihrer Wahlberechtigung stark unterscheiden,
-um fehlerhaftes Aufteilen, Ausfüllen und Vermischung der Stimmzettel unterschidlicher
+um fehlerhaftes Aufteilen, Ausfüllen und Vermischung der Stimmzettel unterschiedlicher
 Wählergruppen zu vermeiden. Zum Beispiel wird eine Migrationsbeiratswahl, bei der Bürger mit
 unterschiedlichen Staatsangehörigkeiten wahlberechtigt sind, im Unterschied zu einer
 Bundestagswahl in separaten Wahlbezirken organisiert.
@@ -74,7 +72,7 @@ Der Inhalt eines Stimmzettels bestimmt aber seine Zugehörigkeit zum Stimmkreis 
 #### Europawahl
 
 `Stimmzettelgebiet` - ist die Bundesrepublik Deutschland. Für das ganze Gebiet der Stadt München mit ihren 25 Stadtbezirken, jeweils mehrere Wahlbezirke/Stimmbezirke umfassend, gibt es also ein einziges Stimmzettelgebiet.
-Jedes Wahllokal befindet sich geografisch auch in einem der 25 Stadtbezirke der Landeshauptstadt München. Der Inhalt eines Stimmzettels ist in allen Wahllokalen der Landeshauptstadt München identsich.
+Jedes Wahllokal befindet sich geografisch auch in einem der 25 Stadtbezirke der Landeshauptstadt München. Der Inhalt eines Stimmzettels ist in allen Wahllokalen der Landeshauptstadt München identisch.
 
 [Mehr Informationen zur Europawahl](https://stadt.muenchen.de/infos/europawahlen.html)
 

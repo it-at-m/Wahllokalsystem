@@ -1,7 +1,8 @@
 # Naming Convetions für Workflows
 
-❗ Ist zu beachten dass alle Workflows im Ordner `workflows` liegen müssen. Sie dürfen nicht auf unterordner aufgeteilt werden.
-Zur besseren Strukturierung in dem Ordner soll daher auf eine einheitliche Namenskonvention geachtet werden.
+> [!CAUTION]
+> Es ist zu beachten, dass alle Workflows im Ordner `workflows` liegen müssen. Sie dürfen nicht auf unterordner aufgeteilt werden.
+> Zur besseren Strukturierung in dem Ordner soll daher auf eine einheitliche Namenskonvention geachtet werden.
 
 - `callable-<kurzbeschreibung>.yml` ... [wiederverwendbare Workflows](https://docs.github.com/de/actions/using-workflows/reusing-workflows)
 - `dispatch-<kurzbeschreibung>.yml` ... [manuell ausführbare workflows](https://docs.github.com/de/actions/using-workflows/manually-running-a-workflow)
@@ -17,7 +18,7 @@ Zur besseren Strukturierung in dem Ordner soll daher auf eine einheitliche Namen
 
 `dispatch-microservice-mvn-release.yml` ist ein Workflow, der manuell getriggert wird um ein Maven-Release eines Mikroservices durchzuführen.
 
-### `<service-namer>_<trigger>.yml`
+### `<service-name>_<trigger>.yml`
 
 `wls-broadcast-service_push-dev-yml` ist der Workflow zum `wls-broadcast-service` der bei einem `push` auf `dev` ausgeführt wird.
 

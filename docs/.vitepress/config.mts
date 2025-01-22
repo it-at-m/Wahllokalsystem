@@ -29,23 +29,21 @@ export default withMermaid({
         sidebar: {
             [PATH_TECHNIK]: [
                 {text: 'Tools & Frameworks', link: `${PATH_TECHNIK}`},
-                {
-                    text: 'Getting Started', link: `${PATH_TECHNIK}get_started/`
-                },
+                {text: 'Getting Started', link: `${PATH_TECHNIK}get_started/`},
                 {text: 'Entwicklungsumgebung', link: `${PATH_TECHNIK}development/`},
-                {
-                    text: 'Guides', link: `${PATH_GUIDES}`, collapsed: true, items: [
+                {text: 'Guides', link: `${PATH_GUIDES}`, collapsed: true, items: [
+                    {text: 'Api-Client generieren', link: `${PATH_GUIDES}api-client-generation/`, collapsed: true, items: [
                         {
-                            text: 'API-Client generieren',
-                            link: `${PATH_GUIDES}how-to-create-client-from-open-api-json.md`
+                            text: 'API-Client im Backend',
+                            link: `${PATH_GUIDES}api-client-generation/how-to-create-client-from-open-api-json.md`
                         },
                         {
-                            text: 'API-Client generieren FE',
-                            link: `${PATH_GUIDES}generate-client-from-openapi-json-frontend.md`
+                            text: 'API-Client im Frontend',
+                            link: `${PATH_GUIDES}api-client-generation/generate-client-from-openapi-json-frontend.md`
                         },
+                    ]},
                         {text: 'Tips und Tricks', link: `${PATH_GUIDES}tips-and-tricks.md`},
-                    ]
-                },
+                ]},
                 {
                     text: 'Coding Conventions', link: `${PATH_CODING_CONVENTIONS}`, collapsed: true, items: [
                         {text: 'Naming Convention - Testing', link: `${PATH_CODING_CONVENTIONS}tests_naming`},

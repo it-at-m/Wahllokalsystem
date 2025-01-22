@@ -1,10 +1,6 @@
 # API-Client aus einem openapi.json File im Frontend
 
-## Einleitung
-
-Durch einen CLI-Befehl lässt sich aus der `openapi.json`-Datei das Datenmodell und die API des Services erstellen.
-
-## Installation
+## Installation der openapitools
 
 Anders als im Backend gibt es für das Frontend kein Plugin, um den Openapi Generator zu integrieren, sondern muss
 als CLI Befehl ausgeführt werden. Mit diesem Befehl kann der openapi-generator global auf dem Rechner 
@@ -18,7 +14,7 @@ npm install @openapitools/openapi-generator-cli -g typescript-fetch
 <summary>Errorhandling</summary>
 
 Sollte dabei diese Fehlermeldung auftauchen:
-![img_1.png](img_1.png)
+![img_1.png](../img_1.png)
 können die Schritte aus 
 [diesem Stack-Beitrag](https://stackoverflow.com/questions/18088372/how-to-npm-install-global-not-as-root/59227497#59227497)
 befolgt werden.

@@ -4,6 +4,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.Me
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.WahlUndBezirkIDUndMeldungsart;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import java.util.stream.Stream;
+import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,13 @@ class WahlUndBezirkIDUndMeldungsartValidatorTest {
     class validWahlUndBezirkIDUndMeldungsartOrThrow {
 
         final FachlicheWlsException providedException = FachlicheWlsException.withCode("").buildWithMessage("sth failed");
+
+        @Test
+        void should_notThrowException_when_wahlUndBezirkIDUndMeldungsartIsValid() {
+            val id = new WahlUndBezirkIDUndMeldungsart("wahlbezirkID", "wahlID", Meldungsart.V1);
+
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahlUndBezirkIDUndMeldungsartOrThrow(id, providedException));
+        }
 
         @Test
         void should_throwFachlicheWlsException_when_wahlUndBezirkIDUndMeldungsartIsNull() {

@@ -29,6 +29,7 @@ class AusdruckReadDTOMapperTest {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val meldungsart = Meldungsart.V1;
+            val meldungsartDto = MeldungsartDTO.V1;
             val content = "Testausdruck";
             val erstelltAm = Instant.now();
 
@@ -36,7 +37,7 @@ class AusdruckReadDTOMapperTest {
 
             val result = unitUnderTest.toDTO(modelToMap);
 
-            val expectedResult = new AusdruckReadDTO(wahlbezirkID, wahlID, meldungsart, content, erstelltAm);
+            val expectedResult = new AusdruckReadDTO(wahlbezirkID, wahlID, meldungsartDto, content, erstelltAm);
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
 

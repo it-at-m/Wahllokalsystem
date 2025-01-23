@@ -48,12 +48,13 @@ class AusdruckControllerTest {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val meldungsArt = Meldungsart.V1;
+            val meldungsArtDto = MeldungsartDTO.V1;
             val content = "Testcontent";
             val erstelltAm = Instant.now();
 
             val id = new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsArt);
             val mockedServiceResponse = new AusdruckModel(id, content, erstelltAm);
-            val mockedServiceResponseAsDTO = new AusdruckReadDTO(wahlbezirkID, wahlID, meldungsArt, content, erstelltAm);
+            val mockedServiceResponseAsDTO = new AusdruckReadDTO(wahlbezirkID, wahlID, meldungsArtDto, content, erstelltAm);
 
             Mockito.when(ausdruckService.getAusdruck(id)).thenReturn(Optional.of(mockedServiceResponse));
             Mockito.when(ausdruckReadDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
@@ -123,8 +124,8 @@ class AusdruckControllerTest {
             val mockedAusdruckeModel2 = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V3), content, erstelltAm);
             val mockedServiceModel = List.of(mockedAusdruckeModel1, mockedAusdruckeModel2);
 
-            val mockedAusdruckReadDTO1 = new AusdruckReadDTO(wahlbezirkID, wahlID, Meldungsart.V1, content, erstelltAm);
-            val mockedAusdruckReadDTO2 = new AusdruckReadDTO(wahlbezirkID, wahlID, Meldungsart.V3, content, erstelltAm);
+            val mockedAusdruckReadDTO1 = new AusdruckReadDTO(wahlbezirkID, wahlID, MeldungsartDTO.V1, content, erstelltAm);
+            val mockedAusdruckReadDTO2 = new AusdruckReadDTO(wahlbezirkID, wahlID, MeldungsartDTO.V3, content, erstelltAm);
             val mockedMappedServiceDTO = List.of(mockedAusdruckReadDTO1, mockedAusdruckReadDTO2);
 
             Mockito.when(ausdruckService.getAllAusdrucke(wahlID, wahlbezirkID)).thenReturn(mockedServiceModel);

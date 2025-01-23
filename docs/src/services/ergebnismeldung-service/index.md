@@ -21,8 +21,8 @@ Folgende Services werden benötigt:
 ### Abrufen von A-Werten (Wahlberechtigte)
 Die Methode `getAWerte()` liefert die A-Werte für eine bestimmte Wahlbezirk-ID.
 Die A-Werte repräsentieren die Anzahl der Wahl- bzw. Stimmberechtigten in einem Wahlbezirk.
-Sie teilen sich auf in die Anzahl an Wahlberechtigten die keinen Wahlschein erhalten haben (A1)
-und in die Anzahl an Wahlberechtigten die einen Wahlschein erhalten haben und deshalb einen W-Vermerk im 
+Sie teilen sich auf in die Anzahl an Wahlberechtigten, die keinen Wahlschein erhalten haben (A1)
+und in die Anzahl an Wahlberechtigten, die einen Wahlschein erhalten haben und deshalb einen W-Vermerk im 
 Wählerverzeichnis besitzen (A2).
 
 - Wenn über die EAI im externen Wahlsystem Daten gefunden werden, dann werden diese im lokalen Repository gespeichert
@@ -37,7 +37,7 @@ Die Methode initialisiereAWerte() initialisiert die Wahlberechtigten (A-Werte) f
 
 - Für jede Wahlbezirk-ID in der Liste wird über die EAI im externen Wahlsystem nach A-Werten gesucht. Bei Erfolg werden
 diese im lokalen Repository gespeichert.
-- Bei Nichterfolg, wird geprüft ob im lokalen Repository wenigstens 'alte' A-Werte existieren.
+- Bei Nichterfolg wird geprüft, ob im lokalen Repository wenigstens 'alte' A-Werte existieren.
 - Falls weder im externen Wahlsystem noch im lokalen Repository A-Werte gefunden werden
   liefert der Service einen Fehler. 
 

@@ -76,10 +76,6 @@ export class BroadcastControllerApi extends runtime.BaseAPI {
             body: BroadcastMessageDTOToJSON(requestParameters['broadcastMessageDTO']),
         }, initOverrides);
 
-        if (response.status === 204) {
-            throw new runtime.WLSError(response, "Es konnten keine Daten gefunden werden", "T", response.status.toString())
-        }
-
         return new runtime.VoidApiResponse(response);
     }
 
@@ -122,10 +118,6 @@ export class BroadcastControllerApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        if (response.status === 204) {
-            throw new runtime.WLSError(response, "Es konnten keine Daten gefunden werden", "T", response.status.toString())
-        }
-
         return new runtime.VoidApiResponse(response);
     }
 
@@ -167,10 +159,6 @@ export class BroadcastControllerApi extends runtime.BaseAPI {
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
-
-        if (response.status === 204) {
-            throw new runtime.WLSError(response, "Es konnten keine Daten gefunden werden", "T", response.status.toString())
-        }
 
         return new runtime.JSONApiResponse(response, (jsonValue) => MessageDTOFromJSON(jsonValue));
     }

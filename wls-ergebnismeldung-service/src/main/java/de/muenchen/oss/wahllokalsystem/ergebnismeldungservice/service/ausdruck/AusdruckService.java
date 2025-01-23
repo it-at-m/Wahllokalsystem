@@ -32,7 +32,7 @@ public class AusdruckService {
     @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetAusdruck')")
     public List<AusdruckModel> getAllAusdrucke(@NotBlank final String wahlID, @NotBlank final String wahlbezirkID) {
         return ausdruckModelMapper.toModelList(
-                ausdruckRepository.findAllByWahlUndBezirkIDUndMeldungsart_WahlIDAndWahlUndBezirkIDUndMeldungsart_WahlbezirkID(wahlID, wahlbezirkID));
+                ausdruckRepository.findByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID));
     }
 
     @PreAuthorize(

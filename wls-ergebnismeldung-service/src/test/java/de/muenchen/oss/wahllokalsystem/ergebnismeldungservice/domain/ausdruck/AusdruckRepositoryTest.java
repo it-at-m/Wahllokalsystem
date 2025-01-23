@@ -59,7 +59,7 @@ class AusdruckRepositoryTest {
     }
 
     @Nested
-    class FindAllByWahlUndBezirkIDUndMeldungsart_WahlIDAndWahlUndBezirkIDUndMeldungsart_WahlbezirkID {
+    class FindByWahlIdAndWahlbezirkId {
 
         @Test
         void should_returnAusdruck_when_wahlUndBezirkIDUndMeldungsartIsGiven() {
@@ -81,7 +81,7 @@ class AusdruckRepositoryTest {
 
             repository.saveAll(ausdruckeToSave);
 
-            val result = repository.findAllByWahlUndBezirkIDUndMeldungsart_WahlIDAndWahlUndBezirkIDUndMeldungsart_WahlbezirkID(wahlIdToFind,
+            val result = repository.findByWahlIdAndWahlbezirkId(wahlIdToFind,
                     wahlbezirkIdToFind);
             Assertions.assertThat(result).hasSize(2);
             Assertions.assertThat(result).allSatisfy(ausdruck -> {

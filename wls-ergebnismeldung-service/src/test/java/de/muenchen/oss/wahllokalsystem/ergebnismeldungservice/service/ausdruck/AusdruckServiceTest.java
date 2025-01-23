@@ -100,14 +100,14 @@ class AusdruckServiceTest {
             val ausdruckEntityList = createListOfAusdruckEntities(wahlID, wahlbezirkID, erstelltAm);
             val ausdruckModelList = createListOfAusdruckModels(wahlID, wahlbezirkID, erstelltAm);
 
-            Mockito.when(ausdruckRepository.findAllByWahlUndBezirkIDUndMeldungsart_WahlIDAndWahlUndBezirkIDUndMeldungsart_WahlbezirkID(wahlID, wahlbezirkID))
+            Mockito.when(ausdruckRepository.findByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID))
                     .thenReturn(
                             ausdruckEntityList);
             Mockito.when(ausdruckModelMapper.toModelList(ausdruckEntityList)).thenReturn(ausdruckModelList);
 
             val result = unitUnderTest.getAllAusdrucke(wahlID, wahlbezirkID);
 
-            Mockito.verify(ausdruckRepository).findAllByWahlUndBezirkIDUndMeldungsart_WahlIDAndWahlUndBezirkIDUndMeldungsart_WahlbezirkID(wahlID, wahlbezirkID);
+            Mockito.verify(ausdruckRepository).findByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID);
             Assertions.assertThat(result).isEqualTo(ausdruckModelList);
         }
 

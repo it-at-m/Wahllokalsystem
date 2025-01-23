@@ -119,18 +119,23 @@ class AusdruckControllerTest {
             val content = "Testcontent";
             val erstelltAm = Instant.now();
 
-            val mockedServiceModel = List.of(new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V1), content, erstelltAm),
-                    new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V3), content, erstelltAm));
-            val mockedMappedServiceDTO = List.of(new AusdruckReadDTO(wahlbezirkID, wahlID, Meldungsart.V1, content, erstelltAm),
-                    new AusdruckReadDTO(wahlbezirkID, wahlID, Meldungsart.V3, content, erstelltAm));
+            val mockedAusdruckeModel1 = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V1), content, erstelltAm);
+            val mockedAusdruckeModel2 = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V3), content, erstelltAm);
+            val mockedServiceModel = List.of(mockedAusdruckeModel1, mockedAusdruckeModel2);
+
+            val mockedAusdruckReadDTO1 = new AusdruckReadDTO(wahlbezirkID, wahlID, Meldungsart.V1, content, erstelltAm);
+            val mockedAusdruckReadDTO2 = new AusdruckReadDTO(wahlbezirkID, wahlID, Meldungsart.V3, content, erstelltAm);
+            val mockedMappedServiceDTO = List.of(mockedAusdruckReadDTO1, mockedAusdruckReadDTO2);
 
             Mockito.when(ausdruckService.getAllAusdrucke(wahlID, wahlbezirkID)).thenReturn(mockedServiceModel);
-            Mockito.when(ausdruckReadDTOMapper.fromListOfAusdruckModelToListOfAusdruckReadDTO(mockedServiceModel)).thenReturn(mockedMappedServiceDTO);
+            Mockito.when(ausdruckReadDTOMapper.toDTO(mockedAusdruckeModel1)).thenReturn(mockedAusdruckReadDTO1);
+            Mockito.when(ausdruckReadDTOMapper.toDTO(mockedAusdruckeModel2)).thenReturn(mockedAusdruckReadDTO2);
 
             val result = unitUnderTest.getAllAusdrucke(wahlID, wahlbezirkID);
 
             Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-            Assertions.assertThat(result.getBody()).isSameAs(mockedMappedServiceDTO);
+            Assertions.assertThat(result.getBody()).isEqualTo(mockedMappedServiceDTO);
+            Assertions.assertThat(result.getBody()).hasSize(mockedServiceModel.size());
         }
     }
 }

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
@@ -31,8 +32,9 @@ public class AusdruckService {
 
     @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetAusdruck')")
     public List<AusdruckModel> getAllAusdrucke(@NotBlank final String wahlID, @NotBlank final String wahlbezirkID) {
-        return ausdruckModelMapper.toModelList(
-                ausdruckRepository.findByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID));
+        val ausdrucke = ausdruckRepository.findByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID);
+
+        return ausdrucke.stream().map(ausdruckModelMapper::toModel).toList();
     }
 
     @PreAuthorize(

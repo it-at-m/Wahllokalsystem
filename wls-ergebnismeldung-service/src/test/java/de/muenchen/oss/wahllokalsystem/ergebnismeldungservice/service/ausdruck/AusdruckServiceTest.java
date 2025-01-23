@@ -97,37 +97,26 @@ class AusdruckServiceTest {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val erstelltAm = Instant.now();
-            val ausdruckEntityList = createListOfAusdruckEntities(wahlID, wahlbezirkID, erstelltAm);
-            val ausdruckModelList = createListOfAusdruckModels(wahlID, wahlbezirkID, erstelltAm);
+            val content = "Testausdruck";
+
+            val ausdruckEntity1 = new Ausdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V1), content, erstelltAm);
+            val ausdruckEntity2 = new Ausdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V3), content, erstelltAm);
+            val ausdruckEntityList = List.of(ausdruckEntity1, ausdruckEntity2);
+
+            val ausdruckModel1 = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V1), content, erstelltAm);
+            val ausdruckModel2 = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V3), content, erstelltAm);
+            val ausdruckModelList = List.of(ausdruckModel1, ausdruckModel2);
 
             Mockito.when(ausdruckRepository.findByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID))
                     .thenReturn(
                             ausdruckEntityList);
-            Mockito.when(ausdruckModelMapper.toModelList(ausdruckEntityList)).thenReturn(ausdruckModelList);
+            Mockito.when(ausdruckModelMapper.toModel(ausdruckEntity1)).thenReturn(ausdruckModel1);
+            Mockito.when(ausdruckModelMapper.toModel(ausdruckEntity2)).thenReturn(ausdruckModel2);
 
             val result = unitUnderTest.getAllAusdrucke(wahlID, wahlbezirkID);
 
             Mockito.verify(ausdruckRepository).findByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID);
             Assertions.assertThat(result).isEqualTo(ausdruckModelList);
-        }
-
-        private List<AusdruckModel> createListOfAusdruckModels(String wahlbezirkID, String wahlID, Instant erstelltAm) {
-            val content = "Testausdruck";
-
-            val ausdruckModel1 = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V1), content, erstelltAm);
-            val ausdruckModel2 = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V3), content, erstelltAm);
-
-            return List.of(ausdruckModel1, ausdruckModel2);
-
-        }
-
-        private List<Ausdruck> createListOfAusdruckEntities(String wahlbezirkID, String wahlID, Instant erstelltAm) {
-            val content = "Testausdruck";
-
-            val ausdruckEntity1 = new Ausdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V1), content, erstelltAm);
-            val ausdruckEntity2 = new Ausdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V3), content, erstelltAm);
-
-            return List.of(ausdruckEntity1, ausdruckEntity2);
         }
     }
 

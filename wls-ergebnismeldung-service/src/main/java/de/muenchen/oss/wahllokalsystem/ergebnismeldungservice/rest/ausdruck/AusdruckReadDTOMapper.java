@@ -1,7 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ausdruck;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckModel;
-import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -12,6 +11,4 @@ public interface AusdruckReadDTOMapper {
     @Mapping(source = "wahlUndBezirkIDUndMeldungsart.wahlbezirkID", target = "wahlbezirkID")
     @Mapping(source = "wahlUndBezirkIDUndMeldungsart.meldungsart", target = "meldungsart")
     AusdruckReadDTO toDTO(AusdruckModel ausdruckModel);
-
-    List<AusdruckReadDTO> fromListOfAusdruckModelToListOfAusdruckReadDTO(List<AusdruckModel> ausdruckModelList);
 }

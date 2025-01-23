@@ -4,7 +4,6 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.Au
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.Meldungsart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.WahlUndBezirkIDUndMeldungsart;
 import java.time.Instant;
-import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -85,46 +84,5 @@ class AusdruckModelMapperTest {
 
             Assertions.assertThat(result.getWahlUndBezirkIDUndMeldungsart().getMeldungsart().name()).isEqualTo(meldungsart.name());
         }
-    }
-
-    @Nested
-    class ToModelList {
-        @Test
-        void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toModelList(null)).isNull();
-        }
-
-        @Test
-        void should_returnListOfAusdruckModel_when_listOfAusdruckIsGiven() {
-            val erstelltAm = Instant.now();
-            val entitiesInput = createListOfAusdruckEntities(erstelltAm);
-            val modelsExpected = createListOfAusdruckModels(erstelltAm);
-
-            val result = unitUnderTest.toModelList(entitiesInput);
-            Assertions.assertThat(result).isEqualTo(modelsExpected);
-        }
-    }
-
-    private List<AusdruckModel> createListOfAusdruckModels(final Instant erstelltAm) {
-        val wahlID = "wahlID";
-        val content = "Testausdruck";
-
-        val ausdruckModel1 = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID01", wahlID, Meldungsart.V1), content, erstelltAm);
-        val ausdruckModel2 = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID02", wahlID, Meldungsart.V1), content, erstelltAm);
-        val ausdruckModel3 = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID03", wahlID, Meldungsart.V3), content, erstelltAm);
-
-        return List.of(ausdruckModel1, ausdruckModel2, ausdruckModel3);
-
-    }
-
-    private List<Ausdruck> createListOfAusdruckEntities(final Instant erstelltAm) {
-        val wahlID = "wahlID";
-        val content = "Testausdruck";
-
-        val ausdruckEntity1 = new Ausdruck(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID01", wahlID, Meldungsart.V1), content, erstelltAm);
-        val ausdruckEntity2 = new Ausdruck(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID02", wahlID, Meldungsart.V1), content, erstelltAm);
-        val ausdruckEntity3 = new Ausdruck(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID03", wahlID, Meldungsart.V3), content, erstelltAm);
-
-        return List.of(ausdruckEntity1, ausdruckEntity2, ausdruckEntity3);
     }
 }

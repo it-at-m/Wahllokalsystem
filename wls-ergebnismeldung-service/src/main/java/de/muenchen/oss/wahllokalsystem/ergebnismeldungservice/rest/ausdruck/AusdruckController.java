@@ -61,8 +61,8 @@ public class AusdruckController {
     @GetMapping("{wahlID}/{wahlbezirkID}")
     public ResponseEntity<List<AusdruckReadDTO>> getAllAusdrucke(@PathVariable("wahlID") final String wahlID,
             @PathVariable("wahlbezirkID") final String wahlbezirkID) {
-        List<AusdruckReadDTO> res = ausdruckReadDTOMapper.fromListOfAusdruckModelToListOfAusdruckReadDTO(ausdruckService.getAllAusdrucke(wahlID, wahlbezirkID));
-        return ResponseEntity.ok().body(res);
+        val ausdrucke = ausdruckService.getAllAusdrucke(wahlID, wahlbezirkID);
+        return ResponseEntity.ok(ausdrucke.stream().map(ausdruckReadDTOMapper::toDTO).toList());
     }
 
     @Operation(description = "Speichern eines Ausdrucks einer bestimmten Meldungsart für einen Wahlbezirk einer Wahl")

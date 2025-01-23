@@ -140,6 +140,42 @@ public class AusdruckControllerIntegrationTest {
         }
 
         @Test
+        void should_overwriteData_when_dataIsPresentInRepository() throws Exception {
+            var clock = Clock.fixed(Instant.now(), ZoneOffset.UTC);
+            var mockedInstant = Instant.now(clock);
+            MockedStatic<Instant> mockedStatic = mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS);
+            mockedStatic.when(Instant::now).thenReturn(mockedInstant);
+
+            val wahlID = "wahlID";
+            val wahlbezirkID = "wahlbezirkID";
+            val meldungsart = Meldungsart.V1;
+            val content = "Testausdruck";
+            val erstelltAm = Instant.now();
+            val idToFind = new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart);
+
+            val entityToOverwrite = new Ausdruck(idToFind, content, erstelltAm);
+            ausdruckRepository.save(entityToOverwrite);
+
+            val contentToOverwrite = "Überschriebener Testausdruck";
+            val expectedOverwrittenEntity = new Ausdruck(idToFind, contentToOverwrite, erstelltAm);
+            val requestBody = new AusdruckWriteDTO(contentToOverwrite);
+            val request = MockMvcRequestBuilders.post(buildGetPostAusdruckURI(wahlID, wahlbezirkID, meldungsart)).contentType(MediaType.APPLICATION_JSON)
+                    .content(
+                            objectMapper.writeValueAsString(requestBody));
+
+            mockMvc.perform(request).andExpect(status().isOk());
+
+            val persistedEntity = ausdruckRepository.findById(idToFind);
+
+            Assertions.assertThat(persistedEntity)
+                    .usingRecursiveComparison()
+                    .withComparatorForType(TimePrecisionComparators.INSTANT_PRECISION_MILLISECONDS, Instant.class)
+                    .isEqualTo(Optional.of(expectedOverwrittenEntity));
+
+            mockedStatic.close();
+        }
+
+        @Test
         void should_returnBadRequest_when_requestBodyIsMissing() throws Exception {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";

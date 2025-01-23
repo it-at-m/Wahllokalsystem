@@ -12,9 +12,9 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplic
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.MeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.StatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.ValidierungsstatusDTO;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.StimmabgabevermerkeDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.WahldatenDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -232,7 +232,8 @@ class SecurityConfigurationTest {
                 val requestBody = new StatusDTO(new BezirkUndWahlID("wahlID", "wahlbezirkID"),
                     new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()),
                     new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()));
-                val request = MockMvcRequestBuilders.post("/businessActions/ausdruck/wahlID/wahlbezirkID/V1/html").with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                val request = MockMvcRequestBuilders.post("/businessActions/ausdruck/wahlID/wahlbezirkID/V1/html").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(requestBody));
 
                 api.perform(request).andExpect(status().isUnauthorized());
@@ -244,14 +245,18 @@ class SecurityConfigurationTest {
                 val requestBody = new StatusDTO(new BezirkUndWahlID("wahlID", "wahlbezirkID"),
                     new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()),
                     new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()));
-                val request = MockMvcRequestBuilders.post("/businessActions/ausdruck/wahlID/wahlbezirkID/V1/html").with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                val request = MockMvcRequestBuilders.post("/businessActions/ausdruck/wahlID/wahlbezirkID/V1/html").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(requestBody));
 
                 api.perform(request).andExpect(status().isOk());
 
                 Mockito.verify(ausdruckService).saveAusdruck(notNull());
             }
+        }
+    }
 
+    @Nested
     class Stimmabgabevermerke {
 
         @WithAnonymousUser

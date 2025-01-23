@@ -1,9 +1,9 @@
 # Infomanagement-Service
 
-Dieser Service dient zum Abruf von Konfigurationsinformationen die für den Betrieb
+Dieser Service dient zum Abruf von Konfigurationsinformationen, die für den Betrieb
 der Software notwendig sind.
 
-Des weiteren können bestimmte Konfigurations-Operationen durchgeführt werden.
+Des Weiteren können bestimmte Konfigurations-Operationen durchgeführt werden.
 
 ## Abhängigkeiten
 

@@ -50,6 +50,6 @@ public class ExceptionConstants {
     public static final ExceptionDataWrapper POST_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("609",
             "postStimmabgabevermerke: Parameter unvollstaendig");
     public static final ExceptionDataWrapper STIMMABGABEVERMERKE_UNSAVEABLE = new ExceptionDataWrapper("620",
-            "postStimmabgabevermerke: Die Stimmabgabevermerke konnten nicht gespeichtert werden.");
+            "postStimmabgabevermerke: Die Stimmabgabevermerke konnten nicht gespeichert werden.");
 
 }

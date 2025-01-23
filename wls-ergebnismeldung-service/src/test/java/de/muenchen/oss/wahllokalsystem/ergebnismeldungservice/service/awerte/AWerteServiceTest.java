@@ -58,7 +58,7 @@ class AWerteServiceTest {
             val result = unitUnderTest.getAWerte(wahlbezirkID);
 
             Mockito.verify(aWerteValidator, times(1)).validWahlbezirkIDParamOrThrow(Mockito.any());
-            Mockito.verify(aWerteModelMapper, times(1)).fromListOfAWerteModeltoListOfAWerteEntity(Mockito.any());
+            Mockito.verify(aWerteModelMapper, times(1)).fromListOfAWerteModelToListOfAWerteEntity(Mockito.any());
 
             Assertions.assertThat(result).isEqualTo(aWerteModelListFromClient);
         }
@@ -67,7 +67,7 @@ class AWerteServiceTest {
         void should_saveEaiDataInRepo_when_eaiDataFound() {
             val wahlbezirkID = "wahlbezirkID1";
             val aWerteModelListFromClient = createListOfAWerteModels(wahlbezirkID);
-            val mappedAWerteEntityList = aWerteModelMapper.fromListOfAWerteModeltoListOfAWerteEntity(aWerteModelListFromClient);
+            val mappedAWerteEntityList = aWerteModelMapper.fromListOfAWerteModelToListOfAWerteEntity(aWerteModelListFromClient);
 
             Mockito.when(aWerteClient.getAWerte(wahlbezirkID)).thenReturn(aWerteModelListFromClient);
 

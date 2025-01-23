@@ -82,35 +82,6 @@ class AusdruckControllerTest {
     }
 
     @Nested
-    class PostAusdruck {
-
-        @Test
-        void should_callServiceWithModel_when_calledWithData() {
-            var clock = Clock.fixed(Instant.now(), ZoneOffset.UTC);
-            var mockedInstant = Instant.now(clock);
-            MockedStatic<Instant> mockedStatic = mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS);
-            mockedStatic.when(Instant::now).thenReturn(mockedInstant);
-
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val meldungsArt = Meldungsart.V1;
-            val content = "Testcontent";
-            val erstelltAm = Instant.now();
-            val id = new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsArt);
-            val ausdruckWriteDTO = new AusdruckWriteDTO(content);
-
-            val mockedAusdruckModel = new AusdruckModel(id, content, erstelltAm);
-            Mockito.when(ausdruckWriteDTOMapper.toModel(ausdruckWriteDTO, id)).thenReturn(mockedAusdruckModel);
-
-            unitUnderTest.postAusdruck(wahlID, wahlbezirkID, meldungsArt, ausdruckWriteDTO);
-
-            Mockito.verify(ausdruckService).saveAusdruck(mockedAusdruckModel);
-
-            mockedStatic.close();
-        }
-    }
-
-    @Nested
     class GetAllAusdrucke {
 
         @Test
@@ -137,6 +108,35 @@ class AusdruckControllerTest {
             Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
             Assertions.assertThat(result.getBody()).isEqualTo(mockedMappedServiceDTO);
             Assertions.assertThat(result.getBody()).hasSize(mockedServiceModel.size());
+        }
+    }
+
+    @Nested
+    class PostAusdruck {
+
+        @Test
+        void should_callServiceWithModel_when_calledWithData() {
+            var clock = Clock.fixed(Instant.now(), ZoneOffset.UTC);
+            var mockedInstant = Instant.now(clock);
+            MockedStatic<Instant> mockedStatic = mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS);
+            mockedStatic.when(Instant::now).thenReturn(mockedInstant);
+
+            val wahlID = "wahlID";
+            val wahlbezirkID = "wahlbezirkID";
+            val meldungsArt = Meldungsart.V1;
+            val content = "Testcontent";
+            val erstelltAm = Instant.now();
+            val id = new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsArt);
+            val ausdruckWriteDTO = new AusdruckWriteDTO(content);
+
+            val mockedAusdruckModel = new AusdruckModel(id, content, erstelltAm);
+            Mockito.when(ausdruckWriteDTOMapper.toModel(ausdruckWriteDTO, id)).thenReturn(mockedAusdruckModel);
+
+            unitUnderTest.postAusdruck(wahlID, wahlbezirkID, meldungsArt, ausdruckWriteDTO);
+
+            Mockito.verify(ausdruckService).saveAusdruck(mockedAusdruckModel);
+
+            mockedStatic.close();
         }
     }
 }

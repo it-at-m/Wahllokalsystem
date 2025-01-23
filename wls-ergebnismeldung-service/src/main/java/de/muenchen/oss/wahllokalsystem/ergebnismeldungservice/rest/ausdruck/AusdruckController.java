@@ -35,6 +35,42 @@ public class AusdruckController {
 
     private final AusdruckWriteDTOMapper ausdruckWriteDTOMapper;
 
+    @Operation(description = "Lesen eines Ausdrucks einer bestimmten Meldungsart für einen Wahlbezirk einer Wahl")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Es existiert ein Ausdruck",
+                            content = { @Content(mediaType = "text/html; charset=utf-8", schema = @Schema(implementation = AusdruckReadDTO.class)) }
+                    ),
+                    @ApiResponse(
+                            responseCode = "204", description = "Es existiert kein Ausdruck zu den entsprechenden Kriterien",
+                            content = { @Content() }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
+                    ),
+                    @ApiResponse(
+                            responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
+                    )
+            }
+    )
+    @GetMapping("{wahlID}/{wahlbezirkID}/{meldungsart}/html")
+    public ResponseEntity<String> getAusdruck(@PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID,
+            @PathVariable("meldungsart") Meldungsart meldungsart) {
+        val ausdruckModel = ausdruckService.getAusdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart));
+
+        if (ausdruckModel.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            val result = ausdruckReadDTOMapper.toDTO(ausdruckModel.get());
+            val responseHeaders = new HttpHeaders();
+            responseHeaders.add(HttpHeaders.CONTENT_TYPE, "text/html; charset=utf-8");
+            return new ResponseEntity<>(result.content(), responseHeaders, HttpStatus.OK);
+        }
+    }
+
     @Operation(description = "Lesen aller Ausdrucke für einen Wahlbezirk einer Wahl")
     @ApiResponses(
             value = {
@@ -87,41 +123,5 @@ public class AusdruckController {
         AusdruckModel ausdruckModel = ausdruckWriteDTOMapper.toModel(ausdruck, new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart));
         ausdruckService.saveAusdruck(ausdruckModel);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @Operation(description = "Lesen eines Ausdrucks einer bestimmten Meldungsart für einen Wahlbezirk einer Wahl")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Es existiert ein Ausdruck",
-                            content = { @Content(mediaType = "text/html; charset=utf-8", schema = @Schema(implementation = AusdruckReadDTO.class)) }
-                    ),
-                    @ApiResponse(
-                            responseCode = "204", description = "Es existiert kein Ausdruck zu den entsprechenden Kriterien",
-                            content = { @Content() }
-                    ),
-                    @ApiResponse(
-                            responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
-                    ),
-                    @ApiResponse(
-                            responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
-                    )
-            }
-    )
-    @GetMapping("{wahlID}/{wahlbezirkID}/{meldungsart}/html")
-    public ResponseEntity<String> getAusdruck(@PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID,
-            @PathVariable("meldungsart") Meldungsart meldungsart) {
-        val ausdruckModel = ausdruckService.getAusdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart));
-
-        if (ausdruckModel.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            val result = ausdruckReadDTOMapper.toDTO(ausdruckModel.get());
-            val responseHeaders = new HttpHeaders();
-            responseHeaders.add(HttpHeaders.CONTENT_TYPE, "text/html; charset=utf-8");
-            return new ResponseEntity<>(result.content(), responseHeaders, HttpStatus.OK);
-        }
     }
 }

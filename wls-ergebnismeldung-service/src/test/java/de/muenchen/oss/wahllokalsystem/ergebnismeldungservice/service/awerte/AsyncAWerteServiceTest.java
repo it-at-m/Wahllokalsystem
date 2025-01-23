@@ -20,7 +20,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class AsyncAwerteServiceTest {
+class AsyncAWerteServiceTest {
 
     @Mock
     AsyncProgress asyncProgress;

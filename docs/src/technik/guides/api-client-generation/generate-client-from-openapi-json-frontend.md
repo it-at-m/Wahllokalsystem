@@ -10,16 +10,13 @@ installiert werden:
 npm install @openapitools/openapi-generator-cli -g typescript-fetch
 ```
 
-<details>
-<summary>Errorhandling</summary>
-
+::: details Errorhandling
 Sollte dabei diese Fehlermeldung auftauchen:
 ![img_1.png](../img_1.png)
 können die Schritte aus 
 [diesem Stack-Beitrag](https://stackoverflow.com/questions/18088372/how-to-npm-install-global-not-as-root/59227497#59227497)
 befolgt werden.
-
-</details>
+:::
 
 Bei Bedarf muss zusätzlich noch der Proxy konfiguriert werden. Anschließend kann im Terminal mit dem Befehl 
 `openapi-generator-cli version` geprüft werden, ob die Installation erfolgreich war. 
@@ -29,8 +26,8 @@ Bei Bedarf muss zusätzlich noch der Proxy konfiguriert werden. Anschließend ka
 Damit der generierte Code zum Projekt passt, wurden die Templates des openapi-generators angepasst.
 
 > [!IMPORTANT]
-> Die Anpassung der Templates ist einmalig erfolgt und muss nicht für jeden Service wiederholt werden. Die geänderten
-> Template Files wurden mit auf GitHub gepushed und liegen unter
+> Die Anpassung des Templates ist einmalig erfolgt und muss nicht für jeden Service wiederholt werden. Das geänderte
+> Template File wurde mit auf GitHub gepushed und liegt unter
 > [wls-gui-wahllokalsystem/src/api/wls-clients/custom-openapi-template-files](https://github.com/it-at-m/Wahllokalsystem/tree/dev/wls-gui-wahllokalsystem/src/api/wls-clients/custom-openapi-template-files).
 > Dieser Abschnitt dient nur zur Information und muss nicht für die Generierung des Codes ausgeführt werden.
 
@@ -41,16 +38,21 @@ openapi-generator-cli author template -g typescript-fetch -o ./my-custom-templat
 ```
 
 können die Template Files heruntergeladen werden. Hierbei steht `-o` für Output und es kann der Ort angegeben werden, an
-dem die heruntergeladenen Files gespeichert werden sollen. Für das WLS wurden die Files `runtime.mustache` und
-`apis.mustache` angepasst, indem folgende Code-Zeilen hinzugefügt wurden:
+dem die heruntergeladenen Files gespeichert werden sollen. Für das WLS wurde das File `runtime.mustache` angepasst. Die
+veränderten oder hinzugefügten Codezeilen sind mit dem Kommentar `//Abweichung vom Standard-Template` gekennzeichnet.
+Folgende Code-Zeilen wurden hinzugefügt:
 
 ::: code-group
 ```:line-numbers=123 [runtime.mustache (Teil 1)]
 protected async request(context: RequestOpts, initOverrides?: RequestInit | InitOverrideFunction): Promise<Response> {
     const { url, init } = await this.createFetchParams(context, initOverrides);
     const response = await this.fetchApi(url, init);
-    if (response && (response.status >= 200 && response.status < 300)) {
-        return response;
+    
+    // Abweichung vom Standard-Template: Zusätzliche Prüfung auf Statuscode 204 und >300    // [!code ++]
+    if (response.status === 204) {    // [!code ++]
+        throw new WLSError(response, "Es konnten keine Daten gefunden werden", "T", response.status.toString())    // [!code ++]
+    } else if (response && (response.status >= 200 && response.status < 300)) {    // [!code ++]
+        return response;    // [!code ++]
     } else if (response && response.status == 400) {    // [!code ++]
       const raw = await response.text();    // [!code ++]
       let content;  // [!code ++]
@@ -78,7 +80,8 @@ protected async request(context: RequestOpts, initOverrides?: RequestInit | Init
 }
 ```
 
-```:line-numbers=291 [runtime.mustache (Teil 2)]
+```:line-numbers=295 [runtime.mustache (Teil 2)]
+// Abweichung vom Standard-Template: Implementierung von WLSError und WLSException    // [!code ++]
 export class WLSError extends Error {   // [!code ++]
   override name: "WLSError" = "WLSError";   // [!code ++]
   category?: string;   // [!code ++]
@@ -156,19 +159,6 @@ export function generateWlsExceptionFromJson(content: any): WLSException {   // 
     service: content.service,   // [!code ++]
   };   // [!code ++]
 }   // [!code ++]
-```
-
-```:line-numbers=312 [apis.mustache]
-    {{/hasFormParams}}
-}, initOverrides);
-
-if (response.status === 204) {   // [!code ++]
-    throw new runtime.WLSError(response, "Es konnten keine Daten gefunden werden", "T", response.status.toString())   // [!code ++]
-}   // [!code ++]
-
-{{#returnType}}
-{{#isResponseFile}}
-return new runtime.BlobApiResponse(response);
 ```
 :::
 

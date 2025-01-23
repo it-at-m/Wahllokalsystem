@@ -134,6 +134,8 @@ export class BaseAPI {
     protected async request(context: RequestOpts, initOverrides?: RequestInit | InitOverrideFunction): Promise<Response> {
         const { url, init } = await this.createFetchParams(context, initOverrides);
         const response = await this.fetchApi(url, init);
+
+        // Abweichung vom Standard-Template: Zusätzliche Prüfung auf Statuscode 204 und >300
         if (response.status === 204) {
             throw new WLSError(response, "Es konnten keine Daten gefunden werden", "T", response.status.toString())
         } else if (response && (response.status >= 200 && response.status < 300)) {
@@ -301,6 +303,7 @@ export class RequiredError extends Error {
     }
 }
 
+// Abweichung vom Standard-Template: Implementierung von WLSError und WLSException
 export class WLSError extends Error {
   override name: "WLSError" = "WLSError";
   category?: string;

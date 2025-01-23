@@ -100,7 +100,7 @@ class AusdruckControllerTest {
             val ausdruckWriteDTO = new AusdruckWriteDTO(content);
 
             val mockedAusdruckModel = new AusdruckModel(id, content, erstelltAm);
-            Mockito.when(ausdruckWriteDTOMapper.toModel(ausdruckWriteDTO, id, erstelltAm)).thenReturn(mockedAusdruckModel);
+            Mockito.when(ausdruckWriteDTOMapper.toModel(ausdruckWriteDTO, id)).thenReturn(mockedAusdruckModel);
 
             unitUnderTest.postAusdruck(wahlID, wahlbezirkID, meldungsArt, ausdruckWriteDTO);
 

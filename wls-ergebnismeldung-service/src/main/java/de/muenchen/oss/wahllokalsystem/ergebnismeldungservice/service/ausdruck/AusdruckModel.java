@@ -7,5 +7,5 @@ import java.time.Instant;
 
 public record AusdruckModel(@Valid @NotNull WahlUndBezirkIDUndMeldungsart wahlUndBezirkIDUndMeldungsart,
                             String content,
-                            @NotNull Instant erstelltAm) {
+                            Instant erstelltAm) {
 }

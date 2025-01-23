@@ -3,7 +3,6 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ausdruck;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.Meldungsart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.WahlUndBezirkIDUndMeldungsart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckModel;
-import java.time.Instant;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -20,7 +19,7 @@ class AusdruckWriteDTOMapperTest {
     class ToModel {
         @Test
         void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toModel(null, null, null)).isNull();
+            Assertions.assertThat(unitUnderTest.toModel(null, null)).isNull();
         }
 
         @Test
@@ -29,13 +28,12 @@ class AusdruckWriteDTOMapperTest {
             val wahlbezirkID = "wahlbezirkID";
             val meldungsart = Meldungsart.V1;
             val content = "Testausdruck";
-            val erstelltAm = Instant.now();
 
             val dtoToMap = new AusdruckWriteDTO(content);
 
-            val result = unitUnderTest.toModel(dtoToMap, new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart), erstelltAm);
+            val result = unitUnderTest.toModel(dtoToMap, new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart));
 
-            val expectedResult = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart), content, erstelltAm);
+            val expectedResult = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart), content, null);
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
@@ -46,11 +44,10 @@ class AusdruckWriteDTOMapperTest {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val content = "Testausdruck";
-            val erstelltAm = Instant.now();
 
             val dtoToMap = new AusdruckWriteDTO(content);
 
-            val result = unitUnderTest.toModel(dtoToMap, new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart), erstelltAm);
+            val result = unitUnderTest.toModel(dtoToMap, new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart));
 
             Assertions.assertThat(result.wahlUndBezirkIDUndMeldungsart().getMeldungsart().name()).isEqualTo(meldungsart.name());
         }

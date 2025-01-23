@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck;
 
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mockStatic;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.Ausdruck;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.AusdruckRepository;
@@ -13,7 +14,9 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Path;
 import jakarta.validation.Validator;
 import jakarta.validation.metadata.ConstraintDescriptor;
+import java.time.Clock;
 import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -24,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -85,7 +89,7 @@ class AusdruckServiceTest {
 
             val result = unitUnderTest.getAusdruck(id);
 
-            Assertions.assertThat(result.isEmpty());
+            Assertions.assertThat(result.isEmpty()).isTrue();
         }
     }
 
@@ -125,29 +129,44 @@ class AusdruckServiceTest {
 
         @Test
         void should_saveMappedAusdruckModel_when_called() {
+            var clock = Clock.fixed(Instant.now(), ZoneOffset.UTC);
+            var mockedInstant = Instant.now(clock);
+            MockedStatic<Instant> mockedStatic = mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS);
+            mockedStatic.when(Instant::now).thenReturn(mockedInstant);
+
             val id = new WahlUndBezirkIDUndMeldungsart();
             val ausdruckModelToSave = new AusdruckModel(id, null, null);
             val mockedModelAsEntity = Mockito.mock(Ausdruck.class);
+            val erstelltAm = Instant.now();
 
-            Mockito.when(ausdruckModelMapper.toEntity(ausdruckModelToSave)).thenReturn(mockedModelAsEntity);
+            Mockito.when(ausdruckModelMapper.toEntity(ausdruckModelToSave, erstelltAm)).thenReturn(mockedModelAsEntity);
 
             unitUnderTest.saveAusdruck(ausdruckModelToSave);
 
             Mockito.verify(ausdruckRepository).save(mockedModelAsEntity);
+
+            mockedStatic.close();
         }
 
         @Test
         void should_throwRepositoryException_when_savingFailed() {
+            var clock = Clock.fixed(Instant.now(), ZoneOffset.UTC);
+            var mockedInstant = Instant.now(clock);
+            MockedStatic<Instant> mockedStatic = mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS);
+            mockedStatic.when(Instant::now).thenReturn(mockedInstant);
+
             val id = new WahlUndBezirkIDUndMeldungsart();
             val ausdruckModelToSave = new AusdruckModel(id, null, null);
             val mockedModelAsEntity = Mockito.mock(Ausdruck.class);
 
             val mockedRepositorySaveException = new RuntimeException("saving failed");
 
-            Mockito.when(ausdruckModelMapper.toEntity(ausdruckModelToSave)).thenReturn(mockedModelAsEntity);
+            Mockito.when(ausdruckModelMapper.toEntity(ausdruckModelToSave, Instant.now())).thenReturn(mockedModelAsEntity);
             Mockito.doThrow(mockedRepositorySaveException).when(ausdruckRepository).save(mockedModelAsEntity);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.saveAusdruck(ausdruckModelToSave)).isSameAs(mockedRepositorySaveException);
+
+            mockedStatic.close();
         }
 
         @Test

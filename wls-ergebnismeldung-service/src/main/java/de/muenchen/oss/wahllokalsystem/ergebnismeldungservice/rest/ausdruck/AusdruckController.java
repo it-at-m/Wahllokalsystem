@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import java.time.Instant;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -85,8 +84,7 @@ public class AusdruckController {
     public ResponseEntity<?> postAusdruck(@PathVariable("wahlID") final String wahlID,
             @PathVariable("wahlbezirkID") final String wahlbezirkID, @PathVariable("meldungsart") final Meldungsart meldungsart,
             @RequestBody final AusdruckWriteDTO ausdruck) {
-        AusdruckModel ausdruckModel = ausdruckWriteDTOMapper.toModel(ausdruck, new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart),
-                Instant.now());
+        AusdruckModel ausdruckModel = ausdruckWriteDTOMapper.toModel(ausdruck, new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart));
         ausdruckService.saveAusdruck(ausdruckModel);
         return new ResponseEntity<>(HttpStatus.OK);
     }

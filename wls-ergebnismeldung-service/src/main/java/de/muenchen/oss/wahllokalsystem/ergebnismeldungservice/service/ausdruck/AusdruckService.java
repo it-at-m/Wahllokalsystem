@@ -7,6 +7,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.Exceptio
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import jakarta.validation.Validator;
 import jakarta.validation.constraints.NotNull;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +48,7 @@ public class AusdruckService {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG);
         }
 
-        ausdruckRepository.save(ausdruckModelMapper.toEntity(ausdruck));
+        ausdruckRepository.save(ausdruckModelMapper.toEntity(ausdruck, Instant.now()));
         log.info("Saved printout: {}", ausdruck);
     }
 

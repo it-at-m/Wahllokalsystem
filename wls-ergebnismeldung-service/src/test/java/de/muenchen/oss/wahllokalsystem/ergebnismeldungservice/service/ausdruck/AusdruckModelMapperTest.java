@@ -56,7 +56,7 @@ class AusdruckModelMapperTest {
 
         @Test
         void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toEntity(null)).isNull();
+            Assertions.assertThat(unitUnderTest.toEntity(null, null)).isNull();
         }
 
         @Test
@@ -68,7 +68,7 @@ class AusdruckModelMapperTest {
             val erstelltAm = Instant.now();
             val ausdruckModel = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart), content, erstelltAm);
 
-            val result = unitUnderTest.toEntity(ausdruckModel);
+            val result = unitUnderTest.toEntity(ausdruckModel, Instant.now());
 
             val expectedResult = new Ausdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart), content, erstelltAm);
 
@@ -80,7 +80,7 @@ class AusdruckModelMapperTest {
         void should_mapToEnumWithSameName_when_givenModelMeldungsartEnumValue(final Meldungsart meldungsart) {
             val modelToMap = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(null, null, meldungsart), null, null);
 
-            val result = unitUnderTest.toEntity(modelToMap);
+            val result = unitUnderTest.toEntity(modelToMap, Instant.now());
 
             Assertions.assertThat(result.getWahlUndBezirkIDUndMeldungsart().getMeldungsart().name()).isEqualTo(meldungsart.name());
         }

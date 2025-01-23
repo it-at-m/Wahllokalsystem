@@ -13,7 +13,8 @@ public class WahlUndBezirkIDUndMeldungsartValidator {
     public void validWahlUndBezirkIDUndMeldungsartOrThrow(final WahlUndBezirkIDUndMeldungsart wahlUndBezirkIDUndMeldungsart,
             final FachlicheWlsException exceptionOnInvalid)
             throws FachlicheWlsException {
-        if (StringUtils.isBlank(wahlUndBezirkIDUndMeldungsart.getWahlID()) ||
+        if (wahlUndBezirkIDUndMeldungsart == null ||
+                StringUtils.isBlank(wahlUndBezirkIDUndMeldungsart.getWahlID()) ||
                 StringUtils.isBlank(wahlUndBezirkIDUndMeldungsart.getWahlbezirkID()) ||
                 wahlUndBezirkIDUndMeldungsart.getMeldungsart() == null) {
             throw exceptionOnInvalid;

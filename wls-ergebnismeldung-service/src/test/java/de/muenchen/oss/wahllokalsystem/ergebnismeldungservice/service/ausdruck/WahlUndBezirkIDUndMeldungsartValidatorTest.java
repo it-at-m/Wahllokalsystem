@@ -6,6 +6,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsExceptio
 import java.util.stream.Stream;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
@@ -25,9 +26,15 @@ class WahlUndBezirkIDUndMeldungsartValidatorTest {
 
         final FachlicheWlsException providedException = FachlicheWlsException.withCode("").buildWithMessage("sth failed");
 
+        @Test
+        void should_throwFachlicheWlsException_when_wahlUndBezirkIDUndMeldungsartIsNull() {
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlUndBezirkIDUndMeldungsartOrThrow(null, providedException))
+                    .isSameAs(providedException);
+        }
+
         @ParameterizedTest(name = "provided exception when {1}")
         @MethodSource("invalidWahlUndBezirkIDUndMeldungsartArgumentsWithTestcaseNameAppendix")
-        void should_throwProvidedException_when_wahlUndBezirkIDUndIsNotValid(final ArgumentsAccessor arguments) {
+        void should_throwProvidedException_when_wahlUndBezirkIDIsNotValid(final ArgumentsAccessor arguments) {
             Assertions.assertThatException()
                     .isThrownBy(
                             () -> unitUnderTest.validWahlUndBezirkIDUndMeldungsartOrThrow(arguments.get(0, WahlUndBezirkIDUndMeldungsart.class),

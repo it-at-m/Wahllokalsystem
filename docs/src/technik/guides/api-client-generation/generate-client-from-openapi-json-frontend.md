@@ -171,7 +171,7 @@ Im Terminal kann, wenn man sich innerhalb der `wls-gui-wahllokalsystem`-Director
 `openapi.json`-File mit folgendem Befehl der entsprechende Code generiert werden:
 
 ```shell
-openapi-generator-cli generate -i src/resources/openapis/<openapi-file> -g typescript-fetch -o src/api/wls-clients/generated-<servicename>-api --template-dir src/api/wls-clients/custom-openapi-template-files
+openapi-generator-cli generate -i src/resources/openapis/<openapi-file> -g typescript-fetch -o src/api/wls-clients/generated-<domain>-api --template-dir src/api/wls-clients/custom-openapi-template-files
 ```
 
 Dabei gilt:
@@ -179,7 +179,7 @@ Dabei gilt:
   _"src/resources/openapis/\<openapi-file\>"_. `<openapi-file>` wird dabei durch das entsprechende
   Release-File ersetzt. Beispiel: `openapi.broadcast.0.2.0.json`
 - Das `-o` steht für Output und gibt den Ort an, an welchem der generierte Code gespeichert werden soll:
-  _"src/api/wls-clients/generated-\<servicename\>-api"_. `<servicename>` wird dabei durch den entsprechenden
+  _"src/api/wls-clients/generated-\<domain\>-api"_. `<domain>` wird dabei durch den entsprechenden
   WLS-Service ersetzt. Beispiel: `generated-broadcast-api`
 - Das `--template-dir` sorgt dafür, dass die angepassten Templates bei der Generierung berücksichtigt werden und gibt
   den Ort an, an dem diese gespeichert sind: _"src/api/wls-clients/custom-openapi-template-files"_
@@ -191,7 +191,7 @@ openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.2.0
 ```
 :::
 
-#### 2) Ausführen des Skripts `gen:gen-<servicename>`
+#### 2) Ausführen des Skripts `gen:gen-<domain>`
 
 In der `package.json` kann der oben genannte Befehl als Skript hinzugefügt werden. Das sieht dann so aus:
 
@@ -199,7 +199,7 @@ In der `package.json` kann der oben genannte Befehl als Skript hinzugefügt werd
  "scripts": {
     "dev": "vite",
     /* ... */
-    "gen:gen-<servicename>": "openapi-generator-cli generate -i src/resources/openapis/<openapi-file> -g typescript-fetch -o src/api/wls-clients/generated-<servicename>-api --template-dir src/api/wls-clients/custom-openapi-template-files" // [!code ++]
+    "gen:gen-<domain>": "openapi-generator-cli generate -i src/resources/openapis/<openapi-file> -g typescript-fetch -o src/api/wls-clients/generated-<domain>-api --template-dir src/api/wls-clients/custom-openapi-template-files" // [!code ++]
   },
 ```
 

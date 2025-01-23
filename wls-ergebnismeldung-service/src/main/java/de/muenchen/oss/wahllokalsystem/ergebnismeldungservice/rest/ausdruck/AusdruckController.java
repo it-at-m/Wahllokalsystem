@@ -2,7 +2,6 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ausdruck;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.Meldungsart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.WahlUndBezirkIDUndMeldungsart;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -57,8 +56,8 @@ public class AusdruckController {
             }
     )
     @GetMapping("{wahlID}/{wahlbezirkID}/{meldungsart}/html")
-    public ResponseEntity<String> getAusdruck(@PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID,
-            @PathVariable("meldungsart") Meldungsart meldungsart) {
+    public ResponseEntity<String> getAusdruck(@PathVariable("wahlID") final String wahlID, @PathVariable("wahlbezirkID") final String wahlbezirkID,
+            @PathVariable("meldungsart") final Meldungsart meldungsart) {
         val ausdruckModel = ausdruckService.getAusdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart));
 
         if (ausdruckModel.isEmpty()) {
@@ -120,7 +119,7 @@ public class AusdruckController {
     public ResponseEntity<?> postAusdruck(@PathVariable("wahlID") final String wahlID,
             @PathVariable("wahlbezirkID") final String wahlbezirkID, @PathVariable("meldungsart") final Meldungsart meldungsart,
             @RequestBody final AusdruckWriteDTO ausdruck) {
-        AusdruckModel ausdruckModel = ausdruckWriteDTOMapper.toModel(ausdruck, new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart));
+        val ausdruckModel = ausdruckWriteDTOMapper.toModel(ausdruck, new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart));
         ausdruckService.saveAusdruck(ausdruckModel);
         return new ResponseEntity<>(HttpStatus.OK);
     }

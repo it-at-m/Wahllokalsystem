@@ -22,6 +22,8 @@ import java.util.Optional;
 import java.util.Set;
 import lombok.val;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -127,13 +129,21 @@ class AusdruckServiceTest {
     @Nested
     class SaveAusdruck {
 
-        @Test
-        void should_saveMappedAusdruckModel_when_called() {
+        private MockedStatic<Instant> mockedStatic = mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS);
+
+        @BeforeEach
+        void setup () {
             var clock = Clock.fixed(Instant.now(), ZoneOffset.UTC);
             var mockedInstant = Instant.now(clock);
-            MockedStatic<Instant> mockedStatic = mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS);
             mockedStatic.when(Instant::now).thenReturn(mockedInstant);
+        }
 
+        @AfterEach
+        void tearDown() {
+            mockedStatic.close();
+        }
+        @Test
+        void should_saveMappedAusdruckModel_when_called() {
             val id = new WahlUndBezirkIDUndMeldungsart();
             val ausdruckModelToSave = new AusdruckModel(id, null, null);
             val mockedModelAsEntity = Mockito.mock(Ausdruck.class);
@@ -144,17 +154,10 @@ class AusdruckServiceTest {
             unitUnderTest.saveAusdruck(ausdruckModelToSave);
 
             Mockito.verify(ausdruckRepository).save(mockedModelAsEntity);
-
-            mockedStatic.close();
         }
 
         @Test
         void should_throwRepositoryException_when_savingFailed() {
-            var clock = Clock.fixed(Instant.now(), ZoneOffset.UTC);
-            var mockedInstant = Instant.now(clock);
-            MockedStatic<Instant> mockedStatic = mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS);
-            mockedStatic.when(Instant::now).thenReturn(mockedInstant);
-
             val id = new WahlUndBezirkIDUndMeldungsart();
             val ausdruckModelToSave = new AusdruckModel(id, null, null);
             val mockedModelAsEntity = Mockito.mock(Ausdruck.class);
@@ -165,8 +168,6 @@ class AusdruckServiceTest {
             Mockito.doThrow(mockedRepositorySaveException).when(ausdruckRepository).save(mockedModelAsEntity);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.saveAusdruck(ausdruckModelToSave)).isSameAs(mockedRepositorySaveException);
-
-            mockedStatic.close();
         }
 
         @Test

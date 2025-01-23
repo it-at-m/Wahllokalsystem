@@ -21,6 +21,7 @@ import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -106,13 +107,22 @@ public class AusdruckControllerIntegrationTest {
     @Nested
     class PostAusdruck {
 
-        @Test
-        void should_persistData_when_dataIsSent() throws Exception {
+        private MockedStatic<Instant> mockedStatic = mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS);
+
+        @BeforeEach
+        void setup () {
             var clock = Clock.fixed(Instant.now(), ZoneOffset.UTC);
             var mockedInstant = Instant.now(clock);
-            MockedStatic<Instant> mockedStatic = mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS);
             mockedStatic.when(Instant::now).thenReturn(mockedInstant);
+        }
 
+        @AfterEach
+        void tearDown() {
+            mockedStatic.close();
+        }
+
+        @Test
+        void should_persistData_when_dataIsSent() throws Exception {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val meldungsart = Meldungsart.V1;
@@ -135,17 +145,10 @@ public class AusdruckControllerIntegrationTest {
                     .usingRecursiveComparison()
                     .withComparatorForType(TimePrecisionComparators.INSTANT_PRECISION_MILLISECONDS, Instant.class)
                     .isEqualTo(Optional.of(entityToFind));
-
-            mockedStatic.close();
         }
 
         @Test
         void should_overwriteData_when_dataIsPresentInRepository() throws Exception {
-            var clock = Clock.fixed(Instant.now(), ZoneOffset.UTC);
-            var mockedInstant = Instant.now(clock);
-            MockedStatic<Instant> mockedStatic = mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS);
-            mockedStatic.when(Instant::now).thenReturn(mockedInstant);
-
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val meldungsart = Meldungsart.V1;
@@ -171,8 +174,6 @@ public class AusdruckControllerIntegrationTest {
                     .usingRecursiveComparison()
                     .withComparatorForType(TimePrecisionComparators.INSTANT_PRECISION_MILLISECONDS, Instant.class)
                     .isEqualTo(Optional.of(expectedOverwrittenEntity));
-
-            mockedStatic.close();
         }
 
         @Test

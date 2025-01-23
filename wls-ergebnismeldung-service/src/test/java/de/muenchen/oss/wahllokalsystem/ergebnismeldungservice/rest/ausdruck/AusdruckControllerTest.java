@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -114,13 +116,22 @@ class AusdruckControllerTest {
     @Nested
     class PostAusdruck {
 
-        @Test
-        void should_callServiceWithModel_when_calledWithData() {
+        private MockedStatic<Instant> mockedStatic = mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS);
+
+        @BeforeEach
+        void setup () {
             var clock = Clock.fixed(Instant.now(), ZoneOffset.UTC);
             var mockedInstant = Instant.now(clock);
-            MockedStatic<Instant> mockedStatic = mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS);
             mockedStatic.when(Instant::now).thenReturn(mockedInstant);
+        }
 
+        @AfterEach
+        void tearDown() {
+            mockedStatic.close();
+        }
+
+        @Test
+        void should_callServiceWithModel_when_calledWithData() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val meldungsArt = Meldungsart.V1;
@@ -135,8 +146,6 @@ class AusdruckControllerTest {
             unitUnderTest.postAusdruck(wahlID, wahlbezirkID, meldungsArt, ausdruckWriteDTO);
 
             Mockito.verify(ausdruckService).saveAusdruck(mockedAusdruckModel);
-
-            mockedStatic.close();
         }
     }
 }

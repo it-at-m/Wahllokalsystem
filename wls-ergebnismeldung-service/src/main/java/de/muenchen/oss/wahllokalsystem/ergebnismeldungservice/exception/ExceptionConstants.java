@@ -43,7 +43,7 @@ public class ExceptionConstants {
     public static final ExceptionDataWrapper POST_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("103",
             "postBegruendung: Parameter unvollständig.");
     public static final ExceptionDataWrapper BEGRUENDUNG_UNSAVEABLE = new ExceptionDataWrapper("624",
-            "postStatus: Der Status konnte nicht gespeichert werden.");
+            "postBegruendung: Die Begruendung konnte nicht gespeichtert werden.");
 
     public static final ExceptionDataWrapper GET_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("608",
             "getStimmabgabevermerke: Parameter unvollstaendig");

@@ -11,6 +11,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplic
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.MeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.StatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.ValidierungsstatusDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDateTime;
@@ -38,6 +39,9 @@ class SecurityConfigurationTest {
 
     @MockBean
     StatusService statusService;
+
+    @MockBean
+    AusdruckService ausdruckService;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -160,6 +164,84 @@ class SecurityConfigurationTest {
             val request = MockMvcRequestBuilders.get("/businessActions/asyncProgress");
 
             api.perform(request).andExpect(status().isOk());
+        }
+    }
+
+    @Nested
+    class Ausdruck {
+
+        @Nested
+        class GetAusdruck {
+
+            @WithAnonymousUser
+            @Test
+            void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+                val request = MockMvcRequestBuilders.get("/businessActions/ausdruck/wahlID/wahlbezirkID/V1/html");
+
+                api.perform(request).andExpect(status().isUnauthorized());
+            }
+
+            @WithMockUser
+            @Test
+            void should_returnNotFound_when_callingAuthenticated() throws Exception {
+                val request = MockMvcRequestBuilders.get("/businessActions/ausdruck/wahlID/wahlbezirkID/V1/html");
+
+                api.perform(request).andExpect(status().isNotFound());
+
+                Mockito.verify(ausdruckService).getAusdruck(notNull());
+            }
+        }
+
+        @Nested
+        class getAllAusdrucke {
+
+            @WithAnonymousUser
+            @Test
+            void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+                val request = MockMvcRequestBuilders.get("/businessActions/ausdruck/wahlID/wahlbezirkID");
+
+                api.perform(request).andExpect(status().isUnauthorized());
+            }
+
+            @WithMockUser
+            @Test
+            void should_returnOK_when_callingAuthenticated() throws Exception {
+                val request = MockMvcRequestBuilders.get("/businessActions/ausdruck/wahlID/wahlbezirkID");
+
+                api.perform(request).andExpect(status().isOk());
+
+                Mockito.verify(ausdruckService).getAllAusdrucke(notNull(), notNull());
+            }
+        }
+
+        @Nested
+        class PostAusdruck {
+
+            @WithAnonymousUser
+            @Test
+            void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+                val requestBody = new StatusDTO(new BezirkUndWahlID("wahlID", "wahlbezirkID"),
+                    new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()),
+                    new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()));
+                val request = MockMvcRequestBuilders.post("/businessActions/ausdruck/wahlID/wahlbezirkID/V1/html").with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestBody));
+
+                api.perform(request).andExpect(status().isUnauthorized());
+            }
+
+            @WithMockUser
+            @Test
+            void should_returnNoContent_when_callingAuthenticated() throws Exception {
+                val requestBody = new StatusDTO(new BezirkUndWahlID("wahlID", "wahlbezirkID"),
+                    new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()),
+                    new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()));
+                val request = MockMvcRequestBuilders.post("/businessActions/ausdruck/wahlID/wahlbezirkID/V1/html").with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestBody));
+
+                api.perform(request).andExpect(status().isOk());
+
+                Mockito.verify(ausdruckService).saveAusdruck(notNull());
+            }
         }
     }
 }

@@ -69,7 +69,7 @@ class AusdruckControllerTest {
         }
 
         @Test
-        void should_returnNullBodyWithHttpStatusNotFound_when_serviceReturnsEmtyOptional() {
+        void should_returnNullBodyWithHttpStatusNotFound_when_serviceReturnsEmptyOptional() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val meldungsArt = Meldungsart.V1;

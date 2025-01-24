@@ -66,9 +66,9 @@ class AusdruckModelMapperTest {
             val meldungsart = Meldungsart.V1;
             val content = "Testausdruck";
             val erstelltAm = Instant.now();
-            val ausdruckModel = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart), content, erstelltAm);
+            val ausdruckModel = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart), content, null);
 
-            val result = unitUnderTest.toEntity(ausdruckModel, Instant.now());
+            val result = unitUnderTest.toEntity(ausdruckModel, erstelltAm);
 
             val expectedResult = new Ausdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart), content, erstelltAm);
 

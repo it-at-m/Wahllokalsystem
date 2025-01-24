@@ -34,12 +34,6 @@ class WahlUndBezirkIDUndMeldungsartValidatorTest {
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahlUndBezirkIDUndMeldungsartOrThrow(id, providedException));
         }
 
-        @Test
-        void should_throwFachlicheWlsException_when_wahlUndBezirkIDUndMeldungsartIsNull() {
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlUndBezirkIDUndMeldungsartOrThrow(null, providedException))
-                    .isSameAs(providedException);
-        }
-
         @ParameterizedTest(name = "provided exception when {1}")
         @MethodSource("invalidWahlUndBezirkIDUndMeldungsartArgumentsWithTestcaseNameAppendix")
         void should_throwProvidedException_when_wahlUndBezirkIDIsNotValid(final ArgumentsAccessor arguments) {
@@ -52,6 +46,7 @@ class WahlUndBezirkIDUndMeldungsartValidatorTest {
 
         public static Stream<Arguments> invalidWahlUndBezirkIDUndMeldungsartArgumentsWithTestcaseNameAppendix() {
             return Stream.of(
+                    Arguments.of(null, "argument is null"),
                     Arguments.of(new WahlUndBezirkIDUndMeldungsart(null, "wahlID", Meldungsart.V1), "wahlbezirkID is null"),
                     Arguments.of(new WahlUndBezirkIDUndMeldungsart("", "wahlID", Meldungsart.V1), "wahlbezirkID is empty"),
                     Arguments.of(new WahlUndBezirkIDUndMeldungsart("   ", "wahlID", Meldungsart.V1), "wahlbezirkID is blank"),

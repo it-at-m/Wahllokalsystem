@@ -233,7 +233,7 @@ const broadcastCA = new BroadcastControllerApi(
 ```
 
 ```typescript [constants.ts]
-const WLS_SERVICE_API_URL = "http://localhost:8083/api/";
+const WLS_SERVICE_API_URL = "/api/";
 
 export const BROADCAST_SERVICE_API_URL = WLS_SERVICE_API_URL + "broadcast-service";
 ```

@@ -110,7 +110,7 @@ public class AusdruckControllerIntegrationTest {
         private MockedStatic<Instant> mockedStatic = mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS);
 
         @BeforeEach
-        void setup () {
+        void setup() {
             var clock = Clock.fixed(Instant.now(), ZoneOffset.UTC);
             var mockedInstant = Instant.now(clock);
             mockedStatic.when(Instant::now).thenReturn(mockedInstant);

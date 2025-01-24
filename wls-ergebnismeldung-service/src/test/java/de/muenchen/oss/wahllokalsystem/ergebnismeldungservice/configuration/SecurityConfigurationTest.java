@@ -48,7 +48,7 @@ class SecurityConfigurationTest {
 
     @MockBean
     AusdruckService ausdruckService;
-    
+
     @MockBean
     StimmabgabevermerkeService stimmabgabevermerkeService;
 
@@ -230,11 +230,11 @@ class SecurityConfigurationTest {
             @Test
             void should_returnUnauthorized_when_callingAnonymous() throws Exception {
                 val requestBody = new StatusDTO(new BezirkUndWahlID("wahlID", "wahlbezirkID"),
-                    new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()),
-                    new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()));
+                        new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()),
+                        new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()));
                 val request = MockMvcRequestBuilders.post("/businessActions/ausdruck/wahlID/wahlbezirkID/V1/html").with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(requestBody));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestBody));
 
                 api.perform(request).andExpect(status().isUnauthorized());
             }
@@ -243,11 +243,11 @@ class SecurityConfigurationTest {
             @Test
             void should_returnNoContent_when_callingAuthenticated() throws Exception {
                 val requestBody = new StatusDTO(new BezirkUndWahlID("wahlID", "wahlbezirkID"),
-                    new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()),
-                    new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()));
+                        new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()),
+                        new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now()));
                 val request = MockMvcRequestBuilders.post("/businessActions/ausdruck/wahlID/wahlbezirkID/V1/html").with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(requestBody));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestBody));
 
                 api.perform(request).andExpect(status().isOk());
 

@@ -51,8 +51,8 @@ public class ExceptionConstants {
             "postStimmabgabevermerke: Parameter unvollstaendig");
     public static final ExceptionDataWrapper STIMMABGABEVERMERKE_UNSAVEABLE = new ExceptionDataWrapper("620",
             "postStimmabgabevermerke: Die Stimmabgabevermerke konnten nicht gespeichtert werden.");
-   
-  public static final ExceptionDataWrapper POST_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("628",
+
+    public static final ExceptionDataWrapper POST_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("628",
             "postAusdruck: Parameter unvollstaendig");
     public static final ExceptionDataWrapper GET_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("629",
             "getAusdruck: Parameter unvollstaendig");

@@ -2,10 +2,12 @@ package de.muenchen.oss.wahllokalsystem.adminservice.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.errorhandler.WlsResponseErrorHandler;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.OAuth2TokenInterceptor;
 import lombok.val;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.AbstractOAuth2Token;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration

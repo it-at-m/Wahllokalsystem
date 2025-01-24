@@ -137,7 +137,7 @@ class ErgebnisseValidatorTest {
 
         @Test
         void should_throwException_when_ergebnisseIsEmpty() {
-            val ergebnisseModelToValidate = new ErgebnisseModel("", "", Stapelart.LTW_BZW_A, Collections.emptyList());
+            val ergebnisseModelToValidate = new ErgebnisseModel("", "", StapelartModel.LTW_BZW_A, Collections.emptyList());
 
             val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("sth failed");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG))
@@ -149,7 +149,7 @@ class ErgebnisseValidatorTest {
 
         @Test
         void should_throwFachlicheWlsException_when_ergebnisseIsNull() {
-            val ergebnisseModelModelToValidate = new ErgebnisseModel("wahlbezirkID", "wahlID", Stapelart.LTW_BZW_A, null);
+            val ergebnisseModelModelToValidate = new ErgebnisseModel("wahlbezirkID", "wahlID", StapelartModel.LTW_BZW_A, null);
 
             val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("sth failed");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG))

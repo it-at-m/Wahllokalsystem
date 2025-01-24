@@ -9,6 +9,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse.BezirkUndWahlIDStapelartDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse.ErgebnisDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse.ErgebnisseDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse.StapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.MeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.StatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.ValidierungsstatusDTO;
@@ -19,6 +23,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.Sta
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
 import lombok.val;
@@ -228,12 +233,77 @@ class SecurityConfigurationTest {
 
             @WithMockUser
             @Test
-            void should_returnNoContent_when_NoDataIsPresent() throws Exception {
+            void should_returnNoContent_when_userIsAuthenticated() throws Exception {
                 val request = MockMvcRequestBuilders.get("/businessActions/ergebnisse/wahlID/wahlbezirkID/LTW_BZW_A");
 
                 api.perform(request).andExpect(status().isNoContent()).andReturn();
 
                 Mockito.verify(ergebnisseService).getErgebnisse(notNull());
+            }
+
+            @WithAnonymousUser
+            @Test
+            void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
+                val request = MockMvcRequestBuilders.get("/businessActions/ergebnisse/wahlID/wahlbezirkID/LTW_BZW_A");
+
+                api.perform(request).andExpect(status().isUnauthorized()).andReturn();
+            }
+        }
+
+        @Nested
+        class PostErgebnisse {
+
+            @WithMockUser
+            @Test
+            void should_returnOk_when_userIsAuthenticated() throws Exception {
+                val ergebnis1 = new ErgebnisDTO(null, null, null, 1, null);
+                val newErgebnisDTOList = new ArrayList<ErgebnisDTO>();
+                newErgebnisDTOList.add(ergebnis1);
+
+                val ergebnisse = new ErgebnisseDTO(new BezirkUndWahlIDStapelartDTO("wahlbezirkID", "wahlID", StapelartDTO.BTW_A), newErgebnisDTOList);
+                val request = MockMvcRequestBuilders.post("/businessActions/ergebnisse/wahlID/wahlbezirkID/LTW_BZW_A").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(ergebnisse));
+                api.perform(request).andExpect(status().isOk()).andReturn();
+
+                Mockito.verify(ergebnisseService).postErgebnisse(any(), any());
+            }
+
+            @WithAnonymousUser
+            @Test
+            void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
+                val ergebnis1 = new ErgebnisDTO(null, null, null, 1, null);
+                val newErgebnisDTOList = new ArrayList<ErgebnisDTO>();
+                newErgebnisDTOList.add(ergebnis1);
+
+                val ergebnisse = new ErgebnisseDTO(new BezirkUndWahlIDStapelartDTO("wahlbezirkID", "wahlID", StapelartDTO.BTW_A), newErgebnisDTOList);
+                val request = MockMvcRequestBuilders.post("/businessActions/ergebnisse/wahlID/wahlbezirkID/LTW_BZW_A").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(ergebnisse));
+
+                api.perform(request).andExpect(status().isUnauthorized()).andReturn();
+            }
+        }
+
+        @Nested
+        class GetAllErgebnisse {
+
+            @WithMockUser
+            @Test
+            void should_returnNoContent_when_userIsAuthenticated() throws Exception {
+                val request = MockMvcRequestBuilders.get("/businessActions/ergebnisse/wahlID/wahlbezirkID");
+
+                api.perform(request).andExpect(status().isNoContent()).andReturn();
+
+                Mockito.verify(ergebnisseService).getAllErgebnisse(notNull(), notNull());
+            }
+
+            @WithAnonymousUser
+            @Test
+            void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
+                val request = MockMvcRequestBuilders.get("/businessActions/ergebnisse/wahlID/wahlbezirkID");
+
+                api.perform(request).andExpect(status().isUnauthorized()).andReturn();
             }
         }
     }

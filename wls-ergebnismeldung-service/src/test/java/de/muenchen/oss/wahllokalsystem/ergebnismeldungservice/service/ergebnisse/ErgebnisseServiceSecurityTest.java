@@ -7,9 +7,9 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplic
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnis;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.ErgebnisseRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse.ErgebnisseDTOMapper;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse.StapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
@@ -62,7 +62,7 @@ class ErgebnisseServiceSecurityTest {
         void should_getAccess_when_allRequiredAuthoritiesArePresent() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_ERGEBNISSE);
 
-            val ergebnisseReference = ergebnisseDTOMapper.toReferenceModel("wahlbezirkID", "wahlID", Stapelart.LTW_BZW_A);
+            val ergebnisseReference = ergebnisseDTOMapper.toReferenceModel("wahlbezirkID", "wahlID", StapelartDTO.LTW_BZW_A);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(ergebnisseReference.wahlbezirkID()), Mockito.any())).thenReturn(true);
 
@@ -75,7 +75,7 @@ class ErgebnisseServiceSecurityTest {
             SecurityUtils.runWith(arguments.get(0, String[].class));
 
             Assertions.assertThatException()
-                    .isThrownBy(() -> unitUnderTest.getErgebnisse(ergebnisseDTOMapper.toReferenceModel("wahlbezirkID", "wahlID", Stapelart.LTW_BZW_A)))
+                    .isThrownBy(() -> unitUnderTest.getErgebnisse(ergebnisseDTOMapper.toReferenceModel("wahlbezirkID", "wahlID", StapelartDTO.LTW_BZW_A)))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
@@ -94,11 +94,13 @@ class ErgebnisseServiceSecurityTest {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
             val stapelart = Stapelart.LTW_BZW_A;
+            val stapelartModel = StapelartModel.LTW_BZW_A;
 
-            val ergebnis1 = new Ergebnis(null, null, null, 1, null);
-            val newErgebnisList = new ArrayList<Ergebnis>();
-            newErgebnisList.add(ergebnis1);
-            val newErgebnisse = new ErgebnisseModel(wahlbezirkID, wahlID, stapelart, newErgebnisList);
+            val ergebnisModel1 = new ErgebnisModel(null, null, null, 1, null);
+            val newErgebnisModelList = new ArrayList<ErgebnisModel>();
+            newErgebnisModelList.add(ergebnisModel1);
+
+            val newErgebnisse = new ErgebnisseModel(wahlbezirkID, wahlID, stapelartModel, newErgebnisModelList);
             val newErgebnisseReference = new ErgebnisseReference(wahlbezirkID, wahlID, stapelart);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
@@ -112,9 +114,10 @@ class ErgebnisseServiceSecurityTest {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
             val stapelart = Stapelart.LTW_BZW_A;
+            val stapelartModel = StapelartModel.LTW_BZW_A;
 
-            val newErgebnisList = new ArrayList<Ergebnis>();
-            val newErgebnisse = new ErgebnisseModel(wahlbezirkID, wahlID, stapelart, newErgebnisList);
+            val newErgebnisModelList = new ArrayList<ErgebnisModel>();
+            val newErgebnisse = new ErgebnisseModel(wahlbezirkID, wahlID, stapelartModel, newErgebnisModelList);
             val newErgebnisseReference = new ErgebnisseReference(wahlbezirkID, wahlID, stapelart);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(false);
@@ -131,9 +134,10 @@ class ErgebnisseServiceSecurityTest {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
             val stapelart = Stapelart.LTW_BZW_A;
+            val stapelartModel = StapelartModel.LTW_BZW_A;
 
-            val newErgebnisList = new ArrayList<Ergebnis>();
-            val newErgebnisse = new ErgebnisseModel(wahlbezirkID, wahlID, stapelart, newErgebnisList);
+            val newErgebnisModelList = new ArrayList<ErgebnisModel>();
+            val newErgebnisse = new ErgebnisseModel(wahlbezirkID, wahlID, stapelartModel, newErgebnisModelList);
             val newErgebnisseReference = new ErgebnisseReference(wahlbezirkID, wahlID, stapelart);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(false);
@@ -150,12 +154,13 @@ class ErgebnisseServiceSecurityTest {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
             val stapelart = Stapelart.LTW_BZW_A;
+            val stapelartModel = StapelartModel.LTW_BZW_A;
 
-            val ergebnis1 = new Ergebnis(null, null, null, 1, null);
-            val newErgebnisList = new ArrayList<Ergebnis>();
-            newErgebnisList.add(ergebnis1);
+            val ergebnisModel1 = new ErgebnisModel(null, null, null, 1, null);
+            val newErgebnisModelList = new ArrayList<ErgebnisModel>();
+            newErgebnisModelList.add(ergebnisModel1);
 
-            val newErgebnisse = new ErgebnisseModel(wahlbezirkID, wahlID, stapelart, newErgebnisList);
+            val newErgebnisse = new ErgebnisseModel(wahlbezirkID, wahlID, stapelartModel, newErgebnisModelList);
             val newErgebnisseReference = new ErgebnisseReference(wahlbezirkID, wahlID, stapelart);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);

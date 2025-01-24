@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.AbstractController;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseReference;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseService;
@@ -55,8 +54,9 @@ public class ErgebnisseController extends AbstractController {
     )
     @GetMapping("{wahlbezirkID}/{wahlID}/{stapelart}")
     public ResponseEntity<ErgebnisseDTO> getErgebnisse(@PathVariable("wahlbezirkID") String wahlbezirkID, @PathVariable("wahlID") String wahlID,
-            @PathVariable("stapelart") Stapelart stapelart) {
-        val ergebnisse = ergebnisseService.getErgebnisse(new ErgebnisseReference(wahlbezirkID, wahlID, stapelart));
+            @PathVariable("stapelart") StapelartDTO stapelart) {
+        val stapelartToUseInReference = ergebnisseDTOMapper.toSpapelart(stapelart);
+        val ergebnisse = ergebnisseService.getErgebnisse(new ErgebnisseReference(wahlbezirkID, wahlID, stapelartToUseInReference));
         return okWithBodyOrNoContent(ergebnisse.map(ergebnisseDTOMapper::toDTO));
     }
 
@@ -110,10 +110,11 @@ public class ErgebnisseController extends AbstractController {
     @PostMapping("{wahlbezirkID}/{wahlID}/{stapelart}")
     @ResponseStatus(HttpStatus.OK)
     public void postErgebnisse(@PathVariable("wahlbezirkID") String wahlbezirkID, @PathVariable("wahlID") String wahlID,
-            @PathVariable("stapelart") Stapelart stapelart,
+            @PathVariable("stapelart") StapelartDTO stapelart,
             @RequestBody ErgebnisseDTO ergebnisseDTO) {
+        val stapelartToUseInReference = ergebnisseDTOMapper.toSpapelart(stapelart);
         val modelToSave = ergebnisseDTOMapper.toModel(ergebnisseDTO);
-        val referenceForModel = new ErgebnisseReference(wahlbezirkID, wahlID, stapelart);
+        val referenceForModel = new ErgebnisseReference(wahlbezirkID, wahlID, stapelartToUseInReference);
         ergebnisseService.postErgebnisse(referenceForModel, modelToSave);
     }
 }

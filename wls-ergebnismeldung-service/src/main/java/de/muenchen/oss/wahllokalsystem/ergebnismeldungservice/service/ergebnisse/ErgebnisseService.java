@@ -50,7 +50,7 @@ public class ErgebnisseService {
         ergebnisseValidator.validIDOrThrow(wahlID, wahlbezirkID,
                 exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG));
 
-        val ergebnisseFromRepo = ergebnisseRepository.getAllErgebnisseInWahlbezirk(wahlID, wahlbezirkID);
+        val ergebnisseFromRepo = ergebnisseRepository.findByWahlbezirkIDAndWahlD(wahlID, wahlbezirkID);
         return ergebnisseFromRepo.stream().map(ergebnisseModelMapper::toModel).toList();
     }
 
@@ -66,7 +66,7 @@ public class ErgebnisseService {
 
         try {
             ergebnisseRepository.save(ergebnisseModelMapper.toEntity(ergebnisseToAdd));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.error("#postErgebnisse unsaveable:", e);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.ERGEBNISSE_UNSAVEABLE);
 

@@ -37,5 +37,5 @@ public interface ErgebnisseRepository extends CrudRepository<Ergebnisse, BezirkU
     void deleteAll();
 
     @Query("SELECT e FROM Ergebnisse e WHERE e.bezirkUndWahlIDStapelart.wahlbezirkID = (:wahlbezirkID) AND e.bezirkUndWahlIDStapelart.wahlID = (:wahlID)")
-    List<Ergebnisse> getAllErgebnisseInWahlbezirk(@Param("wahlbezirkID") String wahlbezirkID, @Param("wahlID") String wahlID);
+    List<Ergebnisse> findByWahlbezirkIDAndWahlD(@Param("wahlbezirkID") String wahlbezirkID, @Param("wahlID") String wahlID);
 }

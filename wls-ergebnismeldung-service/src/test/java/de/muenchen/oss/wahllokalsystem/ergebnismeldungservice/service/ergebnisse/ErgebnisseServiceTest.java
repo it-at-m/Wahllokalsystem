@@ -96,7 +96,7 @@ class ErgebnisseServiceTest {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG))
                     .thenReturn(mockedWlsException);
 
-            Mockito.when(ergebnisseRepository.getAllErgebnisseInWahlbezirk(wahlbezirkID, wahlID)).thenReturn(List.of(entityFromRepo));
+            Mockito.when(ergebnisseRepository.findByWahlbezirkIDAndWahlD(wahlbezirkID, wahlID)).thenReturn(List.of(entityFromRepo));
             Mockito.when(ergebnisseModelMapper.toModel(entityFromRepo)).thenReturn(mappedEntity);
 
             val result = unitUnderTest.getAllErgebnisse(wahlbezirkID, wahlID);

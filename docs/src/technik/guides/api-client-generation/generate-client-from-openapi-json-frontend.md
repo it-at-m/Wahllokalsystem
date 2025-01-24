@@ -12,7 +12,7 @@ npm install @openapitools/openapi-generator-cli -g typescript-fetch
 
 ::: details Errorhandling
 Sollte dabei diese Fehlermeldung auftauchen:
-![img_1.png](../img_1.png)
+![img_1.png](../../../public/error_install_openapi-generator.png)
 können die Schritte aus 
 [diesem Stack-Beitrag](https://stackoverflow.com/questions/18088372/how-to-npm-install-global-not-as-root/59227497#59227497)
 befolgt werden.

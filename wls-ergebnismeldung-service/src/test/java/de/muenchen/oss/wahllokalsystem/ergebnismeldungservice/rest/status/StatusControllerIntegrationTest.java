@@ -15,7 +15,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.status.Stat
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.status.Validierungsstatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusModelMapper;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.LocalDateTimeComparators;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.TimePrecisionComparators;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -85,7 +85,7 @@ public class StatusControllerIntegrationTest {
 
             Assertions.assertThat(responseBodyAsDTO)
                     .usingRecursiveComparison()
-                    .withComparatorForType(LocalDateTimeComparators.PRECISION_MILLISECONDS, LocalDateTime.class)
+                    .withComparatorForType(TimePrecisionComparators.LOCAL_DATE_TIME_PRECISION_MILLISECONDS, LocalDateTime.class)
                     .isEqualTo(expectedResult);
         }
 
@@ -136,7 +136,7 @@ public class StatusControllerIntegrationTest {
             val expectedEntity = statusModelMapper.toEntity(statusDTOMapper.toModel(requestBody));
             Assertions.assertThat(entityFromRepo)
                     .usingRecursiveComparison()
-                    .withComparatorForType(LocalDateTimeComparators.PRECISION_MILLISECONDS, LocalDateTime.class)
+                    .withComparatorForType(TimePrecisionComparators.LOCAL_DATE_TIME_PRECISION_MILLISECONDS, LocalDateTime.class)
                     .isEqualTo(expectedEntity);
         }
 
@@ -166,7 +166,7 @@ public class StatusControllerIntegrationTest {
             val expectedEntity = statusModelMapper.toEntity(statusDTOMapper.toModel(requestBody));
             Assertions.assertThat(entityFromRepo)
                     .usingRecursiveComparison()
-                    .withComparatorForType(LocalDateTimeComparators.PRECISION_MILLISECONDS, LocalDateTime.class)
+                    .withComparatorForType(TimePrecisionComparators.LOCAL_DATE_TIME_PRECISION_MILLISECONDS, LocalDateTime.class)
                     .isEqualTo(expectedEntity);
         }
 

@@ -14,13 +14,13 @@ class AWerteModelMapperTest {
     private final AWerteModelMapper unitUnderTest = Mappers.getMapper(AWerteModelMapper.class);
 
     @Nested
-    class FromListOfAWerteModeltoListOfAWerteEntity {
+    class FromListOfAWerteModelToListOfAWerteEntity {
         @Test
         void should_returnListOfAWerteEntity_when_listOfAWerteModelIsGiven() {
             val wahlbezirkID = "wahlbezirkID";
             val modelsToMap = createListOfAWerteModels(wahlbezirkID);
 
-            val result = unitUnderTest.fromListOfAWerteModeltoListOfAWerteEntity(modelsToMap);
+            val result = unitUnderTest.fromListOfAWerteModelToListOfAWerteEntity(modelsToMap);
 
             val expectedResult = createListOfAWerteEntities(wahlbezirkID);
             Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);

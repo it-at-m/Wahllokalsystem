@@ -20,7 +20,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class AsyncAwerteServiceTest {
+class AsyncAWerteServiceTest {
 
     @Mock
     AsyncProgress asyncProgress;
@@ -62,7 +62,7 @@ class AsyncAwerteServiceTest {
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.initialiseAWerte(wahlbezirkIDs));
             Mockito.verify(asyncProgress, times(3)).setAWerteNext(Mockito.any());
             Mockito.verify(aWerteValidator, times(3)).validWahlbezirkIDParamOrThrow(Mockito.any());
-            Mockito.verify(aWerteModelMapper, times(3)).fromListOfAWerteModeltoListOfAWerteEntity(Mockito.any());
+            Mockito.verify(aWerteModelMapper, times(3)).fromListOfAWerteModelToListOfAWerteEntity(Mockito.any());
             Mockito.verify(aWerteRepository, times(3)).saveAll(Mockito.any());
 
         }

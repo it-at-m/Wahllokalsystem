@@ -62,3 +62,16 @@ bzw. ausgelesen werden.
 Bei der Briefwahl zählt der Wahlvorstand die Stimmzettelumschlaege.
 Über das Schreiben und Lesen der Stimmzettelumschlaege kann die aktuelle Anzahl eines Wahlbezirkes für eine Wahl an WLS 
 übermittelt bzw. ausgelesen werden.
+
+### Lesen und Schreiben von Ausdrucken
+Hier können Niederschrift(V1) und Schnellmeldung(V3) gespeichert und gelesen werden.
+
+####  Speichern eines Ausdrucks mit bestimmter Meldungsart für einen Wahlbezirk einer Wahl
+Speichert einen Ausdruck der entsprechenden Meldungsart für einen Wahlbezirk einer Wahl.
+Es wird automatisch ein aktuelles Erstellungsdatum mit erzeugt und gespeichert.
+
+### Lesen eines Ausdrucks mit bestimmter Meldungsart für einen Wahlbezirk einer Wahl
+Liest einen Ausdruck mit entsprechender Meldungsart für einen Wahlbezirk einer Wahl.
+
+### Lesen aller Ausdrucke für einen Wahlbezirk einer Wahl
+Liest alle Ausdrucke (V1 und V3) für einen Wahlbezirk einer Wahl.

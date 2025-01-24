@@ -79,6 +79,7 @@ public class UserControllerIntegrationTest {
             userRepository.deleteUsersByWahltagID("wahltagID");
             authorityRepository.deleteAll();
             permissionRepository.deleteAll();
+            loginAttemptRepository.deleteAll();
         });
     }
 

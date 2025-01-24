@@ -13,7 +13,6 @@
     "preview": "vite preview",
     "lint": "prettier . --check && eslint . && vue-tsc --noEmit",
     "fix": "prettier . --write && eslint . --fix",
-    "gen:gen-broadcast": "openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.2.0.json -g typescript-fetch -o src/api/wls-clients/generated-broadcast-api --template-dir src/api/wls-clients/custom-openapi-template-files",
     "gen:gen-broadcast-axios": "openapi-generator-cli generate -i ./src/resources/openapis/openapi.broadcast.0.2.0.json -g typescript-axios -o ./src/api/wls-clients/generated-broadcast-api"
   },
   "dependencies": {

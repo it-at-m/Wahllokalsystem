@@ -12,20 +12,29 @@ import org.springframework.web.client.RestTemplate;
 public class ClientConfiguration {
 
     @Bean
-    public RestTemplate restTemplate(final WlsResponseErrorHandler wlsResponseErrorHandler, final OAuth2TokenInterceptor oAuth2TokenInterceptor) {
-        val restTemplate = new RestTemplate();
-
-        /* definieren des Errorhandlers für Antworten vom externen Service */
-        restTemplate.setErrorHandler(wlsResponseErrorHandler);
-        /* Ergänzen eines Interceptors um den Bearer-Token an den nächsten Service weiter zu geben */
-        restTemplate.getInterceptors().add(oAuth2TokenInterceptor);
-
-        return restTemplate;
-    }
-
-    @Bean
     public WlsResponseErrorHandler wlsResponseErrorHandler(final ObjectMapper objectMapper) {
         return new WlsResponseErrorHandler(objectMapper);
     }
 
+    @Bean
+    public RestTemplate restTemplate(final WlsResponseErrorHandler wlsResponseErrorHandler) {
+        val restTemplate = new RestTemplate();
+
+        restTemplate.setErrorHandler(wlsResponseErrorHandler);
+        restTemplate.getInterceptors().add((request, body, execution) -> {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null) {
+                return execution.execute(request, body);
+            }
+
+            if (!(authentication.getCredentials() instanceof AbstractOAuth2Token token)) {
+                return execution.execute(request, body);
+            }
+
+            request.getHeaders().setBearerAuth(token.getTokenValue());
+            return execution.execute(request, body);
+        });
+
+        return restTemplate;
+    }
 }

@@ -59,7 +59,7 @@ flowchart LR
 | [Infomanagement](/services/infomanagement-service/)                      | 8201 |
 | [Monitoring](/services/monitoring-service/)                              | 8206 |
 | [Vorfälle und Vorkommnisse](/services/vorfaelleundvorkommnisse-service/) | 8204 |
-| Wahlvorbereitung                                                         | 8203 |
+| [Wahlvorbereitung](/services/wahlvorbereitungs-service/)                 | 8203 |
 | [Wahlvorstand](/services/wahlvorstand-service/)                          | 8207 |
 
 ## Benutzer

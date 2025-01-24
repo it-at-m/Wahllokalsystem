@@ -107,6 +107,7 @@ export default withMermaid({
                 {text: 'Infomanagement-Service', link: `${PATH_SERVICES}infomanagement-service/`},
                 {text: 'Monitoring-Service', link: `${PATH_SERVICES}monitoring-service/`},
                 {text: 'Vorfälle und Vorkommnisse-Service', link: `${PATH_SERVICES}vorfaelleundvorkommnisse-service/`},
+                {text: 'Wahlvorbereitung-Service', link: `${PATH_SERVICES}wahlvorbereitungs-service/`},
                 {text: 'Wahlvorstand-Service', link: `${PATH_SERVICES}wahlvorstand-service/`},
             ],
         },

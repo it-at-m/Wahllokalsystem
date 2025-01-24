@@ -19,14 +19,19 @@ public class BasePathConfiguration {
     @Value("${service.config.clients.infomanagement.basePath}")
     String infomanagementBasePath;
 
+    @Value("${service.config.clients.ergebnismeldung.basePath}")
+    String ergebnismeldungBasePath;
+
     private final de.muenchen.oss.wahllokalsystem.adminservice.eai.auth.ApiClient authApiClient;
     private final de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.ApiClient basisdatenApiClient;
     private final de.muenchen.oss.wahllokalsystem.adminservice.eai.infomanagement.ApiClient infomanagementApiClient;
+    private final de.muenchen.oss.wahllokalsystem.adminservice.eai.ergebnismeldung.ApiClient ergebnismeldungApiClient;
 
     @PostConstruct
     public void updateBasePaths() {
         basisdatenApiClient.setBasePath(basisdatenBasePath);
         authApiClient.setBasePath(authBasePath);
         infomanagementApiClient.setBasePath(infomanagementBasePath);
+        ergebnismeldungApiClient.setBasePath(ergebnismeldungBasePath);
     }
 }

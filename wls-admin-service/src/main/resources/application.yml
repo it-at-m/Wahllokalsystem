@@ -63,3 +63,5 @@ service:
         basePath: "http://localhost:8205"
       infomanagement:
         basePath: "http://localhost:8201"
+      ergebnismeldung:
+        basePath: "http://localhost:8208"

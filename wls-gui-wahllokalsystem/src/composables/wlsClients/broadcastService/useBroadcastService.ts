@@ -5,7 +5,7 @@ import type {
   GetMessageRequest,
 } from "@/api/wls-clients/generated-broadcast-api";
 
-import { postConfig } from "@/api/fetch-utils";
+import { fetchConfig } from "@/api/fetch-utils";
 import {
   BroadcastControllerApi,
   Configuration,
@@ -30,7 +30,7 @@ export function useBroadcastService() {
       const deleteParams: DeleteMessageRequest = { nachrichtID };
 
       try {
-        await broadcastCA.deleteMessage(deleteParams, postConfig());
+        await broadcastCA.deleteMessage(deleteParams, fetchConfig());
       } catch {
         return {
           message: "",
@@ -58,7 +58,7 @@ export function useBroadcastService() {
     const postParams: BroadcastRequest = { broadcastMessageDTO };
 
     try {
-      await broadcastCA.broadcast(postParams, postConfig());
+      await broadcastCA.broadcast(postParams, fetchConfig());
       return { error: "" };
     } catch (e) {
       if (e instanceof WLSError) {

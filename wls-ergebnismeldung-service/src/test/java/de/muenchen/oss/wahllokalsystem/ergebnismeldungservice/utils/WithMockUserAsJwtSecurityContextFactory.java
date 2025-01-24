@@ -60,8 +60,8 @@ final public class WithMockUserAsJwtSecurityContextFactory implements WithSecuri
         this.securityContextHolderStrategy = securityContextHolderStrategy;
     }
 
-    private Map<String, Object> createClaimsMap(final String[] concatedClaimProperties, final String keyValueSeparator) {
-        return Arrays.stream(concatedClaimProperties).map(concatedClaimProperty -> concatedClaimProperty.split(keyValueSeparator))
+    private Map<String, Object> createClaimsMap(final String[] concatenatedClaimProperties, final String keyValueSeparator) {
+        return Arrays.stream(concatenatedClaimProperties).map(concatenatedClaimProperty -> concatenatedClaimProperty.split(keyValueSeparator))
                 .collect(Collectors.toMap(propertyAsArray -> propertyAsArray[0], propertyAsArray -> propertyAsArray[1]));
     }
 }

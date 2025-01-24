@@ -67,9 +67,11 @@ class WahllokalBenutzerControllerIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        transactionTemplate.executeWithoutResult(status -> entityManager.createQuery("DELETE FROM User").executeUpdate());
-        permissionRepository.deleteAll();
-        authorityRepository.deleteAll();
+        transactionTemplate.executeWithoutResult(status -> {
+            entityManager.createQuery("DELETE FROM User").executeUpdate();
+            permissionRepository.deleteAll();
+            authorityRepository.deleteAll();
+        });
     }
 
     @Nested

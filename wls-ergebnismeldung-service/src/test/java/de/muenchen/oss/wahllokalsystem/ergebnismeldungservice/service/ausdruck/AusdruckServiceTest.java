@@ -17,6 +17,7 @@ import jakarta.validation.metadata.ConstraintDescriptor;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -123,6 +124,17 @@ class AusdruckServiceTest {
 
             Mockito.verify(ausdruckRepository).findByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID);
             Assertions.assertThat(result).isEqualTo(ausdruckModelList);
+        }
+
+        @Test
+        void should_returnEmptyList_when_noDataFound() {
+            val wahlID = "wahlID";
+            val wahlbezirkID = "wahlbezirkID";
+
+            Mockito.when(ausdruckRepository.findByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID)).thenReturn(Collections.emptyList());
+            val result = unitUnderTest.getAllAusdrucke(wahlID, wahlbezirkID);
+
+            Assertions.assertThat(result).isEmpty();
         }
     }
 

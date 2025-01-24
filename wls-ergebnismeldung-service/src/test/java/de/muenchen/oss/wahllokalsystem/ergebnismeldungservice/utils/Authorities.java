@@ -17,6 +17,8 @@ public class Authorities {
     public static final String SERVICE_SET_BEGRUENDUNG = "Ergebnismeldung_BUSINESSACTION_PostBegruendung";
     public static final String SERVICE_GET_STIMMZETTELUMSCHLAEGE = "Ergebnismeldung_BUSINESSACTION_GetStimmzettelumschlaege";
     public static final String SERVICE_SET_STIMMZETTELUMSCHLAEGE = "Ergebnismeldung_BUSINESSACTION_PostStimmzettelumschlaege";
+    public static final String SERVICE_GET_AUSDRUCK = "Ergebnismeldung_BUSINESSACTION_GetAusdruck";
+    public static final String SERVICE_POST_AUSDRUCK = "Ergebnismeldung_BUSINESSACTION_PostAusdruck";
     public static final String SERVICE_GET_STIMMABGABEVERMERKE = "Ergebnismeldung_BUSINESSACTION_GetStimmabgabevermerke";
     public static final String SERVICE_SET_STIMMABGABEVERMERKE = "Ergebnismeldung_BUSINESSACTION_PostStimmabgabevermerke";
 

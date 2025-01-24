@@ -172,7 +172,7 @@ class AusdruckServiceTest {
         }
 
         @Test
-        void should_throwFachlicheWlsExceptionForParameter_when_callingValidator() {
+        void should_throwFachlicheWlsExceptionForParameter_when_validatorValidationReturnsSetWithViolations() {
             val id = new WahlUndBezirkIDUndMeldungsart();
             val ausdruckModelToSave = new AusdruckModel(id, null, null);
 

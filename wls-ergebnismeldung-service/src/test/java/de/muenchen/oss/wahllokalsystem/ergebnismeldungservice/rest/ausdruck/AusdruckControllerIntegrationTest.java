@@ -97,7 +97,6 @@ public class AusdruckControllerIntegrationTest {
 
         @Test
         void should_returnBadRequest_when_requestIsInvalid() throws Exception {
-
             val request = MockMvcRequestBuilders.get(buildGetPostAusdruckURI(" ", " ", Meldungsart.V1));
 
             mockMvc.perform(request).andExpect(status().isBadRequest());

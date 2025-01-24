@@ -24,7 +24,7 @@ public class AsyncProgressController {
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200", description = "Auskunft über Bearbeitungzustand erhalten",
+                            responseCode = "200", description = "Auskunft über Bearbeitungszustand erhalten",
                             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = AsyncProgressDTO.class)) }
                     ),
                     @ApiResponse(

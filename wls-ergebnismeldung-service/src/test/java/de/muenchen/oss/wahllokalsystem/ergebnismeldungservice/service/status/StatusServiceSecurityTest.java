@@ -96,7 +96,7 @@ class StatusServiceSecurityTest {
         }
 
         @Test
-        void should_throwAccessDeniedException_when_allRequiredAthoritiesArePresentButBezirkIDEvaluatorReturnsFalse() {
+        void should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButBezirkIDEvaluatorReturnsFalse() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_STATUS);
 
             val wahlbezirkID = "wahlbezirkID";

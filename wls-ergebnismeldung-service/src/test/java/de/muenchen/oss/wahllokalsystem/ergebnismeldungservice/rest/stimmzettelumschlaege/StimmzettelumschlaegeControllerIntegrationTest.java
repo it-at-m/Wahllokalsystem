@@ -12,7 +12,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettel
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelumschlaege.StimmzettelumschlaegeModelMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.LocalDateTimeComparators;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.TimePrecisionComparators;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.WithMockUserAsJwt;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
@@ -89,7 +89,7 @@ public class StimmzettelumschlaegeControllerIntegrationTest {
 
             Assertions.assertThat(responseBodyAsDTO)
                     .usingRecursiveComparison()
-                    .withComparatorForType(LocalDateTimeComparators.PRECISION_MILLISECONDS, LocalDateTime.class)
+                    .withComparatorForType(TimePrecisionComparators.LOCAL_DATE_TIME_PRECISION_MILLISECONDS, LocalDateTime.class)
                     .isEqualTo(expectedResult);
         }
 
@@ -155,7 +155,7 @@ public class StimmzettelumschlaegeControllerIntegrationTest {
             val expectedEntity = stimmzettelumschlaegeModelMapper.toEntity(stimmzettelumschlaegeDTOMapper.toModel(requestBody));
             Assertions.assertThat(entityFromRepo)
                     .usingRecursiveComparison()
-                    .withComparatorForType(LocalDateTimeComparators.PRECISION_MILLISECONDS, LocalDateTime.class)
+                    .withComparatorForType(TimePrecisionComparators.LOCAL_DATE_TIME_PRECISION_MILLISECONDS, LocalDateTime.class)
                     .isEqualTo(expectedEntity);
         }
 
@@ -224,7 +224,7 @@ public class StimmzettelumschlaegeControllerIntegrationTest {
                 val expectedEntity = stimmzettelumschlaegeModelMapper.toEntity(stimmzettelumschlaegeDTOMapper.toModel(requestBody));
                 Assertions.assertThat(replacedEntityFromRepo)
                         .usingRecursiveComparison()
-                        .withComparatorForType(LocalDateTimeComparators.PRECISION_MILLISECONDS, LocalDateTime.class)
+                        .withComparatorForType(TimePrecisionComparators.LOCAL_DATE_TIME_PRECISION_MILLISECONDS, LocalDateTime.class)
                         .isEqualTo(expectedEntity);
             }
         }

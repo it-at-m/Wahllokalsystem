@@ -62,7 +62,7 @@ public class AsyncProgressControllerIntegrationTest {
         }
 
         @Test
-        void should_returnHttpStatus500WithWlsException_when_anExceptionOccured() throws Exception {
+        void should_returnHttpStatus500WithWlsException_when_anExceptionOccurred() throws Exception {
             val exceptionMessage = "mapping failed";
             Mockito.when(asyncProgressDTOMapper.toDTO(any())).thenThrow(new RuntimeException(exceptionMessage));
 

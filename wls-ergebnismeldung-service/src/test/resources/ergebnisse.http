@@ -1,0 +1,40 @@
+### get userinfo with auth_token
+GET {{ WLS_AUTH_SERVICE }}/user
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### GET Ergebnisse für wahlID, wahlbezirkID and stapelart
+GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/wahlbezirkID/wahlID/LTW_BZW_A
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### GET alle Ergebnisse für wahlID und wahlbezirkID
+GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/wahlbezirkID/wahlID
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### Initialisiere Ergebnisse
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/wahlbezirkID/wahlID/LTW_BZW_A
+Content-Type: application/json
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+{
+  "bezirkUndWahlIDStapelart": {
+    "wahlbezirkID": "wahlbezirkID",
+    "wahlID": "wahlID",
+    "stapelart": "LTW_BZW_A"
+  },
+  "ergebnisse": [
+    {
+      "wahlvorschlagID": "wahlvorschlagID1",
+      "kandidatID": "kandidatID1",
+      "wahlvorschlagsordnungszahl": 1,
+      "ergebnis": 1,
+      "numIndex": 1
+    },
+    {
+      "wahlvorschlagID": "wahlvorschlagID2",
+      "kandidatID": "kandidatID2",
+      "wahlvorschlagsordnungszahl": 2,
+      "ergebnis": 2,
+      "numIndex": 2
+    }
+  ]
+}

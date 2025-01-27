@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,6 +19,7 @@ public class ErgebnismeldungController {
 
     @PostMapping("{wahlID}/{wahlbezirkID}/{waehlerverzeichnisNummer}/{meldungsart}/{hauptwahlbezirkID}")
     public ResponseEntity<?> sendErgebnisse(
+            @RequestHeader(required = false, name = "forceergebnismeldung") final String forceUpdate,
             @PathVariable("wahlID") String wahlID,
             @PathVariable("wahlbezirkID") String wahlbezirkID,
             @PathVariable("waehlerverzeichnisNummer") Long waehlerverzeichnisNummer,

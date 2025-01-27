@@ -49,7 +49,7 @@ class BegruendungServiceTest {
         }
 
         @Test
-        void should_returnBegruendungModel_when_BegruendungIsFoundFromRepo() {
+        void should_returnBegruendungModel_when_begruendungIsFoundFromRepo() {
             val reference = BegruendungReference.builder().build();
 
             val mappedEntityId = new BezirkUndWahlIDStapelart();
@@ -67,7 +67,7 @@ class BegruendungServiceTest {
         }
 
         @Test
-        void should_returnFachlicheWlsException_when_BegruendungIsInvalid() {
+        void should_returnFachlicheWlsException_when_begruendungIsInvalid() {
             val reference = BegruendungReference.builder().build();
 
             val exceptionToThrow = FachlicheWlsException.withCode("0815").buildWithMessage("upsi");
@@ -84,7 +84,7 @@ class BegruendungServiceTest {
     @Nested
     class PostBegruendung {
         @Test
-        void should_returnFachlicheWlsException_when_BegruendungModelIsInvalid() {
+        void should_returnFachlicheWlsException_when_begruendungModelIsInvalid() {
             val invalidModel = BegruendungModel.builder().build();
             val reference = BegruendungReference.builder().build();
 

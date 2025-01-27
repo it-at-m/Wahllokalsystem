@@ -5,6 +5,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.Begruendung;
@@ -53,7 +54,7 @@ public class BegruendungControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_GET_BEGRUENDUNG, Authorities.REPOSITORY_READ_BEGRUENDUNG })
-        void should_returnNoContent_when_NoDataIsPresent() throws Exception {
+        void should_returnNoContent_when_noDataIsPresent() throws Exception {
             val request = get("/businessActions/begruendung/wahlbezirkID/21/LTW_BZW_A");
 
             val response = api.perform(request).andExpect(status().isNoContent()).andReturn();

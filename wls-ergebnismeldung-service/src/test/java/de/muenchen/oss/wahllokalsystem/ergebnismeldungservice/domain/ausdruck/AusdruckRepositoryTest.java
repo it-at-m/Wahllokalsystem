@@ -37,7 +37,7 @@ class AusdruckRepositoryTest {
     class FindByID {
 
         @Test
-        void should_returnData_when_IdIsGiven() {
+        void should_returnData_when_idIsGiven() {
             val idToFind = new WahlUndBezirkIDUndMeldungsart("wahlbezirkID01", "wahlID01", Meldungsart.V1);
             val ausdruckToFind = new Ausdruck(idToFind, "Testcontent", Instant.now());
             val ausdruckeToSave = List.of(

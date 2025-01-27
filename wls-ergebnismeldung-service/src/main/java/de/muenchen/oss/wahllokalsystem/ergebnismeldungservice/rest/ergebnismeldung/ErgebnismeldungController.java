@@ -1,0 +1,25 @@
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnismeldung;
+
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.MeldungsartDTO;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/businessActions/sendErgebnismeldung")
+public class ErgebnismeldungController {
+
+    @PostMapping("{wahlID}/{wahlbezirkID}/{waehlerverzeichnisNummer}/{meldungsart}/{hauptwahlbezirkID}")
+    public ResponseEntity<?> sendErgebnisse(
+            @PathVariable("wahlID") String wahlID,
+            @PathVariable("wahlbezirkID") String wahlbezirkID,
+            @PathVariable("waehlerverzeichnisNummer") Long waehlerverzeichnisNummer,
+            @PathVariable("meldungsart") MeldungsartDTO meldungsart,
+            @PathVariable("hauptwahlbezirkID") String hauptwahlbezirkID) {
+        return ResponseEntity.ok().build();
+    }
+}
+
+

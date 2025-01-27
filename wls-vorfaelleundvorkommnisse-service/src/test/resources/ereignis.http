@@ -3,11 +3,11 @@ GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### GET Ereignisse
-GET {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}//businessActions/ereignisse/wahlbezirkID
+GET {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/wahlbezirkID
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST Ereignisse nur Vorkommnisse
-POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}//businessActions/ereignisse/wahlbezirkID
+POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/wahlbezirkID
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
@@ -27,7 +27,7 @@ Content-Type: application/json
 }
 
 ### POST Ereignisse nur Vorfälle
-POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}//businessActions/ereignisse/wahlbezirkID
+POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/wahlbezirkID
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
@@ -47,7 +47,7 @@ Content-Type: application/json
 }
 
 ### POST Ereignisse gemischt
-POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}//businessActions/ereignisse/wahlbezirkID
+POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/wahlbezirkID
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
@@ -67,7 +67,7 @@ Content-Type: application/json
 }
 
 ### POST Ereignisse leer
-POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}//businessActions/ereignisse/wahlbezirkID
+POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/wahlbezirkID
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 

@@ -32,7 +32,7 @@ public abstract class AbstractAWerteService {
 
         if (aWerteList != null && !aWerteList.isEmpty()) {
             try {
-                aWerteRepository.saveAll(aWerteModelMapper.fromListOfAWerteModeltoListOfAWerteEntity(aWerteList));
+                aWerteRepository.saveAll(aWerteModelMapper.fromListOfAWerteModelToListOfAWerteEntity(aWerteList));
             } catch (Exception e) {
                 log.error("#getAWerte unsaveable: " + e.getMessage(), e);
             }

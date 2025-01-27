@@ -62,7 +62,7 @@ class AsyncAWerteServiceTest {
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.initialiseAWerte(wahlbezirkIDs));
             Mockito.verify(asyncProgress, times(3)).setAWerteNext(Mockito.any());
             Mockito.verify(aWerteValidator, times(3)).validWahlbezirkIDParamOrThrow(Mockito.any());
-            Mockito.verify(aWerteModelMapper, times(3)).fromListOfAWerteModeltoListOfAWerteEntity(Mockito.any());
+            Mockito.verify(aWerteModelMapper, times(3)).fromListOfAWerteModelToListOfAWerteEntity(Mockito.any());
             Mockito.verify(aWerteRepository, times(3)).saveAll(Mockito.any());
 
         }

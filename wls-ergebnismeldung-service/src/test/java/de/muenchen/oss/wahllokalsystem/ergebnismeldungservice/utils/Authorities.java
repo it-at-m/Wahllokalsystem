@@ -21,6 +21,8 @@ public class Authorities {
     public static final String SERVICE_POST_AUSDRUCK = "Ergebnismeldung_BUSINESSACTION_PostAusdruck";
     public static final String SERVICE_GET_STIMMABGABEVERMERKE = "Ergebnismeldung_BUSINESSACTION_GetStimmabgabevermerke";
     public static final String SERVICE_SET_STIMMABGABEVERMERKE = "Ergebnismeldung_BUSINESSACTION_PostStimmabgabevermerke";
+    public static final String SERVICE_GET_ERGEBNISSE = "Ergebnismeldung_BUSINESSACTION_GetErgebnisse";
+    public static final String SERVICE_SET_ERGEBNISSE = "Ergebnismeldung_BUSINESSACTION_PostErgebnisse";
 
     public static final String REPOSITORY_READ_AWERTE = "Ergebnismeldung_READ_AWerte";
     public static final String REPOSITORY_DELETE_AWERTE = "Ergebnismeldung_DELETE_AWerte";
@@ -45,6 +47,10 @@ public class Authorities {
     public static final String REPOSITORY_DELETE_STIMMABGABEVERMERKE = "Ergebnismeldung_DELETE_Stimmabgabevermerke";
     public static final String REPOSITORY_READ_STIMMABGABEVERMERKE = "Ergebnismeldung_READ_Stimmabgabevermerke";
     public static final String REPOSITORY_WRITE_STIMMABGABEVERMERKE = "Ergebnismeldung_WRITE_Stimmabgabevermerke";
+
+    public static final String REPOSITORY_READ_ERGEBNISSE = "Ergebnismeldung_READ_Ergebnisse";
+    public static final String REPOSITORY_DELETE_ERGEBNISSE = "Ergebnismeldung_DELETE_Ergebnisse";
+    public static final String REPOSITORY_WRITE_ERGEBNISSE = "Ergebnismeldung_WRITE_Ergebnisse";
 
     public static final String[] ALL_AUTHORITIES_USER_GET_AWERTE = new String[] {
             SERVICE_GET_AWERTE,
@@ -120,4 +126,21 @@ public class Authorities {
             REPOSITORY_WRITE_STIMMABGABEVERMERKE,
             SERVICE_SET_STIMMABGABEVERMERKE
     };
+
+    public static final String[] ALL_AUTHORITIES_GET_ERGEBNISSE = new String[] {
+            REPOSITORY_READ_ERGEBNISSE,
+            SERVICE_GET_ERGEBNISSE
+    };
+
+    public static final String[] ALL_AUTHORITIES_SET_ERGEBNISSE_MISSING_WILL_RESULT_IN_WLS_EXCEPTION = new String[] {
+            REPOSITORY_WRITE_ERGEBNISSE
+    };
+
+    public static final String[] ALL_AUTHORITIES_SET_ERGEBNISSE_MISSING_WILL_RESULT_IN_ACCESS_DENIED = new String[] {
+            REPOSITORY_READ_ERGEBNISSE,
+            SERVICE_SET_ERGEBNISSE
+    };
+
+    public static final String[] ALL_AUTHORITIES_SET_ERGEBNISSE = ArrayUtils.addAll(ALL_AUTHORITIES_SET_ERGEBNISSE_MISSING_WILL_RESULT_IN_ACCESS_DENIED,
+            ALL_AUTHORITIES_SET_ERGEBNISSE_MISSING_WILL_RESULT_IN_WLS_EXCEPTION);
 }

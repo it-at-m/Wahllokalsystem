@@ -33,4 +33,4 @@ Closes #
 
 > [^1]: _Nicht zutreffende Referenzen vor dem Speichern entfernen_
 
-[naming-conventions-link][https://it-at-m.github.io/Wahllokalsystem/technik/naming_conventions/]
+[naming-conventions-link]: https://it-at-m.github.io/Wahllokalsystem/technik/naming_conventions/

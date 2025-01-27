@@ -225,7 +225,7 @@ public class ErgebnisseControllerIntegrationTest {
         @WithMockUser(
                 authorities = { Authorities.SERVICE_SET_ERGEBNISSE }
         )
-        void should_returnNoContent_when_ListIsEmpty() throws Exception {
+        void should_returnNoContent_when_listIsEmpty() throws Exception {
             val wahlbezirkID1 = "wahlbezirkID1";
             val wahlID1 = "wahlID1";
             val stapelartDTO = StapelartDTO.LTW_BZW_A;

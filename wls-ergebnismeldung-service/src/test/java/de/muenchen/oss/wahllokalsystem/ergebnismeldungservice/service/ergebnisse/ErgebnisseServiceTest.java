@@ -41,7 +41,7 @@ class ErgebnisseServiceTest {
     class GetErgebnisse {
 
         @Test
-        void should_returnNull_when_RepoIsEmpty() {
+        void should_returnNull_when_repoIsEmpty() {
             val reference = ErgebnisseReference.builder().build();
             val mappedEntityId = new BezirkUndWahlIDStapelart();
 
@@ -60,7 +60,7 @@ class ErgebnisseServiceTest {
         }
 
         @Test
-        void should_returnErgebnisseModel_when_ErgebnisseIsFoundFromRepo() {
+        void should_returnErgebnisseModel_when_ergebnisseIsFoundFromRepo() {
             val reference = ErgebnisseReference.builder().build();
 
             val mappedEntityId = new BezirkUndWahlIDStapelart();
@@ -85,7 +85,7 @@ class ErgebnisseServiceTest {
     class GetAllErgebnisse {
 
         @Test
-        void should_returnAllErgebnisseModel_when_ErgebnisseIsFoundFromRepo() {
+        void should_returnAllErgebnisseModel_when_ergebnisseIsFoundFromRepo() {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
 

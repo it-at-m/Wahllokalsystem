@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.notNull;
@@ -6,13 +6,15 @@ import static org.mockito.ArgumentMatchers.notNull;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration.Profiles;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.BegruendungRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.begruendung.BegruendungDTOMapper;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.ErgebnisseRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse.ErgebnisseDTOMapper;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse.StapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
+import java.util.ArrayList;
 import java.util.stream.Stream;
 import lombok.val;
 import org.apache.commons.lang3.ArrayUtils;
@@ -33,38 +35,38 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS })
-class BegruendungServiceSecurityTest {
+class ErgebnisseServiceSecurityTest {
 
     @MockBean
     BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
     @Autowired
-    BegruendungService unitUnderTest;
+    ErgebnisseService unitUnderTest;
 
     @Autowired
-    BegruendungRepository begruendungRepository;
+    ErgebnisseRepository ergebnisseRepository;
 
     @Autowired
-    BegruendungDTOMapper begruendungDTOMapper;
+    ErgebnisseDTOMapper ergebnisseDTOMapper;
 
     @AfterEach
     void tearDown() {
-        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_BEGRUENDUNG);
-        begruendungRepository.deleteAll();
+        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_ERGEBNISSE);
+        ergebnisseRepository.deleteAll();
     }
 
     @Nested
-    class GetBegruendung {
+    class GetErgebnisse {
 
         @Test
         void should_getAccess_when_allRequiredAuthoritiesArePresent() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_BEGRUENDUNG);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_ERGEBNISSE);
 
-            val begruendungReference = begruendungDTOMapper.toReferenceModel("wahlbezirkID", "wahlID", Stapelart.LTW_BZW_A);
+            val ergebnisseReference = ergebnisseDTOMapper.toReferenceModel("wahlbezirkID", "wahlID", StapelartDTO.LTW_BZW_A);
 
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(begruendungReference.wahlbezirkID()), Mockito.any())).thenReturn(true);
+            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(ergebnisseReference.wahlbezirkID()), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getBegruendung(begruendungReference));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getErgebnisse(ergebnisseReference));
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")
@@ -73,47 +75,54 @@ class BegruendungServiceSecurityTest {
             SecurityUtils.runWith(arguments.get(0, String[].class));
 
             Assertions.assertThatException()
-                    .isThrownBy(() -> unitUnderTest.getBegruendung(begruendungDTOMapper.toReferenceModel("wahlbezirkID", "wahlID", Stapelart.LTW_BZW_A)))
+                    .isThrownBy(() -> unitUnderTest.getErgebnisse(ergebnisseDTOMapper.toReferenceModel("wahlbezirkID", "wahlID", StapelartDTO.LTW_BZW_A)))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
             return SecurityUtils
-                    .buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_BEGRUENDUNG);
+                    .buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_ERGEBNISSE);
         }
     }
 
     @Nested
-    class SetBegruendung {
+    class PostErgebnisse {
 
         @Test
         void should_getAccess_when_allRequiredAuthoritiesArePresent() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_BEGRUENDUNG);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_ERGEBNISSE);
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
             val stapelart = Stapelart.LTW_BZW_A;
+            val stapelartModel = StapelartModel.LTW_BZW_A;
 
-            val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelart, "grund1", "grund2", true, true);
-            val newBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
+            val ergebnisModel1 = new ErgebnisModel(null, null, null, 1, null);
+            val newErgebnisModelList = new ArrayList<ErgebnisModel>();
+            newErgebnisModelList.add(ergebnisModel1);
+
+            val newErgebnisse = new ErgebnisseModel(wahlbezirkID, wahlID, stapelartModel, newErgebnisModelList);
+            val newErgebnisseReference = new ErgebnisseReference(wahlbezirkID, wahlID, stapelart);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung, newBegruendungReference));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postErgebnisse(newErgebnisseReference, newErgebnisse));
         }
 
         @Test
-        void should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButBezirkIDEvaluatorReturnsFalse() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_BEGRUENDUNG);
+        void should_throwAccessDeniedException_when_allRequiredAthoritiesArePresentButBezirkIDEvaluatorReturnsFalse() {
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_ERGEBNISSE);
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
             val stapelart = Stapelart.LTW_BZW_A;
+            val stapelartModel = StapelartModel.LTW_BZW_A;
 
-            val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelart, "grund1", "grund2", true, true);
-            val newBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
+            val newErgebnisModelList = new ArrayList<ErgebnisModel>();
+            val newErgebnisse = new ErgebnisseModel(wahlbezirkID, wahlID, stapelartModel, newErgebnisModelList);
+            val newErgebnisseReference = new ErgebnisseReference(wahlbezirkID, wahlID, stapelart);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(false);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung, newBegruendungReference))
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postErgebnisse(newErgebnisseReference, newErgebnisse))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
@@ -121,17 +130,19 @@ class BegruendungServiceSecurityTest {
         @MethodSource("getMissingAuthoritiesVariationsThrowingAccessDenied")
         void should_throwAccessDeniedException_when_anyRequiredAuthorityIsMissing(final ArgumentsAccessor arguments) {
             SecurityUtils.runWith(
-                    ArrayUtils.addAll(Authorities.ALL_AUTHORITIES_SET_BEGRUENDUNG_MISSING_WILL_RESULT_IN_ACCESS_DENIED, arguments.get(0, String[].class)));
+                    ArrayUtils.addAll(Authorities.ALL_AUTHORITIES_SET_ERGEBNISSE_MISSING_WILL_RESULT_IN_ACCESS_DENIED, arguments.get(0, String[].class)));
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
             val stapelart = Stapelart.LTW_BZW_A;
+            val stapelartModel = StapelartModel.LTW_BZW_A;
 
-            val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelart, "grund1", "grund2", true, true);
-            val newBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
+            val newErgebnisModelList = new ArrayList<ErgebnisModel>();
+            val newErgebnisse = new ErgebnisseModel(wahlbezirkID, wahlID, stapelartModel, newErgebnisModelList);
+            val newErgebnisseReference = new ErgebnisseReference(wahlbezirkID, wahlID, stapelart);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(false);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung, newBegruendungReference))
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postErgebnisse(newErgebnisseReference, newErgebnisse))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
@@ -139,28 +150,33 @@ class BegruendungServiceSecurityTest {
         @MethodSource("getMissingAuthoritiesVariationsThrowingTechnischeWlsException")
         void should_throwTechnischeWlsException_when_anyRequiredAuthorityIsMissing(final ArgumentsAccessor arguments) {
             SecurityUtils.runWith(
-                    ArrayUtils.addAll(Authorities.ALL_AUTHORITIES_SET_BEGRUENDUNG_MISSING_WILL_RESULT_IN_ACCESS_DENIED, arguments.get(0, String[].class)));
+                    ArrayUtils.addAll(Authorities.ALL_AUTHORITIES_SET_ERGEBNISSE_MISSING_WILL_RESULT_IN_ACCESS_DENIED, arguments.get(0, String[].class)));
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
             val stapelart = Stapelart.LTW_BZW_A;
+            val stapelartModel = StapelartModel.LTW_BZW_A;
 
-            val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelart, "grund1", "grund2", true, true);
-            val newBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
+            val ergebnisModel1 = new ErgebnisModel(null, null, null, 1, null);
+            val newErgebnisModelList = new ArrayList<ErgebnisModel>();
+            newErgebnisModelList.add(ergebnisModel1);
+
+            val newErgebnisse = new ErgebnisseModel(wahlbezirkID, wahlID, stapelartModel, newErgebnisModelList);
+            val newErgebnisseReference = new ErgebnisseReference(wahlbezirkID, wahlID, stapelart);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung, newBegruendungReference))
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postErgebnisse(newErgebnisseReference, newErgebnisse))
                     .isInstanceOf(TechnischeWlsException.class);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariationsThrowingAccessDenied() {
             return SecurityUtils
-                    .buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_SET_BEGRUENDUNG_MISSING_WILL_RESULT_IN_ACCESS_DENIED);
+                    .buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_SET_ERGEBNISSE_MISSING_WILL_RESULT_IN_ACCESS_DENIED);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariationsThrowingTechnischeWlsException() {
             return SecurityUtils
-                    .buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_SET_BEGRUENDUNG_MISSING_WILL_RESULT_IN_WLS_EXCEPTION);
+                    .buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_SET_ERGEBNISSE_MISSING_WILL_RESULT_IN_WLS_EXCEPTION);
         }
     }
 }

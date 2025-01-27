@@ -7,7 +7,7 @@
 
 <!-- Backend -->
 ### Backend ###
-- [ ] [Codingconventions](https://it-at-m.github.io/Wahllokalsystem/technik/coding_conventions/) beachtet
+- [ ] [Naming Conventions][naming-conventions-link] beachtet
 - [ ] Doku aktualisiert
 - [ ] Swagger-API vollständig
 - [ ] Unit-Tests gepflegt
@@ -20,7 +20,7 @@
 
 <!-- Frontend -->
 ### Frontend
-- [ ] [Codingconventions](https://it-at-m.github.io/Wahllokalsystem/technik/coding_conventions/) beachtet
+- [ ] [Naming Conventions][naming-conventions-link] beachtet
 - [ ] Doku aktualisiert
 - [ ] Unit-Tests gepflegt
 - [ ] Komponententests gepflegt
@@ -32,3 +32,5 @@ Verwandt mit Issue #
 Closes #
 
 > [^1]: _Nicht zutreffende Referenzen vor dem Speichern entfernen_
+
+[naming-conventions-link][https://it-at-m.github.io/Wahllokalsystem/technik/naming_conventions/]

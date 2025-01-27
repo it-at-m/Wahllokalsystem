@@ -63,4 +63,9 @@ public class ExceptionConstants {
             "postErgebnisse: Parameter unvollstaendig.");
     public static final ExceptionDataWrapper ERGEBNISSE_UNSAVEABLE = new ExceptionDataWrapper("621",
             "postErgebnisse: Die Ergebnisse konnten nicht gespeichert werden.");
+
+    public static final ExceptionDataWrapper SENDERGEBNISSE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("617",
+            "sendErgebnisse: Parameter unvollstaendig");
+    public static final ExceptionDataWrapper FORCEERGEBNISSE_WRONG_USAGE = new ExceptionDataWrapper("627",
+            "forceErgebnisse: forceErgebnisse sollte nie in Benutzung sein wenn beide Validierungsstatus auf NICHT_GESENDET stehen.");
 }

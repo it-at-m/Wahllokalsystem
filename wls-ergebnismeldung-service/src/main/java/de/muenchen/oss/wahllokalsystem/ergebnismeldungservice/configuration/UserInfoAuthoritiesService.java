@@ -27,8 +27,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * Service, der einen OIDC /userinfo Endpoint aufruft (mit JWT Bearer Auth) und dort die enthaltenen
- * "Authorities" extrahiert.
+ * Service, der einen OIDC /userinfo Endpoint aufruft (mit JWT Bearer Auth) und dort die enthaltenen "Authorities" extrahiert.
  */
 @Slf4j
 public class UserInfoAuthoritiesService {
@@ -45,7 +44,7 @@ public class UserInfoAuthoritiesService {
     /**
      * Erzeugt eine neue Instanz.
      *
-     * @param userInfoUri userinfo Endpoint URI
+     * @param userInfoUri         userinfo Endpoint URI
      * @param restTemplateBuilder ein {@link RestTemplateBuilder}
      */
     public UserInfoAuthoritiesService(String userInfoUri, RestTemplateBuilder restTemplateBuilder) {
@@ -84,6 +83,7 @@ public class UserInfoAuthoritiesService {
             @SuppressWarnings("unchecked")
             Map<String, Object> map = restTemplate.exchange(this.userInfoUri, HttpMethod.GET, entity,
                     Map.class).getBody();
+            jwt.getClaims().put("abc", "UWB");
 
             log.debug("Response from user-info Endpoint: {}", map);
             if (map.containsKey(CLAIM_AUTHORITIES)) {

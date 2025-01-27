@@ -54,7 +54,7 @@ public class BegruendungControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_GET_BEGRUENDUNG, Authorities.REPOSITORY_READ_BEGRUENDUNG })
-        void should_returnNoContent_when_NoDataIsPresent() throws Exception {
+        void should_returnNoContent_when_noDataIsPresent() throws Exception {
             val request = get("/businessActions/begruendung/wahlbezirkID/21/LTW_BZW_A");
 
             val response = api.perform(request).andExpect(status().isNoContent()).andReturn();

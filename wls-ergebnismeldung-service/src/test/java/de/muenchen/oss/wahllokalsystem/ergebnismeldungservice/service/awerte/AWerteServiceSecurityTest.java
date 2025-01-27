@@ -51,7 +51,7 @@ class AWerteServiceSecurityTest {
         }
 
         @Test
-        void should_grantAccessAndThrowNoException_when_AllAuthoritiesUserGetAWerteIsValid() throws Exception {
+        void should_grantAccessAndThrowNoException_when_allAuthoritiesUserGetAWerteIsValid() throws Exception {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_USER_GET_AWERTE);
 
             val wahlbezirkID = "wahlbezirkID";

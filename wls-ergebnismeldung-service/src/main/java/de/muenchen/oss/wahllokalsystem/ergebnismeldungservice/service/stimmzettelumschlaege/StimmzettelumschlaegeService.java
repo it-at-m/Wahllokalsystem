@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzett
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.common.security.AuthenticationHandler;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelumschlaege.StimmzettelumschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Collection;
@@ -40,8 +41,8 @@ public class StimmzettelumschlaegeService {
     }
 
     @PreAuthorize(
-        "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostStimmzettelumschlaege')"
-                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)"
+            "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostStimmzettelumschlaege')"
+                    + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)"
     )
     public void setStimmzettelumschlaege(@P("param") final BezirkUndWahlID id, final StimmzettelumschlaegeModel stimmzettelumschlaege) {
         log.info("#postStimmzettelumschlaege");

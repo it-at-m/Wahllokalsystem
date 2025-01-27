@@ -25,7 +25,7 @@ class AusdruckModelMapperTest {
         }
 
         @Test
-        void should_returnAusdruckModel_when_givenAusdruckEntity() {
+        void should_returnAusdruckReadModel_when_givenAusdruckEntity() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val meldungsart = Meldungsart.V1;
@@ -35,7 +35,7 @@ class AusdruckModelMapperTest {
 
             val result = unitUnderTest.toModel(ausdruckEntity);
 
-            val expectedResult = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart), content, erstelltAm);
+            val expectedResult = new AusdruckReadModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart), content, erstelltAm);
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
@@ -60,13 +60,13 @@ class AusdruckModelMapperTest {
         }
 
         @Test
-        void should_returnAusdruckEntity_when_givenAusdruckModel() {
+        void should_returnAusdruckEntity_when_givenAusdruckWriteModel() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val meldungsart = Meldungsart.V1;
             val content = "Testausdruck";
             val erstelltAm = Instant.now();
-            val ausdruckModel = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart), content, null);
+            val ausdruckModel = new AusdruckWriteModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart), content);
 
             val result = unitUnderTest.toEntity(ausdruckModel, erstelltAm);
 
@@ -78,7 +78,7 @@ class AusdruckModelMapperTest {
         @ParameterizedTest
         @EnumSource(Meldungsart.class)
         void should_mapToEnumWithSameName_when_givenModelMeldungsartEnumValue(final Meldungsart meldungsart) {
-            val modelToMap = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(null, null, meldungsart), null, null);
+            val modelToMap = new AusdruckWriteModel(new WahlUndBezirkIDUndMeldungsart(null, null, meldungsart), null);
 
             val result = unitUnderTest.toEntity(modelToMap, Instant.now());
 

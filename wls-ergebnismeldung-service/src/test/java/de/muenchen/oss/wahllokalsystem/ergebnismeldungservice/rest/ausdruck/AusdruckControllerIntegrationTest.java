@@ -48,7 +48,7 @@ public class AusdruckControllerIntegrationTest {
     AusdruckModelMapper ausdruckModelMapper;
 
     @Autowired
-    AusdruckReadDTOMapper ausdruckReadDTOMapper;
+    AusdruckDTOMapper ausdruckDTOMapper;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -259,8 +259,8 @@ public class AusdruckControllerIntegrationTest {
                     AusdruckReadDTO[].class);
 
             val expectedResponseBody = new AusdruckReadDTO[] {
-                    ausdruckReadDTOMapper.toDTO(ausdruckModelMapper.toModel(entityToFind1)),
-                    ausdruckReadDTOMapper.toDTO(ausdruckModelMapper.toModel(entityToFind2))
+                    ausdruckDTOMapper.toDTO(ausdruckModelMapper.toModel(entityToFind1)),
+                    ausdruckDTOMapper.toDTO(ausdruckModelMapper.toModel(entityToFind2))
             };
 
             Assertions.assertThat(responseBodyAsDTO)

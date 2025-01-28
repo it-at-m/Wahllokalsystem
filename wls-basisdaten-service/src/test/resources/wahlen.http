@@ -10,7 +10,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
     const wahltagAsDateString = wahltag.toJSON().substring(0, 10);
     request.variables.set("dateOfWahltagID1", wahltagAsDateString);
 %}
-POST {{ WLS_BASISDATEN_SERVICE_URL }}//businessActions/wahlen/wahltagID1
+POST {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/wahlen/wahltagID1
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 

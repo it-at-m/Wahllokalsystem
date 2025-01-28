@@ -1,11 +1,12 @@
 import {withMermaid} from "vitepress-plugin-mermaid"
 
+const PATH_SERVICES = '/services/';
 const PATH_TECHNIK = '/technik/';
 const PATH_ECOSYSTEM = PATH_TECHNIK + 'ecosystem/';
-const PATH_NAMING_CONVENTIONS = PATH_TECHNIK + 'naming_conventions/';
 const PATH_ADR = PATH_TECHNIK + 'adr/';
+const PATH_NAMING_CONVENTIONS = PATH_TECHNIK + 'naming_conventions/';
 const PATH_GUIDES = PATH_TECHNIK + 'guides/';
-const PATH_SERVICES = '/services/';
+const PATH_API_CLIENT_GENERATION = PATH_GUIDES + 'api-client-generation/'
 const PATH_SYSSPEC = PATH_TECHNIK + "systemspecification/";
 
 // https://vitepress.dev/reference/site-config
@@ -77,10 +78,16 @@ export default withMermaid({
                 },
                 {
                     text: 'Guides', link: `${PATH_GUIDES}`, collapsed: true, items: [
-                        {
-                            text: 'API-Client generieren',
-                            link: `${PATH_GUIDES}how-to-create-client-from-open-api-json.md`
-                        },
+                        {text: 'Api-Client generieren', link: `${PATH_API_CLIENT_GENERATION}`, collapsed: true, items: [
+                            {
+                                text: 'API-Client im Backend',
+                                link: `${PATH_API_CLIENT_GENERATION}how-to-create-client-from-open-api-json.md`
+                            },
+                            {
+                                text: 'API-Client im Frontend',
+                                link: `${PATH_API_CLIENT_GENERATION}generate-client-from-openapi-json-frontend.md`
+                            },
+                        ]},
                         {text: 'Datenbankzugriff', link: `${PATH_GUIDES}db-access.md`},
                         {text: 'Neuer Microservice', link: `${PATH_GUIDES}new-service.md`}
                     ]
@@ -107,6 +114,7 @@ export default withMermaid({
                 {text: 'Infomanagement-Service', link: `${PATH_SERVICES}infomanagement-service/`},
                 {text: 'Monitoring-Service', link: `${PATH_SERVICES}monitoring-service/`},
                 {text: 'Vorfälle und Vorkommnisse-Service', link: `${PATH_SERVICES}vorfaelleundvorkommnisse-service/`},
+                {text: 'Wahlvorbereitung-Service', link: `${PATH_SERVICES}wahlvorbereitungs-service/`},
                 {text: 'Wahlvorstand-Service', link: `${PATH_SERVICES}wahlvorstand-service/`},
             ],
         },

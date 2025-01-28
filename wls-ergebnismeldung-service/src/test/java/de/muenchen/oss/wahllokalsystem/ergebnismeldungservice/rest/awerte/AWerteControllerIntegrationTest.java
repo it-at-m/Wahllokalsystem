@@ -106,7 +106,7 @@ public class AWerteControllerIntegrationTest {
             api.perform(request).andExpect(status().isOk()).andReturn();
 
             val aWerteFromRepo = awerteRepository.findByBezirkUndWahlID_WahlbezirkID(wahlbezirkID);
-            val expectedEntities = aWerteModelMapper.fromListOfAWerteModeltoListOfAWerteEntity(
+            val expectedEntities = aWerteModelMapper.fromListOfAWerteModelToListOfAWerteEntity(
                     aWerteClientMapper.fromRemoteClientListOfWahlberechtigteDtoToListOfAWerteModel(eaiWahlberechtigte));
 
             Assertions.assertThat(aWerteFromRepo).usingRecursiveComparison().isEqualTo(expectedEntities);

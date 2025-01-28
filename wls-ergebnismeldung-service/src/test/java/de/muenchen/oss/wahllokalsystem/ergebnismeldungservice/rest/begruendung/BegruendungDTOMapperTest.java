@@ -2,8 +2,10 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.begruendung;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.BezirkUndWahlIDStapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungReference;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -31,7 +33,7 @@ class BegruendungDTOMapperTest {
                         true);
                 val result = unitUnderTest.toModel(begruendungDTO);
 
-                val expectedResult = new BegruendungModel("bezirkID", "wahlID", Stapelart.LTW_BZW_A, "grund1", "grund2", true, true);
+                val expectedResult = new BegruendungModel("bezirkID", "wahlID", StapelartModel.LTW_BZW_A, "grund1", "grund2", true, true);
 
                 Assertions.assertThat(result).isEqualTo(expectedResult);
             }
@@ -47,7 +49,7 @@ class BegruendungDTOMapperTest {
 
             @Test
             void should_returnBegruendungReference_when_givenIDs() {
-                val result = unitUnderTest.toReferenceModel("bezirkID", "wahlID", Stapelart.LTW_BZW_A);
+                val result = unitUnderTest.toReferenceModel("bezirkID", "wahlID", StapelartDTO.LTW_BZW_A);
 
                 val expectedResult = new BegruendungReference("bezirkID", "wahlID", Stapelart.LTW_BZW_A);
 
@@ -66,7 +68,7 @@ class BegruendungDTOMapperTest {
 
         @Test
         void should_returnBegruendungDTO_when_givenBegruendungModel() {
-            val begruendungModel = new BegruendungModel("bezirkID", "wahlID", Stapelart.LTW_BZW_A, "grund1", "grund2", true, true);
+            val begruendungModel = new BegruendungModel("bezirkID", "wahlID", StapelartModel.LTW_BZW_A, "grund1", "grund2", true, true);
             val result = unitUnderTest.toDTO(begruendungModel);
 
             val expectedResult = new BegruendungDTO(new BezirkUndWahlIDStapelart("bezirkID", "wahlID", Stapelart.LTW_BZW_A), "grund1", "grund2", true, true);

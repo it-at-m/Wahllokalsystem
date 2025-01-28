@@ -1,10 +1,11 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseReference;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseService;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.StapelartModel;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

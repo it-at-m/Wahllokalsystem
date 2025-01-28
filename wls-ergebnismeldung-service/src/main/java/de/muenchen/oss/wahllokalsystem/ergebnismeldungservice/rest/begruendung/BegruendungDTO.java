@@ -6,7 +6,7 @@ import lombok.Builder;
 
 @Builder
 public record BegruendungDTO(@NotNull BezirkUndWahlIDStapelart bezirkUndWahlIDStapelart,
-                             String grund1,
+                             String grund,
                              String grund2,
                              boolean nachzaehlung,
                              boolean unstimmigkeiten) {

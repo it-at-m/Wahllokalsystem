@@ -4,6 +4,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Bezi
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnis;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnisse;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
 import java.util.ArrayList;
 import lombok.val;
 import org.assertj.core.api.Assertions;

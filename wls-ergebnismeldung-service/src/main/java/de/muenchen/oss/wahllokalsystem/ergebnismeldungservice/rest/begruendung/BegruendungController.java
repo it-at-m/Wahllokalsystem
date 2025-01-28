@@ -35,7 +35,7 @@ public class BegruendungController {
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200", description = "Es existiert eine Begruendung",
+                            responseCode = "200", description = "Es existiert eine Begruendung.",
                             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WahlscheineDTO.class)) }
                     ),
                     @ApiResponse(

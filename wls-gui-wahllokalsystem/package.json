@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "vite",
+    "serve": "serve dist",
     "test": "vitest run",
     "build": "vue-tsc --build --force && vite build",
     "preview": "vite preview",
@@ -37,6 +38,7 @@
     "eslint-plugin-vue": "9.31.0",
     "jsdom": "25.0.1",
     "prettier": "3.3.3",
+    "serve": "^14.2.4",
     "typescript": "5.5.4",
     "unplugin-fonts": "1.1.1",
     "vite": "5.4.11",

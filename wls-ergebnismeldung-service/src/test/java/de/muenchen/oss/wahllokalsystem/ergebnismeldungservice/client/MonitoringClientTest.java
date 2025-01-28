@@ -57,13 +57,13 @@ class MonitoringClientTest {
             val uhrzeit = LocalDateTime.now();
 
             val mockedDTOToSend = Mockito.mock(SendungsdatenDTO.class);
-            val mockedApiWlsExcepton = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
+            val mockedApiWlsException = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
 
             Mockito.when(statusClientMapper.toSendungsdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
-            Mockito.doThrow(mockedApiWlsExcepton).when(wahllokalZustandControllerApi).postSchnellmeldungSendungsuhrzeit(mockedDTOToSend);
+            Mockito.doThrow(mockedApiWlsException).when(wahllokalZustandControllerApi).postSchnellmeldungSendungsuhrzeit(mockedDTOToSend);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postSchnellmeldungSendungsuhrzeit(bezirkUndWahlID, uhrzeit))
-                    .isSameAs(mockedApiWlsExcepton);
+                    .isSameAs(mockedApiWlsException);
         }
 
         @Test
@@ -106,13 +106,13 @@ class MonitoringClientTest {
             val uhrzeit = LocalDateTime.now();
 
             val mockedDTOToSend = Mockito.mock(DruckdatenDTO.class);
-            val mockedApiWlsExcepton = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
+            val mockedApiWlsException = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
 
             Mockito.when(statusClientMapper.toDruckdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
-            Mockito.doThrow(mockedApiWlsExcepton).when(wahllokalZustandControllerApi).postSchnellmeldungDruckuhrzeit(mockedDTOToSend);
+            Mockito.doThrow(mockedApiWlsException).when(wahllokalZustandControllerApi).postSchnellmeldungDruckuhrzeit(mockedDTOToSend);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postSchnellmeldungDruckuhrzeit(bezirkUndWahlID, uhrzeit))
-                    .isSameAs(mockedApiWlsExcepton);
+                    .isSameAs(mockedApiWlsException);
         }
 
         @Test
@@ -155,13 +155,13 @@ class MonitoringClientTest {
             val uhrzeit = LocalDateTime.now();
 
             val mockedDTOToSend = Mockito.mock(SendungsdatenDTO.class);
-            val mockedApiWlsExcepton = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
+            val mockedApiWlsException = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
 
             Mockito.when(statusClientMapper.toSendungsdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
-            Mockito.doThrow(mockedApiWlsExcepton).when(wahllokalZustandControllerApi).postNiederschriftSendungsuhrzeit(mockedDTOToSend);
+            Mockito.doThrow(mockedApiWlsException).when(wahllokalZustandControllerApi).postNiederschriftSendungsuhrzeit(mockedDTOToSend);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postNiederschriftSendungsuhrzeit(bezirkUndWahlID, uhrzeit))
-                    .isSameAs(mockedApiWlsExcepton);
+                    .isSameAs(mockedApiWlsException);
         }
 
         @Test
@@ -204,13 +204,13 @@ class MonitoringClientTest {
             val uhrzeit = LocalDateTime.now();
 
             val mockedDTOToSend = Mockito.mock(DruckdatenDTO.class);
-            val mockedApiWlsExcepton = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
+            val mockedApiWlsException = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
 
             Mockito.when(statusClientMapper.toDruckdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
-            Mockito.doThrow(mockedApiWlsExcepton).when(wahllokalZustandControllerApi).postNiederschriftDruckuhrzeit(mockedDTOToSend);
+            Mockito.doThrow(mockedApiWlsException).when(wahllokalZustandControllerApi).postNiederschriftDruckuhrzeit(mockedDTOToSend);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postNiederschriftDruckuhrzeit(bezirkUndWahlID, uhrzeit))
-                    .isSameAs(mockedApiWlsExcepton);
+                    .isSameAs(mockedApiWlsException);
         }
 
         @Test

@@ -48,7 +48,7 @@ class AWerteClientImplTest {
         }
 
         @Test
-        void should_returnNull_when_ClientThrowsAnyException() {
+        void should_returnNull_when_clientThrowsAnyException() {
             Mockito.when(wahldatenControllerApi.loadWahlberechtigte(any()))
                     .thenThrow(new RestClientException("error occurs while attempting to invoke the API"));
 

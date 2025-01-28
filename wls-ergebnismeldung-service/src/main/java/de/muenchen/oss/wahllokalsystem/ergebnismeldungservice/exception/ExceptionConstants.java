@@ -43,5 +43,24 @@ public class ExceptionConstants {
     public static final ExceptionDataWrapper POST_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("103",
             "postBegruendung: Parameter unvollständig.");
     public static final ExceptionDataWrapper BEGRUENDUNG_UNSAVEABLE = new ExceptionDataWrapper("624",
-            "postStatus: Der Status konnte nicht gespeichert werden.");
+            "postBegruendung: Die Begruendung konnte nicht gespeichert werden.");
+
+    public static final ExceptionDataWrapper GET_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("608",
+            "getStimmabgabevermerke: Parameter unvollstaendig");
+    public static final ExceptionDataWrapper POST_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("609",
+            "postStimmabgabevermerke: Parameter unvollstaendig");
+    public static final ExceptionDataWrapper STIMMABGABEVERMERKE_UNSAVEABLE = new ExceptionDataWrapper("620",
+            "postStimmabgabevermerke: Die Stimmabgabevermerke konnten nicht gespeichert werden.");
+
+    public static final ExceptionDataWrapper POST_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("628",
+            "postAusdruck: Parameter unvollstaendig");
+    public static final ExceptionDataWrapper GET_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("629",
+            "getAusdruck: Parameter unvollstaendig");
+
+    public static final ExceptionDataWrapper GET_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("614",
+            "getErgebnisse: Parameter unvollstaendig.");
+    public static final ExceptionDataWrapper POST_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("615",
+            "postErgebnisse: Parameter unvollstaendig.");
+    public static final ExceptionDataWrapper ERGEBNISSE_UNSAVEABLE = new ExceptionDataWrapper("621",
+            "postErgebnisse: Die Ergebnisse konnten nicht gespeichert werden.");
 }

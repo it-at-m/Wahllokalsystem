@@ -1,23 +1,9 @@
 import { createDefaultWlsError } from "@/api/WLSError";
 
 /**
- * Returns a default GET-Config for fetch
+ * Returns a default Config for fetch
  */
-export function getConfig(): RequestInit {
-  return {
-    headers: getHeaders(),
-    mode: "cors",
-    credentials: "same-origin",
-    redirect: "manual",
-  };
-}
-
-/**
- * Returns a default POST-Config for fetch
- * @param body Optional body to be transferred
- */
-// eslint-disable-next-line
-export function postConfig(): RequestInit {
+export function fetchConfig(): RequestInit {
   return {
     headers: getHeaders(),
     mode: "cors",

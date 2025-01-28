@@ -42,7 +42,7 @@ class AsyncProgressDTOMapperTest {
         }
 
         @Test
-        void should_HandleNullFieldsCorrectly_when_AsyncProgressWithNullFieldsGiven() {
+        void should_handleNullFieldsCorrectly_when_asyncProgressWithNullFieldsGiven() {
             val asyncProgress = new AsyncProgress(null, null, false, 0, 0, null);
 
             val result = mapper.toDTO(asyncProgress);

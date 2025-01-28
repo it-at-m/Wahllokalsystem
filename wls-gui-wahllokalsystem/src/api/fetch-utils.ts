@@ -1,30 +1,10 @@
 import { createDefaultWlsError } from "@/api/WLSError";
-import {
-  generateWlsExceptionFromJson,
-  isWLSException,
-} from "@/api/WLSException";
 
 /**
- * Returns a default GET-Config for fetch
+ * Returns a default Config for fetch
  */
-export function getConfig(): RequestInit {
+export function fetchConfig(): RequestInit {
   return {
-    headers: getHeaders(),
-    mode: "cors",
-    credentials: "same-origin",
-    redirect: "manual",
-  };
-}
-
-/**
- * Returns a default POST-Config for fetch
- * @param body Optional body to be transferred
- */
-// eslint-disable-next-line
-export function postConfig(body: any): RequestInit {
-  return {
-    method: "POST",
-    body: body ? JSON.stringify(body) : undefined,
     headers: getHeaders(),
     mode: "cors",
     credentials: "same-origin",
@@ -96,53 +76,6 @@ export function defaultCatchHandler(
 ): PromiseLike<never> {
   throw createDefaultWlsError({
     message: errorMessage,
-  });
-}
-
-export function wlsResponseHandler(response: Response): Promise<Response> {
-  if (!response.ok || response.status === 204) {
-    return Promise.reject(response);
-  } else {
-    return Promise.resolve(response);
-  }
-}
-
-export function wlsCatchHandler(response: Response): PromiseLike<never> {
-  if (response.status === 204) {
-    throw createDefaultWlsError({
-      message: "Es konnten keine Daten gefunden werden",
-      code: response.status.toString(),
-    });
-  }
-  if (response.status === 400) {
-    return rejectWithWlsError(response, "Ungültige Anfrage");
-  } else {
-    return rejectWithWlsError(
-      response,
-      "Ein unbekannter Fehler ist aufgetreten"
-    );
-  }
-}
-
-function rejectWithWlsError(response: Response, nonWlsErrorMessage: string) {
-  return response.text().then((raw) => {
-    try {
-      const content = JSON.parse(raw);
-      const wlsError = isWLSException(content)
-        ? generateWlsExceptionFromJson(content)
-        : createDefaultWlsError({
-            message: nonWlsErrorMessage,
-            code: response.status.toString(),
-          });
-      return Promise.reject(wlsError);
-    } catch {
-      return Promise.reject(
-        createDefaultWlsError({
-          message: nonWlsErrorMessage,
-          code: response.status.toString(),
-        })
-      );
-    }
   });
 }
 

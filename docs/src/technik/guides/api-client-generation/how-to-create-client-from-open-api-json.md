@@ -1,17 +1,6 @@
 # API-Client aus OpenAPI-Spec erstellen
 
-## Einleitung
-
-Alle Services stellen ihre API in Form einer OpenAPI Spezifikation zur Verfügung. Diese Dateien liegen den Assets
-der jeweiligen Releases bei.
-
-![Übersicht über Release von wls-eai-service Version 0.0.1-RC1](/screenshot-wls-eai-service-release-0.0.1-RC1.png)  
-*Übersicht über [Release](https://github.com/it-at-m/Wahllokalsystem/releases/tag/wls-eai-service%2F0.0.1-RC1) von
-wls-eai-service Version 0.0.1-RC1*
-
-Durch ein Maven-Plugin lassen sich aus der Datei `openapi.json` der Client generieren.
-
-## Einfügen des Plugins
+## Einfügen des Maven-Plugins
 
 Um aus der Spezifikation die Java-Klassen zu erstellen, muss das Generator-Plugin eingebunden werden.
 

@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.Begruendung;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.BezirkUndWahlIDStapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.BezirkUndWahlIDStapelart;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

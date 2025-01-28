@@ -75,3 +75,8 @@ Liest einen Ausdruck mit entsprechender Meldungsart für einen Wahlbezirk einer 
 
 ### Lesen aller Ausdrucke für einen Wahlbezirk einer Wahl
 Liest alle Ausdrucke (V1 und V3) für einen Wahlbezirk einer Wahl.
+
+### Lesen und Schreiben von Ergebnissen
+Wahlergebnisse können gespeichert werden. Die Ergebnisse werden über ihren Wahlbezirk, ihre Wahl und den Stapel,
+auf dem sie liegen, ausgelesen.
+Es können auch die Ergebnisse von allen Stapeln einer Wahl in einem Wahlbezirk gelesen werden.

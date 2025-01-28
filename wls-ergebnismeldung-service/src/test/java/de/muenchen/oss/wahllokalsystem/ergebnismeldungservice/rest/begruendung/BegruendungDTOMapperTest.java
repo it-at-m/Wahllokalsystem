@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.begruendung;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.BezirkUndWahlIDStapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.BezirkUndWahlIDStapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungReference;
@@ -29,7 +29,7 @@ class BegruendungDTOMapperTest {
 
             @Test
             void should_returnBegruendungModel_when_givenBegruendungDTO() {
-                val begruendungDTO = new BegruendungDTO(new BezirkUndWahlIDStapelart("bezirkID", "wahlID", Stapelart.LTW_BZW_A), "grund1", "grund2", true,
+                val begruendungDTO = new BegruendungDTO(new BezirkUndWahlIDStapelartDTO("bezirkID", "wahlID", StapelartDTO.LTW_BZW_A), "grund1", "grund2", true,
                         true);
                 val result = unitUnderTest.toModel(begruendungDTO);
 
@@ -71,7 +71,8 @@ class BegruendungDTOMapperTest {
             val begruendungModel = new BegruendungModel("bezirkID", "wahlID", StapelartModel.LTW_BZW_A, "grund1", "grund2", true, true);
             val result = unitUnderTest.toDTO(begruendungModel);
 
-            val expectedResult = new BegruendungDTO(new BezirkUndWahlIDStapelart("bezirkID", "wahlID", Stapelart.LTW_BZW_A), "grund1", "grund2", true, true);
+            val expectedResult = new BegruendungDTO(new BezirkUndWahlIDStapelartDTO("bezirkID", "wahlID", StapelartDTO.LTW_BZW_A), "grund1", "grund2", true,
+                    true);
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }

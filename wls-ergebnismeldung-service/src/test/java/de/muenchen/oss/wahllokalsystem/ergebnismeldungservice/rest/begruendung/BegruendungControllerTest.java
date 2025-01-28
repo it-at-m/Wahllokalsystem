@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.begruendung;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.BezirkUndWahlIDStapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.BezirkUndWahlIDStapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungReference;
@@ -42,7 +42,7 @@ class BegruendungControllerTest {
             val stapelartDTO = StapelartDTO.LTW_BZW_A;
 
             val mockedBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
-            val bezirkUndWahlIDStapelart = new BezirkUndWahlIDStapelart(wahlbezirkID, wahlID, stapelart);
+            val bezirkUndWahlIDStapelart = new BezirkUndWahlIDStapelartDTO(wahlbezirkID, wahlID, stapelartDTO);
             val mockedServiceResponse = new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, null, null, true, true);
             val mockedServiceResponseAsDTO = new BegruendungDTO(bezirkUndWahlIDStapelart, null, null, true, true);
 
@@ -86,7 +86,7 @@ class BegruendungControllerTest {
             val stapelartDTO = StapelartDTO.LTW_BZW_A;
             val stapelartModel = StapelartModel.LTW_BZW_A;
 
-            val begruendungDTO = new BegruendungDTO(new BezirkUndWahlIDStapelart(wahlbezirkID, wahlID, stapelart), null, null, true, true);
+            val begruendungDTO = new BegruendungDTO(new BezirkUndWahlIDStapelartDTO(wahlbezirkID, wahlID, stapelartDTO), null, null, true, true);
             val begruendungReferce = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
 
             val mockedBegruendungModel = new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, null, null, true, true);

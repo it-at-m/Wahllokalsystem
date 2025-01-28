@@ -12,6 +12,8 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.BegruendungRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.BezirkUndWahlIDStapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.BezirkUndWahlIDStapelartDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
@@ -76,6 +78,7 @@ public class BegruendungControllerIntegrationTest {
 
             val stapelart1 = Stapelart.LTW_BZW_A;
             val stapelart2 = Stapelart.LTW_BZW_B;
+            val stapelartDTO = StapelartDTO.LTW_BZW_A;
 
             val begruendung1 = new Begruendung();
             begruendung1.setBezirkUndWahlIDStapelart(new BezirkUndWahlIDStapelart(wahlbezirkID1, wahlID1, stapelart1));
@@ -95,7 +98,7 @@ public class BegruendungControllerIntegrationTest {
             begruendung3.setGrund1("grund1");
             begruendungRepository.save(begruendung3);
 
-            val expectedIDOfResponse = new BezirkUndWahlIDStapelart(wahlbezirkID1, wahlID1, stapelart1);
+            val expectedIDOfResponse = new BezirkUndWahlIDStapelartDTO(wahlbezirkID1, wahlID1, stapelartDTO);
             val expectedResponse = new BegruendungDTO(expectedIDOfResponse, "grund1", "grund2", true, true);
 
             val request = get("/businessActions/begruendung/" + wahlbezirkID1 + "/" + wahlID1 + "/" + stapelart1);
@@ -140,11 +143,12 @@ public class BegruendungControllerIntegrationTest {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
             val stapelart = Stapelart.LTW_BZW_A;
-            val bezirkUndWahlIDStapelart = new BezirkUndWahlIDStapelart(wahlbezirkID, wahlID, stapelart);
+            val stapelartDTO = StapelartDTO.LTW_BZW_A;
+            val bezirkUndWahlIDStapelartDTO = new BezirkUndWahlIDStapelartDTO(wahlbezirkID, wahlID, stapelartDTO);
             val grund1 = "grund1";
             val grund2 = "grund2";
 
-            val requestBody = new BegruendungDTO(bezirkUndWahlIDStapelart, grund1, grund2, true, true);
+            val requestBody = new BegruendungDTO(bezirkUndWahlIDStapelartDTO, grund1, grund2, true, true);
             val request = post("/businessActions/begruendung/" + wahlbezirkID + "/" + wahlID + "/" + stapelart).with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(requestBody));

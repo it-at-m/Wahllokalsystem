@@ -95,8 +95,8 @@ class BegruendungControllerTest {
 
             unitUnderTest.postBegruendung(wahlbezirkID, wahlID, stapelartDTO, begruendungDTO);
 
-            Mockito.verify(begruendungService).postBegruendung(new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, null, null, true, true),
-                    begruendungReferce);
+            Mockito.verify(begruendungService)
+                    .postBegruendung(begruendungReferce, new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, null, null, true, true));
         }
     }
 }

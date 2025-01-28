@@ -101,7 +101,7 @@ class BegruendungServiceSecurityTest {
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung, newBegruendungReference));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendungReference, newBegruendung));
         }
 
         @Test
@@ -117,7 +117,7 @@ class BegruendungServiceSecurityTest {
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(false);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung, newBegruendungReference))
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendungReference, newBegruendung))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
@@ -136,7 +136,7 @@ class BegruendungServiceSecurityTest {
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(false);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung, newBegruendungReference))
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendungReference, newBegruendung))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
@@ -155,7 +155,7 @@ class BegruendungServiceSecurityTest {
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung, newBegruendungReference))
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendungReference, newBegruendung))
                     .isInstanceOf(TechnischeWlsException.class);
         }
 

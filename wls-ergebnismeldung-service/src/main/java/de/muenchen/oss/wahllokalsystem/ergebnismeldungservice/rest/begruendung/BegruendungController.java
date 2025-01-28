@@ -85,7 +85,7 @@ public class BegruendungController {
         val modelToSave = begruendungDTOMapper.toModel(begruendungDTO);
         val stapelartForReference = begruendungDTOMapper.toSpapelart(stapelart);
         val referenceForModel = new BegruendungReference(wahlbezirkID, wahlID, stapelartForReference);
-        begruendungService.postBegruendung(modelToSave, referenceForModel);
+        begruendungService.postBegruendung(referenceForModel, modelToSave);
     }
 
     private <T> ResponseEntity<T> okWithBodyOrNoContent(final T body) {

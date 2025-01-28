@@ -12,6 +12,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.BegruendungRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.BezirkUndWahlIDStapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.BezirkUndWahlIDStapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
@@ -30,6 +31,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
@@ -45,23 +47,41 @@ public class BegruendungControllerIntegrationTest {
     @Autowired
     BegruendungRepository begruendungRepository;
 
+    @Autowired
+    MockMvc mockMvc;
+
+    @AfterEach
+    void tearDown() {
+        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_BEGRUENDUNG);
+        begruendungRepository.deleteAll();
+    }
+
     @Nested
     class GetBegruendung {
 
-        @AfterEach
-        void tearDown() {
-            SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_BEGRUENDUNG);
-            begruendungRepository.deleteAll();
-        }
-
         @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_GET_BEGRUENDUNG, Authorities.REPOSITORY_READ_BEGRUENDUNG })
-        void should_returnNoContent_when_noDataIsPresent() throws Exception {
-            val request = get("/businessActions/begruendung/wahlbezirkID/21/LTW_BZW_A");
+        @WithMockUser(
+                authorities = { Authorities.SERVICE_SET_BEGRUENDUNG }
+        )
+        void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
+            val wahlbezirkID1 = "wahlbezirkID1";
+            val wahlID1 = "wahlID1";
+            val stapelart1 = Stapelart.LTW_BZW_A;
+            val stapelartDTO = StapelartDTO.LTW_BZW_A;
 
-            val response = api.perform(request).andExpect(status().isNoContent()).andReturn();
+            val requestBody = new BegruendungDTO(new BezirkUndWahlIDStapelartDTO(wahlbezirkID1, wahlID1, stapelartDTO), null, null, true, true);
 
-            Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
+            val request = MockMvcRequestBuilders.post("/businessActions/begruendung/" + wahlbezirkID1 + "/" + wahlID1 + "/" + stapelart1).with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestBody));
+
+            val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn().getResponse();
+            val receivedWlsException = objectMapper.readValue(response.getContentAsString(), WlsExceptionDTO.class);
+
+            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F,
+                    ExceptionConstants.POST_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG.code(),
+                    "WLS-ERGEBNISMELDUNG", ExceptionConstants.POST_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG.message());
+            Assertions.assertThat(receivedWlsException).isEqualTo(expectedWlsExceptionDTO);
         }
 
         @Test
@@ -112,12 +132,6 @@ public class BegruendungControllerIntegrationTest {
     @Nested
     class PostBegruendung {
 
-        @AfterEach
-        void tearDown() {
-            SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_BEGRUENDUNG);
-            begruendungRepository.deleteAll();
-        }
-
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_SET_BEGRUENDUNG, Authorities.REPOSITORY_WRITE_BEGRUENDUNG })
         void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
@@ -125,12 +139,13 @@ public class BegruendungControllerIntegrationTest {
             val request = post("/businessActions/begruendung/wahlbezirkID/0/LTW_BZW_A").with(csrf()).contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(requestBody));
 
-            val expecetedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, "103", "WLS-ERGEBNISMELDUNG", null);
+            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.POST_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG.code(),
+                    "WLS-ERGEBNISMELDUNG", ExceptionConstants.POST_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG.message());
 
             val result = api.perform(request).andExpect(status().isBadRequest()).andReturn();
             val resultBodyAsWlsExceptionDTO = objectMapper.readValue(result.getResponse().getContentAsString(), WlsExceptionDTO.class);
 
-            Assertions.assertThat(resultBodyAsWlsExceptionDTO).usingRecursiveComparison().ignoringFields("message").isEqualTo(expecetedWlsExceptionDTO);
+            Assertions.assertThat(resultBodyAsWlsExceptionDTO).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedWlsExceptionDTO);
             Assertions.assertThat(resultBodyAsWlsExceptionDTO.message()).isNotNull();
         }
 

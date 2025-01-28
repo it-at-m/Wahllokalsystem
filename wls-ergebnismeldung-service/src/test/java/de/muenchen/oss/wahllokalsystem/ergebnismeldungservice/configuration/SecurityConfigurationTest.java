@@ -429,25 +429,21 @@ class SecurityConfigurationTest {
             @Test
             void should_returnOk_when_userIsAuthenticated() throws Exception {
                 val begruendung = new BegruendungDTO(new BezirkUndWahlIDStapelartDTO("wahlbezirkID", "wahlID", StapelartDTO.BTW_A), null, null, true, true);
-                val request = MockMvcRequestBuilders.post("/businessActions/ergebnisse/wahlID/wahlbezirkID/LTW_BZW_A").with(csrf())
+                val request = MockMvcRequestBuilders.post("/businessActions/begruendung/wahlID/wahlbezirkID/LTW_BZW_A").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(begruendung));
                 api.perform(request).andExpect(status().isOk()).andReturn();
 
-                Mockito.verify(ergebnisseService).postErgebnisse(any(), any());
+                Mockito.verify(begruendungService).postBegruendung(any(), any());
             }
 
             @WithAnonymousUser
             @Test
             void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
-                val ergebnis1 = new ErgebnisDTO(null, null, null, 1, null);
-                val newErgebnisDTOList = new ArrayList<ErgebnisDTO>();
-                newErgebnisDTOList.add(ergebnis1);
-
-                val ergebnisse = new ErgebnisseDTO(new BezirkUndWahlIDStapelartDTO("wahlbezirkID", "wahlID", StapelartDTO.BTW_A), newErgebnisDTOList);
-                val request = MockMvcRequestBuilders.post("/businessActions/ergebnisse/wahlID/wahlbezirkID/LTW_BZW_A").with(csrf())
+                val begruendung = new BegruendungDTO(new BezirkUndWahlIDStapelartDTO("wahlbezirkID", "wahlID", StapelartDTO.BTW_A), null, null, true, true);
+                val request = MockMvcRequestBuilders.post("/businessActions/begruendung/wahlID/wahlbezirkID/LTW_BZW_A").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(ergebnisse));
+                        .content(objectMapper.writeValueAsBytes(begruendung));
 
                 api.perform(request).andExpect(status().isUnauthorized()).andReturn();
             }

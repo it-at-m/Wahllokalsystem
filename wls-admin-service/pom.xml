@@ -36,7 +36,9 @@
         <!-- Version muss mit der in den spring-boot-dependencies bereitgestellten Lombok-Version übereinstimmen -->
         <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
+        <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <org.springdoc.version>2.6.0</org.springdoc.version>
+        <wls.common.version>1.2.0</wls.common.version>
     </properties>
 
     <dependencyManagement>
@@ -155,6 +157,19 @@
             <artifactId>hibernate-jpamodelgen</artifactId>
         </dependency>
 
+        <!-- wls-common -->
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>security</artifactId>
+            <version>${wls.common.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>exception</artifactId>
+            <version>${wls.common.version}</version>
+        </dependency>
+
         <!-- Other -->
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
@@ -164,6 +179,11 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${org.springdoc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.6</version>
         </dependency>
 
         <!-- Validation -->
@@ -329,11 +349,24 @@
                             <version>${org.projectlombok.lombok.version}</version>
                         </path>
                         <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${org.mapstruct.version}</version>
+                        </path>
+                        <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok-mapstruct-binding</artifactId>
                             <version>${org.projectlombok.mapstructbinding.version}</version>
                         </path>
                     </annotationProcessorPaths>
+                    <compilerArgs>
+                        <compilerArg>
+                            -Amapstruct.defaultComponentModel=spring
+                        </compilerArg>
+                        <compilerArg>
+                            -Amapstruct.unmappedTargetPolicy=ERROR
+                        </compilerArg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
@@ -459,6 +492,175 @@
                     <outputFileName>openapi.json</outputFileName>
                     <outputDir>${project.build.directory}</outputDir>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.5.0</version>
+                <configuration>
+                    <generatorName>java</generatorName>
+                    <library>resttemplate</library>
+
+                    <generateApiTests>false</generateApiTests>
+                    <generateModelTests>false</generateModelTests>
+                    <generateApiDocumentation>false</generateApiDocumentation>
+                    <generateModelDocumentation>false</generateModelDocumentation>
+
+                    <configOptions>
+                        <hideGenerationTimestamp>false</hideGenerationTimestamp>
+                        <legacyDiscriminatorBehavior>false</legacyDiscriminatorBehavior>
+                        <generateClientAsBean>true</generateClientAsBean>
+                        <useJakartaEe>true</useJakartaEe>
+                    </configOptions>
+
+                    <!-- #611 -->
+                    <typeMappings>
+                        <typeMapping>OffsetDateTime=java.time.LocalDateTime</typeMapping>
+                    </typeMappings>
+                    <importMappings>
+                        <importMapping>java.time.OffsetDateTime=java.time.LocalDateTime</importMapping>
+                    </importMappings>
+
+                    <globalProperties>
+                        <supportingFiles>
+                            BaseApi.java,ApiClient.java,JavaTimeFormatter.java,Authentication.java,OAuth.java,ApiKeyAuth.java,HttpBasicAuth.java,HttpBearerAuth.java,RFC3339DateFormat.java
+                        </supportingFiles>
+                    </globalProperties>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generateAuth</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.auth.0.1.0.json</inputSpec>
+
+                            <generatorName>java</generatorName>
+                            <library>resttemplate</library>
+
+                            <apiPackage>${project.groupId}.adminservice.eai.auth.client</apiPackage>
+                            <modelPackage>${project.groupId}.adminservice.eai.auth.model</modelPackage>
+
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+
+                            <configOptions>
+                                <hideGenerationTimestamp>false</hideGenerationTimestamp>
+                                <legacyDiscriminatorBehavior>false</legacyDiscriminatorBehavior>
+                                <generateClientAsBean>true</generateClientAsBean>
+                                <useJakartaEe>true</useJakartaEe>
+                            </configOptions>
+
+                            <globalProperties>
+                                <supportingFiles>
+                                    BaseApi.java,ApiClient.java,JavaTimeFormatter.java,Authentication.java,OAuth.java,ApiKeyAuth.java,HttpBasicAuth.java,HttpBearerAuth.java,RFC3339DateFormat.java
+                                </supportingFiles>
+                            </globalProperties>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generateBasisdaten</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.basisdaten.0.1.0.json</inputSpec>
+
+                            <generatorName>java</generatorName>
+                            <library>resttemplate</library>
+
+                            <apiPackage>${groupId}.adminservice.eai.basisdaten.client</apiPackage>
+                            <modelPackage>${groupId}.adminservice.eai.basisdaten.model</modelPackage>
+
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+
+                            <configOptions>
+                                <hideGenerationTimestamp>false</hideGenerationTimestamp>
+                                <legacyDiscriminatorBehavior>false</legacyDiscriminatorBehavior>
+                                <generateClientAsBean>true</generateClientAsBean>
+                                <useJakartaEe>true</useJakartaEe>
+                            </configOptions>
+
+                            <globalProperties>
+                                <supportingFiles>
+                                    BaseApi.java,ApiClient.java,JavaTimeFormatter.java,Authentication.java,OAuth.java,ApiKeyAuth.java,HttpBasicAuth.java,HttpBearerAuth.java,RFC3339DateFormat.java
+                                </supportingFiles>
+                            </globalProperties>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generateInfomanagement</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.infomanagement.0.2.0.json</inputSpec>
+
+                            <generatorName>java</generatorName>
+                            <library>resttemplate</library>
+
+                            <apiPackage>${groupId}.adminservice.eai.infomanagement.client</apiPackage>
+                            <modelPackage>${groupId}.adminservice.eai.infomanagement.model</modelPackage>
+
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+
+                            <configOptions>
+                                <hideGenerationTimestamp>false</hideGenerationTimestamp>
+                                <legacyDiscriminatorBehavior>false</legacyDiscriminatorBehavior>
+                                <generateClientAsBean>true</generateClientAsBean>
+                                <useJakartaEe>true</useJakartaEe>
+                            </configOptions>
+
+                            <globalProperties>
+                                <supportingFiles>
+                                    BaseApi.java,ApiClient.java,JavaTimeFormatter.java,Authentication.java,OAuth.java,ApiKeyAuth.java,HttpBasicAuth.java,HttpBearerAuth.java,RFC3339DateFormat.java
+                                </supportingFiles>
+                            </globalProperties>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generateErgebnismeldung</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.ergebnismeldung.0.0.1-SNAPSHOT.json</inputSpec>
+
+                            <generatorName>java</generatorName>
+                            <library>resttemplate</library>
+
+                            <apiPackage>${groupId}.adminservice.eai.ergebnismeldung.client</apiPackage>
+                            <modelPackage>${groupId}.adminservice.eai.ergebnismeldung.model</modelPackage>
+
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+
+                            <configOptions>
+                                <hideGenerationTimestamp>false</hideGenerationTimestamp>
+                                <legacyDiscriminatorBehavior>false</legacyDiscriminatorBehavior>
+                                <generateClientAsBean>true</generateClientAsBean>
+                                <useJakartaEe>true</useJakartaEe>
+                            </configOptions>
+
+                            <globalProperties>
+                                <supportingFiles>
+                                    BaseApi.java,ApiClient.java,JavaTimeFormatter.java,Authentication.java,OAuth.java,ApiKeyAuth.java,HttpBasicAuth.java,HttpBearerAuth.java,RFC3339DateFormat.java
+                                </supportingFiles>
+                            </globalProperties>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

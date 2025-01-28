@@ -1,8 +1,4 @@
-# Erstellung eines neue Microservices
-
-Wenn ein neuer Microservice angelegt wird, sind dabei folgende Themen zu beachten.
-
-## Backend-Microservice
+# Backend-Microservice
 
 ### Maven-Projekt anlegen
 

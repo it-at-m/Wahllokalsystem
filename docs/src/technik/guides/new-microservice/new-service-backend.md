@@ -92,7 +92,3 @@ und die Zuordnung zu den Rollen vorgenommen.
 
 > [!NOTE]
 > Die Pflege der Rollen und Rechte erfolgt immer über neue, noch nicht im Default-Branch enthaltene, Flyway-Skripte.
-
-## Frontend-Microservice
-
-🚧 -> https://github.com/it-at-m/Wahllokalsystem/issues/742

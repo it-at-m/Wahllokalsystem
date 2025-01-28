@@ -1,7 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.begruendung;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.wahlscheine.WahlscheineDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungReference;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
@@ -35,8 +34,8 @@ public class BegruendungController {
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200", description = "Es existiert eine Begruendung",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WahlscheineDTO.class)) }
+                            responseCode = "200", description = "Es existiert eine Begruendung.",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = BegruendungDTO.class)) }
                     ),
                     @ApiResponse(
                             responseCode = "204", description = "Es existieren keine Begruendungen zu den entsprechenden Kriterien",

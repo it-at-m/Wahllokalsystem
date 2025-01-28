@@ -24,5 +24,5 @@ public interface BegruendungDTOMapper {
     @Mapping(target = "grund1", source = "grund")
     BegruendungModel toModel(BegruendungDTO dto);
 
-    Stapelart toSpapelart(StapelartDTO stapelart);
+    Stapelart toStapelart(StapelartDTO stapelart);
 }

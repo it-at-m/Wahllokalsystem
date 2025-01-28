@@ -428,7 +428,7 @@ class SecurityConfigurationTest {
             @WithMockUser
             @Test
             void should_returnOk_when_userIsAuthenticated() throws Exception {
-                val begruendung = new BegruendungDTO(new BezirkUndWahlIDStapelartDTO("wahlbezirkID", "wahlID", StapelartDTO.BTW_A), null, null, true, true);
+                val begruendung = new BegruendungDTO(new BezirkUndWahlIDStapelartDTO("wahlbezirkID", "wahlID", StapelartDTO.LTW_BZW_A), null, null, true, true);
                 val request = MockMvcRequestBuilders.post("/businessActions/begruendung/wahlID/wahlbezirkID/LTW_BZW_A").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(begruendung));
@@ -440,7 +440,7 @@ class SecurityConfigurationTest {
             @WithAnonymousUser
             @Test
             void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
-                val begruendung = new BegruendungDTO(new BezirkUndWahlIDStapelartDTO("wahlbezirkID", "wahlID", StapelartDTO.BTW_A), null, null, true, true);
+                val begruendung = new BegruendungDTO(new BezirkUndWahlIDStapelartDTO("wahlbezirkID", "wahlID", StapelartDTO.LTW_BZW_A), null, null, true, true);
                 val request = MockMvcRequestBuilders.post("/businessActions/begruendung/wahlID/wahlbezirkID/LTW_BZW_A").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(begruendung));

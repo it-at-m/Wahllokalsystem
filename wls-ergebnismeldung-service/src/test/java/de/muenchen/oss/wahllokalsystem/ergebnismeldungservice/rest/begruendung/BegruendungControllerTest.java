@@ -91,7 +91,7 @@ class BegruendungControllerTest {
 
             val mockedBegruendungModel = new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, null, null, true, true);
             Mockito.when(begruendungDTOMapper.toModel(begruendungDTO)).thenReturn(mockedBegruendungModel);
-            Mockito.when(begruendungDTOMapper.toSpapelart(stapelartDTO)).thenReturn(stapelart);
+            Mockito.when(begruendungDTOMapper.toStapelart(stapelartDTO)).thenReturn(stapelart);
 
             unitUnderTest.postBegruendung(wahlbezirkID, wahlID, stapelartDTO, begruendungDTO);
 

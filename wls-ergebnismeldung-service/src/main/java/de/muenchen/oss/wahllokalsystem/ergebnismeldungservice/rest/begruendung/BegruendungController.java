@@ -82,7 +82,7 @@ public class BegruendungController {
             @PathVariable("stapelart") StapelartDTO stapelart,
             @RequestBody BegruendungDTO begruendungDTO) {
         val modelToSave = begruendungDTOMapper.toModel(begruendungDTO);
-        val stapelartForReference = begruendungDTOMapper.toSpapelart(stapelart);
+        val stapelartForReference = begruendungDTOMapper.toStapelart(stapelart);
         val referenceForModel = new BegruendungReference(wahlbezirkID, wahlID, stapelartForReference);
         begruendungService.postBegruendung(referenceForModel, modelToSave);
     }

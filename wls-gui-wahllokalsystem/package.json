@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "serve": "serve dist",
+    "serve": "serve dist -p 8400",
     "test": "vitest run",
     "build": "vue-tsc --build --force && vite build",
     "preview": "vite preview",

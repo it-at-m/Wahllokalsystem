@@ -58,3 +58,26 @@ jobs:
       pom-dir: 'wls-gui-<frontend-name>'
 ``` 
 :::
+
+### Routing im Gateway einrichten
+
+Damit der Port und die URL für das neue Frontend-Projekt korrekt verknüpft wird, muss das 
+[`application-routes.yml`-File](https://github.com/it-at-m/Wahllokalsystem/blob/dev/stack/gateway_config/application-routes.yml) 
+entsprechend angepasst werden:
+
+TODO: wie muss der pfad angepasst werden?  
+TODO: Name vom bestehenden frontend pfad anpassen!
+```yaml
+spring:
+  cloud:
+    gateway:
+      routes:
+        # ... 
+        - id: gui-<frontend-name>
+          uri: http://kubernetes.docker.internal:<PORT>/
+          predicates:
+            - Path=/**
+```
+
+> [!IMPORTANT]
+> Die route mit dem Pfad `Path=/**` muss immer an letzter Stelle stehen, da sie sonst alle anderen Routen überschreibt.

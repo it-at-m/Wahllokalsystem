@@ -1,5 +1,8 @@
 # Backend-Microservice
 
+Um einen neuen Backend-Service anzulegen sind zuvor die [allgemeinen Infos](/technik/guides/new-microservice) zum 
+Einrichten eines neuen Services zu beachten.
+
 ### Maven-Projekt anlegen
 
 Für den neuen Service wird ein Ordner parallel zu den anderen Services angelegt. Dabei ist auf das Namensschema zu achten:
@@ -17,18 +20,7 @@ zugreift. Dementsprechend verwenden die Services unterschiedliche Plugins.
 Da das RefArch-Template auf ein allgemeines Szenario abzielt, ist mit zusätzlichen Schritten zu rechnen, um den Service
 funktionsfähig zu bekommen.
 
-#### Update der Tests
-
-Im Projekt haben wir für das Naming unserer Tests [Konventionen](/technik/naming_conventions/testing) aufgestellt. Die bereitgestellten Tests des Templates
-müssen entsprechend angepasst werden.
-
-### Workflows einrichten
-
-Im Repo gibt es diverse [Workflows](/technik/ecosystem/workflows). Die Workflows eines bestehenden Services sind zu
-kopieren und die Trigger anzupassen.
-
-> [!IMPORTANT]
-> Beim Kopieren ist das [Namensschema](/technik/naming_conventions/workflows) zu beachten.
+### Workflow Templates
 
 ::: code-group
 ```yml {1,8-9,18} [wls-&lt;domain&gt;-service_push-dev.yml]

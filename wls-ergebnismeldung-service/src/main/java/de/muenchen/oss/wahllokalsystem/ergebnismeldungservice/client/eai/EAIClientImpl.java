@@ -1,10 +1,12 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.awerte;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.eai;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.client.WahldatenControllerApi;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.WahlberechtigteDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteClient;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.EaiService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
 @RequiredArgsConstructor
 @Slf4j
-public class AWerteClientImpl implements AWerteClient {
+public class EAIClientImpl implements AWerteClient, EaiService {
 
     private final WahldatenControllerApi wahldatenControllerApi;
 
@@ -31,5 +33,10 @@ public class AWerteClientImpl implements AWerteClient {
             return null;
         }
         return aWerteClientMapper.fromRemoteClientListOfWahlberechtigteDtoToListOfAWerteModel(wahlberechtigteDTOSet);
+    }
+
+    @Override
+    public void sendErgebnismeldung(ErgebnismeldungDTO ergebnismeldungDTO) {
+
     }
 }

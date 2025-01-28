@@ -2,6 +2,8 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.awerte;
 
 import static org.mockito.ArgumentMatchers.any;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.eai.AWerteClientMapper;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.eai.EAIClientImpl;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.client.WahldatenControllerApi;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.WahlberechtigteDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteModel;
@@ -27,7 +29,7 @@ class AWerteClientImplTest {
     AWerteClientMapper aWerteClientMapper;
 
     @InjectMocks
-    AWerteClientImpl unitUnderTest;
+    EAIClientImpl unitUnderTest;
 
     @Nested
     class GetAWerte {

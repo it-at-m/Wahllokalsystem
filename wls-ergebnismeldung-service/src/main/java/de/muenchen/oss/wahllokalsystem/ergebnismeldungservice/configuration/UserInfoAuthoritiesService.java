@@ -83,7 +83,6 @@ public class UserInfoAuthoritiesService {
             @SuppressWarnings("unchecked")
             Map<String, Object> map = restTemplate.exchange(this.userInfoUri, HttpMethod.GET, entity,
                     Map.class).getBody();
-            jwt.getClaims().put("abc", "UWB");
 
             log.debug("Response from user-info Endpoint: {}", map);
             if (map.containsKey(CLAIM_AUTHORITIES)) {

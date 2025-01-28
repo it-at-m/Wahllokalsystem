@@ -1,0 +1,3 @@
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/sendErgebnismeldung/wahlID/wahlbezirkID/1/V1/wahlbezirkID
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json

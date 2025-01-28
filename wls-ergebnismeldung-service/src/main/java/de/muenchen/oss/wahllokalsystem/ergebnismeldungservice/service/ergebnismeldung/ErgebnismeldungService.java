@@ -1,8 +1,11 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.common.security.AuthenticationHandler;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.authentication.AuthenticationService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.WahlbezirkArtModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.validation.ErgebnismeldungValidator;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.ValidierungsstatusModel;
@@ -11,12 +14,13 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzette
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
@@ -25,16 +29,21 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ErgebnismeldungService {
 
+    private static final Logger SYSLOGGER = LoggerFactory.getLogger("ERGEBNISMELDUNG_SERVICE_SIEM_log");
+
     private static final String WAHLBEZIRK_ART_USER_DETAIL_KEY = "wahlbezirksArt";
 
     private final ErgebnismeldungValidator ergebnismeldungValidator;
     private final ExceptionFactory exceptionFactory;
-    private final Collection<AuthenticationHandler> authenticationHandlers;
+    private final ErgebnismeldungMappingService ergebnismeldungMappingService;
 
     private final UrnenwahlClient urnenwahlClient;
+    private final WahlenClient wahlenClient;
+    private final EaiService eaiService;
     private final StimmzettelumschlaegeService stimmzettelumschlaegeService;
     private final StatusService statusService;
     private final StatusClient statusClient;
+    private final AuthenticationService authenticationService;
 
     @PreAuthorize(
             "hasAuthority('Ergebnismeldung_BUSINESSACTION_ForceErgebnisse')"
@@ -50,8 +59,47 @@ public class ErgebnismeldungService {
         status.ifPresent(this::sendRelevantStatus);
     }
 
+    @PreAuthorize(
+            "hasAuthority('Ergebnismeldung_BUSINESSACTION_SendErgebnisse')"
+                    + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#criteria, authentication)"
+    )
+    public boolean sendErgebnisse(@P("criteria") final ErgebnisseToSendCriteriaModel ergebnisseToSendCriteria) {
+        ergebnismeldungValidator.validErgebnisseToSendCriteriaOrThrow(ergebnisseToSendCriteria);
+        log.info("#sendErgebnisse hauptwahlbezirkID {}", ergebnisseToSendCriteria.hauptwahlbezirkID());
+
+        assertWahlIsGeschlossen(new BezirkUndWahlID(ergebnisseToSendCriteria.wahlID(), ergebnisseToSendCriteria.wahlbezirkID()));
+
+        val wahlart = wahlenClient.getWahlartOfCurrentWahltag(ergebnisseToSendCriteria.wahlID());
+        val wahlbezirkArt = authenticationService.getWahlbezirkArtOfCurrentAuthentication();
+
+        log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 1");
+        val valid = ergebnismeldungValidator.checkValidation(wahlart, wahlbezirkArt, ergebnisseToSendCriteria.wahlbezirkID(),
+                ergebnisseToSendCriteria.wahlID(), ergebnisseToSendCriteria.waehlerverzeichnisNummer(), ergebnisseToSendCriteria.meldungsart());
+        log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 2");
+
+        val eaiMeldungsart = ErgebnismeldungDTO.MeldungsartEnum.fromValue(ergebnisseToSendCriteria.meldungsart().name());
+
+        if (valid) {
+            log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3 valid: {}", valid);
+            sendErgebnisseToEAI(
+                    ergebnismeldungMappingService.createErgebnismeldung(wahlart, ergebnisseToSendCriteria.wahlID(), ergebnisseToSendCriteria.wahlbezirkID(),
+                            ergebnisseToSendCriteria.waehlerverzeichnisNummer(), eaiMeldungsart,
+                            ergebnisseToSendCriteria.hauptwahlbezirkID()));
+            log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 4 valid: {}", valid);
+        }
+        return valid;
+    }
+
+    private void sendErgebnisseToEAI(ErgebnismeldungDTO ergebnismeldung) {
+        log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3.1 a sendErgebnisseToEAI" + ergebnismeldung);
+        eaiService.sendErgebnismeldung(ergebnismeldung);
+        log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3.1 b sendErgebnisseToEAI");
+        sendSendungsuhrzeiten(ergebnismeldung);
+        log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3.1 c sendErgebnisseToEAI");
+    }
+
     private void assertWahlIsGeschlossen(final BezirkUndWahlID bezirkUndWahlID) {
-        WahlbezirkArtModel wahlbezirkart = getWahlbezirkArtOfCurrentAuthentication();
+        WahlbezirkArtModel wahlbezirkart = authenticationService.getWahlbezirkArtOfCurrentAuthentication();
         boolean isGeschlossen;
         try {
             isGeschlossen = switch (wahlbezirkart) {
@@ -70,18 +118,6 @@ public class ErgebnismeldungService {
         if (!isGeschlossen) {
             log.error("Es wurde keine Schließungsuhrzeit für die Wahl {} vom Bezirk {} erfasst", bezirkUndWahlID.getWahlID(),
                     bezirkUndWahlID.getWahlbezirkID());
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.WAHLBEZIRKART_NOT_LOADABLE);
-        }
-    }
-
-    private WahlbezirkArtModel getWahlbezirkArtOfCurrentAuthentication() {
-        /* TODO mit der Logik aus dem Stimmzettelumschlägen zusammenlegen */
-        val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-        val authenticationHandler = authenticationHandlers.stream().filter(handler -> handler.canHandle(currentAuthentication)).findFirst();
-        try {
-            val wahlbezirkOfUser = authenticationHandler.get().getDetail(WAHLBEZIRK_ART_USER_DETAIL_KEY, currentAuthentication);
-            return wahlbezirkOfUser.map(WahlbezirkArtModel::valueOf).get();
-        } catch (Exception e) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.WAHLBEZIRKART_NOT_LOADABLE);
         }
     }
@@ -109,6 +145,37 @@ public class ErgebnismeldungService {
             } catch (Exception e) {
                 log.error("#postNiederschriftSendungsuhrzeit Exception:", e);
             }
+        }
+    }
+
+    private void sendSendungsuhrzeiten(final ErgebnismeldungDTO ergebnismeldung) {
+        val now = LocalDateTime.now();
+        try {
+            val meldungsart = ergebnismeldung.getMeldungsart();  // meldungsart kann null sein, dann fliegt eine Exception!
+            logErgebnismeldungGesendet(meldungsart.name(), ergebnismeldung.getWahlID());
+
+            if (meldungsart.equals(ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT)) {
+                statusClient.postNiederschriftSendungsuhrzeit(new BezirkUndWahlID(ergebnismeldung.getWahlID(), ergebnismeldung.getWahlbezirkID()), now);
+            } else if (meldungsart.equals(ErgebnismeldungDTO.MeldungsartEnum.SCHNELLMELDUNG)) {
+                statusClient.postSchnellmeldungSendungsuhrzeit(new BezirkUndWahlID(ergebnismeldung.getWahlID(), ergebnismeldung.getWahlbezirkID()), now);
+            }
+        } catch (final Exception ex) {
+            // Do not throw exception bug log it in Logfile. Monitoring cannot cripple main functionality
+            log.error("sendSendungsstatus Fehler: {}", ex);
+        }
+    }
+
+    private void logErgebnismeldungGesendet(final String meldungsart, final String wahlID) {
+        val now = LocalDateTime.now();
+        val eid = meldungsart.equals(MeldungsartModel.V3.name()) ? "SCHNELLMELDUNG_GESENDET" : "NIEDERSCHRIFT_GESENDET";
+
+        try {
+            MDC.put("eid", eid);
+            MDC.put("result", "0");
+            SYSLOGGER.info("wahlId=" + wahlID + "|sendingTime=" + now.toString() + "|");
+        } finally {
+            MDC.remove("eid");
+            MDC.remove("result");
         }
     }
 }

@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.Stapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;

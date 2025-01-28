@@ -31,7 +31,7 @@ public class AusdruckService {
     private final Validator validator;
 
     @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetAusdruck')")
-    public List<AusdruckModel> getAllAusdrucke(@NotBlank final String wahlID, @NotBlank final String wahlbezirkID) {
+    public List<AusdruckReadModel> getAllAusdrucke(@NotBlank final String wahlID, @NotBlank final String wahlbezirkID) {
         val ausdrucke = ausdruckRepository.findByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID);
 
         return ausdrucke.stream().map(ausdruckModelMapper::toModel).toList();
@@ -40,7 +40,7 @@ public class AusdruckService {
     @PreAuthorize(
         "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostAusdruck') and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param?.wahlUndBezirkIDUndMeldungsart.wahlbezirkID, authentication)"
     )
-    public void saveAusdruck(@P("param") @NotNull final AusdruckModel ausdruck) {
+    public void saveAusdruck(@P("param") @NotNull final AusdruckWriteModel ausdruck) {
         log.debug("Saving printout {}", ausdruck.wahlUndBezirkIDUndMeldungsart().getMeldungsart());
 
         if (!validator.validate(ausdruck).isEmpty()) {
@@ -52,7 +52,7 @@ public class AusdruckService {
     }
 
     @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetAusdruck')")
-    public Optional<AusdruckModel> getAusdruck(WahlUndBezirkIDUndMeldungsart id) {
+    public Optional<AusdruckReadModel> getAusdruck(WahlUndBezirkIDUndMeldungsart id) {
         log.debug("Loading printout {}", id.getMeldungsart());
 
         wahlUndBezirkIDUndMeldungsartValidator.validWahlUndBezirkIDUndMeldungsartOrThrow(id,

@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.BezirkUndWahlIDStapelart;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotNull;

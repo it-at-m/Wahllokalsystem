@@ -125,7 +125,7 @@ class KonfigurierterWahltagDTOMapperTest {
 
         @ParameterizedTest
         @MethodSource("argumentsForStatusValuesReturnFalse")
-        void should_returnTrue_when_nonActiveValuesAreGiven(final ArgumentsAccessor argumentsAccessor) {
+        void should_returnFalse_when_nonActiveValuesAreGiven(final ArgumentsAccessor argumentsAccessor) {
             Assertions.assertThat(unitUnderTest.statusToActiveFlag(argumentsAccessor.get(0, WahltagStatus.class))).isFalse();
         }
 

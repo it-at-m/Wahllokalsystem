@@ -113,7 +113,7 @@ class KonfigurierterWahltagDTOMapperTest {
         private static final List<WahltagStatus> STATUS_VALUES_THAT_ARE_ACTIVE = List.of(WahltagStatus.AKTIV);
 
         @Test
-        void should_returnNull_when_givenNull() {
+        void should_returnFalse_when_givenNull() {
             Assertions.assertThat(unitUnderTest.statusToActiveFlag(null)).isFalse();
         }
 

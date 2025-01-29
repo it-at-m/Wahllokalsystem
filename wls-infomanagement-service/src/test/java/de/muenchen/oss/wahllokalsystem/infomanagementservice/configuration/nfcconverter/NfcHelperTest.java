@@ -114,7 +114,7 @@ class NfcHelperTest {
     }
 
     @Test
-    void should_returnNull_when_givenEmptyArrayOfCookies() {
+    void should_returnNull_when_givenNullArrayOfCookies() {
         assertNull(NfcHelper.nfcConverter((Cookie[]) null));
     }
 

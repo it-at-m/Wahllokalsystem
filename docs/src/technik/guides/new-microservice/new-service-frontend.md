@@ -65,9 +65,6 @@ Damit der Port und die URL für das neue Frontend-Projekt korrekt verknüpft wir
 [`application-routes.yml`-File](https://github.com/it-at-m/Wahllokalsystem/blob/dev/stack/gateway_config/application-routes.yml) 
 entsprechend angepasst werden:
 
-[//]: # (TODO: wie muss der pfad angepasst werden?)
-[//]: # (TODO: Name vom bestehenden frontend pfad in "gui-wahllokalsystem" statt "frontend" anpassen!)
-
 ```yaml
 spring:
   cloud:

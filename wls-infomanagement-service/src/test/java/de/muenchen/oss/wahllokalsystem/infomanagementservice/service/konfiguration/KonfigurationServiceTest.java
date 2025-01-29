@@ -74,7 +74,7 @@ class KonfigurationServiceTest {
         private static final String JWT_DETAIL_WAHLBEZIRKSART_KEY = "wahlbezirksArt";
 
         @Test
-        void konfigurationFoundInRepoWithAlternativKey() {
+        void should_returnKonfigurationModel_when_foundInRepoWithAlternativKey() {
             val konfigKeyAsString = "ABSCHLUSSTEXT";
             val keyForRequestedKonfiguration = KonfigurationKonfigKey.valueOf(konfigKeyAsString);
             val alternativeKey = KonfigurationKonfigKey.ABSCHLUSSTEXT;
@@ -96,7 +96,7 @@ class KonfigurationServiceTest {
         }
 
         @Test
-        void konfigurationFoundInRepoWithoutAlternativeKey() {
+        void should_returnKonfigurationModel_when_foundInRepoWithoutAlternativeKey() {
             val konfigKeyAsString = "ABSCHLUSSTEXT";
             val keyForRequestedKonfiguration = KonfigurationKonfigKey.valueOf(konfigKeyAsString);
 
@@ -117,7 +117,7 @@ class KonfigurationServiceTest {
         }
 
         @Test
-        void noKonfigurationFoundInRepo() {
+        void should_returnEmptyOptional_when_repoIsEmpty() {
             val konfigKeyAsString = "ABSCHLUSSTEXT";
             val keyForRequestedKonfiguration = KonfigurationKonfigKey.valueOf(konfigKeyAsString);
 
@@ -135,7 +135,7 @@ class KonfigurationServiceTest {
         }
 
         @Test
-        void validationOfParameterFailed() {
+        void should_throwException_when_validationFails() {
             val konfigKeyAsString = "ABSCHLUSSTEXT";
             val keyForRequestedKonfiguration = KonfigurationKonfigKey.valueOf(konfigKeyAsString);
 
@@ -147,7 +147,7 @@ class KonfigurationServiceTest {
         }
 
         @Test
-        void useDefaultValueAsWahlbezirksArtWhenNotPartOfJWT() {
+        void should_returnKonfigurationModel_when_wahlbezirksArtISNotPartOfJWT() {
             val konfigKeyAsString = "ABSCHLUSSTEXT";
             val keyForRequestedKonfiguration = KonfigurationKonfigKey.valueOf(konfigKeyAsString);
 
@@ -168,7 +168,7 @@ class KonfigurationServiceTest {
         }
 
         @Test
-        void noAuthenticationHandlerFound() {
+        void should_returnKonfigurationModel_when_noAuthenticationHandlerIsFound() {
             val konfigKeyAsString = "ABSCHLUSSTEXT";
             val keyForRequestedKonfiguration = KonfigurationKonfigKey.valueOf(konfigKeyAsString);
 
@@ -194,7 +194,7 @@ class KonfigurationServiceTest {
     class SetKonfiguration {
 
         @Test
-        void isSaved() {
+        void should_saveKonfiguration_when_called() {
             val konfigurationSetModel = KonfigurationSetModel.builder().build();
 
             val mockedKonfigurationEntity = new Konfiguration();
@@ -208,7 +208,7 @@ class KonfigurationServiceTest {
         }
 
         @Test
-        void exceptionFromValidationIsUnhandled() {
+        void should_throwException_when_validationFails() {
             val konfigurationSetModel = KonfigurationSetModel.builder().build();
 
             val mockedValidatorException = new IllegalArgumentException("WRONG!!!");
@@ -219,7 +219,7 @@ class KonfigurationServiceTest {
         }
 
         @Test
-        void exceptionFromRepositoryIsHandled() {
+        void should_throwTechnischeWlsException_when_repoFails() {
             val konfigurationSetModel = KonfigurationSetModel.builder().build();
 
             val mockedRepositoryException = new IllegalArgumentException("i cant saved");
@@ -241,7 +241,7 @@ class KonfigurationServiceTest {
     class GetAllKonfigurations {
 
         @Test
-        void dataFromRepository() {
+        void should_returnAllKonfigurationModel_when_dataFoundInRepo() {
             val mockedRepositoryResponse = List.of(new Konfiguration(), new Konfiguration());
             val mockedMappedEntityAsModel = KonfigurationModel.builder().build();
 
@@ -254,7 +254,7 @@ class KonfigurationServiceTest {
         }
 
         @Test
-        void noDataFromRepository() {
+        void should_returnEmptyList_when_noDataFoundInRepo() {
             Mockito.when(konfigurationRepository.findAll()).thenReturn(Collections.emptyList());
 
             val result = unitUnderTest.getAllKonfigurations();
@@ -267,7 +267,7 @@ class KonfigurationServiceTest {
     class GetKennbuchstabenListen {
 
         @Test
-        void kennbuchstabenFound() {
+        void should_returnKennbuchstabenListenModel_when_dataFoundInRepo() {
             val konfigurationWert = "wert";
             val mockedRepoResponse = new Konfiguration();
             mockedRepoResponse.setWert(konfigurationWert);
@@ -282,7 +282,7 @@ class KonfigurationServiceTest {
         }
 
         @Test
-        void exceptionWhenNoKennbuchtabenFoundInRepo() {
+        void should_returnFachlicheWlsException_when_noDataFoundInRepo() {
             val mockedExceptionFactoryWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(konfigurationRepository.findById("KENNBUCHSTABEN")).thenReturn(Optional.empty());
@@ -301,8 +301,8 @@ class KonfigurationServiceTest {
                 KonfigurationKonfigKey.SPAETESTE_LOGIN_UHRZEIT, KonfigurationKonfigKey.WILLKOMMENSTEXT);
 
         @ParameterizedTest
-        @MethodSource("getNonSupporetedKeys")
-        void verifyRepoNotCalled(final KonfigurationKonfigKey konfigurationKonfigKey) {
+        @MethodSource("getNonSupportedKeys")
+        void should_verifyThatRepoIsNotCalled_when_nonSupportedKeysAreGiven(final KonfigurationKonfigKey konfigurationKonfigKey) {
             val result = unitUnderTest.getKonfigurationUnauthorized(konfigurationKonfigKey);
 
             Assertions.assertThat(result).isEmpty();
@@ -310,12 +310,12 @@ class KonfigurationServiceTest {
         }
 
         @Test
-        void whenParameterIsNullThenReturnsEmpty() {
+        void should_returnEmptyOptional_when_nullIsGiven() {
             Assertions.assertThat(unitUnderTest.getKonfigurationUnauthorized(null)).isEmpty();
         }
 
         @Test
-        void fruehesteLoginUhrzeitIsReadFromRepo() {
+        void should_returnKonfigurationModel_when_fruehesteLoginUhrzeitIsGiven() {
             val mockedRepoResponse = new Konfiguration();
             val mockedMappedEntityAsModel = KonfigurationModel.builder().build();
 
@@ -328,7 +328,7 @@ class KonfigurationServiceTest {
         }
 
         @Test
-        void spaetesteLoginUhrzeitIsReadFromRepo() {
+        void should_returnKonfigurationModel_when_spaetesteLoginUhrzeitIsGiven() {
             val mockedRepoResponse = new Konfiguration();
             val mockedMappedEntityAsModel = KonfigurationModel.builder().build();
 
@@ -341,7 +341,7 @@ class KonfigurationServiceTest {
         }
 
         @Test
-        void willkommenstextIsReadFromRepo() {
+        void should_returnKonfigurationModel_when_willkommenstextIsGiven() {
             val mockedRepoResponse = new Konfiguration();
             val mockedMappedEntityAsModel = KonfigurationModel.builder().build();
 
@@ -353,10 +353,8 @@ class KonfigurationServiceTest {
             Assertions.assertThat(result.get()).isSameAs(mockedMappedEntityAsModel);
         }
 
-        private static Stream<Arguments> getNonSupporetedKeys() {
+        private static Stream<Arguments> getNonSupportedKeys() {
             return Arrays.stream(KonfigurationKonfigKey.values()).filter(konfigKey -> !SUPPORTED_KEYS.contains(konfigKey)).map(Arguments::of);
         }
-
     }
-
 }

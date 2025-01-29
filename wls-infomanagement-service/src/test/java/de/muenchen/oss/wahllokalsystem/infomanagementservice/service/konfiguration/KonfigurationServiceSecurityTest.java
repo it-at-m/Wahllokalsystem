@@ -56,7 +56,7 @@ public class KonfigurationServiceSecurityTest {
     class GetKonfiguration {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_callingAuthorized() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_KONFIGURATION);
 
             Assertions.assertThatNoException().isThrownBy(() -> konfigurationService.getKonfiguration(KonfigurationKonfigKey.WILLKOMMENSTEXT));
@@ -64,7 +64,7 @@ public class KonfigurationServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwException_when_anyAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatThrownBy(() -> konfigurationService.getKonfiguration(KonfigurationKonfigKey.WILLKOMMENSTEXT))
@@ -80,7 +80,7 @@ public class KonfigurationServiceSecurityTest {
     class SetKonfiguration {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_callingAuthorized() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_KONFIGURATION);
 
             val konfigurationSetModel = new KonfigurationSetModel("schluessel", "wert", "beschreibung", "standwert");
@@ -89,7 +89,7 @@ public class KonfigurationServiceSecurityTest {
         }
 
         @Test
-        void accessDeniedOnMissingServiceAuthority() {
+        void should_throwException_when_servicePostAuthorityIsMissing() {
             SecurityUtils.runWith(
                     removeAuthority(Authorities.ALL_AUTHORITIES_SET_KONFIGURATION, Authorities.SERVICE_POST_KONFIGURATION));
 
@@ -100,7 +100,7 @@ public class KonfigurationServiceSecurityTest {
         }
 
         @Test
-        void wlsExceptionOnMissingWriteAuthority() {
+        void should_throwException_when_repositoryWriteAuthorityIsMissing() {
             SecurityUtils.runWith(
                     removeAuthority(Authorities.ALL_AUTHORITIES_SET_KONFIGURATION, Authorities.REPOSITORY_WRITE_KONFIGURATION));
 
@@ -119,7 +119,7 @@ public class KonfigurationServiceSecurityTest {
     class GetAllKonfigurations {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_callingAuthorized() {
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_KONFIGURATIONS);
 
@@ -128,7 +128,7 @@ public class KonfigurationServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwException_when_anyAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatThrownBy(() -> konfigurationService.getAllKonfigurations())
@@ -144,7 +144,7 @@ public class KonfigurationServiceSecurityTest {
     class GetKennbuchstabenListen {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_callingAuthorized() {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_KONFIGURATION);
             konfigurationRepository.save(new Konfiguration("KENNBUCHSTABEN", "", "", ""));
 
@@ -155,7 +155,7 @@ public class KonfigurationServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwException_when_anyAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_KONFIGURATION);
             konfigurationRepository.save(new Konfiguration("KENNBUCHSTABEN", "", "", ""));
 
@@ -173,7 +173,7 @@ public class KonfigurationServiceSecurityTest {
     @Nested
     class GetKonfigurationUnauthorized {
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_callingAuthorized() {
             SecurityContextHolder.clearContext();
 
             Assertions.assertThatNoException().isThrownBy(() -> konfigurationService.getKonfigurationUnauthorized(KonfigurationKonfigKey.WILLKOMMENSTEXT));

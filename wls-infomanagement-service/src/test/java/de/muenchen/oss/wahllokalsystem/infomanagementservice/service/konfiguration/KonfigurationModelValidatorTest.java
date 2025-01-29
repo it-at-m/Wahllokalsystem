@@ -28,13 +28,13 @@ class KonfigurationModelValidatorTest {
     class ValidOrThrowGetKonfigurationByKey {
 
         @Test
-        void noExceptionOnNonNull() {
+        void should_notThrowException_when_konfigurationKonfigKeyIsValid() {
             Assertions.assertThatNoException()
                     .isThrownBy(() -> unitUnderTest.validOrThrowGetKonfigurationByKey(KonfigurationKonfigKey.WILLKOMMENSTEXT));
         }
 
         @Test
-        void exceptionOnNullKey() {
+        void should_throwException_when_konfigurationKonfigKeyIsNull() {
             val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETKONFIGURATION_PARAMETER_UNVOLLSTAENDIG))
                     .thenReturn(expectedException);
@@ -47,14 +47,14 @@ class KonfigurationModelValidatorTest {
     class ValidOrThrowSetKonfiguration {
 
         @Test
-        void noExceptionWhenValid() {
+        void should_notThrowException_when_konfigurationSetModelIsValid() {
             val validModel = initValidModel().build();
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validOrThrowSetKonfiguration(validModel));
         }
 
         @Test
-        void exceptionWhenModelIsNull() {
+        void should_throwException_when_konfigurationSetModelIsNull() {
             val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTKONFIGURATION_PARAMETER_UNVOLLSTAENDIG))
                     .thenReturn(expectedException);
@@ -63,7 +63,7 @@ class KonfigurationModelValidatorTest {
         }
 
         @Test
-        void exceptionWhenSchluesselIsNull() {
+        void should_throwException_when_konfigurationSetModelSchluesselIsNull() {
             val invalidModel = initValidModel().schluessel(null).build();
 
             val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");

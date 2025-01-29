@@ -8,11 +8,9 @@ import static de.muenchen.oss.wahllokalsystem.infomanagementservice.TestConstant
 import static de.muenchen.oss.wahllokalsystem.infomanagementservice.TestConstants.SPRING_TEST_PROFILE;
 
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.MicroServiceApplication;
-
-import java.net.URI;
-
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.KonfigurationRepository;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration.dto.KonfigurationDTO;
+import java.net.URI;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -53,7 +51,7 @@ class UnicodeConfigurationTest {
     private KonfigurationRepository konfigurationRepository;
 
     @Test
-    void testForNfcNormalization() {
+    void should_returnComposedString_when_givenDecomposedString() {
         val konfigurationDTO = KonfigurationDTO.builder().schluessel("WILLKOMMENSTEXT").beschreibung(TEXT_ATTRIBUTE_DECOMPOSED).build();
 
         Assertions.assertThat(konfigurationDTO.beschreibung()).hasSize(TEXT_ATTRIBUTE_DECOMPOSED.length());

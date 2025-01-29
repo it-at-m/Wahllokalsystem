@@ -16,7 +16,7 @@ class KonfigurierterWahltagModelMapperTest {
     @Nested
     class ToModel {
         @Test
-        void isMapped() {
+        void should_returnKonfigurierterWahltagModel_when_konfigurierterWahltagIsGiven() {
             val wahltag = LocalDate.now();
             val wahltagID = "wahltagID";
             val isActive = true;
@@ -32,7 +32,7 @@ class KonfigurierterWahltagModelMapperTest {
     @Nested
     class ToEntity {
         @Test
-        void isMapped() {
+        void should_returnKonfigurierterWahltag_when_konfigurierterWahltagModelIsGiven() {
             val wahltag = LocalDate.now();
             val wahltagID = "wahltagID";
             val isActive = true;
@@ -49,7 +49,7 @@ class KonfigurierterWahltagModelMapperTest {
     class ToModelList {
 
         @Test
-        void isMapped() {
+        void should_returnListOfKonfigurierterWahltagModel_when_listOfKonfigurierterWahltagIsGiven() {
             val wahltag1 = LocalDate.now().minusDays(1);
             val wahltagID1 = "wahltagID";
             val isActive1 = true;

@@ -32,7 +32,7 @@ public class KonfigurierterWahltagServiceIntegrationTest {
     class SetKonfigurierterWahltag {
 
         @Test
-        void onlyExistingKonfigurierterWahltagAreInaktiv() {
+        void should_verifyThatAllExistingWahltageAreSetToInactiveAndOnlyLastAddedWahltagIsActive_when_wahltagIsAdded() {
             val existingWahltag1 = new KonfigurierterWahltag(LocalDate.parse("2024-06-12"), "wahltag1", true, "nummer1");
             val existingWahltag2 = new KonfigurierterWahltag(LocalDate.parse("2024-05-12"), "wahltag2", false, "nummer2");
             val existingWahltag3 = new KonfigurierterWahltag(LocalDate.parse("2024-07-13"), "wahltag3", false, "nummer3");
@@ -60,7 +60,7 @@ public class KonfigurierterWahltagServiceIntegrationTest {
     class GetKonfigurierteWahltage {
 
         @Test
-        void dataIsSortedByWahltagASC() {
+        void should_verifyThatListOfKonfigurierterWahltagModelIsSortedAscendingByWahltag_when_called() {
             val wahltag1 = new KonfigurierterWahltag(LocalDate.parse("2024-06-12"), "wahltag1", true, "nummer1");
             val wahltag2 = new KonfigurierterWahltag(LocalDate.parse("2024-05-12"), "wahltag2", false, "nummer2");
             val wahltag3 = new KonfigurierterWahltag(LocalDate.parse("2024-07-13"), "wahltag3", false, "nummer3");

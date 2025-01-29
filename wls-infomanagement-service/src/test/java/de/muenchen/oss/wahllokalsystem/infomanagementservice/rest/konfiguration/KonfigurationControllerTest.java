@@ -42,7 +42,7 @@ class KonfigurationControllerTest {
     class GetKonfiguration {
 
         @Test
-        void serviceCalledWithDataFound() {
+        void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
             val konfigurationKeyParameter = KonfigurationKey.KENNBUCHSTABEN;
 
             val mockedMapperResultToModelKey = KonfigurationKonfigKey.WILLKOMMENSTEXT;
@@ -59,7 +59,7 @@ class KonfigurationControllerTest {
         }
 
         @Test
-        void serviceCalledWithNoDataFound() {
+        void should_returnNullBodyWithHttpStatusNoContent_when_serviceReturnsNoData() {
             val konfigurationKeyParameter = KonfigurationKey.KENNBUCHSTABEN;
 
             val mockedMapperResultToModelKey = KonfigurationKonfigKey.WILLKOMMENSTEXT;
@@ -69,6 +69,7 @@ class KonfigurationControllerTest {
 
             val result = unitUnderTest.getKonfiguration(KonfigurationKey.KENNBUCHSTABEN);
 
+            Assertions.assertThat(result.getBody()).isNull();
             Assertions.assertThat(result).isEqualTo(ResponseEntity.noContent().build());
         }
 
@@ -78,7 +79,7 @@ class KonfigurationControllerTest {
     class PostKonfiguration {
 
         @Test
-        void serviceCalledWithMappedData() {
+        void should_notThrowException_when_calledWithData() {
             val konfigKey = KonfigurationKey.KENNBUCHSTABEN;
             val requestDTO = new KonfigurationSetDTO("wert", "beschreibung", "standardwert");
 
@@ -95,7 +96,7 @@ class KonfigurationControllerTest {
     class GetKonfigurationen {
 
         @Test
-        void serviceCalledOkWhenDataFound() {
+        void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
             val mockedServiceResponseModel = List.of(
                     KonfigurationModel.builder().build(),
                     KonfigurationModel.builder().build(),
@@ -112,7 +113,7 @@ class KonfigurationControllerTest {
         }
 
         @Test
-        void serviceCalledNoContentWhenNoDataFound() {
+        void should_returnNullWithHttpStatusNoContent_when_serviceReturnsNoData() {
             Mockito.when(konfigurationService.getAllKonfigurations()).thenReturn(null);
 
             val result = unitUnderTest.getKonfigurations();
@@ -126,7 +127,7 @@ class KonfigurationControllerTest {
     class GetKennbuchstabenListen {
 
         @Test
-        void serviceCalled() {
+        void should_returnDTO_when_serviceReturnedData() {
             val mockedServiceResponse = new KennbuchstabenListenModel(Collections.emptyList());
             val mockedMappedResponseAsDTO = new KennbuchstabenListenDTO(Collections.emptyList());
 
@@ -143,7 +144,7 @@ class KonfigurationControllerTest {
     class GetKonfigurationUnauthorized {
 
         @Test
-        void okWhenDataWasFound() {
+        void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
             val konfigKey = KonfigurationKey.KENNBUCHSTABEN;
             val mockedKonfigKeyAsModel = KonfigurationKonfigKey.KENNBUCHSTABEN;
             val mockedServiceResponseModel = KonfigurationModel.builder().build();
@@ -159,7 +160,7 @@ class KonfigurationControllerTest {
         }
 
         @Test
-        void noContentWhenNoDataFound() {
+        void should_returnNullBodyWithHttpStatusNoContent_when_serviceReturnsNoData() {
             val konfigKey = KonfigurationKey.KENNBUCHSTABEN;
             val mockedKonfigKeyAsModel = KonfigurationKonfigKey.KENNBUCHSTABEN;
 

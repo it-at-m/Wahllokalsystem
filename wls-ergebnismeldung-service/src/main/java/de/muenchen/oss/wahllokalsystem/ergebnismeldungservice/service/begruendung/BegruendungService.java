@@ -43,14 +43,14 @@ public class BegruendungService {
         "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostBegruendung')"
                 + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
     )
-    public void postBegruendung(@P("param") @NotNull BegruendungModel begruendungToAdd, BegruendungReference begruendungReference) {
+    public void postBegruendung(@P("param") final BegruendungReference begruendungReference, @NotNull final BegruendungModel begruendungToAdd) {
         log.info("#postBegruendung");
         begruendungValidator.validModelOrThrow(begruendungToAdd);
         begruendungValidator.validReferenceOrThrow(begruendungReference);
 
         try {
             begruendungRepository.save(begruendungModelMapper.toEntity(begruendungToAdd));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.error("#postBegruendung unsaveable:", e);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.BEGRUENDUNG_UNSAVEABLE);
         }

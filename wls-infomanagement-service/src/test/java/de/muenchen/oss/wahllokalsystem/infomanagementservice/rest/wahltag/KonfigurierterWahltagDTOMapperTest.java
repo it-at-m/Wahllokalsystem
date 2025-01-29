@@ -24,7 +24,7 @@ class KonfigurierterWahltagDTOMapperTest {
 
         @Test
         void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
+            Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
         }
 
         @Test
@@ -48,7 +48,7 @@ class KonfigurierterWahltagDTOMapperTest {
 
         @Test
         void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
+            Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
         }
 
         @Test

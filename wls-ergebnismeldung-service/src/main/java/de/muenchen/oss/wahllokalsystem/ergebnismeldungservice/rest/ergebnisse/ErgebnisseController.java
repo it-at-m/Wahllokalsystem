@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.AbstractController;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseReference;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;

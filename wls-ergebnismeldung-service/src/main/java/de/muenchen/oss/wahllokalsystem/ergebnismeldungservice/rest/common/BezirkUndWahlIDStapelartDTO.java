@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common;
 
 import jakarta.validation.constraints.NotNull;
 

@@ -1,7 +1,7 @@
 # Frontend-Projekt
 
-Um ein neues Frontend-Projekt anzulegen sind zuvor die [allgemeinen Infos](/technik/guides/new-microservice) zum
-Einrichten eines neuen Services zu beachten.
+Um ein neues Frontend-Projekt anzulegen sind zuvor die [allgemeinen Infos](/technik/guides/new-microservice/index.md) 
+zum Einrichten eines neuen Services zu beachten.
 
 ### Referenzarchitektur-Template klonen
 Um ein neues Frontend-Projekt anzulegen, wird das entsprechende Frontend-Template der 

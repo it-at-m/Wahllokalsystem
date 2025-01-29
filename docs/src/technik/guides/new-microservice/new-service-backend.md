@@ -1,7 +1,7 @@
 # Backend-Microservice
 
-Um einen neuen Backend-Service anzulegen sind zuvor die [allgemeinen Infos](/technik/guides/new-microservice) zum 
-Einrichten eines neuen Services zu beachten.
+Um einen neuen Backend-Service anzulegen sind zuvor die [allgemeinen Infos](/technik/guides/new-microservice/index.md) 
+zum Einrichten eines neuen Services zu beachten.
 
 ### Maven-Projekt anlegen
 

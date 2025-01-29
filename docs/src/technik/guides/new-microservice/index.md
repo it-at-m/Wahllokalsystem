@@ -9,7 +9,6 @@ Im Projekt haben wir für das Naming unserer Tests [Konventionen](/technik/namin
 entsprechend angepasst werden.
 
 ## Workflows einrichten
-<!-- Anmerkung: Zeilen 14-18 werden in anderen Files importiert. Falls sich durch Anpassungen die Zeilen ändern-->
 
 Im Repo gibt es diverse [Workflows](/technik/ecosystem/workflows). Die Workflows eines bestehenden Services sind zu
 kopieren und die Trigger anzupassen.

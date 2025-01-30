@@ -12,7 +12,7 @@ public interface BegruendungDTOMapper {
 
     @Mapping(target = "bezirkUndWahlIDStapelart.wahlbezirkID", source = "wahlbezirkID")
     @Mapping(target = "bezirkUndWahlIDStapelart.wahlID", source = "wahlID")
-    @Mapping(target = "bezirkUndWahlIDStapelart.stapelartDTO", source = "stapelart")
+    @Mapping(target = "bezirkUndWahlIDStapelart.stapelart", source = "stapelart")
     @Mapping(target = "grund", source = "grund1")
     BegruendungDTO toDTO(BegruendungModel model);
 
@@ -20,7 +20,7 @@ public interface BegruendungDTOMapper {
 
     @Mapping(target = "wahlbezirkID", source = "bezirkUndWahlIDStapelart.wahlbezirkID")
     @Mapping(target = "wahlID", source = "bezirkUndWahlIDStapelart.wahlID")
-    @Mapping(target = "stapelart", source = "bezirkUndWahlIDStapelart.stapelartDTO")
+    @Mapping(target = "stapelart", source = "bezirkUndWahlIDStapelart.stapelart")
     @Mapping(target = "grund1", source = "grund")
     BegruendungModel toModel(BegruendungDTO dto);
 

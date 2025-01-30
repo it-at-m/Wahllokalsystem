@@ -55,7 +55,7 @@ jobs:
     uses:
       ./.github/workflows/callable-run-npm-build.yml
     with:
-      pom-dir: 'wls-gui-<frontend-name>'
+      package-dir: 'wls-gui-<frontend-name>'
 ``` 
 :::
 

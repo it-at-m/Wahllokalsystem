@@ -82,7 +82,7 @@ class KonfigurierterWahltagServiceTest {
         }
 
         @Test
-        void should_saveInactiveKonfigurierterWahltag_when_called() {
+        void should_saveInactiveKonfigurierterWahltag_when_calledWithModel() {
             val konfigurierterWahltagToSave = KonfigurierterWahltagModel.builder().active(false).build();
 
             val mockedModelAsEntity = new KonfigurierterWahltag();
@@ -98,7 +98,7 @@ class KonfigurierterWahltagServiceTest {
         }
 
         @Test
-        void should_saveActiveKonfigurierterWahltagAndSetExistingKonfigurierteWahltageInaktiv_when_called() {
+        void should_saveActiveKonfigurierterWahltagAndSetExistingKonfigurierteWahltageInaktiv_when_calledWithModel() {
             val konfigurierterWahltagToSave = KonfigurierterWahltagModel.builder().active(true).build();
 
             val mockedModelAsEntity = new KonfigurierterWahltag();
@@ -133,7 +133,7 @@ class KonfigurierterWahltagServiceTest {
         }
 
         @Test
-        void should_deleteKonfigurierterWahltag_when_called() {
+        void should_deleteKonfigurierterWahltag_when_calledWithWahltagID() {
             val wahltagID = "wahltagID";
 
             Mockito.doNothing().when(konfigurierterWahltagRepository).deleteById(wahltagID);

@@ -17,7 +17,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public class ArchUnitTest {
 
-    private static final String REGEX_TEST_CASE_NAME = "should_[a-z].*_when_[a-z].*";
+    private static final String REGEX_TEST_CASE_NAME = "^should_([a-z]+([A-Z]+[a-z]*)+)_when_([a-z]+([A-Z]+[a-z]*)+)$";
 
     private static final MethodsShouldConjunction RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED = methods()
             .that().areAnnotatedWith(Test.class)

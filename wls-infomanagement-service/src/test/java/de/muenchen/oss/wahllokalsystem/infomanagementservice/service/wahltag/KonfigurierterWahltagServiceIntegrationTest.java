@@ -60,7 +60,7 @@ public class KonfigurierterWahltagServiceIntegrationTest {
     class GetKonfigurierteWahltage {
 
         @Test
-        void should_verifyThatListOfKonfigurierterWahltagModelIsSortedAscendingByWahltag_when_called() {
+        void should_verifyThatListOfKonfigurierterWahltagModelIsSortedAscendingByWahltag_when_calledGetKonfigurierteWahltage() {
             val wahltag1 = new KonfigurierterWahltag(LocalDate.parse("2024-06-12"), "wahltag1", true, "nummer1");
             val wahltag2 = new KonfigurierterWahltag(LocalDate.parse("2024-05-12"), "wahltag2", false, "nummer2");
             val wahltag3 = new KonfigurierterWahltag(LocalDate.parse("2024-07-13"), "wahltag3", false, "nummer3");

@@ -194,7 +194,7 @@ class KonfigurationServiceTest {
     class SetKonfiguration {
 
         @Test
-        void should_saveKonfiguration_when_called() {
+        void should_saveKonfiguration_when_calledWithModel() {
             val konfigurationSetModel = KonfigurationSetModel.builder().build();
 
             val mockedKonfigurationEntity = new Konfiguration();

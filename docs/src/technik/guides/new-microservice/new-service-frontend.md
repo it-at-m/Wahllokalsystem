@@ -74,11 +74,13 @@ spring:
         - id: gui-<frontend-name> // [!code focus:4]
           uri: http://kubernetes.docker.internal:<PORT>/
           predicates:
-            - Path=/**
+            - Path=/<frontend-name>/**
 ```
 
 > [!IMPORTANT]
-> Die route mit dem Pfad `Path=/**` muss immer an letzter Stelle stehen, da sie sonst alle anderen Routen überschreibt.
+> Es wird immer die erste Route verwendet, welche die Bedingungen (predicates) erfüllt. Nur `Path=/**` wäre auf alle Pfade 
+> anwendbar, weshalb alle Routen, die danach noch kommen, nicht mehr berücksichtigt werden. Daher muss eine Route mit 
+> dem Pfad `Path=/**` immer an letzter Stelle stehen.
 
 ## Ungenutzte Refarch-Elemente entfernen
 

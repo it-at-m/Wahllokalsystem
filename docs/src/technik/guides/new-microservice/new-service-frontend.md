@@ -3,7 +3,7 @@
 Um ein neues Frontend-Projekt anzulegen sind zuvor die [allgemeinen Infos](/technik/guides/new-microservice/index.md) 
 zum Einrichten eines neuen Services zu beachten.
 
-### Referenzarchitektur-Template klonen
+## Referenzarchitektur-Template klonen
 Um ein neues Frontend-Projekt anzulegen, wird das entsprechende Frontend-Template der 
 [Referenzarchitektur](https://github.com/it-at-m/refarch-templates/tree/main/refarch-frontend) benötigt. Da wir einen 
 neuen Frontend-Service brauchen, ist nur der Ordner `refarch-frontend` des Templates relevant.
@@ -17,7 +17,7 @@ Zum Beispiel heißt der Ordner `wls-gui-wahllokalsystem` für das Wahllokalsyste
 Admintool bezeichnet werden.
 :::
 
-### Workflow Templates
+## Workflow Templates
 
 ::: code-group
 ```yml {1,8-9,18} [wls-gui-&lt;frontend-name&gt;_push-dev.yml]
@@ -59,7 +59,7 @@ jobs:
 ``` 
 :::
 
-### Routing im Gateway einrichten
+## Routing im Gateway einrichten
 
 Damit der Port und die URL für das neue Frontend-Projekt korrekt verknüpft wird, muss das 
 [`application-routes.yml`-File](https://github.com/it-at-m/Wahllokalsystem/blob/dev/stack/gateway_config/application-routes.yml) 
@@ -80,7 +80,7 @@ spring:
 > [!IMPORTANT]
 > Die route mit dem Pfad `Path=/**` muss immer an letzter Stelle stehen, da sie sonst alle anderen Routen überschreibt.
 
-### Ungenutzte Refarch-Elemente entfernen
+## Ungenutzte Refarch-Elemente entfernen
 
 Damit der Code sauber und übersichtlich bleibt, sollten die Elemente des Refarch-Templates, die nicht für das Projekt
 benötigt werden, wie zum Beispiel [Mucatar](https://github.com/it-at-m/Wahllokalsystem/pull/661/files) entfernt werden. 

@@ -59,7 +59,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
                 authorities = { de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG,
                         de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
         )
-        void emptyResponse() throws Exception {
+        void should_returnNoContent_when_noDataFoundInRepository() throws Exception {
             val request = MockMvcRequestBuilders.get("/businessActions/konfigurierterWahltag");
 
             val response = api.perform(request).andExpect(status().isNoContent()).andReturn();
@@ -73,7 +73,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
                         de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG,
                         de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG }
         )
-        void dataFound() throws Exception {
+        void should_returnData_when_dataIsPresentInRepository() throws Exception {
             val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
             val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");
             val konfigurierterWahltagExpected = new KonfigurierterWahltag(LocalDate.now(), "6-7-8", true, "0103");
@@ -104,7 +104,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
                         de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG,
                         de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
         )
-        void newAktivWahltagSavedAndReadOKWithBody() throws Exception {
+        void should_persistAndFindData_when_noDataIsPresentInRepository() throws Exception {
             // DB leer, Wahltag neu setzen mit WahltagStatus.AKTIV -> OK zurück mit empty body
             val konfigurierterWahltagDTO = new KonfigurierterWahltagDTO(LocalDate.now(), "1-2-3", WahltagStatus.AKTIV, "4711");
             val requestPost = createPostWithBody(konfigurierterWahltagDTO);
@@ -131,7 +131,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
                         de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG,
                         de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
         )
-        void newInaktivWahltagSavedAndReadOKNoContent() throws Exception {
+        void should_persistAndNotFindData_when_noDataIsPresentInRepository() throws Exception {
             // Dooffall: DB leer neu setzen mit WahltagStatus.INAKTIV -> OK zurück mit empty body
             val konfigurierterWahltagDTO = new KonfigurierterWahltagDTO(LocalDate.now(), "1-2-3", WahltagStatus.INAKTIV, "4711");
             val requestPost = createPostWithBody(konfigurierterWahltagDTO);
@@ -154,7 +154,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
                         de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG,
                         de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
         )
-        void overrideAktiverWahltagAndReadOKWithContent() throws Exception {
+        void should_replaceOldData_when_dataIsPresentInRepository() throws Exception {
             // DB hat aktiven Wahltag, überschreiben mit neuem Wahltag -> -> OK zurück mit empty body
             val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
             val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");
@@ -200,7 +200,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
                 authorities = { de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_GET_KONFIGURIERTEWAHLTAGE,
                         de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_READ_KONFIGURIERTEWAHLTAGE }
         )
-        void emptyResponse() throws Exception {
+        void should_returnOk_when_noDataFoundInRepository() throws Exception {
             val request = MockMvcRequestBuilders.get("/businessActions/konfigurierteWahltage");
 
             val response = api.perform(request).andExpect(status().isOk()).andReturn();
@@ -214,7 +214,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
                         Authorities.REPOSITORY_READ_KONFIGURIERTEWAHLTAGE,
                         de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG }
         )
-        void dataFound() throws Exception {
+        void should_returnData_when_dataIsPresentInRepository() throws Exception {
             val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
             val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");
             val konfigurierterWahltag3 = new KonfigurierterWahltag(LocalDate.now(), "6-7-8", true, "0103");
@@ -246,7 +246,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = {})
-        void isFalseWhenWahltagNotFound() throws Exception {
+        void should_returnFalseAndStatusOk_when_noWahltagFound() throws Exception {
             val request = MockMvcRequestBuilders.get("/businessActions/loginCheck/5555");
 
             val response = api.perform(request).andExpect(status().isOk()).andReturn();
@@ -256,7 +256,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG })
-        void isInactiveFound() throws Exception {
+        void should_returnFalseAndStatusOk_when_noActiveWahltagFound() throws Exception {
             val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
             val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");
             val konfigurierterWahltag3 = new KonfigurierterWahltag(LocalDate.now(), "6-7-8", true, "0103");
@@ -272,12 +272,11 @@ public class KonfigurierterWahltagControllerIntegrationTest {
             val expectedResponseBody = "false";
 
             Assertions.assertThat(responseBody).isEqualTo(expectedResponseBody);
-
         }
 
         @Test
         @WithMockUser(authorities = { de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG })
-        void isActiveFound() throws Exception {
+        void should_returnTrueAndStatusOk_when_activeWahltagFound() throws Exception {
             val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
             val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");
             val konfigurierterWahltag3 = new KonfigurierterWahltag(LocalDate.now(), "6-7-8", true, "0103");

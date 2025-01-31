@@ -9,13 +9,13 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @ActiveProfiles(TestConstants.SPRING_NO_SECURITY_PROFILE)
-public class MicroServiceApplicationNoSecurityProfileTest {
+class MicroServiceApplicationNoSecurityProfileTest {
 
     @Autowired
     AnonymousHandler anonymousHandler;
 
     @Test
-    void anonymousHandlerIsPartOfContext() {
+    void should_returnNotNull_when_anonymouseHandlerIsUsedFromAutowiredContext() {
         Assertions.assertThat(anonymousHandler).isNotNull();
     }
 }

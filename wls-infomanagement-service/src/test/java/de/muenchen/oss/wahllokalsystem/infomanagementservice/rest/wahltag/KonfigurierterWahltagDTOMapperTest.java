@@ -23,12 +23,12 @@ class KonfigurierterWahltagDTOMapperTest {
     class ToDTO {
 
         @Test
-        void nullInNullOut() {
-            Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
+        void should_returnNull_when_givenNull() {
+            Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
         }
 
         @Test
-        void isMappedToDTO() {
+        void should_returnKonfigurierterWahltagDTO_when_konfigurierterWahltagModelIsGiven() {
             val wahltag = LocalDate.now();
             val wahltagID = "1-2-3";
             val wahltagStatus = WahltagStatus.INAKTIV;
@@ -47,12 +47,12 @@ class KonfigurierterWahltagDTOMapperTest {
     class ToModel {
 
         @Test
-        void nullInNullOut() {
-            Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
+        void should_returnNull_when_givenNull() {
+            Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
         }
 
         @Test
-        void isMappedToModel() {
+        void should_returnKonfigurierterWahltagModel_when_konfigurierterWahltagDTOIsGiven() {
             val wahltag = LocalDate.now();
             val wahltagID = "1-2-3";
             val wahltagStatus = WahltagStatus.INAKTIV;
@@ -69,12 +69,12 @@ class KonfigurierterWahltagDTOMapperTest {
     @Nested
     class ToDTOList {
         @Test
-        void nullInNullOut() {
+        void should_returnNull_when_givenNull() {
             Assertions.assertThat(unitUnderTest.toDTOList(null)).isNull();
         }
 
         @Test
-        void isMappedToDTOList() {
+        void should_returnListOfKonfigurierterWahltagDTO_when_listOfKonfigurierterWahltagModelIsGiven() {
             val wahltag_1 = LocalDate.now();
             val wahltagID_1 = "1-2-3";
             val wahltagStatus_1 = WahltagStatus.INAKTIV;
@@ -113,19 +113,19 @@ class KonfigurierterWahltagDTOMapperTest {
         private static final List<WahltagStatus> STATUS_VALUES_THAT_ARE_ACTIVE = List.of(WahltagStatus.AKTIV);
 
         @Test
-        void nullReturnsFalse() {
+        void should_returnFalse_when_givenNull() {
             Assertions.assertThat(unitUnderTest.statusToActiveFlag(null)).isFalse();
         }
 
         @ParameterizedTest
         @MethodSource("argumentsForStatusValuesReturnTrue")
-        void verifyStatusValuesReturningTrue(final ArgumentsAccessor argumentsAccessor) {
+        void should_returnTrue_when_activeValuesAreGiven(final ArgumentsAccessor argumentsAccessor) {
             Assertions.assertThat(unitUnderTest.statusToActiveFlag(argumentsAccessor.get(0, WahltagStatus.class))).isTrue();
         }
 
         @ParameterizedTest
         @MethodSource("argumentsForStatusValuesReturnFalse")
-        void verifyStatusValuesReturningFalse(final ArgumentsAccessor argumentsAccessor) {
+        void should_returnFalse_when_nonActiveValuesAreGiven(final ArgumentsAccessor argumentsAccessor) {
             Assertions.assertThat(unitUnderTest.statusToActiveFlag(argumentsAccessor.get(0, WahltagStatus.class))).isFalse();
         }
 
@@ -142,12 +142,12 @@ class KonfigurierterWahltagDTOMapperTest {
     class ActiveFlagToStatus {
 
         @Test
-        void trueIsActive() {
+        void should_returnTrue_when_wahltagStatusActiveIsGiven() {
             Assertions.assertThat(unitUnderTest.activeFlagToStatus(true)).isEqualTo(WahltagStatus.AKTIV);
         }
 
         @Test
-        void falseIsInactive() {
+        void should_returnFAlse_when_wahltagStatusInactiveIsGiven() {
             Assertions.assertThat(unitUnderTest.activeFlagToStatus(false)).isEqualTo(WahltagStatus.INAKTIV);
         }
     }

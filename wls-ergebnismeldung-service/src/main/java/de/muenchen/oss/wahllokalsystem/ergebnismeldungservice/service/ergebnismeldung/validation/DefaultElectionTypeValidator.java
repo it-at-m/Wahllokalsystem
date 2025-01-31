@@ -102,7 +102,7 @@ public class DefaultElectionTypeValidator {
     }
 
     private boolean checkValidationWahlscheine(String wahlbezirkID, String wahlID) throws WlsException {
-        val wahlscheine = wahlscheineRepo.findById(new BezirkUndWahlID(wahlbezirkID, wahlID));
+        val wahlscheine = wahlscheineRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID));
         boolean wahlscheineErfasst = wahlscheine.isPresent();
         if (!wahlscheineErfasst) {
             log.error("Briefwahlbezirk {} hat Wahlscheine noch nicht erfasst. Invalide!", wahlbezirkID);
@@ -112,8 +112,8 @@ public class DefaultElectionTypeValidator {
     }
 
     private boolean checkAWerte(String wahlbezirkID, String wahlID) throws WlsException {
-        val bezirkUndWahlID = new BezirkUndWahlID(wahlbezirkID, wahlID);
-        Optional<AWerte> aWerte = aWerteRepo.findById(new BezirkUndWahlID(wahlbezirkID, wahlID));
+        val bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
+        Optional<AWerte> aWerte = aWerteRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID));
         if (aWerte.isEmpty()) {
             aWerte_BusinessActionService.getAWerte(wahlbezirkID);
             aWerte = aWerteRepo.findById(bezirkUndWahlID);

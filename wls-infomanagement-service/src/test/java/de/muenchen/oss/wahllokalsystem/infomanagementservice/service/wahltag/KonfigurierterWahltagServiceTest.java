@@ -43,7 +43,7 @@ class KonfigurierterWahltagServiceTest {
     class GetKonfigurierterWahltag {
 
         @Test
-        void konfigurierterWahltagFound() {
+        void should_returnKonfigurierterWahltagModel_when_dataFoundInRepo() {
             val mockedWahltagFromRepo = new KonfigurierterWahltag();
             val mockedEntityAsModel = KonfigurierterWahltagModel.builder().active(true).build();
 
@@ -57,7 +57,7 @@ class KonfigurierterWahltagServiceTest {
         }
 
         @Test
-        void noKonfigurierterWahltagFound() {
+        void should_returnNull_when_noDataFoundInRepo() {
             Mockito.when(konfigurierterWahltagRepository.findByActive(true)).thenReturn(null);
 
             val result = unitUnderTest.getKonfigurierterWahltag();
@@ -70,7 +70,7 @@ class KonfigurierterWahltagServiceTest {
     class SetKonfigurierterWahltag {
 
         @Test
-        void noSaveOnFailedValidation() {
+        void should_throwException_when_validationFails() {
             val konfigurierterWahltagToSave = KonfigurierterWahltagModel.builder().build();
 
             val mockedValidationException = new RuntimeException("failed validation");
@@ -82,7 +82,7 @@ class KonfigurierterWahltagServiceTest {
         }
 
         @Test
-        void newInaktivWahltagSaved() {
+        void should_saveInactiveKonfigurierterWahltag_when_calledWithModel() {
             val konfigurierterWahltagToSave = KonfigurierterWahltagModel.builder().active(false).build();
 
             val mockedModelAsEntity = new KonfigurierterWahltag();
@@ -98,7 +98,7 @@ class KonfigurierterWahltagServiceTest {
         }
 
         @Test
-        void newAktivWahltagSaved() {
+        void should_saveActiveKonfigurierterWahltagAndSetExistingKonfigurierteWahltageInaktiv_when_calledWithModel() {
             val konfigurierterWahltagToSave = KonfigurierterWahltagModel.builder().active(true).build();
 
             val mockedModelAsEntity = new KonfigurierterWahltag();
@@ -119,7 +119,7 @@ class KonfigurierterWahltagServiceTest {
     class DeleteKonfigurierterWahltag {
 
         @Test
-        void validationOfModelFailed() {
+        void should_throwException_when_validationFails() {
             val wahltagID = "wahltagID";
 
             val mockedValidationException = new RuntimeException("failed Validation");
@@ -133,7 +133,7 @@ class KonfigurierterWahltagServiceTest {
         }
 
         @Test
-        void deletionSuccessful() {
+        void should_deleteKonfigurierterWahltag_when_calledWithWahltagID() {
             val wahltagID = "wahltagID";
 
             Mockito.doNothing().when(konfigurierterWahltagRepository).deleteById(wahltagID);
@@ -148,7 +148,7 @@ class KonfigurierterWahltagServiceTest {
         }
 
         @Test
-        void onDeleteExceptionIsMappedAndThrown() {
+        void should_throwTechnischeWlsException_when_repoFails() {
             val wahltagID = "wahltagID";
 
             val mockedThrownException = new RuntimeException("on delete exception");
@@ -169,7 +169,7 @@ class KonfigurierterWahltagServiceTest {
     class GetKonfigurierteWahltage {
 
         @Test
-        void listOfKonfigurierteWahltageIsSend() {
+        void should_returnListOfKonfigurierterWahltagModel_when_dataFoundInRepo() {
             val mockedRepoResponse = Arrays.asList(new KonfigurierterWahltag(), new KonfigurierterWahltag(), new KonfigurierterWahltag());
             mockedRepoResponse.forEach(wahltag -> wahltag.setWahltag(LocalDate.now()));
             val mockedRepoResponseAsModelList = Arrays.asList(KonfigurierterWahltagModel.builder().build(), KonfigurierterWahltagModel.builder().build());
@@ -185,7 +185,7 @@ class KonfigurierterWahltagServiceTest {
     class IsWahltagActive {
 
         @Test
-        void falseOnNoRepoHit() {
+        void should_returnFalse_when_noDataFoundInRepo() {
             val wahltagID = "wahltagID";
 
             Mockito.when(konfigurierterWahltagRepository.findById(wahltagID)).thenReturn(Optional.empty());
@@ -194,7 +194,7 @@ class KonfigurierterWahltagServiceTest {
         }
 
         @Test
-        void verifyInactiveRepoValueReturnsFalse() {
+        void should_returnFalse_when_inactiveKonfigurierterWahltagFoundInRepo() {
             val wahltagID = "wahltagID";
 
             val mockedEntity = new KonfigurierterWahltag();
@@ -206,7 +206,7 @@ class KonfigurierterWahltagServiceTest {
         }
 
         @Test
-        void verifyActiveRepoValueReturnsTrue() {
+        void should_returnTrue_when_activeKonfigurierterWahltagFoundInRepo() {
             val wahltagID = "wahltagID";
 
             val mockedEntity = new KonfigurierterWahltag();

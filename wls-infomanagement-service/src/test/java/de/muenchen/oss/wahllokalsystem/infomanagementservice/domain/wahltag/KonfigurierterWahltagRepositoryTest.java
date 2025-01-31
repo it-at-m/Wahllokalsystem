@@ -25,7 +25,7 @@ class KonfigurierterWahltagRepositoryTest {
 
         @Test
         @Transactional
-        void verifyAllKonfigurierteWahltageAreInaktiv() {
+        void should_verifyThatAllKonfigurierteWahltageAreInaktiv_when_setExistingKonfigurierteWahltageInaktivIsCalled() {
             val wahltageToSave = List.of(new KonfigurierterWahltag(LocalDate.parse("2024-01-01"), "wahltag1", true, "nummer1"),
                     new KonfigurierterWahltag(LocalDate.parse("2024-01-02"), "wahltag2", false, "nummer2"),
                     new KonfigurierterWahltag(LocalDate.parse("2024-01-03"), "wahltag3", false, "nummer3"),

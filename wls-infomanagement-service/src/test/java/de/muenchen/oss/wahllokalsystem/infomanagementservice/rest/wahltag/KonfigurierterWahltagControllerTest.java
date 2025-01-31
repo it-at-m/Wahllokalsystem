@@ -31,7 +31,7 @@ class KonfigurierterWahltagControllerTest {
     class GetKonfigurierterWahltag {
 
         @Test
-        void serviceCalledWithDataFound() {
+        void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
             val mockDTO = KonfigurierterWahltagDTO.builder().wahltag(LocalDate.now()).wahltagStatus(WahltagStatus.INAKTIV).wahltagID("1-2-3").nummer("4711")
                     .build();
             val mockModel = KonfigurierterWahltagModel.builder().build();
@@ -45,7 +45,7 @@ class KonfigurierterWahltagControllerTest {
         }
 
         @Test
-        void serviceCalledWithNoDataFound() {
+        void should_returnNullBodyWithHttpStatusNoContent_when_serviceReturnsNoData() {
             KonfigurierterWahltagDTO mockDTO = null;
             KonfigurierterWahltagModel mockModel = null;
 
@@ -54,6 +54,7 @@ class KonfigurierterWahltagControllerTest {
 
             val result = unitUnderTest.getKonfigurierterWahltag();
 
+            Assertions.assertThat(result.getBody()).isNull();
             Assertions.assertThat(result).isEqualTo(ResponseEntity.noContent().build());
         }
     }
@@ -62,7 +63,7 @@ class KonfigurierterWahltagControllerTest {
     class SetKonfigurierterWahltag {
 
         @Test
-        void serviceCalledWithPostDataOK() {
+        void should_notThrowException_when_calledWithData() {
             val wahltag = LocalDate.now();
             val wahltagID = "1-2-3";
             val wahltagStatus = WahltagStatus.INAKTIV;
@@ -82,7 +83,7 @@ class KonfigurierterWahltagControllerTest {
     class DeleteKonfigurierterWahltag {
 
         @Test
-        void serviceCalledWithDeleteDataOK() {
+        void should_notThrowException_when_calledWithData() {
             val wahltagID = "1-2-3";
 
             Mockito.doNothing().when(konfigurierterWahltagService).deleteKonfigurierterWahltag(wahltagID);
@@ -95,7 +96,7 @@ class KonfigurierterWahltagControllerTest {
     class GetKonfigurierteWahltage {
 
         @Test
-        void serviceCalledWithDataFound() {
+        void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
             val mockDTOList = List.of(
                     KonfigurierterWahltagDTO.builder().build(),
                     KonfigurierterWahltagDTO.builder().build(),
@@ -116,12 +117,13 @@ class KonfigurierterWahltagControllerTest {
         }
 
         @Test
-        void serviceCalledWithNoDataFound() {
+        void should_returnNullBodyWithHttpStatusNoContent_when_serviceReturnsNoData() {
             Mockito.when(konfigurierterWahltagDTOMapper.toDTOList(null)).thenReturn(null);
             Mockito.when(konfigurierterWahltagService.getKonfigurierteWahltage()).thenReturn(null);
 
             val result = unitUnderTest.getKonfigurierteWahltage();
 
+            Assertions.assertThat(result.getBody()).isNull();
             Assertions.assertThat(result).isEqualTo(ResponseEntity.noContent().build());
         }
     }
@@ -130,7 +132,7 @@ class KonfigurierterWahltagControllerTest {
     class IsWahltagActive {
 
         @Test
-        void serviceCalledWithActiveWahltagId() {
+        void should_returnTrueWithHttpStatusOk_when_serviceReturnedActiveWahltag() {
             val wahltagID = "1-2-3";
 
             Mockito.when(konfigurierterWahltagService.isWahltagActive(wahltagID)).thenReturn(true);
@@ -141,7 +143,7 @@ class KonfigurierterWahltagControllerTest {
         }
 
         @Test
-        void serviceCalledWithInactiveWahltagId() {
+        void should_returnFalseWithHttpStatusOk_when_serviceReturnedInactiveWahltag() {
             val wahltagID = "4-5-6";
 
             Mockito.when(konfigurierterWahltagService.isWahltagActive(wahltagID)).thenReturn(false);

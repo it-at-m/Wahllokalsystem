@@ -60,6 +60,10 @@ export default defineConfig({
       clientPort: serverPort,
     },
   },
+  // serves built solution from ./dist folder to preview (no hot reload)
+  preview: {
+    port: serverPort,
+  },
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),

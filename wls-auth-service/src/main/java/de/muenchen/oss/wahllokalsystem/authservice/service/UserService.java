@@ -162,6 +162,7 @@ public class UserService {
         return usersToCSVString(persistedUsers);
     }
 
+    @Transactional
     public Optional<UserModel> getUser(String name) {
         val user = userRepository.findByUsername(name);
         return user.map(userModelMapper::toModel);

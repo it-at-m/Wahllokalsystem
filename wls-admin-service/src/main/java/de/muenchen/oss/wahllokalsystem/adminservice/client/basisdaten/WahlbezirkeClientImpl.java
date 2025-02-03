@@ -1,10 +1,10 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.client.basisdaten;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.configuration.Profiles;
-import de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.client.WahltageControllerApi;
+import de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.client.WahlbezirkeControllerApi;
 import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.WahltagModel;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.WahltageClient;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.WahlbezirkModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.WahlbezirkeClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.List;
@@ -18,34 +18,34 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
-public class WahltageClientImpl implements WahltageClient {
+public class WahlbezirkeClientImpl implements WahlbezirkeClient {
 
     private final ExceptionFactory exceptionFactory;
 
-    private final WahltageControllerApi wahltageControllerApi;
+    private final WahlbezirkeControllerApi wahlbezirkeControllerApi;
 
-    private final WahltagClientMapper wahltagClientMapper;
+    private final WahlbezirkeClientMapper wahlbezirkeClientMapper;
 
     @Override
-    public List<WahltagModel> getWahltage() {
-        log.debug("#getWahltage1");
+    public List<WahlbezirkModel> getWahlbezirke(String wahltagID) {
+        log.debug("#getWahlbezirke");
 
-        final List<WahltagModel> wahltage;
+        final List<WahlbezirkModel> wahlbezirke;
         try {
-            val wahltageDTO = wahltageControllerApi.getWahltage();
+            val wahlbezirkeDTO = wahlbezirkeControllerApi.getWahlbezirke(wahltagID);
 
-            if (wahltageDTO == null) {
+            if (wahlbezirkeDTO == null) {
                 return null;
             }
 
-            wahltage = wahltagClientMapper.fromRemoteClientSetOfWahltagDTOtoListOfWahltagModel(wahltageDTO);
-            log.debug("#getWahltage response from basisdaten: {}", wahltage);
+            wahlbezirke = wahlbezirkeClientMapper.fromListOfWahlbezirkDTOtoListOfWahlbezirkModel(wahlbezirkeDTO);
         } catch (WlsException wlsEx) {
-            log.debug("found WlsException: {}");
+            log.error("#getWahlbezirke found WlsException:", wlsEx);
             throw wlsEx;
         } catch (Exception exception) {
+            log.error("#getWahlbezirke exception:", exception);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
         }
-        return wahltage;
+        return wahlbezirke;
     }
 }

@@ -8,8 +8,14 @@ import lombok.NoArgsConstructor;
 public class ExceptionConstants {
 
     public static final ExceptionDataWrapper KOMMUNIKATIONSFEHLER_MIT_BASISDATEN = new ExceptionDataWrapper(
-        "200", "Bei der Kommunikation mit dem Basisdaten-Service kam es zu einem Fehler: %s");
+            "200", "Bei der Kommunikation mit dem Basisdaten-Service kam es zu einem Fehler: %s");
+    public static final ExceptionDataWrapper KOMMUNIKATIONSFEHLER_MIT_ERGEBNISMELDUNG = new ExceptionDataWrapper(
+            "500", "Bei der Kommunikation mit dem Ergebnismeldung-Service kam es zu einem Fehler: %s");
+    public static final ExceptionDataWrapper KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT = new ExceptionDataWrapper(
+            "300", "Bei der Kommunikation mit dem Infomanagement-Service kam es zu einem Fehler: %s");
 
+    public static final ExceptionDataWrapper INVALID_ARGUMENT = new ExceptionDataWrapper(
+            "166", "Kein Wahltag vorhanden für die angegebene Wahltag-ID");
     public static ExceptionDataWrapper MISSING_ARGUMENT = new ExceptionDataWrapper(
-        "165", "Parameter %s fehlt.");
+            "165", "Parameter %s fehlt.");
 }

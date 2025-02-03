@@ -47,23 +47,23 @@ class UnicodeConfigurationTest {
     @Test
     @Disabled
     void should_returnComposedString_when_givenDecomposedString() {
-//        // Persist entity with decomposed string.
-//        final TheEntityDto theEntityDto = new TheEntityDto();
-//        theEntityDto.setTextAttribute(TEXT_ATTRIBUTE_DECOMPOSED);
-//        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), theEntityDto.getTextAttribute().length());
-//        final TheEntityDto response = testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), theEntityDto, TheEntityDto.class).getBody();
-//
-//        // Check whether response contains a composed string.
-//        assertEquals(TEXT_ATTRIBUTE_COMPOSED, response.getTextAttribute());
-//        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), response.getTextAttribute().length());
-//
-//        // Extract uuid from self link.
-//        final UUID uuid = UUID.fromString(StringUtils.substringAfterLast(response.getRequiredLink("self").getHref(), "/"));
-//
-//        // Check persisted entity contains a composed string via JPA repository.
-//        final TheEntity theEntity = theEntityRepository.findById(uuid).orElse(null);
-//        assertEquals(TEXT_ATTRIBUTE_COMPOSED, theEntity.getTextAttribute());
-//        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), theEntity.getTextAttribute().length());
+        //        // Persist entity with decomposed string.
+        //        final TheEntityDto theEntityDto = new TheEntityDto();
+        //        theEntityDto.setTextAttribute(TEXT_ATTRIBUTE_DECOMPOSED);
+        //        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), theEntityDto.getTextAttribute().length());
+        //        final TheEntityDto response = testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), theEntityDto, TheEntityDto.class).getBody();
+        //
+        //        // Check whether response contains a composed string.
+        //        assertEquals(TEXT_ATTRIBUTE_COMPOSED, response.getTextAttribute());
+        //        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), response.getTextAttribute().length());
+        //
+        //        // Extract uuid from self link.
+        //        final UUID uuid = UUID.fromString(StringUtils.substringAfterLast(response.getRequiredLink("self").getHref(), "/"));
+        //
+        //        // Check persisted entity contains a composed string via JPA repository.
+        //        final TheEntity theEntity = theEntityRepository.findById(uuid).orElse(null);
+        //        assertEquals(TEXT_ATTRIBUTE_COMPOSED, theEntity.getTextAttribute());
+        //        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), theEntity.getTextAttribute().length());
     }
 
 }

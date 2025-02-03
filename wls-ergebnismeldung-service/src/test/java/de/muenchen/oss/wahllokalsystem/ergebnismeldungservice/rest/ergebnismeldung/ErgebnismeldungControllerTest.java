@@ -44,8 +44,5 @@ class ErgebnismeldungControllerTest {
 
             Mockito.verify(ergebnismeldungService).updateSendungszeiten(new BezirkUndWahlID(wahlID, wahlbezirkID));
         }
-
-        @Test
-        void should_
     }
 }

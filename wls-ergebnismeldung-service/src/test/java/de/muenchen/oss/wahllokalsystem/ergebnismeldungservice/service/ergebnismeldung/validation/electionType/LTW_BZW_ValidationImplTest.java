@@ -107,6 +107,22 @@ class LTW_BZW_ValidationImplTest {
 
             Assertions.assertThat(result).isEqualTo(mockedValidatorResponse);
         }
+
+        @Test
+        void should_notCallDefaultValidatorWithStapelLTW_BZW_DIII_when_meldungsartIsSchnellmeldung() {
+            val wahlbezirkID = "wahlbezirkID";
+            val wahlID = "wahlID";
+            val waehlerverzeichnisNummer = 0L;
+            val meldungsart = MeldungsartModel.V3;
+
+            unitUnderTest.isValidUwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
+
+            Mockito.verify(defaultElectionTypeValidator)
+                    .checkValidation(eq(WahlbezirkArtModel.UWB), eq(wahlbezirkID), eq(wahlID), eq(waehlerverzeichnisNummer), captorStapelList.capture());
+
+            Assertions.assertThat(captorStapelList.getValue()).doesNotContain(Stapelart.LTW_BZW_DII);
+
+        }
     }
 
     @Nested

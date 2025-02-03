@@ -33,8 +33,7 @@ public class WahlartPredicateHolder {
             Map.entry(WahlartModel.OBW,
                     new InvalidErgebnissePredicate(List.of(Stapelart.OBW_C_UNGUELTIG, Stapelart.OBW_B_LEER, Stapelart.OBW_B_UNGEKENNZEICHNET))),
             Map.entry(WahlartModel.SRW, new InvalidErgebnissePredicate(List.of(Stapelart.SRW_BAW_D_UNGUELTIG))),
-            Map.entry(WahlartModel.VE, new InvalidErgebnissePredicate(List.of(Stapelart.VE_BE_D_UNGUELTIG)))
-    );
+            Map.entry(WahlartModel.VE, new InvalidErgebnissePredicate(List.of(Stapelart.VE_BE_D_UNGUELTIG))));
 
     public Predicate<Stapelart> getPredicateForStapelWithInvalidErgebnisse(final WahlartModel wahlart) {
         if (!predicatesForWahlarten.containsKey(wahlart)) {
@@ -46,9 +45,8 @@ public class WahlartPredicateHolder {
 
     private record InvalidErgebnissePredicate(Collection<Stapelart> stapelRepresentingInvalid) implements Predicate<Stapelart> {
 
-        @Override
-        public boolean test(final Stapelart stapelart) {
-            return stapelRepresentingInvalid.contains(stapelart);
-        }
+    @Override
+    public boolean test(final Stapelart stapelart) {
+        return stapelRepresentingInvalid.contains(stapelart);
     }
-}
+}}

@@ -19,7 +19,6 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,12 +48,12 @@ public class ErgebnismeldungMappingService {
         ergebnismeldung.setWahlID(wahlID);
         ergebnismeldung.setWahlbezirkID(wahlbezirkID);
 
-        val bezirkUndWahlID = new BezirkUndWahlID(wahlbezirkID, wahlID);
+        val bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
         val bezirkIDUndWaehlerverzeichnisNummer = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID,
                 waehlerverzeichnisNummer);
 
         val wahlbezirkArtOfUser = authenticationService.getWahlbezirkArtOfCurrentAuthentication();
-        ergebnismeldung.setaWerte(getAWerte(wahlbezirkArtOfUser, bezirkUndWahlID).orElse(null));
+        ergebnismeldung.setaWerte(getAWerte(wahlbezirkArtOfUser, bezirkUndWahlID));
 
         val bWerte = getBWerte(wahlbezirkArtOfUser, bezirkUndWahlID, bezirkIDUndWaehlerverzeichnisNummer, wahlart);
         ergebnismeldung.setbWerte(bWerte);
@@ -74,6 +73,7 @@ public class ErgebnismeldungMappingService {
         ergebnismeldung.setWahlart(mapping.toWahlart(wahlart));
 
         log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3.2  c createErgebmismeldung hauptwahlbezirkID" + hauptwahlbezirkID);
+        //TODO warum nur für diese Wahlarten
         if (wahlbezirkArtOfUser == WahlbezirkArtModel.BWB && (meldungsart.equals(ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT) && (wahlart.equals(
                 WahlartModel.LTW) || wahlart.equals(WahlartModel.BZW)))) {
             long zurueckgewiesenGesamt = briefwahlClient.getAnzahlZurueckgewiesenerWahlbriefe(hauptwahlbezirkID, wahlID, waehlerverzeichnisNummer);
@@ -85,20 +85,20 @@ public class ErgebnismeldungMappingService {
         return ergebnismeldung;
     }
 
-    private Optional<AWerteDTO> getAWerte(final WahlbezirkArtModel wahlbezirkArt, final BezirkUndWahlID bezirkUndWahlID) {
+    private AWerteDTO getAWerte(final WahlbezirkArtModel wahlbezirkArt, final BezirkUndWahlID bezirkUndWahlID) {
         if (wahlbezirkArt == WahlbezirkArtModel.UWB) {
-            val aWerte = aWerteRepo.findById(bezirkUndWahlID).orElseThrow(NullPointerException::new);
-            return Optional.of(mapping.toEntity(aWerte));
+            val aWerte = aWerteRepo.findById(bezirkUndWahlID).orElse(null);
+            return mapping.toEntity(aWerte);
         } else {
-            return Optional.empty();
+            return null;
         }
     }
 
     private BWerteDTO getBWerte(final WahlbezirkArtModel wahlbezirkArt, final BezirkUndWahlID bezirkUndWahlID,
             final BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer, final WahlartModel wahlart) {
         return switch (wahlbezirkArt) {
-            case UWB -> getBWerteDTOUWB(bezirkUndWahlID.getWahlID(), bezirkIDUndWaehlerverzeichnisNummer, wahlart);
-            case BWB -> getBWerteDTOBWB(bezirkUndWahlID);
+        case UWB -> getBWerteDTOUWB(bezirkUndWahlID.getWahlID(), bezirkIDUndWaehlerverzeichnisNummer, wahlart);
+        case BWB -> getBWerteDTOBWB(bezirkUndWahlID);
         };
     }
 
@@ -114,7 +114,7 @@ public class ErgebnismeldungMappingService {
         val bWerte = new BWerteDTO();
         val wahldatenSet = stimmabgabevermerkeRepo.findById(waehlerverzeichnisNummer).orElseThrow(NullPointerException::new).getWahldaten();
         val stimmzettelumschlaege = stimmzettelumschlaegeRepo.findById(
-                new BezirkUndWahlID(waehlerverzeichnisNummer.getWahlbezirkID(), wahlID)).orElseThrow(NullPointerException::new);
+                new BezirkUndWahlID(wahlID, waehlerverzeichnisNummer.getWahlbezirkID())).orElse(null);
 
         val wahldaten = wahldatenSet.stream().filter(wahldaten_ -> wahldaten_.getBezirkUndWahlIDUndWaehlerverzeichnisnummer().getWahlID().equals(wahlID))
                 .findFirst().orElse(null);

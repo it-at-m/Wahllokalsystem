@@ -46,8 +46,8 @@ public class ErgebnismeldungService {
     private final AuthenticationService authenticationService;
 
     @PreAuthorize(
-            "hasAuthority('Ergebnismeldung_BUSINESSACTION_ForceErgebnisse')"
-                    + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#bezirkUndWahl.wahlbezirkID(), authentication)"
+        "hasAuthority('Ergebnismeldung_BUSINESSACTION_ForceErgebnisse')"
+                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#bezirkUndWahl.wahlbezirkID(), authentication)"
     )
     public void updateSendungszeiten(@P("bezirkUndWahl") final BezirkUndWahlID bezirkUndWahlID) {
         log.info("#updateSendungszeiten");
@@ -60,8 +60,8 @@ public class ErgebnismeldungService {
     }
 
     @PreAuthorize(
-            "hasAuthority('Ergebnismeldung_BUSINESSACTION_SendErgebnisse')"
-                    + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#criteria, authentication)"
+        "hasAuthority('Ergebnismeldung_BUSINESSACTION_SendErgebnisse')"
+                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#criteria, authentication)"
     )
     public boolean sendErgebnisse(@P("criteria") final ErgebnisseToSendCriteriaModel ergebnisseToSendCriteria) {
         ergebnismeldungValidator.validErgebnisseToSendCriteriaOrThrow(ergebnisseToSendCriteria);
@@ -151,7 +151,7 @@ public class ErgebnismeldungService {
     private void sendSendungsuhrzeiten(final ErgebnismeldungDTO ergebnismeldung) {
         val now = LocalDateTime.now();
         try {
-            val meldungsart = ergebnismeldung.getMeldungsart();  // meldungsart kann null sein, dann fliegt eine Exception!
+            val meldungsart = ergebnismeldung.getMeldungsart(); // meldungsart kann null sein, dann fliegt eine Exception!
             logErgebnismeldungGesendet(meldungsart.name(), ergebnismeldung.getWahlID());
 
             if (meldungsart.equals(ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT)) {

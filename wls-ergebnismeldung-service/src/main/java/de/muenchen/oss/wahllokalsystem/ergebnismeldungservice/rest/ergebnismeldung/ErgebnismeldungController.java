@@ -60,5 +60,3 @@ public class ErgebnismeldungController {
         return ResponseEntity.ok().build();
     }
 }
-
-

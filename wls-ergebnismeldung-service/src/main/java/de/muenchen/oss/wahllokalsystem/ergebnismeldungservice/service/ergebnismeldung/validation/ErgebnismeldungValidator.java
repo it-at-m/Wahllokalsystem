@@ -48,7 +48,6 @@ public class ErgebnismeldungValidator {
         return electionTypeValidators.stream()
                 .filter(v -> v.supports(wahlart))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("#checkValidation kann mit Wahlart" + wahlart.name() + " nicht umgehen :("))
-                ;
+                .orElseThrow(() -> new IllegalArgumentException("#checkValidation kann mit Wahlart" + wahlart.name() + " nicht umgehen :("));
     }
 }

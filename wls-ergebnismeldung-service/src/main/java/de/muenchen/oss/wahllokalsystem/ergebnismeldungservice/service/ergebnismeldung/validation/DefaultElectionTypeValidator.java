@@ -38,7 +38,8 @@ public class DefaultElectionTypeValidator {
     private final AWerteService aWerte_BusinessActionService;
 
     /**
-     * Validiert gemaess wahlart und wahlbezirkart. wahlbezirkID und wahlID werden für das Laden der benötigten Daten aus den repos benötigt. Wird von den
+     * Validiert gemaess wahlart und wahlbezirkart. wahlbezirkID und wahlID werden für das Laden der
+     * benötigten Daten aus den repos benötigt. Wird von den
      * checkValidation(...) der abgeleiteten Klassen gerufen, diese erzeugen auch benoetigteStapel.
      */
     public boolean checkValidation(WahlbezirkArtModel wahlbezirkart,

@@ -94,16 +94,7 @@ public class Mapping {
         return ergebnisSet;
     }
 
-    public ErgebnismeldungDTO.WahlartEnum convertWahlart(WahlartModel wahlart) {
-        try {
-            return ErgebnismeldungDTO.WahlartEnum.valueOf(wahlart.name());
-        } catch (Exception e) {
-            LOGGER.error("#convertWahlart: parsing Exception");
-        }
-        return null;
-    }
-
-    public ErgebnismeldungDTO.WahlartEnum toWahlart(WahlartModel wahlart) {
+    public ErgebnismeldungDTO.WahlartEnum toWahlart(final WahlartModel wahlart) {
         try {
             return ErgebnismeldungDTO.WahlartEnum.valueOf(wahlart.name());
         } catch (Exception e) {

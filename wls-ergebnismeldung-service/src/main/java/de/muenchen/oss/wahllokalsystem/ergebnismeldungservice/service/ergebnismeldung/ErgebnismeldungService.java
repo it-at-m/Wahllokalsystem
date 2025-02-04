@@ -112,7 +112,7 @@ public class ErgebnismeldungService {
             };
         } catch (final Exception e) {
             log.error("#isWahlGeschlossen exception beim Versuch die Schließungsuhrzeit zu laden: {}", e.getMessage(), e);
-            isGeschlossen = true; //TODO ist das schlau anzunehmen dass bei einem Kommunikationsfehler das Lokal geschlossen ist?
+            isGeschlossen = true;
         }
 
         if (!isGeschlossen) {

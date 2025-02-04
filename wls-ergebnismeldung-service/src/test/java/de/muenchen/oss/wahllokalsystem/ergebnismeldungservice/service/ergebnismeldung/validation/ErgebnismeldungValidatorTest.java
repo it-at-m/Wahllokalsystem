@@ -117,7 +117,7 @@ class ErgebnismeldungValidatorTest {
 
         @ParameterizedTest
         @ValueSource(booleans = { true, false })
-        void should_returnValidatorResponseOfUWBValidator_whenWahlbezirkArtIsUWB(final boolean expectedValidationResult) {
+        void should_returnValidatorResponseOfUWBValidator_when_wahlbezirkArtIsUWB(final boolean expectedValidationResult) {
             val wahlbezirkArt = WahlbezirkArtModel.UWB;
             val wahlart = WahlartModel.BTW;
             val wahlbezirkID = "wahlbezirkID";
@@ -137,7 +137,7 @@ class ErgebnismeldungValidatorTest {
 
         @ParameterizedTest
         @ValueSource(booleans = { true, false })
-        void should_returnValidatorResponseOfBWBValidator_whenWahlbezirkArtIsBWB(final boolean expectedValidationResult) {
+        void should_returnValidatorResponseOfBWBValidator_when_wahlbezirkArtIsBWB(final boolean expectedValidationResult) {
             val wahlbezirkArt = WahlbezirkArtModel.BWB;
             val wahlart = WahlartModel.BTW;
             val wahlbezirkID = "wahlbezirkID";
@@ -156,7 +156,7 @@ class ErgebnismeldungValidatorTest {
         }
 
         @Test
-        void should_throwIllegalArgumentException_whenNoValidatorIsFoundForWahlart() {
+        void should_throwIllegalArgumentException_when_noValidatorIsFoundForWahlart() {
             val wahlbezirkArt = WahlbezirkArtModel.BWB;
             val wahlart = WahlartModel.BTW;
             val wahlbezirkID = "wahlbezirkID";

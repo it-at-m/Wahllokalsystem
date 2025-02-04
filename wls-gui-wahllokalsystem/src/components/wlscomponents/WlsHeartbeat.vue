@@ -68,7 +68,7 @@ function getColor(isOffline: boolean) {
 // todo: example implementation --> api logic should be transferred to composable
 async function heartbeat() {
   const url = "api/monitoring-service/businessActions/lastSeen/wbz-1";
-  return axios
+  return await axios
     .post(url)
     .then((response) => {
       if (response.status == 200) {

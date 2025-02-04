@@ -1,9 +1,7 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.awerte;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.eai;
 
 import static org.mockito.ArgumentMatchers.any;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.eai.AWerteClientMapper;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.eai.EAIClientImpl;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.client.WahldatenControllerApi;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.WahlberechtigteDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteModel;
@@ -20,7 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestClientException;
 
 @ExtendWith(MockitoExtension.class)
-class AWerteClientImplTest {
+class EAIClientImplTest {
 
     @Mock
     WahldatenControllerApi wahldatenControllerApi;

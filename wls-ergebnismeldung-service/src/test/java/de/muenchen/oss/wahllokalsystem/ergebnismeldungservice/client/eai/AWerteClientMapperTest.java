@@ -1,6 +1,5 @@
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.awerte;
+package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.eai;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.eai.AWerteClientMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.WahlberechtigteDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;

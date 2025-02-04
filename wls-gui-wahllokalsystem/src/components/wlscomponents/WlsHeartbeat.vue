@@ -43,7 +43,7 @@ import { useInterval } from "@/composables/useInterval";
 
 useInterval(() => {
   heartbeat();
-}, 30000); // Alle 30 Sekunden
+}, 30000); // updates every 30 seconds
 
 defineProps({
   isOffline: { type: Boolean, default: false },
@@ -65,6 +65,7 @@ function getColor(isOffline: boolean) {
   return isOffline ? "error" : "white";
 }
 
+// todo: example implementation --> api logic should be transferred to composable
 async function heartbeat() {
   const url = "api/monitoring-service/businessActions/lastSeen/wbz-1";
   return axios

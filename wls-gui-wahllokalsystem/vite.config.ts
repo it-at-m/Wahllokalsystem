@@ -45,7 +45,8 @@ export default defineConfig({
         display: "standalone",
         icons: [],
       },
-      srcDir: "src/api", // Hier ist das Verzeichnis für die benutzerdefinierte Service-Worker Datei
+      // custom service worker file
+      srcDir: "src/api",
       filename: "wahl-worker.js",
     }),
   ],

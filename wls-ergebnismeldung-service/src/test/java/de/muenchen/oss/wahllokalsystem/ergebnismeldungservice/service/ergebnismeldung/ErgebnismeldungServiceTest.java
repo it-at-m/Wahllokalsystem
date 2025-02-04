@@ -258,7 +258,6 @@ class ErgebnismeldungServiceTest {
                 Assertions.assertThatException().isThrownBy(() -> unitUnderTest.sendErgebnisse(ergebnisseToSendCriteria))
                         .isSameAs(mockedFachlicheWlsException);
             }
-
         }
 
         @Nested

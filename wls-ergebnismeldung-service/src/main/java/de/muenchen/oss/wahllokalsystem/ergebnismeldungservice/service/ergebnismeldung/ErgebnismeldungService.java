@@ -32,8 +32,6 @@ public class ErgebnismeldungService {
 
     private static final Logger SYSLOGGER = LoggerFactory.getLogger("ERGEBNISMELDUNG_SERVICE_SIEM_log");
 
-    private static final String WAHLBEZIRK_ART_USER_DETAIL_KEY = "wahlbezirksArt";
-
     private final ErgebnismeldungValidator ergebnismeldungValidator;
     private final ExceptionFactory exceptionFactory;
     private final ErgebnismeldungMappingService ergebnismeldungMappingService;

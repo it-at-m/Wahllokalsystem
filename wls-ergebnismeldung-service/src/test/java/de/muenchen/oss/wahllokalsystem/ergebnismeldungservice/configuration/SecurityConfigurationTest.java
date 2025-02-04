@@ -479,7 +479,6 @@ class SecurityConfigurationTest {
                     .with(csrf());
 
             api.perform(request).andExpect(status().isUnauthorized());
-
         }
     }
 }

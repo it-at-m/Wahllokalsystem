@@ -65,7 +65,6 @@ class BriefwahlClientTest {
             Assertions.assertThatException()
                     .isThrownBy(() -> unitUnderTest.getAnzahlZurueckgewiesenerWahlbriefe(wahlbezirkID, wahlID, waehlerverzeichnissNummer))
                     .isSameAs(mockedApiWlsException);
-
         }
 
         @Test
@@ -84,7 +83,6 @@ class BriefwahlClientTest {
             Assertions.assertThatException()
                     .isThrownBy(() -> unitUnderTest.getAnzahlZurueckgewiesenerWahlbriefe(wahlbezirkID, wahlID, waehlerverzeichnissNummer))
                     .isSameAs(mockedWlsException);
-
         }
     }
 }

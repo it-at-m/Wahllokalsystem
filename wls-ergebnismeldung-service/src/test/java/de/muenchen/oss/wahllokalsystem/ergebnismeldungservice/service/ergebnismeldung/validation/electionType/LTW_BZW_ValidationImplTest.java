@@ -121,7 +121,6 @@ class LTW_BZW_ValidationImplTest {
                     .checkValidation(eq(WahlbezirkArtModel.UWB), eq(wahlbezirkID), eq(wahlID), eq(waehlerverzeichnisNummer), captorStapelList.capture());
 
             Assertions.assertThat(captorStapelList.getValue()).doesNotContain(Stapelart.LTW_BZW_DII);
-
         }
     }
 

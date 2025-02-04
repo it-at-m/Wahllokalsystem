@@ -33,7 +33,7 @@ public class ErgebnismeldungController {
 
         val shouldUpdateSendungszeiten = Boolean.parseBoolean(forceUpdate);
         if (shouldUpdateSendungszeiten) {
-            ergebnismeldungService.updateSendungszeiten(new BezirkUndWahlID(sendErgebnisParameter.wahlbezirkID(), sendErgebnisParameter.wahlID()));
+            ergebnismeldungService.updateSendungszeiten(new BezirkUndWahlID(sendErgebnisParameter.wahlID(), sendErgebnisParameter.wahlbezirkID()));
         } else {
             boolean valid = false;
             try {

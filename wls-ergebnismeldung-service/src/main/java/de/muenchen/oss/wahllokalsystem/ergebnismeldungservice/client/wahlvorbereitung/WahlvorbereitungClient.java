@@ -18,9 +18,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class WahlvorbereitungClient implements UrnenwahlClient {
 
-    private UrnenwahlSchliessungsUhrzeitControllerApi urnenwahlSchliessungsUhrzeitControllerApi;
+    private final UrnenwahlSchliessungsUhrzeitControllerApi urnenwahlSchliessungsUhrzeitControllerApi;
 
-    private ExceptionFactory exceptionFactory;
+    private final ExceptionFactory exceptionFactory;
 
     @Override
     public boolean isGeschlossen(final String wahlbezirkID) {

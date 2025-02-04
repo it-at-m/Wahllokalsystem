@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.eai.Mapping;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
@@ -36,6 +37,7 @@ public class ErgebnismeldungService {
     private final ErgebnismeldungValidator ergebnismeldungValidator;
     private final ExceptionFactory exceptionFactory;
     private final ErgebnismeldungMappingService ergebnismeldungMappingService;
+    private final Mapping mapping;
 
     private final UrnenwahlClient urnenwahlClient;
     private final WahlenClient wahlenClient;
@@ -77,7 +79,7 @@ public class ErgebnismeldungService {
                 ergebnisseToSendCriteria.wahlID(), ergebnisseToSendCriteria.waehlerverzeichnisNummer(), ergebnisseToSendCriteria.meldungsart());
         log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 2");
 
-        val eaiMeldungsart = ErgebnismeldungDTO.MeldungsartEnum.fromValue(ergebnisseToSendCriteria.meldungsart().name());
+        val eaiMeldungsart = mapping.toDTO(ergebnisseToSendCriteria.meldungsart());
 
         if (valid) {
             log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3 valid: {}", valid);

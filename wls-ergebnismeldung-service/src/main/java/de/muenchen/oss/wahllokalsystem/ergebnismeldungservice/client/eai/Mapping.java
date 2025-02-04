@@ -9,6 +9,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.Erge
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.UngueltigeStimmzettelDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.WahlberechtigteDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.authentication.AuthenticationService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlartModel;
@@ -118,6 +119,13 @@ public class Mapping {
             ungueltigesErgebnis.getErgebnisse().forEach(ergebnis -> ungueltigeStimmzettelSet.add(toDto(ergebnis, stapelart)));
         });
         return ungueltigeStimmzettelSet;
+    }
+
+    public ErgebnismeldungDTO.MeldungsartEnum toDTO(final MeldungsartModel meldungsart) {
+        return switch (meldungsart) {
+        case V1 -> ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT;
+        case V3 -> ErgebnismeldungDTO.MeldungsartEnum.SCHNELLMELDUNG;
+        };
     }
 
     private UngueltigeStimmzettelDTO toDto(Ergebnis ergebnis, Stapelart stapelart) {

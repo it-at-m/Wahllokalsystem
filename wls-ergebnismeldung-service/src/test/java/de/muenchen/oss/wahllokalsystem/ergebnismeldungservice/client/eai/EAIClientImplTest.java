@@ -3,8 +3,13 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.eai;
 import static org.mockito.ArgumentMatchers.any;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.client.WahldatenControllerApi;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.client.WahlergebnisControllerApi;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.WahlberechtigteDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteModel;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -22,9 +27,14 @@ class EAIClientImplTest {
 
     @Mock
     WahldatenControllerApi wahldatenControllerApi;
+    @Mock
+    WahlergebnisControllerApi wahlergebnisControllerApi;
 
     @Mock
     AWerteClientMapper aWerteClientMapper;
+
+    @Mock
+    ExceptionFactory exceptionFactory;
 
     @InjectMocks
     EAIClientImpl unitUnderTest;
@@ -54,6 +64,32 @@ class EAIClientImplTest {
 
             Assertions.assertThat(unitUnderTest.getAWerte("wahlbezirkId")).isNull();
         }
+    }
+
+    @Nested
+    class SendErgebnismeldung {
+
+        @Test
+        void should_callApiController_when_ergebnismeldungIsGiven() {
+            val ergebnismeldungDTO = new ErgebnismeldungDTO();
+
+            unitUnderTest.sendErgebnismeldung(ergebnismeldungDTO);
+
+            Mockito.verify(wahlergebnisControllerApi).saveErgebnismeldung(ergebnismeldungDTO);
+        }
+
+        @Test
+        void should_throwTechnischeWlsException_when_apiThrewException() {
+            val ergebnismeldungDTO = new ErgebnismeldungDTO().meldungsart(ErgebnismeldungDTO.MeldungsartEnum.SCHNELLMELDUNG);
+
+            val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("");
+
+            Mockito.doThrow(new RuntimeException("api call failed")).when(wahlergebnisControllerApi).saveErgebnismeldung(ergebnismeldungDTO);
+            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_AOUEAI)).thenReturn(mockedWlsException);
+
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.sendErgebnismeldung(ergebnismeldungDTO)).isSameAs(mockedWlsException);
+        }
+
     }
 
     private List<WahlberechtigteDTO> createListOfWahlberechtigteDTO() {

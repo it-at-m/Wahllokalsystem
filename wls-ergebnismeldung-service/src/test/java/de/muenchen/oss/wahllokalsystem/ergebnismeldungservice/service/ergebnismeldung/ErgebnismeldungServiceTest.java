@@ -3,7 +3,10 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnism
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mockStatic;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.eai.Mapping;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.authentication.AuthenticationService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.validation.ErgebnismeldungValidator;
@@ -44,6 +47,8 @@ class ErgebnismeldungServiceTest {
     ExceptionFactory exceptionFactory;
     @Mock
     ErgebnismeldungMappingService ergebnismeldungMappingService;
+    @Mock
+    Mapping mapping;
 
     @Mock
     UrnenwahlClient urnenwahlClient;
@@ -234,6 +239,174 @@ class ErgebnismeldungServiceTest {
     @Nested
     class SendErgebnisse {
 
+        @Nested
+        class ForUWB {
+
+            @Test
+            void should_throwFachlicheWlsException_when_wahlIsNotGeschlossen() {
+                val wahlbezirkID = "wahlbezirkID";
+                val wahlID = "wahlID";
+                val waehlerverzeichnisNummer = 1L;
+                val meldungsart = MeldungsartModel.V1;
+                val ergebnisseToSendCriteria = new ErgebnisseToSendCriteriaModel(wahlID, wahlbezirkID, waehlerverzeichnisNummer, meldungsart, wahlbezirkID);
+
+                val mockedFachlicheWlsException = FachlicheWlsException.withCode("000").buildWithMessage("wahl is nicht geschlossen");
+
+                Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.WAHL_NICHT_GESCHLOSSEN)).thenReturn(mockedFachlicheWlsException);
+                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(WahlbezirkArtModel.UWB);
+                Mockito.when(urnenwahlClient.isGeschlossen(wahlbezirkID)).thenReturn(false);
+                Assertions.assertThatException().isThrownBy(() -> unitUnderTest.sendErgebnisse(ergebnisseToSendCriteria))
+                        .isSameAs(mockedFachlicheWlsException);
+            }
+
+        }
+
+        @Nested
+        class ForBWB {
+
+            @Test
+            void should_throwFachlicheWlsException_when_wahlIsNotGeschlossen() {
+                val wahlbezirkID = "wahlbezirkID";
+                val wahlID = "wahlID";
+                val bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
+                val waehlerverzeichnisNummer = 1L;
+                val meldungsart = MeldungsartModel.V1;
+                val ergebnisseToSendCriteria = new ErgebnisseToSendCriteriaModel(wahlID, wahlbezirkID, waehlerverzeichnisNummer, meldungsart, wahlbezirkID);
+
+                val mockedFachlicheWlsException = FachlicheWlsException.withCode("000").buildWithMessage("wahl is nicht geschlossen");
+
+                Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.WAHL_NICHT_GESCHLOSSEN)).thenReturn(mockedFachlicheWlsException);
+                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(WahlbezirkArtModel.BWB);
+                Mockito.when(stimmzettelumschlaegeService.getStimmzettelumschlaege(bezirkUndWahlID))
+                        .thenReturn(Optional.of(createStimmzettelumschlaegeWithUrnenOeffnungsUhrzeit(null)));
+
+                Assertions.assertThatException().isThrownBy(() -> unitUnderTest.sendErgebnisse(ergebnisseToSendCriteria))
+                        .isSameAs(mockedFachlicheWlsException);
+            }
+        }
+
+        @Nested
+        class ForNiederschrift {
+
+            @Test
+            void should_sendSendungsuhrzeiten_when_validErgebnisse() {
+                val wahlbezirkID = "wahlbezirkID";
+                val wahlID = "wahlID";
+                val waehlerverzeichnisNummer = 1L;
+                val meldungsart = MeldungsartModel.V1;
+                val hauptwahlbezirkID = "hauptwahlbezirkID";
+                val ergebnisseToSendCriteria = new ErgebnisseToSendCriteriaModel(wahlID, wahlbezirkID, waehlerverzeichnisNummer, meldungsart,
+                        hauptwahlbezirkID);
+
+                val mockedWahlbezirkartOfCurrentUser = WahlbezirkArtModel.UWB;
+                val mockedWahlartOfCurrentWahltag = WahlartModel.BTW;
+                val mockedEAIMeldungsart = ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT;
+                val mockedErgebnismeldungDTO = new ErgebnismeldungDTO().wahlID(wahlID).wahlbezirkID(wahlbezirkID).meldungsart(mockedEAIMeldungsart);
+                val mockedNow = LocalDateTime.now();
+
+                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(mockedWahlbezirkartOfCurrentUser);
+                Mockito.when(ergebnismeldungValidator.checkValidation(eq(mockedWahlartOfCurrentWahltag), eq(mockedWahlbezirkartOfCurrentUser), eq(wahlbezirkID),
+                        eq(wahlID),
+                        eq(waehlerverzeichnisNummer), eq(meldungsart))).thenReturn(true);
+                Mockito.when(wahlenClient.getWahlartOfCurrentWahltag(wahlID)).thenReturn(mockedWahlartOfCurrentWahltag);
+                Mockito.when(urnenwahlClient.isGeschlossen(wahlbezirkID)).thenReturn(true);
+                Mockito.when(mapping.toDTO(meldungsart)).thenReturn(mockedEAIMeldungsart);
+                Mockito.when(ergebnismeldungMappingService.createErgebnismeldung(eq(mockedWahlartOfCurrentWahltag), eq(wahlID), eq(wahlbezirkID),
+                        eq(waehlerverzeichnisNummer), eq(mockedEAIMeldungsart), eq(hauptwahlbezirkID))).thenReturn(mockedErgebnismeldungDTO);
+
+                unitUnderTest.sendErgebnisse(ergebnisseToSendCriteria);
+
+                Mockito.verify(statusClient).postNiederschriftSendungsuhrzeit(new BezirkUndWahlID(wahlID, wahlbezirkID), mockedNow);
+            }
+        }
+
+        @Nested
+        class ForSchnellmeldung {
+
+            @Test
+            void should_sendSendungsuhrzeiten_when_validErgebnisse() {
+                val wahlbezirkID = "wahlbezirkID";
+                val wahlID = "wahlID";
+                val waehlerverzeichnisNummer = 1L;
+                val meldungsart = MeldungsartModel.V1;
+                val hauptwahlbezirkID = "hauptwahlbezirkID";
+                val ergebnisseToSendCriteria = new ErgebnisseToSendCriteriaModel(wahlID, wahlbezirkID, waehlerverzeichnisNummer, meldungsart,
+                        hauptwahlbezirkID);
+
+                val mockedWahlbezirkartOfCurrentUser = WahlbezirkArtModel.UWB;
+                val mockedWahlartOfCurrentWahltag = WahlartModel.BTW;
+                val mockedEAIMeldungsart = ErgebnismeldungDTO.MeldungsartEnum.SCHNELLMELDUNG;
+                val mockedErgebnismeldungDTO = new ErgebnismeldungDTO().wahlID(wahlID).wahlbezirkID(wahlbezirkID).meldungsart(mockedEAIMeldungsart);
+                val mockedNow = LocalDateTime.now();
+
+                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(mockedWahlbezirkartOfCurrentUser);
+                Mockito.when(ergebnismeldungValidator.checkValidation(eq(mockedWahlartOfCurrentWahltag), eq(mockedWahlbezirkartOfCurrentUser), eq(wahlbezirkID),
+                        eq(wahlID),
+                        eq(waehlerverzeichnisNummer), eq(meldungsart))).thenReturn(true);
+                Mockito.when(wahlenClient.getWahlartOfCurrentWahltag(wahlID)).thenReturn(mockedWahlartOfCurrentWahltag);
+                Mockito.when(urnenwahlClient.isGeschlossen(wahlbezirkID)).thenReturn(true);
+                Mockito.when(mapping.toDTO(meldungsart)).thenReturn(mockedEAIMeldungsart);
+                Mockito.when(ergebnismeldungMappingService.createErgebnismeldung(eq(mockedWahlartOfCurrentWahltag), eq(wahlID), eq(wahlbezirkID),
+                        eq(waehlerverzeichnisNummer), eq(mockedEAIMeldungsart), eq(hauptwahlbezirkID))).thenReturn(mockedErgebnismeldungDTO);
+
+                unitUnderTest.sendErgebnisse(ergebnisseToSendCriteria);
+
+                Mockito.verify(statusClient).postSchnellmeldungSendungsuhrzeit(new BezirkUndWahlID(wahlID, wahlbezirkID), mockedNow);
+            }
+        }
+
+        @Test
+        void should_callErgebnisValidator_when_called() {
+            val wahlbezirkID = "wahlbezirkID";
+            val wahlID = "wahlID";
+            val waehlerverzeichnisNummer = 1L;
+            val meldungsart = MeldungsartModel.V1;
+            val ergebnisseToSendCriteria = new ErgebnisseToSendCriteriaModel(wahlID, wahlbezirkID, waehlerverzeichnisNummer, meldungsart, wahlbezirkID);
+
+            val mockedWahlbezirkartOfCurrentUser = WahlbezirkArtModel.UWB;
+            val mockedWahlartOfCurrentWahltag = WahlartModel.BTW;
+
+            Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(mockedWahlbezirkartOfCurrentUser);
+            Mockito.when(wahlenClient.getWahlartOfCurrentWahltag(wahlID)).thenReturn(mockedWahlartOfCurrentWahltag);
+            Mockito.when(urnenwahlClient.isGeschlossen(wahlbezirkID)).thenReturn(true);
+            Mockito.when(mapping.toDTO(meldungsart)).thenReturn(ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT);
+
+            unitUnderTest.sendErgebnisse(ergebnisseToSendCriteria);
+
+            Mockito.verify(ergebnismeldungValidator).validErgebnisseToSendCriteriaOrThrow(ergebnisseToSendCriteria);
+            Mockito.verify(ergebnismeldungValidator)
+                    .checkValidation(eq(mockedWahlartOfCurrentWahltag), eq(mockedWahlbezirkartOfCurrentUser), eq(wahlbezirkID), eq(wahlID),
+                            eq(waehlerverzeichnisNummer), eq(meldungsart));
+        }
+
+        @Test
+        void should_sendErgebnisse_when_ergebnisseAreValid() {
+            val wahlbezirkID = "wahlbezirkID";
+            val wahlID = "wahlID";
+            val waehlerverzeichnisNummer = 1L;
+            val meldungsart = MeldungsartModel.V1;
+            val hauptwahlbezirkID = "hauptwahlbezirkID";
+            val ergebnisseToSendCriteria = new ErgebnisseToSendCriteriaModel(wahlID, wahlbezirkID, waehlerverzeichnisNummer, meldungsart, hauptwahlbezirkID);
+
+            val mockedWahlbezirkartOfCurrentUser = WahlbezirkArtModel.UWB;
+            val mockedWahlartOfCurrentWahltag = WahlartModel.BTW;
+            val mockedErgebnismeldungDTO = new ErgebnismeldungDTO().wahlbezirkID(wahlbezirkID);
+            val mockedEAIMeldungsart = ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT;
+
+            Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(mockedWahlbezirkartOfCurrentUser);
+            Mockito.when(ergebnismeldungValidator.checkValidation(eq(mockedWahlartOfCurrentWahltag), eq(mockedWahlbezirkartOfCurrentUser), eq(wahlbezirkID),
+                    eq(wahlID),
+                    eq(waehlerverzeichnisNummer), eq(meldungsart))).thenReturn(true);
+            Mockito.when(wahlenClient.getWahlartOfCurrentWahltag(wahlID)).thenReturn(mockedWahlartOfCurrentWahltag);
+            Mockito.when(urnenwahlClient.isGeschlossen(wahlbezirkID)).thenReturn(true);
+            Mockito.when(mapping.toDTO(meldungsart)).thenReturn(mockedEAIMeldungsart);
+            Mockito.when(ergebnismeldungMappingService.createErgebnismeldung(eq(mockedWahlartOfCurrentWahltag), eq(wahlID), eq(wahlbezirkID),
+                    eq(waehlerverzeichnisNummer), eq(mockedEAIMeldungsart), eq(hauptwahlbezirkID))).thenReturn(mockedErgebnismeldungDTO);
+
+            unitUnderTest.sendErgebnisse(ergebnisseToSendCriteria);
+
+            Mockito.verify(eaiService).sendErgebnismeldung(mockedErgebnismeldungDTO);
+        }
     }
 
     private MeldungModel createMeldungWithValidierungsstatus(final ValidierungsstatusModel validierungsstatus) {

@@ -2,9 +2,5 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnism
 
 public interface UrnenwahlClient {
 
-    /**
-     * @param wahlbezirkID
-     * @return
-     */
     boolean isGeschlossen(String wahlbezirkID);
 }

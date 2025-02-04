@@ -52,8 +52,6 @@ public class ErgebnismeldungController {
             if (!valid) {
                 log.debug("#sendergebnis 2");
                 log.debug("#sendergebnis 3 valid:" + valid);
-                // this shoud not be reached, because expected is a WlsException if valid =
-                // false, it is only fot just in case..
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
         }

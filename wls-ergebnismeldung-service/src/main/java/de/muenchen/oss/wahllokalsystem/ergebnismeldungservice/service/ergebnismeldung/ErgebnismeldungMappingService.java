@@ -73,7 +73,6 @@ public class ErgebnismeldungMappingService {
         ergebnismeldung.setWahlart(mapping.toWahlart(wahlart));
 
         log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3.2  c createErgebmismeldung hauptwahlbezirkID" + hauptwahlbezirkID);
-        //TODO warum nur für diese Wahlarten
         if (wahlbezirkArtOfUser == WahlbezirkArtModel.BWB && (meldungsart.equals(ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT) && (wahlart.equals(
                 WahlartModel.LTW) || wahlart.equals(WahlartModel.BZW)))) {
             long zurueckgewiesenGesamt = briefwahlClient.getAnzahlZurueckgewiesenerWahlbriefe(hauptwahlbezirkID, wahlID, waehlerverzeichnisNummer);
@@ -102,7 +101,6 @@ public class ErgebnismeldungMappingService {
         };
     }
 
-    //TODO gehört in den Ergebnis-Service: Erweitern des Lesezugriffes um Exclude oder Include für Staptelart
     private List<Ergebnisse> getErgebnisse(WahlartModel wahlart, List<Ergebnisse> ergebnisse, boolean gueltig, ErgebnismeldungDTO.MeldungsartEnum meldungsart) {
         val predicateForStapelWithInvalidErgebnisse = wahlartPredicateHolder.getPredicateForStapelWithInvalidErgebnisse(wahlart);
         val ergebnisseFilter = gueltig ? Predicate.not(predicateForStapelWithInvalidErgebnisse) : predicateForStapelWithInvalidErgebnisse;

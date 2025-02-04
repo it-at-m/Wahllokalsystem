@@ -4,6 +4,5 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.Erge
 
 public interface EaiService {
 
-    //TODO: das Interface sollte nicht auf das Datenmodell der EAI zugreifen
     void sendErgebnismeldung(ErgebnismeldungDTO ergebnismeldungDTO);
 }

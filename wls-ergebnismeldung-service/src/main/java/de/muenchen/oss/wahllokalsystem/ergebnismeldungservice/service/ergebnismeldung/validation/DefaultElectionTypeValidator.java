@@ -42,7 +42,6 @@ public class DefaultElectionTypeValidator {
      * benötigten Daten aus den repos benötigt. Wird von den
      * checkValidation(...) der abgeleiteten Klassen gerufen, diese erzeugen auch benoetigteStapel.
      */
-    //TODO da die Methode immer true liefert (anstatt von false kommen Exceptions) kann man den Returntype entfernen
     public boolean checkValidation(WahlbezirkArtModel wahlbezirkart,
             String wahlbezirkID,
             String wahlID,

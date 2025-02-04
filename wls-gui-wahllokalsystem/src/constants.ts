@@ -12,3 +12,8 @@ export const enum STATUS_INDICATORS {
   WARNING = "warning",
   ERROR = "error",
 }
+
+const WLS_SERVICE_API_URL = "/api/";
+
+export const BROADCAST_SERVICE_API_URL =
+  WLS_SERVICE_API_URL + "broadcast-service";

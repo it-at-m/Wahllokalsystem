@@ -1,28 +1,23 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ausdruck;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mockStatic;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.Meldungsart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.WahlUndBezirkIDUndMeldungsart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.MeldungsartDTO;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckReadModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckService;
-import java.time.Clock;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckWriteModel;
 import java.time.Instant;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpHeaders;
@@ -35,10 +30,7 @@ class AusdruckControllerTest {
     AusdruckService ausdruckService;
 
     @Mock
-    AusdruckReadDTOMapper ausdruckReadDTOMapper;
-
-    @Mock
-    AusdruckWriteDTOMapper ausdruckWriteDTOMapper;
+    AusdruckDTOMapper ausdruckDTOMapper;
 
     @InjectMocks
     AusdruckController unitUnderTest;
@@ -56,11 +48,11 @@ class AusdruckControllerTest {
             val erstelltAm = Instant.now();
 
             val id = new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsArt);
-            val mockedServiceResponse = new AusdruckModel(id, content, erstelltAm);
+            val mockedServiceResponse = new AusdruckReadModel(id, content, erstelltAm);
             val mockedServiceResponseAsDTO = new AusdruckReadDTO(wahlbezirkID, wahlID, meldungsArtDto, content, erstelltAm);
 
             Mockito.when(ausdruckService.getAusdruck(id)).thenReturn(Optional.of(mockedServiceResponse));
-            Mockito.when(ausdruckReadDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
+            Mockito.when(ausdruckDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
 
             val result = unitUnderTest.getAusdruck(wahlID, wahlbezirkID, meldungsArt);
 
@@ -94,8 +86,8 @@ class AusdruckControllerTest {
             val content = "Testcontent";
             val erstelltAm = Instant.now();
 
-            val mockedAusdruckeModel1 = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V1), content, erstelltAm);
-            val mockedAusdruckeModel2 = new AusdruckModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V3), content, erstelltAm);
+            val mockedAusdruckeModel1 = new AusdruckReadModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V1), content, erstelltAm);
+            val mockedAusdruckeModel2 = new AusdruckReadModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V3), content, erstelltAm);
             val mockedServiceModel = List.of(mockedAusdruckeModel1, mockedAusdruckeModel2);
 
             val mockedAusdruckReadDTO1 = new AusdruckReadDTO(wahlbezirkID, wahlID, MeldungsartDTO.V1, content, erstelltAm);
@@ -103,8 +95,8 @@ class AusdruckControllerTest {
             val mockedMappedServiceDTO = List.of(mockedAusdruckReadDTO1, mockedAusdruckReadDTO2);
 
             Mockito.when(ausdruckService.getAllAusdrucke(wahlID, wahlbezirkID)).thenReturn(mockedServiceModel);
-            Mockito.when(ausdruckReadDTOMapper.toDTO(mockedAusdruckeModel1)).thenReturn(mockedAusdruckReadDTO1);
-            Mockito.when(ausdruckReadDTOMapper.toDTO(mockedAusdruckeModel2)).thenReturn(mockedAusdruckReadDTO2);
+            Mockito.when(ausdruckDTOMapper.toDTO(mockedAusdruckeModel1)).thenReturn(mockedAusdruckReadDTO1);
+            Mockito.when(ausdruckDTOMapper.toDTO(mockedAusdruckeModel2)).thenReturn(mockedAusdruckReadDTO2);
 
             val result = unitUnderTest.getAllAusdrucke(wahlID, wahlbezirkID);
 
@@ -117,32 +109,17 @@ class AusdruckControllerTest {
     @Nested
     class PostAusdruck {
 
-        private MockedStatic<Instant> mockedStatic = mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS);
-
-        @BeforeEach
-        void setup() {
-            var clock = Clock.fixed(Instant.now(), ZoneOffset.UTC);
-            var mockedInstant = Instant.now(clock);
-            mockedStatic.when(Instant::now).thenReturn(mockedInstant);
-        }
-
-        @AfterEach
-        void tearDown() {
-            mockedStatic.close();
-        }
-
         @Test
-        void should_callServiceWithModel_when_calledWithData() {
+        void should_callServiceWithAusdruckWriteModel_when_calledWithData() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val meldungsArt = Meldungsart.V1;
             val content = "Testcontent";
-            val erstelltAm = Instant.now();
             val id = new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsArt);
             val ausdruckWriteDTO = new AusdruckWriteDTO(content);
 
-            val mockedAusdruckModel = new AusdruckModel(id, content, erstelltAm);
-            Mockito.when(ausdruckWriteDTOMapper.toModel(ausdruckWriteDTO, id)).thenReturn(mockedAusdruckModel);
+            val mockedAusdruckModel = new AusdruckWriteModel(id, content);
+            Mockito.when(ausdruckDTOMapper.toModel(ausdruckWriteDTO, id)).thenReturn(mockedAusdruckModel);
 
             unitUnderTest.postAusdruck(wahlID, wahlbezirkID, meldungsArt, ausdruckWriteDTO);
 

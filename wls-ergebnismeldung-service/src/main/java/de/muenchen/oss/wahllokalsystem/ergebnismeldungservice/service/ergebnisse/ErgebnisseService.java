@@ -42,9 +42,9 @@ public class ErgebnisseService {
 
     @PreAuthorize(
         "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetErgebnisse')"
-                + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
+                + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
     )
-    public List<ErgebnisseModel> getAllErgebnisse(@P("param") @NotNull final String wahlID, @NotNull final String wahlbezirkID) {
+    public List<ErgebnisseModel> getAllErgebnisse(@NotNull final String wahlID, @P("wahlbezirkID") @NotNull final String wahlbezirkID) {
         log.info("#getErgebnisse");
 
         ergebnisseValidator.validIDOrThrow(wahlID, wahlbezirkID,

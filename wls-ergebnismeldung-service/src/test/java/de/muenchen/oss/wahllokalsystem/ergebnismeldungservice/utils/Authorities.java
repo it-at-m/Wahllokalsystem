@@ -134,6 +134,11 @@ public class Authorities {
             SERVICE_GET_ERGEBNISSE
     };
 
+    public static final String[] ALL_AUTHORITIES_GET_ALL_ERGEBNISSE = new String[] {
+            REPOSITORY_READ_ERGEBNISSE,
+            SERVICE_GET_ERGEBNISSE
+    };
+
     public static final String[] ALL_AUTHORITIES_SET_ERGEBNISSE_MISSING_WILL_RESULT_IN_WLS_EXCEPTION = new String[] {
             REPOSITORY_WRITE_ERGEBNISSE
     };

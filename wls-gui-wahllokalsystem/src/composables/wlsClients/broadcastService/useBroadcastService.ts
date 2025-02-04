@@ -1,26 +1,45 @@
-import type { BroadcastMessageToRead } from "@/api/wls-clients/broadcast-service/BroadcastMessageToRead";
+import type {
+  BroadcastMessageDTO,
+  BroadcastRequest,
+  DeleteMessageRequest,
+  GetMessageRequest,
+} from "@/api/wls-clients/generated-broadcast-api";
 
+import { fetchConfig } from "@/api/fetch-utils";
 import {
-  broadcastMessageRead,
-  getBroadcastMessage,
-  postBroadcastMessage,
-} from "@/api/wls-clients/broadcast-service/broadcast-client";
+  BroadcastControllerApi,
+  Configuration,
+  WLSError,
+} from "@/api/wls-clients/generated-broadcast-api";
+import { BROADCAST_SERVICE_API_URL } from "@/constants";
 
 export function useBroadcastService() {
-  async function getMessage(wahlbezirkID: string) {
-    try {
-      const response = await getBroadcastMessage(wahlbezirkID);
-      const content: BroadcastMessageToRead = await response.json();
+  const broadcastCA = new BroadcastControllerApi(
+    new Configuration({
+      basePath: BROADCAST_SERVICE_API_URL,
+    })
+  );
 
-      await broadcastMessageRead(content.oid).catch(() => {
+  async function getMessage(wahlbezirkID: string) {
+    const getParams: GetMessageRequest = { wahlbezirkID };
+
+    try {
+      const response = await broadcastCA.getMessage(getParams);
+
+      const nachrichtID = response.oid;
+      const deleteParams: DeleteMessageRequest = { nachrichtID };
+
+      try {
+        await broadcastCA.deleteMessage(deleteParams, fetchConfig());
+      } catch {
         return {
           message: "",
           error: "Es ist ein Fehler beim Lesen der Nachricht aufgetreten",
         };
-      });
+      }
 
       return {
-        message: content.nachricht,
+        message: response.nachricht,
         error: "",
       };
     } catch (e) {
@@ -31,12 +50,24 @@ export function useBroadcastService() {
     }
   }
 
-  async function postMessage(message: string, wahlbezirkIDs: string[]) {
+  async function postMessage(nachricht: string, wahlbezirkIDs: string[]) {
+    const broadcastMessageDTO = {
+      wahlbezirkIDs,
+      nachricht,
+    } as BroadcastMessageDTO;
+    const postParams: BroadcastRequest = { broadcastMessageDTO };
+
     try {
-      await postBroadcastMessage(wahlbezirkIDs, message);
+      await broadcastCA.broadcast(postParams, fetchConfig());
       return { error: "" };
     } catch (e) {
-      return { error: (e as Error).message };
+      if (e instanceof WLSError) {
+        const errorMessage =
+          e.service + " - " + e.message + " (Code: " + e.code + ")";
+        return { error: errorMessage };
+      } else {
+        return { error: "Fehler beim Senden der Broadcast Nachricht" };
+      }
     }
   }
 

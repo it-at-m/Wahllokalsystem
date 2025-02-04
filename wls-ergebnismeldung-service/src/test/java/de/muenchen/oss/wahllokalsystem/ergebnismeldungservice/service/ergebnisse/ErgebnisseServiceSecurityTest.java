@@ -8,8 +8,9 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.ErgebnisseRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse.ErgebnisseDTOMapper;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse.StapelartDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
@@ -83,6 +84,57 @@ class ErgebnisseServiceSecurityTest {
             return SecurityUtils
                     .buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_ERGEBNISSE);
         }
+    }
+
+    @Nested
+    class GetAllErgebnisse {
+
+        @Test
+        void should_getAccess_when_allRequiredAuthoritiesArePresent() {
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_ERGEBNISSE);
+
+            val wahlID = "wahlID";
+            val wahlbezirkID = "wahlbezirkID";
+
+            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
+
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getAllErgebnisse(wahlID, wahlbezirkID));
+        }
+
+        @Test
+        void should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButBezirkIdDoesNotMatch() {
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_ERGEBNISSE);
+
+            val wahlID = "wahlID";
+            val wahlbezirkID = "wahlbezirkID";
+
+            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
+
+            Assertions.assertThatException()
+                    .isThrownBy(() -> unitUnderTest.getAllErgebnisse(wahlID, wahlbezirkID))
+                    .isInstanceOf(AccessDeniedException.class);
+        }
+
+        @ParameterizedTest
+        @MethodSource("getMissingAuthoritiesVariations")
+        void should_throwAccessDeniedException_when_anyRequiredAuthorityIsMissing(final ArgumentsAccessor arguments) {
+            SecurityUtils.runWith(arguments.get(0, String[].class));
+
+            val wahlID = "wahlID";
+            val wahlbezirkID = "wahlbezirkID";
+
+            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
+
+            Assertions.assertThatException()
+                    .isThrownBy(() -> unitUnderTest.getAllErgebnisse(wahlID, wahlbezirkID))
+                    .isInstanceOf(AccessDeniedException.class);
+        }
+
+        private static Stream<Arguments> getMissingAuthoritiesVariations() {
+            return SecurityUtils
+                    .buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_ALL_ERGEBNISSE);
+        }
+
     }
 
     @Nested

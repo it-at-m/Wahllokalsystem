@@ -27,7 +27,7 @@ class KonfigurationDTOMapperTest {
     class ToDTO {
 
         @Test
-        void konfigurationModelIsMapped() {
+        void should_returnKonfigurationDTO_when_konfigurationModelIsGiven() {
             val key = "key";
             val value = "value";
             val description = "description";
@@ -42,7 +42,7 @@ class KonfigurationDTOMapperTest {
         }
 
         @Test
-        void KennbuchstabenListenModelIsMapped() {
+        void should_returnKennbuchstabenListenDTO_when_kennbuchstabenListenModelIsGiven() {
             val kennbuchstaben11 = new KennbuchstabenModel(List.of("11a", "11b"));
             val kennbuchstaben12 = new KennbuchstabenModel(List.of("12"));
             val kennbuchstaben21 = new KennbuchstabenModel(List.of("21a", "21b", "21c"));
@@ -71,13 +71,13 @@ class KonfigurationDTOMapperTest {
 
         @ParameterizedTest
         @EnumSource(KonfigurationKey.class)
-        void allPossibleInputKeysAreMappedToNonNull(final KonfigurationKey key) {
+        void should_mapToNotNull_when_givenAllPossibleInputKeysFromKonfigurationKey(final KonfigurationKey key) {
             Assertions.assertThat(unitUnderTest.toModelKey(key)).isNotNull();
         }
 
         @ParameterizedTest
         @EnumSource(KonfigurationKey.class)
-        void isMappedToEqualsName(final KonfigurationKey key) {
+        void should_returnEnumValueWithSameName_when_givenAnyKonfigurationKeyEnumName(final KonfigurationKey key) {
             val parametersName = key.name();
             val mappedValuesName = unitUnderTest.toModelKey(key).name();
 
@@ -88,7 +88,7 @@ class KonfigurationDTOMapperTest {
     @Nested
     class ToSetModel {
         @Test
-        void isMappedToModel() {
+        void should_returnKonfigurationSetModel_when_givenKonfigurationSetDTO() {
             val dtoToMap = new KonfigurationSetDTO("wert", "beschreibung", "standard");
             val keyToMap = KonfigurationKey.FRUEHESTE_EROEFFNUNGSZEIT;
 

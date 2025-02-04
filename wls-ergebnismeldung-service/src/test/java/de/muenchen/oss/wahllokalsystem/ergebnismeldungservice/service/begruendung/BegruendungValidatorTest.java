@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendu
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.stream.Stream;
@@ -66,14 +67,14 @@ class BegruendungValidatorTest {
 
         @Test
         void should_notThrowException_when_begruendungIsEmptyButNotNull() {
-            val begruendungModelToValidate = new BegruendungModel("", "", Stapelart.LTW_BZW_A, "", "", true, true);
+            val begruendungModelToValidate = new BegruendungModel("", "", StapelartModel.LTW_BZW_A, "", "", true, true);
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validModelOrThrow(begruendungModelToValidate));
         }
 
         @Test
         void should_throwFachlicheWlsException_when_grundParamsAreNull() {
-            val begruendungModelModelToValidate = new BegruendungModel("wahlbezirkID", "wahlID", Stapelart.LTW_BZW_A, null, null, true, true);
+            val begruendungModelModelToValidate = new BegruendungModel("wahlbezirkID", "wahlID", StapelartModel.LTW_BZW_A, null, null, true, true);
 
             val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("sth failed");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG))
@@ -85,7 +86,7 @@ class BegruendungValidatorTest {
 
         @Test
         void should_notThrowFachlicheWlsException_when_onlyOneGrundIsNull() {
-            val begruendungModelModelToValidate = new BegruendungModel("wahlbezirkID", "wahlID", Stapelart.LTW_BZW_A, null, "grund2", true, true);
+            val begruendungModelModelToValidate = new BegruendungModel("wahlbezirkID", "wahlID", StapelartModel.LTW_BZW_A, null, "grund2", true, true);
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validModelOrThrow(begruendungModelModelToValidate));
         }

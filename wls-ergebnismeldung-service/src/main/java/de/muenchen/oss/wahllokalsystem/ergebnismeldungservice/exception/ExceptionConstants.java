@@ -64,9 +64,9 @@ public class ExceptionConstants {
             "Bei der Kommunikation mit dem MonitoringService kam es zu einem Fehler.");
 
     public static final ExceptionDataWrapper GET_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("101",
-            "getBegruendung: Parameter unvollständig.");
+            "getBegruendung: Parameter unvollstaendig.");
     public static final ExceptionDataWrapper POST_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG = new ExceptionDataWrapper("103",
-            "postBegruendung: Parameter unvollständig.");
+            "postBegruendung: Parameter unvollstaendig.");
     public static final ExceptionDataWrapper BEGRUENDUNG_UNSAVEABLE = new ExceptionDataWrapper("624",
             "postBegruendung: Die Begruendung konnte nicht gespeichert werden.");
 

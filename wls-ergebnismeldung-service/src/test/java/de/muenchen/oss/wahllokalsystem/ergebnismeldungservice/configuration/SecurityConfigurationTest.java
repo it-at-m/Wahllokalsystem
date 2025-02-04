@@ -9,16 +9,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse.BezirkUndWahlIDStapelartDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.begruendung.BegruendungDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.BezirkUndWahlIDStapelartDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse.ErgebnisDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse.ErgebnisseDTO;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse.StapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.MeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.StatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.ValidierungsstatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.StimmabgabevermerkeDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.WahldatenDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.ErgebnismeldungService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusService;
@@ -61,6 +63,9 @@ class SecurityConfigurationTest {
 
     @MockBean
     ErgebnisseService ergebnisseService;
+
+    @MockBean
+    BegruendungService begruendungService;
 
     @MockBean
     ErgebnismeldungService ergebnismeldungService;
@@ -390,6 +395,59 @@ class SecurityConfigurationTest {
             @Test
             void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
                 val request = MockMvcRequestBuilders.get("/businessActions/ergebnisse/wahlID/wahlbezirkID");
+
+                api.perform(request).andExpect(status().isUnauthorized()).andReturn();
+            }
+        }
+    }
+
+    @Nested
+    class Begruendung {
+
+        @Nested
+        class GetBegruendung {
+
+            @WithMockUser
+            @Test
+            void should_returnNoContent_when_userIsAuthenticated() throws Exception {
+                val request = MockMvcRequestBuilders.get("/businessActions/begruendung/wahlID/wahlbezirkID/LTW_BZW_A");
+
+                api.perform(request).andExpect(status().isNoContent()).andReturn();
+
+                Mockito.verify(begruendungService).getBegruendung(notNull());
+            }
+
+            @WithAnonymousUser
+            @Test
+            void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
+                val request = MockMvcRequestBuilders.get("/businessActions/begruendung/wahlID/wahlbezirkID/LTW_BZW_A");
+
+                api.perform(request).andExpect(status().isUnauthorized()).andReturn();
+            }
+        }
+
+        @Nested
+        class PostBegruendung {
+
+            @WithMockUser
+            @Test
+            void should_returnOk_when_userIsAuthenticated() throws Exception {
+                val begruendung = new BegruendungDTO(new BezirkUndWahlIDStapelartDTO("wahlbezirkID", "wahlID", StapelartDTO.LTW_BZW_A), null, null, true, true);
+                val request = MockMvcRequestBuilders.post("/businessActions/begruendung/wahlID/wahlbezirkID/LTW_BZW_A").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(begruendung));
+                api.perform(request).andExpect(status().isOk()).andReturn();
+
+                Mockito.verify(begruendungService).postBegruendung(any(), any());
+            }
+
+            @WithAnonymousUser
+            @Test
+            void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
+                val begruendung = new BegruendungDTO(new BezirkUndWahlIDStapelartDTO("wahlbezirkID", "wahlID", StapelartDTO.LTW_BZW_A), null, null, true, true);
+                val request = MockMvcRequestBuilders.post("/businessActions/begruendung/wahlID/wahlbezirkID/LTW_BZW_A").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(begruendung));
 
                 api.perform(request).andExpect(status().isUnauthorized()).andReturn();
             }

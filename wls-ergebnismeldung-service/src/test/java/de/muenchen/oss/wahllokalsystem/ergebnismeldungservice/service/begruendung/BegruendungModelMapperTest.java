@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendu
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.Begruendung;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.BezirkUndWahlIDStapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -26,7 +27,7 @@ class BegruendungModelMapperTest {
             val begruendung = new Begruendung(new BezirkUndWahlIDStapelart("bezirkID", "wahlID", Stapelart.LTW_BZW_A), "grund1", "grund2", true, true);
             val result = unitUnderTest.toModel(begruendung);
 
-            val expectedResult = new BegruendungModel("bezirkID", "wahlID", Stapelart.LTW_BZW_A, "grund1", "grund2", true, true);
+            val expectedResult = new BegruendungModel("bezirkID", "wahlID", StapelartModel.LTW_BZW_A, "grund1", "grund2", true, true);
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
@@ -37,7 +38,7 @@ class BegruendungModelMapperTest {
 
         @Test
         void should_returnBegruendungEntity_when_givenBegruendungModel() {
-            val begruendungModel = new BegruendungModel("bezirkID", "wahlID", Stapelart.LTW_BZW_A, "grund1", "grund2", true, true);
+            val begruendungModel = new BegruendungModel("bezirkID", "wahlID", StapelartModel.LTW_BZW_A, "grund1", "grund2", true, true);
             val result = unitUnderTest.toEntity(begruendungModel);
 
             val expectedResult = new Begruendung(new BezirkUndWahlIDStapelart("bezirkID", "wahlID", Stapelart.LTW_BZW_A), "grund1", "grund2", true, true);

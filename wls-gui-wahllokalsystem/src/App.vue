@@ -22,6 +22,7 @@
           cols="3"
           class="d-flex align-center justify-end"
         >
+          <wls-heartbeat></wls-heartbeat>
           <v-tooltip
             location="bottom"
             text="Backend Communication Examples"
@@ -104,6 +105,7 @@ import {
 
 import { getUser } from "@/api/user-client";
 import TheSnackbar from "@/components/TheSnackbar.vue";
+import WlsHeartbeat from "@/components/wlscomponents/WlsHeartbeat.vue";
 import { EXAMPLE_ROUTES_BACKEND, EXAMPLE_ROUTES_NEWROUTE } from "@/constants";
 import { useUserStore } from "@/stores/user";
 import User, { UserLocalDevelopment } from "@/types/User";

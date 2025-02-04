@@ -19,6 +19,7 @@ public class AuthenticationService {
     private final ExceptionFactory exceptionFactory;
     private final Collection<AuthenticationHandler> authenticationHandlers;
 
+    //TODO Signatur um Exception erweitern zu besseren Dokumentation
     public WahlbezirkArtModel getWahlbezirkArtOfCurrentAuthentication() {
         /* TODO mit der Logik aus dem Stimmzettelumschlägen zusammenlegen */
         val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();

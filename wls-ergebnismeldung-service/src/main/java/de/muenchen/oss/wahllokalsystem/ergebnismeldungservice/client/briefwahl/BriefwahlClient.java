@@ -30,7 +30,7 @@ public class BriefwahlClient implements de.muenchen.oss.wahllokalsystem.ergebnis
         //TODO: Issue da dies Aufgabe des Briefwahlservices sein sollte; Der Ergebnisservice sollte kein Wissen darüber haben
         // was die Zurückweisungsgründe bedeuten
         return beanstandeteWahlbriefe.getBeanstandeteWahlbriefe().get(wahlID).stream()
-                .filter(zurueckweisungsgrund -> zurueckweisungsgrund.equals(Zurueckweisungsgrund.ZUGELASSEN)).count();
+                .filter(zurueckweisungsgrund -> !zurueckweisungsgrund.equals(Zurueckweisungsgrund.ZUGELASSEN)).count();
     }
 
     private BeanstandeteWahlbriefeDTO getBeanstandeteWahlbriefe(final String wahlbezirkID, final long waehlerverzeichnisNummer) {

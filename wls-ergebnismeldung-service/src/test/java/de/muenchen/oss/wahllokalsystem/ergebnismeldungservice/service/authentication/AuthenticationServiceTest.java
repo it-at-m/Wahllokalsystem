@@ -48,7 +48,7 @@ class AuthenticationServiceTest {
             Mockito.when(mockedAuthenticationHandler.canHandle(Mockito.any())).thenReturn(true);
             Mockito.when(mockedAuthenticationHandler.getDetail(eq("wahlbezirksArt"), eq(currentAuthentication))).thenReturn(Optional.of("BWB"));
 
-            val result = unitUnderTest.getWahlbezirkArtOfCurrentAuthentication();
+            val result = unitUnderTest.getWahlbezirkArtOfCurrentAuthenticationOrThrow();
 
             Assertions.assertThat(result).isEqualTo(WahlbezirkArtModel.BWB);
         }
@@ -63,7 +63,8 @@ class AuthenticationServiceTest {
             Mockito.when(authenticationHandlers.stream()).thenReturn(Stream.of(mockedAuthenticationHandler));
             Mockito.when(mockedAuthenticationHandler.canHandle(Mockito.any())).thenReturn(false);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlbezirkArtOfCurrentAuthentication()).isInstanceOf(NullPointerException.class);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlbezirkArtOfCurrentAuthenticationOrThrow())
+                    .isInstanceOf(NullPointerException.class);
         }
 
         @Test
@@ -79,7 +80,7 @@ class AuthenticationServiceTest {
             Mockito.when(mockedAuthenticationHandler.getDetail(eq("wahlbezirksArt"), eq(currentAuthentication))).thenReturn(Optional.empty());
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.WAHLBEZIRKART_NOT_LOADABLE)).thenReturn(mockedWlsException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlbezirkArtOfCurrentAuthentication()).isSameAs(mockedWlsException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).isSameAs(mockedWlsException);
         }
     }
 

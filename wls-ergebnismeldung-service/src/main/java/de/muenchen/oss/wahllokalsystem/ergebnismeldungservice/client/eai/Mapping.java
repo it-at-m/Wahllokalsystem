@@ -128,6 +128,6 @@ public class Mapping {
     }
 
     public WahlbezirkArtModel getWahlbezirkart() {
-        return authenticationService.getWahlbezirkArtOfCurrentAuthentication();
+        return authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow();
     }
 }

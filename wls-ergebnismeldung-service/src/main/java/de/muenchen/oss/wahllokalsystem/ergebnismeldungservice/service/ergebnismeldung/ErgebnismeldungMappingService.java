@@ -53,7 +53,7 @@ public class ErgebnismeldungMappingService {
         val bezirkIDUndWaehlerverzeichnisNummer = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID,
                 waehlerverzeichnisNummer);
 
-        val wahlbezirkArtOfUser = authenticationService.getWahlbezirkArtOfCurrentAuthentication();
+        val wahlbezirkArtOfUser = authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow();
         ergebnismeldung.setaWerte(getAWerte(wahlbezirkArtOfUser, bezirkUndWahlID));
 
         val bWerte = getBWerte(wahlbezirkArtOfUser, bezirkUndWahlID, bezirkIDUndWaehlerverzeichnisNummer, wahlart);

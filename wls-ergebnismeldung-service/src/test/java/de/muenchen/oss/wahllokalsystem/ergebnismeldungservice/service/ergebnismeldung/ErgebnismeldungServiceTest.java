@@ -97,7 +97,7 @@ class ErgebnismeldungServiceTest {
                 val mockedFachlicheWlsException = FachlicheWlsException.withCode("000").buildWithMessage("wahl is nicht geschlossen");
 
                 Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.WAHL_NICHT_GESCHLOSSEN)).thenReturn(mockedFachlicheWlsException);
-                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(WahlbezirkArtModel.UWB);
+                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(WahlbezirkArtModel.UWB);
                 Mockito.when(urnenwahlClient.isGeschlossen(wahlbezirkID)).thenReturn(false);
 
                 Assertions.assertThatException().isThrownBy(() -> unitUnderTest.updateSendungszeiten(bezirkUndWahlID))
@@ -115,7 +115,7 @@ class ErgebnismeldungServiceTest {
                 val mockedStatus = new StatusModel(bezirkUndWahlID, createMeldungWithValidierungsstatus(ValidierungsstatusModel.VALIDE),
                         createMeldungWithValidierungsstatus(ValidierungsstatusModel.NICHT_GESENDET));
 
-                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(WahlbezirkArtModel.UWB);
+                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(WahlbezirkArtModel.UWB);
                 Mockito.when(statusService.getStatus(bezirkUndWahlID)).thenReturn(Optional.of(mockedStatus));
                 Mockito.doThrow(mockedUrnenwahlClientException).when(urnenwahlClient).isGeschlossen(wahlbezirkID);
 
@@ -137,7 +137,7 @@ class ErgebnismeldungServiceTest {
                 val mockedFachlicheWlsException = FachlicheWlsException.withCode("000").buildWithMessage("wahl is nicht geschlossen");
 
                 Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.WAHL_NICHT_GESCHLOSSEN)).thenReturn(mockedFachlicheWlsException);
-                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(WahlbezirkArtModel.BWB);
+                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(WahlbezirkArtModel.BWB);
                 Mockito.when(stimmzettelumschlaegeService.getStimmzettelumschlaege(bezirkUndWahlID))
                         .thenReturn(Optional.of(createStimmzettelumschlaegeWithUrnenOeffnungsUhrzeit(null)));
 
@@ -156,7 +156,7 @@ class ErgebnismeldungServiceTest {
                 val mockedStatus = new StatusModel(bezirkUndWahlID, createMeldungWithValidierungsstatus(ValidierungsstatusModel.VALIDE),
                         createMeldungWithValidierungsstatus(ValidierungsstatusModel.NICHT_GESENDET));
 
-                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(WahlbezirkArtModel.BWB);
+                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(WahlbezirkArtModel.BWB);
                 Mockito.when(statusService.getStatus(bezirkUndWahlID)).thenReturn(Optional.of(mockedStatus));
                 Mockito.doThrow(mockedStimmzettelumschlaegeService).when(stimmzettelumschlaegeService).getStimmzettelumschlaege(bezirkUndWahlID);
 
@@ -176,7 +176,7 @@ class ErgebnismeldungServiceTest {
             val mockedStatus = new StatusModel(bezirkUndWahlID, createMeldungWithValidierungsstatus(ValidierungsstatusModel.VALIDE),
                     createMeldungWithValidierungsstatus(ValidierungsstatusModel.NICHT_GESENDET));
 
-            Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(WahlbezirkArtModel.UWB);
+            Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(WahlbezirkArtModel.UWB);
             Mockito.when(statusService.getStatus(bezirkUndWahlID)).thenReturn(Optional.of(mockedStatus));
             Mockito.when(urnenwahlClient.isGeschlossen(wahlbezirkID)).thenReturn(true);
 
@@ -195,7 +195,7 @@ class ErgebnismeldungServiceTest {
             val mockedStatus = new StatusModel(bezirkUndWahlID, createMeldungWithValidierungsstatus(ValidierungsstatusModel.VALIDE),
                     createMeldungWithValidierungsstatus(ValidierungsstatusModel.VALIDE));
 
-            Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(WahlbezirkArtModel.UWB);
+            Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(WahlbezirkArtModel.UWB);
             Mockito.when(statusService.getStatus(bezirkUndWahlID)).thenReturn(Optional.of(mockedStatus));
             Mockito.when(urnenwahlClient.isGeschlossen(wahlbezirkID)).thenReturn(true);
 
@@ -215,7 +215,7 @@ class ErgebnismeldungServiceTest {
                     createMeldungWithValidierungsstatus(ValidierungsstatusModel.NICHT_GESENDET));
             val mockedFachlicheWlsException = FachlicheWlsException.withCode("000").buildWithMessage("mocked wls exception");
 
-            Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(WahlbezirkArtModel.UWB);
+            Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(WahlbezirkArtModel.UWB);
             Mockito.when(statusService.getStatus(bezirkUndWahlID)).thenReturn(Optional.of(mockedStatus));
             Mockito.when(urnenwahlClient.isGeschlossen(wahlbezirkID)).thenReturn(true);
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.FORCEERGEBNISSE_WRONG_USAGE)).thenReturn(mockedFachlicheWlsException);
@@ -253,7 +253,7 @@ class ErgebnismeldungServiceTest {
                 val mockedFachlicheWlsException = FachlicheWlsException.withCode("000").buildWithMessage("wahl is nicht geschlossen");
 
                 Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.WAHL_NICHT_GESCHLOSSEN)).thenReturn(mockedFachlicheWlsException);
-                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(WahlbezirkArtModel.UWB);
+                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(WahlbezirkArtModel.UWB);
                 Mockito.when(urnenwahlClient.isGeschlossen(wahlbezirkID)).thenReturn(false);
                 Assertions.assertThatException().isThrownBy(() -> unitUnderTest.sendErgebnisse(ergebnisseToSendCriteria))
                         .isSameAs(mockedFachlicheWlsException);
@@ -275,7 +275,7 @@ class ErgebnismeldungServiceTest {
                 val mockedFachlicheWlsException = FachlicheWlsException.withCode("000").buildWithMessage("wahl is nicht geschlossen");
 
                 Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.WAHL_NICHT_GESCHLOSSEN)).thenReturn(mockedFachlicheWlsException);
-                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(WahlbezirkArtModel.BWB);
+                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(WahlbezirkArtModel.BWB);
                 Mockito.when(stimmzettelumschlaegeService.getStimmzettelumschlaege(bezirkUndWahlID))
                         .thenReturn(Optional.of(createStimmzettelumschlaegeWithUrnenOeffnungsUhrzeit(null)));
 
@@ -303,7 +303,7 @@ class ErgebnismeldungServiceTest {
                 val mockedErgebnismeldungDTO = new ErgebnismeldungDTO().wahlID(wahlID).wahlbezirkID(wahlbezirkID).meldungsart(mockedEAIMeldungsart);
                 val mockedNow = LocalDateTime.now();
 
-                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(mockedWahlbezirkartOfCurrentUser);
+                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(mockedWahlbezirkartOfCurrentUser);
                 Mockito.when(ergebnismeldungValidator.checkValidation(eq(mockedWahlartOfCurrentWahltag), eq(mockedWahlbezirkartOfCurrentUser), eq(wahlbezirkID),
                         eq(wahlID),
                         eq(waehlerverzeichnisNummer), eq(meldungsart))).thenReturn(true);
@@ -338,7 +338,7 @@ class ErgebnismeldungServiceTest {
                 val mockedErgebnismeldungDTO = new ErgebnismeldungDTO().wahlID(wahlID).wahlbezirkID(wahlbezirkID).meldungsart(mockedEAIMeldungsart);
                 val mockedNow = LocalDateTime.now();
 
-                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(mockedWahlbezirkartOfCurrentUser);
+                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(mockedWahlbezirkartOfCurrentUser);
                 Mockito.when(ergebnismeldungValidator.checkValidation(eq(mockedWahlartOfCurrentWahltag), eq(mockedWahlbezirkartOfCurrentUser), eq(wahlbezirkID),
                         eq(wahlID),
                         eq(waehlerverzeichnisNummer), eq(meldungsart))).thenReturn(true);
@@ -365,7 +365,7 @@ class ErgebnismeldungServiceTest {
             val mockedWahlbezirkartOfCurrentUser = WahlbezirkArtModel.UWB;
             val mockedWahlartOfCurrentWahltag = WahlartModel.BTW;
 
-            Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(mockedWahlbezirkartOfCurrentUser);
+            Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(mockedWahlbezirkartOfCurrentUser);
             Mockito.when(wahlenClient.getWahlartOfCurrentWahltag(wahlID)).thenReturn(mockedWahlartOfCurrentWahltag);
             Mockito.when(urnenwahlClient.isGeschlossen(wahlbezirkID)).thenReturn(true);
             Mockito.when(mapping.toDTO(meldungsart)).thenReturn(ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT);
@@ -392,7 +392,7 @@ class ErgebnismeldungServiceTest {
             val mockedErgebnismeldungDTO = new ErgebnismeldungDTO().wahlbezirkID(wahlbezirkID);
             val mockedEAIMeldungsart = ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT;
 
-            Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(mockedWahlbezirkartOfCurrentUser);
+            Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(mockedWahlbezirkartOfCurrentUser);
             Mockito.when(ergebnismeldungValidator.checkValidation(eq(mockedWahlartOfCurrentWahltag), eq(mockedWahlbezirkartOfCurrentUser), eq(wahlbezirkID),
                     eq(wahlID),
                     eq(waehlerverzeichnisNummer), eq(meldungsart))).thenReturn(true);

@@ -102,7 +102,7 @@ class ErgebnismeldungMappingServiceTest {
                 val mockedStimmabgabevermerke = createStimmabgabevermerke(wahlID, wahlbezirkID, waehlverzeichnisNummer);
 
                 Mockito.when(mapping.toWahlart(wahlart)).thenReturn(mockedMappedWahlart);
-                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(mockedUserWahlbezirkart);
+                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(mockedUserWahlbezirkart);
                 Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(wahlbezirkID, wahlID)).thenReturn(mockedErgebnisse);
                 Mockito.when(stimmabgabevermerkeRepo.findById(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlverzeichnisNummer)))
                         .thenReturn(Optional.of(mockedStimmabgabevermerke));
@@ -150,7 +150,7 @@ class ErgebnismeldungMappingServiceTest {
                 val mockedStimmzettelumschlaege = new Stimmzettelumschlaege();
 
                 Mockito.when(mapping.toWahlart(wahlart)).thenReturn(mockedMappedWahlart);
-                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(mockedUserWahlbezirkart);
+                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(mockedUserWahlbezirkart);
                 Mockito.when(aWerteRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID))).thenReturn(Optional.empty());
                 Mockito.when(stimmzettelumschlaegeRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID)))
                         .thenReturn(Optional.of(mockedStimmzettelumschlaege));
@@ -177,7 +177,7 @@ class ErgebnismeldungMappingServiceTest {
                 val mockedStimmzettelumschlaege = new Stimmzettelumschlaege();
 
                 Mockito.when(mapping.toWahlart(wahlart)).thenReturn(mockedMappedWahlart);
-                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(mockedUserWahlbezirkart);
+                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(mockedUserWahlbezirkart);
                 Mockito.when(stimmzettelumschlaegeRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID)))
                         .thenReturn(Optional.of(mockedStimmzettelumschlaege));
                 Mockito.when(wahlartPredicateHolder.getPredicateForStapelWithInvalidErgebnisse(wahlart)).thenReturn(stapelart -> true);
@@ -215,7 +215,7 @@ class ErgebnismeldungMappingServiceTest {
                 val mockedStimmzettelumschlaege = createStimmzettelumschlaege(10);
 
                 Mockito.when(mapping.toWahlart(wahlart)).thenReturn(mockedMappedWahlart);
-                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(mockedUserWahlbezirkart);
+                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(mockedUserWahlbezirkart);
                 Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(wahlbezirkID, wahlID)).thenReturn(mockedErgebnisse);
                 Mockito.when(stimmzettelumschlaegeRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID)))
                         .thenReturn(Optional.of(mockedStimmzettelumschlaege));
@@ -261,7 +261,7 @@ class ErgebnismeldungMappingServiceTest {
                 val mockedBriefwahlClientResponse = 23L;
 
                 Mockito.when(mapping.toWahlart(wahlart)).thenReturn(mockedMappedWahlart);
-                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthentication()).thenReturn(mockedUserWahlbezirkart);
+                Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(mockedUserWahlbezirkart);
                 Mockito.when(stimmzettelumschlaegeRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID)))
                         .thenReturn(Optional.of(mockedStimmzettelumschlaege));
                 Mockito.when(wahlartPredicateHolder.getPredicateForStapelWithInvalidErgebnisse(wahlart))

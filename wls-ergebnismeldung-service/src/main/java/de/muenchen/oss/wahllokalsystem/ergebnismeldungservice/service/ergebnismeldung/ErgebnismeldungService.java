@@ -70,7 +70,7 @@ public class ErgebnismeldungService {
         assertWahlIsGeschlossen(new BezirkUndWahlID(ergebnisseToSendCriteria.wahlID(), ergebnisseToSendCriteria.wahlbezirkID()));
 
         val wahlart = wahlenClient.getWahlartOfCurrentWahltag(ergebnisseToSendCriteria.wahlID());
-        val wahlbezirkArt = authenticationService.getWahlbezirkArtOfCurrentAuthentication();
+        val wahlbezirkArt = authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow();
 
         log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 1");
         val valid = ergebnismeldungValidator.checkValidation(wahlart, wahlbezirkArt, ergebnisseToSendCriteria.wahlbezirkID(),
@@ -99,7 +99,7 @@ public class ErgebnismeldungService {
     }
 
     private void assertWahlIsGeschlossen(final BezirkUndWahlID bezirkUndWahlID) {
-        WahlbezirkArtModel wahlbezirkart = authenticationService.getWahlbezirkArtOfCurrentAuthentication();
+        WahlbezirkArtModel wahlbezirkart = authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow();
         boolean isGeschlossen;
         try {
             isGeschlossen = switch (wahlbezirkart) {

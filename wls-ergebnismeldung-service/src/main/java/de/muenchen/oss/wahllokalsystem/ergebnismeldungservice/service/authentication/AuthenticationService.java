@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.authentic
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.common.security.AuthenticationHandler;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.WahlbezirkArtModel;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,7 @@ public class AuthenticationService {
     private final ExceptionFactory exceptionFactory;
     private final Collection<AuthenticationHandler> authenticationHandlers;
 
-    //TODO Signatur um Exception erweitern zu besseren Dokumentation
-    public WahlbezirkArtModel getWahlbezirkArtOfCurrentAuthentication() {
+    public WahlbezirkArtModel getWahlbezirkArtOfCurrentAuthenticationOrThrow() throws FachlicheWlsException {
         /* TODO mit der Logik aus dem Stimmzettelumschlägen zusammenlegen */
         val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
         val authenticationHandler = authenticationHandlers.stream().filter(handler -> handler.canHandle(currentAuthentication)).findFirst();

@@ -49,7 +49,7 @@ public class ErgebnismeldungService {
 
     @PreAuthorize(
         "hasAuthority('Ergebnismeldung_BUSINESSACTION_ForceErgebnisse')"
-                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#bezirkUndWahl.wahlbezirkID(), authentication)"
+                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#bezirkUndWahl.wahlbezirkID, authentication)"
     )
     public void updateSendungszeiten(@P("bezirkUndWahl") final BezirkUndWahlID bezirkUndWahlID) {
         log.info("#updateSendungszeiten");
@@ -63,7 +63,7 @@ public class ErgebnismeldungService {
 
     @PreAuthorize(
         "hasAuthority('Ergebnismeldung_BUSINESSACTION_SendErgebnisse')"
-                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#criteria, authentication)"
+                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#criteria.wahlbezirkID, authentication)"
     )
     public boolean sendErgebnisse(@P("criteria") final ErgebnisseToSendCriteriaModel ergebnisseToSendCriteria) {
         ergebnismeldungValidator.validErgebnisseToSendCriteriaOrThrow(ergebnisseToSendCriteria);

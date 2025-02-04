@@ -118,7 +118,7 @@ public class ErgebnismeldungService {
         if (!isGeschlossen) {
             log.error("Es wurde keine Schließungsuhrzeit für die Wahl {} vom Bezirk {} erfasst", bezirkUndWahlID.getWahlID(),
                     bezirkUndWahlID.getWahlbezirkID());
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.WAHLBEZIRKART_NOT_LOADABLE);
+            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.WAHL_NICHT_GESCHLOSSEN);
         }
     }
 

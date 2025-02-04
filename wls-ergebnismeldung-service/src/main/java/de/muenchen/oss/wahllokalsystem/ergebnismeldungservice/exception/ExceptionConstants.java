@@ -91,6 +91,9 @@ public class ExceptionConstants {
     public static final ExceptionDataWrapper FORCEERGEBNISSE_WRONG_USAGE = new ExceptionDataWrapper("627",
             "forceErgebnisse: forceErgebnisse sollte nie in Benutzung sein wenn beide Validierungsstatus auf NICHT_GESENDET stehen.");
 
+    public static final ExceptionDataWrapper WAHL_NICHT_GESCHLOSSEN = new ExceptionDataWrapper("625",
+            "Die Wahl zu dieser WahlID in diesem Wahlbezirk ist noch nicht geschlossen.");
+
     public static final ExceptionDataWrapper WAHLART_NOT_IMPLEMENTED = new ExceptionDataWrapper("631", "getErgebnisCsv: Wahlart nicht implementiert");
     public static final ExceptionDataWrapper SENDERGEBNISSE_STAPELN_UNVOLLSTAENDIG = new ExceptionDataWrapper("632", "sendErgebnisse: Stapeln unvollstaendig");
     public static final ExceptionDataWrapper SENDERGEBNISSE_STIMMABGABEVERMERKE_UNVOLLSTAENDIG = new ExceptionDataWrapper("633",

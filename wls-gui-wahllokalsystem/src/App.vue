@@ -22,7 +22,7 @@
           cols="3"
           class="d-flex align-center justify-end"
         >
-          <wls-heartbeat></wls-heartbeat>
+          <wls-heartbeat v-model:isOffline="isOffline"></wls-heartbeat>
           <v-tooltip
             location="bottom"
             text="Backend Communication Examples"
@@ -85,7 +85,7 @@
 
 <script setup lang="ts">
 import { useToggle } from "@vueuse/core";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import {
   VApp,
   VAppBar,
@@ -112,6 +112,7 @@ import User, { UserLocalDevelopment } from "@/types/User";
 
 const userStore = useUserStore();
 const [drawer, toggleDrawer] = useToggle();
+const isOffline = ref(false);
 
 onMounted(() => {
   loadUser();

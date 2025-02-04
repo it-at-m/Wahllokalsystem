@@ -29,6 +29,7 @@
 </template>
 
 <script setup lang="ts">
+import axios from "axios";
 import {
   VBtn,
   VCard,
@@ -38,7 +39,17 @@ import {
   VMenu,
 } from "vuetify/components";
 
-let isOffline = true;
+import { useInterval } from "@/composables/useInterval";
+
+useInterval(() => {
+  heartbeat();
+}, 30000); // Alle 30 Sekunden
+
+defineProps({
+  isOffline: { type: Boolean, default: false },
+});
+
+const emit = defineEmits(["update:isOffline"]);
 
 function getIcon(isOffline: boolean) {
   return isOffline ? "$signalOffline" : "$signalOnline";
@@ -52,6 +63,22 @@ function getText(isOffline: boolean) {
 
 function getColor(isOffline: boolean) {
   return isOffline ? "error" : "white";
+}
+
+async function heartbeat() {
+  const url = "api/monitoring-service/businessActions/lastSeen/wbz-1";
+  return axios
+    .post(url)
+    .then((response) => {
+      if (response.status == 200) {
+        console.log("ok");
+        emit("update:isOffline", false);
+      }
+    })
+    .catch(() => {
+      console.log("offline");
+      emit("update:isOffline", true);
+    });
 }
 </script>
 

@@ -45,6 +45,7 @@ public class ErgebnismeldungController {
                                 sendErgebnisParameter.hauptwahlbezirkID()));
                 log.debug("#sendergebnis 1");
             } catch (Exception e) {
+                log.debug("exception during sendErgebnisse occurred", e);
                 if (e instanceof WlsException wlsException)
                     return new ResponseEntity<>(dtoMapper.toDTO(wlsException), HttpStatus.CONFLICT);
             }

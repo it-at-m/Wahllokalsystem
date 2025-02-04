@@ -19,18 +19,20 @@ public class OBW_ValidationImpl implements ElectionTypeValidation {
 
     private final DefaultElectionTypeValidator validator;
 
-    public boolean supports(WahlartModel wahlart) {
+    public boolean supports(final WahlartModel wahlart) {
         return WahlartModel.OBW == wahlart;
     }
 
     @Override
-    public boolean isValidUwb(String wahlbezirkID, String wahlID, Long waehlerverzeichnisNummer, MeldungsartModel meldungsart) throws WlsException {
+    public boolean isValidUwb(final String wahlbezirkID, final String wahlID, final Long waehlerverzeichnisNummer, final MeldungsartModel meldungsart)
+            throws WlsException {
         val necessaryStacks = buildNecessaryStack();
         return validator.checkValidation(WahlbezirkArtModel.UWB, wahlbezirkID, wahlID, waehlerverzeichnisNummer, necessaryStacks);
     }
 
     @Override
-    public boolean isValidBwb(String wahlbezirkID, String wahlID, Long waehlerverzeichnisNummer, MeldungsartModel meldungsart) throws WlsException {
+    public boolean isValidBwb(final String wahlbezirkID, final String wahlID, final Long waehlerverzeichnisNummer, final MeldungsartModel meldungsart)
+            throws WlsException {
         val necessaryStacks = buildNecessaryStack();
         necessaryStacks.add(Stapelart.OBW_B_LEER);
 

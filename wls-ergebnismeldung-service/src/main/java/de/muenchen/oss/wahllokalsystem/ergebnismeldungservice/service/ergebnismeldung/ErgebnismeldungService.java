@@ -92,7 +92,7 @@ public class ErgebnismeldungService {
         return valid;
     }
 
-    private void sendErgebnisseToEAI(ErgebnismeldungDTO ergebnismeldung) {
+    private void sendErgebnisseToEAI(final ErgebnismeldungDTO ergebnismeldung) {
         log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3.1 a sendErgebnisseToEAI" + ergebnismeldung);
         eaiService.sendErgebnismeldung(ergebnismeldung);
         log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3.1 b sendErgebnisseToEAI");

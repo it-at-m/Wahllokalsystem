@@ -52,22 +52,22 @@ public class DummyClientImpl
     }
 
     @Override
-    public boolean isGeschlossen(String wahlbezirkID) {
+    public boolean isGeschlossen(final String wahlbezirkID) {
         return true;
     }
 
     @Override
-    public WahlartModel getWahlartOfCurrentWahltag(String wahlID) {
+    public WahlartModel getWahlartOfCurrentWahltag(final String wahlID) {
         return WahlartModel.BTW;
     }
 
     @Override
-    public long getAnzahlZurueckgewiesenerWahlbriefe(String wahlbezirkID, String wahlID, long waehlerverzeichnisNummer) {
+    public long getAnzahlZurueckgewiesenerWahlbriefe(final String wahlbezirkID, final String wahlID, final long waehlerverzeichnisNummer) {
         return 0;
     }
 
     @Override
-    public void sendErgebnismeldung(ErgebnismeldungDTO ergebnismeldungDTO) {
+    public void sendErgebnismeldung(final ErgebnismeldungDTO ergebnismeldungDTO) {
         log.info("dummy client sendErgebnismeldung {}", ergebnismeldungDTO);
     }
 }

@@ -22,18 +22,20 @@ public class LTW_BZW_ValidationImpl implements ElectionTypeValidation {
     private final DefaultElectionTypeValidator validator;
 
     @Override
-    public boolean supports(WahlartModel wahlart) {
+    public boolean supports(final WahlartModel wahlart) {
         return WahlartModel.LTW == wahlart || WahlartModel.BZW == wahlart;
     }
 
     @Override
-    public boolean isValidUwb(String wahlbezirkID, String wahlID, Long waehlerverzeichnisNummer, MeldungsartModel meldungsart) throws WlsException {
+    public boolean isValidUwb(final String wahlbezirkID, final String wahlID, final Long waehlerverzeichnisNummer, final MeldungsartModel meldungsart)
+            throws WlsException {
         val necessaryStacks = buildNecessaryStack(meldungsart);
         return validator.checkValidation(WahlbezirkArtModel.UWB, wahlbezirkID, wahlID, waehlerverzeichnisNummer, necessaryStacks);
     }
 
     @Override
-    public boolean isValidBwb(String wahlbezirkID, String wahlID, Long waehlerverzeichnisNummer, MeldungsartModel meldungsart) throws WlsException {
+    public boolean isValidBwb(final String wahlbezirkID, final String wahlID, final Long waehlerverzeichnisNummer, final MeldungsartModel meldungsart)
+            throws WlsException {
         val necessaryStacks = buildNecessaryStack(meldungsart);
         necessaryStacks.add(Stapelart.LTW_BZW_G_KLEIN);
         necessaryStacks.add(Stapelart.LTW_BZW_G_GROSS);
@@ -42,7 +44,7 @@ public class LTW_BZW_ValidationImpl implements ElectionTypeValidation {
         return validator.checkValidation(WahlbezirkArtModel.BWB, wahlbezirkID, wahlID, waehlerverzeichnisNummer, necessaryStacks);
     }
 
-    private List<Stapelart> buildNecessaryStack(MeldungsartModel meldungsart) {
+    private List<Stapelart> buildNecessaryStack(final MeldungsartModel meldungsart) {
         List<Stapelart> necessaryStacks = new ArrayList<>();
         necessaryStacks.add(Stapelart.LTW_BZW_A);
         necessaryStacks.add(Stapelart.LTW_BZW_B);

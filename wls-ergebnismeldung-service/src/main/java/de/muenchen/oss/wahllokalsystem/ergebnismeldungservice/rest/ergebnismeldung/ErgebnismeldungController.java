@@ -28,7 +28,7 @@ public class ErgebnismeldungController {
     @PostMapping("{wahlID}/{wahlbezirkID}/{waehlerverzeichnisNummer}/{meldungsart}/{hauptwahlbezirkID}")
     public ResponseEntity<?> sendErgebnisse(
             @RequestHeader(required = false, name = "forceergebnismeldung") final String forceUpdate,
-            SendErgebnisParameter sendErgebnisParameter) {
+            final SendErgebnisParameter sendErgebnisParameter) {
         log.info("sendErgebnisse called with {}", sendErgebnisParameter);
 
         val shouldUpdateSendungszeiten = Boolean.parseBoolean(forceUpdate);

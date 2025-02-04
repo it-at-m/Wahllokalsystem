@@ -24,7 +24,7 @@ public class BriefwahlClient implements de.muenchen.oss.wahllokalsystem.ergebnis
     private final ExceptionFactory exceptionFactory;
 
     @Override
-    public long getAnzahlZurueckgewiesenerWahlbriefe(String wahlbezirkID, String wahlID, long waehlerverzeichnisNummer) {
+    public long getAnzahlZurueckgewiesenerWahlbriefe(final String wahlbezirkID, final String wahlID, final long waehlerverzeichnisNummer) {
         val beanstandeteWahlbriefe = getBeanstandeteWahlbriefe(wahlbezirkID, waehlerverzeichnisNummer);
 
         return beanstandeteWahlbriefe.getBeanstandeteWahlbriefe().get(wahlID).stream()

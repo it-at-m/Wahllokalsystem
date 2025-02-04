@@ -43,7 +43,7 @@ public class EAIClientImpl implements AWerteClient, EaiService {
     }
 
     @Override
-    public void sendErgebnismeldung(ErgebnismeldungDTO ergebnismeldungDTO) {
+    public void sendErgebnismeldung(final ErgebnismeldungDTO ergebnismeldungDTO) {
         try {
             wahlergebnisControllerApi.saveErgebnismeldung(ergebnismeldungDTO);
         } catch (final Exception exception) {
@@ -53,7 +53,7 @@ public class EAIClientImpl implements AWerteClient, EaiService {
         }
     }
 
-    private void simLogging(ErgebnismeldungDTO.MeldungsartEnum meldungsart) {
+    private void simLogging(final ErgebnismeldungDTO.MeldungsartEnum meldungsart) {
         try {
             switch (meldungsart) {
             case NIEDERSCHRIFT:

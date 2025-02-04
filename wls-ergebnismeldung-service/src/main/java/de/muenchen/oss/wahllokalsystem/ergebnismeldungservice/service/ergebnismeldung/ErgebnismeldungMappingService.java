@@ -42,8 +42,9 @@ public class ErgebnismeldungMappingService {
 
     private final Mapping mapping;
 
-    public ErgebnismeldungDTO createErgebnismeldung(WahlartModel wahlart, String wahlID, String wahlbezirkID, Long waehlerverzeichnisNummer,
-            ErgebnismeldungDTO.MeldungsartEnum meldungsart, String hauptwahlbezirkID) {
+    public ErgebnismeldungDTO createErgebnismeldung(final WahlartModel wahlart, final String wahlID, final String wahlbezirkID,
+            final Long waehlerverzeichnisNummer,
+            final ErgebnismeldungDTO.MeldungsartEnum meldungsart, final String hauptwahlbezirkID) {
         val ergebnismeldung = new ErgebnismeldungDTO();
         ergebnismeldung.setWahlID(wahlID);
         ergebnismeldung.setWahlbezirkID(wahlbezirkID);
@@ -101,14 +102,15 @@ public class ErgebnismeldungMappingService {
         };
     }
 
-    private List<Ergebnisse> getErgebnisse(WahlartModel wahlart, List<Ergebnisse> ergebnisse, boolean gueltig, ErgebnismeldungDTO.MeldungsartEnum meldungsart) {
+    private List<Ergebnisse> getErgebnisse(final WahlartModel wahlart, final List<Ergebnisse> ergebnisse, final boolean gueltig,
+            final ErgebnismeldungDTO.MeldungsartEnum meldungsart) {
         val predicateForStapelWithInvalidErgebnisse = wahlartPredicateHolder.getPredicateForStapelWithInvalidErgebnisse(wahlart);
         val ergebnisseFilter = gueltig ? Predicate.not(predicateForStapelWithInvalidErgebnisse) : predicateForStapelWithInvalidErgebnisse;
 
         return ergebnisse.stream().filter(ergenis -> ergebnisseFilter.test(ergenis.getBezirkUndWahlIDStapelart().getStapelart())).toList();
     }
 
-    private BWerteDTO getBWerteDTOUWB(String wahlID, BezirkIDUndWaehlerverzeichnisNummer waehlerverzeichnisNummer, WahlartModel wahlart) {
+    private BWerteDTO getBWerteDTOUWB(final String wahlID, final BezirkIDUndWaehlerverzeichnisNummer waehlerverzeichnisNummer, final WahlartModel wahlart) {
         val bWerte = new BWerteDTO();
         val wahldatenSet = stimmabgabevermerkeRepo.findById(waehlerverzeichnisNummer).orElseThrow(NullPointerException::new).getWahldaten();
         val stimmzettelumschlaege = stimmzettelumschlaegeRepo.findById(
@@ -135,7 +137,7 @@ public class ErgebnismeldungMappingService {
         return bWerte;
     }
 
-    private BWerteDTO getBWerteDTOBWB(BezirkUndWahlID bezirkUndWahlID) {
+    private BWerteDTO getBWerteDTOBWB(final BezirkUndWahlID bezirkUndWahlID) {
         val bWerte = new BWerteDTO();
 
         Stimmzettelumschlaege stimmzettelumschlaege = stimmzettelumschlaegeRepo.findById(bezirkUndWahlID).orElseThrow(NullPointerException::new);

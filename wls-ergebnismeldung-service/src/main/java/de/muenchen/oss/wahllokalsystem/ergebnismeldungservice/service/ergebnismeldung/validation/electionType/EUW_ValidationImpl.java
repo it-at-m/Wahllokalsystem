@@ -20,18 +20,20 @@ public class EUW_ValidationImpl implements ElectionTypeValidation {
     private final DefaultElectionTypeValidator validator;
 
     @Override
-    public boolean supports(WahlartModel wahlart) {
+    public boolean supports(final WahlartModel wahlart) {
         return WahlartModel.EUW == wahlart;
     }
 
     @Override
-    public boolean isValidUwb(String wahlbezirkID, String wahlID, Long waehlerverzeichnisNummer, MeldungsartModel meldungsart) throws WlsException {
+    public boolean isValidUwb(final String wahlbezirkID, final String wahlID, final Long waehlerverzeichnisNummer, final MeldungsartModel meldungsart)
+            throws WlsException {
         val necessaryStacks = buildNecessaryStack();
         return validator.checkValidation(WahlbezirkArtModel.UWB, wahlbezirkID, wahlID, waehlerverzeichnisNummer, necessaryStacks);
     }
 
     @Override
-    public boolean isValidBwb(String wahlbezirkID, String wahlID, Long waehlerverzeichnisNummer, MeldungsartModel meldungsart) throws WlsException {
+    public boolean isValidBwb(final String wahlbezirkID, final String wahlID, final Long waehlerverzeichnisNummer, final MeldungsartModel meldungsart)
+            throws WlsException {
         val necessaryStacks = buildNecessaryStack();
         necessaryStacks.add(Stapelart.EUW_B_LEER);
 

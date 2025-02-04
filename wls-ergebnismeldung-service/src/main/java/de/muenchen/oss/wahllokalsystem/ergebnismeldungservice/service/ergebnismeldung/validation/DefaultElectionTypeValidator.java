@@ -42,7 +42,7 @@ public class DefaultElectionTypeValidator {
      * benötigten Daten aus den repos benötigt. Wird von den
      * checkValidation(...) der abgeleiteten Klassen gerufen, diese erzeugen auch benoetigteStapel.
      */
-    public boolean checkValidation(WahlbezirkArtModel wahlbezirkart,
+    public boolean checkValidation(final WahlbezirkArtModel wahlbezirkart,
             String wahlbezirkID,
             String wahlID,
             Long waehlerverzeichnisNummer,
@@ -65,7 +65,7 @@ public class DefaultElectionTypeValidator {
         return valid;
     }
 
-    private boolean checkValidationStapel(String wahlbezirkID, String wahlID, List<Stapelart> benoetigteStapel) throws WlsException {
+    private boolean checkValidationStapel(final String wahlbezirkID, final String wahlID, final List<Stapelart> benoetigteStapel) throws WlsException {
 
         // Ermittle vorhandene Stapelarten aus ergebnisRepo.ergebnisseList.ergebnisse.bezirksUndWahlIdStapelart und
         // lege sie in einem HashSet ab.
@@ -86,8 +86,8 @@ public class DefaultElectionTypeValidator {
         return true;
     }
 
-    private boolean checkValidationStimmabgabevermerke(String wahlbezirkID,
-            Long waehlerverzeichnisNummer) throws WlsException {
+    private boolean checkValidationStimmabgabevermerke(final String wahlbezirkID,
+            final Long waehlerverzeichnisNummer) throws WlsException {
         val bezirkIDUndWaehlerverzeichnisNummer = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID,
                 waehlerverzeichnisNummer);
 
@@ -102,7 +102,7 @@ public class DefaultElectionTypeValidator {
         return stimmabgabevermerkeErfasst;
     }
 
-    private boolean checkValidationWahlscheine(String wahlbezirkID, String wahlID) throws WlsException {
+    private boolean checkValidationWahlscheine(final String wahlbezirkID, final String wahlID) throws WlsException {
         val wahlscheine = wahlscheineRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID));
         boolean wahlscheineErfasst = wahlscheine.isPresent();
         if (!wahlscheineErfasst) {
@@ -112,7 +112,7 @@ public class DefaultElectionTypeValidator {
         return wahlscheineErfasst;
     }
 
-    private boolean checkAWerte(String wahlbezirkID, String wahlID) throws WlsException {
+    private boolean checkAWerte(final String wahlbezirkID, final String wahlID) throws WlsException {
         val bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
         Optional<AWerte> aWerte = aWerteRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID));
         if (aWerte.isEmpty()) {

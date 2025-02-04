@@ -35,8 +35,9 @@ public class ErgebnismeldungValidator {
         }
     }
 
-    public boolean checkValidation(WahlartModel wahlart, WahlbezirkArtModel wahlbezirksart, String wahlbezirkID, String wahlID, Long waehlerverzeichnisNummer,
-            MeldungsartModel meldungsart) throws WlsException {
+    public boolean checkValidation(final WahlartModel wahlart, final WahlbezirkArtModel wahlbezirksart, final String wahlbezirkID, final String wahlID,
+            final Long waehlerverzeichnisNummer,
+            final MeldungsartModel meldungsart) throws WlsException {
         val validator = findValidator(wahlart);
         if (wahlbezirksart.equals(WahlbezirkArtModel.UWB)) {
             return validator.isValidUwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
@@ -44,7 +45,7 @@ public class ErgebnismeldungValidator {
         return validator.isValidBwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
     }
 
-    private ElectionTypeValidation findValidator(WahlartModel wahlart) {
+    private ElectionTypeValidation findValidator(final WahlartModel wahlart) {
         return electionTypeValidators.stream()
                 .filter(v -> v.supports(wahlart))
                 .findAny()

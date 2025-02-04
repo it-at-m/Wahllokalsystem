@@ -19,6 +19,9 @@ public class ExceptionConstants {
     public static final ExceptionDataWrapper BASISDATEN_WAHL_NOT_FOUND = new ExceptionDataWrapper("302",
             "Die Wahl zur übergebenen wahlID wurde nicht gefunden.");
 
+    public static final ExceptionDataWrapper KOMMUNIKATIONSFEHLER_MIT_AOUEAI = new ExceptionDataWrapper("400",
+            "Bei der Kommunikation mit dem AoueaiService kam es zu einem Fehler.");
+
     public static final ExceptionDataWrapper KOMMUNIKATIONSFEHLER_MIT_WAHLVORBEREITUNG = new ExceptionDataWrapper("500",
             "Bei der Kommunikation mit dem WahlvorbereitungsService kam es zu einem Fehler.");
     public static final ExceptionDataWrapper WAHLVORBEREITUNG_SCHLIESSUNGSUHRZEIT_NULL_OR_EMPTY = new ExceptionDataWrapper("501",

@@ -98,7 +98,7 @@ class DefaultElectionTypeValidatorTest {
                         .thenReturn(mockedWlsException);
 
                 Assertions.assertThatThrownBy(
-                                () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
+                        () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
                         .isSameAs(mockedWlsException);
             }
 
@@ -118,7 +118,7 @@ class DefaultElectionTypeValidatorTest {
                         .thenReturn(mockedWlsException);
 
                 Assertions.assertThatThrownBy(
-                                () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
+                        () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
                         .isSameAs(mockedWlsException);
             }
         }
@@ -164,7 +164,7 @@ class DefaultElectionTypeValidatorTest {
                         .thenReturn(mockedWlsException);
 
                 Assertions.assertThatThrownBy(
-                                () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
+                        () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
                         .isSameAs(mockedWlsException);
             }
 
@@ -185,7 +185,7 @@ class DefaultElectionTypeValidatorTest {
                         .thenReturn(mockedWlsException);
 
                 Assertions.assertThatThrownBy(
-                                () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
+                        () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
                         .isSameAs(mockedWlsException);
             }
 
@@ -208,7 +208,7 @@ class DefaultElectionTypeValidatorTest {
                         .thenReturn(mockedWlsException);
 
                 Assertions.assertThatThrownBy(
-                                () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
+                        () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
                         .isSameAs(mockedWlsException);
             }
 

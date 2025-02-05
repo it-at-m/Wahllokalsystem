@@ -10,59 +10,40 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
-public class LTW_BZW_ValidationImpl implements ElectionTypeValidation {
+public class SrwBawValidationImpl implements ElectionTypeValidation {
 
     private final DefaultElectionTypeValidator validator;
 
     @Override
     public boolean supports(final WahlartModel wahlart) {
-        return WahlartModel.LTW == wahlart || WahlartModel.BZW == wahlart;
+        return WahlartModel.SRW == wahlart || WahlartModel.BAW == wahlart;
     }
 
     @Override
     public boolean isValidUwb(final String wahlbezirkID, final String wahlID, final Long waehlerverzeichnisNummer, final MeldungsartModel meldungsart)
             throws WlsException {
-        val necessaryStacks = buildNecessaryStack(meldungsart);
+        val necessaryStacks = buildNecessaryStack();
         return validator.checkValidation(WahlbezirkArtModel.UWB, wahlbezirkID, wahlID, waehlerverzeichnisNummer, necessaryStacks);
     }
 
     @Override
     public boolean isValidBwb(final String wahlbezirkID, final String wahlID, final Long waehlerverzeichnisNummer, final MeldungsartModel meldungsart)
             throws WlsException {
-        val necessaryStacks = buildNecessaryStack(meldungsart);
-        necessaryStacks.add(Stapelart.LTW_BZW_G_KLEIN);
-        necessaryStacks.add(Stapelart.LTW_BZW_G_GROSS);
-        necessaryStacks.add(Stapelart.LTW_BZW_G_BEIDE);
-
+        val necessaryStacks = buildNecessaryStack();
         return validator.checkValidation(WahlbezirkArtModel.BWB, wahlbezirkID, wahlID, waehlerverzeichnisNummer, necessaryStacks);
     }
 
-    private List<Stapelart> buildNecessaryStack(final MeldungsartModel meldungsart) {
+    private List<Stapelart> buildNecessaryStack() {
         List<Stapelart> necessaryStacks = new ArrayList<>();
-        necessaryStacks.add(Stapelart.LTW_BZW_A);
-        necessaryStacks.add(Stapelart.LTW_BZW_B);
-        necessaryStacks.add(Stapelart.LTW_BZW_C_GUELTIG);
-        necessaryStacks.add(Stapelart.LTW_BZW_C_UNGUELTIG);
-        necessaryStacks.add(Stapelart.LTW_BZW_D);
-        // Stapel LTW_BZW_DII nur nach der Schnellmeldung und vor der Niederschrift erforderlich
-        log.debug("#addnecessary stapel meldungsart {}", meldungsart);
-        if (meldungsart.equals(MeldungsartModel.V1)) {
-            log.debug("#addnecessary stapel");
-            necessaryStacks.add(Stapelart.LTW_BZW_DII);
-            log.debug("#addnecessary stapel");
-        } else {
-            log.debug("do not #addnecessary stapel");
-        }
-        necessaryStacks.add(Stapelart.LTW_BZW_E);
-        necessaryStacks.add(Stapelart.LTW_BZW_F_GUELTIG);
-        necessaryStacks.add(Stapelart.LTW_BZW_F_UNGUELTIG);
+        necessaryStacks.add(Stapelart.SRW_BAW_A);
+        necessaryStacks.add(Stapelart.SRW_BAW_B);
+        necessaryStacks.add(Stapelart.SRW_BAW_D_UNGUELTIG);
         return necessaryStacks;
     }
+
 }

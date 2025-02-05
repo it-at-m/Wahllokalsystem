@@ -15,13 +15,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class BTW_ValidationImpl implements ElectionTypeValidation {
+public class MbwValidationImpl implements ElectionTypeValidation {
 
     private final DefaultElectionTypeValidator validator;
 
     @Override
     public boolean supports(final WahlartModel wahlart) {
-        return WahlartModel.BTW == wahlart;
+        return WahlartModel.MBW == wahlart;
     }
 
     @Override
@@ -35,22 +35,15 @@ public class BTW_ValidationImpl implements ElectionTypeValidation {
     public boolean isValidBwb(final String wahlbezirkID, final String wahlID, final Long waehlerverzeichnisNummer, final MeldungsartModel meldungsart)
             throws WlsException {
         val necessaryStacks = buildNecessaryStack();
-        necessaryStacks.add(Stapelart.BTW_C_LEER);
         return validator.checkValidation(WahlbezirkArtModel.BWB, wahlbezirkID, wahlID, waehlerverzeichnisNummer, necessaryStacks);
     }
 
     private List<Stapelart> buildNecessaryStack() {
         List<Stapelart> necessaryStacks = new ArrayList<>();
-        necessaryStacks.add(Stapelart.BTW_A);
-        necessaryStacks.add(Stapelart.BTW_B_I_GUELTIG);
-        necessaryStacks.add(Stapelart.BTW_B_I_UNGUELTIG);
-        necessaryStacks.add(Stapelart.BTW_B_II_GUELTIG);
-        necessaryStacks.add(Stapelart.BTW_B_II_UNGUELTIG);
-        necessaryStacks.add(Stapelart.BTW_C_UNGEKENNZEICHNET);
-        necessaryStacks.add(Stapelart.BTW_D_I_GUELTIG);
-        necessaryStacks.add(Stapelart.BTW_D_II_GUELTIG);
-        necessaryStacks.add(Stapelart.BTW_D_I_UNGUELTIG);
-        necessaryStacks.add(Stapelart.BTW_D_II_UNGUELTIG);
+        necessaryStacks.add(Stapelart.MBW_A);
+        necessaryStacks.add(Stapelart.MBW_B);
+        necessaryStacks.add(Stapelart.MBW_D_UNGUELTIG);
         return necessaryStacks;
     }
+
 }

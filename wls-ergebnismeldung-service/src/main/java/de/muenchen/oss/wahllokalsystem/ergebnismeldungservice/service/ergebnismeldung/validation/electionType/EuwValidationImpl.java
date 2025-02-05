@@ -15,13 +15,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class VE_BE_ValidationImpl implements ElectionTypeValidation {
+public class EuwValidationImpl implements ElectionTypeValidation {
 
     private final DefaultElectionTypeValidator validator;
 
     @Override
     public boolean supports(final WahlartModel wahlart) {
-        return WahlartModel.VE == wahlart || WahlartModel.BEB == wahlart;
+        return WahlartModel.EUW == wahlart;
     }
 
     @Override
@@ -35,17 +35,18 @@ public class VE_BE_ValidationImpl implements ElectionTypeValidation {
     public boolean isValidBwb(final String wahlbezirkID, final String wahlID, final Long waehlerverzeichnisNummer, final MeldungsartModel meldungsart)
             throws WlsException {
         val necessaryStacks = buildNecessaryStack();
+        necessaryStacks.add(Stapelart.EUW_B_LEER);
+
         return validator.checkValidation(WahlbezirkArtModel.BWB, wahlbezirkID, wahlID, waehlerverzeichnisNummer, necessaryStacks);
     }
 
     private List<Stapelart> buildNecessaryStack() {
         List<Stapelart> necessaryStacks = new ArrayList<>();
-        necessaryStacks.add(Stapelart.VE_BE_D_OPTION_1);
-        necessaryStacks.add(Stapelart.VE_BE_D_OPTION_2);
-        necessaryStacks.add(Stapelart.VE_BE_D_UNGUELTIG);
-        necessaryStacks.add(Stapelart.VE_BE_CBA_OPTION_1);
-        necessaryStacks.add(Stapelart.VE_BE_CBA_OPTION_2);
-        necessaryStacks.add(Stapelart.VE_BE_CBA_UNGUELTIG);
+        necessaryStacks.add(Stapelart.EUW_A);
+        necessaryStacks.add(Stapelart.EUW_B_UNGEKENNZEICHNET);
+        necessaryStacks.add(Stapelart.EUW_C_GUELTIG);
+        necessaryStacks.add(Stapelart.EUW_C_UNGUELTIG);
         return necessaryStacks;
     }
+
 }

@@ -29,13 +29,13 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class VE_BE_ValidationImplTest {
+class BtwValidationImplTest {
 
     @Mock
     DefaultElectionTypeValidator defaultElectionTypeValidator;
 
     @InjectMocks
-    VE_BE_ValidationImpl unitUnderTest;
+    BtwValidationImpl unitUnderTest;
 
     @Captor
     ArgumentCaptor<List<Stapelart>> captorStapelList;
@@ -44,26 +44,18 @@ class VE_BE_ValidationImplTest {
     class Supports {
 
         @Test
-        void should_returnTrue_when_wahlartIsVE() {
-            Assertions.assertThat(unitUnderTest.supports(WahlartModel.VE)).isTrue();
-        }
-
-        @Test
-        void should_returnTrue_when_wahlartIsBEB() {
-            Assertions.assertThat(unitUnderTest.supports(WahlartModel.BEB)).isTrue();
+        void should_returnTrue_when_wahlartIsBTW() {
+            Assertions.assertThat(unitUnderTest.supports(WahlartModel.BTW)).isTrue();
         }
 
         @ParameterizedTest
-        @MethodSource("argumentsForNonVEOrBEBWahlart")
-        void should_returnFalse_when_wahlartIsNotVEOrBEB(final ArgumentsAccessor arguments) {
+        @MethodSource("argumentsForNonBTWWahlart")
+        void should_returnFalse_when_wahlartIsNotBTW(final ArgumentsAccessor arguments) {
             Assertions.assertThat(unitUnderTest.supports(arguments.get(0, WahlartModel.class))).isFalse();
         }
 
-        public static Stream<Arguments> argumentsForNonVEOrBEBWahlart() {
-            return Arrays.stream(WahlartModel.values())
-                    .filter(wahlart -> !WahlartModel.VE.equals(wahlart))
-                    .filter(wahlart -> !WahlartModel.BEB.equals(wahlart))
-                    .map(Arguments::of);
+        public static Stream<Arguments> argumentsForNonBTWWahlart() {
+            return Arrays.stream(WahlartModel.values()).filter(wahlart -> !WahlartModel.BTW.equals(wahlart)).map(Arguments::of);
         }
     }
 
@@ -83,7 +75,8 @@ class VE_BE_ValidationImplTest {
                     .checkValidation(eq(WahlbezirkArtModel.UWB), eq(wahlbezirkID), eq(wahlID), eq(waehlerverzeichnisNummer), captorStapelList.capture());
 
             val expectedStapel = Arrays.stream(Stapelart.values())
-                    .filter(stapelart -> stapelart.name().startsWith("VE_BE_"))
+                    .filter(stapelart -> !Stapelart.BTW_C_LEER.equals(stapelart))
+                    .filter(stapelart -> stapelart.name().startsWith("BTW_"))
                     .toList().toArray(new Stapelart[0]);
 
             Assertions.assertThat(captorStapelList.getValue()).containsExactlyInAnyOrder(expectedStapel);
@@ -122,7 +115,7 @@ class VE_BE_ValidationImplTest {
                     .checkValidation(eq(WahlbezirkArtModel.BWB), eq(wahlbezirkID), eq(wahlID), eq(waehlerverzeichnisNummer), captorStapelList.capture());
 
             val expectedStapel = Arrays.stream(Stapelart.values())
-                    .filter(stapelart -> stapelart.name().startsWith("VE_BE_"))
+                    .filter(stapelart -> stapelart.name().startsWith("BTW_"))
                     .toList().toArray(new Stapelart[0]);
 
             Assertions.assertThat(captorStapelList.getValue()).containsExactlyInAnyOrder(expectedStapel);

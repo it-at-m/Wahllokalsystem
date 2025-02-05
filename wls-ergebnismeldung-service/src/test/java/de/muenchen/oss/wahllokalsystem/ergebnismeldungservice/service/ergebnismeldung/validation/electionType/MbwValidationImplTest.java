@@ -29,13 +29,13 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class BTW_ValidationImplTest {
+class MbwValidationImplTest {
 
     @Mock
     DefaultElectionTypeValidator defaultElectionTypeValidator;
 
     @InjectMocks
-    BTW_ValidationImpl unitUnderTest;
+    MbwValidationImpl unitUnderTest;
 
     @Captor
     ArgumentCaptor<List<Stapelart>> captorStapelList;
@@ -44,18 +44,18 @@ class BTW_ValidationImplTest {
     class Supports {
 
         @Test
-        void should_returnTrue_when_wahlartIsBTW() {
-            Assertions.assertThat(unitUnderTest.supports(WahlartModel.BTW)).isTrue();
+        void should_returnTrue_when_wahlartIsMBW() {
+            Assertions.assertThat(unitUnderTest.supports(WahlartModel.MBW)).isTrue();
         }
 
         @ParameterizedTest
-        @MethodSource("argumentsForNonBTWWahlart")
-        void should_returnFalse_when_wahlartIsNotBTW(final ArgumentsAccessor arguments) {
+        @MethodSource("argumentsForNonMBWWahlart")
+        void should_returnFalse_when_wahlartIsNotMBW(final ArgumentsAccessor arguments) {
             Assertions.assertThat(unitUnderTest.supports(arguments.get(0, WahlartModel.class))).isFalse();
         }
 
-        public static Stream<Arguments> argumentsForNonBTWWahlart() {
-            return Arrays.stream(WahlartModel.values()).filter(wahlart -> !WahlartModel.BTW.equals(wahlart)).map(Arguments::of);
+        public static Stream<Arguments> argumentsForNonMBWWahlart() {
+            return Arrays.stream(WahlartModel.values()).filter(wahlart -> !WahlartModel.MBW.equals(wahlart)).map(Arguments::of);
         }
     }
 
@@ -75,8 +75,10 @@ class BTW_ValidationImplTest {
                     .checkValidation(eq(WahlbezirkArtModel.UWB), eq(wahlbezirkID), eq(wahlID), eq(waehlerverzeichnisNummer), captorStapelList.capture());
 
             val expectedStapel = Arrays.stream(Stapelart.values())
-                    .filter(stapelart -> !Stapelart.BTW_C_LEER.equals(stapelart))
-                    .filter(stapelart -> stapelart.name().startsWith("BTW_"))
+                    .filter(stapelart -> !Stapelart.MBW_A_B.equals(stapelart))
+                    .filter(stapelart -> !Stapelart.MBW_D.equals(stapelart))
+                    .filter(stapelart -> !Stapelart.MBW_B_C.equals(stapelart))
+                    .filter(stapelart -> stapelart.name().startsWith("MBW_"))
                     .toList().toArray(new Stapelart[0]);
 
             Assertions.assertThat(captorStapelList.getValue()).containsExactlyInAnyOrder(expectedStapel);
@@ -115,7 +117,10 @@ class BTW_ValidationImplTest {
                     .checkValidation(eq(WahlbezirkArtModel.BWB), eq(wahlbezirkID), eq(wahlID), eq(waehlerverzeichnisNummer), captorStapelList.capture());
 
             val expectedStapel = Arrays.stream(Stapelart.values())
-                    .filter(stapelart -> stapelart.name().startsWith("BTW_"))
+                    .filter(stapelart -> !Stapelart.MBW_A_B.equals(stapelart))
+                    .filter(stapelart -> !Stapelart.MBW_D.equals(stapelart))
+                    .filter(stapelart -> !Stapelart.MBW_B_C.equals(stapelart))
+                    .filter(stapelart -> stapelart.name().startsWith("MBW_"))
                     .toList().toArray(new Stapelart[0]);
 
             Assertions.assertThat(captorStapelList.getValue()).containsExactlyInAnyOrder(expectedStapel);
@@ -137,4 +142,5 @@ class BTW_ValidationImplTest {
             Assertions.assertThat(result).isEqualTo(mockedValidatorResponse);
         }
     }
+
 }

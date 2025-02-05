@@ -34,7 +34,7 @@ public class BasisdatenClient implements WahlenClient {
     @Override
     public WahlartModel getWahlartOfCurrentWahltag(final String wahlID) {
         val currentWahltagID = getConfiguredWahltagID();
-        val wahlartOfWahl = getWahlen(currentWahltagID);
+        val wahlartOfWahl = getWahlen(currentWahltagID, wahlID);
 
         return basisdatenClientMapper.toModel(wahlartOfWahl);
     }
@@ -57,7 +57,7 @@ public class BasisdatenClient implements WahlenClient {
         return konfigurierterWahltag.getWahltagID();
     }
 
-    private WahlDTO.WahlartEnum getWahlen(final String wahltagID) {
+    private WahlDTO.WahlartEnum getWahlen(final String wahltagID, final String wahlID) {
         final List<WahlDTO> wahlen;
         try {
             wahlen = wahlenControllerApi.getWahlen(wahltagID);
@@ -72,10 +72,7 @@ public class BasisdatenClient implements WahlenClient {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.BASISDATEN_WAHLEN_EMPTY);
         }
 
-        if (wahlen.size() != 1) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.BASISDATEN_WAHL_NOT_FOUND);
-        }
-
-        return wahlen.get(0).getWahlart();
+        return wahlen.stream().filter(wahl -> wahlID.equals(wahl.getWahlID())).findFirst().map(WahlDTO::getWahlart).orElseThrow(
+                () -> exceptionFactory.createFachlicheWlsException(ExceptionConstants.BASISDATEN_WAHL_NOT_FOUND));
     }
 }

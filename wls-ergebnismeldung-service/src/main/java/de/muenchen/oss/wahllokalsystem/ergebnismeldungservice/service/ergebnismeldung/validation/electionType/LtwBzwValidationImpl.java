@@ -53,7 +53,7 @@ public class LtwBzwValidationImpl implements ElectionTypeValidation {
         necessaryStacks.add(Stapelart.LTW_BZW_D);
         // Stapel LTW_BZW_DII nur nach der Schnellmeldung und vor der Niederschrift erforderlich
         log.debug("#addnecessary stapel meldungsart {}", meldungsart);
-        if (meldungsart.equals(MeldungsartModel.V1)) {
+        if (MeldungsartModel.V1.equals(meldungsart)) {
             log.debug("#addnecessary stapel");
             necessaryStacks.add(Stapelart.LTW_BZW_DII);
             log.debug("#addnecessary stapel");

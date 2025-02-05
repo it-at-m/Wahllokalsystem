@@ -13,6 +13,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactor
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.slf4j.MDC;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -55,14 +56,11 @@ public class EAIClientImpl implements AWerteClient, EaiService {
 
     private void simLogging(final ErgebnismeldungDTO.MeldungsartEnum meldungsart) {
         try {
-            switch (meldungsart) {
-            case NIEDERSCHRIFT:
-                MDC.put("eid", "NIEDERSCHRIFT_GESENDET");
-                break;
-            case SCHNELLMELDUNG:
-                MDC.put("eid", "SCHNELLMELDUNG_GESENDET");
-                break;
-            }
+            val mdcEIDValue = switch (meldungsart) {
+            case NIEDERSCHRIFT -> "NIEDERSCHRIFT_GESENDET";
+            case SCHNELLMELDUNG -> "SCHNELLMELDUNG_GESENDET";
+            };
+            MDC.put("eid", mdcEIDValue);
             MDC.put("result", "3");
             log.info("IVU AOUEAI nicht erreichbar!");
         } finally {

@@ -27,8 +27,14 @@ public class BriefwahlClient implements de.muenchen.oss.wahllokalsystem.ergebnis
     public long getAnzahlZurueckgewiesenerWahlbriefe(final String wahlbezirkID, final String wahlID, final long waehlerverzeichnisNummer) {
         val beanstandeteWahlbriefe = getBeanstandeteWahlbriefe(wahlbezirkID, waehlerverzeichnisNummer);
 
-        return beanstandeteWahlbriefe.getBeanstandeteWahlbriefe().get(wahlID).stream()
-                .filter(zurueckweisungsgrund -> !zurueckweisungsgrund.equals(Zurueckweisungsgrund.ZUGELASSEN)).count();
+        val beanstandeteWahlbriefeOfWahl = beanstandeteWahlbriefe.getBeanstandeteWahlbriefe().get(wahlID);
+        if (beanstandeteWahlbriefeOfWahl == null) {
+            return 0;
+        } else {
+            return beanstandeteWahlbriefeOfWahl.stream()
+                    .filter(zurueckweisungsgrund -> !zurueckweisungsgrund.equals(Zurueckweisungsgrund.ZUGELASSEN))
+                    .count();
+        }
     }
 
     private BeanstandeteWahlbriefeDTO getBeanstandeteWahlbriefe(final String wahlbezirkID, final long waehlerverzeichnisNummer) {

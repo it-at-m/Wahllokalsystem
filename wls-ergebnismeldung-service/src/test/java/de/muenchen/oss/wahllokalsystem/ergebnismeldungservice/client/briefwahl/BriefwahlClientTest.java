@@ -84,5 +84,22 @@ class BriefwahlClientTest {
                     .isThrownBy(() -> unitUnderTest.getAnzahlZurueckgewiesenerWahlbriefe(wahlbezirkID, wahlID, waehlerverzeichnissNummer))
                     .isSameAs(mockedWlsException);
         }
+
+        @Test
+        void should_return0_when_wahlIDIsNotPartOfBeanstandeteWahlbriefe() {
+            val wahlbezirkID = "wahlbezirkID";
+            val wahlID = "wahlID";
+            val waehlerverzeichnissNummer = 1L;
+
+            val mockedBeanstandeteWahlbriefe = new BeanstandeteWahlbriefeDTO().putBeanstandeteWahlbriefeItem("other" + wahlID,
+                    List.of(Zurueckweisungsgrund.SCHEINE_UNGLEICH_UMSCHLAEGE, Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.KEIN_ORIGINAL_SCHEIN,
+                            Zurueckweisungsgrund.SCHEIN_UNGUELTIG));
+            Mockito.when(beanstandeteWahlbriefeControllerApi.getBeanstandeteWahlbriefe(eq(wahlbezirkID), eq(waehlerverzeichnissNummer)))
+                    .thenReturn(mockedBeanstandeteWahlbriefe);
+
+            val result = unitUnderTest.getAnzahlZurueckgewiesenerWahlbriefe(wahlbezirkID, wahlID, waehlerverzeichnissNummer);
+
+            Assertions.assertThat(result).isEqualTo(0);
+        }
     }
 }

@@ -58,7 +58,7 @@ public class DummyClientImpl
 
     @Override
     public WahlartModel getWahlartOfCurrentWahltag(final String wahlID) {
-        return WahlartModel.BTW;
+        return WahlartModel.EUW;
     }
 
     @Override

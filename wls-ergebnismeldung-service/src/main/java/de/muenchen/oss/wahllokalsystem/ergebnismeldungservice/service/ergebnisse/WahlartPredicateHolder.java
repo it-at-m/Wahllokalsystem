@@ -49,4 +49,6 @@ public class WahlartPredicateHolder {
     public boolean test(final Stapelart stapelart) {
         return stapelRepresentingInvalid.contains(stapelart);
     }
+    //CHECKSTYLE.OFF: WhitespaceAround: WhitespaceAround: '}' is not followed by whitespace. Empty blocks may only be represented as {} when not part of a multi-block statement (4.1.3)
 }}
+//CHECKSTYLE.ON: AbbreviationAsWordInName

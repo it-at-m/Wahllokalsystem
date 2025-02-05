@@ -97,8 +97,8 @@ public class ErgebnismeldungMappingService {
     private BWerteDTO getBWerte(final WahlbezirkArtModel wahlbezirkArt, final BezirkUndWahlID bezirkUndWahlID,
             final BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer, final WahlartModel wahlart) {
         return switch (wahlbezirkArt) {
-        case UWB -> getBWerteDTOUWB(bezirkUndWahlID.getWahlID(), bezirkIDUndWaehlerverzeichnisNummer, wahlart);
-        case BWB -> getBWerteDTOBWB(bezirkUndWahlID);
+        case UWB -> getBWerteDTOOfUWBWahlbezirk(bezirkUndWahlID.getWahlID(), bezirkIDUndWaehlerverzeichnisNummer, wahlart);
+        case BWB -> getBWerteDTOOfBWBWahlbezirk(bezirkUndWahlID);
         };
     }
 
@@ -110,7 +110,8 @@ public class ErgebnismeldungMappingService {
         return ergebnisse.stream().filter(ergenis -> ergebnisseFilter.test(ergenis.getBezirkUndWahlIDStapelart().getStapelart())).toList();
     }
 
-    private BWerteDTO getBWerteDTOUWB(final String wahlID, final BezirkIDUndWaehlerverzeichnisNummer waehlerverzeichnisNummer, final WahlartModel wahlart) {
+    private BWerteDTO getBWerteDTOOfUWBWahlbezirk(final String wahlID, final BezirkIDUndWaehlerverzeichnisNummer waehlerverzeichnisNummer,
+            final WahlartModel wahlart) {
         val bWerte = new BWerteDTO();
         val wahldatenSet = stimmabgabevermerkeRepo.findById(waehlerverzeichnisNummer).orElseThrow(NullPointerException::new).getWahldaten();
         val stimmzettelumschlaege = stimmzettelumschlaegeRepo.findById(
@@ -137,7 +138,7 @@ public class ErgebnismeldungMappingService {
         return bWerte;
     }
 
-    private BWerteDTO getBWerteDTOBWB(final BezirkUndWahlID bezirkUndWahlID) {
+    private BWerteDTO getBWerteDTOOfBWBWahlbezirk(final BezirkUndWahlID bezirkUndWahlID) {
         val bWerte = new BWerteDTO();
 
         Stimmzettelumschlaege stimmzettelumschlaege = stimmzettelumschlaegeRepo.findById(bezirkUndWahlID).orElseThrow(NullPointerException::new);

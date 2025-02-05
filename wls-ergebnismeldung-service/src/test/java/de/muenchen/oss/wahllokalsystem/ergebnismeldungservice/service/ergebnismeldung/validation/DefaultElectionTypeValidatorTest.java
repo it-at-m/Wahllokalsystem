@@ -98,7 +98,7 @@ class DefaultElectionTypeValidatorTest {
                         .thenReturn(mockedWlsException);
 
                 Assertions.assertThatThrownBy(
-                        () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
+                                () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
                         .isSameAs(mockedWlsException);
             }
 
@@ -118,7 +118,7 @@ class DefaultElectionTypeValidatorTest {
                         .thenReturn(mockedWlsException);
 
                 Assertions.assertThatThrownBy(
-                        () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
+                                () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
                         .isSameAs(mockedWlsException);
             }
         }
@@ -164,7 +164,7 @@ class DefaultElectionTypeValidatorTest {
                         .thenReturn(mockedWlsException);
 
                 Assertions.assertThatThrownBy(
-                        () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
+                                () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
                         .isSameAs(mockedWlsException);
             }
 
@@ -185,7 +185,7 @@ class DefaultElectionTypeValidatorTest {
                         .thenReturn(mockedWlsException);
 
                 Assertions.assertThatThrownBy(
-                        () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
+                                () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
                         .isSameAs(mockedWlsException);
             }
 
@@ -198,7 +198,7 @@ class DefaultElectionTypeValidatorTest {
 
                 val mockedRepoErgebnisse = List.of(createErgebnisWithStapelArt(Stapelart.BTW_A), createErgebnisWithStapelArt(Stapelart.BTW_B_I_GUELTIG));
                 val mockedStimmabgabevermerke = new Stimmabgabevermerke();
-                val mockedWlsException = FachlicheWlsException.withCode("000").buildWithMessage("Required stimmabgabevermerke are missing");
+                val mockedWlsException = FachlicheWlsException.withCode("000").buildWithMessage("Required A-Werte are missing");
 
                 Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID))).thenReturn(mockedRepoErgebnisse);
                 Mockito.when(stimmabgabevermerkeRepo.findById(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer)))
@@ -208,7 +208,7 @@ class DefaultElectionTypeValidatorTest {
                         .thenReturn(mockedWlsException);
 
                 Assertions.assertThatThrownBy(
-                        () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
+                                () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
                         .isSameAs(mockedWlsException);
             }
 

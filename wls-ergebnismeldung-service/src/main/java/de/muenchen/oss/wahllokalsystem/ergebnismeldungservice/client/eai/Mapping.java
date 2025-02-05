@@ -20,24 +20,22 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class Mapping {
 
     private final AuthenticationService authenticationService;
     private final ExceptionFactory exceptionFactory;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Mapping.class);
-
     public List<AWerte> toAWerteList(List<WahlberechtigteDTO> aoueai) {
-        LOGGER.info("#toAWerteList List<AWerte>");
+        log.info("#toAWerteList List<AWerte>");
         if (aoueai == null) {
-            LOGGER.error("Antwort von AOUEAI war leer.");
+            log.error("Antwort von AOUEAI war leer.");
             return null;
         }
         List<AWerte> entity = new ArrayList<>();
@@ -81,10 +79,10 @@ public class Mapping {
                 try {
                     aoueaiErgebnis.setWahlvorschlagsordnungszahl(wvsoz);
                 } catch (Exception e) {
-                    LOGGER.warn("toAoueaiErgebnisseSet 4.1.1  fehler: {} e komplett: {}", e.getMessage(), e.toString());
-                    LOGGER.warn("toAoueaiErgebnisseSet 4.1.1.1  ergebnisse: {} ", ergebnisse);
-                    LOGGER.warn("toAoueaiErgebnisseSet 4.1.1.2  ergebnisList: {} ", ergebnisList);
-                    LOGGER.warn("toAoueaiErgebnisseSet 4.1.1.3  ergebnis: {} ", ergebnis);
+                    log.warn("toAoueaiErgebnisseSet 4.1.1  fehler: {} e komplett: {}", e.getMessage(), e.toString());
+                    log.warn("toAoueaiErgebnisseSet 4.1.1.1  ergebnisse: {} ", ergebnisse);
+                    log.warn("toAoueaiErgebnisseSet 4.1.1.2  ergebnisList: {} ", ergebnisList);
+                    log.warn("toAoueaiErgebnisseSet 4.1.1.3  ergebnis: {} ", ergebnis);
                 }
                 aoueaiErgebnis.setStimmenart(stapelart.name());
                 ergebnisSet.add(aoueaiErgebnis);
@@ -98,7 +96,7 @@ public class Mapping {
         try {
             return ErgebnismeldungDTO.WahlartEnum.valueOf(wahlart.name());
         } catch (Exception e) {
-            LOGGER.error("#convertWahlart: parsing Exception");
+            log.error("#convertWahlart: parsing Exception");
         }
         return null;
     }

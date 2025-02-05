@@ -7,15 +7,10 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnisDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.UngueltigeStimmzettelDTO;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.WahlberechtigteDTO;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.authentication.AuthenticationService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlartModel;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,29 +25,6 @@ import org.springframework.stereotype.Component;
 public class Mapping {
 
     private final AuthenticationService authenticationService;
-    private final ExceptionFactory exceptionFactory;
-
-    public List<AWerte> toAWerteList(List<WahlberechtigteDTO> aoueai) {
-        log.info("#toAWerteList List<AWerte>");
-        if (aoueai == null) {
-            log.error("Antwort von AOUEAI war leer.");
-            return null;
-        }
-        List<AWerte> entity = new ArrayList<>();
-        aoueai.forEach(wahlberechtigte -> entity.add(toEntity(wahlberechtigte)));
-        return entity;
-    }
-
-    private AWerte toEntity(final WahlberechtigteDTO aoueai) {
-        if (aoueai == null || aoueai.getWahlID() == null || aoueai.getWahlbezirkID() == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.MAPPING_AOUEAI);
-        }
-        AWerte entity = new AWerte();
-        entity.setBezirkUndWahlID(new BezirkUndWahlID(aoueai.getWahlbezirkID(), aoueai.getWahlID()));
-        entity.setA1(aoueai.getA1());
-        entity.setA2(aoueai.getA2());
-        return entity;
-    }
 
     public de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.AWerteDTO toEntity(final AWerte aWerte) {
         de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.AWerteDTO aoueaiAWerte = new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.AWerteDTO();

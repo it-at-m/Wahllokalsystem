@@ -63,7 +63,7 @@ class EuwValidationImplTest {
     class IsValidUwb {
 
         @Test
-        void should_callDefaultValidatorWithBTWStapel_when_isCalled() {
+        void should_callDefaultValidatorWithEUWStapel_when_isCalled() {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
             val waehlerverzeichnisNummer = 0L;
@@ -103,7 +103,7 @@ class EuwValidationImplTest {
     class IsValidBwb {
 
         @Test
-        void should_callDefaultValidatorWithBTWStapel_when_isCalled() {
+        void should_callDefaultValidatorWithEUWStapel_when_isCalled() {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
             val waehlerverzeichnisNummer = 0L;

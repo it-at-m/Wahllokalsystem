@@ -71,7 +71,7 @@ class VeBeValidationImplTest {
     class IsValidUwb {
 
         @Test
-        void should_callDefaultValidatorWithBTWStapel_when_isCalled() {
+        void should_callDefaultValidatorWithVeBeStapel_when_isCalled() {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
             val waehlerverzeichnisNummer = 0L;
@@ -110,7 +110,7 @@ class VeBeValidationImplTest {
     class IsValidBwb {
 
         @Test
-        void should_callDefaultValidatorWithBTWStapel_when_isCalled() {
+        void should_callDefaultValidatorWithVeBeStapel_when_isCalled() {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
             val waehlerverzeichnisNummer = 0L;

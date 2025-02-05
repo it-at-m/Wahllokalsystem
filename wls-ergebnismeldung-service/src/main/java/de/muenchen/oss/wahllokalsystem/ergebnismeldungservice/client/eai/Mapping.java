@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -32,7 +33,6 @@ public class Mapping {
     private final ExceptionFactory exceptionFactory;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Mapping.class);
-    private static Long wvsoz;
 
     public List<AWerte> toAWerteList(List<WahlberechtigteDTO> aoueai) {
         LOGGER.info("#toAWerteList List<AWerte>");
@@ -76,10 +76,10 @@ public class Mapping {
                 aoueaiErgebnis.setErgebnis(ergebnis.getErgebnis());
                 aoueaiErgebnis.setKandidatID(ergebnis.getKandidatID());
                 aoueaiErgebnis.setWahlvorschlagID(ergebnis.getWahlvorschlagID());
-                wvsoz = ergebnis.getWahlvorschlagsordnungszahl();
+                val wvsoz = ergebnis.getWahlvorschlagsordnungszahl();
 
                 try {
-                    aoueaiErgebnis.setWahlvorschlagsordnungszahl((long) wvsoz);
+                    aoueaiErgebnis.setWahlvorschlagsordnungszahl(wvsoz);
                 } catch (Exception e) {
                     LOGGER.warn("toAoueaiErgebnisseSet 4.1.1  fehler: {} e komplett: {}", e.getMessage(), e.toString());
                     LOGGER.warn("toAoueaiErgebnisseSet 4.1.1.1  ergebnisse: {} ", ergebnisse);

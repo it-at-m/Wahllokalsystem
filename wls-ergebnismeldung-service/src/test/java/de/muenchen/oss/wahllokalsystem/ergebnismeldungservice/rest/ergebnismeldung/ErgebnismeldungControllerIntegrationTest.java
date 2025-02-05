@@ -31,7 +31,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabe
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Wahldaten;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnismeldungDTO;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.WahlDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.basisdaten.model.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.monitoring.model.SendungsdatenDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.wahlvorbereitung.model.UrnenwahlSchliessungsUhrzeitDTO;
@@ -230,7 +230,7 @@ class ErgebnismeldungControllerIntegrationTest {
                 stubFor(
                         get("/businessActions/konfigurierterWahltag").willReturn(createWireMockResponse(mockedKonfigurierterWahltag, HttpStatus.OK)));
 
-                val mockedWahlenOfWahltag = List.of(new WahlDTO().wahlart(WahlDTO.WahlartEnum.EUW));
+                val mockedWahlenOfWahltag = List.of(new WahlDTO().wahlart(WahlDTO.WahlartEnum.EUW).wahlID(wahlID));
                 stubFor(
                         get("/businessActions/wahlen/" + mockedWahltagID).willReturn(createWireMockResponse(mockedWahlenOfWahltag, HttpStatus.OK)));
 

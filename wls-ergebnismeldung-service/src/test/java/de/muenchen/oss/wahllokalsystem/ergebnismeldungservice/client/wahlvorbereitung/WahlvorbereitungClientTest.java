@@ -6,6 +6,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.Exceptio
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import jakarta.annotation.Nonnull;
 import java.time.LocalDateTime;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -46,15 +47,11 @@ class WahlvorbereitungClientTest {
         }
 
         @Test
-        void should_returnFalse_when_urnenwahlSchliessungsUhrzeitIsNull() {
-            val wahlbezirkID = "wahlbezirkID";
-
-            Mockito.when(urnenwahlSchliessungsUhrzeitControllerApi.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
-                    .thenReturn(new UrnenwahlSchliessungsUhrzeitDTO().urnenwahlSchliessungsUhrzeit(null));
-
-            val result = unitUnderTest.isGeschlossen(wahlbezirkID);
-
-            Assertions.assertThat(result).isFalse();
+        void should_dontRequireAdditionalChecksOnSchliessungsUhrzeit_when_propertyUrnenwahlSchliessungsUhrzeitIsAnnotatedWithNonnull()
+                throws NoSuchFieldException {
+            Assertions.assertThat(
+                    UrnenwahlSchliessungsUhrzeitDTO.class.getDeclaredField("urnenwahlSchliessungsUhrzeit").getAnnotation(Nonnull.class))
+                    .isNotNull();
         }
 
         @Test

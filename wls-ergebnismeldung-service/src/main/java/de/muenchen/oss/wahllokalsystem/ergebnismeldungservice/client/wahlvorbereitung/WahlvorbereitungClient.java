@@ -24,10 +24,11 @@ public class WahlvorbereitungClient implements UrnenwahlClient {
 
     @Override
     public boolean isGeschlossen(final String wahlbezirkID) {
-        return getSchliessungsuhrzeit(wahlbezirkID).getUrnenwahlSchliessungsUhrzeit() != null;
+        assertWahlbezirkWithSchliessungsuhrzeitExists(wahlbezirkID);
+        return true;
     }
 
-    private UrnenwahlSchliessungsUhrzeitDTO getSchliessungsuhrzeit(final String wahlbezirkID) {
+    private void assertWahlbezirkWithSchliessungsuhrzeitExists(final String wahlbezirkID) {
         final UrnenwahlSchliessungsUhrzeitDTO urnenwahlSchliessungsUhrzeitDTO;
         try {
             urnenwahlSchliessungsUhrzeitDTO = urnenwahlSchliessungsUhrzeitControllerApi.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID);
@@ -41,7 +42,5 @@ public class WahlvorbereitungClient implements UrnenwahlClient {
         if (urnenwahlSchliessungsUhrzeitDTO == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.WAHLVORBEREITUNG_SCHLIESSUNGSUHRZEIT_NULL_OR_EMPTY);
         }
-
-        return urnenwahlSchliessungsUhrzeitDTO;
     }
 }

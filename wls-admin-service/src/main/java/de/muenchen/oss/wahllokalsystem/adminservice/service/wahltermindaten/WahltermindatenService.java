@@ -38,7 +38,7 @@ public class WahltermindatenService {
         wahltermindatenClient.putWahltermindaten(wahltagID);
         val wahltage = wahltageClient.getWahltage();
 
-        log.debug("Habe {} wahltage für gefunden", wahltage.size());
+        log.debug("Habe {} wahltage für {} gefunden", wahltage.size(), wahltagID);
 
         val first = wahltage.stream().filter(wahltag -> wahltag.wahltagID().equals(wahltagID)).findFirst();
 

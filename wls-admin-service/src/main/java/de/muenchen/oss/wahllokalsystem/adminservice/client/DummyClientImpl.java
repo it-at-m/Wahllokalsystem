@@ -43,9 +43,9 @@ public class DummyClientImpl implements AWerteClient, KonfigurierterWahltagClien
     @Override
     public List<WahltagModel> getWahltage() {
         return List.of(
-                new WahltagModel("wahltagID1", LocalDate.now().minusMonths(2), "Beschreibung Wahltag 1", "0"),
-                new WahltagModel("wahltagID3", LocalDate.now().plusMonths(1), "Beschreibung Wahltag 3", "2"),
-                new WahltagModel("wahltagID2", LocalDate.now().minusMonths(1), "Beschreibung Wahltag 2", "1"));
+                new WahltagModel("wahltagID", LocalDate.now().minusMonths(2), "Beschreibung Wahltag 1", "0"),
+                new WahltagModel("wahltagID", LocalDate.now().plusMonths(1), "Beschreibung Wahltag 3", "2"),
+                new WahltagModel("wahltagID", LocalDate.now().minusMonths(1), "Beschreibung Wahltag 2", "1"));
     }
 
     @Override

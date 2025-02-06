@@ -10,7 +10,6 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.Erge
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.UngueltigeStimmzettelDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.authentication.AuthenticationService;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlartModel;
 import java.util.HashSet;
 import java.util.List;
@@ -96,9 +95,5 @@ public class Mapping {
         ungueltigeStimmzettel.setAnzahl(ergebnis.getErgebnis());
         ungueltigeStimmzettel.setStimmenart(stapelart.name());
         return ungueltigeStimmzettel;
-    }
-
-    public WahlbezirkArtModel getWahlbezirkart() {
-        return authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow();
     }
 }

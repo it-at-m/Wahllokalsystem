@@ -11,7 +11,6 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.Erge
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.UngueltigeStimmzettelDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.authentication.AuthenticationService;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlartModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.List;
@@ -29,7 +28,6 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -174,19 +172,6 @@ class MappingTest {
             return Stream.of(
                     Arguments.of(MeldungsartModel.V1, ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT),
                     Arguments.of(MeldungsartModel.V3, ErgebnismeldungDTO.MeldungsartEnum.SCHNELLMELDUNG));
-        }
-    }
-
-    @Nested
-    class GetWahlbezirkart {
-
-        @ParameterizedTest
-        @EnumSource(WahlbezirkArtModel.class)
-        void should_returnResultOfAuthenticationService(final WahlbezirkArtModel wahlbezirkArt) {
-            Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(wahlbezirkArt);
-
-            Assertions.assertThat(unitUnderTest.getWahlbezirkart()).isEqualTo(wahlbezirkArt);
-
         }
     }
 

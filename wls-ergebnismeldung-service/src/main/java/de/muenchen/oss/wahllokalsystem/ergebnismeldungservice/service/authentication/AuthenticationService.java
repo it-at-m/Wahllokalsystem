@@ -23,11 +23,10 @@ public class AuthenticationService {
     public WahlbezirkArtModel getWahlbezirkArtOfCurrentAuthenticationOrThrow() throws FachlicheWlsException {
         val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
         val authenticationHandler = authenticationHandlers.stream().filter(handler -> handler.canHandle(currentAuthentication)).findFirst();
-        try {
-            val wahlbezirkOfUser = authenticationHandler.get().getDetail(WAHLBEZIRK_ART_USER_DETAIL_KEY, currentAuthentication);
-            return wahlbezirkOfUser.map(WahlbezirkArtModel::valueOf).get();
-        } catch (Exception e) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.WAHLBEZIRKART_NOT_LOADABLE);
-        }
+        val wahlbezirkOfUser = authenticationHandler
+                .flatMap(handler -> handler.getDetail(WAHLBEZIRK_ART_USER_DETAIL_KEY, currentAuthentication))
+                .map(WahlbezirkArtModel::valueOf);
+
+        return wahlbezirkOfUser.orElseThrow(() -> exceptionFactory.createFachlicheWlsException(ExceptionConstants.WAHLBEZIRKART_NOT_LOADABLE));
     }
 }

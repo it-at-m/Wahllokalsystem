@@ -3,7 +3,7 @@ package de.muenchen.oss.wahllokalsystem.adminservice.client.ergebnismeldung;
 import de.muenchen.oss.wahllokalsystem.adminservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.adminservice.eai.ergebnismeldung.client.AWerteControllerApi;
 import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.AWerteClient;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.AWerteClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.List;

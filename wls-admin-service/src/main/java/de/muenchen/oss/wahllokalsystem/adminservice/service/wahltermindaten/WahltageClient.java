@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.adminservice.service;
+package de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten;
 
 import java.util.List;
 

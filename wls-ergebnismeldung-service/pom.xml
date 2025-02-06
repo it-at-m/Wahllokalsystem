@@ -474,8 +474,8 @@
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.basisdaten.0.1.0.json</inputSpec>
 
-                            <apiPackage>${groupId}.ergebnismeldungservice.eai.basisdaten.client</apiPackage>
-                            <modelPackage>${groupId}.ergebnismeldungservice.eai.basisdaten.model</modelPackage>
+                            <apiPackage>${project.groupId}.ergebnismeldungservice.eai.basisdaten.client</apiPackage>
+                            <modelPackage>${project.groupId}.ergebnismeldungservice.eai.basisdaten.model</modelPackage>
                         </configuration>
                     </execution>
                     <execution>
@@ -486,8 +486,8 @@
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.briefwahl.0.0.1-SNAPSHOT.json</inputSpec>
 
-                            <apiPackage>${groupId}.ergebnismeldungservice.eai.briefwahl.client</apiPackage>
-                            <modelPackage>${groupId}.ergebnismeldungservice.eai.briefwahl.model</modelPackage>
+                            <apiPackage>${project.groupId}.ergebnismeldungservice.eai.briefwahl.client</apiPackage>
+                            <modelPackage>${project.groupId}.ergebnismeldungservice.eai.briefwahl.model</modelPackage>
                         </configuration>
                     </execution>
                     <execution>
@@ -498,8 +498,8 @@
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.wahlvorbereitung.0.1.1-Beta1.json</inputSpec>
 
-                            <apiPackage>${groupId}.ergebnismeldungservice.eai.wahlvorbereitung.client</apiPackage>
-                            <modelPackage>${groupId}.ergebnismeldungservice.eai.wahlvorbereitung.model</modelPackage>
+                            <apiPackage>${project.groupId}.ergebnismeldungservice.eai.wahlvorbereitung.client</apiPackage>
+                            <modelPackage>${project.groupId}.ergebnismeldungservice.eai.wahlvorbereitung.model</modelPackage>
                         </configuration>
                     </execution>
                 </executions>

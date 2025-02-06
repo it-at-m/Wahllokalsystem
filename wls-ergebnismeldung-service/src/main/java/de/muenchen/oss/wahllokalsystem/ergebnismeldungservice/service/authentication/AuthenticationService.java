@@ -21,7 +21,6 @@ public class AuthenticationService {
     private final Collection<AuthenticationHandler> authenticationHandlers;
 
     public WahlbezirkArtModel getWahlbezirkArtOfCurrentAuthenticationOrThrow() throws FachlicheWlsException {
-        /* TODO mit der Logik aus dem Stimmzettelumschlägen zusammenlegen */
         val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
         val authenticationHandler = authenticationHandlers.stream().filter(handler -> handler.canHandle(currentAuthentication)).findFirst();
         try {

@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,27 +63,34 @@ public class ErgebnismeldungController {
         if (shouldUpdateSendungszeiten) {
             ergebnismeldungService.updateSendungszeiten(new BezirkUndWahlID(sendErgebnisParameter.wahlID(), sendErgebnisParameter.wahlbezirkID()));
         } else {
-            boolean valid = false;
-            try {
-                log.debug("#sendergebnis 0");
-                val modelEnum = MeldungsartModel.valueOf(sendErgebnisParameter.meldungsart().name());
-                valid = ergebnismeldungService.sendErgebnisse(
-                        new ErgebnisseToSendCriteriaModel(sendErgebnisParameter.wahlID(), sendErgebnisParameter.wahlbezirkID(),
-                                sendErgebnisParameter.waehlerverzeichnisNummer(), modelEnum,
-                                sendErgebnisParameter.hauptwahlbezirkID()));
-                log.debug("#sendergebnis 1");
-            } catch (Exception e) {
-                log.debug("exception during sendErgebnisse occurred", e);
-                if (e instanceof WlsException wlsException)
-                    return new ResponseEntity<>(dtoMapper.toDTO(wlsException), HttpStatus.CONFLICT);
-            }
-            if (!valid) {
-                log.debug("#sendergebnis 2");
-                log.debug("#sendergebnis 3 valid:" + valid);
-                return new ResponseEntity<>(HttpStatus.CONFLICT);
-            }
+            ResponseEntity<?> conflictStatus = handleSendErgebnismeldung(sendErgebnisParameter);
+            if (conflictStatus != null) return conflictStatus;
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    @Nullable
+    private ResponseEntity<?> handleSendErgebnismeldung(SendErgebnisParameter sendErgebnisParameter) {
+        boolean valid = false;
+        try {
+            log.debug("#sendergebnis 0");
+            val modelEnum = MeldungsartModel.valueOf(sendErgebnisParameter.meldungsart().name());
+            valid = ergebnismeldungService.sendErgebnisse(
+                    new ErgebnisseToSendCriteriaModel(sendErgebnisParameter.wahlID(), sendErgebnisParameter.wahlbezirkID(),
+                            sendErgebnisParameter.waehlerverzeichnisNummer(), modelEnum,
+                            sendErgebnisParameter.hauptwahlbezirkID()));
+            log.debug("#sendergebnis 1");
+        } catch (Exception e) {
+            log.debug("exception during sendErgebnisse occurred", e);
+            if (e instanceof WlsException wlsException)
+                return new ResponseEntity<>(dtoMapper.toDTO(wlsException), HttpStatus.CONFLICT);
+        }
+        if (!valid) {
+            log.debug("#sendergebnis 2");
+            log.debug("#sendergebnis 3 valid:" + valid);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+        return null;
     }
 }

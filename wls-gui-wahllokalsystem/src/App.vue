@@ -86,6 +86,7 @@
 
 <script setup lang="ts">
 import { useToggle } from "@vueuse/core";
+import localforage from "localforage";
 import { onMounted, ref } from "vue";
 import {
   VApp,
@@ -117,6 +118,15 @@ const isOffline = ref(false);
 
 onMounted(() => {
   loadUser();
+
+  // config for service worker indexed db (same config as in wahl-worker.js !)
+  localforage.config({
+    driver: localforage.INDEXEDDB,
+    name: "wahldb",
+    version: 1.0,
+    storeName: "wahlstore",
+    description: "store for wahlnumber",
+  });
 });
 
 /**

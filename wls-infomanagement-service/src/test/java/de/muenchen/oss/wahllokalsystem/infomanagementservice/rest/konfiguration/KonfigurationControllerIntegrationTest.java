@@ -67,7 +67,7 @@ public class KonfigurationControllerIntegrationTest {
 
         @Test
         @WithMockUserAsJwt(authorities = { Authorities.SERVICE_GET_KONFIGURATION, Authorities.REPOSITORY_READ_KONFIGURATION })
-        void emptyResponse() throws Exception {
+        void should_returnNoContent_when_noDataFoundInRepository() throws Exception {
             val request = MockMvcRequestBuilders.get("/businessActions/konfiguration/WILLKOMMENSTEXT");
 
             val response = api.perform(request).andExpect(status().isNoContent()).andReturn();
@@ -79,7 +79,7 @@ public class KonfigurationControllerIntegrationTest {
         @WithMockUserAsJwt(
                 authorities = { Authorities.SERVICE_GET_KONFIGURATION, Authorities.REPOSITORY_READ_KONFIGURATION, Authorities.REPOSITORY_WRITE_KONFIGURATION }
         )
-        void dataFound() throws Exception {
+        void should_returnData_when_dataIsPresentInRepository() throws Exception {
             val konfiguration1 = new Konfiguration("schluessel1", "wert1", "beschreibung1", "standardwert1");
             val konfiguration2 = new Konfiguration("schluessel2", "wert2", "beschreibung2", "standardwert2");
             val konfigurationToFind = new Konfiguration("WILLKOMMENSTEXT", "hello world", "A long time ago in a galaxy far, far away", "a new hope");
@@ -107,7 +107,7 @@ public class KonfigurationControllerIntegrationTest {
         @WithMockUserAsJwt(
                 authorities = { Authorities.SERVICE_POST_KONFIGURATION, Authorities.REPOSITORY_WRITE_KONFIGURATION, Authorities.REPOSITORY_READ_KONFIGURATION }
         )
-        void newDataSuccessfullySaved() throws Exception {
+        void should_persistData_when_noDataIsPresentInRepository() throws Exception {
             val konfigurationKey = "WILLKOMMENSTEXT";
             val requestBody = new KonfigurationSetDTO("wert", "beschreibung", "standard");
             val request = createPostWithBody(konfigurationKey, requestBody);
@@ -126,7 +126,7 @@ public class KonfigurationControllerIntegrationTest {
         @WithMockUserAsJwt(
                 authorities = { Authorities.SERVICE_POST_KONFIGURATION, Authorities.REPOSITORY_WRITE_KONFIGURATION, Authorities.REPOSITORY_READ_KONFIGURATION }
         )
-        void oldDataOverriden() throws Exception {
+        void should_replaceOldData_when_dataIsPresentInRepository() throws Exception {
             val konfigurationKey = "WILLKOMMENSTEXT";
             val requestBody = new KonfigurationSetDTO("wert", "beschreibung", "standard");
             val request = createPostWithBody(konfigurationKey, requestBody);
@@ -146,7 +146,7 @@ public class KonfigurationControllerIntegrationTest {
         @WithMockUserAsJwt(
                 authorities = { Authorities.SERVICE_POST_KONFIGURATION, Authorities.REPOSITORY_WRITE_KONFIGURATION }
         )
-        void validationExceptionOccurredAndIsMapped() throws Exception {
+        void should_returnInternalServerErrorWLSException_when_validationFailed() throws Exception {
             val requestBody = new KonfigurationSetDTO(null, "beschreibung", "standard");
             val request = createPostWithBody("WILLKOMMENSTEXT", requestBody);
 
@@ -176,7 +176,7 @@ public class KonfigurationControllerIntegrationTest {
         @WithMockUserAsJwt(
                 authorities = { Authorities.SERVICE_GET_KONFIUGRATIONEN, Authorities.REPOSITORY_READ_KONFIGURATION, Authorities.REPOSITORY_WRITE_KONFIGURATION }
         )
-        void konfigurationDataFound() throws Exception {
+        void should_returnData_when_dataIsPresentInRepository() throws Exception {
             konfigurationRepository.save(new Konfiguration("schluessel1", "wert1", "beschreibung1", "standard1"));
             konfigurationRepository.save(new Konfiguration("schluessel2", "wert2", "beschreibung2", "standard2"));
 
@@ -202,7 +202,7 @@ public class KonfigurationControllerIntegrationTest {
                 authorities = { Authorities.SERVICE_GET_KENNBUCHSTABEN_LISTEN, Authorities.REPOSITORY_READ_KONFIGURATION,
                         Authorities.REPOSITORY_WRITE_KONFIGURATION }
         )
-        void kennbuchstabenFoundDefaultSettings() throws Exception {
+        void should_returnData_when_dataIsPresentInRepository() throws Exception {
             konfigurationRepository.save(new Konfiguration("KENNBUCHSTABEN", "a,b, c;A,B,C$1,2;11,12", "", ""));
 
             val request = MockMvcRequestBuilders.get("/businessActions/kennbuchstaben");
@@ -223,7 +223,7 @@ public class KonfigurationControllerIntegrationTest {
 
         @Test
         @WithAnonymousUser
-        void willkommenstextFound() throws Exception {
+        void should_returnData_when_dataIsPresentInRepository() throws Exception {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_KONFIGURATION);
             val schluesel = "WILLKOMMENSTEXT";
             val wert = "hello world";

@@ -10,12 +10,14 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import de.muenchen.oss.wahllokalsystem.authservice.security.CustomUsernamePasswordAuthenticationFilter;
+import de.muenchen.oss.wahllokalsystem.authservice.security.WahlbezirkArtTokenCustomizer;
 import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.SecureRandom;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
@@ -54,6 +56,7 @@ import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 @Import(RestTemplateAutoConfiguration.class)
+@Slf4j
 public class SecurityConfiguration {
 
     private final String LOGIN_PATH = "/login";
@@ -176,5 +179,10 @@ public class SecurityConfiguration {
     @Bean
     public ConcurrentSessionControlAuthenticationStrategy concurrentSessionControlAuthenticationStrategy(SessionRegistry sessionRegistry) {
         return new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry);
+    }
+
+    @Bean
+    public WahlbezirkArtTokenCustomizer wahlbezirkArtTokenCustomizer(final UserService userService) {
+        return new WahlbezirkArtTokenCustomizer(userService);
     }
 }

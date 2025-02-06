@@ -84,8 +84,8 @@ public class Mapping {
 
     public ErgebnismeldungDTO.MeldungsartEnum toDTO(final MeldungsartModel meldungsart) {
         return switch (meldungsart) {
-            case V1 -> ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT;
-            case V3 -> ErgebnismeldungDTO.MeldungsartEnum.SCHNELLMELDUNG;
+        case V1 -> ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT;
+        case V3 -> ErgebnismeldungDTO.MeldungsartEnum.SCHNELLMELDUNG;
         };
     }
 

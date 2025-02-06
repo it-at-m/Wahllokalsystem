@@ -4,6 +4,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.awerte.AWer
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnis;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnisse;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.AWerteDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnisDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.UngueltigeStimmzettelDTO;
@@ -26,8 +27,8 @@ public class Mapping {
 
     private final AuthenticationService authenticationService;
 
-    public de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.AWerteDTO toEntity(final AWerte aWerte) {
-        de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.AWerteDTO aoueaiAWerte = new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.AWerteDTO();
+    public AWerteDTO toEntity(final AWerte aWerte) {
+        AWerteDTO aoueaiAWerte = new AWerteDTO();
         if (aWerte != null) {
             aoueaiAWerte.setA1(aWerte.getA1());
             aoueaiAWerte.setA2(aWerte.getA2());
@@ -36,13 +37,13 @@ public class Mapping {
     }
 
     public Set<ErgebnisDTO> toAoueaiErgebnisseSet(final List<Ergebnisse> ergebnisse) {
-        Set<de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnisDTO> ergebnisSet = new HashSet<>();
+        Set<ErgebnisDTO> ergebnisSet = new HashSet<>();
 
         ergebnisse.forEach(ergebnisList -> {
             Stapelart stapelart = ergebnisList.getBezirkUndWahlIDStapelart().getStapelart();
             ergebnisList.getErgebnisse().forEach(ergebnis -> {
 
-                de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnisDTO aoueaiErgebnis = new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnisDTO();
+                ErgebnisDTO aoueaiErgebnis = new ErgebnisDTO();
                 aoueaiErgebnis.setErgebnis(ergebnis.getErgebnis());
                 aoueaiErgebnis.setKandidatID(ergebnis.getKandidatID());
                 aoueaiErgebnis.setWahlvorschlagID(ergebnis.getWahlvorschlagID());

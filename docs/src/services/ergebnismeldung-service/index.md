@@ -95,3 +95,8 @@ Es können auch die Ergebnisse von allen Stapeln einer Wahl in einem Wahlbezirk 
 
 Zu Wahlergebnissen können Begründungen verfasst werden, in denen festgehalten wird, wieso ein Wahlergebnis trotz
 Abweichungen in der Anzahl der Stimmen gespeichert wird.
+
+### Übermittlung einer Ergebnismeldung
+
+Eine Ergebnismeldung kann eine Schnellmeldung oder eine Niederschrift sein, welche an das externe System übermittelt wird.
+Die Ergebnismeldung aggregiert die zuvor erfassten Daten wie zum Beispiel die Ergebnisse und Stimmabgabevermerke.

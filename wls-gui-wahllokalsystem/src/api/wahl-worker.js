@@ -6,20 +6,18 @@ import localforage from "localforage";
  ****************************************************************************************************************/
 
 const logID = "wahlworker: ";
+
 /**
- * alle URLs die diesen String enthalten werden vom SW gecached.
+ * All URLs that contain this string are cached by the SW.
  */
 const FILTER = "businessActions";
 
-/**
- *
- */
 const StatusCodeOk = [200, 201, 204];
 
 /**
- * State des SW
- * Active: intercepted Requests und liest/speichert im cache.
- * INACTIVE: leited die Requests nur durch
+ * State of the SW
+ * ACTIVE: intercepts requests and reads/saves in cache.
+ * INACTIVE: only passes the requests through.
  */
 const WahlworkerState = Object.freeze({
   ACTIVE: 1,
@@ -40,7 +38,6 @@ const ContentTypes = Object.freeze({
 const doLog = true;
 
 const STRATEGY_HEADER = "X-WLS-SW-STRATEGY";
-const STRATEGY_OFFLINE_FIRST = "OFFLINE_FIRST";
 const STRATEGY_ONLINE_ONLY = "ONLINE_ONLY";
 const STRATEGY_ONLINE_FIRST = "ONLINE_FIRST";
 
@@ -52,12 +49,12 @@ localforage.config({
   driver: localforage.INDEXEDDB, // Force WebSQL; same as using setDriver()
   name: "wahldb",
   version: 1.0,
-  storeName: "wahlstore", // Should be alphanumeric, with underscores.
+  storeName: "wahlstore",
   description: "store for wahlnumber",
 });
 
 /*****************************************************************************************************************
- * runtime propertys
+ * runtime properties
  ****************************************************************************************************************/
 
 self.state = WahlworkerState.INACTIVE;
@@ -69,8 +66,8 @@ self.pin = undefined;
  ****************************************************************************************************************/
 
 self.addEventListener("activate", function (event) {
-  log("aktivate event");
-  //übernehme clients: kein reload erforderlich
+  log("activate event");
+  // take over clients: no reload required
   event.waitUntil(
     clients.claim().then(() => {
       log("clients claimed");
@@ -79,7 +76,7 @@ self.addEventListener("activate", function (event) {
 });
 
 self.addEventListener("message", function (event) {
-  log("pin erhalten: " + event.data);
+  log("pin received: " + event.data);
   self.pin = event.data;
   setPin(self.pin);
 });
@@ -89,13 +86,9 @@ self.addEventListener("install", (event) => {
   // This causes your service worker to kick out the current active worker and activate itself as soon as it enters the waiting phase (or immediately if it's already in the waiting phase). It doesn't cause your worker to skip installing, just waiting. -> so behandelt nun alle nachfolgenden fetches-> kein neustart erforderlich.
   event.waitUntil(
     self.skipWaiting().then(() => {
-      log("installiert und kontrolle übernommen.");
+      log("installed and took control");
     })
   );
-
-  //    event.waitUntil(
-  // caching etc
-  //  );
 });
 
 /*****************************************************************************************************************
@@ -103,17 +96,17 @@ self.addEventListener("install", (event) => {
  ****************************************************************************************************************/
 
 /**
- * falls verantwortlich für die ULR werden die Daten
- * beim Get zuerst aus der idb versucht zu laden, sonst von remote geladen(anschließend in der idb gecached).
- * beim Post diese zuvor in der idb gespeichert.
+ * If responsible for the URL, the data from GET requests is first attempted to be
+ * loaded from the IDB, otherwise it is loaded remotely (and then cached in the IDB).
+ * When sending POST requests, the data is first saved in the IDB.
  */
 self.addEventListener("fetch", function (event) {
-  log("Unterbreche Request für " + event.request.url);
+  log("Interrupt request for " + event.request.url);
   if (self.isResponsible(event)) {
-    // pin aus der idb holen.
+    // get pin from IDB
     event.respondWith(
       getPin().then(() => {
-        // falls kein pin gefunden, request einfach weiterleiten.
+        // forwarding request if no pin is found
         if (self.state === WahlworkerState.ACTIVE) {
           if (event.request.method === "GET") {
             let strat = event.request.headers.get(STRATEGY_HEADER);
@@ -134,11 +127,9 @@ self.addEventListener("fetch", function (event) {
 });
 
 /**
- * Gibt true zurück falls die URL den Substring FILTER enthält
- * und zusätzlich der HEADER @const STRATEGY_HEADER
- * auf @const STRATEGY_ONLINE_ONLY gesetzt, false  zurück
- * auf @const STRATEGY_OFFLINE_FIRST gesetzt, true zurück
- * auf @const STRATEGY_ONLINE_ONLY gesetzt, true zurück
+ * Returns false if the URL contains the substring FILTER and the
+ * HEADER @const STRATEGY_HEADER is set to @const STRATEGY_ONLINE_ONLY.
+ * Returns true otherwise.
  */
 self.isResponsible = (event) => {
   let isResponsible = event.request.url.includes(FILTER);
@@ -147,7 +138,7 @@ self.isResponsible = (event) => {
     log("strategy found: " + strat);
     if (strat === STRATEGY_ONLINE_ONLY) isResponsible = false;
   }
-  log(" is responsible : " + isResponsible);
+  log("is responsible : " + isResponsible);
   return isResponsible;
 };
 
@@ -159,51 +150,50 @@ self.handlePOST = (event) => {
       ? clonedRequest.headers.get(ContentTypes.HEADERNAME)
       : ContentTypes.JSON;
   return self.blobOrTxtProm(clonedRequest, contentType).then((data) => {
-    // ergebnismeldung senden soll status immer weiterreichen
-    let is_ergebnismeldung_send = event.request.url.includes(
+    // sending ergebnismeldung should always forward the status
+    let is_ergebnismeldung_sent = event.request.url.includes(
       "ergebnismeldung/businessActions/sendErgebnismeldung"
     );
     return self
       .fetchEvent(event)
       .then(function (response) {
-        // als dirty speichern wenn wir nicht ok zurückbekommen
+        // save as dirty if we don't get back ok
         let dirty = StatusCodeOk.indexOf(response.status) === -1;
         return setItemAndContentType(key, data, contentType, dirty).then(
           function () {
-            // redirect, 200er, und ergebnnismeldung senden ergebnise durchreichen
+            // redirect 200s and send ergebnismeldung + forward results
             if (
               response.type === "opaqueredirect" ||
               dirty === false ||
-              is_ergebnismeldung_send
+              is_ergebnismeldung_sent
             )
               return response;
-            // sollten wir einen Fehler bekommen, dies nicht an den client weiterleiten. Dieser kann normal weiterarbeiten und später
-            // bei dedarf synchronisieren.
+            // If we get an error, don't forward this to the client.
+            // This can continue to work normally and be synchronized later if necessary.
             else {
               this.log(
-                `POST response not OK, Statuscode was ${response.status}`
+                `POST response not OK, statuscode was ${response.status}`
               );
-              var init = {
+              return new Response(null, {
                 status: 200,
-                statusText: `returning OK - orig. Statuscode is ${response.status}`,
-              };
-              return new Response(null, init);
+                statusText: `returning OK - orig. statuscode is ${response.status}`,
+              });
             }
           }
         );
       })
       .catch(function () {
         return setItemAndContentType(key, data, contentType, true).then(() => {
-          // weiterreichen das senden nicht erfolgreich war
-          if (is_ergebnismeldung_send) {
+          // forward that sending was not successful
+          if (is_ergebnismeldung_sent) {
             return new Response(null, {
               status: 500,
-              statusText: "Ergebnismeldung send - post nicht möglich",
+              statusText: "sending Ergebnismeldung - post not possible",
             });
           } else {
             return new Response(null, {
               status: 200,
-              statusText: "OK - post nicht möglich",
+              statusText: "OK - post not possible",
             });
           }
         });
@@ -235,10 +225,10 @@ self.handleGETonlineFirst = (event) => {
 };
 
 /**
- * speichert Daten aus einem get Fetch in der IDB falls erfolgreich.
- * @param key: url des requests
- * @param response: response des fetches
- * @param rejectResponse: rejected den response, falls nicht erfolgreich
+ * Saves data from a GET request to the IDB if successful.
+ * @param key - request url
+ * @param response - fetch response
+ * @param rejectResponse - rejects response if not successful
  */
 self._handleGetFetch = (key, response, rejectResponse = false) => {
   let responseClone = response.clone(),
@@ -263,14 +253,14 @@ self._handleGetFetch = (key, response, rejectResponse = false) => {
 };
 
 /**
- * verpackt Daten aus der IDB in ein Response.
- * @param data: Daten die aus der IDB gelesen wurden.
- * @param responseIfNoData: optional, falls keine Daten vorhanden, wird dieses ResponseObjekt zurückgegeben.
+ * Packs data from the IDB into a response.
+ * @param data - data read from the IDB
+ * @param responseIfNoData - optional, if no data is available, this responseObject is returned
  */
 self._handleGetIDB = (data, responseIfNoData) => {
-  // data ist {data: .., contentType: .., dirty:.., timestamp: ...}
+  // data is {data: .., contentType: .., dirty:.., timestamp: ...}
   if (data === null) {
-    log("keine Daten im lokalen Speicher gefunden.");
+    log("no data found in local storage");
     return responseIfNoData
       ? Promise.reject(responseIfNoData)
       : Promise.reject();
@@ -287,10 +277,10 @@ self._handleGetIDB = (data, responseIfNoData) => {
 };
 
 /**
- * Hilfsmethode die anhand dem contenType den Body auspackt.
+ * Auxiliary method that unpacks the body based on the contentType.
  */
 self.blobOrTxtProm = (request, contentType) => {
-  // Das Hilfehandbuch kommt im Binärformat, daher muss hier response.blob() genutzt werden um die Daten zu kopieren.
+  // The help manual comes in binary format, so response.blob() has to be used to copy the data.
   if (
     contentType &&
     (contentType.indexOf(ContentTypes.PDF) !== -1 ||
@@ -298,13 +288,13 @@ self.blobOrTxtProm = (request, contentType) => {
   ) {
     return request.blob();
   } else {
-    // In allen anderen Fällen reicht aktuell .text() aus.
+    // In all other cases, .text() is currently sufficient.
     return request.text();
   }
 };
 
 /**
- * event fetchen
+ * fetching event
  */
 self.fetchEvent = (event) => {
   return fetch(event.request).then(function (response) {
@@ -314,11 +304,11 @@ self.fetchEvent = (event) => {
 };
 
 /*****************************************************************************************************************
- * push handling, hiermit kann man funktionen einfach testen.
+ * push handling, this makes it easy to test functions.
  ****************************************************************************************************************/
 
 /**
- * gibt alle Daten der idb auf der Konsole aus.
+ * Prints all data from the IDB to the console.
  */
 self.addEventListener("push", function (event) {
   let data = [];
@@ -333,12 +323,12 @@ self.addEventListener("push", function (event) {
       localforage
         .iterate(function (value, key) {
           if (key !== PIN_KEY) {
-            //decrypt falls kein blob
+            // decrypt if not a blob
             if (!(value.data instanceof Blob)) {
               let decrypted = CryptoJS.AES.decrypt(value.data, self.pin);
               value.data = decrypted.toString(CryptoJS.enc.Utf8);
             }
-            //objectify if json string
+            // objectify if json string
             if (
               value.contentType.includes(ContentTypes.JSON) &&
               value.data &&
@@ -363,20 +353,20 @@ self.addEventListener("push", function (event) {
 });
 
 /*****************************************************************************************************************
- * idb/crypto Abstraktion
+ * idb/crypto Abstraction
  ****************************************************************************************************************/
 function _setItem(key, value) {
-  log("speichere data key:" + key + " mit value: " + JSON.stringify(value));
+  log("saving data key:" + key + " with value: " + JSON.stringify(value));
   return localforage.setItem(key, value);
 }
 
 /**
- * setzt ein item in der idb
+ * sets an item in the IDB
  * @param {any} key
- * @param {stringified object} value wird verschlüsselt, außer es handelt sich um einen Blob. Blobs können nicht verschlüsselt werden.
- * @param {any} contentType http header
- * @param {boolean} dirty noch nicht ans backend übertragen
- * @returns
+ * @param {stringified object} value - is encrypted unless it is a blob. Blobs cannot be encrypted.
+ * @param {any} contentType - http header
+ * @param {boolean} dirty - not yet transferred to the backend
+ * @param responseStatus
  */
 function setItemAndContentType(key, value, contentType, dirty, responseStatus) {
   let contentTypeData;
@@ -407,7 +397,7 @@ function setItemAndContentType(key, value, contentType, dirty, responseStatus) {
 function getItem(key) {
   return localforage.getItem(key).then((item) => {
     if (item === null) return item;
-    // blobs sind nicht verschlüsselt.
+    // blobs are not encrypted
     if (!(item.data instanceof Blob)) {
       if (item.status !== 204) {
         let decrypted = CryptoJS.AES.decrypt(item.data, self.pin);
@@ -428,7 +418,7 @@ function getPin() {
     self.state =
       self.pin === undefined || self.pin === null
         ? WahlworkerState.INACTIVE
-        : WahlworkerState.ACTIVE; // kann die idb nicht verwenden wenn wir keine pin haben.
+        : WahlworkerState.ACTIVE; // can't use the IDB if we don't have a pin
   });
 }
 

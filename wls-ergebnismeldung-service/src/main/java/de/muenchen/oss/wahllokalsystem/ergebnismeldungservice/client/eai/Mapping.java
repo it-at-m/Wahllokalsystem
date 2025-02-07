@@ -9,7 +9,6 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.Erge
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.UngueltigeStimmzettelDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.authentication.AuthenticationService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlartModel;
 import java.util.HashSet;
 import java.util.List;
@@ -22,8 +21,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class Mapping {
-
-    private final AuthenticationService authenticationService;
 
     public AWerteDTO toEntity(final AWerte aWerte) {
         AWerteDTO aoueaiAWerte = new AWerteDTO();
@@ -82,8 +79,8 @@ public class Mapping {
 
     public ErgebnismeldungDTO.MeldungsartEnum toDTO(final MeldungsartModel meldungsart) {
         return switch (meldungsart) {
-        case V1 -> ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT;
-        case V3 -> ErgebnismeldungDTO.MeldungsartEnum.SCHNELLMELDUNG;
+            case V1 -> ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT;
+            case V3 -> ErgebnismeldungDTO.MeldungsartEnum.SCHNELLMELDUNG;
         };
     }
 

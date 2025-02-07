@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class Mapping {
 
-    public AWerteDTO toEntity(final AWerte aWerte) {
+    public AWerteDTO toClientDTO(final AWerte aWerte) {
         AWerteDTO aoueaiAWerte = new AWerteDTO();
         if (aWerte != null) {
             aoueaiAWerte.setA1(aWerte.getA1());
@@ -31,7 +31,7 @@ public class Mapping {
         return aoueaiAWerte;
     }
 
-    public Set<ErgebnisDTO> toAoueaiErgebnisseSet(final List<Ergebnisse> ergebnisse) {
+    public Set<ErgebnisDTO> toDtoErgebnisseSet(final List<Ergebnisse> ergebnisse) {
         Set<ErgebnisDTO> ergebnisSet = new HashSet<>();
 
         ergebnisse.forEach(ergebnisList -> {
@@ -59,7 +59,7 @@ public class Mapping {
         return ergebnisSet;
     }
 
-    public ErgebnismeldungDTO.WahlartEnum toWahlart(final WahlartModel wahlart) {
+    public ErgebnismeldungDTO.WahlartEnum toWahlartDTO(final WahlartModel wahlart) {
         try {
             return ErgebnismeldungDTO.WahlartEnum.valueOf(wahlart.name());
         } catch (Exception e) {
@@ -79,8 +79,8 @@ public class Mapping {
 
     public ErgebnismeldungDTO.MeldungsartEnum toDTO(final MeldungsartModel meldungsart) {
         return switch (meldungsart) {
-            case V1 -> ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT;
-            case V3 -> ErgebnismeldungDTO.MeldungsartEnum.SCHNELLMELDUNG;
+        case V1 -> ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT;
+        case V3 -> ErgebnismeldungDTO.MeldungsartEnum.SCHNELLMELDUNG;
         };
     }
 

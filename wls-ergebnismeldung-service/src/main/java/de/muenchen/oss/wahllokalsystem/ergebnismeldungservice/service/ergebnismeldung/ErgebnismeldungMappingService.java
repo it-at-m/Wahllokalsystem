@@ -64,14 +64,14 @@ public class ErgebnismeldungMappingService {
         val ergebnisse = ergebnisseRepo.findByWahlbezirkIDAndWahlD(wahlbezirkID, wahlID);
 
         val gueltigeErgebnisse = getErgebnisse(wahlart, ergebnisse, true, meldungsart);
-        ergebnismeldung.setErgebnisse(mapping.toAoueaiErgebnisseSet(gueltigeErgebnisse));
+        ergebnismeldung.setErgebnisse(mapping.toDtoErgebnisseSet(gueltigeErgebnisse));
         ergebnismeldung.setMeldungsart(meldungsart);
         log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3.2  b createErgebnismeldung");
 
         val ungueltigeErgebnisse = getErgebnisse(wahlart, ergebnisse, false, meldungsart);
         ergebnismeldung.setUngueltigeStimmzettels(mapping.toDtoSet(ungueltigeErgebnisse));
         ergebnismeldung.setUngueltigeStimmzettelAnzahl((long) ungueltigeErgebnisse.size());
-        ergebnismeldung.setWahlart(mapping.toWahlart(wahlart));
+        ergebnismeldung.setWahlart(mapping.toWahlartDTO(wahlart));
 
         log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3.2  c createErgebmismeldung hauptwahlbezirkID" + hauptwahlbezirkID);
         if (wahlbezirkArtOfUser == WahlbezirkArtModel.BWB && (meldungsart.equals(ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT) && (wahlart.equals(
@@ -88,7 +88,7 @@ public class ErgebnismeldungMappingService {
     private AWerteDTO getAWerte(final WahlbezirkArtModel wahlbezirkArt, final BezirkUndWahlID bezirkUndWahlID) {
         if (wahlbezirkArt == WahlbezirkArtModel.UWB) {
             val aWerte = aWerteRepo.findById(bezirkUndWahlID).orElse(null);
-            return mapping.toEntity(aWerte);
+            return mapping.toClientDTO(aWerte);
         } else {
             return null;
         }

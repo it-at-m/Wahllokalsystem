@@ -40,7 +40,7 @@ class MappingTest {
     Mapping unitUnderTest;
 
     @Nested
-    class ToEntity {
+    class ToClientDTO {
 
         @Test
         void should_mapToAWerteDTO_when_aWerteEntityIsGiven() {
@@ -50,7 +50,7 @@ class MappingTest {
             val a2 = 22L;
             val entityToMap = new AWerte(new BezirkUndWahlID(wahlID, wahlbezirkID), a1, a2);
 
-            val result = unitUnderTest.toEntity(entityToMap);
+            val result = unitUnderTest.toClientDTO(entityToMap);
 
             val expectedResult = new AWerteDTO().a1(a1).a2(a2);
 
@@ -59,14 +59,14 @@ class MappingTest {
 
         @Test
         void should_createEmptyAWerteDTO_when_aWerteEntityIsNull() {
-            val result = unitUnderTest.toEntity(null);
+            val result = unitUnderTest.toClientDTO(null);
 
             Assertions.assertThat(result).isEqualTo(new AWerteDTO());
         }
     }
 
     @Nested
-    class ToAoueaiErgebnisseSet {
+    class ToDtoErgebnisseSet {
 
         @Test
         void should_mapToSetWithDTO_when_listOfEntitiesIsGiven() {
@@ -78,7 +78,7 @@ class MappingTest {
                             List.of(new Ergebnis("wahlvorschlag21", "kandidat21", 3L, 21, null),
                                     new Ergebnis("wahlvorschlag22", "kandidat22", 4L, 22, null))));
 
-            val result = unitUnderTest.toAoueaiErgebnisseSet(entitiesToMap);
+            val result = unitUnderTest.toDtoErgebnisseSet(entitiesToMap);
 
             val expectedResult = Set.of(
                     new ErgebnisDTO().stimmenart("BTW_A").ergebnis(11L).kandidatID("kandidat11").wahlvorschlagID("wahlvorschlag11")
@@ -99,12 +99,12 @@ class MappingTest {
     }
 
     @Nested
-    class ToWahlart {
+    class ToWahlartDTO {
 
         @ParameterizedTest
         @EnumSource(WahlartModel.class)
         void should_returnWahlartEnumWithSameName_when_wahlartModelIsGiven(final WahlartModel wahlartModel) {
-            Assertions.assertThat(unitUnderTest.toWahlart(wahlartModel).name()).isEqualTo(wahlartModel.name());
+            Assertions.assertThat(unitUnderTest.toWahlartDTO(wahlartModel).name()).isEqualTo(wahlartModel.name());
         }
     }
 

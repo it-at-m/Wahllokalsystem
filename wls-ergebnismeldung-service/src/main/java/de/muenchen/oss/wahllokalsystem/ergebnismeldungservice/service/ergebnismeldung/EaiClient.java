@@ -2,7 +2,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnism
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnismeldungDTO;
 
-public interface EaiService {
+public interface EaiClient {
 
     /**
      * @param ergebnismeldungDTO data to send

@@ -39,7 +39,7 @@ public class ErgebnismeldungService {
 
     private final UrnenwahlClient urnenwahlClient;
     private final WahlenClient wahlenClient;
-    private final EaiService eaiService;
+    private final EaiClient eaiClient;
     private final StimmzettelumschlaegeService stimmzettelumschlaegeService;
     private final StatusService statusService;
     private final StatusClient statusClient;
@@ -93,7 +93,7 @@ public class ErgebnismeldungService {
 
     private void sendErgebnisseToEAI(final ErgebnismeldungDTO ergebnismeldung) {
         log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3.1 a sendErgebnisseToEAI" + ergebnismeldung);
-        eaiService.sendErgebnismeldung(ergebnismeldung);
+        eaiClient.sendErgebnismeldung(ergebnismeldung);
         log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3.1 b sendErgebnisseToEAI");
         sendSendungsuhrzeiten(ergebnismeldung);
         log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3.1 c sendErgebnisseToEAI");

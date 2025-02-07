@@ -8,7 +8,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.Wahl
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteClient;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.EaiService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.EaiClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
 @RequiredArgsConstructor
 @Slf4j
-public class EAIClientImpl implements AWerteClient, EaiService {
+public class EAIClientImpl implements AWerteClient, EaiClient {
 
     private final WahldatenControllerApi wahldatenControllerApi;
     private final WahlergebnisControllerApi wahlergebnisControllerApi;

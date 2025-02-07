@@ -55,7 +55,7 @@ class ErgebnismeldungServiceTest {
     @Mock
     WahlenClient wahlenClient;
     @Mock
-    EaiService eaiService;
+    EaiClient eaiClient;
     @Mock
     StimmzettelumschlaegeService stimmzettelumschlaegeService;
     @Mock
@@ -404,7 +404,7 @@ class ErgebnismeldungServiceTest {
 
             unitUnderTest.sendErgebnisse(ergebnisseToSendCriteria);
 
-            Mockito.verify(eaiService).sendErgebnismeldung(mockedErgebnismeldungDTO);
+            Mockito.verify(eaiClient).sendErgebnismeldung(mockedErgebnismeldungDTO);
         }
     }
 

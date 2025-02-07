@@ -5,7 +5,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.Erge
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteClient;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.BriefwahlClient;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.EaiService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.EaiClient;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.UrnenwahlClient;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlenClient;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.DUMMY_CLIENTS)
 @Slf4j
 public class DummyClientImpl
-        implements AWerteClient, StatusClient, UrnenwahlClient, WahlenClient, BriefwahlClient, EaiService {
+        implements AWerteClient, StatusClient, UrnenwahlClient, WahlenClient, BriefwahlClient, EaiClient {
 
     @Override
     public List<AWerteModel> getAWerte(final String wahlbezirkID) throws WlsException {

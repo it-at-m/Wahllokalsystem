@@ -56,7 +56,6 @@ public class LtwBzwValidationImpl implements ElectionTypeValidation {
         if (MeldungsartModel.V1.equals(meldungsart)) {
             log.debug("#addnecessary stapel");
             necessaryStacks.add(Stapelart.LTW_BZW_DII);
-            log.debug("#addnecessary stapel");
         } else {
             log.debug("do not #addnecessary stapel");
         }

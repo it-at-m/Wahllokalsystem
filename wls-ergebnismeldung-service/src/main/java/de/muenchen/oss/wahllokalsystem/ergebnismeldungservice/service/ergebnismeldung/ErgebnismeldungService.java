@@ -68,6 +68,7 @@ public class ErgebnismeldungService {
         log.info("#sendErgebnisse hauptwahlbezirkID {}", ergebnisseToSendCriteria.hauptwahlbezirkID());
 
         assertWahlIsGeschlossen(new BezirkUndWahlID(ergebnisseToSendCriteria.wahlID(), ergebnisseToSendCriteria.wahlbezirkID()));
+        log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 0");
 
         val wahlart = wahlenClient.getWahlartOfCurrentWahltag(ergebnisseToSendCriteria.wahlID());
         val wahlbezirkArt = authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow();

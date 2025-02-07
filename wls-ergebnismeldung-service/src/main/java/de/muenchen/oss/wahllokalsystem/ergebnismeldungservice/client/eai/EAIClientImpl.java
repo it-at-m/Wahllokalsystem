@@ -63,7 +63,7 @@ public class EAIClientImpl implements AWerteClient, EaiClient {
             };
             MDC.put("eid", mdcEIDValue);
             MDC.put("result", "3");
-            log.info("IVU AOUEAI nicht erreichbar!");
+            log.info("AOUEAI nicht erreichbar!");
         } finally {
             MDC.remove("eid");
             MDC.remove("result");

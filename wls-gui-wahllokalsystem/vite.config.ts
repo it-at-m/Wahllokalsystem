@@ -33,6 +33,10 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       injectRegister: "auto",
+      strategies: "injectManifest", // makes it possible to use own service worker
+      injectManifest: {
+        injectionPoint: undefined, // standard injection at end of sw file
+      },
       workbox: {
         cleanupOutdatedCaches: true,
         globPatterns: ["**/*.{js,ts,css,html,ico,png,svg,json,vue,txt}"],

@@ -30,7 +30,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ErgebnismeldungService {
 
-    private static final Logger SYSLOGGER = LoggerFactory.getLogger("ERGEBNISMELDUNG_SERVICE_SIEM_log");
+    private static final Logger SYSLOGGER = LoggerFactory.getLogger("ERGEBNISMELDUNG_SERVICE_SIEM_LOGGER");
 
     private final ErgebnismeldungValidator ergebnismeldungValidator;
     private final ExceptionFactory exceptionFactory;

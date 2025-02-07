@@ -53,7 +53,7 @@ class BriefwahlClientImplTest {
         }
 
         @Test
-        void should_rethrowWlsException_when_apiThrewWlsException() {
+        void should_rethrowWlsException_when_wlsExcetionIsThrownFromApi() {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
             val waehlerverzeichnissNummer = 1L;
@@ -68,7 +68,7 @@ class BriefwahlClientImplTest {
         }
 
         @Test
-        void should_throwWlsException_when_apiThrewNonWlsException() {
+        void should_throwWlsException_when_nonWlsExceptionIsThrownFromApi() {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
             val waehlerverzeichnissNummer = 1L;

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
 @RequiredArgsConstructor
 @Slf4j
-public class WahlvorbereitungClient implements UrnenwahlClient {
+public class WahlvorbereitungClientImpl implements UrnenwahlClient {
 
     private final UrnenwahlSchliessungsUhrzeitControllerApi urnenwahlSchliessungsUhrzeitControllerApi;
 

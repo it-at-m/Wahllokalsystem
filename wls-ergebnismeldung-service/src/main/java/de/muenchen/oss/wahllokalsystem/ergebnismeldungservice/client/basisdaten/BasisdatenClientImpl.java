@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
 @RequiredArgsConstructor
 @Slf4j
-public class BasisdatenClient implements WahlenClient {
+public class BasisdatenClientImpl implements WahlenClient {
 
     private final KonfigurierterWahltagControllerApi konfigurierterWahltagControllerApi;
     private final WahlenControllerApi wahlenControllerApi;

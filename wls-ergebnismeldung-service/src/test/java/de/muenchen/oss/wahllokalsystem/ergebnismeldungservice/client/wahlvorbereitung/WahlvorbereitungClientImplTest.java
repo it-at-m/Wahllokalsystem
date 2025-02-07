@@ -19,7 +19,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class WahlvorbereitungClientTest {
+class WahlvorbereitungClientImplTest {
 
     @Mock
     UrnenwahlSchliessungsUhrzeitControllerApi urnenwahlSchliessungsUhrzeitControllerApi;
@@ -28,7 +28,7 @@ class WahlvorbereitungClientTest {
     ExceptionFactory exceptionFactory;
 
     @InjectMocks
-    WahlvorbereitungClient unitUnderTest;
+    WahlvorbereitungClientImpl unitUnderTest;
 
     @Nested
     class IsGeschlossen {

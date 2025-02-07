@@ -5,6 +5,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.briefwahl.clie
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.briefwahl.model.BeanstandeteWahlbriefeDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.briefwahl.model.Zurueckweisungsgrund;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.BriefwahlClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
 @RequiredArgsConstructor
 @Slf4j
-public class BriefwahlClient implements de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.BriefwahlClient {
+public class BriefwahlClientImpl implements BriefwahlClient {
 
     private final BeanstandeteWahlbriefeControllerApi beanstandeteWahlbriefeControllerApi;
 

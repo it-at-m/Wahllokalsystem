@@ -21,7 +21,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class BriefwahlClientTest {
+class BriefwahlClientImplTest {
 
     @Mock
     BeanstandeteWahlbriefeControllerApi beanstandeteWahlbriefeControllerApi;
@@ -30,7 +30,7 @@ class BriefwahlClientTest {
     ExceptionFactory exceptionFactory;
 
     @InjectMocks
-    BriefwahlClient unitUnderTest;
+    BriefwahlClientImpl unitUnderTest;
 
     @Nested
     class GetAnzahlZurueckgewiesenerWahlbriefe {

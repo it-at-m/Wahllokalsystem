@@ -3,8 +3,6 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.basisdaten
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.basisdaten.client.WahlenControllerApi;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.basisdaten.model.WahlDTO;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.infomanagement.client.KonfigurierterWahltagControllerApi;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlenClient;
@@ -24,7 +22,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class BasisdatenClientImpl implements WahlenClient {
 
-    private final KonfigurierterWahltagControllerApi konfigurierterWahltagControllerApi;
     private final WahlenControllerApi wahlenControllerApi;
 
     private final ExceptionFactory exceptionFactory;
@@ -32,29 +29,10 @@ public class BasisdatenClientImpl implements WahlenClient {
     private final BasisdatenClientMapper basisdatenClientMapper;
 
     @Override
-    public WahlartModel getWahlartOfCurrentWahltag(final String wahlID) {
-        val currentWahltagID = getConfiguredWahltagID();
-        val wahlartOfWahl = getWahlen(currentWahltagID, wahlID);
+    public WahlartModel getWahlart(final String wahltagID, final String wahlID) {
+        val wahlartOfWahl = getWahlen(wahltagID, wahlID);
 
         return basisdatenClientMapper.toModel(wahlartOfWahl);
-    }
-
-    private String getConfiguredWahltagID() {
-        final KonfigurierterWahltagDTO konfigurierterWahltag;
-        try {
-            konfigurierterWahltag = konfigurierterWahltagControllerApi.getKonfigurierterWahltag();
-        } catch (final WlsException wlsException) {
-            log.debug("found WlsException", wlsException);
-            throw wlsException;
-        } catch (final Exception e) {
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT);
-        }
-
-        if (konfigurierterWahltag == null || konfigurierterWahltag.getWahltagID() == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.INFOMANAGEMENT_WAHLTAG_NULL_OR_EMPTY);
-        }
-
-        return konfigurierterWahltag.getWahltagID();
     }
 
     private WahlDTO.WahlartEnum getWahlen(final String wahltagID, final String wahlID) {

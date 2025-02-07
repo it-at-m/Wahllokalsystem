@@ -39,6 +39,7 @@ public class ErgebnismeldungService {
 
     private final UrnenwahlClient urnenwahlClient;
     private final WahlenClient wahlenClient;
+    private final CurrentWahltagClient currentWahltagClient;
     private final EaiClient eaiClient;
     private final StimmzettelumschlaegeService stimmzettelumschlaegeService;
     private final StatusService statusService;
@@ -70,7 +71,8 @@ public class ErgebnismeldungService {
         assertWahlIsGeschlossen(new BezirkUndWahlID(ergebnisseToSendCriteria.wahlID(), ergebnisseToSendCriteria.wahlbezirkID()));
         log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 0");
 
-        val wahlart = wahlenClient.getWahlartOfCurrentWahltag(ergebnisseToSendCriteria.wahlID());
+        val currentWahltagID = currentWahltagClient.getWahltagID();
+        val wahlart = wahlenClient.getWahlart(currentWahltagID, ergebnisseToSendCriteria.wahlID());
         val wahlbezirkArt = authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow();
 
         log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 1");

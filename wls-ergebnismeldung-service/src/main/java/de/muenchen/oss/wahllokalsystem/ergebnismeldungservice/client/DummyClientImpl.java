@@ -5,6 +5,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.Erge
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteClient;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.BriefwahlClient;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.CurrentWahltagClient;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.EaiClient;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.UrnenwahlClient;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlartModel;
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.DUMMY_CLIENTS)
 @Slf4j
 public class DummyClientImpl
-        implements AWerteClient, StatusClient, UrnenwahlClient, WahlenClient, BriefwahlClient, EaiClient {
+        implements AWerteClient, StatusClient, UrnenwahlClient, WahlenClient, BriefwahlClient, EaiClient, CurrentWahltagClient {
 
     @Override
     public List<AWerteModel> getAWerte(final String wahlbezirkID) throws WlsException {
@@ -57,7 +58,7 @@ public class DummyClientImpl
     }
 
     @Override
-    public WahlartModel getWahlartOfCurrentWahltag(final String wahlID) {
+    public WahlartModel getWahlart(final String wahltagID, final String wahlID) {
         return WahlartModel.EUW;
     }
 
@@ -69,5 +70,10 @@ public class DummyClientImpl
     @Override
     public void sendErgebnismeldung(final ErgebnismeldungDTO ergebnismeldungDTO) {
         log.info("dummy client sendErgebnismeldung {}", ergebnismeldungDTO);
+    }
+
+    @Override
+    public String getWahltagID() {
+        return "wahltagID";
     }
 }

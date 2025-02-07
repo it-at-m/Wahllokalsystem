@@ -59,14 +59,14 @@ public class ErgebnismeldungMappingService {
         val bWerte = getBWerte(wahlbezirkArtOfUser, bezirkUndWahlID, bezirkIDUndWaehlerverzeichnisNummer, wahlart);
         ergebnismeldung.setbWerte(bWerte);
 
-        log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3.2  a createErgebmismeldung wahlart {}", wahlart);
+        log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3.2  a createErgebnismeldung wahlart {}", wahlart);
         // Ergebnisse
         val ergebnisse = ergebnisseRepo.findByWahlbezirkIDAndWahlD(wahlbezirkID, wahlID);
 
         val gueltigeErgebnisse = getErgebnisse(wahlart, ergebnisse, true, meldungsart);
         ergebnismeldung.setErgebnisse(mapping.toAoueaiErgebnisseSet(gueltigeErgebnisse));
         ergebnismeldung.setMeldungsart(meldungsart);
-        log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3.2  b createErgebmismeldung");
+        log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3.2  b createErgebnismeldung");
 
         val ungueltigeErgebnisse = getErgebnisse(wahlart, ergebnisse, false, meldungsart);
         ergebnismeldung.setUngueltigeStimmzettels(mapping.toDtoSet(ungueltigeErgebnisse));

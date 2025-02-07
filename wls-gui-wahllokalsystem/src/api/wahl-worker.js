@@ -187,8 +187,7 @@ self.handlePOST = (event) => {
                 status: 200,
                 statusText: `returning OK - orig. Statuscode is ${response.status}`,
               };
-              let rsp = new Response(null, init);
-              return rsp;
+              return new Response(null, init);
             }
           }
         );
@@ -197,19 +196,15 @@ self.handlePOST = (event) => {
         return setItemAndContentType(key, data, contentType, true).then(() => {
           // weiterreichen das senden nicht erfolgreich war
           if (is_ergebnismeldung_send) {
-            var init = {
+            return new Response(null, {
               status: 500,
               statusText: "Ergebnismeldung send - post nicht möglich",
-            };
-            let rsp = new Response(null, init);
-            return rsp;
+            });
           } else {
-            var init = {
+            return new Response(null, {
               status: 200,
               statusText: "OK - post nicht möglich",
-            };
-            let rsp = new Response(null, init);
-            return rsp;
+            });
           }
         });
       });
@@ -336,7 +331,7 @@ self.addEventListener("push", function (event) {
   event.waitUntil(
     getPin().then(() => {
       localforage
-        .iterate(function (value, key, iterationNumber) {
+        .iterate(function (value, key) {
           if (key !== PIN_KEY) {
             //decrypt falls kein blob
             if (!(value.data instanceof Blob)) {
@@ -440,33 +435,6 @@ function getPin() {
 /*****************************************************************************************************************
  * utility
  ****************************************************************************************************************/
-
-// Nachrichten senden Beispiele: http://craig-russell.co.uk/2016/01/29/service-worker-messaging.html#.W7YZvBwhJFo
-function send_message_to_all_clients(msg) {
-  clients.matchAll().then((clients) => {
-    clients.forEach((client) => {
-      send_message_to_client(client, msg).then((m) =>
-        console.log("SW Received Message: " + m)
-      );
-    });
-  });
-}
-
-function send_message_to_client(client, msg) {
-  return new Promise(function (resolve, reject) {
-    var msg_chan = new MessageChannel();
-
-    msg_chan.port1.onmessage = function (event) {
-      if (event.data.error) {
-        reject(event.data.error);
-      } else {
-        resolve(event.data);
-      }
-    };
-
-    client.postMessage("SW Says: '" + msg + "'", [msg_chan.port2]);
-  });
-}
 
 function log(message) {
   if (doLog) console.log(logID + message);

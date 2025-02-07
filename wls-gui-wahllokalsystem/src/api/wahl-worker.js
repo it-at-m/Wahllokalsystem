@@ -1,8 +1,5 @@
+import CryptoJS from "crypto-js";
 import localforage from "localforage";
-
-// TODO: crypto-js fixen (imports funktionieren beide nicht!)
-// importScripts("../../node_modules/crypto-js/crypto-js.js");
-// import CryptoJS from "crypto-js"; <-- npm install crypto-js wird dafür gebraucht
 
 /*****************************************************************************************************************
  * constants/config
@@ -343,10 +340,8 @@ self.addEventListener("push", function (event) {
           if (key !== PIN_KEY) {
             //decrypt falls kein blob
             if (!(value.data instanceof Blob)) {
-              //let decrypted = CryptoJS.AES.decrypt(value.data, self.pin); TODO: wieder aktivieren
-              let decrypted = value.data;
-              //value.data = decrypted.toString(CryptoJS.enc.Utf8); TODO: wieder aktivieren
-              value.data = decrypted.toString("utf8");
+              let decrypted = CryptoJS.AES.decrypt(value.data, self.pin);
+              value.data = decrypted.toString(CryptoJS.enc.Utf8);
             }
             //objectify if json string
             if (
@@ -399,8 +394,10 @@ function setItemAndContentType(key, value, contentType, dirty, responseStatus) {
       status: responseStatus,
     };
   } else {
-    let encrypted = value instanceof Blob ? value : value;
-    //: CryptoJS.AES.encrypt(value, self.pin).toString(); TODO: wieder aktivieren statt dem zweiten "value"
+    let encrypted =
+      value instanceof Blob
+        ? value
+        : CryptoJS.AES.encrypt(value, self.pin).toString();
     contentTypeData = {
       data: encrypted,
       contentType: contentType,
@@ -418,10 +415,8 @@ function getItem(key) {
     // blobs sind nicht verschlüsselt.
     if (!(item.data instanceof Blob)) {
       if (item.status !== 204) {
-        // decrypted = CryptoJS.AES.decrypt(item.data, self.pin); TODO: wieder aktivieren
-        let decrypted = item.data;
-        // item.data = decrypted.toString(CryptoJS.enc.Utf8); TODO: wieder aktivieren
-        item.data = decrypted.toString("utf8");
+        let decrypted = CryptoJS.AES.decrypt(item.data, self.pin);
+        item.data = decrypted.toString(CryptoJS.enc.Utf8);
       }
     }
     return item;

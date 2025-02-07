@@ -49,7 +49,7 @@ public class EAIClientImpl implements AWerteClient, EaiService {
         try {
             wahlergebnisControllerApi.saveErgebnismeldung(ergebnismeldungDTO);
         } catch (final Exception exception) {
-            log.warn("#saveWahlergebnismeldung: Ergebnismeldung ist nicht validiert. Exception: {}", exception.getMessage());
+            log.warn("Failed to save Ergebnismeldung: {}. Exception: {}", ergebnismeldungDTO, exception.getMessage());
             simLogging(Objects.requireNonNull(ergebnismeldungDTO.getMeldungsart(), "Ergebnismeldung Meldungsart is null"));
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_AOUEAI);
         }

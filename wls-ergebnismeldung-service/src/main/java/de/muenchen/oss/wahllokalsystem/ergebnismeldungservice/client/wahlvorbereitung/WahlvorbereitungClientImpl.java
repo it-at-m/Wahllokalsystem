@@ -23,7 +23,7 @@ public class WahlvorbereitungClientImpl implements UrnenwahlClient {
     private final ExceptionFactory exceptionFactory;
 
     @Override
-    public boolean isGeschlossen(final String wahlbezirkID) {
+    public boolean isWahlbezirkGeschlossen(final String wahlbezirkID) {
         assertWahlbezirkWithSchliessungsuhrzeitExists(wahlbezirkID);
         return true;
     }

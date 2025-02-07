@@ -31,7 +31,7 @@ class WahlvorbereitungClientImplTest {
     WahlvorbereitungClientImpl unitUnderTest;
 
     @Nested
-    class IsGeschlossen {
+    class IsWahlbezirkGeschlossen {
 
         @Test
         void should_returnTrue_when_urnenwahlSchliessungsUhrzeitIsNotNull() {
@@ -41,7 +41,7 @@ class WahlvorbereitungClientImplTest {
                     .thenReturn(new UrnenwahlSchliessungsUhrzeitDTO().urnenwahlSchliessungsUhrzeit(
                             LocalDateTime.now()));
 
-            val result = unitUnderTest.isGeschlossen(wahlbezirkID);
+            val result = unitUnderTest.isWahlbezirkGeschlossen(wahlbezirkID);
 
             Assertions.assertThat(result).isTrue();
         }
@@ -61,7 +61,7 @@ class WahlvorbereitungClientImplTest {
             val mockedApiWlsException = FachlicheWlsException.withCode("000").buildWithMessage("");
             Mockito.doThrow(mockedApiWlsException).when(urnenwahlSchliessungsUhrzeitControllerApi).getUrnenwahlSchliessungsUhrzeit(wahlbezirkID);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.isGeschlossen(wahlbezirkID)).isSameAs(mockedApiWlsException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.isWahlbezirkGeschlossen(wahlbezirkID)).isSameAs(mockedApiWlsException);
         }
 
         @Test
@@ -75,7 +75,7 @@ class WahlvorbereitungClientImplTest {
             Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_WAHLVORBEREITUNG))
                     .thenReturn(mockedWlsException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.isGeschlossen(wahlbezirkID)).isSameAs(mockedWlsException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.isWahlbezirkGeschlossen(wahlbezirkID)).isSameAs(mockedWlsException);
         }
 
         @Test
@@ -88,7 +88,7 @@ class WahlvorbereitungClientImplTest {
                     .thenReturn(mockedWlsException);
             Mockito.when(urnenwahlSchliessungsUhrzeitControllerApi.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID)).thenReturn(null);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.isGeschlossen(wahlbezirkID)).isSameAs(mockedWlsException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.isWahlbezirkGeschlossen(wahlbezirkID)).isSameAs(mockedWlsException);
         }
     }
 

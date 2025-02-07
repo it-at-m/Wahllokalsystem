@@ -52,7 +52,7 @@ public class DummyClientImpl
     }
 
     @Override
-    public boolean isGeschlossen(final String wahlbezirkID) {
+    public boolean isWahlbezirkGeschlossen(final String wahlbezirkID) {
         return true;
     }
 

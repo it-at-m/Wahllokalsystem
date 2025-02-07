@@ -104,7 +104,7 @@ public class ErgebnismeldungService {
         boolean isGeschlossen;
         try {
             isGeschlossen = switch (wahlbezirkart) {
-                case UWB -> urnenwahlClient.isGeschlossen(bezirkUndWahlID.getWahlbezirkID());
+                case UWB -> urnenwahlClient.isWahlbezirkGeschlossen(bezirkUndWahlID.getWahlbezirkID());
                 case BWB -> {
                     val umschlaegeOfWahlbezirk = stimmzettelumschlaegeService.getStimmzettelumschlaege(bezirkUndWahlID);
                     yield umschlaegeOfWahlbezirk.filter(stimmzettelumschlaegeModel -> stimmzettelumschlaegeModel.urneneroeffnungsUhrzeit() != null)

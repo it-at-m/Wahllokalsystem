@@ -98,7 +98,7 @@ class ErgebnismeldungServiceTest {
 
                 Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.WAHL_NICHT_GESCHLOSSEN)).thenReturn(mockedFachlicheWlsException);
                 Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(WahlbezirkArtModel.UWB);
-                Mockito.when(urnenwahlClient.isGeschlossen(wahlbezirkID)).thenReturn(false);
+                Mockito.when(urnenwahlClient.isWahlbezirkGeschlossen(wahlbezirkID)).thenReturn(false);
 
                 Assertions.assertThatException().isThrownBy(() -> unitUnderTest.updateSendungszeiten(bezirkUndWahlID))
                         .isSameAs(mockedFachlicheWlsException);
@@ -117,7 +117,7 @@ class ErgebnismeldungServiceTest {
 
                 Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(WahlbezirkArtModel.UWB);
                 Mockito.when(statusService.getStatus(bezirkUndWahlID)).thenReturn(Optional.of(mockedStatus));
-                Mockito.doThrow(mockedUrnenwahlClientException).when(urnenwahlClient).isGeschlossen(wahlbezirkID);
+                Mockito.doThrow(mockedUrnenwahlClientException).when(urnenwahlClient).isWahlbezirkGeschlossen(wahlbezirkID);
 
                 unitUnderTest.updateSendungszeiten(bezirkUndWahlID);
 
@@ -178,7 +178,7 @@ class ErgebnismeldungServiceTest {
 
             Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(WahlbezirkArtModel.UWB);
             Mockito.when(statusService.getStatus(bezirkUndWahlID)).thenReturn(Optional.of(mockedStatus));
-            Mockito.when(urnenwahlClient.isGeschlossen(wahlbezirkID)).thenReturn(true);
+            Mockito.when(urnenwahlClient.isWahlbezirkGeschlossen(wahlbezirkID)).thenReturn(true);
 
             unitUnderTest.updateSendungszeiten(bezirkUndWahlID);
 
@@ -197,7 +197,7 @@ class ErgebnismeldungServiceTest {
 
             Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(WahlbezirkArtModel.UWB);
             Mockito.when(statusService.getStatus(bezirkUndWahlID)).thenReturn(Optional.of(mockedStatus));
-            Mockito.when(urnenwahlClient.isGeschlossen(wahlbezirkID)).thenReturn(true);
+            Mockito.when(urnenwahlClient.isWahlbezirkGeschlossen(wahlbezirkID)).thenReturn(true);
 
             unitUnderTest.updateSendungszeiten(bezirkUndWahlID);
 
@@ -217,7 +217,7 @@ class ErgebnismeldungServiceTest {
 
             Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(WahlbezirkArtModel.UWB);
             Mockito.when(statusService.getStatus(bezirkUndWahlID)).thenReturn(Optional.of(mockedStatus));
-            Mockito.when(urnenwahlClient.isGeschlossen(wahlbezirkID)).thenReturn(true);
+            Mockito.when(urnenwahlClient.isWahlbezirkGeschlossen(wahlbezirkID)).thenReturn(true);
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.FORCEERGEBNISSE_WRONG_USAGE)).thenReturn(mockedFachlicheWlsException);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.updateSendungszeiten(bezirkUndWahlID)).isSameAs(mockedFachlicheWlsException);
@@ -254,7 +254,7 @@ class ErgebnismeldungServiceTest {
 
                 Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.WAHL_NICHT_GESCHLOSSEN)).thenReturn(mockedFachlicheWlsException);
                 Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(WahlbezirkArtModel.UWB);
-                Mockito.when(urnenwahlClient.isGeschlossen(wahlbezirkID)).thenReturn(false);
+                Mockito.when(urnenwahlClient.isWahlbezirkGeschlossen(wahlbezirkID)).thenReturn(false);
                 Assertions.assertThatException().isThrownBy(() -> unitUnderTest.sendErgebnisse(ergebnisseToSendCriteria))
                         .isSameAs(mockedFachlicheWlsException);
             }
@@ -308,7 +308,7 @@ class ErgebnismeldungServiceTest {
                         eq(wahlID),
                         eq(waehlerverzeichnisNummer), eq(meldungsart))).thenReturn(true);
                 Mockito.when(wahlenClient.getWahlartOfCurrentWahltag(wahlID)).thenReturn(mockedWahlartOfCurrentWahltag);
-                Mockito.when(urnenwahlClient.isGeschlossen(wahlbezirkID)).thenReturn(true);
+                Mockito.when(urnenwahlClient.isWahlbezirkGeschlossen(wahlbezirkID)).thenReturn(true);
                 Mockito.when(mapping.toDTO(meldungsart)).thenReturn(mockedEAIMeldungsart);
                 Mockito.when(ergebnismeldungMappingService.createErgebnismeldung(eq(mockedWahlartOfCurrentWahltag), eq(wahlID), eq(wahlbezirkID),
                         eq(waehlerverzeichnisNummer), eq(mockedEAIMeldungsart), eq(hauptwahlbezirkID))).thenReturn(mockedErgebnismeldungDTO);
@@ -343,7 +343,7 @@ class ErgebnismeldungServiceTest {
                         eq(wahlID),
                         eq(waehlerverzeichnisNummer), eq(meldungsart))).thenReturn(true);
                 Mockito.when(wahlenClient.getWahlartOfCurrentWahltag(wahlID)).thenReturn(mockedWahlartOfCurrentWahltag);
-                Mockito.when(urnenwahlClient.isGeschlossen(wahlbezirkID)).thenReturn(true);
+                Mockito.when(urnenwahlClient.isWahlbezirkGeschlossen(wahlbezirkID)).thenReturn(true);
                 Mockito.when(mapping.toDTO(meldungsart)).thenReturn(mockedEAIMeldungsart);
                 Mockito.when(ergebnismeldungMappingService.createErgebnismeldung(eq(mockedWahlartOfCurrentWahltag), eq(wahlID), eq(wahlbezirkID),
                         eq(waehlerverzeichnisNummer), eq(mockedEAIMeldungsart), eq(hauptwahlbezirkID))).thenReturn(mockedErgebnismeldungDTO);
@@ -367,7 +367,7 @@ class ErgebnismeldungServiceTest {
 
             Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(mockedWahlbezirkartOfCurrentUser);
             Mockito.when(wahlenClient.getWahlartOfCurrentWahltag(wahlID)).thenReturn(mockedWahlartOfCurrentWahltag);
-            Mockito.when(urnenwahlClient.isGeschlossen(wahlbezirkID)).thenReturn(true);
+            Mockito.when(urnenwahlClient.isWahlbezirkGeschlossen(wahlbezirkID)).thenReturn(true);
             Mockito.when(mapping.toDTO(meldungsart)).thenReturn(ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT);
 
             unitUnderTest.sendErgebnisse(ergebnisseToSendCriteria);
@@ -397,7 +397,7 @@ class ErgebnismeldungServiceTest {
                     eq(wahlID),
                     eq(waehlerverzeichnisNummer), eq(meldungsart))).thenReturn(true);
             Mockito.when(wahlenClient.getWahlartOfCurrentWahltag(wahlID)).thenReturn(mockedWahlartOfCurrentWahltag);
-            Mockito.when(urnenwahlClient.isGeschlossen(wahlbezirkID)).thenReturn(true);
+            Mockito.when(urnenwahlClient.isWahlbezirkGeschlossen(wahlbezirkID)).thenReturn(true);
             Mockito.when(mapping.toDTO(meldungsart)).thenReturn(mockedEAIMeldungsart);
             Mockito.when(ergebnismeldungMappingService.createErgebnismeldung(eq(mockedWahlartOfCurrentWahltag), eq(wahlID), eq(wahlbezirkID),
                     eq(waehlerverzeichnisNummer), eq(mockedEAIMeldungsart), eq(hauptwahlbezirkID))).thenReturn(mockedErgebnismeldungDTO);

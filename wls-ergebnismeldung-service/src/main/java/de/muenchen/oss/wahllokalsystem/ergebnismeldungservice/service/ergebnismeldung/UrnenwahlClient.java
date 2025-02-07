@@ -12,5 +12,5 @@ public interface UrnenwahlClient {
      * @throws de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException when no
      *             wahlbezirk with the given ID exists
      */
-    boolean isGeschlossen(String wahlbezirkID);
+    boolean isWahlbezirkGeschlossen(String wahlbezirkID);
 }

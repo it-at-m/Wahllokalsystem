@@ -20,7 +20,7 @@ public class MbwValidationImpl implements ElectionTypeValidation {
     private final DefaultElectionTypeValidator validator;
 
     @Override
-    public boolean supports(final WahlartModel wahlart) {
+    public boolean supportsWahlart(final WahlartModel wahlart) {
         return WahlartModel.MBW == wahlart;
     }
 

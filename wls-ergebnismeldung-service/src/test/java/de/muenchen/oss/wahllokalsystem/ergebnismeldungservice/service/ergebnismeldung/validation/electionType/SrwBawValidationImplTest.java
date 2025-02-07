@@ -41,22 +41,22 @@ class SrwBawValidationImplTest {
     ArgumentCaptor<List<Stapelart>> captorStapelList;
 
     @Nested
-    class Supports {
+    class SupportsWahlart {
 
         @Test
         void should_returnTrue_when_wahlartIsSRW() {
-            Assertions.assertThat(unitUnderTest.supports(WahlartModel.SRW)).isTrue();
+            Assertions.assertThat(unitUnderTest.supportsWahlart(WahlartModel.SRW)).isTrue();
         }
 
         @Test
         void should_returnTrue_when_wahlartIsBAW() {
-            Assertions.assertThat(unitUnderTest.supports(WahlartModel.BAW)).isTrue();
+            Assertions.assertThat(unitUnderTest.supportsWahlart(WahlartModel.BAW)).isTrue();
         }
 
         @ParameterizedTest
         @MethodSource("argumentsForNonSRWOrNonBAWWahlart")
         void should_returnFalse_when_wahlartIsNotSRWOrBAW(final ArgumentsAccessor arguments) {
-            Assertions.assertThat(unitUnderTest.supports(arguments.get(0, WahlartModel.class))).isFalse();
+            Assertions.assertThat(unitUnderTest.supportsWahlart(arguments.get(0, WahlartModel.class))).isFalse();
         }
 
         public static Stream<Arguments> argumentsForNonSRWOrNonBAWWahlart() {

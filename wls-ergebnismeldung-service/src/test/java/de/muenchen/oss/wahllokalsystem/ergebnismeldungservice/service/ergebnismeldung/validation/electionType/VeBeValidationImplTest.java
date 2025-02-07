@@ -41,22 +41,22 @@ class VeBeValidationImplTest {
     ArgumentCaptor<List<Stapelart>> captorStapelList;
 
     @Nested
-    class Supports {
+    class SupportsWahlart {
 
         @Test
         void should_returnTrue_when_wahlartIsVE() {
-            Assertions.assertThat(unitUnderTest.supports(WahlartModel.VE)).isTrue();
+            Assertions.assertThat(unitUnderTest.supportsWahlart(WahlartModel.VE)).isTrue();
         }
 
         @Test
         void should_returnTrue_when_wahlartIsBEB() {
-            Assertions.assertThat(unitUnderTest.supports(WahlartModel.BEB)).isTrue();
+            Assertions.assertThat(unitUnderTest.supportsWahlart(WahlartModel.BEB)).isTrue();
         }
 
         @ParameterizedTest
         @MethodSource("argumentsForNonVEOrBEBWahlart")
         void should_returnFalse_when_wahlartIsNotVEOrBEB(final ArgumentsAccessor arguments) {
-            Assertions.assertThat(unitUnderTest.supports(arguments.get(0, WahlartModel.class))).isFalse();
+            Assertions.assertThat(unitUnderTest.supportsWahlart(arguments.get(0, WahlartModel.class))).isFalse();
         }
 
         public static Stream<Arguments> argumentsForNonVEOrBEBWahlart() {

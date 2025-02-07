@@ -41,17 +41,17 @@ class ObwValidationImplTest {
     ArgumentCaptor<List<Stapelart>> captorStapelList;
 
     @Nested
-    class Supports {
+    class SupportsWahlart {
 
         @Test
         void should_returnTrue_when_wahlartIsOBW() {
-            Assertions.assertThat(unitUnderTest.supports(WahlartModel.OBW)).isTrue();
+            Assertions.assertThat(unitUnderTest.supportsWahlart(WahlartModel.OBW)).isTrue();
         }
 
         @ParameterizedTest
         @MethodSource("argumentsForNonOBWWahlart")
         void should_returnFalse_when_wahlartIsNotOBW(final ArgumentsAccessor arguments) {
-            Assertions.assertThat(unitUnderTest.supports(arguments.get(0, WahlartModel.class))).isFalse();
+            Assertions.assertThat(unitUnderTest.supportsWahlart(arguments.get(0, WahlartModel.class))).isFalse();
         }
 
         public static Stream<Arguments> argumentsForNonOBWWahlart() {

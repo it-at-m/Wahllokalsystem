@@ -41,17 +41,17 @@ class EuwValidationImplTest {
     ArgumentCaptor<List<Stapelart>> captorStapelList;
 
     @Nested
-    class Supports {
+    class SupportsWahlart {
 
         @Test
         void should_returnTrue_when_wahlartIsEUW() {
-            Assertions.assertThat(unitUnderTest.supports(WahlartModel.EUW)).isTrue();
+            Assertions.assertThat(unitUnderTest.supportsWahlart(WahlartModel.EUW)).isTrue();
         }
 
         @ParameterizedTest
         @MethodSource("argumentsForNonEUWWahlart")
         void should_returnFalse_when_wahlartIsNotEUW(final ArgumentsAccessor arguments) {
-            Assertions.assertThat(unitUnderTest.supports(arguments.get(0, WahlartModel.class))).isFalse();
+            Assertions.assertThat(unitUnderTest.supportsWahlart(arguments.get(0, WahlartModel.class))).isFalse();
         }
 
         public static Stream<Arguments> argumentsForNonEUWWahlart() {

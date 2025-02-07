@@ -126,7 +126,7 @@ class ErgebnismeldungValidatorTest {
             val meldungsart = MeldungsartModel.V1;
 
             Mockito.when(electionTypeValidations.stream()).thenReturn(Stream.of(validator));
-            Mockito.when(validator.supports(wahlart)).thenReturn(true);
+            Mockito.when(validator.supportsWahlart(wahlart)).thenReturn(true);
             Mockito.when(validator.isValidUwb(eq(wahlbezirkID), eq(wahlID), eq(waehlerverzeichnisNumemr), eq(meldungsart)))
                     .thenReturn(expectedValidationResult);
 
@@ -146,7 +146,7 @@ class ErgebnismeldungValidatorTest {
             val meldungsart = MeldungsartModel.V1;
 
             Mockito.when(electionTypeValidations.stream()).thenReturn(Stream.of(validator));
-            Mockito.when(validator.supports(wahlart)).thenReturn(true);
+            Mockito.when(validator.supportsWahlart(wahlart)).thenReturn(true);
             Mockito.when(validator.isValidBwb(eq(wahlbezirkID), eq(wahlID), eq(waehlerverzeichnisNumemr), eq(meldungsart)))
                     .thenReturn(expectedValidationResult);
 
@@ -165,7 +165,7 @@ class ErgebnismeldungValidatorTest {
             val meldungsart = MeldungsartModel.V1;
 
             Mockito.when(electionTypeValidations.stream()).thenReturn(Stream.of(validator));
-            Mockito.when(validator.supports(wahlart)).thenReturn(false);
+            Mockito.when(validator.supportsWahlart(wahlart)).thenReturn(false);
 
             Assertions.assertThatException()
                     .isThrownBy(() -> unitUnderTest.checkValidation(wahlart, wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNumemr, meldungsart))

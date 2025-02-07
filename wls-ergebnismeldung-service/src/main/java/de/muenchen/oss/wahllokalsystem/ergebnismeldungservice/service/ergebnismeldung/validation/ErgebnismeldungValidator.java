@@ -47,7 +47,7 @@ public class ErgebnismeldungValidator {
 
     private ElectionTypeValidation findValidator(final WahlartModel wahlart) {
         return electionTypeValidators.stream()
-                .filter(v -> v.supports(wahlart))
+                .filter(v -> v.supportsWahlart(wahlart))
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("#checkValidation kann mit Wahlart" + wahlart.name() + " nicht umgehen :("));
     }

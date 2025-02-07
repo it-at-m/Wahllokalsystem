@@ -41,17 +41,17 @@ class BtwValidationImplTest {
     ArgumentCaptor<List<Stapelart>> captorStapelList;
 
     @Nested
-    class Supports {
+    class SupportsWahlart {
 
         @Test
         void should_returnTrue_when_wahlartIsBTW() {
-            Assertions.assertThat(unitUnderTest.supports(WahlartModel.BTW)).isTrue();
+            Assertions.assertThat(unitUnderTest.supportsWahlart(WahlartModel.BTW)).isTrue();
         }
 
         @ParameterizedTest
         @MethodSource("argumentsForNonBTWWahlart")
         void should_returnFalse_when_wahlartIsNotBTW(final ArgumentsAccessor arguments) {
-            Assertions.assertThat(unitUnderTest.supports(arguments.get(0, WahlartModel.class))).isFalse();
+            Assertions.assertThat(unitUnderTest.supportsWahlart(arguments.get(0, WahlartModel.class))).isFalse();
         }
 
         public static Stream<Arguments> argumentsForNonBTWWahlart() {

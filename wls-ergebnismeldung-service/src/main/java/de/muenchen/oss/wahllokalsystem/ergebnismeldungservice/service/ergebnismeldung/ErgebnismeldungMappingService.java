@@ -97,8 +97,8 @@ public class ErgebnismeldungMappingService {
     private BWerteDTO getBWerte(final WahlbezirkArtModel wahlbezirkArt, final BezirkUndWahlID bezirkUndWahlID,
             final BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer, final WahlartModel wahlart) {
         return switch (wahlbezirkArt) {
-            case UWB -> getBWerteDTOOfUWBWahlbezirk(bezirkUndWahlID.getWahlID(), bezirkIDUndWaehlerverzeichnisNummer, wahlart);
-            case BWB -> getBWerteDTOOfBWBWahlbezirk(bezirkUndWahlID);
+        case UWB -> getBWerteDTOOfUWBWahlbezirk(bezirkUndWahlID.getWahlID(), bezirkIDUndWaehlerverzeichnisNummer, wahlart);
+        case BWB -> getBWerteDTOOfBWBWahlbezirk(bezirkUndWahlID);
         };
     }
 

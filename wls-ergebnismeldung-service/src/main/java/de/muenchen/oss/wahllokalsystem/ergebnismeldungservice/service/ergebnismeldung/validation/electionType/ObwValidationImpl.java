@@ -19,7 +19,7 @@ public class ObwValidationImpl implements ElectionTypeValidation {
 
     private final DefaultElectionTypeValidator validator;
 
-    public boolean supports(final WahlartModel wahlart) {
+    public boolean supportsWahlart(final WahlartModel wahlart) {
         return WahlartModel.OBW == wahlart;
     }
 

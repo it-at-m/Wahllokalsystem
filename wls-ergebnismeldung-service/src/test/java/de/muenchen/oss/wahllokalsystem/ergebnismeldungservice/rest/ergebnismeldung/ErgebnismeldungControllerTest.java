@@ -44,7 +44,7 @@ class ErgebnismeldungControllerTest {
     class SendErgebnisse {
 
         @Test
-        void should_callForceErgebnisse_when_forceIsTrueInAllLowerCase() {
+        void should_callUpdateSendungszeiten_when_forceIsTrueInAllLowerCase() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val sendErgebnisParameter = new SendErgebnisParameter(wahlID, wahlbezirkID, null, null, null);
@@ -55,7 +55,7 @@ class ErgebnismeldungControllerTest {
         }
 
         @Test
-        void should_callForceErgebnisse_when_forceIsTrueInAllUpperCase() {
+        void should_callUpdateSendungszeiten_when_forceIsTrueInAllUpperCase() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val sendErgebnisParameter = new SendErgebnisParameter(wahlID, wahlbezirkID, null, null, null);

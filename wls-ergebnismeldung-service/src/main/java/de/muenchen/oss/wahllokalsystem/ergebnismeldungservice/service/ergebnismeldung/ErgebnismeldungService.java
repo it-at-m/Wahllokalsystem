@@ -135,10 +135,11 @@ public class ErgebnismeldungService {
                 try {
                     statusClient.postSchnellmeldungSendungsuhrzeit(status.bezirkUndWahlID(), now);
                 } catch (Exception e) {
-                    log.error("#postSchnellmeldungsSendungsuhrzeit Exception:", e);
+                    log.error("#sendRelevantStatus Exception:", e);
                 }
             } else {
-                log.error("#forceErgebnisse Error: forceErgebnisse sollte nie in Benutzung sein während beide Validierungstatus aus NICHT_GESENDET stehen.");
+                log.error(
+                        "#sendRelevantStatus Error: sendRelevantStatus sollte nie in Benutzung sein während beide Validierungstatus auf NICHT_GESENDET stehen.");
                 throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.FORCEERGEBNISSE_WRONG_USAGE);
             }
         } else {

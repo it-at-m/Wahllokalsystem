@@ -129,7 +129,6 @@ public class ErgebnismeldungService {
 
         if (validierungsStatusNiederschrift.equals(ValidierungsstatusModel.NICHT_GESENDET)) {
             if (!validierungsStatusSchnellmeldung.equals(ValidierungsstatusModel.NICHT_GESENDET)) {
-                //status.getSchnellmeldung().setValidierungsstatus(Validierungsstatus_.INVALIDE);
                 try {
                     statusClient.postSchnellmeldungSendungsuhrzeit(status.bezirkUndWahlID(), now);
                 } catch (Exception e) {

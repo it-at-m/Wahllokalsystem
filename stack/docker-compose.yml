@@ -162,7 +162,7 @@ services:
     networks:
       - services
 
-  wls-ergebnismedung-service:
+  wls-ergebnismeldung-service:
     container_name: wls-ergebnismeldung-service
     image: ghcr.io/it-at-m/wahllokalsystem-wls-ergebnismeldung-service:latest
     depends_on:

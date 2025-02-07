@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -43,14 +44,15 @@ public class Mapping {
                 aoueaiErgebnis.setKandidatID(ergebnis.getKandidatID());
                 aoueaiErgebnis.setWahlvorschlagID(ergebnis.getWahlvorschlagID());
 
-                try {
-                    aoueaiErgebnis.setWahlvorschlagsordnungszahl(ergebnis.getWahlvorschlagsordnungszahl());
-                } catch (Exception e) {
-                    log.warn("toAoueaiErgebnisseSet 4.1.1  fehler: {} e komplett: {}", e.getMessage(), e.toString());
+                val wahlvorschlagsordnungszahl = ergebnis.getWahlvorschlagsordnungszahl();
+                if (wahlvorschlagsordnungszahl == null) {
+                    log.warn("toAoueaiErgebnisseSet 4.1.1  fehler - wahlvorschlagsordnungszahl is null");
                     log.warn("toAoueaiErgebnisseSet 4.1.1.1  ergebnisse: {} ", ergebnisse);
                     log.warn("toAoueaiErgebnisseSet 4.1.1.2  ergebnisList: {} ", ergebnisList);
                     log.warn("toAoueaiErgebnisseSet 4.1.1.3  ergebnis: {} ", ergebnis);
                 }
+                aoueaiErgebnis.setWahlvorschlagsordnungszahl(wahlvorschlagsordnungszahl);
+
                 aoueaiErgebnis.setStimmenart(stapelart.name());
                 ergebnisSet.add(aoueaiErgebnis);
             });

@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -46,10 +45,9 @@ public class Mapping {
                 aoueaiErgebnis.setErgebnis(ergebnis.getErgebnis());
                 aoueaiErgebnis.setKandidatID(ergebnis.getKandidatID());
                 aoueaiErgebnis.setWahlvorschlagID(ergebnis.getWahlvorschlagID());
-                val wvsoz = ergebnis.getWahlvorschlagsordnungszahl();
 
                 try {
-                    aoueaiErgebnis.setWahlvorschlagsordnungszahl(wvsoz);
+                    aoueaiErgebnis.setWahlvorschlagsordnungszahl(ergebnis.getWahlvorschlagsordnungszahl());
                 } catch (Exception e) {
                     log.warn("toAoueaiErgebnisseSet 4.1.1  fehler: {} e komplett: {}", e.getMessage(), e.toString());
                     log.warn("toAoueaiErgebnisseSet 4.1.1.1  ergebnisse: {} ", ergebnisse);

@@ -7,18 +7,18 @@ GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/wa
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST stimmabgabevermerke - 2 Wahldaten
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/wahlbezirkID1/1
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/wahlbezirkID/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
-  "wahlbezirkID": "wahlbezirkID1",
+  "wahlbezirkID": "wahlbezirkID",
   "waehlerverzeichnisNummer": 1,
   "anzahlBlaetter": 2,
   "wahldaten": [
     {
       "waehlerverzeichnisNummer": 1,
-      "wahlbezirkID": "wahlbezirkID1",
+      "wahlbezirkID": "wahlbezirkID",
       "wahlID": "wahlID1",
       "eingenommenewahlscheine": [
         {
@@ -52,7 +52,7 @@ Content-Type: application/json
     },
     {
       "waehlerverzeichnisNummer": 1,
-      "wahlbezirkID": "wahlbezirkID1",
+      "wahlbezirkID": "wahlbezirkID",
       "wahlID": "wahlID2",
       "eingenommenewahlscheine": [
         {

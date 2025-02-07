@@ -21,6 +21,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabeve
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.WahldatenDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.ErgebnismeldungService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeService;
@@ -65,6 +66,9 @@ class SecurityConfigurationTest {
 
     @MockBean
     BegruendungService begruendungService;
+
+    @MockBean
+    ErgebnismeldungService ergebnismeldungService;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -447,6 +451,34 @@ class SecurityConfigurationTest {
 
                 api.perform(request).andExpect(status().isUnauthorized()).andReturn();
             }
+        }
+    }
+
+    @Nested
+    class Ergebnismeldung {
+
+        @WithMockUser
+        @Test
+        void should_returnOk_when_userIsAuthenticated() throws Exception {
+            val request = MockMvcRequestBuilders.post(
+                    "/businessActions/sendErgebnismeldung/wahlID/wahlbezirkID/1/V1/hauptwahlbezirkID")
+                    .header("forceergebnismeldung", "true")
+                    .with(csrf());
+
+            api.perform(request).andExpect(status().isOk());
+
+            Mockito.verify(ergebnismeldungService).updateSendungszeiten(notNull());
+        }
+
+        @WithAnonymousUser
+        @Test
+        void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
+            val request = MockMvcRequestBuilders.post(
+                    "/businessActions/sendErgebnismeldung/wahlID/wahlbezirkID/1/V1/hauptwahlbezirkID")
+                    .header("forceergebnismeldung", "true")
+                    .with(csrf());
+
+            api.perform(request).andExpect(status().isUnauthorized());
         }
     }
 }

@@ -56,43 +56,43 @@ class SecurityConfigurationTest {
     WahltermindatenService wahltermindatenService;
 
     @Test
-    void accessSecuredResourceRootThenUnauthorized() throws Exception {
+    void should_returnUnauthorized_when_accessingRoot() throws Exception {
         api.perform(get("/"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void accessSecuredResourceActuatorThenUnauthorized() throws Exception {
+    void should_returnUnauthorized_when_accessingActuator() throws Exception {
         api.perform(get("/actuator"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void accessUnsecuredResourceActuatorHealthThenOk() throws Exception {
+    void should_returnOk_when_accessingActuatorHealth() throws Exception {
         api.perform(get("/actuator/health"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void accessUnsecuredResourceActuatorInfoThenOk() throws Exception {
+    void should_returnOk_when_accessingActuatorInfo() throws Exception {
         api.perform(get("/actuator/info"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void accessUnsecuredResourceActuatorMetricsThenOk() throws Exception {
+    void should_returnOk_when_accessingActuatorMetrics() throws Exception {
         api.perform(get("/actuator/metrics"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void accessUnsecuredResourceV3ApiDocsThenOk() throws Exception {
+    void should_returnOk_when_accessingApiDocs() throws Exception {
         api.perform(get("/v3/api-docs"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void accessUnsecuredResourceSwaggerUiThenOk() throws Exception {
+    void should_returnOk_when_accessingSwaggerUi() throws Exception {
         api.perform(get("/swagger-ui/index.html"))
                 .andExpect(status().isOk());
     }
@@ -102,13 +102,13 @@ class SecurityConfigurationTest {
 
         @Test
         @WithAnonymousUser
-        void accessGetWahlvorstaendeUnauthorizedThenUnauthorized() throws Exception {
+        void should_returnUnauthorized_when_accessingWahlvorschlaegeWithAnonymous() throws Exception {
             api.perform(get("/businessActions/wahlvorschlaege/wahlID/wahlbezirkID")).andExpect(status().isUnauthorized());
         }
 
         @Test
         @WithMockUser
-        void accessGetWahlvorschlaegeUnauthorizedThenOk() throws Exception {
+        void should_returnOk_when_accessingWahlvorschlaegeWithMockUser() throws Exception {
             api.perform(get("/businessActions/wahlvorschlaege/wahlID/wahlbezirkID")).andExpect(status().isOk());
         }
     }
@@ -118,13 +118,13 @@ class SecurityConfigurationTest {
 
         @Test
         @WithAnonymousUser
-        void accessGetWahltageUnauthorizedThenUnauthorized() throws Exception {
+        void should_returnUnauthorized_when_accessingWahltageWithAnonymous() throws Exception {
             api.perform(get("/businessActions/wahltage")).andExpect(status().isUnauthorized());
         }
 
         @Test
         @WithMockUser
-        void accessGetWahltageUnauthorizedThenOk() throws Exception {
+        void should_returnOk_when_accessingWahltageWithMockUser() throws Exception {
             api.perform(get("/businessActions/wahltage")).andExpect(status().isOk());
         }
     }
@@ -134,25 +134,25 @@ class SecurityConfigurationTest {
 
         @Test
         @WithAnonymousUser
-        void accessGetHandbuchUnauthorizedThenUnauthorized() throws Exception {
+        void should_returnUnauthorized_when_accessingGetHandbuchWithAnonymous() throws Exception {
             api.perform(get("/businessActions/handbuch/wahlID/UWB")).andExpect(status().isUnauthorized());
         }
 
         @Test
         @WithMockUser
-        void accessGetHandbuchAuthorizedThenOk() throws Exception {
+        void should_returnOk_when_accessingGetHandbuchWithMockUser() throws Exception {
             api.perform(get("/businessActions/handbuch/wahlID/UWB")).andExpect(status().isOk());
         }
 
         @Test
         @WithAnonymousUser
-        void accessPostHandbuchUnauthorizedThenUnauthorized() throws Exception {
+        void should_returnUnauthorized_when_accessingPostHandbuchWithAnonymous() throws Exception {
             api.perform(post("/businessActions/handbuch/wahlID/UWB").with(csrf())).andExpect(status().isUnauthorized());
         }
 
         @Test
         @WithMockUser
-        void accessPostHandbuchAuthorizedThenOk() throws Exception {
+        void should_returnOk_when_accessingPostHandbuchWithMockUser() throws Exception {
             api.perform(multipart("/businessActions/handbuch/wahlID/UWB").file("manual", "content".getBytes()).with(csrf())).andExpect(status().isOk());
         }
     }
@@ -162,25 +162,25 @@ class SecurityConfigurationTest {
 
         @Test
         @WithAnonymousUser
-        void accessGetUngueltigeWahlscheineUnauthorizedThenUnauthorized() throws Exception {
+        void should_returnUnauthorized_when_accessingGetUngueltigeWsWithAnonymous() throws Exception {
             api.perform(get("/businessActions/ungueltigews/wahlID/UWB")).andExpect(status().isUnauthorized());
         }
 
         @Test
         @WithMockUser
-        void accessGetUngueltigeWahlscheineAuthorizedThenOk() throws Exception {
+        void should_returnOk_when_accessingGetUngueltigeWsWithMockUser() throws Exception {
             api.perform(get("/businessActions/ungueltigews/wahlID/UWB")).andExpect(status().isOk());
         }
 
         @Test
         @WithAnonymousUser
-        void accessPostUngueltigeWahlscheineUnauthorizedThenUnauthorized() throws Exception {
+        void should_returnUnauthorized_when_accessingPostUngueltigeWsWithAnonymous() throws Exception {
             api.perform(post("/businessActions/ungueltigews/wahlID/UWB").with(csrf())).andExpect(status().isUnauthorized());
         }
 
         @Test
         @WithMockUser
-        void accessPostUngueltigeWahlscheineAuthorizedThenOk() throws Exception {
+        void should_returnOk_when_accessingPostUngueltigeWsWithMockUser() throws Exception {
             api.perform(multipart("/businessActions/ungueltigews/wahlID/UWB").file("manual", "content".getBytes()).with(csrf())).andExpect(status().isOk());
         }
     }
@@ -190,13 +190,13 @@ class SecurityConfigurationTest {
 
         @Test
         @WithAnonymousUser
-        void accessGetReferendumvorlagenUnauthorizedThenUnauthorized() throws Exception {
+        void should_returnUnauthorized_when_accessingGetReferendumvorlagenWIthAnonymous() throws Exception {
             api.perform(get("/businessActions/referendumvorlagen/wahlID/wahlbezirkID")).andExpect(status().isUnauthorized());
         }
 
         @Test
         @WithMockUser
-        void accessGetReferendumvorlagenAuthorizedThenOk() throws Exception {
+        void should_returnOk_when_accessingGetReferendunvorlagenWithMockUser() throws Exception {
             api.perform(get("/businessActions/referendumvorlagen/wahlID/wahlbezirkID")).andExpect(status().isOk());
         }
     }
@@ -206,25 +206,25 @@ class SecurityConfigurationTest {
 
         @Test
         @WithAnonymousUser
-        void should_denyAccess_when_accessingUnauthorizedViaGet() throws Exception {
+        void should_returnUnauthorized_when_accessingPutWahltermindatenWithAnonymous() throws Exception {
             api.perform(put("/businessActions/wahltermindaten/wahlID").with(csrf())).andExpect(status().isUnauthorized());
         }
 
         @Test
         @WithMockUser
-        void should_permitAccess_when_accessingAuthorizedViaGet() throws Exception {
+        void should_returnOk_when_accessingPutWahltermindatenWithMockUser() throws Exception {
             api.perform(put("/businessActions/wahltermindaten/wahlID").with(csrf())).andExpect(status().isOk());
         }
 
         @Test
         @WithAnonymousUser
-        void should_denyAccess_when_accessingUnauthorizedViaDelete() throws Exception {
+        void should_returnUnauthorized_when_accessingDeleteWahltermindatenWithAnonymous() throws Exception {
             api.perform(delete("/businessActions/wahltermindaten/wahlID").with(csrf())).andExpect(status().isUnauthorized());
         }
 
         @Test
         @WithMockUser
-        void should_permitAccess_when_accessingAuthorizedDelete() throws Exception {
+        void should_returnOk_when_accessingDeleteWahltermindatenWithMockUser() throws Exception {
             api.perform(delete("/businessActions/wahltermindaten/wahlID").with(csrf())).andExpect(status().isOk());
         }
     }
@@ -233,13 +233,13 @@ class SecurityConfigurationTest {
     class AsyncProgress {
         @Test
         @WithAnonymousUser
-        void should_denyAccess_when_requestWithAnonymousUser() throws Exception {
+        void should_returnUnauthorized_when_accessingAsyncProgressWithAnonymous() throws Exception {
             api.perform(get("/businessActions/asyncProgress")).andExpect(status().isUnauthorized());
         }
 
         @Test
         @WithMockUser
-        void should_permitAccess_when_requestWithAuthorizedUser() throws Exception {
+        void should_returnOk_when_accessingAsyncProgressWithMockUser() throws Exception {
             api.perform(get("/businessActions/asyncProgress")).andExpect(status().isOk());
         }
     }

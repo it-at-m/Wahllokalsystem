@@ -39,7 +39,7 @@ class WahlvorschlaegeClientImplTest {
     class GetWahlvorschlaege {
 
         @Test
-        void clientResponseIsMapped() {
+        void should_returnWahlvorschlaegeModel_when_givenWahlvorschlaegeDTO() {
             val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
 
             val mockedClientResponse = new WahlvorschlaegeDTO();
@@ -55,7 +55,7 @@ class WahlvorschlaegeClientImplTest {
         }
 
         @Test
-        void exceptionWhenClientResponseIsNull() {
+        void should_returnFachlicheWlsException_when_givenNull() {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(wahlvorschlagControllerApi.loadWahlvorschlaege(any(), any())).thenReturn(null);

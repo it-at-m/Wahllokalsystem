@@ -43,7 +43,7 @@ class WahlenClientImplTest {
     class GetWahlen {
 
         @Test
-        void clientResponseIsMapped() {
+        void should_returnListOfWahlModel_when_givenClientWahlenDTO() {
             val testDate = LocalDate.now();
 
             val mockedClientResponse = createClientWahlenDTO();
@@ -60,7 +60,7 @@ class WahlenClientImplTest {
         }
 
         @Test
-        void exceptionWhenClientResponseIsNull() {
+        void should_returnFachlicheWlsException_when_givenNull() {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(wahldatenControllerApi.loadWahlen(any(), any())).thenReturn(null);
@@ -71,7 +71,7 @@ class WahlenClientImplTest {
         }
 
         @Test
-        void controllerApiExceptionIsMapped() {
+        void should_returnTechnischeWlsException_when_apiInvocationFailed() {
             val testDate = LocalDate.now();
             val mockedException = TechnischeWlsException.withCode("100")
                     .buildWithMessage("Bei der Kommunikation mit dem Aoueai-Service ist ein Fehler aufgetreten. Es konnten daher keine Daten geladen werden.");

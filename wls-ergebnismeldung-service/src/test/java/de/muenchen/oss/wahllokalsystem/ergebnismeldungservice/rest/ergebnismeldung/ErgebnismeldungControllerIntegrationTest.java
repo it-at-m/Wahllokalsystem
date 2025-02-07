@@ -52,7 +52,9 @@ import java.util.Set;
 import java.util.UUID;
 import lombok.val;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
@@ -92,13 +94,18 @@ class ErgebnismeldungControllerIntegrationTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    private final MockedStatic<LocalDateTime> mockedStaticLocalDateTime = mockStatic(LocalDateTime.class, Mockito.CALLS_REAL_METHODS);
+    private static final MockedStatic<LocalDateTime> mockedStaticLocalDateTime = mockStatic(LocalDateTime.class, Mockito.CALLS_REAL_METHODS);
 
-    @BeforeEach
-    void setup() {
+    @BeforeAll
+    static void setupTestSuit() {
         var clock = Clock.fixed(Instant.now(), ZoneOffset.UTC);
         var mockedLocalDateTime = LocalDateTime.now(clock);
         mockedStaticLocalDateTime.when(LocalDateTime::now).thenReturn(mockedLocalDateTime);
+    }
+
+    @BeforeEach
+    void setup() {
+
     }
 
     @AfterEach
@@ -115,9 +122,12 @@ class ErgebnismeldungControllerIntegrationTest {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_STIMMABGABEVERMERKE);
         stimmabgabevermerkeRepository.deleteAll();
 
-        mockedStaticLocalDateTime.close();
-
         reset();
+    }
+
+    @AfterAll
+    static void teardownTestSuit() {
+        mockedStaticLocalDateTime.close();
     }
 
     @Nested
@@ -131,9 +141,9 @@ class ErgebnismeldungControllerIntegrationTest {
 
                 @WithMockUserAsJwt(
                         claimProperties = "wahlbezirksArt=UWB", authorities = {
-                        Authorities.REPOSITORY_READ_STATUS, Authorities.REPOSITORY_WRITE_STATUS, Authorities.SERVICE_GET_STATUS,
-                        Authorities.SERVICE_UPDATE_SENDUNGSZEITEN
-                }
+                                Authorities.REPOSITORY_READ_STATUS, Authorities.REPOSITORY_WRITE_STATUS, Authorities.SERVICE_GET_STATUS,
+                                Authorities.SERVICE_UPDATE_SENDUNGSZEITEN
+                        }
                 )
                 @Test
                 void should_sendSchnellmeldungToMonitoringService_when_statusForBezirkUndWahlRequiredSchnellmeldungToSend() throws Exception {
@@ -155,7 +165,7 @@ class ErgebnismeldungControllerIntegrationTest {
                             .willReturn(createWireMockResponse(mockedUrnenwahlschliessungsUhrzeit, HttpStatus.OK)));
 
                     val request = MockMvcRequestBuilders.post(
-                                    createURISendErgebnismeldungForNiederschrift(wahlbezirkID, wahlID, waehlerverzeichnisNummer))
+                            createURISendErgebnismeldungForNiederschrift(wahlbezirkID, wahlID, waehlerverzeichnisNummer))
                             .header("forceergebnismeldung", "true")
                             .with(csrf());
                     mockMvc.perform(request).andExpect(status().isOk());
@@ -164,8 +174,8 @@ class ErgebnismeldungControllerIntegrationTest {
                     val sendStatusRequestBodyAsDTO = objectMapper.readValue(statusRequest.getRequest().getBody(), SendungsdatenDTO.class);
 
                     val expectedSendStatusRequestBody = new SendungsdatenDTO().bezirkUndWahlID(
-                                    new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.monitoring.model.BezirkUndWahlID().wahlID(wahlID)
-                                            .wahlbezirkID(wahlbezirkID))
+                            new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.monitoring.model.BezirkUndWahlID().wahlID(wahlID)
+                                    .wahlbezirkID(wahlbezirkID))
                             .sendungsuhrzeit(mockedNow);
 
                     Assertions.assertThat(sendStatusRequestBodyAsDTO).isEqualTo(expectedSendStatusRequestBody);
@@ -173,9 +183,9 @@ class ErgebnismeldungControllerIntegrationTest {
 
                 @WithMockUserAsJwt(
                         claimProperties = "wahlbezirksArt=UWB", authorities = {
-                        Authorities.REPOSITORY_READ_STATUS, Authorities.REPOSITORY_WRITE_STATUS, Authorities.SERVICE_GET_STATUS,
-                        Authorities.SERVICE_UPDATE_SENDUNGSZEITEN
-                }
+                                Authorities.REPOSITORY_READ_STATUS, Authorities.REPOSITORY_WRITE_STATUS, Authorities.SERVICE_GET_STATUS,
+                                Authorities.SERVICE_UPDATE_SENDUNGSZEITEN
+                        }
                 )
                 @Test
                 @Disabled("nicht durchführbar weil eine fehlende Schließungsuhrzeit zu einem Fehler führt welcher als geschlossen interpretiert wird #793")
@@ -193,7 +203,7 @@ class ErgebnismeldungControllerIntegrationTest {
                             .willReturn(createWireMockResponse(mockedUrnenwahlschliessungsUhrzeit, HttpStatus.OK)));
 
                     val request = MockMvcRequestBuilders.post(
-                                    createURISendErgebnismeldungForNiederschrift(wahlbezirkID, wahlID, waehlerverzeichnisNummer))
+                            createURISendErgebnismeldungForNiederschrift(wahlbezirkID, wahlID, waehlerverzeichnisNummer))
                             .header("forceergebnismeldung", "true")
                             .with(csrf());
                     val mockMvcResult = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
@@ -209,14 +219,14 @@ class ErgebnismeldungControllerIntegrationTest {
 
             @WithMockUserAsJwt(
                     claimProperties = "wahlbezirksArt=UWB", authorities = {
-                    Authorities.REPOSITORY_READ_STATUS, Authorities.REPOSITORY_WRITE_STATUS, Authorities.SERVICE_GET_STATUS,
-                    Authorities.SERVICE_SEND_ERGEBNISSE,
-                    Authorities.REPOSITORY_READ_STIMMABGABEVERMERKE, Authorities.REPOSITORY_WRITE_STIMMABGABEVERMERKE,
-                    Authorities.SERVICE_GET_STIMMABGABEVERMERKE,
-                    Authorities.REPOSITORY_READ_STIMMZETTELUMSCHLAEGE,
-                    Authorities.REPOSITORY_READ_AWERTE, Authorities.REPOSITORY_WRITE_AWERTE, Authorities.SERVICE_GET_AWERTE,
-                    Authorities.REPOSITORY_READ_ERGEBNISSE, Authorities.REPOSITORY_WRITE_ERGEBNISSE, Authorities.SERVICE_GET_ERGEBNISSE,
-            }
+                            Authorities.REPOSITORY_READ_STATUS, Authorities.REPOSITORY_WRITE_STATUS, Authorities.SERVICE_GET_STATUS,
+                            Authorities.SERVICE_SEND_ERGEBNISSE,
+                            Authorities.REPOSITORY_READ_STIMMABGABEVERMERKE, Authorities.REPOSITORY_WRITE_STIMMABGABEVERMERKE,
+                            Authorities.SERVICE_GET_STIMMABGABEVERMERKE,
+                            Authorities.REPOSITORY_READ_STIMMZETTELUMSCHLAEGE,
+                            Authorities.REPOSITORY_READ_AWERTE, Authorities.REPOSITORY_WRITE_AWERTE, Authorities.SERVICE_GET_AWERTE,
+                            Authorities.REPOSITORY_READ_ERGEBNISSE, Authorities.REPOSITORY_WRITE_ERGEBNISSE, Authorities.SERVICE_GET_ERGEBNISSE,
+                    }
             )
             @Test
             void should_sendErgebnisseToEAI_when_ergebnisseAreValid() throws Exception {
@@ -242,7 +252,7 @@ class ErgebnismeldungControllerIntegrationTest {
                 val eaiServiceStubbing = stubFor(post("/ergebnismeldung").willReturn(createWireMockResponse(HttpStatus.OK)));
 
                 val request = MockMvcRequestBuilders.post(
-                                createURISendErgebnismeldungForNiederschrift(wahlbezirkID, wahlID, waehlerverzeichnisNummer))
+                        createURISendErgebnismeldungForNiederschrift(wahlbezirkID, wahlID, waehlerverzeichnisNummer))
                         .with(csrf());
                 mockMvc.perform(request).andExpect(status().isOk());
 

@@ -1,10 +1,9 @@
-# Erstellung eines neue Microservices
+# Backend-Microservice
 
-Wenn ein neuer Microservice angelegt wird, sind dabei folgende Themen zu beachten.
+Um einen neuen Backend-Service anzulegen sind zuvor die [allgemeinen Infos](/technik/guides/new-microservice/index.md) 
+zum Einrichten eines neuen Services zu beachten.
 
-## Backend-Microservice
-
-### Maven-Projekt anlegen
+## Maven-Projekt anlegen
 
 Für den neuen Service wird ein Ordner parallel zu den anderen Services angelegt. Dabei ist auf das Namensschema zu achten:
 `wls-<Domain>-service`
@@ -12,7 +11,7 @@ Für den neuen Service wird ein Ordner parallel zu den anderen Services angelegt
 In dem Ordner wird das Maven-Projekt eingerichtet. Dazu aus den [RefArch-Templates](https://github.com/it-at-m/refarch-templates/tree/main/refarch-backend/)
 die Dateien des jeweiligen Unterordners in den erstellten Projektordner kopieren.
 
-#### Pflege der Dependencies und Plugins
+### Pflege der Dependencies und Plugins
 
 Einen Überblick über die verwendeten Dependencies und Plugins geben die vorhandenen Services. Der Broadcast-Service ist
 ein Service, der auf keine andere Services zugreift. Der Basisdaten-Service ist ein Service der auf andere Services
@@ -21,18 +20,7 @@ zugreift. Dementsprechend verwenden die Services unterschiedliche Plugins.
 Da das RefArch-Template auf ein allgemeines Szenario abzielt, ist mit zusätzlichen Schritten zu rechnen, um den Service
 funktionsfähig zu bekommen.
 
-#### Update der Tests
-
-Im Projekt haben wir für das Naming unserer Tests [Konventionen](/technik/naming_conventions/testing) aufgestellt. Die bereitgestellten Tests des Templates
-müssen entsprechend angepasst werden.
-
-### Workflows einrichten
-
-Im Repo gibt es diverse [Workflows](/technik/ecosystem/workflows). Die Workflows eines bestehenden Services sind zu
-kopieren und die Trigger anzupassen.
-
-> [!IMPORTANT]
-> Beim Kopieren ist das [Namensschema](/technik/naming_conventions/workflows) zu beachten.
+## Workflow Templates
 
 ::: code-group
 ```yml {1,8-9,18} [wls-&lt;domain&gt;-service_push-dev.yml]
@@ -74,7 +62,7 @@ jobs:
 ``` 
 :::
 
-### Datenbank einrichten
+## Datenbank einrichten
 
 Jeder Service hat einen eigenen Benutzer für die Datenbank. Diese sind im File `stack/oracle-database/add-user-on-startup.sql` hinterlegt. Die Zugriffs-URL ist für alle Services gleich:
 `jdbc:oracle:thin:@//localhost:1521/XEPDB1`
@@ -88,7 +76,7 @@ Beispiel für `wls-broadcast-service`:
 - Benutzername: `wls_broadcast_service`
 - Passwort: `secret`
 
-### Routing im Gateway einrichten
+## Routing im Gateway einrichten
 
 Damit das Frontend mit dem Service kommunizieren kann, ist im Gateway eine neue Route einzurichten. Das Routing erfolgt mit
 dem Servicenamen.
@@ -97,14 +85,10 @@ Beispiel:
 
 Anfragen die an den Broadcast-Service gehen sollen beginnen im Path mit `/api/broadcast-service/`.
 
-### Pflege der Rechte im Auth-Service
+## Pflege der Rechte im Auth-Service
 
 Die Pflege der Rechte erfolgt in dem Auth-Service über Flyway-Files. Über `insert`-Statements werden die Rechte ergänzt
 und die Zuordnung zu den Rollen vorgenommen.
 
 > [!NOTE]
 > Die Pflege der Rollen und Rechte erfolgt immer über neue, noch nicht im Default-Branch enthaltene, Flyway-Skripte.
-
-## Frontend-Microservice
-
-🚧 -> https://github.com/it-at-m/Wahllokalsystem/issues/742

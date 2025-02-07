@@ -7,6 +7,7 @@ const PATH_ADR = PATH_TECHNIK + 'adr/';
 const PATH_NAMING_CONVENTIONS = PATH_TECHNIK + 'naming_conventions/';
 const PATH_GUIDES = PATH_TECHNIK + 'guides/';
 const PATH_API_CLIENT_GENERATION = PATH_GUIDES + 'api-client-generation/'
+const PATH_MICROSERVICE_GENERATION = PATH_GUIDES + 'new-microservice/'
 const PATH_SYSSPEC = PATH_TECHNIK + "systemspecification/";
 
 // https://vitepress.dev/reference/site-config
@@ -89,7 +90,16 @@ export default withMermaid({
                             },
                         ]},
                         {text: 'Datenbankzugriff', link: `${PATH_GUIDES}db-access.md`},
-                        {text: 'Neuer Microservice', link: `${PATH_GUIDES}new-service.md`}
+                        {text: 'Microservice anlegen', link: `${PATH_MICROSERVICE_GENERATION}`, collapsed: true, items: [
+                            {
+                                text: "Neuer Microservice Backend",
+                                link: `${PATH_MICROSERVICE_GENERATION}new-service-backend.md`
+                            },
+                            {
+                                text: "Neues Frontend-Projekt",
+                                link: `${PATH_MICROSERVICE_GENERATION}new-service-frontend.md`
+                            }
+                        ]}
                     ]
                 },
                 {

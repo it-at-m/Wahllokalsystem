@@ -73,7 +73,7 @@ public class ErgebnismeldungMappingService {
         ergebnismeldung.setUngueltigeStimmzettelAnzahl((long) ungueltigeErgebnisse.size());
         ergebnismeldung.setWahlart(mapping.toWahlartDTO(wahlart));
 
-        log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3.2  c createErgebmismeldung hauptwahlbezirkID" + hauptwahlbezirkID);
+        log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3.2  c createErgebmismeldung hauptwahlbezirkID {}", hauptwahlbezirkID);
         if (wahlbezirkArtOfUser == WahlbezirkArtModel.BWB && (meldungsart.equals(ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT) && (wahlart.equals(
                 WahlartModel.LTW) || wahlart.equals(WahlartModel.BZW)))) {
             long zurueckgewiesenGesamt = briefwahlClient.getAnzahlZurueckgewiesenerWahlbriefe(hauptwahlbezirkID, wahlID, waehlerverzeichnisNummer);

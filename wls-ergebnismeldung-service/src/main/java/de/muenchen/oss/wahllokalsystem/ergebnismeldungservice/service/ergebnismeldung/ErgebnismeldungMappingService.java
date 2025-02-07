@@ -97,8 +97,8 @@ public class ErgebnismeldungMappingService {
     private BWerteDTO getBWerte(final WahlbezirkArtModel wahlbezirkArt, final BezirkUndWahlID bezirkUndWahlID,
             final BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer, final WahlartModel wahlart) {
         return switch (wahlbezirkArt) {
-        case UWB -> getBWerteDTOOfUWBWahlbezirk(bezirkUndWahlID.getWahlID(), bezirkIDUndWaehlerverzeichnisNummer, wahlart);
-        case BWB -> getBWerteDTOOfBWBWahlbezirk(bezirkUndWahlID);
+            case UWB -> getBWerteDTOOfUWBWahlbezirk(bezirkUndWahlID.getWahlID(), bezirkIDUndWaehlerverzeichnisNummer, wahlart);
+            case BWB -> getBWerteDTOOfBWBWahlbezirk(bezirkUndWahlID);
         };
     }
 
@@ -117,19 +117,17 @@ public class ErgebnismeldungMappingService {
         val stimmzettelumschlaege = stimmzettelumschlaegeRepo.findById(
                 new BezirkUndWahlID(wahlID, waehlerverzeichnisNummer.getWahlbezirkID())).orElse(null);
 
-        val wahldaten = wahldatenSet.stream().filter(wahldaten_ -> wahldaten_.getBezirkUndWahlIDUndWaehlerverzeichnisnummer().getWahlID().equals(wahlID))
+        val wahldatenOfWahl = wahldatenSet.stream().filter(wahldaten -> wahldaten.getBezirkUndWahlIDUndWaehlerverzeichnisnummer().getWahlID().equals(wahlID))
                 .findFirst().orElse(null);
-        if (wahldaten != null) {
+        if (wahldatenOfWahl != null) {
+            long eingenommeneWahlscheine = wahldatenOfWahl.getEingenommenewahlscheine().stream().mapToLong(EingenommenerWahlschein::getAnzahl).sum();
+            bWerte.setB2(eingenommeneWahlscheine);
 
-            //B2 Wert -> besteht aus allen eingenommenen Wahlscheinen für diese Wahl
-            long b2Wert = wahldaten.getEingenommenewahlscheine().stream().mapToLong(EingenommenerWahlschein::getAnzahl).sum();
-            bWerte.setB2(b2Wert);
-
-            //B1 Wert -> besteht aus allen Stimmabgabevermerken für diese Wahl
-            long b1Wert = wahldaten.getVermerke().stream().mapToLong(vermerke_ -> vermerke_.getStimmzettel().stream().mapToLong(Stimmzettel::getAnzahl).sum())
+            long erfassteStimmabgabevermerke = wahldatenOfWahl.getVermerke().stream()
+                    .mapToLong(vermerke -> vermerke.getStimmzettel().stream().mapToLong(Stimmzettel::getAnzahl).sum())
                     .sum();
-            bWerte.setB1(b1Wert);
-            bWerte.setB(b1Wert + b2Wert);
+            bWerte.setB1(erfassteStimmabgabevermerke);
+            bWerte.setB(erfassteStimmabgabevermerke + eingenommeneWahlscheine);
         }
         if ((wahlart.equals(WahlartModel.EUW) || wahlart.equals(WahlartModel.BTW) || wahlart.equals(WahlartModel.VE) || wahlart.equals(
                 WahlartModel.BEB)) && stimmzettelumschlaege != null) {

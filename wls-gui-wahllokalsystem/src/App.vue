@@ -63,20 +63,20 @@
             </template>
           </v-tooltip>
           <v-tooltip
-              location="bottom"
-              text="Routing Examples"
+            location="bottom"
+            text="Routing Examples"
           >
             <template #activator="{ props }">
               <router-link
-                  v-bind="props"
-                  :to="{ name: EXAMPLE_VALIDATION }"
+                v-bind="props"
+                :to="{ name: EXAMPLE_VALIDATION }"
               >
                 <v-btn
-                    icon="$textBoxCheck"
-                    variant="text"
-                    density="comfortable"
-                    size="x-large"
-                    color="white"
+                  icon="$textBoxCheck"
+                  variant="text"
+                  density="comfortable"
+                  size="x-large"
+                  color="white"
                 >
                 </v-btn>
               </router-link>
@@ -124,7 +124,11 @@ import {
 
 import { getUser } from "@/api/user-client";
 import TheSnackbar from "@/components/TheSnackbar.vue";
-import {EXAMPLE_ROUTES_BACKEND, EXAMPLE_ROUTES_NEWROUTE, EXAMPLE_VALIDATION} from "@/constants";
+import {
+  EXAMPLE_ROUTES_BACKEND,
+  EXAMPLE_ROUTES_NEWROUTE,
+  EXAMPLE_VALIDATION,
+} from "@/constants";
 import { useUserStore } from "@/stores/user";
 import User, { UserLocalDevelopment } from "@/types/User";
 

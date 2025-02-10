@@ -13,8 +13,8 @@ import {
 import ExampleBackendCommunicationView from "@/views/ExampleBackendCommunicationView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
 import ExampleNewRouteView from "@/views/ExampleNewRouteView.vue";
-import HomeView from "@/views/HomeView.vue";
 import ExampleValidation from "@/views/ExampleValidation.vue";
+import HomeView from "@/views/HomeView.vue";
 
 const routes = [
   {

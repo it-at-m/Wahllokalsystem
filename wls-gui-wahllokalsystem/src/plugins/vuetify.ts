@@ -1,6 +1,6 @@
 import "vuetify/styles";
 
-import {mdiHome, mdiMessageText, mdiRoutes, mdiTextBoxCheck} from "@mdi/js";
+import { mdiHome, mdiMessageText, mdiRoutes, mdiTextBoxCheck } from "@mdi/js";
 import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
 

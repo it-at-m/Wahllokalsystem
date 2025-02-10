@@ -30,7 +30,7 @@
         <v-tabs-window-item value="1">
           <v-container class="d-flex flex-column align-center mt-5 mb-5">
             <p>
-              Validation will only trigger, when the submit button is pressed
+              Validation will only trigger, when the submit button is clicked
             </p>
             <v-form
               class="mt-5"

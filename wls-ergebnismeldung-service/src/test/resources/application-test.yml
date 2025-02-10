@@ -5,6 +5,14 @@ service:
         basePath: http://localhost:${wiremock.server.port}/
       monitoring:
         basePath: http://localhost:${wiremock.server.port}/
+      infomanagement:
+        basePath: http://localhost:${wiremock.server.port}/
+      basisdaten:
+        basePath: http://localhost:${wiremock.server.port}/
+      briefwahl:
+        basePath: http://localhost:${wiremock.server.port}/
+      wahlvorbereitung:
+        basePath: http://localhost:${wiremock.server.port}/
 
 spring:
 

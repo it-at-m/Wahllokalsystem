@@ -13,7 +13,7 @@ class MicroServiceApplicationDefaultProfileTest {
     AnonymousHandler anonymousHandler;
 
     @Test
-    void anonymouseHandlerIsNotPartOfContext() {
+    void should_returnNull_when_anonymouseHandlerIsUsedFromAutowiredContext() {
         Assertions.assertThat(anonymousHandler).isNull();
     }
 

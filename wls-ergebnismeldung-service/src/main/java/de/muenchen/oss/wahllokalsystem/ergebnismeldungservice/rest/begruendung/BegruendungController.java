@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.begruendung;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungReference;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
@@ -53,7 +53,7 @@ public class BegruendungController {
     )
     @GetMapping("{wahlbezirkID}/{wahlID}/{stapelart}")
     public ResponseEntity<BegruendungDTO> getBegruendung(@PathVariable("wahlbezirkID") final String wahlbezirkID, @PathVariable("wahlID") final String wahlID,
-            @PathVariable("stapelart") final Stapelart stapelart) {
+            @PathVariable("stapelart") final StapelartDTO stapelart) {
         val referenceModel = begruendungDTOMapper.toReferenceModel(wahlbezirkID, wahlID, stapelart);
         val begruendungFromService = begruendungDTOMapper.toDTO(begruendungService.getBegruendung(referenceModel));
 
@@ -79,11 +79,12 @@ public class BegruendungController {
     @PostMapping("{wahlbezirkID}/{wahlID}/{stapelart}")
     @ResponseStatus(HttpStatus.OK)
     public void postBegruendung(@PathVariable("wahlbezirkID") String wahlbezirkID, @PathVariable("wahlID") String wahlID,
-            @PathVariable("stapelart") Stapelart stapelart,
+            @PathVariable("stapelart") StapelartDTO stapelart,
             @RequestBody BegruendungDTO begruendungDTO) {
         val modelToSave = begruendungDTOMapper.toModel(begruendungDTO);
-        val referenceForModel = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
-        begruendungService.postBegruendung(modelToSave, referenceForModel);
+        val stapelartForReference = begruendungDTOMapper.toStapelart(stapelart);
+        val referenceForModel = new BegruendungReference(wahlbezirkID, wahlID, stapelartForReference);
+        begruendungService.postBegruendung(referenceForModel, modelToSave);
     }
 
     private <T> ResponseEntity<T> okWithBodyOrNoContent(final T body) {

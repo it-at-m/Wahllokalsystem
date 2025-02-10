@@ -65,6 +65,14 @@ service:
       threadNamePrefix: "taskExecutor-"
     clients:
       eai:
-        basePath: http://localhost:39149
+        basePath: http://localhost:8300
       monitoring:
-        basePath: http://localhost:39154
+        basePath: http://localhost:8206
+      infomanagement:
+        basePath: http://localhost:8201
+      basisdaten:
+        basePath: http://localhost:8205
+      briefwahl:
+        basePath: http://localhost:8202
+      wahlvorbereitung:
+        basePath: http://localhost:8203

@@ -6,7 +6,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-ergebnismeldung-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
     <name>wls_ergebnismeldung_service</name>
 
     <properties>
@@ -452,6 +452,54 @@
 
                             <apiPackage>${groupId}.ergebnismeldungservice.eai.monitoring.client</apiPackage>
                             <modelPackage>${groupId}.ergebnismeldungservice.eai.monitoring.model</modelPackage>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generateInfomanagement</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.infomanagement.0.2.0.json</inputSpec>
+
+                            <apiPackage>${groupId}.ergebnismeldungservice.eai.infomanagement.client</apiPackage>
+                            <modelPackage>${groupId}.ergebnismeldungservice.eai.infomanagement.model</modelPackage>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generateBasisdaten</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.basisdaten.0.1.0.json</inputSpec>
+
+                            <apiPackage>${project.groupId}.ergebnismeldungservice.eai.basisdaten.client</apiPackage>
+                            <modelPackage>${project.groupId}.ergebnismeldungservice.eai.basisdaten.model</modelPackage>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generateBriefwahl</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.briefwahl.0.0.1-SNAPSHOT.json</inputSpec>
+
+                            <apiPackage>${project.groupId}.ergebnismeldungservice.eai.briefwahl.client</apiPackage>
+                            <modelPackage>${project.groupId}.ergebnismeldungservice.eai.briefwahl.model</modelPackage>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generateWahlvorbereitung</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.wahlvorbereitung.0.1.1-Beta1.json</inputSpec>
+
+                            <apiPackage>${project.groupId}.ergebnismeldungservice.eai.wahlvorbereitung.client</apiPackage>
+                            <modelPackage>${project.groupId}.ergebnismeldungservice.eai.wahlvorbereitung.model</modelPackage>
                         </configuration>
                     </execution>
                 </executions>

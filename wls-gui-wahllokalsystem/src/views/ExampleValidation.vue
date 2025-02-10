@@ -19,7 +19,7 @@
 
         <v-container class="d-flex flex-column align-center mt-5 mb-5">
           <p>Validation will only trigger, when the submit button is pressed</p>
-          <v-form validate-on="submit lazy" @submit.prevent="submit" class="mt-5">
+          <v-form class="mt-5" validate-on="submit lazy" @submit.prevent="submit" >
             <v-text-field
                 v-model="inputRequiredField"
                 :rules="[REQUIRED]"
@@ -70,7 +70,7 @@ const inputTooShortField = ref("");
 
 
 function submit() {
-
+  // do nothing
 }
 
 

@@ -65,7 +65,7 @@ self.pin = undefined;
  * listeners
  ****************************************************************************************************************/
 
-self.addEventListener("activate", function (event) {
+self.addEventListener("activate", (event) => {
   log("activate event");
   // take over clients: no reload required
   event.waitUntil(
@@ -75,7 +75,7 @@ self.addEventListener("activate", function (event) {
   );
 });
 
-self.addEventListener("message", function (event) {
+self.addEventListener("message", (event) => {
   log("pin received: " + event.data);
   self.pin = event.data;
   setPin(self.pin);
@@ -100,7 +100,7 @@ self.addEventListener("install", (event) => {
  * loaded from the IDB, otherwise it is loaded remotely (and then cached in the IDB).
  * When sending POST requests, the data is first saved in the IDB.
  */
-self.addEventListener("fetch", function (event) {
+self.addEventListener("fetch", (event) => {
   log("Interrupt request for " + event.request.url);
   if (self.isResponsible(event)) {
     // get pin from IDB
@@ -156,33 +156,29 @@ self.handlePOST = (event) => {
     );
     return self
       .fetchEvent(event)
-      .then(function (response) {
+      .then((response) => {
         // save as dirty if we don't get back ok
         let dirty = StatusCodeOk.indexOf(response.status) === -1;
-        return setItemAndContentType(key, data, contentType, dirty).then(
-          function () {
-            // redirect 200s and send ergebnismeldung + forward results
-            if (
-              response.type === "opaqueredirect" ||
-              dirty === false ||
-              is_ergebnismeldung_sent
-            )
-              return response;
-            // If we get an error, don't forward this to the client.
-            // This can continue to work normally and be synchronized later if necessary.
-            else {
-              this.log(
-                `POST response not OK, statuscode was ${response.status}`
-              );
-              return new Response(null, {
-                status: 200,
-                statusText: `returning OK - orig. statuscode is ${response.status}`,
-              });
-            }
+        return setItemAndContentType(key, data, contentType, dirty).then(() => {
+          // redirect 200s and send ergebnismeldung + forward results
+          if (
+            response.type === "opaqueredirect" ||
+            dirty === false ||
+            is_ergebnismeldung_sent
+          )
+            return response;
+          // If we get an error, don't forward this to the client.
+          // This can continue to work normally and be synchronized later if necessary.
+          else {
+            this.log(`POST response not OK, statuscode was ${response.status}`);
+            return new Response(null, {
+              status: 200,
+              statusText: `returning OK - orig. statuscode is ${response.status}`,
+            });
           }
-        );
+        });
       })
-      .catch(function () {
+      .catch(() => {
         return setItemAndContentType(key, data, contentType, true).then(() => {
           // forward that sending was not successful
           if (is_ergebnismeldung_sent) {
@@ -297,7 +293,7 @@ self.blobOrTxtProm = (request, contentType) => {
  * fetching event
  */
 self.fetchEvent = (event) => {
-  return fetch(event.request).then(function (response) {
+  return fetch(event.request).then((response) => {
     log("fetched data from remote");
     return response;
   });
@@ -310,7 +306,7 @@ self.fetchEvent = (event) => {
 /**
  * Prints all data from the IDB to the console.
  */
-self.addEventListener("push", function (event) {
+self.addEventListener("push", (event) => {
   let data = [];
 
   function KeyVal(key, val) {
@@ -321,7 +317,7 @@ self.addEventListener("push", function (event) {
   event.waitUntil(
     getPin().then(() => {
       localforage
-        .iterate(function (value, key) {
+        .iterate((value, key) => {
           if (key !== PIN_KEY) {
             // decrypt if not a blob
             if (!(value.data instanceof Blob)) {
@@ -343,7 +339,7 @@ self.addEventListener("push", function (event) {
         })
         .then(() => {
           console.table(data);
-          return localforage.length().then(function (numberOfKeys) {
+          return localforage.length().then((numberOfKeys) => {
             // Outputs the length of the database.
             log("iteration complete, number of keys: " + numberOfKeys);
           });

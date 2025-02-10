@@ -120,7 +120,7 @@ public class ErgebnismeldungMappingService {
         val wahldatenOfWahl = wahldatenSet.stream().filter(wahldaten -> wahldaten.getBezirkUndWahlIDUndWaehlerverzeichnisnummer().getWahlID().equals(wahlID))
                 .findFirst().orElse(null);
         if (wahldatenOfWahl != null) {
-            long eingenommeneWahlscheine = wahldatenOfWahl.getEingenommenewahlscheine().stream().mapToLong(EingenommenerWahlschein::getAnzahl).sum();
+            long eingenommeneWahlscheine = wahldatenOfWahl.getEingenommeneWahlscheine().stream().mapToLong(EingenommenerWahlschein::getAnzahl).sum();
             bWerte.setB2(eingenommeneWahlscheine);
 
             long erfassteStimmabgabevermerke = wahldatenOfWahl.getVermerke().stream()

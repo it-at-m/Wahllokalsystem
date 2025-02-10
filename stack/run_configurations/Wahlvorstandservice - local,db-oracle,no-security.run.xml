@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Wahlvorstandservice - local,db-oracle,no-security" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,oracle,no-sec">
+    <option name="ACTIVE_PROFILES" value="local,db-oracle,no-security" />
+    <module name="wls-wahlvorstand-service" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="de.muenchen.oss.wahllokalsystem.wahlvorstandservice.MicroServiceApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

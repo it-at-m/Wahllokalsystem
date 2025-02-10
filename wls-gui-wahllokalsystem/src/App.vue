@@ -86,6 +86,7 @@
 
 <script setup lang="ts">
 import { useToggle } from "@vueuse/core";
+import axios from "axios";
 import localforage from "localforage";
 import { onMounted, ref } from "vue";
 import {
@@ -118,6 +119,7 @@ const isOffline = ref(false);
 
 onMounted(() => {
   loadUser();
+  getUserFromAuth();
 
   // config for service worker indexed db (same config as in wahl-worker.js !)
   localforage.config({
@@ -131,6 +133,7 @@ onMounted(() => {
 
 /**
  * Loads UserInfo from the backend and sets it in the store.
+ * Todo: will this be replaced by getUserFromAuth?
  */
 function loadUser(): void {
   getUser()
@@ -143,6 +146,34 @@ function loadUser(): void {
         userStore.setUser(null);
       }
     });
+}
+
+// Todo: example implementtions --> move logic to api files
+async function getUserFromAuth() {
+  const url = "api/auth-service/user";
+  return await axios
+    .get(url)
+    .then((response) => {
+      if (response.status == 200) {
+        sendPinToSW(response.data.pin);
+      }
+    })
+    .catch(() => {
+      console.log("kein user gefunden");
+    });
+}
+
+async function sendPinToSW(pin: String) {
+  // waiting for SW to be registered
+  while (!navigator.serviceWorker || !navigator.serviceWorker.controller) {
+    console.warn("wahllokal-auth: retry sendPinToSW in 200 mils");
+    await sleep(200);
+  }
+  navigator.serviceWorker.controller.postMessage(pin);
+}
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 </script>
 

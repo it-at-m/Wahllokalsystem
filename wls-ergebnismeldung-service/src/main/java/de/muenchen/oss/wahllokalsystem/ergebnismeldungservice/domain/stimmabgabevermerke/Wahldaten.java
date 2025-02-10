@@ -58,7 +58,7 @@ public class Wahldaten {
     @NotNull
     @Size(min = 1)
     @ToString.Include
-    private Set<EingenommenerWahlschein> eingenommenewahlscheine = new LinkedHashSet<>();
+    private Set<EingenommenerWahlschein> eingenommeneWahlscheine = new LinkedHashSet<>();
 
     public void addVermerk(Vermerk vermerk) {
         vermerke.add(vermerk);

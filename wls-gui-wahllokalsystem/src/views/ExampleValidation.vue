@@ -38,20 +38,17 @@
               @submit.prevent="submit"
             >
               <v-text-field
-                v-model="inputRequiredField"
                 :rules="[REQUIRED]"
                 clearable
                 label="Input required"
                 min-width="400"
               ></v-text-field>
               <v-text-field
-                v-model="inputTooLongField"
                 :rules="[MAX_LENGTH(20)]"
                 label="Input cant be longer then 20"
                 min-width="400"
               ></v-text-field>
               <v-text-field
-                v-model="inputTooShortField"
                 :rules="[MIN_LENGTH(5)]"
                 label="Input cant be shorter than 5"
                 min-width="400"
@@ -89,9 +86,6 @@ import {
 import { MAX_LENGTH, MIN_LENGTH, REQUIRED } from "@/util/rules";
 
 const tab = ref(null);
-const inputRequiredField = ref("");
-const inputTooLongField = ref("");
-const inputTooShortField = ref("");
 
 function submit() {
   // do nothing

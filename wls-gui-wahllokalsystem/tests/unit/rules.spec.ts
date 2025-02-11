@@ -5,7 +5,7 @@ import { MAX_LENGTH, MIN_LENGTH, REQUIRED } from "@/util/rules";
 describe("Validation rules", () => {
   describe("RULE_MAX_LENGTH", () => {
     const rule = MAX_LENGTH(10);
-    const ruleErrorMessage = "Maximum length is 10 characters.";
+    const ruleErrorMessage = "Maximale länge ist 10 Zeichen.";
 
     test("should_returnErrorMessage_when_inputTooLong", () => {
       expect(rule("tooLongString")).toStrictEqual(ruleErrorMessage);
@@ -17,7 +17,7 @@ describe("Validation rules", () => {
 
   describe("RULE_MIN_LENGTH", () => {
     const rule = MIN_LENGTH(5);
-    const ruleErrorMessage = "Minimum length is 5 characters.";
+    const ruleErrorMessage = "Minimale länge ist 5 Zeichen.";
 
     test("should_returnErrorMessage_when_inputTooShort", () => {
       expect(rule("t")).toStrictEqual(ruleErrorMessage);

@@ -34,12 +34,12 @@ export default defineConfig({
       registerType: "autoUpdate",
       injectRegister: "auto",
       strategies: "injectManifest", // makes it possible to use own service worker
+      srcDir: "src", // custom sw file directory
+      filename: "wahl-worker.js", // custom sw file
       injectManifest: {
         injectionPoint: undefined, // standard injection at end of sw file
-      },
-      workbox: {
-        cleanupOutdatedCaches: true,
-        globPatterns: ["**/*.{js,ts,css,html,ico,png,svg,json,vue,txt}"],
+        // globPatterns: ["**/*.{js,ts,css,html,ico,png,svg,json,vue,txt}"], // todo: files anpassen
+        sourcemap: true,
       },
       manifest: {
         name: "Wahllokalsystem",
@@ -49,9 +49,6 @@ export default defineConfig({
         display: "standalone",
         icons: [],
       },
-      // custom service worker file
-      srcDir: "src/api",
-      filename: "wahl-worker.js",
     }),
   ],
   server: {

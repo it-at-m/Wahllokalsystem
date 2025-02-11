@@ -1,5 +1,7 @@
 import CryptoJS from "crypto-js";
 import localforage from "localforage";
+import { clientsClaim } from "workbox-core";
+import { registerRoute } from "workbox-routing";
 
 /*****************************************************************************************************************
  * constants/config
@@ -45,6 +47,13 @@ const PIN_KEY = "PIN";
 
 console.info(logID + "1 nicer Wahl Arbeiter am Start vong her.");
 
+/**
+ * automatically adds an activate event listener and calls self.clients.claim() within it.
+ * takes over clients: no reload required
+ */
+clientsClaim();
+console.info(logID + "clients claimed");
+
 localforage.config({
   driver: localforage.INDEXEDDB, // Force WebSQL; same as using setDriver()
   name: "wahldb",
@@ -65,30 +74,24 @@ self.pin = undefined;
  * listeners
  ****************************************************************************************************************/
 
-self.addEventListener("activate", (event) => {
-  log("activate event");
-  // take over clients: no reload required
-  event.waitUntil(
-    clients.claim().then(() => {
-      log("clients claimed");
-    })
-  );
-});
-
 self.addEventListener("message", (event) => {
   log("pin received: " + event.data);
   self.pin = event.data;
   setPin(self.pin);
+
+  if (event.data && event.data.type === "SKIP_WAITING") self.skipWaiting();
 });
 
-self.addEventListener("install", (event) => {
-  //TODO: behalten ? Caution: skipWaiting() means that your new service worker is likely controlling pages that were loaded with an older version. This means some of your page's fetches will have been handled by your old service worker, but your new service worker will be handling subsequent fetches. If this might break things, don't use skipWaiting().
-  // This causes your service worker to kick out the current active worker and activate itself as soon as it enters the waiting phase (or immediately if it's already in the waiting phase). It doesn't cause your worker to skip installing, just waiting. -> so behandelt nun alle nachfolgenden fetches-> kein neustart erforderlich.
-  event.waitUntil(
-    self.skipWaiting().then(() => {
-      log("installed and took control");
-    })
-  );
+self.addEventListener("install", () => {
+  //TODO: behalten ? Caution: skipWaiting() means that your new service worker is likely controlling pages that were
+  // loaded with an older version. This means some of your page's fetches will have been handled by your old service
+  // worker, but your new service worker will be handling subsequent fetches. If this might break things, don't use
+  // skipWaiting(). This causes your service worker to kick out the current active worker and activate itself as soon
+  // as it enters the waiting phase (or immediately if it's already in the waiting phase). It doesn't cause your worker
+  // to skip installing, just waiting. -> so behandelt nun alle nachfolgenden fetches-> kein neustart erforderlich.
+
+  self.skipWaiting();
+  log("installed and took control");
 });
 
 /*****************************************************************************************************************
@@ -100,31 +103,52 @@ self.addEventListener("install", (event) => {
  * loaded from the IDB, otherwise it is loaded remotely (and then cached in the IDB).
  * When sending POST requests, the data is first saved in the IDB.
  */
-self.addEventListener("fetch", (event) => {
-  log("Interrupt request for " + event.request.url);
-  if (self.isResponsible(event)) {
-    // get pin from IDB
-    event.respondWith(
-      getPin().then(() => {
-        // forwarding request if no pin is found
-        if (self.state === WahlworkerState.ACTIVE) {
-          if (event.request.method === "GET") {
-            let strat = event.request.headers.get(STRATEGY_HEADER);
-            if (strat === STRATEGY_ONLINE_FIRST)
-              return self.handleGETonlineFirst(event);
-            else return self.handleGET(event);
-          } else if (event.request.method === "POST") {
-            return self.handlePOST(event);
-          }
+
+// register route for GET requests
+registerRoute(
+  ({ request }) => request.method === "GET",
+  async (event) => {
+    log("Processing GET request for " + event.request.url);
+
+    if (self.isResponsible(event)) {
+      await getPin();
+      // forwarding request if no pin is found
+      if (self.state === WahlworkerState.ACTIVE) {
+        const strat = event.request.headers.get(STRATEGY_HEADER);
+        if (strat === STRATEGY_ONLINE_FIRST) {
+          return handleGETonlineFirst(event);
         } else {
-          return self.fetchEvent(event);
+          return handleGET(event);
         }
-      })
-    );
-  } else {
-    return false;
+      } else {
+        return fetchEvent(event);
+      }
+    } else {
+      return false;
+    }
   }
-});
+);
+
+// register route for POST requests
+registerRoute(
+  ({ request }) => request.method === "POST",
+  async (event) => {
+    log("Processing POST request for " + event.request.url);
+
+    if (self.isResponsible(event)) {
+      await getPin();
+      // forwarding request if no pin is found
+      if (self.state === WahlworkerState.ACTIVE) {
+        return handlePOST(event);
+      } else {
+        return fetchEvent(event);
+      }
+    } else {
+      return false;
+    }
+  },
+  "POST"
+);
 
 /**
  * Returns false if the URL contains the substring FILTER and the
@@ -306,7 +330,7 @@ self.fetchEvent = (event) => {
 /**
  * Prints all data from the IDB to the console.
  */
-self.addEventListener("push", (event) => {
+self.addEventListener("push", () => {
   let data = [];
 
   function KeyVal(key, val) {
@@ -314,38 +338,36 @@ self.addEventListener("push", (event) => {
     this.val = val;
   }
 
-  event.waitUntil(
-    getPin().then(() => {
-      localforage
-        .iterate((value, key) => {
-          if (key !== PIN_KEY) {
-            // decrypt if not a blob
-            if (!(value.data instanceof Blob)) {
-              let decrypted = CryptoJS.AES.decrypt(value.data, self.pin);
-              value.data = decrypted.toString(CryptoJS.enc.Utf8);
-            }
-            // objectify if json string
-            if (
-              value.contentType.includes(ContentTypes.JSON) &&
-              value.data &&
-              value.data !== ""
-            ) {
-              try {
-                value.data = JSON.parse(value.data);
-              } catch (error) {}
-            }
-            data.push(new KeyVal(key, value));
+  getPin()
+    .then(() => {
+      return localforage.iterate((value, key) => {
+        if (key !== PIN_KEY) {
+          // decrypt if not a blob
+          if (!(value.data instanceof Blob)) {
+            let decrypted = CryptoJS.AES.decrypt(value.data, self.pin);
+            value.data = decrypted.toString(CryptoJS.enc.Utf8);
           }
-        })
-        .then(() => {
-          console.table(data);
-          return localforage.length().then((numberOfKeys) => {
-            // Outputs the length of the database.
-            log("iteration complete, number of keys: " + numberOfKeys);
-          });
-        });
+          // objectify if json string
+          if (
+            value.contentType.includes(ContentTypes.JSON) &&
+            value.data &&
+            value.data !== ""
+          ) {
+            try {
+              value.data = JSON.parse(value.data);
+            } catch (error) {}
+          }
+          data.push(new KeyVal(key, value));
+        }
+      });
     })
-  );
+    .then(() => {
+      console.table(data);
+      return localforage.length().then((numberOfKeys) => {
+        // Outputs the length of the database.
+        log("iteration complete, number of keys: " + numberOfKeys);
+      });
+    });
 });
 
 /*****************************************************************************************************************

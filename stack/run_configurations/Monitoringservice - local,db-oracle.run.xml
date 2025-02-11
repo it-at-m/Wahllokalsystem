@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Monitoringservice local,db-h2" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,h2,sec">
-    <option name="ACTIVE_PROFILES" value="local,db-h2" />
+  <configuration default="false" name="Monitoringservice - local,db-oracle" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,oracle,sec">
+    <option name="ACTIVE_PROFILES" value="local,db-oracle" />
     <module name="wls-monitoring-service" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="de.muenchen.oss.wahllokalsystem.monitoringservice.MicroServiceApplication" />
     <method v="2">

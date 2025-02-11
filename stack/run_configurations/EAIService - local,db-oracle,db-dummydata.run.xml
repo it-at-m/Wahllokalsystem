@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="EAIService local,db-oracle,db-dummydata" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,oracle,sec">
+  <configuration default="false" name="EAIService - local,db-oracle,db-dummydata" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,oracle,sec">
     <option name="ACTIVE_PROFILES" value="local,db-oracle,db-dummydata" />
     <module name="wls-eai-service" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="de.muenchen.oss.wahllokalsystem.eaiservice.MicroServiceApplication" />

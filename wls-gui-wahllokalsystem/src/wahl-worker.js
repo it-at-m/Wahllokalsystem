@@ -46,17 +46,10 @@ const STRATEGY_ONLINE_FIRST = "ONLINE_FIRST";
 
 const PIN_KEY = "PIN";
 
-//const router = new Router();
-
 /**
  * delete old assets from previous sw versions
  */
 cleanupOutdatedCaches();
-
-/**
- * to allow work offline
- */
-//registerRoute(new NavigationRoute(createHandlerBoundToURL('index.html')))
 
 console.info(logID + "1 nicer Wahl Arbeiter am Start vong her.");
 

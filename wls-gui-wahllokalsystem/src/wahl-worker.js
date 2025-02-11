@@ -1,6 +1,7 @@
 import CryptoJS from "crypto-js";
 import localforage from "localforage";
 import { clientsClaim } from "workbox-core";
+import { cleanupOutdatedCaches } from "workbox-precaching";
 import { registerRoute } from "workbox-routing";
 
 /*****************************************************************************************************************
@@ -50,7 +51,7 @@ const PIN_KEY = "PIN";
 /**
  * delete old assets from previous sw versions
  */
-//cleanupOutdatedCaches();
+cleanupOutdatedCaches();
 
 /**
  * to allow work offline

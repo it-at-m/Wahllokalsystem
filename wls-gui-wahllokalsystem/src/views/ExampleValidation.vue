@@ -74,13 +74,13 @@ import {
   VBtn,
   VCard,
   VCol,
+  VContainer,
   VForm,
   VTab,
   VTabs,
   VTabsWindow,
   VTabsWindowItem,
   VTextField,
-  VContainer,
 } from "vuetify/components";
 
 import { MAX_LENGTH, MIN_LENGTH, REQUIRED } from "@/util/rules";

@@ -29,12 +29,11 @@
         </v-tabs-window-item>
         <v-tabs-window-item value="1">
           <v-container class="d-flex flex-column align-center mt-5 mb-5">
-            <p>
-              Validation will only trigger, when the submit button is clicked
-            </p>
+            <p>All inputs have to be valid to enable the submit button</p>
             <v-form
+              v-model="formIsValid"
               class="mt-5"
-              validate-on="submit lazy"
+              fast-fail
               @submit.prevent="submit"
             >
               <v-text-field
@@ -58,6 +57,7 @@
                 class="mt-2"
                 text="Submit"
                 type="submit"
+                :disabled="!formIsValid"
                 block
               ></v-btn>
             </v-form>
@@ -86,6 +86,7 @@ import {
 import { MAX_LENGTH, MIN_LENGTH, REQUIRED } from "@/util/rules";
 
 const tab = ref(null);
+const formIsValid = ref(false);
 
 function submit() {
   // do nothing

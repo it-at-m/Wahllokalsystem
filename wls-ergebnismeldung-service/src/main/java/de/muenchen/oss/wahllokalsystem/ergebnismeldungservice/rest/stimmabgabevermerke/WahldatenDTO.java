@@ -7,5 +7,5 @@ public record WahldatenDTO(@NotNull String wahlbezirkID,
                            @NotNull String wahlID,
                            @NotNull long waehlerverzeichnisNummer,
                            @NotNull Set<VermerkDTO> vermerke,
-                           @NotNull Set<EingenommenerWahlscheinDTO> eingenommenewahlscheine) {
+                           @NotNull Set<EingenommenerWahlscheinDTO> eingenommeneWahlscheine) {
 }

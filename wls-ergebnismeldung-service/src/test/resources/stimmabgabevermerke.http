@@ -20,7 +20,7 @@ Content-Type: application/json
       "waehlerverzeichnisNummer": 1,
       "wahlbezirkID": "wahlbezirkID",
       "wahlID": "wahlID1",
-      "eingenommenewahlscheine": [
+      "eingenommeneWahlscheine": [
         {
           "anzahl": 2,
           "stimmzettelart": "KLEIN"
@@ -54,7 +54,7 @@ Content-Type: application/json
       "waehlerverzeichnisNummer": 1,
       "wahlbezirkID": "wahlbezirkID",
       "wahlID": "wahlID2",
-      "eingenommenewahlscheine": [
+      "eingenommeneWahlscheine": [
         {
           "anzahl": 2,
           "stimmzettelart": "KLEIN"
@@ -101,7 +101,7 @@ Content-Type: application/json
       "waehlerverzeichnisNummer": 1,
       "wahlbezirkID": "wahlbezirkID1",
       "wahlID": "other Wahl",
-      "eingenommenewahlscheine": [
+      "eingenommeneWahlscheine": [
         {
           "anzahl": 2,
           "stimmzettelart": "KLEIN"

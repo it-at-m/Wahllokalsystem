@@ -82,7 +82,7 @@ public class StimmabgabevermerkeDTOMapperTest {
                                     (sz) -> sz.stimmzettelart().name().equals(stimmzettelart.name())))))
                     .isTrue();
             Assertions.assertThat(result.wahldaten().stream().allMatch(
-                    (wahldatenModel) -> wahldatenModel.eingenommenewahlscheine().stream().allMatch(
+                    (wahldatenModel) -> wahldatenModel.eingenommeneWahlscheine().stream().allMatch(
                             (wahlschein) -> wahlschein.stimmzettelart().name().equals(stimmzettelart.name()))))
                     .isTrue();
         }
@@ -152,7 +152,7 @@ public class StimmabgabevermerkeDTOMapperTest {
                                     (sz) -> sz.stimmzettelart().name().equals(stimmzettelart.name())))))
                     .isTrue();
             Assertions.assertThat(result.wahldaten().stream().allMatch(
-                    (wahldatenDTO) -> wahldatenDTO.eingenommenewahlscheine().stream().allMatch(
+                    (wahldatenDTO) -> wahldatenDTO.eingenommeneWahlscheine().stream().allMatch(
                             (wahlschein) -> wahlschein.stimmzettelart().name().equals(stimmzettelart.name()))))
                     .isTrue();
         }

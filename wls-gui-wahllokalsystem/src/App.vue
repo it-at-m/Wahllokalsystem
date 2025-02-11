@@ -64,7 +64,7 @@
           </v-tooltip>
           <v-tooltip
             location="bottom"
-            text="Routing Examples"
+            text="Datenvalidierung Examples"
           >
             <template #activator="{ props }">
               <router-link

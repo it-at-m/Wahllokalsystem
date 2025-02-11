@@ -30,6 +30,10 @@ public class WahltermindatenController {
                             responseCode = "200", description = "Die Wahltermindaten wurden erfolgreich importiert."
                     ),
                     @ApiResponse(
+                            responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
+                    ),
+                    @ApiResponse(
                             responseCode = "500", description = "Fehler während des Imports.",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
                     )

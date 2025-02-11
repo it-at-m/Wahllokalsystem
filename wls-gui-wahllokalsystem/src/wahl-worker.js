@@ -111,12 +111,9 @@ self.addEventListener("install", () => {
  ****************************************************************************************************************/
 
 /**
- * If responsible for the URL, the data from GET requests is first attempted to be
- * loaded from the IDB, otherwise it is loaded remotely (and then cached in the IDB).
- * When sending POST requests, the data is first saved in the IDB.
+ * The data from GET requests is first attempted to be loaded from the IDB,
+ * otherwise it is loaded remotely (and then cached in the IDB).
  */
-
-// register route for GET requests
 registerRoute(
   ({ request }) => request.method === "GET",
   (event) =>
@@ -128,7 +125,9 @@ registerRoute(
     })
 );
 
-// register route for POST requests
+/**
+ * When sending POST requests, the data is first saved in the IDB.
+ */
 registerRoute(
   ({ request }) => request.method === "POST",
   (event) => processRequest(event, handlePOST),

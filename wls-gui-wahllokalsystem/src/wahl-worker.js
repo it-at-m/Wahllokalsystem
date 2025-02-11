@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable no-undef */
 import CryptoJS from "crypto-js";
 import localforage from "localforage";
 import { clientsClaim } from "workbox-core";
@@ -350,7 +352,8 @@ self.addEventListener("push", () => {
           ) {
             try {
               value.data = JSON.parse(value.data);
-            } catch (error) {}
+              // eslint-disable-next-line no-empty
+            } catch {}
           }
           data.push(new KeyVal(key, value));
         }

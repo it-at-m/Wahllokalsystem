@@ -1,6 +1,6 @@
 <template>
   <v-menu>
-    <template v-slot:activator="{ props: menu }">
+    <template #activator="{ props: menu }">
       <v-btn
         v-bind="menu"
         :icon="getIcon(isOffline)"
@@ -72,12 +72,10 @@ async function heartbeat() {
     .post(url)
     .then((response) => {
       if (response.status == 200) {
-        console.log("ok");
         emit("update:isOffline", false);
       }
     })
     .catch(() => {
-      console.log("offline");
       emit("update:isOffline", true);
     });
 }

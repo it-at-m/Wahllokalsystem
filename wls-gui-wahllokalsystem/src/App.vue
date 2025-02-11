@@ -23,7 +23,7 @@
           class="d-flex align-center justify-end"
         >
           <!-- heartbeat uses v-model for two-way-binding -->
-          <wls-heartbeat v-model:isOffline="isOffline"></wls-heartbeat>
+          <wls-heartbeat v-model:is-offline="isOffline"></wls-heartbeat>
           <v-tooltip
             location="bottom"
             text="Backend Communication Examples"
@@ -159,13 +159,15 @@ async function getUserFromAuth() {
       }
     })
     .catch(() => {
+      // eslint-disable-next-line no-console
       console.log("kein user gefunden");
     });
 }
 
-async function sendPinToSW(pin: String) {
+async function sendPinToSW(pin: string) {
   // waiting for SW to be registered
   while (!navigator.serviceWorker || !navigator.serviceWorker.controller) {
+    // eslint-disable-next-line no-console
     console.warn("wahllokal-auth: retry sendPinToSW in 200 mils");
     await sleep(200);
   }

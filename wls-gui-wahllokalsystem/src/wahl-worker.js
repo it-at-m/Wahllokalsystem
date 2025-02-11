@@ -45,6 +45,18 @@ const STRATEGY_ONLINE_FIRST = "ONLINE_FIRST";
 
 const PIN_KEY = "PIN";
 
+//const router = new Router();
+
+/**
+ * delete old assets from previous sw versions
+ */
+//cleanupOutdatedCaches();
+
+/**
+ * to allow work offline
+ */
+//registerRoute(new NavigationRoute(createHandlerBoundToURL('index.html')))
+
 console.info(logID + "1 nicer Wahl Arbeiter am Start vong her.");
 
 /**
@@ -107,48 +119,38 @@ self.addEventListener("install", () => {
 // register route for GET requests
 registerRoute(
   ({ request }) => request.method === "GET",
-  async (event) => {
-    log("Processing GET request for " + event.request.url);
-
-    if (self.isResponsible(event)) {
-      await getPin();
-      // forwarding request if no pin is found
-      if (self.state === WahlworkerState.ACTIVE) {
-        const strat = event.request.headers.get(STRATEGY_HEADER);
-        if (strat === STRATEGY_ONLINE_FIRST) {
-          return handleGETonlineFirst(event);
-        } else {
-          return handleGET(event);
-        }
-      } else {
-        return fetchEvent(event);
-      }
-    } else {
-      return false;
-    }
-  }
+  (event) =>
+    processRequest(event, (event) => {
+      const strat = event.request.headers.get(STRATEGY_HEADER);
+      return strat === STRATEGY_ONLINE_FIRST
+        ? handleGETonlineFirst(event)
+        : handleGET(event);
+    })
 );
 
 // register route for POST requests
 registerRoute(
   ({ request }) => request.method === "POST",
-  async (event) => {
-    log("Processing POST request for " + event.request.url);
-
-    if (self.isResponsible(event)) {
-      await getPin();
-      // forwarding request if no pin is found
-      if (self.state === WahlworkerState.ACTIVE) {
-        return handlePOST(event);
-      } else {
-        return fetchEvent(event);
-      }
-    } else {
-      return false;
-    }
-  },
+  (event) => processRequest(event, handlePOST),
   "POST"
 );
+
+// Funktion zum Verarbeiten von Anfragen
+async function processRequest(event, handleRequestMethod) {
+  log(`Interrupting ${event.request.method} request for ${event.request.url}`);
+
+  if (self.isResponsible(event)) {
+    await getPin();
+    // forwarding request if no pin is found
+    if (self.state === WahlworkerState.ACTIVE) {
+      return handleRequestMethod(event);
+    } else {
+      return fetchEvent(event);
+    }
+  } else {
+    return false;
+  }
+}
 
 /**
  * Returns false if the URL contains the substring FILTER and the

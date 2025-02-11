@@ -97,14 +97,14 @@ Des Weiteren wird für die abschließende Konfiguration der Beans `wls-common:ex
 <dependency>
     <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
     <artifactId>exception</artifactId>
-    <version>1.2.0</version> <!-- bzw. die aktuelle latest-Version -->
+    <version>1.2.0</version>
 </dependency>
 
 <!-- Required for OAuth2TokenInterceptor -->
 <dependency>
    <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
    <artifactId>security</artifactId>
-   <version>1.2.0</version> <!-- bzw. die aktuelle latest-Version -->
+   <version>1.2.0</version>
 </dependency>
 ```
 

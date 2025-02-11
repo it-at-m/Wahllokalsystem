@@ -90,14 +90,21 @@ Damit die generierten Klassen compiliert werden können, muss folgende Dependenc
 </dependency>
 ```
 
-Des Weiteren wird für die abschließende Konfiguration der Beans `wls-common:exception` benötigt:
+Des Weiteren wird für die abschließende Konfiguration der Beans `wls-common:exception` und `wls-common:security` benötigt:
 
 ```xml
 
 <dependency>
     <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
     <artifactId>exception</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
+</dependency>
+
+<!-- Required for OAuth2TokenInterceptor -->
+<dependency>
+   <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+   <artifactId>security</artifactId>
+   <version>1.2.0</version>
 </dependency>
 ```
 
@@ -106,31 +113,19 @@ Des Weiteren wird für die abschließende Konfiguration der Beans `wls-common:ex
 Damit der generierte Client verwendet werden kann, muss dem Spring-Context noch ein `RestTemplate` hinzugefügt werden:
 
 ```java
+import de.muenchen.oss.wahllokalsystem.wls.common.security.OAuth2TokenInterceptor;
 
 @Configuration
 public class ClientConfiguration {
 
     @Bean
-    public RestTemplate restTemplate(final WlsResponseErrorHandler wlsResponseErrorHandler) {
+    public RestTemplate restTemplate(final WlsResponseErrorHandler wlsResponseErrorHandler, final OAuth2TokenInterceptor oAuth2TokenInterceptor) {
         val restTemplate = new RestTemplate();
 
         /* definieren des Errorhandlers für Antworten vom externen Service */
         restTemplate.setErrorHandler(wlsResponseErrorHandler);
         /* Ergänzen eines Interceptors um den Bearer-Token an den nächsten Service weiter zu geben */
-        restTemplate.getInterceptors().add((request, body, execution) -> {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication == null) {
-                return execution.execute(request, body);
-            }
-
-            if (!(authentication.getCredentials() instanceof AbstractOAuth2Token)) {
-                return execution.execute(request, body);
-            }
-
-            val token = (AbstractOAuth2Token) authentication.getCredentials();
-            request.getHeaders().setBearerAuth(token.getTokenValue());
-            return execution.execute(request, body);
-        });
+        restTemplate.getInterceptors().add(oAuth2TokenInterceptor);
 
         return restTemplate;
     }

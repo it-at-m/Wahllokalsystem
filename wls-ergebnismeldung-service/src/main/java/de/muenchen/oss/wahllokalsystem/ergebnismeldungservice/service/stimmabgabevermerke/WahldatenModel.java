@@ -8,5 +8,5 @@ public record WahldatenModel(
         @NotNull String wahlID,
         @NotNull Long waehlerverzeichnisNummer,
         @NotNull Set<VermerkModel> vermerke,
-        @NotNull Set<EingenommenerWahlscheinModel> eingenommenewahlscheine) {
+        @NotNull Set<EingenommenerWahlscheinModel> eingenommeneWahlscheine) {
 }

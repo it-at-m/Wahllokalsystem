@@ -137,7 +137,7 @@ Content-Type: application/json
       "waehlerverzeichnisNummer": 1,
       "wahlbezirkID": "wahlbezirkID",
       "wahlID": "wahlID01",
-      "eingenommenewahlscheine": [
+      "eingenommeneWahlscheine": [
         {
           "anzahl": 2,
           "stimmzettelart": "KLEIN"

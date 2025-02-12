@@ -39,10 +39,10 @@ public class WahltermindatenClientImpl implements WahltermindatenClient {
 
         try {
             wahltermindatenControllerApi.deleteWahltermindaten(wahltagID);
-        } catch (WlsException wlsException) {
+        } catch (final WlsException wlsException) {
             log.debug("#deleteWahltermindaten found WlsException:", wlsException);
             throw wlsException;
-        } catch (Exception exception) {
+        } catch (final Exception exception) {
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
         }
     }

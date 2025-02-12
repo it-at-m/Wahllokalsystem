@@ -26,10 +26,10 @@ public class AWerteClientImpl implements AWerteClient {
     public void initialiseAWerte(List<String> wahlbezirkIDs) {
         try {
             awerteControllerApi.initialiseAWerte(wahlbezirkIDs);
-        } catch (WlsException wlsException) {
+        } catch (final WlsException wlsException) {
             log.debug("#initialiseAWerte found WlsException:", wlsException);
             throw wlsException;
-        } catch (Exception exception) {
+        } catch (final Exception exception) {
             log.error("Error beim A-Werte initialisieren: ", exception);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_ERGEBNISMELDUNG);
         }

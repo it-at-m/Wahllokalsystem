@@ -40,10 +40,10 @@ public class WahltageClientImpl implements WahltageClient {
 
             wahltage = wahltagClientMapper.fromListOfWahltagDTOtoListOfWahltagModel(wahltageDTO);
             log.debug("#getWahltage response from basisdaten: {}", wahltage);
-        } catch (WlsException wlsException) {
+        } catch (final WlsException wlsException) {
             log.debug("#getWahltage found WlsException:", wlsException);
             throw wlsException;
-        } catch (Exception exception) {
+        } catch (final Exception exception) {
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
         }
         return wahltage;

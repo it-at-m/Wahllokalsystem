@@ -63,7 +63,8 @@ public class ErgebnismeldungController {
             @PathVariable("waehlerverzeichnisNummer") final Long waehlerverzeichnisNummer,
             @PathVariable("meldungsart") final MeldungsartDTO meldungsart,
             @PathVariable("hauptwahlbezirkID") final String hauptwahlbezirkID) {
-        log.info("sendErgebnisse called with wahlID: {}, wahlbezirkID: {}, waehlerverzeichnisNummer: {}, meldungsart: {}, hauptwahlbezirkID: {}", wahlID, wahlbezirkID, waehlerverzeichnisNummer, meldungsart, hauptwahlbezirkID);
+        log.info("sendErgebnisse called with wahlID: {}, wahlbezirkID: {}, waehlerverzeichnisNummer: {}, meldungsart: {}, hauptwahlbezirkID: {}", wahlID,
+                wahlbezirkID, waehlerverzeichnisNummer, meldungsart, hauptwahlbezirkID);
 
         val shouldUpdateSendungszeiten = Boolean.parseBoolean(forceUpdate);
         if (shouldUpdateSendungszeiten) {
@@ -77,7 +78,8 @@ public class ErgebnismeldungController {
     }
 
     @Nullable
-    private ResponseEntity<?> handleSendErgebnismeldung(final String wahlID, final String wahlbezirkID, final Long waehlerverzeichnisNummer, final MeldungsartDTO meldungsart, final String hauptwahlbezirkID) {
+    private ResponseEntity<?> handleSendErgebnismeldung(final String wahlID, final String wahlbezirkID, final Long waehlerverzeichnisNummer,
+            final MeldungsartDTO meldungsart, final String hauptwahlbezirkID) {
         boolean valid = false;
         try {
             log.debug("#sendergebnis 0");

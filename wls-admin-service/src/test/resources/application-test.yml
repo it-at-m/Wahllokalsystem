@@ -1,3 +1,13 @@
+service:
+  config:
+    clients:
+      infomanagement:
+        basePath: http://localhost:${wiremock.server.port}/
+      basisdaten:
+        basePath: http://localhost:${wiremock.server.port}/
+      ergebnismeldung:
+        basePath: http://localhost:${wiremock.server.port}/
+
 spring:
 
   # Spring JPA

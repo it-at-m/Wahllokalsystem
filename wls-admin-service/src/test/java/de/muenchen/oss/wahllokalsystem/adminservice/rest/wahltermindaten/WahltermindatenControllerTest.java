@@ -1,6 +1,5 @@
-package de.muenchen.oss.wahllokalsystem.adminservice.rest;
+package de.muenchen.oss.wahllokalsystem.adminservice.rest.wahltermindaten;
 
-import de.muenchen.oss.wahllokalsystem.adminservice.rest.wahltermindaten.WahltermindatenController;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahltermindatenService;
 import lombok.val;
 import org.junit.jupiter.api.Nested;

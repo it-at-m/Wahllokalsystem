@@ -96,14 +96,14 @@ class HandbuchValidatorTest {
         }
 
         @Test
-        void should_notThrowException_when_modelIsNull() {
+        void should_throwException_when_modelIsNull() {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTHANDBUCH_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedWlsException);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.validHandbuchWriteModelOrThrow(null)).isSameAs(mockedWlsException);
         }
 
         @Test
-        void should_notThrowException_when_handbuchReferenceIsNull() {
+        void should_throwException_when_handbuchReferenceIsNull() {
             val invalidModel = initValidModel().handbuchReferenceModel(null).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTHANDBUCH_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedWlsException);
@@ -112,7 +112,7 @@ class HandbuchValidatorTest {
         }
 
         @Test
-        void should_notThrowException_when_handbuchReferenceWahltagIDIsNull() {
+        void should_throwException_when_handbuchReferenceWahltagIDIsNull() {
             val invalidModel = initValidModel().handbuchReferenceModel(initValidHandbuchReferenceModel().wahltagID(null).build()).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTHANDBUCH_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedWlsException);
@@ -121,7 +121,7 @@ class HandbuchValidatorTest {
         }
 
         @Test
-        void should_notThrowException_when_handbuchReferenceWahltagIDIsEmptyString() {
+        void should_throwException_when_handbuchReferenceWahltagIDIsEmptyString() {
             val invalidModel = initValidModel().handbuchReferenceModel(initValidHandbuchReferenceModel().wahltagID("").build()).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTHANDBUCH_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedWlsException);
@@ -130,7 +130,7 @@ class HandbuchValidatorTest {
         }
 
         @Test
-        void should_notThrowException_when_handbuchReferenceWahltagIDIsBlankString() {
+        void should_throwException_when_handbuchReferenceWahltagIDIsBlankString() {
             val invalidModel = initValidModel().handbuchReferenceModel(initValidHandbuchReferenceModel().wahltagID("      ").build()).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTHANDBUCH_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedWlsException);
@@ -139,7 +139,7 @@ class HandbuchValidatorTest {
         }
 
         @Test
-        void should_notThrowException_when_handbuchReferenceWahlbezirksArtIsNull() {
+        void should_throwException_when_handbuchReferenceWahlbezirksArtIsNull() {
             val invalidModel = initValidModel().handbuchReferenceModel(initValidHandbuchReferenceModel().wahlbezirksart(null).build()).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTHANDBUCH_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedWlsException);
@@ -148,7 +148,7 @@ class HandbuchValidatorTest {
         }
 
         @Test
-        void should_notThrowException_when_handbuchDataIsNull() {
+        void should_throwException_when_handbuchDataIsNull() {
             val invalidModel = initValidModel().handbuchData(new byte[0]).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTHANDBUCH_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedWlsException);
@@ -157,7 +157,7 @@ class HandbuchValidatorTest {
         }
 
         @Test
-        void should_notThrowException_when_handbuchDataHasZeroLength() {
+        void should_throwException_when_handbuchDataHasZeroLength() {
             val invalidModel = initValidModel().handbuchData(new byte[0]).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTHANDBUCH_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedWlsException);

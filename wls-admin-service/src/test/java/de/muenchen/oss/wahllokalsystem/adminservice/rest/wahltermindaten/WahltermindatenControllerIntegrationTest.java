@@ -68,7 +68,7 @@ class WahltermindatenControllerIntegrationTest {
             val request = post("/businessActions/importWahltermindaten/" + invalidWahltagID).with(csrf());
 
             val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.MISSING_ARGUMENT.code(),
-                "WLS-ERGEBNISMELDUNG", ExceptionConstants.MISSING_ARGUMENT.message());
+                    "WLS-ERGEBNISMELDUNG", ExceptionConstants.MISSING_ARGUMENT.message());
 
             val result = api.perform(request).andExpect(status().isBadRequest()).andReturn();
             val resultBodyAsWlsExceptionDTO = objectMapper.readValue(result.getResponse().getContentAsString(), WlsExceptionDTO.class);
@@ -121,14 +121,14 @@ class WahltermindatenControllerIntegrationTest {
 
         private ResponseDefinitionBuilder createWireMockResponse(final HttpStatus responseStatus) {
             return aResponse()
-                .withStatus(responseStatus.value());
+                    .withStatus(responseStatus.value());
         }
 
         private ResponseDefinitionBuilder createWireMockResponse(final Object responseBody, final HttpStatus responseStatus) throws Exception {
             return aResponse()
-                .withBody(objectMapper.writeValueAsString(responseBody))
-                .withHeader("Content-Type", "application/json")
-                .withStatus(responseStatus.value());
+                    .withBody(objectMapper.writeValueAsString(responseBody))
+                    .withHeader("Content-Type", "application/json")
+                    .withStatus(responseStatus.value());
         }
 
     }

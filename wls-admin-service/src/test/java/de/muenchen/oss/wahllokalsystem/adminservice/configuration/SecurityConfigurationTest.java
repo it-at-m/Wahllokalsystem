@@ -84,7 +84,8 @@ class SecurityConfigurationTest {
         @Test
         void should_returnUnauthorized_when_callingAnonymous() throws Exception {
             val wahltagID = "wahltagID";
-            val request = MockMvcRequestBuilders.post("/businessActions/importWahltermindaten/" + wahltagID).with(csrf()).contentType(MediaType.APPLICATION_JSON);
+            val request = MockMvcRequestBuilders.post("/businessActions/importWahltermindaten/" + wahltagID).with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON);
 
             api.perform(request).andExpect(status().isUnauthorized());
         }
@@ -93,7 +94,8 @@ class SecurityConfigurationTest {
         @Test
         void should_returnNoContent_when_callingAuthenticated() throws Exception {
             val wahltagID = "wahltagID";
-            val request = MockMvcRequestBuilders.post("/businessActions/importWahltermindaten/" + wahltagID).with(csrf()).contentType(MediaType.APPLICATION_JSON);
+            val request = MockMvcRequestBuilders.post("/businessActions/importWahltermindaten/" + wahltagID).with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON);
 
             api.perform(request).andExpect(status().isOk());
 

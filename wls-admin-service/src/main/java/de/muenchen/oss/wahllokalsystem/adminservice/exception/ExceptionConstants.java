@@ -16,6 +16,6 @@ public class ExceptionConstants {
 
     public static final ExceptionDataWrapper INVALID_ARGUMENT = new ExceptionDataWrapper(
             "166", "Kein Wahltag vorhanden für die angegebene Wahltag-ID");
-    public static ExceptionDataWrapper MISSING_ARGUMENT = new ExceptionDataWrapper(
+    public static final ExceptionDataWrapper MISSING_ARGUMENT = new ExceptionDataWrapper(
             "165", "Parameter fehlt.");
 }

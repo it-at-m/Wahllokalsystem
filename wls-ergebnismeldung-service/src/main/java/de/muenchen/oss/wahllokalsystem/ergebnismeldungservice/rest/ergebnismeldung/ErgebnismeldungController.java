@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnismeldung;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.MeldungsartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.ErgebnismeldungService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.ErgebnisseToSendCriteriaModel;
@@ -18,6 +19,7 @@ import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,14 +58,18 @@ public class ErgebnismeldungController {
     @PostMapping("{wahlID}/{wahlbezirkID}/{waehlerverzeichnisNummer}/{meldungsart}/{hauptwahlbezirkID}")
     public ResponseEntity<?> sendErgebnisse(
             @RequestHeader(required = false, name = "forceergebnismeldung") final String forceUpdate,
-            final SendErgebnisParameter sendErgebnisParameter) {
-        log.info("sendErgebnisse called with {}", sendErgebnisParameter);
+            @PathVariable("wahlID") final String wahlID,
+            @PathVariable("wahlbezirkID") final String wahlbezirkID,
+            @PathVariable("waehlerverzeichnisNummer") final Long waehlerverzeichnisNummer,
+            @PathVariable("meldungsart") final MeldungsartDTO meldungsart,
+            @PathVariable("hauptwahlbezirkID") final String hauptwahlbezirkID) {
+        log.info("sendErgebnisse called with wahlID: {}, wahlbezirkID: {}, waehlerverzeichnisNummer: {}, meldungsart: {}, hauptwahlbezirkID: {}", wahlID, wahlbezirkID, waehlerverzeichnisNummer, meldungsart, hauptwahlbezirkID);
 
         val shouldUpdateSendungszeiten = Boolean.parseBoolean(forceUpdate);
         if (shouldUpdateSendungszeiten) {
-            ergebnismeldungService.updateSendungszeiten(new BezirkUndWahlID(sendErgebnisParameter.wahlID(), sendErgebnisParameter.wahlbezirkID()));
+            ergebnismeldungService.updateSendungszeiten(new BezirkUndWahlID(wahlID, wahlbezirkID));
         } else {
-            ResponseEntity<?> conflictStatus = handleSendErgebnismeldung(sendErgebnisParameter);
+            ResponseEntity<?> conflictStatus = handleSendErgebnismeldung(wahlID, wahlbezirkID, waehlerverzeichnisNummer, meldungsart, hauptwahlbezirkID);
             if (conflictStatus != null) return conflictStatus;
         }
 
@@ -71,15 +77,13 @@ public class ErgebnismeldungController {
     }
 
     @Nullable
-    private ResponseEntity<?> handleSendErgebnismeldung(SendErgebnisParameter sendErgebnisParameter) {
+    private ResponseEntity<?> handleSendErgebnismeldung(final String wahlID, final String wahlbezirkID, final Long waehlerverzeichnisNummer, final MeldungsartDTO meldungsart, final String hauptwahlbezirkID) {
         boolean valid = false;
         try {
             log.debug("#sendergebnis 0");
-            val modelEnum = MeldungsartModel.valueOf(sendErgebnisParameter.meldungsart().name());
+            val modelEnum = MeldungsartModel.valueOf(meldungsart.name());
             valid = ergebnismeldungService.sendErgebnisse(
-                    new ErgebnisseToSendCriteriaModel(sendErgebnisParameter.wahlID(), sendErgebnisParameter.wahlbezirkID(),
-                            sendErgebnisParameter.waehlerverzeichnisNummer(), modelEnum,
-                            sendErgebnisParameter.hauptwahlbezirkID()));
+                    new ErgebnisseToSendCriteriaModel(wahlID, wahlbezirkID, waehlerverzeichnisNummer, modelEnum, hauptwahlbezirkID));
             log.debug("#sendergebnis 1");
         } catch (Exception e) {
             log.debug("exception during sendErgebnisse occurred", e);

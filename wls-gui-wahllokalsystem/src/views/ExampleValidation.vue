@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-col class="text-center">
-      <h2>This view shows how validation with rules and forms work</h2>
+      <h2>Dieser View zeigt, wie Validierung mit Regeln und Forms funktioniert.</h2>
     </v-col>
     <div>
       <v-tabs
@@ -29,8 +29,9 @@
         </v-tabs-window-item>
         <v-tabs-window-item value="1">
           <v-container class="d-flex flex-column align-center mt-5 mb-5">
-            <p>All inputs have to be valid to enable the submit button</p>
+            <p>Alle inputs müssen valide sein, bevor der sumbit-button enabled wird</p>
             <v-form
+                ref="form"
               v-model="formIsValid"
               class="mt-5"
               fast-fail
@@ -87,8 +88,10 @@ import { MAX_LENGTH, MIN_LENGTH, REQUIRED } from "@/util/rules";
 
 const tab = ref(null);
 const formIsValid = ref(false);
+const form = ref<HTMLFormElement | null>(null);
 
 function submit() {
   // do nothing
+  form.value?.reset();
 }
 </script>

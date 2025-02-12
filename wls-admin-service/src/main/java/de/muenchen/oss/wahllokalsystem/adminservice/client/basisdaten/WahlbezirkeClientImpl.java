@@ -39,10 +39,10 @@ public class WahlbezirkeClientImpl implements WahlbezirkeClient {
             }
 
             wahlbezirke = wahlbezirkeClientMapper.fromListOfWahlbezirkDTOtoListOfWahlbezirkModel(wahlbezirkeDTO);
-        } catch (WlsException wlsEx) {
-            log.error("#getWahlbezirke found WlsException:", wlsEx);
-            throw wlsEx;
-        } catch (Exception exception) {
+        } catch (final WlsException wlsException) {
+            log.error("#getWahlbezirke found WlsException:", wlsException);
+            throw wlsException;
+        } catch (final Exception exception) {
             log.error("#getWahlbezirke exception:", exception);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
         }

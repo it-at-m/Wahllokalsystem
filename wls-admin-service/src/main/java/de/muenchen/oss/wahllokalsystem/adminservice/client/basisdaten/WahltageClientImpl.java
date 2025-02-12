@@ -28,7 +28,7 @@ public class WahltageClientImpl implements WahltageClient {
 
     @Override
     public List<WahltagModel> getWahltage() {
-        log.debug("#getWahltage1");
+        log.debug("#getWahltage");
 
         final List<WahltagModel> wahltage;
         try {
@@ -40,9 +40,9 @@ public class WahltageClientImpl implements WahltageClient {
 
             wahltage = wahltagClientMapper.fromListOfWahltagDTOtoListOfWahltagModel(wahltageDTO);
             log.debug("#getWahltage response from basisdaten: {}", wahltage);
-        } catch (WlsException wlsEx) {
-            log.debug("found WlsException: {}");
-            throw wlsEx;
+        } catch (WlsException wlsException) {
+            log.debug("#getWahltage found WlsException:", wlsException);
+            throw wlsException;
         } catch (Exception exception) {
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
         }

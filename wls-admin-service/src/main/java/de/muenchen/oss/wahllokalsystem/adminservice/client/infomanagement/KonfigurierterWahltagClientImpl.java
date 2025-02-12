@@ -32,9 +32,9 @@ public class KonfigurierterWahltagClientImpl implements KonfigurierterWahltagCli
         try {
             val konfigurierterWahltagDTO = konfigurierterWahltagClientMapper.toClientDto(konfigurierterWahltag);
             konfigurierterWahltagControllerApi.setKonfigurierterWahltag(konfigurierterWahltagDTO);
-        } catch (WlsException wlsEx) {
-            log.debug("found WlsException: {}");
-            throw wlsEx;
+        } catch (WlsException wlsException) {
+            log.debug("#postKonfigurierterWahltag found WlsException:", wlsException);
+            throw wlsException;
         } catch (Exception exception) {
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT);
         }

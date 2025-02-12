@@ -23,16 +23,17 @@ public class DummyClientImpl implements AWerteClient, KonfigurierterWahltagClien
 
     @Override
     public void initialiseAWerte(List<String> wahlbezirkIDs) {
-
+        log.info("dummy client initialiseAWerte({}) called instead of ergebnismeldung-service", wahlbezirkIDs);
     }
 
     @Override
     public void postKonfigurierterWahltag(KonfigurierterWahltagModel konfigurierterWahltag) {
-
+        log.info("dummy client postKonfigurierterWahltag({}) called instead of infomanagement-service", konfigurierterWahltag);
     }
 
     @Override
     public List<WahlbezirkModel> getWahlbezirke(String wahltagID) {
+        log.info("dummy client getWahlbezirke({}) called instead of basisdaten-service", wahltagID);
         return List.of(
                 new WahlbezirkModel("wahlbezirkID1_1", WahlbezirkArtModel.UWB, "1201", LocalDate.now(), "0", "wahlID1"),
                 new WahlbezirkModel("wahlbezirkID1_2", WahlbezirkArtModel.UWB, "1251", LocalDate.now(), "0", "wahlID1"),
@@ -41,6 +42,7 @@ public class DummyClientImpl implements AWerteClient, KonfigurierterWahltagClien
 
     @Override
     public List<WahltagModel> getWahltage() {
+        log.info("dummy client getWahltage() called instead of infomanagement-service");
         return List.of(
                 new WahltagModel("wahltagID", LocalDate.now().minusMonths(2), "Beschreibung Wahltag 1", "0"),
                 new WahltagModel("wahltagID", LocalDate.now().plusMonths(1), "Beschreibung Wahltag 3", "2"),
@@ -49,11 +51,11 @@ public class DummyClientImpl implements AWerteClient, KonfigurierterWahltagClien
 
     @Override
     public void putWahltermindaten(String wahltagID) {
-
+        log.info("dummy client putWahltermindaten({}) called instead of basisdaten-service", wahltagID);
     }
 
     @Override
     public void deleteWahltermindaten(String wahltagID) {
-
+        log.info("dummy client deleteWahltermindaten({}) called instead of basisdaten-service", wahltagID);
     }
 }

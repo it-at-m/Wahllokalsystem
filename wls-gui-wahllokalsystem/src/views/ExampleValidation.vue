@@ -9,7 +9,8 @@
         align-tabs="center"
       >
         <v-tab value="0">input fields</v-tab>
-        <v-tab value="1">form</v-tab>
+        <v-tab value="1">form button disabled</v-tab>
+        <v-tab value="2">form method validation check</v-tab>
       </v-tabs>
       <v-tabs-window v-model="tab">
         <v-tabs-window-item value="0">
@@ -29,13 +30,13 @@
         </v-tabs-window-item>
         <v-tabs-window-item value="1">
           <v-container class="d-flex flex-column align-center mt-5 mb-5">
-            <p>Alle inputs müssen valide sein, bevor der sumbit-button enabled wird</p>
+            <p>Alle inputs müssen valide sein, bevor der submit-button betätigt werden kann</p>
             <v-form
-                ref="form"
-              v-model="formIsValid"
+                ref="firstForm"
+              v-model="firstFormIsValid"
               class="mt-5"
               fast-fail
-              @submit.prevent="submit"
+              @submit.prevent="submitFirstForm"
             >
               <v-text-field
                 :rules="[REQUIRED]"
@@ -58,8 +59,43 @@
                 class="mt-2"
                 text="Submit"
                 type="submit"
-                :disabled="!formIsValid"
+                :disabled="!firstFormIsValid"
                 block
+              ></v-btn>
+            </v-form>
+          </v-container>
+        </v-tabs-window-item>
+        <v-tabs-window-item value="2">
+          <v-container class="d-flex flex-column align-center mt-5 mb-5">
+            <p>Funktionalität des submit-buttons wird nur aktiviert, wenn alle Felder valide sind</p>
+            <v-form
+                ref="secondForm"
+                v-model="secondFormIsValid"
+                class="mt-5"
+                fast-fail
+                @submit.prevent="submitSecondForm"
+            >
+              <v-text-field
+                  :rules="[REQUIRED]"
+                  clearable
+                  label="Input required"
+                  min-width="400"
+              ></v-text-field>
+              <v-text-field
+                  :rules="[MAX_LENGTH(20)]"
+                  label="Input cant be longer then 20"
+                  min-width="400"
+              ></v-text-field>
+              <v-text-field
+                  :rules="[MIN_LENGTH(5)]"
+                  label="Input cant be shorter than 5"
+                  min-width="400"
+              ></v-text-field>
+              <v-btn
+                  primary
+                  class="mt-2"
+                  text="Submit"
+                  type="submit"
               ></v-btn>
             </v-form>
           </v-container>
@@ -70,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import {ref} from "vue";
 import {
   VBtn,
   VCard,
@@ -84,14 +120,24 @@ import {
   VTextField,
 } from "vuetify/components";
 
-import { MAX_LENGTH, MIN_LENGTH, REQUIRED } from "@/util/rules";
+import {MAX_LENGTH, MIN_LENGTH, REQUIRED} from "@/util/rules";
 
 const tab = ref(null);
-const formIsValid = ref(false);
-const form = ref<HTMLFormElement | null>(null);
+const firstFormIsValid = ref(false);
+const secondFormIsValid = ref(false);
+const firstForm = ref<HTMLFormElement>();
+const secondForm = ref<HTMLFormElement>();
 
-function submit() {
-  // do nothing
-  form.value?.reset();
+function submitFirstForm() {
+  firstForm.value?.reset();
+}
+
+async function submitSecondForm() {
+  if(secondForm.value) {
+    const { valid } = await secondForm.value.validate();
+    if (valid) {
+      secondForm.value.reset();
+    }
+  }
 }
 </script>

@@ -62,7 +62,7 @@ class KopfdatenServiceTest {
             Mockito.when(kopfdatenModelMapper.toEntity(mockedKopfdatenModelByInitializer)).thenReturn(mockedKopfdatenModelMappedToEntity);
             Mockito.when(konfigurierterWahltagClient.getKonfigurierterWahltag()).thenReturn(mockedKonfigurierterWahltagFromClient);
             Mockito.when(wahldatenClient.loadBasisdaten(
-                            new WahltagWithNummer(mockedKonfigurierterWahltagFromClient.wahltag(), mockedKonfigurierterWahltagFromClient.nummer())))
+                    new WahltagWithNummer(mockedKonfigurierterWahltagFromClient.wahltag(), mockedKonfigurierterWahltagFromClient.nummer())))
                     .thenReturn(mockedBasisdatenModelFromClient);
             Mockito.when(kopfdatenMapper.initKopfdata(wahlID, wahlbezrkID, mockedBasisdatenModelFromClient)).thenReturn(mockedKopfdatenModelByInitializer);
 

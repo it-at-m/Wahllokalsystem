@@ -86,7 +86,7 @@ public class ReferendumvorlagenServiceSecurityTest {
             val wahlbezirkID = "wahlbezirkID";
 
             Assertions.assertThatThrownBy(
-                            () -> referendumvorlagenService.getReferendumvorlagen(new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID)))
+                    () -> referendumvorlagenService.getReferendumvorlagen(new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID)))
                     .isInstanceOf(
                             AccessDeniedException.class);
             //we have to check is data is stores because access denied exceptions are caught too
@@ -108,7 +108,7 @@ public class ReferendumvorlagenServiceSecurityTest {
                             HttpStatus.OK.value()).withBody(objectMapper.writeValueAsBytes(eaiReferendumvorschlage))));
 
             Assertions.assertThatThrownBy(
-                            () -> referendumvorlagenService.getReferendumvorlagen(new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID)))
+                    () -> referendumvorlagenService.getReferendumvorlagen(new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID)))
                     .isInstanceOf(
                             AccessDeniedException.class);
             //we have to check is data is stores because access denied exceptions are caught too

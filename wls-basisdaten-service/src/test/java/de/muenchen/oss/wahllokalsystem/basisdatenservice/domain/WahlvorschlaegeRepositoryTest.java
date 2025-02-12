@@ -54,7 +54,7 @@ class WahlvorschlaegeRepositoryTest {
     class DeleteAllByBezirkUndWahlID_WahlID {
 
         @Test
-        void should_returnOk_when_wahlIdMatchesAndWahlvorschlaegeAreRemoved() {
+        void should_removeWahlvorschlaegeAndChildren_when_wahlIdMatches() {
             val wahlIDToDelete = "wahlID";
 
             val wahlvorschlaegeToKeep = transactionTemplate.execute(status -> {

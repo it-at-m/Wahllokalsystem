@@ -17,7 +17,7 @@ class KonfigurierterWahltagClientMapperTest {
     class FromRemoteClientDTOToModel {
 
         @Test
-        void should_returnWahltagModel_when_statusIsActive() {
+        void should_map_when_statusIsActive() {
             val konfigurierterWahltagDTO = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
                     KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
 
@@ -31,7 +31,7 @@ class KonfigurierterWahltagClientMapperTest {
         }
 
         @Test
-        void should_returnWahltagModel_when_statusIsActiveInaktive() {
+        void should_map_when_statusIsInactive() {
             val konfigurierterWahltagDTO = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
                     KonfigurierterWahltagDTO.WahltagStatusEnum.INAKTIV);
 

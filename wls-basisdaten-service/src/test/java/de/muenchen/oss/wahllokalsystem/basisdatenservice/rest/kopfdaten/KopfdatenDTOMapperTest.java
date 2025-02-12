@@ -17,7 +17,7 @@ class KopfdatenDTOMapperTest {
     class FromKopfdatenModelToKopfdatenDTO {
 
         @Test
-        void nullInNullOut() {
+        void should_returnNull_when_givenNull() {
             Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
         }
 

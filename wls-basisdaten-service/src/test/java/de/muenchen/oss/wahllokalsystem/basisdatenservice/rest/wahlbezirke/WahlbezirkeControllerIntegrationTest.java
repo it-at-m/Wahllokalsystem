@@ -153,7 +153,7 @@ public class WahlbezirkeControllerIntegrationTest {
         }
 
         @Test
-        void should_returnWahlbezirkDTOList_when_repoHasPriorityForRemoteOnLoad() throws Exception {
+        void should_prioritizeRepo_when_loadedFromRemote() throws Exception {
             val forWahltagDate = LocalDate.now().minusMonths(2);
             val wahltagID = "_identifikatorWahltag1";
 

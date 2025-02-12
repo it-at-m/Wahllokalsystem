@@ -56,7 +56,7 @@ class UserInfoAuthoritiesServiceTest {
     class LoadAuthorities {
 
         @Test
-        void should_returnListOfAuthorities_when_givenListOfAuthorities() {
+        void should_buildAuthoritiesFromTemplateResponse_when_givenCollectionOfAuthorities() {
             val jwtTokenValue = "myTokenValue";
 
             val expectedRequestHeaders = new HttpHeaders();
@@ -86,7 +86,7 @@ class UserInfoAuthoritiesServiceTest {
         }
 
         @Test
-        void should_returnListOfAuthorities_when_givenStringAsAuthorities() {
+        void should_buildAuthoritiesFromTemplateResponse_when_givenArrayAsAuthorities() {
             val jwtTokenValue = "myTokenValue";
 
             val expectedRequestHeaders = new HttpHeaders();
@@ -116,7 +116,7 @@ class UserInfoAuthoritiesServiceTest {
         }
 
         @Test
-        void should_returnListOfAuthorities_when_givenUnhandledDataStructureAsAuthorities() {
+        void should_buildAuthoritiesFromTemplateResponse_when_givenUnhandledDataStructureAsAuthorities() {
             val jwtTokenValue = "myTokenValue";
 
             val expectedRequestHeaders = new HttpHeaders();
@@ -139,7 +139,7 @@ class UserInfoAuthoritiesServiceTest {
         }
 
         @Test
-        void should_returnNoAuthorities_when_notUsingAuthoritiesClaim() {
+        void should_buildAuthoritiesFromTemplateResponse_when_withoutAuthoritiesClaim() {
             val jwtTokenValue = "myTokenValue";
 
             val expectedRequestHeaders = new HttpHeaders();

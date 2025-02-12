@@ -17,7 +17,7 @@ class DummyClientImplTest {
     class GetWahlvorschlaege {
 
         @Test
-        void should_returnWahlvorschlaegeWithoutNullFields_when_givenIDs() {
+        void should_returnNonNullObject_when_givenIDs() {
             val result = unitUnderTest.getWahlvorschlaege(new BezirkUndWahlID("wahlID", "wahlbezirkID"));
 
             Assertions.assertThat(result).hasNoNullFieldsOrProperties();
@@ -28,7 +28,7 @@ class DummyClientImplTest {
     class GetWahltage {
 
         @Test
-        void nachfrage() {
+        void should_returnWahltage_when_wahlIsNotOlderThanThreeMonths() {
             val result = unitUnderTest.getWahltage(LocalDate.now().minusMonths(3));
             Assertions.assertThat(result).size().isPositive();
         }
@@ -48,7 +48,7 @@ class DummyClientImplTest {
     class LoadBasisdaten {
 
         @Test
-        void should_returnnotEmptyObject_when_dataIsPresent() {
+        void should_returnNotEmptyObject_when_dataIsPresent() {
             val result = unitUnderTest.loadBasisdaten(new WahltagWithNummer(LocalDate.now(), "0"));
             Assertions.assertThat(result).hasNoNullFieldsOrProperties();
             Assertions.assertThat(result.basisstrukturdaten()).isNotEmpty();
@@ -94,7 +94,7 @@ class DummyClientImplTest {
         }
 
         @Test
-        void should_returnCorrectData_when_givenProperData() {
+        void should_makeSureAllUnderobjectsHaveTheRequestedDate_when_givenProperData() {
             val aDate = LocalDate.now();
             val result = unitUnderTest.loadBasisdaten(new WahltagWithNummer(aDate, "0"));
             Assertions.assertThat(result.basisstrukturdaten()).allMatch(bsd -> bsd.wahltag().equals(aDate));
@@ -108,7 +108,7 @@ class DummyClientImplTest {
     class GetKonfigurierterWahltag {
 
         @Test
-        void should_returnNonNullObject_when_givenProperData() {
+        void should_returnNonNullObjectWithActivePropertyTrue_when_calling() {
             val result = unitUnderTest.getKonfigurierterWahltag();
             Assertions.assertThat(result).hasNoNullFieldsOrProperties();
             Assertions.assertThat(result.active()).isTrue();
@@ -119,7 +119,7 @@ class DummyClientImplTest {
     class LoadWahlbezirke {
 
         @Test
-        void should_returnNonEmptyField_when_givenProperData() {
+        void should_returnNonEmptyField_when_calling() {
             val result = unitUnderTest.loadWahlbezirke(LocalDate.now(), "0");
             Assertions.assertThat(result).isNotEmpty();
         }

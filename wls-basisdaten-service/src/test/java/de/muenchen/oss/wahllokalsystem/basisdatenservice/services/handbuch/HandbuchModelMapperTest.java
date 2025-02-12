@@ -41,7 +41,7 @@ class HandbuchModelMapperTest {
     class ToEntity {
 
         @Test
-        void should_returnHandbuch_when_givenHandbuchWriteModel() {
+        void should_returnHandbuchEntity_when_givenHandbuchWriteModel() {
             val modelToMap = new HandbuchWriteModel(new HandbuchReferenceModel("wahltagID", WahlbezirkArtModel.BWB), "helloWorld".getBytes());
 
             val result = unitUnderTest.toEntity(modelToMap);

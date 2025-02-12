@@ -29,7 +29,7 @@ class KopfdatenControllerTest {
     class GetKopfdaten {
 
         @Test
-        void should_returnKopfdatenDTO_when_objectsAreMapped() {
+        void should_callServiceAndMapObjects_when_called() {
 
             val kopfdatenModel = KopfdatenModel.builder().build();
             val kopfdatenDTO = KopfdatenDTO.builder().build();

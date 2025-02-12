@@ -50,7 +50,7 @@ class ReferendumvorlagenRepositoryTest {
     class DeleteAllByBezirkUndWahlID_WahlID {
 
         @Test
-        void should_returnOk_when_wahlIdMatchesAndReferendumvorlagenAreRemoved() {
+        void should_removeReferendumvorlagenAndChildren_when_wahlIdMatches() {
             val wahlIDToDelete = "wahlID";
 
             val referendumvorlagenToKeep = transactionTemplate.execute(status -> {

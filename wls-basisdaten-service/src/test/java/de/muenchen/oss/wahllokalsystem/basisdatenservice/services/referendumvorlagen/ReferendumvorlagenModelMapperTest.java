@@ -68,7 +68,7 @@ class ReferendumvorlagenModelMapperTest {
         class OfReferendumvorlagenModel {
 
             @Test
-            void should_returnReferendumvorlagen_when_givenReferendumvorlagenModel() {
+            void should_returnReferendumvorlagenEntity_when_givenReferendumvorlagenModel() {
                 val stimmzettelgebietID = "stimmzettelgebietID";
 
                 val modelToMap = new ReferendumvorlagenModel(stimmzettelgebietID,
@@ -95,7 +95,7 @@ class ReferendumvorlagenModelMapperTest {
         class OfReferendumvorlageModel {
 
             @Test
-            void should_returnReferendumvorlage_when_givenReferendumvorlageModel() {
+            void should_returnReferendumvorlageEntity_when_givenReferendumvorlageModel() {
                 val modelToMap = new ReferendumvorlageModel("wahlvorschlagID1", 1L, "kurzname1", "frage1",
                         Set.of(new ReferendumoptionModel("option11", "optionsName11", 1L),
                                 new ReferendumoptionModel("option12", "optionsName12", 2L)));

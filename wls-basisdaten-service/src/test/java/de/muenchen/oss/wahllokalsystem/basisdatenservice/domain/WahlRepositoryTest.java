@@ -92,7 +92,7 @@ class WahlRepositoryTest {
     }
 
     @Test
-    void should_returnOk_when_existingWahlenAreBeingOverridden() {
+    void should_overrideExistingWithSameId_when_savingNewWahlen() {
         repository.deleteAll();
         val wahltagDateToFind = LocalDate.of(2024, 9, 3);
         val wahlenToSave_First = List.of(

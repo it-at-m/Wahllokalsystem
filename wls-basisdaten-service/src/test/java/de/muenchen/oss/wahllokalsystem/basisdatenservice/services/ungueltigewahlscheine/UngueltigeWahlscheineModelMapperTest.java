@@ -34,7 +34,7 @@ class UngueltigeWahlscheineModelMapperTest {
     class ToEntity {
 
         @Test
-        void should_returnUngueltigeWahlscheine_when_givenUngueltigeWahlscheineWriteModel() {
+        void should_returnUngueltigeWahlscheineEntity_when_givenUngueltigeWahlscheineWriteModel() {
             val wahltagID = "wahltagID";
             val data = "the test data".getBytes();
 

@@ -112,7 +112,7 @@ public class KopfdatenControllerIntegrationTest {
 
         @Test
         @Transactional
-        void should_returnKopfdatenList_when_externalDataIsPersisted() throws Exception {
+        void should_persistExternalData_when_called() throws Exception {
             // mock infomanagement konfigurierterWahltag
             KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
                     KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
@@ -144,7 +144,7 @@ public class KopfdatenControllerIntegrationTest {
 
         @Test
         @Transactional
-        void should_returnOk_when_dataIsLoadedFromRepo() throws Exception {
+        void should_loadExistingDataFromRepo_when_noRemoteDataIsPresent() throws Exception {
             val kopfdatenEntity1 = MockDataFactory.createKopfdatenEntityFor("wahlID1", "wahlbezirkID1_1",
                     Stimmzettelgebietsart.SG, "Munich-Repo1", "120",
                     "Bundestagswahl", "1201");

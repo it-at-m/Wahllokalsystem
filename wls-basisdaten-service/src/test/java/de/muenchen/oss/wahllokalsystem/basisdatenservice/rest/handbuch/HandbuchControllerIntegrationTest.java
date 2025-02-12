@@ -53,7 +53,7 @@ public class HandbuchControllerIntegrationTest {
     class GetHandbuch {
 
         @Test
-        void should_returnData_when_dataIsFoundInRepo() throws Exception {
+        void should_returnData_when_callingGetHandbuch() throws Exception {
             val handbuchContent = "dies ist ein Handbuch".getBytes();
 
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_HANDBUCH);
@@ -70,7 +70,7 @@ public class HandbuchControllerIntegrationTest {
         }
 
         @Test
-        void should_returnInternalServerErrorException_when_noDataIsFoundInRepo() throws Exception {
+        void should_throwInternalServerErrorException_when_noDataIsFoundInRepo() throws Exception {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_HANDBUCH);
             val request = MockMvcRequestBuilders.get("/businessActions/handbuch/wahltagID/UWB");
             val response = mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
@@ -88,7 +88,7 @@ public class HandbuchControllerIntegrationTest {
     class SetHandbuch {
 
         @Test
-        void should_returnData_when_dataIsFoundInRepo() throws Exception {
+        void should_saveData_when_callingSaveHandbuch() throws Exception {
             val handbuchContent = "dies ist ein Handbuch".getBytes();
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_HANDBUCH);
@@ -102,7 +102,7 @@ public class HandbuchControllerIntegrationTest {
         }
 
         @Test
-        void should_returnOk_when_dataIsBeingReplaced() throws Exception {
+        void should_replaceData_when_dataIsPresent() throws Exception {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_HANDBUCH);
             handbuchRepository.save(new Handbuch(new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB), "alter handbuch content".getBytes()));
 

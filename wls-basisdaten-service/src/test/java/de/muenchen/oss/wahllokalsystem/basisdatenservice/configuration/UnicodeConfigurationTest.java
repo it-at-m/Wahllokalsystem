@@ -60,7 +60,7 @@ class UnicodeConfigurationTest {
     WahltagRepository wahltagRepository;
 
     @Test
-    void should_returnWahl_when_givenComposedString() {
+    void should_testForNfcNormalization_when_givenComposedString() {
 
         // Persist entity with decomposed string
         // wahltag required for next step to store a list of wahlen

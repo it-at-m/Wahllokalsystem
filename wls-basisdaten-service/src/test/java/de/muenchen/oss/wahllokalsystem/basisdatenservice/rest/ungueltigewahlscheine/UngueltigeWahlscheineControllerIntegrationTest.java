@@ -101,7 +101,7 @@ public class UngueltigeWahlscheineControllerIntegrationTest {
     class SetUngueltigeWahlscheine {
 
         @Test
-        void should_returnOk_when_dataIsSaved() throws Exception {
+        void should_setNewData_when_called() throws Exception {
             val newData = "csv-data".getBytes();
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_UNGUELTIGEWAHLSCHEINE);
@@ -115,7 +115,7 @@ public class UngueltigeWahlscheineControllerIntegrationTest {
         }
 
         @Test
-        void should_returnOk_when_dataIsReplaced() throws Exception {
+        void should_replaceData_when_dataIsPresent() throws Exception {
             val newData = "csv-data".getBytes();
 
             val oldData = "old-csv-data".getBytes();

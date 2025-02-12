@@ -30,7 +30,7 @@ class WahltermindatenClientImplTest {
     class PutWahltermindaten {
 
         @Test
-        void should_verifyPutWahltermindatenAPICall_when_wahltagIDIsGiven() {
+        void should_verifyPutWahltermindatenApiCall_when_wahltagIDIsGiven() {
             val wahltagID = "wahltagID";
 
             unitUnderTest.putWahltermindaten(wahltagID);

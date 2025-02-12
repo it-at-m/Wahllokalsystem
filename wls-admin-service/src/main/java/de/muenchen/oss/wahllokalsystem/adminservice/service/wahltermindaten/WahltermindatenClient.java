@@ -1,11 +1,18 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten;
 
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
-
 public interface WahltermindatenClient {
 
-    void putWahltermindaten(final String wahltagID) throws WlsException;
+    /**
+     * @param wahltagID filter for Wahltaa
+     * @throws de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException when problem
+     *             on retrieving the information occurred
+     */
+    void putWahltermindaten(final String wahltagID);
 
-    void deleteWahltermindaten(final String wahltagID) throws WlsException;
-
+    /**
+     * @param wahltagID filter for Wahltaa
+     * @throws de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException when problem
+     *             on retrieving the information occurred
+     */
+    void deleteWahltermindaten(final String wahltagID);
 }

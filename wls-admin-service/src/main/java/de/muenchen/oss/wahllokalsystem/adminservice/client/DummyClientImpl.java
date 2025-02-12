@@ -10,7 +10,6 @@ import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.Wahl
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahltageClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahltermindatenClient;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -49,12 +48,12 @@ public class DummyClientImpl implements AWerteClient, KonfigurierterWahltagClien
     }
 
     @Override
-    public void putWahltermindaten(String wahltagID) throws WlsException {
+    public void putWahltermindaten(String wahltagID) {
 
     }
 
     @Override
-    public void deleteWahltermindaten(String wahltagID) throws WlsException {
+    public void deleteWahltermindaten(String wahltagID) {
 
     }
 }

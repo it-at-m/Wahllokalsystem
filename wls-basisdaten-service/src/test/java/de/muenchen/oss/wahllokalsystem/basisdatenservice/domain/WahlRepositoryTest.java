@@ -41,7 +41,7 @@ class WahlRepositoryTest {
     }
 
     @Test
-    void findByWahltagOrderByReihenfolge() {
+    void should_returnWahlenList_when_findByWahltagOrderByReihenfolgeIsCalled() {
         val wahlenToSave = createWahlenList();
         repository.saveAll(wahlenToSave);
 
@@ -57,7 +57,7 @@ class WahlRepositoryTest {
     class ExistsByWahltag {
 
         @Test
-        void trueWhenOneWahltagExists() {
+        void should_returnTrue_when_wahltagExistsInRepo() {
             val wahltagDateToFind = LocalDate.of(2024, 9, 3);
             val wahlenToSave = List.of(
                     new Wahl("wahltagID1", "name1", 1, 1, wahltagDateToFind, Wahlart.BTW, null, "1"),
@@ -68,7 +68,7 @@ class WahlRepositoryTest {
         }
 
         @Test
-        void trueWhenMoreThanOneWahltagExists() {
+        void should_returnTrue_when_oneOrMoreWahltageExistInRepo() {
             val wahltagDateToFind = LocalDate.of(2024, 9, 3);
             val wahlenToSave = List.of(
                     new Wahl("wahltagID1", "name1", 1, 1, wahltagDateToFind, Wahlart.BTW, null, "1"),
@@ -80,7 +80,7 @@ class WahlRepositoryTest {
         }
 
         @Test
-        void falseWhenNoWahltagExists() {
+        void should_returnFalse_when_wahlTagDoesNotExistInRepo() {
             val wahltagDateToFind = LocalDate.of(2024, 9, 3);
             val wahlenToSave = List.of(
                     new Wahl("wahltagID1", "name1", 1, 1, wahltagDateToFind.minusDays(1), Wahlart.BTW, null, "1"),
@@ -92,7 +92,7 @@ class WahlRepositoryTest {
     }
 
     @Test
-    void savingNewWahlenOverridesExistingWithSameId() {
+    void should_returnOk_when_existingWahlenAreBeingOverridden() {
         repository.deleteAll();
         val wahltagDateToFind = LocalDate.of(2024, 9, 3);
         val wahlenToSave_First = List.of(

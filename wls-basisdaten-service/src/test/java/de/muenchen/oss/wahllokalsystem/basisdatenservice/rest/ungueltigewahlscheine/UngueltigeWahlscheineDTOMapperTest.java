@@ -23,7 +23,7 @@ class UngueltigeWahlscheineDTOMapperTest {
         class ToUngueltigeWahlscheineReferenceModel {
 
             @Test
-            void isMapped() {
+            void should_returnUngueltigeWahlscheineReferenceModel_when_givenWahltagIDAndWahlbezirkartDTO() {
                 val result = unitUnderTest.toModel("wahltagID", WahlbezirkArtDTO.BWB);
 
                 val expectedResult = new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.BWB);
@@ -32,7 +32,7 @@ class UngueltigeWahlscheineDTOMapperTest {
 
             @ParameterizedTest
             @EnumSource(WahlbezirkArtDTO.class)
-            void alleEnumValuesAreMappable(final WahlbezirkArtDTO art) {
+            void should_returnWahlbezirkModel_when_givenWahlbezirkArtDTOs(final WahlbezirkArtDTO art) {
                 val result = unitUnderTest.toModel(null, art);
 
                 Assertions.assertThat(result.wahlbezirksart().toString()).isEqualTo(art.toString());
@@ -43,7 +43,7 @@ class UngueltigeWahlscheineDTOMapperTest {
         class ToUngueltigeWahlscheineWriteModel {
 
             @Test
-            void isMapped() {
+            void should_returnUngueltigeWahlscheineWriteModel_when_givenUngueltigeWahlscheineReferenceModel() {
                 val referenceModel = new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
                 val data = "data".getBytes();
 

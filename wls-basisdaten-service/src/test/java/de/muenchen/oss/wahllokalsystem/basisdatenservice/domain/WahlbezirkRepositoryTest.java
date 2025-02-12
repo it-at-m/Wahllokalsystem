@@ -36,7 +36,7 @@ class WahlbezirkRepositoryTest {
     }
 
     @Test
-    void findByWahltag() {
+    void should_returnWahlbezirkList_when_findByWahltagIsCalled() {
         val wahltag = LocalDate.now();
         List<Wahlbezirk> wahlbezirkeToSave = MockDataFactory.createListOfWahlbezirkEntity("", wahltag);
         repository.saveAll(wahlbezirkeToSave);
@@ -50,7 +50,7 @@ class WahlbezirkRepositoryTest {
     class ExistsByWahltag {
 
         @Test
-        void trueWhenOneExists() {
+        void should_returnTrue_when_oneWahltagExistsInRepo() {
             val wahltag1 = LocalDate.now();
             val wahltag2 = LocalDate.now().plusDays(1);
             repository.save(MockDataFactory.createWahlbezirkEntity(wahltag1));
@@ -60,7 +60,7 @@ class WahlbezirkRepositoryTest {
         }
 
         @Test
-        void trueWhenMoreThanOneExists() {
+        void should_returnTrue_when_moreThanOneWahltagExistsInRepo() {
             val wahltag1 = LocalDate.now();
             val wahltag2 = LocalDate.now().plusDays(1);
             repository.save(MockDataFactory.createWahlbezirkEntity(wahltag1));
@@ -71,7 +71,7 @@ class WahlbezirkRepositoryTest {
         }
 
         @Test
-        void falseWhenZeroExists() {
+        void should_returnFalse_when_wahltagDoesNotExistInRepo() {
             val wahltag1 = LocalDate.now();
             val wahltag2 = LocalDate.now().plusDays(1);
             repository.save(MockDataFactory.createWahlbezirkEntity(wahltag2));
@@ -82,7 +82,7 @@ class WahlbezirkRepositoryTest {
     }
 
     @Test
-    void deleteByWahltag() {
+    void should_returnOk_when_dataIsDeleted() {
         val wahltag1 = LocalDate.now();
         val wahltag2 = LocalDate.now().plusDays(1);
         List<Wahlbezirk> wahlbezirkeToSave1 = MockDataFactory.createListOfWahlbezirkEntity("praefix1", wahltag1);

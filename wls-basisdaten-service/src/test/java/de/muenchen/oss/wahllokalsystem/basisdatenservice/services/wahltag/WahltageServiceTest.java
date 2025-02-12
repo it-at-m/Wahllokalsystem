@@ -38,7 +38,7 @@ class WahltageServiceTest {
     class GetWahltage {
 
         @Test
-        void dataIsLoadedFromRemoteEvenIfExistingInRepoAndRepoIsUpdated() {
+        void should_loadDataFromRemote_whenExistingInRepoAndRepoIsUpdated() {
             val mockedListOfEntities = createWahltagList("2");
             val mockedClientResponse = createWahltagModelList("2");
             val mockedMappedSavedEntities = createWahltagModelList("2");

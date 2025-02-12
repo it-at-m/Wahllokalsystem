@@ -47,7 +47,7 @@ class HandbuchControllerTest {
     class GetHandbuch {
 
         @Test
-        void serviceIsCalled() {
+        void should_returnOk_when_serviceIsCalled() {
             val filenameSuffix = "file.pdf";
             val wahltagID = "wahltagID";
             val wahlbezirkArt = WahlbezirkArtDTO.UWB;
@@ -73,7 +73,7 @@ class HandbuchControllerTest {
     class SetHandbuch {
 
         @Test
-        void requestIsSendToService() throws IOException {
+        void should_returnNoException_when_requestIsSentToService() throws IOException {
             final HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
             val servletRequest = new DefaultMultipartHttpServletRequest(httpServletRequest);
 
@@ -91,7 +91,7 @@ class HandbuchControllerTest {
         }
 
         @Test
-        void ioExceptionIsMappedToWlsException() throws IOException {
+        void should_returnWlsException_when_ioExceptionIsGiven() throws IOException {
             final HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
             val servletRequest = new DefaultMultipartHttpServletRequest(httpServletRequest);
 

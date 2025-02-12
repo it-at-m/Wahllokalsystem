@@ -25,7 +25,7 @@ class FileMapperTest {
     class ToResponseEntity {
 
         @Test
-        void responseEntityIsBuilt() {
+        void should_returnResponseEntity_when_dataIsGiven() {
             val body = "content".getBytes();
             val attachmentFilename = "attachment.txt";
             val contentType = "text/plain";
@@ -45,7 +45,7 @@ class FileMapperTest {
     class FromRequest {
 
         @Test
-        void gotDataFromRequest() throws IOException {
+        void should_returnData_when_requestHasFile() throws IOException {
             val fileContent = "content".getBytes();
             val multiPartFiles = new LinkedMultiValueMap<String, MultipartFile>();
             multiPartFiles.put("key", List.of(new MockMultipartFile("filename", fileContent)));
@@ -58,7 +58,7 @@ class FileMapperTest {
         }
 
         @Test
-        void exceptionWhenRequestHasNoFile() {
+        void should_returnIOException_when_requestHasNoFile() {
             val multiPartFiles = new LinkedMultiValueMap<String, MultipartFile>();
             multiPartFiles.put("key", Collections.emptyList());
             final HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);

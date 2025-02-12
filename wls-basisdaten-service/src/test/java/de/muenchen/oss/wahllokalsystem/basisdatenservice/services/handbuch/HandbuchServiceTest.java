@@ -2,9 +2,9 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch;
 
 import static org.mockito.Mockito.times;
 
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagIdUndWahlbezirksart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.handbuch.Handbuch;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.handbuch.HandbuchRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagIdUndWahlbezirksart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
@@ -42,7 +42,7 @@ class HandbuchServiceTest {
     class GetHandbuch {
 
         @Test
-        void dataFound() {
+        void should_returnHandbuch_when_dataIsFoundInRepo() {
             val handbuchReference = new HandbuchReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
 
             val mockedHandbuchID = new WahltagIdUndWahlbezirksart();
@@ -57,7 +57,7 @@ class HandbuchServiceTest {
         }
 
         @Test
-        void noDataFound() {
+        void should_returnTechnischeWlsException_when_dataIsNotFoundInRepo() {
             val handbuchReference = new HandbuchReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
 
             val mockedHandbuchID = new WahltagIdUndWahlbezirksart();
@@ -75,7 +75,7 @@ class HandbuchServiceTest {
     class SetHandbuch {
 
         @Test
-        void dataSuccessfullySaved() {
+        void should_saveHandbuch_when_called() {
             val handbuchToSave = HandbuchWriteModel.builder().build();
 
             val mockedModelMappedToEntity = new Handbuch();
@@ -88,7 +88,7 @@ class HandbuchServiceTest {
         }
 
         @Test
-        void noSaveOnValidationError() {
+        void should_returnValidationException_when_validationFailed() {
             val handbuchToSave = HandbuchWriteModel.builder().build();
 
             val mockedValidationException = new RuntimeException("validation failed");
@@ -101,7 +101,7 @@ class HandbuchServiceTest {
         }
 
         @Test
-        void onSaveExceptionIsMappedToWlsException() {
+        void should_mapExceptionToWlsException_when_savingFailed() {
             val handbuchToSave = HandbuchWriteModel.builder().build();
 
             val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("");

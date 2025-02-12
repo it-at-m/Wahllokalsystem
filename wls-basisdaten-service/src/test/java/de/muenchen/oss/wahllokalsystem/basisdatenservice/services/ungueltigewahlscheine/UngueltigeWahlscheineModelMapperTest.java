@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.ungueltigewahlscheine;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ungueltigewahlscheine.UngueltigeWahlscheine;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahlbezirkArt;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagIdUndWahlbezirksart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ungueltigewahlscheine.UngueltigeWahlscheine;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -18,7 +18,7 @@ class UngueltigeWahlscheineModelMapperTest {
     class ToID {
 
         @Test
-        void isMapped() {
+        void should_returnWahltagIdUndWahlbezirksart_when_givenUngueltigeWahlscheineReferenceModel() {
             val wahltagID = "wahltagID";
 
             val modelToMap = new UngueltigeWahlscheineReferenceModel(wahltagID, WahlbezirkArtModel.UWB);
@@ -34,7 +34,7 @@ class UngueltigeWahlscheineModelMapperTest {
     class ToEntity {
 
         @Test
-        void isMapped() {
+        void should_returnUngueltigeWahlscheine_when_givenUngueltigeWahlscheineWriteModel() {
             val wahltagID = "wahltagID";
             val data = "the test data".getBytes();
 

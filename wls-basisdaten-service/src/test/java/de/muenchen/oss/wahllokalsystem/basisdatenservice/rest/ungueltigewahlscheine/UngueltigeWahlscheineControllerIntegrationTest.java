@@ -5,10 +5,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ungueltigewahlscheine.UngueltigeWahlscheine;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ungueltigewahlscheine.UngueltigeWahlscheineRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahlbezirkArt;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagIdUndWahlbezirksart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ungueltigewahlscheine.UngueltigeWahlscheine;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ungueltigewahlscheine.UngueltigeWahlscheineRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
@@ -53,7 +53,7 @@ public class UngueltigeWahlscheineControllerIntegrationTest {
     class GetUngueltigeWahlscheine {
 
         @Test
-        void dataFound() throws Exception {
+        void should_returnUngueltigeWahlscheine_when_dataIsPresentInRepo() throws Exception {
             val ungueltigeWahlscheineData = "csv-data".getBytes();
 
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_UNGUELTIGEWAHLSCHEINE);
@@ -70,7 +70,7 @@ public class UngueltigeWahlscheineControllerIntegrationTest {
         }
 
         @Test
-        void technischeWlsExceptionWhenNoDataFound() throws Exception {
+        void should_returnTechnischeWlsException_when_noDataFound() throws Exception {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_UNGUELTIGEWAHLSCHEINE);
             val request = MockMvcRequestBuilders.get("/businessActions/ungueltigews/wahltagID/UWB");
             val response = mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
@@ -83,7 +83,7 @@ public class UngueltigeWahlscheineControllerIntegrationTest {
         }
 
         @Test
-        void fachlicheWlsExceptionWhenPathVariableIsInvalid() throws Exception {
+        void should_returnFachlicheWlsException_when_pathVariableIsInvalid() throws Exception {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_UNGUELTIGEWAHLSCHEINE);
             val request = MockMvcRequestBuilders.get("/businessActions/ungueltigews/   /UWB");
             val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
@@ -101,7 +101,7 @@ public class UngueltigeWahlscheineControllerIntegrationTest {
     class SetUngueltigeWahlscheine {
 
         @Test
-        void newDataIsSet() throws Exception {
+        void should_returnOk_when_dataIsSaved() throws Exception {
             val newData = "csv-data".getBytes();
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_UNGUELTIGEWAHLSCHEINE);
@@ -115,7 +115,7 @@ public class UngueltigeWahlscheineControllerIntegrationTest {
         }
 
         @Test
-        void oldDataIsReplaced() throws Exception {
+        void should_returnOk_when_dataIsReplaced() throws Exception {
             val newData = "csv-data".getBytes();
 
             val oldData = "old-csv-data".getBytes();
@@ -134,7 +134,7 @@ public class UngueltigeWahlscheineControllerIntegrationTest {
         }
 
         @Test
-        void fachlicheWlsExceptionWhenRequestIsInvalid() throws Exception {
+        void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
             val newData = "csv-data".getBytes();
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_UNGUELTIGEWAHLSCHEINE);
@@ -149,7 +149,7 @@ public class UngueltigeWahlscheineControllerIntegrationTest {
         }
 
         @Test
-        void technischeWlsExceptionWhenNotSaveableCauseOfMissingAttachment() throws Exception {
+        void should_returnTechnischeWlsException_when_notSaveableCauseOfMissingAttachment() throws Exception {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_UNGUELTIGEWAHLSCHEINE);
             val request = MockMvcRequestBuilders.multipart("/businessActions/ungueltigews/wahltagID/UWB").with(csrf());
             val response = mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();

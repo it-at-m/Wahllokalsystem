@@ -5,10 +5,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.handbuch.Handbuch;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.handbuch.HandbuchRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahlbezirkArt;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagIdUndWahlbezirksart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.handbuch.Handbuch;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.handbuch.HandbuchRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
@@ -53,7 +53,7 @@ public class HandbuchControllerIntegrationTest {
     class GetHandbuch {
 
         @Test
-        void dataFound() throws Exception {
+        void should_returnData_when_dataIsFoundInRepo() throws Exception {
             val handbuchContent = "dies ist ein Handbuch".getBytes();
 
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_HANDBUCH);
@@ -70,7 +70,7 @@ public class HandbuchControllerIntegrationTest {
         }
 
         @Test
-        void noDataFound() throws Exception {
+        void should_returnInternalServerErrorException_when_noDataIsFoundInRepo() throws Exception {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_HANDBUCH);
             val request = MockMvcRequestBuilders.get("/businessActions/handbuch/wahltagID/UWB");
             val response = mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
@@ -88,7 +88,7 @@ public class HandbuchControllerIntegrationTest {
     class SetHandbuch {
 
         @Test
-        void dataIsSaved() throws Exception {
+        void should_returnData_when_dataIsFoundInRepo() throws Exception {
             val handbuchContent = "dies ist ein Handbuch".getBytes();
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_HANDBUCH);
@@ -102,7 +102,7 @@ public class HandbuchControllerIntegrationTest {
         }
 
         @Test
-        void existingDataIsReplaced() throws Exception {
+        void should_returnOk_when_dataIsBeingReplaced() throws Exception {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_HANDBUCH);
             handbuchRepository.save(new Handbuch(new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB), "alter handbuch content".getBytes()));
 
@@ -119,7 +119,7 @@ public class HandbuchControllerIntegrationTest {
         }
 
         @Test
-        void wlsExceptionOccuredCauseOfMissingAttachment() throws Exception {
+        void should_returnInternalServerErrorException_when_attachmentIsMissing() throws Exception {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_HANDBUCH);
             val request = MockMvcRequestBuilders.multipart("/businessActions/handbuch/wahltagID/UWB").with(csrf());
             val response = mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();

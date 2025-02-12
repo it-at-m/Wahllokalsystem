@@ -58,7 +58,7 @@ public class ReferendumvorlagenServiceSecurityTest {
     class LoadReferendumvorlagen {
 
         @Test
-        void accessGranted() throws Exception {
+        void should_grantAccess_when_authoritiesArePresent() throws Exception {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_REFERENDUMVORLAGEN);
 
             val wahlID = "wahlID";
@@ -78,7 +78,7 @@ public class ReferendumvorlagenServiceSecurityTest {
         }
 
         @Test
-        void missingServiceAuthorityCausesAccessDenied() throws Exception {
+        void should_denyAccess_when_authoritiesAreMissing() throws Exception {
             SecurityUtils.runWith(Authorities.REPOSITORY_READ_REFERENDUMVORLAGEN, Authorities.REPOSITORY_WRITE_REFERENDUMVORLAGEN,
                     Authorities.REPOSITORY_WRITE_REFERENDUMVORLAGE);
 
@@ -86,7 +86,7 @@ public class ReferendumvorlagenServiceSecurityTest {
             val wahlbezirkID = "wahlbezirkID";
 
             Assertions.assertThatThrownBy(
-                    () -> referendumvorlagenService.getReferendumvorlagen(new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID)))
+                            () -> referendumvorlagenService.getReferendumvorlagen(new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID)))
                     .isInstanceOf(
                             AccessDeniedException.class);
             //we have to check is data is stores because access denied exceptions are caught too
@@ -96,7 +96,7 @@ public class ReferendumvorlagenServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingRepositoryAuthoritiesVariations")
-        void missingRepositoryAuthoritiesCausesNoFailWithAccessDenied(final ArgumentsAccessor argumentsAccessor) throws Exception {
+        void should_denyAccess_when_oneRepositoryAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) throws Exception {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val wahlID = "wahlID";
@@ -108,7 +108,7 @@ public class ReferendumvorlagenServiceSecurityTest {
                             HttpStatus.OK.value()).withBody(objectMapper.writeValueAsBytes(eaiReferendumvorschlage))));
 
             Assertions.assertThatThrownBy(
-                    () -> referendumvorlagenService.getReferendumvorlagen(new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID)))
+                            () -> referendumvorlagenService.getReferendumvorlagen(new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID)))
                     .isInstanceOf(
                             AccessDeniedException.class);
             //we have to check is data is stores because access denied exceptions are caught too

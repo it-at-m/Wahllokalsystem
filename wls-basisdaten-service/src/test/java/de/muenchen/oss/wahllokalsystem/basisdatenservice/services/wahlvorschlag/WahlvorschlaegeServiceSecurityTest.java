@@ -53,7 +53,7 @@ public class WahlvorschlaegeServiceSecurityTest {
         }
 
         @Test
-        void accessGranted() throws Exception {
+        void should_grantAccess_when_authoritiesArePresent() throws Exception {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLVORSCHLAEGE);
 
             val wahlID = "wahlID";
@@ -69,7 +69,7 @@ public class WahlvorschlaegeServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void missingAuthorityCausesFailWithAccessDenied(final ArgumentsAccessor argumentsAccessor) throws Exception {
+        void should_denyAccess_when_anyAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) throws Exception {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val wahlID = "wahlID";

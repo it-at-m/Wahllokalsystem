@@ -16,7 +16,7 @@ class WahlModelMapperTest {
     private final WahlModelMapper unitUnderTest = Mappers.getMapper(WahlModelMapper.class);
 
     @Test
-    void fromListOfWahlModeltoListOfWahlEntities() {
+    void should_returnWahlList_when_givenWahlModelList() {
         val modelsToMap = createListOfWahlModels();
 
         val result = unitUnderTest.fromListOfWahlModeltoListOfWahlEntities(modelsToMap);
@@ -26,7 +26,7 @@ class WahlModelMapperTest {
     }
 
     @Test
-    void fromListOfWahlEntityToListOfWahlModel() {
+    void should_returnWahlModelList_when_givenWahlList() {
         val entitiesToMap = createWahlenList();
 
         val result = unitUnderTest.fromListOfWahlEntityToListOfWahlModel(entitiesToMap);

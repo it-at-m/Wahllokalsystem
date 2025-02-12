@@ -52,7 +52,7 @@ class WahlenClientMapperTest {
     class FromRemoteClientSetOfWahlDTOtoListOfWahlModel {
 
         @Test
-        void should_returnWahlModelList_when_WahlDTOList() {
+        void should_returnWahlModelList_when_wahlDTOList() {
             val wahl1 = new WahlDTO();
             wahl1.setIdentifikator("identifikatorWahl1");
             wahl1.setNummer("nummerWahl1");

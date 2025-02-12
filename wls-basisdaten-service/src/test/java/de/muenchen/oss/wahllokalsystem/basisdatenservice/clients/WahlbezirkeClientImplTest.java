@@ -41,7 +41,7 @@ class WahlbezirkeClientImplTest {
     class LoadWahlbezirke {
 
         @Test
-        void should_mapClientResponse_when_called() {
+        void should_mapClientResponse_when_callingGet() {
             val testDate = LocalDate.now().minusMonths(3);
 
             val mockedClientResponse = MockDataFactory.createSetOfClientWahlbezirkDTO(testDate);

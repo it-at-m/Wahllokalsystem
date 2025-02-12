@@ -77,7 +77,7 @@ class UngueltigeWahlscheineServiceTest {
     class SetUngueltigeWahlscheine {
 
         @Test
-        void should_saveUngueltigeWahlscheine_when_called() {
+        void should_saveUngueltigeWahlscheine_when_callingPost() {
             val ungueltigeWahlscheineData = "csv data to set".getBytes();
             val ungueltigeWahlscheineWriteModel = new UngueltigeWahlscheineWriteModel(new UngueltigeWahlscheineReferenceModel("wahlID", WahlbezirkArtModel.BWB),
                     ungueltigeWahlscheineData);

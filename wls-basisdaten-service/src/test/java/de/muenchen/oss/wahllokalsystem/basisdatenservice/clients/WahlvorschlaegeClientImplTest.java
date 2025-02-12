@@ -39,7 +39,7 @@ class WahlvorschlaegeClientImplTest {
     class GetWahlvorschlaege {
 
         @Test
-        void should_mapClientResponse_when_called() {
+        void should_mapClientResponse_when_callingGet() {
             val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
 
             val mockedClientResponse = new WahlvorschlaegeDTO();

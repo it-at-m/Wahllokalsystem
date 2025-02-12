@@ -108,7 +108,7 @@ class DummyClientImplTest {
     class GetKonfigurierterWahltag {
 
         @Test
-        void should_returnNonNullObjectWithActivePropertyTrue_when_calling() {
+        void should_returnNonNullObjectWithActivePropertyTrue_when_callingGet() {
             val result = unitUnderTest.getKonfigurierterWahltag();
             Assertions.assertThat(result).hasNoNullFieldsOrProperties();
             Assertions.assertThat(result.active()).isTrue();
@@ -119,7 +119,7 @@ class DummyClientImplTest {
     class LoadWahlbezirke {
 
         @Test
-        void should_returnNonEmptyField_when_calling() {
+        void should_returnNonEmptyField_when_callingGet() {
             val result = unitUnderTest.loadWahlbezirke(LocalDate.now(), "0");
             Assertions.assertThat(result).isNotEmpty();
         }

@@ -42,7 +42,7 @@ class WahltageClientImplTest {
     class GetWahltage {
 
         @Test
-        void should_mapClientResponse_when_called() {
+        void should_mapClientResponse_when_callingGet() {
             val testDate = LocalDate.now().minusMonths(3);
 
             val mockedClientResponse = createClientWahltageDTO();

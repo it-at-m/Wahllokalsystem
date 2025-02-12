@@ -28,7 +28,7 @@ class WahlvorschlaegeValidatorTest {
         private final FachlicheWlsException mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
         @Test
-        void should_notThrowException_when_valid() {
+        void should_notThrowException_when_givenValidIDs() {
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(new BezirkUndWahlID("wahlID", "wahlbezirkID")));
         }
 

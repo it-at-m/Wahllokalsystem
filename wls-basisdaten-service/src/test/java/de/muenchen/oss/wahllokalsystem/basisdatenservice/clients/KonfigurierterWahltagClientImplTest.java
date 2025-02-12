@@ -39,7 +39,7 @@ class KonfigurierterWahltagClientImplTest {
     class LoadBasisdaten {
 
         @Test
-        void should_mapClientResponse_when_called() {
+        void should_mapClientResponse_when_callingGet() {
             val mockedClientResponse = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
                     KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
             val mockedMappedClientResponse = KonfigurierterWahltagModel.builder().build();

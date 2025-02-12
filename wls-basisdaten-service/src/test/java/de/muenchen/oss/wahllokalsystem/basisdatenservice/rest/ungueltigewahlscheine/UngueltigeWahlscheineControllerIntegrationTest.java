@@ -101,7 +101,7 @@ public class UngueltigeWahlscheineControllerIntegrationTest {
     class SetUngueltigeWahlscheine {
 
         @Test
-        void should_setNewData_when_called() throws Exception {
+        void should_setNewData_when_callingPost() throws Exception {
             val newData = "csv-data".getBytes();
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_UNGUELTIGEWAHLSCHEINE);

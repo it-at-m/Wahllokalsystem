@@ -139,7 +139,7 @@ class HandbuchValidatorTest {
         }
 
         @Test
-        void should_notThrowException_when_HandbuchReferenceWahlbezirksArtIsNull() {
+        void should_notThrowException_when_handbuchReferenceWahlbezirksArtIsNull() {
             val invalidModel = initValidModel().handbuchReferenceModel(initValidHandbuchReferenceModel().wahlbezirksart(null).build()).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTHANDBUCH_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedWlsException);

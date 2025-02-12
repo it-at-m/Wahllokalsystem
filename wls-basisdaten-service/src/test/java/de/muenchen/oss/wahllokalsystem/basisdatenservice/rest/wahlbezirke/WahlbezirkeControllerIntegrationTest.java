@@ -98,7 +98,7 @@ public class WahlbezirkeControllerIntegrationTest {
     class GetWahlbezirke {
 
         @Test
-        void should_returnWahlbezirkDTOList_when_LoadedFromExternal() throws Exception {
+        void should_returnWahlbezirkDTOList_when_loadedFromExternal() throws Exception {
             val forWahltagDate = LocalDate.now().minusMonths(2);
             val wahltagID = "_identifikatorWahltag1";
             val wahltagNummer = "nummerWahltag1";

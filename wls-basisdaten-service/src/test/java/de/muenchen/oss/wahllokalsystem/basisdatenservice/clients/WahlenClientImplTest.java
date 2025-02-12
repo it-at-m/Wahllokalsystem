@@ -43,7 +43,7 @@ class WahlenClientImplTest {
     class GetWahlen {
 
         @Test
-        void should_mapClientResponse_when_called() {
+        void should_mapClientResponse_when_callingGet() {
             val testDate = LocalDate.now();
 
             val mockedClientResponse = createClientWahlenDTO();

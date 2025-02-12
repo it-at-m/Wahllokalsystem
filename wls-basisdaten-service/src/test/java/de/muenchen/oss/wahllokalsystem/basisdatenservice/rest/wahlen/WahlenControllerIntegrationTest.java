@@ -163,7 +163,7 @@ public class WahlenControllerIntegrationTest {
         }
 
         @Test
-        void should_returnTechnischeWlsException_when_NoExternalDataFound() throws Exception {
+        void should_returnTechnischeWlsException_when_noExternalDataFound() throws Exception {
             var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung4", "1");
             val requestDate = LocalDate.now().toString();
             wahltagRepository.save(searchingForWahltag);

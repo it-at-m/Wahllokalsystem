@@ -75,7 +75,7 @@ class HandbuchServiceTest {
     class SetHandbuch {
 
         @Test
-        void should_saveHandbuch_when_called() {
+        void should_saveHandbuch_when_callingPost() {
             val handbuchToSave = HandbuchWriteModel.builder().build();
 
             val mockedModelMappedToEntity = new Handbuch();

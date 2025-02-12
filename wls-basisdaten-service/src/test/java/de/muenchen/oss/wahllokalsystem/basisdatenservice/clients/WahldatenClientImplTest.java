@@ -41,7 +41,7 @@ class WahldatenClientImplTest {
     class LoadBasisdaten {
 
         @Test
-        void should_mapClientResponse_when_called() {
+        void should_mapClientResponse_when_callingGet() {
             val testDate = LocalDate.now();
 
             val mockedClientResponse = MockDataFactory.createClientBasisdatenDTO(LocalDate.now());

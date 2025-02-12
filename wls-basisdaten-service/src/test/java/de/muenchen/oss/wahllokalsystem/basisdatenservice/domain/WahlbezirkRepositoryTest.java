@@ -82,7 +82,7 @@ class WahlbezirkRepositoryTest {
     }
 
     @Test
-    void should_deleteWahltag_when_called() {
+    void should_deleteWahltag_when_callingDelete() {
         val wahltag1 = LocalDate.now();
         val wahltag2 = LocalDate.now().plusDays(1);
         List<Wahlbezirk> wahlbezirkeToSave1 = MockDataFactory.createListOfWahlbezirkEntity("praefix1", wahltag1);

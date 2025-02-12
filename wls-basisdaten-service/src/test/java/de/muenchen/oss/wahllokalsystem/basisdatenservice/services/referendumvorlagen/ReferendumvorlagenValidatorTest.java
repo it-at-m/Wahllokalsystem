@@ -35,7 +35,7 @@ class ReferendumvorlagenValidatorTest {
         }
 
         @Test
-        void should_throw_exception_when_modelIsNull() {
+        void should_throwException_when_modelIsNull() {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG))
                     .thenReturn(mockedWlsException);
 

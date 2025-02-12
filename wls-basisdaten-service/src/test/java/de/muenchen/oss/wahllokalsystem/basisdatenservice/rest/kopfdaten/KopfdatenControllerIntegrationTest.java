@@ -112,7 +112,7 @@ public class KopfdatenControllerIntegrationTest {
 
         @Test
         @Transactional
-        void should_persistExternalData_when_called() throws Exception {
+        void should_persistExternalData_when_callingGet() throws Exception {
             // mock infomanagement konfigurierterWahltag
             KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
                     KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);

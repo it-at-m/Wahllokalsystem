@@ -56,7 +56,7 @@ class AWerteClientImplTest {
 
             Mockito.doThrow(new RuntimeException("api call failed")).when(awerteControllerApi).initialiseAWerte(wahlbezirkIDList);
             Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_ERGEBNISMELDUNG))
-                .thenReturn(mockedWlsException);
+                    .thenReturn(mockedWlsException);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.initialiseAWerte(wahlbezirkIDList)).isSameAs(mockedWlsException);
         }

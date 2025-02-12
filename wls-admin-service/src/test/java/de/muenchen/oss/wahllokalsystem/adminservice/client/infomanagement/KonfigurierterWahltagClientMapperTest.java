@@ -31,7 +31,7 @@ class KonfigurierterWahltagClientMapperTest {
             val result = unitUnderTest.toClientDto(konfigurierterWahltagModel);
 
             val expectedkonfigurierterWahltagDto = new KonfigurierterWahltagDTO().wahltag(dateNow).wahltagID("wahltagID").wahltagStatus(
-                KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV).nummer("123");
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV).nummer("123");
 
             Assertions.assertThat(result).isEqualTo(expectedkonfigurierterWahltagDto);
         }
@@ -46,7 +46,7 @@ class KonfigurierterWahltagClientMapperTest {
             val result = unitUnderTest.toClientDto(konfigurierterWahltagModel);
 
             val expectedkonfigurierterWahltagDto = new KonfigurierterWahltagDTO().wahltag(dateNow).wahltagID("wahltagID").wahltagStatus(
-                KonfigurierterWahltagDTO.WahltagStatusEnum.INAKTIV).nummer("123");
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.INAKTIV).nummer("123");
 
             Assertions.assertThat(result).isEqualTo(expectedkonfigurierterWahltagDto);
         }

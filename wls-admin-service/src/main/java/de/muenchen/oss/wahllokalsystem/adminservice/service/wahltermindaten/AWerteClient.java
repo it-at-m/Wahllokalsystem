@@ -6,7 +6,7 @@ import java.util.List;
 public interface AWerteClient {
 
     /**
-     * @param  wahlbezirkIDs reference to a list of Wahlbezirke
+     * @param wahlbezirkIDs reference to a list of Wahlbezirke
      * @throws WlsException
      *             {@link de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException}
      *             if there were trouble during communication

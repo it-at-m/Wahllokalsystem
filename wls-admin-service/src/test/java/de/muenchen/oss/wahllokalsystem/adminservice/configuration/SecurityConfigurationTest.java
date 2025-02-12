@@ -92,7 +92,7 @@ class SecurityConfigurationTest {
 
         @WithMockUser
         @Test
-        void should_returnNoContent_when_callingAuthenticated() throws Exception {
+        void should_returnOk_when_callingAuthenticated() throws Exception {
             val wahltagID = "wahltagID";
             val request = MockMvcRequestBuilders.post("/businessActions/importWahltermindaten/" + wahltagID).with(csrf())
                     .contentType(MediaType.APPLICATION_JSON);

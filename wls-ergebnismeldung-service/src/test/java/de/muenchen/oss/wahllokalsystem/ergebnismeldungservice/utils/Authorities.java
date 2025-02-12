@@ -23,6 +23,8 @@ public class Authorities {
     public static final String SERVICE_SET_STIMMABGABEVERMERKE = "Ergebnismeldung_BUSINESSACTION_PostStimmabgabevermerke";
     public static final String SERVICE_GET_ERGEBNISSE = "Ergebnismeldung_BUSINESSACTION_GetErgebnisse";
     public static final String SERVICE_SET_ERGEBNISSE = "Ergebnismeldung_BUSINESSACTION_PostErgebnisse";
+    public static final String SERVICE_UPDATE_SENDUNGSZEITEN = "Ergebnismeldung_BUSINESSACTION_ForceErgebnisse";
+    public static final String SERVICE_SEND_ERGEBNISSE = "Ergebnismeldung_BUSINESSACTION_SendErgebnisse";
 
     public static final String REPOSITORY_READ_AWERTE = "Ergebnismeldung_READ_AWerte";
     public static final String REPOSITORY_DELETE_AWERTE = "Ergebnismeldung_DELETE_AWerte";
@@ -128,6 +130,11 @@ public class Authorities {
     };
 
     public static final String[] ALL_AUTHORITIES_GET_ERGEBNISSE = new String[] {
+            REPOSITORY_READ_ERGEBNISSE,
+            SERVICE_GET_ERGEBNISSE
+    };
+
+    public static final String[] ALL_AUTHORITIES_GET_ALL_ERGEBNISSE = new String[] {
             REPOSITORY_READ_ERGEBNISSE,
             SERVICE_GET_ERGEBNISSE
     };

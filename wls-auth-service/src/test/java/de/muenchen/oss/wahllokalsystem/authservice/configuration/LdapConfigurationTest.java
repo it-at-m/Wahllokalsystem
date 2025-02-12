@@ -9,11 +9,13 @@ import de.muenchen.oss.wahllokalsystem.authservice.domain.Permission;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.PermissionRepository;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.User;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.UserRepository;
+import de.muenchen.oss.wahllokalsystem.authservice.domain.Wahlbezirksart;
 import de.muenchen.oss.wahllokalsystem.authservice.rest.UserDTO;
 import java.net.URI;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -101,11 +103,13 @@ class LdapConfigurationTest {
 
         @Test
         void should_accessSecureResource_when_loggingInWithToken() throws Exception {
+            val userWahlbezirkArt = Wahlbezirksart.BWB;
+
             transactionTemplate.executeWithoutResult(status -> {
                 val savedPermission = permissionRepository.save(new Permission("permission"));
                 val authorityToSave = new Authority("WLS_WAHLVORSTAND", new HashSet<>(Set.of(savedPermission)), Collections.emptySet());
                 val authoritySaved = authorityRepository.save(authorityToSave);
-                val userToSave = new User(EMBEDDED_LDAP_USER, null, null, true, true, WAHLTAG_ID, null, null, null, null, null,
+                val userToSave = new User(EMBEDDED_LDAP_USER, null, null, true, true, WAHLTAG_ID, null, null, null, userWahlbezirkArt, null,
                         new HashSet<>(Set.of(authoritySaved)),
                         null);
                 userRepository.save(userToSave);
@@ -181,6 +185,10 @@ class LdapConfigurationTest {
             val tokenResponse = restTemplate.exchange(tokenRequest, String.class);
 
             val token = objectMapper.readValue(tokenResponse.getBody(), Token.class).getAccess_token();
+
+            val tokenPayload = Base64.getDecoder().decode(token.split("\\.")[1].getBytes());
+            val tokenPayloadAsMap = objectMapper.readValue(tokenPayload, Map.class);
+            Assertions.assertThat(tokenPayloadAsMap.get("wahlbezirksArt")).isEqualTo(userWahlbezirkArt.name());
 
             //user endpoint
             val userRequestHeaders = new HttpHeaders();

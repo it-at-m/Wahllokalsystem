@@ -5,7 +5,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Bezi
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface BegruendungModelMapper {
 
     BezirkUndWahlIDStapelart toEmbeddedId(BegruendungReference reference);

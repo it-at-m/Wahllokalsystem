@@ -19,7 +19,7 @@ class JWTHandlerTest {
     class GetDetail {
 
         @Test
-        void detailKeyHasData() {
+        void should_returnDetailValue_when_detailKeyHasData() {
             val detailKey = "requestedKey";
             val detailValue = "detailValue";
 
@@ -33,7 +33,7 @@ class JWTHandlerTest {
         }
 
         @Test
-        void detailKeyHasNoData() {
+        void should_returnEmptyOptional_when_detailKeyHasNoData() {
             val detailKey = "requestedKey";
 
             val jwt = createJWT(Map.of(detailKey + "extra", detailKey));

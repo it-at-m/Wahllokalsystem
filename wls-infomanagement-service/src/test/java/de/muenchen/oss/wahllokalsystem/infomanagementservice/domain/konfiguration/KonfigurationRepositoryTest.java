@@ -27,7 +27,7 @@ class KonfigurationRepositoryTest {
     }
 
     @Test
-    void getFruehesteLoginUhrzeit() {
+    void should_returnKonfigurationWithFruehesteLoginUhrzeit_when_getFruehesteLoginUhrzeitIsCalled() {
         val konfigurationFruehesteLoginUhrzeit = new Konfiguration("FRUEHESTE_LOGIN_UHRZEIT", "06:00:00", "", "");
         SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_KONFIGURATION);
         konfigurationRepository.save(konfigurationFruehesteLoginUhrzeit);
@@ -37,7 +37,7 @@ class KonfigurationRepositoryTest {
     }
 
     @Test
-    void getSpaetesteLoginUhrzeit() {
+    void should_returnKonfigurationWithSpaetesteLoginUhrzeit_when_getSpaetesteLoginUhrzeitIsCalled() {
         val konfigurationFruehesteLoginUhrzeit = new Konfiguration("SPAETESTE_LOGIN_UHRZEIT", "23:56:00", "", "");
         SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_KONFIGURATION);
         konfigurationRepository.save(konfigurationFruehesteLoginUhrzeit);
@@ -47,7 +47,7 @@ class KonfigurationRepositoryTest {
     }
 
     @Test
-    void getWillkommenstext() {
+    void should_returnKonfigurationWithWillkommenstext_when_getWillkommenstextIsCalled() {
         val konfigurationFruehesteLoginUhrzeit = new Konfiguration("WILLKOMMENSTEXT", "hello world", "", "");
         SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_KONFIGURATION);
         konfigurationRepository.save(konfigurationFruehesteLoginUhrzeit);

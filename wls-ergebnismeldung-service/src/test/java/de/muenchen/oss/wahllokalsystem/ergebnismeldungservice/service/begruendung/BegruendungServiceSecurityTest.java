@@ -9,6 +9,8 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration.Prof
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.BegruendungRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.begruendung.BegruendungDTOMapper;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
@@ -60,7 +62,7 @@ class BegruendungServiceSecurityTest {
         void should_getAccess_when_allRequiredAuthoritiesArePresent() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_BEGRUENDUNG);
 
-            val begruendungReference = begruendungDTOMapper.toReferenceModel("wahlbezirkID", "wahlID", Stapelart.LTW_BZW_A);
+            val begruendungReference = begruendungDTOMapper.toReferenceModel("wahlbezirkID", "wahlID", StapelartDTO.LTW_BZW_A);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(begruendungReference.wahlbezirkID()), Mockito.any())).thenReturn(true);
 
@@ -73,7 +75,7 @@ class BegruendungServiceSecurityTest {
             SecurityUtils.runWith(arguments.get(0, String[].class));
 
             Assertions.assertThatException()
-                    .isThrownBy(() -> unitUnderTest.getBegruendung(begruendungDTOMapper.toReferenceModel("wahlbezirkID", "wahlID", Stapelart.LTW_BZW_A)))
+                    .isThrownBy(() -> unitUnderTest.getBegruendung(begruendungDTOMapper.toReferenceModel("wahlbezirkID", "wahlID", StapelartDTO.LTW_BZW_A)))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
@@ -92,13 +94,14 @@ class BegruendungServiceSecurityTest {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
             val stapelart = Stapelart.LTW_BZW_A;
+            val stapelartModel = StapelartModel.LTW_BZW_A;
 
-            val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelart, "grund1", "grund2", true, true);
+            val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, "grund1", "grund2", true, true);
             val newBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung, newBegruendungReference));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendungReference, newBegruendung));
         }
 
         @Test
@@ -107,13 +110,14 @@ class BegruendungServiceSecurityTest {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
             val stapelart = Stapelart.LTW_BZW_A;
+            val stapelartModel = StapelartModel.LTW_BZW_A;
 
-            val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelart, "grund1", "grund2", true, true);
+            val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, "grund1", "grund2", true, true);
             val newBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(false);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung, newBegruendungReference))
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendungReference, newBegruendung))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
@@ -125,13 +129,14 @@ class BegruendungServiceSecurityTest {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
             val stapelart = Stapelart.LTW_BZW_A;
+            val stapelartModel = StapelartModel.LTW_BZW_A;
 
-            val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelart, "grund1", "grund2", true, true);
+            val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, "grund1", "grund2", true, true);
             val newBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(false);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung, newBegruendungReference))
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendungReference, newBegruendung))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
@@ -143,13 +148,14 @@ class BegruendungServiceSecurityTest {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
             val stapelart = Stapelart.LTW_BZW_A;
+            val stapelartModel = StapelartModel.LTW_BZW_A;
 
-            val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelart, "grund1", "grund2", true, true);
+            val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, "grund1", "grund2", true, true);
             val newBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendung, newBegruendungReference))
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postBegruendung(newBegruendungReference, newBegruendung))
                     .isInstanceOf(TechnischeWlsException.class);
         }
 

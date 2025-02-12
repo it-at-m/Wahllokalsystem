@@ -97,7 +97,7 @@ class WahlvorschlaegeServiceTest {
         }
 
         @Test
-        void should_throwFachlicheWlsException_when_validationFailed() {
+        void should_throwRuntimeException_when_validationFailed() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val wahlUndBezirkID = new BezirkUndWahlID(wahlID, wahlbezirkID);

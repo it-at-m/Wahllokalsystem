@@ -33,7 +33,7 @@ class WahlvorschlaegeValidatorTest {
         }
 
         @Test
-        void should_notThrowException_when_parameterIsNull() {
+        void should_throwException_when_parameterIsNull() {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG)).thenReturn(mockedFachlicheWlsException);
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(null)).isSameAs(mockedFachlicheWlsException);
         }

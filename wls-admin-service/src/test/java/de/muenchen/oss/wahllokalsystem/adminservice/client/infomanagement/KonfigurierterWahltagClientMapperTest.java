@@ -14,11 +14,11 @@ class KonfigurierterWahltagClientMapperTest {
     private final KonfigurierterWahltagClientMapper unitUnderTest = Mappers.getMapper(KonfigurierterWahltagClientMapper.class);
 
     @Nested
-    class ToClientDto {
+    class ToDto {
 
         @Test
         void should_returnNull_when_nullIsGiven() {
-            Assertions.assertThat(unitUnderTest.toClientDto(null)).isNull();
+            Assertions.assertThat(unitUnderTest.toDto(null)).isNull();
         }
 
         @Test
@@ -28,7 +28,7 @@ class KonfigurierterWahltagClientMapperTest {
 
             Assertions.assertThat(konfigurierterWahltagModel).hasNoNullFieldsOrProperties();
 
-            val result = unitUnderTest.toClientDto(konfigurierterWahltagModel);
+            val result = unitUnderTest.toDto(konfigurierterWahltagModel);
 
             val expectedkonfigurierterWahltagDto = new KonfigurierterWahltagDTO().wahltag(dateNow).wahltagID("wahltagID").wahltagStatus(
                     KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV).nummer("123");
@@ -43,7 +43,7 @@ class KonfigurierterWahltagClientMapperTest {
 
             Assertions.assertThat(konfigurierterWahltagModel).hasNoNullFieldsOrProperties();
 
-            val result = unitUnderTest.toClientDto(konfigurierterWahltagModel);
+            val result = unitUnderTest.toDto(konfigurierterWahltagModel);
 
             val expectedkonfigurierterWahltagDto = new KonfigurierterWahltagDTO().wahltag(dateNow).wahltagID("wahltagID").wahltagStatus(
                     KonfigurierterWahltagDTO.WahltagStatusEnum.INAKTIV).nummer("123");

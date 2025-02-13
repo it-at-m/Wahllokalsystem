@@ -12,7 +12,7 @@ import org.mapstruct.Mapping;
 public interface KonfigurierterWahltagClientMapper {
 
     @Mapping(target = "wahltagStatus", source = "active")
-    KonfigurierterWahltagDTO toClientDto(KonfigurierterWahltagModel model);
+    KonfigurierterWahltagDTO toDto(KonfigurierterWahltagModel model);
 
     default KonfigurierterWahltagDTO.WahltagStatusEnum mapModelBooleanActiveToWahltagStatusEnumString(boolean active) {
         return active ? AKTIV : INAKTIV;

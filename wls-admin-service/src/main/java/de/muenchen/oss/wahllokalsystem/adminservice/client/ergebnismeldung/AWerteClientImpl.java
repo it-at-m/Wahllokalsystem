@@ -23,7 +23,7 @@ public class AWerteClientImpl implements AWerteClient {
     private final ExceptionFactory exceptionFactory;
 
     @Override
-    public void initialiseAWerte(List<String> wahlbezirkIDs) {
+    public void initialiseAWerte(final List<String> wahlbezirkIDs) {
         try {
             awerteControllerApi.initialiseAWerte(wahlbezirkIDs);
         } catch (final WlsException wlsException) {

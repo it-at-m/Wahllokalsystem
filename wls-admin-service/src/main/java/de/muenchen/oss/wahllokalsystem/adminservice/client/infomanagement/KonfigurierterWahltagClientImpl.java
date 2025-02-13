@@ -26,11 +26,11 @@ public class KonfigurierterWahltagClientImpl implements KonfigurierterWahltagCli
     private final KonfigurierterWahltagClientMapper konfigurierterWahltagClientMapper;
 
     @Override
-    public void postKonfigurierterWahltag(KonfigurierterWahltagModel konfigurierterWahltag) {
+    public void postKonfigurierterWahltag(final KonfigurierterWahltagModel konfigurierterWahltag) {
         log.debug("#postKonfigurierterWahltag");
 
         try {
-            val konfigurierterWahltagDTO = konfigurierterWahltagClientMapper.toClientDto(konfigurierterWahltag);
+            val konfigurierterWahltagDTO = konfigurierterWahltagClientMapper.toDto(konfigurierterWahltag);
             konfigurierterWahltagControllerApi.setKonfigurierterWahltag(konfigurierterWahltagDTO);
         } catch (final WlsException wlsException) {
             log.debug("#postKonfigurierterWahltag found WlsException:", wlsException);

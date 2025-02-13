@@ -22,7 +22,7 @@ public class WahltermindatenClientImpl implements WahltermindatenClient {
     private final WahltermindatenControllerApi wahltermindatenControllerApi;
 
     @Override
-    public void putWahltermindaten(String wahltagID) {
+    public void putWahltermindaten(final String wahltagID) {
         try {
             wahltermindatenControllerApi.putWahltermindaten(wahltagID);
         } catch (WlsException wlsException) {
@@ -34,7 +34,7 @@ public class WahltermindatenClientImpl implements WahltermindatenClient {
     }
 
     @Override
-    public void deleteWahltermindaten(String wahltagID) {
+    public void deleteWahltermindaten(final String wahltagID) {
         log.debug("#deleteWahltermindaten");
 
         try {

@@ -42,7 +42,7 @@ class KonfigurierterWahltagClientImplTest {
             val mockedKonfigurierterWahltagDTO = new KonfigurierterWahltagDTO().wahltag(nowDate).wahltagID("1-2-3").wahltagStatus(
                     KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV).nummer("123");
 
-            Mockito.when(konfigurierterWahltagClientMapper.toClientDto(konfigurierterWahltagModel)).thenReturn(mockedKonfigurierterWahltagDTO);
+            Mockito.when(konfigurierterWahltagClientMapper.toDto(konfigurierterWahltagModel)).thenReturn(mockedKonfigurierterWahltagDTO);
 
             unitUnderTest.postKonfigurierterWahltag(konfigurierterWahltagModel);
 
@@ -56,7 +56,7 @@ class KonfigurierterWahltagClientImplTest {
             val mockedKonfigurierterWahltagDTO = new KonfigurierterWahltagDTO().wahltag(nowDate).wahltagID("1-2-3").wahltagStatus(
                     KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV).nummer("123");
 
-            Mockito.when(konfigurierterWahltagClientMapper.toClientDto(konfigurierterWahltagModel)).thenReturn(mockedKonfigurierterWahltagDTO);
+            Mockito.when(konfigurierterWahltagClientMapper.toDto(konfigurierterWahltagModel)).thenReturn(mockedKonfigurierterWahltagDTO);
 
             val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("communication with KonfigurierterWahltagApi api failed");
 
@@ -73,7 +73,7 @@ class KonfigurierterWahltagClientImplTest {
                     KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV).nummer("123");
             val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("communication with KonfigurierterWahltagApi api failed");
 
-            Mockito.when(konfigurierterWahltagClientMapper.toClientDto(konfigurierterWahltagModel)).thenReturn(mockedKonfigurierterWahltagDTO);
+            Mockito.when(konfigurierterWahltagClientMapper.toDto(konfigurierterWahltagModel)).thenReturn(mockedKonfigurierterWahltagDTO);
             Mockito.doThrow(new RuntimeException("api call failed")).when(konfigurierterWahltagControllerApi)
                     .setKonfigurierterWahltag(mockedKonfigurierterWahltagDTO);
             Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT))

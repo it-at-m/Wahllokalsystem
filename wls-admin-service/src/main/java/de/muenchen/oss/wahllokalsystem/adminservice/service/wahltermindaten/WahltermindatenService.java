@@ -29,7 +29,7 @@ public class WahltermindatenService {
     private final KonfigurierterWahltagClient konfigurierterWahltagClient;
 
     @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_LoadWahltermindaten')")
-    public void loadWahltermindaten(String wahltagID) {
+    public void loadWahltermindaten(final String wahltagID) {
         wahltermindatenValidator.validWahltagIDParamOrThrow(wahltagID);
 
         log.debug("Initialisiere Wahltermindaten für Wahltag {}", wahltagID);

@@ -57,7 +57,7 @@ flowchart LR
 | [EAI](/services/backend-services/eai-service/)                                            | 8300 |
 | [Ergebnismeldung](/services/backend-services/ergebnismeldung-service/)                    | 8208 |
 | [Infomanagement](/services/backend-services/infomanagement-service/)                      | 8201 |
-| [Monitoring](/services/backend-services/-service/)                                        | 8206 |
+| [Monitoring](/services/backend-services/monitoring-service/)                              | 8206 |
 | [Vorfälle und Vorkommnisse](/services/backend-services/vorfaelleundvorkommnisse-service/) | 8204 |
 | [Wahlvorbereitung](/services/backend-services/wahlvorbereitungs-service/)                 | 8203 |
 | [Wahlvorstand](/services/backend-services/wahlvorstand-service/)                          | 8207 |

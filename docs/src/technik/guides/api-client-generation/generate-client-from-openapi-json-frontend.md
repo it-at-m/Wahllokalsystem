@@ -12,12 +12,36 @@ npm install @openapitools/openapi-generator-cli -g typescript-axios
 ```
 
 ::: details Errorhandling
-Sollte dabei diese Fehlermeldung auftauchen:
+Möglicherweise erscheint bei dem Versuch die openapitools zu installieren, diese Fehlermeldung: 
 ![error_install_openapi-generator.png](/error_install_openapi-generator.png)
-können die Schritte aus 
-[diesem Stack-Beitrag](https://stackoverflow.com/questions/18088372/how-to-npm-install-global-not-as-root/59227497#59227497)
-befolgt werden.
-Bei Bedarf muss zusätzlich noch der Proxy konfiguriert werden.
+
+In diesem Fall können die folgenden Schritte ausgeführt werden ([Quelle](https://stackoverflow.com/questions/18088372/how-to-npm-install-global-not-as-root/59227497#59227497))
+
+> [!TIP]
+> Es ist empfehlenswert, für die folgenden Befehle das `Git Bash`-Terminal zu nutzen.
+
+1. **npm Konfigurieren**
+    ```shell
+    npm config set prefix '~/.local/'
+    ```
+   Durch diesen Befehl wird die Zeile `prefix=~/.local/` zur `.npmrc`-Datei hinzugefügt. Alternativ kann dies auch 
+   manuell erfolgen.
+2. **Umgebungsvariablen prüfen**
+
+   `~/.local/` sollte in der `PATH`-Umgebungsvariable enthalten sein. Dies kann entweder manuell, oder über diesen 
+   Befehl erfolgen. `./bashrc` sollte dabei durch das entsprechende Config-File des genutzten Terminals ersetzt werden.
+   ```shell
+   mkdir -p ~/.local
+   echo 'export PATH="$HOME/.local/:$PATH"' >> ~/.bashrc
+   ```
+3. **Proxy konfigurieren** 
+
+   Bei Bedarf muss zusätzlich noch mit folgendem Befehl der https-Proxy konfiguriert werden:
+   ```shell
+   export HTTPS_PROXY=<proxy url>
+   ```
+
+Nach Durchführung dieser Schritte kann der Installationsbefehl erneut ausgeführt werden.
 :::
 
 Anschließend kann im Terminal mit dem Befehl `openapi-generator-cli version` geprüft werden, ob die Installation 

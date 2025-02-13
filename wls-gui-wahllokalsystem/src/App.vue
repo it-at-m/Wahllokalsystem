@@ -166,12 +166,13 @@ async function getUserFromAuth() {
 
 async function sendPinToSW(pin: string) {
   // waiting for SW to be registered
-  while (!navigator.serviceWorker || !navigator.serviceWorker.controller) {
+  try {
+    const registration = await navigator.serviceWorker.ready;
+    registration.active?.postMessage(pin);
+  } catch (error) {
     // eslint-disable-next-line no-console
-    console.warn("wahllokal-auth: retry sendPinToSW in 200 mils");
-    await sleep(200);
+    console.error("Failed to send PIN to service worker:", error);
   }
-  navigator.serviceWorker.controller.postMessage(pin);
 }
 
 function sleep(ms: number) {

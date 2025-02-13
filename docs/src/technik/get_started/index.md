@@ -93,6 +93,9 @@ gruppiert nach der Art der Datenbank und ob die Security aktiviert ist oder nich
 
 Eine Übersicht über die Profile gibt es [hier](#profile).
 
+> [!TIP]
+> Wenn es Updates an den Runconfigurations gab, die gefetcht wurden, ist es notwendig IntelliJ neu zu starten.
+
 ## Starten des Frontends
 
 Standardmäßig wird das Frontend über den Befehl `"dev": "vite"` in der `package.json`-Datei gestartet.

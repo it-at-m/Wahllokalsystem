@@ -8,7 +8,5 @@ import lombok.Builder;
 public record WahltagModel(@NotNull String wahltagID,
                            @NotNull LocalDate wahltag,
                            String beschreibung,
-                           String nummer
-) {
-
+                           String nummer) {
 }

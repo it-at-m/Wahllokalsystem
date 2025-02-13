@@ -67,6 +67,5 @@ public class WahltermindatenService {
             // "Rollback..." <--|
             throw e;
         }
-
     }
 }

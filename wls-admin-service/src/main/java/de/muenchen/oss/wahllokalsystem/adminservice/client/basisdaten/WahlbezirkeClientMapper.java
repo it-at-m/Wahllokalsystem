@@ -9,5 +9,4 @@ import org.mapstruct.Mapper;
 public interface WahlbezirkeClientMapper {
 
     List<WahlbezirkModel> fromListOfWahlbezirkDTOtoListOfWahlbezirkModel(List<WahlbezirkDTO> wahlbezirkeDTOs);
-
 }

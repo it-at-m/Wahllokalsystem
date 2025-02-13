@@ -37,7 +37,7 @@ class KonfigurierterWahltagClientMapperTest {
         }
 
         @Test
-        void should_mapToDtoWithWithEnumStatusInaktiv_when_givenModelWithActiveFalse() {
+        void should_mapToDtoWithEnumStatusInaktiv_when_givenModelWithActiveFalse() {
             val dateNow = LocalDate.now();
             val konfigurierterWahltagModel = new KonfigurierterWahltagModel(dateNow, "wahltagID", false, "123");
 

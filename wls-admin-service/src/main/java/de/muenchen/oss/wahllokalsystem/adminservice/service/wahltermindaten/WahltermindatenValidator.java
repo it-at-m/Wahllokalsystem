@@ -13,7 +13,7 @@ public class WahltermindatenValidator {
     private final ExceptionFactory exceptionFactory;
 
     public void validWahltagIDParamOrThrow(final String wahltagID) {
-        if (wahltagID == null || StringUtils.isEmpty(wahltagID) || StringUtils.isBlank(wahltagID)) {
+        if (StringUtils.isBlank(wahltagID)) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.MISSING_ARGUMENT);
         }
     }

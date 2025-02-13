@@ -41,7 +41,7 @@ public class WahltermindatenController {
     )
     @PostMapping("importWahltermindaten/{wahltagID}")
     @ResponseStatus(HttpStatus.OK)
-    public void loadWahltermindaten(@PathVariable("wahltagID") String wahltagID) {
+    public void loadWahltermindaten(@PathVariable("wahltagID") final String wahltagID) {
         wahltermindatenService.loadWahltermindaten(wahltagID);
     }
 

@@ -18,9 +18,9 @@
   },
   "dependencies": {
     "@vueuse/core": "12.4.0",
-    "axios": "^1.7.9",
-    "crypto-js": "^4.2.0",
-    "localforage": "^1.10.0",
+    "axios": "1.7.9",
+    "crypto-js": "4.2.0",
+    "localforage": "1.10.0",
     "pinia": "2.3.0",
     "roboto-fontface": "0.10.0",
     "vue": "3.5.13",
@@ -31,7 +31,7 @@
     "@mdi/js": "7.4.47",
     "@muenchen/prettier-codeformat": "1.0.2",
     "@tsconfig/node-lts": "22.0.1",
-    "@types/crypto-js": "^4.2.2",
+    "@types/crypto-js": "4.2.2",
     "@types/node": "22.9.0",
     "@vitejs/plugin-vue": "5.1.4",
     "@vue/eslint-config-prettier": "10.1.0",
@@ -45,13 +45,13 @@
     "typescript": "5.5.4",
     "unplugin-fonts": "1.1.1",
     "vite": "5.4.11",
-    "vite-plugin-pwa": "^0.21.1",
+    "vite-plugin-pwa": "0.21.1",
     "vite-plugin-vuetify": "2.0.4",
     "vitest": "2.1.8",
     "vue-tsc": "2.2.0",
-    "workbox-core": "^7.3.0",
-    "workbox-precaching": "^7.3.0",
-    "workbox-routing": "^7.3.0",
-    "workbox-strategies": "^7.3.0"
+    "workbox-core": "7.3.0",
+    "workbox-precaching": "7.3.0",
+    "workbox-routing": "7.3.0",
+    "workbox-strategies": "7.3.0"
   }
 }

@@ -15,7 +15,7 @@ class WahltagClientMapperTest {
     private final WahltagClientMapper unitUnderTest = Mappers.getMapper(WahltagClientMapper.class);
 
     @Nested
-    class ToModelList  {
+    class ToModelList {
 
         @Test
         void should_returnNull_when_nullIsGiven() {

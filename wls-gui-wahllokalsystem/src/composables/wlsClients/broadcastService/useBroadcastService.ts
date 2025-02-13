@@ -1,16 +1,12 @@
-import type {
-  BroadcastMessageDTO,
-  BroadcastRequest,
-  DeleteMessageRequest,
-  GetMessageRequest,
-} from "@/api/wls-clients/generated-broadcast-api";
+import type { BroadcastMessageDTO } from "@/api/wls-clients/generated-broadcast-api";
 
-import { fetchConfig } from "@/api/fetch-utils";
+import axios from "axios";
+
 import {
   BroadcastControllerApi,
   Configuration,
-  WLSError,
 } from "@/api/wls-clients/generated-broadcast-api";
+import { WLSError } from "@/api/WLSError";
 import { BROADCAST_SERVICE_API_URL } from "@/constants";
 
 export function useBroadcastService() {
@@ -21,16 +17,19 @@ export function useBroadcastService() {
   );
 
   async function getMessage(wahlbezirkID: string) {
-    const getParams: GetMessageRequest = { wahlbezirkID };
-
     try {
-      const response = await broadcastCA.getMessage(getParams);
-
-      const nachrichtID = response.oid;
-      const deleteParams: DeleteMessageRequest = { nachrichtID };
+      const response = await broadcastCA.getMessage(wahlbezirkID);
+      if (response.status == 204) {
+        return {
+          message: "",
+          error: "Es konnten keine Daten gefunden werden",
+        };
+      }
+      const messageDTO = response.data;
+      const nachrichtID = messageDTO.oid;
 
       try {
-        await broadcastCA.deleteMessage(deleteParams, fetchConfig());
+        await broadcastCA.deleteMessage(nachrichtID);
       } catch {
         return {
           message: "",
@@ -39,7 +38,7 @@ export function useBroadcastService() {
       }
 
       return {
-        message: response.nachricht,
+        message: messageDTO.nachricht,
         error: "",
       };
     } catch (e) {
@@ -55,16 +54,25 @@ export function useBroadcastService() {
       wahlbezirkIDs,
       nachricht,
     } as BroadcastMessageDTO;
-    const postParams: BroadcastRequest = { broadcastMessageDTO };
 
     try {
-      await broadcastCA.broadcast(postParams, fetchConfig());
+      await broadcastCA.broadcast(broadcastMessageDTO);
       return { error: "" };
     } catch (e) {
-      if (e instanceof WLSError) {
-        const errorMessage =
-          e.service + " - " + e.message + " (Code: " + e.code + ")";
-        return { error: errorMessage };
+      if (axios.isAxiosError(e)) {
+        if (e.response) {
+          const error: WLSError = e.response.data;
+          const errorMessage =
+            error.service +
+            " - " +
+            error.message +
+            " (Code: " +
+            error.code +
+            ")";
+          return { error: errorMessage };
+        } else {
+          return { error: "Fehler beim Senden der Broadcast Nachricht" };
+        }
       } else {
         return { error: "Fehler beim Senden der Broadcast Nachricht" };
       }

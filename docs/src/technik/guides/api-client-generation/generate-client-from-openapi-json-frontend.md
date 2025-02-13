@@ -13,7 +13,7 @@ npm install @openapitools/openapi-generator-cli -g typescript-axios
 
 ::: details Errorhandling
 Sollte dabei diese Fehlermeldung auftauchen:
-![error_install_openapi-generator.png](../../../public/error_install_openapi-generator.png)
+![error_install_openapi-generator.png](/error_install_openapi-generator.png)
 können die Schritte aus 
 [diesem Stack-Beitrag](https://stackoverflow.com/questions/18088372/how-to-npm-install-global-not-as-root/59227497#59227497)
 befolgt werden.

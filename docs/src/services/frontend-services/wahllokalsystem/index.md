@@ -5,7 +5,7 @@
 Damit die Anwendung auch ohne eine Netzwerkverbindung genutzt werden kann, wurde mithilfe des 
 [`vite-pwa-plugin`](https://vite-pwa-org.netlify.app/) ein Service Worker eingerichtet.
 
-Um während der Entwicklung die Funktionalität des Service Workers zu testen, muss das Skript `build preview` aus der
+Um während der Entwicklung die Funktionalität des Service Workers zu testen, muss das Skript `build-preview` aus der
 `package.json`-Datei gestartet werden. Der SW bezieht sich auf die Elemente, die im `dist`-Ordner liegen, daher muss
 die Anwendung nach jeder Änderung im SW-File neu gebaut werden.
 
@@ -21,9 +21,7 @@ Je nach verwendetem Browser sind unterschiedliche Schritte notwendig, um die Kon
     3. Auf `about:debugging` klicken
     4. Im neuen Tab den gewünschten SW finden (`wahl-worker.js`) und auf `Untersuchen` klicken
     5. Die Konsole öffnet sich in einem neuen Tab
-  ::: 
-  
-
+  :::
 
 ### Funktionsweise des SW
 

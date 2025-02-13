@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="WahlvorbereitungService - local,db-oracle,no-security,dummy.nobezirkid.check" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,oracle,no-sec">
+    <option name="ACTIVE_PROFILES" value="local,db-oracle,no-security,dummy.nobezirkid.check" />
+    <module name="wls-wahlvorbereitung-service" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.MicroServiceApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

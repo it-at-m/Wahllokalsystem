@@ -62,6 +62,17 @@ flowchart LR
 | [Wahlvorbereitung](/services/wahlvorbereitungs-service/)                 | 8203 |
 | [Wahlvorstand](/services/wahlvorstand-service/)                          | 8207 |
 
+## Profile
+
+| Profilname             | Beschreibung                                                                                                                             |
+|------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
+| db-h2                  | Als Datenbank wird eine embedded H2 im Service verwendet.                                                                                |
+| db-oracle              | Als Datenbank wird eine Oracle Datenbank verwendet. Im Standard wird die DB-Datenbank aus dem Stack (Docker) verwendet.                  |
+| db-dummydata           | Es werden Flyway-Files mit Dummydaten für die Datenbank mit verwendet.                                                                   |
+| no-security            | Die Prüfungen der Authentifizierung und Authorisierung werden deaktiviert.                                                               |
+| dummy.nobezirkid.check | Deaktiviert die Prüfung, dass Anfragen für einen bestimmten Wahlbezirk (wahlbezirkID), nur von dem User des Wahlbezirkes erfolgen dürfen |
+
+
 ## Benutzer
 
 | Name        | Passwort | Beschreibung                                                          |
@@ -74,6 +85,16 @@ flowchart LR
 ## Datenbank
 
 Der Zugriff auf die Oracle-Datenbank über die IDE ist gemäß [dieser Anleitung](/technik/guides/db-access) einzurichten.
+
+## Runconfigurations
+
+Für die Spring-Boot Microservices werden für IntelliJ Runconfigurations zur Verfügung gestellt. Diese sind
+gruppiert nach der Art der Datenbank und ob die Security aktiviert ist oder nicht.
+
+Eine Übersicht über die Profile gibt es [hier](#profile).
+
+> [!TIP]
+> Wenn es Updates an den Runconfigurations gab, die gefetcht wurden, ist es notwendig IntelliJ neu zu starten.
 
 ## Starten des Frontends
 

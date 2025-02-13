@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="BroadcastService - local,db-oracle" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,oracle,sec">
+    <option name="ACTIVE_PROFILES" value="local,db-oracle" />
+    <module name="wls-broadcast-service" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="de.muenchen.oss.wahllokalsystem.broadcastservice.MicroServiceApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

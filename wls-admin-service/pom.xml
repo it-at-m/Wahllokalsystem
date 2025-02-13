@@ -658,7 +658,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.ergebnismeldung.0.0.1-SNAPSHOT.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.ergebnismeldung.0.2.1.json</inputSpec>
 
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>

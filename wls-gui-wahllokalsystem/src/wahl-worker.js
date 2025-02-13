@@ -107,8 +107,8 @@ self.addEventListener("install", () => {
  ****************************************************************************************************************/
 
 /**
- * The data from GET requests is first attempted to be loaded from the IDB,
- * otherwise it is loaded remotely (and then cached in the IDB).
+ * The data from GET requests is first attempted to be loaded from the IDB (handleGETofflineFirst),
+ * otherwise it is loaded remotely (and then cached in the IDB; handleGETonlineFirst).
  */
 registerRoute(
   ({ request }) => request.method === "GET",
@@ -117,7 +117,7 @@ registerRoute(
       const strat = event.request.headers.get(STRATEGY_HEADER);
       return strat === STRATEGY_ONLINE_FIRST
         ? handleGETonlineFirst(event)
-        : handleGET(event);
+        : handleGETofflineFirst(event);
     })
 );
 
@@ -130,17 +130,16 @@ registerRoute(
   "POST"
 );
 
-// Funktion zum Verarbeiten von Anfragen
 async function processRequest(event, handleRequestMethod) {
   log(`Interrupting ${event.request.method} request for ${event.request.url}`);
 
   if (self.isResponsible(event)) {
-    await getPin();
-    // forwarding request if no pin is found
+    await getPin(); // if pin found WahlworkerState is set to ACTIVE, otherwise it es set to INACTIVE
     if (self.state === WahlworkerState.ACTIVE) {
       return handleRequestMethod(event);
     } else {
-      return fetchEvent(event);
+      // forwarding request if no pin is found
+      return performRemoteRequest(event);
     }
   } else {
     return false;
@@ -172,61 +171,69 @@ self.handlePOST = (event) => {
       : ContentTypes.JSON;
   return self.blobOrTxtProm(clonedRequest, contentType).then((data) => {
     // sending ergebnismeldung should always forward the status
-    let is_ergebnismeldung_sent = event.request.url.includes(
+    let sending_ergebnismeldung = event.request.url.includes(
       "ergebnismeldung/businessActions/sendErgebnismeldung"
     );
     return self
-      .fetchEvent(event)
+      .performRemoteRequest(event)
       .then((response) => {
-        // save as dirty if we don't get back ok
+        // save as dirty = true, if we don't get back one of [200, 201, 204]
         let dirty = StatusCodeOk.indexOf(response.status) === -1;
-        return setItemAndContentType(key, data, contentType, dirty).then(() => {
-          // redirect 200s and send ergebnismeldung + forward results
-          if (
-            response.type === "opaqueredirect" ||
-            dirty === false ||
-            is_ergebnismeldung_sent
-          )
-            return response;
-          // If we get an error, don't forward this to the client.
-          // This can continue to work normally and be synchronized later if necessary.
-          else {
-            this.log(`POST response not OK, statuscode was ${response.status}`);
-            return new Response(null, {
-              status: 200,
-              statusText: `returning OK - orig. statuscode is ${response.status}`,
-            });
+        return setItemAndContentTypeinIDB(key, data, contentType, dirty).then(
+          () => {
+            // forward response if redirect, status ok or sending ergebnismeldung
+            if (
+              response.type === "opaqueredirect" ||
+              dirty === false ||
+              sending_ergebnismeldung
+            )
+              return response;
+            // If we get an error, don't forward this to the client.
+            // This can continue to work normally and be synchronized later if necessary.
+            else {
+              this.log(
+                `POST response not OK, statuscode was ${response.status}`
+              );
+              return new Response(null, {
+                status: 200,
+                statusText: `returning OK - orig. statuscode is ${response.status}`,
+              });
+            }
           }
-        });
+        );
       })
       .catch(() => {
-        return setItemAndContentType(key, data, contentType, true).then(() => {
-          // forward that sending was not successful
-          if (is_ergebnismeldung_sent) {
-            return new Response(null, {
-              status: 500,
-              statusText: "sending Ergebnismeldung - post not possible",
-            });
-          } else {
-            return new Response(null, {
-              status: 200,
-              statusText: "OK - post not possible",
-            });
+        return setItemAndContentTypeinIDB(key, data, contentType, true).then(
+          () => {
+            // forward that sending was not successful
+            if (sending_ergebnismeldung) {
+              return new Response(null, {
+                status: 500,
+                statusText: "sending Ergebnismeldung - post not possible",
+              });
+            } else {
+              // return ok: request saved in IDB and has to be synchronized later
+              return new Response(null, {
+                status: 200,
+                statusText: "OK - post not possible",
+              });
+            }
           }
-        });
+        );
       });
   });
 };
 
-self.handleGET = (event) => {
+self.handleGETofflineFirst = (event) => {
   log(" handle GET ");
   let key = event.request.url;
-  return getItem(key)
+  return getItemFromIDB(key)
     .then(_handleGetIDB)
     .catch(() => {
+      // if no data found in IDB fetch from remote
       return self
-        .fetchEvent(event)
-        .then((response) => self._handleGetFetch(key, response, false));
+        .performRemoteRequest(event) // fetch event holt die daten vom server (online)
+        .then((response) => self._handleGetRemote(key, response, false));
     });
 };
 
@@ -234,10 +241,12 @@ self.handleGETonlineFirst = (event) => {
   log(" handle GET ONLINE FIRST");
   let key = event.request.url;
   return self
-    .fetchEvent(event)
-    .then((response) => self._handleGetFetch(key, response, true))
+    .performRemoteRequest(event)
+    .then((response) => self._handleGetRemote(key, response, true))
     .catch((badResponse) => {
-      return getItem(key).then((data) => self._handleGetIDB(data, badResponse));
+      return getItemFromIDB(key).then((data) =>
+        self._handleGetIDB(data, badResponse)
+      );
     });
 };
 
@@ -247,14 +256,15 @@ self.handleGETonlineFirst = (event) => {
  * @param response - fetch response
  * @param rejectResponse - rejects response if not successful
  */
-self._handleGetFetch = (key, response, rejectResponse = false) => {
+self._handleGetRemote = (key, response, rejectResponse = false) => {
   let responseClone = response.clone(),
     contentType = response.headers.has(ContentTypes.HEADERNAME)
       ? response.headers.get(ContentTypes.HEADERNAME)
       : ContentTypes.JSON;
+  // code one of [200, 201, 204]
   if (StatusCodeOk.indexOf(response.status) !== -1) {
     return self.blobOrTxtProm(response, contentType).then((data) => {
-      return setItemAndContentType(
+      return setItemAndContentTypeinIDB(
         key,
         data,
         contentType,
@@ -265,6 +275,7 @@ self._handleGetFetch = (key, response, rejectResponse = false) => {
       });
     });
   } else {
+    // when code not in [200, 201, 204]
     return rejectResponse ? Promise.reject(responseClone) : responseClone;
   }
 };
@@ -282,12 +293,11 @@ self._handleGetIDB = (data, responseIfNoData) => {
       ? Promise.reject(responseIfNoData)
       : Promise.reject();
   } else {
-    var init = {
+    let rsp = new Response(data.data, {
       status: data.status,
       statusText: "Wahlworker at your service.",
-    };
-
-    let rsp = new Response(data.data, init);
+    });
+    // todo: warum content type erst im nachhinein setzen?
     rsp.headers.set(ContentTypes.HEADERNAME, data.contentType); // content type setzen nach dem Wert der zuvor gespeichert worden ist. TODO für alle header?
     return rsp;
   }
@@ -313,7 +323,7 @@ self.blobOrTxtProm = (request, contentType) => {
 /**
  * fetching event
  */
-self.fetchEvent = (event) => {
+self.performRemoteRequest = (event) => {
   return fetch(event.request).then((response) => {
     log("fetched data from remote");
     return response;
@@ -371,7 +381,7 @@ self.addEventListener("push", () => {
 /*****************************************************************************************************************
  * idb/crypto Abstraction
  ****************************************************************************************************************/
-function _setItem(key, value) {
+function _setItemInIDB(key, value) {
   log("saving data key:" + key + " with value: " + JSON.stringify(value));
   return localforage.setItem(key, value);
 }
@@ -384,8 +394,15 @@ function _setItem(key, value) {
  * @param {boolean} dirty - not yet transferred to the backend
  * @param responseStatus
  */
-function setItemAndContentType(key, value, contentType, dirty, responseStatus) {
+function setItemAndContentTypeinIDB(
+  key,
+  value,
+  contentType,
+  dirty,
+  responseStatus
+) {
   let contentTypeData;
+  // when nothing has been found remote
   if (responseStatus === 204) {
     contentTypeData = {
       data: null,
@@ -395,6 +412,7 @@ function setItemAndContentType(key, value, contentType, dirty, responseStatus) {
       status: responseStatus,
     };
   } else {
+    // all other `StatusCodeOk` Codes (201 or 200)
     let encrypted =
       value instanceof Blob
         ? value
@@ -407,13 +425,13 @@ function setItemAndContentType(key, value, contentType, dirty, responseStatus) {
       status: 200,
     };
   }
-  return _setItem(key, contentTypeData);
+  return _setItemInIDB(key, contentTypeData);
 }
 
-function getItem(key) {
+function getItemFromIDB(key) {
   return localforage.getItem(key).then((item) => {
     if (item === null) return item;
-    // blobs are not encrypted
+    // decrypt if item.data is not a blob, because blobs are not encrypted
     if (!(item.data instanceof Blob)) {
       if (item.status !== 204) {
         let decrypted = CryptoJS.AES.decrypt(item.data, self.pin);
@@ -425,7 +443,7 @@ function getItem(key) {
 }
 
 function setPin(pin) {
-  _setItem(PIN_KEY, pin);
+  _setItemInIDB(PIN_KEY, pin);
 }
 
 function getPin() {
@@ -434,7 +452,7 @@ function getPin() {
     self.state =
       self.pin === undefined || self.pin === null
         ? WahlworkerState.INACTIVE
-        : WahlworkerState.ACTIVE; // can't use the IDB if we don't have a pin
+        : WahlworkerState.ACTIVE; // can't use the IDB if we don't have a pin because it is used to encrypt the data
   });
 }
 

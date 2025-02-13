@@ -148,7 +148,7 @@ function loadUser(): void {
     });
 }
 
-// Todo: example implementtions --> move logic to api files
+// Todo: example implementation --> move logic to api files
 async function getUserFromAuth() {
   const url = "api/auth-service/user";
   return await axios
@@ -173,10 +173,6 @@ async function sendPinToSW(pin: string) {
     // eslint-disable-next-line no-console
     console.error("Failed to send PIN to service worker:", error);
   }
-}
-
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 </script>
 

@@ -38,7 +38,6 @@ export default defineConfig({
       filename: "wahl-worker.js", // custom sw file
       injectManifest: {
         injectionPoint: undefined, // standard injection at end of sw file
-        // globPatterns: ["**/*.{js,ts,css,html,ico,png,svg,json,vue,txt}"], // todo: files anpassen
         sourcemap: true,
       },
       manifest: {

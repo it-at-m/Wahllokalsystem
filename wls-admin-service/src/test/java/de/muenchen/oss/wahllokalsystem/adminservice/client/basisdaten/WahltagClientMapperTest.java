@@ -15,11 +15,11 @@ class WahltagClientMapperTest {
     private final WahltagClientMapper unitUnderTest = Mappers.getMapper(WahltagClientMapper.class);
 
     @Nested
-    class FromListOfWahltagDTOtoListOfWahltagModel {
+    class ToModelList  {
 
         @Test
         void should_returnNull_when_nullIsGiven() {
-            Assertions.assertThat(unitUnderTest.fromListOfWahltagDTOtoListOfWahltagModel(null)).isNull();
+            Assertions.assertThat(unitUnderTest.toModelList(null)).isNull();
         }
 
         @Test
@@ -32,7 +32,7 @@ class WahltagClientMapperTest {
 
             dtosToMap.forEach(wahltag -> Assertions.assertThat(wahltag).hasNoNullFieldsOrProperties());
 
-            val result = unitUnderTest.fromListOfWahltagDTOtoListOfWahltagModel(dtosToMap);
+            val result = unitUnderTest.toModelList(dtosToMap);
 
             val expectedWahltage = List.of(
                     new WahltagModel("wahltagID1", nowDate, "beschreibung", "1"),

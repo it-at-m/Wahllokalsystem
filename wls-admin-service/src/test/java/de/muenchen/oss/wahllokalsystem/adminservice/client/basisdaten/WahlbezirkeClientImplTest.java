@@ -42,10 +42,10 @@ class WahlbezirkeClientImplTest {
 
             val mockedWahlbezirkDTOList = List
                     .of(new WahlbezirkDTO().wahlbezirkID("wahlbezirkID").wahltag(wahltag).nummer("123").wahlbezirkart(WahlbezirkDTO.WahlbezirkartEnum.UWB));
-            val mockedWahlbezirkModelList = wahlbezirkeClientMapper.fromListOfWahlbezirkDTOtoListOfWahlbezirkModel(mockedWahlbezirkDTOList);
+            val mockedWahlbezirkModelList = wahlbezirkeClientMapper.toModelList(mockedWahlbezirkDTOList);
 
             Mockito.when(wahlbezirkeControllerApi.getWahlbezirke(wahltagID)).thenReturn(mockedWahlbezirkDTOList);
-            Mockito.when(wahlbezirkeClientMapper.fromListOfWahlbezirkDTOtoListOfWahlbezirkModel(mockedWahlbezirkDTOList)).thenReturn(mockedWahlbezirkModelList);
+            Mockito.when(wahlbezirkeClientMapper.toModelList(mockedWahlbezirkDTOList)).thenReturn(mockedWahlbezirkModelList);
 
             val result = unitUnderTest.getWahlbezirke(wahltagID);
 

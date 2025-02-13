@@ -10,5 +10,5 @@ public interface WahltagClientMapper {
 
     WahltagModel toModel(WahltagDTO wahltagDTO);
 
-    List<WahltagModel> fromListOfWahltagDTOtoListOfWahltagModel(List<WahltagDTO> wahltagDTOs);
+    List<WahltagModel> toModelList(List<WahltagDTO> wahltagDTOs);
 }

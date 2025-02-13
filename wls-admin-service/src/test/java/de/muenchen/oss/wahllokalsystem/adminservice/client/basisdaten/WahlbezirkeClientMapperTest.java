@@ -16,11 +16,11 @@ class WahlbezirkeClientMapperTest {
     private final WahlbezirkeClientMapper unitUnderTest = Mappers.getMapper(WahlbezirkeClientMapper.class);
 
     @Nested
-    class FromListOfWahlbezirkDTOtoListOfWahlbezirkModel {
+    class ToModelList  {
 
         @Test
         void should_returnNull_when_nullIsGiven() {
-            Assertions.assertThat(unitUnderTest.fromListOfWahlbezirkDTOtoListOfWahlbezirkModel(null)).isNull();
+            Assertions.assertThat(unitUnderTest.toModelList(null)).isNull();
         }
 
         @Test
@@ -37,7 +37,7 @@ class WahlbezirkeClientMapperTest {
 
             dtosToMap.forEach(wahlbezirk -> Assertions.assertThat(wahlbezirk).hasNoNullFieldsOrProperties());
 
-            val result = unitUnderTest.fromListOfWahlbezirkDTOtoListOfWahlbezirkModel(dtosToMap);
+            val result = unitUnderTest.toModelList(dtosToMap);
 
             val expectedWahlbezirke = List.of(
                     new WahlbezirkModel("wahlbezirkID1", WahlbezirkArtModel.UWB, "nummer", wahltag, "wahlnummer", "wahlID1"),

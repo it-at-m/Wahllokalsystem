@@ -42,10 +42,10 @@ class WahltageClientImplTest {
                     new WahltagDTO().wahltagID("wahltagID1").wahltag(wahltag).beschreibung("beschreibung").nummer("1"),
                     new WahltagDTO().wahltagID("wahltagID2").wahltag(wahltag).beschreibung("beschreibung").nummer("2"),
                     new WahltagDTO().wahltagID("wahltagID3").wahltag(wahltag).beschreibung("beschreibung").nummer("3"));
-            val mockedWahltageModelList = wahltagClientMapper.fromListOfWahltagDTOtoListOfWahltagModel(mockedWahltageDTOList);
+            val mockedWahltageModelList = wahltagClientMapper.toModelList(mockedWahltageDTOList);
 
             Mockito.when(wahltageControllerApi.getWahltage()).thenReturn(mockedWahltageDTOList);
-            Mockito.when(wahltagClientMapper.fromListOfWahltagDTOtoListOfWahltagModel(mockedWahltageDTOList)).thenReturn(mockedWahltageModelList);
+            Mockito.when(wahltagClientMapper.toModelList(mockedWahltageDTOList)).thenReturn(mockedWahltageModelList);
 
             val result = unitUnderTest.getWahltage();
 

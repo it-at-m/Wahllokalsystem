@@ -91,13 +91,8 @@ self.addEventListener("message", (event) => {
 });
 
 self.addEventListener("install", () => {
-  //TODO: behalten ? Caution: skipWaiting() means that your new service worker is likely controlling pages that were
-  // loaded with an older version. This means some of your page's fetches will have been handled by your old service
-  // worker, but your new service worker will be handling subsequent fetches. If this might break things, don't use
-  // skipWaiting(). This causes your service worker to kick out the current active worker and activate itself as soon
-  // as it enters the waiting phase (or immediately if it's already in the waiting phase). It doesn't cause your worker
-  // to skip installing, just waiting. -> so behandelt nun alle nachfolgenden fetches-> kein neustart erforderlich.
-
+  // skipWaiting() forces a newly installed and waiting sw to get active
+  // --> no restart is required for the new sw to take control
   self.skipWaiting();
   log("installed and took control");
 });
@@ -297,8 +292,8 @@ self._handleGetIDB = (data, responseIfNoData) => {
       status: data.status,
       statusText: "Wahlworker at your service.",
     });
-    // todo: warum content type erst im nachhinein setzen?
-    rsp.headers.set(ContentTypes.HEADERNAME, data.contentType); // content type setzen nach dem Wert der zuvor gespeichert worden ist. TODO für alle header?
+    // set content type according to the value that was previously saved TODO für alle header?
+    rsp.headers.set(ContentTypes.HEADERNAME, data.contentType);
     return rsp;
   }
 };

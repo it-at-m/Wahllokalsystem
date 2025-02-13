@@ -39,6 +39,7 @@
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <org.springdoc.version>2.6.0</org.springdoc.version>
         <wls.common.version>1.2.0</wls.common.version>
+        <com.tngtech.archunit.version>1.2.2</com.tngtech.archunit.version>
     </properties>
 
     <dependencyManagement>
@@ -232,13 +233,13 @@
         <dependency>
             <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
             <artifactId>testing</artifactId>
-            <version>1.1.0</version>
+            <version>${wls.common.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.tngtech.archunit</groupId>
             <artifactId>archunit-junit5</artifactId>
-            <version>1.2.2</version>
+            <version>${com.tngtech.archunit.version}</version>
             <scope>test</scope>
         </dependency>
 

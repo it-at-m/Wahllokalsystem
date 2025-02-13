@@ -14,7 +14,7 @@
     "build-preview": "npm run build && npm run preview",
     "lint": "prettier . --check && eslint . && vue-tsc --noEmit",
     "fix": "prettier . --write && eslint . --fix",
-    "gen:gen-broadcast": "openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.2.0.json -g typescript-fetch -o src/api/wls-clients/generated-broadcast-api --template-dir src/api/wls-clients/custom-openapi-template-files"
+    "gen:broadcast-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.2.0.json -g typescript-axios -o src/api/wls-clients/generated-broadcast-api"
   },
   "dependencies": {
     "@vueuse/core": "12.4.0",
@@ -38,6 +38,7 @@
     "@vue/eslint-config-typescript": "14.1.4",
     "@vue/test-utils": "2.4.6",
     "@vue/tsconfig": "0.5.1",
+    "axios": "1.7.9",
     "eslint": "9.14.0",
     "eslint-plugin-vue": "9.31.0",
     "jsdom": "25.0.1",

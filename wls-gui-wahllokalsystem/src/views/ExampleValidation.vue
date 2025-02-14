@@ -48,7 +48,7 @@
               ></v-text-field>
               <v-text-field
                 :rules="[MAX_LENGTH(20)]"
-                label="Input cant be longer then 20"
+                label="Input cant be longer than 20"
                 min-width="400"
               ></v-text-field>
               <v-text-field
@@ -88,7 +88,7 @@
               ></v-text-field>
               <v-text-field
                 :rules="[MAX_LENGTH(20)]"
-                label="Input cant be longer then 20"
+                label="Input cant be longer than 20"
                 min-width="400"
               ></v-text-field>
               <v-text-field

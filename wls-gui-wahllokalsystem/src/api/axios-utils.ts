@@ -38,6 +38,6 @@ function getHeaders(strategy = "OFFLINE_FIRST"): AxiosHeaders {
 }
 
 function getCSRFToken() {
-  let token = document.cookie.match("(^|;)\\s*XSRF-TOKEN\\s*=\\s*([^;]+)");
+  const token = document.cookie.match("(^|;)\\s*XSRF-TOKEN\\s*=\\s*([^;]+)");
   return token ? token.pop() : "";
 }

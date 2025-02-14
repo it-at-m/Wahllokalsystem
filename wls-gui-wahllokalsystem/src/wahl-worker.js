@@ -137,7 +137,8 @@ async function processRequest(event, handleRequestMethod) {
       return performRemoteRequest(event);
     }
   } else {
-    return false;
+    // do nothing if not responsible
+    return new Response(null);
   }
 }
 

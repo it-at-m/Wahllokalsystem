@@ -132,11 +132,10 @@ export default withMermaid({
                         {text: 'Wahlvorstand-Service', link: `${PATH_SERVICES_BACKEND}wahlvorstand-service/`},
                     ]
                 },
-                {
-                    text: 'Frontend Projekte', link: `${PATH_SERVICES_FRONTEND}`, collapsed: false, items:
-                        [
-                            {text: 'Wahllokalsystem', link: `${PATH_SERVICES_FRONTEND}wahllokalsystem/`},
-                        ]
+                {text: 'Frontend Projekte', link: `${PATH_SERVICES_FRONTEND}`, collapsed: false, items:
+                    [
+                        {text: 'Wahllokalsystem', link: `${PATH_SERVICES_FRONTEND}wahllokalsystem/`},
+                    ]
                 },
             ],
         },

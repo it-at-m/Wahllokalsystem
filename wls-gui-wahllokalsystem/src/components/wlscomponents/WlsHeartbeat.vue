@@ -39,6 +39,7 @@ import {
   VMenu,
 } from "vuetify/components";
 
+import { basicPostConfig } from "@/api/axios-utils";
 import { useInterval } from "@/composables/useInterval";
 
 useInterval(() => {
@@ -67,9 +68,13 @@ function getColor(isOffline: boolean) {
 
 // todo: example implementation --> api logic should be transferred to composable
 async function heartbeat() {
-  const url = "api/monitoring-service/businessActions/lastSeen/wbz-1";
   return await axios
-    .post(url)
+    .request(
+      basicPostConfig(
+        "api/monitoring-service/businessActions/lastSeen/wbz-1",
+        "ONLINE_ONLY"
+      )
+    )
     .then((response) => {
       if (response.status == 200) {
         emit("update:isOffline", false);

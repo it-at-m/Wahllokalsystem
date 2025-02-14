@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.adminservice.clients;
 import de.muenchen.oss.wahllokalsystem.adminservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.adminservice.eai.infomanagement.client.KonfigurierterWahltagControllerApi;
 import de.muenchen.oss.wahllokalsystem.adminservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
+import de.muenchen.oss.wahllokalsystem.adminservice.services.KonfigurierterWahltagClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.services.KonfigurierterWahltagModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;

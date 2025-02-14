@@ -2,7 +2,7 @@ package de.muenchen.oss.wahllokalsystem.adminservice.services;
 
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 
-public interface KonfigurierteWahltageClient {
+public interface KonfigurierterWahltagClient {
 
     /**
      * @return KonfigurierterWahltagDTO

@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable no-undef */
+import axios from "axios";
 import CryptoJS from "crypto-js";
 import localforage from "localforage";
 import { clientsClaim } from "workbox-core";
@@ -320,10 +321,18 @@ self.blobOrTxtProm = (request, contentType) => {
  * fetching event
  */
 self.performRemoteRequest = (event) => {
-  return fetch(event.request).then((response) => {
-    log("fetched data from remote");
-    return response;
-  });
+  // event.request einfach an axios.request übergeben gibt folgenden fehler: TypeError: Request constructor: function get() {[native code]} is an invalid header value.
+  return axios
+    .request({
+      url: event.request.url,
+      method: event.request.method,
+      withCredentials: true,
+      headers: event.request.headers,
+    })
+    .then((response) => {
+      log("sent/received data to/from remote");
+      return response;
+    });
 };
 
 /*****************************************************************************************************************

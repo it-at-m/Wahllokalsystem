@@ -1,9 +1,7 @@
 <template>
   <v-card>
     <v-col class="text-center">
-      <h2>
-        Dieser View zeigt, wie Validierung mit Regeln und Forms funktioniert.
-      </h2>
+      <h2>This view shows how validation works with rules and forms.</h2>
     </v-col>
     <div>
       <v-tabs
@@ -33,8 +31,7 @@
         <v-tabs-window-item value="1">
           <v-container class="d-flex flex-column align-center mt-5 mb-5">
             <p>
-              Alle inputs müssen valide sein, bevor der submit-button betätigt
-              werden kann
+              All inputs must be valid before the submit button can be pressed.
             </p>
             <v-form
               ref="firstForm"
@@ -73,8 +70,8 @@
         <v-tabs-window-item value="2">
           <v-container class="d-flex flex-column align-center mt-5 mb-5">
             <p>
-              Funktionalität des submit-buttons wird nur aktiviert, wenn alle
-              Felder valide sind
+              The functionality of the submit button is only activated if all
+              fields are valid.
             </p>
             <v-form
               ref="secondForm"

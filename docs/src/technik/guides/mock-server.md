@@ -16,11 +16,11 @@ Ein Node-Modul, das Konfigurationswerte enthält, die in Mock-Modulen verwendet 
 
 Jedes Mock-Server-Modul ist ein Node.js-Modul, das eine Funktion exportiert.
 
-    module.exports = function () {
+`module.exports = function () {}`
 
 Diese Funktion kann bis zu zwei Parameter haben:
 
-    module.exports = function (server, config) {
+`module.exports = function (server, config) {}`
 
 Dabei ist
 * `server` eine Instanz des `server.js` Moduls (siehe modules/server.js)
@@ -32,7 +32,7 @@ Diese Funktion kann entweder ein einfaches JavaScript-Objekt zurückgeben (das a
 
 Wie oben erwähnt, kann ein Mock-Modul eine Antwortfunktion mit der folgenden Signatur zurückgeben:
 
-    function (res, urlParam1, urlParam2)
+`function (res, urlParam1, urlParam2)`
 
 Dabei ist `res` das Anfrageobjekt und alle verbleibenden Parameter repräsentieren die zusätzlichen URL-Segmente nach der Basis-REST-URL (Beispiel: Wenn die REST-URL ist /foo/rest/entity/blah/blub, dann wird urlParam1 "blah" und urlParam2 "blub" sein).
 
@@ -49,7 +49,7 @@ Der `this`-Verweis innerhalb unserer Funktion ist eine Instanz von `MockModuleCo
 ### Beispiele
 
 #### Einfachstes Beispiel
-
+```javascript
     module.exports = function () {
         "use strict";
     
@@ -58,11 +58,11 @@ Der `this`-Verweis innerhalb unserer Funktion ist eine Instanz von `MockModuleCo
             bar: 666
         }
     };
-
+```
 Gibt eine HTTP 200 JSON-Antwort an den Client zurück.
 
 #### Einfaches Beispiel
-
+```javascript
     module.exports = function () {
         "use strict";
     
@@ -80,13 +80,13 @@ Gibt eine HTTP 200 JSON-Antwort an den Client zurück.
             }
         };
     };
-
+```
 * Wir protokollieren den Wert von `additionalUrlParam1` in der Konsole.
 
 * Wenn das letzte Segment der REST-URL "cool" ist, antworten wir mit einem JSON-Körper, andernfalls geben wir HTTP 404 Not Found zurück.
 
 #### fortgeschritteneres Beispiel
-
+```javascript
     module.exports = function () {
         "use strict";
     
@@ -117,8 +117,8 @@ Gibt eine HTTP 200 JSON-Antwort an den Client zurück.
             }
         };
     };
-
-## Start des Servers (nur internem zugang möglich)
+```
+## Start des Servers (nur mit  internem zugang möglich)
 Der aktuelle Mock-Server ist veraltet, weshalb die `node-modules` aus dem internen Repository übernommen werden müssen, da einige Abhängigkeiten nicht mehr vorhanden sind.  
 Zudem ist es erforderlich, das interne Altprojekt `gui_wahllokalsystem_polymer` auszuchecken und sicherzustellen, dass es sich im gleichen Verzeichnis wie der Mock-Server befindet.  
 Auch hier sollten die Node-Modules aus einem älteren Projekt verwendet werden.

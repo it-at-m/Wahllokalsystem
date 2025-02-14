@@ -1,6 +1,5 @@
-package de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten;
+package de.muenchen.oss.wahllokalsystem.adminservice.service.common;
 
-import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahltagModel;
 import java.util.List;
 
 public interface WahltageClient {

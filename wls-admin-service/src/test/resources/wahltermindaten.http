@@ -1,0 +1,8 @@
+### get userinfo with auth_token
+GET {{ WLS_AUTH_SERVICE }}/user
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### Import Wahltermindaten (needs profile 'dummy.clients' to make this work because of internal calls to other services)
+POST {{ WLS_ADMIN_SERVICE_URL }}/businessActions/importWahltermindaten/wahltagID
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json

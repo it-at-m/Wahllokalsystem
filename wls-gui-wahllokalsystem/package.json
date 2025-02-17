@@ -45,6 +45,8 @@
     "vite-plugin-pwa": "0.21.1",
     "vite-plugin-vuetify": "2.0.4",
     "vitest": "2.1.8",
-    "vue-tsc": "2.2.0"
+    "vue-tsc": "2.2.0",
+    "workbox-core": "7.3.0",
+    "workbox-precaching": "7.3.0"
   }
 }

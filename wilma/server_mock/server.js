@@ -1,7 +1,6 @@
 'use strict';
 
 let express = require('express');
-let favicon = require('serve-favicon');
 let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let fs = require('fs');
@@ -17,7 +16,6 @@ process.title = process.argv[4] || 'wls-mock-server';
 
 app.set('port', process.env.PORT || process.argv[5] || 4730);
 
-//app.use(favicon(staticDocumentRoot + '/app/favicon.ico'));
 app.use(logger('dev'));
 
 app.use(bodyParser.json({ limit: '1000kb' }));
@@ -115,9 +113,7 @@ app.get('/auth/uaa/user', function (req, res) {
     if (foundUser) {
         let foundUserCopy = SERVER.deepCopy(foundUser);
 
-        // res.setTimeout(3000, function(){
         res.json(foundUserCopy);
-        // });
 
         debug('Found user', { user: foundUser });
     } else {
@@ -180,7 +176,3 @@ const port = 4730;
 server.listen(port, () => {
     console.log(`Server is listening on https://localhost:${port}`);
   });
-
-// let server = app.listen(app.get('port'), function () {
-//     debug('Started mock server "' + process.title + '"', server.address());
-// });

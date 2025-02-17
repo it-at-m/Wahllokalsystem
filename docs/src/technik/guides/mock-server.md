@@ -6,7 +6,7 @@ Dadurch genügt es für die Frontend-Entwicklung, lediglich den Mock-Server zu s
 
 ## Entwicklung
 Der Server wurde mit dem Framework expressJs erstellt. 
-Wenn neue services gebraucht werden, können diese im ordern `server_mock` ergänzt werden
+Wenn neue Services gebraucht werden, können diese im Ordner `server_mock` ergänzt werden
 
 ### settings.js
 
@@ -68,7 +68,6 @@ Gibt eine HTTP 200 JSON-Antwort an den Client zurück.
     
         /** @this MockModuleContext */
         return function (req, additionalUrlParam1) {
-    
             this.debug("additionalUrlParam1: " + additionalUrlParam1);
     
             if (additionalUrlParam1 === 'cool') {
@@ -85,7 +84,7 @@ Gibt eine HTTP 200 JSON-Antwort an den Client zurück.
 
 * Wenn das letzte Segment der REST-URL "cool" ist, antworten wir mit einem JSON-Körper, andernfalls geben wir HTTP 404 Not Found zurück.
 
-#### fortgeschritteneres Beispiel
+#### Fortgeschritteneres Beispiel
 ```javascript
     module.exports = function () {
         "use strict";

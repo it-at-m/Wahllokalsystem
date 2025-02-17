@@ -31,7 +31,6 @@ module.exports = {
      * @param {string} service
      */
     notFound: function (response, service) {
-
         response.statusCode = 404;
         response.json(new this.ErrorResponse('Not Found', service, 'F', 404));
 

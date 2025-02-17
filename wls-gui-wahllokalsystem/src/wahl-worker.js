@@ -1,3 +1,4 @@
+import localforage from "localforage";
 import { clientsClaim } from "workbox-core";
 import { cleanupOutdatedCaches } from "workbox-precaching";
 
@@ -13,6 +14,20 @@ cleanupOutdatedCaches();
  */
 clientsClaim();
 
+/*****************************************************************************************************************
+ * configuration
+ ****************************************************************************************************************/
+localforage.config({
+  driver: localforage.INDEXEDDB, // Force WebSQL; same as using setDriver()
+  name: "wahldb",
+  version: 1.0,
+  storeName: "wahlstore",
+  description: "store for wahlnumber",
+});
+
+/*****************************************************************************************************************
+ * constants
+ ****************************************************************************************************************/
 const logID = "wahlworker: ";
 const doLog = true;
 
@@ -21,7 +36,6 @@ const doLog = true;
  ****************************************************************************************************************/
 /**
  * 'install' event is always the first one sent to a service worker
- * Todo: start the process of populating an IndexedDB, and caching site assets
  * application is preparing to make everything available for offline use
  */
 self.oninstall = () => {
@@ -30,7 +44,24 @@ self.oninstall = () => {
   self.skipWaiting();
 
   log("installed and took control");
+
+  // to test idb
+  _setItemInIDB("testkey", "testvalue")
+    .then(() => {
+      log("SUCCESS - saved data to idb");
+    })
+    .catch(() => {
+      log("FAILED - couldn't save data to idb");
+    });
 };
+
+/*****************************************************************************************************************
+ * idb utility
+ ****************************************************************************************************************/
+function _setItemInIDB(key, value) {
+  log("saving data - key: " + key + ", value: " + JSON.stringify(value));
+  return localforage.setItem(key, value);
+}
 
 /*****************************************************************************************************************
  * utility

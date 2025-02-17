@@ -84,7 +84,7 @@ class PathVariableAnnotationIsGivenOnParameter {
 class RequestHeaderAnnotationIsGivenOnParameter {
 
     @VisibleForTesting
-    public void methodUnderTest(@PathVariable final String parameter) {
+    public void methodUnderTest(@RequestHeader final String parameter) {
 
     }
 }
@@ -92,7 +92,7 @@ class RequestHeaderAnnotationIsGivenOnParameter {
 class RequestParamAnnotationIsGivenOnParameter {
 
     @VisibleForTesting
-    public void methodUnderTest(@PathVariable final String parameter) {
+    public void methodUnderTest(@RequestParam final String parameter) {
 
     }
 }
@@ -100,7 +100,7 @@ class RequestParamAnnotationIsGivenOnParameter {
 class RequestBodyAnnotationIsGivenOnParameter {
 
     @VisibleForTesting
-    public void methodUnderTest(@PathVariable final String parameter) {
+    public void methodUnderTest(@RequestBody final String parameter) {
 
     }
 }

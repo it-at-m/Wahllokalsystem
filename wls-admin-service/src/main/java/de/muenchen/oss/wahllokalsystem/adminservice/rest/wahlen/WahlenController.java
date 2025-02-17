@@ -39,5 +39,4 @@ public class WahlenController {
         wahlenService.updateWahlen(wahlenDTOMapper.toModelList(wahlen), wahltagID);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }

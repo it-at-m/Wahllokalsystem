@@ -2,12 +2,13 @@ package de.muenchen.oss.wahllokalsystem.adminservice.rest.wahlen;
 
 
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
 
-public record WahlDTO(@NotNull String wahlID, @NotNull String name,
+public record WahlDTO(@NotNull String wahlID,
+                      @NotNull String name,
                       @NotNull Long reihenfolge,
                       @NotNull Long waehlerverzeichnisnummer,
-                      @NotNull java.time.LocalDate wahltag,
+                      @NotNull LocalDate wahltag,
                       @NotNull WahlartDTO wahlart,
-                      FarbeDTO farbe
-       ) {
+                      FarbeDTO farbe) {
 }

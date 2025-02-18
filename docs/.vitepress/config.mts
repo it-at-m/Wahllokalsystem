@@ -71,6 +71,10 @@ export default withMermaid({
                         {
                             text: 'Pfadvariablen als Parameter',
                             link: `${PATH_ADR}adr-issue804-pathVariableAsMethodArguments`
+                        },
+                        {
+                            text: 'Kein i18n von Beginn an',
+                            link: `${PATH_ADR}adr-no-use-of-i18n-at-start`
                         }
                     ]
                 },

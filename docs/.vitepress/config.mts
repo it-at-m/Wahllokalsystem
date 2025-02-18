@@ -67,6 +67,10 @@ export default withMermaid({
                         {
                             text: 'Frontend-Refarch-Template',
                             link: `${PATH_ADR}adr-frontend-template`
+                        },
+                        {
+                            text: 'Pfadvariablen als Parameter',
+                            link: `${PATH_ADR}adr-issue804-pathVariableAsMethodArguments`
                         }
                     ]
                 },

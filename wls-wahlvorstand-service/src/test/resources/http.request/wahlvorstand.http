@@ -12,7 +12,6 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
-  "wahlbezirkID": "wahlbezirkID",
   "anwesenheitBeginn": "2024-06-09T23:59:12.123",
   "wahlvorstandsmitglieder": [
     {

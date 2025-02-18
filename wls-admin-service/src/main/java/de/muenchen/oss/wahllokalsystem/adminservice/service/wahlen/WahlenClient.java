@@ -7,7 +7,7 @@ public interface WahlenClient {
 
     /**
      * @param wahltagID reference to a specific wahltag
-     * @return List of <WahltagModel>
+     * @return List of <WahlModel>
      * @throws WlsException
      *             {@link de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException} if
      *             return would be null

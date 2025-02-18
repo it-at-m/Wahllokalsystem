@@ -68,15 +68,15 @@ public class DummyClientImpl implements AWerteClient, KonfigurierterWahltagClien
     public List<WahlModel> getWahlen(String wahltagID) throws WlsException {
         log.info("dummy client getWahlen() called instead of basisdaten-service");
         return List.of(
-            new WahlModel(wahltagID, "name" + "wahl1", 1L,
-                1L, LocalDate.now().plusMonths(1),
-                WahlartModel.BAW, new FarbeModel(1, 1, 1)),
-            new WahlModel(wahltagID, "name" + "wahl2", 2L,
-                2L, LocalDate.now().plusMonths(2),
-                WahlartModel.LTW, new FarbeModel(2, 2, 2)),
-            new WahlModel(wahltagID, "name" + "wahl3", 3L,
-                3L, LocalDate.now().plusMonths(3),
-                WahlartModel.LTW, new FarbeModel(3, 3, 3)));
+                new WahlModel(wahltagID, "name" + "wahl1", 1L,
+                        1L, LocalDate.now().plusMonths(1),
+                        WahlartModel.BAW, new FarbeModel(1, 1, 1)),
+                new WahlModel(wahltagID, "name" + "wahl2", 2L,
+                        2L, LocalDate.now().plusMonths(2),
+                        WahlartModel.LTW, new FarbeModel(2, 2, 2)),
+                new WahlModel(wahltagID, "name" + "wahl3", 3L,
+                        3L, LocalDate.now().plusMonths(3),
+                        WahlartModel.LTW, new FarbeModel(3, 3, 3)));
     }
 
     @Override

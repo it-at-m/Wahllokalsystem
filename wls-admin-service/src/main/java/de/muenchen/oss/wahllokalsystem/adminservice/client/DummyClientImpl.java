@@ -1,12 +1,14 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.client;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.configuration.Profiles;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer.WahllokalBenutzerClient;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer.WahllokalBenutzerModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.AWerteClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.KonfigurierterWahltagClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.KonfigurierterWahltagModel;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahlbezirkArtModel;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahlbezirkModel;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahlbezirkeClient;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkArtModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkeClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahltageClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahltermindatenClient;
@@ -19,7 +21,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @Profile(Profiles.DUMMY_CLIENTS)
-public class DummyClientImpl implements AWerteClient, KonfigurierterWahltagClient, WahlbezirkeClient, WahltageClient, WahltermindatenClient {
+public class DummyClientImpl
+        implements AWerteClient, KonfigurierterWahltagClient, WahlbezirkeClient, WahltageClient, WahltermindatenClient, WahllokalBenutzerClient {
 
     @Override
     public void initialiseAWerte(List<String> wahlbezirkIDs) {
@@ -57,5 +60,23 @@ public class DummyClientImpl implements AWerteClient, KonfigurierterWahltagClien
     @Override
     public void deleteWahltermindaten(String wahltagID) {
         log.info("dummy client deleteWahltermindaten({}) called instead of basisdaten-service", wahltagID);
+    }
+
+    @Override
+    public String generateAndExportWahllokalBenutzer(String wahltagID, List<WahllokalBenutzerModel> wahllokalUserInfoModel) {
+        return "ftpprs-1503\r\n" + "c94m3c-0365\r\n" + "v7jnkr-2161\r\n" + "evc77k-2062\r\n" + "sae447-1327\r\n"
+                + "xh3mv2-0508\r\n" + "rkqdt2-2570\r\n" + "a3c9hm-1369\r\n" + "jnhm44-0566";
+    }
+
+    @Override
+    public void deleteWahllokalBenutzer(String wahltagID) {
+        log.info("dummy client deleteWahllokalBenutzer({}) called instead of auth-service", wahltagID);
+    }
+
+    @Override
+    public String exportWahllokalBenutzer(String wahltagID) {
+        log.info("dummy client exportWahllokalBenutzer({}) called instead of auth-service", wahltagID);
+        return "ftpprs-1503\r\n" + "c94m3c-0365\r\n" + "v7jnkr-2161\r\n" + "evc77k-2062\r\n" + "sae447-1327\r\n"
+                + "xh3mv2-0508\r\n" + "rkqdt2-2570\r\n" + "a3c9hm-1369\r\n" + "jnhm44-0566";
     }
 }

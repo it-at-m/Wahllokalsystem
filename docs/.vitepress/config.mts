@@ -67,6 +67,10 @@ export default withMermaid({
                         {
                             text: 'Frontend-Refarch-Template',
                             link: `${PATH_ADR}adr-frontend-template`
+                        },
+                        {
+                            text: 'Kein i18n von Beginn an',
+                            link: `${PATH_ADR}adr-no-use-of-i18n-at-start`
                         }
                     ]
                 },

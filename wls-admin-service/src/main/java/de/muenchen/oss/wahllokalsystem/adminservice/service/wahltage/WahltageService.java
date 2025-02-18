@@ -5,6 +5,7 @@ import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahltageClien
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +15,7 @@ public class WahltageService {
 
     private final WahltageClient wahltageClient;
 
+    @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_GetWahltage')")
     public List<WahltagModel> getWahltage() {
         return wahltageClient.getWahltage();
     }

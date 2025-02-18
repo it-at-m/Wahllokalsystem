@@ -7,5 +7,7 @@ import lombok.NoArgsConstructor;
 public class Authorities {
 
     public static final String ADMIN_LOADWAHLTERMINDATEN = "Admin_BUSINESSACTION_LoadWahltermindaten";
-
+    public static final String ADMIN_GETWAHLEN = "Admin_BUSINESSACTION_GetWahlen";
+    public static final String ADMIN_UPDATEWAHLEN = "Admin_BUSINESSACTION_UpdateWahlen";
+    public static final String ADMIN_GETWAHLTAGE = "Admin_BUSINESSACTION_GetWahltage";
 }

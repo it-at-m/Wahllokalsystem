@@ -6,11 +6,11 @@
 
 ## Kontext
 
-Beim Update der openAPI Beschreibung für den ErgebnismeldungsService kam es beim Build zu einem
+Beim Update der OpenAPI Beschreibung für den ErgebnismeldungsService kam es beim Build zu einem
 [Fehler](https://github.com/it-at-m/Wahllokalsystem/issues/760#issuecomment-2650329956).
-Der Generator war nicht in der Lage aus dem File die notwendigen Klassen zu generieren. Der Grund dafüre war, dass
+Der Generator war nicht in der Lage aus dem File die notwendigen Klassen zu generieren. Der Grund dafür war, dass
 im File beim Endpunkt mit dem Pfad `/businessActions/sendErgebnismeldung/{wahlID}/{wahlbezirkID}/{waehlerverzeichnisNummer}/{meldungsart}/{hauptwahlbezirkID}`
-die Pfadvariablen nicht beschrieben waren. Das openAPI-File wurde so generiert, weil im Controller die Pfadvariablen
+die Pfadvariablen nicht beschrieben waren. Das OpenAPI-File wurde so generiert, weil im Controller die Pfadvariablen
 nicht explizit definiert wurden, sondern in einer Klasse zusammen gefasst waren:
 
 ::: code-group
@@ -135,7 +135,7 @@ public record SendErgebnisParameter(
 Im fehlerhaften `openAPI.json` kann man erkennen, dass die Pfadvariablen nicht deklariert sind. In der `fixed`-Version
 die Pfadvariablen korrekt deklariert.
 
-Um eine korrekte openAPI Spezifikation zu erhalten, aus der die Client-Klassen generiert werden können, könnte die
+Um eine korrekte OpenAPI Spezifikation zu erhalten, aus der die Client-Klassen generiert werden können, könnte die
 Pfadvariablen auch via Annotation definiert werden:
 
 ```java
@@ -158,7 +158,7 @@ public ResponseEntity<?> sendErgebnisse(
 
 ## Entscheidung
 
-Die Pfadvariablen direkt sollen als Parameter der Method definiert werden. Eine Zusammenfassung in eine Klasse darf
+Die Pfadvariablen sollen direkt als Parameter der Method definiert werden. Eine Zusammenfassung in eine Klasse darf
 nicht erfolgen.
 
 ## Konsequenzen

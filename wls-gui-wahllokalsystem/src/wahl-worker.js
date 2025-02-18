@@ -1,6 +1,7 @@
 import localforage from "localforage";
 import { clientsClaim } from "workbox-core";
 import { cleanupOutdatedCaches } from "workbox-precaching";
+import { registerRoute } from "workbox-routing";
 
 /**
  * delete old assets from previous sw versions
@@ -54,6 +55,36 @@ self.oninstall = () => {
       log("FAILED - couldn't save data to idb");
     });
 };
+
+/*****************************************************************************************************************
+ * catch api routes
+ ****************************************************************************************************************/
+
+// registerRoute ALWAYS expects a Response as return value!!
+
+// GET-Requests
+registerRoute(
+  ({ request }) => request.method === "GET",
+  async (event) => {
+    console.log("GET request identified");
+
+    // return original response
+    return await fetch(event.request);
+  },
+  "GET"
+);
+
+// POST-Requests
+registerRoute(
+  ({ request }) => request.method === "POST",
+  async (event) => {
+    console.log("POST request identified");
+
+    // return original response
+    return await fetch(event.request);
+  },
+  "POST"
+);
 
 /*****************************************************************************************************************
  * idb utility

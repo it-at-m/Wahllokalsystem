@@ -48,6 +48,7 @@
     "vitest": "2.1.8",
     "vue-tsc": "2.2.0",
     "workbox-core": "7.3.0",
-    "workbox-precaching": "7.3.0"
+    "workbox-precaching": "7.3.0",
+    "workbox-routing": "^7.3.0"
   }
 }

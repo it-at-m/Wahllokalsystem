@@ -8,5 +8,5 @@ public interface WahlvorstandDTOMapper {
 
     WahlvorstandDTO toDTO(WahlvorstandModel model);
 
-    WahlvorstandModel toModel(WahlvorstandDTO dto);
+    WahlvorstandModel toModel(String wahlbezirkID, WahlvorstandDTO dto);
 }

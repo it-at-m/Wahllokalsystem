@@ -4,6 +4,7 @@ import static de.muenchen.oss.wahllokalsystem.wahlvorstandservice.TestConstants.
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand.WahlvorstandDTO;
@@ -109,7 +110,7 @@ class SecurityConfigurationTest {
         @Test
         @WithMockUser
         void should_returnStatusOk_when_postingBusinessActionsWahlvorstand() throws Exception {
-            val requestBody = new WahlvorstandDTO("wahlbezirkID", null, null);
+            val requestBody = new WahlvorstandDTO(null, null);
             val request = MockMvcRequestBuilders.post("/businessActions/wahlvorstand/wahlbezirkID").with(csrf()).contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(requestBody));
 

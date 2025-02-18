@@ -34,15 +34,16 @@ public class WahlvorstandDTOMapperTest {
 
         @Test
         void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
+            Assertions.assertThat(unitUnderTest.toModel(null, null)).isNull();
         }
 
         @Test
         void should_returnWahlvorstandModel_when_givenWahlvorstandDTO() {
+            val wahlbezirkID = "wahlbezirkID";
             val mockedWahlvorstandDTO = TestDataFactory.CreateWahlvorstandDto.withData();
-            val expectedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.fromDto(mockedWahlvorstandDTO);
+            val expectedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.fromDto(wahlbezirkID, mockedWahlvorstandDTO);
 
-            val result = unitUnderTest.toModel(mockedWahlvorstandDTO);
+            val result = unitUnderTest.toModel(wahlbezirkID, mockedWahlvorstandDTO);
             Assertions.assertThat(result).isEqualTo(expectedWahlvorstandModel);
         }
     }

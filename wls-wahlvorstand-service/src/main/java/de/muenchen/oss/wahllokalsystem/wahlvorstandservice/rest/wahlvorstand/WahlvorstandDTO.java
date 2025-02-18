@@ -5,7 +5,6 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record WahlvorstandDTO(String wahlbezirkID,
-                              LocalDateTime anwesenheitBeginn,
+public record WahlvorstandDTO(LocalDateTime anwesenheitBeginn,
                               List<WahlvorstandsmitgliedDTO> wahlvorstandsmitglieder) {
 }

@@ -61,14 +61,14 @@ public class TestDataFactory {
             return new WahlvorstandModel("wahlbezirkID", LocalDateTime.now().withNano(0), wahlvorstandsmitgliedModelList);
         }
 
-        public static WahlvorstandModel fromDto(WahlvorstandDTO wahlvorstandDto) {
+        public static WahlvorstandModel fromDto(final String wahlbezirkID, WahlvorstandDTO wahlvorstandDto) {
             List<WahlvorstandsmitgliedModel> wahlvorstandsmitgliedModelList = wahlvorstandDto.wahlvorstandsmitglieder().stream()
                     .map(mitglied -> new WahlvorstandsmitgliedModel(
                             mitglied.identifikator(), mitglied.familienname(), mitglied.vorname(), MapFunktion.funktionDtoToFunktionModel(mitglied.funktion()),
                             mitglied.funktionsname(), mitglied.anwesend()))
                     .toList();
 
-            return new WahlvorstandModel(wahlvorstandDto.wahlbezirkID(), wahlvorstandDto.anwesenheitBeginn(), wahlvorstandsmitgliedModelList);
+            return new WahlvorstandModel(wahlbezirkID, wahlvorstandDto.anwesenheitBeginn(), wahlvorstandsmitgliedModelList);
         }
 
         public static WahlvorstandModel fallback(String wahlbezirkID) {
@@ -99,14 +99,7 @@ public class TestDataFactory {
             List<WahlvorstandsmitgliedDTO> wahlvorstandsmitgliedDtoList = new ArrayList<>();
             wahlvorstandsmitgliedDtoList.add(CreateWahlvorstandsmitgliedDto.withData());
 
-            return new WahlvorstandDTO("wahlbezirkID", LocalDateTime.now().withNano(0), wahlvorstandsmitgliedDtoList);
-        }
-
-        public static WahlvorstandDTO withWahlbezirkID(String wahlbezirkID) {
-            List<WahlvorstandsmitgliedDTO> wahlvorstandsmitgliedDtoList = new ArrayList<>();
-            wahlvorstandsmitgliedDtoList.add(CreateWahlvorstandsmitgliedDto.withData());
-
-            return new WahlvorstandDTO(wahlbezirkID, LocalDateTime.now().withNano(0), wahlvorstandsmitgliedDtoList);
+            return new WahlvorstandDTO(LocalDateTime.now().withNano(0), wahlvorstandsmitgliedDtoList);
         }
 
         public static WahlvorstandDTO fromModel(WahlvorstandModel model) {
@@ -114,7 +107,7 @@ public class TestDataFactory {
                     mitglied.identifikator(), mitglied.familienname(), mitglied.vorname(), MapFunktion.funktionModelToFunktionDto(mitglied.funktion()),
                     mitglied.funktionsname(), mitglied.anwesend()))
                     .toList();
-            return new WahlvorstandDTO(model.wahlbezirkID(), model.anwesenheitBeginn(), wahlvorstandsmitgliedDtoList);
+            return new WahlvorstandDTO(model.anwesenheitBeginn(), wahlvorstandsmitgliedDtoList);
         }
     }
 

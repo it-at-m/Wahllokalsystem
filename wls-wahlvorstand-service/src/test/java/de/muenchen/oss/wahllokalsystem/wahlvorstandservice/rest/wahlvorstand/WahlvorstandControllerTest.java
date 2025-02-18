@@ -91,12 +91,13 @@ public class WahlvorstandControllerTest {
 
         @Test
         void should_notThrowException_when_newDataSaved() {
+            val wahlbezirkID = "wahlbezirkID";
             val mockedWahlvorstandDto = TestDataFactory.CreateWahlvorstandDto.withData();
-            val mockedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.fromDto(mockedWahlvorstandDto);
+            val mockedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.fromDto(wahlbezirkID, mockedWahlvorstandDto);
 
-            Mockito.when(wahlvorstandDTOMapper.toModel(mockedWahlvorstandDto)).thenReturn(mockedWahlvorstandModel);
+            Mockito.when(wahlvorstandDTOMapper.toModel(wahlbezirkID, mockedWahlvorstandDto)).thenReturn(mockedWahlvorstandModel);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postWahlvorstand(mockedWahlvorstandDto));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postWahlvorstand(wahlbezirkID, mockedWahlvorstandDto));
             Mockito.verify(wahlvorstandService).postWahlvorstand(mockedWahlvorstandModel);
         }
     }

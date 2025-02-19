@@ -101,5 +101,23 @@ class KonfigurierterWahltagClientImplTest {
             Mockito.verify(konfigurierterWahltagControllerApi).setKonfigurierterWahltag(mockedKonfigurierterWahltagDTO);
             Mockito.verifyNoInteractions(wahlenControllerApi);
         }
+
+        @Test
+        void should_throwWlsException_when_basisdatenApiThrewException() {
+            val nowDate = LocalDate.now();
+            val konfigurierterWahltagModel = new KonfigurierterWahltagModel(nowDate, "1-2-3", true, "123");
+            val mockedKonfigurierterWahltagDTO = new KonfigurierterWahltagDTO().wahltag(nowDate).wahltagID("1-2-3").wahltagStatus(
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV).nummer("123");
+
+            Mockito.when(konfigurierterWahltagClientMapper.toDto(konfigurierterWahltagModel)).thenReturn(mockedKonfigurierterWahltagDTO);
+
+            val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("communication with wahlenApi failed");
+
+            Mockito.doThrow(new RuntimeException("api call basisdaten failed")).when(wahlenControllerApi).resetWahlen();
+            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN))
+                    .thenReturn(mockedWlsException);
+
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postKonfigurierterWahltag(konfigurierterWahltagModel)).isSameAs(mockedWlsException);
+        }
     }
 }

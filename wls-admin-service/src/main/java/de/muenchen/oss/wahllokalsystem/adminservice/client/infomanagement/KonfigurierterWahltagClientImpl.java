@@ -37,7 +37,12 @@ public class KonfigurierterWahltagClientImpl implements KonfigurierterWahltagCli
             val konfigurierterWahltagDTO = konfigurierterWahltagClientMapper.toDto(konfigurierterWahltag);
             konfigurierterWahltagControllerApi.setKonfigurierterWahltag(konfigurierterWahltagDTO);
             if (konfigurierterWahltagDTO.getWahltagStatus().equals(KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV)) {
-                wahlenControllerApi.resetWahlen();
+                try {
+                    wahlenControllerApi.resetWahlen();
+                } catch (final Exception exception) {
+                    log.error("#postKonfigurierterWahltag failed to reset elections:", exception);
+                    throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
+                }
             }
         } catch (final WlsException wlsException) {
             log.debug("#postKonfigurierterWahltag found WlsException:", wlsException);

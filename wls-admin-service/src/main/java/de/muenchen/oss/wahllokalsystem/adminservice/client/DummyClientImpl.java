@@ -32,6 +32,11 @@ public class DummyClientImpl implements AWerteClient, KonfigurierterWahltagClien
     }
 
     @Override
+    public void deleteKonfigurierterWahltag(String wahltagID) {
+        log.info("dummy client deleteKonfigurierterWahltag({}) called instead of infomanagement-service", wahltagID);
+    }
+
+    @Override
     public List<WahlbezirkModel> getWahlbezirke(String wahltagID) {
         log.info("dummy client getWahlbezirke({}) called instead of basisdaten-service", wahltagID);
         return List.of(

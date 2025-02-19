@@ -39,4 +39,18 @@ public class KonfigurierterWahltagClientImpl implements KonfigurierterWahltagCli
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT);
         }
     }
+
+    @Override
+    public void deleteKonfigurierterWahltag(final String wahltagID) {
+        log.debug("#deleteKonfigurierterWahltag");
+
+        try {
+            konfigurierterWahltagControllerApi.deleteKonfigurierterWahltag(wahltagID);
+        } catch (final WlsException wlsException) {
+            log.debug("#postKonfigurierterWahltag found WlsException:", wlsException);
+            throw wlsException;
+        } catch (Exception exception) {
+            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT);
+        }
+    }
 }

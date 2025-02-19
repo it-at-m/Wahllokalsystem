@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,4 +46,25 @@ public class WahltermindatenController {
         wahltermindatenService.loadWahltermindaten(wahltagID);
     }
 
+    @Operation(
+            description = "Loescht Wahlen, Wahlbezirke, Stimmzettelgebiete und Basisstrukturdaten zu einem gegebenen Wahltag aus dem externem Wahlsystem.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Die Wahltermindaten wurden erfolgreich gelöscht."
+                    ),
+                    @ApiResponse(
+                            responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
+                    ),
+                    @ApiResponse(
+                            responseCode = "500", description = "Fehler während des Imports.",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
+                    )
+            }
+    )
+    @PostMapping("/deleteWahltermindaten/{wahltagID}")
+    public ResponseEntity<?> deleteWahltermindaten(@PathVariable("wahltagID") String wahltagID) {
+        wahltermindatenService.deleteWahltermindaten(wahltagID);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

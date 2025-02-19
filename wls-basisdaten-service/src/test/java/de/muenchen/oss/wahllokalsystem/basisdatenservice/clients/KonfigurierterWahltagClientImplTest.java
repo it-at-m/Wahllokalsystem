@@ -39,7 +39,7 @@ class KonfigurierterWahltagClientImplTest {
     class LoadBasisdaten {
 
         @Test
-        void clientResponseIsMapped() {
+        void should_mapClientResponse_when_callingGet() {
             val mockedClientResponse = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
                     KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
             val mockedMappedClientResponse = KonfigurierterWahltagModel.builder().build();
@@ -55,7 +55,7 @@ class KonfigurierterWahltagClientImplTest {
         }
 
         @Test
-        void exceptionWhenClientResponseIsNull() {
+        void should_throwFachlicheWlsException_when_givenNull() {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(konfigurierterWahltagControllerApi.getKonfigurierterWahltag()).thenReturn(null);
@@ -65,7 +65,7 @@ class KonfigurierterWahltagClientImplTest {
         }
 
         @Test
-        void controllerApiExceptionIsMapped() {
+        void should_throwTechnischeWlsException_when_apiInvocationFailed() {
             val mockedException = TechnischeWlsException.withCode("100")
                     .buildWithMessage("Bei der Kommunikation mit dem Aoueai-Service ist ein Fehler aufgetreten. Es konnten daher keine Daten geladen werden.");
 

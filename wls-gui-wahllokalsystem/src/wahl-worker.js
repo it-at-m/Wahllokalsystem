@@ -78,10 +78,26 @@ registerRoute(
 registerRoute(
   ({ request }) => request.method === "POST",
   async (event) => {
-    console.log("POST request identified");
+    log("POST request identified");
 
-    // return original response
-    return await fetch(event.request);
+    try {
+      // body can only be read once so a clone is needed to extract data for saving in idb
+      const requestClone = event.request.clone();
+
+      // check if there is a body sent with post request (eg broadcastMessageRead has no body).
+      // if no "" is returned to be saved as value in idb
+      const requestBody = await requestClone.json().catch(() => "");
+      const response = await fetch(event.request);
+      await _setItemInIDB("lastPostedData", requestBody);
+
+      // return original response
+      return response;
+    } catch (error) {
+      console.error("Error saving to IDB:", error);
+
+      // return original response
+      return await fetch(event.request);
+    }
   },
   "POST"
 );

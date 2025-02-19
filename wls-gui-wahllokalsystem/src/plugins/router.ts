@@ -7,11 +7,13 @@ import {
   EXAMPLE_ROUTES_DYNAMIC,
   EXAMPLE_ROUTES_NEWROUTE,
   EXAMPLE_ROUTES_NOTFOUND,
+  EXAMPLE_VALIDATION,
   ROUTES_HOME,
 } from "@/constants";
 import ExampleBackendCommunicationView from "@/views/ExampleBackendCommunicationView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
 import ExampleNewRouteView from "@/views/ExampleNewRouteView.vue";
+import ExampleValidation from "@/views/ExampleValidation.vue";
 import HomeView from "@/views/HomeView.vue";
 
 const routes = [
@@ -42,6 +44,11 @@ const routes = [
     name: EXAMPLE_ROUTES_NOTFOUND,
     component: ExampleError404View,
   }, // CatchAll route
+  {
+    path: "/validation-example",
+    name: EXAMPLE_VALIDATION,
+    component: ExampleValidation,
+  },
 ];
 
 const router = createRouter({

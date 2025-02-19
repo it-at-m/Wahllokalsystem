@@ -36,29 +36,7 @@ public class WahllokalBenutzerService {
         }
 
         log.debug("generateWahllokalbenutzer, Anzahl Wahlbezirke: {}", wahlbezirke.size());
-        List<WahllokalBenutzerModel> userModels = new ArrayList<>();
-
-        for (WahlbezirkModel wb : wahlbezirke) {
-            Optional<WahllokalBenutzerModel> foundUserOfWahllokalNummer = userModels.stream()
-                    .filter(u -> u.wahlbezirknummer().equals(wb.nummer()))
-                    .findAny();
-
-            if (foundUserOfWahllokalNummer.isPresent()) {
-                foundUserOfWahllokalNummer.get()
-                        .wbid_wahlnummer()
-                        .add(new TripleOfWahlbezirkIDWahlNummerWahlIDModel(wb.wahlbezirkID(), wb.wahlnummer(), wb.wahlID()));
-
-            } else {
-                ArrayList<TripleOfWahlbezirkIDWahlNummerWahlIDModel> initWbIdWahlnummerWahlIDModel = new ArrayList<>();
-                initWbIdWahlnummerWahlIDModel.add(new TripleOfWahlbezirkIDWahlNummerWahlIDModel(wb.wahlbezirkID(), wb.wahlnummer(), wb.wahlID()));
-                userModels.add(new WahllokalBenutzerModel(wb.wahlbezirkID(),
-                        wb.nummer(),
-                        wb.wahltag(),
-                        wb.wahlbezirkart(),
-                        initWbIdWahlnummerWahlIDModel));
-
-            }
-        }
+        List<WahllokalBenutzerModel> userModels = generateBenutzerModels(wahlbezirke);
         log.debug("generateWahllokalbenutzer, Anzahl generierter Benutzer: {}", userModels.size());
 
         return new CsvFileModel(wahllokalBenutzerClient.generateAndExportWahllokalBenutzer(wahltagID, userModels));
@@ -76,5 +54,32 @@ public class WahllokalBenutzerService {
         wahllokalbenutzerValidator.validWahltagIDParamOrThrow(wahltagID);
 
         wahllokalBenutzerClient.deleteWahllokalBenutzer(wahltagID);
+    }
+
+    private static List<WahllokalBenutzerModel> generateBenutzerModels(List<WahlbezirkModel> wahlbezirke) {
+        List<WahllokalBenutzerModel> userModels = new ArrayList<>();
+
+        for (WahlbezirkModel wb : wahlbezirke) {
+            Optional<WahllokalBenutzerModel> foundUserOfWahllokalNummer = userModels.stream()
+                    .filter(u -> u.wahlbezirknummer().equals(wb.nummer()))
+                    .findAny();
+
+            if (foundUserOfWahllokalNummer.isPresent()) {
+                foundUserOfWahllokalNummer.get()
+                        .wbid_wahlnummer()
+                        .add(new TripleOfWahlbezirkIDWahlnummerWahlIDModel(wb.wahlbezirkID(), wb.wahlnummer(), wb.wahlID()));
+
+            } else {
+                ArrayList<TripleOfWahlbezirkIDWahlnummerWahlIDModel> initWbIdWahlnummerWahlIDModel = new ArrayList<>();
+                initWbIdWahlnummerWahlIDModel.add(new TripleOfWahlbezirkIDWahlnummerWahlIDModel(wb.wahlbezirkID(), wb.wahlnummer(), wb.wahlID()));
+                userModels.add(new WahllokalBenutzerModel(wb.wahlbezirkID(),
+                        wb.nummer(),
+                        wb.wahltag(),
+                        wb.wahlbezirkart(),
+                        initWbIdWahlnummerWahlIDModel));
+
+            }
+        }
+        return userModels;
     }
 }

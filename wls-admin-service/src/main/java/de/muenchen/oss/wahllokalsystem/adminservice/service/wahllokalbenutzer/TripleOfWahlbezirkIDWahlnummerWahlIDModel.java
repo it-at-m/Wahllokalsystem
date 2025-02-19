@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public record TripleOfWahlbezirkIDWahlNummerWahlIDModel(
+public record TripleOfWahlbezirkIDWahlnummerWahlIDModel(
     @NotNull String wahlbezirkID,
     @NotNull String wahlnummer,
     @NotNull String wahlID){

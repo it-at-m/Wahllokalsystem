@@ -47,7 +47,7 @@ self.oninstall = () => {
   log("installed and took control");
 
   // to test idb
-  _setItemInIDB("testkey", "testvalue")
+  _setItemInIDB("testkey", "testvalue", false)
     .then(() => {
       log("SUCCESS - saved data to idb");
     })
@@ -120,7 +120,12 @@ registerRoute(
         .json()
         .catch(() => "last message has been read"); // string is specific for broadcast service
       const response = await fetch(event.request);
-      await _setItemInIDB("lastPostedData", requestBody);
+      // set dirty flag to data that has to be synchronized
+      if (response.ok) {
+        await _setItemInIDB("lastPostedData", requestBody, false);
+      } else {
+        await _setItemInIDB("lastPostedData", requestBody, true);
+      }
 
       // return original response
       return response;
@@ -137,8 +142,9 @@ registerRoute(
 /*****************************************************************************************************************
  * idb utility
  ****************************************************************************************************************/
-function _setItemInIDB(key, value) {
-  log("saving data - key: " + key + ", value: " + JSON.stringify(value));
+function _setItemInIDB(key, data, dirty) {
+  log("saving data - value: " + JSON.stringify(data) + ", dirty: " + dirty);
+  const value = { data: data, dirty: dirty };
   return localforage.setItem(key, value);
 }
 

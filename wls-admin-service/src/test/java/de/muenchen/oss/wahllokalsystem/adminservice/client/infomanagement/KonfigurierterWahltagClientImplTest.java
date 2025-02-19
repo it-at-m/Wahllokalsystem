@@ -1,9 +1,10 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.client.infomanagement;
 
+import de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.client.WahlenControllerApi;
 import de.muenchen.oss.wahllokalsystem.adminservice.eai.infomanagement.client.KonfigurierterWahltagControllerApi;
 import de.muenchen.oss.wahllokalsystem.adminservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.KonfigurierterWahltagModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.time.LocalDate;
@@ -29,6 +30,9 @@ class KonfigurierterWahltagClientImplTest {
     @Mock
     KonfigurierterWahltagClientMapper konfigurierterWahltagClientMapper;
 
+    @Mock
+    WahlenControllerApi wahlenControllerApi;
+
     @InjectMocks
     KonfigurierterWahltagClientImpl unitUnderTest;
 
@@ -47,6 +51,7 @@ class KonfigurierterWahltagClientImplTest {
             unitUnderTest.postKonfigurierterWahltag(konfigurierterWahltagModel);
 
             Mockito.verify(konfigurierterWahltagControllerApi).setKonfigurierterWahltag(mockedKonfigurierterWahltagDTO);
+            Mockito.verify(wahlenControllerApi).resetWahlen();
         }
 
         @Test
@@ -80,6 +85,21 @@ class KonfigurierterWahltagClientImplTest {
                     .thenReturn(mockedWlsException);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postKonfigurierterWahltag(konfigurierterWahltagModel)).isSameAs(mockedWlsException);
+        }
+
+        @Test
+        void should_notResetWahlen_when_wahlIsNotActive() {
+            val nowDate = LocalDate.now();
+            val konfigurierterWahltagModel = new KonfigurierterWahltagModel(nowDate, "1-2-3", true, "123");
+            val mockedKonfigurierterWahltagDTO = new KonfigurierterWahltagDTO().wahltag(nowDate).wahltagID("1-2-3").wahltagStatus(
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.INAKTIV).nummer("123");
+
+            Mockito.when(konfigurierterWahltagClientMapper.toDto(konfigurierterWahltagModel)).thenReturn(mockedKonfigurierterWahltagDTO);
+
+            unitUnderTest.postKonfigurierterWahltag(konfigurierterWahltagModel);
+
+            Mockito.verify(konfigurierterWahltagControllerApi).setKonfigurierterWahltag(mockedKonfigurierterWahltagDTO);
+            Mockito.verifyNoInteractions(wahlenControllerApi);
         }
     }
 }

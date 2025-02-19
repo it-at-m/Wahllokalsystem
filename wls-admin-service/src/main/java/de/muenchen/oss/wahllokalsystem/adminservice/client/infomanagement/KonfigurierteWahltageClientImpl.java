@@ -1,17 +1,16 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.client.infomanagement;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.configuration.Profiles;
-import de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.client.WahlenControllerApi;
 import de.muenchen.oss.wahllokalsystem.adminservice.eai.infomanagement.client.KonfigurierterWahltagControllerApi;
 import de.muenchen.oss.wahllokalsystem.adminservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.KonfigurierterWahltagClient;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag.KonfigurierteWahltageClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -19,31 +18,23 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
-public class KonfigurierterWahltagClientImpl implements KonfigurierterWahltagClient {
+public class KonfigurierteWahltageClientImpl implements KonfigurierteWahltageClient {
 
     private final ExceptionFactory exceptionFactory;
-
     private final KonfigurierterWahltagControllerApi konfigurierterWahltagControllerApi;
-
     private final KonfigurierterWahltagClientMapper konfigurierterWahltagClientMapper;
 
-    private final WahlenControllerApi wahlenControllerApi;
-
     @Override
-    public void postKonfigurierterWahltag(final KonfigurierterWahltagModel konfigurierterWahltag) {
-        log.debug("#postKonfigurierterWahltag");
-
+    public List<KonfigurierterWahltagModel> getKonfigurierteWahltage() throws WlsException {
+        final List<KonfigurierterWahltagDTO> konfigurierterWahltagDTOList;
         try {
-            val konfigurierterWahltagDTO = konfigurierterWahltagClientMapper.toDto(konfigurierterWahltag);
-            konfigurierterWahltagControllerApi.setKonfigurierterWahltag(konfigurierterWahltagDTO);
-            if (konfigurierterWahltagDTO.getWahltagStatus().equals(KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV)) {
-                wahlenControllerApi.resetWahlen();
-            }
-        } catch (final WlsException wlsException) {
-            log.debug("#postKonfigurierterWahltag found WlsException:", wlsException);
-            throw wlsException;
+            konfigurierterWahltagDTOList = konfigurierterWahltagControllerApi.getKonfigurierteWahltage();
         } catch (final Exception exception) {
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT);
         }
+        if (konfigurierterWahltagDTOList == null) {
+            return null;
+        }
+        return konfigurierterWahltagDTOList.stream().map(konfigurierterWahltagClientMapper::toModel).toList();
     }
 }

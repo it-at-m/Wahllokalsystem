@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag.KonfigurierteWahltageService;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahltermindatenService;
 import lombok.val;
 import org.junit.jupiter.api.Nested;
@@ -34,6 +35,9 @@ class SecurityConfigurationTest {
 
     @MockBean
     WahltermindatenService wahltermindatenService;
+
+    @MockBean
+    KonfigurierteWahltageService konfigurierteWahltageService;
 
     @Test
     void should_returnStatusUnauthorized_when_accessingSecuredResourceRoot() throws Exception {
@@ -100,6 +104,30 @@ class SecurityConfigurationTest {
             api.perform(request).andExpect(status().isOk());
 
             Mockito.verify(wahltermindatenService).loadWahltermindaten(wahltagID);
+        }
+    }
+
+    @Nested
+    class GetKonfigurierteWahltage {
+
+        @WithAnonymousUser
+        @Test
+        void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+            val request = MockMvcRequestBuilders.get("/businessActions/konfigurierteWahltage").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON);
+
+            api.perform(request).andExpect(status().isUnauthorized());
+        }
+
+        @WithMockUser
+        @Test
+        void should_returnOk_when_callingAuthenticated() throws Exception {
+            val request = MockMvcRequestBuilders.get("/businessActions/konfigurierteWahltage").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON);
+
+            api.perform(request).andExpect(status().isOk());
+
+            Mockito.verify(konfigurierteWahltageService).getKonfigurierteWahltage();
         }
     }
 

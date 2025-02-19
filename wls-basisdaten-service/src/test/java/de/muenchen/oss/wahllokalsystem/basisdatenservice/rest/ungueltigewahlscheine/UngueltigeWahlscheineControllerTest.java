@@ -56,7 +56,7 @@ class UngueltigeWahlscheineControllerTest {
         }
 
         @Test
-        void serviceCalled() {
+        void should_callService_when_callingGetUngueltigeWahlscheine() {
             val wahltagID = "wahltagID";
 
             val mockedReferenceModel = new UngueltigeWahlscheineReferenceModel(wahltagID, WahlbezirkArtModel.BWB);
@@ -78,7 +78,7 @@ class UngueltigeWahlscheineControllerTest {
     class SetUngueltigeWahlscheine {
 
         @Test
-        void serviceCalled() throws IOException {
+        void should_callService_when_callingSetUngueltigeWahlscheine() throws IOException {
             val wahltagID = "wahltagID";
             final HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
             val servletRequest = new DefaultMultipartHttpServletRequest(httpServletRequest);
@@ -97,7 +97,7 @@ class UngueltigeWahlscheineControllerTest {
         }
 
         @Test
-        void occuringIoExceptionIsMappedToWlsException() throws IOException {
+        void should_mapToWlsException_when_ioExceptionOccurs() throws IOException {
             val wahltagID = "wahltagID";
             final HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
             val servletRequest = new DefaultMultipartHttpServletRequest(httpServletRequest);

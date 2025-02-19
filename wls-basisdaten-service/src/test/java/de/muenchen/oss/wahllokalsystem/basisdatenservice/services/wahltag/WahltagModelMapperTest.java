@@ -13,7 +13,7 @@ class WahltagModelMapperTest {
     private final WahltagModelMapper unitUnderTest = Mappers.getMapper(WahltagModelMapper.class);
 
     @Test
-    void fromWahltagModelToWahltagEntityList() {
+    void should_returnWahltagEntityList_when_givenWahltagModelList() {
         val modelsToMap = createWahltagModelList();
 
         val result = unitUnderTest.fromWahltagModelToWahltagEntityList(modelsToMap);
@@ -23,7 +23,7 @@ class WahltagModelMapperTest {
     }
 
     @Test
-    void fromWahltagEntityToWahltagModelList() {
+    void should_returnWahltagModelList_when_givenWahltagEntityList() {
         val entitiesToMap = createWahltagList();
 
         val result = unitUnderTest.fromWahltagEntityToWahltagModelList(entitiesToMap);
@@ -33,7 +33,7 @@ class WahltagModelMapperTest {
     }
 
     @Test
-    void toModel() {
+    void should_returnWahltagModel_when_givenWahltagEntity() {
         val wahltagID = "wahltagID";
         val wahltag = LocalDate.now();
         val beschreibung = "beschreibung";

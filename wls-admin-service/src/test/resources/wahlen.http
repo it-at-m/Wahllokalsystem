@@ -2,11 +2,11 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET Wahlen - works only with profile "dummy.client"
+### GET Wahlen - works only with profile "dummy.clients"
 GET {{ WLS_ADMIN_SERVICE_URL }}/businessActions/wahlen/wahltagID
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST Wahlen - works only with profile "dummy.client"
+### POST Wahlen - works only with profile "dummy.clients"
 < {%
     const wahltag = new Date();
     wahltag.setMonth(wahltag.getMonth() - 2);

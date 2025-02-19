@@ -3,6 +3,6 @@ GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 
-### Get Wahltage - works only with profile "dummy.client"
+### Get Wahltage - works only with profile "dummy.clients"
 GET {{ WLS_ADMIN_SERVICE_URL }}/businessActions/wahltage
 Authorization: Bearer {{$auth.token("auth-service")}}

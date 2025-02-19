@@ -1,6 +1,11 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.rest.wahlen;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen.WahlenService;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +28,26 @@ public class WahlenController {
 
     private final WahlDTOMapper wahlenDTOMapper;
 
+    @Operation(
+        description = "Liest die Wahlen eines Wahltages vom BasisdatenService.",
+        responses = {
+            @ApiResponse(
+                responseCode = "200", description = "Die Wahlen wurden erfolgreich gelesen."
+            ),
+            @ApiResponse(
+                responseCode = "204", description = "Es existieren keine Wahlen zu den entsprechenden Kriterien.",
+                content = { @Content() }
+            ),
+            @ApiResponse(
+                responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich.",
+                content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
+            ),
+            @ApiResponse(
+                responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
+            )
+        }
+    )
     @GetMapping("/wahlen/{wahltagID}")
     public ResponseEntity<List<WahlDTO>> getWahlen(@PathVariable("wahltagID") final String wahltagID) {
         final List<WahlDTO> result = wahlenDTOMapper.toDtoList(wahlenService.getWahlen(wahltagID));
@@ -33,6 +58,22 @@ public class WahlenController {
         }
     }
 
+    @Operation(
+        description = "Aktualisiert die Wahlen eines Wahltages im BasisdatenService.",
+        responses = {
+            @ApiResponse(
+                responseCode = "200", description = "Die Wahlen wurden erfolgreich gespeichert."
+            ),
+            @ApiResponse(
+                responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich.",
+                content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
+            ),
+            @ApiResponse(
+                responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
+            )
+        }
+    )
     @PostMapping("/wahlen/{wahltagID}")
     public ResponseEntity<?> updateWahlen(@RequestBody final List<WahlDTO> wahlen,
             @PathVariable("wahltagID") final String wahltagID) {

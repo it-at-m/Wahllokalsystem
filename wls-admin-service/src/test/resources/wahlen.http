@@ -1,0 +1,60 @@
+### get userinfo with auth_token
+GET {{ WLS_AUTH_SERVICE }}/user
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### GET Wahlen - works only with profile "dummy.client"
+GET {{ WLS_ADMIN_SERVICE_URL }}/businessActions/wahlen/wahltagID
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### POST Wahlen - works only with profile "dummy.client"
+< {%
+    const wahltag = new Date();
+    wahltag.setMonth(wahltag.getMonth() - 2);
+    const wahltagAsDateString = wahltag.toJSON().substring(0, 10);
+    request.variables.set("dateOfWahltagID1", wahltagAsDateString);
+%}
+POST {{ WLS_ADMIN_SERVICE_URL }}/businessActions/wahlen/wahltagID
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+[
+  {
+    "wahlID": "wahl1",
+    "name": "aName_1",
+    "reihenfolge": 1,
+    "waehlerverzeichnisnummer": 1,
+    "wahltag": "{{ dateOfWahltagID1 }}",
+    "wahlart": "BTW",
+    "farbe": {
+      "r": 0,
+      "g": 1,
+      "b": 2
+    }
+  },
+  {
+    "wahlID": "wahl2",
+    "name": "1",
+    "reihenfolge": 2,
+    "waehlerverzeichnisnummer": 1,
+    "wahltag": "{{ dateOfWahltagID1 }}",
+    "wahlart": "EUW",
+    "farbe": {
+      "r": 3,
+      "g": 4,
+      "b": 5
+    }
+  },
+  {
+    "wahlID": "wahl3",
+    "name": "2-",
+    "reihenfolge": 3,
+    "waehlerverzeichnisnummer": 1,
+    "wahltag": "{{ dateOfWahltagID1 }}",
+    "wahlart": "LTW",
+    "farbe": {
+      "r": 6,
+      "g": 7,
+      "b": 8
+    }
+  }
+]

@@ -1,0 +1,8 @@
+### get userinfo with auth_token
+GET {{ WLS_AUTH_SERVICE }}/user
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+
+### Get Wahltage - works only with profile "dummy.client"
+GET {{ WLS_ADMIN_SERVICE_URL }}/businessActions/wahltage
+Authorization: Bearer {{$auth.token("auth-service")}}

@@ -66,10 +66,40 @@ self.oninstall = () => {
 registerRoute(
   ({ request }) => request.method === "GET",
   async (event) => {
-    console.log("GET request identified");
+    log("GET request identified");
 
-    // return original response
-    return await fetch(event.request);
+    try {
+      const response = await fetch(event.request);
+
+      try {
+        if (!response.ok) {
+          // get idb data as fallback
+          const storedData = await _getItemFromIDB("lastPostedData");
+          if (storedData) {
+            log("fetched from idb: " + JSON.stringify(storedData));
+            return new Response(JSON.stringify(storedData), {
+              status: 200,
+              statusText: "fetched from idb",
+            });
+          } else {
+            return new Response(
+              JSON.stringify({
+                error: "no data found in idb",
+                status: 500,
+              }),
+              { status: 500 }
+            );
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching idb data:", error);
+      }
+
+      // return original response
+      return response;
+    } catch (error) {
+      console.error("Error fetching remote data:", error);
+    }
   },
   "GET"
 );
@@ -86,7 +116,9 @@ registerRoute(
 
       // check if there is a body sent with post request (eg broadcastMessageRead has no body).
       // if no "" is returned to be saved as value in idb
-      const requestBody = await requestClone.json().catch(() => "");
+      const requestBody = await requestClone
+        .json()
+        .catch(() => "last message has been read"); // string is specific for broadcast service
       const response = await fetch(event.request);
       await _setItemInIDB("lastPostedData", requestBody);
 
@@ -108,6 +140,15 @@ registerRoute(
 function _setItemInIDB(key, value) {
   log("saving data - key: " + key + ", value: " + JSON.stringify(value));
   return localforage.setItem(key, value);
+}
+
+async function _getItemFromIDB(key) {
+  try {
+    return await localforage.getItem(key);
+  } catch (error) {
+    console.error("Fehler beim Laden aus IDB:", error);
+    return null;
+  }
 }
 
 /*****************************************************************************************************************

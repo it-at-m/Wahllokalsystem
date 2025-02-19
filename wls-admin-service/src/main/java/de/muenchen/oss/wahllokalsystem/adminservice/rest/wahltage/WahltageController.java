@@ -25,20 +25,20 @@ public class WahltageController {
     private final WahltagDTOMapper wahltagDTOMapper;
 
     @Operation(
-        description = "Liest alle vorhandenen Wahltage vom BasisdatenService.",
-        responses = {
-            @ApiResponse(
-                responseCode = "200", description = "Die Wahltage wurden erfolgreich gelesen."
-            ),
-            @ApiResponse(
-                responseCode = "204", description = "Es existieren keine Wahltage.",
-                content = { @Content() }
-            ),
-            @ApiResponse(
-                responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
-            )
-        }
+            description = "Liest alle vorhandenen Wahltage vom BasisdatenService.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Die Wahltage wurden erfolgreich gelesen."
+                    ),
+                    @ApiResponse(
+                            responseCode = "204", description = "Es existieren keine Wahltage.",
+                            content = { @Content() }
+                    ),
+                    @ApiResponse(
+                            responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
+                    )
+            }
     )
     @GetMapping("/wahltage")
     public ResponseEntity<List<WahltagDTO>> getWahltage() {

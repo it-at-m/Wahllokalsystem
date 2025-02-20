@@ -104,7 +104,7 @@ class WahlenControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.ADMIN_UPDATEWAHLEN })
-        void should_returnOK_when_allRemoteClientsAreCalledSuccesfully() throws Exception {
+        void should_returnOK_when_allRemoteClientsAreCalledSuccessfully() throws Exception {
             val wahltagID = "wahltagID";
             val wahlen = List.of(new de.muenchen.oss.wahllokalsystem.adminservice.rest.wahlen.WahlDTO("wahlID1", "name1", 3L, 1L, LocalDate.now(),
                     WahlartDTO.BAW, new FarbeDTO(1, 1, 1)));

@@ -28,9 +28,7 @@ public class WahlenClientImpl implements WahlenClient {
 
     @Override
     public List<WahlModel> getWahlen(String wahltagID) throws WlsException {
-
         log.debug("#getWahlen");
-
         List<WahlModel> wahlen;
         try {
             val wahlenDTO = wahlenControllerApi.getWahlen(wahltagID);

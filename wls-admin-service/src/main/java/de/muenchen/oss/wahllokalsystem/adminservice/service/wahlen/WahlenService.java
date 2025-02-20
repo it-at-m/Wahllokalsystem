@@ -20,7 +20,7 @@ public class WahlenService {
     private final WahlenClient wahlenClient;
 
     @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_GetWahlen')")
-    public List<WahlModel> getWahlen(String wahltagID) {
+    public List<WahlModel> getWahlen(final String wahltagID) {
         wahlenValidator.validWahlIDParamOrThrow(wahltagID);
 
         return wahlenClient.getWahlen(wahltagID);

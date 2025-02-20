@@ -1,5 +1,5 @@
 export default interface IdbObject {
-  data: Object;
+  data: object;
   url: string;
   dirty: boolean;
 }

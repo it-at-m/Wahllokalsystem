@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import localforage from "localforage";
 import { clientsClaim } from "workbox-core";
 import { cleanupOutdatedCaches } from "workbox-precaching";

@@ -6,7 +6,7 @@
       height="150"
       persistent
     >
-      <template v-slot:activator="{ props: activatorProps }">
+      <template #activator="{ props: activatorProps }">
         <v-btn
           v-bind="activatorProps"
           icon="$reload"
@@ -33,6 +33,7 @@ import localforage from "localforage";
 import { ref } from "vue";
 import { VBtn, VCard, VDialog } from "vuetify/components";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useInterval } from "@/composables/useInterval";
 
 const dialog = ref(false);
@@ -49,10 +50,10 @@ async function synchronizeOfflineData() {
   dialog.value = true;
   statusText.value = "Gathering dirty data in IDB...";
 
-  let dataToSync: IdbObject[] = [];
+  const dataToSync: IdbObject[] = [];
   // gather dirty data
   return localforage
-    .iterate((value: { data: Object; url: string; dirty: boolean }) => {
+    .iterate((value: IdbObject) => {
       if (value.dirty) {
         dataToSync.push(value);
       }
@@ -60,19 +61,17 @@ async function synchronizeOfflineData() {
     .then(async () => {
       if (dataToSync.length > 0) {
         statusText.value = "... syncing ... ";
-        for (let element = 0; element < dataToSync.length; element++) {
-          const obj = dataToSync[element];
+        for (const element of dataToSync) {
           await axios
             .request({
-              url: obj.url,
+              url: element.url,
               method: "POST",
-              data: obj.data,
+              data: element.data,
             })
             .then(() => {
               statusText.value = "data has been synchronized successfully";
             })
-            .catch((e) => {
-              console.log("failed to resend data. " + e);
+            .catch(() => {
               statusText.value = "offline. try again in a few secs";
             });
         }
@@ -82,8 +81,7 @@ async function synchronizeOfflineData() {
       await new Promise((resolve) => setTimeout(resolve, 2000)); // wait to show message
       dialog.value = false;
     })
-    .catch(async (e) => {
-      console.log(e);
+    .catch(async () => {
       await new Promise((resolve) => setTimeout(resolve, 2000)); // wait to show message
       dialog.value = false;
     });

@@ -106,7 +106,6 @@
 
 <script setup lang="ts">
 import { useToggle } from "@vueuse/core";
-import axios from "axios";
 import localforage from "localforage";
 import { onMounted, ref } from "vue";
 import {
@@ -143,7 +142,6 @@ const isOffline = ref(false);
 
 onMounted(() => {
   loadUser();
-  getUserFromAuth();
 
   // config for service worker indexed db (same config as in wahl-worker.js !)
   localforage.config({
@@ -157,7 +155,6 @@ onMounted(() => {
 
 /**
  * Loads UserInfo from the backend and sets it in the store.
- * Todo: will this be replaced by getUserFromAuth?
  */
 function loadUser(): void {
   getUser()
@@ -170,32 +167,6 @@ function loadUser(): void {
         userStore.setUser(null);
       }
     });
-}
-
-// Todo: example implementation --> move logic to api files
-async function getUserFromAuth() {
-  const url = "api/auth-service/user";
-  return await axios
-    .get(url)
-    .then((response) => {
-      if (response.status == 200) {
-        sendPinToSW(response.data.pin);
-      }
-    })
-    .catch(() => {
-      // eslint-disable-next-line no-console
-      console.log("kein user gefunden");
-    });
-}
-async function sendPinToSW(pin: string) {
-  // waiting for SW to be registered
-  try {
-    const registration = await navigator.serviceWorker.ready;
-    registration.active?.postMessage(pin);
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("Failed to send PIN to service worker:", error);
-  }
 }
 </script>
 

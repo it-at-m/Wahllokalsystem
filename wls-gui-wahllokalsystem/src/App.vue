@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <the-snackbar />
+    <offline-syncer />
     <v-app-bar color="primary">
       <v-row align="center">
         <v-col
@@ -22,6 +23,8 @@
           cols="3"
           class="d-flex align-center justify-end"
         >
+          <!-- heartbeat uses v-model for two-way-binding -->
+          <wls-heartbeat v-model:is-offline="isOffline"></wls-heartbeat>
           <v-tooltip
             location="bottom"
             text="Backend Communication Examples"
@@ -104,8 +107,9 @@
 
 <script setup lang="ts">
 import { useToggle } from "@vueuse/core";
+import axios from "axios";
 import localforage from "localforage";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import {
   VApp,
   VAppBar,
@@ -125,6 +129,8 @@ import {
 
 import { getUser } from "@/api/user-client";
 import TheSnackbar from "@/components/TheSnackbar.vue";
+import OfflineSyncer from "@/components/wlsComponents/OfflineSyncer.vue";
+import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import {
   EXAMPLE_ROUTES_BACKEND,
   EXAMPLE_ROUTES_NEWROUTE,
@@ -135,9 +141,11 @@ import User, { UserLocalDevelopment } from "@/types/User";
 
 const userStore = useUserStore();
 const [drawer, toggleDrawer] = useToggle();
+const isOffline = ref(false);
 
 onMounted(() => {
   loadUser();
+  getUserFromAuth();
 
   // config for service worker indexed db (same config as in wahl-worker.js !)
   localforage.config({
@@ -151,6 +159,7 @@ onMounted(() => {
 
 /**
  * Loads UserInfo from the backend and sets it in the store.
+ * Todo: will this be replaced by getUserFromAuth?
  */
 function loadUser(): void {
   getUser()
@@ -163,6 +172,32 @@ function loadUser(): void {
         userStore.setUser(null);
       }
     });
+}
+
+// Todo: example implementation --> move logic to api files
+async function getUserFromAuth() {
+  const url = "api/auth-service/user";
+  return await axios
+    .get(url)
+    .then((response) => {
+      if (response.status == 200) {
+        sendPinToSW(response.data.pin);
+      }
+    })
+    .catch(() => {
+      // eslint-disable-next-line no-console
+      console.log("kein user gefunden");
+    });
+}
+async function sendPinToSW(pin: string) {
+  // waiting for SW to be registered
+  try {
+    const registration = await navigator.serviceWorker.ready;
+    registration.active?.postMessage(pin);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Failed to send PIN to service worker:", error);
+  }
 }
 </script>
 

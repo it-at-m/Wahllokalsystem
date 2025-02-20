@@ -1,7 +1,6 @@
 <template>
   <v-app>
     <the-snackbar />
-    <offline-syncer />
     <v-app-bar color="primary">
       <v-row align="center">
         <v-col
@@ -129,7 +128,6 @@ import {
 
 import { getUser } from "@/api/user-client";
 import TheSnackbar from "@/components/TheSnackbar.vue";
-import OfflineSyncer from "@/components/wlsComponents/OfflineSyncer.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import {
   EXAMPLE_ROUTES_BACKEND,

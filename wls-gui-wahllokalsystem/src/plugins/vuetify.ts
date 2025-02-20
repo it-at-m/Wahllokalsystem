@@ -3,6 +3,7 @@ import "vuetify/styles";
 import {
   mdiHome,
   mdiMessageText,
+  mdiReload,
   mdiRoutes,
   mdiSignalCellular3,
   mdiSignalOff,
@@ -22,6 +23,7 @@ export default createVuetify({
       textBoxCheck: mdiTextBoxCheck,
       signalOffline: mdiSignalOff,
       signalOnline: mdiSignalCellular3,
+      reload: mdiReload,
     },
     sets: {
       mdi,

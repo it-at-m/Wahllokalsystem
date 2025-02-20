@@ -1,11 +1,23 @@
 <template>
-  <div class="text-center pa-4">
+  <div class="text-center">
     <v-dialog
       v-model="dialog"
       max-width="400"
       height="150"
       persistent
     >
+      <template v-slot:activator="{ props: activatorProps }">
+        <v-btn
+          v-bind="activatorProps"
+          icon="$reload"
+          class="px-0"
+          size="x-small"
+          color="primary"
+          @click="synchronizeOfflineData"
+        >
+        </v-btn>
+      </template>
+
       <v-card
         title="Synchronizing"
         :text="statusText"
@@ -19,16 +31,19 @@ import type IdbObject from "@/types/wlsTypes/IdbObject";
 import axios from "axios";
 import localforage from "localforage";
 import { ref } from "vue";
-import { VCard, VDialog } from "vuetify/components";
+import { VBtn, VCard, VDialog } from "vuetify/components";
 
 import { useInterval } from "@/composables/useInterval";
 
 const dialog = ref(false);
 const statusText = ref("");
 
+// todo: synchronizing activated via click. uncomment to activate periodically
+/*
 useInterval(() => {
   synchronizeOfflineData();
 }, 10000); // updates every 10 seconds
+*/
 
 async function synchronizeOfflineData() {
   dialog.value = true;
@@ -58,7 +73,7 @@ async function synchronizeOfflineData() {
             })
             .catch((e) => {
               console.log("failed to resend data. " + e);
-              statusText.value = "offline. trying again in a few secs";
+              statusText.value = "offline. try again in a few secs";
             });
         }
       } else {

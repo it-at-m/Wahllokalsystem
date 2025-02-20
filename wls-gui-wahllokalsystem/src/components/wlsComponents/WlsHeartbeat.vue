@@ -12,11 +12,18 @@
     </template>
     <v-card
       width="250"
-      max-height="200"
+      max-height="280"
     >
       <v-list class="pt-0">
         <v-list-item class="list-header">
-          <strong>Verbindungsstatus</strong>
+          <v-row
+            class="ma-1"
+            align="center"
+          >
+            <strong>Verbindungsstatus</strong>
+            <v-spacer />
+            <offline-syncer />
+          </v-row>
         </v-list-item>
         <v-divider
           thickness="2"
@@ -37,9 +44,12 @@ import {
   VList,
   VListItem,
   VMenu,
+  VRow,
+  VSpacer,
 } from "vuetify/components";
 
 import { basicPostConfig } from "@/api/axios-utils";
+import OfflineSyncer from "@/components/wlsComponents/OfflineSyncer.vue";
 import { useInterval } from "@/composables/useInterval";
 
 useInterval(() => {

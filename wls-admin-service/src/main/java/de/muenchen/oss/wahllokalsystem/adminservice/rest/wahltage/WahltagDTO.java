@@ -7,6 +7,6 @@ import lombok.Builder;
 @Builder
 public record WahltagDTO(@NotNull String wahltagID,
                          @NotNull LocalDate wahltag,
-                         String beschreibung,
-                         String nummer) {
+                         @NotNull String beschreibung,
+                         @NotNull String nummer) {
 }

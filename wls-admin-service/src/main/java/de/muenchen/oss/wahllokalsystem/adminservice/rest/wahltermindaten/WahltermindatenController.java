@@ -56,12 +56,12 @@ public class WahltermindatenController {
                             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
                     ),
                     @ApiResponse(
-                            responseCode = "500", description = "Fehler während des Imports.",
+                            responseCode = "500", description = "Fehler während des Löschvorgangs.",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
                     )
             }
     )
-    @PostMapping("/deleteWahltermindaten/{wahltagID}")
+    @PostMapping("deleteWahltermindaten/{wahltagID}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteWahltermindaten(@PathVariable("wahltagID") String wahltagID) {
         wahltermindatenService.deleteWahltermindaten(wahltagID);

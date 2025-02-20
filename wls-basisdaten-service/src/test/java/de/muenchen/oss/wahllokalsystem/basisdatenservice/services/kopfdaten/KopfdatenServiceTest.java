@@ -48,7 +48,7 @@ class KopfdatenServiceTest {
     class GetKopfdaten {
 
         @Test
-        void dataIsLoadedFromRemoteIfNotExistingInRepo() {
+        void should_loadDataFromRemote_when_notExistingInRepo() {
             val wahlID = "wahlID1";
             val wahlbezrkID = "wahlbezirkID1_1";
             val bezirkUndWahlId = new BezirkUndWahlID(wahlID, wahlbezrkID);
@@ -74,7 +74,7 @@ class KopfdatenServiceTest {
         }
 
         @Test
-        void dataIsLoadedFromRepoIfPresentAndNotFromRemoteClient() {
+        void should_loadDataFromRepo_when_dataIsPresentAndNotFromRemoteClient() {
             val bezirkUndWahlId = new BezirkUndWahlID("wahlID1", "wahlbezirkID1_1");
 
             val kopfdatenEntityInRepo = MockDataFactory.createKopfdatenEntityFor("wahlID1", "wahlbezirkID1_1",

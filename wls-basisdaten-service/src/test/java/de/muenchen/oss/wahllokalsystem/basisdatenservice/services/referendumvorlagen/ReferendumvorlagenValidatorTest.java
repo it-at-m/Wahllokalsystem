@@ -28,14 +28,14 @@ class ReferendumvorlagenValidatorTest {
         private final FachlicheWlsException mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
         @Test
-        void noExceptionWhenModelIsValid() {
+        void should_throwNoException_when_modelIsValid() {
             val validModel = initValidModel().build();
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validReferumvorlageReferenceModelOrThrow(validModel));
         }
 
         @Test
-        void exceptionWhenModelIsNull() {
+        void should_throwException_when_modelIsNull() {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG))
                     .thenReturn(mockedWlsException);
 
@@ -43,7 +43,7 @@ class ReferendumvorlagenValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlIDIsNull() {
+        void should_throwException_when_wahlIDIsNull() {
             val invalidModel = initValidModel().wahlID(null).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG))
@@ -53,7 +53,7 @@ class ReferendumvorlagenValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlIDIsEmptyString() {
+        void should_throwException_when_wahlIDIsEmptyString() {
             val invalidModel = initValidModel().wahlID("").build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG))
@@ -63,7 +63,7 @@ class ReferendumvorlagenValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDIsNull() {
+        void should_throwException_when_wahlbezirkIDIsNull() {
             val invalidModel = initValidModel().wahlbezirkID(null).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG))
@@ -73,7 +73,7 @@ class ReferendumvorlagenValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDIsEmptyString() {
+        void should_throwException_when_wahlbezirkIDIsEmptyString() {
             val invalidModel = initValidModel().wahlbezirkID("").build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG))

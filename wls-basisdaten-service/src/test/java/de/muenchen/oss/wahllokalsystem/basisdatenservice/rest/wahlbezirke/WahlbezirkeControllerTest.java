@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlbezirke;
 
 import static org.mockito.ArgumentMatchers.any;
+
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkeService;
 import java.util.List;
@@ -30,7 +31,7 @@ class WahlbezirkeControllerTest {
     class GetWahlbezirke {
 
         @Test
-        void serviceIsCalledAndObjectsAreMapped() {
+        void should_returnWahlbezirkDTOList_when_serviceIsCalled() {
             val wahlbezirkModels = List.of(
                     WahlbezirkModel.builder().build(),
                     WahlbezirkModel.builder().build(),

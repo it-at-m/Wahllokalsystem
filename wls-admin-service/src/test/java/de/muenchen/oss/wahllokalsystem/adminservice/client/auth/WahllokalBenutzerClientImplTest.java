@@ -81,6 +81,22 @@ class WahllokalBenutzerClientImplTest {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.generateAndExportWahllokalBenutzer("wahltagID", listOfWahllokalbenutzerModels))
                     .isSameAs(mockedWlsException);
         }
+
+        @Test
+        void should_returnExportedUsers_when_generateAndExportSucceeds() {
+            val listOfWahllokalbenutzerModels = getListOfWahlLokalBenutzerModels();
+            val mockedListOfWahllokalUserInfoDTOs = getListOfWahlLokalUserInfoDTO();
+            val expectedResponse = "exported_users";
+
+            Mockito.when(wahllokalBenutzerClientMapper.toListOfWahllokalUserInfoDTO(listOfWahllokalbenutzerModels))
+                    .thenReturn(mockedListOfWahllokalUserInfoDTOs);
+            Mockito.when(wahllokalBenutzerControllerApi.createAndExportWahllokalBenutzer("wahltagID", mockedListOfWahllokalUserInfoDTOs))
+                    .thenReturn(expectedResponse);
+
+            val result = unitUnderTest.generateAndExportWahllokalBenutzer("wahltagID", listOfWahllokalbenutzerModels);
+
+            Assertions.assertThat(result).isEqualTo(expectedResponse);
+        }
     }
 
     @Nested
@@ -105,6 +121,18 @@ class WahllokalBenutzerClientImplTest {
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.exportWahllokalBenutzer("wahltagID")).isSameAs(mockedWlsException);
         }
+
+        @Test
+        void should_returnExportedUsers_when_exportSucceeds() {
+            val expectedResponse = "exported_users";
+
+            Mockito.when(wahllokalBenutzerControllerApi.exportWahllokalBenutzer("wahltagID"))
+                    .thenReturn(expectedResponse);
+
+            val result = unitUnderTest.exportWahllokalBenutzer("wahltagID");
+
+            Assertions.assertThat(result).isEqualTo(expectedResponse);
+        }
     }
 
     @Nested
@@ -128,6 +156,13 @@ class WahllokalBenutzerClientImplTest {
                     .thenReturn(mockedWlsException);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.deleteWahllokalBenutzer("wahltagID")).isSameAs(mockedWlsException);
+        }
+
+        @Test
+        void should_verifyDeletion_when_deleteSucceeds() {
+            unitUnderTest.deleteWahllokalBenutzer("wahltagID");
+
+            Mockito.verify(wahllokalBenutzerControllerApi).deleteWahllokalBenutzer("wahltagID");
         }
     }
 

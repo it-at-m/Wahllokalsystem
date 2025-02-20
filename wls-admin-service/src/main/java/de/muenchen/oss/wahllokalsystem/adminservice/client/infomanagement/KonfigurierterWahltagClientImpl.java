@@ -47,7 +47,7 @@ public class KonfigurierterWahltagClientImpl implements KonfigurierterWahltagCli
         try {
             konfigurierterWahltagControllerApi.deleteKonfigurierterWahltag(wahltagID);
         } catch (final WlsException wlsException) {
-            log.debug("#postKonfigurierterWahltag found WlsException:", wlsException);
+            log.debug("#deleteKonfigurierterWahltag found WlsException:", wlsException);
             throw wlsException;
         } catch (Exception exception) {
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT);

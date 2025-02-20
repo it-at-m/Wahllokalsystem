@@ -44,4 +44,28 @@ class WahltermindatenServiceSecurityTest {
                     .isInstanceOf(AccessDeniedException.class);
         }
     }
+
+    @Nested
+    class DeleteWahltermindaten {
+
+        @Test
+        void should_getAccess_when_allRequiredAuthoritiesArePresent() {
+            SecurityUtils.runWith(Authorities.ADMIN_DELETEWAHLTERMINDATEN);
+
+            val wahltagID = "wahltagID";
+
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.deleteWahltermindaten(wahltagID));
+        }
+
+        @Test
+        void should_throwAccessDeniedException_when_requiredAuthorityIsMissing() {
+            SecurityUtils.runWith("wrong_authority");
+
+            val wahltagID = "wahltagID";
+
+            Assertions.assertThatException()
+                .isThrownBy(() -> unitUnderTest.deleteWahltermindaten(wahltagID))
+                .isInstanceOf(AccessDeniedException.class);
+        }
+    }
 }

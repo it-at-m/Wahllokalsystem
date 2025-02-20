@@ -103,4 +103,30 @@ class SecurityConfigurationTest {
         }
     }
 
+    @Nested
+    class Deletetermindaten {
+
+        @WithAnonymousUser
+        @Test
+        void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+            val wahltagID = "wahltagID";
+            val request = MockMvcRequestBuilders.post("/businessActions/deleteWahltermindaten/" + wahltagID).with(csrf())
+                .contentType(MediaType.APPLICATION_JSON);
+
+            api.perform(request).andExpect(status().isUnauthorized());
+        }
+
+        @WithMockUser
+        @Test
+        void should_returnOk_when_callingAuthenticated() throws Exception {
+            val wahltagID = "wahltagID";
+            val request = MockMvcRequestBuilders.post("/businessActions/deleteWahltermindaten/" + wahltagID).with(csrf())
+                .contentType(MediaType.APPLICATION_JSON);
+
+            api.perform(request).andExpect(status().isOk());
+
+            Mockito.verify(wahltermindatenService).deleteWahltermindaten(wahltagID);
+        }
+    }
+
 }

@@ -8,4 +8,5 @@ public class Authorities {
 
     public static final String ADMIN_LOADWAHLTERMINDATEN = "Admin_BUSINESSACTION_LoadWahltermindaten";
 
+    public static final String ADMIN_DELETEWAHLTERMINDATEN = "Admin_BUSINESSACTION_DeleteWahltermindaten";
 }

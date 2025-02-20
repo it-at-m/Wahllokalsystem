@@ -44,10 +44,10 @@ export default defineConfig({
       manifest: {
         name: "Wahllokalsystem",
         short_name: "WLS",
-        description: "",
+        description: "Datenerfassung am Wahltag",
         theme_color: "#546e7a",
         display: "standalone",
-        icons: [],
+        icons: [{ src: "/favicon.ico", sizes: "16x16", type: "image/x-icon" }],
       },
     }),
   ],

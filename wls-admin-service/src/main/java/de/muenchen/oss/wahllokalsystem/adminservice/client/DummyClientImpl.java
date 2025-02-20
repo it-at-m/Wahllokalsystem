@@ -1,14 +1,14 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.client;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.configuration.Profiles;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkArtModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkeClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer.WahllokalBenutzerClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer.WahllokalBenutzerModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.AWerteClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.KonfigurierterWahltagClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.KonfigurierterWahltagModel;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkArtModel;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkModel;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkeClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahltageClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahltermindatenClient;

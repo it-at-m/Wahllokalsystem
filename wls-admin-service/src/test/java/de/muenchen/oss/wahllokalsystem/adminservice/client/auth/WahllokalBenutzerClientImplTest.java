@@ -42,37 +42,44 @@ class WahllokalBenutzerClientImplTest {
         void should_verifyCreateAndExportWahllokalBenutzer_when_wahllokalBenutzerModelsIsGiven() {
             val listOfWahllokalbenutzerModels = getListOfWahlLokalBenutzerModels();
             val mockedListOfWahllokalUserInfoDTOs = getListOfWahlLokalUserInfoDTO();
-            Mockito.when(wahllokalBenutzerClientMapper.toListOfWahllokalUserInfoDTO(listOfWahllokalbenutzerModels)).thenReturn(mockedListOfWahllokalUserInfoDTOs);
+            Mockito.when(wahllokalBenutzerClientMapper.toListOfWahllokalUserInfoDTO(listOfWahllokalbenutzerModels))
+                    .thenReturn(mockedListOfWahllokalUserInfoDTOs);
             unitUnderTest.generateAndExportWahllokalBenutzer("wahltagID", listOfWahllokalbenutzerModels);
-            Mockito.verify(wahllokalBenutzerControllerApi).createAndExportWahllokalBenutzer("wahltagID",mockedListOfWahllokalUserInfoDTOs);
+            Mockito.verify(wahllokalBenutzerControllerApi).createAndExportWahllokalBenutzer("wahltagID", mockedListOfWahllokalUserInfoDTOs);
         }
 
         @Test
         void should_rethrowWlsException_when_wlsExceptionIsThrownFromWahllokalBenutzerControllerApi() {
             val listOfWahllokalbenutzerModels = getListOfWahlLokalBenutzerModels();
             val mockedListOfWahllokalUserInfoDTOs = getListOfWahlLokalUserInfoDTO();
-            Mockito.when(wahllokalBenutzerClientMapper.toListOfWahllokalUserInfoDTO(listOfWahllokalbenutzerModels)).thenReturn(mockedListOfWahllokalUserInfoDTOs);
+            Mockito.when(wahllokalBenutzerClientMapper.toListOfWahllokalUserInfoDTO(listOfWahllokalbenutzerModels))
+                    .thenReturn(mockedListOfWahllokalUserInfoDTOs);
 
             val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("communication with WahllokalBenutzerControllerApi api failed");
 
-            Mockito.doThrow(mockedWlsException).when(wahllokalBenutzerControllerApi).createAndExportWahllokalBenutzer("wahltagID", mockedListOfWahllokalUserInfoDTOs);
+            Mockito.doThrow(mockedWlsException).when(wahllokalBenutzerControllerApi).createAndExportWahllokalBenutzer("wahltagID",
+                    mockedListOfWahllokalUserInfoDTOs);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.generateAndExportWahllokalBenutzer("wahltagID", listOfWahllokalbenutzerModels)).isSameAs(mockedWlsException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.generateAndExportWahllokalBenutzer("wahltagID", listOfWahllokalbenutzerModels))
+                    .isSameAs(mockedWlsException);
         }
 
         @Test
         void should_throwTechnischeWlsException_when_nonWlsExceptionIsThrownFromWahllokalBenutzerControllerApi() {
             val listOfWahllokalbenutzerModels = getListOfWahlLokalBenutzerModels();
             val mockedListOfWahllokalUserInfoDTOs = getListOfWahlLokalUserInfoDTO();
-            Mockito.when(wahllokalBenutzerClientMapper.toListOfWahllokalUserInfoDTO(listOfWahllokalbenutzerModels)).thenReturn(mockedListOfWahllokalUserInfoDTOs);
+            Mockito.when(wahllokalBenutzerClientMapper.toListOfWahllokalUserInfoDTO(listOfWahllokalbenutzerModels))
+                    .thenReturn(mockedListOfWahllokalUserInfoDTOs);
 
             val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("communication with WahllokalBenutzerControllerApi api failed");
 
-            Mockito.doThrow(new RuntimeException("api call failed")).when(wahllokalBenutzerControllerApi).createAndExportWahllokalBenutzer("wahltagID", mockedListOfWahllokalUserInfoDTOs);
+            Mockito.doThrow(new RuntimeException("api call failed")).when(wahllokalBenutzerControllerApi).createAndExportWahllokalBenutzer("wahltagID",
+                    mockedListOfWahllokalUserInfoDTOs);
             Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_AUTH))
                     .thenReturn(mockedWlsException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.generateAndExportWahllokalBenutzer("wahltagID", listOfWahllokalbenutzerModels)).isSameAs(mockedWlsException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.generateAndExportWahllokalBenutzer("wahltagID", listOfWahllokalbenutzerModels))
+                    .isSameAs(mockedWlsException);
         }
     }
 
@@ -134,8 +141,7 @@ class WahllokalBenutzerClientImplTest {
                 List.of(
                         new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID1_0", "0", "wahlID0"),
                         new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID1_1", "1", "wahlID1"),
-                        new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID1_2", "2", "wahlID2")
-                ));
+                        new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID1_2", "2", "wahlID2")));
         val wahllokalBenutzerModel_2 = new WahllokalBenutzerModel(
                 "wahlbezirkID2_0",
                 "0002",
@@ -144,8 +150,7 @@ class WahllokalBenutzerClientImplTest {
                 List.of(
                         new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID2_0", "0", "wahlID0"),
                         new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID2_1", "1", "wahlID1"),
-                        new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID2_2", "2", "wahlID2")
-                ));
+                        new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID2_2", "2", "wahlID2")));
         val wahllokalBenutzerModel_3 = new WahllokalBenutzerModel(
                 "wahlbezirkID3_0",
                 "0003",
@@ -154,8 +159,7 @@ class WahllokalBenutzerClientImplTest {
                 List.of(
                         new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID3_0", "0", "wahlID0"),
                         new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID3_1", "1", "wahlID1"),
-                        new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID3_2", "2", "wahlID2")
-                ));
+                        new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID3_2", "2", "wahlID2")));
         return List.of(wahllokalBenutzerModel_1, wahllokalBenutzerModel_2, wahllokalBenutzerModel_3);
     }
 
@@ -171,8 +175,7 @@ class WahllokalBenutzerClientImplTest {
                         "{\"wahlbezirkID\":\"wahlbezirkID1_0\",\"wahlnummer\":\"0\",\"wahlID\":\"wahlID0\"}," +
                         "{\"wahlbezirkID\":\"wahlbezirkID1_1\",\"wahlnummer\":\"1\",\"wahlID\":\"wahlID1\"}," +
                         "{\"wahlbezirkID\":\"wahlbezirkID1_2\",\"wahlnummer\":\"2\",\"wahlID\":\"wahlID2\"}" +
-                        "]"
-        );
+                        "]");
         val wahllokalUserInfoDTO_2 = new WahllokalUserInfoDTO();
         wahllokalUserInfoDTO_2.setWahlbezirkID("wahlbezirkID2_0");
         wahllokalUserInfoDTO_2.setWahlbezirknummer("0002");
@@ -183,8 +186,7 @@ class WahllokalBenutzerClientImplTest {
                         "{\"wahlbezirkID\":\"wahlbezirkID2_0\",\"wahlnummer\":\"0\",\"wahlID\":\"wahlID0\"}," +
                         "{\"wahlbezirkID\":\"wahlbezirkID2_1\",\"wahlnummer\":\"1\",\"wahlID\":\"wahlID1\"}," +
                         "{\"wahlbezirkID\":\"wahlbezirkID2_2\",\"wahlnummer\":\"2\",\"wahlID\":\"wahlID2\"}" +
-                        "]"
-        );
+                        "]");
         val wahllokalUserInfoDTO_3 = new WahllokalUserInfoDTO();
         wahllokalUserInfoDTO_3.setWahlbezirkID("wahlbezirkID3_0");
         wahllokalUserInfoDTO_3.setWahlbezirknummer("0003");
@@ -195,8 +197,7 @@ class WahllokalBenutzerClientImplTest {
                         "{\"wahlbezirkID\":\"wahlbezirkID3_0\",\"wahlnummer\":\"0\",\"wahlID\":\"wahlID0\"}," +
                         "{\"wahlbezirkID\":\"wahlbezirkID3_1\",\"wahlnummer\":\"1\",\"wahlID\":\"wahlID1\"}," +
                         "{\"wahlbezirkID\":\"wahlbezirkID3_2\",\"wahlnummer\":\"2\",\"wahlID\":\"wahlID2\"}" +
-                        "]"
-        );
+                        "]");
         return List.of(wahllokalUserInfoDTO_1, wahllokalUserInfoDTO_2, wahllokalUserInfoDTO_3);
     }
 }

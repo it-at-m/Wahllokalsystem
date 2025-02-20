@@ -134,7 +134,7 @@ class WahllokalBenutzerServiceTest {
 
     private final String mockedWahllokalBenutzer = "ftpprs-1503\r\n" + "c94m3c-0365\r\n" + "v7jnkr-2161\r\n";
 
-    private List<WahlbezirkModel> getMockWahlbezirke(){
+    private List<WahlbezirkModel> getMockWahlbezirke() {
         return List.of(
                 new WahlbezirkModel("wahlbezirkID1_0", WahlbezirkArtModel.UWB, "1503", LocalDate.now(), "0", "wahlID0"),
                 new WahlbezirkModel("wahlbezirkID2_0", WahlbezirkArtModel.BWB, "0365", LocalDate.now(), "0", "wahlID0"),
@@ -147,8 +147,7 @@ class WahllokalBenutzerServiceTest {
                 new WahlbezirkModel("wahlbezirkID2_2", WahlbezirkArtModel.BWB, "0365", LocalDate.now(), "2", "wahlID2"),
 
                 new WahlbezirkModel("wahlbezirkID3_1", WahlbezirkArtModel.UWB, "2161", LocalDate.now(), "1", "wahlID1"),
-                new WahlbezirkModel("wahlbezirkID3_2", WahlbezirkArtModel.UWB, "2161", LocalDate.now(), "2", "wahlID2")
-        );
+                new WahlbezirkModel("wahlbezirkID3_2", WahlbezirkArtModel.UWB, "2161", LocalDate.now(), "2", "wahlID2"));
     }
 
     private List<WahllokalBenutzerModel> getListOfWahlLokalBenutzerModels() {
@@ -161,8 +160,7 @@ class WahllokalBenutzerServiceTest {
                 List.of(
                         new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID1_0", "0", "wahlID0"),
                         new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID1_1", "1", "wahlID1"),
-                        new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID1_2", "2", "wahlID2")
-                ));
+                        new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID1_2", "2", "wahlID2")));
         val wahllokalBenutzerModel_2 = new WahllokalBenutzerModel(
                 "wahlbezirkID2_0",
                 "0365",
@@ -171,8 +169,7 @@ class WahllokalBenutzerServiceTest {
                 List.of(
                         new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID2_0", "0", "wahlID0"),
                         new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID2_1", "1", "wahlID1"),
-                        new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID2_2", "2", "wahlID2")
-                ));
+                        new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID2_2", "2", "wahlID2")));
         val wahllokalBenutzerModel_3 = new WahllokalBenutzerModel(
                 "wahlbezirkID3_0",
                 "2161",
@@ -181,8 +178,7 @@ class WahllokalBenutzerServiceTest {
                 List.of(
                         new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID3_0", "0", "wahlID0"),
                         new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID3_1", "1", "wahlID1"),
-                        new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID3_2", "2", "wahlID2")
-                ));
+                        new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID3_2", "2", "wahlID2")));
         return List.of(wahllokalBenutzerModel_1, wahllokalBenutzerModel_2, wahllokalBenutzerModel_3);
     }
 }

@@ -36,7 +36,7 @@ public class WahllokalBenutzerController {
                     ),
                     @ApiResponse(
                             responseCode = "400", description = "Benutzer können nicht generiert werden.",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))}
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
                     ),
                     @ApiResponse(
                             responseCode = "165", description = "Anfrageparameter sind fehlerhaft",
@@ -59,7 +59,7 @@ public class WahllokalBenutzerController {
                     ),
                     @ApiResponse(
                             responseCode = "400", description = "Benutzer können nicht exportiert werden.",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))}
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
                     ),
                     @ApiResponse(
                             responseCode = "165", description = "Anfrageparameter sind fehlerhaft",

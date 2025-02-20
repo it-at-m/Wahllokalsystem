@@ -18,13 +18,15 @@ export function basicGetConfig(
 
 export function basicPostConfig(
   url: string,
-  swStrategy?: string
+  swStrategy?: string,
+  data?: object
 ): AxiosRequestConfig {
   return {
     url: url,
     method: "post",
     withCredentials: true,
     headers: getHeaders(swStrategy),
+    data: data,
   };
 }
 

@@ -33,6 +33,7 @@ import localforage from "localforage";
 import { ref } from "vue";
 import { VBtn, VCard, VDialog } from "vuetify/components";
 
+import { basicPostConfig } from "@/api/axios-utils";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useInterval } from "@/composables/useInterval";
 
@@ -63,11 +64,7 @@ async function synchronizeOfflineData() {
         statusText.value = "... syncing ... ";
         for (const element of dataToSync) {
           await axios
-            .request({
-              url: element.url,
-              method: "POST",
-              data: element.data,
-            })
+            .request(basicPostConfig(element.url, undefined, element.data))
             .then(() => {
               statusText.value = "data has been synchronized successfully";
             })

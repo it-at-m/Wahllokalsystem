@@ -27,7 +27,7 @@ class AsyncProgressControllerTest {
     class GetAsyncProgress {
 
         @Test
-        void should_returnCurrentProgressStateAsDTO_when_called() {
+        void should_returnCurrentProgressStateAsDTO_when_callingAsyncProgress() {
             val mockedProgressDTO = new AsyncProgressDTO(null, null, null, null, false, 0, 1, null, true, 3, 4, null);
 
             Mockito.when(asyncProgressDTOMapper.toDto(asyncProgress)).thenReturn(mockedProgressDTO);

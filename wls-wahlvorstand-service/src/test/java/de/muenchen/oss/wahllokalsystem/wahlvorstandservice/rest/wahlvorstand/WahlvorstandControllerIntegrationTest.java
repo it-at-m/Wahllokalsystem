@@ -142,7 +142,7 @@ public class WahlvorstandControllerIntegrationTest {
         )
         void should_saveWahlvorstand_when_newDataSuccessfullySaved() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
-            val mockedWahlvorstandDTO = TestDataFactory.CreateWahlvorstandDto.withWahlbezirkID(wahlbezirkID);
+            val mockedWahlvorstandDTO = TestDataFactory.CreateWahlvorstandWriteDto.withData();
 
             WireMock.stubFor(WireMock.put("/wahlvorstaende/anwesenheit")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
@@ -153,7 +153,7 @@ public class WahlvorstandControllerIntegrationTest {
             api.perform(request).andExpect(status().isOk()).andReturn();
 
             val wahlvorstandFromRepo = wahlvorstandRepository.findById(wahlbezirkID).get();
-            val expectedWahlvorstand = wahlvorstandModelMapper.toEntity(wahlvorstandDTOMapper.toModel(mockedWahlvorstandDTO));
+            val expectedWahlvorstand = wahlvorstandModelMapper.toEntity(wahlvorstandDTOMapper.toModel(wahlbezirkID, mockedWahlvorstandDTO));
             Assertions.assertThat(wahlvorstandFromRepo).usingRecursiveComparison().isEqualTo(expectedWahlvorstand);
         }
 
@@ -168,7 +168,7 @@ public class WahlvorstandControllerIntegrationTest {
             wahlvorstandRepository.save(wahlvorstandToOverride);
             val wahlvorstandBeforeOverridden = wahlvorstandRepository.findById(wahlbezirkID).get();
 
-            val mockedWahlvorstandDTO = TestDataFactory.CreateWahlvorstandDto.withWahlbezirkID(wahlbezirkID);
+            val mockedWahlvorstandDTO = TestDataFactory.CreateWahlvorstandWriteDto.withData();
             WireMock.stubFor(WireMock.put("/wahlvorstaende/anwesenheit")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
                             .withStatus(HttpStatus.OK.value())));
@@ -178,7 +178,7 @@ public class WahlvorstandControllerIntegrationTest {
             api.perform(request).andExpect(status().isOk()).andReturn();
 
             val wahlvorstandFromRepo = wahlvorstandRepository.findById(wahlbezirkID).get();
-            val expectedWahlvorstand = wahlvorstandModelMapper.toEntity(wahlvorstandDTOMapper.toModel(mockedWahlvorstandDTO));
+            val expectedWahlvorstand = wahlvorstandModelMapper.toEntity(wahlvorstandDTOMapper.toModel(wahlbezirkID, mockedWahlvorstandDTO));
 
             Assertions.assertThat(wahlvorstandFromRepo).usingRecursiveComparison().isEqualTo(expectedWahlvorstand);
             Assertions.assertThat(wahlvorstandBeforeOverridden.getWahlvorstandsmitglieder()).isNotEqualTo(wahlvorstandFromRepo.getWahlvorstandsmitglieder());

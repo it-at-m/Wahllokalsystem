@@ -29,7 +29,7 @@ class WahlvorschlaegeControllerTest {
     class GetWahlvorschlaege {
 
         @Test
-        void serviceIsCalledAndObjectsAreMapped() {
+        void should_returnWahlvorschlaegeDTO_when_serviceIsCalled() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
 

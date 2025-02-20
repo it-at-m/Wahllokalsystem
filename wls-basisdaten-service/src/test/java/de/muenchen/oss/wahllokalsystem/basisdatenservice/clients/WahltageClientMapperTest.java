@@ -19,7 +19,7 @@ class WahltageClientMapperTest {
     class ToWahltagModel {
 
         @Test
-        void isMapped() {
+        void should_returnWahltagModel_when_givenWahltagDTO() {
             val dtoToMap = new WahltagDTO();
             dtoToMap.setIdentifikator("identifikatorWahltag1");
             dtoToMap.setBeschreibung("beschreibungWahltag1");
@@ -45,7 +45,7 @@ class WahltageClientMapperTest {
     class FromRemoteClientWahltageDTOtoListOfWahltagModel {
 
         @Test
-        void isMapped() {
+        void should_returnWahltagModelList_when_givenWahltagDTOList() {
             val wahltag1 = new WahltagDTO();
             wahltag1.setIdentifikator("identifikatorWahltag1");
             wahltag1.setBeschreibung("beschreibungWahltag1");

@@ -47,7 +47,7 @@ self.oninstall = () => {
   log("installed and took control");
 
   // to test idb
-  _setItemInIDB("testkey", "testvalue", false)
+  _setItemInIDB("testkey", "testvalue", "", false)
     .then(() => {
       log("SUCCESS - saved data to idb");
     })
@@ -122,9 +122,19 @@ registerRoute(
       const response = await fetch(event.request);
       // set dirty flag to data that has to be synchronized
       if (response.ok) {
-        await _setItemInIDB("lastPostedData", requestBody, false);
+        await _setItemInIDB(
+          "lastPostedData",
+          requestBody,
+          requestClone.url,
+          false
+        );
       } else {
-        await _setItemInIDB("lastPostedData", requestBody, true);
+        await _setItemInIDB(
+          "lastPostedData",
+          requestBody,
+          requestClone.url,
+          true
+        );
       }
 
       // return original response
@@ -142,9 +152,9 @@ registerRoute(
 /*****************************************************************************************************************
  * idb utility
  ****************************************************************************************************************/
-function _setItemInIDB(key, data, dirty) {
+function _setItemInIDB(key, data, url, dirty) {
   log("saving data - value: " + JSON.stringify(data) + ", dirty: " + dirty);
-  const value = { data: data, dirty: dirty };
+  const value = { data: data, url: url, dirty: dirty };
   return localforage.setItem(key, value);
 }
 

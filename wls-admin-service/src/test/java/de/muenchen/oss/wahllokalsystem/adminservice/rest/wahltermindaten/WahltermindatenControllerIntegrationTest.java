@@ -132,7 +132,7 @@ class WahltermindatenControllerIntegrationTest {
             val request = post("/businessActions/deleteWahltermindaten/" + invalidWahltagID).with(csrf());
 
             val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.MISSING_ARGUMENT.code(),
-                "WLS-ADMIN", ExceptionConstants.MISSING_ARGUMENT.message());
+                    "WLS-ADMIN", ExceptionConstants.MISSING_ARGUMENT.message());
 
             val result = api.perform(request).andExpect(status().isBadRequest()).andReturn();
             val resultBodyAsWlsExceptionDTO = objectMapper.readValue(result.getResponse().getContentAsString(), WlsExceptionDTO.class);

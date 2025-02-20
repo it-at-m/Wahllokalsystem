@@ -111,7 +111,7 @@ class KonfigurierterWahltagClientImplTest {
 
             Mockito.doThrow(new RuntimeException("api call failed")).when(konfigurierterWahltagControllerApi).deleteKonfigurierterWahltag(wahltagID);
             Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT))
-                .thenReturn(mockedWlsException);
+                    .thenReturn(mockedWlsException);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.deleteKonfigurierterWahltag(wahltagID)).isSameAs(mockedWlsException);
         }

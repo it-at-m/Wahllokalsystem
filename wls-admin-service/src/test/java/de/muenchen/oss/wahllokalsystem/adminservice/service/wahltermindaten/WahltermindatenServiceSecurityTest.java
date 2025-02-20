@@ -64,8 +64,8 @@ class WahltermindatenServiceSecurityTest {
             val wahltagID = "wahltagID";
 
             Assertions.assertThatException()
-                .isThrownBy(() -> unitUnderTest.deleteWahltermindaten(wahltagID))
-                .isInstanceOf(AccessDeniedException.class);
+                    .isThrownBy(() -> unitUnderTest.deleteWahltermindaten(wahltagID))
+                    .isInstanceOf(AccessDeniedException.class);
         }
     }
 }

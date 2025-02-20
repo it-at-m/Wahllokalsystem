@@ -100,6 +100,24 @@ registerRoute(
       return response;
     } catch (error) {
       console.error("Error fetching remote data:", error);
+
+      // get idb data as fallback not only when response is not ok but also when fetching fails entirely
+      const storedData = await _getItemFromIDB("lastPostedData");
+      if (storedData) {
+        log("fetched from idb: " + JSON.stringify(storedData));
+        return new Response(JSON.stringify(storedData), {
+          status: 200,
+          statusText: "fetched from idb",
+        });
+      } else {
+        return new Response(
+          JSON.stringify({
+            error: "no data found in idb",
+            status: 500,
+          }),
+          { status: 500 }
+        );
+      }
     }
   },
   "GET"

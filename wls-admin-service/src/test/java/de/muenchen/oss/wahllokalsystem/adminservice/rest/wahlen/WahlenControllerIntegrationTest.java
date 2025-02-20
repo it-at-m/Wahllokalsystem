@@ -97,7 +97,6 @@ class WahlenControllerIntegrationTest {
 
             api.perform(request).andExpect(status().isNoContent()).andReturn();
         }
-
     }
 
     @Nested

@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen;
 
-import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +27,8 @@ public class WahlenService {
 
     @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_UpdateWahlen')")
     public void updateWahlen(final List<WahlModel> wahlen, final String wahltagID) {
-        if (wahlen == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.MISSING_ARGUMENT);
-        }
+        wahlenValidator.validWahlModelListOrThrow(wahlen);
+
         wahlenClient.postWahlen(wahltagID, wahlen);
     }
 }

@@ -2,7 +2,6 @@ package de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen;
 
 import static org.mockito.Mockito.times;
 
-import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.time.LocalDate;
@@ -64,7 +63,7 @@ class WahlenServiceTest {
             val wahlID = "wahlID";
 
             val mockedFachlicheWlsException = FachlicheWlsException.withCode("000").buildWithMessage("missing argument");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.MISSING_ARGUMENT)).thenReturn(mockedFachlicheWlsException);
+            Mockito.doThrow(mockedFachlicheWlsException).when(wahlenValidator).validWahlModelListOrThrow(null);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.updateWahlen(null, wahlID))
                     .isSameAs(mockedFachlicheWlsException);

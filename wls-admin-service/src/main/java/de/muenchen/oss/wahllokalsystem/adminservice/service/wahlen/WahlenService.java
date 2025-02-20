@@ -27,7 +27,7 @@ public class WahlenService {
     }
 
     @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_UpdateWahlen')")
-    public void updateWahlen(List<WahlModel> wahlen, String wahltagID) {
+    public void updateWahlen(final List<WahlModel> wahlen, final String wahltagID) {
         if (wahlen == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.MISSING_ARGUMENT);
         }

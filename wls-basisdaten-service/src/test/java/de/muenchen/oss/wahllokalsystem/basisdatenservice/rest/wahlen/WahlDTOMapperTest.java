@@ -19,12 +19,12 @@ class WahlDTOMapperTest {
     class FromListOfWahlModelToListOfWahlDTO {
 
         @Test
-        void nullInNullOut() {
+        void should_returnNull_when_givenNull() {
             Assertions.assertThat(unitUnderTest.fromListOfWahlModelToListOfWahlDTO(null)).isNull();
         }
 
         @Test
-        void isMappedToDTO() {
+        void should_returnWahlDTOList_when_givenWahlModelList() {
             val modelsInput = createListOfWahlModels();
             val dtosExpected = createControllerListOfWahlDTO();
 
@@ -33,7 +33,7 @@ class WahlDTOMapperTest {
         }
 
         @Test
-        void isMappedToModel() {
+        void should_returnWahlModelList_when_givenWahlDTOList() {
             val modelsExpected = createListOfWahlModels();
             val dtosInput = createControllerListOfWahlDTO();
 

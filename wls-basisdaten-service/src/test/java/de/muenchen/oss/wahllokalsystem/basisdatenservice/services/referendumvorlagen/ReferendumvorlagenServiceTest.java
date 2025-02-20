@@ -46,7 +46,7 @@ class ReferendumvorlagenServiceTest {
     class LoadReferendumvorlagen {
 
         @Test
-        void dataImportedAndSavedWhenNoDataExists() {
+        void should_importAndSaveData_when_noDataExists() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val referendumvorlagenReference = new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID);
@@ -69,7 +69,7 @@ class ReferendumvorlagenServiceTest {
         }
 
         @Test
-        void returnExistingDataWithoutImport() {
+        void should_returnExistingData_when_withoutImport() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val referendumvorlagenReference = new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID);
@@ -90,7 +90,7 @@ class ReferendumvorlagenServiceTest {
         }
 
         @Test
-        void noExceptionWhenSaveOfImportedFailed() {
+        void should_throwNoException_when_saveOfImportedFailed() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val referendumvorlagenReference = new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID);

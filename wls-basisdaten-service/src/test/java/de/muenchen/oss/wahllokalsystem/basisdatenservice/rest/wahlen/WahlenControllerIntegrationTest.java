@@ -9,12 +9,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.WahlenClientMapper;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.Wahltag;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Farbe;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahl;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.WahlRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.Wahltag;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModelMapper;
@@ -93,7 +93,7 @@ public class WahlenControllerIntegrationTest {
     class GetWahlen {
 
         @Test
-        void loadedFromExternal() throws Exception {
+        void should_returnWahlDTOList_when_loadedFromExternal() throws Exception {
             var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung1", "1");
             val requestDate = LocalDate.now().toString();
 
@@ -119,7 +119,7 @@ public class WahlenControllerIntegrationTest {
 
         @Test
         @Transactional
-        void externalDataIsPersisted() throws Exception {
+        void should_returnWahlList_when_externalDataIsPersisted() throws Exception {
             var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung2", "1");
             val requestDate = LocalDate.now().toString();
 
@@ -142,7 +142,7 @@ public class WahlenControllerIntegrationTest {
         }
 
         @Test
-        void loadFromRepository() throws Exception {
+        void should_returnWahlDTOList_when_loadFromRepository() throws Exception {
             var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung3", "1");
             wahltagRepository.save(searchingForWahltag);
 
@@ -163,7 +163,7 @@ public class WahlenControllerIntegrationTest {
         }
 
         @Test
-        void technischeWlsExceptionWhenNoExternalDataFound() throws Exception {
+        void should_returnTechnischeWlsException_when_noExternalDataFound() throws Exception {
             var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung4", "1");
             val requestDate = LocalDate.now().toString();
             wahltagRepository.save(searchingForWahltag);
@@ -187,7 +187,7 @@ public class WahlenControllerIntegrationTest {
     class PostWahlen {
 
         @Test
-        void newDataIsSet() throws Exception {
+        void should_saveNewData_when_repoIsEmpty() throws Exception {
             var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung5", "1");
             wahltagRepository.save(searchingForWahltag);
             val newData = createControllerListOfWahlDTO(searchingForWahltag, "");
@@ -206,7 +206,7 @@ public class WahlenControllerIntegrationTest {
         }
 
         @Test
-        void existingWahlenAreReplaced() throws Exception {
+        void should_saveNewData_when_existingWahlenAreReplaced() throws Exception {
             var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung6", "1");
             wahltagRepository.save(searchingForWahltag);
             val oldData = createControllerListOfWahlDTO(searchingForWahltag, "");
@@ -232,7 +232,7 @@ public class WahlenControllerIntegrationTest {
         }
 
         @Test
-        void fachlicheWlsExceptionWhenRequestIsInvalid() throws Exception {
+        void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
             var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung7", "1");
             wahltagRepository.save(searchingForWahltag);
             val newData = createControllerListOfWahlDTO(searchingForWahltag, "");
@@ -250,7 +250,7 @@ public class WahlenControllerIntegrationTest {
         }
 
         @Test
-        void fachlicheWlsExceptionWhenNotSaveableCauseOfMissingRequestbody() throws Exception {
+        void should_returnFachlicheWlsException_when_notSaveableCauseOfMissingRequestbody() throws Exception {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL, Authorities.SERVICE_POST_WAHLEN, Authorities.REPOSITORY_READ_WAHL);
             var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung8", "1");
             wahltagRepository.save(searchingForWahltag);
@@ -269,7 +269,7 @@ public class WahlenControllerIntegrationTest {
     class ResetWahlen {
 
         @Test
-        void existingWahlenAreReseted() throws Exception {
+        void should_resetExistingWahlen_when_wahlenArePresentInRepo() throws Exception {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL);
             val oldRepositoryWahlen = createWahlEntities();
             wahlRepository.saveAll(oldRepositoryWahlen);

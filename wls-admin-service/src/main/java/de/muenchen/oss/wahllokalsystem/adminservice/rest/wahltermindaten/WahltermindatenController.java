@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,8 +62,8 @@ public class WahltermindatenController {
             }
     )
     @PostMapping("/deleteWahltermindaten/{wahltagID}")
-    public ResponseEntity<?> deleteWahltermindaten(@PathVariable("wahltagID") String wahltagID) {
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteWahltermindaten(@PathVariable("wahltagID") String wahltagID) {
         wahltermindatenService.deleteWahltermindaten(wahltagID);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

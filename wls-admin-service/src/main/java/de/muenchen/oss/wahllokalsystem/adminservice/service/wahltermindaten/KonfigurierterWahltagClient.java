@@ -11,7 +11,7 @@ public interface KonfigurierterWahltagClient {
     void postKonfigurierterWahltag(KonfigurierterWahltagModel konfigurierterWahltag);
 
     /**
-     * @param wahltagID filter for konfigurierten Wahltaa
+     * @param wahltagID filter for konfigurierten Wahltag
      * @throws de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException when problem
      *             on retrieving the information occurred
      */

@@ -34,7 +34,10 @@ public class WahllokalBenutzerController {
                             responseCode = "200", description = "Benutzer erfolgreich generiert.",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = CsvFileDTO.class))
                     ),
-                    @ApiResponse(responseCode = "400", description = "Benutzer können nicht generiert werden."),
+                    @ApiResponse(
+                            responseCode = "400", description = "Benutzer können nicht generiert werden.",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))}
+                    ),
                     @ApiResponse(
                             responseCode = "165", description = "Anfrageparameter sind fehlerhaft",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
@@ -54,7 +57,10 @@ public class WahllokalBenutzerController {
                             responseCode = "200", description = "Benutzer erfolgreich exportiert.",
                             content = { @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CsvFileDTO.class))) }
                     ),
-                    @ApiResponse(responseCode = "400", description = "Benutzer können nicht generiert werden."),
+                    @ApiResponse(
+                            responseCode = "400", description = "Benutzer können nicht exportiert werden.",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))}
+                    ),
                     @ApiResponse(
                             responseCode = "165", description = "Anfrageparameter sind fehlerhaft",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))

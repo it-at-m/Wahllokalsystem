@@ -1,6 +1,8 @@
 service:
   config:
     clients:
+      auth:
+        basePath: http://localhost:${wiremock.server.port}/
       infomanagement:
         basePath: http://localhost:${wiremock.server.port}/
       basisdaten:

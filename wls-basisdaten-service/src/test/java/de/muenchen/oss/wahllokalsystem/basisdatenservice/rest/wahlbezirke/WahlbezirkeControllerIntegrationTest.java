@@ -10,8 +10,8 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.WahlbezirkeClientMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.Wahlbezirk;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.WahlbezirkRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.WahlRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkModelMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModelMapper;
@@ -98,7 +98,7 @@ public class WahlbezirkeControllerIntegrationTest {
     class GetWahlbezirke {
 
         @Test
-        void loadedFromExternal() throws Exception {
+        void should_returnWahlbezirkDTOList_when_loadedFromExternal() throws Exception {
             val forWahltagDate = LocalDate.now().minusMonths(2);
             val wahltagID = "_identifikatorWahltag1";
             val wahltagNummer = "nummerWahltag1";
@@ -127,7 +127,7 @@ public class WahlbezirkeControllerIntegrationTest {
 
         @Test
         @Transactional
-        void externalDataIsPersisted() throws Exception {
+        void should_returnWahlbezirkDTOList_when_externalDataIsPersisted() throws Exception {
             val forWahltagDate = LocalDate.now().minusMonths(2);
             val wahltagID = "_identifikatorWahltag1";
             val wahltagNummer = "nummerWahltag1";
@@ -153,7 +153,7 @@ public class WahlbezirkeControllerIntegrationTest {
         }
 
         @Test
-        void repoHasPriorityForRemoteOnLoad() throws Exception {
+        void should_prioritizeRepo_when_loadedFromRemote() throws Exception {
             val forWahltagDate = LocalDate.now().minusMonths(2);
             val wahltagID = "_identifikatorWahltag1";
 
@@ -189,7 +189,7 @@ public class WahlbezirkeControllerIntegrationTest {
         }
 
         @Test
-        void technischeWlsExceptionWhenNoExternalDataFound() throws Exception {
+        void should_returnTechnischeWlsException_when_noExternalDataFound() throws Exception {
             val forWahltagDate = LocalDate.now().minusMonths(2);
             val wahltagID = "_identifikatorWahltag1";
             val wahltagNummer = "nummerWahltag1";

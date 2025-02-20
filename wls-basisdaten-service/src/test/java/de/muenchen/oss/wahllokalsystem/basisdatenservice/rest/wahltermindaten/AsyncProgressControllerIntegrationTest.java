@@ -38,7 +38,7 @@ class AsyncProgressControllerIntegrationTest {
     class GetAsyncProgress {
 
         @Test
-        void should_returnCurrentAsyncProgress_when_requested() throws Exception {
+        void should_returnCurrentAsyncProgress_when_callingAsyncProgress() throws Exception {
             val expectedAsyncProgressDTO = setupAsyncProgressStateAndReturnExpectedDTO();
 
             val request = MockMvcRequestBuilders.get("/businessActions/asyncProgress");

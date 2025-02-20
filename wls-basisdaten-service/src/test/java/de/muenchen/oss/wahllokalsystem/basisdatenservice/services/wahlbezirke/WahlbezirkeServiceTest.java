@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.Wahlbezirk;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahlbezirkArt;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.Wahlbezirk;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.WahlbezirkRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
@@ -45,7 +45,7 @@ class WahlbezirkeServiceTest {
     class GetWahlbezirke {
 
         @Test
-        void dataIsLoadedFromRemoteIfNotExistingInRepo() {
+        void should_loadDataFromRemote_when_notExistingInRepo() {
             val wahltagID = "_identifikatorWahltag3";
             val wahltagDate = LocalDate.now();
 
@@ -73,7 +73,7 @@ class WahlbezirkeServiceTest {
         }
 
         @Test
-        void dataIsLoadedFromRepoIfPresentAndNotFromRemoteClient() {
+        void should_loadDataFromRepo_when_presentAndNotFromRemoteClient() {
             val wahltagID = "_identifikatorWahltag3";
 
             val wahltag = new WahltagModel(wahltagID, LocalDate.now(), "", "");

@@ -91,7 +91,7 @@ public class WahlvorschlaegeControllerIntegrationTest {
     class GetWahlvorschlaege {
 
         @Test
-        void loadedFromExternal() throws Exception {
+        void should_returnWahlvorschlaegeDTO_when_loadedFromExternal() throws Exception {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
 
@@ -112,7 +112,7 @@ public class WahlvorschlaegeControllerIntegrationTest {
 
         @Test
         @Transactional
-        void externalDataIsPersisted() throws Exception {
+        void should_returnWahlvorschlaege_when_externalDataIsPersisted() throws Exception {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
 
@@ -136,7 +136,7 @@ public class WahlvorschlaegeControllerIntegrationTest {
         }
 
         @Test
-        void loadFromRepository() throws Exception {
+        void should_returnWahlvorschlaegeDTO_when_loadedFromRepository() throws Exception {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
 
@@ -160,7 +160,7 @@ public class WahlvorschlaegeControllerIntegrationTest {
         }
 
         @Test
-        void technischeWlsExceptionWhenNoExternalDataFound() throws Exception {
+        void should_returnTechnischeWlsException_when_noExternalDataFound() throws Exception {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
 

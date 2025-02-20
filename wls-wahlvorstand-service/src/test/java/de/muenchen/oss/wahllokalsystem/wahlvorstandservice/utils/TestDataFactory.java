@@ -6,6 +6,7 @@ import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.W
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand.FunktionDTO;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand.WahlvorstandDTO;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand.WahlvorstandWriteDTO;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand.WahlvorstandsmitgliedDTO;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.FunktionModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.KonfigurierterWahltagModel;
@@ -61,14 +62,14 @@ public class TestDataFactory {
             return new WahlvorstandModel("wahlbezirkID", LocalDateTime.now().withNano(0), wahlvorstandsmitgliedModelList);
         }
 
-        public static WahlvorstandModel fromDto(WahlvorstandDTO wahlvorstandDto) {
+        public static WahlvorstandModel fromDto(final String wahlbezirkID, WahlvorstandWriteDTO wahlvorstandDto) {
             List<WahlvorstandsmitgliedModel> wahlvorstandsmitgliedModelList = wahlvorstandDto.wahlvorstandsmitglieder().stream()
                     .map(mitglied -> new WahlvorstandsmitgliedModel(
                             mitglied.identifikator(), mitglied.familienname(), mitglied.vorname(), MapFunktion.funktionDtoToFunktionModel(mitglied.funktion()),
                             mitglied.funktionsname(), mitglied.anwesend()))
                     .toList();
 
-            return new WahlvorstandModel(wahlvorstandDto.wahlbezirkID(), wahlvorstandDto.anwesenheitBeginn(), wahlvorstandsmitgliedModelList);
+            return new WahlvorstandModel(wahlbezirkID, wahlvorstandDto.anwesenheitBeginn(), wahlvorstandsmitgliedModelList);
         }
 
         public static WahlvorstandModel fallback(String wahlbezirkID) {
@@ -115,6 +116,16 @@ public class TestDataFactory {
                     mitglied.funktionsname(), mitglied.anwesend()))
                     .toList();
             return new WahlvorstandDTO(model.wahlbezirkID(), model.anwesenheitBeginn(), wahlvorstandsmitgliedDtoList);
+        }
+    }
+
+    public static class CreateWahlvorstandWriteDto {
+
+        public static WahlvorstandWriteDTO withData() {
+            List<WahlvorstandsmitgliedDTO> wahlvorstandsmitgliedDtoList = new ArrayList<>();
+            wahlvorstandsmitgliedDtoList.add(CreateWahlvorstandsmitgliedDto.withData());
+
+            return new WahlvorstandWriteDTO(LocalDateTime.now().withNano(0), wahlvorstandsmitgliedDtoList);
         }
     }
 

@@ -20,7 +20,7 @@ class WahlbezirkeClientMapperTest {
     class FromClientDTOToModel {
 
         @Test
-        void isMapped() {
+        void should_returnWahlbezirkModel_when_givenWahlbezirkDTO() {
             val dtoToMap = new WahlbezirkDTO();
             dtoToMap.setIdentifikator("identifikatorWahlbezirk1");
             dtoToMap.setWahlID("wahlID1");
@@ -49,7 +49,7 @@ class WahlbezirkeClientMapperTest {
     class FromRemoteSetOfDTOsToSetOfModels {
 
         @Test
-        void isMapped() {
+        void should_returnSetOfWahlbezirkModels_when_givenWahlbezirkDTOS() {
             val wahlbezirk1 = new WahlbezirkDTO();
             wahlbezirk1.setIdentifikator("identifikatorWahlbezirk1");
             wahlbezirk1.setWahlID("wahlID1");

@@ -34,9 +34,9 @@ class WahlenServiceTest {
         void should_callGetWahlenClient_when_serviceIsCalled() {
             val wahlID = "wahlID";
 
-            Mockito.doNothing().when(wahlenValidator).validWahlIDParamOrThrow(wahlID);
             unitUnderTest.getWahlen(wahlID);
 
+            Mockito.verify(wahlenValidator, times(1)).validWahlIDParamOrThrow(wahlID);
             Mockito.verify(wahlenClient, times(1)).getWahlen(wahlID);
         }
     }

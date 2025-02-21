@@ -18,8 +18,8 @@
 </template>
 
 <script setup lang="ts">
-import BaseButtonRefresh from "@/components/base/buttons/BaseButtonRefresh.vue";
-import BaseButtonSave from "@/components/base/buttons/BaseButtonSave.vue";
+import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
+import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheWahlvorstandAnwesenheitRequirementCard from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.vue";
 import TheWahlvorstandLastSendDiv from "@/components/wahlvorstand/TheWahlvorstandLastSendDiv.vue";
 import TheWahlvorstandLatestLoadDiv from "@/components/wahlvorstand/TheWahlvorstandLatestLoadDiv.vue";

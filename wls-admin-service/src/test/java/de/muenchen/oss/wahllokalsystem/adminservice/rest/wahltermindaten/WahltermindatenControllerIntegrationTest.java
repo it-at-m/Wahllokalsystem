@@ -161,7 +161,6 @@ class WahltermindatenControllerIntegrationTest {
             val request = post("/businessActions/deleteWahltermindaten/" + wahltagID).with(csrf());
 
             // missing stubbing for "/businessActions/wahltermindaten" throws exception
-
             stubFor(WireMock.delete("/businessActions/konfigurierterWahltag/" + wahltagID).willReturn(createWireMockResponse(HttpStatus.OK)));
 
             api.perform(request).andExpect(status().isInternalServerError()).andReturn();

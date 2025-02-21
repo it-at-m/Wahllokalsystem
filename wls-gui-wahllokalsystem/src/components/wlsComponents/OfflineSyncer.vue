@@ -6,16 +6,20 @@
       height="150"
       persistent
     >
-      <template #activator="{ props: activatorProps }">
-        <v-btn
-          v-bind="activatorProps"
-          icon="$reload"
-          class="px-0"
-          size="x-small"
-          color="primary"
-          @click="synchronizeOfflineData"
-        >
-        </v-btn>
+      <template #activator="{ props: dialog }">
+        <v-tooltip text="sync offline data">
+          <template #activator="{ props: tooltip }">
+            <v-btn
+              v-bind="mergeProps(dialog, tooltip)"
+              icon="$reload"
+              class="px-0"
+              size="x-small"
+              color="primary"
+              @click="synchronizeOfflineData"
+            >
+            </v-btn>
+          </template>
+        </v-tooltip>
       </template>
 
       <v-card
@@ -30,8 +34,8 @@ import type IdbObject from "@/types/wlsTypes/IdbObject";
 
 import axios from "axios";
 import localforage from "localforage";
-import { ref } from "vue";
-import { VBtn, VCard, VDialog } from "vuetify/components";
+import { mergeProps, ref } from "vue";
+import { VBtn, VCard, VDialog, VTooltip } from "vuetify/components";
 
 import { basicPostConfig } from "@/api/axios-utils";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

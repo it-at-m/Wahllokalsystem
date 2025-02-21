@@ -13,3 +13,5 @@ node_modules
 /wls-gui-wahllokalsystem/src/api/wls-clients/generated-*-api/.npmignore
 /wls-gui-wahllokalsystem/src/api/wls-clients/generated-*-api/.openapi-generator-ignore
 /wls-gui-wahllokalsystem/src/api/wls-clients/generated-*-api/git_push.sh
+
+*storybook.log

@@ -1,8 +1,8 @@
 <template>
   <v-menu>
-    <template #activator="{ props: menu }">
+    <template #activator="{ props: menuActivator }">
       <v-btn
-        v-bind="menu"
+        v-bind="menuActivator"
         :icon="getIcon(isOffline)"
         variant="text"
         density="comfortable"

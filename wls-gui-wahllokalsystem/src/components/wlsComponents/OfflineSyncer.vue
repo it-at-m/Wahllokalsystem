@@ -6,11 +6,11 @@
       height="150"
       persistent
     >
-      <template #activator="{ props: dialog }">
+      <template #activator="{ props: dialogActivator }">
         <v-tooltip text="sync offline data">
-          <template #activator="{ props: tooltip }">
+          <template #activator="{ props: tooltipActivator }">
             <v-btn
-              v-bind="mergeProps(dialog, tooltip)"
+              v-bind="mergeProps(dialogActivator, tooltipActivator)"
               icon="$reload"
               class="px-0"
               size="x-small"

@@ -1,0 +1,31 @@
+package de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen;
+
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class WahlenService {
+
+    private final WahlenValidator wahlenValidator;
+
+    private final WahlenClient wahlenClient;
+
+    @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_GetWahlen')")
+    public List<WahlModel> getWahlen(final String wahltagID) {
+        wahlenValidator.validWahlIDParamOrThrow(wahltagID);
+
+        return wahlenClient.getWahlen(wahltagID);
+    }
+
+    @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_UpdateWahlen')")
+    public void updateWahlen(final List<WahlModel> wahlen, final String wahltagID) {
+        wahlenValidator.validWahlModelListOrThrow(wahlen);
+
+        wahlenClient.postWahlen(wahltagID, wahlen);
+    }
+}

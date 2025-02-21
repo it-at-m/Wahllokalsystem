@@ -64,7 +64,7 @@ class WahlenClientImplTest {
         }
 
         @Test
-        void should_throwTechnischeWlsException_when_exceptionIsThrownFromWahlenApi() {
+        void should_throwTechnischeWlsException_when_nonWlsExceptionIsThrownFromWahlenApi() {
             val wahlID = "wahlID";
             val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("communication with wahlen api failed");
 

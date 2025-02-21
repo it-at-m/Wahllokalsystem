@@ -65,7 +65,7 @@ self.oninstall = () => {
 
 // GET-Requests
 registerRoute(
-  ({ request }) => request.method === "GET",
+  new RegExp("/api/.+"),
   async (event) => {
     log("GET request identified");
 
@@ -125,7 +125,7 @@ registerRoute(
 
 // POST-Requests
 registerRoute(
-  ({ request }) => request.method === "POST",
+  new RegExp("/api/.+"),
   async (event) => {
     log("POST request identified");
 

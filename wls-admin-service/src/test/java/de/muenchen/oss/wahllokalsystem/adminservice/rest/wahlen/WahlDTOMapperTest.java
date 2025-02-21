@@ -51,17 +51,17 @@ class WahlDTOMapperTest {
     }
 
     private List<WahlDTO> createWahlDTOList() {
-        val wahl1 = new WahlDTO("wahlID1", "name1", 3L, 1L, LocalDate.now(), WahlartDTO.BAW, new FarbeDTO(1, 1, 1));
-        val wahl2 = new WahlDTO("wahlID2", "name2", 3L, 1L, LocalDate.now(), WahlartDTO.BAW, new FarbeDTO(1, 1, 1));
-        val wahl3 = new WahlDTO("wahlID3", "name3", 3L, 1L, LocalDate.now().plusMonths(2), WahlartDTO.BAW, new FarbeDTO(1, 1, 1));
+        val wahl1 = new WahlDTO("wahlID1", "name1", 3L, 1L, LocalDate.now(), WahlartDTO.BAW, new FarbeDTO(1, 2, 3));
+        val wahl2 = new WahlDTO("wahlID2", "name2", 3L, 1L, LocalDate.now().plusMonths(1), WahlartDTO.BTW, new FarbeDTO(4, 5, 6));
+        val wahl3 = new WahlDTO("wahlID3", "name3", 3L, 1L, LocalDate.now().plusMonths(2), WahlartDTO.LTW, new FarbeDTO(7, 8, 9));
 
         return List.of(wahl1, wahl2, wahl3);
     }
 
     private List<WahlModel> createWahlModelList() {
-        val wahl1 = new WahlModel("wahlID1", "name1", 3L, 1L, LocalDate.now(), WahlartModel.BAW, new FarbeModel(1, 1, 1));
-        val wahl2 = new WahlModel("wahlID2", "name2", 3L, 1L, LocalDate.now(), WahlartModel.BAW, new FarbeModel(1, 1, 1));
-        val wahl3 = new WahlModel("wahlID3", "name3", 3L, 1L, LocalDate.now().plusMonths(2), WahlartModel.BAW, new FarbeModel(1, 1, 1));
+        val wahl1 = new WahlModel("wahlID1", "name1", 3L, 1L, LocalDate.now(), WahlartModel.BAW, new FarbeModel(1, 2, 3));
+        val wahl2 = new WahlModel("wahlID2", "name2", 3L, 1L, LocalDate.now().plusMonths(1), WahlartModel.BTW, new FarbeModel(4, 5, 6));
+        val wahl3 = new WahlModel("wahlID3", "name3", 3L, 1L, LocalDate.now().plusMonths(2), WahlartModel.LTW, new FarbeModel(7, 8, 9));
 
         return List.of(wahl1, wahl2, wahl3);
     }

@@ -45,4 +45,25 @@ public class WahltermindatenController {
         wahltermindatenService.loadWahltermindaten(wahltagID);
     }
 
+    @Operation(
+            description = "Loescht Wahlen, Wahlbezirke, Stimmzettelgebiete und Basisstrukturdaten zu einem gegebenen Wahltag aus dem externem Wahlsystem.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Die Wahltermindaten wurden erfolgreich gelöscht."
+                    ),
+                    @ApiResponse(
+                            responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich",
+                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
+                    ),
+                    @ApiResponse(
+                            responseCode = "500", description = "Fehler während des Löschvorgangs.",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
+                    )
+            }
+    )
+    @PostMapping("deleteWahltermindaten/{wahltagID}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteWahltermindaten(@PathVariable("wahltagID") String wahltagID) {
+        wahltermindatenService.deleteWahltermindaten(wahltagID);
+    }
 }

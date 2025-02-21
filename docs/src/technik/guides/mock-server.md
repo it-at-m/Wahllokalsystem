@@ -23,7 +23,7 @@ Diese Funktion kann bis zu zwei Parameter haben:
 `module.exports = function (server, config) {}`
 
 Dabei ist
-* `server` eine Instanz des `server.js` Moduls (siehe modules/server.js)
+* `server` eine Instanz des `server.js` Moduls (siehe wilma/server_mock/modules/server.js)
 * `config` ein Objekt mit den Werten, die in `settings.js` definiert sind.
 
 Diese Funktion kann entweder ein einfaches JavaScript-Objekt zurückgeben (das als HTTP 200-Antwort an den Client gesendet wird) oder eine Antwortfunktion.

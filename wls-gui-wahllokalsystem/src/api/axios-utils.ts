@@ -11,7 +11,7 @@ export function basicGetConfig(
     method: "get",
     // "mode: 'cors'" from fetch is not necessary, because its included in axios
     withCredentials: true, // equivalent to "credentials: 'include'" in fetch
-    // "redirect: 'manual'" from fetch is not necessary, because its icluded in axios
+    // "redirect: 'manual'" from fetch is not necessary, because its included in axios
     headers: getHeaders(swStrategy),
   };
 }

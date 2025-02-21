@@ -5,6 +5,7 @@ const PATH_TECHNIK = '/technik/';
 const PATH_ECOSYSTEM = PATH_TECHNIK + 'ecosystem/';
 const PATH_ADR = PATH_TECHNIK + 'adr/';
 const PATH_NAMING_CONVENTIONS = PATH_TECHNIK + 'naming_conventions/';
+const PATH_NAMING_CONVENTIONS_TESTS = PATH_NAMING_CONVENTIONS + 'tests/';
 const PATH_GUIDES = PATH_TECHNIK + 'guides/';
 const PATH_API_CLIENT_GENERATION = PATH_GUIDES + 'api-client-generation/'
 const PATH_MICROSERVICE_GENERATION = PATH_GUIDES + 'new-microservice/'
@@ -81,8 +82,12 @@ export default withMermaid({
                 {
                     text: 'Naming Conventions', link: `${PATH_NAMING_CONVENTIONS}`, collapsed: true, items: [
                         {text: 'Flyway', link: `${PATH_NAMING_CONVENTIONS}flyway`},
-                        {text: 'Tests', link: `${PATH_NAMING_CONVENTIONS}testing`},
-                        {text: 'Workflows', link: `${PATH_NAMING_CONVENTIONS}workflows`}
+                        {text: 'Tests', collapsed: true, items: [
+                                {text: 'Backend', link: `${PATH_NAMING_CONVENTIONS_TESTS}backend`},
+                                {text: 'Frontend', link: `${PATH_NAMING_CONVENTIONS_TESTS}frontend`},
+                            ]},
+                        {text: 'Workflows', link: `${PATH_NAMING_CONVENTIONS}workflows`},
+                        {text: 'Frontend', link: `${PATH_NAMING_CONVENTIONS}frontend`}
                     ]
                 },
                 {
@@ -119,6 +124,10 @@ export default withMermaid({
                             text: "Sicherheit",
                             link: `${PATH_SYSSPEC}security`,
                         },
+                        {
+                            text: "Frontend",
+                            link: `${PATH_SYSSPEC}frontend`
+                        }
                     ],
                 }
             ],

@@ -190,5 +190,7 @@ async function _getItemFromIDB(key) {
  * utility
  ****************************************************************************************************************/
 function log(message) {
-  if (doLog) console.log(logID + message);
+  if (doLog) {
+    console.log(logID + message);
+  }
 }

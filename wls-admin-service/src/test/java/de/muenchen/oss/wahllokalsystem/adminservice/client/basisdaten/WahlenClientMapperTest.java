@@ -29,11 +29,14 @@ class WahlenClientMapperTest {
         void should_mapToListOfModel_when_givenListOfDTO() {
             val nowDate = LocalDate.now();
             val dtosToMap = List.of(
-                    new WahlDTO().wahlID("wahlID1").name("name1").reihenfolge(1L).waehlerverzeichnisnummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.BAW).farbe(new Farbe().r(1L).g(2L).b(3L))
+                    new WahlDTO().wahlID("wahlID1").name("name1").reihenfolge(1L).waehlerverzeichnisnummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.BAW)
+                            .farbe(new Farbe().r(1L).g(2L).b(3L))
                             .nummer("1"),
-                    new WahlDTO().wahlID("wahlID2").name("name2").reihenfolge(2L).waehlerverzeichnisnummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.BTW).farbe(new Farbe().r(4L).g(5L).b(6L))
+                    new WahlDTO().wahlID("wahlID2").name("name2").reihenfolge(2L).waehlerverzeichnisnummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.BTW)
+                            .farbe(new Farbe().r(4L).g(5L).b(6L))
                             .nummer("2"),
-                    new WahlDTO().wahlID("wahlID3").name("name3").reihenfolge(3L).waehlerverzeichnisnummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.LTW).farbe(new Farbe().r(7L).g(8L).b(9L))
+                    new WahlDTO().wahlID("wahlID3").name("name3").reihenfolge(3L).waehlerverzeichnisnummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.LTW)
+                            .farbe(new Farbe().r(7L).g(8L).b(9L))
                             .nummer("3"));
 
             Assertions.assertThat(dtosToMap).allSatisfy(wahl -> Assertions.assertThat(wahl).hasNoNullFieldsOrProperties());
@@ -41,9 +44,9 @@ class WahlenClientMapperTest {
             val result = unitUnderTest.toModelList(dtosToMap);
 
             val expectedModels = List.of(
-                new WahlModel("wahlID1", "name1", 1L, 1L, nowDate, WahlartModel.BAW, new FarbeModel(1L, 2L, 3L)),
-                new WahlModel("wahlID2", "name2", 2L, 1L, nowDate, WahlartModel.BTW, new FarbeModel(4L, 5L, 6L)),
-                new WahlModel("wahlID3", "name3", 3L, 1L, nowDate, WahlartModel.LTW, new FarbeModel(7L, 8L, 9L)));
+                    new WahlModel("wahlID1", "name1", 1L, 1L, nowDate, WahlartModel.BAW, new FarbeModel(1L, 2L, 3L)),
+                    new WahlModel("wahlID2", "name2", 2L, 1L, nowDate, WahlartModel.BTW, new FarbeModel(4L, 5L, 6L)),
+                    new WahlModel("wahlID3", "name3", 3L, 1L, nowDate, WahlartModel.LTW, new FarbeModel(7L, 8L, 9L)));
 
             Assertions.assertThat(result).containsExactlyInAnyOrderElementsOf(expectedModels);
         }
@@ -70,11 +73,14 @@ class WahlenClientMapperTest {
             val result = unitUnderTest.toDtoList(modelsToMap);
 
             val expectedDtos = List.of(
-                    new WahlDTO().wahlID("wahlID1").name("name1").reihenfolge(1L).waehlerverzeichnisnummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.BAW).farbe(new Farbe().r(1L).g(2L).b(3L))
+                    new WahlDTO().wahlID("wahlID1").name("name1").reihenfolge(1L).waehlerverzeichnisnummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.BAW)
+                            .farbe(new Farbe().r(1L).g(2L).b(3L))
                             .nummer(null),
-                    new WahlDTO().wahlID("wahlID2").name("name2").reihenfolge(2L).waehlerverzeichnisnummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.BTW).farbe(new Farbe().r(4L).g(5L).b(6L))
+                    new WahlDTO().wahlID("wahlID2").name("name2").reihenfolge(2L).waehlerverzeichnisnummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.BTW)
+                            .farbe(new Farbe().r(4L).g(5L).b(6L))
                             .nummer(null),
-                    new WahlDTO().wahlID("wahlID3").name("name3").reihenfolge(3L).waehlerverzeichnisnummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.LTW).farbe(new Farbe().r(7L).g(8L).b(9L))
+                    new WahlDTO().wahlID("wahlID3").name("name3").reihenfolge(3L).waehlerverzeichnisnummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.LTW)
+                            .farbe(new Farbe().r(7L).g(8L).b(9L))
                             .nummer(null));
 
             Assertions.assertThat(result).containsExactlyInAnyOrderElementsOf(expectedDtos);

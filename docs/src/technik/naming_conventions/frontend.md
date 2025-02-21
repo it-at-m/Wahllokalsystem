@@ -99,4 +99,12 @@ Die Tests liegen parallel zum Testgegenstand.
 Damit Element leichter für Tests zugänglich sollen sie ein Attribut für Tests bekommen.
 Der Name des Attributes ist [`data-cy`](https://docs.cypress.io/app/core-concepts/best-practices#Selecting-Elements).
 
-Bei dem wandelt handelt es sich **nicht** um eine ID.
+Bei dem Wert handelt es sich **nicht** um eine ID.
+
+## Eventhandlingmethoden
+
+`on<Data><Event>`
+
+**Beipspiel**
+
+`onAnwesenheitChanged($event, mitglied)` ... Eventhandler wenn sich die Anwesenheit geändert hat 

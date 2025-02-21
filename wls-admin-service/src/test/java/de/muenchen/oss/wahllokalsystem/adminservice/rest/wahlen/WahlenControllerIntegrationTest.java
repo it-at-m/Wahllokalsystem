@@ -13,13 +13,15 @@ import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.adminservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.model.WahlDTO;
+import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.adminservice.utils.Authorities;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +94,23 @@ class WahlenControllerIntegrationTest {
 
             api.perform(request).andExpect(status().isNoContent()).andReturn();
         }
+
+        @Test
+        @WithMockUser(authorities = { Authorities.ADMIN_GETWAHLEN })
+        void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
+            val invalidWahltagID = " ";
+            val request = MockMvcRequestBuilders.get("/businessActions/wahlen/" + invalidWahltagID);
+
+            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.MISSING_ARGUMENT.code(),
+                "WLS-ADMIN", ExceptionConstants.MISSING_ARGUMENT.message());
+
+            val result = api.perform(request).andExpect(status().isBadRequest()).andReturn();
+            val resultBodyAsWlsExceptionDTO = objectMapper.readValue(result.getResponse().getContentAsString(), WlsExceptionDTO.class);
+
+            Assertions.assertThat(resultBodyAsWlsExceptionDTO).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedWlsExceptionDTO);
+            Assertions.assertThat(resultBodyAsWlsExceptionDTO.message()).isNotNull();
+        }
+
     }
 
     @Nested

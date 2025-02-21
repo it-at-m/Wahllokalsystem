@@ -13,9 +13,9 @@ import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.adminservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahlbezirkModel;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
@@ -68,7 +68,7 @@ class WahltermindatenControllerIntegrationTest {
             val request = post("/businessActions/importWahltermindaten/" + invalidWahltagID).with(csrf());
 
             val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.MISSING_ARGUMENT.code(),
-                    "WLS-ERGEBNISMELDUNG", ExceptionConstants.MISSING_ARGUMENT.message());
+                    "WLS-ADMIN", ExceptionConstants.MISSING_ARGUMENT.message());
 
             val result = api.perform(request).andExpect(status().isBadRequest()).andReturn();
             val resultBodyAsWlsExceptionDTO = objectMapper.readValue(result.getResponse().getContentAsString(), WlsExceptionDTO.class);

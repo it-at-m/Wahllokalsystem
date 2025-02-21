@@ -14,7 +14,7 @@ let debug = require('debug')('wls:server');
 
 process.title = process.argv[4] || 'wls-mock-server';
 
-app.set('port', process.env.PORT || process.argv[5] || 4730);
+app.set('port', process.env.PORT || process.argv[5] || 8083);
 
 app.use(logger('dev'));
 
@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // serve static content
-app.use(rootUrl, express.static(staticDocumentRoot));
+//app.use(rootUrl, express.static(staticDocumentRoot));
 
 // set cors headers for all requests
 app.all('*', function (req, res, next) {
@@ -158,21 +158,22 @@ app.post('/logout', function (req, res) {
 
 app.all(
     [
-        '/:service/:type(rest|businessActions)/:entity',
-        '/:service/:type(rest|businessActions)/:entity/*'
+        '/api/:service-service/:type(rest|businessActions)/:entity',
+        '/api/:service-service/:type(rest|businessActions)/:entity/*'
     ],
     require('./modules/mockDispatcher')(SERVER)
 );
 
 // start listening
 const https = require('https');
+const http = require('http');
 const keys = {
     key: fs.readFileSync('./../../../cert/localhost.key'),
     cert: fs.readFileSync('./../../../cert/localhost.crt')
   };
-const server = https.createServer(keys, app);
+const server = http.createServer({}, app);
 
-const port = 4730;
+const port = 8083;
 server.listen(port, () => {
     console.log(`Server is listening on https://localhost:${port}`);
   });

@@ -176,7 +176,6 @@ class WahltermindatenControllerIntegrationTest {
 
             api.perform(request).andExpect(status().isInternalServerError()).andReturn();
         }
-
     }
 
     private ResponseDefinitionBuilder createWireMockResponse(final HttpStatus responseStatus) {

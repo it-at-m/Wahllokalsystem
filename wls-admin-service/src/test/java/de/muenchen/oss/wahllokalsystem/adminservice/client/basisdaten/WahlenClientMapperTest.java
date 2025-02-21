@@ -36,7 +36,7 @@ class WahlenClientMapperTest {
                     new WahlDTO().wahlID("wahlID3").name("name3").reihenfolge(3L).waehlerverzeichnisnummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.LTW).farbe(new Farbe().r(7L).g(8L).b(9L))
                             .nummer("3"));
 
-            dtosToMap.forEach(wahl -> Assertions.assertThat(wahl).hasNoNullFieldsOrProperties());
+            Assertions.assertThat(dtosToMap).allSatisfy(wahl -> Assertions.assertThat(wahl).hasNoNullFieldsOrProperties());
 
             val result = unitUnderTest.toModelList(dtosToMap);
 

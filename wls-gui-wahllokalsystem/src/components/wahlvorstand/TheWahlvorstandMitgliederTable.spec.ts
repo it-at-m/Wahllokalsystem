@@ -53,7 +53,7 @@ describe("TheWahlvorstandMitgliederTable.vue", () => {
 
   enableAutoUnmount(afterEach);
 
-  describe("DataBinding", () => {
+  describe("Rendering", () => {
     it("should_showMultipleLines_when_multipleWahlvorstandsmitgliederAreGiven", async (context) => {
       const wahlvorstandStore = useWahlvorstandStore();
 
@@ -90,63 +90,65 @@ describe("TheWahlvorstandMitgliederTable.vue", () => {
     });
   });
 
-  describe("Eventing", () => {
-    it("should_setAnwesendTrue_when_checkBoxForMitgliedThatIsNotAnwesendWasClicked", async () => {
-      const wahlvorstandStore = useWahlvorstandStore();
+  describe("Events", () => {
+    describe("update:model-value", () => {
+      it("should_setAnwesendTrue_when_checkBoxForMitgliedThatIsNotAnwesendWasClicked", async () => {
+        const wahlvorstandStore = useWahlvorstandStore();
 
-      wahlvorstandStore.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withIdentifikator("id1")
-          .withAnwesend(false),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withIdentifikator("id2")
-          .withAnwesend(false),
-      ];
+        wahlvorstandStore.wahlvorstand.wahlvorstandsmitglieder = [
+          WahlvorstandsmitgliedBuilder.createMinimal()
+            .withIdentifikator("id1")
+            .withAnwesend(false),
+          WahlvorstandsmitgliedBuilder.createMinimal()
+            .withIdentifikator("id2")
+            .withAnwesend(false),
+        ];
 
-      await nextTick();
+        await nextTick();
 
-      const secondCheckBox = wrapper.findAllComponents(
-        '[data-cy="checkboxAnwesend"'
-      )[1];
+        const secondCheckBox = wrapper.findAllComponents(
+          '[data-cy="checkboxAnwesend"'
+        )[1];
 
-      await secondCheckBox.setValue(true);
+        await secondCheckBox.setValue(true);
 
-      expect(wahlvorstandStore.changeAnwesendOfMitglied).toHaveBeenCalledTimes(
-        1
-      );
-      expect(wahlvorstandStore.changeAnwesendOfMitglied).toHaveBeenCalledWith(
-        true,
-        "id2"
-      );
-    });
+        expect(
+          wahlvorstandStore.changeAnwesendOfMitglied
+        ).toHaveBeenCalledTimes(1);
+        expect(wahlvorstandStore.changeAnwesendOfMitglied).toHaveBeenCalledWith(
+          true,
+          "id2"
+        );
+      });
 
-    it("should_setAnwesendFalse_when_checkBoxForMitgliedThatChangedToFalse", async () => {
-      const wahlvorstandStore = useWahlvorstandStore();
+      it("should_setAnwesendFalse_when_checkBoxForMitgliedThatChangedToFalse", async () => {
+        const wahlvorstandStore = useWahlvorstandStore();
 
-      wahlvorstandStore.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withIdentifikator("id1")
-          .withAnwesend(true),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withIdentifikator("id2")
-          .withAnwesend(true),
-      ];
+        wahlvorstandStore.wahlvorstand.wahlvorstandsmitglieder = [
+          WahlvorstandsmitgliedBuilder.createMinimal()
+            .withIdentifikator("id1")
+            .withAnwesend(true),
+          WahlvorstandsmitgliedBuilder.createMinimal()
+            .withIdentifikator("id2")
+            .withAnwesend(true),
+        ];
 
-      await nextTick();
+        await nextTick();
 
-      const secondCheckBox = wrapper.findAllComponents(
-        '[data-cy="checkboxAnwesend"'
-      )[1];
+        const secondCheckBox = wrapper.findAllComponents(
+          '[data-cy="checkboxAnwesend"'
+        )[1];
 
-      await secondCheckBox.setValue(false);
+        await secondCheckBox.setValue(false);
 
-      expect(wahlvorstandStore.changeAnwesendOfMitglied).toHaveBeenCalledTimes(
-        1
-      );
-      expect(wahlvorstandStore.changeAnwesendOfMitglied).toHaveBeenCalledWith(
-        false,
-        "id2"
-      );
+        expect(
+          wahlvorstandStore.changeAnwesendOfMitglied
+        ).toHaveBeenCalledTimes(1);
+        expect(wahlvorstandStore.changeAnwesendOfMitglied).toHaveBeenCalledWith(
+          false,
+          "id2"
+        );
+      });
     });
   });
 });

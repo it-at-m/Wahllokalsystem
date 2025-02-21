@@ -45,11 +45,6 @@ class WahlenControllerIntegrationTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    @BeforeEach
-    void setup() {
-
-    }
-
     @AfterEach
     void teardown() {
         reset();

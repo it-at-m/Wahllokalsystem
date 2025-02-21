@@ -96,7 +96,7 @@ public class WahltermindatenService {
         }
 
         if (occuredExceptions.isEmpty()) {
-            logAdminCustom("0", "message=Wahltermindaten zu Wahltag-ID " + wahltagID + " geloscht|");
+            logAdminCustom("0", "message=Wahltermindaten zu Wahltag-ID " + wahltagID + " gelöscht|");
         } else {
             logAdminCustom("1", "message=Es wurde versucht die Wahltermindaten zu Wahltag-ID " + wahltagID + " zu löschen|");
             RuntimeException reducedException = occuredExceptions.stream()

@@ -195,7 +195,7 @@ class SecurityConfigurationTest {
     }
 
     @Nested
-    class Deletetermindaten {
+    class DeleteWahltermindaten {
 
         @WithAnonymousUser
         @Test

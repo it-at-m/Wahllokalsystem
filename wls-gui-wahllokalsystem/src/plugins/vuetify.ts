@@ -1,6 +1,14 @@
 import "vuetify/styles";
 
-import { mdiHome, mdiMessageText, mdiRoutes, mdiTextBoxCheck } from "@mdi/js";
+import {
+  mdiContentSave,
+  mdiHome,
+  mdiMessageText,
+  mdiRoutes,
+  mdiSend,
+  mdiTextBoxCheck,
+  mdiUpdate,
+} from "@mdi/js";
 import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
 
@@ -13,6 +21,9 @@ export default createVuetify({
       routes: mdiRoutes,
       messageText: mdiMessageText,
       textBoxCheck: mdiTextBoxCheck,
+      save: mdiContentSave,
+      send: mdiSend,
+      updateTime: mdiUpdate,
     },
     sets: {
       mdi,

@@ -68,7 +68,7 @@ class WahlenClientMapperTest {
                     new WahlModel("wahlID2", "name2", 2L, 1L, nowDate, WahlartModel.BTW, new FarbeModel(4L, 5L, 6L)),
                     new WahlModel("wahlID3", "name3", 3L, 1L, nowDate, WahlartModel.LTW, new FarbeModel(7L, 8L, 9L)));
 
-            modelsToMap.forEach(wahl -> Assertions.assertThat(wahl).hasNoNullFieldsOrProperties());
+            Assertions.assertThat(modelsToMap).allSatisfy(wahl -> Assertions.assertThat(wahl).hasNoNullFieldsOrProperties());
 
             val result = unitUnderTest.toDtoList(modelsToMap);
 

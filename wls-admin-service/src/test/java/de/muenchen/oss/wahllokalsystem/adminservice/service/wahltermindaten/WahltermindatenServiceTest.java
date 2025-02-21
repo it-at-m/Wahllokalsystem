@@ -1,6 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahltagModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahltageClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.time.LocalDate;
@@ -90,6 +92,38 @@ class WahltermindatenServiceTest {
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.loadWahltermindaten(wahltagID)).isSameAs(mockedException);
             Mockito.verify(wahltermindatenClient).deleteWahltermindaten(wahltagID);
+        }
+    }
+
+    @Nested
+    class DeleteWahltermindaten {
+
+        @Test
+        void should_deleteWahltermindaten_when_allClientCallsAreSuccesful() {
+            val wahltagID = "wahltagID";
+
+            Mockito.doNothing().when(wahltermindatenClient).deleteWahltermindaten(wahltagID);
+            Mockito.doNothing().when(konfigurierterWahltagClient).deleteKonfigurierterWahltag(wahltagID);
+
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.deleteWahltermindaten(wahltagID));
+        }
+
+        @Test
+        void should_throwRuntimeException_when_wahltermindatenClientFails() {
+            val wahltagID = "wahltagID";
+
+            Mockito.doThrow(new RuntimeException()).when(wahltermindatenClient).deleteWahltermindaten(wahltagID);
+
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.deleteWahltermindaten(wahltagID)).isInstanceOf(RuntimeException.class);
+        }
+
+        @Test
+        void should_throwRuntimeException_when_konfigurierterWahltagClientFails() {
+            val wahltagID = "wahltagID";
+
+            Mockito.doThrow(new RuntimeException()).when(konfigurierterWahltagClient).deleteKonfigurierterWahltag(wahltagID);
+
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.deleteWahltermindaten(wahltagID)).isInstanceOf(RuntimeException.class);
         }
     }
 }

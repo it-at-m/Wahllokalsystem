@@ -219,5 +219,4 @@ class SecurityConfigurationTest {
             Mockito.verify(wahltermindatenService).deleteWahltermindaten(wahltagID);
         }
     }
-
 }

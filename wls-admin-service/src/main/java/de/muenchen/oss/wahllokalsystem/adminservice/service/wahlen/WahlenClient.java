@@ -25,5 +25,5 @@ public interface WahlenClient {
      *             {@link de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException}
      *             if there were trouble during communication
      */
-    void postWahlen(String wahltagID, List<WahlModel> wahlen);
+    void postWahlen(String wahltagID, List<WahlModel> wahlen) throws WlsException;
 }

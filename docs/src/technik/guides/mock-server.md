@@ -117,12 +117,3 @@ Gibt eine HTTP 200 JSON-Antwort an den Client zurück.
         };
     };
 ```
-## Start des Servers (nur mit  internem zugang möglich)
-Der aktuelle Mock-Server ist veraltet, weshalb die `node-modules` aus dem internen Repository übernommen werden müssen, da einige Abhängigkeiten nicht mehr vorhanden sind.  
-Zudem ist es erforderlich, das interne Altprojekt `gui_wahllokalsystem_polymer` auszuchecken und sicherzustellen, dass es sich im gleichen Verzeichnis wie der Mock-Server befindet.  
-Auch hier sollten die Node-Modules aus einem älteren Projekt verwendet werden.
-
-Darüber hinaus müssen die Zertifikate aus dem internen Verzeichnis in einen übergeordneten Ordner mit dem Namen `cert` kopiert werden.  
-Zum Beispiel: `develop/cert` sowie die Verzeichnisse `develop/old-wls/wilma` und `develop/old-wls/gui_wahllokalsystem_polymer`.
-
-Anschließend kann im Verzeichnis `wilma/server_mock` der Befehl `npm start "/../../gui_wahllokalsystem_polymer/" ""` ausgeführt werden, um den Mock-Server zu starten.  

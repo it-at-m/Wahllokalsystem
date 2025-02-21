@@ -103,7 +103,6 @@ function MockModuleContext(req) {
     }
 
 
-    /** use with caution! */
     this.includeScript = require('./includeScript');
 }
 

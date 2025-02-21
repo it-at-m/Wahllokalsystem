@@ -34,7 +34,7 @@ Wie oben erwähnt, kann ein Mock-Modul eine Antwortfunktion mit der folgenden Si
 
 `function (res, urlParam1, urlParam2)`
 
-Dabei ist `res` das Anfrageobjekt und alle verbleibenden Parameter repräsentieren die zusätzlichen URL-Segmente nach der Basis-REST-URL (Beispiel: Wenn die REST-URL ist /foo/rest/entity/blah/blub, dann wird urlParam1 "blah" und urlParam2 "blub" sein).
+Dabei ist `res` das Anfrageobjekt und alle verbleibenden Parameter repräsentieren die zusätzlichen URL-Segmente nach der Basis-REST-URL (Beispiel: Wenn die REST-URL ist /foo/rest/entity/bar/baz, dann wird urlParam1 "bar" und urlParam2 "baz" sein).
 
 Der `this`-Verweis innerhalb unserer Funktion ist eine Instanz von `MockModuleContext` (definiert in modules/mockDispatcher.js). Bis jetzt bietet das Kontextobjekt die folgenden Eigenschaften:
 
@@ -82,7 +82,7 @@ Gibt eine HTTP 200 JSON-Antwort an den Client zurück.
 ```
 * Wir protokollieren den Wert von `additionalUrlParam1` in der Konsole.
 
-* Wenn das letzte Segment der REST-URL "cool" ist, antworten wir mit einem JSON-Körper, andernfalls geben wir HTTP 404 Not Found zurück.
+* Wenn das letzte Segment der REST-URL "cool" ist, antworten wir mit einer JSON-Response, andernfalls geben wir HTTP 404 Not Found zurück.
 
 #### Fortgeschritteneres Beispiel
 ```javascript

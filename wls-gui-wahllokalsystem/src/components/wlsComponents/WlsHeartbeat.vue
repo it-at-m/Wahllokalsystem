@@ -64,7 +64,7 @@ import OfflineSyncer from "@/components/wlsComponents/OfflineSyncer.vue";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useInterval } from "@/composables/useInterval";
 
-// todo: synchronizing activated via click. uncomment to activate periodically
+// todo: checking status activated via click. uncomment to activate periodically
 /*
 useInterval(() => {
   heartbeat();

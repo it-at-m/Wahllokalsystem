@@ -17,10 +17,10 @@
       <v-list class="pt-0">
         <v-list-item>
           <v-btn
-            @click.stop="heartbeat"
             :disabled="isCheckStatusBtnDisabled"
             color="primary"
             style="width: 100%"
+            @click.stop="heartbeat"
           >
             {{ checkStatusBtnText }}
           </v-btn>

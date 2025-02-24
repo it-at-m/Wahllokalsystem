@@ -1,7 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.client.infomanagement;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.configuration.Profiles;
-import de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.client.WahlenControllerApi;
 import de.muenchen.oss.wahllokalsystem.adminservice.eai.infomanagement.client.KonfigurierterWahltagControllerApi;
 import de.muenchen.oss.wahllokalsystem.adminservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
@@ -9,6 +8,7 @@ import de.muenchen.oss.wahllokalsystem.adminservice.service.common.Konfigurierte
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.KonfigurierterWahltagClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -27,8 +27,6 @@ public class KonfigurierterWahltagClientImpl implements KonfigurierterWahltagCli
 
     private final KonfigurierterWahltagClientMapper konfigurierterWahltagClientMapper;
 
-    private final WahlenControllerApi wahlenControllerApi;
-
     @Override
     public void postKonfigurierterWahltag(final KonfigurierterWahltagModel konfigurierterWahltag) {
         log.debug("#postKonfigurierterWahltag");
@@ -36,19 +34,30 @@ public class KonfigurierterWahltagClientImpl implements KonfigurierterWahltagCli
         try {
             val konfigurierterWahltagDTO = konfigurierterWahltagClientMapper.toDto(konfigurierterWahltag);
             konfigurierterWahltagControllerApi.setKonfigurierterWahltag(konfigurierterWahltagDTO);
-            if (konfigurierterWahltagDTO.getWahltagStatus().equals(KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV)) {
-                try {
-                    wahlenControllerApi.resetWahlen();
-                } catch (final Exception exception) {
-                    log.error("#postKonfigurierterWahltag failed to reset elections:", exception);
-                    throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
-                }
-            }
         } catch (final WlsException wlsException) {
             log.debug("#postKonfigurierterWahltag found WlsException:", wlsException);
             throw wlsException;
         } catch (final Exception exception) {
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT);
         }
+    }
+
+    @Override
+    public List<KonfigurierterWahltagModel> getKonfigurierteWahltage() throws WlsException {
+        final List<KonfigurierterWahltagDTO> konfigurierterWahltagDTOList;
+        try {
+            konfigurierterWahltagDTOList = konfigurierterWahltagControllerApi.getKonfigurierteWahltage();
+
+            if (konfigurierterWahltagDTOList == null) {
+                return null;
+            }
+
+        } catch (WlsException wlsException) {
+            log.debug("#getKonfigurierteWahltage found WlsException:", wlsException);
+            throw wlsException;
+        } catch (Exception exception) {
+            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT);
+        }
+        return konfigurierterWahltagDTOList.stream().map(konfigurierterWahltagClientMapper::toModel).toList();
     }
 }

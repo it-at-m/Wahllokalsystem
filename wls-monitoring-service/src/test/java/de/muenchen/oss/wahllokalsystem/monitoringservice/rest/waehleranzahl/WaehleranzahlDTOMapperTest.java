@@ -2,7 +2,9 @@ package de.muenchen.oss.wahllokalsystem.monitoringservice.rest.waehleranzahl;
 
 import de.muenchen.oss.wahllokalsystem.monitoringservice.service.waehleranzahl.WaehleranzahlModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+
 import java.time.LocalDateTime;
+
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -22,7 +24,7 @@ class WaehleranzahlDTOMapperTest {
         }
 
         @Test
-        void should_mapModelToDto_when_ModelIsNotNull() {
+        void should_mapModelToDto_when_modelIsNotNull() {
             String wahlID = "wahlID01";
             String wahlbezirkID = "wahlbezirkID01";
             long anzahlWaehler = 99L;
@@ -47,7 +49,7 @@ class WaehleranzahlDTOMapperTest {
         }
 
         @Test
-        void should_mapDtoToModel_when_DtoIsNotNull() {
+        void should_mapDtoToModel_when_dtoIsNotNull() {
             String wahlID = "wahlID01";
             String wahlbezirkID = "wahlbezirkID01";
             long anzahlWaehler = 99L;

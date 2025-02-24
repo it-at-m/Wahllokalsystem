@@ -4,7 +4,7 @@ let express = require('express');
 let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let fs = require('fs');
-let rootArgument = process.argv[3] || '/../../gui-monitoringtool-polymer/build/es5-bundled/';
+let rootArgument = process.argv[3]
 let rootUrl = process.argv[4] || '';
 let staticDocumentRoot = fs.realpathSync(__dirname + rootArgument);
 let app = express();
@@ -12,7 +12,7 @@ let SERVER = require('./modules/server');
 let bodyParser = require('body-parser');
 let debug = require('debug')('wls:server');
 
-process.title = process.argv[4] || 'wls-mock-server';
+process.title = rootUrl || 'wls-mock-server';
 
 app.set('port', process.env.PORT || process.argv[5] || 8083);
 

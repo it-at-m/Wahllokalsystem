@@ -176,10 +176,9 @@ module.exports = function () {
         if (dispatcher.moduleExists()) {          
             setTimeout(async function() {
                 try {
-
                     var context = await dispatcher.dispatch();
 
-                    console.log("es geht weiter nach warten async" + httpRequest.url)
+                    console.log("es geht weiter nach warten async " + httpRequest.url)
 
                     context.debug('responding ' + JSON.stringify({
                         status: context.statusCode,

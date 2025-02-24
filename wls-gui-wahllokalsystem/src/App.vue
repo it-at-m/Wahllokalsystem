@@ -22,6 +22,8 @@
           cols="3"
           class="d-flex align-center justify-end"
         >
+          <!-- heartbeat uses v-model for two-way-binding -->
+          <wls-heartbeat v-model:is-offline="isOffline"></wls-heartbeat>
           <v-tooltip
             location="bottom"
             text="Backend Communication Examples"
@@ -104,7 +106,8 @@
 
 <script setup lang="ts">
 import { useToggle } from "@vueuse/core";
-import { onMounted } from "vue";
+import localforage from "localforage";
+import { onMounted, ref } from "vue";
 import {
   VApp,
   VAppBar,
@@ -124,6 +127,7 @@ import {
 
 import { getUser } from "@/api/user-client";
 import TheSnackbar from "@/components/TheSnackbar.vue";
+import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import {
   EXAMPLE_ROUTES_BACKEND,
   EXAMPLE_ROUTES_NEWROUTE,
@@ -134,9 +138,19 @@ import User, { UserLocalDevelopment } from "@/types/User";
 
 const userStore = useUserStore();
 const [drawer, toggleDrawer] = useToggle();
+const isOffline = ref(false);
 
 onMounted(() => {
   loadUser();
+
+  // config for service worker indexed db (same config as in wahl-worker.js !)
+  localforage.config({
+    driver: localforage.INDEXEDDB,
+    name: "wahldb",
+    version: 1.0,
+    storeName: "wahlstore",
+    description: "store for wahlnumber",
+  });
 });
 
 /**

@@ -8,8 +8,10 @@ import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.Tes
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
+
 import java.util.List;
 import java.util.stream.Stream;
+
 import lombok.val;
 import org.apache.commons.lang3.ArrayUtils;
 import org.assertj.core.api.Assertions;
@@ -111,7 +113,7 @@ public class EreignisServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} {1} missing")
         @MethodSource("getMissingServiceAuthoritiesVariations")
-        void should_throwAccessDeniedException_whenServiceAuthoritiesMissing(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwAccessDeniedException_when_serviceAuthoritiesMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(ArrayUtils.addAll(Authorities.ALL_REPO_AUTHORITIES_SET_EREIGNISSE, argumentsAccessor.get(0, String[].class)));
             val wahlbezirkID = "wahlbezirkID";
             val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData());

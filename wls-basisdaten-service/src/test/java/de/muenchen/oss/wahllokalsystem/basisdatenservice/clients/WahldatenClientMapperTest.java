@@ -19,7 +19,7 @@ class WahldatenClientMapperTest {
     class FromRemoteClientDTOToModel {
 
         @Test
-        void isMapped() {
+        void should_returnBasisdatenModel_when_givenBasisdatenDTO() {
 
             val basisdatenDTO = MockDataFactory.createClientBasisdatenDTO(LocalDate.now());
 

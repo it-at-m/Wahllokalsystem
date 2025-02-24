@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahltag;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
@@ -80,7 +81,7 @@ public class WahltageControllerIntegrationTest {
     class GetWahltage {
 
         @Test
-        void loadedFromExternal() throws Exception {
+        void should_returnWahltagDTOList_when_loadedFromExternal() throws Exception {
             val requestDate = LocalDate.now().minusMonths(3).toString();
 
             val eaiWahltage = createClientWahltageDTO(false);
@@ -102,7 +103,7 @@ public class WahltageControllerIntegrationTest {
 
         @Test
         @Transactional
-        void externalDataIsPersisted() throws Exception {
+        void should_returnWahltagList_when_externalDataIsPersisted() throws Exception {
             val requestDate = LocalDate.now().minusMonths(3).toString();
 
             val eaiWahltage = createClientWahltageDTO(false);
@@ -125,7 +126,7 @@ public class WahltageControllerIntegrationTest {
         }
 
         @Test
-        void loadFromRemoteFirstAndThanUpdateRepository() throws Exception {
+        void should_returnWahltagDTOList_when_loadedFromRemoteFirstAndUpdatedRepositoryAfter() throws Exception {
             val entitiesToFindInRepository = modelMapper
                     .fromWahltagModelToWahltagEntityList(wahltageClientMapper
                             .fromRemoteClientSetOfWahltagDTOtoListOfWahltagModel(createClientWahltageDTO(true)));
@@ -158,7 +159,7 @@ public class WahltageControllerIntegrationTest {
         }
 
         @Test
-        void technischeWlsExceptionWhenNoExternalDataFound() throws Exception {
+        void should_returnTechnischeWlsException_when_noExternalDataFound() throws Exception {
             val requestDate = LocalDate.now().minusMonths(3).toString();
 
             WireMock.stubFor(WireMock.get("/wahldaten/wahltage?includingSince=" + requestDate)

@@ -29,7 +29,7 @@ class WahltageControllerTest {
     class GetWahltage {
 
         @Test
-        void serviceIsCalledAndObjectsAreMapped() {
+        void should_returnWahltagDTOList_when_serviceIsCalled() {
             val wahltagModels = List.of(
                     WahltagModel.builder().build(),
                     WahltagModel.builder().build(),

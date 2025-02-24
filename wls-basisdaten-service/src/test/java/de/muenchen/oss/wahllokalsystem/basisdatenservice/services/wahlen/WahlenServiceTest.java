@@ -52,7 +52,7 @@ class WahlenServiceTest {
     class GetWahlen {
 
         @Test
-        void ifRepoDataFoundThanReturnsRepoDataAndMakesNoCallToRemoteClient() {
+        void should_returnRepoDataAndMakeNoCallToRemoteClient_when_repoDataFound() {
             var searchingForWahltag = new WahltagModel("wahltagID", LocalDate.now(), "beschreibung14", "1");
             List<Wahl> mockedListOfEntities = createWahlEntities("");
             List<WahlModel> mockedListOfModels = createWahlModels("");
@@ -72,7 +72,7 @@ class WahlenServiceTest {
         }
 
         @Test
-        void ifRepoDataNotFoundThanReturnsRemoteClientData() {
+        void should_returnRemoteClientData_when_repoDataNotFound() {
             var searchingForWahltag = new WahltagModel("wahltagID", LocalDate.now(), "beschreibung15", "1");
             List<Wahl> mockedListOfEntities = createWahlEntities("");
             List<WahlModel> mockedListOfModelsIfClientCall = createWahlModels("clientPraefix");
@@ -96,7 +96,7 @@ class WahlenServiceTest {
     class PostWahlen {
 
         @Test
-        void dataSaved() {
+        void should_returnSavedData_when_serviceIsCalled() {
             val wahltagID = "wahltagID";
             List<WahlModel> mockedListOfModels = createWahlModels("");
             List<Wahl> mockedListOfEntities = createWahlEntities("");
@@ -110,7 +110,7 @@ class WahlenServiceTest {
         }
 
         @Test
-        void wlsExceptionWhenSavingFailed() {
+        void should_throwTechnischeWlsException_when_savingFailed() {
             val wahltagID = "wahltagID";
             List<WahlModel> mockedListOfModels = createWahlModels("");
             List<Wahl> mockedListOfEntities = createWahlEntities("");
@@ -128,7 +128,7 @@ class WahlenServiceTest {
         }
 
         @Test
-        void postingNewWahlenOverridesExistingWithSameId() {
+        void should_overrideExistingWahlen_when_postingWahlenWithSameId() {
             val wahltagID = "wahltagID";
             var searchingForWahltag = new WahltagModel(wahltagID, LocalDate.now().plusMonths(1), "beschreibung1", "1");
 
@@ -174,7 +174,7 @@ class WahlenServiceTest {
     class ResetWahlen {
 
         @Test
-        void dataSuccessfullyReseted() {
+        void should_resetData_when_serviceIsCalled() {
             ArgumentCaptor<List<Wahl>> reqCaptor = ArgumentCaptor.forClass(List.class);
 
             val wahlenToReset = createWahlEntities("");

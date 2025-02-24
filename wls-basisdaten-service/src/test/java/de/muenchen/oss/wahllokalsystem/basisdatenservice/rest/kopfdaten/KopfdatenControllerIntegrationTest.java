@@ -80,7 +80,7 @@ public class KopfdatenControllerIntegrationTest {
     class GetKopfdaten {
 
         @Test
-        void loadedFromExternal() throws Exception {
+        void should_returnKopfdatenDTO_when_loadedFromExternal() throws Exception {
             // mock infomanagement konfigurierterWahltag
             KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
                     KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
@@ -112,7 +112,7 @@ public class KopfdatenControllerIntegrationTest {
 
         @Test
         @Transactional
-        void externalDataIsPersisted() throws Exception {
+        void should_persistExternalData_when_callingGet() throws Exception {
             // mock infomanagement konfigurierterWahltag
             KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
                     KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
@@ -144,7 +144,7 @@ public class KopfdatenControllerIntegrationTest {
 
         @Test
         @Transactional
-        void loadExistingDataFromRepoNoRemoteData() throws Exception {
+        void should_loadExistingDataFromRepo_when_noRemoteDataIsPresent() throws Exception {
             val kopfdatenEntity1 = MockDataFactory.createKopfdatenEntityFor("wahlID1", "wahlbezirkID1_1",
                     Stimmzettelgebietsart.SG, "Munich-Repo1", "120",
                     "Bundestagswahl", "1201");
@@ -166,7 +166,7 @@ public class KopfdatenControllerIntegrationTest {
         }
 
         @Test
-        void technischeWlsExceptionWhenFailedCommunicationWithInfomanagementClient() throws Exception {
+        void should_returnTechnischeWlsException_when_communicationWithInfomanagementClientFailed() throws Exception {
             KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
                     KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
 
@@ -189,7 +189,7 @@ public class KopfdatenControllerIntegrationTest {
         }
 
         @Test
-        void technischeWlsExceptionWhenFailedComunicationWithEaiAndKopfdatenNotFound() throws Exception {
+        void should_returnTechnischeWlsException_when_comunicationWithEaiFailedAndKopfdatenNotFound() throws Exception {
             KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
                     KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
 
@@ -213,7 +213,7 @@ public class KopfdatenControllerIntegrationTest {
         }
 
         @Test
-        void fachlicheWlsExceptionWhenNoKonfigurierterWahltagNoContent() throws Exception {
+        void should_returnFachlicheWlsException_when_noKonfigurierterWahltagNoContent() throws Exception {
             KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
                     KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
 
@@ -236,7 +236,7 @@ public class KopfdatenControllerIntegrationTest {
         }
 
         @Test
-        void fachlicheWlsExceptionWhenKopfdatenNoContent() throws Exception {
+        void should_returnFachlicheWlsException_when_kopfdatenNoContent() throws Exception {
             KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
                     KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
 

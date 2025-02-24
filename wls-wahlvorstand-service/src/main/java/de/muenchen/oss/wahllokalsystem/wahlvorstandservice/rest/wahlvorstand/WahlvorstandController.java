@@ -81,8 +81,8 @@ public class WahlvorstandController {
             }
     )
     @PostMapping("/{wahlbezirkID}")
-    public ResponseEntity<?> postWahlvorstand(@RequestBody WahlvorstandDTO wahlvorstandBody) {
-        wahlvorstandService.postWahlvorstand(wahlvorstandDTOMapper.toModel(wahlvorstandBody));
+    public ResponseEntity<?> postWahlvorstand(@PathVariable("wahlbezirkID") final String wahlbezirkID, @RequestBody WahlvorstandWriteDTO wahlvorstandBody) {
+        wahlvorstandService.postWahlvorstand(wahlvorstandDTOMapper.toModel(wahlbezirkID, wahlvorstandBody));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

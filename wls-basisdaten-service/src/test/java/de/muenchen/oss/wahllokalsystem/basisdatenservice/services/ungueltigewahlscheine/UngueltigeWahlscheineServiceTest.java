@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.ungueltigewahlscheine;
 
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagIdUndWahlbezirksart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ungueltigewahlscheine.UngueltigeWahlscheine;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ungueltigewahlscheine.UngueltigeWahlscheineRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagIdUndWahlbezirksart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
@@ -40,7 +40,7 @@ class UngueltigeWahlscheineServiceTest {
     class GetUngueltigeWahlscheine {
 
         @Test
-        void dataFound() {
+        void should_returnUngueltigeWahlscheine_when_dataIsFoundInRepo() {
             val ungueltigeWahlscheineReferenceModel = new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
 
             val mockedEntityUngueltigeWahlscheine = "csv-data".getBytes();
@@ -59,7 +59,7 @@ class UngueltigeWahlscheineServiceTest {
         }
 
         @Test
-        void exceptionWhenNoDataFound() {
+        void should_throwException_when_noDataFound() {
             val ungueltigeWahlscheineReferenceModel = new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
 
             val mockedMappedEntityID = new WahltagIdUndWahlbezirksart();
@@ -77,7 +77,7 @@ class UngueltigeWahlscheineServiceTest {
     class SetUngueltigeWahlscheine {
 
         @Test
-        void dataSet() {
+        void should_saveUngueltigeWahlscheine_when_callingPost() {
             val ungueltigeWahlscheineData = "csv data to set".getBytes();
             val ungueltigeWahlscheineWriteModel = new UngueltigeWahlscheineWriteModel(new UngueltigeWahlscheineReferenceModel("wahlID", WahlbezirkArtModel.BWB),
                     ungueltigeWahlscheineData);
@@ -93,7 +93,7 @@ class UngueltigeWahlscheineServiceTest {
         }
 
         @Test
-        void wlsExceptionWhenSavingFailed() {
+        void should_throwTechnischeWlsException_when_savingFailed() {
             val ungueltigeWahlscheineData = "csv data to set".getBytes();
             val ungueltigeWahlscheineWriteModel = new UngueltigeWahlscheineWriteModel(new UngueltigeWahlscheineReferenceModel("wahlID", WahlbezirkArtModel.BWB),
                     ungueltigeWahlscheineData);

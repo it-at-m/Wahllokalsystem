@@ -1,6 +1,8 @@
 import {withMermaid} from "vitepress-plugin-mermaid"
 
 const PATH_SERVICES = '/services/';
+const PATH_SERVICES_BACKEND = PATH_SERVICES + 'backend-services/';
+const PATH_SERVICES_FRONTEND = PATH_SERVICES + 'frontend-services/';
 const PATH_TECHNIK = '/technik/';
 const PATH_ECOSYSTEM = PATH_TECHNIK + 'ecosystem/';
 const PATH_ADR = PATH_TECHNIK + 'adr/';
@@ -67,6 +69,14 @@ export default withMermaid({
                         {
                             text: 'Frontend-Refarch-Template',
                             link: `${PATH_ADR}adr-frontend-template`
+                        },
+                        {
+                            text: 'Pfadvariablen als Parameter',
+                            link: `${PATH_ADR}adr-issue804-pathVariableAsMethodArguments`
+                        },
+                        {
+                            text: 'Kein i18n von Beginn an',
+                            link: `${PATH_ADR}adr-no-use-of-i18n-at-start`
                         }
                     ]
                 },
@@ -116,17 +126,26 @@ export default withMermaid({
                 }
             ],
             [PATH_SERVICES]: [
-                {text: 'Admin-Service', link: `${PATH_SERVICES}admin-service/`},
-                {text: 'Auth-Service', link: `${PATH_SERVICES}auth-service/`},
-                {text: 'Basisdaten-Service', link: `${PATH_SERVICES}basisdaten-service/`},
-                {text: 'Briefwahl-Service', link: `${PATH_SERVICES}briefwahl-service/`},
-                {text: 'EAI-Service', link: `${PATH_SERVICES}eai-service/`},
-                {text: 'Ergebnismeldung-Service', link: `${PATH_SERVICES}ergebnismeldung-service/`},
-                {text: 'Infomanagement-Service', link: `${PATH_SERVICES}infomanagement-service/`},
-                {text: 'Monitoring-Service', link: `${PATH_SERVICES}monitoring-service/`},
-                {text: 'Vorfälle und Vorkommnisse-Service', link: `${PATH_SERVICES}vorfaelleundvorkommnisse-service/`},
-                {text: 'Wahlvorbereitung-Service', link: `${PATH_SERVICES}wahlvorbereitungs-service/`},
-                {text: 'Wahlvorstand-Service', link: `${PATH_SERVICES}wahlvorstand-service/`},
+                {text: 'Backend Services', link: `${PATH_SERVICES_BACKEND}`, collapsed: false, items:
+                    [
+                        {text: 'Admin-Service', link: `${PATH_SERVICES_BACKEND}admin-service/`},
+                        {text: 'Auth-Service', link: `${PATH_SERVICES_BACKEND}auth-service/`},
+                        {text: 'Basisdaten-Service', link: `${PATH_SERVICES_BACKEND}basisdaten-service/`},
+                        {text: 'Briefwahl-Service', link: `${PATH_SERVICES_BACKEND}briefwahl-service/`},
+                        {text: 'EAI-Service', link: `${PATH_SERVICES_BACKEND}eai-service/`},
+                        {text: 'Ergebnismeldung-Service', link: `${PATH_SERVICES_BACKEND}ergebnismeldung-service/`},
+                        {text: 'Infomanagement-Service', link: `${PATH_SERVICES_BACKEND}infomanagement-service/`},
+                        {text: 'Monitoring-Service', link: `${PATH_SERVICES_BACKEND}monitoring-service/`},
+                        {text: 'Vorfälle und Vorkommnisse-Service', link: `${PATH_SERVICES_BACKEND}vorfaelleundvorkommnisse-service/`},
+                        {text: 'Wahlvorbereitung-Service', link: `${PATH_SERVICES_BACKEND}wahlvorbereitungs-service/`},
+                        {text: 'Wahlvorstand-Service', link: `${PATH_SERVICES_BACKEND}wahlvorstand-service/`},
+                    ]
+                },
+                {text: 'Frontend Projekte', link: `${PATH_SERVICES_FRONTEND}`, collapsed: false, items:
+                    [
+                        {text: 'Wahllokalsystem', link: `${PATH_SERVICES_FRONTEND}wahllokalsystem/`},
+                    ]
+                },
             ],
         },
 

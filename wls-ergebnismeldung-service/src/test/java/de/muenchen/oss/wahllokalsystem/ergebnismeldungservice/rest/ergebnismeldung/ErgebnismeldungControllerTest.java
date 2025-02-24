@@ -47,9 +47,8 @@ class ErgebnismeldungControllerTest {
         void should_callUpdateSendungszeiten_when_forceIsTrueInAllLowerCase() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
-            val sendErgebnisParameter = new SendErgebnisParameter(wahlID, wahlbezirkID, null, null, null);
 
-            unitUnderTest.sendErgebnisse("true", sendErgebnisParameter);
+            unitUnderTest.sendErgebnisse("true", wahlID, wahlbezirkID, null, null, null);
 
             Mockito.verify(ergebnismeldungService).updateSendungszeiten(new BezirkUndWahlID(wahlID, wahlbezirkID));
         }
@@ -58,9 +57,8 @@ class ErgebnismeldungControllerTest {
         void should_callUpdateSendungszeiten_when_forceIsTrueInAllUpperCase() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
-            val sendErgebnisParameter = new SendErgebnisParameter(wahlID, wahlbezirkID, null, null, null);
 
-            unitUnderTest.sendErgebnisse("TRUE", sendErgebnisParameter);
+            unitUnderTest.sendErgebnisse("TRUE", wahlID, wahlbezirkID, null, null, null);
 
             Mockito.verify(ergebnismeldungService).updateSendungszeiten(new BezirkUndWahlID(wahlID, wahlbezirkID));
         }
@@ -73,9 +71,8 @@ class ErgebnismeldungControllerTest {
             val waehlverzeichnisNummer = 1L;
             val meldungsart = MeldungsartDTO.V1;
             val hauptwahlbezirk = "hauptwahlbezirk";
-            val sendErgebnisParameter = new SendErgebnisParameter(wahlID, wahlbezirkID, waehlverzeichnisNummer, meldungsart, hauptwahlbezirk);
 
-            unitUnderTest.sendErgebnisse(arguments.get(0, String.class), sendErgebnisParameter);
+            unitUnderTest.sendErgebnisse(arguments.get(0, String.class), wahlID, wahlbezirkID, waehlverzeichnisNummer, meldungsart, hauptwahlbezirk);
 
             Mockito.verify(ergebnismeldungService)
                     .sendErgebnisse(new ErgebnisseToSendCriteriaModel(wahlID, wahlbezirkID, waehlverzeichnisNummer, MeldungsartModel.V1, hauptwahlbezirk));
@@ -88,11 +85,10 @@ class ErgebnismeldungControllerTest {
             val waehlverzeichnisNummer = 1L;
             val meldungsart = MeldungsartDTO.V1;
             val hauptwahlbezirk = "hauptwahlbezirk";
-            val sendErgebnisParameter = new SendErgebnisParameter(wahlID, wahlbezirkID, waehlverzeichnisNummer, meldungsart, hauptwahlbezirk);
 
             Mockito.when(ergebnismeldungService.sendErgebnisse(any())).thenReturn(true);
 
-            val result = unitUnderTest.sendErgebnisse("false", sendErgebnisParameter);
+            val result = unitUnderTest.sendErgebnisse("false", wahlID, wahlbezirkID, waehlverzeichnisNummer, meldungsart, hauptwahlbezirk);
 
             Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         }
@@ -104,11 +100,10 @@ class ErgebnismeldungControllerTest {
             val waehlverzeichnisNummer = 1L;
             val meldungsart = MeldungsartDTO.V1;
             val hauptwahlbezirk = "hauptwahlbezirk";
-            val sendErgebnisParameter = new SendErgebnisParameter(wahlID, wahlbezirkID, waehlverzeichnisNummer, meldungsart, hauptwahlbezirk);
 
             Mockito.when(ergebnismeldungService.sendErgebnisse(any())).thenReturn(false);
 
-            val result = unitUnderTest.sendErgebnisse("false", sendErgebnisParameter);
+            val result = unitUnderTest.sendErgebnisse("false", wahlID, wahlbezirkID, waehlverzeichnisNummer, meldungsart, hauptwahlbezirk);
 
             Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
         }
@@ -120,7 +115,6 @@ class ErgebnismeldungControllerTest {
             val waehlverzeichnisNummer = 1L;
             val meldungsart = MeldungsartDTO.V1;
             val hauptwahlbezirk = "hauptwahlbezirk";
-            val sendErgebnisParameter = new SendErgebnisParameter(wahlID, wahlbezirkID, waehlverzeichnisNummer, meldungsart, hauptwahlbezirk);
 
             val mockedWlsException = FachlicheWlsException.withCode("123").inService("service").buildWithMessage("error");
             val mockedWlsExceptionAsDTO = new WlsExceptionDTO(WlsExceptionCategory.F, "123", "service", "error");
@@ -128,7 +122,7 @@ class ErgebnismeldungControllerTest {
             Mockito.doThrow(mockedWlsException).when(ergebnismeldungService).sendErgebnisse(any());
             Mockito.when(dtoMapper.toDTO(mockedWlsException)).thenReturn(mockedWlsExceptionAsDTO);
 
-            val result = unitUnderTest.sendErgebnisse("false", sendErgebnisParameter);
+            val result = unitUnderTest.sendErgebnisse("false", wahlID, wahlbezirkID, waehlverzeichnisNummer, meldungsart, hauptwahlbezirk);
 
             Assertions.assertThat(result).isEqualTo(ResponseEntity.status(HttpStatus.CONFLICT).body(mockedWlsExceptionAsDTO));
         }
@@ -140,11 +134,10 @@ class ErgebnismeldungControllerTest {
             val waehlverzeichnisNummer = 1L;
             val meldungsart = MeldungsartDTO.V1;
             val hauptwahlbezirk = "hauptwahlbezirk";
-            val sendErgebnisParameter = new SendErgebnisParameter(wahlID, wahlbezirkID, waehlverzeichnisNummer, meldungsart, hauptwahlbezirk);
 
             Mockito.doThrow(new IllegalArgumentException("sth failed")).when(ergebnismeldungService).sendErgebnisse(any());
 
-            val result = unitUnderTest.sendErgebnisse("false", sendErgebnisParameter);
+            val result = unitUnderTest.sendErgebnisse("false", wahlID, wahlbezirkID, waehlverzeichnisNummer, meldungsart, hauptwahlbezirk);
 
             Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
         }

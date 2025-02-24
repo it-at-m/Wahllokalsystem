@@ -5,8 +5,8 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.WahlbezirkRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.WahlRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.MockDataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
@@ -63,7 +63,7 @@ public class WahlbezirkeServiceSecurityTest {
         }
 
         @Test
-        void accessGranted() throws Exception {
+        void should_grantAccess_when_authoritiesArePresent() throws Exception {
             initRepositoryForSearchingWahlbezirke(true);
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLBEZIRKE);
 
@@ -81,7 +81,7 @@ public class WahlbezirkeServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariationsRepoEmpty")
-        void missingAuthorityCausesFailWithAccessDeniedCaseEmptyRepo(final ArgumentsAccessor argumentsAccessor) throws Exception {
+        void should_denyAccess_when_anyAuthorityIsMissingAndRepoIsEmpty(final ArgumentsAccessor argumentsAccessor) throws Exception {
             initRepositoryForSearchingWahlbezirke(false);
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
@@ -105,7 +105,7 @@ public class WahlbezirkeServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariationsRepoHasData")
-        void missingAuthorityCausesFailWithAccessDeniedCaseRepoHasData(final ArgumentsAccessor argumentsAccessor) throws Exception {
+        void should_denyAccess_when_anyAuthorityIsMissingAndRepoHasData(final ArgumentsAccessor argumentsAccessor) throws Exception {
             initRepositoryForSearchingWahlbezirke(true);
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 

@@ -47,20 +47,31 @@ flowchart LR
 > Diese Ports werden sowohl in der IDE als auch in Docker verwendet.
 > Beachten Sie, dass somit nur eine Instanz eines Services gleichzeitig laufen kann.
 
-| Service                                                                  | Port |
-|--------------------------------------------------------------------------|------|
-| [Admin](/services/admin-service/)                                        | 8209 |
-| [Auth](/services/auth-service/)                                          | 8100 |
-| [Basisdaten](/services/basisdaten-service/)                              | 8205 |
-| [Briefwahl](/services/briefwahl-service/)                                | 8202 |
-| Broadcast                                                                | 8200 |
-| [EAI](/services/eai-service/)                                            | 8300 |
-| [Ergebnismeldung](/services/ergebnismeldung-service/)                    | 8208 |
-| [Infomanagement](/services/infomanagement-service/)                      | 8201 |
-| [Monitoring](/services/monitoring-service/)                              | 8206 |
-| [Vorfälle und Vorkommnisse](/services/vorfaelleundvorkommnisse-service/) | 8204 |
-| [Wahlvorbereitung](/services/wahlvorbereitungs-service/)                 | 8203 |
-| [Wahlvorstand](/services/wahlvorstand-service/)                          | 8207 |
+| Service                                                                                   | Port |
+|-------------------------------------------------------------------------------------------|------|
+| [Admin](/services/backend-services/admin-service/)                                        | 8209 |
+| [Auth](/services/backend-services/auth-service/)                                          | 8100 |
+| [Basisdaten](/services/backend-services/basisdaten-service/)                              | 8205 |
+| [Briefwahl](/services/backend-services/briefwahl-service/)                                | 8202 |
+| Broadcast                                                                                 | 8200 |
+| [EAI](/services/backend-services/eai-service/)                                            | 8300 |
+| [Ergebnismeldung](/services/backend-services/ergebnismeldung-service/)                    | 8208 |
+| [Infomanagement](/services/backend-services/infomanagement-service/)                      | 8201 |
+| [Monitoring](/services/backend-services/monitoring-service/)                              | 8206 |
+| [Vorfälle und Vorkommnisse](/services/backend-services/vorfaelleundvorkommnisse-service/) | 8204 |
+| [Wahlvorbereitung](/services/backend-services/wahlvorbereitungs-service/)                 | 8203 |
+| [Wahlvorstand](/services/backend-services/wahlvorstand-service/)                          | 8207 |
+
+## Profile
+
+| Profilname             | Beschreibung                                                                                                                             |
+|------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
+| db-h2                  | Als Datenbank wird eine embedded H2 im Service verwendet.                                                                                |
+| db-oracle              | Als Datenbank wird eine Oracle Datenbank verwendet. Im Standard wird die DB-Datenbank aus dem Stack (Docker) verwendet.                  |
+| db-dummydata           | Es werden Flyway-Files mit Dummydaten für die Datenbank mit verwendet.                                                                   |
+| no-security            | Die Prüfungen der Authentifizierung und Authorisierung werden deaktiviert.                                                               |
+| dummy.nobezirkid.check | Deaktiviert die Prüfung, dass Anfragen für einen bestimmten Wahlbezirk (wahlbezirkID), nur von dem User des Wahlbezirkes erfolgen dürfen |
+
 
 ## Benutzer
 
@@ -74,6 +85,16 @@ flowchart LR
 ## Datenbank
 
 Der Zugriff auf die Oracle-Datenbank über die IDE ist gemäß [dieser Anleitung](/technik/guides/db-access) einzurichten.
+
+## Runconfigurations
+
+Für die Spring-Boot Microservices werden für IntelliJ Runconfigurations zur Verfügung gestellt. Diese sind
+gruppiert nach der Art der Datenbank und ob die Security aktiviert ist oder nicht.
+
+Eine Übersicht über die Profile gibt es [hier](#profile).
+
+> [!TIP]
+> Wenn es Updates an den Runconfigurations gab, die gefetcht wurden, ist es notwendig IntelliJ neu zu starten.
 
 ## Starten des Frontends
 

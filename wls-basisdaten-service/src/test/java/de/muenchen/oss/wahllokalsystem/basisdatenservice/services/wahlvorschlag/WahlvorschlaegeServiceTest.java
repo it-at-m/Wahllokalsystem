@@ -40,7 +40,7 @@ class WahlvorschlaegeServiceTest {
     class GetWahlvorschlaege {
 
         @Test
-        void missingDataIsLoadedAndStored() {
+        void should_loadAndStoreData_when_serviceIsCalled() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val wahlUndBezirkID = new BezirkUndWahlID(wahlID, wahlbezirkID);
@@ -79,7 +79,7 @@ class WahlvorschlaegeServiceTest {
         }
 
         @Test
-        void existingDataIsLoaded() {
+        void should_loadExistingData_when_serviceIsCalled() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val wahlUndBezirkID = new BezirkUndWahlID(wahlID, wahlbezirkID);
@@ -97,7 +97,7 @@ class WahlvorschlaegeServiceTest {
         }
 
         @Test
-        void validationExceptionGotThrown() {
+        void should_throwRuntimeException_when_validationFailed() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val wahlUndBezirkID = new BezirkUndWahlID(wahlID, wahlbezirkID);
@@ -110,7 +110,7 @@ class WahlvorschlaegeServiceTest {
         }
 
         @Test
-        void clientExceptionGotThrown() {
+        void should_throwRuntimeException_when_clientFailed() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val wahlUndBezirkID = new BezirkUndWahlID(wahlID, wahlbezirkID);
@@ -123,7 +123,7 @@ class WahlvorschlaegeServiceTest {
         }
 
         @Test
-        void persistingExceptionDoesntPreventFromResultObject() {
+        void should_notPreventFromResultObject_when_exceptionIsPersisted() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val wahlUndBezirkID = new BezirkUndWahlID(wahlID, wahlbezirkID);

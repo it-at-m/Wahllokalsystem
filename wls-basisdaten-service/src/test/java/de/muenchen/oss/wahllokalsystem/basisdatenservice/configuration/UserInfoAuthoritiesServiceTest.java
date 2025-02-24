@@ -56,7 +56,7 @@ class UserInfoAuthoritiesServiceTest {
     class LoadAuthorities {
 
         @Test
-        void buildAuthoritiesFromTemplateResponseWithCollection() {
+        void should_buildAuthoritiesFromTemplateResponse_when_givenCollectionOfAuthorities() {
             val jwtTokenValue = "myTokenValue";
 
             val expectedRequestHeaders = new HttpHeaders();
@@ -86,7 +86,7 @@ class UserInfoAuthoritiesServiceTest {
         }
 
         @Test
-        void buildAuthoritiesFromTemplateResponseWithArray() {
+        void should_buildAuthoritiesFromTemplateResponse_when_givenArrayAsAuthorities() {
             val jwtTokenValue = "myTokenValue";
 
             val expectedRequestHeaders = new HttpHeaders();
@@ -116,7 +116,7 @@ class UserInfoAuthoritiesServiceTest {
         }
 
         @Test
-        void buildAuthoritiesFromTemplateResponseWithUnhandledDataStructure() {
+        void should_buildAuthoritiesFromTemplateResponse_when_givenUnhandledDataStructureAsAuthorities() {
             val jwtTokenValue = "myTokenValue";
 
             val expectedRequestHeaders = new HttpHeaders();
@@ -139,7 +139,7 @@ class UserInfoAuthoritiesServiceTest {
         }
 
         @Test
-        void buildAuthoritiesFromTemplateResponseWithoutAuthoritiesClaim() {
+        void should_buildAuthoritiesFromTemplateResponse_when_withoutAuthoritiesClaim() {
             val jwtTokenValue = "myTokenValue";
 
             val expectedRequestHeaders = new HttpHeaders();
@@ -159,7 +159,7 @@ class UserInfoAuthoritiesServiceTest {
         }
 
         @Test
-        void errorWhileLoadingViaTemplate() {
+        void should_returnNoAuthorities_when_errorDuringTemplate() {
             val jwtTokenValue = "myTokenValue";
 
             val expectedRequestHeaders = new HttpHeaders();
@@ -176,7 +176,7 @@ class UserInfoAuthoritiesServiceTest {
         }
 
         @Test
-        void loadedAuthoritiesAsPlacedInCache() {
+        void should_returnListOfAuthorities_when_authoritiesAreLoadedInCache() {
             val jwtSubject = "subject";
             val jwtTokenValue = "myTokenValue";
             val jwtForCachMethodCall = Mockito.mock(Jwt.class);

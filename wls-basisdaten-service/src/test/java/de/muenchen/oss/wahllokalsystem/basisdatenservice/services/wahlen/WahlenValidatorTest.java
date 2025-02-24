@@ -28,12 +28,12 @@ class WahlenValidatorTest {
     class ValidWahlenCriteriaOrThrow {
 
         @Test
-        void noExceptionWhenCriteriaIsValid() {
+        void should_returnNoException_when_criteriaIsValid() {
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahlenCriteriaOrThrow("validWahltagID"));
         }
 
         @Test
-        void exceptionWhenCriteriaIsNull() {
+        void should_returnException_when_criteriaIsNull() {
             val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
@@ -42,7 +42,7 @@ class WahlenValidatorTest {
         }
 
         @Test
-        void exceptionWhenCriteriaIsEmpty() {
+        void should_returnException_when_criteriaIsEmpty() {
             val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
@@ -51,7 +51,7 @@ class WahlenValidatorTest {
         }
 
         @Test
-        void exceptionWhenCriteriaIsBlank() {
+        void should_returnException_when_criteriaIsBlank() {
             val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
@@ -64,14 +64,14 @@ class WahlenValidatorTest {
     class ValidWahlenWriteModelOrThrow {
 
         @Test
-        void noExceptionWhenModelIsValid() {
+        void should_returnNoException_when_modelIsValid() {
             val validModel = new WahlenWriteModel("wahltagID", List.of(createEmptyWahlModel()));
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahlenWriteModelOrThrow(validModel));
         }
 
         @Test
-        void exceptionWhenWahltagIDIsNull() {
+        void should_returnException_when_wahltagIDIsNull() {
             val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
@@ -82,7 +82,7 @@ class WahlenValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahltagIDIsEmpty() {
+        void should_returnException_when_wahltagIDIsEmpty() {
             val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
@@ -93,7 +93,7 @@ class WahlenValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahltagIDIsBlank() {
+        void should_returnException_when_wahltagIDIsBlank() {
             val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
@@ -104,7 +104,7 @@ class WahlenValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlenIsNull() {
+        void should_returnException_when_wahlenIsNull() {
             val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
@@ -115,7 +115,7 @@ class WahlenValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlenIsEmpty() {
+        void should_returnException_when_wahlenIsEmpty() {
             val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);

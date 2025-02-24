@@ -2,10 +2,10 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.ungueltigewah
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ungueltigewahlscheine.UngueltigeWahlscheine;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ungueltigewahlscheine.UngueltigeWahlscheineRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahlbezirkArt;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagIdUndWahlbezirksart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ungueltigewahlscheine.UngueltigeWahlscheine;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.ungueltigewahlscheine.UngueltigeWahlscheineRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
@@ -45,7 +45,7 @@ public class UngueltigeWahlscheineServiceSecurityTest {
     class GetUngueltigeWahlscheine {
 
         @Test
-        void accessGranted() {
+        void should_grantAccess_when_authoritiesArePresent() {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_UNGUELTIGEWAHLSCHEINE);
             val ungueltigeWahlscheineToGet = new UngueltigeWahlscheine(new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB), "data".getBytes());
             ungueltigeWahlscheineRepository.save(ungueltigeWahlscheineToGet);
@@ -60,7 +60,7 @@ public class UngueltigeWahlscheineServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
+        void should_denyAccess_when_anyAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_UNGUELTIGEWAHLSCHEINE);
             val ungueltigeWahlscheineToGet = new UngueltigeWahlscheine(new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB), "data".getBytes());
             ungueltigeWahlscheineRepository.save(ungueltigeWahlscheineToGet);
@@ -80,7 +80,7 @@ public class UngueltigeWahlscheineServiceSecurityTest {
     class SetUngueltigeWahlscheine {
 
         @Test
-        void accessGranted() {
+        void should_grantAccess_when_authoritiesArePresent() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_UNGUELTIGEWAHLSCHEINE);
             val writeModel = new UngueltigeWahlscheineWriteModel(new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.BWB),
                     "data".getBytes());
@@ -88,7 +88,7 @@ public class UngueltigeWahlscheineServiceSecurityTest {
         }
 
         @Test
-        void accessDeniedWhenServiceAuthorityIsMissing() {
+        void should_denyAccess_when_serviceAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_UNGUELTIGEWAHLSCHEINE);
             val writeModel = new UngueltigeWahlscheineWriteModel(new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.BWB),
                     "data".getBytes());
@@ -96,7 +96,7 @@ public class UngueltigeWahlscheineServiceSecurityTest {
         }
 
         @Test
-        void technischeWlsExceptionWhenRepoAuthorityIsMissing() {
+        void should_throwTechnischeWlsException_when_repoAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.SERVICE_POST_UNGUELTIGEWAHLSCHEINE);
             val writeModel = new UngueltigeWahlscheineWriteModel(new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.BWB),
                     "data".getBytes());

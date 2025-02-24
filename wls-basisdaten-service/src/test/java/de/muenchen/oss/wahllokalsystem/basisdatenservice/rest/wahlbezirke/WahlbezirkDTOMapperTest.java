@@ -16,12 +16,12 @@ class WahlbezirkDTOMapperTest {
     class FromListOfWahlbezirkModelToListOfWahlbezirkDTO {
 
         @Test
-        void nullInNullOut() {
+        void should_returnNull_when_givenNull() {
             Assertions.assertThat(unitUnderTest.fromListOfWahlbezirkModelToListOfWahlbezirkDTO(null)).isNull();
         }
 
         @Test
-        void isMappedToDTO() {
+        void should_returnWahlbezirkDTOList_when_givenWahlbezirkModelList() {
             val modelsInput = MockDataFactory.createListOfWahlbezirkModel("", LocalDate.now());
             val dtosExpected = MockDataFactory.createWlsWahlbezirkDTOs("", LocalDate.now());
 

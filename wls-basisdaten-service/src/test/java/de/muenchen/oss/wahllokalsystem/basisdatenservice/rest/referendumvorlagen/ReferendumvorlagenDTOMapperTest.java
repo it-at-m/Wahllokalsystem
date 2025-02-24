@@ -19,7 +19,7 @@ class ReferendumvorlagenDTOMapperTest {
     class ToDTO {
 
         @Test
-        void isMapped() {
+        void should_returnReferendumvorlagenDTO_when_givenReferendumvorlagenModel() {
             val stimmzettelgebietID = "stimmzettelgebietID";
 
             val modelToMap = new ReferendumvorlagenModel(stimmzettelgebietID,
@@ -48,7 +48,7 @@ class ReferendumvorlagenDTOMapperTest {
     class ToModel {
 
         @Test
-        void isMapped() {
+        void should_returnReferendumvorlagenReferenceModel_when_givenIDs() {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
 

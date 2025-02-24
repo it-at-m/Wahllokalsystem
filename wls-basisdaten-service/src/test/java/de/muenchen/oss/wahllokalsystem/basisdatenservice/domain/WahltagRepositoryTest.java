@@ -3,16 +3,16 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
 
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.Wahltag;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.WahltagRepository;
 import java.time.LocalDate;
 import java.util.Arrays;
-import lombok.val;
-import org.assertj.core.api.Assertions;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import java.util.Comparator;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ class WahltagRepositoryTest {
      * Tests if searched returned Wahltags are right sorted
      */
     @Test
-    void findAllByOrderByWahltagAsc() {
+    void should_returnWahltageList_when_findAllByOrderByWahltagAscIsCalled() {
         List<Wahltag> wahltageToSave = createWahltagList();
         repository.saveAll(wahltageToSave);
         List<Wahltag> foundWahltage = repository.findAllByOrderByWahltagAsc();

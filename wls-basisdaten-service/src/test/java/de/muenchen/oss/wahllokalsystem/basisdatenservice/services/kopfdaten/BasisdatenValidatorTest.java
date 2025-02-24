@@ -35,13 +35,13 @@ class BasisdatenValidatorTest {
         final FachlicheWlsException mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
         @Test
-        void noExceptionWhenBasisdatenContentIsValid() {
+        void should_notThrowException_when_basisdatenContentIsValid() {
             val valideBasisdaten = MockDataFactory.createBasisdatenModel(LocalDate.now());
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validBasisdatenContentOrThrow(valideBasisdaten));
         }
 
         @Test
-        void exceptionWhenNotEveryPropertyContaininsData() {
+        void should_throwException_when_notEveryPropertyContainsData() {
             val valideBasisdaten = MockDataFactory.createBasisdatenModel(LocalDate.now());
             val invalideBD1_0 = BasisdatenModel.builder()
                     .basisstrukturdaten(null)
@@ -106,7 +106,7 @@ class BasisdatenValidatorTest {
         }
 
         @Test
-        void exceptioIfNotforEveryBasistrutkturdatenCorespondingAtLeastOneWahlOneWahlbezirkAndOneStimmzettelgebiet() {
+        void should_throwException_when_notForEveryBasisstrukturdatenCorrespondingAtLeastOneWahlOneWahlbezirkAndOneStimmzettelgebiet() {
             val valideBasisdaten = MockDataFactory.createBasisdatenModel(LocalDate.now());
             Set<BasisstrukturdatenModel> moreBasisstrukturdaten = new ImmutableSet.Builder<BasisstrukturdatenModel>()
                     .add(BasisstrukturdatenModel.builder().wahlID("wahlID999").build())
@@ -127,7 +127,7 @@ class BasisdatenValidatorTest {
         }
 
         @Test
-        void exceptioIfNotforEveryWahlCorespondingAtLeastOneBasistrutkturdatenAndOneWahlbezirk() {
+        void should_throwException_when_notForEveryWahlCorrespondingAtLeastOneBasisstrukturdatenAndOneWahlbezirk() {
             val valideBasisdaten = MockDataFactory.createBasisdatenModel(LocalDate.now());
 
             Set<WahlModel> moreWahlen = new ImmutableSet.Builder<WahlModel>()
@@ -148,7 +148,7 @@ class BasisdatenValidatorTest {
         }
 
         @Test
-        void exceptioIfNotforEveryWahlbezirkCorespondingAtLeastOneBasistrutkturdatenAndOneWahl() {
+        void should_throwException_when_notForEveryWahlbezirkCorrespondingAtLeastOneBasisstrukturdatenAndOneWahl() {
             val valideBasisdaten = MockDataFactory.createBasisdatenModel(LocalDate.now());
 
             Set<WahlbezirkModel> moreWahlbezirke = new ImmutableSet.Builder<WahlbezirkModel>()
@@ -169,7 +169,7 @@ class BasisdatenValidatorTest {
         }
 
         @Test
-        void exceptioIfNotforEveryStimmzettelgebietCorespondingAtLeastOneBasistrutkturdaten() {
+        void should_throwException_when_notForEveryStimmzettelgebietCorrespondingAtLeastOneBasisstrukturdaten() {
             val valideBasisdaten = MockDataFactory.createBasisdatenModel(LocalDate.now());
 
             Set<StimmzettelgebietModel> moreStimmzettelGebiete = new ImmutableSet.Builder<StimmzettelgebietModel>()

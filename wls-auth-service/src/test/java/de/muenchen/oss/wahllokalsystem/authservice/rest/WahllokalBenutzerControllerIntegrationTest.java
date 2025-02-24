@@ -14,9 +14,11 @@ import de.muenchen.oss.wahllokalsystem.authservice.domain.User;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.UserRepository;
 import de.muenchen.oss.wahllokalsystem.authservice.service.CryptoService;
 import jakarta.persistence.EntityManager;
+
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -33,10 +35,10 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 @SpringBootTest(
         classes = MicroServiceApplication.class,
-        properties = { "service.config.user.authority.wahlvorstand=" + PROP_USER_AUTHORITY_WAHLVORSTAND }
+        properties = {"service.config.user.authority.wahlvorstand=" + PROP_USER_AUTHORITY_WAHLVORSTAND}
 )
 @AutoConfigureMockMvc
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, TestConstants.SPRING_NO_SECURITY_PROFILE, Profiles.DUMMY_CLIENTS })
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE, TestConstants.SPRING_NO_SECURITY_PROFILE, Profiles.DUMMY_CLIENTS})
 class WahllokalBenutzerControllerIntegrationTest {
 
     public static final String PROP_USER_AUTHORITY_WAHLVORSTAND = "WLS_USER_AUTHORITY_WAHLVORSTAND";
@@ -102,7 +104,7 @@ class WahllokalBenutzerControllerIntegrationTest {
         }
 
         @Test
-        void should_deleteOldUsersWithWahltagIDAndPersistNewUsers_when_UsersAreGiven() throws Exception {
+        void should_deleteOldUsersWithWahltagIDAndPersistNewUsers_when_usersAreGiven() throws Exception {
             val wahltagID = "wahltagID";
 
             val oldUser1 = new User();

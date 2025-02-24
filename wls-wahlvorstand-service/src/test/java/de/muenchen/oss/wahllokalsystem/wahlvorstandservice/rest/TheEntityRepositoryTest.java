@@ -19,14 +19,14 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(
-        classes = { MicroServiceApplication.class },
+        classes = {MicroServiceApplication.class},
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
                 "spring.datasource.url=jdbc:h2:mem:wls;DB_CLOSE_ON_EXIT=FALSE",
                 "refarch.gracefulshutdown.pre-wait-seconds=0"
         }
 )
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE})
 class TheEntityRepositoryTest {
 
     @Autowired
@@ -34,7 +34,7 @@ class TheEntityRepositoryTest {
 
     @Test
     @Transactional(propagation = Propagation.REQUIRED, noRollbackFor = Exception.class)
-    void testSave() {
+    void should_save_when_called() {
 
         // Implement your logic here by replacing and/or extending the code
 

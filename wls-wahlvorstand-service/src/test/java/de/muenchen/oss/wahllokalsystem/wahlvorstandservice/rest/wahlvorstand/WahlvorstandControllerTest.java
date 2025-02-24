@@ -2,9 +2,11 @@ package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand;
 
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlvorstandService;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.utils.TestDataFactory;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -66,7 +68,7 @@ public class WahlvorstandControllerTest {
         }
 
         @Test
-        void should_returnFallbackWahlvorstandDTO_when_WahlvorstandDoesNotExist() {
+        void should_returnFallbackWahlvorstandDTO_when_wahlvorstandDoesNotExist() {
             val wahlbezirkID = "wahlbezirkID";
             val forceUpdate = false;
             val mockedFallbackWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.fallback(wahlbezirkID);

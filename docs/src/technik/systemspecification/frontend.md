@@ -2,7 +2,16 @@
 
 ## Struktur
 
-### Ordner
+Das Frontend besteht für die Entwicklung aus 3 Komponenten, welche sich jeweils in einem Ordner auf der Rootebene
+wiederspiegeln.
+
+| Komponente | Beschreibung                                                |
+|------------|-------------------------------------------------------------|
+| src        | Der Code der Anwendung mit allen Komponenten und Funktionen |
+| tests      | Tests zum Anwendungscode                                    |
+| stories    | Stories für StorybookJS zu den Komponenten der Anwendung    |
+
+### Anwendungscode
 
 Das Projekt besteht im Wesentlichen aus folgenden Hauptordnern:
 
@@ -14,8 +23,7 @@ Das Projekt besteht im Wesentlichen aus folgenden Hauptordnern:
 | resources/openapi    | openAPI Beschreibung die für die Clients verwendet werden                 |
 | store                | Stores des Anwendung                                                      |
 | types                | Eigenen Datentype der Anwendung. (Die Datentype der Clients sind in `api` |                                                    
-| views                | Views der Anwendung                                                       |                                                    
-| **/\_\_snapshots\_\_ | Snapshots von Komponenten für Tests                                       |
+| views                | Views der Anwendung                                                       |
 
 je Ordner kann, sofern es meherer Elemente gibt die zu unterschiedlichen fachlichen Domainen gehörten Unterordner geben.
 
@@ -29,8 +37,19 @@ je Ordner kann, sofern es meherer Elemente gibt die zu unterschiedlichen fachlic
 
 `components/wahlvorstand` ... Enthält Komponenten die im Kontext vom Wahlvorstand zum Einsatz kommen
 
+### Tests und Stories
 
-### Komponentenkommunikation
+Die Tests und Stories bilden die gleiche Ordnerstruktur ab wie der jeweilige Testgegestand bzw. die Komponente der Stories.
+
+Für die Komponte im Ordner `src/componentes/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.vue` liegen die Tests
+in `tests/componentes/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.spec.ts` und die Stories in
+`stories/componentes/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.stories.ts`.
+
+Bei den Tests gibt es zusätzlich parallel zu den Testfiles einen Ordner `__snapshots__`. Dieser enthält die Referenzen
+für die Darstellung für [Komponententest](#komponententests).
+
+
+## Komponentenkommunikation
 
 ````mermaid
 
@@ -60,7 +79,7 @@ BaseComponentB -- Event --> domainComponentB
 BaseComponentC -- Event --> BaseComponentB
 ````
 
-### Kommunikation mit dem Backend
+## Kommunikation mit dem Backend
 
 ```mermaid
 flowchart TD

@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen;
 
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlenClient;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

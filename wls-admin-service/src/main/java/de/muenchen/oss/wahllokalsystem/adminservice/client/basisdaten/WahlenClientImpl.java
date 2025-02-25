@@ -3,9 +3,8 @@ package de.muenchen.oss.wahllokalsystem.adminservice.client.basisdaten;
 import de.muenchen.oss.wahllokalsystem.adminservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.client.WahlenControllerApi;
 import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag.WahlenClient;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlenClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen.WahlModel;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen.WahlenClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.List;
@@ -25,6 +24,9 @@ public class WahlenClientImpl implements WahlenClient {
 
     private final WahlenControllerApi wahlenControllerApi;
 
+    private final WahlenClientMapper wahlenClientMapper;
+
+    @Override
     public void resetWahlen() {
         log.debug("#resetWahlen");
         try {

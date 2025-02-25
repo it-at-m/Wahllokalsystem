@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.adminservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.client.WahlenControllerApi;
 import de.muenchen.oss.wahllokalsystem.adminservice.eai.infomanagement.client.KonfigurierterWahltagControllerApi;
 import de.muenchen.oss.wahllokalsystem.adminservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.utils.Authorities;
@@ -43,6 +44,9 @@ class KonfigurierteWahltageControllerIntegrationTest {
 
     @MockBean
     KonfigurierterWahltagControllerApi konfigurierterWahltagControllerApi;
+
+    @MockBean
+    WahlenControllerApi wahlenControllerApi;
 
     @BeforeEach
     void setup() {
@@ -99,6 +103,7 @@ class KonfigurierteWahltageControllerIntegrationTest {
                     .content(objectMapper.writeValueAsString(requestBody));
 
             api.perform(request).andExpect(status().isOk());
+            Mockito.verify(wahlenControllerApi).resetWahlen();
         }
     }
 }

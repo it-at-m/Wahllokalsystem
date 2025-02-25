@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from "@storybook/vue3";
 
 import { createPinia, setActivePinia } from "pinia";
 
-import TheWahlvorstandLastSendDiv from "@/components/wahlvorstand/TheWahlvorstandLastSendDiv.vue";
-import pinia from "@/plugins/pinia";
-import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
+import TheWahlvorstandLastSendDiv from "../../../src/components/wahlvorstand/TheWahlvorstandLastSendDiv.vue";
+import pinia from "../../../src/plugins/pinia";
+import { useWahlvorstandStore } from "../../../src/stores/wahlvorstandStore";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta = {

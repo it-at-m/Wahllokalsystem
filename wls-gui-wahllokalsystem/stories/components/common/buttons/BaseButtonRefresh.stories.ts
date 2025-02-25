@@ -1,21 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
 
-import BaseButtonSave from "./BaseButtonSave.vue";
+import BaseButtonRefresh from "../../../../src/components/common/buttons/BaseButtonRefresh.vue";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta = {
-  component: BaseButtonSave,
+  component: BaseButtonRefresh,
   args: {},
-} satisfies Meta<typeof BaseButtonSave>;
+} satisfies Meta<typeof BaseButtonRefresh>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {},
-};
-
-export const Disabled: Story = {
-  args: {
-    disabled: true,
-  },
 };

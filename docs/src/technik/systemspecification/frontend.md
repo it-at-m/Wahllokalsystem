@@ -19,7 +19,7 @@ Das Projekt besteht im Wesentlichen aus folgenden Hauptordnern:
 |----------------------|---------------------------------------------------------------------------|
 | api                  | (generierte) Clients für den Zugriff auf die Backend-Services             |
 | components           | Komponenten die zur Verfügung stehen.                                     |
-| composables          | Wiederverwenbarer Code                                                    |
+| composables          | Wiederverwendbarer Code                                                   |
 | resources/openapi    | openAPI Beschreibung die für die Clients verwendet werden                 |
 | store                | Stores des Anwendung                                                      |
 | types                | Eigenen Datentype der Anwendung. (Die Datentype der Clients sind in `api` |                                                    

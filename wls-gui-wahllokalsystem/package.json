@@ -11,6 +11,7 @@
     "test": "vitest run",
     "build": "vue-tsc --build --force && vite build",
     "preview": "vite preview",
+    "build-preview": "npm run build && npm run preview",
     "lint": "prettier . --check && eslint . && vue-tsc --noEmit",
     "fix": "prettier . --write && eslint . --fix",
     "gen:broadcast-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.2.0.json -g typescript-axios -o src/api/wls-clients/generated-broadcast-api",
@@ -20,6 +21,7 @@
   },
   "dependencies": {
     "@vueuse/core": "12.4.0",
+    "localforage": "1.10.0",
     "pinia": "2.3.0",
     "roboto-fontface": "0.10.0",
     "vue": "3.5.13",
@@ -55,9 +57,13 @@
     "typescript": "5.5.4",
     "unplugin-fonts": "1.1.1",
     "vite": "5.4.11",
+    "vite-plugin-pwa": "0.21.1",
     "vite-plugin-vuetify": "2.0.4",
     "vitest": "2.1.8",
-    "vue-tsc": "2.2.0"
+    "vue-tsc": "2.2.0",
+    "workbox-core": "7.3.0",
+    "workbox-precaching": "7.3.0",
+    "workbox-routing": "7.3.0"
   },
   "eslintConfig": {
     "extends": [

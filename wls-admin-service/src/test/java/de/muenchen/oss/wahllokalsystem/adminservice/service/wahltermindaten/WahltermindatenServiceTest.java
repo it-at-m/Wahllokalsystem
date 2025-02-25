@@ -94,4 +94,36 @@ class WahltermindatenServiceTest {
             Mockito.verify(wahltermindatenClient).deleteWahltermindaten(wahltagID);
         }
     }
+
+    @Nested
+    class DeleteWahltermindaten {
+
+        @Test
+        void should_deleteWahltermindaten_when_allClientCallsAreSuccesful() {
+            val wahltagID = "wahltagID";
+
+            Mockito.doNothing().when(wahltermindatenClient).deleteWahltermindaten(wahltagID);
+            Mockito.doNothing().when(konfigurierterWahltagClient).deleteKonfigurierterWahltag(wahltagID);
+
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.deleteWahltermindaten(wahltagID));
+        }
+
+        @Test
+        void should_throwRuntimeException_when_wahltermindatenClientFails() {
+            val wahltagID = "wahltagID";
+
+            Mockito.doThrow(new RuntimeException()).when(wahltermindatenClient).deleteWahltermindaten(wahltagID);
+
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.deleteWahltermindaten(wahltagID)).isInstanceOf(RuntimeException.class);
+        }
+
+        @Test
+        void should_throwRuntimeException_when_konfigurierterWahltagClientFails() {
+            val wahltagID = "wahltagID";
+
+            Mockito.doThrow(new RuntimeException()).when(konfigurierterWahltagClient).deleteKonfigurierterWahltag(wahltagID);
+
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.deleteWahltermindaten(wahltagID)).isInstanceOf(RuntimeException.class);
+        }
+    }
 }

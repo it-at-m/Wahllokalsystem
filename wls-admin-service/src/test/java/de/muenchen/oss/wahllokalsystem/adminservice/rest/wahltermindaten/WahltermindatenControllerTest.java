@@ -31,4 +31,17 @@ class WahltermindatenControllerTest {
             Mockito.verify(wahltermindatenService).loadWahltermindaten(wahltagID);
         }
     }
+
+    @Nested
+    class DeleteWahltermindaten {
+
+        @Test
+        void should_callServiceWithWahltagID_when_calledWithWahltagID() {
+            val wahltagID = "wahltagID";
+
+            unitUnderTest.deleteWahltermindaten(wahltagID);
+
+            Mockito.verify(wahltermindatenService).deleteWahltermindaten(wahltagID);
+        }
+    }
 }

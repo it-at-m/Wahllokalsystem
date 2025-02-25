@@ -19,8 +19,7 @@ public class MethodRulesTest {
         @Test
         void should_throwError_when_ruleNotMatching() {
             Assertions.assertThatThrownBy(() -> ruleUnderTest.check(new ClassFileImporter()
-                    .importClasses(NamingConventionExamplesTest.ExampleTestNamesViolatingNamingConventionRule.class)
-            )).isInstanceOf(AssertionError.class);
+                    .importClasses(NamingConventionExamplesTest.ExampleTestNamesViolatingNamingConventionRule.class))).isInstanceOf(AssertionError.class);
         }
 
         @Test

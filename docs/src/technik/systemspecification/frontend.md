@@ -48,6 +48,12 @@ in `tests/componentes/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.spe
 Bei den Tests gibt es zusätzlich parallel zu den Testfiles einen Ordner `__snapshots__`. Dieser enthält die Referenzen
 für die Darstellung für [Komponententest](#komponententests).
 
+## Komponenten
+
+Das Frontend wird aus diversen [Single-File-Components](https://vuejs.org/guide/scaling-up/sfc.html) zusammengesetzt
+in Typescript zusammengesetzt. Bei der Implementierung verwenden die
+[Composition-API](https://vuejs.org/guide/introduction.html#composition-api).
+
 
 ## Komponentenkommunikation
 

@@ -2,6 +2,10 @@ package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClass
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 public class NamingConventionExamplesTest {
 
@@ -36,15 +40,18 @@ public class NamingConventionExamplesTest {
         void shouldTest123_when456() {
         }
 
-        @Test
-        void should_test_123_when_456_testing() {
+        @ParameterizedTest
+        @EmptySource
+        void should_test_123_when_456_testing(String input) {
         }
 
-        @Test
-        void should_validCamelCase_When_456() {
+        @ParameterizedTest
+        @NullSource
+        void should_validCamelCase_When_456(String input) {
         }
 
-        @Test
+        @ParameterizedTest
+        @ValueSource(ints = { 1, 3, 5 })
         void should_123_when_456() {
         }
     }
@@ -68,16 +75,29 @@ public class NamingConventionExamplesTest {
         void should_longTestNameWrittenInCamelCase_when_nameIsStillGoingOn() {
         }
 
-        @Test
-        void should_beValid_when_havingNumbers123InName() {
+        @ParameterizedTest
+        @EmptySource
+        void should_beValid_when_havingNumbers123InName(String input) {
         }
 
-        @Test
-        void should_beValid_when_havingMANYCAPITALLETTERS() {
+        @ParameterizedTest
+        @NullSource
+        void should_beValid_when_havingMANYCAPITALLETTERS(String input) {
         }
 
-        @Test
+        @ParameterizedTest
+        @ValueSource(ints = { 1, 3, 5 })
         void should_beValid_when_endingWithNumbers123() {
+        }
+    }
+
+    @Nested
+    public class ExampleTestNamesWithoutAnntation {
+
+        void should_abc_when_def() {
+        }
+
+        void shouldTest123() {
         }
     }
 }

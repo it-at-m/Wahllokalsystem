@@ -24,6 +24,13 @@ public class MethodRulesTest {
         }
 
         @Test
+        void should_throwError_when_noTestsWithAnnotationFound() {
+            Assertions.assertThatThrownBy(() -> ruleUnderTest.check(new ClassFileImporter()
+                    .importClasses(NamingConventionExamplesTest.ExampleTestNamesWithoutAnntation.class)))
+                    .isInstanceOf(AssertionError.class);
+        }
+
+        @Test
         void should_throwNoError_when_ruleMatching() {
             Assertions.assertThatCode(() -> ruleUnderTest.check(new ClassFileImporter()
                     .importClasses(NamingConventionExamplesTest.ExampleTestNamesFollowingNamingConventionRule.class)))

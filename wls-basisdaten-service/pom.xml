@@ -79,18 +79,6 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!-- wls-common -->
-        <dependency>
-            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
-            <artifactId>security</artifactId>
-            <version>${wls.common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
-            <artifactId>exception</artifactId>
-            <version>1.1.0</version>
-        </dependency>
-
         <!-- Caching -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -169,6 +157,18 @@
             <artifactId>hibernate-jpamodelgen</artifactId>
         </dependency>
 
+        <!-- wls-common -->
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>security</artifactId>
+            <version>${wls.common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>exception</artifactId>
+            <version>${wls.common.version}</version>
+        </dependency>
+
         <!-- Other -->
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
@@ -183,13 +183,6 @@
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
             <version>0.2.6</version>
-        </dependency>
-
-        <!-- wls-common -->
-        <dependency>
-            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
-            <artifactId>security</artifactId>
-            <version>${wls.common.version}</version>
         </dependency>
 
         <!-- Validation -->

@@ -7,6 +7,7 @@ import com.tngtech.archunit.lang.syntax.elements.MethodsShouldConjunction;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.condition.RequestMappingMethodParameterAnnotationCondition;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,4 +27,7 @@ public class MethodRules {
 
     public static final MethodsShouldConjunction RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED = methods()
             .that().areAnnotatedWith(BeforeEach.class).should().haveNameMatching("setup");
+
+    public static final MethodsShouldConjunction RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED = methods()
+            .that().areAnnotatedWith(AfterEach.class).should().haveNameMatching("teardown");
 }

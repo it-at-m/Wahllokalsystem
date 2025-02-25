@@ -6,6 +6,8 @@ bitte den [StyleGuide](https://vuejs.org/style-guide/) beachten.
 - Definitionen von Properties, Events und lokalen Variablen in camelCase
 - Element-Attribute in Kebab-Case
 
+Die Benennung erfolgt grundsätzlich auf Englisch mit Aufnahme von Fachbegriffen welche auf Deutsch verwendet werden.
+
 ## Views
 
 `<Domain>[<Funktion>]View.vue`

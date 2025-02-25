@@ -23,4 +23,11 @@ public interface KonfigurierterWahltagClient {
      *             if there were trouble during communication
      */
     List<KonfigurierterWahltagModel> getKonfigurierteWahltage() throws WlsException;
+
+    /**
+     * @param wahltagID filter for konfigurierten Wahltag
+     * @throws de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException when problem
+     *             on retrieving the information occurred
+     */
+    void deleteKonfigurierterWahltag(String wahltagID);
 }

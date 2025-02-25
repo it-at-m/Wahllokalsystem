@@ -1,12 +1,18 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahltageClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +20,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class WahltermindatenService {
+
+    private static final Logger SYSLOGGER = LoggerFactory.getLogger("ADMIN_SERVICE_SIEM_LOGGER");
 
     private final ExceptionFactory exceptionFactory;
 
@@ -67,6 +75,58 @@ public class WahltermindatenService {
             wahltermindatenClient.deleteWahltermindaten(wahltagID);
             // "Rollback..." <--|
             throw e;
+        }
+    }
+
+    @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_DeleteWahltermindaten')")
+    public void deleteWahltermindaten(final String wahltagID) {
+        wahltermindatenValidator.validWahltagIDParamOrThrow(wahltagID);
+
+        List<RuntimeException> occuredExceptions = new ArrayList<>();
+
+        try {
+            wahltermindatenClient.deleteWahltermindaten(wahltagID);
+        } catch (RuntimeException e) {
+            occuredExceptions.add(e);
+        }
+
+        try {
+            konfigurierterWahltagClient.deleteKonfigurierterWahltag(wahltagID);
+        } catch (RuntimeException e) {
+            occuredExceptions.add(e);
+        }
+
+        if (occuredExceptions.isEmpty()) {
+            logAdminCustom("0", "message=Wahltermindaten zu Wahltag-ID " + wahltagID + " gelöscht|");
+        } else {
+            logAdminCustom("1", "message=Es wurde versucht die Wahltermindaten zu Wahltag-ID " + wahltagID + " zu löschen|");
+            RuntimeException reducedException = occuredExceptions.stream()
+                    .reduce((e, e2) -> {
+                        e2.addSuppressed(e);
+                        return e;
+                    })
+                    .get();
+            log.error("#deleteWahltermindaten exception: ", reducedException);
+            throw reducedException;
+        }
+    }
+
+    /**
+     * Fachliches Logging mit SIEM:
+     * <p>
+     * Write WAHLTERMINDATEN_LOESCHEN to SysLog with
+     *
+     * @param result result text
+     * @param message message text
+     */
+    private void logAdminCustom(String result, String message) {
+        try {
+            MDC.put("eid", "WAHLTERMINDATEN_LOESCHEN");
+            MDC.put("result", result);
+            SYSLOGGER.info(message);
+        } finally {
+            MDC.remove("eid");
+            MDC.remove("result");
         }
     }
 }

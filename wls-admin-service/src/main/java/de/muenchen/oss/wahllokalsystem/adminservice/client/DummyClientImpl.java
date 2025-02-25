@@ -1,6 +1,12 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.client;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.configuration.Profiles;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahltagModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahltageClient;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen.FarbeModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen.WahlModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen.WahlartModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen.WahlenClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag.WahlenClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.AWerteClient;
@@ -8,9 +14,8 @@ import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.Konf
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahlbezirkModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahlbezirkeClient;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahltagModel;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahltageClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahltermindatenClient;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +35,11 @@ public class DummyClientImpl implements AWerteClient, KonfigurierterWahltagClien
     @Override
     public void postKonfigurierterWahltag(KonfigurierterWahltagModel konfigurierterWahltag) {
         log.info("dummy client postKonfigurierterWahltag({}) called instead of infomanagement-service", konfigurierterWahltag);
+    }
+
+    @Override
+    public void deleteKonfigurierterWahltag(String wahltagID) {
+        log.info("dummy client deleteKonfigurierterWahltag({}) called instead of infomanagement-service", wahltagID);
     }
 
     @Override
@@ -72,5 +82,25 @@ public class DummyClientImpl implements AWerteClient, KonfigurierterWahltagClien
     @Override
     public void resetWahlen() {
         log.info("dummy client resetWahlen() called instead of basisdaten-service");
+    }
+
+    @Override
+    public List<WahlModel> getWahlen(String wahltagID) throws WlsException {
+        log.info("dummy client getWahlen() called instead of basisdaten-service");
+        return List.of(
+                new WahlModel(wahltagID, "name" + "wahl1", 1L,
+                        1L, LocalDate.now().plusMonths(1),
+                        WahlartModel.BAW, new FarbeModel(1, 1, 1)),
+                new WahlModel(wahltagID, "name" + "wahl2", 2L,
+                        2L, LocalDate.now().plusMonths(2),
+                        WahlartModel.LTW, new FarbeModel(2, 2, 2)),
+                new WahlModel(wahltagID, "name" + "wahl3", 3L,
+                        3L, LocalDate.now().plusMonths(3),
+                        WahlartModel.LTW, new FarbeModel(3, 3, 3)));
+    }
+
+    @Override
+    public void postWahlen(String wahltagID, List<WahlModel> wahlen) {
+        log.info("dummy client postWahlen() called instead of basisdaten-service");
     }
 }

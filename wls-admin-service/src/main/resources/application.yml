@@ -54,7 +54,7 @@ info.application.version: @project.version@
 
 service:
   info:
-    oid: WLS-ERGEBNISMELDUNG
+    oid: WLS-ADMIN
   config:
     clients:
       auth:

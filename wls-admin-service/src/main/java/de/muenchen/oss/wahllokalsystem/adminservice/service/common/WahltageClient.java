@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten;
+package de.muenchen.oss.wahllokalsystem.adminservice.service.common;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ public interface WahltageClient {
 
     /**
      * @return list of Wahltage
-     *         {@link de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahltagModel}
+     *         {@link WahltagModel}
      * @throws de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException when problem
      *             on retrieving the information occurred
      */

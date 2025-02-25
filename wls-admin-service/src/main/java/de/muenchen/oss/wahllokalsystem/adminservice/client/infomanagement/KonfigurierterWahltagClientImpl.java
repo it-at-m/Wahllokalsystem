@@ -61,4 +61,18 @@ public class KonfigurierterWahltagClientImpl implements KonfigurierterWahltagCli
         }
         return konfigurierterWahltagDTOList.stream().map(konfigurierterWahltagClientMapper::toModel).toList();
     }
+
+    @Override
+    public void deleteKonfigurierterWahltag(final String wahltagID) {
+        log.debug("#deleteKonfigurierterWahltag");
+
+        try {
+            konfigurierterWahltagControllerApi.deleteKonfigurierterWahltag(wahltagID);
+        } catch (final WlsException wlsException) {
+            log.debug("#deleteKonfigurierterWahltag found WlsException:", wlsException);
+            throw wlsException;
+        } catch (Exception exception) {
+            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT);
+        }
+    }
 }

@@ -1,4 +1,4 @@
-# Security: H2-Konsole in Produktionsumgebung disablen
+# Security: H2-Konsole in Produktionsumgebung deaktivieren
 
 ## Status
 

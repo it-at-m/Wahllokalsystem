@@ -9,8 +9,6 @@ import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta = {
   component: TheWahlvorstandLastSendDiv,
-  // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/writing-docs/autodocs
-  tags: ["autodocs"],
   args: {},
   decorators: [
     (story) => {

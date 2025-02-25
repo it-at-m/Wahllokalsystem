@@ -10,6 +10,7 @@ setup((app) => {
 });
 
 const preview: Preview = {
+  tags: ["autodocs"],
   parameters: {
     controls: {
       matchers: {

@@ -21,5 +21,5 @@ public class MethodRules {
 
     public static final MethodsShouldConjunction RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED = methods()
             .that().areAnnotatedWith(Test.class).or().areAnnotatedWith(ParameterizedTest.class)
-            .should().haveNameMatching("should_[a-z].*_when_[a-z].*");
+            .should().haveNameMatching("^should_[a-z].*_when_[a-z].*");
 }

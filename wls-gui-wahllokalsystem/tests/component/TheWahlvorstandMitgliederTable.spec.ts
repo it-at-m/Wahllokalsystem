@@ -155,7 +155,6 @@ describe("TheWahlvorstandMitgliederTable.vue", () => {
 
 function getSnapshotFilename(context: ExtendedContext<RunnerTestCase>): string {
   const path = `./__snapshots__/${getSuitPath(context.task.suite)}/`;
-  console.debug(`snapshot path: ${path}`);
   return `${path}/${context.task.name}.html`;
 }
 

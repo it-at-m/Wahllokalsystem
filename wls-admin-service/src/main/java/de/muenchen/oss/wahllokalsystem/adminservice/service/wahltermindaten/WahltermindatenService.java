@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahltageClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahltageClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.ArrayList;
 import java.util.List;
@@ -116,7 +116,7 @@ public class WahltermindatenService {
      * <p>
      * Write WAHLTERMINDATEN_LOESCHEN to SysLog with
      *
-     * @param result result text
+     * @param result  result text
      * @param message message text
      */
     private void logAdminCustom(String result, String message) {

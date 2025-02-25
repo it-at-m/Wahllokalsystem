@@ -14,7 +14,7 @@
     "lint": "prettier . --check && eslint . && vue-tsc --noEmit",
     "fix": "prettier . --write && eslint . --fix",
     "gen:broadcast-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.2.0.json -g typescript-axios -o src/api/wls-clients/generated-broadcast-api",
-    "gen:wahlvorstand-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.wahlvorstand.0.2.0-SNAPSHOT.json -g typescript-axios -o src/api/wls-clients/generated-wahlvorstand-api",
+    "gen:wahlvorstand-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.wahlvorstand.0.2.0.json -g typescript-axios -o src/api/wls-clients/generated-wahlvorstand-api",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

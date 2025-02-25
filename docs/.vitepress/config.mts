@@ -109,7 +109,8 @@ export default withMermaid({
                                 text: "Neues Frontend-Projekt",
                                 link: `${PATH_MICROSERVICE_GENERATION}new-service-frontend.md`
                             }
-                        ]}
+                        ]},
+                        {text: 'Mock-Server', link: `${PATH_GUIDES}mock-server.md`},
                     ]
                 },
                 {

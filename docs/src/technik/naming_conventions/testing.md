@@ -78,6 +78,13 @@ public interface EreignisModelMapper {
 ```
 :::
 
+::: tip HINWEIS
+Mit der Einführung der [Archunit-Tests](https://www.archunit.org/) im Projekt, wird die grundsätzliche Einhaltung der 
+Naming Convention **im Backend** anhand der RegEx `^should_[a-z].*_when_[a-z].*` automatisiert für alle Tests mit den 
+Annotationen `@Test` und `@ParametrizedTest` geprüft. Für jeden neuen Service muss dieser Test analog zu den anderen 
+hinzugefügt werden.
+:::
+
 ## Konsequenzen
 
 ### positiv

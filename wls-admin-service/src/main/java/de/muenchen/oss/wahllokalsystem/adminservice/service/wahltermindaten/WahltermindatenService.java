@@ -116,7 +116,7 @@ public class WahltermindatenService {
      * <p>
      * Write WAHLTERMINDATEN_LOESCHEN to SysLog with
      *
-     * @param result  result text
+     * @param result result text
      * @param message message text
      */
     private void logAdminCustom(String result, String message) {

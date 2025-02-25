@@ -41,7 +41,7 @@ export const LastSendingWithLeadingZeros: Story = {
   },
 };
 
-export const LastsendingIsNull: Story = {
+export const LastSendingIsNull: Story = {
   beforeEach() {
     const store = useWahlvorstandStore(pinia);
     store.lastSending = null;

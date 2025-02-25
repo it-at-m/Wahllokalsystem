@@ -1,10 +1,12 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 public class NamingConventionExamplesTest {
 
+    // Naming Convention for test Names
     @Nested
     public class ExampleTestNamesViolatingNamingConventionRule {
 
@@ -78,6 +80,31 @@ public class NamingConventionExamplesTest {
 
         @Test
         void should_beValid_when_endingWithNumbers123() {
+        }
+    }
+
+    // Naming Convention for @BeforeEach methods
+    @Nested
+    public class ExampleBeforeEachMethodNamesViolatingNamingConventionRule {
+
+        @BeforeEach
+        void setUp() {
+        }
+
+        @BeforeEach
+        void set_up() {
+        }
+
+        @BeforeEach
+        void randomName() {
+        }
+    }
+
+    @Nested
+    public class ExampleBeforeEachMethodNameFollowingNamingConventionRule {
+
+        @BeforeEach
+        void setup() {
         }
     }
 }

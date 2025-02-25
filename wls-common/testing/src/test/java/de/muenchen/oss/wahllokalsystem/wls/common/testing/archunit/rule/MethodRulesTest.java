@@ -4,8 +4,11 @@ import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.lang.ArchRule;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.NamingConventionExamplesTest;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules.RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules.RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED;
@@ -13,63 +16,39 @@ import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.M
 
 public class MethodRulesTest {
 
-    @Nested
-    class TestNamingConventionRule {
-
-        final ArchRule ruleUnderTest = RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED;
-
-        @Test
-        void should_throwError_when_ruleNotMatching() {
-            Assertions.assertThatThrownBy(() -> ruleUnderTest.check(new ClassFileImporter()
-                    .importClasses(NamingConventionExamplesTest.ExampleTestNamesViolatingNamingConventionRule.class)))
-                    .isInstanceOf(AssertionError.class);
-        }
-
-        @Test
-        void should_throwNoError_when_ruleMatching() {
-            Assertions.assertThatCode(() -> ruleUnderTest.check(new ClassFileImporter()
-                    .importClasses(NamingConventionExamplesTest.ExampleTestNamesFollowingNamingConventionRule.class)))
-                    .doesNotThrowAnyException();
-        }
+    @ParameterizedTest
+    @MethodSource("getRulesAndMatchingTestClassesThrowingErrors")
+    void should_throwError_when_ruleNotMatching(ArchRule ruleUnderTest, Class<?> testClass) {
+        Assertions.assertThatThrownBy(() -> ruleUnderTest.check(new ClassFileImporter()
+                        .importClasses(testClass)))
+                .isInstanceOf(AssertionError.class);
     }
 
-    @Nested
-    class BeforeEachNamingConventionRule {
-
-        final ArchRule ruleUnderTest = RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED;
-
-        @Test
-        void should_throwError_when_ruleNotMatching() {
-            Assertions.assertThatThrownBy(() -> ruleUnderTest.check(new ClassFileImporter()
-                    .importClasses(NamingConventionExamplesTest.ExampleBeforeEachMethodNamesViolatingNamingConventionRule.class)))
-                    .isInstanceOf(AssertionError.class);
-        }
-
-        @Test
-        void should_throwNoError_when_ruleMatching() {
-            Assertions.assertThatCode(() -> ruleUnderTest.check(new ClassFileImporter()
-                    .importClasses(NamingConventionExamplesTest.ExampleBeforeEachMethodNameFollowingNamingConventionRule.class)))
-                    .doesNotThrowAnyException();
-        }
+    @ParameterizedTest
+    @MethodSource("getRulesAndMatchingTestClassesNotThrowingErrors")
+    void should_throwNoError_when_ruleMatching(ArchRule ruleUnderTest, Class<?> testClass) {
+        Assertions.assertThatCode(() -> ruleUnderTest.check(new ClassFileImporter()
+                        .importClasses(testClass)))
+                .doesNotThrowAnyException();
     }
 
-    @Nested
-    class AfterEachNamingConventionRule {
+    private static Stream<Arguments> getRulesAndMatchingTestClassesThrowingErrors() {
+        return Stream.of(
+                Arguments.of(RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED,
+                        NamingConventionExamplesTest.ExampleTestNamesViolatingNamingConventionRule.class),
+                Arguments.of(RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED,
+                        NamingConventionExamplesTest.ExampleBeforeEachMethodNamesViolatingNamingConventionRule.class),
+                Arguments.of(RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED,
+                        NamingConventionExamplesTest.ExampleAfterEachMethodNamesViolatingNamingConventionRule.class));
+    }
 
-        final ArchRule ruleUnderTest = RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED;
-
-        @Test
-        void should_throwError_when_ruleNotMatching() {
-            Assertions.assertThatThrownBy(() -> ruleUnderTest.check(new ClassFileImporter()
-                    .importClasses(NamingConventionExamplesTest.ExampleAfterEachMethodNamesViolatingNamingConventionRule.class)))
-                    .isInstanceOf(AssertionError.class);
-        }
-
-        @Test
-        void should_throwNoError_when_ruleMatching() {
-            Assertions.assertThatCode(() -> ruleUnderTest.check(new ClassFileImporter()
-                    .importClasses(NamingConventionExamplesTest.ExampleAfterEachMethodNameFollowingNamingConventionRule.class)))
-                    .doesNotThrowAnyException();
-        }
+    private static Stream<Arguments> getRulesAndMatchingTestClassesNotThrowingErrors() {
+        return Stream.of(
+                Arguments.of(RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED,
+                        NamingConventionExamplesTest.ExampleTestNamesFollowingNamingConventionRule.class),
+                Arguments.of(RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED,
+                        NamingConventionExamplesTest.ExampleBeforeEachMethodNameFollowingNamingConventionRule.class),
+                Arguments.of(RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED,
+                        NamingConventionExamplesTest.ExampleAfterEachMethodNameFollowingNamingConventionRule.class));
     }
 }

@@ -1,4 +1,8 @@
+import * as path from "node:path";
+
 import type { StorybookConfig } from "@storybook/vue3-vite";
+
+import { mergeConfig } from "vitest/config";
 
 const config: StorybookConfig = {
   stories: ["../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
@@ -13,7 +17,18 @@ const config: StorybookConfig = {
     options: {},
   },
   core: {
+    builder: "@storybook/builder-vite",
     disableTelemetry: true, // 👈 Disables telemetry
   },
+  async viteFinal(config) {
+    return mergeConfig(config, {
+      resolve: {
+        alias: {
+          "@": path.resolve(__dirname, "../src"),
+        },
+      },
+    });
+  },
 };
+
 export default config;

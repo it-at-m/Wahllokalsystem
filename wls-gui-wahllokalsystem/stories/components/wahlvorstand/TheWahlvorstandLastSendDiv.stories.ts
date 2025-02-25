@@ -6,7 +6,6 @@ import TheWahlvorstandLastSendDiv from "@/components/wahlvorstand/TheWahlvorstan
 import pinia from "@/plugins/pinia";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta = {
   component: TheWahlvorstandLastSendDiv,
   args: {},

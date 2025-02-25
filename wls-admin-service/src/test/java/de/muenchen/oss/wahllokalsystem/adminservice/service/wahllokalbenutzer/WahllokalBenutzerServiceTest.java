@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer;
 
+import static org.mockito.ArgumentMatchers.eq;
 import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkModel;
@@ -14,6 +15,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -36,6 +39,9 @@ class WahllokalBenutzerServiceTest {
 
     @InjectMocks
     WahllokalBenutzerService unitUnderTest;
+
+    @Captor
+    ArgumentCaptor<List<WahllokalBenutzerModel>> userModelsCaptor;
 
     @Nested
     class GenerateWahllokalbenutzer {
@@ -65,7 +71,22 @@ class WahllokalBenutzerServiceTest {
         }
 
         @Test
-        void should_generateAndExportWahllokalBenutzer_when_givenWahltagIDAndWahlbezirke() {
+        void should_generateWahllokalBenutzerModels_when_givenWahltagIDAndWahlbezirke() {
+            val wahltagID = "wahltagID";
+            val mockedWahlbezirke = getMockWahlbezirke();
+
+            Mockito.doNothing().when(wahllokalBenutzerValidator).validWahltagIDParamOrThrow(wahltagID);
+            Mockito.when(wahlbezirkeClient.getWahlbezirke(wahltagID)).thenReturn(mockedWahlbezirke);
+
+            unitUnderTest.generateWahllokalbenutzer(wahltagID);
+            Mockito.verify(wahllokalBenutzerClient).generateAndExportWahllokalBenutzer(eq(wahltagID), userModelsCaptor.capture());
+
+            val expectedUserModels = getListOfWahlLokalBenutzerModels();
+            Assertions.assertThat(userModelsCaptor.getValue()).usingRecursiveComparison().isEqualTo(expectedUserModels);
+        }
+
+        @Test
+        void should_exportCsvFileModelWithWahllokalbenutzerNames_when_givenWahltagIDAndWahlbezirke() {
             val wahltagID = "wahltagID";
             val mockedWahlbezirke = getMockWahlbezirke();
             val userModels = getListOfWahlLokalBenutzerModels();

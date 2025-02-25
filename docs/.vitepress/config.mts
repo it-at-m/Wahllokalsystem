@@ -110,6 +110,7 @@ export default withMermaid({
                                 link: `${PATH_MICROSERVICE_GENERATION}new-service-frontend.md`
                             }
                         ]},
+                        {text: 'Mock-Server', link: `${PATH_GUIDES}mock-server.md`},
                         {text: "ArchUnit Rules Testen", link: `${PATH_GUIDES}archunit-rule-tests.md`}
                     ]
                 },

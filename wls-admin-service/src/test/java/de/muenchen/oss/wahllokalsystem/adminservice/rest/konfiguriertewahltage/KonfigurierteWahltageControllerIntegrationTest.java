@@ -23,9 +23,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
@@ -52,19 +54,51 @@ class KonfigurierteWahltageControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.ADMIN_READ_KONFIGURIERTEWAHLTAGE })
-        void should_returnKonfigurierteWahltage_when_clientIsCalled() throws Exception {
+        void should_returnData_when_apiReturnsData() throws Exception {
             val request = get("/businessActions/konfigurierteWahltage").with(csrf());
-            val expectedResponse = new KonfigurierterWahltagDTO();
-            expectedResponse.setWahltag(LocalDate.now());
-            expectedResponse.setWahltagID("wahltagID");
-            expectedResponse.setWahltagStatus(KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
-            expectedResponse.setNummer("0");
+            val expectedResponse = new de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.KonfigurierterWahltagDTO(LocalDate.now(),
+                    "wahltagID", true, "0");
+            val apiResponse = new KonfigurierterWahltagDTO();
+            apiResponse.setWahltag(LocalDate.now());
+            apiResponse.setWahltagID("wahltagID");
+            apiResponse.setWahltagStatus(KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
+            apiResponse.setNummer("0");
 
-            Mockito.when(konfigurierterWahltagControllerApi.getKonfigurierteWahltage()).thenReturn(List.of(expectedResponse));
+            Mockito.when(konfigurierterWahltagControllerApi.getKonfigurierteWahltage()).thenReturn(List.of(apiResponse));
 
             val result = api.perform(request).andExpect(status().isOk()).andReturn();
 
             Assertions.assertThat(result.getResponse().getContentAsString()).isEqualTo(objectMapper.writeValueAsString(List.of(expectedResponse)));
+        }
+    }
+
+    @Nested
+    class PostKonfigurierteWahltage {
+
+        @Test
+        @WithMockUser(authorities = { Authorities.ADMIN_POST_KONFIGURIERTERWAHLTAG })
+        void should_giveDataToApi_when_dataIsValid() throws Exception {
+            val requestBody = new de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.KonfigurierterWahltagDTO(
+                    LocalDate.now(), "wahltagID", false, "0");
+
+            val request = MockMvcRequestBuilders.post("/businessActions/konfigurierterWahltag").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestBody));
+
+            api.perform(request).andExpect(status().isOk());
+        }
+
+        @Test
+        @WithMockUser(authorities = { Authorities.ADMIN_POST_KONFIGURIERTERWAHLTAG })
+        void should_giveDataToApiAndResetWahlen_when_statusIsAktiv() throws Exception {
+            val requestBody = new de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.KonfigurierterWahltagDTO(
+                    LocalDate.now(), "wahltagID", true, "0");
+
+            val request = MockMvcRequestBuilders.post("/businessActions/konfigurierterWahltag").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestBody));
+
+            api.perform(request).andExpect(status().isOk());
         }
     }
 }

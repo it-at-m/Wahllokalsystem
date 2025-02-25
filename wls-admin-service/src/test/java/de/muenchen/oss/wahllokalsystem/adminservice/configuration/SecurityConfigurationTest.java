@@ -121,11 +121,11 @@ class SecurityConfigurationTest {
 
         @WithMockUser
         @Test
-        void should_returnOk_when_callingAuthenticated() throws Exception {
+        void should_returnNoContent_when_callingAuthenticated() throws Exception {
             val request = MockMvcRequestBuilders.get("/businessActions/konfigurierteWahltage").with(csrf())
                     .contentType(MediaType.APPLICATION_JSON);
 
-            api.perform(request).andExpect(status().isOk());
+            api.perform(request).andExpect(status().isNoContent());
 
             Mockito.verify(konfigurierteWahltageService).getKonfigurierteWahltage();
         }

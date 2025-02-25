@@ -10,4 +10,6 @@ public class Authorities {
 
     public static final String ADMIN_READ_KONFIGURIERTEWAHLTAGE = "Admin_BUSINESSACTION_GetKonfigurierteWahltage";
 
+    public static final String ADMIN_POST_KONFIGURIERTERWAHLTAG = "Admin_BUSINESSACTION_PostKonfigurierterWahltag";
+
 }

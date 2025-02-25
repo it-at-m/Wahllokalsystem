@@ -8,6 +8,7 @@ import de.muenchen.oss.wahllokalsystem.adminservice.service.common.Konfigurierte
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -51,7 +52,6 @@ class KonfigurierterWahltagClientImplTest {
             unitUnderTest.postKonfigurierterWahltag(konfigurierterWahltagModel);
 
             Mockito.verify(konfigurierterWahltagControllerApi).setKonfigurierterWahltag(mockedKonfigurierterWahltagDTO);
-            Mockito.verify(wahlenControllerApi).resetWahlen();
         }
 
         @Test
@@ -101,23 +101,51 @@ class KonfigurierterWahltagClientImplTest {
             Mockito.verify(konfigurierterWahltagControllerApi).setKonfigurierterWahltag(mockedKonfigurierterWahltagDTO);
             Mockito.verifyNoInteractions(wahlenControllerApi);
         }
+    }
+
+    @Nested
+    class GetKonfigurierteWahltage {
 
         @Test
-        void should_throwWlsException_when_basisdatenApiThrewException() {
+        void should_callApi_when_konfigurierteWahltageIsCalled() throws Exception {
             val nowDate = LocalDate.now();
             val konfigurierterWahltagModel = new KonfigurierterWahltagModel(nowDate, "1-2-3", true, "123");
             val mockedKonfigurierterWahltagDTO = new KonfigurierterWahltagDTO().wahltag(nowDate).wahltagID("1-2-3").wahltagStatus(
                     KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV).nummer("123");
 
-            Mockito.when(konfigurierterWahltagClientMapper.toDto(konfigurierterWahltagModel)).thenReturn(mockedKonfigurierterWahltagDTO);
+            Mockito.when(konfigurierterWahltagControllerApi.getKonfigurierteWahltage()).thenReturn(List.of(mockedKonfigurierterWahltagDTO));
+            Mockito.when(konfigurierterWahltagClientMapper.toModel(mockedKonfigurierterWahltagDTO)).thenReturn(konfigurierterWahltagModel);
 
-            val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("communication with wahlenApi failed");
+            unitUnderTest.getKonfigurierteWahltage();
 
-            Mockito.doThrow(new RuntimeException("api call basisdaten failed")).when(wahlenControllerApi).resetWahlen();
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN))
+            Mockito.verify(konfigurierterWahltagControllerApi).getKonfigurierteWahltage();
+        }
+
+        @Test
+        void should_throwTechnischeWlsException_when_exceptionIsThrownByApi() throws Exception {
+            val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("Communication with KonfigurierteWahltageApi failed");
+
+            Mockito.doThrow(mockedWlsException).when(konfigurierterWahltagControllerApi).getKonfigurierteWahltage();
+
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getKonfigurierteWahltage()).isSameAs(mockedWlsException);
+        }
+
+        @Test
+        void should_returnNull_when_apiReturnsNull() throws Exception {
+            Mockito.when(konfigurierterWahltagControllerApi.getKonfigurierteWahltage()).thenReturn(null);
+
+            Assertions.assertThat(unitUnderTest.getKonfigurierteWahltage()).isEmpty();
+        }
+
+        @Test
+        void should_rethrowWlsException_when_wlsExceptionIsThrownFromKonfigurierterWahltagControllerApi() {
+            val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("communication with wahlen api failed");
+
+            Mockito.doThrow(new RuntimeException("api call failed")).when(konfigurierterWahltagControllerApi).getKonfigurierteWahltage();
+            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT))
                     .thenReturn(mockedWlsException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postKonfigurierterWahltag(konfigurierterWahltagModel)).isSameAs(mockedWlsException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getKonfigurierteWahltage()).isSameAs(mockedWlsException);
         }
     }
 }

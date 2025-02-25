@@ -71,7 +71,7 @@ public class KonfigurierteWahltageController {
                     )
             }
     )
-    @PostMapping
+    @PostMapping("konfigurierterWahltag")
     @ResponseStatus(HttpStatus.OK)
     public void postKonfigurierterWahltag(@RequestBody KonfigurierterWahltagDTO konfigurierterWahltagDTO) {
         val modelToSave = konfigurierterWahltagDTOMapper.toModel(konfigurierterWahltagDTO);

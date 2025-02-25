@@ -6,3 +6,15 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 GET {{ WLS_ADMIN_SERVICE_URL }}/businessActions/konfigurierteWahltage
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
+
+### POST Konfigurierter Wahltag
+POST {{ WLS_ADMIN_SERVICE_URL }}/businessActions/konfigurierterWahltag
+Content-Type: application/json
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+{
+  "wahltag": "2024-12-03T09:10:11",
+  "wahltagID": "wahltagID",
+  "wahltagStatus": "AKTIV",
+  "nummer": "0"
+}

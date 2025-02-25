@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag;
 
-import de.muenchen.oss.wahllokalsystem.adminservice.client.infomanagement.KonfigurierterWahltagClientMapper;
 import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.KonfigurierterWahltagClient;
@@ -22,8 +21,6 @@ public class KonfigurierteWahltageService {
 
     private final ExceptionFactory exceptionFactory;
 
-    private final KonfigurierterWahltagClientMapper konfigurierterWahltagClientMapper;
-
     private final KonfigurierterWahltagValidator konfigurierterWahltagValidator;
 
     @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_GetKonfigurierteWahltage')")
@@ -31,7 +28,7 @@ public class KonfigurierteWahltageService {
         return konfigurierterWahltagClient.getKonfigurierteWahltage();
     }
 
-    @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_KonfigurierteWahltage')")
+    @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_PostKonfigurierterWahltag')")
     public void postKonfigurierterWahltag(KonfigurierterWahltagModel konfigurierterWahltagModel) {
         konfigurierterWahltagValidator.validateModel(konfigurierterWahltagModel);
         if (konfigurierterWahltagModel.active()) {
@@ -41,7 +38,7 @@ public class KonfigurierteWahltageService {
                 log.error("#postKonfigurierterWahltag failed to reset elections:", exception);
                 throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
             }
-            konfigurierterWahltagClient.postKonfigurierterWahltag(konfigurierterWahltagModel);
         }
+        konfigurierterWahltagClient.postKonfigurierterWahltag(konfigurierterWahltagModel);
     }
 }

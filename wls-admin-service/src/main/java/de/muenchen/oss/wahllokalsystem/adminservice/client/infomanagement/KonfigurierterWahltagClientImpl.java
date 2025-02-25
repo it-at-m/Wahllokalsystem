@@ -8,6 +8,7 @@ import de.muenchen.oss.wahllokalsystem.adminservice.service.common.Konfigurierte
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.KonfigurierterWahltagClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +50,7 @@ public class KonfigurierterWahltagClientImpl implements KonfigurierterWahltagCli
             konfigurierterWahltagDTOList = konfigurierterWahltagControllerApi.getKonfigurierteWahltage();
 
             if (konfigurierterWahltagDTOList == null) {
-                return null;
+                return Collections.emptyList();
             }
 
         } catch (WlsException wlsException) {

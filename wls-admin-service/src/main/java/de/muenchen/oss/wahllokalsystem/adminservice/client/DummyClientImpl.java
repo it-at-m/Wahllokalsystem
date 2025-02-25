@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.adminservice.client;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag.WahlenClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.AWerteClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.KonfigurierterWahltagClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahlbezirkArtModel;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @Profile(Profiles.DUMMY_CLIENTS)
-public class DummyClientImpl implements AWerteClient, KonfigurierterWahltagClient, WahlbezirkeClient, WahltageClient, WahltermindatenClient {
+public class DummyClientImpl implements AWerteClient, KonfigurierterWahltagClient, WahlbezirkeClient, WahltageClient, WahltermindatenClient, WahlenClient {
 
     @Override
     public void initialiseAWerte(List<String> wahlbezirkIDs) {
@@ -66,5 +67,10 @@ public class DummyClientImpl implements AWerteClient, KonfigurierterWahltagClien
                 new KonfigurierterWahltagModel(LocalDate.now(), "wahltagID1", true, "0"),
                 new KonfigurierterWahltagModel(LocalDate.now().minusMonths(1), "wahltagID2", false, "1"),
                 new KonfigurierterWahltagModel(LocalDate.now().plusMonths(2), "wahltagID3", true, "2"));
+    }
+
+    @Override
+    public void resetWahlen() {
+        log.info("dummy client resetWahlen() called instead of basisdaten-service");
     }
 }

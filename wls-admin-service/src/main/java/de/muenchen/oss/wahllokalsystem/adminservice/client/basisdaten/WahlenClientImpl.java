@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.client.basisdaten;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.configuration.Profiles;
+import de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.client.WahlenControllerApi;
 import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag.WahlenClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
@@ -18,12 +19,12 @@ public class WahlenClientImpl implements WahlenClient {
 
     private final ExceptionFactory exceptionFactory;
 
-    private final WahlenClient wahlenClient;
+    private final WahlenControllerApi wahlenControllerApi;
 
     public void resetWahlen() {
         log.debug("#resetWahlen");
         try {
-            wahlenClient.resetWahlen();
+            wahlenControllerApi.resetWahlen();
         } catch (WlsException wlsException) {
             log.debug("#resetWahlen found WlsException:", wlsException);
             throw wlsException;

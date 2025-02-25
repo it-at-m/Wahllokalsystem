@@ -109,7 +109,8 @@ export default withMermaid({
                                 text: "Neues Frontend-Projekt",
                                 link: `${PATH_MICROSERVICE_GENERATION}new-service-frontend.md`
                             }
-                        ]}
+                        ]},
+                        {text: "ArchUnit Rules Testen", link: `${PATH_GUIDES}archunit-rule-tests.md`}
                     ]
                 },
                 {

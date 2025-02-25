@@ -13,7 +13,7 @@ wiederspiegeln.
 
 ### Anwendungscode
 
-Das Projekt besteht im Wesentlichen aus folgenden Hauptordnern:
+Der Anwendungscode besteht auf folgenden Ordnern:
 
 | Ordner               | Beschreibung                                                              |
 |----------------------|---------------------------------------------------------------------------|
@@ -25,7 +25,7 @@ Das Projekt besteht im Wesentlichen aus folgenden Hauptordnern:
 | types                | Eigenen Datentype der Anwendung. (Die Datentype der Clients sind in `api` |                                                    
 | views                | Views der Anwendung                                                       |
 
-je Ordner kann, sofern es meherer Elemente gibt die zu unterschiedlichen fachlichen Domainen gehörten Unterordner geben.
+je Ordner kann, sofern es mehrerer Elemente gibt die zu unterschiedlichen fachlichen Domainen gehörten, Unterordner geben.
 
 `common` ... Elemente ohne spezifische fachliche Zugehörigkeit
 
@@ -105,8 +105,9 @@ domainService -. uses .-> domainMapper
 
 ### Unittesting
 
-Funktionen in Composables, Stores und Datentypen werden mit Unit-Tests abgedeckt. Die Kommunikation mit anderen Funktionen
-anderer Module werden gemockt. Dabei ist die korrekte Interaktion mit dem Mock zu verifizieren.
+Funktionen in Composables, Stores und Datentypen enthalten sind, werden mit Unit-Tests abgedeckt.
+Die Kommunikation mit Funktionen anderer Module werden gemockt. Dabei ist die korrekte Interaktion mit dem Mock
+zu verifizieren.
 
 ### Komponententests
 

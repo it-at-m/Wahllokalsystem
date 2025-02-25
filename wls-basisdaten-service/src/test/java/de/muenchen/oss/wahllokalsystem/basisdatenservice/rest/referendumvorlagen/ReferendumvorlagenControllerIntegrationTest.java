@@ -87,7 +87,7 @@ public class ReferendumvorlagenControllerIntegrationTest {
     class GetReferendumvorlagen {
 
         @Test
-        void loadedFromExternal() throws Exception {
+        void should_returnReferendumvorlagenDTO_when_loadedFromExternal() throws Exception {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
 
@@ -127,7 +127,7 @@ public class ReferendumvorlagenControllerIntegrationTest {
         }
 
         @Test
-        void technischeWlsExceptionWhenNoDataFoundExternal() throws Exception {
+        void should_returnTechnischeWlsException_when_noDataFoundExternal() throws Exception {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
 
@@ -141,7 +141,7 @@ public class ReferendumvorlagenControllerIntegrationTest {
         }
 
         @Test
-        void technischeWlsExceptionWhenCommunicationFailed() throws Exception {
+        void should_returnTechnischeWlsException_when_communicationFailed() throws Exception {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
 
@@ -159,7 +159,7 @@ public class ReferendumvorlagenControllerIntegrationTest {
         }
 
         @Test
-        void fachlicheWlsExceptionWhenPathVariableIsInvalid() throws Exception {
+        void should_returnFachlicheWlsException_when_pathVariableIsInvalid() throws Exception {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
 

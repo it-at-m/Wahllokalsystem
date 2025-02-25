@@ -28,13 +28,13 @@ class WahlbezirkeValidatorTest {
         final FachlicheWlsException mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
         @Test
-        void noExceptionWhenRequestParamIsValid() {
+        void should_throwNoException_when_requestParamIsValid() {
             val requestParam = "wahltagID";
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahltagIDParamOrThrow(requestParam));
         }
 
         @Test
-        void exceptionWhenWahltagIDIsNull() {
+        void should_throwException_when_wahltagIDIsNull() {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_GETWAHLBEZIRKE_PARAMETER_UNVOLLSTAENDIG))
                     .thenReturn(mockedWlsException);
 
@@ -42,7 +42,7 @@ class WahlbezirkeValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahltagIDIsEmpty() {
+        void should_throwException_when_wahltagIDIsEmpty() {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_GETWAHLBEZIRKE_PARAMETER_UNVOLLSTAENDIG))
                     .thenReturn(mockedWlsException);
 
@@ -50,7 +50,7 @@ class WahlbezirkeValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahltagIDIsBlank() {
+        void should_throwException_when_wahltagIDIsBlank() {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_GETWAHLBEZIRKE_PARAMETER_UNVOLLSTAENDIG))
                     .thenReturn(mockedWlsException);
 

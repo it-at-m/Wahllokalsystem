@@ -37,7 +37,7 @@ class KopfdatenRepositoryTest {
     }
 
     @Test
-    public void kopfdatenRepositorySave() {
+    public void should_saveData_when_callingPost() {
         val original = MockDataFactory.createKopfdatenEntityFor("wahlID1", "wahlbezirkID1",
                 Stimmzettelgebietsart.SG, "101", "München-Hadern", "Bundestagswahl", "1901");
 
@@ -47,7 +47,7 @@ class KopfdatenRepositoryTest {
     }
 
     @Test
-    public void kopfdatenRepositoryDeleteAllByBezirkUndWahlID_WahlID() {
+    public void should_deleteAllByBezirkUndWahlIDANDByWahlID_when_callingDeleteAll() {
         val kopfdaten_1 = MockDataFactory.createKopfdatenEntityFor("wahlID1", "wahlbezirkID1",
                 Stimmzettelgebietsart.SG, "101", "München-Hadern", "Landtagswahl", "1901");
         val kopfdaten_2 = MockDataFactory.createKopfdatenEntityFor("wahlID1", "wahlbezirkID2",

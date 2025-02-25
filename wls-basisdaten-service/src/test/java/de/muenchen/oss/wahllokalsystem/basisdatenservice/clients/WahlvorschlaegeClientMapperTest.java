@@ -22,7 +22,7 @@ class WahlvorschlaegeClientMapperTest {
     class ToModel {
 
         @Test
-        void isMapped() {
+        void should_returnWahlvorschlaegeModel_when_givenWahlvorschlaegeDTO() {
             val stimmzettelgebietID = "stimmzettelgebietID";
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";

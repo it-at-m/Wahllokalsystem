@@ -1,5 +1,4 @@
 import type { Wahlvorstandsmitglied } from "@/types/wahlvorstand/wahlvorstandsmitglied";
-import type { ExtendedContext, RunnerTestCase, RunnerTestSuite } from "vitest";
 
 import { createTestingPinia } from "@pinia/testing";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
@@ -21,6 +20,7 @@ import * as directives from "vuetify/directives";
 import TheWahlvorstandMitgliederTable from "@/components/wahlvorstand/TheWahlvorstandMitgliederTable.vue";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 import { WahlvorstandsmitgliedBuilder } from "@/types/wahlvorstand/wahlvorstandsmitglied";
+import { getSnapshotFilename } from "../../utils/testutils";
 
 describe("TheWahlvorstandMitgliederTable.vue", () => {
   let vuetify: ReturnType<typeof createVuetify>;
@@ -152,24 +152,3 @@ describe("TheWahlvorstandMitgliederTable.vue", () => {
     });
   });
 });
-
-function getSnapshotFilename(context: ExtendedContext<RunnerTestCase>): string {
-  const path = `./__snapshots__/${getSuitPath(context.task.suite)}/`;
-  return `${path}/${context.task.name}.html`;
-}
-
-function getSuitPath(suite?: RunnerTestSuite): string {
-  const pathElementsBottomUp: string[] = [];
-
-  let suitForPath = suite;
-  while (
-    suitForPath !== undefined &&
-    suitForPath.suite !== suitForPath &&
-    !pathElementsBottomUp.includes(suitForPath.name)
-  ) {
-    pathElementsBottomUp.push(suitForPath.name);
-    suitForPath = suitForPath.suite;
-  }
-
-  return pathElementsBottomUp.reverse().join("/");
-}

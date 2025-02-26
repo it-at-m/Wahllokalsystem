@@ -1,5 +1,3 @@
-import type { ExtendedContext, RunnerTestCase, RunnerTestSuite } from "vitest";
-
 import { createTestingPinia } from "@pinia/testing";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
@@ -19,6 +17,7 @@ import * as directives from "vuetify/directives";
 
 import TheWahlvorstandAnwesenheitRequirementCard from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.vue";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
+import { getSnapshotFilename } from "../../utils/testutils";
 
 describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => {
   let vuetify: ReturnType<typeof createVuetify>;
@@ -96,24 +95,3 @@ describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => {
     });
   });
 });
-
-function getSnapshotFilename(context: ExtendedContext<RunnerTestCase>): string {
-  const path = `./__snapshots__/${getSuitPath(context.task.suite)}/`;
-  return `${path}/${context.task.name}.html`;
-}
-
-function getSuitPath(suite?: RunnerTestSuite): string {
-  const pathElementsBottomUp: string[] = [];
-
-  let suitForPath = suite;
-  while (
-    suitForPath !== undefined &&
-    suitForPath.suite !== suitForPath &&
-    !pathElementsBottomUp.includes(suitForPath.name)
-  ) {
-    pathElementsBottomUp.push(suitForPath.name);
-    suitForPath = suitForPath.suite;
-  }
-
-  return pathElementsBottomUp.reverse().join("/");
-}

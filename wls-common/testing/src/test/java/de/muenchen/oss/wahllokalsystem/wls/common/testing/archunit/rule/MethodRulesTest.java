@@ -36,6 +36,8 @@ public class MethodRulesTest {
         return Stream.of(
                 Arguments.of(RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED,
                         NamingConventionExamplesTest.ExampleTestNamesViolatingNamingConventionRule.class),
+                Arguments.of(RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED,
+                        NamingConventionExamplesTest.ExampleTestNamesWithoutAnntation.class),
                 Arguments.of(RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED,
                         NamingConventionExamplesTest.ExampleBeforeEachMethodNamesViolatingNamingConventionRule.class),
                 Arguments.of(RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED,

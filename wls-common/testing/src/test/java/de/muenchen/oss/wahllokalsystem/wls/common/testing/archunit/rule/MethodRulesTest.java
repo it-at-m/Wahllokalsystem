@@ -18,7 +18,7 @@ public class MethodRulesTest {
     @MethodSource("getRulesAndMatchingTestClassesThrowingErrors")
     void should_throwError_when_ruleNotSatisfied(ArchRule ruleUnderTest, Class<?> testClass) {
         Assertions.assertThatThrownBy(() -> ruleUnderTest.check(new ClassFileImporter()
-                        .importClasses(testClass)))
+                .importClasses(testClass)))
                 .isInstanceOf(AssertionError.class)
                 .satisfies(assertionError -> Assertions.assertThat(assertionError.getMessage().split(System.lineSeparator()).length)
                         .isGreaterThanOrEqualTo(testClass.getMethods().length));
@@ -28,7 +28,7 @@ public class MethodRulesTest {
     @MethodSource("getRulesAndTestClassesWithoutMatchingCasesThrowingErrors")
     void should_throwError_when_noCasesMatchingRuleWereFound(ArchRule ruleUnderTest, Class<?> testClass) {
         Assertions.assertThatCode(() -> ruleUnderTest.check(new ClassFileImporter()
-                        .importClasses(testClass)))
+                .importClasses(testClass)))
                 .isInstanceOf(AssertionError.class)
                 .satisfies(assertionError -> Assertions.assertThat(assertionError.getMessage().split(System.lineSeparator()).length)
                         .isEqualTo(1));
@@ -38,7 +38,7 @@ public class MethodRulesTest {
     @MethodSource("getRulesAndMatchingTestClassesNotThrowingErrors")
     void should_throwNoError_when_ruleSatisfied(ArchRule ruleUnderTest, Class<?> testClass) {
         Assertions.assertThatCode(() -> ruleUnderTest.check(new ClassFileImporter()
-                        .importClasses(testClass)))
+                .importClasses(testClass)))
                 .doesNotThrowAnyException();
     }
 

@@ -51,7 +51,7 @@ public class NamingConventionExamplesTest {
         }
 
         @ParameterizedTest
-        @ValueSource(ints = { 1, 3, 5 })
+        @ValueSource(ints = {1, 3, 5})
         void should_123_when_456() {
         }
     }
@@ -86,13 +86,13 @@ public class NamingConventionExamplesTest {
         }
 
         @ParameterizedTest
-        @ValueSource(ints = { 1, 3, 5 })
+        @ValueSource(ints = {1, 3, 5})
         void should_beValid_when_endingWithNumbers123() {
         }
     }
 
     @Nested
-    public class ExampleTestNamesWithoutAnntation {
+    public class ExampleTestNamesWithoutAnnotation {
 
         void should_abc_when_def() {
         }

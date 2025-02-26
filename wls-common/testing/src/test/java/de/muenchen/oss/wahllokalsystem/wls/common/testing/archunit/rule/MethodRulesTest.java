@@ -30,8 +30,8 @@ public class MethodRulesTest {
         Assertions.assertThatCode(() -> ruleUnderTest.check(new ClassFileImporter()
                 .importClasses(testClass)))
                 .isInstanceOf(AssertionError.class)
-                .satisfies(assertionError -> Assertions.assertThat(assertionError.getMessage().split(System.lineSeparator()).length)
-                        .isEqualTo(1));
+                .satisfies(assertionError -> Assertions.assertThat(assertionError.getMessage())
+                        .contains("failed to check any classes"));
     }
 
     @ParameterizedTest

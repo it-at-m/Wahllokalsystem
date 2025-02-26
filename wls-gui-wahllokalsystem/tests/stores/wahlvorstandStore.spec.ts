@@ -162,6 +162,7 @@ describe("wahlvorstandStore.ts", () => {
       await unitUnderTest.sendWahlvorstand();
 
       expect(mockDefinitions.saveWahlvorstand).toHaveBeenCalledWith(
+        wahlbezirkID,
         unitUnderTest.wahlvorstand
       );
     });

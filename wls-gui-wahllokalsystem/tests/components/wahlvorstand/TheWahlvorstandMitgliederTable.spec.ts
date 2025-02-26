@@ -107,7 +107,7 @@ describe("TheWahlvorstandMitgliederTable.vue", () => {
         await nextTick();
 
         const secondCheckBox = wrapper.findAllComponents(
-          '[data-cy="checkboxAnwesend"'
+          '[data-cy="checkboxAnwesend"]'
         )[1];
 
         await secondCheckBox.setValue(true);
@@ -136,7 +136,7 @@ describe("TheWahlvorstandMitgliederTable.vue", () => {
         await nextTick();
 
         const secondCheckBox = wrapper.findAllComponents(
-          '[data-cy="checkboxAnwesend"'
+          '[data-cy="checkboxAnwesend"]'
         )[1];
 
         await secondCheckBox.setValue(false);

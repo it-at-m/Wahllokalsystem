@@ -95,7 +95,7 @@ public class NamingConventionExamplesTest {
     }
 
     @Nested
-    public class ExampleTestNamesWithoutAnntation {
+    public class ExampleTestNamesWithoutAnnotation {
 
         void should_abc_when_def() {
         }

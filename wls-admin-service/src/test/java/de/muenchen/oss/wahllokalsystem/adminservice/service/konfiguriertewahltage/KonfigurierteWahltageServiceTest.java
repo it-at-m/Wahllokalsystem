@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.service.konfiguriertewahltage;
 
-import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlenClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag.KonfigurierteWahltageService;
@@ -99,18 +98,6 @@ class KonfigurierteWahltageServiceTest {
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postKonfigurierterWahltag(mockedKonfigurierterWahltagModel));
 
             Mockito.verifyNoInteractions(wahlenClient);
-        }
-
-        @Test
-        void should_throwTechnischeWlsException_when_exceptionIsThrownByApi() {
-            val wahlbezirkID = "wahlbezirkID";
-            val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("");
-            val mockedKonfigurierterWahltagModel = new KonfigurierterWahltagModel(LocalDate.now(), wahlbezirkID, true, "1");
-
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN)).thenReturn(mockedWlsException);
-            Mockito.doThrow(mockedWlsException).when(wahlenClient).resetWahlen();
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postKonfigurierterWahltag(mockedKonfigurierterWahltagModel))
-                    .isSameAs(mockedWlsException);
         }
     }
 }

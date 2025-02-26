@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.adminservice.rest.konfiguriertewahltage;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.KonfigurierterWahltagDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.KonfigurierterWahltagDTOMapper;
+import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.WahltagStatusDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
 import java.time.LocalDate;
 import lombok.val;
@@ -31,7 +32,7 @@ class KonfigurierterWahltagDTOMapperTest {
 
             val result = unitUnderTest.toDTO(konfigurierterWahltagModel);
 
-            val expectedkonfigurierterWahltagDTO = new KonfigurierterWahltagDTO(LocalDate.now(), "wahltagID", true, "123");
+            val expectedkonfigurierterWahltagDTO = new KonfigurierterWahltagDTO(LocalDate.now(), "wahltagID", WahltagStatusDTO.AKTIV, "123");
 
             Assertions.assertThat(result).isEqualTo(expectedkonfigurierterWahltagDTO);
         }
@@ -45,7 +46,7 @@ class KonfigurierterWahltagDTOMapperTest {
 
             val result = unitUnderTest.toDTO(konfigurierterWahltagModel);
 
-            val expectedkonfigurierterWahltagDTO = new KonfigurierterWahltagDTO(LocalDate.now(), "wahltagID", false, "123");
+            val expectedkonfigurierterWahltagDTO = new KonfigurierterWahltagDTO(LocalDate.now(), "wahltagID", WahltagStatusDTO.INAKTIV, "123");
 
             Assertions.assertThat(result).isEqualTo(expectedkonfigurierterWahltagDTO);
         }
@@ -60,7 +61,7 @@ class KonfigurierterWahltagDTOMapperTest {
 
         @Test
         void should_mapToModelWithActiveTrue_when_givenDtoWithEnumStatusAktiv() {
-            val konfigurierterWahltagDTO = new KonfigurierterWahltagDTO(LocalDate.now(), "wahltagID", true, "123");
+            val konfigurierterWahltagDTO = new KonfigurierterWahltagDTO(LocalDate.now(), "wahltagID", WahltagStatusDTO.AKTIV, "123");
 
             Assertions.assertThat(konfigurierterWahltagDTO).hasNoNullFieldsOrProperties();
 
@@ -73,7 +74,7 @@ class KonfigurierterWahltagDTOMapperTest {
 
         @Test
         void should_mapToModelWithActiveFalse_when_givenDtoWithEnumStatusInaktiv() {
-            val konfigurierterWahltagDTO = new KonfigurierterWahltagDTO(LocalDate.now(), "wahltagID", false, "123");
+            val konfigurierterWahltagDTO = new KonfigurierterWahltagDTO(LocalDate.now(), "wahltagID", WahltagStatusDTO.INAKTIV, "123");
 
             Assertions.assertThat(konfigurierterWahltagDTO).hasNoNullFieldsOrProperties();
 

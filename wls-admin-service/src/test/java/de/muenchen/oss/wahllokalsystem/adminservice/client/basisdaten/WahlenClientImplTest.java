@@ -33,7 +33,7 @@ class WahlenClientImplTest {
     WahlenClientImpl unitUnderTest;
 
     @Nested
-    class GetWahltage {
+    class ResetWahlen {
 
         @Test
         void should_resetWahlen_when_noExceptionIsThrown() {

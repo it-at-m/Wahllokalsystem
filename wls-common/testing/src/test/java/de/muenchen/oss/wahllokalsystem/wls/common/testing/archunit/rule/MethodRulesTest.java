@@ -28,9 +28,9 @@ public class MethodRulesTest {
 
     @ParameterizedTest
     @MethodSource("getRulesAndTestClassesWithoutMatchingCasesThrowingErrors")
-    void should_throwError_when_noCasesMatchingRuleWereFound(ArchRule ruleUnderTest, Class<?> testClass) {
+    void should_throwError_when_noCasesMatchingRuleWereFound(ArchRule ruleUnderTest) {
         Assertions.assertThatCode(() -> ruleUnderTest.check(new ClassFileImporter()
-                .importClasses(testClass)))
+                .importClasses(NamingConventionExamplesTest.ExampleTestNamesWithoutAnntation.class)))
                 .isInstanceOf(AssertionError.class)
                 .satisfies(assertionError -> Assertions.assertThat(assertionError.getMessage())
                         .contains("failed to check any classes"));
@@ -56,12 +56,9 @@ public class MethodRulesTest {
 
     private static Stream<Arguments> getRulesAndTestClassesWithoutMatchingCasesThrowingErrors() {
         return Stream.of(
-                Arguments.of(RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED,
-                        NamingConventionExamplesTest.ExampleTestNamesWithoutAnntation.class),
-                Arguments.of(RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED,
-                        NamingConventionExamplesTest.ExampleTestNamesWithoutAnntation.class),
-                Arguments.of(RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED,
-                        NamingConventionExamplesTest.ExampleTestNamesWithoutAnntation.class));
+                Arguments.of(RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED),
+                Arguments.of(RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED),
+                Arguments.of(RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED));
     }
 
     private static Stream<Arguments> getRulesAndMatchingTestClassesNotThrowingErrors() {

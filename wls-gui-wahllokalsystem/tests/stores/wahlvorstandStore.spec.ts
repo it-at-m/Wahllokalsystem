@@ -66,6 +66,10 @@ describe("wahlvorstandStore.ts", () => {
       ];
 
       expect(unitUnderTest.isSchriftfuehrerAnwesend).toStrictEqual(true);
+
+      expect(mockDefinitions.isSchriftfuehrer.mock.calls[0][0]).toStrictEqual(
+        "SB"
+      );
     });
 
     it("should_returnFalse_when_whenMitgliedWithFunktionExistsButIsNotAnwesend", () => {
@@ -79,6 +83,13 @@ describe("wahlvorstandStore.ts", () => {
       ];
 
       expect(unitUnderTest.isSchriftfuehrerAnwesend).toStrictEqual(false);
+
+      expect(mockDefinitions.isSchriftfuehrer.mock.calls[0][0]).toStrictEqual(
+        "SB"
+      );
+      expect(mockDefinitions.isSchriftfuehrer.mock.calls[1][0]).toStrictEqual(
+        "W"
+      );
     });
 
     it("should_returnFalse_when_noMitgliedMatchesFunktion", () => {
@@ -94,8 +105,13 @@ describe("wahlvorstandStore.ts", () => {
           .withFunktion("W")
           .withAnwesend(true),
       ];
-
       expect(unitUnderTest.isSchriftfuehrerAnwesend).toStrictEqual(false);
+      expect(mockDefinitions.isSchriftfuehrer.mock.calls[0][0]).toStrictEqual(
+        "SB"
+      );
+      expect(mockDefinitions.isSchriftfuehrer.mock.calls[1][0]).toStrictEqual(
+        "W"
+      );
     });
   });
 

@@ -30,7 +30,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
 public class UrnenwahlvorbereitungSecurityTest {
 
-    @MockBean(name = "bezirkIdPermisionEvaluator")
+    @MockBean
     BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
     @Autowired

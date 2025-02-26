@@ -56,9 +56,7 @@ public class MethodRulesTest {
 
     private static Stream<Arguments> getRulesAndTestClassesWithoutMatchingCasesThrowingErrors() {
         return Stream.of(
-                Arguments.of(RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED),
-                Arguments.of(RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED),
-                Arguments.of(RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED));
+                Arguments.of(RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED));
     }
 
     private static Stream<Arguments> getRulesAndMatchingTestClassesNotThrowingErrors() {

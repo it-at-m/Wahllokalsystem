@@ -23,7 +23,7 @@ public class MethodRulesTest {
                 .importClasses(testClass)))
                 .isInstanceOf(AssertionError.class)
                 .satisfies(assertionError -> Assertions.assertThat(assertionError.getMessage().split(System.lineSeparator()).length)
-                        .isGreaterThanOrEqualTo(testClass.getMethods().length));
+                        .isGreaterThanOrEqualTo(testClass.getDeclaredMethods().length));
     }
 
     @ParameterizedTest

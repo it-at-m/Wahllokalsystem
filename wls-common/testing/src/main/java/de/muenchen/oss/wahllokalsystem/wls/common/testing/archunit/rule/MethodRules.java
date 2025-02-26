@@ -25,9 +25,11 @@ public class MethodRules {
             .that().areAnnotatedWith(Test.class).or().areAnnotatedWith(ParameterizedTest.class)
             .should().haveNameMatching("^should_[a-z].*_when_[a-z].*");
 
-    public static final MethodsShouldConjunction RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED = methods()
-            .that().areAnnotatedWith(BeforeEach.class).should().haveNameMatching("setup");
+    public static final ArchRule RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED = methods()
+            .that().areAnnotatedWith(BeforeEach.class).should().haveNameMatching("setup")
+            .allowEmptyShould(true);
 
-    public static final MethodsShouldConjunction RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED = methods()
-            .that().areAnnotatedWith(AfterEach.class).should().haveNameMatching("teardown");
+    public static final ArchRule RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED = methods()
+            .that().areAnnotatedWith(AfterEach.class).should().haveNameMatching("teardown")
+            .allowEmptyShould(true);
 }

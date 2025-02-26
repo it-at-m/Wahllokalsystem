@@ -159,6 +159,12 @@ describe("wahlvorstandStore.ts", () => {
       user.wahlbezirkID = wahlbezirkID;
       userStore.setUser(user);
 
+      const mockedDatetime = new Date();
+
+      mockDefinitions.saveWahlvorstand.mockReturnValue(
+        Promise.resolve({ updateDatetime: mockedDatetime })
+      );
+
       await unitUnderTest.sendWahlvorstand();
 
       expect(mockDefinitions.saveWahlvorstand).toHaveBeenCalledWith(
@@ -177,6 +183,12 @@ describe("wahlvorstandStore.ts", () => {
       userStore.setUser(user);
 
       expect(unitUnderTest.lastSending).toBeNull();
+
+      const mockedDatetime = new Date();
+
+      mockDefinitions.saveWahlvorstand.mockReturnValue(
+        Promise.resolve({ updateDatetime: mockedDatetime })
+      );
 
       await unitUnderTest.sendWahlvorstand();
 

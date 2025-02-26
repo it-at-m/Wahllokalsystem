@@ -50,8 +50,11 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   async function sendWahlvorstand() {
     const currentUserWahlbezirkID = userStore.getUser?.wahlbezirkID;
     if (currentUserWahlbezirkID) {
-      saveWahlvorstand(currentUserWahlbezirkID, wahlvorstand.value);
-      lastSending.value = new Date();
+      const { updateDatetime } = await saveWahlvorstand(
+        currentUserWahlbezirkID,
+        wahlvorstand.value
+      );
+      lastSending.value = updateDatetime;
     }
   }
 

@@ -22,20 +22,20 @@ export function useWahlvorstandService() {
       .then((response) => toModel(response.data));
   }
 
-  function saveWahlvorstand(
+  async function saveWahlvorstand(
     wahlbezirkID: string,
     wahlvorstand: Wahlvorstand
-  ): {
+  ): Promise<{
     updateDatetime: Date;
-  } {
+  }> {
     const now = new Date();
     const wahlvorstandDto = toDto(wahlvorstand, now);
 
     wahlvorstandControllerApi.postWahlvorstand(wahlbezirkID, wahlvorstandDto);
 
-    return {
+    return Promise.resolve({
       updateDatetime: now,
-    };
+    });
   }
 
   return {

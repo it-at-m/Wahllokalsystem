@@ -150,11 +150,12 @@ class WahllokalBenutzerClientMapperTest {
         val wahltag = LocalDate.now();
         List<WahllokalUserInfoDTO> listOfWahlLokalUserInfoDTO = new ArrayList<>();
         for(int i = 0; i < 3; i++) {
+            WahllokalUserInfoDTO.WahlbezirksartEnum wahlbezirkModel = i % 2 == 0 ? WahllokalUserInfoDTO.WahlbezirksartEnum.UWB : WahllokalUserInfoDTO.WahlbezirksartEnum.BWB;
             val wahllokalUserInfoDTO = new WahllokalUserInfoDTO();
             wahllokalUserInfoDTO.setWahlbezirkID(String.format("wahlbezirkID%s_0", i));
             wahllokalUserInfoDTO.setWahlbezirknummer(String.format("000%s", i));
             wahllokalUserInfoDTO.setWahltag(wahltag);
-            wahllokalUserInfoDTO.setWahlbezirksart(WahllokalUserInfoDTO.WahlbezirksartEnum.UWB);
+            wahllokalUserInfoDTO.setWahlbezirksart(wahlbezirkModel);
             wahllokalUserInfoDTO.setWbidWahlnummer(
                     String.format("[" +
                             "{\"wahlbezirkID\":\"wahlbezirkID%s_0\",\"wahlnummer\":\"0\",\"wahlID\":\"wahlID0\"}," +
@@ -212,10 +213,10 @@ class WahllokalBenutzerClientMapperTest {
     private WahllokalUserInfoDTO getWahllokalUserInfoDTOWithBWB() {
         val wahltag = LocalDate.now();
         val wahllokalUserInfoDTO = new WahllokalUserInfoDTO();
-        wahllokalUserInfoDTO.setWahlbezirkID("wahlbezirkID1s_0");
+        wahllokalUserInfoDTO.setWahlbezirkID("wahlbezirkID1_0");
         wahllokalUserInfoDTO.setWahlbezirknummer("0001");
         wahllokalUserInfoDTO.setWahltag(wahltag);
-        wahllokalUserInfoDTO.setWahlbezirksart(WahllokalUserInfoDTO.WahlbezirksartEnum.UWB);
+        wahllokalUserInfoDTO.setWahlbezirksart(WahllokalUserInfoDTO.WahlbezirksartEnum.BWB);
         wahllokalUserInfoDTO.setWbidWahlnummer(
                 "[" +
                         "{\"wahlbezirkID\":\"wahlbezirkID1_0\",\"wahlnummer\":\"0\",\"wahlID\":\"wahlID0\"}," +

@@ -7,10 +7,10 @@ Tests werden zu Suits zusammengefasst welche durch [`describe`](https://vitest.d
 Allgemein gilt für den Aufbau:
 
 ```typescript
-describe("<Dateiname des Testgegenstandes", () => {
+describe("<Dateiname des Testgegenstandes>", () => {
     describe("<zu testende Funktionalität>", () => {
         it("<Testfallbeschreibung>", () => {
-        };
+        });
     });
 });
 ```

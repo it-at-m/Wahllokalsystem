@@ -27,5 +27,4 @@ public class ClientConfiguration {
     public WlsResponseErrorHandler wlsResponseErrorHandler(final ObjectMapper objectMapper) {
         return new WlsResponseErrorHandler(objectMapper);
     }
-
 }

@@ -17,6 +17,7 @@ class WahllokalBenutzerControllerTest {
 
     @Mock
     WahllokalBenutzerService wahllokalBenutzerService;
+
     @Mock
     CsvFileDTOMapper csvFileDTOMapper;
 

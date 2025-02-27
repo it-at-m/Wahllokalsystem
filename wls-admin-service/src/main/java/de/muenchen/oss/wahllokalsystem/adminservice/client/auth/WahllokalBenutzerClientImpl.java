@@ -56,7 +56,6 @@ public class WahllokalBenutzerClientImpl implements WahllokalBenutzerClient {
             log.error("#WahllokalBenutzer nicht geloescht. Exception:", exception);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_AUTH);
         }
-        log.debug("#ende deleteWahllokalBenutzer {}", wahltagID);
     }
 
     @Override

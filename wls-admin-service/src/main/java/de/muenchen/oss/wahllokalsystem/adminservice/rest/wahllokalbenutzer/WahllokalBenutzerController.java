@@ -28,7 +28,7 @@ public class WahllokalBenutzerController {
     private final CsvFileDTOMapper csvFileDTOMapper;
 
     @Operation(
-            description = "Generiert die Benutzer fuer den gegeben Wahltag.",
+            description = "Generiert die Benutzer fuer den gegebenen Wahltag.",
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Benutzer erfolgreich generiert.",
@@ -77,7 +77,7 @@ public class WahllokalBenutzerController {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Benutzer erfolgreich gelöscht."),
-                    @ApiResponse(responseCode = "400", description = "Benutzer können wegen Client-Kommunikationfehler nicht gelöscht werden."),
+                    @ApiResponse(responseCode = "400", description = "Benutzer können wegen Client-Kommunikationsfehler nicht gelöscht werden."),
                     @ApiResponse(responseCode = "165", description = "Anfrageparameter sind fehlerhaft")
             }
     )

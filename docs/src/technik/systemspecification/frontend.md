@@ -87,8 +87,8 @@ je Ordner kann, sofern es mehrerer Elemente gibt die zu unterschiedlichen fachli
 
 Die Tests und Stories bilden die gleiche Ordnerstruktur ab wie der jeweilige Testgegestand bzw. die Komponente der Stories.
 
-Für die Komponte im Ordner `src/componentes/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.vue` liegen die Tests
-in `tests/componentes/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.spec.ts` und die Stories in
+Für die Komponte im Ordner `src/components/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.vue` liegen die Tests
+in `tests/components/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.spec.ts` und die Stories in
 `stories/componentes/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.stories.ts`.
 
 Bei den Tests gibt es zusätzlich parallel zu den Testfiles einen Ordner `__snapshots__`. Dieser enthält die Referenzen

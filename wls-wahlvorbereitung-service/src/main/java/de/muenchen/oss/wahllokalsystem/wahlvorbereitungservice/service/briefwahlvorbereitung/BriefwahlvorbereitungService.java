@@ -23,7 +23,7 @@ public class BriefwahlvorbereitungService {
 
     @PreAuthorize(
         "hasAuthority('Wahlvorbereitung_BUSINESSACTION_GetBriefwahlvorbereitung')"
-                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
+                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
     )
     public Optional<BriefwahlvorbereitungModel> getBriefwahlvorbereitung(@P("wahlbezirkID") final String wahlbezirkID) {
         log.debug("#getBriefwahlvorbereitung");
@@ -40,7 +40,7 @@ public class BriefwahlvorbereitungService {
 
     @PreAuthorize(
         "hasAuthority('Wahlvorbereitung_BUSINESSACTION_PostBriefwahlvorbereitung')"
-                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#briefwahlvorbereitungToSet.wahlbezirkID(), authentication)"
+                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#briefwahlvorbereitungToSet.wahlbezirkID(), authentication)"
     )
     public void setBriefwahlvorbereitung(@P("briefwahlvorbereitungToSet") final BriefwahlvorbereitungModel briefwahlvorbereitungToSet) {
         log.debug("#postBriefwahlvorbereitung");

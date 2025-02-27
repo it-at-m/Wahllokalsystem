@@ -30,7 +30,7 @@ public class MethodRulesTest {
     @MethodSource("getRulesAndTestClassesWithoutMatchingCasesThrowingErrors")
     void should_throwError_when_noCasesMatchingRuleWereFound(ArchRule ruleUnderTest) {
         Assertions.assertThatCode(() -> ruleUnderTest.check(new ClassFileImporter()
-                .importClasses(NamingConventionExamplesTest.ExampleTestNamesWithoutAnnotation.class)))
+                .importClasses(NamingConventionExamplesTest.ExampleMethodNamesWithoutAnnotation.class)))
                 .isInstanceOf(AssertionError.class)
                 .satisfies(assertionError -> Assertions.assertThat(assertionError.getMessage())
                         .contains("failed to check any classes"));
@@ -41,6 +41,14 @@ public class MethodRulesTest {
     void should_throwNoError_when_ruleSatisfied(ArchRule ruleUnderTest, Class<?> testClass) {
         Assertions.assertThatCode(() -> ruleUnderTest.check(new ClassFileImporter()
                 .importClasses(testClass)))
+                .doesNotThrowAnyException();
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRulesAndTestClassesWithoutMatchingCasesNotThrowingErrors")
+    void should_throwNoError_when_noCasesMatchingRuleWereFoundAndAllowEmptyIsTrue(ArchRule ruleUnderTest) {
+        Assertions.assertThatCode(() -> ruleUnderTest.check(new ClassFileImporter()
+                .importClasses(NamingConventionExamplesTest.ExampleMethodNamesWithoutAnnotation.class)))
                 .doesNotThrowAnyException();
     }
 
@@ -67,5 +75,11 @@ public class MethodRulesTest {
                         NamingConventionExamplesTest.ExampleBeforeEachMethodNameFollowingNamingConventionRule.class),
                 Arguments.of(RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED,
                         NamingConventionExamplesTest.ExampleAfterEachMethodNameFollowingNamingConventionRule.class));
+    }
+
+    private static Stream<Arguments> getRulesAndTestClassesWithoutMatchingCasesNotThrowingErrors() {
+        return Stream.of(
+                Arguments.of(RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED),
+                Arguments.of(RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED));
     }
 }

@@ -320,7 +320,7 @@ describe("wahlvorstandStore.ts", () => {
 });
 
 function createUser(wahlbezirkID: string | undefined): User {
-  //TODO create Issue to use interface for User and provide BuilderImpl-Class
+  //TODO create Issue to use interface for User and provide BuilderImpl-Class => #853
   const user = new User();
 
   user.wahlbezirkID = wahlbezirkID;

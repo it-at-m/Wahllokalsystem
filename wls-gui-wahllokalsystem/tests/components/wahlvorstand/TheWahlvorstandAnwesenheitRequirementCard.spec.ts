@@ -25,7 +25,6 @@ describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => {
 
   beforeAll(() => {
     createPinia();
-    createVuetify();
   });
 
   beforeEach(() => {

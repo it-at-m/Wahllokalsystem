@@ -28,7 +28,6 @@ describe("TheWahlvorstandMitgliederTable.vue", () => {
 
   beforeAll(() => {
     createPinia();
-    createVuetify();
   });
 
   beforeEach(() => {

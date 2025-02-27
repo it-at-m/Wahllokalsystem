@@ -1,4 +1,4 @@
-# Naming Convention für Tests
+# Namingconventions für Tests im Frontend
 
 Der Dateinamen von Tests ist [hier](../frontend#tests) beschrieben.
 

@@ -1,32 +1,13 @@
-# Naming Convention für Tests
+# Namingconventions für Tests im Backend
 
-## Kontext
+Durch die Einführung dieser Naming Conventions wird die Lesbarkeit und Verständlichkeit unserer Tests verbessert. Die
+einheitliche Namensgebung erleichtert es anderen Entwicklern, den Code zu verstehen und zu warten. Außerdem wird die
+Zusammenarbeit innerhalb des Teams effizienter, da jeder bei Bedarf schnell die relevanten Tests finden und bearbeiten
+kann. Darüber hinaus ermöglicht die Verwendung von `@Nested` eine bessere Strukturierung der Tests und eine einfachere
+Überprüfung der Testergebnisse. Insgesamt erwarten wir eine höhere Codequalität und eine schnellere Fehlererkennung
+durch die Einführung dieser Convention.
 
-Aktuell gibt es keine Struktur oder Vorgaben bei der Benennung von Tests. Die meisten Namen sind sehr kurz gehalten und
-wenig aussagekräftig, wie zum Beispiel:
-
-````java
-void dataFound() {}
-void noDataFound() {}
-void serviceCalled() {}
-````
-
-Damit der Gesamtcode im Projekt übersichtlicher und einheitlicher ist, sollen Naming Conventions eingesetzt werden.
-Grundlage für die Einführung sind unter anderem auch sich wiederholende Tests mit gleichem Inhalt in den verschiedenen
-Services. So wird gewährleistet, dass deren Kontext schneller klar ist, ohne den Code lesen zu müssen und die Wartung
-und Erweiterung des Codes wird erleichtert.
-
-## Entscheidung
-
-Die Bezeichnungen sollen dem Schema `should_<result>_when_<input>` folgen, wobei Result (= ExpectedBehavior, bzw.
-erwartetes Ergebnis) und Input (= StateUnderTest, bzw. zu testender Zustand) in CamelCase gehalten werden. Dem Schema
-entsprechend sind die Testnamen auch auf Englisch zu formulieren.
-
-Wir haben uns darauf geeinigt, die zu testenden Methoden im Backend mit `@Nested`, und im Frontend mit
-`describe("xyz", () => {}` zu gruppieren. Im Fall von überladenen Methoden werden diese innerhalb der Methodenklasse 
-zusätzlich verschachtelt und ebenfalls mit `@Nested` annotiert, oder in einen neuen `describe()`-Block eingeordnet.
-
-### Beispiele
+## Beispiele
 
 ```java
 void should_returnDTO_when_givenValidId() {}
@@ -34,7 +15,7 @@ void should_notThrowException_when_newDataSaved() {}
 void should_throwAccessDeniedException_whenAuthoritiesMissing() {}
 ```
 
-##### Gruppierung überladener Methoden:
+### Gruppierung überladener Methoden:
 
 **Backend-Beispiel:** Vereinfachter Pseudocode! Beispiel aus dem Vorfälle und Vorkommnisse Service.
 ::: code-group
@@ -69,19 +50,3 @@ public interface EreignisModelMapper {
 }
 ```
 :::
-
-## Konsequenzen
-
-### positiv
-
-Durch die Einführung dieser Naming Conventions wird die Lesbarkeit und Verständlichkeit unserer Tests verbessert. Die
-einheitliche Namensgebung erleichtert es anderen Entwicklern, den Code zu verstehen und zu warten. Außerdem wird die
-Zusammenarbeit innerhalb des Teams effizienter, da jeder bei Bedarf schnell die relevanten Tests finden und bearbeiten
-kann. Darüber hinaus ermöglicht die Verwendung von `@Nested` eine bessere Strukturierung der Tests und eine einfachere
-Überprüfung der Testergebnisse. Insgesamt erwarten wir eine höhere Codequalität und eine schnellere Fehlererkennung
-durch die Einführung dieser Convention.
-
-### negativ
-
-Gegebenenfalls müssen - neben der Anpassung der Namen - einige bestehende Tests umgeschrieben werden, um der neuen
-Bezeichnung zu entsprechen. 

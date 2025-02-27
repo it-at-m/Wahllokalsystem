@@ -4,7 +4,7 @@ Wenn ein neuer Microservice angelegt wird, sind dabei einige Themen zu beachten.
 
 ## Update der Tests
 
-Im Projekt haben wir für das Naming unserer Tests [Konventionen](/technik/naming_conventions/tests/frontend) aufgestellt. Die bereitgestellten Tests der 
+Im Projekt haben wir für das Naming unserer Tests [Konventionen](/technik/naming_conventions/tests/) aufgestellt. Die bereitgestellten Tests der 
 [Refarch-Templates](https://github.com/it-at-m/refarch-templates/), welches im Projekt eingesetzt wird, müssen 
 entsprechend angepasst werden.
 

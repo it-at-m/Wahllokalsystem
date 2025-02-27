@@ -151,6 +151,17 @@ describe("wahlvorstandStore.ts", () => {
         false
       );
     });
+
+    it("should_returnFalse_when_schriftfuehrerIsNotAnwesendAndWahlvorsteherIsNotAnwesend", () => {
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isWahlvorsteherAnwesend = false;
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isSchriftfuehrerAnwesend = false;
+
+      expect(unitUnderTest.isWahlvorstandAusreichendAnwesend).toStrictEqual(
+        false
+      );
+    });
   });
 
   describe("sendWahlvorstand", () => {

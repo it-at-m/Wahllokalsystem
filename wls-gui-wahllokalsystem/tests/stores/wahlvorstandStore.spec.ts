@@ -19,6 +19,7 @@ vi.mock("@/types/wahlvorstand/wahlvorstandsmitgliedFunktion", () => ({
   isSchriftfuehrer: mockDefinitions.isSchriftfuehrer,
   isWahlvorsteher: mockDefinitions.isWahlvorsteher,
 }));
+
 vi.mock("@/composables/wahlvorstand/wahlvorstandService", () => ({
   useWahlvorstandService: () => ({
     saveWahlvorstand: mockDefinitions.saveWahlvorstand,

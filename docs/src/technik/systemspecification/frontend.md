@@ -2,6 +2,51 @@
 
 ## Struktur
 
+<details><summary>Grafische Darstellung der Struktur</summary>
+
+```
+frontend-project
+├─ src
+|  ├─ api
+|  ├─ components
+|  |  ├─ common
+|  |  |  └─ buttons
+|  |  |     └─ TheBaseRefreshButton.vue
+|  |  └─ wahlvorstand
+|  |     └─ TheWahlvorstandAnwesenheitRequirementCard.vue
+|  ├─ composables
+|  |  ├─ common
+|  |  |   └─ formatter.ts
+|  |  └─ wahlvorstand
+|  |     └─ wahlvorstandService.ts
+|  ├─ plugins
+|  |     ├─ index.ts
+|  |     ├─ pinia.ts
+|  |     ├─ router.ts
+|  |     └─ vuetify.ts
+|  ├─ resources
+|  |     └─ openapis
+|  |        └─ openapi.broadcast.0.2.0.json
+|  ├─ stores
+|  |     └─ wahlvorstandStore.ts
+|  ├─ types
+|  |     └─ wahlvorstand
+|  |        ├─ wahlvorstand.ts
+|  |        └─ wahlvorstandsMitglied.ts
+|  └─ views
+|     └─ WahlvorstandView.vue
+├─ stories
+|  └─ components
+|     └─ wahlvorstand
+|        └─ TheWahlvorstandAnwesenheitRequirementCard.stories.ts
+└─ tests
+   └─ components
+      └─ wahlvorstand
+         └─ TheWahlvorstandAnwesenheitRequirementCard.spec.ts
+```
+
+</details>
+
 Das Frontend besteht für die Entwicklung aus 3 Komponenten, welche sich jeweils in einem Ordner auf der Rootebene
 wiederspiegeln.
 

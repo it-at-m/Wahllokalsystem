@@ -5,8 +5,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useUserStore } from "@/stores/user";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 import User from "@/types/User";
-import { WahlvorstandBuilder } from "@/types/wahlvorstand/wahlvorstand";
-import { WahlvorstandsmitgliedBuilder } from "@/types/wahlvorstand/wahlvorstandsmitglied";
+import { WahlvorstandBuilder } from "@/types/wahlvorstand/Wahlvorstand";
+import { WahlvorstandsmitgliedBuilder } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
 
 const mockDefinitions = vi.hoisted(() => ({
   isSchriftfuehrer: vi.fn(),

@@ -1,4 +1,4 @@
-import type { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/wahlvorstandsmitgliedFunktion";
+import type { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion";
 
 export interface Wahlvorstandsmitglied {
   identifikator: string; //TODO is always given when reading => Issue 851

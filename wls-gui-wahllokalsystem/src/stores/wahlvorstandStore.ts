@@ -1,15 +1,15 @@
-import type { Wahlvorstand } from "@/types/wahlvorstand/wahlvorstand";
+import type { Wahlvorstand } from "@/types/wahlvorstand/Wahlvorstand";
 
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 import { useWahlvorstandService } from "@/composables/wahlvorstand/wahlvorstandService";
 import { useUserStore } from "@/stores/user";
-import { WahlvorstandBuilder } from "@/types/wahlvorstand/wahlvorstand";
+import { WahlvorstandBuilder } from "@/types/wahlvorstand/Wahlvorstand";
 import {
   isSchriftfuehrer,
   isWahlvorsteher,
-} from "@/types/wahlvorstand/wahlvorstandsmitgliedFunktion";
+} from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion";
 
 const { getWahlvorstand, saveWahlvorstand } = useWahlvorstandService();
 

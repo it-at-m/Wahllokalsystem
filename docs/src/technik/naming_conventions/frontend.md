@@ -74,7 +74,7 @@ Die Benennung erfolgt grundsätzlich auf Englisch mit Aufnahme von Fachbegriffen
 
 **Beispiel**
 
-`wahlvorstand.ts` ... enthält das Interface `Wahlvorstand` und eine Hilfsklasse die das Interface implementiert
+`Wahlvorstand.ts` ... enthält das Interface `Wahlvorstand` und eine Hilfsklasse die das Interface implementiert
 
 ## Tests
 

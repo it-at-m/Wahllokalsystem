@@ -1,4 +1,4 @@
-import type { Wahlvorstandsmitglied } from "@/types/wahlvorstand/wahlvorstandsmitglied";
+import type { Wahlvorstandsmitglied } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
 
 export interface Wahlvorstand {
   wahlvorstandsmitglieder: Wahlvorstandsmitglied[];

@@ -31,8 +31,8 @@ frontend-project
 |  |     └─ wahlvorstandStore.ts
 |  ├─ types
 |  |     └─ wahlvorstand
-|  |        ├─ wahlvorstand.ts
-|  |        └─ wahlvorstandsMitglied.ts
+|  |        ├─ Wahlvorstand.ts
+|  |        └─ WahlvorstandsMitglied.ts
 |  └─ views
 |     └─ WahlvorstandView.vue
 ├─ stories

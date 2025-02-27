@@ -1,4 +1,4 @@
-import type { Wahlvorstand } from "@/types/wahlvorstand/wahlvorstand";
+import type { Wahlvorstand } from "@/types/wahlvorstand/Wahlvorstand";
 
 import {
   Configuration,

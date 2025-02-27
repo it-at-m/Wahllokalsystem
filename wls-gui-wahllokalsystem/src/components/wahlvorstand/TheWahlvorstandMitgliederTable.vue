@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Wahlvorstandsmitglied } from "@/types/wahlvorstand/wahlvorstandsmitglied";
+import type { Wahlvorstandsmitglied } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
 
 import { computed } from "vue";
 import { VCheckbox, VTable } from "vuetify/components";

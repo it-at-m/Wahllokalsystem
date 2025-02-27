@@ -1,4 +1,4 @@
-import type { Wahlvorstandsmitglied } from "@/types/wahlvorstand/wahlvorstandsmitglied";
+import type { Wahlvorstandsmitglied } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
 
 import { createTestingPinia } from "@pinia/testing";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
@@ -19,7 +19,7 @@ import * as directives from "vuetify/directives";
 
 import TheWahlvorstandMitgliederTable from "@/components/wahlvorstand/TheWahlvorstandMitgliederTable.vue";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
-import { WahlvorstandsmitgliedBuilder } from "@/types/wahlvorstand/wahlvorstandsmitglied";
+import { WahlvorstandsmitgliedBuilder } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
 import { getSnapshotFilename } from "../../utils/testutils";
 
 describe("TheWahlvorstandMitgliederTable.vue", () => {

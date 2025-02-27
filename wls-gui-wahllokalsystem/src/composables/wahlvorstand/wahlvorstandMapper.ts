@@ -3,11 +3,11 @@ import type {
   WahlvorstandsmitgliedDTO,
   WahlvorstandWriteDTO,
 } from "@/api/wls-clients/generated-wahlvorstand-api";
-import type { Wahlvorstand } from "@/types/wahlvorstand/wahlvorstand";
-import type { Wahlvorstandsmitglied } from "@/types/wahlvorstand/wahlvorstandsmitglied";
+import type { Wahlvorstand } from "@/types/wahlvorstand/Wahlvorstand";
+import type { Wahlvorstandsmitglied } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
 
 import { WahlvorstandsmitgliedDTOFunktionEnum } from "@/api/wls-clients/generated-wahlvorstand-api";
-import { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/wahlvorstandsmitgliedFunktion";
+import { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion";
 
 export function useWahlvorstandMapper() {
   function toModel(wahlvorstand: WahlvorstandDTO): Wahlvorstand {

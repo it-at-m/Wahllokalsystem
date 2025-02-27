@@ -8,7 +8,6 @@ import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahltageClien
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen.FarbeModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen.WahlModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen.WahlartModel;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen.WahlenClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer.WahllokalBenutzerClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer.WahllokalBenutzerModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.AWerteClient;

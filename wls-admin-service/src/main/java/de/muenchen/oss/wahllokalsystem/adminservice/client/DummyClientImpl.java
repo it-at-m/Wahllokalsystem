@@ -2,6 +2,9 @@ package de.muenchen.oss.wahllokalsystem.adminservice.client;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkArtModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkeClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlenClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahltageClient;
@@ -12,9 +15,6 @@ import de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer.Wa
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer.WahllokalBenutzerModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.AWerteClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.KonfigurierterWahltagClient;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkArtModel;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkModel;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkeClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahltermindatenClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import java.time.LocalDate;

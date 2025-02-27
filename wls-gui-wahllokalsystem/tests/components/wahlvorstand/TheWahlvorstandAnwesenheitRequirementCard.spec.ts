@@ -63,7 +63,7 @@ describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => {
         getSnapshotFilename(context)
       );
     });
-    
+
     it("should_showErrorText_when_schriftfuehrerIsNotAnwesend", async (context) => {
       const wahlvorstandStore = useWahlvorstandStore();
 
@@ -78,7 +78,7 @@ describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => {
         getSnapshotFilename(context)
       );
     });
-    
+
     it("should_showErrorText_when_wahlvorsteherIsNotAnwesend", async (context) => {
       const wahlvorstandStore = useWahlvorstandStore();
 

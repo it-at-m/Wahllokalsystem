@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.client.infomanagement;
 
-import de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.client.WahlenControllerApi;
 import de.muenchen.oss.wahllokalsystem.adminservice.eai.infomanagement.client.KonfigurierterWahltagControllerApi;
 import de.muenchen.oss.wahllokalsystem.adminservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
@@ -30,9 +29,6 @@ class KonfigurierterWahltagClientImplTest {
 
     @Mock
     KonfigurierterWahltagClientMapper konfigurierterWahltagClientMapper;
-
-    @Mock
-    WahlenControllerApi wahlenControllerApi;
 
     @InjectMocks
     KonfigurierterWahltagClientImpl unitUnderTest;
@@ -92,7 +88,7 @@ class KonfigurierterWahltagClientImplTest {
     class GetKonfigurierteWahltage {
 
         @Test
-        void should_callApi_when_konfigurierteWahltageIsCalled() throws Exception {
+        void should_callApi_when_konfigurierteWahltageIsCalled() {
             val nowDate = LocalDate.now();
             val mockedKonfigurierterWahltagModel = new KonfigurierterWahltagModel(nowDate, "1-2-3", true, "123");
             val mockedKonfigurierterWahltagDTO = new KonfigurierterWahltagDTO().wahltag(nowDate).wahltagID("1-2-3").wahltagStatus(
@@ -107,7 +103,7 @@ class KonfigurierterWahltagClientImplTest {
         }
 
         @Test
-        void should_rethrowWlsException_when_wlsExceptionIsThrownByApi() throws Exception {
+        void should_rethrowWlsException_when_wlsExceptionIsThrownByApi() {
             val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("Communication with KonfigurierteWahltageApi failed");
 
             Mockito.doThrow(mockedWlsException).when(konfigurierterWahltagControllerApi).getKonfigurierteWahltage();
@@ -116,7 +112,7 @@ class KonfigurierterWahltagClientImplTest {
         }
 
         @Test
-        void should_returnEmptyList_when_apiReturnsNull() throws Exception {
+        void should_returnEmptyList_when_apiReturnsNull() {
             Mockito.when(konfigurierterWahltagControllerApi.getKonfigurierteWahltage()).thenReturn(null);
 
             Assertions.assertThat(unitUnderTest.getKonfigurierteWahltage()).isEmpty();

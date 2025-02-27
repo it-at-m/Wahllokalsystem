@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.rest.konfiguriertewahltage;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.getAllServeEvents;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static de.muenchen.oss.wahllokalsystem.adminservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -8,10 +9,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.admin.model.ServeEventQuery;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.adminservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.client.WahlenControllerApi;
 import de.muenchen.oss.wahllokalsystem.adminservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.WahltagStatusDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.utils.Authorities;
@@ -19,14 +20,11 @@ import java.time.LocalDate;
 import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -46,14 +44,6 @@ class KonfigurierteWahltageControllerIntegrationTest {
 
     @Autowired
     ObjectMapper objectMapper;
-
-    @MockBean
-    WahlenControllerApi wahlenControllerApi;
-
-    @BeforeEach
-    void setup() {
-
-    }
 
     @Nested
     class GetKonfigurierteWahltage {
@@ -91,9 +81,18 @@ class KonfigurierteWahltageControllerIntegrationTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(requestBody));
 
-            stubFor(WireMock.post("/businessActions/konfigurierterWahltag").willReturn(createWireMockResponse(HttpStatus.OK)));
+            val konfigurierterWahltagStubbing = stubFor(
+                    WireMock.post("/businessActions/konfigurierterWahltag").willReturn(createWireMockResponse(HttpStatus.OK)));
 
             api.perform(request).andExpect(status().isOk());
+
+            val statusRequest = getAllServeEvents(ServeEventQuery.forStubMapping(konfigurierterWahltagStubbing)).get(0);
+            val sendStatusRequestBodyAsDTO = objectMapper.readValue(statusRequest.getRequest().getBody(), KonfigurierterWahltagDTO.class);
+
+            val expectedSendStatusRequestBody = new KonfigurierterWahltagDTO().wahltag(LocalDate.now()).wahltagID("wahltagID").wahltagStatus(
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.INAKTIV).nummer("0");
+
+            Assertions.assertThat(sendStatusRequestBodyAsDTO).isEqualTo(expectedSendStatusRequestBody);
         }
 
         @Test
@@ -107,9 +106,8 @@ class KonfigurierteWahltageControllerIntegrationTest {
                     .content(objectMapper.writeValueAsString(requestBody));
 
             stubFor(WireMock.post("/businessActions/konfigurierterWahltag").willReturn(createWireMockResponse(HttpStatus.OK)));
-
+            stubFor(WireMock.post("/businessActions/resetWahlen").willReturn(createWireMockResponse(HttpStatus.OK)));
             api.perform(request).andExpect(status().isOk());
-            Mockito.verify(wahlenControllerApi).resetWahlen();
         }
     }
 

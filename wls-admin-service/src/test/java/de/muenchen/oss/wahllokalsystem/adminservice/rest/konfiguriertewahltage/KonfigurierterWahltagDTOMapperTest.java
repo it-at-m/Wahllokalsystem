@@ -54,6 +54,7 @@ class KonfigurierterWahltagDTOMapperTest {
 
     @Nested
     class ToModel {
+
         @Test
         void should_returnNull_when_nullIsGiven() {
             Assertions.assertThat(unitUnderTest.toModel(null)).isNull();

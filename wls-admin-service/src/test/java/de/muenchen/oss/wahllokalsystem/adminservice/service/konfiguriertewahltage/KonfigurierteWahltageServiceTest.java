@@ -6,7 +6,6 @@ import de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahlta
 import de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag.KonfigurierterWahltagValidator;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.KonfigurierterWahltagClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.val;
@@ -21,9 +20,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class KonfigurierteWahltageServiceTest {
-
-    @Mock
-    ExceptionFactory exceptionFactory;
 
     @Mock
     KonfigurierterWahltagClient konfigurierterWahltagClient;

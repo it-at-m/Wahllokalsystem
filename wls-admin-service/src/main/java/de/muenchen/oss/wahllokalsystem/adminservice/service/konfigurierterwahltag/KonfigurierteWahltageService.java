@@ -26,7 +26,7 @@ public class KonfigurierteWahltageService {
     }
 
     @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_PostKonfigurierterWahltag')")
-    public void postKonfigurierterWahltag(KonfigurierterWahltagModel konfigurierterWahltagModel) {
+    public void postKonfigurierterWahltag(final KonfigurierterWahltagModel konfigurierterWahltagModel) {
         konfigurierterWahltagValidator.validateModel(konfigurierterWahltagModel);
         if (konfigurierterWahltagModel.active()) {
             wahlenClient.resetWahlen();

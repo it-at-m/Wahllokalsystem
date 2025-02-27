@@ -1,8 +1,15 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkArtModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -55,6 +62,36 @@ class WahllokalBenutzerValidatorTest {
                     Arguments.of(null, "wahltagID is null"),
                     Arguments.of((""), "wahltagID is empty"),
                     Arguments.of(("   "), "wahltagID is blank"));
+        }
+    }
+
+    @Nested
+    class WahlbezirkeExistOrThrow {
+
+        @ParameterizedTest(name = "provided exception when {1}")
+        @MethodSource("invalidWahlbezirkeArgumentsWithTestcaseNameAppendix")
+        void should_throwException_when_wahlbezirkeNull(final List<WahlbezirkModel> wahlbezirkModels, final String description) {
+            val mockedException = TechnischeWlsException.withCode("165").buildWithMessage("Kein Wahltag vorhanden für die angegebene Wahltag-ID");
+            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.INVALID_ARGUMENT)).thenReturn(mockedException);
+
+            Assertions.assertThatException()
+                    .isThrownBy(
+                            () -> unitUnderTest.wahlbezirkeExistOrThrow(wahlbezirkModels))
+                    .isSameAs(mockedException);
+        }
+
+        @Test
+        void should_notThrowException_when_wahlbezirkeExistOrThrow() {
+            WahlbezirkModel wahlbezirkModel = new WahlbezirkModel("id", WahlbezirkArtModel.BWB, "3", LocalDate.now(), "3", "4");
+            val listOfWahlbezirkModels = List.of(wahlbezirkModel);
+
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.wahlbezirkeExistOrThrow(listOfWahlbezirkModels));
+        }
+
+        public static Stream<Arguments> invalidWahlbezirkeArgumentsWithTestcaseNameAppendix() {
+            return Stream.of(
+                    Arguments.of(null, "wahlbezirke is null"),
+                    Arguments.of((new ArrayList<>()), "wahlbezirke is empty"));
         }
     }
 }

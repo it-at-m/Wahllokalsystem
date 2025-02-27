@@ -5,5 +5,3 @@
 <script setup lang="ts">
 import { VBtn } from "vuetify/components";
 </script>
-
-<style scoped></style>

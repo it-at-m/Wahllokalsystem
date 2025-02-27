@@ -14,5 +14,3 @@ import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 const { time } = useFormatter();
 const wahlvorstandStore = useWahlvorstandStore();
 </script>
-
-<style scoped></style>

@@ -51,5 +51,3 @@ function onAnwesenheitChanged(
   );
 }
 </script>
-
-<style scoped></style>

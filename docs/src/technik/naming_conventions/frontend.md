@@ -99,7 +99,7 @@ Die Tests liegen parallel zum Testgegenstand.
 ## Testattribut
 
 Damit Element leichter für Tests zugänglich sollen sie ein Attribut für Tests bekommen.
-Der Name des Attributes ist [`data-cy`](https://docs.cypress.io/app/core-concepts/best-practices#Selecting-Elements).
+Der Name des Attributes ist [`data-test`](https://docs.cypress.io/app/core-concepts/best-practices#Selecting-Elements).
 
 Bei dem Wert handelt es sich **nicht** um eine ID.
 

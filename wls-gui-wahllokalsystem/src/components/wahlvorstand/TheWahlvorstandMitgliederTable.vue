@@ -1,5 +1,5 @@
 <template>
-  <v-table data-cy="tableWahlvorstandsMitglieder">
+  <v-table data-test="tableWahlvorstandsMitglieder">
     <thead>
       <tr>
         <th>Familienname</th>
@@ -14,14 +14,14 @@
         v-for="mitglied in wahlvorstand.wahlvorstandsmitglieder"
         :key="mitglied.identifikator"
       >
-        <td data-cy="textFamilienname">{{ mitglied.familienname }}</td>
-        <td data-cy="textVorname">{{ mitglied.vorname }}</td>
-        <td data-cy="textFunktion">{{ mitglied.funktionsname }}</td>
+        <td data-test="textFamilienname">{{ mitglied.familienname }}</td>
+        <td data-test="textVorname">{{ mitglied.vorname }}</td>
+        <td data-test="textFunktion">{{ mitglied.funktionsname }}</td>
         <td>
           <v-checkbox
             :model-value="mitglied.anwesend"
             :hide-details="true"
-            data-cy="checkboxAnwesend"
+            data-test="checkboxAnwesend"
             @update:model-value="onAnwesenheitChanged($event, mitglied)"
           />
         </td>

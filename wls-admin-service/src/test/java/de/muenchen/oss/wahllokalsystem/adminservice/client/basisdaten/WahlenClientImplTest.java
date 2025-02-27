@@ -33,6 +33,37 @@ class WahlenClientImplTest {
     WahlenClientImpl unitUnderTest;
 
     @Nested
+    class ResetWahlen {
+
+        @Test
+        void should_resetWahlen_when_noExceptionIsThrown() {
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.resetWahlen());
+
+            Mockito.verify(wahlenControllerApi).resetWahlen();
+        }
+
+        @Test
+        void should_throwTechnischeWlsException_when_wlsExceptionIsThrownFromWahlenApi() {
+            val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("communication with wahlen api failed");
+
+            Mockito.doThrow(mockedWlsException).when(wahlenControllerApi).resetWahlen();
+
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.resetWahlen()).isSameAs(mockedWlsException);
+        }
+
+        @Test
+        void should_rethrowWlsException_when_wlsExceptionIsThrownFromWahlenApi() {
+            val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("communication with wahlen api failed");
+
+            Mockito.doThrow(new RuntimeException("api call failed")).when(wahlenControllerApi).resetWahlen();
+            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN))
+                    .thenReturn(mockedWlsException);
+
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.resetWahlen()).isSameAs(mockedWlsException);
+        }
+    }
+
+    @Nested
     class GetWahlen {
 
         @Test

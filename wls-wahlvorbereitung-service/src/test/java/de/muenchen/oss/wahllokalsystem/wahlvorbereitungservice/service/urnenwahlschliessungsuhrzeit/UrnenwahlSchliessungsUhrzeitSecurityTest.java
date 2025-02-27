@@ -29,7 +29,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
 public class UrnenwahlSchliessungsUhrzeitSecurityTest {
 
-    @MockBean(name = "bezirkIdPermisionEvaluator")
+    @MockBean
     BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
     @Autowired

@@ -6,7 +6,7 @@
       >
       <v-card-text>
         <div class="error-text">
-          TODO: Check Anzahl anwesende basieren auf Zustand (vor/nach 18
+          TODO: Check Anzahl Anwesende, basierend auf Zustand (vor/nach 18
           Uhr/Schließung)
         </div>
         <div

@@ -1,10 +1,13 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -15,6 +18,12 @@ public class WahllokalBenutzerValidator {
     public void validWahltagIDParamOrThrow(final String wahltagID) {
         if (StringUtils.isBlank(wahltagID)) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.MISSING_ARGUMENT);
+        }
+    }
+
+    public void wahlbezirkeExistOrThrow(final List<WahlbezirkModel> wahlbezirke) {
+        if (wahlbezirke == null || wahlbezirke.isEmpty()) {
+            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.INVALID_ARGUMENT);
         }
     }
 }

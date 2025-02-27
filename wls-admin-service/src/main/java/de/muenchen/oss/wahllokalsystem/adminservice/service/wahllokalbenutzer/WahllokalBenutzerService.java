@@ -31,9 +31,7 @@ public class WahllokalBenutzerService {
 
         val wahlbezirke = wahlbezirkeClient.getWahlbezirke(wahltagID);
 
-        if (wahlbezirke == null || wahlbezirke.isEmpty()) {
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.INVALID_ARGUMENT);
-        }
+        wahllokalbenutzerValidator.wahlbezirkeExistOrThrow(wahlbezirke);
 
         log.debug("generateWahllokalbenutzer, Anzahl Wahlbezirke: {}", wahlbezirke.size());
         List<WahllokalBenutzerModel> userModels = generateBenutzerModels(wahlbezirke);

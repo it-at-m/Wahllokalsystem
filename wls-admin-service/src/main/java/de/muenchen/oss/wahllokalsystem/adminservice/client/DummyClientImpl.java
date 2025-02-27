@@ -1,6 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.client;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.configuration.Profiles;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlenClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahltageClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen.FarbeModel;
@@ -11,7 +13,6 @@ import de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer.Wa
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer.WahllokalBenutzerModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.AWerteClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.KonfigurierterWahltagClient;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.KonfigurierterWahltagModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkeClient;
@@ -69,6 +70,20 @@ public class DummyClientImpl implements AWerteClient, KonfigurierterWahltagClien
     @Override
     public void deleteWahltermindaten(String wahltagID) {
         log.info("dummy client deleteWahltermindaten({}) called instead of basisdaten-service", wahltagID);
+    }
+
+    @Override
+    public List<KonfigurierterWahltagModel> getKonfigurierteWahltage() {
+        log.info("dummy client getKonfigurierteWahltage() called instead of infomanagement-service");
+        return List.of(
+                new KonfigurierterWahltagModel(LocalDate.now(), "wahltagID1", true, "0"),
+                new KonfigurierterWahltagModel(LocalDate.now().minusMonths(1), "wahltagID2", false, "1"),
+                new KonfigurierterWahltagModel(LocalDate.now().plusMonths(2), "wahltagID3", true, "2"));
+    }
+
+    @Override
+    public void resetWahlen() {
+        log.info("dummy client resetWahlen() called instead of basisdaten-service");
     }
 
     @Override

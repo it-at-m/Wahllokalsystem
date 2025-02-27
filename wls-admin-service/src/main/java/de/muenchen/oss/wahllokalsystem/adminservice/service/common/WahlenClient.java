@@ -1,5 +1,6 @@
-package de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen;
+package de.muenchen.oss.wahllokalsystem.adminservice.service.common;
 
+import de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen.WahlModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import java.util.List;
 
@@ -26,4 +27,10 @@ public interface WahlenClient {
      *             if there were trouble during communication
      */
     void postWahlen(String wahltagID, List<WahlModel> wahlen) throws WlsException;
+
+    /**
+     * @throws de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException when problem
+     *             on retrieving the information occurred
+     */
+    void resetWahlen();
 }

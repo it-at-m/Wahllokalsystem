@@ -26,14 +26,14 @@ public class WahllokalBenutzerClientImpl implements WahllokalBenutzerClient {
 
     @Override
     public String generateAndExportWahllokalBenutzer(final String wahltagID, List<WahllokalBenutzerModel> wahllokalBenutzerModels) {
-        String csvBenutzers;
+        String csvBenutzer;
 
         log.debug("#generateAndExportWahllokalBenutzer {}", wahltagID);
 
         try {
             val wahllokalUserInfoDTOs = wahllokalBenutzerClientMapper.toListOfWahllokalUserInfoDTO(wahllokalBenutzerModels);
-            csvBenutzers = wahllokalBenutzerControllerApi.createAndExportWahllokalBenutzer(wahltagID, wahllokalUserInfoDTOs);
-            log.info("#generateAndExportWahllokalBenutzer, response: {}", csvBenutzers);
+            csvBenutzer = wahllokalBenutzerControllerApi.createAndExportWahllokalBenutzer(wahltagID, wahllokalUserInfoDTOs);
+            log.info("#generateAndExportWahllokalBenutzer, response: {}", csvBenutzer);
         } catch (final WlsException wlsException) {
             log.error("#generateAndExportWahllokalBenutzer found WlsException:", wlsException);
             throw wlsException;
@@ -41,7 +41,7 @@ public class WahllokalBenutzerClientImpl implements WahllokalBenutzerClient {
             log.error("#generateAndExportWahllokalBenutzer exception:", exception);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_AUTH);
         }
-        return csvBenutzers;
+        return csvBenutzer;
     }
 
     @Override

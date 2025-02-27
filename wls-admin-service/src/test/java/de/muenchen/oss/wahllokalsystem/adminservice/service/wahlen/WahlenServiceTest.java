@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen;
 
 import static org.mockito.Mockito.times;
 
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlenClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import java.time.LocalDate;
 import java.util.List;

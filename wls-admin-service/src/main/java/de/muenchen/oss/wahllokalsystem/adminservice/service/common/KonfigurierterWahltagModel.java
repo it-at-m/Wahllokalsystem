@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten;
+package de.muenchen.oss.wahllokalsystem.adminservice.service.common;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

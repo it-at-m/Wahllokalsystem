@@ -25,11 +25,6 @@ import { afterEach, beforeEach, describe, it } from "vitest";
 
 /* Die Description ist der Dateiname des Testgegenstandes */ // [!code focus]
 describe("wahlvorstandStore.ts", () => { // [!code focus]    
-  beforeEach(() => {
-  });
-
-  afterEach(() => {
-  });
 
   /* Die Description ist der Name der Funktion die getested wird */ // [!code focus]
   describe("isSchriftfuehrerAnwesend", () => { // [!code focus]
@@ -65,11 +60,6 @@ describe("wahlvorstandStore.ts", () => { // [!code focus]
 ```typescript
 /* Die Description ist der Dateiname des Testgegenstandes */ // [!code focus]
 describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => { // [!code focus]
-    beforeEach(() => {
-    });
-
-    afterEach(() => {
-    });
    
   /* Tests die sich mit dem Rendern der Komponente befassen */ // [!code focus]
   describe("Rendering", () => { // [!code focus]

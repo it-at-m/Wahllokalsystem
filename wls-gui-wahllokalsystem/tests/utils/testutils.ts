@@ -3,21 +3,21 @@ import type { ExtendedContext, RunnerTestCase, RunnerTestSuite } from "vitest";
 export function getSnapshotFilename(
   context: ExtendedContext<RunnerTestCase>
 ): string {
-  const path = `./__snapshots__/${getSuitPath(context.task.suite)}/`;
+  const path = `./__snapshots__/${getSuitePath(context.task.suite)}/`;
   return `${path}/${context.task.name}.html`;
 }
 
-function getSuitPath(suite?: RunnerTestSuite): string {
+function getSuitePath(suite?: RunnerTestSuite): string {
   const pathElementsBottomUp: string[] = [];
 
-  let suitForPath = suite;
+  let suiteForPath = suite;
   while (
-    suitForPath !== undefined &&
-    suitForPath.suite !== suitForPath &&
-    !pathElementsBottomUp.includes(suitForPath.name)
+    suiteForPath !== undefined &&
+    suiteForPath.suite !== suiteForPath &&
+    !pathElementsBottomUp.includes(suiteForPath.name)
   ) {
-    pathElementsBottomUp.push(suitForPath.name);
-    suitForPath = suitForPath.suite;
+    pathElementsBottomUp.push(suiteForPath.name);
+    suiteForPath = suiteForPath.suite;
   }
 
   return pathElementsBottomUp.reverse().join("/");

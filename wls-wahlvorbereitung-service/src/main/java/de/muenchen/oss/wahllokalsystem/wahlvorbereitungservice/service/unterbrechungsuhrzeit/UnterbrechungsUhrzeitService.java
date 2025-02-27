@@ -23,7 +23,7 @@ public class UnterbrechungsUhrzeitService {
 
     @PreAuthorize(
         "hasAuthority('Wahlvorbereitung_BUSINESSACTION_UnterbrechungsUhrzeit')"
-                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
+                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
     )
     public Optional<UnterbrechungsUhrzeitModel> getUnterbrechungsUhrzeit(@P("wahlbezirkID") final String wahlbezirkID) {
         log.debug("#getUnterbrechungsUhrzeit");
@@ -40,7 +40,7 @@ public class UnterbrechungsUhrzeitService {
 
     @PreAuthorize(
         "hasAuthority('Wahlvorbereitung_BUSINESSACTION_UnterbrechungsUhrzeit')"
-                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#unterbrechungsUhrzeitToSet.wahlbezirkID(), authentication)"
+                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#unterbrechungsUhrzeitToSet.wahlbezirkID(), authentication)"
     )
     public void setUnterbrechungsUhrzeit(@P("unterbrechungsUhrzeitToSet") final UnterbrechungsUhrzeitModel unterbrechungsUhrzeitToSet) {
         log.debug("#postUnterbrechungsUhrzeit");

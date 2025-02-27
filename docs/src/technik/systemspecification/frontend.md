@@ -50,8 +50,7 @@ für die Darstellung für [Komponententest](#komponententests).
 
 ## Komponenten
 
-Das Frontend wird aus diversen [Single-File-Components](https://vuejs.org/guide/scaling-up/sfc.html) zusammengesetzt
-in Typescript zusammengesetzt. Bei der Implementierung verwenden die
+Das Frontend wird aus diversen [Single-File-Components](https://vuejs.org/guide/scaling-up/sfc.html) zusammengesetzt. Dabei verwenden wir Typescript und die
 [Composition-API](https://vuejs.org/guide/introduction.html#composition-api).
 
 

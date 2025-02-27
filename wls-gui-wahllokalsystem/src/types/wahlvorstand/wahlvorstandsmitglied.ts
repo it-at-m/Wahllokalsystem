@@ -1,7 +1,7 @@
 import type { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/wahlvorstandsmitgliedFunktion";
 
 export interface Wahlvorstandsmitglied {
-  identifikator: string; //TODO is always given when reading => Issue
+  identifikator: string; //TODO is always given when reading => Issue 851
   anwesend: boolean;
   familienname?: string;
   vorname?: string;
@@ -11,7 +11,7 @@ export interface Wahlvorstandsmitglied {
 
 export class WahlvorstandsmitgliedBuilder implements Wahlvorstandsmitglied {
   constructor(
-    public identifikator: string, //TODO is always given when reading => Issue
+    public identifikator: string, //TODO is always given when reading => Issue 851
     public anwesend: boolean,
     public familienname?: string,
     public vorname?: string,

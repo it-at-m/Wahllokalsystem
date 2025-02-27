@@ -53,7 +53,7 @@ describe("TheWahlvorstandMitgliederTable.vue", () => {
 
   enableAutoUnmount(afterEach);
 
-  describe("Rendering", () => {
+  describe("visual logic", () => {
     it("should_showMultipleLines_when_multipleWahlvorstandsmitgliederAreGiven", async (context) => {
       const wahlvorstandStore = useWahlvorstandStore();
 
@@ -90,7 +90,7 @@ describe("TheWahlvorstandMitgliederTable.vue", () => {
     });
   });
 
-  describe("Events", () => {
+  describe("behavioral logic", () => {
     describe("update:model-value", () => {
       it("should_setAnwesendTrue_when_checkBoxForMitgliedThatIsNotAnwesendWasClicked", async () => {
         const wahlvorstandStore = useWahlvorstandStore();

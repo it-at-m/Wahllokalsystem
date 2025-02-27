@@ -50,7 +50,7 @@ describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => {
 
   enableAutoUnmount(afterEach);
 
-  describe("Rendering", () => {
+  describe("visual logic", () => {
     it("should_showNoErrorTexts_when_allRequirementsAreSatisfied", async (context) => {
       const wahlvorstandStore = useWahlvorstandStore();
 

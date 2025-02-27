@@ -62,7 +62,7 @@ describe("wahlvorstandStore.ts", () => { // [!code focus]
 describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => { // [!code focus]
    
   /* Tests die sich mit dem Rendern der Komponente befassen */ // [!code focus]
-  describe("Rendering", () => { // [!code focus]
+  describe("visual logic", () => { // [!code focus]
     /* Tests entsprechend der Testcasebeschreibung */ // [!code focus]
     it("should_showNoErrorTexts_when_allRequirementsAreSatisfied", async (context) => { // [!code focus]
     });
@@ -73,7 +73,7 @@ describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => { // [!code focu
   });
   
   /* Tests zu den Events der Komponente */ // [!code focus]
-  describe("Eventing", () => { // [!code focus]
+  describe("behavioral logic", () => { // [!code focus]
       /* Tests zu dem Event `update:model-value` */ // [!code focus]
       describe("update:model-value", () => { // [!code focus]
         /* Tests entsprechend der Testcasebeschreibung */ // [!code focus]

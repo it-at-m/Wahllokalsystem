@@ -29,17 +29,9 @@ zusätzlich verschachtelt und ebenfalls mit `@Nested` annotiert, oder in einen n
 ### Beispiele
 
 ```java
-// Backend: should_expectedResultInCamelCase_when_inputInCamelCase() {}
 void should_returnDTO_when_givenValidId() {}
 void should_notThrowException_when_newDataSaved() {}
 void should_throwAccessDeniedException_whenAuthoritiesMissing() {}
-```
-
-```typescript
-// Frontend: it("should_expectedResultInCamelCase_when_inputInCamelCase", () => {});
-it("should_returnResolvedResponse_when_responseCodeIs200", () => {});
-it("should_executeGetMessageFunction_when_buttonClicked", () => {});
-it("should_clearMessageInput_when_messageHasBeenSent", () => {});
 ```
 
 ##### Gruppierung überladener Methoden:

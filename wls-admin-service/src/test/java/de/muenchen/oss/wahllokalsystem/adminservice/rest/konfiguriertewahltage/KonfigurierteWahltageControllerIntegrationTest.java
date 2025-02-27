@@ -86,13 +86,13 @@ class KonfigurierteWahltageControllerIntegrationTest {
 
             api.perform(request).andExpect(status().isOk());
 
-            val statusRequest = getAllServeEvents(ServeEventQuery.forStubMapping(konfigurierterWahltagStubbing)).get(0);
-            val sendStatusRequestBodyAsDTO = objectMapper.readValue(statusRequest.getRequest().getBody(), KonfigurierterWahltagDTO.class);
+            val konfigurierterWahltagRequest = getAllServeEvents(ServeEventQuery.forStubMapping(konfigurierterWahltagStubbing)).get(0);
+            val konfigurierterWahltagRequestBodyAsDTO = objectMapper.readValue(konfigurierterWahltagRequest.getRequest().getBody(), KonfigurierterWahltagDTO.class);
 
-            val expectedSendStatusRequestBody = new KonfigurierterWahltagDTO().wahltag(LocalDate.now()).wahltagID("wahltagID").wahltagStatus(
+            val expectedKonfigurierterWahltagRequestBodyAsDTO = new KonfigurierterWahltagDTO().wahltag(LocalDate.now()).wahltagID("wahltagID").wahltagStatus(
                     KonfigurierterWahltagDTO.WahltagStatusEnum.INAKTIV).nummer("0");
 
-            Assertions.assertThat(sendStatusRequestBodyAsDTO).isEqualTo(expectedSendStatusRequestBody);
+            Assertions.assertThat(konfigurierterWahltagRequestBodyAsDTO).isEqualTo(expectedKonfigurierterWahltagRequestBodyAsDTO);
         }
 
         @Test

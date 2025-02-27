@@ -91,8 +91,8 @@ Für die Komponte im Ordner `src/components/wahlvorstand/TheWahlvorstandAnwesenh
 in `tests/components/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.spec.ts` und die Stories in
 `stories/componentes/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.stories.ts`.
 
-Bei den Tests gibt es zusätzlich parallel zu den Testfiles einen Ordner `__snapshots__`. Dieser enthält die Referenzen
-für die Darstellung für [Komponententest](#komponententests).
+Bei den Tests zu Komponenten gibt es zusätzlich, parallel zu den Testfiles, einen Ordner `__snapshots__`.
+Dieser enthält die Referenzen für die Darstellung für [Komponententest](#komponententests).
 
 ## Komponenten
 

@@ -15,7 +15,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getWahlvorstand: vi.fn(),
 }));
 
-vi.mock("@/types/wahlvorstand/wahlvorstandsmitgliedFunktion", () => ({
+vi.mock("@/types/wahlvorstand/WahlvorstandsmitgliedFunktion", () => ({
   isSchriftfuehrer: mockDefinitions.isSchriftfuehrer,
   isWahlvorsteher: mockDefinitions.isWahlvorsteher,
 }));

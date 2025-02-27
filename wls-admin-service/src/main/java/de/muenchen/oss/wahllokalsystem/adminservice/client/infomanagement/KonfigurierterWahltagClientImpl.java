@@ -2,11 +2,14 @@ package de.muenchen.oss.wahllokalsystem.adminservice.client.infomanagement;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.adminservice.eai.infomanagement.client.KonfigurierterWahltagControllerApi;
+import de.muenchen.oss.wahllokalsystem.adminservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.KonfigurierterWahltagClient;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.KonfigurierterWahltagModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import java.util.Collections;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -38,6 +41,25 @@ public class KonfigurierterWahltagClientImpl implements KonfigurierterWahltagCli
         } catch (final Exception exception) {
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT);
         }
+    }
+
+    @Override
+    public List<KonfigurierterWahltagModel> getKonfigurierteWahltage() throws WlsException {
+        final List<KonfigurierterWahltagDTO> konfigurierterWahltagDTOList;
+        try {
+            konfigurierterWahltagDTOList = konfigurierterWahltagControllerApi.getKonfigurierteWahltage();
+
+            if (konfigurierterWahltagDTOList == null) {
+                return Collections.emptyList();
+            }
+
+        } catch (WlsException wlsException) {
+            log.debug("#getKonfigurierteWahltage found WlsException:", wlsException);
+            throw wlsException;
+        } catch (Exception exception) {
+            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT);
+        }
+        return konfigurierterWahltagDTOList.stream().map(konfigurierterWahltagClientMapper::toModel).toList();
     }
 
     @Override

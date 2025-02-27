@@ -111,12 +111,15 @@ describe("wahlvorstandStore.ts", () => {
   });
 
   describe("isWahlvorstandAusreichendAnwesend", () => {
-    it("should_returnTrue_when_schriftfuehrerAndWahlvorsteherAreAnwesend", () => {
+    let unitUnderTest: ReturnType<typeof useWahlvorstandStore>;
+    beforeEach(() => {
       const testPinia = createTestingPinia({
         createSpy: vi.fn,
       });
-      const unitUnderTest = useWahlvorstandStore(testPinia);
+      unitUnderTest = useWahlvorstandStore(testPinia);
+    });
 
+    it("should_returnTrue_when_schriftfuehrerAndWahlvorsteherAreAnwesend", () => {
       // @ts-expect-error: cannot set readonly
       unitUnderTest.isWahlvorsteherAnwesend = true;
       // @ts-expect-error: cannot set readonly
@@ -128,11 +131,6 @@ describe("wahlvorstandStore.ts", () => {
     });
 
     it("should_returnFalse_when_schriftfuehrerIsNotAnwesendAndWahlvorsteherIsAnwesend", () => {
-      const testPinia = createTestingPinia({
-        createSpy: vi.fn,
-      });
-      const unitUnderTest = useWahlvorstandStore(testPinia);
-
       // @ts-expect-error: cannot set readonly
       unitUnderTest.isWahlvorsteherAnwesend = true;
       // @ts-expect-error: cannot set readonly
@@ -144,11 +142,6 @@ describe("wahlvorstandStore.ts", () => {
     });
 
     it("should_returnFalse_when_schriftfuehrerIsAnwesendAndWahlvorsteherIsNotAnwesend", () => {
-      const testPinia = createTestingPinia({
-        createSpy: vi.fn,
-      });
-      const unitUnderTest = useWahlvorstandStore(testPinia);
-
       // @ts-expect-error: cannot set readonly
       unitUnderTest.isWahlvorsteherAnwesend = false;
       // @ts-expect-error: cannot set readonly

@@ -10,6 +10,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules.RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED;
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules.RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules.RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED;
 
 public class MethodRulesTest {
@@ -21,14 +23,14 @@ public class MethodRulesTest {
                 .importClasses(testClass)))
                 .isInstanceOf(AssertionError.class)
                 .satisfies(assertionError -> Assertions.assertThat(assertionError.getMessage().split(System.lineSeparator()).length)
-                        .isGreaterThanOrEqualTo(testClass.getMethods().length));
+                        .isGreaterThanOrEqualTo(testClass.getDeclaredMethods().length));
     }
 
     @ParameterizedTest
     @MethodSource("getRulesAndTestClassesWithoutMatchingCasesThrowingErrors")
-    void should_throwError_when_noCasesMatchingRuleWereFound(ArchRule ruleUnderTest, Class<?> testClass) {
+    void should_throwError_when_noCasesMatchingRuleWereFound(ArchRule ruleUnderTest) {
         Assertions.assertThatCode(() -> ruleUnderTest.check(new ClassFileImporter()
-                .importClasses(testClass)))
+                .importClasses(NamingConventionExamplesTest.ExampleTestNamesWithoutAnnotation.class)))
                 .isInstanceOf(AssertionError.class)
                 .satisfies(assertionError -> Assertions.assertThat(assertionError.getMessage())
                         .contains("failed to check any classes"));
@@ -45,18 +47,25 @@ public class MethodRulesTest {
     private static Stream<Arguments> getRulesAndMatchingTestClassesThrowingErrors() {
         return Stream.of(
                 Arguments.of(RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED,
-                        NamingConventionExamplesTest.ExampleTestNamesViolatingNamingConventionRule.class));
+                        NamingConventionExamplesTest.ExampleTestNamesViolatingNamingConventionRule.class),
+                Arguments.of(RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED,
+                        NamingConventionExamplesTest.ExampleBeforeEachMethodNamesViolatingNamingConventionRule.class),
+                Arguments.of(RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED,
+                        NamingConventionExamplesTest.ExampleAfterEachMethodNamesViolatingNamingConventionRule.class));
     }
 
     private static Stream<Arguments> getRulesAndTestClassesWithoutMatchingCasesThrowingErrors() {
         return Stream.of(
-                Arguments.of(RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED,
-                        NamingConventionExamplesTest.ExampleTestNamesWithoutAnntation.class));
+                Arguments.of(RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED));
     }
 
     private static Stream<Arguments> getRulesAndMatchingTestClassesNotThrowingErrors() {
         return Stream.of(
                 Arguments.of(RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED,
-                        NamingConventionExamplesTest.ExampleTestNamesFollowingNamingConventionRule.class));
+                        NamingConventionExamplesTest.ExampleTestNamesFollowingNamingConventionRule.class),
+                Arguments.of(RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED,
+                        NamingConventionExamplesTest.ExampleBeforeEachMethodNameFollowingNamingConventionRule.class),
+                Arguments.of(RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED,
+                        NamingConventionExamplesTest.ExampleAfterEachMethodNameFollowingNamingConventionRule.class));
     }
 }

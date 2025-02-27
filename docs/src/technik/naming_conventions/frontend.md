@@ -78,7 +78,7 @@ Die Benennung erfolgt grundsätzlich auf Englisch mit Aufnahme von Fachbegriffen
 
 ## Tests
 
-Die Tests liegen parallel zum Testgegenstand.
+Die Tests liegen im `tests`-Ordner, welcher der Aufbaustruktur des `src`-Ordners folgt.
 
 `<Testgegenstand ohne Dateiendung>.spec.ts`
 

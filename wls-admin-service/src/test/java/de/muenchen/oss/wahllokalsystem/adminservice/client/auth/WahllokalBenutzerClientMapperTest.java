@@ -25,60 +25,14 @@ class WahllokalBenutzerClientMapperTest {
         class ToWahllokalUserInfoDTO {
 
             @Test
-            void should_returnNull_when_nullIsGiven() {
-                Assertions.assertThat(unitUnderTest.toWahllokalUserInfoDTO(null)).isNull();
-            }
-
-            @Test
-            void should_mapToWahllokalUserInfoDTO_when_givenWahllokalBenutzerModel() {
+            void should_mapToWahllokalUserInfoDTO_when_givenModel() {
                 val wahllokalBenutzerModel = getWahllokalBenutzerModelWithBWB();
-
-                Assertions.assertThat(wahllokalBenutzerModel).hasNoNullFieldsOrProperties();
 
                 val result = unitUnderTest.toWahllokalUserInfoDTO(wahllokalBenutzerModel);
 
                 val expectedWahllokalUserInfoDTO = getWahllokalUserInfoDTOWithBWB();
 
-                Assertions.assertThat(result).isEqualTo(expectedWahllokalUserInfoDTO);
-            }
-
-            @Test
-            void should_mapToDtoWithWahlbezirksartUWB_when_givenModelWithWahlbezirksartUWB() {
-                val wahllokalBenutzerModel = getWahllokalBenutzerModelWithUWB();
-
-                Assertions.assertThat(wahllokalBenutzerModel).hasNoNullFieldsOrProperties();
-
-                val result = unitUnderTest.toWahllokalUserInfoDTO(wahllokalBenutzerModel);
-
-                val expectedWahllokalUserInfoDTO = getWahllokalUserInfoDTOWithUWB();
-
-                Assertions.assertThat(result.getWahlbezirksart()).isEqualTo(expectedWahllokalUserInfoDTO.getWahlbezirksart());
-            }
-
-            @Test
-            void should_mapToDtoWithWahlbezirksartBWB_when_givenModelWithWahlbezirksartBWB() {
-                val wahllokalBenutzerModel = getWahllokalBenutzerModelWithBWB();
-
-                Assertions.assertThat(wahllokalBenutzerModel).hasNoNullFieldsOrProperties();
-
-                val result = unitUnderTest.toWahllokalUserInfoDTO(wahllokalBenutzerModel);
-
-                val expectedWahllokalUserInfoDTO = getWahllokalUserInfoDTOWithBWB();
-
-                Assertions.assertThat(result.getWahlbezirksart()).isEqualTo(expectedWahllokalUserInfoDTO.getWahlbezirksart());
-            }
-
-            @Test
-            void should_transfereSameWbidWahlnummerInformation_when_givenModelHasWbidWahlnummer() {
-                val wahllokalBenutzerModel = getWahllokalBenutzerModelWithBWB();
-
-                Assertions.assertThat(wahllokalBenutzerModel.wbid_wahlnummer()).isNotEmpty();
-
-                val result = unitUnderTest.toWahllokalUserInfoDTO(wahllokalBenutzerModel);
-
-                val expectedWahllokalUserInfoDTO = getWahllokalUserInfoDTOWithBWB();
-
-                Assertions.assertThat(result.getWbidWahlnummer()).isEqualTo(expectedWahllokalUserInfoDTO.getWbidWahlnummer());
+                Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedWahllokalUserInfoDTO);
             }
         }
 

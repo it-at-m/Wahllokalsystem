@@ -100,7 +100,9 @@ Das Frontend wird aus diversen [Single-File-Components](https://vuejs.org/guide/
 [Composition-API](https://vuejs.org/guide/introduction.html#composition-api).
 
 
-## Komponentenkommunikation
+## Kommunikation
+
+### zwischen Komponenten
 
 ````mermaid
 
@@ -130,7 +132,7 @@ BaseComponentB -- Event --> domainComponentB
 BaseComponentC -- Event --> BaseComponentB
 ````
 
-## Kommunikation mit dem Backend
+### mit dem Backend
 
 ```mermaid
 flowchart TD

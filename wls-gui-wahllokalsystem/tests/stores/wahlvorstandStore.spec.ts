@@ -29,6 +29,8 @@ vi.mock("@/composables/wahlvorstand/wahlvorstandService", () => ({
 const mockedNow = new Date();
 
 describe("wahlvorstandStore.ts", () => {
+  let unitUnderTest: ReturnType<typeof useWahlvorstandStore>;
+
   beforeEach(() => {
     // creates a fresh pinia and makes it active
     // so it's automatically picked up by any useStore() call
@@ -37,6 +39,7 @@ describe("wahlvorstandStore.ts", () => {
     vi.useFakeTimers({
       now: mockedNow,
     });
+    unitUnderTest = useWahlvorstandStore();
   });
 
   afterEach(() => {
@@ -46,16 +49,12 @@ describe("wahlvorstandStore.ts", () => {
 
   describe("isSchriftfuehrerAnwesend", () => {
     it("should_returnFalse_when_noMitgliedExists", () => {
-      const unitUnderTest = useWahlvorstandStore();
-
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [];
 
       expect(unitUnderTest.isSchriftfuehrerAnwesend).toStrictEqual(false);
     });
 
     it("should_returnTrue_when_atLeastOneMitgliedMatches", () => {
-      const unitUnderTest = useWahlvorstandStore();
-
       mockDefinitions.isSchriftfuehrer.mockReturnValue(true);
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
@@ -73,8 +72,6 @@ describe("wahlvorstandStore.ts", () => {
     });
 
     it("should_returnFalse_when_whenMitgliedWithFunktionExistsButIsNotAnwesend", () => {
-      const unitUnderTest = useWahlvorstandStore();
-
       mockDefinitions.isSchriftfuehrer.mockReturnValue(true);
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
@@ -93,8 +90,6 @@ describe("wahlvorstandStore.ts", () => {
     });
 
     it("should_returnFalse_when_noMitgliedMatchesFunktion", () => {
-      const unitUnderTest = useWahlvorstandStore();
-
       mockDefinitions.isSchriftfuehrer.mockReturnValue(false);
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
@@ -167,8 +162,6 @@ describe("wahlvorstandStore.ts", () => {
 
   describe("sendWahlvorstand", () => {
     it("should_sendWahlvorstand_when_wahlbezirkIDIsGiven", async () => {
-      const unitUnderTest = useWahlvorstandStore();
-
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
       const user = new User();
@@ -190,8 +183,6 @@ describe("wahlvorstandStore.ts", () => {
     });
 
     it("should_setLastSend_when_wahlvorstandIsSent", async () => {
-      const unitUnderTest = useWahlvorstandStore();
-
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
       const user = new User();
@@ -212,8 +203,6 @@ describe("wahlvorstandStore.ts", () => {
     });
 
     it("should_notSendWahlvorstand_when_wahlbezirkIDIsNotGiven", async () => {
-      const unitUnderTest = useWahlvorstandStore();
-
       const userStore = useUserStore();
       const user = new User();
       user.wahlbezirkID = undefined;
@@ -227,8 +216,6 @@ describe("wahlvorstandStore.ts", () => {
 
   describe("loadWahlvorstand", () => {
     it("should_setWahlvorstand_when_userHasWahlbezirkID", async () => {
-      const unitUnderTest = useWahlvorstandStore();
-
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
       const user = new User();
@@ -245,8 +232,6 @@ describe("wahlvorstandStore.ts", () => {
     });
 
     it("should_setLastLoading_when_wahlvorstandIsLoaded", async () => {
-      const unitUnderTest = useWahlvorstandStore();
-
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
       const user = new User();
@@ -271,8 +256,6 @@ describe("wahlvorstandStore.ts", () => {
         when: "usersWahlbezirkIdIsUndefined",
       },
     ])("should_notLoadWahlvorstand_when_$when", async ({ user }) => {
-      const unitUnderTest = useWahlvorstandStore();
-
       const userStore = useUserStore();
       userStore.setUser(user);
 
@@ -285,8 +268,6 @@ describe("wahlvorstandStore.ts", () => {
 
   describe("changeAnwesendOfMitglied", () => {
     it("should_setGivenAnwesenheitOfMitglied_when_mitgliedWithIdExists", () => {
-      const unitUnderTest = useWahlvorstandStore();
-
       const newAnwesenheit = true;
       const mitgliedID = "mitgliedID";
 
@@ -310,8 +291,6 @@ describe("wahlvorstandStore.ts", () => {
     });
 
     it("should_notUpdateAnwesenheitOfMitglied_when_mitgliedWithIdDoesNotExists", () => {
-      const unitUnderTest = useWahlvorstandStore();
-
       const newAnwesenheit = true;
       const mitgliedID = "mitgliedID";
 

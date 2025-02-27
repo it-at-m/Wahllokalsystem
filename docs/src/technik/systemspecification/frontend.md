@@ -15,15 +15,16 @@ wiederspiegeln.
 
 Der Anwendungscode besteht auf folgenden Ordnern:
 
-| Ordner               | Beschreibung                                                              |
-|----------------------|---------------------------------------------------------------------------|
-| api                  | (generierte) Clients für den Zugriff auf die Backend-Services             |
-| components           | Komponenten die zur Verfügung stehen.                                     |
-| composables          | Wiederverwendbarer Code                                                   |
-| resources/openapi    | openAPI Beschreibung die für die Clients verwendet werden                 |
-| store                | Stores des Anwendung                                                      |
-| types                | Eigenen Datentype der Anwendung. (Die Datentype der Clients sind in `api` |                                                    
-| views                | Views der Anwendung                                                       |
+| Ordner            | Beschreibung                                                              |
+|-------------------|---------------------------------------------------------------------------|
+| api               | (generierte) Clients für den Zugriff auf die Backend-Services             |
+| components        | Komponenten die zur Verfügung stehen.                                     |
+| composables       | Wiederverwendbarer Code                                                   |
+| resources/openapi | openAPI Beschreibung die für die Clients verwendet werden                 |
+| plugins           | Konfiguration der verwendete Plugins, z.B. Pinia, Router oder Vuetify     |
+| store             | Stores des Anwendung                                                      |
+| types             | Eigenen Datentype der Anwendung. (Die Datentype der Clients sind in `api` |                                                    
+| views             | Views der Anwendung                                                       |
 
 je Ordner kann, sofern es mehrerer Elemente gibt die zu unterschiedlichen fachlichen Domainen gehörten, Unterordner geben.
 

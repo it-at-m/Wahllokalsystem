@@ -39,8 +39,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   );
 
   async function loadWahlvorstand() {
-    const userStore = useUserStore();
-    const currentUserWahlbezirkID = userStore.getUser?.wahlbezirkID;
+    const currentUserWahlbezirkID = getUsersWahlbezirkID();
     if (currentUserWahlbezirkID) {
       wahlvorstand.value = await getWahlvorstand(currentUserWahlbezirkID);
       lastLoading.value = new Date();
@@ -48,7 +47,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   }
 
   async function sendWahlvorstand() {
-    const currentUserWahlbezirkID = userStore.getUser?.wahlbezirkID;
+    const currentUserWahlbezirkID = getUsersWahlbezirkID();
     if (currentUserWahlbezirkID) {
       const { updateDatetime } = await saveWahlvorstand(
         currentUserWahlbezirkID,
@@ -67,6 +66,10 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     if (wahlvorstandsMitgliedToUpdate) {
       wahlvorstandsMitgliedToUpdate.anwesend = newValue;
     }
+  }
+
+  function getUsersWahlbezirkID(): string | undefined {
+    return userStore.getUser?.wahlbezirkID;
   }
 
   return {

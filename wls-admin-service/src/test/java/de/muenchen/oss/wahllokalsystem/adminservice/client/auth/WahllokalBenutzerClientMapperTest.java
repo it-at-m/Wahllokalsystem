@@ -19,7 +19,7 @@ class WahllokalBenutzerClientMapperTest {
     private final WahllokalBenutzerClientMapper unitUnderTest = Mappers.getMapper(WahllokalBenutzerClientMapper.class);
 
     @Nested
-    class ToDTO{
+    class ToDTO {
 
         @Nested
         class ToWahllokalUserInfoDTO {
@@ -84,11 +84,11 @@ class WahllokalBenutzerClientMapperTest {
     private List<WahllokalBenutzerModel> getListOfWahlLokalBenutzerModels() {
         val wahltag = LocalDate.now();
         List<WahllokalBenutzerModel> listOfWahlLokalBenutzerModel = new ArrayList<>();
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             WahlbezirkArtModel wahlbezirkModel = i % 2 == 0 ? WahlbezirkArtModel.UWB : WahlbezirkArtModel.BWB;
             val wahllokalBenutzerModel = new WahllokalBenutzerModel(
                     String.format("wahlbezirkID%s_0", i),
-                            String.format("000%s", i),
+                    String.format("000%s", i),
                     wahltag,
                     wahlbezirkModel,
                     List.of(
@@ -103,8 +103,9 @@ class WahllokalBenutzerClientMapperTest {
     private List<WahllokalUserInfoDTO> getListOfWahlLokalUserInfoDTO() {
         val wahltag = LocalDate.now();
         List<WahllokalUserInfoDTO> listOfWahlLokalUserInfoDTO = new ArrayList<>();
-        for(int i = 0; i < 3; i++) {
-            WahllokalUserInfoDTO.WahlbezirksartEnum wahlbezirkModel = i % 2 == 0 ? WahllokalUserInfoDTO.WahlbezirksartEnum.UWB : WahllokalUserInfoDTO.WahlbezirksartEnum.BWB;
+        for (int i = 0; i < 3; i++) {
+            WahllokalUserInfoDTO.WahlbezirksartEnum wahlbezirkModel = i % 2 == 0 ? WahllokalUserInfoDTO.WahlbezirksartEnum.UWB
+                    : WahllokalUserInfoDTO.WahlbezirksartEnum.BWB;
             val wahllokalUserInfoDTO = new WahllokalUserInfoDTO();
             wahllokalUserInfoDTO.setWahlbezirkID(String.format("wahlbezirkID%s_0", i));
             wahllokalUserInfoDTO.setWahlbezirknummer(String.format("000%s", i));
@@ -115,12 +116,11 @@ class WahllokalBenutzerClientMapperTest {
                             "{\"wahlbezirkID\":\"wahlbezirkID%s_0\",\"wahlnummer\":\"0\",\"wahlID\":\"wahlID0\"}," +
                             "{\"wahlbezirkID\":\"wahlbezirkID%s_1\",\"wahlnummer\":\"1\",\"wahlID\":\"wahlID1\"}," +
                             "{\"wahlbezirkID\":\"wahlbezirkID%s_2\",\"wahlnummer\":\"2\",\"wahlID\":\"wahlID2\"}" +
-                            "]",i, i, i));
+                            "]", i, i, i));
             listOfWahlLokalUserInfoDTO.add(wahllokalUserInfoDTO);
         }
         return listOfWahlLokalUserInfoDTO;
     }
-
 
     private WahllokalBenutzerModel getWahllokalBenutzerModelWithUWB() {
         val wahltag = LocalDate.now();

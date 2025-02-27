@@ -156,6 +156,7 @@ class SecurityConfigurationTest {
             Mockito.verify(wahllokalBenutzerService).generateWahllokalbenutzer(wahltagID);
         }
     }
+
     @Nested
     class GetKonfigurierteWahltage {
 

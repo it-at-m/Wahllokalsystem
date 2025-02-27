@@ -1,15 +1,11 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer;
 
-import static org.mockito.ArgumentMatchers.eq;
-import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkeClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
-import java.time.LocalDate;
-import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -21,6 +17,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
 class WahllokalBenutzerServiceTest {
@@ -63,9 +64,8 @@ class WahllokalBenutzerServiceTest {
 
             val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("message");
 
-            Mockito.doNothing().when(wahllokalBenutzerValidator).validWahltagIDParamOrThrow(wahltagID);
             Mockito.when(wahlbezirkeClient.getWahlbezirke(wahltagID)).thenReturn(null);
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.INVALID_ARGUMENT)).thenReturn(mockedWlsException);
+            Mockito.doThrow(mockedWlsException).when(wahllokalBenutzerValidator).wahlbezirkeExistOrThrow(null);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.generateWahllokalbenutzer(wahltagID)).isSameAs(mockedWlsException);
         }

@@ -11,6 +11,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules.RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED;
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules.RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules.RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules.RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED;
 
@@ -48,12 +50,18 @@ public class MethodRulesTest {
         return Stream.of(
                 Arguments.of(RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED,
                         NamingConventionExamplesTest.ExampleTestNamesViolatingNamingConventionRule.class),
+                Arguments.of(RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED,
+                        NamingConventionExamplesTest.ExampleBeforeEachMethodNamesViolatingNamingConventionRule.class),
+                Arguments.of(RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED,
+                        NamingConventionExamplesTest.ExampleAfterEachMethodNamesViolatingNamingConventionRule.class));
+                        NamingConventionExamplesTest.ExampleTestNamesViolatingNamingConventionRule.class),
                 Arguments.of(RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED,
                         ModifiersExampleTest.WrongModifierExamples.class));
     }
 
     private static Stream<Arguments> getRulesAndTestClassesWithoutMatchingCasesThrowingErrors() {
         return Stream.of(
+                Arguments.of(RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED));
                 Arguments.of(RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED),
                 Arguments.of(RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED));
     }
@@ -62,6 +70,10 @@ public class MethodRulesTest {
         return Stream.of(
                 Arguments.of(RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED,
                         NamingConventionExamplesTest.ExampleTestNamesFollowingNamingConventionRule.class),
+                Arguments.of(RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED,
+                        NamingConventionExamplesTest.ExampleBeforeEachMethodNameFollowingNamingConventionRule.class),
+                Arguments.of(RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED,
+                        NamingConventionExamplesTest.ExampleAfterEachMethodNameFollowingNamingConventionRule.class),
                 Arguments.of(RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED,
                         ModifiersExampleTest.CorrectModifierExamples.class));
     }

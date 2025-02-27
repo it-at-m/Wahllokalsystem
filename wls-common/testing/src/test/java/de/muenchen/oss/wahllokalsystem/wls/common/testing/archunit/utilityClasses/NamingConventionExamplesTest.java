@@ -1,5 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -9,6 +11,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 public class NamingConventionExamplesTest {
 
+    // Naming Convention for test Names
     @Nested
     public class ExampleTestNamesViolatingNamingConventionRule {
 
@@ -98,6 +101,56 @@ public class NamingConventionExamplesTest {
         }
 
         void shouldTest123() {
+        }
+    }
+
+    // Naming Convention for @BeforeEach methods
+    @Nested
+    public class ExampleBeforeEachMethodNamesViolatingNamingConventionRule {
+
+        @BeforeEach
+        void setUp() {
+        }
+
+        @BeforeEach
+        void set_up() {
+        }
+
+        @BeforeEach
+        void randomName() {
+        }
+    }
+
+    @Nested
+    public class ExampleBeforeEachMethodNameFollowingNamingConventionRule {
+
+        @BeforeEach
+        void setup() {
+        }
+    }
+
+    // Naming Convention for @AfterEach methods
+    @Nested
+    public class ExampleAfterEachMethodNamesViolatingNamingConventionRule {
+
+        @AfterEach
+        void tearDown() {
+        }
+
+        @AfterEach
+        void tear_down() {
+        }
+
+        @AfterEach
+        void randomName() {
+        }
+    }
+
+    @Nested
+    public class ExampleAfterEachMethodNameFollowingNamingConventionRule {
+
+        @AfterEach
+        void teardown() {
         }
     }
 }

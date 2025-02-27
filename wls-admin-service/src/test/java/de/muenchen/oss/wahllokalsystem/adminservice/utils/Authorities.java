@@ -12,6 +12,10 @@ public class Authorities {
     public static final String ADMIN_GETWAHLTAGE = "Admin_BUSINESSACTION_GetWahltage";
     public static final String ADMIN_DELETEWAHLTERMINDATEN = "Admin_BUSINESSACTION_DeleteWahltermindaten";
 
+    public static final String ADMIN_READ_KONFIGURIERTEWAHLTAGE = "Admin_BUSINESSACTION_GetKonfigurierteWahltage";
+
+    public static final String ADMIN_POST_KONFIGURIERTERWAHLTAG = "Admin_BUSINESSACTION_PostKonfigurierterWahltag";
+
     public static final String[] ALL_AUTHORITIES_UPDATEWAHLEN = new String[] {
             ADMIN_UPDATEWAHLEN
     };

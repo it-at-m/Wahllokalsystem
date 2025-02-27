@@ -46,7 +46,6 @@ describe("TheWahlvorstandMitgliederTable.vue", () => {
         ],
       },
     });
-    // Löscht die mocking-History
     vi.clearAllMocks();
   });
 

@@ -43,7 +43,6 @@ describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => {
         ],
       },
     });
-    // Löscht die mocking-History
     vi.clearAllMocks();
   });
 

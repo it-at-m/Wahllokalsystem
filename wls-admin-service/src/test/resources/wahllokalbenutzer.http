@@ -1,0 +1,19 @@
+### get userinfo with auth_token
+# @no-redirect
+GET {{ WLS_AUTH_SERVICE }}/user
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### Generate Wahllokalbenutzer (needs profile 'dummy.clients' to make this work because of internal calls to other services)
+POST {{ WLS_ADMIN_SERVICE_URL }}/businessActions/generateWahllokalbenutzer/wahltagID1
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+### Export Wahllokalbenutzer (needs profile 'dummy.clients' to make this work because of internal calls to other services)
+GET {{ WLS_ADMIN_SERVICE_URL }}/businessActions/exportWahllokalBenutzer/wahltagID1
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+### Delete Wahllokalbenutzer (needs profile 'dummy.clients' to make this work because of internal calls to other services)
+POST {{ WLS_ADMIN_SERVICE_URL }}/businessActions/deleteWahllokalBenutzer/wahltagID1
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json

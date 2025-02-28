@@ -2,17 +2,19 @@ package de.muenchen.oss.wahllokalsystem.adminservice.client;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkArtModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkeClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlenClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahltageClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen.FarbeModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen.WahlModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen.WahlartModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer.WahllokalBenutzerClient;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer.WahllokalBenutzerModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.AWerteClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.KonfigurierterWahltagClient;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahlbezirkArtModel;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahlbezirkModel;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahlbezirkeClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahltermindatenClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import java.time.LocalDate;
@@ -24,7 +26,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @Profile(Profiles.DUMMY_CLIENTS)
-public class DummyClientImpl implements AWerteClient, KonfigurierterWahltagClient, WahlbezirkeClient, WahltageClient, WahltermindatenClient, WahlenClient {
+public class DummyClientImpl
+        implements AWerteClient, KonfigurierterWahltagClient, WahlbezirkeClient, WahltageClient, WahltermindatenClient, WahlenClient, WahllokalBenutzerClient {
 
     @Override
     public void initialiseAWerte(List<String> wahlbezirkIDs) {
@@ -84,6 +87,24 @@ public class DummyClientImpl implements AWerteClient, KonfigurierterWahltagClien
     }
 
     @Override
+    public String generateAndExportWahllokalBenutzer(String wahltagID, List<WahllokalBenutzerModel> wahllokalUserInfoModel) {
+        log.info("dummy client generateWahllokalBenutzer({}) called instead of auth-service", wahltagID);
+        return "dummy:ftpprs-1503\r\n" + "dummy:c94m3c-0365\r\n" + "dummy:v7jnkr-2161\r\n" + "dummy:evc77k-2062\r\n" + "sae447-1327\r\n"
+                + "dummy:xh3mv2-0508\r\n" + "dummy:rkqdt2-2570\r\n" + "dummy:a3c9hm-1369\r\n" + "dummy:jnhm44-0566";
+    }
+
+    @Override
+    public void deleteWahllokalBenutzer(String wahltagID) {
+        log.info("dummy client deleteWahllokalBenutzer({}) called instead of auth-service", wahltagID);
+    }
+
+    @Override
+    public String exportWahllokalBenutzer(String wahltagID) {
+        log.info("dummy client exportWahllokalBenutzer({}) called instead of auth-service", wahltagID);
+        return "dummy:ftpprs-1503\r\n" + "dummy:c94m3c-0365\r\n" + "dummy:v7jnkr-2161\r\n" + "dummy:evc77k-2062\r\n" + "sae447-1327\r\n"
+                + "dummy:xh3mv2-0508\r\n" + "dummy:rkqdt2-2570\r\n" + "dummy:a3c9hm-1369\r\n" + "dummy:jnhm44-0566";
+    }
+
     public List<WahlModel> getWahlen(String wahltagID) throws WlsException {
         log.info("dummy client getWahlen() called instead of basisdaten-service");
         return List.of(

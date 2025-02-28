@@ -8,13 +8,8 @@ POST {{ WLS_ADMIN_SERVICE_URL }}/businessActions/generateWahllokalbenutzer/wahlt
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
-### Generate Wahllokalbenutzer for more Elections on same Day (needs profile 'dummy.clients' to make this work because of internal calls to other services)
-POST {{ WLS_ADMIN_SERVICE_URL }}/businessActions/generateWahllokalbenutzer/wahltagID0von3amGleichenTag
-Authorization: Bearer {{$auth.token("auth-service")}}
-Content-Type: application/json
-
 ### Export Wahllokalbenutzer (needs profile 'dummy.clients' to make this work because of internal calls to other services)
-GET {{ WLS_ADMIN_SERVICE_URL }}/businessActions/exportWahllokalBenutzer/wahltagID0von3amGleichenTag
+GET {{ WLS_ADMIN_SERVICE_URL }}/businessActions/exportWahllokalBenutzer/wahltagID1
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 

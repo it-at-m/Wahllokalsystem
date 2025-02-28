@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule;
 
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.lang.ArchRule;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.ModifiersExampleTest;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.NamingConventionExamplesTest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,6 +13,7 @@ import java.util.stream.Stream;
 
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules.RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules.RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED;
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules.RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules.RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED;
 
 public class MethodRulesTest {
@@ -30,7 +32,7 @@ public class MethodRulesTest {
     @MethodSource("getRulesAndTestClassesWithoutMatchingCasesThrowingErrors")
     void should_throwError_when_noCasesMatchingRuleWereFound(ArchRule ruleUnderTest) {
         Assertions.assertThatCode(() -> ruleUnderTest.check(new ClassFileImporter()
-                .importClasses(NamingConventionExamplesTest.ExampleTestNamesWithoutAnnotation.class)))
+                .importClasses(NamingConventionExamplesTest.ExampleMethodNamesWithoutAnnotation.class)))
                 .isInstanceOf(AssertionError.class)
                 .satisfies(assertionError -> Assertions.assertThat(assertionError.getMessage())
                         .contains("failed to check any classes"));
@@ -44,6 +46,14 @@ public class MethodRulesTest {
                 .doesNotThrowAnyException();
     }
 
+    @ParameterizedTest
+    @MethodSource("getRulesAndTestClassesWithoutMatchingCasesNotThrowingErrors")
+    void should_throwNoError_when_noCasesMatchingRuleWereFoundAndAllowEmptyIsTrue(ArchRule ruleUnderTest) {
+        Assertions.assertThatCode(() -> ruleUnderTest.check(new ClassFileImporter()
+                .importClasses(NamingConventionExamplesTest.ExampleMethodNamesWithoutAnnotation.class)))
+                .doesNotThrowAnyException();
+    }
+
     private static Stream<Arguments> getRulesAndMatchingTestClassesThrowingErrors() {
         return Stream.of(
                 Arguments.of(RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED,
@@ -51,12 +61,15 @@ public class MethodRulesTest {
                 Arguments.of(RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED,
                         NamingConventionExamplesTest.ExampleBeforeEachMethodNamesViolatingNamingConventionRule.class),
                 Arguments.of(RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED,
-                        NamingConventionExamplesTest.ExampleAfterEachMethodNamesViolatingNamingConventionRule.class));
+                        NamingConventionExamplesTest.ExampleAfterEachMethodNamesViolatingNamingConventionRule.class),
+                Arguments.of(RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED,
+                        ModifiersExampleTest.WrongModifierExamples.class));
     }
 
     private static Stream<Arguments> getRulesAndTestClassesWithoutMatchingCasesThrowingErrors() {
         return Stream.of(
-                Arguments.of(RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED));
+                Arguments.of(RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED),
+                Arguments.of(RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED));
     }
 
     private static Stream<Arguments> getRulesAndMatchingTestClassesNotThrowingErrors() {
@@ -66,6 +79,14 @@ public class MethodRulesTest {
                 Arguments.of(RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED,
                         NamingConventionExamplesTest.ExampleBeforeEachMethodNameFollowingNamingConventionRule.class),
                 Arguments.of(RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED,
-                        NamingConventionExamplesTest.ExampleAfterEachMethodNameFollowingNamingConventionRule.class));
+                        NamingConventionExamplesTest.ExampleAfterEachMethodNameFollowingNamingConventionRule.class),
+                Arguments.of(RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED,
+                        ModifiersExampleTest.CorrectModifierExamples.class));
+    }
+
+    private static Stream<Arguments> getRulesAndTestClassesWithoutMatchingCasesNotThrowingErrors() {
+        return Stream.of(
+                Arguments.of(RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED),
+                Arguments.of(RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED));
     }
 }

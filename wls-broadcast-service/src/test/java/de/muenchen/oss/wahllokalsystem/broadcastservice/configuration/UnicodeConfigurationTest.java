@@ -17,6 +17,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,6 +51,11 @@ class UnicodeConfigurationTest {
 
     @Autowired
     private MessageRepository messageRepository;
+
+    @BeforeEach
+    void setup() {
+        messageRepository.deleteAll();
+    }
 
     @Test
     void should_returnComposedString_when_givenDecomposedString() {

@@ -39,7 +39,7 @@ public class StimmzettelumschlaegeService {
 
     @PreAuthorize(
         "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostStimmzettelumschlaege')"
-                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)"
+                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)"
     )
     public void setStimmzettelumschlaege(@P("param") final BezirkUndWahlID id, final StimmzettelumschlaegeModel stimmzettelumschlaege) {
         log.info("#postStimmzettelumschlaege");

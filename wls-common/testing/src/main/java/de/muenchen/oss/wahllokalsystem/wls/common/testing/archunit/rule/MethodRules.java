@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.methods;
 
+import com.tngtech.archunit.core.domain.JavaModifier;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.syntax.elements.MethodsShouldConjunction;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.condition.RequestMappingMethodParameterAnnotationCondition;
@@ -32,4 +33,10 @@ public class MethodRules {
     public static final ArchRule RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED = methods()
             .that().areAnnotatedWith(AfterEach.class).should().haveNameMatching("teardown")
             .allowEmptyShould(true);
+
+    public static final ArchRule RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED = methods()
+            .that().areAnnotatedWith(Test.class).or().areAnnotatedWith(ParameterizedTest.class).should()
+            .notHaveModifier(JavaModifier.PROTECTED)
+            .andShould().notHaveModifier(JavaModifier.PRIVATE)
+            .andShould().notHaveModifier(JavaModifier.PUBLIC);
 }

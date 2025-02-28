@@ -28,6 +28,8 @@ Die Benennung erfolgt grundsätzlich auf Englisch, mit Ausnahme von Fachbegriffe
 
 `BaseButtonSave.vue` ... Allgemeiner Button zum Speichern
 
+`BaseWahlvorstandMitgliedCard.vue` ... V-Card zur Darstellung eines Wahlvorstandsmitgliedes
+
 ### Single-Use-Komponenten
 
 `The[<Domain>]<Funktion><Type>.vue`

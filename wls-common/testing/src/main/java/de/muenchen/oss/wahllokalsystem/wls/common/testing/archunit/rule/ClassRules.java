@@ -14,4 +14,10 @@ public class ClassRules {
 
     public static final ArchRule RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_Model_CONVENTION_MATCHED = classes()
             .that().resideInAPackage("..service..").and().areRecords().should().haveSimpleNameEndingWith("Model");
+
+    public static final ArchRule RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED = classes()
+            .that().resideInAPackage("..domain..")
+            .should().haveSimpleNameNotEndingWith("DTO")
+            .andShould().haveSimpleNameNotEndingWith("Model")
+            .andShould().haveSimpleNameNotEndingWith("Entity");
 }

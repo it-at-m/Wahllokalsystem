@@ -122,6 +122,9 @@ class WahllokalBenutzerClientMapperTest {
         return listOfWahlLokalUserInfoDTO;
     }
 
+    /**
+     * Data should match with getWahllokalUserInfoDTOWithUWB
+     */
     private WahllokalBenutzerModel getWahllokalBenutzerModelWithUWB() {
         val wahltag = LocalDate.now();
         return new WahllokalBenutzerModel(
@@ -135,6 +138,9 @@ class WahllokalBenutzerClientMapperTest {
                         new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID1_2", "2", "wahlID2")));
     }
 
+    /**
+     * Data should match with getWahllokalUserInfoDTOWithBWB
+     */
     private WahllokalBenutzerModel getWahllokalBenutzerModelWithBWB() {
         val wahltag = LocalDate.now();
         return new WahllokalBenutzerModel(
@@ -148,6 +154,9 @@ class WahllokalBenutzerClientMapperTest {
                         new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID1_2", "2", "wahlID2")));
     }
 
+    /**
+     * Data should match with getWahllokalBenutzerModelWithUWB
+     */
     private WahllokalUserInfoDTO getWahllokalUserInfoDTOWithUWB() {
         val wahltag = LocalDate.now();
         val wahllokalUserInfoDTO = new WahllokalUserInfoDTO();
@@ -164,6 +173,9 @@ class WahllokalBenutzerClientMapperTest {
         return wahllokalUserInfoDTO;
     }
 
+    /**
+     * Data should match with getWahllokalBenutzerModelWithBWB
+     */
     private WahllokalUserInfoDTO getWahllokalUserInfoDTOWithBWB() {
         val wahltag = LocalDate.now();
         val wahllokalUserInfoDTO = new WahllokalUserInfoDTO();

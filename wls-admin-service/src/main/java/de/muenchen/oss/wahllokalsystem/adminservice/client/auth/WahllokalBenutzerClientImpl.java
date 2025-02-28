@@ -61,10 +61,10 @@ public class WahllokalBenutzerClientImpl implements WahllokalBenutzerClient {
     @Override
     public String exportWahllokalBenutzer(String wahltagID) {
         log.debug("#begin exportWahllokalBenutzer {}", wahltagID);
-        String csvBenutzers;
+        String csvBenutzer;
         try {
-            csvBenutzers = wahllokalBenutzerControllerApi.exportWahllokalBenutzer(wahltagID);
-            log.info("#exportWahllokalBenutzer, response: {}", csvBenutzers);
+            csvBenutzer = wahllokalBenutzerControllerApi.exportWahllokalBenutzer(wahltagID);
+            log.info("#exportWahllokalBenutzer, response: {}", csvBenutzer);
         } catch (final WlsException wlsException) {
             log.error("#exportWahllokalBenutzer found WlsException:", wlsException);
             throw wlsException;
@@ -72,6 +72,6 @@ public class WahllokalBenutzerClientImpl implements WahllokalBenutzerClient {
             log.error("#WahllokalBenutzer nicht exportiert. Exception:", exception);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_AUTH);
         }
-        return csvBenutzers;
+        return csvBenutzer;
     }
 }

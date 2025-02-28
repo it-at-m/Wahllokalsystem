@@ -20,7 +20,7 @@ Die Benennung erfolgt grundsätzlich auf Englisch, mit Ausnahme von Fachbegriffe
 
 ### Basiskomponenten
 
-`Base<Type>[Domain]<Funktion>.vue`
+`Base<Type>[<Domain>]<Funktion>.vue`
 
 **Beispiel**
 
@@ -30,7 +30,7 @@ Die Benennung erfolgt grundsätzlich auf Englisch, mit Ausnahme von Fachbegriffe
 
 ### Single-Use-Komponenten
 
-`The[Domain]<Funktion><Type>.vue`
+`The[<Domain>]<Funktion><Type>.vue`
 
 **Beispiele**
 

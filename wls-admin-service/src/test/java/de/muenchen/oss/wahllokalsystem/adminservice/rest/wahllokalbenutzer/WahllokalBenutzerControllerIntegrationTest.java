@@ -1,19 +1,18 @@
-package de.muenchen.oss.wahllokalsystem.adminservice.rest.wahltermindaten;
+package de.muenchen.oss.wahllokalsystem.adminservice.rest.wahllokalbenutzer;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.reset;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static de.muenchen.oss.wahllokalsystem.adminservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.adminservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.utils.Authorities;
@@ -24,7 +23,6 @@ import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +38,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 @AutoConfigureWireMock
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
-class WahltermindatenControllerIntegrationTest {
+class WahllokalBenutzerControllerIntegrationTest {
 
     @Autowired
     MockMvc api;
@@ -48,24 +46,19 @@ class WahltermindatenControllerIntegrationTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    @BeforeEach
-    void setup() {
-
-    }
-
     @AfterEach
     void teardown() {
         reset();
     }
 
     @Nested
-    class LoadWahltermindaten {
+    class GenerateWahllokalbenutzer {
 
         @Test
-        @WithMockUser(authorities = { Authorities.ADMIN_LOADWAHLTERMINDATEN })
+        @WithMockUser(authorities = { Authorities.ADMIN_GENERATEEXPORTWAHLLOKALBENUTZER })
         void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
             val invalidWahltagID = " ";
-            val request = post("/businessActions/importWahltermindaten/" + invalidWahltagID).with(csrf());
+            val request = post("/businessActions/generateWahllokalbenutzer/" + invalidWahltagID).with(csrf());
 
             val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.MISSING_ARGUMENT.code(),
                     "WLS-ADMIN", ExceptionConstants.MISSING_ARGUMENT.message());
@@ -78,58 +71,27 @@ class WahltermindatenControllerIntegrationTest {
         }
 
         @Test
-        @WithMockUser(authorities = { Authorities.ADMIN_LOADWAHLTERMINDATEN })
+        @WithMockUser(authorities = { Authorities.ADMIN_GENERATEEXPORTWAHLLOKALBENUTZER })
         void should_returnOK_when_allRemoteClientsAreCalledSuccesfully() throws Exception {
             val wahltagID = "wahltagID";
-            val request = post("/businessActions/importWahltermindaten/" + wahltagID).with(csrf());
+            val request = post("/businessActions/generateWahllokalbenutzer/" + wahltagID).with(csrf());
 
-            stubFor(WireMock.put("/businessActions/wahltermindaten/" + wahltagID).willReturn(createWireMockResponse(HttpStatus.OK)));
-
-            val wahltageList = List.of(new WahltagModel("wahltagID", LocalDate.now().minusMonths(2), "Beschreibung Wahltag 1", "0"));
-            stubFor(WireMock.get("/businessActions/wahltage").willReturn(createWireMockResponse(wahltageList, HttpStatus.OK)));
-
-            val wahlbezirkeList = List.of(new WahlbezirkModel("wahlbezirkID1_1", WahlbezirkArtModel.UWB, "1201", LocalDate.now(), "0", "wahlID1"));
+            val wahlbezirkeList = List.of(new WahlbezirkModel("wahlbezirkID", WahlbezirkArtModel.UWB, "4711", LocalDate.now(), "0", "wahlID"));
             stubFor(WireMock.get("/businessActions/wahlbezirke/" + wahltagID).willReturn(createWireMockResponse(wahlbezirkeList, HttpStatus.OK)));
-
-            stubFor(WireMock.post("/businessActions/awerte/init").willReturn(createWireMockResponse(HttpStatus.OK)));
-
-            stubFor(WireMock.post("/businessActions/konfigurierterWahltag").willReturn(createWireMockResponse(HttpStatus.OK)));
+            stubFor(WireMock.post("/generateAndExportWahllokalbenutzer/" + wahltagID).willReturn(createWireMockResponse(HttpStatus.OK)));
 
             api.perform(request).andExpect(status().isOk()).andReturn();
         }
-
-        @Test
-        @WithMockUser(authorities = { Authorities.ADMIN_LOADWAHLTERMINDATEN })
-        void should_returnInternalServerErrorAndRollback_when_konfigurierterWahltagCouldNotBeSet() throws Exception {
-            val wahltagID = "wahltagID";
-            val request = post("/businessActions/importWahltermindaten/" + wahltagID).with(csrf());
-
-            stubFor(WireMock.put("/businessActions/wahltermindaten/" + wahltagID).willReturn(createWireMockResponse(HttpStatus.OK)));
-
-            val wahltageList = List.of(new WahltagModel("wahltagID", LocalDate.now().minusMonths(2), "Beschreibung Wahltag 1", "0"));
-            stubFor(WireMock.get("/businessActions/wahltage").willReturn(createWireMockResponse(wahltageList, HttpStatus.OK)));
-
-            val wahlbezirkeList = List.of(new WahlbezirkModel("wahlbezirkID1_1", WahlbezirkArtModel.UWB, "1201", LocalDate.now(), "0", "wahlID1"));
-            stubFor(WireMock.get("/businessActions/wahlbezirke/" + wahltagID).willReturn(createWireMockResponse(wahlbezirkeList, HttpStatus.OK)));
-
-            stubFor(WireMock.post("/businessActions/awerte/init").willReturn(createWireMockResponse(HttpStatus.OK)));
-
-            // missing stubbing for "/businessActions/konfigurierterWahltag" throws exception and service tries to delete
-            stubFor(WireMock.delete("/businessActions/wahltermindaten/" + wahltagID).willReturn(createWireMockResponse(HttpStatus.OK)));
-
-            api.perform(request).andExpect(status().isInternalServerError()).andReturn();
-        }
-
     }
 
     @Nested
-    class DeleteWahltermindaten {
+    class ExportWahllokalBenutzer {
 
         @Test
-        @WithMockUser(authorities = { Authorities.ADMIN_DELETEWAHLTERMINDATEN })
+        @WithMockUser(authorities = { Authorities.ADMIN_EXPORTWAHLLOKALBENUTZER })
         void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
             val invalidWahltagID = " ";
-            val request = post("/businessActions/deleteWahltermindaten/" + invalidWahltagID).with(csrf());
+            val request = get("/businessActions/exportWahllokalBenutzer/" + invalidWahltagID).with(csrf());
 
             val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.MISSING_ARGUMENT.code(),
                     "WLS-ADMIN", ExceptionConstants.MISSING_ARGUMENT.message());
@@ -137,44 +99,50 @@ class WahltermindatenControllerIntegrationTest {
             val result = api.perform(request).andExpect(status().isBadRequest()).andReturn();
             val resultBodyAsWlsExceptionDTO = objectMapper.readValue(result.getResponse().getContentAsString(), WlsExceptionDTO.class);
 
-            Assertions.assertThat(resultBodyAsWlsExceptionDTO).usingRecursiveComparison().isEqualTo(expectedWlsExceptionDTO);
+            Assertions.assertThat(resultBodyAsWlsExceptionDTO).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedWlsExceptionDTO);
             Assertions.assertThat(resultBodyAsWlsExceptionDTO.message()).isNotNull();
         }
 
         @Test
-        @WithMockUser(authorities = { Authorities.ADMIN_DELETEWAHLTERMINDATEN })
-        void should_returnOK_when_allRemoteClientsAreCalledSuccesfully() throws Exception {
+        @WithMockUser(authorities = { Authorities.ADMIN_EXPORTWAHLLOKALBENUTZER })
+        void should_returnOK_when_remoteClientIsCalledSuccesfully() throws Exception {
             val wahltagID = "wahltagID";
-            val request = post("/businessActions/deleteWahltermindaten/" + wahltagID).with(csrf());
+            val request = get("/businessActions/exportWahllokalBenutzer/" + wahltagID).with(csrf());
 
-            stubFor(WireMock.delete("/businessActions/wahltermindaten/" + wahltagID).willReturn(createWireMockResponse(HttpStatus.OK)));
-            stubFor(WireMock.delete("/businessActions/konfigurierterWahltag/" + wahltagID).willReturn(createWireMockResponse(HttpStatus.OK)));
+            stubFor(WireMock.get("/exportWahllokalbenutzer/" + wahltagID).willReturn(createWireMockResponse(HttpStatus.OK)));
 
             api.perform(request).andExpect(status().isOk()).andReturn();
         }
+    }
+
+    @Nested
+    class DeleteWahllokalBenutzer {
 
         @Test
-        @WithMockUser(authorities = { Authorities.ADMIN_DELETEWAHLTERMINDATEN })
-        void should_returnInternalServer_when_wahltermindatenCouldNotBeDeleted() throws Exception {
-            val wahltagID = "wahltagID";
-            val request = post("/businessActions/deleteWahltermindaten/" + wahltagID).with(csrf());
+        @WithMockUser(authorities = { Authorities.ADMIN_DELETEWAHLLOKALBENUTZER })
+        void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
+            val invalidWahltagID = " ";
+            val request = post("/businessActions/deleteWahllokalBenutzer/" + invalidWahltagID).with(csrf());
 
-            // missing stubbing for "/businessActions/wahltermindaten" throws exception
-            stubFor(WireMock.delete("/businessActions/konfigurierterWahltag/" + wahltagID).willReturn(createWireMockResponse(HttpStatus.OK)));
+            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.MISSING_ARGUMENT.code(),
+                    "WLS-ADMIN", ExceptionConstants.MISSING_ARGUMENT.message());
 
-            api.perform(request).andExpect(status().isInternalServerError()).andReturn();
+            val result = api.perform(request).andExpect(status().isBadRequest()).andReturn();
+            val resultBodyAsWlsExceptionDTO = objectMapper.readValue(result.getResponse().getContentAsString(), WlsExceptionDTO.class);
+
+            Assertions.assertThat(resultBodyAsWlsExceptionDTO).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedWlsExceptionDTO);
+            Assertions.assertThat(resultBodyAsWlsExceptionDTO.message()).isNotNull();
         }
 
         @Test
-        @WithMockUser(authorities = { Authorities.ADMIN_DELETEWAHLTERMINDATEN })
-        void should_returnInternalServer_when_konfigurierterWahltagCouldNotBeDeleted() throws Exception {
+        @WithMockUser(authorities = { Authorities.ADMIN_DELETEWAHLLOKALBENUTZER })
+        void should_returnOK_when_remoteClientIsCalledSuccesfully() throws Exception {
             val wahltagID = "wahltagID";
-            val request = post("/businessActions/deleteWahltermindaten/" + wahltagID).with(csrf());
+            val request = post("/businessActions/deleteWahllokalBenutzer/" + wahltagID).with(csrf());
 
-            stubFor(WireMock.delete("/businessActions/wahltermindaten/" + wahltagID).willReturn(createWireMockResponse(HttpStatus.OK)));
-            // missing stubbing for "/businessActions/konfigurierterWahltag" throws exception
+            stubFor(WireMock.delete("/deleteWahllokalbenutzer/" + wahltagID).willReturn(createWireMockResponse(HttpStatus.OK)));
 
-            api.perform(request).andExpect(status().isInternalServerError()).andReturn();
+            api.perform(request).andExpect(status().isOk()).andReturn();
         }
     }
 

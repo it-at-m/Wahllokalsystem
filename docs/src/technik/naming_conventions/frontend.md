@@ -94,6 +94,10 @@ Die Tests liegen im `tests`-Ordner, welcher der Aufbaustruktur des `src`-Ordners
 
 `<Storybookgegenstand ohne Dateiendung>.stories.ts`
 
+> [!IMPORTANT]
+> Stories zu Komponenten, die den Stories verwenden, haben auf der Übersichtsseite (`docs`) alle denselben Zustand.
+> Der Zustand für alle Komponenten entsprecht dem Zustand im Store mit der letzten Story.
+
 **Beispiel**
 
 `BaseButtonRefresh.stories.ts` ... Stories zu `BaseButtonRefresh.vue`

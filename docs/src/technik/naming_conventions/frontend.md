@@ -1,12 +1,12 @@
 # Naming Convention für Frontend Elemente
 
-bitte den [StyleGuide](https://vuejs.org/style-guide/) beachten.
+Bitte den [StyleGuide](https://vuejs.org/style-guide/) beachten.
 
 - Dateinamen sind in [c|C]amelCase
 - Definitionen von Properties, Events und lokalen Variablen in camelCase
 - Element-Attribute in Kebab-Case
 
-Die Benennung erfolgt grundsätzlich auf Englisch mit Aufnahme von Fachbegriffen welche auf Deutsch verwendet werden.
+Die Benennung erfolgt grundsätzlich auf Englisch, mit Ausnahme von Fachbegriffen welche auf Deutsch verwendet werden.
 
 ## Views
 
@@ -46,7 +46,7 @@ Die Benennung erfolgt grundsätzlich auf Englisch mit Aufnahme von Fachbegriffen
 
 `wahlvorstandStore.ts` ... Store für den Wahlvorstand
 
-## composables
+## Composables
 
 ### domainspezifische composables
 
@@ -98,7 +98,7 @@ Die Tests liegen im `tests`-Ordner, welcher der Aufbaustruktur des `src`-Ordners
 
 ## Testattribut
 
-Damit Element leichter für Tests zugänglich sollen sie ein Attribut für Tests bekommen.
+Damit Elemente leichter für Tests zugänglich sind, sollen sie ein Attribut für Tests bekommen.
 Der Name des Attributes ist [`data-test`](https://docs.cypress.io/app/core-concepts/best-practices#Selecting-Elements).
 
 Bei dem Wert handelt es sich **nicht** um eine ID.
@@ -109,4 +109,4 @@ Bei dem Wert handelt es sich **nicht** um eine ID.
 
 **Beipspiel**
 
-`onAnwesenheitChanged($event, mitglied)` ... Eventhandler wenn sich die Anwesenheit geändert hat 
+`onAnwesenheitChanged($event, mitglied)` ... Eventhandler, wenn sich die Anwesenheit geändert hat 

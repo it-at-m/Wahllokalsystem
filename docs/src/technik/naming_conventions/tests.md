@@ -76,7 +76,7 @@ public interface EreignisModelMapper {
 
 ### Frontend
 
-Der Dateinamen von Tests ist [hier](/technik/naming_conventions/frontend#tests) beschrieben.
+Der Dateinamen von Tests sind [hier](/technik/naming_conventions/frontend#tests) beschrieben.
 
 Allgemein gilt für den Aufbau:
 
@@ -95,7 +95,7 @@ describe("<Dateiname des Testgegenstandes>", () => {
 #### Beispiel für Tests eines Stores
 
 ```typescript
-import { afterEach, beforeEach, describe, it } from "vitest";
+import { describe, it } from "vitest";
 
 /* Die Description ist der Dateiname des Testgegenstandes */ // [!code focus]
 describe("wahlvorstandStore.ts", () => { // [!code focus]    
@@ -132,6 +132,8 @@ describe("wahlvorstandStore.ts", () => { // [!code focus]
 #### Beispiel für Tests zu einer Komponente
 
 ```typescript
+import { describe, it } from "vitest";
+
 /* Die Description ist der Dateiname des Testgegenstandes */ // [!code focus]
 describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => { // [!code focus]
    

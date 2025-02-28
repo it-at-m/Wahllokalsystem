@@ -63,25 +63,25 @@ Der Anwendungscode besteht auf folgenden Ordnern:
 | Ordner            | Beschreibung                                                              |
 |-------------------|---------------------------------------------------------------------------|
 | api               | (generierte) Clients für den Zugriff auf die Backend-Services             |
-| components        | Komponenten die zur Verfügung stehen.                                     |
+| components        | Komponenten die zur Verfügung stehen                                      |
 | composables       | Wiederverwendbarer Code                                                   |
 | resources/openapi | openAPI Beschreibung die für die Clients verwendet werden                 |
-| plugins           | Konfiguration der verwendete Plugins, z.B. Pinia, Router oder Vuetify     |
-| store             | Stores des Anwendung                                                      |
-| types             | Eigenen Datentype der Anwendung. (Die Datentype der Clients sind in `api` |                                                    
+| plugins           | Konfiguration der verwendeten Plugins, z.B. Pinia, Router oder Vuetify     |
+| store             | Stores der Anwendung                                                      |
+| types             | Eigenen Datentypen der Anwendung (Die Datentypen der Clients sind in `api` |                                                    
 | views             | Views der Anwendung                                                       |
 
-je Ordner kann, sofern es mehrerer Elemente gibt die zu unterschiedlichen fachlichen Domainen gehörten, Unterordner geben.
+Sofern es mehrere Elemente gibt, die zu unterschiedlichen fachlichen Domainen gehörten, kann es je Ordner verschiedene Unterordner geben.
 
 `common` ... Elemente ohne spezifische fachliche Zugehörigkeit
 
-`<domain>` ... Elemente mit spezifischer fachliche Zugehörigkeit
+`<domain>` ... Elemente mit spezifischer fachlicher Zugehörigkeit
 
 **Beispiele**
 
-`components/common` ... Enthält Komponenten die über zum Einsatz kommen können.
+`components/common` ... Enthält Komponenten, die überall zum Einsatz kommen können.
 
-`components/wahlvorstand` ... Enthält Komponenten die im Kontext vom Wahlvorstand zum Einsatz kommen
+`components/wahlvorstand` ... Enthält Komponenten, die im Kontext vom Wahlvorstand zum Einsatz kommen
 
 ### Tests und Stories
 
@@ -89,7 +89,7 @@ Die Tests und Stories bilden die gleiche Ordnerstruktur ab wie der jeweilige Tes
 
 Für die Komponte im Ordner `src/components/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.vue` liegen die Tests
 in `tests/components/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.spec.ts` und die Stories in
-`stories/componentes/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.stories.ts`.
+`stories/components/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.stories.ts`.
 
 Bei den Tests zu Komponenten gibt es zusätzlich, parallel zu den Testfiles, einen Ordner `__snapshots__`.
 Dieser enthält die Referenzen für die Darstellung für [Komponententest](#komponententests).
@@ -152,8 +152,8 @@ domainService -. uses .-> domainMapper
 
 ### Unittesting
 
-Funktionen in Composables, Stores und Datentypen enthalten sind, werden mit Unit-Tests abgedeckt.
-Die Kommunikation mit Funktionen anderer Module werden gemockt. Dabei ist die korrekte Interaktion mit dem Mock
+Funktionen, die in Composables, Stores und Datentypen enthalten sind, werden mit Unit-Tests abgedeckt.
+Die Kommunikation mit Funktionen anderer Module wird gemockt. Dabei ist die korrekte Interaktion mit dem Mock
 zu verifizieren.
 
 ### Komponententests

@@ -14,8 +14,12 @@ import java.util.stream.Stream;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_Model_CONVENTION_MATCHED;
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_NO_CROSS_DEPENDENCIES_CONVENTION_MATCHED;
 
 public class ClassRulesTest {
+
+    static String INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH = "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.incorrectFileNamingAndDependencies";
+    static String CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH = "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.correctFileNamingAndDependencies";
 
     @ParameterizedTest
     @MethodSource("getRulesAndMatchingTestClassesThrowingErrors")
@@ -36,20 +40,24 @@ public class ClassRulesTest {
     private static Stream<Arguments> getRulesAndMatchingTestClassesThrowingErrors() {
         return Stream.of(
                 Arguments.of(RULE_DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED,
-                        "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.incorrectFileNaming.rest"),
+                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".rest"),
                 Arguments.of(RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_Model_CONVENTION_MATCHED,
-                        "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.incorrectFileNaming.service"),
+                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".service"),
                 Arguments.of(RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED,
-                        "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.incorrectFileNaming.domain"));
+                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".domain"),
+                Arguments.of(RULE_NO_CROSS_DEPENDENCIES_CONVENTION_MATCHED,
+                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH));
     }
 
     private static Stream<Arguments> getRulesAndMatchingTestClassesNotThrowingErrors() {
         return Stream.of(
                 Arguments.of(RULE_DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED,
-                        "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.correctFileNaming.rest"),
+                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".rest"),
                 Arguments.of(RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_Model_CONVENTION_MATCHED,
-                        "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.correctFileNaming.service"),
+                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".service"),
                 Arguments.of(RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED,
-                        "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.correctFileNaming.domain"));
+                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".domain"),
+                Arguments.of(RULE_NO_CROSS_DEPENDENCIES_CONVENTION_MATCHED,
+                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH));
     }
 }

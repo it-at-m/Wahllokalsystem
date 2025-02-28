@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
 import com.tngtech.archunit.lang.ArchRule;
 import lombok.AccessLevel;
@@ -20,4 +21,8 @@ public class ClassRules {
             .should().haveSimpleNameNotEndingWith("DTO")
             .andShould().haveSimpleNameNotEndingWith("Model")
             .andShould().haveSimpleNameNotEndingWith("Entity");
+
+    public static final ArchRule RULE_NO_CROSS_DEPENDENCIES_CONVENTION_MATCHED = noClasses()
+            .that().resideInAnyPackage("..rest..", "..service..", "..domain..")
+            .should().dependOnClassesThat().resideInAnyPackage("..rest..", "..service..", "..domain..");
 }

@@ -36,7 +36,7 @@
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <org.springdoc.version>2.6.0</org.springdoc.version>
-        <wls.common.version>1.1.0</wls.common.version>
+        <wls.common.version>1.2.0</wls.common.version>
     </properties>
 
     <dependencyManagement>
@@ -105,13 +105,6 @@
             <artifactId>spring-security-oauth2-jose</artifactId>
         </dependency>
 
-        <!-- wls-common -->
-        <dependency>
-            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
-            <artifactId>security</artifactId>
-            <version>${wls.common.version}</version>
-        </dependency>
-
         <!-- json etc. -->
         <dependency>
             <groupId>org.springframework.hateoas</groupId>
@@ -160,6 +153,13 @@
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-jpamodelgen</artifactId>
+        </dependency>
+
+        <!-- wls-common -->
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>security</artifactId>
+            <version>${wls.common.version}</version>
         </dependency>
 
         <!-- Other -->

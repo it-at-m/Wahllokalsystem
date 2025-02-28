@@ -35,7 +35,7 @@ public class WahlscheineService {
 
     @PreAuthorize(
         "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostWahlscheine')"
-                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)"
+                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)"
     )
     public void setWahlscheine(@P("param") final BezirkUndWahlID id, final WahlscheineModel wahlscheine) {
         log.info("#postWahlscheine");

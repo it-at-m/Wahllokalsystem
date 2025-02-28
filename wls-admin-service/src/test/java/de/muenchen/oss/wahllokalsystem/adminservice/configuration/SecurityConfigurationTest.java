@@ -15,6 +15,7 @@ import de.muenchen.oss.wahllokalsystem.adminservice.rest.wahlen.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.rest.wahlen.WahlartDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag.KonfigurierteWahltageService;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen.WahlenService;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer.WahllokalBenutzerService;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltage.WahltageService;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahltermindatenService;
 import java.time.LocalDate;
@@ -49,6 +50,9 @@ class SecurityConfigurationTest {
 
     @MockBean
     WahltermindatenService wahltermindatenService;
+
+    @MockBean
+    WahllokalBenutzerService wahllokalBenutzerService;
 
     @MockBean
     KonfigurierteWahltageService konfigurierteWahltageService;
@@ -124,6 +128,32 @@ class SecurityConfigurationTest {
             api.perform(request).andExpect(status().isOk());
 
             Mockito.verify(wahltermindatenService).loadWahltermindaten(wahltagID);
+        }
+    }
+
+    @Nested
+    class GenerateWahllokalbenutzer {
+
+        @WithAnonymousUser
+        @Test
+        void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+            val wahltagID = "wahltagID";
+            val request = MockMvcRequestBuilders.post("/businessActions/generateWahllokalbenutzer/" + wahltagID).with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON);
+
+            api.perform(request).andExpect(status().isUnauthorized());
+        }
+
+        @WithMockUser
+        @Test
+        void should_returnOk_when_callingAuthenticated() throws Exception {
+            val wahltagID = "wahltagID";
+            val request = MockMvcRequestBuilders.post("/businessActions/generateWahllokalbenutzer/" + wahltagID).with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON);
+
+            api.perform(request).andExpect(status().isOk());
+
+            Mockito.verify(wahllokalBenutzerService).generateWahllokalbenutzer(wahltagID);
         }
     }
 

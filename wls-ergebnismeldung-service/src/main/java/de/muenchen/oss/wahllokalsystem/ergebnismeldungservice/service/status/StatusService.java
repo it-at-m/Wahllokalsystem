@@ -38,7 +38,7 @@ public class StatusService {
 
     @PreAuthorize(
         "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostStatus')"
-                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)"
+                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)"
     )
     public void setStatus(@P("param") final BezirkUndWahlID id, final StatusModel status) {
         log.info("#postStatus");

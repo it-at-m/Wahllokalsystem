@@ -4,6 +4,9 @@ import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkArt
 import java.time.LocalDate;
 import java.util.List;
 
+import lombok.Builder;
+
+@Builder
 public record WahllokalBenutzerModel(
         String wahlbezirkID,
         String wahlbezirknummer,

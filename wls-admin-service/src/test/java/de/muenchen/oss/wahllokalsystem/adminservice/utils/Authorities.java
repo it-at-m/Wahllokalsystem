@@ -26,5 +26,4 @@ public class Authorities {
     public static final String[] ALL_AUTHORITIES_GETWAHLEN = new String[] {
             ADMIN_GETWAHLEN
     };
-
 }

@@ -75,7 +75,6 @@ public class WahllokalBenutzerService {
                         wb.wahltag(),
                         wb.wahlbezirkart(),
                         initWbIdWahlnummerWahlIDModel));
-
             }
         }
         return userModels;

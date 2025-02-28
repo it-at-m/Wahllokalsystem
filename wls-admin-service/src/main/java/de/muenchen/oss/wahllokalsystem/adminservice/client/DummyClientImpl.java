@@ -101,8 +101,8 @@ public class DummyClientImpl
     @Override
     public String exportWahllokalBenutzer(String wahltagID) {
         log.info("dummy client exportWahllokalBenutzer({}) called instead of auth-service", wahltagID);
-        return "ftpprs-1503\r\n" + "c94m3c-0365\r\n" + "v7jnkr-2161\r\n" + "evc77k-2062\r\n" + "sae447-1327\r\n"
-                + "xh3mv2-0508\r\n" + "rkqdt2-2570\r\n" + "a3c9hm-1369\r\n" + "jnhm44-0566";
+        return "dummy:ftpprs-1503\r\n" + "dummy:c94m3c-0365\r\n" + "dummy:v7jnkr-2161\r\n" + "dummy:evc77k-2062\r\n" + "sae447-1327\r\n"
+                + "dummy:xh3mv2-0508\r\n" + "dummy:rkqdt2-2570\r\n" + "dummy:a3c9hm-1369\r\n" + "dummy:jnhm44-0566";
     }
 
     public List<WahlModel> getWahlen(String wahltagID) throws WlsException {

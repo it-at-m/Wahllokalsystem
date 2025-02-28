@@ -14,7 +14,10 @@ import java.util.stream.Stream;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_Model_CONVENTION_MATCHED;
-import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_NO_CROSS_DEPENDENCIES_CONVENTION_MATCHED;
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_NO_CROSS_DEPENDENCIES_INSIDE_DOMAIN_CONVENTION_MATCHED;
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_NO_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED;
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED;
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED;
 
 public class ClassRulesTest {
 
@@ -45,7 +48,13 @@ public class ClassRulesTest {
                         INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".service"),
                 Arguments.of(RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED,
                         INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".domain"),
-                Arguments.of(RULE_NO_CROSS_DEPENDENCIES_CONVENTION_MATCHED,
+                Arguments.of(RULE_NO_CROSS_DEPENDENCIES_INSIDE_DOMAIN_CONVENTION_MATCHED,
+                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+                Arguments.of(RULE_NO_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED,
+                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+                Arguments.of(RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED,
+                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+                Arguments.of(RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED,
                         INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH));
     }
 
@@ -57,7 +66,13 @@ public class ClassRulesTest {
                         CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".service"),
                 Arguments.of(RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED,
                         CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".domain"),
-                Arguments.of(RULE_NO_CROSS_DEPENDENCIES_CONVENTION_MATCHED,
+                Arguments.of(RULE_NO_CROSS_DEPENDENCIES_INSIDE_DOMAIN_CONVENTION_MATCHED,
+                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+                Arguments.of(RULE_NO_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED,
+                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+                Arguments.of(RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED,
+                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+                Arguments.of(RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED,
                         CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH));
     }
 }

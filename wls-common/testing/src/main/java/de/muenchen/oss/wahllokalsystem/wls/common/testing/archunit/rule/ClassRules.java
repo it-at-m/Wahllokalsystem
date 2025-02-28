@@ -22,7 +22,23 @@ public class ClassRules {
             .andShould().haveSimpleNameNotEndingWith("Model")
             .andShould().haveSimpleNameNotEndingWith("Entity");
 
-    public static final ArchRule RULE_NO_CROSS_DEPENDENCIES_CONVENTION_MATCHED = noClasses()
-            .that().resideInAnyPackage("..rest..", "..service..", "..domain..")
-            .should().dependOnClassesThat().resideInAnyPackage("..rest..", "..service..", "..domain..");
+    // dto files do not import from service or domain packages
+    public static final ArchRule RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED = noClasses()
+            .that().resideInAPackage("..rest..").and().haveSimpleNameEndingWith("DTO")
+            .should().dependOnClassesThat().resideInAnyPackage("..service..", "..domain..");
+
+    // model files do not import from rest or domain packages
+    public static final ArchRule RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED = noClasses()
+            .that().resideInAPackage("..service..").and().haveSimpleNameEndingWith("Model")
+            .should().dependOnClassesThat().resideInAnyPackage("..rest..", "..domain..");
+
+    // files in service package do not import from rest packages
+    public static final ArchRule RULE_NO_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED = noClasses()
+            .that().resideInAPackage("..service..")
+            .should().dependOnClassesThat().resideInAnyPackage("..rest..");
+
+    // files in domain package do not import from rest or service packages
+    public static final ArchRule RULE_NO_CROSS_DEPENDENCIES_INSIDE_DOMAIN_CONVENTION_MATCHED = noClasses()
+            .that().resideInAPackage("..domain..")
+            .should().dependOnClassesThat().resideInAnyPackage("..rest..", "..service..");
 }

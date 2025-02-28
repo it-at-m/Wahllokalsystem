@@ -21,8 +21,8 @@ import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.C
 
 public class ClassRulesTest {
 
-    static String INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH = "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.incorrectFileNamingAndDependencies";
-    static String CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH = "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.correctFileNamingAndDependencies";
+    static final String INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH = "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.incorrectFileNamingAndDependencies";
+    static final String CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH = "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.correctFileNamingAndDependencies";
 
     @ParameterizedTest
     @MethodSource("getRulesAndMatchingTestClassesThrowingErrors")

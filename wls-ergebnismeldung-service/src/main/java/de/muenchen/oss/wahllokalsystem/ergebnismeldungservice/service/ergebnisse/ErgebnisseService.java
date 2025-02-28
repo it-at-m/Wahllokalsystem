@@ -28,7 +28,7 @@ public class ErgebnisseService {
 
     @PreAuthorize(
         "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetErgebnisse')"
-                + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
+                + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
     )
     public Optional<ErgebnisseModel> getErgebnisse(@P("param") @NotNull final ErgebnisseReference ergebnisseReference) {
         log.info("#getErgebnisse");
@@ -42,7 +42,7 @@ public class ErgebnisseService {
 
     @PreAuthorize(
         "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetErgebnisse')"
-                + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
+                + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
     )
     public List<ErgebnisseModel> getAllErgebnisse(@NotNull final String wahlID, @P("wahlbezirkID") @NotNull final String wahlbezirkID) {
         log.info("#getErgebnisse");
@@ -56,7 +56,7 @@ public class ErgebnisseService {
 
     @PreAuthorize(
         "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostErgebnisse')"
-                + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
+                + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
     )
     public void postErgebnisse(@P("param") final ErgebnisseReference ergebnisseReference, @NotNull final ErgebnisseModel ergebnisseToAdd) {
         log.info("#postErgebnisse");

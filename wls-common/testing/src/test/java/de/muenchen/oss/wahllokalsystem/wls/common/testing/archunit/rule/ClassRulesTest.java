@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.stream.Stream;
 
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED;
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_Model_CONVENTION_MATCHED;
 
 public class ClassRulesTest {
 
@@ -34,12 +35,16 @@ public class ClassRulesTest {
     private static Stream<Arguments> getRulesAndMatchingTestClassesThrowingErrors() {
         return Stream.of(
                 Arguments.of(RULE_DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED,
-                        "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.incorrectFileNaming.rest"));
+                        "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.incorrectFileNaming.rest"),
+                Arguments.of(RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_Model_CONVENTION_MATCHED,
+                        "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.incorrectFileNaming.service"));
     }
 
     private static Stream<Arguments> getRulesAndMatchingTestClassesNotThrowingErrors() {
         return Stream.of(
                 Arguments.of(RULE_DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED,
-                        "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.correctFileNaming.rest"));
+                        "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.correctFileNaming.rest"),
+                Arguments.of(RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_Model_CONVENTION_MATCHED,
+                        "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.correctFileNaming.service"));
     }
 }

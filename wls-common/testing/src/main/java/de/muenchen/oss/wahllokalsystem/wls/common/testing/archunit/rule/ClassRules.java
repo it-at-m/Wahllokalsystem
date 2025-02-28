@@ -11,4 +11,7 @@ public class ClassRules {
 
     public static final ArchRule RULE_DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED = classes()
             .that().resideInAPackage("..rest..").and().areRecords().should().haveSimpleNameEndingWith("DTO");
+
+    public static final ArchRule RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_Model_CONVENTION_MATCHED = classes()
+            .that().resideInAPackage("..service..").and().areRecords().should().haveSimpleNameEndingWith("Model");
 }

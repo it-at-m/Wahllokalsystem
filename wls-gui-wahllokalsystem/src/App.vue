@@ -89,7 +89,10 @@
     </v-app-bar>
     <v-navigation-drawer v-model="drawer">
       <v-list>
-        <v-list-item />
+        <v-list-item
+          title="Wahlvorstand"
+          :to="ROUTE_WAHLVORSTAND"
+        />
       </v-list>
     </v-navigation-drawer>
     <v-main>
@@ -132,11 +135,14 @@ import {
   EXAMPLE_ROUTES_BACKEND,
   EXAMPLE_ROUTES_NEWROUTE,
   EXAMPLE_VALIDATION,
+  ROUTE_WAHLVORSTAND,
 } from "@/constants";
 import { useUserStore } from "@/stores/user";
+import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 import User, { UserLocalDevelopment } from "@/types/User";
 
 const userStore = useUserStore();
+const wahlvorstandStore = useWahlvorstandStore();
 const [drawer, toggleDrawer] = useToggle();
 const isOffline = ref(false);
 
@@ -166,7 +172,8 @@ function loadUser(): void {
       } else {
         userStore.setUser(null);
       }
-    });
+    })
+    .then(() => wahlvorstandStore.loadWahlvorstand());
 }
 </script>
 

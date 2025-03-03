@@ -83,8 +83,9 @@ export default withMermaid({
                 {
                     text: 'Naming Conventions', link: `${PATH_NAMING_CONVENTIONS}`, collapsed: true, items: [
                         {text: 'Flyway', link: `${PATH_NAMING_CONVENTIONS}flyway`},
-                        {text: 'Tests', link: `${PATH_NAMING_CONVENTIONS}testing`},
-                        {text: 'Workflows', link: `${PATH_NAMING_CONVENTIONS}workflows`}
+                        {text: 'Tests', collapsed: true, link: `${PATH_NAMING_CONVENTIONS}tests`},
+                        {text: 'Workflows', link: `${PATH_NAMING_CONVENTIONS}workflows`},
+                        {text: 'Frontend', link: `${PATH_NAMING_CONVENTIONS}frontend`}
                     ]
                 },
                 {
@@ -123,6 +124,10 @@ export default withMermaid({
                             text: "Sicherheit",
                             link: `${PATH_SYSSPEC}security`,
                         },
+                        {
+                            text: "Frontend",
+                            link: `${PATH_SYSSPEC}frontend`
+                        }
                     ],
                 }
             ],

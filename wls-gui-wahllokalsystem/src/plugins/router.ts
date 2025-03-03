@@ -8,6 +8,7 @@ import {
   EXAMPLE_ROUTES_NEWROUTE,
   EXAMPLE_ROUTES_NOTFOUND,
   EXAMPLE_VALIDATION,
+  ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
 } from "@/constants";
 import ExampleBackendCommunicationView from "@/views/ExampleBackendCommunicationView.vue";
@@ -15,12 +16,19 @@ import ExampleError404View from "@/views/ExampleError404View.vue";
 import ExampleNewRouteView from "@/views/ExampleNewRouteView.vue";
 import ExampleValidation from "@/views/ExampleValidation.vue";
 import HomeView from "@/views/HomeView.vue";
+import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
 
 const routes = [
   {
     path: "/",
     name: ROUTES_HOME,
     component: HomeView,
+    meta: {},
+  },
+  {
+    path: "/wahlvorstand",
+    name: ROUTE_WAHLVORSTAND,
+    component: WahlvorstandAnwesenheitView,
     meta: {},
   },
   {

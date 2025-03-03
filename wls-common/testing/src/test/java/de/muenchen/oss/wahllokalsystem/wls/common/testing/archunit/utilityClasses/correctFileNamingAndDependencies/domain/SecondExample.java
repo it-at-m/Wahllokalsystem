@@ -1,11 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.correctFileNamingAndDependencies.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.Embeddable;
 
-@Entity
-public class Example {
-
-    @Id
-    private Long id;
+@Embeddable
+public class SecondExample {
 }

@@ -1,6 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule;
 
 import com.tngtech.archunit.lang.ArchRule;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -17,8 +19,9 @@ public class ClassRules {
             .that().resideInAPackage("..service..").and().areRecords().should().haveSimpleNameEndingWith("Model");
 
     public static final ArchRule RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED = classes()
-            .that().resideInAPackage("..domain..")
-            .should().haveSimpleNameNotEndingWith("DTO")
+            .that().resideInAPackage("..domain..").and().areNotEnums().and().areNotInterfaces()
+            .should().beAnnotatedWith(Entity.class).orShould().beAnnotatedWith(Embeddable.class)
+            .andShould().haveSimpleNameNotEndingWith("DTO")
             .andShould().haveSimpleNameNotEndingWith("Model")
             .andShould().haveSimpleNameNotEndingWith("Entity");
 

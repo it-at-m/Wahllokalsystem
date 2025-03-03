@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.client.basisdaten;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.model.WahlbezirkDTO;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahlbezirkArtModel;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahlbezirkModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkArtModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkModel;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.val;

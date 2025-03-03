@@ -4,6 +4,7 @@ export const EXAMPLE_ROUTES_NOTFOUND = "404";
 export const EXAMPLE_ROUTES_DYNAMIC = "dynamic";
 export const EXAMPLE_ROUTES_BACKEND = "talk-to-backend";
 export const EXAMPLE_VALIDATION = "validation-example";
+export const ROUTE_WAHLVORSTAND = "wahlvorstand";
 
 export const SNACKBAR_DEFAULT_TIMEOUT = 5000;
 
@@ -18,3 +19,5 @@ const WLS_SERVICE_API_URL = "/api/";
 
 export const BROADCAST_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "broadcast-service";
+export const WAHLVORSTAND_SERVICE_API_URL =
+  WLS_SERVICE_API_URL + "wahlvorstand-service";

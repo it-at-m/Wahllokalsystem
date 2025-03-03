@@ -1,8 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand;
 
-import static de.muenchen.oss.wahllokalsystem.wahlvorstandservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.wahlvorstandservice.TestConstants.SPRING_TEST_PROFILE;
-import static de.muenchen.oss.wahllokalsystem.wls.common.security.Profiles.NO_BEZIRKS_ID_CHECK;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -16,6 +14,7 @@ import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.utils.TestDataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.WithMockUserAsJwt;
 import java.time.LocalDate;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -37,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
 @AutoConfigureWireMock
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE, NO_BEZIRKS_ID_CHECK })
+@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
 public class WahlvorstandControllerIntegrationTest {
 
     @Autowired
@@ -90,6 +89,11 @@ public class WahlvorstandControllerIntegrationTest {
         }
 
         @Test
+        @WithMockUserAsJwt(
+                authorities = { Authorities.SERVICE_GET_WAHLVORSTAND, Authorities.SERVICE_UPDATE_WAHLVORSTAND, Authorities.REPOSITORY_READ_WAHLVORSTAND,
+                        Authorities.REPOSITORY_WRITE_WAHLVORSTAND },
+                claimProperties = { "wahlbezirkID=wahlbezirkID" }
+        )
         void should_returnWahlvorstand_when_dataFound() throws Exception {
             val wahlvorstand = TestDataFactory.CreateWahlvorstandEntity.withData();
             wahlvorstandRepository.save(wahlvorstand);

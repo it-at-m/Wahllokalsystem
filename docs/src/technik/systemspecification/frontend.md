@@ -2,7 +2,7 @@
 
 ## Struktur
 
-<details><summary>Grafische Darstellung der Struktur</summary>
+::: details Grafische Darstellung
 
 ```
 frontend-project
@@ -45,7 +45,7 @@ frontend-project
          └─ TheWahlvorstandAnwesenheitRequirementCard.spec.ts
 ```
 
-</details>
+:::
 
 Das Frontend besteht für die Entwicklung aus 3 Komponenten, welche sich jeweils in einem Ordner auf der Rootebene
 wiederspiegeln.

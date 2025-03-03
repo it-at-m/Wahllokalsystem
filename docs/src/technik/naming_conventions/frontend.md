@@ -95,7 +95,7 @@ Die Tests liegen im `tests`-Ordner, welcher der Aufbaustruktur des `src`-Ordners
 `<Storybookgegenstand ohne Dateiendung>.stories.ts`
 
 > [!IMPORTANT]
-> Stories zu Komponenten, die den Stories verwenden, haben auf der Übersichtsseite (`docs`) alle denselben Zustand.
+> Stories zu Komponenten, die den Store verwenden, haben auf der Übersichtsseite (`docs`) alle denselben Zustand.
 > Der Zustand für alle Komponenten entsprecht dem Zustand im Store mit der letzten Story.
 
 **Beispiel**
@@ -113,6 +113,6 @@ Bei dem Wert handelt es sich **nicht** um eine ID.
 
 `on<Data><Event>`
 
-**Beipspiel**
+**Beispiel**
 
 `onAnwesenheitChanged($event, mitglied)` ... Eventhandler, wenn sich die Anwesenheit geändert hat 

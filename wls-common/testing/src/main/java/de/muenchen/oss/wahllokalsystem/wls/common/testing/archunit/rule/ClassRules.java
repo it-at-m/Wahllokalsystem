@@ -1,11 +1,11 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule;
 
-import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
-import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
-
 import com.tngtech.archunit.lang.ArchRule;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ClassRules {
@@ -31,6 +31,11 @@ public class ClassRules {
     public static final ArchRule RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED = noClasses()
             .that().resideInAPackage("..service..").and().haveSimpleNameEndingWith("Model")
             .should().dependOnClassesThat().resideInAnyPackage("..rest..", "..domain..");
+
+    // files in rest package do not import from domain package
+    public static final ArchRule RULE_NO_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED = noClasses()
+            .that().resideInAPackage("..rest..")
+            .should().dependOnClassesThat().resideInAnyPackage("..domain..");
 
     // files in service package do not import from rest packages
     public static final ArchRule RULE_NO_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED = noClasses()

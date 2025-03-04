@@ -9,6 +9,4 @@ hero:
   actions:
     - text: Getting started
       link: /technik/get_started
-
 ---
-

@@ -1,6 +1,6 @@
 # Backend-Microservice
 
-Um einen neuen Backend-Service anzulegen sind zuvor die [allgemeinen Infos](/technik/guides/new-microservice/index.md) 
+Um einen neuen Backend-Service anzulegen sind zuvor die [allgemeinen Infos](/technik/guides/new-microservice/index.md)
 zum Einrichten eines neuen Services zu beachten.
 
 ## Maven-Projekt anlegen
@@ -23,7 +23,8 @@ funktionsfähig zu bekommen.
 ## Workflow Templates
 
 ::: code-group
-```yml {1,8-9,18} [wls-&lt;domain&gt;-service_push-dev.yml]
+
+```yml {1,8-9,18} [wls-<domain>-service_push-dev.yml]
 name: build push dev <domain>-service
 
 on:
@@ -31,35 +32,34 @@ on:
     branches:
       - dev
     paths:
-      - 'wls-<domain>-service/**'
-      - '.github/workflows/wls-<domain>-service_push-dev.yml'
+      - "wls-<domain>-service/**"
+      - ".github/workflows/wls-<domain>-service_push-dev.yml"
 
 jobs:
   build-github-container-image:
     permissions:
       packages: write
-    uses:
-      ./.github/workflows/callable-create-github-container-image.yml
+    uses: ./.github/workflows/callable-create-github-container-image.yml
     with:
-      service: 'wls-<domain>-service'
+      service: "wls-<domain>-service"
 ```
 
-```yml {1,6-7,14} [wls-&lt;domain&gt;-service_pull-request.yml]
+```yml {1,6-7,14} [wls-<domain>-service_pull-request.yml]
 name: verify pull request <domain>-service
 
 on:
   pull_request:
     paths:
-      - 'wls-<domain>-service/**'
-      - '.github/workflows/wls-<domain>-service_pull-request.yml'
+      - "wls-<domain>-service/**"
+      - ".github/workflows/wls-<domain>-service_pull-request.yml"
 
 jobs:
   verify-pull-request:
-    uses:
-      ./.github/workflows/callable-run-mvn-verify.yml
+    uses: ./.github/workflows/callable-run-mvn-verify.yml
     with:
-      pom-dir: 'wls-<domain>-service'
-``` 
+      pom-dir: "wls-<domain>-service"
+```
+
 :::
 
 ## Datenbank einrichten
@@ -73,6 +73,7 @@ Dabei sollte auf folgendes Schema geachtet werden:
 - Passwort: secret
 
 Beispiel für `wls-broadcast-service`:
+
 - Benutzername: `wls_broadcast_service`
 - Passwort: `secret`
 

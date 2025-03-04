@@ -1,3 +1,3 @@
 Systemspezifikation vom Wahllokalsystem
 
-🚧 -> https://github.com/it-at-m/Wahllokalsystem/issues/741
+🚧 -> <https://github.com/it-at-m/Wahllokalsystem/issues/741>

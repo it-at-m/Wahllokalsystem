@@ -6,7 +6,7 @@
 
 ## Kontext
 
-Mit der H2-Konsole kann bei einem laufenden Service wie unter  [Accessing the H2 Console](https://www.baeldung.com/spring-boot-h2-database#h2-console)
+Mit der H2-Konsole kann bei einem laufenden Service wie unter [Accessing the H2 Console](https://www.baeldung.com/spring-boot-h2-database#h2-console)
 beschrieben einfach auf die H2-Datenbank zugegriffen werden. Dies stellt auf Produktivumgebungen im Allgemeinen ein
 Sicherheitsrisiko dar.
 

@@ -68,7 +68,7 @@ Die Benennung erfolgt grundsätzlich auf Englisch, mit Ausnahme von Fachbegriffe
 
 **Beispiel**
 
-`formatter.ts` ... allgemein gültige Formatierungsfunktionen 
+`formatter.ts` ... allgemein gültige Formatierungsfunktionen
 
 ## Types
 
@@ -115,4 +115,4 @@ Bei dem Wert handelt es sich **nicht** um eine ID.
 
 **Beispiel**
 
-`onAnwesenheitChanged($event, mitglied)` ... Eventhandler, wenn sich die Anwesenheit geändert hat 
+`onAnwesenheitChanged($event, mitglied)` ... Eventhandler, wenn sich die Anwesenheit geändert hat

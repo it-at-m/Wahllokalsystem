@@ -17,11 +17,11 @@ zusätzlich verschachtelt und ebenfalls mit `@Nested` annotiert, oder in einen n
 Aktuell gibt es keine Struktur oder Vorgaben bei der Benennung von Tests. Die meisten Namen sind sehr kurz gehalten und
 wenig aussagekräftig, wie zum Beispiel:
 
-````java
+```java
 void dataFound() {}
 void noDataFound() {}
 void serviceCalled() {}
-````
+```
 
 Damit der Gesamtcode im Projekt übersichtlicher und einheitlicher ist, sollen Naming Conventions eingesetzt werden.
 Grundlage für die Einführung sind unter anderem auch sich wiederholende Tests mit gleichem Inhalt in den verschiedenen
@@ -38,21 +38,22 @@ void should_notThrowException_when_newDataSaved() {}
 void should_throwAccessDeniedException_whenAuthoritiesMissing() {}
 ```
 
-#### Gruppierung überladener Methoden:
+#### Gruppierung überladener Methoden
 
 **Backend-Beispiel:** Vereinfachter Pseudocode! Beispiel aus dem Vorfälle und Vorkommnisse Service.
 ::: code-group
+
 ```java{2-3,5-6,11-12} [MapperTest.java]
 class EreignisModelMapperTest {
   @Nested
   class ToEntity {                      // Name der zu testenden Methode
-    
+
      @Nested
      class ToEreignisEntity {           // nested overload 1
          @Test
          void should_returnEreignis_when_givenEreignisModel() {}
      }
-  
+
      @Nested
      class ToListOfEreignisEntity {     // nested overload 2
          @Test
@@ -72,6 +73,7 @@ public interface EreignisModelMapper {
     List<Ereignis> toEntity(EreignisseWriteModel model);
 }
 ```
+
 :::
 
 ### Frontend
@@ -82,10 +84,9 @@ Allgemein gilt für den Aufbau:
 
 ```typescript
 describe("<Dateiname des Testgegenstandes>", () => {
-    describe("<zu testende Funktionalität>", () => {
-        it("<Testfallbeschreibung>", () => {
-        });
-    });
+  describe("<zu testende Funktionalität>", () => {
+    it("<Testfallbeschreibung>", () => {});
+  });
 });
 ```
 
@@ -98,33 +99,33 @@ describe("<Dateiname des Testgegenstandes>", () => {
 import { describe, it } from "vitest";
 
 /* Die Description ist der Dateiname des Testgegenstandes */ // [!code focus]
-describe("wahlvorstandStore.ts", () => { // [!code focus]    
+describe("wahlvorstandStore.ts", () => {
+  // [!code focus]
 
   /* Die Description ist der Name der Funktion die getested wird */ // [!code focus]
-  describe("isSchriftfuehrerAnwesend", () => { // [!code focus]
-    /* Beschreibung des Testcases entsprechend des Schemas */ // [!code focus]  
-    it("should_returnFalse_when_noMitgliedExists", () => { // [!code focus]
+  describe("isSchriftfuehrerAnwesend", () => {
+    // [!code focus]
+    /* Beschreibung des Testcases entsprechend des Schemas */ // [!code focus]
+    it("should_returnFalse_when_noMitgliedExists", () => {
+      // [!code focus]
     });
 
-    it("should_returnTrue_when_atLeastOneMitgliedMatches", () => { // [!code focus]
+    it("should_returnTrue_when_atLeastOneMitgliedMatches", () => {
+      // [!code focus]
     });
 
-    it("should_returnFalse_when_whenMitgliedWithFunktionExistsButIsNotAnwesend", () => {
-    });
+    it("should_returnFalse_when_whenMitgliedWithFunktionExistsButIsNotAnwesend", () => {});
 
-    it("should_returnFalse_when_noMitgliedMatchesFunktion", () => {
-    });
+    it("should_returnFalse_when_noMitgliedMatchesFunktion", () => {});
   });
 
-  describe("sendWahlvorstand", () => { // [!code focus]
-    it("should_sendWahlvorstand_when_wahlbezirkIDIsGiven", async () => {
-    });
+  describe("sendWahlvorstand", () => {
+    // [!code focus]
+    it("should_sendWahlvorstand_when_wahlbezirkIDIsGiven", async () => {});
 
-    it("should_setLastSend_when_wahlvorstandIsSent", async () => {
-    });
+    it("should_setLastSend_when_wahlvorstandIsSent", async () => {});
 
-    it("should_notSendWahlvorstand_when_wahlbezirkIDIsNotGiven", async () => {
-    });
+    it("should_notSendWahlvorstand_when_wahlbezirkIDIsNotGiven", async () => {});
   });
 });
 ```
@@ -135,31 +136,33 @@ describe("wahlvorstandStore.ts", () => { // [!code focus]
 import { describe, it } from "vitest";
 
 /* Die Description ist der Dateiname des Testgegenstandes */ // [!code focus]
-describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => { // [!code focus]
-   
-  /* Tests die sich mit dem Rendern der Komponente befassen */ // [!code focus]
-  describe("visual logic", () => { // [!code focus]
-    /* Tests entsprechend der Testcasebeschreibung */ // [!code focus]
-    it("should_showNoErrorTexts_when_allRequirementsAreSatisfied", async (context) => { // [!code focus]
-    });
-    it("should_showErrorText_when_schriftfuehrerIsNotAnwesend", async (context) => {
-    });
-    it("should_showErrorText_when_wahlvorsteherIsNotAnwesend", async (context) => {
-    });
-  });
-  
-  /* Tests zu den Events der Komponente */ // [!code focus]
-  describe("behavioral logic", () => { // [!code focus]
-      /* Tests zu dem Event `update:model-value` */ // [!code focus]
-      describe("update:model-value", () => { // [!code focus]
-        /* Tests entsprechend der Testcasebeschreibung */ // [!code focus]
-        it("should_setAnwesendTrue_when_checkBoxForMitgliedThatIsNotAnwesendWasClicked", async () => { // [!code focus]
-        });
+describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => {
+  // [!code focus]
 
-        it("should_setAnwesendFalse_when_checkBoxForMitgliedThatChangedToFalse", async () => {
-        }); 
+  /* Tests die sich mit dem Rendern der Komponente befassen */ // [!code focus]
+  describe("visual logic", () => {
+    // [!code focus]
+    /* Tests entsprechend der Testcasebeschreibung */ // [!code focus]
+    it("should_showNoErrorTexts_when_allRequirementsAreSatisfied", async (context) => {
+      // [!code focus]
+    });
+    it("should_showErrorText_when_schriftfuehrerIsNotAnwesend", async (context) => {});
+    it("should_showErrorText_when_wahlvorsteherIsNotAnwesend", async (context) => {});
+  });
+
+  /* Tests zu den Events der Komponente */ // [!code focus]
+  describe("behavioral logic", () => {
+    // [!code focus]
+    /* Tests zu dem Event `update:model-value` */ // [!code focus]
+    describe("update:model-value", () => {
+      // [!code focus]
+      /* Tests entsprechend der Testcasebeschreibung */ // [!code focus]
+      it("should_setAnwesendTrue_when_checkBoxForMitgliedThatIsNotAnwesendWasClicked", async () => {
+        // [!code focus]
       });
+
+      it("should_setAnwesendFalse_when_checkBoxForMitgliedThatChangedToFalse", async () => {});
+    });
   });
 });
-
 ```

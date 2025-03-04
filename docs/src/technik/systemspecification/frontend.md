@@ -51,7 +51,7 @@ Das Frontend besteht für die Entwicklung aus 3 Komponenten, welche sich jeweils
 wiederspiegeln.
 
 | Komponente | Beschreibung                                                |
-|------------|-------------------------------------------------------------|
+| ---------- | ----------------------------------------------------------- |
 | src        | Der Code der Anwendung mit allen Komponenten und Funktionen |
 | tests      | Tests zum Anwendungscode                                    |
 | stories    | Stories für StorybookJS zu den Komponenten der Anwendung    |
@@ -60,16 +60,16 @@ wiederspiegeln.
 
 Der Anwendungscode besteht auf folgenden Ordnern:
 
-| Ordner             | Beschreibung                                                               |
-|--------------------|----------------------------------------------------------------------------|
-| api                | (generierte) Clients für den Zugriff auf die Backend-Services              |
-| components         | Komponenten die zur Verfügung stehen                                       |
-| composables        | Wiederverwendbarer Code                                                    |
-| resources/openapi  | openAPI Beschreibung die für die Clients verwendet werden                  |
-| plugins            | Konfiguration der verwendeten Plugins, z.B. Pinia, Router oder Vuetify     |
-| store              | Stores der Anwendung                                                       |
-| types              | Eigenen Datentypen der Anwendung (Die Datentypen der Clients sind in `api` |                                                    
-| views              | Views der Anwendung                                                        |
+| Ordner            | Beschreibung                                                               |
+| ----------------- | -------------------------------------------------------------------------- |
+| api               | (generierte) Clients für den Zugriff auf die Backend-Services              |
+| components        | Komponenten die zur Verfügung stehen                                       |
+| composables       | Wiederverwendbarer Code                                                    |
+| resources/openapi | openAPI Beschreibung die für die Clients verwendet werden                  |
+| plugins           | Konfiguration der verwendeten Plugins, z.B. Pinia, Router oder Vuetify     |
+| store             | Stores der Anwendung                                                       |
+| types             | Eigenen Datentypen der Anwendung (Die Datentypen der Clients sind in `api` |
+| views             | Views der Anwendung                                                        |
 
 Sofern es mehrere Elemente gibt, die zu unterschiedlichen fachlichen Domainen gehörten, kann es je Ordner verschiedene Unterordner geben.
 
@@ -99,12 +99,11 @@ Dieser enthält die Referenzen für die Darstellung für [Komponententest](#komp
 Das Frontend wird aus diversen [Single-File-Components](https://vuejs.org/guide/scaling-up/sfc.html) zusammengesetzt. Dabei verwenden wir Typescript und die
 [Composition-API](https://vuejs.org/guide/introduction.html#composition-api).
 
-
 ## Kommunikation
 
 ### zwischen Komponenten
 
-````mermaid
+```mermaid
 
 flowchart TD
 
@@ -130,7 +129,7 @@ domainComponentB -- Action --> domainStore
 BaseComponentA -- Event --> domainComponentB
 BaseComponentB -- Event --> domainComponentB
 BaseComponentC -- Event --> BaseComponentB
-````
+```
 
 ### mit dem Backend
 

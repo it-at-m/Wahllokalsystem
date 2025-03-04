@@ -15,6 +15,7 @@ Wahlen, Wahlbezirke und Kopfdaten können in der Service-Datenbank gespeichert w
 ## Abhängigkeiten
 
 Folgende Services werden zum Betrieb benötigt:
+
 - EAI-Service
 - Infomanagement-Service
 
@@ -28,12 +29,12 @@ classDiagram
     Wahlvorschläge
     Referendumvorlagen
     Kopfdaten
-    
+
     Wahltermindaten --> Wahlbezirk : uses
     Wahltermindaten --> Kopfdaten : uses
     Wahltermindaten --> Wahlvorschläge : uses
     Wahltermindaten --> Referendumvorlagen : uses
-    
+
     class Wahltermindaten {
         <<virtual>>
         LocalDate wahltag
@@ -44,7 +45,7 @@ classDiagram
 
 In dem Service werden Handbücher verwaltet. Je Wahl und Wahlbezirksart kann ein Handbuch hinterlegt werden.
 
-Bei dem Handbuch soll es sich um ein PDF-Dokument handeln. 
+Bei dem Handbuch soll es sich um ein PDF-Dokument handeln.
 
 ## Ungültige Wahlscheine
 
@@ -63,7 +64,7 @@ werden von dem EAI-Service importiert.
 ```mermaid
 
 sequenceDiagram
-    
+
     box BasisdatenService
         participant WahltermindatenService
         participant WahltagService
@@ -74,19 +75,19 @@ sequenceDiagram
         participant Wahlvorschlaege
         participant Referendumvorlagen
     end
-    
+
     WahltermindatenService ->>+ WahltagService: request für Wahltag mit ID
     WahltagService -->>- WahltermindatenService: Wahltag
-    
+
     WahltermindatenService ->>+ Basisdaten : request Basisdaten für Wahltag
     Basisdaten -->>- WahltermindatenService : Basisdaten
-    
-    WahltermindatenService ->> WahltermindatenService : Speichere Wahlen aus Basisdaten    
+
+    WahltermindatenService ->> WahltermindatenService : Speichere Wahlen aus Basisdaten
     WahltermindatenService ->> WahltermindatenService : Speicher Wahlbezirke der Basisdaten
     WahltermindatenService ->> WahltermindatenService : Speicher Kopfdaten der Basisdaten
-    
+
     WahltermindatenService -->> AsyncWahltermindatenService : Starte Initialisierung der<br>Wahlvorschläge und Referendumvorlagen
-    
+
     AsyncWahltermindatenService ->>+ Wahlvorschlaege : lade request Wahlvorschläge für Bezirke der Wahlen
     Wahlvorschlaege -->>- AsyncWahltermindatenService : Wahlvorschläge
     AsyncWahltermindatenService ->> AsyncWahltermindatenService : speichere Wahlvorschläge
@@ -104,11 +105,11 @@ Der aktuelle Stand des Imports kann über die API gerufen werden.
 
 Alle Konfigurationsparameter beginnen mit `service.config`
 
-| Name | Beschreibung                                      | Default |
-| ---- |---------------------------------------------------| ------- |
-| ungueltigewahlscheine.filenamesuffix | Dateinamenssuffix für die ungueltigen Wahlscheine | Ungueltigews.csv | 
-| manual.filenamesuffix | Dateinamenssuffix für das Handbuch              | Handbuch.pdf | 
-| async.corePoolSize | core Poolsize von ThreadPoolTaskExecutor        | 2 |
-| async.maxPoolSize | max Poolsize von ThreadPoolTaskExecutor         | 2 |
-| async.queueCapacity | Kapazität für Queue von ThreadPoolTaskExecutor  | 500 |
-| async.threadNamePrefix | Prefix für Threads von  ThreadPoolTaskExecutor  | taskExecutor- |
+| Name                                 | Beschreibung                                      | Default          |
+| ------------------------------------ | ------------------------------------------------- | ---------------- |
+| ungueltigewahlscheine.filenamesuffix | Dateinamenssuffix für die ungueltigen Wahlscheine | Ungueltigews.csv |
+| manual.filenamesuffix                | Dateinamenssuffix für das Handbuch                | Handbuch.pdf     |
+| async.corePoolSize                   | core Poolsize von ThreadPoolTaskExecutor          | 2                |
+| async.maxPoolSize                    | max Poolsize von ThreadPoolTaskExecutor           | 2                |
+| async.queueCapacity                  | Kapazität für Queue von ThreadPoolTaskExecutor    | 500              |
+| async.threadNamePrefix               | Prefix für Threads von ThreadPoolTaskExecutor     | taskExecutor-    |

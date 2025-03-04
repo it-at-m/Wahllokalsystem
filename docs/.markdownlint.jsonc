@@ -9,4 +9,5 @@
   "MD033": {
     "allowed_elements": ["adr-status", "status-overview", "details", "summary"],
   },
+  "MD028": false,
 }

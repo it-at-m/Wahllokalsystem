@@ -4,7 +4,7 @@
 
 ::: details Grafische Darstellung
 
-```
+```text
 frontend-project
 ├─ src
 |  ├─ api
@@ -77,7 +77,7 @@ Sofern es mehrere Elemente gibt, die zu unterschiedlichen fachlichen Domainen ge
 
 `<domain>` ... Elemente mit spezifischer fachlicher Zugehörigkeit
 
-**Beispiele**
+#### Beispiel
 
 `components/common` ... Enthält Komponenten, die überall zum Einsatz kommen können.
 

@@ -57,7 +57,7 @@ erfolgreich war.
 
 Es gibt zwei Möglichkeiten, den Befehl auszuführen, um den gewünschten Code generieren zu lassen.
 
-#### 1) Ausführen des Befehls im Terminal
+### 1) Ausführen des Befehls im Terminal
 
 Im Terminal kann, wenn man sich innerhalb der `wls-gui-wahllokalsystem`-Directory befindet, für jedes
 `openapi.json`-File mit folgendem Befehl der entsprechende Code generiert werden:
@@ -124,7 +124,7 @@ Node.js v22.11.0
 Process finished with exit code 1
 ```
 
-In diesem Fall muss bitte nach Möglichkeit 1 - [Ausführen des Befehls im Terminal](#_1-ausfuhren-des-befehls-im-terminal)
+In diesem Fall muss bitte nach Möglichkeit 1 - [Ausführen des Befehls im Terminal](#1-ausführen-des-befehls-im-terminal)
 verfahren werden.
 
 🚧 -> Die behebung dieses Problems wird in [diesem Issue](https://github.com/it-at-m/Wahllokalsystem/issues/809) behandelt.

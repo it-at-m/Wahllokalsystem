@@ -22,7 +22,7 @@ Admintool bezeichnet werden.
 
 ::: code-group
 
-```yml {1,8-9,18} [wls-gui-<frontend-name>_push-dev.yml]
+```yml {1,8-9,18} [wls-gui-&ltfrontend-name&gt_push-dev.yml]
 name: build push dev gui <frontend-name>
 
 on:
@@ -42,7 +42,7 @@ jobs:
       service: "wls-gui-<frontend-name>"
 ```
 
-```yml {1,6-7,14} [wls-gui-<frontend-name>_pull-request.yml]
+```yml {1,6-7,14} [wls-gui-&ltfrontend-name&gt_pull-request.yml]
 name: verify pull request gui <frontend-name>
 
 on:

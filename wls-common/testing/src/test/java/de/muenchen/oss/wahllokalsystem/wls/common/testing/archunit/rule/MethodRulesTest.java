@@ -1,20 +1,19 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule;
 
-import com.tngtech.archunit.core.importer.ClassFileImporter;
-import com.tngtech.archunit.lang.ArchRule;
-import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.ModifiersExampleTest;
-import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.NamingConventionExamplesTest;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.stream.Stream;
-
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules.RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules.RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules.RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules.RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED;
+
+import com.tngtech.archunit.core.importer.ClassFileImporter;
+import com.tngtech.archunit.lang.ArchRule;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.ModifiersExampleTest;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.NamingConventionExamplesTest;
+import java.util.stream.Stream;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 public class MethodRulesTest {
 

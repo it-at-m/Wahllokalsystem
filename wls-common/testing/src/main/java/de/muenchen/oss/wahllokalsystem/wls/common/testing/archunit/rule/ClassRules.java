@@ -1,13 +1,13 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule;
 
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
+
 import com.tngtech.archunit.lang.ArchRule;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
-import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
-import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ClassRules {

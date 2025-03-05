@@ -61,7 +61,20 @@ public final class WithMockUserAsJwtSecurityContextFactory implements WithSecuri
     }
 
     private Map<String, Object> createClaimsMap(final String[] concatenatedClaimProperties, final String keyValueSeparator) {
-        return Arrays.stream(concatenatedClaimProperties).map(concatenatedClaimProperty -> concatenatedClaimProperty.split(keyValueSeparator))
+        return Arrays.stream(concatenatedClaimProperties)
+                .map(concatenatedClaimProperty -> this.getSplittedClaimProperty(concatenatedClaimProperty, keyValueSeparator))
                 .collect(Collectors.toMap(propertyAsArray -> propertyAsArray[0], propertyAsArray -> propertyAsArray[1]));
+    }
+
+    private String[] getSplittedClaimProperty(final String concatenatedClaimProperty, final String keyValueSeparator) {
+        val indexOfKeyValueSeparator = concatenatedClaimProperty.indexOf(keyValueSeparator);
+        if (indexOfKeyValueSeparator > 0) {
+            return new String[] {
+                    concatenatedClaimProperty.substring(0, indexOfKeyValueSeparator),
+                    concatenatedClaimProperty.substring(indexOfKeyValueSeparator + keyValueSeparator.length())
+            };
+        } else {
+            throw new IllegalArgumentException("claim " + concatenatedClaimProperty + " does not match required format");
+        }
     }
 }

@@ -80,6 +80,14 @@ class WithMockUserAsJwtSecurityContextFactoryTest {
             Assertions.assertThat(claims).contains(Map.entry("key2", "value2"));
         }
 
+        @Test
+        void should_throwException_when_claimPropertyDoesNotContainTheSeparator() {
+            Assertions.assertThatException()
+                    .isThrownBy(() -> unitUnderTest.createSecurityContext(getAnnotation(TestClassWithClaimMismatchingTheRequiredFormatInAnnotation.class)))
+                    .isInstanceOf(IllegalArgumentException.class);
+
+        }
+
         private WithMockUserAsJwt getAnnotation(Class<?> clazz) {
             return clazz.getAnnotation(WithMockUserAsJwt.class);
         }
@@ -108,5 +116,10 @@ class TestClassWithClaimsInAnnotation {
 
 @WithMockUserAsJwt(claimProperties = { "key1;value1", "key2;value2" }, claimPropertiesSeparator = ";")
 class TestClassWithClaimsAndClaimSeparatorInAnnotation {
+
+}
+
+@WithMockUserAsJwt(claimProperties = { "key=value" }, claimPropertiesSeparator = ";")
+class TestClassWithClaimMismatchingTheRequiredFormatInAnnotation {
 
 }

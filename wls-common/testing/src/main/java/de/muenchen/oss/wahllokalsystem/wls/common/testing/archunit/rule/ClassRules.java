@@ -3,11 +3,20 @@ package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
+import com.tngtech.archunit.core.domain.JavaClass;
+import com.tngtech.archunit.lang.ArchCondition;
 import com.tngtech.archunit.lang.ArchRule;
+import com.tngtech.archunit.lang.ConditionEvents;
+import com.tngtech.archunit.lang.SimpleConditionEvent;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
+import java.util.Arrays;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.val;
+import org.junit.jupiter.api.Nested;
+import org.springframework.util.StringUtils;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ClassRules {
@@ -74,4 +83,49 @@ public class ClassRules {
             .and().haveSimpleNameNotEndingWith("TestConstants")
             .and().areNotAnnotatedWith(Nested.class)
             .should().haveSimpleNameEndingWith("Test");
+
+    private static final ArchCondition<JavaClass> haveMatchingPublicMethodName =
+            new ArchCondition<>("have matching public method name") {
+                @Override
+                public void check(JavaClass classWithNestedAnnotation, ConditionEvents events) {
+                    val expectedMethodName = StringUtils.uncapitalize(classWithNestedAnnotation.getSimpleName());
+                    var topEnclosingClass = getTopEnclosingClass(classWithNestedAnnotation);
+
+                    if (topEnclosingClass.isPresent()) {
+                        try {
+                            val nestedTestClassFullname = topEnclosingClass.get().getFullName();
+
+                            val nestedClassNameWithoutTestSuffix = nestedTestClassFullname.substring(0, nestedTestClassFullname.lastIndexOf("Test"));
+                            val testedClass = Class.forName(nestedClassNameWithoutTestSuffix);   // sollte de.muenchen...NotARecordSoEndingIsNotRelevant suchen
+
+                            val testedClassHasPublicMehodMatchingNestedClassName = Arrays.stream(testedClass.getMethods())
+                                    .anyMatch(method -> method.getName().equals(expectedMethodName));
+                            System.out.println("\n\n has matching " + testedClassHasPublicMehodMatchingNestedClassName);
+
+                            if (!testedClassHasPublicMehodMatchingNestedClassName) {
+                                events.add(SimpleConditionEvent.violated(classWithNestedAnnotation,
+                                        "tested class \"" + nestedTestClassFullname + "\" has no public method matching the nested class name: " + expectedMethodName));
+                            }
+                        } catch (Exception e) {
+                            events.add(SimpleConditionEvent.violated(classWithNestedAnnotation, "expected class related to test suite not found: " + topEnclosingClass.get().getFullName()));
+                        }
+                    } else {
+                        events.add(SimpleConditionEvent.violated(classWithNestedAnnotation, "nested annotation is not on an inner class"));
+                    }
+                }
+            };
+
+    private static Optional<JavaClass> getTopEnclosingClass(final JavaClass item) {
+        var enclosingClass = item.getEnclosingClass();
+        while (enclosingClass.isPresent() && enclosingClass.get().getEnclosingClass().isPresent()) {
+            enclosingClass = enclosingClass.get().getEnclosingClass();
+        }
+        return enclosingClass;
+    }
+
+    public static final ArchRule RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED = classes()
+            .that().areAnnotatedWith(Nested.class)
+            .and().haveSimpleNameNotEndingWith("SecurityConfigurationTest")
+            .and().haveSimpleNameNotEndingWith("SecurityTest")
+            .should(haveMatchingPublicMethodName);
 }

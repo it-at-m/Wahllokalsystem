@@ -4,6 +4,7 @@ import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.C
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_MODEL_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_FILES_IN_TEST_END_WITH_TEST_CONVENTION_MATCHED;
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_NO_CROSS_DEPENDENCIES_INSIDE_DOMAIN_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_NO_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_NO_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED;
@@ -68,6 +69,8 @@ public class ClassRulesTest {
                 Arguments.of(RULE_NO_DTOS_OR_CONTROLLERS_OUTSIDE_OF_REST_PACKAGE_CONVENTION_MATCHED,
                         INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
                 Arguments.of(RULE_FILES_IN_TEST_END_WITH_TEST_CONVENTION_MATCHED,
+                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+                Arguments.of(RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED,
                         INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH));
     }
 
@@ -96,6 +99,8 @@ public class ClassRulesTest {
                 Arguments.of(RULE_NO_DTOS_OR_CONTROLLERS_OUTSIDE_OF_REST_PACKAGE_CONVENTION_MATCHED,
                         CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
                 Arguments.of(RULE_FILES_IN_TEST_END_WITH_TEST_CONVENTION_MATCHED,
+                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+                Arguments.of(RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED,
                         CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH));
     }
 }

@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.correctFileNamingAndDependencies.test;
+package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.correctFileNamingAndDependencies.service;
 
 import org.junit.jupiter.api.Nested;
 

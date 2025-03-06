@@ -24,6 +24,11 @@ public class ClassRules {
             .andShould().haveSimpleNameNotEndingWith("Model")
             .andShould().haveSimpleNameNotEndingWith("Entity");
 
+    // no @entity or @embeddable outside of domain
+    public static final ArchRule RULE_NO_ENTITIES_OUTSIDE_OF_DOMAIN_PACKAGE_CONVENTION_MATCHED = noClasses()
+            .that().areAnnotatedWith(Entity.class).or().areAnnotatedWith(Embeddable.class)
+            .should().resideOutsideOfPackage("..domain..");
+
     // dto files do not import from service or domain packages
     public static final ArchRule RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED = noClasses()
             .that().resideInAnyPackage("..rest..").and().haveSimpleNameEndingWith("DTO")

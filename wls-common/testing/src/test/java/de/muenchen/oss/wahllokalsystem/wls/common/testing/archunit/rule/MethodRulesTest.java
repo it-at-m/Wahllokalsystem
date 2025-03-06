@@ -21,7 +21,7 @@ public class MethodRulesTest {
     @MethodSource("getRulesAndMatchingTestClassesThrowingErrors")
     void should_throwError_when_ruleNotSatisfied(ArchRule ruleUnderTest, Class<?> testClass) {
         Assertions.assertThatThrownBy(() -> ruleUnderTest.check(new ClassFileImporter()
-                        .importClasses(testClass)))
+                .importClasses(testClass)))
                 .isInstanceOf(AssertionError.class)
                 .satisfies(assertionError -> Assertions.assertThat(assertionError.getMessage().split(System.lineSeparator()).length)
                         .isGreaterThanOrEqualTo(testClass.getDeclaredMethods().length));
@@ -31,7 +31,7 @@ public class MethodRulesTest {
     @MethodSource("getRulesAndTestClassesWithoutMatchingCasesThrowingErrors")
     void should_throwError_when_noCasesMatchingRuleWereFound(ArchRule ruleUnderTest) {
         Assertions.assertThatCode(() -> ruleUnderTest.check(new ClassFileImporter()
-                        .importClasses(NamingConventionExamplesTest.ExampleMethodNamesWithoutAnnotation.class)))
+                .importClasses(NamingConventionExamplesTest.ExampleMethodNamesWithoutAnnotation.class)))
                 .isInstanceOf(AssertionError.class)
                 .satisfies(assertionError -> Assertions.assertThat(assertionError.getMessage())
                         .contains("failed to check any classes"));
@@ -41,7 +41,7 @@ public class MethodRulesTest {
     @MethodSource("getRulesAndMatchingTestClassesNotThrowingErrors")
     void should_throwNoError_when_ruleSatisfied(ArchRule ruleUnderTest, Class<?> testClass) {
         Assertions.assertThatCode(() -> ruleUnderTest.check(new ClassFileImporter()
-                        .importClasses(testClass)))
+                .importClasses(testClass)))
                 .doesNotThrowAnyException();
     }
 
@@ -49,7 +49,7 @@ public class MethodRulesTest {
     @MethodSource("getRulesAndTestClassesWithoutMatchingCasesNotThrowingErrors")
     void should_throwNoError_when_noCasesMatchingRuleWereFoundAndAllowEmptyIsTrue(ArchRule ruleUnderTest) {
         Assertions.assertThatCode(() -> ruleUnderTest.check(new ClassFileImporter()
-                        .importClasses(NamingConventionExamplesTest.ExampleMethodNamesWithoutAnnotation.class)))
+                .importClasses(NamingConventionExamplesTest.ExampleMethodNamesWithoutAnnotation.class)))
                 .doesNotThrowAnyException();
     }
 

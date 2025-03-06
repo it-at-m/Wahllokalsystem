@@ -72,5 +72,6 @@ public class ClassRules {
             .that().resideInAnyPackage("..test..")
             .and().resideOutsideOfPackage("..test.utils..")
             .and().haveSimpleNameNotEndingWith("TestConstants")
+            .and().areNotAnnotatedWith(Nested.class)
             .should().haveSimpleNameEndingWith("Test");
 }

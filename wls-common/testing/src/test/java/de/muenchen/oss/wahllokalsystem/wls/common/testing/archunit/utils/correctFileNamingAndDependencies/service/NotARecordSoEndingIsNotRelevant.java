@@ -4,4 +4,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.correct
 
 public class NotARecordSoEndingIsNotRelevant {
     static Example example = new Example();
+
+    public void publicMethodName() {
+    }
 }

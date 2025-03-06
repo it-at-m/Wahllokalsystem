@@ -67,4 +67,10 @@ public class ClassRules {
     public static final ArchRule RULE_NO_CROSS_DEPENDENCIES_INSIDE_DOMAIN_CONVENTION_MATCHED = noClasses()
             .that().resideInAnyPackage("..domain..")
             .should().dependOnClassesThat().resideInAnyPackage("..rest..", "..service..");
+
+    public static final ArchRule RULE_FILES_IN_TEST_END_WITH_TEST_CONVENTION_MATCHED = classes()
+            .that().resideInAnyPackage("..test..")
+            .and().resideOutsideOfPackage("..test.utils..")
+            .and().haveSimpleNameNotEndingWith("TestConstants")
+            .should().haveSimpleNameEndingWith("Test");
 }

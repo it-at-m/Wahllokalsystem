@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_MODEL_CONVENTION_MATCHED;
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_FILES_IN_TEST_END_WITH_TEST_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_NO_CROSS_DEPENDENCIES_INSIDE_DOMAIN_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_NO_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_NO_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED;
@@ -23,8 +24,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public class ClassRulesTest {
 
-    static final String INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH = "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.incorrectFileNamingAndDependencies";
-    static final String CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH = "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.correctFileNamingAndDependencies";
+    static final String INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH = "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.incorrectFileNamingAndDependencies";
+    static final String CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH = "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.correctFileNamingAndDependencies";
 
     @ParameterizedTest
     @MethodSource("getRulesAndMatchingTestClassesThrowingErrors")
@@ -65,6 +66,8 @@ public class ClassRulesTest {
                 Arguments.of(RULE_NO_MODELS_OR_SERVICES_OUTSIDE_OF_SERVICE_PACKAGE_CONVENTION_MATCHED,
                         INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
                 Arguments.of(RULE_NO_DTOS_OR_CONTROLLERS_OUTSIDE_OF_REST_PACKAGE_CONVENTION_MATCHED,
+                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+                Arguments.of(RULE_FILES_IN_TEST_END_WITH_TEST_CONVENTION_MATCHED,
                         INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH));
     }
 
@@ -91,6 +94,8 @@ public class ClassRulesTest {
                 Arguments.of(RULE_NO_MODELS_OR_SERVICES_OUTSIDE_OF_SERVICE_PACKAGE_CONVENTION_MATCHED,
                         CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
                 Arguments.of(RULE_NO_DTOS_OR_CONTROLLERS_OUTSIDE_OF_REST_PACKAGE_CONVENTION_MATCHED,
+                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+                Arguments.of(RULE_FILES_IN_TEST_END_WITH_TEST_CONVENTION_MATCHED,
                         CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH));
     }
 }

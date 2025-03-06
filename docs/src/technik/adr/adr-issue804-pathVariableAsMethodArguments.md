@@ -38,9 +38,7 @@ public record SendErgebnisParameter(
 {
   "/businessActions/sendErgebnismeldung/{wahlID}/{wahlbezirkID}/{waehlerverzeichnisNummer}/{meldungsart}/{hauptwahlbezirkID}": {
     "post": {
-      "tags": [
-        "ergebnismeldung-controller"
-      ],
+      "tags": ["ergebnismeldung-controller"],
       "description": "Übermitteln einer Ergebnismeldung an das externe System für eine konkrete Wahl eines Wahlbezirkes",
       "operationId": "sendErgebnisse",
       "parameters": [
@@ -75,9 +73,7 @@ public record SendErgebnisParameter(
 {
   "/businessActions/sendErgebnismeldung/{wahlID}/{wahlbezirkID}/{waehlerverzeichnisNummer}/{meldungsart}/{hauptwahlbezirkID}": {
     "post": {
-      "tags": [
-        "ergebnismeldung-controller"
-      ],
+      "tags": ["ergebnismeldung-controller"],
       "description": "Übermitteln einer Ergebnismeldung an das externe System für eine konkrete Wahl eines Wahlbezirkes",
       "operationId": "sendErgebnisse",
       "parameters": [
@@ -173,4 +169,4 @@ Properties der Klassen übereinstimmen. Was ebenfalls die Komplexität steigern 
 
 ### negativ
 
-Keine, da sich aktuelle alle Controller nach dieser Entscheidung richten. 
+Keine, da sich aktuelle alle Controller nach dieser Entscheidung richten.

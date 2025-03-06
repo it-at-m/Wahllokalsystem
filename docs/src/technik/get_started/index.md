@@ -10,14 +10,14 @@ Dazu haben wir Regeln definiert. Diese Regeln und deren Hinterlegung in der jewe
 
 ```mermaid
 flowchart LR
-    
-    subgraph Dev-PC 
-        subgraph IDE 
+
+    subgraph Dev-PC
+        subgraph IDE
             wlsService
             frontend_gui[gui_wahllokalsystem]
         end
-        
-        subgraph Docker 
+
+        subgraph Docker
             authService
             oracleDB[Oracle DB]
             apiGateway[API Gateway]
@@ -48,7 +48,7 @@ flowchart LR
 > Beachten Sie, dass somit nur eine Instanz eines Services gleichzeitig laufen kann.
 
 | Service                                                                                   | Port |
-|-------------------------------------------------------------------------------------------|------|
+| ----------------------------------------------------------------------------------------- | ---- |
 | [Admin](/services/backend-services/admin-service/)                                        | 8209 |
 | [Auth](/services/backend-services/auth-service/)                                          | 8100 |
 | [Basisdaten](/services/backend-services/basisdaten-service/)                              | 8205 |
@@ -65,18 +65,17 @@ flowchart LR
 ## Profile
 
 | Profilname             | Beschreibung                                                                                                                             |
-|------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | db-h2                  | Als Datenbank wird eine embedded H2 im Service verwendet.                                                                                |
 | db-oracle              | Als Datenbank wird eine Oracle Datenbank verwendet. Im Standard wird die DB-Datenbank aus dem Stack (Docker) verwendet.                  |
 | db-dummydata           | Es werden Flyway-Files mit Dummydaten für die Datenbank mit verwendet.                                                                   |
 | no-security            | Die Prüfungen der Authentifizierung und Authorisierung werden deaktiviert.                                                               |
 | dummy.nobezirkid.check | Deaktiviert die Prüfung, dass Anfragen für einen bestimmten Wahlbezirk (wahlbezirkID), nur von dem User des Wahlbezirkes erfolgen dürfen |
 
-
 ## Benutzer
 
 | Name        | Passwort | Beschreibung                                                          |
-|-------------|----------|-----------------------------------------------------------------------|
+| ----------- | -------- | --------------------------------------------------------------------- |
 | wls_test    | test     | Ein Benutzer ohne weitere Rechte                                      |
 | wls_all     | test     | Ein Benutzer mit allen Rechten                                        |
 | wls_all_bwb | test     | Ein Benutzer mit allen Rechten mit der WahlbezirksArt BWB (Briefwahl) |
@@ -124,4 +123,3 @@ sollte der Container in Docker einmal komplett gelöscht und über das `docker-c
 > [!WARNING]
 > Bei dieser Variante ist es wichtig, dass die Änderung im `docker-compose.yml` File nicht gepusht wird, weil alle
 > anderen Container mit security laufen und das `no-security`-Profil nur für die Entwicklung benötigt wird.
-

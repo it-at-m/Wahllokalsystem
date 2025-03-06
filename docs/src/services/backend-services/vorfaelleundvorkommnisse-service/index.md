@@ -13,4 +13,4 @@ Der Service hat keine Abhängigkeiten zu anderen Services.
 
 ## Fachliches Datenmodell
 
-![Image of Ereignisse data model](/vorfaelleundvorkommnisse/fachliches_datenmodell_ereignisse.png) 
+![Image of Ereignisse data model](/vorfaelleundvorkommnisse/fachliches_datenmodell_ereignisse.png)

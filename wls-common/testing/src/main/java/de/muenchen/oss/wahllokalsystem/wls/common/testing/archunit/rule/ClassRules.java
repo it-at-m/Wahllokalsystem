@@ -19,9 +19,8 @@ public class ClassRules {
             .that().resideInAnyPackage("..service..").and().areRecords().should().haveSimpleNameEndingWith("Model");
 
     public static final ArchRule RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED = classes()
-            .that().resideInAnyPackage("..domain..").and().areNotEnums().and().areNotInterfaces()
-            .should().beAnnotatedWith(Entity.class).orShould().beAnnotatedWith(Embeddable.class)
-            .andShould().haveSimpleNameNotEndingWith("DTO")
+            .that().areAnnotatedWith(Entity.class).or().areAnnotatedWith(Embeddable.class)
+            .should().haveSimpleNameNotEndingWith("DTO")
             .andShould().haveSimpleNameNotEndingWith("Model")
             .andShould().haveSimpleNameNotEndingWith("Entity");
 

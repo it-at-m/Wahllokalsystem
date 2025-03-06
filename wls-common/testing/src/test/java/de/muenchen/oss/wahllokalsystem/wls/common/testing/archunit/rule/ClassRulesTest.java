@@ -2,7 +2,7 @@ package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule;
 
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED;
-import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_Model_CONVENTION_MATCHED;
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_MODEL_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_NO_CROSS_DEPENDENCIES_INSIDE_DOMAIN_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_NO_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_NO_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED;
@@ -46,7 +46,7 @@ public class ClassRulesTest {
         return Stream.of(
                 Arguments.of(RULE_DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED,
                         INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".rest"),
-                Arguments.of(RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_Model_CONVENTION_MATCHED,
+                Arguments.of(RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_MODEL_CONVENTION_MATCHED,
                         INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".service"),
                 Arguments.of(RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED,
                         INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".domain"),
@@ -72,7 +72,7 @@ public class ClassRulesTest {
         return Stream.of(
                 Arguments.of(RULE_DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED,
                         CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".rest"),
-                Arguments.of(RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_Model_CONVENTION_MATCHED,
+                Arguments.of(RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_MODEL_CONVENTION_MATCHED,
                         CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".service"),
                 Arguments.of(RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED,
                         CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".domain"),

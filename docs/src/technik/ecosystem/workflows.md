@@ -22,6 +22,7 @@ sequenceDiagram
     Dev ->> PR: Create
     
     PR ->> Workflow: run CoderabbitAI Review
+    PR ->> Workflow: run add service label to pr
     
     PR ->> Workflow: run CodeQL
     alt Backend Microservice

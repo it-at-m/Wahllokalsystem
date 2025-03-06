@@ -3,7 +3,7 @@ package de.muenchen.oss.wahllokalsystem.authservice.domain;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 
-import de.muenchen.oss.wahllokalsystem.authservice.service.CryptoService;
+import de.muenchen.oss.wahllokalsystem.authservice.common.CryptoService;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -284,7 +284,7 @@ class UserRepositoryImplTest {
     class Exists {
 
         @Test
-        void should_searchWithEncryptedUsername_when_searching() {
+        void should_searchWithEncryptedUsername_when_searchingWithUsername() {
             val username = "username";
 
             val mockedEncryptedUsername = "encryptedUsername";

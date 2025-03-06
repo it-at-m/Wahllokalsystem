@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.authservice.service;
 
+import de.muenchen.oss.wahllokalsystem.authservice.common.CryptoService;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.AESEncryptionConfiguration;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import lombok.val;

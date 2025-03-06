@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.authservice.service;
+package de.muenchen.oss.wahllokalsystem.authservice.common;
 
 import de.muenchen.oss.wahllokalsystem.authservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;

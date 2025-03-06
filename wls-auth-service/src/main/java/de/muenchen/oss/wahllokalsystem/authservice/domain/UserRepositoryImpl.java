@@ -3,7 +3,7 @@
  */
 package de.muenchen.oss.wahllokalsystem.authservice.domain;
 
-import de.muenchen.oss.wahllokalsystem.authservice.service.CryptoService;
+import de.muenchen.oss.wahllokalsystem.authservice.common.CryptoService;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import java.util.Collection;

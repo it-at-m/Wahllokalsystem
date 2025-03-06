@@ -6,13 +6,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.authservice.TestConstants;
+import de.muenchen.oss.wahllokalsystem.authservice.common.CryptoService;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.Authority;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.AuthorityRepository;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.PermissionRepository;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.User;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.UserRepository;
-import de.muenchen.oss.wahllokalsystem.authservice.service.CryptoService;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.Collections;

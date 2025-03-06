@@ -1,6 +1,6 @@
 # Backend-Microservice
 
-Um einen neuen Backend-Service anzulegen sind zuvor die [allgemeinen Infos](/technik/guides/new-microservice/index.md) 
+Um einen neuen Backend-Service anzulegen sind zuvor die [allgemeinen Infos](/technik/guides/new-microservice/index.md)
 zum Einrichten eines neuen Services zu beachten.
 
 ## Maven-Projekt anlegen
@@ -21,8 +21,9 @@ Da das RefArch-Template auf ein allgemeines Szenario abzielt, ist mit zusätzlic
 funktionsfähig zu bekommen.
 
 ## Workflow Templates
-
+<!-- prettier-ignore-start -->
 ::: code-group
+
 ```yml {1,8-9,18} [wls-&lt;domain&gt;-service_push-dev.yml]
 name: build push dev <domain>-service
 
@@ -59,9 +60,10 @@ jobs:
       ./.github/workflows/callable-run-mvn-verify.yml
     with:
       pom-dir: 'wls-<domain>-service'
-``` 
-:::
+```
 
+:::
+<!-- prettier-ignore-end -->
 ## Datenbank einrichten
 
 Jeder Service hat einen eigenen Benutzer für die Datenbank. Diese sind im File `stack/oracle-database/add-user-on-startup.sql` hinterlegt. Die Zugriffs-URL ist für alle Services gleich:
@@ -73,6 +75,7 @@ Dabei sollte auf folgendes Schema geachtet werden:
 - Passwort: secret
 
 Beispiel für `wls-broadcast-service`:
+
 - Benutzername: `wls_broadcast_service`
 - Passwort: `secret`
 

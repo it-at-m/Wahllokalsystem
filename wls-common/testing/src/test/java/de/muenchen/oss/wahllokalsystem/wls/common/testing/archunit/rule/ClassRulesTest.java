@@ -8,6 +8,9 @@ import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.C
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_NO_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED;
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_NO_DTOS_OR_CONTROLLERS_OUTSIDE_OF_REST_PACKAGE_CONVENTION_MATCHED;
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_NO_ENTITIES_OR_REPOS_OUTSIDE_OF_DOMAIN_PACKAGE_CONVENTION_MATCHED;
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules.RULE_NO_MODELS_OR_SERVICES_OUTSIDE_OF_SERVICE_PACKAGE_CONVENTION_MATCHED;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
@@ -56,6 +59,12 @@ public class ClassRulesTest {
                 Arguments.of(RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED,
                         INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
                 Arguments.of(RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED,
+                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+                Arguments.of(RULE_NO_ENTITIES_OR_REPOS_OUTSIDE_OF_DOMAIN_PACKAGE_CONVENTION_MATCHED,
+                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+                Arguments.of(RULE_NO_MODELS_OR_SERVICES_OUTSIDE_OF_SERVICE_PACKAGE_CONVENTION_MATCHED,
+                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+                Arguments.of(RULE_NO_DTOS_OR_CONTROLLERS_OUTSIDE_OF_REST_PACKAGE_CONVENTION_MATCHED,
                         INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH));
     }
 
@@ -76,6 +85,12 @@ public class ClassRulesTest {
                 Arguments.of(RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED,
                         CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
                 Arguments.of(RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED,
+                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+                Arguments.of(RULE_NO_ENTITIES_OR_REPOS_OUTSIDE_OF_DOMAIN_PACKAGE_CONVENTION_MATCHED,
+                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+                Arguments.of(RULE_NO_MODELS_OR_SERVICES_OUTSIDE_OF_SERVICE_PACKAGE_CONVENTION_MATCHED,
+                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+                Arguments.of(RULE_NO_DTOS_OR_CONTROLLERS_OUTSIDE_OF_REST_PACKAGE_CONVENTION_MATCHED,
                         CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH));
     }
 }

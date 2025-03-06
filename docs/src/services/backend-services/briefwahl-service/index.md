@@ -17,6 +17,7 @@ Wahlbriefdaten umfassen Informationen über die Menge an Wahlbriefen sowie Nacht
 ### beanstandete Wahlbriefe
 
 Beanstandete Wahlbriefe sind Wahlbriefe welche genauer betrachtet wurden. Aus folgenden Gründen kann es zu Zurückweisungen kommen:
+
 - nicht wahlberechtigt
 - der Wahlschein ist ungültig
 - ...

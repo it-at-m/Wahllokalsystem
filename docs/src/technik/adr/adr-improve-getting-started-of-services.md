@@ -16,7 +16,7 @@ benötigt Oracle einen Datenbankserver.
 Des Weiteren ist aktuell das Profil `local` notwendig um die Services zu starten. Die in den Services hinterlegten Startskripte
 sind daher wichtig, um die Services zu starten.
 
-Wenn man mehrere Services lokal starten möchte, muss man eigenständig auf die Ports achten und diese gegenfalls anpassen. 
+Wenn man mehrere Services lokal starten möchte, muss man eigenständig auf die Ports achten und diese gegenfalls anpassen.
 
 ## Entscheidung
 
@@ -45,4 +45,4 @@ Leichterer Einstieg für Dritte in die Anwendung weil nun ein Service ohne Anpas
 ### negativ
 
 Bei der Erstellung eines Services müssen weitere Regeln beachtet werden. Services, die miteinander Kommunizieren, müssen
-aufeinander abgestimmt werden (z.B. beim Port). 
+aufeinander abgestimmt werden (z.B. beim Port).

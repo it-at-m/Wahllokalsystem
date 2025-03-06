@@ -4,7 +4,7 @@ Für jeden Service gibt es eine separate Beschreibung zu dessen Aufgaben und Fun
 
 ## Fachliches Datenmodell
 
-Das folgende Datenmodell wurde mit Betrachtung der gesetzlichen Grundlage verschiedener Wahlen, sowie des örtlichen 
+Das folgende Datenmodell wurde mit Betrachtung der gesetzlichen Grundlage verschiedener Wahlen, sowie des örtlichen
 Kommunal- und/oder Landeswahlrechts erstellt.
 
 ![Datenmodell:](/fachlichesDatenmodell/vermutetesFachlichesDatenmodell_20241008.png)
@@ -20,8 +20,8 @@ Wählergruppen zu vermeiden. Zum Beispiel wird eine Migrationsbeiratswahl, bei d
 unterschiedlichen Staatsangehörigkeiten wahlberechtigt sind, im Unterschied zu einer
 Bundestagswahl in separaten Wahlbezirken organisiert.
 
-Wenn aber am gleichen Datum eine Bundestagswahl und ein Bürgerentscheid stattfinden, können diese 
-dem gleichen Wahltermin zugeteilt und somit in gemeinsamen Wahllokalen organisiert werden. 
+Wenn aber am gleichen Datum eine Bundestagswahl und ein Bürgerentscheid stattfinden, können diese
+dem gleichen Wahltermin zugeteilt und somit in gemeinsamen Wahllokalen organisiert werden.
 
 `Stimmzettelgebiet` - siehe hierzu und vergleiche die unten aufgefürten Bedeutungen in verschiedenen Wahlarten;
 
@@ -31,23 +31,22 @@ dem gleichen Wahltermin zugeteilt und somit in gemeinsamen Wahllokalen organisie
 
 `Wahlbezirk` - auch als Stimmbezirk bezeichnet, entspricht einem Wahllokal (Wahlraum), geführt von einem Wahlvorstand.
 
-
 [Quellen und mehr Informationen](https://stadt.muenchen.de/rathaus/politik/wahlen.html)
-
 
 ### Erläuterung zu einzelnen Wahlarten
 
 #### Bundestagswahl
 
-`Stimmzettelgebiet` - das im Model bezeichnet Gebiet ist im Bundeswahlrecht der "Wahlkreis". 
+`Stimmzettelgebiet` - das im Model bezeichnet Gebiet ist im Bundeswahlrecht der "Wahlkreis".
 Die Landeshauptstadt München hat 4 Wahlkreise:
+
 - 217 - München Nord
 - 218 - München Ost
 - 219 - München Süd
 - 220 - München-West/Mitte.
 
-In jedem Wahlkreis gibt es dann mehrere Wahlbezirke (Wahllokale), diese haben in einem Wahlkreis den gleichen Stimmzettel. 
-Jedes Wahllokal befindet sich geografisch auch in einem der 25 Stadtbezirke der Landeshauptstadt München. 
+In jedem Wahlkreis gibt es dann mehrere Wahlbezirke (Wahllokale), diese haben in einem Wahlkreis den gleichen Stimmzettel.
+Jedes Wahllokal befindet sich geografisch auch in einem der 25 Stadtbezirke der Landeshauptstadt München.
 Der Inhalt eines Stimmzettels bestimmt sich aus der Zugehörigkeit zum Wahlkreis und nicht zum Stadtbezirk.
 
 ##### Beispiel Bundestagswahl
@@ -59,8 +58,8 @@ Der Inhalt eines Stimmzettels bestimmt sich aus der Zugehörigkeit zum Wahlkreis
 #### Landtagswahl
 
 `Stimmzettelgebiet` - entspricht einem Stimmkreis. Bayern ist in Regierungsbezirke (Wahlkreise), in Landkreise und kreisfreie Städte bzw. in Wahlkreise und Stimmkreise (je max. 125.000 Einwohner) eingeteilt.
-Landeshauptstadt München liegt im Wahlkreis Oberbayern und umfasst 9 (Stand 2024) Stimmkreise von 101 bis 109. In jedem Stimmkreis gibt es dann mehrere Wahlbezirke (Wahllokale), diese haben in einem 
-Stimmkreis den gleichen Stimmzettel. Jedes Wahllokal befindet sich geografisch auch in einem der 25 Stadtbezirke der Landeshauptstadt München. 
+Landeshauptstadt München liegt im Wahlkreis Oberbayern und umfasst 9 (Stand 2024) Stimmkreise von 101 bis 109. In jedem Stimmkreis gibt es dann mehrere Wahlbezirke (Wahllokale), diese haben in einem
+Stimmkreis den gleichen Stimmzettel. Jedes Wahllokal befindet sich geografisch auch in einem der 25 Stadtbezirke der Landeshauptstadt München.
 Der Inhalt eines Stimmzettels bestimmt aber seine Zugehörigkeit zum Stimmkreis und nicht zum Stadtbezirk.
 
 ##### Beispiel Landtagswahl
@@ -75,4 +74,3 @@ Der Inhalt eines Stimmzettels bestimmt aber seine Zugehörigkeit zum Stimmkreis 
 Jedes Wahllokal befindet sich geografisch auch in einem der 25 Stadtbezirke der Landeshauptstadt München. Der Inhalt eines Stimmzettels ist in allen Wahllokalen der Landeshauptstadt München identisch.
 
 [Mehr Informationen zur Europawahl](https://stadt.muenchen.de/infos/europawahlen.html)
-

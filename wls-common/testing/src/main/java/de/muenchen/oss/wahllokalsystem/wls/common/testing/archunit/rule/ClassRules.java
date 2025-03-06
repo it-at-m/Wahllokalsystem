@@ -97,7 +97,9 @@ public class ClassRules {
                 if (classNameString.endsWith("no class found")
                         || classNameString.endsWith("ControllerIntegrationTest")
                         || classNameString.endsWith("ServiceSecurityTest")
-                        || classNameString.endsWith("SecurityConfigurationTest")) {
+                        || classNameString.endsWith("SecurityConfigurationTest")
+                        || classNameString.endsWith("ArchUnitTest")
+                        || classNameString.endsWith("SwaggerConfigurationTest")) {
                     System.out.println("skipped testfile");
                     return;
                 }

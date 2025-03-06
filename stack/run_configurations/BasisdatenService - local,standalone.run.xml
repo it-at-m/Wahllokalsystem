@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="BasisdatenService - local,db-h2,no-security" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,h2,no-sec">
-    <option name="ACTIVE_PROFILES" value="local,db-h2,no-security" />
+  <configuration default="false" name="BasisdatenService - local,standalone" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,standalone,sec">
+    <option name="ACTIVE_PROFILES" value="local,standalone" />
     <module name="wls-basisdaten-service" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication" />
     <method v="2">

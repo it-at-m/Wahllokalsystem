@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="AdminService - local,db-oracle,no-security" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,oracle,no-sec">
-    <option name="ACTIVE_PROFILES" value="local,db-oracle,no-security" />
+  <configuration default="false" name="AdminService - local,standalone" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,standalone,sec">
+    <option name="ACTIVE_PROFILES" value="local,standalone" />
     <module name="wls-admin-service" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="de.muenchen.oss.wahllokalsystem.adminservice.MicroServiceApplication" />
     <method v="2">

@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ErgebnismeldungService - local,db-h2" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,integrated,sec">
-    <option name="ACTIVE_PROFILES" value="local,db-h2" />
+  <configuration default="false" name="ErgebnismeldungService - local,standalone" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,standalone,sec">
+    <option name="ACTIVE_PROFILES" value="local,standalone" />
     <module name="wls-ergebnismeldung-service" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication" />
     <method v="2">

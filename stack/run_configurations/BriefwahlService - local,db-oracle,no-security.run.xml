@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="BriefwahlService - local,db-oracle,no-security" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,oracle,no-sec">
-    <option name="ACTIVE_PROFILES" value="local,db-oracle,no-security" />
+  <configuration default="false" name="BriefwahlService - local,standalone,db-oracle,no-security" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,standalone,oracle,no-sec">
+    <option name="ACTIVE_PROFILES" value="local,standalone,db-oracle,no-security" />
     <module name="wls-briefwahl-service" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="de.muenchen.oss.wahllokalsystem.briefwahlservice.MicroServiceApplication" />
     <method v="2">

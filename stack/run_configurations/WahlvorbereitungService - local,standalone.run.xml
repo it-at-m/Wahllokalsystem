@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="WahlvorbereitungService - local,db-h2,dummy.nobezirkid.check" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,h2,sec">
-    <option name="ACTIVE_PROFILES" value="local,db-h2,dummy.nobezirkid.check" />
+  <configuration default="false" name="WahlvorbereitungService - local,standalone" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,standalone,sec">
+    <option name="ACTIVE_PROFILES" value="local,standalone" />
     <module name="wls-wahlvorbereitung-service" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.MicroServiceApplication" />
     <method v="2">

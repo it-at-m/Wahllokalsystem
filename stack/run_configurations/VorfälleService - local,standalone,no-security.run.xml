@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="VorfälleService - local,db-h2,no-security,dummy.nobezirkid.check" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,h2,no-sec">
-    <option name="ACTIVE_PROFILES" value="local,db-h2,no-security,dummy.nobezirkid.check" />
+  <configuration default="false" name="VorfälleService - local,standalone,no-security" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,standalone,no-sec">
+    <option name="ACTIVE_PROFILES" value="local,standalone,no-security" />
     <module name="wls-vorfaelleundvorkommnisse-service" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.MicroServiceApplication" />
     <method v="2">

@@ -39,22 +39,4 @@ public class MethodRules {
             .notHaveModifier(JavaModifier.PROTECTED)
             .andShould().notHaveModifier(JavaModifier.PRIVATE)
             .andShould().notHaveModifier(JavaModifier.PUBLIC);
-
-/*    private static final ArchCondition<JavaMethod> haveMatchingNestedTestClass =
-            new ArchCondition<>("have matching public method name") {
-                @Override
-                public void check(JavaMethod publicMethod, ConditionEvents events) {
-
-                    boolean hasMatchingName = true; // TODO!
-
-                    if (!hasMatchingName) {
-                        String message = String.format("Nested class with name %s does not have a matching public method",
-                                publicMethod.getName());
-                        events.add(SimpleConditionEvent.violated(publicMethod, message));
-                    }
-                }
-            };
-
-    public static ArchRule RULE_PUBLIC_METHOD_HAS_CORRESPONDING_NESTED_TESTSUITE_CONVENTION_MATCHED = methods()
-            .that().haveModifier(JavaModifier.PUBLIC).should(haveMatchingNestedTestClass);*/
 }

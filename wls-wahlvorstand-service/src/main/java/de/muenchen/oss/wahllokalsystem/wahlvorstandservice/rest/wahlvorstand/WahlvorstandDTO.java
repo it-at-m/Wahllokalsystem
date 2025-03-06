@@ -1,10 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Builder;
 
 @Builder

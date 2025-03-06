@@ -12,7 +12,7 @@ Die Benennung erfolgt grundsätzlich auf Englisch, mit Ausnahme von Fachbegriffe
 
 `<Domain>[<Funktion>]View.vue`
 
-**Beispiel**
+### Beispiel
 
 `WahlvorstandView.vue` ... eine View für den Wahlvorstand
 
@@ -22,7 +22,7 @@ Die Benennung erfolgt grundsätzlich auf Englisch, mit Ausnahme von Fachbegriffe
 
 `Base<Type>[<Domain>]<Funktion>.vue`
 
-**Beispiel**
+#### Beispiel
 
 `BaseButtonRefresh.vue` ... Allgemeiner Button zur Aktualisierung
 
@@ -34,7 +34,7 @@ Die Benennung erfolgt grundsätzlich auf Englisch, mit Ausnahme von Fachbegriffe
 
 `The[<Domain>]<Funktion><Type>.vue`
 
-**Beispiele**
+#### Beispiele
 
 `TheWahlvorstandLastSendDiv.vue` ... Wahlvorstandskomponente welche die Uhrzeit der letzten Übermittlung darstellt
 
@@ -44,7 +44,7 @@ Die Benennung erfolgt grundsätzlich auf Englisch, mit Ausnahme von Fachbegriffe
 
 `<domain>Store.ts`
 
-**Beispiel**
+### Beispiel
 
 `wahlvorstandStore.ts` ... Store für den Wahlvorstand
 
@@ -54,7 +54,7 @@ Die Benennung erfolgt grundsätzlich auf Englisch, mit Ausnahme von Fachbegriffe
 
 `<domain><Funktion>.ts`
 
-**Beispiel**
+#### Beispiel
 
 `wahlvorstandService.ts` ... fachliche Funktionen zum Wahlvorstand
 
@@ -66,15 +66,15 @@ Die Benennung erfolgt grundsätzlich auf Englisch, mit Ausnahme von Fachbegriffe
 
 `<funktion>.ts`
 
-**Beispiel**
+#### Beispiel
 
-`formatter.ts` ... allgemein gültige Formatierungsfunktionen 
+`formatter.ts` ... allgemein gültige Formatierungsfunktionen
 
 ## Types
 
 `<interface>.ts`
 
-**Beispiel**
+### Beispiel
 
 `Wahlvorstand.ts` ... enthält das Interface `Wahlvorstand` und eine Hilfsklasse die das Interface implementiert
 
@@ -84,7 +84,7 @@ Die Tests liegen im `tests`-Ordner, welcher der Aufbaustruktur des `src`-Ordners
 
 `<Testgegenstand ohne Dateiendung>.spec.ts`
 
-**Beispiel**
+### Beispiel
 
 `TheWahlvorstandMitgliederTable.spec.ts` ... Tests zu `TheWahlvorstandMitgliederTable.vue`
 
@@ -98,7 +98,7 @@ Die Tests liegen im `tests`-Ordner, welcher der Aufbaustruktur des `src`-Ordners
 > Stories zu Komponenten, die den Store verwenden, haben auf der Übersichtsseite (`docs`) alle denselben Zustand.
 > Der Zustand für alle Komponenten entsprecht dem Zustand im Store mit der letzten Story.
 
-**Beispiel**
+### Beispiel
 
 `BaseButtonRefresh.stories.ts` ... Stories zu `BaseButtonRefresh.vue`
 
@@ -113,6 +113,6 @@ Bei dem Wert handelt es sich **nicht** um eine ID.
 
 `on<Data><Event>`
 
-**Beispiel**
+### Beispiel
 
-`onAnwesenheitChanged($event, mitglied)` ... Eventhandler, wenn sich die Anwesenheit geändert hat 
+`onAnwesenheitChanged($event, mitglied)` ... Eventhandler, wenn sich die Anwesenheit geändert hat

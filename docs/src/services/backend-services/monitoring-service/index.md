@@ -5,6 +5,7 @@ Empfangen von Informationen über Ereignisse der Wahlbezirke.
 ## Abhängigkeiten
 
 Folgende Services sind für den Betrieb erforderlich:
+
 - EAI-Service
 
 ## Daten und Funktionen

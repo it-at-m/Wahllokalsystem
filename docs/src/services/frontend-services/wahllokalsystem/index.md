@@ -16,9 +16,9 @@ Je nach verwendetem Browser sind unterschiedliche Schritte notwendig, um die Kon
 - **Chrome**: log-Ausgaben werden in der Browser Konsole mit ausgegeben (F12)
 - **Firefox**: log-Ausgaben werden in einer eigenen SW-Konsole angezeigt.
   ::: details SW-Konsole in Firefox finden
-    1. Entwicklertools öffnen (F12)
-    2. Zum Tab `Anwendung` navigieren
-    3. Auf `about:debugging` klicken
-    4. Im neuen Tab den gewünschten SW finden (`wahl-worker.js`) und auf `Untersuchen` klicken
-    5. Die Konsole öffnet sich in einem neuen Tab
-  :::
+  1. Entwicklertools öffnen (F12)
+  2. Zum Tab `Anwendung` navigieren
+  3. Auf `about:debugging` klicken
+  4. Im neuen Tab den gewünschten SW finden (`wahl-worker.js`) und auf `Untersuchen` klicken
+  5. Die Konsole öffnet sich in einem neuen Tab
+     :::

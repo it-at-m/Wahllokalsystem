@@ -39,6 +39,7 @@
         <module>monitoring</module>
         <module>security</module>
         <module>testing</module>
+        <module>swagger</module>
     </modules>
 
     <dependencyManagement>

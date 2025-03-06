@@ -37,10 +37,6 @@ public class WahllokalBenutzerController {
                     @ApiResponse(
                             responseCode = "400", description = "Benutzer können nicht generiert werden.",
                             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
-                    ),
-                    @ApiResponse(
-                            responseCode = "165", description = "Anfrageparameter sind fehlerhaft",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
                     )
             }
     )
@@ -60,10 +56,6 @@ public class WahllokalBenutzerController {
                     @ApiResponse(
                             responseCode = "400", description = "Benutzer können nicht exportiert werden.",
                             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
-                    ),
-                    @ApiResponse(
-                            responseCode = "165", description = "Anfrageparameter sind fehlerhaft",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
                     )
             }
     )
@@ -77,8 +69,7 @@ public class WahllokalBenutzerController {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Benutzer erfolgreich gelöscht."),
-                    @ApiResponse(responseCode = "400", description = "Benutzer können wegen Client-Kommunikationsfehler nicht gelöscht werden."),
-                    @ApiResponse(responseCode = "165", description = "Anfrageparameter sind fehlerhaft")
+                    @ApiResponse(responseCode = "400", description = "Benutzer können wegen Client-Kommunikationsfehler nicht gelöscht werden.")
             }
     )
     @ResponseStatus(HttpStatus.OK)

@@ -63,6 +63,10 @@
             <artifactId>archunit-junit5</artifactId>
             <version>1.4.0</version>
         </dependency>
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

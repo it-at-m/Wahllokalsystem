@@ -7,4 +7,7 @@ public class NotARecordSoEndingIsNotRelevant {
 
     public void publicMethodName() {
     }
+
+    public void anotherPublicMethod() {
+    }
 }

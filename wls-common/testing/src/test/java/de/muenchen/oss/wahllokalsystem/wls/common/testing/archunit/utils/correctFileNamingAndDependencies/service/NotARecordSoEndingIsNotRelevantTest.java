@@ -7,4 +7,8 @@ public class NotARecordSoEndingIsNotRelevantTest {
     @Nested
     class PublicMethodName {
     }
+
+    @Nested
+    class AnotherPublicMethod {
+    }
 }

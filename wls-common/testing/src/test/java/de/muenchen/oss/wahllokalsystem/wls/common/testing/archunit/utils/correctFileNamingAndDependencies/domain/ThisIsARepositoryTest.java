@@ -1,6 +1,10 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.correctFileNamingAndDependencies.domain;
 
-public interface ThisIsARepository {
+import org.junit.jupiter.api.Nested;
 
-    void sayHello();
+public class ThisIsARepositoryTest {
+
+    @Nested
+    class SayHello {
+    }
 }

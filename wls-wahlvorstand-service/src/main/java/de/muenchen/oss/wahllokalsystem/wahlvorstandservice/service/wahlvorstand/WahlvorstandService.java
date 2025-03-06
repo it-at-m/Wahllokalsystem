@@ -41,7 +41,7 @@ public class WahlvorstandService {
 
     @PreAuthorize(
         "hasAuthority('Wahlvorstand_BUSINESSACTION_GetWahlvorstand')"
-                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
+                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
     )
     public Optional<WahlvorstandModel> getWahlvorstand(@P("wahlbezirkID") final String wahlbezirkID) {
         log.info("#getWahlvorstand");

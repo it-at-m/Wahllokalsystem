@@ -143,11 +143,9 @@ describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => { // [!code focu
   });
 
   /* Tests zu den Events der Komponente */ // [!code focus]
-  describe("behavioral logic", () => {
-    // [!code focus]
+  describe("behavioral logic", () => { // [!code focus]
     /* Tests zu dem Event `update:model-value` */ // [!code focus]
-    describe("update:model-value", () => {
-      // [!code focus]
+    describe("update:model-value", () => { // [!code focus]
       /* Tests entsprechend der Testcasebeschreibung */ // [!code focus]
       it("should_setAnwesendTrue_when_checkBoxForMitgliedThatIsNotAnwesendWasClicked", async () => { // [!code focus]
       });

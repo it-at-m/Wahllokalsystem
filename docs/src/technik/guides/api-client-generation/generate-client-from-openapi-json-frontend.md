@@ -183,8 +183,7 @@ import { BROADCAST_SERVICE_API_URL } from "@/constants";
 export function useBroadcastService() {
   const broadcastCA = new BroadcastControllerApi(/* ... */);
 
-  async function getMessage(wahlbezirkID: string) {
-    // [!code focus:20]
+  async function getMessage(wahlbezirkID: string) { // [!code focus:23]
     try {
       const response = await broadcastCA.getMessage(wahlbezirkID);
       if (response.status == 204) {

@@ -19,7 +19,7 @@
 "service-eai":
   - changed-files:
       - any-glob-to-any-file: [ 'wls-eai-service/**' ]
-"ergebnismeldung":
+"service-ergebnismeldung":
   - changed-files:
       - any-glob-to-any-file: [ 'wls-ergebnismeldung-service/**' ]
 "service-gui-admin":

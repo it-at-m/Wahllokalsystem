@@ -24,10 +24,24 @@ public class ClassRules {
             .andShould().haveSimpleNameNotEndingWith("Model")
             .andShould().haveSimpleNameNotEndingWith("Entity");
 
-    // no @entity or @embeddable outside of domain
-    public static final ArchRule RULE_NO_ENTITIES_OUTSIDE_OF_DOMAIN_PACKAGE_CONVENTION_MATCHED = noClasses()
-            .that().areAnnotatedWith(Entity.class).or().areAnnotatedWith(Embeddable.class)
+    // no @entity or @embeddable or repository outside of domain
+    public static final ArchRule RULE_NO_ENTITIES_OR_REPOS_OUTSIDE_OF_DOMAIN_PACKAGE_CONVENTION_MATCHED = noClasses()
+            .that().areAnnotatedWith(Entity.class)
+            .or().areAnnotatedWith(Embeddable.class)
+            .or().haveSimpleNameEndingWith("Repository")
             .should().resideOutsideOfPackage("..domain..");
+
+    // no model or service outside of service
+    public static final ArchRule RULE_NO_MODELS_OR_SERVICES_OUTSIDE_OF_SERVICE_PACKAGE_CONVENTION_MATCHED = noClasses()
+            .that().haveSimpleNameEndingWith("Model")
+            .or().haveSimpleNameEndingWith("Service")
+            .should().resideOutsideOfPackage("..service..");
+
+    // no dto or controller  outside of rest
+    public static final ArchRule RULE_NO_DTOS_OR_CONTROLLERS_OUTSIDE_OF_REST_PACKAGE_CONVENTION_MATCHED = noClasses()
+            .that().haveSimpleNameEndingWith("DTO")
+            .or().haveSimpleNameEndingWith("Controller")
+            .should().resideOutsideOfPackage("..rest..");
 
     // dto files do not import from service or domain packages
     public static final ArchRule RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED = noClasses()

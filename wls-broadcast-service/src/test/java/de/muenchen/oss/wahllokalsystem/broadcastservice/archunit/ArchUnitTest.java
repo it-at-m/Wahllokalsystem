@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.broadcastservice.archunit;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
+import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.ArchRule;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules;
@@ -19,7 +20,7 @@ public class ArchUnitTest {
     @BeforeAll
     static void init() {
         allTestClasses = new ClassFileImporter()
-                .withImportOption((location) -> location.contains("Test"))
+                .withImportOption(new ImportOption.OnlyIncludeTests())
                 .importPackages(MicroServiceApplication.class.getPackage().getName());
     }
 

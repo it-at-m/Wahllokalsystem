@@ -8,10 +8,8 @@ import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.Tes
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
-
 import java.util.List;
 import java.util.stream.Stream;
-
 import lombok.val;
 import org.apache.commons.lang3.ArrayUtils;
 import org.assertj.core.api.Assertions;
@@ -34,7 +32,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
 public class EreignisServiceSecurityTest {
 
-    @MockBean(name = "bezirkIdPermisionEvaluator")
+    @MockBean
     BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
     @Autowired

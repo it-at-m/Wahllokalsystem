@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
@@ -36,7 +37,7 @@
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <org.springdoc.version>2.6.0</org.springdoc.version>
-        <wls.common.version>1.2.0</wls.common.version>
+        <wls.common.version>1.3.0</wls.common.version>
         <com.tngtech.archunit.version>1.2.2</com.tngtech.archunit.version>
     </properties>
 
@@ -461,8 +462,8 @@
                         <eclipse>
                             <file>itm-java-codeformat/java_codestyle_formatter.xml</file>
                         </eclipse>
-                        <trimTrailingWhitespace />
-                        <endWithNewline />
+                        <trimTrailingWhitespace/>
+                        <endWithNewline/>
                     </java>
                 </configuration>
                 <executions>
@@ -557,7 +558,8 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.auth.0.1.0.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.auth.0.1.0.json
+                            </inputSpec>
 
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
@@ -590,7 +592,8 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.basisdaten.0.1.0.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.basisdaten.0.1.0.json
+                            </inputSpec>
 
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
@@ -623,7 +626,9 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.infomanagement.0.2.0.json</inputSpec>
+                            <inputSpec>
+                                ${project.basedir}/src/main/resources/openapis/openapi.infomanagement.0.2.0.json
+                            </inputSpec>
 
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
@@ -656,7 +661,9 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.ergebnismeldung.0.2.1.json</inputSpec>
+                            <inputSpec>
+                                ${project.basedir}/src/main/resources/openapis/openapi.ergebnismeldung.0.2.1.json
+                            </inputSpec>
 
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>

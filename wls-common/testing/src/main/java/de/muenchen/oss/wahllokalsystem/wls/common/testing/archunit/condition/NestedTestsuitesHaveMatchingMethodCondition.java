@@ -6,6 +6,7 @@ import com.tngtech.archunit.lang.ConditionEvents;
 import com.tngtech.archunit.lang.SimpleConditionEvent;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.Set;
 import lombok.val;
 import org.junit.jupiter.api.Nested;
 import org.springframework.util.StringUtils;
@@ -24,13 +25,7 @@ public class NestedTestsuitesHaveMatchingMethodCondition {
 
                 // exclude specific testfiles from @nested naming convention
                 String classNameString = topEnclosingClass.map(JavaClass::getFullName).orElse("failed to extract class name");
-                if (classNameString.endsWith("failed to extract class name")
-                        || classNameString.endsWith("ControllerIntegrationTest")
-                        || classNameString.endsWith("ServiceSecurityTest")
-                        || classNameString.endsWith("SecurityConfigurationTest")
-                        || classNameString.endsWith("ArchUnitTest")
-                        || classNameString.endsWith("SwaggerConfigurationTest")) {
-                    System.out.println("skipped testfile");
+                if (exclusions.stream().anyMatch(classNameString::endsWith)) {
                     return;
                 }
 
@@ -84,4 +79,12 @@ public class NestedTestsuitesHaveMatchingMethodCondition {
 
         return highestNested;
     }
+
+    private static final Set<String> exclusions = Set.of(
+            "failed to extract class name",
+            "ControllerIntegrationTest",
+            "ServiceSecurityTest",
+            "SecurityConfigurationTest",
+            "ArchUnitTest",
+            "SwaggerConfigurationTest");
 }

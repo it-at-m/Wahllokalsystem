@@ -25,9 +25,9 @@ public class SwaggerDefaultConfiguration {
     private void addErrorToApi(Operation operation, Components components) {
         if (operation.getResponses() != null) {
             addRequestBodyValidationErrorToAPI(operation, components);
+            addNotFoundErrorToAPI(operation);
+            addInternalErrorToAPI(operation, components);
         }
-        addNotFoundErrorToAPI(operation);
-        addInternalErrorToAPI(operation, components);
     }
 
     private void addRequestBodyValidationErrorToAPI(Operation operation, Components components) {

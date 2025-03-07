@@ -2,7 +2,7 @@ package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
-import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.condition.NestedTestsuitesHaveMatchingMethodCondition.haveMatchingPublicMethodName;
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.condition.NestedTestsuitesHaveMatchingMethodCondition.haveMatchingPublicMethodNameIfTheyAreHighestNestedClass;
 
 import com.tngtech.archunit.lang.ArchRule;
 import jakarta.persistence.Embeddable;
@@ -78,5 +78,5 @@ public class ClassRules {
             .should().haveSimpleNameEndingWith("Test");
 
     public static final ArchRule RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED = classes()
-            .that().areAnnotatedWith(Nested.class).should(haveMatchingPublicMethodName);
+            .that().areAnnotatedWith(Nested.class).should(haveMatchingPublicMethodNameIfTheyAreHighestNestedClass);
 }

@@ -7,14 +7,17 @@ import com.tngtech.archunit.lang.SimpleConditionEvent;
 import java.util.Arrays;
 import java.util.Optional;
 import lombok.val;
+import org.junit.jupiter.api.Nested;
 import org.springframework.util.StringUtils;
 
 public class NestedTestsuitesHaveMatchingMethodCondition {
 
-    public static final ArchCondition<JavaClass> haveMatchingPublicMethodName = new ArchCondition<>("have matching public method name") {
+    public static final ArchCondition<JavaClass> haveMatchingPublicMethodNameIfTheyAreHighestNestedClass = new ArchCondition<>(
+            "have matching public method name") {
         @Override
         public void check(JavaClass classWithNestedAnnotation, ConditionEvents events) {
-            val expectedMethodName = StringUtils.uncapitalize(classWithNestedAnnotation.getSimpleName());
+            var topNestedClass = getTopNestedClass(classWithNestedAnnotation);
+            val expectedMethodName = StringUtils.uncapitalize(topNestedClass.getSimpleName());
             var topEnclosingClass = getTopEnclosingClass(classWithNestedAnnotation);
 
             if (topEnclosingClass.isPresent()) {
@@ -60,5 +63,25 @@ public class NestedTestsuitesHaveMatchingMethodCondition {
             enclosingClass = enclosingClass.get().getEnclosingClass();
         }
         return enclosingClass;
+    }
+
+    private static JavaClass getTopNestedClass(final JavaClass item) {
+        var currentClass = item;
+        JavaClass highestNested = null;
+
+        while (currentClass.getEnclosingClass().isPresent()) {
+            currentClass = currentClass.getEnclosingClass().orElseThrow();
+
+            if (currentClass.isAnnotatedWith(Nested.class)) {
+                highestNested = currentClass;
+            } else {
+                break;
+            }
+        }
+
+        // when item already is highest nested class
+        highestNested = highestNested == null ? item : highestNested;
+
+        return highestNested;
     }
 }

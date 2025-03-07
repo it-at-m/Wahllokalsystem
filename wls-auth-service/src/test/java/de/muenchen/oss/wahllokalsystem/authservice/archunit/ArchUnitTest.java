@@ -26,7 +26,7 @@ public class ArchUnitTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("allServiceClassesRulesToVerify")
-    void should_verifyArchUnitRuleForAlshould_verifyArchUnitRuleForAllTestClassesOfService_when_runninglClassesOfService_when_running(final ArgumentsAccessor arguments) {
+    void should_verifyArchUnitRuleForAllTestClassesOfService_when_running(final ArgumentsAccessor arguments) {
         arguments.get(1, ArchRule.class).check(allTestClasses);
     }
 

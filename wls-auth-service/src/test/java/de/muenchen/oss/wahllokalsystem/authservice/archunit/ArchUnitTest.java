@@ -1,10 +1,10 @@
-package de.muenchen.oss.wahllokalsystem.adminservice.archunit;
+package de.muenchen.oss.wahllokalsystem.authservice.archunit;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.ArchRule;
-import de.muenchen.oss.wahllokalsystem.adminservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;

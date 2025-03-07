@@ -1,10 +1,10 @@
-package de.muenchen.oss.wahllokalsystem.adminservice.archunit;
+package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.archunit;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.ArchRule;
-import de.muenchen.oss.wahllokalsystem.adminservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
@@ -25,12 +25,12 @@ public class ArchUnitTest {
     }
 
     @ParameterizedTest(name = "{0}")
-    @MethodSource("allServiceClassesRulesToVerify")
+    @MethodSource("allTestClassesRulesToVerify")
     void should_verifyArchUnitRuleForAllClassesOfService_when_running(final ArgumentsAccessor arguments) {
         arguments.get(1, ArchRule.class).check(allTestClasses);
     }
 
-    public static Stream<Arguments> allServiceClassesRulesToVerify() {
+    public static Stream<Arguments> allTestClassesRulesToVerify() {
         return Stream.of(
                 Arguments.of("TEST_NAMING_CONVENTION_RULE", MethodRules.RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED));
     }

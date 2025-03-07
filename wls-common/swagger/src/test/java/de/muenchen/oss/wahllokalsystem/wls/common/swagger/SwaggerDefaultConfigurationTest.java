@@ -20,14 +20,14 @@ class SwaggerDefaultConfigurationTest {
     private Components components;
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         SwaggerDefaultConfiguration configuration = new SwaggerDefaultConfiguration();
         customizer = configuration.errorCustomizer();
         components = new Components();
     }
 
     @Test
-    public void should_AddErrorResponsesToGetOperation_when_CustomizerIsCalled() {
+    public void should_addErrorResponsesToGetOperation_when_customizerIsCalled() {
         Operation operation = new Operation();
         operation.setResponses(new ApiResponses());
         PathItem pathItem = new PathItem();
@@ -36,7 +36,7 @@ class SwaggerDefaultConfigurationTest {
     }
 
     @Test
-    public void should_AddErrorResponsesToPostOperation_when_CustomizerIsCalled() {
+    public void should_addErrorResponsesToPostOperation_when_customizerIsCalled() {
         Operation operation = new Operation();
         operation.setResponses(new ApiResponses());
         PathItem pathItem = new PathItem();
@@ -45,7 +45,7 @@ class SwaggerDefaultConfigurationTest {
     }
 
     @Test
-    public void should_AddErrorResponsesToDeleteOperation_when_CustomizerIsCalled() {
+    public void should_addErrorResponsesToDeleteOperation_when_customizerIsCalled() {
         Operation operation = new Operation();
         operation.setResponses(new ApiResponses());
         PathItem pathItem = new PathItem();
@@ -53,7 +53,7 @@ class SwaggerDefaultConfigurationTest {
         assertErrorResponsesAddedForOperation(operation, pathItem);
     }
 
-    private void assertErrorResponsesAddedForOperation(Operation operation, PathItem pathItem) {
+    private void assertErrorResponsesAddedForOperation(final Operation operation, final PathItem pathItem) {
         Paths paths = new Paths();
         paths.put("/test", pathItem);
 
@@ -68,7 +68,7 @@ class SwaggerDefaultConfigurationTest {
         assertApiResponse(operation.getResponses(), "500");
     }
 
-    private void assertApiResponse(ApiResponses responses, String code) {
+    private void assertApiResponse(final ApiResponses responses, final String code) {
         ApiResponse apiResponse = responses.get(code);
         assertNotNull(apiResponse, "Response for code " + code + " should not be null");
     }

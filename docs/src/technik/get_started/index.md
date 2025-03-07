@@ -73,8 +73,8 @@ flowchart LR
 | dummy.nobezirkid.check | Deaktiviert die Prüfung, dass Anfragen für einen bestimmten Wahlbezirk (wahlbezirkID), nur von dem User des Wahlbezirkes erfolgen dürfen             |
 | dummy.clients          | Es erfolgt keine Kommunikation mit fachlichen Services weil Dummy-Implementierung anstatt von Clients verwendet werden.                              |
 | standalone             | Der Service arbeitet eigenständig. Inkludiert dummy.clients, dummy.nobezirkid.check und db-h2.                                                       |
-| local                  | Das anzeigt dass der Service lokal laufen soll. Entsprechend wird der Port des Services definiert um nicht in Konflikt mit anderen Service zu kommen |
-| plainTextLogging       | Wenn es vorhanden ist sind die Logmeldung einfach Text. Ohne dieses Profil sind die Logmeldungen ein JSON-Objekt                                     |
+| local                  | Der Service läuft lokal. Entsprechend wird der Port des Services definiert um nicht in Konflikt mit anderen Service zu kommen. |
+| plainTextLogging       | Logmeldungen werden als Text ausgegeben. Ohne dieses Profil sind die Logmeldungen ein JSON-Objekt. |
 
 ## Benutzer
 

@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SwaggerDefaultConfiguration {
+
     @Bean
     public GlobalOpenApiCustomizer errorCustomizer() {
         return api -> api.getPaths().values().forEach(path -> path.readOperations()
@@ -22,7 +23,7 @@ public class SwaggerDefaultConfiguration {
     }
 
     // add response based on the behavior of the global exception handler
-    private void addErrorToApi(Operation operation, Components components) {
+    private void addErrorToApi(final Operation operation, final Components components) {
         if (operation.getResponses() != null) {
             addRequestBodyValidationErrorToAPI(operation, components);
             addNotFoundErrorToAPI(operation);

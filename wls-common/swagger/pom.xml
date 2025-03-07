@@ -17,14 +17,25 @@
         <url>${wls.github.url}</url>
         <connection>${wls.github.scm.connection}</connection>
         <developerConnection>${wls.github.scm.connection}</developerConnection>
-      <tag>HEAD</tag>
+        <tag>HEAD</tag>
   </scm>
+    <properties>
+        <wls.common.version>1.4.0-SNAPSHOT</wls.common.version>
+        <com.tngtech.archunit.version>1.4.0</com.tngtech.archunit.version>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
             <artifactId>exception</artifactId>
-            <version>1.2.0</version>
+            <version>${wls.common.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-common</artifactId>
+            <version>2.6.0</version>
             <scope>compile</scope>
         </dependency>
         <!-- Tests -->
@@ -34,10 +45,21 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-common</artifactId>
-            <version>2.6.0</version>
-            <scope>compile</scope>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>testing</artifactId>
+            <version>${wls.common.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit-junit5</artifactId>
+            <version>${com.tngtech.archunit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

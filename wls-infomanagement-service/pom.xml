@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
@@ -37,7 +38,7 @@
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
         <org.springdoc.version>2.6.0</org.springdoc.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
-        <wls.common.version>1.1.0</wls.common.version>
+        <wls.common.version>1.3.0</wls.common.version>
     </properties>
 
     <dependencyManagement>
@@ -284,7 +285,7 @@
         </dependency>
 
     </dependencies>
-    
+
     <scm>
         <url>https://github.com/it-at-m/Wahllokalsystem</url>
         <connection>scm:git:https://github.com/it-at-m/Wahllokalsystem.git</connection>
@@ -437,8 +438,8 @@
                         <eclipse>
                             <file>itm-java-codeformat/java_codestyle_formatter.xml</file>
                         </eclipse>
-                        <trimTrailingWhitespace />
-                        <endWithNewline />
+                        <trimTrailingWhitespace/>
+                        <endWithNewline/>
                     </java>
                 </configuration>
                 <executions>

@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
 public class NestedTestsuitesHaveMatchingMethodCondition {
 
     public static final ArchCondition<JavaClass> haveMatchingPublicMethodNameIfTheyAreHighestNestedClass = new ArchCondition<>(
-            "have matching public method name") {
+            "have matching public method name if they are highest nested class") {
         @Override
         public void check(JavaClass classWithNestedAnnotation, ConditionEvents events) {
             var topNestedClass = getTopNestedClass(classWithNestedAnnotation);

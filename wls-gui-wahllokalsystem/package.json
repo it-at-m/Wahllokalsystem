@@ -56,7 +56,7 @@
     "storybook": "8.5.6",
     "typescript": "5.5.4",
     "unplugin-fonts": "1.1.1",
-    "vite": "5.4.11",
+    "vite": "5.4.12",
     "vite-plugin-pwa": "0.21.1",
     "vite-plugin-vuetify": "2.0.4",
     "vitest": "2.1.9",

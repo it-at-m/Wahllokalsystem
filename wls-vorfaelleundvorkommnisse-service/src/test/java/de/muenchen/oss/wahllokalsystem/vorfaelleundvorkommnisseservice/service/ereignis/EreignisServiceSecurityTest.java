@@ -32,7 +32,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
 public class EreignisServiceSecurityTest {
 
-    @MockBean(name = "bezirkIdPermisionEvaluator")
+    @MockBean
     BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
     @Autowired
@@ -111,7 +111,7 @@ public class EreignisServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} {1} missing")
         @MethodSource("getMissingServiceAuthoritiesVariations")
-        void should_throwAccessDeniedException_whenServiceAuthoritiesMissing(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwAccessDeniedException_when_serviceAuthoritiesMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(ArrayUtils.addAll(Authorities.ALL_REPO_AUTHORITIES_SET_EREIGNISSE, argumentsAccessor.get(0, String[].class)));
             val wahlbezirkID = "wahlbezirkID";
             val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData());

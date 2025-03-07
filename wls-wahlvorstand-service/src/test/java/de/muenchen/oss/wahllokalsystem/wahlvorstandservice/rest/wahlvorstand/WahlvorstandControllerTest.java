@@ -66,7 +66,7 @@ public class WahlvorstandControllerTest {
         }
 
         @Test
-        void should_returnFallbackWahlvorstandDTO_when_WahlvorstandDoesNotExist() {
+        void should_returnFallbackWahlvorstandDTO_when_wahlvorstandDoesNotExist() {
             val wahlbezirkID = "wahlbezirkID";
             val forceUpdate = false;
             val mockedFallbackWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.fallback(wahlbezirkID);

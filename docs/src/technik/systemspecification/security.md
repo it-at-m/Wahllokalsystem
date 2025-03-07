@@ -10,30 +10,30 @@ unter Verwendung des Bearer-Tokens weiterleiten.
 
 ```mermaid
 
-sequenceDiagram    
+sequenceDiagram
     actor User
-    
+
     User->>+Gateway : Anfrage an geschützte Ressource
     Gateway->>-User : Weiterleitung an Login
-    
+
     User->>+AuthService : Loginseite anfordern
     AuthService->>-User : Loginseite
-    
+
     User->>+AuthService : Übermittlung Logindaten
-    
+
     AuthService->>LDAP : Prüfung Userlogin via BIND
     AuthService->>AuthService : Sicherstellen dass User sich anmelden darf
-    
+
     AuthService->>-User: Weiterleiten an `/oauth2/authorize` mit Einmalcode
-    
+
     User->>+AuthService: Aufruf `/oauth2/authorize` mit Einmalcode
     AuthService->>-User: Weiterleiten Gateway mit Einmalcode
-    
+
     User->>+Gateway : /login/oauth2/code mit Einmalcode
     Gateway->>+AuthService : Anfrage nach Token mit Einmalcode
     AuthService->>-Gateway : Bearertoken als JWT
     Gateway->>-User : Setzen von Session-Cookie<br> und Weiterleiten auf geschützte Resource
-    
+
     User->>+Gateway : Anfrage an geschützte Ressource mit Session
     Gateway->>+WlsServiceXYZ : mit Bearer-Token der Session
     WlsServiceXYZ->>+AuthService : Anfrage nach Berechtigungen zu diesem Token

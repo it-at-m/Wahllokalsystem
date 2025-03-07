@@ -4,7 +4,7 @@ import static de.muenchen.oss.wahllokalsystem.adminservice.eai.infomanagement.mo
 import static de.muenchen.oss.wahllokalsystem.adminservice.eai.infomanagement.model.KonfigurierterWahltagDTO.WahltagStatusEnum.INAKTIV;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.KonfigurierterWahltagModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -14,7 +14,14 @@ public interface KonfigurierterWahltagClientMapper {
     @Mapping(target = "wahltagStatus", source = "active")
     KonfigurierterWahltagDTO toDto(KonfigurierterWahltagModel model);
 
+    @Mapping(target = "active", source = "wahltagStatus")
+    KonfigurierterWahltagModel toModel(KonfigurierterWahltagDTO dto);
+
     default KonfigurierterWahltagDTO.WahltagStatusEnum mapModelBooleanActiveToWahltagStatusEnumString(boolean active) {
         return active ? AKTIV : INAKTIV;
+    }
+
+    default boolean mapWahltagStatusEnumStringToModelBooleanActive(KonfigurierterWahltagDTO.WahltagStatusEnum wahltagStatusEnum) {
+        return wahltagStatusEnum == AKTIV;
     }
 }

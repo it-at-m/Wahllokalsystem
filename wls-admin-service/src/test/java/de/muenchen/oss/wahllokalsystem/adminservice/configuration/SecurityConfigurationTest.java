@@ -1,16 +1,21 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.configuration;
 
 import static de.muenchen.oss.wahllokalsystem.adminservice.TestConstants.SPRING_TEST_PROFILE;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.adminservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.KonfigurierterWahltagDTO;
+import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.WahltagStatusDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.rest.wahlen.FarbeDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.rest.wahlen.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.rest.wahlen.WahlartDTO;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag.KonfigurierteWahltageService;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen.WahlenService;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer.WahllokalBenutzerService;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltage.WahltageService;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahltermindatenService;
 import java.time.LocalDate;
@@ -45,6 +50,12 @@ class SecurityConfigurationTest {
 
     @MockBean
     WahltermindatenService wahltermindatenService;
+
+    @MockBean
+    WahllokalBenutzerService wahllokalBenutzerService;
+
+    @MockBean
+    KonfigurierteWahltageService konfigurierteWahltageService;
 
     @MockBean
     WahltageService wahltageService;
@@ -117,6 +128,82 @@ class SecurityConfigurationTest {
             api.perform(request).andExpect(status().isOk());
 
             Mockito.verify(wahltermindatenService).loadWahltermindaten(wahltagID);
+        }
+    }
+
+    @Nested
+    class GenerateWahllokalbenutzer {
+
+        @WithAnonymousUser
+        @Test
+        void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+            val wahltagID = "wahltagID";
+            val request = MockMvcRequestBuilders.post("/businessActions/generateWahllokalbenutzer/" + wahltagID).with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON);
+
+            api.perform(request).andExpect(status().isUnauthorized());
+        }
+
+        @WithMockUser
+        @Test
+        void should_returnOk_when_callingAuthenticated() throws Exception {
+            val wahltagID = "wahltagID";
+            val request = MockMvcRequestBuilders.post("/businessActions/generateWahllokalbenutzer/" + wahltagID).with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON);
+
+            api.perform(request).andExpect(status().isOk());
+
+            Mockito.verify(wahllokalBenutzerService).generateWahllokalbenutzer(wahltagID);
+        }
+    }
+
+    @Nested
+    class GetKonfigurierteWahltage {
+
+        @WithAnonymousUser
+        @Test
+        void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+            val request = MockMvcRequestBuilders.get("/businessActions/konfigurierteWahltage").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON);
+
+            api.perform(request).andExpect(status().isUnauthorized());
+        }
+
+        @WithMockUser
+        @Test
+        void should_returnNoContent_when_callingAuthenticated() throws Exception {
+            val request = MockMvcRequestBuilders.get("/businessActions/konfigurierteWahltage").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON);
+
+            api.perform(request).andExpect(status().isNoContent());
+
+            Mockito.verify(konfigurierteWahltageService).getKonfigurierteWahltage();
+        }
+    }
+
+    @Nested
+    class PostKonfigurierterWahltag {
+
+        @WithAnonymousUser
+        @Test
+        void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+            val requestBody = new KonfigurierterWahltagDTO(LocalDate.now(), "wahltagID", WahltagStatusDTO.AKTIV, "0");
+            val request = MockMvcRequestBuilders.post("/businessActions/konfigurierterWahltag").with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestBody));
+
+            api.perform(request).andExpect(status().isUnauthorized());
+        }
+
+        @WithMockUser
+        @Test
+        void should_returnNoContent_when_callingAuthenticated() throws Exception {
+            val requestBody = new KonfigurierterWahltagDTO(LocalDate.now(), "wahltagID", WahltagStatusDTO.AKTIV, "0");
+            val request = MockMvcRequestBuilders.post("/businessActions/konfigurierterWahltag").with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestBody));
+
+            api.perform(request).andExpect(status().isOk());
+
+            Mockito.verify(konfigurierteWahltageService).postKonfigurierterWahltag(notNull());
         }
     }
 

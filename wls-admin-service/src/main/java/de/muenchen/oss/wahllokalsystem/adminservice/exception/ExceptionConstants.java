@@ -13,6 +13,8 @@ public class ExceptionConstants {
             "500", "Bei der Kommunikation mit dem Ergebnismeldung-Service kam es zu einem Fehler.");
     public static final ExceptionDataWrapper KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT = new ExceptionDataWrapper(
             "300", "Bei der Kommunikation mit dem Infomanagement-Service kam es zu einem Fehler.");
+    public static final ExceptionDataWrapper KOMMUNIKATIONSFEHLER_MIT_AUTH = new ExceptionDataWrapper(
+            "400", "Bei der Kommunikation mit dem Auth-Service kam es zu einem Fehler.");
 
     public static final ExceptionDataWrapper INVALID_ARGUMENT = new ExceptionDataWrapper(
             "166", "Kein Wahltag vorhanden für die angegebene Wahltag-ID");

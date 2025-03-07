@@ -1,0 +1,48 @@
+"documentation":
+  - changed-files:
+      - any-glob-to-any-file: [ 'docs/**' ]
+"service-admin":
+  - changed-files:
+      - any-glob-to-any-file: [ 'wls-admin-service/**' ]
+"service-auth":
+  - changed-files:
+      - any-glob-to-any-file: [ 'wls-auth-service/**' ]
+"service-basisdaten":
+  - changed-files:
+      - any-glob-to-any-file: [ 'wls-basisdaten-service/**' ]
+"service-briefwahl":
+  - changed-files:
+      - any-glob-to-any-file: [ 'wls-briefwahl-service/**' ]
+"service-broadcast":
+  - changed-files:
+      - any-glob-to-any-file: [ 'wls-broadcast-service/**' ]
+"service-eai":
+  - changed-files:
+      - any-glob-to-any-file: [ 'wls-eai-service/**' ]
+"service-ergebnismeldung":
+  - changed-files:
+      - any-glob-to-any-file: [ 'wls-ergebnismeldung-service/**' ]
+"service-gui-admin":
+  - changed-files:
+      - any-glob-to-any-file: [ 'wls-gui-admin/**' ]
+"service-gui-wls":
+  - changed-files:
+      - any-glob-to-any-file: [ 'wls-gui-wahllokalsystem/**' ]
+"service-infomanagement":
+  - changed-files:
+      - any-glob-to-any-file: [ 'wls-infomanagement-service/**' ]
+"service-monitoring":
+  - changed-files:
+      - any-glob-to-any-file: [ 'wls-monitoring-service/**' ]
+"service-vorfaelleundvorkommnisse":
+  - changed-files:
+      - any-glob-to-any-file: [ 'wls-vorfaelleundvorkommnisse-service/**' ]
+"service-wahlvorbereitung":
+  - changed-files:
+      - any-glob-to-any-file: [ 'wls-wahlvorbereitung-service/**' ]
+"service-wahlvorstand":
+  - changed-files:
+      - any-glob-to-any-file: [ 'wls-wahlvorstand-service/**' ]
+"wls-common":
+  - changed-files:
+      - any-glob-to-any-file: [ 'wls-common/**' ]

@@ -5,7 +5,8 @@
     "declarations.d.ts",
     "src/**/*",
     "src/**/*.vue",
-    "tests/**/*.ts"
+    "tests/**/*.ts",
+    "stories/**/*.ts"
   ],
   "compilerOptions": {
     "composite": true,

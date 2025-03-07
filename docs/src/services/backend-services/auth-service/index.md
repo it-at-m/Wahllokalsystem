@@ -18,7 +18,7 @@ erDiagram
     User 1+--0+ Authority : hat
     Authority 1+--0+ Permission : hat
     User 1--|o LoginAttempt : unternahm
-    
+
     User {
         String username
         boolean userEnabled
@@ -31,15 +31,15 @@ erDiagram
         String pin
         String wbid_wahlnummer
     }
-    
+
     Authority {
         String authority
     }
-    
+
     Permission {
         String permission
     }
-    
+
     LoginAttempt {
         int attempts
         LocalDateTime lastModified
@@ -48,7 +48,7 @@ erDiagram
 
 > [!IMPORTANT]
 > Der Benutzername liegt in der Datenbank nur verschlüsselt vor.
- 
+
 ## Prozesse
 
 ### Auswahl Loginmaske
@@ -56,18 +56,18 @@ erDiagram
 ```mermaid
 
 sequenceDiagram
-    
+
     actor User
-    
+
     User->>+AuthService : Request Login
-    
+
     AuthService->>AuthService: bestimme LoginView
     alt LoginView == Wahllokalsystem
         AuthService->>+InfomanagementService : get Willkommenstext Konfiguration
         InfomanagementService->>-AuthService : Willkommenstext
     end
     AuthService->>AuthService: ergänze Werte für View
-    
+
     AuthService->>-User : LoginView
 ```
 
@@ -75,6 +75,7 @@ sequenceDiagram
 
 Damit ein Benutzer sich anmelden darf, müssen zum einen die Logindaten entsprechend LDAP korrekt sein.
 Des Weiteren müssen folgende Regeln beachtet werden:
+
 1. Ist der Nutzer gesperrt?
 1. Falls der Nutzer gesperrt ist, muss die Sperre abgelaufen sein
 1. darf der Nutzer sich nur innerhalb einer bestimmten Zeitspanne einloggen wird der Zeitraum validiert
@@ -102,7 +103,7 @@ Die Benutzer die zuvor für den Wahltermin vorhanden waren werden gelöscht.
 Alle Konfigurationsparameter beginnen mit dem Prefix `service.config`
 
 | Name                                             | Beschreibung                                                                                      | Default                  |
-|--------------------------------------------------|---------------------------------------------------------------------------------------------------|--------------------------|
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------- | ------------------------ |
 | crypto.encryptionPrefix                          | String vor dem verschlüssten Wert. Auf diese Weise sind verschlüsselte Werte erkennbar            | ENCRYPTED:               |
 | crypto.key                                       | Schlüssel zum ver- und entschlüsseln                                                              |                          |
 | falscheLoginZeitstrafe                           | Zeit in Minuten für eine Sperrung                                                                 | 10                       |

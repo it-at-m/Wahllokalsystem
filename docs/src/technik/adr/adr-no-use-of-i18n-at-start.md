@@ -27,7 +27,7 @@ Alle erstellten Komponenten müssten analysiert und die Texte extrahiert und dur
 ### positiv
 
 Die Texte sind direkt in den Komponenten erkennbar was die Verständlichkeit der Komponenten und der Fachdomain erleichtert.
-Es gibt eine Bibliothek weniger, von der wir abhängig sind und die zu Pflegen ist, was die Komplexität geringer hält. 
+Es gibt eine Bibliothek weniger, von der wir abhängig sind und die zu Pflegen ist, was die Komplexität geringer hält.
 
 ### negativ
 

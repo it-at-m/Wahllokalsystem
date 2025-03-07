@@ -1,8 +1,12 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkArtModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkModel;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkeClient;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahltageClient;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.time.LocalDate;

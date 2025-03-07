@@ -35,7 +35,7 @@ public class WaehlerverzeichnisServiceSecurityTest {
     @Autowired
     WaehlerverzeichnisService unitUnderTest;
 
-    @MockBean(name = "bezirkIdPermisionEvaluator")
+    @MockBean
     BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
     @BeforeEach

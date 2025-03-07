@@ -21,7 +21,7 @@ public class WahlbriefdatenService {
 
     @PreAuthorize(
         "hasAuthority('Briefwahl_BUSINESSACTION_GetWahlbriefdaten')"
-                + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
+                + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
     )
     public Optional<WahlbriefdatenModel> getWahlbriefdaten(@P("wahlbezirkID") final String wahlbezirkID) {
         log.info("#getBeanstandeteWahlbriefe");
@@ -32,7 +32,7 @@ public class WahlbriefdatenService {
 
     @PreAuthorize(
         "hasAuthority('Briefwahl_BUSINESSACTION_PostWahlbriefdaten')"
-                + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param?.wahlbezirkID(), authentication)"
+                + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.wahlbezirkID(), authentication)"
     )
     public void setWahlbriefdaten(@P("param") final WahlbriefdatenModel wahlbriefdatenToSet) {
         log.info("#postBeanstandeteWahlbriefe");

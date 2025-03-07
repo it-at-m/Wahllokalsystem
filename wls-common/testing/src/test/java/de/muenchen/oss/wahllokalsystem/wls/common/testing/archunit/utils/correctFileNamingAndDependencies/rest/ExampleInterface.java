@@ -12,5 +12,5 @@ public interface ExampleInterface {
 
     Integer anotherMethodWithOverload();
 
-    List<Integer> AnotherMethodWithOverload(Integer input);
+    List<Integer> anotherMethodWithOverload(Integer input);
 }

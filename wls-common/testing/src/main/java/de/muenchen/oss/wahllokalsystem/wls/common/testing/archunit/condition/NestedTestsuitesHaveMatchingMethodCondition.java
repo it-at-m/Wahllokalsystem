@@ -42,7 +42,7 @@ public class NestedTestsuitesHaveMatchingMethodCondition {
                         events.add(SimpleConditionEvent.violated(classWithNestedAnnotation,
                                 "tested class \"" + nestedTestClassFullname + "\" has no public method matching the nested class name: " + expectedMethodName));
                     }
-                } catch (Exception e) {
+                } catch (ClassNotFoundException e) {
                     events.add(SimpleConditionEvent.violated(classWithNestedAnnotation,
                             "expected class related to test suite not found: " + topEnclosingClass.get().getFullName()));
                 }

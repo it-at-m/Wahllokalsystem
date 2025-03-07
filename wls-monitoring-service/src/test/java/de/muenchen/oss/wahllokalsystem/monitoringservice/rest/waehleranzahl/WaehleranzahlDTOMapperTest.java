@@ -2,9 +2,7 @@ package de.muenchen.oss.wahllokalsystem.monitoringservice.rest.waehleranzahl;
 
 import de.muenchen.oss.wahllokalsystem.monitoringservice.service.waehleranzahl.WaehleranzahlModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
-
 import java.time.LocalDateTime;
-
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;

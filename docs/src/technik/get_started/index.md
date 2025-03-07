@@ -64,17 +64,17 @@ flowchart LR
 
 ## Profile
 
-| Profilname             | Beschreibung                                                                                                                                         |
-|------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| db-h2                  | Als Datenbank wird eine embedded H2 im Service verwendet.                                                                                            |
-| db-oracle              | Als Datenbank wird eine Oracle Datenbank verwendet. Im Standard wird die DB-Datenbank aus dem Stack (Docker) verwendet.                              |
-| db-dummydata           | Es werden Flyway-Files mit Dummydaten für die Datenbank mit verwendet.                                                                               |
-| no-security            | Die Prüfungen der Authentifizierung und Authorisierung werden deaktiviert.                                                                           |
-| dummy.nobezirkid.check | Deaktiviert die Prüfung, dass Anfragen für einen bestimmten Wahlbezirk (wahlbezirkID), nur von dem User des Wahlbezirkes erfolgen dürfen             |
-| dummy.clients          | Es erfolgt keine Kommunikation mit fachlichen Services weil Dummy-Implementierung anstatt von Clients verwendet werden.                              |
-| standalone             | Der Service arbeitet eigenständig. Inkludiert dummy.clients, dummy.nobezirkid.check und db-h2.                                                       |
-| local                  | Der Service läuft lokal. Entsprechend wird der Port des Services definiert um nicht in Konflikt mit anderen Service zu kommen. |
-| plainTextLogging       | Logmeldungen werden als Text ausgegeben. Ohne dieses Profil sind die Logmeldungen ein JSON-Objekt. |
+| Profilname             | Beschreibung                                                                                                                             |
+|------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
+| db-h2                  | Als Datenbank wird eine embedded H2 im Service verwendet.                                                                                |
+| db-oracle              | Als Datenbank wird eine Oracle Datenbank verwendet. Im Standard wird die DB-Datenbank aus dem Stack (Docker) verwendet.                  |
+| db-dummydata           | Es werden Flyway-Files mit Dummydaten für die Datenbank mit verwendet.                                                                   |
+| no-security            | Die Prüfungen der Authentifizierung und Authorisierung werden deaktiviert.                                                               |
+| dummy.nobezirkid.check | Deaktiviert die Prüfung, dass Anfragen für einen bestimmten Wahlbezirk (wahlbezirkID), nur von dem User des Wahlbezirkes erfolgen dürfen |
+| dummy.clients          | Es erfolgt keine Kommunikation mit fachlichen Services weil Dummy-Implementierung anstatt von Clients verwendet werden.                  |
+| standalone             | Der Service arbeitet eigenständig. Inkludiert dummy.clients, dummy.nobezirkid.check und db-h2.                                           |
+| local                  | Der Service läuft lokal. Entsprechend wird der Port des Services definiert um nicht in Konflikt mit anderen Service zu kommen.           |
+| plainTextLogging       | Logmeldungen werden als Text ausgegeben. Ohne dieses Profil sind die Logmeldungen ein JSON-Objekt.                                       |
 
 ## Benutzer
 

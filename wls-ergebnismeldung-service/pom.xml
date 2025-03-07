@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
@@ -36,7 +37,7 @@
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <org.springdoc.version>2.6.0</org.springdoc.version>
-        <wls.common.version>1.2.0</wls.common.version>
+        <wls.common.version>1.3.0</wls.common.version>
     </properties>
 
     <dependencyManagement>
@@ -439,7 +440,8 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.monitoring.0.1.0.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.monitoring.0.1.0.json
+                            </inputSpec>
 
                             <apiPackage>${groupId}.ergebnismeldungservice.eai.monitoring.client</apiPackage>
                             <modelPackage>${groupId}.ergebnismeldungservice.eai.monitoring.model</modelPackage>
@@ -451,7 +453,9 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.infomanagement.0.2.0.json</inputSpec>
+                            <inputSpec>
+                                ${project.basedir}/src/main/resources/openapis/openapi.infomanagement.0.2.0.json
+                            </inputSpec>
 
                             <apiPackage>${groupId}.ergebnismeldungservice.eai.infomanagement.client</apiPackage>
                             <modelPackage>${groupId}.ergebnismeldungservice.eai.infomanagement.model</modelPackage>
@@ -463,7 +467,8 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.basisdaten.0.1.0.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.basisdaten.0.1.0.json
+                            </inputSpec>
 
                             <apiPackage>${project.groupId}.ergebnismeldungservice.eai.basisdaten.client</apiPackage>
                             <modelPackage>${project.groupId}.ergebnismeldungservice.eai.basisdaten.model</modelPackage>
@@ -475,7 +480,9 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.briefwahl.0.0.1-SNAPSHOT.json</inputSpec>
+                            <inputSpec>
+                                ${project.basedir}/src/main/resources/openapis/openapi.briefwahl.0.0.1-SNAPSHOT.json
+                            </inputSpec>
 
                             <apiPackage>${project.groupId}.ergebnismeldungservice.eai.briefwahl.client</apiPackage>
                             <modelPackage>${project.groupId}.ergebnismeldungservice.eai.briefwahl.model</modelPackage>
@@ -487,10 +494,14 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.wahlvorbereitung.0.1.1-Beta1.json</inputSpec>
+                            <inputSpec>
+                                ${project.basedir}/src/main/resources/openapis/openapi.wahlvorbereitung.0.1.1-Beta1.json
+                            </inputSpec>
 
-                            <apiPackage>${project.groupId}.ergebnismeldungservice.eai.wahlvorbereitung.client</apiPackage>
-                            <modelPackage>${project.groupId}.ergebnismeldungservice.eai.wahlvorbereitung.model</modelPackage>
+                            <apiPackage>${project.groupId}.ergebnismeldungservice.eai.wahlvorbereitung.client
+                            </apiPackage>
+                            <modelPackage>${project.groupId}.ergebnismeldungservice.eai.wahlvorbereitung.model
+                            </modelPackage>
                         </configuration>
                     </execution>
                 </executions>
@@ -565,8 +576,8 @@
                         <eclipse>
                             <file>itm-java-codeformat/java_codestyle_formatter.xml</file>
                         </eclipse>
-                        <trimTrailingWhitespace />
-                        <endWithNewline />
+                        <trimTrailingWhitespace/>
+                        <endWithNewline/>
                     </java>
                 </configuration>
                 <executions>

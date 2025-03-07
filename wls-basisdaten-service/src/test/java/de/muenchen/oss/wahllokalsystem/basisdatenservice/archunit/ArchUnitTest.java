@@ -14,17 +14,19 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public class ArchUnitTest {
 
-    private static JavaClasses allServiceClasses;
+    private static JavaClasses allTestClasses;
 
     @BeforeAll
     static void init() {
-        allServiceClasses = new ClassFileImporter().importPackages(MicroServiceApplication.class.getPackage().getName());
+        allTestClasses = new ClassFileImporter()
+                .withImportOption((location) -> location.contains("Test"))
+                .importPackages(MicroServiceApplication.class.getPackage().getName());
     }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("allServiceClassesRulesToVerify")
     void should_verifyArchUnitRuleForAllClassesOfService_when_running(final ArgumentsAccessor arguments) {
-        arguments.get(1, ArchRule.class).check(allServiceClasses);
+        arguments.get(1, ArchRule.class).check(allTestClasses);
     }
 
     public static Stream<Arguments> allServiceClassesRulesToVerify() {

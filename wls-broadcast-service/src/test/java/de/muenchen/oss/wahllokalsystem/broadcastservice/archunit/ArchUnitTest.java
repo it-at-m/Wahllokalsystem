@@ -14,20 +14,22 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public class ArchUnitTest {
 
-    private static JavaClasses allServiceClasses;
+    private static JavaClasses allTestClasses;
 
     @BeforeAll
     static void init() {
-        allServiceClasses = new ClassFileImporter().importPackages(MicroServiceApplication.class.getPackage().getName());
+        allTestClasses = new ClassFileImporter()
+                .withImportOption((location) -> location.contains("Test"))
+                .importPackages(MicroServiceApplication.class.getPackage().getName());
     }
 
     @ParameterizedTest(name = "{0}")
-    @MethodSource("allServiceClassesRulesToVerify")
+    @MethodSource("allTestClassesRulesToVerify")
     void should_verifyArchUnitRuleForAllClassesOfService_when_running(final ArgumentsAccessor arguments) {
-        arguments.get(1, ArchRule.class).check(allServiceClasses);
+        arguments.get(1, ArchRule.class).check(allTestClasses);
     }
 
-    public static Stream<Arguments> allServiceClassesRulesToVerify() {
+    public static Stream<Arguments> allTestClassesRulesToVerify() {
         return Stream.of(
                 Arguments.of("TEST_NAMING_CONVENTION_RULE", MethodRules.RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED));
     }

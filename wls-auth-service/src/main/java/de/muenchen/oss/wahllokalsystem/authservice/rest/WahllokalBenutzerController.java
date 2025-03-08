@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.authservice.rest;
 
 import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,12 @@ public class WahllokalBenutzerController {
     private final UserService userService;
 
     @Operation(
-            description = "Generiert Wahllokalbenutzer zum angegebenen Wahltag. Für jeden Benutzer der angelegt werden soll, muss eine WahllokalUserInfo im Body vorhanden sein. Als Antwort wird eine CSV-Liste mit den generierten Benutzernamen zurückgegeben."
+            description = "Generiert Wahllokalbenutzer zum angegebenen Wahltag. Für jeden Benutzer der angelegt werden soll, muss eine WahllokalUserInfo im Body vorhanden sein. Als Antwort wird eine CSV-Liste mit den generierten Benutzernamen zurückgegeben.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Wahllokalbenutzer wurde erfolgreich angelegt."
+                    )
+            }
     )
     @PostMapping(value = "/generateAndExportWahllokalbenutzer/{wahltagID}")
     @ResponseBody
@@ -41,7 +47,12 @@ public class WahllokalBenutzerController {
         }
     }
 
-    @Operation(description = "Liefert einen CSV-String der alle Wahllokalbenutzernamen zum angegebenen Wahltag enthält.")
+    @Operation(description = "Liefert einen CSV-String der alle Wahllokalbenutzernamen zum angegebenen Wahltag enthält.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Der CSV-String wurde erfolgreich geliefert."
+                    )
+            })
     @GetMapping(value = "/exportWahllokalbenutzer/{wahltagID}")
     @ResponseBody
     public ResponseEntity<String> exportWahllokalBenutzer(@PathVariable("wahltagID") String wahltagID) {
@@ -55,7 +66,11 @@ public class WahllokalBenutzerController {
         }
     }
 
-    @Operation(description = "Löscht alle Wahllokalbenutzer zum angegebenen Wahltag unwiederruflich.")
+    @Operation(description = "Löscht alle Wahllokalbenutzer zum angegebenen Wahltag unwiederruflich.", responses = {
+            @ApiResponse(
+                    responseCode = "200", description = "User erfolgreich gelöscht."
+            )
+    })
     @DeleteMapping(value = "/deleteWahllokalbenutzer/{wahltagID}")
     public void deleteWahllokalBenutzer(@PathVariable("wahltagID") String wahltagID) {
         log.info("Lösche Benutzer für Wahltag-ID <{}>.", wahltagID);

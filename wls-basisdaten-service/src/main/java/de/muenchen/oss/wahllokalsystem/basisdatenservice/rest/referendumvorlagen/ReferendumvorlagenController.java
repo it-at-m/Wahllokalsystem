@@ -1,10 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.referendumvorlagen;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenService;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -26,16 +23,7 @@ public class ReferendumvorlagenController {
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200", description = "OK",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ReferendumvorlagenDTO.class)) }
-                    ),
-                    @ApiResponse(
-                            responseCode = "500", description = "Probleme bei der Kommunikation mit dem externen System von dem die Daten importiert werden",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
-                    ),
-                    @ApiResponse(
-                            responseCode = "204", description = "Keine Daten vom Fremdsystem geliefert",
-                            content = @Content(schema = @Schema())
+                            responseCode = "200", description = "Referendumvorlage erfolgreich zurückgegeben"
                     )
             }
     )

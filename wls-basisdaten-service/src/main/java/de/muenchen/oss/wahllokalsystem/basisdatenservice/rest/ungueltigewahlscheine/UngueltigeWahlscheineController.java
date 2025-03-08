@@ -46,12 +46,7 @@ public class UngueltigeWahlscheineController {
             description = "Abrufen der ungueltigen Wahlscheine eines Wahltages für eine bestimmte Wahlbezirksart. Kommen als Anhang im csv-Format mit den Spalten Nachname, Vorname und Nummer",
             responses = {
                     @ApiResponse(
-                            responseCode = "500", description = "Ungueltige Wahlscheine sind nicht abrufbar. Entweder fehlt es oder es gab technische Probleme",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
-                    ),
-                    @ApiResponse(
-                            responseCode = "400", description = "Anfrageparameter sind fehlerhaft",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
+                            responseCode = "200", description = "Ungueltige Wahlscheine erfolgreich zurückgegeben."
                     )
             }
     )
@@ -70,7 +65,7 @@ public class UngueltigeWahlscheineController {
     @Operation(
             description = "Speichern der ungueltigen Wahlscheine eines Wahltages für eine bestimmte Wahlbezirksart",
             responses = {
-                    @ApiResponse(responseCode = "500", description = "ungueltige Wahlscheine konnten nicht gespeichert werden"),
+                    @ApiResponse(responseCode = "200", description = "Ungueltige Wahlscheine erfolgreich gespeichert."),
                     @ApiResponse(
                             responseCode = "400", description = "Anfrageparameter sind fehlerhaft",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))

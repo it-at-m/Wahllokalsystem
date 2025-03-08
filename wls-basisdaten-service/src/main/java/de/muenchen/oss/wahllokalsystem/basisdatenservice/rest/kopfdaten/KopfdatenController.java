@@ -20,12 +20,14 @@ public class KopfdatenController {
     private final KopfdatenService kopfdatenService;
     private final KopfdatenDTOMapper kopfdatenDTOMapper;
 
-    @Operation(description = "Laden der Kopfdaten für die Wahl {wahlID} für den Wahlbezirk {wahlbezirkID}.",
+    @Operation(
+            description = "Laden der Kopfdaten für die Wahl {wahlID} für den Wahlbezirk {wahlbezirkID}.",
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Kopfdaten erfolgreich zurückgegeben."
                     )
-            })
+            }
+    )
     @GetMapping("/{wahlID}/{wahlbezirkID}")
     public KopfdatenDTO getKopfdaten(@PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID) {
         return kopfdatenDTOMapper.toDTO(

@@ -19,12 +19,14 @@ public class WahltageController {
     private final WahltageService wahltageService;
     private final WahltageDTOMapper wahltageDTOMapper;
 
-    @Operation(description = "Laden der Liste der Wahltage, aufsteigend sortiert nach Wahltag-Datum und nicht länger als 3 Monate in der Vergangenheit.",
+    @Operation(
+            description = "Laden der Liste der Wahltage, aufsteigend sortiert nach Wahltag-Datum und nicht länger als 3 Monate in der Vergangenheit.",
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Wahltage erfolgreich zurückgegeben."
                     )
-            })
+            }
+    )
     @GetMapping
     public List<WahltagDTO> getWahltage() {
         return wahltageDTOMapper.fromListOfWahltagModelToListOfWahltagDTO(wahltageService.getWahltage());

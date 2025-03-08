@@ -20,11 +20,13 @@ public class WahlbezirkeController {
     private final WahlbezirkeService wahlbezirkeService;
     private final WahlbezirkDTOMapper wahlbezirkDTOMapper;
 
-    @Operation(description = "Laden der Liste der Wahlbezirke, die einem vorgegebenen Wahltag (Parameter wahltagID) entsprechen.", responses = {
-            @ApiResponse(
-                    responseCode = "200", description = "Wahlbezirke erfolgreich zurückgegeben."
-            )
-    })
+    @Operation(
+            description = "Laden der Liste der Wahlbezirke, die einem vorgegebenen Wahltag (Parameter wahltagID) entsprechen.", responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Wahlbezirke erfolgreich zurückgegeben."
+                    )
+            }
+    )
     @GetMapping("/{wahltagID}")
     public List<WahlbezirkDTO> getWahlbezirke(@PathVariable("wahltagID") final String wahltagID) {
         return wahlbezirkDTOMapper.fromListOfWahlbezirkModelToListOfWahlbezirkDTO(wahlbezirkeService.getWahlbezirke(wahltagID));

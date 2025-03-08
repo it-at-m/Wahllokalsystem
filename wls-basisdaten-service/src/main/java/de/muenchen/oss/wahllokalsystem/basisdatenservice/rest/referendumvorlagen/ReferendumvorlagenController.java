@@ -2,6 +2,8 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.referendumvorlage
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,10 @@ public class ReferendumvorlagenController {
             value = {
                     @ApiResponse(
                             responseCode = "200", description = "Referendumvorlage erfolgreich zurückgegeben"
+                    ),
+                    @ApiResponse(
+                            responseCode = "204", description = "Keine Daten vom Fremdsystem geliefert",
+                            content = @Content(schema = @Schema())
                     )
             }
     )

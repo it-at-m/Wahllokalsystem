@@ -44,12 +44,14 @@ public class UserController {
         return userServiceModel.map(userDTOMapper::toDTO).orElse(null);
     }
 
-    @Operation(description = "Freischalten eines users.",
+    @Operation(
+            description = "Freischalten eines users.",
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "User erfolgreich freigeschaltet."
                     )
-            })
+            }
+    )
     @RequestMapping(value = "/user/{username}/unlock", method = POST)
     @PreAuthorize("hasAuthority('ROLE_ADMIN_ADMIN')")
     @Transactional

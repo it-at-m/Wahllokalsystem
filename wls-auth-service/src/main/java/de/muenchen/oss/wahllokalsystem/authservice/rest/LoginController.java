@@ -21,7 +21,8 @@ public class LoginController {
 
     private final LoginService loginService;
 
-    @Operation(description = "Liefert die Login Ansicht zurück",
+    @Operation(
+            description = "Liefert die Login Ansicht zurück",
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Login Ansicht erfolgreich geliefert."

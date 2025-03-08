@@ -47,12 +47,14 @@ public class WahllokalBenutzerController {
         }
     }
 
-    @Operation(description = "Liefert einen CSV-String der alle Wahllokalbenutzernamen zum angegebenen Wahltag enthält.",
+    @Operation(
+            description = "Liefert einen CSV-String der alle Wahllokalbenutzernamen zum angegebenen Wahltag enthält.",
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Der CSV-String wurde erfolgreich geliefert."
                     )
-            })
+            }
+    )
     @GetMapping(value = "/exportWahllokalbenutzer/{wahltagID}")
     @ResponseBody
     public ResponseEntity<String> exportWahllokalBenutzer(@PathVariable("wahltagID") String wahltagID) {
@@ -66,11 +68,13 @@ public class WahllokalBenutzerController {
         }
     }
 
-    @Operation(description = "Löscht alle Wahllokalbenutzer zum angegebenen Wahltag unwiederruflich.", responses = {
-            @ApiResponse(
-                    responseCode = "200", description = "User erfolgreich gelöscht."
-            )
-    })
+    @Operation(
+            description = "Löscht alle Wahllokalbenutzer zum angegebenen Wahltag unwiederruflich.", responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "User erfolgreich gelöscht."
+                    )
+            }
+    )
     @DeleteMapping(value = "/deleteWahllokalbenutzer/{wahltagID}")
     public void deleteWahllokalBenutzer(@PathVariable("wahltagID") String wahltagID) {
         log.info("Lösche Benutzer für Wahltag-ID <{}>.", wahltagID);

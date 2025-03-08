@@ -58,7 +58,7 @@ public class WahlenController {
     )
     @PostMapping("/wahlen/{wahltagID}")
     public ResponseEntity<?> updateWahlen(@RequestBody final List<WahlDTO> wahlen,
-                                          @PathVariable("wahltagID") final String wahltagID) {
+            @PathVariable("wahltagID") final String wahltagID) {
         wahlenService.updateWahlen(wahlenDTOMapper.toModelList(wahlen), wahltagID);
         return new ResponseEntity<>(HttpStatus.OK);
     }

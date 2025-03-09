@@ -2,12 +2,10 @@ package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand;
 
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlvorstandModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.WahlvorstandService;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,20 +26,14 @@ public class WahlvorstandController {
     private final WahlvorstandService wahlvorstandService;
     private final WahlvorstandDTOMapper wahlvorstandDTOMapper;
 
-    @Operation(description = "Laden des Wahlvorstandes")
-    @ApiResponses(
-            value = {
+    @Operation(
+            description = "Laden des Wahlvorstandes eines Wahlbezirks { wahlbezirkID }",
+            responses = {
                     @ApiResponse(
-                            responseCode = "200", description = "OK",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WahlvorstandDTO.class)) }
+                            responseCode = "200", description = "Wahlvorstand erfolgreich zurückgegeben.",
                     ),
                     @ApiResponse(
-                            responseCode = "400", description = "Anfrageparameter sind fehlerhaft",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
-                    ),
-                    @ApiResponse(
-                            responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
+                            responseCode = "201", description = "Wahlvorstand konnte nicht gefunden werden sind fehlerhaft"
                     )
             }
     )
@@ -63,22 +55,12 @@ public class WahlvorstandController {
         return okWithBodyOrNoContent(result.map(wahlvorstandDTOMapper::toDTO));
     }
 
-    @Operation(description = "Aktualisieren des Wahlvorstandes")
-    @ApiResponses(
-            value = {
+    @Operation(
+            description = "Aktualisieren des Wahlvorstandes",
+            responses = {
                     @ApiResponse(
-                            responseCode = "200", description = "OK",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WahlvorstandDTO.class)) }
-                    ),
-                    @ApiResponse(
-                            responseCode = "400", description = "Anfrageparameter sind fehlerhaft",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
-                    ),
-                    @ApiResponse(
-                            responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
-                    )
-            }
+                            responseCode = "200", description = "Wahlvorstand erfolgreich gespeichert."
+                    ) }
     )
     @PostMapping("/{wahlbezirkID}")
     public ResponseEntity<?> postWahlvorstand(@PathVariable("wahlbezirkID") final String wahlbezirkID, @RequestBody WahlvorstandWriteDTO wahlvorstandBody) {

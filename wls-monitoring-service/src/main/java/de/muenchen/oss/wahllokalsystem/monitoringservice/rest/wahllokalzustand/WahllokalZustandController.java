@@ -24,7 +24,7 @@ public class WahllokalZustandController {
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Letzte Anwesenheit erfolgreich gespeichert."
-                    )}
+                    ) }
     )
     @PostMapping("/lastSeen/{wahlbezirkID}")
     public void postLastSeen(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
@@ -37,7 +37,7 @@ public class WahllokalZustandController {
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Letzte Abmeldung erfolgreich weiter geleitet."
-                    )}
+                    ) }
     )
     @PostMapping("/letzteAbmeldung/{wahlbezirkID}")
     public void postLetzteAbmeldung(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
@@ -50,7 +50,7 @@ public class WahllokalZustandController {
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Sendungsuhrzeit der Schnellmeldung erfolgreich weiter geleitet."
-                    )}
+                    ) }
     )
     @PostMapping("/schnellmeldungSendungsuhrzeit")
     public void postSchnellmeldungSendungsuhrzeit(@RequestBody SendungsdatenDTO sendungsdatenDTO) {
@@ -63,7 +63,7 @@ public class WahllokalZustandController {
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Druckuhrzeit der Schnellmeldung erfolgreich weiter geleitet."
-                    )}
+                    ) }
     )
     @PostMapping("/schnellmeldungDruckuhrzeit")
     public void postSchnellmeldungDruckuhrzeit(@RequestBody DruckdatenDTO druckdatenDTO) {
@@ -76,7 +76,7 @@ public class WahllokalZustandController {
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Sendungsuhrzeit der Niederschrift erfolgreich weiter geleitet."
-                    )}
+                    ) }
     )
     @PostMapping("/niederschriftSendungsuhrzeit")
     public void postNiederschriftSendungsuhrzeit(@RequestBody SendungsdatenDTO sendungsdatenDTO) {
@@ -89,7 +89,7 @@ public class WahllokalZustandController {
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Druckuhrzeit der Niederschrift erfolgreich weiter geleitet."
-                    )}
+                    ) }
     )
     @PostMapping("/niederschriftDruckuhrzeit")
     public void postNiederschriftDruckuhrzeit(@RequestBody DruckdatenDTO druckdatenDTO) {

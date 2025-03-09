@@ -4,6 +4,7 @@ import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.AbstractCont
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.waehlerverzeichnis.WaehlerverzeichnisService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,11 @@ public class WaehlerverzeichnisController extends AbstractController {
     @PostMapping("{wahlbezirkID}/{wvzNummer}")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(
-            description = "Speichern der Angaben über das Wählerverzeichnis des Urnenwahllokals {wahlbezirkID}. Wird je aktivem Wählerverzeichnis einmal gespeichert und per wvzNummer dem jeweiligen zugeordnet."
+            description = "Speichern der Angaben über das Wählerverzeichnis des Urnenwahllokals {wahlbezirkID}. Wird je aktivem Wählerverzeichnis einmal gespeichert und per wvzNummer dem jeweiligen zugeordnet.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Angaben über das Wählerverzeichnis des Urnenwahllokals erfolgreich gespeichert."
+                    ) }
     )
     public void postWaehlerverzeichnis(@PathVariable("wahlbezirkID") final String wahlbezirkID, @PathVariable("wvzNummer") final long wvzNummer,
             @RequestBody final WaehlerverzeichnisWriteDTO requestBody) {
@@ -37,7 +42,13 @@ public class WaehlerverzeichnisController extends AbstractController {
     }
 
     @GetMapping("{wahlbezirkID}/{wvzNummer}")
-    @Operation(description = "Angaben über das Wählerverzeichnis des Urnenwahllokals {wahlbezirkID}")
+    @Operation(
+            description = "Angaben über das Wählerverzeichnis des Urnenwahllokals {wahlbezirkID}",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Wählerverzeichnis erfolgreich zurückgegeben."
+                    ) }
+    )
     public ResponseEntity<WaehlerverzeichnisDTO> getWaehlerverzeichnis(@PathVariable("wahlbezirkID") final String wahlbezirkID,
             @PathVariable("wvzNummer") final long wvzNummer) {
         val waehlerverzeichnisModel = waehlerverzeichnisService.getWaehlerverzeichnis(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, wvzNummer));

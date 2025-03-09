@@ -37,7 +37,7 @@
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
         <org.springdoc.version>2.6.0</org.springdoc.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
-        <wls.common.version>1.2.0</wls.common.version>
+        <wls.common.version>1.4.0</wls.common.version>
     </properties>
 
     <dependencyManagement>
@@ -160,6 +160,11 @@
         <dependency>
             <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
             <artifactId>security</artifactId>
+            <version>${wls.common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>swagger</artifactId>
             <version>${wls.common.version}</version>
         </dependency>
 

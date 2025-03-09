@@ -54,7 +54,7 @@ public class WahldatenController {
     }
 
     @Operation(
-            description = "Sucht alle Wahlbezirke für einen bestimmten Wahltag und eine Nummer. ",
+            description = "Sucht alle Wahlbezirke für einen bestimmten Wahltag und eine Nummer.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Liste aller Wahlbezirke erfolgreich zurückgegeben.")
             }

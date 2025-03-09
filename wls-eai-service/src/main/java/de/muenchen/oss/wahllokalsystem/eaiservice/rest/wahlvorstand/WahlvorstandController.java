@@ -25,7 +25,7 @@ public class WahlvorstandController {
             description = "Abrufen des Wahlvorstandes für einen bestimmten Wahlbezirk",
             responses = {
                     @ApiResponse(
-                            responseCode = "200", description = "Wahlvorstand erfolgreich zurückgegeben"
+                            responseCode = "200", description = "Wahlvorstand erfolgreich zurückgegeben."
                     ) }
     )
     public WahlvorstandDTO loadWahlvorstand(final @RequestParam("wahlbezirkID")
@@ -37,7 +37,7 @@ public class WahlvorstandController {
     @Operation(
             description = "Aktualisieren der Anwesenheit der Wahlvorstandsmitglieder eines bestimmten Wahlbezirkes", responses = {
                     @ApiResponse(
-                            responseCode = "200", description = "Anwesenheit erfolgreich gespeichert"
+                            responseCode = "200", description = "Anwesenheit erfolgreich gespeichert."
                     ) }
     )
     public void saveAnwesenheit(@RequestBody WahlvorstandsaktualisierungDTO wahlvorstand) {

@@ -30,7 +30,7 @@ public class WahlvorstandController {
             description = "Laden des Wahlvorstandes eines Wahlbezirks { wahlbezirkID }",
             responses = {
                     @ApiResponse(
-                            responseCode = "200", description = "Wahlvorstand erfolgreich zurückgegeben.",
+                            responseCode = "200", description = "Wahlvorstand erfolgreich zurückgegeben."
                     ),
                     @ApiResponse(
                             responseCode = "201", description = "Wahlvorstand konnte nicht gefunden werden sind fehlerhaft"

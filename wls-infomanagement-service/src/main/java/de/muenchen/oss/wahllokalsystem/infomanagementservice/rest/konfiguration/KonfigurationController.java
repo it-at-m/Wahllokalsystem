@@ -74,6 +74,7 @@ public class KonfigurationController {
             description = "Gibt eine Konfiguration anhand der Loginzeit { key } zurück.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Konfigurationen erfolgreich geladen."),
+                    @ApiResponse(responseCode = "200", description = "Keine Konfiguration für den { key } vorhanden."),
             }
     )
     @GetMapping("/konfigurationUnauthorized/{key}")

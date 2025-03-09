@@ -27,7 +27,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         scanBasePackages = {
                 "org.springframework.data.jpa.convert.threeten",
                 "de.muenchen.oss.wahllokalsystem.eaiservice",
-                "de.muenchen.oss.wahllokalsystem.wls.common.exception"
+                "de.muenchen.oss.wahllokalsystem.wls.common.exception",
+                "de.muenchen.oss.wahllokalsystem.wls.common.swagger"
         }
 )
 public class MicroServiceApplication {

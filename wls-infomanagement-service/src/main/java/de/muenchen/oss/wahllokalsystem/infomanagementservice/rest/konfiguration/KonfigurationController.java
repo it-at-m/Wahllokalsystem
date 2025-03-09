@@ -41,7 +41,7 @@ public class KonfigurationController {
     }
 
     @Operation(
-            description = "Speichert die Konfiguration { key } zurück.",
+            description = "Speichert die Konfiguration { key }.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Konfiguration erfolgreich gespeichert."),
             }
@@ -85,7 +85,7 @@ public class KonfigurationController {
     }
 
     @Operation(
-            description = "Gibt die Objekt mit einer Liste alle Kennbuchstaben zurück .",
+            description = "Gibt die Objekt mit einer Liste aller Kennbuchstaben zurück .",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Objekt mit Liste aller Kennbuchstaben erfolgreich geladen."),
             }

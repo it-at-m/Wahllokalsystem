@@ -28,11 +28,11 @@ public class EreignisController {
 
     private final EreignisService ereignisService;
 
-    @Operation(description = "Laden der Ereignisse des Wahllokals {wahlbezirkID}")
+    @Operation(description = "Laden der Ereignisse des Wahllokals {wahlbezirkID}.")
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200", description = "Ergebnisse des Wahllokals erfolgreich geladen",
+                            responseCode = "200", description = "Ergebnisse des Wahllokals erfolgreich geladen.",
                             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WahlbezirkEreignisseDTO.class)) }
                     ),
                     @ApiResponse(
@@ -47,7 +47,7 @@ public class EreignisController {
         return okWithBodyOrNoContent(ereignisFromService.map(ereignisDTOMapper::toDTO));
     }
 
-    @Operation(description = "Speichern der Ereignisse des Wahllokals {wahlbezirkID}")
+    @Operation(description = "Speichern der Ereignisse des Wahllokals {wahlbezirkID}.")
     @ApiResponses(
             value = {
                     @ApiResponse(

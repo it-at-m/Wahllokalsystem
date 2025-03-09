@@ -1,7 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis;
 
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisService;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,20 +32,12 @@ public class EreignisController {
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200", description = "OK",
+                            responseCode = "200", description = "Ergebnisse des Wahllokals erfolgreich geladen",
                             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WahlbezirkEreignisseDTO.class)) }
                     ),
                     @ApiResponse(
                             responseCode = "204", description = "Keine Daten vom Fremdsystem geliefert",
                             content = @Content(schema = @Schema())
-                    ),
-                    @ApiResponse(
-                            responseCode = "400", description = "Anfrageparameter sind fehlerhaft",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
-                    ),
-                    @ApiResponse(
-                            responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
                     )
             }
     )
@@ -62,14 +53,6 @@ public class EreignisController {
                     @ApiResponse(
                             responseCode = "200", description = "OK",
                             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WahlbezirkEreignisseDTO.class)) }
-                    ),
-                    @ApiResponse(
-                            responseCode = "400", description = "Anfrageparameter sind fehlerhaft",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
-                    ),
-                    @ApiResponse(
-                            responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
                     )
             }
     )

@@ -85,7 +85,7 @@ public class KonfigurationController {
     }
 
     @Operation(
-            description = "Gibt die Objekt mit einer Liste aller Kennbuchstaben zurück .",
+            description = "Gibt die Objekt mit einer Liste aller Kennbuchstaben zurück.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Objekt mit Liste aller Kennbuchstaben erfolgreich geladen."),
             }

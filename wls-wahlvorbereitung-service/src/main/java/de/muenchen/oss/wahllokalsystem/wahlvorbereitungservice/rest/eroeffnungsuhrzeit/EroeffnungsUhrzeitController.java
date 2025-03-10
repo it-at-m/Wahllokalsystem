@@ -28,7 +28,7 @@ public class EroeffnungsUhrzeitController extends AbstractController {
             description = "Laden der Eroeffnungsuhrzeit des Wahllokals {wahlbezirkID}",
             responses = {
                     @ApiResponse(
-                            responseCode = "200", description = "Eroeffnungsuhrzeit erfolgreich zurückgegeben."
+                            responseCode = "200", description = "Eroeffnungsuhrzeit erfolgreich gespeichert."
                     ) }
     )
     @GetMapping("{wahlbezirkID}")

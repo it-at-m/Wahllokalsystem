@@ -26,15 +26,16 @@ public class WaehlerverzeichnisController extends AbstractController {
 
     private final WaehlerverzeichnisService waehlerverzeichnisService;
 
-    @PostMapping("{wahlbezirkID}/{wvzNummer}")
-    @ResponseStatus(HttpStatus.CREATED)
+
     @Operation(
             description = "Speichern der Angaben über das Wählerverzeichnis des Urnenwahllokals {wahlbezirkID}. Wird je aktivem Wählerverzeichnis einmal gespeichert und per wvzNummer dem jeweiligen zugeordnet.",
             responses = {
                     @ApiResponse(
-                            responseCode = "200", description = "Angaben über das Wählerverzeichnis des Urnenwahllokals erfolgreich gespeichert."
+                            responseCode = "201", description = "Angaben über das Wählerverzeichnis des Urnenwahllokals erfolgreich gespeichert."
                     ) }
     )
+    @PostMapping("{wahlbezirkID}/{wvzNummer}")
+    @ResponseStatus(HttpStatus.CREATED)
     public void postWaehlerverzeichnis(@PathVariable("wahlbezirkID") final String wahlbezirkID, @PathVariable("wvzNummer") final long wvzNummer,
             @RequestBody final WaehlerverzeichnisWriteDTO requestBody) {
         val modelToSet = waehlerverzeichnisDTOMapper.toModel(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, wvzNummer), requestBody);
@@ -47,7 +48,10 @@ public class WaehlerverzeichnisController extends AbstractController {
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Wählerverzeichnis erfolgreich zurückgegeben."
-                    ) }
+                    ),
+                    @ApiResponse(
+                    responseCode = "204", description = "Kein Wählerverzeichnis für den angegebenen Wahlbezirk und die Wählerverzeichnisnummer gefunden."
+            )  }
     )
     public ResponseEntity<WaehlerverzeichnisDTO> getWaehlerverzeichnis(@PathVariable("wahlbezirkID") final String wahlbezirkID,
             @PathVariable("wvzNummer") final long wvzNummer) {

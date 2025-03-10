@@ -31,7 +31,7 @@ public class WahlvorstandController {
                             responseCode = "200", description = "Wahlvorstand erfolgreich zurückgegeben."
                     ),
                     @ApiResponse(
-                            responseCode = "201", description = "Wahlvorstand konnte nicht gefunden werden."
+                            responseCode = "204", description = "Wahlvorstand konnte nicht gefunden werden."
                     )
             }
     )

@@ -37,31 +37,34 @@ public class NestedTestsuitesHaveMatchingMethodCondition extends ArchCondition<J
         var topNestedClass = getTopNestedClass(classWithNestedAnnotation);
         var topEnclosingClass = getTopEnclosingClass(classWithNestedAnnotation);
 
-        if (topEnclosingClass.isPresent()) {
-            try {
-                val testSuiteClassFullName = topEnclosingClass.get().getFullName();
-                // exclude specific testfiles from @nested naming convention
-                if (testFilesExcludedFromNestedConvention.stream().anyMatch(testSuiteClassFullName::endsWith)) {
-                    return;
-                }
+        // only check rule for topNestedClasses
+        if (topNestedClass.equals(classWithNestedAnnotation)) {
+            if (topEnclosingClass.isPresent()) {
+                try {
+                    val testSuiteClassFullName = topEnclosingClass.get().getFullName();
+                    // exclude specific testfiles from @nested naming convention
+                    if (testFilesExcludedFromNestedConvention.stream().anyMatch(testSuiteClassFullName::endsWith)) {
+                        return;
+                    }
 
-                val testedClassFullName = testSuiteClassFullName.substring(0, testSuiteClassFullName.lastIndexOf("Test"));
-                val testedClass = Class.forName(testedClassFullName);
+                    val testedClassFullName = testSuiteClassFullName.substring(0, testSuiteClassFullName.lastIndexOf("Test"));
+                    val testedClass = Class.forName(testedClassFullName);
 
-                val expectedMethodName = StringUtils.uncapitalize(topNestedClass.getSimpleName());
-                val testedClassHasPublicMehodMatchingNestedClassName = Arrays.stream(testedClass.getMethods())
-                        .anyMatch(method -> method.getName().equals(expectedMethodName));
+                    val expectedMethodName = StringUtils.uncapitalize(topNestedClass.getSimpleName());
+                    val testedClassHasPublicMehodMatchingNestedClassName = Arrays.stream(testedClass.getMethods())
+                            .anyMatch(method -> method.getName().equals(expectedMethodName));
 
-                if (!testedClassHasPublicMehodMatchingNestedClassName) {
+                    if (!testedClassHasPublicMehodMatchingNestedClassName) {
+                        events.add(SimpleConditionEvent.violated(classWithNestedAnnotation,
+                                "tested class \"" + testSuiteClassFullName + "\" has no public method matching the nested class name: " + expectedMethodName));
+                    }
+                } catch (final ClassNotFoundException e) {
                     events.add(SimpleConditionEvent.violated(classWithNestedAnnotation,
-                            "tested class \"" + testSuiteClassFullName + "\" has no public method matching the nested class name: " + expectedMethodName));
+                            "expected class related to test suite not found: " + topEnclosingClass.get().getFullName()));
                 }
-            } catch (final ClassNotFoundException e) {
-                events.add(SimpleConditionEvent.violated(classWithNestedAnnotation,
-                        "expected class related to test suite not found: " + topEnclosingClass.get().getFullName()));
+            } else {
+                events.add(SimpleConditionEvent.violated(classWithNestedAnnotation, "nested annotation is not on an inner class"));
             }
-        } else {
-            events.add(SimpleConditionEvent.violated(classWithNestedAnnotation, "nested annotation is not on an inner class"));
         }
     }
 

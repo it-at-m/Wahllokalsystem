@@ -60,7 +60,7 @@ public class NestedTestsuitesHaveMatchingMethodCondition extends ArchCondition<J
                     events.add(SimpleConditionEvent.violated(classWithNestedAnnotation,
                             "tested class \"" + nestedTestClassFullname + "\" has no public method matching the nested class name: " + expectedMethodName));
                 }
-            } catch (ClassNotFoundException e) {
+            } catch (final ClassNotFoundException e) {
                 events.add(SimpleConditionEvent.violated(classWithNestedAnnotation,
                         "expected class related to test suite not found: " + topEnclosingClass.get().getFullName()));
             }

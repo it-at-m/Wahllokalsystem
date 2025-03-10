@@ -11,6 +11,7 @@ class MicroServiceApplicationIntegratedIntegrationTest {
 
     @Test
     void should_throwNoException_when_serviceIsStartedWithNoDummyRestClients() {
-
+        //no special assertions. Just check if the microservice starts with given non-dummy rest client
+        //introduced for #902
     }
 }

@@ -1,7 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.rest.wahllokalbenutzer;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer.WahllokalBenutzerService;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,10 +32,6 @@ public class WahllokalBenutzerController {
                     @ApiResponse(
                             responseCode = "200", description = "Benutzer erfolgreich generiert.",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = CsvFileDTO.class))
-                    ),
-                    @ApiResponse(
-                            responseCode = "400", description = "Benutzer können nicht generiert werden.",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
                     )
             }
     )
@@ -52,10 +47,6 @@ public class WahllokalBenutzerController {
                     @ApiResponse(
                             responseCode = "200", description = "Benutzer erfolgreich exportiert.",
                             content = { @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CsvFileDTO.class))) }
-                    ),
-                    @ApiResponse(
-                            responseCode = "400", description = "Benutzer können nicht exportiert werden.",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
                     )
             }
     )
@@ -68,8 +59,7 @@ public class WahllokalBenutzerController {
     @Operation(description = "Löscht alle Benutzerdaten aller Wahllokale fuer eine WahlId mithilfe einer wahltagID.")
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "200", description = "Benutzer erfolgreich gelöscht."),
-                    @ApiResponse(responseCode = "400", description = "Benutzer können wegen Client-Kommunikationsfehler nicht gelöscht werden.")
+                    @ApiResponse(responseCode = "200", description = "Benutzer erfolgreich gelöscht.")
             }
     )
     @ResponseStatus(HttpStatus.OK)

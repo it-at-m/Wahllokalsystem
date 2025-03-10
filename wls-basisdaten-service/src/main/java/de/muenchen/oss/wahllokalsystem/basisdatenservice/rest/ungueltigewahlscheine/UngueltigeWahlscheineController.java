@@ -65,11 +65,7 @@ public class UngueltigeWahlscheineController {
     @Operation(
             description = "Speichern der ungueltigen Wahlscheine eines Wahltages für eine bestimmte Wahlbezirksart",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Ungueltige Wahlscheine erfolgreich gespeichert."),
-                    @ApiResponse(
-                            responseCode = "400", description = "Anfrageparameter sind fehlerhaft",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
-                    )
+                    @ApiResponse(responseCode = "200", description = "Ungueltige Wahlscheine erfolgreich gespeichert.")
             }
     )
     public void setUngueltigeWahlscheine(@PathVariable("wahltagID") final String wahltagID,

@@ -182,7 +182,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public WlsUserTokenCustomizer wahlbezirkArtTokenCustomizer(final UserService userService) {
+    public WlsUserTokenCustomizer wlsUserTokenCustomizer(final UserService userService) {
         return new WlsUserTokenCustomizer(userService);
     }
 }

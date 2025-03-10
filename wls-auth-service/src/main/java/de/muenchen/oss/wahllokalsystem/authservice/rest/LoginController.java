@@ -1,6 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.authservice.rest;
 
 import de.muenchen.oss.wahllokalsystem.authservice.service.LoginService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,14 @@ public class LoginController {
 
     private final LoginService loginService;
 
+    @Operation(
+            description = "Liefert die Login Ansicht zurück",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Login Ansicht erfolgreich geliefert."
+                    )
+            }
+    )
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView login(HttpServletRequest request, HttpServletResponse response) {
         val loginView = new ModelAndView();

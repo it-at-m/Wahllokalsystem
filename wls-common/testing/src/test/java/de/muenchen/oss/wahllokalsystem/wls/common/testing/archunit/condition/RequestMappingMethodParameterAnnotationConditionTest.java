@@ -30,19 +30,19 @@ class RequestMappingMethodParameterAnnotationConditionTest {
         }
 
         @Test
-        void should_throwNoException_when_RequestParamAnnotationIsGiven() {
+        void should_throwNoException_when_requestParamAnnotationIsGiven() {
             ruleWithConditionUnderTest.check(
                     new ClassFileImporter(List.of(new ImportOption.OnlyIncludeTests())).importClasses(RequestParamAnnotationIsGivenOnParameter.class));
         }
 
         @Test
-        void should_throwNoException_when_RequestBodyAnnotationIsGiven() {
+        void should_throwNoException_when_requestBodyAnnotationIsGiven() {
             ruleWithConditionUnderTest.check(
                     new ClassFileImporter(List.of(new ImportOption.OnlyIncludeTests())).importClasses(RequestBodyAnnotationIsGivenOnParameter.class));
         }
 
         @Test
-        void should_throwNoException_when_RequestHeaderAnnotationIsGiven() {
+        void should_throwNoException_when_requestHeaderAnnotationIsGiven() {
             ruleWithConditionUnderTest.check(
                     new ClassFileImporter(List.of(new ImportOption.OnlyIncludeTests())).importClasses(RequestHeaderAnnotationIsGivenOnParameter.class));
         }

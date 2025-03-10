@@ -1,10 +1,10 @@
-package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.archunit;
+package de.muenchen.oss.wahllokalsystem.wls.common.security.archunit;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.ArchRule;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.OAuth2TokenInterceptor;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,7 +21,7 @@ public class ArchUnitTest {
     static void init() {
         allTestClasses = new ClassFileImporter()
                 .withImportOption(new ImportOption.OnlyIncludeTests())
-                .importPackages(MicroServiceApplication.class.getPackage().getName());
+                .importPackages(OAuth2TokenInterceptor.class.getPackage().getName());
     }
 
     @ParameterizedTest(name = "{0}")
@@ -31,8 +31,6 @@ public class ArchUnitTest {
     }
 
     public static Stream<Arguments> allTestClassesRulesToVerify() {
-        return Stream.of(
-                Arguments.of("TEST_NAMING_CONVENTION_RULE", MethodRules.RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED),
-                Arguments.of("RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED", MethodRules.RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED));
+        return Stream.of(Arguments.of("RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED", MethodRules.RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED));
     }
 }

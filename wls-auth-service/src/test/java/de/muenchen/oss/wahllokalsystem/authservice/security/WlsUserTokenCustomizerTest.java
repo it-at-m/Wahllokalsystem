@@ -24,13 +24,13 @@ import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 
 @ExtendWith(MockitoExtension.class)
-class WahlbezirkArtTokenCustomizerTest {
+class WlsUserTokenCustomizerTest {
 
     @Mock
     UserService userService;
 
     @InjectMocks
-    WahlbezirkArtTokenCustomizer unitUnderTest;
+    WlsUserTokenCustomizer unitUnderTest;
 
     @Nested
     class Customize {
@@ -64,6 +64,44 @@ class WahlbezirkArtTokenCustomizerTest {
             unitUnderTest.customize(jwtContext);
 
             jwtContext.getClaims().claims(claims -> Assertions.assertThat(claims).contains(Assertions.entry("wahlbezirksArt", wahlbezirkArt)));
+        }
+
+        @Test
+        void should_addWahlbezirkIDOfUser_when_tokenTypeIsAccessTokenAndUserIsFound() {
+            val username = "username";
+            val wahlbezirkID = "wahlbezirkID";
+
+            val jwtContext = JwtEncodingContext.with(JwsHeader.with(MacAlgorithm.HS256), JwtClaimsSet.builder()).context(context -> {
+                context.put(OAuth2TokenType.class, OAuth2TokenType.ACCESS_TOKEN);
+                context.put(Authentication.class.getName().concat(".PRINCIPAL"), new TestingAuthenticationToken(username, ""));
+            }).build();
+
+            val mockedUser = new UserModel(username, "", true, "", LocalDate.now(), wahlbezirkID, "", null, "", Collections.emptySet(), "");
+
+            Mockito.when(userService.getUser(username)).thenReturn(Optional.of(mockedUser));
+
+            unitUnderTest.customize(jwtContext);
+
+            jwtContext.getClaims().claims(claims -> Assertions.assertThat(claims).contains(Assertions.entry("wahlbezirkID", wahlbezirkID)));
+        }
+
+        @Test
+        void should_addWbIDWahlnummerOfUser_when_tokenTypeIsAccessTokenAndUserIsFound() {
+            val username = "username";
+            val wbidWahlnummer = "wbidWahlnummer";
+
+            val jwtContext = JwtEncodingContext.with(JwsHeader.with(MacAlgorithm.HS256), JwtClaimsSet.builder()).context(context -> {
+                context.put(OAuth2TokenType.class, OAuth2TokenType.ACCESS_TOKEN);
+                context.put(Authentication.class.getName().concat(".PRINCIPAL"), new TestingAuthenticationToken(username, ""));
+            }).build();
+
+            val mockedUser = new UserModel(username, "", true, "", LocalDate.now(), "", "", null, "", Collections.emptySet(), wbidWahlnummer);
+
+            Mockito.when(userService.getUser(username)).thenReturn(Optional.of(mockedUser));
+
+            unitUnderTest.customize(jwtContext);
+
+            jwtContext.getClaims().claims(claims -> Assertions.assertThat(claims).contains(Assertions.entry("wahlbezirkid_wahlnummer", wbidWahlnummer)));
         }
 
         @Test

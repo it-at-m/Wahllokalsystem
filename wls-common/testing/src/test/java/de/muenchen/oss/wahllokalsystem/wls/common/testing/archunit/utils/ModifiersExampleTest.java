@@ -11,12 +11,12 @@ public class ModifiersExampleTest {
     public class CorrectModifierExamples {
 
         @Test
-        void test123() {
+        void should_test123_when_test456() {
         }
 
         @ParameterizedTest
         @NullSource
-        void test456(String input) {
+        void should_execute_when_running(String input) {
         }
     }
 
@@ -24,16 +24,16 @@ public class ModifiersExampleTest {
     public class WrongModifierExamples {
 
         @Test
-        public void test123() {
+        public void should_abc_when_def() {
         }
 
         @Test
-        protected void test456() {
+        protected void should_a123_when_b456() {
         }
 
         @ParameterizedTest
         @NullSource
-        private void test789(String input) {
+        private void should_a_when_b(String input) {
         }
     }
 }

@@ -1,10 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag.KonfigurierteWahltageService;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -36,12 +33,7 @@ public class KonfigurierteWahltageController {
                             responseCode = "200", description = "Die konfigurierten Wahltage wurden erfolgreich geliefert."
                     ),
                     @ApiResponse(
-                            responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
-                    ),
-                    @ApiResponse(
-                            responseCode = "500", description = "Problem beim Verarbeiten der Anfrage.",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
+                            responseCode = "204", description = "Keine konfigurierten Wahltage vorhanden"
                     )
             }
     )
@@ -61,14 +53,7 @@ public class KonfigurierteWahltageController {
                     @ApiResponse(
                             responseCode = "200", description = "Die konfigurierten Wahltage wurden erfolgreich geliefert."
                     ),
-                    @ApiResponse(
-                            responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
-                    ),
-                    @ApiResponse(
-                            responseCode = "500", description = "Problem beim Verarbeiten der Anfrage.",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
-                    )
+
             }
     )
     @PostMapping("konfigurierterWahltag")

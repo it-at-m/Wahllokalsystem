@@ -32,7 +32,7 @@ public class EreignisController {
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200", description = "Ergebnisse des Wahllokals erfolgreich geladen.",
+                            responseCode = "200", description = "Ereignisse des Wahllokals erfolgreich geladen.",
                             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WahlbezirkEreignisseDTO.class)) }
                     ),
                     @ApiResponse(

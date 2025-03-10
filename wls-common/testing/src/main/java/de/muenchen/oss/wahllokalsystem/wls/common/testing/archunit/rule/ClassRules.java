@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.condition.NestedTestsuitesHaveMatchingMethodCondition.haveMatchingPublicMethodNameIfTheyAreHighestNestedClass;
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.predicate.GetAtLeastOneMethodWithAnnotationPredicate.haveAtLeastOneMethodAnnotetedWithTest;
 
 import com.tngtech.archunit.lang.ArchRule;
 import jakarta.persistence.Embeddable;
@@ -70,12 +71,8 @@ public class ClassRules {
             .that().resideInAnyPackage("..domain..")
             .should().dependOnClassesThat().resideInAnyPackage("..rest..", "..service..");
 
-    public static final ArchRule RULE_FILES_IN_TEST_END_WITH_TEST_CONVENTION_MATCHED = classes()
-            .that().resideInAnyPackage("..test..")
-            .and().resideOutsideOfPackage("..test.utils..")
-            .and().haveSimpleNameNotEndingWith("TestConstants")
-            .and().areNotAnnotatedWith(Nested.class)
-            .should().haveSimpleNameEndingWith("Test");
+    public static final ArchRule RULE_TESTCLASSES_END_WITH_TEST_CONVENTION_MATCHED = classes()
+            .that(haveAtLeastOneMethodAnnotetedWithTest).should().haveSimpleNameEndingWith("Test");
 
     public static final ArchRule RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED = classes()
             .that().areAnnotatedWith(Nested.class).should(haveMatchingPublicMethodNameIfTheyAreHighestNestedClass);

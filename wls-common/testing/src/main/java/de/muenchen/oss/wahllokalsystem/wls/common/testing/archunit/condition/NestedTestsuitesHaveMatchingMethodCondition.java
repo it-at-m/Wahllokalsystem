@@ -11,48 +11,51 @@ import lombok.val;
 import org.junit.jupiter.api.Nested;
 import org.springframework.util.StringUtils;
 
-public class NestedTestsuitesHaveMatchingMethodCondition {
+public class NestedTestsuitesHaveMatchingMethodCondition extends ArchCondition<JavaClass> {
 
-    public static final ArchCondition<JavaClass> haveMatchingPublicMethodNameIfTheyAreHighestNestedClass = new ArchCondition<>(
-            "have matching public method name if they are highest nested class") {
-        @Override
-        public void check(JavaClass classWithNestedAnnotation, ConditionEvents events) {
-            var topNestedClass = getTopNestedClass(classWithNestedAnnotation);
-            val expectedMethodName = StringUtils.uncapitalize(topNestedClass.getSimpleName());
-            var topEnclosingClass = getTopEnclosingClass(classWithNestedAnnotation);
+    public static final ArchCondition<JavaClass> haveMatchingPublicMethodNameIfTheyAreHighestNestedClass = new NestedTestsuitesHaveMatchingMethodCondition();
 
-            if (topEnclosingClass.isPresent()) {
+    public NestedTestsuitesHaveMatchingMethodCondition() {
+        super("have matching public method name if they are highest nested class");
+    }
 
-                // exclude specific testfiles from @nested naming convention
-                String classNameString = topEnclosingClass.map(JavaClass::getFullName).orElse("failed to extract class name");
-                if (exclusions.stream().anyMatch(classNameString::endsWith)) {
-                    return;
-                }
+    @Override
+    public void check(JavaClass classWithNestedAnnotation, ConditionEvents events) {
+        var topNestedClass = getTopNestedClass(classWithNestedAnnotation);
+        val expectedMethodName = StringUtils.uncapitalize(topNestedClass.getSimpleName());
+        var topEnclosingClass = getTopEnclosingClass(classWithNestedAnnotation);
 
-                try {
-                    val nestedTestClassFullname = topEnclosingClass.get().getFullName();
+        if (topEnclosingClass.isPresent()) {
 
-                    val nestedClassNameWithoutTestSuffix = nestedTestClassFullname.substring(0, nestedTestClassFullname.lastIndexOf("Test"));
-                    val testedClass = Class.forName(nestedClassNameWithoutTestSuffix);
-
-                    val testedClassHasPublicMehodMatchingNestedClassName = Arrays.stream(testedClass.getMethods())
-                            .anyMatch(method -> method.getName().equals(expectedMethodName));
-
-                    if (!testedClassHasPublicMehodMatchingNestedClassName) {
-                        events.add(SimpleConditionEvent.violated(classWithNestedAnnotation,
-                                "tested class \"" + nestedTestClassFullname + "\" has no public method matching the nested class name: " + expectedMethodName));
-                    }
-                } catch (ClassNotFoundException e) {
-                    events.add(SimpleConditionEvent.violated(classWithNestedAnnotation,
-                            "expected class related to test suite not found: " + topEnclosingClass.get().getFullName()));
-                }
-            } else {
-                events.add(SimpleConditionEvent.violated(classWithNestedAnnotation, "nested annotation is not on an inner class"));
+            // exclude specific testfiles from @nested naming convention
+            String classNameString = topEnclosingClass.map(JavaClass::getFullName).orElse("failed to extract class name");
+            if (exclusions.stream().anyMatch(classNameString::endsWith)) {
+                return;
             }
-        }
-    };
 
-    private static Optional<JavaClass> getTopEnclosingClass(final JavaClass item) {
+            try {
+                val nestedTestClassFullname = topEnclosingClass.get().getFullName();
+
+                val nestedClassNameWithoutTestSuffix = nestedTestClassFullname.substring(0, nestedTestClassFullname.lastIndexOf("Test"));
+                val testedClass = Class.forName(nestedClassNameWithoutTestSuffix);
+
+                val testedClassHasPublicMehodMatchingNestedClassName = Arrays.stream(testedClass.getMethods())
+                        .anyMatch(method -> method.getName().equals(expectedMethodName));
+
+                if (!testedClassHasPublicMehodMatchingNestedClassName) {
+                    events.add(SimpleConditionEvent.violated(classWithNestedAnnotation,
+                            "tested class \"" + nestedTestClassFullname + "\" has no public method matching the nested class name: " + expectedMethodName));
+                }
+            } catch (ClassNotFoundException e) {
+                events.add(SimpleConditionEvent.violated(classWithNestedAnnotation,
+                        "expected class related to test suite not found: " + topEnclosingClass.get().getFullName()));
+            }
+        } else {
+            events.add(SimpleConditionEvent.violated(classWithNestedAnnotation, "nested annotation is not on an inner class"));
+        }
+    }
+
+    private Optional<JavaClass> getTopEnclosingClass(final JavaClass item) {
         var enclosingClass = item.getEnclosingClass();
         while (enclosingClass.isPresent() && enclosingClass.get().getEnclosingClass().isPresent()) {
             enclosingClass = enclosingClass.get().getEnclosingClass();
@@ -60,7 +63,7 @@ public class NestedTestsuitesHaveMatchingMethodCondition {
         return enclosingClass;
     }
 
-    private static JavaClass getTopNestedClass(final JavaClass item) {
+    private JavaClass getTopNestedClass(final JavaClass item) {
         var currentClass = item;
         JavaClass highestNested = null;
 
@@ -80,7 +83,7 @@ public class NestedTestsuitesHaveMatchingMethodCondition {
         return highestNested;
     }
 
-    private static final Set<String> exclusions = Set.of(
+    private final Set<String> exclusions = Set.of(
             "failed to extract class name",
             "ControllerIntegrationTest",
             "ServiceSecurityTest",

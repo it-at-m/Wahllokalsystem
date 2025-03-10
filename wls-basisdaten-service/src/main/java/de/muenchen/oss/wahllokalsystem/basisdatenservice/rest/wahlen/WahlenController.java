@@ -2,7 +2,6 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenWriteModel;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -35,7 +34,7 @@ public class WahlenController {
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200", description = "OK",
+                            responseCode = "200", description = "Wahlen des Wahltags erfolgreich zurückgegeben",
                             content = { @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = WahlDTO.class))) }
                     )
             }
@@ -49,11 +48,7 @@ public class WahlenController {
     @Operation(
             description = "Speichern einer Liste von Wahlen.",
             responses = {
-                    @ApiResponse(responseCode = "500", description = "Wahlen können nicht gespeichert werden."),
-                    @ApiResponse(
-                            responseCode = "400", description = "Anfrageparameter sind fehlerhaft",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
-                    )
+                    @ApiResponse(responseCode = "200", description = "Wahlen erfolgreich abgespeichert.")
             }
     )
     @ResponseStatus(HttpStatus.OK)

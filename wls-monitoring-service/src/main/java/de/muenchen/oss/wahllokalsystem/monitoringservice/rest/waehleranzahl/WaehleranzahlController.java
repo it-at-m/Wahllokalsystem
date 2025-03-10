@@ -4,6 +4,7 @@ import de.muenchen.oss.wahllokalsystem.monitoringservice.rest.AbstractController
 import de.muenchen.oss.wahllokalsystem.monitoringservice.service.waehleranzahl.WaehleranzahlService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -24,7 +25,13 @@ public class WaehleranzahlController extends AbstractController {
     private final WaehleranzahlService waehleranzahlService;
     private final WaehleranzahlDTOMapper waehleranzahlDTOMapper;
 
-    @Operation(description = "Laden der zuvor gespeicherten Wahlbeteiligung für die Wahl {wahlID} für den Wahlbezirk {wahlbezirkID}.")
+    @Operation(
+            description = "Laden der zuvor gespeicherten Wahlbeteiligung für die Wahl {wahlID} für den Wahlbezirk {wahlbezirkID}.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Wahlbeteiligung für Wahl erfolgreich zurückgegeben."
+                    ) }
+    )
     @GetMapping("/{wahlID}/{wahlbezirkID}")
     ResponseEntity<WaehleranzahlDTO> getWahlbeteiligung(@PathVariable("wahlID") final String wahlID, @PathVariable("wahlbezirkID") final String wahlbezirkID) {
         val waehleranzahlModel = waehleranzahlService.getWahlbeteiligung(new BezirkUndWahlID(wahlID, wahlbezirkID));
@@ -32,7 +39,13 @@ public class WaehleranzahlController extends AbstractController {
         return okWithBodyOrNoContent(waehleranzahlModel.map(waehleranzahlDTOMapper::toDTO));
     }
 
-    @Operation(description = "Speichern und Weiterleiten der Wahlbeteiligung für die Wahl {wahlID} für den Wahlbezirk {wahlbezirkID}.")
+    @Operation(
+            description = "Speichern und Weiterleiten der Wahlbeteiligung für die Wahl {wahlID} für den Wahlbezirk {wahlbezirkID}.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Wahlbeteiligung für die Wahl erfolgreich gespeichert und zurückgegeben."
+                    ) }
+    )
     @PostMapping("/{wahlID}/{wahlbezirkID}")
     public void postWahlbeteiligung(@PathVariable("wahlbezirkID") final String wahlbezirkID, @PathVariable("wahlID") final String wahlID,
             @RequestBody WaehleranzahlDTO waehleranzahl) {

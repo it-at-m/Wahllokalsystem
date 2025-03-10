@@ -24,7 +24,7 @@ class DTOMapperTest {
         }
 
         @Test
-        void should_returnDTO_whenExceptionIsGiven() {
+        void should_returnDTO_when_exceptionIsGiven() {
             val code = "089";
             val serviceName = "dto mapper test";
             val message = "lets check the mapping";
@@ -41,7 +41,7 @@ class DTOMapperTest {
     @ParameterizedTest(name = "expected: {0} input: {1}")
     @MethodSource
     void should_returnWlsExceptionCategory_when_restDTOCategoryIsGiven(final WlsExceptionCategory expectedResult,
-            final de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionCategory categoryToMap) {
+                                                                       final de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionCategory categoryToMap) {
         Assertions.assertThat(unitUnderTest.toDTOCategory(categoryToMap)).isEqualTo(expectedResult);
     }
 

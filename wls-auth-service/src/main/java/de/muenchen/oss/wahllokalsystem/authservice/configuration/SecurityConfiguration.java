@@ -10,7 +10,7 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import de.muenchen.oss.wahllokalsystem.authservice.security.CustomUsernamePasswordAuthenticationFilter;
-import de.muenchen.oss.wahllokalsystem.authservice.security.WahlbezirkArtTokenCustomizer;
+import de.muenchen.oss.wahllokalsystem.authservice.security.WlsUserTokenCustomizer;
 import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -95,22 +95,22 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http, SessionRegistry sessionRegistry) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests.requestMatchers(
-                        // allow access to /actuator/info
-                        AntPathRequestMatcher.antMatcher("/actuator/info"),
-                        // allow access to /actuator/health for OpenShift Health Check
-                        AntPathRequestMatcher.antMatcher("/actuator/health"),
-                        // allow access to /actuator/health/liveness for OpenShift Liveness Check
-                        AntPathRequestMatcher.antMatcher("/actuator/health/liveness"),
-                        // allow access to /actuator/health/readiness for OpenShift Readiness Check
-                        AntPathRequestMatcher.antMatcher("/actuator/health/readiness"),
-                        // allow access to /actuator/metrics for Prometheus monitoring in OpenShift
-                        AntPathRequestMatcher.antMatcher("/actuator/metrics"),
-                        AntPathRequestMatcher.antMatcher("/v3/api-docs/**"),
-                        AntPathRequestMatcher.antMatcher("/swagger-ui/**"),
-                        AntPathRequestMatcher.antMatcher("/"),
-                        AntPathRequestMatcher.antMatcher("/home"),
-                        AntPathRequestMatcher.antMatcher("/css/*"),
-                        AntPathRequestMatcher.antMatcher("/js/*"))
+                                // allow access to /actuator/info
+                                AntPathRequestMatcher.antMatcher("/actuator/info"),
+                                // allow access to /actuator/health for OpenShift Health Check
+                                AntPathRequestMatcher.antMatcher("/actuator/health"),
+                                // allow access to /actuator/health/liveness for OpenShift Liveness Check
+                                AntPathRequestMatcher.antMatcher("/actuator/health/liveness"),
+                                // allow access to /actuator/health/readiness for OpenShift Readiness Check
+                                AntPathRequestMatcher.antMatcher("/actuator/health/readiness"),
+                                // allow access to /actuator/metrics for Prometheus monitoring in OpenShift
+                                AntPathRequestMatcher.antMatcher("/actuator/metrics"),
+                                AntPathRequestMatcher.antMatcher("/v3/api-docs/**"),
+                                AntPathRequestMatcher.antMatcher("/swagger-ui/**"),
+                                AntPathRequestMatcher.antMatcher("/"),
+                                AntPathRequestMatcher.antMatcher("/home"),
+                                AntPathRequestMatcher.antMatcher("/css/*"),
+                                AntPathRequestMatcher.antMatcher("/js/*"))
                         .permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer -> httpSecurityOAuth2ResourceServerConfigurer
@@ -182,7 +182,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public WahlbezirkArtTokenCustomizer wahlbezirkArtTokenCustomizer(final UserService userService) {
-        return new WahlbezirkArtTokenCustomizer(userService);
+    public WlsUserTokenCustomizer wahlbezirkArtTokenCustomizer(final UserService userService) {
+        return new WlsUserTokenCustomizer(userService);
     }
 }

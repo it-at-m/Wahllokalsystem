@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.server.authorization.token.OAuth2Toke
 
 @RequiredArgsConstructor
 @Slf4j
-public class WahlbezirkArtTokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext> {
+public class WlsUserTokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext> {
 
     private final UserService userService;
 
@@ -20,6 +20,7 @@ public class WahlbezirkArtTokenCustomizer implements OAuth2TokenCustomizer<JwtEn
             val user = userService.getUser(context.getPrincipal().getName());
             if (user.isPresent()) {
                 context.getClaims().claims(claims -> claims.put("wahlbezirksArt", user.get().wahlbezirksArt()));
+                context.getClaims().claims(claims -> claims.put("wahlbezirkID", user.get().wahlbezirkID()));
             } else {
                 log.warn("no user found with {}", context.getPrincipal().getName());
             }

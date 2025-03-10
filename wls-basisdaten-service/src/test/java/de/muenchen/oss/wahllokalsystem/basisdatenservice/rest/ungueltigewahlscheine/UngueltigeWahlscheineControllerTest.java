@@ -51,7 +51,7 @@ class UngueltigeWahlscheineControllerTest {
     class GetUngueltigeWahlscheine {
 
         @BeforeEach
-        void setUp() {
+        void setup() {
             unitUnderTest.ungueltigeWahlscheineFileNameSuffix = ".csv";
         }
 

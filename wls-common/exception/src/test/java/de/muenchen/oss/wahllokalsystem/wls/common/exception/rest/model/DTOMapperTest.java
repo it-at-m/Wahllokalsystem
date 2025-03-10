@@ -24,7 +24,7 @@ class DTOMapperTest {
         }
 
         @Test
-        void should_returnDTO_whenExceptionIsGiven() {
+        void should_returnDTO_when_exceptionIsGiven() {
             val code = "089";
             val serviceName = "dto mapper test";
             val message = "lets check the mapping";

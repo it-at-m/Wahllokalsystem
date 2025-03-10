@@ -13,11 +13,25 @@ import org.springframework.util.StringUtils;
 
 public class NestedTestsuitesHaveMatchingMethodCondition extends ArchCondition<JavaClass> {
 
-    public static final ArchCondition<JavaClass> haveMatchingPublicMethodNameIfTheyAreHighestNestedClass = new NestedTestsuitesHaveMatchingMethodCondition();
+    private final Set<String> testFilesExcludedFromNestedConvention;
 
     public NestedTestsuitesHaveMatchingMethodCondition() {
         super("have matching public method name if they are highest nested class");
+        this.testFilesExcludedFromNestedConvention = Set.of(
+                "failed to extract class name",
+                "ControllerIntegrationTest",
+                "ServiceSecurityTest",
+                "SecurityConfigurationTest",
+                "ArchUnitTest",
+                "SwaggerConfigurationTest");
     }
+
+    public NestedTestsuitesHaveMatchingMethodCondition(Set<String> customExclusions) {
+        super("have matching public method name if they are highest nested class");
+        this.testFilesExcludedFromNestedConvention = Set.copyOf(customExclusions);
+    }
+
+    public static final ArchCondition<JavaClass> haveMatchingPublicMethodNameIfTheyAreHighestNestedClass = new NestedTestsuitesHaveMatchingMethodCondition();
 
     @Override
     public void check(JavaClass classWithNestedAnnotation, ConditionEvents events) {
@@ -28,7 +42,7 @@ public class NestedTestsuitesHaveMatchingMethodCondition extends ArchCondition<J
 
             // exclude specific testfiles from @nested naming convention
             String classNameString = topEnclosingClass.map(JavaClass::getFullName).orElse("failed to extract class name");
-            if (exclusions.stream().anyMatch(classNameString::endsWith)) {
+            if (testFilesExcludedFromNestedConvention.stream().anyMatch(classNameString::endsWith)) {
                 return;
             }
 
@@ -82,12 +96,4 @@ public class NestedTestsuitesHaveMatchingMethodCondition extends ArchCondition<J
 
         return highestNested;
     }
-
-    private final Set<String> exclusions = Set.of(
-            "failed to extract class name",
-            "ControllerIntegrationTest",
-            "ServiceSecurityTest",
-            "SecurityConfigurationTest",
-            "ArchUnitTest",
-            "SwaggerConfigurationTest");
 }

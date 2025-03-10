@@ -39,14 +39,14 @@ public class NestedTestsuitesHaveMatchingMethodCondition extends ArchCondition<J
 
         if (topEnclosingClass.isPresent()) {
             try {
-                val nestedTestClassFullname = topEnclosingClass.get().getFullName();
+                val testSuiteClassFullName = topEnclosingClass.get().getFullName();
                 // exclude specific testfiles from @nested naming convention
-                if (testFilesExcludedFromNestedConvention.stream().anyMatch(nestedTestClassFullname::endsWith)) {
+                if (testFilesExcludedFromNestedConvention.stream().anyMatch(testSuiteClassFullName::endsWith)) {
                     return;
                 }
 
-                val nestedClassNameWithoutTestSuffix = nestedTestClassFullname.substring(0, nestedTestClassFullname.lastIndexOf("Test"));
-                val testedClass = Class.forName(nestedClassNameWithoutTestSuffix);
+                val testedClassFullName = testSuiteClassFullName.substring(0, testSuiteClassFullName.lastIndexOf("Test"));
+                val testedClass = Class.forName(testedClassFullName);
 
                 val expectedMethodName = StringUtils.uncapitalize(topNestedClass.getSimpleName());
                 val testedClassHasPublicMehodMatchingNestedClassName = Arrays.stream(testedClass.getMethods())
@@ -54,7 +54,7 @@ public class NestedTestsuitesHaveMatchingMethodCondition extends ArchCondition<J
 
                 if (!testedClassHasPublicMehodMatchingNestedClassName) {
                     events.add(SimpleConditionEvent.violated(classWithNestedAnnotation,
-                            "tested class \"" + nestedTestClassFullname + "\" has no public method matching the nested class name: " + expectedMethodName));
+                            "tested class \"" + testSuiteClassFullName + "\" has no public method matching the nested class name: " + expectedMethodName));
                 }
             } catch (final ClassNotFoundException e) {
                 events.add(SimpleConditionEvent.violated(classWithNestedAnnotation,

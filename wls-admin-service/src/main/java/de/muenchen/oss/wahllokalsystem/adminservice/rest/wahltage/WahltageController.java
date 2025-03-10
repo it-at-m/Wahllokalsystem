@@ -1,10 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.rest.wahltage;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltage.WahltageService;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +31,6 @@ public class WahltageController {
                     @ApiResponse(
                             responseCode = "204", description = "Es existieren keine Wahltage.",
                             content = { @Content() }
-                    ),
-                    @ApiResponse(
-                            responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
                     )
             }
     )

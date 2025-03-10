@@ -41,7 +41,7 @@ class DTOMapperTest {
     @ParameterizedTest(name = "expected: {0} input: {1}")
     @MethodSource
     void should_returnWlsExceptionCategory_when_restDTOCategoryIsGiven(final WlsExceptionCategory expectedResult,
-                                                                       final de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionCategory categoryToMap) {
+            final de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionCategory categoryToMap) {
         Assertions.assertThat(unitUnderTest.toDTOCategory(categoryToMap)).isEqualTo(expectedResult);
     }
 

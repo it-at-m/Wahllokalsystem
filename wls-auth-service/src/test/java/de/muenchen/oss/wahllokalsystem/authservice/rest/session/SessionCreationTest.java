@@ -67,7 +67,7 @@ class SessionCreationTest {
     }
 
     @AfterEach
-    public void tearDown() throws SQLException {
+    public void teardown() throws SQLException {
         purgeSessions();
         if (conn != null && !conn.isClosed()) {
             conn.close();

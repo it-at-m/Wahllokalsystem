@@ -18,7 +18,6 @@ public class NestedTestsuitesHaveMatchingMethodCondition extends ArchCondition<J
     public NestedTestsuitesHaveMatchingMethodCondition() {
         super("have matching public method name if they are highest nested class");
         this.testFilesExcludedFromNestedConvention = Set.of(
-                "failed to extract class name",
                 "ControllerIntegrationTest",
                 "ServiceSecurityTest",
                 "SecurityConfigurationTest",
@@ -39,15 +38,12 @@ public class NestedTestsuitesHaveMatchingMethodCondition extends ArchCondition<J
         var topEnclosingClass = getTopEnclosingClass(classWithNestedAnnotation);
 
         if (topEnclosingClass.isPresent()) {
-
-            // exclude specific testfiles from @nested naming convention
-            String classNameString = topEnclosingClass.map(JavaClass::getFullName).orElse("failed to extract class name");
-            if (testFilesExcludedFromNestedConvention.stream().anyMatch(classNameString::endsWith)) {
-                return;
-            }
-
             try {
                 val nestedTestClassFullname = topEnclosingClass.get().getFullName();
+                // exclude specific testfiles from @nested naming convention
+                if (testFilesExcludedFromNestedConvention.stream().anyMatch(nestedTestClassFullname::endsWith)) {
+                    return;
+                }
 
                 val nestedClassNameWithoutTestSuffix = nestedTestClassFullname.substring(0, nestedTestClassFullname.lastIndexOf("Test"));
                 val testedClass = Class.forName(nestedClassNameWithoutTestSuffix);

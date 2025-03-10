@@ -26,7 +26,6 @@ public class WaehlerverzeichnisController extends AbstractController {
 
     private final WaehlerverzeichnisService waehlerverzeichnisService;
 
-
     @Operation(
             description = "Speichern der Angaben über das Wählerverzeichnis des Urnenwahllokals {wahlbezirkID}. Wird je aktivem Wählerverzeichnis einmal gespeichert und per wvzNummer dem jeweiligen zugeordnet.",
             responses = {
@@ -50,8 +49,9 @@ public class WaehlerverzeichnisController extends AbstractController {
                             responseCode = "200", description = "Wählerverzeichnis erfolgreich zurückgegeben."
                     ),
                     @ApiResponse(
-                    responseCode = "204", description = "Kein Wählerverzeichnis für den angegebenen Wahlbezirk und die Wählerverzeichnisnummer gefunden."
-            )  }
+                            responseCode = "204",
+                            description = "Kein Wählerverzeichnis für den angegebenen Wahlbezirk und die Wählerverzeichnisnummer gefunden."
+                    ) }
     )
     public ResponseEntity<WaehlerverzeichnisDTO> getWaehlerverzeichnis(@PathVariable("wahlbezirkID") final String wahlbezirkID,
             @PathVariable("wvzNummer") final long wvzNummer) {

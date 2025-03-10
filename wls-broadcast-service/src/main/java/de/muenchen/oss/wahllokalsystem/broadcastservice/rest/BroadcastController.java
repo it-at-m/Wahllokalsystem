@@ -28,9 +28,7 @@ public class BroadcastController {
             summary = "Nachricht an alle senden",
             description = "Bietet einen Endpunkt an, der eine Nachricht für alle Wahlbezirke(Wahllokale) bereitstellt.",
             responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Nachricht erfolgreich gesendet."
-                    )
+                    @ApiResponse(responseCode = "200", description = "Nachricht erfolgreich gesendet.")
             }
     )
     @PostMapping(value = BROADCAST_PATH)

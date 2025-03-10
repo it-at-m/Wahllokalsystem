@@ -42,7 +42,7 @@ public class EroeffnungsUhrzeitController extends AbstractController {
             description = "Aktualisiert die Eroeffnungsuhrzeit des Wahllokals {wahlbezirkID}",
             responses = {
                     @ApiResponse(
-                            responseCode = "201", description = "Fortsetzungsuhrzeit erfolgreich gespeichert."
+                            responseCode = "201", description = "Eroeffnungsuhrzeit erfolgreich gespeichert."
                     ) }
     )
     @PostMapping("{wahlbezirkID}")

@@ -21,7 +21,8 @@ public class WahlbezirkeController {
     private final WahlbezirkDTOMapper wahlbezirkDTOMapper;
 
     @Operation(
-            description = "Laden der Liste der Wahlbezirke, die einem vorgegebenen Wahltag (Parameter wahltagID) entsprechen.", responses = {
+            description = "Laden der Liste der Wahlbezirke, die einem vorgegebenen Wahltag (Parameter wahltagID) entsprechen.", 
+            responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Wahlbezirke erfolgreich zurückgegeben."
                     )

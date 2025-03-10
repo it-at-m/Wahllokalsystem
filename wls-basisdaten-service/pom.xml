@@ -173,9 +173,6 @@
             <artifactId>swagger</artifactId>
             <version>${wls.common.version}</version>
         </dependency>
-
-
-
         <!-- Other -->
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>

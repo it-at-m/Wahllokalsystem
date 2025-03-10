@@ -35,7 +35,7 @@ public class AWerteController {
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200", description = "OK",
+                            responseCode = "200", description = "Wahlberechtigten (A-Werte) erfolgreich zurückgegeben.",
                             content = { @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AWerteDTO.class))) }
                     )
             }
@@ -50,7 +50,7 @@ public class AWerteController {
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200", description = "OK",
+                            responseCode = "200", description = "A-Werte erfolgreich synchronisiert.",
                             content = @Content(schema = @Schema())
                     )
             }

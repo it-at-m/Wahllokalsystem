@@ -59,12 +59,10 @@ public class ArchUnitTest {
                 Arguments.of(
                         "RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED",
                         MethodRules.RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED,
-                        allTestClassesBeforeEachConvention)
-                ,
+                        allTestClassesBeforeEachConvention),
                 Arguments.of(
                         "RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED",
                         MethodRules.RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED,
-                        allTestClassesAfterEachConvention)
-        );
+                        allTestClassesAfterEachConvention));
     }
 }

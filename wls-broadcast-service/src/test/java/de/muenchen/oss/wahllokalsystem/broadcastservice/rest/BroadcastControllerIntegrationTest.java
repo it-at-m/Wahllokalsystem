@@ -96,10 +96,10 @@ public class BroadcastControllerIntegrationTest {
             log.debug("#BroadcastControllerIntegrationTest");
             MockHttpServletResponse result;
             result = mvc.perform(
-                            post(BROADCAST_URL)
-                                    .content(TestdataFactory.asJsonString(BROADCAST_MESSAGE_DTO, objectMapper))
-                                    .contentType(MediaType.APPLICATION_JSON_UTF8)
-                                    .accept(MediaType.APPLICATION_JSON))
+                    post(BROADCAST_URL)
+                            .content(TestdataFactory.asJsonString(BROADCAST_MESSAGE_DTO, objectMapper))
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .accept(MediaType.APPLICATION_JSON))
                     .andReturn().getResponse();
 
             int status = result.getStatus();
@@ -111,9 +111,9 @@ public class BroadcastControllerIntegrationTest {
         void should_throwFachlicheWlsException_when_givenWahlbezirkIdIsNull() throws Exception {
             final BroadcastMessageDTO bmDTOIncomplete1 = new BroadcastMessageDTO(null, "Das ist ein Test");
             mvc.perform(post(BROADCAST_URL)
-                            .content(TestdataFactory.asJsonString(bmDTOIncomplete1, objectMapper))
-                            .contentType(MediaType.APPLICATION_JSON_UTF8)
-                            .accept(MediaType.APPLICATION_JSON))
+                    .content(TestdataFactory.asJsonString(bmDTOIncomplete1, objectMapper))
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isBadRequest())
                     .andExpect(result -> {
                         Exception resolvedException = result.getResolvedException();
@@ -130,9 +130,9 @@ public class BroadcastControllerIntegrationTest {
         void should_throwFachlicheWlsException_when_givenMessageIsNull() throws Exception {
             final BroadcastMessageDTO bmDTOIncomplete2 = new BroadcastMessageDTO(Arrays.asList("1", "2", "3", "4"), null);
             mvc.perform(post(BROADCAST_URL)
-                            .content(TestdataFactory.asJsonString(bmDTOIncomplete2, objectMapper))
-                            .contentType(MediaType.APPLICATION_JSON_UTF8)
-                            .accept(MediaType.APPLICATION_JSON))
+                    .content(TestdataFactory.asJsonString(bmDTOIncomplete2, objectMapper))
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isBadRequest())
                     .andExpect(result -> {
                         Exception resolvedException = result.getResolvedException();
@@ -154,9 +154,9 @@ public class BroadcastControllerIntegrationTest {
             log.debug("#GetMessageIntegrationTest");
             messageRepository.save(TestdataFactory.CreateMessageEntity.withCustomParams("123", "Das ist ein Test", LocalDateTime.now()));
             MockHttpServletResponse result = mvc.perform(
-                            get(GETMESSAGE_URL + "123")
-                                    .contentType(MediaType.APPLICATION_JSON_UTF8)
-                                    .accept(MediaType.APPLICATION_JSON))
+                    get(GETMESSAGE_URL + "123")
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .accept(MediaType.APPLICATION_JSON))
                     .andReturn().getResponse();
             String content = result.getContentAsString();
             Message message = objectMapper.readValue(content, Message.class);
@@ -167,7 +167,7 @@ public class BroadcastControllerIntegrationTest {
         void should_throwFachlicheWlsException_when_wahlbezirkIdIsBlank() throws Exception {
             log.debug("#GetMessageIntegrationTestGetParamBlank");
             mvc.perform(get(GETMESSAGE_URL + "   ")
-                            .contentType(MediaType.APPLICATION_JSON))
+                    .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isBadRequest())
                     .andExpect(result -> {
                         Exception resolvedException = result.getResolvedException();
@@ -186,7 +186,7 @@ public class BroadcastControllerIntegrationTest {
             String wahlbezirkID = "";
 
             mvc.perform(get(GETMESSAGE_URL + wahlbezirkID)
-                            .contentType(MediaType.APPLICATION_JSON))
+                    .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isInternalServerError())
                     .andExpect(result -> {
                         String actualStringResponse = result.getResponse().getContentAsString();
@@ -199,7 +199,7 @@ public class BroadcastControllerIntegrationTest {
         void should_throwFachlicheWlsException_when_noMessageFound() throws Exception {
             log.debug("#GetMessageNoContentIntegrationTest");
             mvc.perform(get(GETMESSAGE_URL + "123")
-                            .contentType(MediaType.APPLICATION_JSON))
+                    .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNoContent())
                     .andExpect(result -> {
                         Exception resolvedException = result.getResolvedException();
@@ -229,8 +229,8 @@ public class BroadcastControllerIntegrationTest {
             Assertions.assertThat(foundMessage).isNotNull();
 
             MockHttpServletResponse result = mvc.perform(
-                            post(DELETE_URL + foundMessage.getOid())
-                                    .contentType(MediaType.APPLICATION_JSON_UTF8).accept(MediaType.APPLICATION_JSON))
+                    post(DELETE_URL + foundMessage.getOid())
+                            .contentType(MediaType.APPLICATION_JSON_UTF8).accept(MediaType.APPLICATION_JSON))
                     .andReturn().getResponse();
 
             int status = result.getStatus();
@@ -246,8 +246,8 @@ public class BroadcastControllerIntegrationTest {
         void should_throwFachlicheWlsException_when_givenBadFormatUUID() throws Exception {
             log.debug("#deleteIntegrationTestBadFormatUUID");
             mvc.perform(post(DELETE_URL + "badformatparam-u-u-i-d")
-                            .contentType(MediaType.APPLICATION_JSON_UTF8)
-                            .accept(MediaType.APPLICATION_JSON))
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isBadRequest())
                     .andExpect(result -> {
                         Exception resolvedException = result.getResolvedException();

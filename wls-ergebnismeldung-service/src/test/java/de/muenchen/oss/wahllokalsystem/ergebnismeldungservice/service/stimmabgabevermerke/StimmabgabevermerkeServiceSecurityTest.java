@@ -101,7 +101,7 @@ public class StimmabgabevermerkeServiceSecurityTest {
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), any())).thenReturn(false);
 
             Assertions.assertThatThrownBy(
-                            () -> stimmabgabevermerkeService.postStimmabgabevermerke(id, createSavableModel(id)))
+                    () -> stimmabgabevermerkeService.postStimmabgabevermerke(id, createSavableModel(id)))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
@@ -116,7 +116,7 @@ public class StimmabgabevermerkeServiceSecurityTest {
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), any())).thenReturn(true);
 
             Assertions.assertThatThrownBy(
-                            () -> stimmabgabevermerkeService.postStimmabgabevermerke(id, createSavableModel(id)))
+                    () -> stimmabgabevermerkeService.postStimmabgabevermerke(id, createSavableModel(id)))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
@@ -131,7 +131,7 @@ public class StimmabgabevermerkeServiceSecurityTest {
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), any())).thenReturn(true);
 
             Assertions.assertThatThrownBy(
-                            () -> stimmabgabevermerkeService.postStimmabgabevermerke(id, createSavableModel(id)))
+                    () -> stimmabgabevermerkeService.postStimmabgabevermerke(id, createSavableModel(id)))
                     .isInstanceOf(TechnischeWlsException.class);
         }
 

@@ -21,6 +21,7 @@ public class WlsUserTokenCustomizer implements OAuth2TokenCustomizer<JwtEncoding
             if (user.isPresent()) {
                 context.getClaims().claims(claims -> claims.put("wahlbezirksArt", user.get().wahlbezirksArt()));
                 context.getClaims().claims(claims -> claims.put("wahlbezirkID", user.get().wahlbezirkID()));
+                context.getClaims().claims(claims -> claims.put("wahlbezirkid_wahlnummer", user.get().wbid_wahlnummer()));
             } else {
                 log.warn("no user found with {}", context.getPrincipal().getName());
             }

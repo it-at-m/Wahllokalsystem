@@ -1,6 +1,6 @@
 # Broadcast-Service
 
-Dieser Service ermöglicht den Benutzern des Admin-Tools, eine Broadcast-Nachricht über die POST-Methode `broadcast()` an alle Wahllokale zu senden. 
+Dieser Service ermöglicht den Benutzern des Admin-Tools, eine Broadcast-Nachricht über die POST-Methode `broadcast()` an alle Wahllokale zu senden.
 Im [Frontend des Wahllokalsystems](/services/frontend-services/wahllokalsystem/) prüft jedes Wahllokal in regelmäßigen Abständen mit der `getMessage()`-Methode, ob es neue, noch ungelesene Broadcast-Nachrichten gibt, die ihm zugewiesen wurden.
 Wenn dies der Fall ist, wird die Nachricht an das Wahllokal übermittelt. Nach der Empfangsbestätigung wird die entsprechende Nachricht für das betroffene Wahllokal über die POST-Methode `deleteMessage()` gelöscht.
 

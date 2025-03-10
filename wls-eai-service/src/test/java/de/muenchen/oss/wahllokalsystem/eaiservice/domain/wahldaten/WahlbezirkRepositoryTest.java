@@ -28,7 +28,7 @@ class WahlbezirkRepositoryTest {
     WahlbezirkRepository unitUnderTest;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         unitUnderTest.deleteAll();
         stimmzettelgebietRepository.deleteAll();
         wahlRepository.deleteAll();

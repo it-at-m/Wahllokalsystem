@@ -1,10 +1,10 @@
-package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.archunit;
+package de.muenchen.oss.wahllokalsystem.wls.common.exception.archunit;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.ArchRule;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,7 +21,7 @@ public class ArchUnitTest {
     static void init() {
         allTestClasses = new ClassFileImporter()
                 .withImportOption(new ImportOption.OnlyIncludeTests())
-                .importPackages(MicroServiceApplication.class.getPackage().getName());
+                .importPackages(FachlicheWlsException.class.getPackage().getName());
     }
 
     @ParameterizedTest(name = "{0}")

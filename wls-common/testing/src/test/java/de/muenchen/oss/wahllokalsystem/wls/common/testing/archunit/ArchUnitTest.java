@@ -21,6 +21,7 @@ public class ArchUnitTest {
 
     private static JavaClasses allTestClassesNamingConvention;
     private static JavaClasses allTestClassesBeforeEachConvention;
+    private static JavaClasses allTestClassesAfterEachConvention;
 
     @BeforeAll
     static void init() {
@@ -35,6 +36,12 @@ public class ArchUnitTest {
                 .importPackages(SecurityUtils.class.getPackage().getName())
                 // excluding intended negative examples from actual test
                 .that(not(equivalentTo(NamingConventionExamplesTest.ExampleBeforeEachMethodNamesViolatingNamingConventionRule.class)));
+
+        allTestClassesAfterEachConvention = new ClassFileImporter()
+                .withImportOption(new ImportOption.OnlyIncludeTests())
+                .importPackages(SecurityUtils.class.getPackage().getName())
+                // excluding intended negative examples from actual test
+                .that(not(equivalentTo(NamingConventionExamplesTest.ExampleAfterEachMethodNamesViolatingNamingConventionRule.class)));
     }
 
     @ParameterizedTest(name = "{0}")
@@ -52,6 +59,12 @@ public class ArchUnitTest {
                 Arguments.of(
                         "RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED",
                         MethodRules.RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED,
-                        allTestClassesBeforeEachConvention));
+                        allTestClassesBeforeEachConvention)
+                ,
+                Arguments.of(
+                        "RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED",
+                        MethodRules.RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED,
+                        allTestClassesAfterEachConvention)
+        );
     }
 }

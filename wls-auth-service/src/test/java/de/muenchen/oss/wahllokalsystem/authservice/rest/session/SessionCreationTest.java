@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.authservice.rest.session;
 
 import static de.muenchen.oss.wahllokalsystem.authservice.TestConstants.SPRING_TEST_PROFILE;
+
 import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
 import java.net.URI;
@@ -60,7 +61,7 @@ class SessionCreationTest {
     SessionRegistry sessionRegistry;
 
     @BeforeEach
-    public void setUp() throws SQLException {
+    public void setup() throws SQLException {
         conn = DriverManager.getConnection(dataSourceUrl, dataSourceUsername, dataSourcePassword);
         purgeSessions();
     }

@@ -41,7 +41,8 @@ public class BroadcastController {
     @Operation(
             summary = "Letzte Nachricht lesen", description = "Sucht nach der ältesten Nachricht für die gegebene Wahlbezirk-Id und gibt diese zurück.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Nachricht erfolgreich zurückgegeben.")
+                    @ApiResponse(responseCode = "200", description = "Nachricht erfolgreich zurückgegeben."),
+                    @ApiResponse(responseCode = "204", description = "Keine Nachricht vorhanden.")
             }
     )
     @GetMapping(value = MESSAGE_PATH)

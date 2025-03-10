@@ -3,8 +3,6 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlvorschlag;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +25,7 @@ public class WahlvorschlaegeController {
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200", description = "OK",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WahlvorschlaegeDTO.class)) }
+                            responseCode = "200", description = "Wahlvorschläge erfolgreich zurückgegeben."
                     )
             }
     )

@@ -52,7 +52,7 @@ public class EreignisControllerIntegrationTest {
     EreignisModelMapper ereignisModelMapper;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_EREIGNISSE);
         ereignisRepository.deleteAll();
     }

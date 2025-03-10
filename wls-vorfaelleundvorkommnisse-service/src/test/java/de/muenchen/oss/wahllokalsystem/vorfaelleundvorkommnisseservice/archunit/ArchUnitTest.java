@@ -33,6 +33,7 @@ public class ArchUnitTest {
     public static Stream<Arguments> allTestClassesRulesToVerify() {
         return Stream.of(
                 Arguments.of("TEST_NAMING_CONVENTION_RULE", MethodRules.RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED),
-                Arguments.of("RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED", MethodRules.RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED));
+                Arguments.of("RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED", MethodRules.RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED),
+                Arguments.of("TEST_AFTER_EACH_NAMING_CONVENTION_RULE", MethodRules.RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED));
     }
 }

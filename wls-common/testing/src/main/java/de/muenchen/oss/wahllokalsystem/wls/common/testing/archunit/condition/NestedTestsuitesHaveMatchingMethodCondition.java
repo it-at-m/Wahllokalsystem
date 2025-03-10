@@ -22,7 +22,6 @@ public class NestedTestsuitesHaveMatchingMethodCondition extends ArchCondition<J
     @Override
     public void check(JavaClass classWithNestedAnnotation, ConditionEvents events) {
         var topNestedClass = getTopNestedClass(classWithNestedAnnotation);
-        val expectedMethodName = StringUtils.uncapitalize(topNestedClass.getSimpleName());
         var topEnclosingClass = getTopEnclosingClass(classWithNestedAnnotation);
 
         if (topEnclosingClass.isPresent()) {
@@ -39,6 +38,7 @@ public class NestedTestsuitesHaveMatchingMethodCondition extends ArchCondition<J
                 val nestedClassNameWithoutTestSuffix = nestedTestClassFullname.substring(0, nestedTestClassFullname.lastIndexOf("Test"));
                 val testedClass = Class.forName(nestedClassNameWithoutTestSuffix);
 
+                val expectedMethodName = StringUtils.uncapitalize(topNestedClass.getSimpleName());
                 val testedClassHasPublicMehodMatchingNestedClassName = Arrays.stream(testedClass.getMethods())
                         .anyMatch(method -> method.getName().equals(expectedMethodName));
 

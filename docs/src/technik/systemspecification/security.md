@@ -43,7 +43,7 @@ sequenceDiagram
 ```
 
 > [!NOTE]
-> Nutzer des Wahllokalsystems dürfen sich nur innerhalb einer bestimmten Zeit anmelden und nur wenn definierte Wahltag
+> Nutzer des Wahllokalsystems dürfen sich nur innerhalb einer bestimmten Zeit anmelden und nur wenn der definierte Wahltag
 > des Benutzers auch als aktiver Wahltag markiert ist. Nutzer des Admin-Tools
 > dürfen sich zu jeder Zeit anmelden. Um welche Art eines Nutzers es sich handelt, wird anhand von Authorities
 > bestimmt.

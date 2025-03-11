@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag;
+package de.muenchen.oss.wahllokalsystem.adminservice.service.konfiguriertewahltage;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;

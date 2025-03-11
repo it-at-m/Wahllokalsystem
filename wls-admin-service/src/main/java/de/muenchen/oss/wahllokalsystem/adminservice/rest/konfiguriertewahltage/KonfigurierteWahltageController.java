@@ -1,6 +1,6 @@
-package de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag;
+package de.muenchen.oss.wahllokalsystem.adminservice.rest.konfiguriertewahltage;
 
-import de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag.KonfigurierteWahltageService;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.konfiguriertewahltage.KonfigurierteWahltageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.List;

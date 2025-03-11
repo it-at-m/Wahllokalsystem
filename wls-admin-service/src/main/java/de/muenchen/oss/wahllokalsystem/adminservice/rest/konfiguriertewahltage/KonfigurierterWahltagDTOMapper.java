@@ -1,7 +1,7 @@
-package de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag;
+package de.muenchen.oss.wahllokalsystem.adminservice.rest.konfiguriertewahltage;
 
-import static de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.WahltagStatusDTO.AKTIV;
-import static de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.WahltagStatusDTO.INAKTIV;
+import static de.muenchen.oss.wahllokalsystem.adminservice.rest.konfiguriertewahltage.WahltagStatusDTO.AKTIV;
+import static de.muenchen.oss.wahllokalsystem.adminservice.rest.konfiguriertewahltage.WahltagStatusDTO.INAKTIV;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
 import org.mapstruct.Mapper;

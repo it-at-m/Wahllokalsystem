@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag;
+package de.muenchen.oss.wahllokalsystem.adminservice.service.konfiguriertewahltage;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlenClient;

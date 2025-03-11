@@ -55,7 +55,7 @@ public class WahlbezirkeServiceSecurityTest {
     class GetWahlbezirke {
 
         @AfterEach
-        void tearDown() {
+        void teardown() {
             SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_WAHLBEZIRK, Authorities.REPOSITORY_DELETE_WAHL, Authorities.REPOSITORY_DELETE_WAHLTAG);
             wahlbezirkRepository.deleteAll();
             wahlRepository.deleteAll();

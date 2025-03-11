@@ -23,7 +23,7 @@ class StimmzettelgebietRepositoryTest {
     StimmzettelgebietRepository stimmzettelgebietRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         stimmzettelgebietRepository.deleteAll();
         wahlRepository.deleteAll();
         wahltageRepository.deleteAll();

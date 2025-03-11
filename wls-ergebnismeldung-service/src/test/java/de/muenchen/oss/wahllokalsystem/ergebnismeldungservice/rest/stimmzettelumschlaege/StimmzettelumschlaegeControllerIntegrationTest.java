@@ -57,7 +57,7 @@ public class StimmzettelumschlaegeControllerIntegrationTest {
     MockMvc mockMvc;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_STIMMZETTELUMSCHLAEGE);
         stimmzettelumschlaegeRepository.deleteAll();
     }

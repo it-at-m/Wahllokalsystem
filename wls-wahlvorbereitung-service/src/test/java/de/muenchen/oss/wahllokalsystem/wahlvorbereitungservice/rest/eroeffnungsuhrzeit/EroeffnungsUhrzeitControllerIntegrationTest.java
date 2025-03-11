@@ -56,7 +56,7 @@ public class EroeffnungsUhrzeitControllerIntegrationTest {
     EroeffnungsUhrzeitRepository eroeffnungsUhrzeitRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_EROEFFNUNGSUHRZEIT);
         eroeffnungsUhrzeitRepository.deleteAll();
     }

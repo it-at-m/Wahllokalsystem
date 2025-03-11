@@ -84,7 +84,7 @@ class LdapConfigurationTest {
     }
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         transactionTemplate.executeWithoutResult(status -> {
             authorityRepository.deleteAll();
             permissionRepository.deleteAll();

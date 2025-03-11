@@ -57,7 +57,7 @@ public class AusdruckControllerIntegrationTest {
     MockMvc mockMvc;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         ausdruckRepository.deleteAll();
     }
 
@@ -116,7 +116,7 @@ public class AusdruckControllerIntegrationTest {
         }
 
         @AfterEach
-        void tearDown() {
+        void teardown() {
             mockedStatic.close();
         }
 

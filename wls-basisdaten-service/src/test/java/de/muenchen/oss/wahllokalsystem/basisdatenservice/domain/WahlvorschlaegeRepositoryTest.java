@@ -44,7 +44,7 @@ class WahlvorschlaegeRepositoryTest {
     private TransactionTemplate transactionTemplate;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         kandidatRepository.deleteAll();
         wahlvorschlagRepository.deleteAll();
         wahlvorschlaegeRepository.deleteAll();

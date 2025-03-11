@@ -41,7 +41,7 @@ class ReferendumvorlagenRepositoryTest {
     private TransactionTemplate transactionTemplate;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         referendumvorlageRepository.deleteAll();
         referendumvorlagenRepository.deleteAll();
     }

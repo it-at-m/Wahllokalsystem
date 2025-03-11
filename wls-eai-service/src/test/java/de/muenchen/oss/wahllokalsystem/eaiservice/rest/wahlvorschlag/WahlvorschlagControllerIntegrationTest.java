@@ -67,7 +67,7 @@ public class WahlvorschlagControllerIntegrationTest {
     WahlvorschlagMapper wahlvorschlagMapper;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         wahlvorschlagRepository.deleteAll();
     }
 

@@ -31,7 +31,7 @@ class WahlbezirkRepositoryTest {
     private WahlbezirkRepository repository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         repository.deleteAll();
     }
 

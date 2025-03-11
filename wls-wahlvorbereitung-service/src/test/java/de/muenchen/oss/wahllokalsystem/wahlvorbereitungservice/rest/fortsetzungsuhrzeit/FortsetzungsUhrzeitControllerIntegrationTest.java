@@ -56,7 +56,7 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
     FortsetzungsUhrzeitRepository fortsetzungsUhrzeitRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_FORTSETZUNGSUHRZEIT);
         fortsetzungsUhrzeitRepository.deleteAll();
     }

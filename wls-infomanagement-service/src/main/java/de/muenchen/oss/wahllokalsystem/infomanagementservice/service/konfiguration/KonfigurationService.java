@@ -37,7 +37,7 @@ public class KonfigurationService {
 
     private final KonfigurationModelValidator konfigurationModelValidator;
 
-    private final Collection<AuthDetailRetriever> authDetailRetrivers;
+    private final Collection<AuthDetailRetriever> authDetailRetrievers;
 
     private final ExceptionFactory exceptionFactory;
 
@@ -109,9 +109,6 @@ public class KonfigurationService {
         val authDetailRetriever = authDetailRetrievers.stream().filter(retriever -> retriever.canHandle(currentAuthentication)).findFirst();
         if (authDetailRetriever.isPresent()) {
             val wahlbezirkOfUser = authDetailRetriever.get().getDetail(WAHLBEZIRK_ART_USER_DETAIL_KEY, currentAuthentication);
-        } else {
-            log.error("kein retriever für authentication class {} vorhanden. Verwende Wahlbezirksart-Fallback {}", currentAuthentication.getClass(), /* additional arguments if any */);
-        }
             return wahlbezirkOfUser.map(WahlbezirkArt::valueOf).orElseGet(() -> {
                 log.error("#getKonfiguration Error: Wahlbezirkart konnte nicht erkannt werden. UWB wurde als Standardwert angenommen");
                 return WAHLBEZIRK_ART_FALLBACK;

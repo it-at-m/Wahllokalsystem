@@ -29,7 +29,7 @@ public class BriefwahlvorbereitungControllerTest {
     BriefwahlvorbereitungController unitUnderTest;
 
     @Test
-    void should_returnBreifwahlvorbereitungData_when_dataFound() {
+    void should_returnBriefwahlvorbereitungData_when_dataFound() {
         val wahlbezirkID = "wahlbezirkID";
 
         val mockedServiceOptionalBody = new BriefwahlvorbereitungModel(wahlbezirkID, Collections.emptyList());
@@ -57,7 +57,7 @@ public class BriefwahlvorbereitungControllerTest {
     }
 
     @Test
-    void should_postBreifwahlvorbereitungData_when_calledAndMappedCorrectly() {
+    void should_postBriefwahlvorbereitungData_when_calledAndMappedCorrectly() {
         val wahlbezirkID = "wahlbezirkID";
         val requestBody = new BriefwahlvorbereitungWriteDTO(Collections.emptyList());
 

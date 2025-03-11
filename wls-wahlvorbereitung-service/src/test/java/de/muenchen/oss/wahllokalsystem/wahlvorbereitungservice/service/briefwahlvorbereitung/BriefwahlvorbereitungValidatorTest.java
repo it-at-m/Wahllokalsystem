@@ -37,7 +37,7 @@ class BriefwahlvorbereitungValidatorTest {
         }
 
         @Test
-        void should_throwWlsException_when_wahlbezirkIDisNull() {
+        void should_throwWlsException_when_wahlbezirkIDIsNull() {
             val exceptionToThrow = FachlicheWlsException.withCode("000").buildWithMessage("error");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG)).thenReturn(exceptionToThrow);
 
@@ -45,7 +45,7 @@ class BriefwahlvorbereitungValidatorTest {
         }
 
         @Test
-        void should_throwWlsException_when_wahlbezirkIDisEmpty() {
+        void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
             val exceptionToThrow = FachlicheWlsException.withCode("000").buildWithMessage("error");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG)).thenReturn(exceptionToThrow);
 
@@ -72,7 +72,7 @@ class BriefwahlvorbereitungValidatorTest {
         }
 
         @Test
-        void should_throwWlsException_when_wahlbezirkIDisNull() {
+        void should_throwWlsException_when_wahlbezirkIDIsNull() {
             val invalidModel = initValid().wahlbezirkID(null).build();
 
             val mockedFactoryException = FachlicheWlsException.withCode("000").buildWithMessage("error");
@@ -82,7 +82,7 @@ class BriefwahlvorbereitungValidatorTest {
         }
 
         @Test
-        void should_throwWlsException_when_wahlbezirkIDisEmpty() {
+        void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
             val invalidModel = initValid().wahlbezirkID("").build();
 
             val mockedFactoryException = FachlicheWlsException.withCode("000").buildWithMessage("error");

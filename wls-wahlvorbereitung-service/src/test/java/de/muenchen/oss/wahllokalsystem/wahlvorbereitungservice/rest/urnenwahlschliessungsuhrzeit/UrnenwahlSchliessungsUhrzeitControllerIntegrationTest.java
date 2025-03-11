@@ -173,7 +173,7 @@ public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
                 authorities = { Authorities.SERVICE_POST_URNENWAHLSCHLIESSUNGSUHRZEIT,
                         Authorities.REPOSITORY_WRITE_URNENWAHLSCHLIESSUNGSUHRZEIT }
         )
-        void should_returnFachlicheWlsException_when_requestIsInvalidWhenParameterNotComplete() throws Exception {
+        void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             val writeDto = new UrnenwahlSchliessungsUhrzeitWriteDTO(null);
             val request = buildPostRequest(wahlbezirkID, writeDto);

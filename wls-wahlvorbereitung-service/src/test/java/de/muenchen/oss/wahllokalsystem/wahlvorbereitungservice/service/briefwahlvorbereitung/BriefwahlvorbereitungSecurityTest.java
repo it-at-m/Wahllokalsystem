@@ -116,7 +116,7 @@ public class BriefwahlvorbereitungSecurityTest {
         }
 
         @Test
-        void should_throwAccessDeniedException_when_serviceAuthoritiyIsMissing() {
+        void should_throwAccessDeniedException_when_serviceAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_REPO_BRIEFWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";

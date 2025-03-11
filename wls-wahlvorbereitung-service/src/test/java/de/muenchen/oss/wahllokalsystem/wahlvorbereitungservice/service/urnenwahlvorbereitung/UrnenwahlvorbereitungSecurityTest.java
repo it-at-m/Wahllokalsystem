@@ -113,7 +113,7 @@ public class UrnenwahlvorbereitungSecurityTest {
         }
 
         @Test
-        void should_throwAccessDeniedException_when_serviceAuthoritiyIsMissing() {
+        void should_throwAccessDeniedException_when_serviceAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_URNENWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";

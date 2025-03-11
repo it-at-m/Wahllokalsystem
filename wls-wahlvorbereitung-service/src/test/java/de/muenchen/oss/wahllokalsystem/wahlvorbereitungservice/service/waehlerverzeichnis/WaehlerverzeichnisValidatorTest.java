@@ -42,7 +42,7 @@ class WaehlerverzeichnisValidatorTest {
         }
 
         @Test
-        void should_throwWlsException_when_wahlbezirkIDisNull() {
+        void should_throwWlsException_when_wahlbezirkIDIsNull() {
             val invalidReference = initValid();
             invalidReference.setWahlbezirkID(null);
 
@@ -53,7 +53,7 @@ class WaehlerverzeichnisValidatorTest {
         }
 
         @Test
-        void should_throwWlsException_when_wahlbezirkIDisEmpty() {
+        void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
             val invalidReference = initValid();
             invalidReference.setWahlbezirkID("");
 
@@ -87,7 +87,7 @@ class WaehlerverzeichnisValidatorTest {
         }
 
         @Test
-        void should_throwWlsException_when_wahbezirkIDAndWaehlerverzeichnisNummerIsNull() {
+        void should_throwWlsException_when_wahlbezirkIDAndWaehlerverzeichnisNummerIsNull() {
             val invalidModel = initValidModel().waehlerverzeichnisReference(null).build();
 
             val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
@@ -108,7 +108,7 @@ class WaehlerverzeichnisValidatorTest {
         }
 
         @Test
-        void should_throwWlsException_when_wahlbezirkIDisNull() {
+        void should_throwWlsException_when_wahlbezirkIDIsNull() {
             val invalidModel = initValidModel().build();
             invalidModel.waehlerverzeichnisReference().setWahlbezirkID(null);
 
@@ -119,7 +119,7 @@ class WaehlerverzeichnisValidatorTest {
         }
 
         @Test
-        void should_throwWlsException_when_wahlbezirkIDisEmpty() {
+        void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
             val invalidModel = initValidModel().build();
             invalidModel.waehlerverzeichnisReference().setWahlbezirkID("");
 

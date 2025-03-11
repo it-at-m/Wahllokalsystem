@@ -59,7 +59,7 @@ public class WahlvorstandControllerIntegrationTest {
     WahlvorstandModelMapper wahlvorstandModelMapper;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_WAHLVORSTAND);
         wahlvorstandRepository.deleteAll();
     }

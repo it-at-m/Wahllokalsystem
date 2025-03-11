@@ -190,6 +190,10 @@ export default withMermaid({
               link: `${PATH_SERVICES_BACKEND}briefwahl-service/`,
             },
             {
+              text: "Broadcast-Service",
+              link: `${PATH_SERVICES_BACKEND}broadcast-service/`,
+            },
+            {
               text: "EAI-Service",
               link: `${PATH_SERVICES_BACKEND}eai-service/`,
             },

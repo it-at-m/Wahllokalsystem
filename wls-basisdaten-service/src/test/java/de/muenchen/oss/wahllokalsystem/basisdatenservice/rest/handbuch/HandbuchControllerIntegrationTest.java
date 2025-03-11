@@ -44,7 +44,7 @@ public class HandbuchControllerIntegrationTest {
     HandbuchRepository handbuchRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_HANDBUCH);
         handbuchRepository.deleteAll();
     }

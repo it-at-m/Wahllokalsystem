@@ -5,12 +5,13 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.authservice.rest.OAuthServerSessions;
+import de.muenchen.oss.wahllokalsystem.authservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -21,7 +22,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,7 +30,6 @@ import org.springframework.session.Session;
 import org.springframework.session.SessionRepository;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import de.muenchen.oss.wahllokalsystem.authservice.utils.Authorities;
 
 @SpringBootTest(
         classes = { MicroServiceApplication.class },
@@ -57,13 +56,13 @@ class SessionControllerIntegrationTest {
     SessionRepository sessionRepository;
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         purgeSessions();
         SecurityUtils.runWith(Authorities.ROLE_ADMIN);
     }
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         purgeSessions();
     }
 

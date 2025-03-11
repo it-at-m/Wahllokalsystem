@@ -58,7 +58,7 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
     UrnenwahlVorbereitungRepository urnenwahlVorbereitungRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_URNENWAHLVORBEREITUNG);
         urnenwahlVorbereitungRepository.deleteAll();
     }

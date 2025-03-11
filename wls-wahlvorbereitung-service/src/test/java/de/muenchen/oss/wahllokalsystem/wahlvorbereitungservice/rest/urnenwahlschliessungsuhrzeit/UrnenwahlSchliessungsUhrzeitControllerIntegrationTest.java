@@ -60,7 +60,7 @@ public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
     UrnenwahlSchliessungsUhrzeitRepository urnenwahlSchliessungsUhrzeitRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_URNENWAHLSCHLIESSUNGSUHRZEIT);
         urnenwahlSchliessungsUhrzeitRepository.deleteAll();
     }

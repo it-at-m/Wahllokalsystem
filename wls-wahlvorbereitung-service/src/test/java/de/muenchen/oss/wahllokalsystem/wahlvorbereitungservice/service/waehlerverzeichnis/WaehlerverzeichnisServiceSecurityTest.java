@@ -39,7 +39,7 @@ public class WaehlerverzeichnisServiceSecurityTest {
     BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         SecurityContextHolder.clearContext();
     }
 

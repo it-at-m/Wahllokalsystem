@@ -9,7 +9,7 @@ public class GetAtLeastOneMethodWithAnnotationPredicate extends DescribedPredica
 
     private final Class<? extends Annotation> annotationClass;
 
-    public GetAtLeastOneMethodWithAnnotationPredicate(Class<? extends Annotation> annotationClass) {
+    public GetAtLeastOneMethodWithAnnotationPredicate(final Class<? extends Annotation> annotationClass) {
         super("have at least one method annotated with @" + annotationClass.getSimpleName());
         this.annotationClass = annotationClass;
     }
@@ -17,7 +17,7 @@ public class GetAtLeastOneMethodWithAnnotationPredicate extends DescribedPredica
     public static final DescribedPredicate<JavaClass> haveAtLeastOneMethodAnnotetedWithTest = new GetAtLeastOneMethodWithAnnotationPredicate(Test.class);
 
     @Override
-    public boolean test(JavaClass javaClass) {
+    public boolean test(final JavaClass javaClass) {
         return javaClass.getMethods()
                 .stream()
                 .anyMatch(method -> method.isAnnotatedWith(annotationClass));

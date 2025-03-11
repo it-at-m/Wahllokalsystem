@@ -25,7 +25,7 @@ public class NestedTestsuitesHaveMatchingMethodCondition extends ArchCondition<J
                 "SwaggerConfigurationTest");
     }
 
-    public NestedTestsuitesHaveMatchingMethodCondition(Set<String> customExclusions) {
+    public NestedTestsuitesHaveMatchingMethodCondition(final Set<String> customExclusions) {
         super("have matching public method name if they are highest nested class");
         this.testFilesExcludedFromNestedConvention = Set.copyOf(customExclusions);
     }

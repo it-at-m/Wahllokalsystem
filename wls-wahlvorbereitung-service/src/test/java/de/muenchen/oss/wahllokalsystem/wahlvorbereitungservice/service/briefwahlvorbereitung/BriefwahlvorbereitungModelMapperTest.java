@@ -22,7 +22,7 @@ class BriefwahlvorbereitungModelMapperTest {
     class ToModel {
 
         @Test
-        void should_returnBreifwahlvorbereitungModel_when_givenBriefwahlvorbereitungEntity() {
+        void should_returnBriefwahlvorbereitungModel_when_givenBriefwahlvorbereitungEntity() {
             val wahlbezirkID = "wahlbezirkID";
             List<Wahlurne> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValid("1234").build());
             val entityToMap = new Briefwahlvorbereitung(wahlbezirkID, urnenanzahl1);

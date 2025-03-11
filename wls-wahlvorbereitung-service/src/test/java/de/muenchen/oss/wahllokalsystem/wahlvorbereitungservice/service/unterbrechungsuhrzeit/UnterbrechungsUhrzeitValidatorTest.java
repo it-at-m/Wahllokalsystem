@@ -102,5 +102,4 @@ class UnterbrechungsUhrzeitValidatorTest {
             return UnterbrechungsUhrzeitModel.builder().wahlbezirkID("wahlbezirkID").unterbrechungsUhrzeit(LocalDateTime.now());
         }
     }
-
 }

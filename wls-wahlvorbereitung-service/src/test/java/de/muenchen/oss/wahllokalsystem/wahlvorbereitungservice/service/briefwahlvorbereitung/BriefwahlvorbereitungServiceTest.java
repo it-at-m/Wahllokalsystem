@@ -127,5 +127,4 @@ class BriefwahlvorbereitungServiceTest {
                     .isSameAs(mockedFactoryException);
         }
     }
-
 }

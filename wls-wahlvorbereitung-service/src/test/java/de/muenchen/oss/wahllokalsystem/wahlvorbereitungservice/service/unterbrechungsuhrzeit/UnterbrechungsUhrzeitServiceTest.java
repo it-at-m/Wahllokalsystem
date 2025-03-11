@@ -127,5 +127,4 @@ class UnterbrechungsUhrzeitServiceTest {
                     .isSameAs(mockedFactoryException);
         }
     }
-
 }

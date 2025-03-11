@@ -63,6 +63,7 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
 
     @Nested
     class GetFortsetzungsUhrzeit {
+
         @Test
         @WithMockUser(
                 authorities = { Authorities.SERVICE_FORTSETZUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT,
@@ -201,5 +202,4 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
                     objectMapper.writeValueAsString(requestBody));
         }
     }
-
 }

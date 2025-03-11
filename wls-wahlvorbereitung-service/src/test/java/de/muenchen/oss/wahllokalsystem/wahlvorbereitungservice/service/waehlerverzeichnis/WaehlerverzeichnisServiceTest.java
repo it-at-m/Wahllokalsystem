@@ -119,5 +119,4 @@ class WaehlerverzeichnisServiceTest {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setWaehlerverzeichnis(modelToSave)).isSameAs(mockedWlsException);
         }
     }
-
 }

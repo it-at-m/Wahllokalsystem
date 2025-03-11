@@ -47,5 +47,4 @@ class UrnenwahlSchliessungsUhrzeitDTOMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

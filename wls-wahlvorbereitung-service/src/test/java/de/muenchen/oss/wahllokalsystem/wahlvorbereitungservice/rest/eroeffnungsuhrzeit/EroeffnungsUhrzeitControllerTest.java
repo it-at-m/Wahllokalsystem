@@ -70,5 +70,4 @@ public class EroeffnungsUhrzeitControllerTest {
         Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postEroeffnungsuhrzeit(wahlbezirkID, requestBody));
         Mockito.verify(eroeffnungsUhrzeitService).setEroeffnungsUhrzeit(mockedMappedRequest);
     }
-
 }

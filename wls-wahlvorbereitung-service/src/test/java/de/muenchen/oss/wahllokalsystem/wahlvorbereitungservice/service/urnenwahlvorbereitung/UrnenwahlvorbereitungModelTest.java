@@ -17,5 +17,4 @@ class UrnenwahlvorbereitungModelTest {
             Assertions.assertThat(result.urnenAnzahl()).isNotNull();
         }
     }
-
 }

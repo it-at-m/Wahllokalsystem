@@ -50,5 +50,4 @@ class BriefwahlvorbereitungDTOMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

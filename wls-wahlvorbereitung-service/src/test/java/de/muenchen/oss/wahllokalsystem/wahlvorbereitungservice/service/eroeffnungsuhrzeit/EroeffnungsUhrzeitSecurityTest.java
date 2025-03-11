@@ -141,6 +141,5 @@ public class EroeffnungsUhrzeitSecurityTest {
             Assertions.assertThatThrownBy(() -> unitUnderTest.setEroeffnungsUhrzeit(modelToSet))
                     .isExactlyInstanceOf(TechnischeWlsException.class);
         }
-
     }
 }

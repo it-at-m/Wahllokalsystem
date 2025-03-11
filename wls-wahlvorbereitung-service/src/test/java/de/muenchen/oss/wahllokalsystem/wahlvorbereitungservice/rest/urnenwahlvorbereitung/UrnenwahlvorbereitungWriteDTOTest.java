@@ -17,5 +17,4 @@ class UrnenwahlvorbereitungWriteDTOTest {
             Assertions.assertThat(result.urnenAnzahl()).isNotNull();
         }
     }
-
 }

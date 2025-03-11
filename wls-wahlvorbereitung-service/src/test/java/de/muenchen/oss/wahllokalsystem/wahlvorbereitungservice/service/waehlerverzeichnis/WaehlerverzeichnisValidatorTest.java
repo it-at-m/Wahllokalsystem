@@ -133,5 +133,4 @@ class WaehlerverzeichnisValidatorTest {
             return WaehlerverzeichnisModel.builder().waehlerverzeichnisReference(new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 89L));
         }
     }
-
 }

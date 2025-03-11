@@ -77,5 +77,4 @@ class UrnenwahlvorbereitungControllerTest {
             Mockito.verify(service).setUrnenwahlvorbereitung(mockedMappedRequest);
         }
     }
-
 }

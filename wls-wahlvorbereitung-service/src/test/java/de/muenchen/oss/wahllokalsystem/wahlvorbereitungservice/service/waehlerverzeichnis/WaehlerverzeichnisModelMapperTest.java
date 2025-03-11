@@ -50,5 +50,4 @@ class WaehlerverzeichnisModelMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

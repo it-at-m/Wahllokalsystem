@@ -87,5 +87,4 @@ class WaehlerverzeichnisControllerTest {
             Assertions.assertThat(result.getBody()).isNull();
         }
     }
-
 }

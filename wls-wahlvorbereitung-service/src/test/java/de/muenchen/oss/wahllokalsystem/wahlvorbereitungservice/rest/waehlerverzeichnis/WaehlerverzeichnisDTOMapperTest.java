@@ -72,5 +72,4 @@ class WaehlerverzeichnisDTOMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

@@ -49,5 +49,4 @@ class FortsetzungsUhrzeitModelMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

@@ -70,5 +70,4 @@ public class FortsetzungsUhrzeitControllerTest {
         Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postFortsetzungsUhrzeit(wahlbezirkID, requestBody));
         Mockito.verify(fortsetzungsUhrzeitService).setFortsetzungsUhrzeit(mockedMappedRequest);
     }
-
 }

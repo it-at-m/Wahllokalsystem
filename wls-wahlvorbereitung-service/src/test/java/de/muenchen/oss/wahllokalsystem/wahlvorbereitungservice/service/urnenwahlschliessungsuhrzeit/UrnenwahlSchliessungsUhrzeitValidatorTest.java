@@ -102,5 +102,4 @@ class UrnenwahlSchliessungsUhrzeitValidatorTest {
             return UrnenwahlSchliessungsUhrzeitModel.builder().wahlbezirkID("wahlbezirkID").schliessungsuhrzeit(LocalDateTime.now());
         }
     }
-
 }

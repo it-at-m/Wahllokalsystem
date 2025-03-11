@@ -47,5 +47,4 @@ class FortsetzungsUhrzeitDTOMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

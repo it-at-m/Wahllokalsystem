@@ -49,5 +49,4 @@ class EroeffnungsUhrzeitModelMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

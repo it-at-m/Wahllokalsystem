@@ -102,5 +102,4 @@ class FortsetzungsUhrzeitValidatorTest {
             return FortsetzungsUhrzeitModel.builder().wahlbezirkID("wahlbezirkID").fortsetzungsUhrzeit(LocalDateTime.now());
         }
     }
-
 }

@@ -49,5 +49,4 @@ class UrnenwahlSchliessungsUhrzeitModelMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

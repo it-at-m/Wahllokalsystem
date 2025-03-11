@@ -68,5 +68,4 @@ public class BriefwahlvorbereitungControllerTest {
         Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postBriefwahlvorbereitung(wahlbezirkID, requestBody));
         Mockito.verify(briefwahlvorbereitungService).setBriefwahlvorbereitung(mockedMappedRequest);
     }
-
 }

@@ -61,5 +61,4 @@ class UrnenwahlvorbereitungDTOMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

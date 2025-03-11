@@ -102,5 +102,4 @@ class EroeffnungsUhrzeitValidatorTest {
             return EroeffnungsUhrzeitModel.builder().wahlbezirkID("wahlbezirkID").eroeffnungsuhrzeit(LocalDateTime.now());
         }
     }
-
 }

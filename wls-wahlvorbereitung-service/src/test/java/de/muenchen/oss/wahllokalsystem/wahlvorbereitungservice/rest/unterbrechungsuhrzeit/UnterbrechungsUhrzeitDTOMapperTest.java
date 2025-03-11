@@ -47,5 +47,4 @@ class UnterbrechungsUhrzeitDTOMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

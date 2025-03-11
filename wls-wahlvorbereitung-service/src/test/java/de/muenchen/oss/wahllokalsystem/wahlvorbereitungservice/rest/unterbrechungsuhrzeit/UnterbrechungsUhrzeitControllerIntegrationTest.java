@@ -201,5 +201,4 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
                     objectMapper.writeValueAsString(requestBody));
         }
     }
-
 }

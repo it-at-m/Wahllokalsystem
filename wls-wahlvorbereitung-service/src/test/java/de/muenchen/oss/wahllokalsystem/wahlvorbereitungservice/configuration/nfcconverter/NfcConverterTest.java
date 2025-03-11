@@ -171,5 +171,4 @@ class NfcConverterTest {
         final UnmodifiableList<Part> parts = new UnmodifiableList<>(baseListParts);
         return parts;
     }
-
 }

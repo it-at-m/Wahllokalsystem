@@ -67,6 +67,7 @@ public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
 
     @Nested
     class GetUrnenwahlSchliessungsUhrzeit {
+
         @Test
         @WithMockUser(
                 authorities = { Authorities.SERVICE_GET_URNENWAHLSCHLIESSUNGSUHRZEIT,
@@ -115,6 +116,7 @@ public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
 
     @Nested
     class PostUrnenwahlSchliessungsUhrzeit {
+
         @Test
         @WithMockUser(
                 authorities = { Authorities.SERVICE_POST_URNENWAHLSCHLIESSUNGSUHRZEIT,
@@ -215,5 +217,4 @@ public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
                     objectMapper.writeValueAsString(requestBody));
         }
     }
-
 }

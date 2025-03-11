@@ -70,5 +70,4 @@ public class UnterbrechungsUhrzeitControllerTest {
         Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postUnterbrechungsuhrzeit(wahlbezirkID, requestBody));
         Mockito.verify(unterbrechungsUhrzeitService).setUnterbrechungsUhrzeit(mockedMappedRequest);
     }
-
 }

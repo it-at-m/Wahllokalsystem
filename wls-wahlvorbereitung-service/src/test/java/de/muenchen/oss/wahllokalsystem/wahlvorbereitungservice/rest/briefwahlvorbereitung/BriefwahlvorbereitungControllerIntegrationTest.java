@@ -65,6 +65,7 @@ public class BriefwahlvorbereitungControllerIntegrationTest {
 
     @Nested
     class GetBriefwahlvorbereitung {
+
         @Test
         @WithMockUser(
                 authorities = { Authorities.SERVICE_GET_BRIEFWAHLVORBEREITUNG, Authorities.REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG,
@@ -208,5 +209,4 @@ public class BriefwahlvorbereitungControllerIntegrationTest {
                     objectMapper.writeValueAsString(requestBody));
         }
     }
-
 }

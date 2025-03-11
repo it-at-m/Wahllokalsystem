@@ -116,5 +116,4 @@ class BriefwahlvorbereitungValidatorTest {
             return BriefwahlvorbereitungModel.builder().wahlbezirkID("wahlbezirkID").urnenAnzahl(urnenanzahl);
         }
     }
-
 }

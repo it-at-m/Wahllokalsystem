@@ -136,6 +136,5 @@ public class UnterbrechungsUhrzeitSecurityTest {
             Assertions.assertThatThrownBy(() -> unitUnderTest.setUnterbrechungsUhrzeit(modelToSet))
                     .isExactlyInstanceOf(TechnischeWlsException.class);
         }
-
     }
 }

@@ -70,5 +70,4 @@ public class UrnenwahlSchliessungsUhrzeitControllerTest {
         Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postUrnenwahlSchliessungsUhrzeit(wahlbezirkID, requestBody));
         Mockito.verify(urnenwahlSchliessungsUhrzeitService).setUrnenwahlSchliessungsUhrzeit(mockedMappedRequest);
     }
-
 }

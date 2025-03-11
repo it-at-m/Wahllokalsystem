@@ -41,7 +41,5 @@ class ExceptionFactoryTest {
 
             Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
         }
-
     }
-
 }

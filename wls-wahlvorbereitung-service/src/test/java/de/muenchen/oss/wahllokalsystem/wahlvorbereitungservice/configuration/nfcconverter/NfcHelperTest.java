@@ -124,5 +124,4 @@ class NfcHelperTest {
         nfdCookie.setPath(THIRD_NFD);
         return nfdCookie;
     }
-
 }

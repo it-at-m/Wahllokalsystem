@@ -59,5 +59,4 @@ class UrnenwahlvorbereitungModelMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

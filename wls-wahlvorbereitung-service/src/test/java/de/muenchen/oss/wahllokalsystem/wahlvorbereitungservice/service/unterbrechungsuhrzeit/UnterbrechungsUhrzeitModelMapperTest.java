@@ -49,5 +49,4 @@ class UnterbrechungsUhrzeitModelMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

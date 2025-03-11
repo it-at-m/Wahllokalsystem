@@ -114,5 +114,4 @@ class UrnenwahlvorbereitungValidatorTest {
             return UrnenwahlvorbereitungModel.builder().wahlbezirkID("wahlbezirkID").urnenAnzahl(List.of(new WahlurneModel("wahlID", 1, true)));
         }
     }
-
 }

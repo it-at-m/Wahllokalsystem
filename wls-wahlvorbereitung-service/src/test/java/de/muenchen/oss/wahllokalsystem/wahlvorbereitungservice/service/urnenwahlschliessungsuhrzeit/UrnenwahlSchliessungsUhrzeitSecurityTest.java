@@ -136,6 +136,5 @@ public class UrnenwahlSchliessungsUhrzeitSecurityTest {
             Assertions.assertThatThrownBy(() -> unitUnderTest.setUrnenwahlSchliessungsUhrzeit(modelToSet))
                     .isExactlyInstanceOf(TechnischeWlsException.class);
         }
-
     }
 }

@@ -141,6 +141,5 @@ public class BriefwahlvorbereitungSecurityTest {
             Assertions.assertThatThrownBy(() -> unitUnderTest.setBriefwahlvorbereitung(modelToSet))
                     .isExactlyInstanceOf(TechnischeWlsException.class);
         }
-
     }
 }

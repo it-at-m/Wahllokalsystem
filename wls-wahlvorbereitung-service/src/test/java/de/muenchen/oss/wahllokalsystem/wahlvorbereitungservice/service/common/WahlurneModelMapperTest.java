@@ -28,5 +28,4 @@ class WahlurneModelMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

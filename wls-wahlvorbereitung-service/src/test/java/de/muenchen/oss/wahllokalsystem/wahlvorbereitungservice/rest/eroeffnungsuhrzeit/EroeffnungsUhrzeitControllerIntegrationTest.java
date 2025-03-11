@@ -63,6 +63,7 @@ public class EroeffnungsUhrzeitControllerIntegrationTest {
 
     @Nested
     class GetEroeffnungsUhrzeit {
+
         @Test
         @WithMockUser(
                 authorities = { Authorities.SERVICE_GET_EROEFFNUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_EROEFFNUNGSUHRZEIT,
@@ -108,6 +109,7 @@ public class EroeffnungsUhrzeitControllerIntegrationTest {
 
     @Nested
     class PostEroeffnungsUhrzeit {
+
         @Test
         @WithMockUser(
                 authorities = { Authorities.SERVICE_POST_EROEFFNUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_EROEFFNUNGSUHRZEIT }
@@ -201,5 +203,4 @@ public class EroeffnungsUhrzeitControllerIntegrationTest {
                     objectMapper.writeValueAsString(requestBody));
         }
     }
-
 }

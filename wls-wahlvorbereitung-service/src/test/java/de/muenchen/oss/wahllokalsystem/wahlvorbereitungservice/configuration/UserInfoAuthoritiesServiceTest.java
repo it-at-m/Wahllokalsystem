@@ -212,6 +212,5 @@ class UserInfoAuthoritiesServiceTest {
 
             Mockito.verify(restTemplate, Mockito.times(1)).exchange(userInfoUri, HttpMethod.GET, expectedRequestEntity, Map.class);
         }
-
     }
 }

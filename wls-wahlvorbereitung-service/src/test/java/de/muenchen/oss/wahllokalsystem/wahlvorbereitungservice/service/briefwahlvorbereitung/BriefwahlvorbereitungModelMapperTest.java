@@ -51,5 +51,4 @@ class BriefwahlvorbereitungModelMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

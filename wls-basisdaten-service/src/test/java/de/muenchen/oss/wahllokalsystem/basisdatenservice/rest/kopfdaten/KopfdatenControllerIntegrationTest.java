@@ -66,7 +66,7 @@ public class KopfdatenControllerIntegrationTest {
     KonfigurierterWahltagClientMapper konfigurierterWahltagClientMapper;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         kopfdatenRepository.deleteAll();
     }
 

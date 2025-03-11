@@ -56,7 +56,7 @@ public class WahlscheineControllerIntegrationTest {
     MockMvc mockMvc;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         wahlscheineRepository.deleteAll();
     }
 

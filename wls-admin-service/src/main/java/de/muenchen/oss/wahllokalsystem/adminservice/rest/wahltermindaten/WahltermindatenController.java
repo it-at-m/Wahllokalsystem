@@ -1,10 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.rest.wahltermindaten;
 
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.WahltermindatenService;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,14 +25,6 @@ public class WahltermindatenController {
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Die Wahltermindaten wurden erfolgreich importiert."
-                    ),
-                    @ApiResponse(
-                            responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
-                    ),
-                    @ApiResponse(
-                            responseCode = "500", description = "Fehler während des Imports.",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
                     )
             }
     )
@@ -50,14 +39,6 @@ public class WahltermindatenController {
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Die Wahltermindaten wurden erfolgreich gelöscht."
-                    ),
-                    @ApiResponse(
-                            responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
-                    ),
-                    @ApiResponse(
-                            responseCode = "500", description = "Fehler während des Löschvorgangs.",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
                     )
             }
     )

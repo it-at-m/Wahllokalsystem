@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.unterbrechu
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.AbstractController;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.unterbrechungsuhrzeit.UnterbrechungsUhrzeitService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,13 @@ public class UnterbrechungsUhrzeitController extends AbstractController {
     private final UnterbrechungsUhrzeitService unterbrechungsuhrzeitService;
     private final UnterbrechungsUhrzeitDTOMapper UnterbrechungsuhrzeitDTOMapper;
 
-    @Operation(description = "Laden der Unterbrechungsuhrzeit des Urnenwahllokals {wahlbezirkID}")
+    @Operation(
+            description = "Laden der Unterbrechungsuhrzeit des Urnenwahllokals {wahlbezirkID}",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Unterbrechungsuhrzeit erfolgreich zurückgegeben."
+                    ) }
+    )
     @GetMapping("{wahlbezirkID}")
     public ResponseEntity<UnterbrechungsUhrzeitDTO> getUnterbrechungsuhrzeit(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
         val unterbrechungsuhrzeitModel = unterbrechungsuhrzeitService.getUnterbrechungsUhrzeit(wahlbezirkID);
@@ -31,7 +38,13 @@ public class UnterbrechungsUhrzeitController extends AbstractController {
         return okWithBodyOrNoContent(unterbrechungsuhrzeitModel.map(UnterbrechungsuhrzeitDTOMapper::toDTO));
     }
 
-    @Operation(description = "Aktualisiert die Unterbrechungsuhrzeit des Urnenwahllokals {wahlbezirkID}")
+    @Operation(
+            description = "Aktualisiert die Unterbrechungsuhrzeit des Urnenwahllokals {wahlbezirkID}",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201", description = "Unterbrechungsuhrzeit erfolgreich gespeichert."
+                    ) }
+    )
     @PostMapping("{wahlbezirkID}")
     @ResponseStatus(HttpStatus.CREATED)
     public void postUnterbrechungsuhrzeit(@PathVariable("wahlbezirkID") final String wahlbezirkID,

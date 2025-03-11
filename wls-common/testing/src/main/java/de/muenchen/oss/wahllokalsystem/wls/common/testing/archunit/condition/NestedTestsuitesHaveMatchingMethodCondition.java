@@ -13,11 +13,11 @@ import org.springframework.util.StringUtils;
 
 public class NestedTestsuitesHaveMatchingMethodCondition extends ArchCondition<JavaClass> {
 
-    private final Set<String> testClassNamesExcludedFromNestedConvention;
+    private final Set<String> classNameEndingExclusions;
 
     public NestedTestsuitesHaveMatchingMethodCondition() {
         super("have matching public method name if they are highest nested class");
-        this.testClassNamesExcludedFromNestedConvention = Set.of(
+        this.classNameEndingExclusions = Set.of(
                 "ControllerIntegrationTest",
                 "ServiceSecurityTest",
                 "SecurityConfigurationTest",
@@ -27,7 +27,7 @@ public class NestedTestsuitesHaveMatchingMethodCondition extends ArchCondition<J
 
     public NestedTestsuitesHaveMatchingMethodCondition(final Set<String> customExclusions) {
         super("have matching public method name if they are highest nested class");
-        this.testClassNamesExcludedFromNestedConvention = Set.copyOf(customExclusions);
+        this.classNameEndingExclusions = Set.copyOf(customExclusions);
     }
 
     public static final ArchCondition<JavaClass> haveMatchingPublicMethodNameIfTheyAreHighestNestedClass = new NestedTestsuitesHaveMatchingMethodCondition();
@@ -43,7 +43,7 @@ public class NestedTestsuitesHaveMatchingMethodCondition extends ArchCondition<J
                 try {
                     val testSuiteClassFullName = topEnclosingClass.get().getFullName();
                     // exclude specific testfiles from @nested naming convention
-                    if (testClassNamesExcludedFromNestedConvention.stream().anyMatch(testSuiteClassFullName::endsWith)) {
+                    if (classNameEndingExclusions.stream().anyMatch(testSuiteClassFullName::endsWith)) {
                         return;
                     }
 

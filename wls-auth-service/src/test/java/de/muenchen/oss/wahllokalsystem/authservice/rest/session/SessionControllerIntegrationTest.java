@@ -62,7 +62,7 @@ class SessionControllerIntegrationTest {
     }
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         purgeSessions();
     }
 

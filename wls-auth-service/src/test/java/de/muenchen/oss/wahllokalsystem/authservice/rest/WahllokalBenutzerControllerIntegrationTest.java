@@ -66,7 +66,7 @@ class WahllokalBenutzerControllerIntegrationTest {
     CryptoService cryptoService;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         transactionTemplate.executeWithoutResult(status -> {
             entityManager.createQuery("DELETE FROM User").executeUpdate();
             permissionRepository.deleteAll();

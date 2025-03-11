@@ -32,7 +32,7 @@ class KopfdatenRepositoryTest {
     private KopfdatenRepository kopfdatenRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         kopfdatenRepository.deleteAll();
     }
 

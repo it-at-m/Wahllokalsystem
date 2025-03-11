@@ -47,7 +47,7 @@ public class WahlvorschlaegeServiceSecurityTest {
     class GetWahlvorschlaege {
 
         @AfterEach
-        void tearDown() {
+        void teardown() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_DELETE_WAHLVORSCHLAEGE);
             wahlvorschlaegeRepository.deleteAll();
         }

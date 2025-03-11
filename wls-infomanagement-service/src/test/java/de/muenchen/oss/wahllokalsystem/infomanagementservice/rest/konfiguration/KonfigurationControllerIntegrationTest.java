@@ -57,7 +57,7 @@ public class KonfigurationControllerIntegrationTest {
     KonfigurationModelValidator konfigurationModelValidator;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_KONFIGURATION);
         konfigurationRepository.deleteAll();
     }

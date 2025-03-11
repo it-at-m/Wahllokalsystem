@@ -50,7 +50,7 @@ public class WahlbriefdatenControllerIntegrationTest {
     WahlbriefdatenDTOMapper wahlbriefdatenDTOMapper;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_WAHLBRIEFDATEN);
         wahlbriefdatenRepository.deleteAll();
     }

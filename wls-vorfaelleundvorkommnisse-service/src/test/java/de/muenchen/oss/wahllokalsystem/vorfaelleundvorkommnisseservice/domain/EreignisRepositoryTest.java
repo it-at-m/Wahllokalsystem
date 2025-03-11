@@ -4,9 +4,7 @@ import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.MicroServ
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.EreignisRepository;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.TestdataFactory;
-
 import java.util.List;
-
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -23,7 +21,7 @@ public class EreignisRepositoryTest {
     EreignisRepository unitUnderTest;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         unitUnderTest.deleteAll();
     }
 

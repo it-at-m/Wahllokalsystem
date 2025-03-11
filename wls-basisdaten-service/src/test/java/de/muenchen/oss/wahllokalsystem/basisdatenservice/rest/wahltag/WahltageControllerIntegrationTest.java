@@ -67,7 +67,7 @@ public class WahltageControllerIntegrationTest {
     WahltagRepository wahltagRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_DELETE_WAHLTAGE);
         wahltagRepository.deleteAll();
     }

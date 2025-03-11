@@ -66,7 +66,7 @@ public class WahlbeteiligungControllerIntegrationTest {
     EntityManager entityManager;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         wahlbeteiligungRepository.deleteAll();
     }
 

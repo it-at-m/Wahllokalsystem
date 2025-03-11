@@ -27,7 +27,7 @@ class BeanstandeteWahlbriefeValidatorTest {
     class ValideReferenceOrThrow {
 
         @Test
-        void exceptionOnWahlbezirkIDIsNull() {
+        void should_throwWlsException_when_wahlbezirkIDIsNull() {
             val invalidReference = getValidReference().wahlbezirkID(null).build();
 
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
@@ -38,7 +38,7 @@ class BeanstandeteWahlbriefeValidatorTest {
         }
 
         @Test
-        void exceptionOnWahlbezirkIDIsEmptyString() {
+        void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
             val invalidReference = getValidReference().wahlbezirkID("").build();
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETBEANSTANDETEWAHLBRIEFE_PARAMETER_UNVOLLSTAENDIG))
@@ -48,7 +48,7 @@ class BeanstandeteWahlbriefeValidatorTest {
         }
 
         @Test
-        void exceptionOnWahlbezirkIsBlankString() {
+        void should_throwWlsException_when_wahlbezirkIDIsBlank() {
             val invalidReference = getValidReference().wahlbezirkID("   ").build();
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETBEANSTANDETEWAHLBRIEFE_PARAMETER_UNVOLLSTAENDIG))
@@ -58,7 +58,7 @@ class BeanstandeteWahlbriefeValidatorTest {
         }
 
         @Test
-        void excepionOnWaehlerverzeichnisnummerIsNull() {
+        void should_throwWlsException_when_waehlerverzeichnisnummerIsNull() {
             val invalidReference = getValidReference().waehlerverzeichnisNummer(null).build();
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETBEANSTANDETEWAHLBRIEFE_PARAMETER_UNVOLLSTAENDIG))
@@ -68,7 +68,7 @@ class BeanstandeteWahlbriefeValidatorTest {
         }
 
         @Test
-        void exceptionOnWaehlerverzeichnisnummerIsZero() {
+        void should_throwWlsException_when_waehlerverzeichnisnummerIsZero() {
             val invalidReference = getValidReference().waehlerverzeichnisNummer(0L).build();
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETBEANSTANDETEWAHLBRIEFE_PARAMETER_UNVOLLSTAENDIG))
@@ -78,7 +78,7 @@ class BeanstandeteWahlbriefeValidatorTest {
         }
 
         @Test
-        void noExceotionOnValideReference() {
+        void should_notThrowException_when_referenceIsValid() {
             val valideReference = getValidReference().build();
 
             org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> unitUnderTest.valideReferenceOrThrow(valideReference));
@@ -87,14 +87,13 @@ class BeanstandeteWahlbriefeValidatorTest {
         private BeanstandeteWahlbriefeReference.BeanstandeteWahlbriefeReferenceBuilder getValidReference() {
             return BeanstandeteWahlbriefeReference.builder().wahlbezirkID("wbzId").waehlerverzeichnisNummer(1L);
         }
-
     }
 
     @Nested
     class ValideModelOrThrow {
 
         @Test
-        void exceptionOnBeanstandeteWahlbriefeIsNull() {
+        void should_throwWlsException_when_beanstandeteWahlbriefeIsNull() {
             val invalidModel = getValidModel().beanstandeteWahlbriefe(null).build();
 
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
@@ -105,7 +104,7 @@ class BeanstandeteWahlbriefeValidatorTest {
         }
 
         @Test
-        void exceptionOnWahlbezirkIDIsNull() {
+        void should_throwWlsException_when_wahlbezirkIDIsNull() {
             val invalidModel = getValidModel().wahlbezirkID(null).build();
 
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
@@ -116,7 +115,7 @@ class BeanstandeteWahlbriefeValidatorTest {
         }
 
         @Test
-        void exceptionOnWahlbezirkIDIsEmptyString() {
+        void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
             val invalidModel = getValidModel().wahlbezirkID("").build();
 
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
@@ -127,7 +126,7 @@ class BeanstandeteWahlbriefeValidatorTest {
         }
 
         @Test
-        void exceptionOnWahlbezirkIDIsBlankString() {
+        void should_throwWlsException_when_wahlbezirkIDIsBlank() {
             val invalidModel = getValidModel().wahlbezirkID("   ").build();
 
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
@@ -138,7 +137,7 @@ class BeanstandeteWahlbriefeValidatorTest {
         }
 
         @Test
-        void exceptionOnWaehlerverzeichnisNummerIsNull() {
+        void should_throwWlsException_when_waehlerverzeichnisnummerIsNull() {
             val invalidModel = getValidModel().waehlerverzeichnisNummer(null).build();
 
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
@@ -149,7 +148,7 @@ class BeanstandeteWahlbriefeValidatorTest {
         }
 
         @Test
-        void exceptionOnWaehlerverzeichnisNummerIsZero() {
+        void should_throwWlsException_when_waehlerverzeichnisnummerIsZero() {
             val invalidModel = getValidModel().waehlerverzeichnisNummer(0L).build();
 
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
@@ -160,7 +159,7 @@ class BeanstandeteWahlbriefeValidatorTest {
         }
 
         @Test
-        void noExceptionOnValideModel() {
+        void should_notThrowException_when_modelIsValid() {
             val modelToValidate = getValidModel().build();
 
             org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> unitUnderTest.valideModelOrThrow(modelToValidate));
@@ -170,7 +169,5 @@ class BeanstandeteWahlbriefeValidatorTest {
             return BeanstandeteWahlbriefeModel.builder().beanstandeteWahlbriefe(new HashMap<>()).waehlerverzeichnisNummer(1L)
                     .wahlbezirkID("wbzId");
         }
-
     }
-
 }

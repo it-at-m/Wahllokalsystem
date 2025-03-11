@@ -18,12 +18,12 @@ class BeanstandeteWahlbriefeModelMapperTest {
     class ToEmbeddedId {
 
         @Test
-        void nullInNullOut() {
+        void should_returnNull_when_givenNull() {
             Assertions.assertThat(unitUnderTest.toEmbeddedId(null)).isNull();
         }
 
         @Test
-        void objectIsMapped() {
+        void should_returnBezirkIDUndWaehlerverzeichnisNummerEntity_when_givenBeanstandeteWahlbriefeReference() {
             val wahlbezirkID = "wbzId";
             val waehlerverzeichnisNummer = 123L;
             val reference = new BeanstandeteWahlbriefeReference(wahlbezirkID, waehlerverzeichnisNummer);
@@ -40,12 +40,12 @@ class BeanstandeteWahlbriefeModelMapperTest {
     class ToModel {
 
         @Test
-        void nullInNullOut() {
+        void should_returnNull_when_givenNull() {
             Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
         }
 
         @Test
-        void objectIsMapped() {
+        void should_returnBeanstandeteWahlbriefeModel_when_givenBeanstandeteWahlbriefeEntity() {
             val wahlbezirkID = "wbzId";
             val waehlerverzeichnisNummer = 123L;
             val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
@@ -71,12 +71,12 @@ class BeanstandeteWahlbriefeModelMapperTest {
     class ToEntity {
 
         @Test
-        void nullInNullOut() {
+        void should_returnNull_when_givenNull() {
             Assertions.assertThat(unitUnderTest.toEntity(null)).isNull();
         }
 
         @Test
-        void objectIsMapped() {
+        void should_returnBeanstandeteWahlbriefeEntity_when_givenBeanstandeteWahlbriefeModel() {
             val wahlbezirkId = "wbzId";
             val waehlerverzeichnisNummer = 2L;
             val zurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();

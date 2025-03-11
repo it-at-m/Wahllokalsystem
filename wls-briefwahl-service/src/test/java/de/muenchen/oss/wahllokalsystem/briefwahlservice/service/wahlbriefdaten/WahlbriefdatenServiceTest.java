@@ -32,7 +32,7 @@ class WahlbriefdatenServiceTest {
     class GetWahlbriefdaten {
 
         @Test
-        void dataFound() {
+        void should_returnWahlbriefdatenModel_when_givenValidWahlbezirkID() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedRepoEntity = new Wahlbriefdaten();
@@ -48,7 +48,7 @@ class WahlbriefdatenServiceTest {
         }
 
         @Test
-        void noDataFound() {
+        void should_returnEmpty_when_noDataFound() {
             val wahlbezirkID = "wahlbezirkID";
 
             Mockito.doNothing().when(wahlbriefdatenValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
@@ -60,7 +60,7 @@ class WahlbriefdatenServiceTest {
         }
 
         @Test
-        void validationFailed() {
+        void should_notSaveBriefwahlvorbereitung_when_validationFailed() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedValidationException = new RuntimeException("validation failed");
@@ -68,16 +68,14 @@ class WahlbriefdatenServiceTest {
             Mockito.doThrow(mockedValidationException).when(wahlbriefdatenValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlbriefdaten(wahlbezirkID)).isSameAs(mockedValidationException);
-
         }
-
     }
 
     @Nested
     class SetWahlbriefdaten {
 
         @Test
-        void newDataSet() {
+        void should_saveWahlbriefdaten_when_givenValidModel() {
             val wahlbriefdatenModelToSet = WahlbriefdatenModel.builder().build();
 
             val mockedModelMappedAsEntity = new Wahlbriefdaten();
@@ -91,7 +89,7 @@ class WahlbriefdatenServiceTest {
         }
 
         @Test
-        void validationFailed() {
+        void should_notSaveBriefwahlvorbereitung_when_validationFailed() {
             val wahlbriefdatenModelToSet = WahlbriefdatenModel.builder().build();
 
             val mockedValidationException = new RuntimeException("validation failed");
@@ -101,9 +99,6 @@ class WahlbriefdatenServiceTest {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setWahlbriefdaten(wahlbriefdatenModelToSet)).isSameAs(mockedValidationException);
 
             Mockito.verifyNoInteractions(wahlbriefdatenRepository);
-
         }
-
     }
-
 }

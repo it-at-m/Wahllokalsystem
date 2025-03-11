@@ -60,7 +60,7 @@ class WahlbriefdatenServiceTest {
         }
 
         @Test
-        void should_notSaveBriefwahlvorbereitung_when_validationFailed() {
+        void should_notSaveWahlbriefdaten_when_validationFailed() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedValidationException = new RuntimeException("validation failed");
@@ -89,7 +89,7 @@ class WahlbriefdatenServiceTest {
         }
 
         @Test
-        void should_notSaveBriefwahlvorbereitung_when_validationFailed() {
+        void should_notSaveWahlbriefdaten_when_validationFailed() {
             val wahlbriefdatenModelToSet = WahlbriefdatenModel.builder().build();
 
             val mockedValidationException = new RuntimeException("validation failed");

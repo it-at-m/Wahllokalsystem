@@ -25,13 +25,14 @@ public class ArchUnitTest {
     }
 
     @ParameterizedTest(name = "{0}")
-    @MethodSource("allServiceClassesRulesToVerify")
-    void should_verifyArchUnitRuleForAllClassesOfService_when_running(final ArgumentsAccessor arguments) {
+    @MethodSource("allTestClassesRulesToVerify")
+    void should_verifyArchUnitRuleForAllTestClassesOfService_when_running(final ArgumentsAccessor arguments) {
         arguments.get(1, ArchRule.class).check(allTestClasses);
     }
 
-    public static Stream<Arguments> allServiceClassesRulesToVerify() {
+    public static Stream<Arguments> allTestClassesRulesToVerify() {
         return Stream.of(
-                Arguments.of("TEST_NAMING_CONVENTION_RULE", MethodRules.RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED));
+                Arguments.of("TEST_NAMING_CONVENTION_RULE", MethodRules.RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED),
+                Arguments.of("RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED", MethodRules.RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED));
     }
 }

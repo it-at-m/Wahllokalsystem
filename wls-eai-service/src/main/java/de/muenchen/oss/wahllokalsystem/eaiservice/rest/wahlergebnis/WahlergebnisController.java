@@ -2,6 +2,8 @@ package de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis;
 
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.service.ergebnismeldung.ErgebnismeldungService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,12 @@ public class WahlergebnisController {
 
     private final ErgebnismeldungService ergebnismeldungService;
 
+    @Operation(
+            description = "Speichert die Ergebnismeldung.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Ergebnismeldung erfolgreich gespeichert.")
+            }
+    )
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public void saveErgebnismeldung(@Valid @RequestBody ErgebnismeldungDTO ergebnismeldung) {

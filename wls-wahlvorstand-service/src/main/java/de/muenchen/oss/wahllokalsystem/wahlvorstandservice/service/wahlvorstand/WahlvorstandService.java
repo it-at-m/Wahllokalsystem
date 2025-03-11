@@ -4,8 +4,8 @@ import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.W
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.WahlvorstandRepository;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.Wahlvorstandsmitglied;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.security.AuthenticationHandler;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.authentication.AuthDetailRetriever;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -34,7 +34,7 @@ public class WahlvorstandService {
     private final WahlenClient wahlenClient;
     private final ExceptionFactory exceptionFactory;
     private final FunktionsnamenMappingProperties namenMapping;
-    private final Collection<AuthenticationHandler> authenticationHandlers;
+    private final Collection<AuthDetailRetriever> authDetailRetrivers;
 
     private static final WahlbezirkArtModel WAHLBEZIRK_ART_FALLBACK = WahlbezirkArtModel.UWB;
     private static final String FALLBACK_STRING = "FALLBACK_";
@@ -178,9 +178,9 @@ public class WahlvorstandService {
 
     private WahlbezirkArtModel getWahlbezirkArtOfAuthenticaton() {
         val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-        val authenticationHandler = authenticationHandlers.stream().filter(handler -> handler.canHandle(currentAuthentication)).findFirst();
-        if (authenticationHandler.isPresent()) {
-            val wahlbezirkOfUser = authenticationHandler.get().getDetail("wahlbezirksArt", currentAuthentication);
+        val authDetailRetriever = authDetailRetrivers.stream().filter(handler -> handler.canHandle(currentAuthentication)).findFirst();
+        if (authDetailRetriever.isPresent()) {
+            val wahlbezirkOfUser = authDetailRetriever.get().getDetail("wahlbezirksArt", currentAuthentication);
             return wahlbezirkOfUser.map(WahlbezirkArtModel::valueOf).orElseGet(() -> {
                 log.error("#getKonfiguration Error: Wahlbezirkart konnte nicht erkannt werden. UWB wurde als Standardwert angenommen");
                 return WAHLBEZIRK_ART_FALLBACK;

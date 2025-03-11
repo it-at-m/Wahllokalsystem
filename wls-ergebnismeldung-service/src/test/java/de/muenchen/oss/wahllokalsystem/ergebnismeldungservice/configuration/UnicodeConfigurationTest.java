@@ -54,7 +54,6 @@ class UnicodeConfigurationTest {
     private BegruendungRepository begruendungRepository;
 
     @Test
-    @Disabled
     void should_returnComposedString_when_givenDecomposedString() {
         //Persist entity with decomposed string.
         val id = new BezirkUndWahlIDStapelartDTO("bezirkID", "wahlID", StapelartDTO.LTW_BZW_A);

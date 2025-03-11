@@ -100,7 +100,7 @@ class UnterbrechungsUhrzeitServiceTest {
         }
 
         @Test
-        void should_notSaveUnterbrechungsuhrzeit_when_givenValidModel() {
+        void should_notSaveUnterbrechungsuhrzeit_when_validationFails() {
             val modelToSave = UnterbrechungsUhrzeitModel.builder().build();
 
             val mockedValidationException = new RuntimeException("validation failed");

@@ -3,7 +3,7 @@ package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.condition.NestedTestsuitesHaveMatchingMethodCondition.haveMatchingPublicMethodNameIfTheyAreHighestNestedClass;
-import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.predicate.GetAtLeastOneMethodWithAnnotationPredicate.haveAtLeastOneMethodAnnotatedWithTest;
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.predicate.HasAtLeastOneMethodWithAnnotationPredicate.haveAtLeastOneMethodAnnotatedWithTest;
 
 import com.tngtech.archunit.lang.ArchRule;
 import jakarta.persistence.Embeddable;

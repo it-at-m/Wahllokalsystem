@@ -10,7 +10,7 @@ import com.tngtech.archunit.lang.ArchRule;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.ModifiersExampleTest;
-import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.NamingConventionExamplesTest;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.NamingConventionExamplesTest;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;

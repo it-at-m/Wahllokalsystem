@@ -48,7 +48,7 @@ class WahlvorschlagServiceTest {
     class GetWahlvorschlaege {
 
         @Test
-        void foundData() {
+        void should_returnWahlvorschlaegeDTO_when_givenValidWahlbezirkIDAndWahlID() {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
 
@@ -63,7 +63,7 @@ class WahlvorschlagServiceTest {
         }
 
         @Test
-        void foundNoData() {
+        void should_throwNoSearchResultFoundException_when_noDataFound() {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
 
@@ -72,14 +72,13 @@ class WahlvorschlagServiceTest {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlvorschlaegeForWahlAndWahlbezirk(wahlID, wahlbezirkID))
                     .usingRecursiveComparison().isEqualTo(new NoSearchResultFoundException(Wahlvorschlaege.class, wahlbezirkID, wahlID));
         }
-
     }
 
     @Nested
     class GetWahlvorschlaegeListe {
 
         @Test
-        void foundData() {
+        void should_returnWahlvorschlaegeListeDTO_when_givenValidWahlbezirkIDAndWahlID() {
             val wahltag = LocalDate.of(2024, 10, 10);
             val wahlID = "wahlID";
 
@@ -94,7 +93,7 @@ class WahlvorschlagServiceTest {
         }
 
         @Test
-        void foundNoData() {
+        void should_throwNoSearchResultFoundException_when_noDataFound() {
             val wahltag = LocalDate.of(2024, 10, 10);
             val wahlID = "wahlID";
 
@@ -103,14 +102,13 @@ class WahlvorschlagServiceTest {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlvorschlaegeListeForWahltagAndWahlID(wahltag, wahlID))
                     .usingRecursiveComparison().isEqualTo(new NoSearchResultFoundException(WahlvorschlaegeListe.class, wahltag, wahlID));
         }
-
     }
 
     @Nested
     class GetReferendumvorlagen {
 
         @Test
-        void foundData() {
+        void should_returnReferendumvorlagenDTO_when_givenValidWahlbezirkIDAndWahlID() {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
 
@@ -125,7 +123,7 @@ class WahlvorschlagServiceTest {
         }
 
         @Test
-        void foundNoData() {
+        void should_throwNoSearchResultFoundException_when_noDataFound() {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
 
@@ -134,7 +132,5 @@ class WahlvorschlagServiceTest {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getReferendumvorlagenForWahlAndWahlbezirk(wahlID, wahlbezirkID))
                     .usingRecursiveComparison().isEqualTo(new NoSearchResultFoundException(Referendumvorlagen.class, wahlbezirkID, wahlID));
         }
-
     }
-
 }

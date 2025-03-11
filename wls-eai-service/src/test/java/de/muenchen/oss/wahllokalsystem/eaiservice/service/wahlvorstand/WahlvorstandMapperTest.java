@@ -19,7 +19,7 @@ class WahlvorstandMapperTest {
     private final WahlvorstandMapper unitUnderTest = Mappers.getMapper(WahlvorstandMapper.class);
 
     @Test
-    void toDTO() {
+    void should_returnWahlvorstandDTO_when_givenWahlvorstandEntity() {
         val wahlbezirkID = UUID.randomUUID();
         val mitglied1 = new Wahlvorstandsmitglied("vorname1", "nachname1", WahlvorstandsmitgliedsFunktion.SWB, true, LocalDateTime.now());
         mitglied1.setId(UUID.randomUUID());
@@ -39,5 +39,4 @@ class WahlvorstandMapperTest {
 
         Assertions.assertThat(result).isEqualTo(expectedResult);
     }
-
 }

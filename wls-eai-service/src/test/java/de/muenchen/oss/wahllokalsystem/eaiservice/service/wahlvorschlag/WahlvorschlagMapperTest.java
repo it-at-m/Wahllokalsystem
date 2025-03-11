@@ -31,7 +31,7 @@ class WahlvorschlagMapperTest {
     class WahlvorschlagMapping {
 
         @Test
-        void wahlvorschlagToDTO() {
+        void should_returnWahlvorschlagDTO_when_givenWahlvorschlagEntity() {
             val kandidat1 = new Kandidat("name1", 1, false, 1, false);
             kandidat1.setId(UUID.randomUUID());
             val kandidat2 = new Kandidat("name2", 2, true, 2, true);
@@ -54,7 +54,7 @@ class WahlvorschlagMapperTest {
         }
 
         @Test
-        void wahlvorschlaegeToDTO() {
+        void should_returnWahlvorschlaegeDTO_when_givenWahlvorschlaegeEntity() {
             val kandidat1 = new Kandidat("name1", 1, false, 1, false);
             kandidat1.setId(UUID.randomUUID());
             val kandidat2 = new Kandidat("name2", 2, true, 2, true);
@@ -96,7 +96,8 @@ class WahlvorschlagMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
 
-        void wahlvorschlaegeListeToDTO() {
+        @Test
+        void should_returnWahlvorschlaegeListeDTO_when_givenWahlvorschlaegeListeEntity() {
             val kandidat1 = new Kandidat("name1", 1, false, 1, false);
             kandidat1.setId(UUID.randomUUID());
             val kandidat2 = new Kandidat("name2", 2, true, 2, true);
@@ -147,7 +148,7 @@ class WahlvorschlagMapperTest {
     @Nested
     class ReferendumMapping {
         @Test
-        void referendumoptionToDTO() {
+        void should_returnReferendumoptionDTO_when_givenReferendumoptionEntity() {
             val entityToMap = new Referendumoption("Optionsname1", Long.valueOf(1));
             entityToMap.setId(UUID.randomUUID());
 
@@ -159,7 +160,7 @@ class WahlvorschlagMapperTest {
         }
 
         @Test
-        void referendumvorlageToDTO() {
+        void should_returnReferendumvorlageDTO_when_givenReferendumvorlageEntity() {
             val referendumoption1 = new Referendumoption("Optionsname1", Long.valueOf(1));
             referendumoption1.setId(UUID.randomUUID());
             val referendumoption2 = new Referendumoption("Optionsname2", Long.valueOf(2));
@@ -180,7 +181,7 @@ class WahlvorschlagMapperTest {
         }
 
         @Test
-        void referendumvorlagenToDTO() {
+        void should_returnReferendumvorlagenDTO_when_givenReferendumvorlagenEntity() {
             val referendumoption1 = new Referendumoption("Optionsname1", Long.valueOf(1));
             referendumoption1.setId(UUID.randomUUID());
             val referendumoption2 = new Referendumoption("Optionsname2", Long.valueOf(2));
@@ -220,5 +221,4 @@ class WahlvorschlagMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

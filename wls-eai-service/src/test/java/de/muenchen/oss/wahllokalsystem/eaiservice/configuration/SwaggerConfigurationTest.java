@@ -34,7 +34,7 @@ class SwaggerConfigurationTest {
     String version;
 
     @Test
-    void versionIsSetInDoc() throws Exception {
+    void should_setVersionInDoc_when_callingApi() throws Exception {
         val request = MockMvcRequestBuilders.get("/v3/api-docs/public-apis").contentType(MediaType.APPLICATION_JSON);
 
         val response = mockMvc.perform(request).andReturn();
@@ -55,5 +55,4 @@ class SwaggerConfigurationTest {
             private String version;
         }
     }
-
 }

@@ -25,7 +25,7 @@ class WahltageRepositoryTest {
     class FindByTagAfterOrTagEquals {
 
         @Test
-        void dataFound() {
+        void should_returnWahltag_when_givenValidDates() {
             val equalsDateString = "2024-07-03";
             val afterDateString = "2024-08-02";
 
@@ -42,5 +42,4 @@ class WahltageRepositoryTest {
             Assertions.assertThat(result).containsOnly(expectedResult);
         }
     }
-
 }

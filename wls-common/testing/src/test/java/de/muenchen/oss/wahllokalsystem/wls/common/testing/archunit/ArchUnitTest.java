@@ -1,15 +1,12 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit;
 
-import static com.tngtech.archunit.base.DescribedPredicate.not;
-import static com.tngtech.archunit.core.domain.JavaClass.Predicates.equivalentTo;
-
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.ArchRule;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules;
-import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.ModifiersExampleTest;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.ModifiersExampleTest;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.NamingConventionExamplesTest;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,6 +14,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import static com.tngtech.archunit.base.DescribedPredicate.not;
+import static com.tngtech.archunit.core.domain.JavaClass.Predicates.equivalentTo;
 
 public class ArchUnitTest {
 

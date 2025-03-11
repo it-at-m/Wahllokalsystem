@@ -3,6 +3,8 @@ spring:
   banner.location: banner.txt
   profiles:
     group:
+      dummy.clients:
+        - dummy.ldap
       local:
         - plainTextLogging
       standalone:

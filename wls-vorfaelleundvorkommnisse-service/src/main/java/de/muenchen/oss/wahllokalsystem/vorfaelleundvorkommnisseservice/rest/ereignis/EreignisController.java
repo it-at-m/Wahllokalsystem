@@ -1,7 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis;
 
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisService;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -29,24 +28,16 @@ public class EreignisController {
 
     private final EreignisService ereignisService;
 
-    @Operation(description = "Laden der Ereignisse des Wahllokals {wahlbezirkID}")
+    @Operation(description = "Laden der Ereignisse des Wahllokals {wahlbezirkID}.")
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200", description = "OK",
+                            responseCode = "200", description = "Ereignisse des Wahllokals erfolgreich geladen.",
                             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WahlbezirkEreignisseDTO.class)) }
                     ),
                     @ApiResponse(
                             responseCode = "204", description = "Keine Daten vom Fremdsystem geliefert",
                             content = @Content(schema = @Schema())
-                    ),
-                    @ApiResponse(
-                            responseCode = "400", description = "Anfrageparameter sind fehlerhaft",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
-                    ),
-                    @ApiResponse(
-                            responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
                     )
             }
     )
@@ -56,20 +47,12 @@ public class EreignisController {
         return okWithBodyOrNoContent(ereignisFromService.map(ereignisDTOMapper::toDTO));
     }
 
-    @Operation(description = "Speichern der Ereignisse des Wahllokals {wahlbezirkID}")
+    @Operation(description = "Speichern der Ereignisse des Wahllokals {wahlbezirkID}.")
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200", description = "OK",
+                            responseCode = "200", description = "Ereignisse des Wahllokals erfolgreich gespeichert.",
                             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WahlbezirkEreignisseDTO.class)) }
-                    ),
-                    @ApiResponse(
-                            responseCode = "400", description = "Anfrageparameter sind fehlerhaft",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
-                    ),
-                    @ApiResponse(
-                            responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
                     )
             }
     )

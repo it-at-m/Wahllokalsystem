@@ -83,7 +83,7 @@ class UrnenwahlSchliessungsUhrzeitServiceTest {
     }
 
     @Nested
-    class should_saveUrnenwahlvorbereitung_when_givenValidModel {
+    class should_saveUrnenwahlSchliessungsuhrzeit_when_givenValidModel {
 
         @Test
         void should_saveUrnenwahlSchliessungsuhrzeit_when_givenValidModel() {

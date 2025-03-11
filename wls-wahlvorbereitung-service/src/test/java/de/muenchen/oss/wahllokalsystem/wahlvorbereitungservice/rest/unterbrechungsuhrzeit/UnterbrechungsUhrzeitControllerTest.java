@@ -29,7 +29,7 @@ public class UnterbrechungsUhrzeitControllerTest {
     UnterbrechungsUhrzeitController unitUnderTest;
 
     @Test
-    void getDataFromService() {
+    void should_returnUnterbrechungsuhrzeit_when_dataFound() {
         val wahlbezirkID = "wahlbezirkID";
         val unterbrechungsUhrzeit = LocalDateTime.now();
 
@@ -46,7 +46,7 @@ public class UnterbrechungsUhrzeitControllerTest {
     }
 
     @Test
-    void gotNoDataFromService() {
+    void should_returnNoContent_when_noDataFound() {
         val wahlbezirkID = "wahlbezirkID";
 
         Mockito.when(unterbrechungsUhrzeitService.getUnterbrechungsUhrzeit(wahlbezirkID)).thenReturn(Optional.empty());
@@ -58,7 +58,7 @@ public class UnterbrechungsUhrzeitControllerTest {
     }
 
     @Test
-    void requestIsMappedAndSendToService() {
+    void should_postUnterbrechungsuhrzeit_when_calledAndMappedCorrectly() {
         val wahlbezirkID = "wahlbezirkID";
         val unterbrechungsUhrzeit = LocalDateTime.now();
         val requestBody = new UnterbrechungsUhrzeitWriteDTO(unterbrechungsUhrzeit);

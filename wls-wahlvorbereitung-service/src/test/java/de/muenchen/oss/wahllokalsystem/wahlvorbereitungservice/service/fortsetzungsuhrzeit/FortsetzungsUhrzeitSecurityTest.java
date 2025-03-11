@@ -44,7 +44,7 @@ public class FortsetzungsUhrzeitSecurityTest {
     class GetFortsetzungsUhrzeit {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_givenAllAuthorities() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_FORTSETZUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
@@ -55,7 +55,7 @@ public class FortsetzungsUhrzeitSecurityTest {
         }
 
         @Test
-        void bezirkIDPermissionEvaluatorFailed() {
+        void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_FORTSETZUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
@@ -68,7 +68,7 @@ public class FortsetzungsUhrzeitSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getAuthoritiesVariations")
-        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val wahlbezirkID = "wahlbezirkID";
@@ -87,7 +87,7 @@ public class FortsetzungsUhrzeitSecurityTest {
     class SetFortsetzungsUhrzeit {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_givenAllAuthorities() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_FORTSETZUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
@@ -99,7 +99,7 @@ public class FortsetzungsUhrzeitSecurityTest {
         }
 
         @Test
-        void bezirkIDPermissionEvaluatorFailed() {
+        void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_FORTSETZUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
@@ -112,7 +112,7 @@ public class FortsetzungsUhrzeitSecurityTest {
         }
 
         @Test
-        void accessDeniedOnServiceAuthorityMissing() {
+        void should_throwAccessDeniedException_when_serviceAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_REPO_FORTSETZUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
@@ -125,7 +125,7 @@ public class FortsetzungsUhrzeitSecurityTest {
         }
 
         @Test
-        void wlsExceptionOnRepoWriteAuthorityMissing() {
+        void should_returnTechnischeWlsException_when_repoAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_FORTSETZUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
@@ -136,6 +136,5 @@ public class FortsetzungsUhrzeitSecurityTest {
             Assertions.assertThatThrownBy(() -> unitUnderTest.setFortsetzungsUhrzeit(modelToSet))
                     .isExactlyInstanceOf(TechnischeWlsException.class);
         }
-
     }
 }

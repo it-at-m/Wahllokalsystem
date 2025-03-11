@@ -1,12 +1,10 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.briefwahlvorbereitung;
 
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.Briefwahlvorbereitung;
-
-import java.util.List;
-
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.domain.Wahlurne;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.common.WahlurneModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.testdaten.WahlurneTestdatenfactory;
+import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -24,7 +22,7 @@ class BriefwahlvorbereitungModelMapperTest {
     class ToModel {
 
         @Test
-        void isMapped() {
+        void should_returnBreifwahlvorbereitungModel_when_givenBriefwahlvorbereitungEntity() {
             val wahlbezirkID = "wahlbezirkID";
             List<Wahlurne> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValid("1234").build());
             val entityToMap = new Briefwahlvorbereitung(wahlbezirkID, urnenanzahl1);
@@ -41,7 +39,7 @@ class BriefwahlvorbereitungModelMapperTest {
     class ToEntity {
 
         @Test
-        void isMapped() {
+        void should_returnBreifwahlvorbereitungEntity_when_givenBriefwahlvorbereitungModel() {
             val wahlbezirkID = "wahlbezirkID";
             List<WahlurneModel> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValidModel("1234").build());
             val modelToMap = new BriefwahlvorbereitungModel(wahlbezirkID, urnenanzahl1);

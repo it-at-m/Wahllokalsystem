@@ -2,11 +2,10 @@ package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.briefwahlvo
 
 import static org.mockito.ArgumentMatchers.eq;
 
-import java.util.Collections;
-import java.util.Optional;
-
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.briefwahlvorbereitung.BriefwahlvorbereitungModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.briefwahlvorbereitung.BriefwahlvorbereitungService;
+import java.util.Collections;
+import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -30,7 +29,7 @@ public class BriefwahlvorbereitungControllerTest {
     BriefwahlvorbereitungController unitUnderTest;
 
     @Test
-    void getDataFromService() {
+    void should_returnBreifwahlvorbereitungData_when_dataFound() {
         val wahlbezirkID = "wahlbezirkID";
 
         val mockedServiceOptionalBody = new BriefwahlvorbereitungModel(wahlbezirkID, Collections.emptyList());
@@ -46,7 +45,7 @@ public class BriefwahlvorbereitungControllerTest {
     }
 
     @Test
-    void gotNoDataFromService() {
+    void should_returnNoContent_when_noDataFound() {
         val wahlbezirkID = "wahlbezirkID";
 
         Mockito.when(briefwahlvorbereitungService.getBriefwahlvorbereitung(wahlbezirkID)).thenReturn(Optional.empty());
@@ -58,7 +57,7 @@ public class BriefwahlvorbereitungControllerTest {
     }
 
     @Test
-    void requestIsMappedAndSendToService() {
+    void should_postBreifwahlvorbereitungData_when_calledAndMappedCorrectly() {
         val wahlbezirkID = "wahlbezirkID";
         val requestBody = new BriefwahlvorbereitungWriteDTO(Collections.emptyList());
 

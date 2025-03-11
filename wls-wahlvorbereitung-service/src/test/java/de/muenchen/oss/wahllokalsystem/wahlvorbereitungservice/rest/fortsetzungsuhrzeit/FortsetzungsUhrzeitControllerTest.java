@@ -29,7 +29,7 @@ public class FortsetzungsUhrzeitControllerTest {
     FortsetzungsUhrzeitController unitUnderTest;
 
     @Test
-    void getDataFromService() {
+    void should_returnFortsetzungsuhrzeit_when_dataFound() {
         val wahlbezirkID = "wahlbezirkID";
         val fortsetzungsUhrzeit = LocalDateTime.now();
 
@@ -46,7 +46,7 @@ public class FortsetzungsUhrzeitControllerTest {
     }
 
     @Test
-    void gotNoDataFromService() {
+    void should_returnNoContent_when_noDataFound() {
         val wahlbezirkID = "wahlbezirkID";
 
         Mockito.when(fortsetzungsUhrzeitService.getFortsetzungsUhrzeit(wahlbezirkID)).thenReturn(Optional.empty());
@@ -58,7 +58,7 @@ public class FortsetzungsUhrzeitControllerTest {
     }
 
     @Test
-    void requestIsMappedAndSendToService() {
+    void should_postFortsetzungsuhrzeit_when_calledAndMappedCorrectly() {
         val wahlbezirkID = "wahlbezirkID";
         val fortsetzungsUhrzeit = LocalDateTime.now();
         val requestBody = new FortsetzungsUhrzeitWriteDTO(fortsetzungsUhrzeit);

@@ -22,7 +22,7 @@ class UrnenwahlvorbereitungModelMapperTest {
     class ToModel {
 
         @Test
-        void isMapped() {
+        void should_returnUrnenwahlvorbereitungModel_when_givenUrnenwahlvorbereitungEntity() {
             val wahlbezirkID = "wahlbezirkID";
             val anzahlKabinen = 21;
             val anzahlNebenraeume = 3;
@@ -43,7 +43,7 @@ class UrnenwahlvorbereitungModelMapperTest {
     class ToEntity {
 
         @Test
-        void isMapped() {
+        void should_returnUrnenwahlvorbereitungEntity_when_givenUrnenwahlvorbereitungModel() {
             val wahlbezirkID = "wahlbezirkID";
             val anzahlKabinen = 21;
             val anzahlNebenraeume = 3;

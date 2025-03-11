@@ -39,8 +39,9 @@ class FortsetzungsUhrzeitServiceTest {
 
     @Nested
     class getFortsetzungsUhrzeit {
+
         @Test
-        void dataFound() {
+        void should_returnFortsetzungsuhrzeit_when_givenValidWahlbezirkID() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedRepoResponse = new FortsetzungsUhrzeit();
@@ -56,7 +57,7 @@ class FortsetzungsUhrzeitServiceTest {
         }
 
         @Test
-        void noDataFound() {
+        void should_returnEmpty_when_noDataFound() {
             val wahlbezirkID = "wahlbezirkID";
 
             Mockito.doNothing().when(fortsetzungsUhrzeitValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
@@ -70,7 +71,7 @@ class FortsetzungsUhrzeitServiceTest {
         }
 
         @Test
-        void exceptionFromValidator() {
+        void should_throwException_when_validationFailed() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedValidatorException = new RuntimeException("validation failed");
@@ -85,7 +86,7 @@ class FortsetzungsUhrzeitServiceTest {
     class SetFortsetzungsUhrzeit {
 
         @Test
-        void isSaved() {
+        void should_saveFortsetzungsuhrzeit_when_givenValidModel() {
             val modelToSave = FortsetzungsUhrzeitModel.builder().build();
 
             val mockedModelAsEntity = new FortsetzungsUhrzeit();
@@ -99,7 +100,7 @@ class FortsetzungsUhrzeitServiceTest {
         }
 
         @Test
-        void exceptionFromValidationGotThrown() {
+        void should_notSaveFortsetzungsuhrzeit_when_validationFailed() {
             val modelToSave = FortsetzungsUhrzeitModel.builder().build();
 
             val mockedValidationException = new RuntimeException("validation failed");
@@ -110,7 +111,7 @@ class FortsetzungsUhrzeitServiceTest {
         }
 
         @Test
-        void exceptionFromSavingIsMapped() {
+        void should_throwTechnischeWlsException_when_savingFailed() {
             val modelToSave = FortsetzungsUhrzeitModel.builder().build();
 
             val mockedModelAsEntity = new FortsetzungsUhrzeit();
@@ -126,5 +127,4 @@ class FortsetzungsUhrzeitServiceTest {
                     .isSameAs(mockedFactoryException);
         }
     }
-
 }

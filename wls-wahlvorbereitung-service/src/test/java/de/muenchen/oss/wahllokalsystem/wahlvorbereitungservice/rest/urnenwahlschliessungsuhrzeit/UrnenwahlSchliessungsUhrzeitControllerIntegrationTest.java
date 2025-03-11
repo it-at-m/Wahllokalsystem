@@ -73,7 +73,7 @@ public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
                         Authorities.REPOSITORY_WRITE_URNENWAHLSCHLIESSUNGSUHRZEIT,
                         Authorities.REPOSITORY_READ_URNENWAHLSCHLIESSUNGSUHRZEIT }
         )
-        void dataFound() throws Exception {
+        void should_returnData_when_dataIsPresentInRepo() throws Exception {
             val wahlbezirkIDToFind = "123";
             val urnenwahlSchliessungsUhrzeitToFind = new UrnenwahlSchliessungsUhrzeit();
             urnenwahlSchliessungsUhrzeitToFind.setWahlbezirkID(wahlbezirkIDToFind);
@@ -96,7 +96,7 @@ public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
                         Authorities.REPOSITORY_WRITE_URNENWAHLSCHLIESSUNGSUHRZEIT,
                         Authorities.REPOSITORY_READ_URNENWAHLSCHLIESSUNGSUHRZEIT }
         )
-        void noDataFound() throws Exception {
+        void should_returnNoContent_when_noDataFound() throws Exception {
             val wahlbezirkIDEmpty = "123";
 
             val wahlbezirkIDNotEmpty = "456";
@@ -120,7 +120,7 @@ public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
                 authorities = { Authorities.SERVICE_POST_URNENWAHLSCHLIESSUNGSUHRZEIT,
                         Authorities.REPOSITORY_WRITE_URNENWAHLSCHLIESSUNGSUHRZEIT }
         )
-        void newDataIsSaved() throws Exception {
+        void should_setNewData_when_callingPost() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             val writeDto = new UrnenwahlSchliessungsUhrzeitWriteDTO(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
             val request = buildPostRequest(wahlbezirkID, writeDto);
@@ -140,7 +140,7 @@ public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
                 authorities = { Authorities.SERVICE_POST_URNENWAHLSCHLIESSUNGSUHRZEIT,
                         Authorities.REPOSITORY_WRITE_URNENWAHLSCHLIESSUNGSUHRZEIT }
         )
-        void existingDataIsOverwritten() throws Exception {
+        void should_replaceData_when_dataIsPresent() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             val writeDto1 = new UrnenwahlSchliessungsUhrzeitWriteDTO(LocalDateTime.of(2023, 1, 1, 12, 0, 0));
             val request1 = buildPostRequest(wahlbezirkID, writeDto1);
@@ -171,7 +171,7 @@ public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
                 authorities = { Authorities.SERVICE_POST_URNENWAHLSCHLIESSUNGSUHRZEIT,
                         Authorities.REPOSITORY_WRITE_URNENWAHLSCHLIESSUNGSUHRZEIT }
         )
-        void gotWlsExceptionWhenParameterNotComplete() throws Exception {
+        void should_returnFachlicheWlsException_when_requestIsInvalidWhenParameterNotComplete() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             val writeDto = new UrnenwahlSchliessungsUhrzeitWriteDTO(null);
             val request = buildPostRequest(wahlbezirkID, writeDto);
@@ -192,7 +192,7 @@ public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
                 authorities = { Authorities.SERVICE_POST_URNENWAHLSCHLIESSUNGSUHRZEIT,
                         Authorities.REPOSITORY_WRITE_URNENWAHLSCHLIESSUNGSUHRZEIT }
         )
-        void gotWlsExceptionWhenNotSaveableCauseOfTooLongData() throws Exception {
+        void should_returnTechnischeWlsException_when_notSaveableCauseOfTooLongData() throws Exception {
             val wahlbezirkID = StringUtils.leftPad(" ", 255) + "wahlbezirkID";
             val writeDto = new UrnenwahlSchliessungsUhrzeitWriteDTO(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
 

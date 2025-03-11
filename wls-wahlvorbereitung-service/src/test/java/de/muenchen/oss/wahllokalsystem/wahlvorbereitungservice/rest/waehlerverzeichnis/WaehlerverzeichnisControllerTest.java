@@ -33,7 +33,7 @@ class WaehlerverzeichnisControllerTest {
     class PostWaehlerverzeichnis {
 
         @Test
-        void dtoIsMappedAndSendToService() {
+        void should_postWaehlerverzeichnis_when_calledAndMappedCorrectly() {
             val wahlbezirkID = "wahlbezirkID";
             val waehlerverzeichnisNummer = 13L;
             val requestDTO = new WaehlerverzeichnisWriteDTO(true, true, true, true);
@@ -54,7 +54,7 @@ class WaehlerverzeichnisControllerTest {
     class GetWaehlerverzeichnis {
 
         @Test
-        void dataFound() {
+        void should_returnWaehlerverzeichnis_when_dataIsPresentInRepo() {
             val wahlbezirkID = "wahlbezirkID";
             val waehlerverzeichnisNummer = 13L;
 
@@ -74,7 +74,7 @@ class WaehlerverzeichnisControllerTest {
         }
 
         @Test
-        void noDataFound() {
+        void should_returnNoContent_when_noDataFound() {
             val wahlbezirkID = "wahlbezirkID";
             val waehlerverzeichnisNummer = 13L;
 

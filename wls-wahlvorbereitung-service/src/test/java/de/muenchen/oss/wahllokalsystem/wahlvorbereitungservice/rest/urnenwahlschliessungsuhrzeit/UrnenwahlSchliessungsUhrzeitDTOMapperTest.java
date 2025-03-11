@@ -19,7 +19,7 @@ class UrnenwahlSchliessungsUhrzeitDTOMapperTest {
     class ToDTO {
 
         @Test
-        void isMapped() {
+        void should_returnUrnenwahlSchliessungsuhrzeitDTO_when_givenUrnenwahlSchliessungsuhrzeitModel() {
             val wahlbezirkID = "wahlbezirkID";
             val schliessungsuhrzeit = LocalDateTime.now();
             val modelToMap = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, schliessungsuhrzeit);
@@ -35,7 +35,7 @@ class UrnenwahlSchliessungsUhrzeitDTOMapperTest {
     class ToModel {
 
         @Test
-        void isMapped() {
+        void should_returnUrnenwahlSchliessungsuhrzeitModel_when_givenUrnenwahlSchliessungsuhrzeitDTO() {
             val schliessungsuhrzeit = LocalDateTime.now();
             val dtoToMap = new UrnenwahlSchliessungsUhrzeitWriteDTO(schliessungsuhrzeit);
             val wahlbezirkIDToMap = "wahlbezirkID";

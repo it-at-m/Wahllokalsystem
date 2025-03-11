@@ -27,7 +27,7 @@ class ExceptionFactoryTest {
     class CreateFachlicheWlsException {
 
         @Test
-        void buildWithExceptionDataWrapperData() {
+        void should_returnWlsExceptionWithGivenData_when_convertedCorrectly() {
             val code = "0815";
             val message = "Everything Everywhere All at Once";
             val wrappedData = new ExceptionDataWrapper(code, message);

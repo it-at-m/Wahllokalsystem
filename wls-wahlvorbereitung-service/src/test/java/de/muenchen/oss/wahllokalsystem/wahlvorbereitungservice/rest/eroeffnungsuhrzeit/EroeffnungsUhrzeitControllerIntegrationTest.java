@@ -68,7 +68,7 @@ public class EroeffnungsUhrzeitControllerIntegrationTest {
                 authorities = { Authorities.SERVICE_GET_EROEFFNUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_EROEFFNUNGSUHRZEIT,
                         Authorities.REPOSITORY_READ_EROEFFNUNGSUHRZEIT }
         )
-        void dataFound() throws Exception {
+        void should_returnEroeffnungsuhrzeit_when_dataIsPresentInRepo() throws Exception {
             val wahlbezirkIDToFind = "123";
             val eroeffnungsUhrzeitToFind = new EroeffnungsUhrzeit();
             eroeffnungsUhrzeitToFind.setWahlbezirkID(wahlbezirkIDToFind);
@@ -89,7 +89,7 @@ public class EroeffnungsUhrzeitControllerIntegrationTest {
                 authorities = { Authorities.SERVICE_GET_EROEFFNUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_EROEFFNUNGSUHRZEIT,
                         Authorities.REPOSITORY_READ_EROEFFNUNGSUHRZEIT }
         )
-        void noDataFound() throws Exception {
+        void should_returnNoContent_when_noDataFound() throws Exception {
             val wahlbezirkIDEmpty = "123";
 
             val wahlbezirkIDNotEmpty = "456";
@@ -112,7 +112,7 @@ public class EroeffnungsUhrzeitControllerIntegrationTest {
         @WithMockUser(
                 authorities = { Authorities.SERVICE_POST_EROEFFNUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_EROEFFNUNGSUHRZEIT }
         )
-        void newDataIsSaved() throws Exception {
+        void should_setNewData_when_callingPost() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             val writeDto = new EroeffnungsUhrzeitWriteDTO(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
             val request = buildPostRequest(wahlbezirkID, writeDto);
@@ -130,7 +130,7 @@ public class EroeffnungsUhrzeitControllerIntegrationTest {
         @WithMockUser(
                 authorities = { Authorities.SERVICE_POST_EROEFFNUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_EROEFFNUNGSUHRZEIT }
         )
-        void existingDataIsOverwritten() throws Exception {
+        void should_replaceData_when_dataIsPresent() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             val writeDto1 = new EroeffnungsUhrzeitWriteDTO(LocalDateTime.of(2023, 1, 1, 12, 0, 0));
             val request1 = buildPostRequest(wahlbezirkID, writeDto1);
@@ -158,7 +158,7 @@ public class EroeffnungsUhrzeitControllerIntegrationTest {
         @WithMockUser(
                 authorities = { Authorities.SERVICE_POST_EROEFFNUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_EROEFFNUNGSUHRZEIT }
         )
-        void gotWlsExceptionWhenParameterNotComplete() throws Exception {
+        void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             val writeDto = new EroeffnungsUhrzeitWriteDTO(null);
             val request = buildPostRequest(wahlbezirkID, writeDto);
@@ -178,7 +178,7 @@ public class EroeffnungsUhrzeitControllerIntegrationTest {
         @WithMockUser(
                 authorities = { Authorities.SERVICE_POST_EROEFFNUNGSUHRZEIT, Authorities.REPOSITORY_WRITE_EROEFFNUNGSUHRZEIT }
         )
-        void gotWlsExceptionWhenNotSaveableCauseOfTooLongData() throws Exception {
+        void should_returnTechnischeWlsException_when_notSaveableCauseOfTooLongData() throws Exception {
             val wahlbezirkID = StringUtils.leftPad(" ", 255) + "wahlbezirkID";
             val writeDto = new EroeffnungsUhrzeitWriteDTO(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
 

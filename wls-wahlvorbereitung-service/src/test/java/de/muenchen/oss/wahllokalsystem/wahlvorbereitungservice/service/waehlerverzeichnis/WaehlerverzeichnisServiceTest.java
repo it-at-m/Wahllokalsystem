@@ -39,7 +39,7 @@ class WaehlerverzeichnisServiceTest {
     class GetWaehlerverzeichnis {
 
         @Test
-        void dataFound() {
+        void should_returnWaehlerverzeichnis_when_givenValidReference() {
             val waehlerverzeichnisReference = new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 123L);
 
             val mockedRepoResponse = new Waehlerverzeichnis();
@@ -54,7 +54,7 @@ class WaehlerverzeichnisServiceTest {
         }
 
         @Test
-        void noDataFound() {
+        void should_returnEmpty_when_noDataFound() {
             val waehlerverzeichnisReference = new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 123L);
 
             Mockito.when(waehlerverzeichnisRepository.findById(waehlerverzeichnisReference)).thenReturn(Optional.empty());
@@ -65,7 +65,7 @@ class WaehlerverzeichnisServiceTest {
         }
 
         @Test
-        void exceptionOnValidation() {
+        void should_throwException_when_validationFailed() {
             val waehlerverzeichnisReference = new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 123L);
 
             val mockedValidationException = new RuntimeException("validation failed");
@@ -81,7 +81,7 @@ class WaehlerverzeichnisServiceTest {
     class SetWaehlverzeichnis {
 
         @Test
-        void dataIsSaved() {
+        void should_saveWaehlerverzeichnis_when_givenValidModel() {
             val modelToSave = WaehlerverzeichnisModel.builder().build();
 
             val mockedMappedEntity = new Waehlerverzeichnis();
@@ -94,7 +94,7 @@ class WaehlerverzeichnisServiceTest {
         }
 
         @Test
-        void exceptionOnValidation() {
+        void should_notSaveWaehlerverzeichnis_when_validationFailed() {
             val modelToSave = WaehlerverzeichnisModel.builder().build();
 
             val mockedValidationException = new RuntimeException("validation failed");
@@ -105,7 +105,7 @@ class WaehlerverzeichnisServiceTest {
         }
 
         @Test
-        void exceptionOnSave() {
+        void should_throwTechnischeWlsException_when_savingFailed() {
             val modelToSave = WaehlerverzeichnisModel.builder().build();
 
             val mockedMappedEntity = new Waehlerverzeichnis();

@@ -19,7 +19,7 @@ class UrnenwahlSchliessungsUhrzeitModelMapperTest {
     class ToModel {
 
         @Test
-        void isMapped() {
+        void should_returnUrnenwahlSchliessungsUhrzeitModel_when_givenUrnenwahlSchliessungsUhrzeitEntity() {
             val wahlbezirkID = "wahlbezirkID";
             val schliessungsuhrzeit = LocalDateTime.now();
             val entityToMap = new UrnenwahlSchliessungsUhrzeit(wahlbezirkID, schliessungsuhrzeit);
@@ -36,7 +36,7 @@ class UrnenwahlSchliessungsUhrzeitModelMapperTest {
     class ToEntity {
 
         @Test
-        void isMapped() {
+        void should_returnUrnenwahlSchliessungsUhrzeitEntity_when_givenUrnenwahlSchliessungsUhrzeitModel() {
             val wahlbezirkID = "wahlbezirkID";
             val schliessungsuhrzeit = LocalDateTime.now();
 

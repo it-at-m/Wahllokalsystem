@@ -16,7 +16,7 @@ class WaehlerverzeichnisModelMapperTest {
     class ToEntity {
 
         @Test
-        void isMapped() {
+        void should_returnWaehlerverzeichnisModel_when_givenWaehlerverzeichnisEntity() {
             val wahlbezirkID = "wahlbezirkID";
             val waehlerverzeichnisNummer = 3L;
             val modelToMap = new WaehlerverzeichnisModel(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer), false, false, true,
@@ -35,7 +35,7 @@ class WaehlerverzeichnisModelMapperTest {
     class ToModel {
 
         @Test
-        void isMapped() {
+        void should_returnWaehlerverzeichnisEntity_when_givenWaehlerverzeichnisModel() {
             val wahlbezirkID = "wahlbezirkID";
             val waehlerverzeichnisNummer = 3L;
             val entityToMap = new Waehlerverzeichnis(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer), false, false, true,

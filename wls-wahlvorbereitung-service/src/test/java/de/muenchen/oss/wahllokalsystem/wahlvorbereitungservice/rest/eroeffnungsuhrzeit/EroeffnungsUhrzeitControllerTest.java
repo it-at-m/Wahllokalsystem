@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.eroeffnungsuhrzeit;
 
 import static org.mockito.ArgumentMatchers.eq;
+
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.eroeffnungsuhrzeit.EroeffnungsUhrzeitModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.eroeffnungsuhrzeit.EroeffnungsUhrzeitService;
 import java.time.LocalDateTime;
@@ -28,7 +29,7 @@ public class EroeffnungsUhrzeitControllerTest {
     EroeffnungsUhrzeitController unitUnderTest;
 
     @Test
-    void getDataFromService() {
+    void should_returnEroeffnungsuhrzeit_when_dataFound() {
         val wahlbezirkID = "wahlbezirkID";
         val eroeffnungsUhrzeit = LocalDateTime.now();
 
@@ -45,7 +46,7 @@ public class EroeffnungsUhrzeitControllerTest {
     }
 
     @Test
-    void gotNoDataFromService() {
+    void should_returnNoContent_when_noDataFound() {
         val wahlbezirkID = "wahlbezirkID";
 
         Mockito.when(eroeffnungsUhrzeitService.getEroeffnungsUhrzeit(wahlbezirkID)).thenReturn(Optional.empty());
@@ -57,7 +58,7 @@ public class EroeffnungsUhrzeitControllerTest {
     }
 
     @Test
-    void requestIsMappedAndSendToService() {
+    void should_postEroeffnungsuhrzeit_when_calledAndMappedCorrectly() {
         val wahlbezirkID = "wahlbezirkID";
         val eroeffnungsUhrzeit = LocalDateTime.now();
         val requestBody = new EroeffnungsUhrzeitWriteDTO(eroeffnungsUhrzeit);

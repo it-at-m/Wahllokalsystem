@@ -27,14 +27,14 @@ class EroeffnungsUhrzeitValidatorTest {
     class ValidWahlbezirkIDOrThrow {
 
         @Test
-        void noExceptionOnValidWahlbezirkID() {
+        void should_notThrowException_when_wahlbezirkIDIsValid() {
             val idToValidate = "wahlbezirkID";
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahlbezirkIDOrThrow(idToValidate));
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDIsNull() {
+        void should_throwWlsException_when_wahlbezirkIDisNull() {
             val exceptionToThrow = FachlicheWlsException.withCode("000").buildWithMessage("error");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG)).thenReturn(exceptionToThrow);
 
@@ -42,7 +42,7 @@ class EroeffnungsUhrzeitValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDIsEmpty() {
+        void should_throwWlsException_when_wahlbezirkIDisEmpty() {
             val exceptionToThrow = FachlicheWlsException.withCode("000").buildWithMessage("error");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG)).thenReturn(exceptionToThrow);
 
@@ -54,14 +54,14 @@ class EroeffnungsUhrzeitValidatorTest {
     class ValidModelToSetOrThrow {
 
         @Test
-        void noExceptionOnValidModel() {
+        void should_notThrowException_when_modelIsValid() {
             val validModel = initValid().build();
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(validModel));
         }
 
         @Test
-        void exceptionWhenModelIsNull() {
+        void should_throwException_when_modelIsNull() {
             val mockedFactoryException = FachlicheWlsException.withCode("000").buildWithMessage("error");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG)).thenReturn(mockedFactoryException);
 
@@ -69,7 +69,7 @@ class EroeffnungsUhrzeitValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDIsNull() {
+        void should_throwWlsException_when_wahlbezirkIDisNull() {
             val invalidModel = initValid().wahlbezirkID(null).build();
 
             val mockedFactoryException = FachlicheWlsException.withCode("000").buildWithMessage("error");
@@ -79,7 +79,7 @@ class EroeffnungsUhrzeitValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDIsEmpty() {
+        void should_throwWlsException_when_wahlbezirkIDisEmpty() {
             val invalidModel = initValid().wahlbezirkID("").build();
 
             val mockedFactoryException = FachlicheWlsException.withCode("000").buildWithMessage("error");
@@ -89,7 +89,7 @@ class EroeffnungsUhrzeitValidatorTest {
         }
 
         @Test
-        void exceptionWhenEroeffnungsUhrzeitIsNull() {
+        void should_throwWlsException_when_eroeffnungsuhrzeitIsNull() {
             val invalidModel = initValid().eroeffnungsuhrzeit(null).build();
 
             val mockedFactoryException = FachlicheWlsException.withCode("000").buildWithMessage("error");

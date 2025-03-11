@@ -19,7 +19,7 @@ class EroeffnungsUhrzeitModelMapperTest {
     class ToModel {
 
         @Test
-        void isMapped() {
+        void should_returnEroeffnungsuhrzeitModel_when_givenEroeffnungsuhrzeitEntity() {
             val wahlbezirkID = "wahlbezirkID";
             val eroeffnungsUhrzeit = LocalDateTime.now();
             val entityToMap = new EroeffnungsUhrzeit(wahlbezirkID, eroeffnungsUhrzeit);
@@ -36,7 +36,7 @@ class EroeffnungsUhrzeitModelMapperTest {
     class ToEntity {
 
         @Test
-        void isMapped() {
+        void should_returnEroeffnungsuhrzeitEntity_when_givenEroeffnungsuhrzeitModel() {
             val wahlbezirkID = "wahlbezirkID";
             val eroeffnungsUhrzeit = LocalDateTime.now();
 

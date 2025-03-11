@@ -19,7 +19,7 @@ class UnterbrechungsUhrzeitDTOMapperTest {
     class ToDTO {
 
         @Test
-        void isMapped() {
+        void should_returnUnterbrechungsUhrzeitDTO_when_givenUnterbrechungsUhrzeitModel() {
             val wahlbezirkID = "wahlbezirkID";
             val unterbrechungsUhrzeit = LocalDateTime.now();
             val modelToMap = new UnterbrechungsUhrzeitModel(wahlbezirkID, unterbrechungsUhrzeit);
@@ -35,7 +35,7 @@ class UnterbrechungsUhrzeitDTOMapperTest {
     class ToModel {
 
         @Test
-        void isMapped() {
+        void should_returnUnterbrechungsUhrzeitModel_when_givenUnterbrechungsUhrzeitDTO() {
             val unterbrechungsUhrzeit = LocalDateTime.now();
             val dtoToMap = new UnterbrechungsUhrzeitWriteDTO(unterbrechungsUhrzeit);
             val wahlbezirkIDToMap = "wahlbezirkID";

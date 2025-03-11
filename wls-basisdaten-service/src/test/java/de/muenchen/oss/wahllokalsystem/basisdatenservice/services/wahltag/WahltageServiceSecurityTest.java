@@ -45,7 +45,7 @@ public class WahltageServiceSecurityTest {
     class GetWahltage {
 
         @AfterEach
-        void tearDown() {
+        void teardown() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_DELETE_WAHLTAGE);
             wahltagRepository.deleteAll();
         }

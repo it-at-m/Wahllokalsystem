@@ -31,7 +31,7 @@ class WahltagRepositoryTest {
     private WahltagRepository repository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         repository.deleteAll();
     }
 

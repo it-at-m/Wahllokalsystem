@@ -78,7 +78,7 @@ public class ReferendumvorlagenControllerIntegrationTest {
     ReferendumvorlagenValidator referendumvorlagenValidator;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_REFERENDUMVORLAGEN);
         referendumvorlagenRepository.deleteAll();
     }

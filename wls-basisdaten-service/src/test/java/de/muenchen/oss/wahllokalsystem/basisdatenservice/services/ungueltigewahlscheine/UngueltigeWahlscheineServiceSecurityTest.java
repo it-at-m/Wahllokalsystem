@@ -36,7 +36,7 @@ public class UngueltigeWahlscheineServiceSecurityTest {
     UngueltigeWahlscheineRepository ungueltigeWahlscheineRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_UNGUELTIGEWAHLSCHEINE);
         ungueltigeWahlscheineRepository.deleteAll();
     }

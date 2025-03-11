@@ -36,7 +36,7 @@ class WahlRepositoryTest {
     private WahlRepository repository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         repository.deleteAll();
     }
 

@@ -4,6 +4,7 @@ import static de.muenchen.oss.wahllokalsystem.eaiservice.TestConstants.SPRING_TE
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.eaiservice.Authorities;
 import de.muenchen.oss.wahllokalsystem.eaiservice.MicroServiceApplication;
@@ -65,7 +66,7 @@ public class ErgebnismeldungControllerIntegrationTest {
     ErgebnismeldungValidator ergebnismeldungValidator;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         ergebnismeldungRepository.deleteAll();
     }
 

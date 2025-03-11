@@ -48,7 +48,7 @@ public class ReferendumvorlagenServiceSecurityTest {
     ObjectMapper objectMapper;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_REFERENDUMVORLAGEN, Authorities.REPOSITORY_DELETE_REFERENDUMVORLAGE);
         referendumvorlagenRepository.deleteAll();
         referendumvorlageRepository.deleteAll();

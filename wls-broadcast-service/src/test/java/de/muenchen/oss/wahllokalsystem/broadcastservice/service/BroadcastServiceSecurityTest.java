@@ -36,7 +36,7 @@ public class BroadcastServiceSecurityTest {
     BroadcastService broadcastService;
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         Assertions.assertThat(broadcastService).isNotNull();
         SecurityContextHolder.clearContext();
     }

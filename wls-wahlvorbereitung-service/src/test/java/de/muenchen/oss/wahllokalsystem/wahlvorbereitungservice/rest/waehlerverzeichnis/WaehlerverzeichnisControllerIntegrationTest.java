@@ -65,7 +65,7 @@ public class WaehlerverzeichnisControllerIntegrationTest {
     WaehlerverzeichnisValidator waehlerverzeichnisValidator;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_WAEHLERVERZEICHNIS);
         waehlerverzeichnisRepository.deleteAll();
     }

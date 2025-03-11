@@ -76,7 +76,7 @@ public class WahldatenControllerIntegrationTest {
     ObjectMapper objectMapper;
 
     @AfterEach
-    public void tearDown() {
+    public void teardown() {
         wahlbezirkRepository.deleteAll();
         stimmzettelgebietRepository.deleteAll();
         wahlRepository.deleteAll();

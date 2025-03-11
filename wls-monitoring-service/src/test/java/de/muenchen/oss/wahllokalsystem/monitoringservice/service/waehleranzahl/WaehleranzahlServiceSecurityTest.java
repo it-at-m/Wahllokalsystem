@@ -59,7 +59,7 @@ public class WaehleranzahlServiceSecurityTest {
     }
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_WAEHLERANZAHL);
         waehleranzahlRepository.deleteAll();
     }

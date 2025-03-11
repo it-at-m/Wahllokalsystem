@@ -48,12 +48,12 @@ flowchart LR
 > Beachten Sie, dass somit nur eine Instanz eines Services gleichzeitig laufen kann.
 
 | Service                                                                                   | Port |
-| ----------------------------------------------------------------------------------------- | ---- |
+|-------------------------------------------------------------------------------------------| ---- |
 | [Admin](/services/backend-services/admin-service/)                                        | 8209 |
 | [Auth](/services/backend-services/auth-service/)                                          | 8100 |
 | [Basisdaten](/services/backend-services/basisdaten-service/)                              | 8205 |
 | [Briefwahl](/services/backend-services/briefwahl-service/)                                | 8202 |
-| Broadcast                                                                                 | 8200 |
+| [Broadcast](/services/backend-services/broadcast-service/)                                | 8200 |
 | [EAI](/services/backend-services/eai-service/)                                            | 8300 |
 | [Ergebnismeldung](/services/backend-services/ergebnismeldung-service/)                    | 8208 |
 | [Infomanagement](/services/backend-services/infomanagement-service/)                      | 8201 |

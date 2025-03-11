@@ -17,7 +17,7 @@ class WahltageRepositoryTest {
     WahltageRepository wahltageRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         wahltageRepository.deleteAll();
     }
 

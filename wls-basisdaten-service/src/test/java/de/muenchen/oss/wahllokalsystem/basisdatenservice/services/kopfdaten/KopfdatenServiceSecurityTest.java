@@ -48,7 +48,7 @@ public class KopfdatenServiceSecurityTest {
     class GetKopfdaten {
 
         @AfterEach
-        void tearDown() {
+        void teardown() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_DELETE_KOPFDATEN);
             kopfdatenRepository.deleteAll();
         }

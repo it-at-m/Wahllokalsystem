@@ -14,7 +14,7 @@ public class GetAtLeastOneMethodWithAnnotationPredicate extends DescribedPredica
         this.annotationClass = annotationClass;
     }
 
-    public static final DescribedPredicate<JavaClass> haveAtLeastOneMethodAnnotetedWithTest = new GetAtLeastOneMethodWithAnnotationPredicate(Test.class);
+    public static final DescribedPredicate<JavaClass> haveAtLeastOneMethodAnnotatedWithTest = new GetAtLeastOneMethodWithAnnotationPredicate(Test.class);
 
     @Override
     public boolean test(final JavaClass javaClass) {

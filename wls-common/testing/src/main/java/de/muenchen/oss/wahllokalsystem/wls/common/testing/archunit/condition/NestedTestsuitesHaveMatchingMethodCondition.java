@@ -51,10 +51,10 @@ public class NestedTestsuitesHaveMatchingMethodCondition extends ArchCondition<J
                     val testedClass = Class.forName(testedClassFullName);
 
                     val expectedMethodName = StringUtils.uncapitalize(topNestedClass.getSimpleName());
-                    val testedClassHasPublicMehodMatchingNestedClassName = Arrays.stream(testedClass.getMethods())
+                    val testedClassHasPublicMethodMatchingNestedClassName = Arrays.stream(testedClass.getMethods())
                             .anyMatch(method -> method.getName().equals(expectedMethodName));
 
-                    if (!testedClassHasPublicMehodMatchingNestedClassName) {
+                    if (!testedClassHasPublicMethodMatchingNestedClassName) {
                         events.add(SimpleConditionEvent.violated(classWithNestedAnnotation,
                                 "tested class \"" + testSuiteClassFullName + "\" has no public method matching the nested class name: " + expectedMethodName));
                     }

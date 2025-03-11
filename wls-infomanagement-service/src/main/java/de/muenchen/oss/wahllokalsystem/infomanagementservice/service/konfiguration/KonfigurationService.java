@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration;
 
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.common.security.AuthenticationHandler;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.Konfiguration;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.KonfigurationRepository;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.exception.ExceptionConstants;
@@ -10,6 +9,7 @@ import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfigurati
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationSetModel;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.WahlbezirkArt;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.authentication.AuthDetailRetriever;
 import jakarta.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.List;
@@ -37,7 +37,7 @@ public class KonfigurationService {
 
     private final KonfigurationModelValidator konfigurationModelValidator;
 
-    private final Collection<AuthenticationHandler> authenticationHandlers;
+    private final Collection<AuthDetailRetriever> authDetailRetrivers;
 
     private final ExceptionFactory exceptionFactory;
 
@@ -106,9 +106,9 @@ public class KonfigurationService {
 
     private WahlbezirkArt getWahlbezirkArt() {
         val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-        val authenticationHandler = authenticationHandlers.stream().filter(handler -> handler.canHandle(currentAuthentication)).findFirst();
-        if (authenticationHandler.isPresent()) {
-            val wahlbezirkOfUser = authenticationHandler.get().getDetail(WAHLBEZIRK_ART_USER_DETAIL_KEY, currentAuthentication);
+        val authDetailRetriver = authDetailRetrivers.stream().filter(handler -> handler.canHandle(currentAuthentication)).findFirst();
+        if (authDetailRetriver.isPresent()) {
+            val wahlbezirkOfUser = authDetailRetriver.get().getDetail(WAHLBEZIRK_ART_USER_DETAIL_KEY, currentAuthentication);
             return wahlbezirkOfUser.map(WahlbezirkArt::valueOf).orElseGet(() -> {
                 log.error("#getKonfiguration Error: Wahlbezirkart konnte nicht erkannt werden. UWB wurde als Standardwert angenommen");
                 return WAHLBEZIRK_ART_FALLBACK;

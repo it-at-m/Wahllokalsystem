@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.infomanagementservice;
 
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.common.security.AnonymousHandler;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.authentication.AnonymousDetailRetriever;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +10,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 class MicroServiceApplicationDefaultProfileTest {
 
     @Autowired(required = false)
-    AnonymousHandler anonymousHandler;
+    AnonymousDetailRetriever anonymousDetailRetriever;
 
     @Test
     void should_returnNull_when_anonymouseHandlerIsUsedFromAutowiredContext() {
-        Assertions.assertThat(anonymousHandler).isNull();
+        Assertions.assertThat(anonymousDetailRetriever).isNull();
     }
 
 }

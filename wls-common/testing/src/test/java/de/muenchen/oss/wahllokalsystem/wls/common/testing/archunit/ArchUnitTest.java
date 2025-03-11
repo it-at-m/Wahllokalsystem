@@ -9,7 +9,8 @@ import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.ArchRule;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules;
-import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.NamingConventionExamplesTest;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.ModifiersExampleTest;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.NamingConventionExamplesTest;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,6 +23,7 @@ public class ArchUnitTest {
     private static JavaClasses allTestClassesNamingConvention;
     private static JavaClasses allTestClassesBeforeEachConvention;
     private static JavaClasses allTestClassesAfterEachConvention;
+    private static JavaClasses allTestClassesTestMethodsArePrivatePackageConvention;
 
     @BeforeAll
     static void init() {
@@ -42,6 +44,12 @@ public class ArchUnitTest {
                 .importPackages(SecurityUtils.class.getPackage().getName())
                 // excluding intended negative examples from actual test
                 .that(not(equivalentTo(NamingConventionExamplesTest.ExampleAfterEachMethodNamesViolatingNamingConventionRule.class)));
+
+        allTestClassesTestMethodsArePrivatePackageConvention = new ClassFileImporter()
+                .withImportOption(new ImportOption.OnlyIncludeTests())
+                .importPackages(SecurityUtils.class.getPackage().getName())
+                // excluding intended negative examples from actual test
+                .that(not(equivalentTo(ModifiersExampleTest.WrongModifierExamples.class)));
     }
 
     @ParameterizedTest(name = "{0}")
@@ -63,6 +71,9 @@ public class ArchUnitTest {
                 Arguments.of(
                         "RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED",
                         MethodRules.RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED,
-                        allTestClassesAfterEachConvention));
+                        allTestClassesAfterEachConvention),
+                Arguments.of("TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED",
+                        MethodRules.RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED,
+                        allTestClassesTestMethodsArePrivatePackageConvention));
     }
 }

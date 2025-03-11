@@ -27,7 +27,7 @@ class SwaggerDefaultConfigurationTest {
     }
 
     @Test
-    public void should_addErrorResponsesToGetOperation_when_customizerIsCalled() {
+    void should_addErrorResponsesToGetOperation_when_customizerIsCalled() {
         Operation operation = new Operation();
         operation.setResponses(new ApiResponses());
         PathItem pathItem = new PathItem();
@@ -36,7 +36,7 @@ class SwaggerDefaultConfigurationTest {
     }
 
     @Test
-    public void should_addErrorResponsesToPostOperation_when_customizerIsCalled() {
+    void should_addErrorResponsesToPostOperation_when_customizerIsCalled() {
         Operation operation = new Operation();
         operation.setResponses(new ApiResponses());
         PathItem pathItem = new PathItem();
@@ -45,7 +45,7 @@ class SwaggerDefaultConfigurationTest {
     }
 
     @Test
-    public void should_addErrorResponsesToDeleteOperation_when_customizerIsCalled() {
+    void should_addErrorResponsesToDeleteOperation_when_customizerIsCalled() {
         Operation operation = new Operation();
         operation.setResponses(new ApiResponses());
         PathItem pathItem = new PathItem();

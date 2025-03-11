@@ -52,6 +52,7 @@ export default defineConfig({
     }),
   ],
   server: {
+    allowedHosts: ["kubernetes.docker.internal"],
     port: serverPort,
     proxy: {
       "/api": "http://localhost:8083",

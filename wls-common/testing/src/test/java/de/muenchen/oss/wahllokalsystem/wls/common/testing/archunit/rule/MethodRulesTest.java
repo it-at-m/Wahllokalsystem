@@ -7,8 +7,8 @@ import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.M
 
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.lang.ArchRule;
-import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.ModifiersExampleTest;
-import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utilityClasses.NamingConventionExamplesTest;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.ModifiersExampleTest;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.NamingConventionExamplesTest;
 import java.util.stream.Stream;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;

@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.urnenwahlsc
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.AbstractController;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.urnenwahlschliessungsuhrzeit.UrnenwahlSchliessungsUhrzeitService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,13 @@ public class UrnenwahlSchliessungsUhrzeitController extends AbstractController {
     private final UrnenwahlSchliessungsUhrzeitService urnenwahlSchliessungsUhrzeitService;
     private final UrnenwahlSchliessungsUhrzeitDTOMapper urnenwahlSchliessungsUhrzeitDTOMapper;
 
-    @Operation(description = "Laden der Urnenwahlschliessungsuhrzeit des Urnenwahllokals {wahlbezirkID}")
+    @Operation(
+            description = "Laden der Urnenwahlschliessungsuhrzeit des Urnenwahllokals {wahlbezirkID}",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Urnenwahlschliessungsuhrzeit erfolgreich zurückgegeben."
+                    ) }
+    )
     @GetMapping("{wahlbezirkID}")
     public ResponseEntity<UrnenwahlSchliessungsUhrzeitDTO> getUrnenwahlSchliessungsUhrzeit(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
         val urnenwahlSchliessungsUhrzeitModel = urnenwahlSchliessungsUhrzeitService.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID);
@@ -31,7 +38,13 @@ public class UrnenwahlSchliessungsUhrzeitController extends AbstractController {
         return okWithBodyOrNoContent(urnenwahlSchliessungsUhrzeitModel.map(urnenwahlSchliessungsUhrzeitDTOMapper::toDTO));
     }
 
-    @Operation(description = "Aktualisiert die Urnenwahlschliessungsuhrzeit des Urnenwahllokals {wahlbezirkID}")
+    @Operation(
+            description = "Aktualisiert die Urnenwahlschliessungsuhrzeit des Urnenwahllokals {wahlbezirkID}",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201", description = "Urnenwahlschliessungsuhrzeit erfolgreich gespeichert."
+                    ) }
+    )
     @PostMapping("{wahlbezirkID}")
     @ResponseStatus(HttpStatus.CREATED)
     public void postUrnenwahlSchliessungsUhrzeit(@PathVariable("wahlbezirkID") final String wahlbezirkID,

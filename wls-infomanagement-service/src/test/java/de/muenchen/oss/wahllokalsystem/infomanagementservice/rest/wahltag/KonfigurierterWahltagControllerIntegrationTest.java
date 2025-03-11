@@ -46,7 +46,7 @@ public class KonfigurierterWahltagControllerIntegrationTest {
     KonfigurierterWahltagValidator konfigurierterWahltagValidator;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_DELETE_KONFIGURIERTERWAHLTAG);
         konfigurierterWahltagRepository.deleteAll();
     }

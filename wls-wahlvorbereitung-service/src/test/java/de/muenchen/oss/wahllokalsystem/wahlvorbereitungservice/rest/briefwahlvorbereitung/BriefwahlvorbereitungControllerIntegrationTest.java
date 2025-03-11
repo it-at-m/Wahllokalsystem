@@ -58,7 +58,7 @@ public class BriefwahlvorbereitungControllerIntegrationTest {
     BriefwahlvorbereitungRepository briefwahlvorbereitungRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_BRIEFWAHLVORBEREITUNG);
         briefwahlvorbereitungRepository.deleteAll();
     }

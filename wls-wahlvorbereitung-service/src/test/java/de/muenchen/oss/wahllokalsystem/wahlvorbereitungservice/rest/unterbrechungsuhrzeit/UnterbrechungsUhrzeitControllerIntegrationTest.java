@@ -56,7 +56,7 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
     UnterbrechungsUhrzeitRepository unterbrechungsUhrzeitRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_UNTERBRECHUNGSUHRZEIT);
         unterbrechungsUhrzeitRepository.deleteAll();
     }

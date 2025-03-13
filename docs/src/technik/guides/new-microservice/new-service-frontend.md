@@ -86,9 +86,10 @@ spring:
 ## Ungenutzte Refarch-Elemente entfernen
 
 Folgende Elemente aus den Refarch-Templates können entfernt werden:
+
 - formatter.ts
 - Snackbar.ts und TheSnackbar.vue
 - SaveLeave.ts
 - Files zu Mucatar
 
-Im [Ticket](https://github.com/it-at-m/Wahllokalsystem/issues/903) wurde ein Frontend-Projekt, inklusive entfernen aller ungenutzten Elemente erstellt. 
+Im [Ticket](https://github.com/it-at-m/Wahllokalsystem/issues/903) wurde ein Frontend-Projekt, inklusive entfernen aller ungenutzten Elemente erstellt.

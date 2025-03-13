@@ -1,13 +1,9 @@
-package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain;
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen;
 
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Farbe;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahl;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.WahlRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Comparator;

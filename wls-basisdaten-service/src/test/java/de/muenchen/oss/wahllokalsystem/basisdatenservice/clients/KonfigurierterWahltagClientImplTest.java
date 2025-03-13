@@ -36,7 +36,7 @@ class KonfigurierterWahltagClientImplTest {
     KonfigurierterWahltagClientImpl unitUnderTest;
 
     @Nested
-    class LoadBasisdaten {
+    class GetKonfigurierterWahltag {
 
         @Test
         void should_mapClientResponse_when_callingGet() {

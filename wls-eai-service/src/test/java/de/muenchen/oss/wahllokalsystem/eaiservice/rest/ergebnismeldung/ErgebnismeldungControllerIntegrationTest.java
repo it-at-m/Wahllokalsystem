@@ -18,13 +18,13 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.domain.ergebnismeldung.Unguelt
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.ergebnismeldung.WahlbriefeWerte;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.Wahlart;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.dto.WahlartDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.AWerteDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.BWerteDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.ErgebnisDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.ErgebnismeldungDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.MeldungsartDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.UngueltigeStimmzettelDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.WahlbriefeWerteDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.AWerteDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.BWerteDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.ErgebnisDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.ErgebnismeldungDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.MeldungsartDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.UngueltigeStimmzettelDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.WahlbriefeWerteDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.service.ergebnismeldung.ErgebnismeldungValidator;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
@@ -188,6 +188,5 @@ public class ErgebnismeldungControllerIntegrationTest {
             return new ErgebnismeldungDTO(wahlbezirkID, wahlID, meldungsart, aWerte, bWerte, wahlbriefeWerte, ungueltigeStimmzettelDTOList,
                     ungueltigeStimmzettelAnzahl, ergebnisse, wahlart);
         }
-
     }
 }

@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto;
+package de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto;
 
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.dto.WahlartDTO;
 import jakarta.validation.constraints.NotNull;

@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto;
+package de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;

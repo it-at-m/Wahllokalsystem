@@ -45,7 +45,7 @@ class WahlvorschlagServiceTest {
     WahlvorschlagService unitUnderTest;
 
     @Nested
-    class GetWahlvorschlaege {
+    class GetWahlvorschlaegeForWahlAndWahlbezirk {
 
         @Test
         void foundData() {
@@ -72,11 +72,10 @@ class WahlvorschlagServiceTest {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlvorschlaegeForWahlAndWahlbezirk(wahlID, wahlbezirkID))
                     .usingRecursiveComparison().isEqualTo(new NoSearchResultFoundException(Wahlvorschlaege.class, wahlbezirkID, wahlID));
         }
-
     }
 
     @Nested
-    class GetWahlvorschlaegeListe {
+    class GetWahlvorschlaegeListeForWahltagAndWahlID {
 
         @Test
         void foundData() {
@@ -103,11 +102,10 @@ class WahlvorschlagServiceTest {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlvorschlaegeListeForWahltagAndWahlID(wahltag, wahlID))
                     .usingRecursiveComparison().isEqualTo(new NoSearchResultFoundException(WahlvorschlaegeListe.class, wahltag, wahlID));
         }
-
     }
 
     @Nested
-    class GetReferendumvorlagen {
+    class GetReferendumvorlagenForWahlAndWahlbezirk {
 
         @Test
         void foundData() {
@@ -134,7 +132,5 @@ class WahlvorschlagServiceTest {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getReferendumvorlagenForWahlAndWahlbezirk(wahlID, wahlbezirkID))
                     .usingRecursiveComparison().isEqualTo(new NoSearchResultFoundException(Referendumvorlagen.class, wahlbezirkID, wahlID));
         }
-
     }
-
 }

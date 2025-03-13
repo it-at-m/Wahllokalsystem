@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto;
+package de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto;
 
 public enum MeldungsartDTO {
     /**

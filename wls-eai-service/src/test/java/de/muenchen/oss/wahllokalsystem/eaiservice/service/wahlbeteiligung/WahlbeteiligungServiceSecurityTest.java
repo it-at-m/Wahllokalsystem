@@ -19,7 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
-public class WahlbeteiligungSecurityTest {
+public class WahlbeteiligungServiceSecurityTest {
 
     @Autowired
     WahlbeteiligungService unitUnderTest;

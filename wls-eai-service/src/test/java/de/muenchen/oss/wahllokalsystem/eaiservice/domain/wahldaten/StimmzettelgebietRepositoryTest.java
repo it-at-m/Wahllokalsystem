@@ -30,7 +30,7 @@ class StimmzettelgebietRepositoryTest {
     }
 
     @Nested
-    class FindByWahlWahltagTagAndWahlNummer {
+    class FindByWahlWahltagTagAndWahlWahltagNummer {
 
         @Test
         void dataFound() {
@@ -63,5 +63,4 @@ class StimmzettelgebietRepositoryTest {
             Assertions.assertThat(result).containsOnly(expectedResult);
         }
     }
-
 }

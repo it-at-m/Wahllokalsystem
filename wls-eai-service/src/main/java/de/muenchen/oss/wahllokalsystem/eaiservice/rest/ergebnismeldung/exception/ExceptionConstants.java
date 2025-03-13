@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.exception;
+package de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.exception;
 
 public class ExceptionConstants {
 

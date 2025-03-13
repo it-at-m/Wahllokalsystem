@@ -3,7 +3,7 @@ package de.muenchen.oss.wahllokalsystem.eaiservice.service.ergebnismeldung;
 import de.muenchen.oss.wahllokalsystem.eaiservice.Authorities;
 import de.muenchen.oss.wahllokalsystem.eaiservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.eaiservice.TestConstants;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.ErgebnismeldungDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -42,6 +42,5 @@ public class ErgebnismeldungServiceSecurityTest {
             Assertions.assertThatException().isThrownBy(() -> ergebnismeldungService.saveErgebnismeldung(ergebnismeldungToSave))
                     .isInstanceOf(AccessDeniedException.class);
         }
-
     }
 }

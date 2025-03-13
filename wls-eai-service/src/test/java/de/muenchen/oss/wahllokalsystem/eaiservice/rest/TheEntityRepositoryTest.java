@@ -34,7 +34,7 @@ class TheEntityRepositoryTest {
 
     @Test
     @Transactional(propagation = Propagation.REQUIRED, noRollbackFor = Exception.class)
-    void testSave() {
+    void should_save_when_called() {
 
         // Implement your logic here by replacing and/or extending the code
 
@@ -49,7 +49,5 @@ class TheEntityRepositoryTest {
         TheEntity persisted = repository.findById(original.getId()).orElse(null);
         assertNotNull(persisted);
         assertEquals(original, persisted);
-
     }
-
 }

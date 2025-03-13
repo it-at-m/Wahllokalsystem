@@ -27,12 +27,12 @@ class WahlvorschlagValidatorTest {
     class ValidateWahlbezirkIDOrThrow {
 
         @Test
-        void noExceptionWhenWahlbezirkIDIsValid() {
+        void should_notThrowException_when_wahlbezirkIDIsValid() {
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validateWahlbezirkIDOrThrow(UUID.randomUUID().toString()));
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDIsNUll() {
+        void should_throwWlsException_when_wahlbezirkIDIsNull() {
             val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLVORSCHLAEGE_BEZIRKID_FEHLT))
                     .thenReturn(mockedFachlicheWlsException);
@@ -41,7 +41,7 @@ class WahlvorschlagValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDIsEmptyString() {
+        void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
             val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLVORSCHLAEGE_BEZIRKID_FEHLT))
                     .thenReturn(mockedFachlicheWlsException);
@@ -50,7 +50,7 @@ class WahlvorschlagValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDIsBlankString() {
+        void should_throwWlsException_when_wahlbezirkIDIsBlank() {
             val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLVORSCHLAEGE_BEZIRKID_FEHLT))
                     .thenReturn(mockedFachlicheWlsException);
@@ -63,12 +63,12 @@ class WahlvorschlagValidatorTest {
     class ValidateWahlIDOrThrow {
 
         @Test
-        void noExceptionWhenWahlIDIsValid() {
+        void should_notThrowException_when_wahlIDIsValid() {
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validateWahlIDOrThrow(UUID.randomUUID().toString()));
         }
 
         @Test
-        void exceptionWhenWahlIDIsNUll() {
+        void should_throwWlsException_when_wahlIDIsNull() {
             val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLVORSCHLAEGE_WAHLID_FEHLT))
                     .thenReturn(mockedFachlicheWlsException);
@@ -77,7 +77,7 @@ class WahlvorschlagValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlIDIsEmptyString() {
+        void should_throwWlsException_when_wahlIDIsEmpty() {
             val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLVORSCHLAEGE_WAHLID_FEHLT))
                     .thenReturn(mockedFachlicheWlsException);
@@ -86,7 +86,7 @@ class WahlvorschlagValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlIDIsBlankString() {
+        void should_throwWlsException_when_wahlIDIsBlank() {
             val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLVORSCHLAEGE_WAHLID_FEHLT))
                     .thenReturn(mockedFachlicheWlsException);
@@ -94,5 +94,4 @@ class WahlvorschlagValidatorTest {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validateWahlIDOrThrow("   ")).isSameAs(mockedFachlicheWlsException);
         }
     }
-
 }

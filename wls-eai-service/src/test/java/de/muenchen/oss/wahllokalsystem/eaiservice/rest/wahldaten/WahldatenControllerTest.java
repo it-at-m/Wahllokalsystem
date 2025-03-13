@@ -34,7 +34,7 @@ class WahldatenControllerTest {
     class LoadWahlberechtigte {
 
         @Test
-        void serviceIsCalled() {
+        void should_loadWahlberechtigte_when_givenValidWahlbezirkID() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedServiceResponse = List.of(WahlberechtigteDTO.builder().build());
@@ -42,13 +42,12 @@ class WahldatenControllerTest {
 
             Assertions.assertThat(unitUnderTest.loadWahlberechtigte(wahlbezirkID)).isSameAs(mockedServiceResponse);
         }
-
     }
 
     @Nested
     class LoadWahltageSinceIncluding {
         @Test
-        void serviceIsCalled() {
+        void should_loadWahltageSinceIncluding_when_givenValidDate() {
             val includingSince = LocalDate.now();
 
             val mockedServiceResponse = Set.of(WahltagDTO.builder().build());
@@ -62,7 +61,7 @@ class WahldatenControllerTest {
     class LoadWahlbezirke {
 
         @Test
-        void serviceIsCalled() {
+        void should_loadWahlbezirke_when_givenValidDateAndNummer() {
             val forDate = LocalDate.now();
             val nummer = "nummer";
 
@@ -71,14 +70,13 @@ class WahldatenControllerTest {
 
             Assertions.assertThat(unitUnderTest.loadWahlbezirke(forDate, nummer)).isSameAs(mockedServiceResponse);
         }
-
     }
 
     @Nested
     class LoadWahlen {
 
         @Test
-        void serviceIsCalled() {
+        void should_loadWahlen_when_givenValidDateAndNummer() {
             val forDate = LocalDate.now();
             val nummer = "nummer";
 
@@ -93,7 +91,7 @@ class WahldatenControllerTest {
     class LoadBasisdaten {
 
         @Test
-        void serviceIsCalled() {
+        void should_loadBasisdaten_when_givenValidDateAndNummer() {
             val forDate = LocalDate.now();
             val nummer = "nummer";
 

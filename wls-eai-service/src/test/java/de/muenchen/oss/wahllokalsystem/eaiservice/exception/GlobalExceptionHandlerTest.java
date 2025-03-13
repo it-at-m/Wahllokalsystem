@@ -25,10 +25,9 @@ class GlobalExceptionHandlerTest {
     GlobalExceptionHandler unitUnderTest;
 
     @Test
-    void handleNotFoundException() {
+    void should_returnNotFound_when_givenNotFoundException() {
         val result = unitUnderTest.handleNotFoundException(new NotFoundException(UUID.randomUUID(), Object.class));
 
         Assertions.assertThat(result).isEqualTo(ResponseEntity.notFound().build());
     }
-
 }

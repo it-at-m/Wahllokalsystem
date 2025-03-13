@@ -32,12 +32,12 @@ class WahlvorstandValidatorTest {
     class ValidateWahlbezirkIDOrThrow {
 
         @Test
-        void noExceptionWhenIdIsValid() {
+        void should_notThrowException_when_wahlbezirkIDIsValid() {
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validateWahlbezirkIDOrThrow(UUID.randomUUID().toString()));
         }
 
         @Test
-        void exceptionWhenIDIsNUll() {
+        void should_throwWlsException_when_wahlbezirkIDIsNull() {
             val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLVORSTAND_SUCHKRITERIEN_UNVOLLSTAENDIG))
                     .thenReturn(mockedFachlicheWlsException);
@@ -46,7 +46,7 @@ class WahlvorstandValidatorTest {
         }
 
         @Test
-        void exceptionWhenIDIsEmptyString() {
+        void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
             val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLVORSTAND_SUCHKRITERIEN_UNVOLLSTAENDIG))
                     .thenReturn(mockedFachlicheWlsException);
@@ -55,7 +55,7 @@ class WahlvorstandValidatorTest {
         }
 
         @Test
-        void exceptionWhenIDIsBlankString() {
+        void should_throwWlsException_when_wahlbezirkIDIsBlank() {
             val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLVORSTAND_SUCHKRITERIEN_UNVOLLSTAENDIG))
                     .thenReturn(mockedFachlicheWlsException);
@@ -68,14 +68,14 @@ class WahlvorstandValidatorTest {
     class ValidateSaveAnwesenheitDataOrThrow {
 
         @Test
-        void noExceptionWhenAktualisierungIsValid() {
+        void should_notThrowException_when_aktualisierungIsValid() {
             val validDTO = initValidAktualisierung().build();
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validateSaveAnwesenheitDataOrThrow(validDTO));
         }
 
         @Test
-        void exceptionWhenAktualisierungIsNull() {
+        void should_throwWlsException_when_aktualisierungIDIsNull() {
             val mockedValidationException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(
                     de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN))
@@ -85,7 +85,7 @@ class WahlvorstandValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlbezirkIdIsNull() {
+        void should_throwWlsException_when_wahlbezirkIDIsNull() {
             val invalidDTO = initValidAktualisierung().wahlbezirkID(null).build();
 
             val mockedValidationException = FachlicheWlsException.withCode("").buildWithMessage("");
@@ -96,7 +96,7 @@ class WahlvorstandValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlbezirkIdIsEmpty() {
+        void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
             val invalidDTO = initValidAktualisierung().wahlbezirkID("").build();
 
             val mockedValidationException = FachlicheWlsException.withCode("").buildWithMessage("");
@@ -107,7 +107,7 @@ class WahlvorstandValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlbezirkIdIsBlank() {
+        void should_throwWlsException_when_wahlbezirkIDIsBlank() {
             val invalidDTO = initValidAktualisierung().wahlbezirkID("   ").build();
 
             val mockedValidationException = FachlicheWlsException.withCode("").buildWithMessage("");
@@ -118,7 +118,7 @@ class WahlvorstandValidatorTest {
         }
 
         @Test
-        void exceptionWhenAnwesenheitBeginnIsNull() {
+        void should_throwWlsException_when_anwesenheitbeginnIsNull() {
             val invalidDTO = initValidAktualisierung().anwesenheitBeginn(null).build();
 
             val mockedValidationException = FachlicheWlsException.withCode("").buildWithMessage("");
@@ -126,14 +126,13 @@ class WahlvorstandValidatorTest {
                     .thenReturn(mockedValidationException);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validateSaveAnwesenheitDataOrThrow(invalidDTO)).isSameAs(mockedValidationException);
-
         }
 
         @Nested
         class ExceptionWhenMitgliederIdIsInvalid {
 
             @Test
-            void isNull() {
+            void should_throwWlsException_when_mitgliederIDIsNull() {
                 val invalidDTO = initValidAktualisierung().mitglieder(
                         Set.of(initValidMitgliedAktualisierung().build(), initValidMitgliedAktualisierung().identifikator(null).build())).build();
 
@@ -146,7 +145,7 @@ class WahlvorstandValidatorTest {
             }
 
             @Test
-            void isEmptyString() {
+            void should_throwWlsException_when_mitgliederIDIsEmpty() {
                 val invalidDTO = initValidAktualisierung().mitglieder(
                         Set.of(initValidMitgliedAktualisierung().build(), initValidMitgliedAktualisierung().identifikator("").build())).build();
 
@@ -159,7 +158,7 @@ class WahlvorstandValidatorTest {
             }
 
             @Test
-            void isBankString() {
+            void should_throwWlsException_when_mitgliederIDIsBlank() {
                 val invalidDTO = initValidAktualisierung().mitglieder(
                         Set.of(initValidMitgliedAktualisierung().build(), initValidMitgliedAktualisierung().identifikator("  ").build())).build();
 
@@ -181,5 +180,4 @@ class WahlvorstandValidatorTest {
             return WahlvorstandsmitgliedAktualisierungDTO.builder().identifikator("mitgliedId");
         }
     }
-
 }

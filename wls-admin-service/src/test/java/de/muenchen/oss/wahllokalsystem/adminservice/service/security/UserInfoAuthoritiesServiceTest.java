@@ -1,6 +1,5 @@
-package de.muenchen.oss.wahllokalsystem.adminservice.configuration;
+package de.muenchen.oss.wahllokalsystem.adminservice.service.security;
 
-import de.muenchen.oss.wahllokalsystem.adminservice.service.security.UserInfoAuthoritiesService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

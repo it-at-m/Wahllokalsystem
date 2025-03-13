@@ -3,7 +3,7 @@ name: verify pull request gui-admintool
 on:
   pull_request:
     paths:
-      - 'wls-gui-wahllokalsystem/**'
+      - 'wls-gui-admintool/**'
       - '.github/workflows/wls-gui-admintool-pull-request.yml'
 
 jobs:

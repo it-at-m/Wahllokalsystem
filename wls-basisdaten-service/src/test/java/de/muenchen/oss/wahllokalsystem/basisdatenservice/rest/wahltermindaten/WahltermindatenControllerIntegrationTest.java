@@ -108,7 +108,7 @@ public class WahltermindatenControllerIntegrationTest {
     WahldatenClientMapper wahldatenClientMapper;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_REFERENDUMVORLAGEN, Authorities.REPOSITORY_DELETE_WAHLVORSCHLAEGE,
                 Authorities.REPOSITORY_DELETE_WAHL, Authorities.REPOSITORY_DELETE_WAHLBEZIRK);
         wahlvorschlaegeRepository.deleteAll();

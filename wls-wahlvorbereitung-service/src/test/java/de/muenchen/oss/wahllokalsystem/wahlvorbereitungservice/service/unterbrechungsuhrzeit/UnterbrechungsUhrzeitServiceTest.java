@@ -39,8 +39,9 @@ class UnterbrechungsUhrzeitServiceTest {
 
     @Nested
     class getUnterbrechungsUhrzeit {
+
         @Test
-        void dataFound() {
+        void should_returnUnterbrechungsuhrzeit_when_givenValidWahlbezirkID() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedRepoResponse = new UnterbrechungsUhrzeit();
@@ -56,7 +57,7 @@ class UnterbrechungsUhrzeitServiceTest {
         }
 
         @Test
-        void noDataFound() {
+        void should_returnEmpty_when_noDataFound() {
             val wahlbezirkID = "wahlbezirkID";
 
             Mockito.doNothing().when(unterbrechungsUhrzeitValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
@@ -70,7 +71,7 @@ class UnterbrechungsUhrzeitServiceTest {
         }
 
         @Test
-        void exceptionFromValidator() {
+        void should_throwException_when_validationFailed() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedValidatorException = new RuntimeException("validation failed");
@@ -85,7 +86,7 @@ class UnterbrechungsUhrzeitServiceTest {
     class SetUnterbrechungsUhrzeit {
 
         @Test
-        void isSaved() {
+        void should_saveUnterbrechungsuhrzeit_when_givenValidModel() {
             val modelToSave = UnterbrechungsUhrzeitModel.builder().build();
 
             val mockedModelAsEntity = new UnterbrechungsUhrzeit();
@@ -99,7 +100,7 @@ class UnterbrechungsUhrzeitServiceTest {
         }
 
         @Test
-        void exceptionFromValidationGotThrown() {
+        void should_notSaveUnterbrechungsuhrzeit_when_validationFails() {
             val modelToSave = UnterbrechungsUhrzeitModel.builder().build();
 
             val mockedValidationException = new RuntimeException("validation failed");
@@ -110,7 +111,7 @@ class UnterbrechungsUhrzeitServiceTest {
         }
 
         @Test
-        void exceptionFromSavingIsMapped() {
+        void should_throwTechnischeWlsException_when_savingFailed() {
             val modelToSave = UnterbrechungsUhrzeitModel.builder().build();
 
             val mockedModelAsEntity = new UnterbrechungsUhrzeit();
@@ -126,5 +127,4 @@ class UnterbrechungsUhrzeitServiceTest {
                     .isSameAs(mockedFactoryException);
         }
     }
-
 }

@@ -11,11 +11,10 @@ class UrnenwahlvorbereitungDTOTest {
     class ConstructionTests {
 
         @Test
-        void listOfWahlurneIsNotNullOnNullParameter() {
+        void should_notReturnNullForUrnenanzahl_when_noDataProvided() {
             val result = new UrnenwahlvorbereitungDTO(null, 0, 0, 0, null);
 
             Assertions.assertThat(result.urnenAnzahl()).isNotNull();
         }
     }
-
 }

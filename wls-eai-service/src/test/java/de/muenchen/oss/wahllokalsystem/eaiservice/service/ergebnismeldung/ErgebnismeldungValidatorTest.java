@@ -27,7 +27,7 @@ class ErgebnismeldungValidatorTest {
     class SaveErgebnismeldungParameterOrThrow {
 
         @Test
-        void noExceptionWhenErgebnismeldungIsValid() {
+        void should_notThrowException_when_ergebnismeldungIsValid() {
             val validErgebnismeldung = ErgebnismeldungDTO.builder().wahlbezirkID("00000000-0000-0000-0000-000000000001").wahlID("wahlID1").meldungsart(null)
                     .aWerte(null).bWerte(null).wahlbriefeWerte(null).ungueltigeStimmzettels(null).ungueltigeStimmzettelAnzahl(null).ergebnisse(null)
                     .wahlart(null).build();
@@ -36,7 +36,7 @@ class ErgebnismeldungValidatorTest {
         }
 
         @Test
-        void exceptionWhenErgebnismeldungIsNull() {
+        void should_throwException_when_ergebnismeldungIsNull() {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(
@@ -47,7 +47,7 @@ class ErgebnismeldungValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDIsEmpty() {
+        void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
             val ergebnismeldungWithBlankWahlbezirkID = ErgebnismeldungDTO.builder().wahlbezirkID("").wahlID("wahlID1").build();
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
@@ -58,7 +58,7 @@ class ErgebnismeldungValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDIsEmptySpace() {
+        void should_throwWlsException_when_wahlbezirkIDIsBlank() {
             val ergebnismeldungWithBlankWahlbezirkID = ErgebnismeldungDTO.builder().wahlbezirkID(" ").wahlID("wahlID1").build();
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
@@ -69,7 +69,7 @@ class ErgebnismeldungValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDIsNull() {
+        void should_throwWlsException_when_wahlbezirkIDIsNull() {
             val ergebnismeldungWithBlankWahlbezirkID = ErgebnismeldungDTO.builder().wahlID("wahlID1").build();
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
@@ -80,7 +80,7 @@ class ErgebnismeldungValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlIDIsEmpty() {
+        void should_throwWlsException_when_wahlIDIsEmpty() {
 
             val ergebnismeldungWithBlankID = ErgebnismeldungDTO.builder().wahlbezirkID("00000000-0000-0000-0000-000000000001").wahlID("").build();
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
@@ -91,7 +91,7 @@ class ErgebnismeldungValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlIDIsEmptySpace() {
+        void should_throwWlsException_when_wahlIDIsBlank() {
 
             val ergebnismeldungWithBlankID = ErgebnismeldungDTO.builder().wahlbezirkID("00000000-0000-0000-0000-000000000001").wahlID(" ").build();
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
@@ -102,7 +102,7 @@ class ErgebnismeldungValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlIDIsNull() {
+        void should_throwWlsException_when_wahlIDIsNull() {
 
             val ergebnismeldungWithBlankID = ErgebnismeldungDTO.builder().wahlbezirkID("00000000-0000-0000-0000-000000000001").build();
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
@@ -111,6 +111,5 @@ class ErgebnismeldungValidatorTest {
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.validDTOToSetOrThrow(ergebnismeldungWithBlankID)).isSameAs(mockedWlsException);
         }
-
     }
 }

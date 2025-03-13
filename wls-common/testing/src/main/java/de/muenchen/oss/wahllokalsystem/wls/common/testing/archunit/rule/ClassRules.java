@@ -2,12 +2,15 @@ package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.condition.NestedTestsuitesHaveMatchingMethodCondition.haveMatchingPublicMethodNameIfTheyAreHighestNestedClass;
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.predicate.HasAtLeastOneMethodWithAnnotationPredicate.haveAtLeastOneMethodAnnotatedWithTest;
 
 import com.tngtech.archunit.lang.ArchRule;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.junit.jupiter.api.Nested;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ClassRules {
@@ -67,4 +70,10 @@ public class ClassRules {
     public static final ArchRule RULE_NO_CROSS_DEPENDENCIES_INSIDE_DOMAIN_CONVENTION_MATCHED = noClasses()
             .that().resideInAnyPackage("..domain..")
             .should().dependOnClassesThat().resideInAnyPackage("..rest..", "..service..");
+
+    public static final ArchRule RULE_TESTCLASSES_END_WITH_TEST_CONVENTION_MATCHED = classes()
+            .that(haveAtLeastOneMethodAnnotatedWithTest).should().haveSimpleNameEndingWith("Test");
+
+    public static final ArchRule RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED = classes()
+            .that().areAnnotatedWith(Nested.class).should(haveMatchingPublicMethodNameIfTheyAreHighestNestedClass);
 }

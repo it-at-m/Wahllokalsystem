@@ -3,6 +3,8 @@ spring:
   banner.location: banner.txt
   profiles:
     group:
+      dummy.clients:
+        - dummy.ldap
       local:
         - plainTextLogging
       standalone:
@@ -66,7 +68,7 @@ service:
     maxLoginAttempts: 5
     clients:
       infomanagement:
-        basepath: http://localhost:39146
+        basepath: http://localhost:8201
         configkey:
           welcomeMessage: WILLKOMMENSTEXT
           fruehesterLogin: FRUEHESTE_LOGIN_UHRZEIT

@@ -70,7 +70,7 @@ public class ErgebnisseControllerIntegrationTest {
     MockMvc mockMvc;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_ERGEBNISSE);
         ergebnisseRepository.deleteAll();
     }

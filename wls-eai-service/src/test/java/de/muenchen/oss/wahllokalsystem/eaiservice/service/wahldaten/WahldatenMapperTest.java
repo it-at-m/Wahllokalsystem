@@ -32,7 +32,7 @@ class WahldatenMapperTest {
     class ToDTO {
 
         @Test
-        void ofWahltag() {
+        void should_returnWahltagDTO_when_givenWahltagEntity() {
             val tag = LocalDate.now();
             val beschreibung = "beschreibung";
             val nummer = "nummer";
@@ -48,7 +48,7 @@ class WahldatenMapperTest {
         }
 
         @Test
-        void ofWahl() {
+        void should_returnWahlDTO_when_givenWahlEntity() {
             val wahlID = UUID.randomUUID();
             val wahltag = LocalDate.now();
             val name = "name";
@@ -64,7 +64,7 @@ class WahldatenMapperTest {
         }
 
         @Test
-        void ofWahlbezirk() {
+        void should_returnWahlbezirkDTO_when_givenWahlbezirkEntity() {
             val wahlbezirkID = UUID.randomUUID();
             val wahlID = UUID.randomUUID();
             val wahltag = LocalDate.now();
@@ -83,7 +83,7 @@ class WahldatenMapperTest {
         }
 
         @Test
-        void ofStimmzettelgebiet() {
+        void should_returnStimmzettelgebietDTO_when_givenStimmzettelgebietEntity() {
             val szgID = UUID.randomUUID();
             val szgNummer = "szgNummer";
             val szgName = "szgName";
@@ -103,7 +103,7 @@ class WahldatenMapperTest {
     class ToWahlberechtigteDTO {
 
         @Test
-        void isMapped() {
+        void should_returnWahlberechtigteDTO_when_givenWahlbezirkEntity() {
             val wahlID = UUID.randomUUID();
             val wahlbezirkID = UUID.randomUUID();
             val a1 = 10;
@@ -126,7 +126,7 @@ class WahldatenMapperTest {
     class ToBasisstrukturdatenDTO {
 
         @Test
-        void isMapped() {
+        void should_returnBasisstrukturdatenDTO_when_givenWahlbezirkEntity() {
             val wahlID = UUID.randomUUID();
             val sgzID = UUID.randomUUID();
             val wbzID = UUID.randomUUID();
@@ -147,7 +147,5 @@ class WahldatenMapperTest {
             val expectedResult = new BasisstrukturdatenDTO(wahlID.toString(), sgzID.toString(), wbzID.toString(), wahltag);
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
-
     }
-
 }

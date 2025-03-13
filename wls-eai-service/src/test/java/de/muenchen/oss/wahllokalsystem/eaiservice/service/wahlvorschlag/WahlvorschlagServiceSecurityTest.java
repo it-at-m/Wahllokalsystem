@@ -30,7 +30,7 @@ public class WahlvorschlagServiceSecurityTest {
     class GetWahlvorschlaegeForWahlAndWahlbezirk {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_givenAllAuthorities() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GETWAHLVORSCHLAEGE);
 
             Assertions.assertThatException().isThrownBy(() -> wahlvorschlagService.getWahlvorschlaegeForWahlAndWahlbezirk("wahlID", "wahlbezirkID"))
@@ -40,7 +40,7 @@ public class WahlvorschlagServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatThrownBy(() -> wahlvorschlagService.getWahlvorschlaegeForWahlAndWahlbezirk("wahlID", "wahlbezirkID"))
@@ -56,7 +56,7 @@ public class WahlvorschlagServiceSecurityTest {
     class GetWahlvorschlaegeListeForWahltagAndWahlID {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_givenAllAuthorities() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GETWAHLVORSCHLAEGELISTE);
 
             Assertions.assertThatException()
@@ -67,7 +67,7 @@ public class WahlvorschlagServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatThrownBy(() -> wahlvorschlagService.getWahlvorschlaegeListeForWahltagAndWahlID(LocalDate.of(2024, 10, 10), "wahlID"))
@@ -83,7 +83,7 @@ public class WahlvorschlagServiceSecurityTest {
     class GetReferendumvorlagenForWahlAndWahlbezirk {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_givenAllAuthorities() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GETREFERENDUMVORLAGEN);
 
             Assertions.assertThatException()
@@ -94,7 +94,7 @@ public class WahlvorschlagServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatThrownBy(() -> wahlvorschlagService.getReferendumvorlagenForWahlAndWahlbezirk("wahlID", "wahlbezirkID"))
@@ -105,5 +105,4 @@ public class WahlvorschlagServiceSecurityTest {
             return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GETREFERENDUMVORLAGEN);
         }
     }
-
 }

@@ -39,8 +39,9 @@ class EroeffnungsUhrzeitServiceTest {
 
     @Nested
     class getEroeffnungsUhrzeit {
+
         @Test
-        void dataFound() {
+        void should_returnEroeffnungsuhrzeit_when_givenValidWahlbezirkID() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedRepoResponse = new EroeffnungsUhrzeit();
@@ -56,7 +57,7 @@ class EroeffnungsUhrzeitServiceTest {
         }
 
         @Test
-        void noDataFound() {
+        void should_returnEmpty_when_noDataFound() {
             val wahlbezirkID = "wahlbezirkID";
 
             Mockito.doNothing().when(eroeffnungsUhrzeitValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
@@ -70,7 +71,7 @@ class EroeffnungsUhrzeitServiceTest {
         }
 
         @Test
-        void exceptionFromValidator() {
+        void should_throwException_when_validationFailed() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedValidatorException = new RuntimeException("validation failed");
@@ -85,7 +86,7 @@ class EroeffnungsUhrzeitServiceTest {
     class SetEroeffnungsUhrzeit {
 
         @Test
-        void isSaved() {
+        void should_saveEroeffnungsuhrzeit_when_givenValidModel() {
             val modelToSave = EroeffnungsUhrzeitModel.builder().build();
 
             val mockedModelAsEntity = new EroeffnungsUhrzeit();
@@ -99,7 +100,7 @@ class EroeffnungsUhrzeitServiceTest {
         }
 
         @Test
-        void exceptionFromValidationGotThrown() {
+        void should_notSaveEroeffnungsuhrzeit_when_validationFailed() {
             val modelToSave = EroeffnungsUhrzeitModel.builder().build();
 
             val mockedValidationException = new RuntimeException("validation failed");
@@ -110,7 +111,7 @@ class EroeffnungsUhrzeitServiceTest {
         }
 
         @Test
-        void exceptionFromSavingIsMapped() {
+        void should_throwTechnischeWlsException_when_savingFailed() {
             val modelToSave = EroeffnungsUhrzeitModel.builder().build();
 
             val mockedModelAsEntity = new EroeffnungsUhrzeit();
@@ -126,5 +127,4 @@ class EroeffnungsUhrzeitServiceTest {
                     .isSameAs(mockedFactoryException);
         }
     }
-
 }

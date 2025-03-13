@@ -27,31 +27,30 @@ class WahldatenValidatorTest {
     class ValidGetWahltageParameterOrThrow {
 
         @Test
-        void noExceptionWhenWahltagIsValid() {
+        void should_notThrowException_when_wahltagIsValid() {
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validGetWahltageParameterOrThrow(LocalDate.now()));
         }
 
         @Test
-        void exceptionWhenWahltagIsNull() {
+        void should_throwWlsException_when_wahltagIsNull() {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLTAGE_TAG_FEHLT)).thenReturn(mockedWlsException);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.validGetWahltageParameterOrThrow(null)).isSameAs(mockedWlsException);
         }
-
     }
 
     @Nested
     class ValidGetWahlenParameterOrThrow {
 
         @Test
-        void noExceptionWhenGetWahlenParameterAreValid() {
+        void should_notThrowException_when_paramsAreValid() {
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validGetWahlenParameterOrThrow(LocalDate.now(), ""));
         }
 
         @Test
-        void exceptionWhenWahltagIsNull() {
+        void should_throwWlsException_when_wahltagIsNull() {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLEN_WAHLTAG_FEHLT)).thenReturn(mockedWlsException);
@@ -60,7 +59,7 @@ class WahldatenValidatorTest {
         }
 
         @Test
-        void exceptionWhenNummerIsNull() {
+        void should_throwWlsException_when_nummerIsNull() {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLEN_NUMMER_FEHLT)).thenReturn(mockedWlsException);
@@ -73,12 +72,12 @@ class WahldatenValidatorTest {
     class ValidGetWahlbezirkeParameterOrThrow {
 
         @Test
-        void noExceptionWhenGetWahlbezirkeParameterAreValid() {
+        void should_notThrowException_when_paramsAreValid() {
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validGetWahlbezirkeParameterOrThrow(LocalDate.now(), ""));
         }
 
         @Test
-        void exceptionWhenWahltagIsNull() {
+        void should_throwWlsException_when_wahltagIsNull() {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLBEZIRKE_WAHLTAG_FEHLT)).thenReturn(mockedWlsException);
@@ -87,7 +86,7 @@ class WahldatenValidatorTest {
         }
 
         @Test
-        void exceptionWhenNummerIsNull() {
+        void should_throwWlsException_when_nummerIsNull() {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLBEZIRKE_NUMMER_FEHLT)).thenReturn(mockedWlsException);
@@ -95,19 +94,18 @@ class WahldatenValidatorTest {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validGetWahlbezirkeParameterOrThrow(LocalDate.now(), null))
                     .isSameAs(mockedWlsException);
         }
-
     }
 
     @Nested
     class ValidGetWahlberechtigteParameterOrThrow {
 
         @Test
-        void noExceptionWhenGetWahlberechtigteParameterAreValid() {
+        void should_notThrowException_when_paramsAreValid() {
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validGetWahlberechtigteParameterOrThrow("wahlbezirkID"));
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDIsNull() {
+        void should_throwWlsException_when_wahlbezirkIDIsNull() {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLBERECHTIGTE_SUCHKRITERIEN_UNVOLLSTAENDIG))
@@ -117,7 +115,7 @@ class WahldatenValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDIsEmptyString() {
+        void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLBERECHTIGTE_SUCHKRITERIEN_UNVOLLSTAENDIG))
@@ -127,7 +125,7 @@ class WahldatenValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDIsBlank() {
+        void should_throwWlsException_when_wahlbezirkIDIsBlank() {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLBERECHTIGTE_SUCHKRITERIEN_UNVOLLSTAENDIG))
@@ -141,12 +139,12 @@ class WahldatenValidatorTest {
     class ValidGetBasisdatenParameterOrThrow {
 
         @Test
-        void noExceptinWhenParametersAreValid() {
+        void should_notThrowException_when_paramsAreValid() {
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validGetBasisdatenParameterOrThrow(LocalDate.now(), "nummer"));
         }
 
         @Test
-        void exceptionWhenWahltagIsNull() {
+        void should_throwWlsException_when_wahltagIsNull() {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADBASISDATEN_TAG_FEHLT)).thenReturn(mockedWlsException);
@@ -155,7 +153,7 @@ class WahldatenValidatorTest {
         }
 
         @Test
-        void exceptionWhenNummerIsNull() {
+        void should_throwWlsException_when_nummerIsNull() {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADBASISDATEN_NUMMER_FEHLT)).thenReturn(mockedWlsException);
@@ -164,5 +162,4 @@ class WahldatenValidatorTest {
                     .isSameAs(mockedWlsException);
         }
     }
-
 }

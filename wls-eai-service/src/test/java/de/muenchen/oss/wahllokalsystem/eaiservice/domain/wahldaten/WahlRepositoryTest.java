@@ -20,7 +20,7 @@ class WahlRepositoryTest {
     WahlRepository wahlRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         wahlRepository.deleteAll();
         wahltageRepository.deleteAll();
     }
@@ -29,7 +29,7 @@ class WahlRepositoryTest {
     class FindByWahltagTagAndWahltagNummer {
 
         @Test
-        void dataFound() {
+        void should_returnWahl_when_givenValidWahltagAndNummer() {
             val wahltag = LocalDate.now();
             val nummer = "1";
 
@@ -54,5 +54,4 @@ class WahlRepositoryTest {
             Assertions.assertThat(result).containsOnly(expectedResult);
         }
     }
-
 }

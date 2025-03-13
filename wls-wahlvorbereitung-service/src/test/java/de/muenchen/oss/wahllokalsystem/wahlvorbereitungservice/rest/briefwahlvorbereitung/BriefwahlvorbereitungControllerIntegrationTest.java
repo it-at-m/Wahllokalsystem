@@ -58,19 +58,20 @@ public class BriefwahlvorbereitungControllerIntegrationTest {
     BriefwahlvorbereitungRepository briefwahlvorbereitungRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_BRIEFWAHLVORBEREITUNG);
         briefwahlvorbereitungRepository.deleteAll();
     }
 
     @Nested
     class GetBriefwahlvorbereitung {
+
         @Test
         @WithMockUser(
                 authorities = { Authorities.SERVICE_GET_BRIEFWAHLVORBEREITUNG, Authorities.REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG,
                         Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG }
         )
-        void dataFound() throws Exception {
+        void should_returnData_when_dataIsPresentInRepo() throws Exception {
             val wahlbezirkIDToFind = "123";
             val briefwahlvorbereitungToFind = new Briefwahlvorbereitung();
             List<Wahlurne> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValid("1234").build());
@@ -92,7 +93,7 @@ public class BriefwahlvorbereitungControllerIntegrationTest {
                 authorities = { Authorities.SERVICE_GET_BRIEFWAHLVORBEREITUNG, Authorities.REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG,
                         Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG }
         )
-        void noDataFound() throws Exception {
+        void should_returnNoContent_when_noDataFound() throws Exception {
             val wahlbezirkIDEmpty = "123";
 
             val wahlbezirkIDNotEmpty = "456";
@@ -116,7 +117,7 @@ public class BriefwahlvorbereitungControllerIntegrationTest {
         @WithMockUser(
                 authorities = { Authorities.SERVICE_POST_BRIEFWAHLVORBEREITUNG, Authorities.REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG }
         )
-        void newDataIsSaved() throws Exception {
+        void should_setNewData_when_callingPost() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             List<WahlurneDTO> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValidDTO("1234").build());
             val writeDto = new BriefwahlvorbereitungWriteDTO(urnenanzahl1);
@@ -135,7 +136,7 @@ public class BriefwahlvorbereitungControllerIntegrationTest {
         @WithMockUser(
                 authorities = { Authorities.SERVICE_POST_BRIEFWAHLVORBEREITUNG, Authorities.REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG }
         )
-        void existingDataIsOverwritten() throws Exception {
+        void should_replaceData_when_dataIsPresent() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             List<WahlurneDTO> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValidDTO("1234").build());
             val writeDto1 = new BriefwahlvorbereitungWriteDTO(urnenanzahl1);
@@ -165,7 +166,7 @@ public class BriefwahlvorbereitungControllerIntegrationTest {
         @WithMockUser(
                 authorities = { Authorities.SERVICE_POST_BRIEFWAHLVORBEREITUNG, Authorities.REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG }
         )
-        void gotWlsExceptionWhenParameterNotComplete() throws Exception {
+        void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             val writeDto = new BriefwahlvorbereitungWriteDTO(null);
             val request = buildPostRequest(wahlbezirkID, writeDto);
@@ -185,7 +186,7 @@ public class BriefwahlvorbereitungControllerIntegrationTest {
         @WithMockUser(
                 authorities = { Authorities.SERVICE_POST_BRIEFWAHLVORBEREITUNG, Authorities.REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG }
         )
-        void gotWlsExceptionWhenNotSaveableCauseOfTooLongData() throws Exception {
+        void should_returnTechnischeWlsException_when_notSaveableCauseOfTooLongData() throws Exception {
             val wahlbezirkID = StringUtils.leftPad(" ", 255) + "wahlbezirkID";
             List<WahlurneDTO> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValidDTO("1234").build());
             val writeDto = new BriefwahlvorbereitungWriteDTO(urnenanzahl1);
@@ -208,5 +209,4 @@ public class BriefwahlvorbereitungControllerIntegrationTest {
                     objectMapper.writeValueAsString(requestBody));
         }
     }
-
 }

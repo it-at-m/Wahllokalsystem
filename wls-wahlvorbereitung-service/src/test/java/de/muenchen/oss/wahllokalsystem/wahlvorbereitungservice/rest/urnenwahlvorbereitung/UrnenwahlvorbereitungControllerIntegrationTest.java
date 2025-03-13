@@ -58,7 +58,7 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
     UrnenwahlVorbereitungRepository urnenwahlVorbereitungRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_URNENWAHLVORBEREITUNG);
         urnenwahlVorbereitungRepository.deleteAll();
     }
@@ -68,7 +68,7 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_GET_URNENWAHLVORBEREITUNG, Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG })
-        void dataFound() throws Exception {
+        void should_returnData_when_dataIsPresentInRepo() throws Exception {
             val wahlbezirkIDToFind = "wahlbezirkIDToFind";
 
             val wahlbezirk1 = UrnenwahlVorbereitungTestdatenfactory.initValid("wahlbezirk1", "wahlID1").build();
@@ -89,7 +89,7 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_GET_URNENWAHLVORBEREITUNG, Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG })
-        void noDataFound() throws Exception {
+        void should_returnNoContent_when_noDataFound() throws Exception {
             val wahlbezirkIDToLookup = "wahlbezirkIDToFind";
 
             val wahlbezirk1 = UrnenwahlVorbereitungTestdatenfactory.initValid("wahlbezirk1", "wahlID1").build();
@@ -111,7 +111,7 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_POST_URNENWAHLVORBEREITUNG, Authorities.REPOSITORY_WRITE_URNENWAHLVORBEREITUNG })
-        void newDataIsSaved() throws Exception {
+        void should_setNewData_when_callingPost() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             val requestBody = UrnenwahlVorbereitungTestdatenfactory.initValidDTO("wahlID").build();
             val request = buildPostRequest(wahlbezirkID, requestBody);
@@ -128,7 +128,7 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_POST_URNENWAHLVORBEREITUNG, Authorities.REPOSITORY_WRITE_URNENWAHLVORBEREITUNG })
-        void existingDataIsOverwritten() throws Exception {
+        void should_replaceData_when_dataIsPresent() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
 
             val requestBody = UrnenwahlVorbereitungTestdatenfactory.initValidDTO("wahlID").build();
@@ -152,7 +152,7 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_POST_URNENWAHLVORBEREITUNG, Authorities.REPOSITORY_WRITE_URNENWAHLVORBEREITUNG })
-        void gotWlsExceptionWhenDataIsInvalid() throws Exception {
+        void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
 
             val requestBody = UrnenwahlVorbereitungTestdatenfactory.initValidDTO("wahlID").urnenAnzahl(Collections.emptyList()).build();
@@ -171,7 +171,7 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_POST_URNENWAHLVORBEREITUNG, Authorities.REPOSITORY_WRITE_URNENWAHLVORBEREITUNG })
-        void gotWlsExceptionWhenNotSaveableCauseOfToLongData() throws Exception {
+        void should_returnTechnischeWlsException_when_notSaveableCauseOfTooLongData() throws Exception {
             val wahlbezirkID = StringUtils.leftPad(" ", 255) + "wahlbezirkID";
 
             val requestBody = UrnenwahlVorbereitungTestdatenfactory.initValidDTO("wahlID").build();

@@ -4,6 +4,7 @@ import static de.muenchen.oss.wahllokalsystem.eaiservice.TestConstants.SPRING_TE
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.eaiservice.Authorities;
 import de.muenchen.oss.wahllokalsystem.eaiservice.MicroServiceApplication;
@@ -65,7 +66,7 @@ public class ErgebnismeldungControllerIntegrationTest {
     ErgebnismeldungValidator ergebnismeldungValidator;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         ergebnismeldungRepository.deleteAll();
     }
 
@@ -75,7 +76,7 @@ public class ErgebnismeldungControllerIntegrationTest {
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_SAVE_ERGEBNISMELDUNG)
         @Transactional
-        void meldungIsSaved() throws Exception {
+        void should_setNewData_when_callingPost() throws Exception {
             val requestBody = getErgebnismeldungDTO();
             val request = MockMvcRequestBuilders.post("/ergebnismeldung").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
                     objectMapper.writeValueAsString(requestBody));
@@ -94,7 +95,7 @@ public class ErgebnismeldungControllerIntegrationTest {
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_SAVE_ERGEBNISMELDUNG)
         @Transactional
-        void validationExceptionOccurredAndIsMapped() throws Exception {
+        void should_returnTechnischeWlsException_when_savingFailed() throws Exception {
             val requestBody = getErgebnismeldungDTO();
             val request = MockMvcRequestBuilders.post("/ergebnismeldung").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
                     objectMapper.writeValueAsString(requestBody));
@@ -187,6 +188,5 @@ public class ErgebnismeldungControllerIntegrationTest {
             return new ErgebnismeldungDTO(wahlbezirkID, wahlID, meldungsart, aWerte, bWerte, wahlbriefeWerte, ungueltigeStimmzettelDTOList,
                     ungueltigeStimmzettelAnzahl, ergebnisse, wahlart);
         }
-
     }
 }

@@ -39,8 +39,9 @@ class BriefwahlvorbereitungServiceTest {
 
     @Nested
     class getBriefwahlvorbereitung {
+
         @Test
-        void dataFound() {
+        void should_returnBriefwahlvorbereitung_when_givenValidWahlbezirkID() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedRepoResponse = new Briefwahlvorbereitung();
@@ -56,7 +57,7 @@ class BriefwahlvorbereitungServiceTest {
         }
 
         @Test
-        void noDataFound() {
+        void should_returnEmpty_when_noDataFound() {
             val wahlbezirkID = "wahlbezirkID";
 
             Mockito.doNothing().when(briefwahlvorbereitungValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
@@ -70,7 +71,7 @@ class BriefwahlvorbereitungServiceTest {
         }
 
         @Test
-        void exceptionFromValidator() {
+        void should_throwException_when_validationFailed() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedValidatorException = new RuntimeException("validation failed");
@@ -85,7 +86,7 @@ class BriefwahlvorbereitungServiceTest {
     class SetBriefwahlvorbereitung {
 
         @Test
-        void isSaved() {
+        void should_saveBriefwahlvorbereitung_when_givenValidModel() {
             val modelToSave = BriefwahlvorbereitungModel.builder().build();
 
             val mockedModelAsEntity = new Briefwahlvorbereitung();
@@ -99,7 +100,7 @@ class BriefwahlvorbereitungServiceTest {
         }
 
         @Test
-        void exceptionFromValidationGotThrown() {
+        void should_notSaveBriefwahlvorbereitung_when_validationFailed() {
             val modelToSave = BriefwahlvorbereitungModel.builder().build();
 
             val mockedValidationException = new RuntimeException("validation failed");
@@ -110,7 +111,7 @@ class BriefwahlvorbereitungServiceTest {
         }
 
         @Test
-        void exceptionFromSavingIsMapped() {
+        void should_throwTechnischeWlsException_when_savingFailed() {
             val modelToSave = BriefwahlvorbereitungModel.builder().build();
 
             val mockedModelAsEntity = new Briefwahlvorbereitung();
@@ -126,5 +127,4 @@ class BriefwahlvorbereitungServiceTest {
                     .isSameAs(mockedFactoryException);
         }
     }
-
 }

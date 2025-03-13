@@ -29,7 +29,7 @@ class AusdruckRepositoryTest {
     AusdruckRepository repository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         repository.deleteAll();
     }
 

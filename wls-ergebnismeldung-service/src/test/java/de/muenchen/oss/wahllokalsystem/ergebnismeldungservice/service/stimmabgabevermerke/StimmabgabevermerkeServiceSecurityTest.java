@@ -45,7 +45,7 @@ public class StimmabgabevermerkeServiceSecurityTest {
     StimmabgabevermerkeRepository stimmabgabevermerkeRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_STIMMABGABEVERMERKE);
         stimmabgabevermerkeRepository.deleteAll();
     }

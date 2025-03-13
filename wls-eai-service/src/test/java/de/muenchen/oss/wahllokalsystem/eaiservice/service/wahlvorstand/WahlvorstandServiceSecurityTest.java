@@ -36,7 +36,7 @@ public class WahlvorstandServiceSecurityTest {
     class GetWahlvorstandForWahlbezirk {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_givenAllAuthorities() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GETWAHLVORSTANDFORWAHLBEZIRK);
 
             Assertions.assertThatException().isThrownBy(() -> wahlvorstandService.getWahlvorstandForWahlbezirk(UUID.randomUUID().toString())).isInstanceOf(
@@ -45,7 +45,7 @@ public class WahlvorstandServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             Assertions.assertThatThrownBy(() -> wahlvorstandService.getWahlvorstandForWahlbezirk(UUID.randomUUID().toString()))
@@ -61,7 +61,7 @@ public class WahlvorstandServiceSecurityTest {
     class SetAnwesenheit {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_givenAllAuthorities() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORIRITES_SETANWESENHEIT);
 
             val aktualisierung = new WahlvorstandsaktualisierungDTO(UUID.randomUUID().toString(),
@@ -72,7 +72,7 @@ public class WahlvorstandServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val aktualisierung = new WahlvorstandsaktualisierungDTO(UUID.randomUUID().toString(),
@@ -85,7 +85,5 @@ public class WahlvorstandServiceSecurityTest {
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
             return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORIRITES_SETANWESENHEIT);
         }
-
     }
-
 }

@@ -51,7 +51,7 @@ class WahlvorstandServiceTest {
     class GetWahlvorstandForWahlbezirk {
 
         @Test
-        void foundData() {
+        void should_returnWahlvorstandDTO_when_givenValidWahlbezirkID() {
             val wahlbezirkID = UUID.randomUUID();
 
             val mockedEntity = new Wahlvorstand();
@@ -67,7 +67,7 @@ class WahlvorstandServiceTest {
         }
 
         @Test
-        void foundNoData() {
+        void should_throwNotFoundException_when_noDataFound() {
             val wahlbezirkID = UUID.randomUUID();
 
             Mockito.when(wahlvorstandRepository.findFirstByWahlbezirkID(wahlbezirkID)).thenReturn(Optional.empty());
@@ -78,7 +78,7 @@ class WahlvorstandServiceTest {
         }
 
         @Test
-        void exceptionForMalformedWahlbezirkID() {
+        void should_throwException_when_whalbezirkIDIsNoUUID() {
             val wahlbezirkID = "noAUUID";
 
             val idConverterException = new RuntimeException("id convert failed");
@@ -89,7 +89,7 @@ class WahlvorstandServiceTest {
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDIsNotValid() {
+        void should_throwException_when_whalbezirkIDIsNotValid() {
             val wahlbezirkID = UUID.randomUUID();
 
             val mockedValidationException = new RuntimeException("validation failed");
@@ -105,7 +105,7 @@ class WahlvorstandServiceTest {
     class SetAnwesenheit {
 
         @Test
-        void existingDataIsUpdated() {
+        void should_saveAnwesenheit_when_givenValidWahlvorstandsaktualisierungDTO() {
             val wahlbezirkID = UUID.randomUUID();
             val mitglied1 = new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), true);
             val mitglied2 = new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), false);
@@ -138,7 +138,7 @@ class WahlvorstandServiceTest {
         }
 
         @Test
-        void exceptionWhenWahlvorstandDoesNotExists() {
+        void should_throwException_when_wahlvorstandDoesNotExists() {
             val wahlbezirkID = UUID.randomUUID();
             val mitglied1 = new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), true);
             val mitglied2 = new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), false);
@@ -155,7 +155,7 @@ class WahlvorstandServiceTest {
         }
 
         @Test
-        void validationFailed() {
+        void should_notSaveAnwesenheit_when_validationFailed() {
             val aktualisierung = new WahlvorstandsaktualisierungDTO(UUID.randomUUID().toString(), Collections.emptySet(), LocalDateTime.now());
 
             val mockedValidationException = new RuntimeException("validation failed");
@@ -166,7 +166,7 @@ class WahlvorstandServiceTest {
         }
 
         @Test
-        void exceptionBecauseOfWahlbezirkIDOfParameterIsInvalid() {
+        void should_throwException_when_wahlbezirkIDIsInvalid() {
             val wahlbezirkID = "malformedID";
 
             val idConverterException = new RuntimeException("id convert failed");
@@ -178,5 +178,4 @@ class WahlvorstandServiceTest {
                     .isSameAs(idConverterException);
         }
     }
-
 }

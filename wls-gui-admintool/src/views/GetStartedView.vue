@@ -32,5 +32,4 @@ import { ref } from "vue";
 import { VCol, VContainer, VRow } from "vuetify/components";
 
 const documentationClicked = ref(false);
-
 </script>

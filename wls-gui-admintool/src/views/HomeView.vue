@@ -34,9 +34,6 @@ const status = ref("DOWN");
 onMounted(() => {
   checkHealth()
     .then((content: HealthState) => (status.value = content.status))
-    .catch((error) => {
-      // add snackbar or delete
-    });
 });
 </script>
 

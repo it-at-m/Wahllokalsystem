@@ -18,11 +18,10 @@ public class NestedTestsuitesHaveMatchingMethodCondition extends ArchCondition<J
     public NestedTestsuitesHaveMatchingMethodCondition() {
         super("have matching public method name if they are highest nested class");
         this.classNameEndingExclusions = Set.of(
-                "ControllerIntegrationTest",
+                "IntegrationTest",
+                "ConfigurationTest",
                 "ServiceSecurityTest",
-                "SecurityConfigurationTest",
-                "ArchUnitTest",
-                "SwaggerConfigurationTest");
+                "ArchUnitTest");
     }
 
     public NestedTestsuitesHaveMatchingMethodCondition(final Set<String> customExclusions) {

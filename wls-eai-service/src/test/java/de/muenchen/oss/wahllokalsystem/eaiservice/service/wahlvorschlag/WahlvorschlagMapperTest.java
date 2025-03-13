@@ -32,15 +32,15 @@ class WahlvorschlagMapperTest {
         @Nested
         class WahlvorschlagMapping {
 
-        @Test
-        void should_returnWahlvorschlagDTO_when_givenWahlvorschlagEntity() {
-            val kandidat1 = new Kandidat("name1", 1, false, 1, false);
-            kandidat1.setId(UUID.randomUUID());
-            val kandidat2 = new Kandidat("name2", 2, true, 2, true);
-            kandidat2.setId(UUID.randomUUID());
-            val kandidaten = Set.of(kandidat1, kandidat2);
-            val entityToMap = new Wahlvorschlag(1, "wahlvorschlag1", true, kandidaten);
-            entityToMap.setId(UUID.randomUUID());
+            @Test
+            void should_returnWahlvorschlagDTO_when_givenWahlvorschlagEntity() {
+                val kandidat1 = new Kandidat("name1", 1, false, 1, false);
+                kandidat1.setId(UUID.randomUUID());
+                val kandidat2 = new Kandidat("name2", 2, true, 2, true);
+                kandidat2.setId(UUID.randomUUID());
+                val kandidaten = Set.of(kandidat1, kandidat2);
+                val entityToMap = new Wahlvorschlag(1, "wahlvorschlag1", true, kandidaten);
+                entityToMap.setId(UUID.randomUUID());
 
                 val result = unitUnderTest.toDTO(entityToMap);
 
@@ -55,15 +55,15 @@ class WahlvorschlagMapperTest {
                 Assertions.assertThat(result).isEqualTo(expectedResult);
             }
 
-        @Test
-        void should_returnWahlvorschlaegeDTO_when_givenWahlvorschlaegeEntity() {
-            val kandidat1 = new Kandidat("name1", 1, false, 1, false);
-            kandidat1.setId(UUID.randomUUID());
-            val kandidat2 = new Kandidat("name2", 2, true, 2, true);
-            kandidat2.setId(UUID.randomUUID());
-            val kandidaten1 = Set.of(kandidat1, kandidat2);
-            val wahlvorschlag1 = new Wahlvorschlag(1, "wahlvorschlag1", true, kandidaten1);
-            wahlvorschlag1.setId(UUID.randomUUID());
+            @Test
+            void should_returnWahlvorschlaegeDTO_when_givenWahlvorschlaegeEntity() {
+                val kandidat1 = new Kandidat("name1", 1, false, 1, false);
+                kandidat1.setId(UUID.randomUUID());
+                val kandidat2 = new Kandidat("name2", 2, true, 2, true);
+                kandidat2.setId(UUID.randomUUID());
+                val kandidaten1 = Set.of(kandidat1, kandidat2);
+                val wahlvorschlag1 = new Wahlvorschlag(1, "wahlvorschlag1", true, kandidaten1);
+                wahlvorschlag1.setId(UUID.randomUUID());
 
                 val kandidat3 = new Kandidat("name3", 1, false, 1, false);
                 kandidat3.setId(UUID.randomUUID());
@@ -100,15 +100,15 @@ class WahlvorschlagMapperTest {
                 Assertions.assertThat(result).isEqualTo(expectedResult);
             }
 
-        @Test
-        void should_returnWahlvorschlaegeListeDTO_when_givenWahlvorschlaegeListeEntity() {
-            val kandidat1 = new Kandidat("name1", 1, false, 1, false);
-            kandidat1.setId(UUID.randomUUID());
-            val kandidat2 = new Kandidat("name2", 2, true, 2, true);
-            kandidat2.setId(UUID.randomUUID());
-            val kandidaten1 = Set.of(kandidat1, kandidat2);
-            val wahlvorschlag1 = new Wahlvorschlag(1, "wahlvorschlag1", true, kandidaten1);
-            wahlvorschlag1.setId(UUID.randomUUID());
+            @Test
+            void should_returnWahlvorschlaegeListeDTO_when_givenWahlvorschlaegeListeEntity() {
+                val kandidat1 = new Kandidat("name1", 1, false, 1, false);
+                kandidat1.setId(UUID.randomUUID());
+                val kandidat2 = new Kandidat("name2", 2, true, 2, true);
+                kandidat2.setId(UUID.randomUUID());
+                val kandidaten1 = Set.of(kandidat1, kandidat2);
+                val wahlvorschlag1 = new Wahlvorschlag(1, "wahlvorschlag1", true, kandidaten1);
+                wahlvorschlag1.setId(UUID.randomUUID());
 
                 val kandidat3 = new Kandidat("name3", 1, false, 1, false);
                 kandidat3.setId(UUID.randomUUID());
@@ -151,13 +151,13 @@ class WahlvorschlagMapperTest {
             }
         }
 
-    @Nested
-    class ReferendumMapping {
+        @Nested
+        class ReferendumMapping {
 
-        @Test
-        void should_returnReferendumoptionDTO_when_givenReferendumoptionEntity() {
-            val entityToMap = new Referendumoption("Optionsname1", Long.valueOf(1));
-            entityToMap.setId(UUID.randomUUID());
+            @Test
+            void should_returnReferendumoptionDTO_when_givenReferendumoptionEntity() {
+                val entityToMap = new Referendumoption("Optionsname1", Long.valueOf(1));
+                entityToMap.setId(UUID.randomUUID());
 
                 val result = unitUnderTest.toDTO(entityToMap);
 
@@ -166,15 +166,15 @@ class WahlvorschlagMapperTest {
                 Assertions.assertThat(result).isEqualTo(expectedResult);
             }
 
-        @Test
-        void should_returnReferendumvorlageDTO_when_givenReferendumvorlageEntity() {
-            val referendumoption1 = new Referendumoption("Optionsname1", Long.valueOf(1));
-            referendumoption1.setId(UUID.randomUUID());
-            val referendumoption2 = new Referendumoption("Optionsname2", Long.valueOf(2));
-            referendumoption2.setId(UUID.randomUUID());
-            val referendumoptionen = Set.of(referendumoption1, referendumoption2);
-            val entityToMap = new Referendumvorlage("wahlvorschlagID", 1, "referendum1", "Warum ist die Banane krumm?", referendumoptionen);
-            entityToMap.setId(UUID.randomUUID());
+            @Test
+            void should_returnReferendumvorlageDTO_when_givenReferendumvorlageEntity() {
+                val referendumoption1 = new Referendumoption("Optionsname1", Long.valueOf(1));
+                referendumoption1.setId(UUID.randomUUID());
+                val referendumoption2 = new Referendumoption("Optionsname2", Long.valueOf(2));
+                referendumoption2.setId(UUID.randomUUID());
+                val referendumoptionen = Set.of(referendumoption1, referendumoption2);
+                val entityToMap = new Referendumvorlage("wahlvorschlagID", 1, "referendum1", "Warum ist die Banane krumm?", referendumoptionen);
+                entityToMap.setId(UUID.randomUUID());
 
                 val result = unitUnderTest.toDTO(entityToMap);
 
@@ -187,15 +187,15 @@ class WahlvorschlagMapperTest {
                 Assertions.assertThat(result).isEqualTo(expectedResult);
             }
 
-        @Test
-        void should_returnReferendumvorlagenDTO_when_givenReferendumvorlagenEntity() {
-            val referendumoption1 = new Referendumoption("Optionsname1", Long.valueOf(1));
-            referendumoption1.setId(UUID.randomUUID());
-            val referendumoption2 = new Referendumoption("Optionsname2", Long.valueOf(2));
-            referendumoption2.setId(UUID.randomUUID());
-            val referendumoptionen1 = Set.of(referendumoption1, referendumoption2);
-            val referendumvorlage1 = new Referendumvorlage("wahlvorschlagID1", 1, "referendum1", "Warum ist die Banane krumm?", referendumoptionen1);
-            referendumvorlage1.setId(UUID.randomUUID());
+            @Test
+            void should_returnReferendumvorlagenDTO_when_givenReferendumvorlagenEntity() {
+                val referendumoption1 = new Referendumoption("Optionsname1", Long.valueOf(1));
+                referendumoption1.setId(UUID.randomUUID());
+                val referendumoption2 = new Referendumoption("Optionsname2", Long.valueOf(2));
+                referendumoption2.setId(UUID.randomUUID());
+                val referendumoptionen1 = Set.of(referendumoption1, referendumoption2);
+                val referendumvorlage1 = new Referendumvorlage("wahlvorschlagID1", 1, "referendum1", "Warum ist die Banane krumm?", referendumoptionen1);
+                referendumvorlage1.setId(UUID.randomUUID());
 
                 val referendumoption3 = new Referendumoption("Optionsname3", Long.valueOf(3));
                 referendumoption3.setId(UUID.randomUUID());

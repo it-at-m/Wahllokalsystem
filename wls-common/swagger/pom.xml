@@ -20,7 +20,7 @@
         <tag>HEAD</tag>
   </scm>
     <properties>
-        <wls.common.version>1.6.0-SNAPSHOT</wls.common.version>
+        <wls.common.version>1.5.1</wls.common.version>
         <com.tngtech.archunit.version>1.4.0</com.tngtech.archunit.version>
     </properties>
 

@@ -1,6 +1,5 @@
 <template>
   <v-app>
-    <the-snackbar />
     <v-app-bar color="primary">
       <v-row align="center">
         <v-col
@@ -30,7 +29,6 @@
             clearable
             :prepend-inner-icon="mdiMagnify"
             theme="dark"
-            @keyup.enter="search"
           />
         </v-col>
         <v-col
@@ -43,15 +41,6 @@
             :tags="['global']"
             :icon="mdiApps"
           />
-          <v-btn
-            variant="text"
-            icon
-          >
-            <ad2-image-avatar
-              v-if="userStore.getUser !== null"
-              :username="userStore.getUser.username"
-            />
-          </v-btn>
         </v-col>
       </v-row>
     </v-app-bar>
@@ -83,7 +72,6 @@ import {
   VApp,
   VAppBar,
   VAppBarNavIcon,
-  VBtn,
   VCol,
   VContainer,
   VFadeTransition,
@@ -98,17 +86,13 @@ import {
 } from "vuetify/components";
 
 import { getUser } from "@/api/user-client";
-import Ad2ImageAvatar from "@/components/common/Ad2ImageAvatar.vue";
-import TheSnackbar from "@/components/TheSnackbar.vue";
 import { APPSWITCHER_URL, ROUTES_GETSTARTED } from "@/constants";
-import { useSnackbarStore } from "@/stores/snackbar";
 import { useUserStore } from "@/stores/user";
 import User, { UserLocalDevelopment } from "@/types/User";
 
 const query = ref<string>("");
 const appswitcherBaseUrl = APPSWITCHER_URL;
 
-const snackbarStore = useSnackbarStore();
 const userStore = useUserStore();
 const [drawer, toggleDrawer] = useToggle();
 
@@ -130,18 +114,6 @@ function loadUser(): void {
         userStore.setUser(null);
       }
     });
-}
-
-/**
- * Navigates to the page with the search results and sends an event to trigger further searches.
- */
-
-async function search(): Promise<void> {
-  if (query.value !== "" && query.value !== null) {
-    snackbarStore.showMessage({
-      message: "Sie haben nach " + query.value + " gesucht. ;)",
-    });
-  }
 }
 </script>
 

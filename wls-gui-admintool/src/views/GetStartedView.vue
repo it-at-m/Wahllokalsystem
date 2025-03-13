@@ -24,13 +24,6 @@
         </div>
       </v-col>
     </v-row>
-    <yes-no-dialog
-      v-model="saveLeaveDialog"
-      dialogtitle="Wirklich verlassen?"
-      dialogtext="Wollen Sie wirklich nicht die Dokumentation anschauen?"
-      @no="cancel"
-      @yes="leave"
-    />
   </v-container>
 </template>
 
@@ -38,13 +31,6 @@
 import { ref } from "vue";
 import { VCol, VContainer, VRow } from "vuetify/components";
 
-import YesNoDialog from "@/components/common/YesNoDialog.vue";
-import { useSaveLeave } from "@/composables/saveLeave";
-
 const documentationClicked = ref(false);
-const { cancel, leave, saveLeaveDialog } = useSaveLeave(isDirty);
 
-function isDirty(): boolean {
-  return !documentationClicked.value;
-}
 </script>

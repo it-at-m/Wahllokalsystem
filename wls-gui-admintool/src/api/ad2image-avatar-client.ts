@@ -21,10 +21,3 @@ export class Ad2imageAvatarClient {
     return url.toString();
   }
 }
-
-/**
- * The default Ad2imageAvatarClient, which is configurable via environment variable VITE_AD2IMAGE_URL in .env file.
- *
- * @see https://github.com/it-at-m/ad2image#documentation
- */
-export const DefaultLhmAvatarService = new Ad2imageAvatarClient(AD2IMAGE_URL);

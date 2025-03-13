@@ -15,7 +15,7 @@ class WahlurneModelMapperTest {
     class ToModel {
 
         @Test
-        void isMapped() {
+        void should_returnWahlurneModel_when_givenWahlurneEntity() {
             val wahlID = "wahlID";
             val anzahl = 23;
             val urneVersiegelt = true;
@@ -28,5 +28,4 @@ class WahlurneModelMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

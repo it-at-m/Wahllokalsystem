@@ -19,7 +19,7 @@ class EroeffnungsUhrzeitDTOMapperTest {
     class ToDTO {
 
         @Test
-        void isMapped() {
+        void should_returnEroeffnungsUhrzeitDTO_when_givenEroeffnungsuhrzeitModel() {
             val wahlbezirkID = "wahlbezirkID";
             val eroeffnungsUhrzeit = LocalDateTime.now();
             val modelToMap = new EroeffnungsUhrzeitModel(wahlbezirkID, eroeffnungsUhrzeit);
@@ -35,7 +35,7 @@ class EroeffnungsUhrzeitDTOMapperTest {
     class ToModel {
 
         @Test
-        void isMapped() {
+        void should_returnEroeffnungsuhrzeitModel_when_givenEroeffnungsuhrzeitDTO() {
             val eroeffnungsUhrzeit = LocalDateTime.now();
             val wahlbezirkIDToMap = "wahlbezirkID";
             val dtoToMap = new EroeffnungsUhrzeitWriteDTO(eroeffnungsUhrzeit);
@@ -47,5 +47,4 @@ class EroeffnungsUhrzeitDTOMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

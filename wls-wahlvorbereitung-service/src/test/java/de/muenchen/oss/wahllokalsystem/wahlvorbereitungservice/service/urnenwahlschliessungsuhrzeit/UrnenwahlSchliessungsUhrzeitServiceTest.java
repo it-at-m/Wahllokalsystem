@@ -39,8 +39,9 @@ class UrnenwahlSchliessungsUhrzeitServiceTest {
 
     @Nested
     class getUrnenwahlSchliessungsUhrzeit {
+
         @Test
-        void dataFound() {
+        void should_returnUrnenwahlSchliessungsuhrzeit_when_givenValidWahlbezirkID() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedRepoResponse = new UrnenwahlSchliessungsUhrzeit();
@@ -56,7 +57,7 @@ class UrnenwahlSchliessungsUhrzeitServiceTest {
         }
 
         @Test
-        void noDataFound() {
+        void should_returnEmpty_when_noDataFound() {
             val wahlbezirkID = "wahlbezirkID";
 
             Mockito.doNothing().when(urnenwahlSchliessungsUhrzeitValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
@@ -70,7 +71,7 @@ class UrnenwahlSchliessungsUhrzeitServiceTest {
         }
 
         @Test
-        void exceptionFromValidator() {
+        void should_throwException_when_validationFailed() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedValidatorException = new RuntimeException("validation failed");
@@ -82,10 +83,10 @@ class UrnenwahlSchliessungsUhrzeitServiceTest {
     }
 
     @Nested
-    class SetUrnenwahlSchliessungsUhrzeit {
+    class should_saveUrnenwahlSchliessungsuhrzeit_when_givenValidModel {
 
         @Test
-        void isSaved() {
+        void should_saveUrnenwahlSchliessungsuhrzeit_when_givenValidModel() {
             val modelToSave = UrnenwahlSchliessungsUhrzeitModel.builder().build();
 
             val mockedModelAsEntity = new UrnenwahlSchliessungsUhrzeit();
@@ -99,7 +100,7 @@ class UrnenwahlSchliessungsUhrzeitServiceTest {
         }
 
         @Test
-        void exceptionFromValidationGotThrown() {
+        void should_notSaveUrnenwahlSchliessungsuhrzeit_when_validationFailed() {
             val modelToSave = UrnenwahlSchliessungsUhrzeitModel.builder().build();
 
             val mockedValidationException = new RuntimeException("validation failed");
@@ -110,7 +111,7 @@ class UrnenwahlSchliessungsUhrzeitServiceTest {
         }
 
         @Test
-        void exceptionFromSavingIsMapped() {
+        void should_throwTechnischeWlsException_when_savingFailed() {
             val modelToSave = UrnenwahlSchliessungsUhrzeitModel.builder().build();
 
             val mockedModelAsEntity = new UrnenwahlSchliessungsUhrzeit();
@@ -126,5 +127,4 @@ class UrnenwahlSchliessungsUhrzeitServiceTest {
                     .isSameAs(mockedFactoryException);
         }
     }
-
 }

@@ -29,7 +29,7 @@ public class UrnenwahlSchliessungsUhrzeitControllerTest {
     UrnenwahlSchliessungsUhrzeitController unitUnderTest;
 
     @Test
-    void getDataFromService() {
+    void should_returnUrnenwahlSchliessungsuhrzeit_when_dataFound() {
         val wahlbezirkID = "wahlbezirkID";
         val urnenwahlSchliessungsUhrzeit = LocalDateTime.now();
 
@@ -46,7 +46,7 @@ public class UrnenwahlSchliessungsUhrzeitControllerTest {
     }
 
     @Test
-    void gotNoDataFromService() {
+    void should_returnNoContent_when_noDataFound() {
         val wahlbezirkID = "wahlbezirkID";
 
         Mockito.when(urnenwahlSchliessungsUhrzeitService.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID)).thenReturn(Optional.empty());
@@ -58,7 +58,7 @@ public class UrnenwahlSchliessungsUhrzeitControllerTest {
     }
 
     @Test
-    void requestIsMappedAndSendToService() {
+    void should_postUrnenwahlSchliessungsuhrzeit_when_calledAndMappedCorrectly() {
         val wahlbezirkID = "wahlbezirkID";
         val urnenwahlSchliessungsUhrzeit = LocalDateTime.now();
         val requestBody = new UrnenwahlSchliessungsUhrzeitWriteDTO(urnenwahlSchliessungsUhrzeit);
@@ -70,5 +70,4 @@ public class UrnenwahlSchliessungsUhrzeitControllerTest {
         Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postUrnenwahlSchliessungsUhrzeit(wahlbezirkID, requestBody));
         Mockito.verify(urnenwahlSchliessungsUhrzeitService).setUrnenwahlSchliessungsUhrzeit(mockedMappedRequest);
     }
-
 }

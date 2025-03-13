@@ -19,7 +19,7 @@ class FortsetzungsUhrzeitDTOMapperTest {
     class ToDTO {
 
         @Test
-        void isMapped() {
+        void should_returnFortsetzungsUhrzeitDTO_when_givenFortsetzungsUhrzeitModel() {
             val wahlbezirkID = "wahlbezirkID";
             val fortsetzungsUhrzeit = LocalDateTime.now();
             val modelToMap = new FortsetzungsUhrzeitModel(wahlbezirkID, fortsetzungsUhrzeit);
@@ -35,7 +35,7 @@ class FortsetzungsUhrzeitDTOMapperTest {
     class ToModel {
 
         @Test
-        void isMapped() {
+        void should_returnFortsetzungsUhrzeitModel_when_givenFortsetzungsUhrzeitDTO() {
             val fortsetzungsUhrzeit = LocalDateTime.now();
             val dtoToMap = new FortsetzungsUhrzeitWriteDTO(fortsetzungsUhrzeit);
             val wahlbezirkIDToMap = "wahlbezirkID";
@@ -47,5 +47,4 @@ class FortsetzungsUhrzeitDTOMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

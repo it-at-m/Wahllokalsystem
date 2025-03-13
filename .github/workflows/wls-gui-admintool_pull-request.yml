@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - 'wls-gui-admintool/**'
-      - '.github/workflows/wls-gui-admintool-pull-request.yml'
+      - '.github/workflows/wls-gui-admintool_pull-request.yml'
 
 jobs:
   verify-pull-request:

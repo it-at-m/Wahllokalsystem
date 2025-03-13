@@ -1,10 +1,11 @@
-package de.muenchen.oss.wahllokalsystem.briefwahlservice.service.wahlbriefdaten;
+package de.muenchen.oss.wahllokalsystem.briefwahlservice.service.beanstandetewahlbriefe;
 
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.test.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
+import java.util.HashMap;
 import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -25,13 +26,13 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
-public class WahlbriefdatenSecurityTest {
+public class BeanstandeteWahlbriefeServiceSecurityTest {
 
     @MockBean
     BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
     @Autowired
-    WahlbriefdatenService unitUnderTest;
+    BeanstandeteWahlbriefeService beanstandeteWahlbriefeService;
 
     @BeforeEach
     void setup() {
@@ -39,26 +40,30 @@ public class WahlbriefdatenSecurityTest {
     }
 
     @Nested
-    class GetWahlbriefdaten {
+    class GetBeanstandeteWahlbriefe {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLBRIEFDATEN);
-
             val wahlbezirkID = "wahlbezirkID";
+            val waehlerverzeichnummer = 13L;
+            val beanstandeteWahlbriefeReference = new BeanstandeteWahlbriefeReference(wahlbezirkID, waehlerverzeichnummer);
+
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_BEANSTANDETE_WAHLBRIEFE);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getWahlbriefdaten(wahlbezirkID));
+            beanstandeteWahlbriefeService.getBeanstandeteWahlbriefe(beanstandeteWahlbriefeReference);
         }
 
         @Test
         void bezirkIDPermissionEvaluatorFailed() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLBRIEFDATEN);
-
             val wahlbezirkID = "wahlbezirkID";
+            val waehlerverzeichnummer = 13L;
+            val beanstandeteWahlbriefeReference = new BeanstandeteWahlbriefeReference(wahlbezirkID, waehlerverzeichnummer);
+
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_BEANSTANDETE_WAHLBRIEFE);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.getWahlbriefdaten(wahlbezirkID))
+            Assertions.assertThatThrownBy(() -> beanstandeteWahlbriefeService.getBeanstandeteWahlbriefe(beanstandeteWahlbriefeReference))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
@@ -68,62 +73,65 @@ public class WahlbriefdatenSecurityTest {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val wahlbezirkID = "wahlbezirkID";
+            val waehlerverzeichnummer = 13L;
+            val beanstandeteWahlbriefeReference = new BeanstandeteWahlbriefeReference(wahlbezirkID, waehlerverzeichnummer);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.getWahlbriefdaten(wahlbezirkID))
+            Assertions.assertThatThrownBy(() -> beanstandeteWahlbriefeService.getBeanstandeteWahlbriefe(beanstandeteWahlbriefeReference))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_WAHLBRIEFDATEN);
+            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_BEANSTANDETE_WAHLBRIEFE);
         }
 
     }
 
     @Nested
-    class SetWahlbriefdaten {
+    class SetBeanstandeteWahlbriefe {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_WAHLBRIEFDATEN);
-
             val wahlbezirkID = "wahlbezirkID";
-            val wahlbriefdatenToSet = new WahlbriefdatenModel(wahlbezirkID, null, null, null, null, null);
+            val waehlerverzeichnummer = 13L;
+            val beanstandeteWahlbriefeModel = new BeanstandeteWahlbriefeModel(wahlbezirkID, waehlerverzeichnummer, new HashMap<>());
 
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_ADD_BEANSTANDETE_WAHLBRIEFE);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.setWahlbriefdaten(wahlbriefdatenToSet));
+            beanstandeteWahlbriefeService.setBeanstandeteWahlbriefe(beanstandeteWahlbriefeModel);
         }
 
         @Test
         void bezirkIDPermissionEvaluatorFailed() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_WAHLBRIEFDATEN);
-
             val wahlbezirkID = "wahlbezirkID";
-            val wahlbriefdatenToSet = new WahlbriefdatenModel(wahlbezirkID, null, null, null, null, null);
+            val waehlerverzeichnummer = 13L;
+            val beanstandeteWahlbriefeModel = new BeanstandeteWahlbriefeModel(wahlbezirkID, waehlerverzeichnummer, new HashMap<>());
 
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_ADD_BEANSTANDETE_WAHLBRIEFE);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.setWahlbriefdaten(wahlbriefdatenToSet))
+            Assertions.assertThatThrownBy(() -> beanstandeteWahlbriefeService.setBeanstandeteWahlbriefe(beanstandeteWahlbriefeModel))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
         void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
-            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
-
             val wahlbezirkID = "wahlbezirkID";
-            val wahlbriefdatenToSet = new WahlbriefdatenModel(wahlbezirkID, null, null, null, null, null);
+            val waehlerverzeichnummer = 13L;
+            val beanstandeteWahlbriefeModel = new BeanstandeteWahlbriefeModel(wahlbezirkID, waehlerverzeichnummer, new HashMap<>());
 
+            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.setWahlbriefdaten(wahlbriefdatenToSet))
+            Assertions.assertThatThrownBy(() -> beanstandeteWahlbriefeService.setBeanstandeteWahlbriefe(beanstandeteWahlbriefeModel))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_SET_WAHLBRIEFDATEN);
+            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_ADD_BEANSTANDETE_WAHLBRIEFE);
         }
     }
+
 }

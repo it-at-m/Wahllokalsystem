@@ -35,7 +35,7 @@ class AuthenticationServiceTest {
     AuthenticationService unitUnderTest;
 
     @Nested
-    class GetWahlbezirkArtOfCurrentAuthentication {
+    class GetWahlbezirkArtOfCurrentAuthenticationOrThrow {
 
         @Test
         void should_returnWahlbezirkArt_when_handlerIsFoundAndDetailsContainWahlbezirkArt() {
@@ -83,5 +83,4 @@ class AuthenticationServiceTest {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).isSameAs(mockedWlsException);
         }
     }
-
 }

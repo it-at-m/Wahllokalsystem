@@ -71,7 +71,9 @@ public class ArchUnitTest {
     private static Stream<Arguments> allServiceClassesRulesToVerify() {
         return Stream.of(
                 Arguments.of("RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED",
-                        ClassRules.RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED));
+                        ClassRules.RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED),
+                Arguments.of("RULE_TESTCLASSES_END_WITH_TEST_CONVENTION_MATCHED",
+                        MethodRules.RULE_TESTCLASSES_END_WITH_TEST_CONVENTION_MATCHED));
     }
 
     public static Stream<Arguments> allClassesOfRestRulesToVerify() {

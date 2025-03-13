@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service;
+package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.ereignis;
 
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;

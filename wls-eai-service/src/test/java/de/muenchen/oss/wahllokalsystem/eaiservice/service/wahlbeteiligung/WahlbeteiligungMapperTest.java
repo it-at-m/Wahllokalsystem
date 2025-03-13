@@ -18,7 +18,7 @@ class WahlbeteiligungMapperTest {
     class ToDTO {
 
         @Test
-        void ofWahlbeteiligung() {
+        void should_returnWahlbeteiligungDTO_when_givenWahlbeteiligungEntity() {
             val id = UUID.randomUUID();
             val wahlID = "wahlID1";
             val wahlbezirkID = "00000000-0000-0000-0000-000000000001";
@@ -35,7 +35,7 @@ class WahlbeteiligungMapperTest {
         }
 
         @Test
-        void ofWahlbeteiligungsMeldungDTO() {
+        void should_returnWahlbeteiligungEntity_when_givenWahlbeteiligungDTO() {
             val wahlID = "wahlID1";
             val wahlbezirkID = "00000000-0000-0000-0000-000000000001";
             val anzahlWaehler = 150;

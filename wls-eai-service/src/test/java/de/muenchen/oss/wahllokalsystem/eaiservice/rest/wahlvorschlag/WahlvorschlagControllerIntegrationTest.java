@@ -76,7 +76,7 @@ public class WahlvorschlagControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLVORSCHLAEGE)
-        void noDataFound() throws Exception {
+        void should_returnEmpty_when_noDataFound() throws Exception {
             val request = MockMvcRequestBuilders.get("/vorschlaege/wahl/wahlID/wahlbezirkID");
 
             val response = api.perform(request).andExpect(status().isNotFound()).andReturn();
@@ -87,7 +87,7 @@ public class WahlvorschlagControllerIntegrationTest {
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLVORSCHLAEGE)
         @Transactional
-        void dataFound() throws Exception {
+        void should_returnData_when_dataIsPresentInRepo() throws Exception {
             val wahlvorschlag1 = new Wahlvorschlag(1, "wahlvorschlag1", true, Set.of(
                     new Kandidat("name1", 1, false, 1, false),
                     new Kandidat("name2", 2, true, 2, true)));
@@ -111,7 +111,7 @@ public class WahlvorschlagControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLVORSCHLAEGE)
-        void wlsExceptionOnMissingWahlbezirkID() throws Exception {
+        void should_throwFachlicheWlsException_when_wahlbezirkIDMissing() throws Exception {
             val request = MockMvcRequestBuilders.get("/vorschlaege/wahl/wahlID/ ");
 
             val response = api.perform(request).andExpect(status().isBadRequest()).andReturn();
@@ -126,7 +126,7 @@ public class WahlvorschlagControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLVORSCHLAEGE)
-        void wlsExceptionOnMissingWahlID() throws Exception {
+        void should_throwFachlicheWlsException_when_wahlIDMissing() throws Exception {
             val request = MockMvcRequestBuilders.get("/vorschlaege/wahl/ /wahlbezirkID");
 
             val response = api.perform(request).andExpect(status().isBadRequest()).andReturn();
@@ -144,7 +144,7 @@ public class WahlvorschlagControllerIntegrationTest {
     class LoadWahlvorschlaegeListe {
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLVORSCHLAEGELISTE)
-        void noDataFound() throws Exception {
+        void should_returnEmpty_when_noDataFound() throws Exception {
             val wahlID = "wahlID";
             val forDate = "2024-10-10";
 
@@ -158,7 +158,7 @@ public class WahlvorschlagControllerIntegrationTest {
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLVORSCHLAEGELISTE)
         @Transactional
-        void dataFound() throws Exception {
+        void should_returnData_when_dataIsPresentInRepo() throws Exception {
             val wahlID = "wahlID";
             val forDate = LocalDate.of(2024, 10, 10);
 
@@ -194,7 +194,7 @@ public class WahlvorschlagControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLVORSCHLAEGELISTE)
-        void wlsExceptionOnMissingWahlID() throws Exception {
+        void should_throwFachlicheWlsException_when_wahlIDMissing() throws Exception {
             val wahlID = " ";
             val forDate = "2024-10-10";
 
@@ -208,7 +208,6 @@ public class WahlvorschlagControllerIntegrationTest {
                     ExceptionConstants.LOADWAHLVORSCHLAEGELISTE_WAHLID_FEHLT.message());
 
             Assertions.assertThat(wlsExceptionDTO).isEqualTo(expectedWlsException);
-
         }
     }
 
@@ -216,7 +215,7 @@ public class WahlvorschlagControllerIntegrationTest {
     class LoadReferendumvorlagen {
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_REFERENDUMVORLAGEN)
-        void noDataFound() throws Exception {
+        void should_returnEmpty_when_noDataFound() throws Exception {
             val request = MockMvcRequestBuilders.get("/vorschlaege/referendum/wahlID/wahlbezirkID");
 
             val response = api.perform(request).andExpect(status().isNotFound()).andReturn();
@@ -227,7 +226,7 @@ public class WahlvorschlagControllerIntegrationTest {
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_REFERENDUMVORLAGEN)
         @Transactional
-        void dataFound() throws Exception {
+        void should_returnData_when_dataIsPresentInRepo() throws Exception {
             val referendumoption1 = new Referendumoption("Optionsname1", 1L);
             val referendumoption2 = new Referendumoption("Optionsname2", 2L);
             val referendumvorlage1 = new Referendumvorlage("wahlvorschlagID1", 1, "referendum1", "Warum ist die Banane krumm?",
@@ -254,7 +253,7 @@ public class WahlvorschlagControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_REFERENDUMVORLAGEN)
-        void wlsExceptionOnMissingWahlID() throws Exception {
+        void should_throwFachlicheWlsException_when_wahlIDMissing() throws Exception {
             val wahlID = " ";
             val wahlbezirkID = "wahlbezirkID";
 
@@ -268,12 +267,11 @@ public class WahlvorschlagControllerIntegrationTest {
                     ExceptionConstants.LOADREFERENDUMVORLAGEN_WAHLID_FEHLT.message());
 
             Assertions.assertThat(wlsExceptionDTO).isEqualTo(expectedWlsException);
-
         }
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_REFERENDUMVORLAGEN)
-        void wlsExceptionOnMissingWahlbezirk() throws Exception {
+        void should_throwFachlicheWlsException_when_wahlbezirkIDMissing() throws Exception {
             val wahlID = "wahlID";
             val wahlbezirkID = " ";
 
@@ -287,7 +285,6 @@ public class WahlvorschlagControllerIntegrationTest {
                     ExceptionConstants.LOADREFERENDUMVORLAGEN_WAHLBEZIRKID_FEHLT.message());
 
             Assertions.assertThat(wlsExceptionDTO).isEqualTo(expectedWlsException);
-
         }
     }
 }

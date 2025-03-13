@@ -25,7 +25,7 @@ class ErgebnismeldungControllerTest {
     class SaveErgebnismeldung {
 
         @Test
-        void serviceIsCalled() {
+        void should_saveErgebnismeldung_when_called() {
             val ergebnismeldungDTO = ErgebnismeldungDTO.builder().build();
 
             unitUnderTest.saveErgebnismeldung(ergebnismeldungDTO);

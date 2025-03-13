@@ -25,7 +25,7 @@ public abstract class AbstractExceptionHandler {
 
     private final DTOMapper dtoMapper;
 
-    public WlsExceptionDTO getWahlExceptionDTO(@NonNull final Throwable throwable) {
+    protected WlsExceptionDTO getWahlExceptionDTO(@NonNull final Throwable throwable) {
         log.debug("Throwable > {}", throwable.toString());
         final WlsExceptionDTO data;
 
@@ -47,26 +47,26 @@ public abstract class AbstractExceptionHandler {
         return data;
     }
 
-    public abstract String getService();
+    protected abstract String getService();
 
-    public WlsExceptionDTO createForTransientException(final Throwable throwable) {
+    protected WlsExceptionDTO createForTransientException(final Throwable throwable) {
         return new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionKonstanten.CODE_TRANSIENT, getService(),
                 String.format("Temporäres Problem, Ursache: %s, Nachricht: %s", throwable.getClass(), throwable.getMessage()));
     }
 
-    public WlsExceptionDTO createForAccessDeniedException(final Throwable throwable) {
+    protected WlsExceptionDTO createForAccessDeniedException(final Throwable throwable) {
         return new WlsExceptionDTO(WlsExceptionCategory.S, ExceptionKonstanten.CODE_SECURITY_ACCESS_DENIED, getService(), throwable.getMessage());
     }
 
-    public ResponseEntity<WlsExceptionDTO> createResponse(final WlsExceptionDTO wlsExceptionDTO) {
+    protected ResponseEntity<WlsExceptionDTO> createResponse(final WlsExceptionDTO wlsExceptionDTO) {
         return switch (wlsExceptionDTO.category()) {
-        case T -> new ResponseEntity<>(wlsExceptionDTO,
-                ExceptionKonstanten.CODE_TRANSIENT.equals(wlsExceptionDTO.code()) ? HttpStatus.CONFLICT : HTTP_STATUS_TECHNISCHER_FEHLER);
-        case F -> ExceptionKonstanten.CODE_ENTITY_NOT_FOUND.equals(wlsExceptionDTO.code()) ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
-                : new ResponseEntity<>(wlsExceptionDTO, HTTP_STATUS_FACHLICHER_FEHLER);
-        case I -> new ResponseEntity<>(wlsExceptionDTO,
-                HTTP_STATUS_INFRASTRUKTURELLER_FEHLER);
-        case S -> new ResponseEntity<>(wlsExceptionDTO, HTTP_STATUS_SICHERHEITSFEHLER);
+            case T -> new ResponseEntity<>(wlsExceptionDTO,
+                    ExceptionKonstanten.CODE_TRANSIENT.equals(wlsExceptionDTO.code()) ? HttpStatus.CONFLICT : HTTP_STATUS_TECHNISCHER_FEHLER);
+            case F -> ExceptionKonstanten.CODE_ENTITY_NOT_FOUND.equals(wlsExceptionDTO.code()) ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+                    : new ResponseEntity<>(wlsExceptionDTO, HTTP_STATUS_FACHLICHER_FEHLER);
+            case I -> new ResponseEntity<>(wlsExceptionDTO,
+                    HTTP_STATUS_INFRASTRUKTURELLER_FEHLER);
+            case S -> new ResponseEntity<>(wlsExceptionDTO, HTTP_STATUS_SICHERHEITSFEHLER);
         };
     }
 }

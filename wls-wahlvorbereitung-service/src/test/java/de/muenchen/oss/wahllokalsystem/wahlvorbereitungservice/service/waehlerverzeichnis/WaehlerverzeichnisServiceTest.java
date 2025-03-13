@@ -78,7 +78,7 @@ class WaehlerverzeichnisServiceTest {
     }
 
     @Nested
-    class SetWaehlverzeichnis {
+    class SetWaehlerverzeichnis {
 
         @Test
         void dataIsSaved() {
@@ -119,5 +119,4 @@ class WaehlerverzeichnisServiceTest {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setWaehlerverzeichnis(modelToSave)).isSameAs(mockedWlsException);
         }
     }
-
 }

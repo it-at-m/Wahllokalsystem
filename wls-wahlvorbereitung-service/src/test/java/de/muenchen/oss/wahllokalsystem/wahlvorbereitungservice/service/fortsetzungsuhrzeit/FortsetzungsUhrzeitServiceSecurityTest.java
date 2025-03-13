@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.unterbrechungsuhrzeit;
+package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.fortsetzungsuhrzeit;
 
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.TestConstants;
@@ -27,13 +27,13 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
-public class UnterbrechungsUhrzeitSecurityTest {
+public class FortsetzungsUhrzeitServiceSecurityTest {
 
     @MockBean
     BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
     @Autowired
-    UnterbrechungsUhrzeitService unitUnderTest;
+    FortsetzungsUhrzeitService unitUnderTest;
 
     @BeforeEach
     void setup() {
@@ -41,28 +41,28 @@ public class UnterbrechungsUhrzeitSecurityTest {
     }
 
     @Nested
-    class GetUnterbrechungsUhrzeit {
+    class GetFortsetzungsUhrzeit {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_UNTERBRECHUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_FORTSETZUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getUnterbrechungsUhrzeit(wahlbezirkID));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getFortsetzungsUhrzeit(wahlbezirkID));
         }
 
         @Test
         void bezirkIDPermissionEvaluatorFailed() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_UNTERBRECHUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_FORTSETZUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getUnterbrechungsUhrzeit(wahlbezirkID))
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getFortsetzungsUhrzeit(wahlbezirkID))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
@@ -74,68 +74,67 @@ public class UnterbrechungsUhrzeitSecurityTest {
             val wahlbezirkID = "wahlbezirkID";
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.getUnterbrechungsUhrzeit(wahlbezirkID))
+            Assertions.assertThatThrownBy(() -> unitUnderTest.getFortsetzungsUhrzeit(wahlbezirkID))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
         private static Stream<Arguments> getAuthoritiesVariations() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_UNTERBRECHUNGSUHRZEIT);
+            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_FORTSETZUNGSUHRZEIT);
         }
     }
 
     @Nested
-    class SetUnterbrechungsUhrzeit {
+    class SetFortsetzungsUhrzeit {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_UNTERBRECHUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_FORTSETZUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
-            val modelToSet = new UnterbrechungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
+            val modelToSet = new FortsetzungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.setUnterbrechungsUhrzeit(modelToSet));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.setFortsetzungsUhrzeit(modelToSet));
         }
 
         @Test
         void bezirkIDPermissionEvaluatorFailed() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_UNTERBRECHUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_FORTSETZUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
-            val modelToSet = new UnterbrechungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
+            val modelToSet = new FortsetzungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setUnterbrechungsUhrzeit(modelToSet))
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setFortsetzungsUhrzeit(modelToSet))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
         @Test
         void accessDeniedOnServiceAuthorityMissing() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_REPO_UNTERBRECHUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_REPO_FORTSETZUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
-            val modelToSet = new UnterbrechungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
+            val modelToSet = new FortsetzungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.setUnterbrechungsUhrzeit(modelToSet))
+            Assertions.assertThatThrownBy(() -> unitUnderTest.setFortsetzungsUhrzeit(modelToSet))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
         @Test
         void wlsExceptionOnRepoWriteAuthorityMissing() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_UNTERBRECHUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_FORTSETZUNGSUHRZEIT);
 
             val wahlbezirkID = "wahlbezirkID";
-            val modelToSet = new UnterbrechungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
+            val modelToSet = new FortsetzungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.setUnterbrechungsUhrzeit(modelToSet))
+            Assertions.assertThatThrownBy(() -> unitUnderTest.setFortsetzungsUhrzeit(modelToSet))
                     .isExactlyInstanceOf(TechnischeWlsException.class);
         }
-
     }
 }

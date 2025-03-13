@@ -1,12 +1,13 @@
-package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.urnenwahlschliessungsuhrzeit;
+package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.urnenwahlvorbereitung;
 
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.TestConstants;
+import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.common.WahlurneModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
-import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -27,13 +28,13 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
-public class UrnenwahlSchliessungsUhrzeitSecurityTest {
+public class UrnenwahlvorbereitungServiceSecurityTest {
 
     @MockBean
     BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
     @Autowired
-    UrnenwahlSchliessungsUhrzeitService unitUnderTest;
+    UrnenwahlvorbereitungService unitUnderTest;
 
     @BeforeEach
     void setup() {
@@ -41,101 +42,100 @@ public class UrnenwahlSchliessungsUhrzeitSecurityTest {
     }
 
     @Nested
-    class GetUrnenwahlSchliessungsUhrzeit {
+    class GetUrnenwahlvorbereitung {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_URNENWAHLSCHLIESSUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_URNENWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getUrnenwahlvorbereitung(wahlbezirkID));
         }
 
         @Test
         void bezirkIDPermissionEvaluatorFailed() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_URNENWAHLSCHLIESSUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_URNENWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getUrnenwahlvorbereitung(wahlbezirkID))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getAuthoritiesVariations")
+        @MethodSource("getMissingAuthoritiesVariations")
         void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val wahlbezirkID = "wahlbezirkID";
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
+            Assertions.assertThatThrownBy(() -> unitUnderTest.getUrnenwahlvorbereitung(wahlbezirkID))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
-        private static Stream<Arguments> getAuthoritiesVariations() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_URNENWAHLSCHLIESSUNGSUHRZEIT);
+        private static Stream<Arguments> getMissingAuthoritiesVariations() {
+            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_URNENWAHLVORBEREITUNG);
         }
     }
 
     @Nested
-    class SetUrnenwahlSchliessungsUhrzeit {
+    class SetUrnenwahlvorbereitung {
 
         @Test
         void accessGranted() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_URNENWAHLSCHLIESSUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_URNENWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
-            val modelToSet = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
+            val modelToSet = new UrnenwahlvorbereitungModel(wahlbezirkID, 0, 0, 0, List.of(new WahlurneModel("wahlID", 1, true)));
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.setUrnenwahlSchliessungsUhrzeit(modelToSet));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.setUrnenwahlvorbereitung(modelToSet));
         }
 
         @Test
         void bezirkIDPermissionEvaluatorFailed() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_URNENWAHLSCHLIESSUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_URNENWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
-            val modelToSet = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
+            val modelToSet = new UrnenwahlvorbereitungModel(wahlbezirkID, 0, 0, 0, List.of(new WahlurneModel("wahlID", 1, true)));
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setUrnenwahlSchliessungsUhrzeit(modelToSet))
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setUrnenwahlvorbereitung(modelToSet))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
         @Test
         void accessDeniedOnServiceAuthorityMissing() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_REPO_URNENWAHLSCHLIESSUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_URNENWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
-            val modelToSet = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
+            val modelToSet = new UrnenwahlvorbereitungModel(wahlbezirkID, 0, 0, 0, List.of(new WahlurneModel("wahlID", 1, true)));
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.setUrnenwahlSchliessungsUhrzeit(modelToSet))
+            Assertions.assertThatThrownBy(() -> unitUnderTest.setUrnenwahlvorbereitung(modelToSet))
                     .isInstanceOf(AccessDeniedException.class);
         }
 
         @Test
         void wlsExceptionOnRepoWriteAuthorityMissing() {
-            SecurityUtils.runWith(Authorities.SERVICE_POST_URNENWAHLSCHLIESSUNGSUHRZEIT);
+            SecurityUtils.runWith(Authorities.SERVICE_POST_URNENWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
-            val modelToSet = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
+            val modelToSet = new UrnenwahlvorbereitungModel(wahlbezirkID, 0, 0, 0, List.of(new WahlurneModel("wahlID", 1, true)));
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.setUrnenwahlSchliessungsUhrzeit(modelToSet))
+            Assertions.assertThatThrownBy(() -> unitUnderTest.setUrnenwahlvorbereitung(modelToSet))
                     .isExactlyInstanceOf(TechnischeWlsException.class);
         }
-
     }
 }

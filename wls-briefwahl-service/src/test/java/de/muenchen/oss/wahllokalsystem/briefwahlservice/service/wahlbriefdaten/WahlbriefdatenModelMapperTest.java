@@ -16,7 +16,7 @@ class WahlbriefdatenModelMapperTest {
     class ToModel {
 
         @Test
-        void isMapped() {
+        void should_returnWahlbriefdatenModel_when_givenWahlbriefdatenEntity() {
             val wahlbezirkID = "wahlbezirkID";
             val wahlbriefe = 12L;
             val verzeichnisseUngueltig = 3L;
@@ -33,14 +33,13 @@ class WahlbriefdatenModelMapperTest {
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
-
     }
 
     @Nested
     class ToEntity {
 
         @Test
-        void isMapped() {
+        void should_returnWahlbriefdatenEntity_when_givenWahlbriefdatenModel() {
             val wahlbezirkID = "wahlbezirkID";
             val wahlbriefe = 12L;
             val verzeichnisseUngueltig = 3L;
@@ -56,7 +55,5 @@ class WahlbriefdatenModelMapperTest {
                     zeitNachtraeglichUeberbrachte);
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
-
     }
-
 }

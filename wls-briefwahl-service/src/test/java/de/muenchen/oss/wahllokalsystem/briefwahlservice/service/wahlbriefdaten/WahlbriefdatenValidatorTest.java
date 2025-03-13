@@ -26,14 +26,14 @@ class WahlbriefdatenValidatorTest {
     class ValidWahlbezirkIDOrThrow {
 
         @Test
-        void noExceptionOnValidWahlbezirkID() {
+        void should_notThrowException_when_givenValidWahlbezirkID() {
             val validWahlbezirkID = "wahlbezirkID";
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahlbezirkIDOrThrow(validWahlbezirkID));
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDIsNull() {
+        void should_throwWlsException_when_wahlbezirkIDIsNull() {
             val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBRIEFDATEN_PARAMETER_UNVOLLSTAENDIG))
@@ -43,7 +43,7 @@ class WahlbriefdatenValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDIsEmpty() {
+        void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
             val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBRIEFDATEN_PARAMETER_UNVOLLSTAENDIG))
@@ -51,21 +51,20 @@ class WahlbriefdatenValidatorTest {
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlbezirkIDOrThrow("")).isSameAs(mockedException);
         }
-
     }
 
     @Nested
     class ValidWahlbriefdatenToSetOrThrow {
 
         @Test
-        void noExceptionWhenModelIsValid() {
+        void should_notThrowException_when_givenValidModel() {
             val validModel = new WahlbriefdatenModel("wahlbezirkID", null, null, null, null, null);
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahlbriefdatenToSetOrThrow(validModel));
         }
 
         @Test
-        void exceptionWhenModelIsNull() {
+        void should_throwWlsException_when_modelIsNull() {
             val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTWAHLBRIEFDATEN_PARAMETER_UNVOLLSTAENDIG))
@@ -75,7 +74,7 @@ class WahlbriefdatenValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDIsNull() {
+        void should_throwWlsException_when_wahlbezirkIDIsNull() {
             val invalidModel = new WahlbriefdatenModel(null, null, null, null, null, null);
 
             val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
@@ -87,7 +86,7 @@ class WahlbriefdatenValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDIsEmpty() {
+        void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
             val invalidModel = new WahlbriefdatenModel("", null, null, null, null, null);
 
             val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
@@ -98,5 +97,4 @@ class WahlbriefdatenValidatorTest {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlbriefdatenToSetOrThrow(invalidModel)).isSameAs(mockedException);
         }
     }
-
 }

@@ -42,7 +42,7 @@ public class WahlbriefdatenSecurityTest {
     class GetWahlbriefdaten {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_givenAllAuthorities() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLBRIEFDATEN);
 
             val wahlbezirkID = "wahlbezirkID";
@@ -52,7 +52,7 @@ public class WahlbriefdatenSecurityTest {
         }
 
         @Test
-        void bezirkIDPermissionEvaluatorFailed() {
+        void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLBRIEFDATEN);
 
             val wahlbezirkID = "wahlbezirkID";
@@ -64,7 +64,7 @@ public class WahlbriefdatenSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val wahlbezirkID = "wahlbezirkID";
@@ -77,14 +77,13 @@ public class WahlbriefdatenSecurityTest {
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
             return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_WAHLBRIEFDATEN);
         }
-
     }
 
     @Nested
     class SetWahlbriefdaten {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_givenAllAuthorities() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_WAHLBRIEFDATEN);
 
             val wahlbezirkID = "wahlbezirkID";
@@ -96,7 +95,7 @@ public class WahlbriefdatenSecurityTest {
         }
 
         @Test
-        void bezirkIDPermissionEvaluatorFailed() {
+        void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_WAHLBRIEFDATEN);
 
             val wahlbezirkID = "wahlbezirkID";
@@ -110,7 +109,7 @@ public class WahlbriefdatenSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val wahlbezirkID = "wahlbezirkID";

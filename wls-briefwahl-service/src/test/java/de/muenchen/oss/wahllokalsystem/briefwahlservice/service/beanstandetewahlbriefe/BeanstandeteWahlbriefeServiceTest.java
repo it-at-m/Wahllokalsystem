@@ -34,7 +34,7 @@ class BeanstandeteWahlbriefeServiceTest {
     class GetBeanstandeteWahlbriefe {
 
         @Test
-        void nullFromRepo() {
+        void should_returnNull_when_noDataFound() {
             val reference = BeanstandeteWahlbriefeReference.builder().build();
 
             val mappedEntityId = new BezirkIDUndWaehlerverzeichnisNummer();
@@ -49,7 +49,7 @@ class BeanstandeteWahlbriefeServiceTest {
         }
 
         @Test
-        void dataFromRepo() {
+        void should_returnBeanstandeteWahlbriefeModel_when_givenValidReference() {
             val reference = BeanstandeteWahlbriefeReference.builder().build();
 
             val mappedEntityId = new BezirkIDUndWaehlerverzeichnisNummer();
@@ -67,7 +67,7 @@ class BeanstandeteWahlbriefeServiceTest {
         }
 
         @Test
-        void noRepoRequestWhenReferenceIsInvalid() {
+        void should_throwFachlicheWlsException_when_referenceIsInvalid() {
             val reference = BeanstandeteWahlbriefeReference.builder().build();
 
             val exceptionToThrow = FachlicheWlsException.withCode("0815").buildWithMessage("upsi");
@@ -85,7 +85,7 @@ class BeanstandeteWahlbriefeServiceTest {
     @Nested
     class SetBeanstandeteWahlbriefe {
         @Test
-        void noSaveWhenModelIsInvalid() {
+        void should_notSaveBriefwahlvorbereitung_when_validationFailed() {
             val invalidModel = BeanstandeteWahlbriefeModel.builder().build();
 
             val exceptionToThrow = FachlicheWlsException.withCode("0815").buildWithMessage("upsi");
@@ -99,7 +99,7 @@ class BeanstandeteWahlbriefeServiceTest {
         }
 
         @Test
-        void modelIsSaved() {
+        void should_saveBeanstandeteWahlbriefe_when_givenValidModel() {
             val model = BeanstandeteWahlbriefeModel.builder().build();
 
             val mappedEntityOfModel = new BeanstandeteWahlbriefe();

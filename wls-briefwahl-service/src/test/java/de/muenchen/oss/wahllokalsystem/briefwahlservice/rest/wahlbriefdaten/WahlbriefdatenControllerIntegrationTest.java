@@ -60,7 +60,7 @@ public class WahlbriefdatenControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_GET_WAHLBRIEFDATEN, Authorities.REPOSITORY_READ_WAHLBRIEFDATEN })
-        void noDataFound() throws Exception {
+        void should_returnNoContent_when_noDataFound() throws Exception {
             val request = get("/businessActions/wahlbriefdaten/wahlbezirkID");
 
             val response = api.perform(request).andExpect(status().isNoContent()).andReturn();
@@ -73,7 +73,7 @@ public class WahlbriefdatenControllerIntegrationTest {
                 authorities = { Authorities.SERVICE_GET_WAHLBRIEFDATEN, Authorities.REPOSITORY_READ_WAHLBRIEFDATEN,
                         Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN }
         )
-        void dataFound() throws Exception {
+        void should_returnData_when_dataIsPresentInRepo() throws Exception {
             val wahlbezirkIDToFind = "wahlbezirkID";
             val wahlbriefdaten1 = new Wahlbriefdaten("id1", null, null, null, null, null);
             val wahlbriefdatenToFind = new Wahlbriefdaten(wahlbezirkIDToFind, 1L, 2L, 3L, 4L, LocalDateTime.parse("2024-09-13T12:11:21.343"));
@@ -98,7 +98,7 @@ public class WahlbriefdatenControllerIntegrationTest {
         @WithMockUser(
                 authorities = { Authorities.SERVICE_POST_WAHLBRIEFDATEN, Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN }
         )
-        void newDataIsSaved() throws Exception {
+        void should_setNewData_when_callingPost() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             val requestBody = new WahlbriefdatenWriteDTO(1L, 2L, 3L, 4L, LocalDateTime.parse("2023-02-23T02:23:32.021"));
 
@@ -118,7 +118,7 @@ public class WahlbriefdatenControllerIntegrationTest {
                 authorities = { Authorities.SERVICE_POST_WAHLBRIEFDATEN, Authorities.REPOSITORY_READ_WAHLBRIEFDATEN,
                         Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN }
         )
-        void existingDataIsReplaced() throws Exception {
+        void should_replaceData_when_dataIsPresent() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             val requestBody = new WahlbriefdatenWriteDTO(1L, 2L, 3L, 4L, LocalDateTime.parse("2035-02-27T00:01:02.003"));
 

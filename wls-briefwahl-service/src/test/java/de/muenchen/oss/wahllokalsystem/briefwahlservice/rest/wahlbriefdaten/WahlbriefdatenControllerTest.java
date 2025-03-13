@@ -32,7 +32,7 @@ class WahlbriefdatenControllerTest {
     class GetWahlbriefdaten {
 
         @Test
-        void dataFound() {
+        void should_returnWahlbriefdaten_when_dataFound() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedServiceResponse = new WahlbriefdatenModel(wahlbezirkID, null, null, null, null, null);
@@ -47,7 +47,7 @@ class WahlbriefdatenControllerTest {
         }
 
         @Test
-        void noDataFound() {
+        void should_returnNoContent_when_noDataFound() {
             val wahlbezirkID = "wahlbezirkID";
 
             Mockito.when(wahlbriefdatenService.getWahlbriefdaten(wahlbezirkID)).thenReturn(Optional.empty());
@@ -63,7 +63,7 @@ class WahlbriefdatenControllerTest {
     class PostWahlbriefdaten {
 
         @Test
-        void requestIsMappedAndSend() {
+        void should_postWahlbriefdaten_when_calledAndMappedCorrectly() {
             val requestBody = new WahlbriefdatenWriteDTO(null, null, null, null, null);
             val wahlbezirkID = "wahlbezirkID";
 
@@ -75,5 +75,4 @@ class WahlbriefdatenControllerTest {
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postWahlbriefdaten(wahlbezirkID, requestBody));
         }
     }
-
 }

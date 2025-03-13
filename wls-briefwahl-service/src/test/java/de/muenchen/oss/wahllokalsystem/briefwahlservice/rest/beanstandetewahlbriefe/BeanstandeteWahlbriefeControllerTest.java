@@ -26,7 +26,7 @@ class BeanstandeteWahlbriefeControllerTest {
     BeanstandeteWahlbriefeController controller;
 
     @Test
-    void getBeanstandeteWahlbriefeDTO() {
+    void should_returnBeanstandeteWahlbriefeDTO_when_dataFound() {
         val wahlbezirkID = "wahlbezirkId";
         val waehlerverzeichnisNummer = 5L;
 
@@ -45,7 +45,7 @@ class BeanstandeteWahlbriefeControllerTest {
     }
 
     @Test
-    void addBeanstandeteWahlbriefe() {
+    void should_postBeanstandeteWahlbriefeDTO_when_calledAndMappedCorrectly() {
         val wahlbezirkID = "wahlbezirkId";
         val waehlerverzeichnisNummer = 5L;
         val requestBody = BeanstandeteWahlbriefeCreateDTO.builder().build();
@@ -58,5 +58,4 @@ class BeanstandeteWahlbriefeControllerTest {
 
         Mockito.verify(beanstandeteWahlbriefeService).setBeanstandeteWahlbriefe(mappedModel);
     }
-
 }

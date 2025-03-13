@@ -55,7 +55,7 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE, Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE })
-        void emptyResponse() throws Exception {
+        void should_returnNoContent_when_noDataFound() throws Exception {
             val request = get("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/21");
 
             val response = api.perform(request).andExpect(status().isNoContent()).andReturn();
@@ -68,7 +68,7 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
                 authorities = { Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE, Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE,
                         Authorities.REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE }
         )
-        void dataFound() throws Exception {
+        void should_returnData_when_dataIsPresentInRepo() throws Exception {
             val wahlbezirkID1 = "wahlbezirkID1";
             val wahlbezirkID2 = "wahlbezirkID2";
 
@@ -104,7 +104,7 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE, Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE })
-        void illegalRequestIsMappedToWlsException() throws Exception {
+        void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
             val request = get("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/0");
 
             val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, "100", "WLS-BRIEFWAHL", null);
@@ -128,7 +128,7 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_ADD_BEANSTANDETE_WAHLBRIEFE, Authorities.REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE })
-        void wlsExceptionOnInvalidRequest() throws Exception {
+        void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
             val requestBody = BeanstandeteWahlbriefeCreateDTO.builder().build();
             val request = post("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/0").with(csrf()).contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(requestBody));
@@ -147,7 +147,7 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
                 authorities = { Authorities.SERVICE_ADD_BEANSTANDETE_WAHLBRIEFE, Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE,
                         Authorities.REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE }
         )
-        void dataAreSaved() throws Exception {
+        void should_setNewData_when_callingPost() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             val waehlerverzeichnisNummer = 89L;
 
@@ -171,6 +171,5 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
 
             Assertions.assertThat(repoResponse).usingRecursiveComparison().isEqualTo(expectedRepoResponse);
         }
-
     }
 }

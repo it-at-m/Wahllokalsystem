@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.methods;
+import static de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.condition.TestClassesEndWithTestCondition.haveTopEnclosingClassEndingWithTest;
 
 import com.tngtech.archunit.core.domain.JavaModifier;
 import com.tngtech.archunit.lang.ArchRule;
@@ -39,4 +40,8 @@ public class MethodRules {
             .notHaveModifier(JavaModifier.PROTECTED)
             .andShould().notHaveModifier(JavaModifier.PRIVATE)
             .andShould().notHaveModifier(JavaModifier.PUBLIC);
+
+    public static final ArchRule RULE_TESTCLASSES_END_WITH_TEST_CONVENTION_MATCHED = methods()
+            .that().areAnnotatedWith(Test.class).or().areAnnotatedWith(ParameterizedTest.class)
+            .should(haveTopEnclosingClassEndingWithTest);
 }

@@ -11,6 +11,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.ModifiersExampleTest;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.NamingConventionExamplesTest;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.incorrectFilenamingAndDependencies.test.TestWithWrongEnding;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,6 +25,7 @@ public class ArchUnitTest {
     private static JavaClasses allTestClassesBeforeEachConvention;
     private static JavaClasses allTestClassesAfterEachConvention;
     private static JavaClasses allTestClassesTestMethodsArePrivatePackageConvention;
+    private static JavaClasses allTestClassesEndWithTestConvention;
 
     @BeforeAll
     static void init() {
@@ -50,12 +52,23 @@ public class ArchUnitTest {
                 .importPackages(SecurityUtils.class.getPackage().getName())
                 // excluding intended negative examples from actual test
                 .that(not(equivalentTo(ModifiersExampleTest.WrongModifierExamples.class)));
+
+        allTestClassesEndWithTestConvention = new ClassFileImporter()
+                .importPackages(SecurityUtils.class.getPackage().getName())
+                // excluding intended negative examples from actual test
+                .that(not(equivalentTo(TestWithWrongEnding.class)));
     }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("allTestClassesRulesToVerify")
     void should_verifyArchUnitRuleForAllTestClassesOfService_when_running(final ArgumentsAccessor arguments) {
         arguments.get(1, ArchRule.class).check(arguments.get(2, JavaClasses.class));
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("allClassesRulesToVerify")
+    void should_verifyArchUnitRuleForAllClassesOfService_when_running(final ArgumentsAccessor arguments) {
+        arguments.get(1, ArchRule.class).check(allTestClassesEndWithTestConvention);
     }
 
     public static Stream<Arguments> allTestClassesRulesToVerify() {
@@ -75,5 +88,12 @@ public class ArchUnitTest {
                 Arguments.of("TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED",
                         MethodRules.RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED,
                         allTestClassesTestMethodsArePrivatePackageConvention));
+    }
+
+    private static Stream<Arguments> allClassesRulesToVerify() {
+        return Stream.of(
+                Arguments.of("RULE_TESTCLASSES_END_WITH_TEST_CONVENTION_MATCHED",
+                        MethodRules.RULE_TESTCLASSES_END_WITH_TEST_CONVENTION_MATCHED,
+                        allTestClassesEndWithTestConvention));
     }
 }

@@ -28,7 +28,7 @@ class WahlbeteiligungValidatorTest {
     class validDTOToSetOrThrow {
 
         @Test
-        void exceptionWhenWahlbeteiligungsMeldungDTOIsNull() {
+        void should_throwWlsException_when_wahlbeteiligungsMeldungDTOIsNull() {
             val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(
                     de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN))
@@ -38,7 +38,7 @@ class WahlbeteiligungValidatorTest {
         }
 
         @Test
-        void noExceptionWhenWahlbeteiligungsMeldungDTOIsValid() {
+        void should_notThrowException_when_wahlbeteiligungsMeldungDTOIsValid() {
             val wahlID = "wahlID1";
             val wahlbezirkID = "00000000-0000-0000-0000-000000000001";
             val anzahlWaehler = 150;
@@ -50,7 +50,7 @@ class WahlbeteiligungValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlIDIsNull() {
+        void should_throwWlsException_when_wahlIDIsNull() {
             val wahlbezirkID = "00000000-0000-0000-0000-000000000001";
             val anzahlWaehler = 150;
             val meldeZeitpunkt = LocalDateTime.now();
@@ -65,7 +65,7 @@ class WahlbeteiligungValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlIDIsEmptyString() {
+        void should_throwWlsException_when_wahlIDIsEmpty() {
             val wahlID = "";
             val wahlbezirkID = "00000000-0000-0000-0000-000000000001";
             val anzahlWaehler = 150;
@@ -81,7 +81,7 @@ class WahlbeteiligungValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlIDIsBlank() {
+        void should_throwWlsException_when_wahlIDIsBlank() {
             val wahlID = " ";
             val wahlbezirkID = "00000000-0000-0000-0000-000000000001";
             val anzahlWaehler = 150;
@@ -97,7 +97,7 @@ class WahlbeteiligungValidatorTest {
         }
 
         @Test
-        void exceptionWhenwahlbezirkIDIsNull() {
+        void should_throwWlsException_when_wahlbezirkIDIsNull() {
             val wahlID = "wahlID1";
             val anzahlWaehler = 150;
             val meldeZeitpunkt = LocalDateTime.now();
@@ -113,7 +113,7 @@ class WahlbeteiligungValidatorTest {
         }
 
         @Test
-        void exceptionWhenwahlbezirkIDIsEmptyString() {
+        void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
             val wahlID = "wahlID1";
             val wahlbezirkID = "";
             val anzahlWaehler = 150;
@@ -130,7 +130,7 @@ class WahlbeteiligungValidatorTest {
         }
 
         @Test
-        void exceptionWhenwahlbezirkIDIsBlank() {
+        void should_throwWlsException_when_wahlbezirkIDIsBlank() {
             val wahlID = "wahlID1";
             val wahlbezirkID = " ";
             val anzahlWaehler = 150;
@@ -147,7 +147,7 @@ class WahlbeteiligungValidatorTest {
         }
 
         @Test
-        void exceptionWhenMeldezeitpunktIsNull() {
+        void should_throwWlsException_when_meldezeitpunktIsNull() {
             val wahlID = "wahlID1";
             val wahlbezirkID = "00000000-0000-0000-0000-000000000001";
             val anzahlWaehler = 150;

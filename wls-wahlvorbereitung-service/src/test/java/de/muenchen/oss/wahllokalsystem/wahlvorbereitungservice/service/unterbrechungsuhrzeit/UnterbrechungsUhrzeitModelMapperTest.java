@@ -19,7 +19,7 @@ class UnterbrechungsUhrzeitModelMapperTest {
     class ToModel {
 
         @Test
-        void isMapped() {
+        void should_returnUnterbrechungsUhrzeitModel_when_givenUnterbrechungsUhrzeitEntity() {
             val wahlbezirkID = "wahlbezirkID";
             val unterbrechungsUhrzeit = LocalDateTime.now();
             val entityToMap = new UnterbrechungsUhrzeit(wahlbezirkID, unterbrechungsUhrzeit);
@@ -36,7 +36,7 @@ class UnterbrechungsUhrzeitModelMapperTest {
     class ToEntity {
 
         @Test
-        void isMapped() {
+        void should_returnUnterbrechungsUhrzeitEntity_when_givenUnterbrechungsUhrzeitModel() {
             val wahlbezirkID = "wahlbezirkID";
             val unterbrechungsUhrzeit = LocalDateTime.now();
 
@@ -49,5 +49,4 @@ class UnterbrechungsUhrzeitModelMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

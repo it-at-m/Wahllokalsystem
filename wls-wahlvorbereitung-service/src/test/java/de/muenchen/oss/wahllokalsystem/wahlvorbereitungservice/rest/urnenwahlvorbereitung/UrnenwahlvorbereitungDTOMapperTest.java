@@ -22,7 +22,7 @@ class UrnenwahlvorbereitungDTOMapperTest {
     class ToDTO {
 
         @Test
-        void isMapped() {
+        void should_returnUrnenwahlvorbereitungDTO_when_givenUrnenwahlvorbereitungModel() {
             val wahlbezirkID = "wahlbezirkID";
             val anzahlKabinen = 12;
             val anzahlWahltische = 21;
@@ -45,7 +45,7 @@ class UrnenwahlvorbereitungDTOMapperTest {
     class ToModel {
 
         @Test
-        void isMapped() {
+        void should_returnUrnenwahlvorbereitungModel_when_givenUrnenwahlvorbereitungDTO() {
             val anzahlKabinen = 12;
             val anzahlWahltische = 21;
             val anzahlNebenraeume = 4;
@@ -61,5 +61,4 @@ class UrnenwahlvorbereitungDTOMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

@@ -39,7 +39,7 @@ class WahlbezirkRepositoryTest {
     class FindWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByWahltagAndNummer {
 
         @Test
-        void dataFound() {
+        void should_returnWahlbezirk_when_givenValidWahltagAndNummer() {
             val wahltag = LocalDate.now();
             val nummer = "nummer";
 
@@ -78,7 +78,7 @@ class WahlbezirkRepositoryTest {
     class FindWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByID {
 
         @Test
-        void dataFound() {
+        void should_returnWahlbezirk_when_givenValidWahlbezirkID() {
             val wahltag = wahltageRepository.save(new Wahltag(LocalDate.now(), "", "nummer"));
             val wahl = wahlRepository.save(new Wahl("", Wahlart.BTW, wahltag));
             val szg = stimmzettelgebietRepository.save(new Stimmzettelgebiet("", "", Stimmzettelgebietsart.SK, wahl));
@@ -91,5 +91,4 @@ class WahlbezirkRepositoryTest {
             Assertions.assertThat(result).containsOnly(wahlbezirkToFind);
         }
     }
-
 }

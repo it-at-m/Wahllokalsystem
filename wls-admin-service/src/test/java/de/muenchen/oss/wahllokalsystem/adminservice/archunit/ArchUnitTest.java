@@ -18,6 +18,7 @@ public class ArchUnitTest {
 
     private static JavaClasses allTestClasses;
     private static JavaClasses allClassesWithoutTests;
+    private final static ImportOption ignoreGeneratedCode = location -> !location.contains("/eai");
 
     @BeforeAll
     static void init() {
@@ -25,7 +26,6 @@ public class ArchUnitTest {
                 .withImportOption(new ImportOption.OnlyIncludeTests())
                 .importPackages(MicroServiceApplication.class.getPackage().getName());
 
-        ImportOption ignoreGeneratedCode = location -> !location.contains("/eai");
         allClassesWithoutTests = new ClassFileImporter()
                 .withImportOption(new ImportOption.DoNotIncludeTests())
                 .withImportOption(ignoreGeneratedCode)

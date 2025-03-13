@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 class InfrastrukturelleWlsExceptionTest {
 
     @Nested
-    class BuilderPattern {
+    class WithCode {
 
         @Test
         void should_returnInfrastrukturelleWlsExceptionWithAllPropertiesSet_when_buildWithAllStepsOfBuilder() {
@@ -28,5 +28,4 @@ class InfrastrukturelleWlsExceptionTest {
             Assertions.assertThat(infrastrukturelleWlsException.getCause()).isSameAs(causingException);
         }
     }
-
 }

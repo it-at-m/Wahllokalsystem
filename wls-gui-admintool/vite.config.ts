@@ -36,7 +36,7 @@ export default defineConfig(({ mode }) => {
     ],
     server: {
       host: true,
-      port: 8081,
+      port: 8401,
       proxy: {
         "/api": "http://localhost:8083",
         "/actuator": "http://localhost:8083",

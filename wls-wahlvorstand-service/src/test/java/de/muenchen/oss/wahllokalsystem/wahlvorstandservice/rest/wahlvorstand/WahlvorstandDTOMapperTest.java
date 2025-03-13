@@ -12,7 +12,7 @@ public class WahlvorstandDTOMapperTest {
     private final WahlvorstandDTOMapper unitUnderTest = Mappers.getMapper(WahlvorstandDTOMapper.class);
 
     @Nested
-    class ToDto {
+    class ToDTO {
 
         @Test
         void should_returnNull_when_givenNull() {

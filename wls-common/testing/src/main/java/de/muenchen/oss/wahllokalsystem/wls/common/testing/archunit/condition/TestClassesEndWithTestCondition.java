@@ -19,20 +19,21 @@ public class TestClassesEndWithTestCondition extends ArchCondition<JavaMethod> {
     public void check(JavaMethod method, ConditionEvents events) {
         var topEnclosingClass = getTopEnclosingClass(method.getOwner());
 
-        System.out.println("method: " + method + " + topEnclosingClass: " + topEnclosingClass);
-
         if (topEnclosingClass.isPresent() && topEnclosingClass.get().getFullName().endsWith("Test")) {
             return;
         } else {
-            events.add(SimpleConditionEvent.violated(method, "test " + method + " is not inside of test class"));
+            events.add(SimpleConditionEvent.violated(method, "test " + method.getName() + " is not inside of test class"));
         }
     }
 
-    private Optional<JavaClass> getTopEnclosingClass(final JavaClass item) {
-        var enclosingClass = item.getEnclosingClass();
-        while (enclosingClass.isPresent() && enclosingClass.get().getEnclosingClass().isPresent()) {
-            enclosingClass = enclosingClass.get().getEnclosingClass();
+    private Optional<JavaClass> getTopEnclosingClass(JavaClass item) {
+        JavaClass enclosingClass = null;
+        while (item.getEnclosingClass().isPresent()) {
+            item = item.getEnclosingClass().orElseThrow();
+            enclosingClass = item;
         }
-        return enclosingClass;
+
+        enclosingClass = enclosingClass == null ? item : enclosingClass;
+        return Optional.of(enclosingClass);
     }
 }

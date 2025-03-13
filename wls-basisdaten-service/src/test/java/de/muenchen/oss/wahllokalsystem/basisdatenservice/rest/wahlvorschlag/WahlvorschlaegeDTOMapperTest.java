@@ -16,7 +16,7 @@ class WahlvorschlaegeDTOMapperTest {
     private final WahlvorschlaegeDTOMapper unitUnderTest = Mappers.getMapper(WahlvorschlaegeDTOMapper.class);
 
     @Nested
-    class FromWahlvorschlagModelToWLSDTO {
+    class ToDTO {
 
         @Test
         void should_returnNull_when_givenNull() {

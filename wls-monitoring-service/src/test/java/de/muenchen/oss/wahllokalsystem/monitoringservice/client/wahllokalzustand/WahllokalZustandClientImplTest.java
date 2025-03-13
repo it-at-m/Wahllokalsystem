@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.monitoringservice.client.wahllokalzustand;
 
 import static org.mockito.ArgumentMatchers.any;
+
 import de.muenchen.oss.wahllokalsystem.monitoringservice.client.common.TimeStampMapper;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.eai.aou.client.WahllokalzustandControllerApi;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.eai.aou.model.DruckzustandDTO;
@@ -106,7 +107,7 @@ class WahllokalZustandClientImplTest {
     }
 
     @Nested
-    class PostSchnellmeldungSendungsuhrzeithrzeit {
+    class PostSchnellmeldungSendungsuhrzeit {
 
         @Test
         void should_callEaiApiWithDTO_when_clientIsCalledWithBezirUndWahlIDAndUhrzeit() {
@@ -300,5 +301,4 @@ class WahllokalZustandClientImplTest {
                                         .wahlID(wahlID)
                                         .niederschriftDruckUhrzeit(zeitpunkt)));
     }
-
 }

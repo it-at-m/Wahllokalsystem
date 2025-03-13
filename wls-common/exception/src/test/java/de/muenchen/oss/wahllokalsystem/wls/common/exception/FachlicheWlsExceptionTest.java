@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 class FachlicheWlsExceptionTest {
 
     @Nested
-    class BuilderPattern {
+    class WithCode {
 
         @Test
         void should_returnFachlicheWlsExceptionWithAllPropertiesSet_when_buildWithAllStepsOfBuilder() {

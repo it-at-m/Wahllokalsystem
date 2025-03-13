@@ -31,7 +31,7 @@ class ErgebnisseValidatorTest {
     ErgebnisseValidator unitUnderTest;
 
     @Nested
-    class ValidBezirkUndWahlIdStapelartOrThrow {
+    class ValidReferenceOrThrow {
 
         @Test
         void should_notThrowException_when_bezirkUndWahlIDStapelartIsValid() {
@@ -50,7 +50,7 @@ class ErgebnisseValidatorTest {
                     .isSameAs(mockedWlsException);
         }
 
-        public static Stream<Arguments> invalidWahlbezirkArgumentsWithTestcaseNameAppendix() {
+        private static Stream<Arguments> invalidWahlbezirkArgumentsWithTestcaseNameAppendix() {
             return Stream.of(
                     Arguments.of(new ErgebnisseReference("wahlbezirkID", null, Stapelart.LTW_BZW_A), "wahlID is null"),
                     Arguments.of(new ErgebnisseReference("wahlbezirkID", "", Stapelart.LTW_BZW_A), "wahlID is empty"),
@@ -63,7 +63,7 @@ class ErgebnisseValidatorTest {
     }
 
     @Nested
-    class ValidWahlbezirkIDAndWahlIDOrThrow {
+    class ValidIDOrThrow {
 
         @Test
         void should_notThrowException_when_bezirkUndWahlIDIsValid() {
@@ -134,7 +134,7 @@ class ErgebnisseValidatorTest {
     }
 
     @Nested
-    class ValidErgebnisseOrThrow {
+    class ValidModelOrThrow {
 
         @Test
         void should_throwException_when_ergebnisseIsEmpty() {

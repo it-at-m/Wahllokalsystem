@@ -14,7 +14,7 @@ class AsyncProgressDTOMapperTest {
     AsyncProgressDTOMapper unitUnderTest = Mappers.getMapper(AsyncProgressDTOMapper.class);
 
     @Nested
-    class ToDTO {
+    class ToDto {
 
         @Test
         void should_returnDTO_when_asyncProgressIsDelivered() {
@@ -49,5 +49,4 @@ class AsyncProgressDTOMapperTest {
             Assertions.assertThat(unitUnderTest.toDto(null)).isNull();
         }
     }
-
 }

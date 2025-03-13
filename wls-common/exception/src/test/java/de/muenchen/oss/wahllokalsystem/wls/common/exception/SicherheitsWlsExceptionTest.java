@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 class SicherheitsWlsExceptionTest {
 
     @Nested
-    class BuilderPattern {
+    class WithCode {
 
         @Test
         void should_returnSicherheitsWlsExceptionWithAllPropertiesSet_when_buildWithAllStepsOfBuilder() {

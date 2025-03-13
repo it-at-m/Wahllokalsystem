@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.service.ergebnismeldung;
 
 import de.muenchen.oss.wahllokalsystem.eaiservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.ErgebnismeldungDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import lombok.val;
@@ -24,7 +24,7 @@ class ErgebnismeldungValidatorTest {
     ErgebnismeldungValidator unitUnderTest;
 
     @Nested
-    class SaveErgebnismeldungParameterOrThrow {
+    class ValidDTOToSetOrThrow {
 
         @Test
         void should_notThrowException_when_ergebnismeldungIsValid() {
@@ -40,7 +40,7 @@ class ErgebnismeldungValidatorTest {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(
-                    de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN))
+                            de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN))
                     .thenReturn(mockedWlsException);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.validDTOToSetOrThrow(null)).isSameAs(mockedWlsException);

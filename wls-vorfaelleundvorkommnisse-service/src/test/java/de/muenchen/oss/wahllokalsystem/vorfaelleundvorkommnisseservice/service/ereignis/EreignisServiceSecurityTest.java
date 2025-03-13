@@ -2,7 +2,6 @@ package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.
 
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.TestConstants;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisService;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.TestdataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;

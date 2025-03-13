@@ -2,8 +2,6 @@ package de.muenchen.oss.wahllokalsystem.adminservice.service.konfiguriertewahlta
 
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlenClient;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag.KonfigurierteWahltageService;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag.KonfigurierterWahltagValidator;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltermindaten.KonfigurierterWahltagClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import java.time.LocalDate;

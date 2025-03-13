@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis;
 
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisartModel;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.ereignis.EreignisartModel;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.TestdataFactory;
 import java.util.List;
 import lombok.val;
@@ -14,7 +14,7 @@ class EreignisDTOMapperTest {
     private final EreignisDTOMapper unitUnderTest = Mappers.getMapper(EreignisDTOMapper.class);
 
     @Nested
-    class ToDto {
+    class ToDTO {
 
         @Test
         void should_returnNull_when_givenNull() {

@@ -30,7 +30,7 @@ class BegruendungValidatorTest {
     BegruendungValidator unitUnderTest;
 
     @Nested
-    class ValidBezirkUndWahlIdStapelartOrThrow {
+    class ValidReferenceOrThrow {
 
         @Test
         void should_notThrowException_when_bezirkUndWahlIDStapelartIsValid() {
@@ -50,7 +50,7 @@ class BegruendungValidatorTest {
                     .isSameAs(mockedWlsException);
         }
 
-        public static Stream<Arguments> invalidWahlbezirkArgumentsWithTestcaseNameAppendix() {
+        private static Stream<Arguments> invalidWahlbezirkArgumentsWithTestcaseNameAppendix() {
             return Stream.of(
                     Arguments.of(new BegruendungReference("wahlbezirkID", null, Stapelart.LTW_BZW_A), "wahlID is null"),
                     Arguments.of(new BegruendungReference("wahlbezirkID", "", Stapelart.LTW_BZW_A), "wahlID is empty"),
@@ -63,7 +63,7 @@ class BegruendungValidatorTest {
     }
 
     @Nested
-    class ValidBegruendungOrThrow {
+    class ValidModelOrThrow {
 
         @Test
         void should_notThrowException_when_begruendungIsEmptyButNotNull() {

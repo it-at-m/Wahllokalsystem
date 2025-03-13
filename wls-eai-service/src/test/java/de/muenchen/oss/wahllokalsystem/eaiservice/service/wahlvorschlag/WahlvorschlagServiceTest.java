@@ -45,7 +45,7 @@ class WahlvorschlagServiceTest {
     WahlvorschlagService unitUnderTest;
 
     @Nested
-    class GetWahlvorschlaege {
+    class GetWahlvorschlaegeForWahlAndWahlbezirk {
 
         @Test
         void should_returnWahlvorschlaegeDTO_when_givenValidWahlbezirkIDAndWahlID() {
@@ -75,7 +75,7 @@ class WahlvorschlagServiceTest {
     }
 
     @Nested
-    class GetWahlvorschlaegeListe {
+    class GetWahlvorschlaegeListeForWahltagAndWahlID {
 
         @Test
         void should_returnWahlvorschlaegeListeDTO_when_givenValidWahlbezirkIDAndWahlID() {
@@ -105,7 +105,7 @@ class WahlvorschlagServiceTest {
     }
 
     @Nested
-    class GetReferendumvorlagen {
+    class GetReferendumvorlagenForWahlAndWahlbezirk {
 
         @Test
         void should_returnReferendumvorlagenDTO_when_givenValidWahlbezirkIDAndWahlID() {

@@ -43,7 +43,7 @@ class ReferendumvorlagenServiceTest {
     public LoggerExtension loggerExtension = new LoggerExtension();
 
     @Nested
-    class LoadReferendumvorlagen {
+    class GetReferendumvorlagen {
 
         @Test
         void should_importAndSaveData_when_noDataExists() {
@@ -115,5 +115,4 @@ class ReferendumvorlagenServiceTest {
             Assertions.assertThat(loggerExtension.getLoggedEventsStream().filter(event -> event.getLevel() == Level.ERROR).count()).isEqualTo(1);
         }
     }
-
 }

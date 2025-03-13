@@ -47,7 +47,7 @@ public class BriefwahlvorbereitungSecurityTest {
     class GetBriefwahlvorbereitung {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_givenAllAuthorities() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_BRIEFWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
@@ -58,7 +58,7 @@ public class BriefwahlvorbereitungSecurityTest {
         }
 
         @Test
-        void bezirkIDPermissionEvaluatorFailed() {
+        void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_BRIEFWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
@@ -71,7 +71,7 @@ public class BriefwahlvorbereitungSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getAuthoritiesVariations")
-        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val wahlbezirkID = "wahlbezirkID";
@@ -90,7 +90,7 @@ public class BriefwahlvorbereitungSecurityTest {
     class SetBriefwahlvorbereitung {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_givenAllAuthorities() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_BRIEFWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
@@ -103,7 +103,7 @@ public class BriefwahlvorbereitungSecurityTest {
         }
 
         @Test
-        void bezirkIDPermissionEvaluatorFailed() {
+        void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_BRIEFWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
@@ -116,7 +116,7 @@ public class BriefwahlvorbereitungSecurityTest {
         }
 
         @Test
-        void accessDeniedOnServiceAuthorityMissing() {
+        void should_throwAccessDeniedException_when_serviceAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_REPO_BRIEFWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
@@ -129,7 +129,7 @@ public class BriefwahlvorbereitungSecurityTest {
         }
 
         @Test
-        void wlsExceptionOnRepoWriteAuthorityMissing() {
+        void should_returnTechnischeWlsException_when_repoAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.SERVICE_POST_BRIEFWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
@@ -141,6 +141,5 @@ public class BriefwahlvorbereitungSecurityTest {
             Assertions.assertThatThrownBy(() -> unitUnderTest.setBriefwahlvorbereitung(modelToSet))
                     .isExactlyInstanceOf(TechnischeWlsException.class);
         }
-
     }
 }

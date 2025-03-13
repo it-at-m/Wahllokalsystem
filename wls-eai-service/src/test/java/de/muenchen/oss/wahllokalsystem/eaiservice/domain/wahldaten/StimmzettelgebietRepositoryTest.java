@@ -33,7 +33,7 @@ class StimmzettelgebietRepositoryTest {
     class FindByWahlWahltagTagAndWahlNummer {
 
         @Test
-        void dataFound() {
+        void should_returnStimmzettelgebiet_when_givenValidWahltagAndNummer() {
             val wahltag = LocalDate.now();
             val nummer = "nummer";
 
@@ -63,5 +63,4 @@ class StimmzettelgebietRepositoryTest {
             Assertions.assertThat(result).containsOnly(expectedResult);
         }
     }
-
 }

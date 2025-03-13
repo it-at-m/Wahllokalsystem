@@ -64,7 +64,7 @@ class WahldatenServiceTest {
     class GetWahltage {
 
         @Test
-        void dataFound() {
+        void should_returnWahltageDTO_when_givenValidDate() {
             val dateSince = LocalDate.now();
 
             val mockedRepoEntity = new Wahltag();
@@ -79,7 +79,7 @@ class WahldatenServiceTest {
         }
 
         @Test
-        void noDataFound() {
+        void should_returnEmpty_when_noDataFound() {
             val dateSince = LocalDate.now();
 
             Mockito.when(wahltageRepository.findByTagAfterOrTagEquals(eq(dateSince), eq(dateSince))).thenReturn(Collections.emptyList());
@@ -90,7 +90,7 @@ class WahldatenServiceTest {
         }
 
         @Test
-        void validationFailed() {
+        void should_throwException_when_validationFailed() {
             val dateSince = LocalDate.now();
 
             val mockedValidationException = new RuntimeException("validation failed");
@@ -105,7 +105,7 @@ class WahldatenServiceTest {
     class GetWahlen {
 
         @Test
-        void dataFound() {
+        void should_returnWahlDTO_when_givenValidWahltagAndNummer() {
             val wahltag = LocalDate.now();
             val nummer = "nummer";
 
@@ -121,7 +121,7 @@ class WahldatenServiceTest {
         }
 
         @Test
-        void noDataFound() {
+        void should_returnEmpty_when_noDataFound() {
             val wahltag = LocalDate.now();
             val nummer = "nummer";
 
@@ -133,7 +133,7 @@ class WahldatenServiceTest {
         }
 
         @Test
-        void validationFailed() {
+        void should_throwException_when_validationFailed() {
             val wahltag = LocalDate.now();
             val nummer = "nummer";
 
@@ -143,14 +143,13 @@ class WahldatenServiceTest {
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlen(wahltag, nummer)).isSameAs(mockedValidationException);
         }
-
     }
 
     @Nested
     class GetWahlbezirke {
 
         @Test
-        void dataFound() {
+        void should_returnWahlbezirkDTO_when_givenValidWahltagAndNummer() {
             val wahltag = LocalDate.now();
             val nummer = "nummer";
 
@@ -167,7 +166,7 @@ class WahldatenServiceTest {
         }
 
         @Test
-        void noDataFound() {
+        void should_returnEmpty_when_noDataFound() {
             val wahltag = LocalDate.now();
             val nummer = "nummer";
 
@@ -180,7 +179,7 @@ class WahldatenServiceTest {
         }
 
         @Test
-        void validationFailed() {
+        void should_throwException_when_validationFailed() {
             val wahltag = LocalDate.now();
             val nummer = "nummer";
 
@@ -190,14 +189,13 @@ class WahldatenServiceTest {
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlbezirke(wahltag, nummer)).isSameAs(mockedValidationException);
         }
-
     }
 
     @Nested
     class GetWahlberechtigte {
 
         @Test
-        void dataFound() {
+        void should_returnWahlberechtigteDTO_when_givenValidWahlbezirkID() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedWahlbezirkAsUUID = UUID.randomUUID();
@@ -215,7 +213,7 @@ class WahldatenServiceTest {
         }
 
         @Test
-        void noDataFound() {
+        void should_returnEmpty_when_noDataFound() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedWahlbezirkAsUUID = UUID.randomUUID();
@@ -230,7 +228,7 @@ class WahldatenServiceTest {
         }
 
         @Test
-        void validationFailed() {
+        void should_throwException_when_validationFailed() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedValidationException = new RuntimeException("validation failed");
@@ -239,14 +237,13 @@ class WahldatenServiceTest {
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlberechtigte(wahlbezirkID)).isSameAs(mockedValidationException);
         }
-
     }
 
     @Nested
     class GetBasisdaten {
 
         @Test
-        void dataFound() {
+        void should_returnBasisdatenDTO_when_givenValidWahltagAndNummer() {
             val wahltag = LocalDate.now();
             val nummer = "nummer";
 
@@ -276,7 +273,7 @@ class WahldatenServiceTest {
         }
 
         @Test
-        void noDataFound() {
+        void should_returnBasisdatenDTOWithEmptyParams_when_noDataFound() {
             val wahltag = LocalDate.now();
             val nummer = "nummer";
 
@@ -292,7 +289,7 @@ class WahldatenServiceTest {
         }
 
         @Test
-        void validationFailed() {
+        void should_throwException_when_validationFailed() {
             val wahltag = LocalDate.now();
             val nummer = "nummer";
 
@@ -303,5 +300,4 @@ class WahldatenServiceTest {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getBasisdaten(wahltag, nummer)).isSameAs(mockedValidationException);
         }
     }
-
 }

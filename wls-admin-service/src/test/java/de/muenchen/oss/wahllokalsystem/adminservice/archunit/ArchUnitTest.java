@@ -18,6 +18,8 @@ public class ArchUnitTest {
 
     private static JavaClasses allTestClasses;
     private static JavaClasses allServiceClasses;
+    private static JavaClasses allClassesWithoutTests;
+    private static final ImportOption ignoreGeneratedCode = location -> !location.contains("/eai");
 
     @BeforeAll
     static void init() {
@@ -26,6 +28,11 @@ public class ArchUnitTest {
                 .importPackages(MicroServiceApplication.class.getPackage().getName());
 
         allServiceClasses = new ClassFileImporter()
+                .importPackages(MicroServiceApplication.class.getPackage().getName());
+
+        allClassesWithoutTests = new ClassFileImporter()
+                .withImportOption(new ImportOption.DoNotIncludeTests())
+                .withImportOption(ignoreGeneratedCode)
                 .importPackages(MicroServiceApplication.class.getPackage().getName());
     }
 
@@ -37,8 +44,20 @@ public class ArchUnitTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("allServiceClassesRulesToVerify")
-    void should_verifyArchUnitRuleForAllClassesOfService_when_running(final ArgumentsAccessor arguments) {
+    void should_verifyArchUnitRuleForAllClasses_when_running(final ArgumentsAccessor arguments) {
         arguments.get(1, ArchRule.class).check(allServiceClasses);
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("allClassesOfRestRulesToVerify")
+    void should_verifyArchUnitRuleForAllClassesOfRest_when_running(final ArgumentsAccessor arguments) {
+        arguments.get(1, ArchRule.class).check(allClassesWithoutTests);
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("allClassesOfServiceRulesToVerify")
+    void should_verifyArchUnitRuleForAllClassesOfService_when_running(final ArgumentsAccessor arguments) {
+        arguments.get(1, ArchRule.class).check(allClassesWithoutTests);
     }
 
     public static Stream<Arguments> allTestClassesRulesToVerify() {
@@ -53,5 +72,28 @@ public class ArchUnitTest {
         return Stream.of(
                 Arguments.of("RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED",
                         ClassRules.RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED));
+    }
+
+    public static Stream<Arguments> allClassesOfRestRulesToVerify() {
+        return Stream.of(
+                Arguments.of("DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED", ClassRules.RULE_DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED),
+                Arguments.of("RULE_NO_DTOS_OR_CONTROLLERS_OUTSIDE_OF_REST_PACKAGE_CONVENTION_MATCHED",
+                        ClassRules.RULE_NO_DTOS_OR_CONTROLLERS_OUTSIDE_OF_REST_PACKAGE_CONVENTION_MATCHED),
+                Arguments.of("RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED",
+                        ClassRules.RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED),
+                Arguments.of("RULE_NO_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED",
+                        ClassRules.RULE_NO_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED));
+    }
+
+    public static Stream<Arguments> allClassesOfServiceRulesToVerify() {
+        return Stream.of(
+                Arguments.of("RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_MODEL_CONVENTION_MATCHED",
+                        ClassRules.RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_MODEL_CONVENTION_MATCHED),
+                Arguments.of("RULE_NO_MODELS_OR_SERVICES_OUTSIDE_OF_SERVICE_PACKAGE_CONVENTION_MATCHED",
+                        ClassRules.RULE_NO_MODELS_OR_SERVICES_OUTSIDE_OF_SERVICE_PACKAGE_CONVENTION_MATCHED),
+                Arguments.of("RULE_NO_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED",
+                        ClassRules.RULE_NO_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED),
+                Arguments.of("RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED",
+                        ClassRules.RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED));
     }
 }

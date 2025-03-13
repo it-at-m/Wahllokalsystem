@@ -50,43 +50,43 @@ class SecurityConfigurationTest {
     WahlbriefdatenService wahlbriefdatenService;
 
     @Test
-    void accessSecuredResourceRootThenUnauthorized() throws Exception {
+    void should_returnUnauthorized_when_accessingRoot() throws Exception {
         api.perform(get("/"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void accessSecuredResourceActuatorThenUnauthorized() throws Exception {
+    void should_returnUnauthorized_when_accessingActuator() throws Exception {
         api.perform(get("/actuator"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void accessUnsecuredResourceActuatorHealthThenOk() throws Exception {
+    void should_returnOk_when_accessingActuatorHealth() throws Exception {
         api.perform(get("/actuator/health"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void accessUnsecuredResourceActuatorInfoThenOk() throws Exception {
+    void should_returnOk_when_accessingActuatorInfo() throws Exception {
         api.perform(get("/actuator/info"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void accessUnsecuredResourceActuatorMetricsThenOk() throws Exception {
+    void should_returnOk_when_accessingActuatorMetrics() throws Exception {
         api.perform(get("/actuator/metrics"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void accessUnsecuredResourceV3ApiDocsThenOk() throws Exception {
+    void should_returnOk_when_accessingApiDocs() throws Exception {
         api.perform(get("/v3/api-docs"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void accessUnsecuredResourceSwaggerUiThenOk() throws Exception {
+    void should_returnOk_when_accessingSwaggerUi() throws Exception {
         api.perform(get("/swagger-ui/index.html"))
                 .andExpect(status().isOk());
     }
@@ -96,13 +96,13 @@ class SecurityConfigurationTest {
 
         @Test
         @WithAnonymousUser
-        void accessGetBeanstandeteWahlbriefeUnauthorizedThenUnauthorized() throws Exception {
+        void should_denyAccess_when_accessingUnauthorizedViaGet() throws Exception {
             api.perform(get("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/2")).andExpect(status().isUnauthorized());
         }
 
         @Test
         @WithMockUser
-        void accessGetBeanstandeteWahlbriefeAuthorizedThenOk() throws Exception {
+        void should_permitAccess_when_accessingAuthorizedViaGet() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             val waehlerverzeichnisNummer = 13L;
             val serviceResponse = new BeanstandeteWahlbriefeModel(wahlbezirkID, waehlerverzeichnisNummer, new HashMap<>());
@@ -120,7 +120,7 @@ class SecurityConfigurationTest {
 
         @Test
         @WithAnonymousUser
-        void accessPostBeanstandeteWahlbriefeUnauthorizedThenUnauthorized() throws Exception {
+        void should_denyAccess_when_accessingUnauthorizedViaPost() throws Exception {
             val requestBodyAsString = objectMapper.writeValueAsString(new BeanstandeteWahlbriefeCreateDTO(new HashMap<>()));
             val request = post(
                     "/businessActions/beanstandeteWahlbriefe/wahlbezirkID/2").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(requestBodyAsString);
@@ -130,7 +130,7 @@ class SecurityConfigurationTest {
 
         @Test
         @WithMockUser
-        void accessPostBeanstandeteWahlbriefeAuthorizedThenUnauthorized() throws Exception {
+        void should_permitAccess_when_accessingAuthorizedViaPost() throws Exception {
             val requestBodyAsString = objectMapper.writeValueAsString(new BeanstandeteWahlbriefeCreateDTO(new HashMap<>()));
             val request = post("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/2").with(csrf()).contentType(MediaType.APPLICATION_JSON)
                     .content(requestBodyAsString);
@@ -146,7 +146,7 @@ class SecurityConfigurationTest {
 
         @Test
         @WithAnonymousUser
-        void accessGetWahlbriefdatenUnauthorizedThenUnauthorized() throws Exception {
+        void should_denyAccess_when_accessingUnauthorizedViaGet() throws Exception {
             val request = get("/businessActions/wahlbriefdaten/wahlbezirkID");
 
             api.perform(request).andExpect(status().isUnauthorized());
@@ -154,7 +154,7 @@ class SecurityConfigurationTest {
 
         @Test
         @WithMockUser
-        void accessGetWahlbriefdatenAuthorizedThenNoContent() throws Exception {
+        void should_permitAccess_when_accessingAuthorizedViaGet() throws Exception {
             val request = get("/businessActions/wahlbriefdaten/wahlbezirkID");
 
             api.perform(request).andExpect(status().isNoContent());
@@ -162,7 +162,7 @@ class SecurityConfigurationTest {
 
         @Test
         @WithAnonymousUser
-        void accessSetWahlbriefdatenUnauthorizedThenUnauthorized() throws Exception {
+        void should_denyAccess_when_accessingUnauthorizedViaPost() throws Exception {
             val requestBody = new WahlbriefdatenWriteDTO(null, null, null, null, null);
             val request = post("/businessActions/wahlbriefdaten/wahlbezirkID").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
                     objectMapper.writeValueAsString(requestBody));
@@ -172,7 +172,7 @@ class SecurityConfigurationTest {
 
         @Test
         @WithMockUser
-        void accessSetWahlbriefdatenAuthorizedThenOk() throws Exception {
+        void should_permitAccess_when_accessingAuthorizedViaPost() throws Exception {
             val requestBody = new WahlbriefdatenWriteDTO(null, null, null, null, null);
             val request = post("/businessActions/wahlbriefdaten/wahlbezirkID").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
                     objectMapper.writeValueAsString(requestBody));
@@ -180,5 +180,4 @@ class SecurityConfigurationTest {
             api.perform(request).andExpect(status().isOk());
         }
     }
-
 }

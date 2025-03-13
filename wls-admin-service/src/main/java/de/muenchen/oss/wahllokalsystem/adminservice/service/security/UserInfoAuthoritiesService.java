@@ -2,7 +2,7 @@
  * Copyright (c): it@M - Dienstleister für Informations- und Telekommunikationstechnik
  * der Landeshauptstadt München, 2024
  */
-package de.muenchen.oss.wahllokalsystem.adminservice.configuration;
+package de.muenchen.oss.wahllokalsystem.adminservice.service.security;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.Ticker;

@@ -4,6 +4,7 @@
  */
 package de.muenchen.oss.wahllokalsystem.adminservice.configuration;
 
+import de.muenchen.oss.wahllokalsystem.adminservice.service.security.UserInfoAuthoritiesService;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.oauth2.jwt.Jwt;

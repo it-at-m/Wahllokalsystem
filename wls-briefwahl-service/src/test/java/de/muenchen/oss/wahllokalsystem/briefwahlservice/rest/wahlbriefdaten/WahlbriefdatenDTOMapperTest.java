@@ -16,7 +16,7 @@ class WahlbriefdatenDTOMapperTest {
     class ToDTO {
 
         @Test
-        void isMapped() {
+        void should_returnWahlbriefdatenDTO_when_givenWahlbriefdatenModel() {
             val wahlbezirkID = "wahlbezirkID";
             val wahlbriefe = 12L;
             val verzeichnisseUngueltig = 3L;
@@ -39,7 +39,7 @@ class WahlbriefdatenDTOMapperTest {
     class ToModel {
 
         @Test
-        void isMapped() {
+        void should_returnWahlbriefdatenModel_when_givenWahlbriefdatenDTOAndWahlbezirkID() {
             val wahlbezirkID = "wahlbezirkID";
             val wahlbriefe = 12L;
             val verzeichnisseUngueltig = 3L;
@@ -57,7 +57,7 @@ class WahlbriefdatenDTOMapperTest {
         }
 
         @Test
-        void mappingWithoutWahlbezirkID() {
+        void should_returnWahlbriefdatenModel_when_givenWahlbriefdatenDTO() {
             val wahlbriefe = 12L;
             val verzeichnisseUngueltig = 3L;
             val nachtraege = 23L;
@@ -74,7 +74,7 @@ class WahlbriefdatenDTOMapperTest {
         }
 
         @Test
-        void mappingWithoutDTO() {
+        void should_returnWahlbriefdatenModel_when_givenWahlbezirkID() {
             val wahlbezirkID = "wahlbezirkID";
 
             val result = unitUnderTest.toModel(wahlbezirkID, null);
@@ -83,5 +83,4 @@ class WahlbriefdatenDTOMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

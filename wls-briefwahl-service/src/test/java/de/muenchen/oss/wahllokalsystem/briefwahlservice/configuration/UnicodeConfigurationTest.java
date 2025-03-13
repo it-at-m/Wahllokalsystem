@@ -52,7 +52,7 @@ class UnicodeConfigurationTest {
     private BeanstandeteWahlbriefeRepository beanstandeteWahlbriefeRepository;
 
     @Test
-    void testForNfcNormalization() {
+    void should_returnComposedString_when_givenDecomposedString() {
         // Persist entity with decomposed string.
         val wahlbezirkID = "wahlbezirkID";
         val waehlerVerzeichnisNummer = 1L;
@@ -82,5 +82,4 @@ class UnicodeConfigurationTest {
                         key2 + textAttributeDecomposed,
                         new Zurueckweisungsgrund[] { Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT, Zurueckweisungsgrund.LOSE_STIMMZETTEL }));
     }
-
 }

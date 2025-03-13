@@ -18,7 +18,7 @@ public class ArchUnitTest {
 
     private static JavaClasses allTestClasses;
     private static JavaClasses allClassesWithoutTests;
-    private final static ImportOption ignoreGeneratedCode = location -> !location.contains("/eai");
+    private static final ImportOption ignoreGeneratedCode = location -> !location.contains("/eai");
 
     @BeforeAll
     static void init() {

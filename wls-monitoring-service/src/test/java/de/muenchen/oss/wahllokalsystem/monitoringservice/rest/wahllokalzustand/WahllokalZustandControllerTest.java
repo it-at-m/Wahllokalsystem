@@ -42,7 +42,7 @@ class WahllokalZustandControllerTest {
     }
 
     @Nested
-    class PostSchnellmeldungsSendungsuhrzeit {
+    class PostSchnellmeldungSendungsuhrzeit {
 
         @Test
         void should_notThrowException_when_serviceIsCalled() {

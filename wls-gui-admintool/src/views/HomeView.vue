@@ -32,8 +32,7 @@ import HealthState from "@/types/HealthState";
 const status = ref("DOWN");
 
 onMounted(() => {
-  checkHealth()
-    .then((content: HealthState) => (status.value = content.status))
+  checkHealth().then((content: HealthState) => (status.value = content.status));
 });
 </script>
 

@@ -1,14 +1,12 @@
-package de.muenchen.oss.wahllokalsystem.broadcastservice.service;
+package de.muenchen.oss.wahllokalsystem.broadcastservice.rest;
 
 import de.muenchen.oss.wahllokalsystem.broadcastservice.domain.Message;
-import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO;
-import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.MessageDTO;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.mapstruct.Mapper;
 
 @Mapper
-public interface BroadcastMapper {
+public interface BroadcastDTOMapper {
 
     MessageDTO toDto(Message entityToMap);
 
@@ -20,6 +18,5 @@ public interface BroadcastMapper {
             message.setNachricht(messageToBroadcast.nachricht());
             return message;
         }).toList();
-
     }
 }

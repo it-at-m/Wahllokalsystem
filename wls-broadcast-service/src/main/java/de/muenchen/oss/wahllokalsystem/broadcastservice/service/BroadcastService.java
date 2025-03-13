@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.broadcastservice.service;
 
 import de.muenchen.oss.wahllokalsystem.broadcastservice.domain.Message;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.domain.MessageRepository;
+import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastDTOMapper;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.MessageDTO;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.util.BroadcastExceptionKonstanten;
@@ -23,7 +24,7 @@ public class BroadcastService {
 
     private final MessageRepository messageRepo;
 
-    private final BroadcastMapper broadcastMapper;
+    private final BroadcastDTOMapper broadcastMapper;
 
     private final ExceptionFactory exceptionFactory;
 
@@ -71,5 +72,4 @@ public class BroadcastService {
             throw exceptionFactory.createFachlicheWlsException(BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG_BAD_FORMAT_UUID);
         }
     }
-
 }

@@ -43,43 +43,43 @@ class SecurityConfigurationTest {
     WahlvorstandService wahlvorstandService;
 
     @Test
-    void accessSecuredResourceRootThenUnauthorized() throws Exception {
+    void should_returnUnauthorized_when_accessingRoot() throws Exception {
         api.perform(get("/"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void accessSecuredResourceActuatorThenUnauthorized() throws Exception {
+    void should_returnUnauthorized_when_accessingActuator() throws Exception {
         api.perform(get("/actuator"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void accessUnsecuredResourceActuatorHealthThenOk() throws Exception {
+    void should_returnOk_when_accessingActuatorHealth() throws Exception {
         api.perform(get("/actuator/health"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void accessUnsecuredResourceActuatorInfoThenOk() throws Exception {
+    void should_returnOk_when_accessingActuatorInfo() throws Exception {
         api.perform(get("/actuator/info"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void accessUnsecuredResourceActuatorMetricsThenOk() throws Exception {
+    void should_returnOk_when_accessingActuatorMetrics() throws Exception {
         api.perform(get("/actuator/metrics"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void accessUnsecuredResourceV3ApiDocsThenOk() throws Exception {
+    void should_returnOk_when_accessingApiDocs() throws Exception {
         api.perform(get("/v3/api-docs"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void accessUnsecuredResourceSwaggerUiThenOk() throws Exception {
+    void should_returnOk_when_accessingSwaggerUi() throws Exception {
         api.perform(get("/swagger-ui/index.html"))
                 .andExpect(status().isOk());
     }
@@ -88,19 +88,19 @@ class SecurityConfigurationTest {
     class Wahlvorstand {
         @Test
         @WithAnonymousUser
-        void accessGetWahlvorstandForWahlbezirkIDUnauthorizedThenUnauthorized() throws Exception {
+        void should_denyAccess_when_accessingUnauthorizedViaGet() throws Exception {
             api.perform(get("/wahlvorstaende?wahlbezirkID=wbzID")).andExpect(status().isUnauthorized());
         }
 
         @Test
         @WithMockUser
-        void accessGetWahlvorstandForWahlbezirkIDAuthorizedThenOk() throws Exception {
+        void should_permitAccess_when_accessingAuthorizedViaGet() throws Exception {
             api.perform(get("/wahlvorstaende?wahlbezirkID=wbzID")).andExpect(status().isOk());
         }
 
         @Test
         @WithAnonymousUser
-        void accessSaveAnwesenheitUnauthorizedThenUnauthorized() throws Exception {
+        void should_denyAccess_when_accessingUnauthorizedViaPut() throws Exception {
             val wahlvorstandAktualisierung = new WahlvorstandsaktualisierungDTO("wbzID", Set.of(new WahlvorstandsmitgliedAktualisierungDTO("id", true)),
                     LocalDateTime.now());
 
@@ -110,7 +110,7 @@ class SecurityConfigurationTest {
 
         @Test
         @WithMockUser
-        void accessSaveAnwesenheitAuthorizedThenOk() throws Exception {
+        void should_permitAccess_when_accessingAuthorizedViaPut() throws Exception {
             val wahlvorstandAktualisierung = new WahlvorstandsaktualisierungDTO("wbzID", Set.of(new WahlvorstandsmitgliedAktualisierungDTO("id", true)),
                     LocalDateTime.now());
 
@@ -118,5 +118,4 @@ class SecurityConfigurationTest {
                     .content(objectMapper.writeValueAsString(wahlvorstandAktualisierung))).andExpect(status().isOk());
         }
     }
-
 }

@@ -22,10 +22,10 @@
 "service-ergebnismeldung":
   - changed-files:
       - any-glob-to-any-file: [ 'wls-ergebnismeldung-service/**' ]
-"service-gui-admin":
+"wls-gui-admin":
   - changed-files:
       - any-glob-to-any-file: [ 'wls-gui-admin/**' ]
-"service-gui-wls":
+"wls-gui-wahllokalsystem":
   - changed-files:
       - any-glob-to-any-file: [ 'wls-gui-wahllokalsystem/**' ]
 "service-infomanagement":

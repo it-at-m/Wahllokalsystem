@@ -32,7 +32,7 @@ class WahlbeteiligungServiceTest {
     class SaveWahlbeteiligung {
 
         @Test
-        void isSaved() {
+        void should_saveWahlbeteiligung_when_givenValidModel() {
             val modelToSave = WahlbeteiligungsMeldungDTO.builder().build();
             val mockedModelAsEntity = new Wahlbeteiligung();
 
@@ -45,7 +45,7 @@ class WahlbeteiligungServiceTest {
         }
 
         @Test
-        void exceptionFromValidationGotThrown() {
+        void should_notSaveBriefwahlvorbereitung_when_validationFailed() {
             val modelToSave = WahlbeteiligungsMeldungDTO.builder().build();
             val mockedValidationException = new RuntimeException("validation failed");
 

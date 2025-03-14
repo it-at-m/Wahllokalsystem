@@ -33,7 +33,7 @@ class UrnenwahlvorbereitungControllerTest {
     class GetUrnenwahlVorbereitung {
 
         @Test
-        void gotDataFromService() {
+        void should_returnUrnenwahlvorbereitungData_when_dataFound() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedServiceOptionalBody = new UrnenwahlvorbereitungModel(wahlbezirkID, 0, 0, 0, Collections.emptyList());
@@ -49,7 +49,7 @@ class UrnenwahlvorbereitungControllerTest {
         }
 
         @Test
-        void gotNoDataFromService() {
+        void should_returnNoContent_when_noDataFound() {
             val wahlbezirkID = "wahlbezirkID";
 
             Mockito.when(service.getUrnenwahlvorbereitung(wahlbezirkID)).thenReturn(Optional.empty());
@@ -65,7 +65,7 @@ class UrnenwahlvorbereitungControllerTest {
     class PostUrnenwahlvorbereitung {
 
         @Test
-        void requestIsMappedAndSendToService() {
+        void should_postUrnenwahlvorbereitungData_when_calledAndMappedCorrectly() {
             val wahlbezirkID = "wahlbezirkID";
             val requestBody = new UrnenwahlvorbereitungWriteDTO(0, 0, 0, Collections.emptyList());
 
@@ -77,5 +77,4 @@ class UrnenwahlvorbereitungControllerTest {
             Mockito.verify(service).setUrnenwahlvorbereitung(mockedMappedRequest);
         }
     }
-
 }

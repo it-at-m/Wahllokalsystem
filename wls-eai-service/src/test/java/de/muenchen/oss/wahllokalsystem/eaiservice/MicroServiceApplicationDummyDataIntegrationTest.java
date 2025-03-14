@@ -15,8 +15,7 @@ class MicroServiceApplicationDummyDataIntegrationTest {
     WahlvorstandRepository wahlvorstandRepository;
 
     @Test
-    void applicationIsRunningAndHasDummyData() {
+    void should_throwNoException_when_serviceIsStartedWithDummyData() {
         Assertions.assertThat(wahlvorstandRepository.count()).isGreaterThan(0);
     }
-
 }

@@ -33,7 +33,7 @@ public class ErgebnismeldungMapperTest {
     class ToEntity {
 
         @Test
-        void isMapped() {
+        void should_returnErgebnismeldungEntity_when_givenValidDTO() {
             val wahlID = "wahlID1";
             val wahlbezirkID = "00000000-0000-0000-0000-000000000001";
             val meldungsart = MeldungsartDTO.NIEDERSCHRIFT;
@@ -100,6 +100,5 @@ public class ErgebnismeldungMapperTest {
 
             Assertions.assertThat(result).usingRecursiveComparison().ignoringFields("erstellungszeit").isEqualTo(expectedResult);
         }
-
     }
 }

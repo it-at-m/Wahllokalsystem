@@ -43,7 +43,7 @@ public class BeanstandeteWahlbriefeSecurityTest {
     class GetBeanstandeteWahlbriefe {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_givenAllAuthorities() {
             val wahlbezirkID = "wahlbezirkID";
             val waehlerverzeichnummer = 13L;
             val beanstandeteWahlbriefeReference = new BeanstandeteWahlbriefeReference(wahlbezirkID, waehlerverzeichnummer);
@@ -55,7 +55,7 @@ public class BeanstandeteWahlbriefeSecurityTest {
         }
 
         @Test
-        void bezirkIDPermissionEvaluatorFailed() {
+        void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
             val wahlbezirkID = "wahlbezirkID";
             val waehlerverzeichnummer = 13L;
             val beanstandeteWahlbriefeReference = new BeanstandeteWahlbriefeReference(wahlbezirkID, waehlerverzeichnummer);
@@ -69,7 +69,7 @@ public class BeanstandeteWahlbriefeSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val wahlbezirkID = "wahlbezirkID";
@@ -84,14 +84,13 @@ public class BeanstandeteWahlbriefeSecurityTest {
         private static Stream<Arguments> getMissingAuthoritiesVariations() {
             return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_BEANSTANDETE_WAHLBRIEFE);
         }
-
     }
 
     @Nested
     class SetBeanstandeteWahlbriefe {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_givenAllAuthorities() {
             val wahlbezirkID = "wahlbezirkID";
             val waehlerverzeichnummer = 13L;
             val beanstandeteWahlbriefeModel = new BeanstandeteWahlbriefeModel(wahlbezirkID, waehlerverzeichnummer, new HashMap<>());
@@ -103,7 +102,7 @@ public class BeanstandeteWahlbriefeSecurityTest {
         }
 
         @Test
-        void bezirkIDPermissionEvaluatorFailed() {
+        void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
             val wahlbezirkID = "wahlbezirkID";
             val waehlerverzeichnummer = 13L;
             val beanstandeteWahlbriefeModel = new BeanstandeteWahlbriefeModel(wahlbezirkID, waehlerverzeichnummer, new HashMap<>());
@@ -117,7 +116,7 @@ public class BeanstandeteWahlbriefeSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
             val wahlbezirkID = "wahlbezirkID";
             val waehlerverzeichnummer = 13L;
             val beanstandeteWahlbriefeModel = new BeanstandeteWahlbriefeModel(wahlbezirkID, waehlerverzeichnummer, new HashMap<>());
@@ -133,5 +132,4 @@ public class BeanstandeteWahlbriefeSecurityTest {
             return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_ADD_BEANSTANDETE_WAHLBRIEFE);
         }
     }
-
 }

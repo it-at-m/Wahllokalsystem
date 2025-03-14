@@ -47,7 +47,7 @@ public class WaehlerverzeichnisServiceSecurityTest {
     class GetWaehlerverzeichnis {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_givenAllAuthorities() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAEHLERVERZEICHNIS);
 
             val waehlerverzeichnisReference = new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 89L);
@@ -57,7 +57,7 @@ public class WaehlerverzeichnisServiceSecurityTest {
         }
 
         @Test
-        void bezirkIDPermissionEvaluatorFailed() {
+        void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
             SecurityUtils.runWith(Authorities.SERVICE_GET_WAEHLERVERZEICHNIS);
 
             val waehlerverzeichnisReference = new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 89L);
@@ -68,7 +68,7 @@ public class WaehlerverzeichnisServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val waehlerverzeichnisReference = new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 89L);
@@ -86,7 +86,7 @@ public class WaehlerverzeichnisServiceSecurityTest {
     class SetWaehlerverzeichnis {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_givenAllAuthorities() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_WAEHLERVERZEICHNIS);
 
             val modelToSet = new WaehlerverzeichnisModel(new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 233L), true, true, false, true);
@@ -95,7 +95,7 @@ public class WaehlerverzeichnisServiceSecurityTest {
         }
 
         @Test
-        void acccessDeniedOnMissingServiceAuthority() {
+        void should_throwAccessDeniedException_when_serviceAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS);
 
             val modelToSet = new WaehlerverzeichnisModel(new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 233L), true, true, false, true);
@@ -104,13 +104,12 @@ public class WaehlerverzeichnisServiceSecurityTest {
         }
 
         @Test
-        void wlsExceptionOnMissingRepositoryWriteAuthority() {
+        void should_returnTechnischeWlsException_when_repoAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.SERVICE_POST_WAEHLERVERZEICHNIS);
 
             val modelToSet = new WaehlerverzeichnisModel(new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 233L), true, true, false, true);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setWaehlerverzeichnis(modelToSet)).isInstanceOf(TechnischeWlsException.class);
         }
-
     }
 }

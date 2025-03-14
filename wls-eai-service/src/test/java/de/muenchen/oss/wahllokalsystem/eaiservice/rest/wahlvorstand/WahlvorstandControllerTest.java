@@ -28,7 +28,7 @@ class WahlvorstandControllerTest {
     class LoadWahlvorstand {
 
         @Test
-        void gotDataFromService() {
+        void should_loadWahlvorstand_when_givenValidWahlbezirkID() {
             val wahlbezirkID = "wahlbezirkID";
             val wahlvorstandFromService = new WahlvorstandDTO("wahlbezirkID", Collections.emptySet());
 
@@ -36,16 +36,14 @@ class WahlvorstandControllerTest {
 
             Assertions.assertThat(unitUnderTest.loadWahlvorstand(wahlbezirkID)).isSameAs(wahlvorstandFromService);
         }
-
     }
 
     @Test
-    void saveAnwesenheit() {
+    void should_saveAnwesenheit_when_called() {
         val updateData = new WahlvorstandsaktualisierungDTO("id", Collections.emptySet(), LocalDateTime.now());
 
         unitUnderTest.saveAnwesenheit(updateData);
 
         Mockito.verify(wahlvorstandService).setAnwesenheit(updateData);
     }
-
 }

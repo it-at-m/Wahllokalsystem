@@ -29,7 +29,7 @@ class WahlvorschlagControllerTest {
     class LoadWahlvorschlaege {
 
         @Test
-        void gotDataFromService() {
+        void should_loadWahlvorschlaege_when_givenValidWahlIDAndWahlbezirkID() {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
             val stimmzettelgebietID = "stimmzettelgebietID";
@@ -40,14 +40,13 @@ class WahlvorschlagControllerTest {
 
             Assertions.assertThat(unitUnderTest.loadWahlvorschlaege(wahlID, wahlbezirkID)).isSameAs(wahlvorschlaegeFromService);
         }
-
     }
 
     @Nested
     class LoadReferendumvorlagen {
 
         @Test
-        void gotDataFromService() {
+        void should_loadReferendumvorlagen_when_givenValidWahlIDAndWahlbezirkID() {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
             val stimmzettelgebietID = "stimmzettelgebietID";
@@ -64,7 +63,7 @@ class WahlvorschlagControllerTest {
     class LoadWahlvorschlaegeListe {
 
         @Test
-        void gotDataFromService() {
+        void should_loadListOfWahlvorschlaege_when_givenValidWahlIDAndWahlbezirkID() {
             val wahltag = LocalDate.of(2024, 10, 10);
             val wahlID = "wahlID";
 
@@ -75,5 +74,4 @@ class WahlvorschlagControllerTest {
             Assertions.assertThat(unitUnderTest.loadWahlvorschlaegeListe(wahltag, wahlID)).isSameAs(wahlvorschlaegeListeFromService);
         }
     }
-
 }

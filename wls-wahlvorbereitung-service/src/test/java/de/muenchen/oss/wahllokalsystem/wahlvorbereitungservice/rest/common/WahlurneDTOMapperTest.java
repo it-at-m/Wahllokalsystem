@@ -15,7 +15,7 @@ class WahlurneDTOMapperTest {
     class ToDTO {
 
         @Test
-        void isMapped() {
+        void should_returnWahlurneDTO_when_givenWahlurneModel() {
             val wahlID = "wahlID";
             val anzahl = 4711;
             val urneVersiegelt = true;
@@ -28,5 +28,4 @@ class WahlurneDTOMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

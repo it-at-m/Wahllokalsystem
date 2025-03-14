@@ -41,11 +41,10 @@ class CacheControlConfigurationTest {
 
     @Test
     @Disabled
-    void testForCacheControlHeadersForEntityEndpoint() {
+    void should_returnExpectedHeaderValues_when_givenEndpoint() {
         ResponseEntity<String> response = testRestTemplate.exchange(ENTITY_ENDPOINT_URL, HttpMethod.GET, null, String.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.getHeaders().containsKey(HttpHeaders.CACHE_CONTROL));
         assertEquals(EXPECTED_CACHE_CONTROL_HEADER_VALUES, response.getHeaders().getCacheControl());
     }
-
 }

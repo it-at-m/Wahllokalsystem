@@ -75,7 +75,7 @@ public class WahlvorstandControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLVORSTAND)
-        void noDataFound() throws Exception {
+        void should_returnEmpty_when_noDataFound() throws Exception {
             val request = MockMvcRequestBuilders.get("/wahlvorstaende?wahlbezirkID=" + UUID.randomUUID());
 
             val response = api.perform(request).andExpect(status().isNotFound()).andReturn();
@@ -86,7 +86,7 @@ public class WahlvorstandControllerIntegrationTest {
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLVORSTAND)
         @Transactional
-        void dataFound() throws Exception {
+        void should_returnData_when_dataIsPresentInRepo() throws Exception {
             val wahlbezirkID1 = UUID.randomUUID();
             val wahlvorstand1 = new Wahlvorstand(wahlbezirkID1,
                     Set.of(new Wahlvorstandsmitglied("vorname11", "nachname11", WahlvorstandsmitgliedsFunktion.B, true, LocalDateTime.now()),
@@ -111,7 +111,7 @@ public class WahlvorstandControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLVORSTAND)
-        void wlsExceptionOnInvalidWahlbezirkIDFormat() throws Exception {
+        void should_returnFachlicheWlsException_when_requestIsInvalidCauseOfInvalidWahlbezirkIDFormat() throws Exception {
             val request = MockMvcRequestBuilders.get("/wahlvorstaende?wahlbezirkID=wrongFormat");
 
             val response = api.perform(request).andExpect(status().isBadRequest()).andReturn();
@@ -130,7 +130,7 @@ public class WahlvorstandControllerIntegrationTest {
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_SAVE_ANWESENHEIT)
         @Transactional
-        void personsAreUpdated() throws Exception {
+        void should_replaceData_when_dataIsPresent() throws Exception {
             val wahlbezirkID = UUID.randomUUID();
             val oldUpdatedDate = LocalDateTime.now().minusDays(1);
             val mitglied1 = new Wahlvorstandsmitglied("vorname11", "nachname11", WahlvorstandsmitgliedsFunktion.B, true, oldUpdatedDate);
@@ -164,7 +164,7 @@ public class WahlvorstandControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_SAVE_ANWESENHEIT)
-        void HttpStatusNotFoundWhenWahlvorstandDoesNotExists() throws Exception {
+        void should_returnHttpStatusNotFound_when_wahlvorstandDoesNotExists() throws Exception {
             val updateDateTime = LocalDateTime.now();
             val mitglieder = Set.of(new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), false),
                     new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), true));
@@ -177,7 +177,7 @@ public class WahlvorstandControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_SAVE_ANWESENHEIT)
-        void HttpStatusBadRequestWhenRequestIsInvalid() throws Exception {
+        void should_returnHttpStatusBadRequest_when_requestIsInvalid() throws Exception {
             val mitglieder = Set.of(new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), false),
                     new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), true));
             val aktualisierung = new WahlvorstandsaktualisierungDTO(UUID.randomUUID().toString(), mitglieder, null);
@@ -187,5 +187,4 @@ public class WahlvorstandControllerIntegrationTest {
             api.perform(request).andExpect(status().isBadRequest());
         }
     }
-
 }

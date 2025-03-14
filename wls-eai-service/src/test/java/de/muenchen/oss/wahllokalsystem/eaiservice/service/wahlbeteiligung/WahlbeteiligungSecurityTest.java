@@ -33,7 +33,7 @@ public class WahlbeteiligungSecurityTest {
     class SaveWahlvorbereitung {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_givenAllAuthorities() {
             SecurityUtils.runWith(Authorities.SERVICE_SAVE_WAHLBETEILIGUNG);
 
             val wahlID = "wahlID1";
@@ -47,7 +47,7 @@ public class WahlbeteiligungSecurityTest {
         }
 
         @Test
-        void accessDeniedOnServiceWithoutAuthority() {
+        void should_throwAccessDeniedException_when_anyAuthorityMissing() {
             SecurityUtils.runWith();
 
             val wahlID = "wahlID1";

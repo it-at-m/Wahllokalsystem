@@ -26,7 +26,7 @@ class IDConverterTest {
     class ConvertIDToUUIDOrThrow {
 
         @Test
-        void stringIsConverted() {
+        void should_convertToUUID_when_givenString() {
             val idToConvert = "7db3ebc6-d2f9-4b7d-a703-6d1677f3f305";
 
             val result = unitUnderTest.convertIDToUUIDOrThrow(idToConvert);
@@ -35,7 +35,7 @@ class IDConverterTest {
         }
 
         @Test
-        void wlsExceptionWhenNotConvertable() {
+        void should_throwWlsException_when_convertingFailed() {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.ID_NICHT_KONVERTIERBAR)).thenReturn(mockedWlsException);
@@ -43,5 +43,4 @@ class IDConverterTest {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.convertIDToUUIDOrThrow("")).isSameAs(mockedWlsException);
         }
     }
-
 }

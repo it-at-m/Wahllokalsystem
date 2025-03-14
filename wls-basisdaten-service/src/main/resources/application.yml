@@ -71,6 +71,6 @@ service:
       threadNamePrefix: "taskExecutor-"
     clients:
       eai:
-        basePath: http://localhost:39149
+        basePath: http://localhost:8300
       infomanagement:
-        basePath: http://localhost:39148
+        basePath: http://localhost:8201

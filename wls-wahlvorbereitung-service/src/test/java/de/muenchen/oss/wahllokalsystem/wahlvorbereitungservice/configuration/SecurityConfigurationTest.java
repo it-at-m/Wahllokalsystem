@@ -39,13 +39,13 @@ public class SecurityConfigurationTest {
     MockMvc mockMvc;
 
     @Test
-    void accessUnsecuredResourceV3ApiDocsThenOk() throws Exception {
+    void should_returnOk_when_accessingApiDocs() throws Exception {
         mockMvc.perform(get("/v3/api-docs"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void accessUnsecuredResourceSwaggerUiThenOk() throws Exception {
+    void should_returnOk_when_accessingSwaggerUi() throws Exception {
         mockMvc.perform(get("/swagger-ui/index.html"))
                 .andExpect(status().isOk());
     }
@@ -55,7 +55,7 @@ public class SecurityConfigurationTest {
 
         @Test
         @WithAnonymousUser
-        void accessGetUrnenwahlvorbereitungUnauthorizedThenUnauthorized() throws Exception {
+        void should_denyAccess_when_accessingUnauthorizedViaGet() throws Exception {
             val request = MockMvcRequestBuilders.get("/businessActions/urnenwahlVorbereitung/wahlbezirkID");
 
             mockMvc.perform(request).andExpect(status().isUnauthorized());
@@ -63,7 +63,7 @@ public class SecurityConfigurationTest {
 
         @Test
         @WithMockUser
-        void accessGetUrnenwahlvorbereitungAuthorizedThenNoContent() throws Exception {
+        void should_permitAccess_when_accessingAuthorizedViaGet() throws Exception {
             val request = MockMvcRequestBuilders.get("/businessActions/urnenwahlVorbereitung/wahlbezirkID");
 
             mockMvc.perform(request).andExpect(status().isNoContent());
@@ -71,7 +71,7 @@ public class SecurityConfigurationTest {
 
         @Test
         @WithAnonymousUser
-        void accessPostUrnenwahlvorbereitungUnauthorizedThenUnauthorized() throws Exception {
+        void should_denyAccess_when_accessingUnauthorizedViaPost() throws Exception {
             val request = MockMvcRequestBuilders.post("/businessActions/urnenwahlVorbereitung/wahlbezirkID").with(csrf())
                     .contentType(MediaType.APPLICATION_JSON).content("{}");
 
@@ -80,7 +80,7 @@ public class SecurityConfigurationTest {
 
         @Test
         @WithMockUser
-        void accessPostUrnenwahlvorbereitungAuthorizedThenIsCreated() throws Exception {
+        void should_permitAccess_when_accessingAuthorizedViaPost() throws Exception {
             val request = MockMvcRequestBuilders.post("/businessActions/urnenwahlVorbereitung/wahlbezirkID").with(csrf())
                     .contentType(MediaType.APPLICATION_JSON).content("{}");
 
@@ -93,7 +93,7 @@ public class SecurityConfigurationTest {
 
         @Test
         @WithAnonymousUser
-        void accessGetWaehlerverzeichnisUnauthorizedThenUnauthorized() throws Exception {
+        void should_denyAccess_when_accessingUnauthorizedViaGet() throws Exception {
             val request = MockMvcRequestBuilders.get("/businessActions/waehlerverzeichnis/waehlerbezirkID/1");
 
             mockMvc.perform(request).andExpect(status().isUnauthorized());
@@ -101,7 +101,7 @@ public class SecurityConfigurationTest {
 
         @Test
         @WithMockUser
-        void accessGetWaehlerverzeichnisAuthorizedThenNoContent() throws Exception {
+        void should_permitAccess_when_accessingAuthorizedViaGet() throws Exception {
             val request = MockMvcRequestBuilders.get("/businessActions/waehlerverzeichnis/waehlerbezirkID/1");
 
             mockMvc.perform(request).andExpect(status().isNoContent());
@@ -109,7 +109,7 @@ public class SecurityConfigurationTest {
 
         @Test
         @WithAnonymousUser
-        void accessPostWaehlerverzeichnisUnauthorizedThenUnauthorized() throws Exception {
+        void should_denyAccess_when_accessingUnauthorizedViaPost() throws Exception {
             val request = MockMvcRequestBuilders.post("/businessActions/waehlerverzeichnis/waehlerbezirkID/1")
                     .with(csrf()).contentType(MediaType.APPLICATION_JSON).content("{}");
 
@@ -118,7 +118,7 @@ public class SecurityConfigurationTest {
 
         @Test
         @WithMockUser
-        void accessPostWaehlerverzeichnisAuthorizedThenCreated() throws Exception {
+        void should_permitAccess_when_accessingAuthorizedViaPost() throws Exception {
             val request = MockMvcRequestBuilders.post("/businessActions/waehlerverzeichnis/waehlerbezirkID/1")
                     .with(csrf()).contentType(MediaType.APPLICATION_JSON).content("{}");
 

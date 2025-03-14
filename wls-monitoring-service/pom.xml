@@ -17,7 +17,7 @@
         <spring.cloud.version>2023.0.5</spring.cloud.version>
         <logstash.encoder>8.0</logstash.encoder>
         <apache.commons.collections4>4.4</apache.commons.collections4>
-        <apache.commons.csv>1.12.0</apache.commons.csv>
+        <apache.commons.csv>1.13.0</apache.commons.csv>
         <apache.commons.io>2.18.0</apache.commons.io>
         <apache.commons.lang3>3.17.0</apache.commons.lang3>
         <apache.commons.text>1.13.0</apache.commons.text>
@@ -530,7 +530,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>10.21.1</version>
+                        <version>10.21.4</version>
                     </dependency>
                 </dependencies>
             </plugin>

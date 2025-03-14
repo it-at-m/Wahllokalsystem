@@ -88,7 +88,7 @@ public class WahldatenControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLBERECHTIGTE)
-        void dataFound() throws Exception {
+        void should_returnData_when_dataIsPresentInRepo() throws Exception {
             val wahltag = wahltageRepository.save(new Wahltag(LocalDate.now(), "beschreibung wahltag", "nummer"));
             val wahl = wahlRepository.save(new Wahl("wahl", Wahlart.BTW, wahltag));
             val stimmzettelgebiet = stimmzettelgebietRepository.save(new Stimmzettelgebiet("sgz1", "sgz1", Stimmzettelgebietsart.SK, wahl));
@@ -108,7 +108,7 @@ public class WahldatenControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLBERECHTIGTE)
-        void noDataFound() throws Exception {
+        void should_returnEmptyArray_when_noDataFound() throws Exception {
             val request = get(WahldatenController.WAHLDATEN_REQUEST_MAPPING + "/wahlbezirke/" + UUID.randomUUID() + "/wahlberechtigte");
 
             val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
@@ -118,7 +118,7 @@ public class WahldatenControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLBERECHTIGTE)
-        void wlsExceptionOnValidationFailed() throws Exception {
+        void should_throwFachlicheWlsException_when_validationFailed() throws Exception {
             val request = get(WahldatenController.WAHLDATEN_REQUEST_MAPPING + "/wahlbezirke/     /wahlberechtigte");
 
             val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
@@ -130,7 +130,6 @@ public class WahldatenControllerIntegrationTest {
 
             Assertions.assertThat(responseBodyAsWlsException).isEqualTo(expectedWlsExceptionDTO);
         }
-
     }
 
     @Nested
@@ -138,7 +137,7 @@ public class WahldatenControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLTAGE)
-        void dataFound() throws Exception {
+        void should_returnData_when_dataIsPresentInRepo() throws Exception {
             val wahltageSinceAsString = "2024-07-03";
 
             val wahltag1ToFind = wahltageRepository.save(new Wahltag(LocalDate.of(2024, 12, 24), "wahltag1", "1"));
@@ -162,7 +161,7 @@ public class WahldatenControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLTAGE)
-        void noDataFound() throws Exception {
+        void should_returnEmptyArray_when_noDataFound() throws Exception {
             val request = get(WahldatenController.WAHLDATEN_REQUEST_MAPPING + "/wahltage?includingSince=1900-01-01");
 
             val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
@@ -172,7 +171,7 @@ public class WahldatenControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLTAGE)
-        void wlsExceptionOnDateQueryParameterIsMissing() throws Exception {
+        void should_returnFachlicheWlsException_when_requestIsInvalidCauseOfMissingDate() throws Exception {
             val request = get(WahldatenController.WAHLDATEN_REQUEST_MAPPING + "/wahltage?includingSince=  ");
 
             val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
@@ -191,7 +190,7 @@ public class WahldatenControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLBEZIRKE)
-        void dataFound() throws Exception {
+        void should_returnData_when_dataIsPresentInRepo() throws Exception {
             val wahltagDate = "2024-07-03";
             val nummerToFind = "1";
 
@@ -218,7 +217,7 @@ public class WahldatenControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLBEZIRKE)
-        void noDataFound() throws Exception {
+        void should_returnEmptyArray_when_noDataFound() throws Exception {
             val request = get(WahldatenController.WAHLDATEN_REQUEST_MAPPING + "/wahlbezirk?forDate=2024-07-03&withNummer=1");
 
             val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
@@ -228,7 +227,7 @@ public class WahldatenControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLBEZIRKE)
-        void wlsExceptionOnNummerQueryParameterIsMissing() throws Exception {
+        void should_returnFachlicheWlsException_when_requestIsInvalidCauseOfMissingNummer() throws Exception {
             val request = get(WahldatenController.WAHLDATEN_REQUEST_MAPPING + "/wahlbezirk?forDate=2024-07-03");
 
             val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
@@ -243,7 +242,7 @@ public class WahldatenControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLBEZIRKE)
-        void wlsExceptionOnDateQueryParameterIsMissing() throws Exception {
+        void should_returnFachlicheWlsException_when_requestIsInvalidCauseOfMissingDate() throws Exception {
             val request = get(WahldatenController.WAHLDATEN_REQUEST_MAPPING + "/wahlbezirk?nummer=2");
 
             val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
@@ -262,7 +261,7 @@ public class WahldatenControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLEN)
-        void dataFound() throws Exception {
+        void should_returnData_when_dataIsPresentInRepo() throws Exception {
             val wahltagDate = "2024-07-03";
             val nummerToFind = "1";
 
@@ -287,7 +286,7 @@ public class WahldatenControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLEN)
-        void noDataFound() throws Exception {
+        void should_returnEmptyArray_when_noDataFound() throws Exception {
             val request = get(WahldatenController.WAHLDATEN_REQUEST_MAPPING + "/wahlen?forDate=2024-07-03&withNummer=1");
 
             val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
@@ -297,7 +296,7 @@ public class WahldatenControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLEN)
-        void wlsExceptionOnNummerQueryParameterIsMissing() throws Exception {
+        void should_returnFachlicheWlsException_when_requestIsInvalidCauseOfMissingNummer() throws Exception {
             val request = get(WahldatenController.WAHLDATEN_REQUEST_MAPPING + "/wahlen?forDate=2024-07-03");
 
             val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
@@ -312,7 +311,7 @@ public class WahldatenControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLEN)
-        void wlsExceptionOnDateQueryParameterIsMissing() throws Exception {
+        void should_returnFachlicheWlsException_when_requestIsInvalidCauseOfMissingDate() throws Exception {
             val request = get(WahldatenController.WAHLDATEN_REQUEST_MAPPING + "/wahlen?withNummer=1");
 
             val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
@@ -324,7 +323,6 @@ public class WahldatenControllerIntegrationTest {
 
             Assertions.assertThat(responseBodyAsWlsException).isEqualTo(expectedWlsExceptionDTO);
         }
-
     }
 
     @Nested
@@ -332,7 +330,7 @@ public class WahldatenControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_BASISDATEN)
-        void dataFound() throws Exception {
+        void should_returnData_when_dataIsPresentInRepo() throws Exception {
             val wahltagDateToFind = "2024-07-03";
             val nummerToFind = "1";
 
@@ -355,7 +353,7 @@ public class WahldatenControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_BASISDATEN)
-        void noDataFound() throws Exception {
+        void should_returnBasisdatenDTOWithNullValues_when_noDataFound() throws Exception {
             val request = get(WahldatenController.WAHLDATEN_REQUEST_MAPPING + "/basisdaten?forDate=2024-07-03&withNummer=1");
 
             val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
@@ -368,7 +366,7 @@ public class WahldatenControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_BASISDATEN)
-        void wlsExceptionOnNummerQueryParameterIsMissing() throws Exception {
+        void should_returnFachlicheWlsException_when_requestIsInvalidCauseOfMissingNummer() throws Exception {
             val request = get(WahldatenController.WAHLDATEN_REQUEST_MAPPING + "/basisdaten?forDate=2024-07-03");
 
             val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
@@ -383,7 +381,7 @@ public class WahldatenControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_BASISDATEN)
-        void wlsExceptionOnDateQueryParameterIsMissing() throws Exception {
+        void should_returnFachlicheWlsException_when_requestIsInvalidCauseOfMissingDate() throws Exception {
             val request = get(WahldatenController.WAHLDATEN_REQUEST_MAPPING + "/basisdaten?withNummer=1");
 
             val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
@@ -395,6 +393,5 @@ public class WahldatenControllerIntegrationTest {
 
             Assertions.assertThat(responseBodyAsWlsException).isEqualTo(expectedWlsExceptionDTO);
         }
-
     }
 }

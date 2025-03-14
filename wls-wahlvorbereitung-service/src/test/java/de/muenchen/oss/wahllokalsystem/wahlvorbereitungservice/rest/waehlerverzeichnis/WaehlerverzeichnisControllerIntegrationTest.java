@@ -75,7 +75,7 @@ public class WaehlerverzeichnisControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_POST_WAEHLERVERZEICHNIS, Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS })
-        void newValidDataIsSaved() throws Exception {
+        void should_setNewData_when_callingPost() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             val waehlerverzeichnisNummer = 89L;
             val requestBody = new WaehlerverzeichnisWriteDTO(true, false, true, false);
@@ -96,7 +96,7 @@ public class WaehlerverzeichnisControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_POST_WAEHLERVERZEICHNIS, Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS })
-        void existingDataIsReplaced() throws Exception {
+        void should_replaceData_when_dataIsPresent() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             val waehlerverzeichnisNummer = 89L;
             val requestBody = new WaehlerverzeichnisWriteDTO(true, false, true, false);
@@ -122,7 +122,7 @@ public class WaehlerverzeichnisControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_POST_WAEHLERVERZEICHNIS, Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS })
-        void exceptionOnValidation() throws Exception {
+        void should_returnFachlicheWlsException_when_requestIsInvalidWhenParameterNotComplete() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             val waehlerverzeichnisNummer = 89L;
             val requestBody = new WaehlerverzeichnisWriteDTO(true, false, true, false);
@@ -147,7 +147,7 @@ public class WaehlerverzeichnisControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_GET_WAEHLERVERZEICHNIS, Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS })
-        void dataFound() throws Exception {
+        void should_returnData_when_dataIsPresentInRepo() throws Exception {
             val wahlbezirkIDToFind = "wahlbezirkIDToFind";
             val waehlerverzeichnisNummerToFind = 23L;
 
@@ -172,7 +172,7 @@ public class WaehlerverzeichnisControllerIntegrationTest {
 
         @Test
         @WithMockUser(authorities = { Authorities.SERVICE_GET_WAEHLERVERZEICHNIS, Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS })
-        void noDataFound() throws Exception {
+        void should_returnNoContent_when_noDataFound() throws Exception {
             val wahlbezirkIDToFind = "wahlbezirkIDToFind";
             val waehlerverzeichnisNummerToFind = 23L;
 

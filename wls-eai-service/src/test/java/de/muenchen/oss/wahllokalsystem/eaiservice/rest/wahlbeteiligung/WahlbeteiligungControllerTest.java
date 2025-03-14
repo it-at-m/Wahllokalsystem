@@ -24,7 +24,7 @@ class WahlbeteiligungControllerTest {
     class SaveWahlbeteiligunsMeldung {
 
         @Test
-        void serviceIsCalled() {
+        void should_saveWahlbeteiligung_when_called() {
             val wahlbeteiligungsMeldungDTO = WahlbeteiligungsMeldungDTO.builder().build();
 
             unitUnderTest.saveWahlbeteiligung(wahlbeteiligungsMeldungDTO);

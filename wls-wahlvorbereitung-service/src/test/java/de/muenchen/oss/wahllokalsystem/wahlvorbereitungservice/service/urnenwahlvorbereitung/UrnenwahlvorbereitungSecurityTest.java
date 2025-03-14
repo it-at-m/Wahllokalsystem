@@ -45,7 +45,7 @@ public class UrnenwahlvorbereitungSecurityTest {
     class GetUrnenwahlvorbereitung {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_givenAllAuthorities() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_URNENWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
@@ -56,7 +56,7 @@ public class UrnenwahlvorbereitungSecurityTest {
         }
 
         @Test
-        void bezirkIDPermissionEvaluatorFailed() {
+        void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_URNENWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
@@ -69,7 +69,7 @@ public class UrnenwahlvorbereitungSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val wahlbezirkID = "wahlbezirkID";
@@ -88,7 +88,7 @@ public class UrnenwahlvorbereitungSecurityTest {
     class SetUrnenwahlvorbereitung {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_givenAllAuthorities() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_URNENWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
@@ -100,7 +100,7 @@ public class UrnenwahlvorbereitungSecurityTest {
         }
 
         @Test
-        void bezirkIDPermissionEvaluatorFailed() {
+        void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_URNENWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
@@ -113,7 +113,7 @@ public class UrnenwahlvorbereitungSecurityTest {
         }
 
         @Test
-        void accessDeniedOnServiceAuthorityMissing() {
+        void should_throwAccessDeniedException_when_serviceAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_URNENWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";
@@ -126,7 +126,7 @@ public class UrnenwahlvorbereitungSecurityTest {
         }
 
         @Test
-        void wlsExceptionOnRepoWriteAuthorityMissing() {
+        void should_returnTechnischeWlsException_when_repoAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.SERVICE_POST_URNENWAHLVORBEREITUNG);
 
             val wahlbezirkID = "wahlbezirkID";

@@ -62,6 +62,7 @@ public class ArchUnitTest {
     }
 
     // override RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED to add custom TestNames to excluded Files
+    // cause: "MessageValidationTest" tests a generated class
     private static final ArchRule RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED = classes()
             .that().areAnnotatedWith(Nested.class).should(new NestedTestsuitesHaveMatchingMethodCondition(Set.of(
                     "BroadcastControllerIntegrationTest", "BroadcastServiceSecurityTest", "ArchUnitTest", "MessageValidationTest")));

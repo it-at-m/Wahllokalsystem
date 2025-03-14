@@ -62,8 +62,8 @@ public class ArchUnitTest {
     }
 
     // override RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED to add custom TestNames to excluded Files
-    // cause: "AbstractExceptionHandlerTest" has protected methods and "SpringContextTest" has no matching "SpringContext" class
+    // cause: "AbstractExceptionHandlerTest" has protected methods, "SpringContextTest" has no matching "SpringContext" class and "WlsExceptionDTOTest" has no matching methods
     private static final ArchRule RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED = classes()
             .that().areAnnotatedWith(Nested.class).should(new NestedTestsuitesHaveMatchingMethodCondition(Set.of(
-                    "SpringContextTest", "AbstractExceptionHandlerTest")));
+                    "SpringContextTest", "AbstractExceptionHandlerTest", "WlsExceptionDTOTest")));
 }

@@ -22,7 +22,7 @@ public class AuthenticationService {
 
     public WahlbezirkArtModel getWahlbezirkArtOfCurrentAuthenticationOrThrow() throws FachlicheWlsException {
         val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-        val authDetailRetriver = authDetailRetrivers.stream().filter(handler -> handler.canHandle(currentAuthentication)).findFirst();
+        val authDetailRetriver = authDetailRetrivers.stream().filter(retriever -> retriever.canHandle(currentAuthentication)).findFirst();
         val wahlbezirkOfUser = authDetailRetriver
                 .flatMap(handler -> handler.getDetail(WAHLBEZIRK_ART_USER_DETAIL_KEY, currentAuthentication))
                 .map(WahlbezirkArtModel::valueOf);

@@ -16,5 +16,4 @@ class MicroServiceApplicationDefaultProfileTest {
     void should_returnNull_when_anonymouseHandlerIsUsedFromAutowiredContext() {
         Assertions.assertThat(anonymousDetailRetriever).isNull();
     }
-
 }

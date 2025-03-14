@@ -18,7 +18,7 @@ class WahlenClientMapperTest {
     private final WahlenClientMapper unitUnderTest = Mappers.getMapper(WahlenClientMapper.class);
 
     @Nested
-    class ToWahlModel {
+    class ToModel {
 
         @Test
         void should_returnWahlModel_when_givenWahlDTO() {

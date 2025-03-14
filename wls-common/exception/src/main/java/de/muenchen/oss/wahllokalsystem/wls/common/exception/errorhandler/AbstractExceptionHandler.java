@@ -69,5 +69,4 @@ public abstract class AbstractExceptionHandler {
         case S -> new ResponseEntity<>(wlsExceptionDTO, HTTP_STATUS_SICHERHEITSFEHLER);
         };
     }
-
 }

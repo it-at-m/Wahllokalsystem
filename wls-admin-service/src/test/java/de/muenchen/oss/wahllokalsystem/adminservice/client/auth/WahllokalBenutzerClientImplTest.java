@@ -12,9 +12,9 @@ import java.time.LocalDate;
 import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.Nested;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -42,7 +42,7 @@ class WahllokalBenutzerClientImplTest {
         void should_verifyCreateAndExportWahllokalBenutzer_when_wahllokalBenutzerModelsIsGiven() {
             val listOfWahllokalbenutzerModels = getListOfWahlLokalBenutzerModels();
             val mockedListOfWahllokalUserInfoDTOs = getListOfWahlLokalUserInfoDTO();
-            Mockito.when(wahllokalBenutzerClientMapper.toListOfWahllokalUserInfoDTO(listOfWahllokalbenutzerModels))
+            Mockito.when(wahllokalBenutzerClientMapper.toDTO(listOfWahllokalbenutzerModels))
                     .thenReturn(mockedListOfWahllokalUserInfoDTOs);
             unitUnderTest.generateAndExportWahllokalBenutzer("wahltagID", listOfWahllokalbenutzerModels);
             Mockito.verify(wahllokalBenutzerControllerApi).createAndExportWahllokalBenutzer("wahltagID", mockedListOfWahllokalUserInfoDTOs);
@@ -52,7 +52,7 @@ class WahllokalBenutzerClientImplTest {
         void should_rethrowWlsException_when_wlsExceptionIsThrownFromWahllokalBenutzerControllerApi() {
             val listOfWahllokalbenutzerModels = getListOfWahlLokalBenutzerModels();
             val mockedListOfWahllokalUserInfoDTOs = getListOfWahlLokalUserInfoDTO();
-            Mockito.when(wahllokalBenutzerClientMapper.toListOfWahllokalUserInfoDTO(listOfWahllokalbenutzerModels))
+            Mockito.when(wahllokalBenutzerClientMapper.toDTO(listOfWahllokalbenutzerModels))
                     .thenReturn(mockedListOfWahllokalUserInfoDTOs);
 
             val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("communication with WahllokalBenutzerControllerApi api failed");
@@ -68,7 +68,7 @@ class WahllokalBenutzerClientImplTest {
         void should_throwTechnischeWlsException_when_nonWlsExceptionIsThrownFromWahllokalBenutzerControllerApi() {
             val listOfWahllokalbenutzerModels = getListOfWahlLokalBenutzerModels();
             val mockedListOfWahllokalUserInfoDTOs = getListOfWahlLokalUserInfoDTO();
-            Mockito.when(wahllokalBenutzerClientMapper.toListOfWahllokalUserInfoDTO(listOfWahllokalbenutzerModels))
+            Mockito.when(wahllokalBenutzerClientMapper.toDTO(listOfWahllokalbenutzerModels))
                     .thenReturn(mockedListOfWahllokalUserInfoDTOs);
 
             val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("communication with WahllokalBenutzerControllerApi api failed");
@@ -88,7 +88,7 @@ class WahllokalBenutzerClientImplTest {
             val mockedListOfWahllokalUserInfoDTOs = getListOfWahlLokalUserInfoDTO();
             val expectedResponse = "exported_users";
 
-            Mockito.when(wahllokalBenutzerClientMapper.toListOfWahllokalUserInfoDTO(listOfWahllokalbenutzerModels))
+            Mockito.when(wahllokalBenutzerClientMapper.toDTO(listOfWahllokalbenutzerModels))
                     .thenReturn(mockedListOfWahllokalUserInfoDTOs);
             Mockito.when(wahllokalBenutzerControllerApi.createAndExportWahllokalBenutzer("wahltagID", mockedListOfWahllokalUserInfoDTOs))
                     .thenReturn(expectedResponse);

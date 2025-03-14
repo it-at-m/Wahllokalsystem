@@ -14,7 +14,7 @@ class KopfdatenDTOMapperTest {
     private final KopfdatenDTOMapper unitUnderTest = Mappers.getMapper(KopfdatenDTOMapper.class);
 
     @Nested
-    class FromKopfdatenModelToKopfdatenDTO {
+    class ToDTO {
 
         @Test
         void should_returnNull_when_givenNull() {

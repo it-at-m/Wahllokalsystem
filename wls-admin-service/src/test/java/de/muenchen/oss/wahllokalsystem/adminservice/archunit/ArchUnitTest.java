@@ -17,6 +17,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 public class ArchUnitTest {
 
     private static JavaClasses allTestClasses;
+    private static JavaClasses allClasses;
     private static JavaClasses allClassesWithoutTests;
     private static final ImportOption ignoreGeneratedCode = location -> !location.contains("/eai");
 
@@ -24,6 +25,9 @@ public class ArchUnitTest {
     static void init() {
         allTestClasses = new ClassFileImporter()
                 .withImportOption(new ImportOption.OnlyIncludeTests())
+                .importPackages(MicroServiceApplication.class.getPackage().getName());
+
+        allClasses = new ClassFileImporter()
                 .importPackages(MicroServiceApplication.class.getPackage().getName());
 
         allClassesWithoutTests = new ClassFileImporter()
@@ -36,6 +40,12 @@ public class ArchUnitTest {
     @MethodSource("allTestClassesRulesToVerify")
     void should_verifyArchUnitRuleForAllTestClassesOfService_when_running(final ArgumentsAccessor arguments) {
         arguments.get(1, ArchRule.class).check(allTestClasses);
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("allClassesRulesToVerify")
+    void should_verifyArchUnitRuleForAllClasses_when_running(final ArgumentsAccessor arguments) {
+        arguments.get(1, ArchRule.class).check(allClasses);
     }
 
     @ParameterizedTest(name = "{0}")
@@ -56,6 +66,14 @@ public class ArchUnitTest {
                 Arguments.of("RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED", MethodRules.RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED),
                 Arguments.of("RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED", MethodRules.RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED),
                 Arguments.of("TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED", MethodRules.RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED));
+    }
+
+    private static Stream<Arguments> allClassesRulesToVerify() {
+        return Stream.of(
+                Arguments.of("RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED",
+                        ClassRules.RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED),
+                Arguments.of("RULE_TESTCLASSES_END_WITH_TEST_CONVENTION_MATCHED",
+                        MethodRules.RULE_TESTCLASSES_END_WITH_TEST_CONVENTION_MATCHED));
     }
 
     public static Stream<Arguments> allClassesOfRestRulesToVerify() {

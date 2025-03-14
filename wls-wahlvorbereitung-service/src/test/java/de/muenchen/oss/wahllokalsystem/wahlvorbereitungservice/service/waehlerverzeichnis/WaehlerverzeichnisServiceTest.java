@@ -78,7 +78,7 @@ class WaehlerverzeichnisServiceTest {
     }
 
     @Nested
-    class SetWaehlverzeichnis {
+    class SetWaehlerverzeichnis {
 
         @Test
         void should_saveWaehlerverzeichnis_when_givenValidModel() {

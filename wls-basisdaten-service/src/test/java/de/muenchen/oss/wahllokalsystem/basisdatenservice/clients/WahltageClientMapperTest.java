@@ -42,7 +42,7 @@ class WahltageClientMapperTest {
     }
 
     @Nested
-    class FromRemoteClientWahltageDTOtoListOfWahltagModel {
+    class FromRemoteClientSetOfWahltagDTOtoListOfWahltagModel {
 
         @Test
         void should_returnWahltagModelList_when_givenWahltagDTOList() {

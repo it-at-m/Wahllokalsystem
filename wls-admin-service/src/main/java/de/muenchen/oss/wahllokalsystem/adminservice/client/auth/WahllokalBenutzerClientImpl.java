@@ -31,7 +31,7 @@ public class WahllokalBenutzerClientImpl implements WahllokalBenutzerClient {
         log.debug("#generateAndExportWahllokalBenutzer {}", wahltagID);
 
         try {
-            val wahllokalUserInfoDTOs = wahllokalBenutzerClientMapper.toListOfWahllokalUserInfoDTO(wahllokalBenutzerModels);
+            val wahllokalUserInfoDTOs = wahllokalBenutzerClientMapper.toDTO(wahllokalBenutzerModels);
             csvBenutzer = wahllokalBenutzerControllerApi.createAndExportWahllokalBenutzer(wahltagID, wahllokalUserInfoDTOs);
             log.info("#generateAndExportWahllokalBenutzer, response: {}", csvBenutzer);
         } catch (final WlsException wlsException) {

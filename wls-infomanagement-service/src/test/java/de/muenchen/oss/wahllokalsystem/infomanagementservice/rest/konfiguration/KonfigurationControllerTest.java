@@ -72,7 +72,6 @@ class KonfigurationControllerTest {
             Assertions.assertThat(result.getBody()).isNull();
             Assertions.assertThat(result).isEqualTo(ResponseEntity.noContent().build());
         }
-
     }
 
     @Nested
@@ -93,7 +92,7 @@ class KonfigurationControllerTest {
     }
 
     @Nested
-    class GetKonfigurationen {
+    class GetKonfigurations {
 
         @Test
         void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
@@ -173,5 +172,4 @@ class KonfigurationControllerTest {
             Assertions.assertThat(result.getBody()).isNull();
         }
     }
-
 }

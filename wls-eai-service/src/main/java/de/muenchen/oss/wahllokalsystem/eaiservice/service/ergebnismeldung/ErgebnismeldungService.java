@@ -2,7 +2,7 @@ package de.muenchen.oss.wahllokalsystem.eaiservice.service.ergebnismeldung;
 
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.ergebnismeldung.Ergebnismeldung;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.ergebnismeldung.ErgebnismeldungRepository;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.ErgebnismeldungDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.ErgebnismeldungDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +28,5 @@ public class ErgebnismeldungService {
         Ergebnismeldung ergebnismeldung = ergebnismeldungMapper.toEntity(ergebnismeldungToSet);
 
         ergebnismeldungRepository.save(ergebnismeldung);
-
     }
 }

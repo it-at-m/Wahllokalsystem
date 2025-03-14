@@ -30,7 +30,7 @@ class StimmzettelgebietRepositoryTest {
     }
 
     @Nested
-    class FindByWahlWahltagTagAndWahlNummer {
+    class FindByWahlWahltagTagAndWahlWahltagNummer {
 
         @Test
         void should_returnStimmzettelgebiet_when_givenValidWahltagAndNummer() {

@@ -21,7 +21,7 @@ class WahlbeteiligungControllerTest {
     WahlbeteiligungController unitUnderTest;
 
     @Nested
-    class SaveWahlbeteiligunsMeldung {
+    class SaveWahlbeteiligung {
 
         @Test
         void should_saveWahlbeteiligung_when_called() {

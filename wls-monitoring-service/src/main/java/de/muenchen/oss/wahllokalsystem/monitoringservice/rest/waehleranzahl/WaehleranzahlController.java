@@ -33,7 +33,8 @@ public class WaehleranzahlController extends AbstractController {
                     ) }
     )
     @GetMapping("/{wahlID}/{wahlbezirkID}")
-    ResponseEntity<WaehleranzahlDTO> getWahlbeteiligung(@PathVariable("wahlID") final String wahlID, @PathVariable("wahlbezirkID") final String wahlbezirkID) {
+    public ResponseEntity<WaehleranzahlDTO> getWahlbeteiligung(@PathVariable("wahlID") final String wahlID,
+            @PathVariable("wahlbezirkID") final String wahlbezirkID) {
         val waehleranzahlModel = waehleranzahlService.getWahlbeteiligung(new BezirkUndWahlID(wahlID, wahlbezirkID));
 
         return okWithBodyOrNoContent(waehleranzahlModel.map(waehleranzahlDTOMapper::toDTO));

@@ -14,7 +14,6 @@ import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.adminservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.adminservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
-import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.WahltagStatusDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.utils.Authorities;
 import java.time.LocalDate;
 import java.util.List;
@@ -52,7 +51,7 @@ class KonfigurierteWahltageControllerIntegrationTest {
         @WithMockUser(authorities = { Authorities.ADMIN_READ_KONFIGURIERTEWAHLTAGE })
         void should_returnData_when_apiReturnsData() throws Exception {
             val request = get("/businessActions/konfigurierteWahltage").with(csrf());
-            val expectedResponse = new de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.KonfigurierterWahltagDTO(LocalDate.now(),
+            val expectedResponse = new de.muenchen.oss.wahllokalsystem.adminservice.rest.konfiguriertewahltage.KonfigurierterWahltagDTO(LocalDate.now(),
                     "wahltagID", WahltagStatusDTO.AKTIV, "0");
             val apiResponse = new KonfigurierterWahltagDTO();
             apiResponse.setWahltag(LocalDate.now());
@@ -74,7 +73,7 @@ class KonfigurierteWahltageControllerIntegrationTest {
         @Test
         @WithMockUser(authorities = { Authorities.ADMIN_POST_KONFIGURIERTERWAHLTAG })
         void should_giveDataToApi_when_dataIsValid() throws Exception {
-            val requestBody = new de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.KonfigurierterWahltagDTO(
+            val requestBody = new de.muenchen.oss.wahllokalsystem.adminservice.rest.konfiguriertewahltage.KonfigurierterWahltagDTO(
                     LocalDate.now(), "wahltagID", WahltagStatusDTO.INAKTIV, "0");
 
             val request = MockMvcRequestBuilders.post("/businessActions/konfigurierterWahltag").with(csrf())
@@ -99,7 +98,7 @@ class KonfigurierteWahltageControllerIntegrationTest {
         @Test
         @WithMockUser(authorities = { Authorities.ADMIN_POST_KONFIGURIERTERWAHLTAG })
         void should_giveDataToApiAndResetWahlen_when_statusIsAktiv() throws Exception {
-            val requestBody = new de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.KonfigurierterWahltagDTO(
+            val requestBody = new de.muenchen.oss.wahllokalsystem.adminservice.rest.konfiguriertewahltage.KonfigurierterWahltagDTO(
                     LocalDate.now(), "wahltagID", WahltagStatusDTO.AKTIV, "0");
 
             val request = MockMvcRequestBuilders.post("/businessActions/konfigurierterWahltag").with(csrf())

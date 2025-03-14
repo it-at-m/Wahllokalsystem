@@ -38,7 +38,7 @@ class UrnenwahlSchliessungsUhrzeitServiceTest {
     UrnenwahlSchliessungsUhrzeitService unitUnderTest;
 
     @Nested
-    class getUrnenwahlSchliessungsUhrzeit {
+    class GetUrnenwahlSchliessungsUhrzeit {
 
         @Test
         void should_returnUrnenwahlSchliessungsuhrzeit_when_givenValidWahlbezirkID() {
@@ -83,7 +83,7 @@ class UrnenwahlSchliessungsUhrzeitServiceTest {
     }
 
     @Nested
-    class should_saveUrnenwahlSchliessungsuhrzeit_when_givenValidModel {
+    class SetUrnenwahlSchliessungsUhrzeit {
 
         @Test
         void should_saveUrnenwahlSchliessungsuhrzeit_when_givenValidModel() {

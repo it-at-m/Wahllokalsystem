@@ -2,11 +2,11 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.authentic
 
 import static org.mockito.ArgumentMatchers.eq;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.common.security.AuthenticationHandler;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.authentication.AuthDetailRetriever;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -29,7 +29,7 @@ class AuthenticationServiceTest {
     ExceptionFactory exceptionFactory;
 
     @Mock
-    Collection<AuthenticationHandler> authenticationHandlers;
+    Collection<AuthDetailRetriever> authDetailRetrievers;
 
     @InjectMocks
     AuthenticationService unitUnderTest;
@@ -42,11 +42,11 @@ class AuthenticationServiceTest {
             val currentAuthentication = new TestingAuthenticationToken("principal", "credentials");
             SecurityContextHolder.getContext().setAuthentication(currentAuthentication);
 
-            val mockedAuthenticationHandler = Mockito.mock(AuthenticationHandler.class);
+            val mockedAuthDetailRetriver = Mockito.mock(AuthDetailRetriever.class);
 
-            Mockito.when(authenticationHandlers.stream()).thenReturn(Stream.of(mockedAuthenticationHandler));
-            Mockito.when(mockedAuthenticationHandler.canHandle(Mockito.any())).thenReturn(true);
-            Mockito.when(mockedAuthenticationHandler.getDetail(eq("wahlbezirksArt"), eq(currentAuthentication))).thenReturn(Optional.of("BWB"));
+            Mockito.when(authDetailRetrievers.stream()).thenReturn(Stream.of(mockedAuthDetailRetriver));
+            Mockito.when(mockedAuthDetailRetriver.canHandle(Mockito.any())).thenReturn(true);
+            Mockito.when(mockedAuthDetailRetriver.getDetail(eq("wahlbezirksArt"), eq(currentAuthentication))).thenReturn(Optional.of("BWB"));
 
             val result = unitUnderTest.getWahlbezirkArtOfCurrentAuthenticationOrThrow();
 
@@ -58,10 +58,10 @@ class AuthenticationServiceTest {
             val currentAuthentication = new TestingAuthenticationToken("principal", "credentials");
             SecurityContextHolder.getContext().setAuthentication(currentAuthentication);
 
-            val mockedAuthenticationHandler = Mockito.mock(AuthenticationHandler.class);
+            val mockedAuthDetailRetriver = Mockito.mock(AuthDetailRetriever.class);
 
-            Mockito.when(authenticationHandlers.stream()).thenReturn(Stream.of(mockedAuthenticationHandler));
-            Mockito.when(mockedAuthenticationHandler.canHandle(Mockito.any())).thenReturn(false);
+            Mockito.when(authDetailRetrievers.stream()).thenReturn(Stream.of(mockedAuthDetailRetriver));
+            Mockito.when(mockedAuthDetailRetriver.canHandle(Mockito.any())).thenReturn(false);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlbezirkArtOfCurrentAuthenticationOrThrow())
                     .isInstanceOf(NullPointerException.class);
@@ -72,12 +72,12 @@ class AuthenticationServiceTest {
             val currentAuthentication = new TestingAuthenticationToken("principal", "credentials");
             SecurityContextHolder.getContext().setAuthentication(currentAuthentication);
 
-            val mockedAuthenticationHandler = Mockito.mock(AuthenticationHandler.class);
+            val mockedAuthDetailRetriver = Mockito.mock(AuthDetailRetriever.class);
             val mockedWlsException = FachlicheWlsException.withCode("000").buildWithMessage("sth failed");
 
-            Mockito.when(authenticationHandlers.stream()).thenReturn(Stream.of(mockedAuthenticationHandler));
-            Mockito.when(mockedAuthenticationHandler.canHandle(Mockito.any())).thenReturn(true);
-            Mockito.when(mockedAuthenticationHandler.getDetail(eq("wahlbezirksArt"), eq(currentAuthentication))).thenReturn(Optional.empty());
+            Mockito.when(authDetailRetrievers.stream()).thenReturn(Stream.of(mockedAuthDetailRetriver));
+            Mockito.when(mockedAuthDetailRetriver.canHandle(Mockito.any())).thenReturn(true);
+            Mockito.when(mockedAuthDetailRetriver.getDetail(eq("wahlbezirksArt"), eq(currentAuthentication))).thenReturn(Optional.empty());
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.WAHLBEZIRKART_NOT_LOADABLE)).thenReturn(mockedWlsException);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).isSameAs(mockedWlsException);

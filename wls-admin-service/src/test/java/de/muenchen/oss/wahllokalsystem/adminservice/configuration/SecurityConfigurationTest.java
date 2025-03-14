@@ -8,12 +8,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.adminservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.KonfigurierterWahltagDTO;
-import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.WahltagStatusDTO;
+import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfiguriertewahltage.KonfigurierterWahltagDTO;
+import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfiguriertewahltage.WahltagStatusDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.rest.wahlen.FarbeDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.rest.wahlen.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.rest.wahlen.WahlartDTO;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag.KonfigurierteWahltageService;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.konfiguriertewahltage.KonfigurierteWahltageService;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen.WahlenService;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer.WahllokalBenutzerService;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltage.WahltageService;

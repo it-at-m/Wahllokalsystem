@@ -75,7 +75,7 @@ class WahltageServiceTest {
     }
 
     @Nested
-    class GetWahltagById {
+    class GetWahltagByID {
 
         @Test
         void should_returnWahltag_when_callingGetById() {

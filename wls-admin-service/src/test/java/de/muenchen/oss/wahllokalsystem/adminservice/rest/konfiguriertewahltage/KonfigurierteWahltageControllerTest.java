@@ -1,11 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.rest.konfiguriertewahltage;
 
-import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.KonfigurierteWahltageController;
-import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.KonfigurierterWahltagDTO;
-import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.KonfigurierterWahltagDTOMapper;
-import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.WahltagStatusDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag.KonfigurierteWahltageService;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.konfiguriertewahltage.KonfigurierteWahltageService;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.val;
@@ -48,7 +44,7 @@ class KonfigurierteWahltageControllerTest {
     }
 
     @Nested
-    class PostKonfigurierteWahltage {
+    class PostKonfigurierterWahltag {
 
         @Test
         void should_callServiceWithModel_when_calledWithData() {

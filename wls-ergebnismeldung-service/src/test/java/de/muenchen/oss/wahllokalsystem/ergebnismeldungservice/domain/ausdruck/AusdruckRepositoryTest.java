@@ -34,7 +34,7 @@ class AusdruckRepositoryTest {
     }
 
     @Nested
-    class FindByID {
+    class FindById {
 
         @Test
         void should_returnData_when_idIsGiven() {
@@ -92,5 +92,4 @@ class AusdruckRepositoryTest {
             });
         }
     }
-
 }

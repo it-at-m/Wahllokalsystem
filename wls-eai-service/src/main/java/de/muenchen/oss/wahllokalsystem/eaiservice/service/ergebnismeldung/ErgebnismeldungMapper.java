@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.service.ergebnismeldung;
 
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.ergebnismeldung.Ergebnismeldung;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.ErgebnismeldungDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.ErgebnismeldungDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

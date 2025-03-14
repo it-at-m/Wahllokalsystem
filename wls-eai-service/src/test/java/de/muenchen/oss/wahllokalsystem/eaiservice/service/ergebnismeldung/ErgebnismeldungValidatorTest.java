@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.service.ergebnismeldung;
 
 import de.muenchen.oss.wahllokalsystem.eaiservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.ErgebnismeldungDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import lombok.val;
@@ -24,7 +24,7 @@ class ErgebnismeldungValidatorTest {
     ErgebnismeldungValidator unitUnderTest;
 
     @Nested
-    class SaveErgebnismeldungParameterOrThrow {
+    class ValidDTOToSetOrThrow {
 
         @Test
         void should_notThrowException_when_ergebnismeldungIsValid() {

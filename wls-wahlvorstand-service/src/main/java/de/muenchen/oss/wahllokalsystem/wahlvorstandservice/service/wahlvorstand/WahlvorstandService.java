@@ -178,7 +178,7 @@ public class WahlvorstandService {
 
     private WahlbezirkArtModel getWahlbezirkArtOfAuthenticaton() {
         val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-        val authDetailRetriever = authDetailRetrivers.stream().filter(handler -> handler.canHandle(currentAuthentication)).findFirst();
+        val authDetailRetriever = authDetailRetrivers.stream().filter(retriever -> retriever.canHandle(currentAuthentication)).findFirst();
         if (authDetailRetriever.isPresent()) {
             val wahlbezirkOfUser = authDetailRetriever.get().getDetail("wahlbezirksArt", currentAuthentication);
             return wahlbezirkOfUser.map(WahlbezirkArtModel::valueOf).orElseGet(() -> {

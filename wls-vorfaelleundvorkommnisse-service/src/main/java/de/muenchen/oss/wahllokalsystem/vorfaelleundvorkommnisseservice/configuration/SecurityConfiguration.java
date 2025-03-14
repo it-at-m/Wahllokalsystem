@@ -4,6 +4,7 @@
  */
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.configuration;
 
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.security.UserInfoAuthoritiesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;

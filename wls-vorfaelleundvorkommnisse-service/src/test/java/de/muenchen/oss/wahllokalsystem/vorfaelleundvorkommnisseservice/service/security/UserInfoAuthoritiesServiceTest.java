@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.configuration;
+package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.security;
 
 import java.util.HashMap;
 import java.util.List;

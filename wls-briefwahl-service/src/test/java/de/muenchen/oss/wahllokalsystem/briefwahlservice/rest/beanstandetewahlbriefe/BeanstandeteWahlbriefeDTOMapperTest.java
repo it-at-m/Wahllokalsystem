@@ -18,12 +18,12 @@ class BeanstandeteWahlbriefeDTOMapperTest {
     class ToCreateModel {
 
         @Test
-        void nullInNullOut() {
+        void should_returnNull_when_givenNull() {
             Assertions.assertThat(unitUnderTest.toCreateModel(null, null, null)).isNull();
         }
 
         @Test
-        void isMapped() {
+        void should_returnBeanstandeteWahlbriefeModel_when_givenValidParams() {
             val zurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();
             zurueckweisungen.put("wahl1", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT });
             zurueckweisungen.put("wahl2", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.KEIN_ORIGINAL_SCHEIN });
@@ -46,12 +46,12 @@ class BeanstandeteWahlbriefeDTOMapperTest {
     class ToReferenceModel {
 
         @Test
-        void nullInNullOut() {
+        void should_returnNull_when_givenNull() {
             Assertions.assertThat(unitUnderTest.toReferenceModel(null, null)).isNull();
         }
 
         @Test
-        void isMapped() {
+        void should_returnBeanstandeteWahlbriefeReferenceModel_when_givenValidParams() {
             val wahlbezirkId = "wahlbezirkID";
             val waehlerverzeichnisNummer = 3L;
 
@@ -65,13 +65,14 @@ class BeanstandeteWahlbriefeDTOMapperTest {
 
     @Nested
     class ToDTO {
+
         @Test
-        void nullInNullOut() {
+        void should_returnNull_when_givenNull() {
             Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
         }
 
         @Test
-        void isMapped() {
+        void should_returnBeanstandeteWahlbriefeDTO_when_givenValidModel() {
             val wahlbezirkId = "wahlbezirkID";
             val waehlerverzeichnisNummer = 3L;
             val zurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();

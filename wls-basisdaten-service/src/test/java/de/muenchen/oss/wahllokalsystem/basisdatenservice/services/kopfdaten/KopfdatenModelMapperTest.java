@@ -14,7 +14,7 @@ class KopfdatenModelMapperTest {
     private final KopfdatenModelMapper unitUnderTest = Mappers.getMapper(KopfdatenModelMapper.class);
 
     @Test
-    void fromListOfEntitiesToListOfModels() {
+    void should_returnKopfdatenModelList_when_givenKopfdatenEntityList() {
         val kopfdatenEntity1 = MockDataFactory.createKopfdatenEntityFor("wahlID1", "wahlbezirkID1_1",
                 Stimmzettelgebietsart.SG, "Munich1", "120",
                 "Bundestagswahl", "1201");
@@ -36,7 +36,7 @@ class KopfdatenModelMapperTest {
     }
 
     @Test
-    void toModel() {
+    void should_returnKopfdatenModel_when_givenKopfdatenEntity() {
         val kopfdatenEntity1 = MockDataFactory.createKopfdatenEntityFor("wahlID1", "wahlbezirkID1_1",
                 Stimmzettelgebietsart.SG, "Munich1", "120",
                 "Bundestagswahl", "1201");
@@ -50,7 +50,7 @@ class KopfdatenModelMapperTest {
     }
 
     @Test
-    void toEntity() {
+    void should_returnKopfdatenEntity_when_givenKopfdatenModel() {
         val kopfdatenModel1 = MockDataFactory.createKopfdatenModelFor("wahlID1", "wahlbezirkID1_1",
                 StimmzettelgebietsartModel.SG, "120", "Munich1",
                 "Bundestagswahl", "1201");

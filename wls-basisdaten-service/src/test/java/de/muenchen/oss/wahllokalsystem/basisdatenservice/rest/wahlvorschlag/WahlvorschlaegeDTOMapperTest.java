@@ -16,15 +16,15 @@ class WahlvorschlaegeDTOMapperTest {
     private final WahlvorschlaegeDTOMapper unitUnderTest = Mappers.getMapper(WahlvorschlaegeDTOMapper.class);
 
     @Nested
-    class FromWahlvorschlagModelToWLSDTO {
+    class ToDTO {
 
         @Test
-        void nullInNullOut() {
+        void should_returnNull_when_givenNull() {
             Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
         }
 
         @Test
-        void isMappedToDTO() {
+        void should_returnWahlvorschlaegeDTO_when_givenWahlvorschlaegeModel() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
 

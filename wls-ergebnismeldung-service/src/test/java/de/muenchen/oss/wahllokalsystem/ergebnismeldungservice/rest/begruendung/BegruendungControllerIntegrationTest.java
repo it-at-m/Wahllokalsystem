@@ -51,7 +51,7 @@ public class BegruendungControllerIntegrationTest {
     MockMvc mockMvc;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_BEGRUENDUNG);
         begruendungRepository.deleteAll();
     }

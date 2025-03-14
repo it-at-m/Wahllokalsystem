@@ -3,7 +3,7 @@ package de.muenchen.oss.wahllokalsystem.eaiservice.service.ergebnismeldung;
 import de.muenchen.oss.wahllokalsystem.eaiservice.Authorities;
 import de.muenchen.oss.wahllokalsystem.eaiservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.eaiservice.TestConstants;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.ErgebnismeldungDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -25,7 +25,7 @@ public class ErgebnismeldungServiceSecurityTest {
     class SaveErgebnismeldung {
 
         @Test
-        void accessGranted() {
+        void should_notThrowException_when_givenAllAuthorities() {
             SecurityUtils.runWith(Authorities.SERVICE_SAVE_ERGEBNISMELDUNG);
 
             val ergebnismeldungToSave = ErgebnismeldungDTO.builder().wahlbezirkID("00000000-0000-0000-0000-000000000001").wahlID("wahlID1").build();
@@ -34,7 +34,7 @@ public class ErgebnismeldungServiceSecurityTest {
         }
 
         @Test
-        void anyMissingAuthorityCausesFail() {
+        void should_throwAccessDeniedException_when_anyAuthorityMissing() {
             SecurityUtils.runWith();
 
             val ergebnismeldungToSave = ErgebnismeldungDTO.builder().wahlbezirkID("00000000-0000-0000-0000-000000000001").wahlID("wahlID1").build();
@@ -42,6 +42,5 @@ public class ErgebnismeldungServiceSecurityTest {
             Assertions.assertThatException().isThrownBy(() -> ergebnismeldungService.saveErgebnismeldung(ergebnismeldungToSave))
                     .isInstanceOf(AccessDeniedException.class);
         }
-
     }
 }

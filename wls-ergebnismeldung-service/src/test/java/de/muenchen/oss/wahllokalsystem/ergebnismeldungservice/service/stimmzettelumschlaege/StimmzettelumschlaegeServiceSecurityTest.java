@@ -45,7 +45,7 @@ class StimmzettelumschlaegeServiceSecurityTest {
     StimmzettelumschlaegeRepository stimmzettelumschlaegeRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_STIMMZETTELUMSCHLAEGE);
         stimmzettelumschlaegeRepository.deleteAll();
     }

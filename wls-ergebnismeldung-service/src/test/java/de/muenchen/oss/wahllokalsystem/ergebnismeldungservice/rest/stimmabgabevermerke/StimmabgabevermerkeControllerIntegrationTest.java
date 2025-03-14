@@ -57,7 +57,7 @@ public class StimmabgabevermerkeControllerIntegrationTest {
     MockMvc mockMvc;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         stimmabgabevermerkeRepository.deleteAll();
     }
 

@@ -23,17 +23,17 @@ class StimmzettelgebietRepositoryTest {
     StimmzettelgebietRepository stimmzettelgebietRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         stimmzettelgebietRepository.deleteAll();
         wahlRepository.deleteAll();
         wahltageRepository.deleteAll();
     }
 
     @Nested
-    class FindByWahlWahltagTagAndWahlNummer {
+    class FindByWahlWahltagTagAndWahlWahltagNummer {
 
         @Test
-        void dataFound() {
+        void should_returnStimmzettelgebiet_when_givenValidWahltagAndNummer() {
             val wahltag = LocalDate.now();
             val nummer = "nummer";
 
@@ -63,5 +63,4 @@ class StimmzettelgebietRepositoryTest {
             Assertions.assertThat(result).containsOnly(expectedResult);
         }
     }
-
 }

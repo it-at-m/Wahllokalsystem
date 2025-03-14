@@ -15,7 +15,7 @@ class WahlvorschlaegeModelMapperTest {
     private final WahlvorschlaegeModelMapper unitUnderTest = Mappers.getMapper(WahlvorschlaegeModelMapper.class);
 
     @Test
-    void modelIsMappedToEntity() {
+    void should_returnWahlvorschlaegeEntity_when_givenWahlvorschlaegeModel() {
         val modelToMap = createWahlvorschlaegeModel();
 
         val result = unitUnderTest.toEntity(modelToMap);
@@ -25,7 +25,7 @@ class WahlvorschlaegeModelMapperTest {
     }
 
     @Test
-    void entityIsMappedToModel() {
+    void should_returnWahlvorschlaegeModel_when_givenWahlvorschlaegeEntity() {
         val entityToMap = createWahlvorschlaegeEntity();
 
         val result = unitUnderTest.toModel(entityToMap);

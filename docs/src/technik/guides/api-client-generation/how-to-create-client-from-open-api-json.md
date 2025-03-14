@@ -139,14 +139,14 @@ aus `wls-common:exception` verwenden. Eine entsprechende Bean muss ebenfalls noc
 ```java
 @Configuration
 public class ClientConfiguration {
-    
+
     //other configurations like the restTemplate bean factory method
 
     @Bean
     public WlsResponseErrorHandler wlsResponseErrorHandler(final ObjectMapper objectMapper) {
         return new WlsResponseErrorHandler(objectMapper);
     }
-    
+
 }
 ```
 

@@ -39,8 +39,9 @@ class UrnenwahlvorbereitungServiceTest {
 
     @Nested
     class getUrnenwahlvorbereitung {
+
         @Test
-        void dataFound() {
+        void should_returnUrnenwahlvorbereitung_when_givenValidWahlbezirkID() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedRepoResponse = new UrnenwahlVorbereitung();
@@ -56,7 +57,7 @@ class UrnenwahlvorbereitungServiceTest {
         }
 
         @Test
-        void noDataFound() {
+        void should_returnEmpty_when_noDataFound() {
             val wahlbezirkID = "wahlbezirkID";
 
             Mockito.doNothing().when(urnenwahlvorbereitungValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
@@ -70,7 +71,7 @@ class UrnenwahlvorbereitungServiceTest {
         }
 
         @Test
-        void exceptionFromValidator() {
+        void should_throwException_when_validationFailed() {
             val wahlbezirkID = "wahlbezirkID";
 
             val mockedValidatorException = new RuntimeException("validation failed");
@@ -85,7 +86,7 @@ class UrnenwahlvorbereitungServiceTest {
     class SetUrnenwahlvorbereitung {
 
         @Test
-        void isSaved() {
+        void should_saveUrnenwahlvorbereitung_when_givenValidModel() {
             val modelToSave = UrnenwahlvorbereitungModel.builder().build();
 
             val mockedModelAsEntity = new UrnenwahlVorbereitung();
@@ -99,7 +100,7 @@ class UrnenwahlvorbereitungServiceTest {
         }
 
         @Test
-        void exceptionFromValidationGotThrown() {
+        void should_notSaveUrnenwahlvorbereitung_when_validationFailed() {
             val modelToSave = UrnenwahlvorbereitungModel.builder().build();
 
             val mockedValidationException = new RuntimeException("validation failed");
@@ -110,7 +111,7 @@ class UrnenwahlvorbereitungServiceTest {
         }
 
         @Test
-        void exceptionFromSavingIsMapped() {
+        void should_throwTechnischeWlsException_when_savingFailed() {
             val modelToSave = UrnenwahlvorbereitungModel.builder().build();
 
             val mockedModelAsEntity = new UrnenwahlVorbereitung();
@@ -126,5 +127,4 @@ class UrnenwahlvorbereitungServiceTest {
                     .isSameAs(mockedFactoryException);
         }
     }
-
 }

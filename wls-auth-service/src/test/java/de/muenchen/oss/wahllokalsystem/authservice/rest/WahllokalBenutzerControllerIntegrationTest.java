@@ -66,7 +66,7 @@ class WahllokalBenutzerControllerIntegrationTest {
     CryptoService cryptoService;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         transactionTemplate.executeWithoutResult(status -> {
             entityManager.createQuery("DELETE FROM User").executeUpdate();
             permissionRepository.deleteAll();
@@ -102,7 +102,7 @@ class WahllokalBenutzerControllerIntegrationTest {
         }
 
         @Test
-        void should_deleteOldUsersWithWahltagIDAndPersistNewUsers_when_UsersAreGiven() throws Exception {
+        void should_deleteOldUsersWithWahltagIDAndPersistNewUsers_when_usersAreGiven() throws Exception {
             val wahltagID = "wahltagID";
 
             val oldUser1 = new User();

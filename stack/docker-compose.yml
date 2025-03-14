@@ -10,7 +10,7 @@ services:
     env_file:
       - .env
     environment:
-      - SPRING_PROFILES_ACTIVE=${WLS_BROADCAST_SERVICE_PROFILE}
+      - SPRING_PROFILES_ACTIVE=local,db-oracle
       - SPRING_DATASOURCE_URL=${WLS_SERVICE_DB_URL}
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${SSO_JWK_URI}
       - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${SSO_USER_INFO_URI}
@@ -30,7 +30,7 @@ services:
     env_file:
       - .env
     environment:
-      - SPRING_PROFILES_ACTIVE=${WLS_INFOMANAGEMENT_SERVICE_PROFILE}
+      - SPRING_PROFILES_ACTIVE=local,db-oracle
       - SPRING_DATASOURCE_URL=${WLS_SERVICE_DB_URL}
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${SSO_JWK_URI}
       - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${SSO_USER_INFO_URI}
@@ -50,7 +50,7 @@ services:
     env_file:
       - .env
     environment:
-      - SPRING_PROFILES_ACTIVE=${WLS_BRIEFWAHL_SERVICE_PROFILE}
+      - SPRING_PROFILES_ACTIVE=local,db-oracle
       - SPRING_DATASOURCE_URL=${WLS_SERVICE_DB_URL}
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${SSO_JWK_URI}
       - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${SSO_USER_INFO_URI}
@@ -70,7 +70,7 @@ services:
     env_file:
       - .env
     environment:
-      - SPRING_PROFILES_ACTIVE=${WLS_WAHLVORBEREITUNG_SERVICE_PROFILE}
+      - SPRING_PROFILES_ACTIVE=local,db-oracle,dummy.nobezirkid.check
       - SPRING_DATASOURCE_URL=${WLS_SERVICE_DB_URL}
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${SSO_JWK_URI}
       - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${SSO_USER_INFO_URI}
@@ -90,7 +90,7 @@ services:
     env_file:
       - .env
     environment:
-      - SPRING_PROFILES_ACTIVE=${WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_PROFILE}
+      - SPRING_PROFILES_ACTIVE=local,db-oracle,dummy.nobezirkid.check
       - SPRING_DATASOURCE_URL=${WLS_SERVICE_DB_URL}
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${SSO_JWK_URI}
       - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${SSO_USER_INFO_URI}
@@ -110,7 +110,7 @@ services:
     env_file:
       - .env
     environment:
-      - SPRING_PROFILES_ACTIVE=${WLS_BASISDATEN_SERVICE_PROFILE}
+      - SPRING_PROFILES_ACTIVE=local,db-oracle
       - SPRING_DATASOURCE_URL=${WLS_SERVICE_DB_URL}
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${SSO_JWK_URI}
       - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${SSO_USER_INFO_URI}
@@ -130,7 +130,7 @@ services:
     env_file:
       - .env
     environment:
-      - SPRING_PROFILES_ACTIVE=${WLS_MONITORING_SERVICE_PROFILE}
+      - SPRING_PROFILES_ACTIVE=local,db-oracle
       - SPRING_DATASOURCE_URL=${WLS_SERVICE_DB_URL}
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${SSO_JWK_URI}
       - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${SSO_USER_INFO_URI}
@@ -150,7 +150,7 @@ services:
     env_file:
       - .env
     environment:
-      - SPRING_PROFILES_ACTIVE=${WLS_WAHLVORSTAND_SERVICE_PROFILE}
+      - SPRING_PROFILES_ACTIVE=local,db-oracle
       - SPRING_DATASOURCE_URL=${WLS_SERVICE_DB_URL}
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${SSO_JWK_URI}
       - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${SSO_USER_INFO_URI}
@@ -170,13 +170,33 @@ services:
     env_file:
       - .env
     environment:
-      - SPRING_PROFILES_ACTIVE=${WLS_ERGEBNISMELDUNG_SERVICE_PROFILE}
+      - SPRING_PROFILES_ACTIVE=local,db-oracle
       - SPRING_DATASOURCE_URL=${WLS_SERVICE_DB_URL}
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${SSO_JWK_URI}
       - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${SSO_USER_INFO_URI}
       - SERVER_PORT=8080
     ports:
       - 8208:8080
+    extra_hosts:
+      - "kubernetes.docker.internal:host-gateway"
+    networks:
+      - services
+
+  wls-admin-service:
+    container_name: wls-admin-service
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-admin-service:latest
+    depends_on:
+      - wls-db-oracle
+    env_file:
+      - .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=local,db-oracle
+      - SPRING_DATASOURCE_URL=${WLS_SERVICE_DB_URL}
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${SSO_JWK_URI}
+      - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${SSO_USER_INFO_URI}
+      - SERVER_PORT=8080
+    ports:
+      - 8209:8080
     extra_hosts:
       - "kubernetes.docker.internal:host-gateway"
     networks:
@@ -190,7 +210,7 @@ services:
     env_file:
       - .env
     environment:
-      - SPRING_PROFILES_ACTIVE=${WLS_EAI_SERVICE_PROFILE}
+      - SPRING_PROFILES_ACTIVE=local,db-oracle,db-dummydata
       - SPRING_DATASOURCE_URL=${WLS_SERVICE_DB_URL}
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${SSO_JWK_URI}
       - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${SSO_USER_INFO_URI}
@@ -218,7 +238,7 @@ services:
       - services
 
   refarch-gateway:
-    image: ghcr.io/it-at-m/refarch/refarch-gateway:1.4.2@sha256:068633218c65e0e60f8d583ab465553e977449c33b70054ae2c53f05fa5c3ad9
+    image: ghcr.io/it-at-m/refarch/refarch-gateway:1.4.4@sha256:20b246e8c46b1fe6312119293bc60956228a017dab402b17b14bc86c0cf9fef5
     env_file:
       - .env
     ports:
@@ -260,7 +280,7 @@ services:
       - SERVICE_CONFIG_CRYPTO_KEY=please change me
       - SERVICE_CONFIG_OAUTH2_CLIENTS_WAHLLOKALGUI_ID=${SSO_CLIENT_ID}
       - SERVICE_CONFIG_OAUTH2_JWK_RSA_INIT_SEED=change_me
-      - SPRING_PROFILES_ACTIVE=${WLS_AUTH_SERVICE_PROFILE}
+      - SPRING_PROFILES_ACTIVE=local,db-oracle,db-dummydata,dummy.ldap
       - SPRING_DATASOURCE_URL=${WLS_SERVICE_DB_URL}
       - SERVER_PORT=8080
     ports:

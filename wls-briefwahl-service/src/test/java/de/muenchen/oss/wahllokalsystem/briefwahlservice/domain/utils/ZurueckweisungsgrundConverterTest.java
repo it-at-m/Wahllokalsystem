@@ -15,17 +15,17 @@ class ZurueckweisungsgrundConverterTest {
     class ConvertToDatabaseColumn {
 
         @Test
-        void arrayIsNumm() {
+        void should_returnNull_when_givenNull() {
             Assertions.assertThat(unitUnderTest.convertToDatabaseColumn(null)).isNull();
         }
 
         @Test
-        void arrayIsEmpty() {
+        void should_returnEmptyArray_when_givenEmptyArray() {
             Assertions.assertThat(unitUnderTest.convertToDatabaseColumn(new Zurueckweisungsgrund[0])).isEqualTo(StringUtils.EMPTY);
         }
 
         @Test
-        void arrayIsConvertedToString() {
+        void should_convertToString_when_givenArray() {
             val arrayData = new Zurueckweisungsgrund[] { Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.GEGENSTAND_IM_UMSCHLAG,
                     Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT };
 
@@ -41,12 +41,12 @@ class ZurueckweisungsgrundConverterTest {
     class ConvertToEntityAttribute {
 
         @Test
-        void argumentIsEmptyString() {
+        void should_convertToEmptyString_when_givenEmptyArray() {
             Assertions.assertThat(unitUnderTest.convertToEntityAttribute("")).isEqualTo(new Zurueckweisungsgrund[0]);
         }
 
         @Test
-        void argumentsAreConverted() {
+        void should_convertCorrectly_when_givenValidArguments() {
             val argument = "ZUGELASSEN,GEGENSTAND_IM_UMSCHLAG,NICHT_WAHLBERECHTIGT";
 
             val expectedResult = new Zurueckweisungsgrund[] { Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.GEGENSTAND_IM_UMSCHLAG,
@@ -57,5 +57,4 @@ class ZurueckweisungsgrundConverterTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

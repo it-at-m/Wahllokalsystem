@@ -16,7 +16,7 @@ class WaehlerverzeichnisDTOMapperTest {
     class ToModel {
 
         @Test
-        void isMapped() {
+        void should_returnWaehlerverzeichnisModel_when_givenWaehlerverzeichnisReferenceAndDTO() {
             val wahlbezirkID = "wahlbezirkID";
             val waehlerverzeichnisNummer = 3L;
             val waehlerverzeichnisReference = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
@@ -30,7 +30,7 @@ class WaehlerverzeichnisDTOMapperTest {
         }
 
         @Test
-        void referenceIsNull() {
+        void should_returnWaehlerverzeichnisModel_when_givenWaehlerverzeichnisDTO() {
             val dtoToMap = new WaehlerverzeichnisWriteDTO(true, true, false, false);
 
             val result = unitUnderTest.toModel(null, dtoToMap);
@@ -41,7 +41,7 @@ class WaehlerverzeichnisDTOMapperTest {
         }
 
         @Test
-        void dtoIsNull() {
+        void should_returnWaehlerverzeichnisModel_when_givenWaehlerverzeichnisReference() {
             val wahlbezirkID = "wahlbezirkID";
             val waehlerverzeichnisNummer = 3L;
             val waehlerverzeichnisReference = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
@@ -58,7 +58,7 @@ class WaehlerverzeichnisDTOMapperTest {
     class ToDto {
 
         @Test
-        void isMapped() {
+        void should_returnWaehlerverzeichnisDTO_when_givenWaehlerverzeichnisModel() {
             val wahlbezirkID = "wahlbezirkID";
             val waehlerverzeichnisNummer = 3L;
             val modelToMap = new WaehlerverzeichnisModel(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer), true, true, false,
@@ -72,5 +72,4 @@ class WaehlerverzeichnisDTOMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

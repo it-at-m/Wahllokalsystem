@@ -66,7 +66,7 @@ public class WahlbeteiligungControllerIntegrationTest {
     EntityManager entityManager;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         wahlbeteiligungRepository.deleteAll();
     }
 
@@ -76,7 +76,7 @@ public class WahlbeteiligungControllerIntegrationTest {
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_SAVE_WAHLBETEILIGUNG)
         @Transactional
-        void meldungIsSaved() throws Exception {
+        void should_setNewData_when_callingPost() throws Exception {
             val wahlID = "wahlID1";
             val wahlbezirkID = "00000000-0000-0000-0000-000000000001";
             val anzahlWaehler = 150;
@@ -101,7 +101,7 @@ public class WahlbeteiligungControllerIntegrationTest {
         @Test
         @WithMockUser(authorities = Authorities.SERVICE_SAVE_WAHLBETEILIGUNG)
         @Transactional
-        void validationExceptionOccurredAndIsMapped() throws Exception {
+        void should_returnTechnischeWlsException_when_savingFailed() throws Exception {
 
             val wahlbezirkID = "00000000-0000-0000-0000-000000000001";
             val anzahlWaehler = 150;
@@ -123,7 +123,5 @@ public class WahlbeteiligungControllerIntegrationTest {
             Assertions.assertThat(responseBodyDTO).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedWlsExceptionDTO);
             Assertions.assertThat(responseBodyDTO.message()).contains(mockedExceptionMessage);
         }
-
     }
-
 }

@@ -45,13 +45,13 @@ public class WahltageServiceSecurityTest {
     class GetWahltage {
 
         @AfterEach
-        void tearDown() {
+        void teardown() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_DELETE_WAHLTAGE);
             wahltagRepository.deleteAll();
         }
 
         @Test
-        void accessGranted() throws Exception {
+        void should_grantAccess_when_authoritiesArePresent() throws Exception {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLTAGE);
 
             String requestDate = LocalDate.now().minusMonths(3).toString();
@@ -66,7 +66,7 @@ public class WahltageServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void missingAuthorityCausesFailWithAccessDenied(final ArgumentsAccessor argumentsAccessor) throws Exception {
+        void should_denyAccess_when_anyAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) throws Exception {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             String requestDate = LocalDate.now().minusMonths(3).toString();

@@ -12,7 +12,7 @@ class WahlbezirkModelMapperTest {
     private final WahlbezirkModelMapper unitUnderTest = Mappers.getMapper(WahlbezirkModelMapper.class);
 
     @Test
-    void fromListOfWahlbezirkModelToListOfWahlbezirkEntities() {
+    void should_returnWahlbezirkEntityList_when_givenWahlbezirkModelList() {
         val modelsToMap = MockDataFactory.createListOfWahlbezirkModel("", LocalDate.now());
 
         val result = unitUnderTest.fromListOfWahlbezirkModeltoListOfWahlbezirkEntities(modelsToMap);
@@ -22,7 +22,7 @@ class WahlbezirkModelMapperTest {
     }
 
     @Test
-    void fromListOfWahlbezirkEntityToListOfWahlbezirkModel() {
+    void should_returnWahlbezirkModelList_when_givenWahlbezirkEntityList() {
         val entitiesToMap = MockDataFactory.createListOfWahlbezirkEntity("", LocalDate.now());
 
         val result = unitUnderTest.fromListOfWahlbezirkEntityToListOfWahlbezirkModel(entitiesToMap);

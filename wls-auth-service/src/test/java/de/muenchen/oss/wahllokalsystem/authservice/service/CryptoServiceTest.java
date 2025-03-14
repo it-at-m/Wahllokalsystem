@@ -38,7 +38,7 @@ class CryptoServiceTest {
     CryptoService unitUnderTest;
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         unitUnderTest.setEncryptedPrefix(ENCRYPTION_PREFIX);
     }
 

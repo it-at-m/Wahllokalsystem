@@ -25,7 +25,7 @@ public class UrnenwahlvorbereitungService {
 
     @PreAuthorize(
         "hasAuthority('Wahlvorbereitung_BUSINESSACTION_GetUrnenwahlVorbereitung')"
-                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
+                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
     )
     public Optional<UrnenwahlvorbereitungModel> getUrnenwahlvorbereitung(@P("wahlbezirkID") final String wahlbezirkID) {
         log.debug("#getUrnenwahlVorbereitung");
@@ -41,7 +41,7 @@ public class UrnenwahlvorbereitungService {
 
     @PreAuthorize(
         "hasAuthority('Wahlvorbereitung_BUSINESSACTION_PostUrnenwahlVorbereitung')"
-                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#vorbereitungToSet.wahlbezirkID, authentication)"
+                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#vorbereitungToSet.wahlbezirkID, authentication)"
     )
     public void setUrnenwahlvorbereitung(@P("vorbereitungToSet") final UrnenwahlvorbereitungModel vorbereitungToSet) {
         log.debug("#postUrnenwahlVorbereitung");

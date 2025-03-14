@@ -41,7 +41,7 @@ class UserInfoAuthoritiesServiceTest {
     UserInfoAuthoritiesService unitUnderTest;
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         val restTemplateBuilder = new RestTemplateBuilder(new RestTemplateCustomizer[0]) {
             @Override
             public RestTemplate build() {

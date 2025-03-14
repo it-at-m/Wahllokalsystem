@@ -1,7 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.ereignis;
 
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisModelMapper;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisartModel;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.TestdataFactory;
 import java.util.List;
 import lombok.val;
@@ -28,7 +26,7 @@ class EreignisModelMapperTest {
     }
 
     @Nested
-    class ToWahlbezirkEreignisseModel {
+    class ToEreignisseModel {
 
         @Test
         void should_returnWahlbezirkEreignisseModel_when_givenWahlbezirkIDKeineVorfaelleKeineVorkommnisseAndListOfEreignisModel() {

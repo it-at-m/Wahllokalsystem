@@ -2,7 +2,6 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.AbstractController;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusService;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -37,14 +36,6 @@ public class StatusController extends AbstractController {
                     @ApiResponse(
                             responseCode = "204", description = "Es existiert kein Zustand entsprechend der Kriterien",
                             content = { @Content() }
-                    ),
-                    @ApiResponse(
-                            responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
-                    ),
-                    @ApiResponse(
-                            responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
                     )
             }
     )
@@ -59,14 +50,6 @@ public class StatusController extends AbstractController {
             value = {
                     @ApiResponse(
                             responseCode = "200", description = "Zustand erfolgreich gespeichert"
-                    ),
-                    @ApiResponse(
-                            responseCode = "400", description = "Validierung der Anfrage war nicht erfolgreich",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
-                    ),
-                    @ApiResponse(
-                            responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
                     )
             }
     )

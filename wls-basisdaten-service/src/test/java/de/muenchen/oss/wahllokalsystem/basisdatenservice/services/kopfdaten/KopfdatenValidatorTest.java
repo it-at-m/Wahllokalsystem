@@ -29,13 +29,13 @@ class KopfdatenValidatorTest {
         final FachlicheWlsException mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
         @Test
-        void noExceptionWhenRequestParamIsValid() {
+        void should_notThrowException_when_requestParamIsValid() {
             val requestParam = new BezirkUndWahlID("wahlID", "wahlbezirkID");
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(requestParam));
         }
 
         @Test
-        void exceptionWhenWahlIDisNullOrEmptyOrBlank() {
+        void should_throwException_when_wahlIDisNullOrEmptyOrBlank() {
             val requestParam1 = new BezirkUndWahlID(null, "wahlbezirkID");
             val requestParam2 = new BezirkUndWahlID("", "wahlbezirkID");
             val requestParam3 = new BezirkUndWahlID("     ", "wahlbezirkID");
@@ -47,7 +47,7 @@ class KopfdatenValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahlbezirkIDisNullOrEmptyOrBlank() {
+        void should_throwException_when_wahlbezirkIDisNullOrEmptyOrBlank() {
             val requestParam1 = new BezirkUndWahlID("wahlID", null);
             val requestParam2 = new BezirkUndWahlID("wahlID", "");
             val requestParam3 = new BezirkUndWahlID("wahlID", "       ");

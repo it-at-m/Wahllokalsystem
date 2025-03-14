@@ -4,8 +4,10 @@ spring:
   profiles:
     group:
       local:
+        - plainTextLogging
+      standalone:
         - db-h2
-      no-security:
+        - dummy.clients
         - dummy.nobezirkid.check
   flyway:
     locations:

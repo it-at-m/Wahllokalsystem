@@ -18,10 +18,10 @@ class WahlenClientMapperTest {
     private final WahlenClientMapper unitUnderTest = Mappers.getMapper(WahlenClientMapper.class);
 
     @Nested
-    class ToWahlModel {
+    class ToModel {
 
         @Test
-        void isMapped() {
+        void should_returnWahlModel_when_givenWahlDTO() {
             val aNowMoment = LocalDate.now();
             val wahl1 = new WahlDTO();
             wahl1.setIdentifikator("identifikatorWahl1");
@@ -52,7 +52,7 @@ class WahlenClientMapperTest {
     class FromRemoteClientSetOfWahlDTOtoListOfWahlModel {
 
         @Test
-        void isMapped() {
+        void should_returnWahlModelList_when_wahlDTOList() {
             val wahl1 = new WahlDTO();
             wahl1.setIdentifikator("identifikatorWahl1");
             wahl1.setNummer("nummerWahl1");

@@ -67,7 +67,7 @@ class StatusControllerTest {
     }
 
     @Nested
-    class PostStatus {
+    class SetStatus {
 
         @Test
         void should_callServiceWithModel_when_calledWithData() {

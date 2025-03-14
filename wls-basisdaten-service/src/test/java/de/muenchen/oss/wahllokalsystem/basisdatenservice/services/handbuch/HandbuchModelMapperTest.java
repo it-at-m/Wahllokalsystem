@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.handbuch.Handbuch;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahlbezirkArt;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagIdUndWahlbezirksart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.handbuch.Handbuch;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -20,7 +20,7 @@ class HandbuchModelMapperTest {
     class ToEntityID {
 
         @Test
-        void isMapped() {
+        void should_returnWahltagIdUndWahlbezirksart_when_givenHandbuchReferenceModel() {
             val modelToMap = new HandbuchReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
 
             val result = unitUnderTest.toEntityID(modelToMap);
@@ -31,7 +31,7 @@ class HandbuchModelMapperTest {
 
         @ParameterizedTest
         @EnumSource(WahlbezirkArtModel.class)
-        void allWahlbezirksArtEnumValuesAreMapped(final WahlbezirkArtModel wahlbezirkArtModel) {
+        void should_mapAllWahlbezirksArtEnumValues_when_givenHandbuchReferenceModel(final WahlbezirkArtModel wahlbezirkArtModel) {
             Assertions.assertThat(unitUnderTest.toEntityID(new HandbuchReferenceModel("", wahlbezirkArtModel)).getWahlbezirksart().toString())
                     .isEqualTo(wahlbezirkArtModel.toString());
         }
@@ -41,7 +41,7 @@ class HandbuchModelMapperTest {
     class ToEntity {
 
         @Test
-        void isMapped() {
+        void should_returnHandbuchEntity_when_givenHandbuchWriteModel() {
             val modelToMap = new HandbuchWriteModel(new HandbuchReferenceModel("wahltagID", WahlbezirkArtModel.BWB), "helloWorld".getBytes());
 
             val result = unitUnderTest.toEntity(modelToMap);
@@ -52,7 +52,7 @@ class HandbuchModelMapperTest {
 
         @ParameterizedTest
         @EnumSource(WahlbezirkArtModel.class)
-        void allWahlbezirksArtEnumValuesAreMapped(final WahlbezirkArtModel wahlbezirkArtModel) {
+        void should_mapAllWahlbezirksArtEnumValues_when_givenHandbuchWriteModel(final WahlbezirkArtModel wahlbezirkArtModel) {
             val modelToMap = new HandbuchWriteModel(new HandbuchReferenceModel("", wahlbezirkArtModel), "".getBytes());
 
             val result = unitUnderTest.toEntity(modelToMap);

@@ -151,7 +151,7 @@ class AusdruckServiceTest {
         }
 
         @AfterEach
-        void tearDown() {
+        void teardown() {
             mockedStatic.close();
         }
 

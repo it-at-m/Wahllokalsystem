@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-admin-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
     <name>wls_admin_service</name>
 
     <properties>
@@ -19,7 +17,7 @@
         <spring.cloud.version>2023.0.5</spring.cloud.version>
         <logstash.encoder>8.0</logstash.encoder>
         <apache.commons.collections4>4.4</apache.commons.collections4>
-        <apache.commons.csv>1.12.0</apache.commons.csv>
+        <apache.commons.csv>1.13.0</apache.commons.csv>
         <apache.commons.io>2.18.0</apache.commons.io>
         <apache.commons.lang3>3.17.0</apache.commons.lang3>
         <apache.commons.text>1.13.0</apache.commons.text>
@@ -38,7 +36,8 @@
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <org.springdoc.version>2.6.0</org.springdoc.version>
-        <wls.common.version>1.2.0</wls.common.version>
+        <wls.common.version>1.5.1</wls.common.version>
+        <com.tngtech.archunit.version>1.4.0</com.tngtech.archunit.version>
     </properties>
 
     <dependencyManagement>
@@ -107,6 +106,13 @@
             <artifactId>spring-security-oauth2-jose</artifactId>
         </dependency>
 
+        <!-- Mapping -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
+        </dependency>
+
         <!-- json etc. -->
         <dependency>
             <groupId>org.springframework.hateoas</groupId>
@@ -163,10 +169,14 @@
             <artifactId>security</artifactId>
             <version>${wls.common.version}</version>
         </dependency>
-
         <dependency>
             <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
             <artifactId>exception</artifactId>
+            <version>${wls.common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>swagger</artifactId>
             <version>${wls.common.version}</version>
         </dependency>
 
@@ -208,6 +218,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-contract-stub-runner</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
@@ -215,6 +230,18 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>testing</artifactId>
+            <version>${wls.common.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit-junit5</artifactId>
+            <version>${com.tngtech.archunit.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -438,8 +465,8 @@
                         <eclipse>
                             <file>itm-java-codeformat/java_codestyle_formatter.xml</file>
                         </eclipse>
-                        <trimTrailingWhitespace/>
-                        <endWithNewline/>
+                        <trimTrailingWhitespace />
+                        <endWithNewline />
                     </java>
                 </configuration>
                 <executions>
@@ -470,7 +497,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>10.21.1</version>
+                        <version>10.21.4</version>
                     </dependency>
                 </dependencies>
             </plugin>

@@ -72,7 +72,7 @@ public class UserControllerIntegrationTest {
     private UserService userService;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         cacheManager.getCache(CacheConfig.USER_CACHE).clear();
         transactionTemplate.executeWithoutResult(status -> {
             SecurityUtils.runWith(Authorities.ROLE_ADMIN);

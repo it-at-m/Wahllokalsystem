@@ -28,7 +28,9 @@ In einer gemeinsamen Diskussion wurde entschieden, die Auslagerung nicht vorzune
 ## Konsequenzen
 
 ### positiv
+
 Es müssen durch den Entschluss keine bestehenden Services angepasst werden. Es entsteht kein zusätzlicher Handlungsbedarf.
 
 ### negativ
+
 Möglicherweise ist der Code weniger übersichtlich und es ergeben sich teilweise redundante/doppelte Codezeilen mit gleichem Inhalt.

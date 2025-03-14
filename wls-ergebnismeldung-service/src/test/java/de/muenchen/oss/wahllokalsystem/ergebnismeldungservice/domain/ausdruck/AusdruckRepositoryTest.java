@@ -29,25 +29,26 @@ class AusdruckRepositoryTest {
     AusdruckRepository repository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         repository.deleteAll();
     }
 
     @Nested
-    class FindByID {
+    class FindById {
 
         @Test
         void should_returnData_when_idIsGiven() {
             val idToFind = new WahlUndBezirkIDUndMeldungsart("wahlbezirkID01", "wahlID01", Meldungsart.V1);
-            val ausdruckToFind = new Ausdruck(idToFind, "Testcontent", Instant.now());
+            val timeNow = Instant.now();
+            val ausdruckToFind = new Ausdruck(idToFind, "Testcontent", timeNow);
             val ausdruckeToSave = List.of(
                     ausdruckToFind,
                     new Ausdruck(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID02", "wahlID01", Meldungsart.V1),
-                            "Testcontent", Instant.now()),
+                            "Testcontent", timeNow),
                     new Ausdruck(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID03", "wahlID01", Meldungsart.V1),
-                            "Testcontent", Instant.now()),
+                            "Testcontent", timeNow),
                     new Ausdruck(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID04", "wahlID01", Meldungsart.V1),
-                            "Testcontent", Instant.now()));
+                            "Testcontent", timeNow));
 
             repository.saveAll(ausdruckeToSave);
 
@@ -65,19 +66,20 @@ class AusdruckRepositoryTest {
         void should_returnAusdruck_when_wahlUndBezirkIDUndMeldungsartIsGiven() {
             val wahlIdToFind = "wahlId01";
             val wahlbezirkIdToFind = "wahlbezirkID01";
+            val timeNow = Instant.now();
             val ausdruckToFind1 = new Ausdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkIdToFind, wahlIdToFind, Meldungsart.V1), "Testcontent",
-                    Instant.now());
+                    timeNow);
             val ausdruckToFind2 = new Ausdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkIdToFind, wahlIdToFind, Meldungsart.V3), "Testcontent",
-                    Instant.now());
+                    timeNow);
             val ausdruckeToSave = List.of(
                     ausdruckToFind1,
                     ausdruckToFind2,
                     new Ausdruck(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID02", "wahlID01", Meldungsart.V1),
-                            "Testcontent", Instant.now()),
+                            "Testcontent", timeNow),
                     new Ausdruck(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID03", "wahlID01", Meldungsart.V1),
-                            "Testcontent", Instant.now()),
+                            "Testcontent", timeNow),
                     new Ausdruck(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID04", "wahlID01", Meldungsart.V1),
-                            "Testcontent", Instant.now()));
+                            "Testcontent", timeNow));
 
             repository.saveAll(ausdruckeToSave);
 
@@ -90,5 +92,4 @@ class AusdruckRepositoryTest {
             });
         }
     }
-
 }

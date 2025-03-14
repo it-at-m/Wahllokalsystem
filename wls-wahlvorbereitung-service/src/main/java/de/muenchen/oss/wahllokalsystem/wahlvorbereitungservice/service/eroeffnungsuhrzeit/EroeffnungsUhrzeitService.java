@@ -24,7 +24,7 @@ public class EroeffnungsUhrzeitService {
 
     @PreAuthorize(
         "hasAuthority('Wahlvorbereitung_BUSINESSACTION_GetEroeffnungsuhrzeit')"
-                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
+                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
     )
     public Optional<EroeffnungsUhrzeitModel> getEroeffnungsUhrzeit(@P("wahlbezirkID") final String wahlbezirkID) {
         log.debug("#getEroeffnungsUhrzeit");
@@ -41,7 +41,7 @@ public class EroeffnungsUhrzeitService {
 
     @PreAuthorize(
         "hasAuthority('Wahlvorbereitung_BUSINESSACTION_PostEroeffnungsuhrzeit')"
-                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#eroeffnungsuhrzeitToSet.wahlbezirkID(), authentication)"
+                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#eroeffnungsuhrzeitToSet.wahlbezirkID(), authentication)"
     )
     public void setEroeffnungsUhrzeit(@P("eroeffnungsuhrzeitToSet") final EroeffnungsUhrzeitModel eroeffnungsuhrzeitToSet) {
         log.debug("#postEroeffnungsuhrzeit");

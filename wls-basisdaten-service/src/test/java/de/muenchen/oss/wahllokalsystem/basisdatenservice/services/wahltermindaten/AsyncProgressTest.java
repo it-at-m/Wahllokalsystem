@@ -13,7 +13,7 @@ class AsyncProgressTest {
     class IncWahlvorschlaegeFinished {
 
         @Test
-        void should_increaseNumberOfFinishedWahlvorschlaege_when_called() {
+        void should_increaseNumberOfFinishedWahlvorschlaege_when_callingGet() {
             val numberOfFinisheBeforeCall = unitUnderTest.getWahlvorschlageFinished();
             unitUnderTest.incWahlvorschlaegeFinished();
             val numberOfFinishedAfterCall = unitUnderTest.getWahlvorschlageFinished();
@@ -58,7 +58,7 @@ class AsyncProgressTest {
     class IncReferendumVorlagenFinished {
 
         @Test
-        void should_increaseNumberOfFinishedReferendumvorlagen_when_called() {
+        void should_increaseNumberOfFinishedReferendumvorlagen_when_callingGet() {
             val numberOfFinisheBeforeCall = unitUnderTest.getReferendumVorlagenFinished();
             unitUnderTest.incReferendumVorlagenFinished();
             val numberOfFinishedAfterCall = unitUnderTest.getReferendumVorlagenFinished();

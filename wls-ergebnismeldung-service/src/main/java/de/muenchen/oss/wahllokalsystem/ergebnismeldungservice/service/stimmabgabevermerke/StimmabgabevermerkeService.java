@@ -35,7 +35,7 @@ public class StimmabgabevermerkeService {
 
     @PreAuthorize(
         "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostStimmabgabevermerke')"
-                + "and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)"
+                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)"
     )
     public void postStimmabgabevermerke(@P("param") final BezirkIDUndWaehlerverzeichnisNummer id, final StimmabgabevermerkeModel stimmabgabevermerkeModel) {
         log.info("#postStimmabgabevermerke");

@@ -1,11 +1,10 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.briefwahlvorbereitung;
 
-import java.util.List;
-
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.common.WahlurneDTO;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.briefwahlvorbereitung.BriefwahlvorbereitungModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.common.WahlurneModel;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.testdaten.WahlurneTestdatenfactory;
+import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -23,7 +22,7 @@ class BriefwahlvorbereitungDTOMapperTest {
     class ToDTO {
 
         @Test
-        void isMapped() {
+        void should_returnBriefwahlvorbereitungDTO_when_givenBriefwahlvorbereitungModel() {
             val wahlbezirkID = "wahlbezirkID";
             List<WahlurneModel> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValidModel("1234").build());
             val modelToMap = new BriefwahlvorbereitungModel(wahlbezirkID, urnenanzahl1);
@@ -39,7 +38,7 @@ class BriefwahlvorbereitungDTOMapperTest {
     class ToModel {
 
         @Test
-        void isMapped() {
+        void should_returnBriefwahlvorbereitungModel_when_givenBriefwahlvorbereitungDTO() {
             List<WahlurneDTO> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValidDTO("1234").build());
             val dtoToMap = new BriefwahlvorbereitungWriteDTO(urnenanzahl1);
             val wahlbezirkIDToMap = "wahlbezirkID";
@@ -51,5 +50,4 @@ class BriefwahlvorbereitungDTOMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

@@ -32,7 +32,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles({ SPRING_TEST_PROFILE, DUMMY_CLIENTS })
 public class WahlvorstandServiceSecurityTest {
 
-    @MockBean(name = "bezirkIdPermisionEvaluator")
+    @MockBean
     BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
     @Autowired

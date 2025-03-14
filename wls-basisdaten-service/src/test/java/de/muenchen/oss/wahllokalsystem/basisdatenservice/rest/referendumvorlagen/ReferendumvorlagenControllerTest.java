@@ -32,7 +32,7 @@ class ReferendumvorlagenControllerTest {
     class GetReferendumvorlagen {
 
         @Test
-        void serviceIsCalled() {
+        void should_returnReferenceDTO_when_serviceIsCalled() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
 

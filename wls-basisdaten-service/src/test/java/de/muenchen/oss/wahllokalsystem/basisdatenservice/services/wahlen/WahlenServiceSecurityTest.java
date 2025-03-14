@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.Wahltag;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Farbe;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahl;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.WahlRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.Wahltag;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
@@ -63,7 +63,7 @@ public class WahlenServiceSecurityTest {
     class GetWahlen {
 
         @Test
-        void accessGranted() {
+        void should_grantAccess_when_authoritiesArePresent() {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHLTAG, Authorities.REPOSITORY_READ_WAHLTAG, Authorities.REPOSITORY_WRITE_WAHL);
             var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now().plusMonths(1), "beschreibung1", "1");
             List<Wahl> mockedListOfEntities = createWahlEntities();
@@ -75,7 +75,7 @@ public class WahlenServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) throws Exception {
+        void should_denyAccess_when_anyAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) throws Exception {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHLTAG, Authorities.REPOSITORY_WRITE_WAHL);
             var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung10", "1");
             wahltagRepository.save(searchingForWahltag);
@@ -104,7 +104,7 @@ public class WahlenServiceSecurityTest {
     class PostWahlen {
 
         @Test
-        void accessGranted() {
+        void should_grantAccess_when_authoritiesArePresent() {
             SecurityUtils.runWith(Authorities.SERVICE_POST_WAHLEN, Authorities.REPOSITORY_WRITE_WAHL);
             val wahltagID = "wahltagID";
             List<WahlModel> mockedListOfModels = createWahlModels();
@@ -113,7 +113,7 @@ public class WahlenServiceSecurityTest {
         }
 
         @Test
-        void accessDeniedWhenServiceAuthorityIsMissing() {
+        void should_denyAccess_when_serviceAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL);
             val wahltagID = "wahltagID";
             List<WahlModel> mockedListOfModels = createWahlModels();
@@ -124,7 +124,7 @@ public class WahlenServiceSecurityTest {
         }
 
         @Test
-        void technischeWlsExceptionWhenRepoAuthorityIsMissing() {
+        void should_throwTechnischeWlsException_when_repoAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.SERVICE_POST_WAHLEN);
             val wahltagID = "wahltagID";
             List<WahlModel> mockedListOfModels = createWahlModels();
@@ -139,20 +139,20 @@ public class WahlenServiceSecurityTest {
     class ResetWahlen {
 
         @Test
-        void accessGranted() {
+        void should_grantAccess_when_authoritiesArePresent() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_RESET_WAHLEN);
             Assertions.assertThatNoException().isThrownBy(() -> wahlenService.resetWahlen());
         }
 
         @Test
-        void accessDeniedWhenServiceAuthoritiyIsMissing() {
+        void should_denyAccess_when_serviceAuthoritiyIsMissing() {
             SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHL, Authorities.REPOSITORY_WRITE_WAHL);
             Assertions.assertThatThrownBy(() -> wahlenService.resetWahlen()).isInstanceOf(AccessDeniedException.class);
         }
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingRepoAuthoritiesVariations")
-        void technischeWlsExceptionWhenRepoAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) {
+        void should_throwTechnischeWlsException_when_repoAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(ArrayUtils.add(argumentsAccessor.get(0, String[].class), Authorities.SERVICE_RESET_WAHLEN));
             Assertions.assertThatThrownBy(() -> wahlenService.resetWahlen()).isInstanceOf(TechnischeWlsException.class);
         }

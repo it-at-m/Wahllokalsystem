@@ -27,7 +27,7 @@ class AWerteRepositoryTest {
     private AWerteRepository repository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         repository.deleteAll();
     }
 

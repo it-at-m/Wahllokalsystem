@@ -8,7 +8,15 @@ import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstan
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_TEST_PROFILE;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.awerte.AWerteRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.BegruendungRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.BezirkUndWahlIDStapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.begruendung.BegruendungDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.BezirkUndWahlIDStapelartDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
+import java.net.URI;
+import lombok.val;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +35,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
 class UnicodeConfigurationTest {
 
-    private static final String ENTITY_ENDPOINT_URL = "/theEntities";
+    private static final String ENTITY_ENDPOINT_URL = "/businessActions/begruendung/";
 
     /**
      * Decomposed string: String "Ä-é" represented with unicode letters "A◌̈-e◌́"
@@ -43,28 +51,24 @@ class UnicodeConfigurationTest {
     private TestRestTemplate testRestTemplate;
 
     @Autowired
-    private AWerteRepository aWerteRepository;
+    private BegruendungRepository begruendungRepository;
 
     @Test
-    @Disabled
     void should_returnComposedString_when_givenDecomposedString() {
-        // Persist entity with decomposed string.
-        //        final TheEntityDto theEntityDto = new TheEntityDto();
-        //        theEntityDto.setTextAttribute(TEXT_ATTRIBUTE_DECOMPOSED);
-        //        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), theEntityDto.getTextAttribute().length());
-        //        final TheEntityDto response = testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), theEntityDto, TheEntityDto.class).getBody();
-        //
-        //        // Check whether response contains a composed string.
-        //        assertEquals(TEXT_ATTRIBUTE_COMPOSED, response.getTextAttribute());
-        //        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), response.getTextAttribute().length());
-        //
-        //        // Extract uuid from self link.
-        //        final UUID uuid = UUID.fromString(StringUtils.substringAfterLast(response.getRequiredLink("self").getHref(), "/"));
-        //
-        //        // Check persisted entity contains a composed string via JPA repository.
-        //        final AWerte theEntity = aWerteRepository.findById(uuid).orElse(null);
-        //        assertEquals(TEXT_ATTRIBUTE_COMPOSED, theEntity.getTextAttribute());
-        //        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), theEntity.getTextAttribute().length());
-    }
+        //Persist entity with decomposed string.
+        val id = new BezirkUndWahlIDStapelartDTO("bezirkID", "wahlID", StapelartDTO.LTW_BZW_A);
+        val begruendungDTO = new BegruendungDTO(id, TEXT_ATTRIBUTE_DECOMPOSED, null, true,
+                true);
 
+        Assertions.assertThat(TEXT_ATTRIBUTE_DECOMPOSED.length()).isEqualTo(begruendungDTO.grund().length());
+
+        // store Begruendung
+        testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL + id.wahlbezirkID() + "/" + id.wahlID() + "/" + id.stapelart()), begruendungDTO,
+                Void.class);
+
+        // Check if persisted entity contains a composed string via JPA repository.
+        val begruendung = begruendungRepository.findById(new BezirkUndWahlIDStapelart("bezirkID", "wahlID", Stapelart.LTW_BZW_A)).orElse(null);
+        Assertions.assertThat(TEXT_ATTRIBUTE_COMPOSED).isEqualTo(begruendung.getGrund1());
+        Assertions.assertThat(TEXT_ATTRIBUTE_COMPOSED.length()).isEqualTo(begruendung.getGrund1().length());
+    }
 }

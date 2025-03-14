@@ -1,7 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung;
 
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.WahlergebnisController;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.ErgebnismeldungDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.service.ergebnismeldung.ErgebnismeldungService;
 import lombok.val;
 import org.junit.jupiter.api.Nested;
@@ -19,13 +18,13 @@ class ErgebnismeldungControllerTest {
     ErgebnismeldungService ergebnismeldungService;
 
     @InjectMocks
-    WahlergebnisController unitUnderTest;
+    ErgebnismeldungController unitUnderTest;
 
     @Nested
     class SaveErgebnismeldung {
 
         @Test
-        void serviceIsCalled() {
+        void should_saveErgebnismeldung_when_called() {
             val ergebnismeldungDTO = ErgebnismeldungDTO.builder().build();
 
             unitUnderTest.saveErgebnismeldung(ergebnismeldungDTO);

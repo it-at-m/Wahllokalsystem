@@ -20,7 +20,7 @@ class LoginAttemptRepositoryTest {
     LoginAttemptRepository loginAttemptRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         loginAttemptRepository.deleteAll();
     }
 

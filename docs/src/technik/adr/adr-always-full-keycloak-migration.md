@@ -1,4 +1,4 @@
-# Immer vollständiger Migration nach Keycloak 
+# Immer vollständiger Migration nach Keycloak
 
 ## Status
 
@@ -31,7 +31,7 @@ zu verwenden.
 Wir verwenden Keycloak in Version 25 und Migrationen nach Keycloak werden immer vollständig durchgeführt.
 Es muss keine Delta-Migration geben.
 
-Dadurch das Keycloak zeitnah durch unseren Authservice abgelößt wird, überwog der *KISS*-Aspekt. Anstelle einer
+Dadurch das Keycloak zeitnah durch unseren Authservice abgelößt wird, überwog der _KISS_-Aspekt. Anstelle einer
 umfangreichen Featurelist konzentrieren wir uns auf wenige notwendige Arten von API-Calls durch Keycloakmigration.
 
 Unterstützt wird die Entscheidung gegen die Option einer Delta-Migration von unserem
@@ -52,5 +52,4 @@ Mit der Fokussierung auf eine vollständige Migration ist es möglich die Keyclo
 
 ### negativ
 
-Es muss immer eine vollständige Migration erfolgen. Eine Teilmigration ist nicht möglich. 
-
+Es muss immer eine vollständige Migration erfolgen. Eine Teilmigration ist nicht möglich.

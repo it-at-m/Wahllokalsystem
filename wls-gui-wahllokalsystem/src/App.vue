@@ -22,6 +22,8 @@
           cols="3"
           class="d-flex align-center justify-end"
         >
+          <!-- heartbeat uses v-model for two-way-binding -->
+          <wls-heartbeat v-model:is-offline="isOffline"></wls-heartbeat>
           <v-tooltip
             location="bottom"
             text="Backend Communication Examples"
@@ -62,12 +64,35 @@
               </router-link>
             </template>
           </v-tooltip>
+          <v-tooltip
+            location="bottom"
+            text="Datenvalidierung Examples"
+          >
+            <template #activator="{ props }">
+              <router-link
+                v-bind="props"
+                :to="{ name: EXAMPLE_VALIDATION }"
+              >
+                <v-btn
+                  icon="$textBoxCheck"
+                  variant="text"
+                  density="comfortable"
+                  size="x-large"
+                  color="white"
+                >
+                </v-btn>
+              </router-link>
+            </template>
+          </v-tooltip>
         </v-col>
       </v-row>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer">
       <v-list>
-        <v-list-item />
+        <v-list-item
+          title="Wahlvorstand"
+          :to="ROUTE_WAHLVORSTAND"
+        />
       </v-list>
     </v-navigation-drawer>
     <v-main>
@@ -84,7 +109,8 @@
 
 <script setup lang="ts">
 import { useToggle } from "@vueuse/core";
-import { onMounted } from "vue";
+import localforage from "localforage";
+import { onMounted, ref } from "vue";
 import {
   VApp,
   VAppBar,
@@ -104,15 +130,33 @@ import {
 
 import { getUser } from "@/api/user-client";
 import TheSnackbar from "@/components/TheSnackbar.vue";
-import { EXAMPLE_ROUTES_BACKEND, EXAMPLE_ROUTES_NEWROUTE } from "@/constants";
+import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
+import {
+  EXAMPLE_ROUTES_BACKEND,
+  EXAMPLE_ROUTES_NEWROUTE,
+  EXAMPLE_VALIDATION,
+  ROUTE_WAHLVORSTAND,
+} from "@/constants";
 import { useUserStore } from "@/stores/user";
+import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 import User, { UserLocalDevelopment } from "@/types/User";
 
 const userStore = useUserStore();
+const wahlvorstandStore = useWahlvorstandStore();
 const [drawer, toggleDrawer] = useToggle();
+const isOffline = ref(false);
 
 onMounted(() => {
   loadUser();
+
+  // config for service worker indexed db (same config as in wahl-worker.js !)
+  localforage.config({
+    driver: localforage.INDEXEDDB,
+    name: "wahldb",
+    version: 1.0,
+    storeName: "wahlstore",
+    description: "store for wahlnumber",
+  });
 });
 
 /**
@@ -128,7 +172,8 @@ function loadUser(): void {
       } else {
         userStore.setUser(null);
       }
-    });
+    })
+    .then(() => wahlvorstandStore.loadWahlvorstand());
 }
 </script>
 

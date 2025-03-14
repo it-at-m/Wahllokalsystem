@@ -44,7 +44,7 @@ class UserRepositoryImplIntegrationTest {
     private PermissionRepository permissionRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         crudUserRepository.deleteAll();
         authorityRepository.deleteAll();
         permissionRepository.deleteAll();

@@ -23,7 +23,7 @@ class AuthorityRepositoryTest {
     AuthorityRepository authorityRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         authorityRepository.deleteAll();
     }
 

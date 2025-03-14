@@ -5,11 +5,8 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.FileMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.FileResponseEntityModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.WahlbezirkArtDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch.HandbuchService;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -48,12 +45,8 @@ public class HandbuchController {
             description = "Abrufen des Handbuches einer Wahl für eine bestimmte Wahlbezirksart",
             responses = {
                     @ApiResponse(
-                            responseCode = "500", description = "Handbuch ist nicht abrufbar. Entweder fehlt es oder es gab technische Probleme",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
-                    ),
-                    @ApiResponse(
-                            responseCode = "400", description = "Anfrageparameter sind fehlerhaft",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
+                            responseCode = "200", description = "Handbuch erfolgreich zurückgegeben."
+
                     )
             }
     )
@@ -69,11 +62,7 @@ public class HandbuchController {
     @Operation(
             description = "Speichern eines Handbuches einer Wahl für eine bestimmte Wahlbezirksart",
             responses = {
-                    @ApiResponse(responseCode = "500", description = "Handbuch kann nicht gespeichert werden"),
-                    @ApiResponse(
-                            responseCode = "400", description = "Anfrageparameter sind fehlerhaft",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class))
-                    )
+                    @ApiResponse(responseCode = "200", description = "Handbuch erfolgreich gespeichert")
             }
     )
     public void setHandbuch(@PathVariable("wahltagID") String wahltagID, @PathVariable("wahlbezirksart") WahlbezirkArtDTO wahlbezirkArtDTO,

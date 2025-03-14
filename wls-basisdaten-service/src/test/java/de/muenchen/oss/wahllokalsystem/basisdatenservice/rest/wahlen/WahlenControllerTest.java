@@ -30,7 +30,7 @@ class WahlenControllerTest {
     class GetWahlen {
 
         @Test
-        void serviceIsCalledWithoutExceptions() {
+        void should_returnWahlDTOList_when_serviceIsCalled() {
             val wahltagID = "wahltagID";
 
             val mockedServiceResponse = List.of(Mockito.mock(WahlModel.class), Mockito.mock(WahlModel.class));
@@ -49,7 +49,7 @@ class WahlenControllerTest {
     class PostWahlen {
 
         @Test
-        void serviceIsCalledWithoutExceptions() {
+        void should_returnOk_when_serviceIsCalled() {
             val wahltagID = "wahltagID";
             val requestBody = List.of(Mockito.mock(WahlDTO.class));
 
@@ -67,7 +67,7 @@ class WahlenControllerTest {
     class ResetWahlen {
 
         @Test
-        void serviceIsCalledWithoutExceptions() {
+        void should_returnOk_when_serviceIsCalled() {
             unitUnderTest.resetWahlen();
 
             Mockito.verify(wahlenService).resetWahlen();

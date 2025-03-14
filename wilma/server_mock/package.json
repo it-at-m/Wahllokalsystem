@@ -1,0 +1,25 @@
+{
+  "name": "wls-gui-wahllokal-mock-backend",
+  "description": "A simple mock backend for development of wls-gui-wahllokal",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "body-parser": "1.20.3",
+    "cookie-parser": "1.4.7",
+    "debug": "4.4.0",
+    "express": "4.21.2",
+    "fast-csv": "5.0.2",
+    "moment": "2.30.1",
+    "morgan": "1.10.0",
+    "serve-favicon": "2.5.0"
+  },
+  "main": "server",
+  "scripts": {
+    "clean": "if ls data/*.json >/dev/null 2>&1; then rm data/*.json >/dev/null 2>&1; fi",
+    "prestart": "npm update",
+    "start": "node server.js wls-mock-server",
+    "clean-e2e": "if ls data/wls-e2e-server-*.json >/dev/null 2>&1; then rm data/wls-e2e-server-*.json >/dev/null 2>&1; fi",
+    "prestart-e2e": "npm update",
+    "start-e2e": "DEBUG=wls:* node server.js wls-e2e-server 4730"
+  }
+}

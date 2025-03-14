@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.authservice.rest.session;
 
 import static de.muenchen.oss.wahllokalsystem.authservice.TestConstants.SPRING_TEST_PROFILE;
+
 import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
 import java.net.URI;
@@ -60,13 +61,13 @@ class SessionCreationTest {
     SessionRegistry sessionRegistry;
 
     @BeforeEach
-    public void setUp() throws SQLException {
+    public void setup() throws SQLException {
         conn = DriverManager.getConnection(dataSourceUrl, dataSourceUsername, dataSourcePassword);
         purgeSessions();
     }
 
     @AfterEach
-    public void tearDown() throws SQLException {
+    public void teardown() throws SQLException {
         purgeSessions();
         if (conn != null && !conn.isClosed()) {
             conn.close();
@@ -83,14 +84,14 @@ class SessionCreationTest {
     }
 
     @Test
-    public void should_notFindSessions_when_noSessionsInDB() throws SQLException {
+    void should_notFindSessions_when_noSessionsInDB() throws SQLException {
         Assertions.assertThat(SessionTestUtils.getSessionIdsFromDatabase(conn).size()).isEqualTo(0);
         Assertions.assertThat(SessionTestUtils.getSessionAttributeBytesFromDb(conn).size()).isEqualTo(0);
         Assertions.assertThat(sessionRegistry.getAllPrincipals().isEmpty()).isTrue();
     }
 
     @Test
-    public void should_createSession_when_callingLoginController() throws SQLException {
+    void should_createSession_when_callingLoginController() throws SQLException {
         val formLoginRequest = new RequestEntity<>(HttpMethod.GET, URI.create("http://localhost:" + port + LOGIN_ENDPOINT));
         val formLoginResponse = testRestTemplate.exchange(formLoginRequest, String.class);
 
@@ -101,7 +102,7 @@ class SessionCreationTest {
     }
 
     @Test
-    public void should_createCsrfSessionAttribute_when_callingLogin() throws SQLException {
+    void should_createCsrfSessionAttribute_when_callingLogin() throws SQLException {
         val formLoginRequest = new RequestEntity<>(HttpMethod.GET, URI.create("http://localhost:" + port + LOGIN_ENDPOINT));
         this.testRestTemplate.exchange(formLoginRequest, String.class);
         val sessionAttributesFromDB = SessionTestUtils.getSessionAttributeBytesFromDb(conn);

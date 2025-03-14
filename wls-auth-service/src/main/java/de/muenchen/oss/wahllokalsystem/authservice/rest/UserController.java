@@ -4,6 +4,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.CacheConfig;
 import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,14 @@ public class UserController {
 
     private final UserDTOMapper userDTOMapper;
 
+    @Operation(
+            description = "Liefert einen User.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Enthält den angegebenen user oder null falls keiner vorhanden ist"
+                    )
+            }
+    )
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     @Transactional(readOnly = true)
     @Cacheable(value = CacheConfig.USER_CACHE, key = "#a0.getName()")
@@ -34,6 +44,14 @@ public class UserController {
         return userServiceModel.map(userDTOMapper::toDTO).orElse(null);
     }
 
+    @Operation(
+            description = "Freischalten eines users.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "User erfolgreich freigeschaltet."
+                    )
+            }
+    )
     @RequestMapping(value = "/user/{username}/unlock", method = POST)
     @PreAuthorize("hasAuthority('ROLE_ADMIN_ADMIN')")
     @Transactional

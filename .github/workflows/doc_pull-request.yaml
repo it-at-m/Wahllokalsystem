@@ -12,14 +12,5 @@ jobs:
       run:
         working-directory: ./docs
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: npm
-          cache-dependency-path: docs/package-lock.json
-
-      - run: npm install
-
-      - run: npm run docs:build
+      - id: build_docs
+        uses: it-at-m/lhm_actions/action-templates/actions/action-build-docs@6b19f8dd2bee160bee82bde4fa04ac9f6c1d5e1e # v1.0.5

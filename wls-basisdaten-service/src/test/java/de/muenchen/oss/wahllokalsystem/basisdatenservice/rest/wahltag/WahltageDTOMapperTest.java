@@ -17,12 +17,12 @@ class WahltageDTOMapperTest {
     class FromListOfWahltagModelToListOfWahltagDTO {
 
         @Test
-        void nullInNullOut() {
+        void should_returnNull_when_givenNull() {
             Assertions.assertThat(unitUnderTest.fromListOfWahltagModelToListOfWahltagDTO(null)).isNull();
         }
 
         @Test
-        void isMappedToDTO() {
+        void should_returnWahltagDTOList_when_givenWahltagModelList() {
             val modelsInput = createClientWahltagModels();
             val dtosExpected = createClientWahltagDTOs();
 

@@ -38,7 +38,7 @@ class WahltageServiceTest {
     class GetWahltage {
 
         @Test
-        void dataIsLoadedFromRemoteEvenIfExistingInRepoAndRepoIsUpdated() {
+        void should_loadDataFromRemote_when_existingInRepoAndRepoIsUpdated() {
             val mockedListOfEntities = createWahltagList("2");
             val mockedClientResponse = createWahltagModelList("2");
             val mockedMappedSavedEntities = createWahltagModelList("2");
@@ -75,10 +75,10 @@ class WahltageServiceTest {
     }
 
     @Nested
-    class GetWahltagById {
+    class GetWahltagByID {
 
         @Test
-        void wahltagFound() {
+        void should_returnWahltag_when_callingGetById() {
             val wahltagID = "wahltagID";
 
             val mockedRepoResponse = new Wahltag();
@@ -91,7 +91,7 @@ class WahltageServiceTest {
         }
 
         @Test
-        void exceptionWhenNotFound() {
+        void should_throwException_when_notFoundInRepo() {
             val wahltagID = "wahltagID";
 
             val mockedRepoResponse = new Wahltag();

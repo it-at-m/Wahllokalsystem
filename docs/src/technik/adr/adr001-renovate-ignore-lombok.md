@@ -71,9 +71,10 @@ Die Version des Annotation-Processors muss in unserem maven projekt definiert we
 </plugin>
 ```
 
-Die Versionen der Dependency und vom Processor sollten gleich sein. Die Wahrscheinlichkeit für Probleme wird mit dem Unterschied der Version (Major, Minor, Patch) zusammenhängen. 
+Die Versionen der Dependency und vom Processor sollten gleich sein. Die Wahrscheinlichkeit für Probleme wird mit dem Unterschied der Version (Major, Minor, Patch) zusammenhängen.
 Da die Versionen aber an unterschiedlicher Stelle gepflegt werden kann dies aktuell nicht
 technisch sichergestellt werden. Daher wurde ein Kommentar in der `pom.xml` in den `properties` eingefügt:
+
 ```xml
 <properties>
     <!-- Version muss mit der in den spring-boot-dependencies bereitgestellten Lombok-Version übereinstimmen -->
@@ -83,7 +84,7 @@ technisch sichergestellt werden. Daher wurde ein Kommentar in der `pom.xml` in d
 
 Renovate kann diesen Kommentar natürlich nicht beachten und erstellt bei entsprechenden möglichen Updates Pull-Requests.
 Diese werden wir aktuell schließen. Da das Wahllokalsystem aus knapp ca. 15 Services am Ende bestehen wird, würden so regelmäßig
-zahlreiche PRs entstehen, die wir schließen müssten. 
+zahlreiche PRs entstehen, die wir schließen müssten.
 
 Updates von `lombok` machen wir bei Updates von `spring` mit.
 

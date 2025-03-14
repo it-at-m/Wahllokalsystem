@@ -9,13 +9,13 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.domain.ergebnismeldung.Unguelt
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.ergebnismeldung.WahlbriefeWerte;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten.Wahlart;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.dto.WahlartDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.AWerteDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.BWerteDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.ErgebnisDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.ErgebnismeldungDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.MeldungsartDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.UngueltigeStimmzettelDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlergebnis.dto.WahlbriefeWerteDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.AWerteDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.BWerteDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.ErgebnisDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.ErgebnismeldungDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.MeldungsartDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.UngueltigeStimmzettelDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.WahlbriefeWerteDTO;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Set;
@@ -33,7 +33,7 @@ public class ErgebnismeldungMapperTest {
     class ToEntity {
 
         @Test
-        void isMapped() {
+        void should_returnErgebnismeldungEntity_when_givenValidDTO() {
             val wahlID = "wahlID1";
             val wahlbezirkID = "00000000-0000-0000-0000-000000000001";
             val meldungsart = MeldungsartDTO.NIEDERSCHRIFT;
@@ -100,6 +100,5 @@ public class ErgebnismeldungMapperTest {
 
             Assertions.assertThat(result).usingRecursiveComparison().ignoringFields("erstellungszeit").isEqualTo(expectedResult);
         }
-
     }
 }

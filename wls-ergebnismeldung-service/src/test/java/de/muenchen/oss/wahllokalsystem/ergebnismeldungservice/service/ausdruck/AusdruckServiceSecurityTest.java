@@ -38,7 +38,7 @@ class AusdruckServiceSecurityTest {
     AusdruckRepository ausdruckRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         ausdruckRepository.deleteAll();
     }
 

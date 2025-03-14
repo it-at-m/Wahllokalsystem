@@ -100,7 +100,7 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult)
+    public void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult)
             throws IOException, ServletException {
         val principal = (LdapUserDetails) authResult.getPrincipal();
         val username = principal.getUsername();
@@ -117,7 +117,7 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed)
+    public void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed)
             throws IOException, ServletException {
         val username = request.getParameter("username");
         if (userService.doesUserExist(username) && failed instanceof BadCredentialsException) {

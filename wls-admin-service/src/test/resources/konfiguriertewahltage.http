@@ -1,0 +1,20 @@
+### get userinfo with auth_token
+GET {{ WLS_AUTH_SERVICE }}/user
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### Get Konfigurierte Wahltage (needs profile 'dummy.clients' to make this work because of internal calls to other services)
+GET {{ WLS_ADMIN_SERVICE_URL }}/businessActions/konfigurierteWahltage
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+### POST Konfigurierter Wahltag
+POST {{ WLS_ADMIN_SERVICE_URL }}/businessActions/konfigurierterWahltag
+Content-Type: application/json
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+{
+  "wahltag": "2024-12-03T09:10:11",
+  "wahltagID": "wahltagID",
+  "wahltagStatus": "AKTIV",
+  "nummer": "0"
+}

@@ -26,6 +26,7 @@ export function getUser(): Promise<User> {
     .then((json: Partial<User>) => {
       const u = new User();
       u.sub = json.sub || "";
+      u.wahlbezirkID = json.wahlbezirkID;
 
       // LHM
       u.displayName = json.displayName || "";

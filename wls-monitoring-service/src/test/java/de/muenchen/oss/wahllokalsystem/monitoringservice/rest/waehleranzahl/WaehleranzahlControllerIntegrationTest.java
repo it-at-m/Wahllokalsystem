@@ -63,7 +63,7 @@ public class WaehleranzahlControllerIntegrationTest {
     WaehleranzahlRepository waehleranzahlRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         waehleranzahlRepository.deleteAll();
     }
 

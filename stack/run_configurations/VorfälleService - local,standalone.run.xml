@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="VorfälleService - local,standalone" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,standalone,sec">
+    <option name="ACTIVE_PROFILES" value="local,standalone" />
+    <module name="wls-vorfaelleundvorkommnisse-service" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.MicroServiceApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

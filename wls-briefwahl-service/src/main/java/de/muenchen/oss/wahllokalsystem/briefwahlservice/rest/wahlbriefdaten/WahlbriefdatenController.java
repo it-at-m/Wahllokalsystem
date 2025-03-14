@@ -1,6 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.briefwahlservice.rest.wahlbriefdaten;
 
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.service.wahlbriefdaten.WahlbriefdatenService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -23,6 +26,17 @@ public class WahlbriefdatenController {
 
     private final WahlbriefdatenDTOMapper wahlbriefdatenDTOMapper;
 
+    @Operation(description = "Laden der Wahlbriefdaten mit { wahlbezirkID }.")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Wahlbriefdaten erfolgreich zurückgegeben."
+                    ),
+                    @ApiResponse(
+                            responseCode = "204", description = "Keine Wahlbriefdaten gefunden."
+                    )
+            }
+    )
     @GetMapping("{wahlbezirkID}")
     public ResponseEntity<WahlbriefdatenDTO> getWahlbriefdaten(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
         val wahlbriefdatenFromService = wahlbriefdatenService.getWahlbriefdaten(wahlbezirkID);
@@ -30,6 +44,14 @@ public class WahlbriefdatenController {
         return okWithBodyOrNoContent(wahlbriefdatenFromService.map(wahlbriefdatenDTOMapper::toDTO));
     }
 
+    @Operation(description = "Speichern der Wahlbriefdaten mit { wahlbezirkID }.")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Wahlbriefdaten erfolgreich gespeichert."
+                    )
+            }
+    )
     @PostMapping("{wahlbezirkID}")
     @ResponseStatus(HttpStatus.OK)
     public void postWahlbriefdaten(@PathVariable("wahlbezirkID") String wahlbezirkID,

@@ -1,6 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.briefwahlservice.rest.beanstandetewahlbriefe;
 
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.service.beanstandetewahlbriefe.BeanstandeteWahlbriefeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,17 @@ public class BeanstandeteWahlbriefeController {
 
     private final BeanstandeteWahlbriefeDTOMapper beanstandeteWahlbriefeDTOMapper;
 
+    @Operation(description = "Laden der Beanstandeten Wahlbriefe mit { wahlbezirkID} und { waehlerverzeichnisNummer }.")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Liste aller beanstandeten Wahlbriefe erfolgreich zurückgegeben."
+                    ),
+                    @ApiResponse(
+                            responseCode = "204", description = "Keine beanstandeten Wahlbriefe gefunden."
+                    )
+            }
+    )
     @GetMapping("{wahlbezirkID}/{waehlerverzeichnisNummer}")
     public ResponseEntity<BeanstandeteWahlbriefeDTO> getBeanstandeteWahlbriefe(@PathVariable("wahlbezirkID") String wahlbezirkID,
             @PathVariable("waehlerverzeichnisNummer") Long waehlerverzeichnisNummer) {
@@ -28,6 +42,14 @@ public class BeanstandeteWahlbriefeController {
         return okWithBodyOrNoContent(beanstandeteWahlbriefeFromService);
     }
 
+    @Operation(description = "Speichern von Beanstandeten Wahlbriefen mit { wahlbezirkID} und { waehlerverzeichnisNummer }.")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Liste aller beanstandeten Wahlbriefe erfolgreich gespeichert."
+                    )
+            }
+    )
     @PostMapping("{wahlbezirkID}/{waehlerverzeichnisNummer}")
     public void setBeanstandeteWahlbriefe(@PathVariable("wahlbezirkID") String wahlbezirkID,
             @PathVariable("waehlerverzeichnisNummer") Long waehlerverzeichnisNummer,

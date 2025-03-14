@@ -112,7 +112,7 @@ class SecurityUtilsTest {
     class BuildArgumentsForMissingAuthoritiesVariations {
 
         @Test
-        void should_createStreamWithCombinationsOfAuthoritiesWithOneAuthorityMissingInEachCombination_when_AuthoritiesAreGiven() {
+        void should_createStreamWithCombinationsOfAuthoritiesWithOneAuthorityMissingInEachCombination_when_authoritiesAreGiven() {
             val authority1 = "authority1";
             val authority2 = "authority2";
             val authority3 = "authority3";

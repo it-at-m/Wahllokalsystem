@@ -10,14 +10,14 @@ Dazu haben wir Regeln definiert. Diese Regeln und deren Hinterlegung in der jewe
 
 ```mermaid
 flowchart LR
-    
-    subgraph Dev-PC 
-        subgraph IDE 
+
+    subgraph Dev-PC
+        subgraph IDE
             wlsService
             frontend_gui[gui_wahllokalsystem]
         end
-        
-        subgraph Docker 
+
+        subgraph Docker
             authService
             oracleDB[Oracle DB]
             apiGateway[API Gateway]
@@ -47,20 +47,20 @@ flowchart LR
 > Diese Ports werden sowohl in der IDE als auch in Docker verwendet.
 > Beachten Sie, dass somit nur eine Instanz eines Services gleichzeitig laufen kann.
 
-| Service                                                                  | Port |
-|--------------------------------------------------------------------------|------|
-| [Admin](/services/admin-service/)                                        | 8209 |
-| [Auth](/services/auth-service/)                                          | 8100 |
-| [Basisdaten](/services/basisdaten-service/)                              | 8205 |
-| [Briefwahl](/services/briefwahl-service/)                                | 8202 |
-| Broadcast                                                                | 8200 |
-| [EAI](/services/eai-service/)                                            | 8300 |
-| [Ergebnismeldung](/services/ergebnismeldung-service/)                    | 8208 |
-| [Infomanagement](/services/infomanagement-service/)                      | 8201 |
-| [Monitoring](/services/monitoring-service/)                              | 8206 |
-| [Vorfälle und Vorkommnisse](/services/vorfaelleundvorkommnisse-service/) | 8204 |
-| [Wahlvorbereitung](/services/wahlvorbereitungs-service/)                 | 8203 |
-| [Wahlvorstand](/services/wahlvorstand-service/)                          | 8207 |
+| Service                                                                                   | Port |
+|-------------------------------------------------------------------------------------------| ---- |
+| [Admin](/services/backend-services/admin-service/)                                        | 8209 |
+| [Auth](/services/backend-services/auth-service/)                                          | 8100 |
+| [Basisdaten](/services/backend-services/basisdaten-service/)                              | 8205 |
+| [Briefwahl](/services/backend-services/briefwahl-service/)                                | 8202 |
+| [Broadcast](/services/backend-services/broadcast-service/)                                | 8200 |
+| [EAI](/services/backend-services/eai-service/)                                            | 8300 |
+| [Ergebnismeldung](/services/backend-services/ergebnismeldung-service/)                    | 8208 |
+| [Infomanagement](/services/backend-services/infomanagement-service/)                      | 8201 |
+| [Monitoring](/services/backend-services/monitoring-service/)                              | 8206 |
+| [Vorfälle und Vorkommnisse](/services/backend-services/vorfaelleundvorkommnisse-service/) | 8204 |
+| [Wahlvorbereitung](/services/backend-services/wahlvorbereitungs-service/)                 | 8203 |
+| [Wahlvorstand](/services/backend-services/wahlvorstand-service/)                          | 8207 |
 
 ## Profile
 
@@ -71,12 +71,15 @@ flowchart LR
 | db-dummydata           | Es werden Flyway-Files mit Dummydaten für die Datenbank mit verwendet.                                                                   |
 | no-security            | Die Prüfungen der Authentifizierung und Authorisierung werden deaktiviert.                                                               |
 | dummy.nobezirkid.check | Deaktiviert die Prüfung, dass Anfragen für einen bestimmten Wahlbezirk (wahlbezirkID), nur von dem User des Wahlbezirkes erfolgen dürfen |
-
+| dummy.clients          | Es erfolgt keine Kommunikation mit fachlichen Services weil Dummy-Implementierung anstatt von Clients verwendet werden.                  |
+| standalone             | Der Service arbeitet eigenständig. Inkludiert dummy.clients, dummy.nobezirkid.check und db-h2.                                           |
+| local                  | Der Service läuft lokal. Entsprechend wird der Port des Services definiert um nicht in Konflikt mit anderen Service zu kommen.           |
+| plainTextLogging       | Logmeldungen werden als Text ausgegeben. Ohne dieses Profil sind die Logmeldungen ein JSON-Objekt.                                       |
 
 ## Benutzer
 
 | Name        | Passwort | Beschreibung                                                          |
-|-------------|----------|-----------------------------------------------------------------------|
+| ----------- | -------- | --------------------------------------------------------------------- |
 | wls_test    | test     | Ein Benutzer ohne weitere Rechte                                      |
 | wls_all     | test     | Ein Benutzer mit allen Rechten                                        |
 | wls_all_bwb | test     | Ein Benutzer mit allen Rechten mit der WahlbezirksArt BWB (Briefwahl) |
@@ -124,4 +127,3 @@ sollte der Container in Docker einmal komplett gelöscht und über das `docker-c
 > [!WARNING]
 > Bei dieser Variante ist es wichtig, dass die Änderung im `docker-compose.yml` File nicht gepusht wird, weil alle
 > anderen Container mit security laufen und das `no-security`-Profil nur für die Entwicklung benötigt wird.
-

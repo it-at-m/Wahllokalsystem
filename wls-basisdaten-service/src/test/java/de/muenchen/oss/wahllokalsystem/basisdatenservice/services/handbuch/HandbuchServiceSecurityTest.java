@@ -1,10 +1,10 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.handbuch.Handbuch;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.handbuch.HandbuchRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahlbezirkArt;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagIdUndWahlbezirksart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.handbuch.Handbuch;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.handbuch.HandbuchRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
@@ -44,7 +44,7 @@ public class HandbuchServiceSecurityTest {
     class GetHandbuch {
 
         @Test
-        void accessGranted() {
+        void should_grantAccess_when_authoritiesArePresent() {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_HANDBUCH);
             handbuchRepository.save(new Handbuch(new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB), "handbuch".getBytes()));
 
@@ -56,7 +56,7 @@ public class HandbuchServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariations")
-        void anyMissingAuthorityCausesFail(final ArgumentsAccessor argumentsAccessor) {
+        void should_failAuthorization_when_anyAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
             val handbuchID = new HandbuchReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
@@ -73,7 +73,7 @@ public class HandbuchServiceSecurityTest {
     class SetHandbuch {
 
         @Test
-        void accessGranted() {
+        void should_grantAccess_when_authoritiesArePresent() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_HANDBUCH);
 
             val handbuchModelToSave = new HandbuchWriteModel(new HandbuchReferenceModel("wahltagID", WahlbezirkArtModel.UWB), "handbuch".getBytes());
@@ -81,7 +81,7 @@ public class HandbuchServiceSecurityTest {
         }
 
         @Test
-        void accessDeniedWhenServiceAuthoritiyIsMissing() {
+        void should_denyAccess_when_serviceAuthoritiyIsMissing() {
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_HANDBUCH);
 
             val handbuchModelToSave = new HandbuchWriteModel(new HandbuchReferenceModel("wahltagID", WahlbezirkArtModel.UWB), "handbuch".getBytes());
@@ -89,7 +89,7 @@ public class HandbuchServiceSecurityTest {
         }
 
         @Test
-        void technischeWlsExceptionWhenRepoAuthorityIsMissing() {
+        void should_returnTechnischeWlsException_when_repoAuthorityIsMissing() {
             SecurityUtils.runWith(Authorities.SERVICE_POST_HANDBUCH);
 
             val handbuchModelToSave = new HandbuchWriteModel(new HandbuchReferenceModel("wahltagID", WahlbezirkArtModel.UWB), "handbuch".getBytes());

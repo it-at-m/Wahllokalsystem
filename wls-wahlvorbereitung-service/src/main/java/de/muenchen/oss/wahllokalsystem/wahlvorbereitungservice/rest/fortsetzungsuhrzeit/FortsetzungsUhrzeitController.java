@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.fortsetzung
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.AbstractController;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.fortsetzungsuhrzeit.FortsetzungsUhrzeitService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,13 @@ public class FortsetzungsUhrzeitController extends AbstractController {
     private final FortsetzungsUhrzeitService fortsetzungsUhrzeitService;
     private final FortsetzungsUhrzeitDTOMapper fortsetzungsUhrzeitDTOMapper;
 
-    @Operation(description = "Laden der Fortsetzungsuhrzeit des Urnenwahllokals {wahlbezirkID}")
+    @Operation(
+            description = "Laden der Fortsetzungsuhrzeit des Urnenwahllokals {wahlbezirkID}",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Fortsetzungsuhrzeit erfolgreich zurückgegeben."
+                    ) }
+    )
     @GetMapping("{wahlbezirkID}")
     public ResponseEntity<FortsetzungsUhrzeitDTO> getFortsetzungsUhrzeit(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
         val fortsetzungsUhrzeitModel = fortsetzungsUhrzeitService.getFortsetzungsUhrzeit(wahlbezirkID);
@@ -31,7 +38,13 @@ public class FortsetzungsUhrzeitController extends AbstractController {
         return okWithBodyOrNoContent(fortsetzungsUhrzeitModel.map(fortsetzungsUhrzeitDTOMapper::toDTO));
     }
 
-    @Operation(description = "Aktualisiert die FortsetzungsUhrzeit des Urnenwahllokals {wahlbezirkID}")
+    @Operation(
+            description = "Aktualisiert die FortsetzungsUhrzeit des Urnenwahllokals {wahlbezirkID}",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201", description = "Fortsetzungsuhrzeit erfolgreich gespeichert."
+                    ) }
+    )
     @PostMapping("{wahlbezirkID}")
     @ResponseStatus(HttpStatus.CREATED)
     public void postFortsetzungsUhrzeit(@PathVariable("wahlbezirkID") final String wahlbezirkID,

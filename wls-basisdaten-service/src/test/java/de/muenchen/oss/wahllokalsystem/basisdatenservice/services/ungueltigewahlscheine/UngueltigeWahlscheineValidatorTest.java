@@ -29,14 +29,14 @@ class UngueltigeWahlscheineValidatorTest {
         final FachlicheWlsException mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
         @Test
-        void noExceptionWhenModelIsValid() {
+        void should_returnNoException_when_modelIsValid() {
             val validModel = initValidModel().build();
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validUngueltigeWahlscheineReferenceOrThrow(validModel));
         }
 
         @Test
-        void exceptionWhenModelIsNull() {
+        void should_returnException_when_modelIsNull() {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG))
                     .thenReturn(mockedWlsException);
 
@@ -44,7 +44,7 @@ class UngueltigeWahlscheineValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahltagIDIsNull() {
+        void should_returnException_when_wahltagIDIsNull() {
             val invalidModel = initValidModel().wahltagID(null).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG))
@@ -55,7 +55,7 @@ class UngueltigeWahlscheineValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahltagIDIsEmpty() {
+        void should_returnException_when_wahltagIDIsEmpty() {
             val invalidModel = initValidModel().wahltagID("").build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG))
@@ -65,7 +65,7 @@ class UngueltigeWahlscheineValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahltagIDIsBlankString() {
+        void should_returnException_when_wahltagIDIsBlankString() {
             val invalidModel = initValidModel().wahltagID("   ").build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG))
@@ -75,7 +75,7 @@ class UngueltigeWahlscheineValidatorTest {
         }
 
         @Test
-        void exceptionWheWahlbezirksartIsNull() {
+        void should_returnException_when_wahlbezirksartIsNull() {
             val invalidModel = initValidModel().wahlbezirksart(null).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG))
@@ -95,14 +95,14 @@ class UngueltigeWahlscheineValidatorTest {
         final FachlicheWlsException mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
         @Test
-        void noExceptionWhenModelIsValid() {
+        void should_returnNoException_when_modelIsValid() {
             val validModel = initValidModel().build();
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validUngueltigeWahlscheineWriteModelOrThrow(validModel));
         }
 
         @Test
-        void exceptionWhenModelIsNull() {
+        void should_returnException_when_modelIsNull() {
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTUNGUELTIGEWS_PARAMETER_UNVOLLSTAENDIG))
                     .thenReturn(mockedWlsException);
 
@@ -110,7 +110,7 @@ class UngueltigeWahlscheineValidatorTest {
         }
 
         @Test
-        void exceptionWhenReferenceModelIsNull() {
+        void should_returnException_when_referenceModelIsNull() {
             val invalidModel = initValidModel().ungueltigeWahlscheineReferenceModel(null).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTUNGUELTIGEWS_PARAMETER_UNVOLLSTAENDIG))
@@ -120,7 +120,7 @@ class UngueltigeWahlscheineValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahltagIDIsNull() {
+        void should_returnException_when_wahltagIDIsNull() {
             val invalidModel = initValidModel().ungueltigeWahlscheineReferenceModel(initValidReferenceModel().wahltagID(null).build()).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTUNGUELTIGEWS_PARAMETER_UNVOLLSTAENDIG))
@@ -131,7 +131,7 @@ class UngueltigeWahlscheineValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahltagIDIsEmpty() {
+        void should_returnException_when_wahltagIDIsEmpty() {
             val invalidModel = initValidModel().ungueltigeWahlscheineReferenceModel(initValidReferenceModel().wahltagID("").build()).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTUNGUELTIGEWS_PARAMETER_UNVOLLSTAENDIG))
@@ -141,7 +141,7 @@ class UngueltigeWahlscheineValidatorTest {
         }
 
         @Test
-        void exceptionWhenWahltagIDIsBlankString() {
+        void should_returnException_when_wahltagIDIsBlankString() {
             val invalidModel = initValidModel().ungueltigeWahlscheineReferenceModel(initValidReferenceModel().wahltagID("   ").build()).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTUNGUELTIGEWS_PARAMETER_UNVOLLSTAENDIG))
@@ -151,7 +151,7 @@ class UngueltigeWahlscheineValidatorTest {
         }
 
         @Test
-        void exceptionWheWahlbezirksartIsNull() {
+        void should_returnException_when_wahlbezirksartIsNull() {
             val invalidModel = initValidModel().ungueltigeWahlscheineReferenceModel(initValidReferenceModel().wahlbezirksart(null).build()).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTUNGUELTIGEWS_PARAMETER_UNVOLLSTAENDIG))
@@ -161,7 +161,7 @@ class UngueltigeWahlscheineValidatorTest {
         }
 
         @Test
-        void exceptionWhenUngueltigeWahlscheineDataIsNull() {
+        void should_returnException_when_ungueltigeWahlscheineDataIsNull() {
             val invalidModel = initValidModel().ungueltigeWahlscheineData(null).build();
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTUNGUELTIGEWS_PARAMETER_UNVOLLSTAENDIG))

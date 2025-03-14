@@ -14,15 +14,15 @@ class KopfdatenDTOMapperTest {
     private final KopfdatenDTOMapper unitUnderTest = Mappers.getMapper(KopfdatenDTOMapper.class);
 
     @Nested
-    class FromKopfdatenModelToKopfdatenDTO {
+    class ToDTO {
 
         @Test
-        void nullInNullOut() {
+        void should_returnNull_when_givenNull() {
             Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
         }
 
         @Test
-        void isMappedToDTO() {
+        void should_returnKopfdatenDTO_when_givenKopfdatenModel() {
 
             val kopfdatenModel = new KopfdatenModel(new BezirkUndWahlID("wahlID1", "wahlbezirkID1"),
                     "LHM", StimmzettelgebietsartModel.SK, "szgNummer1", "szgName1",

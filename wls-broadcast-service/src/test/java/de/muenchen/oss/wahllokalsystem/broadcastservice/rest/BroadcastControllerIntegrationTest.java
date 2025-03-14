@@ -84,7 +84,7 @@ public class BroadcastControllerIntegrationTest {
     }
 
     @AfterEach
-    void closeService() throws Exception {
+    void teardown() throws Exception {
         closeable.close();
     }
 

@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.eroeffnungs
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.AbstractController;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.eroeffnungsuhrzeit.EroeffnungsUhrzeitService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,13 @@ public class EroeffnungsUhrzeitController extends AbstractController {
     private final EroeffnungsUhrzeitService eroeffnungsuhrzeitService;
     private final EroeffnungsUhrzeitDTOMapper EroeffnungsuhrzeitDTOMapper;
 
-    @Operation(description = "Laden der Eroeffnungsuhrzeit des Wahllokals {wahlbezirkID}")
+    @Operation(
+            description = "Laden der Eroeffnungsuhrzeit des Wahllokals {wahlbezirkID}",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Eroeffnungsuhrzeit erfolgreich gespeichert."
+                    ) }
+    )
     @GetMapping("{wahlbezirkID}")
     public ResponseEntity<EroeffnungsUhrzeitDTO> getEroeffnungsuhrzeit(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
         val eroeffnungsuhrzeitModel = eroeffnungsuhrzeitService.getEroeffnungsUhrzeit(wahlbezirkID);
@@ -31,7 +38,13 @@ public class EroeffnungsUhrzeitController extends AbstractController {
         return okWithBodyOrNoContent(eroeffnungsuhrzeitModel.map(EroeffnungsuhrzeitDTOMapper::toDTO));
     }
 
-    @Operation(description = "Aktualisiert die Eroeffnungsuhrzeit des Wahllokals {wahlbezirkID}")
+    @Operation(
+            description = "Aktualisiert die Eroeffnungsuhrzeit des Wahllokals {wahlbezirkID}",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201", description = "Eroeffnungsuhrzeit erfolgreich gespeichert."
+                    ) }
+    )
     @PostMapping("{wahlbezirkID}")
     @ResponseStatus(HttpStatus.CREATED)
     public void postEroeffnungsuhrzeit(@PathVariable("wahlbezirkID") final String wahlbezirkID,

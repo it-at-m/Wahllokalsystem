@@ -19,7 +19,7 @@ class FortsetzungsUhrzeitModelMapperTest {
     class ToModel {
 
         @Test
-        void isMapped() {
+        void should_returnFortsetzungsuhrzeitModel_when_givenFortsetzungsuhrzeitEntity() {
             val wahlbezirkID = "wahlbezirkID";
             val fortsetzungsUhrzeit = LocalDateTime.now();
             val entityToMap = new FortsetzungsUhrzeit(wahlbezirkID, fortsetzungsUhrzeit);
@@ -36,7 +36,7 @@ class FortsetzungsUhrzeitModelMapperTest {
     class ToEntity {
 
         @Test
-        void isMapped() {
+        void should_returnFortsetzungsuhrzeitEntity_when_givenFortsetzungsuhrzeitModel() {
             val wahlbezirkID = "wahlbezirkID";
             val fortsetzungsUhrzeit = LocalDateTime.now();
 
@@ -49,5 +49,4 @@ class FortsetzungsUhrzeitModelMapperTest {
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
     }
-
 }

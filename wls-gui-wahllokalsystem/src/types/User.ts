@@ -15,6 +15,8 @@ class User {
   memberof: string[] = [];
   user_roles: string[] = [];
   authorities: string[] = [];
+
+  wahlbezirkID? = "";
 }
 
 export function UserLocalDevelopment(): User {

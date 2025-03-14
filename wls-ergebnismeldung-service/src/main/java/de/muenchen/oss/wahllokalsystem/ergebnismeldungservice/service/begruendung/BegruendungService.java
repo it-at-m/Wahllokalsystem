@@ -28,7 +28,7 @@ public class BegruendungService {
 
     @PreAuthorize(
         "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetBegruendung')"
-                + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
+                + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
     )
     public BegruendungModel getBegruendung(@P("param") @NotNull final BegruendungReference begruendungReference) {
         log.info("#getBegruendung");
@@ -41,7 +41,7 @@ public class BegruendungService {
 
     @PreAuthorize(
         "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostBegruendung')"
-                + " and @bezirkIdPermisionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
+                + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
     )
     public void postBegruendung(@P("param") final BegruendungReference begruendungReference, @NotNull final BegruendungModel begruendungToAdd) {
         log.info("#postBegruendung");

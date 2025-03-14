@@ -10,7 +10,7 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import de.muenchen.oss.wahllokalsystem.authservice.security.CustomUsernamePasswordAuthenticationFilter;
-import de.muenchen.oss.wahllokalsystem.authservice.security.WahlbezirkArtTokenCustomizer;
+import de.muenchen.oss.wahllokalsystem.authservice.security.WlsUserTokenCustomizer;
 import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -182,7 +182,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public WahlbezirkArtTokenCustomizer wahlbezirkArtTokenCustomizer(final UserService userService) {
-        return new WahlbezirkArtTokenCustomizer(userService);
+    public WlsUserTokenCustomizer wlsUserTokenCustomizer(final UserService userService) {
+        return new WlsUserTokenCustomizer(userService);
     }
 }

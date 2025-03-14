@@ -4,8 +4,12 @@ spring:
   profiles:
     group:
       local:
+        - plainTextLogging
+      standalone:
         - db-h2
         - dummy.clients
+        - dummy.nobezirkid.check
+
   flyway:
     locations:
       - classpath:db/migrations/{vendor}
@@ -60,4 +64,4 @@ info.application.version: @project.version@
 app:
   clients:
     eai:
-      basePath: http://localhost:39149
+      basePath: http://localhost:8300

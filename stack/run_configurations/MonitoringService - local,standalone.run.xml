@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="MonitoringService - local,standalone" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,standalone,sec">
+    <option name="ACTIVE_PROFILES" value="local,standalone" />
+    <module name="wls-monitoring-service" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="de.muenchen.oss.wahllokalsystem.monitoringservice.MicroServiceApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

@@ -48,13 +48,13 @@ public class KopfdatenServiceSecurityTest {
     class GetKopfdaten {
 
         @AfterEach
-        void tearDown() {
+        void teardown() {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_DELETE_KOPFDATEN);
             kopfdatenRepository.deleteAll();
         }
 
         @Test
-        void accessGranted() throws Exception {
+        void should_grantAccess_when_authoritiesArePresent() throws Exception {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_READ_KOPFDATEN);
 
             // mock infomanagement konfigurierterWahltag
@@ -77,7 +77,7 @@ public class KopfdatenServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariationsRepoEmpty")
-        void missingAuthorityCausesFailWithAccessDeniedCaseEmptyRepo(final ArgumentsAccessor argumentsAccessor) throws Exception {
+        void should_denyAccess_when_authoritiesAreMissingAndRepoIsEmpty(final ArgumentsAccessor argumentsAccessor) throws Exception {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
             // mock infomanagement konfigurierterWahltag
             KonfigurierterWahltagDTO infomanagementKonfigurierterWahltag = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
@@ -105,7 +105,7 @@ public class KopfdatenServiceSecurityTest {
 
         @ParameterizedTest(name = "{index} - {1} missing")
         @MethodSource("getMissingAuthoritiesVariationsRepoHasData")
-        void missingAuthorityCausesFailWithAccessDeniedCaseRepoHasData(final ArgumentsAccessor argumentsAccessor) throws Exception {
+        void should_denyAccess_when_authoritiesAreMissingAndRepoIsNotEmpty(final ArgumentsAccessor argumentsAccessor) throws Exception {
             SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
             writeDataToRepository();
 

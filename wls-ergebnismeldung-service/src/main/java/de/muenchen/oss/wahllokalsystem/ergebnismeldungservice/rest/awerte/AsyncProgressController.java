@@ -1,7 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.awerte;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AsyncProgress;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,10 +25,6 @@ public class AsyncProgressController {
                     @ApiResponse(
                             responseCode = "200", description = "Auskunft über Bearbeitungszustand erhalten",
                             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = AsyncProgressDTO.class)) }
-                    ),
-                    @ApiResponse(
-                            responseCode = "500", description = "Probleme bei der Verarbeitung der Anfrage",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WlsExceptionDTO.class)) }
                     )
             }
     )

@@ -32,7 +32,7 @@ export function useBroadcastService() {
         await broadcastCA.deleteMessage(nachrichtID);
       } catch {
         return {
-          message: "",
+          message: messageDTO.nachricht, // eg if message fetched from idb
           error: "Es ist ein Fehler beim Lesen der Nachricht aufgetreten",
         };
       }

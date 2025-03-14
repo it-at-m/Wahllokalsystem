@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.monitoringservice.rest.wahllokalzustand;
 
 import de.muenchen.oss.wahllokalsystem.monitoringservice.service.wahllokalzustand.WahllokalZustandService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +20,11 @@ public class WahllokalZustandController {
     private final WahllokalZustandService wahllokalZustandService;
 
     @Operation(
-            description = "Letzte Anwesenheit des Wahlbezirks {wahlbezirkID}. Generiert die Empfangs-Uhrzeit, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
+            description = "Letzte Anwesenheit des Wahlbezirks {wahlbezirkID}. Generiert die Empfangs-Uhrzeit, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Letzte Anwesenheit erfolgreich gespeichert."
+                    ) }
     )
     @PostMapping("/lastSeen/{wahlbezirkID}")
     public void postLastSeen(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
@@ -28,7 +33,11 @@ public class WahllokalZustandController {
     }
 
     @Operation(
-            description = "Empfängt die Request als Nachricht über die letzte Abmeldung des Wahlbezirks {wahlbezirkID}, generiert die Empfangs-Uhrzeit, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
+            description = "Empfängt die Request als Nachricht über die letzte Abmeldung des Wahlbezirks {wahlbezirkID}, generiert die Empfangs-Uhrzeit, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Letzte Abmeldung erfolgreich weiter geleitet."
+                    ) }
     )
     @PostMapping("/letzteAbmeldung/{wahlbezirkID}")
     public void postLetzteAbmeldung(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
@@ -37,7 +46,11 @@ public class WahllokalZustandController {
     }
 
     @Operation(
-            description = "Empfängt die Daten über die Sendungsuhrzeit der Schnellmeldung, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
+            description = "Empfängt die Daten über die Sendungsuhrzeit der Schnellmeldung, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Sendungsuhrzeit der Schnellmeldung erfolgreich weiter geleitet."
+                    ) }
     )
     @PostMapping("/schnellmeldungSendungsuhrzeit")
     public void postSchnellmeldungSendungsuhrzeit(@RequestBody SendungsdatenDTO sendungsdatenDTO) {
@@ -46,7 +59,11 @@ public class WahllokalZustandController {
     }
 
     @Operation(
-            description = "Empfängt die Daten über die Druckuhrzeit der Schnellmeldung, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
+            description = "Empfängt die Daten über die Druckuhrzeit der Schnellmeldung, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Druckuhrzeit der Schnellmeldung erfolgreich weiter geleitet."
+                    ) }
     )
     @PostMapping("/schnellmeldungDruckuhrzeit")
     public void postSchnellmeldungDruckuhrzeit(@RequestBody DruckdatenDTO druckdatenDTO) {
@@ -55,7 +72,11 @@ public class WahllokalZustandController {
     }
 
     @Operation(
-            description = "Empfängt die Daten über die Sendungsuhrzeit der Niederschrift, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
+            description = "Empfängt die Daten über die Sendungsuhrzeit der Niederschrift, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Sendungsuhrzeit der Niederschrift erfolgreich weiter geleitet."
+                    ) }
     )
     @PostMapping("/niederschriftSendungsuhrzeit")
     public void postNiederschriftSendungsuhrzeit(@RequestBody SendungsdatenDTO sendungsdatenDTO) {
@@ -64,7 +85,11 @@ public class WahllokalZustandController {
     }
 
     @Operation(
-            description = "Empfängt die Daten über die Druckuhrzeit der Niederschrift, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter."
+            description = "Empfängt die Daten über die Druckuhrzeit der Niederschrift, packt diese in ein Wahllokalzustand-Objekt und leitet dieses weiter.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Druckuhrzeit der Niederschrift erfolgreich weiter geleitet."
+                    ) }
     )
     @PostMapping("/niederschriftDruckuhrzeit")
     public void postNiederschriftDruckuhrzeit(@RequestBody DruckdatenDTO druckdatenDTO) {

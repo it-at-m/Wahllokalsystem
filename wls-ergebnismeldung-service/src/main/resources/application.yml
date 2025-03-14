@@ -4,6 +4,8 @@ spring:
   profiles:
     group:
       local:
+        - plainTextLogging
+      standalone:
         - db-h2
         - dummy.clients
         - dummy.nobezirkid.check

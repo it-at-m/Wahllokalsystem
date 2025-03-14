@@ -4,7 +4,11 @@ spring:
   profiles:
     group:
       local:
+        - plainTextLogging
+      standalone:
         - db-h2
+        - dummy.clients
+        - dummy.nobezirkid.check
   flyway:
     locations:
       - classpath:db/migrations/{vendor}
@@ -54,7 +58,7 @@ info.application.version: @project.version@
 
 service:
   info:
-    oid: WLS-ERGEBNISMELDUNG
+    oid: WLS-ADMIN
   config:
     clients:
       auth:

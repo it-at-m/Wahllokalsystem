@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.urnenwahlvo
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.AbstractController;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.urnenwahlvorbereitung.UrnenwahlvorbereitungService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,13 @@ public class UrnenwahlvorbereitungController extends AbstractController {
     private final UrnenwahlvorbereitungDTOMapper urnenwahlvorbereitungDTOMapper;
     private final UrnenwahlvorbereitungService urnenwahlvorbereitungService;
 
-    @Operation(description = "Laden der Wahlvorbereitungsdaten des Urnenwahllokals {wahlbezirkID}")
+    @Operation(
+            description = "Laden der Wahlvorbereitungsdaten des Urnenwahllokals {wahlbezirkID}",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "Wahlvorbereitungsdaten erfolgreich zurückgegeben."
+                    ) }
+    )
     @GetMapping("{wahlbezirkID}")
     public ResponseEntity<UrnenwahlvorbereitungDTO> getUrnenwahlVorbereitung(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
         val urnenwahlvorbereitungModel = urnenwahlvorbereitungService.getUrnenwahlvorbereitung(wahlbezirkID);
@@ -31,7 +38,13 @@ public class UrnenwahlvorbereitungController extends AbstractController {
         return okWithBodyOrNoContent(urnenwahlvorbereitungModel.map(urnenwahlvorbereitungDTOMapper::toDTO));
     }
 
-    @Operation(description = "Aktualisiert die Wahlvorbereitungsdaten des Urnenwahllokals {wahlbezirkID}")
+    @Operation(
+            description = "Aktualisiert die Wahlvorbereitungsdaten des Urnenwahllokals {wahlbezirkID}",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201", description = "Wahlvorbereitungsdaten erfolgreich gespeichert."
+                    ) }
+    )
     @PostMapping("{wahlbezirkID}")
     @ResponseStatus(HttpStatus.CREATED)
     public void postUrnenwahlvorbereitung(@PathVariable("wahlbezirkID") final String wahlbezirkID,

@@ -30,7 +30,7 @@ public class LdapConfiguration {
     }
 
     @Bean
-    @Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
+    @Profile(Profiles.NOT + Profiles.DUMMY_LDAP)
     public LdapContextSource ldapContextSource() {
         val contextSourceValue = new DefaultSpringSecurityContextSource(serviceAuthLdapProperties.getContextSource());
         contextSourceValue.setAnonymousReadOnly(serviceAuthLdapProperties.isAnonymousReadOnly());
@@ -45,7 +45,7 @@ public class LdapConfiguration {
     }
 
     @Bean
-    @Profile(Profiles.DUMMY_CLIENTS)
+    @Profile(Profiles.DUMMY_LDAP)
     public EmbeddedLdapServerContextSourceFactoryBean embeddedLdapContextSource() {
         log.warn("using embeddedLdapContextSource");
         return EmbeddedLdapServerContextSourceFactoryBean.fromEmbeddedLdapServer();

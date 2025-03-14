@@ -19,7 +19,7 @@ public class ErgebnisseRepositoryTest {
     private ErgebnisseRepository ergebnisseRepository;
 
     @Test
-    public void should_returnErgebnisseList_when_getAllErgebnisseIsCalled() {
+    void should_returnErgebnisseList_when_getAllErgebnisseIsCalled() {
         val bezirkUndWahlIDStapelart = new BezirkUndWahlIDStapelart("wahlbezirkID", "wahlID", Stapelart.LTW_BZW_A);
         val ergebnis1 = new Ergebnis(null, null, null, 1, null);
         val ergebnisList = List.of(ergebnis1);

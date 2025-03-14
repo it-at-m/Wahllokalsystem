@@ -20,7 +20,7 @@ class PermissionRepositoryTest {
     private PermissionRepository permissionRepository;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         permissionRepository.deleteAll();
     }
 

@@ -3,7 +3,6 @@ package de.muenchen.oss.wahllokalsystem.authservice.configuration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +41,7 @@ class UserInfoAuthoritiesServiceTest {
     UserInfoAuthoritiesService unitUnderTest;
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         val restTemplateBuilder = new RestTemplateBuilder(new RestTemplateCustomizer[0]) {
             @Override
             public RestTemplate build() {

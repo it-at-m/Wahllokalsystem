@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.broadcastservice.rest;
 
-import de.muenchen.oss.wahllokalsystem.broadcastservice.service.BroadcastMapper;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.TestdataFactory;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -12,7 +11,7 @@ import org.mapstruct.factory.Mappers;
 
 public class BroadcastDTOMapperTest {
 
-    private final BroadcastMapper unitUnderTest = Mappers.getMapper(BroadcastMapper.class);
+    private final BroadcastDTOMapper unitUnderTest = Mappers.getMapper(BroadcastDTOMapper.class);
 
     @Nested
     class ToDto {

@@ -71,7 +71,7 @@ public class AWerteControllerIntegrationTest {
     AsyncAWerteService asyncAWerteService;
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_AWERTE);
         awerteRepository.deleteAll();
     }

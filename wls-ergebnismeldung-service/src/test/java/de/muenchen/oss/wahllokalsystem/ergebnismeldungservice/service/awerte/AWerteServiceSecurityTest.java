@@ -45,7 +45,7 @@ class AWerteServiceSecurityTest {
     class GetAWerte {
 
         @AfterEach
-        void tearDown() {
+        void teardown() {
             SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_AWERTE);
             aWerteRepository.deleteAll();
         }
@@ -136,7 +136,7 @@ class AWerteServiceSecurityTest {
     class InitialiseAWerte {
 
         @AfterEach
-        void tearDown() {
+        void teardown() {
             SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_AWERTE);
             aWerteRepository.deleteAll();
         }

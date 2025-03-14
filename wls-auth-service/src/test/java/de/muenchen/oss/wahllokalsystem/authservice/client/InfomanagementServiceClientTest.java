@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.authservice.client;
 
 import de.muenchen.oss.wahllokalsystem.authservice.eai.infomanagement.client.KonfigurationControllerApi;
+import de.muenchen.oss.wahllokalsystem.authservice.eai.infomanagement.client.KonfigurierterWahltagControllerApi;
 import de.muenchen.oss.wahllokalsystem.authservice.eai.infomanagement.model.KonfigurationDTO;
 import de.muenchen.oss.wahllokalsystem.authservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.authservice.security.LegalLoginIntervalModel;
@@ -35,6 +36,9 @@ class InfomanagementServiceClientTest {
 
     @Mock
     KonfigurationControllerApi konfigurationControllerApi;
+
+    @Mock
+    KonfigurierterWahltagControllerApi konfigurierterWahltagControllerApi;
 
     @InjectMocks
     InfomanagementServiceClient unitUnderTest;
@@ -155,4 +159,57 @@ class InfomanagementServiceClientTest {
 
     }
 
+    @Nested
+    class IsWahltagActive {
+
+        @Test
+        void should_returnTrue_when_apiReturnsTrue() {
+            val wahltagID = "wahltagID";
+
+            Mockito.when(konfigurierterWahltagControllerApi.isWahltagActive(wahltagID)).thenReturn(Boolean.TRUE);
+
+            Assertions.assertThat(unitUnderTest.isWahltagActive(wahltagID)).isTrue();
+        }
+
+        @Test
+        void should_returnFalse_when_apiReturnsFalse() {
+            val wahltagID = "wahltagID";
+
+            Mockito.when(konfigurierterWahltagControllerApi.isWahltagActive(wahltagID)).thenReturn(Boolean.FALSE);
+
+            Assertions.assertThat(unitUnderTest.isWahltagActive(wahltagID)).isFalse();
+        }
+
+        @Test
+        void should_returnFalse_when_apiReturnsNull() {
+            val wahltagID = "wahltagID";
+
+            Mockito.when(konfigurierterWahltagControllerApi.isWahltagActive(wahltagID)).thenReturn(null);
+
+            Assertions.assertThat(unitUnderTest.isWahltagActive(wahltagID)).isFalse();
+        }
+
+        @Test
+        void should_rethrowException_when_apiThrowsWlsException() {
+            val wahltagID = "wahltagID";
+
+            val mockedApiWlsException = TechnischeWlsException.withCode("").buildWithMessage("is wahltagActive call failed");
+            Mockito.doThrow(mockedApiWlsException).when(konfigurierterWahltagControllerApi).isWahltagActive(wahltagID);
+
+            Assertions.assertThatThrownBy(() -> unitUnderTest.isWahltagActive(wahltagID)).isSameAs(mockedApiWlsException);
+        }
+
+        @Test
+        void should_throwWlsException_when_apiThrowsNonWlsException() {
+            val wahltagID = "wahltagID";
+
+            val mockedApiNonWlsException = new RuntimeException("is wahltagActive call failed");
+            val mockedWrappedWlsException = TechnischeWlsException.withCode("").buildWithMessage("is wahltagActive call failed");
+            Mockito.doThrow(mockedApiNonWlsException).when(konfigurierterWahltagControllerApi).isWahltagActive(wahltagID);
+            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_KONFIGSERVICE))
+                    .thenReturn(mockedWrappedWlsException);
+
+            Assertions.assertThatThrownBy(() -> unitUnderTest.isWahltagActive(wahltagID)).isSameAs(mockedWrappedWlsException);
+        }
+    }
 }

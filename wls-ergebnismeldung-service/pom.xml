@@ -17,7 +17,7 @@
         <spring.cloud.version>2023.0.5</spring.cloud.version>
         <logstash.encoder>8.0</logstash.encoder>
         <apache.commons.collections4>4.4</apache.commons.collections4>
-        <apache.commons.csv>1.12.0</apache.commons.csv>
+        <apache.commons.csv>1.13.0</apache.commons.csv>
         <apache.commons.io>2.18.0</apache.commons.io>
         <apache.commons.lang3>3.17.0</apache.commons.lang3>
         <apache.commons.text>1.13.0</apache.commons.text>
@@ -36,7 +36,8 @@
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <org.springdoc.version>2.6.0</org.springdoc.version>
-        <wls.common.version>1.1.0</wls.common.version>
+        <wls.common.version>1.5.1</wls.common.version>
+        <com.tngtech.archunit.version>1.4.0</com.tngtech.archunit.version>
     </properties>
 
     <dependencyManagement>
@@ -75,13 +76,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-
-        <!-- wls-common -->
-        <dependency>
-            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
-            <artifactId>exception</artifactId>
-            <version>1.1.0</version>
         </dependency>
 
         <!-- Caching -->
@@ -191,6 +185,11 @@
             <artifactId>security</artifactId>
             <version>${wls.common.version}</version>
         </dependency>
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>swagger</artifactId>
+            <version>${wls.common.version}</version>
+        </dependency>
 
         <!-- Validation -->
         <dependency>
@@ -237,7 +236,7 @@
         <dependency>
             <groupId>com.tngtech.archunit</groupId>
             <artifactId>archunit-junit5</artifactId>
-            <version>1.2.2</version>
+            <version>${com.tngtech.archunit.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -604,7 +603,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>10.21.1</version>
+                        <version>10.21.4</version>
                     </dependency>
                 </dependencies>
             </plugin>

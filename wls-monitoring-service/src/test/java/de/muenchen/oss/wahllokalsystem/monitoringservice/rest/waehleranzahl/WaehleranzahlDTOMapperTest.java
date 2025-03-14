@@ -22,7 +22,7 @@ class WaehleranzahlDTOMapperTest {
         }
 
         @Test
-        void should_mapModelToDto_when_ModelIsNotNull() {
+        void should_mapModelToDto_when_modelIsNotNull() {
             String wahlID = "wahlID01";
             String wahlbezirkID = "wahlbezirkID01";
             long anzahlWaehler = 99L;
@@ -47,7 +47,7 @@ class WaehleranzahlDTOMapperTest {
         }
 
         @Test
-        void should_mapDtoToModel_when_DtoIsNotNull() {
+        void should_mapDtoToModel_when_dtoIsNotNull() {
             String wahlID = "wahlID01";
             String wahlbezirkID = "wahlbezirkID01";
             long anzahlWaehler = 99L;

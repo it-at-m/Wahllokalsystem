@@ -67,8 +67,8 @@ public class ArchUnitTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("allClassesRulesToVerify")
-    void should_verifyArchUnitRuleForAllClassesOfService_when_running(final ArgumentsAccessor arguments) {
-        arguments.get(1, ArchRule.class).check(allTestClassesEndWithTestConvention);
+    void should_verifyArchUnitRuleForAllClasses_when_running(final ArgumentsAccessor arguments) {
+        arguments.get(1, ArchRule.class).check(arguments.get(2, JavaClasses.class));
     }
 
     public static Stream<Arguments> allTestClassesRulesToVerify() {

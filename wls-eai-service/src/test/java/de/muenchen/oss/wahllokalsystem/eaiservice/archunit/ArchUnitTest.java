@@ -17,7 +17,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 public class ArchUnitTest {
 
     private static JavaClasses allTestClasses;
-    private static JavaClasses allServiceClasses;
+    private static JavaClasses allClasses;
 
     @BeforeAll
     static void init() {
@@ -25,7 +25,7 @@ public class ArchUnitTest {
                 .withImportOption(new ImportOption.OnlyIncludeTests())
                 .importPackages(MicroServiceApplication.class.getPackage().getName());
 
-        allServiceClasses = new ClassFileImporter()
+        allClasses = new ClassFileImporter()
                 .importPackages(MicroServiceApplication.class.getPackage().getName());
     }
 
@@ -36,9 +36,9 @@ public class ArchUnitTest {
     }
 
     @ParameterizedTest(name = "{0}")
-    @MethodSource("allServiceClassesRulesToVerify")
-    void should_verifyArchUnitRuleForAllClassesOfService_when_running(final ArgumentsAccessor arguments) {
-        arguments.get(1, ArchRule.class).check(allServiceClasses);
+    @MethodSource("allClassesRulesToVerify")
+    void should_verifyArchUnitRuleForAllClasses_when_running(final ArgumentsAccessor arguments) {
+        arguments.get(1, ArchRule.class).check(allClasses);
     }
 
     public static Stream<Arguments> allTestClassesRulesToVerify() {
@@ -49,7 +49,7 @@ public class ArchUnitTest {
                 Arguments.of("TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED", MethodRules.RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED));
     }
 
-    private static Stream<Arguments> allServiceClassesRulesToVerify() {
+    private static Stream<Arguments> allClassesRulesToVerify() {
         return Stream.of(
                 Arguments.of("RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED",
                         ClassRules.RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED),

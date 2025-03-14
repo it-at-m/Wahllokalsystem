@@ -24,7 +24,7 @@ public class AuthenticationService {
         val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
         val authDetailRetriver = authDetailRetrivers.stream().filter(retriever -> retriever.canHandle(currentAuthentication)).findFirst();
         val wahlbezirkOfUser = authDetailRetriver
-                .flatMap(handler -> handler.getDetail(WAHLBEZIRK_ART_USER_DETAIL_KEY, currentAuthentication))
+                .flatMap(retriever -> retriever.getDetail(WAHLBEZIRK_ART_USER_DETAIL_KEY, currentAuthentication))
                 .map(WahlbezirkArtModel::valueOf);
 
         return wahlbezirkOfUser.orElseThrow(() -> exceptionFactory.createFachlicheWlsException(ExceptionConstants.WAHLBEZIRKART_NOT_LOADABLE));

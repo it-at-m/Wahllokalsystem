@@ -1,8 +1,6 @@
-import type { ExtendedContext, RunnerTestCase, RunnerTestSuite } from "vitest";
+import type { RunnerTestSuite, TestContext } from "vitest";
 
-export function getSnapshotFilename(
-  context: ExtendedContext<RunnerTestCase>
-): string {
+export function getSnapshotFilename(context: TestContext): string {
   const path = `./__snapshots__/${getSuitePath(context.task.suite)}/`;
   return `${path}/${context.task.name}.html`;
 }

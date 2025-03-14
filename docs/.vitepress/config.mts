@@ -91,6 +91,10 @@ export default withMermaid({
               text: "Kein i18n von Beginn an",
               link: `${PATH_ADR}adr-no-use-of-i18n-at-start`,
             },
+            {
+              text: "Kleine Menge von Renovate-PRs",
+              link: `${PATH_ADR}adr-lower-number-of-renovate-prs.md`,
+            },
           ],
         },
         {

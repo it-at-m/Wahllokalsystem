@@ -54,7 +54,7 @@ public class ArchUnitTest {
         arguments.get(1, ArchRule.class).check(allClassesWithoutTests);
     }
 
-    public static Stream<Arguments> allTestClassesRulesToVerify() {
+    private static Stream<Arguments> allTestClassesRulesToVerify() {
         return Stream.of(
                 Arguments.of("TEST_NAMING_CONVENTION_RULE", MethodRules.RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED),
                 Arguments.of("RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED", MethodRules.RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED),
@@ -70,7 +70,7 @@ public class ArchUnitTest {
                         MethodRules.RULE_TESTCLASSES_END_WITH_TEST_CONVENTION_MATCHED));
     }
 
-    public static Stream<Arguments> allClassesWithoutTestsRulesToVerify() {
+    private static Stream<Arguments> allClassesWithoutTestsRulesToVerify() {
         return Stream.of(
                 //--- rest rules
                 Arguments.of("DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED",

@@ -1,20 +1,8 @@
-import {createPinia} from "pinia";
-import {beforeAll, beforeEach, describe, expect, it} from "vitest";
-import {createVuetify} from "vuetify";
-import * as components from "vuetify/components";
-import * as directives from "vuetify/directives";
+import { describe, expect, it } from "vitest";
 
 // `describe`-Funktionen können geschachtelt werden, um Tests zu gruppieren und ordnen. Es ist immer eine Top-Level
 // `describe`-Funktion notwendig.
 describe("Beispiele und Erklärungen", () => {
-
-  // wird einmal vor allen Tests ausgeführt
-  beforeAll(() => {
-    createPinia();
-    // Definition, dass vuetify benutzt wird
-    createVuetify();
-  });
-
   // Test um zu testen ob Tests funktionieren
   it("true test", () => {
     expect(true).toBe(true);

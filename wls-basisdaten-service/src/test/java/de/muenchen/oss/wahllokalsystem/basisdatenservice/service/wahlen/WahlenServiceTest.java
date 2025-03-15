@@ -236,13 +236,13 @@ class WahlenServiceTest {
     private List<WahlModel> createWahlModels(final String clientPraefix) {
         WahlModel wahl1 = new WahlModel("wahlid1", clientPraefix + "wahl1", 1L,
                 1L, LocalDate.now().plusMonths(1),
-                Wahlart.BAW, new Farbe(1, 1, 1), "0");
+                WahlartModel.BAW, new FarbeModel(1, 1, 1), "0");
         WahlModel wahl2 = new WahlModel("wahlid2", clientPraefix + "wahl2", 2L,
                 2L, LocalDate.now().plusMonths(2),
-                Wahlart.LTW, new Farbe(2, 2, 2), "1");
+                WahlartModel.LTW, new FarbeModel(2, 2, 2), "1");
         WahlModel wahl3 = new WahlModel("wahlid3", clientPraefix + "wahl3", 3L,
                 3L, LocalDate.now().plusMonths(3),
-                Wahlart.LTW, new Farbe(3, 3, 3), "2");
+                WahlartModel.LTW, new FarbeModel(3, 3, 3), "2");
         List<WahlModel> lw = new ArrayList<>();
         lw.add(wahl1);
         lw.add(wahl2);

@@ -10,7 +10,6 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.Wahl
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.WahlbezirkRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahl;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.WahlRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahlbezirkArtModel;
@@ -25,6 +24,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlbezirke.Wah
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlbezirke.WahlbezirkModelMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlModelMapper;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlartModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltag.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltag.WahltageService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
@@ -178,8 +178,8 @@ class WahltermindatenServiceTest {
         }
 
         private static BasisdatenModel createMockedBasisdatenModel(LocalDate wahltagDate) {
-            val mockedWahldatenWahlen = Set.of(new WahlModel("wahlID1", "wahl 1", 1L, 1L, wahltagDate, Wahlart.BTW, null, "1"),
-                    new WahlModel("wahlID2", "wahl 2", 1L, 1L, wahltagDate, Wahlart.BTW, null, "2"));
+            val mockedWahldatenWahlen = Set.of(new WahlModel("wahlID1", "wahl 1", 1L, 1L, wahltagDate, WahlartModel.BTW, null, "1"),
+                    new WahlModel("wahlID2", "wahl 2", 1L, 1L, wahltagDate, WahlartModel.BTW, null, "2"));
             val mockedWahldatenWahlbezirke = Set.of(new WahlbezirkModel("wbz1", WahlbezirkArtModel.UWB, "1", wahltagDate, "1", "1"),
                     new WahlbezirkModel("wbz2", WahlbezirkArtModel.UWB, "1", wahltagDate, "2", "2"));
             return new BasisdatenModel(Collections.emptySet(), mockedWahldatenWahlen, mockedWahldatenWahlbezirke,

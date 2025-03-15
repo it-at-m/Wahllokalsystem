@@ -1,12 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
-import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart.BTW;
-import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart.EUW;
-import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart.LTW;
-
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration.Profiles;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Farbe;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.StimmzettelgebietsartModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummerModel;
@@ -23,7 +17,9 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorla
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlagenReferenceModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlbezirke.WahlbezirkModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlbezirke.WahlbezirkeClient;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.FarbeModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlartModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlenClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltag.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltag.WahltageClient;
@@ -69,9 +65,9 @@ public class DummyClientImpl
     @Override
     public List<WahlModel> getWahlen(final WahltagWithNummerModel wahltagWithNummerModel) throws WlsException {
         return List.of(
-                new WahlModel("wahl1", "remoteWahl 0", 1L, 1L, wahltagWithNummerModel.wahltag(), BTW, new Farbe(0, 1, 2), "1"),
-                new WahlModel("wahl2", "remoteWahl 1", 2L, 1L, wahltagWithNummerModel.wahltag(), EUW, new Farbe(3, 4, 5), "1"),
-                new WahlModel("wahl3", "remoteWahl 2", 3L, 1L, wahltagWithNummerModel.wahltag(), LTW, new Farbe(6, 7, 8), "1"));
+                new WahlModel("wahl1", "remoteWahl 0", 1L, 1L, wahltagWithNummerModel.wahltag(), WahlartModel.BTW, new FarbeModel(0, 1, 2), "1"),
+                new WahlModel("wahl2", "remoteWahl 1", 2L, 1L, wahltagWithNummerModel.wahltag(), WahlartModel.EUW, new FarbeModel(3, 4, 5), "1"),
+                new WahlModel("wahl3", "remoteWahl 2", 3L, 1L, wahltagWithNummerModel.wahltag(), WahlartModel.LTW, new FarbeModel(6, 7, 8), "1"));
     }
 
     @Override
@@ -98,8 +94,8 @@ public class DummyClientImpl
                         new BasisstrukturdatenModel("wahlID2", "szgID", "wahlbezirkID2_2", wahltagWithNummerModel.wahltag()),
                         new BasisstrukturdatenModel("wahlID2", "szgIDOther", "wahlbezirkID2_2", wahltagWithNummerModel.wahltag())),
                 Set.of(
-                        new WahlModel("wahlID1", "Bundestagswahl", 1L, 1L, wahltagWithNummerModel.wahltag(), Wahlart.BTW, new Farbe(0, 1, 2), "0"),
-                        new WahlModel("wahlID2", "Europawahl", 2L, 1L, wahltagWithNummerModel.wahltag(), Wahlart.EUW, new Farbe(3, 4, 5), "1")),
+                        new WahlModel("wahlID1", "Bundestagswahl", 1L, 1L, wahltagWithNummerModel.wahltag(), WahlartModel.BTW, new FarbeModel(0, 1, 2), "0"),
+                        new WahlModel("wahlID2", "Europawahl", 2L, 1L, wahltagWithNummerModel.wahltag(), WahlartModel.EUW, new FarbeModel(3, 4, 5), "1")),
                 Set.of(
                         new WahlbezirkModel("wahlbezirkID1_1", WahlbezirkArtModel.UWB, "1201", wahltagWithNummerModel.wahltag(), "0", "wahlID1"),
                         new WahlbezirkModel("wahlbezirkID1_2", WahlbezirkArtModel.BWB, "1251", wahltagWithNummerModel.wahltag(), "0", "wahlID1"),

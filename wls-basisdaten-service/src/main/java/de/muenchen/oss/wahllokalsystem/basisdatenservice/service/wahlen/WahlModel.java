@@ -1,7 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Farbe;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import lombok.Builder;
@@ -12,8 +10,8 @@ public record WahlModel(@NotNull String wahlID,
                         @NotNull Long reihenfolge,
                         @NotNull Long waehlerverzeichnisnummer,
                         @NotNull LocalDate wahltag,
-                        @NotNull Wahlart wahlart,
-                        Farbe farbe,
+                        @NotNull WahlartModel wahlart,
+                        FarbeModel farbe,
                         String nummer
 ) {
 

@@ -44,9 +44,9 @@ class WahlModelMapperTest {
     }
 
     private List<WahlModel> createListOfWahlModels() {
-        val wahl1 = new WahlModel("wahlID1", "name1", 3L, 1L, LocalDate.now().minusMonths(1), Wahlart.BAW, new Farbe(1, 1, 1), "1");
-        val wahl2 = new WahlModel("wahlID2", "name2", 2L, 2L, LocalDate.now().plusMonths(1), Wahlart.EUW, new Farbe(2, 2, 2), "2");
-        val wahl3 = new WahlModel("wahlID3", "name3", 1L, 3L, LocalDate.now().minusMonths(1), Wahlart.VE, new Farbe(3, 3, 3), "3");
+        val wahl1 = new WahlModel("wahlID1", "name1", 3L, 1L, LocalDate.now().minusMonths(1), WahlartModel.BAW, new FarbeModel(1, 1, 1), "1");
+        val wahl2 = new WahlModel("wahlID2", "name2", 2L, 2L, LocalDate.now().plusMonths(1), WahlartModel.EUW, new FarbeModel(2, 2, 2), "2");
+        val wahl3 = new WahlModel("wahlID3", "name3", 1L, 3L, LocalDate.now().minusMonths(1), WahlartModel.VE, new FarbeModel(3, 3, 3), "3");
 
         return List.of(wahl1, wahl2, wahl3);
     }

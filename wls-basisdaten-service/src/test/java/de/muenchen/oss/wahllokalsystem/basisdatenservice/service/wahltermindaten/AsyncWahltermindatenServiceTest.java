@@ -6,7 +6,6 @@ import static org.mockito.Mockito.times;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.Referendumvorlagen;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.ReferendumvorlagenRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.Wahlvorschlaege;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahlbezirkArtModel;
@@ -17,6 +16,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorla
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlagenModelMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlbezirke.WahlbezirkModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlartModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlag.WahlvorschlaegeClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlag.WahlvorschlaegeModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlag.WahlvorschlaegeModelMapper;
@@ -74,7 +74,7 @@ class AsyncWahltermindatenServiceTest {
         void should_persistWahlvorschlaege_when_basisdatenAreDelivered() {
             val wahltagDate = LocalDate.now();
             val wahltagNummer = "wahltagNummer";
-            val basisdatenModel = createBasisdatenModelWith2WahlenAnd2WahlbezirkeForEachWahl(wahltagDate, Wahlart.BTW);
+            val basisdatenModel = createBasisdatenModelWith2WahlenAnd2WahlbezirkeForEachWahl(wahltagDate, WahlartModel.BTW);
 
             val mockedWahlvorschlaegeClientResponse = WahlvorschlaegeModel.builder().build();
             val mockedWahlvorschlaegeModelMappedAsEntity = new Wahlvorschlaege();
@@ -93,7 +93,7 @@ class AsyncWahltermindatenServiceTest {
         void should_increaseWahlvorstandProgressEven_when_savingFailed() {
             val wahltagDate = LocalDate.now();
             val wahltagNummer = "wahltagNummer";
-            val basisdatenModel = createBasisdatenModelWith2WahlenAnd2WahlbezirkeForEachWahl(wahltagDate, Wahlart.BTW);
+            val basisdatenModel = createBasisdatenModelWith2WahlenAnd2WahlbezirkeForEachWahl(wahltagDate, WahlartModel.BTW);
 
             val mockedWahlvorschlaegeClientResponse = WahlvorschlaegeModel.builder().build();
             val mockedWahlvorschlaegeModelMappedAsEntity = new Wahlvorschlaege();
@@ -112,7 +112,7 @@ class AsyncWahltermindatenServiceTest {
         void should_increaseWahlvorstandProgressEven_when_loadingWahlvorschlaegeFromClientFailed() {
             val wahltagDate = LocalDate.now();
             val wahltagNummer = "wahltagNummer";
-            val basisdatenModel = createBasisdatenModelWith2WahlenAnd2WahlbezirkeForEachWahl(wahltagDate, Wahlart.BTW);
+            val basisdatenModel = createBasisdatenModelWith2WahlenAnd2WahlbezirkeForEachWahl(wahltagDate, WahlartModel.BTW);
 
             Mockito.doThrow(new RuntimeException("getting data from client failed")).when(wahlvorschlaegeClient).getWahlvorschlaege(any());
 
@@ -126,7 +126,7 @@ class AsyncWahltermindatenServiceTest {
         void should_persistReferendumvorlagen_when_basisdatenAreDelivered() {
             val wahltagDate = LocalDate.now();
             val wahltagNummer = "wahltagNummer";
-            val basisdatenModel = createBasisdatenModelWith2WahlenAnd2WahlbezirkeForEachWahl(wahltagDate, Wahlart.BEB);
+            val basisdatenModel = createBasisdatenModelWith2WahlenAnd2WahlbezirkeForEachWahl(wahltagDate, WahlartModel.BEB);
 
             val mockedReferendumvorlagenClientResponse = createEmptyReferendumvorlagenModel();
             val mockedReferendumvorlagenModelMappedAsEntity = new Referendumvorlagen();
@@ -146,7 +146,7 @@ class AsyncWahltermindatenServiceTest {
         void should_increaseReferendumvorlagenProgressEven_when_savingFailed() {
             val wahltagDate = LocalDate.now();
             val wahltagNummer = "wahltagNummer";
-            val basisdatenModel = createBasisdatenModelWith2WahlenAnd2WahlbezirkeForEachWahl(wahltagDate, Wahlart.BEB);
+            val basisdatenModel = createBasisdatenModelWith2WahlenAnd2WahlbezirkeForEachWahl(wahltagDate, WahlartModel.BEB);
 
             val mockedReferendumvorlagenClientResponse = createEmptyReferendumvorlagenModel();
             val mockedReferendumvorlagenModelMappedAsEntity = new Referendumvorlagen();
@@ -166,7 +166,7 @@ class AsyncWahltermindatenServiceTest {
         void should_increaseReferendumvorlagenProgressEven_when_loadingReferendumvorlagenFromClientFailed() {
             val wahltagDate = LocalDate.now();
             val wahltagNummer = "wahltagNummer";
-            val basisdatenModel = createBasisdatenModelWith2WahlenAnd2WahlbezirkeForEachWahl(wahltagDate, Wahlart.BEB);
+            val basisdatenModel = createBasisdatenModelWith2WahlenAnd2WahlbezirkeForEachWahl(wahltagDate, WahlartModel.BEB);
 
             Mockito.doThrow(new RuntimeException("getting data from client failed")).when(referendumvorlagenClient).getReferendumvorlagen(any());
 
@@ -189,7 +189,7 @@ class AsyncWahltermindatenServiceTest {
             return new BasisdatenModel(Collections.emptySet(), Collections.emptySet(), Collections.emptySet(), Collections.emptySet());
         }
 
-        private BasisdatenModel createBasisdatenModelWith2WahlenAnd2WahlbezirkeForEachWahl(final LocalDate wahltagDate, final Wahlart wahlArt) {
+        private BasisdatenModel createBasisdatenModelWith2WahlenAnd2WahlbezirkeForEachWahl(final LocalDate wahltagDate, final WahlartModel wahlArt) {
             val wahlenModels = Set.of(
                     new WahlModel("wahlID1", "wahl1", 1L, 1L, wahltagDate, wahlArt, null, "1"),
                     new WahlModel("wahlID2", "wahl2", 2L, 2L, wahltagDate, wahlArt, null, "2"));

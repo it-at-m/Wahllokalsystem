@@ -1,9 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Farbe;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.FarbeModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlartModel;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -40,8 +40,8 @@ class WahlenClientMapperTest {
                     1L,
                     1L,
                     aNowMoment,
-                    Wahlart.BAW,
-                    new Farbe(0, 0, 0),
+                    WahlartModel.BAW,
+                    new FarbeModel(0, 0, 0),
                     "nummerWahl1");
 
             Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedWahl);
@@ -88,8 +88,8 @@ class WahlenClientMapperTest {
                             1L,
                             1L,
                             LocalDate.now(),
-                            Wahlart.BAW,
-                            new Farbe(0, 0, 0),
+                            WahlartModel.BAW,
+                            new FarbeModel(0, 0, 0),
                             "nummerWahl1"),
                     new WahlModel(
                             "identifikatorWahl2",
@@ -97,8 +97,8 @@ class WahlenClientMapperTest {
                             1L,
                             1L,
                             LocalDate.now(),
-                            Wahlart.BAW,
-                            new Farbe(0, 0, 0),
+                            WahlartModel.BAW,
+                            new FarbeModel(0, 0, 0),
                             "nummerWahl2"),
                     new WahlModel(
                             "identifikatorWahl3",
@@ -106,8 +106,8 @@ class WahlenClientMapperTest {
                             1L,
                             1L,
                             LocalDate.now(),
-                            Wahlart.BAW,
-                            new Farbe(0, 0, 0),
+                            WahlartModel.BAW,
+                            new FarbeModel(0, 0, 0),
                             "nummerWahl3"));
 
             Assertions.assertThat(result).containsExactlyInAnyOrderElementsOf(expectedWahltage);

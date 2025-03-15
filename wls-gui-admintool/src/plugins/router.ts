@@ -21,7 +21,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHashHistory('/admintool/'),
+  history: createWebHashHistory("/admintool/"),
   routes,
   scrollBehavior() {
     return {

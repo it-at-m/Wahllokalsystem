@@ -34,7 +34,7 @@ export default defineConfig(({ mode }) => {
       }),
       vueDevTools(),
     ],
-    base: '/admintool/',
+    base: "/admintool/",
     server: {
       host: true,
       port: 8401,

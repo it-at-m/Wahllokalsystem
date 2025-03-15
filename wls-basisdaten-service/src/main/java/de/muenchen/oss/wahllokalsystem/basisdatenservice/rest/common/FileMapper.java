@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common;
 
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.FileResponseEntityModel;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;

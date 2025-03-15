@@ -39,8 +39,8 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.Stimmzett
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlbezirkDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahltagWithNummer;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltermindaten.AsyncWahltermindatenService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummer;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltermindaten.AsyncWahltermindatenService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;

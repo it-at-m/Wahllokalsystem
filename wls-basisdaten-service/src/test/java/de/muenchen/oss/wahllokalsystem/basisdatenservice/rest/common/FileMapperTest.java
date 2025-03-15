@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common;
 
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.FileResponseEntityModel;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Collections;

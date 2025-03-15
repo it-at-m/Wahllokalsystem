@@ -2,9 +2,9 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.ungueltigewahlsch
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.FileMapper;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.FileResponseEntityModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.FileResponseEntityModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.WahlbezirkArtDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.ungueltigewahlscheine.UngueltigeWahlscheineService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.ungueltigewahlscheine.UngueltigeWahlscheineService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.kopfdaten;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KopfdatenService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.KopfdatenService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

@@ -6,23 +6,23 @@ import { v4 as uuidv4 } from "uuid";
 
 export const useUserNotificationStore = defineStore("notification", {
   state: () => ({
-    notifications: [] as UserNotification[],
+    userNotifications: [] as UserNotification[],
   }),
 
   actions: {
     addNotification(message: string, category: UserNotificationTypeEnum) {
       const id = uuidv4();
-      const newNotification: UserNotification = {
+      const newUserNotification: UserNotification = {
         message,
         category,
         id,
       };
-      this.notifications.push(newNotification);
+      this.userNotifications.push(newUserNotification);
     },
 
     removeNotification(id: string) {
-      this.notifications = this.notifications.filter(
-        (notification) => notification.id !== id
+      this.userNotifications = this.userNotifications.filter(
+        (userNotification) => userNotification.id !== id
       );
     },
   },

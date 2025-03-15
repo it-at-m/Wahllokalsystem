@@ -16,12 +16,12 @@ describe("userNotificationStore.ts", () => {
     test("should_addANewNotification_when_called", () => {
       const category = UserNotificationTypeEnum.ERFOLG;
       const message = "Test message";
-      expect(unitUnderTest.notifications.length).toStrictEqual(0);
+      expect(unitUnderTest.userNotifications.length).toStrictEqual(0);
 
       unitUnderTest.addNotification(message, category);
 
-      expect(unitUnderTest.notifications.length).toStrictEqual(1);
-      expect(unitUnderTest.notifications[0]).toStrictEqual(
+      expect(unitUnderTest.userNotifications.length).toStrictEqual(1);
+      expect(unitUnderTest.userNotifications[0]).toStrictEqual(
         expect.objectContaining({
           message: message,
           category: category,
@@ -46,15 +46,15 @@ describe("userNotificationStore.ts", () => {
         UserNotificationTypeEnum.ERFOLG
       );
 
-      const notificationToDeleteId = unitUnderTest.notifications[1].id;
+      const notificationToDeleteId = unitUnderTest.userNotifications[1].id;
 
       unitUnderTest.removeNotification(notificationToDeleteId);
 
-      const notificationExists = unitUnderTest.notifications.some(
+      const notificationExists = unitUnderTest.userNotifications.some(
         (notification) => notification.id === notificationToDeleteId
       );
 
-      expect(unitUnderTest.notifications.length).toStrictEqual(2);
+      expect(unitUnderTest.userNotifications.length).toStrictEqual(2);
       expect(notificationExists).toStrictEqual(false);
     });
   });

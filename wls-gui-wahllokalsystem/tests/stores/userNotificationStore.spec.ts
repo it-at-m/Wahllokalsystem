@@ -2,7 +2,7 @@ import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, test } from "vitest";
 
 import { useUserNotificationStore } from "@/stores/useUserNotificationStore.ts";
-import { UserNotificationTypeEnum } from "@/types/wlsTypes/UserNotificationTypeEnum.ts";
+import { UserNotificationCategoryEnum } from "@/types/wlsTypes/UserNotificationCategoryEnum.ts";
 
 describe("userNotificationStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useUserNotificationStore>;
@@ -14,7 +14,7 @@ describe("userNotificationStore.ts", () => {
 
   describe("addNotification", () => {
     test("should_addANewNotification_when_called", () => {
-      const category = UserNotificationTypeEnum.ERFOLG;
+      const category = UserNotificationCategoryEnum.ERFOLG;
       const message = "Test message";
       expect(unitUnderTest.userNotifications.length).toStrictEqual(0);
 
@@ -35,15 +35,15 @@ describe("userNotificationStore.ts", () => {
     test("should_removeNotificationById_when_calledWithId", () => {
       unitUnderTest.addNotification(
         "Test message One",
-        UserNotificationTypeEnum.ERFOLG
+        UserNotificationCategoryEnum.ERFOLG
       );
       unitUnderTest.addNotification(
         "Test message Two",
-        UserNotificationTypeEnum.ERFOLG
+        UserNotificationCategoryEnum.ERFOLG
       );
       unitUnderTest.addNotification(
         "Test message Three",
-        UserNotificationTypeEnum.ERFOLG
+        UserNotificationCategoryEnum.ERFOLG
       );
 
       const notificationToDeleteId = unitUnderTest.userNotifications[1].id;

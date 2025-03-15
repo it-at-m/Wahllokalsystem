@@ -1,4 +1,4 @@
-export enum UserNotificationTypeEnum {
+export enum UserNotificationCategoryEnum {
   ERFOLG = "Erfolg",
   WARNUNG = "Warnung",
   FEHLER = "Fehler",

@@ -1,5 +1,5 @@
 import type { UserNotification } from "@/types/wlsTypes/UserNotification.ts";
-import type { UserNotificationTypeEnum } from "@/types/wlsTypes/UserNotificationTypeEnum.ts";
+import type { UserNotificationCategoryEnum } from "@/types/wlsTypes/UserNotificationCategoryEnum.ts";
 
 import { defineStore } from "pinia";
 import { v4 as uuidv4 } from "uuid";
@@ -10,7 +10,7 @@ export const useUserNotificationStore = defineStore("notification", {
   }),
 
   actions: {
-    addNotification(message: string, category: UserNotificationTypeEnum) {
+    addNotification(message: string, category: UserNotificationCategoryEnum) {
       const id = uuidv4();
       const newUserNotification: UserNotification = {
         message,

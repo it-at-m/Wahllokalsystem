@@ -1,7 +1,7 @@
-import type { UserNotificationTypeEnum } from "@/types/wlsTypes/UserNotificationTypeEnum.ts";
+import type { UserNotificationCategoryEnum } from "@/types/wlsTypes/UserNotificationCategoryEnum.ts";
 
 export interface UserNotification {
   id: string;
   message: string;
-  category: UserNotificationTypeEnum;
+  category: UserNotificationCategoryEnum;
 }

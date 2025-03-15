@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummer;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummerModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.StimmzettelgebietModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDate;
@@ -39,7 +39,7 @@ class DummyClientImplTest {
 
         @Test
         void should_returnAtLeastOneObject_when_dataIsPresent() {
-            val result = unitUnderTest.getWahlen(new WahltagWithNummer(LocalDate.now(), "0"));
+            val result = unitUnderTest.getWahlen(new WahltagWithNummerModel(LocalDate.now(), "0"));
             Assertions.assertThat(result).size().isPositive();
         }
     }
@@ -49,7 +49,7 @@ class DummyClientImplTest {
 
         @Test
         void should_returnNotEmptyObject_when_dataIsPresent() {
-            val result = unitUnderTest.loadBasisdaten(new WahltagWithNummer(LocalDate.now(), "0"));
+            val result = unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(LocalDate.now(), "0"));
             Assertions.assertThat(result).hasNoNullFieldsOrProperties();
             Assertions.assertThat(result.basisstrukturdaten()).isNotEmpty();
             Assertions.assertThat(result.wahlen()).isNotEmpty();
@@ -59,7 +59,7 @@ class DummyClientImplTest {
 
         @Test
         void should_returnBasisdaten_when_atLeastOneWahlbezirkAndStimmzettelgebietMatches() {
-            val result = unitUnderTest.loadBasisdaten(new WahltagWithNummer(LocalDate.now(), "0"));
+            val result = unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(LocalDate.now(), "0"));
             result.basisstrukturdaten().forEach((bsd) -> {
                 Assertions.assertThat(result.wahlen()).anyMatch(w -> w.wahlID().equals(bsd.wahlID()));
                 Assertions.assertThat(result.wahlbezirke()).anyMatch(wbz -> wbz.wahlbezirkID().equals(bsd.wahlbezirkID()));
@@ -69,7 +69,7 @@ class DummyClientImplTest {
 
         @Test
         void should_returnBasisdaten_when_atLeastOneWahlbezirkAndBasisstrukturdatenMatches() {
-            val result = unitUnderTest.loadBasisdaten(new WahltagWithNummer(LocalDate.now(), "0"));
+            val result = unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(LocalDate.now(), "0"));
             result.wahlen().forEach((wahl) -> {
                 Assertions.assertThat(result.basisstrukturdaten()).anyMatch(bsd -> bsd.wahlID().equals(wahl.wahlID()));
                 Assertions.assertThat(result.wahlbezirke()).anyMatch(wbz -> wbz.wahlID().equals(wahl.wahlID()));
@@ -78,7 +78,7 @@ class DummyClientImplTest {
 
         @Test
         void should_returnBasisdaten_when_atLeastOneWahlAndBasisstrukturdatenMatches() {
-            val result = unitUnderTest.loadBasisdaten(new WahltagWithNummer(LocalDate.now(), "0"));
+            val result = unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(LocalDate.now(), "0"));
             result.wahlbezirke().forEach((wbz) -> {
                 Assertions.assertThat(result.basisstrukturdaten()).anyMatch(bsd -> bsd.wahlbezirkID().equals(wbz.wahlbezirkID()));
                 Assertions.assertThat(result.wahlen()).anyMatch(wahl -> wahl.wahlID().equals(wbz.wahlID()));
@@ -87,7 +87,7 @@ class DummyClientImplTest {
 
         @Test
         void should_returnBasisdaten_when_anyBasisstrukturdatenMatchesStimmzettelgebietID() {
-            val result = unitUnderTest.loadBasisdaten(new WahltagWithNummer(LocalDate.now(), "0"));
+            val result = unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(LocalDate.now(), "0"));
             for (StimmzettelgebietModel szg : result.stimmzettelgebiete()) {
                 Assertions.assertThat(result.basisstrukturdaten()).anyMatch(bsd -> bsd.stimmzettelgebietID().equals(szg.identifikator()));
             }
@@ -96,7 +96,7 @@ class DummyClientImplTest {
         @Test
         void should_makeSureAllUnderobjectsHaveTheRequestedDate_when_givenProperData() {
             val aDate = LocalDate.now();
-            val result = unitUnderTest.loadBasisdaten(new WahltagWithNummer(aDate, "0"));
+            val result = unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(aDate, "0"));
             Assertions.assertThat(result.basisstrukturdaten()).allMatch(bsd -> bsd.wahltag().equals(aDate));
             Assertions.assertThat(result.wahlen()).allMatch(w -> w.wahltag().equals(aDate));
             Assertions.assertThat(result.wahlbezirke()).allMatch(wbz -> wbz.wahltag().equals(aDate));

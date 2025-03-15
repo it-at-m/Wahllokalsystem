@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.KopfdatenRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Stimmzettelgebietsart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.StimmzettelgebietsartModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummer;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummerModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.MockDataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDate;
@@ -62,7 +62,7 @@ class KopfdatenServiceTest {
             Mockito.when(kopfdatenModelMapper.toEntity(mockedKopfdatenModelByInitializer)).thenReturn(mockedKopfdatenModelMappedToEntity);
             Mockito.when(konfigurierterWahltagClient.getKonfigurierterWahltag()).thenReturn(mockedKonfigurierterWahltagFromClient);
             Mockito.when(wahldatenClient.loadBasisdaten(
-                    new WahltagWithNummer(mockedKonfigurierterWahltagFromClient.wahltag(), mockedKonfigurierterWahltagFromClient.nummer())))
+                    new WahltagWithNummerModel(mockedKonfigurierterWahltagFromClient.wahltag(), mockedKonfigurierterWahltagFromClient.nummer())))
                     .thenReturn(mockedBasisdatenModelFromClient);
             Mockito.when(kopfdatenMapper.initKopfdata(wahlID, wahlbezrkID, mockedBasisdatenModelFromClient)).thenReturn(mockedKopfdatenModelByInitializer);
 

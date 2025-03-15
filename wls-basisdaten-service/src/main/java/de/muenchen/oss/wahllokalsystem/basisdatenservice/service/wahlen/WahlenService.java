@@ -4,7 +4,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Farbe;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahl;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.WahlRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummer;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummerModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltag.WahltageService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.List;
@@ -43,7 +43,7 @@ public class WahlenService {
             log.info("#getWahlen: Für wahltagID {} waren keine Wahlen in der Datenbank", wahltagID);
             List<Wahl> wahlEntities = wahlModelMapper
                     .fromListOfWahlModeltoListOfWahlEntities(
-                            wahlenClient.getWahlen(new WahltagWithNummer(wahltagValue.wahltag(), wahltagValue.nummer())));
+                            wahlenClient.getWahlen(new WahltagWithNummerModel(wahltagValue.wahltag(), wahltagValue.nummer())));
             wahlRepository.saveAll(wahlEntities);
         }
         return wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(wahlRepository.findByWahltagOrderByReihenfolge(wahltagValue.wahltag()));

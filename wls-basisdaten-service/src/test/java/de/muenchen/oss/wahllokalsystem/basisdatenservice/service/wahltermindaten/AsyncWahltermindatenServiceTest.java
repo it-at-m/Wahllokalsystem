@@ -10,7 +10,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.Wahlvorschlaege;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahlbezirkArtModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummer;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummerModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.BasisdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlagenClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlagenModel;
@@ -65,7 +65,7 @@ class AsyncWahltermindatenServiceTest {
             val wahltagNummer = "wahltagNummer";
             val basisdatenModel = createEmptyBasisdatenModel();
 
-            unitUnderTest.initVorlagenAndVorschlaege(new WahltagWithNummer(wahltagDate, wahltagNummer), basisdatenModel);
+            unitUnderTest.initVorlagenAndVorschlaege(new WahltagWithNummerModel(wahltagDate, wahltagNummer), basisdatenModel);
 
             Mockito.verify(asyncProgress).reset(wahltagDate, wahltagNummer);
         }
@@ -82,7 +82,7 @@ class AsyncWahltermindatenServiceTest {
             Mockito.when(wahlvorschlaegeClient.getWahlvorschlaege(any())).thenReturn(mockedWahlvorschlaegeClientResponse);
             Mockito.when(wahlvorschlaegeModelMapper.toEntity(mockedWahlvorschlaegeClientResponse)).thenReturn(mockedWahlvorschlaegeModelMappedAsEntity);
 
-            unitUnderTest.initVorlagenAndVorschlaege(new WahltagWithNummer(wahltagDate, wahltagNummer), basisdatenModel);
+            unitUnderTest.initVorlagenAndVorschlaege(new WahltagWithNummerModel(wahltagDate, wahltagNummer), basisdatenModel);
 
             Mockito.verify(wahlvorschlaegeRepository, times(4)).save(mockedWahlvorschlaegeModelMappedAsEntity);
             Mockito.verify(asyncProgress, times(4)).incWahlvorschlaegeFinished();
@@ -102,7 +102,7 @@ class AsyncWahltermindatenServiceTest {
             Mockito.when(wahlvorschlaegeModelMapper.toEntity(mockedWahlvorschlaegeClientResponse)).thenReturn(mockedWahlvorschlaegeModelMappedAsEntity);
             Mockito.doThrow(new RuntimeException("saving failed")).when(wahlvorschlaegeRepository).save(mockedWahlvorschlaegeModelMappedAsEntity);
 
-            unitUnderTest.initVorlagenAndVorschlaege(new WahltagWithNummer(wahltagDate, wahltagNummer), basisdatenModel);
+            unitUnderTest.initVorlagenAndVorschlaege(new WahltagWithNummerModel(wahltagDate, wahltagNummer), basisdatenModel);
 
             Mockito.verify(asyncProgress, times(4)).incWahlvorschlaegeFinished();
             Mockito.verify(asyncProgress, times(4)).setWahlvorschlaegeNext(any());
@@ -116,7 +116,7 @@ class AsyncWahltermindatenServiceTest {
 
             Mockito.doThrow(new RuntimeException("getting data from client failed")).when(wahlvorschlaegeClient).getWahlvorschlaege(any());
 
-            unitUnderTest.initVorlagenAndVorschlaege(new WahltagWithNummer(wahltagDate, wahltagNummer), basisdatenModel);
+            unitUnderTest.initVorlagenAndVorschlaege(new WahltagWithNummerModel(wahltagDate, wahltagNummer), basisdatenModel);
 
             Mockito.verify(asyncProgress, times(4)).incWahlvorschlaegeFinished();
             Mockito.verify(asyncProgress, times(4)).setWahlvorschlaegeNext(any());
@@ -135,7 +135,7 @@ class AsyncWahltermindatenServiceTest {
             Mockito.when(referendumvorlagenModelMapper.toEntity(eq(mockedReferendumvorlagenClientResponse), any()))
                     .thenReturn(mockedReferendumvorlagenModelMappedAsEntity);
 
-            unitUnderTest.initVorlagenAndVorschlaege(new WahltagWithNummer(wahltagDate, wahltagNummer), basisdatenModel);
+            unitUnderTest.initVorlagenAndVorschlaege(new WahltagWithNummerModel(wahltagDate, wahltagNummer), basisdatenModel);
 
             Mockito.verify(referendumvorlagenRepository, times(4)).save(mockedReferendumvorlagenModelMappedAsEntity);
             Mockito.verify(asyncProgress, times(4)).incReferendumVorlagenFinished();
@@ -156,7 +156,7 @@ class AsyncWahltermindatenServiceTest {
                     .thenReturn(mockedReferendumvorlagenModelMappedAsEntity);
             Mockito.doThrow(new RuntimeException("saving failed")).when(referendumvorlagenRepository).save(any());
 
-            unitUnderTest.initVorlagenAndVorschlaege(new WahltagWithNummer(wahltagDate, wahltagNummer), basisdatenModel);
+            unitUnderTest.initVorlagenAndVorschlaege(new WahltagWithNummerModel(wahltagDate, wahltagNummer), basisdatenModel);
 
             Mockito.verify(asyncProgress, times(4)).incReferendumVorlagenFinished();
             Mockito.verify(asyncProgress, times(4)).setReferendumVorlagenNext(any());
@@ -170,7 +170,7 @@ class AsyncWahltermindatenServiceTest {
 
             Mockito.doThrow(new RuntimeException("getting data from client failed")).when(referendumvorlagenClient).getReferendumvorlagen(any());
 
-            unitUnderTest.initVorlagenAndVorschlaege(new WahltagWithNummer(wahltagDate, wahltagNummer), basisdatenModel);
+            unitUnderTest.initVorlagenAndVorschlaege(new WahltagWithNummerModel(wahltagDate, wahltagNummer), basisdatenModel);
 
             Mockito.verify(asyncProgress, times(4)).incReferendumVorlagenFinished();
             Mockito.verify(asyncProgress, times(4)).setReferendumVorlagenNext(any());

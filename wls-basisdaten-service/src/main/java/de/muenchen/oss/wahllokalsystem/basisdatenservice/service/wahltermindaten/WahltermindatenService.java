@@ -7,7 +7,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.Wahl
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.WahlRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummer;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummerModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.BasisstrukturdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.KopfdatenMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.KopfdatenModel;
@@ -62,7 +62,7 @@ public class WahltermindatenService {
         wahltermindatenValidator.validateParameterToInitWahltermindaten(wahltagID);
         val wahltagModel = getWahltagByIdOrThrow(wahltagID,
                 () -> exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_PUTWAHLTERMINDATEN_NO_WAHLTAG));
-        val wahltagWithNummer = new WahltagWithNummer(wahltagModel.wahltag(), wahltagModel.nummer());
+        val wahltagWithNummer = new WahltagWithNummerModel(wahltagModel.wahltag(), wahltagModel.nummer());
         val basisdatenModel = wahldatenClient.loadBasisdaten(wahltagWithNummer);
         if (null == basisdatenModel) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_BASISDATEN_NO_DATA);
@@ -83,7 +83,7 @@ public class WahltermindatenService {
         val wahltag = getWahltagByIdOrThrow(wahltagID,
                 () -> exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_DELETEWAHLTERMINDATEN_PARAMETER_UNVOLLSTAENDIG));
 
-        val basisstrukturdaten = wahldatenClient.loadBasisdaten(new WahltagWithNummer(wahltag.wahltag(), wahltag.nummer())).basisstrukturdaten();
+        val basisstrukturdaten = wahldatenClient.loadBasisdaten(new WahltagWithNummerModel(wahltag.wahltag(), wahltag.nummer())).basisstrukturdaten();
         val wahlIDs = basisstrukturdaten.stream().map(BasisstrukturdatenModel::wahlID).toList();
 
         wahlbezirkRepository.deleteByWahltag(wahltag.wahltag());

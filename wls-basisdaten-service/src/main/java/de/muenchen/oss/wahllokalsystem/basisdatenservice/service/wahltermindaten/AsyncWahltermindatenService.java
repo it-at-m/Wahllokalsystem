@@ -3,7 +3,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltermindate
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.ReferendumvorlagenRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlaegeRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummer;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummerModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.BasisdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlagenClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlagenModelMapper;
@@ -35,8 +35,8 @@ public class AsyncWahltermindatenService {
     private final ReferendumvorlagenModelMapper referendumvorlagenModelMapper;
 
     @Async
-    public void initVorlagenAndVorschlaege(final WahltagWithNummer wahltagWithNummer, final BasisdatenModel basisdaten) {
-        asyncProgress.reset(wahltagWithNummer.wahltag(), wahltagWithNummer.wahltagNummer());
+    public void initVorlagenAndVorschlaege(final WahltagWithNummerModel wahltagWithNummerModel, final BasisdatenModel basisdaten) {
+        asyncProgress.reset(wahltagWithNummerModel.wahltag(), wahltagWithNummerModel.wahltagNummer());
         initWahlvorschlaege(basisdaten);
         initReferendumvorlagen(basisdaten);
     }

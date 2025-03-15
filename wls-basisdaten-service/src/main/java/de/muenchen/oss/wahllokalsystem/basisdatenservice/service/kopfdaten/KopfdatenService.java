@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.KopfdatenRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummer;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummerModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +38,7 @@ public class KopfdatenService {
                     bezirkUndWahlID.getWahlID());
             KonfigurierterWahltagModel konfigurierterWahltagModel = konfigurierterWahltagClient.getKonfigurierterWahltag();
             BasisdatenModel basisdatenModel = wahldatenClient.loadBasisdaten(
-                    new WahltagWithNummer(konfigurierterWahltagModel.wahltag(), konfigurierterWahltagModel.nummer()));
+                    new WahltagWithNummerModel(konfigurierterWahltagModel.wahltag(), konfigurierterWahltagModel.nummer()));
             kopfdatenModel = kopfDataInitializer.initKopfdata(bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID(), basisdatenModel);
             kopfdatenRepository.save(kopfdatenModelMapper.toEntity(kopfdatenModel));
         }

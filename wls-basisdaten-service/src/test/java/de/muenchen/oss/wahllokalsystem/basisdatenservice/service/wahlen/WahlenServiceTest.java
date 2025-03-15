@@ -5,7 +5,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahl;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.WahlRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummer;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummerModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltag.WahltagModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltag.WahltageService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
@@ -81,7 +81,7 @@ class WahlenServiceTest {
             Mockito.when(wahltageService.getWahltagByID("wahltagID")).thenReturn(searchingForWahltag);
             Mockito.when(wahlRepository.existsByWahltag(searchingForWahltag.wahltag())).thenReturn(false);
             Mockito.when(wahlRepository.findByWahltagOrderByReihenfolge(searchingForWahltag.wahltag())).thenReturn(mockedListOfEntities);
-            Mockito.when(wahlenClient.getWahlen(new WahltagWithNummer(searchingForWahltag.wahltag(), searchingForWahltag.nummer())))
+            Mockito.when(wahlenClient.getWahlen(new WahltagWithNummerModel(searchingForWahltag.wahltag(), searchingForWahltag.nummer())))
                     .thenReturn(mockedListOfModelsIfClientCall);
             Mockito.when(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(mockedListOfModelsIfClientCall)).thenReturn(mockedListOfEntities);
             Mockito.when(wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(mockedListOfEntities)).thenReturn(mockedListOfModelsIfClientCall);

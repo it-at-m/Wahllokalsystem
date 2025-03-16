@@ -6,8 +6,8 @@ import static org.mockito.Mockito.times;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.FileMapper;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.FileResponseEntityModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.WahlbezirkArtDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.FileResponseEntityModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.ungueltigewahlscheine.UngueltigeWahlscheineReferenceModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.ungueltigewahlscheine.UngueltigeWahlscheineService;

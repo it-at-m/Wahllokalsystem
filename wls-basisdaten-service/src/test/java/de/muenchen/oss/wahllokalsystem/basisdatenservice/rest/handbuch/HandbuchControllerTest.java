@@ -4,8 +4,8 @@ import static org.mockito.ArgumentMatchers.eq;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.FileMapper;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.FileResponseEntityModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.WahlbezirkArtDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.FileResponseEntityModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.handbuch.HandbuchReferenceModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.handbuch.HandbuchService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.handbuch.HandbuchWriteModel;

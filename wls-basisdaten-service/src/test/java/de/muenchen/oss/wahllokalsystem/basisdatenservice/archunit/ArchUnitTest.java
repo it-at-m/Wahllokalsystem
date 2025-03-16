@@ -20,7 +20,7 @@ public class ArchUnitTest {
     private static JavaClasses allClasses;
     private static JavaClasses allClassesWithoutTests;
     private static final ImportOption ignoreGeneratedCode = location -> !location.contains("/eai");
-    private static final ImportOption ignoreGeneratedCodeWlsCommon = location -> !location.contains("/wls");
+    private static final ImportOption ignoreGeneratedCodeWlsCommon = location -> !location.contains("/common");
 
     @BeforeAll
     static void init() {
@@ -34,6 +34,7 @@ public class ArchUnitTest {
         allClassesWithoutTests = new ClassFileImporter()
                 .withImportOption(new ImportOption.DoNotIncludeTests())
                 .withImportOption(ignoreGeneratedCode)
+                .withImportOption(ignoreGeneratedCodeWlsCommon)
                 .importPackages(MicroServiceApplication.class.getPackage().getName());
     }
 

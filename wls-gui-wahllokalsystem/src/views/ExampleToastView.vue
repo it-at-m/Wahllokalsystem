@@ -7,16 +7,22 @@
       min-width="300"
     >
       <v-btn
+        id="success-button"
         class="mb-5"
         @click="toastErfolg"
         >Erfolg
       </v-btn>
       <v-btn
+        id="warning-button"
         class="mb-5"
         @click="toastWarnung"
         >WARNUNG
       </v-btn>
-      <v-btn @click="toastError">FEHLER</v-btn>
+      <v-btn
+        id="error-button"
+        @click="toastError"
+        >FEHLER
+      </v-btn>
     </v-container>
   </v-container>
 </template>

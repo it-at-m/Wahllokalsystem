@@ -3,27 +3,29 @@ import type { UserNotificationCategoryEnum } from "@/types/wlsTypes/UserNotifica
 
 import { defineStore } from "pinia";
 import { v4 as uuidv4 } from "uuid";
+import { ref } from "vue";
 
-export const useUserNotificationStore = defineStore("notification", {
-  state: () => ({
-    userNotifications: [] as UserNotification[],
-  }),
+export const useUserNotificationStore = defineStore("userNotification", () => {
+  const userNotifications = ref([] as UserNotification[]);
 
-  actions: {
-    addNotification(message: string, category: UserNotificationCategoryEnum) {
-      const id = uuidv4();
-      const newUserNotification: UserNotification = {
-        message,
-        category,
-        id,
-      };
-      this.userNotifications.push(newUserNotification);
-    },
+  function addNotification(
+    message: string,
+    category: UserNotificationCategoryEnum
+  ) {
+    const id = uuidv4();
+    const newUserNotification: UserNotification = {
+      message,
+      category,
+      id,
+    };
+    userNotifications.value.push(newUserNotification);
+  }
 
-    removeNotification(id: string) {
-      this.userNotifications = this.userNotifications.filter(
-        (userNotification) => userNotification.id !== id
-      );
-    },
-  },
+  function removeNotification(id: string) {
+    userNotifications.value = userNotifications.value.filter(
+      (userNotification) => userNotification.id !== id
+    );
+  }
+
+  return { userNotifications, addNotification, removeNotification };
 });

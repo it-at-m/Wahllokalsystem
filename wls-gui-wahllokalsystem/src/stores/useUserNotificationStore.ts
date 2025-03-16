@@ -1,57 +1,31 @@
 import type { UserNotification } from "@/types/wlsTypes/UserNotification.ts";
+import type { UserNotificationCategoryEnum } from "@/types/wlsTypes/UserNotificationCategoryEnum.ts";
 
 import { defineStore } from "pinia";
 import { v4 as uuidv4 } from "uuid";
-import { toast } from "vue3-toastify";
+import { ref } from "vue";
 
-import { UserNotificationCategoryEnum } from "@/types/wlsTypes/UserNotificationCategoryEnum.ts";
+export const useUserNotificationStore = defineStore("userNotification", () => {
+  const userNotifications = ref([] as UserNotification[]);
 
-export const useUserNotificationStore = defineStore("notification", {
-  state: () => ({
-    userNotifications: [] as UserNotification[],
-  }),
+  function addNotification(
+    message: string,
+    category: UserNotificationCategoryEnum
+  ) {
+    const id = uuidv4();
+    const newUserNotification: UserNotification = {
+      message,
+      category,
+      id,
+    };
+    userNotifications.value.push(newUserNotification);
+  }
 
-  actions: {
-    addNotification(message: string, category: UserNotificationCategoryEnum) {
-      const id = uuidv4();
-      const newUserNotification: UserNotification = {
-        message,
-        category,
-        id,
-      };
-      this.userNotifications.push(newUserNotification);
-      switch (category) {
-        case UserNotificationCategoryEnum.ERFOLG:
-          toast.success(message, {
-            autoClose: 5000,
-            toastId: id,
-            position: toast.POSITION.BOTTOM_LEFT,
-            onClose: () => this.removeNotification(id),
-          });
-          break;
-        case UserNotificationCategoryEnum.WARNUNG:
-          toast.warning(message, {
-            autoClose: 5000,
-            toastId: id,
-            position: toast.POSITION.BOTTOM_LEFT,
-            onClose: () => this.removeNotification(id),
-          });
-          break;
-        case UserNotificationCategoryEnum.FEHLER:
-          toast.error(message, {
-            autoClose: false,
-            toastId: id,
-            position: toast.POSITION.BOTTOM_LEFT,
-            onClose: () => this.removeNotification(id),
-          });
-          break;
-      }
-    },
+  function removeNotification(id: string) {
+    userNotifications.value = userNotifications.value.filter(
+      (userNotification) => userNotification.id !== id
+    );
+  }
 
-    removeNotification(id: string) {
-      this.userNotifications = this.userNotifications.filter(
-        (userNotification) => userNotification.id !== id
-      );
-    },
-  },
+  return { userNotifications, addNotification, removeNotification };
 });

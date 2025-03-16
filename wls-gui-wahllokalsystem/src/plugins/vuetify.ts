@@ -10,6 +10,7 @@ import {
   mdiSignalCellular3,
   mdiSignalOff,
   mdiTextBoxCheck,
+  mdiToaster,
   mdiUpdate,
 } from "@mdi/js";
 import { createVuetify } from "vuetify";
@@ -30,6 +31,7 @@ export default createVuetify({
       save: mdiContentSave,
       send: mdiSend,
       updateTime: mdiUpdate,
+      toaster: mdiToaster,
     },
     sets: {
       mdi,

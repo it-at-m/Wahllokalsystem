@@ -84,6 +84,26 @@
               </router-link>
             </template>
           </v-tooltip>
+          <v-tooltip
+            location="bottom"
+            text="Toast Examples"
+          >
+            <template #activator="{ props }">
+              <router-link
+                v-bind="props"
+                :to="{ name: TOAST }"
+              >
+                <v-btn
+                  icon="$toaster"
+                  variant="text"
+                  density="comfortable"
+                  size="x-large"
+                  color="white"
+                >
+                </v-btn>
+              </router-link>
+            </template>
+          </v-tooltip>
         </v-col>
       </v-row>
     </v-app-bar>
@@ -136,6 +156,7 @@ import {
   EXAMPLE_ROUTES_NEWROUTE,
   EXAMPLE_VALIDATION,
   ROUTE_WAHLVORSTAND,
+  TOAST,
 } from "@/constants";
 import { useUserStore } from "@/stores/user";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";

@@ -29,29 +29,29 @@
 <script setup lang="ts">
 import { VBtn, VContainer } from "vuetify/components";
 
-import { useUserNotificationStore } from "@/stores/useUserNotificationStore.ts";
-import { UserNotificationCategoryEnum } from "@/types/wlsTypes/UserNotificationCategoryEnum.ts";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-const userNotificationStore = useUserNotificationStore();
+const userNotificationService = useUserNotificationService();
 
 function toastErfolg(): void {
-  userNotificationStore.addNotification(
+  userNotificationService.addNotification(
     "Erfolg",
-    UserNotificationCategoryEnum.ERFOLG
+    UserNotificationCategoryEnum.SUCCESS
   );
 }
 
 function toastWarnung(): void {
-  userNotificationStore.addNotification(
+  userNotificationService.addNotification(
     "Warnung",
-    UserNotificationCategoryEnum.WARNUNG
+    UserNotificationCategoryEnum.WARNING
   );
 }
 
 function toastError(): void {
-  userNotificationStore.addNotification(
+  userNotificationService.addNotification(
     "Fehler",
-    UserNotificationCategoryEnum.FEHLER
+    UserNotificationCategoryEnum.ERROR
   );
 }
 </script>

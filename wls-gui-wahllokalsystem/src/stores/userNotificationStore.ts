@@ -1,4 +1,5 @@
-import type { UserNotification } from "@/types/wlsTypes/UserNotification.ts";
+import type { UserNotification } from "@/types/userNotification/UserNotification.ts";
+import type { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 import { defineStore } from "pinia";
 import { v4 as uuidv4 } from "uuid";

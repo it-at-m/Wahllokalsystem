@@ -380,7 +380,8 @@ public class WahltermindatenControllerIntegrationTest {
 
             val expectedBasisdatenModel = wahldatenClientMapper.fromRemoteClientDTOToModel(basisstrukturdatenToImport);
             Mockito.verify(asyncWahltermindatenService)
-                    .initVorlagenAndVorschlaege(eq(new WahltagWithNummerModel(wahltagToGetWahltermindaten.getWahltag(), wahltagToGetWahltermindaten.getNummer())),
+                    .initVorlagenAndVorschlaege(
+                            eq(new WahltagWithNummerModel(wahltagToGetWahltermindaten.getWahltag(), wahltagToGetWahltermindaten.getNummer())),
                             eq(expectedBasisdatenModel));
         }
 

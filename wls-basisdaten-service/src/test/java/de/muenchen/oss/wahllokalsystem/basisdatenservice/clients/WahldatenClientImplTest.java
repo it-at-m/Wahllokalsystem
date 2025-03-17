@@ -77,7 +77,8 @@ class WahldatenClientImplTest {
             Mockito.when(wahldatenControllerApi.loadBasisdaten(any(), any()))
                     .thenThrow(new RestClientException("error occurs while attempting to invoke the API"));
             Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI)).thenThrow(mockedException);
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(testDate, "0"))).isSameAs(mockedException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(testDate, "0")))
+                    .isSameAs(mockedException);
         }
 
     }

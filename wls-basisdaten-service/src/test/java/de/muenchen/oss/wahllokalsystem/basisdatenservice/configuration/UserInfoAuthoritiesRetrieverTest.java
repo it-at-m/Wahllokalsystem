@@ -23,7 +23,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.client.RestTemplate;
 
 @ExtendWith(MockitoExtension.class)
-class UserInfoAuthoritiesProviderTest {
+class UserInfoAuthoritiesRetrieverTest {
 
     private static final String RESPONSEBODY_MAP_KEY_CLAIM_AUTHORITIES = "authorities";
 
@@ -38,7 +38,7 @@ class UserInfoAuthoritiesProviderTest {
 
     String userInfoUri = "http://localhost:8080/userinfo";
 
-    UserInfoAuthoritiesProvider unitUnderTest;
+    UserInfoAuthoritiesRetriever unitUnderTest;
 
     @BeforeEach
     void setup() {
@@ -49,7 +49,7 @@ class UserInfoAuthoritiesProviderTest {
             }
         };
 
-        unitUnderTest = new UserInfoAuthoritiesProvider(userInfoUri, restTemplateBuilder);
+        unitUnderTest = new UserInfoAuthoritiesRetriever(userInfoUri, restTemplateBuilder);
     }
 
     @Nested

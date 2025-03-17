@@ -31,7 +31,7 @@ import org.springframework.web.client.RestTemplate;
  * "Authorities" extrahiert.
  */
 @Slf4j
-public class UserInfoAuthoritiesProvider {
+public class UserInfoAuthoritiesRetriever {
 
     private static final String NAME_AUTHENTICATION_CACHE = "authentication_cache";
     private static final int AUTHENTICATION_CACHE_ENTRY_SECONDS_TO_EXPIRE = 60;
@@ -48,7 +48,7 @@ public class UserInfoAuthoritiesProvider {
      * @param userInfoUri userinfo Endpoint URI
      * @param restTemplateBuilder ein {@link RestTemplateBuilder}
      */
-    public UserInfoAuthoritiesProvider(String userInfoUri, RestTemplateBuilder restTemplateBuilder) {
+    public UserInfoAuthoritiesRetriever(String userInfoUri, RestTemplateBuilder restTemplateBuilder) {
         this.userInfoUri = userInfoUri;
         this.restTemplate = restTemplateBuilder.build();
         this.cache = new CaffeineCache(NAME_AUTHENTICATION_CACHE,

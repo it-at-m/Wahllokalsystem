@@ -1,8 +1,8 @@
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, test } from "vitest";
 
-import { useUserNotificationStore } from "@/stores/useUserNotificationStore.ts";
-import { UserNotificationCategoryEnum } from "@/types/wlsTypes/UserNotificationCategoryEnum.ts";
+import { useUserNotificationStore } from "@/stores/userNotificationStore.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 describe("userNotificationStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useUserNotificationStore>;

@@ -18,6 +18,9 @@ spring:
   session:
     jdbc:
       table-name: SPRING_SESSION
+  jpa:
+    hibernate:
+      ddl-auto: validate
 
 security:
   # possible values: none, all, changing (With changing, only changing requests such as POST, PUT, DELETE are logged)

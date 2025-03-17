@@ -1,13 +1,13 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltermindaten;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.ReferendumvorlagenRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummerModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.BasisdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlagenClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlagenModelMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlagenReferenceModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlartModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlag.WahlvorschlaegeClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlag.WahlvorschlaegeModelMapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
@@ -46,9 +46,8 @@ public class AsyncWahltermindatenService {
         asyncProgress.setWahlvorschlaegeLoadingActive(true);
 
         val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-
         basisdaten.wahlen().parallelStream()
-                .filter(wahl -> !Wahlart.VE.equals(wahl.wahlart()) && !Wahlart.BEB.equals(wahl.wahlart()))
+                .filter(wahl -> !WahlartModel.VE.equals(wahl.wahlart()) && !WahlartModel.BEB.equals(wahl.wahlart()))
                 .forEach(wahl -> basisdaten.wahlbezirke().parallelStream()
                         .forEach(wahlbezirk -> {
                             if (wahl.wahlID().equals(wahlbezirk.wahlID())) {
@@ -74,7 +73,7 @@ public class AsyncWahltermindatenService {
     }
 
     private void initReferendumvorlagen(final BasisdatenModel basisdaten) {
-        if (basisdaten.wahlen().stream().anyMatch(wahl -> Wahlart.VE.equals(wahl.wahlart()) || Wahlart.BEB.equals(wahl.wahlart()))) {
+        if (basisdaten.wahlen().stream().anyMatch(wahl -> WahlartModel.VE.equals(wahl.wahlart()) || WahlartModel.BEB.equals(wahl.wahlart()))) {
             asyncProgress.setReferendumVorlagenTotal(basisdaten.wahlen().size() * basisdaten.wahlbezirke().size());
             asyncProgress.setReferendumLoadingActive(true);
         }
@@ -82,7 +81,7 @@ public class AsyncWahltermindatenService {
         val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
 
         basisdaten.wahlen().parallelStream()
-                .filter(wahl -> Wahlart.VE.equals(wahl.wahlart()) || Wahlart.BEB.equals(wahl.wahlart()))
+                .filter(wahl -> WahlartModel.VE.equals(wahl.wahlart()) || WahlartModel.BEB.equals(wahl.wahlart()))
                 .forEach(wahl -> basisdaten.wahlbezirke().parallelStream()
                         .forEach(wahlbezirk -> {
                             if (wahl.wahlID().equals(wahlbezirk.wahlID())) {

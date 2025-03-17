@@ -1,5 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.archunit;
 
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
+
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
@@ -21,6 +23,12 @@ public class ArchUnitTest {
     private static JavaClasses allClassesWithoutTests;
     private static final ImportOption ignoreGeneratedCode = location -> !location.contains("/eai");
     private static final ImportOption ignoreGeneratedCodeWlsCommon = location -> !location.contains("/common");
+    private static final ArchRule RULE_NO_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED = noClasses()
+            .that().resideInAnyPackage("..rest..")
+            .should().dependOnClassesThat().resideInAnyPackage("..basisdatenservice.domain..");
+    private static final ArchRule RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED = noClasses()
+            .that().resideInAnyPackage("..service..").and().haveSimpleNameEndingWith("Model")
+            .should().dependOnClassesThat().resideInAnyPackage("..rest..", "..basisdaten.domain..");
 
     @BeforeAll
     static void init() {
@@ -82,7 +90,7 @@ public class ArchUnitTest {
                 Arguments.of("RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED",
                         ClassRules.RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED),
                 Arguments.of("RULE_NO_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED",
-                        ClassRules.RULE_NO_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED),
+                        RULE_NO_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED),
                 //--- service rules
                 Arguments.of("RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_MODEL_CONVENTION_MATCHED",
                         ClassRules.RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_MODEL_CONVENTION_MATCHED),
@@ -91,7 +99,7 @@ public class ArchUnitTest {
                 Arguments.of("RULE_NO_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED",
                         ClassRules.RULE_NO_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED),
                 Arguments.of("RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED",
-                        ClassRules.RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED),
+                        RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED),
                 //--- domain rules
                 Arguments.of("RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED",
                         ClassRules.RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED),

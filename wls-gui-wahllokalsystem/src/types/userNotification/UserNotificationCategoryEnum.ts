@@ -1,7 +1,7 @@
 export const UserNotificationCategoryEnum = {
-  ERFOLG: "Erfolg",
-  WARNUNG: "Warnung",
-  FEHLER: "Fehler",
+  SUCCESS: "Success",
+  WARNING: "Warning",
+  ERROR: "Error",
 } as const;
 
 export type UserNotificationCategoryEnum =

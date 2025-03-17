@@ -14,7 +14,7 @@ describe("userNotificationStore.ts", () => {
 
   describe("addNotification", () => {
     test("should_addANewNotification_when_called", () => {
-      const category = UserNotificationCategoryEnum.ERFOLG;
+      const category = UserNotificationCategoryEnum.SUCCESS;
       const message = "Test message";
       expect(unitUnderTest.userNotifications.length).toStrictEqual(0);
 
@@ -35,15 +35,15 @@ describe("userNotificationStore.ts", () => {
     test("should_removeNotificationById_when_calledWithId", () => {
       unitUnderTest.addNotification(
         "Test message One",
-        UserNotificationCategoryEnum.ERFOLG
+        UserNotificationCategoryEnum.SUCCESS
       );
       unitUnderTest.addNotification(
         "Test message Two",
-        UserNotificationCategoryEnum.ERFOLG
+        UserNotificationCategoryEnum.SUCCESS
       );
       unitUnderTest.addNotification(
         "Test message Three",
-        UserNotificationCategoryEnum.ERFOLG
+        UserNotificationCategoryEnum.SUCCESS
       );
 
       const notificationToDeleteId = unitUnderTest.userNotifications[1].id;

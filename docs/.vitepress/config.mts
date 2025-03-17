@@ -232,6 +232,10 @@ export default withMermaid({
               text: "Wahllokalsystem",
               link: `${PATH_SERVICES_FRONTEND}wahllokalsystem/`,
             },
+            {
+              text: "Admintool",
+              link: `${PATH_SERVICES_FRONTEND}admintool/`,
+            },
           ],
         },
       ],

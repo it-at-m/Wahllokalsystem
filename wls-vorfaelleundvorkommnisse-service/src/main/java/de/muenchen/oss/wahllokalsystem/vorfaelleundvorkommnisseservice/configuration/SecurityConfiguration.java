@@ -4,7 +4,6 @@
  */
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.configuration;
 
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.security.UserInfoAuthoritiesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
@@ -56,7 +55,7 @@ public class SecurityConfiguration {
                         .authenticated())
                 .oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer -> httpSecurityOAuth2ResourceServerConfigurer
                         .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(new JwtUserInfoAuthenticationConverter(
-                                new UserInfoAuthoritiesService(userInfoUri, restTemplateBuilder)))));
+                                new UserInfoAuthoritiesRetriever(userInfoUri, restTemplateBuilder)))));
 
         return http.build();
     }

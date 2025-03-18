@@ -4,9 +4,6 @@ spring:
   h2.console.enabled: true
   jpa:
     database: H2
-    hibernate:
-      ddl-auto: validate
-      naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     # Logging for database operation
     show-sql: true
     properties:

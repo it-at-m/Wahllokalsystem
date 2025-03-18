@@ -20,9 +20,6 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://kubernetes.docker.internal:8100/oauth2/jwks
-  jpa:
-    hibernate:
-      ddl-auto: validate
 
 security:
   # possible values: none, all, changing (With changing, only changing requests such as POST, PUT, DELETE are logged)

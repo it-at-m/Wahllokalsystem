@@ -44,7 +44,7 @@ public class SwaggerDefaultConfiguration {
 
     private void addInternalErrorToAPI(Operation operation, Components components) {
         operation.getResponses().addApiResponse("500", new ApiResponse()
-                .description("Unbehandelter internal error z.B. Kommunikation mit anderen Systemen oder ander arten von unbehandelten Fehlern")
+                .description("Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder anderen Arten von unbehandelten Fehlern")
                 .content(new Content().addMediaType(APPLICATION_JSON_VALUE, createWlsExceptionDTOMediaType(components))));
     }
 

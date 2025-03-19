@@ -10,12 +10,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch.HandbuchService;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenService;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.ungueltigewahlscheine.UngueltigeWahlscheineService;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageService;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltermindaten.WahltermindatenService;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.handbuch.HandbuchService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlagenService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.ungueltigewahlscheine.UngueltigeWahlscheineService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltag.WahltageService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltermindaten.WahltermindatenService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlag.WahlvorschlaegeService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

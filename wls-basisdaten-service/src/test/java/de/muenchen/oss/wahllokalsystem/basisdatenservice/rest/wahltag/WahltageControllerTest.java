@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahltag;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltag.WahltagModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltag.WahltageService;
 import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;

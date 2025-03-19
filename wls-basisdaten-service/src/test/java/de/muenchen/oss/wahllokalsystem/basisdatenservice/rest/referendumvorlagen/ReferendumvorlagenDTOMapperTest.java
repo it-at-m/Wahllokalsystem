@@ -1,9 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.referendumvorlagen;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumoptionModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlageModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenReferenceModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumoptionModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlageModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlagenModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlagenReferenceModel;
 import java.util.Set;
 import lombok.val;
 import org.assertj.core.api.Assertions;

@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlvorschlag;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlag.WahlvorschlaegeModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

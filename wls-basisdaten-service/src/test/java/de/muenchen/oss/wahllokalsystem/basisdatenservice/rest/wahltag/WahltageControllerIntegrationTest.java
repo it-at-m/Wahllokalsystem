@@ -12,7 +12,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.Wahltag;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModelMapper;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltag.WahltagModelMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;

@@ -1,5 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.archunit;
 
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
+
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
@@ -18,6 +20,15 @@ public class ArchUnitTest {
 
     private static JavaClasses allTestClasses;
     private static JavaClasses allClasses;
+    private static JavaClasses allClassesWithoutTests;
+    private static final ImportOption ignoreGeneratedCode = location -> !location.contains("/eai");
+    private static final ImportOption ignoreGeneratedCodeWlsCommon = location -> !location.contains("/common");
+    private static final ArchRule RULE_NO_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED = noClasses()
+            .that().resideInAnyPackage("..rest..")
+            .should().dependOnClassesThat().resideInAnyPackage("..basisdatenservice.domain..");
+    private static final ArchRule RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED = noClasses()
+            .that().resideInAnyPackage("..service..").and().haveSimpleNameEndingWith("Model")
+            .should().dependOnClassesThat().resideInAnyPackage("..rest..", "..basisdaten.domain..");
 
     @BeforeAll
     static void init() {
@@ -26,6 +37,12 @@ public class ArchUnitTest {
                 .importPackages(MicroServiceApplication.class.getPackage().getName());
 
         allClasses = new ClassFileImporter()
+                .importPackages(MicroServiceApplication.class.getPackage().getName());
+
+        allClassesWithoutTests = new ClassFileImporter()
+                .withImportOption(new ImportOption.DoNotIncludeTests())
+                .withImportOption(ignoreGeneratedCode)
+                .withImportOption(ignoreGeneratedCodeWlsCommon)
                 .importPackages(MicroServiceApplication.class.getPackage().getName());
     }
 
@@ -39,6 +56,12 @@ public class ArchUnitTest {
     @MethodSource("allClassesRulesToVerify")
     void should_verifyArchUnitRuleForAllClasses_when_running(final ArgumentsAccessor arguments) {
         arguments.get(1, ArchRule.class).check(allClasses);
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("allClassesWithoutTestsRulesToVerify")
+    void should_verifyArchUnitRuleForAllClassesWithoutTests_when_running(final ArgumentsAccessor arguments) {
+        arguments.get(1, ArchRule.class).check(allClassesWithoutTests);
     }
 
     public static Stream<Arguments> allTestClassesRulesToVerify() {
@@ -55,5 +78,34 @@ public class ArchUnitTest {
                         ClassRules.RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED),
                 Arguments.of("RULE_TESTCLASSES_END_WITH_TEST_CONVENTION_MATCHED",
                         MethodRules.RULE_TESTCLASSES_END_WITH_TEST_CONVENTION_MATCHED));
+    }
+
+    private static Stream<Arguments> allClassesWithoutTestsRulesToVerify() {
+        return Stream.of(
+                //--- rest rules
+                Arguments.of("DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED",
+                        ClassRules.RULE_DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED),
+                Arguments.of("RULE_NO_DTOS_OR_CONTROLLERS_OUTSIDE_OF_REST_PACKAGE_CONVENTION_MATCHED",
+                        ClassRules.RULE_NO_DTOS_OR_CONTROLLERS_OUTSIDE_OF_REST_PACKAGE_CONVENTION_MATCHED),
+                Arguments.of("RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED",
+                        ClassRules.RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED),
+                Arguments.of("RULE_NO_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED",
+                        RULE_NO_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED),
+                //--- service rules
+                Arguments.of("RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_MODEL_CONVENTION_MATCHED",
+                        ClassRules.RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_MODEL_CONVENTION_MATCHED),
+                Arguments.of("RULE_NO_MODELS_OR_SERVICES_OUTSIDE_OF_SERVICE_PACKAGE_CONVENTION_MATCHED",
+                        ClassRules.RULE_NO_MODELS_OR_SERVICES_OUTSIDE_OF_SERVICE_PACKAGE_CONVENTION_MATCHED),
+                Arguments.of("RULE_NO_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED",
+                        ClassRules.RULE_NO_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED),
+                Arguments.of("RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED",
+                        RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED),
+                //--- domain rules
+                Arguments.of("RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED",
+                        ClassRules.RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED),
+                Arguments.of("RULE_NO_ENTITIES_OR_REPOS_OUTSIDE_OF_DOMAIN_PACKAGE_CONVENTION_MATCHED",
+                        ClassRules.RULE_NO_ENTITIES_OR_REPOS_OUTSIDE_OF_DOMAIN_PACKAGE_CONVENTION_MATCHED),
+                Arguments.of("RULE_NO_CROSS_DEPENDENCIES_INSIDE_DOMAIN_CONVENTION_MATCHED",
+                        ClassRules.RULE_NO_CROSS_DEPENDENCIES_INSIDE_DOMAIN_CONVENTION_MATCHED));
     }
 }

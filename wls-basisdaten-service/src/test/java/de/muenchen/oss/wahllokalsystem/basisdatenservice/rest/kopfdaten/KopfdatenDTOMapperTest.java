@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.kopfdaten;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.StimmzettelgebietsartModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KopfdatenModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.StimmzettelgebietsartModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.KopfdatenModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import lombok.val;
 import org.assertj.core.api.Assertions;

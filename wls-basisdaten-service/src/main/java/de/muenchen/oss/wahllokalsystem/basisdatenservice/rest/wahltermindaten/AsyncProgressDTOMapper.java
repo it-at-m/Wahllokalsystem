@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahltermindaten;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltermindaten.AsyncProgress;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltermindaten.AsyncProgress;
 import org.mapstruct.Mapper;
 
 @Mapper

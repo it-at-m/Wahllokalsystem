@@ -9,6 +9,8 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import de.muenchen.oss.wahllokalsystem.authservice.configuration.properties.RSAConfigurationProperties;
+import de.muenchen.oss.wahllokalsystem.authservice.configuration.properties.RSAKeySetting;
 import de.muenchen.oss.wahllokalsystem.authservice.security.CustomUsernamePasswordAuthenticationFilter;
 import de.muenchen.oss.wahllokalsystem.authservice.security.WlsUserTokenCustomizer;
 import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
@@ -17,6 +19,7 @@ import java.security.KeyPairGenerator;
 import java.security.SecureRandom;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,6 +59,7 @@ import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 @Import(RestTemplateAutoConfiguration.class)
+@RequiredArgsConstructor
 @Slf4j
 public class SecurityConfiguration {
 
@@ -69,6 +73,8 @@ public class SecurityConfiguration {
 
     @Value("${service.config.oauth2.jwk.rsa.init.seed}")
     String rsaKeyPairSeed;
+
+    final private RSAConfigurationProperties rsaConfigurationProperties;
 
     @Bean
     @Order(1)
@@ -138,9 +144,18 @@ public class SecurityConfiguration {
 
     @Bean
     public JWKSource<SecurityContext> jwkSource() {
-        KeyPair keyPair = generateRsaKey();
-        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
+        RSAPublicKey publicKey;
+        RSAPrivateKey privateKey;
+        if (rsaConfigurationProperties.getRsaKeySetting() == RSAKeySetting.STATIC_KEY) {
+            publicKey = rsaConfigurationProperties.getPublicKey();
+            privateKey = rsaConfigurationProperties.getPrivateKey();
+        } else if (rsaConfigurationProperties.getRsaKeySetting() == RSAKeySetting.GENERATED_KEY) {
+            KeyPair keyPair = generateRsaKey();
+            publicKey = (RSAPublicKey) keyPair.getPublic();
+            privateKey = (RSAPrivateKey) keyPair.getPrivate();
+        } else {
+            throw new IllegalStateException("RSA settings not supported");
+        }
         RSAKey rsaKey = new RSAKey.Builder(publicKey)
                 .privateKey(privateKey)
                 .keyID("keyID")

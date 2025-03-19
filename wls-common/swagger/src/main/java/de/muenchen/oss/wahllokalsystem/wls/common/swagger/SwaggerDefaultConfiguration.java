@@ -33,7 +33,7 @@ public class SwaggerDefaultConfiguration {
 
     private void addRequestBodyValidationErrorToAPI(Operation operation, Components components) {
         operation.getResponses().addApiResponse("400", new ApiResponse()
-                .description("Validierung des Request Body fehlgeschlagen")
+                .description("Validierung des Requestbody fehlgeschlagen")
                 .content(new Content().addMediaType(APPLICATION_JSON_VALUE, createWlsExceptionDTOMediaType(components))));
     }
 
@@ -44,7 +44,7 @@ public class SwaggerDefaultConfiguration {
 
     private void addInternalErrorToAPI(Operation operation, Components components) {
         operation.getResponses().addApiResponse("500", new ApiResponse()
-                .description("Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder anderen Arten von unbehandelten Fehlern")
+                .description("Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern")
                 .content(new Content().addMediaType(APPLICATION_JSON_VALUE, createWlsExceptionDTOMediaType(components))));
     }
 

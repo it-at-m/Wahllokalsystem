@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlModel;
 import java.util.List;
 import org.mapstruct.Mapper;
 

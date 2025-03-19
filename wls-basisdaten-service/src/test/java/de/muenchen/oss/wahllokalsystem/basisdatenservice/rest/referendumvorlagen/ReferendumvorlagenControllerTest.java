@@ -2,9 +2,9 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.referendumvorlage
 
 import static org.mockito.ArgumentMatchers.eq;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenReferenceModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlagenModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlagenReferenceModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlagenService;
 import java.util.Collections;
 import lombok.val;
 import org.assertj.core.api.Assertions;

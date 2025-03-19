@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltermindaten.AsyncProgress;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltermindaten.AsyncProgress;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.val;

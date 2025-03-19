@@ -16,7 +16,6 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgab
 import jakarta.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 import lombok.val;
 
 public class Testdaten {
@@ -44,7 +43,7 @@ public class Testdaten {
                     EigenommenerWahlschein.createEntity(waehlerverzeichnisnummer * 10 + 2));
 
             val wahldaten = new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Wahldaten(
-                    UUID.randomUUID(), new BezirkUndWahlIDUndWaehlerverzeichnisnummer(wahlbezirkID, wahlID, waehlerverzeichnisnummer), new HashSet<>(),
+                    null, new BezirkUndWahlIDUndWaehlerverzeichnisnummer(wahlbezirkID, wahlID, waehlerverzeichnisnummer), new HashSet<>(),
                     eingenommeneWahlscheine);
             vermerke.forEach(wahldaten::addVermerk);
             return wahldaten;
@@ -77,7 +76,7 @@ public class Testdaten {
                     Stimmzettel.createEntity(blattnummer * 10 + 1),
                     Stimmzettel.createEntity(blattnummer * 10 + 2));
 
-            return new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Vermerk(UUID.randomUUID(), null, blattnummer,
+            return new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Vermerk(null, null, blattnummer,
                     stimmzettel);
         }
 

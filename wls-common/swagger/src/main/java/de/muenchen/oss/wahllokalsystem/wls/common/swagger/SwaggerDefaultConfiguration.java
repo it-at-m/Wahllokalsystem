@@ -33,18 +33,18 @@ public class SwaggerDefaultConfiguration {
 
     private void addRequestBodyValidationErrorToAPI(Operation operation, Components components) {
         operation.getResponses().addApiResponse("400", new ApiResponse()
-                .description("request body validation failed")
+                .description("Validierung des Requestbody fehlgeschlagen")
                 .content(new Content().addMediaType(APPLICATION_JSON_VALUE, createWlsExceptionDTOMediaType(components))));
     }
 
     private void addNotFoundErrorToAPI(Operation operation) {
         operation.getResponses().addApiResponse("404", new ApiResponse()
-                .description("resource not found"));
+                .description("Ressource nicht gefunden"));
     }
 
     private void addInternalErrorToAPI(Operation operation, Components components) {
         operation.getResponses().addApiResponse("500", new ApiResponse()
-                .description("unhandled internal error e.g. communication with other system or some types of unhandled exception")
+                .description("Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern")
                 .content(new Content().addMediaType(APPLICATION_JSON_VALUE, createWlsExceptionDTOMediaType(components))));
     }
 

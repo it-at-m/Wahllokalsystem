@@ -30,12 +30,12 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
-    classes = { MicroServiceApplication.class },
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    properties = {
-        "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
-        "refarch.gracefulshutdown.pre-wait-seconds=0"
-    }
+        classes = { MicroServiceApplication.class },
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = {
+                "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
+                "refarch.gracefulshutdown.pre-wait-seconds=0"
+        }
 )
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
 class UnicodeConfigurationTest {
@@ -86,13 +86,13 @@ class UnicodeConfigurationTest {
         val bWerte = new BWerteDTO(4L, 3L, 2L);
         val wahlbriefeWerte = new WahlbriefeWerteDTO(3L);
         val ungueltigeStimmzettelDTOList = Set.of(new UngueltigeStimmzettelDTO("test1", 4L, "wahlvorschlagID1"),
-            new UngueltigeStimmzettelDTO("test2", 5L, "wahlvorschlagID2"));
+                new UngueltigeStimmzettelDTO("test2", 5L, "wahlvorschlagID2"));
         val ungueltigeStimmzettelAnzahl = 4L;
         val ergebnisse = Set.of(new ErgebnisDTO("test1", 5L, 3L, "wahlvorschlagID1", "kandidatID1"),
-            new ErgebnisDTO("test2", 6L, 4L, "wahlvorschlagID2", "kandidatID2"));
+                new ErgebnisDTO("test2", 6L, 4L, "wahlvorschlagID2", "kandidatID2"));
         val wahlart = WahlartDTO.BTW;
 
         return new ErgebnismeldungDTO(wahlbezirkID, wahlID, meldungsart, aWerte, bWerte, wahlbriefeWerte, ungueltigeStimmzettelDTOList,
-            ungueltigeStimmzettelAnzahl, ergebnisse, wahlart);
+                ungueltigeStimmzettelAnzahl, ergebnisse, wahlart);
     }
 }

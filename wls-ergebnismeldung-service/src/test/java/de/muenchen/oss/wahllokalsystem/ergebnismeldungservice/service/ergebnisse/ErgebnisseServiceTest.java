@@ -99,7 +99,7 @@ class ErgebnisseServiceTest {
             Mockito.when(ergebnisseRepository.findByWahlbezirkIDAndWahlD(wahlbezirkID, wahlID)).thenReturn(List.of(entityFromRepo));
             Mockito.when(ergebnisseModelMapper.toModel(entityFromRepo)).thenReturn(mappedEntity);
 
-            val result = unitUnderTest.getAllErgebnisse(wahlbezirkID, wahlID);
+            val result = unitUnderTest.getAllErgebnisse(wahlID, wahlbezirkID);
 
             Assertions.assertThat(result).isEqualTo(List.of(mappedEntity));
         }

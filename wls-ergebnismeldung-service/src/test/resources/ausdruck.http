@@ -19,6 +19,15 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   "content": "Testcontent1"
 }
 
+### POST Ausdruck for Meldungsart "V1" for wahlID and wahlbezirkID1
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ausdruck/wahlID/wahlbezirkID1/V1/html
+Content-Type: application/json
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+{
+  "content": "Testcontent1"
+}
+
 ### POST Ausdruck for Meldungsart "V3" for wahlID and wahlbezirkID
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ausdruck/wahlID/wahlbezirkID/V3/html
 Content-Type: application/json

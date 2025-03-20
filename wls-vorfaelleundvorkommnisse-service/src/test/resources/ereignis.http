@@ -2,12 +2,36 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET Ereignisse
+### GET Ereignisse - wahlbezirkID
 GET {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/wahlbezirkID
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST Ereignisse nur Vorkommnisse
+### GET Ereignisse - wahlbezirkID1
+GET {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/wahlbezirkID1
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### POST Ereignisse nur Vorkommnisse - wahlbezirkID
 POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/wahlbezirkID
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "ereigniseintraege": [
+    {
+      "beschreibung": "beschreibung",
+      "uhrzeit": "2024-06-09T23:59:12.123",
+      "ereignisart": "VORKOMMNIS"
+    },
+    {
+      "beschreibung": "beschreibung",
+      "uhrzeit": "2024-06-09T23:59:12.123",
+      "ereignisart": "VORKOMMNIS"
+    }
+  ]
+}
+
+### POST Ereignisse nur Vorkommnisse - wahlbezirkID1
+POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/wahlbezirkID1
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 

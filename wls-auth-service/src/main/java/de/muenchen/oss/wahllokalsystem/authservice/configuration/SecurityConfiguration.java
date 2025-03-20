@@ -147,8 +147,8 @@ public class SecurityConfiguration {
     @Bean
     public JWKSource<SecurityContext> jwkSource() {
         Pair<RSAPrivateKey, RSAPublicKey> keyPair = getKeyPair();
-        val rsaKey = new RSAKey.Builder((RSAPublicKey) keyPair.getKey())
-                .privateKey((RSAPrivateKey) keyPair.getValue())
+        val rsaKey = new RSAKey.Builder(keyPair.getValue())
+                .privateKey(keyPair.getKey())
                 .keyID("keyID")
                 .build();
         JWKSet jwkSet = new JWKSet(rsaKey);

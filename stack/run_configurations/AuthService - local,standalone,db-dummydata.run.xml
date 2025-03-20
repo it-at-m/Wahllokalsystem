@@ -2,7 +2,7 @@
   <configuration default="false" name="AuthService - local,standalone,db-dummydata" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,standalone,sec">
     <option name="ACTIVE_PROFILES" value="local,standalone,db-dummydata" />
     <envs>
-      <env name="service.config.rsa.rsa-key-setting" value="generated_key"/>
+      <env name="service.config.rsa.rsa-key-setting" value="GENERATED_KEY"/>
     </envs>
     <module name="wls-auth-service" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication" />

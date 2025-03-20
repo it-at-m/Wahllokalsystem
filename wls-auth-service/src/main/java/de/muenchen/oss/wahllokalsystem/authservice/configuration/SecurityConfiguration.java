@@ -21,6 +21,8 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
@@ -144,24 +146,40 @@ public class SecurityConfiguration {
 
     @Bean
     public JWKSource<SecurityContext> jwkSource() {
-        RSAPublicKey publicKey;
+        Pair<RSAPrivateKey, RSAPublicKey> keyPair = getKeyPair();
+        val rsaKey = new RSAKey.Builder((RSAPublicKey) keyPair.getKey())
+                .privateKey((RSAPrivateKey) keyPair.getValue())
+                .keyID("keyID")
+                .build();
+        JWKSet jwkSet = new JWKSet(rsaKey);
+        return new ImmutableJWKSet<>(jwkSet);
+    }
+
+    private Pair<RSAPrivateKey, RSAPublicKey> getKeyPair() {
         RSAPrivateKey privateKey;
+        RSAPublicKey publicKey;
         if (rsaConfigurationProperties.getRsaKeySetting() == RSAKeySetting.STATIC_KEY) {
             publicKey = rsaConfigurationProperties.getPublicKey();
             privateKey = rsaConfigurationProperties.getPrivateKey();
         } else if (rsaConfigurationProperties.getRsaKeySetting() == RSAKeySetting.GENERATED_KEY) {
-            KeyPair keyPair = generateRsaKey();
+            log.warn("""
+                    ##############################
+                    ##                          ##
+                    ##  Generierte RSA-Keys     ##
+                    ##      werden verwendet    ##
+                    ##                          ##
+                    ##  NICHT FÜR DEN           ##
+                    ##  PRODUKTIVEINSATZ        ##
+                    ##  BESTIMMT                ##
+                    ##############################""");
+
+            val keyPair = generateRsaKey();
             publicKey = (RSAPublicKey) keyPair.getPublic();
             privateKey = (RSAPrivateKey) keyPair.getPrivate();
         } else {
             throw new IllegalStateException("RSA settings not supported");
         }
-        RSAKey rsaKey = new RSAKey.Builder(publicKey)
-                .privateKey(privateKey)
-                .keyID("keyID")
-                .build();
-        JWKSet jwkSet = new JWKSet(rsaKey);
-        return new ImmutableJWKSet<>(jwkSet);
+        return Pair.of(privateKey, publicKey);
     }
 
     private KeyPair generateRsaKey() {

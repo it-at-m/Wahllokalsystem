@@ -14,7 +14,3 @@ public class RSAConfigurationProperties {
     private RSAPublicKey publicKey;
     private RSAKeySetting rsaKeySetting = RSAKeySetting.STATIC_KEY;
 }
-
-/**
- * enum standard keys keys zu run configs hinzufügen docker und skript auch
- */

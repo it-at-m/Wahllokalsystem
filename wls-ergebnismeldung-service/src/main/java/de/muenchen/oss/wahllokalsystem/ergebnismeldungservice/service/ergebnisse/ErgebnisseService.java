@@ -50,7 +50,7 @@ public class ErgebnisseService {
         ergebnisseValidator.validIDOrThrow(wahlID, wahlbezirkID,
                 exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG));
 
-        val ergebnisseFromRepo = ergebnisseRepository.findByWahlbezirkIDAndWahlD(wahlID, wahlbezirkID);
+        val ergebnisseFromRepo = ergebnisseRepository.findByWahlbezirkIDAndWahlD(wahlbezirkID, wahlID);
         return ergebnisseFromRepo.stream().map(ergebnisseModelMapper::toModel).toList();
     }
 

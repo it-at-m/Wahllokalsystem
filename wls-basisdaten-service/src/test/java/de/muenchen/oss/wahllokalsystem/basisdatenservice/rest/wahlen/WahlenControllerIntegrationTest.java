@@ -17,7 +17,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.Wahltag;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModelMapper;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlModelMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
@@ -316,13 +316,13 @@ public class WahlenControllerIntegrationTest {
             final String namePraefix) {
         val wahl1 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID1", namePraefix + "name1", 3L, 1L,
                 searchingForWahltag.getWahltag(),
-                Wahlart.BAW, new Farbe(1, 1, 1), "1");
+                WahlartDTO.BAW, new FarbeDTO(1, 1, 1), "1");
         val wahl2 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID2", namePraefix + "name2", 3L, 1L,
                 searchingForWahltag.getWahltag(),
-                Wahlart.BAW, new Farbe(1, 1, 1), "2");
+                WahlartDTO.BAW, new FarbeDTO(1, 1, 1), "2");
         val wahl3 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID3", namePraefix + "name3", 3L, 1L,
                 LocalDate.now().plusMonths(2),
-                Wahlart.BAW, new Farbe(1, 1, 1), "3");
+                WahlartDTO.BAW, new FarbeDTO(1, 1, 1), "3");
 
         return Stream.of(wahl1, wahl2, wahl3).filter(wahl -> (wahl.wahltag().equals(searchingForWahltag.getWahltag()))).collect(Collectors.toList());
     }

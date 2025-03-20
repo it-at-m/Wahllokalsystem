@@ -39,8 +39,8 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.Stimmzett
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlbezirkDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahltagWithNummer;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltermindaten.AsyncWahltermindatenService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummerModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltermindaten.AsyncWahltermindatenService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
@@ -60,10 +60,10 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -79,26 +79,26 @@ public class WahltermindatenControllerIntegrationTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    @SpyBean
+    @MockitoSpyBean
     WahlvorschlaegeRepository wahlvorschlaegeRepository;
     @Autowired
     WahlvorschlagRepository wahlvorschlagRepository;
     @Autowired
     KandidatRepository kandidatRepository;
 
-    @SpyBean
+    @MockitoSpyBean
     ReferendumvorlagenRepository referendumvorlagenRepository;
     @Autowired
     ReferendumvorlageRepository referendumvorlageRepository;
 
-    @SpyBean
+    @MockitoSpyBean
     WahlRepository wahlRepository;
-    @SpyBean
+    @MockitoSpyBean
     WahlbezirkRepository wahlbezirkRepository;
-    @SpyBean
+    @MockitoSpyBean
     KopfdatenRepository kopfdatenRepository;
 
-    @SpyBean
+    @MockitoSpyBean
     AsyncWahltermindatenService asyncWahltermindatenService;
 
     @Autowired
@@ -380,7 +380,8 @@ public class WahltermindatenControllerIntegrationTest {
 
             val expectedBasisdatenModel = wahldatenClientMapper.fromRemoteClientDTOToModel(basisstrukturdatenToImport);
             Mockito.verify(asyncWahltermindatenService)
-                    .initVorlagenAndVorschlaege(eq(new WahltagWithNummer(wahltagToGetWahltermindaten.getWahltag(), wahltagToGetWahltermindaten.getNummer())),
+                    .initVorlagenAndVorschlaege(
+                            eq(new WahltagWithNummerModel(wahltagToGetWahltermindaten.getWahltag(), wahltagToGetWahltermindaten.getNummer())),
                             eq(expectedBasisdatenModel));
         }
 

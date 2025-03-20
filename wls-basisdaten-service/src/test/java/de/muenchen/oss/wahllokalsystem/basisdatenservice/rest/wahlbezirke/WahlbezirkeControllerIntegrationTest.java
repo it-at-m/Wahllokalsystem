@@ -13,8 +13,8 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.Wahl
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.WahlRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkModelMapper;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModelMapper;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlbezirke.WahlbezirkModelMapper;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlModelMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.MockDataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;

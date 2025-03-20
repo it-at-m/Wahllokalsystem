@@ -12,18 +12,18 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 
 /**
  * Ein custom {@link JwtAuthenticationConverter}, der die Authorities mittels
- * {@link UserInfoAuthoritiesService} vom /userinfo Endpoint des OIDC Providers bezieht.
+ * {@link UserInfoAuthoritiesRetriever} vom /userinfo Endpoint des OIDC Providers bezieht.
  */
 public class JwtUserInfoAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 
-    private final UserInfoAuthoritiesService userInfoService;
+    private final UserInfoAuthoritiesRetriever userInfoService;
 
     /**
      * Erzeugt eine neue Instanz von {@link JwtUserInfoAuthenticationConverter}.
      *
-     * @param userInfoService ein {@link UserInfoAuthoritiesService}
+     * @param userInfoService ein {@link UserInfoAuthoritiesRetriever}
      */
-    public JwtUserInfoAuthenticationConverter(UserInfoAuthoritiesService userInfoService) {
+    public JwtUserInfoAuthenticationConverter(UserInfoAuthoritiesRetriever userInfoService) {
         this.userInfoService = userInfoService;
     }
 

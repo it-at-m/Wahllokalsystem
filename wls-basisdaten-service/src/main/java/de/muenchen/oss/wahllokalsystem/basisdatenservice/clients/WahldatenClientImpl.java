@@ -4,9 +4,9 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.client.WahldatenControllerApi;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.BasisdatenDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahltagWithNummer;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisdatenModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.WahldatenClient;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummerModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.BasisdatenModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.WahldatenClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +25,10 @@ public class WahldatenClientImpl implements WahldatenClient {
     private final WahldatenClientMapper wahldatenClientMapper;
 
     @Override
-    public BasisdatenModel loadBasisdaten(WahltagWithNummer wahltagWithNummer) throws WlsException {
+    public BasisdatenModel loadBasisdaten(WahltagWithNummerModel wahltagWithNummerModel) throws WlsException {
         final BasisdatenDTO basisdatenDTO;
         try {
-            basisdatenDTO = wahldatenControllerApi.loadBasisdaten(wahltagWithNummer.wahltag(), wahltagWithNummer.wahltagNummer());
+            basisdatenDTO = wahldatenControllerApi.loadBasisdaten(wahltagWithNummerModel.wahltag(), wahltagWithNummerModel.wahltagNummer());
         } catch (final Exception exception) {
             log.info("exception on getBasisdaten from external", exception);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);

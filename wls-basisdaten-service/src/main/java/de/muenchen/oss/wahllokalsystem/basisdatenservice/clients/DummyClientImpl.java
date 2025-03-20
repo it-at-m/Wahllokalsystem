@@ -1,36 +1,32 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.clients;
 
-import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart.BTW;
-import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart.EUW;
-import static de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart.LTW;
-
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration.Profiles;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Farbe;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.StimmzettelgebietsartModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahltagWithNummer;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisdatenModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisstrukturdatenModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KonfigurierterWahltagClient;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KonfigurierterWahltagModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.StimmzettelgebietModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.WahldatenClient;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumoptionModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlageModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenClient;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenReferenceModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkeClient;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenClient;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageClient;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.KandidatModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeClient;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlagModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.StimmzettelgebietsartModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahlbezirkArtModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummerModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.BasisdatenModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.BasisstrukturdatenModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.KonfigurierterWahltagClient;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.KonfigurierterWahltagModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.StimmzettelgebietModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.WahldatenClient;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumoptionModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlageModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlagenClient;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlagenModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlagenReferenceModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlbezirke.WahlbezirkModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlbezirke.WahlbezirkeClient;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.FarbeModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlartModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlenClient;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltag.WahltagModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltag.WahltageClient;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlag.KandidatModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlag.WahlvorschlaegeClient;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlag.WahlvorschlaegeModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlag.WahlvorschlagModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDate;
@@ -67,11 +63,11 @@ public class DummyClientImpl
     }
 
     @Override
-    public List<WahlModel> getWahlen(final WahltagWithNummer wahltagWithNummer) throws WlsException {
+    public List<WahlModel> getWahlen(final WahltagWithNummerModel wahltagWithNummerModel) throws WlsException {
         return List.of(
-                new WahlModel("wahl1", "remoteWahl 0", 1L, 1L, wahltagWithNummer.wahltag(), BTW, new Farbe(0, 1, 2), "1"),
-                new WahlModel("wahl2", "remoteWahl 1", 2L, 1L, wahltagWithNummer.wahltag(), EUW, new Farbe(3, 4, 5), "1"),
-                new WahlModel("wahl3", "remoteWahl 2", 3L, 1L, wahltagWithNummer.wahltag(), LTW, new Farbe(6, 7, 8), "1"));
+                new WahlModel("wahl1", "remoteWahl 0", 1L, 1L, wahltagWithNummerModel.wahltag(), WahlartModel.BTW, new FarbeModel(0, 1, 2), "1"),
+                new WahlModel("wahl2", "remoteWahl 1", 2L, 1L, wahltagWithNummerModel.wahltag(), WahlartModel.EUW, new FarbeModel(3, 4, 5), "1"),
+                new WahlModel("wahl3", "remoteWahl 2", 3L, 1L, wahltagWithNummerModel.wahltag(), WahlartModel.LTW, new FarbeModel(6, 7, 8), "1"));
     }
 
     @Override
@@ -90,27 +86,27 @@ public class DummyClientImpl
     }
 
     @Override
-    public BasisdatenModel loadBasisdaten(WahltagWithNummer wahltagWithNummer) throws WlsException {
+    public BasisdatenModel loadBasisdaten(WahltagWithNummerModel wahltagWithNummerModel) throws WlsException {
         return new BasisdatenModel(
-                Set.of(new BasisstrukturdatenModel("wahlID1", "szgID", "wahlbezirkID1_1", wahltagWithNummer.wahltag()),
-                        new BasisstrukturdatenModel("wahlID1", "szgID", "wahlbezirkID1_2", wahltagWithNummer.wahltag()),
-                        new BasisstrukturdatenModel("wahlID1", "szgID", "wahlbezirkID2_1", wahltagWithNummer.wahltag()),
-                        new BasisstrukturdatenModel("wahlID2", "szgID", "wahlbezirkID2_2", wahltagWithNummer.wahltag()),
-                        new BasisstrukturdatenModel("wahlID2", "szgIDOther", "wahlbezirkID2_2", wahltagWithNummer.wahltag())),
+                Set.of(new BasisstrukturdatenModel("wahlID1", "szgID", "wahlbezirkID1_1", wahltagWithNummerModel.wahltag()),
+                        new BasisstrukturdatenModel("wahlID1", "szgID", "wahlbezirkID1_2", wahltagWithNummerModel.wahltag()),
+                        new BasisstrukturdatenModel("wahlID1", "szgID", "wahlbezirkID2_1", wahltagWithNummerModel.wahltag()),
+                        new BasisstrukturdatenModel("wahlID2", "szgID", "wahlbezirkID2_2", wahltagWithNummerModel.wahltag()),
+                        new BasisstrukturdatenModel("wahlID2", "szgIDOther", "wahlbezirkID2_2", wahltagWithNummerModel.wahltag())),
                 Set.of(
-                        new WahlModel("wahlID1", "Bundestagswahl", 1L, 1L, wahltagWithNummer.wahltag(), Wahlart.BTW, new Farbe(0, 1, 2), "0"),
-                        new WahlModel("wahlID2", "Europawahl", 2L, 1L, wahltagWithNummer.wahltag(), Wahlart.EUW, new Farbe(3, 4, 5), "1")),
+                        new WahlModel("wahlID1", "Bundestagswahl", 1L, 1L, wahltagWithNummerModel.wahltag(), WahlartModel.BTW, new FarbeModel(0, 1, 2), "0"),
+                        new WahlModel("wahlID2", "Europawahl", 2L, 1L, wahltagWithNummerModel.wahltag(), WahlartModel.EUW, new FarbeModel(3, 4, 5), "1")),
                 Set.of(
-                        new WahlbezirkModel("wahlbezirkID1_1", WahlbezirkArtModel.UWB, "1201", wahltagWithNummer.wahltag(), "0", "wahlID1"),
-                        new WahlbezirkModel("wahlbezirkID1_2", WahlbezirkArtModel.BWB, "1251", wahltagWithNummer.wahltag(), "0", "wahlID1"),
-                        new WahlbezirkModel("wahlbezirkID2_1", WahlbezirkArtModel.UWB, "1202", wahltagWithNummer.wahltag(), "0", "wahlID1"),
-                        new WahlbezirkModel("wahlbezirkID2_2", WahlbezirkArtModel.BWB, "1252", wahltagWithNummer.wahltag(), "0", "wahlID1"),
-                        new WahlbezirkModel("wahlbezirkID2_2", WahlbezirkArtModel.BWB, "1252", wahltagWithNummer.wahltag(), "1", "wahlID2")
+                        new WahlbezirkModel("wahlbezirkID1_1", WahlbezirkArtModel.UWB, "1201", wahltagWithNummerModel.wahltag(), "0", "wahlID1"),
+                        new WahlbezirkModel("wahlbezirkID1_2", WahlbezirkArtModel.BWB, "1251", wahltagWithNummerModel.wahltag(), "0", "wahlID1"),
+                        new WahlbezirkModel("wahlbezirkID2_1", WahlbezirkArtModel.UWB, "1202", wahltagWithNummerModel.wahltag(), "0", "wahlID1"),
+                        new WahlbezirkModel("wahlbezirkID2_2", WahlbezirkArtModel.BWB, "1252", wahltagWithNummerModel.wahltag(), "0", "wahlID1"),
+                        new WahlbezirkModel("wahlbezirkID2_2", WahlbezirkArtModel.BWB, "1252", wahltagWithNummerModel.wahltag(), "1", "wahlID2")
 
                 ),
                 Set.of(
-                        new StimmzettelgebietModel("szgID", "120", "Munich", wahltagWithNummer.wahltag(), StimmzettelgebietsartModel.SG),
-                        new StimmzettelgebietModel("szgIDOther", "920", "Munich Center", wahltagWithNummer.wahltag(), StimmzettelgebietsartModel.SB)));
+                        new StimmzettelgebietModel("szgID", "120", "Munich", wahltagWithNummerModel.wahltag(), StimmzettelgebietsartModel.SG),
+                        new StimmzettelgebietModel("szgIDOther", "920", "Munich Center", wahltagWithNummerModel.wahltag(), StimmzettelgebietsartModel.SB)));
     }
 
     @Override

@@ -74,7 +74,6 @@ class UnicodeConfigurationTest {
         testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), ergebnisMeldungDto, Void.class);
 
         // Check persisted entity contains a composed string via JPA repository.
-        val zahl = ergebnismeldungRepository.count();
         final Ergebnismeldung ergebnismeldung = ergebnismeldungRepository.findAll().iterator().next();
         Assertions.assertThat(TEXT_ATTRIBUTE_COMPOSED).isEqualTo(ergebnismeldung.getWahlbezirkID());
         Assertions.assertThat(TEXT_ATTRIBUTE_COMPOSED.length()).isEqualTo(ergebnismeldung.getWahlbezirkID().length());

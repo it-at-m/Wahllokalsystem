@@ -6,8 +6,8 @@ import "vue3-toastify/dist/index.css";
 import App from "@/App.vue";
 import { registerPlugins } from "@/plugins";
 
-const app = createApp(App).use(Vue3Toastify, {});
+const app = createApp(App);
 
-registerPlugins(app);
+registerPlugins(app.use(Vue3Toastify, {}));
 
 app.mount("#app");

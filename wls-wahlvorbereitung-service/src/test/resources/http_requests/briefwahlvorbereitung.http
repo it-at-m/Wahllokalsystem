@@ -2,12 +2,36 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET wbzID-1
-GET {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/briefwahlvorbereitung/wbzID-1
+### GET wahlbezirkID
+GET {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/briefwahlvorbereitung/wahlbezirkID
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST wbzID-1
-POST {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/briefwahlvorbereitung/wbzID-1
+### GET wahlbezirkID1
+GET {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/briefwahlvorbereitung/wahlbezirkID1
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### POST wahlbezirkID
+POST {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/briefwahlvorbereitung/wahlbezirkID
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "urnenAnzahl": [
+    {
+      "anzahl": 1,
+      "urneVersiegelt": true,
+      "wahlID": "wahlID1"
+    },
+    {
+      "wahlID": "wahlID2",
+      "urneVersiegelt": false,
+      "anzahl": 13
+    }
+  ]
+}
+
+### POST wahlbezirkID1
+POST {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/briefwahlvorbereitung/wahlbezirkID1
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 

@@ -6,7 +6,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/wahlbezirkID1/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST stimmabgabevermerke - 2 Wahldaten
+### POST stimmabgabevermerke - 2 Wahldaten - wahlbezirkID
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/wahlbezirkID/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
@@ -53,6 +53,87 @@ Content-Type: application/json
     {
       "waehlerverzeichnisNummer": 1,
       "wahlbezirkID": "wahlbezirkID",
+      "wahlID": "wahlID2",
+      "eingenommeneWahlscheine": [
+        {
+          "anzahl": 2,
+          "stimmzettelart": "KLEIN"
+        },
+        {
+          "anzahl": 4,
+          "stimmzettelart": "BEIDE"
+        },
+        {
+          "anzahl": 12,
+          "stimmzettelart": "GROSS"
+        }
+      ],
+      "vermerke": [
+        {
+          "blattnummer": 1,
+          "stimmzettel": [
+            {
+              "anzahl": 1,
+              "stimmzettelart": "GROSS"
+            },
+            {
+              "anzahl": 1,
+              "stimmzettelart": "KLEIN"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+### POST stimmabgabevermerke - 2 Wahldaten - wahlbezirkID1
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/wahlbezirkID1/1
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "wahlbezirkID": "wahlbezirkID1",
+  "waehlerverzeichnisNummer": 1,
+  "anzahlBlaetter": 2,
+  "wahldaten": [
+    {
+      "waehlerverzeichnisNummer": 1,
+      "wahlbezirkID": "wahlbezirkID1",
+      "wahlID": "wahlID1",
+      "eingenommeneWahlscheine": [
+        {
+          "anzahl": 2,
+          "stimmzettelart": "KLEIN"
+        },
+        {
+          "anzahl": 4,
+          "stimmzettelart": "BEIDE"
+        },
+        {
+          "anzahl": 12,
+          "stimmzettelart": "GROSS"
+        }
+      ],
+      "vermerke": [
+        {
+          "blattnummer": 1,
+          "stimmzettel": [
+            {
+              "anzahl": 1,
+              "stimmzettelart": "GROSS"
+            },
+            {
+              "anzahl": 1,
+              "stimmzettelart": "KLEIN"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "waehlerverzeichnisNummer": 1,
+      "wahlbezirkID": "wahlbezirkID1",
       "wahlID": "wahlID2",
       "eingenommeneWahlscheine": [
         {

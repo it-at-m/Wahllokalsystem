@@ -2,8 +2,8 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST wahlbriefdaten wbz-1
-POST {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/wahlbriefdaten/wbz-1
+### POST wahlbriefdaten wahlbezirkID
+POST {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/wahlbriefdaten/wahlbezirkID
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
@@ -15,6 +15,10 @@ Content-Type: application/json
   "zeitNachtraeglichUeberbrachte": "2024-06-09T23:59:12.123"
 }
 
-### GET wahlbriefdaten wbz-1
-GET {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/wahlbriefdaten/wbz-1
+### GET wahlbriefdaten wahlbezirkID
+GET {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/wahlbriefdaten/wahlbezirkID
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### GET wahlbriefdaten wahlbezirkID1
+GET {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/wahlbriefdaten/wahlbezirkID1
 Authorization: Bearer {{$auth.token("auth-service")}}

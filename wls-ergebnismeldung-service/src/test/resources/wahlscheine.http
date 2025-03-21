@@ -6,7 +6,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/wahlscheine/wahlID/wahlbezirkID
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST wahlscheine
+### POST wahlscheine - wahlbezirkID
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/wahlscheine/wahlID/wahlbezirkID
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
@@ -15,6 +15,19 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   "bezirkUndWahlID": {
     "wahlID": "wahlID",
     "wahlbezirkID": "wahlbezirkID"
+  },
+  "stimmabgabevermerke": 33
+}
+
+### POST wahlscheine - wahlbezirkID1
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/wahlscheine/wahlID/wahlbezirkID1
+Content-Type: application/json
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+{
+  "bezirkUndWahlID": {
+    "wahlID": "wahlID",
+    "wahlbezirkID": "wahlbezirkID1"
   },
   "stimmabgabevermerke": 33
 }

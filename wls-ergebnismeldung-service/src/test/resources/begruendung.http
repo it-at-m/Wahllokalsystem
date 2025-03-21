@@ -21,7 +21,7 @@ Content-Type: application/json
     "wahlID": "wahlID",
     "stapelart": "LTW_BZW_A"
   },
-  "grund1": "grund1",
+  "grund": "grund",
   "grund2": "grund2",
   "nachzaehlung": true,
   "unstimmigkeiten": true
@@ -38,7 +38,7 @@ Content-Type: application/json
     "wahlID": "wahlID",
     "stapelart": "LTW_BZW_A"
   },
-  "grund1": "ohne Grund 2",
+  "grund": "ohne Grund 2",
   "nachzaehlung": true,
   "unstimmigkeiten": true
 }

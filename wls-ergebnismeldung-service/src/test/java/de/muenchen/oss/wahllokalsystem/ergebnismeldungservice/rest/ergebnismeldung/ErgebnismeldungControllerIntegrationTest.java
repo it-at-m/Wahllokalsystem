@@ -49,7 +49,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterAll;
@@ -286,7 +285,7 @@ class ErgebnismeldungControllerIntegrationTest {
                 //Insert Stimmabgabevermerke
                 val vermerk = Testdaten.Vermerk.createEntity(1);
                 val eigennommeneWahlscheine = Testdaten.EigenommenerWahlschein.createEntity(1);
-                val wahldaten = new Wahldaten(UUID.randomUUID(), new BezirkUndWahlIDUndWaehlerverzeichnisnummer(wahlbezirkID, wahlID, waehlerverzeichnisNummer),
+                val wahldaten = new Wahldaten(null, new BezirkUndWahlIDUndWaehlerverzeichnisnummer(wahlbezirkID, wahlID, waehlerverzeichnisNummer),
                         Set.of(vermerk), Set.of(eigennommeneWahlscheine));
                 vermerk.setWahldaten(wahldaten);
                 stimmabgabevermerkeRepository.save(new Stimmabgabevermerke(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer), 1,

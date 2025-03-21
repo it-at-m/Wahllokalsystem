@@ -1,6 +1,5 @@
 <template>
   <v-app>
-    <the-snackbar />
     <v-app-bar color="primary">
       <v-row align="center">
         <v-col
@@ -129,7 +128,6 @@ import {
 } from "vuetify/components";
 
 import { getUser } from "@/api/user-client";
-import TheSnackbar from "@/components/TheSnackbar.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import {
   EXAMPLE_ROUTES_BACKEND,

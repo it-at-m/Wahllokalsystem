@@ -3,11 +3,11 @@ GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ###
-GET {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/beanstandeteWahlbriefe/wbz-1/1
+GET {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/beanstandeteWahlbriefe/wahlbezirkID/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ###
-POST {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/beanstandeteWahlbriefe/wbz-1/1
+POST {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/beanstandeteWahlbriefe/wahlbezirkID/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
@@ -22,7 +22,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/beanstandeteWahlbriefe/wbz-1/1
+POST {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/beanstandeteWahlbriefe/wahlbezirkID/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 

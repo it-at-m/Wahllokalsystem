@@ -6,16 +6,23 @@ package de.muenchen.oss.wahllokalsystem.eaiservice.configuration;
 
 import static de.muenchen.oss.wahllokalsystem.eaiservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.eaiservice.TestConstants.SPRING_TEST_PROFILE;
-import static de.muenchen.oss.wahllokalsystem.eaiservice.TestConstants.TheEntityDto;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.muenchen.oss.wahllokalsystem.eaiservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.eaiservice.domain.TheEntity;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.TheEntityRepository;
+import de.muenchen.oss.wahllokalsystem.eaiservice.domain.ergebnismeldung.Ergebnismeldung;
+import de.muenchen.oss.wahllokalsystem.eaiservice.domain.ergebnismeldung.ErgebnismeldungRepository;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.dto.WahlartDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.AWerteDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.BWerteDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.ErgebnisDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.ErgebnismeldungDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.MeldungsartDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.UngueltigeStimmzettelDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.ergebnismeldung.dto.WahlbriefeWerteDTO;
 import java.net.URI;
-import java.util.UUID;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.Disabled;
+import java.util.Set;
+import lombok.val;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,7 +40,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
 class UnicodeConfigurationTest {
 
-    private static final String ENTITY_ENDPOINT_URL = "/theEntities";
+    private static final String ENTITY_ENDPOINT_URL = "/ergebnismeldung";
 
     /**
      * Decomposed string: String "Ä-é" represented with unicode letters "A◌̈-e◌́"
@@ -49,27 +56,43 @@ class UnicodeConfigurationTest {
     private TestRestTemplate testRestTemplate;
 
     @Autowired
-    private TheEntityRepository theEntityRepository;
+    private ErgebnismeldungRepository ergebnismeldungRepository;
+
+    @BeforeEach
+    void setup() {
+        ergebnismeldungRepository.deleteAll();
+    }
 
     @Test
-    @Disabled
     void should_returnComposedString_when_givenDecomposedString() {
         // Persist entity with decomposed string.
-        final TheEntityDto theEntityDto = new TheEntityDto();
-        theEntityDto.setTextAttribute(TEXT_ATTRIBUTE_DECOMPOSED);
-        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), theEntityDto.getTextAttribute().length());
-        final TheEntityDto response = testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), theEntityDto, TheEntityDto.class).getBody();
+        final ErgebnismeldungDTO ergebnisMeldungDto = getErgebnismeldungDTO(TEXT_ATTRIBUTE_DECOMPOSED);
 
-        // Check whether response contains a composed string.
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, response.getTextAttribute());
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), response.getTextAttribute().length());
+        Assertions.assertThat(TEXT_ATTRIBUTE_DECOMPOSED.length()).isEqualTo(ergebnisMeldungDto.wahlbezirkID().length());
 
-        // Extract uuid from self link.
-        final UUID uuid = UUID.fromString(StringUtils.substringAfterLast(response.getRequiredLink("self").getHref(), "/"));
+        // store Ergebnismeldung
+        testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), ergebnisMeldungDto, Void.class);
 
         // Check persisted entity contains a composed string via JPA repository.
-        final TheEntity theEntity = theEntityRepository.findById(uuid).orElse(null);
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, theEntity.getTextAttribute());
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), theEntity.getTextAttribute().length());
+        final Ergebnismeldung ergebnismeldung = ergebnismeldungRepository.findAll().iterator().next();
+        Assertions.assertThat(TEXT_ATTRIBUTE_COMPOSED).isEqualTo(ergebnismeldung.getWahlbezirkID());
+        Assertions.assertThat(TEXT_ATTRIBUTE_COMPOSED.length()).isEqualTo(ergebnismeldung.getWahlbezirkID().length());
+    }
+
+    private ErgebnismeldungDTO getErgebnismeldungDTO(String wahlbezirkID) {
+        val wahlID = "wahlID1";
+        val meldungsart = MeldungsartDTO.NIEDERSCHRIFT;
+        val aWerte = new AWerteDTO(3L, 2L);
+        val bWerte = new BWerteDTO(4L, 3L, 2L);
+        val wahlbriefeWerte = new WahlbriefeWerteDTO(3L);
+        val ungueltigeStimmzettelDTOList = Set.of(new UngueltigeStimmzettelDTO("test1", 4L, "wahlvorschlagID1"),
+                new UngueltigeStimmzettelDTO("test2", 5L, "wahlvorschlagID2"));
+        val ungueltigeStimmzettelAnzahl = 4L;
+        val ergebnisse = Set.of(new ErgebnisDTO("test1", 5L, 3L, "wahlvorschlagID1", "kandidatID1"),
+                new ErgebnisDTO("test2", 6L, 4L, "wahlvorschlagID2", "kandidatID2"));
+        val wahlart = WahlartDTO.BTW;
+
+        return new ErgebnismeldungDTO(wahlbezirkID, wahlID, meldungsart, aWerte, bWerte, wahlbriefeWerte, ungueltigeStimmzettelDTOList,
+                ungueltigeStimmzettelAnzahl, ergebnisse, wahlart);
     }
 }

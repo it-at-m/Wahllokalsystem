@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahltag;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltag.WahltageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.List;

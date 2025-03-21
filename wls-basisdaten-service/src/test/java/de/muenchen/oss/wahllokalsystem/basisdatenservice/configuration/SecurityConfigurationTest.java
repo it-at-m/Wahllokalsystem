@@ -10,22 +10,22 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch.HandbuchService;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenService;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.ungueltigewahlscheine.UngueltigeWahlscheineService;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageService;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltermindaten.WahltermindatenService;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.handbuch.HandbuchService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlagenService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.ungueltigewahlscheine.UngueltigeWahlscheineService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltag.WahltageService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltermindaten.WahltermindatenService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlag.WahlvorschlaegeService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -37,22 +37,22 @@ class SecurityConfigurationTest {
     @Autowired
     MockMvc api;
 
-    @MockBean
+    @MockitoBean
     WahlvorschlaegeService wahlvorschlaegeService;
 
-    @MockBean
+    @MockitoBean
     WahltageService wahltageService;
 
-    @MockBean
+    @MockitoBean
     HandbuchService handbuchService;
 
-    @MockBean
+    @MockitoBean
     UngueltigeWahlscheineService ungueltigeWahlscheineService;
 
-    @MockBean
+    @MockitoBean
     ReferendumvorlagenService referendumvorlagenService;
 
-    @MockBean
+    @MockitoBean
     WahltermindatenService wahltermindatenService;
 
     @Test

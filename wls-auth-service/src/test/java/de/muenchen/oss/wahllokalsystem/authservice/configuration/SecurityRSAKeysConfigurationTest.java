@@ -1,5 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.authservice.configuration;
 
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
+
 import com.nimbusds.jose.jwk.source.JWKSource;
 import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
 import org.assertj.core.api.Assertions;
@@ -8,7 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.factory.UnsatisfiedDependencyException;
 import org.springframework.boot.SpringApplication;
+import org.springframework.test.annotation.DirtiesContext;
 
+@DirtiesContext(classMode = AFTER_CLASS)
 class SecurityRSAKeysConfigurationTest {
 
     @Nested

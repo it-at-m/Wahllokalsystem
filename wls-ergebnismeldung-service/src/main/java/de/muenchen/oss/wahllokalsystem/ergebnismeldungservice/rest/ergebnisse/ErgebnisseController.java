@@ -67,7 +67,7 @@ public class ErgebnisseController extends AbstractController {
     )
     @GetMapping("{wahlbezirkID}/{wahlID}")
     public ResponseEntity<List<ErgebnisseDTO>> getAllErgebnisse(@PathVariable("wahlbezirkID") String wahlbezirkID, @PathVariable("wahlID") String wahlID) {
-        val ergebnisse = ergebnisseService.getAllErgebnisse(wahlbezirkID, wahlID);
+        val ergebnisse = ergebnisseService.getAllErgebnisse(wahlID, wahlbezirkID);
         if (ergebnisse.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

@@ -2,16 +2,16 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET wbzID-1/1
-GET {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/waehlerverzeichnis/wbzID-1/1
+### GET wahlbezirkID
+GET {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/waehlerverzeichnis/wahlbezirkID/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### GET wbzID-1/2
 GET {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/waehlerverzeichnis/wbzID-1/2
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST wbzID-1/1
-POST {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/waehlerverzeichnis/wbzID-1/1
+### POST wahlbezirkID/1
+POST {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/waehlerverzeichnis/wahlbezirkID/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
@@ -22,8 +22,8 @@ Content-Type: application/json
   "mitteilungUeberUngueltigeWahlscheineErhalten": true
 }
 
-### POST wbzID-1/2
-POST {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/waehlerverzeichnis/wbzID-1/2
+### POST wahlbezirkID/2
+POST {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/waehlerverzeichnis/wahlbezirkID/2
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 

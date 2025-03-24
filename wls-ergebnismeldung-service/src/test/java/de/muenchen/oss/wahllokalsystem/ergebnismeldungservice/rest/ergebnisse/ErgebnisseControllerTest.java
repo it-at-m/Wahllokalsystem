@@ -93,7 +93,7 @@ class ErgebnisseControllerTest {
             val mockedServiceResponseAsDTO = new ErgebnisseDTO(bezirkUndWahlIDStapelartDTO, Collections.emptyList());
             val mockedListServiceResponseAsDTO = List.of(mockedServiceResponseAsDTO);
 
-            Mockito.when(ergebnisseService.getAllErgebnisse(wahlbezirkID, wahlID)).thenReturn(mockedListServiceResponse);
+            Mockito.when(ergebnisseService.getAllErgebnisse(wahlID, wahlbezirkID)).thenReturn(mockedListServiceResponse);
             Mockito.when(ergebnisseDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
 
             val result = unitUnderTest.getAllErgebnisse(wahlbezirkID, wahlID);
@@ -107,7 +107,7 @@ class ErgebnisseControllerTest {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
 
-            Mockito.when(ergebnisseService.getAllErgebnisse(wahlbezirkID, wahlID)).thenReturn(Collections.emptyList());
+            Mockito.when(ergebnisseService.getAllErgebnisse(wahlID, wahlbezirkID)).thenReturn(Collections.emptyList());
 
             val result = unitUnderTest.getAllErgebnisse(wahlbezirkID, wahlID);
 

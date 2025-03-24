@@ -45,12 +45,12 @@ public class ErgebnisseService {
                 + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
     )
     public List<ErgebnisseModel> getAllErgebnisse(@NotNull final String wahlID, @P("wahlbezirkID") @NotNull final String wahlbezirkID) {
-        log.info("#getErgebnisse");
+        log.info("#getAllErgebnisse");
 
         ergebnisseValidator.validIDOrThrow(wahlID, wahlbezirkID,
                 exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG));
 
-        val ergebnisseFromRepo = ergebnisseRepository.findByWahlbezirkIDAndWahlD(wahlID, wahlbezirkID);
+        val ergebnisseFromRepo = ergebnisseRepository.findByWahlbezirkIDAndWahlD(wahlbezirkID, wahlID);
         return ergebnisseFromRepo.stream().map(ergebnisseModelMapper::toModel).toList();
     }
 

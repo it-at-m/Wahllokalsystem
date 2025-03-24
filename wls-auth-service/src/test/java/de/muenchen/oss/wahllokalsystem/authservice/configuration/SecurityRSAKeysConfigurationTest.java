@@ -1,19 +1,25 @@
 package de.muenchen.oss.wahllokalsystem.authservice.configuration;
 
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
-
 import com.nimbusds.jose.jwk.source.JWKSource;
 import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.factory.UnsatisfiedDependencyException;
 import org.springframework.boot.SpringApplication;
-import org.springframework.test.annotation.DirtiesContext;
 
-@DirtiesContext(classMode = AFTER_CLASS)
 class SecurityRSAKeysConfigurationTest {
+
+    @AfterEach
+    void teardown() {
+        System.clearProperty("spring.profiles.active");
+        System.clearProperty("service.config.oauth2.jwk.rsa.init.seed");
+        System.clearProperty("service.config.rsa.rsaKeySetting");
+        System.clearProperty("service.config.rsa.private-key");
+        System.clearProperty("service.config.rsa.public-key");
+    }
 
     @Nested
     class RSAKeyConfigured {
@@ -23,7 +29,7 @@ class SecurityRSAKeysConfigurationTest {
             System.setProperty("spring.profiles.active", "test,dummy.ldap");
             System.setProperty("service.config.oauth2.jwk.rsa.init.seed", "seed");
             System.setProperty("service.config.rsa.rsaKeySetting", "STATIC_KEY");
-            //  System.setProperty("service.config.rsa.private-key", "");
+            System.setProperty("service.config.rsa.private-key", "");
             Throwable exception = Assertions.catchThrowableOfType(
                     UnsatisfiedDependencyException.class, () -> SpringApplication.run(MicroServiceApplication.class));
             assertForCorrectException(exception);
@@ -34,7 +40,7 @@ class SecurityRSAKeysConfigurationTest {
             System.setProperty("spring.profiles.active", "test,dummy.ldap");
             System.setProperty("service.config.oauth2.jwk.rsa.init.seed", "seed");
             System.setProperty("service.config.rsa.rsaKeySetting", "STATIC_KEY");
-            // System.setProperty("service.config.rsa.public-key", "");
+            System.setProperty("service.config.rsa.public-key", "");
             Throwable exception = Assertions.catchThrowableOfType(
                     UnsatisfiedDependencyException.class, () -> SpringApplication.run(MicroServiceApplication.class));
             assertForCorrectException(exception);
@@ -45,8 +51,8 @@ class SecurityRSAKeysConfigurationTest {
             System.setProperty("spring.profiles.active", "test,dummy.ldap");
             System.setProperty("service.config.oauth2.jwk.rsa.init.seed", "seed");
             System.setProperty("service.config.rsa.rsaKeySetting", "STATIC_KEY");
-            //            System.setProperty("service.config.rsa.public-key", "");
-            //            System.setProperty("service.config.rsa.private-key", "");
+            System.setProperty("service.config.rsa.public-key", "");
+            System.setProperty("service.config.rsa.private-key", "");
             Throwable exception = Assertions.catchThrowableOfType(
                     UnsatisfiedDependencyException.class, () -> SpringApplication.run(MicroServiceApplication.class));
             assertForCorrectException(exception);

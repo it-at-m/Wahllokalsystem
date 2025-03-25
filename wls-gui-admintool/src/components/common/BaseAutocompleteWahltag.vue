@@ -17,7 +17,7 @@ const props = defineProps({
    * Wahltage to select
    */
   items: {
-    type: Array<String>,
+    type: Array<string>,
     required: true,
   },
   multiple: {

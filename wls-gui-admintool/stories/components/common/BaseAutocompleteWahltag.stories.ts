@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
 
-import BaseAutocompleteWahltag from "../../../src/components/common/BaseAutocompleteWahltag.vue";
+import BaseAutocompleteWahltag from "@/components/common/BaseAutocompleteWahltag.vue";
 
 const meta = {
   component: BaseAutocompleteWahltag,

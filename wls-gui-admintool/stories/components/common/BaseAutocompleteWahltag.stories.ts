@@ -11,7 +11,14 @@ const meta = {
         type: "object",
       },
     },
+    multiple: {
+      description: "ermöglicht Mehrfachauswahl",
+      control: {
+        type: "boolean",
+      },
+    },
   },
+  args: {},
 } satisfies Meta<typeof BaseAutocompleteWahltag>;
 
 export default meta;
@@ -21,11 +28,13 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     items: ["01.01.2000", "01.01.2001"],
+    multiple: true,
   },
 };
 
-export const Empty: Story = {
+export const SingleSelect: Story = {
   args: {
-    items: [],
+    items: ["01.01.2000", "01.01.2001"],
+    multiple: false,
   },
 };

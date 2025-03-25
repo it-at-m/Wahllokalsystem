@@ -4,7 +4,7 @@
     chips
     label="Wahltage auswählen"
     :items="props.items"
-    multiple
+    :multiple="props.multiple"
     variant="outlined"
   ></v-autocomplete>
 </template>
@@ -19,6 +19,10 @@ const props = defineProps({
   items: {
     type: Array<String>,
     required: true,
+  },
+  multiple: {
+    type: Boolean,
+    default: true,
   },
 });
 </script>

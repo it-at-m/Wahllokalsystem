@@ -76,7 +76,7 @@ public class SecurityConfiguration {
     @Value("${service.config.oauth2.jwk.rsa.init.seed}")
     String rsaKeyPairSeed;
 
-    final private RSAConfigurationProperties rsaConfigurationProperties;
+    private final RSAConfigurationProperties rsaConfigurationProperties;
 
     @Bean
     @Order(1)

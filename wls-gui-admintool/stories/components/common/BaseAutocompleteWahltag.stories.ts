@@ -17,6 +17,12 @@ const meta = {
         type: "boolean",
       },
     },
+    selected: {
+      description: "Aktuell gewählte(r) Wert(e)",
+      control: {
+        type: "object",
+      },
+    },
   },
   args: {},
 } satisfies Meta<typeof BaseAutocompleteWahltag>;
@@ -27,14 +33,27 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    items: ["01.01.2000", "01.01.2001"],
+    items: ["27.02.1988", "31.01.1998", "04.04.2000"],
     multiple: true,
   },
 };
 
+/**
+ * Nur ein Wahltag kann ausgewählt werden.
+ */
 export const SingleSelect: Story = {
   args: {
-    items: ["01.01.2000", "01.01.2001"],
-    multiple: false,
+    ...Default.args,
+    multiple: false, // überschreibt den Wert aus ...Default.args
+  },
+};
+
+/**
+ * Ein Wahltag ist vorausgewählt.
+ */
+export const PreSelect: Story = {
+  args: {
+    ...Default.args,
+    selected: ["04.04.2000"], // ergänzt die Werte aus ...Default.args
   },
 };

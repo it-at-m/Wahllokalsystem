@@ -38,7 +38,7 @@ class EroeffnungsUhrzeitServiceTest {
     EroeffnungsUhrzeitService unitUnderTest;
 
     @Nested
-    class getEroeffnungsUhrzeit {
+    class GetEroeffnungsUhrzeit {
 
         @Test
         void should_returnEroeffnungsuhrzeit_when_givenValidWahlbezirkID() {

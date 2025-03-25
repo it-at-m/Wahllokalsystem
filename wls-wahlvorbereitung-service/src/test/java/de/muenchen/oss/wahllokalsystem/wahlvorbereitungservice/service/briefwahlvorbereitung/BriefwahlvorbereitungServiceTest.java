@@ -38,7 +38,7 @@ class BriefwahlvorbereitungServiceTest {
     BriefwahlvorbereitungService unitUnderTest;
 
     @Nested
-    class getBriefwahlvorbereitung {
+    class GetBriefwahlvorbereitung {
 
         @Test
         void should_returnBriefwahlvorbereitung_when_givenValidWahlbezirkID() {

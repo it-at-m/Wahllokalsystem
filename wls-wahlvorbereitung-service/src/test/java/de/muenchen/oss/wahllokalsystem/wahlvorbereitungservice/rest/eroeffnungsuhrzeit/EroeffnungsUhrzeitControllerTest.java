@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,46 +29,54 @@ public class EroeffnungsUhrzeitControllerTest {
     @InjectMocks
     EroeffnungsUhrzeitController unitUnderTest;
 
-    @Test
-    void should_returnEroeffnungsuhrzeit_when_dataFound() {
-        val wahlbezirkID = "wahlbezirkID";
-        val eroeffnungsUhrzeit = LocalDateTime.now();
+    @Nested
+    class GetEroeffnungsuhrzeit {
 
-        val mockedServiceOptionalBody = new EroeffnungsUhrzeitModel(wahlbezirkID, eroeffnungsUhrzeit);
-        val mockedMappedServiceResponseAsDTO = new EroeffnungsUhrzeitDTO(wahlbezirkID, eroeffnungsUhrzeit);
+        @Test
+        void should_returnEroeffnungsuhrzeit_when_dataFound() {
+            val wahlbezirkID = "wahlbezirkID";
+            val eroeffnungsUhrzeit = LocalDateTime.now();
 
-        Mockito.when(eroeffnungsUhrzeitService.getEroeffnungsUhrzeit(wahlbezirkID)).thenReturn(Optional.of(mockedServiceOptionalBody));
-        Mockito.when(eroeffnungsUhrzeitDTOMapper.toDTO(mockedServiceOptionalBody)).thenReturn(mockedMappedServiceResponseAsDTO);
+            val mockedServiceOptionalBody = new EroeffnungsUhrzeitModel(wahlbezirkID, eroeffnungsUhrzeit);
+            val mockedMappedServiceResponseAsDTO = new EroeffnungsUhrzeitDTO(wahlbezirkID, eroeffnungsUhrzeit);
 
-        val result = unitUnderTest.getEroeffnungsuhrzeit(wahlbezirkID);
+            Mockito.when(eroeffnungsUhrzeitService.getEroeffnungsUhrzeit(wahlbezirkID)).thenReturn(Optional.of(mockedServiceOptionalBody));
+            Mockito.when(eroeffnungsUhrzeitDTOMapper.toDTO(mockedServiceOptionalBody)).thenReturn(mockedMappedServiceResponseAsDTO);
 
-        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Assertions.assertThat(result.getBody()).isEqualTo(mockedMappedServiceResponseAsDTO);
+            val result = unitUnderTest.getEroeffnungsuhrzeit(wahlbezirkID);
+
+            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+            Assertions.assertThat(result.getBody()).isEqualTo(mockedMappedServiceResponseAsDTO);
+        }
+
+        @Test
+        void should_returnNoContent_when_noDataFound() {
+            val wahlbezirkID = "wahlbezirkID";
+
+            Mockito.when(eroeffnungsUhrzeitService.getEroeffnungsUhrzeit(wahlbezirkID)).thenReturn(Optional.empty());
+
+            val result = unitUnderTest.getEroeffnungsuhrzeit(wahlbezirkID);
+
+            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+            Assertions.assertThat(result.getBody()).isNull();
+        }
     }
 
-    @Test
-    void should_returnNoContent_when_noDataFound() {
-        val wahlbezirkID = "wahlbezirkID";
+    @Nested
+    class PostEroeffnungsuhrzeit {
 
-        Mockito.when(eroeffnungsUhrzeitService.getEroeffnungsUhrzeit(wahlbezirkID)).thenReturn(Optional.empty());
+        @Test
+        void should_postEroeffnungsuhrzeit_when_calledAndMappedCorrectly() {
+            val wahlbezirkID = "wahlbezirkID";
+            val eroeffnungsUhrzeit = LocalDateTime.now();
+            val requestBody = new EroeffnungsUhrzeitWriteDTO(eroeffnungsUhrzeit);
 
-        val result = unitUnderTest.getEroeffnungsuhrzeit(wahlbezirkID);
+            val mockedMappedRequest = new EroeffnungsUhrzeitModel(wahlbezirkID, eroeffnungsUhrzeit);
 
-        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        Assertions.assertThat(result.getBody()).isNull();
-    }
+            Mockito.when(eroeffnungsUhrzeitDTOMapper.toModel(eq(wahlbezirkID), eq(requestBody))).thenReturn(mockedMappedRequest);
 
-    @Test
-    void should_postEroeffnungsuhrzeit_when_calledAndMappedCorrectly() {
-        val wahlbezirkID = "wahlbezirkID";
-        val eroeffnungsUhrzeit = LocalDateTime.now();
-        val requestBody = new EroeffnungsUhrzeitWriteDTO(eroeffnungsUhrzeit);
-
-        val mockedMappedRequest = new EroeffnungsUhrzeitModel(wahlbezirkID, eroeffnungsUhrzeit);
-
-        Mockito.when(eroeffnungsUhrzeitDTOMapper.toModel(eq(wahlbezirkID), eq(requestBody))).thenReturn(mockedMappedRequest);
-
-        Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postEroeffnungsuhrzeit(wahlbezirkID, requestBody));
-        Mockito.verify(eroeffnungsUhrzeitService).setEroeffnungsUhrzeit(mockedMappedRequest);
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postEroeffnungsuhrzeit(wahlbezirkID, requestBody));
+            Mockito.verify(eroeffnungsUhrzeitService).setEroeffnungsUhrzeit(mockedMappedRequest);
+        }
     }
 }

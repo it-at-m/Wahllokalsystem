@@ -12,7 +12,7 @@
     "build": "vue-tsc --build --noCheck && vite build",
     "lint": "prettier . --check && eslint . && vue-tsc --build --noEmit",
     "fix": "prettier . --write && eslint . --fix",
-    "storybook": "storybook dev -p 6006",
+    "storybook": "storybook dev -p 6007",
     "build-storybook": "storybook build"
   },
   "dependencies": {

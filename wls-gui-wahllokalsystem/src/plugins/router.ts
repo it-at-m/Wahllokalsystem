@@ -10,10 +10,12 @@ import {
   EXAMPLE_VALIDATION,
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
+  TOAST,
 } from "@/constants";
 import ExampleBackendCommunicationView from "@/views/ExampleBackendCommunicationView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
 import ExampleNewRouteView from "@/views/ExampleNewRouteView.vue";
+import ExampleToastView from "@/views/ExampleToastView.vue";
 import ExampleValidation from "@/views/ExampleValidation.vue";
 import HomeView from "@/views/HomeView.vue";
 import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
@@ -56,6 +58,11 @@ const routes = [
     path: "/validation-example",
     name: EXAMPLE_VALIDATION,
     component: ExampleValidation,
+  },
+  {
+    path: "/toast-example",
+    name: TOAST,
+    component: ExampleToastView,
   },
 ];
 

@@ -6,7 +6,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmzettelumschlaege/wahlID/wahlbezirkID
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST Anzahl der Stimmzettelumschlaege
+### POST Anzahl der Stimmzettelumschlaege - wahlbezirkID
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmzettelumschlaege/wahlID/wahlbezirkID
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
@@ -15,6 +15,21 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   "bezirkUndWahlID": {
     "wahlID": "wahlID",
     "wahlbezirkID": "wahlbezirkID"
+  },
+  "urneneroeffnungsUhrzeit": "2024-12-18T14:52:41.263Z",
+  "anzahlWaehler": 47,
+  "anzahlWaehler2": 11
+}
+
+### POST Anzahl der Stimmzettelumschlaege - wahlbezirkID1
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmzettelumschlaege/wahlID/wahlbezirkID1
+Content-Type: application/json
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+{
+  "bezirkUndWahlID": {
+    "wahlID": "wahlID",
+    "wahlbezirkID": "wahlbezirkID1"
   },
   "urneneroeffnungsUhrzeit": "2024-12-18T14:52:41.263Z",
   "anzahlWaehler": 47,

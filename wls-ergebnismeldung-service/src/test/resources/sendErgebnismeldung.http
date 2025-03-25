@@ -174,3 +174,8 @@ Content-Type: application/json
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/sendErgebnismeldung/wahlID01/wahlbezirkID/1/V1/wahlbezirkID
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
+
+### Send Ergebnismeldung - wahlbezirkID1
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/sendErgebnismeldung/wahlID01/wahlbezirkID1/1/V1/wahlbezirkID
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json

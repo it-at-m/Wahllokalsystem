@@ -2,12 +2,25 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET wbzID-1
-GET {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/unterbrechungsUhrzeit/wbzID-1
+### GET wahlbezirkID
+GET {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/unterbrechungsUhrzeit/wahlbezirkID
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST wbzID-1
-POST {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/unterbrechungsUhrzeit/wbzID-1
+### GET wahlbezirkID1
+GET {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/unterbrechungsUhrzeit/wahlbezirkID1
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### POST wahlbezirkID
+POST {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/unterbrechungsUhrzeit/wahlbezirkID
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "unterbrechungsUhrzeit": "2024-06-10T16:54:44.606"
+}
+
+### POST wahlbezirkID1
+POST {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/unterbrechungsUhrzeit/wahlbezirkID1
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 

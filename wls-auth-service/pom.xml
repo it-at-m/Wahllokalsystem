@@ -398,6 +398,7 @@
                                 <SPRING_PROFILES_ACTIVE>db-h2,dummy.clients</SPRING_PROFILES_ACTIVE>
                                 <SERVICE.CONFIG.CRYPTO.KEY>please change me</SERVICE.CONFIG.CRYPTO.KEY>
                                 <SERVICE.CONFIG.OAUTH2.JWK.RSA.INIT.SEED>seed</SERVICE.CONFIG.OAUTH2.JWK.RSA.INIT.SEED>
+                                <SERVICE.CONFIG.RSA.RSA-KEY-SETTING>GENERATED_KEY</SERVICE.CONFIG.RSA.RSA-KEY-SETTING>
                             </environmentVariables>
                         </configuration>
                     </execution>

@@ -32,7 +32,7 @@ class SecurityRSAKeysConfigurationTest {
             System.setProperty("service.config.rsa.private-key", "");
             Throwable exception = Assertions.catchThrowableOfType(
                     UnsatisfiedDependencyException.class, () -> SpringApplication.run(MicroServiceApplication.class));
-            assertForCorrectException(exception);
+            assertCauseIsNoInstantiatedJWKSource(exception);
         }
 
         @Test
@@ -43,7 +43,7 @@ class SecurityRSAKeysConfigurationTest {
             System.setProperty("service.config.rsa.public-key", "");
             Throwable exception = Assertions.catchThrowableOfType(
                     UnsatisfiedDependencyException.class, () -> SpringApplication.run(MicroServiceApplication.class));
-            assertForCorrectException(exception);
+            assertCauseIsNoInstantiatedJWKSource(exception);
         }
 
         @Test
@@ -55,25 +55,7 @@ class SecurityRSAKeysConfigurationTest {
             System.setProperty("service.config.rsa.private-key", "");
             Throwable exception = Assertions.catchThrowableOfType(
                     UnsatisfiedDependencyException.class, () -> SpringApplication.run(MicroServiceApplication.class));
-            assertForCorrectException(exception);
-        }
-
-        private void assertForCorrectException(Throwable exception) {
-            BeanInstantiationException causeWithJWKSource = null;
-            do {
-                if (exception.getCause() instanceof BeanInstantiationException bcex) {
-                    if (bcex.getBeanClass() == JWKSource.class) {
-                        causeWithJWKSource = bcex;
-                    }
-                }
-
-                if (exception != exception.getCause()) {
-                    exception = exception.getCause();
-                } else {
-                    exception = null;
-                }
-            } while (exception != null && causeWithJWKSource == null);
-            Assertions.assertThat(causeWithJWKSource).isNotNull();
+            assertCauseIsNoInstantiatedJWKSource(exception);
         }
 
     }
@@ -86,21 +68,25 @@ class SecurityRSAKeysConfigurationTest {
             System.setProperty("service.config.oauth2.jwk.rsa.init.seed", "seed");
             Throwable exception = Assertions.catchThrowableOfType(
                     UnsatisfiedDependencyException.class, () -> SpringApplication.run(MicroServiceApplication.class));
-            BeanInstantiationException causeWithJWKSource = null;
-            do {
-                if (exception.getCause() instanceof BeanInstantiationException bcex) {
-                    if (bcex.getBeanClass() == JWKSource.class) {
-                        causeWithJWKSource = bcex;
-                    }
-                }
-
-                if (exception != exception.getCause()) {
-                    exception = exception.getCause();
-                } else {
-                    exception = null;
-                }
-            } while (exception != null && causeWithJWKSource == null);
-            Assertions.assertThat(causeWithJWKSource).isNotNull();
+            assertCauseIsNoInstantiatedJWKSource(exception);
         }
+    }
+
+    private void assertCauseIsNoInstantiatedJWKSource(Throwable exception) {
+        BeanInstantiationException causeWithJWKSource = null;
+        do {
+            if (exception.getCause() instanceof BeanInstantiationException bcex) {
+                if (bcex.getBeanClass() == JWKSource.class) {
+                    causeWithJWKSource = bcex;
+                }
+            }
+
+            if (exception != exception.getCause()) {
+                exception = exception.getCause();
+            } else {
+                exception = null;
+            }
+        } while (exception != null && causeWithJWKSource == null);
+        Assertions.assertThat(causeWithJWKSource).isNotNull();
     }
 }

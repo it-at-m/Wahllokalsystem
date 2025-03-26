@@ -51,6 +51,12 @@ describe("BaseAutocompleteWahltag.vue", () => {
             beschreibung: "Gerhard",
             nummer: "4.1",
           },
+          {
+            wahltagID: "5",
+            wahltag: "05.11.",
+            beschreibung: "Robert",
+            nummer: "5.1",
+          },
         ],
       },
     });

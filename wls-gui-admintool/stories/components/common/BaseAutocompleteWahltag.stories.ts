@@ -45,6 +45,12 @@ const wahltage: WahltagDTO[] = [
     beschreibung: "Viviane",
     nummer: "3.1",
   },
+  {
+    wahltagID: "4",
+    wahltag: "31.10.1999",
+    beschreibung: "Gerhard",
+    nummer: "4.1",
+  },
 ];
 
 export const Default: Story = {

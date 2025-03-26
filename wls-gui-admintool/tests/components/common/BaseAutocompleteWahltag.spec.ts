@@ -57,6 +57,12 @@ describe("BaseAutocompleteWahltag.vue", () => {
             beschreibung: "R",
             nummer: "5.1",
           },
+          {
+            wahltagID: "6",
+            wahltag: "14.05.1977",
+            beschreibung: "N",
+            nummer: "6.1",
+          },
         ],
       },
     });

@@ -39,11 +39,11 @@ export function useWahlvorstandMapper() {
     wahlvorstandmitglied: WahlvorstandsmitgliedDTO
   ): Wahlvorstandsmitglied {
     return {
-      anwesend: wahlvorstandmitglied.anwesend ?? false,
+      anwesend: wahlvorstandmitglied.anwesend,
       familienname: wahlvorstandmitglied.familienname,
       funktion: funktionDtoToFunktionModel(wahlvorstandmitglied.funktion),
       funktionsname: wahlvorstandmitglied.funktionsname,
-      identifikator: wahlvorstandmitglied.identifikator ?? "",
+      identifikator: wahlvorstandmitglied.identifikator,
       vorname: wahlvorstandmitglied.vorname,
     };
   }

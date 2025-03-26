@@ -4,6 +4,7 @@
     chips
     label="Wahltage auswählen"
     :items="props.items"
+    item-title="wahltag"
     :multiple="props.multiple"
     variant="outlined"
     v-model="selected"
@@ -11,6 +12,8 @@
 </template>
 
 <script setup lang="ts">
+import type { WahltagDTO } from "@/api/wls-clients/generated-admin-api";
+
 import { VAutocomplete } from "vuetify/components";
 
 const props = defineProps({
@@ -18,7 +21,7 @@ const props = defineProps({
    * Wahltage to select
    */
   items: {
-    type: Array<string>,
+    type: Array<WahltagDTO>,
     required: true,
   },
   multiple: {
@@ -28,5 +31,5 @@ const props = defineProps({
   },
 });
 
-const selected = defineModel({ type: String });
+const selected = defineModel();
 </script>

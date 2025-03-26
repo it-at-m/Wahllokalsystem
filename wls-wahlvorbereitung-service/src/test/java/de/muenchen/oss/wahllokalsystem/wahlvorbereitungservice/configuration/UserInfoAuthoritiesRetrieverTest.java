@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.configuration;
+package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.configuration;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +23,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.client.RestTemplate;
 
 @ExtendWith(MockitoExtension.class)
-class UserInfoAuthoritiesServiceTest {
+class UserInfoAuthoritiesRetrieverTest {
 
     private static final String RESPONSEBODY_MAP_KEY_CLAIM_AUTHORITIES = "authorities";
 
@@ -38,7 +38,7 @@ class UserInfoAuthoritiesServiceTest {
 
     String userInfoUri = "http://localhost:8080/userinfo";
 
-    UserInfoAuthoritiesService unitUnderTest;
+    UserInfoAuthoritiesRetriever unitUnderTest;
 
     @BeforeEach
     void setup() {
@@ -49,7 +49,7 @@ class UserInfoAuthoritiesServiceTest {
             }
         };
 
-        unitUnderTest = new UserInfoAuthoritiesService(userInfoUri, restTemplateBuilder);
+        unitUnderTest = new UserInfoAuthoritiesRetriever(userInfoUri, restTemplateBuilder);
     }
 
     @Nested
@@ -81,9 +81,8 @@ class UserInfoAuthoritiesServiceTest {
 
             val authorities = unitUnderTest.loadAuthorities(jwt);
 
-            Assertions.assertThat(authorities)
-                    .hasSize(claimAuthorityValues.size())
-                    .containsAll(expectedAuthorities);
+            Assertions.assertThat(authorities).hasSize(claimAuthorityValues.size());
+            Assertions.assertThat(authorities).containsAll(expectedAuthorities);
         }
 
         @Test
@@ -112,9 +111,8 @@ class UserInfoAuthoritiesServiceTest {
 
             val authorities = unitUnderTest.loadAuthorities(jwt);
 
-            Assertions.assertThat(authorities)
-                    .hasSize(claimAuthorityValues.length)
-                    .containsAll(expctedAuthorities);
+            Assertions.assertThat(authorities).hasSize(claimAuthorityValues.length);
+            Assertions.assertThat(authorities).containsAll(expctedAuthorities);
         }
 
         @Test
@@ -208,13 +206,11 @@ class UserInfoAuthoritiesServiceTest {
 
             val authoritiesThatShouldComeFromCache = unitUnderTest.loadAuthorities(jwtForCachMethodCall);
 
-            Assertions.assertThat(authorities)
-                    .hasSize(claimAuthorityValues.size())
-                    .containsAll(expectedAuthorities);
+            Assertions.assertThat(authorities).hasSize(claimAuthorityValues.size());
+            Assertions.assertThat(authorities).containsAll(expectedAuthorities);
             Assertions.assertThat(authoritiesThatShouldComeFromCache).isSameAs(authorities);
 
             Mockito.verify(restTemplate, Mockito.times(1)).exchange(userInfoUri, HttpMethod.GET, expectedRequestEntity, Map.class);
         }
-
     }
 }

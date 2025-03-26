@@ -2,7 +2,7 @@
  * Copyright (c): it@M - Dienstleister für Informations- und Telekommunikationstechnik
  * der Landeshauptstadt München, 2024
  */
-package de.muenchen.oss.wahllokalsystem.broadcastservice.configuration;
+package de.muenchen.oss.wahllokalsystem.briefwahlservice.configuration;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.Ticker;
@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -32,7 +31,7 @@ import org.springframework.web.client.RestTemplate;
  * "Authorities" extrahiert.
  */
 @Slf4j
-public class UserInfoAuthoritiesService {
+public class UserInfoAuthoritiesRetriever {
 
     private static final String NAME_AUTHENTICATION_CACHE = "authentication_cache";
     private static final int AUTHENTICATION_CACHE_ENTRY_SECONDS_TO_EXPIRE = 60;
@@ -49,7 +48,7 @@ public class UserInfoAuthoritiesService {
      * @param userInfoUri userinfo Endpoint URI
      * @param restTemplateBuilder ein {@link RestTemplateBuilder}
      */
-    public UserInfoAuthoritiesService(String userInfoUri, RestTemplateBuilder restTemplateBuilder) {
+    public UserInfoAuthoritiesRetriever(String userInfoUri, RestTemplateBuilder restTemplateBuilder) {
         this.userInfoUri = userInfoUri;
         this.restTemplate = restTemplateBuilder.build();
         this.cache = new CaffeineCache(NAME_AUTHENTICATION_CACHE,
@@ -60,8 +59,7 @@ public class UserInfoAuthoritiesService {
     }
 
     /**
-     * Ruft den /userinfo Endpoint und extrahiert {@link GrantedAuthority}s aus dem "authorities"
-     * Claim.
+     * Ruft den /userinfo Endpoint und extrahiert {@link GrantedAuthority}s aus dem "authorities" Claim.
      *
      * @param jwt der JWT
      * @return die {@link GrantedAuthority}s gem. Claim "authorities" des /userinfo Endpoints
@@ -104,16 +102,15 @@ public class UserInfoAuthoritiesService {
 
     private static List<SimpleGrantedAuthority> asAuthorities(Object object) {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        if (object instanceof Collection) {
-            Collection<?> collection = (Collection<?>) object;
-            object = collection.toArray(new Object[0]);
+        if (object instanceof Collection collectionWithAuthorities) {
+            object = collectionWithAuthorities.toArray(new Object[0]);
         }
         if (ObjectUtils.isArray(object)) {
             authorities.addAll(
                     Stream.of(((Object[]) object))
                             .map(Object::toString)
                             .map(SimpleGrantedAuthority::new)
-                            .collect(Collectors.toList()));
+                            .toList());
         }
         return authorities;
     }

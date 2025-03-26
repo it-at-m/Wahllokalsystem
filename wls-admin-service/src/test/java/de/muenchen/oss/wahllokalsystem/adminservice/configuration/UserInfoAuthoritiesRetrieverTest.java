@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.authservice.configuration;
+package de.muenchen.oss.wahllokalsystem.adminservice.configuration;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +23,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.client.RestTemplate;
 
 @ExtendWith(MockitoExtension.class)
-class UserInfoAuthoritiesServiceTest {
+class UserInfoAuthoritiesRetrieverTest {
 
     private static final String RESPONSEBODY_MAP_KEY_CLAIM_AUTHORITIES = "authorities";
 
@@ -38,7 +38,7 @@ class UserInfoAuthoritiesServiceTest {
 
     String userInfoUri = "http://localhost:8080/userinfo";
 
-    UserInfoAuthoritiesService unitUnderTest;
+    UserInfoAuthoritiesRetriever unitUnderTest;
 
     @BeforeEach
     void setup() {
@@ -49,7 +49,7 @@ class UserInfoAuthoritiesServiceTest {
             }
         };
 
-        unitUnderTest = new UserInfoAuthoritiesService(userInfoUri, restTemplateBuilder);
+        unitUnderTest = new UserInfoAuthoritiesRetriever(userInfoUri, restTemplateBuilder);
     }
 
     @Nested

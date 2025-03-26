@@ -89,7 +89,7 @@ Der Syncer prüft, ob in den lokalen Daten mit `dirty=true` markierte Daten vorh
 Dann versucht er jede dieser Datensätze (aus der `indexedDB`) erneut ans Backend zu senden. Bei erfolgreich durchgeführten Anfragen wird das `dirty` auf `false` gesetzt.
 Nicht erfolgreiche Anfragen haben keine Konsequenzen. Nachdem alle Anfragen zu synchronisieren versucht wurden, verschwindet die Anzeige unten rechts wieder.
 
-#### b). Synchronisation Variante 2: Senden der Schnellmeldung/Niederschrift (Sync im Vordergrund)
+#### b). Synchronisation Variante 2: Senden der Schnellmeldung oder Niederschrift (Sync im Vordergrund)
 
 Vor dem senden einer Schnellmeldung oder Niederschrift wird der Offline-Syncer im Vordergrund gestartet. Dies ist für den Wahlvorstand durch das Popup “Offlinedaten werden Synchronisiert” ersichtlich.
 
@@ -100,9 +100,9 @@ Ist die Synchronisation erfolgreich, oder waren keine dirty-Daten vorhanden, wir
 
 Ist das Synchronisieren nicht erfolgreich, weil bestimmte Daten aufgrund von schlechter Netzverbindung oder nicht erreichbaren Services nicht gesendet werden konnten, wird KEINE Schnellmeldung/Niederschrift gesendet, weil das Wahllokalsystem nicht sicherstellen kann, dass alle Ergebnisrelevanten Daten übermittelt werden konnten. In diesem Falle kann der Wahlvorstand als nächsten Schritt seine Schnellmeldung/Niederschrift ausdrucken, auf der, durch den Offline-Druck, garantiert alle Relevanten, aktuellen und korrekten Daten stehen werden.
 
-##### c). Synchronisation Variante 3: Ausloggen eines Benutzers (Sync im Vordergrund)
+#### c). Synchronisation Variante 3: Ausloggen eines Benutzers (Sync im Vordergrund)
 
-Wie oben [unter b beim Senden der Ergebnismeldung](#b-synchronisation-variante-2-senden-der-schnellmeldungniederschrift-sync-im-vordergrund) wird auch vor dem Ausloggen eines Benutzers versucht,
+Wie oben [unter b beim Senden der Ergebnismeldung](#b-synchronisation-variante-2-senden-der-schnellmeldung-oder-niederschrift-sync-im-vordergrund) wird auch vor dem Ausloggen eines Benutzers versucht,
 falls `dirty=true`-markierte Daten in der `IndexedDB` vorhanden, diese ans Backend zu senden.
 
 ### E. Logout eines Benutzers

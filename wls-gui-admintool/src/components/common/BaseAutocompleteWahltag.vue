@@ -1,11 +1,9 @@
 <template>
   <v-autocomplete
     clearable
-    chips
-    label="Wahltage auswählen"
+    label="Wahltag auswählen"
     :items="props.items"
     item-title="wahltag"
-    :multiple="props.multiple"
     variant="outlined"
     v-model="selected"
   ></v-autocomplete>
@@ -23,11 +21,6 @@ const props = defineProps({
   items: {
     type: Array<WahltagDTO>,
     required: true,
-  },
-  multiple: {
-    type: Boolean,
-    default: true,
-    required: false,
   },
 });
 

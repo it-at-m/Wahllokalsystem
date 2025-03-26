@@ -12,12 +12,6 @@ const meta = {
         type: "object",
       },
     },
-    multiple: {
-      description: "ermöglicht Mehrfachauswahl",
-      control: {
-        type: "boolean",
-      },
-    },
     modelValue: {
       description: "Aktuell gewählte(r) Wert(e)",
       control: {
@@ -56,17 +50,6 @@ const wahltage: WahltagDTO[] = [
 export const Default: Story = {
   args: {
     items: wahltage, //wahltage.map((tag) => tag.wahltag),
-    multiple: true,
-  },
-};
-
-/**
- * Nur ein Wahltag kann ausgewählt werden.
- */
-export const SingleSelect: Story = {
-  args: {
-    ...Default.args,
-    multiple: false, // überschreibt den Wert aus ...Default.args
   },
 };
 

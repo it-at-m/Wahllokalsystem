@@ -9,6 +9,8 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import de.muenchen.oss.wahllokalsystem.authservice.configuration.properties.RSAConfigurationProperties;
+import de.muenchen.oss.wahllokalsystem.authservice.configuration.properties.RSAKeySetting;
 import de.muenchen.oss.wahllokalsystem.authservice.security.CustomUsernamePasswordAuthenticationFilter;
 import de.muenchen.oss.wahllokalsystem.authservice.security.WlsUserTokenCustomizer;
 import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
@@ -17,7 +19,10 @@ import java.security.KeyPairGenerator;
 import java.security.SecureRandom;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
@@ -56,6 +61,7 @@ import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 @Import(RestTemplateAutoConfiguration.class)
+@RequiredArgsConstructor
 @Slf4j
 public class SecurityConfiguration {
 
@@ -69,6 +75,8 @@ public class SecurityConfiguration {
 
     @Value("${service.config.oauth2.jwk.rsa.init.seed}")
     String rsaKeyPairSeed;
+
+    private final RSAConfigurationProperties rsaConfigurationProperties;
 
     @Bean
     @Order(1)
@@ -138,15 +146,40 @@ public class SecurityConfiguration {
 
     @Bean
     public JWKSource<SecurityContext> jwkSource() {
-        KeyPair keyPair = generateRsaKey();
-        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-        RSAKey rsaKey = new RSAKey.Builder(publicKey)
-                .privateKey(privateKey)
+        Pair<RSAPrivateKey, RSAPublicKey> keyPair = getKeyPair();
+        val rsaKey = new RSAKey.Builder(keyPair.getValue())
+                .privateKey(keyPair.getKey())
                 .keyID("keyID")
                 .build();
         JWKSet jwkSet = new JWKSet(rsaKey);
         return new ImmutableJWKSet<>(jwkSet);
+    }
+
+    private Pair<RSAPrivateKey, RSAPublicKey> getKeyPair() {
+        RSAPrivateKey privateKey;
+        RSAPublicKey publicKey;
+        if (rsaConfigurationProperties.getRsaKeySetting() == RSAKeySetting.STATIC_KEY) {
+            publicKey = rsaConfigurationProperties.getPublicKey();
+            privateKey = rsaConfigurationProperties.getPrivateKey();
+        } else if (rsaConfigurationProperties.getRsaKeySetting() == RSAKeySetting.GENERATED_KEY) {
+            log.warn("""
+                    ##############################
+                    ##                          ##
+                    ##  Generierte RSA-Keys     ##
+                    ##      werden verwendet    ##
+                    ##                          ##
+                    ##  NICHT FÜR DEN           ##
+                    ##  PRODUKTIVEINSATZ        ##
+                    ##  BESTIMMT                ##
+                    ##############################""");
+
+            val keyPair = generateRsaKey();
+            publicKey = (RSAPublicKey) keyPair.getPublic();
+            privateKey = (RSAPrivateKey) keyPair.getPrivate();
+        } else {
+            throw new IllegalStateException("RSA settings not supported");
+        }
+        return Pair.of(privateKey, publicKey);
     }
 
     private KeyPair generateRsaKey() {

@@ -34,6 +34,7 @@ export default withMermaid({
 
     outline: {
       label: "Auf dieser Seite",
+      level: 'deep'
     },
 
     sidebar: {
@@ -163,6 +164,13 @@ export default withMermaid({
             {
               text: "Frontend",
               link: `${PATH_SYSSPEC}frontend`,
+              collapsed: true,
+              items: [
+                {
+                  text: "Offlinefähigkeit-Konzept",
+                  link: `${PATH_SYSSPEC}offlinefaehigkeit-konzept.md`,
+                }
+              ],
             },
           ],
         },

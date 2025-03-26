@@ -21,8 +21,7 @@ folgenden SW) umsetzen.
 Um einen möglichst konfigurations- und wartungsarmen Code zu ermöglichen ist es notwendig,
 dass alle WLS-Schnittstellen einer Objektart, die Lese- und Schreiboperationen bieten, die
 gleiche URL anbieten und die Unterscheidung der Operation einzig und allein anhand der
-HTTP-Methode durchgeführt wird. So haben wir zum Beispiel für die Objektart `Eroeffnungsuhrzeit` 
-eine GET und eine POST Operation an die URL: "_/businessActions/eroeffnungsuhrzeit/wahlbezirkID_".
+HTTP-Methode durchgeführt wird. So haben wir zum Beispiel für die Objektart `Eroeffnungsuhrzeit` eine GET und eine POST Operation an die URL: "_/businessActions/eroeffnungsuhrzeit/wahlbezirkID_".
 
 ## III. Umgesetztes Verhalten
 
@@ -76,11 +75,12 @@ Passiert dies bei schreibenden Anfragen, verschattet der SW den Fehler, sodass d
 Aus [C. b)](#b-ist-offline-oder-ein-fehler-ist-aufgetreten) entsteht die berechtigte Frage:
 _Wie kommen die offline-gespeicherten Daten wieder ins Backend_?
 
-Hierfür soll eine Synchronisationskomponente (`Offline-Syncer`) implementiert werden. 
+Hierfür soll eine Synchronisationskomponente (`Offline-Syncer`) implementiert werden.
 Diese Komponente wird bei dem Eintritt von drei Ereignissen aktiv (getriggert):
- - beim Wechseln vom `offline` in den `online` Status, die sog. Hintergrund-Synchronisation);
- - beim Senden der Ergebnismeldung (Schnellmeldung oder Niederschrift) die sog. Vordergrund-Synchronisation);
- - beim Ausloggen des Benutzers.
+
+- beim Wechseln vom `offline` in den `online` Status, die sog. Hintergrund-Synchronisation);
+- beim Senden der Ergebnismeldung (Schnellmeldung oder Niederschrift) die sog. Vordergrund-Synchronisation);
+- beim Ausloggen des Benutzers.
 
 #### a). Hintergrundsynchronisation beim offline-online Wechsel
 

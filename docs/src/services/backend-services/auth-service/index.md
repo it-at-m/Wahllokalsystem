@@ -103,7 +103,7 @@ Die Benutzer die zuvor für den Wahltermin vorhanden waren werden gelöscht.
 Alle Konfigurationsparameter beginnen mit dem Prefix `service.config`
 
 | Name                                             | Beschreibung                                                                                      | Default                  |
-| ------------------------------------------------ | ------------------------------------------------------------------------------------------------- | ------------------------ |
+|--------------------------------------------------|---------------------------------------------------------------------------------------------------|--------------------------|
 | crypto.encryptionPrefix                          | String vor dem verschlüssten Wert. Auf diese Weise sind verschlüsselte Werte erkennbar            | ENCRYPTED:               |
 | crypto.key                                       | Schlüssel zum ver- und entschlüsseln                                                              |                          |
 | falscheLoginZeitstrafe                           | Zeit in Minuten für eine Sperrung                                                                 | 10                       |
@@ -122,3 +122,6 @@ Alle Konfigurationsparameter beginnen mit dem Prefix `service.config`
 | oauth2.clients.wahllokalgui.id                   | ID des Client der Wahllokal-Anwendung                                                             | wahllokalgui             |
 | oauth2.clients.admingui.id                       | ID des Client der Admintool-Anwendung                                                             | admingui                 |
 | oauth2.jwk.rsa.init.seed                         | Seed für RSA-Schlüsselpaar. Gleiche Seeds sorgen für gleiche Ergebnisse                           |                          |
+| rsa.rsa-key-setting                              | Enum (GENERATED_KEY,STATIC_KEY), das bestimmt welcher RSA-Key verwendet werden soll               |                          |
+| rsa.public-key                                   | Verwendeter Public-Key                                                                            |                          |
+| rsa.private-key                                  | Verwendeter Private-Key                                                                           |                          |

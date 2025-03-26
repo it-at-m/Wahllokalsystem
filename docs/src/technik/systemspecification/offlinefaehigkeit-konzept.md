@@ -52,7 +52,7 @@ Anschließend wird die Initialisierungsseite des WLS aufgerufen. Auf dieser werd
 
 ### C. Behandlung der aus-/eingehenden Requests/Responses
 
-##### a). Variante 1: Alles funktioniert
+#### a). Variante 1: Alles funktioniert
 
 In diesem Fall wird davon ausgegangen, dass keine Probleme auftreten.
 
@@ -60,7 +60,7 @@ Der Wahlvorstand speichert seine Daten und diese werden immer erfolgreich im Bac
 Alles was der SW in diesem Fall tut ist, seine lokalen Daten aktuell zu halten. Bedeutet: Der Wahlvorstand sendet Daten, diese leitet der SW ans Backend.
 Anschließend speichert er die gesendeten Daten wie unter [Umgesetztes Verhalten](#iii-umgesetztes-verhalten) beschrieben.
 
-##### b). Variante 2: Offline oder Fehler treten auf
+#### b). Variante 2: Offline oder Fehler treten auf
 
 In diesem Fall wird davon ausgegangen, dass der Wahlvorstand Offline ist, oder Fehler im Backend auftreten.
 
@@ -77,7 +77,7 @@ _Wie kommen die offline-gespeicherten Daten wieder ins Backend_?
 
 Hierfür soll eine Synchronisationskomponente (`Offline-Syncer`) implementiert werden. Diese wird in zwei Systemzuständen aktiv (getriggert).
 
-##### a). Synchronisation Variante 1: Wechsel des Online/Offline-Zustands (Sync im Hintergrund)
+#### a). Synchronisation Variante 1: Wechsel des Online/Offline-Zustands (Sync im Hintergrund)
 
 Wenn der Wahllokalclient den Zustand von _Offline_ zu _Online_ wechselt, wird der `Offline-Syncer` aktiv.
 Dies geschieht im Hintegrund und ist für den Benutzer nur durch eine Einblendung unten rechts auf der Seite erkennbar.
@@ -89,7 +89,7 @@ Der Syncer prüft, ob in den lokalen Daten mit `dirty=true` markierte Daten vorh
 Dann versucht er jede dieser Datensätze (aus der `indexedDB`) erneut ans Backend zu senden. Bei erfolgreich durchgeführten Anfragen wird das `dirty` auf `false` gesetzt.
 Nicht erfolgreiche Anfragen haben keine Konsequenzen. Nachdem alle Anfragen zu synchronisieren versucht wurden, verschwindet die Anzeige unten rechts wieder.
 
-##### b). Synchronisation Variante 2: Senden der Schnellmeldung/Niederschrift (Sync im Vordergrund)
+#### b). Synchronisation Variante 2: Senden der Schnellmeldung/Niederschrift (Sync im Vordergrund)
 
 Vor dem senden einer Schnellmeldung oder Niederschrift wird der Offline-Syncer im Vordergrund gestartet. Dies ist für den Wahlvorstand durch das Popup “Offlinedaten werden Synchronisiert” ersichtlich.
 

@@ -7,6 +7,7 @@ import * as directives from "vuetify/directives";
 
 import BaseAutocompleteWahltag from "@/components/common/BaseAutocompleteWahltag.vue";
 import pinia from "@/plugins/pinia";
+import { getSnapshotFilename } from "../../utils/testutils.ts";
 
 describe("BaseAutocompleteWahltag.vue", () => {
   let vuetify: ReturnType<typeof createVuetify>;
@@ -34,9 +35,10 @@ describe("BaseAutocompleteWahltag.vue", () => {
   enableAutoUnmount(afterEach);
 
   describe("visual logic", () => {
-    it("should_renderAutocompleteWithCorrectLabel_when_componentIsMounted", () => {
-      const label = wrapper.find("label");
-      expect(label.text()).toBe("Wahltage auswählen");
+    it("should_renderAutocompleteWithCorrectLabel_when_componentIsMounted", async (context) => {
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
     });
   });
 });

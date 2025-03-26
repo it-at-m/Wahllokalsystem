@@ -17,7 +17,7 @@ const meta = {
         type: "boolean",
       },
     },
-    selected: {
+    modelValue: {
       description: "Aktuell gewählte(r) Wert(e)",
       control: {
         type: "object",
@@ -54,6 +54,6 @@ export const SingleSelect: Story = {
 export const PreSelect: Story = {
   args: {
     ...Default.args,
-    selected: ["04.04.2000"], // ergänzt die Werte aus ...Default.args
+    modelValue: "04.04.2000", // ergänzt die Werte aus ...Default.args
   },
 };

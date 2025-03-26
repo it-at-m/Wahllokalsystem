@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.service.handbuch;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahlbezirkArt;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagIdUndWahlbezirksart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.handbuch.Handbuch;
@@ -23,8 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
+@ActiveProfiles(profiles = TestConstants.SPRING_TEST_PROFILE)
 public class HandbuchServiceSecurityTest {
 
     @Autowired

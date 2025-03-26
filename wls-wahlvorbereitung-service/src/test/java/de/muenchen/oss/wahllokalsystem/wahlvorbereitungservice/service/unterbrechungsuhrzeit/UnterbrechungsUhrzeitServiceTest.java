@@ -38,7 +38,7 @@ class UnterbrechungsUhrzeitServiceTest {
     UnterbrechungsUhrzeitService unitUnderTest;
 
     @Nested
-    class getUnterbrechungsUhrzeit {
+    class GetUnterbrechungsUhrzeit {
 
         @Test
         void should_returnUnterbrechungsuhrzeit_when_givenValidWahlbezirkID() {

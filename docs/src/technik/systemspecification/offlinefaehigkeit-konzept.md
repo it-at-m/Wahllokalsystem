@@ -1,5 +1,11 @@
 # Offlinefähigkeit-Konzept
 
+In den Wahllokalen kann die Internetverbindung instabil sein, was jedoch die Bedienbarkeit des Clients nicht beeinträchtigen darf.
+Eine Voraussetzung für die Nutzung ist, dass zu Beginn des Wahltages beim Anmelden eine Internetverbindung verfügbar ist.
+Anschließend sollte der Benutzer bis einschließlich des Drucks der Niederschrift durchgehend arbeiten können. Sollte am Ende des Tages
+weiterhin keine Verbindung bestehen, wird im schlimmsten Fall die Niederschrift im Wahllokal gedruckt und telefonisch übermittelt.
+Die Datenübertragung an das Backend kann auch am nächsten Tag dürch das Hochfahren des Notebooks erfolgen.
+
 ## I. Beschreibung Offlinefähigkeit
 
 Grundsätzlich läuft die Kommunikation des Clients mit dem Backend über REST Schnittstellen.
@@ -44,7 +50,7 @@ als “dirty” markiert, wenn ein Request fehlschlägt.
 Bei Login am Wahllokalsystem prüft der Client zunächst, welcher Benutzer als letztes an diesem Browser angemeldet war. Ist der aktuelle Benutzer ungleich dem letzten Benutzer, wird die lokale Datenbank gelöscht. Handelt es sich aber um den gleichen Benutzer, bleiben seine Offline erfassten Daten bestehen und er kann weiter arbeiten.
 Anschließend wird die Initialisierungsseite des WLS aufgerufen. Auf dieser werden alle lesenden Endpunkte, welche für die aktuelle Systemsituation (Art des Wahllokals, Anzahl und Arten der stattfindenden Wahlen) relevant sind einmalig aufgerufen. Da der SW alle Anfragen unterbricht und speichert, wird mit dieser Aktion sichergestellt, dass alle Daten ab sofort Offline zur Verfügung stehen.
 
-### C. Behandlung der aus-/eingehenden Requests/Responses 
+### C. Behandlung der aus-/eingehenden Requests/Responses
 
 ##### a). Variante 1: Alles funktioniert
 
@@ -66,22 +72,21 @@ Passiert dies bei schreibenden Anfragen, verschattet der SW den Fehler, sodass d
 
 ### D. Datensynchronisation
 
-Aus [C. Behandlung der aus-/eingehenden Requests/Responses - b.) Variante 2](#b-variante-2-offline-oder-fehler-treten-auf) entsteht die berechtigte Frage: 
+Aus [C. Behandlung der aus-/eingehenden Requests/Responses - b.) Variante 2](#b-variante-2-offline-oder-fehler-treten-auf) entsteht die berechtigte Frage:
 _Wie kommen die offline-gespeicherten Daten wieder ins Backend_?
 
 Hierfür soll eine Synchronisationskomponente (`Offline-Syncer`) implementiert werden. Diese wird in zwei Systemzuständen aktiv (getriggert).
 
-
 ##### a). Synchronisation Variante 1: Wechsel des Online/Offline-Zustands (Sync im Hintergrund)
 
-Wenn der Wahllokalclient den Zustand von _Offline_ zu _Online_ wechselt, wird der `Offline-Syncer` aktiv. 
+Wenn der Wahllokalclient den Zustand von _Offline_ zu _Online_ wechselt, wird der `Offline-Syncer` aktiv.
 Dies geschieht im Hintegrund und ist für den Benutzer nur durch eine Einblendung unten rechts auf der Seite erkennbar.
 
 ![Sinchronisation im Hintergrund:](/offlinesyncer/SyncInBackground.PNG?url)
 [Abbildung 1: Synchronisation im Hintergrund](/offlinesyncer/SyncInBackground.PNG)
 
-Der Syncer prüft, ob in den lokalen Daten mit `dirty=true` markierte Daten vorhanden sind und sortiert diese anhand der ursprünglichen Speicherung-Reihenfolge (`timestamp`). 
-Dann versucht er jede dieser Datensätze (aus der `indexedDB`) erneut ans Backend zu senden. Bei erfolgreich durchgeführten Anfragen wird das `dirty` auf `false` gesetzt. 
+Der Syncer prüft, ob in den lokalen Daten mit `dirty=true` markierte Daten vorhanden sind und sortiert diese anhand der ursprünglichen Speicherung-Reihenfolge (`timestamp`).
+Dann versucht er jede dieser Datensätze (aus der `indexedDB`) erneut ans Backend zu senden. Bei erfolgreich durchgeführten Anfragen wird das `dirty` auf `false` gesetzt.
 Nicht erfolgreiche Anfragen haben keine Konsequenzen. Nachdem alle Anfragen zu synchronisieren versucht wurden, verschwindet die Anzeige unten rechts wieder.
 
 ##### b). Synchronisation Variante 2: Senden der Schnellmeldung/Niederschrift (Sync im Vordergrund)
@@ -97,7 +102,7 @@ Ist das Synchronisieren nicht erfolgreich, weil bestimmte Daten aufgrund von sch
 
 ##### c). Synchronisation Variante 3: Ausloggen eines Benutzers (Sync im Vordergrund)
 
-Wie oben [unter b beim Senden der Ergebnismeldung](#b-synchronisation-variante-2-senden-der-schnellmeldungniederschrift-sync-im-vordergrund) wird auch vor dem Ausloggen eines Benutzers versucht, 
+Wie oben [unter b beim Senden der Ergebnismeldung](#b-synchronisation-variante-2-senden-der-schnellmeldungniederschrift-sync-im-vordergrund) wird auch vor dem Ausloggen eines Benutzers versucht,
 falls `dirty=true`-markierte Daten in der `IndexedDB` vorhanden, diese ans Backend zu senden.
 
 ### E. Logout eines Benutzers
@@ -109,5 +114,5 @@ Daten werden NICHT gelöscht, wenn ein Nutzer sich abmeldet. Dadurch wird verhin
 3. Schließen des Tabs
 4. Etc.
 
-Offline erfasste Daten verloren gehen. Die Daten bleiben solange im Offline-Speicher enthalten, bis sich ein 
+Offline erfasste Daten verloren gehen. Die Daten bleiben solange im Offline-Speicher enthalten, bis sich ein
 anderer Benutzer am gleichen Rechner anmeldet (siehe [Initialisierung](#b-initialisierung)).

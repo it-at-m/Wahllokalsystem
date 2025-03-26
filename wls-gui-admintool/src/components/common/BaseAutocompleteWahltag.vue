@@ -4,7 +4,6 @@
     label="Wahltag auswählen"
     :items="props.items"
     item-title="wahltag"
-    variant="outlined"
     v-model="selected"
   ></v-autocomplete>
 </template>

@@ -13,7 +13,7 @@ const meta = {
       },
     },
     modelValue: {
-      description: "Aktuell gewählte(r) Wert(e)",
+      description: "Aktuell gewählter Wert",
       control: {
         type: "object",
       },
@@ -49,7 +49,7 @@ const wahltage: WahltagDTO[] = [
 
 export const Default: Story = {
   args: {
-    items: wahltage, //wahltage.map((tag) => tag.wahltag),
+    items: wahltage,
   },
 };
 
@@ -59,11 +59,6 @@ export const Default: Story = {
 export const PreSelect: Story = {
   args: {
     ...Default.args,
-    modelValue: {
-      wahltagID: "3",
-      wahltag: "04.04.2000",
-      beschreibung: "Viviane",
-      nummer: "3.1",
-    }, // ergänzt die Werte aus ...Default.args
+    modelValue: wahltage[2], // ergänzt oder überschreibt die Werte aus ...Default.args / der Default Story
   },
 };

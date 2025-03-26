@@ -21,7 +21,7 @@
     "gen:ergebnismeldung-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.ergebnismeldung.0.3.0.json -g typescript-axios -o src/api/wls-clients/generated-ergebnismeldung-api",
     "gen:infomanagement-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.infomanagement.0.3.0.json -g typescript-axios -o src/api/wls-clients/generated-infomanagement-api",
     "gen:monitoring-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.monitoring.0.2.0.json -g typescript-axios -o src/api/wls-clients/generated-monitoring-api",
-    "gen:vorfaelleundvorkomnisse-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.vorfaelleundvorkomnisse.0.2.0.json -g typescript-axios -o src/api/wls-clients/generated-vorfaelleundvorkomnisse-api",
+    "gen:vorfaelleundvorkommnisse-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.vorfaelleundvorkommnisse.0.2.0.json -g typescript-axios -o src/api/wls-clients/generated-vorfaelleundvorkommnisse-api",
     "gen:wahlvorbereitung-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.wahlvorbereitung.0.2.0.json -g typescript-axios -o src/api/wls-clients/generated-wahlvorbereitung-api",
     "gen:wahlvorstand-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.wahlvorstand.0.3.0.json -g typescript-axios -o src/api/wls-clients/generated-wahlvorstand-api",
     "storybook": "storybook dev -p 6006",

@@ -2,7 +2,7 @@
  * Copyright (c): it@M - Dienstleister für Informations- und Telekommunikationstechnik
  * der Landeshauptstadt München, 2024
  */
-package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration;
+package de.muenchen.oss.wahllokalsystem.monitoringservice.configuration;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.Ticker;
@@ -27,11 +27,11 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * Service, der einen OIDC /userinfo Endpoint aufruft (mit JWT Bearer Auth) und dort die enthaltenen
- * "Authorities" extrahiert.
+ * Retriever, der einen OIDC /userinfo Endpoint aufruft (mit JWT Bearer Auth) und dort die
+ * enthaltenen "Authorities" extrahiert.
  */
 @Slf4j
-public class UserInfoAuthoritiesService {
+public class UserInfoAuthoritiesRetriever {
 
     private static final String NAME_AUTHENTICATION_CACHE = "authentication_cache";
     private static final int AUTHENTICATION_CACHE_ENTRY_SECONDS_TO_EXPIRE = 60;
@@ -48,7 +48,7 @@ public class UserInfoAuthoritiesService {
      * @param userInfoUri userinfo Endpoint URI
      * @param restTemplateBuilder ein {@link RestTemplateBuilder}
      */
-    public UserInfoAuthoritiesService(String userInfoUri, RestTemplateBuilder restTemplateBuilder) {
+    public UserInfoAuthoritiesRetriever(String userInfoUri, RestTemplateBuilder restTemplateBuilder) {
         this.userInfoUri = userInfoUri;
         this.restTemplate = restTemplateBuilder.build();
         this.cache = new CaffeineCache(NAME_AUTHENTICATION_CACHE,

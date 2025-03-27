@@ -5,6 +5,8 @@
     :items="props.items"
     item-title="wahltag"
     v-model="selected"
+    @update:model-value="$emit('update:selected', $event)"
+    return-object
   ></v-autocomplete>
 </template>
 
@@ -20,5 +22,7 @@ const props = defineProps({
   },
 });
 
-const selected = defineModel();
+const selected = defineModel<WahltagDTO>();
+
+const emit = defineEmits(["update:selected"]);
 </script>

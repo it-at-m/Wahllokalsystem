@@ -1,9 +1,11 @@
 import type { WahltagDTO } from "@/api/wls-clients/generated-admin-api";
 import type { Meta, StoryObj } from "@storybook/vue3";
 
+import { fn } from "@storybook/test";
+
 import BaseAutocompleteWahltag from "@/components/common/BaseAutocompleteWahltag.vue";
 
-const meta = {
+const meta: Meta<typeof BaseAutocompleteWahltag> = {
   component: BaseAutocompleteWahltag,
   argTypes: {
     items: {
@@ -19,8 +21,10 @@ const meta = {
       },
     },
   },
-  args: {},
-} satisfies Meta<typeof BaseAutocompleteWahltag>;
+  args: {
+    "onUpdate:selected": fn(),
+  },
+};
 
 export default meta;
 

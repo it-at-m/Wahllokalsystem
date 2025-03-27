@@ -15,13 +15,13 @@ const meta: Meta<typeof BaseAutocompleteWahltag> = {
       },
     },
     modelValue: {
-      // since modelValue is passed via `defineModel()`, the data type is not recognized but added to the description
-      description: "Aktuell gewählter Wert \n\n`WahltagDTO`",
+      description: "Aktuell gewählter Wert",
       control: {
         type: "object",
       },
       table: {
         category: "props",
+        type: { summary: "WahltagDTO" },
       },
     },
     "onUpdate:modelValue": {

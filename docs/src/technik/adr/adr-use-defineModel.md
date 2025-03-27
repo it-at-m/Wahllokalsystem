@@ -28,24 +28,27 @@ Storybook-Code folgende Elemente hinzugefügt werden:
 
 ::: code-group
 
-```typescript {5-9,13-14} [Component.stories.ts]
+```typescript {9-12,16-17} [Component.stories.ts]
 const meta: Meta<typeof Component> = {
-    component: Component,
-    argTypes: {
-        modelValue: {
-        // als Teil der Beschreibung konkret den Datentyp angeben
-            description: "Aktuell gewählter Wert \n\n`String`", 
-            table: { // konkret angeben, dass modelValue ein prop ist 
-              category: "props", 
-            }, 
-        },
-        "onUpdate:modelValue": { 
-          description: "Wird ausgelöst wenn sich der aktuelle Wert ändert", 
-          table: { // konkret angeben, dass onUpdate ein event ist 
-            category: "events", 
-          },
-        },
+  component: Component,
+  argTypes: {
+    modelValue: {
+      description: "Aktuell gewählter Wert",
+      control: {
+        type: "object",
+      },
+      table: {
+        category: "props", // konkret angeben, dass modelValue ein prop ist 
+        type: { summary: "String" }, // konkret den Datentyp angeben
+      },
     },
+    "onUpdate:modelValue": { 
+      description: "Wird ausgelöst wenn sich der aktuelle Wert ändert", 
+      table: { // konkret angeben, dass onUpdate ein event ist 
+        category: "events", 
+      },
+    },
+  },
 };
 
 ```

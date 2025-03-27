@@ -78,13 +78,31 @@ describe("BaseAutocompleteWahltag.vue", () => {
     });
   });
 
+  describe("visual logic", () => {
+    it("should_renderDateOfWahltag_when_elementIsSelected", async (context) => {
+      const wahltag = {
+        wahltagID: "2",
+        wahltag: "31.01.1998",
+        beschreibung: "D",
+        nummer: "2.1",
+      };
+      await wrapper.setProps({ modelValue: wahltag });
+
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+      expect(wrapper.html()).toContain(wahltag.wahltag);
+      expect(wrapper.html()).not.toContain(wahltag.beschreibung);
+    });
+  });
+
   describe("behavioral logic", () => {
     it("should_emitWahltag_when_elementIsSelected", async (context) => {
       await wrapper.setProps({
         modelValue: {
           wahltagID: "2",
           wahltag: "31.01.1998",
-          beschreibung: "Daniel",
+          beschreibung: "D",
           nummer: "2.1",
         },
       });

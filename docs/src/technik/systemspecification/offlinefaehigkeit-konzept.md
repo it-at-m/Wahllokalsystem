@@ -71,11 +71,7 @@ Passiert dies bei schreibenden Anfragen, verschattet der SW den Fehler, sodass d
 
 ### D. Datensynchronisation
 
-Aus [C. b)](#b-ist-offline-oder-ein-fehler-ist-aufgetreten) entsteht die berechtigte Frage:
-_Wie kommen die offline-gespeicherten Daten wieder ins Backend_?
-
-Hierfür soll eine Synchronisationskomponente (`Offline-Syncer`) implementiert werden.
-Diese Komponente wird bei dem Eintritt von drei Ereignissen aktiv (getriggert):
+Um die Daten, die bisher nicht erfolgreich an das Backend übermittelt werden konnten, bei wiederhergestellter Verbindung zu übermittelt, erfolgt eine Synchronisierung:
 
 - beim Wechseln vom `offline` in den `online` Status, die sog. Hintergrund-Synchronisation);
 - beim Senden der Ergebnismeldung (Schnellmeldung oder Niederschrift) die sog. Vordergrund-Synchronisation);

@@ -3,9 +3,9 @@ import type { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/Wah
 export interface Wahlvorstandsmitglied {
   identifikator: string; //TODO is always given when reading => Issue 851
   anwesend: boolean;
-  familienname?: string;
-  vorname?: string;
-  funktion?: WahlvorstandsmitgliedFunktionEnum;
+  familienname: string;
+  vorname: string;
+  funktion: WahlvorstandsmitgliedFunktionEnum;
   funktionsname?: string;
 }
 
@@ -13,14 +13,14 @@ export class WahlvorstandsmitgliedBuilder implements Wahlvorstandsmitglied {
   constructor(
     public identifikator: string, //TODO is always given when reading => Issue 851
     public anwesend: boolean,
-    public familienname?: string,
-    public vorname?: string,
-    public funktion?: WahlvorstandsmitgliedFunktionEnum,
+    public familienname: string,
+    public vorname: string,
+    public funktion: WahlvorstandsmitgliedFunktionEnum,
     public funktionsname?: string
   ) {}
 
   static createMinimal(): WahlvorstandsmitgliedBuilder {
-    return new WahlvorstandsmitgliedBuilder("", false);
+    return new WahlvorstandsmitgliedBuilder("", false, "", "", "W");
   }
 
   static createComplete(): WahlvorstandsmitgliedBuilder {

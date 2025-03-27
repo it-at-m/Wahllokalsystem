@@ -27,7 +27,7 @@ HTTP-Methode durchgeführt wird. So haben wir zum Beispiel für die Objektart `E
 
 Beim Lesen und Schreiben werden die Netzwerk-Anfragen des Browsers vom Service Worker
 (der als eine Art Middleware aggiert) abgefangen und wahlweise lokal gespeichert oder aus
-dem lokalen Speicher geladen.
+dem lokalen Speicher geladen, bzw. mit dem Backend ausgetauscht.
 Die Identifizierung der Anfragen erfolgt dabei allein anhand der URL. Wenn also der Client (mit
 Wahlbezirk-ID „123“) beim ersten anmelden (um dem obigen Beispiel zu folgen) die
 Eröffnungsuhrzeit lädt, um ggf. bereits erfasste Daten zu laden, wird im lokalen Speicher mit

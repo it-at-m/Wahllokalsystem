@@ -13,7 +13,7 @@ Die dahinter verborgenen Ressourcen sind über Schreib- und Lese-Operationen zug
 Sollte der Client offline sein, kann auf die Ressourcen nicht zugegriffen werden.
 Offlinefähigkeit beschreibt das Konzept, die Ressourcen lokal im Client abzubilden und mit dem
 Backend zu synchronisieren.
-Diese Anforderung lässt sich mit einer neuartigen Technologie namens Service Worker (im
+Diese Anforderung lässt sich mit dem Service Worker (im
 folgenden SW) umsetzen.
 
 ## II. Anforderungen an die REST-Schnittstellen der Microservices

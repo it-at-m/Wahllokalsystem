@@ -15,14 +15,22 @@ const meta: Meta<typeof BaseAutocompleteWahltag> = {
       },
     },
     modelValue: {
-      description: "Aktuell gewählter Wert",
+      // since modelValue is passed via `defineModel()`, the data type is not recognized but added to the description
+      description: "Aktuell gewählter Wert \n\n`WahltagDTO`",
       control: {
         type: "object",
       },
+      table: {
+        category: "props",
+      },
     },
-  },
-  args: {
-    "onUpdate:selected": fn(),
+    "onUpdate:modelValue": {
+      description:
+        "Wird ausgelöst wenn sich der aktuelle Wert ändert und gibt den neuen Wert zurück",
+      table: {
+        category: "events",
+      },
+    },
   },
 };
 
@@ -72,6 +80,8 @@ const wahltage: WahltagDTO[] = [
 export const Default: Story = {
   args: {
     items: wahltage,
+    // is required so that storybook can render/process the event
+    "onUpdate:modelValue": fn(),
   },
 };
 
@@ -81,6 +91,6 @@ export const Default: Story = {
 export const PreSelect: Story = {
   args: {
     ...Default.args,
-    modelValue: wahltage[2], // ergänzt oder überschreibt die Werte aus ...Default.args / der Default Story
+    modelValue: wahltage[2],
   },
 };

@@ -37,8 +37,7 @@ Key der neue Wert gespeichert.
 
 ### A. Strategien
 
-Es gibt drei unterschiedliche Strategien, mit denen der SW umgehen kann: `OFFLINE_FIRST`,
-`ONLINE_FIRST`, `ONLINE_ONLY`. Im Folgenden sind die Strategien erklärt.
+Es gibt drei unterschiedliche Strategien, mit denen der SW umgehen kann:
 
 - `OFFLINE_FIRST` (default): Hat der Service Worker Daten im lokalen Speicher, werden diese Daten zurückgeliefert. Nur wenn keine Daten vorhanden sind, wird ein Request ans Backend geschickt;
 - `ONLINE_FIRST` Bei Daten wie z.B. den Wahlvorständen, A-Werten und Konfigurationsdaten kann es sein, dass im Backend neuere Daten vorhanden sind. Daher wird mit dieser Strategie zuerst ein Request ans Backend geschickt. Ist dieser erfolgreich, werden die neuen Daten lokal gespeichert und zurückgegeben;

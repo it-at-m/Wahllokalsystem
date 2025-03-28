@@ -28,7 +28,6 @@ const meta: Meta<typeof BaseNumberInput> = {
       },
     },
     "onUpdate:modelValue": {
-      // TODO: gibt den neuen Wert 2x zurück
       name: "update:modelValue", // to show name of event not eventHandler
       description:
         "Wird ausgelöst wenn sich der aktuelle Wert ändert und gibt den neuen Wert zurück",
@@ -45,6 +44,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     label: "Zahl eingeben",
+    // TODO: Event wird nicht nur bei Änderung von modelValue sondern auch bei Klick in oder Verlassen des Felds emittiert
     "onUpdate:modelValue": fn(),
   },
 };

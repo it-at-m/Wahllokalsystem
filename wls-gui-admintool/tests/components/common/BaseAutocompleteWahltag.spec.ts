@@ -61,9 +61,7 @@ describe("BaseAutocompleteWahltag.vue", () => {
         getSnapshotFilename(context)
       );
     });
-  });
 
-  describe("visual logic", () => {
     it("should_renderDateOfWahltag_when_elementIsSelected", async (context) => {
       const tag = wahltage[0];
       await wrapper.setProps({ modelValue: tag });

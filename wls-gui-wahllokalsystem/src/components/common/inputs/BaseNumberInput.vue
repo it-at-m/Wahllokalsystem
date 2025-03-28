@@ -19,10 +19,12 @@ const props = defineProps({
   label: {
     type: String,
     required: false,
+    default: "Zahl eingeben",
   },
   rules: {
     type: Array<(value: number) => string | boolean>,
     required: false,
+    default: [],
   },
 });
 

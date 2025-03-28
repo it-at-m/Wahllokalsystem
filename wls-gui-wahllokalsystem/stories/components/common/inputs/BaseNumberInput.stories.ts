@@ -23,6 +23,9 @@ const meta: Meta<typeof BaseNumberInput> = {
     },
     rules: {
       description: "Validierungsregeln",
+      control: {
+        disable: true,
+      },
     },
     "onUpdate:modelValue": {
       // TODO: gibt den neuen Wert 2x zurück
@@ -42,13 +45,11 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     label: "Zahl eingeben",
-    rules: [],
     "onUpdate:modelValue": fn(),
   },
 };
 
 /**
- * Pflichtfeld
  * ```
  * const REQUIRED = (value: any) => (!!value && value.trim().length > 0) || "Feld darf nicht leer sein."
  * const rules = [REQUIRED]
@@ -62,7 +63,6 @@ export const Required: Story = {
 };
 
 /**
- * Input muss zwischen 5 und 10 liegen
  * ```
  * const MIN_NUMBER = (min: number) => (value: number) => value >= min || "Eingabe darf nicht kleiner als ${min} sein."
  * const MAX_NUMBER (max: number) => (value: number) => value <= max || "Eingabe darf nicht größer als ${max} sein."

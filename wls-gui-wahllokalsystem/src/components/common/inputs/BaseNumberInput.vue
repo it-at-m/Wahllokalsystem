@@ -1,7 +1,7 @@
 <template>
   <v-text-field
     ref="inputRef"
-    v-model="modelValue"
+    v-model="formattedValue"
     :label="props.label"
     clearable
     variant="solo"
@@ -21,10 +21,12 @@ const props = defineProps({
     required: false,
   },
   rules: {
-    type: Array,
+    type: Array<(value: number) => string | boolean>,
     required: false,
   },
 });
+
+const modelValue = defineModel({ type: Number });
 
 const currencyInputOptions = computed(() => {
   return {
@@ -36,13 +38,14 @@ const currencyInputOptions = computed(() => {
 
 // inputRef needs to be present for vue-currency-input to work
 // formattedValue avoids, that characters can be typed
-const { inputRef, modelValue, setValue } = useCurrencyInput(
+const { inputRef, formattedValue, setValue } = useCurrencyInput(
   currencyInputOptions.value
 );
 
+// if the value of the input is changed externally (and not only by user input)
 // see https://dm4t2.github.io/vue-currency-input/guide.html#external-props-changes.
 watch(
-  () => props.modelValue,
+  () => modelValue.value,
   (value) => {
     setValue(value === undefined ? null : value);
   }

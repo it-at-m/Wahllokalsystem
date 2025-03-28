@@ -29,6 +29,7 @@ const props = defineProps({
 });
 
 const modelValue = defineModel({ type: Number });
+const emit = defineEmits(["update:modelValue"]);
 
 const currencyInputOptions = computed(() => {
   return {
@@ -42,7 +43,8 @@ const currencyInputOptions = computed(() => {
 // inputRef needs to be present for vue-currency-input to work
 // formattedValue avoids, that characters can be typed
 const { inputRef, formattedValue, setValue } = useCurrencyInput(
-  currencyInputOptions.value
+  currencyInputOptions.value,
+  false // would emit event "change" instead of "update:modelValue" + would be triggered every time the field is clicked into or left
 );
 
 // if the value of the input is changed externally (and not only by user input)
@@ -53,4 +55,10 @@ watch(
     setValue(value === undefined ? null : value);
   }
 );
+
+watch(formattedValue, (newValue) => {
+  if (newValue) {
+    emit("update:modelValue", +newValue);
+  }
+});
 </script>

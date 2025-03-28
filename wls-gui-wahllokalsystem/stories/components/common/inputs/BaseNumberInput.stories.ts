@@ -44,7 +44,6 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     label: "Zahl eingeben",
-    // TODO: Event wird nicht nur bei Änderung von modelValue sondern auch bei Klick in oder Verlassen des Felds emittiert
     "onUpdate:modelValue": fn(),
   },
 };

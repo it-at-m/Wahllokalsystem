@@ -13,7 +13,7 @@ entsprechenden Actions ausgeführt. Mit unseren gut 12 Backend-Microservices fü
 Standardlimit von 10 Renovate-PRs kann dies bis zu 120 parallele Jobs führen. Diese werden aber nicht gleichzeit
 abgearbeitet, ein Teil wird gequeued. 9 der 10 Jobs werden aber nicht direkt in einem Merge münden.
 
-Das ganze führt dazu, dass man relativ lange warten muss um die Renovate-PRs abarbeiten zu können. 
+Das ganze führt dazu, dass man relativ lange warten muss um die Renovate-PRs abarbeiten zu können.
 
 ## Entscheidung
 

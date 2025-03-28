@@ -80,7 +80,7 @@ Um die Daten, die bisher nicht erfolgreich an das Backend übermittelt werden ko
 #### a). Hintergrundsynchronisation beim offline-online Wechsel
 
 Wenn der Wahllokalclient den Zustand von _Offline_ zu _Online_ wechselt, wird der `Offline-Syncer` aktiv.
-Dies geschieht im Hintegrund und ist für den Benutzer nur durch eine Einblendung unten rechts auf der Seite erkennbar.
+Dies geschieht im Hintegrund und ist für den Benutzer nur durch eine Einblendung erkennbar.
 
 ![Sinchronisation im Hintergrund:](/offlinesyncer/SyncInBackground.PNG?url)
 [Abbildung 1: Synchronisation im Hintergrund](/offlinesyncer/SyncInBackground.PNG)

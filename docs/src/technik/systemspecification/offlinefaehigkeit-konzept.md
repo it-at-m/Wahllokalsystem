@@ -91,14 +91,9 @@ Nicht erfolgreiche Anfragen haben keine Konsequenzen. Nachdem alle Anfragen zu s
 
 #### b). Vordergrundsynchronisation beim Senden der Ergebnismeldung
 
-Vor dem senden einer Schnellmeldung oder Niederschrift wird der Offline-Syncer im Vordergrund gestartet. Dies ist für den Wahlvorstand durch das Popup “Offlinedaten werden Synchronisiert” ersichtlich.
+Vor dem Senden einer Schnellmeldung oder Niederschrift muss der Offline-Syncer erfolgreich durchlaufen sein. War die Synchronisierung nicht erfolgreich kann kein Senden erfolgen.
 
-![Synchronisation im Vordergrund](/public/offlinesyncer/SyncInForeground.PNG?url)
-[Abbildung 2: Synchronisation im Vordergrund](/public/offlinesyncer/SyncInForeground.PNG)
-
-Ist die Synchronisation erfolgreich, oder waren keine dirty-Daten vorhanden, wird das Fenster noch eine Sekunde angezeigt, damit der Wahlvorstand die Möglichkeit hat das Ergebnis zu sehen. Anschließend wird die Schnellmeldung bzw. Niederschrift gesendet.
-
-Ist das Synchronisieren nicht erfolgreich, weil bestimmte Daten aufgrund von schlechter Netzverbindung oder nicht erreichbaren Services nicht gesendet werden konnten, wird KEINE Schnellmeldung/Niederschrift gesendet, weil das Wahllokalsystem nicht sicherstellen kann, dass alle Ergebnisrelevanten Daten übermittelt werden konnten. In diesem Falle kann der Wahlvorstand als nächsten Schritt seine Schnellmeldung/Niederschrift ausdrucken, auf der, durch den Offline-Druck, garantiert alle Relevanten, aktuellen und korrekten Daten stehen werden.
+Zur Besseren Nachvollziehbarkeit wird der Synchronisierungsforschritt dem User angezeigt.
 
 #### c). Vordergrundsynchronisation beim Ausloggen des Benutzers
 

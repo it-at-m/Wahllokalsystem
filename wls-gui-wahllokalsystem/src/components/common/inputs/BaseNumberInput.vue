@@ -33,6 +33,7 @@ const currencyInputOptions = computed(() => {
     currency: "EUR", // currency has to be set, even if not displayed
     currencyDisplay: CurrencyDisplay.hidden,
     useGrouping: false,
+    precision: 0,
   };
 });
 

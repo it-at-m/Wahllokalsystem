@@ -14,7 +14,7 @@ der Datentyp des modelValue nicht erkannt wird:
 
 ![defineModel without extra config](/defineModelAdr/defineModel_without_extra_config.png)
 
-Daher hat sich die Frage gestellt zur vorherigen 
+Daher hat sich die Frage gestellt zur vorherigen
 [Implementierung](https://vuejs.org/guide/components/v-model.html#under-the-hood) des two-way-bindings mit
 `defineProps()` und `defineEmits()` umzusteigen:
 
@@ -72,7 +72,7 @@ const modelValue = defineModel({ type: String });
 
 :::
 
-So ergibt sich trotz der Nutzung von `defineModel()` für die Dokumentation das gleiche Verhalten, das mit dem 
+So ergibt sich trotz der Nutzung von `defineModel()` für die Dokumentation das gleiche Verhalten, das mit dem
 two-way-binding mit `defineProps()` und `defineEmits()` erreicht wird.
 
 ## Konsequenzen

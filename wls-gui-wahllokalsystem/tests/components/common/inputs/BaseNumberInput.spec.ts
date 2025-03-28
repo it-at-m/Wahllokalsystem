@@ -3,6 +3,7 @@ import { createPinia } from "pinia";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
+import { VTextField } from "vuetify/components";
 import * as directives from "vuetify/directives";
 
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
@@ -45,6 +46,20 @@ describe("BaseNumberInput.vue", () => {
         getSnapshotFilename(context)
       );
       expect(wrapper.html()).toContain(input);
+    });
+  });
+
+  describe("behavioral logic", () => {
+    describe("update:modelValue", () => {
+      it("should_updateModelValue_when_elementIsTyped", async () => {
+        const input = 896572;
+
+        const textfield = wrapper.findComponent(VTextField);
+        await textfield.setValue(input);
+
+        expect(wrapper.emitted()).toHaveProperty("update:modelValue");
+        expect(wrapper.emitted("update:modelValue")).toEqual([[input]]);
+      });
     });
   });
 });

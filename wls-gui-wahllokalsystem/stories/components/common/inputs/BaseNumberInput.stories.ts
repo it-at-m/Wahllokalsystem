@@ -26,7 +26,7 @@ const meta: Meta<typeof BaseNumberInput> = {
     },
     "onUpdate:modelValue": {
       // TODO: gibt den neuen Wert 2x zurück
-      name: "update: modelValue", // to show name of event not eventHandler
+      name: "update:modelValue", // to show name of event not eventHandler
       description:
         "Wird ausgelöst wenn sich der aktuelle Wert ändert und gibt den neuen Wert zurück",
       table: {

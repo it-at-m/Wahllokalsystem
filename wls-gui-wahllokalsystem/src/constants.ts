@@ -22,3 +22,5 @@ export const BROADCAST_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "broadcast-service";
 export const WAHLVORSTAND_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "wahlvorstand-service";
+export const VORFAELLEUNDVORKOMMNISSE_SERVICE_API_URL =
+  WLS_SERVICE_API_URL + "vorfaelleundvorkommnisse-service";

@@ -7,15 +7,15 @@
 ## Kontext
 
 Im Rahmen der Entwicklung mit Storybook ist aufgefallen, dass das two-way-binding mit der
-[Vue 3 `defineModel()`-Funktion](https://vuejs.org/api/sfc-script-setup.html#definemodel) nicht direkt unterstützt wird.
+[`defineModel()`-Funktion](https://vuejs.org/api/sfc-script-setup.html#definemodel) nicht direkt unterstützt wird.
 Dies äußert sich darin, dass variablen, die per `defineModel()` deklariert wurden, in der Dokumentation nicht unter
 `PROPS` gelistet werden und auch das zugehörige event nicht unter `EVENTS` gelistet wird. Außerdem kommt dazu, dass
 der Datentyp des modelValue nicht erkannt wird:
 
 ![defineModel without extra config](/defineModelAdr/defineModel_without_extra_config.png)
 
-Daher hat sich die Frage gestellt zur vorherigen
-[Vue 2 Implementierung](https://vuejs.org/guide/components/v-model.html#under-the-hood) des two-way-bindings mit
+Daher hat sich die Frage gestellt zur vorherigen 
+[Implementierung](https://vuejs.org/guide/components/v-model.html#under-the-hood) des two-way-bindings mit
 `defineProps()` und `defineEmits()` umzusteigen:
 
 ![props and defineEmit](/defineModelAdr/props-and-defineEmit.png)
@@ -28,7 +28,7 @@ Storybook-Code folgende Elemente hinzugefügt werden:
 
 ::: code-group
 
-```typescript {7-8,13,15} [Component.stories.ts]
+```typescript {7-8,13,15,23-24} [Component.stories.ts]
 const meta: Meta<typeof Component> = {
   component: Component,
   argTypes: {
@@ -48,7 +48,13 @@ const meta: Meta<typeof Component> = {
     },
   },
 };
-
+// (...)
+export const Default: Story = {
+    args: {
+        // wird benötigt, damit Storybook das Event verarbeiten kann
+        "onUpdate:modelValue": fn(),
+    },
+};
 ```
 
 ```vue [Component.vue]
@@ -66,8 +72,8 @@ const modelValue = defineModel({ type: String });
 
 :::
 
-So ergibt sich trotz der Nutzung von `defineModel()` für die Dokumentation das gleiche Verhalten, das mit dem Vue 2
-two-way-binding erreicht wird.
+So ergibt sich trotz der Nutzung von `defineModel()` für die Dokumentation das gleiche Verhalten, das mit dem 
+two-way-binding mit `defineProps()` und `defineEmits()` erreicht wird.
 
 ## Konsequenzen
 

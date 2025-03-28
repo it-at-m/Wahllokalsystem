@@ -49,9 +49,10 @@ export const Default: Story = {
 
 /**
  * Pflichtfeld
- *
- * Für ein Beispiel, wie die Rules korrekt übergeben werden, siehe
- * [Vue Doku](https://vuetifyjs.com/en/components/text-fields/#validation-26-rules)
+ * ```
+ * const rules = [REQUIRED]
+ * const REQUIRED = (value: any) => (!!value && value.trim().length > 0) || "Feld darf nicht leer sein."
+ * ```
  */
 export const Required: Story = {
   args: {

@@ -27,7 +27,7 @@ HTTP-Methode durchgeführt wird. So haben wir zum Beispiel für die Objektart `E
 Beim Lesen und Schreiben werden die Netzwerk-Anfragen des Browsers vom Service Worker
 (der als eine Art Middleware aggiert) abgefangen und wahlweise lokal gespeichert oder aus
 dem lokalen Speicher geladen, bzw. mit dem Backend ausgetauscht.
-Die Identifizierung der Anfragen erfolgt dabei allein anhand der URL des Requests, die in der `IndexedDB` als `Key` fungiert. 
+Die Identifizierung der Anfragen erfolgt dabei allein anhand der URL des Requests, die in der `IndexedDB` als `Key` fungiert.
 Das `Value` das dem `Key` enspricht soll ein JSON-String sein, das neben dem Payload noch ein paar Informationen enthalten muss.
 Für mehrere Details siehe unten: [Beispiel eines möglichen IndexedDB-Eintrags](#beispieleintrag-in-der-indexeddb).
 
@@ -38,7 +38,7 @@ Ergebnisse weiterer Requests zu der selben Ressource-URL führen zur Aktualisier
 Es gibt drei unterschiedliche Strategien, mit denen der SW umgehen kann:
 
 - `OFFLINE_FIRST` (default): Hat der Service Worker Daten im lokalen Speicher, werden diese Daten zurückgeliefert. Nur wenn keine Daten vorhanden sind, wird ein Request ans Backend geschickt;
-- `ONLINE_FIRST`: Es gibt Daten, die remote und nicht im Client entstehen und somit, falls verfügbar, Priorität vor dem lokalen Speicher haben; 
+- `ONLINE_FIRST`: Es gibt Daten, die remote und nicht im Client entstehen und somit, falls verfügbar, Priorität vor dem lokalen Speicher haben;
 - `ONLINE_ONLY`: Diese Strategie wird für Operationen benötigt, die nur remote relevant sind und im lokalen Speicher nicht gespeichert werden.
 
 Für Beispiele für Ressourcen unter den nicht-default Strategien, siehe Kapitel [Beispieldaten pro Offline-Strategie](#beispieldaten-pro-offline-strategie).
@@ -66,7 +66,7 @@ In jedem der Fälle wird der SW merken, dass Anfragen ans Backend nicht mit eine
 
 Passiert dies bei lesenden Anfragen wird, wie unter [Strategien](#strategien) beschrieben, mit den in der `IndexedDB` offline-vorhandenen Daten geantwortet.
 
-Passiert dies bei schreibenden Anfragen, verschattet der SW den Fehler, sodass der Benutzer nichts von den Problemen sieht. Außerdem werden die soeben gesendeten Daten lokal nicht nur gespeichert, sondern auch als `dirty:true` markiert zusammen mit dem Zeitpunkt ([timestamp](#timestampId)) zu dem die Daten zu senden versucht wurde, gespeichert.
+Passiert dies bei schreibenden Anfragen, verschattet der SW den Fehler, sodass der Benutzer nichts von den Problemen sieht. Außerdem werden die soeben gesendeten Daten lokal nicht nur gespeichert, sondern auch als `dirty:true` markiert zusammen mit dem Zeitpunkt ([timestamp](#beispieleintrag-in-der-indexeddb)) zu dem die Daten zu senden versucht wurde, gespeichert.
 
 ### Datensynchronisation
 
@@ -81,7 +81,7 @@ Um die Daten, die bisher nicht erfolgreich an das Backend übermittelt werden ko
 Wenn der Wahllokalclient den Zustand von _Offline_ zu _Online_ wechselt, wird der `Offline-Syncer` aktiv.
 Dies geschieht im Hintegrund und ist für den Benutzer nur durch eine Einblendung erkennbar.
 
-Der `Offline-Syncer` prüft, ob in den lokalen Daten mit `dirty=true` markierte Daten vorhanden sind und sortiert diese anhand der ursprünglichen Speicherung-Reihenfolge ([timestamp](#timestampId)).
+Der `Offline-Syncer` prüft, ob in den lokalen Daten mit `dirty=true` markierte Daten vorhanden sind und sortiert diese anhand der ursprünglichen Speicherung-Reihenfolge ([timestamp](#beispieleintrag-in-der-indexeddb)).
 Dann versucht er jede dieser Datensätze (aus der `indexedDB`) erneut ans Backend zu senden. Bei erfolgreich durchgeführten Anfragen wird das `dirty` auf `false` gesetzt.
 Nicht erfolgreiche Anfragen haben keine Konsequenzen. Nachdem alle Anfragen zu synchronisieren versucht wurden, verschwindet die Anzeige unten rechts wieder.
 
@@ -115,7 +115,7 @@ Das `Value` das dem `Key` enspricht soll ein JSON-String sein, das neben dem Pay
 - das Payload (`data` = Inhalt des Requests);
 - die Art des Inhalts (`contentType` z.Bsp. `application/json; charset=utf8`, `text/csv; charset=utf8` usw.);
 - ob der Eintrag mit dem Backend unsynchronisiert (`dirty:true`) oder synchronisert (`dirty:true`) ist;
-- der Zeitpunkt der versuchten oder erfolgten Speicher-/Leseoperation (<span id="timestampId">`timestamp`</span>)`;
+- der Zeitpunkt der versuchten oder erfolgten Speicher-/Leseoperation (`timestamp`);
 - der Status des Requests (`200`, `201`, oder `204`).
 
 Ein Beispiel für einen möglichen Eintrag in der IndexedDB wäre:
@@ -126,7 +126,7 @@ Ein Beispiel für einen möglichen Eintrag in der IndexedDB wäre:
             "contentType":"application/json; charset=utf8",
             "dirty":"false",
             "timestamp":"2025-03-11T05:05:00.020Z",
-            "status":"200"            
+            "status":"200"
          }`
 
 Die Properties-Namen werden hier nur orientativ aufgeführt.
@@ -138,16 +138,16 @@ Arbeitet der Client nun weiter und erfasst eine neue Eroeffnungsuhrzeit, wird un
 
 ### Beispieldaten pro Offline-Strategie
 
-`ONLINE_FIRST`: 
+`ONLINE_FIRST`:
 Die Daten unter den folgenden URLs, werden aus dem Backend präferiert:
 
 - `/ergebnismeldung/awerte/wahlbezirkID` (AWerte);
 - `/infomanagement/konfiguration` (Konfiguration);
 - `/basisdaten/ungueltigews/wahltagID/wahlbezirksart` (UngueltigeWahlscheine);
-- `/wahlvorstand/wahlbezirkID` (Wahlvorstand); 
+- `/wahlvorstand/wahlbezirkID` (Wahlvorstand);
 
 Daher wird mit dieser Strategie zuerst ein Request ans Backend geschickt. Ist dieser erfolgreich, werden die neuen Daten lokal gespeichert und zurückgegeben,
-ist er nicht erfolgreich, wird der ggf. vorhandene Eintrag aus der `IndexedDB` zurück gegeben. 
+ist er nicht erfolgreich, wird der ggf. vorhandene Eintrag aus der `IndexedDB` zurück gegeben.
 
 `ONLINE_ONLY`:
 Die Daten die an die folgenden URLs übermittelt werden, sind nur für das Backend relevant und werden lokal nicht gespeichert:
@@ -157,7 +157,3 @@ Die Daten die an die folgenden URLs übermittelt werden, sind nur für das Backe
 - `/broadcast/messageRead/nachrichtId` (Information, dass die Broadcast-Nachricht gelesen wurde);
 - `/monitoring/lastSeen/wahlbezirkID` (Uhrzeit der letzten Abmeldung);
 - `/monitoring/letzteAbmeldung/wahlbezirkID` (Uhrzeit der letzten Abmeldung).
-
-
-
-

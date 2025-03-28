@@ -27,6 +27,7 @@ const meta: Meta<typeof BaseAutocompleteWahltag> = {
     "onUpdate:modelValue": {
       description:
         "Wird ausgelöst wenn sich der aktuelle Wert ändert und gibt den neuen Wert zurück",
+      name: "update:modelValue", // to show name of event not eventHandler
       table: {
         category: "events",
       },

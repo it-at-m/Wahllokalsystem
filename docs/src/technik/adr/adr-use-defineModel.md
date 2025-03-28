@@ -22,30 +22,28 @@ Daher hat sich die Frage gestellt zur vorherigen
 
 ## Entscheidung
 
-Da `defienModel()` die aktuell empfohlene Vue 3 Best-Practice ist und weniger Code erfordert wurde entschieden das two-
+Da `defienModel()` die aktuell empfohlene Vue 3 Best-Practice ist und weniger Code erfordert, wurde entschieden das two-
 way-binding damit zu implementieren. Um die Dokumentation trotzdem vollständig und korrekt zu halten, müssen im
 Storybook-Code folgende Elemente hinzugefügt werden:
 
 ::: code-group
 
-```typescript {9-12,16-17} [Component.stories.ts]
+```typescript {7-8,13,15} [Component.stories.ts]
 const meta: Meta<typeof Component> = {
   component: Component,
   argTypes: {
     modelValue: {
       description: "Aktuell gewählter Wert",
-      control: {
-        type: "object",
-      },
       table: {
         category: "props", // konkret angeben, dass modelValue ein prop ist 
         type: { summary: "String" }, // konkret den Datentyp angeben
       },
     },
     "onUpdate:modelValue": { 
-      description: "Wird ausgelöst wenn sich der aktuelle Wert ändert", 
-      table: { // konkret angeben, dass onUpdate ein event ist 
-        category: "events", 
+      description: "Wird ausgelöst wenn sich der aktuelle Wert ändert",
+      name: "update:modelValue", // onUpdate wäre der Name des eventHandlers
+      table: {
+        category: "events", // konkret angeben, dass onUpdate ein event ist 
       },
     },
   },

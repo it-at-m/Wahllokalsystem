@@ -33,7 +33,7 @@ export default withMermaid({
     },
 
     outline: {
-      label: "Auf dieser Seite"
+      label: "Auf dieser Seite",
     },
 
     sidebar: {

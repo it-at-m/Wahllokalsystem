@@ -6,70 +6,69 @@ Anschließend sollte der Benutzer bis einschließlich des Drucks der Niederschri
 weiterhin keine Verbindung bestehen, wird die Niederschrift im Wahllokal gedruckt und telefonisch übermittelt.
 Die Datenübertragung an das Backend kann auch am nächsten Tag dürch das Hochfahren des Notebooks erfolgen.
 
-## I. Beschreibung Offlinefähigkeit
+## Beschreibung Offlinefähigkeit
 
 Grundsätzlich läuft die Kommunikation des Clients mit dem Backend über REST Schnittstellen.
 Die dahinter verborgenen Ressourcen sind über Schreib- und Lese-Operationen zugänglich.
 Sollte der Client offline sein, kann auf die Ressourcen nicht zugegriffen werden.
 Offlinefähigkeit beschreibt das Konzept, die Ressourcen lokal im Client abzubilden und mit dem
 Backend zu synchronisieren.
-Diese Anforderung lässt sich mit dem Service Worker (im
-folgenden SW) umsetzen.
+Diese Anforderung lässt sich mit dem Service Worker (im folgenden SW) umsetzen.
 
-## II. Anforderungen an die REST-Schnittstellen der Microservices
+## Anforderungen an die REST-Schnittstellen der Microservices
 
 Um einen möglichst konfigurations- und wartungsarmen Code zu ermöglichen ist es notwendig,
 dass alle WLS-Schnittstellen einer Objektart, die Lese- und Schreiboperationen bieten, die
 gleiche URL anbieten und die Unterscheidung der Operation einzig und allein anhand der
 HTTP-Methode durchgeführt wird. So haben wir zum Beispiel für die Objektart `Eroeffnungsuhrzeit` eine GET und eine POST Operation an die URL: "_/businessActions/eroeffnungsuhrzeit/wahlbezirkID_".
 
-## III. Umgesetztes Verhalten
+## Umgesetztes Verhalten
 
 Beim Lesen und Schreiben werden die Netzwerk-Anfragen des Browsers vom Service Worker
 (der als eine Art Middleware aggiert) abgefangen und wahlweise lokal gespeichert oder aus
 dem lokalen Speicher geladen, bzw. mit dem Backend ausgetauscht.
-Die Identifizierung der Anfragen erfolgt dabei allein anhand der URL. Wenn also der Client (mit
-Wahlbezirk-ID „123“) beim ersten anmelden (um dem obigen Beispiel zu folgen) die
-Eröffnungsuhrzeit lädt, um ggf. bereits erfasste Daten zu laden, wird im lokalen Speicher mit
-dem Key "_/businessActions/eroeffnungsuhrzeit/123_" der Wert gespeichert der geladen wird (in unserem Beispiel wäre das JSON-Objekt `Eroeffnungsuhrzeit`).
-Arbeitet der Client nun weiter und erfasst eine neue `Eroeffnungsuhrzeit`, wird unter dem obigen
-Key der neue Wert gespeichert.
+Die Identifizierung der Anfragen erfolgt dabei allein anhand der URL des Requests, die in der `IndexedDB` als `Key` fungiert. 
+Das `Value` das dem `Key` enspricht soll ein JSON-String sein, das neben dem Payload noch ein paar Informationen enthalten muss.
+Für mehrere Details siehe unten: [Beispiel eines möglichen IndexedDB-Eintrags](#beispieleintrag-in-der-indexeddb).
 
-### A. Strategien
+Ergebnisse weiterer Requests zu der selben Ressource-URL führen zur Aktualisierung des `Values` unter dem gleichen `Key`.
+
+### Strategien
 
 Es gibt drei unterschiedliche Strategien, mit denen der SW umgehen kann:
 
 - `OFFLINE_FIRST` (default): Hat der Service Worker Daten im lokalen Speicher, werden diese Daten zurückgeliefert. Nur wenn keine Daten vorhanden sind, wird ein Request ans Backend geschickt;
-- `ONLINE_FIRST` Bei Daten wie z.B. den Wahlvorständen, A-Werten und Konfigurationsdaten kann es sein, dass im Backend neuere Daten vorhanden sind. Daher wird mit dieser Strategie zuerst ein Request ans Backend geschickt. Ist dieser erfolgreich, werden die neuen Daten lokal gespeichert und zurückgegeben;
-- `ONLINE_ONLY` Diese Strategie wird für schreibende Operationen benötigt. Diese Strategie verhindert, dass der Service Worker die Daten
-als `dirty: true` markiert, wenn ein Request fehlschlägt.
+- `ONLINE_FIRST`: Es gibt Daten, die remote und nicht im Client entstehen und somit, falls verfügbar, Priorität vor dem lokalen Speicher haben; 
+- `ONLINE_ONLY`: Diese Strategie wird für Operationen benötigt, die nur remote relevant sind und im lokalen Speicher nicht gespeichert werden.
 
-### B. Initialisierung
+Für Beispiele für Ressourcen unter den nicht-default Strategien, siehe Kapitel [Beispieldaten pro Offline-Strategie](#beispieldaten-pro-offline-strategie).
+
+### Initialisierung
 
 Bei Login am Wahllokalsystem prüft der Client zunächst, welcher Benutzer als letztes an diesem Browser angemeldet war. Ist der aktuelle Benutzer ungleich dem letzten Benutzer, wird die lokale Datenbank gelöscht. Handelt es sich aber um den gleichen Benutzer, bleiben seine Offline erfassten Daten bestehen und er kann weiter arbeiten.
 Anschließend wird die Initialisierungsseite des WLS aufgerufen. Auf dieser werden alle lesenden Endpunkte, welche für die aktuelle Systemsituation (Art des Wahllokals, Anzahl und Arten der stattfindenden Wahlen) relevant sind einmalig aufgerufen. Da der SW alle Anfragen unterbricht und speichert, wird mit dieser Aktion sichergestellt, dass alle Daten ab sofort Offline zur Verfügung stehen.
 
-### C. Behandlung der aus- oder eingehenden Requests oder Responses
+### Behandlung der aus- oder eingehenden Requests oder Responses
 
-#### a). Ist `online` und `kein Fehler` tritt auf
+#### Ist `online` und `kein Fehler` tritt auf
 
 In diesem Fall wird davon ausgegangen, dass keine Probleme auftreten.
 
-Der Wahlvorstand speichert seine Daten und diese werden immer erfolgreich im Backend gespeichert.
-Alles was der SW in diesem Fall tut ist, seine lokalen Daten aktuell zu halten. Bedeutet: Der Wahlvorstand sendet Daten, diese leitet der SW ans Backend.
-Anschließend speichert er die gesendeten Daten wie unter [Umgesetztes Verhalten](#iii-umgesetztes-verhalten) beschrieben.
+Der Client sendet seine Anfrage und die enthaltenen Daten werden erfolgreich im Backend gespeichert.
+Alles was der SW in diesem Fall tut ist, seine lokalen Daten aktuell zu halten. Bedeutet: Der Client sendet Daten, diese leitet der SW ans Backend.
+Anschließend speichert er die gesendeten Daten wie unter [Umgesetztes Verhalten](#umgesetztes-verhalten) beschrieben.
 
-#### b). Ist `offline` oder `ein Fehler` ist aufgetreten
+#### Ist `offline` oder `ein Fehler` ist aufgetreten
 
-In diesem Fall wird davon ausgegangen, dass der Wahlvorstand Offline ist, oder Fehler im Backend auftreten.
+In diesem Fall wird davon ausgegangen, dass der Client offline ist, oder Fehler im Backend auftreten.
 
 In jedem der Fälle wird der SW merken, dass Anfragen ans Backend nicht mit einem gültigen HTTP-Statuscode (200, 201 und 204) beantwortet werden.
 
-Passiert dies bei lesenden Anfragen wird, wie unter [Strategien](#a-strategien) beschrieben, mit den Offline vorhandenen Daten geantwortet.
+Passiert dies bei lesenden Anfragen wird, wie unter [Strategien](#strategien) beschrieben, mit den in der `IndexedDB` offline-vorhandenen Daten geantwortet.
 
-Passiert dies bei schreibenden Anfragen, verschattet der SW den Fehler, sodass der Wahlvorstand nichts von den Problemen sieht. Außerdem werden die soeben gesendeten Daten lokal nicht nur gespeichert sondern auch als `dirty` markiert, sowie der Zeitpunkt, zu dem die Daten zu senden versucht wurden, gespeichert.
+Passiert dies bei schreibenden Anfragen, verschattet der SW den Fehler, sodass der Benutzer nichts von den Problemen sieht. Außerdem werden die soeben gesendeten Daten lokal nicht nur gespeichert, sondern auch als `dirty:true` markiert zusammen mit dem Zeitpunkt ([timestamp](#timestampId)) zu dem die Daten zu senden versucht wurde, gespeichert.
 
-### D. Datensynchronisation
+### Datensynchronisation
 
 Um die Daten, die bisher nicht erfolgreich an das Backend übermittelt werden konnten, bei wiederhergestellter Verbindung zu übermittelt, erfolgt eine Synchronisierung:
 
@@ -77,30 +76,27 @@ Um die Daten, die bisher nicht erfolgreich an das Backend übermittelt werden ko
 - beim Senden der Ergebnismeldung (Schnellmeldung oder Niederschrift) die sog. Vordergrund-Synchronisation);
 - beim Ausloggen des Benutzers.
 
-#### a). Hintergrundsynchronisation beim offline-online Wechsel
+#### Hintergrundsynchronisation beim offline-online Wechsel
 
 Wenn der Wahllokalclient den Zustand von _Offline_ zu _Online_ wechselt, wird der `Offline-Syncer` aktiv.
 Dies geschieht im Hintegrund und ist für den Benutzer nur durch eine Einblendung erkennbar.
 
-![Sinchronisation im Hintergrund:](/offlinesyncer/SyncInBackground.PNG?url)
-[Abbildung 1: Synchronisation im Hintergrund](/offlinesyncer/SyncInBackground.PNG)
-
-Der Syncer prüft, ob in den lokalen Daten mit `dirty=true` markierte Daten vorhanden sind und sortiert diese anhand der ursprünglichen Speicherung-Reihenfolge (`timestamp`).
+Der `Offline-Syncer` prüft, ob in den lokalen Daten mit `dirty=true` markierte Daten vorhanden sind und sortiert diese anhand der ursprünglichen Speicherung-Reihenfolge ([timestamp](#timestampId)).
 Dann versucht er jede dieser Datensätze (aus der `indexedDB`) erneut ans Backend zu senden. Bei erfolgreich durchgeführten Anfragen wird das `dirty` auf `false` gesetzt.
 Nicht erfolgreiche Anfragen haben keine Konsequenzen. Nachdem alle Anfragen zu synchronisieren versucht wurden, verschwindet die Anzeige unten rechts wieder.
 
-#### b). Vordergrundsynchronisation beim Senden der Ergebnismeldung
+#### Vordergrundsynchronisation beim Senden der Ergebnismeldung
 
-Vor dem Senden einer Schnellmeldung oder Niederschrift muss der Offline-Syncer erfolgreich durchlaufen sein. War die Synchronisierung nicht erfolgreich kann kein Senden erfolgen.
+Vor dem Senden einer Schnellmeldung oder Niederschrift muss der `Offline-Syncer` erfolgreich durchlaufen sein. War die Synchronisierung nicht erfolgreich kann kein Senden erfolgen.
 
 Zur Besseren Nachvollziehbarkeit wird der Synchronisierungsforschritt dem User angezeigt.
 
-#### c). Vordergrundsynchronisation beim Ausloggen des Benutzers
+#### Vordergrundsynchronisation beim Ausloggen des Benutzers
 
-Wie oben [unter b beim Senden der Ergebnismeldung](#b-vordergrundsynchronisation-beim-senden-der-ergebnismeldung) wird auch vor dem Ausloggen eines Benutzers versucht,
+Wie oben [unter b beim Senden der Ergebnismeldung](#vordergrundsynchronisation-beim-senden-der-ergebnismeldung) wird auch vor dem Ausloggen eines Benutzers versucht,
 falls `dirty=true`-markierte Daten in der `IndexedDB` vorhanden, diese ans Backend zu senden.
 
-### E. Logout eines Benutzers
+### Logout eines Benutzers
 
 Daten werden NICHT gelöscht, wenn ein Nutzer sich abmeldet. Dadurch wird verhindert, dass durch
 
@@ -109,5 +105,59 @@ Daten werden NICHT gelöscht, wenn ein Nutzer sich abmeldet. Dadurch wird verhin
 3. Schließen des Tabs
 4. Etc.
 
-Offline erfasste Daten verloren gehen. Die Daten bleiben solange im Offline-Speicher enthalten, bis sich ein
-anderer Benutzer am gleichen Rechner anmeldet (siehe [Initialisierung](#b-initialisierung)).
+offline-erfasste Daten verloren gehen. Die Daten bleiben solange im Offline-Speicher enthalten, bis sich ein
+anderer Benutzer am gleichen Rechner anmeldet (siehe [Initialisierung](#initialisierung)).
+
+### Beispieleintrag in der IndexedDB
+
+Das `Value` das dem `Key` enspricht soll ein JSON-String sein, das neben dem Payload noch die folgenden Informationen enthält:
+
+- das Payload (`data` = Inhalt des Requests);
+- die Art des Inhalts (`contentType` z.Bsp. `application/json; charset=utf8`, `text/csv; charset=utf8` usw.);
+- ob der Eintrag mit dem Backend unsynchronisiert (`dirty:true`) oder synchronisert (`dirty:true`) ist;
+- der Zeitpunkt der versuchten oder erfolgten Speicher-/Leseoperation (<span id="timestampId">`timestamp`</span>)`;
+- der Status des Requests (`200`, `201`, oder `204`).
+
+Ein Beispiel für einen möglichen Eintrag in der IndexedDB wäre:
+
+- `Key`: `eroeffnungsuhrzeit/wahlbezirkID123`
+- `Value`: `{
+            "data":{"wahlbezirkID":"wahlbezirkID123", "eroeffnungsuhrzeit":"2025-03-11T05:05:00.000"},
+            "contentType":"application/json; charset=utf8",
+            "dirty":"false",
+            "timestamp":"2025-03-11T05:05:00.020Z",
+            "status":"200"            
+         }`
+
+Die Properties-Namen werden hier nur orientativ aufgeführt.
+
+Wenn also der Client (mit Wahlbezirk-ID „123“) beim ersten Anmelden (um dem obigen Beispiel zu folgen) die
+Eröffnungsuhrzeit lädt, um ggf. bereits erfasste Daten zu laden, wird im lokalen Speicher mit
+dem Key "_/eroeffnungsuhrzeit/123_" der Wert gespeichert der geladen wird (in unserem Beispiel wäre das JSON-Objekt `Eroeffnungsuhrzeit`).
+Arbeitet der Client nun weiter und erfasst eine neue Eroeffnungsuhrzeit, wird unter dem obigen Key der neue Wert gespeichert.
+
+### Beispieldaten pro Offline-Strategie
+
+`ONLINE_FIRST`: 
+Die Daten unter den folgenden URLs, werden aus dem Backend präferiert:
+
+- `/ergebnismeldung/awerte/wahlbezirkID` (AWerte);
+- `/infomanagement/konfiguration` (Konfiguration);
+- `/basisdaten/ungueltigews/wahltagID/wahlbezirksart` (UngueltigeWahlscheine);
+- `/wahlvorstand/wahlbezirkID` (Wahlvorstand); 
+
+Daher wird mit dieser Strategie zuerst ein Request ans Backend geschickt. Ist dieser erfolgreich, werden die neuen Daten lokal gespeichert und zurückgegeben,
+ist er nicht erfolgreich, wird der ggf. vorhandene Eintrag aus der `IndexedDB` zurück gegeben. 
+
+`ONLINE_ONLY`:
+Die Daten die an die folgenden URLs übermittelt werden, sind nur für das Backend relevant und werden lokal nicht gespeichert:
+
+- `/auth/user` (Der User des Wahlbezirks wird geladen);
+- `/broadcast/getMessage/wahlbezirkId` (Es wird nach für den Wahlbezirk vorhandenen Broadcast Informationen gesucht);
+- `/broadcast/messageRead/nachrichtId` (Information, dass die Broadcast-Nachricht gelesen wurde);
+- `/monitoring/lastSeen/wahlbezirkID` (Uhrzeit der letzten Abmeldung);
+- `/monitoring/letzteAbmeldung/wahlbezirkID` (Uhrzeit der letzten Abmeldung).
+
+
+
+

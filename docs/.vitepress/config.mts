@@ -33,8 +33,7 @@ export default withMermaid({
     },
 
     outline: {
-      label: "Auf dieser Seite",
-      level: "deep",
+      label: "Auf dieser Seite"
     },
 
     sidebar: {

@@ -7,6 +7,8 @@ import "./custom.css";
 
 import status from "../components/adr/status.vue";
 import statusOverview from "../components/adr/status/overview.vue";
+import architectureMd from "../components/architecture/md.vue";
+import MermaidDiagram from "../components/MermaidDiagram.vue";
 
 export default {
   extends: DefaultTheme,
@@ -14,5 +16,7 @@ export default {
     // register your custom global components
     app.component("adrStatus", status);
     app.component("statusOverview", statusOverview);
+    app.component("architectureMd", architectureMd);
+    app.component("mermaidDiagram", MermaidDiagram);
   },
 } satisfies Theme;

@@ -25,4 +25,9 @@ export default createVuetify({
       },
     },
   },
+  defaults: {
+    VAutocomplete: {
+      variant: "outlined",
+    },
+  },
 });

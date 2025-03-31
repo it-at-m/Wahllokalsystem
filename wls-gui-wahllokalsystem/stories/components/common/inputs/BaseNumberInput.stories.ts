@@ -70,7 +70,7 @@ export const Required: Story = {
 /**
  * ```
  * const MIN_NUMBER = (min: number) => (value: number) => value >= min || "Eingabe darf nicht kleiner als ${min} sein."
- * const MAX_NUMBER (max: number) => (value: number) => value <= max || "Eingabe darf nicht größer als ${max} sein."
+ * const MAX_NUMBER = (max: number) => (value: number) => value <= max || "Eingabe darf nicht größer als ${max} sein."
  * const rules = [MIN_NUMBER(5), MAX_NUMBER(10)]
  * ```
  */

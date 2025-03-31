@@ -13,3 +13,5 @@ export const MAX_NUMBER = (max: number) => (value: number) =>
 
 export const MIN_NUMBER = (min: number) => (value: number) =>
   value >= min || `Eingabe darf nicht kleiner als ${min} sein.`;
+
+export const NO_NEGATIVE_INPUT = MIN_NUMBER(0);

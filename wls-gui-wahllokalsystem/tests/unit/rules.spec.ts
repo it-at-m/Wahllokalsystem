@@ -5,6 +5,7 @@ import {
   MAX_NUMBER,
   MIN_LENGTH,
   MIN_NUMBER,
+  NO_NEGATIVE_INPUT,
   REQUIRED,
 } from "@/util/rules";
 
@@ -49,6 +50,17 @@ describe("Validation rules", () => {
       expect(rule(7)).toBeTypeOf("string");
     });
     test("should_returnTrue_when_inputSmallEnough", () => {
+      expect(rule(2)).toStrictEqual(true);
+    });
+  });
+
+  describe("RULE_NO_NEGATIVE_INPUT", () => {
+    const rule = NO_NEGATIVE_INPUT;
+
+    test("should_returnErrorMessage_when_inputNegative", () => {
+      expect(rule(-2)).toBeTypeOf("string");
+    });
+    test("should_returnTrue_when_inputPositive", () => {
       expect(rule(2)).toStrictEqual(true);
     });
   });

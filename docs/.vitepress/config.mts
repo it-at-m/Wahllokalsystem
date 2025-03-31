@@ -34,7 +34,7 @@ export default withMermaid({
 
     outline: {
       label: "Auf dieser Seite",
-      level: "deep"
+      level: "deep",
     },
 
     sidebar: {

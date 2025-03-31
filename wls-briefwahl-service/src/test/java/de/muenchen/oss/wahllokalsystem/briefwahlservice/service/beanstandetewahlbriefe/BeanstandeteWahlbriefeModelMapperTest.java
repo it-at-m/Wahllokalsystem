@@ -26,7 +26,7 @@ class BeanstandeteWahlbriefeModelMapperTest {
         void should_returnBezirkIDUndWaehlerverzeichnisNummerEntity_when_givenBeanstandeteWahlbriefeReference() {
             val wahlbezirkID = "wbzId";
             val waehlerverzeichnisNummer = 123L;
-            val reference = new BeanstandeteWahlbriefeReference(wahlbezirkID, waehlerverzeichnisNummer);
+            val reference = new BeanstandeteWahlbriefeReferenceModel(wahlbezirkID, waehlerverzeichnisNummer);
 
             val expectedResult = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
 

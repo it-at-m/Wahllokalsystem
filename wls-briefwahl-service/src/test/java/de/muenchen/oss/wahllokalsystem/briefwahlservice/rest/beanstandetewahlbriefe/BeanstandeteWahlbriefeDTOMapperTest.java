@@ -2,7 +2,7 @@ package de.muenchen.oss.wahllokalsystem.briefwahlservice.rest.beanstandetewahlbr
 
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.common.beanstandetewahlbriefe.Zurueckweisungsgrund;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.service.beanstandetewahlbriefe.BeanstandeteWahlbriefeModel;
-import de.muenchen.oss.wahllokalsystem.briefwahlservice.service.beanstandetewahlbriefe.BeanstandeteWahlbriefeReference;
+import de.muenchen.oss.wahllokalsystem.briefwahlservice.service.beanstandetewahlbriefe.BeanstandeteWahlbriefeReferenceModel;
 import java.util.HashMap;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -55,7 +55,7 @@ class BeanstandeteWahlbriefeDTOMapperTest {
             val wahlbezirkId = "wahlbezirkID";
             val waehlerverzeichnisNummer = 3L;
 
-            val expectedResult = new BeanstandeteWahlbriefeReference(wahlbezirkId, waehlerverzeichnisNummer);
+            val expectedResult = new BeanstandeteWahlbriefeReferenceModel(wahlbezirkId, waehlerverzeichnisNummer);
 
             val result = unitUnderTest.toReferenceModel(wahlbezirkId, waehlerverzeichnisNummer);
 

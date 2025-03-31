@@ -8,10 +8,12 @@ import {
   EXAMPLE_ROUTES_NEWROUTE,
   EXAMPLE_ROUTES_NOTFOUND,
   EXAMPLE_VALIDATION,
+  ROUTE_VORFAELLEUNDVORKOMMNISSE,
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
   TOAST,
 } from "@/constants";
+import EreignisseView from "@/views/EreignisseView.vue";
 import ExampleBackendCommunicationView from "@/views/ExampleBackendCommunicationView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
 import ExampleNewRouteView from "@/views/ExampleNewRouteView.vue";
@@ -31,6 +33,12 @@ const routes = [
     path: "/wahlvorstand",
     name: ROUTE_WAHLVORSTAND,
     component: WahlvorstandAnwesenheitView,
+    meta: {},
+  },
+  {
+    path: "/stoerungen",
+    name: ROUTE_VORFAELLEUNDVORKOMMNISSE,
+    component: EreignisseView,
     meta: {},
   },
   {

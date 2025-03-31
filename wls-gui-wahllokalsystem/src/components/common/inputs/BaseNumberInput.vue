@@ -6,6 +6,8 @@
     clearable
     variant="solo"
     :rules="props.rules"
+    type="number"
+    hide-spin-buttons
   >
   </v-text-field>
 </template>

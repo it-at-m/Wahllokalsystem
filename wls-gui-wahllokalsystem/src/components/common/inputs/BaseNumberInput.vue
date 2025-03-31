@@ -26,10 +26,14 @@ const props = defineProps({
     required: false,
     default: [],
   },
+  modelValue: {
+    type: Number,
+    required: false,
+    default: null,
+  },
 });
 
-const modelValue = defineModel({ type: Number });
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits<{ "update:modelValue": [value: number] }>();
 
 const currencyInputOptions = computed(() => {
   return {
@@ -44,13 +48,15 @@ const currencyInputOptions = computed(() => {
 // formattedValue avoids, that characters can be typed
 const { inputRef, formattedValue, setValue } = useCurrencyInput(
   currencyInputOptions.value,
-  false // would emit event "change" instead of "update:modelValue" + would be triggered every time the field is clicked into or left
+  // disable autoEmit: `true` would emit event "change" instead of "update:modelValue" + would be triggered every time the field is clicked into or left
+  // see: https://dm4t2.github.io/vue-currency-input/guide.html#auto-emit
+  false
 );
 
 // if the value of the input is changed externally (and not only by user input)
 // see https://dm4t2.github.io/vue-currency-input/guide.html#external-props-changes.
 watch(
-  () => modelValue.value,
+  () => props.modelValue,
   (value) => {
     setValue(value === undefined ? null : value);
   }
@@ -58,7 +64,7 @@ watch(
 
 watch(formattedValue, (newValue) => {
   if (newValue) {
-    emit("update:modelValue", +newValue);
+    emit("update:modelValue", Number.parseInt(newValue));
   }
 });
 </script>

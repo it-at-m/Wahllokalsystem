@@ -27,6 +27,12 @@ const meta: Meta<typeof BaseNumberInput> = {
         disable: true,
       },
     },
+    // @ts-expect-error/disabled-because-if-omitted-it-will-still-be-displayed-in-storybook
+    "update:modelValue": {
+      table: {
+        disable: true,
+      },
+    },
     "onUpdate:modelValue": {
       name: "update:modelValue", // to show name of event not eventHandler
       description:

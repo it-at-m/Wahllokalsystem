@@ -1,4 +1,3 @@
-import type { EreignisseWrite } from "@/types/vorfaelleundvorkommnisse/EreignisseWrite.ts";
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 import {
@@ -25,7 +24,7 @@ export function useEreignisService() {
 
   async function saveEreignisse(
     wahlbezirkID: string,
-    ereignisse: EreignisseWrite
+    ereignisse: WahlbezirkEreignisse
   ): Promise<void> {
     const ereignisseWriteDto = toDto(ereignisse);
 

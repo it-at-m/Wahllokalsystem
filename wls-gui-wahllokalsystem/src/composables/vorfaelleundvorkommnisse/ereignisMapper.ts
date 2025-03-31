@@ -4,7 +4,6 @@ import type {
   WahlbezirkEreignisseDTO,
 } from "@/api/wls-clients/generated-vorfaelleundvorkommnisse-api";
 import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
-import type { EreignisseWrite } from "@/types/vorfaelleundvorkommnisse/EreignisseWrite.ts";
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 import { EreignisDTOEreignisartEnum } from "@/api/wls-clients/generated-vorfaelleundvorkommnisse-api";
@@ -26,7 +25,7 @@ export function useEreignisMapper() {
     };
   }
 
-  function toDto(ereignisseModel: EreignisseWrite): EreignisseWriteDTO {
+  function toDto(ereignisseModel: WahlbezirkEreignisse): EreignisseWriteDTO {
     const ereignisseAsDto = ereignisseModel.ereigniseintraege?.map(
       (ereignisModel) => ereignisModelToEreignisDto(ereignisModel)
     );

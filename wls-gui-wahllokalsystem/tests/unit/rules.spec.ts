@@ -1,6 +1,12 @@
 import { describe, expect, test } from "vitest";
 
-import { MAX_LENGTH, MIN_LENGTH, REQUIRED } from "@/util/rules";
+import {
+  MAX_LENGTH,
+  MAX_NUMBER,
+  MIN_LENGTH,
+  MIN_NUMBER,
+  REQUIRED,
+} from "@/util/rules";
 
 describe("Validation rules", () => {
   describe("RULE_MAX_LENGTH", () => {
@@ -22,6 +28,28 @@ describe("Validation rules", () => {
     });
     test("should_returnTrue_when_inputLongEnough", () => {
       expect(rule("stringLongEnough")).toStrictEqual(true);
+    });
+  });
+
+  describe("RULE_MIN_NUMBER", () => {
+    const rule = MIN_NUMBER(5);
+
+    test("should_returnErrorMessage_when_inputTooSmall", () => {
+      expect(rule(2)).toBeTypeOf("string");
+    });
+    test("should_returnTrue_when_inputBigEnough", () => {
+      expect(rule(7)).toStrictEqual(true);
+    });
+  });
+
+  describe("RULE_MAX_NUMBER", () => {
+    const rule = MAX_NUMBER(5);
+
+    test("should_returnErrorMessage_when_inputTooBig", () => {
+      expect(rule(7)).toBeTypeOf("string");
+    });
+    test("should_returnTrue_when_inputSmallEnough", () => {
+      expect(rule(2)).toStrictEqual(true);
     });
   });
 

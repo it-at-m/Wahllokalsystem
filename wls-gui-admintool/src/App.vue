@@ -49,6 +49,9 @@
         <v-list-item :to="{ name: ROUTES_GETSTARTED }">
           <v-list-item-title>Get started</v-list-item-title>
         </v-list-item>
+        <v-list-item :to="{ name: ROUTES_INIT_WAHLTAG }">
+          <v-list-item-title>Init Wahltage</v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-main>
@@ -86,7 +89,11 @@ import {
 } from "vuetify/components";
 
 import { getUser } from "@/api/user-client";
-import { APPSWITCHER_URL, ROUTES_GETSTARTED } from "@/constants";
+import {
+  APPSWITCHER_URL,
+  ROUTES_GETSTARTED,
+  ROUTES_INIT_WAHLTAG,
+} from "@/constants";
 import { useUserStore } from "@/stores/user";
 import User, { UserLocalDevelopment } from "@/types/User";
 

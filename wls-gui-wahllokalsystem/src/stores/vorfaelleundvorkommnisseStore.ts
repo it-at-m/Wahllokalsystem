@@ -18,6 +18,14 @@ export const useEreignisStore = defineStore(storeID, () => {
     WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse()
   );
 
+  function addEreignis() {
+    wahlbezirkEreignisse.value.ereigniseintraege?.push({
+      uhrzeit: new Date(),
+      beschreibung: "",
+      ereignisart: "VORFALL",
+    });
+  }
+
   async function loadEreignisse() {
     const currentUserWahlbezirkID = getUsersWahlbezirkID();
     if (currentUserWahlbezirkID) {
@@ -40,5 +48,6 @@ export const useEreignisStore = defineStore(storeID, () => {
     wahlbezirkEreignisse,
     loadEreignisse,
     sendEreignisse,
+    addEreignis,
   };
 });

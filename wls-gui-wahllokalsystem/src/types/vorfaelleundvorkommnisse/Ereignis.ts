@@ -2,14 +2,14 @@ import type { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisa
 
 export interface Ereignis {
   beschreibung?: string;
-  uhrzeit?: string;
+  uhrzeit?: Date;
   ereignisart?: EreignisartEnum;
 }
 
 export class EreignisBuilder implements Ereignis {
   constructor(
     public beschreibung?: string,
-    public uhrzeit?: string,
+    public uhrzeit?: Date,
     public ereignisart?: EreignisartEnum
   ) {}
 
@@ -20,7 +20,7 @@ export class EreignisBuilder implements Ereignis {
   static createComplete(): EreignisBuilder {
     return new EreignisBuilder(
       "Ein Stift ist runter gefallen",
-      "12:33",
+      new Date("2025-03-31T15:15:00.000"),
       "VORFALL"
     );
   }
@@ -30,7 +30,7 @@ export class EreignisBuilder implements Ereignis {
     return this;
   }
 
-  withUhrzeit(uhrzeit: string) {
+  withUhrzeit(uhrzeit: Date) {
     this.uhrzeit = uhrzeit;
     return this;
   }

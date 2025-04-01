@@ -1,30 +1,99 @@
 <template>
-  <v-table data-test="tableWahlvorstandsMitglieder">
-    <thead>
-      <tr>
-        <th>Uhrzeit</th>
-        <th>Beschreibung</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr
-        v-for="(ereignis, index) in wahlbezirkEreignisse.ereigniseintraege"
-        :key="index"
-      >
-        <td data-test="textUhrzeit">{{ ereignis.uhrzeit }}</td>
-        <td data-test="textBeschreibung">{{ ereignis.beschreibung }}</td>
-      </tr>
-    </tbody>
-  </v-table>
+  <div>
+    <v-row
+      v-for="(ereignis, index) in wahlbezirkEreignisse.ereigniseintraege"
+      :key="index"
+    >
+      <v-col cols="1">{{ index + 1 }}</v-col>
+      <v-col cols="2">
+        <v-text-field
+          :model-value="toHhMm(ereignis.uhrzeit)"
+          label="Uhrzeit"
+          type="time"
+          hide-details
+          @update:model-value="
+            (value) => onEreignisUhrzeitChanged(ereignis, value, index)
+          "
+        ></v-text-field>
+      </v-col>
+      <v-col>
+        <v-textarea
+          v-model="ereignis.beschreibung"
+          rows="1"
+          auto-grow
+          label="Beschreibung"
+          hide-details
+          @update:model-value="(value) => (ereignis.beschreibung = value)"
+        ></v-textarea>
+      </v-col>
+      <v-col cols="1">
+        <v-icon
+          icon="$delete"
+          title="Löschen"
+          @click="removeEreignis(index)"
+        >
+        </v-icon>
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { VTable } from "vuetify/components";
+import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 
+import { storeToRefs } from "pinia";
+import { computed, onMounted } from "vue";
+import { VCol, VIcon, VRow, VTextarea, VTextField } from "vuetify/components";
+
+import useFormatter from "@/composables/common/formatter.ts";
 import { useEreignisStore } from "@/stores/vorfaelleundvorkommnisseStore.ts";
 
+const { toHhMm } = useFormatter();
 const ereignisStore = useEreignisStore();
-const wahlbezirkEreignisse = computed(() => ereignisStore.wahlbezirkEreignisse);
+const { wahlbezirkEreignisse } = storeToRefs(ereignisStore);
+
+const addEreignis = () => {
+  wahlbezirkEreignisse.value.ereigniseintraege?.push({
+    uhrzeit: new Date(),
+    beschreibung: "",
+  });
+};
+
+const removeEreignis = (index: number) => {
+  wahlbezirkEreignisse.value.ereigniseintraege?.splice(index, 1);
+};
+
+onMounted(() => {
+  loadEreignisse();
+});
+
+/**
+ * Loads Ereignisse from the backend and sets it in the store.
+ */
+function loadEreignisse(): void {
+  ereignisStore.loadEreignisse();
+}
+
+function onEreignisUhrzeitChanged(
+  ereignis: Ereignis,
+  uhrzeit: String,
+  index: number
+) {
+  console.log(
+    `ereignis.uhrzeit:  -> ${ereignis.uhrzeit}; uhrzeit:  -> ${uhrzeit}; Typ: -> ${typeof ereignis.uhrzeit}`
+  );
+  const timeInHoursAndMinutes = uhrzeit
+    .split(":")
+    .map((s) => Number.parseInt(s));
+  const currentUhrzeit = ereignis.uhrzeit;
+  currentUhrzeit?.setHours(timeInHoursAndMinutes[0], timeInHoursAndMinutes[1]);
+  console.log(currentUhrzeit);
+  //ereignis.uhrzeit = currentUhrzeit;
+  // ereignisStore.wahlbezirkEreignisse.value.ereigniseintraege[index].uhrzeit =
+  //   currentUhrzeit;
+  if (wahlbezirkEreignisse.value.ereigniseintraege) {
+    wahlbezirkEreignisse.value.ereigniseintraege[index].uhrzeit =
+      currentUhrzeit;
+  }
+}
 </script>

@@ -37,7 +37,7 @@ export function useEreignisMapper() {
   function ereignisDtoToEreignisModel(ereignisDto: EreignisDTO): Ereignis {
     return {
       beschreibung: ereignisDto.beschreibung ?? "",
-      uhrzeit: ereignisDto.uhrzeit ?? "",
+      uhrzeit: ereignisDto.uhrzeit ? new Date(ereignisDto.uhrzeit) : undefined,
       ereignisart: ereignisDto.ereignisart
         ? ereignisartDtoToEreignisartModel(ereignisDto.ereignisart)
         : undefined,
@@ -47,7 +47,7 @@ export function useEreignisMapper() {
   function ereignisModelToEreignisDto(ereignisModel: Ereignis): EreignisDTO {
     return {
       beschreibung: ereignisModel.beschreibung ?? "",
-      uhrzeit: ereignisModel.uhrzeit ?? "",
+      uhrzeit: ereignisModel.uhrzeit?.toJSON(),
       ereignisart: ereignisModel.ereignisart
         ? ereignisartModelToEreignisartDto(ereignisModel.ereignisart)
         : undefined,

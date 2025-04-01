@@ -85,12 +85,12 @@ function onEreignisUhrzeitChanged(
   const timeInHoursAndMinutes = uhrzeit
     .split(":")
     .map((s) => Number.parseInt(s));
-  const currentUhrzeit = ereignis.uhrzeit;
+  const currentUhrzeit = ereignis.uhrzeit
+    ? new Date(ereignis.uhrzeit)
+    : undefined;
   currentUhrzeit?.setHours(timeInHoursAndMinutes[0], timeInHoursAndMinutes[1]);
   console.log(currentUhrzeit);
-  //ereignis.uhrzeit = currentUhrzeit;
-  // ereignisStore.wahlbezirkEreignisse.value.ereigniseintraege[index].uhrzeit =
-  //   currentUhrzeit;
+
   if (wahlbezirkEreignisse.value.ereigniseintraege) {
     wahlbezirkEreignisse.value.ereigniseintraege[index].uhrzeit =
       currentUhrzeit;

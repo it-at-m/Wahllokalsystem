@@ -26,7 +26,8 @@ public class BeanstandeteWahlbriefeService {
         "hasAuthority('Briefwahl_BUSINESSACTION_GetBeanstandeteWahlbriefe')"
                 + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
     )
-    public BeanstandeteWahlbriefeModel getBeanstandeteWahlbriefe(@P("param") @NotNull final BeanstandeteWahlbriefeReference beanstandeteWahlbriefeReference) {
+    public BeanstandeteWahlbriefeModel getBeanstandeteWahlbriefe(
+            @P("param") @NotNull final BeanstandeteWahlbriefeReferenceModel beanstandeteWahlbriefeReference) {
         log.info("#getBeanstandeteWahlbriefe");
         beanstandeteWahlbriefeValidator.valideReferenceOrThrow(beanstandeteWahlbriefeReference);
 

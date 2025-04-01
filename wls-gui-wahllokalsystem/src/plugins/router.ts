@@ -8,6 +8,7 @@ import {
   EXAMPLE_ROUTES_NEWROUTE,
   EXAMPLE_ROUTES_NOTFOUND,
   EXAMPLE_VALIDATION,
+  PDF_EXAMPLE,
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
   TOAST,
@@ -15,6 +16,7 @@ import {
 import ExampleBackendCommunicationView from "@/views/ExampleBackendCommunicationView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
 import ExampleNewRouteView from "@/views/ExampleNewRouteView.vue";
+import ExamplePrintPdfView from "@/views/ExamplePrintPdfView.vue";
 import ExampleToastView from "@/views/ExampleToastView.vue";
 import ExampleValidation from "@/views/ExampleValidation.vue";
 import HomeView from "@/views/HomeView.vue";
@@ -63,6 +65,11 @@ const routes = [
     path: "/toast-example",
     name: TOAST,
     component: ExampleToastView,
+  },
+  {
+    path: "/pdf-example",
+    name: PDF_EXAMPLE,
+    component: ExamplePrintPdfView,
   },
 ];
 

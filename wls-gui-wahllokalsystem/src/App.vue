@@ -103,6 +103,26 @@
               </router-link>
             </template>
           </v-tooltip>
+          <v-tooltip
+            location="bottom"
+            text="PDF printing example"
+          >
+            <template #activator="{ props }">
+              <router-link
+                v-bind="props"
+                :to="{ name: PDF_EXAMPLE }"
+              >
+                <v-btn
+                  icon="$pdf"
+                  variant="text"
+                  density="comfortable"
+                  size="x-large"
+                  color="white"
+                >
+                </v-btn>
+              </router-link>
+            </template>
+          </v-tooltip>
         </v-col>
       </v-row>
     </v-app-bar>
@@ -153,6 +173,7 @@ import {
   EXAMPLE_ROUTES_BACKEND,
   EXAMPLE_ROUTES_NEWROUTE,
   EXAMPLE_VALIDATION,
+  PDF_EXAMPLE,
   ROUTE_WAHLVORSTAND,
   TOAST,
 } from "@/constants";

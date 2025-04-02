@@ -76,6 +76,7 @@ Um die Daten, die bisher nicht erfolgreich an das Backend übermittelt werden ko
 - beim Senden der Ergebnismeldung (Schnellmeldung oder Niederschrift) die sog. Vordergrund-Synchronisation);
 - beim Ausloggen des Benutzers.
 
+ ![Skizze Offline-Syncer und Strategy](/offlinesyncer/offlinekonzept.png)
 #### Hintergrundsynchronisation beim offline-online Wechsel
 
 Wenn der Wahllokalclient den Zustand von _Offline_ zu _Online_ wechselt, wird der `Offline-Syncer` aktiv.

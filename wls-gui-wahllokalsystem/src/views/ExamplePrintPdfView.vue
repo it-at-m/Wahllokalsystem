@@ -65,19 +65,11 @@
       >
         Print
       </v-btn>
-      <v-btn
-        class="ma-2"
-        @click="printDocumentJspdf"
-        color="primary"
-      >
-        Print with jsPdf
-      </v-btn>
     </v-row>
   </div>
 </template>
 
 <script setup lang="ts">
-import { jsPDF } from "jspdf";
 import { ref } from "vue";
 import {
   VAutocomplete,
@@ -129,82 +121,6 @@ class Data {
     this.toppings = toppings;
     this.hungerIndex = hungerIndex;
   }
-}
-
-function printDocumentJspdf() {
-  let data = new Data(
-    "Heute gibt es Leckereien!",
-    cake.value,
-    cakeNumber.value,
-    toppings.value,
-    hungerIndex.value
-  );
-
-  const doc = new jsPDF();
-  console.log(doc.getFontList());
-
-  doc.setFont("helvetica", "bold");
-  doc.text("Heute gibt es Leckereien!", 10, 10);
-
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(15);
-  doc.text(
-    "Für deinen perfekten Nachtisch hast du\nfolgende Einstellungen getroffen:",
-    10,
-    20
-  );
-
-  doc.text("Kuchen: " + data.cake, 10, 40);
-  doc.text("Stücke: " + data.cakeNumber, 10, 50);
-  doc.text("Toppings: " + data.toppings, 10, 60);
-  doc.text(
-    "Hunger Index:\n" + data.hungerIndex[0] + " - " + data.hungerIndex[1],
-    10,
-    70
-  );
-
-  if (data.hungerIndex[1] <= 20) {
-    doc.text(
-      "Du scheinst satt zu sein. Ist noch was vom Kuchen übrig?",
-      10,
-      90
-    );
-  } else if (data.hungerIndex[0] >= 50) {
-    doc.text(
-      "Du bist ziemlich hungrig, du solltest dir\njetzt einen Kuchen backen! Und am\nbesten gleich noch was für deine\nKollegen mitbringen",
-      10,
-      90
-    );
-  } else {
-    doc.text("", 10, 130);
-  }
-
-  doc.setFont("helvetica", "bold");
-  doc.text("Kalorienliste", 150, 20, { align: "right" }, null);
-
-  doc.setFont("helvetica", "normal");
-  const tableData = desserts.value.map((item) => ({
-    Name: item.name.toString(),
-    Calories: item.calories.toString(),
-  }));
-  doc.table(
-    117,
-    30,
-    tableData,
-    [
-      { name: "Name", prompt: "Name", width: 70, align: "left", padding: 1 },
-      {
-        name: "Calories",
-        prompt: "Calories",
-        width: 100,
-        align: "left",
-        padding: 1,
-      },
-    ],
-    { autoSize: true }
-  );
-
-  doc.save();
 }
 
 function printDocument() {

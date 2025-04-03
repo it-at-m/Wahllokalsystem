@@ -145,7 +145,6 @@ function printDocument() {
 
   if (printWindow) {
     printWindow.document.body.innerHTML = htmlFromData(data);
-    printWindow.focus();
     printWindow.print();
     printWindow.close();
   }

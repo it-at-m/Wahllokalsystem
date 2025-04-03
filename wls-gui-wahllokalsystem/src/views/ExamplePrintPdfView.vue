@@ -1,5 +1,10 @@
 <template>
   <div>
+    <v-row>
+      <v-col class="text-center">
+        <h2>This view shows how printing pdfs will work</h2>
+      </v-col>
+    </v-row>
     <v-row class="pa-2">
       <v-col>
         <v-table

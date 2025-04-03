@@ -8,7 +8,7 @@
           :items="wahltage"
           :loading="wahltageAreLoading"
         />
-        <base-refresh-icon-button
+        <base-icon-button-refresh
           class="ml-2"
           @click="onRefreshWahltageClicked"
         />
@@ -33,7 +33,7 @@ import { onMounted, ref } from "vue";
 import { VCard, VCardText, VCardTitle } from "vuetify/components";
 
 import BaseAutocompleteWahltag from "@/components/common/BaseAutocompleteWahltag.vue";
-import BaseRefreshIconButton from "@/components/common/BaseRefreshIconButton.vue";
+import BaseIconButtonRefresh from "@/components/common/BaseIconButtonRefresh.vue";
 import useWahltagService from "@/composables/wahltag/wahltagService.ts";
 
 const { getWahltage } = useWahltagService();

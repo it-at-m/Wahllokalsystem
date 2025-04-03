@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3";
 
 import { fn } from "@storybook/test";
 
-import { default as StoryComponent } from "@/components/common/BaseRefreshIconButton.vue";
+import { default as StoryComponent } from "@/components/common/BaseIconButtonRefresh.vue";
 
 const meta: Meta<typeof StoryComponent> = {
   component: StoryComponent,

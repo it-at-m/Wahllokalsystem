@@ -148,10 +148,7 @@ werden:
 ::: code-group
 
 ```typescript [useBroadcastService.ts]
-import {
-  BroadcastControllerApi,
-  Configuration,
-} from "@/api/wls-clients/generated-broadcast-api";
+import { BroadcastControllerApi, Configuration } from "@/api/wls-clients/generated-broadcast-api";
 import { BROADCAST_SERVICE_API_URL } from "@/constants";
 
 export function useBroadcastService() {
@@ -164,32 +161,27 @@ export function useBroadcastService() {
 ```typescript [constants.ts]
 const WLS_SERVICE_API_URL = "/api/";
 
-export const BROADCAST_SERVICE_API_URL =
-  WLS_SERVICE_API_URL + "broadcast-service";
+export const BROADCAST_SERVICE_API_URL = WLS_SERVICE_API_URL + "broadcast-service";
 ```
 
 :::
 
 Die Api-Aufrufe erfolgen dann zum Beispiel so:
 
-```typescript {10,18}
+```typescript {10,17}
 // useBroadcastService.ts
-import {
-  BroadcastControllerApi,
-  Configuration,
-} from "@/api/wls-clients/generated-broadcast-api";
+import { BroadcastControllerApi, Configuration } from "@/api/wls-clients/generated-broadcast-api";
 import { BROADCAST_SERVICE_API_URL } from "@/constants";
 
 export function useBroadcastService() {
   const broadcastCA = new BroadcastControllerApi(/* ... */);
 
-  async function getMessage(wahlbezirkID: string) { // [!code focus:23]
-    try {
+  async function getMessage(wahlbezirkID: string) { 
+    try { // [!code focus:15]
       const response = await broadcastCA.getMessage(wahlbezirkID);
       if (response.status == 204) {
         return { message: "", error: "Es konnten keine Daten gefunden werden" };
       }
-
       const messageDTO = response.data;
       const nachrichtID = messageDTO.oid;
       try {
@@ -200,13 +192,11 @@ export function useBroadcastService() {
           error: "Es ist ein Fehler beim Lesen der Nachricht aufgetreten",
         };
       }
-
       return { message: messageDTO.nachricht, error: "" };
     } catch (e) {
       return { message: "", error: (e as Error).message };
     }
   }
-
   return { getMessage };
 }
 ```
@@ -214,7 +204,7 @@ export function useBroadcastService() {
 Im Fall eines `400`er Codes in der Response, was in den meisten Fällen einer WlsException entspricht, können diese Werte
 dann wie folgt aufgerufen und weiterverarbeitet werden:
 
-```typescript {21-24}
+```typescript {24-28}
 // useBroadcastService.ts
 import type { BroadcastMessageDTO } from "@/api/wls-clients/generated-broadcast-api";
 
@@ -230,31 +220,17 @@ import { BROADCAST_SERVICE_API_URL } from "@/constants";
 export function useBroadcastService() {
   const broadcastCA = new BroadcastControllerApi(/* ... */);
 
-  async function getMessage(wahlbezirkID: string) {
-    /* ... */
-  }
+  async function postMessage(nachricht: string, wahlbezirkIDs: string[]) { 
+    const broadcastMessageDTO = { wahlbezirkIDs, nachricht } as BroadcastMessageDTO;
 
-  async function postMessage(nachricht: string, wahlbezirkIDs: string[]) {
-    // [!code focus:20]
-    const broadcastMessageDTO = {
-      wahlbezirkIDs,
-      nachricht,
-    } as BroadcastMessageDTO;
-
-    try {
+    try { // [!code focus:12]
       await broadcastCA.broadcast(broadcastMessageDTO);
       return { error: "" };
     } catch (e) {
       if (axios.isAxiosError(e)) {
         if (e.response) {
           const error: WLSError = e.response.data;
-          const errorMessage =
-            error.service +
-            " - " +
-            error.message +
-            " (Code: " +
-            error.code +
-            ")";
+          const errorMessage = error.service + " - " + error.message + " (Code: " + error.code + ")";
           return { error: errorMessage };
         } else {
           return { error: "Fehler beim Senden der Broadcast Nachricht" };
@@ -264,11 +240,7 @@ export function useBroadcastService() {
       }
     }
   }
-
-  return {
-    getMessage,
-    postMessage,
-  };
+  return { getMessage, postMessage };
 }
 ```
 

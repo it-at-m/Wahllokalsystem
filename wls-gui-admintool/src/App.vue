@@ -53,7 +53,7 @@
           :to="{ name: ROUTES_INIT_WAHLTAG }"
           data-test="navigation-item-init-wahltage"
         >
-          <v-list-item-title>Init Wahltage</v-list-item-title>
+          <v-list-item-title>Benutzer bearbeiten</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>

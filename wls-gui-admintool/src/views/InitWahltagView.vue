@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>WahltagEvent initialisieren</v-card-title>
+    <v-card-title>Benutzer bearbeiten</v-card-title>
     <v-card-text>
       <div class="d-flex justify-between flex-wrap">
         <base-autocomplete-wahltag

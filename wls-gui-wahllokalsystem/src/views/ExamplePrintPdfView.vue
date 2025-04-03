@@ -60,11 +60,10 @@
     >
       <v-btn
         class="ma-2"
-        @click="printDocumentDepr"
+        @click="printDocument"
         color="primary"
       >
-        Print with deprecated <br />
-        document.write()
+        Print
       </v-btn>
       <v-btn
         class="ma-2"
@@ -92,10 +91,10 @@ import {
 
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 
-const cake = defineModel<String>("cake", { default: "srgrygedgyd" });
+const cake = ref("");
 const cakeNumber = ref(0);
-const toppings = ref([]);
-const hungerIndex = ref([10, 35]);
+const toppings = ref(null);
+const hungerIndex = ref([]);
 
 const desserts = ref([
   { name: "Frozen Yogurt", calories: 159 },
@@ -114,14 +113,14 @@ class Data {
   title: String;
   cake: String;
   cakeNumber: number;
-  toppings: Array<String>;
+  toppings: Array<String> | null;
   hungerIndex: Array<number>;
 
   constructor(
     title: String,
     cake: String,
     cakeNumber: number,
-    toppings: Array<String>,
+    toppings: Array<String> | null,
     hungerIndex: Array<number>
   ) {
     this.title = title;
@@ -208,7 +207,7 @@ function printDocumentJspdf() {
   doc.save();
 }
 
-function printDocumentDepr() {
+function printDocument() {
   let data = new Data(
     "Heute gibt es Leckereien!",
     cake.value,
@@ -224,10 +223,7 @@ function printDocumentDepr() {
   );
 
   if (printWindow) {
-    // document.write() is deprecated!
-    printWindow.document.write(htmlFromData(data));
-
-    printWindow.document.close();
+    printWindow.document.body.innerHTML = htmlFromData(data);
     printWindow.focus();
     printWindow.print();
     printWindow.close();
@@ -235,124 +231,136 @@ function printDocumentDepr() {
 }
 
 function htmlFromData(data: Data) {
-  return `
-            <!DOCTYPE html>
-            <html lang="de">
-            <head>
-                <meta charset="utf-8"/>
-                <style>
-                    /****** Print Header ******/
-                    @page {
-                        size: auto;
-                        margin-top: 0.0cm;
-                        margin-left: 0;
-                        margin-right: 0;
-                    }
+  let htmlString;
 
-                    @media print {
-                        div.footer {
-                            position: fixed;
-                            bottom: 0;
-                            left: 1cm;
-                            font-size: x-small;
-                            z-index: 0;
-                        }
-                    }
+  const htmlOpeningTagsAndStyle = `
+    <!DOCTYPE html>
+      <html lang="de">
+      <head>
+        <meta charset="utf-8"/>
+        <style>
+          /****** Print Header ******/
+          @page {
+              size: auto;
+              margin-top: 0.0cm;
+              margin-left: 0;
+              margin-right: 0;
+          }
 
-                    /****** Default Value Tags ******/
-                    body {
-                        max-width: 21cm;
-                        margin: 0;
-                        font-size: 9pt;
-                        writing-mode: lr-tb;
-                        text-align: left;
-                        font-family: Arial, serif;
-                    }
+          @media print {
+               div.footer {
+                   position: fixed;
+                   bottom: 0;
+                   left: 1cm;
+                   font-size: x-small;
+                   z-index: 0;
+               }
+           }
 
-                    html, body {
-                        overflow-x: hidden;
-                    }
+          /****** Default Value Tags ******/
+          body {
+              max-width: 21cm;
+              margin: 0;
+              font-size: 9pt;
+              writing-mode: lr-tb;
+              text-align: left;
+              font-family: Arial, serif;
+          }
 
-                    /****** Table ******/
-                    table {
-                        border-collapse: collapse;
-                    }
+          html, body {
+              overflow-x: hidden;
+          }
 
-                    .table > tr > th,
-                    .table > tr > td {
-                        padding-top: 2px;
-                        padding-bottom: 2px;
-                    }
+          /****** Table ******/
+          table {
+              border-collapse: collapse;
+          }
 
-                    th,
-                    td {
-                        font-weight: normal;
-                        padding: 0.12cm 0.2cm;
-                        border: 1px solid #000000;
-                    }
+          .table > tr > th,
+          .table > tr > td {
+              padding-top: 2px;
+              padding-bottom: 2px;
+          }
 
-                    /** styles **/
-                    .horizontal {
-                        display: flex;
-                    }
+          th,
+          td {
+              font-weight: normal;
+              padding: 0.12cm 0.2cm;
+              border: 1px solid #000000;
+          }
 
-                    .vertical {
-                        display: flex;
-                        flex-direction: column;
-                    }
+          /** styles **/
+          .horizontal {
+              display: flex;
+          }
 
-                    .spaceBetween {
-                        justify-content: space-between;
-                    }
+          .vertical {
+              display: flex;
+              flex-direction: column;
+          }
 
-                    .widthLeft {
-                        width: 10.95cm;
-                    }
+          .spaceBetween {
+              justify-content: space-between;
+          }
 
-                    .widthRightTop {
-                        width: 6.7cm;
-                    }
+          .widthLeft {
+              width: 10.95cm;
+          }
 
-                    .margin-top {
-                        margin-top: 1.5cm;
-                    }
-                    .margin-leftright {
-                        margin-left: 1cm;
-                        margin-right: 1cm;
-                    }
-                </style>
-                <title>Testdruck PDF</title>
-            </head>
-            <body>
-                <h1 class="margin-top margin-leftright">
-                ${data.title}
-                </h1>
-                <div class="horizontal spaceBetween margin-leftright">
-                  <div class="vertical widthLeft">
-                      <p>Für deinen perfekten Nachtisch hast du folgende Einstellungen getroffen:</p>
-                      <br />
-                      <p>Kuchen: ${data.cake}</p>
-                      <p>Stücke: ${data.cakeNumber}</p>
-                      <p>Toppings: ${data.toppings}</p>
-                      <p>Hunger Index: ${data.hungerIndex[0]} - ${data.hungerIndex[1]}</p>
-                      <p>${
-                        data.hungerIndex[1] <= 20
-                          ? "Du scheinst satt zu sein. Ist noch was vom Kuchen übrig?"
-                          : data.hungerIndex[0] >= 50
-                            ? "Du bist ziemlich hungrig, du solltest dir jetzt einen Kuchen backen! Und am besten gleich noch was für deine Kollegen mitbringen"
-                            : ""
-                      }</p>
-                      <br />
-                      <br />
-                  </div>
-                  <div class="vertical spaceBetween widthRightTop marginTopBottom_1">
-                      <h2>Kalorienliste</h2>
-                      <span>${document.getElementById("table").innerHTML}</span>
-                  </div>
-                </div>
-                </div>
-            </body>
-            </html>
-            `;
+          .widthRightTop {
+              width: 6.7cm;
+          }
+
+          .margin-top {
+              margin-top: 1.5cm;
+          }
+          .margin-leftright {
+              margin-left: 1cm;
+              margin-right: 1cm;
+          }
+       </style>
+      <title>Testdruck PDF</title>
+    </head>`;
+  htmlString = htmlString + htmlOpeningTagsAndStyle;
+
+  const htmlBodyAndClosingTags = `
+   <body>
+     <h1 class="margin-top margin-leftright">${data.title ? data.title : "Alternativer Titel"}</h1>
+     <div class="horizontal spaceBetween margin-leftright">
+       <div class="vertical widthLeft">
+         <p>Für deinen perfekten Nachtisch hast du folgende Einstellungen getroffen: mehr text um zu sehen was passiert wenn der platz nicht reicht</p>
+         <br />
+         <p>Kuchen: ${data.cake ? data.cake : "Standardkuchen"}</p>
+         <p>Stücke: ${data.cakeNumber ? data.cakeNumber : "2 schaffst du bestimmt!"}</p>
+         <p>Toppings: ${data.toppings ? data.toppings : "Weniger ist mehr."}</p>
+         <p>Hunger Index: ${data.hungerIndex[0] ? data.hungerIndex[0] : "Hier ist was schief gelaufen."} - ${data.hungerIndex[1] ? data.hungerIndex[1] : "Das Messgerät spinnt."}</p>
+         <p>${
+           data.hungerIndex[1] <= 20
+             ? "Du scheinst satt zu sein. Ist noch was vom Kuchen übrig?"
+             : data.hungerIndex[0] >= 50
+               ? "Du bist ziemlich hungrig, du solltest dir jetzt einen Kuchen backen! Und am besten gleich noch was für deine Kollegen mitbringen"
+               : ""
+         }
+         </p>
+         <br />
+         <br />
+       </div>
+       <div class="vertical spaceBetween widthRightTop marginTopBottom_1">
+         <h2>Kalorienliste</h2>
+         <span>
+         ${(() => {
+           const tableElement = document.getElementById("table");
+           return tableElement
+             ? tableElement.innerHTML
+             : "Keine Tabellendaten gefunden";
+         })()}
+         </span>
+       </div>
+     </div>
+   </body>
+   </html>`;
+  htmlString = htmlString + htmlBodyAndClosingTags;
+
+  return htmlString;
 }
 </script>

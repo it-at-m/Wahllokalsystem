@@ -4,15 +4,6 @@ import type { Wahltag } from "@/types/wahltag/Wahltag.ts";
 import { type WahltagEvent } from "@/types/wahltag/WahltagEvent.ts";
 
 export function useWahltagMapper() {
-  function mapWahltagModelToWahltagDto(model: Wahltag): WahltagDTO {
-    return {
-      nummer: "",
-      wahltagID: "",
-      wahltag: model.wahltag,
-      beschreibung: "",
-    };
-  }
-
   function mapGroupedWahltagDtosToWahltage(
     groupedDtos: Map<string, WahltagDTO[]>
   ): Wahltag[] {
@@ -43,7 +34,6 @@ export function useWahltagMapper() {
   }
 
   return {
-    wahltagModelToWahltagDto: mapWahltagModelToWahltagDto,
     mapGroupedWahltagDtosToWahltage,
   };
 }

@@ -21,7 +21,7 @@ const meta: Meta<typeof BaseAutocompleteWahltag> = {
       },
       table: {
         category: "props",
-        type: { summary: "WahltagDTO" },
+        type: { summary: "Wahltag" },
       },
     },
     "onUpdate:modelValue": {

@@ -7,7 +7,7 @@ import { default as StoryComponent } from "@/components/common/BaseIconButtonRef
 const meta: Meta<typeof StoryComponent> = {
   component: StoryComponent,
   argTypes: {
-    /* @ts-ignore: error cause not explicit defined as event */
+    /* @ts-expect-error: error cause not explicit defined as event */
     onClick: {
       table: {
         disable: true,
@@ -15,7 +15,7 @@ const meta: Meta<typeof StoryComponent> = {
     },
   },
   args: {
-    /* @ts-ignore: error cause not explicit defined as event */
+    /* @ts-expect-error: error cause not explicit defined as event */
     onClick: fn(),
   },
 };

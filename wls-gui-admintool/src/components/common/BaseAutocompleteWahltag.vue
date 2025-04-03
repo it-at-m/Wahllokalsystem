@@ -6,6 +6,7 @@
     item-title="wahltag"
     v-model="modelValue"
     return-object
+    data-testr="autocompleteWahltage"
   ></v-autocomplete>
 </template>
 

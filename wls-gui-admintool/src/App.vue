@@ -49,7 +49,10 @@
         <v-list-item :to="{ name: ROUTES_GETSTARTED }">
           <v-list-item-title>Get started</v-list-item-title>
         </v-list-item>
-        <v-list-item :to="{ name: ROUTES_INIT_WAHLTAG }">
+        <v-list-item
+          :to="{ name: ROUTES_INIT_WAHLTAG }"
+          data-test="navigation-item-init-wahltage"
+        >
           <v-list-item-title>Init Wahltage</v-list-item-title>
         </v-list-item>
       </v-list>

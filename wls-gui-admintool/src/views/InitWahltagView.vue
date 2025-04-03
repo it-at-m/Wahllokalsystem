@@ -6,6 +6,7 @@
         <base-autocomplete-wahltag
           v-model="wahltagSelected"
           :items="wahltageAsDTO"
+          :loading="wahltageAreLoading"
         />
         <base-refresh-icon-button
           class="ml-2"
@@ -54,6 +55,7 @@ const wahltagModelForSelected = computed(() => {
     return undefined;
   }
 });
+const wahltageAreLoading = ref(false);
 
 onMounted(() => {
   loadWahltage();
@@ -64,6 +66,6 @@ function onRefreshWahltageClicked() {
 }
 
 async function loadWahltage(): Promise<void> {
-  wahltage.value = await getWahltage();
+  wahltage.value = await getWahltage(wahltageAreLoading);
 }
 </script>

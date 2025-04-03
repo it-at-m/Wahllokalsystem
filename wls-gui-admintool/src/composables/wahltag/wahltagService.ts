@@ -1,10 +1,12 @@
 import type { WahltagDTO } from "@/api/wls-clients/generated-admin-api";
 import type { Wahltag } from "@/types/wahltag/Wahltag.ts";
+import type { Ref } from "vue";
 
 import {
   Configuration,
   WahltageControllerApi,
 } from "@/api/wls-clients/generated-admin-api";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWahltagMapper } from "@/composables/wahltag/wahltagMapper.ts";
 import { ADMIN_SERVICE_API_URL } from "@/constants.ts";
 
@@ -15,21 +17,31 @@ export default function useWahltagService() {
     })
   );
   const { mapWahltagDtoToWahltagEvent } = useWahltagMapper();
+  const { addNotification } = useUserNotificationService();
 
-  async function getWahltage(): Promise<Wahltag[]> {
-    const wahltage = await adminWahltageAPI
-      .getWahltage()
-      .then((response) => response.data);
-
-    const wahltageGroupByDatum = groupWahltagDtosByWahltag(wahltage);
+  async function getWahltage(isLoading?: Ref<boolean>): Promise<Wahltag[]> {
+    updateLoading(true, isLoading);
 
     const result: Wahltag[] = [];
-    wahltageGroupByDatum.forEach((wahltage, wahltagDatum) => {
-      result.push({
-        wahltag: wahltagDatum,
-        events: wahltage.map((dto) => mapWahltagDtoToWahltagEvent(dto)),
+    try {
+      const wahltage = await adminWahltageAPI
+        .getWahltage()
+        .then((response) => response.data);
+
+      const wahltageGroupByDatum = groupWahltagDtosByWahltag(wahltage);
+
+      wahltageGroupByDatum.forEach((wahltage, wahltagDatum) => {
+        result.push({
+          wahltag: wahltagDatum,
+          events: wahltage.map((dto) => mapWahltagDtoToWahltagEvent(dto)),
+        });
       });
-    });
+    } catch (error) {
+      addNotification("Wahltage konnten nicht geladen werden", "Error");
+    }
+
+    updateLoading(false, isLoading);
+
     return result;
   }
 
@@ -49,6 +61,12 @@ export default function useWahltagService() {
     }, groupedWahltage);
 
     return groupedWahltage;
+  }
+
+  function updateLoading(loadingState: boolean, loadingRef?: Ref<boolean>) {
+    if (loadingRef) {
+      loadingRef.value = loadingState;
+    }
   }
 
   return {

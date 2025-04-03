@@ -238,7 +238,7 @@ services:
       - services
 
   refarch-gateway:
-    image: ghcr.io/it-at-m/refarch/refarch-gateway:1.4.4@sha256:20b246e8c46b1fe6312119293bc60956228a017dab402b17b14bc86c0cf9fef5
+    image: ghcr.io/it-at-m/refarch/refarch-gateway:1.4.5@sha256:7aa12dd012ab96da2053c509c9c957bc1a1548bcba295a563dc2f0d5bab985f0
     env_file:
       - .env
     ports:

@@ -30,18 +30,30 @@ export const useEreignisStore = defineStore(storeID, () => {
     const currentUserWahlbezirkID = getUsersWahlbezirkID();
     if (currentUserWahlbezirkID) {
       wahlbezirkEreignisse.value = await getEreignisse(currentUserWahlbezirkID);
+      sortEreignisse();
     }
   }
 
   async function sendEreignisse() {
     const currentUserWahlbezirkID = getUsersWahlbezirkID();
     if (currentUserWahlbezirkID) {
+      sortEreignisse();
       await saveEreignisse(currentUserWahlbezirkID, wahlbezirkEreignisse.value);
     }
   }
 
   function getUsersWahlbezirkID(): string | undefined {
     return userStore.getUser?.wahlbezirkID;
+  }
+
+  // Funktion zum Sortieren der Ereignisse
+  function sortEreignisse() {
+    return wahlbezirkEreignisse.value.ereigniseintraege?.sort((a, b) => {
+      const timeA = a.uhrzeit ? new Date(a.uhrzeit).getTime() : Infinity;
+      const timeB = b.uhrzeit ? new Date(b.uhrzeit).getTime() : Infinity;
+
+      return timeA - timeB;
+    });
   }
 
   return {

@@ -42,7 +42,7 @@
 import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 
 import { storeToRefs } from "pinia";
-import { computed, onMounted } from "vue";
+import { onMounted } from "vue";
 import { VCol, VIcon, VRow, VTextarea, VTextField } from "vuetify/components";
 
 import useFormatter from "@/composables/common/formatter.ts";
@@ -51,13 +51,6 @@ import { useEreignisStore } from "@/stores/vorfaelleundvorkommnisseStore.ts";
 const { toHhMm } = useFormatter();
 const ereignisStore = useEreignisStore();
 const { wahlbezirkEreignisse } = storeToRefs(ereignisStore);
-
-const addEreignis = () => {
-  wahlbezirkEreignisse.value.ereigniseintraege?.push({
-    uhrzeit: new Date(),
-    beschreibung: "",
-  });
-};
 
 const removeEreignis = (index: number) => {
   wahlbezirkEreignisse.value.ereigniseintraege?.splice(index, 1);
@@ -79,9 +72,6 @@ function onEreignisUhrzeitChanged(
   uhrzeit: String,
   index: number
 ) {
-  console.log(
-    `ereignis.uhrzeit:  -> ${ereignis.uhrzeit}; uhrzeit:  -> ${uhrzeit}; Typ: -> ${typeof ereignis.uhrzeit}`
-  );
   const timeInHoursAndMinutes = uhrzeit
     .split(":")
     .map((s) => Number.parseInt(s));
@@ -89,7 +79,6 @@ function onEreignisUhrzeitChanged(
     ? new Date(ereignis.uhrzeit)
     : undefined;
   currentUhrzeit?.setHours(timeInHoursAndMinutes[0], timeInHoursAndMinutes[1]);
-  console.log(currentUhrzeit);
 
   if (wahlbezirkEreignisse.value.ereigniseintraege) {
     wahlbezirkEreignisse.value.ereigniseintraege[index].uhrzeit =

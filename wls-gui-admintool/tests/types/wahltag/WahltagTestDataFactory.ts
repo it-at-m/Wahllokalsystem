@@ -10,15 +10,6 @@ const { generateDateRandomAsString, generateNumberRandom } =
   useCommonTestDataFactory();
 
 export function useWahltagTestDataFactory() {
-  function createWahltagDtoComplete(): Builder<WahltagDTO> {
-    return proxyBuilder<WahltagDTO>({
-      wahltag: generateDateRandomAsString(),
-      wahltagID: `wahltagID${generateNumberRandom(3)}`,
-      nummer: `${generateNumberRandom(2)}`,
-      beschreibung: `beschreibung${generateNumberRandom(3)}`,
-    });
-  }
-
   function createWahltagComplete(countEvents = 3): Wahltag {
     const wahltagEvents: WahltagEvent[] = [];
     for (let i = 0; i < countEvents; i++) {
@@ -30,7 +21,16 @@ export function useWahltagTestDataFactory() {
     };
   }
 
-  function initWahltagEvent(): Builder<WahltagEvent> {
+  function prepareWahltagDtoComplete(): Builder<WahltagDTO> {
+    return proxyBuilder<WahltagDTO>({
+      wahltag: generateDateRandomAsString(),
+      wahltagID: `wahltagID${generateNumberRandom(3)}`,
+      nummer: `${generateNumberRandom(2)}`,
+      beschreibung: `beschreibung${generateNumberRandom(3)}`,
+    });
+  }
+
+  function prepareWahltagEvent(): Builder<WahltagEvent> {
     return proxyBuilder<WahltagEvent>({
       wahltagID: `wahltagID${generateNumberRandom(3)}`,
       nummer: `${generateNumberRandom(2)}`,
@@ -49,7 +49,7 @@ export function useWahltagTestDataFactory() {
 
   return {
     createWahltagComplete,
-    createWahltagDtoComplete,
-    initWahltagEvent,
+    prepareWahltagDtoComplete,
+    prepareWahltagEvent,
   };
 }

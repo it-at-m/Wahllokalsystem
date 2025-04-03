@@ -8,7 +8,7 @@ import { describe, expect, it } from "vitest";
 
 import { useWahltagMapper } from "@/composables/wahltag/wahltagMapper.ts";
 
-const { createWahltagDtoComplete } = useWahltagTestDataFactory();
+const { prepareWahltagDtoComplete } = useWahltagTestDataFactory();
 
 const unitUnderTest = useWahltagMapper();
 
@@ -22,16 +22,16 @@ describe("wahltagMapper.ts", () => {
         [
           wahltag1Key,
           [
-            createWahltagDtoComplete().build(),
-            createWahltagDtoComplete().build(),
+            prepareWahltagDtoComplete().build(),
+            prepareWahltagDtoComplete().build(),
           ],
         ],
         [
           wahltag2Key,
           [
-            createWahltagDtoComplete().build(),
-            createWahltagDtoComplete().build(),
-            createWahltagDtoComplete().build(),
+            prepareWahltagDtoComplete().build(),
+            prepareWahltagDtoComplete().build(),
+            prepareWahltagDtoComplete().build(),
           ],
         ],
       ]);

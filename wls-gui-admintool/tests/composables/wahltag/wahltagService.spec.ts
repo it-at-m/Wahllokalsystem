@@ -48,7 +48,7 @@ vi.mock("@/types/wahltag/WahltagEvent.ts", () => ({
   compareByNummerAsc: mockDefinitions.compareByNummerAsc,
 }));
 
-const { createWahltagComplete, createWahltagDtoComplete } =
+const { createWahltagComplete, prepareWahltagDtoComplete } =
   useWahltagTestDataFactory();
 
 const unitUnderTest = useWahltagService();
@@ -60,14 +60,14 @@ describe("wahltagService.ts", () => {
 
   describe("getWahltage", () => {
     it("should_returnWahltageFromTheAdminAPI_when_called", async () => {
-      const mockedResponseGetWahltage = [createWahltagDtoComplete().build()];
+      const mockedResponseGetWahltage = [prepareWahltagDtoComplete().build()];
       const mockGroupedWahltage = new Map<string, WahltagDTO[]>([
-        ["wahltag1", [createWahltagDtoComplete().build()]],
+        ["wahltag1", [prepareWahltagDtoComplete().build()]],
         [
           "wahltag2",
           [
-            createWahltagDtoComplete().build(),
-            createWahltagDtoComplete().build(),
+            prepareWahltagDtoComplete().build(),
+            prepareWahltagDtoComplete().build(),
           ],
         ],
       ]);
@@ -103,14 +103,14 @@ describe("wahltagService.ts", () => {
     });
 
     it("should_changeTheValueOfLoading_when_loadingIsNotUndefined", async () => {
-      const mockedResponseGetWahltage = [createWahltagDtoComplete().build()];
+      const mockedResponseGetWahltage = [prepareWahltagDtoComplete().build()];
       const mockGroupedWahltage = new Map<string, WahltagDTO[]>([
-        ["wahltag1", [createWahltagDtoComplete().build()]],
+        ["wahltag1", [prepareWahltagDtoComplete().build()]],
         [
           "wahltag2",
           [
-            createWahltagDtoComplete().build(),
-            createWahltagDtoComplete().build(),
+            prepareWahltagDtoComplete().build(),
+            prepareWahltagDtoComplete().build(),
           ],
         ],
       ]);

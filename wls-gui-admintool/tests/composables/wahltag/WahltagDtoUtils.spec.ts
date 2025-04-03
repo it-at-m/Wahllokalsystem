@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 
 import { useWahltagDtoUtils } from "@/composables/wahltag/WahltagDtoUtils.ts";
 
-const { createWahltagDtoComplete } = useWahltagTestDataFactory();
+const { prepareWahltagDtoComplete } = useWahltagTestDataFactory();
 
 const unitUnderTest = useWahltagDtoUtils();
 
@@ -16,12 +16,12 @@ describe("WahltagDtoUtils.ts", () => {
       const wahltag2 = "wahltag2";
       const wahltag3 = "wahltag3";
 
-      const dto1 = createWahltagDtoComplete().wahltag(wahltag1).build();
-      const dto2 = createWahltagDtoComplete().wahltag(wahltag2).build();
-      const dto3 = createWahltagDtoComplete().wahltag(wahltag1).build();
-      const dto4 = createWahltagDtoComplete().wahltag(wahltag1).build();
-      const dto5 = createWahltagDtoComplete().wahltag(wahltag3).build();
-      const dto6 = createWahltagDtoComplete().wahltag(wahltag2).build();
+      const dto1 = prepareWahltagDtoComplete().wahltag(wahltag1).build();
+      const dto2 = prepareWahltagDtoComplete().wahltag(wahltag2).build();
+      const dto3 = prepareWahltagDtoComplete().wahltag(wahltag1).build();
+      const dto4 = prepareWahltagDtoComplete().wahltag(wahltag1).build();
+      const dto5 = prepareWahltagDtoComplete().wahltag(wahltag3).build();
+      const dto6 = prepareWahltagDtoComplete().wahltag(wahltag2).build();
       const dtos = [dto1, dto2, dto3, dto4, dto5, dto6];
 
       const result = unitUnderTest.groupWahltagDtosByWahltag(dtos);

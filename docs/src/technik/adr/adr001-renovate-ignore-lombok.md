@@ -14,26 +14,26 @@ In unseren Services verwenden wir `lombok`. Die Dependency dafür kommt von Spri
 
 ```xml
 <dependencyManagement>
-    <dependencies>
-        <dependency>
-            <!-- Import dependency management from Spring Boot -->
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-dependencies</artifactId>
-            <version>${spring.boot.version}</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-    </dependencies>
+  <dependencies>
+    <dependency>
+      <!-- Import dependency management from Spring Boot -->
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-dependencies</artifactId>
+      <version>${spring.boot.version}</version>
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
+  </dependencies>
 </dependencyManagement>
 ```
 
 ```xml
 <dependencies>
-    <dependency>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <scope>provided</scope>
-    </dependency>
+  <dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <scope>provided</scope>
+  </dependency>
 </dependencies>
 ```
 
@@ -43,31 +43,31 @@ Die Version des Annotation-Processors muss in unserem maven projekt definiert we
 
 ```xml
 <properties>
-    <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>
+  <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>
 </properties>
 ```
 
 ```xml
 <plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-compiler-plugin</artifactId>
-    <version>${maven.compiler.plugin.version}</version>
-    <configuration>
-        <source>${java.version}</source>
-        <target>${java.version}</target>
-        <annotationProcessorPaths>
-            <path>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${org.projectlombok.lombok.version}</version>
-            </path>
-            <path>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok-mapstruct-binding</artifactId>
-                <version>${org.projectlombok.mapstructbinding.version}</version>
-            </path>
-        </annotationProcessorPaths>
-    </configuration>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-compiler-plugin</artifactId>
+  <version>${maven.compiler.plugin.version}</version>
+  <configuration>
+    <source>${java.version}</source>
+    <target>${java.version}</target>
+    <annotationProcessorPaths>
+      <path>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${org.projectlombok.lombok.version}</version>
+      </path>
+      <path>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok-mapstruct-binding</artifactId>
+        <version>${org.projectlombok.mapstructbinding.version}</version>
+      </path>
+    </annotationProcessorPaths>
+  </configuration>
 </plugin>
 ```
 
@@ -77,8 +77,8 @@ technisch sichergestellt werden. Daher wurde ein Kommentar in der `pom.xml` in d
 
 ```xml
 <properties>
-    <!-- Version muss mit der in den spring-boot-dependencies bereitgestellten Lombok-Version übereinstimmen -->
-    <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>
+  <!-- Version muss mit der in den spring-boot-dependencies bereitgestellten Lombok-Version übereinstimmen -->
+  <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>
 </properties>
 ```
 

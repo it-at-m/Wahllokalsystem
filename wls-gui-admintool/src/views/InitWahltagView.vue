@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card data-test="initWahltageView">
     <v-card-title>Benutzer bearbeiten</v-card-title>
     <v-card-text>
       <div class="d-flex justify-between flex-wrap">

@@ -30,6 +30,14 @@ export function useWahltagTestDataFactory() {
     };
   }
 
+  function initWahltagEvent(): Builder<WahltagEvent> {
+    return proxyBuilder<WahltagEvent>({
+      wahltagID: `wahltagID${generateNumberRandom(3)}`,
+      nummer: `${generateNumberRandom(2)}`,
+      beschreibung: `beschreibung${generateNumberRandom(3)}`,
+    });
+  }
+
   /* internal only */
   function createWahltagEventComplete(): WahltagEvent {
     return {
@@ -42,5 +50,6 @@ export function useWahltagTestDataFactory() {
   return {
     createWahltagComplete,
     createWahltagDtoComplete,
+    initWahltagEvent,
   };
 }

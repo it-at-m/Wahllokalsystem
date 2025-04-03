@@ -5,13 +5,12 @@
 Um aus der Spezifikation die Java-Klassen zu erstellen, muss das Generator-Plugin eingebunden werden.
 
 ```xml
-
 <plugin>
-    <groupId>org.openapitools</groupId>
-    <artifactId>openapi-generator-maven-plugin</artifactId>
-    <version>7.5.0</version>
-    <executions>
-    </executions>
+  <groupId>org.openapitools</groupId>
+  <artifactId>openapi-generator-maven-plugin</artifactId>
+  <version>7.5.0</version>
+  <executions>
+  </executions>
 </plugin>
 ```
 
@@ -20,54 +19,53 @@ Für jeden zu erzeugenden Client mus ein `execution`-Element definiert werden.
 ## Konfigurieren der Ausführung
 
 ```xml
-
 <execution>
-    <!-- wenn mehrere Clients erzeugt werden muss jede execution eine eindeutige ID haben -->
-    <id>generateEAI</id>
-    <goals>
-        <goal>generate</goal>
-    </goals>
-    <configuration>
-        <!-- Pfad zur JSON-Datei mit der OpenAPI-Beschreibung -->
-        <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.eai.0.0.1-RC1.json</inputSpec>
-
-        <!-- Wir wollen Java-Klassen generieren-->
-        <generatorName>java</generatorName>
-        <!-- Als Client wird das Resttemplate verwendet-->
-        <library>resttemplate</library>
-
-        <!-- Package in dem die Clients der jeweiligen Controller erzeugt werden -->
-        <!-- Hier wird das Package für Zugriff auf den EAI-Service innerhalb des Basisdatenservices definiert -->
-        <apiPackage>${groupId}.basisdatenservice.eai.aou.client</apiPackage>
-        <!-- Package in das die Datenklassen erzeugt werden -->
-        <modelPackage>${groupId}.basisdatenservice.eai.aou.model</modelPackage>
-
-        <!-- Weitere Klassen als Grundlagen für zusätzliche Tests sind nicht erforderlich-->
-        <generateApiTests>false</generateApiTests>
-        <generateModelTests>false</generateModelTests>
-        <!-- Die zusätzliche Generierung der Dokumentation ist nicht erforderlich.
-        Das JavaDoc der Klassen enthält bereits die Dokumentation -->
-        <generateApiDocumentation>false</generateApiDocumentation>
-        <generateModelDocumentation>false</generateModelDocumentation>
-
-        <configOptions>
-            <!-- Fügt einen Zeitstempel mit dem Zeitpunkt der Generierung bei den Klassen ein -->
-            <hideGenerationTimestamp>false</hideGenerationTimestamp>
-            <!-- Empfohlen laut Doku -->
-            <legacyDiscriminatorBehavior>false</legacyDiscriminatorBehavior>
-            <!-- der Client wird mit @Component annotiert -->
-            <generateClientAsBean>true</generateClientAsBean>
-            <!-- damit da jakarta-Package verwendet wird -->
-            <useJakartaEe>true</useJakartaEe>
-        </configOptions>
-
-        <globalProperties>
-            <!-- zusätzliche Klassen, die notwendig sind damit die Clients korrekt arbeiten können -->
-            <supportingFiles>
-                BaseApi.java,ApiClient.java,JavaTimeFormatter.java,Authentication.java,OAuth.java,ApiKeyAuth.java,HttpBasicAuth.java,HttpBearerAuth.java,RFC3339DateFormat.java
-            </supportingFiles>
-        </globalProperties>
-    </configuration>
+  <!-- wenn mehrere Clients erzeugt werden muss jede execution eine eindeutige ID haben -->
+  <id>generateEAI</id>
+  <goals>
+    <goal>generate</goal>
+  </goals>
+  <configuration>
+    <!-- Pfad zur JSON-Datei mit der OpenAPI-Beschreibung -->
+    <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.eai.0.0.1-RC1.json</inputSpec>
+    
+    <!-- Wir wollen Java-Klassen generieren-->
+    <generatorName>java</generatorName>
+    <!-- Als Client wird das Resttemplate verwendet-->
+    <library>resttemplate</library>
+    
+    <!-- Package in dem die Clients der jeweiligen Controller erzeugt werden -->
+    <!-- Hier wird das Package für Zugriff auf den EAI-Service innerhalb des Basisdatenservices definiert -->
+    <apiPackage>${groupId}.basisdatenservice.eai.aou.client</apiPackage>
+    <!-- Package in das die Datenklassen erzeugt werden -->
+    <modelPackage>${groupId}.basisdatenservice.eai.aou.model</modelPackage>
+    
+    <!-- Weitere Klassen als Grundlagen für zusätzliche Tests sind nicht erforderlich-->
+    <generateApiTests>false</generateApiTests>
+    <generateModelTests>false</generateModelTests>
+    <!-- Die zusätzliche Generierung der Dokumentation ist nicht erforderlich.
+    Das JavaDoc der Klassen enthält bereits die Dokumentation -->
+    <generateApiDocumentation>false</generateApiDocumentation>
+    <generateModelDocumentation>false</generateModelDocumentation>
+  
+    <configOptions>
+      <!-- Fügt einen Zeitstempel mit dem Zeitpunkt der Generierung bei den Klassen ein -->
+      <hideGenerationTimestamp>false</hideGenerationTimestamp>
+      <!-- Empfohlen laut Doku -->
+      <legacyDiscriminatorBehavior>false</legacyDiscriminatorBehavior>
+      <!-- der Client wird mit @Component annotiert -->
+      <generateClientAsBean>true</generateClientAsBean>
+      <!-- damit da jakarta-Package verwendet wird -->
+      <useJakartaEe>true</useJakartaEe>
+    </configOptions>
+    
+    <globalProperties>
+      <!-- zusätzliche Klassen, die notwendig sind damit die Clients korrekt arbeiten können -->
+      <supportingFiles>
+        BaseApi.java,ApiClient.java,JavaTimeFormatter.java,Authentication.java,OAuth.java,ApiKeyAuth.java,HttpBasicAuth.java,HttpBearerAuth.java,RFC3339DateFormat.java
+      </supportingFiles>
+    </globalProperties>
+  </configuration>
 </execution>
 ```
 
@@ -82,29 +80,27 @@ Bei der Konfiguration für die Packages soll folgendes Schema beachtet werden:
 Damit die generierten Klassen compiliert werden können, muss folgende Dependency ergänzt werden:
 
 ```xml
-
 <dependency>
-    <groupId>org.openapitools</groupId>
-    <artifactId>jackson-databind-nullable</artifactId>
-    <version>0.2.6</version>
+  <groupId>org.openapitools</groupId>
+  <artifactId>jackson-databind-nullable</artifactId>
+  <version>0.2.6</version>
 </dependency>
 ```
 
 Des Weiteren wird für die abschließende Konfiguration der Beans `wls-common:exception` und `wls-common:security` benötigt:
 
 ```xml
-
 <dependency>
-    <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
-    <artifactId>exception</artifactId>
-    <version>1.2.0</version>
+  <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+  <artifactId>exception</artifactId>
+  <version>1.2.0</version>
 </dependency>
 
 <!-- Required for OAuth2TokenInterceptor -->
 <dependency>
-   <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
-   <artifactId>security</artifactId>
-   <version>1.2.0</version>
+ <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+ <artifactId>security</artifactId>
+ <version>1.2.0</version>
 </dependency>
 ```
 
@@ -118,18 +114,17 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.OAuth2TokenIntercepto
 @Configuration
 public class ClientConfiguration {
 
-    @Bean
-    public RestTemplate restTemplate(final WlsResponseErrorHandler wlsResponseErrorHandler, final OAuth2TokenInterceptor oAuth2TokenInterceptor) {
-        val restTemplate = new RestTemplate();
-
-        /* definieren des Errorhandlers für Antworten vom externen Service */
-        restTemplate.setErrorHandler(wlsResponseErrorHandler);
-        /* Ergänzen eines Interceptors um den Bearer-Token an den nächsten Service weiter zu geben */
-        restTemplate.getInterceptors().add(oAuth2TokenInterceptor);
-
-        return restTemplate;
-    }
-
+  @Bean
+  public RestTemplate restTemplate(final WlsResponseErrorHandler wlsResponseErrorHandler, final OAuth2TokenInterceptor oAuth2TokenInterceptor) {
+    val restTemplate = new RestTemplate();
+      
+    /* definieren des Errorhandlers für Antworten vom externen Service */
+    restTemplate.setErrorHandler(wlsResponseErrorHandler);
+    /* Ergänzen eines Interceptors um den Bearer-Token an den nächsten Service weiter zu geben */
+    restTemplate.getInterceptors().add(oAuth2TokenInterceptor);
+      
+    return restTemplate;
+  }
 }
 ```
 
@@ -140,13 +135,11 @@ aus `wls-common:exception` verwenden. Eine entsprechende Bean muss ebenfalls noc
 @Configuration
 public class ClientConfiguration {
 
-    //other configurations like the restTemplate bean factory method
-
-    @Bean
-    public WlsResponseErrorHandler wlsResponseErrorHandler(final ObjectMapper objectMapper) {
-        return new WlsResponseErrorHandler(objectMapper);
-    }
-
+  //other configurations like the restTemplate bean factory method
+  @Bean
+  public WlsResponseErrorHandler wlsResponseErrorHandler(final ObjectMapper objectMapper) {
+    return new WlsResponseErrorHandler(objectMapper);
+  }
 }
 ```
 
@@ -159,21 +152,20 @@ den Client generiert haben, erreichbar ist.
 wird, das sonst eine zirkulare Abhängigkeit vorliegt und die Anwendung nicht startet.
 
 ```java
-
 @Configuration
 @RequiredArgsConstructor
 public class BasePathConfiguration {
 
-    /* Umgebungsvariable welche die Ziel-URL enthält, z.b. http//localhost:39146 */
-    @Value("${app.clients.eai.basePath}")
-    String eaiBasePath;
+  /* Umgebungsvariable welche die Ziel-URL enthält, z.b. http//localhost:39146 */
+  @Value("${app.clients.eai.basePath}")
+  String eaiBasePath;
 
-    private final ApiClient eaiApiClient;
+  private final ApiClient eaiApiClient;
 
-    @PostConstruct
-    public void updateBasePaths() {
-        eaiApiClient.setBasePath(eaiBasePath);
-    }
+  @PostConstruct
+  public void updateBasePaths() {
+    eaiApiClient.setBasePath(eaiBasePath);
+  }
 }
 ```
 
@@ -192,18 +184,15 @@ Abschließend wird der EAI-Client, welche das Datenmodell des aufgerufenen exter
 Services mappt, erstellt:
 
 ```java
-
 @Component
 @RequiredArgsConstructor
 public class DemoClient {
 
-    private final WahlvorschlagControllerApi wahlvorschlagControllerApi;
+  private final WahlvorschlagControllerApi wahlvorschlagControllerApi;
 
-    public DemoDTO getDemo() {
-        val wahlvorschlaege = wahlvorschlagControllerApi.loadWahlvorschlaege("wahlID", "wahlbezirkID");
-
-        return new DemoDTO(wahlvorschlaege.getStimmzettelgebietID(), "" + wahlvorschlaege.getWahlvorschlaege().size());
-    }
-
+  public DemoDTO getDemo() {
+    val wahlvorschlaege = wahlvorschlagControllerApi.loadWahlvorschlaege("wahlID", "wahlbezirkID");
+    return new DemoDTO(wahlvorschlaege.getStimmzettelgebietID(), "" + wahlvorschlaege.getWahlvorschlaege().size());
+  }
 }
 ```

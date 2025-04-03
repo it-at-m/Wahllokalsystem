@@ -31,8 +31,8 @@ export default function useWahltagService() {
         .then((response) => response.data);
 
       const wahltageGroupByDatum = groupWahltagDtosByWahltag(wahltagDtos);
-      const wahltage = mapGroupedWahltagDtosToWahltage(wahltageGroupByDatum);
-      wahltage.forEach((wahltag) => wahltag.events.sort(compareByNummerAsc));
+      result.push(...mapGroupedWahltagDtosToWahltage(wahltageGroupByDatum));
+      result.forEach((wahltag) => wahltag.events.sort(compareByNummerAsc));
     } catch (error) {
       addNotification("Wahltage konnten nicht geladen werden", "Error");
     }

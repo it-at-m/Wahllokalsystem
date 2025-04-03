@@ -33,7 +33,7 @@ export default function useWahltagService() {
       const wahltageGroupByDatum = groupWahltagDtosByWahltag(wahltagDtos);
       result.push(...mapGroupedWahltagDtosToWahltage(wahltageGroupByDatum));
       result.forEach((wahltag) => wahltag.events.sort(compareByNummerAsc));
-    } catch (error) {
+    } catch {
       addNotification("Wahltage konnten nicht geladen werden", "Error");
     }
 

@@ -1,4 +1,3 @@
-import type { WahltagDTO } from "@/api/wls-clients/generated-admin-api";
 import type { Wahltag } from "@/types/wahltag/Wahltag.ts";
 import type { Ref } from "vue";
 
@@ -7,6 +6,7 @@ import {
   WahltageControllerApi,
 } from "@/api/wls-clients/generated-admin-api";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
+import { useWahltagDtoUtils } from "@/composables/wahltag/WahltagDtoUtils.ts";
 import { useWahltagMapper } from "@/composables/wahltag/wahltagMapper.ts";
 import { ADMIN_SERVICE_API_URL } from "@/constants.ts";
 import { compareByNummerAsc } from "@/types/wahltag/WahltagEvent.ts";
@@ -19,6 +19,7 @@ export default function useWahltagService() {
   );
   const { mapWahltagDtoToWahltagEvent } = useWahltagMapper();
   const { addNotification } = useUserNotificationService();
+  const { groupWahltagDtosByWahltag } = useWahltagDtoUtils();
 
   async function getWahltage(isLoading?: Ref<boolean>): Promise<Wahltag[]> {
     updateLoading(true, isLoading);
@@ -39,7 +40,7 @@ export default function useWahltagService() {
 
         result.push({
           wahltag: wahltagDatum,
-          events: wahltage.map((dto) => mapWahltagDtoToWahltagEvent(dto)),
+          events: wahltagEvents,
         });
       });
     } catch (error) {
@@ -49,24 +50,6 @@ export default function useWahltagService() {
     updateLoading(false, isLoading);
 
     return result;
-  }
-
-  function groupWahltagDtosByWahltag(
-    dtos: WahltagDTO[]
-  ): Map<string, WahltagDTO[]> {
-    const groupedWahltage = new Map<string, WahltagDTO[]>();
-
-    dtos.reduce((group, wahltagDTO) => {
-      const { wahltag } = wahltagDTO;
-
-      const currentGroupValue = group.get(wahltag) ?? [];
-      currentGroupValue.push(wahltagDTO);
-      group.set(wahltag, currentGroupValue);
-
-      return group;
-    }, groupedWahltage);
-
-    return groupedWahltage;
   }
 
   function updateLoading(loadingState: boolean, loadingRef?: Ref<boolean>) {

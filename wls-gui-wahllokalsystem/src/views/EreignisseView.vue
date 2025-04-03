@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title>Dokumentation eingetretener Ereignisse</v-card-title>
     <v-card-text>
-      <the-ereignisse-table />
+      <the-ereignisse-row />
     </v-card-text>
     <v-card-actions>
       <v-btn
@@ -25,7 +25,7 @@ import {
 } from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import TheEreignisseTable from "@/components/vorfaelleundvorkommnisse/TheEreignisseTable.vue";
+import TheEreignisseRow from "@/components/vorfaelleundvorkommnisse/TheEreignisseRow.vue";
 import { useEreignisStore } from "@/stores/vorfaelleundvorkommnisseStore.ts";
 
 const ereignisStore = useEreignisStore();

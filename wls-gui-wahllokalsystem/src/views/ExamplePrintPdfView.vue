@@ -8,8 +8,8 @@
     <v-row class="pa-2">
       <v-col>
         <v-table
-          density="compact"
           id="table"
+          density="compact"
         >
           <thead>
             <tr>
@@ -30,10 +30,10 @@
       </v-col>
       <v-col class="mt-5">
         <v-text-field
+          id="print"
           v-model="cake"
           label="Dein Lieblingskuchen"
           placeholder="Himbeertorte"
-          id="print"
           width="500"
         ></v-text-field>
         <base-number-input
@@ -65,8 +65,8 @@
     >
       <v-btn
         class="ma-2"
-        @click="printDocument"
         color="primary"
+        @click="printDocument"
       >
         Print
       </v-btn>
@@ -107,18 +107,18 @@ const desserts = ref([
 ]);
 
 class Data {
-  title: String;
-  cake: String;
+  title: string;
+  cake: string;
   cakeNumber: number;
-  toppings: Array<String> | null;
-  hungerIndex: Array<number>;
+  toppings: string[] | null;
+  hungerIndex: number[];
 
   constructor(
-    title: String,
-    cake: String,
+    title: string,
+    cake: string,
     cakeNumber: number,
-    toppings: Array<String> | null,
-    hungerIndex: Array<number>
+    toppings: string[] | null,
+    hungerIndex: number[]
   ) {
     this.title = title;
     this.cake = cake;
@@ -129,7 +129,7 @@ class Data {
 }
 
 function printDocument() {
-  let data = new Data(
+  const data = new Data(
     "Heute gibt es leckeren Nachtisch!",
     cake.value,
     cakeNumber.value,

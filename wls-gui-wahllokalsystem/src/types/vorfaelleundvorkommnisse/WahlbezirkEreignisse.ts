@@ -4,7 +4,7 @@ export interface WahlbezirkEreignisse {
   wahlbezirkID: string;
   keineVorfaelle?: boolean;
   keineVorkommnisse?: boolean;
-  ereigniseintraege?: Array<Ereignis>;
+  ereigniseintraege?: Ereignis[];
 }
 
 export class WahlbezirkEreignisseBuilder implements WahlbezirkEreignisse {

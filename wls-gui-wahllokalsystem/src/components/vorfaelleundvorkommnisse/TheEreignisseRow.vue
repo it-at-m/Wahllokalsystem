@@ -122,7 +122,7 @@ function loadEreignisse(): void {
 
 function onEreignisUhrzeitChanged(
   ereignis: Ereignis,
-  uhrzeit: String,
+  uhrzeit: string,
   index: number
 ) {
   const timeInHoursAndMinutes = uhrzeit

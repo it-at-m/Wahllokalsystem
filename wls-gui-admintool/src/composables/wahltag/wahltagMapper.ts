@@ -4,14 +4,6 @@ import type { Wahltag } from "@/types/wahltag/Wahltag.ts";
 import { type WahltagEvent } from "@/types/wahltag/WahltagEvent.ts";
 
 export function useWahltagMapper() {
-  function mapWahltagDtoToWahltagEvent(dto: WahltagDTO): WahltagEvent {
-    return {
-      nummer: dto.nummer,
-      wahltagID: dto.wahltagID,
-      beschreibung: dto.beschreibung,
-    };
-  }
-
   function mapWahltagModelToWahltagDto(model: Wahltag): WahltagDTO {
     return {
       nummer: "",
@@ -40,9 +32,18 @@ export function useWahltagMapper() {
     return result;
   }
 
+  /* internal only */
+
+  function mapWahltagDtoToWahltagEvent(dto: WahltagDTO): WahltagEvent {
+    return {
+      nummer: dto.nummer,
+      wahltagID: dto.wahltagID,
+      beschreibung: dto.beschreibung,
+    };
+  }
+
   return {
     wahltagModelToWahltagDto: mapWahltagModelToWahltagDto,
-    mapWahltagDtoToWahltagEvent,
     mapGroupedWahltagDtosToWahltage,
   };
 }

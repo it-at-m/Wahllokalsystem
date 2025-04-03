@@ -17,8 +17,7 @@ export default function useWahltagService() {
       basePath: ADMIN_SERVICE_API_URL,
     })
   );
-  const { mapWahltagDtoToWahltagEvent, mapGroupedWahltagDtosToWahltage } =
-    useWahltagMapper();
+  const { mapGroupedWahltagDtosToWahltage } = useWahltagMapper();
   const { addNotification } = useUserNotificationService();
   const { groupWahltagDtosByWahltag } = useWahltagDtoUtils();
 

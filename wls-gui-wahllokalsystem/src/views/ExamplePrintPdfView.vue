@@ -246,15 +246,15 @@ function htmlFromData(data: Data) {
         <title>Testdruck PDF</title>
       </head>
       <body>
-        <h1 class="margin-top margin-leftright">${data.title ? data.title : "Alternativer Titel"}</h1>
+        <h1 class="margin-top margin-leftright">${data.title || "Alternativer Titel"}</h1>
         <div class="horizontal spaceBetween margin-leftright">
           <div class="vertical widthLeft">
             <p>Für deinen perfekten Nachtisch hast du folgende Einstellungen getroffen: mehr text um zu sehen was passiert wenn der platz nicht reicht</p>
             <br />
-            <p>Kuchen: ${data.cake ? data.cake : "Standardkuchen"}</p>
-            <p>Stücke: ${data.cakeNumber ? data.cakeNumber : "2 schaffst du bestimmt!"}</p>
-            <p>Toppings: ${data.toppings ? data.toppings : "Weniger ist mehr."}</p>
-            <p>Hunger Index: ${data.hungerIndex[0] ? data.hungerIndex[0] : "Hier ist was schief gelaufen"} - ${data.hungerIndex[1] ? data.hungerIndex[1] : "Das Messgerät spinnt."}</p>
+            <p>Kuchen: ${data.cake || "Standardkuchen"}</p>
+            <p>Stücke: ${data.cakeNumber || "2 schaffst du bestimmt!"}</p>
+            <p>Toppings: ${data.toppings || "Weniger ist mehr."}</p>
+            <p>Hunger Index: ${data.hungerIndex[0] || "Hier ist was schief gelaufen"} - ${data.hungerIndex[1] || "Das Messgerät spinnt."}</p>
             <p>${
               data.hungerIndex[1] <= 20
                 ? "Du scheinst satt zu sein. Ist noch was vom Kuchen übrig?"

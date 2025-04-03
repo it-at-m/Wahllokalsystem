@@ -17,7 +17,8 @@ export default function useWahltagService() {
       basePath: ADMIN_SERVICE_API_URL,
     })
   );
-  const { mapWahltagDtoToWahltagEvent } = useWahltagMapper();
+  const { mapWahltagDtoToWahltagEvent, mapGroupedWahltagDtosToWahltage } =
+    useWahltagMapper();
   const { addNotification } = useUserNotificationService();
   const { groupWahltagDtosByWahltag } = useWahltagDtoUtils();
 
@@ -26,23 +27,13 @@ export default function useWahltagService() {
 
     const result: Wahltag[] = [];
     try {
-      const wahltage = await adminWahltageAPI
+      const wahltagDtos = await adminWahltageAPI
         .getWahltage()
         .then((response) => response.data);
 
-      const wahltageGroupByDatum = groupWahltagDtosByWahltag(wahltage);
-
-      wahltageGroupByDatum.forEach((wahltage, wahltagDatum) => {
-        const wahltagEvents = wahltage.map((dto) =>
-          mapWahltagDtoToWahltagEvent(dto)
-        );
-        wahltagEvents.sort(compareByNummerAsc);
-
-        result.push({
-          wahltag: wahltagDatum,
-          events: wahltagEvents,
-        });
-      });
+      const wahltageGroupByDatum = groupWahltagDtosByWahltag(wahltagDtos);
+      const wahltage = mapGroupedWahltagDtosToWahltage(wahltageGroupByDatum);
+      wahltage.forEach((wahltag) => wahltag.events.sort(compareByNummerAsc));
     } catch (error) {
       addNotification("Wahltage konnten nicht geladen werden", "Error");
     }

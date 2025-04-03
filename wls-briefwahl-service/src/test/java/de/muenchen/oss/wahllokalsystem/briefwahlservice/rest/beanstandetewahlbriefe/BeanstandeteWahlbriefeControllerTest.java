@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.briefwahlservice.rest.beanstandetewahlbriefe;
 
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.service.beanstandetewahlbriefe.BeanstandeteWahlbriefeModel;
-import de.muenchen.oss.wahllokalsystem.briefwahlservice.service.beanstandetewahlbriefe.BeanstandeteWahlbriefeReference;
+import de.muenchen.oss.wahllokalsystem.briefwahlservice.service.beanstandetewahlbriefe.BeanstandeteWahlbriefeReferenceModel;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.service.beanstandetewahlbriefe.BeanstandeteWahlbriefeService;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -30,7 +30,7 @@ class BeanstandeteWahlbriefeControllerTest {
         val wahlbezirkID = "wahlbezirkId";
         val waehlerverzeichnisNummer = 5L;
 
-        val modelReference = BeanstandeteWahlbriefeReference.builder().build();
+        val modelReference = BeanstandeteWahlbriefeReferenceModel.builder().build();
         val serviceResponse = BeanstandeteWahlbriefeModel.builder().build();
         val mappedServiceResponse = BeanstandeteWahlbriefeDTO.builder().build();
 

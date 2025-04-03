@@ -24,13 +24,10 @@ const mockDefinitions = vi.hoisted(() => ({
   }),
 }));
 
-vi.mock("@/api/wls-clients/generated-admin-api", async (importOriginal) => {
-  const mod = await importOriginal();
-  return {
-    Configuration: mockDefinitions.adminApiConfigurationConstructor,
-    WahltageControllerApi: mockDefinitions.wahltagControllerApiConstructor,
-  };
-});
+vi.mock("@/api/wls-clients/generated-admin-api", () => ({
+  Configuration: mockDefinitions.adminApiConfigurationConstructor,
+  WahltageControllerApi: mockDefinitions.wahltagControllerApiConstructor,
+}));
 vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
   useUserNotificationService: () => ({
     addNotification: mockDefinitions.addNotification,

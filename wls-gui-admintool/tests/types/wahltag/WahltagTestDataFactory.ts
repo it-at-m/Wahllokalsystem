@@ -19,7 +19,7 @@ export function useWahltagTestDataFactory() {
     });
   }
 
-  function createWahltagComplete(countEvents: number = 3): Wahltag {
+  function createWahltagComplete(countEvents = 3): Wahltag {
     const wahltagEvents: WahltagEvent[] = [];
     for (let i = 0; i < countEvents; i++) {
       wahltagEvents.push(createWahltagEventComplete());

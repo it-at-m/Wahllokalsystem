@@ -84,7 +84,7 @@ openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.2.0
 
 :::
 
-#### 2) Ausführen des Skripts `gen:<domain>-api`
+### 2) Ausführen des Skripts `gen:<domain>-api`
 
 In der `package.json` kann der oben genannte Befehl als Skript hinzugefügt werden. Das sieht dann so aus:
 

@@ -5,7 +5,7 @@
       <div class="d-flex justify-between flex-wrap">
         <base-autocomplete-wahltag
           v-model="wahltagSelected"
-          :items="wahltageAsDTO"
+          :items="wahltage"
           :loading="wahltageAreLoading"
         />
         <base-refresh-icon-button
@@ -13,9 +13,9 @@
           @click="onRefreshWahltageClicked"
         />
       </div>
-      <div v-if="wahltagModelForSelected">
+      <div v-if="wahltagSelected">
         <div
-          v-for="event in wahltagModelForSelected.events"
+          v-for="event in wahltagSelected.events"
           :key="event.wahltagID"
         >
           {{ event.wahltagID }} - {{ event.beschreibung }} - {{ event.nummer }}
@@ -26,35 +26,20 @@
 </template>
 
 <script setup lang="ts">
-import type { WahltagDTO } from "@/api/wls-clients/generated-admin-api";
 import type { Wahltag } from "@/types/wahltag/Wahltag.ts";
 import type { Ref } from "vue";
 
-import { computed, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { VCard, VCardText, VCardTitle } from "vuetify/components";
 
 import BaseAutocompleteWahltag from "@/components/common/BaseAutocompleteWahltag.vue";
 import BaseRefreshIconButton from "@/components/common/BaseRefreshIconButton.vue";
-import { useWahltagMapper } from "@/composables/wahltag/wahltagMapper.ts";
 import useWahltagService from "@/composables/wahltag/wahltagService.ts";
 
 const { getWahltage } = useWahltagService();
-const { wahltagModelToWahltagDto } = useWahltagMapper();
 
 const wahltage: Ref<Wahltag[]> = ref([]);
-const wahltageAsDTO = computed(() =>
-  wahltage.value.map((wahltag) => wahltagModelToWahltagDto(wahltag))
-);
-const wahltagSelected: Ref<WahltagDTO | undefined> = ref(undefined);
-const wahltagModelForSelected = computed(() => {
-  if (wahltagSelected.value) {
-    return wahltage.value.find(
-      (wahltag) => wahltag.wahltag === wahltagSelected.value?.wahltag
-    );
-  } else {
-    return undefined;
-  }
-});
+const wahltagSelected: Ref<Wahltag | undefined> = ref(undefined);
 const wahltageAreLoading = ref(false);
 
 onMounted(() => {

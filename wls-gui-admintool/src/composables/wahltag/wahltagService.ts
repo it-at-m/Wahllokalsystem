@@ -9,6 +9,7 @@ import {
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWahltagMapper } from "@/composables/wahltag/wahltagMapper.ts";
 import { ADMIN_SERVICE_API_URL } from "@/constants.ts";
+import { compareByNummerAsc } from "@/types/wahltag/WahltagEvent.ts";
 
 export default function useWahltagService() {
   const adminWahltageAPI = new WahltageControllerApi(
@@ -31,6 +32,11 @@ export default function useWahltagService() {
       const wahltageGroupByDatum = groupWahltagDtosByWahltag(wahltage);
 
       wahltageGroupByDatum.forEach((wahltage, wahltagDatum) => {
+        const wahltagEvents = wahltage.map((dto) =>
+          mapWahltagDtoToWahltagEvent(dto)
+        );
+        wahltagEvents.sort(compareByNummerAsc);
+
         result.push({
           wahltag: wahltagDatum,
           events: wahltage.map((dto) => mapWahltagDtoToWahltagEvent(dto)),

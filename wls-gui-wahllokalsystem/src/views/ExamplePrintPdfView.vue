@@ -209,7 +209,7 @@ function printDocumentJspdf() {
 
 function printDocument() {
   let data = new Data(
-    "Heute gibt es Leckereien!",
+    "Heute gibt es leckeren Nachtisch!",
     cake.value,
     cakeNumber.value,
     toppings.value,
@@ -231,9 +231,7 @@ function printDocument() {
 }
 
 function htmlFromData(data: Data) {
-  let htmlString;
-
-  const htmlOpeningTagsAndStyle = `
+  return `
     <!DOCTYPE html>
       <html lang="de">
       <head>
@@ -261,7 +259,7 @@ function htmlFromData(data: Data) {
           body {
               max-width: 21cm;
               margin: 0;
-              font-size: 9pt;
+              font-size: 12pt;
               writing-mode: lr-tb;
               text-align: left;
               font-family: Arial, serif;
@@ -304,7 +302,8 @@ function htmlFromData(data: Data) {
           }
 
           .widthLeft {
-              width: 10.95cm;
+              width: 10cm;
+              margin-right: 0.4cm;
           }
 
           .widthRightTop {
@@ -312,55 +311,80 @@ function htmlFromData(data: Data) {
           }
 
           .margin-top {
-              margin-top: 1.5cm;
+              margin-top: 1cm;
           }
+
           .margin-leftright {
               margin-left: 1cm;
               margin-right: 1cm;
           }
+
+          .smallfont {
+              font-size: 9pt;
+          }
        </style>
-      <title>Testdruck PDF</title>
-    </head>`;
-  htmlString = htmlString + htmlOpeningTagsAndStyle;
-
-  const htmlBodyAndClosingTags = `
-   <body>
-     <h1 class="margin-top margin-leftright">${data.title ? data.title : "Alternativer Titel"}</h1>
-     <div class="horizontal spaceBetween margin-leftright">
-       <div class="vertical widthLeft">
-         <p>Für deinen perfekten Nachtisch hast du folgende Einstellungen getroffen: mehr text um zu sehen was passiert wenn der platz nicht reicht</p>
-         <br />
-         <p>Kuchen: ${data.cake ? data.cake : "Standardkuchen"}</p>
-         <p>Stücke: ${data.cakeNumber ? data.cakeNumber : "2 schaffst du bestimmt!"}</p>
-         <p>Toppings: ${data.toppings ? data.toppings : "Weniger ist mehr."}</p>
-         <p>Hunger Index: ${data.hungerIndex[0] ? data.hungerIndex[0] : "Hier ist was schief gelaufen."} - ${data.hungerIndex[1] ? data.hungerIndex[1] : "Das Messgerät spinnt."}</p>
-         <p>${
-           data.hungerIndex[1] <= 20
-             ? "Du scheinst satt zu sein. Ist noch was vom Kuchen übrig?"
-             : data.hungerIndex[0] >= 50
-               ? "Du bist ziemlich hungrig, du solltest dir jetzt einen Kuchen backen! Und am besten gleich noch was für deine Kollegen mitbringen"
-               : ""
-         }
-         </p>
-         <br />
-         <br />
-       </div>
-       <div class="vertical spaceBetween widthRightTop marginTopBottom_1">
-         <h2>Kalorienliste</h2>
-         <span>
-         ${(() => {
-           const tableElement = document.getElementById("table");
-           return tableElement
-             ? tableElement.innerHTML
-             : "Keine Tabellendaten gefunden";
-         })()}
-         </span>
-       </div>
-     </div>
-   </body>
-   </html>`;
-  htmlString = htmlString + htmlBodyAndClosingTags;
-
-  return htmlString;
+        <title>Testdruck PDF</title>
+      </head>
+      <body>
+        <h1 class="margin-top margin-leftright">${data.title ? data.title : "Alternativer Titel"}</h1>
+        <div class="horizontal spaceBetween margin-leftright">
+          <div class="vertical widthLeft">
+            <p>Für deinen perfekten Nachtisch hast du folgende Einstellungen getroffen: mehr text um zu sehen was passiert wenn der platz nicht reicht</p>
+            <br />
+            <p>Kuchen: ${data.cake ? data.cake : "Standardkuchen"}</p>
+            <p>Stücke: ${data.cakeNumber ? data.cakeNumber : "2 schaffst du bestimmt!"}</p>
+            <p>Toppings: ${data.toppings ? data.toppings : "Weniger ist mehr."}</p>
+            <p>Hunger Index: ${data.hungerIndex[0] ? data.hungerIndex[0] : "Hier ist was schief gelaufen"} - ${data.hungerIndex[1] ? data.hungerIndex[1] : "Das Messgerät spinnt."}</p>
+            <p>${
+              data.hungerIndex[1] <= 20
+                ? "Du scheinst satt zu sein. Ist noch was vom Kuchen übrig?"
+                : data.hungerIndex[0] >= 50
+                  ? "Du bist ziemlich hungrig, du solltest dir jetzt einen Kuchen backen! Und am besten gleich noch was für deine Kollegen mitbringen"
+                  : ""
+            }
+            </p>
+            <br />
+            <br />
+          </div>
+          <div class="vertical spaceBetween widthRightTop marginTopBottom_1">
+            <h4>Kalorienliste</h4>
+            <span>
+              ${(() => {
+                const tableElement = document.getElementById("table");
+                return tableElement
+                  ? tableElement.innerHTML
+                  : "Keine Tabellendaten gefunden";
+              })()}
+            </span>
+          </div>
+        </div>
+        <div class="margin-top margin-leftright">
+          <h3>Aus offensichtlichen obligatorischen Gründen:</h3>
+          <span class="smallfont">und um den seitenumbruch zu testen</span>
+          <p>
+              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
+              et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+              Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
+              consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+              sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+              takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+              diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
+              accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum
+              dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel
+              illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent
+              luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer
+              adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+              Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea
+              commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse.
+              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
+              et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+              Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
+              consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+              sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+              takimata sanctus est Lorem ipsum dolor sit amet. 
+          </p>
+        </div>
+      </body>
+      </html>`;
 }
 </script>

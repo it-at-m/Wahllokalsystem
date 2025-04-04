@@ -11,7 +11,7 @@
           :rules="[REQUIRED]"
           label="Uhrzeit"
           type="time"
-          hide-details
+          clearable
           @update:model-value="
             (value) => onEreignisUhrzeitChanged(ereignis, value, index)
           "
@@ -22,9 +22,9 @@
           v-model="ereignis.beschreibung"
           :rules="[MIN_LENGTH(4), MAX_LENGTH(500)]"
           rows="1"
-          auto-grow
           label="Beschreibung"
-          hide-details
+          auto-grow
+          clearable
           @update:model-value="(value) => (ereignis.beschreibung = value)"
         ></v-textarea>
       </v-col>
@@ -125,17 +125,21 @@ function onEreignisUhrzeitChanged(
   uhrzeit: string,
   index: number
 ) {
-  const timeInHoursAndMinutes = uhrzeit
-    .split(":")
-    .map((s) => Number.parseInt(s));
-  const currentUhrzeit = ereignis.uhrzeit
-    ? new Date(ereignis.uhrzeit)
-    : undefined;
-  currentUhrzeit?.setHours(timeInHoursAndMinutes[0], timeInHoursAndMinutes[1]);
+  const updateUhrzeit = (time: Date | undefined) => {
+    if (wahlbezirkEreignisse.value.ereigniseintraege) {
+      wahlbezirkEreignisse.value.ereigniseintraege[index].uhrzeit = time;
+    }
+  };
 
-  if (wahlbezirkEreignisse.value.ereigniseintraege) {
-    wahlbezirkEreignisse.value.ereigniseintraege[index].uhrzeit =
-      currentUhrzeit;
+  if (uhrzeit) {
+    const [hours, minutes] = uhrzeit.split(":").map(Number);
+    const currentUhrzeit = ereignis.uhrzeit
+      ? new Date(ereignis.uhrzeit)
+      : new Date();
+    currentUhrzeit.setHours(hours, minutes);
+    updateUhrzeit(currentUhrzeit);
+  } else {
+    updateUhrzeit(undefined);
   }
 }
 </script>

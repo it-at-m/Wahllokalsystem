@@ -42,13 +42,13 @@ export default function useWahltagService() {
     return result;
   }
 
-  function updateLoading(loadingState: boolean, loadingRef?: Ref<boolean>) {
-    if (loadingRef) {
-      loadingRef.value = loadingState;
-    }
-  }
-
   return {
     getWahltage,
   };
+}
+
+function updateLoading(loadingState: boolean, loadingRef?: Ref<boolean>) {
+  if (loadingRef) {
+    loadingRef.value = loadingState;
+  }
 }

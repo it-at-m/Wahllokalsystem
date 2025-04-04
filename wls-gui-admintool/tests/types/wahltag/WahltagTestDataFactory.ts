@@ -38,18 +38,17 @@ export function useWahltagTestDataFactory() {
     });
   }
 
-  /* internal only */
-  function createWahltagEventComplete(): WahltagEvent {
-    return {
-      nummer: `${generateRandomNumber(2)}`,
-      wahltagID: `wahltagID${generateRandomNumber(3)}`,
-      beschreibung: `beschreibung${generateRandomNumber(3)}`,
-    };
-  }
-
   return {
     createWahltagComplete,
     prepareWahltagDtoComplete,
     prepareWahltagEvent,
+  };
+}
+
+function createWahltagEventComplete(): WahltagEvent {
+  return {
+    nummer: `${generateRandomNumber(2)}`,
+    wahltagID: `wahltagID${generateRandomNumber(3)}`,
+    beschreibung: `beschreibung${generateRandomNumber(3)}`,
   };
 }

@@ -1,10 +1,10 @@
 import type { WahltagDTO } from "@/api/wls-clients/generated-admin-api";
 import type { Wahltag } from "@/types/wahltag/Wahltag.ts";
 import type { WahltagEvent } from "@/types/wahltag/WahltagEvent.ts";
-import type { Builder } from "@tests/common/Builder.ts";
+import type { Builder } from "@tests/utils/common/Builder.ts";
 
-import { proxyBuilder } from "@tests/common/Builder.ts";
-import { useCommonTestDataFactory } from "@tests/common/CommonTestDataFactory.ts";
+import { proxyBuilder } from "@tests/utils/common/Builder.ts";
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
 const { generateDateRandomAsString, generateNumberRandom } =
   useCommonTestDataFactory();

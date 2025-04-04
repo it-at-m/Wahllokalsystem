@@ -6,7 +6,7 @@ import {
   WahltageControllerApi,
 } from "@/api/wls-clients/generated-admin-api";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
-import { useWahltagDtoUtils } from "@/composables/wahltag/WahltagDtoUtils.ts";
+import { useWahltagDtoUtils } from "@/composables/wahltag/wahltagDtoUtils.ts";
 import { useWahltagMapper } from "@/composables/wahltag/wahltagMapper.ts";
 import { ADMIN_SERVICE_API_URL } from "@/constants.ts";
 import { compareByNummerAsc } from "@/types/wahltag/WahltagEvent.ts";

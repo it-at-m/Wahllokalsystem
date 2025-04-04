@@ -3,7 +3,7 @@ import type { WahltagDTO } from "@/api/wls-clients/generated-admin-api";
 import { useWahltagTestDataFactory } from "@tests/types/wahltag/WahltagTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 
-import { useWahltagDtoUtils } from "@/composables/wahltag/WahltagDtoUtils.ts";
+import { useWahltagDtoUtils } from "@/composables/wahltag/wahltagDtoUtils.ts";
 
 const { prepareWahltagDtoComplete } = useWahltagTestDataFactory();
 

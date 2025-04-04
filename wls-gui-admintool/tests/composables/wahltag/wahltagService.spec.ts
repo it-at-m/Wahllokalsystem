@@ -33,7 +33,7 @@ vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
     addNotification: mockDefinitions.addNotification,
   }),
 }));
-vi.mock("@/composables/wahltag/WahltagDtoUtils.ts", () => ({
+vi.mock("@/composables/wahltag/wahltagDtoUtils.ts", () => ({
   useWahltagDtoUtils: () => ({
     groupWahltagDtosByWahltag: mockDefinitions.groupWahltagDtosByWahltag,
   }),

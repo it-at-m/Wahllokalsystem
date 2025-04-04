@@ -42,27 +42,63 @@ type Story = StoryObj<typeof meta>;
 const wahltage: Wahltag[] = [
   {
     wahltag: "27.02.1988",
-    events: [],
+    events: [
+      {
+        wahltagID: "1",
+        beschreibung: "S",
+        nummer: "1.1",
+      },
+    ],
   },
   {
     wahltag: "31.01.1998",
-    events: [],
+    events: [
+      {
+        wahltagID: "2",
+        beschreibung: "D",
+        nummer: "2.1",
+      },
+    ],
   },
   {
     wahltag: "04.04.2000",
-    events: [],
+    events: [
+      {
+        wahltagID: "3",
+        beschreibung: "V",
+        nummer: "3.1",
+      },
+    ],
   },
   {
     wahltag: "31.10.1999",
-    events: [],
+    events: [
+      {
+        wahltagID: "4",
+        beschreibung: "G",
+        nummer: "4.1",
+      },
+    ],
   },
   {
     wahltag: "05.11.1969",
-    events: [],
+    events: [
+      {
+        wahltagID: "5",
+        beschreibung: "R",
+        nummer: "5.1",
+      },
+    ],
   },
   {
     wahltag: "14.05.1977",
-    events: [],
+    events: [
+      {
+        wahltagID: "6",
+        beschreibung: "N",
+        nummer: "6.1",
+      },
+    ],
   },
 ];
 

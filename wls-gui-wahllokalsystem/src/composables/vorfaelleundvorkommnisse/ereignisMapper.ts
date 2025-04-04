@@ -45,9 +45,17 @@ export function useEreignisMapper() {
   }
 
   function ereignisModelToEreignisDto(ereignisModel: Ereignis): EreignisDTO {
+    let mappedUhrzeit;
+    if (ereignisModel.uhrzeit) {
+      mappedUhrzeit = new Date(ereignisModel.uhrzeit);
+      mappedUhrzeit.setHours(
+        mappedUhrzeit.getHours() -
+          Math.trunc(mappedUhrzeit.getTimezoneOffset() / 60)
+      );
+    }
     return {
       beschreibung: ereignisModel.beschreibung ?? "",
-      uhrzeit: ereignisModel.uhrzeit?.toJSON(),
+      uhrzeit: mappedUhrzeit?.toJSON(),
       ereignisart: ereignisModel.ereignisart
         ? ereignisartModelToEreignisartDto(ereignisModel.ereignisart)
         : undefined,

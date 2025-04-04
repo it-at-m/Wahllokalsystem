@@ -12,7 +12,7 @@ public class BeanstandeteWahlbriefeValidator {
 
     private final ExceptionFactory exceptionFactory;
 
-    public void valideReferenceOrThrow(final BeanstandeteWahlbriefeReference beanstandeteWahlbriefeReference) {
+    public void valideReferenceOrThrow(final BeanstandeteWahlbriefeReferenceModel beanstandeteWahlbriefeReference) {
         if (StringUtils.isBlank(
                 beanstandeteWahlbriefeReference.wahlbezirkID()) || beanstandeteWahlbriefeReference.waehlerverzeichnisNummer() == null
                 || beanstandeteWahlbriefeReference.waehlerverzeichnisNummer() == 0) {

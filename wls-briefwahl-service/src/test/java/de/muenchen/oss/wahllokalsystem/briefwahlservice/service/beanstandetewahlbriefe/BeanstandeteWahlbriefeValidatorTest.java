@@ -84,8 +84,8 @@ class BeanstandeteWahlbriefeValidatorTest {
             org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> unitUnderTest.valideReferenceOrThrow(valideReference));
         }
 
-        private BeanstandeteWahlbriefeReference.BeanstandeteWahlbriefeReferenceBuilder getValidReference() {
-            return BeanstandeteWahlbriefeReference.builder().wahlbezirkID("wbzId").waehlerverzeichnisNummer(1L);
+        private BeanstandeteWahlbriefeReferenceModel.BeanstandeteWahlbriefeReferenceModelBuilder getValidReference() {
+            return BeanstandeteWahlbriefeReferenceModel.builder().wahlbezirkID("wbzId").waehlerverzeichnisNummer(1L);
         }
     }
 

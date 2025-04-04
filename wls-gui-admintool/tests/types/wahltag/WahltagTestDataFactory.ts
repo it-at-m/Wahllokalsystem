@@ -6,7 +6,7 @@ import type { Builder } from "@tests/utils/common/Builder.ts";
 import { proxyBuilder } from "@tests/utils/common/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
-const { generateDateRandomAsString, generateNumberRandom } =
+const { generateRandomDateAsString, generateRandomNumber } =
   useCommonTestDataFactory();
 
 export function useWahltagTestDataFactory() {
@@ -16,34 +16,34 @@ export function useWahltagTestDataFactory() {
       wahltagEvents.push(createWahltagEventComplete());
     }
     return {
-      wahltag: generateDateRandomAsString(),
+      wahltag: generateRandomDateAsString(),
       events: wahltagEvents,
     };
   }
 
   function prepareWahltagDtoComplete(): Builder<WahltagDTO> {
     return proxyBuilder<WahltagDTO>({
-      wahltag: generateDateRandomAsString(),
-      wahltagID: `wahltagID${generateNumberRandom(3)}`,
-      nummer: `${generateNumberRandom(2)}`,
-      beschreibung: `beschreibung${generateNumberRandom(3)}`,
+      wahltag: generateRandomDateAsString(),
+      wahltagID: `wahltagID${generateRandomNumber(3)}`,
+      nummer: `${generateRandomNumber(2)}`,
+      beschreibung: `beschreibung${generateRandomNumber(3)}`,
     });
   }
 
   function prepareWahltagEvent(): Builder<WahltagEvent> {
     return proxyBuilder<WahltagEvent>({
-      wahltagID: `wahltagID${generateNumberRandom(3)}`,
-      nummer: `${generateNumberRandom(2)}`,
-      beschreibung: `beschreibung${generateNumberRandom(3)}`,
+      wahltagID: `wahltagID${generateRandomNumber(3)}`,
+      nummer: `${generateRandomNumber(2)}`,
+      beschreibung: `beschreibung${generateRandomNumber(3)}`,
     });
   }
 
   /* internal only */
   function createWahltagEventComplete(): WahltagEvent {
     return {
-      nummer: `${generateNumberRandom(2)}`,
-      wahltagID: `wahltagID${generateNumberRandom(3)}`,
-      beschreibung: `beschreibung${generateNumberRandom(3)}`,
+      nummer: `${generateRandomNumber(2)}`,
+      wahltagID: `wahltagID${generateRandomNumber(3)}`,
+      beschreibung: `beschreibung${generateRandomNumber(3)}`,
     };
   }
 

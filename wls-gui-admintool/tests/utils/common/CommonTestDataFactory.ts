@@ -1,9 +1,9 @@
 export function useCommonTestDataFactory() {
-  function generateNumberRandom(length: number): number {
+  function generateRandomNumber(length: number): number {
     return Math.floor(Math.random() * (length * 10));
   }
 
-  function generateDateRandomAsString(): string {
+  function generateRandomDateAsString(): string {
     const date = new Date();
 
     date.setDate(date.getDate() - Math.trunc(Math.random() * 100));
@@ -12,7 +12,7 @@ export function useCommonTestDataFactory() {
   }
 
   return {
-    generateNumberRandom,
-    generateDateRandomAsString,
+    generateRandomNumber,
+    generateRandomDateAsString,
   };
 }

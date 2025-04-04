@@ -3,24 +3,24 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.errorhandler.WlsResponseErrorHandler;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.OAuth2TokenInterceptor;
-import lombok.val;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class ClientConfiguration {
 
     @Bean
-    public RestTemplate restTemplate(final WlsResponseErrorHandler wlsResponseErrorHandler, final OAuth2TokenInterceptor oAuth2TokenInterceptor) {
-        val restTemplate = new RestTemplate();
+    public RestTemplate restTemplate(RestTemplateBuilder builder, final WlsResponseErrorHandler wlsResponseErrorHandler,
+            final OAuth2TokenInterceptor oAuth2TokenInterceptor, final ObjectMapper objectMapper) {
 
-        /* definieren des Errorhandlers für Antworten vom externen Service */
-        restTemplate.setErrorHandler(wlsResponseErrorHandler);
-        /* Ergänzen eines Interceptors um den Bearer-Token an den nächsten Service weiter zu geben */
-        restTemplate.getInterceptors().add(oAuth2TokenInterceptor);
-
-        return restTemplate;
+        return builder
+                .additionalMessageConverters(new MappingJackson2HttpMessageConverter(objectMapper))
+                .errorHandler(wlsResponseErrorHandler)
+                .additionalInterceptors(oAuth2TokenInterceptor)
+                .build();
     }
 
     @Bean

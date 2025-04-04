@@ -15,15 +15,33 @@ import { getSnapshotFilename } from "../../utils/testutils.ts";
 const wahltage: Wahltag[] = [
   {
     wahltag: "24.12.2025",
-    events: [],
+    events: [
+      {
+        wahltagID: "1",
+        beschreibung: "Weihnachten",
+        nummer: "1.1",
+      },
+    ],
   },
   {
     wahltag: "01.01.2025",
-    events: [],
+    events: [
+      {
+        wahltagID: "2",
+        beschreibung: "Neujahr",
+        nummer: "2.1",
+      },
+    ],
   },
   {
     wahltag: "20.03.2025",
-    events: [],
+    events: [
+      {
+        wahltagID: "3",
+        beschreibung: "Frühlingsanfang",
+        nummer: "3.1",
+      },
+    ],
   },
 ];
 

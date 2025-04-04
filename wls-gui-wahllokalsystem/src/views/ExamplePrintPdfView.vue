@@ -8,7 +8,7 @@
     <v-row class="pa-2">
       <v-col>
         <v-table
-          id="table"
+          ref="tableRef"
           density="compact"
         >
           <thead>
@@ -75,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, useTemplateRef } from "vue";
 import {
   VAutocomplete,
   VBtn,
@@ -92,6 +92,7 @@ const cake = ref("");
 const cakeNumber = ref(0);
 const toppings = ref(null);
 const hungerIndex = ref([]);
+const tableRef = useTemplateRef("tableRef");
 
 const desserts = ref([
   { name: "Frozen Yogurt", calories: 159 },
@@ -269,12 +270,7 @@ function htmlFromData(data: Data) {
           <div class="vertical spaceBetween widthRightTop marginTopBottom_1">
             <h4>Kalorienliste</h4>
             <span>
-              ${(() => {
-                const tableElement = document.getElementById("table");
-                return tableElement
-                  ? tableElement.innerHTML
-                  : "Keine Tabellendaten gefunden";
-              })()}
+              ${tableRef.value ? tableRef.value.$el.innerHTML : "Keine Tabellendaten gefunden"}
             </span>
           </div>
         </div>

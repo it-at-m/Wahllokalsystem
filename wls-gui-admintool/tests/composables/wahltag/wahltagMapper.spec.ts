@@ -39,41 +39,11 @@ describe("wahltagMapper.ts", () => {
       const result =
         unitUnderTest.mapGroupedWahltagDtosToWahltage(mapWithDtosToMap);
 
-      const expectedWahltag1: Wahltag = {
-        wahltag: wahltag1Key,
-        events: [
-          {
-            wahltagID: mapWithDtosToMap.get(wahltag1Key)![0].wahltagID,
-            beschreibung: mapWithDtosToMap.get(wahltag1Key)![0].beschreibung,
-            nummer: mapWithDtosToMap.get(wahltag1Key)![0].nummer,
-          },
-          {
-            wahltagID: mapWithDtosToMap.get(wahltag1Key)![1].wahltagID,
-            beschreibung: mapWithDtosToMap.get(wahltag1Key)![1].beschreibung,
-            nummer: mapWithDtosToMap.get(wahltag1Key)![1].nummer,
-          },
-        ],
-      };
-      const expectedWahltag2: Wahltag = {
-        wahltag: wahltag2Key,
-        events: [
-          {
-            wahltagID: mapWithDtosToMap.get(wahltag2Key)![0].wahltagID,
-            beschreibung: mapWithDtosToMap.get(wahltag2Key)![0].beschreibung,
-            nummer: mapWithDtosToMap.get(wahltag2Key)![0].nummer,
-          },
-          {
-            wahltagID: mapWithDtosToMap.get(wahltag2Key)![1].wahltagID,
-            beschreibung: mapWithDtosToMap.get(wahltag2Key)![1].beschreibung,
-            nummer: mapWithDtosToMap.get(wahltag2Key)![1].nummer,
-          },
-          {
-            wahltagID: mapWithDtosToMap.get(wahltag2Key)![2].wahltagID,
-            beschreibung: mapWithDtosToMap.get(wahltag2Key)![2].beschreibung,
-            nummer: mapWithDtosToMap.get(wahltag2Key)![2].nummer,
-          },
-        ],
-      };
+      const { expectedWahltag1, expectedWahltag2 } = getExpectedWahltage(
+        wahltag1Key,
+        wahltag2Key,
+        mapWithDtosToMap
+      );
 
       expect(result.length).toStrictEqual(2);
       expect(result[0]).toStrictEqual(expectedWahltag1);
@@ -81,3 +51,46 @@ describe("wahltagMapper.ts", () => {
     });
   });
 });
+
+function getExpectedWahltage(
+  wahltag1Key: string,
+  wahltag2Key: string,
+  mapWithDtosToMap: Map<string, WahltagDTO[]>
+) {
+  const expectedWahltag1: Wahltag = {
+    wahltag: wahltag1Key,
+    events: [
+      {
+        wahltagID: mapWithDtosToMap.get(wahltag1Key)![0].wahltagID,
+        beschreibung: mapWithDtosToMap.get(wahltag1Key)![0].beschreibung,
+        nummer: mapWithDtosToMap.get(wahltag1Key)![0].nummer,
+      },
+      {
+        wahltagID: mapWithDtosToMap.get(wahltag1Key)![1].wahltagID,
+        beschreibung: mapWithDtosToMap.get(wahltag1Key)![1].beschreibung,
+        nummer: mapWithDtosToMap.get(wahltag1Key)![1].nummer,
+      },
+    ],
+  };
+  const expectedWahltag2: Wahltag = {
+    wahltag: wahltag2Key,
+    events: [
+      {
+        wahltagID: mapWithDtosToMap.get(wahltag2Key)![0].wahltagID,
+        beschreibung: mapWithDtosToMap.get(wahltag2Key)![0].beschreibung,
+        nummer: mapWithDtosToMap.get(wahltag2Key)![0].nummer,
+      },
+      {
+        wahltagID: mapWithDtosToMap.get(wahltag2Key)![1].wahltagID,
+        beschreibung: mapWithDtosToMap.get(wahltag2Key)![1].beschreibung,
+        nummer: mapWithDtosToMap.get(wahltag2Key)![1].nummer,
+      },
+      {
+        wahltagID: mapWithDtosToMap.get(wahltag2Key)![2].wahltagID,
+        beschreibung: mapWithDtosToMap.get(wahltag2Key)![2].beschreibung,
+        nummer: mapWithDtosToMap.get(wahltag2Key)![2].nummer,
+      },
+    ],
+  };
+  return { expectedWahltag1, expectedWahltag2 };
+}

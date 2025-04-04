@@ -60,32 +60,8 @@ describe("wahltagService.ts", () => {
 
   describe("getWahltage", () => {
     it("should_returnWahltageFromTheAdminAPI_when_called", async () => {
-      const mockedResponseGetWahltage = [prepareWahltagDtoComplete().build()];
-      const mockGroupedWahltage = new Map<string, WahltagDTO[]>([
-        ["wahltag1", [prepareWahltagDtoComplete().build()]],
-        [
-          "wahltag2",
-          [
-            prepareWahltagDtoComplete().build(),
-            prepareWahltagDtoComplete().build(),
-          ],
-        ],
-      ]);
-      const mockedWahltage = [
-        createWahltagComplete(1),
-        createWahltagComplete(2),
-      ];
-
-      mockDefinitions.apiGetWahltage.mockReturnValue(
-        Promise.resolve({ data: mockedResponseGetWahltage })
-      );
-      mockDefinitions.groupWahltagDtosByWahltag.mockReturnValue(
-        mockGroupedWahltage
-      );
-      mockDefinitions.mapGroupedWahltagDtosToWahltage.mockReturnValue(
-        mockedWahltage
-      );
-      mockDefinitions.compareByNummerAsc.mockReturnValue(0);
+      const { mockedWahltage, mockedResponseGetWahltage, mockGroupedWahltage } =
+        useMockSetupForSuccessfulLoadWahltage();
 
       const result = await unitUnderTest.getWahltage();
 
@@ -103,32 +79,7 @@ describe("wahltagService.ts", () => {
     });
 
     it("should_changeTheValueOfLoading_when_loadingIsNotUndefined", async () => {
-      const mockedResponseGetWahltage = [prepareWahltagDtoComplete().build()];
-      const mockGroupedWahltage = new Map<string, WahltagDTO[]>([
-        ["wahltag1", [prepareWahltagDtoComplete().build()]],
-        [
-          "wahltag2",
-          [
-            prepareWahltagDtoComplete().build(),
-            prepareWahltagDtoComplete().build(),
-          ],
-        ],
-      ]);
-      const mockedWahltage = [
-        createWahltagComplete(1),
-        createWahltagComplete(2),
-      ];
-
-      mockDefinitions.apiGetWahltage.mockReturnValue(
-        Promise.resolve({ data: mockedResponseGetWahltage })
-      );
-      mockDefinitions.groupWahltagDtosByWahltag.mockReturnValue(
-        mockGroupedWahltage
-      );
-      mockDefinitions.mapGroupedWahltagDtosToWahltage.mockReturnValue(
-        mockedWahltage
-      );
-      mockDefinitions.compareByNummerAsc.mockReturnValue(0);
+      useMockSetupForSuccessfulLoadWahltage();
 
       const loadingRef = ref(false);
       const spyOnValueSetterOfRef = spyOn(loadingRef, "value", "set");
@@ -175,3 +126,35 @@ describe("wahltagService.ts", () => {
     });
   });
 });
+
+function useMockSetupForSuccessfulLoadWahltage() {
+  const mockedResponseGetWahltage = [prepareWahltagDtoComplete().build()];
+  const mockGroupedWahltage = new Map<string, WahltagDTO[]>([
+    ["wahltag1", [prepareWahltagDtoComplete().build()]],
+    [
+      "wahltag2",
+      [
+        prepareWahltagDtoComplete().build(),
+        prepareWahltagDtoComplete().build(),
+      ],
+    ],
+  ]);
+  const mockedWahltage = [createWahltagComplete(1), createWahltagComplete(2)];
+
+  mockDefinitions.apiGetWahltage.mockReturnValue(
+    Promise.resolve({ data: mockedResponseGetWahltage })
+  );
+  mockDefinitions.groupWahltagDtosByWahltag.mockReturnValue(
+    mockGroupedWahltage
+  );
+  mockDefinitions.mapGroupedWahltagDtosToWahltage.mockReturnValue(
+    mockedWahltage
+  );
+  mockDefinitions.compareByNummerAsc.mockReturnValue(0);
+
+  return {
+    mockedResponseGetWahltage,
+    mockGroupedWahltage,
+    mockedWahltage,
+  };
+}

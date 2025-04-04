@@ -23,17 +23,15 @@ export function useWahltagMapper() {
     return result;
   }
 
-  /* internal only */
-
-  function mapWahltagDtoToWahltagEvent(dto: WahltagDTO): WahltagEvent {
-    return {
-      nummer: dto.nummer,
-      wahltagID: dto.wahltagID,
-      beschreibung: dto.beschreibung,
-    };
-  }
-
   return {
     mapGroupedWahltagDtosToWahltage,
+  };
+}
+
+function mapWahltagDtoToWahltagEvent(dto: WahltagDTO): WahltagEvent {
+  return {
+    nummer: dto.nummer,
+    wahltagID: dto.wahltagID,
+    beschreibung: dto.beschreibung,
   };
 }

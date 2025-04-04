@@ -14,7 +14,7 @@ const unitUnderTest = useWahltagMapper();
 
 describe("wahltagMapper.ts", () => {
   describe("mapGroupedWahltagDtosToWahltage", () => {
-    it("should_returnTyp_when_mapWithDtosAreGiven", () => {
+    it("should_returnArrayOfWahltagType_when_mapWithDtosIsGiven", () => {
       const wahltag1Key = "wahltag1";
       const wahltag2Key = "wahltag2";
 

@@ -15,7 +15,7 @@ describe("BaseIconButtonRefresh.vue", () => {
   });
 
   describe("visual logic", () => {
-    it("should redner correctly with an icon", async (context) => {
+    it("should_rednerCorrectlyWithAnIcon_when_componentIsMounted", async (context) => {
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );

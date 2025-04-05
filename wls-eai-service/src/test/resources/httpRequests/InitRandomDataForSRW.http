@@ -1,0 +1,56 @@
+### init SRW
+POST {{ WLS_EAI_SERVICE_URL }}/initData/wahltage
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "wahltagInitRequests": [
+    {
+      "beschreibung": "SRW",
+      "nummer": "2",
+      "wahltag": "2026-01-01",
+      "wahlInitOptions": [
+        {
+          "wahlart": "SRW",
+          "name": "Stadtratswahl",
+          "stimmzettelgebietInitOptions": [
+            {
+              "name": "szg w2.1",
+              "nummer": "200",
+              "stimmzettelgebietsart": "SG",
+              "randomWahlbezirke": {
+                "a1": {
+                  "min": 10,
+                  "max": 20
+                },
+                "a2": {
+                  "min": 10,
+                  "max": 20
+                },
+                "a3": {
+                  "min": 10,
+                  "max": 20
+                },
+                "uwb": {
+                  "min": 20,
+                  "max": 20
+                },
+                "bwb": {
+                  "min": 10,
+                  "max": 20
+                }
+              },
+              "wahlvorschlagInitOptions": {
+                "kandidatenMinCount": 40,
+                "kandidatenMaxCount": 80,
+                "wahlvorschlaegeMinCount": 14,
+                "wahlvorschlaegeMaxCount": 14
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+

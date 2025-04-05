@@ -33,6 +33,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class InitDataService {
 
     private final TransactionTemplate transactionTemplate;
@@ -116,7 +118,9 @@ public class InitDataService {
         val wahlvorschlaegeOfStimmzettelgebiet = setupWahlvorschlaege(wahlvorschlagInitOptions);
 
         //UWB
-        IntStream.rangeClosed(1, getCountInRange(options.uwb())).forEach(i -> {
+        val countUwbs = getCountInRange(options.uwb());
+        log.atInfo().log("countUwbs: {} of szg: {}", countUwbs, stimmzettelgebiet.getNummer());
+        IntStream.rangeClosed(1, countUwbs).forEach(i -> {
             val wahlbezirk = wahlbezirkRepository.save(
                     new Wahlbezirk(wahldatenMapper.toEntity(WahlbezirkArtDTO.UWB), stimmzettelgebiet.getNummer() + "_U_" + i, stimmzettelgebiet,
                             getCountInRange(options.a1()),
@@ -127,7 +131,9 @@ public class InitDataService {
         });
 
         //BWB
-        IntStream.rangeClosed(1, getCountInRange(options.bwb())).forEach(i -> {
+        val countBwbs = getCountInRange(options.bwb());
+        log.atInfo().log("countBwbs: {} of szg: {}", countBwbs, stimmzettelgebiet.getNummer());
+        IntStream.rangeClosed(1, countBwbs).forEach(i -> {
             val wahlbezirk = wahlbezirkRepository.save(
                     new Wahlbezirk(wahldatenMapper.toEntity(WahlbezirkArtDTO.BWB), stimmzettelgebiet.getNummer() + "_B_" + i, stimmzettelgebiet,
                             getCountInRange(options.a1()),
@@ -180,8 +186,9 @@ public class InitDataService {
     }
 
     private Collection<InitWahlvorschlagModel> setupWahlvorschlaege(final WahlvorschlagInitOptions wahlvorschlagInitOptions) {
-        val countRangeWahlvorschlaege = wahlvorschlagInitOptions.wahlvorschlaegeMaxCount() - wahlvorschlagInitOptions.wahlvorschlaegeMinCount();
-        val countWahwahlvorschleage = (int) (Math.random() * wahlvorschlagInitOptions.wahlvorschlaegeMinCount() + 1) + countRangeWahlvorschlaege;
+        val countWahwahlvorschleage = getCountInRange(
+                new RangeDTO(wahlvorschlagInitOptions.wahlvorschlaegeMinCount(), wahlvorschlagInitOptions.wahlvorschlaegeMaxCount()));
+        log.atDebug().log("countWahwahlvorschleage: {}", countWahwahlvorschleage);
 
         return IntStream.rangeClosed(1, countWahwahlvorschleage).mapToObj(i -> {
             val kandidaten = setupKandidaten(wahlvorschlagInitOptions);
@@ -190,8 +197,7 @@ public class InitDataService {
     }
 
     private Collection<InitKandidatModel> setupKandidaten(final WahlvorschlagInitOptions wahlvorschlagInitOptions) {
-        val countRangeKandidaten = wahlvorschlagInitOptions.kandidatenMaxCount() - wahlvorschlagInitOptions.kandidatenMinCount();
-        val countKandidaten = (int) (Math.random() * wahlvorschlagInitOptions.kandidatenMinCount() + 1) + countRangeKandidaten;
+        val countKandidaten = getCountInRange(new RangeDTO(wahlvorschlagInitOptions.kandidatenMinCount(), wahlvorschlagInitOptions.kandidatenMaxCount()));
 
         return IntStream.rangeClosed(1, countKandidaten).mapToObj(i -> new InitKandidatModel("Kandidat " + i, i)).toList();
     }
@@ -201,6 +207,6 @@ public class InitDataService {
     }
 
     private int getCountInRange(final RangeDTO range) {
-        return (int) (Math.random() * range.min() + 1) + range.max() - range.min();
+        return range.getValueInRange();
     }
 }

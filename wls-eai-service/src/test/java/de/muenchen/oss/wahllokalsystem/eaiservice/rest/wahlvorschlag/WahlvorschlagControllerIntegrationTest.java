@@ -88,14 +88,17 @@ public class WahlvorschlagControllerIntegrationTest {
         @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLVORSCHLAEGE)
         @Transactional
         void should_returnData_when_dataIsPresentInRepo() throws Exception {
-            val wahlvorschlag1 = new Wahlvorschlag(1, "wahlvorschlag1", true, Set.of(
-                    new Kandidat("name1", 1, false, 1, false),
-                    new Kandidat("name2", 2, true, 2, true)));
-            val wahlvorschlag2 = new Wahlvorschlag(1, "wahlvorschlag2", true, Set.of(
-                    new Kandidat("name3", 1, false, 1, false),
-                    new Kandidat("name4", 2, true, 2, true)));
+            val wahlvorschlaegeListe = wahlvorschlaegeListeRepository.save(new WahlvorschlaegeListe(LocalDate.now(), "wahlID", null));
+            val wahlvorschlaege1 = new Wahlvorschlaege("wahlbezirkID", "wahlID", "stimmzettelgebietID", null, wahlvorschlaegeListe);
 
-            val wahlvorschlaege1 = new Wahlvorschlaege("wahlbezirkID", "wahlID", "stimmzettelgebietID", Set.of(wahlvorschlag1, wahlvorschlag2));
+            val wahlvorschlag1 = new Wahlvorschlag(1, "wahlvorschlag1", true, null, wahlvorschlaege1);
+            wahlvorschlag1.setKandidaten(Set.of(
+                    new Kandidat("name1", 1, false, 1, false, wahlvorschlag1),
+                    new Kandidat("name2", 2, true, 2, true, wahlvorschlag1)));
+            val wahlvorschlag2 = new Wahlvorschlag(1, "wahlvorschlag2", true, null, wahlvorschlaege1);
+            wahlvorschlag2.setKandidaten(Set.of(
+                    new Kandidat("name3", 1, false, 1, false, wahlvorschlag2),
+                    new Kandidat("name4", 2, true, 2, true, wahlvorschlag2)));
 
             val wahlvorschlaegeToLoad = wahlvorschlagRepository.save(wahlvorschlaege1);
 
@@ -162,23 +165,33 @@ public class WahlvorschlagControllerIntegrationTest {
             val wahlID = "wahlID";
             val forDate = LocalDate.of(2024, 10, 10);
 
-            val wahlvorschlag1 = new Wahlvorschlag(1, "wahlvorschlag1", true, Set.of(
-                    new Kandidat("name1", 1, false, 1, false),
-                    new Kandidat("name2", 2, true, 2, true)));
-            val wahlvorschlag2 = new Wahlvorschlag(1, "wahlvorschlag2", true, Set.of(
-                    new Kandidat("name3", 1, false, 1, false),
-                    new Kandidat("name4", 2, true, 2, true)));
-            val wahlvorschlaege1 = new Wahlvorschlaege("wahlbezirkID1", "wahlID1", "stimmzettelgebietID1", Set.of(wahlvorschlag1, wahlvorschlag2));
+            val wahlvorschlaegeListe = new WahlvorschlaegeListe(forDate, wahlID, null);
 
-            val wahlvorschlag3 = new Wahlvorschlag(1, "wahlvorschlag1", true, Set.of(
-                    new Kandidat("name5", 1, false, 1, false),
-                    new Kandidat("name6", 2, true, 2, true)));
-            val wahlvorschlag4 = new Wahlvorschlag(1, "wahlvorschlag2", true, Set.of(
-                    new Kandidat("name7", 1, false, 1, false),
-                    new Kandidat("name8", 2, true, 2, true)));
-            val wahlvorschlaege2 = new Wahlvorschlaege("wahlbezirkID2", "wahlID1", "stimmzettelgebietID2", Set.of(wahlvorschlag3, wahlvorschlag4));
+            val wahlvorschlaege1 = new Wahlvorschlaege("wahlbezirkID1", "wahlID1", "stimmzettelgebietID1", null,
+                    wahlvorschlaegeListe);
+            val wahlvorschlag1 = new Wahlvorschlag(1, "wahlvorschlag1", true, null, wahlvorschlaege1);
+            wahlvorschlag1.setKandidaten(Set.of(
+                    new Kandidat("name1", 1, false, 1, false, wahlvorschlag1),
+                    new Kandidat("name2", 2, true, 2, true, wahlvorschlag1)));
+            val wahlvorschlag2 = new Wahlvorschlag(1, "wahlvorschlag2", true, null, wahlvorschlaege1);
+            wahlvorschlag2.setKandidaten(Set.of(
+                    new Kandidat("name3", 1, false, 1, false, wahlvorschlag2),
+                    new Kandidat("name4", 2, true, 2, true, wahlvorschlag2)));
+            wahlvorschlaege1.setWahlvorschlaege(Set.of(wahlvorschlag1, wahlvorschlag2));
 
-            val wahlvorschlaegeListe = new WahlvorschlaegeListe(forDate, wahlID, Set.of(wahlvorschlaege1, wahlvorschlaege2));
+            val wahlvorschlaege2 = new Wahlvorschlaege("wahlbezirkID2", "wahlID1", "stimmzettelgebietID2", null,
+                    wahlvorschlaegeListe);
+            val wahlvorschlag3 = new Wahlvorschlag(1, "wahlvorschlag1", true, null, wahlvorschlaege2);
+            wahlvorschlag3.setKandidaten(Set.of(
+                    new Kandidat("name5", 1, false, 1, false, wahlvorschlag3),
+                    new Kandidat("name6", 2, true, 2, true, wahlvorschlag3)));
+            val wahlvorschlag4 = new Wahlvorschlag(1, "wahlvorschlag2", true, null, wahlvorschlaege2);
+            wahlvorschlag4.setKandidaten(Set.of(
+                    new Kandidat("name7", 1, false, 1, false, wahlvorschlag4),
+                    new Kandidat("name8", 2, true, 2, true, wahlvorschlag4)));
+            wahlvorschlaege2.setWahlvorschlaege(Set.of(wahlvorschlag3, wahlvorschlag4));
+
+            wahlvorschlaegeListe.setWahlvorschlaegeliste(Set.of(wahlvorschlaege1, wahlvorschlaege2));
 
             val wahlvorschlaegeListeToLoad = wahlvorschlaegeListeRepository.save(wahlvorschlaegeListe);
 

@@ -52,7 +52,7 @@ class WahlvorschlagServiceTest {
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
 
-            val mockedEntity = new Wahlvorschlaege("wahlbezirkID", "wahlID", "stimmzettelgebietID", Collections.emptySet());
+            val mockedEntity = new Wahlvorschlaege("wahlbezirkID", "wahlID", "stimmzettelgebietID", Collections.emptySet(), null);
             val mockedMappedEntity = new WahlvorschlaegeDTO(wahlbezirkID, wahlID, "stimmzettelgebietID", Collections.emptySet());
             Mockito.when(wahlvorschlagRepository.findFirstByWahlbezirkIDAndWahlID(wahlbezirkID, wahlID)).thenReturn(Optional.of(mockedEntity));
             Mockito.when(wahlvorschlagMapper.toDTO(mockedEntity)).thenReturn(mockedMappedEntity);

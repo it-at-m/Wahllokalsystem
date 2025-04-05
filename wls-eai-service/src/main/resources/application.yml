@@ -1,6 +1,8 @@
 spring:
   application.name: @project.artifactId@
   banner.location: banner.txt
+  jpa:
+    show-sql: true
   profiles:
     group:
       local:

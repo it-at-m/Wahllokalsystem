@@ -40,7 +40,13 @@ Content-Type: application/json
                   "a3": 0,
                   "wahlbezirkArt": "UWB"
                 }
-              ]
+              ],
+              "wahlvorschlagInitOptions": {
+                "kandidatenMaxCount": 5,
+                "kandidatenMinCount": 5,
+                "wahlvorschlaegeMinCount": 5,
+                "wahlvorschlaegeMaxCount": 5
+              }
             },
             {
               "name": "szg w1.2",
@@ -68,7 +74,13 @@ Content-Type: application/json
                   "a3": 0,
                   "wahlbezirkArt": "UWB"
                 }
-              ]
+              ],
+              "wahlvorschlagInitOptions": {
+                "kandidatenMaxCount": 0,
+                "kandidatenMinCount": 0,
+                "wahlvorschlaegeMinCount": 0,
+                "wahlvorschlaegeMaxCount": 0
+              }
             }
           ]
         }
@@ -109,7 +121,13 @@ Content-Type: application/json
                   "a3": 0,
                   "wahlbezirkArt": "UWB"
                 }
-              ]
+              ],
+              "wahlvorschlagInitOptions": {
+                "kandidatenMaxCount": 0,
+                "kandidatenMinCount": 0,
+                "wahlvorschlaegeMinCount": 0,
+                "wahlvorschlaegeMaxCount": 0
+              }
             },
             {
               "name": "szg w2.2",
@@ -137,7 +155,13 @@ Content-Type: application/json
                   "a3": 0,
                   "wahlbezirkArt": "UWB"
                 }
-              ]
+              ],
+              "wahlvorschlagInitOptions": {
+                "kandidatenMaxCount": 0,
+                "kandidatenMinCount": 0,
+                "wahlvorschlaegeMinCount": 0,
+                "wahlvorschlaegeMaxCount": 0
+              }
             }
           ]
         }
@@ -178,11 +202,17 @@ Content-Type: application/json
                   "a3": 0,
                   "wahlbezirkArt": "UWB"
                 }
-              ]
+              ],
+              "wahlvorschlagInitOptions": {
+                "kandidatenMaxCount": 0,
+                "kandidatenMinCount": 0,
+                "wahlvorschlaegeMinCount": 0,
+                "wahlvorschlaegeMaxCount": 0
+              }
             },
             {
               "name": "szg w3.2",
-              "nummer": "101",
+              "nummer": "301",
               "stimmzettelgebietsart": "SB",
               "wahlbezirkOptions": [
                 {
@@ -206,7 +236,13 @@ Content-Type: application/json
                   "a3": 0,
                   "wahlbezirkArt": "UWB"
                 }
-              ]
+              ],
+              "wahlvorschlagInitOptions": {
+                "kandidatenMaxCount": 0,
+                "kandidatenMinCount": 0,
+                "wahlvorschlaegeMinCount": 0,
+                "wahlvorschlaegeMaxCount": 0
+              }
             }
           ]
         }

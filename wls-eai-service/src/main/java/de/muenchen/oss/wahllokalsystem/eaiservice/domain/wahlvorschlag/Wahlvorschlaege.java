@@ -4,6 +4,7 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.domain.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import java.util.Set;
@@ -35,7 +36,12 @@ public class Wahlvorschlaege extends BaseEntity {
     @ToString.Include
     String stimmzettelgebietID;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "wahlvorschlaegeID")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "wahlvorschlaege")
+    @EqualsAndHashCode.Exclude
     Set<Wahlvorschlag> wahlvorschlaege;
+
+    @ManyToOne
+    @JoinColumn(name = "wahlvorschlaegelisteID")
+    @EqualsAndHashCode.Exclude
+    WahlvorschlaegeListe wahlvorschlaegeListe;
 }

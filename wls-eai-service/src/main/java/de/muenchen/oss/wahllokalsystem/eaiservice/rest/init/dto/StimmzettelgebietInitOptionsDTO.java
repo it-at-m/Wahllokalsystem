@@ -8,6 +8,7 @@ public record StimmzettelgebietInitOptionsDTO(
         String nummer,
         String name,
         @NotNull StimmzettelgebietsartDTO stimmzettelgebietsart,
-        List<WahlbezirkOptionsDTO> wahlbezirkOptions
+        @NotNull List<WahlbezirkOptionsDTO> wahlbezirkOptions,
+        @NotNull WahlvorschlagInitOptions wahlvorschlagInitOptions
 ) {
 }

@@ -89,8 +89,7 @@ public class InitDataService {
 
     private void storeRandomGeneratedStimmzettelgebiete(
             final RandomStimmzettelgebieteInitOptionsDTO options,
-            final Wahl wahl
-    ) {
+            final Wahl wahl) {
         IntStream.rangeClosed(1, getCountInRange(options.count())).forEach(i -> {
             val stimmzettelgebiet = stimmzettelgebietRepository.save(
                     new Stimmzettelgebiet(wahl.getName() + "_" + i, "" + i, wahldatenMapper.toEntity(options.stimmzettelgebietsart()), wahl));

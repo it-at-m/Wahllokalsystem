@@ -105,43 +105,44 @@ Content-Type: application/json
         {
           "name": "Bezirksausschusswahl",
           "wahlart": "BZW",
-          "stimmzettelgebietInitOptions": [
-            {
-              "name": "szg w3.1",
-              "nummer": "B100",
-              "stimmzettelgebietsart": "SB",
-              "randomWahlbezirke": {
-                "a1": {
-                  "min": 10,
-                  "max": 20
-                },
-                "a2": {
-                  "min": 10,
-                  "max": 20
-                },
-                "a3": {
-                  "min": 10,
-                  "max": 20
-                },
-                "uwb": {
-                  "min": 20,
-                  "max": 20
-                },
-                "bwb": {
-                  "min": 10,
-                  "max": 20
-                }
+          "randomStimmzettelgebiete": {
+            "stimmzettelgebietsart": "SB",
+            "count": {
+              "min": 25,
+              "max": 25
+            },
+            "randomWahlbezirke": {
+              "a1": {
+                "min": 10,
+                "max": 20
               },
-              "wahlvorschlagInitOptions": {
-                "kandidatenMaxCount": 1,
-                "kandidatenMinCount": 1,
-                "wahlvorschlaegeMinCount": 5,
-                "wahlvorschlaegeMaxCount": 5
+              "a2": {
+                "min": 10,
+                "max": 20
+              },
+              "a3": {
+                "min": 10,
+                "max": 20
+              },
+              "uwb": {
+                "min": 20,
+                "max": 20
+              },
+              "bwb": {
+                "min": 10,
+                "max": 20
               }
+            },
+            "wahlvorschlagInitOptions": {
+              "kandidatenMaxCount": 5,
+              "kandidatenMinCount": 7,
+              "wahlvorschlaegeMinCount": 3,
+              "wahlvorschlaegeMaxCount": 7
             }
-          ]
+          }
         }
       ]
     }
   ]
 }
+

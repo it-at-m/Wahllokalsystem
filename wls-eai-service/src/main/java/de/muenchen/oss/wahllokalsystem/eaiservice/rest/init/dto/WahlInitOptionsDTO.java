@@ -6,5 +6,6 @@ import java.util.List;
 
 public record WahlInitOptionsDTO(@NotNull WahlartDTO wahlart,
                                  @NotNull String name,
+                                 RandomStimmzettelgebieteInitOptionsDTO randomStimmzettelgebiete,
                                  List<StimmzettelgebietInitOptionsDTO> stimmzettelgebietInitOptions) {
 }

@@ -45,13 +45,13 @@
         </logger>
 
         <logger name="org.hibernate.SQL"
-                level="debug"
+                level="off"
                 additivity="false">
             <appender-ref ref="STDOUT" />
         </logger>
 
         <logger name="org.hibernate.orm"
-                level="trace"
+                level="off"
                 additivity="false">
             <appender-ref ref="STDOUT" />
         </logger>

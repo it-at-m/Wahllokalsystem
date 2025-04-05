@@ -193,7 +193,7 @@ public class InitDataService {
         val countRangeKandidaten = wahlvorschlagInitOptions.kandidatenMaxCount() - wahlvorschlagInitOptions.kandidatenMinCount();
         val countKandidaten = (int) (Math.random() * wahlvorschlagInitOptions.kandidatenMinCount() + 1) + countRangeKandidaten;
 
-        return IntStream.rangeClosed(0, countKandidaten).mapToObj(i -> new InitKandidatModel("Kandidat " + i, i)).toList();
+        return IntStream.rangeClosed(1, countKandidaten).mapToObj(i -> new InitKandidatModel("Kandidat " + i, i)).toList();
     }
 
     private static String createDefaultBeschreibung(final WahltagInitOptionsDTO wahltagInit) {

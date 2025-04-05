@@ -15,12 +15,15 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorschlag.Wahlvorsc
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorschlag.WahlvorschlaegeListeRepository;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorschlag.Wahlvorschlag;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorschlag.WahlvorschlagRepository;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.init.dto.RamdomWahlbezirkeInitOptionsDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.init.dto.RangeDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.init.dto.StimmzettelgebietInitOptionsDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.init.dto.WahlInitOptionsDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.init.dto.WahlbezirkOptionsDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.init.dto.WahltagInitOptionsDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.init.dto.WahltagInitRequestDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.init.dto.WahlvorschlagInitOptions;
+import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahldaten.dto.WahlbezirkArtDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.service.wahldaten.WahldatenMapper;
 import java.util.Collection;
 import java.util.Collections;
@@ -84,9 +87,39 @@ public class InitDataService {
             val stimmzettelgebiet = stimmzettelgebietRepository.save(
                     new Stimmzettelgebiet(option.nummer(), option.name(), wahldatenMapper.toEntity(option.stimmzettelgebietsart()), wahl));
 
-            if (!CollectionUtils.isEmpty(option.wahlbezirkOptions())) {
+            if (option.randomWahlbezirke() != null) {
+                storeRandomGeneratedWahlbezirke(option.randomWahlbezirke(), option.wahlvorschlagInitOptions(), stimmzettelgebiet);
+            } else if (!CollectionUtils.isEmpty(option.wahlbezirkOptions())) {
                 storeWahlbezirke(option.wahlbezirkOptions(), option.wahlvorschlagInitOptions(), stimmzettelgebiet);
             }
+        });
+    }
+
+    private void storeRandomGeneratedWahlbezirke(final RamdomWahlbezirkeInitOptionsDTO options,
+            final WahlvorschlagInitOptions wahlvorschlagInitOptions,
+            final Stimmzettelgebiet stimmzettelgebiet) {
+        val wahlvorschlaegeOfStimmzettelgebiet = setupWahlvorschlaege(wahlvorschlagInitOptions);
+
+        //UWB
+        IntStream.rangeClosed(1, getCountInRange(options.uwb())).forEach(i -> {
+            val wahlbezirk = wahlbezirkRepository.save(
+                    new Wahlbezirk(wahldatenMapper.toEntity(WahlbezirkArtDTO.UWB), stimmzettelgebiet.getNummer() + "_U_" + i, stimmzettelgebiet,
+                            getCountInRange(options.a1()),
+                            getCountInRange(options.a2()),
+                            getCountInRange(options.a3())));
+
+            storeWahlvorschlaege(wahlvorschlaegeOfStimmzettelgebiet, wahlbezirk);
+        });
+
+        //BWB
+        IntStream.rangeClosed(1, getCountInRange(options.bwb())).forEach(i -> {
+            val wahlbezirk = wahlbezirkRepository.save(
+                    new Wahlbezirk(wahldatenMapper.toEntity(WahlbezirkArtDTO.BWB), stimmzettelgebiet.getNummer() + "_B_" + i, stimmzettelgebiet,
+                            getCountInRange(options.a1()),
+                            getCountInRange(options.a2()),
+                            getCountInRange(options.a3())));
+
+            storeWahlvorschlaege(wahlvorschlaegeOfStimmzettelgebiet, wahlbezirk);
         });
     }
 
@@ -150,5 +183,9 @@ public class InitDataService {
 
     private static String createDefaultBeschreibung(final WahltagInitOptionsDTO wahltagInit) {
         return "beschreibung of " + wahltagInit.wahltag() + " nummer " + wahltagInit.nummer();
+    }
+
+    private int getCountInRange(final RangeDTO range) {
+        return (int) (Math.random() * range.min() + 1) + range.max() - range.min();
     }
 }

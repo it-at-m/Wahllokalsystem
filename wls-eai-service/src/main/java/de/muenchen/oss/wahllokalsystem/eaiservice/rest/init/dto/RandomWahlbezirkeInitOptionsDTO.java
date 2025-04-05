@@ -2,7 +2,7 @@ package de.muenchen.oss.wahllokalsystem.eaiservice.rest.init.dto;
 
 import jakarta.validation.constraints.NotNull;
 
-public record RamdomWahlbezirkeInitOptionsDTO(
+public record RandomWahlbezirkeInitOptionsDTO(
         @NotNull RangeDTO uwb,
         @NotNull RangeDTO bwb,
         @NotNull RangeDTO a1,

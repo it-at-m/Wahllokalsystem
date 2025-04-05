@@ -1,0 +1,56 @@
+### init OBW
+POST {{ WLS_EAI_SERVICE_URL }}/initData/wahltage
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "wahltagInitRequests": [
+    {
+      "beschreibung": "OBW",
+      "nummer": "1",
+      "wahltag": "2026-01-01",
+      "wahlInitOptions": [
+        {
+          "name": "OBW",
+          "wahlart": "OBW",
+          "stimmzettelgebietInitOptions": [
+            {
+              "name": "szg w1.1",
+              "nummer": "100",
+              "stimmzettelgebietsart": "SG",
+              "randomWahlbezirke": {
+                "a1": {
+                  "min": 10,
+                  "max": 20
+                },
+                "a2": {
+                  "min": 10,
+                  "max": 20
+                },
+                "a3": {
+                  "min": 10,
+                  "max": 20
+                },
+                "uwb": {
+                  "min": 20,
+                  "max": 20
+                },
+                "bwb": {
+                  "min": 10,
+                  "max": 20
+                }
+              },
+              "wahlvorschlagInitOptions": {
+                "kandidatenMinCount": 1,
+                "kandidatenMaxCount": 1,
+                "wahlvorschlaegeMinCount": 5,
+                "wahlvorschlaegeMaxCount": 5
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+

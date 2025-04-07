@@ -3,18 +3,16 @@ import type { Wahltag } from "@/types/wahltag/Wahltag.ts";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { createVuetify } from "vuetify";
-import * as components from "vuetify/components";
 import { VAutocomplete } from "vuetify/components";
-import * as directives from "vuetify/directives";
 
 import BaseAutocompleteWahltag from "@/components/common/BaseAutocompleteWahltag.vue";
 import pinia from "@/plugins/pinia";
+import vuetify from "@/plugins/vuetify";
 import { getSnapshotFilename } from "../../utils/testutils.ts";
 
 const wahltage: Wahltag[] = [
   {
-    wahltag: "24.12.2025",
+    wahltag: new Date("2025-12-24"),
     events: [
       {
         wahltagID: "1",
@@ -24,7 +22,7 @@ const wahltage: Wahltag[] = [
     ],
   },
   {
-    wahltag: "01.01.2025",
+    wahltag: new Date("2025-01-01"),
     events: [
       {
         wahltagID: "2",
@@ -34,7 +32,7 @@ const wahltage: Wahltag[] = [
     ],
   },
   {
-    wahltag: "20.03.2025",
+    wahltag: new Date("2025-03-20"),
     events: [
       {
         wahltagID: "3",
@@ -46,7 +44,6 @@ const wahltage: Wahltag[] = [
 ];
 
 describe("BaseAutocompleteWahltag.vue", () => {
-  let vuetify: ReturnType<typeof createVuetify>;
   let wrapper: VueWrapper;
 
   beforeAll(() => {
@@ -54,11 +51,6 @@ describe("BaseAutocompleteWahltag.vue", () => {
   });
 
   beforeEach(() => {
-    vuetify = createVuetify({
-      components,
-      directives,
-    });
-
     wrapper = mount(BaseAutocompleteWahltag, {
       global: { plugins: [pinia, vuetify] },
       props: {
@@ -83,7 +75,6 @@ describe("BaseAutocompleteWahltag.vue", () => {
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );
-      expect(wrapper.html()).toContain(tag.wahltag);
     });
   });
 

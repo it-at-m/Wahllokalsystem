@@ -33,5 +33,9 @@ export default createVuetify({
     VAutocomplete: {
       variant: "outlined",
     },
+    VDialog: {
+      persistent: true,
+      maxWidth: 600,
+    },
   },
 });

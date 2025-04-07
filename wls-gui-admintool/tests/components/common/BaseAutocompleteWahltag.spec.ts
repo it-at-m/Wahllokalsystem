@@ -1,3 +1,6 @@
+import type { Wahltag } from "@/types/wahltag/Wahltag.ts";
+
+import { getSnapshotFilename } from "@tests/utils/testutils.ts";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
@@ -8,26 +11,37 @@ import * as directives from "vuetify/directives";
 
 import BaseAutocompleteWahltag from "@/components/common/BaseAutocompleteWahltag.vue";
 import pinia from "@/plugins/pinia";
-import { getSnapshotFilename } from "../../utils/testutils.ts";
 
-const wahltage = [
+const wahltage: Wahltag[] = [
   {
-    wahltagID: "1",
     wahltag: "24.12.2025",
-    beschreibung: "Weihnachten",
-    nummer: "1.1",
+    events: [
+      {
+        wahltagID: "1",
+        beschreibung: "Weihnachten",
+        nummer: "1.1",
+      },
+    ],
   },
   {
-    wahltagID: "2",
     wahltag: "01.01.2025",
-    beschreibung: "Neujahr",
-    nummer: "2.1",
+    events: [
+      {
+        wahltagID: "2",
+        beschreibung: "Neujahr",
+        nummer: "2.1",
+      },
+    ],
   },
   {
-    wahltagID: "3",
     wahltag: "20.03.2025",
-    beschreibung: "Frühlingsanfang",
-    nummer: "3.1",
+    events: [
+      {
+        wahltagID: "3",
+        beschreibung: "Frühlingsanfang",
+        nummer: "3.1",
+      },
+    ],
   },
 ];
 
@@ -70,7 +84,6 @@ describe("BaseAutocompleteWahltag.vue", () => {
         getSnapshotFilename(context)
       );
       expect(wrapper.html()).toContain(tag.wahltag);
-      expect(wrapper.html()).not.toContain(tag.beschreibung);
     });
   });
 

@@ -6,24 +6,25 @@
     item-title="wahltag"
     v-model="modelValue"
     return-object
+    data-test="autocompleteWahltage"
   ></v-autocomplete>
 </template>
 
 <script setup lang="ts">
-import type { WahltagDTO } from "@/api/wls-clients/generated-admin-api";
+import type { Wahltag } from "@/types/wahltag/Wahltag.ts";
 import type { PropType } from "vue";
 
 import { VAutocomplete } from "vuetify/components";
 
 const props = defineProps({
   items: {
-    type: Array<WahltagDTO>,
+    type: Array<Wahltag>,
     required: true,
   },
 });
 
 const modelValue = defineModel({
-  type: Object as PropType<WahltagDTO>,
+  type: Object as PropType<Wahltag>,
   required: false,
 });
 </script>

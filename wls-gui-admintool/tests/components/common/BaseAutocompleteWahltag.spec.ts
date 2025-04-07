@@ -1,5 +1,6 @@
 import type { Wahltag } from "@/types/wahltag/Wahltag.ts";
 
+import { getSnapshotFilename } from "@tests/utils/testutils.ts";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
@@ -8,7 +9,6 @@ import { VAutocomplete } from "vuetify/components";
 import BaseAutocompleteWahltag from "@/components/common/BaseAutocompleteWahltag.vue";
 import pinia from "@/plugins/pinia";
 import vuetify from "@/plugins/vuetify";
-import { getSnapshotFilename } from "../../utils/testutils.ts";
 
 const wahltage: Wahltag[] = [
   {

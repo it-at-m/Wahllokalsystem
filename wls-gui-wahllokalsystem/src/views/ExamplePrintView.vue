@@ -2,7 +2,7 @@
   <div>
     <v-row>
       <v-col class="text-center">
-        <h2>This view shows how printing pdfs will work</h2>
+        <h2>This view shows how printing will work</h2>
       </v-col>
     </v-row>
     <v-row class="pa-2">
@@ -244,7 +244,7 @@ function htmlFromData(data: Data) {
               font-size: 9pt;
           }
        </style>
-        <title>Testdruck PDF</title>
+        <title>Testdruck</title>
       </head>
       <body>
         <h1 class="margin-top margin-leftright">${data.title || "Alternativer Titel"}</h1>

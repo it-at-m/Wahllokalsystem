@@ -105,15 +105,15 @@
           </v-tooltip>
           <v-tooltip
             location="bottom"
-            text="PDF printing example"
+            text="printing example"
           >
             <template #activator="{ props }">
               <router-link
                 v-bind="props"
-                :to="{ name: PDF_EXAMPLE }"
+                :to="{ name: PRINT_EXAMPLE }"
               >
                 <v-btn
-                  icon="$pdf"
+                  icon="$printer"
                   variant="text"
                   density="comfortable"
                   size="x-large"
@@ -173,7 +173,7 @@ import {
   EXAMPLE_ROUTES_BACKEND,
   EXAMPLE_ROUTES_NEWROUTE,
   EXAMPLE_VALIDATION,
-  PDF_EXAMPLE,
+  PRINT_EXAMPLE,
   ROUTE_WAHLVORSTAND,
   TOAST,
 } from "@/constants";

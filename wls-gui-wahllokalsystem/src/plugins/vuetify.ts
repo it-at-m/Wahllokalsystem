@@ -2,9 +2,9 @@ import "vuetify/styles";
 
 import {
   mdiContentSave,
-  mdiFilePdfBox,
   mdiHome,
   mdiMessageText,
+  mdiPrinter,
   mdiReload,
   mdiRoutes,
   mdiSend,
@@ -33,7 +33,7 @@ export default createVuetify({
       send: mdiSend,
       updateTime: mdiUpdate,
       toaster: mdiToaster,
-      pdf: mdiFilePdfBox,
+      printer: mdiPrinter,
     },
     sets: {
       mdi,

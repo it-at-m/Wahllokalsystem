@@ -15,9 +15,9 @@ import { VBtn } from "vuetify/components";
 import * as directives from "vuetify/directives";
 
 import pinia from "@/plugins/pinia";
-import ExamplePrintPdfView from "@/views/ExamplePrintPdfView.vue";
+import ExamplePrintView from "@/views/ExamplePrintView.vue";
 
-describe("ExamplePrintPdfView.vue", () => {
+describe("ExamplePrintView.vue", () => {
   let vuetify: ReturnType<typeof createVuetify>;
   let wrapper: VueWrapper;
 
@@ -32,7 +32,7 @@ describe("ExamplePrintPdfView.vue", () => {
       directives,
     });
 
-    wrapper = mount(ExamplePrintPdfView, {
+    wrapper = mount(ExamplePrintView, {
       global: { plugins: [pinia, vuetify] },
     });
     vi.clearAllMocks();

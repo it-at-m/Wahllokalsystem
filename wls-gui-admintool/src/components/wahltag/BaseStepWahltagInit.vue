@@ -5,6 +5,7 @@
         :loading="isLoading || istDeleting"
         active
         class="mb-2"
+        data-test="override"
         @click="onOverrideWahltagClicked"
         >Überschreiben</v-btn
       >
@@ -14,6 +15,7 @@
         :loading="isLoading"
         active
         class="mb-2"
+        data-test="create"
         @click="onInitWahltagClicked"
         >Erstellen</v-btn
       >

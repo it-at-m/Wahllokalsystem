@@ -3,6 +3,7 @@ import type { Ref } from "vue";
 
 import {
   Configuration,
+  KonfigurierteWahltageControllerApi,
   WahltageControllerApi,
 } from "@/api/wls-clients/generated-admin-api";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
@@ -17,6 +18,13 @@ export default function useWahltagService() {
       basePath: ADMIN_SERVICE_API_URL,
     })
   );
+  const basisdatenKonfigurierteWahltageAPI =
+    new KonfigurierteWahltageControllerApi(
+      new Configuration({
+        basePath: ADMIN_SERVICE_API_URL,
+      })
+    );
+
   const { mapGroupedWahltagDtosToWahltage } = useWahltagMapper();
   const { addNotification } = useUserNotificationService();
   const { groupWahltagDtosByWahltag } = useWahltagDtoUtils();
@@ -42,8 +50,28 @@ export default function useWahltagService() {
     return result;
   }
 
+  async function isKonfigurierterWahltag(wahltagID: string): Promise<boolean> {
+    try {
+      const konfigurierteWahltage = await basisdatenKonfigurierteWahltageAPI
+        .getKonfigurierteWahltage()
+        .then((response) => response.data);
+
+      return konfigurierteWahltage.some(
+        (konfigurierterWahltag) => konfigurierterWahltag.wahltagID === wahltagID
+      );
+    } catch {
+      addNotification(
+        "Abrufen der konfigurierten Wahltage fehlgeschlagen",
+        "Error"
+      );
+    }
+
+    return false;
+  }
+
   return {
     getWahltage,
+    isKonfigurierterWahltag,
   };
 }
 

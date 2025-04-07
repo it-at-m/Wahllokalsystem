@@ -1,4 +1,7 @@
-import type { WahltagDTO } from "@/api/wls-clients/generated-admin-api";
+import type {
+  KonfigurierterWahltagDTO,
+  WahltagDTO,
+} from "@/api/wls-clients/generated-admin-api";
 import type { Wahltag } from "@/types/wahltag/Wahltag.ts";
 import type { WahltagEvent } from "@/types/wahltag/WahltagEvent.ts";
 import type { Builder } from "@tests/utils/common/Builder.ts";
@@ -10,6 +13,15 @@ const { generateRandomDateAsString, generateRandomNumber } =
   useCommonTestDataFactory();
 
 export function useWahltagTestDataFactory() {
+  function createKonfigurierterWahltagDTOComplete(): KonfigurierterWahltagDTO {
+    return {
+      nummer: `${generateRandomNumber(2)}`,
+      wahltag: generateRandomDateAsString(),
+      wahltagID: `wahltagID${generateRandomNumber(3)}`,
+      wahltagStatusDTO: "INAKTIV",
+    };
+  }
+
   function createWahltagComplete(countEvents = 3): Wahltag {
     const wahltagEvents: WahltagEvent[] = [];
     for (let i = 0; i < countEvents; i++) {
@@ -19,6 +31,12 @@ export function useWahltagTestDataFactory() {
       wahltag: generateRandomDateAsString(),
       events: wahltagEvents,
     };
+  }
+
+  function prepareKonfigurierterWahltagDTO(): Builder<KonfigurierterWahltagDTO> {
+    return proxyBuilder<KonfigurierterWahltagDTO>(
+      createKonfigurierterWahltagDTOComplete()
+    );
   }
 
   function prepareWahltagDtoComplete(): Builder<WahltagDTO> {
@@ -39,7 +57,9 @@ export function useWahltagTestDataFactory() {
   }
 
   return {
+    createKonfigurierterWahltagDTOComplete,
     createWahltagComplete,
+    prepareKonfigurierterWahltagDTO,
     prepareWahltagDtoComplete,
     prepareWahltagEvent,
   };

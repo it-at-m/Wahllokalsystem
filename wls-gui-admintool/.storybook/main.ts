@@ -20,6 +20,7 @@ const config: StorybookConfig = {
     builder: "@storybook/builder-vite",
     disableTelemetry: true,
   },
+  staticDirs: ["msw/gen/public"],
   async viteFinal(config) {
     return mergeConfig(config, {
       resolve: {

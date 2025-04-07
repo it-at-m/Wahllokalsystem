@@ -1,9 +1,9 @@
+import { getSnapshotFilename } from "@tests/utils/testutils.ts";
 import { mount, VueWrapper } from "@vue/test-utils";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import BaseIconButtonRefresh from "@/components/common/BaseIconButtonRefresh.vue";
 import vuetify from "@/plugins/vuetify";
-import { getSnapshotFilename } from "../../utils/testutils.ts";
 
 describe("BaseIconButtonRefresh.vue", () => {
   let wrapper: VueWrapper;

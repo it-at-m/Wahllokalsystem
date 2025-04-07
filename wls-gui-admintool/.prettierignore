@@ -4,6 +4,6 @@ node_modules
 src/api/wls-clients/generated-*-api
 src/resources/openapis
 
-.storybook/**/gen/**
+.msw/**
 
 tests/**/__snapshots__/**

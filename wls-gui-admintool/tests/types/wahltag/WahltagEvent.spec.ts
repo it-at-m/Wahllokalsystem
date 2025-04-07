@@ -7,7 +7,7 @@ const { prepareWahltagEvent } = useWahltagTestDataFactory();
 
 describe("WahltagEvent.ts", () => {
   describe("compareByNummerAsc", () => {
-    it("should_return0_when_bothNummersAreEqual", () => {
+    it("should_return0_when_bothNummerAttributesAreEqual", () => {
       expect(
         compareByNummerAsc(
           prepareWahltagEvent().nummer("42").build(),

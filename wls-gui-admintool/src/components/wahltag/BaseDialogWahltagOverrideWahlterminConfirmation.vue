@@ -6,7 +6,7 @@
     <v-card>
       <v-card-title>Wahltermindaten erneut anlegen</v-card-title>
       <v-card-text>
-        <div>
+        <div data-test="div-confirm-information">
           Für diesen Wahltag existieren bereits Wahltermindaten. Bitte geben sie
           "{{ requiredConfirmText }}" in das Eingabefeld ein und bestätigen sie
           um die alten Wahltermindaten zu löschen und neue zu erstellen.

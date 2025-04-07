@@ -1,0 +1,27 @@
+import type { Meta, StoryObj } from "@storybook/vue3";
+
+import { fn } from "@storybook/test";
+
+import { default as StoryComponent } from "@/components/common/BaseButtonCancel.vue";
+
+const meta: Meta<typeof StoryComponent> = {
+  component: StoryComponent,
+  argTypes: {
+    /* @ts-expect-error: error cause not explicit defined as event */
+    onClick: {
+      table: {
+        disable: true,
+      },
+    },
+  },
+  args: {
+    /* @ts-expect-error: error cause not explicit defined as event */
+    onClick: fn(),
+  },
+};
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {};

@@ -61,7 +61,6 @@ const emit = defineEmits<{
 defineExpose({
   show,
   hide,
-  a: 10,
 });
 
 const visible = ref(false);

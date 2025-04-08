@@ -9,7 +9,7 @@ import type { Builder } from "@tests/utils/common/Builder.ts";
 import { proxyBuilder } from "@tests/utils/common/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
-const { generateRandomDateAsString, generateRandomNumber } =
+const { generateRandomDate, generateRandomDateAsString, generateRandomNumber } =
   useCommonTestDataFactory();
 
 export function useWahltagTestDataFactory() {
@@ -28,7 +28,7 @@ export function useWahltagTestDataFactory() {
       wahltagEvents.push(createWahltagEventComplete());
     }
     return {
-      wahltag: generateRandomDateAsString(),
+      wahltag: generateRandomDate(),
       events: wahltagEvents,
     };
   }

@@ -59,16 +59,16 @@ describe("BaseStepWahltagInit.vue", () => {
     });
   });
 
-  afterAll(() => {
-    vi.unstubAllGlobals();
-  });
-
   afterEach(() => {
     vi.clearAllMocks();
     vi.resetAllMocks();
     wrapper.unmount();
     document.body.innerHTML = "";
     document.head.innerHTML = "";
+  });
+
+  afterAll(() => {
+    vi.unstubAllGlobals();
   });
 
   describe("visual logic", () => {

@@ -15,6 +15,14 @@ export function useCommonTestDataFactory() {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
   }
 
+  function generateRandomDateTimeAsString() {
+    const date = new Date();
+
+    date.setDate(date.getDate() - Math.trunc(Math.random() * 100));
+
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}T${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+  }
+
   function generateRandomDate(): Date {
     const date = new Date();
 
@@ -28,5 +36,6 @@ export function useCommonTestDataFactory() {
     generateRandomNumber,
     generateRandomDate,
     generateRandomDateAsString,
+    generateRandomDateTimeAsString,
   };
 }

@@ -6,6 +6,8 @@ export function useBasisdatenMapper() {
     dto: AsyncProgressDTO
   ): BasisdatenInitProgress {
     return {
+      wahlNummer: dto.wahlNummer,
+      forWahltag: dto.forWahltag,
       lastStartTime: dto.lastStartTime,
       lastFinishTime: dto.lastFinishTime,
       wahlvorschlaege: {

@@ -19,6 +19,8 @@ describe("basisdatenMapper.ts", () => {
           unitUnderTest.mapAsyncProgressDtoToBasisdatenInitProgress(dtoToMap);
 
         const expectedResult: BasisdatenInitProgress = {
+          forWahltag: dtoToMap.forWahltag,
+          wahlNummer: dtoToMap.wahlNummer,
           lastStartTime: dtoToMap.lastStartTime,
           lastFinishTime: dtoToMap.lastFinishTime,
           wahlvorschlaege: {

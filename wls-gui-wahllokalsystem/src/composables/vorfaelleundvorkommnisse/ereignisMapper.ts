@@ -34,58 +34,58 @@ export function useEreignisMapper() {
     };
   }
 
-  function ereignisDtoToEreignisModel(ereignisDto: EreignisDTO): Ereignis {
-    return {
-      beschreibung: ereignisDto.beschreibung ?? "",
-      uhrzeit: ereignisDto.uhrzeit ? new Date(ereignisDto.uhrzeit) : undefined,
-      ereignisart: ereignisDto.ereignisart
-        ? ereignisartDtoToEreignisartModel(ereignisDto.ereignisart)
-        : undefined,
-    };
-  }
-
-  function ereignisModelToEreignisDto(ereignisModel: Ereignis): EreignisDTO {
-    let mappedUhrzeit;
-    if (ereignisModel.uhrzeit) {
-      mappedUhrzeit = new Date(ereignisModel.uhrzeit);
-      mappedUhrzeit.setHours(
-        mappedUhrzeit.getHours() -
-          Math.trunc(mappedUhrzeit.getTimezoneOffset() / 60)
-      );
-    }
-    return {
-      beschreibung: ereignisModel.beschreibung ?? "",
-      uhrzeit: mappedUhrzeit?.toJSON(),
-      ereignisart: ereignisModel.ereignisart
-        ? ereignisartModelToEreignisartDto(ereignisModel.ereignisart)
-        : undefined,
-    };
-  }
-
-  function ereignisartDtoToEreignisartModel(
-    ereignisartDto: EreignisDTOEreignisartEnum
-  ): EreignisartEnum {
-    switch (ereignisartDto) {
-      case "VORFALL":
-        return EreignisartEnum.Vorfall;
-      case "VORKOMMNIS":
-        return EreignisartEnum.Vorkommnis;
-    }
-  }
-
-  function ereignisartModelToEreignisartDto(
-    ereignisartModel: EreignisartEnum
-  ): EreignisDTOEreignisartEnum {
-    switch (ereignisartModel) {
-      case "VORFALL":
-        return EreignisDTOEreignisartEnum.Vorfall;
-      case "VORKOMMNIS":
-        return EreignisDTOEreignisartEnum.Vorkommnis;
-    }
-  }
-
   return {
     toModel,
     toDto,
   };
+}
+
+function ereignisDtoToEreignisModel(ereignisDto: EreignisDTO): Ereignis {
+  return {
+    beschreibung: ereignisDto.beschreibung ?? "",
+    uhrzeit: ereignisDto.uhrzeit ? new Date(ereignisDto.uhrzeit) : undefined,
+    ereignisart: ereignisDto.ereignisart
+      ? ereignisartDtoToEreignisartModel(ereignisDto.ereignisart)
+      : undefined,
+  };
+}
+
+function ereignisModelToEreignisDto(ereignisModel: Ereignis): EreignisDTO {
+  let mappedUhrzeit;
+  if (ereignisModel.uhrzeit) {
+    mappedUhrzeit = new Date(ereignisModel.uhrzeit);
+    mappedUhrzeit.setHours(
+      mappedUhrzeit.getHours() -
+        Math.trunc(mappedUhrzeit.getTimezoneOffset() / 60)
+    );
+  }
+  return {
+    beschreibung: ereignisModel.beschreibung ?? "",
+    uhrzeit: mappedUhrzeit?.toJSON(),
+    ereignisart: ereignisModel.ereignisart
+      ? ereignisartModelToEreignisartDto(ereignisModel.ereignisart)
+      : undefined,
+  };
+}
+
+function ereignisartDtoToEreignisartModel(
+  ereignisartDto: EreignisDTOEreignisartEnum
+): EreignisartEnum {
+  switch (ereignisartDto) {
+    case "VORFALL":
+      return EreignisartEnum.Vorfall;
+    case "VORKOMMNIS":
+      return EreignisartEnum.Vorkommnis;
+  }
+}
+
+function ereignisartModelToEreignisartDto(
+  ereignisartModel: EreignisartEnum
+): EreignisDTOEreignisartEnum {
+  switch (ereignisartModel) {
+    case "VORFALL":
+      return EreignisDTOEreignisartEnum.Vorfall;
+    case "VORKOMMNIS":
+      return EreignisDTOEreignisartEnum.Vorkommnis;
+  }
 }

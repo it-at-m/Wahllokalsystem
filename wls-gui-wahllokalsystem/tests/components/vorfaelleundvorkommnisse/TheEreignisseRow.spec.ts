@@ -16,7 +16,7 @@ import { nextTick } from "vue";
 
 import TheEreignisseRow from "@/components/vorfaelleundvorkommnisse/TheEreignisseRow.vue";
 import vuetify from "@/plugins/vuetify";
-import { useEreignisStore } from "@/stores/vorfaelleundvorkommnisseStore";
+import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { EreignisBuilder } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 import { getSnapshotFilename } from "../../utils/testutils";
 

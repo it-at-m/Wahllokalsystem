@@ -1,8 +1,8 @@
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useUserStore } from "@/stores/user";
-import { useEreignisStore } from "@/stores/vorfaelleundvorkommnisseStore.ts";
 import User from "@/types/User";
 import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
@@ -20,7 +20,7 @@ vi.mock("@/composables/vorfaelleundvorkommnisse/ereignisService", () => ({
 
 const mockedNow = new Date();
 
-describe("vorfaelleundvorkommnisseStore.ts", () => {
+describe("ereignisStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useEreignisStore>;
 
   beforeEach(() => {

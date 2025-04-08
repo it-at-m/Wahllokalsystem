@@ -4,7 +4,11 @@
       v-for="(ereignis, index) in wahlbezirkEreignisse.ereigniseintraege"
       :key="index"
     >
-      <v-col cols="1" class="text-center mt-5">{{ index + 1 }}</v-col>
+      <v-col
+        cols="1"
+        class="text-center mt-5"
+        >{{ index + 1 }}</v-col
+      >
       <v-col cols="2">
         <v-text-field
           :model-value="toHhMm(ereignis.uhrzeit)"
@@ -55,7 +59,7 @@ import { VCol, VIcon, VRow, VTextarea, VTextField } from "vuetify/components";
 
 import YesNoDialog from "@/components/common/YesNoDialog.vue";
 import useFormatter from "@/composables/common/formatter.ts";
-import { useEreignisStore } from "@/stores/vorfaelleundvorkommnisseStore.ts";
+import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { MAX_LENGTH, MIN_LENGTH, REQUIRED } from "@/util/rules.ts";
 
 const { toHhMm } = useFormatter();

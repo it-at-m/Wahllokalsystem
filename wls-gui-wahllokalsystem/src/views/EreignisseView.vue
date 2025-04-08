@@ -35,7 +35,7 @@ import {
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheEreignisseRow from "@/components/vorfaelleundvorkommnisse/TheEreignisseRow.vue";
-import { useEreignisStore } from "@/stores/vorfaelleundvorkommnisseStore.ts";
+import { useEreignisStore } from "@/stores/ereignisStore.ts";
 
 const ereignisStore = useEreignisStore();
 

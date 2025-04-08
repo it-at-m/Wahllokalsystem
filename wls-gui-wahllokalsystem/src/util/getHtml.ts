@@ -105,14 +105,19 @@ export function htmlFromData(data: any, tableRef: Ref) {
             <p>Stücke: ${data.cakeNumber || "2 schaffst du bestimmt!"}</p>
             <p>Toppings: ${data.toppings || "Weniger ist mehr."}</p>
             <p>Hunger Index: ${data.hungerIndex[0] || "Hier ist was schief gelaufen"} - ${data.hungerIndex[1] || "Das Messgerät spinnt."}</p>
-            <p>${
+            ${
               data.hungerIndex[1] <= 20
-                ? "Du scheinst satt zu sein. Ist noch was vom Kuchen übrig?"
+                ? `<p>
+                     Hinweis:
+                     <i>Du scheinst satt zu sein. Ist noch was vom Kuchen übrig?</i>
+                   </p>`
                 : data.hungerIndex[0] >= 50
-                  ? "Du bist ziemlich hungrig, du solltest dir jetzt einen Kuchen backen! Und am besten gleich noch was für deine Kollegen mitbringen"
-                  : ""
+                  ? `<p>
+                     Hinweis:
+                     <i>Du bist ziemlich hungrig, du solltest dir jetzt einen Kuchen backen! Und am besten gleich noch was für deine Kollegen mitbringen</i>
+                   </p>`
+                  : ``
             }
-            </p>
             <br />
             <br />
           </div>

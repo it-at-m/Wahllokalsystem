@@ -94,7 +94,7 @@ describe("BaseStepWahltagInit.vue", () => {
       );
     });
 
-    it("should_renderCreateButton_when_wahltermindatenExists", async (context) => {
+    it("should_renderCreateButton_when_wahltermindatenDoesNotExists", async (context) => {
       await wrapper.setProps({
         wahlterminDatenExists: false,
       });

@@ -30,16 +30,16 @@ export default function useBasisdatenTestDataFactory() {
 
   function createBasisdatenInitProgressComplete(): BasisdatenInitProgress {
     return {
+      forWahltag: generateRandomDateAsString(),
+      wahlNummer: `${generateRandomNumber(1)}`,
       lastStartTime: generateRandomDateTimeAsString(),
+      lastFinishTime: generateRandomDateTimeAsString(),
       referendumvorlagen: {
         active: generateRandomBoolean(),
         total: generateRandomNumber(4),
         next: `next ${generateRandomNumber(10)}`,
         finished: generateRandomNumber(4),
       },
-      forWahltag: generateRandomDateAsString(),
-      wahlNummer: `${generateRandomNumber(1)}`,
-      lastFinishTime: generateRandomDateTimeAsString(),
       wahlvorschlaege: {
         active: generateRandomBoolean(),
         total: generateRandomNumber(4),

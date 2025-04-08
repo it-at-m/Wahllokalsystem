@@ -29,6 +29,7 @@ export function getUsersWahlbezirkID(userStore: any): string | undefined {
 
 export const useEreignisStore = defineStore(storeID, () => {
   const userStore = useUserStore();
+  const error = ref<string | null>(null);
 
   const wahlbezirkEreignisse = ref<WahlbezirkEreignisse>(
     WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse()
@@ -45,16 +46,33 @@ export const useEreignisStore = defineStore(storeID, () => {
   async function loadEreignisse() {
     const currentUserWahlbezirkID = getUsersWahlbezirkID(userStore);
     if (currentUserWahlbezirkID) {
-      wahlbezirkEreignisse.value = await getEreignisse(currentUserWahlbezirkID);
-      sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
+      error.value = null;
+      try {
+        wahlbezirkEreignisse.value = await getEreignisse(
+          currentUserWahlbezirkID
+        );
+        sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
+      } catch (e) {
+        error.value = "Fehler beim Laden der Ereignisse";
+        console.error(e);
+      }
     }
   }
 
   async function sendEreignisse() {
     const currentUserWahlbezirkID = getUsersWahlbezirkID(userStore);
     if (currentUserWahlbezirkID) {
-      sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
-      await saveEreignisse(currentUserWahlbezirkID, wahlbezirkEreignisse.value);
+      error.value = null;
+      try {
+        sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
+        await saveEreignisse(
+          currentUserWahlbezirkID,
+          wahlbezirkEreignisse.value
+        );
+      } catch (e) {
+        error.value = "Fehler beim Speichern der Ereignisse";
+        console.error(e);
+      }
     }
   }
 
@@ -63,5 +81,6 @@ export const useEreignisStore = defineStore(storeID, () => {
     loadEreignisse,
     sendEreignisse,
     addEreignis,
+    error,
   };
 });

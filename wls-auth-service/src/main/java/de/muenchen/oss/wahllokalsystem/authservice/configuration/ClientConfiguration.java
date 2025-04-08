@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 public class ClientConfiguration {
 
     @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder, final WlsResponseErrorHandler wlsResponseErrorHandler,
+    public RestTemplate restTemplate(final RestTemplateBuilder builder, final WlsResponseErrorHandler wlsResponseErrorHandler,
             final OAuth2TokenInterceptor oAuth2TokenInterceptor, final ObjectMapper objectMapper) {
 
         return builder

@@ -1,0 +1,172 @@
+import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
+
+import { createTestingPinia } from "@pinia/testing";
+import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
+import { createPinia } from "pinia";
+import {
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
+import { nextTick } from "vue";
+
+import TheEreignisseRow from "@/components/vorfaelleundvorkommnisse/TheEreignisseRow.vue";
+import vuetify from "@/plugins/vuetify";
+import { useEreignisStore } from "@/stores/vorfaelleundvorkommnisseStore";
+import { EreignisBuilder } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
+import { getSnapshotFilename } from "../../utils/testutils";
+
+describe("TheEreignisseRow.vue", () => {
+  let wrapper: VueWrapper;
+  // Mock the ResizeObserver
+  const ResizeObserverMock = vi.fn(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+  }));
+  // Stub the global ResizeObserver
+  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+
+  beforeAll(() => {
+    createPinia();
+  });
+
+  beforeEach(() => {
+    wrapper = mount(TheEreignisseRow, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            createSpy: vi.fn,
+          }),
+          vuetify,
+        ],
+      },
+    });
+    vi.clearAllMocks();
+  });
+
+  enableAutoUnmount(afterEach);
+
+  describe("visual logic", () => {
+    it("component mounted", () => {
+      expect(wrapper.exists()).toBeTruthy();
+    });
+
+    it("should_showNoRows_when_noEreignisIsGiven", async (context) => {
+      const ereignisStore = useEreignisStore();
+      const ereigniseintraege = [] as Ereignis[];
+
+      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = ereigniseintraege;
+
+      await nextTick();
+
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+
+    it("should_showOneRow_when_oneEreignisIsGiven", async (context) => {
+      const ereignisStore = useEreignisStore();
+      const ereigniseintraege = [] as Ereignis[];
+
+      let date = new Date();
+      date.setHours(12, 0);
+      ereigniseintraege.push(
+        EreignisBuilder.createComplete()
+          .withUhrzeit(date)
+          .withBeschreibung(`Vorfall Nr.: 1`)
+      );
+
+      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = ereigniseintraege;
+
+      await nextTick();
+
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+
+    it("should_showMultipleRows_when_multipleEreignisseAreGiven", async (context) => {
+      const ereignisStore = useEreignisStore();
+
+      const ereigniseintraege = [] as Ereignis[];
+      for (let i = 0; i < 5; i++) {
+        let date = new Date();
+        date.setHours(i, 0);
+        ereigniseintraege.push(
+          EreignisBuilder.createComplete()
+            .withUhrzeit(date)
+            .withBeschreibung(`Vorfall Nr.: ${i}`)
+        );
+      }
+
+      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = ereigniseintraege;
+
+      await nextTick();
+
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+  });
+
+  describe("behavioral logic", () => {
+    it("should_showErrorMessage_when_beschreibungIsNotSetCorrectly", async (context) => {
+      const ereignisStore = useEreignisStore();
+      const ereigniseintraege = [] as Ereignis[];
+
+      let date = new Date();
+      date.setHours(12, 0);
+      ereigniseintraege.push(
+        EreignisBuilder.createComplete().withUhrzeit(date).withBeschreibung(``)
+      );
+
+      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = ereigniseintraege;
+
+      await nextTick();
+
+      // Triggern des Updates der VTextarea mit weniger als 4 Zeichen
+      const textarea = wrapper.findComponent({ name: "VTextarea" });
+      expect(textarea.exists()).toBe(true); // Überprüfen, ob die Textarea existiert
+      await textarea.setValue("abc"); // weniger als 4 Zeichen
+
+      await nextTick();
+
+      // Überprüfen, ob die Fehlermeldung angezeigt wird
+      const errorMessage = wrapper.get(".v-messages__message");
+      expect(errorMessage.text()).toContain("Minimale Länge ist 4 Zeichen.");
+    });
+
+    it("should_showErrorMessage_when_uhrzeitIsNotSetCorrectly", async (context) => {
+      const ereignisStore = useEreignisStore();
+      const ereigniseintraege = [] as Ereignis[];
+
+      let date = new Date();
+      date.setHours(12, 0);
+      ereigniseintraege.push(
+        EreignisBuilder.createComplete()
+          .withUhrzeit(date)
+          .withBeschreibung(`Beschreibung`)
+      );
+
+      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = ereigniseintraege;
+
+      await nextTick();
+
+      // Triggern des Updates des VTextfield mit undefined
+      const textfield = wrapper.findComponent({ name: "v-text-field" });
+      expect(textfield.exists()).toBe(true); // Überprüfen, ob das Textfeld existiert
+      await textfield.setValue(undefined);
+
+      await nextTick();
+
+      // Überprüfen, ob die Fehlermeldung angezeigt wird
+      const errorMessage = wrapper.get(".v-messages__message");
+      expect(errorMessage.text()).toContain("Feld darf nicht leer sein.");
+    });
+  });
+});

@@ -2,7 +2,10 @@ import { getSnapshotFilename } from "@tests/utils/testutils.ts";
 import { mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { nextTick } from "vue";
+import { VTextField } from "vuetify/components";
 
+import BaseButtonCancel from "@/components/common/BaseButtonCancel.vue";
+import BaseButtonConfirm from "@/components/common/BaseButtonConfirm.vue";
 import BaseDialogWahltagOverrideWahlterminConfirmation from "@/components/wahltag/BaseDialogWahltagOverrideWahlterminConfirmation.vue";
 import vuetify from "@/plugins/vuetify.ts";
 
@@ -66,18 +69,10 @@ describe("BaseDialogWahltagOverrideWahlterminConfirmation.vue", () => {
   describe("behavior logic", () => {
     it("should_emitConfirmDelete_when_confirmButtonClicked", async () => {
       wrapper.vm.show();
-
       await wrapper.vm.$nextTick();
 
-      const confirmButton = document.body.querySelector(
-        '[data-test="button-confirm"]'
-      );
-
-      if (!confirmButton) {
-        throw new Error("No confirm button found.");
-      }
-
-      confirmButton.dispatchEvent(new Event("click"));
+      const confirmButton = wrapper.findComponent(BaseButtonConfirm);
+      confirmButton.element.dispatchEvent(new Event("click"));
 
       await nextTick();
 
@@ -86,20 +81,10 @@ describe("BaseDialogWahltagOverrideWahlterminConfirmation.vue", () => {
 
     it("should_emitCancelDelete_when_cancelButtonClicked", async () => {
       wrapper.vm.show();
-
       await wrapper.vm.$nextTick();
 
-      const confirmButton = document.body.querySelector(
-        '[data-test="button-cancel"]'
-      );
-
-      if (!confirmButton) {
-        throw new Error("No confirm button found.");
-      }
-
-      confirmButton.dispatchEvent(new Event("click"));
-
-      await nextTick();
+      const cancelButton = wrapper.findComponent(BaseButtonCancel);
+      await cancelButton.trigger("click");
 
       expect(wrapper.emitted("cancelDelete")).toEqual([[]]);
     });

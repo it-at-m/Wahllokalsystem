@@ -4,7 +4,7 @@
       v-for="(ereignis, index) in wahlbezirkEreignisse.ereigniseintraege"
       :key="index"
     >
-      <v-col cols="1">{{ index + 1 }}</v-col>
+      <v-col cols="1" class="text-center mt-5">{{ index + 1 }}</v-col>
       <v-col cols="2">
         <v-text-field
           :model-value="toHhMm(ereignis.uhrzeit)"

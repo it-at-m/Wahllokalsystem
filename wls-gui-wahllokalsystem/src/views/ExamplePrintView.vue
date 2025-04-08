@@ -7,10 +7,7 @@
     </v-row>
     <v-row class="pa-2">
       <v-col>
-        <v-table
-          ref="tableRef"
-          density="compact"
-        >
+        <v-table density="compact">
           <thead>
             <tr>
               <th class="text-left">Name</th>
@@ -75,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, useTemplateRef } from "vue";
+import { ref } from "vue";
 import {
   VAutocomplete,
   VBtn,
@@ -94,7 +91,6 @@ const cake = ref("");
 const cakeNumber = ref(0);
 const toppings = ref(null);
 const hungerIndex = ref([]);
-const tableRef = useTemplateRef("tableRef");
 
 const desserts = ref([
   { name: "Frozen Yogurt", calories: 159 },

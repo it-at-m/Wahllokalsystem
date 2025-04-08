@@ -1,6 +1,5 @@
 import { spyOn } from "@storybook/test";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { ref } from "vue";
 
 import { useWahltermindatenService } from "@/composables/wahltermindaten/wahltermindatenService.ts";
 
@@ -17,7 +16,9 @@ const mockDefinitions = vi.hoisted(() => ({
       deleteWahltermindaten: mockDefinitions.apiDeleteWahlterminDaten,
     };
   }),
-  vueRef: vi.fn(),
+  vueRefBuilder: vi.fn().mockImplementation(() => ({
+    value: undefined,
+  })),
 }));
 
 vi.mock("@/api/wls-clients/generated-admin-api", () => ({
@@ -31,15 +32,8 @@ vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
   }),
 }));
 vi.mock("vue", () => ({
-  ref: mockDefinitions.vueRef,
+  ref: mockDefinitions.vueRefBuilder,
 }));
-
-const mockedRef = {
-  value: false,
-};
-mockDefinitions.vueRef.mockImplementation(() => {
-  return mockedRef;
-});
 
 const unitUnderTest = useWahltermindatenService();
 
@@ -79,9 +73,11 @@ describe("wahltermindatenService.ts", () => {
       it("should_updateIsLoadingRef_when_succeeded", async () => {
         const wahltagID = "wahltagID";
 
-        const loadingRef = ref(false);
-        mockDefinitions.vueRef.mockReturnValue(loadingRef);
-        const spyOnValueSetterOfRef = spyOn(mockedRef, "value", "set");
+        const spyOnValueSetterOfRef = spyOn(
+          unitUnderTest.isLoading,
+          "value",
+          "set"
+        );
 
         await unitUnderTest.importWahlterminDaten(wahltagID);
 
@@ -96,9 +92,11 @@ describe("wahltermindatenService.ts", () => {
       it("should_updateIsLoadingRef_when_exceptionOccurred", async () => {
         const wahltagID = "wahltagID";
 
-        const loadingRef = ref(false);
-        mockDefinitions.vueRef.mockReturnValue(loadingRef);
-        const spyOnValueSetterOfRef = spyOn(mockedRef, "value", "set");
+        const spyOnValueSetterOfRef = spyOn(
+          unitUnderTest.isLoading,
+          "value",
+          "set"
+        );
 
         mockDefinitions.apiLoadWahlterminDaten.mockRejectedValue(
           new Error("api call failed")
@@ -115,88 +113,84 @@ describe("wahltermindatenService.ts", () => {
       });
     });
 
-    describe("deleteWahltermindaten", () => {
+    describe("deleteAndImportWahlterminDaten", () => {
       it("should_returnResolvedPromise_when_calledWithWahltag", async () => {
         const wahltagID = "wahltagID";
 
-        await unitUnderTest.deleteWahltermindaten(wahltagID);
+        await unitUnderTest.deleteAndImportWahlterminDaten(wahltagID);
 
         expect(mockDefinitions.apiDeleteWahlterminDaten).toHaveBeenCalledWith(
           wahltagID
         );
+        expect(mockDefinitions.apiLoadWahlterminDaten).toHaveBeenCalledWith(
+          wahltagID
+        );
+        expect(unitUnderTest.istDeleting.value).toStrictEqual(false);
+        expect(unitUnderTest.isLoading.value).toStrictEqual(false);
       });
 
-      it("should_returnRejectedPromise_when_calledExceptionOnApiCallOccurred", async () => {
+      it("should_addNotification_when_ deleteApiCallFailed", async () => {
         const wahltagID = "wahltagID";
 
         mockDefinitions.apiDeleteWahlterminDaten.mockRejectedValue(
           new Error("api call failed")
         );
 
-        await expect(
-          async () => await unitUnderTest.deleteWahltermindaten(wahltagID)
-        ).rejects.toEqual(undefined);
-
-        expect(mockDefinitions.apiDeleteWahlterminDaten).toHaveBeenCalledWith(
-          wahltagID
-        );
-      });
-
-      it("should_addNotification_when_exceptionOccurred", async () => {
-        const wahltagID = "wahltagID";
-
-        mockDefinitions.apiDeleteWahlterminDaten.mockRejectedValue(
-          new Error("api call failed")
-        );
-
-        await expect(
-          async () => await unitUnderTest.deleteWahltermindaten(wahltagID)
-        ).rejects.toEqual(undefined);
+        await unitUnderTest.deleteAndImportWahlterminDaten(wahltagID);
 
         expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
           expect.any(String),
           "Error",
         ]);
+        expect(unitUnderTest.istDeleting.value).toStrictEqual(false);
+        expect(unitUnderTest.isLoading.value).toStrictEqual(false);
       });
 
-      it("should_updateIsDeletingRef_when_succeeded", async () => {
+      it("should_addNotification_when_ loadApiCallFailed", async () => {
         const wahltagID = "wahltagID";
 
-        const loadingRef = ref(false);
-        mockDefinitions.vueRef.mockReturnValue(loadingRef);
-        const spyOnValueSetterOfRef = spyOn(mockedRef, "value", "set");
-
-        await unitUnderTest.deleteWahltermindaten(wahltagID);
-
-        expect(spyOnValueSetterOfRef.mock.calls).toStrictEqual([
-          [true],
-          [false],
-        ]);
-
-        spyOnValueSetterOfRef.mockRestore();
-      });
-
-      it("should_updateIsDeletingRef_when_exceptionOccurred", async () => {
-        const wahltagID = "wahltagID";
-
-        const loadingRef = ref(false);
-        mockDefinitions.vueRef.mockReturnValue(loadingRef);
-        const spyOnValueSetterOfRef = spyOn(mockedRef, "value", "set");
-
-        mockDefinitions.apiDeleteWahlterminDaten.mockRejectedValue(
+        mockDefinitions.apiLoadWahlterminDaten.mockRejectedValue(
           new Error("api call failed")
         );
 
-        await expect(
-          async () => await unitUnderTest.deleteWahltermindaten(wahltagID)
-        ).rejects.toEqual(undefined);
+        await unitUnderTest.deleteAndImportWahlterminDaten(wahltagID);
 
-        expect(spyOnValueSetterOfRef.mock.calls).toStrictEqual([
+        expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+          expect.any(String),
+          "Error",
+        ]);
+        expect(unitUnderTest.istDeleting.value).toStrictEqual(false);
+        expect(unitUnderTest.isLoading.value).toStrictEqual(false);
+      });
+
+      it("should_updateIsRefs_when_succeeded", async () => {
+        const wahltagID = "wahltagID";
+
+        const spyOnValueSetterOfIsLoadingRef = spyOn(
+          unitUnderTest.isLoading,
+          "value",
+          "set"
+        );
+        const spyOnValueSetterOfIsDeletingRef = spyOn(
+          unitUnderTest.istDeleting,
+          "value",
+          "set"
+        );
+
+        await unitUnderTest.deleteAndImportWahlterminDaten(wahltagID);
+
+        expect(spyOnValueSetterOfIsLoadingRef.mock.calls).toStrictEqual([
           [true],
           [false],
         ]);
+        expect(spyOnValueSetterOfIsDeletingRef.mock.calls).toStrictEqual([
+          [true],
+          [false],
+          [false],
+        ]);
 
-        spyOnValueSetterOfRef.mockRestore();
+        spyOnValueSetterOfIsLoadingRef.mockRestore();
+        spyOnValueSetterOfIsDeletingRef.mockRestore();
       });
     });
   });

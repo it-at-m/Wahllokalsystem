@@ -33,31 +33,23 @@ export function useWahltermindatenService() {
 
   async function deleteAndImportWahlterminDaten(wahltagID: string) {
     try {
-      await deleteWahltermindaten(wahltagID);
-      importWahlterminDaten(wahltagID);
+      istDeleting.value = true;
+      await controllerApi.deleteWahltermindaten(wahltagID);
+      istDeleting.value = false;
+      isLoading.value = true;
+      await controllerApi.loadWahltermindaten(wahltagID);
     } catch {
       addNotification(
         "Löschen und Importieren der Wahltermindaten fehlgeschlagen",
         "Error"
       );
-    }
-  }
-
-  async function deleteWahltermindaten(wahltagID: string) {
-    istDeleting.value = true;
-
-    try {
-      await controllerApi.deleteWahltermindaten(wahltagID);
-    } catch {
-      addNotification("Löschen der Wahltermindaten fehlgeschlagen", "Error");
-      return Promise.reject();
     } finally {
+      isLoading.value = false;
       istDeleting.value = false;
     }
   }
 
   return {
-    deleteWahltermindaten,
     deleteAndImportWahlterminDaten,
     isLoading,
     istDeleting,

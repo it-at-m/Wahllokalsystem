@@ -51,5 +51,8 @@ export default createVuetify({
     VAutocomplete: {
       variant: "outlined",
     },
+    VProgressLinear: {
+      height: "16",
+    },
   },
 });

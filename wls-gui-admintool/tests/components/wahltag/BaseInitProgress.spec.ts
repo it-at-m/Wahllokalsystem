@@ -86,6 +86,4 @@ describe("BaseInitProgress.vue", () => {
       );
     });
   });
-
-  describe("behavior logic", () => {});
 });

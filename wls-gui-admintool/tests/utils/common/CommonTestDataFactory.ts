@@ -1,6 +1,6 @@
 export function useCommonTestDataFactory() {
   function generateRandomBoolean() {
-    return Math.random() % 2 === 0;
+    return Math.random() < 0.5;
   }
 
   function generateRandomNumber(length: number): number {

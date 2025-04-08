@@ -12,7 +12,7 @@ import {
   it,
   vi,
 } from "vitest";
-import { nextTick } from "vue";
+import { nextTick, ref } from "vue";
 
 import BaseDialogWahltagOverrideWahlterminConfirmation from "@/components/wahltag/BaseDialogWahltagOverrideWahlterminConfirmation.vue";
 import BaseStepWahltagInit from "@/components/wahltag/BaseStepWahltagInit.vue";
@@ -21,17 +21,23 @@ import vuetify from "@/plugins/vuetify.ts";
 const mockDefinitions = vi.hoisted(() => ({
   importWahlterminDaten: vi.fn(),
   deleteAndImportWahlterminDaten: vi.fn(),
-  isLoading: false,
+  isLoading: true,
   istDeleting: false,
 }));
+
+const isLoadingRefDefaultValue = false;
+const isLoadingRef = ref(isLoadingRefDefaultValue);
+
+const isDeletingRefDefaultValue = false;
+const isDeletingRef = ref(isDeletingRefDefaultValue);
 
 vi.mock("@/composables/wahltermindaten/wahltermindatenService.ts", () => ({
   useWahltermindatenService: () => ({
     importWahlterminDaten: mockDefinitions.importWahlterminDaten,
     deleteAndImportWahlterminDaten:
       mockDefinitions.deleteAndImportWahlterminDaten,
-    isLoading: mockDefinitions.isLoading,
-    istDeleting: mockDefinitions.istDeleting,
+    isLoading: isLoadingRef,
+    istDeleting: isDeletingRef,
   }),
 }));
 
@@ -57,6 +63,8 @@ describe("BaseStepWahltagInit.vue", () => {
         wahltagEvent: prepareWahltagEvent().build(),
       },
     });
+    isDeletingRef.value = isDeletingRefDefaultValue;
+    isLoadingRef.value = isLoadingRefDefaultValue;
   });
 
   afterEach(() => {
@@ -72,36 +80,79 @@ describe("BaseStepWahltagInit.vue", () => {
   });
 
   describe("visual logic", () => {
-    it("should_showOverrideDialog_when_overrideIsClicked", async (context) => {
-      await wrapper.setProps({
-        wahlterminDatenExists: true,
+    describe("wahlterminDatenExists is false", () => {
+      it("should_renderCreateButton_when_loadingIsFalse", async (context) => {
+        await wrapper.setProps({
+          wahlterminDatenExists: false,
+        });
+
+        await expect(wrapper.html()).toMatchFileSnapshot(
+          getSnapshotFilename(context)
+        );
       });
 
-      await wrapper.findComponent('[data-test="override"]').trigger("click");
+      it("should_renderCreateButton_when_loadingIsTrue", async (context) => {
+        await wrapper.setProps({
+          wahlterminDatenExists: false,
+        });
+        isLoadingRef.value = true;
 
-      await expect(document.body.innerHTML).toMatchFileSnapshot(
-        getSnapshotFilename(context)
-      );
+        await nextTick();
+
+        await expect(wrapper.html()).toMatchFileSnapshot(
+          getSnapshotFilename(context)
+        );
+      });
     });
 
-    it("should_renderOverrideButton_when_wahltermindatenExists", async (context) => {
-      await wrapper.setProps({
-        wahlterminDatenExists: true,
+    describe("wahlterminDatenExists is true", () => {
+      it("should_renderOverrideButton_when_loadingIsFalse", async (context) => {
+        await wrapper.setProps({
+          wahlterminDatenExists: true,
+        });
+
+        await expect(wrapper.html()).toMatchFileSnapshot(
+          getSnapshotFilename(context)
+        );
       });
 
-      await expect(wrapper.html()).toMatchFileSnapshot(
-        getSnapshotFilename(context)
-      );
+      it("should_renderOverrideButton_when_loadingIsTrue", async (context) => {
+        await wrapper.setProps({
+          wahlterminDatenExists: true,
+        });
+        isLoadingRef.value = true;
+
+        await nextTick();
+
+        await expect(wrapper.html()).toMatchFileSnapshot(
+          getSnapshotFilename(context)
+        );
+      });
+
+      it("should_renderOverrideButton_when_deletingIsTrue", async (context) => {
+        await wrapper.setProps({
+          wahlterminDatenExists: true,
+        });
+        isDeletingRef.value = true;
+
+        await nextTick();
+
+        await expect(wrapper.html()).toMatchFileSnapshot(
+          getSnapshotFilename(context)
+        );
+      });
     });
 
-    it("should_renderCreateButton_when_wahltermindatenDoesNotExists", async (context) => {
-      await wrapper.setProps({
-        wahlterminDatenExists: false,
-      });
+    describe("wahlterminDatenExists is undefined", () => {
+      it("should_renderTextOnly_when_itIsUndefinedIfWahltermindatenExists", async (context) => {
+        await wrapper.setProps({
+          wahlterminDatenExists: undefined,
+        });
 
-      await expect(wrapper.html()).toMatchFileSnapshot(
-        getSnapshotFilename(context)
-      );
+        await expect(wrapper.html()).toMatchFileSnapshot(
+          getSnapshotFilename(context)
+        );
+      });
     });
 
     it("should_renderTextOnly_when_itIsUndefinedIfWahltermindatenExists", async (context) => {

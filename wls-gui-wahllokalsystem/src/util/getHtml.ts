@@ -14,7 +14,7 @@ export function htmlFromData(
           /****** Print Header ******/
           @page {
               size: auto;
-              margin-top: 0.0cm;
+              margin-top: 1cm;
               margin-left: 0;
               margin-right: 0;
           }
@@ -100,7 +100,7 @@ export function htmlFromData(
         <title>Testdruck</title>
       </head>
       <body>
-        <h1 class="margin-top margin-leftright">${data.title || "Alternativer Titel"}</h1>
+        <h1 class="margin-leftright">${data.title || "Alternativer Titel"}</h1>
         <div class="horizontal spaceBetween margin-leftright">
           <div class="vertical widthLeft">
             <p>Für deinen perfekten Nachtisch hast du folgende Einstellungen getroffen: mehr text um zu sehen was passiert wenn der platz nicht reicht</p>
@@ -171,7 +171,14 @@ export function htmlFromData(
               Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
               consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
               sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
-              takimata sanctus est Lorem ipsum dolor sit amet. 
+              takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
+              et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+              Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
+              consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+              sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+              takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+              diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
+              accusam et justo duo dolores et ea rebum. 
           </p>
         </div>
       </body>

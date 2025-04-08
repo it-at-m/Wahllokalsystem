@@ -15,8 +15,8 @@ const unitUnderTest = useWahltagMapper();
 describe("wahltagMapper.ts", () => {
   describe("mapGroupedWahltagDtosToWahltage", () => {
     it("should_returnArrayOfWahltagType_when_mapWithDtosIsGiven", () => {
-      const wahltag1Key = "wahltag1";
-      const wahltag2Key = "wahltag2";
+      const wahltag1Key = "2025-04-04";
+      const wahltag2Key = "2025-01-04";
 
       const mapWithDtosToMap = new Map<string, WahltagDTO[]>([
         [
@@ -58,7 +58,7 @@ function getExpectedWahltage(
   mapWithDtosToMap: Map<string, WahltagDTO[]>
 ) {
   const expectedWahltag1: Wahltag = {
-    wahltag: wahltag1Key,
+    wahltag: new Date(wahltag1Key),
     events: [
       {
         wahltagID: mapWithDtosToMap.get(wahltag1Key)![0].wahltagID,
@@ -73,7 +73,7 @@ function getExpectedWahltage(
     ],
   };
   const expectedWahltag2: Wahltag = {
-    wahltag: wahltag2Key,
+    wahltag: new Date(wahltag2Key),
     events: [
       {
         wahltagID: mapWithDtosToMap.get(wahltag2Key)![0].wahltagID,

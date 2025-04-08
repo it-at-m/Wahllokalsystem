@@ -11,8 +11,17 @@ export function useCommonTestDataFactory() {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
   }
 
+  function generateRandomDate(): Date {
+    const date = new Date();
+
+    date.setDate(date.getDate() - Math.trunc(Math.random() * 100));
+
+    return date;
+  }
+
   return {
     generateRandomNumber,
+    generateRandomDate,
     generateRandomDateAsString,
   };
 }

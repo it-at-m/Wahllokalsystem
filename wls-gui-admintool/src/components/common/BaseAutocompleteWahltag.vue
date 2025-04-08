@@ -3,7 +3,7 @@
     clearable
     label="Wahltag auswählen"
     :items="props.items"
-    item-title="wahltag"
+    :item-title="itemTitle"
     v-model="modelValue"
     return-object
     data-test="autocompleteWahltage"
@@ -14,7 +14,10 @@
 import type { Wahltag } from "@/types/wahltag/Wahltag.ts";
 import type { PropType } from "vue";
 
+import { useDate } from "vuetify";
 import { VAutocomplete } from "vuetify/components";
+
+const date = useDate();
 
 const props = defineProps({
   items: {
@@ -27,4 +30,8 @@ const modelValue = defineModel({
   type: Object as PropType<Wahltag>,
   required: false,
 });
+
+function itemTitle(wahltag: Wahltag): string {
+  return date.format(wahltag.wahltag, "fullDate");
+}
 </script>

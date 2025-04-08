@@ -79,15 +79,8 @@ const confirmDelete = () => {
 };
 
 onMounted(() => {
-  loadEreignisse();
-});
-
-/**
- * Loads Ereignisse from the backend and sets it in the store.
- */
-function loadEreignisse(): void {
   ereignisStore.loadEreignisse();
-}
+});
 
 function onEreignisUhrzeitChanged(
   ereignis: Ereignis,

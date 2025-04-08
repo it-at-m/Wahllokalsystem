@@ -1,4 +1,8 @@
 export function useCommonTestDataFactory() {
+  function generateRandomBoolean() {
+    return Math.random() % 2 === 0;
+  }
+
   function generateRandomNumber(length: number): number {
     return Math.floor(Math.random() * (length * 10));
   }
@@ -20,6 +24,7 @@ export function useCommonTestDataFactory() {
   }
 
   return {
+    generateRandomBoolean,
     generateRandomNumber,
     generateRandomDate,
     generateRandomDateAsString,

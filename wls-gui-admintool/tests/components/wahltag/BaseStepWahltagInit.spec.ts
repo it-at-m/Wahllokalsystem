@@ -22,7 +22,7 @@ const mockDefinitions = vi.hoisted(() => ({
   importWahlterminDaten: vi.fn(),
   deleteAndImportWahlterminDaten: vi.fn(),
   isLoading: true,
-  istDeleting: false,
+  isDeleting: false,
 }));
 
 const isLoadingRefDefaultValue = false;
@@ -37,7 +37,7 @@ vi.mock("@/composables/wahltermindaten/wahltermindatenService.ts", () => ({
     deleteAndImportWahlterminDaten:
       mockDefinitions.deleteAndImportWahlterminDaten,
     isLoading: isLoadingRef,
-    istDeleting: isDeletingRef,
+    isDeleting: isDeletingRef,
   }),
 }));
 

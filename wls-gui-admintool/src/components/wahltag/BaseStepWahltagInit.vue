@@ -2,7 +2,7 @@
   <div>
     <div v-if="wahlterminDatenExists === true">
       <v-btn
-        :loading="isLoading || istDeleting"
+        :loading="isLoading || isDeleting"
         active
         class="mb-2"
         data-test="override"
@@ -45,7 +45,7 @@ const {
   importWahlterminDaten,
   isLoading,
   deleteAndImportWahlterminDaten,
-  istDeleting,
+  isDeleting,
 } = useWahltermindatenService();
 
 const props = defineProps({

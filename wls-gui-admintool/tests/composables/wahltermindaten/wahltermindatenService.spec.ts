@@ -125,7 +125,7 @@ describe("wahltermindatenService.ts", () => {
         expect(mockDefinitions.apiLoadWahlterminDaten).toHaveBeenCalledWith(
           wahltagID
         );
-        expect(unitUnderTest.istDeleting.value).toStrictEqual(false);
+        expect(unitUnderTest.isDeleting.value).toStrictEqual(false);
         expect(unitUnderTest.isLoading.value).toStrictEqual(false);
       });
 
@@ -142,7 +142,7 @@ describe("wahltermindatenService.ts", () => {
           expect.any(String),
           "Error",
         ]);
-        expect(unitUnderTest.istDeleting.value).toStrictEqual(false);
+        expect(unitUnderTest.isDeleting.value).toStrictEqual(false);
         expect(unitUnderTest.isLoading.value).toStrictEqual(false);
       });
 
@@ -159,7 +159,7 @@ describe("wahltermindatenService.ts", () => {
           expect.any(String),
           "Error",
         ]);
-        expect(unitUnderTest.istDeleting.value).toStrictEqual(false);
+        expect(unitUnderTest.isDeleting.value).toStrictEqual(false);
         expect(unitUnderTest.isLoading.value).toStrictEqual(false);
       });
 
@@ -172,7 +172,7 @@ describe("wahltermindatenService.ts", () => {
           "set"
         );
         const spyOnValueSetterOfIsDeletingRef = spyOn(
-          unitUnderTest.istDeleting,
+          unitUnderTest.isDeleting,
           "value",
           "set"
         );

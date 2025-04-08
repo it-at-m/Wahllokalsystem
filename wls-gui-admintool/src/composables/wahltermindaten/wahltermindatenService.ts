@@ -16,7 +16,7 @@ const { addNotification } = useUserNotificationService();
 
 export function useWahltermindatenService() {
   const isLoading = ref(false);
-  const istDeleting = ref(false);
+  const isDeleting = ref(false);
 
   async function importWahlterminDaten(wahltagID: string) {
     isLoading.value = true;
@@ -33,9 +33,9 @@ export function useWahltermindatenService() {
 
   async function deleteAndImportWahlterminDaten(wahltagID: string) {
     try {
-      istDeleting.value = true;
+      isDeleting.value = true;
       await controllerApi.deleteWahltermindaten(wahltagID);
-      istDeleting.value = false;
+      isDeleting.value = false;
       isLoading.value = true;
       await controllerApi.loadWahltermindaten(wahltagID);
     } catch {
@@ -45,14 +45,14 @@ export function useWahltermindatenService() {
       );
     } finally {
       isLoading.value = false;
-      istDeleting.value = false;
+      isDeleting.value = false;
     }
   }
 
   return {
     deleteAndImportWahlterminDaten,
     isLoading,
-    istDeleting,
+    isDeleting,
     importWahlterminDaten,
   };
 }

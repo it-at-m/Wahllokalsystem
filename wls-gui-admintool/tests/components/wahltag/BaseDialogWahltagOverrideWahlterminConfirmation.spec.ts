@@ -91,36 +91,23 @@ describe("BaseDialogWahltagOverrideWahlterminConfirmation.vue", () => {
 
     it("should_enableConfirmButton_when_requiredConfirmTextIsEntered", async () => {
       const confirmText = "confirmText";
-
-      cleanUp(wrapper);
-
-      wrapper = setupWrapper({
+      await wrapper.setProps({
         requiredConfirmText: confirmText,
       });
       wrapper.vm.show();
       await wrapper.vm.$nextTick();
 
-      const confirmTextField = document.body
-        .querySelector('[data-test="textfield-confirm-text"]')
-        ?.querySelector("input");
-
-      if (!confirmTextField) {
-        throw new Error("No confirm text field found.");
-      }
-
-      confirmTextField.value = confirmText;
-
-      const confirmButton = document.body.querySelector(
-        '[data-test="button-cancel"]'
+      const confirmButton = wrapper.findComponent(BaseButtonConfirm);
+      expect(confirmButton.element.hasAttribute("disabled")).toStrictEqual(
+        true
       );
 
-      await nextTick();
+      const confirmTextField = wrapper.findComponent(VTextField);
+      await confirmTextField.setValue(confirmText);
 
-      if (!confirmButton) {
-        throw new Error("No confirm button found.");
-      }
-
-      expect(confirmButton.hasAttribute("disabled")).toStrictEqual(false);
+      expect(confirmButton.element.hasAttribute("disabled")).toStrictEqual(
+        false
+      );
     });
   });
 });

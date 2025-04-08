@@ -11,7 +11,7 @@ const {
 } = useCommonTestDataFactory();
 
 export default function useBasisdatenTestDataFactory() {
-  function createCompleteAsyncProgressDTO(): AsyncProgressDTO {
+  function createAsyncProgressDTOComplete(): AsyncProgressDTO {
     return {
       lastStartTime: generateRandomDateTimeAsString(),
       lastFinishTime: generateRandomDateTimeAsString(),
@@ -28,7 +28,7 @@ export default function useBasisdatenTestDataFactory() {
     };
   }
 
-  function createCompleteBasisdatenInitProgress(): BasisdatenInitProgress {
+  function createBasisdatenInitProgressComplete(): BasisdatenInitProgress {
     return {
       lastStartTime: generateRandomDateTimeAsString(),
       referendumvorlagen: {
@@ -50,7 +50,7 @@ export default function useBasisdatenTestDataFactory() {
   }
 
   return {
-    createCompleteAsyncProgressDTO,
-    createCompleteBasisdatenInitProgress,
+    createAsyncProgressDTOComplete,
+    createBasisdatenInitProgressComplete,
   };
 }

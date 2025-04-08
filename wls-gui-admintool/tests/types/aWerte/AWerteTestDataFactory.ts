@@ -10,7 +10,7 @@ const {
 } = useCommonTestDataFactory();
 
 export default function useAWerteTestDataFactory() {
-  function generateAsyncProgressDTO(): AsyncProgressDTO {
+  function createAsyncProgressDTOComplete(): AsyncProgressDTO {
     return {
       aWerteFinished: generateRandomNumber(4),
       aWerteNext: `next ${generateRandomNumber(4)}`,
@@ -21,7 +21,7 @@ export default function useAWerteTestDataFactory() {
     };
   }
 
-  function generateAWerteInitProgress(): AWerteInitProgress {
+  function createAWerteInitProgressComplete(): AWerteInitProgress {
     return {
       total: generateRandomNumber(4),
       active: generateRandomBoolean(),
@@ -31,7 +31,7 @@ export default function useAWerteTestDataFactory() {
   }
 
   return {
-    generateAsyncProgressDTO,
-    generateAWerteInitProgress,
+    createAsyncProgressDTOComplete,
+    createAWerteInitProgressComplete,
   };
 }

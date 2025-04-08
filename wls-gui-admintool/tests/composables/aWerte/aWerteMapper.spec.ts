@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 
 import { useAWerteMapper } from "@/composables/aWerte/aWerteMapper.ts";
 
-const { generateAsyncProgressDTO } = useAWerteTestDataFactory();
+const { createAsyncProgressDTOComplete } = useAWerteTestDataFactory();
 
 const unitUnderTest = useAWerteMapper();
 
@@ -13,7 +13,7 @@ describe("aWerteMapper.ts", () => {
   describe("useAWerteMapper", () => {
     describe("asyncProgressDtoToAWerteInitProgress", () => {
       it("should_mapToType_when_dtoIsGiven", () => {
-        const dtoToMap = generateAsyncProgressDTO();
+        const dtoToMap = createAsyncProgressDTOComplete();
 
         const result =
           unitUnderTest.asyncProgressDtoToAWerteInitProgress(dtoToMap);

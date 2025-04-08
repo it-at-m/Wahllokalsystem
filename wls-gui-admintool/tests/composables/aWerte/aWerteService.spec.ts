@@ -25,7 +25,7 @@ vi.mock("@/composables/aWerte/aWerteMapper.ts", () => ({
   }),
 }));
 
-const { generateAsyncProgressDTO, generateAWerteInitProgress } =
+const { createAsyncProgressDTOComplete, createAWerteInitProgressComplete } =
   useAWerteTestDataFactory();
 
 const unitUnderTest = useAWerteService();
@@ -39,12 +39,13 @@ describe("aWerteService.ts", () => {
   describe("useWerteService", () => {
     describe("getAWerteProgress", () => {
       it("should_returnAWerteInitProgress_when_apiReturnData", async () => {
-        const mockedApiResponse = generateAsyncProgressDTO();
+        const mockedApiResponse = createAsyncProgressDTOComplete();
         mockDefinitions.apiGetAsyncProgress.mockReturnValue(
           Promise.resolve({ data: mockedApiResponse })
         );
 
-        const mockedApiResponseMappedToModel = generateAWerteInitProgress();
+        const mockedApiResponseMappedToModel =
+          createAWerteInitProgressComplete();
         mockDefinitions.mappingAsyncProgressDtoToAWerteInitProgress.mockReturnValue(
           mockedApiResponseMappedToModel
         );
@@ -58,7 +59,8 @@ describe("aWerteService.ts", () => {
         const mockedApiError = new Error("api call failed");
         mockDefinitions.apiGetAsyncProgress.mockRejectedValue(mockedApiError);
 
-        const mockedApiResponseMappedToModel = generateAWerteInitProgress();
+        const mockedApiResponseMappedToModel =
+          createAWerteInitProgressComplete();
         mockDefinitions.mappingAsyncProgressDtoToAWerteInitProgress.mockReturnValue(
           mockedApiResponseMappedToModel
         );

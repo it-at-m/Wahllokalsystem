@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 
 import { useBasisdatenMapper } from "@/composables/basisdaten/basisdatenMapper.ts";
 
-const { createCompleteAsyncProgressDTO } = useBasisdatenTestDataFactory();
+const { createAsyncProgressDTOComplete } = useBasisdatenTestDataFactory();
 
 const unitUnderTest = useBasisdatenMapper();
 
@@ -13,7 +13,7 @@ describe("basisdatenMapper.ts", () => {
   describe("useBasisdatenMapper", () => {
     describe("mapAsyncProgressDtoToBasisdatenInitProgress", () => {
       it("should_mapToType_when_dtoIsGiven", () => {
-        const dtoToMap = createCompleteAsyncProgressDTO();
+        const dtoToMap = createAsyncProgressDTOComplete();
 
         const result =
           unitUnderTest.mapAsyncProgressDtoToBasisdatenInitProgress(dtoToMap);

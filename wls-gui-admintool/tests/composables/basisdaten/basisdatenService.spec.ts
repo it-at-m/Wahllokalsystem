@@ -25,7 +25,7 @@ vi.mock("@/composables/basisdaten/basisdatenMapper.ts", () => ({
   }),
 }));
 
-const { createCompleteAsyncProgressDTO, createCompleteBasisdatenInitProgress } =
+const { createAsyncProgressDTOComplete, createBasisdatenInitProgressComplete } =
   useBasisdatenTestDataFactory();
 
 const unitUnderTest = useBasisdatenService();
@@ -39,13 +39,13 @@ describe("basisdatenService.ts", () => {
   describe("useBasisdatenService", () => {
     describe("getAsyncProgress", () => {
       it("should_returnBasisdatenInitProgress_when_apiReturnData", async () => {
-        const mockedApiResponse = createCompleteAsyncProgressDTO();
+        const mockedApiResponse = createAsyncProgressDTOComplete();
         mockDefinitions.apiGetAsyncProgress.mockReturnValue(
           Promise.resolve({ data: mockedApiResponse })
         );
 
         const mockedApiResponseMappedToModel =
-          createCompleteBasisdatenInitProgress();
+          createBasisdatenInitProgressComplete();
         mockDefinitions.mapAsyncProgressDtoToBasisdatenInitProgress.mockReturnValue(
           mockedApiResponseMappedToModel
         );

@@ -15,7 +15,7 @@ export function useWahltagMapper() {
       );
 
       result.push({
-        wahltag: wahltagDatum,
+        wahltag: new Date(wahltagDatum),
         events: wahltagEvents,
       });
     });

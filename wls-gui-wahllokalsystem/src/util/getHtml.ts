@@ -1,7 +1,8 @@
+import type { Data } from "@/types/Data.ts";
 import type { Ref } from "vue";
 
 export function htmlFromData(
-  data: any,
+  data: Data,
   desserts: Ref<{ name: string; calories: number }[]>
 ) {
   return `

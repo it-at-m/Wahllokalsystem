@@ -125,7 +125,7 @@ function printDocument() {
   );
 
   if (printWindow) {
-    printWindow.document.body.innerHTML = htmlFromData(data, tableRef);
+    printWindow.document.body.innerHTML = htmlFromData(data, desserts);
     printWindow.print();
     printWindow.close();
   }

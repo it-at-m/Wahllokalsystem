@@ -1,6 +1,9 @@
 import type { Ref } from "vue";
 
-export function htmlFromData(data: any, tableRef: Ref) {
+export function htmlFromData(
+  data: any,
+  desserts: Ref<{ name: string; calories: number }[]>
+) {
   return `
     <!DOCTYPE html>
       <html lang="de">
@@ -123,9 +126,25 @@ export function htmlFromData(data: any, tableRef: Ref) {
           </div>
           <div class="vertical spaceBetween widthRightTop marginTopBottom_1">
             <h4>Kalorienliste</h4>
-            <span>
-              ${tableRef.value ? tableRef.value.$el.innerHTML : "Keine Tabellendaten gefunden"}
-            </span>
+            <table>
+              <thead>
+                <tr>
+                  <th class="text-left">Name</th>
+                  <th class="text-left">Kalorien</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${desserts.value
+                  .map(
+                    (dessert) => `
+                    <tr>
+                      <td>${dessert.name}</td>
+                      <td>${dessert.calories}</td>
+                    </tr>`
+                  )
+                  .join(``)}
+              </tbody>
+            </table>
           </div>
         </div>
         <div class="margin-top margin-leftright">

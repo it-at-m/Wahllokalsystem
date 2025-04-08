@@ -25,7 +25,6 @@
           label="Beschreibung"
           auto-grow
           clearable
-          @update:model-value="(value) => (ereignis.beschreibung = value)"
         ></v-textarea>
       </v-col>
       <v-col cols="1">

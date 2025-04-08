@@ -114,7 +114,7 @@
         />
         <v-list-item
           title="Störungen"
-          :to="{ name: ROUTE_VORFAELLEUNDVORKOMMNISSE }"
+          :to="ROUTE_VORFAELLEUNDVORKOMMNISSE"
         />
       </v-list>
     </v-navigation-drawer>

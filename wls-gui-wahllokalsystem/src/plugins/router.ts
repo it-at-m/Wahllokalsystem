@@ -36,7 +36,7 @@ const routes = [
     meta: {},
   },
   {
-    path: "/stoerungen",
+    path: "/vorfaelleundvorkommnisse",
     name: ROUTE_VORFAELLEUNDVORKOMMNISSE,
     component: EreignisseView,
     meta: {},

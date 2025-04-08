@@ -7,7 +7,7 @@ import {
 import { useAWerteMapper } from "@/composables/aWerte/aWerteMapper.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 
-export default function aWerteService() {
+export default function useAWerteService() {
   const awerteAsyncProgressAPI = new AsyncProgressControllerApi(
     new Configuration({
       basePath: ERGEBNISMELDUNG_SERVICE_API_URL,

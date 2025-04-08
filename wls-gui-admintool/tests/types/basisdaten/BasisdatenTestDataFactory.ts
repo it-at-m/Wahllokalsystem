@@ -1,4 +1,5 @@
 import type { AsyncProgressDTO } from "@/api/wls-clients/generated-basisdaten-api";
+import type { BasisdatenInitProgress } from "@/types/basisdaten/BasisdatenInitProgress.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
@@ -27,7 +28,29 @@ export default function useBasisdatenTestDataFactory() {
     };
   }
 
+  function createCompleteBasisdatenInitProgress(): BasisdatenInitProgress {
+    return {
+      lastStartTime: generateRandomDateTimeAsString(),
+      referendumvorlagen: {
+        active: generateRandomBoolean(),
+        total: generateRandomNumber(4),
+        next: `next ${generateRandomNumber(10)}`,
+        finished: generateRandomNumber(4),
+      },
+      forWahltag: generateRandomDateAsString(),
+      wahlNummer: `${generateRandomNumber(1)}`,
+      lastFinishTime: generateRandomDateTimeAsString(),
+      wahlvorschlaege: {
+        active: generateRandomBoolean(),
+        total: generateRandomNumber(4),
+        next: `next ${generateRandomNumber(10)}`,
+        finished: generateRandomNumber(4),
+      },
+    };
+  }
+
   return {
     createCompleteAsyncProgressDTO,
+    createCompleteBasisdatenInitProgress,
   };
 }

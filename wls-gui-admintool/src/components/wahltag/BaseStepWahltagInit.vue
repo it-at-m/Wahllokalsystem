@@ -68,7 +68,7 @@ function onInitWahltagClicked() {
   importWahlterminDaten(props.wahltagEvent.wahltagID);
 }
 
-async function onOverrideDialogConfirmDelete() {
+function onOverrideDialogConfirmDelete() {
   templateRefWahltagDeleteConfirmationDialog.value?.hide();
 
   deleteAndImportWahlterminDaten(props.wahltagEvent.wahltagID);

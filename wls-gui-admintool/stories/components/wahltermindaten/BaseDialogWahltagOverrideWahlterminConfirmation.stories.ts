@@ -29,9 +29,3 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
-
-export const WithDiffrentConfirmText: Story = {
-  args: {
-    requiredConfirmText: "lorem ipsum",
-  },
-};

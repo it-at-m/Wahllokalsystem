@@ -1,4 +1,5 @@
 import { createTestingPinia } from "@pinia/testing";
+import { getSnapshotFilename } from "@tests/utils/testutils";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import {
@@ -17,7 +18,6 @@ import * as directives from "vuetify/directives";
 
 import TheWahlvorstandAnwesenheitRequirementCard from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.vue";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
-import { getSnapshotFilename } from "../../utils/testutils";
 
 describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => {
   let vuetify: ReturnType<typeof createVuetify>;

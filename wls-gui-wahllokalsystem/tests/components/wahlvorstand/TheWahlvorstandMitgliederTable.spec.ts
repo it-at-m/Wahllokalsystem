@@ -1,6 +1,7 @@
 import type { Wahlvorstandsmitglied } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
 
 import { createTestingPinia } from "@pinia/testing";
+import { getSnapshotFilename } from "@tests/utils/testutils";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import {
@@ -20,7 +21,6 @@ import * as directives from "vuetify/directives";
 import TheWahlvorstandMitgliederTable from "@/components/wahlvorstand/TheWahlvorstandMitgliederTable.vue";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 import { WahlvorstandsmitgliedBuilder } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
-import { getSnapshotFilename } from "../../utils/testutils";
 
 describe("TheWahlvorstandMitgliederTable.vue", () => {
   let vuetify: ReturnType<typeof createVuetify>;

@@ -5,7 +5,7 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 
 const {
   generateRandomBoolean,
-  generateRandomDateAsString,
+  generateRandomDateTimeAsString,
   generateRandomNumber,
 } = useCommonTestDataFactory();
 
@@ -16,8 +16,8 @@ export default function useAWerteTestDataFactory() {
       aWerteNext: `next ${generateRandomNumber(4)}`,
       aWerteTotal: generateRandomNumber(4),
       aWerteLoadingActive: generateRandomBoolean(),
-      lastFinishTime: generateRandomDateAsString(),
-      lastStartTime: generateRandomDateAsString(),
+      lastFinishTime: generateRandomDateTimeAsString(),
+      lastStartTime: generateRandomDateTimeAsString(),
     };
   }
 
@@ -25,8 +25,8 @@ export default function useAWerteTestDataFactory() {
     return {
       total: generateRandomNumber(4),
       active: generateRandomBoolean(),
-      lastFinishTime: generateRandomDateAsString(),
-      lastStartTime: generateRandomDateAsString(),
+      lastFinishTime: generateRandomDateTimeAsString(),
+      lastStartTime: generateRandomDateTimeAsString(),
     };
   }
 

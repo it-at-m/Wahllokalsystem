@@ -64,6 +64,8 @@ describe("BaseStepWahltagInit.vue", () => {
   });
 
   afterEach(() => {
+    vi.clearAllMocks();
+    vi.resetAllMocks();
     wrapper.unmount();
     document.body.innerHTML = "";
     document.head.innerHTML = "";

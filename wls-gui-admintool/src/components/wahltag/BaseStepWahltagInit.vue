@@ -41,8 +41,12 @@ import { VBtn } from "vuetify/components";
 import BaseDialogWahltagOverrideWahlterminConfirmation from "@/components/wahltag/BaseDialogWahltagOverrideWahlterminConfirmation.vue";
 import { useWahltermindatenService } from "@/composables/wahltermindaten/wahltermindatenService.ts";
 
-const { importWahlterminDaten, isLoading, deleteWahltermindaten, istDeleting } =
-  useWahltermindatenService();
+const {
+  importWahlterminDaten,
+  isLoading,
+  deleteAndImportWahlterminDaten,
+  istDeleting,
+} = useWahltermindatenService();
 
 const props = defineProps({
   wahltagEvent: {
@@ -67,8 +71,7 @@ function onInitWahltagClicked() {
 async function onOverrideDialogConfirmDelete() {
   templateRefWahltagDeleteConfirmationDialog.value?.hide();
 
-  await deleteWahltermindaten(props.wahltagEvent.wahltagID);
-  importWahlterminDaten(props.wahltagEvent.wahltagID);
+  deleteAndImportWahlterminDaten(props.wahltagEvent.wahltagID);
 }
 
 function onOverrideDialogCancelDelete() {

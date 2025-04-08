@@ -31,6 +31,18 @@ export function useWahltermindatenService() {
     isLoading.value = false;
   }
 
+  async function deleteAndImportWahlterminDaten(wahltagID: string) {
+    try {
+      await deleteWahltermindaten(wahltagID);
+      importWahlterminDaten(wahltagID);
+    } catch {
+      addNotification(
+        "Löschen und Importieren der Wahltermindaten fehlgeschlagen",
+        "Error"
+      );
+    }
+  }
+
   async function deleteWahltermindaten(wahltagID: string) {
     istDeleting.value = true;
 
@@ -46,6 +58,7 @@ export function useWahltermindatenService() {
 
   return {
     deleteWahltermindaten,
+    deleteAndImportWahlterminDaten,
     isLoading,
     istDeleting,
     importWahlterminDaten,

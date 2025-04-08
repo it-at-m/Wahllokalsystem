@@ -40,7 +40,7 @@ describe("vorfaelleundvorkommnisseStore.ts", () => {
   });
 
   describe("loadEreignisse", () => {
-    it("should_setWahlbezirkEreignisse_when_userHasWahlbezirkID", async () => {
+    it("should_loadWahlbezirkEreignisse_when_userHasWahlbezirkID", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
       const user = new User();

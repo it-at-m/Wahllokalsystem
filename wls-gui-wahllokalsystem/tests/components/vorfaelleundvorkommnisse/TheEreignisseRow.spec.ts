@@ -58,9 +58,7 @@ describe("TheEreignisseRow.vue", () => {
 
     it("should_showNoRows_when_noEreignisIsGiven", async (context) => {
       const ereignisStore = useEreignisStore();
-      const ereigniseintraege = [] as Ereignis[];
-
-      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = ereigniseintraege;
+      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = [] as Ereignis[];
 
       await nextTick();
 
@@ -73,7 +71,7 @@ describe("TheEreignisseRow.vue", () => {
       const ereignisStore = useEreignisStore();
       const ereigniseintraege = [] as Ereignis[];
 
-      let date = new Date();
+      const date = new Date();
       date.setHours(12, 0);
       ereigniseintraege.push(
         EreignisBuilder.createComplete()
@@ -95,7 +93,7 @@ describe("TheEreignisseRow.vue", () => {
 
       const ereigniseintraege = [] as Ereignis[];
       for (let i = 0; i < 5; i++) {
-        let date = new Date();
+        const date = new Date();
         date.setHours(i, 0);
         ereigniseintraege.push(
           EreignisBuilder.createComplete()
@@ -115,11 +113,11 @@ describe("TheEreignisseRow.vue", () => {
   });
 
   describe("behavioral logic", () => {
-    it("should_showErrorMessage_when_beschreibungIsNotSetCorrectly", async (context) => {
+    it("should_showErrorMessage_when_beschreibungIsNotSetCorrectly", async () => {
       const ereignisStore = useEreignisStore();
       const ereigniseintraege = [] as Ereignis[];
 
-      let date = new Date();
+      const date = new Date();
       date.setHours(12, 0);
       ereigniseintraege.push(
         EreignisBuilder.createComplete().withUhrzeit(date).withBeschreibung(``)
@@ -141,11 +139,11 @@ describe("TheEreignisseRow.vue", () => {
       expect(errorMessage.text()).toContain("Minimale Länge ist 4 Zeichen.");
     });
 
-    it("should_showErrorMessage_when_uhrzeitIsNotSetCorrectly", async (context) => {
+    it("should_showErrorMessage_when_uhrzeitIsNotSetCorrectly", async () => {
       const ereignisStore = useEreignisStore();
       const ereigniseintraege = [] as Ereignis[];
 
-      let date = new Date();
+      const date = new Date();
       date.setHours(12, 0);
       ereigniseintraege.push(
         EreignisBuilder.createComplete()

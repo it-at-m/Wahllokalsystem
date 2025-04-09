@@ -19,6 +19,7 @@
         v-model="activeStep"
         :items="steps"
         item-title="nummer"
+        :hide-actions="!wahltagSelectedHasMultipleEvents"
       >
         <template #title="{ step }"
           ><div class="mb-1">
@@ -70,6 +71,9 @@ const { getWahltage, isKonfigurierterWahltag } = useWahltagService();
 
 const wahltage: Ref<Wahltag[]> = ref([]);
 const wahltagSelected: Ref<Wahltag | undefined> = ref(undefined);
+const wahltagSelectedHasMultipleEvents = computed(
+  () => (wahltagSelected.value?.events.length ?? 0) > 1
+);
 const wahltageAreLoading = ref(false);
 
 const konfigurierteWahltage: Ref<Map<string, boolean | undefined>> = ref(

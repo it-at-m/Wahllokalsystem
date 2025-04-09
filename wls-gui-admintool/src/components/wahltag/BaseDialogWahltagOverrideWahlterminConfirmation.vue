@@ -59,8 +59,8 @@ const emit = defineEmits<{
 }>();
 
 defineExpose({
-  show,
-  hide,
+  showDialog,
+  hideDialog,
 });
 
 const visible = ref(false);
@@ -85,13 +85,13 @@ function onConfirmClicked() {
   emit("confirmDelete");
 }
 
-function show() {
+function showDialog() {
   confirmText.value = "";
   confirmTextField.value?.reset();
   visible.value = true;
 }
 
-function hide() {
+function hideDialog() {
   visible.value = false;
 }
 </script>

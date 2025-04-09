@@ -198,7 +198,7 @@ describe("BaseStepWahltagInit.vue", () => {
         .wahltageOverrideConfirmationDialog as InstanceType<
         typeof BaseDialogWahltagOverrideWahlterminConfirmation
       >;
-      const dialogHideSpy = vi.spyOn(referencedConfirmDialog, "hide");
+      const dialogHideSpy = vi.spyOn(referencedConfirmDialog, "hideDialog");
 
       referencedConfirmDialog.$emit("confirmDelete");
 
@@ -228,7 +228,7 @@ describe("BaseStepWahltagInit.vue", () => {
         .wahltageOverrideConfirmationDialog as InstanceType<
         typeof BaseDialogWahltagOverrideWahlterminConfirmation
       >;
-      const dialogHideSpy = vi.spyOn(referencedConfirmDialog, "hide");
+      const dialogHideSpy = vi.spyOn(referencedConfirmDialog, "hideDialog");
       referencedConfirmDialog.$emit("cancelDelete");
 
       await nextTick();

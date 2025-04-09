@@ -69,16 +69,16 @@ function onInitWahltagClicked() {
 }
 
 function onOverrideDialogConfirmDelete() {
-  templateRefWahltagDeleteConfirmationDialog.value?.hide();
+  templateRefWahltagDeleteConfirmationDialog.value?.hideDialog();
 
   deleteAndImportWahlterminDaten(props.wahltagEvent.wahltagID);
 }
 
 function onOverrideDialogCancelDelete() {
-  templateRefWahltagDeleteConfirmationDialog.value?.hide();
+  templateRefWahltagDeleteConfirmationDialog.value?.hideDialog();
 }
 
 function onOverrideWahltagClicked() {
-  templateRefWahltagDeleteConfirmationDialog.value?.show();
+  templateRefWahltagDeleteConfirmationDialog.value?.showDialog();
 }
 </script>

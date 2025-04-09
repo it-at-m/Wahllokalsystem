@@ -30,7 +30,7 @@ describe("BaseDialogWahltagOverrideWahlterminConfirmation.vue", () => {
     });
 
     it("should_renderDialog_when_showWasCalled", async (context) => {
-      wrapper.vm.show();
+      wrapper.vm.showDialog();
 
       await wrapper.vm.$nextTick();
 
@@ -40,9 +40,9 @@ describe("BaseDialogWahltagOverrideWahlterminConfirmation.vue", () => {
     });
 
     it("should_hideDialog_when_hideWasCalledAfterShow", async (context) => {
-      wrapper.vm.show();
+      wrapper.vm.showDialog();
       await wrapper.vm.$nextTick();
-      wrapper.vm.hide();
+      wrapper.vm.hideDialog();
       await wrapper.vm.$nextTick();
 
       await expect(document.body.innerHTML).toMatchFileSnapshot(
@@ -56,7 +56,7 @@ describe("BaseDialogWahltagOverrideWahlterminConfirmation.vue", () => {
         requiredConfirmText: "requiredConfirmText",
       });
 
-      wrapper.vm.show();
+      wrapper.vm.showDialog();
       await wrapper.vm.$nextTick();
 
       await expect(document.body.innerHTML).toMatchFileSnapshot(
@@ -67,7 +67,7 @@ describe("BaseDialogWahltagOverrideWahlterminConfirmation.vue", () => {
 
   describe("behavior logic", () => {
     it("should_emitConfirmDelete_when_confirmButtonClicked", async () => {
-      wrapper.vm.show();
+      wrapper.vm.showDialog();
       await wrapper.vm.$nextTick();
 
       const confirmButton = wrapper.findComponent(BaseButtonConfirm);
@@ -79,7 +79,7 @@ describe("BaseDialogWahltagOverrideWahlterminConfirmation.vue", () => {
     });
 
     it("should_emitCancelDelete_when_cancelButtonClicked", async () => {
-      wrapper.vm.show();
+      wrapper.vm.showDialog();
       await wrapper.vm.$nextTick();
 
       const cancelButton = wrapper.findComponent(BaseButtonCancel);
@@ -93,7 +93,7 @@ describe("BaseDialogWahltagOverrideWahlterminConfirmation.vue", () => {
       await wrapper.setProps({
         requiredConfirmText: confirmText,
       });
-      wrapper.vm.show();
+      wrapper.vm.showDialog();
       await wrapper.vm.$nextTick();
 
       const confirmButton = wrapper.findComponent(BaseButtonConfirm);

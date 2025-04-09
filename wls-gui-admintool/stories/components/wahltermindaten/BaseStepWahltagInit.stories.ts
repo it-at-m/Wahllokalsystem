@@ -8,7 +8,6 @@ import { default as StoryComponent } from "@/components/wahltag/BaseStepWahltagI
 const meta: Meta<typeof StoryComponent> = {
   component: StoryComponent,
   subcomponents: { BaseDialogWahltagOverrideWahlterminConfirmation },
-  argTypes: {},
   args: {
     wahltagEvent: {
       nummer: "Nummer 1",

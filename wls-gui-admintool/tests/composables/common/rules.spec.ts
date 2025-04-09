@@ -15,7 +15,7 @@ describe("rules.ts", () => {
     });
 
     describe("requiredText", () => {
-      it("should_returnFalse_whenValueIsUndefinedButRequiredTextIsNot", () => {
+      it("should_returnFalse_when_valueIsUndefinedButRequiredTextIsNot", () => {
         const rule = requiredTextRuleBuilder(requiredText);
 
         expect(rule(undefined)).toStrictEqual(false);

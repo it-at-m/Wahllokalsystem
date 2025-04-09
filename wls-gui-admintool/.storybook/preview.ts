@@ -23,7 +23,7 @@ const preview: Preview = {
     },
   },
 
-  loaders: [mswLoader], // 👈 Add the MSW loader to all stories
+  loaders: [mswLoader],
 };
 
 export default preview;

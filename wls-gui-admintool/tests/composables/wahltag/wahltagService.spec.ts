@@ -143,7 +143,7 @@ describe("wahltagService.ts", () => {
   });
 
   describe("isKonfigurierterWahltag", () => {
-    it("should_returnTrue_when_wahltagIDIsPartInfomanagementResponse", async () => {
+    it("should_returnTrue_when_wahltagIDIsPartOfInfomanagementResponse", async () => {
       const wahltagID = "wahltagID";
 
       const mockResponseKonfigurierteWahltag: KonfigurierterWahltagDTO[] = [
@@ -159,7 +159,7 @@ describe("wahltagService.ts", () => {
       expect(result).toStrictEqual(true);
     });
 
-    it("should_returnFalse_when_wahltagIDIsNotPartInfomanagementResponse", async () => {
+    it("should_returnFalse_when_wahltagIDIsNotPartOfInfomanagementResponse", async () => {
       const wahltagID = "wahltagID";
 
       const mockResponseKonfigurierteWahltag: KonfigurierterWahltagDTO[] = [];

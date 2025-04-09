@@ -23,11 +23,12 @@ describe("BaseDialogWahltagOverrideWahlterminConfirmation.vue", () => {
   });
 
   describe("visual logic", () => {
-    it("should_nothingVisible_when_mountedUnchanged", async (context) => {
+    it("should_renderNothingVisible_when_mountedUnchanged", async (context) => {
       await expect(document.body.innerHTML).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );
     });
+    
     it("should_renderDialog_when_showWasCalled", async (context) => {
       wrapper.vm.show();
 
@@ -51,13 +52,11 @@ describe("BaseDialogWahltagOverrideWahlterminConfirmation.vue", () => {
 
     it("should_renderValues_when_propertiesAreSet", async (context) => {
       cleanUp(wrapper);
-
       wrapper = setupWrapper({
         requiredConfirmText: "requiredConfirmText",
       });
 
       wrapper.vm.show();
-
       await wrapper.vm.$nextTick();
 
       await expect(document.body.innerHTML).toMatchFileSnapshot(

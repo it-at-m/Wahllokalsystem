@@ -17,24 +17,37 @@
       <v-stepper
         v-if="steps.length > 0"
         v-model="activeStep"
-        :items="steps"
-        item-title="nummer"
         editable
         :hide-actions="!wahltagSelectedHasMultipleEvents"
       >
-        <template #title="{ step }"
-          ><div class="mb-1">
-            Wahlnummer: {{ steps[step - 1].nummer }}
-          </div></template
-        >
-        <template #subtitle="{ step }">
-          <div>{{ steps[step - 1].beschreibung }}</div>
-        </template>
+        <v-stepper-header>
+          <template
+            v-for="(step, index) in steps"
+            :key="step.wahltagID"
+          >
+            <v-stepper-item
+              :value="index"
+              :complete="activeStep > index"
+              :title="step.nummer"
+              :subtitle="step.beschreibung"
+            />
+
+            <v-divider v-if="index < steps.length - 1" />
+          </template>
+        </v-stepper-header>
+        <!--        <template #title="{ step }"-->
+        <!--          ><div class="mb-1">-->
+        <!--            Wahlnummer: {{ steps[step - 1].nummer }}-->
+        <!--          </div></template-->
+        <!--        >-->
+        <!--        <template #subtitle="{ step }">-->
+        <!--          <div>{{ steps[step - 1].beschreibung }}</div>-->
+        <!--        </template>-->
         <v-stepper-window>
           <v-stepper-window-item
             v-for="(step, index) in steps"
             :key="step.wahltagID"
-            :value="index + 1"
+            :value="index"
           >
             <base-step-wahltag-init
               :wahltag-event="step"
@@ -58,7 +71,10 @@ import {
   VCard,
   VCardText,
   VCardTitle,
+  VDivider,
   VStepper,
+  VStepperHeader,
+  VStepperItem,
   VStepperWindow,
   VStepperWindowItem,
 } from "vuetify/components";

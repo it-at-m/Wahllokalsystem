@@ -18,12 +18,11 @@ export default function useWahltagService() {
       basePath: ADMIN_SERVICE_API_URL,
     })
   );
-  const basisdatenKonfigurierteWahltageAPI =
-    new KonfigurierteWahltageControllerApi(
-      new Configuration({
-        basePath: ADMIN_SERVICE_API_URL,
-      })
-    );
+  const adminKonfigurierteWahltageAPI = new KonfigurierteWahltageControllerApi(
+    new Configuration({
+      basePath: ADMIN_SERVICE_API_URL,
+    })
+  );
 
   const { mapGroupedWahltagDtosToWahltage } = useWahltagMapper();
   const { addNotification } = useUserNotificationService();
@@ -52,7 +51,7 @@ export default function useWahltagService() {
 
   async function isKonfigurierterWahltag(wahltagID: string): Promise<boolean> {
     try {
-      const konfigurierteWahltage = await basisdatenKonfigurierteWahltageAPI
+      const konfigurierteWahltage = await adminKonfigurierteWahltageAPI
         .getKonfigurierteWahltage()
         .then((response) => response.data);
 

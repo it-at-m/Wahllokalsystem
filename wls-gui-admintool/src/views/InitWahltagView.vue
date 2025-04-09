@@ -19,6 +19,7 @@
         v-model="activeStep"
         :items="steps"
         item-title="nummer"
+        editable
         :hide-actions="!wahltagSelectedHasMultipleEvents"
       >
         <template #title="{ step }"

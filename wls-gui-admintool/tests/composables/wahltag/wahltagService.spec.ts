@@ -172,22 +172,7 @@ describe("wahltagService.ts", () => {
       expect(result).toStrictEqual(false);
     });
 
-    it("should_addNotification_when_anExceptionOccurred", async () => {
-      const wahltagID = "wahltagID";
-
-      mockDefinitions.apiGetKonfigurierteWahltage.mockRejectedValue(
-        new Error("api call failed")
-      );
-
-      await unitUnderTest.isKonfigurierterWahltag(wahltagID);
-
-      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
-        expect.any(String),
-        "Error",
-      ]);
-    });
-
-    it("should_returnFalse_when_anExceptionOccurred", async () => {
+    it("should_addNotificationAndReturnFalse_when_anExceptionOccurred", async () => {
       const wahltagID = "wahltagID";
 
       mockDefinitions.apiGetKonfigurierteWahltage.mockRejectedValue(
@@ -196,6 +181,10 @@ describe("wahltagService.ts", () => {
 
       const result = await unitUnderTest.isKonfigurierterWahltag(wahltagID);
 
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        expect.any(String),
+        "Error",
+      ]);
       expect(result).toStrictEqual(false);
     });
   });

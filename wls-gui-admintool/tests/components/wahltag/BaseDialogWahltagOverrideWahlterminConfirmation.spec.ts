@@ -28,7 +28,7 @@ describe("BaseDialogWahltagOverrideWahlterminConfirmation.vue", () => {
         getSnapshotFilename(context)
       );
     });
-    
+
     it("should_renderDialog_when_showWasCalled", async (context) => {
       wrapper.vm.show();
 

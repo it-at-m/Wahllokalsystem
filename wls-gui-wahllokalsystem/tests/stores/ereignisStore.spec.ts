@@ -111,6 +111,20 @@ describe("ereignisStore.ts", () => {
     });
   });
 
+  it("should_handleError_when_getEreignisseThrowsError", async () => {
+    const userStore = useUserStore();
+    const wahlbezirkID = "wahlbezirkID";
+    const user = new User();
+    user.wahlbezirkID = wahlbezirkID;
+    userStore.setUser(user);
+
+    const mockedError = new Error("Network error");
+    mockDefinitions.getEreignisse.mockRejectedValue(mockedError);
+
+    await unitUnderTest.loadEreignisse();
+    expect(unitUnderTest.error).equals("Fehler beim Laden der Ereignisse");
+  });
+
   describe("addEreignis", () => {
     it("should_addEreignisToWahlbezirkEreignisse_when_ereignisIsAdded", async () => {
       const userStore = useUserStore();

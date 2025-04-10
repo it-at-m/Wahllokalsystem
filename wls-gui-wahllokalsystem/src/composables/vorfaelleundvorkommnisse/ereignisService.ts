@@ -45,6 +45,7 @@ export function useEreignisService() {
         "Das Speichern der Störungen schlug fehl.",
         UserNotificationCategoryEnum.ERROR
       );
+      console.debug(error);
     }
   }
 

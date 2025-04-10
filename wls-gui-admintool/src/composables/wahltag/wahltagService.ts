@@ -6,6 +6,7 @@ import {
   KonfigurierteWahltageControllerApi,
   WahltageControllerApi,
 } from "@/api/wls-clients/generated-admin-api";
+import { useApiUtils } from "@/composables/common/apiUtils.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWahltagDtoUtils } from "@/composables/wahltag/wahltagDtoUtils.ts";
 import { useWahltagMapper } from "@/composables/wahltag/wahltagMapper.ts";
@@ -23,6 +24,7 @@ export default function useWahltagService() {
       basePath: ADMIN_SERVICE_API_URL,
     })
   );
+  const { returnUndefinedOnStatus204OrElseDate } = useApiUtils();
 
   const { mapGroupedWahltagDtosToWahltage } = useWahltagMapper();
   const { addNotification } = useUserNotificationService();
@@ -35,11 +37,13 @@ export default function useWahltagService() {
     try {
       const wahltagDtos = await adminWahltageAPI
         .getWahltage()
-        .then((response) => response.data);
+        .then((response) => returnUndefinedOnStatus204OrElseDate(response));
 
-      const wahltageGroupByDatum = groupWahltagDtosByWahltag(wahltagDtos);
-      result.push(...mapGroupedWahltagDtosToWahltage(wahltageGroupByDatum));
-      result.forEach((wahltag) => wahltag.events.sort(compareByNummerAsc));
+      if (wahltagDtos) {
+        const wahltageGroupByDatum = groupWahltagDtosByWahltag(wahltagDtos);
+        result.push(...mapGroupedWahltagDtosToWahltage(wahltageGroupByDatum));
+        result.forEach((wahltag) => wahltag.events.sort(compareByNummerAsc));
+      }
     } catch {
       addNotification("Wahltage konnten nicht geladen werden", "Error");
     }

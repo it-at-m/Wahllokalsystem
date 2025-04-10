@@ -117,6 +117,17 @@ describe("wahltagService.ts", () => {
       expect(result).toStrictEqual([]);
     });
 
+    it("should_returnEmptyArray_when_apiReturned204WithUndefined", async () => {
+      useMockSetupForSuccessfulLoadWahltage();
+      mockDefinitions.apiGetWahltage.mockReturnValue(
+        Promise.resolve({ data: undefined })
+      );
+
+      const result = await unitUnderTest.getWahltage();
+
+      expect(result).toStrictEqual([]);
+    });
+
     it("should_triggerToastyWithError_when_anExceptionOccurred", async () => {
       mockDefinitions.apiGetWahltage.mockRejectedValue(
         new Error("api call failed")

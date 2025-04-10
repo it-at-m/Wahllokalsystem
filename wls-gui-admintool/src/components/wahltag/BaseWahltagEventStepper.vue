@@ -43,6 +43,7 @@
 </template>
 <script setup lang="ts">
 import type { WahltagEvent } from "@/types/wahltag/WahltagEvent.ts";
+import type { ShallowRef } from "vue";
 
 import { computed, ref, useTemplateRef } from "vue";
 import {
@@ -87,7 +88,7 @@ const hasMultipleEvents = computed(() => (props.wahltagEvents.length ?? 0) > 1);
 
 const componentRefWahltageEventStepper = useTemplateRef(
   "wahltageEventsStepper"
-);
+) as Readonly<ShallowRef<InstanceType<typeof VStepper>>>;
 
 function getItemColor(index: number): string {
   return index < activeStepComputed.value ? "success" : "primary";

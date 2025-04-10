@@ -17,6 +17,7 @@
           :label="confirmTextFieldLabel"
           :rules="[requiredText(requiredConfirmText)]"
           class="mt-2"
+          autofocus
           data-test="textfield-confirm-text"
         />
       </v-card-text>
@@ -31,6 +32,8 @@
   </v-dialog>
 </template>
 <script setup lang="ts">
+import type { ShallowRef } from "vue";
+
 import { computed, ref, useTemplateRef } from "vue";
 import {
   VCard,
@@ -66,7 +69,9 @@ defineExpose({
 const visible = ref(false);
 
 const confirmText = ref("");
-const confirmTextField = useTemplateRef("confirmTextField");
+const confirmTextField = useTemplateRef("confirmTextField") as Readonly<
+  ShallowRef<InstanceType<typeof VTextField>>
+>;
 
 const confirmTextFieldLabel = computed(
   () => `Bitte geben sie "${props.requiredConfirmText}" ein`

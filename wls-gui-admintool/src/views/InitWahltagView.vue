@@ -14,50 +14,10 @@
           @click="onRefreshWahltageClicked"
         />
       </div>
-      <v-stepper
-        v-if="steps.length > 0"
-        v-model="activeStep"
-        editable
-        :hide-actions="!wahltagSelectedHasMultipleEvents"
-      >
-        <v-stepper-header>
-          <template
-            v-for="(step, index) in steps"
-            :key="step.wahltagID"
-          >
-            <v-stepper-item
-              :value="index"
-              :complete="activeStep > index"
-              :title="step.nummer"
-              :subtitle="step.beschreibung"
-            />
-
-            <v-divider v-if="index < steps.length - 1" />
-          </template>
-        </v-stepper-header>
-        <!--        <template #title="{ step }"-->
-        <!--          ><div class="mb-1">-->
-        <!--            Wahlnummer: {{ steps[step - 1].nummer }}-->
-        <!--          </div></template-->
-        <!--        >-->
-        <!--        <template #subtitle="{ step }">-->
-        <!--          <div>{{ steps[step - 1].beschreibung }}</div>-->
-        <!--        </template>-->
-        <v-stepper-window>
-          <v-stepper-window-item
-            v-for="(step, index) in steps"
-            :key="step.wahltagID"
-            :value="index"
-          >
-            <base-step-wahltag-init
-              :wahltag-event="step"
-              :wahltermin-daten-exists="
-                konfigurierteWahltage.get(step.wahltagID)
-              "
-            />
-          </v-stepper-window-item>
-        </v-stepper-window>
-      </v-stepper>
+      <base-wahltag-event-stepper
+        :wahltag-events="wahltagEventsOfSelectedWahltag"
+        :konfigurierte-wahltage="konfigurierteWahltage"
+      />
     </v-card-text>
   </v-card>
 </template>
@@ -67,38 +27,26 @@ import type { Wahltag } from "@/types/wahltag/Wahltag.ts";
 import type { Ref } from "vue";
 
 import { computed, onMounted, ref } from "vue";
-import {
-  VCard,
-  VCardText,
-  VCardTitle,
-  VDivider,
-  VStepper,
-  VStepperHeader,
-  VStepperItem,
-  VStepperWindow,
-  VStepperWindowItem,
-} from "vuetify/components";
+import { VCard, VCardText, VCardTitle } from "vuetify/components";
 
 import BaseAutocompleteWahltag from "@/components/common/BaseAutocompleteWahltag.vue";
 import BaseIconButtonRefresh from "@/components/common/BaseIconButtonRefresh.vue";
-import BaseStepWahltagInit from "@/components/wahltag/BaseStepWahltagInit.vue";
+import BaseWahltagEventStepper from "@/components/wahltag/BaseWahltagEventStepper.vue";
 import useWahltagService from "@/composables/wahltag/wahltagService.ts";
 
 const { getWahltage, isKonfigurierterWahltag } = useWahltagService();
 
 const wahltage: Ref<Wahltag[]> = ref([]);
 const wahltagSelected: Ref<Wahltag | undefined> = ref(undefined);
-const wahltagSelectedHasMultipleEvents = computed(
-  () => (wahltagSelected.value?.events.length ?? 0) > 1
-);
 const wahltageAreLoading = ref(false);
 
 const konfigurierteWahltage: Ref<Map<string, boolean | undefined>> = ref(
   new Map<string, boolean | undefined>()
 );
 
-const steps = computed(() => wahltagSelected.value?.events ?? []);
-const activeStep = ref(0);
+const wahltagEventsOfSelectedWahltag = computed(
+  () => wahltagSelected.value?.events ?? []
+);
 
 onMounted(() => {
   loadWahltage();
@@ -110,7 +58,6 @@ function onRefreshWahltageClicked() {
 
 function onSelectedWahltagChanged(newSelectedWahltag?: Wahltag) {
   wahltagSelected.value = newSelectedWahltag;
-  activeStep.value = 0;
 
   if (newSelectedWahltag) {
     reloadKonfigurierteWahltageOfDate(newSelectedWahltag);

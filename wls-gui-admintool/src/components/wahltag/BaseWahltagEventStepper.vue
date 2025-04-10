@@ -17,7 +17,6 @@
           :title="toStepTitle(event)"
           :subtitle="event.beschreibung"
         />
-
         <v-divider v-if="index < wahltagEvents.length - 1" />
       </template>
     </v-stepper-header>

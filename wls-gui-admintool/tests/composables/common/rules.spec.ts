@@ -20,7 +20,7 @@ describe("rules.ts", () => {
         { descriptionValueIs: "valueIsNull", value: null },
         { descriptionValueIs: "valueIsEmptyString", value: "" },
         {
-          descriptionValueIs: "valueIsNotEqualsRequired",
+          descriptionValueIs: "valueDoesNotEqualRequired",
           value: requiredText + requiredText,
         },
       ])(

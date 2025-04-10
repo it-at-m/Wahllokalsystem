@@ -3,7 +3,6 @@
     v-if="wahltagEvents.length > 0"
     v-model="activeStepComputed"
     editable
-    :hide-actions="!hasMultipleEvents"
   >
     <v-stepper-header>
       <template
@@ -32,6 +31,11 @@
         />
       </v-stepper-window-item>
     </v-stepper-window>
+    <v-stepper-actions
+      v-if="hasMultipleEvents"
+      @click:next="onNextClicked"
+      @click:prev="onPrevClicked"
+    />
   </v-stepper>
 </template>
 <script setup lang="ts">
@@ -41,6 +45,7 @@ import { computed, ref } from "vue";
 import {
   VDivider,
   VStepper,
+  VStepperActions,
   VStepperHeader,
   VStepperItem,
   VStepperWindow,
@@ -73,6 +78,14 @@ const activeStepComputed = computed({
   },
 });
 const hasMultipleEvents = computed(() => (props.wahltagEvents.length ?? 0) > 1);
+
+function onNextClicked() {
+  activeStepComputed.value = activeStepComputed.value + 1;
+}
+
+function onPrevClicked() {
+  activeStepComputed.value = activeStepComputed.value - 1;
+}
 
 function toStepTitle(wahltagEvent: WahltagEvent) {
   return `Wahlnummer: ${wahltagEvent.nummer}`;

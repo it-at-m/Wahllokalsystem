@@ -14,6 +14,7 @@ import {
 } from "vitest";
 import { nextTick } from "vue";
 
+import YesNoDialog from "@/components/common/YesNoDialog.vue";
 import TheEreignisseRow from "@/components/vorfaelleundvorkommnisse/TheEreignisseRow.vue";
 import vuetify from "@/plugins/vuetify";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
@@ -165,6 +166,40 @@ describe("TheEreignisseRow.vue", () => {
       // Überprüfen, ob die Fehlermeldung angezeigt wird
       const errorMessage = wrapper.get(".v-messages__message");
       expect(errorMessage.text()).toContain("Feld darf nicht leer sein.");
+    });
+
+    it("should_openYesNoDialog_when_deleteIconIsClicked", async () => {
+      const ereignisStore = useEreignisStore();
+      const ereigniseintraege = [] as Ereignis[];
+
+      const date = new Date();
+      date.setHours(12, 0);
+      ereigniseintraege.push(
+        EreignisBuilder.createComplete()
+          .withUhrzeit(date)
+          .withBeschreibung(`Beschreibung`)
+      );
+
+      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = ereigniseintraege;
+
+      await nextTick();
+
+      const deleteIcon = wrapper.findComponent(
+        '[data-test="delete-ereignis-icon"]'
+      );
+      expect(deleteIcon.exists()).toBe(true);
+
+      await deleteIcon.trigger("click");
+
+      const deleteDialog = wrapper.findComponent(YesNoDialog);
+      expect(deleteDialog.exists()).toBe(true);
+
+      deleteDialog.vm.$emit("yes");
+      await nextTick();
+
+      expect(ereignisStore.wahlbezirkEreignisse.ereigniseintraege).toHaveLength(
+        0
+      );
     });
   });
 });

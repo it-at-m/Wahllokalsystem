@@ -19,7 +19,7 @@ describe("BaseDialogWahltagOverrideWahlterminConfirmation.vue", () => {
   });
 
   afterEach(() => {
-    cleanUp(wrapper);
+    cleanUpWrapper(wrapper);
   });
 
   describe("visual logic", () => {
@@ -51,7 +51,7 @@ describe("BaseDialogWahltagOverrideWahlterminConfirmation.vue", () => {
     });
 
     it("should_renderValues_when_propertiesAreSet", async (context) => {
-      cleanUp(wrapper);
+      cleanUpWrapper(wrapper);
       wrapper = setupWrapper({
         requiredConfirmText: "requiredConfirmText",
       });
@@ -119,7 +119,7 @@ function setupWrapper(props?: Record<string, unknown>) {
   });
 }
 
-function cleanUp(wrapper: VueWrapper) {
+function cleanUpWrapper(wrapper: VueWrapper) {
   wrapper.unmount();
   document.body.innerHTML = "";
   document.head.innerHTML = "";

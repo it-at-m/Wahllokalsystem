@@ -83,14 +83,16 @@ describe("BaseAutocompleteWahltag.vue", () => {
   });
 
   describe(COMPONENT_EVENT_TESTS, () => {
-    it("should_emitWahltag_when_elementIsSelected", async () => {
-      const tag = wahltage[2];
+    describe("update:modelValue", () => {
+      it("should_emitWahltag_when_elementIsSelected", async () => {
+        const tag = wahltage[2];
 
-      const autocomplete = wrapper.findComponent(VAutocomplete);
-      await autocomplete.setValue(tag);
+        const autocomplete = wrapper.findComponent(VAutocomplete);
+        await autocomplete.setValue(tag);
 
-      expect(wrapper.emitted()).toHaveProperty("update:modelValue");
-      expect(wrapper.emitted("update:modelValue")).toEqual([[tag]]);
+        expect(wrapper.emitted()).toHaveProperty("update:modelValue");
+        expect(wrapper.emitted("update:modelValue")).toEqual([[tag]]);
+      });
     });
   });
 });

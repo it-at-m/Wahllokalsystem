@@ -106,9 +106,9 @@ function onPrevClicked() {
 
 function onImportWahltermindatenDone() {
   if (componentRefWahltageEventStepper.value && !isLastStep.value) {
-    addNotification("Wahltermindaten wurden erstellt", "Success");
     componentRefWahltageEventStepper.value.next();
   }
+  addNotification("Wahltermindaten wurden erstellt", "Success");
 }
 
 function toStepTitle(wahltagEvent: WahltagEvent) {

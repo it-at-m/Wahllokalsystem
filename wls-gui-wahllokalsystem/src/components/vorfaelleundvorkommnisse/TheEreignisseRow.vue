@@ -33,6 +33,7 @@
       </v-col>
       <v-col cols="1">
         <v-icon
+          data-test="delete-ereignis-icon"
           icon="$delete"
           title="Löschen"
           @click="openDeleteDialog(index)"

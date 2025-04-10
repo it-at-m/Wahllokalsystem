@@ -22,13 +22,15 @@ export function useWahltermindatenService() {
     isLoading.value = true;
     try {
       await controllerApi.loadWahltermindaten(wahltagID);
-    } catch {
+    } catch (error) {
       addNotification(
         "Importieren der Wahltermindaten fehlgeschlagen",
         "Error"
       );
+      throw error;
+    } finally {
+      isLoading.value = false;
     }
-    isLoading.value = false;
   }
 
   async function deleteAndImportWahlterminDaten(wahltagID: string) {
@@ -38,11 +40,12 @@ export function useWahltermindatenService() {
       isDeleting.value = false;
       isLoading.value = true;
       await controllerApi.loadWahltermindaten(wahltagID);
-    } catch {
+    } catch (error) {
       addNotification(
         "Löschen und Importieren der Wahltermindaten fehlgeschlagen",
         "Error"
       );
+      throw error;
     } finally {
       isLoading.value = false;
       isDeleting.value = false;

@@ -59,19 +59,24 @@ const props = defineProps({
     default: undefined,
   },
 });
+const emits = defineEmits<{
+  importWahlterminDatenDone: [];
+}>();
 
 const templateRefWahltagDeleteConfirmationDialog = useTemplateRef<
   InstanceType<typeof BaseDialogWahltagOverrideWahlterminConfirmation>
 >("wahltageOverrideConfirmationDialog");
 
-function onInitWahltagClicked() {
-  importWahlterminDaten(props.wahltagEvent.wahltagID);
+async function onInitWahltagClicked() {
+  await importWahlterminDaten(props.wahltagEvent.wahltagID);
+  emits("importWahlterminDatenDone");
 }
 
-function onOverrideDialogConfirmDelete() {
+async function onOverrideDialogConfirmDelete() {
   templateRefWahltagDeleteConfirmationDialog.value?.hideDialog();
 
-  deleteAndImportWahlterminDaten(props.wahltagEvent.wahltagID);
+  await deleteAndImportWahlterminDaten(props.wahltagEvent.wahltagID);
+  emits("importWahlterminDatenDone");
 }
 
 function onOverrideDialogCancelDelete() {

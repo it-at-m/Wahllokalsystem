@@ -62,7 +62,9 @@ describe("wahltermindatenService.ts", () => {
           new Error("api call failed")
         );
 
-        await unitUnderTest.importWahlterminDaten(wahltagID);
+        await expect(
+          async () => await unitUnderTest.importWahlterminDaten(wahltagID)
+        ).rejects.toThrow();
 
         expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
           expect.any(String),
@@ -102,7 +104,9 @@ describe("wahltermindatenService.ts", () => {
           new Error("api call failed")
         );
 
-        await unitUnderTest.importWahlterminDaten(wahltagID);
+        await expect(
+          async () => await unitUnderTest.importWahlterminDaten(wahltagID)
+        ).rejects.toThrow();
 
         expect(spyOnValueSetterOfRef.mock.calls).toStrictEqual([
           [true],
@@ -136,7 +140,10 @@ describe("wahltermindatenService.ts", () => {
           new Error("api call failed")
         );
 
-        await unitUnderTest.deleteAndImportWahlterminDaten(wahltagID);
+        await expect(
+          async () =>
+            await unitUnderTest.deleteAndImportWahlterminDaten(wahltagID)
+        ).rejects.toThrow();
 
         expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
           expect.any(String),
@@ -153,7 +160,10 @@ describe("wahltermindatenService.ts", () => {
           new Error("api call failed")
         );
 
-        await unitUnderTest.deleteAndImportWahlterminDaten(wahltagID);
+        await expect(
+          async () =>
+            await unitUnderTest.deleteAndImportWahlterminDaten(wahltagID)
+        ).rejects.toThrow();
 
         expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
           expect.any(String),

@@ -2,6 +2,7 @@
   <v-stepper
     v-if="wahltagEvents.length > 0"
     v-model="activeStepComputed"
+    ref="wahltageEventsStepper"
     editable
   >
     <v-stepper-header>
@@ -29,6 +30,7 @@
         <base-step-wahltag-init
           :wahltag-event="event"
           :wahltermin-daten-exists="konfigurierteWahltage.get(event.wahltagID)"
+          @importWahlterminDatenDone="onImportWahltermindatenDone"
         />
       </v-stepper-window-item>
     </v-stepper-window>
@@ -42,7 +44,7 @@
 <script setup lang="ts">
 import type { WahltagEvent } from "@/types/wahltag/WahltagEvent.ts";
 
-import { computed, ref } from "vue";
+import { computed, ref, useTemplateRef } from "vue";
 import {
   VDivider,
   VStepper,
@@ -78,7 +80,14 @@ const activeStepComputed = computed({
     lastSetActiveStep.value = newValue;
   },
 });
+const isLastStep = computed(
+  () => activeStepComputed.value >= props.wahltagEvents.length - 1
+);
 const hasMultipleEvents = computed(() => (props.wahltagEvents.length ?? 0) > 1);
+
+const componentRefWahltageEventStepper = useTemplateRef(
+  "wahltageEventsStepper"
+);
 
 function getItemColor(index: number): string {
   return index < activeStepComputed.value ? "success" : "primary";
@@ -90,6 +99,12 @@ function onNextClicked() {
 
 function onPrevClicked() {
   activeStepComputed.value = activeStepComputed.value - 1;
+}
+
+function onImportWahltermindatenDone() {
+  if (componentRefWahltageEventStepper.value && !isLastStep.value) {
+    componentRefWahltageEventStepper.value.next();
+  }
 }
 
 function toStepTitle(wahltagEvent: WahltagEvent) {

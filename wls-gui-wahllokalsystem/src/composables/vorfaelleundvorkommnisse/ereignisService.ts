@@ -4,9 +4,12 @@ import {
   Configuration,
   EreignisControllerApi,
 } from "@/api/wls-clients/generated-vorfaelleundvorkommnisse-api";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useEreignisMapper } from "@/composables/vorfaelleundvorkommnisse/ereignisMapper.ts";
 import { VORFAELLEUNDVORKOMMNISSE_SERVICE_API_URL } from "@/constants";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
+const userNotificationService = useUserNotificationService();
 const { toModel, toDto } = useEreignisMapper();
 
 export function useEreignisService() {
@@ -28,10 +31,22 @@ export function useEreignisService() {
   ): Promise<void> {
     const ereignisseWriteDto = toDto(ereignisse);
 
-    await ereignisControllerApi.postEreignisse(
-      wahlbezirkID,
-      ereignisseWriteDto
-    );
+    try {
+      await ereignisControllerApi.postEreignisse(
+        wahlbezirkID,
+        ereignisseWriteDto
+      );
+      userNotificationService.addNotification(
+        "Die Störungen wurden erfolgreich gespeichert",
+        UserNotificationCategoryEnum.SUCCESS
+      );
+    } catch (error) {
+      console.error("Fehler beim Speichern der Störungen:", error);
+      userNotificationService.addNotification(
+        "Das Speichern der Störungen schlug fehl.",
+        UserNotificationCategoryEnum.ERROR
+      );
+    }
   }
 
   return {

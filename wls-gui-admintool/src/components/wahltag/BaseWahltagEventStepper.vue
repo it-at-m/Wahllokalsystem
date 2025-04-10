@@ -57,6 +57,9 @@ import {
 } from "vuetify/components";
 
 import BaseStepWahltagInit from "@/components/wahltag/BaseStepWahltagInit.vue";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
+
+const { addNotification } = useUserNotificationService();
 
 const props = defineProps({
   wahltagEvents: {
@@ -104,6 +107,7 @@ function onPrevClicked() {
 
 function onImportWahltermindatenDone() {
   if (componentRefWahltageEventStepper.value && !isLastStep.value) {
+    addNotification("Wahltermindaten wurden erstellt", "Success");
     componentRefWahltageEventStepper.value.next();
   }
 }

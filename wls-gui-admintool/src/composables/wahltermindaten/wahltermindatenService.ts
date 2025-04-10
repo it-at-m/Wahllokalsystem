@@ -7,7 +7,7 @@ import {
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ADMIN_SERVICE_API_URL } from "@/constants.ts";
 
-const controllerApi = new WahltermindatenControllerApi(
+const adminWahltermindatenAPI = new WahltermindatenControllerApi(
   new Configuration({
     basePath: ADMIN_SERVICE_API_URL,
   })
@@ -21,7 +21,7 @@ export function useWahltermindatenService() {
   async function importWahlterminDaten(wahltagID: string) {
     isLoading.value = true;
     try {
-      await controllerApi.loadWahltermindaten(wahltagID);
+      await adminWahltermindatenAPI.loadWahltermindaten(wahltagID);
     } catch (error) {
       addNotification(
         "Importieren der Wahltermindaten fehlgeschlagen",
@@ -36,10 +36,10 @@ export function useWahltermindatenService() {
   async function deleteAndImportWahlterminDaten(wahltagID: string) {
     try {
       isDeleting.value = true;
-      await controllerApi.deleteWahltermindaten(wahltagID);
+      await adminWahltermindatenAPI.deleteWahltermindaten(wahltagID);
       isDeleting.value = false;
       isLoading.value = true;
-      await controllerApi.loadWahltermindaten(wahltagID);
+      await adminWahltermindatenAPI.loadWahltermindaten(wahltagID);
     } catch (error) {
       addNotification(
         "Löschen und Importieren der Wahltermindaten fehlgeschlagen",

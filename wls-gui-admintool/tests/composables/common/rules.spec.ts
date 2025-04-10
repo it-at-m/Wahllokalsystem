@@ -15,29 +15,22 @@ describe("rules.ts", () => {
     });
 
     describe("requiredText", () => {
-      it("should_returnFalse_when_valueIsUndefinedButRequiredTextIsNot", () => {
-        const rule = requiredTextRuleBuilder(requiredText);
+      it.each([
+        { descriptionValueIs: "valueIisUndefined", value: undefined },
+        { descriptionValueIs: "valueIsNull", value: null },
+        { descriptionValueIs: "valueIsEmptyString", value: "" },
+        {
+          descriptionValueIs: "valueIsNotEqualsRequired",
+          value: requiredText + requiredText,
+        },
+      ])(
+        "should_returnFalse_when_$descriptionValueIsButRequiredTextIsNot",
+        ({ value }) => {
+          const rule = requiredTextRuleBuilder(requiredText);
 
-        expect(rule(undefined)).toStrictEqual(false);
-      });
-
-      it("should_returnFalse_whenValueIsNullButRequiredTextIsNot", () => {
-        const rule = requiredTextRuleBuilder(requiredText);
-
-        expect(rule(null)).toStrictEqual(false);
-      });
-
-      it("should_returnFalse_whenValueIsEmptyStringButRequiredTextIsNot", () => {
-        const rule = requiredTextRuleBuilder(requiredText);
-
-        expect(rule("")).toStrictEqual(false);
-      });
-
-      it("should_returnFalse_whenValueIsNotEqualRequiredText", () => {
-        const rule = requiredTextRuleBuilder(requiredText);
-
-        expect(rule(requiredText + "c")).toStrictEqual(false);
-      });
+          expect(rule(value)).toStrictEqual(false);
+        }
+      );
 
       it("should_returnTrue_whenValueIsEqualRequiredText", () => {
         const rule = requiredTextRuleBuilder(requiredText);

@@ -4,6 +4,7 @@ import {
   mdiContentSave,
   mdiHome,
   mdiMessageText,
+  mdiPrinter,
   mdiReload,
   mdiRoutes,
   mdiSend,
@@ -32,6 +33,7 @@ export default createVuetify({
       send: mdiSend,
       updateTime: mdiUpdate,
       toaster: mdiToaster,
+      printer: mdiPrinter,
     },
     sets: {
       mdi,

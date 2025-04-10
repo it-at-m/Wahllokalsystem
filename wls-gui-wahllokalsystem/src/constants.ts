@@ -8,6 +8,7 @@ export const ROUTE_WAHLVORSTAND = "wahlvorstand";
 export const ROUTE_VORFAELLEUNDVORKOMMNISSE = "vorfaelleundvorkommnisse";
 
 export const TOAST = "toast";
+export const PRINT_EXAMPLE = "print-example";
 
 export const SNACKBAR_DEFAULT_TIMEOUT = 5000;
 

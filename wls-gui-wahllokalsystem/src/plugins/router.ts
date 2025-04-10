@@ -8,6 +8,7 @@ import {
   EXAMPLE_ROUTES_NEWROUTE,
   EXAMPLE_ROUTES_NOTFOUND,
   EXAMPLE_VALIDATION,
+  PRINT_EXAMPLE,
   ROUTE_VORFAELLEUNDVORKOMMNISSE,
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
@@ -17,6 +18,7 @@ import EreignisseView from "@/views/EreignisseView.vue";
 import ExampleBackendCommunicationView from "@/views/ExampleBackendCommunicationView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
 import ExampleNewRouteView from "@/views/ExampleNewRouteView.vue";
+import ExamplePrintView from "@/views/ExamplePrintView.vue";
 import ExampleToastView from "@/views/ExampleToastView.vue";
 import ExampleValidation from "@/views/ExampleValidation.vue";
 import HomeView from "@/views/HomeView.vue";
@@ -71,6 +73,11 @@ const routes = [
     path: "/toast-example",
     name: TOAST,
     component: ExampleToastView,
+  },
+  {
+    path: "/print-example",
+    name: PRINT_EXAMPLE,
+    component: ExamplePrintView,
   },
 ];
 

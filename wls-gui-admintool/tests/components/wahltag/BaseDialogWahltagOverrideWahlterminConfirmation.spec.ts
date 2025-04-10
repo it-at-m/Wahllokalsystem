@@ -1,4 +1,8 @@
-import { getSnapshotFilename } from "@tests/utils/testutils.ts";
+import {
+  COMPONENT_EVENT_TESTS,
+  COMPONENT_RENDER_TESTS,
+  getSnapshotFilename,
+} from "@tests/utils/testutils.ts";
 import { mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { nextTick } from "vue";
@@ -22,7 +26,7 @@ describe("BaseDialogWahltagOverrideWahlterminConfirmation.vue", () => {
     cleanUpWrapper(wrapper);
   });
 
-  describe("visual logic", () => {
+  describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderNothingVisible_when_mountedUnchanged", async (context) => {
       await expect(document.body.innerHTML).toMatchFileSnapshot(
         getSnapshotFilename(context)
@@ -65,7 +69,7 @@ describe("BaseDialogWahltagOverrideWahlterminConfirmation.vue", () => {
     });
   });
 
-  describe("behavior logic", () => {
+  describe(COMPONENT_EVENT_TESTS, () => {
     it("should_emitConfirmDelete_when_confirmButtonClicked", async () => {
       wrapper.vm.showDialog();
       await wrapper.vm.$nextTick();

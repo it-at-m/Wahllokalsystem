@@ -1,7 +1,11 @@
 import type { VueWrapper } from "@vue/test-utils";
 
 import { useWahltagTestDataFactory } from "@tests/types/wahltag/WahltagTestDataFactory.ts";
-import { getSnapshotFilename } from "@tests/utils/testutils.ts";
+import {
+  COMPONENT_EVENT_TESTS,
+  COMPONENT_RENDER_TESTS,
+  getSnapshotFilename,
+} from "@tests/utils/testutils.ts";
 import { mount } from "@vue/test-utils";
 import {
   afterAll,
@@ -79,7 +83,7 @@ describe("BaseStepWahltagInit.vue", () => {
     vi.unstubAllGlobals();
   });
 
-  describe("visual logic", () => {
+  describe(COMPONENT_RENDER_TESTS, () => {
     describe("wahlterminDatenExists is false", () => {
       it("should_renderCreateButton_when_loadingIsFalse", async (context) => {
         await wrapper.setProps({
@@ -166,7 +170,7 @@ describe("BaseStepWahltagInit.vue", () => {
     });
   });
 
-  describe("behaviour logic", () => {
+  describe(COMPONENT_EVENT_TESTS, () => {
     it("should_triggerImportWahlterminDaten_when_createButtonWasClicked", async () => {
       const wahltagEvent = prepareWahltagEvent().build();
       await wrapper.setProps({

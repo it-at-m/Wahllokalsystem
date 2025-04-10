@@ -11,6 +11,7 @@
       >
         <v-stepper-item
           :value="index"
+          :color="getItemColor(index)"
           :complete="lastSetActiveStep > index"
           :title="toStepTitle(event)"
           :subtitle="event.beschreibung"
@@ -78,6 +79,10 @@ const activeStepComputed = computed({
   },
 });
 const hasMultipleEvents = computed(() => (props.wahltagEvents.length ?? 0) > 1);
+
+function getItemColor(index: number): string {
+  return index < activeStepComputed.value ? "success" : "primary";
+}
 
 function onNextClicked() {
   activeStepComputed.value = activeStepComputed.value + 1;

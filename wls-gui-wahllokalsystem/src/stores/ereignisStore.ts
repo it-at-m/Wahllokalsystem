@@ -54,7 +54,6 @@ export const useEreignisStore = defineStore(storeID, () => {
         sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
       } catch (e) {
         error.value = "Fehler beim Laden der Ereignisse";
-        console.error(e);
       }
     }
   }
@@ -71,7 +70,6 @@ export const useEreignisStore = defineStore(storeID, () => {
         );
       } catch (e) {
         error.value = "Fehler beim Speichern der Ereignisse";
-        console.error(e);
       }
     }
   }

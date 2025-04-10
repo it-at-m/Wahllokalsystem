@@ -41,7 +41,6 @@ export function useEreignisService() {
         UserNotificationCategoryEnum.SUCCESS
       );
     } catch (error) {
-      console.error("Fehler beim Speichern der Störungen:", error);
       userNotificationService.addNotification(
         "Das Speichern der Störungen schlug fehl.",
         UserNotificationCategoryEnum.ERROR

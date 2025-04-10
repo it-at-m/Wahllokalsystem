@@ -11,10 +11,10 @@ import de.muenchen.oss.wahllokalsystem.monitoringservice.eai.aou.model.Wahllokal
 import de.muenchen.oss.wahllokalsystem.monitoringservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Set;
 import lombok.val;
-import java.time.LocalDateTime;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -24,11 +24,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
 @AutoConfigureWireMock
+@DirtiesContext
 public class WahllokalZustandServiceSecurityTest {
 
     @Autowired

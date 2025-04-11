@@ -67,30 +67,6 @@ describe("BaseDialogWahltagOverrideWahlterminConfirmation.vue", () => {
         getSnapshotFilename(context)
       );
     });
-  });
-
-  describe(COMPONENT_EVENT_TESTS, () => {
-    it("should_emitConfirmDelete_when_confirmButtonClicked", async () => {
-      wrapper.vm.showDialog();
-      await wrapper.vm.$nextTick();
-
-      const confirmButton = wrapper.findComponent(BaseButtonConfirm);
-      confirmButton.element.dispatchEvent(new Event("click"));
-
-      await nextTick();
-
-      expect(wrapper.emitted("confirmDelete")).toEqual([[]]);
-    });
-
-    it("should_emitCancelDelete_when_cancelButtonClicked", async () => {
-      wrapper.vm.showDialog();
-      await wrapper.vm.$nextTick();
-
-      const cancelButton = wrapper.findComponent(BaseButtonCancel);
-      await cancelButton.trigger("click");
-
-      expect(wrapper.emitted("cancelDelete")).toEqual([[]]);
-    });
 
     it("should_enableConfirmButton_when_requiredConfirmTextIsEntered", async () => {
       const confirmText = "confirmText";
@@ -111,6 +87,34 @@ describe("BaseDialogWahltagOverrideWahlterminConfirmation.vue", () => {
       expect(confirmButton.element.hasAttribute("disabled")).toStrictEqual(
         false
       );
+    });
+  });
+
+  describe(COMPONENT_EVENT_TESTS, () => {
+    describe("confirmDelete", () => {
+      it("should_emitConfirmDelete_when_confirmButtonClicked", async () => {
+        wrapper.vm.showDialog();
+        await wrapper.vm.$nextTick();
+
+        const confirmButton = wrapper.findComponent(BaseButtonConfirm);
+        confirmButton.element.dispatchEvent(new Event("click"));
+
+        await nextTick();
+
+        expect(wrapper.emitted("confirmDelete")).toEqual([[]]);
+      });
+    });
+
+    describe("cancelDelete", () => {
+      it("should_emitCancelDelete_when_cancelButtonClicked", async () => {
+        wrapper.vm.showDialog();
+        await wrapper.vm.$nextTick();
+
+        const cancelButton = wrapper.findComponent(BaseButtonCancel);
+        await cancelButton.trigger("click");
+
+        expect(wrapper.emitted("cancelDelete")).toEqual([[]]);
+      });
     });
   });
 });

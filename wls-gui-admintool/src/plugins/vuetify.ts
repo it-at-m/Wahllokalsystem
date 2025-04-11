@@ -54,5 +54,9 @@ export default createVuetify({
     VProgressLinear: {
       height: "16",
     },
+    VDialog: {
+      persistent: true,
+      maxWidth: 600,
+    },
   },
 });

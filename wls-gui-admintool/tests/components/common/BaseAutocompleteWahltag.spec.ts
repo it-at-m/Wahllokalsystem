@@ -1,6 +1,10 @@
 import type { Wahltag } from "@/types/wahltag/Wahltag.ts";
 
-import { getSnapshotFilename } from "@tests/utils/testutils.ts";
+import {
+  COMPONENT_EVENT_TESTS,
+  COMPONENT_RENDER_TESTS,
+  getSnapshotFilename,
+} from "@tests/utils/testutils.ts";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
@@ -61,7 +65,7 @@ describe("BaseAutocompleteWahltag.vue", () => {
 
   enableAutoUnmount(afterEach);
 
-  describe("visual logic", () => {
+  describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderAutocompleteWithCorrectLabel_when_componentIsMounted", async (context) => {
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
@@ -78,15 +82,17 @@ describe("BaseAutocompleteWahltag.vue", () => {
     });
   });
 
-  describe("behavioral logic", () => {
-    it("should_emitWahltag_when_elementIsSelected", async () => {
-      const tag = wahltage[2];
+  describe(COMPONENT_EVENT_TESTS, () => {
+    describe("update:modelValue", () => {
+      it("should_emitWahltag_when_elementIsSelected", async () => {
+        const tag = wahltage[2];
 
-      const autocomplete = wrapper.findComponent(VAutocomplete);
-      await autocomplete.setValue(tag);
+        const autocomplete = wrapper.findComponent(VAutocomplete);
+        await autocomplete.setValue(tag);
 
-      expect(wrapper.emitted()).toHaveProperty("update:modelValue");
-      expect(wrapper.emitted("update:modelValue")).toEqual([[tag]]);
+        expect(wrapper.emitted()).toHaveProperty("update:modelValue");
+        expect(wrapper.emitted("update:modelValue")).toEqual([[tag]]);
+      });
     });
   });
 });

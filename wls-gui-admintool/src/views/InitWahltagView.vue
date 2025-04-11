@@ -34,7 +34,7 @@ import { VCard, VCardText, VCardTitle } from "vuetify/components";
 
 import BaseAutocompleteWahltag from "@/components/common/BaseAutocompleteWahltag.vue";
 import BaseIconButtonRefresh from "@/components/common/BaseIconButtonRefresh.vue";
-import useWahltagService from "@/composables/wahltag/wahltagService.ts";
+import { useWahltagService } from "@/composables/wahltag/wahltagService.ts";
 
 const { getWahltage } = useWahltagService();
 

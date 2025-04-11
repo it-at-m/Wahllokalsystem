@@ -5,7 +5,7 @@ import { useWahltagTestDataFactory } from "@tests/types/wahltag/WahltagTestDataF
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
 
-import useWahltagService from "@/composables/wahltag/wahltagService.ts";
+import { useWahltagService } from "@/composables/wahltag/wahltagService.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   apiGetWahltage: vi.fn(),

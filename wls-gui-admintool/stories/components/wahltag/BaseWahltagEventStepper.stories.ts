@@ -9,6 +9,13 @@ const { prepareWahltagEvent } = useWahltagTestDataFactory();
 
 const meta: Meta<typeof StoryComponent> = {
   component: StoryComponent,
+  argTypes: {
+    konfigurierteWahltage: {
+      description:
+        "Key: WahltagID<br />Value: true oder false wenn geprüft wurde ob es zu der ID " +
+        "einen konfigurierten Wahltag gibt, sonst undefined",
+    },
+  },
   args: {
     wahltagEvents: [
       prepareWahltagEvent().wahltagID("wahltagID1").build(),

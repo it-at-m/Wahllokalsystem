@@ -36,6 +36,25 @@ export default defineConfigWithVueTs(
         "kebab-case",
         { registeredComponentsOnly: false },
       ],
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "ExportDefaultDeclaration",
+          message: "Prefer named exports",
+        },
+      ],
+    },
+  },
+  // Overrides für spezifische Dateien oder Verzeichnisse
+  {
+    files: [
+      ".storybook/*.ts",
+      "stories/**",
+      "*.config.{ts,js}",
+      "src/plugins/**",
+    ],
+    rules: {
+      "no-restricted-syntax": "off", // Deaktiviert die Regel in diesem Verzeichnis
     },
   }
 );

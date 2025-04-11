@@ -1,7 +1,7 @@
 import type { AxiosResponse } from "axios";
 
 export function useApiUtils() {
-  function returnUndefinedOnStatus204OrElseDate<T>(
+  function returnUndefinedOnStatus204OrElseResponseData<T>(
     axiosResponse: AxiosResponse<T>
   ) {
     if (axiosResponse.status === 204) {
@@ -12,6 +12,6 @@ export function useApiUtils() {
   }
 
   return {
-    returnUndefinedOnStatus204OrElseDate,
+    returnUndefinedOnStatus204OrElseResponseData,
   };
 }

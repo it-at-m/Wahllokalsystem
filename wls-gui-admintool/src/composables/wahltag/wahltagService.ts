@@ -24,7 +24,7 @@ export default function useWahltagService() {
       basePath: ADMIN_SERVICE_API_URL,
     })
   );
-  const { returnUndefinedOnStatus204OrElseDate } = useApiUtils();
+  const { returnUndefinedOnStatus204OrElseResponseData } = useApiUtils();
 
   const { mapGroupedWahltagDtosToWahltage } = useWahltagMapper();
   const { addNotification } = useUserNotificationService();
@@ -37,7 +37,9 @@ export default function useWahltagService() {
     try {
       const wahltagDtos = await adminWahltageAPI
         .getWahltage()
-        .then((response) => returnUndefinedOnStatus204OrElseDate(response));
+        .then((response) =>
+          returnUndefinedOnStatus204OrElseResponseData(response)
+        );
 
       if (wahltagDtos) {
         const wahltageGroupByDatum = groupWahltagDtosByWahltag(wahltagDtos);

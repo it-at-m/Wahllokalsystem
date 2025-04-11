@@ -148,7 +148,7 @@ describe("BaseStepWahltagInit.vue", () => {
     });
 
     describe("wahlterminDatenExists is undefined", () => {
-      it("should_renderTextOnly_when_wahltermindatenExistsIsUndifined", async (context) => {
+      it("should_renderTextOnly_when_wahltermindatenExistsIsUndefined", async (context) => {
         await wrapper.setProps({
           wahlterminDatenExists: undefined,
         });
@@ -157,16 +157,6 @@ describe("BaseStepWahltagInit.vue", () => {
           getSnapshotFilename(context)
         );
       });
-    });
-
-    it("should_renderTextOnly_when_wahltermindatenExistsIsUndefined", async (context) => {
-      await wrapper.setProps({
-        wahlterminDatenExists: undefined,
-      });
-
-      await expect(wrapper.html()).toMatchFileSnapshot(
-        getSnapshotFilename(context)
-      );
     });
   });
 

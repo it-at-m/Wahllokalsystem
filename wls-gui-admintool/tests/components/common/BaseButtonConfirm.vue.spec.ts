@@ -5,20 +5,20 @@ import {
 import { mount, VueWrapper } from "@vue/test-utils";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import BaseIconButtonRefresh from "@/components/common/BaseIconButtonRefresh.vue";
-import vuetify from "@/plugins/vuetify";
+import BaseButtonConfirm from "@/components/common/BaseButtonConfirm.vue";
+import vuetify from "@/plugins/vuetify.ts";
 
-describe("BaseIconButtonRefresh.vue", () => {
+describe("BaseButtonConfirm.vue", () => {
   let wrapper: VueWrapper;
 
   beforeEach(() => {
-    wrapper = mount(BaseIconButtonRefresh, {
+    wrapper = mount(BaseButtonConfirm, {
       global: { plugins: [vuetify] },
     });
   });
 
   describe(COMPONENT_RENDER_TESTS, () => {
-    it("should_renderCorrectlyWithAnIcon_when_componentIsMounted", async (context) => {
+    it("should_renderCorrectly_when_componentIsMounted", async (context) => {
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );

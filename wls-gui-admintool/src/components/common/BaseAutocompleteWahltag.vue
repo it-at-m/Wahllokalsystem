@@ -7,6 +7,7 @@
     v-model="modelValue"
     return-object
     data-test="autocompleteWahltage"
+    no-data-text="Keine Wahltage gefunden"
   ></v-autocomplete>
 </template>
 

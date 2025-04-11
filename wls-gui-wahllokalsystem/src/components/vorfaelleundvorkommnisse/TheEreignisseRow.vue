@@ -32,7 +32,10 @@
           autofokus
         ></v-textarea>
       </v-col>
-      <v-col cols="1" class="text-center mt-5">
+      <v-col
+        cols="1"
+        class="text-center mt-5"
+      >
         <v-icon
           data-test="delete-ereignis-icon"
           icon="$delete"

@@ -1,4 +1,7 @@
-import type { WahltagDTO } from "@/api/wls-clients/generated-admin-api";
+import type {
+  KonfigurierterWahltagDTO,
+  WahltagDTO,
+} from "@/api/wls-clients/generated-admin-api";
 
 import { spyOn } from "@storybook/test";
 import { useWahltagTestDataFactory } from "@tests/types/wahltag/WahltagTestDataFactory.ts";
@@ -9,6 +12,7 @@ import { useWahltagService } from "@/composables/wahltag/wahltagService.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   apiGetWahltage: vi.fn(),
+  apiGetKonfigurierteWahltage: vi.fn(),
   wahltageControllerApi: vi.fn(),
   compareByNummerAsc: vi.fn(),
   mapGroupedWahltagDtosToWahltage: vi.fn(),
@@ -22,11 +26,20 @@ const mockDefinitions = vi.hoisted(() => ({
   adminApiConfigurationConstructor: vi.fn().mockImplementation(() => {
     return {};
   }),
+  konfigurierterWahltagControllerApiConstructor: vi
+    .fn()
+    .mockImplementation(() => {
+      return {
+        getKonfigurierteWahltage: mockDefinitions.apiGetKonfigurierteWahltage,
+      };
+    }),
 }));
 
 vi.mock("@/api/wls-clients/generated-admin-api", () => ({
   Configuration: mockDefinitions.adminApiConfigurationConstructor,
   WahltageControllerApi: mockDefinitions.wahltagControllerApiConstructor,
+  KonfigurierteWahltageControllerApi:
+    mockDefinitions.konfigurierterWahltagControllerApiConstructor,
 }));
 vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
   useUserNotificationService: () => ({
@@ -48,8 +61,11 @@ vi.mock("@/types/wahltag/WahltagEvent.ts", () => ({
   compareByNummerAsc: mockDefinitions.compareByNummerAsc,
 }));
 
-const { createWahltagComplete, prepareWahltagDtoComplete } =
-  useWahltagTestDataFactory();
+const {
+  createWahltagComplete,
+  prepareKonfigurierterWahltagDTO,
+  prepareWahltagDtoComplete,
+} = useWahltagTestDataFactory();
 
 const unitUnderTest = useWahltagService();
 
@@ -101,6 +117,17 @@ describe("wahltagService.ts", () => {
       expect(result).toStrictEqual([]);
     });
 
+    it("should_returnEmptyArray_when_apiReturned204WithUndefined", async () => {
+      useMockSetupForSuccessfulLoadWahltage();
+      mockDefinitions.apiGetWahltage.mockReturnValue(
+        Promise.resolve({ data: undefined })
+      );
+
+      const result = await unitUnderTest.getWahltage();
+
+      expect(result).toStrictEqual([]);
+    });
+
     it("should_triggerToastyWithError_when_anExceptionOccurred", async () => {
       mockDefinitions.apiGetWahltage.mockRejectedValue(
         new Error("api call failed")
@@ -123,6 +150,53 @@ describe("wahltagService.ts", () => {
       expect(configurationConstructorParameter["basePath"]).toStrictEqual(
         "/api/admin-service"
       );
+    });
+  });
+
+  describe("isKonfigurierterWahltag", () => {
+    it("should_returnTrue_when_wahltagIDIsPartOfInfomanagementResponse", async () => {
+      const wahltagID = "wahltagID";
+
+      const mockResponseKonfigurierteWahltag: KonfigurierterWahltagDTO[] = [
+        prepareKonfigurierterWahltagDTO().wahltagID(wahltagID).build(),
+        prepareKonfigurierterWahltagDTO().wahltagID(`${wahltagID}0815`).build(),
+      ];
+      mockDefinitions.apiGetKonfigurierteWahltage.mockReturnValue(
+        Promise.resolve({ data: mockResponseKonfigurierteWahltag })
+      );
+
+      const result = await unitUnderTest.isKonfigurierterWahltag(wahltagID);
+
+      expect(result).toStrictEqual(true);
+    });
+
+    it("should_returnFalse_when_wahltagIDIsNotPartOfInfomanagementResponse", async () => {
+      const wahltagID = "wahltagID";
+
+      const mockResponseKonfigurierteWahltag: KonfigurierterWahltagDTO[] = [];
+      mockDefinitions.apiGetKonfigurierteWahltage.mockReturnValue(
+        Promise.resolve({ data: mockResponseKonfigurierteWahltag })
+      );
+
+      const result = await unitUnderTest.isKonfigurierterWahltag(wahltagID);
+
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_addNotificationAndReturnFalse_when_anExceptionOccurred", async () => {
+      const wahltagID = "wahltagID";
+
+      mockDefinitions.apiGetKonfigurierteWahltage.mockRejectedValue(
+        new Error("api call failed")
+      );
+
+      const result = await unitUnderTest.isKonfigurierterWahltag(wahltagID);
+
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        expect.any(String),
+        "Error",
+      ]);
+      expect(result).toStrictEqual(false);
     });
   });
 });

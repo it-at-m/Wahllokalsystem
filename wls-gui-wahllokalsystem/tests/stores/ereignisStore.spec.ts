@@ -75,6 +75,20 @@ describe("ereignisStore.ts", () => {
         0
       );
     });
+
+    it("should_handleError_when_getEreignisseThrowsError", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      const user = new User();
+      user.wahlbezirkID = wahlbezirkID;
+      userStore.setUser(user);
+
+      const mockedError = new Error("Network error");
+      mockDefinitions.getEreignisse.mockRejectedValue(mockedError);
+
+      await unitUnderTest.loadEreignisse();
+      expect(unitUnderTest.error).equals("Fehler beim Laden der Ereignisse");
+    });
   });
 
   describe("sendEreignisse", () => {
@@ -109,20 +123,6 @@ describe("ereignisStore.ts", () => {
 
       expect(mockDefinitions.saveEreignisse).toBeCalledTimes(0);
     });
-  });
-
-  it("should_handleError_when_getEreignisseThrowsError", async () => {
-    const userStore = useUserStore();
-    const wahlbezirkID = "wahlbezirkID";
-    const user = new User();
-    user.wahlbezirkID = wahlbezirkID;
-    userStore.setUser(user);
-
-    const mockedError = new Error("Network error");
-    mockDefinitions.getEreignisse.mockRejectedValue(mockedError);
-
-    await unitUnderTest.loadEreignisse();
-    expect(unitUnderTest.error).equals("Fehler beim Laden der Ereignisse");
   });
 
   describe("addEreignis", () => {

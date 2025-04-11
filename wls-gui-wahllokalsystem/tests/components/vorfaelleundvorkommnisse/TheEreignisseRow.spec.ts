@@ -111,9 +111,6 @@ describe("TheEreignisseRow.vue", () => {
         getSnapshotFilename(context)
       );
     });
-  });
-
-  describe("behavioral logic", () => {
     it("should_showErrorMessage_when_beschreibungIsNotSetCorrectly", async () => {
       const ereignisStore = useEreignisStore();
       const ereigniseintraege = [] as Ereignis[];
@@ -167,7 +164,9 @@ describe("TheEreignisseRow.vue", () => {
       const errorMessage = wrapper.get(".v-messages__message");
       expect(errorMessage.text()).toContain("Feld darf nicht leer sein.");
     });
+  });
 
+  describe("behavioral logic", () => {
     it("should_openYesNoDialog_when_deleteIconIsClicked", async () => {
       const ereignisStore = useEreignisStore();
       const ereigniseintraege = [] as Ereignis[];

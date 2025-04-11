@@ -119,3 +119,10 @@ export const PreSelect: Story = {
     modelValue: wahltage[2],
   },
 };
+
+export const NoData: Story = {
+  args: {
+    ...Default.args,
+    items: [],
+  },
+};

@@ -12,22 +12,6 @@ const ereignisService = useEreignisService();
 
 export const storeID = "vorfaelleundvorkommnisse";
 
-// Funktion zum Sortieren der Ereignisse
-function sortEreignisse(ereigniseintraege: Ereignis[] | undefined) {
-  return ereigniseintraege?.sort((a, b) => {
-    const timeA = a.uhrzeit ? new Date(a.uhrzeit).getTime() : Infinity;
-    const timeB = b.uhrzeit ? new Date(b.uhrzeit).getTime() : Infinity;
-
-    return timeA - timeB;
-  });
-}
-
-// Funktion zum Abrufen der Wahlbezirk-ID des Benutzers
-function getUsersWahlbezirkID(): string | undefined {
-  const userStore = useUserStore();
-  return userStore.getUser?.wahlbezirkID;
-}
-
 export const useEreignisStore = defineStore(storeID, () => {
   const error = ref<string | null>(null);
 
@@ -84,3 +68,19 @@ export const useEreignisStore = defineStore(storeID, () => {
     error,
   };
 });
+
+// Funktion zum Sortieren der Ereignisse
+function sortEreignisse(ereigniseintraege: Ereignis[] | undefined) {
+  return ereigniseintraege?.sort((a, b) => {
+    const timeA = a.uhrzeit ? new Date(a.uhrzeit).getTime() : Infinity;
+    const timeB = b.uhrzeit ? new Date(b.uhrzeit).getTime() : Infinity;
+
+    return timeA - timeB;
+  });
+}
+
+// Funktion zum Abrufen der Wahlbezirk-ID des Benutzers
+function getUsersWahlbezirkID(): string | undefined {
+  const userStore = useUserStore();
+  return userStore.getUser?.wahlbezirkID;
+}

@@ -1,6 +1,6 @@
 export function useCommonTestDataFactory() {
   function generateRandomNumber(length: number): number {
-    return Math.floor(Math.random() * (length * 10));
+    return Math.floor(Math.random() * Math.pow(10, length));
   }
 
   function generateRandomDateAsString(): string {

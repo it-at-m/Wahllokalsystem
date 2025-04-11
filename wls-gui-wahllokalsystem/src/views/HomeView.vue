@@ -23,7 +23,7 @@ import { onMounted, ref } from "vue";
 import { VCol, VContainer, VIcon, VRow } from "vuetify/components";
 
 import { checkHealth } from "@/api/health-client";
-import HealthState from "@/types/HealthState";
+import { HealthState } from "@/types/HealthState";
 
 const status = ref("DOWN");
 

@@ -179,7 +179,7 @@ import {
 } from "@/constants";
 import { useUserStore } from "@/stores/user";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
-import User, { UserLocalDevelopment } from "@/types/User";
+import { User, UserLocalDevelopment } from "@/types/User";
 
 const userStore = useUserStore();
 const wahlvorstandStore = useWahlvorstandStore();

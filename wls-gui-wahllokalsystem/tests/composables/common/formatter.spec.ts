@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import useFormatter from "@/composables/common/formatter";
+import { useFormatter } from "@/composables/common/formatter";
 
 describe("formatter.ts", () => {
   const { time } = useFormatter();

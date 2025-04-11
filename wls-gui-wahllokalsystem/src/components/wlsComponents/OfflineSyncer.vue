@@ -30,7 +30,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import type IdbObject from "@/types/wlsTypes/IdbObject";
+import type { IdbObject } from "@/types/wlsTypes/IdbObject";
 
 import axios from "axios";
 import localforage from "localforage";

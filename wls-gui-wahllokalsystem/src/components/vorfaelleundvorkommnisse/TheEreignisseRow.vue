@@ -29,6 +29,7 @@
           label="Beschreibung"
           auto-grow
           clearable
+          autofokus
         ></v-textarea>
       </v-col>
       <v-col cols="1" class="text-center mt-5">

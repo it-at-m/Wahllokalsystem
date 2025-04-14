@@ -1,4 +1,7 @@
-import { getSnapshotFilename } from "@tests/utils/testutils.ts";
+import {
+  COMPONENT_RENDER_TESTS,
+  getSnapshotFilename,
+} from "@tests/utils/testutils.ts";
 import { mount, VueWrapper } from "@vue/test-utils";
 import { beforeEach, describe, expect, it } from "vitest";
 
@@ -14,7 +17,7 @@ describe("BaseIconButtonRefresh.vue", () => {
     });
   });
 
-  describe("visual logic", () => {
+  describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderCorrectlyWithAnIcon_when_componentIsMounted", async (context) => {
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)

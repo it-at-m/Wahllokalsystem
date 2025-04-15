@@ -18,6 +18,7 @@
         :wahltag-events="wahltagEventsOfSelectedWahltag"
         :konfigurierte-wahltage="konfigurierteWahltage"
       />
+      <the-wahltag-init-progress-div class="mt-2" />
     </v-card-text>
   </v-card>
 </template>
@@ -32,6 +33,7 @@ import { VCard, VCardText, VCardTitle } from "vuetify/components";
 import BaseAutocompleteWahltag from "@/components/common/BaseAutocompleteWahltag.vue";
 import BaseIconButtonRefresh from "@/components/common/BaseIconButtonRefresh.vue";
 import BaseWahltagEventStepper from "@/components/wahltag/BaseWahltagEventStepper.vue";
+import TheWahltagInitProgressDiv from "@/components/wahltag/TheWahltagInitProgressDiv.vue";
 import useWahltagService from "@/composables/wahltag/wahltagService.ts";
 
 const { getWahltage, isKonfigurierterWahltag } = useWahltagService();

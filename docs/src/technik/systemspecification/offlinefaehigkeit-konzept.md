@@ -80,7 +80,6 @@ Um die Daten, die bisher nicht erfolgreich an das Backend übermittelt werden ko
 
 ![Skizze OfflineSyncher](/offlinesyncer/offlinesyncher.png)
 
-
 #### Hintergrundsynchronisation beim offline-online Wechsel
 
 Wenn der Wahllokalclient den Zustand von _Offline_ zu _Online_ wechselt, wird der `Offline-Syncer` aktiv.
@@ -164,6 +163,7 @@ Die Daten die an die folgenden URLs übermittelt werden, sind nur für das Backe
 - `/monitoring/letzteAbmeldung/wahlbezirkID` (Uhrzeit der letzten Abmeldung).
 
 ### Anhang
+
 #### Strategy OFFLINE-FIRST
 
 ```mermaid
@@ -201,6 +201,7 @@ sequenceDiagram
     end    
     
 ```
+
 #### Strategy ONLINE-FIRST
 
 ```mermaid
@@ -239,6 +240,7 @@ sequenceDiagram
     end    
     
 ```
+
 #### Strategy ONLINE-ONLY
 
 ```mermaid
@@ -300,4 +302,3 @@ sequenceDiagram
         end        
     end    
 ```
-

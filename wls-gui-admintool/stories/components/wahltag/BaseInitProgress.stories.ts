@@ -73,3 +73,13 @@ export const NotFinishedButAlsoNotActive: Story = {
     },
   },
 };
+
+export const FinishedWithTotalZero: Story = {
+  args: {
+    wahlvorschlaege: {
+      active: false,
+      finished: 12,
+      total: 0,
+    },
+  },
+};

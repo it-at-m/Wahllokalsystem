@@ -13,6 +13,7 @@ import useWahltagService from "@/composables/wahltag/wahltagService.ts";
 const mockDefinitions = vi.hoisted(() => ({
   apiGetWahltage: vi.fn(),
   apiGetKonfigurierteWahltage: vi.fn(),
+  apiUtilsReturnUndefinedOnStatus204OrElseResponseData: vi.fn(),
   wahltageControllerApi: vi.fn(),
   compareByNummerAsc: vi.fn(),
   mapGroupedWahltagDtosToWahltage: vi.fn(),
@@ -60,6 +61,12 @@ vi.mock("@/composables/wahltag/wahltagMapper.ts", () => ({
 vi.mock("@/types/wahltag/WahltagEvent.ts", () => ({
   compareByNummerAsc: mockDefinitions.compareByNummerAsc,
 }));
+vi.mock("@/composables/common/apiUtils.ts", () => ({
+  useApiUtils: () => ({
+    returnUndefinedOnStatus204OrElseResponseData:
+      mockDefinitions.apiUtilsReturnUndefinedOnStatus204OrElseResponseData,
+  }),
+}));
 
 const {
   createWahltagComplete,
@@ -72,6 +79,7 @@ const unitUnderTest = useWahltagService();
 describe("wahltagService.ts", () => {
   afterEach(() => {
     vi.clearAllMocks();
+    vi.resetAllMocks();
   });
 
   describe("getWahltage", () => {
@@ -122,6 +130,9 @@ describe("wahltagService.ts", () => {
       mockDefinitions.apiGetWahltage.mockReturnValue(
         Promise.resolve({ data: undefined })
       );
+      mockDefinitions.apiUtilsReturnUndefinedOnStatus204OrElseResponseData.mockReturnValueOnce(
+        undefined
+      );
 
       const result = await unitUnderTest.getWahltage();
 
@@ -163,6 +174,9 @@ describe("wahltagService.ts", () => {
       ];
       mockDefinitions.apiGetKonfigurierteWahltage.mockReturnValue(
         Promise.resolve({ data: mockResponseKonfigurierteWahltag })
+      );
+      mockDefinitions.apiUtilsReturnUndefinedOnStatus204OrElseResponseData.mockReturnValue(
+        mockResponseKonfigurierteWahltag
       );
 
       const result = await unitUnderTest.isKonfigurierterWahltag(wahltagID);
@@ -217,6 +231,9 @@ function useMockSetupForSuccessfulLoadWahltage() {
 
   mockDefinitions.apiGetWahltage.mockReturnValue(
     Promise.resolve({ data: mockedResponseGetWahltage })
+  );
+  mockDefinitions.apiUtilsReturnUndefinedOnStatus204OrElseResponseData.mockReturnValue(
+    mockedResponseGetWahltage
   );
   mockDefinitions.groupWahltagDtosByWahltag.mockReturnValue(
     mockGroupedWahltage

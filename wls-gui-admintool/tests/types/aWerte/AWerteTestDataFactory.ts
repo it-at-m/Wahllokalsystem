@@ -29,6 +29,8 @@ export default function useAWerteTestDataFactory() {
       active: generateRandomBoolean(),
       lastFinishTime: generateRandomDateTimeAsString(),
       lastStartTime: generateRandomDateTimeAsString(),
+      finished: generateRandomNumber(4),
+      next: `${generateRandomNumber(10)}`,
     };
   }
 

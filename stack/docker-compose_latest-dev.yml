@@ -328,6 +328,16 @@ services:
     networks:
       - services
 
+  wls-gui-wahllokalsystem:
+    container_name: wls-gui-wahllokalsystem
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-gui-wahllokalsystem:latest-dev
+    ports:
+      - 8400:8080
+    extra_hosts:
+      - "kubernetes.docker.internal:host-gateway"
+    networks:
+      - services
+
 networks:
   internal:
   services:

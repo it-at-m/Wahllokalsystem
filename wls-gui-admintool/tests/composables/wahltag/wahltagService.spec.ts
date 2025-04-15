@@ -212,6 +212,27 @@ describe("wahltagService.ts", () => {
       ]);
       expect(result).toStrictEqual(false);
     });
+
+    it("should_returnFalse_when_apiResponseIsUndefined", async () => {
+      const wahltagID = "wahltagID";
+
+      const mockedAxiosResponse = { status: 204, data: undefined };
+      mockDefinitions.apiGetKonfigurierteWahltage.mockReturnValue(
+        Promise.resolve({ status: 204, data: undefined })
+      );
+      mockDefinitions.apiUtilsReturnUndefinedOnStatus204OrElseResponseData.mockReturnValue(
+        undefined
+      );
+
+      const result = await unitUnderTest.isKonfigurierterWahltag(wahltagID);
+
+      expect(result).toStrictEqual(false);
+
+      expect(
+        mockDefinitions.apiUtilsReturnUndefinedOnStatus204OrElseResponseData
+          .mock.calls[0][0]
+      ).toStrictEqual(mockedAxiosResponse);
+    });
   });
 });
 

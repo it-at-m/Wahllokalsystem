@@ -32,10 +32,8 @@ vi.mock("@/composables/aWerte/aWerteService.ts", () => ({
 
 const { createAWerteInitProgressComplete, prepareAWerteInitProgress } =
   useAWerteTestDataFactory();
-const {
-  createBasisdatenInitProgressComplete,
-  prepareBasisdatenInitProgressComplete,
-} = useBasisdatenTestDataFactory();
+const { prepareBasisdatenInitProgressComplete } =
+  useBasisdatenTestDataFactory();
 const { generateRandomDateTimeAsString } = useCommonTestDataFactory();
 
 describe("TheWahltagInitProgressDiv.vue", () => {

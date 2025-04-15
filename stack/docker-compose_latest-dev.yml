@@ -338,6 +338,16 @@ services:
     networks:
       - services
 
+  wls-gui-admintool:
+    container_name: wls-gui-admintool
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-gui-admintool:latest-dev
+    ports:
+      - 8401:8080
+    extra_hosts:
+      - "kubernetes.docker.internal:host-gateway"
+    networks:
+      - services
+
 networks:
   internal:
   services:

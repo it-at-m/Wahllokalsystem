@@ -1,6 +1,8 @@
 import type { AsyncProgressDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { AWerteInitProgress } from "@/types/aWerte/AWerteInitProgress.ts";
+import type { Builder } from "@tests/utils/common/Builder.ts";
 
+import { proxyBuilder } from "@tests/utils/common/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
 const {
@@ -30,8 +32,13 @@ export default function useAWerteTestDataFactory() {
     };
   }
 
+  function prepareAWerteInitProgress(): Builder<AWerteInitProgress> {
+    return proxyBuilder<AWerteInitProgress>(createAWerteInitProgressComplete());
+  }
+
   return {
     createAsyncProgressDTOComplete,
     createAWerteInitProgressComplete,
+    prepareAWerteInitProgress,
   };
 }

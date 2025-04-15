@@ -5,6 +5,8 @@ export const EXAMPLE_ROUTES_DYNAMIC = "dynamic";
 export const EXAMPLE_ROUTES_BACKEND = "talk-to-backend";
 export const EXAMPLE_VALIDATION = "validation-example";
 export const ROUTE_WAHLVORSTAND = "wahlvorstand";
+export const ROUTE_VORFAELLEUNDVORKOMMNISSE = "vorfaelleundvorkommnisse";
+
 export const TOAST = "toast";
 export const PRINT_EXAMPLE = "print-example";
 
@@ -23,3 +25,5 @@ export const BROADCAST_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "broadcast-service";
 export const WAHLVORSTAND_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "wahlvorstand-service";
+export const VORFAELLEUNDVORKOMMNISSE_SERVICE_API_URL =
+  WLS_SERVICE_API_URL + "vorfaelleundvorkommnisse-service";

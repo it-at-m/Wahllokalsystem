@@ -132,6 +132,10 @@
           title="Wahlvorstand"
           :to="ROUTE_WAHLVORSTAND"
         />
+        <v-list-item
+          title="Störungen"
+          :to="ROUTE_VORFAELLEUNDVORKOMMNISSE"
+        />
       </v-list>
     </v-navigation-drawer>
     <v-main>
@@ -174,6 +178,7 @@ import {
   EXAMPLE_ROUTES_NEWROUTE,
   EXAMPLE_VALIDATION,
   PRINT_EXAMPLE,
+  ROUTE_VORFAELLEUNDVORKOMMNISSE,
   ROUTE_WAHLVORSTAND,
   TOAST,
 } from "@/constants";

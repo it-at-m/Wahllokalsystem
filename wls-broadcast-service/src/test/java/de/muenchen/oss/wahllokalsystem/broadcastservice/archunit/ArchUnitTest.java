@@ -8,6 +8,7 @@ import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.ArchRule;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.condition.NestedTestsuitesHaveMatchingMethodCondition;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -22,6 +23,7 @@ public class ArchUnitTest {
 
     private static JavaClasses allTestClasses;
     private static JavaClasses allClasses;
+    private static JavaClasses allClassesWithoutTests;
 
     @BeforeAll
     static void init() {
@@ -30,6 +32,10 @@ public class ArchUnitTest {
                 .importPackages(MicroServiceApplication.class.getPackage().getName());
 
         allClasses = new ClassFileImporter()
+                .importPackages(MicroServiceApplication.class.getPackage().getName());
+
+        allClassesWithoutTests = new ClassFileImporter()
+                .withImportOption(new ImportOption.DoNotIncludeTests())
                 .importPackages(MicroServiceApplication.class.getPackage().getName());
     }
 
@@ -43,6 +49,12 @@ public class ArchUnitTest {
     @MethodSource("allClassesRulesToVerify")
     void should_verifyArchUnitRuleForAllClasses_when_running(final ArgumentsAccessor arguments) {
         arguments.get(1, ArchRule.class).check(allClasses);
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("allClassesWithoutTestsRulesToVerify")
+    void should_verifyArchUnitRuleForAllClassesWithoutTests_when_running(final ArgumentsAccessor arguments) {
+        arguments.get(1, ArchRule.class).check(allClassesWithoutTests);
     }
 
     public static Stream<Arguments> allTestClassesRulesToVerify() {
@@ -66,4 +78,25 @@ public class ArchUnitTest {
     private static final ArchRule RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED = classes()
             .that().areAnnotatedWith(Nested.class).should(new NestedTestsuitesHaveMatchingMethodCondition(Set.of(
                     "BroadcastControllerIntegrationTest", "BroadcastServiceSecurityTest", "ArchUnitTest", "MessageValidationTest")));
+
+    private static Stream<Arguments> allClassesWithoutTestsRulesToVerify() {
+        return Stream.of(
+                //--- rest rules
+                Arguments.of("DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED",
+                        ClassRules.RULE_DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED),
+                Arguments.of("RULE_NO_DTOS_OR_CONTROLLERS_OUTSIDE_OF_REST_PACKAGE_CONVENTION_MATCHED",
+                        ClassRules.RULE_NO_DTOS_OR_CONTROLLERS_OUTSIDE_OF_REST_PACKAGE_CONVENTION_MATCHED),
+                Arguments.of("RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED",
+                        ClassRules.RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED),
+                //--- service rules
+                Arguments.of("RULE_NO_MODELS_OR_SERVICES_OUTSIDE_OF_SERVICE_PACKAGE_CONVENTION_MATCHED",
+                        ClassRules.RULE_NO_MODELS_OR_SERVICES_OUTSIDE_OF_SERVICE_PACKAGE_CONVENTION_MATCHED),
+                //--- domain rules
+                Arguments.of("RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED",
+                        ClassRules.RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED),
+                Arguments.of("RULE_NO_ENTITIES_OR_REPOS_OUTSIDE_OF_DOMAIN_PACKAGE_CONVENTION_MATCHED",
+                        ClassRules.RULE_NO_ENTITIES_OR_REPOS_OUTSIDE_OF_DOMAIN_PACKAGE_CONVENTION_MATCHED),
+                Arguments.of("RULE_NO_CROSS_DEPENDENCIES_INSIDE_DOMAIN_CONVENTION_MATCHED",
+                        ClassRules.RULE_NO_CROSS_DEPENDENCIES_INSIDE_DOMAIN_CONVENTION_MATCHED));
+    }
 }

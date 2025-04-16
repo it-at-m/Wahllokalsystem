@@ -2,6 +2,7 @@ import "vuetify/styles";
 
 import {
   mdiContentSave,
+  mdiEmail,
   mdiHome,
   mdiMessageText,
   mdiReload,
@@ -12,6 +13,7 @@ import {
   mdiTextBoxCheck,
   mdiToaster,
   mdiUpdate,
+  mdiVote,
 } from "@mdi/js";
 import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
@@ -32,6 +34,8 @@ export default createVuetify({
       send: mdiSend,
       updateTime: mdiUpdate,
       toaster: mdiToaster,
+      wahlbezirksartUWB: mdiVote,
+      wahlbezirksartBWB: mdiEmail,
     },
     sets: {
       mdi,

@@ -48,6 +48,16 @@ sn: bwb
 uid: wls_all_bwb
 userPassword: test
 
+dn: uid=wls_admin,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: wls_admin
+sn: admin
+uid: wls_admin
+userPassword: test
+
 dn: cn=user,ou=groups,dc=springframework,dc=org
 objectclass: top
 objectclass: groupOfNames
@@ -56,3 +66,4 @@ member: uid=wls_test,ou=people,dc=springframework,dc=org
 member: uid=wls_all,ou=people,dc=springframework,dc=org
 member: uid=wls_all_uwb,ou=people,dc=springframework,dc=org
 member: uid=wls_all_bwb,ou=people,dc=springframework,dc=org
+member: uid=wls_admin,ou=people,dc=springframework,dc=org

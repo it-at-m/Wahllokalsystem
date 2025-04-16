@@ -79,11 +79,12 @@ flowchart LR
 ## Benutzer
 
 | Name        | Passwort | Beschreibung                                                          |
-| ----------- | -------- | --------------------------------------------------------------------- |
+|-------------| -------- |-----------------------------------------------------------------------|
 | wls_test    | test     | Ein Benutzer ohne weitere Rechte                                      |
 | wls_all     | test     | Ein Benutzer mit allen Rechten                                        |
 | wls_all_bwb | test     | Ein Benutzer mit allen Rechten mit der WahlbezirksArt BWB (Briefwahl) |
 | wls_all_uwb | test     | Ein Benutzer mit allen Rechten mit der WahlbezirksArt UWB (Urnenwahl) |
+| wls_admin   | test     | Benutzer der auf das AdminTool zugreifen darf                         |
 
 ## Datenbank
 

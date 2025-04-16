@@ -1,23 +1,38 @@
 <template>
-  <div>
-    <div class="text-h1">Wahlvorstand</div>
-    <the-wahlvorstand-latest-load-div
-      :datetime="wahlvorstandStore.lastLoading"
-    />
-    <the-wahlvorstand-last-send-div :datetime="wahlvorstandStore.lastSending" />
-    <the-wahlvorstand-mitglieder-table />
-    <the-wahlvorstand-anwesenheit-requirement-card
-      v-show="!wahlvorstandStore.isWahlvorstandAusreichendAnwesend"
-    />
-    <base-button-refresh @click="wahlvorstandStore.loadWahlvorstand()" />
-    <base-button-save
-      :disabled="!wahlvorstandStore.isWahlvorstandAusreichendAnwesend"
-      @click="wahlvorstandStore.sendWahlvorstand()"
-    />
-  </div>
+  <v-card>
+    <v-card-title class="d-flex align-center justify-space-between">
+      <span>Anwesenheit prüfen</span>
+      <div class="d-flex flex-column align-start">
+        <the-wahlvorstand-latest-load-div
+          :datetime="wahlvorstandStore.lastLoading"
+          class="mb-1"
+          style="font-size: 0.85rem"
+        />
+        <the-wahlvorstand-last-send-div
+          :datetime="wahlvorstandStore.lastSending"
+          style="font-size: 0.85rem"
+        />
+      </div>
+    </v-card-title>
+    <v-card-text>
+      <the-wahlvorstand-mitglieder-table />
+      <the-wahlvorstand-anwesenheit-requirement-card
+        v-show="!wahlvorstandStore.isWahlvorstandAusreichendAnwesend"
+      />
+    </v-card-text>
+    <v-card-actions>
+      <base-button-refresh @click="wahlvorstandStore.loadWahlvorstand()" />
+      <base-button-save
+        :disabled="!wahlvorstandStore.isWahlvorstandAusreichendAnwesend"
+        @click="wahlvorstandStore.sendWahlvorstand()"
+      />
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script setup lang="ts">
+import { VCard, VCardActions, VCardText, VCardTitle } from "vuetify/components";
+
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheWahlvorstandAnwesenheitRequirementCard from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.vue";

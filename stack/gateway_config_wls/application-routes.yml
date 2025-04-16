@@ -10,12 +10,6 @@ spring:
             - RewritePath=/api/sso/userinfo, /user
             - RemoveRequestHeader=Cookie
             - RemoveResponseHeader=Set-Cookie
-        - id: admin-service
-          uri: http://kubernetes.docker.internal:8209/
-          predicates:
-            - Path=/api/admin-service/**
-          filters:
-            - RewritePath=/api/admin-service/(?<urlsegments>.*), /$\{urlsegments}
         - id: auth-service
           uri: http://kubernetes.docker.internal:8100/
           predicates:
@@ -42,12 +36,6 @@ spring:
             - Path=/api/broadcast-service/**
           filters:
             - RewritePath=/api/broadcast-service/(?<urlsegments>.*), /$\{urlsegments}
-        - id: eai-service
-          uri: http://kubernetes.docker.internal:8300/
-          predicates:
-            - Path=/api/eai-service/**
-          filters:
-            - RewritePath=/api/eai-service/(?<urlsegments>.*), /$\{urlsegments}
         - id: ergebnismeldung-service
           uri: http://kubernetes.docker.internal:8208/
           predicates:

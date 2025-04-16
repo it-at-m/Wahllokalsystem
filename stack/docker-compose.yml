@@ -237,7 +237,7 @@ services:
     networks:
       - services
 
-  refarch-gateway:
+  refarch-gateway-wls:
     image: ghcr.io/it-at-m/refarch/refarch-gateway:1.4.5@sha256:7aa12dd012ab96da2053c509c9c957bc1a1548bcba295a563dc2f0d5bab985f0
     env_file:
       - .env
@@ -251,11 +251,43 @@ services:
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=${SSO_USER_INFO_URI}
       - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_SSO_ISSUERURI=http://kubernetes.docker.internal:8100
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_PROVIDER=sso
-      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_CLIENTID=${SSO_CLIENT_ID}
-      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_CLIENTSECRET=${SSO_CLIENT_SECRET}
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_CLIENTID=wls
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_CLIENTSECRET=secret
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_SCOPE=openid
     volumes:
-      - './gateway_config:/config'
+      - './gateway_config_wls:/config'
+    networks:
+      - services
+    extra_hosts:
+      - "kubernetes.docker.internal:host-gateway"
+    healthcheck:
+      interval: 30s
+      timeout: 60s
+      retries: 3
+      start_period: 60s
+      test: [ "CMD-SHELL", "curl http://localhost:8080/actuator/health/liveness" ]
+    security_opt:
+      - no-new-privileges:true
+
+  refarch-gateway-admin:
+    image: ghcr.io/it-at-m/refarch/refarch-gateway:1.4.5@sha256:7aa12dd012ab96da2053c509c9c957bc1a1548bcba295a563dc2f0d5bab985f0
+    env_file:
+      - .env
+    ports:
+      - "8084:8080"
+    environment:
+      - ALLOWED_ORIGINS_PUBLIC=http://localhost:*
+      - ALLOWED_ORIGINS_CLIENTS=http://localhost:*
+      - SPRING_CONFIG_ADDITIONAL_LOCATION=/config/application-routes.yml
+      - SPRING_PROFILES_ACTIVE=hazelcast-local
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=${SSO_USER_INFO_URI}
+      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_SSO_ISSUERURI=http://kubernetes.docker.internal:8100
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_PROVIDER=sso
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_CLIENTID=admin
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_CLIENTSECRET=secret
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_SCOPE=openid
+    volumes:
+      - './gateway_config_admin:/config'
     networks:
       - services
     extra_hosts:

@@ -41,7 +41,7 @@ type Story = StoryObj<typeof meta>;
 
 const wahltage: Wahltag[] = [
   {
-    wahltag: "27.02.1988",
+    wahltag: new Date("1988-02-27"),
     events: [
       {
         wahltagID: "1",
@@ -51,7 +51,7 @@ const wahltage: Wahltag[] = [
     ],
   },
   {
-    wahltag: "31.01.1998",
+    wahltag: new Date("1998-01-31"),
     events: [
       {
         wahltagID: "2",
@@ -61,7 +61,7 @@ const wahltage: Wahltag[] = [
     ],
   },
   {
-    wahltag: "04.04.2000",
+    wahltag: new Date("2000-04-04"),
     events: [
       {
         wahltagID: "3",
@@ -71,7 +71,7 @@ const wahltage: Wahltag[] = [
     ],
   },
   {
-    wahltag: "31.10.1999",
+    wahltag: new Date("1999-10-31"),
     events: [
       {
         wahltagID: "4",
@@ -81,7 +81,7 @@ const wahltage: Wahltag[] = [
     ],
   },
   {
-    wahltag: "05.11.1969",
+    wahltag: new Date("1969-11-05"),
     events: [
       {
         wahltagID: "5",
@@ -91,7 +91,7 @@ const wahltage: Wahltag[] = [
     ],
   },
   {
-    wahltag: "14.05.1977",
+    wahltag: new Date("1977-05-14"),
     events: [
       {
         wahltagID: "6",
@@ -117,5 +117,12 @@ export const PreSelect: Story = {
   args: {
     ...Default.args,
     modelValue: wahltage[2],
+  },
+};
+
+export const NoData: Story = {
+  args: {
+    ...Default.args,
+    items: [],
   },
 };

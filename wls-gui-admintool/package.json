@@ -51,15 +51,17 @@
     "@vue/test-utils": "2.4.6",
     "@vue/tsconfig": "0.7.0",
     "axios": "1.8.4",
-    "eslint": "9.21.0",
+    "eslint": "9.24.0",
     "eslint-plugin-storybook": "0.12.0",
     "eslint-plugin-vue": "9.33.0",
     "jsdom": "26.0.0",
+    "msw": "2.7.4",
+    "msw-storybook-addon": "2.0.4",
     "prettier": "3.5.3",
     "storybook": "8.6.12",
     "typescript": "5.8.2",
     "unplugin-fonts": "1.3.1",
-    "vite": "6.2.4",
+    "vite": "6.2.5",
     "vite-plugin-vue-devtools": "7.7.2",
     "vite-plugin-vuetify": "2.1.0",
     "vitest": "3.0.9",
@@ -68,6 +70,11 @@
   "eslintConfig": {
     "extends": [
       "plugin:storybook/recommended"
+    ]
+  },
+  "msw": {
+    "workerDirectory": [
+      ".msw/public"
     ]
   }
 }

@@ -2,8 +2,11 @@ import "vuetify/styles";
 
 import {
   mdiContentSave,
+  mdiDelete,
   mdiHome,
   mdiMessageText,
+  mdiPlus,
+  mdiPrinter,
   mdiReload,
   mdiRoutes,
   mdiSend,
@@ -29,9 +32,12 @@ export default createVuetify({
       signalOnline: mdiSignalCellular3,
       reload: mdiReload,
       save: mdiContentSave,
+      delete: mdiDelete,
+      add: mdiPlus,
       send: mdiSend,
       updateTime: mdiUpdate,
       toaster: mdiToaster,
+      printer: mdiPrinter,
     },
     sets: {
       mdi,

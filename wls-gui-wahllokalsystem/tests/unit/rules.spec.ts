@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import {
   MAX_LENGTH,
@@ -13,10 +13,10 @@ describe("Validation rules", () => {
   describe("RULE_MAX_LENGTH", () => {
     const rule = MAX_LENGTH(10);
 
-    test("should_returnErrorMessage_when_inputTooLong", () => {
+    it("should_returnErrorMessage_when_inputTooLong", () => {
       expect(rule("tooLongString")).toBeTypeOf("string");
     });
-    test("should_returnTrue_when_inputShortEnough", () => {
+    it("should_returnTrue_when_inputShortEnough", () => {
       expect(rule("short")).toStrictEqual(true);
     });
   });
@@ -24,10 +24,10 @@ describe("Validation rules", () => {
   describe("RULE_MIN_LENGTH", () => {
     const rule = MIN_LENGTH(5);
 
-    test("should_returnErrorMessage_when_inputTooShort", () => {
+    it("should_returnErrorMessage_when_inputTooShort", () => {
       expect(rule("t")).toBeTypeOf("string");
     });
-    test("should_returnTrue_when_inputLongEnough", () => {
+    it("should_returnTrue_when_inputLongEnough", () => {
       expect(rule("stringLongEnough")).toStrictEqual(true);
     });
   });
@@ -35,10 +35,10 @@ describe("Validation rules", () => {
   describe("RULE_MIN_NUMBER", () => {
     const rule = MIN_NUMBER(5);
 
-    test("should_returnErrorMessage_when_inputTooSmall", () => {
+    it("should_returnErrorMessage_when_inputTooSmall", () => {
       expect(rule(2)).toBeTypeOf("string");
     });
-    test("should_returnTrue_when_inputBigEnough", () => {
+    it("should_returnTrue_when_inputBigEnough", () => {
       expect(rule(7)).toStrictEqual(true);
     });
   });
@@ -46,10 +46,10 @@ describe("Validation rules", () => {
   describe("RULE_MAX_NUMBER", () => {
     const rule = MAX_NUMBER(5);
 
-    test("should_returnErrorMessage_when_inputTooBig", () => {
+    it("should_returnErrorMessage_when_inputTooBig", () => {
       expect(rule(7)).toBeTypeOf("string");
     });
-    test("should_returnTrue_when_inputSmallEnough", () => {
+    it("should_returnTrue_when_inputSmallEnough", () => {
       expect(rule(2)).toStrictEqual(true);
     });
   });
@@ -57,10 +57,10 @@ describe("Validation rules", () => {
   describe("RULE_NO_NEGATIVE_INPUT", () => {
     const rule = NO_NEGATIVE_INPUT;
 
-    test("should_returnErrorMessage_when_inputNegative", () => {
+    it("should_returnErrorMessage_when_inputNegative", () => {
       expect(rule(-2)).toBeTypeOf("string");
     });
-    test("should_returnTrue_when_inputPositive", () => {
+    it("should_returnTrue_when_inputPositive", () => {
       expect(rule(2)).toStrictEqual(true);
     });
   });
@@ -68,11 +68,11 @@ describe("Validation rules", () => {
   describe("RULE_REQUIRED", () => {
     const rule = REQUIRED;
 
-    test("should_returnTrue_when_inputExists", () => {
+    it("should_returnTrue_when_inputExists", () => {
       expect(rule("input")).toStrictEqual(true);
     });
 
-    test.each([
+    it.each([
       ["Blank", " "],
       ["Empty", ""],
       ["Null", null],

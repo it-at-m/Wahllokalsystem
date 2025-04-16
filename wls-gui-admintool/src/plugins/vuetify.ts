@@ -4,6 +4,7 @@ import "vuetify/styles";
 import { mdiRefresh } from "@mdi/js";
 import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
+import { de } from "vuetify/locale";
 
 export default createVuetify({
   icons: {
@@ -14,6 +15,23 @@ export default createVuetify({
     },
     sets: {
       mdi,
+    },
+  },
+  locale: {
+    locale: "de",
+    messages: { de },
+  },
+  date: {
+    formats: {
+      /* alias and object by options:
+      https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#syntax
+      example:
+      wlsDateFormat: {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }
+      */
     },
   },
   theme: {
@@ -32,6 +50,10 @@ export default createVuetify({
   defaults: {
     VAutocomplete: {
       variant: "outlined",
+    },
+    VDialog: {
+      persistent: true,
+      maxWidth: 600,
     },
   },
 });

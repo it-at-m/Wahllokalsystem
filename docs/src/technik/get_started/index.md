@@ -84,7 +84,6 @@ flowchart LR
 | wls_all     | test     | Ein Benutzer mit allen Rechten                                        |
 | wls_all_bwb | test     | Ein Benutzer mit allen Rechten mit der WahlbezirksArt BWB (Briefwahl) |
 | wls_all_uwb | test     | Ein Benutzer mit allen Rechten mit der WahlbezirksArt UWB (Urnenwahl) |
-| wls_admin   | test     | Benutzer der auf das AdminTool zugreifen darf                         |
 
 > [!CAUTION]
 > Für die Anmeldung am WLS muss der User die Rolle `WLS_WAHLVORSTAND` haben.

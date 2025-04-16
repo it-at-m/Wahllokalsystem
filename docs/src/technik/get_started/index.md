@@ -86,6 +86,10 @@ flowchart LR
 | wls_all_uwb | test     | Ein Benutzer mit allen Rechten mit der WahlbezirksArt UWB (Urnenwahl) |
 | wls_admin   | test     | Benutzer der auf das AdminTool zugreifen darf                         |
 
+> [!CAUTION]
+> Für die Anmeldung am WLS muss der User die Rolle `WLS_WAHLVORSTAND` haben.
+> Für die Anmeldung am Admintool muss der User die Rolle `MONITORING_HELPDESK` haben.
+
 ## Datenbank
 
 Der Zugriff auf die Oracle-Datenbank über die IDE ist gemäß [dieser Anleitung](/technik/guides/db-access) einzurichten.

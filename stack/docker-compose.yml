@@ -238,6 +238,7 @@ services:
       - services
 
   refarch-gateway-wls:
+    container_name: wls-refarch-gateway-wls
     image: ghcr.io/it-at-m/refarch/refarch-gateway:1.4.5@sha256:7aa12dd012ab96da2053c509c9c957bc1a1548bcba295a563dc2f0d5bab985f0
     env_file:
       - .env
@@ -270,6 +271,7 @@ services:
       - no-new-privileges:true
 
   refarch-gateway-admin:
+    container_name: wls-refarch-gateway-admin
     image: ghcr.io/it-at-m/refarch/refarch-gateway:1.4.5@sha256:7aa12dd012ab96da2053c509c9c957bc1a1548bcba295a563dc2f0d5bab985f0
     env_file:
       - .env

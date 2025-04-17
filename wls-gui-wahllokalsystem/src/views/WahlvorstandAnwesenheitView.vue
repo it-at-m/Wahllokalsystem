@@ -23,8 +23,8 @@
       <base-button-refresh @click="wahlvorstandStore.loadWahlvorstand()" />
       <base-button-save
         :disabled="!wahlvorstandStore.isWahlvorstandAusreichendAnwesend"
-        @click="wahlvorstandStore.sendWahlvorstand()"
         active
+        @click="wahlvorstandStore.sendWahlvorstand()"
       />
     </v-card-actions>
   </v-card>

@@ -44,7 +44,5 @@ const wahlvorstandStore = useWahlvorstandStore();
 <style scoped>
 .error-text {
   color: rgb(var(--v-theme-error));
-  display: flex;
-  flex-direction: column;
 }
 </style>

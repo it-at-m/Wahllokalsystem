@@ -3,6 +3,7 @@ import "vuetify/styles";
 import {
   mdiContentSave,
   mdiDelete,
+  mdiDiameterVariant,
   mdiHome,
   mdiMessageText,
   mdiPlus,
@@ -38,6 +39,7 @@ export default createVuetify({
       updateTime: mdiUpdate,
       toaster: mdiToaster,
       printer: mdiPrinter,
+      invalid: mdiDiameterVariant,
     },
     sets: {
       mdi,

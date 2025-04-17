@@ -5,8 +5,7 @@
       <div class="d-flex flex-column align-start">
         <the-wahlvorstand-latest-load-div
           :datetime="wahlvorstandStore.lastLoading"
-          class="mb-1"
-          style="font-size: 0.85rem"
+          class="text-subtitle-2 mb-1"
         />
         <the-wahlvorstand-last-send-div
           :datetime="wahlvorstandStore.lastSending"

@@ -25,6 +25,7 @@
       <base-button-save
         :disabled="!wahlvorstandStore.isWahlvorstandAusreichendAnwesend"
         @click="wahlvorstandStore.sendWahlvorstand()"
+        active
       />
     </v-card-actions>
   </v-card>

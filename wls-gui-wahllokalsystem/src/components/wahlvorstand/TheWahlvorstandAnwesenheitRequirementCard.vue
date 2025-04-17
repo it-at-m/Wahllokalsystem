@@ -7,9 +7,8 @@
       <v-card-text>
         <div class="d-flex align-center mb-2">
           <v-icon
-            class="mr-2"
+            class="mr-2 error-text"
             icon="$invalid"
-            color="red"
           />
           <div class="error-text">
             <div>
@@ -24,7 +23,7 @@
             </div>
           </div>
         </div>
-        <div class="v-spacer">
+        <div class="mt-6">
           Bitte wenden Sie sich bei fehlenden Mitgliedern oder getauschten
           Rollen an die Bezirksinspektion. Dort werden die Rollen im System
           richtig hinterlegt. Bis dahin bleiben Sie bitte auf dieser Seite.
@@ -47,8 +46,5 @@ const wahlvorstandStore = useWahlvorstandStore();
   color: rgb(var(--v-theme-error));
   display: flex;
   flex-direction: column;
-}
-.v-spacer {
-  margin-top: 32px;
 }
 </style>

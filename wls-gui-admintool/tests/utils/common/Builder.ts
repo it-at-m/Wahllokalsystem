@@ -1,5 +1,5 @@
 export type Builder<T> = {
-  [k in keyof T]: (arg: T[k]) => Builder<T>;
+  [k in keyof T]-?: T[k] extends undefined ? never : (arg: T[k]) => Builder<T>; // fix damit value?: string durch den Builder geht
 } & { build(): T };
 
 export function proxyBuilder<T>(base: T): Builder<T> {

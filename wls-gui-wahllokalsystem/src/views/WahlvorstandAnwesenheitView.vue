@@ -9,7 +9,7 @@
         />
         <the-wahlvorstand-last-send-div
           :datetime="wahlvorstandStore.lastSending"
-          style="font-size: 0.85rem"
+          class="text-subtitle-2"
         />
       </div>
     </v-card-title>

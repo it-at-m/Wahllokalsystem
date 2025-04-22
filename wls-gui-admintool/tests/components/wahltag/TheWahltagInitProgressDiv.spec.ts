@@ -1,7 +1,7 @@
 import type { VueWrapper } from "@vue/test-utils";
 
-import useAWerteTestDataFactory from "@tests/types/aWerte/AWerteTestDataFactory.ts";
-import useBasisdatenTestDataFactory from "@tests/types/basisdaten/BasisdatenTestDataFactory.ts";
+import { useAWerteTestDataFactory } from "@tests/types/aWerte/AWerteTestDataFactory.ts";
+import { useBasisdatenTestDataFactory } from "@tests/types/basisdaten/BasisdatenTestDataFactory.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import {
   COMPONENT_RENDER_TESTS,
@@ -25,7 +25,7 @@ vi.mock("@/composables/basisdaten/basisdatenService.ts", () => ({
   }),
 }));
 vi.mock("@/composables/aWerte/aWerteService.ts", () => ({
-  default: () => ({
+  useAWerteService: () => ({
     getAWerteProgress: mockDefinitions.getAWerteProgress,
   }),
 }));

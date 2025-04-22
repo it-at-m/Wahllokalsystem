@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
-import useRules from "@/composables/common/rules.ts";
+import { useRules } from "@/composables/common/rules.ts";
 
 describe("rules.ts", () => {
   describe("useRules", () => {

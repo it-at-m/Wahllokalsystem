@@ -34,7 +34,7 @@ import BaseAutocompleteWahltag from "@/components/common/BaseAutocompleteWahltag
 import BaseIconButtonRefresh from "@/components/common/BaseIconButtonRefresh.vue";
 import BaseWahltagEventStepper from "@/components/wahltag/BaseWahltagEventStepper.vue";
 import TheWahltagInitProgressDiv from "@/components/wahltag/TheWahltagInitProgressDiv.vue";
-import useWahltagService from "@/composables/wahltag/wahltagService.ts";
+import { useWahltagService } from "@/composables/wahltag/wahltagService.ts";
 
 const { getWahltage, isKonfigurierterWahltag } = useWahltagService();
 

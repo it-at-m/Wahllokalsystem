@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useUserStore } from "@/stores/user";
-import User from "@/types/User";
+import { User } from "@/types/User";
 import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 const mockDefinitions = vi.hoisted(() => ({

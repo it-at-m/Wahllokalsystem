@@ -13,7 +13,7 @@ import { useWahltagMapper } from "@/composables/wahltag/wahltagMapper.ts";
 import { ADMIN_SERVICE_API_URL } from "@/constants.ts";
 import { compareByNummerAsc } from "@/types/wahltag/WahltagEvent.ts";
 
-export default function useWahltagService() {
+export function useWahltagService() {
   const adminWahltageAPI = new WahltageControllerApi(
     new Configuration({
       basePath: ADMIN_SERVICE_API_URL,

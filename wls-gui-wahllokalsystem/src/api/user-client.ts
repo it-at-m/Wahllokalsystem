@@ -1,6 +1,9 @@
-import { defaultCatchHandler, defaultResponseHandler, fetchConfig } from "@/api/fetch-utils";
-import User from "@/types/User";
-
+import {
+  defaultCatchHandler,
+  defaultResponseHandler,
+  fetchConfig,
+} from "@/api/fetch-utils";
+import { User } from "@/types/User";
 
 /**
  * Retrieves the user data via the userinfo route of the API gateway. The SSO client must be configured so that
@@ -24,7 +27,6 @@ export function getUser(): Promise<User> {
       const u = new User();
       u.sub = json.sub || "";
       u.wahlbezirkID = json.wahlbezirkID;
-      u.wahlbezirksArt = json.wahlbezirksArt;
 
       // LHM
       u.displayName = json.displayName || "";

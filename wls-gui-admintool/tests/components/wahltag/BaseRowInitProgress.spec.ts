@@ -1,6 +1,6 @@
 import type { VueWrapper } from "@vue/test-utils";
 
-import useProgressTestDataFactory from "@tests/types/common/ProgressTestDataFactory.ts";
+import { useProgressTestDataFactory } from "@tests/types/common/ProgressTestDataFactory.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { getSnapshotFilename } from "@tests/utils/testutils.ts";
 import { mount } from "@vue/test-utils";

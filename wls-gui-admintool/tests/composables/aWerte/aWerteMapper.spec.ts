@@ -1,6 +1,6 @@
 import type { AWerteInitProgress } from "@/types/aWerte/AWerteInitProgress.ts";
 
-import useAWerteTestDataFactory from "@tests/types/aWerte/AWerteTestDataFactory.ts";
+import { useAWerteTestDataFactory } from "@tests/types/aWerte/AWerteTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 
 import { useAWerteMapper } from "@/composables/aWerte/aWerteMapper.ts";

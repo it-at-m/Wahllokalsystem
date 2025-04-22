@@ -24,7 +24,13 @@ export default [
   },
   {
     rules: {
-      "no-console": ["error", { allow: ["debug"] }],
+      "no-console": [
+        "error",
+        {
+          ignores: ["VIcon"],
+        },
+        { allow: ["debug"] },
+      ],
       "vue/component-name-in-template-casing": [
         "error",
         "kebab-case",

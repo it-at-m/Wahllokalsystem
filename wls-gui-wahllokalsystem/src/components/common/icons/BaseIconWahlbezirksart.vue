@@ -16,9 +16,11 @@ const store = useUserStore();
 const iconMap = {
   UWB: "$wahlbezirksartUWB",
   BWB: "$wahlbezirksartBWB",
+  [undefined]: "$wahlbezirksartBWB",
 };
 
 const wahlartIcon = computed(() => {
+  console.log("Trigger fuer Change aufgerufen:", store.getWahlbezirksArt);
   return iconMap[store.getWahlbezirksArt];
 });
 </script>

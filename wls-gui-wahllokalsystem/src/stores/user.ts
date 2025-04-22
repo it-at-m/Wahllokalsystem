@@ -19,6 +19,7 @@ export const useUserStore = defineStore("user", () => {
   });
 
   const getWahlbezirksArt = computed((): WahlbezirksArtEnum => {
+    console.log("Getter wurde aufgerufen");
     return wahlbezirksArt.value;
   });
 

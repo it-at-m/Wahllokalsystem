@@ -1,4 +1,5 @@
 import { createTestingPinia } from "@pinia/testing";
+import { getSnapshotFilename } from "@tests/utils/testutils.ts";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import {
@@ -11,16 +12,13 @@ import {
   vi,
 } from "vitest";
 import { nextTick } from "vue";
-import { createVuetify } from "vuetify";
-import * as components from "vuetify/components";
-import { VIcon } from "vuetify/components";
-import * as directives from "vuetify/directives";
 
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
+import vuetify from "@/plugins/vuetify.ts";
 import { useUserStore } from "@/stores/user";
+import User from "@/types/User.ts";
 
 describe("BaseIconWahlbezirksart.vue", () => {
-  let vuetify: ReturnType<typeof createVuetify>;
   let wrapper: VueWrapper;
 
   beforeAll(() => {
@@ -28,11 +26,6 @@ describe("BaseIconWahlbezirksart.vue", () => {
   });
 
   beforeEach(() => {
-    vuetify = createVuetify({
-      components,
-      directives,
-    });
-
     wrapper = mount(BaseIconWahlbezirksart, {
       global: {
         plugins: [
@@ -52,33 +45,41 @@ describe("BaseIconWahlbezirksart.vue", () => {
   describe("visual logic", () => {
     it("should_displayUWB_when_storeVariableIsUWB", async (context) => {
       const userStore = useUserStore();
-      console.log(wrapper.html);
-      userStore.setWahlbezirksArt("UWB");
+      const u = new User();
+      u.wahlbezirksArt = "UWB";
+      userStore.setUser(u);
 
       await wrapper.vm.$nextTick();
 
-      const icon = wrapper.findComponent(VIcon);
-      expect(icon.attributes("class")).toContain("mdiVote");
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
     });
-  });
 
-  it("should_displayBWB_when_storeVariableIsBWB", async (context) => {
-    const userStore = useUserStore();
-    userStore.setWahlbezirksArt("BWB");
+    it("should_displayBWB_when_storeVariableIsBWB", async (context) => {
+      const userStore = useUserStore();
+      const u = new User();
+      u.wahlbezirksArt = "BWB";
+      userStore.setUser(u);
 
-    await nextTick();
+      await nextTick();
 
-    const icon = wrapper.findComponent(VIcon);
-    expect(icon.attributes("class")).toContain("mdiEmail");
-  });
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
 
-  it("should_displayBWB_when_storeVariableIsBWB", async (context) => {
-    const userStore = useUserStore();
-    userStore.setWahlbezirksArt(undefined);
+    it("should_displayBWB_when_storeVariableIsBWB", async (context) => {
+      const userStore = useUserStore();
+      const u = new User();
+      u.wahlbezirksArt = undefined;
+      userStore.setUser(u);
 
-    await nextTick();
+      await nextTick();
 
-    const icon = wrapper.findComponent(VIcon);
-    expect(icon.attributes("class")).toContain("mdiEmail");
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
   });
 });

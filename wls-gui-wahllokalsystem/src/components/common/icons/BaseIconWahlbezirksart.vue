@@ -20,7 +20,8 @@ const iconMap = {
 };
 
 const wahlartIcon = computed(() => {
-  console.log("Trigger fuer Change aufgerufen:", store.getWahlbezirksArt);
-  return iconMap[store.getWahlbezirksArt];
+  if (store.getUser !== null) {
+    return iconMap[store.getUser.wahlbezirksArt];
+  }
 });
 </script>

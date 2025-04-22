@@ -16,13 +16,15 @@ const store = useUserStore();
 const iconMap = {
   UWB: "$wahlbezirksartUWB",
   BWB: "$wahlbezirksartBWB",
-  [undefined]: "$wahlbezirksartBWB",
 };
 
 const wahlartIcon = computed(() => {
   if (store.getUser !== null) {
-    return iconMap[store.getUser.wahlbezirksArt];
+    if (store.getUser.wahlbezirksArt != undefined) {
+      return iconMap[store.getUser.wahlbezirksArt];
+    } else {
+      return iconMap["BWB"];
+    }
   }
-  return iconMap[undefined];
 });
 </script>

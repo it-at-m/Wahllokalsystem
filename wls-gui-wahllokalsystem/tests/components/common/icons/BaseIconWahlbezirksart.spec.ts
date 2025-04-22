@@ -16,7 +16,7 @@ import { nextTick } from "vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useUserStore } from "@/stores/user";
-import User from "@/types/User.ts";
+import { User } from "@/types/User.ts";
 
 describe("BaseIconWahlbezirksart.vue", () => {
   let wrapper: VueWrapper;

@@ -2,7 +2,6 @@
   <v-btn
     prepend-icon="$save"
     :disabled="props.disabled"
-    color="primary"
     >Speichern</v-btn
   >
 </template>

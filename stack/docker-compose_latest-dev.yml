@@ -115,6 +115,8 @@ services:
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${SSO_JWK_URI}
       - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${SSO_USER_INFO_URI}
       - SERVER_PORT=8080
+      - SERVICE_CONFIG_CLIENTS_EAI_BASEPATH=http://kubernetes.docker.internal:8300
+      - SERVICE_CONFIG_CLIENTS_INFOMANAGEMENT_BASEPATH=http://kubernetes.docker.internal:8201
     ports:
       - 8205:8080
     extra_hosts:
@@ -135,6 +137,7 @@ services:
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${SSO_JWK_URI}
       - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${SSO_USER_INFO_URI}
       - SERVER_PORT=8080
+      - APP_CLIENTS_EAI_BASEPATH=http://kubernetes.docker.internal:8300
     ports:
       - 8206:8080
     extra_hosts:
@@ -155,6 +158,9 @@ services:
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${SSO_JWK_URI}
       - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${SSO_USER_INFO_URI}
       - SERVER_PORT=8080
+      - APP_CLIENTS_EAI_BASEPATH=http://kubernetes.docker.internal:8300
+      - APP_CLIENTS_INFOMANAGEMENT_BASEPATH=http://kubernetes.docker.internal:8201
+      - APP_CLIENTS_BASISDATEN_BASEPATH=http://kubernetes.docker.internal:8205
     ports:
       - 8207:8080
     extra_hosts:
@@ -175,6 +181,12 @@ services:
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${SSO_JWK_URI}
       - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${SSO_USER_INFO_URI}
       - SERVER_PORT=8080
+      - SERVICE_CONFIG_CLIENTS_EAI_BASEPATH=http://kubernetes.docker.internal:8300
+      - SERVICE_CONFIG_CLIENTS_MONITORING_BASEPATH=http://kubernetes.docker.internal:8206
+      - SERVICE_CONFIG_CLIENTS_INFOMANAGEMENT_BASEPATH=http://kubernetes.docker.internal:8201
+      - SERVICE_CONFIG_CLIENTS_BASISDATEN_BASEPATH=http://kubernetes.docker.internal:8205
+      - SERVICE_CONFIG_CLIENTS_BRIEFWAHL_BASEPATH=http://kubernetes.docker.internal:8202
+      - SERVICE_CONFIG_CLIENTS_WAHLVORBEREITUNG_BASEPATH=http://kubernetes.docker.internal:8203
     ports:
       - 8208:8080
     extra_hosts:
@@ -195,6 +207,10 @@ services:
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${SSO_JWK_URI}
       - SECURITY_OAUTH2_RESOURCE_USER-INFO-URI=${SSO_USER_INFO_URI}
       - SERVER_PORT=8080
+      - SERVICE_CONFIG_CLIENTS_AUTH_BASEPATH=http://kubernetes.docker.internal:8100
+      - SERVICE_CONFIG_CLIENTS_BASISDATEN_BASEPATH=http://kubernetes.docker.internal:8205
+      - SERVICE_CONFIG_CLIENTS_INFOMANAGEMENT_BASEPATH=http://kubernetes.docker.internal:8201
+      - SERVICE_CONFIG_CLIENTS_ERGEBNISMELDUNG_BASEPATH=http://kubernetes.docker.internal:8208
     ports:
       - 8209:8080
     extra_hosts:
@@ -283,6 +299,7 @@ services:
       SPRING_PROFILES_ACTIVE: db-oracle,db-dummydata,dummy.ldap,plainTextLogging
       SPRING_DATASOURCE_URL: ${WLS_SERVICE_DB_URL}
       SERVER_PORT: 8080
+      SERVICE_CONFIG_CLIENTS_INFOMANAGEMENT_BASEPATH: http://kubernetes.docker.internal:8201
       SERVICE_CONFIG_RSA_RSA_KEY_SETTING: STATIC_KEY
       SERVICE_CONFIG_RSA_PRIVATE-KEY: |
         -----BEGIN PRIVATE KEY-----
@@ -325,6 +342,16 @@ services:
         -----END PUBLIC KEY-----
     ports:
       - 8100:8080
+    networks:
+      - services
+
+  wls-gui-wahllokalsystem:
+    container_name: wls-gui-wahllokalsystem
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-gui-wahllokalsystem:latest-dev
+    ports:
+      - 8400:8080
+    extra_hosts:
+      - "kubernetes.docker.internal:host-gateway"
     networks:
       - services
 

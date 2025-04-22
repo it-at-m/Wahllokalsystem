@@ -126,12 +126,6 @@ public class SecurityConfiguration {
                 .formLogin((form) -> form
                         .loginPage(LOGIN_PATH)
                         .permitAll())
-                .sessionManagement(customizer -> customizer
-                        .sessionFixation().migrateSession()
-                        .maximumSessions(1)
-                        .expiredUrl(LOGIN_PATH)
-                        .maxSessionsPreventsLogin(false)
-                        .sessionRegistry(sessionRegistry))
                 .logout(LogoutConfigurer::permitAll)
                 .securityContext(securityContext -> securityContext.requireExplicitSave(false))
                 .addFilterBefore(customUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

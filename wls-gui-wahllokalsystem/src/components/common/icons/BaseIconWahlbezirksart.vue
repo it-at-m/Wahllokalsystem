@@ -23,5 +23,6 @@ const wahlartIcon = computed(() => {
   if (store.getUser !== null) {
     return iconMap[store.getUser.wahlbezirksArt];
   }
+  return iconMap[undefined];
 });
 </script>

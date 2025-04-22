@@ -1,9 +1,5 @@
 import type { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
-
-
-
-
 class User {
   sub = "";
 

@@ -12,7 +12,7 @@ const {
   generateRandomBoolean,
 } = useCommonTestDataFactory();
 
-export default function useBasisdatenTestDataFactory() {
+export function useBasisdatenTestDataFactory() {
   function createAsyncProgressDTOComplete(): AsyncProgressDTO {
     return {
       lastStartTime: generateRandomDateTimeAsString(),

@@ -19,7 +19,7 @@ class User {
   wahlbezirkID? = "";
 }
 
-export function UserLocalDevelopment(): User {
+function UserLocalDevelopment(): User {
   const u = new User();
   u.username = "Local Development User";
   u.displayName = "Local Development User";
@@ -32,4 +32,4 @@ export function UserLocalDevelopment(): User {
   return u;
 }
 
-export default User;
+export { User, UserLocalDevelopment };

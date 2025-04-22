@@ -8,7 +8,7 @@
 <script setup lang="ts">
 import { VIcon } from "vuetify/components";
 
-import useFormatter from "@/composables/common/formatter";
+import { useFormatter } from "@/composables/common/formatter";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 
 const { time } = useFormatter();

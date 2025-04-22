@@ -31,7 +31,7 @@ import { computed, onMounted, onUnmounted, ref } from "vue";
 import { VCard, VCardText, VCardTitle } from "vuetify/components";
 
 import BaseInitProgress from "@/components/wahltag/BaseInitProgress.vue";
-import useAWerteService from "@/composables/aWerte/aWerteService.ts";
+import { useAWerteService } from "@/composables/aWerte/aWerteService.ts";
 import { useBasisdatenService } from "@/composables/basisdaten/basisdatenService.ts";
 
 const { getAsyncProgress } = useBasisdatenService();

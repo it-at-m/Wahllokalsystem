@@ -1,4 +1,4 @@
-import useBasisdatenTestDataFactory from "@tests/types/basisdaten/BasisdatenTestDataFactory.ts";
+import { useBasisdatenTestDataFactory } from "@tests/types/basisdaten/BasisdatenTestDataFactory.ts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { useBasisdatenService } from "@/composables/basisdaten/basisdatenService.ts";

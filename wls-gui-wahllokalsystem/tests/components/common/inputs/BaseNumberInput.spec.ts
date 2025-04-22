@@ -1,3 +1,4 @@
+import { getSnapshotFilename } from "@tests/utils/testutils.ts";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
@@ -10,7 +11,6 @@ import * as directives from "vuetify/directives";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import pinia from "@/plugins/pinia";
 import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
-import { getSnapshotFilename } from "../../../utils/testutils.ts";
 
 describe("BaseNumberInput.vue", () => {
   let vuetify: ReturnType<typeof createVuetify>;

@@ -1,4 +1,4 @@
-import type { WahltagDTO } from "@/api/wls-clients/generated-admin-api";
+import type { Wahltag } from "@/types/wahltag/Wahltag.ts";
 import type { Meta, StoryObj } from "@storybook/vue3";
 
 import { fn } from "@storybook/test";
@@ -21,7 +21,7 @@ const meta: Meta<typeof BaseAutocompleteWahltag> = {
       },
       table: {
         category: "props",
-        type: { summary: "WahltagDTO" },
+        type: { summary: "Wahltag" },
       },
     },
     "onUpdate:modelValue": {
@@ -39,42 +39,66 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-const wahltage: WahltagDTO[] = [
+const wahltage: Wahltag[] = [
   {
-    wahltagID: "1",
-    wahltag: "27.02.1988",
-    beschreibung: "S",
-    nummer: "1.1",
+    wahltag: new Date("1988-02-27"),
+    events: [
+      {
+        wahltagID: "1",
+        beschreibung: "S",
+        nummer: "1.1",
+      },
+    ],
   },
   {
-    wahltagID: "2",
-    wahltag: "31.01.1998",
-    beschreibung: "D",
-    nummer: "2.1",
+    wahltag: new Date("1998-01-31"),
+    events: [
+      {
+        wahltagID: "2",
+        beschreibung: "D",
+        nummer: "2.1",
+      },
+    ],
   },
   {
-    wahltagID: "3",
-    wahltag: "04.04.2000",
-    beschreibung: "V",
-    nummer: "3.1",
+    wahltag: new Date("2000-04-04"),
+    events: [
+      {
+        wahltagID: "3",
+        beschreibung: "V",
+        nummer: "3.1",
+      },
+    ],
   },
   {
-    wahltagID: "4",
-    wahltag: "31.10.1999",
-    beschreibung: "G",
-    nummer: "4.1",
+    wahltag: new Date("1999-10-31"),
+    events: [
+      {
+        wahltagID: "4",
+        beschreibung: "G",
+        nummer: "4.1",
+      },
+    ],
   },
   {
-    wahltagID: "5",
-    wahltag: "05.11.1969",
-    beschreibung: "R",
-    nummer: "5.1",
+    wahltag: new Date("1969-11-05"),
+    events: [
+      {
+        wahltagID: "5",
+        beschreibung: "R",
+        nummer: "5.1",
+      },
+    ],
   },
   {
-    wahltagID: "6",
-    wahltag: "14.05.1977",
-    beschreibung: "N",
-    nummer: "6.1",
+    wahltag: new Date("1977-05-14"),
+    events: [
+      {
+        wahltagID: "6",
+        beschreibung: "N",
+        nummer: "6.1",
+      },
+    ],
   },
 ];
 
@@ -93,5 +117,12 @@ export const PreSelect: Story = {
   args: {
     ...Default.args,
     modelValue: wahltage[2],
+  },
+};
+
+export const NoData: Story = {
+  args: {
+    ...Default.args,
+    items: [],
   },
 };

@@ -40,6 +40,7 @@ flowchart TD
             ms1[Microservice 1]
             ms2[Microservice 2]
             ms3[Microservice 3]
+            ms4[Microservice 4]
             msn[Microservice N]
         end
     end
@@ -49,12 +50,13 @@ flowchart TD
 
     apiGwWls --> ms1
     apiGwWls --> ms2
-
-    apiGwAdmin --> ms2
+    apiGwWls --> ms3
+    
     apiGwAdmin --> ms3
-
+    apiGwAdmin --> ms4
     ms2 --> msn
     ms3 --> msn
+    ms4 --> msn
 ```
 
 Das WLS besteht aus 3 Arten von Komponenten. Die **Frontends** stellen das Userinterface für die Benutzer dar.

@@ -69,7 +69,7 @@ describe("BaseIconWahlbezirksart.vue", () => {
       );
     });
 
-    it("should_displayBWB_when_storeVariableIsBWB", async (context) => {
+    it("should_displayBWB_when_storeVariableIsUndefined", async (context) => {
       const userStore = useUserStore();
       const u = new User();
       u.wahlbezirksArt = undefined;

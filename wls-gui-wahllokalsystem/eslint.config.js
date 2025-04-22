@@ -24,17 +24,11 @@ export default [
   },
   {
     rules: {
-      "no-console": [
-        "error",
-        {
-          ignores: ["VIcon"],
-        },
-        { allow: ["debug"] },
-      ],
+      "no-console": ["error", { allow: ["debug"] }],
       "vue/component-name-in-template-casing": [
         "error",
         "kebab-case",
-        { registeredComponentsOnly: false },
+        { registeredComponentsOnly: false, ignores: ["VIcon"] },
       ],
       "no-restricted-exports": [
         "error",

@@ -26,5 +26,6 @@ const wahlartIcon = computed(() => {
       return iconMap["BWB"];
     }
   }
+  return iconMap["BWB"];
 });
 </script>

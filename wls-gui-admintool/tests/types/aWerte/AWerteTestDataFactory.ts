@@ -11,7 +11,7 @@ const {
   generateRandomNumber,
 } = useCommonTestDataFactory();
 
-export default function useAWerteTestDataFactory() {
+export function useAWerteTestDataFactory() {
   function createAsyncProgressDTOComplete(): AsyncProgressDTO {
     return {
       aWerteFinished: generateRandomNumber(4),

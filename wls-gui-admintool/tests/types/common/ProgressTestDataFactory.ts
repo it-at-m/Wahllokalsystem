@@ -7,7 +7,7 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 const { generateRandomNumber, generateRandomBoolean } =
   useCommonTestDataFactory();
 
-export default function useProgressTestDataFactory() {
+export function useProgressTestDataFactory() {
   function createProgressComplete(): Progress {
     return {
       finished: generateRandomNumber(2),

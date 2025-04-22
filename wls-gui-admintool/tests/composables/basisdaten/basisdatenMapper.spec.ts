@@ -1,6 +1,6 @@
 import type { BasisdatenInitProgress } from "@/types/basisdaten/BasisdatenInitProgress.ts";
 
-import useBasisdatenTestDataFactory from "@tests/types/basisdaten/BasisdatenTestDataFactory.ts";
+import { useBasisdatenTestDataFactory } from "@tests/types/basisdaten/BasisdatenTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 
 import { useBasisdatenMapper } from "@/composables/basisdaten/basisdatenMapper.ts";

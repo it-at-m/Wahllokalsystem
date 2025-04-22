@@ -1,4 +1,4 @@
-export default class HealthState {
+export class HealthState {
   status: string;
 
   constructor(status: string) {

@@ -98,7 +98,7 @@ import {
   ROUTES_INIT_WAHLTAG,
 } from "@/constants";
 import { useUserStore } from "@/stores/user";
-import User, { UserLocalDevelopment } from "@/types/User";
+import { User, UserLocalDevelopment } from "@/types/User";
 
 const query = ref<string>("");
 const appswitcherBaseUrl = APPSWITCHER_URL;

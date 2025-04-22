@@ -1,7 +1,7 @@
-import useAWerteTestDataFactory from "@tests/types/aWerte/AWerteTestDataFactory.ts";
+import { useAWerteTestDataFactory } from "@tests/types/aWerte/AWerteTestDataFactory.ts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import useAWerteService from "@/composables/aWerte/aWerteService.ts";
+import { useAWerteService } from "@/composables/aWerte/aWerteService.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   apiGetAsyncProgress: vi.fn(),

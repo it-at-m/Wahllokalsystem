@@ -10,7 +10,7 @@
 
 flowchart LR
 
-    Wahllokalsystem --> external[System zur Wahlverwaltung]
+    Wahllokalsystem --> electionManagementSystem[System zur Wahlverwaltung]
     Wahllokalsystem --> LDAP
 ```
 

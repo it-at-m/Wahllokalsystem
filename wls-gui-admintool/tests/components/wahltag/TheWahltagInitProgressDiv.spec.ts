@@ -25,7 +25,7 @@ vi.mock("@/composables/basisdaten/basisdatenService.ts", () => ({
   }),
 }));
 vi.mock("@/composables/aWerte/aWerteService.ts", () => ({
-  default: () => ({
+  useAWerteService: () => ({
     getAWerteProgress: mockDefinitions.getAWerteProgress,
   }),
 }));

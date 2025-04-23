@@ -10,6 +10,7 @@ import {
   EXAMPLE_VALIDATION,
   PRINT_EXAMPLE,
   ROUTE_VORFAELLEUNDVORKOMMNISSE,
+  ROUTE_WAHLVORBEREITUNG,
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
   TOAST,
@@ -22,6 +23,7 @@ import ExamplePrintView from "@/views/ExamplePrintView.vue";
 import ExampleToastView from "@/views/ExampleToastView.vue";
 import ExampleValidation from "@/views/ExampleValidation.vue";
 import HomeView from "@/views/HomeView.vue";
+import WahlvorbereitungView from "@/views/WahlvorbereitungView.vue";
 import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
 
 const routes = [
@@ -36,6 +38,11 @@ const routes = [
     name: ROUTE_WAHLVORSTAND,
     component: WahlvorstandAnwesenheitView,
     meta: {},
+  },
+  {
+    path: "/wahlvorbereitung",
+    name: ROUTE_WAHLVORBEREITUNG,
+    component: WahlvorbereitungView,
   },
   {
     path: "/vorfaelleundvorkommnisse",

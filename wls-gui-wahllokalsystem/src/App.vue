@@ -133,6 +133,10 @@
           :to="ROUTE_WAHLVORSTAND"
         />
         <v-list-item
+          title="Wahlvorbereitung"
+          :to="ROUTE_WAHLVORBEREITUNG"
+        />
+        <v-list-item
           title="Störungen"
           :to="ROUTE_VORFAELLEUNDVORKOMMNISSE"
         />
@@ -179,6 +183,7 @@ import {
   EXAMPLE_VALIDATION,
   PRINT_EXAMPLE,
   ROUTE_VORFAELLEUNDVORKOMMNISSE,
+  ROUTE_WAHLVORBEREITUNG,
   ROUTE_WAHLVORSTAND,
   TOAST,
 } from "@/constants";

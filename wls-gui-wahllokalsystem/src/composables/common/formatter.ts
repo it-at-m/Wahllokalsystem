@@ -1,4 +1,4 @@
-export default function useFormatter() {
+export function useFormatter() {
   const NO_VALUE_DEFAULT = "";
   const TIME_FIELD_SEPARATOR = ":";
 

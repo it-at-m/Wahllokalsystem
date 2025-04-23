@@ -13,7 +13,7 @@ import { useWahltagMapper } from "@/composables/wahltag/wahltagMapper.ts";
 import { ADMIN_SERVICE_API_URL } from "@/constants.ts";
 import { compareByNummerAsc } from "@/types/wahltag/WahltagEvent.ts";
 
-export default function useWahltagService() {
+export function useWahltagService() {
   const adminWahltageAPI = new WahltageControllerApi(
     new Configuration({
       basePath: ADMIN_SERVICE_API_URL,
@@ -59,11 +59,18 @@ export default function useWahltagService() {
     try {
       const konfigurierteWahltage = await adminKonfigurierteWahltageAPI
         .getKonfigurierteWahltage()
-        .then((response) => response.data);
+        .then((response) =>
+          returnUndefinedOnStatus204OrElseResponseData(response)
+        );
 
-      return konfigurierteWahltage.some(
-        (konfigurierterWahltag) => konfigurierterWahltag.wahltagID === wahltagID
-      );
+      if (konfigurierteWahltage) {
+        return konfigurierteWahltage.some(
+          (konfigurierterWahltag) =>
+            konfigurierterWahltag.wahltagID === wahltagID
+        );
+      } else {
+        return false;
+      }
     } catch {
       addNotification(
         "Abrufen der konfigurierten Wahltage fehlgeschlagen",

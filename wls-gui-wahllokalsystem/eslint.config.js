@@ -30,6 +30,27 @@ export default [
         "kebab-case",
         { registeredComponentsOnly: false },
       ],
+      "no-restricted-exports": [
+        "error",
+        {
+          restrictDefaultExports: {
+            direct: true, // restricts `export default abc;`
+            named: true, // restricts `export { abc as default };`
+          },
+        },
+      ],
+    },
+  },
+  // overrides for specific files or directories
+  {
+    files: [
+      ".storybook/*.ts",
+      "stories/**",
+      "*.config.{ts,js}",
+      "src/plugins/**",
+    ],
+    rules: {
+      "no-restricted-exports": "off", // deactivate rule for the above named directories
     },
   },
 ];

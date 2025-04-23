@@ -46,7 +46,7 @@ import {
 
 import BaseButtonCancel from "@/components/common/BaseButtonCancel.vue";
 import BaseButtonConfirm from "@/components/common/BaseButtonConfirm.vue";
-import useRules from "@/composables/common/rules.ts";
+import { useRules } from "@/composables/common/rules.ts";
 
 const props = defineProps({
   requiredConfirmText: {

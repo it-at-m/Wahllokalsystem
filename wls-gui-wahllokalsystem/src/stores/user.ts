@@ -17,6 +17,5 @@ export const useUserStore = defineStore("user", () => {
   function setUser(payload: User | null): void {
     user.value = payload;
   }
-
   return { getUser, setUser };
 });

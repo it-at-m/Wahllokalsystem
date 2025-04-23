@@ -1,8 +1,8 @@
 <template>
-  <VIcon
+  <v-icon
     :icon="wahlartIcon"
     size="large"
-  ></VIcon>
+  ></v-icon>
 </template>
 
 <script setup lang="ts">
@@ -11,7 +11,7 @@ import { VIcon } from "vuetify/components";
 
 import { useUserStore } from "@/stores/user";
 
-const store = useUserStore();
+const userStore = useUserStore();
 
 const iconMap = {
   UWB: "$wahlbezirksartUWB",
@@ -19,13 +19,7 @@ const iconMap = {
 };
 
 const wahlartIcon = computed(() => {
-  if (store.getUser !== null) {
-    if (store.getUser.wahlbezirksArt != undefined) {
-      return iconMap[store.getUser.wahlbezirksArt];
-    } else {
-      return iconMap["BWB"];
-    }
-  }
-  return iconMap["BWB"];
+  const wahlbezirkArt = userStore.getUser?.wahlbezirksArt ?? "BWB";
+  return iconMap[wahlbezirkArt];
 });
 </script>

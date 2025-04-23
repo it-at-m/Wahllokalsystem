@@ -28,17 +28,25 @@ type Story = StoryObj<typeof meta>;
 export const WahlartIsUWB: Story = {
   async beforeEach() {
     const store = useUserStore(pinia);
-    const u = new User();
-    u.wahlbezirksArt = "UWB";
-    store.setUser(u);
+    const userWithUWB = new User();
+    userWithUWB.wahlbezirksArt = "UWB";
+    store.setUser(userWithUWB);
   },
 };
 
 export const WahlartIsBWB: Story = {
   async beforeEach() {
     const store = useUserStore(pinia);
-    const u = new User();
-    u.wahlbezirksArt = "BWB";
-    store.setUser(u);
+    const userWithBWB = new User();
+    userWithBWB.wahlbezirksArt = "BWB";
+    store.setUser(userWithBWB);
+  },
+};
+
+export const WahlartIsUndefined: Story = {
+  async beforeEach() {
+    const store = useUserStore(pinia);
+    const userWithUndefinedWahlart = new User();
+    store.setUser(userWithUndefinedWahlart);
   },
 };

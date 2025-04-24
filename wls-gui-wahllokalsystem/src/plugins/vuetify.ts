@@ -4,6 +4,7 @@ import {
   mdiContentSave,
   mdiDelete,
   mdiDiameterVariant,
+  mdiEmail,
   mdiHome,
   mdiMessageText,
   mdiPlus,
@@ -16,6 +17,7 @@ import {
   mdiTextBoxCheck,
   mdiToaster,
   mdiUpdate,
+  mdiVote,
 } from "@mdi/js";
 import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
@@ -40,6 +42,8 @@ export default createVuetify({
       toaster: mdiToaster,
       printer: mdiPrinter,
       invalid: mdiDiameterVariant,
+      wahlbezirksartUWB: mdiVote,
+      wahlbezirksartBWB: mdiEmail,
     },
     sets: {
       mdi,

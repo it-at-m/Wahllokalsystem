@@ -187,7 +187,7 @@ import {
   ROUTE_WAHLVORSTAND,
   TOAST,
 } from "@/constants";
-import { useUserStore } from "@/stores/user";
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 import { User, UserLocalDevelopment } from "@/types/User";
 

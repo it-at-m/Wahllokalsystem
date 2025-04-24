@@ -1,10 +1,10 @@
 import type { Wahlvorstand } from "@/types/wahlvorstand/Wahlvorstand";
 
-import { defineStore } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
 import { useWahlvorstandService } from "@/composables/wahlvorstand/wahlvorstandService";
-import { useUserStore } from "@/stores/user";
+import { useUserStore } from "@/stores/userStore.ts";
 import { WahlvorstandBuilder } from "@/types/wahlvorstand/Wahlvorstand";
 import {
   isSchriftfuehrer,
@@ -16,8 +16,7 @@ const { getWahlvorstand, saveWahlvorstand } = useWahlvorstandService();
 export const storeID = "wahlvorstand";
 
 export const useWahlvorstandStore = defineStore(storeID, () => {
-  const userStore = useUserStore();
-
+  const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
   const wahlvorstand = ref<Wahlvorstand>(
     WahlvorstandBuilder.createEmptyWahlvorstand()
   );
@@ -39,18 +38,18 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   );
 
   async function loadWahlvorstand() {
-    const currentUserWahlbezirkID = getUsersWahlbezirkID();
-    if (currentUserWahlbezirkID) {
-      wahlvorstand.value = await getWahlvorstand(currentUserWahlbezirkID);
+    const wahlbezirkID = currentUserWahlbezirkID.value;
+    if (wahlbezirkID) {
+      wahlvorstand.value = await getWahlvorstand(wahlbezirkID);
       lastLoading.value = new Date();
     }
   }
 
   async function sendWahlvorstand() {
-    const currentUserWahlbezirkID = getUsersWahlbezirkID();
-    if (currentUserWahlbezirkID) {
+    const wahlbezirkID = currentUserWahlbezirkID.value;
+    if (wahlbezirkID) {
       const { updateDatetime } = await saveWahlvorstand(
-        currentUserWahlbezirkID,
+        wahlbezirkID,
         wahlvorstand.value
       );
       lastSending.value = updateDatetime;
@@ -66,10 +65,6 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     if (wahlvorstandsMitgliedToUpdate) {
       wahlvorstandsMitgliedToUpdate.anwesend = newValue;
     }
-  }
-
-  function getUsersWahlbezirkID(): string | undefined {
-    return userStore.getUser?.wahlbezirkID;
   }
 
   return {

@@ -17,5 +17,10 @@ export const useUserStore = defineStore("user", () => {
   function setUser(payload: User | null): void {
     user.value = payload;
   }
-  return { getUser, setUser };
+
+  function currentUserWahlbezirkID(): string | undefined {
+    return user.value?.wahlbezirkID;
+  }
+
+  return { getUser, setUser, currentUserWahlbezirkID };
 });

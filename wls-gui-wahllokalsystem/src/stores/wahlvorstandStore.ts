@@ -4,7 +4,7 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 import { useWahlvorstandService } from "@/composables/wahlvorstand/wahlvorstandService";
-import { useUserStore } from "@/stores/user";
+import { useUserStore } from "@/stores/userStore.ts";
 import { WahlvorstandBuilder } from "@/types/wahlvorstand/Wahlvorstand";
 import {
   isSchriftfuehrer,
@@ -12,12 +12,11 @@ import {
 } from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion";
 
 const { getWahlvorstand, saveWahlvorstand } = useWahlvorstandService();
+const { currentUserWahlbezirkID } = useUserStore();
 
 export const storeID = "wahlvorstand";
 
 export const useWahlvorstandStore = defineStore(storeID, () => {
-  const userStore = useUserStore();
-
   const wahlvorstand = ref<Wahlvorstand>(
     WahlvorstandBuilder.createEmptyWahlvorstand()
   );
@@ -39,18 +38,18 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   );
 
   async function loadWahlvorstand() {
-    const currentUserWahlbezirkID = getUsersWahlbezirkID();
-    if (currentUserWahlbezirkID) {
-      wahlvorstand.value = await getWahlvorstand(currentUserWahlbezirkID);
+    const wahlbezirkID = currentUserWahlbezirkID();
+    if (wahlbezirkID) {
+      wahlvorstand.value = await getWahlvorstand(wahlbezirkID);
       lastLoading.value = new Date();
     }
   }
 
   async function sendWahlvorstand() {
-    const currentUserWahlbezirkID = getUsersWahlbezirkID();
-    if (currentUserWahlbezirkID) {
+    const wahlbezirkID = currentUserWahlbezirkID();
+    if (wahlbezirkID) {
       const { updateDatetime } = await saveWahlvorstand(
-        currentUserWahlbezirkID,
+        wahlbezirkID,
         wahlvorstand.value
       );
       lastSending.value = updateDatetime;
@@ -66,10 +65,6 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     if (wahlvorstandsMitgliedToUpdate) {
       wahlvorstandsMitgliedToUpdate.anwesend = newValue;
     }
-  }
-
-  function getUsersWahlbezirkID(): string | undefined {
-    return userStore.getUser?.wahlbezirkID;
   }
 
   return {

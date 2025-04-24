@@ -5,10 +5,11 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
-import { useUserStore } from "@/stores/user";
+import { useUserStore } from "@/stores/userStore.ts";
 import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 const ereignisService = useEreignisService();
+const { currentUserWahlbezirkID } = useUserStore();
 
 export const storeID = "vorfaelleundvorkommnisse";
 
@@ -28,13 +29,12 @@ export const useEreignisStore = defineStore(storeID, () => {
   }
 
   async function loadEreignisse() {
-    const currentUserWahlbezirkID = getUsersWahlbezirkID();
-    if (currentUserWahlbezirkID) {
+    const wahlbezirkID = currentUserWahlbezirkID();
+    if (wahlbezirkID) {
       error.value = null;
       try {
-        wahlbezirkEreignisse.value = await ereignisService.getEreignisse(
-          currentUserWahlbezirkID
-        );
+        wahlbezirkEreignisse.value =
+          await ereignisService.getEreignisse(wahlbezirkID);
         sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
       } catch (e) {
         error.value = "Fehler beim Laden der Ereignisse";
@@ -44,13 +44,13 @@ export const useEreignisStore = defineStore(storeID, () => {
   }
 
   async function sendEreignisse() {
-    const currentUserWahlbezirkID = getUsersWahlbezirkID();
-    if (currentUserWahlbezirkID) {
+    const wahlbezirkID = currentUserWahlbezirkID();
+    if (wahlbezirkID) {
       error.value = null;
       try {
         sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
         await ereignisService.saveEreignisse(
-          currentUserWahlbezirkID,
+          wahlbezirkID,
           wahlbezirkEreignisse.value
         );
       } catch (e) {
@@ -77,10 +77,4 @@ function sortEreignisse(ereigniseintraege: Ereignis[] | undefined) {
 
     return timeA - timeB;
   });
-}
-
-// Funktion zum Abrufen der Wahlbezirk-ID des Benutzers
-function getUsersWahlbezirkID(): string | undefined {
-  const userStore = useUserStore();
-  return userStore.getUser?.wahlbezirkID;
 }

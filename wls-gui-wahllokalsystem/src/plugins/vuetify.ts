@@ -58,4 +58,9 @@ export default createVuetify({
       },
     },
   },
+  defaults: {
+    VCardTitle: {
+      class: "bg-grey-lighten-3 border-b border-grey-lighten-1 mb-2",
+    },
+  },
 });

@@ -5,8 +5,9 @@
     label="Uhrzeit"
     type="time"
     clearable
-    max-width="200"
+    max-width="175"
     class="centered-input"
+    density="comfortable"
   ></v-text-field>
 </template>
 

@@ -1,7 +1,7 @@
 import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
-import { defineStore } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { ref } from "vue";
 
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
@@ -15,7 +15,7 @@ export const storeID = "vorfaelleundvorkommnisse";
 export const useEreignisStore = defineStore(storeID, () => {
   const error = ref<string | null>(null);
 
-  const { currentUserWahlbezirkID } = useUserStore();
+  const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
   const wahlbezirkEreignisse = ref<WahlbezirkEreignisse>(
     WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse()
   );
@@ -29,7 +29,7 @@ export const useEreignisStore = defineStore(storeID, () => {
   }
 
   async function loadEreignisse() {
-    const wahlbezirkID = currentUserWahlbezirkID();
+    const wahlbezirkID = currentUserWahlbezirkID.value;
     if (wahlbezirkID) {
       error.value = null;
       try {
@@ -44,7 +44,7 @@ export const useEreignisStore = defineStore(storeID, () => {
   }
 
   async function sendEreignisse() {
-    const wahlbezirkID = currentUserWahlbezirkID();
+    const wahlbezirkID = currentUserWahlbezirkID.value;
     if (wahlbezirkID) {
       error.value = null;
       try {

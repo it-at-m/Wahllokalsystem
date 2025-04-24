@@ -1,6 +1,6 @@
 import type { Wahlvorstand } from "@/types/wahlvorstand/Wahlvorstand";
 
-import { defineStore } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
 import { useWahlvorstandService } from "@/composables/wahlvorstand/wahlvorstandService";
@@ -16,7 +16,7 @@ const { getWahlvorstand, saveWahlvorstand } = useWahlvorstandService();
 export const storeID = "wahlvorstand";
 
 export const useWahlvorstandStore = defineStore(storeID, () => {
-  const { currentUserWahlbezirkID } = useUserStore();
+  const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
   const wahlvorstand = ref<Wahlvorstand>(
     WahlvorstandBuilder.createEmptyWahlvorstand()
   );
@@ -38,7 +38,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   );
 
   async function loadWahlvorstand() {
-    const wahlbezirkID = currentUserWahlbezirkID();
+    const wahlbezirkID = currentUserWahlbezirkID.value;
     if (wahlbezirkID) {
       wahlvorstand.value = await getWahlvorstand(wahlbezirkID);
       lastLoading.value = new Date();
@@ -46,7 +46,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   }
 
   async function sendWahlvorstand() {
-    const wahlbezirkID = currentUserWahlbezirkID();
+    const wahlbezirkID = currentUserWahlbezirkID.value;
     if (wahlbezirkID) {
       const { updateDatetime } = await saveWahlvorstand(
         wahlbezirkID,

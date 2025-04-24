@@ -10,16 +10,16 @@ export interface UserState {
 export const useUserStore = defineStore("user", () => {
   const user = ref<User | null>(null);
 
+  const currentUserWahlbezirkID = computed((): string | undefined => {
+    return user.value?.wahlbezirkID;
+  });
+
   const getUser = computed((): User | null => {
     return user.value;
   });
 
   function setUser(payload: User | null): void {
     user.value = payload;
-  }
-
-  function currentUserWahlbezirkID(): string | undefined {
-    return user.value?.wahlbezirkID;
   }
 
   return { getUser, setUser, currentUserWahlbezirkID };

@@ -45,9 +45,9 @@ describe("BaseIconWahlbezirksart.vue", () => {
   describe("visual logic", () => {
     it("should_displayUWB_when_storeVariableIsUWB", async (context) => {
       const userStore = useUserStore();
-      const u = new User();
-      u.wahlbezirksArt = "UWB";
-      userStore.setUser(u);
+      const userWithUWB = new User();
+      userWithUWB.wahlbezirksArt = "UWB";
+      userStore.setUser(userWithUWB);
 
       await wrapper.vm.$nextTick();
 
@@ -58,9 +58,9 @@ describe("BaseIconWahlbezirksart.vue", () => {
 
     it("should_displayBWB_when_storeVariableIsBWB", async (context) => {
       const userStore = useUserStore();
-      const u = new User();
-      u.wahlbezirksArt = "BWB";
-      userStore.setUser(u);
+      const userWithBWB = new User();
+      userWithBWB.wahlbezirksArt = "BWB";
+      userStore.setUser(userWithBWB);
 
       await nextTick();
 
@@ -71,9 +71,9 @@ describe("BaseIconWahlbezirksart.vue", () => {
 
     it("should_displayBWB_when_storeVariableIsUndefined", async (context) => {
       const userStore = useUserStore();
-      const u = new User();
-      u.wahlbezirksArt = undefined;
-      userStore.setUser(u);
+      const userWithUndefinedWahlart = new User();
+      userWithUndefinedWahlart.wahlbezirksArt = undefined;
+      userStore.setUser(userWithUndefinedWahlart);
 
       await nextTick();
 

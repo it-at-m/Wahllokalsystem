@@ -1,3 +1,5 @@
+import type { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
+
 class User {
   sub = "";
 
@@ -17,12 +19,14 @@ class User {
   authorities: string[] = [];
 
   wahlbezirkID? = "";
+  wahlbezirksArt?: WahlbezirksArtEnum;
 }
 
 function UserLocalDevelopment(): User {
   const u = new User();
   u.username = "Local Development User";
   u.displayName = "Local Development User";
+  u.wahlbezirksArt = "UWB";
   u.authorities = [
     // todo add authorities
   ];

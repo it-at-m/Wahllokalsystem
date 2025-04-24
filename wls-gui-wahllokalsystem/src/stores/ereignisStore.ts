@@ -9,13 +9,13 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 const ereignisService = useEreignisService();
-const { currentUserWahlbezirkID } = useUserStore();
 
 export const storeID = "vorfaelleundvorkommnisse";
 
 export const useEreignisStore = defineStore(storeID, () => {
   const error = ref<string | null>(null);
 
+  const { currentUserWahlbezirkID } = useUserStore();
   const wahlbezirkEreignisse = ref<WahlbezirkEreignisse>(
     WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse()
   );

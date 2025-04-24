@@ -12,11 +12,11 @@ import {
 } from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion";
 
 const { getWahlvorstand, saveWahlvorstand } = useWahlvorstandService();
-const { currentUserWahlbezirkID } = useUserStore();
 
 export const storeID = "wahlvorstand";
 
 export const useWahlvorstandStore = defineStore(storeID, () => {
+  const { currentUserWahlbezirkID } = useUserStore();
   const wahlvorstand = ref<Wahlvorstand>(
     WahlvorstandBuilder.createEmptyWahlvorstand()
   );

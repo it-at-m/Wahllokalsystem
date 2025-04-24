@@ -4,7 +4,7 @@ import { createPinia, setActivePinia } from "pinia";
 
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
 import pinia from "@/plugins/pinia";
-import { useUserStore } from "@/stores/user.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { User } from "@/types/User.ts";
 
 const meta = {

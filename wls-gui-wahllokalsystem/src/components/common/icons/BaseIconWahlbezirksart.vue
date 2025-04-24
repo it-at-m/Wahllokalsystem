@@ -9,7 +9,7 @@
 import { computed } from "vue";
 import { VIcon } from "vuetify/components";
 
-import { useUserStore } from "@/stores/user";
+import { useUserStore } from "@/stores/userStore.ts";
 
 const userStore = useUserStore();
 

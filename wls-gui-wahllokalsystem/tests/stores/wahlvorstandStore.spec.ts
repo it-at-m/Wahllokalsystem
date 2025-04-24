@@ -2,7 +2,7 @@ import { createTestingPinia } from "@pinia/testing";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useUserStore } from "@/stores/user";
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 import { User } from "@/types/User";
 import { WahlvorstandBuilder } from "@/types/wahlvorstand/Wahlvorstand";

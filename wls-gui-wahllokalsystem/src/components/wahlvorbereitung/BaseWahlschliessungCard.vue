@@ -13,11 +13,7 @@
       <base-button-save
         color="primary"
         :disabled="isSaveButtonDisabled"
-        @click="
-          wahlbezirkStore.sendSchliessungsuhrzeit(
-            schliessungsuhrzeit.toISOString()
-          )
-        "
+        @click="onSaveSchliessungsuhrzeitClicked"
       />
     </v-card-actions>
   </v-card>
@@ -40,10 +36,18 @@ import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
 const schliessungsuhrzeitValidForm: Ref<null | boolean> = ref(null);
-const schliessungsuhrzeit: Ref<Date> = ref(new Date());
+const schliessungsuhrzeit: Ref<Date | undefined> = ref();
 
 const wahlbezirkStore = useWahlbezirkStore();
 const isSaveButtonDisabled = computed(
   () => schliessungsuhrzeitValidForm.value !== true
 );
+
+function onSaveSchliessungsuhrzeitClicked() {
+  if (schliessungsuhrzeit.value) {
+    wahlbezirkStore.sendSchliessungsuhrzeit(
+      schliessungsuhrzeit.value.toISOString()
+    );
+  }
+}
 </script>

@@ -23,12 +23,12 @@ const { toHhMm } = useFormatter();
 
 const schliessungsuhrzeit = defineModel({
   type: Object as PropType<Date>,
-  // TODO: darf nciht vorausgefüllt sein
 });
 
 function onSchliessungsuhrzeitChanged(time: string | undefined) {
-  if (time && schliessungsuhrzeit.value) {
+  if (time) {
     const [hours, minutes] = time.split(":").map(Number);
+    schliessungsuhrzeit.value = schliessungsuhrzeit.value ?? new Date();
     schliessungsuhrzeit.value.setHours(hours, minutes);
   } else {
     schliessungsuhrzeit.value = undefined;

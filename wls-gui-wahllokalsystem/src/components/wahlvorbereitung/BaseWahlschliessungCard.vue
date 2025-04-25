@@ -9,7 +9,6 @@
       </v-form>
     </v-card-text>
     <v-card-actions>
-      <!-- todo: wird noch nicht richtig aktiviert -->
       <base-button-save
         color="primary"
         :disabled="isSaveButtonDisabled"

@@ -1,16 +1,14 @@
 <template>
   <v-card>
     <v-card-title>Wahlscheine und Uhrzeit Wahlende</v-card-title>
-    <v-card-text class="text-center mt-2 pb-0">
+    <v-card-text class="pb-0">
       Bitte geben Sie hier die Uhrzeit ein, zu der die Wahl für geschlossen
       erklärt wurde.
       <v-form v-model="schliessungsuhrzeitValidForm">
-        <div class="d-flex justify-center mt-2">
-          <base-time-input :model-value="schliessungsuhrzeit" />
-        </div>
+        <base-time-input :model-value="schliessungsuhrzeit" />
       </v-form>
     </v-card-text>
-    <v-card-actions class="justify-center mb-0">
+    <v-card-actions>
       <!-- todo: wird noch nicht richtig aktiviert -->
       <base-button-save
         color="primary"

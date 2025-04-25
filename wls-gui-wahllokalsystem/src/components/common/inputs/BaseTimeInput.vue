@@ -5,9 +5,8 @@
     label="Uhrzeit"
     type="time"
     clearable
-    max-width="175"
-    class="centered-input"
-    density="comfortable"
+    max-width="150"
+    class="mt-5"
     @update:model-value="(value) => onSchliessungsuhrzeitChanged(value)"
   ></v-text-field>
 </template>
@@ -24,6 +23,7 @@ const { toHhMm } = useFormatter();
 
 const schliessungsuhrzeit = defineModel({
   type: Object as PropType<Date>,
+  // TODO: darf nciht vorausgefüllt sein
 });
 
 function onSchliessungsuhrzeitChanged(time: string | undefined) {
@@ -35,9 +35,3 @@ function onSchliessungsuhrzeitChanged(time: string | undefined) {
   }
 }
 </script>
-
-<style scoped>
-.centered-input :deep(input) {
-  text-align: center;
-}
-</style>

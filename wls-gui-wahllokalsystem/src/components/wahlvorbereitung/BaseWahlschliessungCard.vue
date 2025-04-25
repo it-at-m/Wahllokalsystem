@@ -6,7 +6,7 @@
       erklärt wurde.
       <v-form v-model="schliessungsuhrzeitValidForm">
         <div class="d-flex justify-center mt-2">
-          <base-time-input></base-time-input>
+          <base-time-input :model-value="schliessungsuhrzeit" />
         </div>
       </v-form>
     </v-card-text>
@@ -15,8 +15,12 @@
       <base-button-save
         color="primary"
         :disabled="isSaveButtonDisabled"
-        @click="wahlbezirkStore.sendSchliessungsuhrzeit()"
-      ></base-button-save>
+        @click="
+          wahlbezirkStore.sendSchliessungsuhrzeit(
+            schliessungsuhrzeit.toISOString()
+          )
+        "
+      />
     </v-card-actions>
   </v-card>
 </template>
@@ -38,6 +42,7 @@ import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
 const schliessungsuhrzeitValidForm: Ref<null | boolean> = ref(null);
+const schliessungsuhrzeit: Ref<Date> = ref(new Date());
 
 const wahlbezirkStore = useWahlbezirkStore();
 const isSaveButtonDisabled = computed(

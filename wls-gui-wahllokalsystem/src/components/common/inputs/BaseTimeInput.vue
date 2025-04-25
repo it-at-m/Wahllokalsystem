@@ -1,6 +1,6 @@
 <template>
   <v-text-field
-    :v-model="toHhMm(schliessungsuhrzeit)"
+    :model-value="toHhMm(schliessungsuhrzeit)"
     :rules="[REQUIRED]"
     label="Uhrzeit"
     type="time"
@@ -8,6 +8,7 @@
     max-width="175"
     class="centered-input"
     density="comfortable"
+    @update:model-value="(value) => onSchliessungsuhrzeitChanged(value)"
   ></v-text-field>
 </template>
 
@@ -25,7 +26,14 @@ const schliessungsuhrzeit = defineModel({
   type: Object as PropType<Date>,
 });
 
-// todo: add rule: schliessungsuhrzeit darf nicht in der zukunft liegen (anderes issue??)
+function onSchliessungsuhrzeitChanged(time: string | undefined) {
+  if (time && schliessungsuhrzeit.value) {
+    const [hours, minutes] = time.split(":").map(Number);
+    schliessungsuhrzeit.value.setHours(hours, minutes);
+  } else {
+    schliessungsuhrzeit.value = undefined;
+  }
+}
 </script>
 
 <style scoped>

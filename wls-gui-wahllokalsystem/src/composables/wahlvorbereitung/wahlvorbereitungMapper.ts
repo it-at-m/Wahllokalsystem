@@ -14,8 +14,16 @@ export function useWahlvorbereitungMapper() {
   function toDTO(
     schliessungsuhrzeitModel: UrnenwahlSchliessungsuhrzeit
   ): UrnenwahlSchliessungsUhrzeitWriteDTO {
+    const mappedUhrzeit = new Date(
+      schliessungsuhrzeitModel.schliessungsuhrzeit
+    );
+    // TODO: auslagern
+    mappedUhrzeit.setHours(
+      mappedUhrzeit.getHours() -
+        Math.trunc(mappedUhrzeit.getTimezoneOffset() / 60)
+    );
     return {
-      schliessungsuhrzeit: schliessungsuhrzeitModel.schliessungsuhrzeit,
+      schliessungsuhrzeit: mappedUhrzeit.toISOString(),
     };
   }
 

@@ -1,13 +1,15 @@
-import type { BroadcastMessageDTO } from "@/api/wls-clients/generated-broadcast-api";
-
-import axios from "axios";
+import type { BroadcastMessage } from "@/types/broadcast/broadcastMessage.ts";
 
 import {
   BroadcastControllerApi,
   Configuration,
 } from "@/api/wls-clients/generated-broadcast-api";
-import { WLSError } from "@/api/WLSError.ts";
+import { useBroadcastMapper } from "@/composables/broadcast/broadcastMapper.ts";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { BROADCAST_SERVICE_API_URL } from "@/constants.ts";
+
+const { dtoToModel } = useBroadcastMapper();
+const { addNotification } = useUserNotificationService();
 
 export function useBroadcastService() {
   const broadcastCA = new BroadcastControllerApi(
@@ -16,71 +18,33 @@ export function useBroadcastService() {
     })
   );
 
-  async function getMessage(wahlbezirkID: string) {
+  async function getMessage(
+    wahlbezirkID: string
+  ): Promise<BroadcastMessage | null> {
     try {
       const response = await broadcastCA.getMessage(wahlbezirkID);
-      if (response.status == 204) {
-        return {
-          message: "",
-          error: "Es konnten keine Daten gefunden werden",
-        };
-      }
-      const messageDTO = response.data;
-      const nachrichtID = messageDTO.oid;
 
-      try {
-        await broadcastCA.deleteMessage(nachrichtID);
-      } catch {
-        return {
-          message: messageDTO.nachricht, // eg if message fetched from idb
-          error: "Es ist ein Fehler beim Lesen der Nachricht aufgetreten",
-        };
+      if (response.status === 200) {
+        return dtoToModel(response.data);
+      } else {
+        return null;
       }
-
-      return {
-        message: messageDTO.nachricht,
-        error: "",
-      };
     } catch (e) {
-      return {
-        message: "",
-        error: (e as Error).message,
-      };
+      addNotification(
+        "Abrufen der Broadcastnachricht ist fehlgeschlagen",
+        "Error"
+      );
+      return null;
     }
   }
 
-  async function postMessage(nachricht: string, wahlbezirkIDs: string[]) {
-    const broadcastMessageDTO = {
-      wahlbezirkIDs,
-      nachricht,
-    } as BroadcastMessageDTO;
-
-    try {
-      await broadcastCA.broadcast(broadcastMessageDTO);
-      return { error: "" };
-    } catch (e) {
-      if (axios.isAxiosError(e)) {
-        if (e.response) {
-          const error: WLSError = e.response.data;
-          const errorMessage =
-            error.service +
-            " - " +
-            error.message +
-            " (Code: " +
-            error.code +
-            ")";
-          return { error: errorMessage };
-        } else {
-          return { error: "Fehler beim Senden der Broadcast Nachricht" };
-        }
-      } else {
-        return { error: "Fehler beim Senden der Broadcast Nachricht" };
-      }
-    }
+  async function deleteMessage(messageId: string) {
+    await broadcastCA.deleteMessage(messageId);
   }
 
   return {
     getMessage,
+    deleteMessage,
     postMessage,
   };
 }

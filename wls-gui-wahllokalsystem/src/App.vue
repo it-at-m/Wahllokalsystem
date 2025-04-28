@@ -127,6 +127,9 @@
         </router-view>
       </v-container>
     </v-main>
+
+    <the-cronjob-render-less></the-cronjob-render-less>
+    <the-broadcast-read-confirmation-dialog></the-broadcast-read-confirmation-dialog>
   </v-app>
 </template>
 
@@ -152,6 +155,8 @@ import {
 } from "vuetify/components";
 
 import { getUser } from "@/api/user-client";
+import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
+import TheCronjobRenderLess from "@/components/cronjob/TheCronjobRenderLess.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import {
   EXAMPLE_ROUTES_NEWROUTE,

@@ -11,7 +11,7 @@
         <span class="ml-2">Nachricht vom Wahlamt</span>
       </v-card-title>
       <v-card-text>
-        <div>{{ currentBroadcastNachricht?.nachricht }}</div>
+        <div class="ml-3">{{ currentBroadcastNachricht?.nachricht }}</div>
         <v-checkbox
           v-model="isMessageMarkedAsRead"
           label="Nachricht gelesen"

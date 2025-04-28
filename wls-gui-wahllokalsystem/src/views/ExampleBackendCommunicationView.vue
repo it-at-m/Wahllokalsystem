@@ -55,7 +55,7 @@ import {
   VTextField,
 } from "vuetify/components";
 
-import { useBroadcastService } from "@/composables/wlsClients/broadcastService/useBroadcastService";
+import { useBroadcastService } from "@/composables/broadcast/broadcastService";
 
 const { getMessage, postMessage } = useBroadcastService();
 

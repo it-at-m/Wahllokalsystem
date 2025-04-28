@@ -6,8 +6,8 @@ import {
   BroadcastControllerApi,
   Configuration,
 } from "@/api/wls-clients/generated-broadcast-api";
-import { WLSError } from "@/api/WLSError";
-import { BROADCAST_SERVICE_API_URL } from "@/constants";
+import { WLSError } from "@/api/WLSError.ts";
+import { BROADCAST_SERVICE_API_URL } from "@/constants.ts";
 
 export function useBroadcastService() {
   const broadcastCA = new BroadcastControllerApi(

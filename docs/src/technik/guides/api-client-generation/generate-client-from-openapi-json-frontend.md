@@ -147,11 +147,11 @@ werden:
 
 ::: code-group
 
-```typescript [useBroadcastService.ts]
+```typescript [broadcastService.ts]
 import { BroadcastControllerApi, Configuration } from "@/api/wls-clients/generated-broadcast-api";
 import { BROADCAST_SERVICE_API_URL } from "@/constants";
 
-export function useBroadcastService() {
+export function broadcastService() {
   const broadcastCA = new BroadcastControllerApi(
     new Configuration({ basePath: BROADCAST_SERVICE_API_URL })
   );
@@ -169,7 +169,7 @@ export const BROADCAST_SERVICE_API_URL = WLS_SERVICE_API_URL + "broadcast-servic
 Die Api-Aufrufe erfolgen dann zum Beispiel so:
 
 ```typescript {10,17}
-// useBroadcastService.ts
+// broadcastService.ts
 import { BroadcastControllerApi, Configuration } from "@/api/wls-clients/generated-broadcast-api";
 import { BROADCAST_SERVICE_API_URL } from "@/constants";
 
@@ -205,7 +205,7 @@ Im Fall eines `400`er Codes in der Response, was in den meisten Fällen einer Wl
 dann wie folgt aufgerufen und weiterverarbeitet werden:
 
 ```typescript {24-28}
-// useBroadcastService.ts
+// broadcastService.ts
 import type { BroadcastMessageDTO } from "@/api/wls-clients/generated-broadcast-api";
 
 import axios from "axios";

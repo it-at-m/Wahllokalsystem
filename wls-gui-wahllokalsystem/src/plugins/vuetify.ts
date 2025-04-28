@@ -6,6 +6,7 @@ import {
   mdiDiameterVariant,
   mdiEmail,
   mdiHome,
+  mdiInformationOutline,
   mdiPlus,
   mdiPrinter,
   mdiReload,
@@ -42,6 +43,7 @@ export default createVuetify({
       invalid: mdiDiameterVariant,
       wahlbezirksartUWB: mdiVote,
       wahlbezirksartBWB: mdiEmail,
+      information: mdiInformationOutline,
     },
     sets: {
       mdi,

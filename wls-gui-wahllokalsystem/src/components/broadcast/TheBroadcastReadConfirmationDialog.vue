@@ -6,7 +6,10 @@
     data-test="dialog-show-broadcast-nachricht"
   >
     <v-card>
-      <v-card-title>Nachricht vom Wahlamt</v-card-title>
+      <v-card-title>
+        <v-icon icon="$information"></v-icon>
+        <span class="ml-2">Nachricht vom Wahlamt</span>
+      </v-card-title>
       <v-card-text>
         <div>{{ currentBroadcastNachricht?.nachricht }}</div>
         <v-checkbox
@@ -41,6 +44,7 @@ import {
   VCardTitle,
   VCheckbox,
   VDialog,
+  VIcon,
 } from "vuetify/components";
 
 import { useBroadcastStore } from "@/stores/broadcastStore.ts";

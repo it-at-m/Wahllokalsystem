@@ -152,8 +152,7 @@ Arbeitet der Client nun weiter und erfasst eine neue Eroeffnungsuhrzeit, wird un
 Daher wird mit dieser Strategie zuerst ein Request ans Backend geschickt. Ist dieser erfolgreich, werden die neuen Daten lokal gespeichert und zurückgegeben,
 ist er nicht erfolgreich, wird der ggf. vorhandene Eintrag aus der `IndexedDB` zurück gegeben.
 
-`ONLINE_ONLY`:
-Die Daten die an die folgenden URLs übermittelt werden, sind nur für das Backend relevant und werden lokal nicht gespeichert:
+#### ONLINE_ONLY
 
 - `/auth/user` (Der User des Wahlbezirks wird geladen);
 - `/broadcast/getMessage/wahlbezirkId` (Es wird nach für den Wahlbezirk vorhandenen Broadcast Informationen gesucht);

@@ -24,8 +24,8 @@
           <v-btn
             :disabled="!isMessageMarkedAsRead"
             active
-            @click="onOkClicked"
             data-test="button-ok"
+            @click="onOkClicked"
             >Ok</v-btn
           >
         </div>

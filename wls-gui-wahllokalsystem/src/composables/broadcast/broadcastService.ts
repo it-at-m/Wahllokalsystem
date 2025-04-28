@@ -39,7 +39,14 @@ export function useBroadcastService() {
   }
 
   async function deleteMessage(messageId: string) {
-    await broadcastCA.deleteMessage(messageId);
+    try {
+      await broadcastCA.deleteMessage(messageId);
+    } catch {
+      addNotification(
+        "Löschen der Broadcastnachricht ist fehlgeschlagen",
+        "Error"
+      );
+    }
   }
 
   return {

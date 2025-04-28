@@ -167,7 +167,7 @@ export default withMermaid({
               items: [
                 {
                   text: "Offlinefähigkeit-Konzept",
-                  link: `${PATH_SYSSPEC}offlinefaehigkeit-konzept.md`,
+                  link: `${PATH_SYSSPEC}frontend/offlinefaehigkeit-konzept.md`,
                 },
               ],
             },

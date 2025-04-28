@@ -3,6 +3,7 @@
     :model-value="hasBroadcastnachricht"
     max-width="400px"
     persistent
+    data-test="dialog-show-broadcast-nachricht"
   >
     <v-card>
       <v-card-title>Nachricht vom Wahlamt</v-card-title>
@@ -12,6 +13,7 @@
           v-model="isMessageMarkedAsRead"
           label="Nachricht gelesen"
           hide-details
+          data-test="checkbox-mark-as-read"
         ></v-checkbox>
       </v-card-text>
       <v-card-actions>
@@ -20,6 +22,7 @@
             :disabled="!isMessageMarkedAsRead"
             active
             @click="onOkClicked"
+            data-test="button-ok"
             >Ok</v-btn
           >
         </div>

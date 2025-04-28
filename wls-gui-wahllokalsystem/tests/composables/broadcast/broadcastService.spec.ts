@@ -101,7 +101,7 @@ describe("BroadcastService.ts", () => {
     it("should_returnNothing_when_requestWasProcessedSuccessfully", async () => {
       const wahlbezirkID = "wahlbezirkID";
 
-      mockDefinitions.getMessage.mockReturnValue(
+      mockDefinitions.deleteMessage.mockReturnValue(
         Promise.resolve({ status: 200 })
       );
 

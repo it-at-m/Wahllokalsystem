@@ -23,6 +23,7 @@ function startBroadcastMessageInterval() {
     () => loadLatestMessage(),
     broadcastMessagePollingInterval
   );
+  loadLatestMessage();
 }
 
 function stopBroadcastMessageInterval() {

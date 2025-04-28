@@ -40,6 +40,7 @@ import { computed, ref } from "vue";
 import {
   VBtn,
   VCard,
+  VCardActions,
   VCardText,
   VCardTitle,
   VCheckbox,

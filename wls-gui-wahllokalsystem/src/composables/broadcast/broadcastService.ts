@@ -52,6 +52,5 @@ export function useBroadcastService() {
   return {
     getMessage,
     deleteMessage,
-    postMessage,
   };
 }

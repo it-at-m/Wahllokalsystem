@@ -8,7 +8,7 @@ import { useBroadcastMapper } from "@/composables/broadcast/broadcastMapper.ts";
 const { prepareMessageDTO } = useBroadcastTestDataFactory();
 
 describe("broadcastMapper.ts", () => {
-  let { dtoToModel } = useBroadcastMapper();
+  const { dtoToModel } = useBroadcastMapper();
 
   describe("dtoToModel", () => {
     it("should_returnBroadcastMessage_when_dtoIsGiven", () => {

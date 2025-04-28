@@ -274,6 +274,7 @@ sequenceDiagram
     participant sender as Sender
     participant fc as Fetch-Client
     participant sw as Service-Worker
+    participant idb as IndexedDB
     participant be as Backend-Service
     
     sender->>fc: Send Request

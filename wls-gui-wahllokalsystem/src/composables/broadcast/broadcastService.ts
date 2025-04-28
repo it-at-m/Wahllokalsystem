@@ -29,7 +29,7 @@ export function useBroadcastService() {
       } else {
         return null;
       }
-    } catch (e) {
+    } catch {
       addNotification(
         "Abrufen der Broadcastnachricht ist fehlgeschlagen",
         "Error"

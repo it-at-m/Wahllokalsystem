@@ -39,9 +39,105 @@ Ergebnisse weiterer Requests zu der selben Ressource-URL führen zur Aktualisier
 
 Es gibt drei unterschiedliche Strategien, mit denen der SW umgehen kann:
 
-- [OFFLINE_FIRST](#strategy-offline-first) (default): Hat der Service Worker Daten im lokalen Speicher, werden diese Daten zurückgeliefert. Nur wenn keine Daten vorhanden sind, wird ein Request ans Backend geschickt;
-- [ONLINE_FIRST](#strategy-online-first): Es gibt Daten, die remote und nicht im Client entstehen und somit, falls verfügbar, Priorität vor dem lokalen Speicher haben;
-- [ONLINE_ONLY](#strategy-online-only): Diese Strategie wird für Operationen benötigt, die nur remote relevant sind und im lokalen Speicher nicht gespeichert werden.
+- **OFFLINE_FIRST** (default): Hat der Service Worker Daten im lokalen Speicher, werden diese Daten zurückgeliefert. Nur wenn keine Daten vorhanden sind, wird ein Request ans Backend geschickt;
+
+```mermaid
+
+sequenceDiagram
+    participant sender as Sender
+    participant fc as Fetch-Client
+    participant sw as Service-Worker
+    participant idb as IndexedDB
+    participant be as Backend-Service
+    
+    sender->>fc: Send Request
+    fc->>fc: Set Header X-WLS-SW-STRATEGY
+    fc->>+sw: Catch this fetch
+    alt X-WLS-SW-STRATEGY == "OFFLINE_FIRST"
+        sw->>+idb : Get Item        
+        idb->>-sw : ItemFound or ItemNotFound
+        alt ItemFound
+            sw->>+fc : Item
+            fc->>-sender: Item
+        end
+        alt ItemNotFound
+            sw->>+be : Get Item
+            be->>-sw: ItemFound or ItemNotFound
+            alt ItemFound
+                sw->>idb : SetItem
+                sw->>fc: Item
+            end
+            alt ItemNotFound
+                sw->>-fc : No-Content
+                fc->>sender: No-Content
+            end
+            
+        end
+    end
+```
+
+- **ONLINE_FIRST**: Es gibt Daten, die remote und nicht im Client entstehen und somit, falls verfügbar, Priorität vor dem lokalen Speicher haben;
+
+```mermaid
+sequenceDiagram
+    participant sender as Sender
+    participant fc as Fetch-Client
+    participant sw as Service-Worker
+    participant idb as IndexedDB
+    participant be as Backend-Service
+    
+    sender->>fc: Send Request
+    fc->>fc: Set Header X-WLS-SW-STRATEGY
+    fc->>+sw: Catch this fetch
+    alt X-WLS-SW-STRATEGY == "ONLINE_FIRST"
+        sw->>+be : Get Item        
+        be->>-sw : ItemFound or ItemNotFound
+        alt ItemFound
+            sw->>idb : SetItem
+            sw->>fc : Item
+            fc->>sender: Item
+        end
+        alt ItemNotFound
+            sw->>+idb : Get Item
+            idb->>-sw: ItemFound or ItemNotFound
+            alt ItemFound
+                sw->>fc: Item
+                fc->>sender: Item
+            end
+            alt ItemNotFound
+                sw->>-fc : No-Content
+                fc->>sender: No-Content
+            end
+            
+        end
+    end
+```
+
+- **ONLINE_ONLY**: Diese Strategie wird für Operationen benötigt, die nur remote relevant sind und im lokalen Speicher nicht gespeichert werden.
+
+```mermaid
+sequenceDiagram
+    participant sender as Sender
+    participant fc as Fetch-Client
+    participant sw as Service-Worker
+    participant be as Backend-Service
+    
+    sender->>fc: Send Request
+    fc->>fc: Set Header X-WLS-SW-STRATEGY
+    fc->>+sw: Catch this fetch
+    alt X-WLS-SW-STRATEGY == "ONLINE_ONLY"
+        sw->>+be : Get Item        
+        be->>-sw : ItemFound or ItemNotFound
+        alt ItemFound
+            sw->>fc : Item
+            fc->>sender: Item
+        end
+        alt ItemNotFound
+            sw->>-fc : No-Content
+            fc->>sender: No-Content
+        end        
+    end    
+```
 
 Für Beispiele für Ressourcen unter den nicht-default Strategien, siehe Kapitel [Beispieldaten pro Offline-Strategie](#beispieldaten-pro-offline-strategie).
 
@@ -68,7 +164,41 @@ In jedem der Fälle wird der SW merken, dass Anfragen ans Backend nicht mit eine
 
 Passiert dies bei lesenden Anfragen wird, wie unter [Strategien](#strategien) beschrieben, mit den in der `IndexedDB` offline-vorhandenen Daten geantwortet.
 
-Passiert dies bei schreibenden Anfragen ([siehe Post-Requests](#post-requests)), verschattet der SW den Fehler, sodass der Benutzer nichts von den Problemen sieht. Außerdem werden die soeben gesendeten Daten lokal nicht nur gespeichert, sondern auch als `dirty:true` markiert zusammen mit dem Zeitpunkt ([timestamp](#beispieleintrag-in-der-indexeddb)) zu dem die Daten zu senden versucht wurde, gespeichert.
+Passiert dies bei schreibenden Anfragen, verschattet der SW den Fehler, sodass der Benutzer nichts von den Problemen sieht. Außerdem werden die soeben gesendeten Daten lokal nicht nur gespeichert, sondern auch als `dirty:true` markiert zusammen mit dem Zeitpunkt ([timestamp](#beispieleintrag-in-der-indexeddb)) zu dem die Daten zu senden versucht wurde, gespeichert.
+
+```mermaid
+
+sequenceDiagram
+    participant sender as Sender
+    participant fc as Fetch-Client
+    participant sw as Service-Worker
+    participant idb as IndexedDB
+    participant be as Backend-Service
+    
+    sender->>fc: Send Request
+    fc->>fc: Set Header X-WLS-SW-STRATEGY
+    fc->>+sw: Catch this fetch
+    alt X-WLS-SW-STRATEGY == (null || undefined || "ONLINE_ONLY")
+        sw->>be : Request
+        be->>sw: Response
+        sw->>fc: Response
+        fc->>sender: Response        
+    end
+    alt X-WLS-SW-STRATEGY != (null || undefined || "ONLINE_ONLY")
+        sw->>+be : Post Item        
+        be->>-sw : ResponseOK or ResponseNotOk
+        alt ResponseOK
+            sw->>idb : Set Item with dirty=false
+            sw->>fc: ResponseOK
+            fc->>sender: ResponseOK
+        end
+        alt ResponseNotOk
+            sw->>idb : Set Item with dirty=true
+            sw->>fc : Fake ResponseOK
+            fc->>sender: Fake ResponseOK
+        end        
+    end    
+```
 
 ### Datensynchronisation
 
@@ -97,7 +227,7 @@ Zur Besseren Nachvollziehbarkeit wird der Synchronisierungsforschritt dem User a
 
 #### Vordergrundsynchronisation beim Ausloggen des Benutzers
 
-Wie oben [unter b beim Senden der Ergebnismeldung](#vordergrundsynchronisation-beim-senden-der-ergebnismeldung) wird auch vor dem Ausloggen eines Benutzers versucht,
+Wie oben [beim Senden der Ergebnismeldung](#vordergrundsynchronisation-beim-senden-der-ergebnismeldung) wird auch vor dem Ausloggen eines Benutzers versucht,
 falls `dirty=true`-markierte Daten in der `IndexedDB` vorhanden, diese ans Backend zu senden.
 
 ### Logout eines Benutzers
@@ -159,145 +289,3 @@ ist er nicht erfolgreich, wird der ggf. vorhandene Eintrag aus der `IndexedDB` z
 - `/broadcast/messageRead/nachrichtId` (Information, dass die Broadcast-Nachricht gelesen wurde);
 - `/monitoring/lastSeen/wahlbezirkID` (Uhrzeit der letzten Abmeldung);
 - `/monitoring/letzteAbmeldung/wahlbezirkID` (Uhrzeit der letzten Abmeldung).
-
-### Anhang
-
-#### Strategy OFFLINE-FIRST
-
-```mermaid
-
-sequenceDiagram
-    participant sender as Sender
-    participant fc as Fetch-Client
-    participant sw as Service-Worker
-    participant idb as IndexedDB
-    participant be as Backend-Service
-    
-    sender->>fc: Send Request
-    fc->>fc: Set Header X-WLS-SW-STRATEGY
-    fc->>+sw: Catch this fetch
-    alt X-WLS-SW-STRATEGY == "OFFLINE_FIRST"
-        sw->>+idb : Get Item        
-        idb->>-sw : ItemFound or ItemNotFound
-        alt ItemFound
-            sw->>+fc : Item
-            fc->>-sender: Item
-        end
-        alt ItemNotFound
-            sw->>+be : Get Item
-            be->>-sw: ItemFound or ItemNotFound
-            alt ItemFound
-                sw->>idb : SetItem
-                sw->>fc: Item
-            end
-            alt ItemNotFound
-                sw->>-fc : No-Content
-                fc->>sender: No-Content
-            end
-            
-        end
-    end    
-    
-```
-
-#### Strategy ONLINE-FIRST
-
-```mermaid
-
-sequenceDiagram
-    participant sender as Sender
-    participant fc as Fetch-Client
-    participant sw as Service-Worker
-    participant idb as IndexedDB
-    participant be as Backend-Service
-    
-    sender->>fc: Send Request
-    fc->>fc: Set Header X-WLS-SW-STRATEGY
-    fc->>+sw: Catch this fetch
-    alt X-WLS-SW-STRATEGY == "ONLINE_FIRST"
-        sw->>+be : Get Item        
-        be->>-sw : ItemFound or ItemNotFound
-        alt ItemFound
-            sw->>idb : SetItem
-            sw->>fc : Item
-            fc->>sender: Item
-        end
-        alt ItemNotFound
-            sw->>+idb : Get Item
-            idb->>-sw: ItemFound or ItemNotFound
-            alt ItemFound
-                sw->>fc: Item
-                fc->>sender: Item
-            end
-            alt ItemNotFound
-                sw->>-fc : No-Content
-                fc->>sender: No-Content
-            end
-            
-        end
-    end    
-    
-```
-
-#### Strategy ONLINE-ONLY
-
-```mermaid
-
-sequenceDiagram
-    participant sender as Sender
-    participant fc as Fetch-Client
-    participant sw as Service-Worker
-    participant be as Backend-Service
-    
-    sender->>fc: Send Request
-    fc->>fc: Set Header X-WLS-SW-STRATEGY
-    fc->>+sw: Catch this fetch
-    alt X-WLS-SW-STRATEGY == "ONLINE_ONLY"
-        sw->>+be : Get Item        
-        be->>-sw : ItemFound or ItemNotFound
-        alt ItemFound
-            sw->>fc : Item
-            fc->>sender: Item
-        end
-        alt ItemNotFound
-            sw->>-fc : No-Content
-            fc->>sender: No-Content
-        end        
-    end    
-```
-
-#### Post-Requests
-
-```mermaid
-
-sequenceDiagram
-    participant sender as Sender
-    participant fc as Fetch-Client
-    participant sw as Service-Worker
-    participant idb as IndexedDB
-    participant be as Backend-Service
-    
-    sender->>fc: Send Request
-    fc->>fc: Set Header X-WLS-SW-STRATEGY
-    fc->>+sw: Catch this fetch
-    alt X-WLS-SW-STRATEGY == (null || undefined || "ONLINE_ONLY")
-        sw->>be : Request
-        be->>sw: Response
-        sw->>fc: Response
-        fc->>sender: Response        
-    end
-    alt X-WLS-SW-STRATEGY != (null || undefined || "ONLINE_ONLY")
-        sw->>+be : Post Item        
-        be->>-sw : ResponseOK or ResponseNotOk
-        alt ResponseOK
-            sw->>idb : Set Item with dirty=false
-            sw->>fc: ResponseOK
-            fc->>sender: ResponseOK
-        end
-        alt ResponseNotOk
-            sw->>idb : Set Item with dirty=true
-            sw->>fc : Fake ResponseOK
-            fc->>sender: Fake ResponseOK
-        end        
-    end    
-```

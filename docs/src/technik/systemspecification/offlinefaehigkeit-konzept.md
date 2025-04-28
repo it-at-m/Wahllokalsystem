@@ -142,8 +142,7 @@ Arbeitet der Client nun weiter und erfasst eine neue Eroeffnungsuhrzeit, wird un
 
 ### Beispieldaten pro Offline-Strategie
 
-`ONLINE_FIRST`:
-Die Daten unter den folgenden URLs, werden aus dem Backend präferiert:
+#### ONLINE_FIRST
 
 - `/ergebnismeldung/awerte/wahlbezirkID` (AWerte);
 - `/infomanagement/konfiguration` (Konfiguration);

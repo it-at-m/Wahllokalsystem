@@ -59,8 +59,8 @@ describe("BroadcastService.ts", () => {
       expect(result).toStrictEqual(mockedMappedBroadcastMessage);
 
       expect(mockDefinitions.getMessage.mock.calls.length).toStrictEqual(1);
-      expect(mockDefinitions.getMessage.mock.calls[0]).toStrictEqual([
-        wahlbezirkID,
+      expect(mockDefinitions.getMessage.mock.calls).toStrictEqual([
+        [wahlbezirkID],
       ]);
     });
 
@@ -108,8 +108,8 @@ describe("BroadcastService.ts", () => {
       await deleteMessage(wahlbezirkID);
 
       expect(mockDefinitions.deleteMessage.mock.calls.length).toStrictEqual(1);
-      expect(mockDefinitions.deleteMessage.mock.calls[0]).toStrictEqual([
-        wahlbezirkID,
+      expect(mockDefinitions.deleteMessage.mock.calls).toStrictEqual([
+        [wahlbezirkID],
       ]);
     });
 

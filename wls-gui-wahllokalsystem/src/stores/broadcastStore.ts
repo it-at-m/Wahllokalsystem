@@ -25,8 +25,8 @@ export const useBroadcastStore = defineStore(broadcastStoreId, () => {
   async function markMessageAsReadAndLoadNextMessage() {
     if (currentBroadcastNachricht.value !== null) {
       await deleteMessage(currentBroadcastNachricht.value.id);
-      await loadLatestMessage();
     }
+    await loadLatestMessage();
   }
 
   return {

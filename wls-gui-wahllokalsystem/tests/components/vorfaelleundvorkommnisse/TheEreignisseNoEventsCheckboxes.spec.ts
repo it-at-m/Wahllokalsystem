@@ -116,4 +116,40 @@ describe("TheEreignisseNoEventsCheckboxes.vue", () => {
       });
     });
   });
+
+  describe("behavioral logic", () => {
+    it("should_updateKeineVorfaelleToTrue_when_keineVorfaelleCheckboxWasSelected", async () => {
+      const ereignisStore = useEreignisStore();
+      ereignisStore.wahlbezirkEreignisse.keineVorfaelle = false;
+      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = [];
+
+      await nextTick();
+
+      const checkboxKeineVorfaelle = wrapper.getComponent(
+        '[data-test="checkboxKeineVorfaelle"]'
+      );
+      await checkboxKeineVorfaelle.setValue(true);
+
+      expect(ereignisStore.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
+        true
+      );
+    });
+
+    it("should_updateKeineVorkommnisseToTrue_when_keineVorkommnisseCheckboxWasSelected", async () => {
+      const ereignisStore = useEreignisStore();
+      ereignisStore.wahlbezirkEreignisse.keineVorkommnisse = false;
+      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = [];
+
+      await nextTick();
+
+      const checkboxKeineVorfaelle = wrapper.getComponent(
+        '[data-test="checkboxKeineVorkommnisse"]'
+      );
+      await checkboxKeineVorfaelle.setValue(true);
+
+      expect(
+        ereignisStore.wahlbezirkEreignisse.keineVorkommnisse
+      ).toStrictEqual(true);
+    });
+  });
 });

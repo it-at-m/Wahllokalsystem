@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 
 describe("dateTimeFormatter.ts", () => {
-  const { time } = useDateTimeFormatter();
+  const { time, toCorrectTimezone } = useDateTimeFormatter();
 
   describe("time", () => {
     it("should_returnEmptyString_when_parameterIsNull", () => {
@@ -32,6 +32,23 @@ describe("dateTimeFormatter.ts", () => {
       const result = time(dateWithTwoDigitTimeParts);
 
       expect(result).toStrictEqual("04:00:03");
+    });
+  });
+
+  describe("toCorrectTimeZone", () => {
+    it.each([
+      { time: "2025-04-29T12:12:07.855Z", when: "DateString" },
+      { time: new Date("2025-04-29T12:12:07.855Z"), when: "Date" },
+    ])("should_returnDateWithCorrectTime_when_given$when", async ({ time }) => {
+      const result = toCorrectTimezone(time).toISOString();
+
+      expect(result).toContain("14:12");
+    });
+
+    it("should_returnDateWithUndefinedTime_when_inputStringIsNoDateString", () => {
+      const result = toCorrectTimezone("text");
+      expect(result).toBeInstanceOf(Date);
+      expect(isNaN(result.getTime())).toBe(true);
     });
   });
 });

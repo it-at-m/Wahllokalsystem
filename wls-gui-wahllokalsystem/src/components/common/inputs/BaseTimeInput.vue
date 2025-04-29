@@ -1,6 +1,6 @@
 <template>
   <v-text-field
-    :model-value="toHhMm(schliessungsuhrzeit)"
+    :model-value="toHhMm(modelValue)"
     :rules="[REQUIRED]"
     label="Uhrzeit"
     type="time"
@@ -21,17 +21,18 @@ import { REQUIRED } from "@/util/rules.ts";
 
 const { toHhMm } = useFormatter();
 
-const schliessungsuhrzeit = defineModel({
+const modelValue = defineModel({
   type: Object as PropType<Date>,
 });
 
 function onSchliessungsuhrzeitChanged(time: string | undefined) {
   if (time) {
     const [hours, minutes] = time.split(":").map(Number);
-    schliessungsuhrzeit.value = schliessungsuhrzeit.value ?? new Date();
-    schliessungsuhrzeit.value.setHours(hours, minutes);
+    const date = new Date();
+    date.setHours(hours, minutes);
+    modelValue.value = date;
   } else {
-    schliessungsuhrzeit.value = undefined;
+    modelValue.value = undefined;
   }
 }
 </script>

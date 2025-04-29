@@ -5,7 +5,7 @@
       Bitte geben Sie hier die Uhrzeit ein, zu der die Wahl für geschlossen
       erklärt wurde.
       <v-form v-model="schliessungsuhrzeitValidForm">
-        <base-time-input :model-value="schliessungsuhrzeit" />
+        <base-time-input v-model="schliessungsuhrzeit" />
       </v-form>
     </v-card-text>
     <v-card-actions>
@@ -35,7 +35,7 @@ import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
 const schliessungsuhrzeitValidForm: Ref<null | boolean> = ref(null);
-const schliessungsuhrzeit: Ref<Date | undefined> = ref();
+const schliessungsuhrzeit: Ref<Date | undefined> = ref(undefined);
 
 const wahlbezirkStore = useWahlbezirkStore();
 const isSaveButtonDisabled = computed(

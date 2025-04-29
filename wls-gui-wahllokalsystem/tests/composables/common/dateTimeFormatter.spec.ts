@@ -3,7 +3,8 @@ import { describe, expect, it } from "vitest";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 
 describe("dateTimeFormatter.ts", () => {
-  const { time, toCorrectTimezone } = useDateTimeFormatter();
+  const { time, toCorrectTimezone, getDateFromTimeString } =
+    useDateTimeFormatter();
 
   describe("time", () => {
     it("should_returnEmptyString_when_parameterIsNull", () => {
@@ -47,6 +48,20 @@ describe("dateTimeFormatter.ts", () => {
 
     it("should_returnDateWithUndefinedTime_when_inputStringIsNoDateString", () => {
       const result = toCorrectTimezone("text");
+      expect(result).toBeInstanceOf(Date);
+      expect(isNaN(result.getTime())).toBe(true);
+    });
+  });
+
+  describe("getDateFromTimeString", () => {
+    it("should_returnDateWithGivenTime_when_givenTimeString", () => {
+      const input = "12:12";
+      const result = getDateFromTimeString(input).toString();
+      expect(result).toContain("12:12");
+    });
+
+    it("should_throwError_when_inputStringIsNoTimeString", () => {
+      const result = getDateFromTimeString("text");
       expect(result).toBeInstanceOf(Date);
       expect(isNaN(result.getTime())).toBe(true);
     });

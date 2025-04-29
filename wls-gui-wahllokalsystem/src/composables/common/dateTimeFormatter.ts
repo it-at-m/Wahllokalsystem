@@ -34,7 +34,14 @@ export function useDateTimeFormatter() {
     return mappedUhrzeit;
   };
 
-  return { time, toHhMm, toCorrectTimezone };
+  const getDateFromTimeString = function (timeString: string): Date {
+    const [hours, minutes] = timeString.split(":").map(Number);
+    const date = new Date();
+    date.setHours(hours, minutes);
+    return date;
+  };
+
+  return { time, toHhMm, toCorrectTimezone, getDateFromTimeString };
 }
 
 function leftPadTwoDigitsWithZero(number: number): string {

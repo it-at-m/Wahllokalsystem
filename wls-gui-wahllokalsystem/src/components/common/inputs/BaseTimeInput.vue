@@ -19,7 +19,7 @@ import { VTextField } from "vuetify/components";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { REQUIRED } from "@/util/rules.ts";
 
-const { toHhMm } = useDateTimeFormatter();
+const { toHhMm, getDateFromTimeString } = useDateTimeFormatter();
 
 const modelValue = defineModel({
   type: Object as PropType<Date>,
@@ -27,10 +27,7 @@ const modelValue = defineModel({
 
 function onSchliessungsuhrzeitChanged(time: string | undefined) {
   if (time) {
-    const [hours, minutes] = time.split(":").map(Number);
-    const date = new Date();
-    date.setHours(hours, minutes);
-    modelValue.value = date;
+    modelValue.value = getDateFromTimeString(time);
   } else {
     modelValue.value = undefined;
   }

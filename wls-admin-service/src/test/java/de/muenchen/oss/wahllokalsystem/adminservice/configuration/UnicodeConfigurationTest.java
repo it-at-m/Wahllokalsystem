@@ -66,8 +66,7 @@ class UnicodeConfigurationTest {
         val wahlenRequest = getAllServeEvents(ServeEventQuery.forStubMapping(wahlenStubbing)).get(0);
         List<WahlDTO> wahlenRequestList = objectMapper.readValue(
                 wahlenRequest.getRequest().getBody(),
-                objectMapper.getTypeFactory().constructCollectionType(List.class, WahlDTO.class)
-        );
+                objectMapper.getTypeFactory().constructCollectionType(List.class, WahlDTO.class));
         val requestedWahlenDTO = wahlenRequestList.get(0);
 
         val expectedWahlenRequestBodyAsDTO = new de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.model.WahlDTO();

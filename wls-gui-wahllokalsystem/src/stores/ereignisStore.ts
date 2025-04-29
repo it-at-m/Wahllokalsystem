@@ -116,7 +116,7 @@ export const useEreignisStore = defineStore(storeID, () => {
   }
 
   function _getArtOfNewEreignisse(): EreignisartEnum {
-    return schliessungsuhrzeit === null ? "VORFALL" : "VORKOMMNIS";
+    return schliessungsuhrzeit.value === null ? "VORFALL" : "VORKOMMNIS";
   }
 
   function _hasEintragOfEreignisart(ereginisart: EreignisartEnum): boolean {

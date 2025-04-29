@@ -1,9 +1,11 @@
-import { createPinia, setActivePinia } from "pinia";
+import { createTestingPinia } from "@pinia/testing";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { User } from "@/types/User";
+import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -22,21 +24,193 @@ const mockedNow = new Date();
 
 describe("ereignisStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useEreignisStore>;
+  let wahlbezirkStore: ReturnType<typeof useWahlbezirkStore>;
 
   beforeEach(() => {
     // creates a fresh pinia and makes it active
     // so it's automatically picked up by any useStore() call
     // without having to pass it to it: `useStore(pinia)`
-    setActivePinia(createPinia());
+    const testPinia = createTestingPinia({
+      stubActions: false,
+      createSpy: vi.fn,
+    });
+    unitUnderTest = useEreignisStore(testPinia);
+    wahlbezirkStore = useWahlbezirkStore(testPinia);
+
     vi.useFakeTimers({
       now: mockedNow,
     });
-    unitUnderTest = useEreignisStore();
   });
 
   afterEach(() => {
     vi.clearAllMocks();
     vi.useRealTimers();
+  });
+
+  describe("areKeineEreignisseFlagsValid", () => {
+    describe("should_returnTrue_when_ereignisseMatchingTheirNoDataFlag", () => {
+      it.each([
+        {
+          testcaseName: "hasVorfaelle=true && hasVorkommnisse=true",
+          data: {
+            vorfaelle: true,
+            vorkommnisse: true,
+          },
+        },
+        {
+          testcaseName: "hasVorfaelle=false && hasVorkommnisse=true",
+          data: {
+            vorfaelle: false,
+            vorkommnisse: true,
+          },
+        },
+        {
+          testcaseName: "hasVorfaelle=true && hasVorkommnisse=false",
+          data: {
+            vorfaelle: true,
+            vorkommnisse: false,
+          },
+        },
+        {
+          testcaseName: "hasVorfaelle=false && hasVorkommnisse=false",
+          data: {
+            vorfaelle: false,
+            vorkommnisse: false,
+          },
+        },
+      ])("$testcaseName", ({ data }) => {
+        // @ts-expect-error: cannot set readonly
+        unitUnderTest.hasVorfaelle = data.vorfaelle;
+        unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = !data.vorfaelle;
+
+        // @ts-expect-error: cannot set readonly
+        unitUnderTest.hasVorkoemmnisse = data.vorkommnisse;
+        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse =
+          !data.vorkommnisse;
+
+        expect(unitUnderTest.areKeineEreignisseFlagsValid).toStrictEqual(true);
+      });
+    });
+
+    describe("should_returnFalse_when_ereignisseNotMatchingTheirNoDataFlag", () => {
+      it.each([
+        {
+          testcaseName: "hasVorfaelle=true && hasVorkommnisse=true",
+          data: {
+            vorfaelle: true,
+            vorkommnisse: true,
+          },
+        },
+        {
+          testcaseName: "hasVorfaelle=false && hasVorkommnisse=true",
+          data: {
+            vorfaelle: false,
+            vorkommnisse: true,
+          },
+        },
+        {
+          testcaseName: "hasVorfaelle=true && hasVorkommnisse=false",
+          data: {
+            vorfaelle: true,
+            vorkommnisse: false,
+          },
+        },
+        {
+          testcaseName: "hasVorfaelle=false && hasVorkommnisse=false",
+          data: {
+            vorfaelle: false,
+            vorkommnisse: false,
+          },
+        },
+      ])("$testcaseName", ({ data }) => {
+        // @ts-expect-error: cannot set readonly
+        unitUnderTest.hasVorfaelle = data.vorfaelle;
+        unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = data.vorfaelle;
+
+        // @ts-expect-error: cannot set readonly
+        unitUnderTest.hasVorkoemmnisse = data.vorkommnisse;
+        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse =
+          data.vorkommnisse;
+
+        expect(unitUnderTest.areKeineEreignisseFlagsValid).toStrictEqual(false);
+      });
+    });
+  });
+
+  describe("hasVorfaelle", () => {
+    it("should_returnTrue_when_ereignisEintraegeHasOneEintragOfTypVorfall", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
+        { ereignisart: "VORFALL" },
+      ];
+
+      expect(unitUnderTest.hasVorfaelle).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_ereignisEintraegeHasMoreThanOneOfTypeVorfall", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
+        { ereignisart: "VORFALL" },
+        { ereignisart: "VORKOMMNIS" },
+        { ereignisart: "VORFALL" },
+        { ereignisart: "VORFALL" },
+      ];
+
+      expect(unitUnderTest.hasVorfaelle).toStrictEqual(true);
+    });
+
+    it("should_returnFalse_when_ereignisEintraegeHasNonOfTypeVorfall", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
+        { ereignisart: "VORKOMMNIS" },
+        { ereignisart: "VORKOMMNIS" },
+        { ereignisart: "VORKOMMNIS" },
+        { ereignisart: "VORKOMMNIS" },
+      ];
+
+      expect(unitUnderTest.hasVorfaelle).toStrictEqual(false);
+    });
+
+    it("should_returnFalse_when_ereignisEintraegeIsUndefined", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = undefined;
+
+      expect(unitUnderTest.hasVorfaelle).toStrictEqual(false);
+    });
+  });
+
+  describe("hasVorkommnisse", () => {
+    it("should_returnTrue_when_ereignisEintraegeHasOneEintragOfTypVORKOMMNIS", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
+        { ereignisart: "VORKOMMNIS" },
+      ];
+
+      expect(unitUnderTest.hasVorkoemmnisse).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_ereignisEintraegeHasMoreThanOneOfTypeVORKOMMNIS", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
+        { ereignisart: "VORKOMMNIS" },
+        { ereignisart: "VORFALL" },
+        { ereignisart: "VORKOMMNIS" },
+        { ereignisart: "VORKOMMNIS" },
+      ];
+
+      expect(unitUnderTest.hasVorkoemmnisse).toStrictEqual(true);
+    });
+
+    it("should_returnFalse_when_ereignisEintraegeHasNonOfTypeVORKOMMNIS", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
+        { ereignisart: "VORFALL" },
+        { ereignisart: "VORFALL" },
+        { ereignisart: "VORFALL" },
+        { ereignisart: "VORFALL" },
+      ];
+
+      expect(unitUnderTest.hasVorkoemmnisse).toStrictEqual(false);
+    });
+
+    it("should_returnFalse_when_ereignisEintraegeIsUndefined", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = undefined;
+
+      expect(unitUnderTest.hasVorkoemmnisse).toStrictEqual(false);
+    });
   });
 
   describe("deleteEreignisByIndex", () => {

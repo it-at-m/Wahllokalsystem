@@ -30,7 +30,7 @@ const isCheckboxNoVorfaelleDisabled = computed(
 );
 const isCheckboxNoVorkommnisseDisabled = computed(
   () =>
-    ereignisStore.hasVorkoemmnisse ||
+    ereignisStore.hasVorkommnisse ||
     wahlbezirkStore.schliessungsuhrzeit === null
 );
 </script>

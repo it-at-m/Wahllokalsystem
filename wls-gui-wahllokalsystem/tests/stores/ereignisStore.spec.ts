@@ -84,7 +84,7 @@ describe("ereignisStore.ts", () => {
         unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = !data.vorfaelle;
 
         // @ts-expect-error: cannot set readonly
-        unitUnderTest.hasVorkoemmnisse = data.vorkommnisse;
+        unitUnderTest.hasVorkommnisse = data.vorkommnisse;
         unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse =
           !data.vorkommnisse;
 
@@ -128,7 +128,7 @@ describe("ereignisStore.ts", () => {
         unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = data.vorfaelle;
 
         // @ts-expect-error: cannot set readonly
-        unitUnderTest.hasVorkoemmnisse = data.vorkommnisse;
+        unitUnderTest.hasVorkommnisse = data.vorkommnisse;
         unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse =
           data.vorkommnisse;
 
@@ -181,7 +181,7 @@ describe("ereignisStore.ts", () => {
         { ereignisart: "VORKOMMNIS" },
       ];
 
-      expect(unitUnderTest.hasVorkoemmnisse).toStrictEqual(true);
+      expect(unitUnderTest.hasVorkommnisse).toStrictEqual(true);
     });
 
     it("should_returnTrue_when_ereignisEintraegeHasMoreThanOneOfTypeVORKOMMNIS", () => {
@@ -192,7 +192,7 @@ describe("ereignisStore.ts", () => {
         { ereignisart: "VORKOMMNIS" },
       ];
 
-      expect(unitUnderTest.hasVorkoemmnisse).toStrictEqual(true);
+      expect(unitUnderTest.hasVorkommnisse).toStrictEqual(true);
     });
 
     it("should_returnFalse_when_ereignisEintraegeHasNonOfTypeVORKOMMNIS", () => {
@@ -203,13 +203,13 @@ describe("ereignisStore.ts", () => {
         { ereignisart: "VORFALL" },
       ];
 
-      expect(unitUnderTest.hasVorkoemmnisse).toStrictEqual(false);
+      expect(unitUnderTest.hasVorkommnisse).toStrictEqual(false);
     });
 
     it("should_returnFalse_when_ereignisEintraegeIsUndefined", () => {
       unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = undefined;
 
-      expect(unitUnderTest.hasVorkoemmnisse).toStrictEqual(false);
+      expect(unitUnderTest.hasVorkommnisse).toStrictEqual(false);
     });
   });
 

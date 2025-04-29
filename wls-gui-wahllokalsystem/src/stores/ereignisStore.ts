@@ -27,7 +27,7 @@ export const useEreignisStore = defineStore(storeID, () => {
   const areKeineEreignisseFlagsValid = computed(
     () =>
       hasVorfaelle.value !== wahlbezirkEreignisse.value.keineVorfaelle &&
-      hasVorkoemmnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse
+      hasVorkommnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse
   );
   const hasVorfaelle = computed(
     () =>
@@ -35,7 +35,7 @@ export const useEreignisStore = defineStore(storeID, () => {
         (eintrag) => eintrag.ereignisart === "VORFALL"
       ) === true
   );
-  const hasVorkoemmnisse = computed(
+  const hasVorkommnisse = computed(
     () =>
       wahlbezirkEreignisse.value.ereigniseintraege?.some(
         (eintrag) => eintrag.ereignisart === "VORKOMMNIS"
@@ -138,7 +138,7 @@ export const useEreignisStore = defineStore(storeID, () => {
     areKeineEreignisseFlagsValid,
     wahlbezirkEreignisse,
     hasVorfaelle,
-    hasVorkoemmnisse,
+    hasVorkommnisse,
     deleteEreignisByIndex,
     loadEreignisse,
     sendEreignisse,

@@ -1,31 +1,32 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.configuration.nfcconverter;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
-import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.getAllServeEvents;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static de.muenchen.oss.wahllokalsystem.adminservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.adminservice.TestConstants.SPRING_TEST_PROFILE;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.admin.model.ServeEventQuery;
+import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.adminservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.adminservice.rest.wahlen.WahlDTO;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.val;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -40,50 +41,39 @@ class NfcFilterTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public static final String BUSINESS_ACTIONS_WAHLEN = "/businessActions/wahlen/";
-
     @Test
     void testNfcFilter() throws Exception {
-        val wahltagID = "wahltagID1";
-        val wahlID = "é";
+        val wahlID = "o\u0308";
 
-        stubFor(WireMock.post("/wahlen/wahltagID1")
-                .withRequestBody(equalToJson("""
-                        {
-                            "wahlID": "%s"
-                        }
-                        """.formatted(wahlID)))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withStatus(400)));
+        val wahlenStubbing = stubFor(
+                WireMock.post("/businessActions/wahlen/wahltagID1").willReturn(createWireMockResponse(HttpStatus.OK)));
 
         List<de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.model.WahlDTO> wahlenDTOListEai = new ArrayList<>();
-        val wahl1 = new de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.model.WahlDTO();
-        wahl1.wahlID(wahlID);
-        wahlenDTOListEai.add(wahl1);
+        val wahlenDTO = new de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.model.WahlDTO();
+        wahlenDTO.wahlID(wahlID);
+        wahlenDTOListEai.add(wahlenDTO);
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(BUSINESS_ACTIONS_WAHLEN + wahltagID)
+        val request = MockMvcRequestBuilders.post("/businessActions/wahlen/wahltagID1").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(wahlenDTOListEai));
+                .content(objectMapper.writeValueAsString(wahlenDTOListEai));
 
-        api.perform(request)
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()").value(1));
+        api.perform(request).andExpect(status().isOk());
 
-        WireMock.verify(postRequestedFor(urlEqualTo("/wahlen/" + wahltagID))
-                .withRequestBody(equalToJson("""
-                        {
-                            "wahlID": "%s"
-                        }
-                        """.formatted(wahlID))));
+        val wahlenRequest = getAllServeEvents(ServeEventQuery.forStubMapping(wahlenStubbing)).get(0);
+        List<WahlDTO> wahlenRequestList = objectMapper.readValue(
+                wahlenRequest.getRequest().getBody(),
+                objectMapper.getTypeFactory().constructCollectionType(List.class, WahlDTO.class)
+        );
+        val requestedWahlenDTO = wahlenRequestList.get(0);
+
+        val expectedWahlenRequestBodyAsDTO = new de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.model.WahlDTO();
+        expectedWahlenRequestBodyAsDTO.wahlID("ö");
+
+        Assertions.assertThat(requestedWahlenDTO).usingRecursiveComparison().ignoringActualNullFields().isEqualTo(expectedWahlenRequestBodyAsDTO);
     }
 
-    private String asJsonString(final Object obj) {
-        try {
-            return objectMapper.writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    private ResponseDefinitionBuilder createWireMockResponse(final HttpStatus responseStatus) {
+        return aResponse()
+                .withStatus(responseStatus.value());
     }
 }

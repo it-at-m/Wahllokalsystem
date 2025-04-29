@@ -16,10 +16,10 @@ import type { PropType } from "vue";
 
 import { VTextField } from "vuetify/components";
 
-import { useFormatter } from "@/composables/common/formatter.ts";
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { REQUIRED } from "@/util/rules.ts";
 
-const { toHhMm } = useFormatter();
+const { toHhMm } = useDateTimeFormatter();
 
 const modelValue = defineModel({
   type: Object as PropType<Date>,

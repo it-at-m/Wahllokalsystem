@@ -1,4 +1,4 @@
-export function useFormatter() {
+export function useDateTimeFormatter() {
   const NO_VALUE_DEFAULT = "";
   const TIME_FIELD_SEPARATOR = ":";
 
@@ -25,9 +25,18 @@ export function useFormatter() {
     return `${hour}${TIME_FIELD_SEPARATOR}${minute}`;
   };
 
-  function leftPadTwoDigitsWithZero(number: number): string {
-    return `${number}`.padStart(2, "0");
-  }
+  const toCorrectTimezone = function (date: Date | string): Date {
+    const mappedUhrzeit = new Date(date);
+    mappedUhrzeit.setHours(
+      mappedUhrzeit.getHours() -
+        Math.trunc(mappedUhrzeit.getTimezoneOffset() / 60)
+    );
+    return mappedUhrzeit;
+  };
 
-  return { time, toHhMm };
+  return { time, toHhMm, toCorrectTimezone };
+}
+
+function leftPadTwoDigitsWithZero(number: number): string {
+  return `${number}`.padStart(2, "0");
 }

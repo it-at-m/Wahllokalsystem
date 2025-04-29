@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { useFormatter } from "@/composables/common/formatter";
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 
-describe("formatter.ts", () => {
-  const { time } = useFormatter();
+describe("dateTimeFormatter.ts", () => {
+  const { time } = useDateTimeFormatter();
 
   describe("time", () => {
     it("should_returnEmptyString_when_parameterIsNull", () => {

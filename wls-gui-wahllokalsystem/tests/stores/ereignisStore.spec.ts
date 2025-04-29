@@ -266,6 +266,46 @@ describe("ereignisStore.ts", () => {
         unitUnderTest.wahlbezirkEreignisse.ereigniseintraege
       ).toStrictEqual(ereigniseintraege);
     });
+
+    it("should_setKeineVorfaelleTrue_when_lastVorfallWasDeleted", () => {
+      const ereigniseintraege = [
+        { beschreibung: "1", ereignisart: EreignisartEnum.Vorfall },
+        { beschreibung: "2", ereignisart: EreignisartEnum.Vorkommnis },
+        { beschreibung: "3", ereignisart: EreignisartEnum.Vorkommnis },
+        { beschreibung: "4", ereignisart: EreignisartEnum.Vorkommnis },
+      ];
+      unitUnderTest.wahlbezirkEreignisse = {
+        wahlbezirkID: "wahlbezirkID",
+        keineVorfaelle: false,
+        ereigniseintraege: Array.from(ereigniseintraege),
+      };
+
+      unitUnderTest.deleteEreignisByIndex(0);
+
+      expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
+        true
+      );
+    });
+
+    it("should_setKeineVorkommnisseTrue_when_lastVorkommnisWasDeleted", () => {
+      const ereigniseintraege = [
+        { beschreibung: "1", ereignisart: EreignisartEnum.Vorkommnis },
+        { beschreibung: "2", ereignisart: EreignisartEnum.Vorfall },
+        { beschreibung: "3", ereignisart: EreignisartEnum.Vorfall },
+        { beschreibung: "4", ereignisart: EreignisartEnum.Vorfall },
+      ];
+      unitUnderTest.wahlbezirkEreignisse = {
+        wahlbezirkID: "wahlbezirkID",
+        keineVorkommnisse: false,
+        ereigniseintraege: Array.from(ereigniseintraege),
+      };
+
+      unitUnderTest.deleteEreignisByIndex(0);
+
+      expect(
+        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse
+      ).toStrictEqual(true);
+    });
   });
 
   describe("loadEreignisse", () => {
@@ -371,6 +411,36 @@ describe("ereignisStore.ts", () => {
       expect(unitUnderTest.wahlbezirkEreignisse.ereigniseintraege).toHaveLength(
         1
       );
+    });
+
+    it("should_addEreignisOfTypVorfall_when_schliessungsuhrzeitIsNull", () => {
+      wahlbezirkStore.schliessungsuhrzeit = null;
+
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [];
+      unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = true;
+      unitUnderTest.addEreignis();
+
+      expect(
+        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege[0].ereignisart
+      ).toStrictEqual("VORFALL");
+      expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
+        false
+      );
+    });
+
+    it("should_addEreignisOfTypVorkommnis_when_schliessungsuhrzeitIsNotNull", () => {
+      wahlbezirkStore.schliessungsuhrzeit = "current time";
+
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [];
+      unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse = true;
+      unitUnderTest.addEreignis();
+
+      expect(
+        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege[0].ereignisart
+      ).toStrictEqual("VORKOMMNIS");
+      expect(
+        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse
+      ).toStrictEqual(false);
     });
   });
 

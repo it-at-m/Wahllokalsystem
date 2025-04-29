@@ -1,7 +1,7 @@
 import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
-import { defineStore, storeToRefs } from "pinia";
+import { acceptHMRUpdate, defineStore, storeToRefs } from "pinia";
 import { ref } from "vue";
 
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
@@ -26,6 +26,31 @@ export const useEreignisStore = defineStore(storeID, () => {
       beschreibung: "",
       ereignisart: "VORFALL",
     });
+  }
+
+  function deleteEreignisByIndex(index: number) {
+    wahlbezirkEreignisse.value.ereigniseintraege?.splice(index, 1);
+  }
+
+  function updateUhrzeitByIndex(uhrzeit: String | undefined, index: number) {
+    if (wahlbezirkEreignisse.value.ereigniseintraege) {
+      const ereignisToChange =
+        wahlbezirkEreignisse.value.ereigniseintraege[index];
+      if (ereignisToChange == undefined) {
+        return;
+      }
+
+      if (uhrzeit) {
+        const [hours, minutes] = uhrzeit.split(":").map(Number);
+        const currentUhrzeit = ereignisToChange.uhrzeit
+          ? new Date(ereignisToChange.uhrzeit)
+          : new Date();
+        currentUhrzeit.setHours(hours, minutes);
+        ereignisToChange.uhrzeit = currentUhrzeit;
+      } else {
+        ereignisToChange.uhrzeit = undefined;
+      }
+    }
   }
 
   async function loadEreignisse() {
@@ -62,9 +87,11 @@ export const useEreignisStore = defineStore(storeID, () => {
 
   return {
     wahlbezirkEreignisse,
+    deleteEreignisByIndex,
     loadEreignisse,
     sendEreignisse,
     addEreignis,
+    updateUhrzeitByIndex,
     error,
   };
 });
@@ -77,4 +104,8 @@ function sortEreignisse(ereigniseintraege: Ereignis[] | undefined) {
 
     return timeA - timeB;
   });
+}
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useEreignisStore, import.meta.hot));
 }

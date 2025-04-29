@@ -42,6 +42,7 @@ describe("TheEreignisseRow.vue", () => {
         plugins: [
           createTestingPinia({
             createSpy: vi.fn,
+            stubActions: false,
           }),
           vuetify,
         ],
@@ -158,6 +159,7 @@ describe("TheEreignisseRow.vue", () => {
       expect(textfield.exists()).toBe(true); // Überprüfen, ob das Textfeld existiert
       await textfield.setValue(undefined);
 
+      await nextTick();
       await nextTick();
 
       // Überprüfen, ob die Fehlermeldung angezeigt wird

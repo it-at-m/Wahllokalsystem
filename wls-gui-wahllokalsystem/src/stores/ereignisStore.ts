@@ -1,11 +1,13 @@
 import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
+import type { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 import { acceptHMRUpdate, defineStore, storeToRefs } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 const ereignisService = useEreignisService();
@@ -16,20 +18,48 @@ export const useEreignisStore = defineStore(storeID, () => {
   const error = ref<string | null>(null);
 
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
+  const { schliessungsuhrzeit } = storeToRefs(useWahlbezirkStore());
+
   const wahlbezirkEreignisse = ref<WahlbezirkEreignisse>(
     WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse()
   );
 
+  const areKeineEreignisseFlagsValid = computed(
+    () =>
+      hasVorfaelle.value !== wahlbezirkEreignisse.value.keineVorfaelle &&
+      hasVorkoemmnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse
+  );
+  const hasVorfaelle = computed(
+    () =>
+      wahlbezirkEreignisse.value.ereigniseintraege?.some(
+        (eintrag) => eintrag.ereignisart === "VORFALL"
+      ) === true
+  );
+  const hasVorkoemmnisse = computed(
+    () =>
+      wahlbezirkEreignisse.value.ereigniseintraege?.some(
+        (eintrag) => eintrag.ereignisart === "VORKOMMNIS"
+      ) === true
+  );
+
   function addEreignis() {
+    const newEreignisEreignisart = _getArtOfNewEreignisse();
     wahlbezirkEreignisse.value.ereigniseintraege?.push({
       uhrzeit: new Date(),
       beschreibung: "",
-      ereignisart: "VORFALL",
+      ereignisart: newEreignisEreignisart,
     });
+
+    if (newEreignisEreignisart === "VORFALL") {
+      wahlbezirkEreignisse.value.keineVorfaelle = false;
+    } else {
+      wahlbezirkEreignisse.value.keineVorkommnisse = false;
+    }
   }
 
   function deleteEreignisByIndex(index: number) {
     wahlbezirkEreignisse.value.ereigniseintraege?.splice(index, 1);
+    _updateKeineFlagsOfEreignisseBaseOnRemovedEreignisart();
   }
 
   function updateUhrzeitByIndex(uhrzeit: string | undefined, index: number) {
@@ -85,8 +115,30 @@ export const useEreignisStore = defineStore(storeID, () => {
     }
   }
 
+  function _getArtOfNewEreignisse(): EreignisartEnum {
+    return schliessungsuhrzeit === null ? "VORFALL" : "VORKOMMNIS";
+  }
+
+  function _hasEintragOfEreignisart(ereginisart: EreignisartEnum): boolean {
+    return (
+      wahlbezirkEreignisse.value.ereigniseintraege?.some(
+        (eintrag) => eintrag.ereignisart === ereginisart
+      ) === true
+    );
+  }
+
+  function _updateKeineFlagsOfEreignisseBaseOnRemovedEreignisart() {
+    wahlbezirkEreignisse.value.keineVorkommnisse =
+      !_hasEintragOfEreignisart("VORKOMMNIS");
+    wahlbezirkEreignisse.value.keineVorfaelle =
+      !_hasEintragOfEreignisart("VORFALL");
+  }
+
   return {
+    areKeineEreignisseFlagsValid,
     wahlbezirkEreignisse,
+    hasVorfaelle,
+    hasVorkoemmnisse,
     deleteEreignisByIndex,
     loadEreignisse,
     sendEreignisse,

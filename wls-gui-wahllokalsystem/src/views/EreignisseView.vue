@@ -1,5 +1,9 @@
 <template>
   <v-card>
+    <v-card-title>Eingetretene Ereignisse </v-card-title>
+    <v-card-text>
+      <the-ereignisse-no-events-checkboxes></the-ereignisse-no-events-checkboxes>
+    </v-card-text>
     <v-card-title>Dokumentation eingetretener Ereignisse</v-card-title>
     <v-card-text>
       <v-form v-model="ereignisseValidForm">
@@ -34,6 +38,7 @@ import {
 } from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import TheEreignisseNoEventsCheckboxes from "@/components/vorfaelleundvorkommnisse/TheEreignisseNoEventsCheckboxes.vue";
 import TheEreignisseRow from "@/components/vorfaelleundvorkommnisse/TheEreignisseRow.vue";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 
@@ -41,7 +46,13 @@ const ereignisStore = useEreignisStore();
 
 const ereignisseValidForm: Ref<null | boolean> = ref(null);
 
-const isSaveButtonDisabled = computed(() => ereignisseValidForm.value !== true);
+const isEreignisseFormInvalid = computed(
+  () => ereignisseValidForm.value !== true
+);
+const isSaveButtonDisabled = computed(
+  () =>
+    isEreignisseFormInvalid.value || !ereignisStore.areKeineEreignisseFlagsValid
+);
 
 function onAddEreignisClicked() {
   ereignisStore.addEreignis();

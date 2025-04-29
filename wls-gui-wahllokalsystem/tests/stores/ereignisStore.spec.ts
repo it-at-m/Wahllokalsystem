@@ -39,6 +39,61 @@ describe("ereignisStore.ts", () => {
     vi.useRealTimers();
   });
 
+  describe("deleteEreignisByIndex", () => {
+    it("should_removeItemOfIndex_when_hasEintraegeAndIndexIsInRange", () => {
+      unitUnderTest.wahlbezirkEreignisse = {
+        wahlbezirkID: "wahlbezirkID",
+        ereigniseintraege: [
+          { beschreibung: "1" },
+          { beschreibung: "2" },
+          { beschreibung: "3" },
+          { beschreibung: "4" },
+        ],
+      };
+
+      unitUnderTest.deleteEreignisByIndex(1);
+
+      expect(
+        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege
+      ).toStrictEqual([
+        { beschreibung: "1" },
+        { beschreibung: "3" },
+        { beschreibung: "4" },
+      ]);
+    });
+
+    it("should_doNothing_when_statesEintraegeAreUndefined", () => {
+      unitUnderTest.wahlbezirkEreignisse = {
+        wahlbezirkID: "wahlbezirkID",
+      };
+
+      unitUnderTest.deleteEreignisByIndex(1);
+
+      expect(
+        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege
+      ).toBeUndefined();
+    });
+
+    it("should_doNothing_when_indexIsOutOfRange", () => {
+      const ereigniseintraege = [
+        { beschreibung: "1" },
+        { beschreibung: "2" },
+        { beschreibung: "3" },
+        { beschreibung: "4" },
+      ];
+      unitUnderTest.wahlbezirkEreignisse = {
+        wahlbezirkID: "wahlbezirkID",
+        ereigniseintraege: Array.from(ereigniseintraege),
+      };
+
+      unitUnderTest.deleteEreignisByIndex(ereigniseintraege.length);
+
+      expect(
+        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege
+      ).toStrictEqual(ereigniseintraege);
+    });
+  });
+
   describe("loadEreignisse", () => {
     it("should_loadWahlbezirkEreignisse_when_userHasWahlbezirkID", async () => {
       const userStore = useUserStore();
@@ -142,6 +197,59 @@ describe("ereignisStore.ts", () => {
       expect(unitUnderTest.wahlbezirkEreignisse.ereigniseintraege).toHaveLength(
         1
       );
+    });
+  });
+
+  describe("updateUhrzeitByIndex", () => {
+    it("should_doNothing_when_noEreignisEintraegeAreGiven", () => {
+      unitUnderTest.wahlbezirkEreignisse = {
+        wahlbezirkID: "wahlbezirkID",
+      };
+
+      unitUnderTest.updateUhrzeitByIndex("12:12", 1);
+
+      expect(
+        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege
+      ).toBeUndefined();
+    });
+
+    it("should_doNothing_when_indexIsOutOfRange", () => {
+      const dateAsString = "2025-04-29T09:33:42";
+      const eintragNotToChange = { uhrzeit: new Date(dateAsString) };
+      unitUnderTest.wahlbezirkEreignisse = {
+        wahlbezirkID: "wahlbezirkID",
+        ereigniseintraege: [eintragNotToChange],
+      };
+
+      unitUnderTest.updateUhrzeitByIndex("12:12", 1);
+
+      expect(eintragNotToChange.uhrzeit).toEqual(new Date(dateAsString));
+    });
+
+    it("should_updateUhrzeit_when_uhrzeitIsGiven", () => {
+      const dateAsString = "2025-04-29T09:33:42";
+      const eintragToChange = { uhrzeit: new Date(dateAsString) };
+      unitUnderTest.wahlbezirkEreignisse = {
+        wahlbezirkID: "wahlbezirkID",
+        ereigniseintraege: [eintragToChange],
+      };
+
+      unitUnderTest.updateUhrzeitByIndex("12:12", 0);
+
+      expect(eintragToChange.uhrzeit).toEqual(new Date("2025-04-29T12:12:42"));
+    });
+
+    it("should_setUhrzeitUndefined_when_uhrzeitIsUndefined", () => {
+      const dateAsString = "2025-04-29T09:33:42";
+      const eintragToChange = { uhrzeit: new Date(dateAsString) };
+      unitUnderTest.wahlbezirkEreignisse = {
+        wahlbezirkID: "wahlbezirkID",
+        ereigniseintraege: [eintragToChange],
+      };
+
+      unitUnderTest.updateUhrzeitByIndex(undefined, 0);
+
+      expect(eintragToChange.uhrzeit).toBeUndefined();
     });
   });
 });

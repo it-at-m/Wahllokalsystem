@@ -32,7 +32,7 @@ export const useEreignisStore = defineStore(storeID, () => {
     wahlbezirkEreignisse.value.ereigniseintraege?.splice(index, 1);
   }
 
-  function updateUhrzeitByIndex(uhrzeit: String | undefined, index: number) {
+  function updateUhrzeitByIndex(uhrzeit: string | undefined, index: number) {
     if (wahlbezirkEreignisse.value.ereigniseintraege) {
       const ereignisToChange =
         wahlbezirkEreignisse.value.ereigniseintraege[index];

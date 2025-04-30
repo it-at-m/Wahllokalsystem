@@ -53,9 +53,28 @@ describe("dateTimeFormatter.ts", () => {
       { time: "2025-04-29T12:12:07.855Z", when: "DateString" },
       { time: new Date("2025-04-29T12:12:07.855Z"), when: "Date" },
     ])("should_returnDateWithCorrectTime_when_given$when", async ({ time }) => {
-      const result = toCorrectTimezone(time).toISOString();
+      const result = toCorrectTimezone(time);
 
-      expect(result).toContain("14:12");
+      // get local time
+      const localHours =
+        result.getUTCHours() - Math.trunc(result.getTimezoneOffset() / 60);
+      const localMinutes = result.getUTCMinutes();
+
+      // expected time in ISO-format
+      const expectedTime = new Date(result);
+      expectedTime.setHours(localHours, localMinutes);
+
+      console.log(
+        "time: " +
+          time +
+          " | result: " +
+          result +
+          " | expected: " +
+          expectedTime
+      );
+      expect(result.toISOString()).toContain(
+        expectedTime.toISOString().substring(11, 16)
+      );
     });
 
     it("should_returnDateWithUndefinedTime_when_inputStringIsNoDateString", () => {

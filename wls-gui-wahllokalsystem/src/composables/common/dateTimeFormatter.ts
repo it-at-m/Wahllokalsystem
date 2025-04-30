@@ -35,7 +35,21 @@ export function useDateTimeFormatter() {
   };
 
   const getDateFromTimeString = function (timeString: string): Date {
+    // Validate time string format (HH:MM)
+    if (!timeString || !/^\d{1,2}:\d{1,2}$/.test(timeString)) {
+      return new Date(NaN);
+    }
     const [hours, minutes] = timeString.split(":").map(Number);
+    if (
+      isNaN(hours) ||
+      isNaN(minutes) ||
+      hours < 0 ||
+      hours > 23 ||
+      minutes < 0 ||
+      minutes > 59
+    ) {
+      return new Date(NaN); // Return invalid date for invalid time values
+    }
     const date = new Date();
     date.setHours(hours, minutes);
     return date;

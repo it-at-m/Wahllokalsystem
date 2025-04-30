@@ -5,11 +5,10 @@ import { useWahlvorbereitungService } from "@/composables/wahlvorbereitung/wahlv
 import { useUserStore } from "@/stores/userStore.ts";
 import { UrnenwahlSchliessungsuhrzeitBuilder } from "@/types/wahlvorbereitung/UrnenwahlSchliessungsuhrzeit.ts";
 
-const { postUrnenwahlSchliessungsuhrzeit } = useWahlvorbereitungService();
-
 export const storeID = "wahlbezirk";
 
 export const useWahlbezirkStore = defineStore(storeID, () => {
+  const { postUrnenwahlSchliessungsuhrzeit } = useWahlvorbereitungService();
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
 
   const schliessungsUhrzeit = ref<string | undefined>(undefined);

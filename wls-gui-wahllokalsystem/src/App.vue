@@ -133,7 +133,7 @@
           :to="ROUTE_WAHLVORSTAND"
         />
         <v-list-group value="Wahlvorbereitung">
-          <template v-slot:activator="{ props }">
+          <template #activator="{ props }">
             <v-list-item
               v-bind="props"
               title="Wahlvorbereitung"

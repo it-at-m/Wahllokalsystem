@@ -76,7 +76,7 @@ describe("dateTimeFormatter.ts", () => {
       expect(result).toContain("12:12");
     });
 
-    it("should_throwError_when_inputStringIsNoTimeString", () => {
+    it("should_returnInvalidDate_when_inputStringIsNoTimeString", () => {
       const result = getDateFromTimeString("text");
       expect(result).toBeInstanceOf(Date);
       expect(isNaN(result.getTime())).toBe(true);

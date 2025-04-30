@@ -54,7 +54,7 @@ describe("wahlbezirkStore.ts", () => {
       );
     });
 
-    it("should_sendSchliessungsuhrzeit_when_wahlbezirkIDIsNotGiven", async () => {
+    it("should_notSendSchliessungsuhrzeit_when_wahlbezirkIDIsNotGiven", async () => {
       const userStore = useUserStore();
       const user = new User();
       user.wahlbezirkID = undefined;

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 
@@ -12,6 +12,10 @@ describe("dateTimeFormatter.ts", () => {
     vi.useFakeTimers({
       now: mockedNow,
     });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   describe("time", () => {

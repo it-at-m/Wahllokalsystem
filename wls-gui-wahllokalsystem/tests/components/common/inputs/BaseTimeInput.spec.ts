@@ -48,6 +48,9 @@ describe("BaseTimeInput.vue", () => {
   });
 
   enableAutoUnmount(afterEach);
+  afterEach(() => {
+    vi.useRealTimers();
+  });
 
   describe("visual logic", () => {
     it("should_renderTextFieldWithCorrectLabel_when_componentIsMounted", async (context) => {

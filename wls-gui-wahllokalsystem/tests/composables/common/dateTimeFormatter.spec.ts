@@ -64,14 +64,6 @@ describe("dateTimeFormatter.ts", () => {
       const expectedTime = new Date(result);
       expectedTime.setHours(localHours, localMinutes);
 
-      console.log(
-        "time: " +
-          time +
-          " | result: " +
-          result +
-          " | expected: " +
-          expectedTime
-      );
       expect(result.toISOString()).toContain(
         expectedTime.toISOString().substring(11, 16)
       );

@@ -1,6 +1,6 @@
 import type { BroadcastMessage } from "@/types/broadcast/broadcastMessage.ts";
 
-import { useBroadcastTestDataFactory } from "@tests/types/broadcast/BroadcastTestDataFactory.ts";
+import { useBroadcastTestDataFactory } from "@tests/utils/broadcast/BroadcastTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 
 import { useBroadcastMapper } from "@/composables/broadcast/broadcastMapper.ts";

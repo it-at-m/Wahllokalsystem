@@ -1,4 +1,4 @@
-import { useBroadcastTestDataFactory } from "@tests/types/broadcast/BroadcastTestDataFactory.ts";
+import { useBroadcastTestDataFactory } from "@tests/utils/broadcast/BroadcastTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 

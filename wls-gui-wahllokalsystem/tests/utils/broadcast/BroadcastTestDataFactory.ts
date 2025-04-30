@@ -2,8 +2,8 @@ import type { MessageDTO } from "@/api/wls-clients/generated-broadcast-api";
 import type { BroadcastMessage } from "@/types/broadcast/broadcastMessage.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
-import { useCommonTestDataFactory } from "@tests/types/common/CommonTestDataFactory.ts";
 import { proxyBuilder } from "@tests/utils/Builder.ts";
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
 const { generateRandomDateTimeAsString, generateRandomNumber } =
   useCommonTestDataFactory();

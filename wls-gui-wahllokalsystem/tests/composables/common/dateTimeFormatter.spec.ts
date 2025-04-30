@@ -1,10 +1,18 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+
+const mockedNow = new Date();
 
 describe("dateTimeFormatter.ts", () => {
   const { time, toCorrectTimezone, getDateFromTimeString } =
     useDateTimeFormatter();
+
+  beforeEach(() => {
+    vi.useFakeTimers({
+      now: mockedNow,
+    });
+  });
 
   describe("time", () => {
     it("should_returnEmptyString_when_parameterIsNull", () => {

@@ -1,7 +1,15 @@
 import { getSnapshotFilename } from "@tests/utils/testutils.ts";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
-import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import {
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 import { nextTick } from "vue";
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
@@ -14,6 +22,7 @@ import pinia from "@/plugins/pinia.ts";
 import { REQUIRED } from "@/util/rules.ts";
 
 const { getDateFromTimeString } = useDateTimeFormatter();
+const mockedNow = new Date();
 
 describe("BaseTimeInput.vue", () => {
   let vuetify: ReturnType<typeof createVuetify>;
@@ -27,6 +36,10 @@ describe("BaseTimeInput.vue", () => {
     vuetify = createVuetify({
       components,
       directives,
+    });
+
+    vi.useFakeTimers({
+      now: mockedNow,
     });
 
     wrapper = mount(BaseTimeInput, {

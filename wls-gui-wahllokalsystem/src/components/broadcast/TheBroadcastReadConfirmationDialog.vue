@@ -7,10 +7,13 @@
   >
     <v-card>
       <v-card-title>
-        <v-icon icon="$information"></v-icon>
+        <v-icon
+          icon="$information"
+          size="x-small"
+        ></v-icon>
         <span class="ml-2">Nachricht vom Wahlamt</span>
       </v-card-title>
-      <v-card-text>
+      <v-card-text class="pb-0">
         <div class="ml-3">{{ currentBroadcastNachricht?.nachricht }}</div>
         <v-checkbox
           v-model="isMessageMarkedAsRead"

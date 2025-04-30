@@ -24,9 +24,6 @@ describe("broadcastStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useBroadcastStore>;
 
   beforeEach(() => {
-    // creates a fresh pinia and makes it active
-    // so it's automatically picked up by any useStore() call
-    // without having to pass it to it: `useStore(pinia)`
     setActivePinia(createPinia());
     unitUnderTest = useBroadcastStore();
   });
@@ -96,7 +93,7 @@ describe("broadcastStore.ts", () => {
       ]);
     });
 
-    it("should_notDeleteTriggerOperation_when_noBroadcastMessageIsInState", async () => {
+    it("should_notTriggerDeleteOperation_when_noBroadcastMessageIsInState", async () => {
       unitUnderTest.currentBroadcastNachricht = null;
 
       await unitUnderTest.markMessageAsReadAndLoadNextMessage();

@@ -7,7 +7,7 @@
     clearable
     max-width="150"
     class="mt-5"
-    @update:model-value="(value) => onSchliessungsuhrzeitChanged(value)"
+    @update:model-value="(value) => onTimeChanged(value)"
   ></v-text-field>
 </template>
 
@@ -25,7 +25,7 @@ const modelValue = defineModel({
   type: Object as PropType<Date>,
 });
 
-function onSchliessungsuhrzeitChanged(time: string | undefined) {
+function onTimeChanged(time: string | undefined) {
   if (time) {
     modelValue.value = getDateFromTimeString(time);
   } else {

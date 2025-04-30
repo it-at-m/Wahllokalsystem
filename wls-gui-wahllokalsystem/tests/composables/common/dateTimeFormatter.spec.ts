@@ -55,18 +55,11 @@ describe("dateTimeFormatter.ts", () => {
     ])("should_returnDateWithCorrectTime_when_given$when", async ({ time }) => {
       const result = toCorrectTimezone(time);
 
-      // get local time
-      const localHours =
-        result.getUTCHours() - Math.trunc(result.getTimezoneOffset() / 60);
-      const localMinutes = result.getUTCMinutes();
+      const utcDate = new Date(time);
+      const localOffset = utcDate.getTimezoneOffset() * 60000;
+      const expectedDate = new Date(utcDate.getTime() - localOffset);
 
-      // expected time in ISO-format
-      const expectedTime = new Date(result);
-      expectedTime.setHours(localHours, localMinutes);
-
-      expect(result.toISOString()).toContain(
-        expectedTime.toISOString().substring(11, 16)
-      );
+      expect(result.toISOString()).toEqual(expectedDate.toISOString());
     });
 
     it("should_returnDateWithUndefinedTime_when_inputStringIsNoDateString", () => {

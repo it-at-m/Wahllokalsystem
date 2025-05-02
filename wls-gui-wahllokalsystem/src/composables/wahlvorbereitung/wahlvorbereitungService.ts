@@ -36,7 +36,7 @@ export function useWahlvorbereitungService() {
 
   async function postUrnenwahlSchliessungsuhrzeit(
     wahlbezirkID: string,
-    schliessungsUhrzeit: UrnenwahlSchliessungsuhrzeit
+    schliessungsUhrzeit: string
   ): Promise<void> {
     const schliessungsuhrzeitWriteDTO = toDTO(schliessungsUhrzeit);
 

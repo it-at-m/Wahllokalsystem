@@ -38,6 +38,10 @@ describe("broadcastCronjobService.ts", () => {
       unitUnderTest.startBroadcastMessageInterval();
 
       expect(mockDefinitions.setInterval).toHaveBeenCalledTimes(1);
+      expect(mockDefinitions.setInterval.mock.calls[0]).toEqual([
+        expect.anything(),
+        300_000,
+      ]);
     });
 
     it("should_instantlyCallLoadLatestMessage_when_functionIsCalled", () => {

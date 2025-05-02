@@ -160,7 +160,6 @@ describe("TheEreignisseRow.vue", () => {
       await textfield.setValue(undefined);
 
       await nextTick();
-      await nextTick();
 
       // Überprüfen, ob die Fehlermeldung angezeigt wird
       const errorMessage = wrapper.get(".v-messages__message");

@@ -10,16 +10,7 @@
         >{{ index + 1 }}</v-col
       >
       <v-col cols="2">
-        <v-text-field
-          :model-value="toHhMm(ereignis.uhrzeit)"
-          :rules="[REQUIRED]"
-          label="Uhrzeit"
-          type="time"
-          clearable
-          @update:model-value="
-            (value) => onEreignisUhrzeitChanged(value, index)
-          "
-        ></v-text-field>
+        <base-time-input v-model="ereignis.uhrzeit"></base-time-input>
       </v-col>
       <v-col>
         <v-textarea
@@ -58,12 +49,13 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
-import { VCol, VIcon, VRow, VTextarea, VTextField } from "vuetify/components";
+import { VCol, VIcon, VRow, VTextarea } from "vuetify/components";
 
+import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import YesNoDialog from "@/components/common/YesNoDialog.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
-import { MAX_LENGTH, MIN_LENGTH, REQUIRED } from "@/util/rules.ts";
+import { MAX_LENGTH, MIN_LENGTH } from "@/util/rules.ts";
 
 const { toHhMm } = useDateTimeFormatter();
 const ereignisStore = useEreignisStore();

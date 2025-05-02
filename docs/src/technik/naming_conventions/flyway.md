@@ -16,7 +16,7 @@ Beispiel:
 ```sql [V1_0__createWahlbezirk.sql]
 CREATE TABLE Wahlbezirk
 (
-id VARCHAR2(36) NOT NULL,
-wahlbezirkArt VARCHAR2(3) NOT NULL
+  id                VARCHAR2(36) NOT NULL,
+  wahlbezirkArt     VARCHAR2(3) NOT NULL
 )
 ```

@@ -46,7 +46,7 @@ public class BeanstandeteWahlbriefeServiceSecurityTest {
         void should_notThrowException_when_givenAllAuthorities() {
             val wahlbezirkID = "wahlbezirkID";
             val waehlerverzeichnummer = 13L;
-            val beanstandeteWahlbriefeReference = new BeanstandeteWahlbriefeReference(wahlbezirkID, waehlerverzeichnummer);
+            val beanstandeteWahlbriefeReference = new BeanstandeteWahlbriefeReferenceModel(wahlbezirkID, waehlerverzeichnummer);
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_BEANSTANDETE_WAHLBRIEFE);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
@@ -58,7 +58,7 @@ public class BeanstandeteWahlbriefeServiceSecurityTest {
         void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
             val wahlbezirkID = "wahlbezirkID";
             val waehlerverzeichnummer = 13L;
-            val beanstandeteWahlbriefeReference = new BeanstandeteWahlbriefeReference(wahlbezirkID, waehlerverzeichnummer);
+            val beanstandeteWahlbriefeReference = new BeanstandeteWahlbriefeReferenceModel(wahlbezirkID, waehlerverzeichnummer);
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_BEANSTANDETE_WAHLBRIEFE);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
@@ -74,7 +74,7 @@ public class BeanstandeteWahlbriefeServiceSecurityTest {
 
             val wahlbezirkID = "wahlbezirkID";
             val waehlerverzeichnummer = 13L;
-            val beanstandeteWahlbriefeReference = new BeanstandeteWahlbriefeReference(wahlbezirkID, waehlerverzeichnummer);
+            val beanstandeteWahlbriefeReference = new BeanstandeteWahlbriefeReferenceModel(wahlbezirkID, waehlerverzeichnummer);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 
             Assertions.assertThatThrownBy(() -> beanstandeteWahlbriefeService.getBeanstandeteWahlbriefe(beanstandeteWahlbriefeReference))

@@ -39,11 +39,11 @@ export function useWahlvorstandMapper() {
     wahlvorstandmitglied: WahlvorstandsmitgliedDTO
   ): Wahlvorstandsmitglied {
     return {
-      anwesend: wahlvorstandmitglied.anwesend ?? false,
+      anwesend: wahlvorstandmitglied.anwesend,
       familienname: wahlvorstandmitglied.familienname,
       funktion: funktionDtoToFunktionModel(wahlvorstandmitglied.funktion),
       funktionsname: wahlvorstandmitglied.funktionsname,
-      identifikator: wahlvorstandmitglied.identifikator ?? "",
+      identifikator: wahlvorstandmitglied.identifikator,
       vorname: wahlvorstandmitglied.vorname,
     };
   }
@@ -62,12 +62,8 @@ export function useWahlvorstandMapper() {
   }
 
   function funktionModelToFunktionDto(
-    funktionAsModel?: WahlvorstandsmitgliedFunktionEnum
-  ): WahlvorstandsmitgliedDTOFunktionEnum | undefined {
-    if (!funktionAsModel) {
-      return undefined;
-    }
-
+    funktionAsModel: WahlvorstandsmitgliedFunktionEnum
+  ): WahlvorstandsmitgliedDTOFunktionEnum {
     switch (funktionAsModel) {
       case "SB":
         return WahlvorstandsmitgliedDTOFunktionEnum.Sb;
@@ -83,12 +79,8 @@ export function useWahlvorstandMapper() {
   }
 
   function funktionDtoToFunktionModel(
-    funktionAsModel?: WahlvorstandsmitgliedDTOFunktionEnum
-  ): WahlvorstandsmitgliedFunktionEnum | undefined {
-    if (!funktionAsModel) {
-      return undefined;
-    }
-
+    funktionAsModel: WahlvorstandsmitgliedDTOFunktionEnum
+  ): WahlvorstandsmitgliedFunktionEnum {
     switch (funktionAsModel) {
       case "SB":
         return WahlvorstandsmitgliedFunktionEnum.Sb;

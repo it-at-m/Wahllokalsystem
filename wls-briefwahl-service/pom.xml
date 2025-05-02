@@ -14,22 +14,22 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>3.4.3</spring.boot.version>
-        <spring.cloud.version>2024.0.0</spring.cloud.version>
-        <logstash.encoder>8.0</logstash.encoder>
+        <spring.boot.version>3.4.4</spring.boot.version>
+        <spring.cloud.version>2024.0.1</spring.cloud.version>
+        <logstash.encoder>8.1</logstash.encoder>
         <apache.commons.collections4>4.4</apache.commons.collections4>
-        <apache.commons.csv>1.13.0</apache.commons.csv>
-        <apache.commons.io>2.18.0</apache.commons.io>
+        <apache.commons.csv>1.14.0</apache.commons.csv>
+        <apache.commons.io>2.19.0</apache.commons.io>
         <apache.commons.lang3>3.17.0</apache.commons.lang3>
-        <apache.commons.text>1.13.0</apache.commons.text>
+        <apache.commons.text>1.13.1</apache.commons.text>
         <apache.commons.validator>1.9.0</apache.commons.validator>
         <!-- SonarQube -->
-        <sonar.scanner.version>5.0.0.4389</sonar.scanner.version>
+        <sonar.scanner.version>5.1.0.4751</sonar.scanner.version>
         <!-- TestCoverage -->
-        <jacoco.version>0.8.12</jacoco.version>
+        <jacoco.version>0.8.13</jacoco.version>
         <!-- Plugins -->
         <maven-scm-plugin.version>2.1.0</maven-scm-plugin.version>
-        <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
         <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
         <maven.resources.plugin.version>3.3.1</maven.resources.plugin.version>
         <!-- Version muss mit der in den spring-boot-dependencies bereitgestellten Lombok-Version übereinstimmen -->
@@ -475,7 +475,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>10.21.4</version>
+                        <version>10.23.0</version>
                     </dependency>
                 </dependencies>
             </plugin>

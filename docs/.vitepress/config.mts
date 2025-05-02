@@ -34,6 +34,7 @@ export default withMermaid({
 
     outline: {
       label: "Auf dieser Seite",
+      level: "deep",
     },
 
     sidebar: {
@@ -90,6 +91,10 @@ export default withMermaid({
             {
               text: "Kein i18n von Beginn an",
               link: `${PATH_ADR}adr-no-use-of-i18n-at-start`,
+            },
+            {
+              text: "Nutzung von defineModel()",
+              link: `${PATH_ADR}adr-use-defineModel`,
             },
           ],
         },

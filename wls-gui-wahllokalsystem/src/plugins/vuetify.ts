@@ -2,8 +2,13 @@ import "vuetify/styles";
 
 import {
   mdiContentSave,
+  mdiDelete,
+  mdiDiameterVariant,
+  mdiEmail,
   mdiHome,
-  mdiMessageText,
+  mdiInformationOutline,
+  mdiPlus,
+  mdiPrinter,
   mdiReload,
   mdiRoutes,
   mdiSend,
@@ -12,6 +17,7 @@ import {
   mdiTextBoxCheck,
   mdiToaster,
   mdiUpdate,
+  mdiVote,
 } from "@mdi/js";
 import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
@@ -23,15 +29,21 @@ export default createVuetify({
       ...aliases,
       home: mdiHome,
       routes: mdiRoutes,
-      messageText: mdiMessageText,
       textBoxCheck: mdiTextBoxCheck,
       signalOffline: mdiSignalOff,
       signalOnline: mdiSignalCellular3,
       reload: mdiReload,
       save: mdiContentSave,
+      delete: mdiDelete,
+      add: mdiPlus,
       send: mdiSend,
       updateTime: mdiUpdate,
       toaster: mdiToaster,
+      printer: mdiPrinter,
+      invalid: mdiDiameterVariant,
+      wahlbezirksartUWB: mdiVote,
+      wahlbezirksartBWB: mdiEmail,
+      information: mdiInformationOutline,
     },
     sets: {
       mdi,
@@ -48,6 +60,11 @@ export default createVuetify({
           error: "#FF0000",
         },
       },
+    },
+  },
+  defaults: {
+    VCardTitle: {
+      class: "bg-grey-lighten-3 border-b border-grey-lighten-1 mb-2",
     },
   },
 });

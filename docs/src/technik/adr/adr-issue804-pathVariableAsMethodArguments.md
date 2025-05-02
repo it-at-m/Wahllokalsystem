@@ -18,20 +18,18 @@ nicht explizit definiert wurden, sondern in einer Klasse zusammen gefasst waren:
 ```java [Controller]
 @PostMapping("{wahlID}/{wahlbezirkID}/{waehlerverzeichnisNummer}/{meldungsart}/{hauptwahlbezirkID}")
 public ResponseEntity<?> sendErgebnisse(
-        @RequestHeader(required = false, name = "forceergebnismeldung") final String forceUpdate,
-        final SendErgebnisParameter sendErgebnisParameter) {
-        }
+  @RequestHeader(required = false, name = "forceergebnismeldung") final String forceUpdate,
+  final SendErgebnisParameter sendErgebnisParameter) {}
 ```
 
 ```java [SendErgebnisParameter]
 public record SendErgebnisParameter(
-        @NotNull String wahlID,
-        @NotNull String wahlbezirkID,
-        @NotNull Long waehlerverzeichnisNummer,
-        @NotNull MeldungsartDTO meldungsart,
-        @NotNull String hauptwahlbezirkID
-) {
-}
+  @NotNull String wahlID,
+  @NotNull String wahlbezirkID,
+  @NotNull Long waehlerverzeichnisNummer,
+  @NotNull MeldungsartDTO meldungsart,
+  @NotNull String hauptwahlbezirkID
+) {}
 ```
 
 ```json [openAPI.json fehlerhaft]
@@ -135,21 +133,19 @@ Um eine korrekte OpenAPI Spezifikation zu erhalten, aus der die Client-Klassen g
 Pfadvariablen auch via Annotation definiert werden:
 
 ```java
-
 @Operation(
-            description = "Übermitteln einer Ergebnismeldung an das externe System für eine konkrete Wahl eines Wahlbezirkes",
-            parameters = { @Parameter(name = "wahlbezirkID", in = ParameterIn.PATH),
-                    @Parameter(name = "wahlID", in = ParameterIn.PATH),
-                    @Parameter(name = "waehlerverzeichnisNummer", in = ParameterIn.PATH, schema = @Schema(implementation = Long.class)),
-                    @Parameter(name = "meldungsart", in = ParameterIn.PATH, schema = @Schema(implementation = MeldungsartDTO.class)),
-                    @Parameter(name = "hauptwahlbezirkID", in = ParameterIn.PATH)
-            }
-    )
+  description = "Übermitteln einer Ergebnismeldung an das externe System für eine konkrete Wahl eines Wahlbezirkes",
+  parameters = { @Parameter(name = "wahlbezirkID", in = ParameterIn.PATH),
+    @Parameter(name = "wahlID", in = ParameterIn.PATH),
+    @Parameter(name = "waehlerverzeichnisNummer", in = ParameterIn.PATH, schema = @Schema(implementation = Long.class)),
+    @Parameter(name = "meldungsart", in = ParameterIn.PATH, schema = @Schema(implementation = MeldungsartDTO.class)),
+    @Parameter(name = "hauptwahlbezirkID", in = ParameterIn.PATH)
+  }
+)
 @PostMapping("{wahlID}/{wahlbezirkID}/{waehlerverzeichnisNummer}/{meldungsart}/{hauptwahlbezirkID}")
 public ResponseEntity<?> sendErgebnisse(
-        @RequestHeader(required = false, name = "forceergebnismeldung") final String forceUpdate,
-        final SendErgebnisParameter sendErgebnisParameter) {
-}
+  @RequestHeader(required = false, name = "forceergebnismeldung") final String forceUpdate,
+  final SendErgebnisParameter sendErgebnisParameter) {}
 ```
 
 ## Entscheidung

@@ -127,7 +127,6 @@
         </router-view>
       </v-container>
     </v-main>
-
     <the-broadcast-read-confirmation-dialog></the-broadcast-read-confirmation-dialog>
   </v-app>
 </template>

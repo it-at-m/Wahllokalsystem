@@ -35,7 +35,7 @@ describe("wahlbezirkStore.ts", () => {
   });
 
   describe("sendSchliessungsuhrzeit", () => {
-    it("should_sendSchliessungsuhrzeit_when_inputAndWahlbezirkIDIsGiven", async () => {
+    it("should_sendSchliessungsuhrzeitAndUpdateSchliessungsuhrzetSent_when_inputAndWahlbezirkIDIsGiven", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
       const user = new User();
@@ -49,9 +49,10 @@ describe("wahlbezirkStore.ts", () => {
       expect(
         mockDefinitions.postUrnenwahlSchliessungsuhrzeit
       ).toHaveBeenCalledWith(wahlbezirkID, time);
+      expect(unitUnderTest.schliessungsUhrzeitSent).toBe(time);
     });
 
-    it("should_notSendSchliessungsuhrzeit_when_wahlbezirkIDIsNotGiven", async () => {
+    it("should_notSendSchliessungsuhrzeitAndUpdateSchliessungsuhrzeitSent_when_wahlbezirkIDIsNotGiven", async () => {
       const userStore = useUserStore();
       const user = new User();
       user.wahlbezirkID = undefined;
@@ -63,6 +64,7 @@ describe("wahlbezirkStore.ts", () => {
       expect(mockDefinitions.postUrnenwahlSchliessungsuhrzeit).toBeCalledTimes(
         0
       );
+      expect(unitUnderTest.schliessungsUhrzeitSent).toBe(undefined);
     });
   });
 });

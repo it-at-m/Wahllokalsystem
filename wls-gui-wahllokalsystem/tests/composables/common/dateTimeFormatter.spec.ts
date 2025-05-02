@@ -40,9 +40,9 @@ describe("dateTimeFormatter.ts", () => {
     });
 
     it("should_returnStringWithPaddingZeros_when_timePartHasNotTwoDigits", () => {
-      const dateWithTwoDigitTimeParts = new Date("2025-02-18T04:00:03");
+      const dateWithoutTwoDigitTimeParts = new Date("2025-02-18T04:00:03");
 
-      const result = time(dateWithTwoDigitTimeParts);
+      const result = time(dateWithoutTwoDigitTimeParts);
 
       expect(result).toStrictEqual("04:00:03");
     });

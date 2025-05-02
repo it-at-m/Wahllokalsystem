@@ -2,7 +2,7 @@ import { createTestingPinia } from "@pinia/testing";
 import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
-} from "@tests/utils/testutils";
+} from "@tests/utils/testutils.ts";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import {

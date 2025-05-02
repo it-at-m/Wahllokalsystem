@@ -11,21 +11,18 @@ import {
   vi,
 } from "vitest";
 import { nextTick } from "vue";
-import { createVuetify } from "vuetify";
-import * as components from "vuetify/components";
 import { VTextField } from "vuetify/components";
-import * as directives from "vuetify/directives";
 
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import pinia from "@/plugins/pinia.ts";
+import vuetify from "@/plugins/vuetify.ts";
 import { REQUIRED } from "@/util/rules.ts";
 
 const { getDateFromTimeString } = useDateTimeFormatter();
 const mockedNow = new Date();
 
 describe("BaseTimeInput.vue", () => {
-  let vuetify: ReturnType<typeof createVuetify>;
   let wrapper: VueWrapper;
 
   beforeAll(() => {
@@ -33,11 +30,6 @@ describe("BaseTimeInput.vue", () => {
   });
 
   beforeEach(() => {
-    vuetify = createVuetify({
-      components,
-      directives,
-    });
-
     vi.useFakeTimers({
       now: mockedNow,
     });

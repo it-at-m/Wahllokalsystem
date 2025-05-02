@@ -1,7 +1,11 @@
 import type { Wahlvorstandsmitglied } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
 
 import { createTestingPinia } from "@pinia/testing";
-import { getSnapshotFilename } from "@tests/utils/testutils";
+import {
+  COMPONENT_EVENT_TESTS,
+  COMPONENT_RENDER_TESTS,
+  getSnapshotFilename,
+} from "@tests/utils/testutils";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import {
@@ -51,7 +55,7 @@ describe("TheWahlvorstandMitgliederTable.vue", () => {
 
   enableAutoUnmount(afterEach);
 
-  describe("visual logic", () => {
+  describe(COMPONENT_RENDER_TESTS, () => {
     it("should_showMultipleLines_when_multipleWahlvorstandsmitgliederAreGiven", async (context) => {
       const wahlvorstandStore = useWahlvorstandStore();
 
@@ -88,7 +92,7 @@ describe("TheWahlvorstandMitgliederTable.vue", () => {
     });
   });
 
-  describe("behavioral logic", () => {
+  describe(COMPONENT_EVENT_TESTS, () => {
     describe("update:model-value", () => {
       it("should_setAnwesendTrue_when_checkBoxForMitgliedThatIsNotAnwesendWasClicked", async () => {
         const wahlvorstandStore = useWahlvorstandStore();

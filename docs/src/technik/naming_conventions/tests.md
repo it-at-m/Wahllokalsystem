@@ -122,7 +122,7 @@ describe("wahlvorstandStore.ts", () => {// [!code focus]
 
 ::: code-group
 
-```typescript [ComponentTest.java]
+```typescript [ComponentTest.spec.ts]
 import { describe, it } from "vitest";
 import { COMPONENT_EVENT_TESTS, COMPONENT_RENDER_TESTS } from "@tests/utils/testutils.ts";
 

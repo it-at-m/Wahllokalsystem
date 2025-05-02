@@ -18,7 +18,7 @@ export const useEreignisStore = defineStore(storeID, () => {
   const error = ref<string | null>(null);
 
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
-  const { schliessungsuhrzeit } = storeToRefs(useWahlbezirkStore());
+  const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
 
   const wahlbezirkEreignisse = ref<WahlbezirkEreignisse>(
     WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse()
@@ -116,7 +116,9 @@ export const useEreignisStore = defineStore(storeID, () => {
   }
 
   function _getArtOfNewEreignisse(): EreignisartEnum {
-    return schliessungsuhrzeit.value === null ? "VORFALL" : "VORKOMMNIS";
+    return schliessungsUhrzeitSent.value === undefined
+      ? "VORFALL"
+      : "VORKOMMNIS";
   }
 
   function _hasEintragOfEreignisart(ereginisart: EreignisartEnum): boolean {

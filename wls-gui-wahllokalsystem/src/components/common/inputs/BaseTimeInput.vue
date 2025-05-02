@@ -1,13 +1,13 @@
 <template>
   <v-text-field
-    :model-value="toHhMm(schliessungsuhrzeit)"
+    :model-value="toHhMm(modelValue)"
     :rules="[REQUIRED]"
     label="Uhrzeit"
     type="time"
     clearable
     max-width="150"
     class="mt-5"
-    @update:model-value="(value) => onSchliessungsuhrzeitChanged(value)"
+    @update:model-value="onTimeChanged"
   ></v-text-field>
 </template>
 
@@ -16,22 +16,20 @@ import type { PropType } from "vue";
 
 import { VTextField } from "vuetify/components";
 
-import { useFormatter } from "@/composables/common/formatter.ts";
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { REQUIRED } from "@/util/rules.ts";
 
-const { toHhMm } = useFormatter();
+const { toHhMm, getDateFromTimeString } = useDateTimeFormatter();
 
-const schliessungsuhrzeit = defineModel({
+const modelValue = defineModel({
   type: Object as PropType<Date>,
-  // TODO: darf nciht vorausgefüllt sein
 });
 
-function onSchliessungsuhrzeitChanged(time: string | undefined) {
-  if (time && schliessungsuhrzeit.value) {
-    const [hours, minutes] = time.split(":").map(Number);
-    schliessungsuhrzeit.value.setHours(hours, minutes);
+function onTimeChanged(time: string | undefined) {
+  if (time) {
+    modelValue.value = getDateFromTimeString(time);
   } else {
-    schliessungsuhrzeit.value = undefined;
+    modelValue.value = undefined;
   }
 }
 </script>

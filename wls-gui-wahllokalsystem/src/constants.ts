@@ -2,11 +2,10 @@ export const ROUTES_HOME = "home";
 export const EXAMPLE_ROUTES_NEWROUTE = "newroute";
 export const EXAMPLE_ROUTES_NOTFOUND = "404";
 export const EXAMPLE_ROUTES_DYNAMIC = "dynamic";
-export const EXAMPLE_ROUTES_BACKEND = "talk-to-backend";
 export const EXAMPLE_VALIDATION = "validation-example";
 export const ROUTE_WAHLVORSTAND = "wahlvorstand";
 export const ROUTE_VORFAELLEUNDVORKOMMNISSE = "vorfaelleundvorkommnisse";
-export const ROUTE_WAHLVORBEREITUNG = "wahlvorbereitung";
+export const ROUTE_WAHLSCHLIESSUNG = "wahlschliessung";
 
 export const TOAST = "toast";
 export const PRINT_EXAMPLE = "print-example";

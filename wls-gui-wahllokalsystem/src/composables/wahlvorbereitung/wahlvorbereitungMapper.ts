@@ -4,6 +4,10 @@ import type {
 } from "@/api/wls-clients/generated-wahlvorbereitung-api";
 import type { UrnenwahlSchliessungsuhrzeit } from "@/types/wahlvorbereitung/UrnenwahlSchliessungsuhrzeit.ts";
 
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+
+const { applyLocalTimezoneOffset } = useDateTimeFormatter();
+
 export function useWahlvorbereitungMapper() {
   function toModel(
     schliessungsuhrzeitDTO: UrnenwahlSchliessungsUhrzeitDTO
@@ -12,16 +16,9 @@ export function useWahlvorbereitungMapper() {
   }
 
   function toDTO(
-    schliessungsuhrzeitModel: UrnenwahlSchliessungsuhrzeit
+    schliessungsuhrzeit: string
   ): UrnenwahlSchliessungsUhrzeitWriteDTO {
-    const mappedUhrzeit = new Date(
-      schliessungsuhrzeitModel.schliessungsuhrzeit
-    );
-    // TODO: auslagern
-    mappedUhrzeit.setHours(
-      mappedUhrzeit.getHours() -
-        Math.trunc(mappedUhrzeit.getTimezoneOffset() / 60)
-    );
+    const mappedUhrzeit = applyLocalTimezoneOffset(schliessungsuhrzeit);
     return {
       schliessungsuhrzeit: mappedUhrzeit.toISOString(),
     };

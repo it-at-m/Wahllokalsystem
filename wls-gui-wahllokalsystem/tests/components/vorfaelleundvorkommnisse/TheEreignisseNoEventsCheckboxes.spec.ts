@@ -84,7 +84,7 @@ describe("TheEreignisseNoEventsCheckboxes.vue", () => {
         useEreignisStore().wahlbezirkEreignisse.ereigniseintraege = [
           { ereignisart: "VORKOMMNIS" },
         ];
-        useWahlbezirkStore().schliessungsuhrzeit = null;
+        useWahlbezirkStore().schliessungsUhrzeitSent = undefined;
 
         await nextTick();
 
@@ -93,9 +93,9 @@ describe("TheEreignisseNoEventsCheckboxes.vue", () => {
         );
       });
 
-      it("should_renderKeineVorkommnisseEnabled_when_noVorkommnisseAreGivenInStoreAndSchliessunguhrzeitNotNull", async (context) => {
+      it("should_renderKeineVorkommnisseEnabled_when_noVorkommnisseAreGivenInStoreAndSchliessunguhrzeitIsSet", async (context) => {
         useEreignisStore().wahlbezirkEreignisse.ereigniseintraege = [];
-        useWahlbezirkStore().schliessungsuhrzeit = "uhrzeit";
+        useWahlbezirkStore().schliessungsUhrzeitSent = "uhrzeit";
 
         await nextTick();
 
@@ -104,9 +104,9 @@ describe("TheEreignisseNoEventsCheckboxes.vue", () => {
         );
       });
 
-      it("should_renderKeineVorkommnisseDisabled_when_noVorkommnisseAreGivenInStoreButSchliessungsuhrzeitIsNull", async (context) => {
+      it("should_renderKeineVorkommnisseDisabled_when_noVorkommnisseAreGivenInStoreButSchliessungsuhrzeitIsNotSet", async (context) => {
         useEreignisStore().wahlbezirkEreignisse.ereigniseintraege = [];
-        useWahlbezirkStore().schliessungsuhrzeit = null;
+        useWahlbezirkStore().schliessungsUhrzeitSent = undefined;
 
         await nextTick();
 

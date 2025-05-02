@@ -1,7 +1,7 @@
 import type { UrnenwahlSchliessungsuhrzeit } from "@/types/wahlvorbereitung/UrnenwahlSchliessungsuhrzeit.ts";
 
-import { Configuration } from "@/api/wls-clients/generated-vorfaelleundvorkommnisse-api";
 import { UrnenwahlSchliessungsUhrzeitControllerApi } from "@/api/wls-clients/generated-wahlvorbereitung-api";
+import { Configuration } from "@/api/wls-clients/generated-wahlvorstand-api";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWahlvorbereitungMapper } from "@/composables/wahlvorbereitung/wahlvorbereitungMapper.ts";
 import { WAHLVORBEREITUNG_SERVICE_API_URL } from "@/constants.ts";
@@ -21,14 +21,22 @@ export function useWahlvorbereitungService() {
   async function getUrnenwahlSchliessungsUhrzeit(
     wahlbezirkID: string
   ): Promise<UrnenwahlSchliessungsuhrzeit> {
-    return await urnenwahlSchliessungsUhrzeitControllerAPI
-      .getUrnenwahlSchliessungsUhrzeit(wahlbezirkID)
-      .then((response) => toModel(response.data));
+    try {
+      return await urnenwahlSchliessungsUhrzeitControllerAPI
+        .getUrnenwahlSchliessungsUhrzeit(wahlbezirkID)
+        .then((response) => toModel(response.data));
+    } catch (error) {
+      userNotificationService.addNotification(
+        "Fehler beim Laden der Schliessungsuhrzeit.",
+        UserNotificationCategoryEnum.ERROR
+      );
+      throw error;
+    }
   }
 
   async function postUrnenwahlSchliessungsuhrzeit(
     wahlbezirkID: string,
-    schliessungsUhrzeit: UrnenwahlSchliessungsuhrzeit
+    schliessungsUhrzeit: string
   ): Promise<void> {
     const schliessungsuhrzeitWriteDTO = toDTO(schliessungsUhrzeit);
 

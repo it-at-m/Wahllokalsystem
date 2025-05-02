@@ -413,8 +413,8 @@ describe("ereignisStore.ts", () => {
       );
     });
 
-    it("should_addEreignisOfTypVorfall_when_schliessungsuhrzeitIsNull", () => {
-      wahlbezirkStore.schliessungsuhrzeit = null;
+    it("should_addEreignisOfTypVorfall_when_schliessungsuhrzeitIsUndefined", () => {
+      wahlbezirkStore.schliessungsUhrzeitSent = undefined;
 
       unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [];
       unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = true;
@@ -428,8 +428,8 @@ describe("ereignisStore.ts", () => {
       );
     });
 
-    it("should_addEreignisOfTypVorkommnis_when_schliessungsuhrzeitIsNotNull", () => {
-      wahlbezirkStore.schliessungsuhrzeit = "current time";
+    it("should_addEreignisOfTypVorkommnis_when_schliessungsuhrzeitIsSet", () => {
+      wahlbezirkStore.schliessungsUhrzeitSent = "current time";
 
       unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [];
       unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse = true;

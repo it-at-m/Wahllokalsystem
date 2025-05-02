@@ -10,7 +10,7 @@
     </v-card-text>
     <v-card-actions>
       <base-button-save
-        color="primary"
+        active
         :disabled="isSaveButtonDisabled"
         @click="onSaveSchliessungsuhrzeitClicked"
       />

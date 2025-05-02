@@ -128,9 +128,6 @@
       </v-container>
     </v-main>
 
-    <the-cronjobs-render-less
-      v-if="userStore.currentUserWahlbezirkID"
-    ></the-cronjobs-render-less>
     <the-broadcast-read-confirmation-dialog></the-broadcast-read-confirmation-dialog>
   </v-app>
 </template>
@@ -138,7 +135,7 @@
 <script setup lang="ts">
 import { useToggle } from "@vueuse/core";
 import localforage from "localforage";
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import {
   VApp,
   VAppBar,
@@ -158,8 +155,8 @@ import {
 
 import { getUser } from "@/api/user-client";
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
-import TheCronjobsRenderLess from "@/components/cronjob/TheCronjobsRenderLess.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
+import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
 import {
   EXAMPLE_ROUTES_NEWROUTE,
   EXAMPLE_VALIDATION,
@@ -174,6 +171,7 @@ import { User, UserLocalDevelopment } from "@/types/User";
 
 const userStore = useUserStore();
 const wahlvorstandStore = useWahlvorstandStore();
+const broadcastCronjobService = useBroadcastCronjobService();
 const [drawer, toggleDrawer] = useToggle();
 const isOffline = ref(false);
 
@@ -190,6 +188,10 @@ onMounted(() => {
   });
 });
 
+onUnmounted(() => {
+  broadcastCronjobService.stopBroadcastMessageInterval();
+});
+
 /**
  * Loads UserInfo from the backend and sets it in the store.
  */
@@ -204,7 +206,10 @@ function loadUser(): void {
         userStore.setUser(null);
       }
     })
-    .then(() => wahlvorstandStore.loadWahlvorstand());
+    .then(() => {
+      wahlvorstandStore.loadWahlvorstand();
+      broadcastCronjobService.startBroadcastMessageInterval();
+    });
 }
 </script>
 

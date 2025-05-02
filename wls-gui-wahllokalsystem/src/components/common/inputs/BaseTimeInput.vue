@@ -7,7 +7,7 @@
     clearable
     max-width="150"
     class="mt-5"
-    @update:model-value="(value) => onTimeChanged(value)"
+    @update:model-value="onTimeChanged"
   ></v-text-field>
 </template>
 

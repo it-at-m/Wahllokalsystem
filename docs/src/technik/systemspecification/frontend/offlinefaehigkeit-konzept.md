@@ -39,7 +39,8 @@ Ergebnisse weiterer Requests zu der selben Ressource-URL führen zur Aktualisier
 
 Es gibt drei unterschiedliche Strategien, mit denen der SW umgehen kann:
 
-#### OFFLINE_FIRST (default): Hat der Service Worker Daten im lokalen Speicher, werden diese Daten zurückgeliefert. Nur wenn keine Daten vorhanden sind, wird ein Request ans Backend geschickt;
+#### OFFLINE_FIRST (default) 
+Hat der Service Worker Daten im lokalen Speicher, werden diese Daten zurückgeliefert. Nur wenn keine Daten vorhanden sind, wird ein Request ans Backend geschickt.
 
 ```mermaid
 
@@ -76,7 +77,8 @@ sequenceDiagram
     end
 ```
 
-#### ONLINE_FIRST: Es gibt Daten, die remote und nicht im Client entstehen und somit, falls verfügbar, Priorität vor dem lokalen Speicher haben;
+#### ONLINE_FIRST
+Es gibt Daten, die remote und nicht im Client entstehen und somit, falls verfügbar, Priorität vor dem lokalen Speicher haben.
 
 ```mermaid
 sequenceDiagram
@@ -113,7 +115,8 @@ sequenceDiagram
     end
 ```
 
-#### ONLINE_ONLY: Diese Strategie wird für Operationen benötigt, die nur remote relevant sind und im lokalen Speicher nicht gespeichert werden.
+#### ONLINE_ONLY
+Diese Strategie wird für Operationen benötigt, die nur remote relevant sind und im lokalen Speicher nicht gespeichert werden.
 
 ```mermaid
 sequenceDiagram

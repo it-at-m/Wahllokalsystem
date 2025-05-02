@@ -121,6 +121,7 @@ describe("wahlvorstandStore.ts", () => {// [!code focus]
 #### Beispiel für Tests zu einer Komponente
 
 ::: code-group
+
 ```typescript [ComponentTest.java]
 import { describe, it } from "vitest";
 import { COMPONENT_EVENT_TESTS, COMPONENT_RENDER_TESTS } from "@tests/utils/testutils.ts";
@@ -152,4 +153,5 @@ describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => { // [!code focu
 export const COMPONENT_RENDER_TESTS = "visual logic";
 export const COMPONENT_EVENT_TESTS = "behavioral logic";
 ```
+
 :::

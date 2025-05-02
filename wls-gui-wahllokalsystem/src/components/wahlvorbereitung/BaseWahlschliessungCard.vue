@@ -5,7 +5,11 @@
       Bitte geben Sie hier die Uhrzeit ein, zu der die Wahl für geschlossen
       erklärt wurde.
       <v-form v-model="schliessungsuhrzeitValidForm">
-        <base-time-input v-model="schliessungsuhrzeit" />
+        <base-time-input
+          v-model="schliessungsuhrzeit"
+          class="mt-5"
+          max-width="150"
+        />
       </v-form>
     </v-card-text>
     <v-card-actions>

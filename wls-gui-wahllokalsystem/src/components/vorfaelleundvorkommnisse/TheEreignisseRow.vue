@@ -63,11 +63,11 @@ import { onMounted, ref } from "vue";
 import { VCol, VIcon, VRow, VTextarea, VTextField } from "vuetify/components";
 
 import YesNoDialog from "@/components/common/YesNoDialog.vue";
-import { useFormatter } from "@/composables/common/formatter.ts";
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { MAX_LENGTH, MIN_LENGTH, REQUIRED } from "@/util/rules.ts";
 
-const { toHhMm } = useFormatter();
+const { toHhMm } = useDateTimeFormatter();
 const ereignisStore = useEreignisStore();
 const { wahlbezirkEreignisse } = storeToRefs(ereignisStore);
 const deleteDialog = ref(false);

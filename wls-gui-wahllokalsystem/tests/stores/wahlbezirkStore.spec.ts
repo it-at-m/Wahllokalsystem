@@ -48,9 +48,10 @@ describe("wahlbezirkStore.ts", () => {
       const time = mockedNow.toISOString();
 
       await unitUnderTest.sendSchliessungsuhrzeit(time);
+
       expect(
         mockDefinitions.postUrnenwahlSchliessungsuhrzeit
-      ).toHaveBeenCalledWith(wahlbezirkID, createSchliessungsuhrzeit(time));
+      ).toHaveBeenCalledWith(wahlbezirkID, time);
     });
 
     it("should_notSendSchliessungsuhrzeit_when_wahlbezirkIDIsNotGiven", async () => {

@@ -1,6 +1,11 @@
 import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 
 import { createTestingPinia } from "@pinia/testing";
+import {
+  COMPONENT_EVENT_TESTS,
+  COMPONENT_RENDER_TESTS,
+  getSnapshotFilename,
+} from "@tests/utils/testutils.ts";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import {
@@ -19,11 +24,6 @@ import TheEreignisseRow from "@/components/vorfaelleundvorkommnisse/TheEreigniss
 import vuetify from "@/plugins/vuetify";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { EreignisBuilder } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
-import {
-  COMPONENT_EVENT_TESTS,
-  COMPONENT_RENDER_TESTS,
-  getSnapshotFilename,
-} from "../../utils/testutils";
 
 describe("TheEreignisseRow.vue", () => {
   let wrapper: VueWrapper;

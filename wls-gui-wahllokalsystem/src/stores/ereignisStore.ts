@@ -23,12 +23,6 @@ export const useEreignisStore = defineStore(storeID, () => {
   const wahlbezirkEreignisse = ref<WahlbezirkEreignisse>(
     WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse()
   );
-
-  const areKeineEreignisseFlagsValid = computed(
-    () =>
-      hasVorfaelle.value !== wahlbezirkEreignisse.value.keineVorfaelle &&
-      hasVorkommnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse
-  );
   const hasVorfaelle = computed(
     () =>
       wahlbezirkEreignisse.value.ereigniseintraege?.some(
@@ -40,6 +34,11 @@ export const useEreignisStore = defineStore(storeID, () => {
       wahlbezirkEreignisse.value.ereigniseintraege?.some(
         (eintrag) => eintrag.ereignisart === EreignisartEnum.Vorkommnis
       ) === true
+  );
+  const areKeineEreignisseFlagsValid = computed(
+    () =>
+      hasVorfaelle.value !== wahlbezirkEreignisse.value.keineVorfaelle &&
+      hasVorkommnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse
   );
 
   function addEreignis() {

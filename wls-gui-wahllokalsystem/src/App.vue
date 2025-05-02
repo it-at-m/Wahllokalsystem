@@ -139,7 +139,6 @@
               title="Wahlvorbereitung"
             ></v-list-item>
           </template>
-
           <v-list-item
             title="Wahlschliessung"
             :to="ROUTE_WAHLSCHLIESSUNG"

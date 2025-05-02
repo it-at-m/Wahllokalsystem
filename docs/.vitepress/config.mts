@@ -168,6 +168,13 @@ export default withMermaid({
             {
               text: "Frontend",
               link: `${PATH_SYSSPEC}frontend`,
+              collapsed: true,
+              items: [
+                {
+                  text: "Offlinefähigkeit-Konzept",
+                  link: `${PATH_SYSSPEC}frontend/offlinefaehigkeit-konzept.md`,
+                },
+              ],
             },
           ],
         },

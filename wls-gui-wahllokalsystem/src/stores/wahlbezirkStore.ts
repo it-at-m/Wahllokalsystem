@@ -11,7 +11,7 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   const { postUrnenwahlSchliessungsuhrzeit } = useWahlvorbereitungService();
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
 
-  const schliessungsUhrzeit = ref<string | undefined>(undefined);
+  const schliessungsUhrzeitSent = ref<string | undefined>(undefined);
 
   async function sendSchliessungsuhrzeit(time: string) {
     const dto =
@@ -19,9 +19,9 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     const wahlbezirkID = currentUserWahlbezirkID.value;
     if (wahlbezirkID) {
       await postUrnenwahlSchliessungsuhrzeit(wahlbezirkID, dto);
-      schliessungsUhrzeit.value = time;
+      schliessungsUhrzeitSent.value = time;
     }
   }
 
-  return { schliessungsUhrzeit, sendSchliessungsuhrzeit };
+  return { schliessungsUhrzeitSent, sendSchliessungsuhrzeit };
 });

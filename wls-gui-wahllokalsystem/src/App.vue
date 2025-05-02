@@ -170,7 +170,8 @@ import { User, UserLocalDevelopment } from "@/types/User";
 
 const userStore = useUserStore();
 const wahlvorstandStore = useWahlvorstandStore();
-const broadcastCronjobService = useBroadcastCronjobService();
+const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
+  useBroadcastCronjobService();
 const [drawer, toggleDrawer] = useToggle();
 const isOffline = ref(false);
 
@@ -188,7 +189,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  broadcastCronjobService.stopBroadcastMessageInterval();
+  stopBroadcastMessageInterval();
 });
 
 /**
@@ -207,7 +208,7 @@ function loadUser(): void {
     })
     .then(() => {
       wahlvorstandStore.loadWahlvorstand();
-      broadcastCronjobService.startBroadcastMessageInterval();
+      startBroadcastMessageInterval();
     });
 }
 </script>

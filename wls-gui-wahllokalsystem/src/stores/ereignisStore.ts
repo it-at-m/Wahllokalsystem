@@ -1,5 +1,4 @@
 import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
-import type { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 import { acceptHMRUpdate, defineStore, storeToRefs } from "pinia";
@@ -8,6 +7,7 @@ import { computed, ref } from "vue";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
+import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 const ereignisService = useEreignisService();
@@ -32,13 +32,13 @@ export const useEreignisStore = defineStore(storeID, () => {
   const hasVorfaelle = computed(
     () =>
       wahlbezirkEreignisse.value.ereigniseintraege?.some(
-        (eintrag) => eintrag.ereignisart === "VORFALL"
+        (eintrag) => eintrag.ereignisart === EreignisartEnum.Vorfall
       ) === true
   );
   const hasVorkommnisse = computed(
     () =>
       wahlbezirkEreignisse.value.ereigniseintraege?.some(
-        (eintrag) => eintrag.ereignisart === "VORKOMMNIS"
+        (eintrag) => eintrag.ereignisart === EreignisartEnum.Vorkommnis
       ) === true
   );
 
@@ -117,8 +117,8 @@ export const useEreignisStore = defineStore(storeID, () => {
 
   function _getArtOfNewEreignisse(): EreignisartEnum {
     return schliessungsUhrzeitSent.value === undefined
-      ? "VORFALL"
-      : "VORKOMMNIS";
+      ? EreignisartEnum.Vorfall
+      : EreignisartEnum.Vorkommnis;
   }
 
   function _hasEintragOfEreignisart(ereginisart: EreignisartEnum): boolean {
@@ -130,10 +130,12 @@ export const useEreignisStore = defineStore(storeID, () => {
   }
 
   function _updateKeineFlagsOfEreignisseBaseOnRemovedEreignisart() {
-    wahlbezirkEreignisse.value.keineVorkommnisse =
-      !_hasEintragOfEreignisart("VORKOMMNIS");
-    wahlbezirkEreignisse.value.keineVorfaelle =
-      !_hasEintragOfEreignisart("VORFALL");
+    wahlbezirkEreignisse.value.keineVorkommnisse = !_hasEintragOfEreignisart(
+      EreignisartEnum.Vorkommnis
+    );
+    wahlbezirkEreignisse.value.keineVorfaelle = !_hasEintragOfEreignisart(
+      EreignisartEnum.Vorfall
+    );
   }
 
   return {

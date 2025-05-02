@@ -19,8 +19,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Ref } from "vue";
-
 import { computed, ref } from "vue";
 import {
   VCard,

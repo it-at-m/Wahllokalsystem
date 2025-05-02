@@ -10,7 +10,7 @@ import { EreignisDTOEreignisartEnum } from "@/api/wls-clients/generated-vorfaell
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 
-const { toCorrectTimezone } = useDateTimeFormatter();
+const { applyLocalTimezoneOffset } = useDateTimeFormatter();
 
 export function useEreignisMapper() {
   function toModel(
@@ -56,7 +56,7 @@ function ereignisDtoToEreignisModel(ereignisDto: EreignisDTO): Ereignis {
 function ereignisModelToEreignisDto(ereignisModel: Ereignis): EreignisDTO {
   let mappedUhrzeit;
   if (ereignisModel.uhrzeit) {
-    mappedUhrzeit = toCorrectTimezone(ereignisModel.uhrzeit);
+    mappedUhrzeit = applyLocalTimezoneOffset(ereignisModel.uhrzeit);
   }
   return {
     beschreibung: ereignisModel.beschreibung ?? "",

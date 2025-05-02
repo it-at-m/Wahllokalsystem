@@ -5,7 +5,7 @@ import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts"
 const mockedNow = new Date();
 
 describe("dateTimeFormatter.ts", () => {
-  const { time, toCorrectTimezone, getDateFromTimeString } =
+  const { time, applyLocalTimezoneOffset, getDateFromTimeString } =
     useDateTimeFormatter();
 
   beforeEach(() => {
@@ -48,12 +48,12 @@ describe("dateTimeFormatter.ts", () => {
     });
   });
 
-  describe("toCorrectTimeZone", () => {
+  describe("applyLocalTimezoneOffset", () => {
     it.each([
       { time: "2025-04-29T12:12:07.855Z", when: "DateString" },
       { time: new Date("2025-04-29T12:12:07.855Z"), when: "Date" },
     ])("should_returnDateWithCorrectTime_when_given$when", async ({ time }) => {
-      const result = toCorrectTimezone(time);
+      const result = applyLocalTimezoneOffset(time);
 
       const utcDate = new Date(time);
       const localOffset = utcDate.getTimezoneOffset() * 60000;
@@ -63,7 +63,7 @@ describe("dateTimeFormatter.ts", () => {
     });
 
     it("should_returnDateWithUndefinedTime_when_inputStringIsNoDateString", () => {
-      const result = toCorrectTimezone("text");
+      const result = applyLocalTimezoneOffset("text");
 
       expect(result).toBeInstanceOf(Date);
       expect(isNaN(result.getTime())).toBe(true);

@@ -25,7 +25,7 @@ export function useDateTimeFormatter() {
     return `${hour}${TIME_FIELD_SEPARATOR}${minute}`;
   };
 
-  const toCorrectTimezone = function (date: Date | string): Date {
+  const applyLocalTimezoneOffset = function (date: Date | string): Date {
     const mappedUhrzeit = new Date(date);
     mappedUhrzeit.setHours(
       mappedUhrzeit.getHours() -
@@ -55,7 +55,7 @@ export function useDateTimeFormatter() {
     return date;
   };
 
-  return { time, toHhMm, toCorrectTimezone, getDateFromTimeString };
+  return { time, toHhMm, applyLocalTimezoneOffset, getDateFromTimeString };
 }
 
 function leftPadTwoDigitsWithZero(number: number): string {

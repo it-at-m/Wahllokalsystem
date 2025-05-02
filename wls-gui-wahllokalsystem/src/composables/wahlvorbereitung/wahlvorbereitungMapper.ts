@@ -6,7 +6,7 @@ import type { UrnenwahlSchliessungsuhrzeit } from "@/types/wahlvorbereitung/Urne
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 
-const { toCorrectTimezone } = useDateTimeFormatter();
+const { applyLocalTimezoneOffset } = useDateTimeFormatter();
 
 export function useWahlvorbereitungMapper() {
   function toModel(
@@ -18,7 +18,7 @@ export function useWahlvorbereitungMapper() {
   function toDTO(
     schliessungsuhrzeitModel: UrnenwahlSchliessungsuhrzeit
   ): UrnenwahlSchliessungsUhrzeitWriteDTO {
-    const mappedUhrzeit = toCorrectTimezone(
+    const mappedUhrzeit = applyLocalTimezoneOffset(
       schliessungsuhrzeitModel.schliessungsuhrzeit
     );
     return {

@@ -112,6 +112,18 @@
           title="Wahlvorstand"
           :to="ROUTE_WAHLVORSTAND"
         />
+        <v-list-group value="Wahlvorbereitung">
+          <template #activator="{ props }">
+            <v-list-item
+              v-bind="props"
+              title="Wahlvorbereitung"
+            ></v-list-item>
+          </template>
+          <v-list-item
+            title="Wahlschliessung"
+            :to="ROUTE_WAHLSCHLIESSUNG"
+          />
+        </v-list-group>
         <v-list-item
           title="Störungen"
           :to="ROUTE_VORFAELLEUNDVORKOMMNISSE"
@@ -144,6 +156,7 @@ import {
   VContainer,
   VFadeTransition,
   VList,
+  VListGroup,
   VListItem,
   VMain,
   VNavigationDrawer,
@@ -161,6 +174,7 @@ import {
   EXAMPLE_VALIDATION,
   PRINT_EXAMPLE,
   ROUTE_VORFAELLEUNDVORKOMMNISSE,
+  ROUTE_WAHLSCHLIESSUNG,
   ROUTE_WAHLVORSTAND,
   TOAST,
 } from "@/constants";

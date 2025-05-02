@@ -53,11 +53,9 @@ import { VCol, VIcon, VRow, VTextarea } from "vuetify/components";
 
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import YesNoDialog from "@/components/common/YesNoDialog.vue";
-import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { MAX_LENGTH, MIN_LENGTH } from "@/util/rules.ts";
 
-const { toHhMm } = useDateTimeFormatter();
 const ereignisStore = useEreignisStore();
 const { wahlbezirkEreignisse } = storeToRefs(ereignisStore);
 const deleteDialog = ref(false);
@@ -78,10 +76,6 @@ function showYesNoDialogForItem(index: number) {
 
 function onDeleteIconClicked(index: number) {
   showYesNoDialogForItem(index);
-}
-
-function onEreignisUhrzeitChanged(uhrzeit: string, index: number) {
-  ereignisStore.updateUhrzeitByIndex(uhrzeit, index);
 }
 
 function onYesNoDialogNoClicked() {

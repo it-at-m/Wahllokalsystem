@@ -3,25 +3,25 @@ import { createRouter, createWebHashHistory } from "vue-router";
 
 import ExampleDynamicComponent from "@/components/ExampleDynamicComponent.vue";
 import {
-  EXAMPLE_ROUTES_BACKEND,
   EXAMPLE_ROUTES_DYNAMIC,
   EXAMPLE_ROUTES_NEWROUTE,
   EXAMPLE_ROUTES_NOTFOUND,
   EXAMPLE_VALIDATION,
   PRINT_EXAMPLE,
   ROUTE_VORFAELLEUNDVORKOMMNISSE,
+  ROUTE_WAHLSCHLIESSUNG,
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
   TOAST,
 } from "@/constants";
 import EreignisseView from "@/views/EreignisseView.vue";
-import ExampleBackendCommunicationView from "@/views/ExampleBackendCommunicationView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
 import ExampleNewRouteView from "@/views/ExampleNewRouteView.vue";
 import ExamplePrintView from "@/views/ExamplePrintView.vue";
 import ExampleToastView from "@/views/ExampleToastView.vue";
 import ExampleValidation from "@/views/ExampleValidation.vue";
 import HomeView from "@/views/HomeView.vue";
+import WahlschliessungView from "@/views/WahlschliessungView.vue";
 import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
 
 const routes = [
@@ -38,15 +38,14 @@ const routes = [
     meta: {},
   },
   {
+    path: "/wahlschliessung",
+    name: ROUTE_WAHLSCHLIESSUNG,
+    component: WahlschliessungView,
+  },
+  {
     path: "/vorfaelleundvorkommnisse",
     name: ROUTE_VORFAELLEUNDVORKOMMNISSE,
     component: EreignisseView,
-    meta: {},
-  },
-  {
-    path: "/talk-to-backend",
-    name: EXAMPLE_ROUTES_BACKEND,
-    component: ExampleBackendCommunicationView,
     meta: {},
   },
   {

@@ -44,9 +44,8 @@ describe("BroadcastService.ts", () => {
     it("should_returnBroadcastMessage_when_messageIsReceivedFromApi", async () => {
       const wahlbezirkID = "wahlbezirkID";
 
-      const mockedApiResponseBody = createMessageDTO();
       mockDefinitions.getMessage.mockReturnValue(
-        Promise.resolve({ status: 200, data: mockedApiResponseBody })
+        Promise.resolve({ status: 200, data: createMessageDTO() })
       );
 
       const mockedMappedBroadcastMessage = createBroadcastMessage();

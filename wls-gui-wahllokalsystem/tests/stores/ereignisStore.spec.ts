@@ -138,7 +138,7 @@ describe("ereignisStore.ts", () => {
   });
 
   describe("hasVorfaelle", () => {
-    it("should_returnTrue_when_ereignisEintraegeHasOneEintragOfTypVorfall", () => {
+    it("should_returnTrue_when_ereignisEintraegeHasOneEintragOfTypeVorfall", () => {
       unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
         { ereignisart: "VORFALL" },
       ];
@@ -176,7 +176,7 @@ describe("ereignisStore.ts", () => {
   });
 
   describe("hasVorkommnisse", () => {
-    it("should_returnTrue_when_ereignisEintraegeHasOneEintragOfTypVORKOMMNIS", () => {
+    it("should_returnTrue_when_ereignisEintraegeHasOneEintragOfTypeVorkommnis", () => {
       unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
         { ereignisart: "VORKOMMNIS" },
       ];
@@ -413,7 +413,7 @@ describe("ereignisStore.ts", () => {
       );
     });
 
-    it("should_addEreignisOfTypVorfall_when_schliessungsuhrzeitIsUndefined", () => {
+    it("should_addEreignisOfTypeVorfall_when_schliessungsuhrzeitIsUndefined", () => {
       wahlbezirkStore.schliessungsUhrzeitSent = undefined;
 
       unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [];
@@ -428,7 +428,7 @@ describe("ereignisStore.ts", () => {
       );
     });
 
-    it("should_addEreignisOfTypVorkommnis_when_schliessungsuhrzeitIsSet", () => {
+    it("should_addEreignisOfTypeVorkommnis_when_schliessungsuhrzeitIsSet", () => {
       wahlbezirkStore.schliessungsUhrzeitSent = "current time";
 
       unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [];

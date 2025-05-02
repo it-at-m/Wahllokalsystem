@@ -19,8 +19,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Ref } from "vue";
-
 import { computed, ref } from "vue";
 import {
   VCard,
@@ -34,8 +32,8 @@ import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
-const schliessungsuhrzeitValidForm: Ref<null | boolean> = ref(null);
-const schliessungsuhrzeit: Ref<Date | undefined> = ref(undefined);
+const schliessungsuhrzeitValidForm = ref<null | boolean>(null);
+const schliessungsuhrzeit = ref<Date | undefined>(undefined);
 
 const wahlbezirkStore = useWahlbezirkStore();
 const isSaveButtonDisabled = computed(

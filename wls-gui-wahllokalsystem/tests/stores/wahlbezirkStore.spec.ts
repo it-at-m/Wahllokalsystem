@@ -1,10 +1,10 @@
+import { useSchliessungsuhrzeitTestDataFactory } from "@tests/utils/wahlvorbereitung/SchliessungsuhrzeitTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { User } from "@/types/User";
-import { UrnenwahlSchliessungsuhrzeitBuilder } from "@/types/wahlvorbereitung/UrnenwahlSchliessungsuhrzeit.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   postUrnenwahlSchliessungsuhrzeit: vi.fn(),
@@ -21,6 +21,8 @@ const mockedNow = new Date();
 
 describe("wahlbezirkStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useWahlbezirkStore>;
+
+  const { createSchliessungsuhrzeit } = useSchliessungsuhrzeitTestDataFactory();
 
   beforeEach(() => {
     setActivePinia(createPinia());
@@ -48,10 +50,7 @@ describe("wahlbezirkStore.ts", () => {
       await unitUnderTest.sendSchliessungsuhrzeit(time);
       expect(
         mockDefinitions.postUrnenwahlSchliessungsuhrzeit
-      ).toHaveBeenCalledWith(
-        wahlbezirkID,
-        UrnenwahlSchliessungsuhrzeitBuilder.createWithSchliessungsuhrzeit(time)
-      );
+      ).toHaveBeenCalledWith(wahlbezirkID, createSchliessungsuhrzeit(time));
     });
 
     it("should_notSendSchliessungsuhrzeit_when_wahlbezirkIDIsNotGiven", async () => {

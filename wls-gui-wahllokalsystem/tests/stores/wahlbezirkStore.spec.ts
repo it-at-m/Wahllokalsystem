@@ -1,4 +1,3 @@
-import { useSchliessungsuhrzeitTestDataFactory } from "@tests/utils/wahlvorbereitung/SchliessungsuhrzeitTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -21,8 +20,6 @@ const mockedNow = new Date();
 
 describe("wahlbezirkStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useWahlbezirkStore>;
-
-  const { createSchliessungsuhrzeit } = useSchliessungsuhrzeitTestDataFactory();
 
   beforeEach(() => {
     setActivePinia(createPinia());

@@ -19,6 +19,8 @@
 </template>
 
 <script setup lang="ts">
+import type { Ref } from "vue";
+
 import { computed, ref } from "vue";
 import {
   VCard,
@@ -36,6 +38,7 @@ const schliessungsuhrzeitValidForm = ref<null | boolean>(null);
 const schliessungsuhrzeit = ref<Date | undefined>(undefined);
 
 const wahlbezirkStore = useWahlbezirkStore();
+
 const isSaveButtonDisabled = computed(
   () => schliessungsuhrzeitValidForm.value !== true
 );

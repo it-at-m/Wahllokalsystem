@@ -64,6 +64,7 @@ describe("dateTimeFormatter.ts", () => {
 
     it("should_returnDateWithUndefinedTime_when_inputStringIsNoDateString", () => {
       const result = toCorrectTimezone("text");
+
       expect(result).toBeInstanceOf(Date);
       expect(isNaN(result.getTime())).toBe(true);
     });
@@ -73,11 +74,13 @@ describe("dateTimeFormatter.ts", () => {
     it("should_returnDateWithGivenTime_when_givenTimeString", () => {
       const input = "12:12";
       const result = getDateFromTimeString(input).toString();
+
       expect(result).toContain("12:12");
     });
 
     it("should_returnInvalidDate_when_inputStringIsNoTimeString", () => {
       const result = getDateFromTimeString("text");
+
       expect(result).toBeInstanceOf(Date);
       expect(isNaN(result.getTime())).toBe(true);
     });

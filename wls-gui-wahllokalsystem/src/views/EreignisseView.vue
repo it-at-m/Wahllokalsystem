@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>Eingetretene Ereignisse </v-card-title>
+    <v-card-title>Eingetretene Ereignisse</v-card-title>
     <v-card-text>
       <the-ereignisse-no-events-checkboxes></the-ereignisse-no-events-checkboxes>
     </v-card-text>

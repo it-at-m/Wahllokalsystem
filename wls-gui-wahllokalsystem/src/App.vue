@@ -25,26 +25,6 @@
           <wls-heartbeat v-model:is-offline="isOffline"></wls-heartbeat>
           <v-tooltip
             location="bottom"
-            text="Backend Communication Examples"
-          >
-            <template #activator="{ props }">
-              <router-link
-                v-bind="props"
-                :to="{ name: EXAMPLE_ROUTES_BACKEND }"
-              >
-                <v-btn
-                  icon="$messageText"
-                  variant="text"
-                  density="comfortable"
-                  size="x-large"
-                  color="white"
-                >
-                </v-btn>
-              </router-link>
-            </template>
-          </v-tooltip>
-          <v-tooltip
-            location="bottom"
             text="Routing Examples"
           >
             <template #activator="{ props }">
@@ -147,13 +127,14 @@
         </router-view>
       </v-container>
     </v-main>
+    <the-broadcast-read-confirmation-dialog></the-broadcast-read-confirmation-dialog>
   </v-app>
 </template>
 
 <script setup lang="ts">
 import { useToggle } from "@vueuse/core";
 import localforage from "localforage";
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import {
   VApp,
   VAppBar,
@@ -172,9 +153,10 @@ import {
 } from "vuetify/components";
 
 import { getUser } from "@/api/user-client";
+import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
+import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
 import {
-  EXAMPLE_ROUTES_BACKEND,
   EXAMPLE_ROUTES_NEWROUTE,
   EXAMPLE_VALIDATION,
   PRINT_EXAMPLE,
@@ -188,6 +170,8 @@ import { User, UserLocalDevelopment } from "@/types/User";
 
 const userStore = useUserStore();
 const wahlvorstandStore = useWahlvorstandStore();
+const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
+  useBroadcastCronjobService();
 const [drawer, toggleDrawer] = useToggle();
 const isOffline = ref(false);
 
@@ -204,6 +188,10 @@ onMounted(() => {
   });
 });
 
+onUnmounted(() => {
+  stopBroadcastMessageInterval();
+});
+
 /**
  * Loads UserInfo from the backend and sets it in the store.
  */
@@ -218,7 +206,10 @@ function loadUser(): void {
         userStore.setUser(null);
       }
     })
-    .then(() => wahlvorstandStore.loadWahlvorstand());
+    .then(() => {
+      wahlvorstandStore.loadWahlvorstand();
+      startBroadcastMessageInterval();
+    });
 }
 </script>
 

@@ -5,8 +5,6 @@
     label="Uhrzeit"
     type="time"
     clearable
-    max-width="150"
-    class="mt-5"
     @update:model-value="onTimeChanged"
   ></v-text-field>
 </template>

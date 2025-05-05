@@ -10,16 +10,7 @@
         >{{ index + 1 }}</v-col
       >
       <v-col cols="2">
-        <v-text-field
-          :model-value="toHhMm(ereignis.uhrzeit)"
-          :rules="[REQUIRED]"
-          label="Uhrzeit"
-          type="time"
-          clearable
-          @update:model-value="
-            (value) => onEreignisUhrzeitChanged(ereignis, value, index)
-          "
-        ></v-text-field>
+        <base-time-input v-model="ereignis.uhrzeit"></base-time-input>
       </v-col>
       <v-col>
         <v-textarea
@@ -40,7 +31,7 @@
           data-test="delete-ereignis-icon"
           icon="$delete"
           title="Löschen"
-          @click="openDeleteDialog(index)"
+          @click="onDeleteIconClicked(index)"
         >
         </v-icon>
       </v-col>
@@ -49,67 +40,53 @@
       v-model="deleteDialog"
       dialogtitle="Ereignis löschen"
       dialogtext="Möchten Sie dieses Ereignis wirklich löschen?"
-      @no="deleteDialog = false"
-      @yes="confirmDelete"
+      @no="onYesNoDialogNoClicked"
+      @yes="onYesNoDialogYesClicked"
     ></yes-no-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
-
 import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
-import { VCol, VIcon, VRow, VTextarea, VTextField } from "vuetify/components";
+import { VCol, VIcon, VRow, VTextarea } from "vuetify/components";
 
+import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import YesNoDialog from "@/components/common/YesNoDialog.vue";
-import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
-import { MAX_LENGTH, MIN_LENGTH, REQUIRED } from "@/util/rules.ts";
+import { MAX_LENGTH, MIN_LENGTH } from "@/util/rules.ts";
 
-const { toHhMm } = useDateTimeFormatter();
 const ereignisStore = useEreignisStore();
 const { wahlbezirkEreignisse } = storeToRefs(ereignisStore);
 const deleteDialog = ref(false);
 const deleteIndex = ref<number | null>(null);
 
-const openDeleteDialog = (index: number) => {
-  deleteIndex.value = index;
-  deleteDialog.value = true;
-};
-
-const confirmDelete = () => {
-  if (deleteIndex.value !== null) {
-    wahlbezirkEreignisse.value.ereigniseintraege?.splice(deleteIndex.value, 1);
-    deleteIndex.value = null; // Zurücksetzen
-  }
-  deleteDialog.value = false; // Dialog schließen
-};
-
 onMounted(() => {
   ereignisStore.loadEreignisse();
 });
 
-function onEreignisUhrzeitChanged(
-  ereignis: Ereignis,
-  uhrzeit: string,
-  index: number
-) {
-  const updateUhrzeit = (time: Date | undefined) => {
-    if (wahlbezirkEreignisse.value.ereigniseintraege) {
-      wahlbezirkEreignisse.value.ereigniseintraege[index].uhrzeit = time;
-    }
-  };
+function closeYesNoDialog() {
+  deleteDialog.value = false;
+}
 
-  if (uhrzeit) {
-    const [hours, minutes] = uhrzeit.split(":").map(Number);
-    const currentUhrzeit = ereignis.uhrzeit
-      ? new Date(ereignis.uhrzeit)
-      : new Date();
-    currentUhrzeit.setHours(hours, minutes);
-    updateUhrzeit(currentUhrzeit);
-  } else {
-    updateUhrzeit(undefined);
+function showYesNoDialogForItem(index: number) {
+  deleteIndex.value = index;
+  deleteDialog.value = true;
+}
+
+function onDeleteIconClicked(index: number) {
+  showYesNoDialogForItem(index);
+}
+
+function onYesNoDialogNoClicked() {
+  closeYesNoDialog();
+}
+
+function onYesNoDialogYesClicked() {
+  if (deleteIndex.value !== null) {
+    ereignisStore.deleteEreignisByIndex(deleteIndex.value);
+    deleteIndex.value = null;
   }
+  closeYesNoDialog();
 }
 </script>

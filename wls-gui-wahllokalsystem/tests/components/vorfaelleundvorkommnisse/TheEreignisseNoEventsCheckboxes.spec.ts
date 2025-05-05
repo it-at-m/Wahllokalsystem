@@ -95,7 +95,7 @@ describe("TheEreignisseNoEventsCheckboxes.vue", () => {
 
       it("should_renderKeineVorkommnisseEnabled_when_noVorkommnisseAreGivenInStoreAndSchliessunguhrzeitIsSet", async (context) => {
         useEreignisStore().wahlbezirkEreignisse.ereigniseintraege = [];
-        useWahlbezirkStore().schliessungsUhrzeitSent = "uhrzeit";
+        useWahlbezirkStore().schliessungsUhrzeitSent = new Date();
 
         await nextTick();
 

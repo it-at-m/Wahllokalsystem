@@ -47,19 +47,19 @@ public class ClassRules {
             .or().haveSimpleNameEndingWith("Controller")
             .should().resideOutsideOfPackage("..rest..");
 
-    // dto files do not import from service or domain packages
+    // dto files do not import from service or domain packages, except from wls.common.security imports
     public static final ArchRule RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED = classes()
             .that().resideInAnyPackage("..rest..").and().haveSimpleNameEndingWith("DTO")
             .should().onlyDependOnClassesThat(not(resideInAnyPackage("..service..", "..domain.."))
                     .or(resideInAnyPackage("..common.security..")));
 
-    // model files do not import from rest or domain packages
+    // model files do not import from rest or domain packages, except from wls.common.security imports
     public static final ArchRule RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED = classes()
             .that().resideInAnyPackage("..service..").and().haveSimpleNameEndingWith("Model")
             .should().onlyDependOnClassesThat(not(resideInAnyPackage("..rest..", "..domain.."))
                     .or(resideInAnyPackage("..common.security..")));
 
-    // files in rest package do not import from domain package
+    // files in rest package do not import from domain package, except from wls.common.security imports
     public static final ArchRule RULE_NO_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED = classes()
             .that().resideInAnyPackage("..rest..")
             .should().onlyDependOnClassesThat(not(resideInAnyPackage("..domain.."))

@@ -46,6 +46,7 @@ describe("TheEreignisseRow.vue", () => {
         plugins: [
           createTestingPinia({
             createSpy: vi.fn,
+            stubActions: false,
           }),
           vuetify,
         ],

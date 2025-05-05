@@ -1,10 +1,14 @@
 import { createTestingPinia } from "@pinia/testing";
+import { spyOn } from "@storybook/test";
+import { useVorfaelleundvorkommnisseTestDateFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDateFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { User } from "@/types/User";
+import * as ImportAllFromEreignisArt from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
@@ -21,6 +25,8 @@ vi.mock("@/composables/vorfaelleundvorkommnisse/ereignisService", () => ({
 }));
 
 const mockedNow = new Date();
+
+const { createEreignis } = useVorfaelleundvorkommnisseTestDateFactory();
 
 describe("ereignisStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useEreignisStore>;
@@ -428,19 +434,46 @@ describe("ereignisStore.ts", () => {
       );
     });
 
-    it("should_addEreignisOfTypeVorkommnis_when_schliessungsuhrzeitIsSet", () => {
-      wahlbezirkStore.schliessungsUhrzeitSent = "current time";
+    it("should_addEreignisOfTypeVorkommnis_when_schliessungsuhrzeitIsSetAndBeforeCurrentTime", () => {
+      const schliessungsuhrzeit = new Date();
+      schliessungsuhrzeit.setTime(schliessungsuhrzeit.getTime() - 60 * 1000);
+      wahlbezirkStore.schliessungsUhrzeitSent = schliessungsuhrzeit;
 
       unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [];
       unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse = true;
+      unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = true;
       unitUnderTest.addEreignis();
 
       expect(
         unitUnderTest.wahlbezirkEreignisse.ereigniseintraege[0].ereignisart
-      ).toStrictEqual("VORKOMMNIS");
+      ).toStrictEqual(EreignisartEnum.Vorkommnis);
       expect(
         unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse
       ).toStrictEqual(false);
+      expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
+        true
+      );
+    });
+
+    it("should_addEreignisOfTypeVorfall_when_schliessungsuhrzeitIsSetAndAfterCurrentTime", () => {
+      const schliessungsuhrzeit = new Date();
+      schliessungsuhrzeit.setTime(schliessungsuhrzeit.getTime() + 60 * 1000);
+      wahlbezirkStore.schliessungsUhrzeitSent = schliessungsuhrzeit;
+
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [];
+      unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse = true;
+      unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = true;
+      unitUnderTest.addEreignis();
+
+      expect(
+        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege[0].ereignisart
+      ).toStrictEqual(EreignisartEnum.Vorfall);
+      expect(
+        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse
+      ).toStrictEqual(true);
+      expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
+        false
+      );
     });
   });
 
@@ -450,7 +483,7 @@ describe("ereignisStore.ts", () => {
         wahlbezirkID: "wahlbezirkID",
       };
 
-      unitUnderTest.updateUhrzeitByIndex("12:12", 1);
+      unitUnderTest.updateUhrzeitByIndex(new Date(), 1);
 
       expect(
         unitUnderTest.wahlbezirkEreignisse.ereigniseintraege
@@ -465,7 +498,7 @@ describe("ereignisStore.ts", () => {
         ereigniseintraege: [eintragNotToChange],
       };
 
-      unitUnderTest.updateUhrzeitByIndex("12:12", 1);
+      unitUnderTest.updateUhrzeitByIndex(new Date(), 1);
 
       expect(eintragNotToChange.uhrzeit).toEqual(new Date(dateAsString));
     });
@@ -478,7 +511,8 @@ describe("ereignisStore.ts", () => {
         ereigniseintraege: [eintragToChange],
       };
 
-      unitUnderTest.updateUhrzeitByIndex("12:12", 0);
+      const updateDate = new Date("2025-04-29T12:12:42");
+      unitUnderTest.updateUhrzeitByIndex(updateDate, 0);
 
       expect(eintragToChange.uhrzeit).toEqual(new Date("2025-04-29T12:12:42"));
     });
@@ -494,6 +528,32 @@ describe("ereignisStore.ts", () => {
       unitUnderTest.updateUhrzeitByIndex(undefined, 0);
 
       expect(eintragToChange.uhrzeit).toBeUndefined();
+    });
+  });
+
+  describe("watchSchliessungsUhrzeitSent", () => {
+    it("should_updateEreignisart_when_schliessungsuhrzeitSentHasChanged", async () => {
+      const schliessungsuhrzeitSend = new Date();
+
+      const ereignisEintraege = [
+        createEreignis(),
+        createEreignis(),
+        createEreignis(),
+      ];
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = ereignisEintraege;
+
+      useWahlbezirkStore().schliessungsUhrzeitSent = schliessungsuhrzeitSend;
+
+      const spy = spyOn(
+        ImportAllFromEreignisArt,
+        "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
+      );
+
+      await nextTick(); //wait till store has processed changed schliessungsuhrzeit
+
+      expect(spy.mock.calls.length).toStrictEqual(ereignisEintraege.length);
+
+      spy.mockRestore();
     });
   });
 });

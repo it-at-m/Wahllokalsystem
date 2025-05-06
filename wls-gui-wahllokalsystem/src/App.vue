@@ -125,8 +125,8 @@
           />
         </v-list-group>
         <v-list-item
-          title="Störungen"
-          :to="ROUTE_VORFAELLEUNDVORKOMMNISSE"
+          title="Ereignisse"
+          :to="ROUTE_EREIGNISSE"
         />
       </v-list>
     </v-navigation-drawer>
@@ -173,7 +173,7 @@ import {
   EXAMPLE_ROUTES_NEWROUTE,
   EXAMPLE_VALIDATION,
   PRINT_EXAMPLE,
-  ROUTE_VORFAELLEUNDVORKOMMNISSE,
+  ROUTE_EREIGNISSE,
   ROUTE_WAHLSCHLIESSUNG,
   ROUTE_WAHLVORSTAND,
   TOAST,

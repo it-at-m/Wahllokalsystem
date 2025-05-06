@@ -20,3 +20,6 @@ function getSuitePath(suite?: RunnerTestSuite): string {
 
   return pathElementsBottomUp.reverse().join("/");
 }
+
+export const COMPONENT_RENDER_TESTS = "visual logic";
+export const COMPONENT_EVENT_TESTS = "behavioral logic";

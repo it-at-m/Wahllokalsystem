@@ -1,5 +1,8 @@
 import { useProgressTestDataFactory } from "@tests/types/common/ProgressTestDataFactory.ts";
-import { getSnapshotFilename } from "@tests/utils/testutils.ts";
+import {
+  COMPONENT_RENDER_TESTS,
+  getSnapshotFilename,
+} from "@tests/utils/testutils.ts";
 import { mount, VueWrapper } from "@vue/test-utils";
 import { beforeEach, describe, expect, it } from "vitest";
 
@@ -19,7 +22,7 @@ describe("BaseInitProgress.vue", () => {
     });
   });
 
-  describe("visual logic", () => {
+  describe(COMPONENT_RENDER_TESTS, () => {
     it("should_useTheCorrectProps_when_bindToEachRow", async () => {
       const props = {
         awerte: createProgressComplete(),

@@ -1,4 +1,4 @@
-import { defineStore, storeToRefs } from "pinia";
+import { acceptHMRUpdate, defineStore, storeToRefs } from "pinia";
 import { ref } from "vue";
 
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
@@ -28,3 +28,7 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
 
   return { schliessungsUhrzeitSent, sendSchliessungsuhrzeit };
 });
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useWahlbezirkStore, import.meta.hot));
+}

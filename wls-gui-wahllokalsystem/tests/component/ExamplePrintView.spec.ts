@@ -1,3 +1,4 @@
+import { COMPONENT_EVENT_TESTS } from "@tests/utils/testutils.ts";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import {
@@ -40,7 +41,7 @@ describe("ExamplePrintView.vue", () => {
 
   enableAutoUnmount(afterEach);
 
-  describe("behavioral logic", () => {
+  describe(COMPONENT_EVENT_TESTS, () => {
     vi.stubGlobal("open", vi.fn());
 
     it("should_openNewPrintWindow_when_printButtonIsClicked", async () => {

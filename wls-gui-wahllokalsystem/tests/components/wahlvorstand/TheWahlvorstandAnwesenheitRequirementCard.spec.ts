@@ -1,5 +1,8 @@
 import { createTestingPinia } from "@pinia/testing";
-import { getSnapshotFilename } from "@tests/utils/testutils";
+import {
+  COMPONENT_RENDER_TESTS,
+  getSnapshotFilename,
+} from "@tests/utils/testutils.ts";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import {
@@ -48,7 +51,7 @@ describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => {
 
   enableAutoUnmount(afterEach);
 
-  describe("visual logic", () => {
+  describe(COMPONENT_RENDER_TESTS, () => {
     it("should_showNoErrorTexts_when_allRequirementsAreSatisfied", async (context) => {
       const wahlvorstandStore = useWahlvorstandStore();
 

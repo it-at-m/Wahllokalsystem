@@ -2,7 +2,10 @@ import type { VueWrapper } from "@vue/test-utils";
 
 import { useProgressTestDataFactory } from "@tests/types/common/ProgressTestDataFactory.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
-import { getSnapshotFilename } from "@tests/utils/testutils.ts";
+import {
+  COMPONENT_RENDER_TESTS,
+  getSnapshotFilename,
+} from "@tests/utils/testutils.ts";
 import { mount } from "@vue/test-utils";
 import { beforeEach, describe, expect, it } from "vitest";
 
@@ -25,7 +28,7 @@ describe("BaseRowInitProgress.vue", () => {
     });
   });
 
-  describe("visual logic", () => {
+  describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderTitleAndProgress_when_progressIsActive", async (context) => {
       await wrapper.setProps({
         progress: {

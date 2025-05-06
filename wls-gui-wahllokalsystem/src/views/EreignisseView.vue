@@ -53,7 +53,7 @@ const isEreignisseFormInvalid = computed(
 );
 const isSaveButtonDisabled = computed(
   () =>
-    (isEreignisseFormInvalid.value && !hasEintraege.value) ||
+    (hasEintraege.value && isEreignisseFormInvalid.value) ||
     !ereignisStore.areKeineEreignisseFlagsValid
 );
 

@@ -97,7 +97,7 @@ import {
   ROUTES_GETSTARTED,
   ROUTES_INIT_WAHLTAG,
 } from "@/constants";
-import { useUserStore } from "@/stores/user";
+import { useUserStore } from "@/stores/userStore.ts";
 import { User, UserLocalDevelopment } from "@/types/User";
 
 const query = ref<string>("");

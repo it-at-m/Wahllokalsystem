@@ -1,6 +1,7 @@
 import { createTestingPinia } from "@pinia/testing";
 import { spyOn } from "@storybook/test";
 import { useVorfaelleundvorkommnisseTestDateFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDateFactory.ts";
+import { flushPromises } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
@@ -33,9 +34,6 @@ describe("ereignisStore.ts", () => {
   let wahlbezirkStore: ReturnType<typeof useWahlbezirkStore>;
 
   beforeEach(() => {
-    // creates a fresh pinia and makes it active
-    // so it's automatically picked up by any useStore() call
-    // without having to pass it to it: `useStore(pinia)`
     const testPinia = createTestingPinia({
       stubActions: false,
       createSpy: vi.fn,
@@ -492,8 +490,7 @@ describe("ereignisStore.ts", () => {
           "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
         );
 
-        await nextTick(); //wait till store has processed changed schliessungsuhrzeit
-        await nextTick(); //wait till
+        await flushPromises();
 
         expect(
           spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mock.calls.length

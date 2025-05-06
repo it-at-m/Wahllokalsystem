@@ -51,7 +51,6 @@ describe("ereignisService", () => {
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         0
       );
-
       expect(mockDefinitions.mapToDto.mock.calls).toStrictEqual([[ereignisse]]);
     });
     it("should_notCallNotificationServiceAfterFailure_when_sendNotificationParameterIsFalse", async () => {

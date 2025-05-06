@@ -18,7 +18,6 @@ describe("TheEreignisseView", () => {
     unobserve: vi.fn(),
     disconnect: vi.fn(),
   }));
-  // Stub the global ResizeObserver
   vi.stubGlobal("ResizeObserver", ResizeObserverMock);
 
   beforeEach(() => {

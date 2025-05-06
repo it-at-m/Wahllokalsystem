@@ -15,7 +15,7 @@
           @update:model-value="
             (value) => onEreignisUhrzeitUpdateModelValue(value, index)
           "
-        ></base-time-input>
+        />
       </v-col>
       <v-col>
         <v-textarea

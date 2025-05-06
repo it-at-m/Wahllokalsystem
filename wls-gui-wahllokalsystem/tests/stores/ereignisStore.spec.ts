@@ -467,8 +467,7 @@ describe("ereignisStore.ts", () => {
           unitUnderTest.wahlbezirkEreignisse.ereigniseintraege =
             ereignisEintraege;
 
-          useWahlbezirkStore().schliessungsUhrzeitSent =
-            schliessungsuhrzeitSend;
+          wahlbezirkStore.schliessungsUhrzeitSent = schliessungsuhrzeitSend;
 
           const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
             ImportAllFromEreignisArt,

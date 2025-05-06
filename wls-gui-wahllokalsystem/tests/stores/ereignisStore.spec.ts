@@ -570,6 +570,60 @@ describe("ereignisStore.ts", () => {
 
         spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();
       });
+
+      it("should_switchFromKeineVorfaelleToKeineVorkommnisse_when_allEreignisseOfArtVorkommnissSwitchedToVorfall", async () => {
+        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
+          { ereignisart: EreignisartEnum.Vorkommnis },
+        ];
+        unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = true;
+        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse = false;
+
+        const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
+          ImportAllFromEreignisArt,
+          "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
+        );
+        spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockReturnValue(
+          EreignisartEnum.Vorfall
+        );
+
+        unitUnderTest.updateUhrzeitByIndex(new Date(), 0);
+
+        await nextTick();
+
+        expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
+          false
+        );
+        expect(
+          unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse
+        ).toStrictEqual(true);
+      });
+
+      it("should_switchFromKeineVorkommnisseToKeineVorfaelle_when_allEreignisseOfArtVorfallSwitchedToVorkommniss", async () => {
+        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
+          { ereignisart: EreignisartEnum.Vorfall },
+        ];
+        unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = false;
+        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse = true;
+
+        const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
+          ImportAllFromEreignisArt,
+          "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
+        );
+        spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockReturnValue(
+          EreignisartEnum.Vorkommnis
+        );
+
+        unitUnderTest.updateUhrzeitByIndex(new Date(), 0);
+
+        await nextTick();
+
+        expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
+          true
+        );
+        expect(
+          unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse
+        ).toStrictEqual(false);
+      });
     });
   });
 });

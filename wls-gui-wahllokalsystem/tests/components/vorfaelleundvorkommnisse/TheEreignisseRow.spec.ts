@@ -1,6 +1,11 @@
 import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 
 import { createTestingPinia } from "@pinia/testing";
+import {
+  COMPONENT_EVENT_TESTS,
+  COMPONENT_RENDER_TESTS,
+  getSnapshotFilename,
+} from "@tests/utils/testutils.ts";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import {
@@ -19,7 +24,6 @@ import TheEreignisseRow from "@/components/vorfaelleundvorkommnisse/TheEreigniss
 import vuetify from "@/plugins/vuetify";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { EreignisBuilder } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
-import { getSnapshotFilename } from "../../utils/testutils";
 
 describe("TheEreignisseRow.vue", () => {
   let wrapper: VueWrapper;
@@ -53,7 +57,7 @@ describe("TheEreignisseRow.vue", () => {
 
   enableAutoUnmount(afterEach);
 
-  describe("visual logic", () => {
+  describe(COMPONENT_RENDER_TESTS, () => {
     it("component mounted", () => {
       expect(wrapper.exists()).toBeTruthy();
     });
@@ -167,7 +171,7 @@ describe("TheEreignisseRow.vue", () => {
     });
   });
 
-  describe("behavioral logic", () => {
+  describe(COMPONENT_EVENT_TESTS, () => {
     it("should_openYesNoDialog_when_deleteIconIsClicked", async () => {
       const ereignisStore = useEreignisStore();
       const ereigniseintraege = [] as Ereignis[];

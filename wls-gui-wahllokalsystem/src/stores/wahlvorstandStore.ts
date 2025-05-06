@@ -1,6 +1,6 @@
 import type { Wahlvorstand } from "@/types/wahlvorstand/Wahlvorstand";
 
-import { defineStore, storeToRefs } from "pinia";
+import { acceptHMRUpdate, defineStore, storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
 import { useWahlvorstandService } from "@/composables/wahlvorstand/wahlvorstandService";
@@ -79,3 +79,9 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     sendWahlvorstand,
   };
 });
+
+if (import.meta.hot) {
+  import.meta.hot.accept(
+    acceptHMRUpdate(useWahlvorstandStore, import.meta.hot)
+  );
+}

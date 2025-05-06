@@ -1,7 +1,11 @@
 import type { VueWrapper } from "@vue/test-utils";
 
 import { createTestingPinia } from "@pinia/testing";
-import { getSnapshotFilename } from "@tests/utils/testutils.ts";
+import {
+  COMPONENT_EVENT_TESTS,
+  COMPONENT_RENDER_TESTS,
+  getSnapshotFilename,
+} from "@tests/utils/testutils.ts";
 import { mount } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
@@ -37,7 +41,7 @@ describe("TheBroadcastReadConfirmationDialog.vue", () => {
     vi.clearAllMocks();
   });
 
-  describe("visual logic", () => {
+  describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderDialog_when_broadcastMessageIsGiven", async (context) => {
       const broadcastStore = useBroadcastStore();
       // @ts-expect-error: cannot set readonly
@@ -77,7 +81,7 @@ describe("TheBroadcastReadConfirmationDialog.vue", () => {
     });
   });
 
-  describe("behavioral logic", () => {
+  describe(COMPONENT_EVENT_TESTS, () => {
     it("should_markActiveMessageAsRead_when_okWasClicked", async () => {
       const broadcastStore = useBroadcastStore();
       // @ts-expect-error: cannot set readonly

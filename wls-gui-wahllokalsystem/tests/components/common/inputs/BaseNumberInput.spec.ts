@@ -1,4 +1,8 @@
-import { getSnapshotFilename } from "@tests/utils/testutils.ts";
+import {
+  COMPONENT_EVENT_TESTS,
+  COMPONENT_RENDER_TESTS,
+  getSnapshotFilename,
+} from "@tests/utils/testutils.ts";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
@@ -33,7 +37,7 @@ describe("BaseNumberInput.vue", () => {
 
   enableAutoUnmount(afterEach);
 
-  describe("visual logic", () => {
+  describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderTextFieldWithCorrectLabel_when_componentIsMounted", async (context) => {
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
@@ -91,7 +95,7 @@ describe("BaseNumberInput.vue", () => {
     });
   });
 
-  describe("behavioral logic", () => {
+  describe(COMPONENT_EVENT_TESTS, () => {
     describe("update:modelValue", () => {
       it("should_updateModelValue_when_elementIsTyped", async () => {
         const input = 896572;

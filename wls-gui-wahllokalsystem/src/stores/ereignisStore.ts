@@ -2,7 +2,7 @@ import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 import { acceptHMRUpdate, defineStore, storeToRefs } from "pinia";
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, watchEffect } from "vue";
 
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -46,6 +46,7 @@ export const useEreignisStore = defineStore(storeID, () => {
   );
 
   watch(schliessungsUhrzeitSent, _onSchliessunguhrzeitSentChanged);
+  watchEffect(() => _updateKeineFlagsOfEreignisseBasedOnCurrentState());
 
   function addEreignis() {
     const currentDate = new Date();
@@ -60,13 +61,10 @@ export const useEreignisStore = defineStore(storeID, () => {
       beschreibung: "",
       ereignisart: newEreignisEreignisart,
     });
-
-    _updateKeineFlagsOfEreignisseBaseOnAddedEreignisart(newEreignisEreignisart);
   }
 
   function deleteEreignisByIndex(index: number) {
     wahlbezirkEreignisse.value.ereigniseintraege?.splice(index, 1);
-    _updateKeineFlagsOfEreignisseBasedOnCurrentState();
   }
 
   function updateUhrzeitByIndex(uhrzeit: Date | undefined, index: number) {
@@ -162,16 +160,6 @@ export const useEreignisStore = defineStore(storeID, () => {
     wahlbezirkEreignisse.value.keineVorfaelle = !_hasEintragOfEreignisart(
       EreignisartEnum.Vorfall
     );
-  }
-
-  function _updateKeineFlagsOfEreignisseBaseOnAddedEreignisart(
-    addedEreignisart: EreignisartEnum
-  ) {
-    if (addedEreignisart === EreignisartEnum.Vorfall) {
-      wahlbezirkEreignisse.value.keineVorfaelle = false;
-    } else {
-      wahlbezirkEreignisse.value.keineVorkommnisse = false;
-    }
   }
 
   return {

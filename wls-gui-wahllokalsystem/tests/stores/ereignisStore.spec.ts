@@ -273,287 +273,311 @@ describe("ereignisStore.ts", () => {
       ).toStrictEqual(ereigniseintraege);
     });
 
-    it("should_setKeineVorfaelleTrue_when_lastVorfallWasDeleted", () => {
-      const ereigniseintraege = [
-        { beschreibung: "1", ereignisart: EreignisartEnum.Vorfall },
-        { beschreibung: "2", ereignisart: EreignisartEnum.Vorkommnis },
-        { beschreibung: "3", ereignisart: EreignisartEnum.Vorkommnis },
-        { beschreibung: "4", ereignisart: EreignisartEnum.Vorkommnis },
-      ];
-      unitUnderTest.wahlbezirkEreignisse = {
-        wahlbezirkID: "wahlbezirkID",
-        keineVorfaelle: false,
-        ereigniseintraege: Array.from(ereigniseintraege),
-      };
+    describe("loadEreignisse", () => {
+      it("should_loadWahlbezirkEreignisse_when_userHasWahlbezirkID", async () => {
+        const userStore = useUserStore();
+        const wahlbezirkID = "wahlbezirkID";
+        const user = new User();
+        user.wahlbezirkID = wahlbezirkID;
+        userStore.setUser(user);
 
-      unitUnderTest.deleteEreignisByIndex(0);
+        const mockedWahlbezirkEreignisse =
+          WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse();
+        mockDefinitions.getEreignisse.mockReturnValue(
+          mockedWahlbezirkEreignisse
+        );
 
-      expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
-        true
-      );
+        await unitUnderTest.loadEreignisse();
+
+        expect(unitUnderTest.wahlbezirkEreignisse).toStrictEqual(
+          mockedWahlbezirkEreignisse
+        );
+      });
+
+      it.each([
+        { user: null, when: "userIsNull" },
+        {
+          user: createUser(undefined),
+          when: "usersWahlbezirkIdIsUndefined",
+        },
+      ])("should_notLoadWahlbezirkEreignisse_when_$when", async ({ user }) => {
+        const userStore = useUserStore();
+        userStore.setUser(user);
+
+        await unitUnderTest.loadEreignisse();
+
+        expect(mockDefinitions.getEreignisse).toHaveBeenCalledTimes(0);
+        expect(
+          unitUnderTest.wahlbezirkEreignisse.ereigniseintraege
+        ).toHaveLength(0);
+      });
+
+      it("should_handleError_when_getEreignisseThrowsError", async () => {
+        const userStore = useUserStore();
+        const wahlbezirkID = "wahlbezirkID";
+        const user = new User();
+        user.wahlbezirkID = wahlbezirkID;
+        userStore.setUser(user);
+
+        const mockedError = new Error("Network error");
+        mockDefinitions.getEreignisse.mockRejectedValue(mockedError);
+
+        await unitUnderTest.loadEreignisse();
+        expect(unitUnderTest.error).equals("Fehler beim Laden der Ereignisse");
+      });
     });
 
-    it("should_setKeineVorkommnisseTrue_when_lastVorkommnisWasDeleted", () => {
-      const ereigniseintraege = [
-        { beschreibung: "1", ereignisart: EreignisartEnum.Vorkommnis },
-        { beschreibung: "2", ereignisart: EreignisartEnum.Vorfall },
-        { beschreibung: "3", ereignisart: EreignisartEnum.Vorfall },
-        { beschreibung: "4", ereignisart: EreignisartEnum.Vorfall },
-      ];
-      unitUnderTest.wahlbezirkEreignisse = {
-        wahlbezirkID: "wahlbezirkID",
-        keineVorkommnisse: false,
-        ereigniseintraege: Array.from(ereigniseintraege),
-      };
+    describe("sendEreignisse", () => {
+      it("should_sendEreignisse_when_wahlbezirkIDIsGiven", () => {
+        const userStore = useUserStore();
+        const wahlbezirkID = "wahlbezirkID";
+        const user = new User();
+        user.wahlbezirkID = wahlbezirkID;
+        userStore.setUser(user);
 
-      unitUnderTest.deleteEreignisByIndex(0);
+        const mockedDatetime = new Date();
 
-      expect(
-        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse
-      ).toStrictEqual(true);
-    });
-  });
+        mockDefinitions.saveEreignisse.mockReturnValue(
+          Promise.resolve({ updateDatetime: mockedDatetime })
+        );
 
-  describe("loadEreignisse", () => {
-    it("should_loadWahlbezirkEreignisse_when_userHasWahlbezirkID", async () => {
-      const userStore = useUserStore();
-      const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+        unitUnderTest.sendEreignisse();
 
-      const mockedWahlbezirkEreignisse =
-        WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse();
-      mockDefinitions.getEreignisse.mockReturnValue(mockedWahlbezirkEreignisse);
+        expect(mockDefinitions.saveEreignisse).toHaveBeenCalledWith(
+          wahlbezirkID,
+          unitUnderTest.wahlbezirkEreignisse
+        );
+      });
 
-      await unitUnderTest.loadEreignisse();
+      it("should_notsendEreignisse_when_wahlbezirkIDIsNotGiven", async () => {
+        const userStore = useUserStore();
+        const user = new User();
+        user.wahlbezirkID = undefined;
+        userStore.setUser(user);
 
-      expect(unitUnderTest.wahlbezirkEreignisse).toStrictEqual(
-        mockedWahlbezirkEreignisse
-      );
+        await unitUnderTest.sendEreignisse();
+
+        expect(mockDefinitions.saveEreignisse).toBeCalledTimes(0);
+      });
     });
 
-    it.each([
-      { user: null, when: "userIsNull" },
-      {
-        user: createUser(undefined),
-        when: "usersWahlbezirkIdIsUndefined",
-      },
-    ])("should_notLoadWahlbezirkEreignisse_when_$when", async ({ user }) => {
-      const userStore = useUserStore();
-      userStore.setUser(user);
+    describe("addEreignis", () => {
+      it("should_addEreignisToWahlbezirkEreignisse_when_ereignisIsAdded", async () => {
+        const userStore = useUserStore();
+        const wahlbezirkID = "wahlbezirkID";
+        const user = new User();
+        user.wahlbezirkID = wahlbezirkID;
+        userStore.setUser(user);
 
-      await unitUnderTest.loadEreignisse();
+        const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
+          ImportAllFromEreignisArt,
+          "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
+        );
 
-      expect(mockDefinitions.getEreignisse).toHaveBeenCalledTimes(0);
-      expect(unitUnderTest.wahlbezirkEreignisse.ereigniseintraege).toHaveLength(
-        0
-      );
+        const mockedEreignisartOfNewEreignis = EreignisartEnum.Vorfall;
+        spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockReturnValue(
+          mockedEreignisartOfNewEreignis
+        );
+
+        const mockedWahlbezirkEreignisse =
+          WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse();
+        mockDefinitions.getEreignisse.mockReturnValue(
+          mockedWahlbezirkEreignisse
+        );
+
+        await unitUnderTest.addEreignis();
+
+        expect(
+          unitUnderTest.wahlbezirkEreignisse.ereigniseintraege
+        ).toHaveLength(1);
+        expect(
+          unitUnderTest.wahlbezirkEreignisse.ereigniseintraege?.[0].ereignisart
+        ).toStrictEqual(mockedEreignisartOfNewEreignis);
+
+        spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();
+      });
     });
 
-    it("should_handleError_when_getEreignisseThrowsError", async () => {
-      const userStore = useUserStore();
-      const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+    describe("updateUhrzeitByIndex", () => {
+      it("should_doNothing_when_noEreignisEintraegeAreGiven", () => {
+        unitUnderTest.wahlbezirkEreignisse = {
+          wahlbezirkID: "wahlbezirkID",
+        };
 
-      const mockedError = new Error("Network error");
-      mockDefinitions.getEreignisse.mockRejectedValue(mockedError);
+        unitUnderTest.updateUhrzeitByIndex(new Date(), 1);
 
-      await unitUnderTest.loadEreignisse();
-      expect(unitUnderTest.error).equals("Fehler beim Laden der Ereignisse");
-    });
-  });
+        expect(
+          unitUnderTest.wahlbezirkEreignisse.ereigniseintraege
+        ).toBeUndefined();
+      });
 
-  describe("sendEreignisse", () => {
-    it("should_sendEreignisse_when_wahlbezirkIDIsGiven", () => {
-      const userStore = useUserStore();
-      const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      it("should_doNothing_when_indexIsOutOfRange", () => {
+        const dateAsString = "2025-04-29T09:33:42";
+        const eintragNotToChange = { uhrzeit: new Date(dateAsString) };
+        unitUnderTest.wahlbezirkEreignisse = {
+          wahlbezirkID: "wahlbezirkID",
+          ereigniseintraege: [eintragNotToChange],
+        };
 
-      const mockedDatetime = new Date();
+        unitUnderTest.updateUhrzeitByIndex(new Date(), 1);
 
-      mockDefinitions.saveEreignisse.mockReturnValue(
-        Promise.resolve({ updateDatetime: mockedDatetime })
-      );
+        expect(eintragNotToChange.uhrzeit).toEqual(new Date(dateAsString));
+      });
 
-      unitUnderTest.sendEreignisse();
+      it("should_updateUhrzeit_when_uhrzeitIsGiven", () => {
+        const dateAsString = "2025-04-29T09:33:42";
+        const eintragToChange = { uhrzeit: new Date(dateAsString) };
+        unitUnderTest.wahlbezirkEreignisse = {
+          wahlbezirkID: "wahlbezirkID",
+          ereigniseintraege: [eintragToChange],
+        };
 
-      expect(mockDefinitions.saveEreignisse).toHaveBeenCalledWith(
-        wahlbezirkID,
-        unitUnderTest.wahlbezirkEreignisse
-      );
-    });
+        const updateDate = new Date("2025-04-29T12:12:42");
+        unitUnderTest.updateUhrzeitByIndex(updateDate, 0);
 
-    it("should_notsendEreignisse_when_wahlbezirkIDIsNotGiven", async () => {
-      const userStore = useUserStore();
-      const user = new User();
-      user.wahlbezirkID = undefined;
-      userStore.setUser(user);
+        expect(eintragToChange.uhrzeit).toEqual(
+          new Date("2025-04-29T12:12:42")
+        );
+      });
 
-      await unitUnderTest.sendEreignisse();
+      it("should_setUhrzeitUndefined_when_uhrzeitIsUndefined", () => {
+        const dateAsString = "2025-04-29T09:33:42";
+        const eintragToChange = { uhrzeit: new Date(dateAsString) };
+        unitUnderTest.wahlbezirkEreignisse = {
+          wahlbezirkID: "wahlbezirkID",
+          ereigniseintraege: [eintragToChange],
+        };
 
-      expect(mockDefinitions.saveEreignisse).toBeCalledTimes(0);
-    });
-  });
+        unitUnderTest.updateUhrzeitByIndex(undefined, 0);
 
-  describe("addEreignis", () => {
-    it("should_addEreignisToWahlbezirkEreignisse_when_ereignisIsAdded", async () => {
-      const userStore = useUserStore();
-      const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
-
-      const mockedWahlbezirkEreignisse =
-        WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse();
-      mockDefinitions.getEreignisse.mockReturnValue(mockedWahlbezirkEreignisse);
-
-      await unitUnderTest.addEreignis();
-
-      expect(unitUnderTest.wahlbezirkEreignisse.ereigniseintraege).toHaveLength(
-        1
-      );
+        expect(eintragToChange.uhrzeit).toBeUndefined();
+      });
     });
 
-    it("should_addEreignisOfTypeVorfall_when_schliessungsuhrzeitIsUndefined", () => {
-      wahlbezirkStore.schliessungsUhrzeitSent = undefined;
+    describe("watch", () => {
+      describe("schliessungsUhrzeitSent", () => {
+        it("should_updateEreignisart_when_schliessungsuhrzeitSentHasChanged", async () => {
+          const schliessungsuhrzeitSend = new Date();
 
-      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [];
-      unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = true;
-      unitUnderTest.addEreignis();
+          const ereignisEintraege = [
+            createEreignis(),
+            createEreignis(),
+            createEreignis(),
+          ];
+          unitUnderTest.wahlbezirkEreignisse.ereigniseintraege =
+            ereignisEintraege;
 
-      expect(
-        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege[0].ereignisart
-      ).toStrictEqual("VORFALL");
-      expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
-        false
-      );
+          useWahlbezirkStore().schliessungsUhrzeitSent =
+            schliessungsuhrzeitSend;
+
+          const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
+            ImportAllFromEreignisArt,
+            "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
+          );
+
+          await nextTick(); //wait till store has processed changed schliessungsuhrzeit
+          await nextTick(); //wait till
+
+          expect(
+            spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mock.calls
+              .length
+          ).toStrictEqual(ereignisEintraege.length);
+
+          spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();
+        });
+      });
     });
 
-    it("should_addEreignisOfTypeVorkommnis_when_schliessungsuhrzeitIsSetAndBeforeCurrentTime", () => {
-      const schliessungsuhrzeit = new Date();
-      schliessungsuhrzeit.setTime(schliessungsuhrzeit.getTime() - 60 * 1000);
-      wahlbezirkStore.schliessungsUhrzeitSent = schliessungsuhrzeit;
+    describe("watchEffect", () => {
+      describe("updateKeineFlagsOfEreignisseBasedOnCurrentState", () => {
+        it("should_setKeineVorfaelleTrue_when_lastVorfallWasDeleted", async () => {
+          const ereigniseintraege = [
+            { beschreibung: "1", ereignisart: EreignisartEnum.Vorfall },
+            { beschreibung: "2", ereignisart: EreignisartEnum.Vorkommnis },
+            { beschreibung: "3", ereignisart: EreignisartEnum.Vorkommnis },
+            { beschreibung: "4", ereignisart: EreignisartEnum.Vorkommnis },
+          ];
+          unitUnderTest.wahlbezirkEreignisse = {
+            wahlbezirkID: "wahlbezirkID",
+            keineVorfaelle: false,
+            ereigniseintraege: Array.from(ereigniseintraege),
+          };
 
-      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [];
-      unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse = true;
-      unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = true;
-      unitUnderTest.addEreignis();
+          unitUnderTest.deleteEreignisByIndex(0);
 
-      expect(
-        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege[0].ereignisart
-      ).toStrictEqual(EreignisartEnum.Vorkommnis);
-      expect(
-        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse
-      ).toStrictEqual(false);
-      expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
-        true
-      );
-    });
+          await nextTick();
 
-    it("should_addEreignisOfTypeVorfall_when_schliessungsuhrzeitIsSetAndAfterCurrentTime", () => {
-      const schliessungsuhrzeit = new Date();
-      schliessungsuhrzeit.setTime(schliessungsuhrzeit.getTime() + 60 * 1000);
-      wahlbezirkStore.schliessungsUhrzeitSent = schliessungsuhrzeit;
+          expect(
+            unitUnderTest.wahlbezirkEreignisse.keineVorfaelle
+          ).toStrictEqual(true);
+        });
 
-      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [];
-      unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse = true;
-      unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = true;
-      unitUnderTest.addEreignis();
+        it("should_setKeineVorkommnisseTrue_when_lastVorkommnisWasDeleted", async () => {
+          const ereigniseintraege = [
+            { beschreibung: "1", ereignisart: EreignisartEnum.Vorkommnis },
+            { beschreibung: "2", ereignisart: EreignisartEnum.Vorfall },
+            { beschreibung: "3", ereignisart: EreignisartEnum.Vorfall },
+            { beschreibung: "4", ereignisart: EreignisartEnum.Vorfall },
+          ];
+          unitUnderTest.wahlbezirkEreignisse = {
+            wahlbezirkID: "wahlbezirkID",
+            keineVorkommnisse: false,
+            ereigniseintraege: Array.from(ereigniseintraege),
+          };
 
-      expect(
-        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege[0].ereignisart
-      ).toStrictEqual(EreignisartEnum.Vorfall);
-      expect(
-        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse
-      ).toStrictEqual(true);
-      expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
-        false
-      );
-    });
-  });
+          unitUnderTest.deleteEreignisByIndex(0);
 
-  describe("updateUhrzeitByIndex", () => {
-    it("should_doNothing_when_noEreignisEintraegeAreGiven", () => {
-      unitUnderTest.wahlbezirkEreignisse = {
-        wahlbezirkID: "wahlbezirkID",
-      };
+          await nextTick();
 
-      unitUnderTest.updateUhrzeitByIndex(new Date(), 1);
+          expect(
+            unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse
+          ).toStrictEqual(true);
+        });
 
-      expect(
-        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege
-      ).toBeUndefined();
-    });
+        it("should_setKeineVorfaelleFalse_when_vorfallWasAdded", async () => {
+          const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
+            ImportAllFromEreignisArt,
+            "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
+          );
 
-    it("should_doNothing_when_indexIsOutOfRange", () => {
-      const dateAsString = "2025-04-29T09:33:42";
-      const eintragNotToChange = { uhrzeit: new Date(dateAsString) };
-      unitUnderTest.wahlbezirkEreignisse = {
-        wahlbezirkID: "wahlbezirkID",
-        ereigniseintraege: [eintragNotToChange],
-      };
+          unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = true;
+          spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockReturnValue(
+            EreignisartEnum.Vorfall
+          );
 
-      unitUnderTest.updateUhrzeitByIndex(new Date(), 1);
+          unitUnderTest.addEreignis();
 
-      expect(eintragNotToChange.uhrzeit).toEqual(new Date(dateAsString));
-    });
+          await nextTick();
 
-    it("should_updateUhrzeit_when_uhrzeitIsGiven", () => {
-      const dateAsString = "2025-04-29T09:33:42";
-      const eintragToChange = { uhrzeit: new Date(dateAsString) };
-      unitUnderTest.wahlbezirkEreignisse = {
-        wahlbezirkID: "wahlbezirkID",
-        ereigniseintraege: [eintragToChange],
-      };
+          expect(
+            unitUnderTest.wahlbezirkEreignisse.keineVorfaelle
+          ).toStrictEqual(false);
 
-      const updateDate = new Date("2025-04-29T12:12:42");
-      unitUnderTest.updateUhrzeitByIndex(updateDate, 0);
+          spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();
+        });
 
-      expect(eintragToChange.uhrzeit).toEqual(new Date("2025-04-29T12:12:42"));
-    });
+        it("should_setKeineVorkommnisseFalse_when_vorkommnissWasAdded", async () => {
+          const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
+            ImportAllFromEreignisArt,
+            "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
+          );
 
-    it("should_setUhrzeitUndefined_when_uhrzeitIsUndefined", () => {
-      const dateAsString = "2025-04-29T09:33:42";
-      const eintragToChange = { uhrzeit: new Date(dateAsString) };
-      unitUnderTest.wahlbezirkEreignisse = {
-        wahlbezirkID: "wahlbezirkID",
-        ereigniseintraege: [eintragToChange],
-      };
+          unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse = true;
+          spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockReturnValue(
+            EreignisartEnum.Vorkommnis
+          );
 
-      unitUnderTest.updateUhrzeitByIndex(undefined, 0);
+          unitUnderTest.addEreignis();
 
-      expect(eintragToChange.uhrzeit).toBeUndefined();
-    });
-  });
+          await nextTick();
 
-  describe("watchSchliessungsUhrzeitSent", () => {
-    it("should_updateEreignisart_when_schliessungsuhrzeitSentHasChanged", async () => {
-      const schliessungsuhrzeitSend = new Date();
+          expect(
+            unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse
+          ).toStrictEqual(false);
 
-      const ereignisEintraege = [
-        createEreignis(),
-        createEreignis(),
-        createEreignis(),
-      ];
-      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = ereignisEintraege;
-
-      useWahlbezirkStore().schliessungsUhrzeitSent = schliessungsuhrzeitSend;
-
-      const spy = spyOn(
-        ImportAllFromEreignisArt,
-        "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
-      );
-
-      await nextTick(); //wait till store has processed changed schliessungsuhrzeit
-
-      expect(spy.mock.calls.length).toStrictEqual(ereignisEintraege.length);
-
-      spy.mockRestore();
+          spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();
+        });
+      });
     });
   });
 });

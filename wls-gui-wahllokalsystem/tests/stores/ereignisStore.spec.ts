@@ -143,6 +143,29 @@ describe("ereignisStore.ts", () => {
     });
   });
 
+  describe("hasEintraege", () => {
+    it("should_returnFalse_when_ereigniseintraegeAreUndefined", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = undefined;
+
+      expect(unitUnderTest.hasEintraege).toStrictEqual(false);
+    });
+    it("should_returnFalse_when_ereigniseintraegeAreEmptyArray", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [];
+
+      expect(unitUnderTest.hasEintraege).toStrictEqual(false);
+    });
+    it("should_returnTrue_when_ereigniseintraegeHasOneItem", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [{}];
+
+      expect(unitUnderTest.hasEintraege).toStrictEqual(true);
+    });
+    it("should_returnTrue_when_ereigniseintraegeHasMoreThanOneItem", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [{}, {}, {}, {}];
+
+      expect(unitUnderTest.hasEintraege).toStrictEqual(true);
+    });
+  });
+
   describe("hasVorfaelle", () => {
     it("should_returnTrue_when_ereignisEintraegeHasOneEintragOfTypeVorfall", () => {
       unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [

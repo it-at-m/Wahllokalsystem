@@ -1,4 +1,4 @@
-import { defineStore } from "pinia";
+import { acceptHMRUpdate, defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 import { User } from "@/types/User";
@@ -19,3 +19,7 @@ export const useUserStore = defineStore("user", () => {
   }
   return { getUser, setUser };
 });
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot));
+}

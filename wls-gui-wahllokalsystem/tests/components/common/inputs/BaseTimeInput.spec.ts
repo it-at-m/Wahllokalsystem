@@ -1,4 +1,8 @@
-import { getSnapshotFilename } from "@tests/utils/testutils.ts";
+import {
+  COMPONENT_EVENT_TESTS,
+  COMPONENT_RENDER_TESTS,
+  getSnapshotFilename,
+} from "@tests/utils/testutils.ts";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import {
@@ -44,7 +48,7 @@ describe("BaseTimeInput.vue", () => {
     vi.useRealTimers();
   });
 
-  describe("visual logic", () => {
+  describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderTextFieldWithCorrectLabel_when_componentIsMounted", async (context) => {
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
@@ -77,7 +81,7 @@ describe("BaseTimeInput.vue", () => {
     });
   });
 
-  describe("behavioral logic", () => {
+  describe(COMPONENT_EVENT_TESTS, () => {
     it("should_updateModelValue_when_elementIsTyped", async () => {
       const input = "12:12";
       const date = getDateFromTimeString(input);

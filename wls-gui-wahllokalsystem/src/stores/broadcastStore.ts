@@ -1,6 +1,6 @@
 import type { BroadcastMessage } from "@/types/broadcast/broadcastMessage.ts";
 
-import { defineStore, storeToRefs } from "pinia";
+import { acceptHMRUpdate, defineStore, storeToRefs } from "pinia";
 import { ref } from "vue";
 
 import { useBroadcastService } from "@/composables/broadcast/broadcastService.ts";
@@ -35,3 +35,7 @@ export const useBroadcastStore = defineStore(broadcastStoreId, () => {
     markMessageAsReadAndLoadNextMessage,
   };
 });
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useBroadcastStore, import.meta.hot));
+}

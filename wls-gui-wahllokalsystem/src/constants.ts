@@ -4,7 +4,7 @@ export const EXAMPLE_ROUTES_NOTFOUND = "404";
 export const EXAMPLE_ROUTES_DYNAMIC = "dynamic";
 export const EXAMPLE_VALIDATION = "validation-example";
 export const ROUTE_WAHLVORSTAND = "wahlvorstand";
-export const ROUTE_VORFAELLEUNDVORKOMMNISSE = "vorfaelleundvorkommnisse";
+export const ROUTE_EREIGNISSE = "ereignisse";
 export const ROUTE_WAHLSCHLIESSUNG = "wahlschliessung";
 
 export const TOAST = "toast";

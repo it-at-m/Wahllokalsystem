@@ -27,6 +27,7 @@
 <script setup lang="ts">
 import type { Ref } from "vue";
 
+import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 import {
   VBtn,
@@ -43,6 +44,7 @@ import TheEreignisseRow from "@/components/vorfaelleundvorkommnisse/TheEreigniss
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 
 const ereignisStore = useEreignisStore();
+const { hasEintraege } = storeToRefs(ereignisStore);
 
 const ereignisseValidForm: Ref<null | boolean> = ref(null);
 
@@ -51,7 +53,8 @@ const isEreignisseFormInvalid = computed(
 );
 const isSaveButtonDisabled = computed(
   () =>
-    isEreignisseFormInvalid.value || !ereignisStore.areKeineEreignisseFlagsValid
+    (isEreignisseFormInvalid.value && !hasEintraege.value) ||
+    !ereignisStore.areKeineEreignisseFlagsValid
 );
 
 function onAddEreignisClicked() {

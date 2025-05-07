@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1 v-if="progressBarActive">Offline-Daten werden heruntergeladen...</h1>
+    <h1 v-if="isLoading">Offline-Daten werden heruntergeladen...</h1>
     <h1 v-else>Offline-Daten wurden heruntergeladen.</h1>
     <p
       v-if="currentlyRunningTask"
@@ -19,7 +19,7 @@
     </p>
     <v-progress-linear
       color="primary"
-      :striped="progressBarActive"
+      :striped="isLoading"
       :max="numberOfTasksToRun"
       :model-value="numberOfSuccessfulTasks + numberOfFailedTasks"
     />
@@ -40,7 +40,7 @@
     </v-expansion-panels>
     <v-progress-linear
       color="primary"
-      :striped="progressBarActive"
+      :striped="isLoading"
       :max="numberOfTasksToRun"
       :model-value="numberOfSuccessfulTasks"
     />
@@ -60,7 +60,7 @@
     </v-expansion-panels>
     <v-progress-linear
       color="primary"
-      :striped="progressBarActive"
+      :striped="isLoading"
       :max="numberOfTasksToRun"
       :model-value="numberOfFailedTasks"
     />
@@ -89,7 +89,7 @@ const {
   failedTasks,
 } = storeToRefs(useTaskManagerStore());
 
-const progressBarActive = computed(() => {
+const isLoading = computed(() => {
   return (
     numberOfSuccessfulTasks.value + numberOfFailedTasks.value !=
     numberOfTasksToRun.value

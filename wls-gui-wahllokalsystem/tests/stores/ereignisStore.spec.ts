@@ -1,9 +1,16 @@
-import { createPinia, setActivePinia } from "pinia";
+import { createTestingPinia } from "@pinia/testing";
+import { spyOn } from "@storybook/test";
+import { useVorfaelleundvorkommnisseTestDateFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDateFactory.ts";
+import { flushPromises } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { User } from "@/types/User";
+import * as ImportAllFromEreignisArt from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
+import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -20,23 +27,252 @@ vi.mock("@/composables/vorfaelleundvorkommnisse/ereignisService", () => ({
 
 const mockedNow = new Date();
 
+const { createEreignis } = useVorfaelleundvorkommnisseTestDateFactory();
+
 describe("ereignisStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useEreignisStore>;
+  let wahlbezirkStore: ReturnType<typeof useWahlbezirkStore>;
 
   beforeEach(() => {
-    // creates a fresh pinia and makes it active
-    // so it's automatically picked up by any useStore() call
-    // without having to pass it to it: `useStore(pinia)`
-    setActivePinia(createPinia());
+    const testPinia = createTestingPinia({
+      stubActions: false,
+      createSpy: vi.fn,
+    });
+    unitUnderTest = useEreignisStore(testPinia);
+    wahlbezirkStore = useWahlbezirkStore(testPinia);
+
     vi.useFakeTimers({
       now: mockedNow,
     });
-    unitUnderTest = useEreignisStore();
   });
 
   afterEach(() => {
     vi.clearAllMocks();
     vi.useRealTimers();
+  });
+
+  describe("areKeineEreignisseFlagsValid", () => {
+    describe("should_returnTrue_when_ereignisseMatchingTheirNoDataFlag", () => {
+      it.each([
+        {
+          testcaseName: "hasVorfaelle=true && hasVorkommnisse=true",
+          data: {
+            vorfaelle: true,
+            vorkommnisse: true,
+          },
+        },
+        {
+          testcaseName: "hasVorfaelle=false && hasVorkommnisse=true",
+          data: {
+            vorfaelle: false,
+            vorkommnisse: true,
+          },
+        },
+        {
+          testcaseName: "hasVorfaelle=true && hasVorkommnisse=false",
+          data: {
+            vorfaelle: true,
+            vorkommnisse: false,
+          },
+        },
+        {
+          testcaseName: "hasVorfaelle=false && hasVorkommnisse=false",
+          data: {
+            vorfaelle: false,
+            vorkommnisse: false,
+          },
+        },
+      ])("$testcaseName", ({ data }) => {
+        // @ts-expect-error: cannot set readonly
+        unitUnderTest.hasVorfaelle = data.vorfaelle;
+        unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = !data.vorfaelle;
+
+        // @ts-expect-error: cannot set readonly
+        unitUnderTest.hasVorkommnisse = data.vorkommnisse;
+        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse =
+          !data.vorkommnisse;
+
+        expect(unitUnderTest.areKeineEreignisseFlagsValid).toStrictEqual(true);
+      });
+    });
+
+    describe("should_returnFalse_when_ereignisseNotMatchingTheirNoDataFlag", () => {
+      it.each([
+        {
+          testcaseName: "hasVorfaelle=true && hasVorkommnisse=true",
+          data: {
+            vorfaelle: true,
+            vorkommnisse: true,
+          },
+        },
+        {
+          testcaseName: "hasVorfaelle=false && hasVorkommnisse=true",
+          data: {
+            vorfaelle: false,
+            vorkommnisse: true,
+          },
+        },
+        {
+          testcaseName: "hasVorfaelle=true && hasVorkommnisse=false",
+          data: {
+            vorfaelle: true,
+            vorkommnisse: false,
+          },
+        },
+        {
+          testcaseName: "hasVorfaelle=false && hasVorkommnisse=false",
+          data: {
+            vorfaelle: false,
+            vorkommnisse: false,
+          },
+        },
+      ])("$testcaseName", ({ data }) => {
+        // @ts-expect-error: cannot set readonly
+        unitUnderTest.hasVorfaelle = data.vorfaelle;
+        unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = data.vorfaelle;
+
+        // @ts-expect-error: cannot set readonly
+        unitUnderTest.hasVorkommnisse = data.vorkommnisse;
+        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse =
+          data.vorkommnisse;
+
+        expect(unitUnderTest.areKeineEreignisseFlagsValid).toStrictEqual(false);
+      });
+    });
+  });
+
+  describe("hasEintraege", () => {
+    it("should_returnFalse_when_ereigniseintraegeAreUndefined", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = undefined;
+
+      expect(unitUnderTest.hasEintraege).toStrictEqual(false);
+    });
+    it("should_returnFalse_when_ereigniseintraegeAreEmptyArray", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [];
+
+      expect(unitUnderTest.hasEintraege).toStrictEqual(false);
+    });
+    it("should_returnTrue_when_ereigniseintraegeHasOneItem", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [{}];
+
+      expect(unitUnderTest.hasEintraege).toStrictEqual(true);
+    });
+    it("should_returnTrue_when_ereigniseintraegeHasMoreThanOneItem", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [{}, {}, {}, {}];
+
+      expect(unitUnderTest.hasEintraege).toStrictEqual(true);
+    });
+  });
+
+  describe("hasVorfaelle", () => {
+    it("should_returnTrue_when_ereignisEintraegeHasOneEintragOfTypeVorfall", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
+        { ereignisart: "VORFALL" },
+      ];
+
+      expect(unitUnderTest.hasVorfaelle).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_ereignisEintraegeHasMoreThanOneOfTypeVorfall", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
+        { ereignisart: "VORFALL" },
+        { ereignisart: "VORKOMMNIS" },
+        { ereignisart: "VORFALL" },
+        { ereignisart: "VORFALL" },
+      ];
+
+      expect(unitUnderTest.hasVorfaelle).toStrictEqual(true);
+    });
+
+    it("should_returnFalse_when_ereignisEintraegeHasNonOfTypeVorfall", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
+        { ereignisart: "VORKOMMNIS" },
+        { ereignisart: "VORKOMMNIS" },
+        { ereignisart: "VORKOMMNIS" },
+        { ereignisart: "VORKOMMNIS" },
+      ];
+
+      expect(unitUnderTest.hasVorfaelle).toStrictEqual(false);
+    });
+
+    it("should_returnFalse_when_ereignisEintraegeIsUndefined", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = undefined;
+
+      expect(unitUnderTest.hasVorfaelle).toStrictEqual(false);
+    });
+  });
+
+  describe("hasVorkommnisse", () => {
+    it("should_returnTrue_when_ereignisEintraegeHasOneEintragOfTypeVorkommnis", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
+        { ereignisart: "VORKOMMNIS" },
+      ];
+
+      expect(unitUnderTest.hasVorkommnisse).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_ereignisEintraegeHasMoreThanOneOfTypeVORKOMMNIS", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
+        { ereignisart: "VORKOMMNIS" },
+        { ereignisart: "VORFALL" },
+        { ereignisart: "VORKOMMNIS" },
+        { ereignisart: "VORKOMMNIS" },
+      ];
+
+      expect(unitUnderTest.hasVorkommnisse).toStrictEqual(true);
+    });
+
+    it("should_returnFalse_when_ereignisEintraegeHasNonOfTypeVORKOMMNIS", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
+        { ereignisart: "VORFALL" },
+        { ereignisart: "VORFALL" },
+        { ereignisart: "VORFALL" },
+        { ereignisart: "VORFALL" },
+      ];
+
+      expect(unitUnderTest.hasVorkommnisse).toStrictEqual(false);
+    });
+
+    it("should_returnFalse_when_ereignisEintraegeIsUndefined", () => {
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = undefined;
+
+      expect(unitUnderTest.hasVorkommnisse).toStrictEqual(false);
+    });
+  });
+
+  describe("addEreignis", () => {
+    it("should_addEreignisToWahlbezirkEreignisse_when_ereignisIsAdded", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      const user = new User();
+      user.wahlbezirkID = wahlbezirkID;
+      userStore.setUser(user);
+
+      const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
+        ImportAllFromEreignisArt,
+        "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
+      );
+
+      const mockedEreignisartOfNewEreignis = EreignisartEnum.Vorfall;
+      spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockReturnValue(
+        mockedEreignisartOfNewEreignis
+      );
+
+      const mockedWahlbezirkEreignisse =
+        WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse();
+      mockDefinitions.getEreignisse.mockReturnValue(mockedWahlbezirkEreignisse);
+
+      await unitUnderTest.addEreignis();
+
+      expect(unitUnderTest.wahlbezirkEreignisse.ereigniseintraege).toHaveLength(
+        1
+      );
+      expect(
+        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege?.[0].ereignisart
+      ).toStrictEqual(mockedEreignisartOfNewEreignis);
+
+      spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();
+    });
   });
 
   describe("deleteEreignisByIndex", () => {
@@ -180,33 +416,13 @@ describe("ereignisStore.ts", () => {
     });
   });
 
-  describe("addEreignis", () => {
-    it("should_addEreignisToWahlbezirkEreignisse_when_ereignisIsAdded", async () => {
-      const userStore = useUserStore();
-      const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
-
-      const mockedWahlbezirkEreignisse =
-        WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse();
-      mockDefinitions.getEreignisse.mockReturnValue(mockedWahlbezirkEreignisse);
-
-      await unitUnderTest.addEreignis();
-
-      expect(unitUnderTest.wahlbezirkEreignisse.ereigniseintraege).toHaveLength(
-        1
-      );
-    });
-  });
-
   describe("updateUhrzeitByIndex", () => {
     it("should_doNothing_when_noEreignisEintraegeAreGiven", () => {
       unitUnderTest.wahlbezirkEreignisse = {
         wahlbezirkID: "wahlbezirkID",
       };
 
-      unitUnderTest.updateUhrzeitByIndex("12:12", 1);
+      unitUnderTest.updateUhrzeitByIndex(new Date(), 1);
 
       expect(
         unitUnderTest.wahlbezirkEreignisse.ereigniseintraege
@@ -221,7 +437,7 @@ describe("ereignisStore.ts", () => {
         ereigniseintraege: [eintragNotToChange],
       };
 
-      unitUnderTest.updateUhrzeitByIndex("12:12", 1);
+      unitUnderTest.updateUhrzeitByIndex(new Date(), 1);
 
       expect(eintragNotToChange.uhrzeit).toEqual(new Date(dateAsString));
     });
@@ -234,7 +450,8 @@ describe("ereignisStore.ts", () => {
         ereigniseintraege: [eintragToChange],
       };
 
-      unitUnderTest.updateUhrzeitByIndex("12:12", 0);
+      const updateDate = new Date("2025-04-29T12:12:42");
+      unitUnderTest.updateUhrzeitByIndex(updateDate, 0);
 
       expect(eintragToChange.uhrzeit).toEqual(new Date("2025-04-29T12:12:42"));
     });
@@ -250,6 +467,183 @@ describe("ereignisStore.ts", () => {
       unitUnderTest.updateUhrzeitByIndex(undefined, 0);
 
       expect(eintragToChange.uhrzeit).toBeUndefined();
+    });
+  });
+
+  describe("watch", () => {
+    describe("schliessungsUhrzeitSent", () => {
+      it("should_updateEreignisart_when_schliessungsuhrzeitSentHasChanged", async () => {
+        const schliessungsuhrzeitSend = new Date();
+
+        const ereignisEintraege = [
+          createEreignis(),
+          createEreignis(),
+          createEreignis(),
+        ];
+        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege =
+          ereignisEintraege;
+
+        wahlbezirkStore.schliessungsUhrzeitSent = schliessungsuhrzeitSend;
+
+        const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
+          ImportAllFromEreignisArt,
+          "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
+        );
+
+        await flushPromises();
+
+        expect(
+          spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mock.calls.length
+        ).toStrictEqual(ereignisEintraege.length);
+
+        spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();
+      });
+    });
+  });
+
+  describe("watchEffect", () => {
+    describe("updateKeineFlagsOfEreignisseBasedOnCurrentState", () => {
+      it("should_setKeineVorfaelleTrue_when_lastVorfallWasDeleted", async () => {
+        const ereigniseintraege = [
+          { beschreibung: "1", ereignisart: EreignisartEnum.Vorfall },
+          { beschreibung: "2", ereignisart: EreignisartEnum.Vorkommnis },
+          { beschreibung: "3", ereignisart: EreignisartEnum.Vorkommnis },
+          { beschreibung: "4", ereignisart: EreignisartEnum.Vorkommnis },
+        ];
+        unitUnderTest.wahlbezirkEreignisse = {
+          wahlbezirkID: "wahlbezirkID",
+          keineVorfaelle: false,
+          ereigniseintraege: Array.from(ereigniseintraege),
+        };
+
+        unitUnderTest.deleteEreignisByIndex(0);
+
+        await nextTick();
+
+        expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
+          true
+        );
+      });
+
+      it("should_setKeineVorkommnisseTrue_when_lastVorkommnisWasDeleted", async () => {
+        const ereigniseintraege = [
+          { beschreibung: "1", ereignisart: EreignisartEnum.Vorkommnis },
+          { beschreibung: "2", ereignisart: EreignisartEnum.Vorfall },
+          { beschreibung: "3", ereignisart: EreignisartEnum.Vorfall },
+          { beschreibung: "4", ereignisart: EreignisartEnum.Vorfall },
+        ];
+        unitUnderTest.wahlbezirkEreignisse = {
+          wahlbezirkID: "wahlbezirkID",
+          keineVorkommnisse: false,
+          ereigniseintraege: Array.from(ereigniseintraege),
+        };
+
+        unitUnderTest.deleteEreignisByIndex(0);
+
+        await nextTick();
+
+        expect(
+          unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse
+        ).toStrictEqual(true);
+      });
+
+      it("should_setKeineVorfaelleFalse_when_vorfallWasAdded", async () => {
+        const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
+          ImportAllFromEreignisArt,
+          "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
+        );
+
+        unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = true;
+        spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockReturnValue(
+          EreignisartEnum.Vorfall
+        );
+
+        unitUnderTest.addEreignis();
+
+        await nextTick();
+
+        expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
+          false
+        );
+
+        spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();
+      });
+
+      it("should_setKeineVorkommnisseFalse_when_vorkommnissWasAdded", async () => {
+        const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
+          ImportAllFromEreignisArt,
+          "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
+        );
+
+        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse = true;
+        spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockReturnValue(
+          EreignisartEnum.Vorkommnis
+        );
+
+        unitUnderTest.addEreignis();
+
+        await nextTick();
+
+        expect(
+          unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse
+        ).toStrictEqual(false);
+
+        spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();
+      });
+
+      it("should_switchFromKeineVorfaelleToKeineVorkommnisse_when_allEreignisseOfArtVorkommnissSwitchedToVorfall", async () => {
+        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
+          { ereignisart: EreignisartEnum.Vorkommnis },
+        ];
+        unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = true;
+        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse = false;
+
+        const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
+          ImportAllFromEreignisArt,
+          "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
+        );
+        spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockReturnValue(
+          EreignisartEnum.Vorfall
+        );
+
+        unitUnderTest.updateUhrzeitByIndex(new Date(), 0);
+
+        await nextTick();
+
+        expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
+          false
+        );
+        expect(
+          unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse
+        ).toStrictEqual(true);
+      });
+
+      it("should_switchFromKeineVorkommnisseToKeineVorfaelle_when_allEreignisseOfArtVorfallSwitchedToVorkommniss", async () => {
+        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
+          { ereignisart: EreignisartEnum.Vorfall },
+        ];
+        unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = false;
+        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse = true;
+
+        const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
+          ImportAllFromEreignisArt,
+          "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
+        );
+        spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockReturnValue(
+          EreignisartEnum.Vorkommnis
+        );
+
+        unitUnderTest.updateUhrzeitByIndex(new Date(), 0);
+
+        await nextTick();
+
+        expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
+          true
+        );
+        expect(
+          unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse
+        ).toStrictEqual(false);
+      });
     });
   });
 });

@@ -178,10 +178,12 @@ import {
   ROUTE_WAHLVORSTAND,
   TOAST,
 } from "@/constants";
+import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 import { User, UserLocalDevelopment } from "@/types/User";
 
+const { loadEreignisse } = useEreignisStore();
 const userStore = useUserStore();
 const wahlvorstandStore = useWahlvorstandStore();
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
@@ -223,6 +225,7 @@ function loadUser(): void {
     .then(() => {
       wahlvorstandStore.loadWahlvorstand();
       startBroadcastMessageInterval();
+      loadEreignisse();
     });
 }
 </script>

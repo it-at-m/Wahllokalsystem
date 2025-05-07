@@ -17,14 +17,14 @@ export const useTaskManagerStore = defineStore(storeID, () => {
   const numberOfFailedTasks = computed(() => {
     return failedTasks.value.length;
   });
-  const numberOfSuccessfullTasks = computed(() => {
+  const numberOfSuccessfulTasks = computed(() => {
     return successfullyTasks.value.length;
   });
 
   const taskList: Task[] = [
     {
-      name: "test",
-      wahlbezirksart: "alle",
+      name: "Wahlen",
+      wahlbezirksart: undefined,
       forWahlen: [
         WahlWahlartEnum.Obw,
         WahlWahlartEnum.Bzw,
@@ -32,7 +32,7 @@ export const useTaskManagerStore = defineStore(storeID, () => {
       ],
       forAllWVZs: undefined,
       callback: () => {
-        return wahlStore.loadWahlen();
+        return wahlStore.loadWahlen(false);
       },
     },
   ];
@@ -53,9 +53,11 @@ export const useTaskManagerStore = defineStore(storeID, () => {
 
   return {
     initTasks,
-    numberOfSuccessfullTasks,
+    numberOfSuccessfulTasks,
     numberOfFailedTasks,
     numberOfTasksToRun,
     currentlyRunningTask,
+    successfullyTasks,
+    failedTasks,
   };
 });

@@ -6,14 +6,14 @@
       label="Besondere Vorfälle während der Wahlhandlung waren nicht zu verzeichnen."
       hide-details
       data-test="checkboxKeineVorfaelle"
-    ></v-checkbox>
+    />
     <v-checkbox
       v-model="wahlbezirkEreignisse.keineVorkommnisse"
       :disabled="isCheckboxNoVorkommnisseDisabled"
       label="Besondere Vorkommnisse während der Auszählung waren nicht zu verzeichnen."
       hide-details
       data-test="checkboxKeineVorkommnisse"
-    ></v-checkbox>
+    />
   </div>
 </template>
 

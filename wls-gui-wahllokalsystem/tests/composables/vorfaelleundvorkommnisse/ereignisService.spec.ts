@@ -70,7 +70,6 @@ describe("ereignisService", () => {
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         0
       );
-
       expect(mockDefinitions.mapToDto.mock.calls).toStrictEqual([[ereignisse]]);
     });
 
@@ -87,7 +86,6 @@ describe("ereignisService", () => {
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
       ]);
-
       expect(mockDefinitions.mapToDto.mock.calls).toStrictEqual([[ereignisse]]);
     });
 
@@ -108,7 +106,6 @@ describe("ereignisService", () => {
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.ERROR],
       ]);
-
       expect(mockDefinitions.mapToDto.mock.calls).toStrictEqual([[ereignisse]]);
     });
   });

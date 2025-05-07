@@ -8,7 +8,7 @@ import type { Wahl } from "@/types/wahl/Wahl.ts";
 import { WahlDTOWahlartEnum } from "@/api/wls-clients/generated-basisdaten-api";
 import { WahlWahlartEnum } from "@/types/wahl/wahlWahlartEnum.ts";
 
-export function useWahlenMapper() {
+export function useWahlMapper() {
   function toModel(dto: WahlDTO): Wahl {
     return {
       wahlID: dto.wahlID,

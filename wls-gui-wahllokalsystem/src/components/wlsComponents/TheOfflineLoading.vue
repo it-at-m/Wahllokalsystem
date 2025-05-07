@@ -39,7 +39,7 @@ import { storeToRefs } from "pinia";
 import { computed } from "vue";
 import { VContainer, VProgressLinear } from "vuetify/components";
 
-import { useTaskManagerStore } from "@/util/taskManager.ts";
+import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 
 const {
   numberOfSuccessfullTasks,

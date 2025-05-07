@@ -8,7 +8,7 @@
         density="comfortable"
         size="x-large"
         :color="getColor(isOffline)"
-      ></v-btn>
+      />
     </template>
     <v-card
       width="250"
@@ -38,7 +38,7 @@
         <v-divider
           thickness="2"
           color="black"
-        ></v-divider>
+        />
         <v-list-item> {{ getText(isOffline) }}</v-list-item>
       </v-list>
     </v-card>
@@ -61,8 +61,8 @@ import {
 
 import { basicPostConfig } from "@/api/axios-utils";
 import OfflineSyncer from "@/components/wlsComponents/OfflineSyncer.vue";
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { useInterval } from "@/composables/useInterval";
 
 // todo: checking status activated via click. uncomment to activate periodically
 /*

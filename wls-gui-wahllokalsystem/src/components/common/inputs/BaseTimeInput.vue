@@ -6,7 +6,7 @@
     type="time"
     clearable
     @update:model-value="onTimeChanged"
-  ></v-text-field>
+  />
 </template>
 
 <script setup lang="ts">

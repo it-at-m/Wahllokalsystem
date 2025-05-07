@@ -25,7 +25,7 @@
       <v-card
         title="Synchronizing"
         :text="statusText"
-      ></v-card>
+      />
     </v-dialog>
   </div>
 </template>
@@ -38,8 +38,6 @@ import { mergeProps, ref } from "vue";
 import { VBtn, VCard, VDialog, VTooltip } from "vuetify/components";
 
 import { basicPostConfig } from "@/api/axios-utils";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { useInterval } from "@/composables/useInterval";
 
 const dialog = ref(false);
 const statusText = ref("");

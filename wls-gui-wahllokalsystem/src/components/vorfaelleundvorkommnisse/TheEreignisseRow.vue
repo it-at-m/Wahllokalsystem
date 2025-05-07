@@ -10,7 +10,7 @@
         >{{ index + 1 }}</v-col
       >
       <v-col cols="2">
-        <base-time-input v-model="ereignis.uhrzeit"></base-time-input>
+        <base-time-input v-model="ereignis.uhrzeit" />
       </v-col>
       <v-col>
         <v-textarea
@@ -21,7 +21,7 @@
           auto-grow
           clearable
           autofokus
-        ></v-textarea>
+        />
       </v-col>
       <v-col
         cols="1"
@@ -32,8 +32,7 @@
           icon="$delete"
           title="Löschen"
           @click="onDeleteIconClicked(index)"
-        >
-        </v-icon>
+        />
       </v-col>
     </v-row>
     <yes-no-dialog
@@ -42,7 +41,7 @@
       dialogtext="Möchten Sie dieses Ereignis wirklich löschen?"
       @no="onYesNoDialogNoClicked"
       @yes="onYesNoDialogYesClicked"
-    ></yes-no-dialog>
+    />
   </div>
 </template>
 

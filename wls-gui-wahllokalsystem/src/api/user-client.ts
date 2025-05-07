@@ -43,7 +43,7 @@ export function getUser(): Promise<User> {
       u.memberof = json.memberof || [];
       u.user_roles = json.user_roles || [];
       u.authorities = json.authorities || [];
-      u.wahltag = json.wahltag || "";
+      u.wahltagID = json.wahltagID || "";
       return u;
     });
 }

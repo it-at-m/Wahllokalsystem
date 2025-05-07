@@ -20,7 +20,7 @@ class User {
 
   wahlbezirkID? = "";
   wahlbezirksArt?: WahlbezirksArtEnum;
-  wahltag? = "";
+  wahltagID? = "";
 }
 
 function UserLocalDevelopment(): User {

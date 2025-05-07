@@ -15,7 +15,7 @@ export const useUserStore = defineStore("user", () => {
   });
 
   const currentUserWahltagID = computed((): string | undefined => {
-    return user.value?.wahltag;
+    return user.value?.wahltagID;
   });
 
   const getUser = computed((): User | null => {

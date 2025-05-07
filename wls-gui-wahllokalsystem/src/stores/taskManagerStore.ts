@@ -59,5 +59,6 @@ export const useTaskManagerStore = defineStore(storeID, () => {
     currentlyRunningTask,
     successfullyTasks,
     failedTasks,
+    taskList,
   };
 });

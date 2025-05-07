@@ -11,7 +11,7 @@ const mockDefinitions = vi.hoisted(() => ({
   loadWahlen: vi.fn(),
 }));
 
-vi.mock("@/store/wahl/wahlStore.ts", () => ({
+vi.mock("@/stores/wahlStore.ts", () => ({
   useWahlStore: () => ({
     loadWahlen: mockDefinitions.loadWahlen,
   }),

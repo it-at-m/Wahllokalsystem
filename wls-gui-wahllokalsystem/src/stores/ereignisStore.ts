@@ -54,16 +54,13 @@ export const useEreignisStore = defineStore(storeID, () => {
 
   function addEreignis() {
     const currentDate = new Date();
-    const newEreignisEreignisart =
-      getEreignisArtForDateRelatedToSchliessungsuhrzeit(
-        currentDate,
-        schliessungsUhrzeitSent.value
-      );
-
     wahlbezirkEreignisse.value.ereigniseintraege?.push({
       uhrzeit: currentDate,
       beschreibung: "",
-      ereignisart: newEreignisEreignisart,
+      ereignisart: getEreignisArtForDateRelatedToSchliessungsuhrzeit(
+        currentDate,
+        schliessungsUhrzeitSent.value
+      ),
     });
   }
 

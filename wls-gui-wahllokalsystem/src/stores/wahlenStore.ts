@@ -14,10 +14,13 @@ export const useWahlenStore = defineStore(storeID, () => {
   const wahlen = ref<Wahl[]>();
   const wahlenReady = ref(false);
 
-  async function loadWahlen() {
+  async function loadWahlen(sendNotification = true) {
     const currentWahltag = userStore.currentUserWahltagID;
     if (currentWahltag) {
-      wahlen.value = await wahlenService.loadWahlen(currentWahltag);
+      wahlen.value = await wahlenService.loadWahlen(
+        currentWahltag,
+        sendNotification
+      );
       wahlenReady.value = true;
     }
   }

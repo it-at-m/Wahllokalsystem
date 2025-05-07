@@ -13,7 +13,7 @@ import {
 } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
-const ereignisService = useEreignisService();
+const { getEreignisse, saveEreignisse } = useEreignisService();
 
 export const storeID = "vorfaelleundvorkommnisse";
 
@@ -96,8 +96,7 @@ export const useEreignisStore = defineStore(storeID, () => {
     if (wahlbezirkID) {
       error.value = null;
       try {
-        wahlbezirkEreignisse.value =
-          await ereignisService.getEreignisse(wahlbezirkID);
+        wahlbezirkEreignisse.value = await getEreignisse(wahlbezirkID);
         sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
       } catch (e) {
         error.value = "Fehler beim Laden der Ereignisse";
@@ -112,10 +111,7 @@ export const useEreignisStore = defineStore(storeID, () => {
       error.value = null;
       try {
         sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
-        await ereignisService.saveEreignisse(
-          wahlbezirkID,
-          wahlbezirkEreignisse.value
-        );
+        await saveEreignisse(wahlbezirkID, wahlbezirkEreignisse.value);
       } catch (e) {
         error.value = "Fehler beim Speichern der Ereignisse";
         console.debug(e);
@@ -146,11 +142,7 @@ export const useEreignisStore = defineStore(storeID, () => {
 
     const wahlbezirkID = currentUserWahlbezirkID.value;
     if (wahlbezirkID !== undefined) {
-      ereignisService.saveEreignisse(
-        wahlbezirkID,
-        wahlbezirkEreignisse.value,
-        false
-      );
+      saveEreignisse(wahlbezirkID, wahlbezirkEreignisse.value, false);
     }
   }
 

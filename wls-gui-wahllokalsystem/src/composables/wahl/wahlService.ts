@@ -35,7 +35,7 @@ export function useWahlService() {
           UserNotificationCategoryEnum.ERROR
         );
       }
-      return null;
+      throw new Error("GetWahlen Failed");
     }
   }
 

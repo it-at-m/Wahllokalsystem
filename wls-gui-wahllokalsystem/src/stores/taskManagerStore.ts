@@ -44,7 +44,7 @@ export const useTaskManagerStore = defineStore(storeID, () => {
       try {
         await task.callback();
         successfullyTasks.value.push(task);
-      } catch (error) {
+      } catch {
         failedTasks.value.push(task);
       }
     }

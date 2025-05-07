@@ -4,8 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useWahlService } from "@/composables/wahl/wahlService.ts";
 
-const { createWahl, createWahlDTO, prepareWahlDTO, prepareWahl } =
-  useWahlTestDataFactory();
+const { createWahl, createWahlDTO } = useWahlTestDataFactory();
 
 const mockDefinitions = vi.hoisted(() => ({
   getWahlen: vi.fn(),

@@ -1,5 +1,9 @@
 import { createTestingPinia } from "@pinia/testing";
-import { getSnapshotFilename } from "@tests/utils/testutils.ts";
+import {
+  COMPONENT_EVENT_TESTS,
+  COMPONENT_RENDER_TESTS,
+  getSnapshotFilename,
+} from "@tests/utils/testutils.ts";
 import { mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
@@ -28,7 +32,7 @@ describe("TheEreignisseNoEventsCheckboxes.vue", () => {
     vi.clearAllMocks();
   });
 
-  describe("visual logic", () => {
+  describe(COMPONENT_RENDER_TESTS, () => {
     describe("databinding", () => {
       it("should_renderCheckboxesSelected_when_keineEreignisseFlagsInStoreAreTrue", async (context) => {
         const ereignisStore = useEreignisStore();
@@ -117,7 +121,7 @@ describe("TheEreignisseNoEventsCheckboxes.vue", () => {
     });
   });
 
-  describe("behavioral logic", () => {
+  describe(COMPONENT_EVENT_TESTS, () => {
     it("should_updateKeineVorfaelleToTrue_when_keineVorfaelleCheckboxWasSelected", async () => {
       const ereignisStore = useEreignisStore();
       ereignisStore.wahlbezirkEreignisse.keineVorfaelle = false;

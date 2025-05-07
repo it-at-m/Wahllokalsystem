@@ -1,6 +1,7 @@
 import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 
 import { createTestingPinia } from "@pinia/testing";
+import { COMPONENT_RENDER_TESTS } from "@tests/utils/testutils.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -37,7 +38,7 @@ describe("TheEreignisseView", () => {
     vi.clearAllMocks();
   });
 
-  describe("visual logic", () => {
+  describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderSaveButtonEnabled_when_hasEintraegeIsFalseAndKeineEreignisseFlagsAreValid", async () => {
       const ereignisStore = useEreignisStore();
 

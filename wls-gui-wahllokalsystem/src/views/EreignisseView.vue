@@ -18,7 +18,7 @@
       >
       <base-button-save
         :disabled="isSaveButtonDisabled"
-        @click="ereignisStore.sendEreignisse()"
+        @click="onSaveClicked"
       />
     </v-card-actions>
   </v-card>
@@ -46,7 +46,7 @@ import { useEreignisStore } from "@/stores/ereignisStore.ts";
 const ereignisStore = useEreignisStore();
 const { hasEintraege, areKeineEreignisseFlagsValid } =
   storeToRefs(ereignisStore);
-const { addEreignis } = ereignisStore;
+const { addEreignis, sendEreignisse } = ereignisStore;
 
 const ereignisseValidForm: Ref<null | boolean> = ref(null);
 
@@ -61,5 +61,9 @@ const isSaveButtonDisabled = computed(
 
 function onAddEreignisClicked() {
   addEreignis();
+}
+
+function onSaveClicked() {
+  sendEreignisse();
 }
 </script>

@@ -12,6 +12,7 @@ import { checkHealth } from "@/api/health-client";
 import { getUser } from "@/api/user-client.ts";
 import TheOfflineLoading from "@/components/wlsComponents/BaseOfflineLoading.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
+import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
@@ -23,6 +24,7 @@ const { startBroadcastMessageInterval } = useBroadcastCronjobService();
 const status = ref("DOWN");
 const userStore = useUserStore();
 const { initTasks } = useTaskManagerStore();
+const { loadEreignisse } = useEreignisStore();
 
 onMounted(() => {
   loadUser();
@@ -43,6 +45,7 @@ function loadUser(): void {
       wahlvorstandStore.loadWahlvorstand();
       startBroadcastMessageInterval();
       initTasks();
+      loadEreignisse();
     });
 }
 </script>

@@ -177,19 +177,10 @@ import {
   ROUTE_WAHLVORSTAND,
   TOAST,
 } from "@/constants";
-import { useEreignisStore } from "@/stores/ereignisStore.ts";
-import { useUserStore } from "@/stores/userStore.ts";
-import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
-import { User, UserLocalDevelopment } from "@/types/User";
 
-const { loadEreignisse } = useEreignisStore();
-const userStore = useUserStore();
-const wahlvorstandStore = useWahlvorstandStore();
-const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
-  useBroadcastCronjobService();
+const { stopBroadcastMessageInterval } = useBroadcastCronjobService();
 const [drawer, toggleDrawer] = useToggle();
 const isOffline = ref(false);
-const { stopBroadcastMessageInterval } = useBroadcastCronjobService();
 
 onMounted(() => {
   // config for service worker indexed db (same config as in wahl-worker.js !)
@@ -205,26 +196,6 @@ onMounted(() => {
 onUnmounted(() => {
   stopBroadcastMessageInterval();
 });
-
-/**
- * Loads UserInfo from the backend and sets it in the store.
- */
-function loadUser(): void {
-  getUser()
-    .then((user: User) => userStore.setUser(user))
-    .catch(() => {
-      // No user info received, so fallback
-      if (import.meta.env.DEV) {
-        userStore.setUser(UserLocalDevelopment());
-      } else {
-        userStore.setUser(null);
-      }
-    })
-    .then(() => {
-      wahlvorstandStore.loadWahlvorstand();
-      startBroadcastMessageInterval();
-    });
-}
 </script>
 
 <style>

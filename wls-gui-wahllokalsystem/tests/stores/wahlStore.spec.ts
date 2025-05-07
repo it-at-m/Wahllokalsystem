@@ -17,7 +17,7 @@ vi.mock("@/composables/wahl/wahlService.ts", () => ({
   }),
 }));
 
-const { createWahl, prepareWahl } = useWahlTestDataFactory();
+const { createWahl } = useWahlTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();
 
 describe("wahlStore.ts", () => {

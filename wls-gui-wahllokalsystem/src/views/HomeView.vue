@@ -12,11 +12,11 @@ import { checkHealth } from "@/api/health-client";
 import { getUser } from "@/api/user-client.ts";
 import TheOfflineLoading from "@/components/wlsComponents/TheOfflineLoading.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
+import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 import { HealthState } from "@/types/HealthState";
 import { User, UserLocalDevelopment } from "@/types/User.ts";
-import { useTaskManagerStore } from "@/util/taskManager.ts";
 
 const wahlvorstandStore = useWahlvorstandStore();
 const { startBroadcastMessageInterval } = useBroadcastCronjobService();

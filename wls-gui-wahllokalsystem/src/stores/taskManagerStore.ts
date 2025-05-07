@@ -1,12 +1,14 @@
 import type { Task } from "@/types/Task.ts";
 import type { Ref } from "vue";
 
+import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/wahlWahlartEnum.ts";
 
-export function useTaskManager() {
+const storeID = "taskManager";
+export const useTaskManagerStore = defineStore(storeID, () => {
   const wahlStore = useWahlenStore();
   const currentlyRunningTask = ref<null | Task>(null);
   const failedTasks: Ref<Task[]> = ref([]);
@@ -56,4 +58,4 @@ export function useTaskManager() {
     numberOfTasksToRun,
     currentlyRunningTask,
   };
-}
+});

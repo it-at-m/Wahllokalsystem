@@ -2,10 +2,18 @@
   <v-container>
     <h1 v-if="progressBarActive">Offline-Daten werden heruntergeladen...</h1>
     <h1 v-else>Offline-Daten wurden heruntergeladen.</h1>
-    <p v-if="currentlyRunningTask">{{ currentlyRunningTask.name }}</p>
-    <p v-else>
+    <p
+      v-if="currentlyRunningTask"
+      class="mt-4"
+    >
+      {{ currentlyRunningTask.name }}
+    </p>
+    <p
+      v-else
+      class="mt-4"
+    >
       Herunterladen der Daten abgeschlossen ({{
-        numberOfSuccessfullTasks + numberOfFailedTasks
+        numberOfSuccessfulTasks + numberOfFailedTasks
       }}
       / {{ numberOfTasksToRun }})
     </p>
@@ -13,19 +21,43 @@
       color="primary"
       :striped="progressBarActive"
       :max="numberOfTasksToRun"
-      :model-value="numberOfSuccessfullTasks + numberOfFailedTasks"
+      :model-value="numberOfSuccessfulTasks + numberOfFailedTasks"
     />
-    <p>
-      Erfolgreich heruntergeladen ({{ numberOfSuccessfullTasks }} /
-      {{ numberOfTasksToRun }})
-    </p>
+    <v-expansion-panels class="mt-4">
+      <v-expansion-panel elevation="0">
+        <v-expansion-panel-title class="pl-0">
+          Erfolgreich heruntergeladen ({{ numberOfSuccessfulTasks }} /
+          {{ numberOfTasksToRun }})
+        </v-expansion-panel-title>
+        <v-expansion-panel-text>
+          <span
+            v-for="successfulTask in successfullyTasks"
+            :key="successfulTask.name"
+            >{{ successfulTask.name }}</span
+          >
+        </v-expansion-panel-text>
+      </v-expansion-panel>
+    </v-expansion-panels>
     <v-progress-linear
       color="primary"
       :striped="progressBarActive"
       :max="numberOfTasksToRun"
-      :model-value="numberOfSuccessfullTasks"
+      :model-value="numberOfSuccessfulTasks"
     />
-    <p>Fehlgeschlagen ({{ numberOfFailedTasks }} / {{ numberOfTasksToRun }})</p>
+    <v-expansion-panels class="mt-4">
+      <v-expansion-panel elevation="0">
+        <v-expansion-panel-title class="pl-0">
+          Fehlgeschlagen ({{ numberOfFailedTasks }} / {{ numberOfTasksToRun }})
+        </v-expansion-panel-title>
+        <v-expansion-panel-text>
+          <span
+            v-for="failedTask in failedTasks"
+            :key="failedTask.name"
+            >{{ failedTask.name }}</span
+          >
+        </v-expansion-panel-text>
+      </v-expansion-panel>
+    </v-expansion-panels>
     <v-progress-linear
       color="primary"
       :striped="progressBarActive"
@@ -37,20 +69,29 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
-import { VContainer, VProgressLinear } from "vuetify/components";
+import {
+  VContainer,
+  VExpansionPanel,
+  VExpansionPanels,
+  VExpansionPanelText,
+  VExpansionPanelTitle,
+  VProgressLinear,
+} from "vuetify/components";
 
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 
 const {
-  numberOfSuccessfullTasks,
+  numberOfSuccessfulTasks,
   numberOfFailedTasks,
   numberOfTasksToRun,
   currentlyRunningTask,
+  successfullyTasks,
+  failedTasks,
 } = storeToRefs(useTaskManagerStore());
 
 const progressBarActive = computed(() => {
   return (
-    numberOfSuccessfullTasks.value + numberOfFailedTasks.value !=
+    numberOfSuccessfulTasks.value + numberOfFailedTasks.value !=
     numberOfTasksToRun.value
   );
 });

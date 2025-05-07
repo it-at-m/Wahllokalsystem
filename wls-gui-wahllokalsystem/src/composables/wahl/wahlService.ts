@@ -17,26 +17,29 @@ export function useWahlService() {
     })
   );
 
-  function loadWahlen(
+  async function getWahlen(
     wahltagID: string,
-    sendNotification: boolean
-  ): Promise<Wahl[]> {
+    sendNotification = true
+  ): Promise<Wahl[] | null> {
     try {
-      return wahlenControllerApi
-        .getWahlen(wahltagID)
-        .then((response) => response.data.map(toModel));
-    } catch (error) {
+      const response = await wahlenControllerApi.getWahlen(wahltagID);
+      if (response.status === 200) {
+        return response.data.map(toModel);
+      } else {
+        return null;
+      }
+    } catch {
       if (sendNotification) {
         userNotficicationService.addNotification(
           "Fehler beim laden der Wahlen",
           UserNotificationCategoryEnum.ERROR
         );
       }
-      throw error;
+      return null;
     }
   }
 
   return {
-    loadWahlen,
+    getWahlen,
   };
 }

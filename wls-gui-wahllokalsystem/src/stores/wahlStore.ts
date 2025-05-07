@@ -9,15 +9,15 @@ import { useUserStore } from "@/stores/userStore.ts";
 export const storeID = "wahlen";
 const wahlenService = useWahlService();
 
-export const useWahlenStore = defineStore(storeID, () => {
+export const useWahlStore = defineStore(storeID, () => {
   const userStore = useUserStore();
-  const wahlen = ref<Wahl[]>();
+  const wahlen = ref<Wahl[] | null>();
   const wahlenReady = ref(false);
 
   async function loadWahlen(sendNotification = true) {
     const currentWahltag = userStore.currentUserWahltagID;
     if (currentWahltag) {
-      wahlen.value = await wahlenService.loadWahlen(
+      wahlen.value = await wahlenService.getWahlen(
         currentWahltag,
         sendNotification
       );

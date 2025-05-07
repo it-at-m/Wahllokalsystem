@@ -4,12 +4,12 @@ import type { Ref } from "vue";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
-import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWahlStore } from "@/stores/wahlStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/wahlWahlartEnum.ts";
 
 const storeID = "taskManager";
 export const useTaskManagerStore = defineStore(storeID, () => {
-  const wahlStore = useWahlenStore();
+  const wahlStore = useWahlStore();
   const currentlyRunningTask = ref<null | Task>(null);
   const failedTasks: Ref<Task[]> = ref([]);
   const successfullyTasks: Ref<Task[]> = ref([]);

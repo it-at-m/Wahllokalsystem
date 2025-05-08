@@ -16,7 +16,7 @@ export function useWahlvorbereitungMapper() {
   }
 
   function toDTO(
-    schliessungsuhrzeit: string
+    schliessungsuhrzeit: Date
   ): UrnenwahlSchliessungsUhrzeitWriteDTO {
     const mappedUhrzeit = applyLocalTimezoneOffset(schliessungsuhrzeit);
     return {

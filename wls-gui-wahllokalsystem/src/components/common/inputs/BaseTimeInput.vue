@@ -5,6 +5,7 @@
     label="Uhrzeit"
     type="time"
     clearable
+    data-test="baseTimeInput"
     @update:model-value="onTimeChanged"
   ></v-text-field>
 </template>

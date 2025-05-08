@@ -28,25 +28,27 @@ describe("wahlenStore.ts", () => {
     unitUnderTest = useWahlenStore();
   });
 
-  it("should_loadWahlen_when_calledWithCorrectWahltagID", async () => {
-    const wahltagID = generateRandomString(10);
-    const userStore = useUserStore();
-    const user = new User();
-    user.wahltagID = wahltagID;
-    userStore.setUser(user);
+  describe("initWahlen", () => {
+    it("should_loadWahlen_when_calledWithCorrectWahltagID", async () => {
+      const wahltagID = generateRandomString(10);
+      const userStore = useUserStore();
+      const user = new User();
+      user.wahltagID = wahltagID;
+      userStore.setUser(user);
 
-    const expectedWahlArray = [createWahl()];
-    const wahl = Promise.resolve(expectedWahlArray);
-    mockDefinitions.getWahlen.mockReturnValue(wahl);
+      const expectedWahlArray = [createWahl()];
+      const wahl = Promise.resolve(expectedWahlArray);
+      mockDefinitions.getWahlen.mockReturnValue(wahl);
 
-    await unitUnderTest.loadWahlen();
+      await unitUnderTest.initWahlen();
 
-    expect(unitUnderTest.wahlen).toStrictEqual(expectedWahlArray);
-  });
+      expect(unitUnderTest.wahlen).toStrictEqual(expectedWahlArray);
+    });
 
-  it("should_notLoadWahlen_when_calledWithNullWahltagId", async () => {
-    await unitUnderTest.loadWahlen();
+    it("should_notLoadWahlen_when_calledWithNullWahltagId", async () => {
+      await unitUnderTest.initWahlen();
 
-    expect(unitUnderTest.wahlen).toStrictEqual(undefined);
+      expect(unitUnderTest.wahlen).toStrictEqual(undefined);
+    });
   });
 });

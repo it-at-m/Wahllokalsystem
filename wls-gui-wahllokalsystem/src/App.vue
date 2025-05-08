@@ -16,13 +16,13 @@
         <v-col
           cols="6"
           class="d-flex align-center justify-center"
-        ></v-col>
+        />
         <v-col
           cols="3"
           class="d-flex align-center justify-end"
         >
           <!-- heartbeat uses v-model for two-way-binding -->
-          <wls-heartbeat v-model:is-offline="isOffline"></wls-heartbeat>
+          <wls-heartbeat v-model:is-offline="isOffline" />
           <v-tooltip
             location="bottom"
             text="Routing Examples"
@@ -38,8 +38,7 @@
                   density="comfortable"
                   size="x-large"
                   color="white"
-                >
-                </v-btn>
+                />
               </router-link>
             </template>
           </v-tooltip>
@@ -58,8 +57,7 @@
                   density="comfortable"
                   size="x-large"
                   color="white"
-                >
-                </v-btn>
+                />
               </router-link>
             </template>
           </v-tooltip>
@@ -78,8 +76,7 @@
                   density="comfortable"
                   size="x-large"
                   color="white"
-                >
-                </v-btn>
+                />
               </router-link>
             </template>
           </v-tooltip>
@@ -98,8 +95,7 @@
                   density="comfortable"
                   size="x-large"
                   color="white"
-                >
-                </v-btn>
+                />
               </router-link>
             </template>
           </v-tooltip>
@@ -117,7 +113,7 @@
             <v-list-item
               v-bind="props"
               title="Wahlvorbereitung"
-            ></v-list-item>
+            />
           </template>
           <v-list-item
             title="Wahlschliessung"
@@ -139,7 +135,7 @@
         </router-view>
       </v-container>
     </v-main>
-    <the-broadcast-read-confirmation-dialog></the-broadcast-read-confirmation-dialog>
+    <the-broadcast-read-confirmation-dialog />
   </v-app>
 </template>
 

@@ -8,7 +8,7 @@
         <v-icon
           icon="$home"
           size="large"
-        ></v-icon>
+        />
         <p>
           Das API-Gateway ist:
           <span :class="status">{{ status }}</span>

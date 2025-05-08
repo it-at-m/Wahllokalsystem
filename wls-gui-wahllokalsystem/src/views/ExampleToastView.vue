@@ -55,4 +55,3 @@ function toastError(): void {
   );
 }
 </script>
-<style scoped></style>

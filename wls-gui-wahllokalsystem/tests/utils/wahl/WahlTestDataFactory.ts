@@ -15,7 +15,7 @@ import { WahlWahlartEnum } from "@/types/wahl/wahlWahlartEnum.ts";
 const {
   generateRandomDateTimeAsString,
   generateRandomString,
-  generateRandomNumber,
+  generateRandomNumberInRange,
 } = useCommonTestDataFactory();
 
 const wahlWahlartEnumValues = Object.values(WahlWahlartEnum);
@@ -24,17 +24,17 @@ const wahlDTOWahlartEnumValues = Object.values(WahlDTOWahlartEnum);
 export function useWahlTestDataFactory() {
   function createRandomFarbe(): Farbe {
     return {
-      r: generateRandomNumber(255),
-      g: generateRandomNumber(255),
-      b: generateRandomNumber(255),
+      r: generateRandomNumberInRange(0, 255),
+      g: generateRandomNumberInRange(0, 255),
+      b: generateRandomNumberInRange(0, 255),
     };
   }
 
   function createRandomFarbeDTO(): FarbeDTO {
     return {
-      r: generateRandomNumber(255),
-      g: generateRandomNumber(255),
-      b: generateRandomNumber(255),
+      r: generateRandomNumberInRange(0, 255),
+      g: generateRandomNumberInRange(0, 255),
+      b: generateRandomNumberInRange(0, 255),
     };
   }
 
@@ -42,12 +42,12 @@ export function useWahlTestDataFactory() {
     return {
       wahlID: generateRandomString(10),
       name: generateRandomString(20),
-      reihenfolge: generateRandomNumber(100),
-      waehlerverzeichnisnummer: generateRandomNumber(100),
+      reihenfolge: generateRandomNumberInRange(0, 100),
+      waehlerverzeichnisnummer: generateRandomNumberInRange(0, 100),
       wahltag: generateRandomDateTimeAsString(),
       wahlart:
         wahlDTOWahlartEnumValues[
-          generateRandomNumber(wahlDTOWahlartEnumValues.length)
+          generateRandomNumberInRange(0, wahlDTOWahlartEnumValues.length - 1)
         ],
       farbe: createRandomFarbeDTO(),
       nummer: generateRandomString(5),
@@ -58,12 +58,12 @@ export function useWahlTestDataFactory() {
     return {
       wahlID: generateRandomString(10),
       name: generateRandomString(20),
-      reihenfolge: generateRandomNumber(100),
-      waehlerverzeichnisnummer: generateRandomNumber(100),
+      reihenfolge: generateRandomNumberInRange(0, 100),
+      waehlerverzeichnisnummer: generateRandomNumberInRange(0, 100),
       wahltag: generateRandomDateTimeAsString(),
       wahlart:
         wahlWahlartEnumValues[
-          generateRandomNumber(wahlWahlartEnumValues.length)
+          generateRandomNumberInRange(0, wahlWahlartEnumValues.length - 1)
         ],
       farbe: createRandomFarbe(), // Randomly generated Farbe
       nummer: generateRandomString(5),

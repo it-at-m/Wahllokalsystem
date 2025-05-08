@@ -11,14 +11,14 @@
             icon="$invalid"
           />
           <div class="error-text">
-            <div>
-              TODO: Check Anzahl Anwesende, basierend auf Zustand (vor/nach 18
-              Uhr/Schließung)
+            <div v-if="!isMindestanwesenheitErreicht">
+              Vor der Wahlschliessung müssen mindestens 3 und nach der
+              Schliessung mindestens 5 Wahlvorstandsmitglieder anwesend sein.
             </div>
-            <div v-if="!wahlvorstandStore.isSchriftfuehrerAnwesend">
+            <div v-if="!isSchriftfuehrerAnwesend">
               Die Rolle Schriftführer*in muss besetzt sein.
             </div>
-            <div v-if="!wahlvorstandStore.isWahlvorsteherAnwesend">
+            <div v-if="!isWahlvorsteherAnwesend">
               Die Rolle Wahlvorsteher*in muss besetzt sein.
             </div>
           </div>
@@ -34,11 +34,16 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { VCard, VCardText, VCardTitle, VIcon } from "vuetify/components";
 
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 
-const wahlvorstandStore = useWahlvorstandStore();
+const {
+  isSchriftfuehrerAnwesend,
+  isWahlvorsteherAnwesend,
+  isMindestanwesenheitErreicht,
+} = storeToRefs(useWahlvorstandStore());
 </script>
 
 <style scoped>

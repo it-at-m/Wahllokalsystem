@@ -10,15 +10,6 @@ export const ROUTE_WAHLSCHLIESSUNG = "wahlschliessung";
 export const TOAST = "toast";
 export const PRINT_EXAMPLE = "print-example";
 
-export const SNACKBAR_DEFAULT_TIMEOUT = 5000;
-
-export const enum STATUS_INDICATORS {
-  SUCCESS = "success",
-  INFO = "info",
-  WARNING = "warning",
-  ERROR = "error",
-}
-
 const WLS_SERVICE_API_URL = "/api/";
 
 export const BROADCAST_SERVICE_API_URL =

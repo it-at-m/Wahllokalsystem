@@ -10,7 +10,7 @@
         <v-icon
           icon="$information"
           size="x-small"
-        ></v-icon>
+        />
         <span class="ml-2">Nachricht vom Wahlamt</span>
       </v-card-title>
       <v-card-text class="pb-0">
@@ -20,7 +20,7 @@
           label="Nachricht gelesen"
           hide-details
           data-test="checkbox-mark-as-read"
-        ></v-checkbox>
+        />
       </v-card-text>
       <v-card-actions>
         <div class="ml-2 mb-2">

@@ -27,7 +27,8 @@ export function useEreignisService() {
 
   async function saveEreignisse(
     wahlbezirkID: string,
-    ereignisse: WahlbezirkEreignisse
+    ereignisse: WahlbezirkEreignisse,
+    sendNotification = true
   ): Promise<void> {
     const ereignisseWriteDto = toDto(ereignisse);
 
@@ -36,15 +37,19 @@ export function useEreignisService() {
         wahlbezirkID,
         ereignisseWriteDto
       );
-      userNotificationService.addNotification(
-        "Die Störungen wurden erfolgreich gespeichert",
-        UserNotificationCategoryEnum.SUCCESS
-      );
+      if (sendNotification) {
+        userNotificationService.addNotification(
+          "Die Störungen wurden erfolgreich gespeichert",
+          UserNotificationCategoryEnum.SUCCESS
+        );
+      }
     } catch (error) {
-      userNotificationService.addNotification(
-        "Das Speichern der Störungen schlug fehl.",
-        UserNotificationCategoryEnum.ERROR
-      );
+      if (sendNotification) {
+        userNotificationService.addNotification(
+          "Das Speichern der Störungen schlug fehl.",
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
       console.debug(error);
     }
   }

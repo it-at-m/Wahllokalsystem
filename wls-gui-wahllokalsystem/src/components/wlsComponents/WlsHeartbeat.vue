@@ -61,8 +61,8 @@ import {
 
 import { basicPostConfig } from "@/api/axios-utils";
 import OfflineSyncer from "@/components/wlsComponents/OfflineSyncer.vue";
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { useInterval } from "@/composables/useInterval";
 
 // todo: checking status activated via click. uncomment to activate periodically
 /*

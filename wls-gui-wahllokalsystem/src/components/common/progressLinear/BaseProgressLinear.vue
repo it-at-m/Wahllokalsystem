@@ -41,5 +41,3 @@ defineProps<{
   tasks: Task[];
 }>();
 </script>
-
-<style scoped></style>

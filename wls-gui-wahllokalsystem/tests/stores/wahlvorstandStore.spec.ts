@@ -263,7 +263,7 @@ describe("wahlvorstandStore.ts", () => {
       );
     });
 
-    it("should_returnFalse_when_mindestanwesenheitisNotGiven", () => {
+    it("should_returnFalse_when_mindestanwesenheitIsNotGiven", () => {
       // @ts-expect-error: cannot set readonly
       unitUnderTest.isWahlvorsteherAnwesend = true;
       // @ts-expect-error: cannot set readonly

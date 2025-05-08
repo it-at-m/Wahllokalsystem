@@ -21,6 +21,13 @@ export const useTaskManagerStore = defineStore(storeID, () => {
     return successfullyTasks.value.length;
   });
 
+  const hasInitializationOfTasksCompletelyRun = computed(
+    () =>
+      numberOfTasksToRun.value > 0 &&
+      numberOfTasksToRun.value ==
+        numberOfSuccessfulTasks.value + numberOfFailedTasks.value
+  );
+
   const taskList: Task[] = [
     {
       name: "Wahlen",
@@ -32,7 +39,7 @@ export const useTaskManagerStore = defineStore(storeID, () => {
       ],
       onlyForAllWVZs: undefined,
       callback: () => {
-        return wahlStore.loadWahlen(false);
+        return wahlStore.initWahlen(false);
       },
     },
   ];
@@ -60,5 +67,6 @@ export const useTaskManagerStore = defineStore(storeID, () => {
     successfullyTasks,
     failedTasks,
     taskList,
+    hasInitializationOfTasksCompletelyRun,
   };
 });

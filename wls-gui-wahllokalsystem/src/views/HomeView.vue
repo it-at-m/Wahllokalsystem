@@ -23,11 +23,14 @@ const wahlvorstandStore = useWahlvorstandStore();
 const { startBroadcastMessageInterval } = useBroadcastCronjobService();
 const status = ref("DOWN");
 const userStore = useUserStore();
-const { initTasks } = useTaskManagerStore();
+const { initTasks, hasInitializationOfTasksCompletelyRun } =
+  useTaskManagerStore();
 const { loadEreignisse } = useEreignisStore();
 
 onMounted(() => {
-  loadUser();
+  if (!hasInitializationOfTasksCompletelyRun) {
+    loadUser();
+  }
   checkHealth().then((content: HealthState) => (status.value = content.status));
 });
 

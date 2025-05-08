@@ -42,6 +42,8 @@ export function getUser(): Promise<User> {
       u.preferred_username = json.preferred_username || "";
       u.memberof = json.memberof || [];
       u.user_roles = json.user_roles || [];
+
+      // WLS_Extended
       u.authorities = json.authorities || [];
       u.wahltagID = json.wahltagID || "";
       return u;

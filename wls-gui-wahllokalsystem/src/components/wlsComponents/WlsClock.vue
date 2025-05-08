@@ -3,15 +3,10 @@
          {{ currentTime.toLocaleTimeString() }}
     </div>
 </template>
-<script type="module">
+<script setup lang="ts">
 import { useCurrentTime } from "@/composables/useCurrentTime";
-export default {
-  setup() {
-    const { currentTime } = useCurrentTime();
 
-    return { currentTime };
-  },
-};
+const { currentTime } = useCurrentTime();
 </script>
 
 <style>

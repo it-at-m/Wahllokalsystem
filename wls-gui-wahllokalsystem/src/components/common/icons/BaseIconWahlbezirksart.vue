@@ -2,7 +2,7 @@
   <v-icon
     :icon="wahlartIcon"
     size="large"
-  ></v-icon>
+  />
 </template>
 
 <script setup lang="ts">

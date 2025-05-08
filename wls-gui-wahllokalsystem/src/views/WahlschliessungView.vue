@@ -1,5 +1,5 @@
 <template>
-  <base-wahlschliessung-card></base-wahlschliessung-card>
+  <base-wahlschliessung-card />
 </template>
 
 <script setup lang="ts">

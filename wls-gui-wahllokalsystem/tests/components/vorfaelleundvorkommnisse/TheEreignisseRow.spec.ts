@@ -205,5 +205,37 @@ describe("TheEreignisseRow.vue", () => {
         0
       );
     });
+
+    it("should_triggerUpdateUhrzeitInStore_when_uhrzeitOfEreignisWasChanged", async () => {
+      const ereignisStore = useEreignisStore();
+
+      const ereigniseintraege = [] as Ereignis[];
+      for (let i = 0; i < 5; i++) {
+        const date = new Date();
+        date.setHours(i, 0);
+        ereigniseintraege.push(
+          EreignisBuilder.createComplete()
+            .withUhrzeit(date)
+            .withBeschreibung(`Vorfall Nr.: ${i}`)
+        );
+      }
+
+      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = ereigniseintraege;
+
+      await nextTick();
+
+      const indexOfTimeInputForChange = 3;
+      const firstEreignisTimeinput = wrapper.findAllComponents(
+        '[data-test="baseTimeInput"]'
+      )[indexOfTimeInputForChange];
+      const newValue = new Date();
+      await firstEreignisTimeinput.setValue(newValue);
+
+      expect(ereignisStore.updateUhrzeitByIndex).toHaveBeenCalledWith(
+        newValue,
+        indexOfTimeInputForChange
+      );
+      expect(ereignisStore.updateUhrzeitByIndex).toHaveBeenCalledTimes(1);
+    });
   });
 });

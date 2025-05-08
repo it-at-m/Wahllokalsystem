@@ -51,7 +51,7 @@
             v-model="textinput"
             clearable
             label="ID"
-          ></v-text-field>
+          />
           <p>
             Dynamic Route
             <router-link

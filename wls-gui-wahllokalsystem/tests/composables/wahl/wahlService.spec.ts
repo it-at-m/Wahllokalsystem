@@ -2,7 +2,10 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+
+
 import { useWahlService } from "@/composables/wahl/wahlService.ts";
+
 
 const { createWahl, createWahlDTO } = useWahlTestDataFactory();
 
@@ -61,9 +64,8 @@ describe("WahlService.ts", () => {
     const wahltagID = generateRandomString(10);
     mockDefinitions.getWahlen.mockRejectedValue(new Error("api called failed"));
 
-    const result = await getWahlen(wahltagID);
+    await expect(async () => getWahlen(wahltagID)).rejects.toThrowError();
 
-    expect(result).toBeNull();
     expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(1);
     expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
       expect.any(String),
@@ -75,9 +77,10 @@ describe("WahlService.ts", () => {
     const wahltagID = generateRandomString(10);
     mockDefinitions.getWahlen.mockRejectedValue(new Error("api called failed"));
 
-    const result = await getWahlen(wahltagID, false);
+    await expect(async () =>
+      getWahlen(wahltagID, false)
+    ).rejects.toThrowError();
 
-    expect(result).toBeNull();
     expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(0);
   });
 });

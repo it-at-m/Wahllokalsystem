@@ -1,6 +1,6 @@
 <template>
   <div class="time">
-    {{ currentTime.toLocaleTimeString() }}
+    {{ currentTime.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) }}
   </div>
 </template>
 <script setup lang="ts">
@@ -9,7 +9,7 @@ import { useCurrentTime } from "@/composables/useCurrentTime";
 const { currentTime } = useCurrentTime();
 </script>
 
-<style>
+<style scoped>
 .time {
   min-width: 100px;
   font-size: 24px;

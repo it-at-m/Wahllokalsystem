@@ -178,7 +178,7 @@ describe("wahlvorstandStore.ts", () => {
 
     it("should_returnTrue_when_wahlIsClosedAnd5MitgliederAreAnwesend", () => {
       const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
-      schliessungsUhrzeitSent.value = undefined;
+      schliessungsUhrzeitSent.value = "2025-03-31T13:31:37";
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
         WahlvorstandsmitgliedBuilder.createMinimal()

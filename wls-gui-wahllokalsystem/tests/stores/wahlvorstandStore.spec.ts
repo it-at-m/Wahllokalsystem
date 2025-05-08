@@ -216,6 +216,8 @@ describe("wahlvorstandStore.ts", () => {
       unitUnderTest.isWahlvorsteherAnwesend = true;
       // @ts-expect-error: cannot set readonly
       unitUnderTest.isSchriftfuehrerAnwesend = true;
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isMindestanwesenheitErreicht = true;
 
       expect(unitUnderTest.isWahlvorstandAusreichendAnwesend).toStrictEqual(
         true
@@ -227,6 +229,8 @@ describe("wahlvorstandStore.ts", () => {
       unitUnderTest.isWahlvorsteherAnwesend = true;
       // @ts-expect-error: cannot set readonly
       unitUnderTest.isSchriftfuehrerAnwesend = false;
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isMindestanwesenheitErreicht = true;
 
       expect(unitUnderTest.isWahlvorstandAusreichendAnwesend).toStrictEqual(
         false
@@ -238,6 +242,8 @@ describe("wahlvorstandStore.ts", () => {
       unitUnderTest.isWahlvorsteherAnwesend = false;
       // @ts-expect-error: cannot set readonly
       unitUnderTest.isSchriftfuehrerAnwesend = true;
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isMindestanwesenheitErreicht = true;
 
       expect(unitUnderTest.isWahlvorstandAusreichendAnwesend).toStrictEqual(
         false
@@ -249,6 +255,21 @@ describe("wahlvorstandStore.ts", () => {
       unitUnderTest.isWahlvorsteherAnwesend = false;
       // @ts-expect-error: cannot set readonly
       unitUnderTest.isSchriftfuehrerAnwesend = false;
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isMindestanwesenheitErreicht = true;
+
+      expect(unitUnderTest.isWahlvorstandAusreichendAnwesend).toStrictEqual(
+        false
+      );
+    });
+
+    it("should_returnFalse_when_mindestanwesenheitisNotGiven", () => {
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isWahlvorsteherAnwesend = true;
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isSchriftfuehrerAnwesend = true;
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isMindestanwesenheitErreicht = false;
 
       expect(unitUnderTest.isWahlvorstandAusreichendAnwesend).toStrictEqual(
         false

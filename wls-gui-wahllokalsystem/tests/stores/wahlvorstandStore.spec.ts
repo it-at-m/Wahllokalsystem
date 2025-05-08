@@ -1,8 +1,9 @@
 import { createTestingPinia } from "@pinia/testing";
-import { createPinia, setActivePinia } from "pinia";
+import { createPinia, setActivePinia, storeToRefs } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 import { User } from "@/types/User";
 import { WahlvorstandBuilder } from "@/types/wahlvorstand/Wahlvorstand";
@@ -108,6 +109,96 @@ describe("wahlvorstandStore.ts", () => {
       expect(mockDefinitions.isSchriftfuehrer.mock.calls[1][0]).toStrictEqual(
         "W"
       );
+    });
+  });
+
+  describe("isMindestanwesenheitErreicht", () => {
+    it("should_returnFalse_when_noMitgliedExists", () => {
+      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [];
+
+      expect(unitUnderTest.isMindestanwesenheitErreicht).toStrictEqual(false);
+    });
+
+    it("should_returnFalse_when_wahlIsNotClosedAnd2MitgliederAreAnwesend", () => {
+      const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
+      schliessungsUhrzeitSent.value = undefined;
+
+      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
+        WahlvorstandsmitgliedBuilder.createMinimal()
+          .withFunktion("W")
+          .withAnwesend(true),
+        WahlvorstandsmitgliedBuilder.createMinimal()
+          .withFunktion("SB")
+          .withAnwesend(true),
+      ];
+
+      expect(unitUnderTest.isMindestanwesenheitErreicht).toStrictEqual(false);
+    });
+
+    it("should_returnFalse_when_wahlIsClosedAnd4MitgliederAreAnwesend", () => {
+      const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
+      schliessungsUhrzeitSent.value = "2025-03-31T13:31:37";
+
+      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
+        WahlvorstandsmitgliedBuilder.createMinimal()
+          .withFunktion("W")
+          .withAnwesend(true),
+        WahlvorstandsmitgliedBuilder.createMinimal()
+          .withFunktion("SB")
+          .withAnwesend(true),
+        WahlvorstandsmitgliedBuilder.createMinimal()
+          .withFunktion("SWB")
+          .withAnwesend(true),
+        WahlvorstandsmitgliedBuilder.createMinimal()
+          .withFunktion("B")
+          .withAnwesend(true),
+      ];
+
+      expect(unitUnderTest.isMindestanwesenheitErreicht).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_wahlIsNotClosedAnd3MitgliederAreAnwesend", () => {
+      const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
+      schliessungsUhrzeitSent.value = undefined;
+
+      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
+        WahlvorstandsmitgliedBuilder.createMinimal()
+          .withFunktion("W")
+          .withAnwesend(true),
+        WahlvorstandsmitgliedBuilder.createMinimal()
+          .withFunktion("SB")
+          .withAnwesend(true),
+        WahlvorstandsmitgliedBuilder.createMinimal()
+          .withFunktion("B")
+          .withAnwesend(true),
+      ];
+
+      expect(unitUnderTest.isMindestanwesenheitErreicht).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_wahlIsClosedAnd5MitgliederAreAnwesend", () => {
+      const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
+      schliessungsUhrzeitSent.value = undefined;
+
+      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
+        WahlvorstandsmitgliedBuilder.createMinimal()
+          .withFunktion("W")
+          .withAnwesend(true),
+        WahlvorstandsmitgliedBuilder.createMinimal()
+          .withFunktion("SB")
+          .withAnwesend(true),
+        WahlvorstandsmitgliedBuilder.createMinimal()
+          .withFunktion("SWB")
+          .withAnwesend(true),
+        WahlvorstandsmitgliedBuilder.createMinimal()
+          .withFunktion("SSB")
+          .withAnwesend(true),
+        WahlvorstandsmitgliedBuilder.createMinimal()
+          .withFunktion("B")
+          .withAnwesend(true),
+      ];
+
+      expect(unitUnderTest.isMindestanwesenheitErreicht).toStrictEqual(true);
     });
   });
 

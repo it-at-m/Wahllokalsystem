@@ -15,7 +15,6 @@
       </v-expansion-panel>
     </v-expansion-panels>
     <v-progress-linear
-      color="primary"
       :striped="isLoading"
       :max="total"
       :model-value="current"

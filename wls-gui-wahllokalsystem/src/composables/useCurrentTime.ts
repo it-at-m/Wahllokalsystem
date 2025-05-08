@@ -1,4 +1,4 @@
-import { ref, onBeforeUnmount } from "vue";
+import { onBeforeUnmount, ref } from "vue";
 
 export const useCurrentTime = () => {
   const currentTime = ref(new Date());
@@ -10,6 +10,6 @@ export const useCurrentTime = () => {
     clearInterval(updateTimeInterval);
   });
   return {
-    currentTime
+    currentTime,
   };
 };

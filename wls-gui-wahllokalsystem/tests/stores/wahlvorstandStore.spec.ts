@@ -137,7 +137,7 @@ describe("wahlvorstandStore.ts", () => {
 
     it("should_returnFalse_when_wahlIsClosedAnd4MitgliederAreAnwesend", () => {
       const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
-      schliessungsUhrzeitSent.value = "2025-03-31T13:31:37";
+      schliessungsUhrzeitSent.value = new Date("2025-03-31T13:31:37");
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
         WahlvorstandsmitgliedBuilder.createMinimal()
@@ -178,7 +178,7 @@ describe("wahlvorstandStore.ts", () => {
 
     it("should_returnTrue_when_wahlIsClosedAnd5MitgliederAreAnwesend", () => {
       const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
-      schliessungsUhrzeitSent.value = "2025-03-31T13:31:37";
+      schliessungsUhrzeitSent.value = new Date("2025-03-31T13:31:37");
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
         WahlvorstandsmitgliedBuilder.createMinimal()

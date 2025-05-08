@@ -4,7 +4,7 @@ import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useUserStore } from "@/stores/userStore.ts";
-import { useWahlStore } from "@/stores/wahlStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { User } from "@/types/User.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -20,12 +20,12 @@ vi.mock("@/composables/wahl/wahlService.ts", () => ({
 const { createWahl } = useWahlTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();
 
-describe("wahlStore.ts", () => {
-  let unitUnderTest: ReturnType<typeof useWahlStore>;
+describe("wahlenStore.ts", () => {
+  let unitUnderTest: ReturnType<typeof useWahlenStore>;
 
   beforeEach(() => {
     setActivePinia(createPinia());
-    unitUnderTest = useWahlStore();
+    unitUnderTest = useWahlenStore();
   });
 
   it("should_loadWahlen_when_calledWithCorrectWahltagID", async () => {

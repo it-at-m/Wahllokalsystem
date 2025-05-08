@@ -9,7 +9,7 @@ import { useUserStore } from "@/stores/userStore.ts";
 export const storeID = "wahlen";
 const wahlenService = useWahlService();
 
-export const useWahlStore = defineStore(storeID, () => {
+export const useWahlenStore = defineStore(storeID, () => {
   const userStore = useUserStore();
   const wahlen = ref<Wahl[] | null>();
   const wahlenReady = ref(false);

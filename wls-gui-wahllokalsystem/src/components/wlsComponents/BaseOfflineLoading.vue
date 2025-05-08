@@ -18,7 +18,6 @@
       / {{ numberOfTasksToRun }})
     </p>
     <v-progress-linear
-      color="primary"
       :striped="isLoading"
       :max="numberOfTasksToRun"
       :model-value="numberOfSuccessfulTasks + numberOfFailedTasks"
@@ -39,7 +38,6 @@
       </v-expansion-panel>
     </v-expansion-panels>
     <v-progress-linear
-      color="primary"
       :striped="isLoading"
       :max="numberOfTasksToRun"
       :model-value="numberOfSuccessfulTasks"
@@ -59,7 +57,6 @@
       </v-expansion-panel>
     </v-expansion-panels>
     <v-progress-linear
-      color="primary"
       :striped="isLoading"
       :max="numberOfTasksToRun"
       :model-value="numberOfFailedTasks"

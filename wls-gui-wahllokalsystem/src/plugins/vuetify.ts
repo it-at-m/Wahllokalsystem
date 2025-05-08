@@ -68,6 +68,7 @@ export default createVuetify({
     },
     VProgressLinear: {
       height: 50,
+      color: "primary",
     },
   },
 });

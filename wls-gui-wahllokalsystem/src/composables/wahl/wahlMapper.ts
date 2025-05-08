@@ -22,32 +22,11 @@ export function useWahlMapper() {
     };
   }
 
-  function toDto(model: Wahl): WahlDTO {
-    return {
-      wahlID: model.wahlID,
-      name: model.name,
-      reihenfolge: model.reihenfolge,
-      waehlerverzeichnisnummer: model.waehlerverzeichnisnummer,
-      wahltag: model.wahltag,
-      wahlart: modelEnumToDtoEnum(model.wahlart),
-      farbe: model.farbe ? mapFarbeModelToDto(model.farbe) : undefined,
-      nummer: model.nummer,
-    };
-  }
-
   function mapFarbeDtoToModel(dto: FarbeDTO): Farbe {
     return {
       r: dto.r,
       g: dto.g,
       b: dto.b,
-    };
-  }
-
-  function mapFarbeModelToDto(model: Farbe): FarbeDTO {
-    return {
-      r: model.r,
-      g: model.g,
-      b: model.b,
     };
   }
 
@@ -78,35 +57,7 @@ export function useWahlMapper() {
     }
   }
 
-  function modelEnumToDtoEnum(modelEnum: WahlWahlartEnum): WahlDTOWahlartEnum {
-    switch (modelEnum) {
-      case WahlWahlartEnum.Baw:
-        return WahlDTOWahlartEnum.Baw;
-      case WahlWahlartEnum.Beb:
-        return WahlDTOWahlartEnum.Beb;
-      case WahlWahlartEnum.Btw:
-        return WahlDTOWahlartEnum.Btw;
-      case WahlWahlartEnum.Bzw:
-        return WahlDTOWahlartEnum.Bzw;
-      case WahlWahlartEnum.Euw:
-        return WahlDTOWahlartEnum.Euw;
-      case WahlWahlartEnum.Ltw:
-        return WahlDTOWahlartEnum.Ltw;
-      case WahlWahlartEnum.Mbw:
-        return WahlDTOWahlartEnum.Mbw;
-      case WahlWahlartEnum.Obw:
-        return WahlDTOWahlartEnum.Obw;
-      case WahlWahlartEnum.Srw:
-        return WahlDTOWahlartEnum.Srw;
-      case WahlWahlartEnum.Svw:
-        return WahlDTOWahlartEnum.Svw;
-      case WahlWahlartEnum.Ve:
-        return WahlDTOWahlartEnum.Ve;
-    }
-  }
-
   return {
     toModel,
-    toDto,
   };
 }

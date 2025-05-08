@@ -4,14 +4,14 @@ import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
-import { useWahlStore } from "@/stores/wahlStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/wahlWahlartEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   loadWahlen: vi.fn(),
 }));
 
-vi.mock("@/stores/wahlStore.ts", () => ({
+vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlStore: () => ({
     loadWahlen: mockDefinitions.loadWahlen,
   }),
@@ -19,12 +19,12 @@ vi.mock("@/stores/wahlStore.ts", () => ({
 
 describe("taskManagerStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useTaskManagerStore>;
-  let wahlStore: ReturnType<typeof useWahlStore>;
+  let wahlStore: ReturnType<typeof useWahlenStore>;
 
   beforeEach(() => {
     setActivePinia(createPinia());
     unitUnderTest = useTaskManagerStore();
-    wahlStore = useWahlStore();
+    wahlStore = useWahlenStore();
   });
 
   it("should_setTaskSuccessful_when_noErrorsWhileRunningTask", async () => {
@@ -32,12 +32,12 @@ describe("taskManagerStore.ts", () => {
       {
         name: "Wahlen",
         wahlbezirksart: undefined,
-        forWahlen: [
+        onlyForWahlen: [
           WahlWahlartEnum.Obw,
           WahlWahlartEnum.Bzw,
           WahlWahlartEnum.Srw,
         ],
-        forAllWVZs: undefined,
+        onlyForAllWVZs: undefined,
         callback: () => {
           return Promise.resolve();
         },
@@ -57,12 +57,12 @@ describe("taskManagerStore.ts", () => {
       {
         name: "Wahlen",
         wahlbezirksart: undefined,
-        forWahlen: [
+        onlyForWahlen: [
           WahlWahlartEnum.Obw,
           WahlWahlartEnum.Bzw,
           WahlWahlartEnum.Srw,
         ],
-        forAllWVZs: undefined,
+        onlyForAllWVZs: undefined,
         callback: () => {
           return wahlStore.loadWahlen();
         },

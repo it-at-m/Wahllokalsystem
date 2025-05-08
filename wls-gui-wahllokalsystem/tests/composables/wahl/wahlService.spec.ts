@@ -54,7 +54,6 @@ describe("WahlService.ts", () => {
     const result = await getWahlen(wahltagID);
 
     expect(result).toEqual([mockedMappedWahl]);
-    expect(mockDefinitions.getWahlen.mock.calls.length).toStrictEqual(1);
     expect(mockDefinitions.getWahlen.mock.calls).toStrictEqual([[wahltagID]]);
   });
 

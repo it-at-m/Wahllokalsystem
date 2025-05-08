@@ -13,7 +13,7 @@ import {
   ROUTES_HOME,
   TOAST,
 } from "@/constants";
-import { useWahlStore } from "@/stores/wahlStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import EreignisseView from "@/views/EreignisseView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
 import ExampleNewRouteView from "@/views/ExampleNewRouteView.vue";
@@ -92,7 +92,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to) => {
-  const wahlenStore = useWahlStore();
+  const wahlenStore = useWahlenStore();
   if (to.name != ROUTES_HOME && !wahlenStore.wahlenReady) {
     return { name: ROUTES_HOME };
   }

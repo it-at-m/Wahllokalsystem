@@ -1,7 +1,10 @@
 import type { Task } from "@/types/Task.ts";
 
 import { createTestingPinia } from "@pinia/testing";
-import { getSnapshotFilename } from "@tests/utils/testutils.ts";
+import {
+  COMPONENT_RENDER_TESTS,
+  getSnapshotFilename,
+} from "@tests/utils/testutils.ts";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import {
@@ -14,15 +17,12 @@ import {
   vi,
 } from "vitest";
 import { nextTick } from "vue";
-import { createVuetify } from "vuetify";
-import * as components from "vuetify/components";
-import * as directives from "vuetify/directives";
 
 import BaseOfflineLoading from "@/components/wlsComponents/BaseOfflineLoading.vue";
+import vuetify from "@/plugins/vuetify.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 
 describe("BaseOfflineLoading.vue", () => {
-  let vuetify: ReturnType<typeof createVuetify>;
   let wrapper: VueWrapper;
 
   beforeAll(() => {
@@ -30,11 +30,6 @@ describe("BaseOfflineLoading.vue", () => {
   });
 
   beforeEach(() => {
-    vuetify = createVuetify({
-      components,
-      directives,
-    });
-
     wrapper = mount(BaseOfflineLoading, {
       global: {
         plugins: [
@@ -50,13 +45,13 @@ describe("BaseOfflineLoading.vue", () => {
 
   enableAutoUnmount(afterEach);
 
-  describe("visual logic", () => {
+  describe(COMPONENT_RENDER_TESTS, () => {
     it("should_showOneTaskSuccessfulRun_when_runSuccessful", async (context) => {
       const taskManagerStore = useTaskManagerStore();
       const exampleTask: Task = {
         wahlbezirksart: undefined,
-        forWahlen: undefined,
-        forAllWVZs: undefined,
+        onlyForWahlen: undefined,
+        onlyForAllWVZs: undefined,
         name: "test",
         callback: () => {
           return Promise.resolve();
@@ -76,8 +71,8 @@ describe("BaseOfflineLoading.vue", () => {
       const taskManagerStore = useTaskManagerStore();
       const exampleTask: Task = {
         wahlbezirksart: undefined,
-        forWahlen: undefined,
-        forAllWVZs: undefined,
+        onlyForWahlen: undefined,
+        onlyForAllWVZs: undefined,
         name: "test",
         callback: () => {
           return Promise.resolve();
@@ -97,8 +92,8 @@ describe("BaseOfflineLoading.vue", () => {
       const taskManagerStore = useTaskManagerStore();
       const exampleTask: Task = {
         wahlbezirksart: undefined,
-        forWahlen: undefined,
-        forAllWVZs: undefined,
+        onlyForWahlen: undefined,
+        onlyForAllWVZs: undefined,
         name: "test",
         callback: () => {
           return Promise.resolve();

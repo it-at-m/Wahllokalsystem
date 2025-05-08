@@ -18,7 +18,7 @@ import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { VBtn, VCol } from "vuetify/components";
 
-import { ROUTES_HOME } from "@/constants";
+import { ROUTE_HOME } from "@/constants";
 
 const route = useRoute();
 const router = useRouter();
@@ -27,7 +27,7 @@ const goBack = () => {
   if (window.history.length > 1) {
     router.go(-1);
   } else {
-    router.push(ROUTES_HOME); // Fallback to home route
+    router.push(ROUTE_HOME); // Fallback to home route
   }
 };
 </script>

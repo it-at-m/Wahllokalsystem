@@ -8,9 +8,9 @@ import {
   EXAMPLE_VALIDATION,
   PRINT_EXAMPLE,
   ROUTE_EREIGNISSE,
+  ROUTE_HOME,
   ROUTE_WAHLSCHLIESSUNG,
   ROUTE_WAHLVORSTAND,
-  ROUTES_HOME,
   TOAST,
 } from "@/constants";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -27,7 +27,7 @@ import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue
 const routes = [
   {
     path: "/",
-    name: ROUTES_HOME,
+    name: ROUTE_HOME,
     component: HomeView,
     meta: {},
   },
@@ -93,8 +93,8 @@ const router = createRouter({
 
 router.beforeEach((to) => {
   const wahlenStore = useWahlenStore();
-  if (to.name != ROUTES_HOME && !wahlenStore.wahlenReady) {
-    return { name: ROUTES_HOME };
+  if (to.name != ROUTE_HOME && !wahlenStore.wahlenReady) {
+    return { name: ROUTE_HOME };
   }
 });
 

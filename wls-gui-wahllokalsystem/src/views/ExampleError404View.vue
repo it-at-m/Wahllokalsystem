@@ -7,7 +7,7 @@
     <v-col class="text-center">
       <p>
         Back
-        <router-link :to="{ name: ROUTES_HOME }"> Home</router-link>
+        <router-link :to="{ name: ROUTE_HOME }"> Home</router-link>
       </p>
     </v-col>
   </v-container>
@@ -16,5 +16,5 @@
 <script setup lang="ts">
 import { VCol, VContainer } from "vuetify/components";
 
-import { ROUTES_HOME } from "@/constants";
+import { ROUTE_HOME } from "@/constants";
 </script>

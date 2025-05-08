@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <div>
     <v-expansion-panels class="mt-4">
       <v-expansion-panel elevation="0">
         <v-expansion-panel-title class="pl-0">
@@ -20,7 +20,7 @@
       :max="total"
       :model-value="current"
     />
-  </v-container>
+  </div>
 </template>
 <script setup lang="ts">
 import type { Task } from "@/types/Task.ts";

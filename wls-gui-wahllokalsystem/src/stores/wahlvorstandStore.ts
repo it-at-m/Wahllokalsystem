@@ -5,6 +5,7 @@ import { computed, ref } from "vue";
 
 import { useWahlvorstandService } from "@/composables/wahlvorstand/wahlvorstandService";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { WahlvorstandBuilder } from "@/types/wahlvorstand/Wahlvorstand";
 import {
   isSchriftfuehrer,
@@ -17,6 +18,8 @@ export const storeID = "wahlvorstand";
 
 export const useWahlvorstandStore = defineStore(storeID, () => {
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
+  const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
+
   const wahlvorstand = ref<Wahlvorstand>(
     WahlvorstandBuilder.createEmptyWahlvorstand()
   );
@@ -33,8 +36,21 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
       (mitglied) => isWahlvorsteher(mitglied.funktion) && mitglied.anwesend
     )
   );
+  const isMindestanwesenheitErreicht = computed<boolean>(() => {
+    const anwesend = wahlvorstand.value.wahlvorstandsmitglieder.filter(
+      (mitglied) => mitglied.anwesend
+    ).length;
+    if (!schliessungsUhrzeitSent.value) {
+      return anwesend >= 3;
+    } else {
+      return anwesend >= 5;
+    }
+  });
   const isWahlvorstandAusreichendAnwesend = computed<boolean>(
-    () => isWahlvorsteherAnwesend.value && isSchriftfuehrerAnwesend.value
+    () =>
+      isWahlvorsteherAnwesend.value &&
+      isSchriftfuehrerAnwesend.value &&
+      isMindestanwesenheitErreicht.value
   );
 
   async function loadWahlvorstand() {
@@ -68,6 +84,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   }
 
   return {
+    isMindestanwesenheitErreicht,
     isSchriftfuehrerAnwesend,
     isWahlvorstandAusreichendAnwesend,
     isWahlvorsteherAnwesend,

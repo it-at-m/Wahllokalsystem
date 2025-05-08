@@ -1,9 +1,7 @@
 <template>
   <div>
     <v-card class="border-lg border-error">
-      <v-card-title class="error-text"
-        >Ungültige Zusammensetzung des Wahlvorstands</v-card-title
-      >
+      <v-card-title>Ungültige Zusammensetzung des Wahlvorstands</v-card-title>
       <v-card-text>
         <div class="d-flex align-center mb-2">
           <v-icon

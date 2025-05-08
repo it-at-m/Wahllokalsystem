@@ -16,13 +16,13 @@ export function useWahlMapper() {
       reihenfolge: dto.reihenfolge,
       waehlerverzeichnisnummer: dto.waehlerverzeichnisnummer,
       wahltag: dto.wahltag,
-      wahlart: dtoEnumToModelEnum(dto.wahlart),
-      farbe: dto.farbe ? mapFarbeDtoToModel(dto.farbe) : undefined,
+      wahlart: _dtoEnumToModelEnum(dto.wahlart),
+      farbe: dto.farbe ? _mapFarbeDtoToModel(dto.farbe) : undefined,
       nummer: dto.nummer,
     };
   }
 
-  function mapFarbeDtoToModel(dto: FarbeDTO): Farbe {
+  function _mapFarbeDtoToModel(dto: FarbeDTO): Farbe {
     return {
       r: dto.r,
       g: dto.g,
@@ -30,7 +30,7 @@ export function useWahlMapper() {
     };
   }
 
-  function dtoEnumToModelEnum(dtoEnum: WahlDTOWahlartEnum): WahlWahlartEnum {
+  function _dtoEnumToModelEnum(dtoEnum: WahlDTOWahlartEnum): WahlWahlartEnum {
     switch (dtoEnum) {
       case WahlDTOWahlartEnum.Baw:
         return WahlWahlartEnum.Baw;

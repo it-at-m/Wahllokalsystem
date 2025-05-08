@@ -59,6 +59,8 @@ describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => {
       wahlvorstandStore.isSchriftfuehrerAnwesend = true;
       // @ts-expect-error: cannot set readonly
       wahlvorstandStore.isWahlvorsteherAnwesend = true;
+      // @ts-expect-error: cannot set readonly
+      wahlvorstandStore.isMindestanwesenheitErreicht = true;
 
       await nextTick(); //changes of stores are handled in component
 
@@ -74,6 +76,8 @@ describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => {
       wahlvorstandStore.isSchriftfuehrerAnwesend = false;
       // @ts-expect-error: cannot set readonly
       wahlvorstandStore.isWahlvorsteherAnwesend = true;
+      // @ts-expect-error: cannot set readonly
+      wahlvorstandStore.isMindestanwesenheitErreicht = true;
 
       await nextTick(); //changes of stores are handled in component
 
@@ -89,6 +93,25 @@ describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => {
       wahlvorstandStore.isSchriftfuehrerAnwesend = true;
       // @ts-expect-error: cannot set readonly
       wahlvorstandStore.isWahlvorsteherAnwesend = false;
+      // @ts-expect-error: cannot set readonly
+      wahlvorstandStore.isMindestanwesenheitErreicht = true;
+
+      await nextTick(); //changes of stores are handled in component
+
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+
+    it("should_showErrorText_when_mindestAnwesenheitIsNotGiven", async (context) => {
+      const wahlvorstandStore = useWahlvorstandStore();
+
+      // @ts-expect-error: cannot set readonly
+      wahlvorstandStore.isSchriftfuehrerAnwesend = true;
+      // @ts-expect-error: cannot set readonly
+      wahlvorstandStore.isWahlvorsteherAnwesend = false;
+      // @ts-expect-error: cannot set readonly
+      wahlvorstandStore.isMindestanwesenheitErreicht = true;
 
       await nextTick(); //changes of stores are handled in component
 

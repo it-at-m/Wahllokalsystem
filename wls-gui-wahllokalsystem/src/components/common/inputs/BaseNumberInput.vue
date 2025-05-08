@@ -8,8 +8,7 @@
     :rules="props.rules"
     type="number"
     hide-spin-buttons
-  >
-  </v-text-field>
+  />
 </template>
 
 <script setup lang="ts">

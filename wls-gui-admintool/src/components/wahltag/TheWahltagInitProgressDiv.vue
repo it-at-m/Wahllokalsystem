@@ -81,5 +81,3 @@ function stopProgressPollInterval() {
   }
 }
 </script>
-
-<style scoped></style>

@@ -22,59 +22,28 @@
       :max="numberOfTasksToRun"
       :model-value="numberOfSuccessfulTasks + numberOfFailedTasks"
     />
-    <v-expansion-panels class="mt-4">
-      <v-expansion-panel elevation="0">
-        <v-expansion-panel-title class="pl-0">
-          Erfolgreich heruntergeladen ({{ numberOfSuccessfulTasks }} /
-          {{ numberOfTasksToRun }})
-        </v-expansion-panel-title>
-        <v-expansion-panel-text>
-          <span
-            v-for="successfulTask in successfullyTasks"
-            :key="successfulTask.name"
-            >{{ successfulTask.name }}</span
-          >
-        </v-expansion-panel-text>
-      </v-expansion-panel>
-    </v-expansion-panels>
-    <v-progress-linear
-      :striped="isLoading"
-      :max="numberOfTasksToRun"
-      :model-value="numberOfSuccessfulTasks"
+    <base-progress-linear
+      titel="Erfolgreich heruntergeladen"
+      :is-loading="isLoading"
+      :current="numberOfSuccessfulTasks"
+      :total="numberOfTasksToRun"
+      :tasks="successfullyTasks"
     />
-    <v-expansion-panels class="mt-4">
-      <v-expansion-panel elevation="0">
-        <v-expansion-panel-title class="pl-0">
-          Fehlgeschlagen ({{ numberOfFailedTasks }} / {{ numberOfTasksToRun }})
-        </v-expansion-panel-title>
-        <v-expansion-panel-text>
-          <span
-            v-for="failedTask in failedTasks"
-            :key="failedTask.name"
-            >{{ failedTask.name }}</span
-          >
-        </v-expansion-panel-text>
-      </v-expansion-panel>
-    </v-expansion-panels>
-    <v-progress-linear
-      :striped="isLoading"
-      :max="numberOfTasksToRun"
-      :model-value="numberOfFailedTasks"
+    <base-progress-linear
+      titel="Fehlgeschlagen"
+      :is-loading="isLoading"
+      :current="numberOfFailedTasks"
+      :total="numberOfTasksToRun"
+      :tasks="failedTasks"
     />
   </v-container>
 </template>
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
-import {
-  VContainer,
-  VExpansionPanel,
-  VExpansionPanels,
-  VExpansionPanelText,
-  VExpansionPanelTitle,
-  VProgressLinear,
-} from "vuetify/components";
+import { VContainer, VProgressLinear } from "vuetify/components";
 
+import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressLinear.vue";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 
 const {

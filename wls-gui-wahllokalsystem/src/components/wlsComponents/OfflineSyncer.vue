@@ -16,8 +16,7 @@
               size="x-small"
               color="primary"
               @click="synchronizeOfflineData"
-            >
-            </v-btn>
+            />
           </template>
         </v-tooltip>
       </template>

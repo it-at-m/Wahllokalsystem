@@ -38,8 +38,7 @@
                   density="comfortable"
                   size="x-large"
                   color="white"
-                >
-                </v-btn>
+                />
               </router-link>
             </template>
           </v-tooltip>
@@ -58,8 +57,7 @@
                   density="comfortable"
                   size="x-large"
                   color="white"
-                >
-                </v-btn>
+                />
               </router-link>
             </template>
           </v-tooltip>
@@ -78,8 +76,7 @@
                   density="comfortable"
                   size="x-large"
                   color="white"
-                >
-                </v-btn>
+                />
               </router-link>
             </template>
           </v-tooltip>
@@ -98,8 +95,7 @@
                   density="comfortable"
                   size="x-large"
                   color="white"
-                >
-                </v-btn>
+                />
               </router-link>
             </template>
           </v-tooltip>

@@ -8,7 +8,7 @@ import { BASISDATEN_SERVICE_API_URL } from "@/constants.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { toModel } = useWahlMapper();
-const userNotficicationService = useUserNotificationService();
+const userNotificationService = useUserNotificationService();
 
 export function useWahlService() {
   const wahlenControllerApi = new WahlenControllerApi(
@@ -30,7 +30,7 @@ export function useWahlService() {
       }
     } catch {
       if (sendNotification) {
-        userNotficicationService.addNotification(
+        userNotificationService.addNotification(
           "Fehler beim laden der Wahlen",
           UserNotificationCategoryEnum.ERROR
         );

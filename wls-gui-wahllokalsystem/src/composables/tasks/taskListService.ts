@@ -1,7 +1,7 @@
 import type { Task } from "@/types/Task.ts";
 
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import { WahlWahlartEnum } from "@/types/wahl/wahlWahlartEnum.ts";
+import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 export function useTaskListService() {
   const wahlenStore = useWahlenStore();

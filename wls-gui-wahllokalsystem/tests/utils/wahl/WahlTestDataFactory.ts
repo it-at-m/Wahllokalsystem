@@ -10,7 +10,7 @@ import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
 import { WahlDTOWahlartEnum } from "@/api/wls-clients/generated-basisdaten-api";
-import { WahlWahlartEnum } from "@/types/wahl/wahlWahlartEnum.ts";
+import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const {
   generateRandomDateTimeAsString,

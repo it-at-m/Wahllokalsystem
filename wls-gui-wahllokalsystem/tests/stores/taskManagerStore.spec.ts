@@ -4,7 +4,7 @@ import { createTestingPinia } from "@pinia/testing";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
-import { WahlWahlartEnum } from "@/types/wahl/wahlWahlartEnum.ts";
+import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getTaskList: vi.fn(),

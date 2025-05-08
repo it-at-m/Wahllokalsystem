@@ -6,7 +6,7 @@ import type { Farbe } from "@/types/wahl/Farbe.ts";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import { WahlDTOWahlartEnum } from "@/api/wls-clients/generated-basisdaten-api";
-import { WahlWahlartEnum } from "@/types/wahl/wahlWahlartEnum.ts";
+import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 export function useWahlMapper() {
   function toModel(dto: WahlDTO): Wahl {

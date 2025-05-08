@@ -20,12 +20,12 @@
               label="Input required"
               clearable
               :rules="[REQUIRED]"
-            ></v-text-field>
+            />
             <v-text-field
               min-width="400"
               label="Input has to be between 2 and 10"
               :rules="[MIN_LENGTH(2), MAX_LENGTH(10)]"
-            ></v-text-field>
+            />
           </v-container>
         </v-tabs-window-item>
         <v-tabs-window-item value="1">
@@ -45,17 +45,17 @@
                 clearable
                 label="Input required"
                 min-width="400"
-              ></v-text-field>
+              />
               <v-text-field
                 :rules="[MAX_LENGTH(20)]"
                 label="Input cant be longer than 20"
                 min-width="400"
-              ></v-text-field>
+              />
               <v-text-field
                 :rules="[MIN_LENGTH(5)]"
                 label="Input cant be shorter than 5"
                 min-width="400"
-              ></v-text-field>
+              />
               <v-btn
                 primary
                 class="mt-2"
@@ -63,7 +63,7 @@
                 type="submit"
                 :disabled="!firstFormIsValid"
                 block
-              ></v-btn>
+              />
             </v-form>
           </v-container>
         </v-tabs-window-item>
@@ -85,23 +85,23 @@
                 clearable
                 label="Input required"
                 min-width="400"
-              ></v-text-field>
+              />
               <v-text-field
                 :rules="[MAX_LENGTH(20)]"
                 label="Input cant be longer than 20"
                 min-width="400"
-              ></v-text-field>
+              />
               <v-text-field
                 :rules="[MIN_LENGTH(5)]"
                 label="Input cant be shorter than 5"
                 min-width="400"
-              ></v-text-field>
+              />
               <v-btn
                 primary
                 class="mt-2"
                 text="Submit"
                 type="submit"
-              ></v-btn>
+              />
             </v-form>
           </v-container>
         </v-tabs-window-item>

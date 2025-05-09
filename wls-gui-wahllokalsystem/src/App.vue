@@ -165,6 +165,7 @@ import {
   VTooltip,
 } from "vuetify/components";
 
+import { getUser } from "@/api/user-client.ts";
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
@@ -178,10 +179,21 @@ import {
   ROUTE_WAHLVORSTAND,
   TOAST,
 } from "@/constants";
+import { useEreignisStore } from "@/stores/ereignisStore.ts";
+import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
+import { User, UserLocalDevelopment } from "@/types/User.ts";
 
 const { stopBroadcastMessageInterval } = useBroadcastCronjobService();
 const [drawer, toggleDrawer] = useToggle();
 const isOffline = ref(false);
+const { initTasks, hasInitializationOfTasksCompletelyRun } =
+  useTaskManagerStore();
+const userStore = useUserStore();
+const wahlvorstandStore = useWahlvorstandStore();
+const { startBroadcastMessageInterval } = useBroadcastCronjobService();
+const { loadEreignisse } = useEreignisStore();
 
 onMounted(() => {
   // config for service worker indexed db (same config as in wahl-worker.js !)
@@ -192,11 +204,33 @@ onMounted(() => {
     storeName: "wahlstore",
     description: "store for wahlnumber",
   });
+
+  if (!hasInitializationOfTasksCompletelyRun) {
+    loadUser();
+  }
 });
 
 onUnmounted(() => {
   stopBroadcastMessageInterval();
 });
+
+function loadUser(): void {
+  getUser()
+    .then((user: User) => userStore.setUser(user))
+    .catch(() => {
+      if (import.meta.env.DEV) {
+        userStore.setUser(UserLocalDevelopment());
+      } else {
+        userStore.setUser(null);
+      }
+    })
+    .then(() => {
+      wahlvorstandStore.loadWahlvorstand();
+      startBroadcastMessageInterval();
+      initTasks();
+      loadEreignisse();
+    });
+}
 </script>
 
 <style>

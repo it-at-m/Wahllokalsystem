@@ -1,3 +1,8 @@
 :root {
   --vp-code-copy-copied-text-content: "In Zwischenablage kopiert!";
+  --vp-layout-max-width: 100%;
+}
+
+.VPDoc.has-aside .content-container {
+  max-width: 100% !important;
 }

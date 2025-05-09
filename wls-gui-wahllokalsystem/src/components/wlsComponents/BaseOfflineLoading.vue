@@ -4,13 +4,13 @@
     <h1 v-else>Offline-Daten wurden heruntergeladen.</h1>
     <p
       v-if="currentlyRunningTask"
-      class="mt-4"
+      class="my-4"
     >
       {{ currentlyRunningTask.name }}
     </p>
     <p
       v-else
-      class="mt-4"
+      class="my-4"
     >
       Herunterladen der Daten abgeschlossen ({{
         numberOfSuccessfulTasks + numberOfFailedTasks

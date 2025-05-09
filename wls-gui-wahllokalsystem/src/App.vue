@@ -184,14 +184,14 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 import { User, UserLocalDevelopment } from "@/types/User.ts";
 
-const { stopBroadcastMessageInterval } = useBroadcastCronjobService();
+const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
+  useBroadcastCronjobService();
 const [drawer, toggleDrawer] = useToggle();
 const isOffline = ref(false);
 const { initTasks, hasInitializationOfTasksCompletelyRun } =
   useTaskManagerStore();
 const userStore = useUserStore();
 const wahlvorstandStore = useWahlvorstandStore();
-const { startBroadcastMessageInterval } = useBroadcastCronjobService();
 const { loadEreignisse } = useEreignisStore();
 
 onMounted(() => {

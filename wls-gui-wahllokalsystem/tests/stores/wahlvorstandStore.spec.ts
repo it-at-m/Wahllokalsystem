@@ -2,6 +2,10 @@ import { createTestingPinia } from "@pinia/testing";
 import { createPinia, setActivePinia, storeToRefs } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import {
+  MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG,
+  MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG,
+} from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
@@ -120,16 +124,34 @@ describe("wahlvorstandStore.ts", () => {
     });
 
     it.each([
-      { schliessungsuhrzeit: undefined, anwesend: 2, expected: false },
       {
-        schliessungsuhrzeit: new Date("2025-03-31T13:31:37"),
-        anwesend: 4,
+        schliessungsuhrzeit: undefined,
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG - 1,
         expected: false,
       },
-      { schliessungsuhrzeit: undefined, anwesend: 3, expected: true },
       {
         schliessungsuhrzeit: new Date("2025-03-31T13:31:37"),
-        anwesend: 5,
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG - 1,
+        expected: false,
+      },
+      {
+        schliessungsuhrzeit: undefined,
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG,
+        expected: true,
+      },
+      {
+        schliessungsuhrzeit: undefined,
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG + 1,
+        expected: true,
+      },
+      {
+        schliessungsuhrzeit: new Date("2025-03-31T13:31:37"),
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG,
+        expected: true,
+      },
+      {
+        schliessungsuhrzeit: new Date("2025-03-31T13:31:37"),
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG + 1,
         expected: true,
       },
     ])(

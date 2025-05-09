@@ -10,8 +10,11 @@
           />
           <div class="error-text">
             <div v-if="!isMindestanwesenheitErreicht">
-              Vor der Wahlschliessung müssen mindestens 3 und nach der
-              Schliessung mindestens 5 Wahlvorstandsmitglieder anwesend sein.
+              Vor der Wahlschliessung müssen mindestens
+              {{ MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG }} und nach der
+              Schliessung mindestens
+              {{ MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG }}
+              Wahlvorstandsmitglieder anwesend sein.
             </div>
             <div v-if="!isSchriftfuehrerAnwesend">
               Die Rolle Schriftführer*in muss besetzt sein.
@@ -35,6 +38,10 @@
 import { storeToRefs } from "pinia";
 import { VCard, VCardText, VCardTitle, VIcon } from "vuetify/components";
 
+import {
+  MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG,
+  MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG,
+} from "@/constants.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 
 const {

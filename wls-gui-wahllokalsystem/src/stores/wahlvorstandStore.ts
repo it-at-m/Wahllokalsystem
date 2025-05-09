@@ -4,6 +4,10 @@ import { acceptHMRUpdate, defineStore, storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
 import { useWahlvorstandService } from "@/composables/wahlvorstand/wahlvorstandService";
+import {
+  MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG,
+  MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG,
+} from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { WahlvorstandBuilder } from "@/types/wahlvorstand/Wahlvorstand";
@@ -41,9 +45,9 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
       (mitglied) => mitglied.anwesend
     ).length;
     if (!schliessungsUhrzeitSent.value) {
-      return anwesend >= 3;
+      return anwesend >= MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG;
     } else {
-      return anwesend >= 5;
+      return anwesend >= MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG;
     }
   });
   const isWahlvorstandAusreichendAnwesend = computed<boolean>(

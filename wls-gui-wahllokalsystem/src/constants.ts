@@ -10,6 +10,9 @@ export const ROUTE_WAHLSCHLIESSUNG = "wahlschliessung";
 export const TOAST = "toast";
 export const PRINT_EXAMPLE = "print-example";
 
+export const MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG = 3;
+export const MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG = 5;
+
 export const SNACKBAR_DEFAULT_TIMEOUT = 5000;
 
 export const enum STATUS_INDICATORS {

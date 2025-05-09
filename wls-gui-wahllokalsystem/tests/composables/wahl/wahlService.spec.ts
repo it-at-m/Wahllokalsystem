@@ -2,10 +2,7 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-
-
 import { useWahlService } from "@/composables/wahl/wahlService.ts";
-
 
 const { createWahl, createWahlDTO } = useWahlTestDataFactory();
 

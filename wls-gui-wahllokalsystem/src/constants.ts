@@ -10,6 +10,9 @@ export const ROUTE_WAHLSCHLIESSUNG = "wahlschliessung";
 export const TOAST = "toast";
 export const PRINT_EXAMPLE = "print-example";
 
+export const MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG = 3;
+export const MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG = 5;
+
 const WLS_SERVICE_API_URL = "/api/";
 
 export const BROADCAST_SERVICE_API_URL =

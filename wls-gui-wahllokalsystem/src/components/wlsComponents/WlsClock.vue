@@ -21,6 +21,6 @@ const { currentTime } = useCurrentTime();
   font-size: 24px;
   font-family: "Rationale", monospace;
   font-style: italic;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
 }
 </style>

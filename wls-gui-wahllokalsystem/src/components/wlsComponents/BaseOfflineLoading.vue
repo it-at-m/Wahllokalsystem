@@ -28,6 +28,7 @@
       :current="numberOfSuccessfulTasks"
       :total="numberOfTasksToRun"
       :tasks="successfullyTasks"
+      color="success"
     />
     <base-progress-linear
       titel="Fehlgeschlagen"
@@ -35,6 +36,7 @@
       :current="numberOfFailedTasks"
       :total="numberOfTasksToRun"
       :tasks="failedTasks"
+      color="warn"
     />
   </v-container>
 </template>

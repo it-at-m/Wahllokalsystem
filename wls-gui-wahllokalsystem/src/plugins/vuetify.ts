@@ -58,6 +58,7 @@ export default createVuetify({
           accent: "#7BA4D9",
           success: "#69BE28",
           error: "#FF0000",
+          warn: "#ffe993",
         },
       },
     },

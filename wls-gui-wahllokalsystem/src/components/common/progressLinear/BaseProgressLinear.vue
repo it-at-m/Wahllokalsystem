@@ -18,6 +18,7 @@
       :striped="isLoading"
       :max="total"
       :model-value="current"
+      :color="color"
     />
   </div>
 </template>
@@ -38,5 +39,6 @@ defineProps<{
   current: number;
   total: number;
   tasks: Task[];
+  color?: string;
 }>();
 </script>

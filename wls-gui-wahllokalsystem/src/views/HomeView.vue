@@ -10,7 +10,7 @@ import { VContainer } from "vuetify/components";
 
 import { checkHealth } from "@/api/health-client";
 import { getUser } from "@/api/user-client.ts";
-import BaseOfflineLoading from "@/components/common/BaseOfflineLoading.vue";
+import BaseOfflineLoading from "@/components/wlsComponents/BaseOfflineLoading.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";

@@ -18,7 +18,7 @@ import {
 } from "vitest";
 import { nextTick } from "vue";
 
-import BaseOfflineLoading from "@/components/common/BaseOfflineLoading.vue";
+import BaseOfflineLoading from "@/components/wlsComponents/BaseOfflineLoading.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 

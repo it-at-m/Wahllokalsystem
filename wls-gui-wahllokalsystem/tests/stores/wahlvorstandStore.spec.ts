@@ -1,8 +1,13 @@
 import { createTestingPinia } from "@pinia/testing";
-import { createPinia, setActivePinia } from "pinia";
+import { createPinia, setActivePinia, storeToRefs } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import {
+  MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG,
+  MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG,
+} from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 import { User } from "@/types/User";
 import { WahlvorstandBuilder } from "@/types/wahlvorstand/Wahlvorstand";
@@ -111,6 +116,59 @@ describe("wahlvorstandStore.ts", () => {
     });
   });
 
+  describe("isMindestanwesenheitErreicht", () => {
+    it("should_returnFalse_when_noMitgliedExists", () => {
+      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [];
+
+      expect(unitUnderTest.isMindestanwesenheitErreicht).toStrictEqual(false);
+    });
+
+    it.each([
+      {
+        schliessungsuhrzeit: undefined,
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG - 1,
+        expected: false,
+      },
+      {
+        schliessungsuhrzeit: new Date("2025-03-31T13:31:37"),
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG - 1,
+        expected: false,
+      },
+      {
+        schliessungsuhrzeit: undefined,
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG,
+        expected: true,
+      },
+      {
+        schliessungsuhrzeit: undefined,
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG + 1,
+        expected: true,
+      },
+      {
+        schliessungsuhrzeit: new Date("2025-03-31T13:31:37"),
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG,
+        expected: true,
+      },
+      {
+        schliessungsuhrzeit: new Date("2025-03-31T13:31:37"),
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG + 1,
+        expected: true,
+      },
+    ])(
+      "should_return'$expected'_when_schliessungsuhrzeitIs'$schliessungsuhrzeit'And'$anwesend'MitgliederAreAnwesend",
+      ({ expected, schliessungsuhrzeit, anwesend }) => {
+        const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
+        schliessungsUhrzeitSent.value = schliessungsuhrzeit;
+
+        _addAnwesendeWahlvorstandsmitglieder(anwesend);
+
+        expect(unitUnderTest.isMindestanwesenheitErreicht).toStrictEqual(
+          expected
+        );
+      }
+    );
+  });
+
   describe("isWahlvorstandAusreichendAnwesend", () => {
     let unitUnderTest: ReturnType<typeof useWahlvorstandStore>;
     beforeEach(() => {
@@ -125,6 +183,8 @@ describe("wahlvorstandStore.ts", () => {
       unitUnderTest.isWahlvorsteherAnwesend = true;
       // @ts-expect-error: cannot set readonly
       unitUnderTest.isSchriftfuehrerAnwesend = true;
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isMindestanwesenheitErreicht = true;
 
       expect(unitUnderTest.isWahlvorstandAusreichendAnwesend).toStrictEqual(
         true
@@ -136,6 +196,8 @@ describe("wahlvorstandStore.ts", () => {
       unitUnderTest.isWahlvorsteherAnwesend = true;
       // @ts-expect-error: cannot set readonly
       unitUnderTest.isSchriftfuehrerAnwesend = false;
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isMindestanwesenheitErreicht = true;
 
       expect(unitUnderTest.isWahlvorstandAusreichendAnwesend).toStrictEqual(
         false
@@ -147,6 +209,8 @@ describe("wahlvorstandStore.ts", () => {
       unitUnderTest.isWahlvorsteherAnwesend = false;
       // @ts-expect-error: cannot set readonly
       unitUnderTest.isSchriftfuehrerAnwesend = true;
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isMindestanwesenheitErreicht = true;
 
       expect(unitUnderTest.isWahlvorstandAusreichendAnwesend).toStrictEqual(
         false
@@ -158,6 +222,21 @@ describe("wahlvorstandStore.ts", () => {
       unitUnderTest.isWahlvorsteherAnwesend = false;
       // @ts-expect-error: cannot set readonly
       unitUnderTest.isSchriftfuehrerAnwesend = false;
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isMindestanwesenheitErreicht = true;
+
+      expect(unitUnderTest.isWahlvorstandAusreichendAnwesend).toStrictEqual(
+        false
+      );
+    });
+
+    it("should_returnFalse_when_mindestanwesenheitIsNotGiven", () => {
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isWahlvorsteherAnwesend = true;
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isSchriftfuehrerAnwesend = true;
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isMindestanwesenheitErreicht = false;
 
       expect(unitUnderTest.isWahlvorstandAusreichendAnwesend).toStrictEqual(
         false
@@ -318,6 +397,14 @@ describe("wahlvorstandStore.ts", () => {
       );
     });
   });
+
+  function _addAnwesendeWahlvorstandsmitglieder(zahl: number) {
+    for (let i = 1; i <= zahl; i++) {
+      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder.push(
+        WahlvorstandsmitgliedBuilder.createMinimal().withAnwesend(true)
+      );
+    }
+  }
 });
 
 function createUser(wahlbezirkID: string | undefined): User {

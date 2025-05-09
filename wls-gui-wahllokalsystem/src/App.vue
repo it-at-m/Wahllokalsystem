@@ -163,7 +163,6 @@ import {
 
 import { getUser } from "@/api/user-client";
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
-import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
 import {

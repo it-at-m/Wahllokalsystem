@@ -105,6 +105,10 @@
     <v-navigation-drawer v-model="drawer">
       <v-list>
         <v-list-item
+          title="Home"
+          :to="'/'"
+        />
+        <v-list-item
           title="Wahlvorstand"
           :to="ROUTE_WAHLVORSTAND"
         />

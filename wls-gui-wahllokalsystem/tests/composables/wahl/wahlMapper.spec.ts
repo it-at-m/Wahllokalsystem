@@ -8,56 +8,58 @@ import { WahlDTOWahlartEnum } from "@/api/wls-clients/generated-basisdaten-api";
 import { useWahlMapper } from "@/composables/wahl/wahlMapper.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
-describe("WahlMapper", () => {
+describe("wahlMapper", () => {
   const { toModel } = useWahlMapper();
   const { prepareWahlDTO } = useWahlTestDataFactory();
 
-  it("should_returnModel_when_dtoIsGiven", () => {
-    const dto: WahlDTO = prepareWahlDTO()
-      .wahlart(WahlDTOWahlartEnum.Baw)
-      .build();
+  describe("toModel", () => {
+    it("should_returnModel_when_dtoIsGiven", () => {
+      const dto: WahlDTO = prepareWahlDTO()
+        .wahlart(WahlDTOWahlartEnum.Baw)
+        .build();
 
-    if (!dto.farbe) {
-      throw new Error("Testdaten haben keine Farbe");
-    }
-    const expectedFarbe = { r: dto.farbe.r, g: dto.farbe.g, b: dto.farbe.b };
+      if (!dto.farbe) {
+        throw new Error("Testdaten haben keine Farbe");
+      }
+      const expectedFarbe = { r: dto.farbe.r, g: dto.farbe.g, b: dto.farbe.b };
 
-    const expectedModel: Wahl = {
-      wahlID: dto.wahlID,
-      name: dto.name,
-      reihenfolge: dto.reihenfolge,
-      waehlerverzeichnisnummer: dto.waehlerverzeichnisnummer,
-      wahltag: dto.wahltag,
-      wahlart: WahlWahlartEnum.Baw,
-      farbe: expectedFarbe,
-      nummer: dto.nummer,
-    };
+      const expectedModel: Wahl = {
+        wahlID: dto.wahlID,
+        name: dto.name,
+        reihenfolge: dto.reihenfolge,
+        waehlerverzeichnisnummer: dto.waehlerverzeichnisnummer,
+        wahltag: dto.wahltag,
+        wahlart: WahlWahlartEnum.Baw,
+        farbe: expectedFarbe,
+        nummer: dto.nummer,
+      };
 
-    const model: Wahl = toModel(dto);
+      const model: Wahl = toModel(dto);
 
-    expect(model).toEqual(expectedModel);
-  });
+      expect(model).toEqual(expectedModel);
+    });
 
-  it("should_returnModelWithUndefined_when_dtoIsGivenWithUndefined", () => {
-    const dto: WahlDTO = prepareWahlDTO()
-      .wahlart(WahlDTOWahlartEnum.Baw)
-      .farbe(undefined)
-      .nummer(undefined)
-      .build();
+    it("should_returnModelWithUndefined_when_dtoIsGivenWithUndefined", () => {
+      const dto: WahlDTO = prepareWahlDTO()
+        .wahlart(WahlDTOWahlartEnum.Baw)
+        .farbe(undefined)
+        .nummer(undefined)
+        .build();
 
-    const expectedModel: Wahl = {
-      wahlID: dto.wahlID,
-      name: dto.name,
-      reihenfolge: dto.reihenfolge,
-      waehlerverzeichnisnummer: dto.waehlerverzeichnisnummer,
-      wahltag: dto.wahltag,
-      wahlart: WahlWahlartEnum.Baw,
-      farbe: undefined,
-      nummer: undefined,
-    };
+      const expectedModel: Wahl = {
+        wahlID: dto.wahlID,
+        name: dto.name,
+        reihenfolge: dto.reihenfolge,
+        waehlerverzeichnisnummer: dto.waehlerverzeichnisnummer,
+        wahltag: dto.wahltag,
+        wahlart: WahlWahlartEnum.Baw,
+        farbe: undefined,
+        nummer: undefined,
+      };
 
-    const model: Wahl = toModel(dto);
+      const model: Wahl = toModel(dto);
 
-    expect(model).toEqual(expectedModel);
+      expect(model).toEqual(expectedModel);
+    });
   });
 });

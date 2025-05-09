@@ -35,7 +35,7 @@ vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
 
 const { generateRandomString } = useCommonTestDataFactory();
 
-describe("WahlService.ts", () => {
+describe("wahlService.ts", () => {
   const { getWahlen } = useWahlService();
 
   beforeEach(() => {
@@ -43,41 +43,51 @@ describe("WahlService.ts", () => {
     vi.clearAllMocks();
   });
 
-  it("should_returnWahl_when_wahltagIDIsGiven", async () => {
-    const wahltagID = generateRandomString(10);
-    mockDefinitions.getWahlen.mockReturnValue(
-      Promise.resolve({ status: 200, data: [createWahlDTO()] })
-    );
-    const mockedMappedWahl = createWahl();
-    mockDefinitions.mapDtoToModel.mockReturnValue(mockedMappedWahl);
+  describe("getWahlen", () => {
+    it("should_returnWahl_when_wahltagIDIsGiven", async () => {
+      const wahltagID = generateRandomString(10);
+      mockDefinitions.getWahlen.mockReturnValue(
+        Promise.resolve({ status: 200, data: [createWahlDTO()] })
+      );
+      const mockedMappedWahl = createWahl();
+      mockDefinitions.mapDtoToModel.mockReturnValue(mockedMappedWahl);
 
-    const result = await getWahlen(wahltagID);
+      const result = await getWahlen(wahltagID);
 
-    expect(result).toEqual([mockedMappedWahl]);
-    expect(mockDefinitions.getWahlen.mock.calls).toStrictEqual([[wahltagID]]);
-  });
+      expect(result).toEqual([mockedMappedWahl]);
+      expect(mockDefinitions.getWahlen.mock.calls).toStrictEqual([[wahltagID]]);
+    });
 
-  it("should_triggerNotification_when_anExceptionOccurredDuringApiCall", async () => {
-    const wahltagID = generateRandomString(10);
-    mockDefinitions.getWahlen.mockRejectedValue(new Error("api called failed"));
+    it("should_triggerNotification_when_anExceptionOccurredDuringApiCall", async () => {
+      const wahltagID = generateRandomString(10);
+      mockDefinitions.getWahlen.mockRejectedValue(
+        new Error("api called failed")
+      );
 
-    await expect(async () => getWahlen(wahltagID)).rejects.toThrowError();
+      await expect(async () => getWahlen(wahltagID)).rejects.toThrowError();
 
-    expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(1);
-    expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
-      expect.any(String),
-      "Error",
-    ]);
-  });
+      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+        1
+      );
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        expect.any(String),
+        "Error",
+      ]);
+    });
 
-  it("should_notTriggerNotification_when_anExceptionOccurredDuringApiCallAndNotificationFlagFalse", async () => {
-    const wahltagID = generateRandomString(10);
-    mockDefinitions.getWahlen.mockRejectedValue(new Error("api called failed"));
+    it("should_notTriggerNotification_when_anExceptionOccurredDuringApiCallAndNotificationFlagFalse", async () => {
+      const wahltagID = generateRandomString(10);
+      mockDefinitions.getWahlen.mockRejectedValue(
+        new Error("api called failed")
+      );
 
-    await expect(async () =>
-      getWahlen(wahltagID, false)
-    ).rejects.toThrowError();
+      await expect(async () =>
+        getWahlen(wahltagID, false)
+      ).rejects.toThrowError();
 
-    expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(0);
+      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+        0
+      );
+    });
   });
 });

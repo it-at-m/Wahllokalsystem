@@ -21,7 +21,6 @@
           cols="3"
           class="d-flex align-center justify-end"
         >
-          <wls-clock />
           <!-- heartbeat uses v-model for two-way-binding -->
           <wls-heartbeat v-model:is-offline="isOffline" />
           <v-tooltip

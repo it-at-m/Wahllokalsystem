@@ -1,4 +1,4 @@
-export const ROUTE_HOME = "home";
+export const ROUTES_HOME = "home";
 export const EXAMPLE_ROUTES_NEWROUTE = "newroute";
 export const EXAMPLE_ROUTES_NOTFOUND = "404";
 export const EXAMPLE_ROUTES_DYNAMIC = "dynamic";

@@ -4,9 +4,9 @@
       <h2>You found a new View!</h2>
       <p>
         Route back Home
-        <router-link :to="{ name: ROUTE_HOME }">via text</router-link>
+        <router-link :to="{ name: ROUTES_HOME }">via text</router-link>
         or
-        <router-link :to="{ name: ROUTE_HOME }">
+        <router-link :to="{ name: ROUTES_HOME }">
           <v-btn
             color="primary"
             density="compact"
@@ -72,7 +72,7 @@
 import { ref } from "vue";
 import { VBtn, VCard, VCol, VContainer, VTextField } from "vuetify/components";
 
-import { EXAMPLE_ROUTES_DYNAMIC, ROUTE_HOME } from "@/constants";
+import { EXAMPLE_ROUTES_DYNAMIC, ROUTES_HOME } from "@/constants";
 import router from "@/plugins/router";
 
 const textinput = ref("defaultId");
@@ -81,7 +81,7 @@ function previousPage() {
   if (window.history.length > 1) {
     router.go(-1);
   } else {
-    router.push(ROUTE_HOME); // Fallback to home route
+    router.push(ROUTES_HOME); // Fallback to home route
   }
 }
 </script>

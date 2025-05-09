@@ -105,10 +105,6 @@
     <v-navigation-drawer v-model="drawer">
       <v-list>
         <v-list-item
-          title="Home"
-          :to="ROUTE_HOME"
-        />
-        <v-list-item
           title="Wahlvorstand"
           :to="ROUTE_WAHLVORSTAND"
         />
@@ -174,7 +170,6 @@ import {
   EXAMPLE_VALIDATION,
   PRINT_EXAMPLE,
   ROUTE_EREIGNISSE,
-  ROUTE_HOME,
   ROUTE_WAHLSCHLIESSUNG,
   ROUTE_WAHLVORSTAND,
   TOAST,

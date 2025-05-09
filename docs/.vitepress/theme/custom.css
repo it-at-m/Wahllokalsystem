@@ -1,23 +1,6 @@
 :root {
   --vp-code-copy-copied-text-content: "In Zwischenablage kopiert!";
-}
-
-@media (min-width: 1440px) {
-  :root {
-    --vp-layout-max-width: 1440px;
-  }
-}
-
-@media (min-width: 1920px) {
-  :root {
-    --vp-layout-max-width: 1920px;
-  }
-}
-
-@media (min-width: 2560px) {
-  :root {
-    --vp-layout-max-width: 2560px;
-  }
+  --vp-layout-max-width: 100%;
 }
 
 .VPDoc.has-aside .content-container {

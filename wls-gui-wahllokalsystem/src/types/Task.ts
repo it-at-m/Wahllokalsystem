@@ -4,7 +4,7 @@ import type { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 export interface Task {
   wahlbezirksart: WahlbezirksArtEnum | undefined;
   onlyForWahlen: WahlWahlartEnum[] | undefined;
-  onlyForAllWVZs: boolean | undefined;
+  onlyForAllWVZs: boolean | undefined; // wahlerverzeichnisse
   name: string;
   callback: () => Promise<unknown>;
 }

@@ -119,87 +119,32 @@ describe("wahlvorstandStore.ts", () => {
       expect(unitUnderTest.isMindestanwesenheitErreicht).toStrictEqual(false);
     });
 
-    it("should_returnFalse_when_wahlIsNotClosedAnd2MitgliederAreAnwesend", () => {
-      const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
-      schliessungsUhrzeitSent.value = undefined;
+    it.each([
+      { schliessungsuhrzeit: undefined, anwesend: 2, expected: false },
+      {
+        schliessungsuhrzeit: new Date("2025-03-31T13:31:37"),
+        anwesend: 4,
+        expected: false,
+      },
+      { schliessungsuhrzeit: undefined, anwesend: 3, expected: true },
+      {
+        schliessungsuhrzeit: new Date("2025-03-31T13:31:37"),
+        anwesend: 5,
+        expected: true,
+      },
+    ])(
+      "should_return'$expected'_when_schliessungsuhrzeitIs'$schliessungsuhrzeit'And'$anwesend'MitgliederAreAnwesend",
+      ({ expected, schliessungsuhrzeit, anwesend }) => {
+        const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
+        schliessungsUhrzeitSent.value = schliessungsuhrzeit;
 
-      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("W")
-          .withAnwesend(true),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("SB")
-          .withAnwesend(true),
-      ];
+        _addAnwesendeWahlvorstandsmitglieder(anwesend);
 
-      expect(unitUnderTest.isMindestanwesenheitErreicht).toStrictEqual(false);
-    });
-
-    it("should_returnFalse_when_wahlIsClosedAnd4MitgliederAreAnwesend", () => {
-      const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
-      schliessungsUhrzeitSent.value = new Date("2025-03-31T13:31:37");
-
-      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("W")
-          .withAnwesend(true),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("SB")
-          .withAnwesend(true),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("SWB")
-          .withAnwesend(true),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("B")
-          .withAnwesend(true),
-      ];
-
-      expect(unitUnderTest.isMindestanwesenheitErreicht).toStrictEqual(false);
-    });
-
-    it("should_returnTrue_when_wahlIsNotClosedAnd3MitgliederAreAnwesend", () => {
-      const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
-      schliessungsUhrzeitSent.value = undefined;
-
-      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("W")
-          .withAnwesend(true),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("SB")
-          .withAnwesend(true),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("B")
-          .withAnwesend(true),
-      ];
-
-      expect(unitUnderTest.isMindestanwesenheitErreicht).toStrictEqual(true);
-    });
-
-    it("should_returnTrue_when_wahlIsClosedAnd5MitgliederAreAnwesend", () => {
-      const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
-      schliessungsUhrzeitSent.value = new Date("2025-03-31T13:31:37");
-
-      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("W")
-          .withAnwesend(true),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("SB")
-          .withAnwesend(true),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("SWB")
-          .withAnwesend(true),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("SSB")
-          .withAnwesend(true),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("B")
-          .withAnwesend(true),
-      ];
-
-      expect(unitUnderTest.isMindestanwesenheitErreicht).toStrictEqual(true);
-    });
+        expect(unitUnderTest.isMindestanwesenheitErreicht).toStrictEqual(
+          expected
+        );
+      }
+    );
   });
 
   describe("isWahlvorstandAusreichendAnwesend", () => {
@@ -430,6 +375,14 @@ describe("wahlvorstandStore.ts", () => {
       );
     });
   });
+
+  function _addAnwesendeWahlvorstandsmitglieder(zahl: number) {
+    for (let i = 1; i <= zahl; i++) {
+      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder.push(
+        WahlvorstandsmitgliedBuilder.createMinimal().withAnwesend(true)
+      );
+    }
+  }
 });
 
 function createUser(wahlbezirkID: string | undefined): User {

@@ -184,15 +184,17 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 import { User, UserLocalDevelopment } from "@/types/User.ts";
 
-const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
-  useBroadcastCronjobService();
-const [drawer, toggleDrawer] = useToggle();
-const isOffline = ref(false);
+const { loadEreignisse } = useEreignisStore();
+const { setUser } = useUserStore();
+const { loadWahlvorstand } = useWahlvorstandStore();
 const { initTasks, hasInitializationOfTasksCompletelyRun } =
   useTaskManagerStore();
-const userStore = useUserStore();
-const wahlvorstandStore = useWahlvorstandStore();
-const { loadEreignisse } = useEreignisStore();
+
+const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
+  useBroadcastCronjobService();
+
+const [drawer, toggleDrawer] = useToggle();
+const isOffline = ref(false);
 
 onMounted(() => {
   // config for service worker indexed db (same config as in wahl-worker.js !)
@@ -215,16 +217,16 @@ onUnmounted(() => {
 
 function loadUser(): void {
   getUser()
-    .then((user: User) => userStore.setUser(user))
+    .then((user: User) => setUser(user))
     .catch(() => {
       if (import.meta.env.DEV) {
-        userStore.setUser(UserLocalDevelopment());
+        setUser(UserLocalDevelopment());
       } else {
-        userStore.setUser(null);
+        setUser(null);
       }
     })
     .then(() => {
-      wahlvorstandStore.loadWahlvorstand();
+      loadWahlvorstand();
       startBroadcastMessageInterval();
       initTasks();
       loadEreignisse();

@@ -9,8 +9,9 @@
           <span
             v-for="task in tasks"
             :key="task.name"
-            >{{ task.name }}</span
           >
+            {{ task.name }},
+          </span>
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>

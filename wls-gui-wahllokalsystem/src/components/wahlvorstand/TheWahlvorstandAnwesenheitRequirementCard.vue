@@ -1,9 +1,7 @@
 <template>
   <div>
     <v-card class="border-lg border-error">
-      <v-card-title class="error-text"
-        >Ungültige Zusammensetzung des Wahlvorstands</v-card-title
-      >
+      <v-card-title>Ungültige Zusammensetzung des Wahlvorstands</v-card-title>
       <v-card-text>
         <div class="d-flex align-center mb-2">
           <v-icon
@@ -11,14 +9,17 @@
             icon="$invalid"
           />
           <div class="error-text">
-            <div>
-              TODO: Check Anzahl Anwesende, basierend auf Zustand (vor/nach 18
-              Uhr/Schließung)
+            <div v-if="!isMindestanwesenheitErreicht">
+              Vor der Wahlschliessung müssen mindestens
+              {{ MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG }} und nach der
+              Schliessung mindestens
+              {{ MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG }}
+              Wahlvorstandsmitglieder anwesend sein.
             </div>
-            <div v-if="!wahlvorstandStore.isSchriftfuehrerAnwesend">
+            <div v-if="!isSchriftfuehrerAnwesend">
               Die Rolle Schriftführer*in muss besetzt sein.
             </div>
-            <div v-if="!wahlvorstandStore.isWahlvorsteherAnwesend">
+            <div v-if="!isWahlvorsteherAnwesend">
               Die Rolle Wahlvorsteher*in muss besetzt sein.
             </div>
           </div>
@@ -34,11 +35,20 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { VCard, VCardText, VCardTitle, VIcon } from "vuetify/components";
 
+import {
+  MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG,
+  MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG,
+} from "@/constants.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 
-const wahlvorstandStore = useWahlvorstandStore();
+const {
+  isSchriftfuehrerAnwesend,
+  isWahlvorsteherAnwesend,
+  isMindestanwesenheitErreicht,
+} = storeToRefs(useWahlvorstandStore());
 </script>
 
 <style scoped>

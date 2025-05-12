@@ -77,6 +77,7 @@ describe("taskManagerStore.ts", () => {
       expect(unitUnderTest.successfullyTasks.length).toStrictEqual(0);
       expect(unitUnderTest.failedTasks.length).toStrictEqual(1);
       expect(unitUnderTest.numberOfTasksToRun).toStrictEqual(1);
+      expect(unitUnderTest.failedTasks).contains(exampleTaskList[0]);
     });
 
     it("should_setTaskInCorrectList_when_givenMultipleTasks", async () => {

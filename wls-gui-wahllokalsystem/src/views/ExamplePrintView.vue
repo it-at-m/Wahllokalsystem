@@ -32,27 +32,26 @@
           label="Dein Lieblingskuchen"
           placeholder="Himbeertorte"
           width="500"
-        ></v-text-field>
+        />
         <base-number-input
           v-model="cakeNumber"
           label="Maximale Kuchenstücke die du verdrücken kannst"
           width="500"
-        ></base-number-input>
+        />
         <v-autocomplete
           v-model="toppings"
           label="Deine Lieblingstoppings"
           width="500"
           :items="['Streusel', 'Schokoglasur', 'Früchte']"
           multiple
-        ></v-autocomplete>
+        />
         <v-range-slider
           v-model="hungerIndex"
           label="Dein Hunger jetzt gerade"
           thumb-label
           thumb-size="14"
           width="500"
-        >
-        </v-range-slider>
+        />
       </v-col>
     </v-row>
 

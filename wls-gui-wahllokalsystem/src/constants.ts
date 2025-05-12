@@ -10,14 +10,8 @@ export const ROUTE_WAHLSCHLIESSUNG = "wahlschliessung";
 export const TOAST = "toast";
 export const PRINT_EXAMPLE = "print-example";
 
-export const SNACKBAR_DEFAULT_TIMEOUT = 5000;
-
-export const enum STATUS_INDICATORS {
-  SUCCESS = "success",
-  INFO = "info",
-  WARNING = "warning",
-  ERROR = "error",
-}
+export const MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG = 3;
+export const MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG = 5;
 
 const WLS_SERVICE_API_URL = "/api/";
 
@@ -29,5 +23,7 @@ export const VORFAELLEUNDVORKOMMNISSE_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "vorfaelleundvorkommnisse-service";
 export const WAHLVORBEREITUNG_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "wahlvorbereitung-service";
+export const BASISDATEN_SERVICE_API_URL =
+  WLS_SERVICE_API_URL + "basisdaten-service";
 export const MONITORING_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "monitoring-service";

@@ -56,8 +56,9 @@ export default createVuetify({
           primary: "#546e7a",
           secondary: "#FFCC00",
           accent: "#7BA4D9",
-          success: "#69BE28",
+          success: "#7fbf7f",
           error: "#FF0000",
+          warn: "#ffe993",
         },
       },
     },
@@ -65,6 +66,10 @@ export default createVuetify({
   defaults: {
     VCardTitle: {
       class: "bg-grey-lighten-3 border-b border-grey-lighten-1 mb-2",
+    },
+    VProgressLinear: {
+      height: 50,
+      color: "primary",
     },
   },
 });

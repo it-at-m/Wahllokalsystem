@@ -1,4 +1,3 @@
-// Composables
 import { createRouter, createWebHashHistory } from "vue-router";
 
 import ExampleDynamicComponent from "@/components/ExampleDynamicComponent.vue";
@@ -14,6 +13,7 @@ import {
   ROUTES_HOME,
   TOAST,
 } from "@/constants";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import EreignisseView from "@/views/EreignisseView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
 import ExampleNewRouteView from "@/views/ExampleNewRouteView.vue";
@@ -89,6 +89,13 @@ const router = createRouter({
       left: 0,
     };
   },
+});
+
+router.beforeEach((to) => {
+  const wahlenStore = useWahlenStore();
+  if (to.name != ROUTES_HOME && !wahlenStore.wahlenReady) {
+    return { name: ROUTES_HOME };
+  }
 });
 
 export default router;

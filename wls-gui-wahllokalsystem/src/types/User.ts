@@ -17,9 +17,10 @@ class User {
   memberof: string[] = [];
   user_roles: string[] = [];
   authorities: string[] = [];
-
+  // WLS_Extended
   wahlbezirkID? = "";
   wahlbezirksArt?: WahlbezirksArtEnum;
+  wahltagID? = "";
 }
 
 function UserLocalDevelopment(): User {

@@ -16,13 +16,13 @@
         <v-col
           cols="6"
           class="d-flex align-center justify-center"
-        ></v-col>
+        />
         <v-col
           cols="3"
           class="d-flex align-center justify-end"
         >
           <!-- heartbeat uses v-model for two-way-binding -->
-          <wls-heartbeat v-model:is-offline="isOffline"></wls-heartbeat>
+          <wls-heartbeat v-model:is-offline="isOffline" />
           <v-tooltip
             location="bottom"
             text="Routing Examples"
@@ -38,8 +38,7 @@
                   density="comfortable"
                   size="x-large"
                   color="white"
-                >
-                </v-btn>
+                />
               </router-link>
             </template>
           </v-tooltip>
@@ -58,8 +57,7 @@
                   density="comfortable"
                   size="x-large"
                   color="white"
-                >
-                </v-btn>
+                />
               </router-link>
             </template>
           </v-tooltip>
@@ -78,8 +76,7 @@
                   density="comfortable"
                   size="x-large"
                   color="white"
-                >
-                </v-btn>
+                />
               </router-link>
             </template>
           </v-tooltip>
@@ -98,8 +95,7 @@
                   density="comfortable"
                   size="x-large"
                   color="white"
-                >
-                </v-btn>
+                />
               </router-link>
             </template>
           </v-tooltip>
@@ -109,6 +105,10 @@
     <v-navigation-drawer v-model="drawer">
       <v-list>
         <v-list-item
+          title="Home"
+          :to="'/'"
+        />
+        <v-list-item
           title="Wahlvorstand"
           :to="ROUTE_WAHLVORSTAND"
         />
@@ -117,7 +117,7 @@
             <v-list-item
               v-bind="props"
               title="Wahlvorbereitung"
-            ></v-list-item>
+            />
           </template>
           <v-list-item
             title="Wahlschliessung"
@@ -139,7 +139,7 @@
         </router-view>
       </v-container>
     </v-main>
-    <the-broadcast-read-confirmation-dialog></the-broadcast-read-confirmation-dialog>
+    <the-broadcast-read-confirmation-dialog />
   </v-app>
 </template>
 
@@ -165,7 +165,7 @@ import {
   VTooltip,
 } from "vuetify/components";
 
-import { getUser } from "@/api/user-client";
+import { getUser } from "@/api/user-client.ts";
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
@@ -178,14 +178,20 @@ import {
   ROUTE_WAHLVORSTAND,
   TOAST,
 } from "@/constants";
+import { useEreignisStore } from "@/stores/ereignisStore.ts";
+import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
-import { User, UserLocalDevelopment } from "@/types/User";
+import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
+import { User, UserLocalDevelopment } from "@/types/User.ts";
 
-const userStore = useUserStore();
-const wahlvorstandStore = useWahlvorstandStore();
+const { loadEreignisse } = useEreignisStore();
+const { setUser } = useUserStore();
+const { loadWahlvorstand } = useWahlvorstandStore();
+const { initTasks } = useTaskManagerStore();
+
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
+
 const [drawer, toggleDrawer] = useToggle();
 const isOffline = ref(false);
 
@@ -206,23 +212,21 @@ onUnmounted(() => {
   stopBroadcastMessageInterval();
 });
 
-/**
- * Loads UserInfo from the backend and sets it in the store.
- */
 function loadUser(): void {
   getUser()
-    .then((user: User) => userStore.setUser(user))
+    .then((user: User) => setUser(user))
     .catch(() => {
-      // No user info received, so fallback
       if (import.meta.env.DEV) {
-        userStore.setUser(UserLocalDevelopment());
+        setUser(UserLocalDevelopment());
       } else {
-        userStore.setUser(null);
+        setUser(null);
       }
     })
     .then(() => {
-      wahlvorstandStore.loadWahlvorstand();
+      loadWahlvorstand();
       startBroadcastMessageInterval();
+      initTasks();
+      loadEreignisse();
     });
 }
 </script>

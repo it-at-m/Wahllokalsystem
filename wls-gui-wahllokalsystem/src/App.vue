@@ -105,6 +105,10 @@
     <v-navigation-drawer v-model="drawer">
       <v-list>
         <v-list-item
+          title="Home"
+          :to="'/'"
+        />
+        <v-list-item
           title="Wahlvorstand"
           :to="ROUTE_WAHLVORSTAND"
         />
@@ -161,7 +165,7 @@ import {
   VTooltip,
 } from "vuetify/components";
 
-import { getUser } from "@/api/user-client";
+import { getUser } from "@/api/user-client.ts";
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
@@ -175,15 +179,19 @@ import {
   TOAST,
 } from "@/constants";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
+import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
-import { User, UserLocalDevelopment } from "@/types/User";
+import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
+import { User, UserLocalDevelopment } from "@/types/User.ts";
 
 const { loadEreignisse } = useEreignisStore();
-const userStore = useUserStore();
-const wahlvorstandStore = useWahlvorstandStore();
+const { setUser } = useUserStore();
+const { loadWahlvorstand } = useWahlvorstandStore();
+const { initTasks } = useTaskManagerStore();
+
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
+
 const [drawer, toggleDrawer] = useToggle();
 const isOffline = ref(false);
 
@@ -204,23 +212,20 @@ onUnmounted(() => {
   stopBroadcastMessageInterval();
 });
 
-/**
- * Loads UserInfo from the backend and sets it in the store.
- */
 function loadUser(): void {
   getUser()
-    .then((user: User) => userStore.setUser(user))
+    .then((user: User) => setUser(user))
     .catch(() => {
-      // No user info received, so fallback
       if (import.meta.env.DEV) {
-        userStore.setUser(UserLocalDevelopment());
+        setUser(UserLocalDevelopment());
       } else {
-        userStore.setUser(null);
+        setUser(null);
       }
     })
     .then(() => {
-      wahlvorstandStore.loadWahlvorstand();
+      loadWahlvorstand();
       startBroadcastMessageInterval();
+      initTasks();
       loadEreignisse();
     });
 }

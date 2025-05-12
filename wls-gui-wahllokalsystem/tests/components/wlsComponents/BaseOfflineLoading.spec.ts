@@ -1,6 +1,5 @@
-import type { Task } from "@/types/tasks/Task.ts";
-
 import { createTestingPinia } from "@pinia/testing";
+import { useTasksTestDataFactory } from "@tests/utils/tasks/TasksTestDataFactory.ts";
 import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
@@ -25,6 +24,8 @@ import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 describe("BaseOfflineLoading.vue", () => {
   let wrapper: VueWrapper;
 
+  const { createTask } = useTasksTestDataFactory();
+
   beforeAll(() => {
     createPinia();
   });
@@ -48,17 +49,8 @@ describe("BaseOfflineLoading.vue", () => {
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_showOneTaskSuccessfulRun_when_runSuccessful", async (context) => {
       const taskManagerStore = useTaskManagerStore();
-      const exampleTask: Task = {
-        onlyForWahlbezirksart: undefined,
-        onlyForWahlen: undefined,
-        onlyForAllWVaehlerverzeichnisse: undefined,
-        name: "test",
-        callback: () => {
-          return Promise.resolve();
-        },
-      };
 
-      taskManagerStore.successfullyTasks.push(exampleTask);
+      taskManagerStore.successfullyTasks.push(createTask("test"));
       taskManagerStore.numberOfTasksToRun = 1;
 
       await nextTick();
@@ -69,17 +61,9 @@ describe("BaseOfflineLoading.vue", () => {
 
     it("should_showTaskNamesInExpansionPanel_when_runSuccessful", async (context) => {
       const taskManagerStore = useTaskManagerStore();
-      const exampleTask: Task = {
-        onlyForWahlbezirksart: undefined,
-        onlyForWahlen: undefined,
-        onlyForAllWVaehlerverzeichnisse: undefined,
-        name: "test",
-        callback: () => {
-          return Promise.resolve();
-        },
-      };
 
-      taskManagerStore.successfullyTasks.push(exampleTask);
+      const taskName = "test task";
+      taskManagerStore.successfullyTasks.push(createTask(taskName));
       taskManagerStore.numberOfTasksToRun = 1;
 
       const successExpansionPanel = wrapper.findComponent(
@@ -95,7 +79,7 @@ describe("BaseOfflineLoading.vue", () => {
       await nextTick();
 
       expect(successExpansionPanelText.isVisible()).toBe(true);
-      expect(successExpansionPanelText.text()).toContain("test");
+      expect(successExpansionPanelText.text()).toContain(taskName);
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );
@@ -103,17 +87,8 @@ describe("BaseOfflineLoading.vue", () => {
 
     it("should_showOneTaskFail_when_runFailed", async (context) => {
       const taskManagerStore = useTaskManagerStore();
-      const exampleTask: Task = {
-        onlyForWahlbezirksart: undefined,
-        onlyForWahlen: undefined,
-        onlyForAllWVaehlerverzeichnisse: undefined,
-        name: "test",
-        callback: () => {
-          return Promise.resolve();
-        },
-      };
 
-      taskManagerStore.failedTasks.push(exampleTask);
+      taskManagerStore.failedTasks.push(createTask("test"));
       taskManagerStore.numberOfTasksToRun = 1;
 
       await nextTick();
@@ -124,17 +99,9 @@ describe("BaseOfflineLoading.vue", () => {
 
     it("should_showTaskNamesInExpansionPanel_when_runFailed", async (context) => {
       const taskManagerStore = useTaskManagerStore();
-      const exampleTask: Task = {
-        onlyForWahlbezirksart: undefined,
-        onlyForWahlen: undefined,
-        onlyForAllWVaehlerverzeichnisse: undefined,
-        name: "test",
-        callback: () => {
-          return Promise.resolve();
-        },
-      };
 
-      taskManagerStore.failedTasks.push(exampleTask);
+      const taskName = "test task";
+      taskManagerStore.failedTasks.push(createTask(taskName));
       taskManagerStore.numberOfTasksToRun = 1;
 
       const failedExpansionPanel = wrapper.findComponent(
@@ -150,7 +117,7 @@ describe("BaseOfflineLoading.vue", () => {
       await nextTick();
 
       expect(failedExpansionPanelText.isVisible()).toBe(true);
-      expect(failedExpansionPanelText.text()).toContain("test");
+      expect(failedExpansionPanelText.text()).toContain(taskName);
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );
@@ -158,17 +125,8 @@ describe("BaseOfflineLoading.vue", () => {
 
     it("should_showHeadlineLoadingText_when_stillLoading", async (context) => {
       const taskManagerStore = useTaskManagerStore();
-      const exampleTask: Task = {
-        onlyForWahlbezirksart: undefined,
-        onlyForWahlen: undefined,
-        onlyForAllWVaehlerverzeichnisse: undefined,
-        name: "test",
-        callback: () => {
-          return Promise.resolve();
-        },
-      };
 
-      taskManagerStore.successfullyTasks.push(exampleTask);
+      taskManagerStore.successfullyTasks.push(createTask("test"));
       taskManagerStore.numberOfTasksToRun = 5;
 
       await nextTick();

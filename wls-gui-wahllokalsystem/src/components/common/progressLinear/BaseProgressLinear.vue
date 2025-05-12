@@ -5,7 +5,7 @@
         <v-expansion-panel-title class="pl-0">
           {{ titel }} ({{ current }} / {{ total }})
         </v-expansion-panel-title>
-        <v-expansion-panel-text>
+        <v-expansion-panel-text data-test="expansion-panel-tasklist">
           {{ tasks.map((task) => task.name).join(", ") }}
         </v-expansion-panel-text>
       </v-expansion-panel>

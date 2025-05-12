@@ -24,6 +24,7 @@
     />
     <base-progress-linear
       titel="Erfolgreich heruntergeladen"
+      data-test="base-progress-success"
       :is-loading="isLoading"
       :current="numberOfSuccessfulTasks"
       :total="numberOfTasksToRun"

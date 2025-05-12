@@ -206,9 +206,7 @@ onMounted(() => {
     description: "store for wahlnumber",
   });
 
-  if (!hasInitializationOfTasksCompletelyRun) {
-    loadUser();
-  }
+  loadUser();
 });
 
 onUnmounted(() => {

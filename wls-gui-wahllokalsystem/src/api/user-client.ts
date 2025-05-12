@@ -46,6 +46,11 @@ export function getUser(): Promise<User> {
       // WLS_Extended
       u.authorities = json.authorities || [];
       u.wahltagID = json.wahltagID || "";
+      u.wbid_wahlnummer = JSON.parse(json.wbid_wahlnummer as any) || {
+        wbid_wahlnummer: [
+          { wahlbezirkID: u.wahlbezirkID || "", wahlnummer: "", wahlID: "" },
+        ],
+      };
       return u;
     });
 }

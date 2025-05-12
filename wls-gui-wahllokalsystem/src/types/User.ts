@@ -1,4 +1,5 @@
 import type { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
+import type { WbId_Wahlnummer } from "@/types/wlsTypes/WbId_Wahlnummer.ts";
 
 class User {
   sub = "";
@@ -21,6 +22,7 @@ class User {
   wahlbezirkID? = "";
   wahlbezirksArt?: WahlbezirksArtEnum;
   wahltagID? = "";
+  wbid_wahlnummer?: WbId_Wahlnummer;
 }
 
 function UserLocalDevelopment(): User {
@@ -28,6 +30,15 @@ function UserLocalDevelopment(): User {
   u.username = "Local Development User";
   u.displayName = "Local Development User";
   u.wahlbezirksArt = "UWB";
+  u.wbid_wahlnummer = {
+    wbid_wahlnummer: [
+      {
+        wahlbezirkID: "",
+        wahlnummer: "",
+        wahlID: "",
+      },
+    ],
+  };
   u.authorities = [
     // todo add authorities
   ];

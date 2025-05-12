@@ -18,6 +18,10 @@ export const useUserStore = defineStore("user", () => {
     return user.value?.wahltagID;
   });
 
+  const currentUserHauptWahlID = computed((): string | undefined => {
+    return user.value?.wbid_wahlnummer?.wbid_wahlnummer[0].wahlID; // todo: filtern nach kleinster wahlnummer
+  });
+
   const getUser = computed((): User | null => {
     return user.value;
   });
@@ -26,7 +30,13 @@ export const useUserStore = defineStore("user", () => {
     user.value = payload;
   }
 
-  return { getUser, setUser, currentUserWahlbezirkID, currentUserWahltagID };
+  return {
+    getUser,
+    setUser,
+    currentUserWahlbezirkID,
+    currentUserWahltagID,
+    currentUserHauptWahlID,
+  };
 });
 
 if (import.meta.hot) {

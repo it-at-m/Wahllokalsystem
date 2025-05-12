@@ -187,8 +187,7 @@ import { User, UserLocalDevelopment } from "@/types/User.ts";
 const { loadEreignisse } = useEreignisStore();
 const { setUser } = useUserStore();
 const { loadWahlvorstand } = useWahlvorstandStore();
-const { initTasks, hasInitializationOfTasksCompletelyRun } =
-  useTaskManagerStore();
+const { initTasks } = useTaskManagerStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();

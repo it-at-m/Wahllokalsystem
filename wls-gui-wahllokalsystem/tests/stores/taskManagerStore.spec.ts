@@ -79,7 +79,7 @@ describe("taskManagerStore.ts", () => {
       expect(unitUnderTest.numberOfTasksToRun).toStrictEqual(1);
     });
 
-    it("should_setTaskInCorrectList_when_noGivenMultipleTasks", async () => {
+    it("should_setTaskInCorrectList_when_givenMultipleTasks", async () => {
       const exampleTaskList: Task[] = [
         {
           name: "Test",

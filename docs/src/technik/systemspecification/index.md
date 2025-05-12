@@ -75,8 +75,8 @@ Aufbau werden bei dem jeweiligen Service dokumentiert.
 
 Ein Backendservice besteht in der Regel aus 3 Layern.
 
-- `access layer` ... Ermöglicht den Zugriff auf den Service
-- `service layer` ... Durchführung der fachlichen Logik, wie Validierung oder Lesen und Speichern sowie die Verwendung  
+- `access layer` ... Ermöglicht den Zugriff auf den Backendservice
+- `service layer` ... Durchführung der fachlichen Logik, wie Validierung oder Lesen und Speichern, sowie die Verwendung  
 dritter Services zur Erfüllung der Aufgaben
 - `persistence layer` ... Zugriff auf die Datenbank
 
@@ -84,12 +84,12 @@ dritter Services zur Erfüllung der Aufgaben
 
 Komponenten die eine rote Umrandung haben sind Teil der Security.
 
-Zum einen gibt es eine Zugriffskontrolle im `access layer`. Hier wird geprüft, ob für den Zugriff auf die geforderte
+Es gibt eine Zugriffskontrolle im `access layer`. Hier wird geprüft, ob für den Zugriff auf die geforderte
 Resource die erforderliche Authentifizierung gegeben ist. Die meisten Ressourcen erfordern eine Authentifizierung. Es gibt
 wenige Resource die ohne Authentifizierung abrufbar sind.
 
 Die Security im `service layer` und `persistence layer` prüft die Autorisierung. Die Methoden erfordern in der Regel
-mindestens 1 der funktion entsprechendes Recht. Das Verändern der Daten eines bestimmten Wahlbezirkes erfordert auch
+mindestens ein der Funktion entsprechendes Recht. Das Verändern der Daten eines bestimmten Wahlbezirkes erfordert auch, dass
 der User berechtigt ist für diesen Wahlbezirk Daten zu verändern.
 
 ```mermaid
@@ -98,7 +98,7 @@ sequenceDiagram
     participant request as Request
     participant proxy as ServiceProxy
     participant hasAuthority
-    participant bezirkIDCheck
+    participant bezirkIDCheck as doBezirkIDCheck
     participant service as Service
 
     request ->> proxy : call Method A
@@ -124,9 +124,9 @@ sequenceDiagram
 #### Fehlerbehandlung
 
 Exceptions die während der Verarbeitung geworfen werden, werden durch den `GlobalExceptionHandler` verarbeitet.
-Dieser erzeugt daraus ein `WlsExceptionDTO` und definiert den entsprechenden Http-Statuscode.
+Dieser erzeugt ein `WlsExceptionDTO` und definiert den entsprechenden Http-Statuscode.
 
-Grundlegen gilt folgeden Mapping von Subklassen einer WlsException zu dem Http-Statuscode:
+Grundlegen gilt folgendes Mapping von Subklassen einer WlsException zu dem Http-Statuscode:
 
 - FachlicheWlsException ... 400
 - TechnischeWlsException ... 500
@@ -136,8 +136,9 @@ Grundlegen gilt folgeden Mapping von Subklassen einer WlsException zu dem Http-S
 Weil das Fehlerhandling in allen Services gleich sein soll wird es über die Bibliothek `wls-common:exception`
 bereitgestellt.
 
-Restclients, die auf andere Services zugreifen, verwenden den [`WlsResponseErrorHandler`](../guides/api-client-generation/how-to-create-client-from-open-api-json.html#context-um-beans-erweitern) um konsequent `WlsException`s
-zu werden.
+Restclients, die auf andere Services zugreifen, verwenden den
+[`WlsResponseErrorHandler`](../guides/api-client-generation/how-to-create-client-from-open-api-json.html#context-um-beans-erweitern)
+um konsequent `WlsException`s zu werfen.
 
 #### Accesslayer
 
@@ -148,7 +149,7 @@ Je Domain gibt es ein Subpackage. In jedem Subpackage gibt es einen RestControll
 das Datenmodell.
 
 ![Komponenten des Accesslayers](/componentsOfAccessLayer.drawio.png)  
-*Komponenten des AccessLayers*
+*Komponenten des Accesslayers*
 
 ```mermaid
 
@@ -162,7 +163,6 @@ classDiagram
         class ServiceA {
             
         }
-
     }
 
     namespace package_rest_resource {
@@ -197,7 +197,7 @@ classDiagram
     
 ```  
 
-_Abhängigkeiten der Klassen des Accesslayers untereinander, sowie den Zugriff auf den Servicelayer*
+<em>Abhängigkeiten der Klassen des Accesslayers untereinander, sowie den Zugriff auf den Servicelayer</em>
 
 #### Servicelayer
 
@@ -210,13 +210,13 @@ notwendig sind.
 Der Großteil der Implementierung wird im Package `service` erfolgen. Je Domain, die durch den Microservice abgedeckt wird,
 gibt es ein Subpackage. Dieses beinhaltet die Serviceklasse, den Mapper, den Validator sowie die Klassen für das Datenmodell.
 
-Die Rückgabewerte und Parameter der des Services sind Klassen des Datenmodells des Services. Im Mapper werden die Klassen
+Die Rückgabewerte und Parameter der Methoden des Services sind Klassen des Datenmodells des Services. Im Mapper werden die Klassen
 des Servicedatenmodells auf die Klassen des Domaindatenmodells gemappt. Durch den Validator wird sichergestellt das
 die Parameter valide sind. Werden Daten von anderen Microservices benötigt, so wird diese Schnittstelle durch ein Interface
 abgebildet. Die Rückgabewerte und Parameter sind wie beim Service Klassen des Datenmodells des Services.
 
 Im Package `clients` ist die Funktionalität für den Zugriff auf einen anderen Microservice implementiert.
-Der Dummyclient implementiert alle in den Services definierten Interfaces die für den Zugriff auf andere Microservices
+Der Dummyclient implementiert alle in den Subpackages definierten Interfaces die für den Zugriff auf andere Microservices
 definiert sind. Er dient primär den Testzwecken und soll eine Eigenständigkeit des Services ermöglichen.
 
 In den Subpackages von `clients` werden die Zugriffe je externen Microservice gebündelt. In den jeweiligen

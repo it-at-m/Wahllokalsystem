@@ -381,7 +381,7 @@ classDiagram
 
 ```
 
-<emBeziehungen der Komponenten des Persistencelayers</em>
+<em>Beziehungen der Komponenten des Persistencelayers</em>
 
 Die Klasse und Interfaces werden im Package `domain` abgelegt. Analog zu den Services werden Subpackages je
 Domain definiert.

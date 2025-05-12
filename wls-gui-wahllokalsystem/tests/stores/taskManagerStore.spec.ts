@@ -36,9 +36,9 @@ describe("taskManagerStore.ts", () => {
       const exampleTaskList: Task[] = [
         {
           name: "Test",
-          wahlbezirksart: undefined,
+          onlyForWahlbezirksart: undefined,
           onlyForWahlen: [WahlWahlartEnum.Obw, WahlWahlartEnum.Bzw],
-          onlyForAllWVZs: undefined,
+          onlyForAllWVaehlerverzeichnisse: undefined,
           callback: () => {
             return Promise.resolve();
           },
@@ -58,13 +58,13 @@ describe("taskManagerStore.ts", () => {
       const exampleTaskList: Task[] = [
         {
           name: "Wahlen",
-          wahlbezirksart: undefined,
+          onlyForWahlbezirksart: undefined,
           onlyForWahlen: [
             WahlWahlartEnum.Obw,
             WahlWahlartEnum.Bzw,
             WahlWahlartEnum.Srw,
           ],
-          onlyForAllWVZs: undefined,
+          onlyForAllWVaehlerverzeichnisse: undefined,
           callback: () => {
             return Promise.reject();
           },
@@ -83,18 +83,18 @@ describe("taskManagerStore.ts", () => {
       const exampleTaskList: Task[] = [
         {
           name: "Test",
-          wahlbezirksart: undefined,
+          onlyForWahlbezirksart: undefined,
           onlyForWahlen: [WahlWahlartEnum.Obw],
-          onlyForAllWVZs: undefined,
+          onlyForAllWVaehlerverzeichnisse: undefined,
           callback: () => {
             return Promise.resolve();
           },
         },
         {
           name: "Test2",
-          wahlbezirksart: undefined,
+          onlyForWahlbezirksart: undefined,
           onlyForWahlen: [WahlWahlartEnum.Obw, WahlWahlartEnum.Bzw],
-          onlyForAllWVZs: undefined,
+          onlyForAllWVaehlerverzeichnisse: undefined,
           callback: () => {
             return Promise.reject();
           },

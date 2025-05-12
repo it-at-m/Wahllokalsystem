@@ -49,9 +49,9 @@ describe("BaseOfflineLoading.vue", () => {
     it("should_showOneTaskSuccessfulRun_when_runSuccessful", async (context) => {
       const taskManagerStore = useTaskManagerStore();
       const exampleTask: Task = {
-        wahlbezirksart: undefined,
+        onlyForWahlbezirksart: undefined,
         onlyForWahlen: undefined,
-        onlyForAllWVZs: undefined,
+        onlyForAllWVaehlerverzeichnisse: undefined,
         name: "test",
         callback: () => {
           return Promise.resolve();
@@ -70,9 +70,9 @@ describe("BaseOfflineLoading.vue", () => {
     it("should_showOneTaskFail_when_runFailed", async (context) => {
       const taskManagerStore = useTaskManagerStore();
       const exampleTask: Task = {
-        wahlbezirksart: undefined,
+        onlyForWahlbezirksart: undefined,
         onlyForWahlen: undefined,
-        onlyForAllWVZs: undefined,
+        onlyForAllWVaehlerverzeichnisse: undefined,
         name: "test",
         callback: () => {
           return Promise.resolve();
@@ -91,9 +91,9 @@ describe("BaseOfflineLoading.vue", () => {
     it("should_showHeadlineLoadingText_when_stillLoading", async (context) => {
       const taskManagerStore = useTaskManagerStore();
       const exampleTask: Task = {
-        wahlbezirksart: undefined,
+        onlyForWahlbezirksart: undefined,
         onlyForWahlen: undefined,
-        onlyForAllWVZs: undefined,
+        onlyForAllWVaehlerverzeichnisse: undefined,
         name: "test",
         callback: () => {
           return Promise.resolve();

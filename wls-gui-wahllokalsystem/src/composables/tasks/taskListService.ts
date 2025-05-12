@@ -10,13 +10,13 @@ export function useTaskListService() {
     return [
       {
         name: "Wahlen",
-        wahlbezirksart: undefined,
+        onlyForWahlbezirksart: undefined,
         onlyForWahlen: [
           WahlWahlartEnum.Obw,
           WahlWahlartEnum.Bzw,
           WahlWahlartEnum.Srw,
         ],
-        onlyForAllWVZs: undefined,
+        onlyForAllWVaehlerverzeichnisse: undefined,
         callback: () => {
           return wahlenStore.initWahlen(false);
         },

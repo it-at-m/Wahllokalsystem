@@ -6,12 +6,7 @@
           {{ titel }} ({{ current }} / {{ total }})
         </v-expansion-panel-title>
         <v-expansion-panel-text>
-          <span
-            v-for="task in tasks"
-            :key="task.name"
-          >
-            {{ task.name }},
-          </span>
+          {{ tasks.map((task) => task.name).join(", ") }}
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>

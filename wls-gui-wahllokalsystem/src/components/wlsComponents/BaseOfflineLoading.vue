@@ -33,6 +33,7 @@
     />
     <base-progress-linear
       titel="Fehlgeschlagen"
+      data-test="base-progress-failed"
       :is-loading="isLoading"
       :current="numberOfFailedTasks"
       :total="numberOfTasksToRun"

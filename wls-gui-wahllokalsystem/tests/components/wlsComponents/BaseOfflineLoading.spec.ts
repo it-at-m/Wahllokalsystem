@@ -122,6 +122,40 @@ describe("BaseOfflineLoading.vue", () => {
       );
     });
 
+    it("should_showTaskNamesInExpansionPanel_when_runFailed", async (context) => {
+      const taskManagerStore = useTaskManagerStore();
+      const exampleTask: Task = {
+        onlyForWahlbezirksart: undefined,
+        onlyForWahlen: undefined,
+        onlyForAllWVaehlerverzeichnisse: undefined,
+        name: "test",
+        callback: () => {
+          return Promise.resolve();
+        },
+      };
+
+      taskManagerStore.failedTasks.push(exampleTask);
+      taskManagerStore.numberOfTasksToRun = 1;
+
+      const failedExpansionPanel = wrapper.findComponent(
+        '[data-test="base-progress-failed"]'
+      );
+      const failedExpansionPanelTitle = failedExpansionPanel.findComponent(
+        ".v-expansion-panel-title"
+      );
+      await failedExpansionPanelTitle.trigger("click");
+      const failedExpansionPanelText = failedExpansionPanel.findComponent(
+        '[data-test="expansion-panel-tasklist"]'
+      );
+      await nextTick();
+
+      expect(failedExpansionPanelText.isVisible()).toBe(true);
+      expect(failedExpansionPanelText.text()).toContain("test");
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+
     it("should_showHeadlineLoadingText_when_stillLoading", async (context) => {
       const taskManagerStore = useTaskManagerStore();
       const exampleTask: Task = {

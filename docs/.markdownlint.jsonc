@@ -3,11 +3,17 @@
 {
   "default": true,
   "no-duplicate-heading": {
-    "siblings_only": true,
+    "siblings_only": true
   },
   "line-length": false,
   "MD033": {
-    "allowed_elements": ["adr-status", "status-overview", "details", "summary"],
+    "allowed_elements": [
+      "adr-status",
+      "status-overview",
+      "details",
+      "summary",
+      "em"
+    ]
   },
-  "MD028": false,
+  "MD028": false
 }

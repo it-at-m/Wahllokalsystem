@@ -85,7 +85,7 @@ dritter Services zur Erfüllung der Aufgaben
 Komponenten die eine rote Umrandung haben sind Teil der Security.
 
 Zum einen gibt es eine Zugriffskontrolle im `access layer`. Hier wird geprüft, ob für den Zugriff auf die geforderte
-Resource die erforderliche Authentifizierung gegeben ist. Die meisten Ressourcen erfordern eine Authentifizierung. Es gibt 
+Resource die erforderliche Authentifizierung gegeben ist. Die meisten Ressourcen erfordern eine Authentifizierung. Es gibt
 wenige Resource die ohne Authentifizierung abrufbar sind.
 
 Die Security im `service layer` und `persistence layer` prüft die Autorisierung. Die Methoden erfordern in der Regel
@@ -127,6 +127,7 @@ Exceptions die während der Verarbeitung geworfen werden, werden durch den `Glob
 Dieser erzeugt daraus ein `WlsExceptionDTO` und definiert den entsprechenden Http-Statuscode.
 
 Grundlegen gilt folgeden Mapping von Subklassen einer WlsException zu dem Http-Statuscode:
+
 - FachlicheWlsException ... 400
 - TechnischeWlsException ... 500
 - InfrastrukturelleWlsException ... 500
@@ -195,7 +196,8 @@ classDiagram
     ServiceA -- ModelA
     
 ```  
-*Abhängigkeiten der Klassen des Accesslayers untereinander, sowie den Zugriff auf den Servicelayer*
+
+_Abhängigkeiten der Klassen des Accesslayers untereinander, sowie den Zugriff auf den Servicelayer*
 
 #### Servicelayer
 
@@ -324,13 +326,14 @@ classDiagram
     ExternalServiceImpl --> ExternalServiceMapper : call
 
 ```  
-*Abhängigkeiten der Klassen des Serviceslayers untereinander, sowie den Zugriff auf den Persistencelayer*
+
+<em>Abhängigkeiten der Klassen des Serviceslayers untereinander, sowie den Zugriff auf den Persistencelayer</em>
 
 <details>
 
 <summary>Beispiel Packagestruktur in Basisdatenservice</summary>
 
-```
+```text
 ├─ clients
 |     ├─ DummyClientImpl
 |     ├─ WahlbezirkeClientImpl
@@ -346,8 +349,9 @@ classDiagram
 |     |    ├─ WahlbezirkModel
 |     |    └─ WahlbezirkModelMapper
 ```  
+
 *`WahlbezirkArtModel` wird nicht nur in `wahlbezirke` verwendet. `clients.WahlbezirkeClientImpl` implementiert
-`service.wahlbezirke.WahlbezirkeClient`
+`service.wahlbezirke.WahlbezirkeClient`*
 
 </details>
 
@@ -359,7 +363,6 @@ Für den Zugriff auf die Datenbank wird [Spring-Data](https://spring.io/projects
 *Komponenten des Persistencelayers*
 
 ```mermaid
-
 classDiagram
     class EntityXRepository~wlsService.EntityX,UUID|String~ {
         <<interface>>
@@ -377,7 +380,8 @@ classDiagram
     EntityXRepository --> EntityX : for
 
 ```
-*Beziehungen der Komponenten des Persistencelayers*
+
+<emBeziehungen der Komponenten des Persistencelayers</em>
 
 Die Klasse und Interfaces werden im Package `domain` abgelegt. Analog zu den Services werden Subpackages je
 Domain definiert.
@@ -388,7 +392,7 @@ Klassen die durch Entitäten verschiedene Subpackages verwenden werden sind in d
 
 <summary>Beispiel Packagestruktur in Basisdatenservice</summary>
 
-```
+```text
 ├─ domain
 |     ├─ common
 |     |    ├─ WahlbezirkArt
@@ -400,6 +404,7 @@ Klassen die durch Entitäten verschiedene Subpackages verwenden werden sind in d
 |     |    ├─ UngueltigeWahlscheine
 |     |    └─ UngueltigeWahlscheineRepository
 ```  
-*`WahlbezirkArt` wird in `handbuch` und `ungueltigeWahlscheine` auf dieselbe Weise verwendet*
+
+<em>`WahlbezirkArt` wird in `handbuch` und `ungueltigeWahlscheine` auf dieselbe Weise verwendet</em>
 
 </details>

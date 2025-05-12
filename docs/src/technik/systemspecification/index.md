@@ -65,9 +65,13 @@ umsetzen und sich um die Datenhaltung kümmern.
 
 ## Servicearchitektur
 
+In diesem Abschnitt wird beschrieben wie ein Microservice in der Regel aufgebaut ist. Abweichungen von diesem
+Aufbau werden bei dem jeweiligen Service dokumentiert.
+
 ### Backendservices
 
-![Aufbau eines Backenservices](/structureOfABackendservice.drawio.png)
+![Aufbau eines Backenservices](/structureOfABackendservice.drawio.png)  
+*Grundlegende Architektur eines Backendservices*
 
 Ein Backendservice besteht in der Regel aus 3 Layern.
 
@@ -117,29 +121,120 @@ sequenceDiagram
 - `BezirkIDPermissionEvaluatorImpl` ... führt eine Prüfung des Authenticationobjektes durch
 - `DummyBezirkIdPermissionEvaluatorImpl` ... liefert immer `true`
 
-#### access layer
+#### Fehlerbehandlung
 
-#### service layer
+Exceptions die während der Verarbeitung geworfen werden, werden durch den `GlobalExceptionHandler` verarbeitet.
+Dieser erzeugt daraus ein `WlsExceptionDTO` und definiert den entsprechenden Http-Statuscode.
+
+Grundlegen gilt folgeden Mapping von Subklassen einer WlsException zu dem Http-Statuscode:
+- FachlicheWlsException ... 400
+- TechnischeWlsException ... 500
+- InfrastrukturelleWlsException ... 500
+- SicherheitsWlsException ... 403
+
+Weil das Fehlerhandling in allen Services gleich sein soll wird es über die Bibliothek `wls-common:exception`
+bereitgestellt.
+
+Restclients, die auf andere Services zugreifen, verwenden den [`WlsResponseErrorHandler`](../guides/api-client-generation/how-to-create-client-from-open-api-json.html#context-um-beans-erweitern) um konsequent `WlsException`s
+zu werden.
+
+#### Accesslayer
+
+Im Accesslayer befinden sich die Klassen, Interfaces und Records welchen den Zugriff auf den Microservice mitels REST via http
+ermöglichen.
+
+Je Domain gibt es ein Subpackage. In jedem Subpackage gibt es einen RestController, einen Mapper und die Records für
+das Datenmodell.
+
+![Komponenten des Accesslayers](/componentsOfAccessLayer.drawio.png)  
+*Komponenten des AccessLayers*
+
+```mermaid
+
+classDiagram
+
+    namespace package_service {
+        class ModelA {
+
+        }
+        
+        class ServiceA {
+            
+        }
+
+    }
+
+    namespace package_rest_resource {
+        class ResourceController {
+            <<Class>>
+            doSth(inputModel: ModelA1) ModelA2
+        }
+
+        class ResourceDTO1 {
+            <<Record>>
+        }
+
+        class ResourceDTO2 {
+            <<Record>>
+        }
+
+        class DTOMapper {
+            <<Interface>>
+
+            toDTO(model: ModelA) ResourceDTO1
+            toModel(dto: ResourceDTO2) ModelA
+        }
+    }
+
+    ResourceController --> ServiceA : call
+    ResourceController --> DTOMapper : call
+
+    DTOMapper -- ResourceDTO1
+    DTOMapper -- ResourceDTO2
+    DTOMapper -- ModelA
+    ServiceA -- ModelA
+    
+```  
+*Abhängigkeiten der Klassen des Accesslayers untereinander, sowie den Zugriff auf den Servicelayer*
+
+#### Servicelayer
 
 Im Servicelayer befinden sind die Klassen, Interfaces und Records die zur Umsetzung der fachlichen Anforderungen
 notwendig sind.
 
-##### Komponenten
+![Komponenten des Servicelayers](/componentsOfServiceLayer.drawio.png)  
+*Komponenten des Servicelayers*
 
-![Aufbau eines Backenservices](/componentsOfServiceLayer.drawio.png)
+Der Großteil der Implementierung wird im Package `service` erfolgen. Je Domain, die durch den Microservice abgedeckt wird,
+gibt es ein Subpackage. Dieses beinhaltet die Serviceklasse, den Mapper, den Validator sowie die Klassen für das Datenmodell.
 
-[Designentscheidung](../adr/adr002-controller-service-datamodels.md) zu den Datenmodellen für die Kommunikation zwischen den Layern.
+Die Rückgabewerte und Parameter der des Services sind Klassen des Datenmodells des Services. Im Mapper werden die Klassen
+des Servicedatenmodells auf die Klassen des Domaindatenmodells gemappt. Durch den Validator wird sichergestellt das
+die Parameter valide sind. Werden Daten von anderen Microservices benötigt, so wird diese Schnittstelle durch ein Interface
+abgebildet. Die Rückgabewerte und Parameter sind wie beim Service Klassen des Datenmodells des Services.
 
+Im Package `clients` ist die Funktionalität für den Zugriff auf einen anderen Microservice implementiert.
+Der Dummyclient implementiert alle in den Services definierten Interfaces die für den Zugriff auf andere Microservices
+definiert sind. Er dient primär den Testzwecken und soll eine Eigenständigkeit des Services ermöglichen.
 
+In den Subpackages von `clients` werden die Zugriffe je externen Microservice gebündelt. In den jeweiligen
+Packages gibt es eine Implementierungsklasse für den Zugriff auf den externen Microservice sowie einen Mapper. Der Mapper
+konvertiert das Datenmodell des externen Microservices auf das geforderte Datenmodell im Microservice.
+
+> [!IMPORTANT]
+> Unter [Umständen](../adr/adr002-controller-service-datamodels.md) kann auf ein Datenmodell im Servierlayer verzichtet werden.
 
 ```mermaid
 
 classDiagram
 
     namespace package_domain {
-
         class EntityA {
 
+        }
+        
+        class RepositoryA {
+            
         }
 
     }
@@ -180,14 +275,9 @@ classDiagram
         class DummyClientImpl {
             <<Class>>
         }
-
-        class ExternalServiceImpl {
-            <<Class>>
-        }
     }
 
     namespace package_eai_externalService {
-
         class ExternalControllerAPI {
             <<generated>>
         }
@@ -201,23 +291,40 @@ classDiagram
         }
     }
 
-    ServiceA --> AMapper : use
-    ServiceA --> AValidator : use
-    ServiceA --> ClientExternalService : use
+    namespace package_clients_externalService {
+        class ExternalServiceImpl {
+            <<Class>>
+        }
+
+        class ExternalServiceMapper {
+            <<Interface>>
+
+            toModel(dto: ExternalDtoA) ModelA1
+            fromModel(model: ModelA2) ExternalDtoB
+        }
+    }
+
+    ServiceA --> RepositoryA : call
+    ServiceA --> AMapper : call
+    ServiceA --> AValidator : call
+    ServiceA --> ClientExternalService : call
     AValidator -- ModelA1
     AValidator -- ModelA2
 
     AMapper -- EntityA
     AMapper -- ModelA1
+    RepositoryA -- EntityA
 
     DummyClientImpl ..|> ClientExternalService
     ExternalServiceImpl ..|> ClientExternalService
 
     ExternalControllerAPI -- ExternalDtoA
     ExternalControllerAPI -- ExternalDtoB
-    ExternalServiceImpl --> ExternalControllerAPI : use
+    ExternalServiceImpl --> ExternalControllerAPI : call
+    ExternalServiceImpl --> ExternalServiceMapper : call
 
-```
+```  
+*Abhängigkeiten der Klassen des Serviceslayers untereinander, sowie den Zugriff auf den Persistencelayer*
 
 <details>
 
@@ -238,11 +345,18 @@ classDiagram
 |     |    ├─ WahlbezirkeService
 |     |    ├─ WahlbezirkModel
 |     |    └─ WahlbezirkModelMapper
-```
+```  
+*`WahlbezirkArtModel` wird nicht nur in `wahlbezirke` verwendet. `clients.WahlbezirkeClientImpl` implementiert
+`service.wahlbezirke.WahlbezirkeClient`
 
 </details>
 
-#### persistence layer
+#### Persistencelayer
+
+Für den Zugriff auf die Datenbank wird [Spring-Data](https://spring.io/projects/spring-data) verwendet.
+
+![Komponenten des Persistencelayers](/componentsOfPersistenceLayer.drawio.png)  
+*Komponenten des Persistencelayers*
 
 ```mermaid
 
@@ -258,21 +372,15 @@ classDiagram
     class CrudRepository {
         <<interface>>
     }
-    
-    class Service {
-        <<Class>>        
-    }
 
     EntityXRepository --|> CrudRepository
     EntityXRepository --> EntityX : for
-    Service --> EntityXRepository : call
 
 ```
-
-Für den Zugriff verwenden wird [Spring-Data](https://spring.io/projects/spring-data).
+*Beziehungen der Komponenten des Persistencelayers*
 
 Die Klasse und Interfaces werden im Package `domain` abgelegt. Analog zu den Services werden Subpackages je
-Themenkomplex definiert.
+Domain definiert.
 
 Klassen die durch Entitäten verschiedene Subpackages verwenden werden sind in dem Subpackage `common` abzulegen.
 
@@ -291,6 +399,7 @@ Klassen die durch Entitäten verschiedene Subpackages verwenden werden sind in d
 |     ├─ ungueltigeWahlscheine
 |     |    ├─ UngueltigeWahlscheine
 |     |    └─ UngueltigeWahlscheineRepository
-```
+```  
+*`WahlbezirkArt` wird in `handbuch` und `ungueltigeWahlscheine` auf dieselbe Weise verwendet*
 
 </details>

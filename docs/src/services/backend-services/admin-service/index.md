@@ -16,3 +16,7 @@ Der Service nutzt folgende Services
 - Verwaltung der Benutzer
 - Festlegung des Wahltages
 - Verwaltung der Wahltermindaten
+
+## Architekturabweichungen
+
+Dieser Service hat keinen Persistencelayer. Der Service spricht ausschließlich mit anderen Microservices.

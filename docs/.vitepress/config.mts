@@ -166,6 +166,10 @@ export default withMermaid({
               link: `${PATH_SYSSPEC}security`,
             },
             {
+              text: "Backend",
+              link: `${PATH_SYSSPEC}backend`,
+            },
+            {
               text: "Frontend",
               link: `${PATH_SYSSPEC}frontend`,
               collapsed: true,

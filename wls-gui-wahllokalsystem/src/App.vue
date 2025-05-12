@@ -196,6 +196,8 @@ const [drawer, toggleDrawer] = useToggle();
 const isOffline = ref(false);
 
 onMounted(() => {
+  loadUser();
+
   // config for service worker indexed db (same config as in wahl-worker.js !)
   localforage.config({
     driver: localforage.INDEXEDDB,
@@ -204,8 +206,6 @@ onMounted(() => {
     storeName: "wahlstore",
     description: "store for wahlnumber",
   });
-
-  loadUser();
 });
 
 onUnmounted(() => {

@@ -1,4 +1,4 @@
-import type { Task } from "@/types/Task.ts";
+import type { Task } from "@/types/tasks/Task.ts";
 
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";

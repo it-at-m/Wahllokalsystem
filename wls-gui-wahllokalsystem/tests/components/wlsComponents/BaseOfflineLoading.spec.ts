@@ -1,4 +1,4 @@
-import type { Task } from "@/types/Task.ts";
+import type { Task } from "@/types/tasks/Task.ts";
 
 import { createTestingPinia } from "@pinia/testing";
 import {

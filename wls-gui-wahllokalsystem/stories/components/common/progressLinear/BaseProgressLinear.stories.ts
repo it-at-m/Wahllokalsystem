@@ -1,4 +1,4 @@
-import type { Task } from "@/types/Task.ts";
+import type { Task } from "@/types/tasks/Task.ts";
 import type { Meta, StoryObj } from "@storybook/vue3";
 
 import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressLinear.vue";

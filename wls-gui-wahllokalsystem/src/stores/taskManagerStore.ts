@@ -1,4 +1,4 @@
-import type { Task } from "@/types/Task.ts";
+import type { Task } from "@/types/tasks/Task.ts";
 import type { Ref } from "vue";
 
 import { defineStore } from "pinia";

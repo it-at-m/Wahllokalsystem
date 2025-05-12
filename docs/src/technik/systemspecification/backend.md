@@ -1,6 +1,6 @@
 # Servicearchitektur
 
-In diesem Abschnitt wird beschrieben wie ein Microservice in der Regel aufgebaut ist. Abweichungen von diesem
+In diesem Abschnitt wird beschrieben, wie ein Microservice in der Regel aufgebaut ist. Abweichungen von diesem
 Aufbau werden bei dem jeweiligen Service dokumentiert.
 
 ## Backendservices

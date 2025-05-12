@@ -8,7 +8,7 @@
     return-object
     data-test="autocompleteWahltage"
     no-data-text="Keine Wahltage gefunden"
-  ></v-autocomplete>
+  />
 </template>
 
 <script setup lang="ts">

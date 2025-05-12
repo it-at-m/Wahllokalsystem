@@ -16,8 +16,7 @@
               size="x-small"
               color="primary"
               @click="synchronizeOfflineData"
-            >
-            </v-btn>
+            />
           </template>
         </v-tooltip>
       </template>
@@ -25,7 +24,7 @@
       <v-card
         title="Synchronizing"
         :text="statusText"
-      ></v-card>
+      />
     </v-dialog>
   </div>
 </template>

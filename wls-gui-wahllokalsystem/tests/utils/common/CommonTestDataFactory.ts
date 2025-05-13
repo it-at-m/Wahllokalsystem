@@ -3,6 +3,9 @@ export function useCommonTestDataFactory() {
     return Math.floor(Math.random() * Math.pow(10, length));
   }
 
+  function generateRandomNumberInRange(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
   function generateRandomDateTimeAsString() {
     const date = new Date();
 
@@ -19,9 +22,22 @@ export function useCommonTestDataFactory() {
     return date;
   }
 
+  function generateRandomString(length: number): string {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      result += characters.charAt(randomIndex);
+    }
+    return result;
+  }
+
   return {
     generateRandomNumber,
     generateRandomDate,
     generateRandomDateTimeAsString,
+    generateRandomString,
+    generateRandomNumberInRange,
   };
 }

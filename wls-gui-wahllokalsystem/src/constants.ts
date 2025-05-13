@@ -23,3 +23,5 @@ export const VORFAELLEUNDVORKOMMNISSE_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "vorfaelleundvorkommnisse-service";
 export const WAHLVORBEREITUNG_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "wahlvorbereitung-service";
+export const BASISDATEN_SERVICE_API_URL =
+  WLS_SERVICE_API_URL + "basisdaten-service";

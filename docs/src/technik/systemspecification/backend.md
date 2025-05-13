@@ -3,6 +3,9 @@
 In diesem Abschnitt wird beschrieben, wie ein Microservice in der Regel aufgebaut ist. Abweichungen von diesem
 Aufbau werden bei dem jeweiligen Service dokumentiert.
 
+![Beziehungen der Module eines Backendservices](/relationshipOfBackendmodules.drawio.png)  
+*Ein Backenservice verwendet wls-common bei der Implementierung*
+
 ## Backendservices
 
 ![Aufbau eines Backenservices](/structureOfABackendservice.drawio.png)  

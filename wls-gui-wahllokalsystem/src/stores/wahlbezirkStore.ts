@@ -17,15 +17,18 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   async function sendSchliessungsuhrzeit(time: string) {
     const wahlbezirkID = currentUserWahlbezirkID.value;
     const schliessungszeitAsDate = new Date(time);
-    if (wahlbezirkID && isValidDate(schliessungszeitAsDate)) {
-      await postUrnenwahlSchliessungsuhrzeit(
-        wahlbezirkID,
-        schliessungszeitAsDate
-      );
-      schliessungsUhrzeitSent.value = schliessungszeitAsDate;
+    try {
+      if (wahlbezirkID && isValidDate(schliessungszeitAsDate)) {
+        await postUrnenwahlSchliessungsuhrzeit(
+          wahlbezirkID,
+          schliessungszeitAsDate
+        );
+        schliessungsUhrzeitSent.value = schliessungszeitAsDate;
+      }
+    } catch (e) {
+      console.debug(e);
     }
   }
-
   return { schliessungsUhrzeitSent, sendSchliessungsuhrzeit };
 });
 

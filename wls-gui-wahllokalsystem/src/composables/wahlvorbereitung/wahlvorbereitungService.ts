@@ -49,11 +49,12 @@ export function useWahlvorbereitungService() {
         "Schliessungsuhrzeit erfolgreich gespeichert.",
         UserNotificationCategoryEnum.SUCCESS
       );
-    } catch {
+    } catch (error) {
       userNotificationService.addNotification(
         "Speichern der Schliessungsuhrzeit fehlgeschlagen.",
         UserNotificationCategoryEnum.ERROR
       );
+      throw error;
     }
   }
 

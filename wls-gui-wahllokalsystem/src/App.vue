@@ -180,6 +180,7 @@ import {
   TOAST,
 } from "@/constants";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
+import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
@@ -189,6 +190,7 @@ const { loadEreignisse } = useEreignisStore();
 const { setUser } = useUserStore();
 const { loadWahlvorstand } = useWahlvorstandStore();
 const { initTasks } = useTaskManagerStore();
+const { loadWaehler } = useMonitoringStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
@@ -231,6 +233,7 @@ function loadUser(): void {
       startBroadcastMessageInterval();
       initTasks();
       loadEreignisse();
+      loadWaehler();
       startWahlbeteiligungInterval();
     });
 }

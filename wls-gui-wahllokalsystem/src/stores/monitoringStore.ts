@@ -24,7 +24,8 @@ export const useMonitoringStore = defineStore(storeID, () => {
     const wahlbezirkID = currentUserWahlbezirkID.value;
     const wahlID = currentUserHauptWahlID.value;
     if (wahlbezirkID && wahlID) {
-      await getWahlbeteiligung(wahlID, wahlbezirkID);
+      const wahlbeteiligung = await getWahlbeteiligung(wahlID, wahlbezirkID);
+      waehler.value = wahlbeteiligung.anzahlWaehler;
     }
   }
 

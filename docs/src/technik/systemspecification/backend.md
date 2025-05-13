@@ -82,7 +82,7 @@ um konsequent `WlsException`s zu werfen.
 
 ### Accesslayer
 
-Im Accesslayer befinden sich die Klassen, Interfaces und Records, welche den Zugriff auf den Microservice mitels REST via http
+Im Accesslayer befinden sich die Klassen, Interfaces und Records, welche den Zugriff auf den Microservice mitels REST via Http
 ermöglichen.
 
 ![Komponenten des Accesslayers](/componentsOfAccessLayer.drawio.png)  

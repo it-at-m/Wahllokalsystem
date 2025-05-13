@@ -23,7 +23,7 @@ Ein Backendservice besteht in der Regel aus 3 Layern.
 Komponenten die eine rote Umrandung haben sind Teil der Security.
 
 Es gibt eine Zugriffskontrolle im `access layer`. Hier wird geprüft, ob für den Zugriff auf die geforderte
-Resource die erforderliche Authentifizierung gegeben ist. Bis auf wenige Ausnahmen ist für Zugriff auf eine Ressource
+Ressource die erforderliche Authentifizierung gegeben ist. Bis auf wenige Ausnahmen ist für jeden Zugriff auf eine Ressource
 eine Authentifizierung erforderlich.
 
 Die Security im `service layer` und `persistence layer` prüft die Autorisierung. Die Ausführung der Methoden erfordert in der Regel
@@ -305,7 +305,7 @@ Der Großteil der Implementierung erfolgt im Package `service`. Je Domain, die d
 gibt es ein Subpackage. Dieses beinhaltet die Serviceklasse, den Mapper, den Validator sowie die Klassen für das Datenmodell.
 
 Die Rückgabewerte und Parameter der Methoden des Services sind Klassen des Datenmodells des Services. Im Mapper werden die Klassen
-des Servicedatenmodells auf die Klassen des Domaindatenmodells gemappt. Durch den Validator wird sichergestellt das
+des Servicedatenmodells auf die Klassen des Domaindatenmodells gemappt. Durch den Validator wird sichergestellt, dass
 die Parameter valide sind. Werden Daten von anderen Microservices benötigt, so wird diese Schnittstelle durch ein Interface
 abgebildet. Die Rückgabewerte und Parameter sind wie beim Service Klassen des Datenmodells des Services.
 
@@ -315,7 +315,7 @@ Im Package `client` ist die Funktionalität für den Zugriff auf einen anderen M
 Der Dummyclient implementiert alle in den Subpackages definierten Interfaces, die für den Zugriff auf andere Microservices
 definiert sind. Er dient primär den Testzwecken und soll eine Eigenständigkeit des Services ermöglichen.
 
-In den Subpackages von `client` werden die Zugriffe nach externen Microservice gebündelt. In den jeweiligen
+In den Subpackages von `client` werden die Zugriffe nach externen Microservices gebündelt. In den jeweiligen
 Packages gibt es eine Implementierungsklasse für den Zugriff auf den externen Microservice sowie einen Mapper. Der Mapper
 konvertiert das Datenmodell des externen Microservices auf das geforderte Datenmodell im Microservice.
 
@@ -351,7 +351,7 @@ classDiagram
 <em>Beziehungen der Komponenten des Persistencelayers</em>
 
 Die Klassen und Interfaces werden im Package `domain` abgelegt. Analog zu den Services werden Subpackages je
-Domain definiert. Klassen die durch Entitäten verschiedene Subpackages verwenden, sind in dem Subpackage `common` abzulegen.
+Domain definiert. Klassen, die durch Entitäten verschiedene Subpackages verwenden, sind in dem Subpackage `common` abzulegen.
 
 <details>
 

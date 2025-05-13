@@ -14,6 +14,10 @@ export const useUserStore = defineStore("user", () => {
     return user.value?.wahlbezirkID;
   });
 
+  const currentUserWahltagID = computed((): string | undefined => {
+    return user.value?.wahltagID;
+  });
+
   const getUser = computed((): User | null => {
     return user.value;
   });
@@ -22,7 +26,7 @@ export const useUserStore = defineStore("user", () => {
     user.value = payload;
   }
 
-  return { getUser, setUser, currentUserWahlbezirkID };
+  return { getUser, setUser, currentUserWahlbezirkID, currentUserWahltagID };
 });
 
 if (import.meta.hot) {

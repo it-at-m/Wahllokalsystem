@@ -46,6 +46,7 @@ export function getUser(): Promise<User> {
       // WLS_Extended
       u.authorities = json.authorities || [];
       u.wahltagID = json.wahltagID || "";
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       u.wbid_wahlnummer = JSON.parse(json.wbid_wahlnummer as any) || {
         wbid_wahlnummer: [
           { wahlbezirkID: u.wahlbezirkID || "", wahlnummer: "", wahlID: "" },

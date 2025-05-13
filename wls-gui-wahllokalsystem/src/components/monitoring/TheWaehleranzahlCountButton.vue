@@ -2,8 +2,8 @@
   <v-btn
     class="bg-white mr-5"
     color="primary"
-    @click="onWaehleranzahlClicked"
     prepend-icon="$plus"
+    @click="onWaehleranzahlClicked"
   >
     {{ waehler }} Wähler*innen
   </v-btn>

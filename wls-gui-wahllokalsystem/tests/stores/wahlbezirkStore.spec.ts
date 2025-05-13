@@ -83,12 +83,15 @@ describe("wahlbezirkStore.ts", () => {
         }
       );
 
-      await unitUnderTest.sendSchliessungsuhrzeit(time);
-
-      expect(unitUnderTest.schliessungsUhrzeitSent).toBe(undefined);
-      expect(
-        mockDefinitions.postUrnenwahlSchliessungsuhrzeit
-      ).toHaveBeenCalledWith(wahlbezirkID, mockedNow);
+      try {
+        await unitUnderTest.sendSchliessungsuhrzeit(time);
+      } catch (error) {
+        expect(error).equals(mockedError);
+        expect(unitUnderTest.schliessungsUhrzeitSent).toBe(undefined);
+        expect(
+          mockDefinitions.postUrnenwahlSchliessungsuhrzeit
+        ).toHaveBeenCalledWith(wahlbezirkID, mockedNow);
+      }
     });
   });
 });

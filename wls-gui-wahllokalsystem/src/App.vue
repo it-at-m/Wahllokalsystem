@@ -169,6 +169,7 @@ import { getUser } from "@/api/user-client.ts";
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
+import { useMonitoringCronjobService } from "@/composables/monitoring/monitoringCronjobService.ts";
 import {
   EXAMPLE_ROUTES_NEWROUTE,
   EXAMPLE_VALIDATION,
@@ -191,6 +192,8 @@ const { initTasks } = useTaskManagerStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
+const { startWahlbeteiligungInterval, stopWahlbeteiligungInterval } =
+  useMonitoringCronjobService();
 
 const [drawer, toggleDrawer] = useToggle();
 const isOffline = ref(false);
@@ -210,6 +213,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   stopBroadcastMessageInterval();
+  stopWahlbeteiligungInterval();
 });
 
 function loadUser(): void {
@@ -227,6 +231,7 @@ function loadUser(): void {
       startBroadcastMessageInterval();
       initTasks();
       loadEreignisse();
+      startWahlbeteiligungInterval();
     });
 }
 </script>

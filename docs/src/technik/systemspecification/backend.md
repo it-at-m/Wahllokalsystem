@@ -82,9 +82,6 @@ um konsequent `WlsException`s zu werfen.
 Im Accesslayer befinden sich die Klassen, Interfaces und Records, welche den Zugriff auf den Microservice mitels REST via http
 ermöglichen.
 
-Je Domain gibt es ein Subpackage. In jedem Subpackage gibt es einen RestController, einen Mapper und die Records für
-das Datenmodell.
-
 ![Komponenten des Accesslayers](/componentsOfAccessLayer.drawio.png)  
 *Komponenten des Accesslayers*
 
@@ -130,6 +127,30 @@ classDiagram
 ```  
 
 <em>Abhängigkeiten der Klassen des Accesslayers untereinander, sowie den Zugriff auf den Servicelayer</em>
+
+Je Domain gibt es ein Subpackage. In jedem Subpackage gibt es einen RestController, einen Mapper und die Records für
+das Datenmodell.
+
+<details>
+
+<summary>Beispiel Packagestruktur in Basisdatenservice</summary>
+
+```text
+├─ rest
+|     ├─ common
+|     |    ├─ WahlbezirkArtDTO
+|     ├─ handbuch
+|     |    ├─ HandbuchController
+|     |    ├─ HandbuchDTOMapper
+|     ├─ wahlbezirke
+|     |    ├─ WahlbezirkDTO
+|     |    ├─ WahlbezirkDTOMapper
+|     |    └─ WahlbezirkeController
+```  
+
+*`WahlbezirkArtDTO` wird nicht in `handbuch` und wahlbezirke` verwendet.*
+
+</details>
 
 ### Servicelayer
 

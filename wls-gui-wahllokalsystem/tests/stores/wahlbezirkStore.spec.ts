@@ -66,5 +66,29 @@ describe("wahlbezirkStore.ts", () => {
       );
       expect(unitUnderTest.schliessungsUhrzeitSent).toBe(undefined);
     });
+
+    it("should_notUpdateSchliessungsUhrzeitSent_when_postUrnenwahlSchliessungsuhrzeitFails", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      const user = new User();
+      user.wahlbezirkID = wahlbezirkID;
+      userStore.setUser(user);
+
+      const time = mockedNow.toISOString();
+
+      const mockedError = new Error("Speicherfehler!");
+      mockDefinitions.postUrnenwahlSchliessungsuhrzeit.mockImplementationOnce(
+        () => {
+          throw mockedError;
+        }
+      );
+
+      await unitUnderTest.sendSchliessungsuhrzeit(time);
+
+      expect(unitUnderTest.schliessungsUhrzeitSent).toBe(undefined);
+      expect(
+        mockDefinitions.postUrnenwahlSchliessungsuhrzeit
+      ).toHaveBeenCalledWith(wahlbezirkID, mockedNow);
+    });
   });
 });

@@ -210,7 +210,7 @@ classDiagram
         }
     }
 
-    namespace package_clients {
+    namespace package_client {
         class DummyClientImpl {
             <<Class>>
         }
@@ -230,7 +230,7 @@ classDiagram
         }
     }
 
-    namespace package_clients_externalService {
+    namespace package_client_externalService {
         class ClientExternalServiceImpl {
             <<Class>>
         }
@@ -271,7 +271,7 @@ classDiagram
 <summary>Beispiel Packagestruktur in Basisdatenservice</summary>
 
 ```text
-├─ clients
+├─ client
 |     ├─ DummyClientImpl
 |     ├─ WahlbezirkeClientImpl
 |     └─ WahlbezirkeClientMapper
@@ -287,7 +287,7 @@ classDiagram
 |     |    └─ WahlbezirkModelMapper
 ```  
 
-*`WahlbezirkArtModel` wird nicht nur in `wahlbezirke` verwendet. `clients.WahlbezirkeClientImpl` implementiert
+*`WahlbezirkArtModel` wird nicht nur in `wahlbezirke` verwendet. `client.WahlbezirkeClientImpl` implementiert
 `service.wahlbezirke.WahlbezirkeClient`*
 
 </details>
@@ -302,13 +302,13 @@ des Servicedatenmodells auf die Klassen des Domaindatenmodells gemappt. Durch de
 die Parameter valide sind. Werden Daten von anderen Microservices benötigt, so wird diese Schnittstelle durch ein Interface
 abgebildet. Die Rückgabewerte und Parameter sind wie beim Service Klassen des Datenmodells des Services.
 
-#### Clientspackage
+#### Clientpackage
 
-Im Package `clients` ist die Funktionalität für den Zugriff auf einen anderen Microservice implementiert.
+Im Package `client` ist die Funktionalität für den Zugriff auf einen anderen Microservice implementiert.
 Der Dummyclient implementiert alle in den Subpackages definierten Interfaces, die für den Zugriff auf andere Microservices
 definiert sind. Er dient primär den Testzwecken und soll eine Eigenständigkeit des Services ermöglichen.
 
-In den Subpackages von `clients` werden die Zugriffe nach externen Microservice gebündelt. In den jeweiligen
+In den Subpackages von `client` werden die Zugriffe nach externen Microservice gebündelt. In den jeweiligen
 Packages gibt es eine Implementierungsklasse für den Zugriff auf den externen Microservice sowie einen Mapper. Der Mapper
 konvertiert das Datenmodell des externen Microservices auf das geforderte Datenmodell im Microservice.
 

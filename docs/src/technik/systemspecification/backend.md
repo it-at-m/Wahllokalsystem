@@ -20,8 +20,8 @@ Ein Backendservice besteht in der Regel aus 3 Layern.
 Komponenten die eine rote Umrandung haben sind Teil der Security.
 
 Es gibt eine Zugriffskontrolle im `access layer`. Hier wird geprüft, ob für den Zugriff auf die geforderte
-Resource die erforderliche Authentifizierung gegeben ist. Die meisten Ressourcen erfordern eine Authentifizierung. Es gibt
-wenige Resource die ohne Authentifizierung abrufbar sind.
+Resource die erforderliche Authentifizierung gegeben ist. Bis auf wenige Ausnahmen ist für Zugriff auf eine Ressource
+eine Authentifizierung erforderlich.
 
 Die Security im `service layer` und `persistence layer` prüft die Autorisierung. Die Ausführung der Methoden erfordert in der Regel
 mindestens ein der Funktion entsprechendes Recht. Das Verändern der Daten eines bestimmten Wahlbezirkes erfordert auch, dass

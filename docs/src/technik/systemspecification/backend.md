@@ -108,29 +108,24 @@ classDiagram
             doSth(inputModel: ModelA1) ModelA2
         }
 
-        class DomainDTO1 {
-            <<Record>>
-        }
-
-        class DomainDTO2 {
+        class DomainDTO {
             <<Record>>
         }
 
         class DTOMapper {
             <<Interface>>
 
-            toDTO(model: DomainModelA) DomainDTO1
-            toModel(dto: DomainDTO2) DomainModelA
+            toDTO(model: DomainModelA) DomainDTO
+            toModel(dto: DomainDTO) DomainModelA
         }
     }
 
     DomainController --> DomainServiceA : call
     DomainController --> DTOMapper : call
 
-    DTOMapper -- DomainDTO1
-    DTOMapper -- DomainDTO2
+    DTOMapper -- DomainDTO
     DTOMapper -- DomainModelA
-  DomainServiceA -- DomainModelA
+    DomainServiceA -- DomainModelA
     
 ```  
 

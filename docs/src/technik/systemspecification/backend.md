@@ -151,7 +151,7 @@ das Datenmodell.
 |     |    └─ WahlbezirkeController
 ```  
 
-*`WahlbezirkArtDTO` wird nicht in `handbuch` und wahlbezirke` verwendet.*
+*`WahlbezirkArtDTO` wird in `handbuch` und `wahlbezirke` verwendet.*
 
 </details>
 
@@ -285,9 +285,15 @@ classDiagram
 |     |    ├─ WahlbezirkeService
 |     |    ├─ WahlbezirkModel
 |     |    └─ WahlbezirkModelMapper
+|     ├─ handbuch
+|     |    ├─ HandbuchModelMapper
+|     |    ├─ HandbuchReferenceModel
+|     |    ├─ HandbuchService
+|     |    ├─ HandbuchValidator
+|     |    └─ HandbuchWriteModel
 ```  
 
-*`WahlbezirkArtModel` wird nicht nur in `wahlbezirke` verwendet. `client.WahlbezirkeClientImpl` implementiert
+*`WahlbezirkArtModel` wird in `handbuch` und `wahlbezirke` verwendet. `client.WahlbezirkeClientImpl` implementiert
 `service.wahlbezirke.WahlbezirkeClient`*
 
 </details>

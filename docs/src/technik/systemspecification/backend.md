@@ -163,25 +163,6 @@ notwendig sind.
 ![Komponenten des Servicelayers](/componentsOfServiceLayer.drawio.png)  
 *Komponenten des Servicelayers*
 
-Der Großteil der Implementierung erfolgt im Package `service`. Je Domain, die durch den Microservice abgedeckt wird,
-gibt es ein Subpackage. Dieses beinhaltet die Serviceklasse, den Mapper, den Validator sowie die Klassen für das Datenmodell.
-
-Die Rückgabewerte und Parameter der Methoden des Services sind Klassen des Datenmodells des Services. Im Mapper werden die Klassen
-des Servicedatenmodells auf die Klassen des Domaindatenmodells gemappt. Durch den Validator wird sichergestellt das
-die Parameter valide sind. Werden Daten von anderen Microservices benötigt, so wird diese Schnittstelle durch ein Interface
-abgebildet. Die Rückgabewerte und Parameter sind wie beim Service Klassen des Datenmodells des Services.
-
-Im Package `clients` ist die Funktionalität für den Zugriff auf einen anderen Microservice implementiert.
-Der Dummyclient implementiert alle in den Subpackages definierten Interfaces, die für den Zugriff auf andere Microservices
-definiert sind. Er dient primär den Testzwecken und soll eine Eigenständigkeit des Services ermöglichen.
-
-In den Subpackages von `clients` werden die Zugriffe nach externen Microservice gebündelt. In den jeweiligen
-Packages gibt es eine Implementierungsklasse für den Zugriff auf den externen Microservice sowie einen Mapper. Der Mapper
-konvertiert das Datenmodell des externen Microservices auf das geforderte Datenmodell im Microservice.
-
-> [!IMPORTANT]
-> Unter [Umständen](../adr/adr002-controller-service-datamodels.md) kann auf ein Datenmodell im Servierlayer verzichtet werden.
-
 ```mermaid
 
 classDiagram
@@ -310,6 +291,29 @@ classDiagram
 `service.wahlbezirke.WahlbezirkeClient`*
 
 </details>
+
+#### Servicepackage
+
+Der Großteil der Implementierung erfolgt im Package `service`. Je Domain, die durch den Microservice abgedeckt wird,
+gibt es ein Subpackage. Dieses beinhaltet die Serviceklasse, den Mapper, den Validator sowie die Klassen für das Datenmodell.
+
+Die Rückgabewerte und Parameter der Methoden des Services sind Klassen des Datenmodells des Services. Im Mapper werden die Klassen
+des Servicedatenmodells auf die Klassen des Domaindatenmodells gemappt. Durch den Validator wird sichergestellt das
+die Parameter valide sind. Werden Daten von anderen Microservices benötigt, so wird diese Schnittstelle durch ein Interface
+abgebildet. Die Rückgabewerte und Parameter sind wie beim Service Klassen des Datenmodells des Services.
+
+#### Clientspackage
+
+Im Package `clients` ist die Funktionalität für den Zugriff auf einen anderen Microservice implementiert.
+Der Dummyclient implementiert alle in den Subpackages definierten Interfaces, die für den Zugriff auf andere Microservices
+definiert sind. Er dient primär den Testzwecken und soll eine Eigenständigkeit des Services ermöglichen.
+
+In den Subpackages von `clients` werden die Zugriffe nach externen Microservice gebündelt. In den jeweiligen
+Packages gibt es eine Implementierungsklasse für den Zugriff auf den externen Microservice sowie einen Mapper. Der Mapper
+konvertiert das Datenmodell des externen Microservices auf das geforderte Datenmodell im Microservice.
+
+> [!IMPORTANT]
+> Unter [Umständen](../adr/adr002-controller-service-datamodels.md) kann auf ein Datenmodell im Servierlayer verzichtet werden.
 
 ### Persistencelayer
 

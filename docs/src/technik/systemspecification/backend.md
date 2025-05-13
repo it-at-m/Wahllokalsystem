@@ -247,7 +247,7 @@ classDiagram
     }
 
     namespace package_clients_externalService {
-        class ExternalServiceImpl {
+        class ClientExternalServiceImpl {
             <<Class>>
         }
 
@@ -271,12 +271,12 @@ classDiagram
     RepositoryA -- EntityA
 
     DummyClientImpl ..|> ClientExternalService
-    ExternalServiceImpl ..|> ClientExternalService
+    ClientExternalServiceImpl ..|> ClientExternalService
 
     ExternalControllerAPI -- ExternalDtoA
     ExternalControllerAPI -- ExternalDtoB
-    ExternalServiceImpl --> ExternalControllerAPI : call
-    ExternalServiceImpl --> ExternalServiceMapper : call
+    ClientExternalServiceImpl --> ExternalControllerAPI : call
+    ClientExternalServiceImpl --> ExternalServiceMapper : call
 
 ```  
 

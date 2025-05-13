@@ -91,44 +91,44 @@ das Datenmodell.
 classDiagram
 
     namespace package_service {
-        class ModelA {
+        class DomainModelA {
 
         }
         
-        class ServiceA {
+        class DomainServiceA {
             
         }
     }
 
-    namespace package_rest_resource {
-        class ResourceController {
+    namespace package_rest_domain {
+        class DomainController {
             <<Class>>
             doSth(inputModel: ModelA1) ModelA2
         }
 
-        class ResourceDTO1 {
+        class DomainDTO1 {
             <<Record>>
         }
 
-        class ResourceDTO2 {
+        class DomainDTO2 {
             <<Record>>
         }
 
         class DTOMapper {
             <<Interface>>
 
-            toDTO(model: ModelA) ResourceDTO1
-            toModel(dto: ResourceDTO2) ModelA
+            toDTO(model: DomainModelA) DomainDTO1
+            toModel(dto: DomainDTO2) DomainModelA
         }
     }
 
-    ResourceController --> ServiceA : call
-    ResourceController --> DTOMapper : call
+    DomainController --> DomainServiceA : call
+    DomainController --> DTOMapper : call
 
-    DTOMapper -- ResourceDTO1
-    DTOMapper -- ResourceDTO2
-    DTOMapper -- ModelA
-    ServiceA -- ModelA
+    DTOMapper -- DomainDTO1
+    DTOMapper -- DomainDTO2
+    DTOMapper -- DomainModelA
+  DomainServiceA -- DomainModelA
     
 ```  
 
@@ -165,7 +165,7 @@ konvertiert das Datenmodell des externen Microservices auf das geforderte Datenm
 
 classDiagram
 
-    namespace package_domain {
+    namespace package_domain_domainA {
         class EntityA {
 
         }
@@ -176,7 +176,7 @@ classDiagram
 
     }
 
-    namespace package_service_serviceA {
+    namespace package_service_domainA {
         class ServiceA {
             <<Class>>
             doSth(inputModel: ModelA1) ModelA2

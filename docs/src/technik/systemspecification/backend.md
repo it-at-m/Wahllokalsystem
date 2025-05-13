@@ -166,6 +166,7 @@ notwendig sind.
 ```mermaid
 
 classDiagram
+    direction LR
 
     namespace package_domain_domainA {
         class EntityA {

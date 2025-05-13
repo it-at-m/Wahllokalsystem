@@ -10,7 +10,7 @@ Der Service hat keine Abhängigkeiten zu anderen Services.
 
 ## Architekturabweichungen
 
-Der Servicelayer hat kein eigenes Datenmodell, statt dessen nutzt der Servicelayer das Datenmodell des Accesslayers.
+Der Servicelayer hat kein eigenes Datenmodell, statt dessen nutzt der [Servicelayer](../../../technik/systemspecification/backend#backendservices) das Datenmodell des Accesslayers.
 
 ## Daten und Funktionen
 

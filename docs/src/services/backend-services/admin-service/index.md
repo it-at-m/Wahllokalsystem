@@ -19,4 +19,4 @@ Der Service nutzt folgende Services
 
 ## Architekturabweichungen
 
-Dieser Service hat keinen Persistencelayer. Der Service spricht ausschließlich mit anderen Microservices.
+Dieser Service hat keinen [Persistencelayer](../../../technik/systemspecification/backend#backendservices). Der Service spricht ausschließlich mit anderen Microservices.

@@ -5,16 +5,8 @@ import {
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
 import { mount, VueWrapper } from "@vue/test-utils";
-import { createPinia, storeToRefs } from "pinia";
-import {
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vitest";
+import { storeToRefs } from "pinia";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
@@ -27,10 +19,6 @@ import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 describe("TheWaehleranzahlCountButton", () => {
   let vuetify: ReturnType<typeof createVuetify>;
   let wrapper: VueWrapper;
-
-  beforeAll(() => {
-    createPinia();
-  });
 
   beforeEach(() => {
     vuetify = createVuetify({

@@ -61,7 +61,7 @@ describe("monitoringService.ts", () => {
         new Error("mocked api call failed")
       );
 
-      await postWahlbeteiligung(wahlID, wahlbezirkID, waehleranzahl);
+      await postWahlbeteiligung(wahlbezirkID, wahlID, waehleranzahl);
 
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.ERROR],
@@ -85,7 +85,7 @@ describe("monitoringService.ts", () => {
       mockDefinitions.toDto.mockReturnValue(mockedWaehleranzahlDTO);
       mockDefinitions.postWahlbeteiligung.mockResolvedValue({});
 
-      await postWahlbeteiligung(wahlID, wahlbezirkID, waehleranzahl);
+      await postWahlbeteiligung(wahlbezirkID, wahlID, waehleranzahl);
 
       expect(mockDefinitions.postWahlbeteiligung).toHaveBeenCalledWith(
         wahlbezirkID,

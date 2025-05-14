@@ -24,8 +24,8 @@ export function useMonitoringService() {
   }
 
   async function postWahlbeteiligung(
-    wahlID: string,
     wahlbezirkID: string,
+    wahlID: string,
     waehleranzahl: Waehleranzahl
   ): Promise<void> {
     const waehleranzahlDTO = toDto(waehleranzahl);

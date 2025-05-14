@@ -38,7 +38,7 @@ export const useMonitoringStore = defineStore(storeID, () => {
     };
 
     if (wahlbezirkID && wahlID) {
-      await postWahlbeteiligung(wahlID, wahlbezirkID, wahlbeteiligung);
+      await postWahlbeteiligung(wahlbezirkID, wahlID, wahlbeteiligung);
     }
   }
 

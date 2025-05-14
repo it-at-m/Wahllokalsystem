@@ -18,6 +18,11 @@ export const useUserStore = defineStore("user", () => {
     return user.value?.wahltagID;
   });
 
+  // todo: in BaseIconWahlbezirksart implementieren
+  const currentUserWahlbezirksArt = computed((): string | undefined => {
+    return user.value?.wahlbezirksArt;
+  });
+
   const getUser = computed((): User | null => {
     return user.value;
   });
@@ -26,7 +31,13 @@ export const useUserStore = defineStore("user", () => {
     user.value = payload;
   }
 
-  return { getUser, setUser, currentUserWahlbezirkID, currentUserWahltagID };
+  return {
+    getUser,
+    setUser,
+    currentUserWahlbezirkID,
+    currentUserWahltagID,
+    currentUserWahlbezirksArt,
+  };
 });
 
 if (import.meta.hot) {

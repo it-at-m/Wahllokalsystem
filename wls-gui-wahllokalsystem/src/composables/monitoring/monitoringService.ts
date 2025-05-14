@@ -18,9 +18,18 @@ export function useMonitoringService() {
   );
 
   async function getWahlbeteiligung(wahlID: string, wahlbezirkID: string) {
-    return await waehlerAnzahlControllerApi
-      .getWahlbeteiligung(wahlID, wahlbezirkID)
-      .then((response) => toModel(response.data));
+    try {
+      const response = await waehlerAnzahlControllerApi.getWahlbeteiligung(
+        wahlID,
+        wahlbezirkID
+      );
+      return toModel(response.data);
+    } catch {
+      userNotificationService.addNotification(
+        "Fehler beim Abrufen der Wahlbeteiligung.",
+        UserNotificationCategoryEnum.ERROR
+      );
+    }
   }
 
   async function postWahlbeteiligung(

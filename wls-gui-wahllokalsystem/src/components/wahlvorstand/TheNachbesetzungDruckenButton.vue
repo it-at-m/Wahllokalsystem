@@ -1,8 +1,8 @@
 <template>
   <v-btn
     prepend-icon="$printer"
-    @click="onNachbesetzungDruckenClicked"
     :disabled="props.disabled"
+    @click="onNachbesetzungDruckenClicked"
   >
     Nachbesetzung drucken
   </v-btn>

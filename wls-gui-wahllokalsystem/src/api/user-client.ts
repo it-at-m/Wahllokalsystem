@@ -1,3 +1,5 @@
+import type { WbId_Wahlnummer } from "@/types/wlsTypes/WbId_Wahlnummer.ts";
+
 import {
   defaultCatchHandler,
   defaultResponseHandler,
@@ -46,12 +48,30 @@ export function getUser(): Promise<User> {
       // WLS_Extended
       u.authorities = json.authorities || [];
       u.wahltagID = json.wahltagID || "";
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      u.wbid_wahlnummer = JSON.parse(json.wbid_wahlnummer as any) || {
+      u.wbid_wahlnummer = _getWbidWahlnummerObjectFromJSON(
+        json.wbid_wahlnummer
+      ) || {
         wbid_wahlnummer: [
-          { wahlbezirkID: u.wahlbezirkID || "", wahlnummer: "", wahlID: "" },
+          {
+            wahlbezirkID: u.wahlbezirkID || "",
+            wahlnummer: "",
+            wahlID: "",
+          },
         ],
       };
+
       return u;
     });
+}
+
+function _getWbidWahlnummerObjectFromJSON(
+  wbid_wahlnummer_json: WbId_Wahlnummer | undefined
+): WbId_Wahlnummer {
+  return wbid_wahlnummer_json && _isString(wbid_wahlnummer_json)
+    ? JSON.parse(wbid_wahlnummer_json)
+    : wbid_wahlnummer_json;
+}
+
+function _isString(value: unknown): value is string {
+  return typeof value === "string";
 }

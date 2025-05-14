@@ -1,4 +1,4 @@
-# Workflows
+# Workflows & Artefakte
 
 Mit [Workflows](https://docs.github.com/en/actions/writing-workflows) automatisieren wir Prozesse in der Entwicklung.
 Wir sichern damit die Qualität und stellen Versionen bereit.

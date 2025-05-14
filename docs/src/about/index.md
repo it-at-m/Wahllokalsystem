@@ -21,4 +21,5 @@ Dazu gibt es zahlreiche Regeln und Konsistenzprüfungen, die dem Wahlvorstand Fe
 
 Das Wahlamt kann über das System den Wahlbezirken wichtige Informationen zukommen lassen.
 
-![Übersicht der Funktionen des Wahllokalsystems im zeitlichen Kontext einer Wahl](/relationshipOfUIsToElectionProcess.drawio.png)
+![Übersicht der Funktionen des Wahllokalsystems im zeitlichen Kontext einer Wahl](/relationshipOfUIsToElectionProcess.drawio.png)  
+*Übersicht der Funktionen des Wahllokalsystems im zeitlichen Kontext einer Wahl*

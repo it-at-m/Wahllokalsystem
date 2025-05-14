@@ -13,7 +13,7 @@ export function useWahlbeteiligungMapper() {
     }
     return {
       anzahlWaehler: wahlbeteiligung.anzahlWaehler,
-      uhrzeit: mappedUhrzeit?.toJSON(),
+      uhrzeit: mappedUhrzeit.toJSON(),
     };
   }
 

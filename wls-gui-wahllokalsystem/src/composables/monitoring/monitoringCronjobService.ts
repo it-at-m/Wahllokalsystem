@@ -13,10 +13,13 @@ export function useMonitoringCronjobService() {
       stopWahlbeteiligungInterval();
     }
 
-    wahlbeteiligungActiveInterval = window.setInterval(
-      () => sendWaehler(),
-      wahlbeteiligungUpdateInterval
-    );
+    wahlbeteiligungActiveInterval = window.setInterval(async () => {
+      try {
+        await sendWaehler();
+      } catch (error) {
+        console.debug("Failed to send wahlbeteiligung:", error);
+      }
+    }, wahlbeteiligungUpdateInterval);
   }
 
   function stopWahlbeteiligungInterval(): void {

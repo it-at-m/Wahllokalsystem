@@ -1,8 +1,22 @@
+/*Changes default settings to use full width of page.
+We have large images that require more space. #1266 #1277*/
 :root {
   --vp-code-copy-copied-text-content: "In Zwischenablage kopiert!";
   --vp-layout-max-width: 100%;
 }
 
 .VPDoc.has-aside .content-container {
+  max-width: 100% !important;
+}
+
+.VPDoc.has-aside .content {
+  max-width: 100% !important;
+}
+
+.VPDoc:not(has-sidebar) .content-container {
+  max-width: 100% !important;
+}
+
+.VPDoc .container {
   max-width: 100% !important;
 }

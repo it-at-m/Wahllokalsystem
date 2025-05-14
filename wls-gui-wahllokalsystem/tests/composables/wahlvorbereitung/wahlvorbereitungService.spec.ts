@@ -40,7 +40,7 @@ describe("wahlvorbereitungService", () => {
   });
 
   describe("postUrnenwahlSchliessungsuhrzeit", () => {
-    it("should_throwErrorAndCallNotificationService_when_APICallFails", async () => {
+    it("should_throwErrorAndCallNotificationService_when_apiCallFails", async () => {
       const wahlbezirkID = "wahlbezirkID";
       const schliessungsuhrzeit = "2025-04-29T12:12:42";
 

@@ -18,11 +18,16 @@ export function useWahlbeteiligungMapper() {
   }
 
   function toModel(wahlbeteiligungDTO: WaehleranzahlDTO): Waehleranzahl {
+    const parsedDate = new Date(wahlbeteiligungDTO.uhrzeit);
     return {
       anzahlWaehler: wahlbeteiligungDTO.anzahlWaehler,
-      uhrzeit: new Date(wahlbeteiligungDTO.uhrzeit),
+      uhrzeit: _isUhrzeitValid(parsedDate) ? parsedDate : undefined,
     };
   }
 
   return { toDto, toModel };
+}
+
+function _isUhrzeitValid(date: Date): boolean {
+  return isNaN(date.getTime());
 }

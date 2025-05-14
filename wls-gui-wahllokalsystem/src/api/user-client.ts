@@ -47,6 +47,7 @@ export function getUser(): Promise<User> {
       u.authorities = json.authorities || [];
       u.wahltagID = json.wahltagID || "";
       u.wahlbezirksArt = json.wahlbezirksArt || undefined;
+      u.wahlbezirkNummer = json.wahlbezirkNummer || "";
       return u;
     });
 }

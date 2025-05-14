@@ -21,6 +21,7 @@ class User {
   wahlbezirkID? = "";
   wahlbezirksArt?: WahlbezirksArtEnum;
   wahltagID? = "";
+  wahlbezirkNummer? = "";
 }
 
 function UserLocalDevelopment(): User {
@@ -28,6 +29,7 @@ function UserLocalDevelopment(): User {
   u.username = "Local Development User";
   u.displayName = "Local Development User";
   u.wahlbezirksArt = "UWB";
+  u.wahlbezirkNummer = "1234";
   u.authorities = [
     // todo add authorities
   ];

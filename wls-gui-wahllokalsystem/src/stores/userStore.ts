@@ -23,6 +23,10 @@ export const useUserStore = defineStore("user", () => {
     return user.value?.wahlbezirksArt;
   });
 
+  const currentUserWahlbezirkNummer = computed((): string | undefined => {
+    return user.value?.wahlbezirkNummer;
+  });
+
   const getUser = computed((): User | null => {
     return user.value;
   });
@@ -37,6 +41,7 @@ export const useUserStore = defineStore("user", () => {
     currentUserWahlbezirkID,
     currentUserWahltagID,
     currentUserWahlbezirksArt,
+    currentUserWahlbezirkNummer,
   };
 });
 

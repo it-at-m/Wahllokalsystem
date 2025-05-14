@@ -19,7 +19,15 @@ export const useUserStore = defineStore("user", () => {
   });
 
   const currentUserHauptWahlID = computed((): string | undefined => {
-    return user.value?.wbid_wahlnummer?.wbid_wahlnummer[0].wahlID; // todo: filtern nach kleinster wahlnummer
+    const smallestWbidWahlnummerObject =
+      user.value?.wbid_wahlnummer?.wbid_wahlnummer?.reduce(
+        (smallest, current) => {
+          return parseInt(current.wahlnummer) < parseInt(smallest.wahlnummer)
+            ? current
+            : smallest;
+        }
+      );
+    return smallestWbidWahlnummerObject?.wahlID;
   });
 
   const getUser = computed((): User | null => {

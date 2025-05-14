@@ -1,4 +1,4 @@
-/*Changes fo default settings to use full width of page.
+/*Changes default settings to use full width of page.
 We have large images that require more space. #1266 #1277*/
 :root {
   --vp-code-copy-copied-text-content: "In Zwischenablage kopiert!";

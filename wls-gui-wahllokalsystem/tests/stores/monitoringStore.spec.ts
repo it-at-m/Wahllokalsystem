@@ -155,8 +155,8 @@ describe("monitoringStore.ts", () => {
 
       expect(unitUnderTest.waehler).toStrictEqual(mockedWahlbeteiligung);
       expect(mockDefinitions.postWahlbeteiligung).toHaveBeenCalledWith(
-        userStore.currentUserHauptWahlID,
         userStore.currentUserWahlbezirkID,
+        userStore.currentUserHauptWahlID,
         mockedWaehleranzahl
       );
     });

@@ -22,7 +22,7 @@ export default createVuetify({
           accent: "#7BA4D9",
           success: "#7fbf7f",
           error: "#FF0000",
-          warn: "#ffe993",
+          warning: "#ffe993",
         },
       },
     },

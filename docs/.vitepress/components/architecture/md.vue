@@ -93,8 +93,8 @@ function createFlowRelations(): string {
 }
 
 function createFlowRelation(relation: Relation, withDetails = true): string {
-  if (withDetails) {
-    return `${relation.source} -->|${relation.titel}| ${relation.target}`;
+  if (withDetails && relation.titel.trim()) {
+    return `${relation.source} -- ${relation.titel} --> ${relation.target}`;
   } else {
     return `${relation.source} --> ${relation.target}`;
   }

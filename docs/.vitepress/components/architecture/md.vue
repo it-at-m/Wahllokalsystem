@@ -9,7 +9,7 @@
     />
 
     <v-select
-      v-model="direction"
+      v-model="selectedDirection"
       label="Ausrichtung"
       :items="['LR', 'TD']"
     />
@@ -33,8 +33,9 @@ import { Relation } from "../../types/architecture/Relation";
 import MermaidDiagram from "../MermaidDiagram.vue";
 
 const selectedService: Ref<string | null> = ref(null);
-const direction = ref("LR");
+const selectedDirection = ref("LR");
 const withOperations = ref(false);
+
 const selectedRelations = computed(() => {
   let relationsMatchingSelection = !selectedService.value
     ? BACKENDSERVICE_RELATIONS
@@ -44,8 +45,8 @@ const selectedRelations = computed(() => {
           relation.target === selectedService.value
       );
 
-  if (withOperations.value) {
-  } else {
+  if (!withOperations.value) {
+    //reduce to distinguish relations
     relationsMatchingSelection = relationsMatchingSelection.filter(
       (relation, index, array) =>
         index === array.findIndex((r) => hasEqualSourceAndTarget(r, relation))
@@ -55,16 +56,12 @@ const selectedRelations = computed(() => {
   return relationsMatchingSelection;
 });
 
-function hasEqualSourceAndTarget(relation: Relation, other: Relation): boolean {
-  return relation.source === other.source && relation.target === other.target;
-}
-
 const mermaidContentForSelectedService = computed(
-  () => `flowchart ${direction.value}
+  () => `flowchart ${selectedDirection.value}
 
   ${createStyleDefinitions()}
 
-  ${createFlowRelations()}
+  ${createFlowchartRelations()}
 `
 );
 
@@ -74,19 +71,26 @@ function createStyleDefinitions() {
     : "";
 }
 
-function createFlowRelations(): string {
+function createFlowchartRelations(): string {
   const relationsArray = selectedRelations.value.map((relation) =>
-    createFlowRelation(relation, withOperations.value)
+    createFlowchartRelation(relation, withOperations.value)
   );
 
   return relationsArray.join("\n");
 }
 
-function createFlowRelation(relation: Relation, withDetails = true): string {
+function createFlowchartRelation(
+  relation: Relation,
+  withDetails = true
+): string {
   if (withDetails && relation.operation.trim()) {
     return `${relation.source} -- ${relation.operation} --> ${relation.target}`;
   } else {
     return `${relation.source} --> ${relation.target}`;
   }
+}
+
+function hasEqualSourceAndTarget(relation: Relation, other: Relation): boolean {
+  return relation.source === other.source && relation.target === other.target;
 }
 </script>

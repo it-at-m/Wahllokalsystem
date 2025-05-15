@@ -198,7 +198,7 @@ export function useWahlvorstandNachbesetzungsDruck() {
                     <td class="blueGrayBG textAlignCenter">Funktion</td>
                     <td class="blueGrayBG textAlignCenter">Nachname</td>
                     <td class="blueGrayBG textAlignCenter">Vorname</td>
-                    <td class="blueGrayBG textAlignCenter">Fehlt 15.45 Uhr (X)</td>
+                    <td class="blueGrayBG textAlignCenter">Fehlt ${data.druckZeitpunkt} Uhr (X)</td>
                     <td class="blueGrayBG textAlignCenter">Nachgerückt aus Gremium (Name)</td> 
                   </tr>
                   ${

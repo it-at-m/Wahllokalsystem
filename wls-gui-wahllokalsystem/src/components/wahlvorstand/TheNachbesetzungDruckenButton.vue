@@ -14,12 +14,14 @@ import type { NachbesetzungsDruckInput } from "@/types/wahlvorstand/Nachbesetzun
 import { storeToRefs } from "pinia";
 import { VBtn } from "vuetify/components";
 
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useWahlvorstandNachbesetzungsDruck } from "@/composables/wahlvorstand/wahlvorstandNachbesetzungsDruck.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 
 const { loadWahlvorstand, sendWahlvorstand } = useWahlvorstandStore();
 const { buildTemplateFromData } = useWahlvorstandNachbesetzungsDruck();
+const { toHhMm } = useDateTimeFormatter();
 
 const { currentUserWahltagID, currentUserWahlbezirkNummer } =
   storeToRefs(useUserStore());
@@ -44,6 +46,7 @@ function _openPrintDialog() {
     wahlbezirknummer: currentUserWahlbezirkNummer.value,
     wahltag: currentUserWahltagID.value,
     wahlvorstaende: wahlvorstand.value.wahlvorstandsmitglieder,
+    druckZeitpunkt: toHhMm(new Date()),
   };
 
   const printWindow = window.open(

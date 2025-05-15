@@ -4,10 +4,12 @@ import {
   Configuration,
   WaehleranzahlControllerApi,
 } from "@/api/wls-clients/generated-monitoring-api";
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useWahlbeteiligungMapper } from "@/composables/monitoring/wahlbeteiligungMapper.ts";
 import { MONITORING_SERVICE_API_URL } from "@/constants.ts";
 
 const { toDto, toModel } = useWahlbeteiligungMapper();
+const { applyLocalTimezoneOffset } = useDateTimeFormatter();
 
 export function useMonitoringService() {
   const waehlerAnzahlControllerApi = new WaehleranzahlControllerApi(
@@ -31,6 +33,9 @@ export function useMonitoringService() {
     wahlID: string,
     waehleranzahl: Waehleranzahl
   ): Promise<void> {
+    waehleranzahl.uhrzeit
+      ? applyLocalTimezoneOffset(waehleranzahl.uhrzeit)
+      : undefined;
     const waehleranzahlDTO = toDto(waehleranzahl);
 
     try {

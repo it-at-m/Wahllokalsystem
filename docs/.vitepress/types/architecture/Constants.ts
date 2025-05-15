@@ -53,22 +53,62 @@ const ADMIN_SERVICE_RELATIONS: Relation[] = [
   {
     source: ADMIN_SERVICE,
     target: AUTH_SERVICE,
-    titel: " ",
+    titel: "createAndExportWahllokalBenutzer",
+  },
+  {
+    source: ADMIN_SERVICE,
+    target: AUTH_SERVICE,
+    titel: "deleteWahllokalBenutzer",
+  },
+  {
+    source: ADMIN_SERVICE,
+    target: AUTH_SERVICE,
+    titel: "exportWahllokalBenutzer",
   },
   {
     source: ADMIN_SERVICE,
     target: BASISDATEN_SERVICE,
-    titel: " ",
+    titel: "getWahlbezirke",
+  },
+  {
+    source: ADMIN_SERVICE,
+    target: BASISDATEN_SERVICE,
+    titel: "getWahltage",
+  },
+  {
+    source: ADMIN_SERVICE,
+    target: BASISDATEN_SERVICE,
+    titel: "resetWahlen",
+  },
+  {
+    source: ADMIN_SERVICE,
+    target: BASISDATEN_SERVICE,
+    titel: "getWahlen",
+  },
+  {
+    source: ADMIN_SERVICE,
+    target: BASISDATEN_SERVICE,
+    titel: "postWahlen",
   },
   {
     source: ADMIN_SERVICE,
     target: INFOMANAGEMENT_SERVICE,
-    titel: " ",
+    titel: "setKonfigurierterWahltag",
+  },
+  {
+    source: ADMIN_SERVICE,
+    target: INFOMANAGEMENT_SERVICE,
+    titel: "getKonfigurierteWahltage",
+  },
+  {
+    source: ADMIN_SERVICE,
+    target: INFOMANAGEMENT_SERVICE,
+    titel: "deleteKonfigurierterWahltag",
   },
   {
     source: ADMIN_SERVICE,
     target: ERGEBNISMELDUNG_SERVICE,
-    titel: " ",
+    titel: "initialiseAWerte",
   },
 ];
 

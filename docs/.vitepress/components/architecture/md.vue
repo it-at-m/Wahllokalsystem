@@ -72,15 +72,25 @@ function hasEqualSourceAndTarget(relation: Relation, other: Relation): boolean {
 const markdownContent = `
 `;
 
-const mermaidContentForSelectedService = computed(
-  () => `flowchart ${direction.value}
+const mermaidContentForSelectedService = computed(() => {
+  const flowchart = `flowchart ${direction.value}
 
-${createFlowRelations()}
-`
-);
+  ${createStyleDefinitions()}
+
+  ${createFlowRelations()}
+`;
+  console.debug(flowchart);
+  return flowchart;
+});
 
 onMounted(() => renderMermaid());
 watch(() => mermaidContentForSelectedService, renderMermaid);
+
+function createStyleDefinitions() {
+  return selectedService.value
+    ? `style ${selectedService.value} stroke-width:4px,stroke:#D50000`
+    : "";
+}
 
 const renderedMarkdownContent = new MarkdownIt().render(markdownContent);
 

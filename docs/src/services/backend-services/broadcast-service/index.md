@@ -8,6 +8,10 @@ Wenn dies der Fall ist, wird die Nachricht an das Wahllokal übermittelt. Nach d
 
 Der Service hat keine Abhängigkeiten zu anderen Services.
 
+## Architekturabweichungen
+
+Der Servicelayer hat kein eigenes Datenmodell, statt dessen nutzt der [Servicelayer](../../../technik/systemspecification/backend#backendservices#servicelayer) das Datenmodell des Accesslayers.
+
 ## Daten und Funktionen
 
 ### BroadcastMessageDTO

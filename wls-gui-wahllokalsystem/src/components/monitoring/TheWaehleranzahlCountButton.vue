@@ -2,7 +2,7 @@
   <v-btn
     class="bg-white mr-5"
     color="primary"
-    prepend-icon="$plus"
+    prepend-icon="$addCircle"
     @click="onWaehleranzahlClicked"
   >
     {{ waehler }} Wähler*innen

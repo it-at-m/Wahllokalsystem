@@ -45,7 +45,7 @@ export default createVuetify({
       wahlbezirksartUWB: mdiVote,
       wahlbezirksartBWB: mdiEmail,
       information: mdiInformationOutline,
-      plus: mdiPlusCircle,
+      addCircle: mdiPlusCircle,
     },
     sets: {
       mdi,

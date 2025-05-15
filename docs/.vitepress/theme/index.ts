@@ -3,6 +3,8 @@ import type { Theme } from "vitepress";
 
 import DefaultTheme from "vitepress/theme";
 
+import vuetify from "./plugins/vuetify";
+
 import "./custom.css";
 
 import status from "../components/adr/status.vue";
@@ -13,6 +15,8 @@ import MermaidDiagram from "../components/MermaidDiagram.vue";
 export default {
   extends: DefaultTheme,
   enhanceApp({ app }) {
+    app.use(vuetify);
+
     // register your custom global components
     app.component("adrStatus", status);
     app.component("statusOverview", statusOverview);

@@ -165,7 +165,6 @@ import {
   VTooltip,
 } from "vuetify/components";
 
-import { getUser } from "@/api/user-client.ts";
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
@@ -182,10 +181,9 @@ import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
-import { User, UserLocalDevelopment } from "@/types/User.ts";
 
 const { loadEreignisse } = useEreignisStore();
-const { setUser } = useUserStore();
+const { loadUser } = useUserStore();
 const { loadWahlvorstand } = useWahlvorstandStore();
 const { initTasks } = useTaskManagerStore();
 
@@ -195,8 +193,13 @@ const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
 const [drawer, toggleDrawer] = useToggle();
 const isOffline = ref(false);
 
-onMounted(() => {
-  loadUser();
+onMounted(async () => {
+  await loadUser().then(() => {
+    loadWahlvorstand();
+    startBroadcastMessageInterval();
+    initTasks();
+    loadEreignisse();
+  });
 
   // config for service worker indexed db (same config as in wahl-worker.js !)
   localforage.config({
@@ -211,24 +214,6 @@ onMounted(() => {
 onUnmounted(() => {
   stopBroadcastMessageInterval();
 });
-
-function loadUser(): void {
-  getUser()
-    .then((user: User) => setUser(user))
-    .catch(() => {
-      if (import.meta.env.DEV) {
-        setUser(UserLocalDevelopment());
-      } else {
-        setUser(null);
-      }
-    })
-    .then(() => {
-      loadWahlvorstand();
-      startBroadcastMessageInterval();
-      initTasks();
-      loadEreignisse();
-    });
-}
 </script>
 
 <style>

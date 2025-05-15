@@ -16,28 +16,53 @@ const WAHLVORSTAND_SERVICE = "wls-wahlvorstand-service";
 const ERGEBNISMELDUNG_SERVICE_RELATIONS: Relation[] = [
   {
     source: ERGEBNISMELDUNG_SERVICE,
+    target: BASISDATEN_SERVICE,
+    operation: "getWahlen",
+  },
+  {
+    source: ERGEBNISMELDUNG_SERVICE,
     target: WAHLVORBEREITUNG_SERVICE,
-    titel: " ",
+    operation: "getUrnenwahlSchliessungsUhrzeit",
   },
   {
     source: ERGEBNISMELDUNG_SERVICE,
     target: BRIEFWAHL_SERVICE,
-    titel: " ",
+    operation: "getBeanstandeteWahlbriefe",
   },
   {
     source: ERGEBNISMELDUNG_SERVICE,
     target: MONITORING_SERVICE,
-    titel: " ",
+    operation: "postSchnellmeldungSendungsuhrzeit",
+  },
+  {
+    source: ERGEBNISMELDUNG_SERVICE,
+    target: MONITORING_SERVICE,
+    operation: "postSchnellmeldungDruckuhrzeit",
+  },
+  {
+    source: ERGEBNISMELDUNG_SERVICE,
+    target: MONITORING_SERVICE,
+    operation: "postNiederschriftSendungsuhrzeit",
+  },
+  {
+    source: ERGEBNISMELDUNG_SERVICE,
+    target: MONITORING_SERVICE,
+    operation: "postNiederschriftDruckuhrzeit",
   },
   {
     source: ERGEBNISMELDUNG_SERVICE,
     target: INFOMANAGEMENT_SERVICE,
-    titel: " ",
+    operation: "getKonfigurierterWahltag",
   },
   {
     source: ERGEBNISMELDUNG_SERVICE,
     target: EAI_SERVICE,
-    titel: " ",
+    operation: "loadWahlberechtigte",
+  },
+  {
+    source: ERGEBNISMELDUNG_SERVICE,
+    target: EAI_SERVICE,
+    operation: "saveErgebnismeldung",
   },
 ];
 
@@ -45,7 +70,12 @@ const AUTH_SERVICE_RELATIONS: Relation[] = [
   {
     source: AUTH_SERVICE,
     target: INFOMANAGEMENT_SERVICE,
-    titel: " ",
+    operation: "getKonfigurationUnauthorized",
+  },
+  {
+    source: AUTH_SERVICE,
+    target: INFOMANAGEMENT_SERVICE,
+    operation: "isWahltagActive",
   },
 ];
 
@@ -53,62 +83,62 @@ const ADMIN_SERVICE_RELATIONS: Relation[] = [
   {
     source: ADMIN_SERVICE,
     target: AUTH_SERVICE,
-    titel: "createAndExportWahllokalBenutzer",
+    operation: "createAndExportWahllokalBenutzer",
   },
   {
     source: ADMIN_SERVICE,
     target: AUTH_SERVICE,
-    titel: "deleteWahllokalBenutzer",
+    operation: "deleteWahllokalBenutzer",
   },
   {
     source: ADMIN_SERVICE,
     target: AUTH_SERVICE,
-    titel: "exportWahllokalBenutzer",
+    operation: "exportWahllokalBenutzer",
   },
   {
     source: ADMIN_SERVICE,
     target: BASISDATEN_SERVICE,
-    titel: "getWahlbezirke",
+    operation: "getWahlbezirke",
   },
   {
     source: ADMIN_SERVICE,
     target: BASISDATEN_SERVICE,
-    titel: "getWahltage",
+    operation: "getWahltage",
   },
   {
     source: ADMIN_SERVICE,
     target: BASISDATEN_SERVICE,
-    titel: "resetWahlen",
+    operation: "resetWahlen",
   },
   {
     source: ADMIN_SERVICE,
     target: BASISDATEN_SERVICE,
-    titel: "getWahlen",
+    operation: "getWahlen",
   },
   {
     source: ADMIN_SERVICE,
     target: BASISDATEN_SERVICE,
-    titel: "postWahlen",
+    operation: "postWahlen",
   },
   {
     source: ADMIN_SERVICE,
     target: INFOMANAGEMENT_SERVICE,
-    titel: "setKonfigurierterWahltag",
+    operation: "setKonfigurierterWahltag",
   },
   {
     source: ADMIN_SERVICE,
     target: INFOMANAGEMENT_SERVICE,
-    titel: "getKonfigurierteWahltage",
+    operation: "getKonfigurierteWahltage",
   },
   {
     source: ADMIN_SERVICE,
     target: INFOMANAGEMENT_SERVICE,
-    titel: "deleteKonfigurierterWahltag",
+    operation: "deleteKonfigurierterWahltag",
   },
   {
     source: ADMIN_SERVICE,
     target: ERGEBNISMELDUNG_SERVICE,
-    titel: "initialiseAWerte",
+    operation: "initialiseAWerte",
   },
 ];
 
@@ -116,12 +146,32 @@ const BASISDATEN_SERVICE_RELATIONS: Relation[] = [
   {
     source: BASISDATEN_SERVICE,
     target: INFOMANAGEMENT_SERVICE,
-    titel: " ",
+    operation: "getKonfigurierterWahltag",
+  },
+  {
+    source: BASISDATEN_SERVICE,
+    target: INFOMANAGEMENT_SERVICE,
+    operation: "loadBasisdaten",
   },
   {
     source: BASISDATEN_SERVICE,
     target: EAI_SERVICE,
-    titel: " ",
+    operation: "loadWahlen",
+  },
+  {
+    source: BASISDATEN_SERVICE,
+    target: EAI_SERVICE,
+    operation: "loadWahlbezirke",
+  },
+  {
+    source: BASISDATEN_SERVICE,
+    target: EAI_SERVICE,
+    operation: "loadWahltageSinceIncluding",
+  },
+  {
+    source: BASISDATEN_SERVICE,
+    target: EAI_SERVICE,
+    operation: "loadWahlvorschlaege",
   },
 ];
 
@@ -129,17 +179,22 @@ const WAHLVORSTAND_SERVICE_RELATION: Relation[] = [
   {
     source: WAHLVORSTAND_SERVICE,
     target: INFOMANAGEMENT_SERVICE,
-    titel: " ",
+    operation: "getKonfigurierterWahltag",
   },
   {
     source: WAHLVORSTAND_SERVICE,
     target: BASISDATEN_SERVICE,
-    titel: " ",
+    operation: "loadWahlen",
   },
   {
     source: WAHLVORSTAND_SERVICE,
     target: EAI_SERVICE,
-    titel: " ",
+    operation: "loadWahlvorstand",
+  },
+  {
+    source: WAHLVORSTAND_SERVICE,
+    target: EAI_SERVICE,
+    operation: "saveAnwesenheit",
   },
 ];
 
@@ -147,14 +202,19 @@ const MONITORING_SERVICE_RELATIONS: Relation[] = [
   {
     source: MONITORING_SERVICE,
     target: EAI_SERVICE,
-    titel: " ",
+    operation: "saveWahlbeteiligung",
+  },
+  {
+    source: MONITORING_SERVICE,
+    target: EAI_SERVICE,
+    operation: "saveWahllokalZustand",
   },
 ];
 
 export const BACKENDSERVICE_RELATIONS: Relation[] = [
+  ...ADMIN_SERVICE_RELATIONS,
   ...ERGEBNISMELDUNG_SERVICE_RELATIONS,
   ...AUTH_SERVICE_RELATIONS,
-  ...ADMIN_SERVICE_RELATIONS,
   ...BASISDATEN_SERVICE_RELATIONS,
   ...WAHLVORSTAND_SERVICE_RELATION,
   ...MONITORING_SERVICE_RELATIONS,

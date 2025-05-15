@@ -1,8 +1,8 @@
 import type { Wahlvorstandsmitglied } from "@/types/wahlvorstand/Wahlvorstandsmitglied.ts";
 
 export interface NachbesetzungsDruckInput {
-  wahlbezirknummer?: string;
-  wahltag?: string;
-  wahlvorstaende?: Wahlvorstandsmitglied[];
+  wahlbezirknummer: string;
+  wahltag: string;
+  wahlvorstaende: Wahlvorstandsmitglied[];
   druckZeitpunkt: string;
 }

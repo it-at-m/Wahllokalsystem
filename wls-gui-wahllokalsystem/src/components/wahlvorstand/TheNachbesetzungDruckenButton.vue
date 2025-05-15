@@ -43,8 +43,8 @@ function onNachbesetzungDruckenClicked() {
 
 function _openPrintDialog() {
   const data: NachbesetzungsDruckInput = {
-    wahlbezirknummer: currentUserWahlbezirkNummer.value,
-    wahltag: currentUserWahltagID.value,
+    wahlbezirknummer: currentUserWahlbezirkNummer.value || "",
+    wahltag: currentUserWahltagID.value || "",
     wahlvorstaende: wahlvorstand.value.wahlvorstandsmitglieder,
     druckZeitpunkt: toHhMm(new Date()),
   };

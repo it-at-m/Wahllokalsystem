@@ -201,21 +201,17 @@ export function useWahlvorstandNachbesetzungsDruck() {
                     <td class="blueGrayBG textAlignCenter">Fehlt ${data.druckZeitpunkt} Uhr (X)</td>
                     <td class="blueGrayBG textAlignCenter">Nachgerückt aus Gremium (Name)</td> 
                   </tr>
-                  ${
-                    data.wahlvorstaende
-                      ? data.wahlvorstaende
-                          .map((mitglied) => {
-                            return `<tr>
+                  ${data.wahlvorstaende
+                    .map((mitglied) => {
+                      return `<tr>
                       <td class="backendData">${mitglied && mitglied.funktionsname ? mitglied.funktionsname : ""}</td>
                       <td class="blackData height04cm">${mitglied && mitglied.familienname ? mitglied.familienname : ""}</td>
                       <td class="blackData">${mitglied && mitglied.vorname ? mitglied.vorname : ""}</td>
                       <td class="backendData textAlignCenter">${mitglied && mitglied.anwesend ? "" : "<b>X</b>"}</td>
                       <td></td>
-                  </tr>`;
-                          })
-                          .join("")
-                      : "Wahlvorstände nicht gefunden."
-                  }
+                    </tr>`;
+                    })
+                    .join("")}
                 </table>
               </div>                      
             </div>

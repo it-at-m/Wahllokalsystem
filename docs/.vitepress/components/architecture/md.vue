@@ -59,16 +59,14 @@ function hasEqualSourceAndTarget(relation: Relation, other: Relation): boolean {
   return relation.source === other.source && relation.target === other.target;
 }
 
-const mermaidContentForSelectedService = computed(() => {
-  const flowchart = `flowchart ${direction.value}
+const mermaidContentForSelectedService = computed(
+  () => `flowchart ${direction.value}
 
   ${createStyleDefinitions()}
 
   ${createFlowRelations()}
-`;
-  console.debug(flowchart);
-  return flowchart;
-});
+`
+);
 
 function createStyleDefinitions() {
   return selectedService.value

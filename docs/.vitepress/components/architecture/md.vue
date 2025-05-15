@@ -12,11 +12,11 @@
     <v-select
       v-model="direction"
       label="Ausrichtung"
-      :items="['TD', 'LR']"
+      :items="['LR', 'TD']"
     />
     <v-checkbox
-      v-model="withDetails"
-      label="Details anzeigen"
+      v-model="withOperations"
+      label="Operationen anzeigen"
     />
     <mermaid-diagram :diagram="mermaidContentForSelectedService" />
   </div>
@@ -43,8 +43,8 @@ const renderMermaid = () => {
 };
 
 const selectedService: Ref<string | null> = ref(null);
-const direction = ref("TD");
-const withDetails = ref(false);
+const direction = ref("LR");
+const withOperations = ref(false);
 const selectedRelations = computed(() => {
   let relationsMatchingSelection = !selectedService.value
     ? BACKENDSERVICE_RELATIONS
@@ -54,7 +54,7 @@ const selectedRelations = computed(() => {
           relation.target === selectedService.value
       );
 
-  if (withDetails.value) {
+  if (withOperations.value) {
   } else {
     relationsMatchingSelection = relationsMatchingSelection.filter(
       (relation, index, array) =>
@@ -96,15 +96,15 @@ const renderedMarkdownContent = new MarkdownIt().render(markdownContent);
 
 function createFlowRelations(): string {
   const relationsArray = selectedRelations.value.map((relation) =>
-    createFlowRelation(relation, withDetails.value)
+    createFlowRelation(relation, withOperations.value)
   );
 
   return relationsArray.join("\n");
 }
 
 function createFlowRelation(relation: Relation, withDetails = true): string {
-  if (withDetails && relation.titel.trim()) {
-    return `${relation.source} -- ${relation.titel} --> ${relation.target}`;
+  if (withDetails && relation.operation.trim()) {
+    return `${relation.source} -- ${relation.operation} --> ${relation.target}`;
   } else {
     return `${relation.source} --> ${relation.target}`;
   }

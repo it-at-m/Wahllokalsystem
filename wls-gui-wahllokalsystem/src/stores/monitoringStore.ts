@@ -12,7 +12,7 @@ export const useMonitoringStore = defineStore(storeID, () => {
   const { currentUserWahlbezirkID, currentUserHauptWahlID } =
     storeToRefs(useUserStore());
 
-  const waehler = ref<number>(0);
+  const waehler = ref(0);
 
   function increaseWaehlerByOne() {
     waehler.value++;

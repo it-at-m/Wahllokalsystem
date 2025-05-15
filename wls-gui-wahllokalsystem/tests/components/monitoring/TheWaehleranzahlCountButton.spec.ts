@@ -65,15 +65,15 @@ describe("TheWaehleranzahlCountButton", () => {
   });
 
   describe(COMPONENT_EVENT_TESTS, () => {
-    it("should_addOneWaehler_when_buttonClicked", async () => {
-      const { addWaehler } = useMonitoringStore();
+    it("should_callIncreaseWaehlerFunction_when_buttonClicked", async () => {
+      const { increaseWaehlerByOne } = useMonitoringStore();
 
       const button = wrapper.findComponent(VBtn);
       await button.trigger("click");
 
       await nextTick();
 
-      expect(addWaehler).toHaveBeenCalledOnce();
+      expect(increaseWaehlerByOne).toHaveBeenCalledOnce();
     });
   });
 });

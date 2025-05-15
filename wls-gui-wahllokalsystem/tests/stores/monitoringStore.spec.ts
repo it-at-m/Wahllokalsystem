@@ -50,10 +50,10 @@ describe("monitoringStore.ts", () => {
     vi.useRealTimers();
   });
 
-  describe("addWaehler", () => {
+  describe("increaseWaehlerByOne", () => {
     it("should_addOneWaehler_when_triggered", () => {
       unitUnderTest.waehler = 10;
-      unitUnderTest.addWaehler();
+      unitUnderTest.increaseWaehlerByOne();
 
       expect(unitUnderTest.waehler).toBe(11);
     });

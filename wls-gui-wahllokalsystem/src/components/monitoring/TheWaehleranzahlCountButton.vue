@@ -16,9 +16,9 @@ import { VBtn } from "vuetify/components";
 import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 
 const { waehler } = storeToRefs(useMonitoringStore());
-const { addWaehler } = useMonitoringStore();
+const { increaseWaehlerByOne } = useMonitoringStore();
 
 function onWaehleranzahlClicked() {
-  addWaehler();
+  increaseWaehlerByOne();
 }
 </script>

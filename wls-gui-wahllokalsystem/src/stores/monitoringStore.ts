@@ -16,7 +16,7 @@ export const useMonitoringStore = defineStore(storeID, () => {
 
   const waehler = ref<number>(0);
 
-  function addWaehler() {
+  function increaseWaehlerByOne() {
     waehler.value++;
   }
 
@@ -42,5 +42,5 @@ export const useMonitoringStore = defineStore(storeID, () => {
     }
   }
 
-  return { waehler, addWaehler, loadWaehler, sendWaehler };
+  return { waehler, increaseWaehlerByOne, loadWaehler, sendWaehler };
 });

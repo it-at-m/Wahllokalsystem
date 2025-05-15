@@ -141,10 +141,6 @@ describe("monitoringStore.ts", () => {
       userStore.currentUserHauptWahlID = generateRandomString(10);
 
       const mockedWahlbeteiligung = 17;
-      const mockedWaehleranzahl: Waehleranzahl = {
-        anzahlWaehler: mockedWahlbeteiligung,
-        uhrzeit: mockedNow,
-      };
 
       unitUnderTest.waehler = mockedWahlbeteiligung;
       mockDefinitions.postWahlbeteiligung.mockReturnValue(Promise.resolve());
@@ -157,7 +153,7 @@ describe("monitoringStore.ts", () => {
       expect(mockDefinitions.postWahlbeteiligung).toHaveBeenCalledWith(
         userStore.currentUserWahlbezirkID,
         userStore.currentUserHauptWahlID,
-        mockedWaehleranzahl
+        mockedWahlbeteiligung
       );
     });
   });

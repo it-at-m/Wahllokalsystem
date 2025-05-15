@@ -1,5 +1,3 @@
-import type { Waehleranzahl } from "@/types/monitoring/Waehleranzahl.ts";
-
 import { defineStore, storeToRefs } from "pinia";
 import { ref } from "vue";
 
@@ -32,13 +30,9 @@ export const useMonitoringStore = defineStore(storeID, () => {
   async function sendWaehler() {
     const wahlbezirkID = currentUserWahlbezirkID.value;
     const wahlID = currentUserHauptWahlID.value;
-    const wahlbeteiligung: Waehleranzahl = {
-      anzahlWaehler: waehler.value,
-      uhrzeit: new Date(),
-    };
 
     if (wahlbezirkID && wahlID) {
-      await postWahlbeteiligung(wahlbezirkID, wahlID, wahlbeteiligung);
+      await postWahlbeteiligung(wahlbezirkID, wahlID, waehler.value);
     }
   }
 

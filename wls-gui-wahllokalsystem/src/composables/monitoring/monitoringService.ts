@@ -31,18 +31,18 @@ export function useMonitoringService() {
   async function postWahlbeteiligung(
     wahlbezirkID: string,
     wahlID: string,
-    waehleranzahl: Waehleranzahl
+    waehleranzahl: number
   ): Promise<void> {
-    waehleranzahl.uhrzeit
-      ? applyLocalTimezoneOffset(waehleranzahl.uhrzeit)
-      : undefined;
-    const waehleranzahlDTO = toDto(waehleranzahl);
+    const wahlbeteiligung: Waehleranzahl = {
+      anzahlWaehler: waehleranzahl,
+      uhrzeit: applyLocalTimezoneOffset(new Date()),
+    };
 
     try {
       await waehlerAnzahlControllerApi.postWahlbeteiligung(
         wahlbezirkID,
         wahlID,
-        waehleranzahlDTO
+        toDto(wahlbeteiligung)
       );
     } catch (e) {
       console.debug(e);

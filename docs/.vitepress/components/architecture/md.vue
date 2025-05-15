@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div v-html="renderedMarkdownContent" />
     <v-select
       v-model="selectedService"
       :items="BACKENDSERVICES"
@@ -23,8 +22,6 @@
 </template>
 
 <script setup lang="ts">
-import MarkdownIt from "markdown-it";
-import mermaid from "mermaid";
 import { computed, onMounted, ref, Ref, watch } from "vue";
 import { VCheckbox, VSelect } from "vuetify/components";
 
@@ -34,13 +31,6 @@ import {
 } from "../../types/architecture/Constants";
 import { Relation } from "../../types/architecture/Relation";
 import MermaidDiagram from "../MermaidDiagram.vue";
-
-const renderMermaid = () => {
-  mermaid.initialize({
-    startOnLoad: true,
-  });
-  mermaid.contentLoaded();
-};
 
 const selectedService: Ref<string | null> = ref(null);
 const direction = ref("LR");
@@ -69,9 +59,6 @@ function hasEqualSourceAndTarget(relation: Relation, other: Relation): boolean {
   return relation.source === other.source && relation.target === other.target;
 }
 
-const markdownContent = `
-`;
-
 const mermaidContentForSelectedService = computed(() => {
   const flowchart = `flowchart ${direction.value}
 
@@ -83,16 +70,11 @@ const mermaidContentForSelectedService = computed(() => {
   return flowchart;
 });
 
-onMounted(() => renderMermaid());
-watch(() => mermaidContentForSelectedService, renderMermaid);
-
 function createStyleDefinitions() {
   return selectedService.value
     ? `style ${selectedService.value} stroke-width:4px,stroke:#D50000`
     : "";
 }
-
-const renderedMarkdownContent = new MarkdownIt().render(markdownContent);
 
 function createFlowRelations(): string {
   const relationsArray = selectedRelations.value.map((relation) =>
@@ -109,6 +91,4 @@ function createFlowRelation(relation: Relation, withDetails = true): string {
     return `${relation.source} --> ${relation.target}`;
   }
 }
-
-renderMermaid();
 </script>

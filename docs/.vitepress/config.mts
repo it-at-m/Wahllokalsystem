@@ -20,6 +20,11 @@ export default withMermaid({
   lang: "de-DE",
   base: "/Wahllokalsystem/",
   srcDir: "src", //markdown files are located in that directory
+  vite: {
+    ssr: {
+      noExternal: ["vuetify"],
+    },
+  },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [

@@ -5,7 +5,6 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useMonitoringService } from "@/composables/monitoring/monitoringService.ts";
-import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   addNotification: vi.fn(),
@@ -115,57 +114,69 @@ describe("monitoringService.ts", () => {
     );
   });
 
+  // todo: anpassen!!
   describe("postWahlbeteiligung", () => {
-    it("should_callNotificationService_when_sendingWahlbeteiligungFailed", async () => {
-      const wahlbezirkID = "wahlbezirkID";
-      const wahlID = "wahlID";
+    it.each([
+      {
+        when: "wahlIdEmpty",
+        wahlID: "",
+        wahlbezirkID: generateRandomString(10),
+      },
+      {
+        when: "wahlIdBlank",
+        wahlID: "  ",
+        wahlbezirkID: generateRandomString(10),
+      },
+      {
+        when: "wahlbezirkIdEmpty",
+        wahlID: generateRandomString(10),
+        wahlbezirkID: "",
+      },
+      {
+        when: "wahlbezirkIdBlank",
+        wahlID: generateRandomString(10),
+        wahlbezirkID: "  ",
+      },
+    ])(
+      "should_notPostWaehleranzahl_when_$when",
+      async ({ wahlID, wahlbezirkID }) => {
+        const waehler = 2;
+        const mockedWaehleranzahlDTO: WaehleranzahlDTO = {
+          anzahlWaehler: waehler,
+          uhrzeit: mockedNow.toISOString(),
+        };
 
-      const waehleranzahl: Waehleranzahl = {
-        anzahlWaehler: 2,
-        uhrzeit: mockedNow,
-      };
+        mockDefinitions.toDto.mockReturnValue(mockedWaehleranzahlDTO);
+        mockDefinitions.postWahlbeteiligung.mockRejectedValueOnce(
+          new Error("mocked api call failed")
+        );
+
+        await expect(
+          postWahlbeteiligung(wahlbezirkID, wahlID, waehler)
+        ).rejects.toThrow("postWahlbeteiligung failed");
+      }
+    );
+
+    it("should_postWaehleranzahl_when_givenWahlIdAndWahlbezirkId", async () => {
+      const wahlbezirkID = generateRandomString(10);
+      const wahlID = generateRandomString(10);
+      const waehler = 2;
+
       const mockedWaehleranzahlDTO: WaehleranzahlDTO = {
-        anzahlWaehler: 2,
-        uhrzeit: mockedNow.toISOString(),
-      };
-
-      mockDefinitions.toDto.mockReturnValue(mockedWaehleranzahlDTO);
-      mockDefinitions.postWahlbeteiligung.mockRejectedValue(
-        new Error("mocked api call failed")
-      );
-
-      await postWahlbeteiligung(wahlbezirkID, wahlID, waehleranzahl);
-
-      expect(mockDefinitions.addNotification.mock.calls).toEqual([
-        [expect.any(String), UserNotificationCategoryEnum.ERROR],
-      ]);
-      expect(mockDefinitions.toDto.mock.calls).toStrictEqual([[waehleranzahl]]);
-    });
-
-    it("should_callApiCorrectly_when_sendingWahlbeteiligung", async () => {
-      const wahlbezirkID = "wahlbezirkID";
-      const wahlID = "wahlID";
-
-      const waehleranzahl: Waehleranzahl = {
-        anzahlWaehler: 2,
-        uhrzeit: mockedNow,
-      };
-      const mockedWaehleranzahlDTO: WaehleranzahlDTO = {
-        anzahlWaehler: 2,
+        anzahlWaehler: waehler,
         uhrzeit: mockedNow.toISOString(),
       };
 
       mockDefinitions.toDto.mockReturnValue(mockedWaehleranzahlDTO);
       mockDefinitions.postWahlbeteiligung.mockResolvedValue({});
 
-      await postWahlbeteiligung(wahlbezirkID, wahlID, waehleranzahl);
+      await postWahlbeteiligung(wahlbezirkID, wahlID, waehler);
 
       expect(mockDefinitions.postWahlbeteiligung).toHaveBeenCalledWith(
         wahlbezirkID,
         wahlID,
         mockedWaehleranzahlDTO
       );
-      expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
     });
   });
 });

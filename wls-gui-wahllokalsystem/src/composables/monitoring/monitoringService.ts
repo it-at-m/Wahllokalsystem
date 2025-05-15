@@ -46,6 +46,7 @@ export function useMonitoringService() {
       );
     } catch (e) {
       console.debug(e);
+      throw new Error("postWahlbeteiligung failed");
     }
   }
 

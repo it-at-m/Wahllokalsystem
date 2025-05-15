@@ -5,11 +5,8 @@ import {
   WaehleranzahlControllerApi,
 } from "@/api/wls-clients/generated-monitoring-api";
 import { useWahlbeteiligungMapper } from "@/composables/monitoring/wahlbeteiligungMapper.ts";
-import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { MONITORING_SERVICE_API_URL } from "@/constants.ts";
-import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-const userNotificationService = useUserNotificationService();
 const { toDto, toModel } = useWahlbeteiligungMapper();
 
 export function useMonitoringService() {
@@ -24,11 +21,8 @@ export function useMonitoringService() {
         wahlbezirkID
       );
       return toModel(response.data);
-    } catch {
-      userNotificationService.addNotification(
-        "Fehler beim Abrufen der Wahlbeteiligung.",
-        UserNotificationCategoryEnum.ERROR
-      );
+    } catch (e) {
+      console.debug(e);
     }
   }
 
@@ -45,11 +39,8 @@ export function useMonitoringService() {
         wahlID,
         waehleranzahlDTO
       );
-    } catch {
-      userNotificationService.addNotification(
-        "Fehler beim Übermitteln der Wahlbeteiligung.",
-        UserNotificationCategoryEnum.ERROR
-      );
+    } catch (e) {
+      console.debug(e);
     }
   }
 

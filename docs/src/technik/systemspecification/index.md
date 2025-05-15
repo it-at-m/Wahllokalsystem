@@ -2,8 +2,6 @@
 
 🚧 -> <https://github.com/it-at-m/Wahllokalsystem/issues/741>
 
-<architecture-the-service-relation-visualizer-div></architecture-the-service-relation-visualizer-div>
-
 ## Systemarchitektur
 
 ### Übersicht der Systeme

@@ -52,7 +52,10 @@ export default withMermaid({
               text: "Tools & Frameworks",
               link: `${PATH_ECOSYSTEM}toolsAndFrameworks`,
             },
-            { text: "Workflows", link: `${PATH_ECOSYSTEM}workflows` },
+            {
+              text: "Workflows & Artefakte",
+              link: `${PATH_ECOSYSTEM}workflowsAndArtifacts`,
+            },
           ],
         },
         {

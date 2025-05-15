@@ -6,6 +6,7 @@ import DefaultTheme from "vitepress/theme";
 import vuetify from "./plugins/vuetify";
 
 import "./custom.css";
+import "vuetify/styles";
 
 import status from "../components/adr/status.vue";
 import statusOverview from "../components/adr/status/overview.vue";

@@ -2,8 +2,10 @@ import type { WaehleranzahlDTO } from "@/api/wls-clients/generated-monitoring-ap
 import type { Waehleranzahl } from "@/types/monitoring/Waehleranzahl.ts";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 
 const { applyLocalTimezoneOffset } = useDateTimeFormatter();
+const { isValidDate } = useDateTimeUtils();
 
 export function useWahlbeteiligungMapper() {
   function toDto(wahlbeteiligung: Waehleranzahl): WaehleranzahlDTO {
@@ -21,13 +23,9 @@ export function useWahlbeteiligungMapper() {
     const parsedDate = new Date(wahlbeteiligungDTO.uhrzeit);
     return {
       anzahlWaehler: wahlbeteiligungDTO.anzahlWaehler,
-      uhrzeit: _isUhrzeitValid(parsedDate) ? parsedDate : undefined,
+      uhrzeit: isValidDate(parsedDate) ? parsedDate : undefined,
     };
   }
 
   return { toDto, toModel };
-}
-
-function _isUhrzeitValid(date: Date): boolean {
-  return isNaN(date.getTime());
 }

@@ -1,4 +1,4 @@
-export interface WbId_Wahlnummer {
+export interface WahlMetaData {
   wahlbezirkID: string;
   wahlnummer: string;
   wahlID: string;

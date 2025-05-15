@@ -16,7 +16,7 @@ export function useUserMapper() {
     user.wahlbezirksArt = userDto.wahlbezirksArt || null;
     user.pin = userDto.pin || "";
     user.authorities = userDto.authorities || [];
-    user.wbid_wahlnummer = JSON.parse(userDto.wbid_wahlnummer) || [
+    user.wahlMetaData = JSON.parse(userDto.wbid_wahlnummer) || [
       {
         wahlbezirkID: user.wahlbezirkID,
         wahlnummer: "",

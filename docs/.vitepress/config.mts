@@ -11,6 +11,7 @@ const PATH_GUIDES = PATH_TECHNIK + "guides/";
 const PATH_API_CLIENT_GENERATION = PATH_GUIDES + "api-client-generation/";
 const PATH_MICROSERVICE_GENERATION = PATH_GUIDES + "new-microservice/";
 const PATH_SYSSPEC = PATH_TECHNIK + "systemspecification/";
+const PATH_SYSSPEC_BACKEND = PATH_SYSSPEC + "backend/";
 
 // https://vitepress.dev/reference/site-config
 export default withMermaid({
@@ -171,6 +172,13 @@ export default withMermaid({
             {
               text: "Backend",
               link: `${PATH_SYSSPEC}backend`,
+              collapsed: true,
+              items: [
+                {
+                  text: "Beziehungen",
+                  link: `${PATH_SYSSPEC_BACKEND}relations.md`,
+                },
+              ],
             },
             {
               text: "Frontend",

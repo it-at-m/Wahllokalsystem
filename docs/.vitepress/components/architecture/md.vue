@@ -1,21 +1,23 @@
 <template>
   <div>
     <div v-html="renderedMarkdownContent" />
-    <select
+    <v-select
       v-model="selectedService"
-      name="service"
+      :items="['ServiceA', 'ServiceB', 'ServiceC', 'ServiceD']"
+      clearable
+      label="Service"
       id="selected-service"
-    >
-      <option
-        value="ServiceA"
-        selected
-      >
-        ServiceA
-      </option>
-      <option value="ServiceB">ServiceB</option>
-      <option value="ServiceC">ServiceC</option>
-      <option value="ServiceD">ServiceD</option>
-    </select>
+    />
+
+    <v-select
+      v-model="direction"
+      label="Ausrichtung"
+      :items="['TD', 'LR']"
+    />
+    <v-checkbox
+      v-model="withDetails"
+      label="Details anzeigen"
+    />
     <mermaid-diagram :diagram="mermaidContentForSelectedService" />
   </div>
 </template>
@@ -24,22 +26,53 @@
 import MarkdownIt from "markdown-it";
 import mermaid from "mermaid";
 import { computed, onMounted, ref, Ref, watch } from "vue";
+import { VCheckbox, VSelect } from "vuetify/components";
 
 import MermaidDiagram from "../MermaidDiagram.vue";
 
+type Relation = { source: string; target: string; details: string };
+
 const renderMermaid = () => {
-  mermaid.initialize({ startOnLoad: true });
+  mermaid.initialize({
+    startOnLoad: true,
+  });
   mermaid.contentLoaded();
 };
 
 const selectedService: Ref<string | null> = ref(null);
+const direction = ref("TD");
+const withDetails = ref(false);
+const selectedRelations = computed(() => {
+  let relationsMatchingSelection = !selectedService.value
+    ? relations
+    : relations.filter(
+        (relation) =>
+          relation.source === selectedService.value ||
+          relation.target === selectedService.value
+      );
 
-const relations: { source: string; target: string }[] = [
-  { source: "ServiceA", target: "ServiceB" },
-  { source: "ServiceA", target: "ServiceC" },
-  { source: "ServiceA", target: "ServiceD" },
-  { source: "ServiceB", target: "ServiceC" },
-  { source: "ServiceB", target: "ServiceD" },
+  if (withDetails.value) {
+  } else {
+    relationsMatchingSelection = relationsMatchingSelection.filter(
+      (relation, index, array) =>
+        index === array.findIndex((r) => hasEqualSourceAndTarget(r, relation))
+    );
+  }
+
+  return relationsMatchingSelection;
+});
+
+function hasEqualSourceAndTarget(relation: Relation, other: Relation): boolean {
+  return relation.source === other.source && relation.target === other.target;
+}
+
+const relations: Relation[] = [
+  { source: "ServiceA", target: "ServiceB", details: "operationB1" },
+  { source: "ServiceA", target: "ServiceB", details: "operationB2" },
+  { source: "ServiceA", target: "ServiceC", details: "operationC1" },
+  { source: "ServiceA", target: "ServiceD", details: "operationD1" },
+  { source: "ServiceB", target: "ServiceC", details: "operationC1" },
+  { source: "ServiceB", target: "ServiceD", details: "operationD1" },
 ];
 
 const markdownContent = `
@@ -47,7 +80,7 @@ const markdownContent = `
 `;
 
 const mermaidContentForSelectedService = computed(
-  () => `flowchart TD
+  () => `flowchart ${direction.value}
 
 ${createFlowRelations()}
 `
@@ -59,22 +92,18 @@ watch(() => mermaidContentForSelectedService, renderMermaid);
 const renderedMarkdownContent = new MarkdownIt().render(markdownContent);
 
 function createFlowRelations(): string {
-  const relationsArray = relations.map((relation) =>
-    createFlowRelation(relation.source, relation.target)
+  const relationsArray = selectedRelations.value.map((relation) =>
+    createFlowRelation(relation, withDetails.value)
   );
 
   return relationsArray.join("\n");
 }
 
-function createFlowRelation(source: string, target: string): string {
-  if (
-    (selectedService.value &&
-      (selectedService.value === source || selectedService.value === target)) ||
-    !selectedService.value
-  ) {
-    return `${source} --> ${target}`;
+function createFlowRelation(relation: Relation, withDetails = false): string {
+  if (withDetails) {
+    return `${relation.source} -->|${relation.details}| ${relation.target}`;
   } else {
-    return "";
+    return `${relation.source} --> ${relation.target}`;
   }
 }
 

@@ -3,7 +3,7 @@
     <div v-html="renderedMarkdownContent" />
     <v-select
       v-model="selectedService"
-      :items="['ServiceA', 'ServiceB', 'ServiceC', 'ServiceD']"
+      :items="BACKENDSERVICES"
       clearable
       label="Service"
       id="selected-service"
@@ -28,9 +28,12 @@ import mermaid from "mermaid";
 import { computed, onMounted, ref, Ref, watch } from "vue";
 import { VCheckbox, VSelect } from "vuetify/components";
 
+import {
+  BACKENDSERVICE_RELATIONS,
+  BACKENDSERVICES,
+} from "../../types/architecture/Constants";
+import { Relation } from "../../types/architecture/Relation";
 import MermaidDiagram from "../MermaidDiagram.vue";
-
-type Relation = { source: string; target: string; details: string };
 
 const renderMermaid = () => {
   mermaid.initialize({
@@ -44,8 +47,8 @@ const direction = ref("TD");
 const withDetails = ref(false);
 const selectedRelations = computed(() => {
   let relationsMatchingSelection = !selectedService.value
-    ? relations
-    : relations.filter(
+    ? BACKENDSERVICE_RELATIONS
+    : BACKENDSERVICE_RELATIONS.filter(
         (relation) =>
           relation.source === selectedService.value ||
           relation.target === selectedService.value
@@ -66,17 +69,7 @@ function hasEqualSourceAndTarget(relation: Relation, other: Relation): boolean {
   return relation.source === other.source && relation.target === other.target;
 }
 
-const relations: Relation[] = [
-  { source: "ServiceA", target: "ServiceB", details: "operationB1" },
-  { source: "ServiceA", target: "ServiceB", details: "operationB2" },
-  { source: "ServiceA", target: "ServiceC", details: "operationC1" },
-  { source: "ServiceA", target: "ServiceD", details: "operationD1" },
-  { source: "ServiceB", target: "ServiceC", details: "operationC1" },
-  { source: "ServiceB", target: "ServiceD", details: "operationD1" },
-];
-
 const markdownContent = `
-# Heading via Markdown
 `;
 
 const mermaidContentForSelectedService = computed(
@@ -99,9 +92,9 @@ function createFlowRelations(): string {
   return relationsArray.join("\n");
 }
 
-function createFlowRelation(relation: Relation, withDetails = false): string {
+function createFlowRelation(relation: Relation, withDetails = true): string {
   if (withDetails) {
-    return `${relation.source} -->|${relation.details}| ${relation.target}`;
+    return `${relation.source} -->|${relation.titel}| ${relation.target}`;
   } else {
     return `${relation.source} --> ${relation.target}`;
   }

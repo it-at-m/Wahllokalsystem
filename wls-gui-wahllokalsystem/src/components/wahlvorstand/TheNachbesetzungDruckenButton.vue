@@ -23,8 +23,7 @@ const { loadWahlvorstand, sendWahlvorstand } = useWahlvorstandStore();
 const { buildTemplateFromData } = useWahlvorstandNachbesetzungsDruck();
 const { toHhMm } = useDateTimeFormatter();
 
-const { currentUserWahltagID, currentUserWahlbezirkNummer } =
-  storeToRefs(useUserStore());
+const { currentUserWahlbezirkNummer } = storeToRefs(useUserStore());
 const { wahlvorstand } = storeToRefs(useWahlvorstandStore());
 
 const props = defineProps({
@@ -44,7 +43,6 @@ function onNachbesetzungDruckenClicked() {
 function _openPrintDialog() {
   const data: NachbesetzungsDruckInput = {
     wahlbezirknummer: currentUserWahlbezirkNummer.value || "",
-    wahltag: currentUserWahltagID.value || "",
     wahlvorstaende: wahlvorstand.value.wahlvorstandsmitglieder,
     druckZeitpunkt: toHhMm(new Date()),
   };

@@ -13,16 +13,10 @@ export function useUserMapper() {
     user.wahltag = userDto.wahltag || "";
     user.wahlbezirkID = userDto.wahlbezirkID || "";
     user.wahlbezirkNummer = userDto.wahlbezirkNummer || "";
-    user.wahlbezirksArt = userDto.wahlbezirksArt || null;
+    user.wahlbezirksArt = userDto.wahlbezirksArt || undefined;
     user.pin = userDto.pin || "";
-    user.authorities = userDto.authorities || [];
-    user.wahlMetaData = JSON.parse(userDto.wbid_wahlnummer) || [
-      {
-        wahlbezirkID: user.wahlbezirkID,
-        wahlnummer: "",
-        wahlID: "",
-      },
-    ];
+    user.authorities = userDto.authorities || new Set<string>();
+    user.wahlMetaData = JSON.parse(userDto.wbid_wahlnummer) || undefined;
 
     return user;
   }

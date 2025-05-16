@@ -3,6 +3,8 @@ import type { WahlMetaData } from "@/types/wlsTypes/WahlMetaData.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
+import { User } from "@/types/User.ts";
+
 const {
   generateRandomString,
   generateRandomDateTimeAsString,
@@ -10,6 +12,10 @@ const {
 } = useCommonTestDataFactory();
 
 export function useUserTestDataFactory() {
+  function createUserWithDefaultValues(): User {
+    return new User();
+  }
+
   function createUserDtoWithRandomValues(): UserDTO {
     return {
       username: generateRandomString(10),
@@ -33,6 +39,7 @@ export function useUserTestDataFactory() {
   }
 
   return {
+    createUserWithDefaultValues,
     createUserDtoWithRandomValues,
     mapDtoWbIdWahlnummerToModelWahlMetaData,
   };

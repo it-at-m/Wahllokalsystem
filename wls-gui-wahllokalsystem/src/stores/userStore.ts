@@ -1,3 +1,5 @@
+import type { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
+
 import { acceptHMRUpdate, defineStore } from "pinia";
 import { computed, ref } from "vue";
 
@@ -29,6 +31,10 @@ export const useUserStore = defineStore("user", () => {
     return user.value?.wahltagID;
   });
 
+  const currentUserWahlbezirksArt = computed((): WahlbezirksArtEnum => {
+    return user.value?.wahlbezirksArt ?? "BWB";
+  });
+
   function setUser(payload: User | null): void {
     user.value = payload;
   }
@@ -39,6 +45,7 @@ export const useUserStore = defineStore("user", () => {
     setUser,
     currentUserWahlbezirkID,
     currentUserWahltagID,
+    currentUserWahlbezirksArt,
   };
 });
 

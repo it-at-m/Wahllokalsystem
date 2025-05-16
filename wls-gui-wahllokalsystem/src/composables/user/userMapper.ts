@@ -16,7 +16,14 @@ export function useUserMapper() {
     user.wahlbezirksArt = userDto.wahlbezirksArt ?? undefined;
     user.pin = userDto.pin ?? "";
     user.authorities = userDto.authorities ?? new Set<string>();
-    user.wahlMetaData = JSON.parse(userDto.wbid_wahlnummer) ?? undefined;
+    try {
+      user.wahlMetaData = userDto.wbid_wahlnummer
+        ? JSON.parse(userDto.wbid_wahlnummer)
+        : undefined;
+    } catch {
+      console.debug("failed to parse JSON wbid_wahlnummer");
+      user.wahlMetaData = undefined;
+    }
 
     return user;
   }

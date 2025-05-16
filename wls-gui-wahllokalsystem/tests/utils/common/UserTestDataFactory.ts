@@ -12,6 +12,30 @@ const {
 } = useCommonTestDataFactory();
 
 export function useUserTestDataFactory() {
+  function createUserWithRandomWahlbezirkID(): User {
+    const user = new User();
+    user.wahlbezirkID = generateRandomString(10);
+    return user;
+  }
+
+  function createUserWithUndefinedWahlbezirkID(): User {
+    const user = new User();
+    user.wahlbezirkID = undefined;
+    return user;
+  }
+
+  function createUserWithRandomWahltagID(): User {
+    const user = new User();
+    user.wahltagID = generateRandomString(10);
+    return user;
+  }
+
+  function createUserWithUndefinedWahltagID(): User {
+    const user = new User();
+    user.wahltagID = undefined;
+    return user;
+  }
+
   function createUserWithDefaultValues(): User {
     return new User();
   }
@@ -39,6 +63,10 @@ export function useUserTestDataFactory() {
   }
 
   return {
+    createUserWithRandomWahlbezirkID,
+    createUserWithUndefinedWahlbezirkID,
+    createUserWithRandomWahltagID,
+    createUserWithUndefinedWahltagID,
     createUserWithDefaultValues,
     createUserDtoWithRandomValues,
     mapDtoWbIdWahlnummerToModelWahlMetaData,

@@ -34,6 +34,7 @@ export const useUserStore = defineStore("user", () => {
   }
 
   return {
+    user,
     loadUser,
     setUser,
     currentUserWahlbezirkID,

@@ -25,13 +25,13 @@ export function useWahlvorstandService() {
       const response =
         await wahlvorstandControllerApi.getWahlvorstand(wahlbezirkID);
       userNotificationService.addNotification(
-        "Der Wahlvorstand wurde erfolgreich gespeichert",
+        "Der Wahlvorstand wurde erfolgreich aktualisiert",
         UserNotificationCategoryEnum.SUCCESS
       );
       return toModel(response.data);
     } catch (error) {
       userNotificationService.addNotification(
-        "Das Speichern des Wahlvorstandes schlug fehl",
+        "Das Aktualisieren des Wahlvorstandes schlug fehl",
         UserNotificationCategoryEnum.ERROR
       );
       throw error;

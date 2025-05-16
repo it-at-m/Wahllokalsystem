@@ -57,7 +57,7 @@ describe("userStore.ts", () => {
 
     it("should_setUser_when_serviceCalledSuccessfully", async () => {
       const user = UserLocalDevelopment();
-      mockDefinitions.getUser.mockRejectedValue(new Error("error in service"));
+      mockDefinitions.getUser.mockResolvedValue(user);
 
       await unitUnderTest.loadUser();
 

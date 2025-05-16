@@ -20,6 +20,9 @@ const {
   createUserWithRandomWahlbezirkID,
   createUserWithUndefinedWahltagID,
   createUserWithRandomWahltagID,
+  createUserWithUndefinedWahlbezirksArt,
+  createUserWithBwbWahlbezirksArt,
+  createUserWithUwbWahlbezirksArt,
 } = useUserTestDataFactory();
 
 describe("userStore.ts", () => {
@@ -109,6 +112,26 @@ describe("userStore.ts", () => {
       unitUnderTest.setUser(user);
 
       expect(unitUnderTest.currentUserWahltagID).toStrictEqual(user.wahltagID);
+    });
+  });
+
+  describe("currentUserWahlbezirksArt", () => {
+    it("should_returnBwb_when_wahlbezirksArtIsUndefined", () => {
+      unitUnderTest.setUser(createUserWithUndefinedWahlbezirksArt());
+
+      expect(unitUnderTest.currentUserWahlbezirksArt).toStrictEqual("BWB");
+    });
+
+    it("should_returnBwb_when_wahlbezirksArtIsBwb", () => {
+      unitUnderTest.setUser(createUserWithBwbWahlbezirksArt());
+
+      expect(unitUnderTest.currentUserWahlbezirksArt).toStrictEqual("BWB");
+    });
+
+    it("should_returnUwb_when_wahlbezirksArtIsUwb", () => {
+      unitUnderTest.setUser(createUserWithUwbWahlbezirksArt());
+
+      expect(unitUnderTest.currentUserWahlbezirksArt).toStrictEqual("UWB");
     });
   });
 });

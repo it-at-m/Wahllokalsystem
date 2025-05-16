@@ -6,17 +6,17 @@ export function useUserMapper() {
   function toModel(userDto: UserDTO): User {
     const user: User = new User();
 
-    user.username = userDto.username || "";
-    user.email = userDto.email || "";
-    user.userEnabled = userDto.userEnabled || false;
-    user.wahltagID = userDto.wahltagID || "";
-    user.wahltag = userDto.wahltag || "";
-    user.wahlbezirkID = userDto.wahlbezirkID || "";
-    user.wahlbezirkNummer = userDto.wahlbezirkNummer || "";
-    user.wahlbezirksArt = userDto.wahlbezirksArt || undefined;
-    user.pin = userDto.pin || "";
-    user.authorities = userDto.authorities || new Set<string>();
-    user.wahlMetaData = JSON.parse(userDto.wbid_wahlnummer) || undefined;
+    user.username = userDto.username ?? "";
+    user.email = userDto.email ?? "";
+    user.userEnabled = userDto.userEnabled ?? false;
+    user.wahltagID = userDto.wahltagID ?? "";
+    user.wahltag = userDto.wahltag ?? "";
+    user.wahlbezirkID = userDto.wahlbezirkID ?? "";
+    user.wahlbezirkNummer = userDto.wahlbezirkNummer ?? "";
+    user.wahlbezirksArt = userDto.wahlbezirksArt ?? undefined;
+    user.pin = userDto.pin ?? "";
+    user.authorities = userDto.authorities ?? new Set<string>();
+    user.wahlMetaData = JSON.parse(userDto.wbid_wahlnummer) ?? undefined;
 
     return user;
   }

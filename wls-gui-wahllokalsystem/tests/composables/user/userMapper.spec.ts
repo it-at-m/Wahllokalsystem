@@ -38,7 +38,7 @@ describe("userMapper.ts", () => {
       expect(result).toEqual(expectedUser);
     });
 
-    it("should_returnUserWithDefaultValues_when_valuesInDtoAreUndefined", () => {
+    it("should_returnUserWithDefaultValues_when_valuesInDtoAreNull", () => {
       const dto = {
         username: null,
         email: null,

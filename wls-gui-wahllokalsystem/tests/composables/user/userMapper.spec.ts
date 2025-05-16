@@ -38,23 +38,42 @@ describe("userMapper.ts", () => {
       expect(result).toEqual(expectedUser);
     });
 
-    it("should_returnUserWithDefaultValues_when_valuesInDtoAreNull", () => {
-      const dto = {
-        username: null,
-        email: null,
-        userEnabled: null,
-        wahltagID: null,
-        wahltag: null,
-        wahlbezirkID: null,
-        wahlbezirkNummer: null,
-        wahlbezirksArt: null,
-        pin: null,
-        authorities: null,
-        wbid_wahlnummer: null,
-      };
-
+    it.each([
+      {
+        userDto: {
+          username: null,
+          email: null,
+          userEnabled: null,
+          wahltagID: null,
+          wahltag: null,
+          wahlbezirkID: null,
+          wahlbezirkNummer: null,
+          wahlbezirksArt: null,
+          pin: null,
+          authorities: null,
+          wbid_wahlnummer: null,
+        },
+        when: "paramsAreNull",
+      },
+      {
+        userDto: {
+          username: undefined,
+          email: undefined,
+          userEnabled: undefined,
+          wahltagID: undefined,
+          wahltag: undefined,
+          wahlbezirkID: undefined,
+          wahlbezirkNummer: undefined,
+          wahlbezirksArt: undefined,
+          pin: undefined,
+          authorities: undefined,
+          wbid_wahlnummer: undefined,
+        },
+        when: "paramsAreUndefined",
+      },
+    ])("should_returnUserWithDefaultValues_when_$when", ({ userDto }) => {
       const expectedUser = createUserWithDefaultValues();
-      const result = toModel(dto as unknown as UserDTO);
+      const result = toModel(userDto as unknown as UserDTO);
 
       expect(result).toEqual(expectedUser);
     });

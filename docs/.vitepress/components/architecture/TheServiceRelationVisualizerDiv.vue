@@ -5,25 +5,32 @@
       :items="BACKENDSERVICES"
       clearable
       persistent-clear
+      hide-details
       label="Service"
       id="selected-service"
     />
-    <v-select
-      v-model="selectedDirection"
-      label="Ausrichtung"
-      :items="['LR', 'TD']"
-    />
-    <v-checkbox
-      v-model="withOperations"
-      label="Operationen anzeigen"
-    />
+    <div class="mt-3 d-flex align-center">
+      <v-btn-toggle
+        v-model="selectedDirection"
+        variant="outlined"
+        mandatory
+      >
+        <v-btn value="LR">LR</v-btn>
+        <v-btn value="TD">TD</v-btn>
+      </v-btn-toggle>
+      <v-checkbox
+        v-model="withOperations"
+        label="Operationen anzeigen"
+        hide-details
+      />
+    </div>
     <mermaid-diagram :diagram="mermaidContentForSelectedService" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, Ref } from "vue";
-import { VCheckbox, VSelect } from "vuetify/components";
+import { VBtn, VBtnToggle, VCheckbox, VSelect } from "vuetify/components";
 
 import {
   BACKENDSERVICE_RELATIONS,

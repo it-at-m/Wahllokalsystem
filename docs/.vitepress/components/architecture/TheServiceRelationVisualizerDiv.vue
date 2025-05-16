@@ -7,7 +7,6 @@
       label="Service"
       id="selected-service"
     />
-
     <v-select
       v-model="selectedDirection"
       label="Ausrichtung"

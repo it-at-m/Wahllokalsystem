@@ -1,8 +1,10 @@
 import { acceptHMRUpdate, defineStore } from "pinia";
 import { computed, ref } from "vue";
 
-import { getUser } from "@/api/user-client.ts";
+import { useUserService } from "@/composables/user/userService.ts";
 import { User, UserLocalDevelopment } from "@/types/User";
+
+const { getUser } = useUserService();
 
 export const useUserStore = defineStore("user", () => {
   const user = ref<User | null>(null);

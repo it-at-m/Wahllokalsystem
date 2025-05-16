@@ -6,6 +6,11 @@ export function useCommonTestDataFactory() {
   function generateRandomNumberInRange(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
+
+  function generateRandomBoolean() {
+    return Math.random() < 0.5;
+  }
+
   function generateRandomDateTimeAsString() {
     const date = new Date();
 
@@ -39,5 +44,6 @@ export function useCommonTestDataFactory() {
     generateRandomDateTimeAsString,
     generateRandomString,
     generateRandomNumberInRange,
+    generateRandomBoolean,
   };
 }

@@ -1,0 +1,39 @@
+import type { UserDTO } from "@/api/wls-clients/generated-auth-api";
+import type { WahlMetaData } from "@/types/wlsTypes/WahlMetaData.ts";
+
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+
+const {
+  generateRandomString,
+  generateRandomDateTimeAsString,
+  generateRandomBoolean,
+} = useCommonTestDataFactory();
+
+export function useUserTestDataFactory() {
+  function createUserDtoWithRandomValues(): UserDTO {
+    return {
+      username: generateRandomString(10),
+      email: generateRandomString(10),
+      userEnabled: generateRandomBoolean(),
+      wahltagID: generateRandomString(10),
+      wahltag: generateRandomDateTimeAsString(),
+      wahlbezirkID: generateRandomString(10),
+      wahlbezirkNummer: generateRandomString(10),
+      wahlbezirksArt: "BWB",
+      pin: generateRandomString(10),
+      authorities: new Set<string>(),
+      wbid_wahlnummer: `{"wbid_wahlnummer":[{"wahlbezirkID":"${generateRandomString(10)}","wahlnummer":"${generateRandomString(1)}","wahlID":"${generateRandomString(10)}"}]}`,
+    };
+  }
+
+  function mapDtoWbIdWahlnummerToModelWahlMetaData(
+    wbid_wahlnummer: string
+  ): WahlMetaData[] {
+    return JSON.parse(wbid_wahlnummer);
+  }
+
+  return {
+    createUserDtoWithRandomValues,
+    mapDtoWbIdWahlnummerToModelWahlMetaData,
+  };
+}

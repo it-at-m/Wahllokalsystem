@@ -4,6 +4,7 @@
       v-model="selectedService"
       :items="BACKENDSERVICES"
       clearable
+      persistent-clear
       label="Service"
       id="selected-service"
     />

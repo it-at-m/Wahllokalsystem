@@ -36,6 +36,24 @@ export function useUserTestDataFactory() {
     return user;
   }
 
+  function createUserWithUwbWahlbezirksArt(): User {
+    const user = new User();
+    user.wahlbezirksArt = "UWB";
+    return user;
+  }
+
+  function createUserWithBwbWahlbezirksArt(): User {
+    const user = new User();
+    user.wahlbezirksArt = "BWB";
+    return user;
+  }
+
+  function createUserWithUndefinedWahlbezirksArt(): User {
+    const user = new User();
+    user.wahlbezirksArt = undefined;
+    return user;
+  }
+
   function createUserWithDefaultValues(): User {
     return new User();
   }
@@ -67,6 +85,9 @@ export function useUserTestDataFactory() {
     createUserWithUndefinedWahlbezirkID,
     createUserWithRandomWahltagID,
     createUserWithUndefinedWahltagID,
+    createUserWithUwbWahlbezirksArt,
+    createUserWithBwbWahlbezirksArt,
+    createUserWithUndefinedWahlbezirksArt,
     createUserWithDefaultValues,
     createUserDtoWithRandomValues,
     mapDtoWbIdWahlnummerToModelWahlMetaData,

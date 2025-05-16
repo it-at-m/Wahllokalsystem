@@ -110,6 +110,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     changeAnwesendOfMitglied,
     loadWahlvorstand,
     sendWahlvorstand,
+    error,
   };
 });
 

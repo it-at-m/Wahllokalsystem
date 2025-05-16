@@ -1,6 +1,6 @@
 <template>
   <div class="mt-3">
-    <v-select
+    <v-autocomplete
       v-model="selectedService"
       :items="BACKENDSERVICES"
       clearable
@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import { computed, ref, Ref } from "vue";
-import { VBtn, VBtnToggle, VCheckbox, VSelect } from "vuetify/components";
+import { VAutocomplete, VBtn, VBtnToggle, VCheckbox } from "vuetify/components";
 
 import {
   BACKENDSERVICE_RELATIONS,

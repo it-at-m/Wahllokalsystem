@@ -1,3 +1,6 @@
+import { useUserStore } from "@/stores/userStore.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
+
 export const EreignisartEnum = {
   Vorfall: "VORFALL",
   Vorkommnis: "VORKOMMNIS",
@@ -10,11 +13,17 @@ export function getEreignisArtForDateRelatedToSchliessungsuhrzeit(
   ereignisDate: Date,
   schliessungsuhrzeit: Date | undefined
 ): EreignisartEnum {
-  if (!schliessungsuhrzeit) {
-    return EreignisartEnum.Vorfall;
-  } else {
-    return ereignisDate.getTime() > schliessungsuhrzeit.getTime()
-      ? EreignisartEnum.Vorkommnis
-      : EreignisartEnum.Vorfall;
+  const userStore = useUserStore();
+  switch (userStore.currentUserWahlbezirkArt) {
+    case WahlbezirksArtEnum.BWB:
+      return EreignisartEnum.Vorkommnis;
+    case WahlbezirksArtEnum.UWB:
+      if (!schliessungsuhrzeit) {
+        return EreignisartEnum.Vorfall;
+      } else {
+        return ereignisDate.getTime() > schliessungsuhrzeit.getTime()
+          ? EreignisartEnum.Vorkommnis
+          : EreignisartEnum.Vorfall;
+      }
   }
 }

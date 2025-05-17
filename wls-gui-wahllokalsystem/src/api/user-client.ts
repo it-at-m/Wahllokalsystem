@@ -46,6 +46,7 @@ export function getUser(): Promise<User> {
       // WLS_Extended
       u.authorities = json.authorities || [];
       u.wahltagID = json.wahltagID || "";
+      u.wahlbezirksArt = json.wahlbezirksArt || "BWB";
       return u;
     });
 }

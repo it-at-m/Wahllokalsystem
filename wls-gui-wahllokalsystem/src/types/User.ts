@@ -19,7 +19,7 @@ class User {
   authorities: string[] = [];
   // WLS_Extended
   wahlbezirkID? = "";
-  wahlbezirksArt?: WahlbezirksArtEnum;
+  wahlbezirksArt!: WahlbezirksArtEnum;
   wahltagID? = "";
 }
 

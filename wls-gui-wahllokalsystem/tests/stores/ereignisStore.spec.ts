@@ -12,6 +12,7 @@ import { User } from "@/types/User";
 import * as ImportAllFromEreignisArt from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getEreignisse: vi.fn(),
@@ -52,92 +53,301 @@ describe("ereignisStore.ts", () => {
   });
 
   describe("areKeineEreignisseFlagsValid", () => {
-    describe("should_returnTrue_when_ereignisseMatchingTheirNoDataFlag", () => {
+    describe("should_returnExpectedValue_dependingOnFunctionData", () => {
       it.each([
         {
-          testcaseName: "hasVorfaelle=true && hasVorkommnisse=true",
           data: {
             vorfaelle: true,
             vorkommnisse: true,
+            wahlbezirkArt: WahlbezirksArtEnum.UWB,
+            schliessungsUhrzeitSent: undefined,
+            wahlbezirkKeineVorfaelle: false,
+            wahlbezirkKeineVorkomnisse: false,
           },
+          expected: true,
         },
         {
-          testcaseName: "hasVorfaelle=false && hasVorkommnisse=true",
-          data: {
-            vorfaelle: false,
-            vorkommnisse: true,
-          },
-        },
-        {
-          testcaseName: "hasVorfaelle=true && hasVorkommnisse=false",
-          data: {
-            vorfaelle: true,
-            vorkommnisse: false,
-          },
-        },
-        {
-          testcaseName: "hasVorfaelle=false && hasVorkommnisse=false",
-          data: {
-            vorfaelle: false,
-            vorkommnisse: false,
-          },
-        },
-      ])("$testcaseName", ({ data }) => {
-        // @ts-expect-error: cannot set readonly
-        unitUnderTest.hasVorfaelle = data.vorfaelle;
-        unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = !data.vorfaelle;
-
-        // @ts-expect-error: cannot set readonly
-        unitUnderTest.hasVorkommnisse = data.vorkommnisse;
-        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse =
-          !data.vorkommnisse;
-
-        expect(unitUnderTest.areKeineEreignisseFlagsValid).toStrictEqual(true);
-      });
-    });
-
-    describe("should_returnFalse_when_ereignisseNotMatchingTheirNoDataFlag", () => {
-      it.each([
-        {
-          testcaseName: "hasVorfaelle=true && hasVorkommnisse=true",
           data: {
             vorfaelle: true,
             vorkommnisse: true,
+            wahlbezirkArt: WahlbezirksArtEnum.UWB,
+            schliessungsUhrzeitSent: undefined,
+            wahlbezirkKeineVorfaelle: true,
+            wahlbezirkKeineVorkomnisse: true,
           },
+          expected: false,
         },
         {
-          testcaseName: "hasVorfaelle=false && hasVorkommnisse=true",
           data: {
-            vorfaelle: false,
+            vorfaelle: true,
             vorkommnisse: true,
+            wahlbezirkArt: WahlbezirksArtEnum.UWB,
+            schliessungsUhrzeitSent: new Date(),
+            wahlbezirkKeineVorfaelle: false,
+            wahlbezirkKeineVorkomnisse: false,
           },
+          expected: true,
         },
         {
-          testcaseName: "hasVorfaelle=true && hasVorkommnisse=false",
+          data: {
+            vorfaelle: true,
+            vorkommnisse: true,
+            wahlbezirkArt: WahlbezirksArtEnum.UWB,
+            schliessungsUhrzeitSent: new Date(),
+            wahlbezirkKeineVorfaelle: true,
+            wahlbezirkKeineVorkomnisse: true,
+          },
+          expected: false,
+        },
+
+        {
           data: {
             vorfaelle: true,
             vorkommnisse: false,
+            wahlbezirkArt: WahlbezirksArtEnum.UWB,
+            schliessungsUhrzeitSent: undefined,
+            wahlbezirkKeineVorfaelle: false,
+            wahlbezirkKeineVorkomnisse: false,
           },
+          expected: true,
         },
         {
-          testcaseName: "hasVorfaelle=false && hasVorkommnisse=false",
+          data: {
+            vorfaelle: true,
+            vorkommnisse: false,
+            wahlbezirkArt: WahlbezirksArtEnum.UWB,
+            schliessungsUhrzeitSent: undefined,
+            wahlbezirkKeineVorfaelle: false,
+            wahlbezirkKeineVorkomnisse: true,
+          },
+          expected: true,
+        },
+        {
+          data: {
+            vorfaelle: true,
+            vorkommnisse: false,
+            wahlbezirkArt: WahlbezirksArtEnum.UWB,
+            schliessungsUhrzeitSent: new Date(),
+            wahlbezirkKeineVorfaelle: false,
+            wahlbezirkKeineVorkomnisse: false,
+          },
+          expected: false,
+        },
+        {
+          data: {
+            vorfaelle: true,
+            vorkommnisse: false,
+            wahlbezirkArt: WahlbezirksArtEnum.UWB,
+            schliessungsUhrzeitSent: new Date(),
+            wahlbezirkKeineVorfaelle: false,
+            wahlbezirkKeineVorkomnisse: true,
+          },
+          expected: true,
+        },
+
+        {
+          data: {
+            vorfaelle: false,
+            vorkommnisse: true,
+            wahlbezirkArt: WahlbezirksArtEnum.UWB,
+            schliessungsUhrzeitSent: undefined,
+            wahlbezirkKeineVorfaelle: false,
+            wahlbezirkKeineVorkomnisse: false,
+          },
+          expected: false,
+        },
+        {
+          data: {
+            vorfaelle: false,
+            vorkommnisse: true,
+            wahlbezirkArt: WahlbezirksArtEnum.UWB,
+            schliessungsUhrzeitSent: undefined,
+            wahlbezirkKeineVorfaelle: true,
+            wahlbezirkKeineVorkomnisse: false,
+          },
+          expected: true,
+        },
+        {
+          data: {
+            vorfaelle: false,
+            vorkommnisse: true,
+            wahlbezirkArt: WahlbezirksArtEnum.UWB,
+            schliessungsUhrzeitSent: new Date(),
+            wahlbezirkKeineVorfaelle: false,
+            wahlbezirkKeineVorkomnisse: false,
+          },
+          expected: false,
+        },
+        {
+          data: {
+            vorfaelle: false,
+            vorkommnisse: true,
+            wahlbezirkArt: WahlbezirksArtEnum.UWB,
+            schliessungsUhrzeitSent: new Date(),
+            wahlbezirkKeineVorfaelle: true,
+            wahlbezirkKeineVorkomnisse: false,
+          },
+          expected: true,
+        },
+
+        {
           data: {
             vorfaelle: false,
             vorkommnisse: false,
+            wahlbezirkArt: WahlbezirksArtEnum.UWB,
+            schliessungsUhrzeitSent: undefined,
+            wahlbezirkKeineVorfaelle: true,
+            wahlbezirkKeineVorkomnisse: true,
           },
+          expected: true,
         },
-      ])("$testcaseName", ({ data }) => {
-        // @ts-expect-error: cannot set readonly
-        unitUnderTest.hasVorfaelle = data.vorfaelle;
-        unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = data.vorfaelle;
+        {
+          data: {
+            vorfaelle: false,
+            vorkommnisse: false,
+            wahlbezirkArt: WahlbezirksArtEnum.UWB,
+            schliessungsUhrzeitSent: undefined,
+            wahlbezirkKeineVorfaelle: true,
+            wahlbezirkKeineVorkomnisse: false,
+          },
+          expected: true,
+        },
+        {
+          data: {
+            vorfaelle: false,
+            vorkommnisse: false,
+            wahlbezirkArt: WahlbezirksArtEnum.UWB,
+            schliessungsUhrzeitSent: new Date(),
+            wahlbezirkKeineVorfaelle: true,
+            wahlbezirkKeineVorkomnisse: true,
+          },
+          expected: true,
+        },
+        {
+          data: {
+            vorfaelle: false,
+            vorkommnisse: false,
+            wahlbezirkArt: WahlbezirksArtEnum.UWB,
+            schliessungsUhrzeitSent: new Date(),
+            wahlbezirkKeineVorfaelle: true,
+            wahlbezirkKeineVorkomnisse: false,
+          },
+          expected: false,
+        },
 
-        // @ts-expect-error: cannot set readonly
-        unitUnderTest.hasVorkommnisse = data.vorkommnisse;
-        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse =
-          data.vorkommnisse;
+        {
+          data: {
+            vorfaelle: true,
+            vorkommnisse: true,
+            wahlbezirkArt: WahlbezirksArtEnum.BWB,
+            schliessungsUhrzeitSent: undefined,
+            wahlbezirkKeineVorkomnisse: false,
+            wahlbezirkKeineVorfaelle: false,
+          },
+          expected: true,
+        },
+        {
+          data: {
+            vorfaelle: true,
+            vorkommnisse: true,
+            wahlbezirkArt: WahlbezirksArtEnum.BWB,
+            schliessungsUhrzeitSent: undefined,
+            wahlbezirkKeineVorfaelle: true,
+            wahlbezirkKeineVorkomnisse: true,
+          },
+          expected: false,
+        },
+        {
+          data: {
+            vorfaelle: true,
+            vorkommnisse: false,
+            wahlbezirkArt: WahlbezirksArtEnum.BWB,
+            schliessungsUhrzeitSent: undefined,
+            wahlbezirkKeineVorfaelle: false,
+            wahlbezirkKeineVorkomnisse: false,
+          },
+          expected: false,
+        },
+        {
+          data: {
+            vorfaelle: true,
+            vorkommnisse: false,
+            wahlbezirkArt: WahlbezirksArtEnum.BWB,
+            schliessungsUhrzeitSent: undefined,
+            wahlbezirkKeineVorfaelle: false,
+            wahlbezirkKeineVorkomnisse: true,
+          },
+          expected: true,
+        },
+        {
+          data: {
+            vorfaelle: false,
+            vorkommnisse: true,
+            wahlbezirkArt: WahlbezirksArtEnum.BWB,
+            schliessungsUhrzeitSent: undefined,
+            wahlbezirkKeineVorfaelle: false,
+            wahlbezirkKeineVorkomnisse: false,
+          },
+          expected: false,
+        },
+        {
+          data: {
+            vorfaelle: false,
+            vorkommnisse: true,
+            wahlbezirkArt: WahlbezirksArtEnum.BWB,
+            schliessungsUhrzeitSent: undefined,
+            wahlbezirkKeineVorfaelle: true,
+            wahlbezirkKeineVorkomnisse: false,
+          },
+          expected: true,
+        },
+        {
+          data: {
+            vorfaelle: false,
+            vorkommnisse: false,
+            wahlbezirkArt: WahlbezirksArtEnum.BWB,
+            schliessungsUhrzeitSent: undefined,
+            wahlbezirkKeineVorfaelle: true,
+            wahlbezirkKeineVorkomnisse: true,
+          },
+          expected: true,
+        },
+        {
+          data: {
+            vorfaelle: false,
+            vorkommnisse: false,
+            wahlbezirkArt: WahlbezirksArtEnum.BWB,
+            schliessungsUhrzeitSent: undefined,
+            wahlbezirkKeineVorfaelle: true,
+            wahlbezirkKeineVorkomnisse: false,
+          },
+          expected: false,
+        },
+      ])(
+        "hasVorfaelle=$data.vorkommnisse | hasVorfaelle=$data.vorkommnisse | wahlbezirkKeineVorfaelle=$data.wahlbezirkKeineVorfaelle | wahlbezirkKeineVorkomnisse=$data.wahlbezirkKeineVorkomnisse | wahlbezirkArt=$data.wahlbezirkArt | schliessungsuhrzeit=$data.schliessungsUhrzeitSent | Exptected=$expected",
+        ({ data, expected }) => {
+          const userStore = useUserStore();
+          const user = new User();
+          user.wahlbezirksArt = data.wahlbezirkArt;
+          userStore.setUser(user);
+          const wahlbezirkStore = useWahlbezirkStore();
+          wahlbezirkStore.schliessungsUhrzeitSent =
+            data.schliessungsUhrzeitSent;
+          // @ts-expect-error: cannot set readonly
+          unitUnderTest.hasVorfaelle = data.vorfaelle;
+          unitUnderTest.wahlbezirkEreignisse.keineVorfaelle =
+            data.wahlbezirkKeineVorfaelle;
 
-        expect(unitUnderTest.areKeineEreignisseFlagsValid).toStrictEqual(false);
-      });
+          // @ts-expect-error: cannot set readonly
+          unitUnderTest.hasVorkommnisse = data.vorkommnisse;
+          unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse =
+            data.wahlbezirkKeineVorkomnisse;
+
+          expect(unitUnderTest.areKeineEreignisseFlagsValid).toStrictEqual(
+            expected
+          );
+        }
+      );
     });
   });
 

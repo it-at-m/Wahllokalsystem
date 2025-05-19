@@ -2,7 +2,6 @@ import { useUserTestDataFactory } from "@tests/utils/common/UserTestDataFactory.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useUserService } from "@/composables/user/userService.ts";
-import { User } from "@/types/User.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   user: vi.fn(),
@@ -22,10 +21,8 @@ vi.mock("@/composables/user/userMapper.ts", () => ({
 }));
 
 const { getUser } = useUserService();
-const {
-  createUserDtoWithRandomValues,
-  mapDtoWbIdWahlnummerToModelWahlMetaData,
-} = useUserTestDataFactory();
+const { createUserDtoWithRandomValues, mapUserDtoToUser } =
+  useUserTestDataFactory();
 
 describe("userService.ts", () => {
   beforeEach(() => {
@@ -36,21 +33,7 @@ describe("userService.ts", () => {
   describe("getUser", () => {
     it("should_returnUser_when_apiCalledSuccesfully", async () => {
       const userDto = createUserDtoWithRandomValues();
-      const mockedMappeduser: User = {
-        username: userDto.username,
-        email: userDto.email,
-        userEnabled: userDto.userEnabled,
-        wahltagID: userDto.wahltagID,
-        wahltag: userDto.wahltag,
-        wahlbezirkID: userDto.wahlbezirkID,
-        wahlbezirkNummer: userDto.wahlbezirkNummer,
-        wahlbezirksArt: userDto.wahlbezirksArt,
-        pin: userDto.pin,
-        authorities: userDto.authorities,
-        wahlMetaData: mapDtoWbIdWahlnummerToModelWahlMetaData(
-          userDto.wbid_wahlnummer
-        ),
-      };
+      const mockedMappeduser = mapUserDtoToUser(userDto);
 
       mockDefinitions.user.mockReturnValue({ status: 200, data: userDto });
       mockDefinitions.toModel.mockReturnValue(mockedMappeduser);

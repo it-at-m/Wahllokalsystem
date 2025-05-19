@@ -74,7 +74,25 @@ export function useUserTestDataFactory() {
     };
   }
 
-  function mapDtoWbIdWahlnummerToModelWahlMetaData(
+  function mapUserDtoToUser(userDto: UserDTO): User {
+    return {
+      username: userDto.username,
+      email: userDto.email,
+      userEnabled: userDto.userEnabled,
+      wahltagID: userDto.wahltagID,
+      wahltag: userDto.wahltag,
+      wahlbezirkID: userDto.wahlbezirkID,
+      wahlbezirkNummer: userDto.wahlbezirkNummer,
+      wahlbezirksArt: userDto.wahlbezirksArt,
+      pin: userDto.pin,
+      authorities: userDto.authorities,
+      wahlMetaData: _mapDtoWbIdWahlnummerToModelWahlMetaData(
+        userDto.wbid_wahlnummer
+      ),
+    };
+  }
+
+  function _mapDtoWbIdWahlnummerToModelWahlMetaData(
     wbid_wahlnummer: string
   ): WahlMetaData[] {
     return JSON.parse(wbid_wahlnummer);
@@ -90,6 +108,6 @@ export function useUserTestDataFactory() {
     createUserWithUndefinedWahlbezirksArt,
     createUserWithDefaultValues,
     createUserDtoWithRandomValues,
-    mapDtoWbIdWahlnummerToModelWahlMetaData,
+    mapUserDtoToUser,
   };
 }

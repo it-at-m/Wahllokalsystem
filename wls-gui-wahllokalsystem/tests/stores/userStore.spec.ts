@@ -3,7 +3,7 @@ import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useUserStore } from "@/stores/userStore.ts";
-import { User, UserLocalDevelopment } from "@/types/User.ts";
+import { createUserLocalDevelopment, User } from "@/types/User.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getUser: vi.fn(),
@@ -39,7 +39,7 @@ describe("userStore.ts", () => {
 
   describe("loaduser", () => {
     it("should_setUserLocalDevelopment_when_serviceCallFailedAndInDevMode", async () => {
-      const user = UserLocalDevelopment();
+      const user = createUserLocalDevelopment();
       mockDefinitions.getUser.mockRejectedValue(new Error("error in service"));
 
       await unitUnderTest.loadUser();
@@ -59,7 +59,7 @@ describe("userStore.ts", () => {
     });
 
     it("should_setUser_when_serviceCalledSuccessfully", async () => {
-      const user = UserLocalDevelopment();
+      const user = createUserLocalDevelopment();
       mockDefinitions.getUser.mockResolvedValue(user);
 
       await unitUnderTest.loadUser();

@@ -2,7 +2,7 @@ import { acceptHMRUpdate, defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 import { useUserService } from "@/composables/user/userService.ts";
-import { User, UserLocalDevelopment } from "@/types/User";
+import { createUserLocalDevelopment, User } from "@/types/User";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { getUser } = useUserService();
@@ -15,7 +15,7 @@ export const useUserStore = defineStore("user", () => {
       user.value = await getUser();
     } catch {
       if (import.meta.env.DEV) {
-        user.value = UserLocalDevelopment();
+        user.value = createUserLocalDevelopment();
       } else {
         user.value = null;
       }

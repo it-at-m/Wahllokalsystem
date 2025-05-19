@@ -19,8 +19,8 @@ function createUserLocalDevelopment(): User {
   const u = new User();
   u.username = "Local Development User";
   u.wahlbezirksArt = "UWB";
-    u.wahlbezirkNummer = "1234";
-    u.wahlMetaData = [
+  u.wahlbezirkNummer = "1234";
+  u.wahlMetaData = [
     {
       wahlbezirkID: "",
       wahlnummer: "",

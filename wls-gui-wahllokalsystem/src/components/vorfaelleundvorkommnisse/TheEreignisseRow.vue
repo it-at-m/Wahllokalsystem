@@ -20,12 +20,17 @@
       <v-col>
         <v-textarea
           v-model="ereignis.beschreibung"
-          :rules="[MIN_LENGTH(4), MAX_LENGTH(500)]"
+          :rules="[
+            MIN_LENGTH(4),
+            MAX_LENGTH(max_length_for_ereignis_beschreibung),
+          ]"
           rows="1"
           label="Beschreibung"
           auto-grow
           clearable
           autofokus
+          persistent-counter
+          :counter="max_length_for_ereignis_beschreibung"
         />
       </v-col>
       <v-col
@@ -65,6 +70,7 @@ const { wahlbezirkEreignisse } = storeToRefs(ereignisStore);
 const { updateUhrzeitByIndex } = ereignisStore;
 const deleteDialog = ref(false);
 const deleteIndex = ref<number | null>(null);
+const max_length_for_ereignis_beschreibung = 500;
 
 function closeYesNoDialog() {
   deleteDialog.value = false;

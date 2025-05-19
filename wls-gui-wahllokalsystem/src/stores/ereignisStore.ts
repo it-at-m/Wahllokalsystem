@@ -44,20 +44,25 @@ export const useEreignisStore = defineStore(storeID, () => {
         (eintrag) => eintrag.ereignisart === EreignisartEnum.Vorkommnis
       ) === true
   );
+
+  const hasValidKeineFlagsDefault = computed(
+    () =>
+      hasVorfaelle.value !== wahlbezirkEreignisse.value.keineVorfaelle &&
+      (hasVorkommnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse ||
+        !schliessungsUhrzeitSent.value)
+  );
+
+  const hasValidKeineFlagsForBWB = computed(
+    () =>
+      hasVorfaelle.value !== wahlbezirkEreignisse.value.keineVorfaelle &&
+      hasVorkommnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse
+  );
+
   const areKeineEreignisseFlagsValid = computed(() => {
-    if (currentUserWahlbezirkArt.value == WahlbezirksArtEnum.UWB) {
-      return (
-        hasVorfaelle.value !== wahlbezirkEreignisse.value.keineVorfaelle &&
-        (hasVorkommnisse.value !==
-          wahlbezirkEreignisse.value.keineVorkommnisse ||
-          !schliessungsUhrzeitSent.value)
-      );
-    } else {
-      return (
-        hasVorfaelle.value !== wahlbezirkEreignisse.value.keineVorfaelle &&
-        hasVorkommnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse
-      );
-    }
+    const isUWB = currentUserWahlbezirkArt.value === WahlbezirksArtEnum.UWB;
+    return isUWB
+      ? hasValidKeineFlagsDefault.value
+      : hasValidKeineFlagsForBWB.value;
   });
 
   watch(schliessungsUhrzeitSent, _onSchliessunguhrzeitSentChanged);

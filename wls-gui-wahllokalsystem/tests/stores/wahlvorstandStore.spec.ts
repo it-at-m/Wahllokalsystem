@@ -150,8 +150,6 @@ describe("wahlvorstandStore.ts", () => {
     ])(
       "should_returnFalse_when_whenMitgliedWithFunktion'$funktion'ExistsButIsNotAnwesend",
       ({ funktion, expected }) => {
-        mockDefinitions.isWahlvorsteher.mockReturnValue(true);
-
         unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
           WahlvorstandsmitgliedBuilder.createMinimal().withFunktion(funktion),
         ];

@@ -28,7 +28,7 @@ aus dem Entwicklungsteam weisen sich selbständig PRs für ein Review zu.
 
 Ziel: Überprüfung, ob die Anforderungen, die in einem Issue gestellt wurden, fachlich korrekt umgesetzt wurden.
 
-Was: Jedes Issues, dass eine für den Fachbereich relevante Änderung hatte 
+Was: Jedes Issues, dass eine für den Fachbereich relevante Änderung hatte
 
 Wie: Vorstellung des Ergebnisses im Rahmen der Demo. In Vorbereitung auf die Demo wird geklärt durch wen die Vorstellung
 erfolgt.

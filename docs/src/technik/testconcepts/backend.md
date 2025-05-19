@@ -24,7 +24,7 @@ erforderlichen [Authentifizierung](../systemspecification/backend#authentifizier
 Was: Geänderte Authentifizierungsregeln, neue oder geänderte Endpunkte eines Services
 
 Wie: Durch Anpassung der `configuration.SecurityConfigurationTest`-Testsuit.
-Das Verhalten mit und ohne korrekter Authentifizierung ist zu prüfen. 
+Das Verhalten mit und ohne korrekter Authentifizierung ist zu prüfen.
 Die korrekte Fachlichkeit des Zugriffes soll dabei nicht geprüft werden.
 
 Verantwortung: Entwicklerin, die die Änderung implementiert hat
@@ -35,8 +35,9 @@ Ziel: Sicherstellen das der Zugriff auf die Operationen eines Services oder Repo
 nur mit den erforderlichen [Berechtigungen](../systemspecification/backend#autorisierung) erfolgt
 
 Was:
-  - Neue oder geänderte Berechtigungen, von Methoden bei Services oder Repositories
-  - Neue oder geänderte Berechtigungen, aufgrund von neuen oder geänderten Abhängigkeiten
+
+- Neue oder geänderte Berechtigungen, von Methoden bei Services oder Repositories
+- Neue oder geänderte Berechtigungen, aufgrund von neuen oder geänderten Abhängigkeiten
 
 Wie: Durch JUnit-Tests in `service.<Domain>SecurityTest`. Der erfolgreiche Zugriff, sowie die Zugriffsverweigerung
 sind zu prüfen.
@@ -63,7 +64,7 @@ Verantwortung: Entwicklerin, die die elementare Änderung an der Fachlichkeit im
 
 ### Architekturtests
 
-Ziel: Sicherstellen, dass formalisierte Regeln der Architektur eingehalten wurden 
+Ziel: Sicherstellen, dass formalisierte Regeln der Architektur eingehalten wurden
 
 Was: Die Regeln, die für den Service als relevant definiert wurden
 

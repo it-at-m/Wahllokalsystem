@@ -1,12 +1,13 @@
 <template>
   <v-icon
-    :icon="getWahlartIcon()"
+    :icon="wahlartIcon"
     size="large"
   />
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
+import { computed } from "vue";
 import { VIcon } from "vuetify/components";
 
 import { useUserStore } from "@/stores/userStore.ts";
@@ -18,7 +19,7 @@ const iconMap = {
   BWB: "$wahlbezirksartBWB",
 };
 
-function getWahlartIcon(): string {
+const wahlartIcon = computed(() => {
   return iconMap[currentUserWahlbezirksArt.value];
-}
+});
 </script>

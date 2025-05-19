@@ -26,10 +26,7 @@
         active
         @click="sendWahlvorstand()"
       />
-      <the-nachbesetzung-drucken-button
-        v-if="currentUserWahlbezirksArt === 'BWB'"
-        :disabled="!!schliessungsUhrzeitSent"
-      />
+      <the-nachbesetzung-drucken-button />
     </v-card-actions>
   </v-card>
 </template>
@@ -45,14 +42,10 @@ import TheWahlvorstandAnwesenheitRequirementCard from "@/components/wahlvorstand
 import TheWahlvorstandLastSendDiv from "@/components/wahlvorstand/TheWahlvorstandLastSendDiv.vue";
 import TheWahlvorstandLatestLoadDiv from "@/components/wahlvorstand/TheWahlvorstandLatestLoadDiv.vue";
 import TheWahlvorstandMitgliederTable from "@/components/wahlvorstand/TheWahlvorstandMitgliederTable.vue";
-import { useUserStore } from "@/stores/userStore.ts";
-import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 
 const { loadWahlvorstand, sendWahlvorstand } = useWahlvorstandStore();
 
 const { isWahlvorstandAusreichendAnwesend, lastLoading, lastSending } =
   storeToRefs(useWahlvorstandStore());
-const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
-const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
 </script>

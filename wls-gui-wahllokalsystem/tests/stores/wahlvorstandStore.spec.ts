@@ -12,6 +12,7 @@ import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 import { User } from "@/types/User";
 import { WahlvorstandBuilder } from "@/types/wahlvorstand/Wahlvorstand";
 import { WahlvorstandsmitgliedBuilder } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
+import { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   isSchriftfuehrer: vi.fn(),
@@ -21,6 +22,14 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock("@/types/wahlvorstand/WahlvorstandsmitgliedFunktion", () => ({
+  WahlvorstandsmitgliedFunktionEnum: {
+    W: "W",
+    Sb: "SB",
+    Swb: "SWB",
+    Ssb: "SSB",
+    B: "B",
+    // Fügen Sie hier andere Enum-Werte hinzu, falls vorhanden
+  },
   isSchriftfuehrer: mockDefinitions.isSchriftfuehrer,
   isWahlvorsteher: mockDefinitions.isWahlvorsteher,
 }));
@@ -112,6 +121,84 @@ describe("wahlvorstandStore.ts", () => {
       );
       expect(mockDefinitions.isSchriftfuehrer.mock.calls[1][0]).toStrictEqual(
         "W"
+      );
+    });
+  });
+
+  describe("isWahlvorsteherAnwesend", () => {
+    it.each([
+      { funktion: WahlvorstandsmitgliedFunktionEnum.W, expected: true },
+      { funktion: WahlvorstandsmitgliedFunktionEnum.Swb, expected: true },
+    ])(
+      "should_returnTrue_when_atLeastOneMitgliedWithFunktion'$funktion'IsAnwesend",
+      ({ funktion, expected }) => {
+        mockDefinitions.isWahlvorsteher.mockReturnValue(true);
+
+        unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
+          WahlvorstandsmitgliedBuilder.createMinimal()
+            .withFunktion(funktion)
+            .withAnwesend(true),
+          WahlvorstandsmitgliedBuilder.createMinimal().withFunktion(
+            WahlvorstandsmitgliedFunktionEnum.W
+          ),
+        ];
+
+        expect(unitUnderTest.isWahlvorsteherAnwesend).toStrictEqual(expected);
+        expect(mockDefinitions.isWahlvorsteher).toHaveBeenCalledWith(funktion);
+      }
+    );
+
+    it.each([
+      { funktion: WahlvorstandsmitgliedFunktionEnum.W, expected: true },
+      { funktion: WahlvorstandsmitgliedFunktionEnum.Swb, expected: true },
+    ])(
+      "should_returnFalse_when_whenMitgliedWithFunktionExistsButIsNotAnwesend",
+      () => {
+        mockDefinitions.isWahlvorsteher.mockReturnValue(true);
+
+        unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
+          WahlvorstandsmitgliedBuilder.createMinimal().withFunktion("W"),
+          WahlvorstandsmitgliedBuilder.createMinimal().withFunktion("SWB"),
+        ];
+
+        expect(unitUnderTest.isWahlvorsteherAnwesend).toStrictEqual(false);
+        expect(mockDefinitions.isWahlvorsteher.mock.calls[0][0]).toStrictEqual(
+          "W"
+        );
+        expect(mockDefinitions.isWahlvorsteher.mock.calls[1][0]).toStrictEqual(
+          "SWB"
+        );
+      }
+    );
+
+    it.each([
+      { funktion: WahlvorstandsmitgliedFunktionEnum.Sb, expected: true },
+      { funktion: WahlvorstandsmitgliedFunktionEnum.Ssb, expected: true },
+      { funktion: WahlvorstandsmitgliedFunktionEnum.B, expected: true },
+    ])("should_returnFalse_when_noMitgliedMatchesFunktion", () => {
+      mockDefinitions.isWahlvorsteher.mockReturnValue(false);
+
+      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
+        WahlvorstandsmitgliedBuilder.createMinimal()
+          .withFunktion("SB")
+          .withAnwesend(true),
+        WahlvorstandsmitgliedBuilder.createMinimal()
+          .withFunktion("SSB")
+          .withAnwesend(true),
+        WahlvorstandsmitgliedBuilder.createMinimal()
+          .withFunktion("B")
+          .withAnwesend(true),
+      ];
+
+      expect(unitUnderTest.isWahlvorsteherAnwesend).toStrictEqual(false);
+      expect(mockDefinitions.isWahlvorsteher.mock.calls[0][0]).toStrictEqual(
+        "SB"
+      );
+      expect(mockDefinitions.isWahlvorsteher.mock.calls[1][0]).toStrictEqual(
+        "SSB"
+      );
+      expect(mockDefinitions.isWahlvorsteher.mock.calls[2][0]).toStrictEqual(
+        "B"
       );
     });
   });

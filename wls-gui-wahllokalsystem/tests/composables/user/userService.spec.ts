@@ -36,7 +36,7 @@ describe("userService.ts", () => {
   describe("getUser", () => {
     it("should_returnUser_when_apiCalledSuccesfully", async () => {
       const userDto = createUserDtoWithRandomValues();
-      const expectedUser: User = {
+      const mockedMappeduser: User = {
         username: userDto.username,
         email: userDto.email,
         userEnabled: userDto.userEnabled,
@@ -53,12 +53,12 @@ describe("userService.ts", () => {
       };
 
       mockDefinitions.user.mockReturnValue({ status: 200, data: userDto });
-      mockDefinitions.toModel.mockReturnValue(expectedUser);
+      mockDefinitions.toModel.mockReturnValue(mockedMappeduser);
 
       const result = await getUser();
 
       expect(mockDefinitions.user.mock.calls.length).toStrictEqual(1);
-      expect(result).toEqual(expectedUser);
+      expect(result).toEqual(mockedMappeduser);
     });
 
     it("should_throwError_when_apiCallFailed", async () => {

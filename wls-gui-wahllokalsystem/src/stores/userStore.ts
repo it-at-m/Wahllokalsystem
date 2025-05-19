@@ -51,7 +51,6 @@ export const useUserStore = defineStore("user", () => {
     return user.value.wahlbezirksArt;
   });
 
-
   function setUser(payload: User): void {
     user.value = payload;
   }
@@ -62,7 +61,7 @@ export const useUserStore = defineStore("user", () => {
     setUser,
     currentUserWahlbezirkID,
     currentUserWahltagID,
-      currentUserWahlbezirksArt,
+    currentUserWahlbezirksArt,
   };
 });
 

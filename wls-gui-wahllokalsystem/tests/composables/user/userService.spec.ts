@@ -1,8 +1,7 @@
-import { useUserTestDataFactory } from "@tests/utils/common/UserTestDataFactory.ts";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useUserService } from "@/composables/user/userService.ts";
-import { User } from "@/types/User.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   user: vi.fn(),
@@ -15,17 +14,14 @@ vi.mock("@/api/wls-clients/generated-auth-api", () => ({
   })),
   Configuration: vi.fn(),
 }));
-vi.mock("@composables/user/userMapper.ts", () => ({
+vi.mock("@/composables/user/userMapper.ts", () => ({
   useUserMapper: () => ({
     toModel: mockDefinitions.toModel,
   }),
 }));
 
 const { getUser } = useUserService();
-const {
-  createUserDtoWithRandomValues,
-  mapDtoWbIdWahlnummerToModelWahlMetaData,
-} = useUserTestDataFactory();
+const { prepareUserDTO, mapUserDtoToUser } = useUserTestDataFactory();
 
 describe("userService.ts", () => {
   beforeEach(() => {
@@ -35,30 +31,16 @@ describe("userService.ts", () => {
 
   describe("getUser", () => {
     it("should_returnUser_when_apiCalledSuccesfully", async () => {
-      const userDto = createUserDtoWithRandomValues();
-      const expectedUser: User = {
-        username: userDto.username,
-        email: userDto.email,
-        userEnabled: userDto.userEnabled,
-        wahltagID: userDto.wahltagID,
-        wahltag: userDto.wahltag,
-        wahlbezirkID: userDto.wahlbezirkID,
-        wahlbezirkNummer: userDto.wahlbezirkNummer,
-        wahlbezirksArt: userDto.wahlbezirksArt,
-        pin: userDto.pin,
-        authorities: userDto.authorities,
-        wahlMetaData: mapDtoWbIdWahlnummerToModelWahlMetaData(
-          userDto.wbid_wahlnummer
-        ),
-      };
+      const userDto = prepareUserDTO().build();
+      const mockedMappeduser = mapUserDtoToUser(userDto);
 
       mockDefinitions.user.mockReturnValue({ status: 200, data: userDto });
-      mockDefinitions.toModel.mockReturnValue(expectedUser);
+      mockDefinitions.toModel.mockReturnValue(mockedMappeduser);
 
       const result = await getUser();
 
       expect(mockDefinitions.user.mock.calls.length).toStrictEqual(1);
-      expect(result).toEqual(expectedUser);
+      expect(result).toEqual(mockedMappeduser);
     });
 
     it("should_throwError_when_apiCallFailed", async () => {

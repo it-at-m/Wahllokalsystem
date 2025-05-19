@@ -1,37 +1,19 @@
 import type { UserDTO } from "@/api/wls-clients/generated-auth-api";
-import type { User } from "@/types/User.ts";
 
-import { useUserTestDataFactory } from "@tests/utils/common/UserTestDataFactory.ts";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 
 import { useUserMapper } from "@/composables/user/userMapper.ts";
 
 describe("userMapper.ts", () => {
   const { toModel } = useUserMapper();
-  const {
-    createUserDtoWithRandomValues,
-    mapDtoWbIdWahlnummerToModelWahlMetaData,
-    createUserWithDefaultValues,
-  } = useUserTestDataFactory();
+  const { prepareUser, prepareUserDTO, mapUserDtoToUser } =
+    useUserTestDataFactory();
 
   describe("toModel", () => {
     it("should_returnModel_when_givenDto", () => {
-      const dto: UserDTO = createUserDtoWithRandomValues();
-      const expectedUser: User = {
-        username: dto.username,
-        email: dto.email,
-        userEnabled: dto.userEnabled,
-        wahltagID: dto.wahltagID,
-        wahltag: dto.wahltag,
-        wahlbezirkID: dto.wahlbezirkID,
-        wahlbezirkNummer: dto.wahlbezirkNummer,
-        wahlbezirksArt: dto.wahlbezirksArt,
-        pin: dto.pin,
-        authorities: dto.authorities,
-        wahlMetaData: mapDtoWbIdWahlnummerToModelWahlMetaData(
-          dto.wbid_wahlnummer
-        ),
-      };
+      const dto: UserDTO = prepareUserDTO().build();
+      const expectedUser = mapUserDtoToUser(dto);
 
       const result = toModel(dto);
 
@@ -72,7 +54,7 @@ describe("userMapper.ts", () => {
         when: "paramsAreUndefined",
       },
     ])("should_returnUserWithDefaultValues_when_$when", ({ userDto }) => {
-      const expectedUser = createUserWithDefaultValues();
+      const expectedUser = prepareUser().build();
       const result = toModel(userDto as unknown as UserDTO);
 
       expect(result).toEqual(expectedUser);

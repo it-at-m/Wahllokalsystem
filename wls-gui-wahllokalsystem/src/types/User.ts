@@ -15,7 +15,7 @@ class User {
   wahlMetaData?: WahlMetaData[];
 }
 
-function UserLocalDevelopment(): User {
+function createUserLocalDevelopment(): User {
   const u = new User();
   u.username = "Local Development User";
   u.wahlbezirksArt = "UWB";
@@ -31,4 +31,4 @@ function UserLocalDevelopment(): User {
   return u;
 }
 
-export { User, UserLocalDevelopment };
+export { User, createUserLocalDevelopment };

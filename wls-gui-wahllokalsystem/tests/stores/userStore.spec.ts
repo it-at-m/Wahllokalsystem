@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useUserStore } from "@/stores/userStore.ts";
 import { createUserLocalDevelopment, User } from "@/types/User.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getUser: vi.fn(),
@@ -109,11 +110,13 @@ describe("userStore.ts", () => {
     it("should_returnBwb_when_wahlbezirksArtIsUndefined", () => {
       unitUnderTest.setUser(prepareUser().wahlbezirksArt(undefined).build());
 
-      expect(unitUnderTest.currentUserWahlbezirksArt).toStrictEqual("BWB");
+      expect(unitUnderTest.currentUserWahlbezirksArt).toStrictEqual(
+        WahlbezirksArtEnum.BWB
+      );
     });
 
     it("should_returnBwb_when_wahlbezirksArtIsBwb", () => {
-      const wahlbezirksArt = "BWB";
+      const wahlbezirksArt = WahlbezirksArtEnum.BWB;
       unitUnderTest.setUser(
         prepareUser().wahlbezirksArt(wahlbezirksArt).build()
       );
@@ -124,7 +127,7 @@ describe("userStore.ts", () => {
     });
 
     it("should_returnUwb_when_wahlbezirksArtIsUwb", () => {
-      const wahlbezirksArt = "UWB";
+      const wahlbezirksArt = WahlbezirksArtEnum.UWB;
       unitUnderTest.setUser(
         prepareUser().wahlbezirksArt(wahlbezirksArt).build()
       );

@@ -6,6 +6,7 @@ import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
 import { User } from "@/types/User.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const {
   generateRandomString,
@@ -53,7 +54,7 @@ export function useUserTestDataFactory() {
       wahltag: generateRandomDateTimeAsString(),
       wahlbezirkID: generateRandomString(10),
       wahlbezirkNummer: generateRandomString(10),
-      wahlbezirksArt: "BWB",
+      wahlbezirksArt: WahlbezirksArtEnum.BWB,
       pin: generateRandomString(10),
       authorities: new Set<string>(),
       wbid_wahlnummer: `{"wbid_wahlnummer":[{"wahlbezirkID":"${generateRandomString(10)}","wahlnummer":"${generateRandomString(1)}","wahlID":"${generateRandomString(10)}"}]}`,

@@ -20,6 +20,7 @@ import { nextTick } from "vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { prepareUser } = useUserTestDataFactory();
 
@@ -50,7 +51,9 @@ describe("BaseIconWahlbezirksart.vue", () => {
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_displayUWB_when_storeVariableIsUWB", async (context) => {
       const userStore = useUserStore();
-      userStore.setUser(prepareUser().wahlbezirksArt("UWB").build());
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
 
       await wrapper.vm.$nextTick();
 
@@ -61,7 +64,9 @@ describe("BaseIconWahlbezirksart.vue", () => {
 
     it("should_displayBWB_when_storeVariableIsBWB", async (context) => {
       const userStore = useUserStore();
-      userStore.setUser(prepareUser().wahlbezirksArt("BWB").build());
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
 
       await nextTick();
 

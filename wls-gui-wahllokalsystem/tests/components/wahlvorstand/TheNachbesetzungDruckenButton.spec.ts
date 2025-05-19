@@ -1,11 +1,11 @@
 import type { VueWrapper } from "@vue/test-utils";
 
 import { createTestingPinia } from "@pinia/testing";
-import { useUserTestDataFactory } from "@tests/utils/common/UserTestDataFactory.ts";
 import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { enableAutoUnmount, mount } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import {
@@ -24,12 +24,9 @@ import * as directives from "vuetify/directives";
 
 import TheNachbesetzungDruckenButton from "@/components/wahlvorstand/TheNachbesetzungDruckenButton.vue";
 import { useUserStore } from "@/stores/userStore.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
-const {
-  createUserWithUndefinedWahlbezirksArt,
-  createUserWithBwbWahlbezirksArt,
-  createUserWithUwbWahlbezirksArt,
-} = useUserTestDataFactory();
+const { prepareUser } = useUserTestDataFactory();
 
 describe("TheNachbesetzungDruckenButton.vue", () => {
   let vuetify: ReturnType<typeof createVuetify>;
@@ -61,7 +58,7 @@ describe("TheNachbesetzungDruckenButton.vue", () => {
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderButton_when_usersWahlbezirksArtIsUndefined", async (context) => {
       const userStore = useUserStore();
-      userStore.setUser(createUserWithUndefinedWahlbezirksArt());
+      userStore.setUser(prepareUser().wahlbezirksArt(undefined).build());
 
       await nextTick();
 
@@ -72,7 +69,9 @@ describe("TheNachbesetzungDruckenButton.vue", () => {
 
     it("should_renderButton_when_usersWahlbezirksArtIsBwb", async (context) => {
       const userStore = useUserStore();
-      userStore.setUser(createUserWithBwbWahlbezirksArt());
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
 
       await nextTick();
 
@@ -83,7 +82,9 @@ describe("TheNachbesetzungDruckenButton.vue", () => {
 
     it("should_notRenderButton_when_usersWahlbezirksArtIsUwb", async (context) => {
       const userStore = useUserStore();
-      userStore.setUser(createUserWithUwbWahlbezirksArt());
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
 
       await nextTick();
 

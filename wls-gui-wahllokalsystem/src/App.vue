@@ -165,7 +165,6 @@ import {
   VTooltip,
 } from "vuetify/components";
 
-import { getUser } from "@/api/user-client.ts";
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
@@ -184,10 +183,9 @@ import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
-import { User, UserLocalDevelopment } from "@/types/User.ts";
 
 const { loadEreignisse } = useEreignisStore();
-const { setUser } = useUserStore();
+const { loadUser } = useUserStore();
 const { loadWahlvorstand } = useWahlvorstandStore();
 const { initTasks } = useTaskManagerStore();
 const { loadWaehler } = useMonitoringStore();
@@ -200,8 +198,15 @@ const { startWahlbeteiligungInterval, stopWahlbeteiligungInterval } =
 const [drawer, toggleDrawer] = useToggle();
 const isOffline = ref(false);
 
-onMounted(() => {
-  loadUser();
+onMounted(async () => {
+  await loadUser().then(() => {
+    loadWahlvorstand();
+    startBroadcastMessageInterval();
+    initTasks();
+    loadEreignisse();
+    loadWaehler();
+    startWahlbeteiligungInterval();
+  });
 
   // config for service worker indexed db (same config as in wahl-worker.js !)
   localforage.config({
@@ -217,26 +222,6 @@ onUnmounted(() => {
   stopBroadcastMessageInterval();
   stopWahlbeteiligungInterval();
 });
-
-function loadUser(): void {
-  getUser()
-    .then((user: User) => setUser(user))
-    .catch(() => {
-      if (import.meta.env.DEV) {
-        setUser(UserLocalDevelopment());
-      } else {
-        setUser(null);
-      }
-    })
-    .then(() => {
-      loadWahlvorstand();
-      startBroadcastMessageInterval();
-      initTasks();
-      loadEreignisse();
-      loadWaehler();
-      startWahlbeteiligungInterval();
-    });
-}
 </script>
 
 <style>

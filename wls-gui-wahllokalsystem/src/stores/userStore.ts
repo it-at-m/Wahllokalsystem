@@ -34,17 +34,16 @@ export const useUserStore = defineStore("user", () => {
     return user.value?.wahlbezirksArt ?? WahlbezirksArtEnum.BWB;
   });
 
-    const currentUserHauptWahlID = computed((): string | undefined => {
-        const smallestWbidWahlnummerObject =
-            user.value?.wbid_wahlnummer?.wbid_wahlnummer?.reduce(
-                (smallest, current) => {
-                    return parseInt(current.wahlnummer) < parseInt(smallest.wahlnummer)
-                        ? current
-                        : smallest;
-                }
-            );
-        return smallestWbidWahlnummerObject?.wahlID;
-    });
+  const currentUserHauptWahlID = computed((): string | undefined => {
+    const smallestWbidWahlnummerObject = user.value?.wahlMetaData?.reduce(
+      (smallest, current) => {
+        return parseInt(current.wahlnummer) < parseInt(smallest.wahlnummer)
+          ? current
+          : smallest;
+      }
+    );
+    return smallestWbidWahlnummerObject?.wahlID;
+  });
 
   function setUser(payload: User | null): void {
     user.value = payload;

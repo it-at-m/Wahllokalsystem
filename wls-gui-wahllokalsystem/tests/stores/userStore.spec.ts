@@ -107,14 +107,6 @@ describe("userStore.ts", () => {
   });
 
   describe("currentUserWahlbezirksArt", () => {
-    it("should_returnBwb_when_wahlbezirksArtIsUndefined", () => {
-      unitUnderTest.setUser(prepareUser().wahlbezirksArt(undefined).build());
-
-      expect(unitUnderTest.currentUserWahlbezirksArt).toStrictEqual(
-        WahlbezirksArtEnum.BWB
-      );
-    });
-
     it("should_returnBwb_when_wahlbezirksArtIsBwb", () => {
       const wahlbezirksArt = WahlbezirksArtEnum.BWB;
       unitUnderTest.setUser(

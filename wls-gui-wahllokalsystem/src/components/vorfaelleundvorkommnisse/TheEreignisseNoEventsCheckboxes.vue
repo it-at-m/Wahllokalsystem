@@ -31,19 +31,19 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
 const { wahlbezirkEreignisse, hasVorkommnisse, hasVorfaelle } =
   storeToRefs(useEreignisStore());
-const { currentUserWahlbezirkArt } = storeToRefs(useUserStore());
+const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
 
 const isCheckboxNoVorfaelleDisabled = computed(() => hasVorfaelle.value);
 const isCheckboxNoVorkommnisseDisabled = computed(() => {
   if (hasVorkommnisse.value) {
     return true;
   }
-  if (currentUserWahlbezirkArt.value === WahlbezirksArtEnum.BWB) {
+  if (currentUserWahlbezirksArt.value === WahlbezirksArtEnum.BWB) {
     return false;
   }
   return schliessungsUhrzeitSent.value === undefined;
 });
 const showCheckboxNoVorfaelle = computed(
-  () => currentUserWahlbezirkArt.value !== WahlbezirksArtEnum.BWB
+  () => currentUserWahlbezirksArt.value !== WahlbezirksArtEnum.BWB
 );
 </script>

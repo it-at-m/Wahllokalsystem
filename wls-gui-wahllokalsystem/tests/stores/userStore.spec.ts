@@ -37,7 +37,7 @@ describe("userStore.ts", () => {
     vi.unstubAllEnvs();
   });
 
-  describe("loaduser", () => {
+  describe("loadUser", () => {
     it("should_setUserLocalDevelopment_when_serviceCallFailedAndInDevMode", async () => {
       const user = createUserLocalDevelopment();
       mockDefinitions.getUser.mockRejectedValue(new Error("error in service"));

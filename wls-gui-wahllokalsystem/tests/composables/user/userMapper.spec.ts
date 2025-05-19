@@ -1,6 +1,6 @@
 import type { UserDTO } from "@/api/wls-clients/generated-auth-api";
 
-import { useUserTestDataFactory } from "@tests/utils/common/UserTestDataFactory.ts";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 
 import { useUserMapper } from "@/composables/user/userMapper.ts";

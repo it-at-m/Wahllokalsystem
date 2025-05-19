@@ -1,4 +1,4 @@
-import { useUserTestDataFactory } from "@tests/utils/common/UserTestDataFactory.ts";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useUserService } from "@/composables/user/userService.ts";

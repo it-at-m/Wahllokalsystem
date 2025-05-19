@@ -1,9 +1,9 @@
 import { createTestingPinia } from "@pinia/testing";
-import { useUserTestDataFactory } from "@tests/utils/common/UserTestDataFactory.ts";
 import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import {

@@ -14,7 +14,7 @@ export function getEreignisArtForDateRelatedToSchliessungsuhrzeit(
   schliessungsuhrzeit: Date | undefined
 ): EreignisartEnum {
   const userStore = useUserStore();
-  switch (userStore.currentUserWahlbezirkArt) {
+  switch (userStore.currentUserWahlbezirksArt) {
     case WahlbezirksArtEnum.BWB:
       return EreignisartEnum.Vorkommnis;
     case WahlbezirksArtEnum.UWB:

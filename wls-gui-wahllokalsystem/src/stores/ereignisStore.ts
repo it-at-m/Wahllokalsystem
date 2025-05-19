@@ -21,7 +21,7 @@ export const storeID = "vorfaelleundvorkommnisse";
 export const useEreignisStore = defineStore(storeID, () => {
   const error = ref<string | null>(null);
 
-  const { currentUserWahlbezirkID, currentUserWahlbezirkArt } =
+  const { currentUserWahlbezirkID, currentUserWahlbezirksArt } =
     storeToRefs(useUserStore());
   const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
 
@@ -59,7 +59,7 @@ export const useEreignisStore = defineStore(storeID, () => {
   );
 
   const areKeineEreignisseFlagsValid = computed(() => {
-    const isUWB = currentUserWahlbezirkArt.value === WahlbezirksArtEnum.UWB;
+    const isUWB = currentUserWahlbezirksArt.value === WahlbezirksArtEnum.UWB;
     return isUWB
       ? hasValidKeineFlagsDefault.value
       : hasValidKeineFlagsForBWB.value;

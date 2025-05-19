@@ -9,15 +9,19 @@
       label="Service"
       id="selected-service"
     />
-    <div class="mt-3 d-flex align-center">
-      <v-btn-toggle
-        v-model="selectedDirection"
-        variant="outlined"
-        mandatory
-      >
-        <v-btn value="LR">LR</v-btn>
-        <v-btn value="TD">TD</v-btn>
-      </v-btn-toggle>
+    <div class="mt-3">
+      <div class="ml-0 d-flex align-center">
+        <v-btn-toggle
+          v-model="selectedDirection"
+          density="compact"
+          variant="outlined"
+          mandatory
+        >
+          <v-btn value="LR">LR</v-btn>
+          <v-btn value="TD">TD</v-btn>
+        </v-btn-toggle>
+        <span class="ml-2">Ausrichtung</span>
+      </div>
       <v-checkbox
         v-model="withOperations"
         label="Operationen anzeigen"

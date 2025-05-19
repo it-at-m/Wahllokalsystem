@@ -1,41 +1,33 @@
 import type { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
+import type { WahlMetaData } from "@/types/wlsTypes/WahlMetaData.ts";
 
 class User {
-  sub = "";
-
-  // LHM
-  displayName = "";
-  surname = "";
-  telephoneNumber = "";
-  email = "";
   username = "";
-  givenname = "";
-  department = "";
-  lhmObjectID = "";
-  // LHM_Extended
-  preferred_username = "";
-  memberof: string[] = [];
-  user_roles: string[] = [];
-  authorities: string[] = [];
-  // WLS_Extended
-  wahlbezirkID? = "";
-  wahlbezirksArt?: WahlbezirksArtEnum;
+  email = "";
+  userEnabled? = false;
   wahltagID? = "";
+  wahltag? = "";
+  wahlbezirkID? = "";
   wahlbezirkNummer? = "";
+  wahlbezirksArt?: WahlbezirksArtEnum;
+  pin = "";
+  authorities = new Set<string>();
+  wahlMetaData?: WahlMetaData[];
 }
 
 function UserLocalDevelopment(): User {
   const u = new User();
   u.username = "Local Development User";
-  u.displayName = "Local Development User";
   u.wahlbezirksArt = "UWB";
-  u.wahlbezirkNummer = "1234";
-  u.authorities = [
-    // todo add authorities
+    u.wahlbezirkNummer = "1234";
+    u.wahlMetaData = [
+    {
+      wahlbezirkID: "",
+      wahlnummer: "",
+      wahlID: "",
+    },
   ];
-  u.user_roles = [
-    // todo add user roles
-  ];
+
   return u;
 }
 

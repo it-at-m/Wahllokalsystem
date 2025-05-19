@@ -1,4 +1,5 @@
 import { createTestingPinia } from "@pinia/testing";
+import { useUserTestDataFactory } from "@tests/utils/common/UserTestDataFactory.ts";
 import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
@@ -19,7 +20,12 @@ import { nextTick } from "vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { User } from "@/types/User.ts";
+
+const {
+  createUserWithUwbWahlbezirksArt,
+  createUserWithBwbWahlbezirksArt,
+  createUserWithUndefinedWahlbezirksArt,
+} = useUserTestDataFactory();
 
 describe("BaseIconWahlbezirksart.vue", () => {
   let wrapper: VueWrapper;
@@ -48,9 +54,7 @@ describe("BaseIconWahlbezirksart.vue", () => {
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_displayUWB_when_storeVariableIsUWB", async (context) => {
       const userStore = useUserStore();
-      const userWithUWB = new User();
-      userWithUWB.wahlbezirksArt = "UWB";
-      userStore.setUser(userWithUWB);
+      userStore.setUser(createUserWithUwbWahlbezirksArt());
 
       await wrapper.vm.$nextTick();
 
@@ -61,9 +65,7 @@ describe("BaseIconWahlbezirksart.vue", () => {
 
     it("should_displayBWB_when_storeVariableIsBWB", async (context) => {
       const userStore = useUserStore();
-      const userWithBWB = new User();
-      userWithBWB.wahlbezirksArt = "BWB";
-      userStore.setUser(userWithBWB);
+      userStore.setUser(createUserWithBwbWahlbezirksArt());
 
       await nextTick();
 
@@ -74,9 +76,7 @@ describe("BaseIconWahlbezirksart.vue", () => {
 
     it("should_displayBWB_when_storeVariableIsUndefined", async (context) => {
       const userStore = useUserStore();
-      const userWithUndefinedWahlart = new User();
-      userWithUndefinedWahlart.wahlbezirksArt = undefined;
-      userStore.setUser(userWithUndefinedWahlart);
+      userStore.setUser(createUserWithUndefinedWahlbezirksArt());
 
       await nextTick();
 

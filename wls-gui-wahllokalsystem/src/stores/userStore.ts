@@ -1,12 +1,11 @@
 import { acceptHMRUpdate, defineStore } from "pinia";
 import { computed, ref } from "vue";
 
-import { User } from "@/types/User";
+import { useUserService } from "@/composables/user/userService.ts";
+import { createUserLocalDevelopment, User } from "@/types/User";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
-export interface UserState {
-  user: User | null;
-}
+const { getUser } = useUserService();
 
 export const useUserStore = defineStore("user", () => {
   const user = ref<User>({
@@ -28,6 +27,18 @@ export const useUserStore = defineStore("user", () => {
     wahltagID: "",
   });
 
+  async function loadUser() {
+    try {
+      user.value = await getUser();
+    } catch {
+      if (import.meta.env.DEV) {
+        user.value = createUserLocalDevelopment();
+      } else {
+        user.value = null;
+      }
+    }
+  }
+
   const currentUserWahlbezirkID = computed((): string | undefined => {
     return user.value?.wahlbezirkID;
   });
@@ -36,24 +47,22 @@ export const useUserStore = defineStore("user", () => {
     return user.value?.wahltagID;
   });
 
-  const currentUserWahlbezirkArt = computed(() => {
+  const currentUserWahlbezirksArt = computed(() => {
     return user.value.wahlbezirksArt;
   });
 
-  const getUser = computed((): User | null => {
-    return user.value;
-  });
 
   function setUser(payload: User): void {
     user.value = payload;
   }
 
   return {
-    getUser,
+    user,
+    loadUser,
     setUser,
     currentUserWahlbezirkID,
     currentUserWahltagID,
-    currentUserWahlbezirkArt,
+      currentUserWahlbezirksArt,
   };
 });
 

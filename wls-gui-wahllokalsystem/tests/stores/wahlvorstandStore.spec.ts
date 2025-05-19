@@ -28,7 +28,6 @@ vi.mock("@/types/wahlvorstand/WahlvorstandsmitgliedFunktion", () => ({
     Swb: "SWB",
     Ssb: "SSB",
     B: "B",
-    // Fügen Sie hier andere Enum-Werte hinzu, falls vorhanden
   },
   isSchriftfuehrer: mockDefinitions.isSchriftfuehrer,
   isWahlvorsteher: mockDefinitions.isWahlvorsteher,
@@ -138,9 +137,6 @@ describe("wahlvorstandStore.ts", () => {
           WahlvorstandsmitgliedBuilder.createMinimal()
             .withFunktion(funktion)
             .withAnwesend(true),
-          WahlvorstandsmitgliedBuilder.createMinimal().withFunktion(
-            WahlvorstandsmitgliedFunktionEnum.W
-          ),
         ];
 
         expect(unitUnderTest.isWahlvorsteherAnwesend).toStrictEqual(expected);
@@ -149,58 +145,45 @@ describe("wahlvorstandStore.ts", () => {
     );
 
     it.each([
-      { funktion: WahlvorstandsmitgliedFunktionEnum.W, expected: true },
-      { funktion: WahlvorstandsmitgliedFunktionEnum.Swb, expected: true },
+      { funktion: WahlvorstandsmitgliedFunktionEnum.W, expected: false },
+      { funktion: WahlvorstandsmitgliedFunktionEnum.Swb, expected: false },
     ])(
-      "should_returnFalse_when_whenMitgliedWithFunktionExistsButIsNotAnwesend",
-      () => {
+      "should_returnFalse_when_whenMitgliedWithFunktion'$funktion'ExistsButIsNotAnwesend",
+      ({ funktion, expected }) => {
         mockDefinitions.isWahlvorsteher.mockReturnValue(true);
 
         unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-          WahlvorstandsmitgliedBuilder.createMinimal().withFunktion("W"),
-          WahlvorstandsmitgliedBuilder.createMinimal().withFunktion("SWB"),
+          WahlvorstandsmitgliedBuilder.createMinimal().withFunktion(funktion),
         ];
 
-        expect(unitUnderTest.isWahlvorsteherAnwesend).toStrictEqual(false);
+        expect(unitUnderTest.isWahlvorsteherAnwesend).toStrictEqual(expected);
         expect(mockDefinitions.isWahlvorsteher.mock.calls[0][0]).toStrictEqual(
-          "W"
-        );
-        expect(mockDefinitions.isWahlvorsteher.mock.calls[1][0]).toStrictEqual(
-          "SWB"
+          funktion
         );
       }
     );
 
     it.each([
-      { funktion: WahlvorstandsmitgliedFunktionEnum.Sb, expected: true },
-      { funktion: WahlvorstandsmitgliedFunktionEnum.Ssb, expected: true },
-      { funktion: WahlvorstandsmitgliedFunktionEnum.B, expected: true },
-    ])("should_returnFalse_when_noMitgliedMatchesFunktion", () => {
-      mockDefinitions.isWahlvorsteher.mockReturnValue(false);
+      { funktion: WahlvorstandsmitgliedFunktionEnum.Sb, expected: false },
+      { funktion: WahlvorstandsmitgliedFunktionEnum.Ssb, expected: false },
+      { funktion: WahlvorstandsmitgliedFunktionEnum.B, expected: false },
+    ])(
+      "should_returnFalse_when_mitgliedWithFunktion'$funktion'IsAnwesendButDoesNotMatch",
+      ({ funktion, expected }) => {
+        mockDefinitions.isWahlvorsteher.mockReturnValue(false);
 
-      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("SB")
-          .withAnwesend(true),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("SSB")
-          .withAnwesend(true),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("B")
-          .withAnwesend(true),
-      ];
+        unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
+          WahlvorstandsmitgliedBuilder.createMinimal()
+            .withFunktion(funktion)
+            .withAnwesend(true),
+        ];
 
-      expect(unitUnderTest.isWahlvorsteherAnwesend).toStrictEqual(false);
-      expect(mockDefinitions.isWahlvorsteher.mock.calls[0][0]).toStrictEqual(
-        "SB"
-      );
-      expect(mockDefinitions.isWahlvorsteher.mock.calls[1][0]).toStrictEqual(
-        "SSB"
-      );
-      expect(mockDefinitions.isWahlvorsteher.mock.calls[2][0]).toStrictEqual(
-        "B"
-      );
-    });
+        expect(unitUnderTest.isWahlvorsteherAnwesend).toStrictEqual(expected);
+        expect(mockDefinitions.isWahlvorsteher.mock.calls[0][0]).toStrictEqual(
+          funktion
+        );
+      }
+    );
   });
 
   describe("isMindestanwesenheitErreicht", () => {

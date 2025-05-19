@@ -346,7 +346,9 @@ describe("wahlvorstandStore.ts", () => {
 
       expect(unitUnderTest.lastLoading).toBeNull();
 
-      await unitUnderTest.loadWahlvorstand();
+      await expect(unitUnderTest.loadWahlvorstand()).rejects.toThrow(
+        "API Error"
+      );
 
       expect(unitUnderTest.lastLoading).toBeNull();
     });

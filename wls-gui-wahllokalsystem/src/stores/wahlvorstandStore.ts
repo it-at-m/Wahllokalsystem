@@ -21,8 +21,6 @@ const { getWahlvorstand, saveWahlvorstand } = useWahlvorstandService();
 export const storeID = "wahlvorstand";
 
 export const useWahlvorstandStore = defineStore(storeID, () => {
-  const error = ref<string | null>(null);
-
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
   const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
 
@@ -62,29 +60,19 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   async function loadWahlvorstand() {
     const wahlbezirkID = currentUserWahlbezirkID.value;
     if (wahlbezirkID) {
-      error.value = null;
-      try {
-        wahlvorstand.value = await getWahlvorstand(wahlbezirkID);
-        lastLoading.value = new Date();
-      } catch {
-        error.value = "Fehler beim Laden des Wahlvorstandes";
-      }
+      wahlvorstand.value = await getWahlvorstand(wahlbezirkID);
+      lastLoading.value = new Date();
     }
   }
 
   async function sendWahlvorstand() {
     const wahlbezirkID = currentUserWahlbezirkID.value;
     if (wahlbezirkID) {
-      error.value = null;
-      try {
-        const { updateDatetime } = await saveWahlvorstand(
-          wahlbezirkID,
-          wahlvorstand.value
-        );
-        lastSending.value = updateDatetime;
-      } catch {
-        error.value = "Fehler beim Speichern des Wahlvorstandes";
-      }
+      const { updateDatetime } = await saveWahlvorstand(
+        wahlbezirkID,
+        wahlvorstand.value
+      );
+      lastSending.value = updateDatetime;
     }
   }
 
@@ -110,7 +98,6 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     changeAnwesendOfMitglied,
     loadWahlvorstand,
     sendWahlvorstand,
-    error,
   };
 });
 

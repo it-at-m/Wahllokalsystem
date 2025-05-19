@@ -21,8 +21,7 @@ vi.mock("@/composables/user/userMapper.ts", () => ({
 }));
 
 const { getUser } = useUserService();
-const { createUserDtoWithRandomValues, mapUserDtoToUser } =
-  useUserTestDataFactory();
+const { prepareUserDTO, mapUserDtoToUser } = useUserTestDataFactory();
 
 describe("userService.ts", () => {
   beforeEach(() => {
@@ -32,7 +31,7 @@ describe("userService.ts", () => {
 
   describe("getUser", () => {
     it("should_returnUser_when_apiCalledSuccesfully", async () => {
-      const userDto = createUserDtoWithRandomValues();
+      const userDto = prepareUserDTO().build();
       const mockedMappeduser = mapUserDtoToUser(userDto);
 
       mockDefinitions.user.mockReturnValue({ status: 200, data: userDto });

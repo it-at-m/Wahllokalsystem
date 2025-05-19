@@ -15,15 +15,7 @@ vi.mock("@/composables/user/userService", () => ({
   }),
 }));
 
-const {
-  createUserWithUndefinedWahlbezirkID,
-  createUserWithRandomWahlbezirkID,
-  createUserWithUndefinedWahltagID,
-  createUserWithRandomWahltagID,
-  createUserWithUndefinedWahlbezirksArt,
-  createUserWithBwbWahlbezirksArt,
-  createUserWithUwbWahlbezirksArt,
-} = useUserTestDataFactory();
+const { prepareUser } = useUserTestDataFactory();
 
 describe("userStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useUserStore>;
@@ -85,53 +77,61 @@ describe("userStore.ts", () => {
 
   describe("currentUserWahlbezirkID", () => {
     it("should_returnUndefined_when_noWahlbezirkIdExists", () => {
-      unitUnderTest.setUser(createUserWithUndefinedWahlbezirkID());
+      unitUnderTest.setUser(prepareUser().wahlbezirkID(undefined).build());
 
       expect(unitUnderTest.currentUserWahlbezirkID).toStrictEqual(undefined);
     });
 
     it("should_returnWahlbezirkId_when_wahlbezirkIdExists", () => {
-      const user: User = createUserWithRandomWahlbezirkID();
-      unitUnderTest.setUser(user);
+      const wahlbezirkID = "ich bin eine id";
+      unitUnderTest.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
-      expect(unitUnderTest.currentUserWahlbezirkID).toStrictEqual(
-        user.wahlbezirkID
-      );
+      expect(unitUnderTest.currentUserWahlbezirkID).toStrictEqual(wahlbezirkID);
     });
   });
 
   describe("currentUserWahltagID", () => {
     it("should_returnUndefined_when_noWahltagIdExists", () => {
-      unitUnderTest.setUser(createUserWithUndefinedWahltagID());
+      unitUnderTest.setUser(prepareUser().wahltagID(undefined).build());
 
       expect(unitUnderTest.currentUserWahltagID).toStrictEqual(undefined);
     });
 
     it("should_returnWahltagId_when_wahltagIdExists", () => {
-      const user: User = createUserWithRandomWahltagID();
-      unitUnderTest.setUser(user);
+      const wahltagID = "ich bin eine id";
+      unitUnderTest.setUser(prepareUser().wahltagID(wahltagID).build());
 
-      expect(unitUnderTest.currentUserWahltagID).toStrictEqual(user.wahltagID);
+      expect(unitUnderTest.currentUserWahltagID).toStrictEqual(wahltagID);
     });
   });
 
   describe("currentUserWahlbezirksArt", () => {
     it("should_returnBwb_when_wahlbezirksArtIsUndefined", () => {
-      unitUnderTest.setUser(createUserWithUndefinedWahlbezirksArt());
+      unitUnderTest.setUser(prepareUser().wahlbezirksArt(undefined).build());
 
       expect(unitUnderTest.currentUserWahlbezirksArt).toStrictEqual("BWB");
     });
 
     it("should_returnBwb_when_wahlbezirksArtIsBwb", () => {
-      unitUnderTest.setUser(createUserWithBwbWahlbezirksArt());
+      const wahlbezirksArt = "BWB";
+      unitUnderTest.setUser(
+        prepareUser().wahlbezirksArt(wahlbezirksArt).build()
+      );
 
-      expect(unitUnderTest.currentUserWahlbezirksArt).toStrictEqual("BWB");
+      expect(unitUnderTest.currentUserWahlbezirksArt).toStrictEqual(
+        wahlbezirksArt
+      );
     });
 
     it("should_returnUwb_when_wahlbezirksArtIsUwb", () => {
-      unitUnderTest.setUser(createUserWithUwbWahlbezirksArt());
+      const wahlbezirksArt = "UWB";
+      unitUnderTest.setUser(
+        prepareUser().wahlbezirksArt(wahlbezirksArt).build()
+      );
 
-      expect(unitUnderTest.currentUserWahlbezirksArt).toStrictEqual("UWB");
+      expect(unitUnderTest.currentUserWahlbezirksArt).toStrictEqual(
+        wahlbezirksArt
+      );
     });
   });
 });

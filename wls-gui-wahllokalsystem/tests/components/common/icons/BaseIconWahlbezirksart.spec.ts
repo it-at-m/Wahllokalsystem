@@ -75,7 +75,7 @@ describe("BaseIconWahlbezirksart.vue", () => {
       );
     });
 
-    it("should_displayBWB_when_storeVariableIsUndefined", async (context) => {
+    it("should_displayNoIcon_when_storeVariableIsUndefined", async (context) => {
       const userStore = useUserStore();
       userStore.setUser(prepareUser().wahlbezirksArt(undefined).build());
 

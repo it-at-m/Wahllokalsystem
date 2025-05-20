@@ -10,7 +10,6 @@ import {
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
-import { User } from "@/types/User";
 import { WahlvorstandBuilder } from "@/types/wahlvorstand/Wahlvorstand";
 import { WahlvorstandsmitgliedBuilder } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
 import { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion.ts";
@@ -324,9 +323,7 @@ describe("wahlvorstandStore.ts", () => {
     it("should_sendWahlvorstand_when_wahlbezirkIDIsGiven", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       const mockedDatetime = new Date();
 
@@ -345,9 +342,7 @@ describe("wahlvorstandStore.ts", () => {
     it("should_setLastSend_when_wahlvorstandIsSent", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       expect(unitUnderTest.lastSending).toBeNull();
 
@@ -364,9 +359,7 @@ describe("wahlvorstandStore.ts", () => {
 
     it("should_notSendWahlvorstand_when_wahlbezirkIDIsNotGiven", async () => {
       const userStore = useUserStore();
-      const user = new User();
-      user.wahlbezirkID = undefined;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(undefined).build());
 
       await unitUnderTest.sendWahlvorstand();
 
@@ -378,9 +371,7 @@ describe("wahlvorstandStore.ts", () => {
     it("should_setWahlvorstand_when_userHasWahlbezirkID", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       const mockedGetWahlvorstand =
         WahlvorstandBuilder.createEmptyWahlvorstand();
@@ -394,9 +385,7 @@ describe("wahlvorstandStore.ts", () => {
     it("should_setLastLoading_when_wahlvorstandIsLoaded", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       const mockedGetWahlvorstand =
         WahlvorstandBuilder.createEmptyWahlvorstand();
@@ -412,9 +401,7 @@ describe("wahlvorstandStore.ts", () => {
     it("should_notUpdateLastLoading_when_getWahlvorstandFails", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       mockDefinitions.getWahlvorstand.mockImplementationOnce(() => {
         throw new Error("API Error");

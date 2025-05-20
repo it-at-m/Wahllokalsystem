@@ -122,6 +122,16 @@ const ADMIN_SERVICE_RELATIONS: Relation[] = [
   },
   {
     source: ADMIN_SERVICE,
+    target: BASISDATEN_SERVICE,
+    operation: "putWahltermindaten",
+  },
+  {
+    source: ADMIN_SERVICE,
+    target: BASISDATEN_SERVICE,
+    operation: "deleteWahltermindaten",
+  },
+  {
+    source: ADMIN_SERVICE,
     target: INFOMANAGEMENT_SERVICE,
     operation: "setKonfigurierterWahltag",
   },
@@ -150,7 +160,7 @@ const BASISDATEN_SERVICE_RELATIONS: Relation[] = [
   },
   {
     source: BASISDATEN_SERVICE,
-    target: INFOMANAGEMENT_SERVICE,
+    target: EAI_SERVICE,
     operation: "loadBasisdaten",
   },
   {
@@ -172,6 +182,11 @@ const BASISDATEN_SERVICE_RELATIONS: Relation[] = [
     source: BASISDATEN_SERVICE,
     target: EAI_SERVICE,
     operation: "loadWahlvorschlaege",
+  },
+  {
+    source: BASISDATEN_SERVICE,
+    target: EAI_SERVICE,
+    operation: "loadReferendumvorlagen",
   },
 ];
 

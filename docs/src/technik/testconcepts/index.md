@@ -12,7 +12,7 @@ Unabhängig von Backend und Frontend gibt es weitere manuelle Teststufen.
 
 Ziel: Überprüfung der Code-Qualität und der korrekten Umsetzung der Anforderungen, sowie die Einhaltung von Projektvorgaben.
 
-Was: Jeder Pull-Request der auf den Default-Branch geht, muss gereviewt werden. Pull-Requests mit einem anderen Ziel
+Was: Jeder Pull-Request, der auf den Default-Branch geht, muss gereviewt werden. Pull-Requests mit einem anderen Ziel
 können optional einem Review unterzogen werden.
 
 Wie: Die Workflows stellen eine syntaktische Funktionsfähigkeit der Anwendung fest, sowie die Einhaltung eines definierten

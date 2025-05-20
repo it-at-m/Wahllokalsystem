@@ -17,7 +17,7 @@ Ziel: Sicherstellen der fachlichen Funktionalität einer Klasse.
 Was: Neue oder geänderte Funktionalität einer Klasse.
 
 Wie: Erstellen, Anpassen oder Erweitern vorhandener Testsuits. Es sollte bei eigenen Klassen eine Codecoverage
-von 100% (Methoden und Lines) erreicht werden. Komponenten, auf die die Testunit zugreift, werden gemockt.
+von 100% (Methoden und Lines) erreicht werden. Komponenten, auf die die Testunit zugreifen, werden gemockt.
 
 Verantwortung: Entwickler, der die Änderung implementiert hat.
 

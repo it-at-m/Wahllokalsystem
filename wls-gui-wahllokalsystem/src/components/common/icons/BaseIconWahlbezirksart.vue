@@ -1,5 +1,6 @@
 <template>
   <v-icon
+    v-if="currentUserWahlbezirksArt"
     :icon="wahlartIcon"
     size="large"
   />
@@ -20,6 +21,8 @@ const iconMap = {
 };
 
 const wahlartIcon = computed(() => {
-  return iconMap[currentUserWahlbezirksArt.value];
+  if (currentUserWahlbezirksArt.value) {
+    return iconMap[currentUserWahlbezirksArt.value];
+  }
 });
 </script>

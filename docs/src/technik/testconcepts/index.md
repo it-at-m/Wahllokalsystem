@@ -10,7 +10,7 @@ Unabhängig von Backend und Frontend gibt es weitere manuelle Teststufen
 
 ### Code-Review
 
-Ziel: Überprüfung der Code-Qualität und der korrekten Umsetzung der Anforderungen, sowie die Einhaltung von Projektvorgaben
+Ziel: Überprüfung der Code-Qualität und der korrekten Umsetzung der Anforderungen, sowie die Einhaltung von Projektvorgaben.
 
 Was: Jeder Pull-Request der auf den Default-Branch geht, muss gereviewt werden. Pull-Requests mit einem anderen Ziel
 können optional einem Review unterzogen werden.
@@ -28,14 +28,14 @@ aus dem Entwicklungsteam weisen sich selbständig PRs für ein Review zu.
 
 Ziel: Überprüfung, ob die Anforderungen, die in einem Issue gestellt wurden, fachlich korrekt umgesetzt wurden.
 
-Was: Jedes Issue, dass eine für den Fachbereich relevante Änderung hatte
+Was: Jedes Issue, dass eine für den Fachbereich relevante Änderung hatte.
 
 Wie: Vorstellung des Ergebnisses im Rahmen der Demo. In Vorbereitung auf die Demo wird geklärt, durch wen die Vorstellung
 erfolgt.
 
 Verantwortung: Entwicklungsteam
 
-Ausführung: Am Ende jedes Sprints auf der Umgebung für die Demo
+Ausführung: Am Ende jedes Sprints auf der Umgebung für die Demo.
 
 ## Bedarfsgesteuerte Tests
 

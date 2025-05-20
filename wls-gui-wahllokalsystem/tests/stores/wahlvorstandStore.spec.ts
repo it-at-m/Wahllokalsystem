@@ -73,15 +73,17 @@ describe("wahlvorstandStore.ts", () => {
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
         WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("SB")
+          .withFunktion(WahlvorstandsmitgliedFunktionEnum.Sb)
           .withAnwesend(true),
-        WahlvorstandsmitgliedBuilder.createMinimal().withFunktion("W"),
+        WahlvorstandsmitgliedBuilder.createMinimal().withFunktion(
+          WahlvorstandsmitgliedFunktionEnum.W
+        ),
       ];
 
       expect(unitUnderTest.isSchriftfuehrerAnwesend).toStrictEqual(true);
 
       expect(mockDefinitions.isSchriftfuehrer.mock.calls[0][0]).toStrictEqual(
-        "SB"
+        WahlvorstandsmitgliedFunktionEnum.Sb
       );
     });
 
@@ -89,17 +91,21 @@ describe("wahlvorstandStore.ts", () => {
       mockDefinitions.isSchriftfuehrer.mockReturnValue(true);
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal().withFunktion("SB"),
-        WahlvorstandsmitgliedBuilder.createMinimal().withFunktion("W"),
+        WahlvorstandsmitgliedBuilder.createMinimal().withFunktion(
+          WahlvorstandsmitgliedFunktionEnum.Sb
+        ),
+        WahlvorstandsmitgliedBuilder.createMinimal().withFunktion(
+          WahlvorstandsmitgliedFunktionEnum.W
+        ),
       ];
 
       expect(unitUnderTest.isSchriftfuehrerAnwesend).toStrictEqual(false);
 
       expect(mockDefinitions.isSchriftfuehrer.mock.calls[0][0]).toStrictEqual(
-        "SB"
+        WahlvorstandsmitgliedFunktionEnum.Sb
       );
       expect(mockDefinitions.isSchriftfuehrer.mock.calls[1][0]).toStrictEqual(
-        "W"
+        WahlvorstandsmitgliedFunktionEnum.W
       );
     });
 
@@ -108,18 +114,18 @@ describe("wahlvorstandStore.ts", () => {
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
         WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("SB")
+          .withFunktion(WahlvorstandsmitgliedFunktionEnum.Sb)
           .withAnwesend(true),
         WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("W")
+          .withFunktion(WahlvorstandsmitgliedFunktionEnum.W)
           .withAnwesend(true),
       ];
       expect(unitUnderTest.isSchriftfuehrerAnwesend).toStrictEqual(false);
       expect(mockDefinitions.isSchriftfuehrer.mock.calls[0][0]).toStrictEqual(
-        "SB"
+        WahlvorstandsmitgliedFunktionEnum.Sb
       );
       expect(mockDefinitions.isSchriftfuehrer.mock.calls[1][0]).toStrictEqual(
-        "W"
+        WahlvorstandsmitgliedFunktionEnum.W
       );
     });
   });

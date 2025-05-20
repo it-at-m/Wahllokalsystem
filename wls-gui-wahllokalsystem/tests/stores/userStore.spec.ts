@@ -107,33 +107,76 @@ describe("userStore.ts", () => {
   });
 
   describe("currentUserWahlbezirksArt", () => {
-    it("should_returnBwb_when_wahlbezirksArtIsUndefined", () => {
-      unitUnderTest.setUser(prepareUser().wahlbezirksArt(undefined).build());
+    it.each([
+      { wahlbezirksart: undefined },
+      { wahlbezirksart: WahlbezirksArtEnum.UWB },
+      { wahlbezirksart: WahlbezirksArtEnum.BWB },
+    ])(
+      "should_return'$wahlbezirksart'_when_wahlbezirksArtIs'$wahlbezirksart'",
+      ({ wahlbezirksart }) => {
+        unitUnderTest.setUser(
+          prepareUser().wahlbezirksArt(wahlbezirksart).build()
+        );
 
-      expect(unitUnderTest.currentUserWahlbezirksArt).toStrictEqual(
-        WahlbezirksArtEnum.BWB
+        expect(unitUnderTest.currentUserWahlbezirksArt).toStrictEqual(
+          wahlbezirksart
+        );
+      }
+    );
+  });
+
+  describe("currentUserHauptWahlID", () => {
+    it("should_returnUndefined_when_wahlMetaDataIsUndefined", () => {
+      unitUnderTest.setUser(prepareUser().wahlMetaData(undefined).build());
+
+      expect(unitUnderTest.currentUserHauptWahlID).toStrictEqual(undefined);
+    });
+
+    it("should_returnHauptWahlId_when_wahlMetaDataHasOneEntry", () => {
+      const expectedWahlID = "ID of object with smallest wahlnummer";
+      unitUnderTest.setUser(
+        prepareUser()
+          .wahlMetaData([
+            {
+              wahlbezirkID: "123",
+              wahlnummer: "1",
+              wahlID: expectedWahlID,
+            },
+          ])
+          .build()
+      );
+
+      expect(unitUnderTest.currentUserHauptWahlID).toStrictEqual(
+        expectedWahlID
       );
     });
 
-    it("should_returnBwb_when_wahlbezirksArtIsBwb", () => {
-      const wahlbezirksArt = WahlbezirksArtEnum.BWB;
+    it("should_returnHauptWahlIdOfObjectWithSmallestWahlnummer_when_wahlMetaDataHasMultipleEntries", () => {
+      const expectedWahlID = "ID of object with smallest wahlnummer";
       unitUnderTest.setUser(
-        prepareUser().wahlbezirksArt(wahlbezirksArt).build()
+        prepareUser()
+          .wahlMetaData([
+            {
+              wahlbezirkID: "123",
+              wahlnummer: "1",
+              wahlID: "ID zu wahlnumemr 1",
+            },
+            {
+              wahlbezirkID: "123",
+              wahlnummer: "3",
+              wahlID: "ID zu wahlunmmer 3",
+            },
+            {
+              wahlbezirkID: "123",
+              wahlnummer: "0",
+              wahlID: expectedWahlID,
+            },
+          ])
+          .build()
       );
 
-      expect(unitUnderTest.currentUserWahlbezirksArt).toStrictEqual(
-        wahlbezirksArt
-      );
-    });
-
-    it("should_returnUwb_when_wahlbezirksArtIsUwb", () => {
-      const wahlbezirksArt = WahlbezirksArtEnum.UWB;
-      unitUnderTest.setUser(
-        prepareUser().wahlbezirksArt(wahlbezirksArt).build()
-      );
-
-      expect(unitUnderTest.currentUserWahlbezirksArt).toStrictEqual(
-        wahlbezirksArt
+      expect(unitUnderTest.currentUserHauptWahlID).toStrictEqual(
+        expectedWahlID
       );
     });
   });

@@ -2,12 +2,12 @@
 
 ## Automatisierte Teststufen
 
-Die folgenden Teststufen werden durch die Workflows automatisiert durchlaufen. Bevor ein Pull-Requests gemergt wird
+Die folgenden Teststufen werden durch die Workflows automatisiert durchlaufen. Bevor ein Pull-Requests gemergt wird,
 müssen alle Teststufen erfolgreich durchlaufen sein.
 
 Die Tests werden mittels JUnit5 und AssertJ geschrieben.
 
-Die [Architekturtests](#architekturtests) sind die einzigen Tests die bei einer Implementierung eines Features
+Die [Architekturtests](#architekturtests) sind die einzigen Tests, die bei einer Implementierung eines Features
 aktualisiert werden.
 
 ### Unittests
@@ -16,14 +16,14 @@ Ziel: Sicherstellen der fachlichen Funktionalität einer Klasse
 
 Was: Neue oder geänderte Funktionalität einer Klasse
 
-Wie: Erstellen, Anpassung oder Erweitern vorhandener Testsuits. Es sollte bei eigenen Klassen eine Codecoverage
+Wie: Erstellen, Anpassen oder Erweitern vorhandener Testsuits. Es sollte bei eigenen Klassen eine Codecoverage
 von 100% (Methoden und Lines) erreicht werden. Komponenten, auf die die Testunit zugreift, werden gemockt.
 
 Verantwortung: Entwicklerin, die die Änderung implementiert hat
 
 ### Integrationstests zur Authentifizierung
 
-Ziel: Sicherstellen das der Zugriff auf Endpunkte der Services mit der
+Ziel: Sicherstellen, dass der Zugriff auf Endpunkte der Services mit der
 erforderlichen [Authentifizierung](../systemspecification/backend#authentifizierung) erfolgt
 
 Was: Geänderte Authentifizierungsregeln, neue oder geänderte Endpunkte eines Services
@@ -36,7 +36,7 @@ Verantwortung: Entwicklerin, die die Änderung implementiert hat
 
 ### Integrationstests zur Autorisierung
 
-Ziel: Sicherstellen das der Zugriff auf die Operationen eines Services oder Repositories
+Ziel: Sicherstellen, dass der Zugriff auf die Operationen eines Services oder Repositories
 nur mit den erforderlichen [Berechtigungen](../systemspecification/backend#autorisierung) erfolgt
 
 Was:
@@ -46,7 +46,7 @@ Was:
 
 Wie: Durch Anpassungen in `service.<Domain>SecurityTest`. Der erfolgreiche Zugriff, sowie die Zugriffsverweigerung
 sind zu prüfen.
-Gibt es mehrere erforderliche Berechtigungen müssen alle Kombinationen geprüft werden.
+Gibt es mehrere erforderliche Berechtigungen, müssen alle Kombinationen geprüft werden.
 Die korrekte logische Verknüpfung der Berechtigungen muss dabei beachtet werden.
 Die korrekte Fachlichkeit des Zugriffes soll dabei nicht geprüft werden.
 
@@ -62,7 +62,7 @@ des korrekten Umgangs mit Exceptions.
 
 Wie: Durch Anpassungen in `rest.<Domain>ControllerIntegrationTest`, welche Zugriff auf die Endpunkte unter Verwendung der
 jeweiligen Authentifizierung durchführen.
-Eine vollständige Abdeckung alle fachlichen Szenarien ist nicht erforderlich, weil dies durch die Unittests der Services
+Eine vollständige Abdeckung aller fachlichen Szenarien ist nicht erforderlich, weil dies durch die Unittests der Services
 sichergestellt wird.
 
 Verantwortung: Entwicklerin, die die elementare Änderung an der Fachlichkeit implementiert hat
@@ -80,5 +80,5 @@ vorzunehmen. Mit den Architekturtests wird aber sichergestellt, dass die Impleme
 Verantwortung: Entwicklerin der das entsprechende Issue zur Pflege der Architekturtests oder bei Änderungen an der Architektur
 
 > [!NOTE]
-> Serviceunabhängige Regeln werden im Module `wls-common:testing` gepflegt. Gruppiert nach dem Testgegenstand
-der Regel, gibt es im Package `archunit.rule` Klassen mit Konstanten zu Regeln für Klassen und Methoden.
+> Serviceunabhängige Regeln werden im Modul `wls-common:testing` gepflegt. Gruppiert nach dem Testgegenstand
+> der Regel, gibt es im Package `archunit.rule` Klassen mit Konstanten zu Regeln für Klassen und Methoden.

@@ -62,8 +62,8 @@ des korrekten Umgangs mit Exceptions.
 
 Wie: Durch Anpassungen in `rest.<Domain>ControllerIntegrationTest`, welche Zugriff auf die Endpunkte unter Verwendung der
 jeweiligen Authentifizierung durchführen.
-Eine vollständige Abdeckung aller fachlichen Szenarien ist nicht erforderlich, weil dies durch die Unittests der Services
-sichergestellt wird.
+Eine vollständige Abdeckung aller fachlichen Szenarien ist nicht erforderlich, weil dies durch die
+[Unittests](#unittests) der Services sichergestellt wird.
 
 Verantwortung: Entwickler, der die elementare Änderung an der Fachlichkeit implementiert hat.
 

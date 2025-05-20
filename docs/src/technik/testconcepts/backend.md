@@ -77,7 +77,8 @@ Wie: Durch Anpassungen in `ArchUnitTest`, unter Verwendung von Regeln aus `wls-c
 erstellte Regeln. Bei der Implementierung von Anforderungen sind in der Regel keine Anpassungen an den Architekturtests
 vorzunehmen. Mit den Architekturtests wird aber sichergestellt, dass die Implementierung sich an die definierten Regeln hält.
 
-Verantwortung: Entwickler, der das entsprechende Issue zur Pflege der Architekturtests oder bei Änderungen an der Architektur.
+Verantwortung: Entwickler, der das entsprechende Issue zur Pflege der Architekturtests umsetzt,
+oder bei Änderungen an der Architektur.
 
 > [!NOTE]
 > Serviceunabhängige Regeln werden im Modul `wls-common:testing` gepflegt. Gruppiert nach dem Testgegenstand

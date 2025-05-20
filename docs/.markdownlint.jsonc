@@ -8,6 +8,7 @@
   "line-length": false,
   "MD033": {
     "allowed_elements": [
+      "architecture-the-service-relation-visualizer-div",
       "adr-status",
       "status-overview",
       "details",

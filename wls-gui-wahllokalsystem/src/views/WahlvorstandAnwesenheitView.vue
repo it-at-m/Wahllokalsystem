@@ -4,11 +4,11 @@
       <span>Anwesenheit prüfen</span>
       <div class="d-flex flex-column align-start">
         <the-wahlvorstand-latest-load-div
-          :datetime="wahlvorstandStore.lastLoading"
+          :datetime="lastLoading"
           class="text-subtitle-2 mb-1"
         />
         <the-wahlvorstand-last-send-div
-          :datetime="wahlvorstandStore.lastSending"
+          :datetime="lastSending"
           class="text-subtitle-2"
         />
       </div>
@@ -16,30 +16,36 @@
     <v-card-text>
       <the-wahlvorstand-mitglieder-table />
       <the-wahlvorstand-anwesenheit-requirement-card
-        v-show="!wahlvorstandStore.isWahlvorstandAusreichendAnwesend"
+        v-show="!isWahlvorstandAusreichendAnwesend"
       />
     </v-card-text>
     <v-card-actions>
-      <base-button-refresh @click="wahlvorstandStore.loadWahlvorstand()" />
+      <base-button-refresh @click="loadWahlvorstand()" />
       <base-button-save
-        :disabled="!wahlvorstandStore.isWahlvorstandAusreichendAnwesend"
+        :disabled="!isWahlvorstandAusreichendAnwesend"
         active
-        @click="wahlvorstandStore.sendWahlvorstand()"
+        @click="sendWahlvorstand()"
       />
+      <the-nachbesetzung-drucken-button />
     </v-card-actions>
   </v-card>
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { VCard, VCardActions, VCardText, VCardTitle } from "vuetify/components";
 
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import TheNachbesetzungDruckenButton from "@/components/wahlvorstand/TheNachbesetzungDruckenButton.vue";
 import TheWahlvorstandAnwesenheitRequirementCard from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.vue";
 import TheWahlvorstandLastSendDiv from "@/components/wahlvorstand/TheWahlvorstandLastSendDiv.vue";
 import TheWahlvorstandLatestLoadDiv from "@/components/wahlvorstand/TheWahlvorstandLatestLoadDiv.vue";
 import TheWahlvorstandMitgliederTable from "@/components/wahlvorstand/TheWahlvorstandMitgliederTable.vue";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 
-const wahlvorstandStore = useWahlvorstandStore();
+const { loadWahlvorstand, sendWahlvorstand } = useWahlvorstandStore();
+
+const { isWahlvorstandAusreichendAnwesend, lastLoading, lastSending } =
+  storeToRefs(useWahlvorstandStore());
 </script>

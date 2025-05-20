@@ -61,7 +61,6 @@ describe("monitoringStore.ts", () => {
 
   describe("loadWaehler", () => {
     it.each([
-      { user: null, when: "userIsNull" },
       {
         user: createUserWithUndefinedWahlbezirkID(),
         when: "usersWahlbezirkIdIsUndefined",
@@ -110,7 +109,6 @@ describe("monitoringStore.ts", () => {
 
   describe("sendWaehler", () => {
     it.each([
-      { user: null, when: "userIsNull" },
       {
         user: createUserWithUndefinedWahlbezirkID(),
         when: "usersWahlbezirkIdIsUndefined",

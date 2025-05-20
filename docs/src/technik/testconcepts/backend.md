@@ -8,7 +8,7 @@ müssen alle Teststufen erfolgreich durchlaufen sein.
 Die Tests werden mittels JUnit5 und AssertJ geschrieben.
 
 Die [Architekturtests](#architekturtests) sind die einzigen Tests, die bei einer Implementierung eines Features
-aktualisiert werden.
+nicht aktualisiert werden.
 
 ### Unittests
 

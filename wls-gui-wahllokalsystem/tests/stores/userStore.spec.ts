@@ -62,12 +62,6 @@ describe("userStore.ts", () => {
   });
 
   describe("setUser", () => {
-    it("should_setUserNull_when_givenNull", () => {
-      unitUnderTest.setUser(null);
-
-      expect(unitUnderTest.user).toStrictEqual(null);
-    });
-
     it("should_setUser_when_givenUser", () => {
       const user = new User();
       unitUnderTest.setUser(user);

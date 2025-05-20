@@ -334,7 +334,6 @@ describe("wahlvorstandStore.ts", () => {
     });
 
     it.each([
-      { user: null, when: "userIsNull" },
       {
         user: createUser(undefined),
         when: "usersWahlbezirkIdIsUndefined",

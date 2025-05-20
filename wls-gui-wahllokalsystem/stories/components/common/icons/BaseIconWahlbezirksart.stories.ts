@@ -1,3 +1,4 @@
+import type { User } from "@/types/User.ts";
 import type { Meta, StoryObj } from "@storybook/vue3";
 
 import { createPinia, setActivePinia } from "pinia";
@@ -5,7 +6,6 @@ import { createPinia, setActivePinia } from "pinia";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
 import pinia from "@/plugins/pinia";
 import { useUserStore } from "@/stores/userStore.ts";
-import { User } from "@/types/User.ts";
 
 const meta = {
   component: BaseIconWahlbezirksart,

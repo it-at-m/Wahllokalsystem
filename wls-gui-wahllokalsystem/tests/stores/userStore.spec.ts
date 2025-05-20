@@ -3,7 +3,7 @@ import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useUserStore } from "@/stores/userStore.ts";
-import { createUserLocalDevelopment, User } from "@/types/User.ts";
+import { createUserLocalDevelopment } from "@/types/User.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -69,7 +69,7 @@ describe("userStore.ts", () => {
     });
 
     it("should_setUser_when_givenUser", () => {
-      const user = new User();
+      const user = prepareUser().build();
       unitUnderTest.setUser(user);
 
       expect(unitUnderTest.user).toStrictEqual(user);

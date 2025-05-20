@@ -1,34 +1,25 @@
 import type { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 import type { WahlMetaData } from "@/types/wlsTypes/WahlMetaData.ts";
 
-class User {
-  username = "";
-  email = "";
-  userEnabled? = false;
-  wahltagID? = "";
-  wahltag? = "";
-  wahlbezirkID? = "";
-  wahlbezirkNummer? = "";
-  wahlbezirksArt?: WahlbezirksArtEnum;
-  pin = "";
-  authorities = new Set<string>();
-  wahlMetaData?: WahlMetaData[];
+export interface User {
+  username: string;
+  email: string;
+  userEnabled?: boolean | undefined;
+  wahltagID?: string | undefined;
+  wahltag?: string | undefined;
+  wahlbezirkID?: string | undefined;
+  wahlbezirkNummer?: string | undefined;
+  wahlbezirksArt?: WahlbezirksArtEnum | undefined;
+  pin: string;
+  authorities: Set<string>;
+  wahlMetaData?: WahlMetaData[] | undefined;
 }
 
-function createUserLocalDevelopment(): User {
-  const u = new User();
-  u.username = "Local Development User";
-  u.wahlbezirksArt = "UWB";
-  u.wahlbezirkNummer = "1234";
-  u.wahlMetaData = [
-    {
-      wahlbezirkID: "",
-      wahlnummer: "",
-      wahlID: "",
-    },
-  ];
-
-  return u;
+export function createUserLocalDevelopment(): User {
+  return {
+    username: "Local Development User",
+    wahlbezirksArt: "UWB",
+    wahlbezirkNummer: "1234",
+    wahlMetaData: [{ wahlbezirkID: "", wahlnummer: "", wahlID: "" }],
+  };
 }
-
-export { User, createUserLocalDevelopment };

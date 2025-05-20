@@ -4,7 +4,7 @@ Auf den Seiten zum [Backend](backend) und Frontend werden die jeweiligen Testkon
 
 Für den Aufbau und die Benennung von Tests sind die [Namingkonventions](../naming_conventions/) zu beachten.
 
-Unabhängig von Backend und Frontend gibt es weitere manuelle Teststufen
+Unabhängig von Backend und Frontend gibt es weitere manuelle Teststufen.
 
 ## Manuelle Teststufen
 

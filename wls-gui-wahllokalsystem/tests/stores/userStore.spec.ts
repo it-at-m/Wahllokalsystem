@@ -124,4 +124,60 @@ describe("userStore.ts", () => {
       }
     );
   });
+
+  describe("currentUserHauptWahlID", () => {
+    it("should_returnUndefined_when_wahlMetaDataIsUndefined", () => {
+      unitUnderTest.setUser(prepareUser().wahlMetaData(undefined).build());
+
+      expect(unitUnderTest.currentUserHauptWahlID).toStrictEqual(undefined);
+    });
+
+    it("should_returnHauptWahlId_when_wahlMetaDataHasOneEntry", () => {
+      const expectedWahlID = "ID of object with smallest wahlnummer";
+      unitUnderTest.setUser(
+        prepareUser()
+          .wahlMetaData([
+            {
+              wahlbezirkID: "123",
+              wahlnummer: "1",
+              wahlID: expectedWahlID,
+            },
+          ])
+          .build()
+      );
+
+      expect(unitUnderTest.currentUserHauptWahlID).toStrictEqual(
+        expectedWahlID
+      );
+    });
+
+    it("should_returnHauptWahlIdOfObjectWithSmallestWahlnummer_when_wahlMetaDataHasMultipleEntries", () => {
+      const expectedWahlID = "ID of object with smallest wahlnummer";
+      unitUnderTest.setUser(
+        prepareUser()
+          .wahlMetaData([
+            {
+              wahlbezirkID: "123",
+              wahlnummer: "1",
+              wahlID: "ID zu wahlnumemr 1",
+            },
+            {
+              wahlbezirkID: "123",
+              wahlnummer: "3",
+              wahlID: "ID zu wahlunmmer 3",
+            },
+            {
+              wahlbezirkID: "123",
+              wahlnummer: "0",
+              wahlID: expectedWahlID,
+            },
+          ])
+          .build()
+      );
+
+      expect(unitUnderTest.currentUserHauptWahlID).toStrictEqual(
+        expectedWahlID
+      );
+    });
+  });
 });

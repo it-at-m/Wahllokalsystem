@@ -1,5 +1,6 @@
 import { createTestingPinia } from "@pinia/testing";
 import { spyOn } from "@storybook/test";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useVorfaelleundvorkommnisseTestDateFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDateFactory.ts";
 import { flushPromises } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -28,6 +29,7 @@ vi.mock("@/composables/vorfaelleundvorkommnisse/ereignisService", () => ({
 const mockedNow = new Date();
 
 const { createEreignis } = useVorfaelleundvorkommnisseTestDateFactory();
+const { prepareUser } = useUserTestDataFactory();
 
 describe("ereignisStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useEreignisStore>;
@@ -352,7 +354,7 @@ describe("ereignisStore.ts", () => {
     it.each([
       { user: null, when: "userIsNull" },
       {
-        user: createUser(undefined),
+        user: prepareUser().wahlbezirkID(undefined).build(),
         when: "usersWahlbezirkIdIsUndefined",
       },
     ])("should_notLoadWahlbezirkEreignisse_when_$when", async ({ user }) => {
@@ -647,12 +649,3 @@ describe("ereignisStore.ts", () => {
     });
   });
 });
-
-function createUser(wahlbezirkID: string | undefined): User {
-  //TODO create Issue to use interface for User and provide BuilderImpl-Class => #853
-  const user = new User();
-
-  user.wahlbezirkID = wahlbezirkID;
-
-  return user;
-}

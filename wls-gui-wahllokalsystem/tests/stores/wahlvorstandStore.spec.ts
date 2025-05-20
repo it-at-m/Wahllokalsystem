@@ -1,4 +1,5 @@
 import { createTestingPinia } from "@pinia/testing";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { createPinia, setActivePinia, storeToRefs } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -41,6 +42,7 @@ vi.mock("@/composables/wahlvorstand/wahlvorstandService", () => ({
 }));
 
 const mockedNow = new Date();
+const { prepareUser } = useUserTestDataFactory();
 
 describe("wahlvorstandStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useWahlvorstandStore>;
@@ -430,7 +432,7 @@ describe("wahlvorstandStore.ts", () => {
     it.each([
       { user: null, when: "userIsNull" },
       {
-        user: createUser(undefined),
+        user: prepareUser().wahlbezirkID(undefined).build(),
         when: "usersWahlbezirkIdIsUndefined",
       },
     ])("should_notLoadWahlvorstand_when_$when", async ({ user }) => {
@@ -500,12 +502,3 @@ describe("wahlvorstandStore.ts", () => {
     }
   }
 });
-
-function createUser(wahlbezirkID: string | undefined): User {
-  //TODO create Issue to use interface for User and provide BuilderImpl-Class => #853
-  const user = new User();
-
-  user.wahlbezirkID = wahlbezirkID;
-
-  return user;
-}

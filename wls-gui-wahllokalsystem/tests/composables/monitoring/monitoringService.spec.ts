@@ -114,7 +114,6 @@ describe("monitoringService.ts", () => {
     );
   });
 
-  // todo: anpassen!!
   describe("postWahlbeteiligung", () => {
     it.each([
       {

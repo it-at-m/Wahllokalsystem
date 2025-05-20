@@ -52,7 +52,7 @@ Verantwortung: Entwicklerin, die die Änderung implementiert hat
 Ziel: Sicherstellen, dass die grundlegenden Einsatzmöglichkeiten eines Microservices gewährleistet sind, in dem
 die Komponenten des Microservices korrekt zusammenarbeiten.
 
-Was: stellvertretende positive wie negative Testfälle einer fachlichen Anforderung eines Services. Überprüfung
+Was: Stellvertretende positive wie negative Testfälle einer fachlichen Anforderung eines Services. Überprüfung
 des korrekten Umgangs mit Exceptions.
 
 Wie: Durch JUnit-Tests in `rest.<Domain>ControllerIntegrationTest`, welche Zugriff auf die Endpunkte unter Verwendung der

@@ -3,6 +3,7 @@ import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import {
@@ -19,7 +20,9 @@ import { nextTick } from "vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { User } from "@/types/User.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
+
+const { prepareUser } = useUserTestDataFactory();
 
 describe("BaseIconWahlbezirksart.vue", () => {
   let wrapper: VueWrapper;
@@ -48,9 +51,9 @@ describe("BaseIconWahlbezirksart.vue", () => {
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_displayUWB_when_storeVariableIsUWB", async (context) => {
       const userStore = useUserStore();
-      const userWithUWB = new User();
-      userWithUWB.wahlbezirksArt = "UWB";
-      userStore.setUser(userWithUWB);
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
 
       await wrapper.vm.$nextTick();
 
@@ -61,9 +64,9 @@ describe("BaseIconWahlbezirksart.vue", () => {
 
     it("should_displayBWB_when_storeVariableIsBWB", async (context) => {
       const userStore = useUserStore();
-      const userWithBWB = new User();
-      userWithBWB.wahlbezirksArt = "BWB";
-      userStore.setUser(userWithBWB);
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
 
       await nextTick();
 
@@ -74,9 +77,7 @@ describe("BaseIconWahlbezirksart.vue", () => {
 
     it("should_displayBWB_when_storeVariableIsUndefined", async (context) => {
       const userStore = useUserStore();
-      const userWithUndefinedWahlart = new User();
-      userWithUndefinedWahlart.wahlbezirksArt = undefined;
-      userStore.setUser(userWithUndefinedWahlart);
+      userStore.setUser(prepareUser().wahlbezirksArt(undefined).build());
 
       await nextTick();
 

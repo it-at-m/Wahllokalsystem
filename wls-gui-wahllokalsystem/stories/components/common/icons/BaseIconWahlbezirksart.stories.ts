@@ -1,4 +1,3 @@
-import type { User } from "@/types/User.ts";
 import type { Meta, StoryObj } from "@storybook/vue3";
 
 import { createPinia, setActivePinia } from "pinia";
@@ -25,28 +24,28 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const WahlartIsUWB: Story = {
+export const WahlbezirksartIsUWB: Story = {
   async beforeEach() {
     const store = useUserStore(pinia);
-    const userWithUWB = new User();
-    userWithUWB.wahlbezirksArt = "UWB";
-    store.setUser(userWithUWB);
+    store.setUser({
+      username: "Local Development User",
+      email: "",
+      wahlbezirksArt: "UWB",
+      pin: "",
+      authorities: new Set<string>(),
+    });
   },
 };
 
-export const WahlartIsBWB: Story = {
+export const WahlbezirksartIsBWB: Story = {
   async beforeEach() {
     const store = useUserStore(pinia);
-    const userWithBWB = new User();
-    userWithBWB.wahlbezirksArt = "BWB";
-    store.setUser(userWithBWB);
-  },
-};
-
-export const WahlartIsUndefined: Story = {
-  async beforeEach() {
-    const store = useUserStore(pinia);
-    const userWithUndefinedWahlart = new User();
-    store.setUser(userWithUndefinedWahlart);
+    store.setUser({
+      username: "Local Development User",
+      email: "",
+      wahlbezirksArt: "BWB",
+      pin: "",
+      authorities: new Set<string>(),
+    });
   },
 };

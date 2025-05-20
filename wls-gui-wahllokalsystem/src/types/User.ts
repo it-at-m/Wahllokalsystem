@@ -18,8 +18,11 @@ export interface User {
 export function createUserLocalDevelopment(): User {
   return {
     username: "Local Development User",
+    email: "",
     wahlbezirksArt: "UWB",
     wahlbezirkNummer: "1234",
+    pin: "",
+    authorities: new Set<string>(),
     wahlMetaData: [{ wahlbezirkID: "", wahlnummer: "", wahlID: "" }],
   };
 }

@@ -9,7 +9,6 @@ import { nextTick } from "vue";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
-import { User } from "@/types/User";
 import * as ImportAllFromEreignisArt from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
@@ -246,9 +245,7 @@ describe("ereignisStore.ts", () => {
     it("should_addEreignisToWahlbezirkEreignisse_when_ereignisIsAdded", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
         ImportAllFromEreignisArt,
@@ -336,9 +333,7 @@ describe("ereignisStore.ts", () => {
     it("should_loadWahlbezirkEreignisse_when_userHasWahlbezirkID", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       const mockedWahlbezirkEreignisse =
         WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse();
@@ -372,9 +367,7 @@ describe("ereignisStore.ts", () => {
     it("should_handleError_when_getEreignisseThrowsError", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       const mockedError = new Error("Network error");
       mockDefinitions.getEreignisse.mockRejectedValue(mockedError);
@@ -388,9 +381,7 @@ describe("ereignisStore.ts", () => {
     it("should_sendEreignisse_when_wahlbezirkIDIsGiven", () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       const mockedDatetime = new Date();
 
@@ -408,9 +399,7 @@ describe("ereignisStore.ts", () => {
 
     it("should_notsendEreignisse_when_wahlbezirkIDIsNotGiven", async () => {
       const userStore = useUserStore();
-      const user = new User();
-      user.wahlbezirkID = undefined;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(undefined).build());
 
       await unitUnderTest.sendEreignisse();
 

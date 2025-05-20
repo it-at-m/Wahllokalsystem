@@ -14,7 +14,13 @@ export const useUserStore = defineStore("user", () => {
     pin: "",
     userEnabled: false,
     username: "",
-    wahlMetaData: [],
+    wahlMetaData: [
+      {
+        wahlbezirkID: "",
+        wahlnummer: "",
+        wahlID: "",
+      },
+    ],
     wahlbezirkID: "",
     wahlbezirkNummer: "",
     wahlbezirksArt: WahlbezirksArtEnum.UWB,
@@ -45,7 +51,7 @@ export const useUserStore = defineStore("user", () => {
 
   const currentUserWahlbezirksArt = computed(
     (): WahlbezirksArtEnum | undefined => {
-        return user.value.wahlbezirksArt;
+      return user.value.wahlbezirksArt;
     }
   );
 

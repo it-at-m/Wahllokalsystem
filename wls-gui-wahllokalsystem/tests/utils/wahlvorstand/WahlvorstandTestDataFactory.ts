@@ -1,0 +1,71 @@
+import type {
+  WahlvorstandDTO,
+  WahlvorstandsmitgliedDTO,
+} from "@/api/wls-clients/generated-wahlvorstand-api";
+import type { Wahlvorstand } from "@/types/wahlvorstand/Wahlvorstand.ts";
+import type { Wahlvorstandsmitglied } from "@/types/wahlvorstand/Wahlvorstandsmitglied.ts";
+
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+
+import { WahlvorstandsmitgliedDTOFunktionEnum } from "@/api/wls-clients/generated-wahlvorstand-api";
+import { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion.ts";
+
+const {
+  generateRandomBoolean,
+  generateRandomString,
+  generateRandomDateTimeAsString,
+  getRandomItem,
+} = useCommonTestDataFactory();
+
+const wahlvorstandsmitgliedDTOFunktionEnumValues = Object.values(
+  WahlvorstandsmitgliedDTOFunktionEnum
+);
+const wahlvorstandsmitgliedFunktionEnumValues = Object.values(
+  WahlvorstandsmitgliedFunktionEnum
+);
+
+export function useWahlvorstandTestDataFactory() {
+  function createWahlvorstand(): Wahlvorstand {
+    return {
+      wahlvorstandsmitglieder: [],
+    };
+  }
+  function createWahlvorstandDTO(): WahlvorstandDTO {
+    return {
+      wahlbezirkID: generateRandomString(10),
+      wahlvorstandsmitglieder: [
+        createWahlvorstandsmitgliedDTO(),
+        createWahlvorstandsmitgliedDTO(),
+        createWahlvorstandsmitgliedDTO(),
+      ],
+      anwesenheitBeginn: generateRandomDateTimeAsString(),
+    };
+  }
+
+  function createWahlvorstandsmitglied(): Wahlvorstandsmitglied {
+    return {
+      familienname: generateRandomString(10),
+      anwesend: true,
+      vorname: generateRandomString(10),
+      funktion: getRandomItem(wahlvorstandsmitgliedFunktionEnumValues),
+      identifikator: generateRandomString(10),
+    };
+  }
+
+  function createWahlvorstandsmitgliedDTO(): WahlvorstandsmitgliedDTO {
+    return {
+      funktion: getRandomItem(wahlvorstandsmitgliedDTOFunktionEnumValues),
+      anwesend: generateRandomBoolean(),
+      familienname: generateRandomString(10),
+      identifikator: generateRandomString(10),
+      vorname: generateRandomString(10),
+    };
+  }
+
+  return {
+    createWahlvorstand,
+    createWahlvorstandDTO,
+    createWahlvorstandsmitglied,
+    createWahlvorstandsmitgliedDTO,
+  };
+}

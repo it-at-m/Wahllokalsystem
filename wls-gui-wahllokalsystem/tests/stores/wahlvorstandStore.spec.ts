@@ -372,7 +372,7 @@ describe("wahlvorstandStore.ts", () => {
     });
   });
 
-  describe("loadWahlvorstand", () => {
+  describe("loadWahlvorstandWithUpdate", () => {
     it("should_setWahlvorstand_when_userHasWahlbezirkID", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
@@ -384,9 +384,12 @@ describe("wahlvorstandStore.ts", () => {
         WahlvorstandBuilder.createEmptyWahlvorstand();
       mockDefinitions.getWahlvorstand.mockReturnValue(mockedGetWahlvorstand);
 
-      await unitUnderTest.loadWahlvorstand();
+      await unitUnderTest.loadWahlvorstandWithUpdate();
 
       expect(unitUnderTest.wahlvorstand).toStrictEqual(mockedGetWahlvorstand);
+      expect(mockDefinitions.getWahlvorstand.mock.calls).toStrictEqual([
+        [wahlbezirkID, true],
+      ]);
     });
 
     it("should_setLastLoading_when_wahlvorstandIsLoaded", async () => {
@@ -402,7 +405,7 @@ describe("wahlvorstandStore.ts", () => {
 
       expect(unitUnderTest.lastLoading).toBeNull();
 
-      await unitUnderTest.loadWahlvorstand();
+      await unitUnderTest.loadWahlvorstandWithUpdate();
 
       expect(unitUnderTest.lastLoading).toStrictEqual(mockedNow);
     });
@@ -420,7 +423,7 @@ describe("wahlvorstandStore.ts", () => {
 
       expect(unitUnderTest.lastLoading).toBeNull();
 
-      await expect(unitUnderTest.loadWahlvorstand()).rejects.toThrow(
+      await expect(unitUnderTest.loadWahlvorstandWithUpdate()).rejects.toThrow(
         "API Error"
       );
 
@@ -437,7 +440,7 @@ describe("wahlvorstandStore.ts", () => {
       const userStore = useUserStore();
       userStore.setUser(user);
 
-      await unitUnderTest.loadWahlvorstand();
+      await unitUnderTest.loadWahlvorstandWithUpdate();
 
       expect(mockDefinitions.getWahlvorstand).toHaveBeenCalledTimes(0);
       expect(unitUnderTest.lastLoading).toBeNull();

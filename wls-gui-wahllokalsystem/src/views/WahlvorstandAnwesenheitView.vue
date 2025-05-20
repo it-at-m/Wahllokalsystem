@@ -20,7 +20,7 @@
       />
     </v-card-text>
     <v-card-actions>
-      <base-button-refresh @click="loadWahlvorstand()" />
+      <base-button-refresh @click="loadWahlvorstandWithUpdate()" />
       <base-button-save
         :disabled="!isWahlvorstandAusreichendAnwesend"
         active
@@ -44,7 +44,7 @@ import TheWahlvorstandLatestLoadDiv from "@/components/wahlvorstand/TheWahlvorst
 import TheWahlvorstandMitgliederTable from "@/components/wahlvorstand/TheWahlvorstandMitgliederTable.vue";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 
-const { loadWahlvorstand, sendWahlvorstand } = useWahlvorstandStore();
+const { loadWahlvorstandWithUpdate, sendWahlvorstand } = useWahlvorstandStore();
 
 const { isWahlvorstandAusreichendAnwesend, lastLoading, lastSending } =
   storeToRefs(useWahlvorstandStore());

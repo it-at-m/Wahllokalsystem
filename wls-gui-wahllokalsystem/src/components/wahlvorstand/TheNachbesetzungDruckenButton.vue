@@ -21,7 +21,7 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 
-const { loadWahlvorstand, sendWahlvorstand } = useWahlvorstandStore();
+const { loadWahlvorstandWithUpdate, sendWahlvorstand } = useWahlvorstandStore();
 const { buildTemplateFromData } = useWahlvorstandNachbesetzungsDruck();
 const { toHhMm } = useDateTimeFormatter();
 
@@ -32,7 +32,7 @@ const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
 
 function onNachbesetzungDruckenClicked() {
   sendWahlvorstand();
-  loadWahlvorstand();
+  loadWahlvorstandWithUpdate();
   _openPrintDialog();
 }
 

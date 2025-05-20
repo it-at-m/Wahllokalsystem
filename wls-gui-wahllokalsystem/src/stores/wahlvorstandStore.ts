@@ -57,10 +57,10 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
       isMindestanwesenheitErreicht.value
   );
 
-  async function loadWahlvorstand() {
+  async function loadWahlvorstandWithUpdate() {
     const wahlbezirkID = currentUserWahlbezirkID.value;
     if (wahlbezirkID) {
-      wahlvorstand.value = await getWahlvorstand(wahlbezirkID);
+      wahlvorstand.value = await getWahlvorstand(wahlbezirkID, true);
       lastLoading.value = new Date();
     }
   }
@@ -96,7 +96,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     lastSending,
     wahlvorstand,
     changeAnwesendOfMitglied,
-    loadWahlvorstand,
+    loadWahlvorstandWithUpdate,
     sendWahlvorstand,
   };
 });

@@ -1,17 +1,19 @@
 <template>
   <v-icon
+    v-if="currentUserWahlbezirksArt"
     :icon="wahlartIcon"
     size="large"
   />
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { computed } from "vue";
 import { VIcon } from "vuetify/components";
 
 import { useUserStore } from "@/stores/userStore.ts";
 
-const userStore = useUserStore();
+const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
 
 const iconMap = {
   UWB: "$wahlbezirksartUWB",
@@ -19,7 +21,8 @@ const iconMap = {
 };
 
 const wahlartIcon = computed(() => {
-  const wahlbezirkArt = userStore.getUser?.wahlbezirksArt ?? "BWB";
-  return iconMap[wahlbezirkArt];
+  return currentUserWahlbezirksArt.value
+    ? iconMap[currentUserWahlbezirksArt.value]
+    : "";
 });
 </script>

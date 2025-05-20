@@ -38,7 +38,7 @@ export function useUserTestDataFactory() {
       wahlMetaData: _mapDtoWbIdWahlnummerToModelWahlMetaData(
         userDto.wbid_wahlnummer
       ),
-    };
+    } as User;
   }
 
   function _createUserWithDefaultValues(): User {
@@ -64,7 +64,7 @@ export function useUserTestDataFactory() {
   function _mapDtoWbIdWahlnummerToModelWahlMetaData(
     wbid_wahlnummer: string
   ): WahlMetaData[] {
-    return JSON.parse(wbid_wahlnummer);
+    return JSON.parse(wbid_wahlnummer).wbid_wahlnummer;
   }
 
   return {

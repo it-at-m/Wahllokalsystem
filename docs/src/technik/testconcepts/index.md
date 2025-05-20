@@ -17,7 +17,7 @@ könnten optional einen Review unterzogen werden.
 
 Wie: Die Workflows stellen eine syntaktische Funktionsfähigkeit der Anwendung fest, sowie die Einhaltung eines definierten
 Stils. Reviewer prüfen die Einhaltung der Definition of Done sowie eine korrekte, vollständige und effiziente Umsetzung.
-In der Regel muss für das Review der Code lokal ausgecheckt werden. Feedback ist über Github zu geben.
+In der Regel muss für das Review der Code lokal ausgecheckt werden. Feedback ist im Pull-Request zu geben.
 
 Verantwortung: Entwicklungsteam
 
@@ -35,7 +35,7 @@ erfolgt.
 
 Verantwortung: Entwicklungsteam
 
-Ausführung: Am Ende jedes Sprints auf der Testumgebung
+Ausführung: Am Ende jedes Sprints auf der Umgebung für die Demo
 
 ## Bedarfsgesteuerte Tests
 

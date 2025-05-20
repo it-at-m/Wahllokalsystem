@@ -5,6 +5,11 @@
 Die folgenden Teststufen werden durch die Workflows automatisiert durchlaufen. Bevor ein Pull-Requests gemergt wird
 müssen alle Teststufen erfolgreich durchlaufen sein.
 
+Die Tests werden mittels JUnit5 und AssertJ geschrieben.
+
+Die [Architekturtests](#architekturtests) sind die einzigen Tests die bei einer Implementierung eines Features
+aktualisiert werden.
+
 ### Unittests
 
 Ziel: Sicherstellen der fachlichen Funktionalität einer Klasse
@@ -39,7 +44,7 @@ Was:
 - Neue oder geänderte Berechtigungen, von Methoden bei Services oder Repositories
 - Neue oder geänderte Berechtigungen, aufgrund von neuen oder geänderten Abhängigkeiten
 
-Wie: Durch JUnit-Tests in `service.<Domain>SecurityTest`. Der erfolgreiche Zugriff, sowie die Zugriffsverweigerung
+Wie: Durch Anpassungen in `service.<Domain>SecurityTest`. Der erfolgreiche Zugriff, sowie die Zugriffsverweigerung
 sind zu prüfen.
 Gibt es mehrere erforderliche Berechtigungen müssen alle Kombinationen geprüft werden.
 Die korrekte logische Verknüpfung der Berechtigungen muss dabei beachtet werden.
@@ -55,10 +60,10 @@ die Komponenten des Microservices korrekt zusammenarbeiten.
 Was: Stellvertretende positive wie negative Testfälle einer fachlichen Anforderung eines Services. Überprüfung
 des korrekten Umgangs mit Exceptions.
 
-Wie: Durch JUnit-Tests in `rest.<Domain>ControllerIntegrationTest`, welche Zugriff auf die Endpunkte unter Verwendung der
+Wie: Durch Anpassungen in `rest.<Domain>ControllerIntegrationTest`, welche Zugriff auf die Endpunkte unter Verwendung der
 jeweiligen Authentifizierung durchführen.
-Eine vollständige Abdeckung alle fachlichen Szenarien ist nicht erforderlich, da durch die Unittests der Services
-alle relevanten Szenarien überprüft werden.
+Eine vollständige Abdeckung alle fachlichen Szenarien ist nicht erforderlich, weil dies durch die Unittests der Services
+sichergestellt wird.
 
 Verantwortung: Entwicklerin, die die elementare Änderung an der Fachlichkeit implementiert hat
 
@@ -68,7 +73,7 @@ Ziel: Sicherstellen, dass formalisierte Regeln der Architektur eingehalten wurde
 
 Was: Die Regeln, die für den Service als relevant definiert wurden
 
-Wie: Durch JUnit-Tests in `ArchUnitTest`, unter Verwendung von Regeln aus `wls-common` und speziell für den Service
+Wie: Durch Anpassungen in `ArchUnitTest`, unter Verwendung von Regeln aus `wls-common` und speziell für den Service
 erstellte Regeln. Bei der Implementierung von Anforderungen sind in der Regel keine Anpassungen an den Architekturtests
 vorzunehmen. Mit den Architekturtests wird aber sichergestellt, dass die Implementierung sich an die definierten Regeln hält.
 

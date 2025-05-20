@@ -21,8 +21,8 @@ const iconMap = {
 };
 
 const wahlartIcon = computed(() => {
-  if (currentUserWahlbezirksArt.value) {
-    return iconMap[currentUserWahlbezirksArt.value];
-  }
+  return currentUserWahlbezirksArt.value
+    ? iconMap[currentUserWahlbezirksArt.value]
+    : "";
 });
 </script>

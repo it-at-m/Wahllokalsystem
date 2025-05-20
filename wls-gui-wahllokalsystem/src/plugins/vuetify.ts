@@ -8,6 +8,7 @@ import {
   mdiHome,
   mdiInformationOutline,
   mdiPlus,
+  mdiPlusCircle,
   mdiPrinter,
   mdiReload,
   mdiRoutes,
@@ -44,6 +45,7 @@ export default createVuetify({
       wahlbezirksartUWB: mdiVote,
       wahlbezirksartBWB: mdiEmail,
       information: mdiInformationOutline,
+      addCircle: mdiPlusCircle,
     },
     sets: {
       mdi,

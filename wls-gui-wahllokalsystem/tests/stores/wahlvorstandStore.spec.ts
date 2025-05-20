@@ -407,6 +407,26 @@ describe("wahlvorstandStore.ts", () => {
       expect(unitUnderTest.lastLoading).toStrictEqual(mockedNow);
     });
 
+    it("should_notUpdateLastLoading_when_getWahlvorstandFails", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      const user = new User();
+      user.wahlbezirkID = wahlbezirkID;
+      userStore.setUser(user);
+
+      mockDefinitions.getWahlvorstand.mockImplementationOnce(() => {
+        throw new Error("API Error");
+      });
+
+      expect(unitUnderTest.lastLoading).toBeNull();
+
+      await expect(unitUnderTest.loadWahlvorstand()).rejects.toThrow(
+        "API Error"
+      );
+
+      expect(unitUnderTest.lastLoading).toBeNull();
+    });
+
     it.each([
       { user: null, when: "userIsNull" },
       {

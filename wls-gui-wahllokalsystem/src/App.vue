@@ -168,6 +168,7 @@ import {
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
+import { useMonitoringCronjobService } from "@/composables/monitoring/monitoringCronjobService.ts";
 import {
   EXAMPLE_ROUTES_NEWROUTE,
   EXAMPLE_VALIDATION,
@@ -178,6 +179,7 @@ import {
   TOAST,
 } from "@/constants";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
+import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
@@ -186,9 +188,12 @@ const { loadEreignisse } = useEreignisStore();
 const { loadUser } = useUserStore();
 const { loadWahlvorstand } = useWahlvorstandStore();
 const { initTasks } = useTaskManagerStore();
+const { loadWaehler } = useMonitoringStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
+const { startWahlbeteiligungInterval, stopWahlbeteiligungInterval } =
+  useMonitoringCronjobService();
 
 const [drawer, toggleDrawer] = useToggle();
 const isOffline = ref(false);
@@ -199,6 +204,8 @@ onMounted(async () => {
     startBroadcastMessageInterval();
     initTasks();
     loadEreignisse();
+    loadWaehler();
+    startWahlbeteiligungInterval();
   });
 
   // config for service worker indexed db (same config as in wahl-worker.js !)
@@ -213,6 +220,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   stopBroadcastMessageInterval();
+  stopWahlbeteiligungInterval();
 });
 </script>
 

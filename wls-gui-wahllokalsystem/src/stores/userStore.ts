@@ -30,8 +30,25 @@ export const useUserStore = defineStore("user", () => {
     return user.value?.wahltagID;
   });
 
-  const currentUserWahlbezirksArt = computed((): WahlbezirksArtEnum => {
-    return user.value?.wahlbezirksArt ?? WahlbezirksArtEnum.BWB;
+  const currentUserWahlbezirksArt = computed(
+    (): WahlbezirksArtEnum | undefined => {
+      return user.value?.wahlbezirksArt;
+    }
+  );
+
+  const currentUserWahlbezirkNummer = computed((): string | undefined => {
+    return user.value?.wahlbezirkNummer;
+  });
+
+  const currentUserHauptWahlID = computed((): string | undefined => {
+    const smallestWbidWahlnummerObject = user.value?.wahlMetaData?.reduce(
+      (smallest, current) => {
+        return parseInt(current.wahlnummer) < parseInt(smallest.wahlnummer)
+          ? current
+          : smallest;
+      }
+    );
+    return smallestWbidWahlnummerObject?.wahlID;
   });
 
   function setUser(payload: User | null): void {
@@ -45,6 +62,8 @@ export const useUserStore = defineStore("user", () => {
     currentUserWahlbezirkID,
     currentUserWahltagID,
     currentUserWahlbezirksArt,
+    currentUserWahlbezirkNummer,
+    currentUserHauptWahlID,
   };
 });
 

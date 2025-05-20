@@ -17,9 +17,14 @@ export function useUserMapper() {
     user.pin = userDto.pin ?? "";
     user.authorities = userDto.authorities ?? new Set<string>();
     try {
-      user.wahlMetaData = userDto.wbid_wahlnummer
+      const parsed_wbid_wahlnummer = userDto.wbid_wahlnummer
         ? JSON.parse(userDto.wbid_wahlnummer)
         : undefined;
+
+      user.wahlMetaData =
+        parsed_wbid_wahlnummer && parsed_wbid_wahlnummer.wbid_wahlnummer
+          ? parsed_wbid_wahlnummer.wbid_wahlnummer
+          : undefined;
     } catch {
       console.debug("failed to parse JSON wbid_wahlnummer");
       user.wahlMetaData = undefined;

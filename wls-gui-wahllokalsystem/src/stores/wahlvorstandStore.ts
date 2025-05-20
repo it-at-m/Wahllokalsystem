@@ -29,6 +29,8 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   );
   const lastLoading = ref<Date | null>(null);
   const lastSending = ref<Date | null>(null);
+  const isLoading = ref(false);
+  const isSaving = ref(false);
 
   const isSchriftfuehrerAnwesend = computed<boolean>(() =>
     wahlvorstand.value.wahlvorstandsmitglieder.some(
@@ -58,21 +60,31 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   );
 
   async function loadWahlvorstand() {
-    const wahlbezirkID = currentUserWahlbezirkID.value;
-    if (wahlbezirkID) {
-      wahlvorstand.value = await getWahlvorstand(wahlbezirkID);
-      lastLoading.value = new Date();
+    isLoading.value = true;
+    try {
+      const wahlbezirkID = currentUserWahlbezirkID.value;
+      if (wahlbezirkID) {
+        wahlvorstand.value = await getWahlvorstand(wahlbezirkID);
+        lastLoading.value = new Date();
+      }
+    } finally {
+      isLoading.value = false;
     }
   }
 
   async function sendWahlvorstand() {
-    const wahlbezirkID = currentUserWahlbezirkID.value;
-    if (wahlbezirkID) {
-      const { updateDatetime } = await saveWahlvorstand(
-        wahlbezirkID,
-        wahlvorstand.value
-      );
-      lastSending.value = updateDatetime;
+    isSaving.value = true;
+    try {
+      const wahlbezirkID = currentUserWahlbezirkID.value;
+      if (wahlbezirkID) {
+        const { updateDatetime } = await saveWahlvorstand(
+          wahlbezirkID,
+          wahlvorstand.value
+        );
+        lastSending.value = updateDatetime;
+      }
+    } finally {
+      isSaving.value = false;
     }
   }
 
@@ -94,6 +106,8 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     isWahlvorsteherAnwesend,
     lastLoading,
     lastSending,
+    isLoading,
+    isSaving,
     wahlvorstand,
     changeAnwesendOfMitglied,
     loadWahlvorstand,

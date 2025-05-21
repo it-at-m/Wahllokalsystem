@@ -44,5 +44,18 @@ describe("konfigurationsparameterMapper.ts", () => {
 
       expect(result).toStrictEqual(expectedModel);
     });
+
+    it("should_returnModelWithDefaultValues_when_givenDtoWithMissingProperties", () => {
+      const dto: KonfigurationDTO[] = [
+        { schluessel: "123", standardwert: "456" },
+      ];
+      const expectedModel: Konfigurationsparameter[] = [
+        { beschreibung: "", schluessel: "123", standardwert: "456", wert: "" },
+      ];
+
+      const result = toModel(dto);
+
+      expect(result).toStrictEqual(expectedModel);
+    });
   });
 });

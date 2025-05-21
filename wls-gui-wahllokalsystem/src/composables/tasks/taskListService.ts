@@ -1,10 +1,12 @@
 import type { Task } from "@/types/tasks/Task.ts";
 
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 export function useTaskListService() {
-  const wahlenStore = useWahlenStore();
+  const { initWahlen } = useWahlenStore();
+  const { initKonfigurationsparameter } = useInfomanagementStore();
 
   function getTaskList(): Task[] {
     return [
@@ -18,7 +20,21 @@ export function useTaskListService() {
         ],
         onlyForAllWVaehlerverzeichnisse: undefined,
         callback: () => {
-          return wahlenStore.initWahlen(false);
+          return initWahlen(false);
+        },
+      },
+      {
+        name: "Konfigurationsparameter",
+        // todo: welche konfig muss hier rein?
+        onlyForWahlbezirksart: undefined,
+        onlyForWahlen: [
+          WahlWahlartEnum.Obw,
+          WahlWahlartEnum.Bzw,
+          WahlWahlartEnum.Srw,
+        ],
+        onlyForAllWVaehlerverzeichnisse: undefined,
+        callback: () => {
+          return initKonfigurationsparameter(false);
         },
       },
     ];

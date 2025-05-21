@@ -1,3 +1,4 @@
+import { storeToRefs } from "pinia";
 import { createRouter, createWebHashHistory } from "vue-router";
 
 import ExampleDynamicComponent from "@/components/ExampleDynamicComponent.vue";
@@ -13,6 +14,7 @@ import {
   ROUTES_HOME,
   TOAST,
 } from "@/constants";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import EreignisseView from "@/views/EreignisseView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
@@ -92,8 +94,16 @@ const router = createRouter({
 });
 
 router.beforeEach((to) => {
-  const wahlenStore = useWahlenStore();
-  if (to.name != ROUTES_HOME && !wahlenStore.wahlenReady) {
+  const { wahlenReady } = storeToRefs(useWahlenStore());
+  const { konfigurationsparameterReady } = storeToRefs(
+    useInfomanagementStore()
+  );
+
+  if (
+    to.name != ROUTES_HOME &&
+    !wahlenReady.value &&
+    !konfigurationsparameterReady.value
+  ) {
     return { name: ROUTES_HOME };
   }
 });

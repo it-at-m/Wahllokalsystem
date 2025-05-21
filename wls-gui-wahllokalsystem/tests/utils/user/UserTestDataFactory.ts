@@ -1,11 +1,11 @@
 import type { UserDTO } from "@/api/wls-clients/generated-auth-api";
+import type { User } from "@/types/User.ts";
 import type { WahlMetaData } from "@/types/wlsTypes/WahlMetaData.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
 import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
-import { User } from "@/types/User.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const {
@@ -38,11 +38,23 @@ export function useUserTestDataFactory() {
       wahlMetaData: _mapDtoWbIdWahlnummerToModelWahlMetaData(
         userDto.wbid_wahlnummer
       ),
-    } as User;
+    };
   }
 
   function _createUserWithDefaultValues(): User {
-    return new User();
+    return {
+      username: "",
+      email: "",
+      userEnabled: false,
+      wahltagID: "",
+      wahltag: "",
+      wahlbezirkID: "",
+      wahlbezirkNummer: "",
+      wahlbezirksArt: undefined,
+      pin: "",
+      authorities: new Set<string>(),
+      wahlMetaData: undefined,
+    };
   }
 
   function _createUserDtoWithRandomValues(): UserDTO {

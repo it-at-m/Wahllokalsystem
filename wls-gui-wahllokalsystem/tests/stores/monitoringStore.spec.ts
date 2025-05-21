@@ -2,7 +2,7 @@ import type { Waehleranzahl } from "@/types/monitoring/Waehleranzahl.ts";
 
 import { createTestingPinia } from "@pinia/testing";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
-import { useUserTestDataFactory } from "@tests/utils/common/UserTestDataFactory.ts";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
@@ -22,10 +22,7 @@ vi.mock("@/composables/monitoring/monitoringService", () => ({
 }));
 
 const mockedNow = new Date();
-const {
-  createUserWithUndefinedWahlbezirkID,
-  createUserWithRandomWahlbezirkID,
-} = useUserTestDataFactory();
+const { prepareUser } = useUserTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();
 
 describe("monitoringStore.ts", () => {
@@ -63,7 +60,7 @@ describe("monitoringStore.ts", () => {
     it.each([
       { user: null, when: "userIsNull" },
       {
-        user: createUserWithUndefinedWahlbezirkID(),
+        user: prepareUser().wahlbezirkID(undefined).build(),
         when: "usersWahlbezirkIdIsUndefined",
       },
     ])("should_notLoadWaehleranzahl_when_$when", async ({ user }) => {
@@ -76,7 +73,7 @@ describe("monitoringStore.ts", () => {
     });
 
     it("should_notLoadWaehleranzahl_when_usersHauptWahlIDIsUndefined", async () => {
-      userStore.setUser(createUserWithRandomWahlbezirkID());
+      userStore.setUser(prepareUser().wahlbezirkID("ich bin eine id").build());
       // @ts-expect-error: cannot set readonly
       userStore.currentUserHauptWahlID = undefined;
 
@@ -87,7 +84,7 @@ describe("monitoringStore.ts", () => {
     });
 
     it("should_loadWaehleranzahl_when_userHasWahlbezirkIDAndHauptWahlID", async () => {
-      userStore.setUser(createUserWithRandomWahlbezirkID());
+      userStore.setUser(prepareUser().wahlbezirkID("ich bin eine id").build());
       // @ts-expect-error: cannot set readonly
       userStore.currentUserHauptWahlID = generateRandomString(10);
 
@@ -112,7 +109,7 @@ describe("monitoringStore.ts", () => {
     it.each([
       { user: null, when: "userIsNull" },
       {
-        user: createUserWithUndefinedWahlbezirkID(),
+        user: prepareUser().wahlbezirkID(undefined).build(),
         when: "usersWahlbezirkIdIsUndefined",
       },
     ])("should_notSendWaehleranzahl_when_$when", async ({ user }) => {
@@ -125,7 +122,7 @@ describe("monitoringStore.ts", () => {
     });
 
     it("should_notSendWaehleranzahl_when_usersHauptWahlIDIsUndefined", async () => {
-      userStore.setUser(createUserWithRandomWahlbezirkID());
+      userStore.setUser(prepareUser().wahlbezirkID("ich bin eine id").build());
       // @ts-expect-error: cannot set readonly
       userStore.currentUserHauptWahlID = undefined;
 
@@ -136,7 +133,7 @@ describe("monitoringStore.ts", () => {
     });
 
     it("should_sendWaehleranzahl_when_userHasWahlbezirkIDAndHauptWahlID", async () => {
-      userStore.setUser(createUserWithRandomWahlbezirkID());
+      userStore.setUser(prepareUser().wahlbezirkID("ich bin eine id").build());
       // @ts-expect-error: cannot set readonly
       userStore.currentUserHauptWahlID = generateRandomString(10);
 

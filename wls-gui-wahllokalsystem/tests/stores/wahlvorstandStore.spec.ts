@@ -10,7 +10,6 @@ import {
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
-import { User } from "@/types/User";
 import { WahlvorstandBuilder } from "@/types/wahlvorstand/Wahlvorstand";
 import { WahlvorstandsmitgliedBuilder } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
 import { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion.ts";
@@ -422,7 +421,7 @@ describe("wahlvorstandStore.ts", () => {
     it.each([
       { user: null, when: "userIsNull" },
       {
-        user: createUser(undefined),
+        user: prepareUser().wahlbezirkID(undefined).build(),
         when: "usersWahlbezirkIdIsUndefined",
       },
     ])("should_notLoadWahlvorstand_when_$when", async ({ user }) => {

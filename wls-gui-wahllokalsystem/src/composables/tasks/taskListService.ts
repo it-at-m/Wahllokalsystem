@@ -25,13 +25,8 @@ export function useTaskListService() {
       },
       {
         name: "Konfigurationsparameter",
-        // todo: welche konfig muss hier rein?
         onlyForWahlbezirksart: undefined,
-        onlyForWahlen: [
-          WahlWahlartEnum.Obw,
-          WahlWahlartEnum.Bzw,
-          WahlWahlartEnum.Srw,
-        ],
+        onlyForWahlen: undefined,
         onlyForAllWVaehlerverzeichnisse: undefined,
         callback: () => {
           return initKonfigurationsparameter(false);

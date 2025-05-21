@@ -13,9 +13,17 @@ export const useInfomanagementStore = defineStore(storeID, () => {
   const konfigurationsparameterReady = ref(false);
 
   async function initKonfigurationsparameter(sendNotification = true) {
-    konfigurationsparameter.value =
-      await getKonfigurationsparameter(sendNotification);
-    konfigurationsparameterReady.value = true;
+    try {
+      konfigurationsparameter.value =
+        await getKonfigurationsparameter(sendNotification);
+      konfigurationsparameterReady.value =
+        !!konfigurationsparameter.value &&
+        konfigurationsparameter.value.length > 0;
+    } catch (error) {
+      konfigurationsparameter.value = null;
+      konfigurationsparameterReady.value = false;
+      throw error;
+    }
   }
 
   return {

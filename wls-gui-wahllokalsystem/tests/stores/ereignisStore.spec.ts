@@ -1,5 +1,6 @@
 import { createTestingPinia } from "@pinia/testing";
 import { spyOn } from "@storybook/test";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useVorfaelleundvorkommnisseTestDateFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDateFactory.ts";
 import { flushPromises } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -8,7 +9,6 @@ import { nextTick } from "vue";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
-import { User } from "@/types/User";
 import * as ImportAllFromEreignisArt from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
@@ -28,6 +28,7 @@ vi.mock("@/composables/vorfaelleundvorkommnisse/ereignisService", () => ({
 const mockedNow = new Date();
 
 const { createEreignis } = useVorfaelleundvorkommnisseTestDateFactory();
+const { prepareUser } = useUserTestDataFactory();
 
 describe("ereignisStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useEreignisStore>;
@@ -244,9 +245,7 @@ describe("ereignisStore.ts", () => {
     it("should_addEreignisToWahlbezirkEreignisse_when_ereignisIsAdded", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
         ImportAllFromEreignisArt,
@@ -334,9 +333,7 @@ describe("ereignisStore.ts", () => {
     it("should_loadWahlbezirkEreignisse_when_userHasWahlbezirkID", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       const mockedWahlbezirkEreignisse =
         WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse();
@@ -352,7 +349,7 @@ describe("ereignisStore.ts", () => {
     it.each([
       { user: null, when: "userIsNull" },
       {
-        user: createUser(undefined),
+        user: prepareUser().wahlbezirkID(undefined).build(),
         when: "usersWahlbezirkIdIsUndefined",
       },
     ])("should_notLoadWahlbezirkEreignisse_when_$when", async ({ user }) => {
@@ -370,9 +367,7 @@ describe("ereignisStore.ts", () => {
     it("should_handleError_when_getEreignisseThrowsError", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       const mockedError = new Error("Network error");
       mockDefinitions.getEreignisse.mockRejectedValue(mockedError);
@@ -386,9 +381,7 @@ describe("ereignisStore.ts", () => {
     it("should_sendEreignisse_when_wahlbezirkIDIsGiven", () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       const mockedDatetime = new Date();
 
@@ -406,9 +399,7 @@ describe("ereignisStore.ts", () => {
 
     it("should_notsendEreignisse_when_wahlbezirkIDIsNotGiven", async () => {
       const userStore = useUserStore();
-      const user = new User();
-      user.wahlbezirkID = undefined;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(undefined).build());
 
       await unitUnderTest.sendEreignisse();
 
@@ -647,12 +638,3 @@ describe("ereignisStore.ts", () => {
     });
   });
 });
-
-function createUser(wahlbezirkID: string | undefined): User {
-  //TODO create Issue to use interface for User and provide BuilderImpl-Class => #853
-  const user = new User();
-
-  user.wahlbezirkID = wahlbezirkID;
-
-  return user;
-}

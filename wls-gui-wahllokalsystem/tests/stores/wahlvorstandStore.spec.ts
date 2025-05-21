@@ -1,4 +1,5 @@
 import { createTestingPinia } from "@pinia/testing";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { createPinia, setActivePinia, storeToRefs } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -9,7 +10,6 @@ import {
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
-import { User } from "@/types/User";
 import { WahlvorstandBuilder } from "@/types/wahlvorstand/Wahlvorstand";
 import { WahlvorstandsmitgliedBuilder } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
 import { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion.ts";
@@ -41,6 +41,7 @@ vi.mock("@/composables/wahlvorstand/wahlvorstandService", () => ({
 }));
 
 const mockedNow = new Date();
+const { prepareUser } = useUserTestDataFactory();
 
 describe("wahlvorstandStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useWahlvorstandStore>;
@@ -322,9 +323,7 @@ describe("wahlvorstandStore.ts", () => {
     it("should_sendWahlvorstand_when_wahlbezirkIDIsGiven", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       const mockedDatetime = new Date();
 
@@ -343,9 +342,7 @@ describe("wahlvorstandStore.ts", () => {
     it("should_setLastSend_when_wahlvorstandIsSent", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       expect(unitUnderTest.lastSending).toBeNull();
 
@@ -362,9 +359,7 @@ describe("wahlvorstandStore.ts", () => {
 
     it("should_notSendWahlvorstand_when_wahlbezirkIDIsNotGiven", async () => {
       const userStore = useUserStore();
-      const user = new User();
-      user.wahlbezirkID = undefined;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(undefined).build());
 
       await unitUnderTest.sendWahlvorstand();
 
@@ -376,9 +371,7 @@ describe("wahlvorstandStore.ts", () => {
     it("should_setWahlvorstand_when_userHasWahlbezirkID", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       const mockedGetWahlvorstand =
         WahlvorstandBuilder.createEmptyWahlvorstand();
@@ -392,9 +385,7 @@ describe("wahlvorstandStore.ts", () => {
     it("should_setLastLoading_when_wahlvorstandIsLoaded", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       const mockedGetWahlvorstand =
         WahlvorstandBuilder.createEmptyWahlvorstand();
@@ -410,9 +401,7 @@ describe("wahlvorstandStore.ts", () => {
     it("should_notUpdateLastLoading_when_getWahlvorstandFails", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       mockDefinitions.getWahlvorstand.mockImplementationOnce(() => {
         throw new Error("API Error");
@@ -430,7 +419,7 @@ describe("wahlvorstandStore.ts", () => {
     it.each([
       { user: null, when: "userIsNull" },
       {
-        user: createUser(undefined),
+        user: prepareUser().wahlbezirkID(undefined).build(),
         when: "usersWahlbezirkIdIsUndefined",
       },
     ])("should_notLoadWahlvorstand_when_$when", async ({ user }) => {
@@ -500,12 +489,3 @@ describe("wahlvorstandStore.ts", () => {
     }
   }
 });
-
-function createUser(wahlbezirkID: string | undefined): User {
-  //TODO create Issue to use interface for User and provide BuilderImpl-Class => #853
-  const user = new User();
-
-  user.wahlbezirkID = wahlbezirkID;
-
-  return user;
-}

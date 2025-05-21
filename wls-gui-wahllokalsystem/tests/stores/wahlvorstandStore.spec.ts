@@ -516,7 +516,7 @@ describe("wahlvorstandStore.ts", () => {
       expect(unitUnderTest.isLoading).toBe(false);
     });
 
-    it("should_setFalse_when_loadWahlvorstandFails", async () => {
+    it("should_updateIsLoading_when_loadWahlvorstandFails", async () => {
       const userStore = useUserStore();
       const user = createUser("wahlbezirkID");
       userStore.setUser(user);

@@ -22,7 +22,7 @@ export function useKonfigurationsparameterService() {
 
   async function getKonfigurationsparameter(
     sendNotification = true
-  ): Promise<Konfigurationsparameter[] | null> {
+  ): Promise<Konfigurationsparameter[]> {
     try {
       const response = await konfigurationControllerApi.getKonfigurations();
       return toModel(response.data as KonfigurationDTO[]); // todo: ist hier beim client der rückgabetyp falsch, dass da ein object statt dto kommt?

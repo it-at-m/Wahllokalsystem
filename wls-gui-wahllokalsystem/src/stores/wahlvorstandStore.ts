@@ -24,13 +24,13 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
   const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
 
+  const isLoading = ref(false);
+  const isSaving = ref(false);
+  const lastLoading = ref<Date | null>(null);
+  const lastSending = ref<Date | null>(null);
   const wahlvorstand = ref<Wahlvorstand>(
     WahlvorstandBuilder.createEmptyWahlvorstand()
   );
-  const lastLoading = ref<Date | null>(null);
-  const lastSending = ref<Date | null>(null);
-  const isLoading = ref(false);
-  const isSaving = ref(false);
 
   const isSchriftfuehrerAnwesend = computed<boolean>(() =>
     wahlvorstand.value.wahlvorstandsmitglieder.some(

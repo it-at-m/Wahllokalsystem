@@ -101,8 +101,7 @@ router.beforeEach((to) => {
 
   if (
     to.name != ROUTES_HOME &&
-    !wahlenReady.value &&
-    !konfigurationsparameterReady.value
+    (!wahlenReady.value || !konfigurationsparameterReady.value)
   ) {
     return { name: ROUTES_HOME };
   }

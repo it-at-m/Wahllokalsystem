@@ -517,20 +517,33 @@ describe("wahlvorstandStore.ts", () => {
     });
 
     it("should_updateIsLoading_when_loadWahlvorstandFails", async () => {
+      const timeout = 100;
       const userStore = useUserStore();
       const user = createUser("wahlbezirkID");
       userStore.setUser(user);
 
-      mockDefinitions.getWahlvorstand.mockImplementationOnce(() => {
-        throw new Error("API Error");
-      });
-
-      expect(unitUnderTest.isLoading).toBe(false);
-
-      await expect(unitUnderTest.loadWahlvorstand()).rejects.toThrow(
-        "API Error"
+      // Verzögerung API-Aufruf simulieren, um die Asynchronität zu testen
+      mockDefinitions.getWahlvorstand.mockReturnValue(
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            reject("Mocked API Error");
+          }, timeout);
+        })
       );
 
+      // vor dem API-Aufruf
+      expect(unitUnderTest.isLoading).toBe(false);
+
+      const promise = unitUnderTest.loadWahlvorstand();
+
+      // während des API-Aufrufs
+      expect(unitUnderTest.isLoading).toBe(true);
+
+      // Zeit vorstellen, um die Promise aufzulösen
+      vi.advanceTimersByTime(timeout);
+      await expect(promise).rejects.toThrow("Mocked API Error");
+
+      // nach dem API-Aufruf
       expect(unitUnderTest.isLoading).toBe(false);
     });
   });
@@ -568,20 +581,33 @@ describe("wahlvorstandStore.ts", () => {
     });
 
     it("should_updateIsSaving_when_sendWahlvorstandFails", async () => {
+      const timeout = 100;
       const userStore = useUserStore();
       const user = createUser("wahlbezirkID");
       userStore.setUser(user);
 
-      mockDefinitions.saveWahlvorstand.mockImplementationOnce(() => {
-        throw new Error("API Error");
-      });
-
-      expect(unitUnderTest.isSaving).toBe(false);
-
-      await expect(unitUnderTest.sendWahlvorstand()).rejects.toThrow(
-        "API Error"
+      // Verzögerung API-Aufruf simulieren, um die Asynchronität zu testen
+      mockDefinitions.saveWahlvorstand.mockReturnValue(
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            reject("Mocked API Error");
+          }, timeout);
+        })
       );
 
+      // vor dem API-Aufruf
+      expect(unitUnderTest.isSaving).toBe(false);
+
+      const promise = unitUnderTest.sendWahlvorstand();
+
+      // während des API-Aufrufs
+      expect(unitUnderTest.isSaving).toBe(true);
+
+      // Zeit vorstellen, um die Promise aufzulösen
+      vi.advanceTimersByTime(timeout);
+      await expect(promise).rejects.toThrow("Mocked API Error");
+
+      // nach dem API-Aufruf
       expect(unitUnderTest.isSaving).toBe(false);
     });
   });

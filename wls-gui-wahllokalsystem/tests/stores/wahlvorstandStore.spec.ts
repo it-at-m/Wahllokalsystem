@@ -567,7 +567,7 @@ describe("wahlvorstandStore.ts", () => {
       expect(unitUnderTest.isSaving).toBe(false);
     });
 
-    it("should_setFalse_when_sendWahlvorstandFails", async () => {
+    it("should_updateIsSaving_when_sendWahlvorstandFails", async () => {
       const userStore = useUserStore();
       const user = createUser("wahlbezirkID");
       userStore.setUser(user);

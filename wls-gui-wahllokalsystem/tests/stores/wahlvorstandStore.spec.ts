@@ -492,6 +492,118 @@ describe("wahlvorstandStore.ts", () => {
     });
   });
 
+  describe("isLoading", () => {
+    it("should_setTrue_when_loadWahlvorstandIsCalled", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      const user = new User();
+      user.wahlbezirkID = wahlbezirkID;
+      userStore.setUser(user);
+
+      const mockedDatetime = new Date();
+
+      // Verzögerung API-Aufruf simulieren, um die Asynchronität zu testen
+      mockDefinitions.getWahlvorstand.mockReturnValue(
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({ updateDatetime: mockedDatetime });
+          }, 100);
+        })
+      );
+
+      // vor dem API-Aufruf
+      expect(unitUnderTest.isLoading).toBe(false);
+
+      const promise = unitUnderTest.loadWahlvorstand();
+
+      // während des API-Aufrufs
+      expect(unitUnderTest.isLoading).toBe(true);
+
+      // Zeit vorstellen, um die Promise aufzulösen
+      vi.advanceTimersByTime(100);
+      await promise;
+
+      // nach dem API-Aufruf
+      expect(unitUnderTest.isLoading).toBe(false);
+    });
+
+    it("should_setFalse_when_loadWahlvorstandFails", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      const user = new User();
+      user.wahlbezirkID = wahlbezirkID;
+      userStore.setUser(user);
+
+      mockDefinitions.getWahlvorstand.mockImplementationOnce(() => {
+        throw new Error("API Error");
+      });
+
+      expect(unitUnderTest.isLoading).toBe(false);
+
+      await expect(unitUnderTest.loadWahlvorstand()).rejects.toThrow(
+        "API Error"
+      );
+
+      expect(unitUnderTest.isLoading).toBe(false);
+    });
+  });
+
+  describe("isSaving", () => {
+    it("should_setTrue_when_sendWahlvorstandIsCalled", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      const user = new User();
+      user.wahlbezirkID = wahlbezirkID;
+      userStore.setUser(user);
+
+      const mockedDatetime = new Date();
+
+      // Verzögerung API-Aufruf simulieren, um die Asynchronität zu testen
+      mockDefinitions.saveWahlvorstand.mockReturnValue(
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({ updateDatetime: mockedDatetime });
+          }, 100);
+        })
+      );
+
+      // vor dem API-Aufruf
+      expect(unitUnderTest.isSaving).toBe(false);
+
+      const promise = unitUnderTest.sendWahlvorstand();
+
+      // während des API-Aufrufs
+      expect(unitUnderTest.isSaving).toBe(true);
+
+      // Zeit vorstellen, um die Promise aufzulösen
+      vi.advanceTimersByTime(100);
+      await promise;
+
+      // nach dem API-Aufruf
+      expect(unitUnderTest.isSaving).toBe(false);
+    });
+
+    it("should_setFalse_when_sendWahlvorstandFails", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      const user = new User();
+      user.wahlbezirkID = wahlbezirkID;
+      userStore.setUser(user);
+
+      mockDefinitions.saveWahlvorstand.mockImplementationOnce(() => {
+        throw new Error("API Error");
+      });
+
+      expect(unitUnderTest.isSaving).toBe(false);
+
+      await expect(unitUnderTest.sendWahlvorstand()).rejects.toThrow(
+        "API Error"
+      );
+
+      expect(unitUnderTest.isSaving).toBe(false);
+    });
+  });
+
   function _addAnwesendeWahlvorstandsmitglieder(zahl: number) {
     for (let i = 1; i <= zahl; i++) {
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder.push(

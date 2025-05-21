@@ -5,6 +5,7 @@ import { createPinia, setActivePinia } from "pinia";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
 import pinia from "@/plugins/pinia";
 import { useUserStore } from "@/stores/userStore.ts";
+import { createUserLocalDevelopment } from "@/types/User.ts";
 
 const meta = {
   component: BaseIconWahlbezirksart,
@@ -27,25 +28,15 @@ type Story = StoryObj<typeof meta>;
 export const WahlbezirksartIsUWB: Story = {
   async beforeEach() {
     const store = useUserStore(pinia);
-    store.setUser({
-      username: "Local Development User",
-      email: "",
-      wahlbezirksArt: "UWB",
-      pin: "",
-      authorities: new Set<string>(),
-    });
+    store.setUser(createUserLocalDevelopment());
   },
 };
 
 export const WahlbezirksartIsBWB: Story = {
   async beforeEach() {
     const store = useUserStore(pinia);
-    store.setUser({
-      username: "Local Development User",
-      email: "",
-      wahlbezirksArt: "BWB",
-      pin: "",
-      authorities: new Set<string>(),
-    });
+    const user = createUserLocalDevelopment();
+    user.wahlbezirksArt = "BWB";
+    store.setUser(user);
   },
 };

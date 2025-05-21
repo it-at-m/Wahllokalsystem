@@ -14,6 +14,7 @@ export function useUserMapper() {
       wahlbezirksArt: userDto.wahlbezirksArt ?? undefined,
       pin: userDto.pin ?? "",
       authorities: userDto.authorities ?? new Set<string>(),
+      wahlMetaData: undefined,
     };
 
     try {

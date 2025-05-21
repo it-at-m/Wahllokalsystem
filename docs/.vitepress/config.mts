@@ -11,6 +11,8 @@ const PATH_GUIDES = PATH_TECHNIK + "guides/";
 const PATH_API_CLIENT_GENERATION = PATH_GUIDES + "api-client-generation/";
 const PATH_MICROSERVICE_GENERATION = PATH_GUIDES + "new-microservice/";
 const PATH_SYSSPEC = PATH_TECHNIK + "systemspecification/";
+const PATH_SYSSPEC_BACKEND = PATH_SYSSPEC + "backend/";
+const PATH_TESTCONCEPTS = PATH_TECHNIK + "testconcepts/";
 
 // https://vitepress.dev/reference/site-config
 export default withMermaid({
@@ -19,6 +21,11 @@ export default withMermaid({
   lang: "de-DE",
   base: "/Wahllokalsystem/",
   srcDir: "src", //markdown files are located in that directory
+  vite: {
+    ssr: {
+      noExternal: ["vuetify"],
+    },
+  },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
@@ -171,6 +178,13 @@ export default withMermaid({
             {
               text: "Backend",
               link: `${PATH_SYSSPEC}backend`,
+              collapsed: true,
+              items: [
+                {
+                  text: "Beziehungen",
+                  link: `${PATH_SYSSPEC_BACKEND}relations.md`,
+                },
+              ],
             },
             {
               text: "Frontend",
@@ -182,6 +196,17 @@ export default withMermaid({
                   link: `${PATH_SYSSPEC}frontend/offlinefaehigkeit-konzept.md`,
                 },
               ],
+            },
+          ],
+        },
+        {
+          text: "Testkonzepte",
+          link: `${PATH_TESTCONCEPTS}`,
+          collapsed: true,
+          items: [
+            {
+              text: "Backend",
+              link: `${PATH_TESTCONCEPTS}backend`,
             },
           ],
         },

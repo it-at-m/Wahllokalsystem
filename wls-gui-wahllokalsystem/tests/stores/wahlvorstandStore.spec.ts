@@ -485,7 +485,7 @@ describe("wahlvorstandStore.ts", () => {
   });
 
   describe("isLoading", () => {
-    it("should_setTrue_when_loadWahlvorstandIsCalled", async () => {
+    it("should_updateIsLoading_when_loadWahlvorstandIsCalled", async () => {
       const timeout = 100;
       const userStore = useUserStore();
       const user = createUser("wahlbezirkID");

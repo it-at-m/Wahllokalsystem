@@ -1,3 +1,5 @@
+import type { User } from "@/types/User.ts";
+
 import { createTestingPinia } from "@pinia/testing";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { createPinia, setActivePinia, storeToRefs } from "pinia";

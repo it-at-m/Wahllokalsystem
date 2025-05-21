@@ -23,10 +23,10 @@ export function useKonfigurationsparameterTestDataFactory() {
     const model: Konfigurationsparameter[] = [];
     for (const dto of dtos) {
       model.push({
-        beschreibung: dto.beschreibung,
-        schluessel: dto.schluessel,
-        standardwert: dto.standardwert,
-        wert: dto.wert,
+        beschreibung: dto.beschreibung ?? "",
+        schluessel: dto.schluessel ?? "",
+        standardwert: dto.standardwert ?? "",
+        wert: dto.wert ?? "",
       });
     }
     return model;

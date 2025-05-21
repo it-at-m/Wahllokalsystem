@@ -1,4 +1,5 @@
 import { createTestingPinia } from "@pinia/testing";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { createPinia, setActivePinia, storeToRefs } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -41,6 +42,7 @@ vi.mock("@/composables/wahlvorstand/wahlvorstandService", () => ({
 }));
 
 const mockedNow = new Date();
+const { prepareUser } = useUserTestDataFactory();
 
 describe("wahlvorstandStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useWahlvorstandStore>;
@@ -322,8 +324,7 @@ describe("wahlvorstandStore.ts", () => {
     it("should_sendWahlvorstand_when_wahlbezirkIDIsGiven", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
+      const user = createUser(wahlbezirkID);
       userStore.setUser(user);
 
       const mockedDatetime = new Date();
@@ -342,9 +343,7 @@ describe("wahlvorstandStore.ts", () => {
 
     it("should_setLastSend_when_wahlvorstandIsSent", async () => {
       const userStore = useUserStore();
-      const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
+      const user = createUser("wahlbezirkID");
       userStore.setUser(user);
 
       expect(unitUnderTest.lastSending).toBeNull();
@@ -362,8 +361,7 @@ describe("wahlvorstandStore.ts", () => {
 
     it("should_notSendWahlvorstand_when_wahlbezirkIDIsNotGiven", async () => {
       const userStore = useUserStore();
-      const user = new User();
-      user.wahlbezirkID = undefined;
+      const user = createUser(undefined);
       userStore.setUser(user);
 
       await unitUnderTest.sendWahlvorstand();
@@ -375,9 +373,7 @@ describe("wahlvorstandStore.ts", () => {
   describe("loadWahlvorstand", () => {
     it("should_setWahlvorstand_when_userHasWahlbezirkID", async () => {
       const userStore = useUserStore();
-      const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
+      const user = createUser("wahlbezirkID");
       userStore.setUser(user);
 
       const mockedGetWahlvorstand =
@@ -391,9 +387,7 @@ describe("wahlvorstandStore.ts", () => {
 
     it("should_setLastLoading_when_wahlvorstandIsLoaded", async () => {
       const userStore = useUserStore();
-      const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
+      const user = createUser("wahlbezirkID");
       userStore.setUser(user);
 
       const mockedGetWahlvorstand =
@@ -409,9 +403,7 @@ describe("wahlvorstandStore.ts", () => {
 
     it("should_notUpdateLastLoading_when_getWahlvorstandFails", async () => {
       const userStore = useUserStore();
-      const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
+      const user = createUser("wahlbezirkID");
       userStore.setUser(user);
 
       mockDefinitions.getWahlvorstand.mockImplementationOnce(() => {
@@ -494,20 +486,17 @@ describe("wahlvorstandStore.ts", () => {
 
   describe("isLoading", () => {
     it("should_setTrue_when_loadWahlvorstandIsCalled", async () => {
+      const timeout = 100;
       const userStore = useUserStore();
-      const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
+      const user = createUser("wahlbezirkID");
       userStore.setUser(user);
-
-      const mockedDatetime = new Date();
 
       // Verzögerung API-Aufruf simulieren, um die Asynchronität zu testen
       mockDefinitions.getWahlvorstand.mockReturnValue(
         new Promise((resolve) => {
           setTimeout(() => {
-            resolve({ updateDatetime: mockedDatetime });
-          }, 100);
+            resolve({});
+          }, timeout);
         })
       );
 
@@ -520,7 +509,7 @@ describe("wahlvorstandStore.ts", () => {
       expect(unitUnderTest.isLoading).toBe(true);
 
       // Zeit vorstellen, um die Promise aufzulösen
-      vi.advanceTimersByTime(100);
+      vi.advanceTimersByTime(timeout);
       await promise;
 
       // nach dem API-Aufruf
@@ -529,9 +518,7 @@ describe("wahlvorstandStore.ts", () => {
 
     it("should_setFalse_when_loadWahlvorstandFails", async () => {
       const userStore = useUserStore();
-      const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
+      const user = createUser("wahlbezirkID");
       userStore.setUser(user);
 
       mockDefinitions.getWahlvorstand.mockImplementationOnce(() => {
@@ -550,20 +537,17 @@ describe("wahlvorstandStore.ts", () => {
 
   describe("isSaving", () => {
     it("should_setTrue_when_sendWahlvorstandIsCalled", async () => {
+      const timeout = 100;
       const userStore = useUserStore();
-      const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
+      const user = createUser("wahlbezirkID");
       userStore.setUser(user);
-
-      const mockedDatetime = new Date();
 
       // Verzögerung API-Aufruf simulieren, um die Asynchronität zu testen
       mockDefinitions.saveWahlvorstand.mockReturnValue(
         new Promise((resolve) => {
           setTimeout(() => {
-            resolve({ updateDatetime: mockedDatetime });
-          }, 100);
+            resolve({});
+          }, timeout);
         })
       );
 
@@ -576,7 +560,7 @@ describe("wahlvorstandStore.ts", () => {
       expect(unitUnderTest.isSaving).toBe(true);
 
       // Zeit vorstellen, um die Promise aufzulösen
-      vi.advanceTimersByTime(100);
+      vi.advanceTimersByTime(timeout);
       await promise;
 
       // nach dem API-Aufruf
@@ -585,9 +569,7 @@ describe("wahlvorstandStore.ts", () => {
 
     it("should_setFalse_when_sendWahlvorstandFails", async () => {
       const userStore = useUserStore();
-      const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
+      const user = createUser("wahlbezirkID");
       userStore.setUser(user);
 
       mockDefinitions.saveWahlvorstand.mockImplementationOnce(() => {
@@ -614,10 +596,5 @@ describe("wahlvorstandStore.ts", () => {
 });
 
 function createUser(wahlbezirkID: string | undefined): User {
-  //TODO create Issue to use interface for User and provide BuilderImpl-Class => #853
-  const user = new User();
-
-  user.wahlbezirkID = wahlbezirkID;
-
-  return user;
+  return prepareUser().wahlbezirkID(wahlbezirkID).build();
 }

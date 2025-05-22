@@ -6,16 +6,17 @@ package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.configuration;
 
 import static de.muenchen.oss.wahllokalsystem.wahlvorstandservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.wahlvorstandservice.TestConstants.SPRING_TEST_PROFILE;
-import static de.muenchen.oss.wahllokalsystem.wahlvorstandservice.TestConstants.TheEntityDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.TheEntity;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.TheEntityRepository;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.WahlvorstandRepository;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand.FunktionDTO;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand.WahlvorstandWriteDTO;
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand.WahlvorstandsmitgliedDTO;
 import java.net.URI;
-import java.util.UUID;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.Disabled;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,17 +24,17 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
-        classes = { MicroServiceApplication.class },
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = {
-                "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
-                "refarch.gracefulshutdown.pre-wait-seconds=0"
-        }
+    classes = { MicroServiceApplication.class },
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    properties = {
+        "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
+        "refarch.gracefulshutdown.pre-wait-seconds=0"
+    }
 )
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
+@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE, Profiles.DUMMY_CLIENTS })
 class UnicodeConfigurationTest {
 
-    private static final String ENTITY_ENDPOINT_URL = "/theEntities";
+    private static final String ENTITY_ENDPOINT_URL = "/businessActions/wahlvorstand/";
 
     /**
      * Decomposed string: String "Ä-é" represented with unicode letters "A◌̈-e◌́"
@@ -49,28 +50,25 @@ class UnicodeConfigurationTest {
     private TestRestTemplate testRestTemplate;
 
     @Autowired
-    private TheEntityRepository theEntityRepository;
+    private WahlvorstandRepository wahlvorstandRepository;
 
     @Test
-    @Disabled
     void should_returnComposedString_when_givenDecomposedString() {
         // Persist entity with decomposed string.
-        final TheEntityDto theEntityDto = new TheEntityDto();
-        theEntityDto.setTextAttribute(TEXT_ATTRIBUTE_DECOMPOSED);
-        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), theEntityDto.getTextAttribute().length());
-        final TheEntityDto response = testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), theEntityDto, TheEntityDto.class).getBody();
+        val wahlbezirkID = "wahlbezirkID";
+        // create a WahlvorstandWriteDTO with a WahlvorstandsMitgliedDTO cotaining the TEXT_ATTRIBUTE_DECOMPOSED as 'familienname'
+        val wahlvorstandsMitgliedDTO = new WahlvorstandsmitgliedDTO("identifikator", TEXT_ATTRIBUTE_DECOMPOSED, "Hans", FunktionDTO.B, "funktionsname", false);
+        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), wahlvorstandsMitgliedDTO.familienname().length());
+        val wahlvorstandWriteDTO = new WahlvorstandWriteDTO(LocalDateTime.now(), Arrays.asList(wahlvorstandsMitgliedDTO));
 
-        // Check whether response contains a composed string.
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, response.getTextAttribute());
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), response.getTextAttribute().length());
-
-        // Extract uuid from self link.
-        final UUID uuid = UUID.fromString(StringUtils.substringAfterLast(response.getRequiredLink("self").getHref(), "/"));
+        // store Wahlvorstand
+        testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL + wahlbezirkID), wahlvorstandWriteDTO,
+            Void.class);
 
         // Check persisted entity contains a composed string via JPA repository.
-        final TheEntity theEntity = theEntityRepository.findById(uuid).orElse(null);
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, theEntity.getTextAttribute());
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), theEntity.getTextAttribute().length());
+        val wahlvorstand = wahlvorstandRepository.findById(wahlbezirkID);
+        assertEquals(TEXT_ATTRIBUTE_COMPOSED, wahlvorstand.get().getWahlvorstandsmitglieder().get(0).getFamilienname());
+        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), wahlvorstand.get().getWahlvorstandsmitglieder().get(0).getFamilienname().length());
     }
 
 }

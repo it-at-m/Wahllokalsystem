@@ -14,8 +14,7 @@ import {
   ROUTES_HOME,
   TOAST,
 } from "@/constants";
-import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
-import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import EreignisseView from "@/views/EreignisseView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
 import ExampleNewRouteView from "@/views/ExampleNewRouteView.vue";
@@ -94,15 +93,11 @@ const router = createRouter({
 });
 
 router.beforeEach((to) => {
-  const { wahlenReady } = storeToRefs(useWahlenStore());
-  const { konfigurationsparameterReady } = storeToRefs(
-    useInfomanagementStore()
+  const { hasInitializationOfTasksCompletelyRun } = storeToRefs(
+    useTaskManagerStore()
   );
 
-  if (
-    to.name != ROUTES_HOME &&
-    (!wahlenReady.value || !konfigurationsparameterReady.value)
-  ) {
+  if (to.name != ROUTES_HOME && !hasInitializationOfTasksCompletelyRun.value) {
     return { name: ROUTES_HOME };
   }
 });

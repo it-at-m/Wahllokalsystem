@@ -49,7 +49,6 @@ describe("infomanagementStore.ts", () => {
       expect(unitUnderTest.konfigurationsparameter).toStrictEqual(
         expectedResult
       );
-      expect(unitUnderTest.konfigurationsparameterReady).toBe(true);
     });
 
     it("should_notUpdateKonfigurationsparameter_when_serviceCallFailed", async () => {
@@ -61,7 +60,6 @@ describe("infomanagementStore.ts", () => {
         unitUnderTest.initKonfigurationsparameter()
       ).rejects.toThrowError();
       expect(unitUnderTest.konfigurationsparameter).toStrictEqual(null);
-      expect(unitUnderTest.konfigurationsparameterReady).toStrictEqual(false);
     });
   });
 });

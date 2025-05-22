@@ -1,5 +1,6 @@
 import { createTestingPinia } from "@pinia/testing";
 import { spyOn } from "@storybook/test";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useVorfaelleundvorkommnisseTestDateFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDateFactory.ts";
 import { flushPromises } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -33,6 +34,7 @@ const { createEreignis } = useVorfaelleundvorkommnisseTestDateFactory();
 describe("ereignisStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useEreignisStore>;
   let wahlbezirkStore: ReturnType<typeof useWahlbezirkStore>;
+  const { prepareUser } = useUserTestDataFactory();
 
   beforeEach(() => {
     const testPinia = createTestingPinia({
@@ -52,14 +54,13 @@ describe("ereignisStore.ts", () => {
     vi.useRealTimers();
   });
 
-  describe("areKeineEreignisseFlagsValid", () => {
+  describe("ereignisStatusValidationFailed", () => {
     describe("should_returnExpectedValue_dependingOnFunctionData", () => {
-      it.each(generateTestdataForAreKeineEreignisseFlagsValid())(
-        "hasVorfaelle=$data.vorfaelle | hasVorfaelle=$data.vorkommnisse | wahlbezirkKeineVorfaelle=$data.wahlbezirkKeineVorfaelle | wahlbezirkKeineVorkommnisse=$data.wahlbezirkKeineVorkommnisse | wahlbezirkArt=$data.wahlbezirkArt | schliessungsuhrzeit=$data.schliessungsUhrzeitSent --> Expected=$expected",
+      it.each(_generateTestdataForAreKeineEreignisseFlagsValid())(
+        "hasVorfaelle=$data.vorfaelle | hasVorkommnisse=$data.vorkommnisse | wahlbezirkKeineVorfaelle=$data.wahlbezirkKeineVorfaelle | wahlbezirkKeineVorkommnisse=$data.wahlbezirkKeineVorkommnisse | wahlbezirkArt=$data.wahlbezirkArt | schliessungsuhrzeit=$data.schliessungsUhrzeitSent --> Expected=$expected",
         ({ data, expected }) => {
           const userStore = useUserStore();
-          const user = new User();
-          user.wahlbezirksArt = data.wahlbezirkArt;
+          const user = prepareUser().wahlbezirksArt(data.wahlbezirkArt).build();
           userStore.setUser(user);
 
           const wahlbezirkStore = useWahlbezirkStore();
@@ -76,9 +77,7 @@ describe("ereignisStore.ts", () => {
           unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse =
             data.wahlbezirkKeineVorkommnisse;
 
-          expect(unitUnderTest.areKeineEreignisseFlagsValid).toStrictEqual(
-            expected
-          );
+          expect(unitUnderTest.hasMissingEreignisFlags).toStrictEqual(expected);
         }
       );
     });
@@ -292,14 +291,9 @@ describe("ereignisStore.ts", () => {
       );
     });
 
-    it.each([
-      {
-        user: createUser(undefined),
-        when: "usersWahlbezirkIdIsUndefined",
-      },
-    ])("should_notLoadWahlbezirkEreignisse_when_$when", async ({ user }) => {
+    it("should_notLoadWahlbezirkEreignisse_when_usersWahlbezirkIdIsUndefined", async () => {
       const userStore = useUserStore();
-      userStore.setUser(user);
+      userStore.setUser(createUser(undefined));
 
       await unitUnderTest.loadEreignisse();
 
@@ -599,7 +593,7 @@ function createUser(wahlbezirkID: string | undefined): User {
   return user;
 }
 
-function generateTestdataForAreKeineEreignisseFlagsValid() {
+function _generateTestdataForAreKeineEreignisseFlagsValid() {
   return [
     {
       data: {

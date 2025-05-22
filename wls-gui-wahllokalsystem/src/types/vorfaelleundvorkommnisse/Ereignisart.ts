@@ -1,3 +1,5 @@
+import { storeToRefs } from "pinia";
+
 import { useUserStore } from "@/stores/userStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
@@ -13,8 +15,8 @@ export function getEreignisArtForDateRelatedToSchliessungsuhrzeit(
   ereignisDate: Date,
   schliessungsuhrzeit: Date | undefined
 ): EreignisartEnum {
-  const userStore = useUserStore();
-  switch (userStore.currentUserWahlbezirksArt) {
+  const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
+  switch (currentUserWahlbezirksArt.value) {
     case WahlbezirksArtEnum.BWB:
       return EreignisartEnum.Vorkommnis;
     case WahlbezirksArtEnum.UWB:

@@ -43,7 +43,7 @@ describe("TheEreignisseView", () => {
       const ereignisStore = useEreignisStore();
 
       // @ts-expect-error: cannot set readonly
-      ereignisStore.areKeineEreignisseFlagsValid = true;
+      ereignisStore.ereignisStatusValidationFailed = true;
       // @ts-expect-error: cannot set readonly
       ereignisStore.hasEintraege = false;
 
@@ -64,7 +64,7 @@ describe("TheEreignisseView", () => {
       ereignisStore.wahlbezirkEreignisse.ereigniseintraege = [validEreignis];
 
       // @ts-expect-error: cannot set readonly
-      ereignisStore.areKeineEreignisseFlagsValid = true;
+      ereignisStore.ereignisStatusValidationFailed = true;
       // @ts-expect-error: cannot set readonly
       ereignisStore.hasEintraege = true;
 
@@ -85,7 +85,7 @@ describe("TheEreignisseView", () => {
       ereignisStore.wahlbezirkEreignisse.ereigniseintraege = [invalidEreignis];
 
       // @ts-expect-error: cannot set readonly
-      ereignisStore.areKeineEreignisseFlagsValid = true;
+      ereignisStore.ereignisStatusValidationFailed = true;
       // @ts-expect-error: cannot set readonly
       ereignisStore.hasEintraege = true;
 
@@ -106,7 +106,7 @@ describe("TheEreignisseView", () => {
       ereignisStore.wahlbezirkEreignisse.ereigniseintraege = [validEreignis];
 
       // @ts-expect-error: cannot set readonly
-      ereignisStore.areKeineEreignisseFlagsValid = false;
+      ereignisStore.ereignisStatusValidationFailed = false;
       // @ts-expect-error: cannot set readonly
       ereignisStore.hasEintraege = true;
 

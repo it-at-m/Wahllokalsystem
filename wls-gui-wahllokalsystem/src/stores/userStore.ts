@@ -8,26 +8,7 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 const { getUser } = useUserService();
 
 export const useUserStore = defineStore("user", () => {
-  const defaultUser = {
-    authorities: new Set<string>(),
-    email: "",
-    pin: "",
-    userEnabled: false,
-    username: "",
-    wahlMetaData: [
-      {
-        wahlbezirkID: "",
-        wahlnummer: "",
-        wahlID: "",
-      },
-    ],
-    wahlbezirkID: "",
-    wahlbezirkNummer: "",
-    wahlbezirksArt: WahlbezirksArtEnum.UWB,
-    wahltag: "",
-    wahltagID: "",
-  };
-  const user = ref<User>(defaultUser);
+  const user = ref<User>(new User());
 
   async function loadUser() {
     try {
@@ -36,7 +17,7 @@ export const useUserStore = defineStore("user", () => {
       if (import.meta.env.DEV) {
         user.value = createUserLocalDevelopment();
       } else {
-        user.value = defaultUser;
+        user.value = new User();
       }
     }
   }

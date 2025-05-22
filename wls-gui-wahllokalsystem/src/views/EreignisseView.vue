@@ -44,7 +44,7 @@ import TheEreignisseRow from "@/components/vorfaelleundvorkommnisse/TheEreigniss
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 
 const ereignisStore = useEreignisStore();
-const { hasEintraege, areKeineEreignisseFlagsValid } =
+const { hasEintraege, ereignisStatusValidationFailed } =
   storeToRefs(ereignisStore);
 const { addEreignis, sendEreignisse } = ereignisStore;
 
@@ -56,7 +56,7 @@ const isEreignisseFormInvalid = computed(
 const isSaveButtonDisabled = computed(
   () =>
     (hasEintraege.value && isEreignisseFormInvalid.value) ||
-    !areKeineEreignisseFlagsValid.value
+    !ereignisStatusValidationFailed.value
 );
 
 function onAddEreignisClicked() {

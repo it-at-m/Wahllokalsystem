@@ -45,24 +45,22 @@ export const useEreignisStore = defineStore(storeID, () => {
       ) === true
   );
 
-  const hasValidKeineFlagsDefault = computed(
+  const hasMissingEreignisFlagsForUWB = computed(
     () =>
       hasVorfaelle.value !== wahlbezirkEreignisse.value.keineVorfaelle &&
       (hasVorkommnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse ||
         !schliessungsUhrzeitSent.value)
   );
 
-  const hasValidKeineFlagsForBWB = computed(
-    () =>
-      hasVorfaelle.value !== wahlbezirkEreignisse.value.keineVorfaelle &&
-      hasVorkommnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse
+  const hasMissingEreignisFlagsForBWB = computed(
+    () => hasVorkommnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse
   );
 
-  const areKeineEreignisseFlagsValid = computed(() => {
+  const hasMissingEreignisFlags = computed(() => {
     const isUWB = currentUserWahlbezirksArt.value === WahlbezirksArtEnum.UWB;
     return isUWB
-      ? hasValidKeineFlagsDefault.value
-      : hasValidKeineFlagsForBWB.value;
+      ? hasMissingEreignisFlagsForUWB.value
+      : hasMissingEreignisFlagsForBWB.value;
   });
 
   watch(schliessungsUhrzeitSent, _onSchliessunguhrzeitSentChanged);
@@ -172,7 +170,7 @@ export const useEreignisStore = defineStore(storeID, () => {
   }
 
   return {
-    areKeineEreignisseFlagsValid,
+    hasMissingEreignisFlags,
     wahlbezirkEreignisse,
     hasEintraege,
     hasVorfaelle,

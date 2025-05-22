@@ -4,6 +4,7 @@ import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
@@ -13,10 +14,10 @@ import vuetify from "@/plugins/vuetify";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
-import { User } from "@/types/User.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 describe("TheEreignisseNoEventsCheckboxes.vue", () => {
+  const { prepareUser } = useUserTestDataFactory();
   let wrapper: VueWrapper<InstanceType<typeof TheEreignisseNoEventsCheckboxes>>;
   beforeEach(() => {
     wrapper = mount(TheEreignisseNoEventsCheckboxes, {
@@ -125,9 +126,10 @@ describe("TheEreignisseNoEventsCheckboxes.vue", () => {
       it("should_renderKeineVorkommnisseEnabled_when_noVorkommnisseAreGivenInStoreAndSchliessungsuhrzeitIsNotSetForBWB", async (context) => {
         useEreignisStore().wahlbezirkEreignisse.ereigniseintraege = [];
         useWahlbezirkStore().schliessungsUhrzeitSent = undefined;
-        const user = new User();
-        user.wahlbezirksArt = WahlbezirksArtEnum.BWB;
-        useUserStore().user = user;
+
+        useUserStore().setUser(
+          prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+        );
 
         await nextTick();
 
@@ -158,6 +160,25 @@ describe("TheEreignisseNoEventsCheckboxes.vue", () => {
 
     it("should_updateKeineVorkommnisseToTrue_when_keineVorkommnisseCheckboxWasSelectedForUWB", async () => {
       const ereignisStore = useEreignisStore();
+      ereignisStore.wahlbezirkEreignisse.keineVorkommnisse = false;
+      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = [];
+
+      await nextTick();
+
+      const checkboxKeineVorfaelle = wrapper.getComponent(
+        '[data-test="checkboxKeineVorkommnisse"]'
+      );
+      await checkboxKeineVorfaelle.setValue(true);
+
+      expect(
+        ereignisStore.wahlbezirkEreignisse.keineVorkommnisse
+      ).toStrictEqual(true);
+    });
+
+    it("should_updateKeineVorkommnisseToTrue_when_keineVorkommnisseCheckboxWasSelectedForBWB", async () => {
+      const ereignisStore = useEreignisStore();
+      const user = prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build();
+      useUserStore().setUser(user);
       ereignisStore.wahlbezirkEreignisse.keineVorkommnisse = false;
       ereignisStore.wahlbezirkEreignisse.ereigniseintraege = [];
 

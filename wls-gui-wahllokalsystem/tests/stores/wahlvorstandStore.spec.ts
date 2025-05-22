@@ -427,14 +427,9 @@ describe("wahlvorstandStore.ts", () => {
       expect(unitUnderTest.lastLoading).toBeNull();
     });
 
-    it.each([
-      {
-        user: createUser(undefined),
-        when: "usersWahlbezirkIdIsUndefined",
-      },
-    ])("should_notLoadWahlvorstand_when_$when", async ({ user }) => {
+    it("should_notLoadWahlvorstand_when_usersWahlbezirkIdIsUndefined", async () => {
       const userStore = useUserStore();
-      userStore.setUser(user);
+      userStore.setUser(createUser(undefined));
 
       await unitUnderTest.loadWahlvorstand();
 

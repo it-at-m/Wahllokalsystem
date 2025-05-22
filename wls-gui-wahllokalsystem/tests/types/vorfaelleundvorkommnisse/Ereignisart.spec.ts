@@ -1,8 +1,8 @@
 import { createTestingPinia } from "@pinia/testing";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useUserStore } from "@/stores/userStore.ts";
-import { User } from "@/types/User.ts";
 import {
   EreignisartEnum,
   getEreignisArtForDateRelatedToSchliessungsuhrzeit,
@@ -11,6 +11,7 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 describe("Ereignisart.ts", () => {
   let userStore: ReturnType<typeof useUserStore>;
+  const { prepareUser } = useUserTestDataFactory();
 
   beforeEach(() => {
     const testPinia = createTestingPinia({
@@ -22,12 +23,12 @@ describe("Ereignisart.ts", () => {
 
   describe("getEreignisArtForDateRelatedToSchliessungsuhrzeitForUWB", () => {
     beforeEach(() => {
-      const user = new User();
-      user.wahlbezirksArt = WahlbezirksArtEnum.UWB;
-      userStore.setUser(user);
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
     });
 
-    it("should_returnVorfall_when_schliessungsuhrzeitIsNotSetAndUwb", () => {
+    it("should_returnVorfall_when_schliessungsuhrzeitIsNotSet", () => {
       const result = getEreignisArtForDateRelatedToSchliessungsuhrzeit(
         new Date(),
         undefined
@@ -69,12 +70,11 @@ describe("Ereignisart.ts", () => {
 
   describe("getEreignisArtForDateRelatedToSchliessungsuhrzeitForBWB", () => {
     beforeEach(() => {
-      const user = new User();
-      user.wahlbezirksArt = WahlbezirksArtEnum.BWB;
+      const user = prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build();
       userStore.setUser(user);
     });
 
-    it("should_returnVorkomniss_when_schliessungsuhrzeitIsNotSetAnd", () => {
+    it("should_returnVorkommnis_when_schliessungsuhrzeitIsNotSet", () => {
       const result = getEreignisArtForDateRelatedToSchliessungsuhrzeit(
         new Date(),
         undefined

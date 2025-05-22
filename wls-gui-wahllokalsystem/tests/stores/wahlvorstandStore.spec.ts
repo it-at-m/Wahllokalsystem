@@ -381,7 +381,7 @@ describe("wahlvorstandStore.ts", () => {
         WahlvorstandBuilder.createEmptyWahlvorstand();
       mockDefinitions.getWahlvorstand.mockReturnValue(mockedGetWahlvorstand);
 
-      await unitUnderTest.loadWahlvorstandWithUpdate();
+      await unitUnderTest.forceLoadWahlvorstand();
 
       expect(unitUnderTest.wahlvorstand).toStrictEqual(mockedGetWahlvorstand);
       expect(mockDefinitions.getWahlvorstand.mock.calls).toStrictEqual([
@@ -400,7 +400,7 @@ describe("wahlvorstandStore.ts", () => {
 
       expect(unitUnderTest.lastLoading).toBeNull();
 
-      await unitUnderTest.loadWahlvorstandWithUpdate();
+      await unitUnderTest.forceLoadWahlvorstand();
 
       expect(unitUnderTest.lastLoading).toStrictEqual(mockedNow);
     });
@@ -416,7 +416,7 @@ describe("wahlvorstandStore.ts", () => {
 
       expect(unitUnderTest.lastLoading).toBeNull();
 
-      await expect(unitUnderTest.loadWahlvorstandWithUpdate()).rejects.toThrow(
+      await expect(unitUnderTest.forceLoadWahlvorstand()).rejects.toThrow(
         "API Error"
       );
 
@@ -433,7 +433,7 @@ describe("wahlvorstandStore.ts", () => {
       const userStore = useUserStore();
       userStore.setUser(user);
 
-      await unitUnderTest.loadWahlvorstandWithUpdate();
+      await unitUnderTest.forceLoadWahlvorstand();
 
       expect(mockDefinitions.getWahlvorstand).toHaveBeenCalledTimes(0);
       expect(unitUnderTest.lastLoading).toBeNull();

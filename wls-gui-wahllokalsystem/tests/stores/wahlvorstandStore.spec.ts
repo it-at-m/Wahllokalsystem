@@ -430,7 +430,7 @@ describe("wahlvorstandStore.ts", () => {
 
     it("should_notLoadWahlvorstand_when_usersWahlbezirkIdIsUndefined", async () => {
       const userStore = useUserStore();
-      userStore.setUser(createUser(undefined));
+      userStore.setUser(_createUser(undefined));
 
       await unitUnderTest.forceLoadWahlvorstand();
 

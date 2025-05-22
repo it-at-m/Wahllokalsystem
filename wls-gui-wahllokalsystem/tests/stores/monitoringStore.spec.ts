@@ -57,7 +57,7 @@ describe("monitoringStore.ts", () => {
   });
 
   describe("loadWaehler", () => {
-    it("should_notLoadWaehleranzahl_when_usersHauptWahlIDIsUndefined", async () => {
+    it("should_notLoadWaehleranzahl_when_userHauptWahlIDIsUndefined", async () => {
       userStore.setUser(prepareUser().wahlbezirkID("ich bin eine id").build());
       // @ts-expect-error: cannot set readonly
       userStore.currentUserHauptWahlID = undefined;

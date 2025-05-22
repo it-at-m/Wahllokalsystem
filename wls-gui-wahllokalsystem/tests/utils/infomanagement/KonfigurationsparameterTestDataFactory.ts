@@ -10,11 +10,26 @@ export function useKonfigurationsparameterTestDataFactory() {
     const dtoList: KonfigurationDTO[] = [];
     for (let i = 0; i < length; i++) {
       dtoList.push({
+        beschreibung: generateRandomString(10),
         schluessel: generateRandomString(10),
+        standardwert: generateRandomString(10),
         wert: generateRandomString(10),
       });
     }
     return dtoList;
+  }
+
+  function createKonfigurationsparameterList(
+    length: number
+  ): Konfigurationsparameter[] {
+    const modelList: Konfigurationsparameter[] = [];
+    for (let i = 0; i < length; i++) {
+      modelList.push({
+        schluessel: generateRandomString(10),
+        wert: generateRandomString(10),
+      });
+    }
+    return modelList;
   }
 
   function mapDtosToModel(dtos: KonfigurationDTO[]): Konfigurationsparameter[] {
@@ -28,5 +43,9 @@ export function useKonfigurationsparameterTestDataFactory() {
     return model;
   }
 
-  return { createKonfigurationDtoList, mapDtosToModel };
+  return {
+    createKonfigurationDtoList,
+    createKonfigurationsparameterList,
+    mapDtosToModel,
+  };
 }

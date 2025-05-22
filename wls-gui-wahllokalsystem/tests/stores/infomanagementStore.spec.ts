@@ -15,7 +15,7 @@ vi.mock("@/composables/infomanagement/konfigurationsparameterService", () => ({
   }),
 }));
 
-const { createKonfigurationDtoList, mapDtosToModel } =
+const { createKonfigurationsparameterList } =
   useKonfigurationsparameterTestDataFactory();
 
 describe("infomanagementStore.ts", () => {
@@ -34,20 +34,20 @@ describe("infomanagementStore.ts", () => {
     vi.useRealTimers();
   });
 
-  describe("getKonfigurations", () => {
+  describe("initKonfigurationsparameter", () => {
     it("should_loadKonfigurations_when_called", async () => {
-      const mockedKonfigurationDtos = createKonfigurationDtoList(3);
-      const expectedResult = mapDtosToModel(mockedKonfigurationDtos);
+      const mockedMappedKonfigurationparameter =
+        createKonfigurationsparameterList(3);
 
       mockDefinitions.getKonfigurationsparameter.mockReturnValue(
-        mockedKonfigurationDtos
+        mockedMappedKonfigurationparameter
       );
 
       await unitUnderTest.initKonfigurationsparameter();
       await nextTick();
 
       expect(unitUnderTest.konfigurationsparameter).toStrictEqual(
-        expectedResult
+        mockedMappedKonfigurationparameter
       );
     });
 

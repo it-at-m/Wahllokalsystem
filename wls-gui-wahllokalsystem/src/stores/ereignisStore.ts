@@ -12,6 +12,7 @@ import {
   getEreignisArtForDateRelatedToSchliessungsuhrzeit,
 } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { getEreignisse, saveEreignisse } = useEreignisService();
 
@@ -20,7 +21,8 @@ export const storeID = "vorfaelleundvorkommnisse";
 export const useEreignisStore = defineStore(storeID, () => {
   const error = ref<string | null>(null);
 
-  const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
+  const { currentUserWahlbezirkID, currentUserWahlbezirksArt } =
+    storeToRefs(useUserStore());
   const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
 
   const wahlbezirkEreignisse = ref<WahlbezirkEreignisse>(
@@ -42,12 +44,26 @@ export const useEreignisStore = defineStore(storeID, () => {
         (eintrag) => eintrag.ereignisart === EreignisartEnum.Vorkommnis
       ) === true
   );
-  const areKeineEreignisseFlagsValid = computed(
+
+  const hasMissingEreignisFlagsForUWB = computed(
     () =>
       hasVorfaelle.value !== wahlbezirkEreignisse.value.keineVorfaelle &&
       (hasVorkommnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse ||
         !schliessungsUhrzeitSent.value)
   );
+
+  const hasMissingEreignisFlagsForBWB = computed(
+    () =>
+      hasVorfaelle.value !== wahlbezirkEreignisse.value.keineVorfaelle &&
+      hasVorkommnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse
+  );
+
+  const hasMissingEreignisFlags = computed(() => {
+    const isUWB = currentUserWahlbezirksArt.value === WahlbezirksArtEnum.UWB;
+    return isUWB
+      ? hasMissingEreignisFlagsForUWB.value
+      : hasMissingEreignisFlagsForBWB.value;
+  });
 
   watch(schliessungsUhrzeitSent, _onSchliessunguhrzeitSentChanged);
   watchEffect(() => _updateKeineFlagsOfEreignisseBasedOnCurrentState());
@@ -156,7 +172,7 @@ export const useEreignisStore = defineStore(storeID, () => {
   }
 
   return {
-    areKeineEreignisseFlagsValid,
+    hasMissingEreignisFlags,
     wahlbezirkEreignisse,
     hasEintraege,
     hasVorfaelle,

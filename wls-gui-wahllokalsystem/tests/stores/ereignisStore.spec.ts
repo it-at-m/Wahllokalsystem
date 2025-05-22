@@ -12,6 +12,7 @@ import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import * as ImportAllFromEreignisArt from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getEreignisse: vi.fn(),
@@ -52,93 +53,33 @@ describe("ereignisStore.ts", () => {
     vi.useRealTimers();
   });
 
-  describe("areKeineEreignisseFlagsValid", () => {
-    describe("should_returnTrue_when_ereignisseMatchingTheirNoDataFlag", () => {
-      it.each([
-        {
-          testcaseName: "hasVorfaelle=true && hasVorkommnisse=true",
-          data: {
-            vorfaelle: true,
-            vorkommnisse: true,
-          },
-        },
-        {
-          testcaseName: "hasVorfaelle=false && hasVorkommnisse=true",
-          data: {
-            vorfaelle: false,
-            vorkommnisse: true,
-          },
-        },
-        {
-          testcaseName: "hasVorfaelle=true && hasVorkommnisse=false",
-          data: {
-            vorfaelle: true,
-            vorkommnisse: false,
-          },
-        },
-        {
-          testcaseName: "hasVorfaelle=false && hasVorkommnisse=false",
-          data: {
-            vorfaelle: false,
-            vorkommnisse: false,
-          },
-        },
-      ])("$testcaseName", ({ data }) => {
-        // @ts-expect-error: cannot set readonly
-        unitUnderTest.hasVorfaelle = data.vorfaelle;
-        unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = !data.vorfaelle;
+  describe("hasMissingEreignisFlags", () => {
+    describe("should_returnExpectedValue_dependingOnFunctionData", () => {
+      it.each(_generateTestdataForAreKeineEreignisseFlagsValid())(
+        "hasVorfaelle=$data.vorfaelle | hasVorkommnisse=$data.vorkommnisse | wahlbezirkKeineVorfaelle=$data.wahlbezirkKeineVorfaelle | wahlbezirkKeineVorkommnisse=$data.wahlbezirkKeineVorkommnisse | wahlbezirkArt=$data.wahlbezirkArt | schliessungsuhrzeit=$data.schliessungsUhrzeitSent --> Expected=$expected",
+        ({ data, expected }) => {
+          const userStore = useUserStore();
+          userStore.setUser(
+            prepareUser().wahlbezirksArt(data.wahlbezirkArt).build()
+          );
 
-        // @ts-expect-error: cannot set readonly
-        unitUnderTest.hasVorkommnisse = data.vorkommnisse;
-        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse =
-          !data.vorkommnisse;
+          const wahlbezirkStore = useWahlbezirkStore();
+          wahlbezirkStore.schliessungsUhrzeitSent =
+            data.schliessungsUhrzeitSent;
 
-        expect(unitUnderTest.areKeineEreignisseFlagsValid).toStrictEqual(true);
-      });
-    });
+          // @ts-expect-error: cannot set readonly
+          unitUnderTest.hasVorfaelle = data.vorfaelle;
+          unitUnderTest.wahlbezirkEreignisse.keineVorfaelle =
+            data.wahlbezirkKeineVorfaelle;
 
-    describe("should_returnFalse_when_ereignisseNotMatchingTheirNoDataFlag", () => {
-      it.each([
-        {
-          testcaseName: "hasVorfaelle=true && hasVorkommnisse=true",
-          data: {
-            vorfaelle: true,
-            vorkommnisse: true,
-          },
-        },
-        {
-          testcaseName: "hasVorfaelle=false && hasVorkommnisse=true",
-          data: {
-            vorfaelle: false,
-            vorkommnisse: true,
-          },
-        },
-        {
-          testcaseName: "hasVorfaelle=true && hasVorkommnisse=false",
-          data: {
-            vorfaelle: true,
-            vorkommnisse: false,
-          },
-        },
-        {
-          testcaseName: "hasVorfaelle=false && hasVorkommnisse=false",
-          data: {
-            vorfaelle: false,
-            vorkommnisse: false,
-          },
-        },
-      ])("$testcaseName", ({ data }) => {
-        // @ts-expect-error: cannot set readonly
-        unitUnderTest.hasVorfaelle = data.vorfaelle;
-        unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = data.vorfaelle;
+          // @ts-expect-error: cannot set readonly
+          unitUnderTest.hasVorkommnisse = data.vorkommnisse;
+          unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse =
+            data.wahlbezirkKeineVorkommnisse;
 
-        // @ts-expect-error: cannot set readonly
-        unitUnderTest.hasVorkommnisse = data.vorkommnisse;
-        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse =
-          data.vorkommnisse;
-
-        expect(unitUnderTest.areKeineEreignisseFlagsValid).toStrictEqual(false);
-      });
+          expect(unitUnderTest.hasMissingEreignisFlags).toStrictEqual(expected);
+        }
+      );
     });
   });
 
@@ -346,15 +287,9 @@ describe("ereignisStore.ts", () => {
       );
     });
 
-    it.each([
-      { user: null, when: "userIsNull" },
-      {
-        user: prepareUser().wahlbezirkID(undefined).build(),
-        when: "usersWahlbezirkIdIsUndefined",
-      },
-    ])("should_notLoadWahlbezirkEreignisse_when_$when", async ({ user }) => {
+    it("should_notLoadWahlbezirkEreignisse_when_usersWahlbezirkIdIsUndefined", async () => {
       const userStore = useUserStore();
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahlbezirkID(undefined).build());
 
       await unitUnderTest.loadEreignisse();
 
@@ -638,3 +573,712 @@ describe("ereignisStore.ts", () => {
     });
   });
 });
+
+function _generateTestdataForAreKeineEreignisseFlagsValid() {
+  return [
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: true,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: true,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: true,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: true,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: true,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: true,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: true,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: true,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: true,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: true,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: true,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: true,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: true,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: true,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: true,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: true,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: true,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: true,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: true,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: true,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: undefined,
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: true,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: false,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: false,
+      },
+      expected: false,
+    },
+    {
+      data: {
+        vorfaelle: false,
+        vorkommnisse: false,
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        schliessungsUhrzeitSent: new Date(),
+        wahlbezirkKeineVorfaelle: true,
+        wahlbezirkKeineVorkommnisse: true,
+      },
+      expected: true,
+    },
+  ];
+}

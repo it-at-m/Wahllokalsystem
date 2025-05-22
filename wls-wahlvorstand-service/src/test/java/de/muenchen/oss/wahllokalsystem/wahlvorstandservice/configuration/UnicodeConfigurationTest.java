@@ -56,10 +56,10 @@ class UnicodeConfigurationTest {
     void should_returnComposedString_when_givenDecomposedString() {
         // Persist entity with decomposed string.
         val wahlbezirkID = "wahlbezirkID";
-        // create a WahlvorstandWriteDTO with a WahlvorstandsMitgliedDTO cotaining the TEXT_ATTRIBUTE_DECOMPOSED as 'familienname'
-        val wahlvorstandsMitgliedDTO = new WahlvorstandsmitgliedDTO("identifikator", TEXT_ATTRIBUTE_DECOMPOSED, "Hans", FunktionDTO.B, "funktionsname", false);
-        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), wahlvorstandsMitgliedDTO.familienname().length());
-        val wahlvorstandWriteDTO = new WahlvorstandWriteDTO(LocalDateTime.now(), Arrays.asList(wahlvorstandsMitgliedDTO));
+        // create a WahlvorstandWriteDTO with a WahlvorstandsmitgliedDTO containing the TEXT_ATTRIBUTE_DECOMPOSED as 'familienname'
+        val wahlvorstandsmitgliedDTO = new WahlvorstandsmitgliedDTO("identifikator", TEXT_ATTRIBUTE_DECOMPOSED, "Hans", FunktionDTO.B, "funktionsname", false);
+        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), wahlvorstandsmitgliedDTO.familienname().length());
+        val wahlvorstandWriteDTO = new WahlvorstandWriteDTO(LocalDateTime.now(), Arrays.asList(wahlvorstandsmitgliedDTO));
 
         // store Wahlvorstand
         testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL + wahlbezirkID), wahlvorstandWriteDTO,

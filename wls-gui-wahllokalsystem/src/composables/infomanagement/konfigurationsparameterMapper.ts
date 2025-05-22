@@ -7,9 +7,7 @@ export function useKonfigurationsparameterMapper() {
 
     for (const dto of dtos) {
       const model: Konfigurationsparameter = {
-        beschreibung: dto.beschreibung ?? "",
         schluessel: dto.schluessel ?? "",
-        standardwert: dto.standardwert ?? "",
         wert: dto.wert ?? "",
       };
       konfigurationsparameter.push(model);

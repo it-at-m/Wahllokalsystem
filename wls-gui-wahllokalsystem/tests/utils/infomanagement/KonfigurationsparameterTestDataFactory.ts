@@ -10,9 +10,7 @@ export function useKonfigurationsparameterTestDataFactory() {
     const dtoList: KonfigurationDTO[] = [];
     for (let i = 0; i < length; i++) {
       dtoList.push({
-        beschreibung: generateRandomString(10),
         schluessel: generateRandomString(10),
-        standardwert: generateRandomString(10),
         wert: generateRandomString(10),
       });
     }
@@ -23,9 +21,7 @@ export function useKonfigurationsparameterTestDataFactory() {
     const model: Konfigurationsparameter[] = [];
     for (const dto of dtos) {
       model.push({
-        beschreibung: dto.beschreibung ?? "",
         schluessel: dto.schluessel ?? "",
-        standardwert: dto.standardwert ?? "",
         wert: dto.wert ?? "",
       });
     }

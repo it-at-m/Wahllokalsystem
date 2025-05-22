@@ -21,21 +21,15 @@ describe("konfigurationsparameterMapper.ts", () => {
 
       const expectedModel: Konfigurationsparameter[] = [
         {
-          beschreibung: dto[0].beschreibung,
           schluessel: dto[0].schluessel,
-          standardwert: dto[0].standardwert,
           wert: dto[0].wert,
         },
         {
-          beschreibung: dto[1].beschreibung,
           schluessel: dto[1].schluessel,
-          standardwert: dto[1].standardwert,
           wert: dto[1].wert,
         },
         {
-          beschreibung: dto[2].beschreibung,
           schluessel: dto[2].schluessel,
-          standardwert: dto[2].standardwert,
           wert: dto[2].wert,
         },
       ];
@@ -46,11 +40,9 @@ describe("konfigurationsparameterMapper.ts", () => {
     });
 
     it("should_returnModelWithDefaultValues_when_givenDtoWithMissingProperties", () => {
-      const dto: KonfigurationDTO[] = [
-        { schluessel: "123", standardwert: "456" },
-      ];
+      const dto: KonfigurationDTO[] = [{ schluessel: "123" }];
       const expectedModel: Konfigurationsparameter[] = [
-        { beschreibung: "", schluessel: "123", standardwert: "456", wert: "" },
+        { schluessel: "123", wert: "" },
       ];
 
       const result = toModel(dto);

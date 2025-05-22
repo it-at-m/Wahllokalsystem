@@ -7,6 +7,7 @@ package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.configuration;
 import static de.muenchen.oss.wahllokalsystem.wahlvorstandservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.wahlvorstandservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.WahlvorstandRepository;
@@ -24,12 +25,12 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
-        classes = { MicroServiceApplication.class },
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = {
-                "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
-                "refarch.gracefulshutdown.pre-wait-seconds=0"
-        }
+    classes = { MicroServiceApplication.class },
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    properties = {
+        "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
+        "refarch.gracefulshutdown.pre-wait-seconds=0"
+    }
 )
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE, Profiles.DUMMY_CLIENTS })
 class UnicodeConfigurationTest {
@@ -54,21 +55,19 @@ class UnicodeConfigurationTest {
 
     @Test
     void should_returnComposedString_when_givenDecomposedString() {
-        // Persist entity with decomposed string.
         val wahlbezirkID = "wahlbezirkID";
         // create a WahlvorstandWriteDTO with a WahlvorstandsmitgliedDTO containing the TEXT_ATTRIBUTE_DECOMPOSED as 'familienname'
         val wahlvorstandsmitgliedDTO = new WahlvorstandsmitgliedDTO("identifikator", TEXT_ATTRIBUTE_DECOMPOSED, "Hans", FunktionDTO.B, "funktionsname", false);
-        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), wahlvorstandsmitgliedDTO.familienname().length());
+        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), wahlvorstandsmitgliedDTO.familienname().length(), "The decomposed string lengths should match");
         val wahlvorstandWriteDTO = new WahlvorstandWriteDTO(LocalDateTime.now(), Arrays.asList(wahlvorstandsmitgliedDTO));
 
-        // store Wahlvorstand
         testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL + wahlbezirkID), wahlvorstandWriteDTO,
-                Void.class);
+            Void.class);
 
-        // Check persisted entity contains a composed string via JPA repository.
         val wahlvorstand = wahlvorstandRepository.findById(wahlbezirkID);
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, wahlvorstand.get().getWahlvorstandsmitglieder().get(0).getFamilienname());
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), wahlvorstand.get().getWahlvorstandsmitglieder().get(0).getFamilienname().length());
+        assertTrue(wahlvorstand.isPresent(), "Wahlvorstand should be present in the database");
+        val mitglied = wahlvorstand.get().getWahlvorstandsmitglieder().get(0);
+        assertEquals(TEXT_ATTRIBUTE_COMPOSED, mitglied.getFamilienname(), "The stored name should be in composed form");
+        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), mitglied.getFamilienname().length(), "The composed string lengths should match");
     }
-
 }

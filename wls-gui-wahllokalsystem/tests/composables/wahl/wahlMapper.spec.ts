@@ -9,12 +9,10 @@ import { useWahlMapper } from "@/composables/wahl/wahlMapper.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 describe("wahlMapper", () => {
-  const unitUnderTest = useWahlMapper();
-  const { toModel } = unitUnderTest;
+  const { toModel } = useWahlMapper();
   const { prepareWahlDTO } = useWahlTestDataFactory();
 
-  // describe("toModel", () => {
-  describe(unitUnderTest.toModel.name, () => {
+  describe("toModel", () => {
     it("should_returnModel_when_dtoIsGiven", () => {
       const dto: WahlDTO = prepareWahlDTO()
         .wahlart(WahlDTOWahlartEnum.Baw)

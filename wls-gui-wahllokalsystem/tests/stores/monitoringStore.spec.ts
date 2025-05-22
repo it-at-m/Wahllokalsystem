@@ -57,6 +57,20 @@ describe("monitoringStore.ts", () => {
   });
 
   describe("loadWaehler", () => {
+    it.each([
+      {
+        user: prepareUser().wahlbezirkID(undefined).build(),
+        when: "usersWahlbezirkIdIsUndefined",
+      },
+    ])("should_notLoadWaehleranzahl_when_$when", async ({ user }) => {
+      userStore.setUser(user);
+
+      await unitUnderTest.loadWaehler();
+
+      expect(mockDefinitions.getWahlbeteiligung).toHaveBeenCalledTimes(0);
+      expect(unitUnderTest.waehler).toBe(0);
+    });
+
     it("should_notLoadWaehleranzahl_when_usersHauptWahlIDIsUndefined", async () => {
       userStore.setUser(prepareUser().wahlbezirkID("ich bin eine id").build());
       // @ts-expect-error: cannot set readonly
@@ -91,6 +105,19 @@ describe("monitoringStore.ts", () => {
   });
 
   describe("sendWaehler", () => {
+    it.each([
+      {
+        user: prepareUser().wahlbezirkID(undefined).build(),
+        when: "usersWahlbezirkIdIsUndefined",
+      },
+    ])("should_notSendWaehleranzahl_when_$when", async ({ user }) => {
+      userStore.setUser(user);
+
+      await unitUnderTest.sendWaehler();
+
+      expect(mockDefinitions.postWahlbeteiligung).toHaveBeenCalledTimes(0);
+      expect(unitUnderTest.waehler).toBe(0);
+    });
     it("should_notSendWaehleranzahl_when_usersHauptWahlIDIsUndefined", async () => {
       userStore.setUser(prepareUser().wahlbezirkID("ich bin eine id").build());
       // @ts-expect-error: cannot set readonly

@@ -20,18 +20,9 @@ describe("konfigurationsparameterMapper.ts", () => {
       const dto: KonfigurationDTO[] = createKonfigurationDtoList(3);
 
       const expectedModel: Konfigurationsparameter[] = [
-        {
-          schluessel: dto[0].schluessel,
-          wert: dto[0].wert,
-        },
-        {
-          schluessel: dto[1].schluessel,
-          wert: dto[1].wert,
-        },
-        {
-          schluessel: dto[2].schluessel,
-          wert: dto[2].wert,
-        },
+        { schluessel: dto[0].schluessel, wert: dto[0].wert },
+        { schluessel: dto[1].schluessel, wert: dto[1].wert },
+        { schluessel: dto[2].schluessel, wert: dto[2].wert },
       ];
 
       const result = toModel(dto);

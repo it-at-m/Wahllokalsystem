@@ -10,7 +10,7 @@ import {
 } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
-import { WahlvorstandBuilder } from "@/types/wahlvorstand/Wahlvorstand";
+import { createEmptyWahlvorstand } from "@/types/wahlvorstand/Wahlvorstand";
 import {
   isSchriftfuehrer,
   isWahlvorsteher,
@@ -28,9 +28,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   const isSaving = ref(false);
   const lastLoading = ref<Date | null>(null);
   const lastSending = ref<Date | null>(null);
-  const wahlvorstand = ref<Wahlvorstand>(
-    WahlvorstandBuilder.createEmptyWahlvorstand()
-  );
+  const wahlvorstand = ref<Wahlvorstand>(createEmptyWahlvorstand());
 
   const isSchriftfuehrerAnwesend = computed<boolean>(() =>
     wahlvorstand.value.wahlvorstandsmitglieder.some(
@@ -59,7 +57,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
       isMindestanwesenheitErreicht.value
   );
 
-  async function loadWahlvorstand() {
+  async function forceLoadWahlvorstand() {
     isLoading.value = true;
     try {
       const wahlbezirkID = currentUserWahlbezirkID.value;
@@ -110,7 +108,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     isSaving,
     wahlvorstand,
     changeAnwesendOfMitglied,
-    loadWahlvorstand,
+    forceLoadWahlvorstand,
     sendWahlvorstand,
   };
 });

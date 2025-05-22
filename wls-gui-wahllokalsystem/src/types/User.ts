@@ -1,5 +1,6 @@
-import type { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 import type { WahlMetaData } from "@/types/wlsTypes/WahlMetaData.ts";
+
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 class User {
   username = "";
@@ -9,7 +10,7 @@ class User {
   wahltag? = "";
   wahlbezirkID? = "";
   wahlbezirkNummer? = "";
-  wahlbezirksArt!: WahlbezirksArtEnum;
+  wahlbezirksArt: WahlbezirksArtEnum = WahlbezirksArtEnum.UWB;
   pin = "";
   authorities = new Set<string>();
   wahlMetaData?: WahlMetaData[];

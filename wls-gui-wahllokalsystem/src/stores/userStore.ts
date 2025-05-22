@@ -1,8 +1,10 @@
+import type { User } from "@/types/User.ts";
+
 import { acceptHMRUpdate, defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 import { useUserService } from "@/composables/user/userService.ts";
-import { createUserLocalDevelopment, User } from "@/types/User";
+import { createUserLocalDevelopment } from "@/types/User";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { getUser } = useUserService();

@@ -2,6 +2,7 @@ import type { User } from "@/types/User.ts";
 
 import { createTestingPinia } from "@pinia/testing";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
+import { useWahlvorstandTestDataFactory } from "@tests/utils/wahlvorstand/WahlvorstandTestDataFactory.ts";
 import { createPinia, setActivePinia, storeToRefs } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -12,8 +13,6 @@ import {
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
-import { WahlvorstandBuilder } from "@/types/wahlvorstand/Wahlvorstand";
-import { WahlvorstandsmitgliedBuilder } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
 import { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -44,6 +43,8 @@ vi.mock("@/composables/wahlvorstand/wahlvorstandService", () => ({
 
 const mockedNow = new Date();
 const { prepareUser } = useUserTestDataFactory();
+const { createWahlvorstand, prepareWahlvorstandsmitglied } =
+  useWahlvorstandTestDataFactory();
 
 describe("wahlvorstandStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useWahlvorstandStore>;
@@ -75,12 +76,14 @@ describe("wahlvorstandStore.ts", () => {
       mockDefinitions.isSchriftfuehrer.mockReturnValue(true);
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion(WahlvorstandsmitgliedFunktionEnum.Sb)
-          .withAnwesend(true),
-        WahlvorstandsmitgliedBuilder.createMinimal().withFunktion(
-          WahlvorstandsmitgliedFunktionEnum.W
-        ),
+        prepareWahlvorstandsmitglied()
+          .funktion(WahlvorstandsmitgliedFunktionEnum.Sb)
+          .anwesend(true)
+          .build(),
+        prepareWahlvorstandsmitglied()
+          .funktion(WahlvorstandsmitgliedFunktionEnum.W)
+          .anwesend(false)
+          .build(),
       ];
 
       expect(unitUnderTest.isSchriftfuehrerAnwesend).toStrictEqual(true);
@@ -94,12 +97,14 @@ describe("wahlvorstandStore.ts", () => {
       mockDefinitions.isSchriftfuehrer.mockReturnValue(true);
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal().withFunktion(
-          WahlvorstandsmitgliedFunktionEnum.Sb
-        ),
-        WahlvorstandsmitgliedBuilder.createMinimal().withFunktion(
-          WahlvorstandsmitgliedFunktionEnum.W
-        ),
+        prepareWahlvorstandsmitglied()
+          .funktion(WahlvorstandsmitgliedFunktionEnum.Sb)
+          .anwesend(false)
+          .build(),
+        prepareWahlvorstandsmitglied()
+          .funktion(WahlvorstandsmitgliedFunktionEnum.W)
+          .anwesend(false)
+          .build(),
       ];
 
       expect(unitUnderTest.isSchriftfuehrerAnwesend).toStrictEqual(false);
@@ -116,12 +121,14 @@ describe("wahlvorstandStore.ts", () => {
       mockDefinitions.isSchriftfuehrer.mockReturnValue(false);
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion(WahlvorstandsmitgliedFunktionEnum.Sb)
-          .withAnwesend(true),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion(WahlvorstandsmitgliedFunktionEnum.W)
-          .withAnwesend(true),
+        prepareWahlvorstandsmitglied()
+          .funktion(WahlvorstandsmitgliedFunktionEnum.Sb)
+          .anwesend(true)
+          .build(),
+        prepareWahlvorstandsmitglied()
+          .funktion(WahlvorstandsmitgliedFunktionEnum.W)
+          .anwesend(true)
+          .build(),
       ];
       expect(unitUnderTest.isSchriftfuehrerAnwesend).toStrictEqual(false);
       expect(mockDefinitions.isSchriftfuehrer.mock.calls[0][0]).toStrictEqual(
@@ -143,9 +150,10 @@ describe("wahlvorstandStore.ts", () => {
         mockDefinitions.isWahlvorsteher.mockReturnValue(true);
 
         unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-          WahlvorstandsmitgliedBuilder.createMinimal()
-            .withFunktion(funktion)
-            .withAnwesend(true),
+          prepareWahlvorstandsmitglied()
+            .funktion(funktion)
+            .anwesend(true)
+            .build(),
         ];
 
         expect(unitUnderTest.isWahlvorsteherAnwesend).toStrictEqual(expected);
@@ -160,7 +168,10 @@ describe("wahlvorstandStore.ts", () => {
       "should_returnFalse_when_whenMitgliedWithFunktion'$funktion'ExistsButIsNotAnwesend",
       ({ funktion, expected }) => {
         unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-          WahlvorstandsmitgliedBuilder.createMinimal().withFunktion(funktion),
+          prepareWahlvorstandsmitglied()
+            .funktion(funktion)
+            .anwesend(false)
+            .build(),
         ];
 
         expect(unitUnderTest.isWahlvorsteherAnwesend).toStrictEqual(expected);
@@ -180,9 +191,10 @@ describe("wahlvorstandStore.ts", () => {
         mockDefinitions.isWahlvorsteher.mockReturnValue(false);
 
         unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-          WahlvorstandsmitgliedBuilder.createMinimal()
-            .withFunktion(funktion)
-            .withAnwesend(true),
+          prepareWahlvorstandsmitglied()
+            .funktion(funktion)
+            .anwesend(true)
+            .build(),
         ];
 
         expect(unitUnderTest.isWahlvorsteherAnwesend).toStrictEqual(expected);
@@ -325,8 +337,7 @@ describe("wahlvorstandStore.ts", () => {
     it("should_sendWahlvorstand_when_wahlbezirkIDIsGiven", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      const user = createUser(wahlbezirkID);
-      userStore.setUser(user);
+      userStore.setUser(_createUser(wahlbezirkID));
 
       const mockedDatetime = new Date();
 
@@ -344,8 +355,7 @@ describe("wahlvorstandStore.ts", () => {
 
     it("should_setLastSend_when_wahlvorstandIsSent", async () => {
       const userStore = useUserStore();
-      const user = createUser("wahlbezirkID");
-      userStore.setUser(user);
+      userStore.setUser(_createUser("wahlbezirkID"));
 
       expect(unitUnderTest.lastSending).toBeNull();
 
@@ -362,8 +372,7 @@ describe("wahlvorstandStore.ts", () => {
 
     it("should_notSendWahlvorstand_when_wahlbezirkIDIsNotGiven", async () => {
       const userStore = useUserStore();
-      const user = createUser(undefined);
-      userStore.setUser(user);
+      userStore.setUser(_createUser(undefined));
 
       await unitUnderTest.sendWahlvorstand();
 
@@ -371,41 +380,40 @@ describe("wahlvorstandStore.ts", () => {
     });
   });
 
-  describe("loadWahlvorstand", () => {
+  describe("forceLoadWahlvorstand", () => {
     it("should_setWahlvorstand_when_userHasWahlbezirkID", async () => {
       const userStore = useUserStore();
-      const user = createUser("wahlbezirkID");
-      userStore.setUser(user);
+      const wahlbezirkID = "wahlbezirkID";
+      userStore.setUser(_createUser(wahlbezirkID));
 
-      const mockedGetWahlvorstand =
-        WahlvorstandBuilder.createEmptyWahlvorstand();
+      const mockedGetWahlvorstand = createWahlvorstand(0);
       mockDefinitions.getWahlvorstand.mockReturnValue(mockedGetWahlvorstand);
 
-      await unitUnderTest.loadWahlvorstand();
+      await unitUnderTest.forceLoadWahlvorstand();
 
       expect(unitUnderTest.wahlvorstand).toStrictEqual(mockedGetWahlvorstand);
+      expect(mockDefinitions.getWahlvorstand.mock.calls).toStrictEqual([
+        [wahlbezirkID],
+      ]);
     });
 
     it("should_setLastLoading_when_wahlvorstandIsLoaded", async () => {
       const userStore = useUserStore();
-      const user = createUser("wahlbezirkID");
-      userStore.setUser(user);
+      userStore.setUser(_createUser("wahlbezirkID"));
 
-      const mockedGetWahlvorstand =
-        WahlvorstandBuilder.createEmptyWahlvorstand();
+      const mockedGetWahlvorstand = createWahlvorstand(0);
       mockDefinitions.getWahlvorstand.mockReturnValue(mockedGetWahlvorstand);
 
       expect(unitUnderTest.lastLoading).toBeNull();
 
-      await unitUnderTest.loadWahlvorstand();
+      await unitUnderTest.forceLoadWahlvorstand();
 
       expect(unitUnderTest.lastLoading).toStrictEqual(mockedNow);
     });
 
     it("should_notUpdateLastLoading_when_getWahlvorstandFails", async () => {
       const userStore = useUserStore();
-      const user = createUser("wahlbezirkID");
-      userStore.setUser(user);
+      userStore.setUser(_createUser("wahlbezirkID"));
 
       mockDefinitions.getWahlvorstand.mockImplementationOnce(() => {
         throw new Error("API Error");
@@ -413,7 +421,7 @@ describe("wahlvorstandStore.ts", () => {
 
       expect(unitUnderTest.lastLoading).toBeNull();
 
-      await expect(unitUnderTest.loadWahlvorstand()).rejects.toThrow(
+      await expect(unitUnderTest.forceLoadWahlvorstand()).rejects.toThrow(
         "API Error"
       );
 
@@ -430,7 +438,7 @@ describe("wahlvorstandStore.ts", () => {
       const userStore = useUserStore();
       userStore.setUser(user);
 
-      await unitUnderTest.loadWahlvorstand();
+      await unitUnderTest.forceLoadWahlvorstand();
 
       expect(mockDefinitions.getWahlvorstand).toHaveBeenCalledTimes(0);
       expect(unitUnderTest.lastLoading).toBeNull();
@@ -442,18 +450,21 @@ describe("wahlvorstandStore.ts", () => {
       const newAnwesenheit = true;
       const mitgliedID = "mitgliedID";
 
-      const mitgliedToChange = WahlvorstandsmitgliedBuilder.createMinimal()
-        .withIdentifikator(mitgliedID)
-        .withAnwesend(!newAnwesenheit);
+      const mitgliedToChange = prepareWahlvorstandsmitglied()
+        .identifikator(mitgliedID)
+        .anwesend(!newAnwesenheit)
+        .build();
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withIdentifikator(mitgliedID + "andere")
-          .withAnwesend(false),
+        prepareWahlvorstandsmitglied()
+          .identifikator(mitgliedID + "andere")
+          .anwesend(false)
+          .build(),
         mitgliedToChange,
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withIdentifikator(mitgliedID + "andere2")
-          .withAnwesend(false),
+        prepareWahlvorstandsmitglied()
+          .identifikator(mitgliedID + "andere2")
+          .anwesend(false)
+          .build(),
       ];
 
       unitUnderTest.changeAnwesendOfMitglied(newAnwesenheit, mitgliedID);
@@ -466,15 +477,18 @@ describe("wahlvorstandStore.ts", () => {
       const mitgliedID = "mitgliedID";
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withIdentifikator(mitgliedID + "andere")
-          .withAnwesend(false),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withIdentifikator(mitgliedID + "andere2")
-          .withAnwesend(false),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withIdentifikator(mitgliedID + "andere3")
-          .withAnwesend(false),
+        prepareWahlvorstandsmitglied()
+          .identifikator(mitgliedID + "andere")
+          .anwesend(false)
+          .build(),
+        prepareWahlvorstandsmitglied()
+          .identifikator(mitgliedID + "andere2")
+          .anwesend(false)
+          .build(),
+        prepareWahlvorstandsmitglied()
+          .identifikator(mitgliedID + "andere3")
+          .anwesend(false)
+          .build(),
       ];
 
       unitUnderTest.changeAnwesendOfMitglied(newAnwesenheit, mitgliedID);
@@ -489,8 +503,7 @@ describe("wahlvorstandStore.ts", () => {
     it("should_updateIsLoading_when_loadWahlvorstandIsCalled", async () => {
       const timeout = 100;
       const userStore = useUserStore();
-      const user = createUser("wahlbezirkID");
-      userStore.setUser(user);
+      userStore.setUser(_createUser("wahlbezirkID"));
 
       // Verzögerung API-Aufruf simulieren, um die Asynchronität zu testen
       mockDefinitions.getWahlvorstand.mockReturnValue(
@@ -504,7 +517,7 @@ describe("wahlvorstandStore.ts", () => {
       // vor dem API-Aufruf
       expect(unitUnderTest.isLoading).toBe(false);
 
-      const promise = unitUnderTest.loadWahlvorstand();
+      const promise = unitUnderTest.forceLoadWahlvorstand();
 
       // während des API-Aufrufs
       expect(unitUnderTest.isLoading).toBe(true);
@@ -520,8 +533,7 @@ describe("wahlvorstandStore.ts", () => {
     it("should_updateIsLoading_when_loadWahlvorstandFails", async () => {
       const timeout = 100;
       const userStore = useUserStore();
-      const user = createUser("wahlbezirkID");
-      userStore.setUser(user);
+      userStore.setUser(_createUser("wahlbezirkID"));
 
       // Verzögerung API-Aufruf simulieren, um die Asynchronität zu testen
       mockDefinitions.getWahlvorstand.mockReturnValue(
@@ -535,7 +547,7 @@ describe("wahlvorstandStore.ts", () => {
       // vor dem API-Aufruf
       expect(unitUnderTest.isLoading).toBe(false);
 
-      const promise = unitUnderTest.loadWahlvorstand();
+      const promise = unitUnderTest.forceLoadWahlvorstand();
 
       // während des API-Aufrufs
       expect(unitUnderTest.isLoading).toBe(true);
@@ -553,8 +565,7 @@ describe("wahlvorstandStore.ts", () => {
     it("should_updateIsSaving_when_sendWahlvorstandIsCalled", async () => {
       const timeout = 100;
       const userStore = useUserStore();
-      const user = createUser("wahlbezirkID");
-      userStore.setUser(user);
+      userStore.setUser(_createUser("wahlbezirkID"));
 
       // Verzögerung API-Aufruf simulieren, um die Asynchronität zu testen
       mockDefinitions.saveWahlvorstand.mockReturnValue(
@@ -584,8 +595,7 @@ describe("wahlvorstandStore.ts", () => {
     it("should_updateIsSaving_when_sendWahlvorstandFails", async () => {
       const timeout = 100;
       const userStore = useUserStore();
-      const user = createUser("wahlbezirkID");
-      userStore.setUser(user);
+      userStore.setUser(_createUser("wahlbezirkID"));
 
       // Verzögerung API-Aufruf simulieren, um die Asynchronität zu testen
       mockDefinitions.saveWahlvorstand.mockReturnValue(
@@ -616,12 +626,12 @@ describe("wahlvorstandStore.ts", () => {
   function _addAnwesendeWahlvorstandsmitglieder(zahl: number) {
     for (let i = 1; i <= zahl; i++) {
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder.push(
-        WahlvorstandsmitgliedBuilder.createMinimal().withAnwesend(true)
+        prepareWahlvorstandsmitglied().anwesend(true).build()
       );
     }
   }
 });
 
-function createUser(wahlbezirkID: string | undefined): User {
+function _createUser(wahlbezirkID: string | undefined): User {
   return prepareUser().wahlbezirkID(wahlbezirkID).build();
 }

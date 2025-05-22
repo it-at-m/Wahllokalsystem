@@ -1,3 +1,4 @@
+import type { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 import type { WahlMetaData } from "@/types/wlsTypes/WahlMetaData.ts";
 
 export interface User {
@@ -8,7 +9,7 @@ export interface User {
   wahltag: string | undefined;
   wahlbezirkID: string | undefined;
   wahlbezirkNummer: string | undefined;
-  wahlbezirksArt: WahlbezirksArtEnum | undefined;
+  wahlbezirksArt: WahlbezirksArtEnum;
   pin: string | undefined;
   authorities: Set<string>;
   wahlMetaData: WahlMetaData[] | undefined;

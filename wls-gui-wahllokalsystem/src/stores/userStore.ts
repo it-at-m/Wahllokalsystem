@@ -10,7 +10,26 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 const { getUser } = useUserService();
 
 export const useUserStore = defineStore("user", () => {
-  const user = ref<User>(new User());
+  const defaultUser: User = {
+    username: "",
+    email: "",
+    userEnabled: false,
+    wahltagID: "",
+    wahltag: "",
+    wahlbezirkID: "",
+    wahlbezirkNummer: "",
+    wahlbezirksArt: WahlbezirksArtEnum.UWB, // assuming ART1 as default
+    pin: "",
+    authorities: new Set<string>(),
+    wahlMetaData: [
+      {
+        wahlbezirkID: "",
+        wahlnummer: "",
+        wahlID: "",
+      },
+    ],
+  };
+  const user = ref<User>(defaultUser);
 
   async function loadUser() {
     try {
@@ -19,7 +38,7 @@ export const useUserStore = defineStore("user", () => {
       if (import.meta.env.DEV) {
         user.value = createUserLocalDevelopment();
       } else {
-        user.value = new User();
+        user.value = defaultUser;
       }
     }
   }

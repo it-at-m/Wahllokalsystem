@@ -26,19 +26,23 @@ const wahlvorstandsmitgliedFunktionEnumValues = Object.values(
 );
 
 export function useWahlvorstandTestDataFactory() {
-  function createWahlvorstand(): Wahlvorstand {
+  function createWahlvorstand(countMitglieder = 3): Wahlvorstand {
+    const wahlvorstandsmitglieder: Wahlvorstandsmitglied[] = [];
+    for (let i = 0; i < countMitglieder; ++i) {
+      wahlvorstandsmitglieder.push(createWahlvorstandsmitglied());
+    }
     return {
-      wahlvorstandsmitglieder: [],
+      wahlvorstandsmitglieder: wahlvorstandsmitglieder,
     };
   }
-  function createWahlvorstandDTO(): WahlvorstandDTO {
+  function createWahlvorstandDTO(countMitglieder = 3): WahlvorstandDTO {
+    const wahlvorstandsmitglieder: WahlvorstandsmitgliedDTO[] = [];
+    for (let i = 0; i < countMitglieder; i++) {
+      wahlvorstandsmitglieder.push(createWahlvorstandsmitgliedDTO());
+    }
     return {
       wahlbezirkID: generateRandomString(10),
-      wahlvorstandsmitglieder: [
-        createWahlvorstandsmitgliedDTO(),
-        createWahlvorstandsmitgliedDTO(),
-        createWahlvorstandsmitgliedDTO(),
-      ],
+      wahlvorstandsmitglieder: wahlvorstandsmitglieder,
       anwesenheitBeginn: generateRandomDateTimeAsString(),
     };
   }

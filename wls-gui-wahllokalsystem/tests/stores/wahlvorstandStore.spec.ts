@@ -13,7 +13,6 @@ import {
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
-import { WahlvorstandBuilder } from "@/types/wahlvorstand/Wahlvorstand";
 import { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -44,7 +43,8 @@ vi.mock("@/composables/wahlvorstand/wahlvorstandService", () => ({
 
 const mockedNow = new Date();
 const { prepareUser } = useUserTestDataFactory();
-const { prepareWahlvorstandsmitglied } = useWahlvorstandTestDataFactory();
+const { createWahlvorstand, prepareWahlvorstandsmitglied } =
+  useWahlvorstandTestDataFactory();
 
 describe("wahlvorstandStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useWahlvorstandStore>;
@@ -390,8 +390,7 @@ describe("wahlvorstandStore.ts", () => {
       const user = createUser(wahlbezirkID);
       userStore.setUser(user);
 
-      const mockedGetWahlvorstand =
-        WahlvorstandBuilder.createEmptyWahlvorstand();
+      const mockedGetWahlvorstand = createWahlvorstand(0);
       mockDefinitions.getWahlvorstand.mockReturnValue(mockedGetWahlvorstand);
 
       await unitUnderTest.forceLoadWahlvorstand();
@@ -407,8 +406,7 @@ describe("wahlvorstandStore.ts", () => {
       const user = createUser("wahlbezirkID");
       userStore.setUser(user);
 
-      const mockedGetWahlvorstand =
-        WahlvorstandBuilder.createEmptyWahlvorstand();
+      const mockedGetWahlvorstand = createWahlvorstand(0);
       mockDefinitions.getWahlvorstand.mockReturnValue(mockedGetWahlvorstand);
 
       expect(unitUnderTest.lastLoading).toBeNull();

@@ -2,6 +2,7 @@ import type { User } from "@/types/User.ts";
 
 import { createTestingPinia } from "@pinia/testing";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
+import { useWahlvorstandTestDataFactory } from "@tests/utils/wahlvorstand/WahlvorstandTestDataFactory.ts";
 import { createPinia, setActivePinia, storeToRefs } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -13,7 +14,6 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 import { WahlvorstandBuilder } from "@/types/wahlvorstand/Wahlvorstand";
-import { WahlvorstandsmitgliedBuilder } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
 import { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -44,6 +44,7 @@ vi.mock("@/composables/wahlvorstand/wahlvorstandService", () => ({
 
 const mockedNow = new Date();
 const { prepareUser } = useUserTestDataFactory();
+const { prepareWahlvorstandsmitglied } = useWahlvorstandTestDataFactory();
 
 describe("wahlvorstandStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useWahlvorstandStore>;
@@ -75,12 +76,14 @@ describe("wahlvorstandStore.ts", () => {
       mockDefinitions.isSchriftfuehrer.mockReturnValue(true);
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion(WahlvorstandsmitgliedFunktionEnum.Sb)
-          .withAnwesend(true),
-        WahlvorstandsmitgliedBuilder.createMinimal().withFunktion(
-          WahlvorstandsmitgliedFunktionEnum.W
-        ),
+        prepareWahlvorstandsmitglied()
+          .funktion(WahlvorstandsmitgliedFunktionEnum.Sb)
+          .anwesend(true)
+          .build(),
+        prepareWahlvorstandsmitglied()
+          .funktion(WahlvorstandsmitgliedFunktionEnum.W)
+          .anwesend(false)
+          .build(),
       ];
 
       expect(unitUnderTest.isSchriftfuehrerAnwesend).toStrictEqual(true);
@@ -94,12 +97,14 @@ describe("wahlvorstandStore.ts", () => {
       mockDefinitions.isSchriftfuehrer.mockReturnValue(true);
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal().withFunktion(
-          WahlvorstandsmitgliedFunktionEnum.Sb
-        ),
-        WahlvorstandsmitgliedBuilder.createMinimal().withFunktion(
-          WahlvorstandsmitgliedFunktionEnum.W
-        ),
+        prepareWahlvorstandsmitglied()
+          .funktion(WahlvorstandsmitgliedFunktionEnum.Sb)
+          .anwesend(false)
+          .build(),
+        prepareWahlvorstandsmitglied()
+          .funktion(WahlvorstandsmitgliedFunktionEnum.W)
+          .anwesend(false)
+          .build(),
       ];
 
       expect(unitUnderTest.isSchriftfuehrerAnwesend).toStrictEqual(false);
@@ -116,12 +121,14 @@ describe("wahlvorstandStore.ts", () => {
       mockDefinitions.isSchriftfuehrer.mockReturnValue(false);
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion(WahlvorstandsmitgliedFunktionEnum.Sb)
-          .withAnwesend(true),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion(WahlvorstandsmitgliedFunktionEnum.W)
-          .withAnwesend(true),
+        prepareWahlvorstandsmitglied()
+          .funktion(WahlvorstandsmitgliedFunktionEnum.Sb)
+          .anwesend(true)
+          .build(),
+        prepareWahlvorstandsmitglied()
+          .funktion(WahlvorstandsmitgliedFunktionEnum.W)
+          .anwesend(true)
+          .build(),
       ];
       expect(unitUnderTest.isSchriftfuehrerAnwesend).toStrictEqual(false);
       expect(mockDefinitions.isSchriftfuehrer.mock.calls[0][0]).toStrictEqual(
@@ -143,9 +150,10 @@ describe("wahlvorstandStore.ts", () => {
         mockDefinitions.isWahlvorsteher.mockReturnValue(true);
 
         unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-          WahlvorstandsmitgliedBuilder.createMinimal()
-            .withFunktion(funktion)
-            .withAnwesend(true),
+          prepareWahlvorstandsmitglied()
+            .funktion(funktion)
+            .anwesend(true)
+            .build(),
         ];
 
         expect(unitUnderTest.isWahlvorsteherAnwesend).toStrictEqual(expected);
@@ -160,7 +168,10 @@ describe("wahlvorstandStore.ts", () => {
       "should_returnFalse_when_whenMitgliedWithFunktion'$funktion'ExistsButIsNotAnwesend",
       ({ funktion, expected }) => {
         unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-          WahlvorstandsmitgliedBuilder.createMinimal().withFunktion(funktion),
+          prepareWahlvorstandsmitglied()
+            .funktion(funktion)
+            .anwesend(false)
+            .build(),
         ];
 
         expect(unitUnderTest.isWahlvorsteherAnwesend).toStrictEqual(expected);
@@ -180,9 +191,10 @@ describe("wahlvorstandStore.ts", () => {
         mockDefinitions.isWahlvorsteher.mockReturnValue(false);
 
         unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-          WahlvorstandsmitgliedBuilder.createMinimal()
-            .withFunktion(funktion)
-            .withAnwesend(true),
+          prepareWahlvorstandsmitglied()
+            .funktion(funktion)
+            .anwesend(true)
+            .build(),
         ];
 
         expect(unitUnderTest.isWahlvorsteherAnwesend).toStrictEqual(expected);
@@ -446,18 +458,21 @@ describe("wahlvorstandStore.ts", () => {
       const newAnwesenheit = true;
       const mitgliedID = "mitgliedID";
 
-      const mitgliedToChange = WahlvorstandsmitgliedBuilder.createMinimal()
-        .withIdentifikator(mitgliedID)
-        .withAnwesend(!newAnwesenheit);
+      const mitgliedToChange = prepareWahlvorstandsmitglied()
+        .identifikator(mitgliedID)
+        .anwesend(!newAnwesenheit)
+        .build();
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withIdentifikator(mitgliedID + "andere")
-          .withAnwesend(false),
+        prepareWahlvorstandsmitglied()
+          .identifikator(mitgliedID + "andere")
+          .anwesend(false)
+          .build(),
         mitgliedToChange,
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withIdentifikator(mitgliedID + "andere2")
-          .withAnwesend(false),
+        prepareWahlvorstandsmitglied()
+          .identifikator(mitgliedID + "andere2")
+          .anwesend(false)
+          .build(),
       ];
 
       unitUnderTest.changeAnwesendOfMitglied(newAnwesenheit, mitgliedID);
@@ -470,15 +485,18 @@ describe("wahlvorstandStore.ts", () => {
       const mitgliedID = "mitgliedID";
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withIdentifikator(mitgliedID + "andere")
-          .withAnwesend(false),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withIdentifikator(mitgliedID + "andere2")
-          .withAnwesend(false),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withIdentifikator(mitgliedID + "andere3")
-          .withAnwesend(false),
+        prepareWahlvorstandsmitglied()
+          .identifikator(mitgliedID + "andere")
+          .anwesend(false)
+          .build(),
+        prepareWahlvorstandsmitglied()
+          .identifikator(mitgliedID + "andere2")
+          .anwesend(false)
+          .build(),
+        prepareWahlvorstandsmitglied()
+          .identifikator(mitgliedID + "andere3")
+          .anwesend(false)
+          .build(),
       ];
 
       unitUnderTest.changeAnwesendOfMitglied(newAnwesenheit, mitgliedID);
@@ -620,7 +638,7 @@ describe("wahlvorstandStore.ts", () => {
   function _addAnwesendeWahlvorstandsmitglieder(zahl: number) {
     for (let i = 1; i <= zahl; i++) {
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder.push(
-        WahlvorstandsmitgliedBuilder.createMinimal().withAnwesend(true)
+        prepareWahlvorstandsmitglied().anwesend(true).build()
       );
     }
   }

@@ -5,6 +5,7 @@ import type {
 import type { Wahlvorstand } from "@/types/wahlvorstand/Wahlvorstand.ts";
 import type { Wahlvorstandsmitglied } from "@/types/wahlvorstand/Wahlvorstandsmitglied.ts";
 
+import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
 import { WahlvorstandsmitgliedDTOFunktionEnum } from "@/api/wls-clients/generated-wahlvorstand-api";
@@ -62,10 +63,15 @@ export function useWahlvorstandTestDataFactory() {
     };
   }
 
+  function prepareWahlvorstandsmitglied() {
+    return proxyBuilder<Wahlvorstandsmitglied>(createWahlvorstandsmitglied());
+  }
+
   return {
     createWahlvorstand,
     createWahlvorstandDTO,
     createWahlvorstandsmitglied,
     createWahlvorstandsmitgliedDTO,
+    prepareWahlvorstandsmitglied,
   };
 }

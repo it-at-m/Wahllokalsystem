@@ -374,7 +374,8 @@ describe("wahlvorstandStore.ts", () => {
   describe("loadWahlvorstandWithUpdate", () => {
     it("should_setWahlvorstand_when_userHasWahlbezirkID", async () => {
       const userStore = useUserStore();
-      const user = createUser("wahlbezirkID");
+      const wahlbezirkID = "wahlbezirkID";
+      const user = createUser(wahlbezirkID);
       userStore.setUser(user);
 
       const mockedGetWahlvorstand =
@@ -385,7 +386,7 @@ describe("wahlvorstandStore.ts", () => {
 
       expect(unitUnderTest.wahlvorstand).toStrictEqual(mockedGetWahlvorstand);
       expect(mockDefinitions.getWahlvorstand.mock.calls).toStrictEqual([
-        [wahlbezirkID, true],
+        [wahlbezirkID],
       ]);
     });
 
@@ -507,7 +508,7 @@ describe("wahlvorstandStore.ts", () => {
       // vor dem API-Aufruf
       expect(unitUnderTest.isLoading).toBe(false);
 
-      const promise = unitUnderTest.loadWahlvorstand();
+      const promise = unitUnderTest.forceLoadWahlvorstand();
 
       // während des API-Aufrufs
       expect(unitUnderTest.isLoading).toBe(true);
@@ -538,7 +539,7 @@ describe("wahlvorstandStore.ts", () => {
       // vor dem API-Aufruf
       expect(unitUnderTest.isLoading).toBe(false);
 
-      const promise = unitUnderTest.loadWahlvorstand();
+      const promise = unitUnderTest.forceLoadWahlvorstand();
 
       // während des API-Aufrufs
       expect(unitUnderTest.isLoading).toBe(true);

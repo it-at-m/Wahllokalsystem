@@ -108,6 +108,7 @@ describe("monitoringStore.ts", () => {
       expect(mockDefinitions.postWahlbeteiligung).toHaveBeenCalledTimes(0);
       expect(unitUnderTest.waehler).toBe(0);
     });
+
     it("should_notSendWaehleranzahl_when_usersHauptWahlIDIsUndefined", async () => {
       userStore.setUser(prepareUser().wahlbezirkID("ich bin eine id").build());
       // @ts-expect-error: cannot set readonly

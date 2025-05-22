@@ -20,10 +20,15 @@ export function useWahlvorstandService() {
     })
   );
 
-  async function getWahlvorstand(wahlbezirkID: string): Promise<Wahlvorstand> {
+  async function getWahlvorstand(
+    wahlbezirkID: string,
+    forceUpdate = false
+  ): Promise<Wahlvorstand> {
     try {
-      const response =
-        await wahlvorstandControllerApi.getWahlvorstand(wahlbezirkID);
+      const response = await wahlvorstandControllerApi.getWahlvorstand(
+        wahlbezirkID,
+        forceUpdate
+      );
       userNotificationService.addNotification(
         "Die Anwesenheit wurde aktualisiert.",
         UserNotificationCategoryEnum.SUCCESS

@@ -1,3 +1,5 @@
+import type { User } from "@/types/User.ts";
+
 import { createTestingPinia } from "@pinia/testing";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { createPinia, setActivePinia, storeToRefs } from "pinia";
@@ -323,7 +325,8 @@ describe("wahlvorstandStore.ts", () => {
     it("should_sendWahlvorstand_when_wahlbezirkIDIsGiven", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+      const user = createUser(wahlbezirkID);
+      userStore.setUser(user);
 
       const mockedDatetime = new Date();
 
@@ -341,8 +344,8 @@ describe("wahlvorstandStore.ts", () => {
 
     it("should_setLastSend_when_wahlvorstandIsSent", async () => {
       const userStore = useUserStore();
-      const wahlbezirkID = "wahlbezirkID";
-      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+      const user = createUser("wahlbezirkID");
+      userStore.setUser(user);
 
       expect(unitUnderTest.lastSending).toBeNull();
 
@@ -359,7 +362,8 @@ describe("wahlvorstandStore.ts", () => {
 
     it("should_notSendWahlvorstand_when_wahlbezirkIDIsNotGiven", async () => {
       const userStore = useUserStore();
-      userStore.setUser(prepareUser().wahlbezirkID(undefined).build());
+      const user = createUser(undefined);
+      userStore.setUser(user);
 
       await unitUnderTest.sendWahlvorstand();
 
@@ -370,8 +374,8 @@ describe("wahlvorstandStore.ts", () => {
   describe("loadWahlvorstand", () => {
     it("should_setWahlvorstand_when_userHasWahlbezirkID", async () => {
       const userStore = useUserStore();
-      const wahlbezirkID = "wahlbezirkID";
-      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+      const user = createUser("wahlbezirkID");
+      userStore.setUser(user);
 
       const mockedGetWahlvorstand =
         WahlvorstandBuilder.createEmptyWahlvorstand();
@@ -384,8 +388,8 @@ describe("wahlvorstandStore.ts", () => {
 
     it("should_setLastLoading_when_wahlvorstandIsLoaded", async () => {
       const userStore = useUserStore();
-      const wahlbezirkID = "wahlbezirkID";
-      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+      const user = createUser("wahlbezirkID");
+      userStore.setUser(user);
 
       const mockedGetWahlvorstand =
         WahlvorstandBuilder.createEmptyWahlvorstand();
@@ -400,8 +404,8 @@ describe("wahlvorstandStore.ts", () => {
 
     it("should_notUpdateLastLoading_when_getWahlvorstandFails", async () => {
       const userStore = useUserStore();
-      const wahlbezirkID = "wahlbezirkID";
-      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+      const user = createUser("wahlbezirkID");
+      userStore.setUser(user);
 
       mockDefinitions.getWahlvorstand.mockImplementationOnce(() => {
         throw new Error("API Error");
@@ -481,6 +485,134 @@ describe("wahlvorstandStore.ts", () => {
     });
   });
 
+  describe("isLoading", () => {
+    it("should_updateIsLoading_when_loadWahlvorstandIsCalled", async () => {
+      const timeout = 100;
+      const userStore = useUserStore();
+      const user = createUser("wahlbezirkID");
+      userStore.setUser(user);
+
+      // Verzögerung API-Aufruf simulieren, um die Asynchronität zu testen
+      mockDefinitions.getWahlvorstand.mockReturnValue(
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({});
+          }, timeout);
+        })
+      );
+
+      // vor dem API-Aufruf
+      expect(unitUnderTest.isLoading).toBe(false);
+
+      const promise = unitUnderTest.loadWahlvorstand();
+
+      // während des API-Aufrufs
+      expect(unitUnderTest.isLoading).toBe(true);
+
+      // Zeit vorstellen, um die Promise aufzulösen
+      vi.advanceTimersByTime(timeout);
+      await promise;
+
+      // nach dem API-Aufruf
+      expect(unitUnderTest.isLoading).toBe(false);
+    });
+
+    it("should_updateIsLoading_when_loadWahlvorstandFails", async () => {
+      const timeout = 100;
+      const userStore = useUserStore();
+      const user = createUser("wahlbezirkID");
+      userStore.setUser(user);
+
+      // Verzögerung API-Aufruf simulieren, um die Asynchronität zu testen
+      mockDefinitions.getWahlvorstand.mockReturnValue(
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            reject("Mocked API Error");
+          }, timeout);
+        })
+      );
+
+      // vor dem API-Aufruf
+      expect(unitUnderTest.isLoading).toBe(false);
+
+      const promise = unitUnderTest.loadWahlvorstand();
+
+      // während des API-Aufrufs
+      expect(unitUnderTest.isLoading).toBe(true);
+
+      // Zeit vorstellen, um die Promise aufzulösen
+      vi.advanceTimersByTime(timeout);
+      await expect(promise).rejects.toThrow("Mocked API Error");
+
+      // nach dem API-Aufruf
+      expect(unitUnderTest.isLoading).toBe(false);
+    });
+  });
+
+  describe("isSaving", () => {
+    it("should_updateIsSaving_when_sendWahlvorstandIsCalled", async () => {
+      const timeout = 100;
+      const userStore = useUserStore();
+      const user = createUser("wahlbezirkID");
+      userStore.setUser(user);
+
+      // Verzögerung API-Aufruf simulieren, um die Asynchronität zu testen
+      mockDefinitions.saveWahlvorstand.mockReturnValue(
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({});
+          }, timeout);
+        })
+      );
+
+      // vor dem API-Aufruf
+      expect(unitUnderTest.isSaving).toBe(false);
+
+      const promise = unitUnderTest.sendWahlvorstand();
+
+      // während des API-Aufrufs
+      expect(unitUnderTest.isSaving).toBe(true);
+
+      // Zeit vorstellen, um die Promise aufzulösen
+      vi.advanceTimersByTime(timeout);
+      await promise;
+
+      // nach dem API-Aufruf
+      expect(unitUnderTest.isSaving).toBe(false);
+    });
+
+    it("should_updateIsSaving_when_sendWahlvorstandFails", async () => {
+      const timeout = 100;
+      const userStore = useUserStore();
+      const user = createUser("wahlbezirkID");
+      userStore.setUser(user);
+
+      // Verzögerung API-Aufruf simulieren, um die Asynchronität zu testen
+      mockDefinitions.saveWahlvorstand.mockReturnValue(
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            reject("Mocked API Error");
+          }, timeout);
+        })
+      );
+
+      // vor dem API-Aufruf
+      expect(unitUnderTest.isSaving).toBe(false);
+
+      const promise = unitUnderTest.sendWahlvorstand();
+
+      // während des API-Aufrufs
+      expect(unitUnderTest.isSaving).toBe(true);
+
+      // Zeit vorstellen, um die Promise aufzulösen
+      vi.advanceTimersByTime(timeout);
+      await expect(promise).rejects.toThrow("Mocked API Error");
+
+      // nach dem API-Aufruf
+      expect(unitUnderTest.isSaving).toBe(false);
+    });
+  });
+
   function _addAnwesendeWahlvorstandsmitglieder(zahl: number) {
     for (let i = 1; i <= zahl; i++) {
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder.push(
@@ -489,3 +621,7 @@ describe("wahlvorstandStore.ts", () => {
     }
   }
 });
+
+function createUser(wahlbezirkID: string | undefined): User {
+  return prepareUser().wahlbezirkID(wahlbezirkID).build();
+}

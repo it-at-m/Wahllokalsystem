@@ -383,7 +383,7 @@ describe("wahlvorstandStore.ts", () => {
     });
   });
 
-  describe("loadWahlvorstandWithUpdate", () => {
+  describe("forceLoadWahlvorstand", () => {
     it("should_setWahlvorstand_when_userHasWahlbezirkID", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";

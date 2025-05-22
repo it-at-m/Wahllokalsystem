@@ -35,6 +35,7 @@ export function useWahlvorstandTestDataFactory() {
       wahlvorstandsmitglieder: wahlvorstandsmitglieder,
     };
   }
+  
   function createWahlvorstandDTO(countMitglieder = 3): WahlvorstandDTO {
     const wahlvorstandsmitglieder: WahlvorstandsmitgliedDTO[] = [];
     for (let i = 0; i < countMitglieder; i++) {

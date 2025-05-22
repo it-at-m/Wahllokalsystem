@@ -109,7 +109,7 @@ describe("TheNachbesetzungDruckenButton.vue", () => {
         await button.trigger("click");
 
         expect(wahlvorstandStore.sendWahlvorstand).toHaveBeenCalled();
-        expect(wahlvorstandStore.loadWahlvorstand).toHaveBeenCalled();
+        expect(wahlvorstandStore.forceLoadWahlvorstand).toHaveBeenCalled();
         expect(window.open).toHaveBeenCalled();
         expect(mockedWindow.print).toHaveBeenCalled();
 

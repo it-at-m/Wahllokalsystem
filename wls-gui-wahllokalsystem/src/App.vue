@@ -186,7 +186,7 @@ import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 
 const { loadEreignisse } = useEreignisStore();
 const { loadUser } = useUserStore();
-const { loadWahlvorstand } = useWahlvorstandStore();
+const { forceLoadWahlvorstand } = useWahlvorstandStore();
 const { initTasks } = useTaskManagerStore();
 const { loadWaehler } = useMonitoringStore();
 
@@ -200,7 +200,7 @@ const isOffline = ref(false);
 
 onMounted(async () => {
   await loadUser().then(() => {
-    loadWahlvorstand();
+    forceLoadWahlvorstand();
     startBroadcastMessageInterval();
     initTasks();
     loadEreignisse();

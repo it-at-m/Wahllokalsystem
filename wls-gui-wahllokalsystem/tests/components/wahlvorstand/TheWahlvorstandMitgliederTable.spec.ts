@@ -6,6 +6,7 @@ import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
+import { useWahlvorstandTestDataFactory } from "@tests/utils/wahlvorstand/WahlvorstandTestDataFactory.ts";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import {
@@ -24,7 +25,8 @@ import * as directives from "vuetify/directives";
 
 import TheWahlvorstandMitgliederTable from "@/components/wahlvorstand/TheWahlvorstandMitgliederTable.vue";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
-import { WahlvorstandsmitgliedBuilder } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
+
+const { prepareWahlvorstandsmitglied } = useWahlvorstandTestDataFactory();
 
 describe("TheWahlvorstandMitgliederTable.vue", () => {
   let vuetify: ReturnType<typeof createVuetify>;
@@ -62,10 +64,12 @@ describe("TheWahlvorstandMitgliederTable.vue", () => {
       const wahlvorstandsmitglieder = [] as Wahlvorstandsmitglied[];
       for (let i = 0; i < 5; i++) {
         wahlvorstandsmitglieder.push(
-          WahlvorstandsmitgliedBuilder.createComplete()
-            .withFamilienname(`famname ${i}`)
-            .withVorname(`vorname ${i}`)
-            .withAnwesend(i % 2 === 0)
+          prepareWahlvorstandsmitglied()
+            .familienname(`famname ${i}`)
+            .vorname(`vorname ${i}`)
+            .anwesend(i % 2 === 0)
+            .funktionsname("funktion")
+            .build()
         );
       }
 
@@ -98,12 +102,14 @@ describe("TheWahlvorstandMitgliederTable.vue", () => {
         const wahlvorstandStore = useWahlvorstandStore();
 
         wahlvorstandStore.wahlvorstand.wahlvorstandsmitglieder = [
-          WahlvorstandsmitgliedBuilder.createMinimal()
-            .withIdentifikator("id1")
-            .withAnwesend(false),
-          WahlvorstandsmitgliedBuilder.createMinimal()
-            .withIdentifikator("id2")
-            .withAnwesend(false),
+          prepareWahlvorstandsmitglied()
+            .identifikator("id1")
+            .anwesend(false)
+            .build(),
+          prepareWahlvorstandsmitglied()
+            .identifikator("id2")
+            .anwesend(false)
+            .build(),
         ];
 
         await nextTick();
@@ -127,12 +133,14 @@ describe("TheWahlvorstandMitgliederTable.vue", () => {
         const wahlvorstandStore = useWahlvorstandStore();
 
         wahlvorstandStore.wahlvorstand.wahlvorstandsmitglieder = [
-          WahlvorstandsmitgliedBuilder.createMinimal()
-            .withIdentifikator("id1")
-            .withAnwesend(true),
-          WahlvorstandsmitgliedBuilder.createMinimal()
-            .withIdentifikator("id2")
-            .withAnwesend(true),
+          prepareWahlvorstandsmitglied()
+            .identifikator("id1")
+            .anwesend(true)
+            .build(),
+          prepareWahlvorstandsmitglied()
+            .identifikator("id2")
+            .anwesend(true)
+            .build(),
         ];
 
         await nextTick();

@@ -38,6 +38,10 @@ export function useCommonTestDataFactory() {
     return result;
   }
 
+  function getRandomItem<T>(items: T[]): T {
+    return items[generateRandomNumberInRange(0, items.length - 1)];
+  }
+
   return {
     generateRandomNumber,
     generateRandomDate,
@@ -45,5 +49,6 @@ export function useCommonTestDataFactory() {
     generateRandomString,
     generateRandomNumberInRange,
     generateRandomBoolean,
+    getRandomItem,
   };
 }

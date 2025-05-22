@@ -57,7 +57,7 @@ describe("monitoringStore.ts", () => {
   });
 
   describe("loadWaehler", () => {
-    it("should_notLoadWaehleranzahl_when_$when", async () => {
+    it("should_notLoadWaehleranzahl_when_usersWahlbezirkIdIsUndefined", async () => {
       userStore.setUser(prepareUser().wahlbezirkID(undefined).build());
 
       await unitUnderTest.loadWaehler();

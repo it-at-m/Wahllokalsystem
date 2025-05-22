@@ -106,7 +106,7 @@ describe("TheEreignisseView", () => {
       ereignisStore.wahlbezirkEreignisse.ereigniseintraege = [validEreignis];
 
       // @ts-expect-error: cannot set readonly
-      ereignisStore.ereignisStatusValidationFailed = false;
+      ereignisStore.hasMissingEreignisFlags = false;
       // @ts-expect-error: cannot set readonly
       ereignisStore.hasEintraege = true;
 

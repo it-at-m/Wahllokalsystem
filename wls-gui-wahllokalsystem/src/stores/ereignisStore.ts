@@ -53,7 +53,9 @@ export const useEreignisStore = defineStore(storeID, () => {
   );
 
   const hasMissingEreignisFlagsForBWB = computed(
-    () => hasVorkommnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse
+    () =>
+      hasVorfaelle.value !== wahlbezirkEreignisse.value.keineVorfaelle &&
+      hasVorkommnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse
   );
 
   const hasMissingEreignisFlags = computed(() => {

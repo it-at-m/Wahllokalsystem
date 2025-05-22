@@ -66,7 +66,25 @@ describe("userStore.ts", () => {
       expect(import.meta.env.DEV).toBe(false);
       await unitUnderTest.loadUser();
 
-      expect(unitUnderTest.user).toStrictEqual(new User());
+      expect(unitUnderTest.user).toStrictEqual({
+        username: "",
+        email: "",
+        userEnabled: false,
+        wahltagID: "",
+        wahltag: "",
+        wahlbezirkID: "",
+        wahlbezirkNummer: "",
+        wahlbezirksArt: WahlbezirksArtEnum.UWB, // assuming ART1 as default
+        pin: "",
+        authorities: new Set<string>(),
+        wahlMetaData: [
+          {
+            wahlbezirkID: "",
+            wahlnummer: "",
+            wahlID: "",
+          },
+        ],
+      });
     });
   });
 

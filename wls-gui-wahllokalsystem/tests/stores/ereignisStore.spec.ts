@@ -1,3 +1,5 @@
+import type { User } from "@/types/User.ts";
+
 import { createTestingPinia } from "@pinia/testing";
 import { spyOn } from "@storybook/test";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
@@ -12,6 +14,7 @@ import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import * as ImportAllFromEreignisArt from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getEreignisse: vi.fn(),
@@ -574,7 +577,7 @@ describe("ereignisStore.ts", () => {
 
 function createUser(wahlbezirkID: string | undefined): User {
   //TODO create Issue to use interface for User and provide BuilderImpl-Class => #853
-  const user = new User();
+  const user = prepareUser().build();
 
   user.wahlbezirkID = wahlbezirkID;
 

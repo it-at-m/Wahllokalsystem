@@ -20,8 +20,12 @@
       />
     </v-card-text>
     <v-card-actions>
-      <base-button-refresh @click="loadWahlvorstand()" />
+      <base-button-refresh
+        :loading="isLoading"
+        @click="loadWahlvorstand()"
+      />
       <base-button-save
+        :loading="isSaving"
         :disabled="!isWahlvorstandAusreichendAnwesend"
         active
         @click="sendWahlvorstand()"
@@ -46,6 +50,11 @@ import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 
 const { loadWahlvorstand, sendWahlvorstand } = useWahlvorstandStore();
 
-const { isWahlvorstandAusreichendAnwesend, lastLoading, lastSending } =
-  storeToRefs(useWahlvorstandStore());
+const {
+  isWahlvorstandAusreichendAnwesend,
+  lastLoading,
+  lastSending,
+  isLoading,
+  isSaving,
+} = storeToRefs(useWahlvorstandStore());
 </script>

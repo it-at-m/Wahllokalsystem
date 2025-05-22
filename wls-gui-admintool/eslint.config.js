@@ -45,6 +45,18 @@ export default defineConfigWithVueTs(
           },
         },
       ],
+      "vue/html-self-closing": [
+        "error",
+        {
+          html: {
+            void: "never",
+            normal: "always",
+            component: "always",
+          },
+          svg: "always",
+          math: "always",
+        },
+      ],
     },
   },
   // overrides for specific files or directories

@@ -25,7 +25,8 @@ export function useKonfigurationsparameterService() {
   ): Promise<Konfigurationsparameter[]> {
     try {
       const response = await konfigurationControllerApi.getKonfigurations();
-      return toModel(response.data as KonfigurationDTO[]); // todo: ist hier beim client der rückgabetyp falsch, dass da ein object statt dto kommt?
+      // todo: mit issue #1328 wird der rückgabetyp des requests angepasst und das `as KonfigurationDTO[]` kann entfernt werden
+      return toModel(response.data as KonfigurationDTO[]);
     } catch {
       if (sendNotification) {
         userNotificationService.addNotification(

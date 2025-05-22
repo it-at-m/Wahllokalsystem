@@ -4,6 +4,7 @@ import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts
 import { describe, expect, it } from "vitest";
 
 import { useUserMapper } from "@/composables/user/userMapper.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 describe("userMapper.ts", () => {
   const { toModel } = useUserMapper();
@@ -30,7 +31,7 @@ describe("userMapper.ts", () => {
           wahltag: null,
           wahlbezirkID: null,
           wahlbezirkNummer: null,
-          wahlbezirksArt: null,
+          wahlbezirksArt: WahlbezirksArtEnum.UWB,
           pin: null,
           authorities: null,
           wbid_wahlnummer: null,
@@ -46,7 +47,7 @@ describe("userMapper.ts", () => {
           wahltag: undefined,
           wahlbezirkID: undefined,
           wahlbezirkNummer: undefined,
-          wahlbezirksArt: undefined,
+          wahlbezirksArt: WahlbezirksArtEnum.UWB,
           pin: undefined,
           authorities: undefined,
           wbid_wahlnummer: undefined,

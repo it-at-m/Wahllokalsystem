@@ -58,7 +58,7 @@ describe("userStore.ts", () => {
       expect(unitUnderTest.user).toStrictEqual(user);
     });
 
-    it("should_setUserNull_when_serviceCallFailedAndInProdMode", async () => {
+    it("should_setDefaultUser_when_serviceCallFailedAndInProdMode", async () => {
       mockDefinitions.getUser.mockRejectedValue(new Error("error in service"));
 
       vi.stubEnv("DEV", false);

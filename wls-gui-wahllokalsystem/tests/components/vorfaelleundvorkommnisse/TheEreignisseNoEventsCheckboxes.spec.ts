@@ -177,8 +177,9 @@ describe("TheEreignisseNoEventsCheckboxes.vue", () => {
 
     it("should_updateKeineVorkommnisseToTrue_when_keineVorkommnisseCheckboxWasSelectedForBWB", async () => {
       const ereignisStore = useEreignisStore();
-      const user = prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build();
-      useUserStore().setUser(user);
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
       ereignisStore.wahlbezirkEreignisse.keineVorkommnisse = false;
       ereignisStore.wahlbezirkEreignisse.ereigniseintraege = [];
 

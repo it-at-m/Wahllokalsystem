@@ -39,11 +39,11 @@ describe("TheEreignisseView", () => {
   });
 
   describe(COMPONENT_RENDER_TESTS, () => {
-    it("should_renderSaveButtonEnabled_when_hasEintraegeIsFalseAndKeineEreignisseFlagsAreValid", async () => {
+    it("should_renderSaveButtonEnabled_when_hasEintraegeIsFalseAndHasMissingEreignisFlagsValid", async () => {
       const ereignisStore = useEreignisStore();
 
       // @ts-expect-error: cannot set readonly
-      ereignisStore.ereignisStatusValidationFailed = true;
+      ereignisStore.hasMissingEreignisFlags = true;
       // @ts-expect-error: cannot set readonly
       ereignisStore.hasEintraege = false;
 
@@ -53,7 +53,7 @@ describe("TheEreignisseView", () => {
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(false);
     });
 
-    it("should_renderSaveButtonEnabled_when_hasEintraegeIsTrueWithValidDataAndKeineEreignisseFlagsAreValid", async () => {
+    it("should_renderSaveButtonEnabled_when_hasEintraegeIsTrueWithValidDataAndHasMissingEreignisFlagsValid", async () => {
       const ereignisStore = useEreignisStore();
 
       const validEreignis: Ereignis = {
@@ -64,7 +64,7 @@ describe("TheEreignisseView", () => {
       ereignisStore.wahlbezirkEreignisse.ereigniseintraege = [validEreignis];
 
       // @ts-expect-error: cannot set readonly
-      ereignisStore.ereignisStatusValidationFailed = true;
+      ereignisStore.hasMissingEreignisFlags = true;
       // @ts-expect-error: cannot set readonly
       ereignisStore.hasEintraege = true;
 
@@ -74,7 +74,7 @@ describe("TheEreignisseView", () => {
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(false);
     });
 
-    it("should_renderSaveButtonDisabled_when_hasEintraegeIsTrueWithInvalidDataAndKeineEreignisseFlagsAreValid", async () => {
+    it("should_renderSaveButtonDisabled_when_hasEintraegeIsTrueWithInvalidDataAndHasMissingEreignisFlagsValid", async () => {
       const ereignisStore = useEreignisStore();
 
       const invalidEreignis: Ereignis = {
@@ -85,7 +85,7 @@ describe("TheEreignisseView", () => {
       ereignisStore.wahlbezirkEreignisse.ereigniseintraege = [invalidEreignis];
 
       // @ts-expect-error: cannot set readonly
-      ereignisStore.ereignisStatusValidationFailed = true;
+      ereignisStore.hasMissingEreignisFlags = true;
       // @ts-expect-error: cannot set readonly
       ereignisStore.hasEintraege = true;
 
@@ -95,7 +95,7 @@ describe("TheEreignisseView", () => {
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
     });
 
-    it("should_renderSaveButtonDisabled_when_hasEintraegeIsTrueWithValidDataAndKeineEreignisseFlagsAreInvalid", async () => {
+    it("should_renderSaveButtonDisabled_when_hasEintraegeIsTrueWithValidDataAndHasMissingEreignisFlagsInvalid", async () => {
       const ereignisStore = useEreignisStore();
 
       const validEreignis: Ereignis = {

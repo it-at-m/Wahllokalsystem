@@ -1,5 +1,3 @@
-import type { User } from "@/types/User.ts";
-
 import { createTestingPinia } from "@pinia/testing";
 import { spyOn } from "@storybook/test";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
@@ -55,14 +53,15 @@ describe("ereignisStore.ts", () => {
     vi.useRealTimers();
   });
 
-  describe("ereignisStatusValidationFailed", () => {
+  describe("hasMissingEreignisFlags", () => {
     describe("should_returnExpectedValue_dependingOnFunctionData", () => {
       it.each(_generateTestdataForAreKeineEreignisseFlagsValid())(
         "hasVorfaelle=$data.vorfaelle | hasVorkommnisse=$data.vorkommnisse | wahlbezirkKeineVorfaelle=$data.wahlbezirkKeineVorfaelle | wahlbezirkKeineVorkommnisse=$data.wahlbezirkKeineVorkommnisse | wahlbezirkArt=$data.wahlbezirkArt | schliessungsuhrzeit=$data.schliessungsUhrzeitSent --> Expected=$expected",
         ({ data, expected }) => {
           const userStore = useUserStore();
-          const user = prepareUser().wahlbezirksArt(data.wahlbezirkArt).build();
-          userStore.setUser(user);
+          userStore.setUser(
+            prepareUser().wahlbezirksArt(data.wahlbezirkArt).build()
+          );
 
           const wahlbezirkStore = useWahlbezirkStore();
           wahlbezirkStore.schliessungsUhrzeitSent =
@@ -290,7 +289,7 @@ describe("ereignisStore.ts", () => {
 
     it("should_notLoadWahlbezirkEreignisse_when_usersWahlbezirkIdIsUndefined", async () => {
       const userStore = useUserStore();
-      userStore.setUser(createUser(undefined));
+      userStore.setUser(prepareUser().wahlbezirkID(undefined).build());
 
       await unitUnderTest.loadEreignisse();
 
@@ -574,15 +573,6 @@ describe("ereignisStore.ts", () => {
     });
   });
 });
-
-function createUser(wahlbezirkID: string | undefined): User {
-  //TODO create Issue to use interface for User and provide BuilderImpl-Class => #853
-  const user = prepareUser().build();
-
-  user.wahlbezirkID = wahlbezirkID;
-
-  return user;
-}
 
 function _generateTestdataForAreKeineEreignisseFlagsValid() {
   return [

@@ -57,13 +57,8 @@ describe("monitoringStore.ts", () => {
   });
 
   describe("loadWaehler", () => {
-    it.each([
-      {
-        user: prepareUser().wahlbezirkID(undefined).build(),
-        when: "usersWahlbezirkIdIsUndefined",
-      },
-    ])("should_notLoadWaehleranzahl_when_$when", async ({ user }) => {
-      userStore.setUser(user);
+    it("should_notLoadWaehleranzahl_when_$when", async () => {
+      userStore.setUser(prepareUser().wahlbezirkID(undefined).build());
 
       await unitUnderTest.loadWaehler();
 
@@ -105,13 +100,8 @@ describe("monitoringStore.ts", () => {
   });
 
   describe("sendWaehler", () => {
-    it.each([
-      {
-        user: prepareUser().wahlbezirkID(undefined).build(),
-        when: "usersWahlbezirkIdIsUndefined",
-      },
-    ])("should_notSendWaehleranzahl_when_$when", async ({ user }) => {
-      userStore.setUser(user);
+    it("should_notSendWaehleranzahl_when_usersWahlbezirkIdIsUndefined", async () => {
+      userStore.setUser(prepareUser().wahlbezirkID(undefined).build());
 
       await unitUnderTest.sendWaehler();
 

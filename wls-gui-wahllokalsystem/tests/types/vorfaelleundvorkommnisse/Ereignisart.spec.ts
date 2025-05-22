@@ -83,7 +83,7 @@ describe("Ereignisart.ts", () => {
       expect(result).toStrictEqual(EreignisartEnum.Vorkommnis);
     });
 
-    it("should_returnVorkomniss_when_schliessungsuhrzeitIsAfterEreignisDate", () => {
+    it("should_returnVorkommnis_when_schliessungsuhrzeitIsAfterEreignisDate", () => {
       const schliessungsuhrzeit = new Date();
       const result = getEreignisArtForDateRelatedToSchliessungsuhrzeit(
         new Date(schliessungsuhrzeit.getTime() - 1),
@@ -93,7 +93,7 @@ describe("Ereignisart.ts", () => {
       expect(result).toStrictEqual(EreignisartEnum.Vorkommnis);
     });
 
-    it("should_returnVorkomniss_when_schliessungsuhrzeitIsEqualEreignisDate", () => {
+    it("should_returnVorkommnis_when_schliessungsuhrzeitIsEqualEreignisDate", () => {
       const schliessungsuhrzeit = new Date();
       const result = getEreignisArtForDateRelatedToSchliessungsuhrzeit(
         schliessungsuhrzeit,

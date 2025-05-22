@@ -40,17 +40,6 @@ describe("userStore.ts", () => {
       expect(unitUnderTest.user).toStrictEqual(user);
     });
 
-    it("should_setUserNull_when_serviceCallFailedAndInProdMode", async () => {
-      mockDefinitions.getUser.mockRejectedValue(new Error("error in service"));
-
-      vi.stubEnv("DEV", false);
-
-      expect(import.meta.env.DEV).toBe(false);
-      await unitUnderTest.loadUser();
-
-      expect(unitUnderTest.user).toStrictEqual(null);
-    });
-
     it("should_setUser_when_serviceCalledSuccessfully", async () => {
       const user = createUserLocalDevelopment();
       mockDefinitions.getUser.mockResolvedValue(user);
@@ -62,17 +51,40 @@ describe("userStore.ts", () => {
   });
 
   describe("setUser", () => {
-    it("should_setUserNull_when_givenNull", () => {
-      unitUnderTest.setUser(null);
-
-      expect(unitUnderTest.user).toStrictEqual(null);
-    });
-
     it("should_setUser_when_givenUser", () => {
       const user = prepareUser().build();
       unitUnderTest.setUser(user);
 
       expect(unitUnderTest.user).toStrictEqual(user);
+    });
+
+    it("should_setDefaultUser_when_serviceCallFailedAndInProdMode", async () => {
+      mockDefinitions.getUser.mockRejectedValue(new Error("error in service"));
+
+      vi.stubEnv("DEV", false);
+
+      expect(import.meta.env.DEV).toBe(false);
+      await unitUnderTest.loadUser();
+
+      expect(unitUnderTest.user).toStrictEqual({
+        username: "",
+        email: "",
+        userEnabled: false,
+        wahltagID: "",
+        wahltag: "",
+        wahlbezirkID: "",
+        wahlbezirkNummer: "",
+        wahlbezirksArt: WahlbezirksArtEnum.UWB,
+        pin: "",
+        authorities: new Set<string>(),
+        wahlMetaData: [
+          {
+            wahlbezirkID: "",
+            wahlnummer: "",
+            wahlID: "",
+          },
+        ],
+      });
     });
   });
 
@@ -108,7 +120,6 @@ describe("userStore.ts", () => {
 
   describe("currentUserWahlbezirksArt", () => {
     it.each([
-      { wahlbezirksart: undefined },
       { wahlbezirksart: WahlbezirksArtEnum.UWB },
       { wahlbezirksart: WahlbezirksArtEnum.BWB },
     ])(

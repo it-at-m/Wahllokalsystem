@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-checkbox
+      v-if="showCheckboxNoVorfaelle"
       v-model="wahlbezirkEreignisse.keineVorfaelle"
       :disabled="isCheckboxNoVorfaelleDisabled"
       label="Besondere Vorfälle während der Wahlhandlung waren nicht zu verzeichnen."
@@ -23,14 +24,26 @@ import { computed } from "vue";
 import { VCheckbox } from "vuetify/components";
 
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
 const { wahlbezirkEreignisse, hasVorkommnisse, hasVorfaelle } =
   storeToRefs(useEreignisStore());
+const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
 
 const isCheckboxNoVorfaelleDisabled = computed(() => hasVorfaelle.value);
-const isCheckboxNoVorkommnisseDisabled = computed(
-  () => hasVorkommnisse.value || schliessungsUhrzeitSent.value === undefined
+const isCheckboxNoVorkommnisseDisabled = computed(() => {
+  if (hasVorkommnisse.value) {
+    return true;
+  }
+  if (currentUserWahlbezirksArt.value === WahlbezirksArtEnum.BWB) {
+    return false;
+  }
+  return schliessungsUhrzeitSent.value === undefined;
+});
+const showCheckboxNoVorfaelle = computed(
+  () => currentUserWahlbezirksArt.value !== WahlbezirksArtEnum.BWB
 );
 </script>

@@ -59,17 +59,6 @@ describe("TheNachbesetzungDruckenButton.vue", () => {
   enableAutoUnmount(afterEach);
 
   describe(COMPONENT_RENDER_TESTS, () => {
-    it("should_notRenderButton_when_usersWahlbezirksArtIsUndefined", async (context) => {
-      const userStore = useUserStore();
-      userStore.setUser(prepareUser().wahlbezirksArt(undefined).build());
-
-      await nextTick();
-
-      await expect(wrapper.html()).toMatchFileSnapshot(
-        getSnapshotFilename(context)
-      );
-    });
-
     it("should_notRenderButton_when_usersWahlbezirksArtIsUwb", async (context) => {
       const userStore = useUserStore();
       userStore.setUser(

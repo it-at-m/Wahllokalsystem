@@ -1,11 +1,11 @@
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import { User } from "@/types/User.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getWahlen: vi.fn(),
@@ -19,6 +19,7 @@ vi.mock("@/composables/wahl/wahlService.ts", () => ({
 
 const { createWahl } = useWahlTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();
+const { prepareUser } = useUserTestDataFactory();
 
 describe("wahlenStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useWahlenStore>;
@@ -32,9 +33,7 @@ describe("wahlenStore.ts", () => {
     it("should_loadWahlen_when_calledWithCorrectWahltagID", async () => {
       const wahltagID = generateRandomString(10);
       const userStore = useUserStore();
-      const user = new User();
-      user.wahltagID = wahltagID;
-      userStore.setUser(user);
+      userStore.setUser(prepareUser().wahltagID(wahltagID).build());
 
       const expectedWahlArray = [createWahl()];
       const wahl = Promise.resolve(expectedWahlArray);

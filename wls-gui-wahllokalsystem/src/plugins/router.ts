@@ -23,8 +23,8 @@ import ExamplePrintView from "@/views/ExamplePrintView.vue";
 import ExampleToastView from "@/views/ExampleToastView.vue";
 import ExampleValidation from "@/views/ExampleValidation.vue";
 import HomeView from "@/views/HomeView.vue";
-import WahleroeffnungView from "@/views/WahleroeffnungView.vue";
-import WahlschliessungView from "@/views/WahlschliessungView.vue";
+import WahleroeffnungView from "@/views/wahlvorbereitung/WahleroeffnungView.vue";
+import WahlschliessungView from "@/views/wahlvorbereitung/WahlschliessungView.vue";
 import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
 
 const routes = [

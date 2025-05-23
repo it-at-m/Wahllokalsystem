@@ -65,7 +65,7 @@ flowchart LR
 ```mermaid
 flowchart LR
     subgraph wls
-        wlsCommonPR([wls-common PR])
+        wlsCommonPR([Wls-common PR])
         mvnVerify[[callable-run-mvn-verify]]
     end
 

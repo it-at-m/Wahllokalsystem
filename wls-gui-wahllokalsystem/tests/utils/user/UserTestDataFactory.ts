@@ -50,7 +50,7 @@ export function useUserTestDataFactory() {
       wahltag: "",
       wahlbezirkID: "",
       wahlbezirkNummer: "",
-      wahlbezirksArt: undefined,
+      wahlbezirksArt: WahlbezirksArtEnum.UWB,
       pin: "",
       authorities: new Set<string>(),
       wahlMetaData: undefined,

@@ -9,7 +9,7 @@ export interface User {
   wahltag: string | undefined;
   wahlbezirkID: string | undefined;
   wahlbezirkNummer: string | undefined;
-  wahlbezirksArt: WahlbezirksArtEnum | undefined;
+  wahlbezirksArt: WahlbezirksArtEnum;
   pin: string | undefined;
   authorities: Set<string>;
   wahlMetaData: WahlMetaData[] | undefined;

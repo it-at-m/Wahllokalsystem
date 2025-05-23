@@ -18,16 +18,15 @@ const {
 } = useWahlvorbereitungMapper();
 
 export function useWahlvorbereitungService() {
+  const wahlvorbereitungsServiceConfigurations = new Configuration({
+    basePath: WAHLVORBEREITUNG_SERVICE_API_URL,
+  });
   const urnenwahlSchliessungsUhrzeitControllerAPI =
     new UrnenwahlSchliessungsUhrzeitControllerApi(
-      new Configuration({
-        basePath: WAHLVORBEREITUNG_SERVICE_API_URL,
-      })
+      wahlvorbereitungsServiceConfigurations
     );
   const eroeffnungsuhrzeitControllerAPI = new EroeffnungsUhrzeitControllerApi(
-    new Configuration({
-      basePath: WAHLVORBEREITUNG_SERVICE_API_URL,
-    })
+    wahlvorbereitungsServiceConfigurations
   );
 
   async function getUrnenwahlSchliessungsUhrzeit(

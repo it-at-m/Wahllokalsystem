@@ -32,6 +32,7 @@ flowchart LR
 flowchart LR
     subgraph wls
         backendServicePR([Backend-Service PR])
+        wlsCommonPR([Wls-common PR])
         mvnVerify[[callable-run-mvn-verify]]
     end
 
@@ -41,6 +42,7 @@ flowchart LR
     end
 
     backendServicePR --> mvnVerify
+    wlsCommonPR --> mvnVerify
     mvnVerify --> checkout
     mvnVerify --> setup-java
 ```
@@ -60,23 +62,6 @@ flowchart LR
     frontendPR --> npmBuild
     npmBuild --> checkout
     npmBuild --> setup-node
-```
-
-```mermaid
-flowchart LR
-    subgraph wls
-        wlsCommonPR([Wls-common PR])
-        mvnVerify[[callable-run-mvn-verify]]
-    end
-
-    subgraph githubActions
-        checkout
-        setup-java
-    end
-
-    wlsCommonPR --> mvnVerify
-    mvnVerify --> checkout
-    mvnVerify --> setup-java
 ```
 
 ```mermaid

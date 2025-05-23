@@ -1,4 +1,4 @@
-# Abhängigkeiten der Workflows und Actions
+# Beziehungen der Workflows und Actions
 
 Unsere Workflows bestehen aus wiederverwendbaren Workflows aus unserem Repository, sowie aus Actions von ITM
 und anderen Github-Actions.

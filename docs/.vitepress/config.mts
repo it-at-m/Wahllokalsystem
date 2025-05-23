@@ -66,8 +66,8 @@ export default withMermaid({
               collapsed: true,
               items: [
                 {
-                  text: "Abhängigkeiten",
-                  link: `${PATH_ECOSTYSTEM_WORKFLOWS}dependencies`,
+                  text: "Beziehungen",
+                  link: `${PATH_ECOSTYSTEM_WORKFLOWS}relations`,
                 },
               ],
             },

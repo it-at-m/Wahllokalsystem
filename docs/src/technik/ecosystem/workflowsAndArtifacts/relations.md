@@ -14,7 +14,7 @@ flowchart LR
 
 ```
 
-### Pull-Requests
+### Pull-Requests nach Dev
 
 ```mermaid
 flowchart LR
@@ -97,7 +97,7 @@ flowchart LR
 ```mermaid
 flowchart LR
     subgraph wls
-        backendServiceDevPush([Backend-Service Push auf Dev])
+        backendServiceDevPush([Backend-Service Push])
 
         buildImage[[callable-create-github-container-image]]
     end
@@ -121,7 +121,7 @@ flowchart LR
 ```mermaid
 flowchart LR
     subgraph wls
-        frontendDevPush([Frontend Push auf Dev])
+        frontendDevPush([Frontend Push])
 
         buildImageFrontend[[callable-create-github-container-image-frontend]]
     end
@@ -145,7 +145,7 @@ flowchart LR
 ```mermaid
 flowchart LR
     subgraph wls
-        docsDevPush([Docs Push auf Dev])
+        docsDevPush([Docs Push])
     end
 
     subgraph githubActions

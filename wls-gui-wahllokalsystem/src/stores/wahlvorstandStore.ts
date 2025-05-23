@@ -62,7 +62,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     try {
       const wahlbezirkID = currentUserWahlbezirkID.value;
       if (wahlbezirkID) {
-        wahlvorstand.value = await getWahlvorstand(wahlbezirkID);
+        wahlvorstand.value = await getWahlvorstand(wahlbezirkID, true);
         lastLoading.value = new Date();
       }
     } finally {

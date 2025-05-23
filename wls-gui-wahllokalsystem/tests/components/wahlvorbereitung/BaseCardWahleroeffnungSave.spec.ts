@@ -8,6 +8,7 @@ import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
+import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import BaseCardWahleroeffnungSave from "@/components/wahlvorbereitung/BaseCardWahleroeffnungSave.vue";
 import vuetify from "@/plugins/vuetify.ts";
@@ -86,6 +87,18 @@ describe("BaseCardWahleroeffnungSave.vue", () => {
       expect(wahlbezirkStore.eroeffnungsuhrzeit?.getTime()).toStrictEqual(
         enteredTime.getTime()
       );
+    });
+
+    it("should_callSendEroeffnungsuhrzeit_when_saveButtonIsClicked", async () => {
+      const wahlbezirkStore = useWahlbezirkStore();
+      wahlbezirkStore.eroeffnungsuhrzeit = new Date("2025-05-23T07:30:00");
+
+      await flushPromises();
+
+      const saveButton = wrapper.findComponent(BaseButtonSave);
+      await saveButton.trigger("click");
+
+      expect(wahlbezirkStore.sendEroeffnungsuhrzeit).toHaveBeenCalled();
     });
   });
 });

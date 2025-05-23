@@ -9,12 +9,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
-import BaseWahleroeffnungCard from "@/components/wahlvorbereitung/BaseWahleroeffnungCard.vue";
+import BaseCardWahleroeffnungSave from "@/components/wahlvorbereitung/BaseCardWahleroeffnungSave.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
-describe("BaseWahleroeffnungCard.vue", () => {
-  let wrapper: VueWrapper<InstanceType<typeof BaseWahleroeffnungCard>>;
+describe("BaseCardWahleroeffnungSave.vue", () => {
+  let wrapper: VueWrapper<InstanceType<typeof BaseCardWahleroeffnungSave>>;
 
   const ResizeObserverMock = vi.fn(() => ({
     observe: vi.fn(),
@@ -24,7 +24,7 @@ describe("BaseWahleroeffnungCard.vue", () => {
   vi.stubGlobal("ResizeObserver", ResizeObserverMock);
 
   beforeEach(() => {
-    wrapper = mount(BaseWahleroeffnungCard, {
+    wrapper = mount(BaseCardWahleroeffnungSave, {
       global: {
         plugins: [
           createTestingPinia({

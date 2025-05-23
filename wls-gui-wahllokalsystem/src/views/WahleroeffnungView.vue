@@ -1,7 +1,7 @@
 <template>
-  <base-wahleroeffnung-card />
+  <base-card-wahleroeffnung-save />
 </template>
 
 <script setup lang="ts">
-import BaseWahleroeffnungCard from "@/components/wahlvorbereitung/BaseWahleroeffnungCard.vue";
+import BaseCardWahleroeffnungSave from "@/components/wahlvorbereitung/BaseCardWahleroeffnungSave.vue";
 </script>

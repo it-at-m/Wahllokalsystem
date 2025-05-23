@@ -19,13 +19,13 @@ export function useWahlvorbereitungMapper() {
     };
   }
 
-  function toModel(
+  function toUrnenwahlSchliessungsuhrzeitModel(
     schliessungsuhrzeitDTO: UrnenwahlSchliessungsUhrzeitDTO
   ): UrnenwahlSchliessungsuhrzeit {
     return { schliessungsuhrzeit: schliessungsuhrzeitDTO.schliessungsuhrzeit };
   }
 
-  function toDTO(
+  function toUrnenwahlSchliessungsuhrzeitDTO(
     schliessungsuhrzeit: Date
   ): UrnenwahlSchliessungsUhrzeitWriteDTO {
     const mappedUhrzeit = applyLocalTimezoneOffset(schliessungsuhrzeit);
@@ -34,5 +34,9 @@ export function useWahlvorbereitungMapper() {
     };
   }
 
-  return { toEroeffnungsuhrzeitWriteDTO, toModel, toDTO };
+  return {
+    toEroeffnungsuhrzeitWriteDTO,
+    toUrnenwahlSchliessungsuhrzeitModel,
+    toUrnenwahlSchliessungsuhrzeitDTO,
+  };
 }

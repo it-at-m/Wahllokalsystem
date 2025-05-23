@@ -8,7 +8,7 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 
 const mockDefinitions = vi.hoisted(() => ({
   addNotification: vi.fn(),
-  toDTO: vi.fn(),
+  toUrnenwahlSchliessungsuhrzeitDTO: vi.fn(),
   toEroeffnungsuhrzeitWriteDTO: vi.fn(),
   postUrnenwahlSchliessungsUhrzeit: vi.fn(),
   postEroeffnungsuhrzeit: vi.fn(),
@@ -33,7 +33,8 @@ vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
 
 vi.mock("@/composables/wahlvorbereitung/wahlvorbereitungMapper.ts", () => ({
   useWahlvorbereitungMapper: () => ({
-    toDTO: mockDefinitions.toDTO,
+    toUrnenwahlSchliessungsuhrzeitDTO:
+      mockDefinitions.toUrnenwahlSchliessungsuhrzeitDTO,
     toEroeffnungsuhrzeitWriteDTO: mockDefinitions.toEroeffnungsuhrzeitWriteDTO,
   }),
 }));
@@ -59,7 +60,9 @@ describe("wahlvorbereitungService", () => {
 
       const mockedSchliessungsuhrzeitAsDTO: UrnenwahlSchliessungsUhrzeitWriteDTO =
         { schliessungsuhrzeit };
-      mockDefinitions.toDTO.mockReturnValue(mockedSchliessungsuhrzeitAsDTO);
+      mockDefinitions.toUrnenwahlSchliessungsuhrzeitDTO.mockReturnValue(
+        mockedSchliessungsuhrzeitAsDTO
+      );
 
       mockDefinitions.postUrnenwahlSchliessungsUhrzeit.mockRejectedValue(
         new Error("API Error")
@@ -75,7 +78,9 @@ describe("wahlvorbereitungService", () => {
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.ERROR],
       ]);
-      expect(mockDefinitions.toDTO.mock.calls).toStrictEqual([[expectedDate]]);
+      expect(
+        mockDefinitions.toUrnenwahlSchliessungsuhrzeitDTO.mock.calls
+      ).toStrictEqual([[expectedDate]]);
     });
   });
 

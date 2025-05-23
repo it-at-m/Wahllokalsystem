@@ -14,6 +14,8 @@ flowchart LR
 
 ```
 
+<em>Legende zu den verwendeten Symbolen</em>
+
 ### Pull-Requests nach Dev
 
 ```mermaid
@@ -27,6 +29,8 @@ flowchart LR
     end
     anyPR --> labeler
 ```
+
+<em>Workflow und Action, die bei jedem Pull-Request ausgeführt wird</em>
 
 ```mermaid
 flowchart LR
@@ -47,6 +51,8 @@ flowchart LR
     mvnVerify --> setup-java
 ```
 
+<em>Workflows und Actions, die bei einem Pull-Requests eines Backend-Services oder bei Wls-common ausgeführt werden</em>
+
 ```mermaid
 flowchart LR
     subgraph wls
@@ -64,6 +70,8 @@ flowchart LR
     npmBuild --> setup-node
 ```
 
+<em>Workflows und Action, die bei einem Pull-Request zu einem Frontend ausgeführt werden</em>
+
 ```mermaid
 flowchart LR
     subgraph wls
@@ -76,6 +84,8 @@ flowchart LR
 
     docsPR --> action-build-docs
 ```
+
+<em>Workflow und Action, die bei einem Pull-Request zur Dokumentation ausgeführt werden</em>
 
 ### Push auf Dev
 
@@ -103,6 +113,8 @@ flowchart LR
     buildImage --> docker/build-push-action
 ```
 
+<em>Workflows und Actions, die bei einem Push eines Backend-Services ausgeführt werden</em>
+
 ```mermaid
 flowchart LR
     subgraph wls
@@ -127,6 +139,8 @@ flowchart LR
     buildImageFrontend --> docker/build-push-action
 ```
 
+<em>Workflows und Actions, die bei einem Push eines Frontends ausgeführt werden</em>
+
 ```mermaid
 flowchart LR
     subgraph wls
@@ -143,6 +157,8 @@ flowchart LR
     docsDevPush --> setup-node
     docsDevPush --> peaceiris/actions-gh-pages
 ```
+
+<em>Workflow und Actions, die bei einem Push der Dokumentation ausgeführt werden</em>
 
 ### Manuell gestartet
 
@@ -170,6 +186,8 @@ flowchart LR
     buildImage --> docker/build-push-action
 ```
 
+<em>Workflows und Actions, die bei der Erstellung eines Images für einen Backend-Service ausgeführt werden</em>
+
 ```mermaid
 flowchart LR
     subgraph wls
@@ -193,6 +211,8 @@ flowchart LR
     buildImageFrontend --> docker/metadata-action
     buildImageFrontend --> docker/build-push-action
 ```
+
+<em>Workflows und Actions, die bei der Erstellung eines Images für ein Frontend ausgeführt werden</em>
 
 ```mermaid
 flowchart LR
@@ -229,6 +249,8 @@ flowchart LR
     buildGHRelease --> softprops/action-gh-release
 ```
 
+<em>Workflows und Actions, die bei der Durchführung eines Releases eines Backend-Services ausgeführt werden</em>
+
 ```mermaid
 flowchart LR
     subgraph wls
@@ -248,3 +270,5 @@ flowchart LR
     dispatchWlsCommonMvnRelease --> softprops/action-gh-release
 
 ```
+
+<em>Workflow und Actions, die bei der Durchführung eines Releases für Wls-common ausgeführt werden</em>

@@ -22,7 +22,7 @@
     <v-card-actions>
       <base-button-refresh
         :loading="isLoading"
-        @click="loadWahlvorstand()"
+        @click="forceLoadWahlvorstand()"
       />
       <base-button-save
         :loading="isSaving"
@@ -48,7 +48,7 @@ import TheWahlvorstandLatestLoadDiv from "@/components/wahlvorstand/TheWahlvorst
 import TheWahlvorstandMitgliederTable from "@/components/wahlvorstand/TheWahlvorstandMitgliederTable.vue";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 
-const { loadWahlvorstand, sendWahlvorstand } = useWahlvorstandStore();
+const { forceLoadWahlvorstand, sendWahlvorstand } = useWahlvorstandStore();
 
 const {
   isWahlvorstandAusreichendAnwesend,

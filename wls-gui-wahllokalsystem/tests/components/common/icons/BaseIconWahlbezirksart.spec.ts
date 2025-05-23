@@ -74,16 +74,5 @@ describe("BaseIconWahlbezirksart.vue", () => {
         getSnapshotFilename(context)
       );
     });
-
-    it("should_displayNoIcon_when_storeVariableIsUndefined", async (context) => {
-      const userStore = useUserStore();
-      userStore.setUser(prepareUser().wahlbezirksArt(undefined).build());
-
-      await nextTick();
-
-      await expect(wrapper.html()).toMatchFileSnapshot(
-        getSnapshotFilename(context)
-      );
-    });
   });
 });

@@ -1,13 +1,13 @@
 # Abhängigkeiten der Workflows und Actions
 
-Unsere Workflows bestehen aus wiederverwendbaren Workflows aus unserem Repository sowie aus Actions von ITM
+Unsere Workflows bestehen aus wiederverwendbaren Workflows aus unserem Repository, sowie aus Actions von ITM
 und anderen Github-Actions.
 
 ## Legende
 
 ```mermaid
 flowchart LR
-    idTriggerable([ein Workflow der über einen automatischen Trigger gestartet wird])
+    idTriggerable([Ein Workflow, der über einen automatischen Trigger gestartet wird])
     idDispatchable>Ein manuell startbarer Workflow]
     idReusable[[Ein wiederverwendbarer Workflow]]
     idGithubAction[Eine Github-Action]
@@ -159,7 +159,7 @@ flowchart LR
     docsDevPush --> peaceiris/actions-gh-pages
 ```
 
-### Manuel gestartet
+### Manuell gestartet
 
 ```mermaid
 flowchart LR

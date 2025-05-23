@@ -6,6 +6,7 @@ export const EXAMPLE_VALIDATION = "validation-example";
 export const ROUTE_WAHLVORSTAND = "wahlvorstand";
 export const ROUTE_EREIGNISSE = "ereignisse";
 export const ROUTE_WAHLSCHLIESSUNG = "wahlschliessung";
+export const ROUTE_BEGINN_STIMMABGABE = "beginnStimmabgabe";
 
 export const TOAST = "toast";
 export const PRINT_EXAMPLE = "print-example";

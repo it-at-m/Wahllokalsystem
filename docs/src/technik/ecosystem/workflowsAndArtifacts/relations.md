@@ -70,7 +70,7 @@ flowchart LR
     npmBuild --> setup-node
 ```
 
-<em>Workflows und Action, die bei einem Pull-Request zu einem Frontend ausgeführt werden</em>
+<em>Workflows und Actions, die bei einem Pull-Request zu einem Frontend ausgeführt werden</em>
 
 ```mermaid
 flowchart LR

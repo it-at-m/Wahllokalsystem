@@ -13,7 +13,7 @@ public interface WahlvorstandModelMapper {
 
     Wahlvorstandsmitglied toEntity(final WahlvorstandsmitgliedModel model);
 
-    Funktion toEntity(final FunktionModel entity);
+    Funktion toEntity(final FunktionModel model);
 
     Wahlvorstand toEntity(final WahlvorstandModel model);
 }

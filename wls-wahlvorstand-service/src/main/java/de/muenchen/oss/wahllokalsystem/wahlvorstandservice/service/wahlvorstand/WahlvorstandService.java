@@ -2,7 +2,6 @@ package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand
 
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.Wahlvorstand;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.WahlvorstandRepository;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.Wahlvorstandsmitglied;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.authentication.AuthDetailRetriever;
@@ -40,8 +39,8 @@ public class WahlvorstandService {
     private static final String FALLBACK_STRING = "FALLBACK_";
 
     @PreAuthorize(
-        "hasAuthority('Wahlvorstand_BUSINESSACTION_GetWahlvorstand')"
-                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
+            "hasAuthority('Wahlvorstand_BUSINESSACTION_GetWahlvorstand')"
+                    + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
     )
     public Optional<WahlvorstandModel> getWahlvorstand(@P("wahlbezirkID") final String wahlbezirkID) {
         log.info("#getWahlvorstand");
@@ -134,9 +133,8 @@ public class WahlvorstandService {
                 .filter(wahlvorstandsmitglied -> wahlvorstandsmitglied.getFunktion().equals(functionOfMitglied))
                 .findFirst();
         return mitgliedDB.map(m -> new WahlvorstandsmitgliedModel(mitglied.identifikator(), mitglied.familienname(), mitglied.vorname(), mitglied.funktion(),
-                m.getFunktionsname(),
-                mitglied.anwesend()))
-                .orElseThrow(() -> new IllegalStateException("Bisher unbekannte Funktion in Wahlvorstand gefunden. Muss neu gemapt werden."));
+                        m.getFunktionsname(), mitglied.anwesend()))
+                .orElseThrow(() -> new IllegalStateException("Bisher unbekannte Funktion in Wahlvorstand gefunden. Muss neu gemappt werden."));
     }
 
     private WahlvorstandModel populateFunktionsnameOnline(WahlvorstandModel wahlvorstand, KonfigurierterWahltagModel wahltagModel) {

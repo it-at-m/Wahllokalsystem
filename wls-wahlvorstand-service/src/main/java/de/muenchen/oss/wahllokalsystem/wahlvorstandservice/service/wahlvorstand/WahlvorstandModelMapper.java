@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand;
 
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.Funktion;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.Wahlvorstand;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.Wahlvorstandsmitglied;
 import org.mapstruct.CollectionMappingStrategy;
@@ -11,6 +12,8 @@ public interface WahlvorstandModelMapper {
     WahlvorstandModel toModel(final Wahlvorstand entity);
 
     Wahlvorstandsmitglied toEntity(final WahlvorstandsmitgliedModel model);
+
+    Funktion toEntity(final FunktionModel model);
 
     Wahlvorstand toEntity(final WahlvorstandModel model);
 }

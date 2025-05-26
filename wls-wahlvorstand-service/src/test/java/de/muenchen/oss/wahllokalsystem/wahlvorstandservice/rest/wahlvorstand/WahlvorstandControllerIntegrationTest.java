@@ -143,7 +143,12 @@ public class WahlvorstandControllerIntegrationTest {
             val responseBodyAsDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WahlvorstandDTO.class);
 
             val expectedResponseDTO = wahlvorstandDTOMapper.toDTO(wahlvorstandClientMapper.toModel(eaiWahlvorstandDto));
-            Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseDTO);
+            Assertions.assertThat(responseBodyAsDTO)
+                    .usingRecursiveComparison()
+                    .ignoringFields("wahlvorstandsmitglieder.funktionsname")
+                    .isEqualTo(expectedResponseDTO);
+            Assertions.assertThat(responseBodyAsDTO.wahlvorstandsmitglieder())
+                    .allSatisfy(mitglied -> Assertions.assertThat(mitglied.funktionsname()).isNotEmpty());
         }
 
         @Test

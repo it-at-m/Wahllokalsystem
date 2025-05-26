@@ -11,7 +11,6 @@ flowchart LR
     idDispatchable>Ein manuell startbarer Workflow]
     idReusable[[Ein wiederverwendbarer Workflow]]
     idGithubAction[Eine Github-Action]
-
 ```
 
 <em>Legende zu den verwendeten Symbolen</em>

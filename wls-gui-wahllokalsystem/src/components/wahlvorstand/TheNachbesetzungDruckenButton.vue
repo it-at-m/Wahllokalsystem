@@ -2,7 +2,6 @@
   <v-btn
     v-if="currentUserWahlbezirksArt === 'BWB'"
     prepend-icon="$printer"
-    :disabled="!!schliessungsUhrzeitSent"
     @click="onNachbesetzungDruckenClicked"
   >
     Nachbesetzung drucken
@@ -18,7 +17,6 @@ import { VBtn } from "vuetify/components";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useWahlvorstandNachbesetzungsDruck } from "@/composables/wahlvorstand/wahlvorstandNachbesetzungsDruck.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 
 const { forceLoadWahlvorstand, sendWahlvorstand } = useWahlvorstandStore();
@@ -28,7 +26,6 @@ const { toHhMm } = useDateTimeFormatter();
 const { currentUserWahlbezirkNummer, currentUserWahlbezirksArt } =
   storeToRefs(useUserStore());
 const { wahlvorstand } = storeToRefs(useWahlvorstandStore());
-const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
 
 function onNachbesetzungDruckenClicked() {
   sendWahlvorstand();

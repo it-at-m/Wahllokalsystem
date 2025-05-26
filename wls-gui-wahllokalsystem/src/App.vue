@@ -123,6 +123,10 @@
             title="Wahlschliessung"
             :to="ROUTE_WAHLSCHLIESSUNG"
           />
+          <v-list-item
+            title="Wahlumgebung"
+            :to="ROUTE_WAHLUMGEBUNG"
+          />
         </v-list-group>
         <v-list-item
           title="Ereignisse"
@@ -175,6 +179,7 @@ import {
   PRINT_EXAMPLE,
   ROUTE_EREIGNISSE,
   ROUTE_WAHLSCHLIESSUNG,
+  ROUTE_WAHLUMGEBUNG,
   ROUTE_WAHLVORSTAND,
   TOAST,
 } from "@/constants";

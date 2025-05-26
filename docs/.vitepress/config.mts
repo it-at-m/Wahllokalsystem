@@ -5,6 +5,7 @@ const PATH_SERVICES_BACKEND = PATH_SERVICES + "backend-services/";
 const PATH_SERVICES_FRONTEND = PATH_SERVICES + "frontend-services/";
 const PATH_TECHNIK = "/technik/";
 const PATH_ECOSYSTEM = PATH_TECHNIK + "ecosystem/";
+const PATH_ECOSTYSTEM_WORKFLOWS = `${PATH_ECOSYSTEM}workflowsAndArtifacts/`;
 const PATH_ADR = PATH_TECHNIK + "adr/";
 const PATH_NAMING_CONVENTIONS = PATH_TECHNIK + "naming_conventions/";
 const PATH_GUIDES = PATH_TECHNIK + "guides/";
@@ -61,7 +62,14 @@ export default withMermaid({
             },
             {
               text: "Workflows & Artefakte",
-              link: `${PATH_ECOSYSTEM}workflowsAndArtifacts`,
+              link: `${PATH_ECOSTYSTEM_WORKFLOWS}`,
+              collapsed: true,
+              items: [
+                {
+                  text: "Beziehungen",
+                  link: `${PATH_ECOSTYSTEM_WORKFLOWS}relations`,
+                },
+              ],
             },
           ],
         },
@@ -322,5 +330,10 @@ export default withMermaid({
   },
   mermaidPlugin: {
     class: "mermaid my-class", // set additional css classes for parent container
+  },
+  mermaid: {
+    flowchart: {
+      wrappingWidth: 600,
+    },
   },
 });

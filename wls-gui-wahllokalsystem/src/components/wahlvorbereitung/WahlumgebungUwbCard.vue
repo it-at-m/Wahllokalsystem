@@ -2,7 +2,6 @@
   <v-card>
     <v-card-title>Zahl der Wahlurnen</v-card-title>
     <v-card-text class="pb-0">
-      a
       <v-form v-model="anzahlWahlurnenValidForm">
         <div class="d-flex flex-wrap justify-space-between">
           <div
@@ -85,6 +84,25 @@
       />
     </v-card-actions>
   </v-card>
+
+  <v-card
+    class="border-lg border-error"
+    v-show="isMinimumRequired"
+  >
+    <v-card-title>Ungültige Eingaben</v-card-title>
+    <v-card-text>
+      <div class="d-flex align-center mb-2">
+        <v-icon
+          class="mr-2 error-text"
+          icon="$invalid"
+        />
+        <div class="error-text">
+          Die Summe der Kabinen, Tische und Nebenräume muss mindestens 1
+          betragen.
+        </div>
+      </div>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script setup lang="ts">
@@ -96,6 +114,7 @@ import {
   VCardTitle,
   VCheckbox,
   VForm,
+  VIcon,
   VTextField,
 } from "vuetify/components";
 
@@ -115,10 +134,22 @@ const anzahlTischeSichtblenden = ref<string | undefined>(undefined);
 const anzahlNebenrauemeWahlraum = ref<string | undefined>(undefined);
 const anzahlWahlkabinen = ref<string | undefined>(undefined);
 
+const isMinimumRequired = computed(() => {
+  if (abstimmungsschutzvorrichtungenValidForm.value !== true) {
+    return false;
+  }
+
+  const tischeSichtblenden = Number(anzahlTischeSichtblenden.value) || 0;
+  const nebenraeumeWahlraum = Number(anzahlNebenrauemeWahlraum.value) || 0;
+  const wahlkabinen = Number(anzahlWahlkabinen.value) || 0;
+
+  return tischeSichtblenden + nebenraeumeWahlraum + wahlkabinen < 1;
+});
+
 const wahlbezirkStore = useWahlbezirkStore();
 const wahlenStore = useWahlenStore();
 
-// TODO
+// TODO replace
 //const wahlen = wahlenStore.wahlen;
 const wahlen = ref([
   { wahlID: 1, name: "Bundestagswahl" },
@@ -130,7 +161,8 @@ const isSaveButtonDisabled = computed(
   () =>
     anzahlWahlurnenValidForm.value !== true ||
     abstimmungsschutzvorrichtungenValidForm.value !== true ||
-    !checkboxValue.value
+    !checkboxValue.value ||
+    isMinimumRequired.value
 );
 
 function onSaveWahlumgebungUWBClicked() {
@@ -140,8 +172,13 @@ function onSaveWahlumgebungUWBClicked() {
       anzahlWahlurnen: anzahl,
     })
   );
-  // TODO
+  // TODO implement
   //wahlbezirkStore.saveWahlumgebungUWB(wahlumgebung);
   console.log("Saved Wahlurnen:", wahlurnenData);
 }
 </script>
+<style scoped>
+.error-text {
+  color: rgb(var(--v-theme-error));
+}
+</style>

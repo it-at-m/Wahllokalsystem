@@ -1,7 +1,7 @@
 <template>
-  <base-wahlurnen-card />
+  <wahlumgebung-uwb-card />
 </template>
 
 <script setup lang="ts">
-import BaseWahlurnenCard from "@/components/wahlvorbereitung/BaseWahlurnenCard.vue";
+import WahlumgebungUwbCard from "@/components/wahlvorbereitung/WahlumgebungUwbCard.vue";
 </script>

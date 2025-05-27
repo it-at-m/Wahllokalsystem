@@ -6,17 +6,28 @@
         ref="wahlurnenForm"
         v-model="anzahlWahlurnenValidForm"
       >
-        <div
-          v-for="wahl in wahlen"
-          :key="wahl.wahlID"
-        >
-          <base-number-input
-            v-model="anzahlWahlurnen[wahl.wahlID]"
-            :label="`Anzahl der Wahlurnen für ${wahl.name}`"
-            :rules="[REQUIRED, MIN_NUMBER(1), MAX_NUMBER(99)]"
-            width="500"
-          />
+        <div class="d-flex flex-wrap justify-space-between">
+          <div
+            v-for="wahl in wahlen"
+            :key="wahl.wahlID"
+          >
+            <v-text-field
+              ref="inputRef"
+              v-model="anzahlWahlurnen[wahl.wahlID]"
+              :label="`Anzahl der Wahlurnen ${wahl.name}`"
+              clearable
+              variant="solo"
+              :rules="[REQUIRED, MIN_NUMBER(1), MAX_NUMBER(99)]"
+              type="number"
+              hide-spin-buttons
+              width="20rem"
+            />
+          </div>
         </div>
+        <v-checkbox
+          v-model="checkboxValue"
+          label="Die Wahlurne(n) war(en) leer und wurde(n) ordnungsgemäß versiegelt"
+        />
       </v-form>
     </v-card-text>
     <v-card-actions>
@@ -36,24 +47,26 @@ import {
   VCardActions,
   VCardText,
   VCardTitle,
+  VCheckbox,
   VForm,
+  VTextField,
 } from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
 
 const anzahlWahlurnen = ref<{ [key: string]: number }>({});
-
 const anzahlWahlurnenValidForm = ref<null | boolean>(null);
 const wahlurnenForm = ref<HTMLFormElement>();
-const schliessungsuhrzeit = ref<Date | undefined>(undefined);
+
+const checkboxValue = ref(false);
 
 const wahlbezirkStore = useWahlbezirkStore();
 const wahlenStore = useWahlenStore();
 
+// TODO
 //const wahlen = wahlenStore.wahlen;
 const wahlen = ref([
   { wahlID: 1, name: "Bundestagswahl" },
@@ -62,15 +75,18 @@ const wahlen = ref([
 ]);
 
 const isSaveButtonDisabled = computed(
-  () => anzahlWahlurnenValidForm.value !== true
+  () => anzahlWahlurnenValidForm.value !== true || !checkboxValue.value
 );
 
 function onSaveAnzahlWahlurnenClicked() {
+  const wahlurnenData = Object.entries(anzahlWahlurnen.value).map(
+    ([wahlID, anzahl]) => ({
+      wahlID: Number(wahlID),
+      anzahlWahlurnen: anzahl,
+    })
+  );
   // TODO
-  //if (schliessungsuhrzeit.value) {
-  //  wahlbezirkStore.sendSchliessungsuhrzeit(
-  //    schliessungsuhrzeit.value.toISOString()
-  //  );
-  //}
+  //wahlbezirkStore.saveWahlurnenData(wahlurnenData);
+  console.log("Saved Wahlurnen:", wahlurnenData);
 }
 </script>

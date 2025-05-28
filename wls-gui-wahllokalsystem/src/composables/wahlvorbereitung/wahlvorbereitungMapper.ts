@@ -1,8 +1,13 @@
 import type {
   UrnenwahlSchliessungsUhrzeitDTO,
   UrnenwahlSchliessungsUhrzeitWriteDTO,
+  UrnenwahlvorbereitungDTO,
+  UrnenwahlvorbereitungWriteDTO,
+  WahlurneDTO,
 } from "@/api/wls-clients/generated-wahlvorbereitung-api";
 import type { UrnenwahlSchliessungsuhrzeit } from "@/types/wahlvorbereitung/UrnenwahlSchliessungsuhrzeit.ts";
+import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
+import type { Wahlurne } from "@/types/wahlvorbereitung/Wahlurne.ts";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 
@@ -24,5 +29,57 @@ export function useWahlvorbereitungMapper() {
     };
   }
 
-  return { toModel, toDTO };
+  function toUrnenwahlvorbereitungModel(
+    urnenwahlvorbereitungDTO: UrnenwahlvorbereitungDTO
+  ): Urnenwahlvorbereitung {
+    const urnenAnzahlModel =
+      urnenwahlvorbereitungDTO.urnenAnzahl?.map((wahlurneDTO) =>
+        toWahlurneModel(wahlurneDTO)
+      ) ?? [];
+    return {
+      wahlbezirkID: urnenwahlvorbereitungDTO.wahlbezirkID,
+      anzahlWahlkabinen: urnenwahlvorbereitungDTO.anzahlWahlkabinen,
+      anzahlWahltische: urnenwahlvorbereitungDTO.anzahlWahltische,
+      anzahlNebenraeume: urnenwahlvorbereitungDTO.anzahlNebenraeume,
+      urnenAnzahlModel,
+    };
+  }
+
+  function toWahlurneModel(wahlurneDto: WahlurneDTO): Wahlurne {
+    return {
+      wahlID: wahlurneDto.wahlID,
+      anzahl: wahlurneDto.anzahl,
+      urneVersiegelt: wahlurneDto.urneVersiegelt,
+    };
+  }
+
+  function toUrnenwahlvorbereitungWriteDto(
+    urnenwahlvorbereitung: Urnenwahlvorbereitung
+  ): UrnenwahlvorbereitungWriteDTO {
+    const urnenAnzahlDto =
+      urnenwahlvorbereitung.urnenAnzahl?.map((wahlurneDTO) =>
+        toWahlurneDto(wahlurneDTO)
+      ) ?? [];
+    return {
+      anzahlWahlkabinen: urnenwahlvorbereitung.anzahlWahlkabinen,
+      anzahlWahltische: urnenwahlvorbereitung.anzahlWahltische,
+      anzahlNebenraeume: urnenwahlvorbereitung.anzahlNebenraeume,
+      urnenAnzahlDto,
+    };
+  }
+
+  function toWahlurneDto(wahlurne: Wahlurne): WahlurneDTO {
+    return {
+      wahlID: wahlurne.wahlID,
+      anzahl: wahlurne.anzahl,
+      urneVersiegelt: wahlurne.urneVersiegelt,
+    };
+  }
+
+  return {
+    toModel,
+    toDTO,
+    toUrnenwahlvorbereitungModel,
+    toUrnenwahlvorbereitungWriteDto,
+  };
 }

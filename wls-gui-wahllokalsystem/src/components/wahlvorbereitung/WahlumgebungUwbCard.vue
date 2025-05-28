@@ -123,9 +123,8 @@ import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
 
-const anzahlWahlurnen = ref<{ [key: string]: number }>({});
 const anzahlWahlurnenValidForm = ref<null | boolean>(null);
-
+const anzahlWahlurnen = ref<{ [key: string]: number }>({});
 const checkboxValue = ref(false);
 
 const abstimmungsschutzvorrichtungenValidForm = ref<null | boolean>(null);
@@ -166,15 +165,17 @@ const isSaveButtonDisabled = computed(
 );
 
 function onSaveWahlumgebungUWBClicked() {
-  const wahlurnenData = Object.entries(anzahlWahlurnen.value).map(
+  // TODO: type Urnenwahlvorbereitung und Wahlurne[] verwenden
+  const urnenwahlvorbereitung = Object.entries(anzahlWahlurnen.value).map(
     ([wahlID, anzahl]) => ({
       wahlID: Number(wahlID),
       anzahlWahlurnen: anzahl,
     })
   );
-  // TODO implement
-  //wahlbezirkStore.saveWahlumgebungUWB(wahlumgebung);
-  console.log("Saved Wahlurnen:", wahlurnenData);
+
+  // TODO: type Urnenwahlvorbereitung im Store wahlbezirk erfassen
+  //wahlbezirkStore.sendUrnenwahlvorbereitung(Urnenwahlvorbereitung);
+  console.log("Saved Wahlurnen:", Urnenwahlvorbereitung);
 }
 </script>
 <style scoped>

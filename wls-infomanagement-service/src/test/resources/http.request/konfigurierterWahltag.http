@@ -10,26 +10,26 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 GET {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurierteWahltage
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### post konfigurierter Wahltag EU-Wahl-24
+### post konfigurierter Wahltag for user wls_all_uwb
 POST {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurierterWahltag
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
-  "wahltag": "2024-06-09",
-  "wahltagID": "euwahl24",
+  "wahltag": "2026-01-01",
+  "wahltagID": "4526485e-2a3f-43d6-bd57-d0a58fc330cb",
   "wahltagStatus": "AKTIV",
   "nummer": "nummer"
 }
 
-### POST konfigurierter Wahltag BTW-21
+### POST konfigurierter Wahltag for user wls_all_bwb
 POST {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurierterWahltag
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
-  "wahltag": "2021-09-26",
-  "wahltagID": "BTW-21",
+  "wahltag": "2026-01-01",
+  "wahltagID": "827e9e6a-ebe9-483f-a9cd-162b26f348e8",
   "wahltagStatus": "AKTIV",
   "nummer": "nummer2"
 }

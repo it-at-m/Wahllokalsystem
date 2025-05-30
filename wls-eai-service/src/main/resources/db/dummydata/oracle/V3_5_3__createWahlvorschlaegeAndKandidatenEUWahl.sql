@@ -1,11 +1,9 @@
 -- #########################
--- ## für EU-Wahl
--- #########################
--- ## Wahlbezirk1 -
+-- ## Wahlbezirk1 - user wls_all_uwb
 -- #########################
 INSERT INTO wahlvorschlaege (id, wahlbezirkID, wahlID, stimmzettelgebietID, wahlvorschlaegelisteID)
-VALUES ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000001',
-        '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000001',
+VALUES ('00000000-0000-0000-0000-000000000001', '9899cae4-df9a-4ffc-a940-f20cf2280171',
+        'd8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1', '00000000-0000-0000-0000-000000000001',
         '00000001-0000-0000-0000-000000000001');
 
 INSERT INTO wahlvorschlag (id, ordnungszahl, kurzname, erhaeltStimmen, wahlvorschlaegeID)
@@ -85,7 +83,7 @@ VALUES ('00000000-0000-0000-0001-000000000015', 'Reagan', 5, 1, 25, 1,
 -- #########################
 INSERT INTO wahlvorschlaege (id, wahlbezirkID, wahlID, stimmzettelgebietID, wahlvorschlaegelisteID)
 VALUES ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000002',
-        '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000002',
+        'd8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1', '00000000-0000-0000-0000-000000000002',
         '00000001-0000-0000-0000-000000000001');
 
 INSERT INTO wahlvorschlag (id, ordnungszahl, kurzname, erhaeltStimmen, wahlvorschlaegeID)
@@ -165,7 +163,7 @@ VALUES ('00000000-0000-0000-0001-000000000030', 'Reagan', 5, 1, 25, 1,
 -- #########################
 INSERT INTO wahlvorschlaege (id, wahlbezirkID, wahlID, stimmzettelgebietID, wahlvorschlaegelisteID)
 VALUES ('00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000003',
-        '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000003',
+        'd8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1', '00000000-0000-0000-0000-000000000003',
         '00000001-0000-0000-0000-000000000001');
 
 INSERT INTO wahlvorschlag (id, ordnungszahl, kurzname, erhaeltStimmen, wahlvorschlaegeID)
@@ -245,7 +243,7 @@ VALUES ('00000000-0000-0000-0001-000000000045', 'Reagan', 5, 1, 25, 1,
 -- #########################
 INSERT INTO wahlvorschlaege (id, wahlbezirkID, wahlID, stimmzettelgebietID, wahlvorschlaegelisteID)
 VALUES ('00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000004',
-        '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000004',
+        'd8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1', '00000000-0000-0000-0000-000000000004',
         '00000001-0000-0000-0000-000000000001');
 
 INSERT INTO wahlvorschlag (id, ordnungszahl, kurzname, erhaeltStimmen, wahlvorschlaegeID)

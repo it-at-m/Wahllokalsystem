@@ -1,3 +1,6 @@
+import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
+import type { Wahlvorstand } from "@/types/wahlvorstand/Wahlvorstand.ts";
+
 import { acceptHMRUpdate, defineStore, storeToRefs } from "pinia";
 import { ref } from "vue";
 
@@ -8,8 +11,11 @@ import { useUserStore } from "@/stores/userStore.ts";
 export const storeID = "wahlbezirk";
 
 export const useWahlbezirkStore = defineStore(storeID, () => {
-  const { postUrnenwahlSchliessungsuhrzeit, postEroeffnungsuhrzeit } =
-    useWahlvorbereitungService();
+  const {
+    postUrnenwahlSchliessungsuhrzeit,
+    postEroeffnungsuhrzeit,
+    postUrnenwahlvorbereitung,
+  } = useWahlvorbereitungService();
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
   const { isValidDate } = useDateTimeUtils();
 
@@ -18,6 +24,8 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   const eroeffnungsuhrzeitIsSaving = ref(false);
 
   const schliessungsUhrzeitSent = ref<Date | undefined>(undefined);
+
+  const urnenwahlVorbereitung = ref<Urnenwahlvorbereitung>();
 
   async function sendEroeffnungsuhrzeit() {
     if (currentUserWahlbezirkID.value && eroeffnungsuhrzeit.value) {
@@ -48,6 +56,17 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     }
   }
 
+  async function sendUrnenwahlvorbereitung(
+    urnenwahlvorbereitung: Urnenwahlvorbereitung
+  ) {
+    const wahlbezirkID = currentUserWahlbezirkID.value;
+
+    if (wahlbezirkID) {
+      await postUrnenwahlvorbereitung(wahlbezirkID, urnenwahlvorbereitung);
+      urnenwahlVorbereitung.value = urnenwahlvorbereitung;
+    }
+  }
+
   return {
     eroeffnungsuhrzeit,
     eroeffnungsuhrzeitIsSaving,
@@ -55,6 +74,8 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     schliessungsUhrzeitSent,
     sendEroeffnungsuhrzeit,
     sendSchliessungsuhrzeit,
+    sendUrnenwahlvorbereitung,
+    urnenwahlVorbereitung,
   };
 });
 

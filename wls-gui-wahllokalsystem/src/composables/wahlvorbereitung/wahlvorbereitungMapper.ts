@@ -30,7 +30,7 @@ export function useWahlvorbereitungMapper() {
     return { schliessungsuhrzeit: schliessungsuhrzeitDTO.schliessungsuhrzeit };
   }
 
-  function toDTO(
+  function toUrnenwahlSchliessungsuhrzeitDTO(
     schliessungsuhrzeit: Date
   ): UrnenwahlSchliessungsUhrzeitWriteDTO {
     const mappedUhrzeit = applyLocalTimezoneOffset(schliessungsuhrzeit);
@@ -51,7 +51,7 @@ export function useWahlvorbereitungMapper() {
       anzahlWahlkabinen: urnenwahlvorbereitungDTO.anzahlWahlkabinen,
       anzahlWahltische: urnenwahlvorbereitungDTO.anzahlWahltische,
       anzahlNebenraeume: urnenwahlvorbereitungDTO.anzahlNebenraeume,
-      urnenAnzahlModel,
+      urnenAnzahl: urnenAnzahlModel,
     };
   }
 
@@ -74,7 +74,7 @@ export function useWahlvorbereitungMapper() {
       anzahlWahlkabinen: urnenwahlvorbereitung.anzahlWahlkabinen,
       anzahlWahltische: urnenwahlvorbereitung.anzahlWahltische,
       anzahlNebenraeume: urnenwahlvorbereitung.anzahlNebenraeume,
-      urnenAnzahlDto,
+      urnenAnzahl: urnenAnzahlDto,
     };
   }
 
@@ -87,9 +87,9 @@ export function useWahlvorbereitungMapper() {
   }
 
   return {
-      toEroeffnungsuhrzeitWriteDTO,
-      toUrnenwahlSchliessungsuhrzeitModel,
-      toUrnenwahlSchliessungsuhrzeitDTO,
+    toEroeffnungsuhrzeitWriteDTO,
+    toUrnenwahlSchliessungsuhrzeitModel,
+    toUrnenwahlSchliessungsuhrzeitDTO,
     toUrnenwahlvorbereitungModel,
     toUrnenwahlvorbereitungWriteDto,
   };

@@ -5,5 +5,5 @@ export interface Urnenwahlvorbereitung {
   anzahlWahlkabinen: number;
   anzahlWahltische: number;
   anzahlNebenraeume: number;
-  urnenAnzahl: Array<Wahlurne>;
+  urnenAnzahl: Wahlurne[];
 }

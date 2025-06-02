@@ -1,6 +1,11 @@
 import type { UrnenwahlSchliessungsuhrzeit } from "@/types/wahlvorbereitung/UrnenwahlSchliessungsuhrzeit.ts";
+import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
 
-import { UrnenwahlSchliessungsUhrzeitControllerApi } from "@/api/wls-clients/generated-wahlvorbereitung-api";
+import {
+  EroeffnungsUhrzeitControllerApi,
+  UrnenwahlSchliessungsUhrzeitControllerApi,
+  UrnenwahlvorbereitungControllerApi,
+} from "@/api/wls-clients/generated-wahlvorbereitung-api";
 import { Configuration } from "@/api/wls-clients/generated-wahlvorstand-api";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWahlvorbereitungMapper } from "@/composables/wahlvorbereitung/wahlvorbereitungMapper.ts";
@@ -9,9 +14,9 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 
 const userNotificationService = useUserNotificationService();
 const {
-    toUrnenwahlSchliessungsuhrzeitModel,
-    toUrnenwahlSchliessungsuhrzeitDTO,
-    toEroeffnungsuhrzeitWriteDTO,
+  toUrnenwahlSchliessungsuhrzeitModel,
+  toUrnenwahlSchliessungsuhrzeitDTO,
+  toEroeffnungsuhrzeitWriteDTO,
   toUrnenwahlvorbereitungModel,
   toUrnenwahlvorbereitungWriteDto,
 } = useWahlvorbereitungMapper();
@@ -29,9 +34,7 @@ export function useWahlvorbereitungService() {
   );
   const urnenwahlvorbereitungControllerApi =
     new UrnenwahlvorbereitungControllerApi(
-      new Configuration({
-        basePath: WAHLVORBEREITUNG_SERVICE_API_URL,
-      })
+      wahlvorbereitungsServiceConfiguration
     );
 
   async function getUrnenwahlSchliessungsUhrzeit(
@@ -44,6 +47,28 @@ export function useWahlvorbereitungService() {
     } catch (error) {
       userNotificationService.addNotification(
         "Fehler beim Laden der Schliessungsuhrzeit.",
+        UserNotificationCategoryEnum.ERROR
+      );
+      throw error;
+    }
+  }
+
+  async function postEroeffnungsuhrzeit(
+    wahlbezirkID: string,
+    eroeffnungsuhrzeit: Date
+  ): Promise<void> {
+    try {
+      await eroeffnungsuhrzeitControllerAPI.postEroeffnungsuhrzeit(
+        wahlbezirkID,
+        toEroeffnungsuhrzeitWriteDTO(eroeffnungsuhrzeit)
+      );
+      userNotificationService.addNotification(
+        "Eröffnungsuhrzeit erfolgreich gespeichert.",
+        UserNotificationCategoryEnum.SUCCESS
+      );
+    } catch (error) {
+      userNotificationService.addNotification(
+        "Speichern der Eröffnungsuhrzeit fehlgeschlagen.",
         UserNotificationCategoryEnum.ERROR
       );
       throw error;

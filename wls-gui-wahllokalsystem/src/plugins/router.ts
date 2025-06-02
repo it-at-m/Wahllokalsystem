@@ -24,9 +24,9 @@ import ExamplePrintView from "@/views/ExamplePrintView.vue";
 import ExampleToastView from "@/views/ExampleToastView.vue";
 import ExampleValidation from "@/views/ExampleValidation.vue";
 import HomeView from "@/views/HomeView.vue";
-import WahlumgebungView from "@/views/WahlumgebungView.vue";
 import WahleroeffnungView from "@/views/wahlvorbereitung/WahleroeffnungView.vue";
 import WahlschliessungView from "@/views/wahlvorbereitung/WahlschliessungView.vue";
+import WahlumgebungView from "@/views/wahlvorbereitung/WahlumgebungView.vue";
 import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
 
 const routes = [
@@ -46,6 +46,16 @@ const routes = [
     path: "/wahlschliessung",
     name: ROUTE_WAHLSCHLIESSUNG,
     component: WahlschliessungView,
+  },
+  {
+    path: "/wahlumgebung",
+    name: ROUTE_WAHLUMGEBUNG,
+    component: WahlumgebungView,
+  },
+  {
+    path: "/beginnStimmabgabe",
+    name: ROUTE_BEGINN_STIMMABGABE,
+    component: WahleroeffnungView,
   },
   {
     path: "/ereignisse",

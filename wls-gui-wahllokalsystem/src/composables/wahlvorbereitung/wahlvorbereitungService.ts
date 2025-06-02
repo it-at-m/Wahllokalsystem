@@ -23,10 +23,10 @@ export function useWahlvorbereitungService() {
   });
   const urnenwahlSchliessungsUhrzeitControllerAPI =
     new UrnenwahlSchliessungsUhrzeitControllerApi(
-      wahlvorbereitungsServiceConfigurations
+      wahlvorbereitungsServiceConfiguration
     );
   const eroeffnungsuhrzeitControllerAPI = new EroeffnungsUhrzeitControllerApi(
-    wahlvorbereitungsServiceConfigurations
+    wahlvorbereitungsServiceConfiguration
   );
 
   async function getUrnenwahlSchliessungsUhrzeit(

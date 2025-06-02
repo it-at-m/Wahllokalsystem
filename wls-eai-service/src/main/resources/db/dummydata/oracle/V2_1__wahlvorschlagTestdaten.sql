@@ -3,7 +3,7 @@ INSERT INTO wahlvorschlaegeliste (id, wahltag, wahlID)
 VALUES ('00000001-0000-0000-0000-000000000001', TO_TIMESTAMP('2026-01-01', 'YYYY-MM-DD'),
         'd8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1');
 
-INSERT INTO wahlvorschlaege (id, wahlbezirkID, wahlID, stimmzettelgebietID, wahlvorschlaegelisteID) -- TODO wahlvorschlaege für uwb werden nicht in db eingetragen
+INSERT INTO wahlvorschlaege (id, wahlbezirkID, wahlID, stimmzettelgebietID, wahlvorschlaegelisteID)
 VALUES ('00000000-0000-0000-0000-000000000001', '9899cae4-df9a-4ffc-a940-f20cf2280171',
         'd8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1', '00000000-0000-0000-0000-000000000001',
         '00000001-0000-0000-0000-000000000001');

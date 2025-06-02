@@ -12,5 +12,5 @@ public interface WahlenClientMapper {
     @Mapping(target = "reihenfolge", constant = "1l")
     WahlModel toModel(WahlDTO wahlDTO);
 
-    List<WahlModel> fromRemoteClientSetOfWahlDTOtoListOfWahlModel(List<WahlDTO> wahlDTO);
+    List<WahlModel> fromRemoteClientListOfWahlDTOtoListOfWahlModel(List<WahlDTO> wahlDTO);
 }

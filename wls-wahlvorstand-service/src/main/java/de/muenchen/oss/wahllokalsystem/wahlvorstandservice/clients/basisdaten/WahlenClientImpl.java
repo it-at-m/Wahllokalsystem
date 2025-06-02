@@ -37,6 +37,6 @@ public class WahlenClientImpl implements WahlenClient {
         if (wahlDTOs == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.BASISDATEN_ANTWORT_NULL);
         }
-        return wahlenClientMapper.fromRemoteClientSetOfWahlDTOtoListOfWahlModel(wahlDTOs);
+        return wahlenClientMapper.fromRemoteClientListOfWahlDTOtoListOfWahlModel(wahlDTOs);
     }
 }

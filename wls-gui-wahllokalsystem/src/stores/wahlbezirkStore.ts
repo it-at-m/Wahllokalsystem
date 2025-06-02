@@ -1,5 +1,4 @@
 import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
-import type { Wahlvorstand } from "@/types/wahlvorstand/Wahlvorstand.ts";
 
 import { acceptHMRUpdate, defineStore, storeToRefs } from "pinia";
 import { ref } from "vue";
@@ -25,7 +24,9 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
 
   const schliessungsUhrzeitSent = ref<Date | undefined>(undefined);
 
-  const urnenwahlVorbereitung = ref<Urnenwahlvorbereitung>();
+  const urnenwahlVorbereitung = ref<Urnenwahlvorbereitung | undefined>(
+    undefined
+  );
 
   async function sendEroeffnungsuhrzeit() {
     if (currentUserWahlbezirkID.value && eroeffnungsuhrzeit.value) {

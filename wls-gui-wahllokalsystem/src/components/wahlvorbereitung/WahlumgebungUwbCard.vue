@@ -86,8 +86,8 @@
   </v-card>
 
   <v-card
-    class="border-lg border-error"
     v-show="isMinimumRequired"
+    class="border-lg border-error"
   >
     <v-card-title>Ungültige Eingaben</v-card-title>
     <v-card-text>
@@ -133,6 +133,10 @@ const anzahlTischeSichtblenden = ref<string | undefined>(undefined);
 const anzahlNebenrauemeWahlraum = ref<string | undefined>(undefined);
 const anzahlWahlkabinen = ref<string | undefined>(undefined);
 
+const urnenwahlVorbereitung = computed(
+  () => wahlbezirkStore.urnenwahlVorbereitung
+);
+
 const isMinimumRequired = computed(() => {
   if (abstimmungsschutzvorrichtungenValidForm.value !== true) {
     return false;
@@ -148,13 +152,7 @@ const isMinimumRequired = computed(() => {
 const wahlbezirkStore = useWahlbezirkStore();
 const wahlenStore = useWahlenStore();
 
-// TODO replace
-//const wahlen = wahlenStore.wahlen;
-const wahlen = ref([
-  { wahlID: 1, name: "Bundestagswahl" },
-  { wahlID: 2, name: "Landtagswahl" },
-  { wahlID: 3, name: "Europawahl" },
-]);
+const wahlen = wahlenStore.wahlen;
 
 const isSaveButtonDisabled = computed(
   () =>
@@ -174,8 +172,8 @@ function onSaveWahlumgebungUWBClicked() {
   );
 
   // TODO: type Urnenwahlvorbereitung im Store wahlbezirk erfassen
-  //wahlbezirkStore.sendUrnenwahlvorbereitung(Urnenwahlvorbereitung);
-  console.log("Saved Wahlurnen:", Urnenwahlvorbereitung);
+  //wahlbezirkStore.sendUrnenwahlvorbereitung(urnenwahlvorbereitung);
+  console.log("Saved Wahlurnen:", urnenwahlvorbereitung);
 }
 </script>
 <style scoped>

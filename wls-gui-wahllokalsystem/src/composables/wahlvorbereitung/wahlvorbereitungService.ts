@@ -18,7 +18,7 @@ const {
 } = useWahlvorbereitungMapper();
 
 export function useWahlvorbereitungService() {
-  const wahlvorbereitungsServiceConfigurations = new Configuration({
+  const wahlvorbereitungsServiceConfiguration = new Configuration({
     basePath: WAHLVORBEREITUNG_SERVICE_API_URL,
   });
   const urnenwahlSchliessungsUhrzeitControllerAPI =

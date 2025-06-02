@@ -1,10 +1,6 @@
 import type { UrnenwahlSchliessungsuhrzeit } from "@/types/wahlvorbereitung/UrnenwahlSchliessungsuhrzeit.ts";
-import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
 
-import {
-  UrnenwahlSchliessungsUhrzeitControllerApi,
-  UrnenwahlvorbereitungControllerApi,
-} from "@/api/wls-clients/generated-wahlvorbereitung-api";
+import { UrnenwahlSchliessungsUhrzeitControllerApi } from "@/api/wls-clients/generated-wahlvorbereitung-api";
 import { Configuration } from "@/api/wls-clients/generated-wahlvorstand-api";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWahlvorbereitungMapper } from "@/composables/wahlvorbereitung/wahlvorbereitungMapper.ts";
@@ -13,19 +9,24 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 
 const userNotificationService = useUserNotificationService();
 const {
-  toModel,
-  toDTO,
+    toUrnenwahlSchliessungsuhrzeitModel,
+    toUrnenwahlSchliessungsuhrzeitDTO,
+    toEroeffnungsuhrzeitWriteDTO,
   toUrnenwahlvorbereitungModel,
   toUrnenwahlvorbereitungWriteDto,
 } = useWahlvorbereitungMapper();
 
 export function useWahlvorbereitungService() {
+  const wahlvorbereitungsServiceConfiguration = new Configuration({
+    basePath: WAHLVORBEREITUNG_SERVICE_API_URL,
+  });
   const urnenwahlSchliessungsUhrzeitControllerAPI =
     new UrnenwahlSchliessungsUhrzeitControllerApi(
-      new Configuration({
-        basePath: WAHLVORBEREITUNG_SERVICE_API_URL,
-      })
+      wahlvorbereitungsServiceConfiguration
     );
+  const eroeffnungsuhrzeitControllerAPI = new EroeffnungsUhrzeitControllerApi(
+    wahlvorbereitungsServiceConfiguration
+  );
   const urnenwahlvorbereitungControllerApi =
     new UrnenwahlvorbereitungControllerApi(
       new Configuration({
@@ -39,7 +40,7 @@ export function useWahlvorbereitungService() {
     try {
       return await urnenwahlSchliessungsUhrzeitControllerAPI
         .getUrnenwahlSchliessungsUhrzeit(wahlbezirkID)
-        .then((response) => toModel(response.data));
+        .then((response) => toUrnenwahlSchliessungsuhrzeitModel(response.data));
     } catch (error) {
       userNotificationService.addNotification(
         "Fehler beim Laden der Schliessungsuhrzeit.",
@@ -53,7 +54,8 @@ export function useWahlvorbereitungService() {
     wahlbezirkID: string,
     schliessungsUhrzeit: Date
   ): Promise<void> {
-    const schliessungsuhrzeitWriteDTO = toDTO(schliessungsUhrzeit);
+    const schliessungsuhrzeitWriteDTO =
+      toUrnenwahlSchliessungsuhrzeitDTO(schliessungsUhrzeit);
 
     try {
       await urnenwahlSchliessungsUhrzeitControllerAPI.postUrnenwahlSchliessungsUhrzeit(
@@ -117,6 +119,7 @@ export function useWahlvorbereitungService() {
 
   return {
     getUrnenwahlSchliessungsUhrzeit,
+    postEroeffnungsuhrzeit,
     postUrnenwahlSchliessungsuhrzeit,
     getUrnenwahlvorbereitung,
     postUrnenwahlvorbereitung,

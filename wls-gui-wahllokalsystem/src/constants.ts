@@ -7,6 +7,7 @@ export const ROUTE_WAHLVORSTAND = "wahlvorstand";
 export const ROUTE_EREIGNISSE = "ereignisse";
 export const ROUTE_WAHLSCHLIESSUNG = "wahlschliessung";
 export const ROUTE_WAHLUMGEBUNG = "wahlumgebung";
+export const ROUTE_BEGINN_STIMMABGABE = "beginnStimmabgabe";
 
 export const TOAST = "toast";
 export const PRINT_EXAMPLE = "print-example";

@@ -1,4 +1,5 @@
 import type {
+  EroeffnungsUhrzeitWriteDTO,
   UrnenwahlSchliessungsUhrzeitDTO,
   UrnenwahlSchliessungsUhrzeitWriteDTO,
   UrnenwahlvorbereitungDTO,
@@ -14,7 +15,16 @@ import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts"
 const { applyLocalTimezoneOffset } = useDateTimeFormatter();
 
 export function useWahlvorbereitungMapper() {
-  function toModel(
+  function toEroeffnungsuhrzeitWriteDTO(
+    eroeffnungsuhrzeit: Date
+  ): EroeffnungsUhrzeitWriteDTO {
+    return {
+      eroeffnungsuhrzeit:
+        applyLocalTimezoneOffset(eroeffnungsuhrzeit).toISOString(),
+    };
+  }
+
+  function toUrnenwahlSchliessungsuhrzeitModel(
     schliessungsuhrzeitDTO: UrnenwahlSchliessungsUhrzeitDTO
   ): UrnenwahlSchliessungsuhrzeit {
     return { schliessungsuhrzeit: schliessungsuhrzeitDTO.schliessungsuhrzeit };
@@ -77,8 +87,9 @@ export function useWahlvorbereitungMapper() {
   }
 
   return {
-    toModel,
-    toDTO,
+      toEroeffnungsuhrzeitWriteDTO,
+      toUrnenwahlSchliessungsuhrzeitModel,
+      toUrnenwahlSchliessungsuhrzeitDTO,
     toUrnenwahlvorbereitungModel,
     toUrnenwahlvorbereitungWriteDto,
   };

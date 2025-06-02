@@ -120,6 +120,10 @@
             />
           </template>
           <v-list-item
+            title="Beginn Stimmabgabe"
+            :to="ROUTE_BEGINN_STIMMABGABE"
+          />
+          <v-list-item
             title="Wahlschliessung"
             :to="ROUTE_WAHLSCHLIESSUNG"
           />
@@ -177,6 +181,7 @@ import {
   EXAMPLE_ROUTES_NEWROUTE,
   EXAMPLE_VALIDATION,
   PRINT_EXAMPLE,
+  ROUTE_BEGINN_STIMMABGABE,
   ROUTE_EREIGNISSE,
   ROUTE_WAHLSCHLIESSUNG,
   ROUTE_WAHLUMGEBUNG,

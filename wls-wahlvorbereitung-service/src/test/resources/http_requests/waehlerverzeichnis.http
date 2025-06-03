@@ -28,8 +28,8 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
-  "verzeichnisLagVor": true,
-  "berichtigungVorBeginnDerAbstimmung": true,
+  "verzeichnisLagVor": false,
+  "berichtigungVorBeginnDerAbstimmung": false,
   "nachtraeglicheBerichtigung": true,
   "mitteilungUeberUngueltigeWahlscheineErhalten": true
 }

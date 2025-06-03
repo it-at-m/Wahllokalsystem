@@ -1,10 +1,9 @@
 import type {
+  EroeffnungsUhrzeitWriteDTO,
   UrnenwahlSchliessungsUhrzeitDTO,
   UrnenwahlSchliessungsUhrzeitWriteDTO,
 } from "@/api/wls-clients/generated-wahlvorbereitung-api";
 import type { UrnenwahlSchliessungsuhrzeit } from "@/types/wahlvorbereitung/UrnenwahlSchliessungsuhrzeit.ts";
-
-import type { EroeffnungsUhrzeitWriteDTO } from "@/api/wls-clients/generated-wahlvorbereitung-api";
 
 import { describe, expect, it, vi } from "vitest";
 
@@ -21,30 +20,34 @@ vi.mock("@/composables/common/dateTimeFormatter.ts", () => ({
 }));
 
 describe("wahlvorbereitungMapper.ts", () => {
-  const { toModel, toDTO, toEroeffnungsuhrzeitWriteDTO } = useWahlvorbereitungMapper();
+  const {
+    toUrnenwahlSchliessungsuhrzeitModel,
+    toUrnenwahlSchliessungsuhrzeitDTO,
+    toEroeffnungsuhrzeitWriteDTO,
+  } = useWahlvorbereitungMapper();
 
-    describe("toEroeffnungsuhrzeitWriteDTO", () => {
-        it("should_returnDTO_when_dateIsGiven", () => {
-            const dateToMap = new Date("2025-05-23T07:05:01+02:00");
+  describe("toEroeffnungsuhrzeitWriteDTO", () => {
+    it("should_returnDTO_when_dateIsGiven", () => {
+      const dateToMap = new Date("2025-05-23T07:05:01+02:00");
 
-            const mockedApplyLocalTimezoneOffsetResponse = new Date(
-                "2025-05-23T07:05:01Z"
-            );
-            mockDefinitions.applyLocalTimezoneOffset.mockReturnValue(
-                mockedApplyLocalTimezoneOffsetResponse
-            );
+      const mockedApplyLocalTimezoneOffsetResponse = new Date(
+        "2025-05-23T07:05:01Z"
+      );
+      mockDefinitions.applyLocalTimezoneOffset.mockReturnValue(
+        mockedApplyLocalTimezoneOffsetResponse
+      );
 
-            const result = toEroeffnungsuhrzeitWriteDTO(dateToMap);
+      const result = toEroeffnungsuhrzeitWriteDTO(dateToMap);
 
-            const expectedResult: EroeffnungsUhrzeitWriteDTO = {
-                eroeffnungsuhrzeit:
-                    mockedApplyLocalTimezoneOffsetResponse.toISOString(),
-            };
-            expect(result).toStrictEqual(expectedResult);
-        });
+      const expectedResult: EroeffnungsUhrzeitWriteDTO = {
+        eroeffnungsuhrzeit:
+          mockedApplyLocalTimezoneOffsetResponse.toISOString(),
+      };
+      expect(result).toStrictEqual(expectedResult);
     });
+  });
 
-  describe("toDTO", () => {
+  describe("toUrnenwahlSchliessungsuhrzeitDTO", () => {
     it("should_returnDTO_when_schliessungsUhrzeitIsGiven", () => {
       const dateToMap = new Date("2025-05-23T18:00:00+02:00");
       const mockedApplyLocalTimezoneOffsetResponse = new Date(
@@ -59,13 +62,13 @@ describe("wahlvorbereitungMapper.ts", () => {
         mockedApplyLocalTimezoneOffsetResponse
       );
 
-      const result = toDTO(dateToMap);
+      const result = toUrnenwahlSchliessungsuhrzeitDTO(dateToMap);
 
       expect(result).toStrictEqual(expectedResult);
     });
   });
 
-  describe("toModel", () => {
+  describe("toUrnenwahlSchliessungsuhrzeitModel", () => {
     it("should_returnModel_when_schliessungsUhrzeitDtoIsGiven", () => {
       const schliessungsuhrzeit = "2025-05-23T18:00:00Z";
       const dateToMap: UrnenwahlSchliessungsUhrzeitDTO = {
@@ -76,7 +79,7 @@ describe("wahlvorbereitungMapper.ts", () => {
         schliessungsuhrzeit: schliessungsuhrzeit,
       };
 
-      const result = toModel(dateToMap);
+      const result = toUrnenwahlSchliessungsuhrzeitModel(dateToMap);
 
       expect(result).toStrictEqual(expectedResult);
     });

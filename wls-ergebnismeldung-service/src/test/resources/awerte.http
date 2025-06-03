@@ -12,8 +12,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 [
-  "9899cae4-df9a-4ffc-a940-f20cf2280171",
-  "wahlbezirkIDXYZ"
+  "9899cae4-df9a-4ffc-a940-f20cf2280171"
 ]
 
 ### GET A-Werte (needs profile 'dummy.clients') | user wls_all_bwb
@@ -26,6 +25,5 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 [
-  "9081145c-dc16-4a9b-8255-5c49ddb98c14",
-  "wahlbezirkIDXYZ"
+  "9081145c-dc16-4a9b-8255-5c49ddb98c14"
 ]

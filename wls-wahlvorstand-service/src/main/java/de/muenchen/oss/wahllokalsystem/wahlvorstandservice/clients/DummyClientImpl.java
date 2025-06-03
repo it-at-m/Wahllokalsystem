@@ -45,6 +45,6 @@ public class DummyClientImpl implements WahlvorstandEaiClient, WahlenClient, Kon
 
     @Override
     public KonfigurierterWahltagModel getKonfigurierterWahltag() throws WlsException {
-        return new KonfigurierterWahltagModel(LocalDate.now().plusMonths(1), "1");
+        return new KonfigurierterWahltagModel(LocalDate.now().plusMonths(1), "wahltagID", "1");
     }
 }

@@ -7,12 +7,14 @@ import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   postUrnenwahlSchliessungsuhrzeit: vi.fn(),
+  postEroeffnungsuhrzeit: vi.fn(),
 }));
 
 vi.mock("@/composables/wahlvorbereitung/wahlvorbereitungService", () => ({
   useWahlvorbereitungService: () => ({
     postUrnenwahlSchliessungsuhrzeit:
       mockDefinitions.postUrnenwahlSchliessungsuhrzeit,
+    postEroeffnungsuhrzeit: mockDefinitions.postEroeffnungsuhrzeit,
   }),
 }));
 
@@ -33,6 +35,77 @@ describe("wahlbezirkStore.ts", () => {
   afterEach(() => {
     vi.clearAllMocks();
     vi.useRealTimers();
+  });
+
+  describe("sendEroeffnungsuhrzeit", () => {
+    it("should_updateIsSavingAndSetSentValue_when_succeeded", async () => {
+      const eroeffnungsuhrzeit = new Date();
+      unitUnderTest.eroeffnungsuhrzeit = eroeffnungsuhrzeit;
+
+      const wahlbezirkID = "wahlbezirkID";
+      useUserStore().setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+
+      const timeout = 100;
+      mockDefinitions.postEroeffnungsuhrzeit.mockReturnValue(
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({});
+          }, timeout);
+        })
+      );
+
+      expect(unitUnderTest.eroeffnungsuhrzeitIsSaving).toStrictEqual(false);
+      const sendEroeffnungsuhrzeitPromise =
+        unitUnderTest.sendEroeffnungsuhrzeit();
+      expect(unitUnderTest.eroeffnungsuhrzeitIsSaving).toStrictEqual(true);
+
+      vi.advanceTimersByTime(timeout);
+      await sendEroeffnungsuhrzeitPromise;
+
+      expect(mockDefinitions.postEroeffnungsuhrzeit.mock.calls).toStrictEqual([
+        [wahlbezirkID, eroeffnungsuhrzeit],
+      ]);
+      expect(unitUnderTest.eroeffnungsuhrzeitIsSaving).toStrictEqual(false);
+      expect(unitUnderTest.eroeffnungsuhrzeit?.getTime()).toStrictEqual(
+        eroeffnungsuhrzeit.getTime()
+      );
+    });
+
+    it("should_notCallService_when_noCurrentUserWahlbezirkIDIsGiven", async () => {
+      unitUnderTest.eroeffnungsuhrzeit = new Date();
+      useUserStore().setUser(prepareUser().wahlbezirkID(undefined).build());
+
+      expect(unitUnderTest.eroeffnungsuhrzeitIsSaving).toStrictEqual(false);
+      const sendEroeffnungsuhrzeitPromise =
+        unitUnderTest.sendEroeffnungsuhrzeit();
+
+      vi.advanceTimersByTime(100);
+      await sendEroeffnungsuhrzeitPromise;
+
+      expect(
+        mockDefinitions.postEroeffnungsuhrzeit.mock.calls.length
+      ).toStrictEqual(0);
+      expect(unitUnderTest.eroeffnungsuhrzeitIsSaving).toStrictEqual(false);
+    });
+
+    it("should_notCallService_when_noEroeffnungsuhrzeitIsGiven", async () => {
+      unitUnderTest.eroeffnungsuhrzeit = undefined;
+      useUserStore().setUser(
+        prepareUser().wahlbezirkID("wahlbezirkID").build()
+      );
+
+      expect(unitUnderTest.eroeffnungsuhrzeitIsSaving).toStrictEqual(false);
+      const sendEroeffnungsuhrzeitPromise =
+        unitUnderTest.sendEroeffnungsuhrzeit();
+
+      vi.advanceTimersByTime(100);
+      await sendEroeffnungsuhrzeitPromise;
+
+      expect(
+        mockDefinitions.postEroeffnungsuhrzeit.mock.calls.length
+      ).toStrictEqual(0);
+      expect(unitUnderTest.eroeffnungsuhrzeitIsSaving).toStrictEqual(false);
+    });
   });
 
   describe("sendSchliessungsuhrzeit", () => {

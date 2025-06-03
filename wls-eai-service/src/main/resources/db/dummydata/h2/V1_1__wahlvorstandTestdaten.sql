@@ -36,5 +36,5 @@ INSERT INTO wahlvorstandsmitglied (id, vorname, nachname, funktion, anwesend, wa
 VALUES ('00000000-0000-0000-0002-000000000005', 'Stewie', 'Griffin', 'B', false, '00000000-0000-0000-0001-000000000002',
         null);
 INSERT INTO wahlvorstandsmitglied (id, vorname, nachname, funktion, anwesend, wahlvorstandID, anwesenheitUpdatedOn)
-VALUES ('00000000-0000-0000-0002-000000000006', 'Brian', 'Griffin', 'B', 0, '00000000-0000-0000-0001-000000000002',
+VALUES ('00000000-0000-0000-0002-000000000006', 'Brian', 'Griffin', 'B', false, '00000000-0000-0000-0001-000000000002',
         null);

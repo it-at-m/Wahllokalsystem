@@ -2,14 +2,17 @@
   <v-card>
     <v-card-title>Zahl der Wahlurnen</v-card-title>
     <v-card-text class="pb-0">
-      <v-form v-model="anzahlWahlurnenValidForm">
+      <v-form
+        ref="wahlurnenForm"
+        v-model="anzahlWahlurnenValidForm"
+      >
         <div class="d-flex flex-wrap justify-space-between">
           <div
-            v-for="wahl in wahlen"
-            :key="wahl.wahlID"
+            v-for="(wahl, index) in wahlen"
+            :key="index"
           >
             <v-text-field
-              v-model="anzahlWahlurnen[wahl.wahlID]"
+              :model-value="urnenwahlVorbereitung.urnenAnzahl[index].anzahl"
               :label="`Anzahl der Wahlurnen ${wahl.name}`"
               clearable
               variant="solo"
@@ -17,6 +20,9 @@
               type="number"
               hide-spin-buttons
               width="20rem"
+              @update:model-value="
+                (value) => onAnzahlUpdateModelValue(value, index)
+              "
             />
           </div>
         </div>
@@ -38,7 +44,7 @@
         <div class="d-flex flex-wrap justify-space-between">
           <div>
             <v-text-field
-              v-model="anzahlTischeSichtblenden"
+              v-model="urnenwahlVorbereitung.anzahlWahltische"
               label="Anzahl der Tische mit Sichtblenden"
               clearable
               variant="solo"
@@ -50,7 +56,7 @@
           </div>
           <div>
             <v-text-field
-              v-model="anzahlNebenrauemeWahlraum"
+              v-model="urnenwahlVorbereitung.anzahlNebenraeume"
               label="Anzahl der Nebenräume im Wahlraum"
               clearable
               variant="solo"
@@ -63,7 +69,7 @@
           <div>
             <v-text-field
               ref="inputRef"
-              v-model="anzahlWahlkabinen"
+              v-model="urnenwahlVorbereitung.anzahlWahlkabinen"
               label="Anzahl der Wahlkabinen"
               clearable
               variant="solo"
@@ -106,7 +112,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
+
+import { storeToRefs } from "pinia";
+import { computed, ref, watch } from "vue";
 import {
   VCard,
   VCardActions,
@@ -119,61 +128,96 @@ import {
 } from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
 
+const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
 const anzahlWahlurnenValidForm = ref<null | boolean>(null);
-const anzahlWahlurnen = ref<{ [key: string]: number }>({});
+const wahlurnenForm = ref<HTMLFormElement | null>(null);
 const checkboxValue = ref(false);
-
 const abstimmungsschutzvorrichtungenValidForm = ref<null | boolean>(null);
 const abstimmungsschutzvorrichtungenForm = ref<HTMLFormElement>();
-const anzahlTischeSichtblenden = ref<string | undefined>(undefined);
-const anzahlNebenrauemeWahlraum = ref<string | undefined>(undefined);
-const anzahlWahlkabinen = ref<string | undefined>(undefined);
+const wahlbezirkStore = useWahlbezirkStore();
+const wahlenStore = useWahlenStore();
+const wahlen = wahlenStore.wahlen;
 
-const urnenwahlVorbereitung = computed(
-  () => wahlbezirkStore.urnenwahlVorbereitung
-);
+const isSaveButtonDisabled = computed(() => {
+  return (
+    anzahlWahlurnenValidForm.value !== true ||
+    abstimmungsschutzvorrichtungenValidForm.value !== true ||
+    !checkboxValue.value ||
+    isMinimumRequired.value
+  );
+});
 
 const isMinimumRequired = computed(() => {
   if (abstimmungsschutzvorrichtungenValidForm.value !== true) {
     return false;
   }
-
-  const tischeSichtblenden = Number(anzahlTischeSichtblenden.value) || 0;
-  const nebenraeumeWahlraum = Number(anzahlNebenrauemeWahlraum.value) || 0;
-  const wahlkabinen = Number(anzahlWahlkabinen.value) || 0;
+  const tischeSichtblenden =
+    Number(urnenwahlVorbereitung.value.anzahlWahltische) || 0;
+  const nebenraeumeWahlraum =
+    Number(urnenwahlVorbereitung.value.anzahlNebenraeume) || 0;
+  const wahlkabinen =
+    Number(urnenwahlVorbereitung.value.anzahlWahlkabinen) || 0;
 
   return tischeSichtblenden + nebenraeumeWahlraum + wahlkabinen < 1;
 });
 
-const wahlbezirkStore = useWahlbezirkStore();
-const wahlenStore = useWahlenStore();
+const urnenwahlVorbereitung = ref<Urnenwahlvorbereitung>({
+  wahlbezirkID: currentUserWahlbezirksArt.value,
+  anzahlWahlkabinen: null,
+  anzahlWahltische: null,
+  anzahlNebenraeume: null,
+  urnenAnzahl:
+    wahlen?.map((wahl) => ({
+      wahlID: wahl.wahlID,
+      anzahl: null,
+      urneVersiegelt: checkboxValue.value,
+    })) || [],
+});
 
-const wahlen = wahlenStore.wahlen;
+async function onAnzahlUpdateModelValue(
+  newAnzahl: string | undefined,
+  urnenWahlIndex: number
+) {
+  updateAnzahlByIndex(newAnzahl, urnenWahlIndex);
+  if (wahlurnenForm.value) {
+    await wahlurnenForm.value?.validate();
+  }
+}
 
-const isSaveButtonDisabled = computed(
-  () =>
-    anzahlWahlurnenValidForm.value !== true ||
-    abstimmungsschutzvorrichtungenValidForm.value !== true ||
-    !checkboxValue.value ||
-    isMinimumRequired.value
-);
+function updateAnzahlByIndex(anzahl: string | undefined, index: number) {
+  if (urnenwahlVorbereitung.value.urnenAnzahl) {
+    const anzahlToChange = urnenwahlVorbereitung.value.urnenAnzahl[index];
+    if (anzahlToChange == undefined) {
+      return;
+    }
+    if (anzahl) {
+      const parsedAnzahl = Number(anzahl);
+      if (!isNaN(parsedAnzahl)) {
+        anzahlToChange.anzahl = parsedAnzahl;
+      } else {
+        anzahlToChange.anzahl = 0; // Setze auf 0, wenn die Umwandlung fehlschlägt
+      }
+    } else {
+      anzahlToChange.anzahl = 0;
+    }
+  }
+}
+
+watch(checkboxValue, (newValue) => {
+  if (urnenwahlVorbereitung.value.urnenAnzahl) {
+    urnenwahlVorbereitung.value.urnenAnzahl.forEach((urnen) => {
+      urnen.urneVersiegelt = newValue;
+    });
+  }
+});
 
 function onSaveWahlumgebungUWBClicked() {
-  // TODO: type Urnenwahlvorbereitung und Wahlurne[] verwenden
-  const urnenwahlvorbereitung = Object.entries(anzahlWahlurnen.value).map(
-    ([wahlID, anzahl]) => ({
-      wahlID: Number(wahlID),
-      anzahlWahlurnen: anzahl,
-    })
-  );
-
-  // TODO: type Urnenwahlvorbereitung im Store wahlbezirk erfassen
-  //wahlbezirkStore.sendUrnenwahlvorbereitung(urnenwahlvorbereitung);
-  console.log("Saved Wahlurnen:", urnenwahlvorbereitung);
+  wahlbezirkStore.sendUrnenwahlvorbereitung(urnenwahlVorbereitung.value);
 }
 </script>
 <style scoped>

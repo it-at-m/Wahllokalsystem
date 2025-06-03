@@ -14,7 +14,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 GET {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende?wahlbezirkID=wahlbezirkID_X
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### PUT Update Wahlvorstand | user wls_all_uwb
+### PUT Update Wahlvorstand | user wls_all_bwb
 PUT {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende/anwesenheit
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
@@ -50,7 +50,7 @@ Content-Type: application/json
   ]
 }
 
-### PUT Update Wahlvorstand | user wls_all_bwb
+### PUT Update Wahlvorstand | user wls_all_uwb
 PUT {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende/anwesenheit
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json

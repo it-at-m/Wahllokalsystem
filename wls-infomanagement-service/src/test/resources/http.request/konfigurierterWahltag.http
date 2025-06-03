@@ -10,7 +10,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 GET {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurierteWahltage
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### post konfigurierter Wahltag for user wls_all_uwb
+### post konfigurierter Wahltag | user wls_all_uwb
 POST {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurierterWahltag
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
@@ -22,7 +22,7 @@ Content-Type: application/json
   "nummer": "nummer"
 }
 
-### POST konfigurierter Wahltag for user wls_all_bwb
+### POST konfigurierter Wahltag | user wls_all_bwb
 POST {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurierterWahltag
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
@@ -35,8 +35,8 @@ Content-Type: application/json
 }
 
 ### DELETE konfigurierter Wahltag BTW-21
-DELETE {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurierterWahltag/BTW-21
+DELETE {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurierterWahltag/EUW
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### check is aktive
-GET {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/loginCheck/BTW-21
+GET {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/loginCheck/EUW

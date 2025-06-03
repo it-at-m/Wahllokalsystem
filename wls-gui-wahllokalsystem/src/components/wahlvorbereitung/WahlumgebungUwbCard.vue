@@ -200,7 +200,7 @@ function updateAnzahlByIndex(anzahl: string | undefined, index: number) {
       if (!isNaN(parsedAnzahl)) {
         anzahlToChange.anzahl = parsedAnzahl;
       } else {
-        anzahlToChange.anzahl = 0; // Setze auf 0, wenn die Umwandlung fehlschlägt
+        anzahlToChange.anzahl = 0;
       }
     } else {
       anzahlToChange.anzahl = 0;

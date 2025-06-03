@@ -12,5 +12,5 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
-  "urnenwahlSchliessungsuhrzeit": "2024-06-10T17:05:33.505"
+  "urnenwahlSchliessungsuhrzeit": "2024-06-10T18:05:33.505"
 }

@@ -12,7 +12,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
-  "fortsetzungsUhrzeit": "2024-06-10T17:05:33.505"
+  "fortsetzungsUhrzeit": "2026-01-01T17:10:33.505"
 }
 
 ### GET wahlbezirkID | user wls_all_bwb
@@ -25,5 +25,5 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
-  "fortsetzungsUhrzeit": "2024-06-10T17:05:33.505"
+  "fortsetzungsUhrzeit": "2026-01-01T17:10:33.505"
 }

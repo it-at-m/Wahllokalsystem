@@ -47,11 +47,10 @@ import BaseHelpListItem from "@/components/basisdaten/BaseInfoHelpListItem.vue";
 import { EXAMPLE_ROUTES_NEWROUTE } from "@/constants.ts";
 
 const infoHelpData = [
-  { icon: "$phone", title: "Wahlhotline", text: "089 233 96233", link: "" },
+  { icon: "$phone", title: "Wahlhotline", text: "089 233 96233" },
   {
     icon: "$fileDocument",
     title: "Schulungsunterlagen und weitere Infos",
-    text: "",
     link: "newroute",
   },
   {

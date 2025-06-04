@@ -7,9 +7,11 @@
           isHovering && link ? 'px-3 py-0 bg-grey-lighten-3' : 'px-3 py-0 '
         "
       >
-        <router-link
+        <a
           v-if="link"
-          :to="link"
+          :href="link"
+          target="_blank"
+          rel="noopener noreferrer"
           style="text-decoration: none; color: inherit"
         >
           <the-info-help-list-item-content
@@ -17,7 +19,7 @@
             :title="title"
             :text="text"
           />
-        </router-link>
+        </a>
         <the-info-help-list-item-content
           v-else
           :icon="icon"

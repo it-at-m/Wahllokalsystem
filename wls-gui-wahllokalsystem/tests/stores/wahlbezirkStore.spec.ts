@@ -8,6 +8,7 @@ import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 const mockDefinitions = vi.hoisted(() => ({
   postUrnenwahlSchliessungsuhrzeit: vi.fn(),
   postEroeffnungsuhrzeit: vi.fn(),
+  postUrnenwahlvorbereitung: vi.fn(),
 }));
 
 vi.mock("@/composables/wahlvorbereitung/wahlvorbereitungService", () => ({
@@ -15,6 +16,7 @@ vi.mock("@/composables/wahlvorbereitung/wahlvorbereitungService", () => ({
     postUrnenwahlSchliessungsuhrzeit:
       mockDefinitions.postUrnenwahlSchliessungsuhrzeit,
     postEroeffnungsuhrzeit: mockDefinitions.postEroeffnungsuhrzeit,
+    postUrnenwahlvorbereitung: mockDefinitions.postUrnenwahlvorbereitung,
   }),
 }));
 
@@ -159,6 +161,89 @@ describe("wahlbezirkStore.ts", () => {
         expect(
           mockDefinitions.postUrnenwahlSchliessungsuhrzeit
         ).toHaveBeenCalledWith(wahlbezirkID, mockedNow);
+      }
+    });
+  });
+
+  describe("sendUrnenwahlvorbereitung", () => {
+    it("should_sendUrnenwahlvorbereitungAndUpdateUrnenwahlVorbereitung_when_wahlbezirkIDIsGiven", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+
+      const urnenwahlvorbereitung = {
+        wahlbezirkID: "wahlbezirkID1",
+        anzahlWahltische: 1,
+        anzahlNebenraeume: 0,
+        anzahlWahlkabinen: 0,
+        urnenAnzahl: [
+          { wahlID: "wahlID1", anzahl: 1, urneVersiegelt: true },
+          { wahlID: "wahlID2", anzahl: 1, urneVersiegelt: true },
+        ],
+      };
+
+      await unitUnderTest.sendUrnenwahlvorbereitung(urnenwahlvorbereitung);
+
+      expect(mockDefinitions.postUrnenwahlvorbereitung).toHaveBeenCalledWith(
+        wahlbezirkID,
+        urnenwahlvorbereitung
+      );
+      expect(unitUnderTest.urnenwahlVorbereitung).toEqual(
+        urnenwahlvorbereitung
+      );
+    });
+
+    it("should_notSendUrnenwahlvorbereitungAndNotUpdateUrnenwahlVorbereitung_when_wahlbezirkIDIsNotGiven", async () => {
+      const userStore = useUserStore();
+      userStore.setUser(prepareUser().wahlbezirkID(undefined).build());
+
+      const urnenwahlvorbereitung = {
+        wahlbezirkID: "wahlbezirkID1",
+        anzahlWahltische: 1,
+        anzahlNebenraeume: 0,
+        anzahlWahlkabinen: 0,
+        urnenAnzahl: [
+          { wahlID: "wahlID1", anzahl: 1, urneVersiegelt: true },
+          { wahlID: "wahlID2", anzahl: 1, urneVersiegelt: true },
+        ],
+      };
+
+      await unitUnderTest.sendUrnenwahlvorbereitung(urnenwahlvorbereitung);
+
+      expect(mockDefinitions.postUrnenwahlvorbereitung).toBeCalledTimes(0);
+      expect(unitUnderTest.urnenwahlVorbereitung).toBe(undefined);
+    });
+
+    it("should_notUpdateUrnenwahlVorbereitung_when_postUrnenwahlvorbereitungFails", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+
+      const urnenwahlvorbereitung = {
+        wahlbezirkID: "wahlbezirkID1",
+        anzahlWahltische: 1,
+        anzahlNebenraeume: 0,
+        anzahlWahlkabinen: 0,
+        urnenAnzahl: [
+          { wahlID: "wahlID1", anzahl: 1, urneVersiegelt: true },
+          { wahlID: "wahlID2", anzahl: 1, urneVersiegelt: true },
+        ],
+      };
+
+      const mockedError = new Error("Speicherfehler!");
+      mockDefinitions.postUrnenwahlvorbereitung.mockImplementationOnce(() => {
+        throw mockedError;
+      });
+
+      try {
+        await unitUnderTest.sendUrnenwahlvorbereitung(urnenwahlvorbereitung);
+      } catch (error) {
+        expect(error).equals(mockedError);
+        expect(unitUnderTest.urnenwahlVorbereitung).toBe(undefined);
+        expect(mockDefinitions.postUrnenwahlvorbereitung).toHaveBeenCalledWith(
+          wahlbezirkID,
+          urnenwahlvorbereitung
+        );
       }
     });
   });

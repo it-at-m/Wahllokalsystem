@@ -27,7 +27,7 @@
           :icon="item.icon"
           :title="item.title"
           :text="item.text"
-          :link="item.link"
+          :callback="item.callback"
         />
       </v-list>
     </v-card>
@@ -50,25 +50,30 @@ const infoHelpData = [
   {
     icon: "$fileDocument",
     title: "Schulungsunterlagen und weitere Infos",
-    link: "newroute",
   },
   {
     icon: "$mapSearch",
     title: "Wahlraumfinder",
     text: "Zuständigen Wahlraum suchen",
-    link: "https://maps.muenchen.de/wahlraumfinder/",
+    callback: () => {
+      const win = window.open(
+        "https://maps.muenchen.de/wahlraumfinder/",
+        "_blank"
+      );
+      if (win) {
+        win.focus();
+      }
+    },
   },
   {
     icon: "$remoteDesktop",
     title: "Fernzugriff starten",
     text: "Zugriff durch Wahlamt erlauben",
-    link: "",
   },
   {
     icon: "$printer",
     title: "Testdruck",
     text: "Testseite ausdrucken",
-    link: "",
   },
 ];
 </script>

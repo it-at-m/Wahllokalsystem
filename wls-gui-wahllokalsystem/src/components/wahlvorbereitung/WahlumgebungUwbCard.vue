@@ -12,7 +12,7 @@
             :key="index"
           >
             <v-text-field
-              :model-value="urnenwahlVorbereitung.urnenAnzahl[index].anzahl"
+              :model-value="urnenwahlVorbereitung.urnenAnzahl[index]?.anzahl"
               :label="`Anzahl der Wahlurnen ${wahl.name}`"
               clearable
               variant="solo"
@@ -23,12 +23,14 @@
               @update:model-value="
                 (value) => onAnzahlUpdateModelValue(value, index)
               "
+              :data-test="`textFieldUrnenAnzahl_${index}`"
             />
           </div>
         </div>
         <v-checkbox
-          v-model="checkboxValue"
+          v-model="isCheckboxAlleVersiegeltEnabled"
           label="Die Wahlurne(n) war(en) leer und wurde(n) ordnungsgemäß versiegelt"
+          data-test="checkboxAlleVersiegelt"
         />
       </v-form>
     </v-card-text>
@@ -136,18 +138,17 @@ import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
 const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
 const anzahlWahlurnenValidForm = ref<null | boolean>(null);
 const wahlurnenForm = ref<HTMLFormElement | null>(null);
-const checkboxValue = ref(false);
+const isCheckboxAlleVersiegeltEnabled = ref(false);
 const abstimmungsschutzvorrichtungenValidForm = ref<null | boolean>(null);
 const abstimmungsschutzvorrichtungenForm = ref<HTMLFormElement>();
 const wahlbezirkStore = useWahlbezirkStore();
-const wahlenStore = useWahlenStore();
-const wahlen = wahlenStore.wahlen;
+const { wahlen } = storeToRefs(useWahlenStore());
 
 const isSaveButtonDisabled = computed(() => {
   return (
     anzahlWahlurnenValidForm.value !== true ||
     abstimmungsschutzvorrichtungenValidForm.value !== true ||
-    !checkboxValue.value ||
+    !isCheckboxAlleVersiegeltEnabled.value ||
     isMinimumRequired.value
   );
 });
@@ -172,10 +173,10 @@ const urnenwahlVorbereitung = ref<Urnenwahlvorbereitung>({
   anzahlWahltische: null,
   anzahlNebenraeume: null,
   urnenAnzahl:
-    wahlen?.map((wahl) => ({
+    wahlen.value?.map((wahl) => ({
       wahlID: wahl.wahlID,
       anzahl: null,
-      urneVersiegelt: checkboxValue.value,
+      urneVersiegelt: isCheckboxAlleVersiegeltEnabled.value,
     })) || [],
 });
 
@@ -208,7 +209,7 @@ function updateAnzahlByIndex(anzahl: string | undefined, index: number) {
   }
 }
 
-watch(checkboxValue, (newValue) => {
+watch(isCheckboxAlleVersiegeltEnabled, (newValue) => {
   if (urnenwahlVorbereitung.value.urnenAnzahl) {
     urnenwahlVorbereitung.value.urnenAnzahl.forEach((urnen) => {
       urnen.urneVersiegelt = newValue;

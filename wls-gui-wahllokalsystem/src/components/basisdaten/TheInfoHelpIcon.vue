@@ -75,6 +75,13 @@ const infoHelpData = [
     icon: "$remoteDesktop",
     title: "Fernzugriff starten",
     text: "Zugriff durch Wahlamt erlauben",
+    // todo es passiert nch nichts? was soll passieren?
+    callback: () => {
+      const win = window.open("KioskControlHandler:teamviewer://", "_blank");
+      if (win) {
+        win.focus();
+      }
+    },
   },
   {
     icon: "$printer",

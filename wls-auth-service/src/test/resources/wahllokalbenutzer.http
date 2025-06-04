@@ -2,7 +2,8 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### create Users for wahltagID 4526485e-2a3f-43d6-bd57-d0a58fc330cb | !! OVERRIDES username wls_all_uwb
+// !! OVERRIDES user wls_all_uwb
+### create Users for wahltagID 4526485e-2a3f-43d6-bd57-d0a58fc330cb | user wls_all_uwb
 POST {{ WLS_AUTH_SERVICE }}/generateAndExportWahllokalbenutzer/4526485e-2a3f-43d6-bd57-d0a58fc330cb
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
@@ -25,7 +26,8 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 DELETE {{ WLS_AUTH_SERVICE }}/deleteWahllokalbenutzer/4526485e-2a3f-43d6-bd57-d0a58fc330cb
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### create Users for wahltagID 827e9e6a-ebe9-483f-a9cd-162b26f348e8 | !! OVERRIDES username wls_all_bwb
+// !! OVERRIDES user wls_all_bwb
+### create Users for wahltagID 827e9e6a-ebe9-483f-a9cd-162b26f348e8 | user wls_all_bwb
 POST {{ WLS_AUTH_SERVICE }}/generateAndExportWahllokalbenutzer/827e9e6a-ebe9-483f-a9cd-162b26f348e8
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json

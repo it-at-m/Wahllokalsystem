@@ -3,6 +3,7 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
+// !! OVERRIDES user wls_all_uwb
 ### Generate Wahllokalbenutzer (needs profile 'dummy.clients' to make this work because of internal calls to other services) | user wls_all_uwb
 POST {{ WLS_ADMIN_SERVICE_URL }}/businessActions/generateWahllokalbenutzer/4526485e-2a3f-43d6-bd57-d0a58fc330cb
 Authorization: Bearer {{$auth.token("auth-service")}}
@@ -18,6 +19,7 @@ POST {{ WLS_ADMIN_SERVICE_URL }}/businessActions/deleteWahllokalBenutzer/4526485
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
+// !! OVERRIDES user wls_all_bwb
 ### Generate Wahllokalbenutzer (needs profile 'dummy.clients' to make this work because of internal calls to other services) | user wls_all_bwb
 POST {{ WLS_ADMIN_SERVICE_URL }}/businessActions/generateWahllokalbenutzer/827e9e6a-ebe9-483f-a9cd-162b26f348e8
 Authorization: Bearer {{$auth.token("auth-service")}}

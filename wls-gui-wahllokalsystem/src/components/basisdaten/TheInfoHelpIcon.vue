@@ -44,12 +44,18 @@ import {
 } from "vuetify/components";
 
 import BaseHelpListItem from "@/components/basisdaten/BaseInfoHelpListItem.vue";
+import { useHandbuchService } from "@/composables/basisdaten/handbuchService.ts";
+
+const { getHandbuch } = useHandbuchService();
 
 const infoHelpData = [
   { icon: "$phone", title: "Wahlhotline", text: "089 233 96233" },
   {
     icon: "$fileDocument",
     title: "Schulungsunterlagen und weitere Infos",
+    callback: () => {
+      return getHandbuch();
+    },
   },
   {
     icon: "$mapSearch",

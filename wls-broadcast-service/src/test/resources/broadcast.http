@@ -19,6 +19,14 @@ Content-Type: application/json
 GET {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/getMessage/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 
+> {%
+    client.global.set("nachrichtID", response.body.oid);
+%}
+
+### Delete lastest | (get message oid from GET request) | user wls_all_uwb
+POST  {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/messageRead/{{nachrichtID}}
+Authorization: Bearer {{$auth.token("auth-service")}}
+
 ### Get message | user wls_all_bwb
 GET {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/getMessage/9081145c-dc16-4a9b-8255-5c49ddb98c14
 Authorization: Bearer {{$auth.token("auth-service")}}
@@ -27,7 +35,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
     client.global.set("nachrichtID", response.body.oid);
 %}
 
-### Delete lastest | (get message oid from GET request)
+### Delete lastest | (get message oid from GET request) | user wls_all_uwb
 POST  {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/messageRead/{{nachrichtID}}
 Authorization: Bearer {{$auth.token("auth-service")}}
 

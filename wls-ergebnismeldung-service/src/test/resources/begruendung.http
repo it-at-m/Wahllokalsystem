@@ -2,10 +2,6 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET Begruendung (needs profile 'dummy.clients') | user wls_all_uwb
-GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/9899cae4-df9a-4ffc-a940-f20cf2280171/1/LTW_BZW_A
-Authorization: Bearer {{$auth.token("auth-service")}}
-
 ### GET Begruendung sent by POST | user wls_all_uwb
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/9899cae4-df9a-4ffc-a940-f20cf2280171/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/LTW_BZW_A
 Authorization: Bearer {{$auth.token("auth-service")}}
@@ -42,10 +38,6 @@ Content-Type: application/json
   "nachzaehlung": true,
   "unstimmigkeiten": true
 }
-
-### GET Begruendung (needs profile 'dummy.clients') | user wls_all_bwb
-GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/9081145c-dc16-4a9b-8255-5c49ddb98c14/1/LTW_BZW_A
-Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### GET Begruendung sent by POST | user wls_all_bwb
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/9081145c-dc16-4a9b-8255-5c49ddb98c14/28039463-3d3d-4ce5-acc1-0bef931a4409/LTW_BZW_A

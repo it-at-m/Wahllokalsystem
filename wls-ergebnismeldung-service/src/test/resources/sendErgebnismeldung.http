@@ -1,10 +1,11 @@
-### Initialisiere A-Werte (needs profile 'dummy.clients', stores AWerte entity in local DB retrieved from DummyClient )
+### Initialisiere A-Werte (needs profile 'dummy.clients', stores AWerte entity in local DB retrieved from DummyClient ) | user wls_all_uwb + wls_all_bwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/awerte/init
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 [
-  "wahlbezirkID"
+  "9899cae4-df9a-4ffc-a940-f20cf2280171",
+  "9081145c-dc16-4a9b-8255-5c49ddb98c14"
 ]
 
 ### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_A | user wls_all_uwb

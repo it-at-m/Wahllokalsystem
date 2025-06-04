@@ -45,8 +45,10 @@ import {
 
 import BaseHelpListItem from "@/components/basisdaten/BaseInfoHelpListItem.vue";
 import { useHandbuchService } from "@/composables/basisdaten/handbuchService.ts";
+import { useTestDruck } from "@/composables/basisdaten/testDruck.ts";
 
 const { getHandbuch } = useHandbuchService();
+const { buildTemplate } = useTestDruck();
 
 const infoHelpData = [
   { icon: "$phone", title: "Wahlhotline", text: "089 233 96233" },
@@ -87,6 +89,19 @@ const infoHelpData = [
     icon: "$printer",
     title: "Testdruck",
     text: "Testseite ausdrucken",
+    callback: () => {
+      const printWindow = window.open(
+        "",
+        "",
+        "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0"
+      );
+
+      if (printWindow) {
+        printWindow.document.body.innerHTML = buildTemplate();
+        printWindow.print();
+        printWindow.close();
+      }
+    },
   },
 ];
 </script>

@@ -44,7 +44,6 @@ import {
 } from "vuetify/components";
 
 import BaseHelpListItem from "@/components/basisdaten/BaseInfoHelpListItem.vue";
-import { EXAMPLE_ROUTES_NEWROUTE } from "@/constants.ts";
 
 const infoHelpData = [
   { icon: "$phone", title: "Wahlhotline", text: "089 233 96233" },
@@ -57,7 +56,7 @@ const infoHelpData = [
     icon: "$mapSearch",
     title: "Wahlraumfinder",
     text: "Zuständigen Wahlraum suchen",
-    link: EXAMPLE_ROUTES_NEWROUTE,
+    link: "https://maps.muenchen.de/wahlraumfinder/",
   },
   {
     icon: "$remoteDesktop",

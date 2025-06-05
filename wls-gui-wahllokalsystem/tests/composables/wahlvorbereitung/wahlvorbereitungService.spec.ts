@@ -151,10 +151,10 @@ describe("wahlvorbereitungService", () => {
   describe("getUrnenwahlvorbereitung", () => {
     it("should_returnUrnenwahlvorbereitung_when_apiCallSucceeded", async () => {
       const wahlbezirkID = "wahlbezirkID1";
-      const expectedUrnenwahlvorbereitungDto = createUrnenwahlvorbereitungDTO();
+      const expectedUrnenwahlvorbereitung = createUrnenwahlvorbereitung();
 
       mockDefinitions.toUrnenwahlvorbereitungModel.mockReturnValue(
-        expectedUrnenwahlvorbereitungDto
+        expectedUrnenwahlvorbereitung
       );
       // Mock the API call to return a response with the expected data
       mockDefinitions.getUrnenwahlVorbereitung.mockResolvedValue(
@@ -163,7 +163,7 @@ describe("wahlvorbereitungService", () => {
 
       const result = await getUrnenwahlvorbereitung(wahlbezirkID);
 
-      expect(result).toEqual(expectedUrnenwahlvorbereitungDto);
+      expect(result).toEqual(expectedUrnenwahlvorbereitung);
     });
 
     it("should_throwErrorAndCallNotificationService_when_apiCallFails", async () => {

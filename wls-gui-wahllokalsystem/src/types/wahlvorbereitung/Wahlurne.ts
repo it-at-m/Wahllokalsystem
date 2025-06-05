@@ -1,5 +1,5 @@
 export interface Wahlurne {
   wahlID: string;
-  anzahl: number;
+  anzahl: number | null;
   urneVersiegelt?: boolean;
 }

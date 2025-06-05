@@ -2,8 +2,8 @@ import type { Wahlurne } from "@/types/wahlvorbereitung/Wahlurne.ts";
 
 export interface Urnenwahlvorbereitung {
   wahlbezirkID: string;
-  anzahlWahlkabinen: number;
-  anzahlWahltische: number;
-  anzahlNebenraeume: number;
+  anzahlWahlkabinen: number | null;
+  anzahlWahltische: number | null;
+  anzahlNebenraeume: number | null;
   urnenAnzahl: Wahlurne[];
 }

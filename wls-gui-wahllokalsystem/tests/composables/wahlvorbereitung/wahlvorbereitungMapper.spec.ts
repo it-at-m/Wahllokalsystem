@@ -1,12 +1,12 @@
 import type {
   EroeffnungsUhrzeitWriteDTO,
-  UrnenwahlvorbereitungDTO,
-  UrnenwahlvorbereitungWriteDTO,
   UrnenwahlSchliessungsUhrzeitDTO,
   UrnenwahlSchliessungsUhrzeitWriteDTO,
+  UrnenwahlvorbereitungDTO,
+  UrnenwahlvorbereitungWriteDTO,
 } from "@/api/wls-clients/generated-wahlvorbereitung-api";
-import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
 import type { UrnenwahlSchliessungsuhrzeit } from "@/types/wahlvorbereitung/UrnenwahlSchliessungsuhrzeit.ts";
+import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
 
 import { describe, expect, it, vi } from "vitest";
 
@@ -29,7 +29,6 @@ describe("wahlvorbereitungMapper.ts", () => {
     toUrnenwahlvorbereitungModel,
     toUrnenwahlSchliessungsuhrzeitModel,
     toUrnenwahlSchliessungsuhrzeitDTO,
-    toEroeffnungsuhrzeitWriteDTO,
   } = useWahlvorbereitungMapper();
 
   describe("toEroeffnungsuhrzeitWriteDTO", () => {
@@ -90,7 +89,7 @@ describe("wahlvorbereitungMapper.ts", () => {
       expect(result).toStrictEqual(expectedResult);
     });
   });
-      
+
   describe("toUrnenwahlvorbereitungWriteDto", () => {
     it("should_returnDTO_when_validModelIsGiven", () => {
       const urnenwahlvorbereitung: Urnenwahlvorbereitung = {
@@ -131,8 +130,11 @@ describe("wahlvorbereitungMapper.ts", () => {
           },
         ],
       };
-      
-        describe("toUrnenwahlvorbereitungModel", () => {
+      expect(result).toStrictEqual(expectedResult);
+    });
+  });
+
+  describe("toUrnenwahlvorbereitungModel", () => {
     it("should_returnModel_when_validDTOIsGiven", () => {
       const urnenwahlvorbereitungDTO: UrnenwahlvorbereitungDTO = {
         wahlbezirkID: "123",
@@ -173,4 +175,7 @@ describe("wahlvorbereitungMapper.ts", () => {
           },
         ],
       };
+      expect(result).toStrictEqual(expectedResult);
+    });
+  });
 });

@@ -2,8 +2,11 @@ import type {
   EroeffnungsUhrzeitWriteDTO,
   UrnenwahlvorbereitungDTO,
   UrnenwahlvorbereitungWriteDTO,
+  UrnenwahlSchliessungsUhrzeitDTO,
+  UrnenwahlSchliessungsUhrzeitWriteDTO,
 } from "@/api/wls-clients/generated-wahlvorbereitung-api";
 import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
+import type { UrnenwahlSchliessungsuhrzeit } from "@/types/wahlvorbereitung/UrnenwahlSchliessungsuhrzeit.ts";
 
 import { describe, expect, it, vi } from "vitest";
 
@@ -24,6 +27,9 @@ describe("wahlvorbereitungMapper.ts", () => {
     toEroeffnungsuhrzeitWriteDTO,
     toUrnenwahlvorbereitungWriteDto,
     toUrnenwahlvorbereitungModel,
+    toUrnenwahlSchliessungsuhrzeitModel,
+    toUrnenwahlSchliessungsuhrzeitDTO,
+    toEroeffnungsuhrzeitWriteDTO,
   } = useWahlvorbereitungMapper();
 
   describe("toEroeffnungsuhrzeitWriteDTO", () => {
@@ -47,51 +53,44 @@ describe("wahlvorbereitungMapper.ts", () => {
     });
   });
 
-  describe("toUrnenwahlvorbereitungModel", () => {
-    it("should_returnModel_when_validDTOIsGiven", () => {
-      const urnenwahlvorbereitungDTO: UrnenwahlvorbereitungDTO = {
-        wahlbezirkID: "123",
-        anzahlWahlkabinen: 5,
-        anzahlWahltische: 10,
-        anzahlNebenraeume: 2,
-        urnenAnzahl: [
-          {
-            wahlID: "1",
-            anzahl: 3,
-            urneVersiegelt: true,
-          },
-          {
-            wahlID: "2",
-            anzahl: 2,
-            urneVersiegelt: false,
-          },
-        ],
+  describe("toUrnenwahlSchliessungsuhrzeitDTO", () => {
+    it("should_returnDTO_when_schliessungsUhrzeitIsGiven", () => {
+      const dateToMap = new Date("2025-05-23T18:00:00+02:00");
+      const mockedApplyLocalTimezoneOffsetResponse = new Date(
+        "2025-05-23T18:00:00Z"
+      );
+      const expectedResult: UrnenwahlSchliessungsUhrzeitWriteDTO = {
+        schliessungsuhrzeit:
+          mockedApplyLocalTimezoneOffsetResponse.toISOString(),
       };
 
-      const result = toUrnenwahlvorbereitungModel(urnenwahlvorbereitungDTO);
+      mockDefinitions.applyLocalTimezoneOffset.mockReturnValue(
+        mockedApplyLocalTimezoneOffsetResponse
+      );
 
-      const expectedResult: Urnenwahlvorbereitung = {
-        wahlbezirkID: "123",
-        anzahlWahlkabinen: 5,
-        anzahlWahltische: 10,
-        anzahlNebenraeume: 2,
-        urnenAnzahl: [
-          {
-            wahlID: "1",
-            anzahl: 3,
-            urneVersiegelt: true,
-          },
-          {
-            wahlID: "2",
-            anzahl: 2,
-            urneVersiegelt: false,
-          },
-        ],
-      };
+      const result = toUrnenwahlSchliessungsuhrzeitDTO(dateToMap);
+
       expect(result).toStrictEqual(expectedResult);
     });
   });
 
+  describe("toUrnenwahlSchliessungsuhrzeitModel", () => {
+    it("should_returnModel_when_schliessungsUhrzeitDtoIsGiven", () => {
+      const schliessungsuhrzeit = "2025-05-23T18:00:00Z";
+      const dateToMap: UrnenwahlSchliessungsUhrzeitDTO = {
+        wahlbezirkID: "id",
+        schliessungsuhrzeit: schliessungsuhrzeit,
+      };
+      const expectedResult: UrnenwahlSchliessungsuhrzeit = {
+        schliessungsuhrzeit: schliessungsuhrzeit,
+      };
+
+      const result = toUrnenwahlSchliessungsuhrzeitModel(dateToMap);
+
+      expect(result).toStrictEqual(expectedResult);
+    });
+  });
+      
   describe("toUrnenwahlvorbereitungWriteDto", () => {
     it("should_returnDTO_when_validModelIsGiven", () => {
       const urnenwahlvorbereitung: Urnenwahlvorbereitung = {
@@ -132,7 +131,46 @@ describe("wahlvorbereitungMapper.ts", () => {
           },
         ],
       };
-      expect(result).toStrictEqual(expectedResult);
-    });
-  });
+      
+        describe("toUrnenwahlvorbereitungModel", () => {
+    it("should_returnModel_when_validDTOIsGiven", () => {
+      const urnenwahlvorbereitungDTO: UrnenwahlvorbereitungDTO = {
+        wahlbezirkID: "123",
+        anzahlWahlkabinen: 5,
+        anzahlWahltische: 10,
+        anzahlNebenraeume: 2,
+        urnenAnzahl: [
+          {
+            wahlID: "1",
+            anzahl: 3,
+            urneVersiegelt: true,
+          },
+          {
+            wahlID: "2",
+            anzahl: 2,
+            urneVersiegelt: false,
+          },
+        ],
+      };
+
+      const result = toUrnenwahlvorbereitungModel(urnenwahlvorbereitungDTO);
+
+      const expectedResult: Urnenwahlvorbereitung = {
+        wahlbezirkID: "123",
+        anzahlWahlkabinen: 5,
+        anzahlWahltische: 10,
+        anzahlNebenraeume: 2,
+        urnenAnzahl: [
+          {
+            wahlID: "1",
+            anzahl: 3,
+            urneVersiegelt: true,
+          },
+          {
+            wahlID: "2",
+            anzahl: 2,
+            urneVersiegelt: false,
+          },
+        ],
+      };
 });

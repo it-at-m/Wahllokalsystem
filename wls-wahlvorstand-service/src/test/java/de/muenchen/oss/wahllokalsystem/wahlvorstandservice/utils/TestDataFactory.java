@@ -139,7 +139,7 @@ public class TestDataFactory {
     public static class CreateFromClient {
 
         public static KonfigurierterWahltagModel konfigurierterWahltagModel() {
-            return new KonfigurierterWahltagModel(LocalDate.now(), "wahltagNummer");
+            return new KonfigurierterWahltagModel(LocalDate.now(), "wahltagID", "wahltagNummer");
         }
 
         public static KonfigurierterWahltagDTO konfigurierterWahltagDTO(LocalDate forDate, KonfigurierterWahltagDTO.WahltagStatusEnum status) {

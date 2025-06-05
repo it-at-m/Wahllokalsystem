@@ -81,12 +81,12 @@ public class WahlvorstandControllerIntegrationTest {
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(infomanagementKonfigurierterWahltag))));
 
-            var searchingForWahltag = infomanagementKonfigurierterWahltag.getWahltag();
-            val eaiWahlen = TestDataFactory.CreateFromClient.wahlModelList();
-            WireMock.stubFor(WireMock.get("/wahldaten/wahlen?forDate=" + searchingForWahltag + "&withNummer=nummerWahltag")
+            var searchingForWahltag = infomanagementKonfigurierterWahltag.getWahltagID();
+            val basisdatenWahlen = TestDataFactory.CreateFromClient.wahlModelList();
+            WireMock.stubFor(WireMock.get("/businessActions/wahlen/" + searchingForWahltag)
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
                             .withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(eaiWahlen))));
+                            .withBody(objectMapper.writeValueAsBytes(basisdatenWahlen))));
 
             val request = MockMvcRequestBuilders.get("/businessActions/wahlvorstand/wahlbezirkID");
             val response = api.perform(request).andExpect(status().isOk()).andReturn();
@@ -125,12 +125,12 @@ public class WahlvorstandControllerIntegrationTest {
             WireMock.stubFor(WireMock.get("/businessActions/konfigurierterWahltag")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(infomanagementKonfigurierterWahltag))));
-            var searchingForWahltag = infomanagementKonfigurierterWahltag.getWahltag();
-            val eaiWahlen = TestDataFactory.CreateFromClient.wahlModelList();
-            WireMock.stubFor(WireMock.get("/wahldaten/wahlen?forDate=" + searchingForWahltag + "&withNummer=nummerWahltag")
+            var searchingForWahltag = infomanagementKonfigurierterWahltag.getWahltagID();
+            val basisdatenWahlen = TestDataFactory.CreateFromClient.wahlModelList();
+            WireMock.stubFor(WireMock.get("/businessActions/wahlen/" + searchingForWahltag)
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
                             .withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(eaiWahlen))));
+                            .withBody(objectMapper.writeValueAsBytes(basisdatenWahlen))));
             val eaiWahlvorstandDto = TestDataFactory.CreateFromClient.wahlvorstandDto(wahlbezirkID);
             WireMock.stubFor(WireMock.get("/wahlvorstaende?wahlbezirkID=" + wahlbezirkID)
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())

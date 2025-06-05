@@ -71,9 +71,9 @@ export function useWahlvorbereitungMapper() {
         toWahlurneDto(wahlurneDTO)
       ) ?? [];
     return {
-      anzahlWahlkabinen: urnenwahlvorbereitung.anzahlWahlkabinen,
-      anzahlWahltische: urnenwahlvorbereitung.anzahlWahltische,
-      anzahlNebenraeume: urnenwahlvorbereitung.anzahlNebenraeume,
+      anzahlWahlkabinen: urnenwahlvorbereitung.anzahlWahlkabinen ?? 0,
+      anzahlWahltische: urnenwahlvorbereitung.anzahlWahltische ?? 0,
+      anzahlNebenraeume: urnenwahlvorbereitung.anzahlNebenraeume ?? 0,
       urnenAnzahl: urnenAnzahlDto,
     };
   }
@@ -81,7 +81,7 @@ export function useWahlvorbereitungMapper() {
   function toWahlurneDto(wahlurne: Wahlurne): WahlurneDTO {
     return {
       wahlID: wahlurne.wahlID,
-      anzahl: wahlurne.anzahl,
+      anzahl: wahlurne.anzahl ?? 0,
       urneVersiegelt: wahlurne.urneVersiegelt,
     };
   }

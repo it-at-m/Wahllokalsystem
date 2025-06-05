@@ -22,7 +22,7 @@
           thickness="2"
           color="black"
         />
-        <base-help-list-item
+        <base-info-help-list-item
           v-for="item in infoHelpData"
           :icon="item.icon"
           :title="item.title"
@@ -43,7 +43,7 @@ import {
   VMenu,
 } from "vuetify/components";
 
-import BaseHelpListItem from "@/components/basisdaten/BaseInfoHelpListItem.vue";
+import BaseInfoHelpListItem from "@/components/basisdaten/BaseInfoHelpListItem.vue";
 import { useHandbuchService } from "@/composables/basisdaten/handbuchService.ts";
 import { useTestDruck } from "@/composables/basisdaten/testDruck.ts";
 

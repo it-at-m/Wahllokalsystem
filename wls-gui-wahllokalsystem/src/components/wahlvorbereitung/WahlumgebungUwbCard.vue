@@ -20,10 +20,10 @@
               type="number"
               hide-spin-buttons
               width="20rem"
+              :data-test="`textFieldUrnenAnzahl_${index}`"
               @update:model-value="
                 (value) => onAnzahlUpdateModelValue(value, index)
               "
-              :data-test="`textFieldUrnenAnzahl_${index}`"
             />
           </div>
         </div>

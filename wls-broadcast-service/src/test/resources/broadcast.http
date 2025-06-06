@@ -35,7 +35,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
     client.global.set("nachrichtID", response.body.oid);
 %}
 
-### Delete lastest | (get message oid from GET request) | user wls_all_uwb
+### Delete lastest | (get message oid from GET request) | user wls_all_bwb
 POST  {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/messageRead/{{nachrichtID}}
 Authorization: Bearer {{$auth.token("auth-service")}}
 

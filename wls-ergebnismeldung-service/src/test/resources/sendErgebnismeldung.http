@@ -181,7 +181,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   "ergebnisse": [
     {
       "wahlvorschlagID": "00000000-0000-0000-0001-000000000013",
-      "kandidatID": "123",
+      "kandidatID": "00000000-0000-0000-0002-000000000016",
       "wahlvorschlagsordnungszahl": 1,
       "ergebnis": 1,
       "numIndex": 1
@@ -203,7 +203,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   "ergebnisse": [
     {
       "wahlvorschlagID": "00000000-0000-0000-0001-000000000013",
-      "kandidatID": "123",
+      "kandidatID": "00000000-0000-0000-0002-000000000017",
       "wahlvorschlagsordnungszahl": 1,
       "ergebnis": 1,
       "numIndex": 1
@@ -225,7 +225,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   "ergebnisse": [
     {
       "wahlvorschlagID": "00000000-0000-0000-0001-000000000013",
-      "kandidatID": "123",
+      "kandidatID": "00000000-0000-0000-0002-000000000018",
       "wahlvorschlagsordnungszahl": 1,
       "ergebnis": 1,
       "numIndex": 1

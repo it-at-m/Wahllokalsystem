@@ -281,7 +281,6 @@ Content-Type: application/json
 }
 
 ### Send Ergebnismeldung | user wls_all_bwb
-## TODO response code 409 (fachliche wls exception) Stapeln unvollständig SRW_BAW_A (die requests drüber sind die stapel die gesendet werden müssen)
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/sendErgebnismeldung/28039463-3d3d-4ce5-acc1-0bef931a4409/9081145c-dc16-4a9b-8255-5c49ddb98c14/1/V1/9081145c-dc16-4a9b-8255-5c49ddb98c14
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json

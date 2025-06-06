@@ -11,7 +11,12 @@
     />
     <v-col class="pa-2 text-subtitle-2">
       {{ title }}
-      <p class="text-grey-darken-1 text-caption">{{ text }}</p>
+      <p
+        v-if="text"
+        class="text-grey-darken-1 text-caption"
+      >
+        {{ text }}
+      </p>
     </v-col>
   </v-row>
 </template>
@@ -19,8 +24,8 @@
 import { VCol, VIcon, VRow } from "vuetify/components";
 
 defineProps({
-  title: String,
-  text: String,
-  icon: String,
+  title: { type: String, required: true },
+  text: { type: String, required: false, default: null },
+  icon: { type: String, required: true },
 });
 </script>

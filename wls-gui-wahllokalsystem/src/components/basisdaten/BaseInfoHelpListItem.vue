@@ -1,28 +1,26 @@
 <template>
-  <v-hover>
-    <template v-slot:default="{ isHovering, props }">
-      <v-list-item
-        v-bind="props"
-        :class="
-          isHovering && callback ? 'px-3 py-0 bg-grey-lighten-3' : 'px-3 py-0 '
-        "
-      >
-        <the-info-help-list-item-content
-          v-if="callback"
-          :icon="icon"
-          :title="title"
-          :text="text"
-          @click="callback()"
-        />
+  <v-hover v-slot="{ isHovering, props }">
+    <v-list-item
+      v-bind="props"
+      :class="
+        isHovering && callback ? 'px-3 py-0 bg-grey-lighten-3' : 'px-3 py-0 '
+      "
+    >
+      <the-info-help-list-item-content
+        v-if="callback"
+        :icon="icon"
+        :title="title"
+        :text="text"
+        @click="callback()"
+      />
 
-        <the-info-help-list-item-content
-          v-else
-          :icon="icon"
-          :title="title"
-          :text="text"
-        />
-      </v-list-item>
-    </template>
+      <the-info-help-list-item-content
+        v-else
+        :icon="icon"
+        :title="title"
+        :text="text"
+      />
+    </v-list-item>
   </v-hover>
 </template>
 <script setup lang="ts">
@@ -31,9 +29,9 @@ import { VHover, VListItem } from "vuetify/components";
 import TheInfoHelpListItemContent from "@/components/basisdaten/BaseInfoHelpListItemContent.vue";
 
 defineProps({
-  title: String,
-  text: String,
-  icon: String,
-  callback: Function,
+  title: { type: String, required: true },
+  text: { type: String, required: false, default: null },
+  icon: { type: String, required: true },
+  callback: { type: Function, required: false, default: null },
 });
 </script>

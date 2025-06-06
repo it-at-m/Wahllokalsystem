@@ -24,6 +24,7 @@
         />
         <base-info-help-list-item
           v-for="item in infoHelpData"
+          :key="item.title"
           :icon="item.icon"
           :title="item.title"
           :text="item.text"

@@ -6,7 +6,7 @@
         isHovering && callback ? 'px-3 py-0 bg-grey-lighten-3' : 'px-3 py-0 '
       "
     >
-      <the-info-help-list-item-content
+      <base-info-help-list-item-content
         v-if="callback"
         :icon="icon"
         :title="title"
@@ -14,7 +14,7 @@
         @click="callback()"
       />
 
-      <the-info-help-list-item-content
+      <base-info-help-list-item-content
         v-else
         :icon="icon"
         :title="title"
@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { VHover, VListItem } from "vuetify/components";
 
-import TheInfoHelpListItemContent from "@/components/basisdaten/BaseInfoHelpListItemContent.vue";
+import BaseInfoHelpListItemContent from "@/components/basisdaten/BaseInfoHelpListItemContent.vue";
 
 defineProps({
   title: { type: String, required: true },

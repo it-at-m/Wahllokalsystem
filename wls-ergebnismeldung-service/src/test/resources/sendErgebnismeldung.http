@@ -167,8 +167,8 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 // --- wls_all_bwb
-### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_A | user wls_all_bwb
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9081145c-dc16-4a9b-8255-5c49ddb98c14/28039463-3d3d-4ce5-acc1-0bef931a4409/EUW_A
+### Initialisiere Ergebnisse - Ergebnisse Stapel SRW_BAW_A | user wls_all_bwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9081145c-dc16-4a9b-8255-5c49ddb98c14/28039463-3d3d-4ce5-acc1-0bef931a4409/SRW_BAW_A
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
 
@@ -176,7 +176,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   "bezirkUndWahlIDStapelart": {
     "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14",
     "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
-    "stapelart": "EUW_A"
+    "stapelart": "SRW_BAW_A"
   },
   "ergebnisse": [
     {
@@ -189,8 +189,8 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   ]
 }
 
-### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_B_UNGEKENNZEICHNET | user wls_all_bwb
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9081145c-dc16-4a9b-8255-5c49ddb98c14/28039463-3d3d-4ce5-acc1-0bef931a4409/EUW_B_UNGEKENNZEICHNET
+### Initialisiere Ergebnisse - Ergebnisse Stapel SRW_BAW_B | user wls_all_bwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9081145c-dc16-4a9b-8255-5c49ddb98c14/28039463-3d3d-4ce5-acc1-0bef931a4409/SRW_BAW_B
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
 
@@ -198,7 +198,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   "bezirkUndWahlIDStapelart": {
     "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14",
     "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
-    "stapelart": "EUW_B_UNGEKENNZEICHNET"
+    "stapelart": "SRW_BAW_B"
   },
   "ergebnisse": [
     {
@@ -211,8 +211,8 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   ]
 }
 
-### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_C_GUELTIG | user wls_all_bwb
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9081145c-dc16-4a9b-8255-5c49ddb98c14/28039463-3d3d-4ce5-acc1-0bef931a4409/EUW_C_GUELTIG
+### Initialisiere Ergebnisse - Ergebnisse Stapel SRW_BAW_D_UNGUELTIG | user wls_all_bwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9081145c-dc16-4a9b-8255-5c49ddb98c14/28039463-3d3d-4ce5-acc1-0bef931a4409/SRW_BAW_D_UNGUELTIG
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
 
@@ -220,29 +220,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   "bezirkUndWahlIDStapelart": {
     "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14",
     "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
-    "stapelart": "EUW_C_GUELTIG"
-  },
-  "ergebnisse": [
-    {
-      "wahlvorschlagID": "00000000-0000-0000-0001-000000000013",
-      "kandidatID": "123",
-      "wahlvorschlagsordnungszahl": 1,
-      "ergebnis": 1,
-      "numIndex": 1
-    }
-  ]
-}
-
-### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_C_UNGUELTIG | user wls_all_bwb
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9081145c-dc16-4a9b-8255-5c49ddb98c14/28039463-3d3d-4ce5-acc1-0bef931a4409/EUW_C_UNGUELTIG
-Content-Type: application/json
-Authorization: Bearer {{$auth.token("auth-service")}}
-
-{
-  "bezirkUndWahlIDStapelart": {
-    "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14",
-    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
-    "stapelart": "EUW_C_UNGUELTIG"
+    "stapelart": "SRW_BAW_D_UNGUELTIG"
   },
   "ergebnisse": [
     {
@@ -303,6 +281,7 @@ Content-Type: application/json
 }
 
 ### Send Ergebnismeldung | user wls_all_bwb
+## TODO response code 409 (fachliche wls exception) Stapeln unvollständig SRW_BAW_A (die requests drüber sind die stapel die gesendet werden müssen)
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/sendErgebnismeldung/28039463-3d3d-4ce5-acc1-0bef931a4409/9081145c-dc16-4a9b-8255-5c49ddb98c14/1/V1/9081145c-dc16-4a9b-8255-5c49ddb98c14
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json

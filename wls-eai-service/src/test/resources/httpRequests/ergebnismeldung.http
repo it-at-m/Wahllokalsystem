@@ -91,7 +91,7 @@ Content-Type: application/json
       "wahlvorschlagsordnungszahl": 5,
       "ergebnis": 3,
       "wahlvorschlagID": "00000000-0000-0000-0001-000000000013",
-      "kandidatID": "1234"
+      "kandidatID": "00000000-0000-0000-0002-000000000018"
     }
   ],
   "wahlart": "BTW",

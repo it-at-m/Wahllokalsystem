@@ -10,11 +10,11 @@ Content-Type: application/json
 [
   {
     "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1",
-    "name": "Bundestagswahl",
+    "name": "Europawahl",
     "reihenfolge": 1,
     "waehlerverzeichnisnummer": 1,
     "wahltag": "2026-01-01",
-    "wahlart": "BTW",
+    "wahlart": "EUW",
     "farbe": {
       "r": 0,
       "g": 1,
@@ -36,11 +36,11 @@ Content-Type: application/json
 [
   {
     "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
-    "name": "Bundestagswahl",
+    "name": "Stadtratswahl",
     "reihenfolge": 1,
     "waehlerverzeichnisnummer": 1,
     "wahltag": "2026-01-01",
-    "wahlart": "BTW",
+    "wahlart": "SRW",
     "farbe": {
       "r": 0,
       "g": 1,

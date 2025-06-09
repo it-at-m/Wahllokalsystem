@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.archunit;
 
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.methods;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
@@ -9,13 +10,28 @@ import com.tngtech.archunit.lang.ArchRule;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules;
+import java.util.List;
 import java.util.stream.Stream;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.expression.Expression;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.util.SimpleMethodInvocation;
 
+@Slf4j
 public class ArchUnitTest {
 
     private static JavaClasses allTestClasses;
@@ -50,6 +66,40 @@ public class ArchUnitTest {
     @MethodSource("allTestClassesRulesToVerify")
     void should_verifyArchUnitRuleForAllTestClassesOfService_when_running(final ArgumentsAccessor arguments) {
         arguments.get(1, ArchRule.class).check(allTestClasses);
+    }
+
+    @Test
+    void should_detectAuthorities_when_running() {
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken("user", "password",
+                List.of(new SimpleGrantedAuthority("Basisdaten_BUSINESSACTION_PostUngueltigews")));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        StandardEvaluationContext context = new StandardEvaluationContext(authentication);
+        //        context.setRootObject(new MethodSecurityExpressionRoot(authentication));
+        //        ((StandardEvaluationContext) context).setRootObject(new SecurityExpressionRoot(authentication));
+
+        val handler = new DefaultMethodSecurityExpressionHandler();
+        val ctx = handler.createEvaluationContext(authentication,
+                new SimpleMethodInvocation(new ArchUnitTest(), ArchUnitTest.class.getDeclaredMethods()[0]));
+
+        Expression expression = new SpelExpressionParser().parseExpression(
+                "hasAuthority('Basisdaten_BUSINESSACTION_PostUngueltigews') and hasAuthority('Basisdaten_BUSINESSACTION_PostUngueltigews')");
+        log.info("{}", expression.getValue(ctx));
+
+        val chainDetector = new DetectAuthorityChain();
+        methods().that(new MethodWithSecurityPredicate()).should(chainDetector).check(allClasses);
+
+        log.info("------------------------------------");
+        log.info("- Result                           -");
+        log.info("------------------------------------");
+
+        chainDetector.getMethodCalls().forEach(((javaMethod, javaMethodCalls) -> {
+            log.info("Method: {}", javaMethod.getFullName());
+            val preAuthorizeAnnotation = javaMethod.getAnnotationOfType(PreAuthorize.class);
+            log.info("PreAuthorize: {}", preAuthorizeAnnotation.value());
+            javaMethodCalls.forEach(javaMethodCall -> log.info("  -> {}", javaMethodCall.getFullName()));
+            log.info("------------------------------------------------------------");
+        }));
     }
 
     @ParameterizedTest(name = "{0}")

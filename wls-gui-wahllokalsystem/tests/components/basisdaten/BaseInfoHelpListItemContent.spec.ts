@@ -1,5 +1,3 @@
-import type { VueWrapper } from "@vue/test-utils";
-
 import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
@@ -11,13 +9,11 @@ import BaseInfoHelpListItemContent from "@/components/basisdaten/BaseInfoHelpLis
 import vuetify from "@/plugins/vuetify.ts";
 
 describe("BaseInfoHelpListItemContent.vue", () => {
-  let wrapper: VueWrapper<InstanceType<typeof BaseInfoHelpListItemContent>>;
-
   enableAutoUnmount(afterEach);
 
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderListItemContentWithMinimumRequiredProps_when_mountedWithTitleAndIconProp", async (context) => {
-      wrapper = mount(BaseInfoHelpListItemContent, {
+      const wrapper = mount(BaseInfoHelpListItemContent, {
         global: {
           plugins: [vuetify],
         },
@@ -30,7 +26,7 @@ describe("BaseInfoHelpListItemContent.vue", () => {
     });
 
     it("should_renderListItemWithAllProps_when_mountedWithTitleTextAndIconProp", async (context) => {
-      wrapper = mount(BaseInfoHelpListItemContent, {
+      const wrapper = mount(BaseInfoHelpListItemContent, {
         global: {
           plugins: [vuetify],
         },

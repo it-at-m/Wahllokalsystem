@@ -66,7 +66,7 @@ describe("BaseInfoHelpListItem.vue", () => {
         title: "Neuer Titel",
         icon: "icon",
         callback: () => {
-          console.log("callback executed");
+          console.debug("callback executed");
         },
       });
 

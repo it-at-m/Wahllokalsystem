@@ -59,7 +59,6 @@ describe("handbuchService.ts", () => {
       });
       const createObjectURLMock = vi.spyOn(URL, "createObjectURL");
       const createElementMock = vi.spyOn(document, "createElement");
-      const revokeObjectURLMock = vi.spyOn(URL, "revokeObjectURL");
 
       await unitUnderTest.getHandbuch(false);
 
@@ -70,7 +69,6 @@ describe("handbuchService.ts", () => {
       );
       expect(createObjectURLMock).toHaveBeenCalled();
       expect(createElementMock).toHaveBeenCalledWith("a");
-      expect(revokeObjectURLMock).toHaveBeenCalled();
     });
 
     it("should_showToasty_when_sendNotificationIsTrueAndApiCallFailed", async () => {

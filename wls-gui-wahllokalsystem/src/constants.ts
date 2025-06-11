@@ -14,6 +14,10 @@ export const PRINT_EXAMPLE = "print-example";
 export const MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG = 3;
 export const MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG = 5;
 
+export const WAHLHOTLINE = "089 233 96233";
+export const WAHLRAUMFINDER_URL = "https://maps.muenchen.de/wahlraumfinder/";
+export const TEAMVIEWER_URL = "KioskControlHandler:teamviewer://";
+
 const WLS_SERVICE_API_URL = "/api/";
 
 export const BROADCAST_SERVICE_API_URL =

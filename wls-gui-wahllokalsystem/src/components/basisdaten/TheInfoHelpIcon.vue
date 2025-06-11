@@ -47,12 +47,20 @@ import {
 import BaseInfoHelpListItem from "@/components/basisdaten/BaseInfoHelpListItem.vue";
 import { useHandbuchService } from "@/composables/basisdaten/handbuchService.ts";
 import { useTestDruck } from "@/composables/basisdaten/testDruck.ts";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
+import {
+  TEAMVIEWER_URL,
+  WAHLHOTLINE,
+  WAHLRAUMFINDER_URL,
+} from "@/constants.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { getHandbuch } = useHandbuchService();
 const { buildTemplate } = useTestDruck();
+const { addNotification } = useUserNotificationService();
 
 const infoHelpData = [
-  { icon: "$phone", title: "Wahlhotline", text: "089 233 96233" },
+  { icon: "$phone", title: "Wahlhotline", text: WAHLHOTLINE },
   {
     icon: "$fileDocument",
     title: "Schulungsunterlagen und weitere Infos",
@@ -65,10 +73,7 @@ const infoHelpData = [
     title: "Wahlraumfinder",
     text: "Zuständigen Wahlraum suchen",
     callback: () => {
-      const win = window.open(
-        "https://maps.muenchen.de/wahlraumfinder/",
-        "_blank"
-      );
+      const win = window.open(WAHLRAUMFINDER_URL, "_blank");
       if (win) {
         win.focus();
       }
@@ -79,7 +84,7 @@ const infoHelpData = [
     title: "Fernzugriff starten",
     text: "Zugriff durch Wahlamt erlauben",
     callback: () => {
-      const win = window.open("KioskControlHandler:teamviewer://", "_blank");
+      const win = window.open(TEAMVIEWER_URL, "_blank");
       if (win) {
         win.focus();
       }
@@ -100,6 +105,11 @@ const infoHelpData = [
         printWindow.document.body.innerHTML = buildTemplate();
         printWindow.print();
         printWindow.close();
+      } else {
+        addNotification(
+          "Druck-Popup blockiert. Bitte erlauben Sie alle Popups für diese Seite",
+          UserNotificationCategoryEnum.WARNING
+        );
       }
     },
   },

@@ -32,33 +32,38 @@ export function useHandbuchService() {
         );
 
         _downloadPdf(response);
-      } catch {
+      } catch (e) {
         if (sendNotification) {
           addNotification(
             "Fehler beim laden des Handbuchs",
             UserNotificationCategoryEnum.ERROR
           );
         }
+        console.debug(e);
         throw new Error("GetHandbuch Failed");
       }
     }
   }
 
   function _downloadPdf(response: AxiosResponse) {
-    // Erstelle eine URL für den Blob
-    const url = window.URL.createObjectURL(
-      new Blob([response.data], { type: "application/pdf" })
-    );
+    let url: string | null = null;
+    try {
+      url = window.URL.createObjectURL(
+        new Blob([response.data], { type: "application/pdf" })
+      );
 
-    // Erstelle ein Link-Element und simuliere einen Klick darauf
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "handbuch.pdf";
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "handbuch.pdf";
 
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    window.URL.revokeObjectURL(url);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } finally {
+      if (url) {
+        window.URL.revokeObjectURL(url);
+      }
+    }
   }
 
   return { getHandbuch };

@@ -31,14 +31,17 @@ const meta = {
   parameters: {
     msw: {
       handlers: [
-        http.all("/api/*", async () => {
-          return new HttpResponse(beispielHandbuchBlob, {
-            status: 200,
-            headers: {
-              "Content-Type": "application/pdf",
-            },
-          });
-        }),
+        http.get(
+          "/api/basisdaten-service/businessActions/handbuch/*",
+          async () => {
+            return new HttpResponse(beispielHandbuchBlob, {
+              status: 200,
+              headers: {
+                "Content-Type": "application/pdf",
+              },
+            });
+          }
+        ),
       ],
     },
   },

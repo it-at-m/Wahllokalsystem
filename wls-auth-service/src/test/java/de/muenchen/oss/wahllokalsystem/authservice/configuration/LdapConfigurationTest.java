@@ -95,7 +95,7 @@ class LdapConfigurationTest {
     @Nested
     class WithEmbeddedLdapServer {
 
-        final String EMBEDDED_LDAP_USER = "wls_all";
+        final String EMBEDDED_LDAP_USER = "wls_all_bwb";
         final String EMBEDDED_LDAP_PASSWORD = "test";
 
         final Pattern csrfTokenPattern = Pattern.compile("<input .* id=\"csrf_token\".*\\r?\\n?.*value=\\\"(.*)\\\".*\\/>");

@@ -7,14 +7,26 @@ GET {{ WLS_ADMIN_SERVICE_URL }}/businessActions/konfigurierteWahltage
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
-### POST Konfigurierter Wahltag
+### POST Konfigurierter Wahltag | user wls_all_uwb
 POST {{ WLS_ADMIN_SERVICE_URL }}/businessActions/konfigurierterWahltag
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 {
-  "wahltag": "2024-12-03T09:10:11",
-  "wahltagID": "wahltagID",
+  "wahltag": "2026-01-01T00:00:00",
+  "wahltagID": "4526485e-2a3f-43d6-bd57-d0a58fc330cb",
+  "wahltagStatus": "AKTIV",
+  "nummer": "0"
+}
+
+### POST Konfigurierter Wahltag | user wls_all_bwb
+POST {{ WLS_ADMIN_SERVICE_URL }}/businessActions/konfigurierterWahltag
+Content-Type: application/json
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+{
+  "wahltag": "2026-01-01T00:00:00",
+  "wahltagID": "827e9e6a-ebe9-483f-a9cd-162b26f348e8",
   "wahltagStatus": "AKTIV",
   "nummer": "0"
 }

@@ -1,116 +1,110 @@
 <template>
-  <v-card>
-    <v-card-title>Zahl der Wahlurnen</v-card-title>
-    <v-card-text class="pb-0">
-      <v-form
-        ref="wahlurnenForm"
-        v-model="anzahlWahlurnenValidForm"
-      >
-        <div class="d-flex flex-wrap justify-space-between">
-          <div
-            v-for="(wahl, index) in wahlen"
-            :key="index"
-          >
-            <v-text-field
-              :model-value="urnenwahlVorbereitung.urnenAnzahl[index]?.anzahl"
-              :label="`Anzahl der Wahlurnen ${wahl.name}`"
-              clearable
-              variant="solo"
-              :rules="[REQUIRED, MIN_NUMBER(1), MAX_NUMBER(99)]"
-              type="number"
-              hide-spin-buttons
-              width="20rem"
-              :data-test="`textFieldUrnenAnzahl_${index}`"
-              @update:model-value="
-                (value) => onAnzahlUpdateModelValue(value, index)
-              "
-            />
+  <v-container>
+    <v-card>
+      <v-card-title>Zahl der Wahlurnen</v-card-title>
+      <v-card-text class="pb-0">
+        <v-form
+          ref="wahlurnenForm"
+          v-model="anzahlWahlurnenValidForm"
+        >
+          <div class="d-flex flex-wrap justify-start">
+            <div
+              v-for="(wahl, index) in urnenwahlVorbereitung.urnenAnzahl"
+              :key="index"
+            >
+              <v-number-input
+                class="mr-4"
+                v-model="wahl.anzahl"
+                :rules="[REQUIRED, MIN_NUMBER(1), MAX_NUMBER(99)]"
+                :data-test="`textFieldUrnenAnzahl_${index}`"
+                :label="`Anzahl der Wahlurnen ${getWahlNameById(wahl.wahlID)}`"
+                min-width="20rem"
+                clearable
+              />
+            </div>
           </div>
-        </div>
-        <v-checkbox
-          v-model="isCheckboxAlleVersiegeltEnabled"
-          label="Die Wahlurne(n) war(en) leer und wurde(n) ordnungsgemäß versiegelt"
-          data-test="checkboxAlleVersiegelt"
-        />
-      </v-form>
-    </v-card-text>
-  </v-card>
+          <v-checkbox
+            v-model="isCheckboxAlleVersiegeltEnabled"
+            label="Die Wahlurne(n) war(en) leer und wurde(n) ordnungsgemäß versiegelt"
+            data-test="checkboxAlleVersiegelt"
+          />
+        </v-form>
+      </v-card-text>
+    </v-card>
 
-  <v-card>
-    <v-card-title>Abstimmungsschutzvorrichtungen</v-card-title>
-    <v-card-text class="pb-0">
-      <v-form
-        ref="abstimmungsschutzvorrichtungenForm"
-        v-model="abstimmungsschutzvorrichtungenValidForm"
-      >
-        <div class="d-flex flex-wrap justify-space-between">
-          <div>
-            <v-text-field
-              v-model="urnenwahlVorbereitung.anzahlWahltische"
-              label="Anzahl der Tische mit Sichtblenden"
-              clearable
-              variant="solo"
-              :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(99)]"
-              type="number"
-              hide-spin-buttons
-              width="20rem"
-            />
+    <v-card>
+      <v-card-title>Abstimmungsschutzvorrichtungen</v-card-title>
+      <v-card-text class="pb-0">
+        <v-form
+          ref="abstimmungsschutzvorrichtungenForm"
+          v-model="abstimmungsschutzvorrichtungenValidForm"
+        >
+          <div class="d-flex flex-wrap justify-start">
+            <div>
+              <v-number-input
+                class="mr-4"
+                v-model="urnenwahlVorbereitung.anzahlWahltische"
+                :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(99)]"
+                min-width="20rem"
+                data-test="numberInputAnzahlWahltische"
+                label="Anzahl der Tische mit Sichtblenden"
+                clearable
+              />
+            </div>
+            <div>
+              <v-number-input
+                class="mr-4"
+                v-model="urnenwahlVorbereitung.anzahlNebenraeume"
+                :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(99)]"
+                data-test="numberInputAnzahlNebenraeume"
+                label="Anzahl der Nebenräume im Wahlraum"
+                min-width="20rem"
+                clearable
+              />
+            </div>
+            <div>
+              <v-number-input
+                class="mr-4"
+                v-model="urnenwahlVorbereitung.anzahlWahlkabinen"
+                :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(99)]"
+                data-test="numberInputAnzahlWahlkabinen"
+                label="Anzahl der Wahlkabinen"
+                min-width="20rem"
+                clearable
+              />
+            </div>
           </div>
-          <div>
-            <v-text-field
-              v-model="urnenwahlVorbereitung.anzahlNebenraeume"
-              label="Anzahl der Nebenräume im Wahlraum"
-              clearable
-              variant="solo"
-              :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(99)]"
-              type="number"
-              hide-spin-buttons
-              width="20rem"
-            />
-          </div>
-          <div>
-            <v-text-field
-              ref="inputRef"
-              v-model="urnenwahlVorbereitung.anzahlWahlkabinen"
-              label="Anzahl der Wahlkabinen"
-              clearable
-              variant="solo"
-              :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(99)]"
-              type="number"
-              hide-spin-buttons
-              width="20rem"
-            />
-          </div>
-        </div>
-      </v-form>
-    </v-card-text>
-    <v-card-actions>
-      <base-button-save
-        active
-        :disabled="isSaveButtonDisabled"
-        @click="onSaveWahlumgebungUWBClicked"
-      />
-    </v-card-actions>
-  </v-card>
-
-  <v-card
-    v-show="isMinimumRequired"
-    class="border-lg border-error"
-  >
-    <v-card-title>Ungültige Eingaben</v-card-title>
-    <v-card-text>
-      <div class="d-flex align-center mb-2">
-        <v-icon
-          class="mr-2 error-text"
-          icon="$invalid"
+        </v-form>
+      </v-card-text>
+      <v-card-actions>
+        <base-button-save
+          active
+          :disabled="isSaveButtonDisabled"
+          @click="onSaveWahlumgebungUWBClicked"
         />
-        <div class="error-text">
-          Die Summe der Kabinen, Tische und Nebenräume muss mindestens 1
-          betragen.
+      </v-card-actions>
+    </v-card>
+
+    <v-card
+      v-show="isMinimumRequired"
+      class="border-lg border-error"
+    >
+      <v-card-title>Ungültige Eingaben</v-card-title>
+      <v-card-text>
+        <div class="d-flex align-center mb-2">
+          <v-icon
+            color="red"
+            class="mr-2"
+            icon="$invalid"
+          />
+          <div class="text-red">
+            Die Summe der Kabinen, Tische und Nebenräume muss mindestens 1
+            betragen.
+          </div>
         </div>
-      </div>
-    </v-card-text>
-  </v-card>
+      </v-card-text>
+    </v-card>
+  </v-container>
 </template>
 
 <script setup lang="ts">
@@ -124,9 +118,10 @@ import {
   VCardText,
   VCardTitle,
   VCheckbox,
+  VContainer,
   VForm,
   VIcon,
-  VTextField,
+  VNumberInput,
 } from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
@@ -142,6 +137,7 @@ const isCheckboxAlleVersiegeltEnabled = ref(false);
 const abstimmungsschutzvorrichtungenValidForm = ref<null | boolean>(null);
 const abstimmungsschutzvorrichtungenForm = ref<HTMLFormElement>();
 const wahlbezirkStore = useWahlbezirkStore();
+const { getWahlNameById } = useWahlenStore();
 const { wahlen } = storeToRefs(useWahlenStore());
 
 const isSaveButtonDisabled = computed(() => {
@@ -180,35 +176,6 @@ const urnenwahlVorbereitung = ref<Urnenwahlvorbereitung>({
     })) || [],
 });
 
-async function onAnzahlUpdateModelValue(
-  newAnzahl: string | undefined,
-  urnenWahlIndex: number
-) {
-  updateAnzahlByIndex(newAnzahl, urnenWahlIndex);
-  if (wahlurnenForm.value) {
-    await wahlurnenForm.value?.validate();
-  }
-}
-
-function updateAnzahlByIndex(anzahl: string | undefined, index: number) {
-  if (urnenwahlVorbereitung.value.urnenAnzahl) {
-    const anzahlToChange = urnenwahlVorbereitung.value.urnenAnzahl[index];
-    if (anzahlToChange == undefined) {
-      return;
-    }
-    if (anzahl) {
-      const parsedAnzahl = Number(anzahl);
-      if (!isNaN(parsedAnzahl)) {
-        anzahlToChange.anzahl = parsedAnzahl;
-      } else {
-        anzahlToChange.anzahl = 0;
-      }
-    } else {
-      anzahlToChange.anzahl = 0;
-    }
-  }
-}
-
 watch(isCheckboxAlleVersiegeltEnabled, (newValue) => {
   if (urnenwahlVorbereitung.value.urnenAnzahl) {
     urnenwahlVorbereitung.value.urnenAnzahl.forEach((urnen) => {
@@ -221,8 +188,4 @@ function onSaveWahlumgebungUWBClicked() {
   wahlbezirkStore.sendUrnenwahlvorbereitung(urnenwahlVorbereitung.value);
 }
 </script>
-<style scoped>
-.error-text {
-  color: rgb(var(--v-theme-error));
-}
-</style>
+<style scoped></style>

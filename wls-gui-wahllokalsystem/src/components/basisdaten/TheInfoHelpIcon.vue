@@ -59,33 +59,25 @@ const infoHelpData = [
   {
     icon: "$fileDocument",
     title: "Schulungsunterlagen und weitere Infos",
-    callback: () => {
-      getHandbuch();
-    },
+    callback: getHandbuch,
   },
   {
     icon: "$mapSearch",
     title: "Wahlraumfinder",
     text: "Zuständigen Wahlraum suchen",
-    callback: () => {
-      openWahlraumfinder();
-    },
+    callback: openWahlraumfinder,
   },
   {
     icon: "$remoteDesktop",
     title: "Fernzugriff starten",
     text: "Zugriff durch Wahlamt erlauben",
-    callback: () => {
-      startFernzugriff();
-    },
+    callback: startFernzugriff,
   },
   {
     icon: "$printer",
     title: "Testdruck",
     text: "Testseite ausdrucken",
-    callback: () => {
-      printTestdruck();
-    },
+    callback: printTestdruck,
   },
 ];
 </script>

@@ -1,9 +1,7 @@
 import { storeToRefs } from "pinia";
 import { createRouter, createWebHashHistory } from "vue-router";
 
-import ExampleDynamicComponent from "@/components/ExampleDynamicComponent.vue";
 import {
-  EXAMPLE_ROUTES_DYNAMIC,
   EXAMPLE_ROUTES_NOTFOUND,
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_EREIGNISSE,
@@ -47,11 +45,6 @@ const routes = [
     name: ROUTE_EREIGNISSE,
     component: EreignisseView,
     meta: {},
-  },
-  {
-    path: "/dynamic/:wahlid",
-    name: EXAMPLE_ROUTES_DYNAMIC,
-    component: ExampleDynamicComponent,
   },
   {
     path: "/:catchAll(.*)*",

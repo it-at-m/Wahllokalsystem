@@ -3,7 +3,9 @@
     <v-list-item
       v-bind="props"
       :class="
-        isHovering && callback ? 'px-3 py-0 bg-grey-lighten-3' : 'px-3 py-0 '
+        isHovering && callback
+          ? 'px-3 py-0 bg-grey-lighten-3 cursor-pointer'
+          : 'px-3 py-0 '
       "
     >
       <base-info-help-list-item-content

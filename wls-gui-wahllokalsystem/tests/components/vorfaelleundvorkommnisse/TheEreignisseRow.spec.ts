@@ -27,6 +27,7 @@ import { EreignisBuilder } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 
 describe("TheEreignisseRow.vue", () => {
   let wrapper: VueWrapper;
+  vi.stubGlobal("visualViewport", new EventTarget());
   // Mock the ResizeObserver
   const ResizeObserverMock = vi.fn(() => ({
     observe: vi.fn(),

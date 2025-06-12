@@ -13,10 +13,12 @@
 - [ ] Unit-Tests gepflegt
 - [ ] Integrationstests gepflegt
 - [ ] Beispiel-Requests gepflegt
+- [ ] Texte auf Rechtschreibung und Grammatik geprüft
 
 <!-- Dokumentation -->
 ### Dokumentation
 - [ ] Links geprüft
+- [ ] Texte auf Rechtschreibung und Grammatik geprüft
 
 <!-- Frontend -->
 ### Frontend
@@ -24,6 +26,7 @@
 - [ ] Doku aktualisiert
 - [ ] Unit-Tests gepflegt
 - [ ] Komponententests gepflegt
+- [ ] Texte auf Rechtschreibung und Grammatik geprüft
 
 # Referenzen[^1]:
 

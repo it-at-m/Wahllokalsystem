@@ -1,6 +1,8 @@
+-- for user wls_all_uwb
 INSERT INTO wahltag (id, tag, beschreibung, nummer)
-values ('00000000-0000-0000-0000-000000000001', to_timestamp('2024-06-09', 'YYYY-MM-DD'),
+values ('4526485e-2a3f-43d6-bd57-d0a58fc330cb', to_timestamp('2026-01-01', 'YYYY-MM-DD'),
         'zehnte Direktwahl zum Europäischen Parlament', '0');
 
+-- for user wls_all_bwb
 INSERT INTO wahltag (id, tag, beschreibung, nummer)
-values ('00000000-0000-0000-0000-000000000002', to_timestamp('2020-03-15', 'YYYY-MM-DD'), 'Kommunalwahl 20', '0');
+values ('827e9e6a-ebe9-483f-a9cd-162b26f348e8', to_timestamp('2026-01-01', 'YYYY-MM-DD'), 'Kommunalwahl 2026', '0');

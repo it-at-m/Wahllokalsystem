@@ -59,10 +59,10 @@ export function useDateTimeFormatter() {
     return date;
   };
 
-  function toLocalDateFormat(dateString: string) {
+  function toGermanDateFormat(dateString: string) {
     const date = new Date(dateString);
     if (isValidDate(date)) {
-      return date.toLocaleDateString(undefined, {
+      return date.toLocaleDateString("de-DE", {
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
@@ -75,7 +75,7 @@ export function useDateTimeFormatter() {
     toHhMm,
     applyLocalTimezoneOffset,
     getDateFromTimeString,
-    toLocalDateFormat,
+    toGermanDateFormat,
   };
 }
 

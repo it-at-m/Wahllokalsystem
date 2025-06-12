@@ -87,14 +87,14 @@ import {
 } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
-const { toLocalDateFormat } = useDateTimeFormatter();
+const { toGermanDateFormat } = useDateTimeFormatter();
 const { user, currentUserWahltag, currentUserWahlbezirkNummer } =
   storeToRefs(useUserStore());
 
 const [drawer, toggleDrawer] = useToggle();
 const isOffline = ref(false);
 const wahltermin = computed(() =>
-  user ? toLocalDateFormat(currentUserWahltag.value ?? "") : ""
+  user ? toGermanDateFormat(currentUserWahltag.value ?? "") : ""
 );
 const wahlbezirknummer = computed(() =>
   user ? currentUserWahlbezirkNummer.value : ""

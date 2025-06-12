@@ -9,7 +9,7 @@ describe("dateTimeFormatter.ts", () => {
     time,
     applyLocalTimezoneOffset,
     getDateFromTimeString,
-    toLocalDateFormat,
+    toGermanDateFormat,
   } = useDateTimeFormatter();
 
   beforeEach(() => {
@@ -90,7 +90,7 @@ describe("dateTimeFormatter.ts", () => {
     });
   });
 
-  describe("toLocalDateFormat", () => {
+  describe("toGermanDateFormat", () => {
     it.each([
       "2026-01-01",
       "2026/01/01",
@@ -100,7 +100,7 @@ describe("dateTimeFormatter.ts", () => {
     ])(
       "should_returnDateStringInLocalFormat_when_givenValidDateString'%s'",
       (datestring) => {
-        expect(toLocalDateFormat(datestring)).toBe("01.01.2026");
+        expect(toGermanDateFormat(datestring)).toBe("01.01.2026");
       }
     );
 
@@ -114,7 +114,7 @@ describe("dateTimeFormatter.ts", () => {
     ])(
       "should_returnUndefined_when_givenInvalidDateString'%s'",
       (datestring) => {
-        expect(toLocalDateFormat(datestring)).toBe(undefined);
+        expect(toGermanDateFormat(datestring)).toBe(undefined);
       }
     );
   });

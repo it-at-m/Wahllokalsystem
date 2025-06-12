@@ -17,8 +17,6 @@ const { currentTime } = useCurrentTime();
 
 <style scoped>
 .time {
-  margin: 0 15px;
-  padding-top: 4px;
   font-size: 24px;
   font-family: "Rationale", monospace;
   font-style: italic;

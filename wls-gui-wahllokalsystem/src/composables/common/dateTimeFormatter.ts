@@ -1,6 +1,10 @@
+import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
+
 export function useDateTimeFormatter() {
   const NO_VALUE_DEFAULT = "";
   const TIME_FIELD_SEPARATOR = ":";
+
+  const { isValidDate } = useDateTimeUtils();
 
   const time = function (date?: Date | null): string {
     if (!date) {
@@ -57,11 +61,13 @@ export function useDateTimeFormatter() {
 
   function toLocalDateFormat(dateString: string) {
     const date = new Date(dateString);
-    return date.toLocaleDateString(undefined, {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
+    if (isValidDate(date)) {
+      return date.toLocaleDateString(undefined, {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+    }
   }
 
   return {

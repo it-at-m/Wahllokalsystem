@@ -1,16 +1,27 @@
+import { storeToRefs } from "pinia";
+
 import { useTestDruck } from "@/composables/basisdaten/testDruck.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
-import { TEAMVIEWER_URL, WAHLRAUMFINDER_URL } from "@/constants.ts";
+import { TEAMVIEWER_URL } from "@/constants.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 export function useHelpIconCallbacks() {
   const { buildTemplate } = useTestDruck();
   const { addNotification } = useUserNotificationService();
+  const { konfigurationsparameter } = storeToRefs(useInfomanagementStore());
 
   function openWahlraumfinder() {
-    const win = window.open(WAHLRAUMFINDER_URL, "_blank");
-    if (win) {
-      win.focus();
+    if (konfigurationsparameter.value) {
+      const wahllokalfinderParam = konfigurationsparameter.value.find(
+        (param) => param.schluessel === "WAHLLOKALFINDER_URL"
+      );
+      if (wahllokalfinderParam) {
+        const win = window.open(wahllokalfinderParam.wert, "_blank");
+        if (win) {
+          win.focus();
+        }
+      }
     }
   }
 

@@ -9,14 +9,15 @@
       "
     >
       <base-info-help-list-item-content
+        :class="LIST_ITEM_CONTENT_MARGIN"
         v-if="callback"
         :icon="icon"
         :title="title"
         :text="text"
         @click="callback()"
       />
-
       <base-info-help-list-item-content
+        :class="LIST_ITEM_CONTENT_MARGIN"
         v-else
         :icon="icon"
         :title="title"
@@ -29,6 +30,8 @@
 import { VHover, VListItem } from "vuetify/components";
 
 import BaseInfoHelpListItemContent from "@/components/basisdaten/BaseInfoHelpListItemContent.vue";
+
+const LIST_ITEM_CONTENT_MARGIN = "mx-0 my-1";
 
 defineProps({
   title: { type: String, required: true },

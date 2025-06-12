@@ -1,8 +1,5 @@
 <template>
-  <v-row
-    class="mx-0 my-1"
-    align="center"
-  >
+  <v-row align="center">
     <v-icon
       :icon="icon"
       color="primary"

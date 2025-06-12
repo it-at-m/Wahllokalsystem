@@ -9,16 +9,16 @@
       "
     >
       <base-info-help-list-item-content
-        :class="LIST_ITEM_CONTENT_MARGIN"
         v-if="callback"
+        :class="LIST_ITEM_CONTENT_MARGIN"
         :icon="icon"
         :title="title"
         :text="text"
         @click="callback()"
       />
       <base-info-help-list-item-content
-        :class="LIST_ITEM_CONTENT_MARGIN"
         v-else
+        :class="LIST_ITEM_CONTENT_MARGIN"
         :icon="icon"
         :title="title"
         :text="text"

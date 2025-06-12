@@ -143,7 +143,6 @@ onMounted(async () => {
     startWahlbeteiligungInterval();
 
     if (currentUserWahltag.value) {
-      console.log(toLocalDateFormat(currentUserWahltag.value));
       wahltermin.value = toLocalDateFormat(currentUserWahltag.value);
     }
     if (currentUserWahlbezirkNummer.value) {

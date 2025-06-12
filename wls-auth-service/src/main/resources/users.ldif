@@ -8,26 +8,6 @@ objectclass: top
 objectclass: organizationalUnit
 ou: people
 
-dn: uid=wls_test,ou=people,dc=springframework,dc=org
-objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
-cn: wls_test
-sn: test
-uid: wls_test
-userPassword: test
-
-dn: uid=wls_all,ou=people,dc=springframework,dc=org
-objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
-cn: wls_all
-sn: all
-uid: wls_all
-userPassword: test
-
 dn: uid=wls_all_uwb,ou=people,dc=springframework,dc=org
 objectclass: top
 objectclass: person
@@ -52,7 +32,5 @@ dn: cn=user,ou=groups,dc=springframework,dc=org
 objectclass: top
 objectclass: groupOfNames
 cn: user
-member: uid=wls_test,ou=people,dc=springframework,dc=org
-member: uid=wls_all,ou=people,dc=springframework,dc=org
 member: uid=wls_all_uwb,ou=people,dc=springframework,dc=org
 member: uid=wls_all_bwb,ou=people,dc=springframework,dc=org

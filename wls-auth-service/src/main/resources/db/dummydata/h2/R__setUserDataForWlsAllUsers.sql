@@ -1,12 +1,3 @@
--- update for user wls_all
-UPDATE Wlsuser
-SET wahlbezirkID     = '', -- no wahlbezirksart either
-    wahltagID        = '5b4a73dd-c67b-490e-a09d-d2023bd91565',
-    wahltag          = '2026-01-01',
-    wahlbezirkNummer = '1234',
-    wbid_wahlnummer  = '{"wbid_wahlnummer": [{"wahlbezirkID": "", "wahlnummer": "0", "wahlID": "9dbae57b-84d1-4a9a-b176-caf838d42f7b"}]}'
-WHERE id in ('00000000-0000-0000-0000-000000000001');
-
 -- update for user wls_all_bwb
 UPDATE Wlsuser
 SET wahlbezirkID     = '9081145c-dc16-4a9b-8255-5c49ddb98c14',

@@ -153,6 +153,41 @@ public class WahlvorstandControllerIntegrationTest {
 
         @Test
         @WithMockUserAsJwt(
+                authorities = { Authorities.SERVICE_GET_WAHLVORSTAND, Authorities.SERVICE_UPDATE_WAHLVORSTAND, Authorities.REPOSITORY_READ_WAHLVORSTAND,
+                        Authorities.REPOSITORY_WRITE_WAHLVORSTAND },
+                claimProperties = { "wahlbezirkID=wahlbezirkID" }
+        )
+        void should_returnFallbackWahlvorstand_when_forceUpdateParamIsTrueAndEaiCallFailed() throws Exception {
+            val wahlbezirkID = "wahlbezirkID";
+
+            val infomanagementKonfigurierterWahltag = TestDataFactory.CreateFromClient.konfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
+            WireMock.stubFor(WireMock.get("/businessActions/konfigurierterWahltag")
+                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
+                            .withBody(objectMapper.writeValueAsBytes(infomanagementKonfigurierterWahltag))));
+            var searchingForWahltag = infomanagementKonfigurierterWahltag.getWahltagID();
+
+            val basisdatenWahlen = TestDataFactory.CreateFromClient.wahlModelList();
+            WireMock.stubFor(WireMock.get("/businessActions/wahlen/" + searchingForWahltag)
+                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
+                            .withStatus(HttpStatus.OK.value())
+                            .withBody(objectMapper.writeValueAsBytes(basisdatenWahlen))));
+
+            WireMock.stubFor(WireMock.get("/wahlvorstaende?wahlbezirkID=" + wahlbezirkID)
+                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                            .withBody(objectMapper.writeValueAsBytes(
+                                    new WlsExceptionDTO(WlsExceptionCategory.T, "000", "WLS-EAI-SERVICE", "error on loading wahlvorstand")))));
+
+            val request = MockMvcRequestBuilders
+                    .get("/businessActions/wahlvorstand/" + wahlbezirkID)
+                    .header("forceUpdate", true);
+            val response = api.perform(request).andExpect(status().isOk()).andReturn();
+
+            Assertions.assertThat(response.getResponse().getContentAsString()).contains("FALLBACK");
+        }
+
+        @Test
+        @WithMockUserAsJwt(
                 claimProperties = "wahlbezirkID=myWahlbezirkID"
         )
         void should_return403WithWlsException_when_accessingWahlbezirkOfOtherUser() throws Exception {

@@ -2,16 +2,12 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET wahlbezirkID
-GET {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/briefwahlvorbereitung/wahlbezirkID
+### GET wahlbezirkID | user wls_all_bwb
+GET {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/briefwahlvorbereitung/9081145c-dc16-4a9b-8255-5c49ddb98c14
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET wahlbezirkID1
-GET {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/briefwahlvorbereitung/wahlbezirkID1
-Authorization: Bearer {{$auth.token("auth-service")}}
-
-### POST wahlbezirkID
-POST {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/briefwahlvorbereitung/wahlbezirkID
+### POST wahlbezirkID | user wls_all_bwb
+POST {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/briefwahlvorbereitung/9081145c-dc16-4a9b-8255-5c49ddb98c14
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
@@ -20,32 +16,7 @@ Content-Type: application/json
     {
       "anzahl": 1,
       "urneVersiegelt": true,
-      "wahlID": "wahlID1"
-    },
-    {
-      "wahlID": "wahlID2",
-      "urneVersiegelt": false,
-      "anzahl": 13
-    }
-  ]
-}
-
-### POST wahlbezirkID1
-POST {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/briefwahlvorbereitung/wahlbezirkID1
-Authorization: Bearer {{$auth.token("auth-service")}}
-Content-Type: application/json
-
-{
-  "urnenAnzahl": [
-    {
-      "anzahl": 1,
-      "urneVersiegelt": true,
-      "wahlID": "wahlID1"
-    },
-    {
-      "wahlID": "wahlID2",
-      "urneVersiegelt": false,
-      "anzahl": 13
+      "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409"
     }
   ]
 }

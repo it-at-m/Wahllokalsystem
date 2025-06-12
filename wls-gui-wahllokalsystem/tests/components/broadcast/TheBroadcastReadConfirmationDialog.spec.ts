@@ -18,6 +18,7 @@ describe("TheBroadcastReadConfirmationDialog.vue", () => {
   let wrapper: VueWrapper<
     InstanceType<typeof TheBroadcastReadConfirmationDialog>
   >;
+  vi.stubGlobal("visualViewport", new EventTarget());
 
   beforeEach(() => {
     wrapper = mount(TheBroadcastReadConfirmationDialog, {

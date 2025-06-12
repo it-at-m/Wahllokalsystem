@@ -46,18 +46,13 @@ import {
 
 import BaseInfoHelpListItem from "@/components/basisdaten/BaseInfoHelpListItem.vue";
 import { useHandbuchService } from "@/composables/basisdaten/handbuchService.ts";
-import { useTestDruck } from "@/composables/basisdaten/testDruck.ts";
-import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
-import {
-  TEAMVIEWER_URL,
-  WAHLHOTLINE,
-  WAHLRAUMFINDER_URL,
-} from "@/constants.ts";
-import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
+import { useHelpIconCallbacks } from "@/composables/basisdaten/helpIconCallbacks.ts";
+import { WAHLHOTLINE } from "@/constants.ts";
 
 const { getHandbuch } = useHandbuchService();
-const { buildTemplate } = useTestDruck();
-const { addNotification } = useUserNotificationService();
+
+const { openWahlraumfinder, startFernzugriff, printTestdruck } =
+  useHelpIconCallbacks();
 
 const infoHelpData = [
   { icon: "$phone", title: "Wahlhotline", text: WAHLHOTLINE },
@@ -65,7 +60,7 @@ const infoHelpData = [
     icon: "$fileDocument",
     title: "Schulungsunterlagen und weitere Infos",
     callback: () => {
-      return getHandbuch();
+      getHandbuch();
     },
   },
   {
@@ -73,10 +68,7 @@ const infoHelpData = [
     title: "Wahlraumfinder",
     text: "Zuständigen Wahlraum suchen",
     callback: () => {
-      const win = window.open(WAHLRAUMFINDER_URL, "_blank");
-      if (win) {
-        win.focus();
-      }
+      openWahlraumfinder();
     },
   },
   {
@@ -84,10 +76,7 @@ const infoHelpData = [
     title: "Fernzugriff starten",
     text: "Zugriff durch Wahlamt erlauben",
     callback: () => {
-      const win = window.open(TEAMVIEWER_URL, "_blank");
-      if (win) {
-        win.focus();
-      }
+      startFernzugriff();
     },
   },
   {
@@ -95,22 +84,7 @@ const infoHelpData = [
     title: "Testdruck",
     text: "Testseite ausdrucken",
     callback: () => {
-      const printWindow = window.open(
-        "",
-        "",
-        "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0"
-      );
-
-      if (printWindow) {
-        printWindow.document.body.innerHTML = buildTemplate();
-        printWindow.print();
-        printWindow.close();
-      } else {
-        addNotification(
-          "Druck-Popup blockiert. Bitte erlauben Sie alle Popups für diese Seite",
-          UserNotificationCategoryEnum.WARNING
-        );
-      }
+      printTestdruck();
     },
   },
 ];

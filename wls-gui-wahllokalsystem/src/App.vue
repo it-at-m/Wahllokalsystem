@@ -7,11 +7,11 @@
           class="d-flex align-center justify-start"
         >
           <v-app-bar-nav-icon @click.stop="toggleDrawer()" />
-          <router-link to="/">
-            <v-toolbar-title class="font-weight-bold">
-              <span class="text-white">WLS</span>
-            </v-toolbar-title>
-          </router-link>
+          <span class="navbar-text mx-2"> {{ wahltermin }} </span>
+          <base-icon-wahlbezirksart class="mx-2" />
+          <span class="navbar-text mx-2">
+            Wahlbezirk {{ wahlbezirknummer }}
+          </span>
         </v-col>
         <v-col
           cols="6"
@@ -21,84 +21,9 @@
           cols="3"
           class="d-flex align-center justify-end"
         >
-          <!-- heartbeat uses v-model for two-way-binding -->
+          <wls-clock />
           <wls-heartbeat v-model:is-offline="isOffline" />
-          <v-tooltip
-            location="bottom"
-            text="Routing Examples"
-          >
-            <template #activator="{ props }">
-              <router-link
-                v-bind="props"
-                :to="{ name: EXAMPLE_ROUTES_NEWROUTE }"
-              >
-                <v-btn
-                  icon="$routes"
-                  variant="text"
-                  density="comfortable"
-                  size="x-large"
-                  color="white"
-                />
-              </router-link>
-            </template>
-          </v-tooltip>
-          <v-tooltip
-            location="bottom"
-            text="Datenvalidierung Examples"
-          >
-            <template #activator="{ props }">
-              <router-link
-                v-bind="props"
-                :to="{ name: EXAMPLE_VALIDATION }"
-              >
-                <v-btn
-                  icon="$textBoxCheck"
-                  variant="text"
-                  density="comfortable"
-                  size="x-large"
-                  color="white"
-                />
-              </router-link>
-            </template>
-          </v-tooltip>
-          <v-tooltip
-            location="bottom"
-            text="Toast Examples"
-          >
-            <template #activator="{ props }">
-              <router-link
-                v-bind="props"
-                :to="{ name: TOAST }"
-              >
-                <v-btn
-                  icon="$toaster"
-                  variant="text"
-                  density="comfortable"
-                  size="x-large"
-                  color="white"
-                />
-              </router-link>
-            </template>
-          </v-tooltip>
-          <v-tooltip
-            location="bottom"
-            text="printing example"
-          >
-            <template #activator="{ props }">
-              <router-link
-                v-bind="props"
-                :to="{ name: PRINT_EXAMPLE }"
-              >
-                <v-btn
-                  icon="$printer"
-                  variant="text"
-                  density="comfortable"
-                  size="x-large"
-                  color="white"
-                />
-              </router-link>
-            </template>
-          </v-tooltip>
+          <the-info-help-icon />
         </v-col>
       </v-row>
     </v-app-bar>
@@ -150,12 +75,12 @@
 <script setup lang="ts">
 import { useToggle } from "@vueuse/core";
 import localforage from "localforage";
+import { storeToRefs } from "pinia";
 import { onMounted, onUnmounted, ref } from "vue";
 import {
   VApp,
   VAppBar,
   VAppBarNavIcon,
-  VBtn,
   VCol,
   VContainer,
   VFadeTransition,
@@ -165,23 +90,21 @@ import {
   VMain,
   VNavigationDrawer,
   VRow,
-  VToolbarTitle,
-  VTooltip,
 } from "vuetify/components";
 
+import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
+import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
+import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useMonitoringCronjobService } from "@/composables/monitoring/monitoringCronjobService.ts";
 import {
-  EXAMPLE_ROUTES_NEWROUTE,
-  EXAMPLE_VALIDATION,
-  PRINT_EXAMPLE,
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_EREIGNISSE,
   ROUTE_WAHLSCHLIESSUNG,
   ROUTE_WAHLVORSTAND,
-  TOAST,
 } from "@/constants";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useMonitoringStore } from "@/stores/monitoringStore.ts";
@@ -200,8 +123,15 @@ const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
 const { startWahlbeteiligungInterval, stopWahlbeteiligungInterval } =
   useMonitoringCronjobService();
 
+const { toLocalDateFormat } = useDateTimeFormatter();
+
+const { currentUserWahltag, currentUserWahlbezirkNummer } =
+  storeToRefs(useUserStore());
+
 const [drawer, toggleDrawer] = useToggle();
 const isOffline = ref(false);
+const wahltermin = ref<string | undefined>(undefined);
+const wahlbezirknummer = ref<string | undefined>(undefined);
 
 onMounted(async () => {
   await loadUser().then(() => {
@@ -211,6 +141,14 @@ onMounted(async () => {
     loadEreignisse();
     loadWaehler();
     startWahlbeteiligungInterval();
+
+    if (currentUserWahltag.value) {
+      console.log(toLocalDateFormat(currentUserWahltag.value));
+      wahltermin.value = toLocalDateFormat(currentUserWahltag.value);
+    }
+    if (currentUserWahlbezirkNummer.value) {
+      wahlbezirknummer.value = currentUserWahlbezirkNummer.value;
+    }
   });
 
   // config for service worker indexed db (same config as in wahl-worker.js !)
@@ -232,5 +170,9 @@ onUnmounted(() => {
 <style>
 .main {
   background-color: white;
+}
+
+.navbar-text {
+  font-size: 20px;
 }
 </style>

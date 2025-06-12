@@ -55,7 +55,22 @@ export function useDateTimeFormatter() {
     return date;
   };
 
-  return { time, toHhMm, applyLocalTimezoneOffset, getDateFromTimeString };
+  function toLocalDateFormat(dateString: string) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString(undefined, {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  }
+
+  return {
+    time,
+    toHhMm,
+    applyLocalTimezoneOffset,
+    getDateFromTimeString,
+    toLocalDateFormat,
+  };
 }
 
 function leftPadTwoDigitsWithZero(number: number): string {

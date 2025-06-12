@@ -1,15 +1,17 @@
 import type { VueWrapper } from "@vue/test-utils";
 
 import {
+  COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
 import { enableAutoUnmount, mount } from "@vue/test-utils";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 import { VHover, VListItem } from "vuetify/components";
 
 import BaseInfoHelpListItem from "@/components/basisdaten/BaseInfoHelpListItem.vue";
+import BaseInfoHelpListItemContent from "@/components/basisdaten/BaseInfoHelpListItemContent.vue";
 import vuetify from "@/plugins/vuetify.ts";
 
 describe("BaseInfoHelpListItem.vue", () => {
@@ -81,6 +83,23 @@ describe("BaseInfoHelpListItem.vue", () => {
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );
+    });
+  });
+
+  describe(COMPONENT_EVENT_TESTS, () => {
+    it("should_executeCallbackFunction_when_listItemWasClicked", async () => {
+      const mockCallback = vi.fn();
+      await wrapper.setProps({
+        title: "Titel",
+        icon: "icon",
+        callback: mockCallback,
+      });
+
+      const item = wrapper.findComponent(BaseInfoHelpListItemContent);
+      await item.trigger("click");
+      await nextTick();
+
+      expect(mockCallback).toHaveBeenCalled();
     });
   });
 });

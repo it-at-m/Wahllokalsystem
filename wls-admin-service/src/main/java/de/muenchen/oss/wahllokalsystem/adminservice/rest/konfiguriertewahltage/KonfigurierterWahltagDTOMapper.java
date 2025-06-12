@@ -10,10 +10,10 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface KonfigurierterWahltagDTOMapper {
 
-    @Mapping(target = "active", source = "wahltagStatusDTO")
+    @Mapping(target = "active", source = "wahltagStatus")
     KonfigurierterWahltagModel toModel(KonfigurierterWahltagDTO dto);
 
-    @Mapping(target = "wahltagStatusDTO", source = "active")
+    @Mapping(target = "wahltagStatus", source = "active")
     KonfigurierterWahltagDTO toDTO(KonfigurierterWahltagModel model);
 
     default WahltagStatusDTO mapModelBooleanActiveToWahltagStatusDTOString(boolean active) {

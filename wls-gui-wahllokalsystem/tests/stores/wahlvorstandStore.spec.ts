@@ -399,6 +399,9 @@ describe("wahlvorstandStore.ts", () => {
     });
 
     it("should_notLoadWahlvorstand_when_serviceCallFailed", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      userStore.setUser(_createUser(wahlbezirkID));
       mockDefinitions.getWahlvorstand.mockRejectedValueOnce(
         new Error("service call failed")
       );
@@ -406,7 +409,6 @@ describe("wahlvorstandStore.ts", () => {
       await expect(() =>
         unitUnderTest.initWahlvorstand()
       ).rejects.toThrowError();
-      expect(mockDefinitions.getWahlvorstand).toHaveBeenCalledTimes(0);
       expect(unitUnderTest.wahlvorstandReady).toStrictEqual(false);
     });
   });

@@ -61,11 +61,10 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   async function initWahlvorstand(sendNotification = true) {
     const wahlbezirkID = currentUserWahlbezirkID.value;
     if (wahlbezirkID) {
-      wahlvorstand.value = await getWahlvorstand(
-        wahlbezirkID,
-        true,
-        sendNotification
-      );
+      wahlvorstand.value = await getWahlvorstand(wahlbezirkID, {
+        forceUpdate: true,
+        sendNotification: sendNotification,
+      });
       wahlvorstandReady.value = true;
     } else {
       await Promise.reject();
@@ -77,7 +76,9 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     try {
       const wahlbezirkID = currentUserWahlbezirkID.value;
       if (wahlbezirkID) {
-        wahlvorstand.value = await getWahlvorstand(wahlbezirkID, true);
+        wahlvorstand.value = await getWahlvorstand(wahlbezirkID, {
+          forceUpdate: true,
+        });
         lastLoading.value = new Date();
       }
     } finally {

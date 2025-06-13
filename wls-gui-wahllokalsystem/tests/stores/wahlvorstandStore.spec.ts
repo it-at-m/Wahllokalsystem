@@ -394,7 +394,7 @@ describe("wahlvorstandStore.ts", () => {
       expect(unitUnderTest.wahlvorstand).toStrictEqual(mockedGetWahlvorstand);
       expect(unitUnderTest.wahlvorstandReady).toStrictEqual(true);
       expect(mockDefinitions.getWahlvorstand.mock.calls).toStrictEqual([
-        [wahlbezirkID, true, true],
+        [wahlbezirkID, { forceUpdate: true, sendNotification: true }],
       ]);
     });
 
@@ -426,7 +426,7 @@ describe("wahlvorstandStore.ts", () => {
 
       expect(unitUnderTest.wahlvorstand).toStrictEqual(mockedGetWahlvorstand);
       expect(mockDefinitions.getWahlvorstand.mock.calls).toStrictEqual([
-        [wahlbezirkID, true],
+        [wahlbezirkID, { forceUpdate: true }],
       ]);
     });
 

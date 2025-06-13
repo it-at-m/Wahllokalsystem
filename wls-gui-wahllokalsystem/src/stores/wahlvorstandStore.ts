@@ -22,7 +22,7 @@ export const storeID = "wahlvorstand";
 
 export const useWahlvorstandStore = defineStore(storeID, () => {
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
-  const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
+  const { schliessungsuhrzeitSent } = storeToRefs(useWahlbezirkStore());
 
   const isLoading = ref(false);
   const isSaving = ref(false);
@@ -45,7 +45,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     const anwesend = wahlvorstand.value.wahlvorstandsmitglieder.filter(
       (mitglied) => mitglied.anwesend
     ).length;
-    if (!schliessungsUhrzeitSent.value) {
+    if (!schliessungsuhrzeitSent.value) {
       return anwesend >= MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG;
     } else {
       return anwesend >= MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG;

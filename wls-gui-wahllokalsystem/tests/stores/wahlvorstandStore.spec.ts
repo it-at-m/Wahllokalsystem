@@ -380,6 +380,39 @@ describe("wahlvorstandStore.ts", () => {
     });
   });
 
+  describe("initWahlvorstand", () => {
+    it("should_loadWahlvorstand_when_called", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      userStore.setUser(_createUser(wahlbezirkID));
+
+      const mockedGetWahlvorstand = createWahlvorstand(0);
+      mockDefinitions.getWahlvorstand.mockReturnValue(mockedGetWahlvorstand);
+
+      await unitUnderTest.initWahlvorstand();
+
+      expect(unitUnderTest.wahlvorstand).toStrictEqual(mockedGetWahlvorstand);
+      expect(unitUnderTest.wahlvorstandReady).toStrictEqual(true);
+      expect(mockDefinitions.getWahlvorstand.mock.calls).toStrictEqual([
+        [wahlbezirkID, { forceUpdate: true, sendNotification: true }],
+      ]);
+    });
+
+    it("should_notLoadWahlvorstand_when_serviceCallFailed", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      userStore.setUser(_createUser(wahlbezirkID));
+      mockDefinitions.getWahlvorstand.mockRejectedValueOnce(
+        new Error("service call failed")
+      );
+
+      await expect(() =>
+        unitUnderTest.initWahlvorstand()
+      ).rejects.toThrowError();
+      expect(unitUnderTest.wahlvorstandReady).toStrictEqual(false);
+    });
+  });
+
   describe("forceLoadWahlvorstand", () => {
     it("should_setWahlvorstand_when_userHasWahlbezirkID", async () => {
       const userStore = useUserStore();
@@ -393,7 +426,7 @@ describe("wahlvorstandStore.ts", () => {
 
       expect(unitUnderTest.wahlvorstand).toStrictEqual(mockedGetWahlvorstand);
       expect(mockDefinitions.getWahlvorstand.mock.calls).toStrictEqual([
-        [wahlbezirkID, true],
+        [wahlbezirkID, { forceUpdate: true }],
       ]);
     });
 

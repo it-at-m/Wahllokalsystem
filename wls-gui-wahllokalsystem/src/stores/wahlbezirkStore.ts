@@ -40,8 +40,8 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   async function sendSchliessungsuhrzeit() {
     if (currentUserWahlbezirkID.value && schliessungsuhrzeit.value) {
       const schliessungszeitToSave = new Date(schliessungsuhrzeit.value);
-      schliessungsuhrzeitIsSaving.value = true;
       if (isValidDate(schliessungszeitToSave)) {
+        schliessungsuhrzeitIsSaving.value = true;
         try {
           await postUrnenwahlSchliessungsuhrzeit(
             currentUserWahlbezirkID.value,

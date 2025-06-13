@@ -111,7 +111,7 @@ describe("wahlbezirkStore.ts", () => {
   describe("sendSchliessungsuhrzeit", () => {
     it("should_updateIsSavingAndSetSentValue_when_succeeded", async () => {
       const schliessungsuhrzeit = new Date();
-      unitUnderTest.schliessungsUhrzeit = schliessungsuhrzeit;
+      unitUnderTest.schliessungsuhrzeit = schliessungsuhrzeit;
 
       const wahlbezirkID = "wahlbezirkID";
       useUserStore().setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
@@ -137,7 +137,7 @@ describe("wahlbezirkStore.ts", () => {
         mockDefinitions.postUrnenwahlSchliessungsuhrzeit.mock.calls
       ).toStrictEqual([[wahlbezirkID, schliessungsuhrzeit]]);
       expect(unitUnderTest.schliessungsuhrzeitIsSaving).toStrictEqual(false);
-      expect(unitUnderTest.schliessungsUhrzeit?.getTime()).toStrictEqual(
+      expect(unitUnderTest.schliessungsuhrzeit?.getTime()).toStrictEqual(
         schliessungsuhrzeit.getTime()
       );
     });
@@ -146,13 +146,13 @@ describe("wahlbezirkStore.ts", () => {
       const userStore = useUserStore();
       userStore.setUser(prepareUser().wahlbezirkID(undefined).build());
 
-      unitUnderTest.schliessungsUhrzeit = new Date();
+      unitUnderTest.schliessungsuhrzeit = new Date();
 
       await unitUnderTest.sendSchliessungsuhrzeit();
       expect(mockDefinitions.postUrnenwahlSchliessungsuhrzeit).toBeCalledTimes(
         0
       );
-      expect(unitUnderTest.schliessungsUhrzeitSent).toBe(undefined);
+      expect(unitUnderTest.schliessungsuhrzeitSent).toBe(undefined);
     });
 
     it("should_notUpdateSchliessungsUhrzeitSent_when_postUrnenwahlSchliessungsuhrzeitFails", async () => {
@@ -160,7 +160,7 @@ describe("wahlbezirkStore.ts", () => {
       const wahlbezirkID = "wahlbezirkID";
       userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
-      unitUnderTest.schliessungsUhrzeit = new Date();
+      unitUnderTest.schliessungsuhrzeit = new Date();
 
       const mockedError = new Error("Speicherfehler!");
       mockDefinitions.postUrnenwahlSchliessungsuhrzeit.mockImplementationOnce(
@@ -173,7 +173,7 @@ describe("wahlbezirkStore.ts", () => {
         await unitUnderTest.sendSchliessungsuhrzeit();
       } catch (error) {
         expect(error).equals(mockedError);
-        expect(unitUnderTest.schliessungsUhrzeitSent).toBe(undefined);
+        expect(unitUnderTest.schliessungsuhrzeitSent).toBe(undefined);
         expect(
           mockDefinitions.postUrnenwahlSchliessungsuhrzeit
         ).toHaveBeenCalledWith(wahlbezirkID, mockedNow);

@@ -41,7 +41,7 @@ describe("BaseWahlschliessungCard.vue", () => {
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWithDisabledSaveButton_when_noUhrzeitIsEntered", async (context) => {
       const wahlbezirkStore = useWahlbezirkStore();
-      wahlbezirkStore.schliessungsUhrzeit = undefined;
+      wahlbezirkStore.schliessungsuhrzeit = undefined;
 
       await flushPromises(); //update databinding and keep button disabled
 
@@ -53,7 +53,7 @@ describe("BaseWahlschliessungCard.vue", () => {
     it("should_renderWithEnabledSaveButton_when_uhrzeitIsGiven", async (context) => {
       const date = new Date("2025-05-23T07:30:00");
       const wahlbezirkStore = useWahlbezirkStore();
-      wahlbezirkStore.schliessungsUhrzeit = date;
+      wahlbezirkStore.schliessungsuhrzeit = date;
 
       await flushPromises(); //update databinding and enabled button
 
@@ -78,20 +78,20 @@ describe("BaseWahlschliessungCard.vue", () => {
     it("should_updateSchliessungsuhrzeitInStore_when_validDateIsEntered", async () => {
       const wahlbezirkStore = useWahlbezirkStore();
 
-      expect(wahlbezirkStore.schliessungsUhrzeit).toBeUndefined();
+      expect(wahlbezirkStore.schliessungsuhrzeit).toBeUndefined();
 
       const schliessungsuhrzeitTimeInput = wrapper.findComponent(BaseTimeInput);
       const enteredTime = new Date();
       await schliessungsuhrzeitTimeInput.setValue(enteredTime);
 
-      expect(wahlbezirkStore.schliessungsUhrzeit?.getTime()).toStrictEqual(
+      expect(wahlbezirkStore.schliessungsuhrzeit?.getTime()).toStrictEqual(
         enteredTime.getTime()
       );
     });
 
     it("should_callSendSchliessungsuhrzeit_when_saveButtonIsClicked", async () => {
       const wahlbezirkStore = useWahlbezirkStore();
-      wahlbezirkStore.schliessungsUhrzeit = new Date("2025-05-23T07:30:00");
+      wahlbezirkStore.schliessungsuhrzeit = new Date("2025-05-23T07:30:00");
 
       await flushPromises();
 

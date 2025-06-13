@@ -17,8 +17,8 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   const eroeffnungsuhrzeitSent = ref<Date | undefined>(undefined);
   const eroeffnungsuhrzeitIsSaving = ref(false);
 
-  const schliessungsUhrzeit = ref<Date | undefined>(undefined);
-  const schliessungsUhrzeitSent = ref<Date | undefined>(undefined);
+  const schliessungsuhrzeit = ref<Date | undefined>(undefined);
+  const schliessungsuhrzeitSent = ref<Date | undefined>(undefined);
   const schliessungsuhrzeitIsSaving = ref(false);
 
   async function sendEroeffnungsuhrzeit() {
@@ -38,8 +38,8 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   }
 
   async function sendSchliessungsuhrzeit() {
-    if (currentUserWahlbezirkID.value && schliessungsUhrzeit.value) {
-      const schliessungszeitToSave = new Date(schliessungsUhrzeit.value);
+    if (currentUserWahlbezirkID.value && schliessungsuhrzeit.value) {
+      const schliessungszeitToSave = new Date(schliessungsuhrzeit.value);
       schliessungsuhrzeitIsSaving.value = true;
       if (isValidDate(schliessungszeitToSave)) {
         try {
@@ -47,7 +47,7 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
             currentUserWahlbezirkID.value,
             schliessungszeitToSave
           );
-          schliessungsUhrzeitSent.value = schliessungszeitToSave;
+          schliessungsuhrzeitSent.value = schliessungszeitToSave;
         } finally {
           schliessungsuhrzeitIsSaving.value = false;
         }
@@ -59,9 +59,9 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     eroeffnungsuhrzeit,
     eroeffnungsuhrzeitIsSaving,
     eroeffnungsuhrzeitSent,
-    schliessungsUhrzeit,
+    schliessungsuhrzeit,
     schliessungsuhrzeitIsSaving,
-    schliessungsUhrzeitSent,
+    schliessungsuhrzeitSent,
     sendEroeffnungsuhrzeit,
     sendSchliessungsuhrzeit,
   };

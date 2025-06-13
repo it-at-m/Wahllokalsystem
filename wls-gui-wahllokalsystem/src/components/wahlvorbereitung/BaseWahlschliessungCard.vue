@@ -6,7 +6,7 @@
       erklärt wurde.
       <v-form v-model="schliessungsuhrzeitValidForm">
         <base-time-input
-          v-model="schliessungsUhrzeit"
+          v-model="schliessungsuhrzeit"
           class="mt-5"
           max-width="150"
         />
@@ -39,7 +39,7 @@ import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
 const { sendSchliessungsuhrzeit } = useWahlbezirkStore();
-const { schliessungsUhrzeit, schliessungsuhrzeitIsSaving } =
+const { schliessungsuhrzeit, schliessungsuhrzeitIsSaving } =
   storeToRefs(useWahlbezirkStore());
 
 const schliessungsuhrzeitValidForm = ref<null | boolean>(null);

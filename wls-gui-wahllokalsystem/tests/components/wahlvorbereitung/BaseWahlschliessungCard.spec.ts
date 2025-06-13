@@ -5,7 +5,15 @@ import {
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 import { nextTick } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
@@ -22,7 +30,8 @@ describe("BaseWahlschliessungCard.vue", () => {
     unobserve: vi.fn(),
     disconnect: vi.fn(),
   }));
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+
+  beforeAll(() => vi.stubGlobal("ResizeObserver", ResizeObserverMock));
 
   beforeEach(() => {
     wrapper = mount(BaseWahlschliessungCard, {
@@ -37,6 +46,8 @@ describe("BaseWahlschliessungCard.vue", () => {
       },
     });
   });
+
+  afterAll(() => vi.unstubAllGlobals());
 
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWithDisabledSaveButton_when_noUhrzeitIsEntered", async (context) => {

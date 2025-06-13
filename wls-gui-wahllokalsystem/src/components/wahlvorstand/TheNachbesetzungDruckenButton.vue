@@ -19,7 +19,7 @@ import { useWahlvorstandNachbesetzungsDruck } from "@/composables/wahlvorstand/w
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 
-const { forceLoadWahlvorstand, sendWahlvorstand } = useWahlvorstandStore();
+const { loadWahlvorstand, sendWahlvorstand } = useWahlvorstandStore();
 const { buildTemplateFromData } = useWahlvorstandNachbesetzungsDruck();
 const { toHhMm } = useDateTimeFormatter();
 
@@ -29,7 +29,7 @@ const { wahlvorstand } = storeToRefs(useWahlvorstandStore());
 
 function onNachbesetzungDruckenClicked() {
   sendWahlvorstand();
-  forceLoadWahlvorstand();
+  loadWahlvorstand();
   _openPrintDialog();
 }
 

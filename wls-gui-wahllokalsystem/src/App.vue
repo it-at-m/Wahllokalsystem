@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <wls-app-bar />
+    <the-wls-app-bar />
     <v-main>
       <v-container fluid>
         <router-view v-slot="{ Component }">
@@ -20,7 +20,7 @@ import { onMounted, onUnmounted } from "vue";
 import { VApp, VContainer, VFadeTransition, VMain } from "vuetify/components";
 
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
-import WlsAppBar from "@/components/wlsComponents/WlsAppBar.vue";
+import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
 import { useMonitoringCronjobService } from "@/composables/monitoring/monitoringCronjobService.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";

@@ -19,7 +19,7 @@ import { useWahlvorstandNachbesetzungsDruck } from "@/composables/wahlvorstand/w
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 
-const { forceLoadWahlvorstand, sendWahlvorstand } = useWahlvorstandStore();
+const { loadWahlvorstand, sendWahlvorstand } = useWahlvorstandStore();
 const { buildTemplateFromData } = useWahlvorstandNachbesetzungsDruck();
 const { toHhMm } = useDateTimeFormatter();
 
@@ -27,9 +27,9 @@ const { currentUserWahlbezirkNummer, currentUserWahlbezirksArt } =
   storeToRefs(useUserStore());
 const { wahlvorstand } = storeToRefs(useWahlvorstandStore());
 
-function onNachbesetzungDruckenClicked() {
-  sendWahlvorstand();
-  forceLoadWahlvorstand(false);
+async function onNachbesetzungDruckenClicked() {
+  await sendWahlvorstand();
+  await loadWahlvorstand(); //(vorher noch in klammern notification false gewesen)
   _openPrintDialog();
 }
 

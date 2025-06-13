@@ -29,7 +29,7 @@ const { wahlvorstand } = storeToRefs(useWahlvorstandStore());
 
 function onNachbesetzungDruckenClicked() {
   sendWahlvorstand();
-  forceLoadWahlvorstand();
+  forceLoadWahlvorstand(false);
   _openPrintDialog();
 }
 

@@ -71,13 +71,14 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     }
   }
 
-  async function forceLoadWahlvorstand() {
+  async function forceLoadWahlvorstand(sendNotification = true) {
     isLoading.value = true;
     try {
       const wahlbezirkID = currentUserWahlbezirkID.value;
       if (wahlbezirkID) {
         wahlvorstand.value = await getWahlvorstand(wahlbezirkID, {
           forceUpdate: true,
+          sendNotification: sendNotification,
         });
         lastLoading.value = new Date();
       }

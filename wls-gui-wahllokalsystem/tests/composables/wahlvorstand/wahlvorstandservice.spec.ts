@@ -73,7 +73,10 @@ describe("WahlvorstandService.ts", () => {
           Promise.resolve({ data: createWahlvorstandDTO() })
         );
 
-        await unitUnderTest.getWahlvorstand(wahlbezirkID, forceUpdate);
+        await unitUnderTest.getWahlvorstand(wahlbezirkID, {
+          forceUpdate: forceUpdate,
+          sendNotification: false,
+        });
 
         expect(mockDefinitions.getWahlvorstand.mock.calls).toStrictEqual([
           [wahlbezirkID, expectedApiCallHeader],
@@ -88,7 +91,10 @@ describe("WahlvorstandService.ts", () => {
       mockDefinitions.getWahlvorstand.mockReturnValue(
         Promise.resolve({ data: createWahlvorstandDTO() })
       );
-      const result = await unitUnderTest.getWahlvorstand("wahlbezirkID", true);
+      const result = await unitUnderTest.getWahlvorstand("wahlbezirkID", {
+        forceUpdate: false,
+        sendNotification: true,
+      });
 
       expect(result).toStrictEqual(mockedMappedWahlvorstand);
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
@@ -101,7 +107,10 @@ describe("WahlvorstandService.ts", () => {
         Promise.reject("mocked api call failed")
       );
       await expect(
-        unitUnderTest.getWahlvorstand("wahlbezirkID", true)
+        unitUnderTest.getWahlvorstand("wahlbezirkID", {
+          forceUpdate: false,
+          sendNotification: true,
+        })
       ).rejects.toThrow("mocked api call failed");
 
       expect(mockDefinitions.addNotification.mock.calls).toEqual([

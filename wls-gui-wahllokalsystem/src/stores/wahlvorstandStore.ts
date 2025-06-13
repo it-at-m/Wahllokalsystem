@@ -72,18 +72,11 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   }
 
   async function forceLoadWahlvorstand() {
-    isLoading.value = true;
-    try {
-      const wahlbezirkID = currentUserWahlbezirkID.value;
-      if (wahlbezirkID) {
-        wahlvorstand.value = await getWahlvorstand(wahlbezirkID, {
-          forceUpdate: true,
-        });
-        lastLoading.value = new Date();
-      }
-    } finally {
-      isLoading.value = false;
-    }
+    await _loadWahlvorstand(true, true);
+  }
+
+  async function loadWahlvorstand() {
+    await _loadWahlvorstand(false, false);
   }
 
   async function sendWahlvorstand() {
@@ -113,6 +106,25 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     }
   }
 
+  async function _loadWahlvorstand(
+    forceUpdate: boolean,
+    sendNotification: boolean
+  ) {
+    isLoading.value = true;
+    try {
+      const wahlbezirkID = currentUserWahlbezirkID.value;
+      if (wahlbezirkID) {
+        wahlvorstand.value = await getWahlvorstand(wahlbezirkID, {
+          forceUpdate: forceUpdate,
+          sendNotification: sendNotification,
+        });
+        lastLoading.value = new Date();
+      }
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   return {
     isMindestanwesenheitErreicht,
     isSchriftfuehrerAnwesend,
@@ -127,6 +139,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     initWahlvorstand,
     changeAnwesendOfMitglied,
     forceLoadWahlvorstand,
+    loadWahlvorstand,
     sendWahlvorstand,
   };
 });

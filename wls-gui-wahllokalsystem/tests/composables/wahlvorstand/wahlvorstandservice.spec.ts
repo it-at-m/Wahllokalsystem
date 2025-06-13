@@ -1,3 +1,4 @@
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useWahlvorstandTestDataFactory } from "@tests/utils/wahlvorstand/WahlvorstandTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -42,6 +43,7 @@ vi.mock("@/composables/wahlvorstand/wahlvorstandMapper", () => ({
 
 const { createWahlvorstandDTO, createWahlvorstand } =
   useWahlvorstandTestDataFactory();
+const { generateRandomString } = useCommonTestDataFactory();
 
 describe("WahlvorstandService.ts", () => {
   const unitUnderTest = useWahlvorstandService();
@@ -80,21 +82,28 @@ describe("WahlvorstandService.ts", () => {
         expect(mockDefinitions.getWahlvorstand.mock.calls).toStrictEqual([
           [wahlbezirkID, expectedApiCallHeader],
         ]);
+        expect(mockDefinitions.addNotification.mock.calls).toEqual([
+          [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
+        ]);
       }
     );
 
     it("should_callUserNotificationWithSuccessAndReturnMappedResponse_when_apiCallSucceeded", async () => {
+      const wahlbezirkID = generateRandomString(10);
       const mockedMappedWahlvorstand = createWahlvorstand();
       mockDefinitions.mapDtoToModel.mockReturnValue(mockedMappedWahlvorstand);
 
       mockDefinitions.getWahlvorstand.mockReturnValue(
         Promise.resolve({ data: createWahlvorstandDTO() })
       );
-      const result = await unitUnderTest.getWahlvorstand("wahlbezirkID", {
+      const result = await unitUnderTest.getWahlvorstand(wahlbezirkID, {
         sendNotification: true,
       });
 
       expect(result).toStrictEqual(mockedMappedWahlvorstand);
+      expect(mockDefinitions.getWahlvorstand.mock.calls).toStrictEqual([
+        [wahlbezirkID, false],
+      ]);
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
       ]);

@@ -29,7 +29,7 @@ const { wahlvorstand } = storeToRefs(useWahlvorstandStore());
 
 async function onNachbesetzungDruckenClicked() {
   await sendWahlvorstand();
-  await loadWahlvorstand(); //(vorher noch in klammern notification false gewesen)
+  await loadWahlvorstand();
   _openPrintDialog();
 }
 

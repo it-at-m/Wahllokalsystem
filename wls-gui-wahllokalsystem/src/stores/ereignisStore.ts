@@ -23,7 +23,7 @@ export const useEreignisStore = defineStore(storeID, () => {
 
   const { currentUserWahlbezirkID, currentUserWahlbezirksArt } =
     storeToRefs(useUserStore());
-  const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
+  const { schliessungsuhrzeitSent } = storeToRefs(useWahlbezirkStore());
 
   const wahlbezirkEreignisse = ref<WahlbezirkEreignisse>(
     WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse()
@@ -49,7 +49,7 @@ export const useEreignisStore = defineStore(storeID, () => {
     () =>
       hasVorfaelle.value !== wahlbezirkEreignisse.value.keineVorfaelle &&
       (hasVorkommnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse ||
-        !schliessungsUhrzeitSent.value)
+        !schliessungsuhrzeitSent.value)
   );
 
   const hasMissingEreignisFlagsForBWB = computed(
@@ -65,7 +65,7 @@ export const useEreignisStore = defineStore(storeID, () => {
       : hasMissingEreignisFlagsForBWB.value;
   });
 
-  watch(schliessungsUhrzeitSent, _onSchliessunguhrzeitSentChanged);
+  watch(schliessungsuhrzeitSent, _onSchliessunguhrzeitSentChanged);
   watchEffect(() => _updateKeineFlagsOfEreignisseBasedOnCurrentState());
 
   function addEreignis() {
@@ -75,7 +75,7 @@ export const useEreignisStore = defineStore(storeID, () => {
       beschreibung: "",
       ereignisart: getEreignisArtForDateRelatedToSchliessungsuhrzeit(
         currentDate,
-        schliessungsUhrzeitSent.value
+        schliessungsuhrzeitSent.value
       ),
     });
   }
@@ -98,7 +98,7 @@ export const useEreignisStore = defineStore(storeID, () => {
         ereignisToChange.ereignisart =
           getEreignisArtForDateRelatedToSchliessungsuhrzeit(
             uhrzeit,
-            schliessungsUhrzeitSent.value
+            schliessungsuhrzeitSent.value
           );
       } else {
         ereignisToChange.uhrzeit = undefined;

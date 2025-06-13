@@ -22,7 +22,8 @@ export function useWahlvorstandService() {
 
   async function getWahlvorstand(
     wahlbezirkID: string,
-    forceUpdate = false
+    forceUpdate = false,
+    sendNotification = true
   ): Promise<Wahlvorstand> {
     try {
       const response = await wahlvorstandControllerApi.getWahlvorstand(
@@ -35,10 +36,12 @@ export function useWahlvorstandService() {
       );
       return toModel(response.data);
     } catch (error) {
-      userNotificationService.addNotification(
-        "Das Aktualisieren der Anwesenheit schlug fehl.",
-        UserNotificationCategoryEnum.ERROR
-      );
+      if (sendNotification) {
+        userNotificationService.addNotification(
+          "Das Aktualisieren der Anwesenheit schlug fehl.",
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
       throw error;
     }
   }

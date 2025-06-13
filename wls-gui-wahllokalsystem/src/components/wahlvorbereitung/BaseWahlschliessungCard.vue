@@ -6,7 +6,7 @@
       erklärt wurde.
       <v-form v-model="schliessungsuhrzeitValidForm">
         <base-time-input
-          v-model="schliessungsuhrzeit"
+          v-model="schliessungsUhrzeit"
           class="mt-5"
           max-width="150"
         />
@@ -15,6 +15,7 @@
     <v-card-actions>
       <base-button-save
         active
+        :loading="schliessungsuhrzeitIsSaving"
         :disabled="isSaveButtonDisabled"
         @click="onSaveSchliessungsuhrzeitClicked"
       />
@@ -23,6 +24,7 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 import {
   VCard,
@@ -36,20 +38,17 @@ import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
-const schliessungsuhrzeitValidForm = ref<null | boolean>(null);
-const schliessungsuhrzeit = ref<Date | undefined>(undefined);
+const { sendSchliessungsuhrzeit } = useWahlbezirkStore();
+const { schliessungsUhrzeit, schliessungsuhrzeitIsSaving } =
+  storeToRefs(useWahlbezirkStore());
 
-const wahlbezirkStore = useWahlbezirkStore();
+const schliessungsuhrzeitValidForm = ref<null | boolean>(null);
 
 const isSaveButtonDisabled = computed(
   () => schliessungsuhrzeitValidForm.value !== true
 );
 
 function onSaveSchliessungsuhrzeitClicked() {
-  if (schliessungsuhrzeit.value) {
-    wahlbezirkStore.sendSchliessungsuhrzeit(
-      schliessungsuhrzeit.value.toISOString()
-    );
-  }
+  sendSchliessungsuhrzeit();
 }
 </script>

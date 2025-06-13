@@ -93,7 +93,7 @@ describe("BaseWahlschliessungCard.vue", () => {
 
       const schliessungsuhrzeitTimeInput = wrapper.findComponent(BaseTimeInput);
       const enteredTime = new Date();
-      await schliessungsuhrzeitTimeInput.setValue(enteredTime);
+      schliessungsuhrzeitTimeInput.vm.$emit("update:modelValue", enteredTime);
 
       expect(wahlbezirkStore.schliessungsuhrzeit?.getTime()).toStrictEqual(
         enteredTime.getTime()

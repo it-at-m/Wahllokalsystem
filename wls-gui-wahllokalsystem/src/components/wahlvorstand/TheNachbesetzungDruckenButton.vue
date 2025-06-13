@@ -27,9 +27,9 @@ const { currentUserWahlbezirkNummer, currentUserWahlbezirksArt } =
   storeToRefs(useUserStore());
 const { wahlvorstand } = storeToRefs(useWahlvorstandStore());
 
-function onNachbesetzungDruckenClicked() {
-  sendWahlvorstand();
-  loadWahlvorstand();
+async function onNachbesetzungDruckenClicked() {
+  await sendWahlvorstand();
+  await loadWahlvorstand();
   _openPrintDialog();
 }
 

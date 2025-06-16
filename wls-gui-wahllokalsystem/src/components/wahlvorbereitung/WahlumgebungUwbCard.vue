@@ -13,8 +13,8 @@
               :key="index"
             >
               <v-number-input
-                class="mr-4"
                 v-model="wahl.anzahl"
+                class="mr-4"
                 :rules="[REQUIRED, MIN_NUMBER(1), MAX_NUMBER(99)]"
                 :data-test="`textFieldUrnenAnzahl_${index}`"
                 :label="`Anzahl der Wahlurnen ${getWahlNameById(wahl.wahlID)}`"
@@ -42,8 +42,8 @@
           <div class="d-flex flex-wrap justify-start">
             <div>
               <v-number-input
-                class="mr-4"
                 v-model="urnenwahlVorbereitung.anzahlWahltische"
+                class="mr-4"
                 :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(99)]"
                 min-width="20rem"
                 data-test="numberInputAnzahlWahltische"
@@ -53,8 +53,8 @@
             </div>
             <div>
               <v-number-input
-                class="mr-4"
                 v-model="urnenwahlVorbereitung.anzahlNebenraeume"
+                class="mr-4"
                 :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(99)]"
                 data-test="numberInputAnzahlNebenraeume"
                 label="Anzahl der Nebenräume im Wahlraum"
@@ -64,8 +64,8 @@
             </div>
             <div>
               <v-number-input
-                class="mr-4"
                 v-model="urnenwahlVorbereitung.anzahlWahlkabinen"
+                class="mr-4"
                 :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(99)]"
                 data-test="numberInputAnzahlWahlkabinen"
                 label="Anzahl der Wahlkabinen"
@@ -149,6 +149,9 @@ const isSaveButtonDisabled = computed(() => {
   );
 });
 
+const tet = computed(() => {
+  return wahlen;
+});
 const isMinimumRequired = computed(() => {
   if (abstimmungsschutzvorrichtungenValidForm.value !== true) {
     return false;

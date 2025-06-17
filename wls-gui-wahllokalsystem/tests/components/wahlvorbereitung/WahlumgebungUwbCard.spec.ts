@@ -1,11 +1,12 @@
+import type { TestingPinia } from "@pinia/testing";
+
 import { createTestingPinia } from "@pinia/testing";
 import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
-import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { nextTick } from "vue";
 import { VNumberInput } from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
@@ -15,9 +16,20 @@ import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
+const mockDefinitions = vi.hoisted(() => ({
+  getWahlen: vi.fn(),
+}));
+
+vi.mock("@/composables/wahl/wahlservice", () => ({
+  useWahlService: () => ({
+    getWahlen: mockDefinitions.getWahlen,
+  }),
+}));
+
 describe("WahlumgebungUwbCard.vue", () => {
-  let wrapper: VueWrapper<InstanceType<typeof WahlumgebungUwbCard>>;
-  let testPinia;
+  let wahlenStore: ReturnType<typeof useWahlenStore>;
+  let wahlbezirkStore: ReturnType<typeof useWahlbezirkStore>;
+  let testPinia: TestingPinia;
 
   const validWahlen = [
     {
@@ -55,45 +67,42 @@ describe("WahlumgebungUwbCard.vue", () => {
 
   beforeEach(() => {
     testPinia = createTestingPinia({
+      stubActions: false,
       createSpy: vi.fn,
-    });
-    wrapper = mount(WahlumgebungUwbCard, {
-      global: {
-        plugins: [testPinia, vuetify],
-      },
     });
   });
 
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWithThreeInputFieldsAndDisabledSaveButton_when_NoWahlenAreGiven", async (context) => {
-      await flushPromises();
+      wahlenStore = useWahlenStore(testPinia);
+      wahlenStore.wahlen = [];
+
+      const wrapper = mount(WahlumgebungUwbCard, {
+        global: {
+          plugins: [testPinia, vuetify],
+        },
+      });
+
       expect(wrapper.findAllComponents(VNumberInput).length).toBe(3);
       const saveButton = wrapper.findComponent(BaseButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
+
       expect(wrapper.html()).toMatchFileSnapshot(getSnapshotFilename(context));
     });
 
     it("should_renderWithFiveInputFieldsAndDisabledSaveButton_when_TwoWahlenAreGiven", async (context) => {
-      const wahlenStore = useWahlenStore(testPinia);
+      wahlbezirkStore = useWahlbezirkStore(testPinia);
+      wahlenStore = useWahlenStore(testPinia);
       wahlenStore.wahlen = validWahlen;
-      const wahlbezirkStore = useWahlbezirkStore(testPinia);
-      await nextTick();
-      wrapper = mount(WahlumgebungUwbCard, {
+      wahlbezirkStore.urnenwahlVorbereitung = validUrnenwahlVorbereitung;
+
+      const wrapper = mount(WahlumgebungUwbCard, {
         global: {
-          plugins: [
-            createTestingPinia({
-              createSpy: vi.fn,
-              stubActions: false,
-            }),
-            vuetify,
-          ],
+          plugins: [testPinia, vuetify],
         },
       });
-      wahlbezirkStore.urnenwahlVorbereitung = validUrnenwahlVorbereitung;
-      await flushPromises();
 
       expect(wrapper.findAllComponents(VNumberInput).length).toBe(5);
-
       const saveButton = wrapper.findComponent(BaseButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
 

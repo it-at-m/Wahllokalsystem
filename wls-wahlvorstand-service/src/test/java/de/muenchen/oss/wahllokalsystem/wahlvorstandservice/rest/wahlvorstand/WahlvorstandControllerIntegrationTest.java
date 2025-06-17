@@ -226,11 +226,18 @@ public class WahlvorstandControllerIntegrationTest {
             Assertions.assertThat(wahlvorstandFromRepo).usingRecursiveComparison().isEqualTo(expectedWahlvorstand);
 
             val eaiRequests = WireMock.getAllServeEvents(ServeEventQuery.forStubMapping(eaiPostWahlvorstandStubbing));
-            val expectedEaiRequest = "{\"wahlbezirkID\":\"" + wahlbezirkID
-                    + "\",\"mitglieder\":[{\"identifikator\":\"id\",\"anwesend\":true}],\"anwesenheitBeginn\":\"" + mockedWahlvorstandDTO.anwesenheitBeginn()
-                    + "\"}";
+
             Assertions.assertThat(eaiRequests).hasSize(1);
-            Assertions.assertThat(new String(eaiRequests.get(0).getRequest().getBody())).isEqualTo(expectedEaiRequest);
+            val receivedEaiRequest = objectMapper.readTree(eaiRequests.get(0).getRequest().getBodyAsString());
+            val expectedEaiRequest = objectMapper.createObjectNode()
+                    .put("wahlbezirkID", wahlbezirkID)
+                    .put("anwesenheitBeginn", mockedWahlvorstandDTO.anwesenheitBeginn().toString())
+                    .set("mitglieder", objectMapper.createArrayNode()
+                            .add(objectMapper.createObjectNode()
+                                    .put("identifikator", mockedWahlvorstandDTO.wahlvorstandsmitglieder().get(0).identifikator())
+                                    .put("anwesend", mockedWahlvorstandDTO.wahlvorstandsmitglieder().get(0).anwesend())));
+
+            Assertions.assertThat(receivedEaiRequest).isEqualTo(expectedEaiRequest);
         }
 
         @Test

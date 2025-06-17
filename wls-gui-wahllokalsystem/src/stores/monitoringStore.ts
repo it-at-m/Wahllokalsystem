@@ -1,4 +1,4 @@
-import { defineStore, storeToRefs } from "pinia";
+import { acceptHMRUpdate, defineStore, storeToRefs } from "pinia";
 import { ref } from "vue";
 
 import { useMonitoringService } from "@/composables/monitoring/monitoringService.ts";
@@ -38,3 +38,7 @@ export const useMonitoringStore = defineStore(storeID, () => {
 
   return { waehler, increaseWaehlerByOne, loadWaehler, sendWaehler };
 });
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useMonitoringStore, import.meta.hot));
+}

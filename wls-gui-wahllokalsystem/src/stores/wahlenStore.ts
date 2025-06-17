@@ -1,6 +1,6 @@
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
-import { defineStore } from "pinia";
+import { acceptHMRUpdate, defineStore } from "pinia";
 import { ref } from "vue";
 
 import { useWahlService } from "@/composables/wahl/wahlService.ts";
@@ -33,3 +33,7 @@ export const useWahlenStore = defineStore(storeID, () => {
     initWahlen,
   };
 });
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useWahlenStore, import.meta.hot));
+}

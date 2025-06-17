@@ -1,6 +1,6 @@
 import type { Konfigurationsparameter } from "@/types/infomanagement/Konfigurationsparameter.ts";
 
-import { defineStore } from "pinia";
+import { acceptHMRUpdate, defineStore } from "pinia";
 import { ref } from "vue";
 
 import { useKonfigurationsparameterService } from "@/composables/infomanagement/konfigurationsparameterService.ts";
@@ -26,3 +26,9 @@ export const useInfomanagementStore = defineStore(storeID, () => {
     initKonfigurationsparameter,
   };
 });
+
+if (import.meta.hot) {
+  import.meta.hot.accept(
+    acceptHMRUpdate(useInfomanagementStore, import.meta.hot)
+  );
+}

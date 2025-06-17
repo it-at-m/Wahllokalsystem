@@ -1,7 +1,7 @@
 import type { Task } from "@/types/tasks/Task.ts";
 import type { Ref } from "vue";
 
-import { defineStore } from "pinia";
+import { acceptHMRUpdate, defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 import { useTaskListService } from "@/composables/tasks/taskListService.ts";
@@ -53,3 +53,7 @@ export const useTaskManagerStore = defineStore(storeID, () => {
     hasInitializationOfTasksCompletelyRun,
   };
 });
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useTaskManagerStore, import.meta.hot));
+}

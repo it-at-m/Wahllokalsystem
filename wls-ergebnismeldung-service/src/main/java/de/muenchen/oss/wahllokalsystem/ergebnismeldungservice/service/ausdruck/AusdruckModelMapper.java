@@ -18,4 +18,6 @@ public interface AusdruckModelMapper {
     @Mapping(target = "meldungsartModel", source = "meldungsart")
     WahlUndBezirkIDUndMeldungsartModel toModel(WahlUndBezirkIDUndMeldungsart entity);
 
+    @Mapping(target = "meldungsart", source = "meldungsartModel")
+    WahlUndBezirkIDUndMeldungsart toEntity(WahlUndBezirkIDUndMeldungsartModel model);
 }

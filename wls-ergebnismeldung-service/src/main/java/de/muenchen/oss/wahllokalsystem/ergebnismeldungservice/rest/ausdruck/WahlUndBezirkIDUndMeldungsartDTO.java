@@ -6,6 +6,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record WahlUndBezirkIDUndMeldungsartDTO(@NotBlank String wahlbezirkID,
                                                @NotBlank String wahlID,
-                                               @NotNull MeldungsartDTO meldungsartModel) {
+                                               @NotNull MeldungsartDTO meldungsartDto) {
 
 }

@@ -60,13 +60,15 @@ class AusdruckServiceTest {
 
         @Test
         void should_throwFachlicheWlsExceptionForParameter_when_callingValidator() {
-            val id = new WahlUndBezirkIDUndMeldungsart();
+            val idModel = new WahlUndBezirkIDUndMeldungsartModel("id", "id2", MeldungsartModel.V1);
+            val id = new WahlUndBezirkIDUndMeldungsart("id", "id2", Meldungsart.V1);
+
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
 
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG))
                     .thenReturn(mockedWlsException);
 
-            unitUnderTest.getAusdruck(id);
+            unitUnderTest.getAusdruck(idModel);
 
             Mockito.verify(wahlUndBezirkIDUndMeldungsartValidator).validWahlUndBezirkIDUndMeldungsartOrThrow(eq(id), eq(mockedWlsException));
         }
@@ -81,7 +83,7 @@ class AusdruckServiceTest {
             Mockito.when(ausdruckRepository.findById(id)).thenReturn(Optional.of(mockedEntity));
             Mockito.when(ausdruckModelMapper.toModel(mockedEntity)).thenReturn(mockedMappedEntityAsModel);
 
-            val result = unitUnderTest.getAusdruck(id);
+            val result = unitUnderTest.getAusdruck(idModel);
 
             Assertions.assertThat(result.get()).isEqualTo(mockedMappedEntityAsModel);
         }
@@ -89,9 +91,11 @@ class AusdruckServiceTest {
         @Test
         void should_returnEmptyOptional_when_notFound() {
             val id = new WahlUndBezirkIDUndMeldungsart();
+            val idModel = new WahlUndBezirkIDUndMeldungsartModel("id", "id2", MeldungsartModel.V1);
+
             Mockito.when(ausdruckRepository.findById(id)).thenReturn(Optional.empty());
 
-            val result = unitUnderTest.getAusdruck(id);
+            val result = unitUnderTest.getAusdruck(idModel);
 
             Assertions.assertThat(result.isEmpty()).isTrue();
         }

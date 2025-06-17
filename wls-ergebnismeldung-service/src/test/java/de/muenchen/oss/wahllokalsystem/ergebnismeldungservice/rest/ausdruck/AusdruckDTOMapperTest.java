@@ -1,7 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ausdruck;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.Meldungsart;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.WahlUndBezirkIDUndMeldungsart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.MeldungsartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckReadModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckWriteModel;
@@ -25,7 +23,7 @@ class AusdruckDTOMapperTest {
 
         @Test
         void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
+            Assertions.assertThat(unitUnderTest.toDTO((AusdruckReadModel) null)).isNull();
         }
 
         @Test
@@ -67,13 +65,13 @@ class AusdruckDTOMapperTest {
         void should_returnAusdruckWriteModel_when_givenAusdruckWriteDTO() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
-            val meldungsart = Meldungsart.V1;
+            val meldungsartDto = MeldungsartDTO.V1;
             val meldungsrtModel = MeldungsartModel.V1;
             val content = "Testausdruck";
 
             val dtoToMap = new AusdruckWriteDTO(content);
 
-            val result = unitUnderTest.toModel(dtoToMap, new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart));
+            val result = unitUnderTest.toModel(dtoToMap, new WahlUndBezirkIDUndMeldungsartDTO(wahlbezirkID, wahlID, meldungsartDto));
 
             val expectedResult = new AusdruckWriteModel(new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, meldungsrtModel), content);
 
@@ -81,17 +79,17 @@ class AusdruckDTOMapperTest {
         }
 
         @ParameterizedTest
-        @EnumSource(Meldungsart.class)
-        void should_mapToEnumWithSameName_when_givenModelMeldungsartEnumValue(final Meldungsart meldungsart) {
+        @EnumSource(MeldungsartDTO.class)
+        void should_mapToEnumWithSameName_when_givenModelMeldungsartEnumValue(final MeldungsartDTO meldungsartDto) {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val content = "Testausdruck";
 
             val dtoToMap = new AusdruckWriteDTO(content);
 
-            val result = unitUnderTest.toModel(dtoToMap, new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart));
+            val result = unitUnderTest.toModel(dtoToMap, new WahlUndBezirkIDUndMeldungsartDTO(wahlbezirkID, wahlID, meldungsartDto));
 
-            Assertions.assertThat(result.wahlUndBezirkIDUndMeldungsartModel().meldungsartModel().name()).isEqualTo(meldungsart.name());
+            Assertions.assertThat(result.wahlUndBezirkIDUndMeldungsartModel().meldungsartModel().name()).isEqualTo(meldungsartDto.name());
         }
     }
 }

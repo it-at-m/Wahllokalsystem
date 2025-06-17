@@ -6,8 +6,6 @@ import static org.mockito.ArgumentMatchers.notNull;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.AusdruckRepository;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.Meldungsart;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.WahlUndBezirkIDUndMeldungsart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
@@ -49,17 +47,17 @@ class AusdruckServiceSecurityTest {
         void should_getAccess_when_requiredAuthorityIsPresent() {
             SecurityUtils.runWith(Authorities.SERVICE_GET_AUSDRUCK);
 
-            val id = new WahlUndBezirkIDUndMeldungsart("wahlbezirkID", "wahlID", Meldungsart.V1);
+            val idModel = new WahlUndBezirkIDUndMeldungsartModel("wahlbezirkID", "wahlID", MeldungsartModel.V1);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getAusdruck(id));
+            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getAusdruck(idModel));
         }
 
         @Test
         @WithMockUser
         void should_throwAccessDeniedException_when_serviceGetAusdruckAuthorityIsMissing() {
-            val id = new WahlUndBezirkIDUndMeldungsart("wahlbezirkID", "wahlID", Meldungsart.V1);
+            val idModel = new WahlUndBezirkIDUndMeldungsartModel("wahlbezirkID", "wahlID", MeldungsartModel.V1);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getAusdruck(id)).isInstanceOf(AccessDeniedException.class);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getAusdruck(idModel)).isInstanceOf(AccessDeniedException.class);
         }
     }
 

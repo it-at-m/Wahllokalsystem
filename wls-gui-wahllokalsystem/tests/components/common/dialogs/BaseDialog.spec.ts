@@ -16,7 +16,7 @@ describe("BaseDialog.vue", () => {
   vi.stubGlobal("visualViewport", new EventTarget());
 
   afterEach(() => {
-    wrapper.unmount();
+    if (wrapper) wrapper.unmount();
   });
 
   describe(COMPONENT_RENDER_TESTS, () => {

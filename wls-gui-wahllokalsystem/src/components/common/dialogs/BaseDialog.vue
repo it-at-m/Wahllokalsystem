@@ -6,7 +6,6 @@
     <v-card>
       <v-card-title>
         <v-icon
-          v-if="icon"
           :icon="icon"
           size="x-small"
         />

@@ -5,10 +5,9 @@
     :label="props.label"
     clearable
     variant="solo"
-    :rules="activeRules"
+    :rules="props.rules"
     type="number"
     hide-spin-buttons
-    @click:control="activateRules()"
   />
 </template>
 
@@ -29,13 +28,12 @@ const props = defineProps({
     default: [],
   },
   modelValue: {
-    type: [Number, null],
+    type: Number,
     required: false,
     default: null,
   },
 });
 
-const activeRules: ((value: number) => string | boolean)[] = [];
 const emit = defineEmits<{ "update:modelValue": [value: number] }>();
 
 const currencyInputOptions = computed(() => {
@@ -70,8 +68,4 @@ watch(formattedValue, (newValue) => {
     emit("update:modelValue", Number.parseInt(newValue));
   }
 });
-
-function activateRules() {
-  return activeRules.push(...props.rules);
-}
 </script>

@@ -5,6 +5,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.admin.model.ServeEventQuery;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.clients.aoueai.WahlvorstandClientMapper;
@@ -211,7 +212,7 @@ public class WahlvorstandControllerIntegrationTest {
             val wahlbezirkID = "wahlbezirkID";
             val mockedWahlvorstandDTO = TestDataFactory.CreateWahlvorstandWriteDto.withData();
 
-            WireMock.stubFor(WireMock.put("/wahlvorstaende/anwesenheit")
+            val eaiPostWahlvorstandStubbing = WireMock.stubFor(WireMock.put("/wahlvorstaende/anwesenheit")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
                             .withStatus(HttpStatus.OK.value())));
 
@@ -223,6 +224,13 @@ public class WahlvorstandControllerIntegrationTest {
             val wahlvorstandFromRepo = wahlvorstandRepository.findById(wahlbezirkID).get();
             val expectedWahlvorstand = wahlvorstandModelMapper.toEntity(wahlvorstandDTOMapper.toModel(wahlbezirkID, mockedWahlvorstandDTO));
             Assertions.assertThat(wahlvorstandFromRepo).usingRecursiveComparison().isEqualTo(expectedWahlvorstand);
+
+            val eaiRequests = WireMock.getAllServeEvents(ServeEventQuery.forStubMapping(eaiPostWahlvorstandStubbing));
+            val expectedEaiRequest = "{\"wahlbezirkID\":\"" + wahlbezirkID
+                    + "\",\"mitglieder\":[{\"identifikator\":\"id\",\"anwesend\":true}],\"anwesenheitBeginn\":\"" + mockedWahlvorstandDTO.anwesenheitBeginn()
+                    + "\"}";
+            Assertions.assertThat(eaiRequests).hasSize(1);
+            Assertions.assertThat(new String(eaiRequests.get(0).getRequest().getBody())).isEqualTo(expectedEaiRequest);
         }
 
         @Test

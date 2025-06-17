@@ -93,6 +93,7 @@ describe("wahlvorbereitungMapper.ts", () => {
   describe("toUrnenwahlvorbereitungWriteDto", () => {
     it("should_returnDTO_when_validModelIsGiven", () => {
       const urnenwahlvorbereitung: Urnenwahlvorbereitung = {
+        urneVersiegelt: false,
         wahlbezirkID: "123",
         anzahlWahlkabinen: 5,
         anzahlWahltische: 10,
@@ -101,12 +102,10 @@ describe("wahlvorbereitungMapper.ts", () => {
           {
             wahlID: "1",
             anzahl: 3,
-            urneVersiegelt: true,
           },
           {
             wahlID: "2",
             anzahl: 2,
-            urneVersiegelt: false,
           },
         ],
       };
@@ -121,7 +120,7 @@ describe("wahlvorbereitungMapper.ts", () => {
           {
             wahlID: "1",
             anzahl: 3,
-            urneVersiegelt: true,
+            urneVersiegelt: false,
           },
           {
             wahlID: "2",
@@ -145,7 +144,7 @@ describe("wahlvorbereitungMapper.ts", () => {
           {
             wahlID: "1",
             anzahl: 3,
-            urneVersiegelt: true,
+            urneVersiegelt: false,
           },
           {
             wahlID: "2",
@@ -162,16 +161,15 @@ describe("wahlvorbereitungMapper.ts", () => {
         anzahlWahlkabinen: 5,
         anzahlWahltische: 10,
         anzahlNebenraeume: 2,
+        urneVersiegelt: false,
         urnenAnzahl: [
           {
             wahlID: "1",
             anzahl: 3,
-            urneVersiegelt: true,
           },
           {
             wahlID: "2",
             anzahl: 2,
-            urneVersiegelt: false,
           },
         ],
       };

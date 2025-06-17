@@ -5,5 +5,6 @@ export interface Urnenwahlvorbereitung {
   anzahlWahlkabinen: number | null;
   anzahlWahltische: number | null;
   anzahlNebenraeume: number | null;
+  urneVersiegelt: boolean;
   urnenAnzahl: Wahlurne[];
 }

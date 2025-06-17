@@ -51,6 +51,8 @@ export function useWahlvorbereitungMapper() {
       anzahlWahlkabinen: urnenwahlvorbereitungDTO.anzahlWahlkabinen,
       anzahlWahltische: urnenwahlvorbereitungDTO.anzahlWahltische,
       anzahlNebenraeume: urnenwahlvorbereitungDTO.anzahlNebenraeume,
+      urneVersiegelt:
+        urnenwahlvorbereitungDTO.urnenAnzahl[0].urneVersiegelt ?? false,
       urnenAnzahl: urnenAnzahlModel,
     };
   }
@@ -59,7 +61,6 @@ export function useWahlvorbereitungMapper() {
     return {
       wahlID: wahlurneDto.wahlID,
       anzahl: wahlurneDto.anzahl,
-      urneVersiegelt: wahlurneDto.urneVersiegelt,
     };
   }
 
@@ -68,7 +69,7 @@ export function useWahlvorbereitungMapper() {
   ): UrnenwahlvorbereitungWriteDTO {
     const urnenAnzahlDto =
       urnenwahlvorbereitung.urnenAnzahl?.map((wahlurneDTO) =>
-        toWahlurneDto(wahlurneDTO)
+        toWahlurneDto(wahlurneDTO, urnenwahlvorbereitung.urneVersiegelt)
       ) ?? [];
     return {
       anzahlWahlkabinen: urnenwahlvorbereitung.anzahlWahlkabinen ?? 0,
@@ -78,11 +79,14 @@ export function useWahlvorbereitungMapper() {
     };
   }
 
-  function toWahlurneDto(wahlurne: Wahlurne): WahlurneDTO {
+  function toWahlurneDto(
+    wahlurne: Wahlurne,
+    urneVersiegelt: boolean
+  ): WahlurneDTO {
     return {
       wahlID: wahlurne.wahlID,
       anzahl: wahlurne.anzahl ?? 0,
-      urneVersiegelt: wahlurne.urneVersiegelt,
+      urneVersiegelt: urneVersiegelt,
     };
   }
 

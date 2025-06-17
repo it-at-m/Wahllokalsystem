@@ -68,7 +68,6 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     urnenwahlvorbereitung: Urnenwahlvorbereitung
   ) {
     const wahlbezirkID = currentUserWahlbezirkID.value;
-
     if (wahlbezirkID) {
       await postUrnenwahlvorbereitung(wahlbezirkID, urnenwahlvorbereitung);
       urnenwahlVorbereitung.value = urnenwahlvorbereitung;

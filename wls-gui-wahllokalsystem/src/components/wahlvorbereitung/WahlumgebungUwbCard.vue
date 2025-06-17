@@ -111,7 +111,7 @@
 import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
 
 import { storeToRefs } from "pinia";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import {
   VCard,
   VCardActions,
@@ -149,9 +149,6 @@ const isSaveButtonDisabled = computed(() => {
   );
 });
 
-const tet = computed(() => {
-  return wahlen;
-});
 const isMinimumRequired = computed(() => {
   if (abstimmungsschutzvorrichtungenValidForm.value !== true) {
     return false;
@@ -171,20 +168,12 @@ const urnenwahlVorbereitung = ref<Urnenwahlvorbereitung>({
   anzahlWahlkabinen: null,
   anzahlWahltische: null,
   anzahlNebenraeume: null,
+  urneVersiegelt: isCheckboxAlleVersiegeltEnabled.value,
   urnenAnzahl:
     wahlen.value?.map((wahl) => ({
       wahlID: wahl.wahlID,
       anzahl: null,
-      urneVersiegelt: isCheckboxAlleVersiegeltEnabled.value,
     })) || [],
-});
-
-watch(isCheckboxAlleVersiegeltEnabled, (newValue) => {
-  if (urnenwahlVorbereitung.value.urnenAnzahl) {
-    urnenwahlVorbereitung.value.urnenAnzahl.forEach((urnen) => {
-      urnen.urneVersiegelt = newValue;
-    });
-  }
 });
 
 function onSaveWahlumgebungUWBClicked() {

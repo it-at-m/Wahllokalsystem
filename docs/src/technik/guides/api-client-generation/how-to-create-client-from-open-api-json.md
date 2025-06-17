@@ -69,6 +69,23 @@ Für jeden zu erzeugenden Client mus ein `execution`-Element definiert werden.
 </execution>
 ```
 
+> [!IMPORTANT]
+> Umgang mit LocalDateTime
+> 
+> Wenn im Zielservice eine Property mit LocalDateTime definiert ist, muss der Client LocalDateTime erzeugen. In der
+> Standardkonfiguration erzeugt der Generator `OffsetDateTime`. Damit `LocalDateTime` verwendet wird muss folgende
+> Konfiguration ergänzt werden:
+>  ```
+> <configuration>
+>   <typeMappings>
+>     <typeMapping>OffsetDateTime=java.time.LocalDateTime</typeMapping>
+>   </typeMappings>
+>   <importMappings>
+>     <importMapping>java.time.OffsetDateTime=java.time.LocalDateTime</importMapping>
+>   </importMappings>
+> </configuration>
+> ```
+
 Eine ausführliche Beschreibung alle Konfigurationsoptionen gibt es in der
 [offiziellen Dokumentation](https://openapi-generator.tech/docs/generators/java/).
 

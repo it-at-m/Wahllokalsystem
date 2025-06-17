@@ -35,7 +35,7 @@ class ErgebnisseValidatorTest {
 
         @Test
         void should_notThrowException_when_bezirkUndWahlIDStapelartIsValid() {
-            val id = new ErgebnisseReference("wahlID", "wahlbezirkID", Stapelart.LTW_BZW_A);
+            val id = new ErgebnisseReferenceModel("wahlID", "wahlbezirkID", Stapelart.LTW_BZW_A);
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validReferenceOrThrow(id, mockedWlsException));
@@ -46,19 +46,19 @@ class ErgebnisseValidatorTest {
         void should_throwProvidedException_when_bezirkUndWahlIDStapelartIsNotValid(final ArgumentsAccessor arguments) {
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
             Assertions.assertThatException()
-                    .isThrownBy(() -> unitUnderTest.validReferenceOrThrow(arguments.get(0, ErgebnisseReference.class), mockedWlsException))
+                    .isThrownBy(() -> unitUnderTest.validReferenceOrThrow(arguments.get(0, ErgebnisseReferenceModel.class), mockedWlsException))
                     .isSameAs(mockedWlsException);
         }
 
         private static Stream<Arguments> invalidWahlbezirkArgumentsWithTestcaseNameAppendix() {
             return Stream.of(
-                    Arguments.of(new ErgebnisseReference("wahlbezirkID", null, Stapelart.LTW_BZW_A), "wahlID is null"),
-                    Arguments.of(new ErgebnisseReference("wahlbezirkID", "", Stapelart.LTW_BZW_A), "wahlID is empty"),
-                    Arguments.of(new ErgebnisseReference("wahlbezirkID", "   ", Stapelart.LTW_BZW_A), "wahlID is blank"),
-                    Arguments.of(new ErgebnisseReference(null, "wahlID", Stapelart.LTW_BZW_A), "wahlbezirkID is null"),
-                    Arguments.of(new ErgebnisseReference("", "wahlID", Stapelart.LTW_BZW_A), "wahlbezirkID is is empty"),
-                    Arguments.of(new ErgebnisseReference("   ", "wahlID", Stapelart.LTW_BZW_A), "wahlbezirkID is blank"),
-                    Arguments.of(new ErgebnisseReference("wahlbezirkID", "wahlID", null), "stapelart is null"));
+                    Arguments.of(new ErgebnisseReferenceModel("wahlbezirkID", null, Stapelart.LTW_BZW_A), "wahlID is null"),
+                    Arguments.of(new ErgebnisseReferenceModel("wahlbezirkID", "", Stapelart.LTW_BZW_A), "wahlID is empty"),
+                    Arguments.of(new ErgebnisseReferenceModel("wahlbezirkID", "   ", Stapelart.LTW_BZW_A), "wahlID is blank"),
+                    Arguments.of(new ErgebnisseReferenceModel(null, "wahlID", Stapelart.LTW_BZW_A), "wahlbezirkID is null"),
+                    Arguments.of(new ErgebnisseReferenceModel("", "wahlID", Stapelart.LTW_BZW_A), "wahlbezirkID is is empty"),
+                    Arguments.of(new ErgebnisseReferenceModel("   ", "wahlID", Stapelart.LTW_BZW_A), "wahlbezirkID is blank"),
+                    Arguments.of(new ErgebnisseReferenceModel("wahlbezirkID", "wahlID", null), "stapelart is null"));
         }
     }
 

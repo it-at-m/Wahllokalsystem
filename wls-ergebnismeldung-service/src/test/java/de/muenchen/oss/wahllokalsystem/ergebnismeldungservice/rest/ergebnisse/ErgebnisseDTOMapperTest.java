@@ -6,7 +6,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.Stapel
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseReference;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseReferenceModel;
 import java.util.ArrayList;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -64,7 +64,7 @@ class ErgebnisseDTOMapperTest {
             void should_returnBegruendungReference_when_givenIDs() {
                 val result = unitUnderTest.toReferenceModel("bezirkID", "wahlID", StapelartDTO.LTW_BZW_A);
 
-                val expectedResult = new ErgebnisseReference("bezirkID", "wahlID", Stapelart.LTW_BZW_A);
+                val expectedResult = new ErgebnisseReferenceModel("bezirkID", "wahlID", Stapelart.LTW_BZW_A);
 
                 Assertions.assertThat(result).isEqualTo(expectedResult);
             }

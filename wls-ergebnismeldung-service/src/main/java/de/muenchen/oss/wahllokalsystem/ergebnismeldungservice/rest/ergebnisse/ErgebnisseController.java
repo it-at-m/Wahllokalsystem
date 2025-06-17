@@ -2,7 +2,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.AbstractController;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseReference;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseReferenceModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -48,7 +48,7 @@ public class ErgebnisseController extends AbstractController {
     public ResponseEntity<ErgebnisseDTO> getErgebnisse(@PathVariable("wahlbezirkID") String wahlbezirkID, @PathVariable("wahlID") String wahlID,
             @PathVariable("stapelart") StapelartDTO stapelart) {
         val stapelartToUseInReference = ergebnisseDTOMapper.toSpapelart(stapelart);
-        val ergebnisse = ergebnisseService.getErgebnisse(new ErgebnisseReference(wahlbezirkID, wahlID, stapelartToUseInReference));
+        val ergebnisse = ergebnisseService.getErgebnisse(new ErgebnisseReferenceModel(wahlbezirkID, wahlID, stapelartToUseInReference));
         return okWithBodyOrNoContent(ergebnisse.map(ergebnisseDTOMapper::toDTO));
     }
 
@@ -90,7 +90,7 @@ public class ErgebnisseController extends AbstractController {
             @RequestBody ErgebnisseDTO ergebnisseDTO) {
         val stapelartToUseInReference = ergebnisseDTOMapper.toSpapelart(stapelart);
         val modelToSave = ergebnisseDTOMapper.toModel(ergebnisseDTO);
-        val referenceForModel = new ErgebnisseReference(wahlbezirkID, wahlID, stapelartToUseInReference);
+        val referenceForModel = new ErgebnisseReferenceModel(wahlbezirkID, wahlID, stapelartToUseInReference);
         ergebnisseService.postErgebnisse(referenceForModel, modelToSave);
     }
 }

@@ -32,7 +32,7 @@
       </v-card-text>
     </v-card>
 
-    <v-card>
+    <v-card class="mt-2">
       <v-card-title>Abstimmungsschutzvorrichtungen</v-card-title>
       <v-card-text class="pb-0">
         <v-form

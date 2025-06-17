@@ -53,6 +53,7 @@ export function useWahlvorbereitungTestDataFactory() {
       anzahlWahlkabinen: 1,
       anzahlWahltische: 1,
       anzahlNebenraeume: 1,
+      urneVersiegelt: true,
       urnenAnzahl: generateWahlurneArray(),
     };
   }
@@ -62,7 +63,6 @@ export function useWahlvorbereitungTestDataFactory() {
       {
         wahlID: "wahlID1",
         anzahl: 1,
-        urneVersiegelt: true,
       },
     ];
   }

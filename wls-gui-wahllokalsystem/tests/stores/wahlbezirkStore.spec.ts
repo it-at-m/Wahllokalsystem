@@ -194,9 +194,10 @@ describe("wahlbezirkStore.ts", () => {
         anzahlWahltische: 1,
         anzahlNebenraeume: 0,
         anzahlWahlkabinen: 0,
+        urneVersiegelt: true,
         urnenAnzahl: [
-          { wahlID: "wahlID1", anzahl: 1, urneVersiegelt: true },
-          { wahlID: "wahlID2", anzahl: 1, urneVersiegelt: true },
+          { wahlID: "wahlID1", anzahl: 1 },
+          { wahlID: "wahlID2", anzahl: 1 },
         ],
       };
 
@@ -220,9 +221,10 @@ describe("wahlbezirkStore.ts", () => {
         anzahlWahltische: 1,
         anzahlNebenraeume: 0,
         anzahlWahlkabinen: 0,
+        urneVersiegelt: true,
         urnenAnzahl: [
-          { wahlID: "wahlID1", anzahl: 1, urneVersiegelt: true },
-          { wahlID: "wahlID2", anzahl: 1, urneVersiegelt: true },
+          { wahlID: "wahlID1", anzahl: 1 },
+          { wahlID: "wahlID2", anzahl: 1 },
         ],
       };
 
@@ -242,9 +244,10 @@ describe("wahlbezirkStore.ts", () => {
         anzahlWahltische: 1,
         anzahlNebenraeume: 0,
         anzahlWahlkabinen: 0,
+        urneVersiegelt: true,
         urnenAnzahl: [
-          { wahlID: "wahlID1", anzahl: 1, urneVersiegelt: true },
-          { wahlID: "wahlID2", anzahl: 1, urneVersiegelt: true },
+          { wahlID: "wahlID1", anzahl: 1 },
+          { wahlID: "wahlID2", anzahl: 1 },
         ],
       };
 

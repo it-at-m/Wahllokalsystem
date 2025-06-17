@@ -414,10 +414,10 @@
 
                     <!-- #611 -->
                     <typeMappings>
-                        <typeMapping>OffsetDateTime=java.time.LocalDateTime</typeMapping>
+                        <typeMapping>OffsetDateTime=LocalDateTime</typeMapping>
                     </typeMappings>
                     <importMappings>
-                        <importMapping>java.time.OffsetDateTime=java.time.LocalDateTime</importMapping>
+                        <importMapping>OffsetDateTime=java.time.LocalDateTime</importMapping>
                     </importMappings>
 
                     <globalProperties>

@@ -1,11 +1,13 @@
-import { acceptHMRUpdate, defineStore, storeToRefs } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { ref } from "vue";
 
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
+import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useWahlvorbereitungService } from "@/composables/wahlvorbereitung/wahlvorbereitungService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 export const storeID = "wahlbezirk";
+const { registerStoreHMR } = useHmrUpdate();
 
 export const useWahlbezirkStore = defineStore(storeID, () => {
   const { postUrnenwahlSchliessungsuhrzeit, postEroeffnungsuhrzeit } =
@@ -67,6 +69,4 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   };
 });
 
-if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useWahlbezirkStore, import.meta.hot));
-}
+registerStoreHMR(useWahlbezirkStore, import.meta.hot);

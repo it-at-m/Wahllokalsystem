@@ -1,13 +1,15 @@
 import type { User } from "@/types/User.ts";
 
-import { acceptHMRUpdate, defineStore } from "pinia";
+import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
+import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useUserService } from "@/composables/user/userService.ts";
 import { createUserLocalDevelopment } from "@/types/User";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { getUser } = useUserService();
+const { registerStoreHMR } = useHmrUpdate();
 
 export const useUserStore = defineStore("user", () => {
   const defaultUser: User = {
@@ -91,6 +93,4 @@ export const useUserStore = defineStore("user", () => {
   };
 });
 
-if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot));
-}
+registerStoreHMR(useUserStore, import.meta.hot);

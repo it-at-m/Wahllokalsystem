@@ -1,9 +1,10 @@
 import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
-import { acceptHMRUpdate, defineStore, storeToRefs } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { computed, ref, watch, watchEffect } from "vue";
 
+import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
@@ -15,6 +16,7 @@ import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/Wa
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { getEreignisse, saveEreignisse } = useEreignisService();
+const { registerStoreHMR } = useHmrUpdate();
 
 export const storeID = "vorfaelleundvorkommnisse";
 
@@ -196,6 +198,4 @@ function sortEreignisse(ereigniseintraege: Ereignis[] | undefined) {
   });
 }
 
-if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useEreignisStore, import.meta.hot));
-}
+registerStoreHMR(useEreignisStore, import.meta.hot);

@@ -1,13 +1,15 @@
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
-import { acceptHMRUpdate, defineStore } from "pinia";
+import { defineStore } from "pinia";
 import { ref } from "vue";
 
+import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useWahlService } from "@/composables/wahl/wahlService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 export const storeID = "wahlen";
 const wahlenService = useWahlService();
+const { registerStoreHMR } = useHmrUpdate();
 
 export const useWahlenStore = defineStore(storeID, () => {
   const userStore = useUserStore();
@@ -34,6 +36,4 @@ export const useWahlenStore = defineStore(storeID, () => {
   };
 });
 
-if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useWahlenStore, import.meta.hot));
-}
+registerStoreHMR(useWahlenStore, import.meta.hot);

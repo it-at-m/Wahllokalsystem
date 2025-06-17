@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.BezirkUndWahlIDStapelartDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelArtDTOMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseModel;
@@ -30,6 +30,9 @@ class ErgebnisseControllerTest {
     @Mock
     ErgebnisseDTOMapper ergebnisseDTOMapper;
 
+    @Mock
+    StapelArtDTOMapper stapelArtDTOMapper;
+
     @InjectMocks
     ErgebnisseController unitUnderTest;
 
@@ -42,16 +45,15 @@ class ErgebnisseControllerTest {
             val wahlbezirkID = "wahlbezirkID";
             val stapelartDTO = StapelartDTO.LTW_BZW_A;
             val stapelartModel = StapelartModel.LTW_BZW_A;
-            val stapelart = Stapelart.LTW_BZW_A;
 
-            val mockedErgebnisseReference = new ErgebnisseReferenceModel(wahlbezirkID, wahlID, stapelart);
+            val mockedErgebnisseReference = new ErgebnisseReferenceModel(wahlbezirkID, wahlID, stapelartModel);
             val bezirkUndWahlIDStapelartDTO = new BezirkUndWahlIDStapelartDTO(wahlbezirkID, wahlID, stapelartDTO);
             val mockedServiceResponse = new ErgebnisseModel(wahlbezirkID, wahlID, stapelartModel, Collections.emptyList());
             val mockedServiceResponseAsDTO = new ErgebnisseDTO(bezirkUndWahlIDStapelartDTO, Collections.emptyList());
 
             Mockito.when(ergebnisseService.getErgebnisse(mockedErgebnisseReference)).thenReturn(Optional.of(mockedServiceResponse));
             Mockito.when(ergebnisseDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
-            Mockito.when(ergebnisseDTOMapper.toSpapelart(stapelartDTO)).thenReturn(stapelart);
+            Mockito.when(stapelArtDTOMapper.toModel(stapelartDTO)).thenReturn(stapelartModel);
 
             val result = unitUnderTest.getErgebnisse(wahlbezirkID, wahlID, stapelartDTO);
 
@@ -63,13 +65,13 @@ class ErgebnisseControllerTest {
         void should_returnEmptyWithHttpStatusNoContent_when_serviceReturnsNoData() {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
-            val stapelart = Stapelart.LTW_BZW_A;
+            val stapelartModel = StapelartModel.LTW_BZW_A;
             val stapelartDTO = StapelartDTO.LTW_BZW_A;
 
-            val mockedErgebnisseReference = new ErgebnisseReferenceModel(wahlbezirkID, wahlID, stapelart);
+            val mockedErgebnisseReference = new ErgebnisseReferenceModel(wahlbezirkID, wahlID, stapelartModel);
 
             Mockito.when(ergebnisseService.getErgebnisse(mockedErgebnisseReference)).thenReturn(Optional.empty());
-            Mockito.when(ergebnisseDTOMapper.toSpapelart(stapelartDTO)).thenReturn(stapelart);
+            Mockito.when(stapelArtDTOMapper.toModel(stapelartDTO)).thenReturn(stapelartModel);
             val result = unitUnderTest.getErgebnisse(wahlbezirkID, wahlID, stapelartDTO);
 
             Assertions.assertThat(result.getBody()).isNull();
@@ -125,14 +127,13 @@ class ErgebnisseControllerTest {
             val wahlbezirkID = "wahlbezirkID";
             val stapelartDTO = StapelartDTO.LTW_BZW_A;
             val stapelartModel = StapelartModel.LTW_BZW_A;
-            val stapelart = Stapelart.LTW_BZW_A;
 
             val ergebnisseDTO = new ErgebnisseDTO(new BezirkUndWahlIDStapelartDTO(wahlbezirkID, wahlID, stapelartDTO), Collections.emptyList());
-            val ergebnisseReference = new ErgebnisseReferenceModel(wahlbezirkID, wahlID, stapelart);
+            val ergebnisseReference = new ErgebnisseReferenceModel(wahlbezirkID, wahlID, stapelartModel);
 
             val mockedErgebnisseModel = new ErgebnisseModel(wahlbezirkID, wahlID, stapelartModel, Collections.emptyList());
             Mockito.when(ergebnisseDTOMapper.toModel(ergebnisseDTO)).thenReturn(mockedErgebnisseModel);
-            Mockito.when(ergebnisseDTOMapper.toSpapelart(stapelartDTO)).thenReturn(stapelart);
+            Mockito.when(stapelArtDTOMapper.toModel(stapelartDTO)).thenReturn(stapelartModel);
 
             unitUnderTest.postErgebnisse(wahlbezirkID, wahlID, stapelartDTO, ergebnisseDTO);
 

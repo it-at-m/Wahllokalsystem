@@ -38,10 +38,10 @@ public class AusdruckService {
     }
 
     @PreAuthorize(
-        "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostAusdruck') and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.wahlUndBezirkIDUndMeldungsart.wahlbezirkID, authentication)"
+        "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostAusdruck') and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.wahlUndBezirkIDUndMeldungsartModel.wahlbezirkID, authentication)"
     )
     public void saveAusdruck(@P("param") @NotNull final AusdruckWriteModel ausdruck) {
-        log.debug("Saving printout {}", ausdruck.wahlUndBezirkIDUndMeldungsart().getMeldungsart());
+        log.debug("Saving printout {}", ausdruck.wahlUndBezirkIDUndMeldungsartModel().meldungsartModel());
 
         if (!validator.validate(ausdruck).isEmpty()) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG);

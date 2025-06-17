@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
@@ -35,7 +34,7 @@ class ErgebnisseValidatorTest {
 
         @Test
         void should_notThrowException_when_bezirkUndWahlIDStapelartIsValid() {
-            val id = new ErgebnisseReferenceModel("wahlID", "wahlbezirkID", Stapelart.LTW_BZW_A);
+            val id = new ErgebnisseReferenceModel("wahlID", "wahlbezirkID", StapelartModel.LTW_BZW_A);
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validReferenceOrThrow(id, mockedWlsException));
@@ -52,12 +51,12 @@ class ErgebnisseValidatorTest {
 
         private static Stream<Arguments> invalidWahlbezirkArgumentsWithTestcaseNameAppendix() {
             return Stream.of(
-                    Arguments.of(new ErgebnisseReferenceModel("wahlbezirkID", null, Stapelart.LTW_BZW_A), "wahlID is null"),
-                    Arguments.of(new ErgebnisseReferenceModel("wahlbezirkID", "", Stapelart.LTW_BZW_A), "wahlID is empty"),
-                    Arguments.of(new ErgebnisseReferenceModel("wahlbezirkID", "   ", Stapelart.LTW_BZW_A), "wahlID is blank"),
-                    Arguments.of(new ErgebnisseReferenceModel(null, "wahlID", Stapelart.LTW_BZW_A), "wahlbezirkID is null"),
-                    Arguments.of(new ErgebnisseReferenceModel("", "wahlID", Stapelart.LTW_BZW_A), "wahlbezirkID is is empty"),
-                    Arguments.of(new ErgebnisseReferenceModel("   ", "wahlID", Stapelart.LTW_BZW_A), "wahlbezirkID is blank"),
+                    Arguments.of(new ErgebnisseReferenceModel("wahlbezirkID", null, StapelartModel.LTW_BZW_A), "wahlID is null"),
+                    Arguments.of(new ErgebnisseReferenceModel("wahlbezirkID", "", StapelartModel.LTW_BZW_A), "wahlID is empty"),
+                    Arguments.of(new ErgebnisseReferenceModel("wahlbezirkID", "   ", StapelartModel.LTW_BZW_A), "wahlID is blank"),
+                    Arguments.of(new ErgebnisseReferenceModel(null, "wahlID", StapelartModel.LTW_BZW_A), "wahlbezirkID is null"),
+                    Arguments.of(new ErgebnisseReferenceModel("", "wahlID", StapelartModel.LTW_BZW_A), "wahlbezirkID is is empty"),
+                    Arguments.of(new ErgebnisseReferenceModel("   ", "wahlID", StapelartModel.LTW_BZW_A), "wahlbezirkID is blank"),
                     Arguments.of(new ErgebnisseReferenceModel("wahlbezirkID", "wahlID", null), "stapelart is null"));
         }
     }

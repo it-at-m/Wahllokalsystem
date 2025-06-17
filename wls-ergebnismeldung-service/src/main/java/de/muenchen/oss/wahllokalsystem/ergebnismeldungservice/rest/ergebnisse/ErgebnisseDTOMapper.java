@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseReferenceModel;
@@ -20,7 +19,6 @@ public interface ErgebnisseDTOMapper {
     @Mapping(target = "bezirkUndWahlIDStapelart.stapelart", source = "stapelart")
     ErgebnisseDTO toDTO(ErgebnisseModel entity);
 
+    @Mapping(target = "stapelartModel", source = "stapelart")
     ErgebnisseReferenceModel toReferenceModel(String wahlbezirkID, String wahlID, StapelartDTO stapelart);
-
-    Stapelart toSpapelart(StapelartDTO stapelart);
 }

@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.begruendung;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.BezirkUndWahlIDStapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungModel;
@@ -51,7 +50,7 @@ class BegruendungDTOMapperTest {
             void should_returnBegruendungReference_when_givenIDs() {
                 val result = unitUnderTest.toReferenceModel("bezirkID", "wahlID", StapelartDTO.LTW_BZW_A);
 
-                val expectedResult = new BegruendungReferenceModel("bezirkID", "wahlID", Stapelart.LTW_BZW_A);
+                val expectedResult = new BegruendungReferenceModel("bezirkID", "wahlID", StapelartModel.LTW_BZW_A);
 
                 Assertions.assertThat(result).isEqualTo(expectedResult);
             }

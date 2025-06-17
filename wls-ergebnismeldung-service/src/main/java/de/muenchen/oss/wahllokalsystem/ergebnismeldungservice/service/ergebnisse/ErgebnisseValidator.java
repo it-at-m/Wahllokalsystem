@@ -18,7 +18,7 @@ public class ErgebnisseValidator {
                 ergebnisseReferenceModel.wahlbezirkID()) ||
                 StringUtils.isBlank(
                         ergebnisseReferenceModel.wahlID())
-                || ergebnisseReferenceModel.stapelart() == null) {
+                || ergebnisseReferenceModel.stapelartModel() == null) {
             throw exceptionOnInvalid;
         }
     }

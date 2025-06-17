@@ -14,6 +14,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.BWer
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.WahlbriefeWerteDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.authentication.AuthenticationService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelArtModelMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.WahlartPredicateHolder;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
@@ -39,6 +40,8 @@ public class ErgebnismeldungMappingService {
     private final AuthenticationService authenticationService;
     private final ErgebnisseRepository ergebnisseRepo;
     private final BriefwahlClient briefwahlClient;
+
+    private final StapelArtModelMapper stapelArtModelMapper;
 
     private final Mapping mapping;
 
@@ -107,7 +110,8 @@ public class ErgebnismeldungMappingService {
         val predicateForStapelWithInvalidErgebnisse = wahlartPredicateHolder.getPredicateForStapelWithInvalidErgebnisse(wahlart);
         val ergebnisseFilter = gueltig ? Predicate.not(predicateForStapelWithInvalidErgebnisse) : predicateForStapelWithInvalidErgebnisse;
 
-        return ergebnisse.stream().filter(ergenis -> ergebnisseFilter.test(ergenis.getBezirkUndWahlIDStapelart().getStapelart())).toList();
+        return ergebnisse.stream().filter(ergenis -> ergebnisseFilter.test(stapelArtModelMapper.toModel(ergenis.getBezirkUndWahlIDStapelart().getStapelart())))
+                .toList();
     }
 
     private BWerteDTO getBWerteDTOOfUWBWahlbezirk(final String wahlID, final BezirkIDUndWaehlerverzeichnisNummer waehlerverzeichnisNummer,

@@ -74,7 +74,8 @@ class AusdruckServiceTest {
         @Test
         void should_returnAusdruckReadModel_when_ausdruckIsFoundInRepo() {
             val id = new WahlUndBezirkIDUndMeldungsart();
-            val mockedMappedEntityAsModel = new AusdruckReadModel(id, null, null);
+            val idModel = new WahlUndBezirkIDUndMeldungsartModel("id", "id2", MeldungsartModel.V1);
+            val mockedMappedEntityAsModel = new AusdruckReadModel(idModel, null, null);
             val mockedEntity = new Ausdruck();
 
             Mockito.when(ausdruckRepository.findById(id)).thenReturn(Optional.of(mockedEntity));
@@ -110,8 +111,8 @@ class AusdruckServiceTest {
             val ausdruckEntity2 = new Ausdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V3), content, erstelltAm);
             val ausdruckEntityList = List.of(ausdruckEntity1, ausdruckEntity2);
 
-            val ausdruckModel1 = new AusdruckReadModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V1), content, erstelltAm);
-            val ausdruckModel2 = new AusdruckReadModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V3), content, erstelltAm);
+            val ausdruckModel1 = new AusdruckReadModel(new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, MeldungsartModel.V1), content, erstelltAm);
+            val ausdruckModel2 = new AusdruckReadModel(new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, MeldungsartModel.V3), content, erstelltAm);
             val ausdruckModelList = List.of(ausdruckModel1, ausdruckModel2);
 
             Mockito.when(ausdruckRepository.findByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID))
@@ -157,8 +158,8 @@ class AusdruckServiceTest {
 
         @Test
         void should_saveMappedAusdruckWriteModel_when_called() {
-            val id = new WahlUndBezirkIDUndMeldungsart();
-            val ausdruckModelToSave = new AusdruckWriteModel(id, null);
+            val idModel = new WahlUndBezirkIDUndMeldungsartModel("id", "id2", MeldungsartModel.V1);
+            val ausdruckModelToSave = new AusdruckWriteModel(idModel, null);
             val mockedModelAsEntity = Mockito.mock(Ausdruck.class);
             val erstelltAm = Instant.now();
 
@@ -171,8 +172,8 @@ class AusdruckServiceTest {
 
         @Test
         void should_throwRepositoryException_when_savingFailed() {
-            val id = new WahlUndBezirkIDUndMeldungsart();
-            val ausdruckModelToSave = new AusdruckWriteModel(id, null);
+            val idModel = new WahlUndBezirkIDUndMeldungsartModel("id", "id2", MeldungsartModel.V1);
+            val ausdruckModelToSave = new AusdruckWriteModel(idModel, null);
             val mockedModelAsEntity = Mockito.mock(Ausdruck.class);
 
             val mockedRepositorySaveException = new RuntimeException("saving failed");
@@ -185,8 +186,8 @@ class AusdruckServiceTest {
 
         @Test
         void should_throwFachlicheWlsExceptionForParameter_when_validatorValidationReturnsSetWithViolations() {
-            val id = new WahlUndBezirkIDUndMeldungsart();
-            val ausdruckModelToSave = new AusdruckWriteModel(id, null);
+            val idModel = new WahlUndBezirkIDUndMeldungsartModel("id", "id2", MeldungsartModel.V1);
+            val ausdruckModelToSave = new AusdruckWriteModel(idModel, null);
 
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("postAusdruck: Parameter unvollstaendig");
 

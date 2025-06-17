@@ -52,7 +52,7 @@ class BegruendungModelMapperTest {
 
         @Test
         void should_returnEmbeddedId_when_givenBegruendungReference() {
-            val begruendungReference = new BegruendungReferenceModel("bezirkID", "wahlID", Stapelart.LTW_BZW_A);
+            val begruendungReference = new BegruendungReferenceModel("bezirkID", "wahlID", StapelartModel.LTW_BZW_A);
             val result = unitUnderTest.toEmbeddedId(begruendungReference);
 
             val expectedResult = new BezirkUndWahlIDStapelart("bezirkID", "wahlID", Stapelart.LTW_BZW_A);

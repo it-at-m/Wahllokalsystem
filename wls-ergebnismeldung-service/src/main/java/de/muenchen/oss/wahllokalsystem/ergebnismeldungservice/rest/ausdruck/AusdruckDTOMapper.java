@@ -9,10 +9,13 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface AusdruckDTOMapper {
 
-    @Mapping(source = "wahlUndBezirkIDUndMeldungsart.wahlID", target = "wahlID")
-    @Mapping(source = "wahlUndBezirkIDUndMeldungsart.wahlbezirkID", target = "wahlbezirkID")
-    @Mapping(source = "wahlUndBezirkIDUndMeldungsart.meldungsart", target = "meldungsart")
+    @Mapping(source = "wahlUndBezirkIDUndMeldungsartModel.wahlID", target = "wahlID")
+    @Mapping(source = "wahlUndBezirkIDUndMeldungsartModel.wahlbezirkID", target = "wahlbezirkID")
+    @Mapping(source = "wahlUndBezirkIDUndMeldungsartModel.meldungsartModel", target = "meldungsart")
     AusdruckReadDTO toDTO(AusdruckReadModel ausdruckModel);
 
+    @Mapping(target = "wahlUndBezirkIDUndMeldungsartModel.wahlID", source = "wahlUndBezirkIDUndMeldungsart.wahlID")
+    @Mapping(target = "wahlUndBezirkIDUndMeldungsartModel.wahlbezirkID", source = "wahlUndBezirkIDUndMeldungsart.wahlbezirkID")
+    @Mapping(target = "wahlUndBezirkIDUndMeldungsartModel.meldungsartModel", source = "wahlUndBezirkIDUndMeldungsart.meldungsart")
     AusdruckWriteModel toModel(AusdruckWriteDTO ausdruckWriteDTO, WahlUndBezirkIDUndMeldungsart wahlUndBezirkIDUndMeldungsart);
 }

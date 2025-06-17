@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
@@ -34,7 +33,7 @@ class BegruendungValidatorTest {
 
         @Test
         void should_notThrowException_when_bezirkUndWahlIDStapelartIsValid() {
-            val id = new BegruendungReferenceModel("wahlID", "wahlbezirkID", Stapelart.LTW_BZW_A);
+            val id = new BegruendungReferenceModel("wahlID", "wahlbezirkID", StapelartModel.LTW_BZW_A);
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validReferenceOrThrow(id));
         }
@@ -52,12 +51,12 @@ class BegruendungValidatorTest {
 
         private static Stream<Arguments> invalidWahlbezirkArgumentsWithTestcaseNameAppendix() {
             return Stream.of(
-                    Arguments.of(new BegruendungReferenceModel("wahlbezirkID", null, Stapelart.LTW_BZW_A), "wahlID is null"),
-                    Arguments.of(new BegruendungReferenceModel("wahlbezirkID", "", Stapelart.LTW_BZW_A), "wahlID is empty"),
-                    Arguments.of(new BegruendungReferenceModel("wahlbezirkID", "   ", Stapelart.LTW_BZW_A), "wahlID is blank"),
-                    Arguments.of(new BegruendungReferenceModel(null, "wahlID", Stapelart.LTW_BZW_A), "wahlbezirkID is null"),
-                    Arguments.of(new BegruendungReferenceModel("", "wahlID", Stapelart.LTW_BZW_A), "wahlbezirkID is is empty"),
-                    Arguments.of(new BegruendungReferenceModel("   ", "wahlID", Stapelart.LTW_BZW_A), "wahlbezirkID is blank"),
+                    Arguments.of(new BegruendungReferenceModel("wahlbezirkID", null, StapelartModel.LTW_BZW_A), "wahlID is null"),
+                    Arguments.of(new BegruendungReferenceModel("wahlbezirkID", "", StapelartModel.LTW_BZW_A), "wahlID is empty"),
+                    Arguments.of(new BegruendungReferenceModel("wahlbezirkID", "   ", StapelartModel.LTW_BZW_A), "wahlID is blank"),
+                    Arguments.of(new BegruendungReferenceModel(null, "wahlID", StapelartModel.LTW_BZW_A), "wahlbezirkID is null"),
+                    Arguments.of(new BegruendungReferenceModel("", "wahlID", StapelartModel.LTW_BZW_A), "wahlbezirkID is is empty"),
+                    Arguments.of(new BegruendungReferenceModel("   ", "wahlID", StapelartModel.LTW_BZW_A), "wahlbezirkID is blank"),
                     Arguments.of(new BegruendungReferenceModel("wahlbezirkID", "wahlID", null), "stapelart is null"));
         }
     }

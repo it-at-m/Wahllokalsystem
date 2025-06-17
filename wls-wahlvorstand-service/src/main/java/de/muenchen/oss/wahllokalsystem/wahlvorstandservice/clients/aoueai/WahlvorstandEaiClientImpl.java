@@ -31,11 +31,11 @@ public class WahlvorstandEaiClientImpl implements WahlvorstandEaiClient {
             wahlvorstandDTO = wahlvorstandControllerApi.loadWahlvorstand(wahlbezirkID);
         } catch (final Exception exception) {
             log.error("Bei der Kommunikation mit der AOUEAI kam es zu einem Fehler: ", exception);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_AOUEAI);
+            return null;
         }
         if (wahlvorstandDTO == null) {
             log.error("Der geladene Wahlvorstand für den Bezirk {} ist null.", wahlbezirkID);
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.AOUEAI_WAHLVORSTAND_NULL);
+            return null;
         }
         return wahlvorstandClientMapper.toModel(wahlvorstandDTO);
     }

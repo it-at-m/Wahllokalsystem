@@ -22,7 +22,9 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   const eroeffnungsuhrzeitSent = ref<Date | undefined>(undefined);
   const eroeffnungsuhrzeitIsSaving = ref(false);
 
-  const schliessungsUhrzeitSent = ref<Date | undefined>(undefined);
+  const schliessungsuhrzeit = ref<Date | undefined>(undefined);
+  const schliessungsuhrzeitSent = ref<Date | undefined>(undefined);
+  const schliessungsuhrzeitIsSaving = ref(false);
 
   const urnenwahlVorbereitung = ref<Urnenwahlvorbereitung | undefined>(
     undefined
@@ -44,16 +46,21 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     }
   }
 
-  async function sendSchliessungsuhrzeit(time: string) {
-    const wahlbezirkID = currentUserWahlbezirkID.value;
-    const schliessungszeitAsDate = new Date(time);
-
-    if (wahlbezirkID && isValidDate(schliessungszeitAsDate)) {
-      await postUrnenwahlSchliessungsuhrzeit(
-        wahlbezirkID,
-        schliessungszeitAsDate
-      );
-      schliessungsUhrzeitSent.value = schliessungszeitAsDate;
+  async function sendSchliessungsuhrzeit() {
+    if (currentUserWahlbezirkID.value && schliessungsuhrzeit.value) {
+      const schliessungszeitToSave = new Date(schliessungsuhrzeit.value);
+      if (isValidDate(schliessungszeitToSave)) {
+        schliessungsuhrzeitIsSaving.value = true;
+        try {
+          await postUrnenwahlSchliessungsuhrzeit(
+            currentUserWahlbezirkID.value,
+            schliessungszeitToSave
+          );
+          schliessungsuhrzeitSent.value = schliessungszeitToSave;
+        } finally {
+          schliessungsuhrzeitIsSaving.value = false;
+        }
+      }
     }
   }
 
@@ -72,7 +79,9 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     eroeffnungsuhrzeit,
     eroeffnungsuhrzeitIsSaving,
     eroeffnungsuhrzeitSent,
-    schliessungsUhrzeitSent,
+    schliessungsuhrzeit,
+    schliessungsuhrzeitIsSaving,
+    schliessungsuhrzeitSent,
     sendEroeffnungsuhrzeit,
     sendSchliessungsuhrzeit,
     sendUrnenwahlvorbereitung,

@@ -1,4 +1,4 @@
-### get user "wls_all"
+### get user
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 

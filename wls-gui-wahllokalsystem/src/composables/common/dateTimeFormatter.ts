@@ -1,6 +1,10 @@
+import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
+
 export function useDateTimeFormatter() {
   const NO_VALUE_DEFAULT = "";
   const TIME_FIELD_SEPARATOR = ":";
+
+  const { isValidDate } = useDateTimeUtils();
 
   const time = function (date?: Date | null): string {
     if (!date) {
@@ -55,7 +59,24 @@ export function useDateTimeFormatter() {
     return date;
   };
 
-  return { time, toHhMm, applyLocalTimezoneOffset, getDateFromTimeString };
+  function toGermanDateFormat(dateString: string) {
+    const date = new Date(dateString);
+    if (isValidDate(date)) {
+      return date.toLocaleDateString("de-DE", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+    }
+  }
+
+  return {
+    time,
+    toHhMm,
+    applyLocalTimezoneOffset,
+    getDateFromTimeString,
+    toGermanDateFormat,
+  };
 }
 
 function leftPadTwoDigitsWithZero(number: number): string {

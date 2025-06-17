@@ -92,7 +92,7 @@ describe("TheEreignisseNoEventsCheckboxes.vue", () => {
         useEreignisStore().wahlbezirkEreignisse.ereigniseintraege = [
           { ereignisart: "VORKOMMNIS" },
         ];
-        useWahlbezirkStore().schliessungsUhrzeitSent = undefined;
+        useWahlbezirkStore().schliessungsuhrzeitSent = undefined;
 
         await nextTick();
 
@@ -103,7 +103,7 @@ describe("TheEreignisseNoEventsCheckboxes.vue", () => {
 
       it("should_renderKeineVorkommnisseEnabled_when_noVorkommnisseAreGivenInStoreAndSchliessunguhrzeitIsSetForUWB", async (context) => {
         useEreignisStore().wahlbezirkEreignisse.ereigniseintraege = [];
-        useWahlbezirkStore().schliessungsUhrzeitSent = new Date();
+        useWahlbezirkStore().schliessungsuhrzeitSent = new Date();
 
         await nextTick();
 
@@ -114,7 +114,7 @@ describe("TheEreignisseNoEventsCheckboxes.vue", () => {
 
       it("should_renderKeineVorkommnisseDisabled_when_noVorkommnisseAreGivenInStoreButSchliessungsuhrzeitIsNotSetForUWB", async (context) => {
         useEreignisStore().wahlbezirkEreignisse.ereigniseintraege = [];
-        useWahlbezirkStore().schliessungsUhrzeitSent = undefined;
+        useWahlbezirkStore().schliessungsuhrzeitSent = undefined;
 
         await nextTick();
 
@@ -125,7 +125,7 @@ describe("TheEreignisseNoEventsCheckboxes.vue", () => {
 
       it("should_renderKeineVorkommnisseEnabled_when_noVorkommnisseAreGivenInStoreAndSchliessungsuhrzeitIsNotSetForBWB", async (context) => {
         useEreignisStore().wahlbezirkEreignisse.ereigniseintraege = [];
-        useWahlbezirkStore().schliessungsUhrzeitSent = undefined;
+        useWahlbezirkStore().schliessungsuhrzeitSent = undefined;
 
         useUserStore().setUser(
           prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()

@@ -51,6 +51,10 @@
           title="Wahlschliessung"
           :to="ROUTE_WAHLSCHLIESSUNG"
         />
+        <v-list-item
+          title="Wahlumgebung"
+          :to="ROUTE_WAHLUMGEBUNG"
+        />
       </v-list-group>
       <v-list-item
         title="Ereignisse"
@@ -83,6 +87,7 @@ import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_EREIGNISSE,
   ROUTE_WAHLSCHLIESSUNG,
+  ROUTE_WAHLUMGEBUNG,
   ROUTE_WAHLVORSTAND,
 } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";

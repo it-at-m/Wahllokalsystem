@@ -97,7 +97,7 @@ class BegruendungServiceSecurityTest {
             val stapelartModel = StapelartModel.LTW_BZW_A;
 
             val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, "grund1", "grund2", true, true);
-            val newBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
+            val newBegruendungReference = new BegruendungReferenceModel(wahlbezirkID, wahlID, stapelart);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
 
@@ -113,7 +113,7 @@ class BegruendungServiceSecurityTest {
             val stapelartModel = StapelartModel.LTW_BZW_A;
 
             val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, "grund1", "grund2", true, true);
-            val newBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
+            val newBegruendungReference = new BegruendungReferenceModel(wahlbezirkID, wahlID, stapelart);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(false);
 
@@ -132,7 +132,7 @@ class BegruendungServiceSecurityTest {
             val stapelartModel = StapelartModel.LTW_BZW_A;
 
             val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, "grund1", "grund2", true, true);
-            val newBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
+            val newBegruendungReference = new BegruendungReferenceModel(wahlbezirkID, wahlID, stapelart);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(false);
 
@@ -151,7 +151,7 @@ class BegruendungServiceSecurityTest {
             val stapelartModel = StapelartModel.LTW_BZW_A;
 
             val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, "grund1", "grund2", true, true);
-            val newBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
+            val newBegruendungReference = new BegruendungReferenceModel(wahlbezirkID, wahlID, stapelart);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
 

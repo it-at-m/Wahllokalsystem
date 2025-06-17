@@ -4,7 +4,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stap
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.BezirkUndWahlIDStapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungReference;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungReferenceModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
 import lombok.val;
@@ -41,7 +41,7 @@ class BegruendungControllerTest {
             val stapelartModel = StapelartModel.LTW_BZW_A;
             val stapelartDTO = StapelartDTO.LTW_BZW_A;
 
-            val mockedBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
+            val mockedBegruendungReference = new BegruendungReferenceModel(wahlbezirkID, wahlID, stapelart);
             val bezirkUndWahlIDStapelart = new BezirkUndWahlIDStapelartDTO(wahlbezirkID, wahlID, stapelartDTO);
             val mockedServiceResponse = new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, null, null, true, true);
             val mockedServiceResponseAsDTO = new BegruendungDTO(bezirkUndWahlIDStapelart, null, null, true, true);
@@ -63,7 +63,7 @@ class BegruendungControllerTest {
             val stapelart = Stapelart.LTW_BZW_A;
             val stapelartDTO = StapelartDTO.LTW_BZW_A;
 
-            val mockedBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
+            val mockedBegruendungReference = new BegruendungReferenceModel(wahlbezirkID, wahlID, stapelart);
 
             Mockito.when(begruendungDTOMapper.toReferenceModel(wahlbezirkID, wahlID, stapelartDTO)).thenReturn(mockedBegruendungReference);
             Mockito.when(begruendungService.getBegruendung(mockedBegruendungReference)).thenReturn(null);
@@ -87,7 +87,7 @@ class BegruendungControllerTest {
             val stapelartModel = StapelartModel.LTW_BZW_A;
 
             val begruendungDTO = new BegruendungDTO(new BezirkUndWahlIDStapelartDTO(wahlbezirkID, wahlID, stapelartDTO), null, null, true, true);
-            val begruendungReferce = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
+            val begruendungReferce = new BegruendungReferenceModel(wahlbezirkID, wahlID, stapelart);
 
             val mockedBegruendungModel = new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, null, null, true, true);
             Mockito.when(begruendungDTOMapper.toModel(begruendungDTO)).thenReturn(mockedBegruendungModel);

@@ -5,5 +5,5 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public record BegruendungReference(@NotNull String wahlbezirkID, @NotNull String wahlID, @NotNull Stapelart stapelart) {
+public record BegruendungReferenceModel(@NotNull String wahlbezirkID, @NotNull String wahlID, @NotNull Stapelart stapelart) {
 }

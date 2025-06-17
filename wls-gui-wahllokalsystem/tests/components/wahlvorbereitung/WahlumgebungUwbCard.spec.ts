@@ -59,9 +59,10 @@ describe("WahlumgebungUwbCard.vue", () => {
     anzahlWahltische: 0,
     anzahlNebenraeume: 0,
     anzahlWahlkabinen: 0,
+    urneVersiegelt: false,
     urnenAnzahl: [
-      { wahlID: "wahlID1", anzahl: 0, urneVersiegelt: false },
-      { wahlID: "wahlID2", anzahl: 0, urneVersiegelt: false },
+      { wahlID: "wahlID1", anzahl: 0 },
+      { wahlID: "wahlID2", anzahl: 0 },
     ],
   };
 

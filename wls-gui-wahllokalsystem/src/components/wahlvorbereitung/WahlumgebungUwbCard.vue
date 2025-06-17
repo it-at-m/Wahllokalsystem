@@ -25,7 +25,7 @@
           </div>
           <v-checkbox
             v-model="isCheckboxAlleVersiegeltEnabled"
-            label="Die Wahlurne(n) war(en) leer und wurde(n) ordnungsgemäß versiegelt"
+            :label="checkboxLableText"
             data-test="checkboxAlleVersiegelt"
           />
         </v-form>
@@ -179,5 +179,12 @@ const urnenwahlVorbereitung = ref<Urnenwahlvorbereitung>({
 function onSaveWahlumgebungUWBClicked() {
   wahlbezirkStore.sendUrnenwahlvorbereitung(urnenwahlVorbereitung.value);
 }
+
+const checkboxLableText = computed(() => {
+  if (wahlen.value && wahlen.value?.length > 1) {
+    return "Die Wahlurnen waren leer und wurden ordnungsgemäß versiegelt";
+  }
+  return "Die Wahlurne war leer und wurde ordnungsgemäß versiegelt";
+});
 </script>
 <style scoped></style>

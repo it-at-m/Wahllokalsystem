@@ -76,7 +76,7 @@ Für jeden zu erzeugenden Client mus ein `execution`-Element definiert werden.
 > Standardkonfiguration erzeugt der Generator `OffsetDateTime`. Damit `LocalDateTime` verwendet wird, muss folgende
 > Konfiguration ergänzt werden:
 >
-> ```
+> ```xml
 > <configuration>
 >  <typeMappings>
 >    <typeMapping>OffsetDateTime=java.time.LocalDateTime</typeMapping>

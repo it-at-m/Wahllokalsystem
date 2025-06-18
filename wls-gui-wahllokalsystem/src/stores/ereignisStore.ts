@@ -198,4 +198,4 @@ function sortEreignisse(ereigniseintraege: Ereignis[] | undefined) {
   });
 }
 
-registerStoreHMR(useEreignisStore, import.meta.hot);
+registerStoreHMR(useEreignisStore);

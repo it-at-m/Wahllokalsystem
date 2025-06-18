@@ -146,4 +146,4 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   };
 });
 
-registerStoreHMR(useWahlvorstandStore, import.meta.hot);
+registerStoreHMR(useWahlvorstandStore);

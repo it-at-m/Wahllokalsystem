@@ -41,4 +41,4 @@ export const useMonitoringStore = defineStore(storeID, () => {
   return { waehler, increaseWaehlerByOne, loadWaehler, sendWaehler };
 });
 
-registerStoreHMR(useMonitoringStore, import.meta.hot);
+registerStoreHMR(useMonitoringStore);

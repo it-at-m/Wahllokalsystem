@@ -29,4 +29,4 @@ export const useInfomanagementStore = defineStore(storeID, () => {
   };
 });
 
-registerStoreHMR(useInfomanagementStore, import.meta.hot);
+registerStoreHMR(useInfomanagementStore);

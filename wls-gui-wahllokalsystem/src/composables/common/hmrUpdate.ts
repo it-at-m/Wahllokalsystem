@@ -3,12 +3,9 @@ import type { StoreDefinition } from "pinia";
 import { acceptHMRUpdate } from "pinia";
 
 export function useHmrUpdate() {
-  function registerStoreHMR(
-    store: StoreDefinition,
-    hot: ImportMeta["hot"] | undefined
-  ) {
-    if (hot) {
-      hot.accept(acceptHMRUpdate(store, hot));
+  function registerStoreHMR(store: StoreDefinition) {
+    if (import.meta.hot) {
+      import.meta.hot.accept(acceptHMRUpdate(store, import.meta.hot));
     }
   }
 

@@ -57,4 +57,4 @@ export const useTaskManagerStore = defineStore(storeID, () => {
   };
 });
 
-registerStoreHMR(useTaskManagerStore, import.meta.hot);
+registerStoreHMR(useTaskManagerStore);

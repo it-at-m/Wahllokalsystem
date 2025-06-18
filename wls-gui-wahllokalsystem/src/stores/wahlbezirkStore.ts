@@ -69,4 +69,4 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   };
 });
 
-registerStoreHMR(useWahlbezirkStore, import.meta.hot);
+registerStoreHMR(useWahlbezirkStore);

@@ -36,4 +36,4 @@ export const useWahlenStore = defineStore(storeID, () => {
   };
 });
 
-registerStoreHMR(useWahlenStore, import.meta.hot);
+registerStoreHMR(useWahlenStore);

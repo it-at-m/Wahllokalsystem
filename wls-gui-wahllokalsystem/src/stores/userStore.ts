@@ -93,4 +93,4 @@ export const useUserStore = defineStore("user", () => {
   };
 });
 
-registerStoreHMR(useUserStore, import.meta.hot);
+registerStoreHMR(useUserStore);

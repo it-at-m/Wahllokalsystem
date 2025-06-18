@@ -38,4 +38,4 @@ export const useBroadcastStore = defineStore(broadcastStoreId, () => {
   };
 });
 
-registerStoreHMR(useBroadcastStore, import.meta.hot);
+registerStoreHMR(useBroadcastStore);

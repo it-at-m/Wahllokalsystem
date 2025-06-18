@@ -192,7 +192,7 @@ public class WahlenControllerIntegrationTest {
 
         @ParameterizedTest(name = "{1}")
         @MethodSource("createSavableData")
-        void should_data_when_repoIsEmpty(final ArgumentsAccessor arguments) throws Exception {
+        void should_addData_when_repoIsEmpty(final ArgumentsAccessor arguments) throws Exception {
             var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung5", "1");
             wahltagRepository.save(searchingForWahltag);
             val newData = List.of(arguments.get(0, de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO.class));

@@ -27,7 +27,8 @@ export const useTaskManagerStore = defineStore(storeID, () => {
     () =>
       numberOfTasksToRun.value > 0 &&
       numberOfTasksToRun.value ==
-        numberOfSuccessfulTasks.value + numberOfFailedTasks.value
+        numberOfSuccessfulTasks.value + numberOfFailedTasks.value &&
+      numberOfFailedTasks.value == 0
   );
 
   async function initTasks() {

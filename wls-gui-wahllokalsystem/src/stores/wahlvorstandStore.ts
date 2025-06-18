@@ -31,7 +31,6 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   const lastLoading = ref<Date | null>(null);
   const lastSending = ref<Date | null>(null);
   const wahlvorstand = ref<Wahlvorstand>(createEmptyWahlvorstand());
-  const wahlvorstandReady = ref(false);
 
   const isSchriftfuehrerAnwesend = computed<boolean>(() =>
     wahlvorstand.value.wahlvorstandsmitglieder.some(
@@ -67,7 +66,6 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
         forceUpdate: true,
         sendNotification: sendNotification,
       });
-      wahlvorstandReady.value = true;
     } else {
       await Promise.reject();
     }
@@ -137,7 +135,6 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     isLoading,
     isSaving,
     wahlvorstand,
-    wahlvorstandReady,
     initWahlvorstand,
     changeAnwesendOfMitglied,
     forceLoadWahlvorstand,

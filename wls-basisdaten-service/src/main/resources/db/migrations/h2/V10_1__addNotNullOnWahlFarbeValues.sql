@@ -1,3 +1,10 @@
+UPDATE Wahl SET r = 0
+    WHERE r IS NULL;
+UPDATE Wahl SET g = 0
+    WHERE g IS NULL;
+UPDATE Wahl SET b = 0
+    WHERE b IS NULL;
+
 ALTER TABLE Wahl
     ALTER COLUMN r SET NOT NULL;
 

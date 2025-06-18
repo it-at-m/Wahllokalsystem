@@ -35,6 +35,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -186,6 +190,26 @@ public class WahlenControllerIntegrationTest {
     @Nested
     class PostWahlen {
 
+        @ParameterizedTest(name = "{1}")
+        @MethodSource("createSavableData")
+        void should_data_when_repoIsEmpty(final ArgumentsAccessor arguments) throws Exception {
+            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung5", "1");
+            wahltagRepository.save(searchingForWahltag);
+            val newData = List.of(arguments.get(0, de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO.class));
+
+            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL, Authorities.SERVICE_POST_WAHLEN);
+            val request = MockMvcRequestBuilders.post("/businessActions/wahlen/" + searchingForWahltag.getWahltagID()).with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                            objectMapper.writeValueAsString(newData));
+            api.perform(request).andExpect(status().isOk());
+
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHL);
+            val savedWahlen = wahlRepository.findAll();
+
+            Assertions.assertThat(savedWahlen)
+                    .isEqualTo(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(dtoMapper.fromListOfWahlDTOtoListOfWahlModel(newData)));
+        }
+
         @Test
         void should_saveNewData_when_repoIsEmpty() throws Exception {
             var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung5", "1");
@@ -262,6 +286,13 @@ public class WahlenControllerIntegrationTest {
                     serviceID, "");
 
             Assertions.assertThat(responseBodyAsWlsExceptionDTO).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedWlsExceptionDTO);
+        }
+
+        public static Stream<Arguments> createSavableData() {
+            return Stream.of(
+                    Arguments.of(createMinimalWahlDTO(), "with minimal wahlDTO"),
+                    Arguments.of(createFullWahlDTO(), "with full wahlDTO")
+            );
         }
     }
 
@@ -366,5 +397,17 @@ public class WahlenControllerIntegrationTest {
         wahl.setReihenfolge(0);
         wahl.setWaehlerverzeichnisnummer(1);
         return wahl;
+    }
+
+    private static de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO createMinimalWahlDTO() {
+        return new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID", "wahlname", 0L, 1L, LocalDate.now(), WahlartDTO.LTW,
+                new FarbeDTO(0, 1, 2),
+                null);
+    }
+
+    private static de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO createFullWahlDTO() {
+        return new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID", "wahlname", 0L, 1L, LocalDate.now(), WahlartDTO.LTW,
+                new FarbeDTO(0, 1, 2),
+                "nummer");
     }
 }

@@ -22,6 +22,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlag
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.ReferendumvorlagenRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.Wahlbezirk;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.WahlbezirkRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Farbe;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahl;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.WahlRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
@@ -156,7 +157,7 @@ public class WahltermindatenControllerIntegrationTest {
         void should_deleteWahlenAndWahlbezirkeOnWahlenOfWahltag_when_wahltagIDIsGiven() throws Exception {
             //Data that should be kept after the call
             val localDateForDataToKeep = LocalDate.parse("2024-10-07");
-            val wahlToKeep = wahlRepository.save(new Wahl(UUID.randomUUID().toString(), "wahlToKeep", 1, 1, localDateForDataToKeep, Wahlart.BTW, null, "1"));
+            val wahlToKeep = wahlRepository.save(new Wahl(UUID.randomUUID().toString(), "wahlToKeep", 1, 1, localDateForDataToKeep, Wahlart.BTW, new Farbe(0, 0, 0), "1"));
             val wahlbezirkToKeep = wahlbezirkRepository.save(
                     new Wahlbezirk("wahlbezirkToKeep", localDateForDataToKeep, "1", WahlbezirkArt.UWB, "1", wahlToKeep.getWahlID()));
             val wahlvorschlaegeToKeep = createWahlvorschlaege(wahlToKeep.getWahlID(), wahlbezirkToKeep.getWahlbezirkID(), "3");
@@ -276,7 +277,7 @@ public class WahltermindatenControllerIntegrationTest {
         }
 
         private Wahl createWahlToDelete(final String wahlID, final LocalDate wahltag) {
-            return wahlRepository.save(new Wahl(wahlID, wahlID, 1, 1, wahltag, Wahlart.BTW, null, "1"));
+            return wahlRepository.save(new Wahl(wahlID, wahlID, 1, 1, wahltag, Wahlart.BTW, new Farbe(0, 0, 0), "1"));
         }
 
         private Collection<Wahlbezirk> createWahlbezirkeToDelete(final LocalDate wahltagDate, final String wahlToDeleteID1, final String wahlToDeleteID2) {

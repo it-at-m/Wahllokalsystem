@@ -33,7 +33,7 @@ class BegruendungValidatorTest {
 
         @Test
         void should_notThrowException_when_bezirkUndWahlIDStapelartIsValid() {
-            val id = new BegruendungReferenceModel("wahlID", "wahlbezirkID", StapelartModel.LTW_BZW_A);
+            val id = new BegruendungReferenceModel("wahlbezirkID", "wahlID", StapelartModel.LTW_BZW_A);
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validReferenceOrThrow(id));
         }

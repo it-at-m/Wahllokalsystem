@@ -34,7 +34,7 @@ class ErgebnisseValidatorTest {
 
         @Test
         void should_notThrowException_when_bezirkUndWahlIDStapelartIsValid() {
-            val id = new ErgebnisseReferenceModel("wahlID", "wahlbezirkID", StapelartModel.LTW_BZW_A);
+            val id = new ErgebnisseReferenceModel("wahlbezirkID", "wahlID", StapelartModel.LTW_BZW_A);
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validReferenceOrThrow(id, mockedWlsException));

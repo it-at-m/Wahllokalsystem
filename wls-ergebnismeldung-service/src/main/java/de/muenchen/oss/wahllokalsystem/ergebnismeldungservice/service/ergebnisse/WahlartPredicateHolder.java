@@ -47,11 +47,10 @@ public class WahlartPredicateHolder {
 
     private record InvalidErgebnissePredicateModel(Collection<StapelartModel> stapelRepresentingInvalid) implements Predicate<StapelartModel> {
 
-        @Override
-        public boolean test(final StapelartModel stapelart) {
-            return stapelRepresentingInvalid.contains(stapelart);
-        }
-        //CHECKSTYLE.OFF: WhitespaceAround: WhitespaceAround: '}' is not followed by whitespace. Empty blocks may only be represented as {} when not part of a multi-block statement (4.1.3)
+    @Override
+    public boolean test(final StapelartModel stapelart) {
+        return stapelRepresentingInvalid.contains(stapelart);
     }
-}
+    //CHECKSTYLE.OFF: WhitespaceAround: WhitespaceAround: '}' is not followed by whitespace. Empty blocks may only be represented as {} when not part of a multi-block statement (4.1.3)
+}}
 //CHECKSTYLE.ON: AbbreviationAsWordInName

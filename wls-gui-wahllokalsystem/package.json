@@ -31,7 +31,7 @@
     "@vueuse/core": "13.1.0",
     "localforage": "1.10.0",
     "pinia": "2.3.1",
-    "roboto-fontface": "0.10.0",
+    "@fontsource/roboto": "5.2.6",
     "vue": "3.5.13",
     "vue-currency-input": "3.2.1",
     "vue-router": "4.5.0",

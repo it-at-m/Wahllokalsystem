@@ -29,14 +29,14 @@ class AusdruckModelMapperTest {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val meldungsart = Meldungsart.V1;
-            val melungsartModel = MeldungsartModel.V1;
+            val meldungsartModel = MeldungsartModel.V1;
             val content = "Testausdruck";
             val erstelltAm = Instant.now();
             val ausdruckEntity = new Ausdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart), content, erstelltAm);
 
             val result = unitUnderTest.toModel(ausdruckEntity);
 
-            val expectedResult = new AusdruckReadModel(new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, melungsartModel), content, erstelltAm);
+            val expectedResult = new AusdruckReadModel(new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, meldungsartModel), content, erstelltAm);
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }

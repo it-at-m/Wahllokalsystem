@@ -39,7 +39,7 @@ public class WahlartPredicateHolder {
 
     public Predicate<StapelartModel> getPredicateForStapelWithInvalidErgebnisse(final WahlartModel wahlart) {
         if (!predicatesForWahlarten.containsKey(wahlart)) {
-            throw new IllegalArgumentException("Wahlart" + wahlart + " wird nicht unterstützt");
+            throw new IllegalArgumentException("Wahlart " + wahlart + " wird nicht unterstützt");
         }
 
         return predicatesForWahlarten.get(wahlart);
@@ -47,10 +47,11 @@ public class WahlartPredicateHolder {
 
     private record InvalidErgebnissePredicateModel(Collection<StapelartModel> stapelRepresentingInvalid) implements Predicate<StapelartModel> {
 
-    @Override
-    public boolean test(final StapelartModel stapelart) {
-        return stapelRepresentingInvalid.contains(stapelart);
+        @Override
+        public boolean test(final StapelartModel stapelart) {
+            return stapelRepresentingInvalid.contains(stapelart);
+        }
+        //CHECKSTYLE.OFF: WhitespaceAround: WhitespaceAround: '}' is not followed by whitespace. Empty blocks may only be represented as {} when not part of a multi-block statement (4.1.3)
     }
-    //CHECKSTYLE.OFF: WhitespaceAround: WhitespaceAround: '}' is not followed by whitespace. Empty blocks may only be represented as {} when not part of a multi-block statement (4.1.3)
-}}
+}
 //CHECKSTYLE.ON: AbbreviationAsWordInName

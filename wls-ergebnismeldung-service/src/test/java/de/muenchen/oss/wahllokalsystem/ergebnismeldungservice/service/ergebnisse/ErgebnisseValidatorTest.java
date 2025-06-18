@@ -55,7 +55,7 @@ class ErgebnisseValidatorTest {
                     Arguments.of(new ErgebnisseReferenceModel("wahlbezirkID", "", StapelartModel.LTW_BZW_A), "wahlID is empty"),
                     Arguments.of(new ErgebnisseReferenceModel("wahlbezirkID", "   ", StapelartModel.LTW_BZW_A), "wahlID is blank"),
                     Arguments.of(new ErgebnisseReferenceModel(null, "wahlID", StapelartModel.LTW_BZW_A), "wahlbezirkID is null"),
-                    Arguments.of(new ErgebnisseReferenceModel("", "wahlID", StapelartModel.LTW_BZW_A), "wahlbezirkID is is empty"),
+                    Arguments.of(new ErgebnisseReferenceModel("", "wahlID", StapelartModel.LTW_BZW_A), "wahlbezirkID is empty"),
                     Arguments.of(new ErgebnisseReferenceModel("   ", "wahlID", StapelartModel.LTW_BZW_A), "wahlbezirkID is blank"),
                     Arguments.of(new ErgebnisseReferenceModel("wahlbezirkID", "wahlID", null), "stapelart is null"));
         }

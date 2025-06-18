@@ -55,7 +55,7 @@ class BegruendungValidatorTest {
                     Arguments.of(new BegruendungReferenceModel("wahlbezirkID", "", StapelartModel.LTW_BZW_A), "wahlID is empty"),
                     Arguments.of(new BegruendungReferenceModel("wahlbezirkID", "   ", StapelartModel.LTW_BZW_A), "wahlID is blank"),
                     Arguments.of(new BegruendungReferenceModel(null, "wahlID", StapelartModel.LTW_BZW_A), "wahlbezirkID is null"),
-                    Arguments.of(new BegruendungReferenceModel("", "wahlID", StapelartModel.LTW_BZW_A), "wahlbezirkID is is empty"),
+                    Arguments.of(new BegruendungReferenceModel("", "wahlID", StapelartModel.LTW_BZW_A), "wahlbezirkID is empty"),
                     Arguments.of(new BegruendungReferenceModel("   ", "wahlID", StapelartModel.LTW_BZW_A), "wahlbezirkID is blank"),
                     Arguments.of(new BegruendungReferenceModel("wahlbezirkID", "wahlID", null), "stapelart is null"));
         }

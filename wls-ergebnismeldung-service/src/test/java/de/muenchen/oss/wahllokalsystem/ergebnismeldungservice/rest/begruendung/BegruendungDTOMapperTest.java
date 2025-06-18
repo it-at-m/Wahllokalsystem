@@ -47,7 +47,7 @@ class BegruendungDTOMapperTest {
             }
 
             @Test
-            void should_returnBegruendungReference_when_givenIDs() {
+            void should_returnBegruendungReferenceModel_when_givenIDs() {
                 val result = unitUnderTest.toReferenceModel("bezirkID", "wahlID", StapelartDTO.LTW_BZW_A);
 
                 val expectedResult = new BegruendungReferenceModel("bezirkID", "wahlID", StapelartModel.LTW_BZW_A);

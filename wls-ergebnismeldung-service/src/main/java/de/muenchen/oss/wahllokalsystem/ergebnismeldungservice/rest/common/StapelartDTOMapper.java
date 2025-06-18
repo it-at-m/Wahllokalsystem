@@ -4,7 +4,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.Sta
 import org.mapstruct.Mapper;
 
 @Mapper
-public interface StapelArtDTOMapper {
+public interface StapelartDTOMapper {
 
     StapelartDTO toDTO(StapelartModel stapelartModel);
 

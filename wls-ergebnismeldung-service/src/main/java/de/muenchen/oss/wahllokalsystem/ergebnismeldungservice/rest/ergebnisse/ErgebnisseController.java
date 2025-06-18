@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.AbstractController;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelArtDTOMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTOMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseReferenceModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +31,7 @@ public class ErgebnisseController extends AbstractController {
     private final ErgebnisseService ergebnisseService;
 
     private final ErgebnisseDTOMapper ergebnisseDTOMapper;
-    private final StapelArtDTOMapper stapelArtDTOMapper;
+    private final StapelartDTOMapper stapelArtDTOMapper;
 
     @Operation(description = "Lesen von Ergebnissen eines Wahlbezirks für eine Wahl von einem bestimmten Stapel")
     @ApiResponses(

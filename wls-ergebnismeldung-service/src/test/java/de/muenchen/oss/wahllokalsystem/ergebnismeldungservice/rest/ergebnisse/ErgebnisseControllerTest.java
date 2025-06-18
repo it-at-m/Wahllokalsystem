@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.BezirkUndWahlIDStapelartDTO;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelArtDTOMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTOMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseReferenceModel;
@@ -31,7 +31,7 @@ class ErgebnisseControllerTest {
     ErgebnisseDTOMapper ergebnisseDTOMapper;
 
     @Mock
-    StapelArtDTOMapper stapelArtDTOMapper;
+    StapelartDTOMapper stapelArtDTOMapper;
 
     @InjectMocks
     ErgebnisseController unitUnderTest;

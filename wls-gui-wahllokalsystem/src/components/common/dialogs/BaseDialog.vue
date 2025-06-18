@@ -1,7 +1,8 @@
 <template>
   <v-dialog
-    :model-value="modelValue"
+    :model-value="visible"
     persistent
+    max-width="648px"
   >
     <v-card>
       <v-card-title>
@@ -26,7 +27,7 @@
         </v-btn>
         <v-btn
           data-test="basedialog-btn-confirm"
-          color="primary"
+          active
           @click="onConfirmClicked"
         >
           {{ confirmtext }}
@@ -49,10 +50,7 @@ import {
 } from "vuetify/components";
 
 defineProps<{
-  /**
-   * Control flag for dialog
-   */
-  modelValue: boolean;
+  visible: boolean;
   dialogtitle: string;
   canceltext?: string;
   confirmtext: string;

@@ -5,11 +5,9 @@ import {
 } from "@tests/utils/testutils.ts";
 import { mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { createVuetify } from "vuetify";
-import * as components from "vuetify/components";
-import * as directives from "vuetify/directives";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
+import vuetify from "@/plugins/vuetify.ts";
 
 describe("BaseDialog.vue", () => {
   let wrapper: VueWrapper;
@@ -63,12 +61,7 @@ describe("BaseDialog.vue", () => {
 function setupWrapperWithConfirmButton() {
   return mount(BaseDialog, {
     global: {
-      plugins: [
-        createVuetify({
-          components,
-          directives,
-        }),
-      ],
+      plugins: [vuetify],
     },
     props: {
       modelValue: true,
@@ -85,12 +78,7 @@ function setupWrapperWithConfirmButton() {
 function setupWrapperWithConfirmAndCancelButton() {
   return mount(BaseDialog, {
     global: {
-      plugins: [
-        createVuetify({
-          components,
-          directives,
-        }),
-      ],
+      plugins: [vuetify],
     },
     props: {
       modelValue: true,

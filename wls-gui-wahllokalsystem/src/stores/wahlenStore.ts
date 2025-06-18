@@ -12,7 +12,6 @@ const wahlenService = useWahlService();
 export const useWahlenStore = defineStore(storeID, () => {
   const userStore = useUserStore();
   const wahlen = ref<Wahl[] | null>();
-  const wahlenReady = ref(false);
 
   async function initWahlen(sendNotification = true) {
     const currentWahltag = userStore.currentUserWahltagID;
@@ -21,7 +20,6 @@ export const useWahlenStore = defineStore(storeID, () => {
         currentWahltag,
         sendNotification
       );
-      wahlenReady.value = true;
     } else {
       await Promise.reject();
     }
@@ -29,7 +27,6 @@ export const useWahlenStore = defineStore(storeID, () => {
 
   return {
     wahlen,
-    wahlenReady,
     initWahlen,
   };
 });

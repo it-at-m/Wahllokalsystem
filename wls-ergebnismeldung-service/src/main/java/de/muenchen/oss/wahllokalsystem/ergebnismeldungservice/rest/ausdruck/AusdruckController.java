@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ausdruck;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.MeldungsartDTO;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckModelMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.MeldungsartModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.WahlUndBezirkIDUndMeldungsartModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -31,7 +31,6 @@ public class AusdruckController {
     private final AusdruckService ausdruckService;
 
     private final AusdruckDTOMapper ausdruckDTOMapper;
-    private final AusdruckModelMapper ausdruckModelMapper;
 
     @Operation(description = "Lesen eines Ausdrucks einer bestimmten Meldungsart für einen Wahlbezirk einer Wahl")
     @ApiResponses(
@@ -48,9 +47,8 @@ public class AusdruckController {
     )
     @GetMapping("{wahlID}/{wahlbezirkID}/{meldungsart}/html")
     public ResponseEntity<String> getAusdruck(@PathVariable("wahlID") final String wahlID, @PathVariable("wahlbezirkID") final String wahlbezirkID,
-            @PathVariable("meldungsart") final MeldungsartDTO meldungsartDto) {
-        val ausdruckReadModel = ausdruckService.getAusdruck(
-                ausdruckDTOMapper.toModel(new WahlUndBezirkIDUndMeldungsartDTO(wahlbezirkID, wahlID, meldungsartDto)));
+            @PathVariable("meldungsart") final MeldungsartModel meldungsartModel) {
+        val ausdruckReadModel = ausdruckService.getAusdruck(new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, meldungsartModel));
 
         if (ausdruckReadModel.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -101,9 +99,9 @@ public class AusdruckController {
     )
     @PostMapping("{wahlID}/{wahlbezirkID}/{meldungsart}/html")
     public ResponseEntity<?> postAusdruck(@PathVariable("wahlID") final String wahlID,
-            @PathVariable("wahlbezirkID") final String wahlbezirkID, @PathVariable("meldungsart") final MeldungsartDTO meldungsartDTO,
+            @PathVariable("wahlbezirkID") final String wahlbezirkID, @PathVariable("meldungsart") final MeldungsartModel meldungsartModel,
             @RequestBody final AusdruckWriteDTO ausdruck) {
-        val ausdruckWriteModel = ausdruckDTOMapper.toModel(ausdruck, new WahlUndBezirkIDUndMeldungsartDTO(wahlbezirkID, wahlID, meldungsartDTO));
+        val ausdruckWriteModel = ausdruckDTOMapper.toModel(ausdruck, new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, meldungsartModel));
         ausdruckService.saveAusdruck(ausdruckWriteModel);
         return new ResponseEntity<>(HttpStatus.OK);
     }

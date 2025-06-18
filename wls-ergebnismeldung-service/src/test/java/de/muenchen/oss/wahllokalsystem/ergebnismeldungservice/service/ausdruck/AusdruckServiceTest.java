@@ -65,6 +65,7 @@ class AusdruckServiceTest {
 
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
 
+            Mockito.when(ausdruckModelMapper.toEntity(idModel)).thenReturn(id);
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG))
                     .thenReturn(mockedWlsException);
 
@@ -81,6 +82,7 @@ class AusdruckServiceTest {
             val mockedEntity = new Ausdruck();
 
             Mockito.when(ausdruckRepository.findById(id)).thenReturn(Optional.of(mockedEntity));
+            Mockito.when(ausdruckModelMapper.toEntity(idModel)).thenReturn(id);
             Mockito.when(ausdruckModelMapper.toModel(mockedEntity)).thenReturn(mockedMappedEntityAsModel);
 
             val result = unitUnderTest.getAusdruck(idModel);
@@ -94,6 +96,7 @@ class AusdruckServiceTest {
             val idModel = new WahlUndBezirkIDUndMeldungsartModel("id", "id2", MeldungsartModel.V1);
 
             Mockito.when(ausdruckRepository.findById(id)).thenReturn(Optional.empty());
+            Mockito.when(ausdruckModelMapper.toEntity(idModel)).thenReturn(id);
 
             val result = unitUnderTest.getAusdruck(idModel);
 

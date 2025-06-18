@@ -64,7 +64,7 @@ function setupWrapperWithConfirmButton() {
       plugins: [vuetify],
     },
     props: {
-      modelValue: true,
+      visible: true,
       icon: "$information",
       dialogtitle: "Test Dialog",
       confirmtext: "Bestätigen",
@@ -81,7 +81,7 @@ function setupWrapperWithConfirmAndCancelButton() {
       plugins: [vuetify],
     },
     props: {
-      modelValue: true,
+      visible: true,
       icon: "$information",
       dialogtitle: "Test Dialog",
       confirmtext: "Bestätigen",

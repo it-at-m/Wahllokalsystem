@@ -29,7 +29,7 @@ const wahlvorstandsmitgliedFunktionEnumValues = Object.values(
 export function useWahlvorstandTestDataFactory() {
   function createWahlvorstand(countMitglieder = 3): Wahlvorstand {
     const wahlvorstandsmitglieder: Wahlvorstandsmitglied[] = [];
-    for (let i = 0; i < countMitglieder; ++i) {
+    for (let i = 0; i < countMitglieder; i++) {
       wahlvorstandsmitglieder.push(createWahlvorstandsmitglied());
     }
     return {
@@ -55,6 +55,7 @@ export function useWahlvorstandTestDataFactory() {
       anwesend: true,
       vorname: generateRandomString(10),
       funktion: getRandomItem(wahlvorstandsmitgliedFunktionEnumValues),
+      funktionsname: generateRandomString(10),
       identifikator: generateRandomString(10),
     };
   }

@@ -6,7 +6,7 @@ import type {
 import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis";
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse";
 
-import { useVorfaelleundvorkommnisseTestDateFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDateFactory";
+import { useVorfaelleundvorkommnisseTestDataFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDataFactory";
 import { describe, expect, it } from "vitest";
 
 import { useEreignisMapper } from "@/composables/vorfaelleundvorkommnisse/ereignisMapper.ts";
@@ -16,13 +16,13 @@ const {
   prepareEreignisDTO,
   prepareEreignis,
   prepareWahlbezirkEreignisse,
-} = useVorfaelleundvorkommnisseTestDateFactory();
+} = useVorfaelleundvorkommnisseTestDataFactory();
 
 describe("ereignisMapper.ts", () => {
   const { toModel, toDto } = useEreignisMapper();
 
   describe("toModel", () => {
-    it("should_returnEreignis_when_dtoIsGiven", () => {
+    it("should_returnWahlbezirkEreignisse_when_dtoIsGiven", () => {
       const dtoToMap = getWahlbezirkEreignisseDTO();
 
       const result = toModel(dtoToMap);
@@ -33,7 +33,7 @@ describe("ereignisMapper.ts", () => {
   });
 
   describe("toDto", () => {
-    it("should_returnEreignisDto_when_modelIsGiven", () => {
+    it("should_returnEreignisseWriteDto_when_modelIsGiven", () => {
       const modelToMap = getWahlbezirkEreignisse();
 
       const result = toDto(modelToMap);

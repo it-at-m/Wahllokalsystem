@@ -18,7 +18,7 @@ const {
   generateRandomBoolean,
 } = useCommonTestDataFactory();
 
-export function useVorfaelleundvorkommnisseTestDateFactory() {
+export function useVorfaelleundvorkommnisseTestDataFactory() {
   function createEreignis(): Ereignis {
     return {
       beschreibung: `beschreibung${generateRandomNumber(4)}`,
@@ -39,7 +39,7 @@ export function useVorfaelleundvorkommnisseTestDateFactory() {
     countEreignisse = 3
   ): WahlbezirkEreignisse {
     const ereigniseintraege: Ereignis[] = [];
-    for (let i = 0; i < countEreignisse; ++i) {
+    for (let i = 0; i < countEreignisse; i++) {
       ereigniseintraege.push(createEreignis());
     }
     return {
@@ -54,7 +54,7 @@ export function useVorfaelleundvorkommnisseTestDateFactory() {
     countEreignisse = 3
   ): WahlbezirkEreignisseDTO {
     const ereigniseintraege: EreignisDTO[] = [];
-    for (let i = 0; i < countEreignisse; ++i) {
+    for (let i = 0; i < countEreignisse; i++) {
       ereigniseintraege.push(createEreignisDTO());
     }
     return {

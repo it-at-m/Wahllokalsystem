@@ -20,8 +20,8 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.Erge
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.UngueltigeStimmzettelDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.authentication.AuthenticationService;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelArtModelMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModelMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.WahlartPredicateHolder;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Testdaten;
@@ -67,7 +67,7 @@ class ErgebnismeldungMappingServiceTest {
     BriefwahlClient briefwahlClient;
 
     @Mock
-    StapelArtModelMapper stapelArtModelMapper;
+    StapelartModelMapper stapelArtModelMapper;
 
     @Mock
     Mapping mapping;

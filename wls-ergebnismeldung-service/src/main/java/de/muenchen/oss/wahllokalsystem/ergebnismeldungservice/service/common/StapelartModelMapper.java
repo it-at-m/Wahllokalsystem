@@ -4,7 +4,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stap
 import org.mapstruct.Mapper;
 
 @Mapper
-public interface StapelArtModelMapper {
+public interface StapelartModelMapper {
     StapelartModel toModel(Stapelart stapelart);
 
     Stapelart toEntity(StapelartModel stapelartModel);

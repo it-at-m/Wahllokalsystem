@@ -14,7 +14,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.BWer
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.WahlbriefeWerteDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.authentication.AuthenticationService;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelArtModelMapper;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModelMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.WahlartPredicateHolder;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
@@ -41,7 +41,7 @@ public class ErgebnismeldungMappingService {
     private final ErgebnisseRepository ergebnisseRepo;
     private final BriefwahlClient briefwahlClient;
 
-    private final StapelArtModelMapper stapelArtModelMapper;
+    private final StapelartModelMapper stapelArtModelMapper;
 
     private final Mapping mapping;
 
@@ -100,8 +100,8 @@ public class ErgebnismeldungMappingService {
     private BWerteDTO getBWerte(final WahlbezirkArtModel wahlbezirkArt, final BezirkUndWahlID bezirkUndWahlID,
             final BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer, final WahlartModel wahlart) {
         return switch (wahlbezirkArt) {
-        case UWB -> getBWerteDTOOfUWBWahlbezirk(bezirkUndWahlID.getWahlID(), bezirkIDUndWaehlerverzeichnisNummer, wahlart);
-        case BWB -> getBWerteDTOOfBWBWahlbezirk(bezirkUndWahlID);
+            case UWB -> getBWerteDTOOfUWBWahlbezirk(bezirkUndWahlID.getWahlID(), bezirkIDUndWaehlerverzeichnisNummer, wahlart);
+            case BWB -> getBWerteDTOOfBWBWahlbezirk(bezirkUndWahlID);
         };
     }
 

@@ -35,7 +35,7 @@ public class Wahl {
     private long reihenfolge;
 
     @Min(0)
-    private long waehlerverzeichnisnummer;
+    private long waehlerverzeichnisNummer;
 
     @NotNull
     private LocalDate wahltag;

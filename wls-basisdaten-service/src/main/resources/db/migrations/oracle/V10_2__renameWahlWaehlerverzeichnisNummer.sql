@@ -1,0 +1,2 @@
+ALTER TABLE Wahl RENAME COLUMN waehlerverzeichnisnummer TO waehlerverzeichnisnummer2;
+ALTER TABLE Wahl RENAME COLUMN waehlerverzeichnisnummer2 TO waehlerverzeichnisNummer;

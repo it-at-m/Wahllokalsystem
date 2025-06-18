@@ -45,6 +45,7 @@ public class Wahl {
     private Wahlart wahlart;
 
     @Embedded
+    @NotNull
     private Farbe farbe;
 
     @Size(max = 255)

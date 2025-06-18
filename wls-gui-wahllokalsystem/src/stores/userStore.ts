@@ -1,13 +1,15 @@
 import type { User } from "@/types/User.ts";
 
-import { acceptHMRUpdate, defineStore } from "pinia";
+import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
+import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useUserService } from "@/composables/user/userService.ts";
 import { createUserLocalDevelopment } from "@/types/User";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { getUser } = useUserService();
+const { registerStoreHMR } = useHmrUpdate();
 
 export const useUserStore = defineStore("user", () => {
   const defaultUser: User = {
@@ -51,6 +53,10 @@ export const useUserStore = defineStore("user", () => {
     return user.value?.wahltagID;
   });
 
+  const currentUserWahltag = computed((): string | undefined => {
+    return user.value.wahltag;
+  });
+
   const currentUserWahlbezirksArt = computed((): WahlbezirksArtEnum => {
     return user.value.wahlbezirksArt;
   });
@@ -80,12 +86,11 @@ export const useUserStore = defineStore("user", () => {
     setUser,
     currentUserWahlbezirkID,
     currentUserWahltagID,
+    currentUserWahltag,
     currentUserWahlbezirksArt,
     currentUserWahlbezirkNummer,
     currentUserHauptWahlID,
   };
 });
 
-if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot));
-}
+registerStoreHMR(useUserStore);

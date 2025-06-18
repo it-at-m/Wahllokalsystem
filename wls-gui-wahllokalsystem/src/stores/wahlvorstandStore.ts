@@ -1,8 +1,9 @@
 import type { Wahlvorstand } from "@/types/wahlvorstand/Wahlvorstand";
 
-import { acceptHMRUpdate, defineStore, storeToRefs } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
+import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useWahlvorstandService } from "@/composables/wahlvorstand/wahlvorstandService";
 import {
   MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG,
@@ -19,10 +20,11 @@ import {
 const { getWahlvorstand, saveWahlvorstand } = useWahlvorstandService();
 
 export const storeID = "wahlvorstand";
+const { registerStoreHMR } = useHmrUpdate();
 
 export const useWahlvorstandStore = defineStore(storeID, () => {
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
-  const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
+  const { schliessungsuhrzeitSent } = storeToRefs(useWahlbezirkStore());
 
   const isLoading = ref(false);
   const isSaving = ref(false);
@@ -44,7 +46,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     const anwesend = wahlvorstand.value.wahlvorstandsmitglieder.filter(
       (mitglied) => mitglied.anwesend
     ).length;
-    if (!schliessungsUhrzeitSent.value) {
+    if (!schliessungsuhrzeitSent.value) {
       return anwesend >= MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG;
     } else {
       return anwesend >= MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG;
@@ -57,17 +59,24 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
       isMindestanwesenheitErreicht.value
   );
 
-  async function forceLoadWahlvorstand() {
-    isLoading.value = true;
-    try {
-      const wahlbezirkID = currentUserWahlbezirkID.value;
-      if (wahlbezirkID) {
-        wahlvorstand.value = await getWahlvorstand(wahlbezirkID, true);
-        lastLoading.value = new Date();
-      }
-    } finally {
-      isLoading.value = false;
+  async function initWahlvorstand(sendNotification = true) {
+    const wahlbezirkID = currentUserWahlbezirkID.value;
+    if (wahlbezirkID) {
+      wahlvorstand.value = await getWahlvorstand(wahlbezirkID, {
+        forceUpdate: true,
+        sendNotification: sendNotification,
+      });
+    } else {
+      await Promise.reject();
     }
+  }
+
+  async function forceLoadWahlvorstand() {
+    await _loadWahlvorstand(true, true);
+  }
+
+  async function loadWahlvorstand() {
+    await _loadWahlvorstand(false, false);
   }
 
   async function sendWahlvorstand() {
@@ -97,6 +106,25 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     }
   }
 
+  async function _loadWahlvorstand(
+    forceUpdate: boolean,
+    sendNotification: boolean
+  ) {
+    isLoading.value = true;
+    try {
+      const wahlbezirkID = currentUserWahlbezirkID.value;
+      if (wahlbezirkID) {
+        wahlvorstand.value = await getWahlvorstand(wahlbezirkID, {
+          forceUpdate: forceUpdate,
+          sendNotification: sendNotification,
+        });
+        lastLoading.value = new Date();
+      }
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   return {
     isMindestanwesenheitErreicht,
     isSchriftfuehrerAnwesend,
@@ -107,14 +135,12 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     isLoading,
     isSaving,
     wahlvorstand,
+    initWahlvorstand,
     changeAnwesendOfMitglied,
     forceLoadWahlvorstand,
+    loadWahlvorstand,
     sendWahlvorstand,
   };
 });
 
-if (import.meta.hot) {
-  import.meta.hot.accept(
-    acceptHMRUpdate(useWahlvorstandStore, import.meta.hot)
-  );
-}
+registerStoreHMR(useWahlvorstandStore);

@@ -1,9 +1,10 @@
 import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
-import { acceptHMRUpdate, defineStore, storeToRefs } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { computed, ref, watch, watchEffect } from "vue";
 
+import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
@@ -15,6 +16,7 @@ import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/Wa
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { getEreignisse, saveEreignisse } = useEreignisService();
+const { registerStoreHMR } = useHmrUpdate();
 
 export const storeID = "vorfaelleundvorkommnisse";
 
@@ -23,7 +25,7 @@ export const useEreignisStore = defineStore(storeID, () => {
 
   const { currentUserWahlbezirkID, currentUserWahlbezirksArt } =
     storeToRefs(useUserStore());
-  const { schliessungsUhrzeitSent } = storeToRefs(useWahlbezirkStore());
+  const { schliessungsuhrzeitSent } = storeToRefs(useWahlbezirkStore());
 
   const wahlbezirkEreignisse = ref<WahlbezirkEreignisse>(
     WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse()
@@ -49,7 +51,7 @@ export const useEreignisStore = defineStore(storeID, () => {
     () =>
       hasVorfaelle.value !== wahlbezirkEreignisse.value.keineVorfaelle &&
       (hasVorkommnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse ||
-        !schliessungsUhrzeitSent.value)
+        !schliessungsuhrzeitSent.value)
   );
 
   const hasMissingEreignisFlagsForBWB = computed(
@@ -65,7 +67,7 @@ export const useEreignisStore = defineStore(storeID, () => {
       : hasMissingEreignisFlagsForBWB.value;
   });
 
-  watch(schliessungsUhrzeitSent, _onSchliessunguhrzeitSentChanged);
+  watch(schliessungsuhrzeitSent, _onSchliessunguhrzeitSentChanged);
   watchEffect(() => _updateKeineFlagsOfEreignisseBasedOnCurrentState());
 
   function addEreignis() {
@@ -75,7 +77,7 @@ export const useEreignisStore = defineStore(storeID, () => {
       beschreibung: "",
       ereignisart: getEreignisArtForDateRelatedToSchliessungsuhrzeit(
         currentDate,
-        schliessungsUhrzeitSent.value
+        schliessungsuhrzeitSent.value
       ),
     });
   }
@@ -98,7 +100,7 @@ export const useEreignisStore = defineStore(storeID, () => {
         ereignisToChange.ereignisart =
           getEreignisArtForDateRelatedToSchliessungsuhrzeit(
             uhrzeit,
-            schliessungsUhrzeitSent.value
+            schliessungsuhrzeitSent.value
           );
       } else {
         ereignisToChange.uhrzeit = undefined;
@@ -196,6 +198,4 @@ function sortEreignisse(ereigniseintraege: Ereignis[] | undefined) {
   });
 }
 
-if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useEreignisStore, import.meta.hot));
-}
+registerStoreHMR(useEreignisStore);

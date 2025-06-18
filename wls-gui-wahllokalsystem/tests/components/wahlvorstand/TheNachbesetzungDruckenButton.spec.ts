@@ -7,7 +7,7 @@ import {
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
-import { enableAutoUnmount, mount } from "@vue/test-utils";
+import { enableAutoUnmount, flushPromises, mount } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import {
   afterEach,
@@ -107,9 +107,10 @@ describe("TheNachbesetzungDruckenButton.vue", () => {
 
         const button = wrapper.findComponent(VBtn);
         await button.trigger("click");
+        await flushPromises(); // wait for all async operations to be executed
 
         expect(wahlvorstandStore.sendWahlvorstand).toHaveBeenCalled();
-        expect(wahlvorstandStore.forceLoadWahlvorstand).toHaveBeenCalled();
+        expect(wahlvorstandStore.loadWahlvorstand).toHaveBeenCalled();
         expect(window.open).toHaveBeenCalled();
         expect(mockedWindow.print).toHaveBeenCalled();
 

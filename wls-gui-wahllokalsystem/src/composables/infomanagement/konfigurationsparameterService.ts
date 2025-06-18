@@ -1,4 +1,3 @@
-import type { KonfigurationDTO } from "@/api/wls-clients/generated-infomanagement-api";
 import type { Konfigurationsparameter } from "@/types/infomanagement/Konfigurationsparameter.ts";
 
 import {
@@ -25,8 +24,7 @@ export function useKonfigurationsparameterService() {
   ): Promise<Konfigurationsparameter[]> {
     try {
       const response = await konfigurationControllerApi.getKonfigurations();
-      // todo: mit issue #1328 wird der rückgabetyp des requests angepasst und das `as KonfigurationDTO[]` kann entfernt werden
-      return toModel(response.data as KonfigurationDTO[]);
+      return toModel(response.data);
     } catch {
       if (sendNotification) {
         userNotificationService.addNotification(

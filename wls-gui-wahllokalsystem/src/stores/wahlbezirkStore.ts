@@ -1,11 +1,13 @@
-import { acceptHMRUpdate, defineStore, storeToRefs } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { ref } from "vue";
 
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
+import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useWahlvorbereitungService } from "@/composables/wahlvorbereitung/wahlvorbereitungService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 export const storeID = "wahlbezirk";
+const { registerStoreHMR } = useHmrUpdate();
 
 export const useWahlbezirkStore = defineStore(storeID, () => {
   const { postUrnenwahlSchliessungsuhrzeit, postEroeffnungsuhrzeit } =
@@ -17,7 +19,9 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   const eroeffnungsuhrzeitSent = ref<Date | undefined>(undefined);
   const eroeffnungsuhrzeitIsSaving = ref(false);
 
-  const schliessungsUhrzeitSent = ref<Date | undefined>(undefined);
+  const schliessungsuhrzeit = ref<Date | undefined>(undefined);
+  const schliessungsuhrzeitSent = ref<Date | undefined>(undefined);
+  const schliessungsuhrzeitIsSaving = ref(false);
 
   async function sendEroeffnungsuhrzeit() {
     if (currentUserWahlbezirkID.value && eroeffnungsuhrzeit.value) {
@@ -35,16 +39,21 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     }
   }
 
-  async function sendSchliessungsuhrzeit(time: string) {
-    const wahlbezirkID = currentUserWahlbezirkID.value;
-    const schliessungszeitAsDate = new Date(time);
-
-    if (wahlbezirkID && isValidDate(schliessungszeitAsDate)) {
-      await postUrnenwahlSchliessungsuhrzeit(
-        wahlbezirkID,
-        schliessungszeitAsDate
-      );
-      schliessungsUhrzeitSent.value = schliessungszeitAsDate;
+  async function sendSchliessungsuhrzeit() {
+    if (currentUserWahlbezirkID.value && schliessungsuhrzeit.value) {
+      const schliessungszeitToSave = new Date(schliessungsuhrzeit.value);
+      if (isValidDate(schliessungszeitToSave)) {
+        schliessungsuhrzeitIsSaving.value = true;
+        try {
+          await postUrnenwahlSchliessungsuhrzeit(
+            currentUserWahlbezirkID.value,
+            schliessungszeitToSave
+          );
+          schliessungsuhrzeitSent.value = schliessungszeitToSave;
+        } finally {
+          schliessungsuhrzeitIsSaving.value = false;
+        }
+      }
     }
   }
 
@@ -52,12 +61,12 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     eroeffnungsuhrzeit,
     eroeffnungsuhrzeitIsSaving,
     eroeffnungsuhrzeitSent,
-    schliessungsUhrzeitSent,
+    schliessungsuhrzeit,
+    schliessungsuhrzeitIsSaving,
+    schliessungsuhrzeitSent,
     sendEroeffnungsuhrzeit,
     sendSchliessungsuhrzeit,
   };
 });
 
-if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useWahlbezirkStore, import.meta.hot));
-}
+registerStoreHMR(useWahlbezirkStore);

@@ -19,6 +19,5 @@ public interface ErgebnisseDTOMapper {
     @Mapping(target = "bezirkUndWahlIDStapelart.stapelart", source = "stapelart")
     ErgebnisseDTO toDTO(ErgebnisseModel entity);
 
-    @Mapping(target = "stapelartModel", source = "stapelart")
     ErgebnisseReferenceModel toReferenceModel(String wahlbezirkID, String wahlID, StapelartDTO stapelart);
 }

@@ -8,7 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface ErgebnisseModelMapper {
 
-    @Mapping(target = "stapelart", source = "stapelartModel")
     BezirkUndWahlIDStapelart toEmbeddedId(ErgebnisseReferenceModel reference);
 
     @Mapping(target = "wahlbezirkID", source = "bezirkUndWahlIDStapelart.wahlbezirkID")

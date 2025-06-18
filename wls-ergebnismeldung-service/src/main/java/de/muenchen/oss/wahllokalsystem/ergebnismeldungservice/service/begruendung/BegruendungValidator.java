@@ -18,7 +18,7 @@ public class BegruendungValidator {
                 begruendungReferenceModel.wahlbezirkID()) ||
                 StringUtils.isBlank(
                         begruendungReferenceModel.wahlID())
-                || begruendungReferenceModel.stapelartModel() == null) {
+                || begruendungReferenceModel.stapelart() == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG);
         }
     }

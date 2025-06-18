@@ -37,7 +37,7 @@ public class AusdruckService {
     }
 
     @PreAuthorize(
-        "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostAusdruck') and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.wahlUndBezirkIDUndMeldungsartModel.wahlbezirkID, authentication)"
+            "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostAusdruck') and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.wahlUndBezirkIDUndMeldungsartModel.wahlbezirkID, authentication)"
     )
     public void saveAusdruck(@P("param") @NotNull final AusdruckWriteModel ausdruck) {
         log.debug("Saving printout {}", ausdruck.wahlUndBezirkIDUndMeldungsartModel().meldungsartModel());
@@ -51,7 +51,7 @@ public class AusdruckService {
     }
 
     @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetAusdruck')")
-    public Optional<AusdruckReadModel> getAusdruck(WahlUndBezirkIDUndMeldungsartModel idModel) {
+    public Optional<AusdruckReadModel> getAusdruck(@NotNull WahlUndBezirkIDUndMeldungsartModel idModel) {
         log.debug("Loading printout {}", idModel.meldungsartModel());
 
         val id = ausdruckModelMapper.toEntity(idModel);

@@ -291,8 +291,7 @@ public class WahlenControllerIntegrationTest {
         public static Stream<Arguments> createSavableData() {
             return Stream.of(
                     Arguments.of(createMinimalWahlDTO(), "with minimal wahlDTO"),
-                    Arguments.of(createFullWahlDTO(), "with full wahlDTO")
-            );
+                    Arguments.of(createFullWahlDTO(), "with full wahlDTO"));
         }
     }
 

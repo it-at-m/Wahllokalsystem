@@ -12,12 +12,10 @@ public interface AusdruckModelMapper {
     @Mapping(target = "wahlUndBezirkIDUndMeldungsartModel", source = "wahlUndBezirkIDUndMeldungsart")
     AusdruckReadModel toModel(Ausdruck entity);
 
-    @Mapping(target = "wahlUndBezirkIDUndMeldungsart.meldungsart", source = "model.wahlUndBezirkIDUndMeldungsartModel.meldungsartModel")
+    @Mapping(target = "wahlUndBezirkIDUndMeldungsart", source = "model.wahlUndBezirkIDUndMeldungsartModel")
     Ausdruck toEntity(AusdruckWriteModel model, Instant erstelltAm);
 
-    @Mapping(target = "meldungsartModel", source = "meldungsart")
     WahlUndBezirkIDUndMeldungsartModel toModel(WahlUndBezirkIDUndMeldungsart entity);
 
-    @Mapping(target = "meldungsart", source = "meldungsartModel")
     WahlUndBezirkIDUndMeldungsart toEntity(WahlUndBezirkIDUndMeldungsartModel model);
 }

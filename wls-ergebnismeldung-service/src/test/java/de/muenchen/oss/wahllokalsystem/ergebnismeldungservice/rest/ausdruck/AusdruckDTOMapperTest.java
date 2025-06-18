@@ -88,7 +88,7 @@ class AusdruckDTOMapperTest {
 
             val result = unitUnderTest.toModel(dtoToMap, new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, meldungsartModel));
 
-            Assertions.assertThat(result.wahlUndBezirkIDUndMeldungsartModel().meldungsartModel().name()).isEqualTo(meldungsartModel.name());
+            Assertions.assertThat(result.wahlUndBezirkIDUndMeldungsartModel().meldungsart().name()).isEqualTo(meldungsartModel.name());
         }
     }
 }

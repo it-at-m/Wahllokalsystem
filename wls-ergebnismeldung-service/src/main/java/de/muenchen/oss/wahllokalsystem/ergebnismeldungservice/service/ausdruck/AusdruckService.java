@@ -37,10 +37,10 @@ public class AusdruckService {
     }
 
     @PreAuthorize(
-        "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostAusdruck') and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.wahlUndBezirkIDUndMeldungsartModel.wahlbezirkID, authentication)"
+            "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostAusdruck') and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.wahlUndBezirkIDUndMeldungsartModel.wahlbezirkID, authentication)"
     )
     public void saveAusdruck(@P("param") @NotNull final AusdruckWriteModel ausdruck) {
-        log.debug("Saving printout {}", ausdruck.wahlUndBezirkIDUndMeldungsartModel().meldungsartModel());
+        log.debug("Saving printout {}", ausdruck.wahlUndBezirkIDUndMeldungsartModel().meldungsart());
 
         if (!validator.validate(ausdruck).isEmpty()) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG);
@@ -52,7 +52,7 @@ public class AusdruckService {
 
     @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetAusdruck')")
     public Optional<AusdruckReadModel> getAusdruck(@NotNull WahlUndBezirkIDUndMeldungsartModel idModel) {
-        log.debug("Loading printout {}", idModel.meldungsartModel());
+        log.debug("Loading printout {}", idModel.meldungsart());
 
         val id = ausdruckModelMapper.toEntity(idModel);
 

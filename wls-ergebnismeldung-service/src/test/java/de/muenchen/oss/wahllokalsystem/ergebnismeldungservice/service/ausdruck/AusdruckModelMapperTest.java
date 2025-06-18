@@ -48,7 +48,7 @@ class AusdruckModelMapperTest {
 
             val result = unitUnderTest.toModel(entityToMap);
 
-            Assertions.assertThat(result.wahlUndBezirkIDUndMeldungsartModel().meldungsartModel().name()).isEqualTo(meldungsart.name());
+            Assertions.assertThat(result.wahlUndBezirkIDUndMeldungsartModel().meldungsart().name()).isEqualTo(meldungsart.name());
         }
     }
 

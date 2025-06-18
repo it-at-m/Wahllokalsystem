@@ -11,7 +11,7 @@ public interface AusdruckDTOMapper {
 
     @Mapping(source = "wahlUndBezirkIDUndMeldungsartModel.wahlID", target = "wahlID")
     @Mapping(source = "wahlUndBezirkIDUndMeldungsartModel.wahlbezirkID", target = "wahlbezirkID")
-    @Mapping(source = "wahlUndBezirkIDUndMeldungsartModel.meldungsartModel", target = "meldungsart")
+    @Mapping(source = "wahlUndBezirkIDUndMeldungsartModel.meldungsart", target = "meldungsart")
     AusdruckReadDTO toDTO(AusdruckReadModel ausdruckModel);
 
     AusdruckWriteModel toModel(AusdruckWriteDTO ausdruckWriteDTO, WahlUndBezirkIDUndMeldungsartModel wahlUndBezirkIDUndMeldungsartModel);

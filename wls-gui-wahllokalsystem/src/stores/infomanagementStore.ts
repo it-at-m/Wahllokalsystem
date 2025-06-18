@@ -3,10 +3,12 @@ import type { Konfigurationsparameter } from "@/types/infomanagement/Konfigurati
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
+import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useKonfigurationsparameterService } from "@/composables/infomanagement/konfigurationsparameterService.ts";
 
 export const storeID = "infomanagement";
 const { getKonfigurationsparameter } = useKonfigurationsparameterService();
+const { registerStoreHMR } = useHmrUpdate();
 
 export const useInfomanagementStore = defineStore(storeID, () => {
   const konfigurationsparameter = ref<Konfigurationsparameter[] | null>(null);
@@ -26,3 +28,5 @@ export const useInfomanagementStore = defineStore(storeID, () => {
     initKonfigurationsparameter,
   };
 });
+
+registerStoreHMR(useInfomanagementStore);

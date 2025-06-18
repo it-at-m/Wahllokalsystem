@@ -4,9 +4,12 @@ import type { Ref } from "vue";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
+import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useTaskListService } from "@/composables/tasks/taskListService.ts";
 
 const storeID = "taskManager";
+const { registerStoreHMR } = useHmrUpdate();
+
 export const useTaskManagerStore = defineStore(storeID, () => {
   const taskListService = useTaskListService();
   const currentlyRunningTask = ref<null | Task>(null);
@@ -54,3 +57,5 @@ export const useTaskManagerStore = defineStore(storeID, () => {
     hasInitializationOfTasksCompletelyRun,
   };
 });
+
+registerStoreHMR(useTaskManagerStore);

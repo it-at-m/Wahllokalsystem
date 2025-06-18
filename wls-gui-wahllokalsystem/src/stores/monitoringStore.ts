@@ -1,10 +1,12 @@
 import { defineStore, storeToRefs } from "pinia";
 import { ref } from "vue";
 
+import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useMonitoringService } from "@/composables/monitoring/monitoringService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const { getWahlbeteiligung, postWahlbeteiligung } = useMonitoringService();
+const { registerStoreHMR } = useHmrUpdate();
 
 export const storeID = "monitoring";
 
@@ -38,3 +40,5 @@ export const useMonitoringStore = defineStore(storeID, () => {
 
   return { waehler, increaseWaehlerByOne, loadWaehler, sendWaehler };
 });
+
+registerStoreHMR(useMonitoringStore);

@@ -49,6 +49,5 @@ public class StapelartModelMapperTest {
 
             Assertions.assertEquals(expectedResult, result);
         }
-
     }
 }

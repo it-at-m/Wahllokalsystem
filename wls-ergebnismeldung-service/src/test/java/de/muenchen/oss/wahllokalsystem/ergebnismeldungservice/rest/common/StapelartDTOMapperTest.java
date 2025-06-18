@@ -49,6 +49,5 @@ public class StapelartDTOMapperTest {
 
             Assertions.assertEquals(expectedResult, result);
         }
-
     }
 }

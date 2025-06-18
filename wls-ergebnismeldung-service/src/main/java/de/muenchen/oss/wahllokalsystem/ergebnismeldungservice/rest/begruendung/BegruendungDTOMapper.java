@@ -3,7 +3,6 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.begruendung;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungReferenceModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -24,6 +23,4 @@ public interface BegruendungDTOMapper {
     @Mapping(target = "stapelart", source = "bezirkUndWahlIDStapelart.stapelart")
     @Mapping(target = "grund1", source = "grund")
     BegruendungModel toModel(BegruendungDTO dto);
-
-    StapelartModel toStapelart(StapelartDTO stapelart);
 }

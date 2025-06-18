@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.begruendung;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.BezirkUndWahlIDStapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTOMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungReferenceModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungService;
@@ -25,6 +26,9 @@ class BegruendungControllerTest {
 
     @Mock
     BegruendungDTOMapper begruendungDTOMapper;
+
+    @Mock
+    StapelartDTOMapper stapelartDTOMapper;
 
     @InjectMocks
     BegruendungController unitUnderTest;
@@ -88,7 +92,7 @@ class BegruendungControllerTest {
 
             val mockedBegruendungModel = new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, null, null, true, true);
             Mockito.when(begruendungDTOMapper.toModel(begruendungDTO)).thenReturn(mockedBegruendungModel);
-            Mockito.when(begruendungDTOMapper.toStapelart(stapelartDTO)).thenReturn(stapelartModel);
+            Mockito.when(stapelartDTOMapper.toModel(stapelartDTO)).thenReturn(stapelartModel);
 
             unitUnderTest.postBegruendung(wahlbezirkID, wahlID, stapelartDTO, begruendungDTO);
 

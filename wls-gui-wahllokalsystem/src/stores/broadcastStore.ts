@@ -1,13 +1,15 @@
 import type { BroadcastMessage } from "@/types/broadcast/broadcastMessage.ts";
 
-import { acceptHMRUpdate, defineStore, storeToRefs } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { ref } from "vue";
 
 import { useBroadcastService } from "@/composables/broadcast/broadcastService.ts";
+import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 export const broadcastStoreId = "broadcast";
 const { getMessage, deleteMessage } = useBroadcastService();
+const { registerStoreHMR } = useHmrUpdate();
 
 export const useBroadcastStore = defineStore(broadcastStoreId, () => {
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
@@ -36,6 +38,4 @@ export const useBroadcastStore = defineStore(broadcastStoreId, () => {
   };
 });
 
-if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useBroadcastStore, import.meta.hot));
-}
+registerStoreHMR(useBroadcastStore);

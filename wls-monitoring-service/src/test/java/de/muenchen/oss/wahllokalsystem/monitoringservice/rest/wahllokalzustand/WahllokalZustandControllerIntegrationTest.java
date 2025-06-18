@@ -223,7 +223,7 @@ class WahllokalZustandControllerIntegrationTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("""
                             {
-                              "druckuhrzeit": "2024-10-21T23:59:12.123Z",
+                              "druckuhrzeit": "2024-10-21T23:59:12.123",
                               "bezirkUndWahlID": {
                                 "wahlID": "wahlID",
                                 "wahlbezirkID": "wahlbezirkID"
@@ -247,7 +247,7 @@ class WahllokalZustandControllerIntegrationTest {
                     .withHeader("Content-Type", equalTo("application/json"))
                     .withRequestBody(matchingJsonPath("$.wahlbezirkID", equalTo("wahlbezirkID")))
                     .withRequestBody(matchingJsonPath("$.druckzustaende[0].wahlID", equalTo("wahlID")))
-                    .withRequestBody(matchingJsonPath("$.druckzustaende[0].niederschriftDruckUhrzeit", equalTo("2024-10-21T23:59:12.123Z"))));
+                    .withRequestBody(matchingJsonPath("$.druckzustaende[0].niederschriftDruckUhrzeit", equalTo("2024-10-21T23:59:12.123"))));
         }
 
     }

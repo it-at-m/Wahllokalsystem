@@ -19,5 +19,9 @@ CREATE TABLE Druckzustand
     schnellmeldungSendenUhrzeit TIMESTAMP,
     niederschriftSendenUhrzeit  TIMESTAMP,
     schnellmeldungDruckUhrzeit  TIMESTAMP,
-    niederschriftDruckUhrzeit   TIMESTAMP
+    niederschriftDruckUhrzeit   TIMESTAMP,
+
+    CONSTRAINT UNIQUE_ENTRIES UNIQUE (wahllokalzustandID, wahlID, schnellmeldungDruckUhrzeit,
+                                      schnellmeldungSendenUhrzeit, niederschriftDruckUhrzeit,
+                                      niederschriftSendenUhrzeit)
 );

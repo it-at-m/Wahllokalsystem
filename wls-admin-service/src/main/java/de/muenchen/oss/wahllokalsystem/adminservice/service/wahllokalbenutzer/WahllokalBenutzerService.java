@@ -30,9 +30,9 @@ public class WahllokalBenutzerService {
         val wahlbezirke = wahlbezirkeClient.getWahlbezirke(wahltagID);
 
         wahllokalbenutzerValidator.wahlbezirkeExistOrThrow(wahlbezirke);
+
         val sortedWahlbezirke = wahlbezirke.stream()
-                .sorted(
-                        Comparator.comparingInt(wb -> Integer.parseInt(wb.wahlnummer())))
+                .sorted(Comparator.comparing(WahlbezirkModel::wahlnummer))
                 .collect(Collectors.groupingBy(WahlbezirkModel::nummer))
                 .values().stream()
                 .flatMap(List::stream)

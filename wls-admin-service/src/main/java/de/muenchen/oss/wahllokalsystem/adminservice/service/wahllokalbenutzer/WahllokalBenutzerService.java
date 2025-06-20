@@ -1,12 +1,12 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer;
 
-import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkeClient;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -17,8 +17,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class WahllokalBenutzerService {
-
-    private final ExceptionFactory exceptionFactory;
 
     private final WahllokalBenutzerValidator wahllokalbenutzerValidator;
 
@@ -32,9 +30,16 @@ public class WahllokalBenutzerService {
         val wahlbezirke = wahlbezirkeClient.getWahlbezirke(wahltagID);
 
         wahllokalbenutzerValidator.wahlbezirkeExistOrThrow(wahlbezirke);
+        val sortedWahlbezirke = wahlbezirke.stream()
+                .sorted(
+                        Comparator.comparingInt(wb -> Integer.parseInt(wb.wahlnummer())))
+                .collect(Collectors.groupingBy(WahlbezirkModel::nummer))
+                .values().stream()
+                .flatMap(List::stream)
+                .toList();
 
-        log.debug("generateWahllokalbenutzer, Anzahl Wahlbezirke: {}", wahlbezirke.size());
-        List<WahllokalBenutzerModel> userModels = generateBenutzerModels(wahlbezirke);
+        log.debug("generateWahllokalbenutzer, Anzahl Wahlbezirke: {}", sortedWahlbezirke.size());
+        List<WahllokalBenutzerModel> userModels = generateBenutzerModels(sortedWahlbezirke);
         log.debug("generateWahllokalbenutzer, Anzahl generierter Benutzer: {}", userModels.size());
 
         return new CsvFileModel(wahllokalBenutzerClient.generateAndExportWahllokalBenutzer(wahltagID, userModels));

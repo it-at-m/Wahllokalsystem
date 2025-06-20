@@ -40,6 +40,7 @@ class WahllokalZustandServiceTest {
 
             unitUnderTest.setWahllokalZustand(wahllokaloZustand);
 
+            Mockito.verify(wahllokalZustandValidator).valideWahllokalZustandOrThrow(wahllokaloZustand);
             Mockito.verify(wahllokalZustandRepository).save(mockedMappedWahllokalZustand);
 
         }

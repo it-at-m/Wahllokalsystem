@@ -1,0 +1,19 @@
+### get Wahltag | user wls_all_uwb + wls_all_bwb
+POST {{ WLS_EAI_SERVICE_URL }}/wahllokalzustand
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171",
+  "letzteAbmeldung": "2025-06-20T08:54:00.000",
+  "zuletztGesehen": "2025-06-20T08:54:00.000",
+  "druckzustaende": [
+    {
+      "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1",
+      "niederschriftDruckUhrzeit": "2025-06-20T08:54:00.000",
+      "schnellmeldungDruckUhrzeit": "2025-06-20T08:34:00.000",
+      "niederschriftSendenUhrzeit": "2025-06-20T08:44:00.000",
+      "schnellmeldungSendenUhrzeit": "2025-06-20T08:24:00.000"
+    }
+  ]
+}

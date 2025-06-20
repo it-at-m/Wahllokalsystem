@@ -1,9 +1,11 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahllokalzustand;
 
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahllokalzustand.dto.WahllokalZustandDTO;
+import de.muenchen.oss.wahllokalsystem.eaiservice.service.wahllokalZustand.WahllokalZustandService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/wahllokalzustand")
+@RequiredArgsConstructor
 public class WahllokalzustandController {
+
+    private final WahllokalZustandService wahllokalZustandService;
 
     @Operation(
             description = "Speichert den Wahllokalzustand. Aktuell noch nicht implementiert. ",
@@ -24,6 +29,6 @@ public class WahllokalzustandController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public void saveWahllokalZustand(@Valid @RequestBody WahllokalZustandDTO wahllokalZustand) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        wahllokalZustandService.setWahllokalZustand(wahllokalZustand);
     }
 }

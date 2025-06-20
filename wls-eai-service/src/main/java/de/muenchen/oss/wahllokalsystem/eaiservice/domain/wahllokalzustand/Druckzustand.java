@@ -18,8 +18,8 @@ import org.hibernate.annotations.JdbcTypeCode;
 public class Druckzustand {
 
     @JdbcTypeCode(VARCHAR)
-    private @NotNull
-    UUID wahlID;
+    @NotNull
+    private UUID wahlID;
 
     private LocalDateTime schnellmeldungSendenUhrzeit;
 

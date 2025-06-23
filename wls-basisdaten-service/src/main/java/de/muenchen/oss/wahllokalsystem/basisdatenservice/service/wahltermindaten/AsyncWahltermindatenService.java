@@ -11,6 +11,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlartM
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlag.WahlvorschlaegeClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlag.WahlvorschlaegeModelMapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -39,11 +40,11 @@ public class AsyncWahltermindatenService {
         asyncProgress.reset(wahltagWithNummerModel.wahltag(), wahltagWithNummerModel.wahltagNummer());
         initWahlvorschlaege(basisdaten);
         initReferendumvorlagen(basisdaten);
+        asyncProgress.setLastFinishTime(LocalDateTime.now());
     }
 
     private void initWahlvorschlaege(final BasisdatenModel basisdaten) {
         asyncProgress.setWahlvorschlaegeTotal(basisdaten.wahlen().size() * basisdaten.wahlbezirke().size());
-        asyncProgress.setWahlvorschlaegeLoadingActive(true);
 
         val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
         basisdaten.wahlen().parallelStream()
@@ -75,7 +76,6 @@ public class AsyncWahltermindatenService {
     private void initReferendumvorlagen(final BasisdatenModel basisdaten) {
         if (basisdaten.wahlen().stream().anyMatch(wahl -> WahlartModel.VE.equals(wahl.wahlart()) || WahlartModel.BEB.equals(wahl.wahlart()))) {
             asyncProgress.setReferendumVorlagenTotal(basisdaten.wahlen().size() * basisdaten.wahlbezirke().size());
-            asyncProgress.setReferendumLoadingActive(true);
         }
 
         val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();

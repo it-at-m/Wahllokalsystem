@@ -22,7 +22,7 @@ class AsyncProgressDTOMapperTest {
             val wahlnummer = "wahlnummer";
             val lastStartTime = LocalDateTime.now().minusDays(2);
             val lastFinishTime = LocalDateTime.now().minusDays(1);
-            val wahlvorschlaegeIsLoading = true;
+            val wahlvorschlaegeIsLoading = false;
             val wahlvorschlaegeTotal = 23;
             val wahlvorschlaegeFinished = 12;
             val wahlvorschlaegeNext = "wahlvorschlagID13";
@@ -31,8 +31,8 @@ class AsyncProgressDTOMapperTest {
             val referendumvorlagenFinished = 20;
             val referendumvorlagenNext = "referendumvorlagenID13";
 
-            val asyncProgress = new AsyncProgress(wahltag, wahlnummer, lastStartTime, lastFinishTime, wahlvorschlaegeIsLoading, wahlvorschlaegeTotal,
-                    wahlvorschlaegeFinished, wahlvorschlaegeNext, referendumvorlagenIsLoading, referendumvorlagenTotal, referendumvorlagenFinished,
+            val asyncProgress = new AsyncProgress(wahltag, wahlnummer, lastStartTime, lastFinishTime, wahlvorschlaegeTotal,
+                    wahlvorschlaegeFinished, wahlvorschlaegeNext, referendumvorlagenTotal, referendumvorlagenFinished,
                     referendumvorlagenNext);
 
             val result = unitUnderTest.toDto(asyncProgress);
@@ -42,6 +42,26 @@ class AsyncProgressDTOMapperTest {
                     referendumvorlagenNext);
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
+        }
+
+        @Test
+        void should_returnIsLoadingActiveTrue_when_totalIsEqualsFinished() {
+            val asyncProgress = new AsyncProgress(null, null, null, null, 10, 10, null, 13, 13, null);
+
+            val result = unitUnderTest.toDto(asyncProgress);
+
+            Assertions.assertThat(result.wahlvorschlaegeLoadingActive()).isTrue();
+            Assertions.assertThat(result.referendumLoadingActive()).isTrue();
+        }
+
+        @Test
+        void should_returnIsLoadingActiveFalse_when_totalIsNotEqualsFinished() {
+            val asyncProgress = new AsyncProgress(null, null, null, null, 10, 11, null, 13, 12, null);
+
+            val result = unitUnderTest.toDto(asyncProgress);
+
+            Assertions.assertThat(result.wahlvorschlaegeLoadingActive()).isFalse();
+            Assertions.assertThat(result.referendumLoadingActive()).isFalse();
         }
 
         @Test

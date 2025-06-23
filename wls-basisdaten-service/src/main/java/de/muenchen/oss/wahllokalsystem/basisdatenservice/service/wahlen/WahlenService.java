@@ -86,6 +86,6 @@ public class WahlenService {
     private void resetWahl(final Wahl wahl) {
         wahl.setFarbe(new Farbe(0, 0, 0));
         wahl.setReihenfolge(0);
-        wahl.setWaehlerverzeichnisnummer(1);
+        wahl.setWaehlerverzeichnisNummer(1);
     }
 }

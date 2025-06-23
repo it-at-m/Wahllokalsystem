@@ -33,16 +33,15 @@ class WahllokalZustandServiceTest {
 
         @Test
         void should_callValidatorAndRepo_when_dtoIsGiven() {
-            val wahllokaloZustand = new WahllokalZustandDTO("wahlbezirkID", null, null, Collections.emptySet());
+            val wahllokalZustand = new WahllokalZustandDTO("wahlbezirkID", null, null, Collections.emptySet());
 
             val mockedMappedWahllokalZustand = new WahllokalZustand();
-            Mockito.when(wahllokalZustandMapper.toEntity(wahllokaloZustand)).thenReturn(mockedMappedWahllokalZustand);
+            Mockito.when(wahllokalZustandMapper.toEntity(wahllokalZustand)).thenReturn(mockedMappedWahllokalZustand);
 
-            unitUnderTest.setWahllokalZustand(wahllokaloZustand);
+            unitUnderTest.setWahllokalZustand(wahllokalZustand);
 
-            Mockito.verify(wahllokalZustandValidator).valideWahllokalZustandOrThrow(wahllokaloZustand);
+            Mockito.verify(wahllokalZustandValidator).validWahllokalZustandOrThrow(wahllokalZustand);
             Mockito.verify(wahllokalZustandRepository).save(mockedMappedWahllokalZustand);
-
         }
     }
 }

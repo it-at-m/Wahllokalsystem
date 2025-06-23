@@ -13,7 +13,7 @@ public class WahllokalZustandValidator {
 
     private final ExceptionFactory exceptionFactory;
 
-    public void valideWahllokalZustandOrThrow(final WahllokalZustandDTO zustand) {
+    public void validWahllokalZustandOrThrow(final WahllokalZustandDTO zustand) {
         if (zustand == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN);
         }

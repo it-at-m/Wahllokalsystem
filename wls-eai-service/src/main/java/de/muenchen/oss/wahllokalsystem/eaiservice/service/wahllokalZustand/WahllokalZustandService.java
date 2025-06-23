@@ -18,9 +18,6 @@ public class WahllokalZustandService {
     @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_SaveWahllokalZustand')")
     public void setWahllokalZustand(final WahllokalZustandDTO wahllokalZustandToSet) {
         wahllokalZustandValidator.valideWahllokalZustandOrThrow(wahllokalZustandToSet);
-
-        val wahllokalZustandEntityToSave = wahllokalZustandMapper.toEntity(wahllokalZustandToSet);
-
-        wahllokalZustandRepository.save(wahllokalZustandEntityToSave);
+        wahllokalZustandRepository.save(wahllokalZustandMapper.toEntity(wahllokalZustandToSet));
     }
 }

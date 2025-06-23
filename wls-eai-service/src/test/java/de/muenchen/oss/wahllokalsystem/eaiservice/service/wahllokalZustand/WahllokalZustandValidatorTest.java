@@ -69,8 +69,7 @@ class WahllokalZustandValidatorTest {
             return Stream.of(
                     Arguments.of(new WahllokalZustandDTO(null, null, null, Collections.emptySet()), "wahlbezirkID is null"),
                     Arguments.of(new WahllokalZustandDTO("", null, null, Collections.emptySet()), "wahlbezirkID is empty string"),
-                    Arguments.of(new WahllokalZustandDTO("   ", null, null, Collections.emptySet()), "wahlbezirkID is blank string")
-            );
+                    Arguments.of(new WahllokalZustandDTO("   ", null, null, Collections.emptySet()), "wahlbezirkID is blank string"));
         }
     }
 }

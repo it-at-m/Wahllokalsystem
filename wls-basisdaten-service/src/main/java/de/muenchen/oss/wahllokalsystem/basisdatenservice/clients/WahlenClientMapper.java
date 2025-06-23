@@ -11,7 +11,7 @@ import org.mapstruct.Mapping;
 @Mapper(imports = FarbeModel.class)
 public interface WahlenClientMapper {
 
-    @Mapping(target = "waehlerverzeichnisnummer", constant = "1l")
+    @Mapping(target = "waehlerverzeichnisNummer", constant = "1l")
     @Mapping(target = "reihenfolge", constant = "1l")
     @Mapping(target = "farbe", expression = "java(new FarbeModel(0, 0, 0))")
     @Mapping(target = "wahlID", source = "identifikator")

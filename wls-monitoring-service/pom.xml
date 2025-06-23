@@ -393,6 +393,14 @@
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
                 <version>7.12.0</version>
+                <configuration>
+                    <typeMappings>
+                        <typeMapping>OffsetDateTime=LocalDateTime</typeMapping>
+                    </typeMappings>
+                    <importMappings>
+                        <importMapping>OffsetDateTime=java.time.LocalDateTime</importMapping>
+                    </importMappings>
+                </configuration>
                 <executions>
                     <execution>
                         <id>generateEAI</id>

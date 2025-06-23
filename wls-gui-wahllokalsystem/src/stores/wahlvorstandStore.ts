@@ -1,8 +1,9 @@
 import type { Wahlvorstand } from "@/types/wahlvorstand/Wahlvorstand";
 
-import { acceptHMRUpdate, defineStore, storeToRefs } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
+import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useWahlvorstandService } from "@/composables/wahlvorstand/wahlvorstandService";
 import {
   MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG,
@@ -19,6 +20,7 @@ import {
 const { getWahlvorstand, saveWahlvorstand } = useWahlvorstandService();
 
 export const storeID = "wahlvorstand";
+const { registerStoreHMR } = useHmrUpdate();
 
 export const useWahlvorstandStore = defineStore(storeID, () => {
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
@@ -29,7 +31,6 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   const lastLoading = ref<Date | null>(null);
   const lastSending = ref<Date | null>(null);
   const wahlvorstand = ref<Wahlvorstand>(createEmptyWahlvorstand());
-  const wahlvorstandReady = ref(false);
 
   const isSchriftfuehrerAnwesend = computed<boolean>(() =>
     wahlvorstand.value.wahlvorstandsmitglieder.some(
@@ -65,7 +66,6 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
         forceUpdate: true,
         sendNotification: sendNotification,
       });
-      wahlvorstandReady.value = true;
     } else {
       await Promise.reject();
     }
@@ -135,7 +135,6 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     isLoading,
     isSaving,
     wahlvorstand,
-    wahlvorstandReady,
     initWahlvorstand,
     changeAnwesendOfMitglied,
     forceLoadWahlvorstand,
@@ -144,8 +143,4 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   };
 });
 
-if (import.meta.hot) {
-  import.meta.hot.accept(
-    acceptHMRUpdate(useWahlvorstandStore, import.meta.hot)
-  );
-}
+registerStoreHMR(useWahlvorstandStore);

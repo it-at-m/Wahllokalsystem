@@ -55,8 +55,18 @@ class AsyncProgressDTOMapperTest {
         }
 
         @Test
+        void should_returnIsLoadingActiveTrue_when_totalIsSmallerThanFinished() {
+            val asyncProgress = new AsyncProgress(null, null, null, null, 10, 11, null, 13, 14, null);
+
+            val result = unitUnderTest.toDto(asyncProgress);
+
+            Assertions.assertThat(result.wahlvorschlaegeLoadingActive()).isTrue();
+            Assertions.assertThat(result.referendumLoadingActive()).isTrue();
+        }
+
+        @Test
         void should_returnIsLoadingActiveFalse_when_totalIsNotEqualsFinished() {
-            val asyncProgress = new AsyncProgress(null, null, null, null, 10, 11, null, 13, 12, null);
+            val asyncProgress = new AsyncProgress(null, null, null, null, 10, 9, null, 13, 12, null);
 
             val result = unitUnderTest.toDto(asyncProgress);
 

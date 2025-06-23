@@ -17,11 +17,11 @@ public interface AsyncProgressDTOMapper {
 
     @Named(NAMED_MAPPING_WAHLVORSCHLAEGE_LOADING)
     default boolean mapIsWahlvorschlaegeLoadingActive(final AsyncProgress asyncProgress) {
-        return asyncProgress.getWahlvorschlaegeTotal() == asyncProgress.getWahlvorschlageFinished();
+        return asyncProgress.getWahlvorschlaegeTotal() <= asyncProgress.getWahlvorschlageFinished();
     }
 
     @Named(NAMED_MAPPING_REFERENDUMVORLAGEN_LOADING)
     default boolean mapIsIsReferendumLoadingActive(final AsyncProgress asyncProgress) {
-        return asyncProgress.getReferendumVorlagenTotal() == asyncProgress.getReferendumVorlagenFinished();
+        return asyncProgress.getReferendumVorlagenTotal() <= asyncProgress.getReferendumVorlagenFinished();
     }
 }

@@ -7,6 +7,11 @@ Die Schnittstelle zwischen diesen Anwendungen wird über diesen EAI-Service real
 
 Der Service hat keine Abhängigkeiten zu anderen Services.
 
+## Abweichungen von der Architektur
+
+Entsprechend dem [ADR zum Datenmodell](../../../technik/adr/adr002-controller-service-datamodels.md)
+verwendet die EAI kein eigenes Datenmodell in den Services. Die Serviceklassen mappen vom DTO auf die Entität.
+
 ## Daten und Funktionen
 
 ### Wahldaten

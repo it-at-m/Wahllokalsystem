@@ -110,7 +110,8 @@ public class ErgebnismeldungMappingService {
         val predicateForStapelWithInvalidErgebnisse = wahlartPredicateHolder.getPredicateForStapelWithInvalidErgebnisse(wahlart);
         val ergebnisseFilter = gueltig ? Predicate.not(predicateForStapelWithInvalidErgebnisse) : predicateForStapelWithInvalidErgebnisse;
 
-        return ergebnisse.stream().filter(ergenis -> ergebnisseFilter.test(stapelArtModelMapper.toModel(ergenis.getBezirkUndWahlIDStapelart().getStapelart())))
+        return ergebnisse.stream()
+                .filter(ergebnis -> ergebnisseFilter.test(stapelArtModelMapper.toModel(ergebnis.getBezirkUndWahlIDStapelart().getStapelart())))
                 .toList();
     }
 

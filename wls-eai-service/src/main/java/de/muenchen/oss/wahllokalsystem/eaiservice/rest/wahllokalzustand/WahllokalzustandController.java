@@ -21,7 +21,7 @@ public class WahllokalzustandController {
     private final WahllokalZustandService wahllokalZustandService;
 
     @Operation(
-            description = "Speichert den Wahllokalzustand. Aktuell noch nicht implementiert. ",
+            description = "Speichert den Wahllokalzustand. ",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Wahllokalzustand erfolgreich gespeichert.")
             }

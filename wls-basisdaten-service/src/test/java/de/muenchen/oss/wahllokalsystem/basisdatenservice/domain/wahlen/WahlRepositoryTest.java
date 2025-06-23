@@ -56,8 +56,8 @@ class WahlRepositoryTest {
         void should_returnTrue_when_wahltagExistsInRepo() {
             val wahltagDateToFind = LocalDate.of(2024, 9, 3);
             val wahlenToSave = List.of(
-                    new Wahl("wahltagID1", "name1", 1, 1, wahltagDateToFind, Wahlart.BTW, null, "1"),
-                    new Wahl("wahltagID2", "name2", 1, 1, wahltagDateToFind.plusDays(1), Wahlart.BTW, null, "1"));
+                    new Wahl("wahltagID1", "name1", 1, 1, wahltagDateToFind, Wahlart.BTW, new Farbe(0, 0, 0), "1"),
+                    new Wahl("wahltagID2", "name2", 1, 1, wahltagDateToFind.plusDays(1), Wahlart.BTW, new Farbe(0, 0, 0), "1"));
             repository.saveAll(wahlenToSave);
 
             Assertions.assertThat(repository.existsByWahltag(wahltagDateToFind)).isTrue();
@@ -67,9 +67,9 @@ class WahlRepositoryTest {
         void should_returnTrue_when_oneOrMoreWahltageExistInRepo() {
             val wahltagDateToFind = LocalDate.of(2024, 9, 3);
             val wahlenToSave = List.of(
-                    new Wahl("wahltagID1", "name1", 1, 1, wahltagDateToFind, Wahlart.BTW, null, "1"),
-                    new Wahl("wahltagID11", "name11", 2, 2, wahltagDateToFind, Wahlart.BTW, null, "2"),
-                    new Wahl("wahltagID2", "name2", 1, 1, wahltagDateToFind.plusDays(1), Wahlart.BTW, null, "1"));
+                    new Wahl("wahltagID1", "name1", 1, 1, wahltagDateToFind, Wahlart.BTW, new Farbe(0, 0, 0), "1"),
+                    new Wahl("wahltagID11", "name11", 2, 2, wahltagDateToFind, Wahlart.BTW, new Farbe(0, 0, 0), "2"),
+                    new Wahl("wahltagID2", "name2", 1, 1, wahltagDateToFind.plusDays(1), Wahlart.BTW, new Farbe(0, 0, 0), "1"));
             repository.saveAll(wahlenToSave);
 
             Assertions.assertThat(repository.existsByWahltag(wahltagDateToFind)).isTrue();
@@ -79,8 +79,8 @@ class WahlRepositoryTest {
         void should_returnFalse_when_wahlTagDoesNotExistInRepo() {
             val wahltagDateToFind = LocalDate.of(2024, 9, 3);
             val wahlenToSave = List.of(
-                    new Wahl("wahltagID1", "name1", 1, 1, wahltagDateToFind.minusDays(1), Wahlart.BTW, null, "1"),
-                    new Wahl("wahltagID2", "name2", 1, 1, wahltagDateToFind.plusDays(1), Wahlart.BTW, null, "1"));
+                    new Wahl("wahltagID1", "name1", 1, 1, wahltagDateToFind.minusDays(1), Wahlart.BTW, new Farbe(0, 0, 0), "1"),
+                    new Wahl("wahltagID2", "name2", 1, 1, wahltagDateToFind.plusDays(1), Wahlart.BTW, new Farbe(0, 0, 0), "1"));
             repository.saveAll(wahlenToSave);
 
             Assertions.assertThat(repository.existsByWahltag(wahltagDateToFind)).isFalse();
@@ -92,11 +92,11 @@ class WahlRepositoryTest {
         repository.deleteAll();
         val wahltagDateToFind = LocalDate.of(2024, 9, 3);
         val wahlenToSave_First = List.of(
-                new Wahl("wahltagID1", "name1_first", 1, 1, wahltagDateToFind, Wahlart.BTW, null, "0"),
-                new Wahl("wahltagID2", "name2_first", 1, 1, wahltagDateToFind, Wahlart.BTW, null, "1"));
+                new Wahl("wahltagID1", "name1_first", 1, 1, wahltagDateToFind, Wahlart.BTW, new Farbe(0, 0, 0), "0"),
+                new Wahl("wahltagID2", "name2_first", 1, 1, wahltagDateToFind, Wahlart.BTW, new Farbe(0, 0, 0), "1"));
         val wahlenToSave_Second = List.of(
-                new Wahl("wahltagID1", "name1_second", 1, 1, wahltagDateToFind.plusDays(1), Wahlart.BTW, null, "0"),
-                new Wahl("wahltagID2", "name2_second", 1, 1, wahltagDateToFind.minusDays(1), Wahlart.BTW, null, "1"));
+                new Wahl("wahltagID1", "name1_second", 1, 1, wahltagDateToFind.plusDays(1), Wahlart.BTW, new Farbe(0, 0, 0), "0"),
+                new Wahl("wahltagID2", "name2_second", 1, 1, wahltagDateToFind.minusDays(1), Wahlart.BTW, new Farbe(0, 0, 0), "1"));
         repository.saveAll(wahlenToSave_First);
         repository.saveAll(wahlenToSave_Second);
 

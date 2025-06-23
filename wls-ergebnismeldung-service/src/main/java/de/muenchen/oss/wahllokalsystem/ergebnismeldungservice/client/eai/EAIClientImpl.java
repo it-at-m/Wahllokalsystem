@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.eai;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration.Profiles;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.client.ErgebnismeldungControllerApi;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.client.WahldatenControllerApi;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.client.WahlergebnisControllerApi;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.WahlberechtigteDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 public class EAIClientImpl implements AWerteClient, EaiClient {
 
     private final WahldatenControllerApi wahldatenControllerApi;
-    private final WahlergebnisControllerApi wahlergebnisControllerApi;
+    private final ErgebnismeldungControllerApi ergebnismeldungControllerApi;
 
     private final AWerteClientMapper aWerteClientMapper;
 
@@ -47,7 +47,7 @@ public class EAIClientImpl implements AWerteClient, EaiClient {
     @Override
     public void sendErgebnismeldung(final ErgebnismeldungDTO ergebnismeldungDTO) {
         try {
-            wahlergebnisControllerApi.saveErgebnismeldung(ergebnismeldungDTO);
+            ergebnismeldungControllerApi.saveErgebnismeldung(ergebnismeldungDTO);
         } catch (final Exception exception) {
             log.warn("Failed to save Ergebnismeldung: {}. Exception: {}", ergebnismeldungDTO, exception.getMessage());
             simLogging(Objects.requireNonNull(ergebnismeldungDTO.getMeldungsart(), "Ergebnismeldung Meldungsart is null"));
@@ -58,8 +58,8 @@ public class EAIClientImpl implements AWerteClient, EaiClient {
     private void simLogging(final ErgebnismeldungDTO.MeldungsartEnum meldungsart) {
         try {
             val mdcEIDValue = switch (meldungsart) {
-            case NIEDERSCHRIFT -> "NIEDERSCHRIFT_GESENDET";
-            case SCHNELLMELDUNG -> "SCHNELLMELDUNG_GESENDET";
+                case NIEDERSCHRIFT -> "NIEDERSCHRIFT_GESENDET";
+                case SCHNELLMELDUNG -> "SCHNELLMELDUNG_GESENDET";
             };
             MDC.put("eid", mdcEIDValue);
             MDC.put("result", "3");

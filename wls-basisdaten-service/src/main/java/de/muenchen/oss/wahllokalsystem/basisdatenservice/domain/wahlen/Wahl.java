@@ -35,7 +35,7 @@ public class Wahl {
     private long reihenfolge;
 
     @Min(0)
-    private long waehlerverzeichnisnummer;
+    private long waehlerverzeichnisNummer;
 
     @NotNull
     private LocalDate wahltag;
@@ -45,6 +45,7 @@ public class Wahl {
     private Wahlart wahlart;
 
     @Embedded
+    @NotNull
     private Farbe farbe;
 
     @Size(max = 255)

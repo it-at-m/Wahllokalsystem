@@ -65,12 +65,6 @@ export function useVorfaelleundvorkommnisseTestDataFactory() {
     };
   }
 
-  function _generateRandomEreignisart(): EreignisartEnum {
-    const ereignisarten = Object.values(EreignisartEnum);
-    const zufaelligerIndex = Math.floor(Math.random() * ereignisarten.length);
-    return ereignisarten[zufaelligerIndex];
-  }
-
   function prepareEreignis(): Builder<Ereignis> {
     return proxyBuilder<Ereignis>(createEreignis());
   }
@@ -87,6 +81,12 @@ export function useVorfaelleundvorkommnisseTestDataFactory() {
     return proxyBuilder<WahlbezirkEreignisseDTO>(
       createWahlbezirkEreignisseDTO()
     );
+  }
+
+  function _generateRandomEreignisart(): EreignisartEnum {
+    const ereignisarten = Object.values(EreignisartEnum);
+    const zufaelligerIndex = Math.floor(Math.random() * ereignisarten.length);
+    return ereignisarten[zufaelligerIndex];
   }
 
   return {

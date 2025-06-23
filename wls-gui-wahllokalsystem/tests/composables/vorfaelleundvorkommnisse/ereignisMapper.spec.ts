@@ -23,18 +23,30 @@ describe("ereignisMapper.ts", () => {
 
   describe("toModel", () => {
     it("should_returnWahlbezirkEreignisse_when_dtoIsGiven", () => {
-      const dtoToMap = getWahlbezirkEreignisseDTO();
+      const dtoToMap = getWahlbezirkEreignisseDTO(
+        getEreignisseDTO("2025-04-28T08:15:00", "2025-04-28T11:40:00")
+      );
 
       const result = toModel(dtoToMap);
 
-      const expectedResult = getWahlbezirkEreignisse();
+      const expectedResult = getWahlbezirkEreignisse(getEreignisse());
+      expect(result).toStrictEqual(expectedResult);
+    });
+
+    it("should_returnWahlbezirkEreignisseWithEmptyArray_when_dtoHasUndefinedEreigniseintraege", () => {
+      const dtoWithUndefinedEreigniseintraege =
+        getWahlbezirkEreignisseDTO(undefined);
+
+      const result = toModel(dtoWithUndefinedEreigniseintraege);
+
+      const expectedResult = getWahlbezirkEreignisse([]);
       expect(result).toStrictEqual(expectedResult);
     });
   });
 
   describe("toDto", () => {
     it("should_returnEreignisseWriteDto_when_modelIsGiven", () => {
-      const modelToMap = getWahlbezirkEreignisse();
+      const modelToMap = getWahlbezirkEreignisse(getEreignisse());
 
       const result = toDto(modelToMap);
 
@@ -49,14 +61,14 @@ describe("ereignisMapper.ts", () => {
   });
 });
 
-function getWahlbezirkEreignisseDTO(): WahlbezirkEreignisseDTO {
+function getWahlbezirkEreignisseDTO(
+  ereigniseintraege: EreignisDTO[] | undefined
+): WahlbezirkEreignisseDTO {
   return prepareWahlbezirkEreignisseDTO()
     .wahlbezirkID("1234")
     .keineVorkommnisse(false)
     .keineVorfaelle(false)
-    .ereigniseintraege(
-      getEreignisseDTO("2025-04-28T08:15:00", "2025-04-28T11:40:00")
-    )
+    .ereigniseintraege(ereigniseintraege)
     .build();
 }
 
@@ -75,12 +87,14 @@ function getEreignisseDTO(uhrzeit1: string, uhrzeit2: string): EreignisDTO[] {
   ];
 }
 
-function getWahlbezirkEreignisse(): WahlbezirkEreignisse {
+function getWahlbezirkEreignisse(
+  ereigniseintraege: Ereignis[]
+): WahlbezirkEreignisse {
   return prepareWahlbezirkEreignisse()
     .wahlbezirkID("1234")
     .keineVorkommnisse(false)
     .keineVorfaelle(false)
-    .ereigniseintraege(getEreignisse())
+    .ereigniseintraege(ereigniseintraege)
     .build();
 }
 

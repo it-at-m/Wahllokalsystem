@@ -21,7 +21,7 @@ public interface AsyncProgressDTOMapper {
     }
 
     @Named(NAMED_MAPPING_REFERENDUMVORLAGEN_LOADING)
-    default boolean mapIsIsReferendumLoadingActive(final AsyncProgress asyncProgress) {
+    default boolean mapIsReferendumLoadingActive(final AsyncProgress asyncProgress) {
         return asyncProgress.getReferendumVorlagenTotal() > asyncProgress.getReferendumVorlagenFinished();
     }
 }

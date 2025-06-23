@@ -2,7 +2,7 @@
   <v-container>
     <v-card>
       <v-card-title>Zahl der Wahlurnen</v-card-title>
-      <v-card-text class="pb-0">
+      <v-card-text class="pb-0 pt-2">
         <v-form
           ref="wahlurnenForm"
           v-model="anzahlWahlurnenValidForm"
@@ -18,7 +18,7 @@
                 :rules="[REQUIRED, MIN_NUMBER(1), MAX_NUMBER(99)]"
                 :data-test="`textFieldUrnenAnzahl_${index}`"
                 :label="`Anzahl der Wahlurnen ${getWahlNameById(wahl.wahlID)}`"
-                min-width="20rem"
+                min-width="25rem"
                 clearable
               />
             </div>
@@ -30,11 +30,9 @@
           />
         </v-form>
       </v-card-text>
-    </v-card>
 
-    <v-card class="mt-2">
       <v-card-title>Abstimmungsschutzvorrichtungen</v-card-title>
-      <v-card-text class="pb-0">
+      <v-card-text class="pb-0 pt-2">
         <v-form
           ref="abstimmungsschutzvorrichtungenForm"
           v-model="abstimmungsschutzvorrichtungenValidForm"
@@ -45,7 +43,7 @@
                 v-model="urnenwahlVorbereitung.anzahlWahltische"
                 class="mr-4"
                 :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(99)]"
-                min-width="20rem"
+                min-width="25rem"
                 data-test="numberInputAnzahlWahltische"
                 label="Anzahl der Tische mit Sichtblenden"
                 clearable
@@ -58,7 +56,7 @@
                 :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(99)]"
                 data-test="numberInputAnzahlNebenraeume"
                 label="Anzahl der Nebenräume im Wahlraum"
-                min-width="20rem"
+                min-width="25rem"
                 clearable
               />
             </div>
@@ -69,7 +67,7 @@
                 :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(99)]"
                 data-test="numberInputAnzahlWahlkabinen"
                 label="Anzahl der Wahlkabinen"
-                min-width="20rem"
+                min-width="25rem"
                 clearable
               />
             </div>
@@ -80,6 +78,7 @@
         <base-button-save
           active
           :disabled="isSaveButtonDisabled"
+          :loading="urnenWahlVorbereitungIsSaving"
           @click="onSaveWahlumgebungUWBClicked"
         />
       </v-card-actions>
@@ -130,15 +129,17 @@ import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
 
-const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
 const anzahlWahlurnenValidForm = ref<null | boolean>(null);
 const wahlurnenForm = ref<HTMLFormElement | null>(null);
 const isCheckboxAlleVersiegeltEnabled = ref(false);
 const abstimmungsschutzvorrichtungenValidForm = ref<null | boolean>(null);
 const abstimmungsschutzvorrichtungenForm = ref<HTMLFormElement>();
-const wahlbezirkStore = useWahlbezirkStore();
-const { getWahlNameById } = useWahlenStore();
+
+const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
 const { wahlen } = storeToRefs(useWahlenStore());
+const { sendUrnenwahlvorbereitung } = useWahlbezirkStore();
+const { urnenWahlVorbereitungIsSaving } = storeToRefs(useWahlbezirkStore());
+const { getWahlNameById } = useWahlenStore();
 
 const isSaveButtonDisabled = computed(() => {
   return (
@@ -177,7 +178,7 @@ const urnenwahlVorbereitung = ref<Urnenwahlvorbereitung>({
 });
 
 function onSaveWahlumgebungUWBClicked() {
-  wahlbezirkStore.sendUrnenwahlvorbereitung(urnenwahlVorbereitung.value);
+  sendUrnenwahlvorbereitung(urnenwahlVorbereitung.value);
 }
 
 const checkboxLableText = computed(() => {

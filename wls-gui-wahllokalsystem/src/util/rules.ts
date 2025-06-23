@@ -3,7 +3,7 @@ export const REQUIRED = (value: any) => {
   if (typeof value === "string") {
     return value.trim().length > 0 || "Feld darf nicht leer sein.";
   } else if (typeof value === "number") {
-    return !isNaN(value);
+    return !isNaN(value) || "Feld darf nicht leer sein.";
   }
   return "Feld darf nicht leer sein.";
 };

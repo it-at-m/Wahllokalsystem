@@ -32,7 +32,7 @@ export function useWahlvorbereitungService() {
   const eroeffnungsuhrzeitControllerAPI = new EroeffnungsUhrzeitControllerApi(
     wahlvorbereitungsServiceConfiguration
   );
-  const urnenwahlvorbereitungControllerApi =
+  const urnenwahlvorbereitungControllerAPI =
     new UrnenwahlvorbereitungControllerApi(
       wahlvorbereitungsServiceConfiguration
     );
@@ -104,7 +104,7 @@ export function useWahlvorbereitungService() {
     wahlbezirkID: string
   ): Promise<Urnenwahlvorbereitung> {
     try {
-      return await urnenwahlvorbereitungControllerApi
+      return await urnenwahlvorbereitungControllerAPI
         .getUrnenwahlVorbereitung(wahlbezirkID)
         .then((response) => toUrnenwahlvorbereitungModel(response.data));
     } catch (error) {
@@ -125,7 +125,7 @@ export function useWahlvorbereitungService() {
     );
 
     try {
-      await urnenwahlvorbereitungControllerApi.postUrnenwahlvorbereitung(
+      await urnenwahlvorbereitungControllerAPI.postUrnenwahlvorbereitung(
         wahlbezirkID,
         urnenwahlvorbereitungWriteDTO
       );

@@ -52,7 +52,7 @@ export function useWahlvorbereitungMapper() {
       anzahlWahltische: urnenwahlvorbereitungDTO.anzahlWahltische,
       anzahlNebenraeume: urnenwahlvorbereitungDTO.anzahlNebenraeume,
       urneVersiegelt:
-        urnenwahlvorbereitungDTO.urnenAnzahl[0].urneVersiegelt ?? false,
+        urnenwahlvorbereitungDTO.urnenAnzahl[0]?.urneVersiegelt ?? false,
       urnenAnzahl: urnenAnzahlModel,
     };
   }

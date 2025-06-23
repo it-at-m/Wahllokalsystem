@@ -26,6 +26,8 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   const schliessungsuhrzeitSent = ref<Date | undefined>(undefined);
   const schliessungsuhrzeitIsSaving = ref(false);
 
+  const urnenWahlVorbereitungIsSaving = ref(false);
+
   const urnenwahlVorbereitung = ref<Urnenwahlvorbereitung | undefined>(
     undefined
   );
@@ -68,9 +70,14 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     urnenwahlvorbereitung: Urnenwahlvorbereitung
   ) {
     const wahlbezirkID = currentUserWahlbezirkID.value;
-    if (wahlbezirkID) {
-      await postUrnenwahlvorbereitung(wahlbezirkID, urnenwahlvorbereitung);
-      urnenwahlVorbereitung.value = urnenwahlvorbereitung;
+    urnenWahlVorbereitungIsSaving.value = true;
+    try {
+      if (wahlbezirkID) {
+        await postUrnenwahlvorbereitung(wahlbezirkID, urnenwahlvorbereitung);
+        urnenwahlVorbereitung.value = urnenwahlvorbereitung;
+      }
+    } finally {
+      urnenWahlVorbereitungIsSaving.value = false;
     }
   }
 
@@ -85,6 +92,7 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     sendSchliessungsuhrzeit,
     sendUrnenwahlvorbereitung,
     urnenwahlVorbereitung,
+    urnenWahlVorbereitungIsSaving,
   };
 });
 

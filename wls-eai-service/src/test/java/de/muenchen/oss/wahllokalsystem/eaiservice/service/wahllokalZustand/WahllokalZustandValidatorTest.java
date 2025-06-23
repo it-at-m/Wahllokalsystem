@@ -49,8 +49,8 @@ class WahllokalZustandValidatorTest {
 
         @ParameterizedTest(name = "{1}")
         @MethodSource("invalidWahlbezirkIDArguments")
-        void should_throwException_when_wahlbezirkIdIsIncorrect(final ArgumentsAccessor arguments) {
-            val mockedWlsException = FachlicheWlsException.withCode("000").buildWithMessage("parameter is null");
+        void should_throwException_when_wahlbezirkIdIsMissing(final ArgumentsAccessor arguments) {
+            val mockedWlsException = FachlicheWlsException.withCode("000").buildWithMessage("wahlbezirkID is null");
             Mockito.when(exceptionFactory.createFachlicheWlsException(
                     de.muenchen.oss.wahllokalsystem.eaiservice.exception.ExceptionConstants.SAVEWAHLLOKALZUSTAND_WAHLBEZIRKID_FEHLT))
                     .thenReturn(mockedWlsException);
@@ -70,7 +70,6 @@ class WahllokalZustandValidatorTest {
                     Arguments.of(new WahllokalZustandDTO(null, null, null, Collections.emptySet()), "wahlbezirkID is null"),
                     Arguments.of(new WahllokalZustandDTO("", null, null, Collections.emptySet()), "wahlbezirkID is empty string"),
                     Arguments.of(new WahllokalZustandDTO("   ", null, null, Collections.emptySet()), "wahlbezirkID is blank string")
-
             );
         }
     }

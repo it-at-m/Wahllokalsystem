@@ -88,7 +88,7 @@ Für jeden zu erzeugenden Client mus ein `execution`-Element definiert werden.
 > ```
 
 > [!WARNING] Known error - java.net.URISyntaxException: Illegal character in opaque part at index
-> 
+>
 > OpenAPI-JSON-Files, welche Version `3.1.0` enthalten, erzeugen aktuell Fehler bei der Generierung eines Clients.
 > Die Lösung ist die Version auf `3.0.1` zu ändern.
 

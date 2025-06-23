@@ -192,29 +192,10 @@ public class WahlenControllerIntegrationTest {
 
         @ParameterizedTest(name = "{1}")
         @MethodSource("createSavableData")
-        void should_addData_when_repoIsEmpty(final ArgumentsAccessor arguments) throws Exception {
+        void should_saveNewData_when_repoIsEmpty(final ArgumentsAccessor arguments) throws Exception {
             var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung5", "1");
             wahltagRepository.save(searchingForWahltag);
             val newData = List.of(arguments.get(0, de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO.class));
-
-            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL, Authorities.SERVICE_POST_WAHLEN);
-            val request = MockMvcRequestBuilders.post("/businessActions/wahlen/" + searchingForWahltag.getWahltagID()).with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON).content(
-                            objectMapper.writeValueAsString(newData));
-            api.perform(request).andExpect(status().isOk());
-
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHL);
-            val savedWahlen = wahlRepository.findAll();
-
-            Assertions.assertThat(savedWahlen)
-                    .isEqualTo(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(dtoMapper.fromListOfWahlDTOtoListOfWahlModel(newData)));
-        }
-
-        @Test
-        void should_saveNewData_when_repoIsEmpty() throws Exception {
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung5", "1");
-            wahltagRepository.save(searchingForWahltag);
-            val newData = createControllerListOfWahlDTO(searchingForWahltag, "");
 
             SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL, Authorities.SERVICE_POST_WAHLEN);
             val request = MockMvcRequestBuilders.post("/businessActions/wahlen/" + searchingForWahltag.getWahltagID()).with(csrf())

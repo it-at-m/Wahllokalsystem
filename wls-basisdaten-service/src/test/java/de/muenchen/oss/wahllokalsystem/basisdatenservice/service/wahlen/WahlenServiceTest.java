@@ -190,7 +190,7 @@ class WahlenServiceTest {
         private Wahl resetWahl(Wahl wahl) {
             wahl.setFarbe(new Farbe(0, 0, 0));
             wahl.setReihenfolge(0);
-            wahl.setWaehlerverzeichnisnummer(1);
+            wahl.setWaehlerverzeichnisNummer(1);
             return wahl;
         }
     }
@@ -203,7 +203,7 @@ class WahlenServiceTest {
         wahl1.setFarbe(new Farbe(1, 1, 1));
         wahl1.setWahlart(Wahlart.BAW);
         wahl1.setReihenfolge(1);
-        wahl1.setWaehlerverzeichnisnummer(1);
+        wahl1.setWaehlerverzeichnisNummer(1);
         wahl1.setWahltag(LocalDate.now().plusMonths(1));
 
         Wahl wahl2 = new Wahl();
@@ -213,7 +213,7 @@ class WahlenServiceTest {
         wahl2.setFarbe(new Farbe(2, 2, 2));
         wahl2.setWahlart(Wahlart.LTW);
         wahl2.setReihenfolge(2);
-        wahl2.setWaehlerverzeichnisnummer(2);
+        wahl2.setWaehlerverzeichnisNummer(2);
         wahl2.setWahltag(LocalDate.now().plusMonths(2));
 
         Wahl wahl3 = new Wahl();
@@ -223,7 +223,7 @@ class WahlenServiceTest {
         wahl3.setFarbe(new Farbe(3, 3, 3));
         wahl3.setWahlart(Wahlart.EUW);
         wahl3.setReihenfolge(3);
-        wahl3.setWaehlerverzeichnisnummer(3);
+        wahl3.setWaehlerverzeichnisNummer(3);
         wahl3.setWahltag(LocalDate.now().plusMonths(3));
         List<Wahl> lw = new ArrayList<>();
         lw.add(wahl1);

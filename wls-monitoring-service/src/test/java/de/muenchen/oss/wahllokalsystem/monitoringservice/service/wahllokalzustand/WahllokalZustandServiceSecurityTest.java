@@ -12,7 +12,6 @@ import de.muenchen.oss.wahllokalsystem.monitoringservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.util.Set;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -54,7 +53,7 @@ public class WahllokalZustandServiceSecurityTest {
 
             val wahllokalZustandDTO = new WahllokalZustandDTO();
             wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-            wahllokalZustandDTO.setZuletztGesehen(OffsetDateTime.now());
+            wahllokalZustandDTO.setZuletztGesehen(LocalDateTime.now());
 
             WireMock.stubFor(WireMock.post("/wahllokalzustand")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
@@ -70,7 +69,7 @@ public class WahllokalZustandServiceSecurityTest {
 
             val wahllokalZustandDTO = new WahllokalZustandDTO();
             wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-            wahllokalZustandDTO.setZuletztGesehen(OffsetDateTime.now());
+            wahllokalZustandDTO.setZuletztGesehen(LocalDateTime.now());
 
             Assertions.assertThatThrownBy(() -> wahllokalZustandService.postLastSeen(wahlbezirkID)).isInstanceOf(AccessDeniedException.class);
         }
@@ -86,7 +85,7 @@ public class WahllokalZustandServiceSecurityTest {
 
             val wahllokalZustandDTO = new WahllokalZustandDTO();
             wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-            wahllokalZustandDTO.setLetzteAbmeldung(OffsetDateTime.now());
+            wahllokalZustandDTO.setLetzteAbmeldung(LocalDateTime.now());
 
             WireMock.stubFor(WireMock.post("/wahllokalzustand")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
@@ -102,7 +101,7 @@ public class WahllokalZustandServiceSecurityTest {
 
             val wahllokalZustandDTO = new WahllokalZustandDTO();
             wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-            wahllokalZustandDTO.setZuletztGesehen(OffsetDateTime.now());
+            wahllokalZustandDTO.setZuletztGesehen(LocalDateTime.now());
 
             Assertions.assertThatThrownBy(() -> wahllokalZustandService.postLetzteAbmeldung(wahlbezirkID)).isInstanceOf(AccessDeniedException.class);
         }
@@ -120,7 +119,7 @@ public class WahllokalZustandServiceSecurityTest {
 
             val druckZustandDTO = new DruckzustandDTO();
             druckZustandDTO.setWahlID(wahlID);
-            druckZustandDTO.setSchnellmeldungSendenUhrzeit(OffsetDateTime.now());
+            druckZustandDTO.setSchnellmeldungSendenUhrzeit(LocalDateTime.now());
             val wahllokalZustandDTO = new WahllokalZustandDTO();
             wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
             wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
@@ -141,7 +140,7 @@ public class WahllokalZustandServiceSecurityTest {
 
             val druckZustandDTO = new DruckzustandDTO();
             druckZustandDTO.setWahlID(wahlID);
-            druckZustandDTO.setSchnellmeldungSendenUhrzeit(OffsetDateTime.now());
+            druckZustandDTO.setSchnellmeldungSendenUhrzeit(LocalDateTime.now());
             val wahllokalZustandDTO = new WahllokalZustandDTO();
             wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
             wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
@@ -165,7 +164,7 @@ public class WahllokalZustandServiceSecurityTest {
 
             val druckZustandDTO = new DruckzustandDTO();
             druckZustandDTO.setWahlID(wahlID);
-            druckZustandDTO.setSchnellmeldungDruckUhrzeit(OffsetDateTime.now());
+            druckZustandDTO.setSchnellmeldungDruckUhrzeit(LocalDateTime.now());
             val wahllokalZustandDTO = new WahllokalZustandDTO();
             wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
             wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
@@ -186,7 +185,7 @@ public class WahllokalZustandServiceSecurityTest {
 
             val druckZustandDTO = new DruckzustandDTO();
             druckZustandDTO.setWahlID(wahlID);
-            druckZustandDTO.setSchnellmeldungDruckUhrzeit(OffsetDateTime.now());
+            druckZustandDTO.setSchnellmeldungDruckUhrzeit(LocalDateTime.now());
             val wahllokalZustandDTO = new WahllokalZustandDTO();
             wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
             wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
@@ -210,7 +209,7 @@ public class WahllokalZustandServiceSecurityTest {
 
             val druckZustandDTO = new DruckzustandDTO();
             druckZustandDTO.setWahlID(wahlID);
-            druckZustandDTO.setNiederschriftSendenUhrzeit(OffsetDateTime.now());
+            druckZustandDTO.setNiederschriftSendenUhrzeit(LocalDateTime.now());
             val wahllokalZustandDTO = new WahllokalZustandDTO();
             wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
             wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
@@ -236,7 +235,7 @@ public class WahllokalZustandServiceSecurityTest {
 
             val druckZustandDTO = new DruckzustandDTO();
             druckZustandDTO.setWahlID(wahlID);
-            druckZustandDTO.setNiederschriftSendenUhrzeit(OffsetDateTime.now());
+            druckZustandDTO.setNiederschriftSendenUhrzeit(LocalDateTime.now());
             val wahllokalZustandDTO = new WahllokalZustandDTO();
             wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
             wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
@@ -260,7 +259,7 @@ public class WahllokalZustandServiceSecurityTest {
 
             val druckZustandDTO = new DruckzustandDTO();
             druckZustandDTO.setWahlID(wahlID);
-            druckZustandDTO.setNiederschriftDruckUhrzeit(OffsetDateTime.now());
+            druckZustandDTO.setNiederschriftDruckUhrzeit(LocalDateTime.now());
             val wahllokalZustandDTO = new WahllokalZustandDTO();
             wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
             wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
@@ -282,7 +281,7 @@ public class WahllokalZustandServiceSecurityTest {
 
             val druckZustandDTO = new DruckzustandDTO();
             druckZustandDTO.setWahlID(wahlID);
-            druckZustandDTO.setNiederschriftDruckUhrzeit(OffsetDateTime.now());
+            druckZustandDTO.setNiederschriftDruckUhrzeit(LocalDateTime.now());
             val wahllokalZustandDTO = new WahllokalZustandDTO();
             wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
             wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));

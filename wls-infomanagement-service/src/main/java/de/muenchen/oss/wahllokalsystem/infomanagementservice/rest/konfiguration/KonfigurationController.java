@@ -6,6 +6,7 @@ import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration.
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
@@ -60,7 +61,7 @@ public class KonfigurationController {
             }
     )
     @GetMapping("/konfiguration")
-    public ResponseEntity<Iterable<KonfigurationDTO>> getKonfigurations() {
+    public ResponseEntity<List<KonfigurationDTO>> getKonfigurations() {
         val allKonfigurations = konfigurationService.getAllKonfigurations();
 
         if (allKonfigurations == null) {

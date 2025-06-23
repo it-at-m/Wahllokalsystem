@@ -5,7 +5,7 @@ import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkMod
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.WahlbezirkeClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import java.util.Comparator;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -25,9 +25,6 @@ import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
 class WahllokalBenutzerServiceTest {
-
-    @Mock
-    ExceptionFactory exceptionFactory;
 
     @Mock
     WahllokalBenutzerValidator wahllokalBenutzerValidator;
@@ -83,6 +80,29 @@ class WahllokalBenutzerServiceTest {
 
             val expectedUserModels = getListOfWahlLokalBenutzerModels();
             Assertions.assertThat(userModelsCaptor.getValue()).usingRecursiveComparison().isEqualTo(expectedUserModels);
+        }
+
+        @Test
+        void should_setTheUserWahlbezirkIDOfTheWahlWithLowestWahlnummer_when_givenWahltagIDAndWahlbezirke() {
+            val wahltagID = "wahltagID";
+            val mockedWahlbezirke = getMockWahlbezirke();
+
+            Mockito.doNothing().when(wahllokalBenutzerValidator).validWahltagIDParamOrThrow(wahltagID);
+            Mockito.when(wahlbezirkeClient.getWahlbezirke(wahltagID)).thenReturn(mockedWahlbezirke);
+
+            unitUnderTest.generateWahllokalbenutzer(wahltagID);
+            Mockito.verify(wahllokalBenutzerClient).generateAndExportWahllokalBenutzer(eq(wahltagID), userModelsCaptor.capture());
+
+            val generatedUsers = userModelsCaptor.getValue();
+
+            for (WahllokalBenutzerModel benutzer : generatedUsers) {
+                String minWahlbezirkID = benutzer.wbid_wahlnummer().stream()
+                        .min(Comparator.comparing(triple -> Integer.parseInt(triple.wahlnummer())))
+                        .map(TripleOfWahlbezirkIDWahlnummerWahlIDModel::wahlbezirkID)
+                        .orElse(null);
+
+                Assertions.assertThat(benutzer.wahlbezirkID()).isEqualTo(minWahlbezirkID);
+            }
         }
 
         @Test
@@ -157,7 +177,7 @@ class WahllokalBenutzerServiceTest {
 
     private List<WahlbezirkModel> getMockWahlbezirke() {
         return List.of(
-                new WahlbezirkModel("wahlbezirkID1_0", WahlbezirkArtModel.UWB, "1503", LocalDate.now(), "0", "wahlID0"),
+
                 new WahlbezirkModel("wahlbezirkID2_0", WahlbezirkArtModel.BWB, "0365", LocalDate.now(), "0", "wahlID0"),
                 new WahlbezirkModel("wahlbezirkID3_0", WahlbezirkArtModel.UWB, "2161", LocalDate.now(), "0", "wahlID0"),
 
@@ -168,7 +188,8 @@ class WahllokalBenutzerServiceTest {
                 new WahlbezirkModel("wahlbezirkID2_2", WahlbezirkArtModel.BWB, "0365", LocalDate.now(), "2", "wahlID2"),
 
                 new WahlbezirkModel("wahlbezirkID3_1", WahlbezirkArtModel.UWB, "2161", LocalDate.now(), "1", "wahlID1"),
-                new WahlbezirkModel("wahlbezirkID3_2", WahlbezirkArtModel.UWB, "2161", LocalDate.now(), "2", "wahlID2"));
+                new WahlbezirkModel("wahlbezirkID3_2", WahlbezirkArtModel.UWB, "2161", LocalDate.now(), "2", "wahlID2"),
+                new WahlbezirkModel("wahlbezirkID1_0", WahlbezirkArtModel.UWB, "1503", LocalDate.now(), "0", "wahlID0"));
     }
 
     private List<WahllokalBenutzerModel> getListOfWahlLokalBenutzerModels() {

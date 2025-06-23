@@ -5,7 +5,6 @@ import de.muenchen.oss.wahllokalsystem.monitoringservice.eai.aou.model.Wahlbetei
 import de.muenchen.oss.wahllokalsystem.monitoringservice.service.waehleranzahl.WaehleranzahlModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -57,7 +56,7 @@ class WaehleranzahlClientImplTest {
             val wahlID = "wahlID01";
             val wahlbezirkID = "wahlbezirkID01";
             val anzahlWahler = 99L;
-            val meldeZeitpunkt = OffsetDateTime.now();
+            val meldeZeitpunkt = LocalDateTime.now();
             return new WahlbeteiligungsMeldungDTO().wahlID(wahlID).wahlbezirkID(wahlbezirkID).anzahlWaehler(anzahlWahler)
                     .meldeZeitpunkt(meldeZeitpunkt);
         }

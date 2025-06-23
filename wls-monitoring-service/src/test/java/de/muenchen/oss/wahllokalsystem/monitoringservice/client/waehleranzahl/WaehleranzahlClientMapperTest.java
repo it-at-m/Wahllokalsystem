@@ -33,9 +33,8 @@ public class WaehleranzahlClientMapperTest {
 
             val result = unitUnderTest.fromModelToRemoteClientDTO(waehleranzahlModel);
 
-            val zoneOffset = ZoneId.systemDefault().getRules().getOffset(meldeZeitpunkt);
             val expectedWahlbeteiligungsMeldungDTO = new WahlbeteiligungsMeldungDTO().wahlID(null).wahlbezirkID(wahlbezirkID).anzahlWaehler(anzahlWahler)
-                    .meldeZeitpunkt(meldeZeitpunkt.atOffset(zoneOffset));
+                    .meldeZeitpunkt(meldeZeitpunkt);
             Assertions.assertThat(result).isEqualTo(expectedWahlbeteiligungsMeldungDTO);
         }
     }

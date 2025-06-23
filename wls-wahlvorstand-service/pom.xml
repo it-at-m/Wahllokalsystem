@@ -36,7 +36,7 @@
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <org.springdoc.version>2.8.5</org.springdoc.version>
-        <wls.common.version>1.6.1</wls.common.version>
+        <wls.common.version>1.6.2</wls.common.version>
         <com.tngtech.archunit.version>1.4.0</com.tngtech.archunit.version>
     </properties>
 
@@ -395,6 +395,14 @@
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
                 <version>7.12.0</version>
+                <configuration>
+                    <typeMappings>
+                        <typeMapping>OffsetDateTime=LocalDateTime</typeMapping>
+                    </typeMappings>
+                    <importMappings>
+                        <importMapping>OffsetDateTime=java.time.LocalDateTime</importMapping>
+                    </importMappings>
+                </configuration>
                 <executions>
                     <execution>
                         <id>generateEAI</id>

@@ -5,6 +5,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.admin.model.ServeEventQuery;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.clients.aoueai.WahlvorstandClientMapper;
@@ -211,7 +212,7 @@ public class WahlvorstandControllerIntegrationTest {
             val wahlbezirkID = "wahlbezirkID";
             val mockedWahlvorstandDTO = TestDataFactory.CreateWahlvorstandWriteDto.withData();
 
-            WireMock.stubFor(WireMock.put("/wahlvorstaende/anwesenheit")
+            val eaiPostWahlvorstandStubbing = WireMock.stubFor(WireMock.put("/wahlvorstaende/anwesenheit")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
                             .withStatus(HttpStatus.OK.value())));
 
@@ -223,6 +224,20 @@ public class WahlvorstandControllerIntegrationTest {
             val wahlvorstandFromRepo = wahlvorstandRepository.findById(wahlbezirkID).get();
             val expectedWahlvorstand = wahlvorstandModelMapper.toEntity(wahlvorstandDTOMapper.toModel(wahlbezirkID, mockedWahlvorstandDTO));
             Assertions.assertThat(wahlvorstandFromRepo).usingRecursiveComparison().isEqualTo(expectedWahlvorstand);
+
+            val eaiRequests = WireMock.getAllServeEvents(ServeEventQuery.forStubMapping(eaiPostWahlvorstandStubbing));
+
+            Assertions.assertThat(eaiRequests).hasSize(1);
+            val receivedEaiRequest = objectMapper.readTree(eaiRequests.get(0).getRequest().getBodyAsString());
+            val expectedEaiRequest = objectMapper.createObjectNode()
+                    .put("wahlbezirkID", wahlbezirkID)
+                    .put("anwesenheitBeginn", mockedWahlvorstandDTO.anwesenheitBeginn().toString())
+                    .set("mitglieder", objectMapper.createArrayNode()
+                            .add(objectMapper.createObjectNode()
+                                    .put("identifikator", mockedWahlvorstandDTO.wahlvorstandsmitglieder().get(0).identifikator())
+                                    .put("anwesend", mockedWahlvorstandDTO.wahlvorstandsmitglieder().get(0).anwesend())));
+
+            Assertions.assertThat(receivedEaiRequest).isEqualTo(expectedEaiRequest);
         }
 
         @Test

@@ -12,7 +12,6 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 ForceUpdate: true
 
 ### POST wahlvorstand | user wls_all_uwb
-## TODO: request response code is 500 --> bug fix issue #1374
 POST {{ WLS_WAHLVORSTAND_SERVICE_URL }}/businessActions/wahlvorstand/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
@@ -49,7 +48,6 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 ForceUpdate: true
 
 ### POST wahlvorstand | user wls_all_bwb
-## TODO: request response code is 500 --> bug fix issue #1374
 POST {{ WLS_WAHLVORSTAND_SERVICE_URL }}/businessActions/wahlvorstand/9081145c-dc16-4a9b-8255-5c49ddb98c14
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json

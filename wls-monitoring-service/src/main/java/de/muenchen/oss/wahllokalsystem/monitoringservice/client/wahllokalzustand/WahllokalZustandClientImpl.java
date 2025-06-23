@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.monitoringservice.client.wahllokalzustand;
 
-import de.muenchen.oss.wahllokalsystem.monitoringservice.client.common.TimeStampMapper;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.eai.aou.client.WahllokalzustandControllerApi;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.eai.aou.model.DruckzustandDTO;
@@ -25,7 +24,6 @@ public class WahllokalZustandClientImpl implements WahllokalZustandClient {
     private final ExceptionFactory exceptionFactory;
 
     private final WahllokalzustandControllerApi wahllokalzustandControllerApi;
-    private final TimeStampMapper timeStampMapper;
 
     private void postWahllokalZustand(WahllokalZustandDTO wahllokalZustandDTO) throws WlsException {
         try {
@@ -40,7 +38,7 @@ public class WahllokalZustandClientImpl implements WahllokalZustandClient {
     public void postLastSeen(final String wahlbezirkID, LocalDateTime zuletztGesehen) throws WlsException {
         WahllokalZustandDTO wahllokalZustandDTO = new WahllokalZustandDTO();
         wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-        wahllokalZustandDTO.setZuletztGesehen(timeStampMapper.localDateTimeToOffsetDateTime(zuletztGesehen));
+        wahllokalZustandDTO.setZuletztGesehen(zuletztGesehen);
         postWahllokalZustand(wahllokalZustandDTO);
     }
 
@@ -48,7 +46,7 @@ public class WahllokalZustandClientImpl implements WahllokalZustandClient {
     public void postLetzteAbmeldung(String wahlbezirkID, LocalDateTime letzteAbmeldung) throws WlsException {
         WahllokalZustandDTO wahllokalZustandDTO = new WahllokalZustandDTO();
         wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-        wahllokalZustandDTO.setLetzteAbmeldung(timeStampMapper.localDateTimeToOffsetDateTime(letzteAbmeldung));
+        wahllokalZustandDTO.setLetzteAbmeldung(letzteAbmeldung);
         postWahllokalZustand(wahllokalZustandDTO);
     }
 
@@ -59,7 +57,7 @@ public class WahllokalZustandClientImpl implements WahllokalZustandClient {
         wahllokalZustandDTO.setWahlbezirkID(bezirkUndWahlID.getWahlbezirkID());
         DruckzustandDTO druckzustandDTO = new DruckzustandDTO();
         druckzustandDTO.setWahlID(bezirkUndWahlID.getWahlID());
-        druckzustandDTO.setSchnellmeldungSendenUhrzeit(timeStampMapper.localDateTimeToOffsetDateTime(schnellmeldungSendungsuhrzeit));
+        druckzustandDTO.setSchnellmeldungSendenUhrzeit(schnellmeldungSendungsuhrzeit);
         wahllokalZustandDTO.addDruckzustaendeItem(druckzustandDTO);
         postWahllokalZustand(wahllokalZustandDTO);
     }
@@ -70,7 +68,7 @@ public class WahllokalZustandClientImpl implements WahllokalZustandClient {
         wahllokalZustandDTO.setWahlbezirkID(bezirkUndWahlID.getWahlbezirkID());
         DruckzustandDTO druckzustandDTO = new DruckzustandDTO();
         druckzustandDTO.setWahlID(bezirkUndWahlID.getWahlID());
-        druckzustandDTO.setSchnellmeldungDruckUhrzeit(timeStampMapper.localDateTimeToOffsetDateTime(schnellmeldungDruckuhrzeit));
+        druckzustandDTO.setSchnellmeldungDruckUhrzeit(schnellmeldungDruckuhrzeit);
         wahllokalZustandDTO.addDruckzustaendeItem(druckzustandDTO);
         postWahllokalZustand(wahllokalZustandDTO);
     }
@@ -81,7 +79,7 @@ public class WahllokalZustandClientImpl implements WahllokalZustandClient {
         wahllokalZustandDTO.setWahlbezirkID(bezirkUndWahlID.getWahlbezirkID());
         DruckzustandDTO druckzustandDTO = new DruckzustandDTO();
         druckzustandDTO.setWahlID(bezirkUndWahlID.getWahlID());
-        druckzustandDTO.setNiederschriftSendenUhrzeit(timeStampMapper.localDateTimeToOffsetDateTime(niederschriftSendungsuhrzeit));
+        druckzustandDTO.setNiederschriftSendenUhrzeit(niederschriftSendungsuhrzeit);
         wahllokalZustandDTO.addDruckzustaendeItem(druckzustandDTO);
         postWahllokalZustand(wahllokalZustandDTO);
     }
@@ -92,7 +90,7 @@ public class WahllokalZustandClientImpl implements WahllokalZustandClient {
         wahllokalZustandDTO.setWahlbezirkID(bezirkUndWahlID.getWahlbezirkID());
         DruckzustandDTO druckzustandDTO = new DruckzustandDTO();
         druckzustandDTO.setWahlID(bezirkUndWahlID.getWahlID());
-        druckzustandDTO.setNiederschriftDruckUhrzeit(timeStampMapper.localDateTimeToOffsetDateTime(niederschriftDruckuhrzeit));
+        druckzustandDTO.setNiederschriftDruckUhrzeit(niederschriftDruckuhrzeit);
         wahllokalZustandDTO.addDruckzustaendeItem(druckzustandDTO);
         postWahllokalZustand(wahllokalZustandDTO);
     }

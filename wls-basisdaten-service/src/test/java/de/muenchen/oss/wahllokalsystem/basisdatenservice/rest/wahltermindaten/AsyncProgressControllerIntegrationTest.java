@@ -53,11 +53,11 @@ class AsyncProgressControllerIntegrationTest {
             val wahlnummer = "wahlnummer";
             val lastStartTime = LocalDateTime.now().minusDays(2);
             val lastFinishTime = LocalDateTime.now().minusDays(1);
-            val wahlvorschlaegeIsLoading = false;
+            val wahlvorschlaegeIsLoading = true;
             val wahlvorschlaegeTotal = 23;
             val wahlvorschlaegeFinished = 12;
             val wahlvorschlaegeNext = "wahlvorschlagID13";
-            val referendumvorlagenIsLoading = false;
+            val referendumvorlagenIsLoading = true;
             val referendumvorlagenTotal = 21;
             val referendumvorlagenFinished = 20;
             val referendumvorlagenNext = "referendumvorlagenID13";

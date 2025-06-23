@@ -58,8 +58,8 @@ public class EAIClientImpl implements AWerteClient, EaiClient {
     private void simLogging(final ErgebnismeldungDTO.MeldungsartEnum meldungsart) {
         try {
             val mdcEIDValue = switch (meldungsart) {
-                case NIEDERSCHRIFT -> "NIEDERSCHRIFT_GESENDET";
-                case SCHNELLMELDUNG -> "SCHNELLMELDUNG_GESENDET";
+            case NIEDERSCHRIFT -> "NIEDERSCHRIFT_GESENDET";
+            case SCHNELLMELDUNG -> "SCHNELLMELDUNG_GESENDET";
             };
             MDC.put("eid", mdcEIDValue);
             MDC.put("result", "3");

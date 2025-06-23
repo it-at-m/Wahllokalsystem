@@ -21,7 +21,7 @@ class AusdruckModelMapperTest {
 
         @Test
         void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
+            Assertions.assertThat(unitUnderTest.toModel((Ausdruck) null)).isNull();
         }
 
         @Test
@@ -29,13 +29,14 @@ class AusdruckModelMapperTest {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val meldungsart = Meldungsart.V1;
+            val meldungsartModel = MeldungsartModel.V1;
             val content = "Testausdruck";
             val erstelltAm = Instant.now();
             val ausdruckEntity = new Ausdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart), content, erstelltAm);
 
             val result = unitUnderTest.toModel(ausdruckEntity);
 
-            val expectedResult = new AusdruckReadModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart), content, erstelltAm);
+            val expectedResult = new AusdruckReadModel(new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, meldungsartModel), content, erstelltAm);
 
             Assertions.assertThat(result).isEqualTo(expectedResult);
         }
@@ -47,7 +48,7 @@ class AusdruckModelMapperTest {
 
             val result = unitUnderTest.toModel(entityToMap);
 
-            Assertions.assertThat(result.wahlUndBezirkIDUndMeldungsart().getMeldungsart().name()).isEqualTo(meldungsart.name());
+            Assertions.assertThat(result.wahlUndBezirkIDUndMeldungsartModel().meldungsart().name()).isEqualTo(meldungsart.name());
         }
     }
 
@@ -64,9 +65,10 @@ class AusdruckModelMapperTest {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val meldungsart = Meldungsart.V1;
+            val meldungsartModel = MeldungsartModel.V1;
             val content = "Testausdruck";
             val erstelltAm = Instant.now();
-            val ausdruckModel = new AusdruckWriteModel(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart), content);
+            val ausdruckModel = new AusdruckWriteModel(new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, meldungsartModel), content);
 
             val result = unitUnderTest.toEntity(ausdruckModel, erstelltAm);
 
@@ -76,13 +78,13 @@ class AusdruckModelMapperTest {
         }
 
         @ParameterizedTest
-        @EnumSource(Meldungsart.class)
-        void should_mapToEnumWithSameName_when_givenModelMeldungsartEnumValue(final Meldungsart meldungsart) {
-            val modelToMap = new AusdruckWriteModel(new WahlUndBezirkIDUndMeldungsart(null, null, meldungsart), null);
+        @EnumSource(MeldungsartModel.class)
+        void should_mapToEnumWithSameName_when_givenModelMeldungsartEnumValue(final MeldungsartModel meldungsartModel) {
+            val modelToMap = new AusdruckWriteModel(new WahlUndBezirkIDUndMeldungsartModel(null, null, meldungsartModel), null);
 
             val result = unitUnderTest.toEntity(modelToMap, Instant.now());
 
-            Assertions.assertThat(result.getWahlUndBezirkIDUndMeldungsart().getMeldungsart().name()).isEqualTo(meldungsart.name());
+            Assertions.assertThat(result.getWahlUndBezirkIDUndMeldungsart().getMeldungsart().name()).isEqualTo(meldungsartModel.name());
         }
     }
 }

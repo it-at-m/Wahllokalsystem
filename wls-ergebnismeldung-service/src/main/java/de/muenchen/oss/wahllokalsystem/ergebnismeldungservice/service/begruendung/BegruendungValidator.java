@@ -13,12 +13,12 @@ public class BegruendungValidator {
 
     private final ExceptionFactory exceptionFactory;
 
-    public void validReferenceOrThrow(final BegruendungReference begruendungReference) throws FachlicheWlsException {
+    public void validReferenceOrThrow(final BegruendungReferenceModel begruendungReferenceModel) throws FachlicheWlsException {
         if (StringUtils.isBlank(
-                begruendungReference.wahlbezirkID()) ||
+                begruendungReferenceModel.wahlbezirkID()) ||
                 StringUtils.isBlank(
-                        begruendungReference.wahlID())
-                || begruendungReference.stapelart() == null) {
+                        begruendungReferenceModel.wahlID())
+                || begruendungReferenceModel.stapelart() == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG);
         }
     }

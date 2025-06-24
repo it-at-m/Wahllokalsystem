@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltermindate
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.referendumvorlagen.Referendumvorlagen;
@@ -20,15 +21,22 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlartM
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlag.WahlvorschlaegeClient;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlag.WahlvorschlaegeModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlag.WahlvorschlaegeModelMapper;
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.Set;
 import lombok.val;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -55,6 +63,20 @@ class AsyncWahltermindatenServiceTest {
 
     @InjectMocks
     AsyncWahltermindatenService unitUnderTest;
+
+    private final MockedStatic<LocalDateTime> mockedStaticLocalDateTime = mockStatic(LocalDateTime.class, Mockito.CALLS_REAL_METHODS);
+
+    @BeforeEach
+    void setup() {
+        var clock = Clock.fixed(Instant.now(), ZoneOffset.UTC);
+        var mockedLocalDateTime = LocalDateTime.now(clock);
+        mockedStaticLocalDateTime.when(LocalDateTime::now).thenReturn(mockedLocalDateTime);
+    }
+
+    @AfterEach
+    void teardown() {
+        mockedStaticLocalDateTime.close();
+    }
 
     @Nested
     class InitVorlagenAndVorschlaege {
@@ -120,6 +142,7 @@ class AsyncWahltermindatenServiceTest {
 
             Mockito.verify(asyncProgress, times(4)).incWahlvorschlaegeFinished();
             Mockito.verify(asyncProgress, times(4)).setWahlvorschlaegeNext(any());
+            Mockito.verify(asyncProgress).setLastFinishTime(LocalDateTime.now());
         }
 
         @Test
@@ -140,6 +163,7 @@ class AsyncWahltermindatenServiceTest {
             Mockito.verify(referendumvorlagenRepository, times(4)).save(mockedReferendumvorlagenModelMappedAsEntity);
             Mockito.verify(asyncProgress, times(4)).incReferendumVorlagenFinished();
             Mockito.verify(asyncProgress, times(4)).setReferendumVorlagenNext(any());
+            Mockito.verify(asyncProgress).setLastFinishTime(LocalDateTime.now());
         }
 
         @Test

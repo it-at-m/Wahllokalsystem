@@ -42,7 +42,7 @@ class ErgebnisseServiceTest {
 
         @Test
         void should_returnNull_when_repoIsEmpty() {
-            val reference = ErgebnisseReference.builder().build();
+            val reference = ErgebnisseReferenceModel.builder().build();
             val mappedEntityId = new BezirkUndWahlIDStapelart();
 
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
@@ -61,7 +61,7 @@ class ErgebnisseServiceTest {
 
         @Test
         void should_returnErgebnisseModel_when_ergebnisseIsFoundFromRepo() {
-            val reference = ErgebnisseReference.builder().build();
+            val reference = ErgebnisseReferenceModel.builder().build();
 
             val mappedEntityId = new BezirkUndWahlIDStapelart();
             val entityFromRepo = new Ergebnisse();
@@ -110,7 +110,7 @@ class ErgebnisseServiceTest {
         @Test
         void should_callValidator_when_posting() {
 
-            val reference = ErgebnisseReference.builder().build();
+            val reference = ErgebnisseReferenceModel.builder().build();
             val invalidModel = ErgebnisseModel.builder().build();
 
             unitUnderTest.postErgebnisse(reference, invalidModel);
@@ -121,7 +121,7 @@ class ErgebnisseServiceTest {
         @Test
         void should_saveErgebnisse_when_called() {
             val model = ErgebnisseModel.builder().build();
-            val reference = ErgebnisseReference.builder().build();
+            val reference = ErgebnisseReferenceModel.builder().build();
             val mappedEntityOfModel = new Ergebnisse();
 
             val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
@@ -140,7 +140,7 @@ class ErgebnisseServiceTest {
         @Test
         void should_throwTechnischeException_when_called() {
             val model = ErgebnisseModel.builder().build();
-            val reference = ErgebnisseReference.builder().build();
+            val reference = ErgebnisseReferenceModel.builder().build();
 
             val mockedModelAsEntity = Mockito.mock(Ergebnisse.class);
             val mockedRepositorySaveException = new RuntimeException("saving failed");

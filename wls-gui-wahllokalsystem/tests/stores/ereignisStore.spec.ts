@@ -1,7 +1,7 @@
 import { createTestingPinia } from "@pinia/testing";
 import { spyOn } from "@storybook/test";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
-import { useVorfaelleundvorkommnisseTestDateFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDateFactory.ts";
+import { useVorfaelleundvorkommnisseTestDataFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDataFactory";
 import { flushPromises } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
@@ -28,7 +28,7 @@ vi.mock("@/composables/vorfaelleundvorkommnisse/ereignisService", () => ({
 
 const mockedNow = new Date();
 
-const { createEreignis } = useVorfaelleundvorkommnisseTestDateFactory();
+const { createEreignis } = useVorfaelleundvorkommnisseTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
 
 describe("ereignisStore.ts", () => {

@@ -40,7 +40,7 @@ class BegruendungServiceTest {
 
         @Test
         void should_returnNull_when_repoIsEmpty() {
-            val reference = BegruendungReference.builder().build();
+            val reference = BegruendungReferenceModel.builder().build();
 
             val mappedEntityId = new BezirkUndWahlIDStapelart();
 
@@ -55,7 +55,7 @@ class BegruendungServiceTest {
 
         @Test
         void should_returnBegruendungModel_when_begruendungIsFoundFromRepo() {
-            val reference = BegruendungReference.builder().build();
+            val reference = BegruendungReferenceModel.builder().build();
 
             val mappedEntityId = new BezirkUndWahlIDStapelart();
             val entityFromRepo = new Begruendung();
@@ -78,7 +78,7 @@ class BegruendungServiceTest {
         @Test
         void should_callValidator_when_posting() {
 
-            val reference = BegruendungReference.builder().build();
+            val reference = BegruendungReferenceModel.builder().build();
             val invalidModel = BegruendungModel.builder().build();
 
             unitUnderTest.postBegruendung(reference, invalidModel);
@@ -89,7 +89,7 @@ class BegruendungServiceTest {
         @Test
         void should_saveBegruendung_when_called() {
             val model = BegruendungModel.builder().build();
-            val reference = BegruendungReference.builder().build();
+            val reference = BegruendungReferenceModel.builder().build();
 
             val mappedEntityOfModel = new Begruendung();
 
@@ -105,7 +105,7 @@ class BegruendungServiceTest {
         @Test
         void should_throwTechnischeException_when_called() {
             val model = BegruendungModel.builder().build();
-            val reference = BegruendungReference.builder().build();
+            val reference = BegruendungReferenceModel.builder().build();
 
             val mockedModelAsEntity = Mockito.mock(Begruendung.class);
             val mockedRepositorySaveException = new RuntimeException("saving failed");

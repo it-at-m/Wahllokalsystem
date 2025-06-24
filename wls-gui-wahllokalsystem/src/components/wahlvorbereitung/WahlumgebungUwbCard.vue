@@ -25,7 +25,7 @@
           </div>
           <v-checkbox
             v-model="urnenwahlVorbereitung.urneVersiegelt"
-            :label="checkboxLableText"
+            :label="checkboxLabelText"
             data-test="checkboxAlleVersiegelt"
           />
         </v-form>
@@ -128,7 +128,6 @@ import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
 
 const anzahlWahlurnenValidForm = ref<null | boolean>(null);
 const wahlurnenForm = ref<HTMLFormElement | null>(null);
-const isCheckboxAlleVersiegeltEnabled = ref(false);
 const abstimmungsschutzvorrichtungenValidForm = ref<null | boolean>(null);
 const abstimmungsschutzvorrichtungenForm = ref<HTMLFormElement>();
 
@@ -141,8 +140,7 @@ const { getWahlNameOrBlankStringById } = useWahlenStore();
 const isSaveButtonDisabled = computed(() => {
   return (
     anzahlWahlurnenValidForm.value !== true ||
-    abstimmungsschutzvorrichtungenValidForm.value !== true ||
-    !isCheckboxAlleVersiegeltEnabled.value ||
+    !urnenwahlVorbereitung.value.urneVersiegelt ||
     isMinimumRequired.value
   );
 });
@@ -165,7 +163,7 @@ function onSaveWahlumgebungUWBClicked() {
   sendUrnenwahlvorbereitung(urnenwahlVorbereitung.value);
 }
 
-const checkboxLableText = computed(() => {
+const checkboxLabelText = computed(() => {
   if (wahlen.value && wahlen.value?.length > 1) {
     return "Die Wahlurnen waren leer und wurden ordnungsgemäß versiegelt";
   }

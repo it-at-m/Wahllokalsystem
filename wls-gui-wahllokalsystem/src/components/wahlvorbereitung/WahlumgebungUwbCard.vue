@@ -122,7 +122,6 @@ import {
 } from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
@@ -133,7 +132,6 @@ const isCheckboxAlleVersiegeltEnabled = ref(false);
 const abstimmungsschutzvorrichtungenValidForm = ref<null | boolean>(null);
 const abstimmungsschutzvorrichtungenForm = ref<HTMLFormElement>();
 
-const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
 const { wahlen } = storeToRefs(useWahlenStore());
 const { sendUrnenwahlvorbereitung } = useWahlbezirkStore();
 const { urnenWahlVorbereitungIsSaving, urnenwahlVorbereitung } =

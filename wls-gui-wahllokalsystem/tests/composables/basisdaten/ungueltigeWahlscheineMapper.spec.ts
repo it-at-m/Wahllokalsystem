@@ -2,10 +2,10 @@ import type { UngueltigerWahlschein } from "@/types/wahlbezirk/UngueltigerWahlsc
 
 import { describe, expect, it } from "vitest";
 
-import { useUngueltigerWahlscheinMapper } from "@/composables/basisdaten/ungueltigerWahlscheinMapper.ts";
+import { useUngueltigeWahlscheineMapper } from "@/composables/basisdaten/ungueltigeWahlscheineMapper.ts";
 
 describe("ungueltigerWahlscheinMapper.ts", () => {
-  const { toModel } = useUngueltigerWahlscheinMapper();
+  const { toModel } = useUngueltigeWahlscheineMapper();
 
   describe("toModel", () => {
     it("should_returnListOfUngueltigeWahlscheine_when_multipleLinesAreGiven", () => {

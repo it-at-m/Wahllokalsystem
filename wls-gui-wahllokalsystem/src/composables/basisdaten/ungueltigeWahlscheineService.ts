@@ -5,7 +5,7 @@ import {
   Configuration,
   UngueltigeWahlscheineControllerApi,
 } from "@/api/wls-clients/generated-basisdaten-api";
-import { useUngueltigerWahlscheinMapper } from "@/composables/basisdaten/ungueltigerWahlscheinMapper.ts";
+import { useUngueltigeWahlscheineMapper } from "@/composables/basisdaten/ungueltigeWahlscheineMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { BASISDATEN_SERVICE_API_URL } from "@/constants.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
@@ -19,7 +19,7 @@ export function useUngueltigeWahlscheineService() {
     );
 
   const { addNotification } = useUserNotificationService();
-  const { toModel } = useUngueltigerWahlscheinMapper();
+  const { toModel } = useUngueltigeWahlscheineMapper();
 
   async function getUngueltigeWahlscheine(
     wahltagID: string,

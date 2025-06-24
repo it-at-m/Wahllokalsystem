@@ -3,7 +3,7 @@ import type { UngueltigerWahlschein } from "@/types/wahlbezirk/UngueltigerWahlsc
 const NEW_LINE = "\n";
 const VALUE_DELIMITER = ";";
 
-export function useUngueltigerWahlscheinMapper() {
+export function useUngueltigeWahlscheineMapper() {
   const removeSpacesAndQuotationsCallback = (entry: string) =>
     entry.replace(/[\s"]+/g, "");
 

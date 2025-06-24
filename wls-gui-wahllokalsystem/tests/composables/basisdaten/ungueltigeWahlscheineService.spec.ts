@@ -22,8 +22,8 @@ vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
     addNotification: mockDefinitions.addNotification,
   }),
 }));
-vi.mock("@/composables/basisdaten/ungueltigerWahlscheinMapper.ts", () => ({
-  useUngueltigerWahlscheinMapper: () => ({
+vi.mock("@/composables/basisdaten/ungueltigeWahlscheineMapper.ts", () => ({
+  useUngueltigeWahlscheineMapper: () => ({
     toModel: mockDefinitions.mapToModel,
   }),
 }));

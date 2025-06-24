@@ -39,7 +39,7 @@ describe("ungueltigeWahlscheineService.ts", () => {
   });
 
   describe("getUngueltigeWahlscheine", () => {
-    it("should_returnListOfUngueltigeWahlscheine_when_apiCalledSucceeded", async () => {
+    it("should_returnListOfUngueltigeWahlscheine_when_apiCallSucceeded", async () => {
       const wahltagID = "wahltagID";
       const wahlbezirksArt = WahlbezirksArtEnum.BWB;
 

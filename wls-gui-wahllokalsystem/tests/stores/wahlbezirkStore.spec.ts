@@ -69,7 +69,7 @@ describe("wahlbezirkStore.ts", () => {
       }
     );
 
-    it("should_notCallService_when_userHasNotWahltagID", async () => {
+    it("should_notCallService_when_userHasNoWahltagID", async () => {
       useUserStore().setUser(prepareUser().wahltagID(undefined).build());
 
       await unitUnderTest.initUngueltigeWahlscheine(true);

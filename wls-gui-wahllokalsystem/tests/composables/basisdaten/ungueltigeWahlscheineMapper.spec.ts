@@ -72,7 +72,7 @@ describe("ungueltigerWahlscheinMapper.ts", () => {
       expect(result).toHaveLength(0);
     });
 
-    it("should_returnEmptyLists_when_linesDontHaveEnoughValues", () => {
+    it("should_returnEmptyList_when_linesDontHaveEnoughValues", () => {
       const csvString = "onlyOneValue";
 
       const result = toModel(csvString);

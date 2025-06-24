@@ -7,8 +7,7 @@ import { useUserMapper } from "@/composables/user/userMapper.ts";
 
 describe("userMapper.ts", () => {
   const { toModel } = useUserMapper();
-  const { prepareUser, prepareUserDTO, mapUserDtoToUser } =
-    useUserTestDataFactory();
+  const { prepareUserDTO, mapUserDtoToUser } = useUserTestDataFactory();
 
   describe("toModel", () => {
     it("should_returnModel_when_givenDto", () => {

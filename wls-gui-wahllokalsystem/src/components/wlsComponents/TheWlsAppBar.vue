@@ -44,16 +44,16 @@
           />
         </template>
         <v-list-item
+          title="Wahlumgebung"
+          :to="ROUTE_WAHLUMGEBUNG"
+        />
+        <v-list-item
           title="Beginn Stimmabgabe"
           :to="ROUTE_BEGINN_STIMMABGABE"
         />
         <v-list-item
           title="Wahlschliessung"
           :to="ROUTE_WAHLSCHLIESSUNG"
-        />
-        <v-list-item
-          title="Wahlumgebung"
-          :to="ROUTE_WAHLUMGEBUNG"
         />
       </v-list-group>
       <v-list-item

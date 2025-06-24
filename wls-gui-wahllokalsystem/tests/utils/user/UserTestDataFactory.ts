@@ -53,7 +53,7 @@ export function useUserTestDataFactory() {
       wahlbezirksArt: WahlbezirksArtEnum.UWB,
       pin: "",
       authorities: new Set<string>(["authority"]),
-      wahlMetaData: [],
+      wahlMetaData: [{ wahlbezirkID: "", wahlID: "", wahlnummer: "" }],
     };
   }
 

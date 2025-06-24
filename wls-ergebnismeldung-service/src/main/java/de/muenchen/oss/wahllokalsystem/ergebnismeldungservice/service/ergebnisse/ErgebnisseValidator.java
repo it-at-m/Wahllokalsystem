@@ -12,13 +12,13 @@ import org.springframework.stereotype.Component;
 public class ErgebnisseValidator {
     private final ExceptionFactory exceptionFactory;
 
-    public void validReferenceOrThrow(final ErgebnisseReference ergebnisseReference, final FachlicheWlsException exceptionOnInvalid)
+    public void validReferenceOrThrow(final ErgebnisseReferenceModel ergebnisseReferenceModel, final FachlicheWlsException exceptionOnInvalid)
             throws FachlicheWlsException {
         if (StringUtils.isBlank(
-                ergebnisseReference.wahlbezirkID()) ||
+                ergebnisseReferenceModel.wahlbezirkID()) ||
                 StringUtils.isBlank(
-                        ergebnisseReference.wahlID())
-                || ergebnisseReference.stapelart() == null) {
+                        ergebnisseReferenceModel.wahlID())
+                || ergebnisseReferenceModel.stapelart() == null) {
             throw exceptionOnInvalid;
         }
     }

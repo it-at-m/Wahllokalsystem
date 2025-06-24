@@ -76,7 +76,7 @@ class ErgebnisseModelMapperTest {
 
         @Test
         void should_returnEmbeddedId_when_givenErgebnisseReference() {
-            val ergebnisseReference = new ErgebnisseReference("bezirkID", "wahlID", Stapelart.LTW_BZW_A);
+            val ergebnisseReference = new ErgebnisseReferenceModel("bezirkID", "wahlID", StapelartModel.LTW_BZW_A);
             val result = unitUnderTest.toEmbeddedId(ergebnisseReference);
 
             val expectedResult = new BezirkUndWahlIDStapelart("bezirkID", "wahlID", Stapelart.LTW_BZW_A);

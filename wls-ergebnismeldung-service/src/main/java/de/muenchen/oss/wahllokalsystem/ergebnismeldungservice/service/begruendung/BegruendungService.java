@@ -30,11 +30,11 @@ public class BegruendungService {
         "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetBegruendung')"
                 + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
     )
-    public BegruendungModel getBegruendung(@P("param") @NotNull final BegruendungReference begruendungReference) {
+    public BegruendungModel getBegruendung(@P("param") @NotNull final BegruendungReferenceModel begruendungReferenceModel) {
         log.info("#getBegruendung");
-        begruendungValidator.validReferenceOrThrow(begruendungReference);
+        begruendungValidator.validReferenceOrThrow(begruendungReferenceModel);
 
-        BezirkUndWahlIDStapelart id = begruendungModelMapper.toEmbeddedId(begruendungReference);
+        BezirkUndWahlIDStapelart id = begruendungModelMapper.toEmbeddedId(begruendungReferenceModel);
         val begruendungFromRepo = getOrNull(id);
         return begruendungFromRepo == null ? null : begruendungModelMapper.toModel(begruendungFromRepo);
     }
@@ -43,10 +43,10 @@ public class BegruendungService {
         "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostBegruendung')"
                 + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
     )
-    public void postBegruendung(@P("param") final BegruendungReference begruendungReference, @NotNull final BegruendungModel begruendungToAdd) {
+    public void postBegruendung(@P("param") final BegruendungReferenceModel begruendungReferenceModel, @NotNull final BegruendungModel begruendungToAdd) {
         log.info("#postBegruendung");
         begruendungValidator.validModelOrThrow(begruendungToAdd);
-        begruendungValidator.validReferenceOrThrow(begruendungReference);
+        begruendungValidator.validReferenceOrThrow(begruendungReferenceModel);
 
         try {
             begruendungRepository.save(begruendungModelMapper.toEntity(begruendungToAdd));

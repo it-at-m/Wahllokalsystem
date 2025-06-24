@@ -7,7 +7,6 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplic
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.begruendung.BegruendungRepository;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.begruendung.BegruendungDTOMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
@@ -93,11 +92,10 @@ class BegruendungServiceSecurityTest {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_BEGRUENDUNG);
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
-            val stapelart = Stapelart.LTW_BZW_A;
             val stapelartModel = StapelartModel.LTW_BZW_A;
 
             val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, "grund1", "grund2", true, true);
-            val newBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
+            val newBegruendungReference = new BegruendungReferenceModel(wahlbezirkID, wahlID, stapelartModel);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
 
@@ -109,11 +107,10 @@ class BegruendungServiceSecurityTest {
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_BEGRUENDUNG);
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
-            val stapelart = Stapelart.LTW_BZW_A;
             val stapelartModel = StapelartModel.LTW_BZW_A;
 
             val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, "grund1", "grund2", true, true);
-            val newBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
+            val newBegruendungReference = new BegruendungReferenceModel(wahlbezirkID, wahlID, stapelartModel);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(false);
 
@@ -128,11 +125,10 @@ class BegruendungServiceSecurityTest {
                     ArrayUtils.addAll(Authorities.ALL_AUTHORITIES_SET_BEGRUENDUNG_MISSING_WILL_RESULT_IN_ACCESS_DENIED, arguments.get(0, String[].class)));
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
-            val stapelart = Stapelart.LTW_BZW_A;
             val stapelartModel = StapelartModel.LTW_BZW_A;
 
             val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, "grund1", "grund2", true, true);
-            val newBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
+            val newBegruendungReference = new BegruendungReferenceModel(wahlbezirkID, wahlID, stapelartModel);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(false);
 
@@ -147,11 +143,10 @@ class BegruendungServiceSecurityTest {
                     ArrayUtils.addAll(Authorities.ALL_AUTHORITIES_SET_BEGRUENDUNG_MISSING_WILL_RESULT_IN_ACCESS_DENIED, arguments.get(0, String[].class)));
             val wahlbezirkID = "wahlbezirkID";
             val wahlID = "wahlID";
-            val stapelart = Stapelart.LTW_BZW_A;
             val stapelartModel = StapelartModel.LTW_BZW_A;
 
             val newBegruendung = new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, "grund1", "grund2", true, true);
-            val newBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
+            val newBegruendungReference = new BegruendungReferenceModel(wahlbezirkID, wahlID, stapelartModel);
 
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
 

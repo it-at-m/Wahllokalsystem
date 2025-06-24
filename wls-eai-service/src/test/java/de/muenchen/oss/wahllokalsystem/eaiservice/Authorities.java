@@ -22,6 +22,8 @@ public class Authorities {
 
     public static final String SERVICE_SAVE_ERGEBNISMELDUNG = "aoueai_BUSINESSACTION_SaveErgebnismeldung";
 
+    public static final String SERVICE_SAVE_WAHLLOKALZUSTAND = "aoueai_BUSINESSACTION_SaveWahllokalZustand";
+
     public static final String[] ALL_AUTHORITIES_GETWAHLVORSTANDFORWAHLBEZIRK = {
             SERVICE_LOAD_WAHLVORSTAND
     };
@@ -36,5 +38,9 @@ public class Authorities {
     };
     public static final String[] ALL_AUTHORITIES_GETREFERENDUMVORLAGEN = {
             SERVICE_LOAD_REFERENDUMVORLAGEN,
+    };
+
+    public static final String[] ALL_AUTHORITIES_SETWAHLLOKALZUSTAND = {
+            SERVICE_SAVE_WAHLLOKALZUSTAND
     };
 }

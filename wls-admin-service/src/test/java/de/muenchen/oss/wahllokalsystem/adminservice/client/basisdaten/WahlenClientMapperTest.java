@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.client.basisdaten;
 
-import de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.model.Farbe;
+import de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.model.FarbeDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.model.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen.FarbeModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen.WahlModel;
@@ -29,14 +29,14 @@ class WahlenClientMapperTest {
         void should_mapToListOfModel_when_givenListOfDTO() {
             val nowDate = LocalDate.now();
             val dtosToMap = List.of(
-                    new WahlDTO().wahlID("wahlID1").name("name1").reihenfolge(1L).waehlerverzeichnisnummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.BAW)
-                            .farbe(new Farbe().r(1L).g(2L).b(3L))
+                    new WahlDTO().wahlID("wahlID1").name("name1").reihenfolge(1L).waehlerverzeichnisNummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.BAW)
+                            .farbe(new FarbeDTO().r(1L).g(2L).b(3L))
                             .nummer("1"),
-                    new WahlDTO().wahlID("wahlID2").name("name2").reihenfolge(2L).waehlerverzeichnisnummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.BTW)
-                            .farbe(new Farbe().r(4L).g(5L).b(6L))
+                    new WahlDTO().wahlID("wahlID2").name("name2").reihenfolge(2L).waehlerverzeichnisNummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.BTW)
+                            .farbe(new FarbeDTO().r(4L).g(5L).b(6L))
                             .nummer("2"),
-                    new WahlDTO().wahlID("wahlID3").name("name3").reihenfolge(3L).waehlerverzeichnisnummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.LTW)
-                            .farbe(new Farbe().r(7L).g(8L).b(9L))
+                    new WahlDTO().wahlID("wahlID3").name("name3").reihenfolge(3L).waehlerverzeichnisNummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.LTW)
+                            .farbe(new FarbeDTO().r(7L).g(8L).b(9L))
                             .nummer("3"));
 
             Assertions.assertThat(dtosToMap).allSatisfy(wahl -> Assertions.assertThat(wahl).hasNoNullFieldsOrProperties());
@@ -73,14 +73,14 @@ class WahlenClientMapperTest {
             val result = unitUnderTest.toDtoList(modelsToMap);
 
             val expectedDtos = List.of(
-                    new WahlDTO().wahlID("wahlID1").name("name1").reihenfolge(1L).waehlerverzeichnisnummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.BAW)
-                            .farbe(new Farbe().r(1L).g(2L).b(3L))
+                    new WahlDTO().wahlID("wahlID1").name("name1").reihenfolge(1L).waehlerverzeichnisNummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.BAW)
+                            .farbe(new FarbeDTO().r(1L).g(2L).b(3L))
                             .nummer(null),
-                    new WahlDTO().wahlID("wahlID2").name("name2").reihenfolge(2L).waehlerverzeichnisnummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.BTW)
-                            .farbe(new Farbe().r(4L).g(5L).b(6L))
+                    new WahlDTO().wahlID("wahlID2").name("name2").reihenfolge(2L).waehlerverzeichnisNummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.BTW)
+                            .farbe(new FarbeDTO().r(4L).g(5L).b(6L))
                             .nummer(null),
-                    new WahlDTO().wahlID("wahlID3").name("name3").reihenfolge(3L).waehlerverzeichnisnummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.LTW)
-                            .farbe(new Farbe().r(7L).g(8L).b(9L))
+                    new WahlDTO().wahlID("wahlID3").name("name3").reihenfolge(3L).waehlerverzeichnisNummer(1L).wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.LTW)
+                            .farbe(new FarbeDTO().r(7L).g(8L).b(9L))
                             .nummer(null));
 
             Assertions.assertThat(result).containsExactlyInAnyOrderElementsOf(expectedDtos);

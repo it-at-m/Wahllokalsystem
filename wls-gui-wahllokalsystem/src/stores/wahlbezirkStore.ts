@@ -1,12 +1,13 @@
 import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
 
 import { defineStore, storeToRefs } from "pinia";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useWahlvorbereitungService } from "@/composables/wahlvorbereitung/wahlvorbereitungService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 export const storeID = "wahlbezirk";
 const { registerStoreHMR } = useHmrUpdate();
@@ -19,6 +20,8 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   } = useWahlvorbereitungService();
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
   const { isValidDate } = useDateTimeUtils();
+  const { wahlen } = storeToRefs(useWahlenStore());
+  const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
 
   const eroeffnungsuhrzeit = ref<Date | undefined>(undefined);
   const eroeffnungsuhrzeitSent = ref<Date | undefined>(undefined);
@@ -27,12 +30,24 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   const schliessungsuhrzeit = ref<Date | undefined>(undefined);
   const schliessungsuhrzeitSent = ref<Date | undefined>(undefined);
   const schliessungsuhrzeitIsSaving = ref(false);
-
   const urnenWahlVorbereitungIsSaving = ref(false);
 
-  const urnenwahlVorbereitung = ref<Urnenwahlvorbereitung | undefined>(
-    undefined
-  );
+  const urnenwahlVorbereitung = ref<Urnenwahlvorbereitung>({
+    anzahlNebenraeume: null,
+    anzahlWahlkabinen: null,
+    anzahlWahltische: null,
+    urneVersiegelt: false,
+    wahlbezirkID: currentUserWahlbezirksArt.value,
+    urnenAnzahl: [],
+  });
+
+  watch(wahlen, () => {
+    urnenwahlVorbereitung.value.urnenAnzahl =
+      wahlen.value?.map((wahl) => ({
+        wahlID: wahl.wahlID,
+        anzahl: null,
+      })) || [];
+  });
 
   async function sendEroeffnungsuhrzeit() {
     if (currentUserWahlbezirkID.value && eroeffnungsuhrzeit.value) {

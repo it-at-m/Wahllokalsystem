@@ -44,7 +44,7 @@ export function useWahlvorbereitungMapper() {
   ): Urnenwahlvorbereitung {
     const urnenAnzahlModel =
       urnenwahlvorbereitungDTO.urnenAnzahl?.map((wahlurneDTO) =>
-        toWahlurneModel(wahlurneDTO)
+        _toWahlurneModel(wahlurneDTO)
       ) ?? [];
     return {
       wahlbezirkID: urnenwahlvorbereitungDTO.wahlbezirkID,
@@ -57,19 +57,12 @@ export function useWahlvorbereitungMapper() {
     };
   }
 
-  function toWahlurneModel(wahlurneDto: WahlurneDTO): Wahlurne {
-    return {
-      wahlID: wahlurneDto.wahlID,
-      anzahl: wahlurneDto.anzahl,
-    };
-  }
-
   function toUrnenwahlvorbereitungWriteDto(
     urnenwahlvorbereitung: Urnenwahlvorbereitung
   ): UrnenwahlvorbereitungWriteDTO {
     const urnenAnzahlDto =
       urnenwahlvorbereitung.urnenAnzahl?.map((wahlurneDTO) =>
-        toWahlurneDto(wahlurneDTO, urnenwahlvorbereitung.urneVersiegelt)
+        _toWahlurneDto(wahlurneDTO, urnenwahlvorbereitung.urneVersiegelt)
       ) ?? [];
     return {
       anzahlWahlkabinen: urnenwahlvorbereitung.anzahlWahlkabinen ?? 0,
@@ -79,7 +72,14 @@ export function useWahlvorbereitungMapper() {
     };
   }
 
-  function toWahlurneDto(
+  function _toWahlurneModel(wahlurneDto: WahlurneDTO): Wahlurne {
+    return {
+      wahlID: wahlurneDto.wahlID,
+      anzahl: wahlurneDto.anzahl,
+    };
+  }
+
+  function _toWahlurneDto(
     wahlurne: Wahlurne,
     urneVersiegelt: boolean
   ): WahlurneDTO {

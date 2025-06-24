@@ -224,9 +224,6 @@ describe("wahlvorbereitungService", () => {
       mockDefinitions.postUrnenwahlvorbereitung.mockRejectedValue(
         mockedApiError
       );
-      mockDefinitions.postUrnenwahlvorbereitung = vi
-        .fn()
-        .mockRejectedValue(mockedApiError);
 
       await expect(
         postUrnenwahlvorbereitung(wahlbezirkID, urnenwahlvorbereitung)

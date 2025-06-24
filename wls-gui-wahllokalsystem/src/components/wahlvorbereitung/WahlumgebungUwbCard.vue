@@ -17,14 +17,14 @@
                 class="mr-4"
                 :rules="[REQUIRED, MIN_NUMBER(1), MAX_NUMBER(99)]"
                 :data-test="`textFieldUrnenAnzahl_${index}`"
-                :label="`Anzahl der Wahlurnen ${getWahlNameById(wahl.wahlID)}`"
-                min-width="25rem"
+                :label="`Anzahl der Wahlurnen ${getWahlNameOrBlankStringById(wahl.wahlID)}`"
+                min-width="30rem"
                 clearable
               />
             </div>
           </div>
           <v-checkbox
-            v-model="isCheckboxAlleVersiegeltEnabled"
+            v-model="urnenwahlVorbereitung.urneVersiegelt"
             :label="checkboxLableText"
             data-test="checkboxAlleVersiegelt"
           />
@@ -43,7 +43,7 @@
                 v-model="urnenwahlVorbereitung.anzahlWahltische"
                 class="mr-4"
                 :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(99)]"
-                min-width="25rem"
+                min-width="30rem"
                 data-test="numberInputAnzahlWahltische"
                 label="Anzahl der Tische mit Sichtblenden"
                 clearable
@@ -56,7 +56,7 @@
                 :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(99)]"
                 data-test="numberInputAnzahlNebenraeume"
                 label="Anzahl der Nebenräume im Wahlraum"
-                min-width="25rem"
+                min-width="30rem"
                 clearable
               />
             </div>
@@ -67,7 +67,7 @@
                 :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(99)]"
                 data-test="numberInputAnzahlWahlkabinen"
                 label="Anzahl der Wahlkabinen"
-                min-width="25rem"
+                min-width="30rem"
                 clearable
               />
             </div>
@@ -107,8 +107,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
-
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 import {
@@ -138,8 +136,9 @@ const abstimmungsschutzvorrichtungenForm = ref<HTMLFormElement>();
 const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
 const { wahlen } = storeToRefs(useWahlenStore());
 const { sendUrnenwahlvorbereitung } = useWahlbezirkStore();
-const { urnenWahlVorbereitungIsSaving } = storeToRefs(useWahlbezirkStore());
-const { getWahlNameById } = useWahlenStore();
+const { urnenWahlVorbereitungIsSaving, urnenwahlVorbereitung } =
+  storeToRefs(useWahlbezirkStore());
+const { getWahlNameOrBlankStringById } = useWahlenStore();
 
 const isSaveButtonDisabled = computed(() => {
   return (
@@ -162,19 +161,6 @@ const isMinimumRequired = computed(() => {
     Number(urnenwahlVorbereitung.value.anzahlWahlkabinen) || 0;
 
   return tischeSichtblenden + nebenraeumeWahlraum + wahlkabinen < 1;
-});
-
-const urnenwahlVorbereitung = ref<Urnenwahlvorbereitung>({
-  wahlbezirkID: currentUserWahlbezirksArt.value,
-  anzahlWahlkabinen: null,
-  anzahlWahltische: null,
-  anzahlNebenraeume: null,
-  urneVersiegelt: isCheckboxAlleVersiegeltEnabled.value,
-  urnenAnzahl:
-    wahlen.value?.map((wahl) => ({
-      wahlID: wahl.wahlID,
-      anzahl: null,
-    })) || [],
 });
 
 function onSaveWahlumgebungUWBClicked() {

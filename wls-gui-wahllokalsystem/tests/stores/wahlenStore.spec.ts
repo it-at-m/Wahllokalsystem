@@ -49,7 +49,7 @@ describe("wahlenStore.ts", () => {
     });
   });
 
-  describe("getWahlNameById", () => {
+  describe("getWahlNameOrBlankStringById", () => {
     it("should_getWahlName_when_calledWithWahlId", async () => {
       const wahlOne = createWahl();
       const wahlTwo = createWahl();
@@ -57,7 +57,7 @@ describe("wahlenStore.ts", () => {
 
       unitUnderTest.wahlen = [wahlOne, wahlTwo, wahlThree];
 
-      const result = unitUnderTest.getWahlNameById(wahlOne.wahlID);
+      const result = unitUnderTest.getWahlNameOrBlankStringById(wahlOne.wahlID);
 
       expect(result).toStrictEqual(wahlOne.name);
     });

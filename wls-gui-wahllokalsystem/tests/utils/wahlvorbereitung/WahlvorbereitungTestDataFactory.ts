@@ -23,7 +23,7 @@ export function useWahlvorbereitungTestDataFactory() {
       anzahlWahlkabinen: 1,
       anzahlWahltische: 1,
       anzahlNebenraeume: 1,
-      urnenAnzahl: generateWahlurneDTOArray(),
+      urnenAnzahl: _generateWahlurneDTOArray(),
     };
   }
 
@@ -33,18 +33,8 @@ export function useWahlvorbereitungTestDataFactory() {
       anzahlWahlkabinen: 1,
       anzahlWahltische: 1,
       anzahlNebenraeume: 1,
-      urnenAnzahl: generateWahlurneDTOArray(),
+      urnenAnzahl: _generateWahlurneDTOArray(),
     };
-  }
-
-  function generateWahlurneDTOArray(): WahlurneDTO[] {
-    return [
-      {
-        wahlID: "wahlID1",
-        anzahl: 1,
-        urneVersiegelt: true,
-      },
-    ];
   }
 
   function createUrnenwahlvorbereitung(): Urnenwahlvorbereitung {
@@ -54,15 +44,25 @@ export function useWahlvorbereitungTestDataFactory() {
       anzahlWahltische: 1,
       anzahlNebenraeume: 1,
       urneVersiegelt: true,
-      urnenAnzahl: generateWahlurneArray(),
+      urnenAnzahl: _generateWahlurneArray(),
     };
   }
 
-  function generateWahlurneArray(): Wahlurne[] {
+  function _generateWahlurneArray(): Wahlurne[] {
     return [
       {
         wahlID: "wahlID1",
         anzahl: 1,
+      },
+    ];
+  }
+
+  function _generateWahlurneDTOArray(): WahlurneDTO[] {
+    return [
+      {
+        wahlID: "wahlID1",
+        anzahl: 1,
+        urneVersiegelt: true,
       },
     ];
   }

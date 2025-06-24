@@ -231,7 +231,6 @@ describe("wahlbezirkStore.ts", () => {
       await unitUnderTest.sendUrnenwahlvorbereitung(urnenwahlvorbereitung);
 
       expect(mockDefinitions.postUrnenwahlvorbereitung).toBeCalledTimes(0);
-      expect(unitUnderTest.urnenwahlVorbereitung).toBe(undefined);
     });
 
     it("should_notUpdateUrnenwahlVorbereitung_when_postUrnenwahlvorbereitungFails", async () => {
@@ -260,7 +259,6 @@ describe("wahlbezirkStore.ts", () => {
         await unitUnderTest.sendUrnenwahlvorbereitung(urnenwahlvorbereitung);
       } catch (error) {
         expect(error).equals(mockedError);
-        expect(unitUnderTest.urnenwahlVorbereitung).toBe(undefined);
         expect(mockDefinitions.postUrnenwahlvorbereitung).toHaveBeenCalledWith(
           wahlbezirkID,
           urnenwahlvorbereitung

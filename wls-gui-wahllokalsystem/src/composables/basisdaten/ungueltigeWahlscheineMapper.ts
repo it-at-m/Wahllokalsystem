@@ -10,11 +10,9 @@ export function useUngueltigeWahlscheineMapper() {
   function toModel(
     ungueltigeWahlscheineCSVString: string
   ): UngueltigerWahlschein[] {
-    const ungueltigeWahlscheineLines = ungueltigeWahlscheineCSVString
+    return ungueltigeWahlscheineCSVString
       .split(NEW_LINE)
-      .map(removeSpacesAndQuotationsCallback);
-
-    return ungueltigeWahlscheineLines
+      .map(removeSpacesAndQuotationsCallback)
       .map((line) => _toModel(line))
       .filter((ungueltigerWahlschein) => ungueltigerWahlschein !== undefined);
   }

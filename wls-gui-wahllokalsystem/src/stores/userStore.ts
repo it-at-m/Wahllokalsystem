@@ -5,7 +5,7 @@ import { computed, ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useUserService } from "@/composables/user/userService.ts";
-import { createUserLocalDevelopment } from "@/types/User";
+import { createUserLocalDevelopment } from "@/types/User.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { getUser } = useUserService();
@@ -36,11 +36,13 @@ export const useUserStore = defineStore("user", () => {
   async function loadUser() {
     try {
       user.value = await getUser();
-    } catch {
+    } catch (e) {
       if (import.meta.env.DEV) {
         user.value = createUserLocalDevelopment();
+        throw e;
       } else {
         user.value = defaultUser;
+        throw e;
       }
     }
   }

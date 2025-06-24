@@ -27,7 +27,7 @@ export function useUserService() {
       return toModel(validUserDtoOrThrow(response.data));
     } catch (e) {
       addNotification(
-        "Fehler beim Laden des Users.",
+        "Fehler beim Laden des Users. Bitte kontaktieren Sie das Wahlamt.",
         UserNotificationCategoryEnum.ERROR
       );
       throw e;

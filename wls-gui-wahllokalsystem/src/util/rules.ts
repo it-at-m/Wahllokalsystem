@@ -5,7 +5,6 @@ export const REQUIRED = (value: any) => {
   } else if (typeof value === "number") {
     return !isNaN(value) || "Feld darf nicht leer sein.";
   }
-  return "Feld darf nicht leer sein.";
 };
 
 export const MAX_LENGTH = (length: number) => (value: any) =>

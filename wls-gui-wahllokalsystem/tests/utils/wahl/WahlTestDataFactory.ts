@@ -43,7 +43,7 @@ export function useWahlTestDataFactory() {
       wahlID: generateRandomString(10),
       name: generateRandomString(20),
       reihenfolge: generateRandomNumberInRange(0, 100),
-      waehlerverzeichnisnummer: generateRandomNumberInRange(0, 100),
+      waehlerverzeichnisNummer: generateRandomNumberInRange(0, 100),
       wahltag: generateRandomDateTimeAsString(),
       wahlart:
         wahlDTOWahlartEnumValues[
@@ -59,7 +59,7 @@ export function useWahlTestDataFactory() {
       wahlID: generateRandomString(10),
       name: generateRandomString(20),
       reihenfolge: generateRandomNumberInRange(0, 100),
-      waehlerverzeichnisnummer: generateRandomNumberInRange(0, 100),
+      waehlerverzeichnisNummer: generateRandomNumberInRange(0, 100),
       wahltag: generateRandomDateTimeAsString(),
       wahlart:
         wahlWahlartEnumValues[

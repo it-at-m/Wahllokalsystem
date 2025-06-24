@@ -14,7 +14,7 @@ export function useWahlMapper() {
       wahlID: dto.wahlID,
       name: dto.name,
       reihenfolge: dto.reihenfolge,
-      waehlerverzeichnisnummer: dto.waehlerverzeichnisnummer,
+      waehlerverzeichnisNummer: dto.waehlerverzeichnisNummer,
       wahltag: dto.wahltag,
       wahlart: _dtoEnumToModelEnum(dto.wahlart),
       farbe: dto.farbe ? _mapFarbeDtoToModel(dto.farbe) : undefined,

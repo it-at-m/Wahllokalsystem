@@ -7,7 +7,7 @@ const { prepareUserDTO } = useUserTestDataFactory();
 const { validUserDtoOrThrow } = useUserValidator();
 
 describe("userValidator.ts", () => {
-  it("should_retunrUserDto_when_userIsValid", () => {
+  it("should_returnUserDto_when_userIsValid", () => {
     const userDto = prepareUserDTO().build();
 
     const result = validUserDtoOrThrow(userDto);

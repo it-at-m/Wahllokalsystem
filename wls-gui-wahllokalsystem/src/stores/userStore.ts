@@ -68,7 +68,7 @@ export const useUserStore = defineStore("user", () => {
   });
 
   const currentUserHauptWahlID = computed((): string => {
-    const smallestWbidWahlnummerObject = user.value.wahlMetaData?.reduce(
+    const smallestWbidWahlnummerObject = user.value.wahlMetaData.reduce(
       (smallest, current) => {
         return parseInt(current.wahlnummer) < parseInt(smallest.wahlnummer)
           ? current

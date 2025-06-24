@@ -28,7 +28,7 @@ class EAIClientImplTest {
     @Mock
     WahldatenControllerApi wahldatenControllerApi;
     @Mock
-    ErgebnismeldungControllerApi wahlergebnisControllerApi;
+    ErgebnismeldungControllerApi ergebnismeldungControllerApi;
 
     @Mock
     AWerteClientMapper aWerteClientMapper;
@@ -75,7 +75,7 @@ class EAIClientImplTest {
 
             unitUnderTest.sendErgebnismeldung(ergebnismeldungDTO);
 
-            Mockito.verify(wahlergebnisControllerApi).saveErgebnismeldung(ergebnismeldungDTO);
+            Mockito.verify(ergebnismeldungControllerApi).saveErgebnismeldung(ergebnismeldungDTO);
         }
 
         @Test
@@ -84,7 +84,7 @@ class EAIClientImplTest {
 
             val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("");
 
-            Mockito.doThrow(new RuntimeException("api call failed")).when(wahlergebnisControllerApi).saveErgebnismeldung(ergebnismeldungDTO);
+            Mockito.doThrow(new RuntimeException("api call failed")).when(ergebnismeldungControllerApi).saveErgebnismeldung(ergebnismeldungDTO);
             Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_AOUEAI)).thenReturn(mockedWlsException);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.sendErgebnismeldung(ergebnismeldungDTO)).isSameAs(mockedWlsException);

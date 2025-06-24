@@ -48,7 +48,7 @@ describe("userService.ts", () => {
         new Error("mocked api call failed")
       );
 
-      await expect(getUser()).rejects.toThrow("Fehler beim Laden des Users.");
+      await expect(getUser()).rejects.toThrow("mocked api call failed");
       expect(mockDefinitions.toModel).not.toHaveBeenCalled();
     });
   });

@@ -13,11 +13,11 @@ export function useUngueltigeWahlscheineMapper() {
     return ungueltigeWahlscheineCSVString
       .split(NEW_LINE)
       .map(removeSpacesAndQuotationsCallback)
-      .map((line) => _toModel(line))
+      .map((line) => csvLineToModel(line))
       .filter((ungueltigerWahlschein) => ungueltigerWahlschein !== undefined);
   }
 
-  function _toModel(
+  function csvLineToModel(
     ungueltigerWahlscheinLine: string
   ): UngueltigerWahlschein | undefined {
     const values = ungueltigerWahlscheinLine.split(VALUE_DELIMITER);

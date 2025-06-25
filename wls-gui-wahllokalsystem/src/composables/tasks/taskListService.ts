@@ -15,7 +15,6 @@ export function useTaskListService() {
   const { initKonfigurationsparameter } = useInfomanagementStore();
   const { initWahlvorstand } = useWahlvorstandStore();
   const { initUngueltigeWahlscheine } = useWahlbezirkStore();
-
   const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
 
   const matchingWahlbezirkArt = (task: Task) =>

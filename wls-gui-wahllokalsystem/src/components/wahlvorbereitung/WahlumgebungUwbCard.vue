@@ -140,6 +140,7 @@ const { getWahlNameOrBlankStringById } = useWahlenStore();
 const isSaveButtonDisabled = computed(() => {
   return (
     anzahlWahlurnenValidForm.value !== true ||
+    abstimmungsschutzvorrichtungenValidForm.value !== true ||
     !urnenwahlVorbereitung.value.urneVersiegelt ||
     isMinimumRequired.value
   );

@@ -11,7 +11,7 @@ import lombok.Builder;
 public record UserDTO(@NotNull String username,
                       String email,
                       @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
-                      @NotNull boolean userEnabled,
+                      boolean userEnabled,
                       String wahltagID,
                       @JsonFormat(pattern = "yyyy-MM-dd") // to avoid date being converted to array
                       LocalDate wahltag,

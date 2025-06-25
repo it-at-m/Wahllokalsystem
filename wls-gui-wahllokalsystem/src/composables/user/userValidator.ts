@@ -18,8 +18,8 @@ export function useUserValidator() {
     const undefinedOrEmptyFields = requiredFields.filter((key) => {
       const value = userDto[key as keyof typeof userDto];
       return (
-        value === undefined || // check for undefined values
-        value === null || // check for null values
+        value === undefined ||
+        value === null ||
         (typeof value === "string" && value.trim() === "") || // check for empty or blank strings
         (value instanceof Set && value.size === 0) // check for empty authorities set
       );

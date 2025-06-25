@@ -7,16 +7,14 @@ import lombok.Builder;
 
 @Builder
 public record UserModel(@NotNull String username,
-                        @NotNull String email,
-                        @NotNull boolean userEnabled,
-                        @NotNull String wahltagID,
-                        @NotNull LocalDate wahltag,
-                        @NotNull String wahlbezirkID,
-                        @NotNull String wahlbezirkNummer,
-                        @NotNull WahlbezirksartModel wahlbezirksArt,
-                        @NotNull String pin,
+                        String email,
+                        boolean userEnabled,
+                        String wahltagID,
+                        LocalDate wahltag,
+                        String wahlbezirkID,
+                        String wahlbezirkNummer,
+                        WahlbezirksartModel wahlbezirksArt,
+                        String pin,
                         @NotNull Set<String> authorities,
-                        @NotNull String wbid_wahlnummer
-) {
-
+                        String wbid_wahlnummer) {
 }

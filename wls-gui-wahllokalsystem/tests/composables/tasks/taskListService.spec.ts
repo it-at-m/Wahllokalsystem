@@ -1,23 +1,26 @@
 import { createTestingPinia } from "@pinia/testing";
-import { storeToRefs } from "pinia";
-import { describe, expect, it, vi } from "vitest";
+import { setActivePinia, storeToRefs } from "pinia";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useTaskListService } from "@/composables/tasks/taskListService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 describe("taskListService.ts", () => {
-  const testPinia = createTestingPinia({
-    createSpy: vi.fn,
-  });
+  let unitUnderTest: ReturnType<typeof useTaskListService>;
 
-  const unitUnderTest = useTaskListService();
+  beforeEach(() => {
+    setActivePinia(
+      createTestingPinia({
+        createSpy: vi.fn,
+      })
+    );
+    unitUnderTest = useTaskListService();
+  });
 
   describe("getTaskList", () => {
     it("should_returnListOfTaskForUWB_when_tasksAndFiltersAreGiven", () => {
-      const { currentUserWahlbezirksArt } = storeToRefs(
-        useUserStore(testPinia)
-      );
+      const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
 
       // @ts-expect-error: cannot set readonly
       currentUserWahlbezirksArt.value = WahlbezirksArtEnum.UWB;
@@ -35,9 +38,8 @@ describe("taskListService.ts", () => {
     });
 
     it("should_returnListOfTaskForBWB_when_tasksAndFiltersAreGiven", () => {
-      const { currentUserWahlbezirksArt } = storeToRefs(
-        useUserStore(testPinia)
-      );
+      console.log(useUserStore().currentUserWahlbezirksArt);
+      const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
 
       // @ts-expect-error: cannot set readonly
       currentUserWahlbezirksArt.value = WahlbezirksArtEnum.BWB;

@@ -1,12 +1,12 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.0",
   "info": {
     "title": "Auth Service",
     "contact": {
       "name": "Your Name",
       "email": "Your E-Mail-Address"
     },
-    "version": "0.1.0"
+    "version": "0.3.0"
   },
   "servers": [
     {
@@ -25,6 +25,7 @@
         "tags": [
           "user-controller"
         ],
+        "description": "Freischalten eines users.",
         "operationId": "unlockUser",
         "parameters": [
           {
@@ -38,17 +39,30 @@
         ],
         "responses": {
           "500": {
-            "description": "Internal Server Error",
+            "description": "unhandled internal error e.g. communication with other system or some types of unhandled exception",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
                 }
               }
             }
           },
           "200": {
-            "description": "OK"
+            "description": "User erfolgreich freigeschaltet."
+          },
+          "400": {
+            "description": "request body validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "resource not found"
           }
         }
       }
@@ -58,6 +72,7 @@
         "tags": [
           "session-controller"
         ],
+        "description": "Beenden einer Session.",
         "operationId": "killSession",
         "parameters": [
           {
@@ -71,17 +86,17 @@
         ],
         "responses": {
           "500": {
-            "description": "Internal Server Error",
+            "description": "unhandled internal error e.g. communication with other system or some types of unhandled exception",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
                 }
               }
             }
           },
           "200": {
-            "description": "OK",
+            "description": "Die Session wurde erfolgreich beendet.",
             "content": {
               "*/*": {
                 "schema": {
@@ -89,6 +104,19 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "request body validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "resource not found"
           }
         }
       }
@@ -125,7 +153,17 @@
         },
         "responses": {
           "500": {
-            "description": "Internal Server Error",
+            "description": "unhandled internal error e.g. communication with other system or some types of unhandled exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Wahllokalbenutzer wurde erfolgreich angelegt.",
             "content": {
               "*/*": {
                 "schema": {
@@ -134,15 +172,18 @@
               }
             }
           },
-          "200": {
-            "description": "OK",
+          "400": {
+            "description": "request body validation failed",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
                 }
               }
             }
+          },
+          "404": {
+            "description": "resource not found"
           }
         }
       }
@@ -152,20 +193,21 @@
         "tags": [
           "user-controller"
         ],
+        "description": "Liefert einen User.",
         "operationId": "user",
         "responses": {
           "500": {
-            "description": "Internal Server Error",
+            "description": "unhandled internal error e.g. communication with other system or some types of unhandled exception",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
                 }
               }
             }
           },
           "200": {
-            "description": "OK",
+            "description": "Enthält den angegebenen user oder null falls keiner vorhanden ist",
             "content": {
               "*/*": {
                 "schema": {
@@ -173,6 +215,19 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "request body validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "resource not found"
           }
         }
       }
@@ -182,20 +237,21 @@
         "tags": [
           "session-controller"
         ],
+        "description": "Listet alle aktive Sessions auf.",
         "operationId": "listActiveSessions",
         "responses": {
           "500": {
-            "description": "Internal Server Error",
+            "description": "unhandled internal error e.g. communication with other system or some types of unhandled exception",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
                 }
               }
             }
           },
           "200": {
-            "description": "OK",
+            "description": "Liste aller aktiver Sessions.",
             "content": {
               "*/*": {
                 "schema": {
@@ -203,6 +259,19 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "request body validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "resource not found"
           }
         }
       }
@@ -226,7 +295,17 @@
         ],
         "responses": {
           "500": {
-            "description": "Internal Server Error",
+            "description": "unhandled internal error e.g. communication with other system or some types of unhandled exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Der CSV-String wurde erfolgreich geliefert.",
             "content": {
               "*/*": {
                 "schema": {
@@ -235,15 +314,18 @@
               }
             }
           },
-          "200": {
-            "description": "OK",
+          "400": {
+            "description": "request body validation failed",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
                 }
               }
             }
+          },
+          "404": {
+            "description": "resource not found"
           }
         }
       }
@@ -256,11 +338,11 @@
         "operationId": "hanelGetMapping",
         "responses": {
           "500": {
-            "description": "Internal Server Error",
+            "description": "unhandled internal error e.g. communication with other system or some types of unhandled exception",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
                 }
               }
             }
@@ -274,6 +356,19 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "request body validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "resource not found"
           }
         }
       }
@@ -297,17 +392,30 @@
         ],
         "responses": {
           "500": {
-            "description": "Internal Server Error",
+            "description": "unhandled internal error e.g. communication with other system or some types of unhandled exception",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
                 }
               }
             }
           },
           "200": {
-            "description": "OK"
+            "description": "User erfolgreich gelöscht."
+          },
+          "400": {
+            "description": "request body validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WlsExceptionDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "resource not found"
           }
         }
       }
@@ -341,19 +449,6 @@
         }
       },
       "UserDTO": {
-        "required": [
-          "authorities",
-          "email",
-          "pin",
-          "userEnabled",
-          "username",
-          "wahlbezirkID",
-          "wahlbezirkNummer",
-          "wahlbezirksArt",
-          "wahltag",
-          "wahltagID",
-          "wbid_wahlnummer"
-        ],
         "type": "object",
         "properties": {
           "username": {
@@ -389,16 +484,29 @@
             "type": "string"
           },
           "authorities": {
-            "uniqueItems": true,
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "uniqueItems": true
           },
           "wbid_wahlnummer": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "authorities",
+          "email",
+          "pin",
+          "userEnabled",
+          "username",
+          "wahlbezirkID",
+          "wahlbezirkNummer",
+          "wahlbezirksArt",
+          "wahltag",
+          "wahltagID",
+          "wbid_wahlnummer"
+        ]
       },
       "OAuthServerSession": {
         "type": "object",
@@ -421,6 +529,34 @@
             }
           }
         }
+      },
+      "WlsExceptionDTO": {
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "F",
+              "T",
+              "S",
+              "I"
+            ]
+          },
+          "code": {
+            "type": "string"
+          },
+          "service": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "category",
+          "code",
+          "message",
+          "service"
+        ]
       }
     },
     "securitySchemes": {

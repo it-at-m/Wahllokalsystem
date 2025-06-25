@@ -8,7 +8,7 @@ import lombok.Builder;
 @Builder
 public record UserModel(@NotNull String username,
                         String email,
-                        @NotNull boolean userEnabled,
+                        boolean userEnabled,
                         String wahltagID,
                         LocalDate wahltag,
                         String wahlbezirkID,

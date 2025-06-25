@@ -27,7 +27,7 @@ describe("wahlMapper", () => {
         wahlID: dto.wahlID,
         name: dto.name,
         reihenfolge: dto.reihenfolge,
-        waehlerverzeichnisnummer: dto.waehlerverzeichnisnummer,
+        waehlerverzeichnisNummer: dto.waehlerverzeichnisNummer,
         wahltag: dto.wahltag,
         wahlart: WahlWahlartEnum.Baw,
         farbe: expectedFarbe,
@@ -42,7 +42,6 @@ describe("wahlMapper", () => {
     it("should_returnModelWithUndefined_when_dtoIsGivenWithUndefined", () => {
       const dto: WahlDTO = prepareWahlDTO()
         .wahlart(WahlDTOWahlartEnum.Baw)
-        .farbe(undefined)
         .nummer(undefined)
         .build();
 
@@ -50,10 +49,14 @@ describe("wahlMapper", () => {
         wahlID: dto.wahlID,
         name: dto.name,
         reihenfolge: dto.reihenfolge,
-        waehlerverzeichnisnummer: dto.waehlerverzeichnisnummer,
+        waehlerverzeichnisNummer: dto.waehlerverzeichnisNummer,
         wahltag: dto.wahltag,
         wahlart: WahlWahlartEnum.Baw,
-        farbe: undefined,
+        farbe: {
+          r: dto.farbe.r,
+          g: dto.farbe.g,
+          b: dto.farbe.b,
+        },
         nummer: undefined,
       };
 

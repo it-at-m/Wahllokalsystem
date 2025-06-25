@@ -6,7 +6,7 @@ export interface Wahl {
   wahlID: string;
   name: string;
   reihenfolge: number;
-  waehlerverzeichnisnummer: number;
+  waehlerverzeichnisNummer: number;
   wahltag: string;
   wahlart: WahlWahlartEnum;
   farbe: Farbe | undefined;

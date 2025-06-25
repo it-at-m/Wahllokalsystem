@@ -12,14 +12,16 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
+  "keineVorfaelle": true,
+  "keineVorkommnisse": false,
   "ereigniseintraege": [
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung1",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORKOMMNIS"
     },
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung2",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORKOMMNIS"
     }
@@ -32,14 +34,16 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
+  "keineVorfaelle": false,
+  "keineVorkommnisse": true,
   "ereigniseintraege": [
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung1",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORFALL"
     },
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung2",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORFALL"
     }
@@ -52,14 +56,16 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
+  "keineVorfaelle": false,
+  "keineVorkommnisse": false,
   "ereigniseintraege": [
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung1",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORFALL"
     },
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung2",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORKOMMNIS"
     }
@@ -72,6 +78,8 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
+  "keineVorfaelle": true,
+  "keineVorkommnisse": true,
   "ereigniseintraege": []
 }
 
@@ -86,14 +94,16 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
+  "keineVorfaelle": true,
+  "keineVorkommnisse": false,
   "ereigniseintraege": [
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung1",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORKOMMNIS"
     },
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung2",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORKOMMNIS"
     }
@@ -106,14 +116,16 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
+  "keineVorfaelle": false,
+  "keineVorkommnisse": true,
   "ereigniseintraege": [
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung1",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORFALL"
     },
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung2",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORFALL"
     }
@@ -126,14 +138,16 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
+  "keineVorfaelle": false,
+  "keineVorkommnisse": false,
   "ereigniseintraege": [
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung1",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORFALL"
     },
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung2",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORKOMMNIS"
     }
@@ -146,6 +160,8 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
+  "keineVorfaelle": true,
+  "keineVorkommnisse": true,
   "ereigniseintraege": []
 }
 

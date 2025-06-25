@@ -9,13 +9,15 @@ import static de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.Te
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.EreignisRepository;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereignis;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.EreignisseRepository;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis.EreignisDTO;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis.EreignisartDTO;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis.EreignisseWriteDTO;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Iterator;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +52,7 @@ class UnicodeConfigurationTest {
     private TestRestTemplate testRestTemplate;
 
     @Autowired
-    private EreignisRepository ereignisRepository;
+    private EreignisseRepository ereignisseRepository;
 
     @Test
     void should_returnComposedString_when_givenDecomposedString() {
@@ -59,15 +61,22 @@ class UnicodeConfigurationTest {
         // create a list of Ereignisse with only one Ereignis containing the TEXT_ATTRIBUTE_DECOMPOSED as 'beschreibung'
         val ereignisDTO = new EreignisDTO(TEXT_ATTRIBUTE_DECOMPOSED, LocalDateTime.now().withNano(0), EreignisartDTO.VORFALL);
         assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), ereignisDTO.beschreibung().length());
-        val ereignisseWriteDTO = new EreignisseWriteDTO(Arrays.asList(ereignisDTO));
+        val ereignisseWriteDTO = new EreignisseWriteDTO(true, true, Arrays.asList(ereignisDTO));
 
         // store list of Ereignisse
         testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL + wahlbezirkID), ereignisseWriteDTO,
                 Void.class);
 
         // Check persisted entity contains a composed string via JPA repository.
-        val ereignis = ereignisRepository.findByWahlbezirkID(wahlbezirkID);
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, ereignis.get(0).getBeschreibung());
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), ereignis.get(0).getBeschreibung().length());
+        val ereignisse = ereignisseRepository.findByWahlbezirkID(wahlbezirkID).orElseThrow();
+        val ereignisSet = ereignisse.getEreignisse();
+        String beschreibung = "";
+        Iterator<Ereignis> iterator = ereignisSet.iterator();
+        if (iterator.hasNext()) {
+            Ereignis erstesEreignis = iterator.next();
+            beschreibung = erstesEreignis.getBeschreibung();
+        }
+        assertEquals(TEXT_ATTRIBUTE_COMPOSED, beschreibung);
+        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), beschreibung.length());
     }
 }

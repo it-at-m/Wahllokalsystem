@@ -30,7 +30,7 @@
           persistent-counter
           :counter="maxLengthForBegruendung"
           data-test="basedialogbegruendung-textarea"
-          @update:model-value="validateBegruendung"
+          @update:model-value="updateValidationState"
         />
       </v-card-text>
       <v-card-actions>
@@ -86,18 +86,11 @@ const emit = defineEmits<{
   confirm: [value: string];
 }>();
 
-function validateBegruendung(): void {
-  isBegruendungValid.value = true;
-  for (const rule of [
-    MIN_LENGTH(minLengthForBegruendung),
-    MAX_LENGTH(maxLengthForBegruendung),
-  ]) {
-    const result = rule(begruendung.value);
-    if (result !== true) {
-      isBegruendungValid.value = false;
-      break;
-    }
-  }
+function updateValidationState(): void {
+  const value = begruendung.value;
+  isBegruendungValid.value =
+    value.length >= minLengthForBegruendung &&
+    value.length <= maxLengthForBegruendung;
 }
 
 function onCancelClicked(): void {

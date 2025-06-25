@@ -20,8 +20,8 @@ export function useUserValidator() {
       return (
         value === undefined ||
         value === null ||
-        (typeof value === "string" && value.trim() === "") || // check for empty or blank strings
-        (value instanceof Set && value.size === 0) // check for empty authorities set
+        _isEmptyString(value) ||
+        _isEmptySet(value)
       );
     });
 
@@ -32,6 +32,14 @@ export function useUserValidator() {
     } else {
       return userDto;
     }
+  }
+
+  function _isEmptyString(value: any) {
+    return typeof value === "string" && value.trim() === "";
+  }
+
+  function _isEmptySet(value: any) {
+    return value instanceof Set && value.size === 0;
   }
 
   return { validUserDtoOrThrow };

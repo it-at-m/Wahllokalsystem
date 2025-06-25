@@ -38,7 +38,6 @@ describe("taskListService.ts", () => {
     });
 
     it("should_returnListOfTaskForBWB_when_tasksAndFiltersAreGiven", () => {
-      console.log(useUserStore().currentUserWahlbezirksArt);
       const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
 
       // @ts-expect-error: cannot set readonly

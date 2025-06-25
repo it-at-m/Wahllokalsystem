@@ -3,7 +3,6 @@ GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST lastSeen | user wls_all_uwb
-## TODO: request response code is 500 --> bug fix issue #1372
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/lastSeen/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 
@@ -19,7 +18,6 @@ POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/lastSeen/{{wahlbezirkID}}
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST letzteAbmeldung | user wls_all_uwb
-## TODO: request response code is 500 --> bug fix issue #1372
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/letzteAbmeldung/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 
@@ -35,7 +33,6 @@ POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/letzteAbmeldung/{{wahlbezi
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST schnellmeldungSendungsuhrzeit | user wls_all_uwb
-## TODO: request response code is 500 --> bug fix issue #1372
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/schnellmeldungSendungsuhrzeit
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
@@ -75,7 +72,6 @@ Content-Type: application/json
 }
 
 ### POST schnellmeldungDruckuhrzeit | user wls_all_uwb
-## TODO: request response code is 500 --> bug fix issue #1372
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/schnellmeldungDruckuhrzeit
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
@@ -115,7 +111,6 @@ Content-Type: application/json
 }
 
 ### POST niederschriftSendungsuhrzeit | user wls_all_uwb
-## TODO: request response code is 500 --> bug fix issue #1372
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/niederschriftSendungsuhrzeit
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
@@ -155,7 +150,6 @@ Content-Type: application/json
 }
 
 ### POST niederschriftDruckuhrzeit | user wls_all_uwb
-## TODO: request response code is 500 --> bug fix issue #1372
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/niederschriftDruckuhrzeit
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json

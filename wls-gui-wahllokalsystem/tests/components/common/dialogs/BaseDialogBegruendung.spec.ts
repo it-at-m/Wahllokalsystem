@@ -4,7 +4,7 @@ import {
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
 import { mount, VueWrapper } from "@vue/test-utils";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import BaseDialogBegruendung from "@/components/common/dialogs/BaseDialogBegruendung.vue";
 import vuetify from "@/plugins/vuetify.ts";
@@ -21,22 +21,34 @@ describe("BaseDialogBegruendung.vue", () => {
 
   const BEGRUENDUNG = "Begründung";
 
+  beforeEach(() => {
+    wrapper = mount(BaseDialogBegruendung, {
+      global: {
+        plugins: [vuetify],
+      },
+      props: {
+        visible: true,
+        dialogtitle: "Abweichung erfordert Begründung",
+        label: "Bitte begründen Sie hier die Abweichung",
+      },
+      slots: {
+        default: "Es wurde eine Abweichung erkannt.",
+      },
+    });
+  });
+
   afterEach(() => {
     if (wrapper) wrapper.unmount();
   });
 
   describe(COMPONENT_RENDER_TESTS, () => {
-    it("should_showBaseDialogBegruendung_WithDisabledSaveButton", async (context) => {
-      wrapper = setupWrapperBaseDialogBegruendung();
-
+    it("should_showBaseDialogBegruendungWithDisabledSaveButton_when_mounted", async (context) => {
       await expect(document.body.innerHTML).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );
     });
 
-    it("should_showBaseDialogBegruendung_WithEnabledSaveButton", async (context) => {
-      wrapper = setupWrapperBaseDialogBegruendung();
-
+    it("should_showBaseDialogBegruendungWithEnabledSaveButton_when_begruendungIsSetAndValid", async (context) => {
       const textarea = wrapper.findComponent(
         '[data-test="basedialogbegruendung-textarea"]'
       );
@@ -46,12 +58,21 @@ describe("BaseDialogBegruendung.vue", () => {
         getSnapshotFilename(context)
       );
     });
+
+    it("should_showBaseDialogBegruendungWithDisabledSaveButton_when_begruendungIsSetAndNotValid", async (context) => {
+      const textarea = wrapper.findComponent(
+        '[data-test="basedialogbegruendung-textarea"]'
+      );
+      await textarea.setValue("a");
+
+      await expect(document.body.innerHTML).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
   });
 
   describe(COMPONENT_EVENT_TESTS, () => {
     it("should_sendConfirmEventWithPayload_when_confirmButtonIsClickedAndInputIsValid", async () => {
-      wrapper = setupWrapperBaseDialogBegruendung();
-
       const textarea = wrapper.findComponent(
         '[data-test="basedialogbegruendung-textarea"]'
       );
@@ -68,8 +89,6 @@ describe("BaseDialogBegruendung.vue", () => {
     });
 
     it("should_notSendConfirmEvent_when_inputIsInvalid", async () => {
-      wrapper = setupWrapperBaseDialogBegruendung();
-
       await wrapper
         .findComponent('[data-test="basedialogbegruendung-btn-confirm"]')
         .trigger("click");
@@ -77,8 +96,6 @@ describe("BaseDialogBegruendung.vue", () => {
     });
 
     it("should_sendCancelEvent_when_cancelButtonIsClicked", async () => {
-      wrapper = setupWrapperBaseDialogBegruendung();
-
       await wrapper
         .findComponent('[data-test="basedialogbegruendung-btn-cancel"]')
         .trigger("click");
@@ -87,19 +104,3 @@ describe("BaseDialogBegruendung.vue", () => {
     });
   });
 });
-
-function setupWrapperBaseDialogBegruendung() {
-  return mount(BaseDialogBegruendung, {
-    global: {
-      plugins: [vuetify],
-    },
-    props: {
-      visible: true,
-      dialogtitle: "Abweichung erfordert Begründung",
-      label: "Bitte begründen Sie hier die Abweichung",
-    },
-    slots: {
-      default: "Es wurde eine Abweichung erkannt.",
-    },
-  });
-}

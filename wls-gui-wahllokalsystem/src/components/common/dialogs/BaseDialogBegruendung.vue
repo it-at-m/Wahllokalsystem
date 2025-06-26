@@ -9,6 +9,7 @@
         <v-icon
           icon="$warning"
           color="warning"
+          size="x-small"
         />
         <span class="ml-2">{{ dialogtitle }}</span>
       </v-card-title>

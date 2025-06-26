@@ -14,7 +14,8 @@
     </div>
     <div>
       Klicken Sie auf "{{ BUTTON_TITLE_CONFIRM }}", um den Schichtwechsel sofort
-      einzutragen. Oder klicken Sie auf "bleiben" und erledigen es später.
+      einzutragen. Oder klicken Sie auf "{{ BUTTON_TITLE_CANCEL }}" und
+      erledigen es später.
     </div>
   </base-dialog>
 </template>
@@ -36,6 +37,7 @@ const { resetAllAnwesenheiten } = useWahlvorstandStore();
 useDateOfActionTimeout(timeToCheckAnwesenheit, showDialog);
 
 const BUTTON_TITLE_CONFIRM = "Anwesenheit erfassen";
+const BUTTON_TITLE_CANCEL = "Bleiben";
 
 const visible = ref(false);
 

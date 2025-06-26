@@ -2,7 +2,7 @@ import type { UserDTO } from "@/api/wls-clients/generated-auth-api";
 
 export function useUserValidator() {
   function validUserDtoOrThrow(userDto: UserDTO) {
-    const requiredFields = [
+    const requiredFields: (keyof UserDTO)[] = [
       "username",
       "userEnabled",
       "wahltagID",

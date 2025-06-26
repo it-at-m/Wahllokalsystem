@@ -28,6 +28,8 @@ import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
+import "@fontsource/roboto/400.css";
+
 const { loadEreignisse } = useEreignisStore();
 const { loadUser } = useUserStore();
 const { initTasks } = useTaskManagerStore();

@@ -18,8 +18,6 @@ const { currentTime } = useCurrentTime();
 <style scoped>
 .time {
   font-size: 24px;
-  font-family: "Rationale", monospace;
-  font-style: italic;
   letter-spacing: 0.08em;
 }
 </style>

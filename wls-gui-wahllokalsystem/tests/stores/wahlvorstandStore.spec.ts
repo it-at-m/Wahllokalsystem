@@ -1,4 +1,5 @@
 import type { User } from "@/types/User.ts";
+import type { Wahlvorstandsmitglied } from "@/types/wahlvorstand/Wahlvorstandsmitglied.ts";
 
 import { createTestingPinia } from "@pinia/testing";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
@@ -43,8 +44,11 @@ vi.mock("@/composables/wahlvorstand/wahlvorstandService", () => ({
 
 const mockedNow = new Date();
 const { prepareUser } = useUserTestDataFactory();
-const { createWahlvorstand, prepareWahlvorstandsmitglied } =
-  useWahlvorstandTestDataFactory();
+const {
+  createWahlvorstand,
+  prepareWahlvorstand,
+  prepareWahlvorstandsmitglied,
+} = useWahlvorstandTestDataFactory();
 
 describe("wahlvorstandStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useWahlvorstandStore>;
@@ -645,6 +649,27 @@ describe("wahlvorstandStore.ts", () => {
 
       // nach dem API-Aufruf
       expect(unitUnderTest.isSaving).toBe(false);
+    });
+  });
+
+  describe("resetAllAnwesenheiten", () => {
+    it("should_setAnwesendFalseForAllWahlvorstandsmitglieder_when_wahlvorstandsmitgliederAreGiven", () => {
+      unitUnderTest.wahlvorstand = prepareWahlvorstand()
+        .wahlvorstandsmitglieder([
+          prepareWahlvorstandsmitglied().anwesend(true).build(),
+          prepareWahlvorstandsmitglied().anwesend(false).build(),
+          prepareWahlvorstandsmitglied().anwesend(true).build(),
+          prepareWahlvorstandsmitglied().anwesend(true).build(),
+          prepareWahlvorstandsmitglied().anwesend(false).build(),
+        ])
+        .build();
+
+      unitUnderTest.resetAllAnwesenheiten();
+
+      expect(unitUnderTest.wahlvorstand.wahlvorstandsmitglieder).toSatisfy(
+        (mitglieder: Wahlvorstandsmitglied[]) =>
+          mitglieder.every((mitglied) => !mitglied.anwesend)
+      );
     });
   });
 

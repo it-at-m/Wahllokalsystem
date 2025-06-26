@@ -11,6 +11,7 @@
       </v-container>
     </v-main>
     <the-broadcast-read-confirmation-dialog />
+    <the-wahlvorstand-anwesenheits-check-popup-dialog />
   </v-app>
 </template>
 
@@ -20,6 +21,7 @@ import { onMounted, onUnmounted } from "vue";
 import { VApp, VContainer, VFadeTransition, VMain } from "vuetify/components";
 
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
+import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
 import { useMonitoringCronjobService } from "@/composables/monitoring/monitoringCronjobService.ts";

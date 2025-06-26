@@ -5,13 +5,11 @@ import {
   UserControllerApi,
 } from "@/api/wls-clients/generated-auth-api";
 import { useUserMapper } from "@/composables/user/userMapper.ts";
-import { useUserValidator } from "@/composables/user/userValidator.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { AUTH_SERVICE_API_URL } from "@/constants.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { toModel } = useUserMapper();
-const { validUserDtoOrThrow } = useUserValidator();
 const { addNotification } = useUserNotificationService();
 
 export function useUserService() {
@@ -24,7 +22,7 @@ export function useUserService() {
   async function getUser(): Promise<User> {
     try {
       const response = await userControllerApi.user();
-      return toModel(validUserDtoOrThrow(response.data));
+      return toModel(response.data);
     } catch (e) {
       addNotification(
         "Fehler beim Laden des Users. Bitte kontaktieren Sie das Wahlamt.",

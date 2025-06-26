@@ -34,11 +34,11 @@ export function useUserValidator() {
     }
   }
 
-  function _isEmptyString(value: any) {
+  function _isEmptyString(value: string | boolean | Set<string>) {
     return typeof value === "string" && value.trim() === "";
   }
 
-  function _isEmptySet(value: any) {
+  function _isEmptySet(value: string | boolean | Set<string>) {
     return value instanceof Set && value.size === 0;
   }
 

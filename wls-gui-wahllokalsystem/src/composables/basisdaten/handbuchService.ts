@@ -23,7 +23,7 @@ export function useHandbuchService() {
     storeToRefs(useUserStore());
 
   async function getHandbuch(sendNotification = true) {
-    if (currentUserWahltagID.value) {
+    if (currentUserWahltagID.value && currentUserWahlbezirksArt.value) {
       try {
         const response = await handbuchControllerApi.getHandbuch(
           currentUserWahltagID.value,

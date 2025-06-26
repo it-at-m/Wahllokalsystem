@@ -74,9 +74,11 @@ export function useUserTestDataFactory() {
   }
 
   function _mapDtoWbIdWahlnummerToModelWahlMetaData(
-    wbid_wahlnummer: string
+    wbid_wahlnummer: string | undefined
   ): WahlMetaData[] {
-    return JSON.parse(wbid_wahlnummer).wbid_wahlnummer;
+    return wbid_wahlnummer
+      ? JSON.parse(wbid_wahlnummer).wbid_wahlnummer
+      : undefined;
   }
 
   return {

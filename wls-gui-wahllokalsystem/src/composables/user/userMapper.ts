@@ -5,16 +5,16 @@ export function useUserMapper() {
   function toModel(userDto: UserDTO): User {
     const user: User = {
       username: userDto.username,
-      email: userDto.email ?? undefined,
-      userEnabled: userDto.userEnabled,
-      wahltagID: userDto.wahltagID,
-      wahltag: userDto.wahltag,
-      wahlbezirkID: userDto.wahlbezirkID,
-      wahlbezirkNummer: userDto.wahlbezirkNummer,
-      wahlbezirksArt: userDto.wahlbezirksArt,
-      pin: userDto.pin,
+      email: userDto.email ?? "",
+      userEnabled: userDto.userEnabled ?? false,
+      wahltagID: userDto.wahltagID ?? "",
+      wahltag: userDto.wahltag ?? "",
+      wahlbezirkID: userDto.wahlbezirkID ?? "",
+      wahlbezirkNummer: userDto.wahlbezirkNummer ?? "",
+      wahlbezirksArt: userDto.wahlbezirksArt ?? undefined,
+      pin: userDto.pin ?? "",
       authorities: userDto.authorities,
-      wahlMetaData: [],
+      wahlMetaData: undefined,
     };
 
     try {
@@ -24,10 +24,10 @@ export function useUserMapper() {
 
       user.wahlMetaData = parsed_wbid_wahlnummer?.wbid_wahlnummer
         ? parsed_wbid_wahlnummer.wbid_wahlnummer
-        : [];
+        : undefined;
     } catch {
       console.debug("failed to parse JSON wbid_wahlnummer");
-      user.wahlMetaData = [];
+      user.wahlMetaData = undefined;
     }
 
     return user;

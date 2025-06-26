@@ -47,35 +47,37 @@ export const useUserStore = defineStore("user", () => {
     }
   }
 
-  const currentUserWahlbezirkID = computed((): string => {
+  const currentUserWahlbezirkID = computed((): string | undefined => {
     return user.value.wahlbezirkID;
   });
 
-  const currentUserWahltagID = computed((): string => {
+  const currentUserWahltagID = computed((): string | undefined => {
     return user.value.wahltagID;
   });
 
-  const currentUserWahltag = computed((): string => {
+  const currentUserWahltag = computed((): string | undefined => {
     return user.value.wahltag;
   });
 
-  const currentUserWahlbezirksArt = computed((): WahlbezirksArtEnum => {
-    return user.value.wahlbezirksArt;
-  });
+  const currentUserWahlbezirksArt = computed(
+    (): WahlbezirksArtEnum | undefined => {
+      return user.value.wahlbezirksArt;
+    }
+  );
 
-  const currentUserWahlbezirkNummer = computed((): string => {
+  const currentUserWahlbezirkNummer = computed((): string | undefined => {
     return user.value.wahlbezirkNummer;
   });
 
-  const currentUserHauptWahlID = computed((): string => {
-    const smallestWbidWahlnummerObject = user.value.wahlMetaData.reduce(
+  const currentUserHauptWahlID = computed((): string | undefined => {
+    const smallestWbidWahlnummerObject = user.value.wahlMetaData?.reduce(
       (smallest, current) => {
         return parseInt(current.wahlnummer) < parseInt(smallest.wahlnummer)
           ? current
           : smallest;
       }
     );
-    return smallestWbidWahlnummerObject.wahlID;
+    return smallestWbidWahlnummerObject?.wahlID;
   });
 
   function setUser(payload: User): void {

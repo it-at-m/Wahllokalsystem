@@ -72,7 +72,7 @@ Content-Type: application/json
   ]
 }
 
-### POST Ereignisse leer | user wls_all_uwb
+### POST Ereignisse leer keineVorfaelle/keineVorkommnisse gesetzt | user wls_all_uwb
 POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
@@ -80,6 +80,17 @@ Content-Type: application/json
 {
   "keineVorfaelle": true,
   "keineVorkommnisse": true,
+  "ereigniseintraege": []
+}
+
+### POST Ereignisse leer, keineVorfaelle/keineVorkommnisse nicht gesetzt | user wls_all_uwb
+POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/9899cae4-df9a-4ffc-a940-f20cf2280171
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "keineVorfaelle": false,
+  "keineVorkommnisse": false,
   "ereigniseintraege": []
 }
 
@@ -154,7 +165,7 @@ Content-Type: application/json
   ]
 }
 
-### POST Ereignisse leer | user wls_all_bwb
+### POST Ereignisse leer, keineVorfaelle/keineVorkommnisse gesetzt | user wls_all_bwb
 POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/9081145c-dc16-4a9b-8255-5c49ddb98c14
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
@@ -165,3 +176,13 @@ Content-Type: application/json
   "ereigniseintraege": []
 }
 
+### POST Ereignisse leer, keineVorfaelle/keineVorkommnisse nicht gesetzt | user wls_all_bwb
+POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/9081145c-dc16-4a9b-8255-5c49ddb98c14
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "keineVorfaelle": false,
+  "keineVorkommnisse": false,
+  "ereigniseintraege": []
+}

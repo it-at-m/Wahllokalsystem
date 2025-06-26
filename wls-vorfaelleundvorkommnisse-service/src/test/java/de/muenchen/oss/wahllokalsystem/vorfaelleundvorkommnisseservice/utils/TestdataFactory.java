@@ -32,12 +32,12 @@ public class TestdataFactory {
 
         public static Ereignis fromModel(EreignisModel ereignisModel) {
             return new Ereignis(ereignisModel.beschreibung(), ereignisModel.uhrzeit(),
-                MapEreignisart.ereignisartModelToEreignisart(ereignisModel.ereignisart()));
+                    MapEreignisart.ereignisartModelToEreignisart(ereignisModel.ereignisart()));
         }
 
         public static List<Ereignis> listFromModel(EreignisseModel ereignisWriteModel) {
             List<Ereignis> ereignisList = ereignisWriteModel.ereigniseintraege().stream().map(ereignis -> new Ereignis(
-                ereignis.beschreibung(), ereignis.uhrzeit(), MapEreignisart.ereignisartModelToEreignisart(ereignis.ereignisart()))).toList();
+                    ereignis.beschreibung(), ereignis.uhrzeit(), MapEreignisart.ereignisartModelToEreignisart(ereignis.ereignisart()))).toList();
             return ereignisList;
         }
     }
@@ -54,14 +54,14 @@ public class TestdataFactory {
 
         public static EreignisModel fromEntity(Ereignis ereignisEntity) {
             return new EreignisModel(ereignisEntity.getBeschreibung(), ereignisEntity.getUhrzeit(),
-                MapEreignisart.ereignisartToEreignisartModel(ereignisEntity.getEreignisart()));
+                    MapEreignisart.ereignisartToEreignisartModel(ereignisEntity.getEreignisart()));
         }
     }
 
     public static class CreateWahlbezirkEreignisseModel {
 
         public static EreignisseModel withData(String wahlbezirkID, boolean keineVorfaelle, boolean keineVorkommnisse,
-            List<EreignisModel> ereignisModelList) {
+                List<EreignisModel> ereignisModelList) {
             return new EreignisseModel(wahlbezirkID, keineVorfaelle, keineVorkommnisse, ereignisModelList);
         }
     }
@@ -74,9 +74,9 @@ public class TestdataFactory {
 
         public static EreignisseModel fromDto(String wahlbezirkID, EreignisseWriteDTO ereignisseWriteDTO) {
             List<EreignisModel> ereignisModelList = ereignisseWriteDTO.ereigniseintraege().stream()
-                .map(ereignisDto -> new EreignisModel(ereignisDto.beschreibung(), ereignisDto.uhrzeit(),
-                    MapEreignisart.ereignisartDtoToEreignisartModel(ereignisDto.ereignisart())))
-                .toList();
+                    .map(ereignisDto -> new EreignisModel(ereignisDto.beschreibung(), ereignisDto.uhrzeit(),
+                            MapEreignisart.ereignisartDtoToEreignisartModel(ereignisDto.ereignisart())))
+                    .toList();
             return new EreignisseModel(wahlbezirkID, ereignisseWriteDTO.keineVorfaelle(), ereignisseWriteDTO.keineVorkommnisse(), ereignisModelList);
         }
     }
@@ -96,45 +96,45 @@ public class TestdataFactory {
     public static class CreateWahlbezirkEreignisseDto {
         public static WahlbezirkEreignisseDTO fromModel(EreignisseModel ereignisseModel) {
             List<EreignisDTO> ereignisDtoList = ereignisseModel.ereigniseintraege().stream().map(ereignisModel -> new EreignisDTO(ereignisModel.beschreibung(),
-                ereignisModel.uhrzeit(), MapEreignisart.ereignisartModelToEreignisartDto(ereignisModel.ereignisart()))).toList();
+                    ereignisModel.uhrzeit(), MapEreignisart.ereignisartModelToEreignisartDto(ereignisModel.ereignisart()))).toList();
             return new WahlbezirkEreignisseDTO(ereignisseModel.wahlbezirkID(), ereignisseModel.keineVorfaelle(), ereignisseModel.keineVorkommnisse(),
-                ereignisDtoList);
+                    ereignisDtoList);
         }
     }
 
     public static class MapEreignisart {
         public static Ereignisart ereignisartModelToEreignisart(EreignisartModel ereignisartModel) {
             return switch (ereignisartModel) {
-                case VORFALL -> Ereignisart.VORFALL;
-                case VORKOMMNIS -> Ereignisart.VORKOMMNIS;
+            case VORFALL -> Ereignisart.VORFALL;
+            case VORKOMMNIS -> Ereignisart.VORKOMMNIS;
             };
         }
 
         public static Ereignisart ereignisartDtoToEreignisart(EreignisartDTO ereignisartDTO) {
             return switch (ereignisartDTO) {
-                case VORFALL -> Ereignisart.VORFALL;
-                case VORKOMMNIS -> Ereignisart.VORKOMMNIS;
+            case VORFALL -> Ereignisart.VORFALL;
+            case VORKOMMNIS -> Ereignisart.VORKOMMNIS;
             };
         }
 
         public static EreignisartModel ereignisartToEreignisartModel(Ereignisart ereignisart) {
             return switch (ereignisart) {
-                case VORFALL -> EreignisartModel.VORFALL;
-                case VORKOMMNIS -> EreignisartModel.VORKOMMNIS;
+            case VORFALL -> EreignisartModel.VORFALL;
+            case VORKOMMNIS -> EreignisartModel.VORKOMMNIS;
             };
         }
 
         public static EreignisartModel ereignisartDtoToEreignisartModel(EreignisartDTO ereignisartDTO) {
             return switch (ereignisartDTO) {
-                case VORFALL -> EreignisartModel.VORFALL;
-                case VORKOMMNIS -> EreignisartModel.VORKOMMNIS;
+            case VORFALL -> EreignisartModel.VORFALL;
+            case VORKOMMNIS -> EreignisartModel.VORKOMMNIS;
             };
         }
 
         public static EreignisartDTO ereignisartModelToEreignisartDto(EreignisartModel ereignisartModel) {
             return switch (ereignisartModel) {
-                case VORFALL -> EreignisartDTO.VORFALL;
-                case VORKOMMNIS -> EreignisartDTO.VORKOMMNIS;
+            case VORFALL -> EreignisartDTO.VORFALL;
+            case VORKOMMNIS -> EreignisartDTO.VORKOMMNIS;
             };
         }
     }

@@ -66,7 +66,18 @@ describe("dateOfActionTimeout", () => {
     setTimeoutSpy.mockRestore();
   });
 
-  it("should_callCallback_when_timeOutHasExceeded", defaultCallback);
+  it("should_callCallback_when_timeOutHasExceeded", () => {
+    const setTimeoutSpy = vi.spyOn(window, "setTimeout");
+
+    const callback = vi.fn();
+    useDateOfActionTimeout(ref(new Date(mockedNow.getTime() + 1)), callback);
+
+    vi.advanceTimersByTime(1);
+
+    expect(callback).toHaveBeenCalledTimes(1);
+
+    setTimeoutSpy.mockRestore();
+  });
 
   it("should_clearOldTimeOut_when_newTimeoutIsSendAfterDateOfActionChanged", async () => {
     const setTimeoutSpy = vi.spyOn(window, "setTimeout");

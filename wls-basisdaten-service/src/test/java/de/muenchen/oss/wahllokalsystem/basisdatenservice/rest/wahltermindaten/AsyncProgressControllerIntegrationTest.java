@@ -57,7 +57,7 @@ class AsyncProgressControllerIntegrationTest {
             val wahlvorschlaegeTotal = 23;
             val wahlvorschlaegeFinished = 12;
             val wahlvorschlaegeNext = "wahlvorschlagID13";
-            val referendumvorlagenIsLoading = false;
+            val referendumvorlagenIsLoading = true;
             val referendumvorlagenTotal = 21;
             val referendumvorlagenFinished = 20;
             val referendumvorlagenNext = "referendumvorlagenID13";
@@ -66,11 +66,9 @@ class AsyncProgressControllerIntegrationTest {
             asyncProgress.setWahlNummer(wahlnummer);
             asyncProgress.setLastStartTime(lastStartTime);
             asyncProgress.setLastFinishTime(lastFinishTime);
-            asyncProgress.setWahlvorschlaegeLoadingActive(wahlvorschlaegeIsLoading);
             asyncProgress.setWahlvorschlaegeTotal(wahlvorschlaegeTotal);
             asyncProgress.setWahlvorschlageFinished(wahlvorschlaegeFinished);
             asyncProgress.setWahlvorschlaegeNext(wahlvorschlaegeNext);
-            asyncProgress.setReferendumLoadingActive(referendumvorlagenIsLoading);
             asyncProgress.setReferendumVorlagenTotal(referendumvorlagenTotal);
             asyncProgress.setReferendumVorlagenFinished(referendumvorlagenFinished);
             asyncProgress.setReferendumVorlagenNext(referendumvorlagenNext);

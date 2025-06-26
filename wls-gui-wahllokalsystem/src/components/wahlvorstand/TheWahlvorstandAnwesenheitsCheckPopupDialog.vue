@@ -14,7 +14,7 @@
     </div>
     <div>
       Klicken Sie auf "{{ BUTTON_TITLE_CONFIRM }}", um den Schichtwechsel sofort
-      einzutragen. Oder Sie klicken Sie auf "bleiben" und erledigen es später.
+      einzutragen. Oder klicken Sie auf "bleiben" und erledigen es später.
     </div>
   </base-dialog>
 </template>

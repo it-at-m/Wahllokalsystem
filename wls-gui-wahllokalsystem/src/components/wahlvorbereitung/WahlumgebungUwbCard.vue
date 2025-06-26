@@ -74,6 +74,25 @@
           </div>
         </v-form>
       </v-card-text>
+      <v-card
+        v-show="isMinimumRequired"
+        class="border-lg border-error mt-2 mb-2"
+      >
+        <v-card-title>Ungültige Eingaben</v-card-title>
+        <v-card-text>
+          <div class="d-flex align-center mb-2">
+            <v-icon
+              color="red"
+              class="mr-2"
+              icon="$invalid"
+            />
+            <div class="text-red">
+              Die Summe der Kabinen, Tische und Nebenräume muss mindestens 1
+              betragen.
+            </div>
+          </div>
+        </v-card-text>
+      </v-card>
       <v-card-actions>
         <base-button-save
           active
@@ -82,26 +101,6 @@
           @click="onSaveWahlumgebungUWBClicked"
         />
       </v-card-actions>
-    </v-card>
-
-    <v-card
-      v-show="isMinimumRequired"
-      class="border-lg border-error"
-    >
-      <v-card-title>Ungültige Eingaben</v-card-title>
-      <v-card-text>
-        <div class="d-flex align-center mb-2">
-          <v-icon
-            color="red"
-            class="mr-2"
-            icon="$invalid"
-          />
-          <div class="text-red">
-            Die Summe der Kabinen, Tische und Nebenräume muss mindestens 1
-            betragen.
-          </div>
-        </div>
-      </v-card-text>
     </v-card>
   </v-container>
 </template>
@@ -147,9 +146,6 @@ const isSaveButtonDisabled = computed(() => {
 });
 
 const isMinimumRequired = computed(() => {
-  if (abstimmungsschutzvorrichtungenValidForm.value !== true) {
-    return false;
-  }
   const tischeSichtblenden =
     Number(urnenwahlVorbereitung.value.anzahlWahltische) || 0;
   const nebenraeumeWahlraum =

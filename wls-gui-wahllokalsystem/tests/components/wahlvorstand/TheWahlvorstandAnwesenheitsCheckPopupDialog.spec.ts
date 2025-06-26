@@ -106,7 +106,7 @@ describe("TheWahlvorstandAnwesenheitsCheckPopupDialog.vue", () => {
 
       componentCallback();
 
-      //Darauf warten, dass der Dialog sichtbar ist
+      // Wait for the dialog to become visible
       await flushPromises();
 
       const confirmButton = wrapper.findAllComponents(VBtn)[1];

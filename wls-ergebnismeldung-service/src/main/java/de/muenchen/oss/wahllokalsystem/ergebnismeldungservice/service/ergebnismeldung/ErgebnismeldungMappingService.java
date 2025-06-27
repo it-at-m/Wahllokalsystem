@@ -14,6 +14,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.BWer
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.WahlbriefeWerteDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.authentication.AuthenticationService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModelMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.WahlartPredicateHolder;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
@@ -40,6 +41,8 @@ public class ErgebnismeldungMappingService {
     private final ErgebnisseRepository ergebnisseRepo;
     private final BriefwahlClient briefwahlClient;
 
+    private final StapelartModelMapper stapelArtModelMapper;
+
     private final Mapping mapping;
 
     public ErgebnismeldungDTO createErgebnismeldung(final WahlartModel wahlart, final String wahlID, final String wahlbezirkID,
@@ -63,12 +66,12 @@ public class ErgebnismeldungMappingService {
         // Ergebnisse
         val ergebnisse = ergebnisseRepo.findByWahlbezirkIDAndWahlD(wahlbezirkID, wahlID);
 
-        val gueltigeErgebnisse = getErgebnisse(wahlart, ergebnisse, true, meldungsart);
+        val gueltigeErgebnisse = getErgebnisse(wahlart, ergebnisse, true);
         ergebnismeldung.setErgebnisse(mapping.toDtoErgebnisseSet(gueltigeErgebnisse));
         ergebnismeldung.setMeldungsart(meldungsart);
         log.debug("SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3.2  b createErgebnismeldung");
 
-        val ungueltigeErgebnisse = getErgebnisse(wahlart, ergebnisse, false, meldungsart);
+        val ungueltigeErgebnisse = getErgebnisse(wahlart, ergebnisse, false);
         ergebnismeldung.setUngueltigeStimmzettels(mapping.toDtoSet(ungueltigeErgebnisse));
         ergebnismeldung.setUngueltigeStimmzettelAnzahl((long) ungueltigeErgebnisse.size());
         ergebnismeldung.setWahlart(mapping.toWahlartDTO(wahlart));
@@ -102,12 +105,13 @@ public class ErgebnismeldungMappingService {
         };
     }
 
-    private List<Ergebnisse> getErgebnisse(final WahlartModel wahlart, final List<Ergebnisse> ergebnisse, final boolean gueltig,
-            final ErgebnismeldungDTO.MeldungsartEnum meldungsart) {
+    private List<Ergebnisse> getErgebnisse(final WahlartModel wahlart, final List<Ergebnisse> ergebnisse, final boolean gueltig) {
         val predicateForStapelWithInvalidErgebnisse = wahlartPredicateHolder.getPredicateForStapelWithInvalidErgebnisse(wahlart);
         val ergebnisseFilter = gueltig ? Predicate.not(predicateForStapelWithInvalidErgebnisse) : predicateForStapelWithInvalidErgebnisse;
 
-        return ergebnisse.stream().filter(ergenis -> ergebnisseFilter.test(ergenis.getBezirkUndWahlIDStapelart().getStapelart())).toList();
+        return ergebnisse.stream()
+                .filter(ergebnis -> ergebnisseFilter.test(stapelArtModelMapper.toModel(ergebnis.getBezirkUndWahlIDStapelart().getStapelart())))
+                .toList();
     }
 
     private BWerteDTO getBWerteDTOOfUWBWahlbezirk(final String wahlID, final BezirkIDUndWaehlerverzeichnisNummer waehlerverzeichnisNummer,

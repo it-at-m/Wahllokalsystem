@@ -31,7 +31,7 @@ class WahldatenClientMapperTest {
 
             Assertions.assertThat(result.basisstrukturdaten()).containsExactlyInAnyOrderElementsOf(expectedBasisdaten.basisstrukturdaten());
             Assertions.assertThat(result.wahlen()).usingRecursiveComparison().ignoringCollectionOrder()
-                    .ignoringFields("reihenfolge", "waehlerverzeichnisnummer", "farbe").isEqualTo(expectedBasisdaten.wahlen());
+                    .ignoringFields("reihenfolge", "waehlerverzeichnisNummer", "farbe").isEqualTo(expectedBasisdaten.wahlen());
             Assertions.assertThat(result.wahlbezirke()).containsExactlyInAnyOrderElementsOf(expectedBasisdaten.wahlbezirke());
             Assertions.assertThat(result.stimmzettelgebiete()).containsExactlyInAnyOrderElementsOf(expectedBasisdaten.stimmzettelgebiete());
         }

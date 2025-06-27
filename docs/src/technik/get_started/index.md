@@ -141,4 +141,5 @@ Damit das Frontend im Zusammenspiel mit den anderen Services lokal gestartet wer
    (siehe [Punkt 1](#1-starten-über-das-gateway--authentifizierung): *Jetzt kann das Frontend zwar aufgerufen werden, aber durch das fehlgeschlagene Laden der initialen Daten ist noch kein Zugriff auf die Anwendung möglich)*
 5. die Services `basisdaten-service`, `eai-service`, `infomanagement-service` und `wahlvorstand-service` starten und folgende http-requests ausführen:
    - `"basisdaten-service/wahltage.http"`: `GET wahltage`
+   - `"basisdaten-service/ungueltigeWahlscheine.http"`: `POST ungueltige Wahlscheine | user wls_all_uwb`
    - `"infomanagement-service/konfigurierterWahltag.http"`: `POST konfigurierter Wahltag` (für den entsprechenden User)

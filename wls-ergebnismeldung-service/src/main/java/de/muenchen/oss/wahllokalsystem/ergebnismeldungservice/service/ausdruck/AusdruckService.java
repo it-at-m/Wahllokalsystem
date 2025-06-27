@@ -1,7 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.AusdruckRepository;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.WahlUndBezirkIDUndMeldungsart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import jakarta.validation.Validator;
@@ -38,10 +37,10 @@ public class AusdruckService {
     }
 
     @PreAuthorize(
-        "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostAusdruck') and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.wahlUndBezirkIDUndMeldungsart.wahlbezirkID, authentication)"
+        "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostAusdruck') and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.wahlUndBezirkIDUndMeldungsartModel.wahlbezirkID, authentication)"
     )
     public void saveAusdruck(@P("param") @NotNull final AusdruckWriteModel ausdruck) {
-        log.debug("Saving printout {}", ausdruck.wahlUndBezirkIDUndMeldungsart().getMeldungsart());
+        log.debug("Saving printout {}", ausdruck.wahlUndBezirkIDUndMeldungsartModel().meldungsart());
 
         if (!validator.validate(ausdruck).isEmpty()) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG);
@@ -52,8 +51,10 @@ public class AusdruckService {
     }
 
     @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetAusdruck')")
-    public Optional<AusdruckReadModel> getAusdruck(WahlUndBezirkIDUndMeldungsart id) {
-        log.debug("Loading printout {}", id.getMeldungsart());
+    public Optional<AusdruckReadModel> getAusdruck(@NotNull WahlUndBezirkIDUndMeldungsartModel idModel) {
+        log.debug("Loading printout {}", idModel.meldungsart());
+
+        val id = ausdruckModelMapper.toEntity(idModel);
 
         wahlUndBezirkIDUndMeldungsartValidator.validWahlUndBezirkIDUndMeldungsartOrThrow(id,
                 exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG));
@@ -61,7 +62,7 @@ public class AusdruckService {
         val result = ausdruckRepository.findById(id);
 
         if (result.isEmpty()) {
-            log.info("Printout not found for: {}", id);
+            log.info("Printout not found for: {}", idModel);
         }
 
         return result.map(ausdruckModelMapper::toModel);

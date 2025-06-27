@@ -8,10 +8,10 @@ import lombok.Builder;
 public record WahlModel(@NotNull String wahlID,
                         @NotNull String name,
                         @NotNull Long reihenfolge,
-                        @NotNull Long waehlerverzeichnisnummer,
+                        @NotNull Long waehlerverzeichnisNummer,
                         @NotNull LocalDate wahltag,
                         @NotNull WahlartModel wahlart,
-                        FarbeModel farbe,
+                        @NotNull FarbeModel farbe,
                         String nummer
 ) {
 

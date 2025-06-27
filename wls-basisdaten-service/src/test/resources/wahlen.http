@@ -12,7 +12,7 @@ Content-Type: application/json
     "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1",
     "name": "Europawahl",
     "reihenfolge": 1,
-    "waehlerverzeichnisnummer": 1,
+    "waehlerverzeichnisNummer": 1,
     "wahltag": "2026-01-01",
     "wahlart": "EUW",
     "farbe": {
@@ -38,7 +38,7 @@ Content-Type: application/json
     "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
     "name": "Stadtratswahl",
     "reihenfolge": 1,
-    "waehlerverzeichnisnummer": 1,
+    "waehlerverzeichnisNummer": 1,
     "wahltag": "2026-01-01",
     "wahlart": "SRW",
     "farbe": {

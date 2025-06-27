@@ -54,6 +54,9 @@ public class ExceptionConstants {
     public static final ExceptionDataWrapper SAVEWAHLERGEBNISMELDUNG_WAHLBEZIRKID_FEHLT = new ExceptionDataWrapper("001", "Die WahkbezirkID fehlt");
     public static final ExceptionDataWrapper SAVEWAHLERGEBNISMELDUNG_WAHLID_FEHLT = new ExceptionDataWrapper(CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
 
+    //saveWahllokalZustand
+    public static final ExceptionDataWrapper SAVEWAHLLOKALZUSTAND_WAHLBEZIRKID_FEHLT = new ExceptionDataWrapper("001", "Die WahlbezirkID fehlt");
+
     /**
      * @throws IllegalAccessException when constructor is used
      */

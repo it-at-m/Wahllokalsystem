@@ -23,17 +23,17 @@ export function useUserTestDataFactory() {
     return proxyBuilder<UserDTO>(_createUserDtoWithRandomValues());
   }
 
-  function mapUserDtoToUser(userDto: UserDTO): User {
+  function mapValidUserDtoToUser(userDto: UserDTO): User {
     return {
       username: userDto.username,
       email: userDto.email,
       userEnabled: userDto.userEnabled,
-      wahltagID: userDto.wahltagID,
-      wahltag: userDto.wahltag,
-      wahlbezirkID: userDto.wahlbezirkID,
-      wahlbezirkNummer: userDto.wahlbezirkNummer,
-      wahlbezirksArt: userDto.wahlbezirksArt,
-      pin: userDto.pin,
+      wahltagID: userDto.wahltagID!,
+      wahltag: userDto.wahltag!,
+      wahlbezirkID: userDto.wahlbezirkID!,
+      wahlbezirkNummer: userDto.wahlbezirkNummer!,
+      wahlbezirksArt: userDto.wahlbezirksArt!,
+      pin: userDto.pin!,
       authorities: userDto.authorities,
       wahlMetaData: _mapDtoWbIdWahlnummerToModelWahlMetaData(
         userDto.wbid_wahlnummer
@@ -82,7 +82,7 @@ export function useUserTestDataFactory() {
   }
 
   return {
-    mapUserDtoToUser,
+    mapValidUserDtoToUser,
     prepareUser,
     prepareUserDTO,
   };

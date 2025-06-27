@@ -5,7 +5,7 @@ import { useUserService } from "@/composables/user/userService.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   user: vi.fn(),
-  toModel: vi.fn(),
+  validateDtoAndMapToModel: vi.fn(),
 }));
 
 vi.mock("@/api/wls-clients/generated-auth-api", () => ({
@@ -16,12 +16,12 @@ vi.mock("@/api/wls-clients/generated-auth-api", () => ({
 }));
 vi.mock("@/composables/user/userMapper.ts", () => ({
   useUserMapper: () => ({
-    toModel: mockDefinitions.toModel,
+    validateDtoAndMapToModel: mockDefinitions.validateDtoAndMapToModel,
   }),
 }));
 
 const { getUser } = useUserService();
-const { prepareUserDTO, mapUserDtoToUser } = useUserTestDataFactory();
+const { prepareUserDTO, mapValidUserDtoToUser } = useUserTestDataFactory();
 
 describe("userService.ts", () => {
   beforeEach(() => {
@@ -32,10 +32,12 @@ describe("userService.ts", () => {
   describe("getUser", () => {
     it("should_returnUser_when_apiCalledSuccesfully", async () => {
       const userDto = prepareUserDTO().build();
-      const mockedMappeduser = mapUserDtoToUser(userDto);
+      const mockedMappeduser = mapValidUserDtoToUser(userDto);
 
       mockDefinitions.user.mockReturnValue({ status: 200, data: userDto });
-      mockDefinitions.toModel.mockReturnValue(mockedMappeduser);
+      mockDefinitions.validateDtoAndMapToModel.mockReturnValue(
+        mockedMappeduser
+      );
 
       const result = await getUser();
 
@@ -49,7 +51,7 @@ describe("userService.ts", () => {
       );
 
       await expect(getUser()).rejects.toThrow("mocked api call failed");
-      expect(mockDefinitions.toModel).not.toHaveBeenCalled();
+      expect(mockDefinitions.validateDtoAndMapToModel).not.toHaveBeenCalled();
     });
   });
 });

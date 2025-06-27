@@ -7,6 +7,7 @@
     <v-card>
       <v-card-title>
         <v-icon
+          class="mb-1"
           icon="$warning"
           color="warning"
           size="x-small"

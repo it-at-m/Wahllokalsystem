@@ -20,7 +20,7 @@
         cols="3"
         class="d-flex align-center justify-end"
       >
-        <wls-clock class="mx-2 pt-1" />
+        <wls-clock class="mx-2" />
         <wls-heartbeat v-model:is-offline="isOffline" />
         <the-info-help-icon />
       </v-col>

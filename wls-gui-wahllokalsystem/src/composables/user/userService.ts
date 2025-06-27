@@ -9,7 +9,7 @@ import { useUserNotificationService } from "@/composables/userNotification/userN
 import { AUTH_SERVICE_API_URL } from "@/constants.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-const { toModel } = useUserMapper();
+const { validateDtoAndMapToModel } = useUserMapper();
 const { addNotification } = useUserNotificationService();
 
 export function useUserService() {
@@ -22,7 +22,7 @@ export function useUserService() {
   async function getUser(): Promise<User> {
     try {
       const response = await userControllerApi.user();
-      return toModel(response.data);
+      return validateDtoAndMapToModel(response.data);
     } catch (e) {
       addNotification(
         "Fehler beim Laden des Users. Bitte kontaktieren Sie das Wahlamt.",

@@ -5,14 +5,14 @@ export interface User {
   username: string;
   email: string | undefined;
   userEnabled: boolean;
-  wahltagID: string | undefined;
-  wahltag: string | undefined;
-  wahlbezirkID: string | undefined;
-  wahlbezirkNummer: string | undefined;
-  wahlbezirksArt: WahlbezirksArtEnum | undefined;
-  pin: string | undefined;
+  wahltagID: string;
+  wahltag: string;
+  wahlbezirkID: string;
+  wahlbezirkNummer: string;
+  wahlbezirksArt: WahlbezirksArtEnum;
+  pin: string;
   authorities: Set<string>;
-  wahlMetaData: WahlMetaData[] | undefined;
+  wahlMetaData: WahlMetaData[];
 }
 
 export function createUserLocalDevelopment(): User {

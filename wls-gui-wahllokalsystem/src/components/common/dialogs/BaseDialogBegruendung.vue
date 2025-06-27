@@ -39,7 +39,6 @@
         <v-spacer />
         <v-btn
           data-test="basedialogbegruendung-btn-cancel"
-          variant="text"
           @click="onCancelClicked"
         >
           Eingaben ändern

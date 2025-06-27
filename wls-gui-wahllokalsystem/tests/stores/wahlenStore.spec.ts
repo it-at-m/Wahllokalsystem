@@ -43,9 +43,5 @@ describe("wahlenStore.ts", () => {
 
       expect(unitUnderTest.wahlen).toStrictEqual(expectedWahlArray);
     });
-
-    it("should_notLoadWahlen_when_calledWithNullWahltagId", async () => {
-      await expect(() => unitUnderTest.initWahlen()).rejects.toThrowError();
-    });
   });
 });

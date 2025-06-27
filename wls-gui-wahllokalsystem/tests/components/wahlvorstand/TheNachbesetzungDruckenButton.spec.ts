@@ -16,7 +16,6 @@ import { VBtn } from "vuetify/components";
 import TheNachbesetzungDruckenButton from "@/components/wahlvorstand/TheNachbesetzungDruckenButton.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -36,11 +35,8 @@ const { createWahlvorstand } = useWahlvorstandTestDataFactory();
 
 describe("TheNachbesetzungDruckenButton.vue", () => {
   let wrapper: VueWrapper;
-  let wahlvorstandStore: ReturnType<typeof useWahlvorstandStore>;
 
   beforeEach(() => {
-    wahlvorstandStore = useWahlvorstandStore();
-
     wrapper = mount(TheNachbesetzungDruckenButton, {
       global: {
         plugins: [

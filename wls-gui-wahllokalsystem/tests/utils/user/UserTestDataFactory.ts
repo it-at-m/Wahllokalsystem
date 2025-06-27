@@ -28,12 +28,14 @@ export function useUserTestDataFactory() {
       username: userDto.username,
       email: userDto.email,
       userEnabled: userDto.userEnabled,
+      /* eslint-disable @typescript-eslint/no-non-null-assertion -- Temporarily disabling because only valid dto is given as input */
       wahltagID: userDto.wahltagID!,
       wahltag: userDto.wahltag!,
       wahlbezirkID: userDto.wahlbezirkID!,
       wahlbezirkNummer: userDto.wahlbezirkNummer!,
       wahlbezirksArt: userDto.wahlbezirksArt!,
       pin: userDto.pin!,
+      /* eslint-enable @typescript-eslint/no-non-null-assertion */
       authorities: userDto.authorities,
       wahlMetaData: _mapDtoWbIdWahlnummerToModelWahlMetaData(
         userDto.wbid_wahlnummer

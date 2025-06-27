@@ -47,13 +47,16 @@ export function useUserMapper() {
         username: userDto.username,
         email: userDto.email,
         userEnabled: userDto.userEnabled,
+        /* eslint-disable @typescript-eslint/no-non-null-assertion -- Temporarily disabling because check is done in validation above */
         wahltagID: userDto.wahltagID!,
         wahltag: userDto.wahltag!,
         wahlbezirkID: userDto.wahlbezirkID!,
         wahlbezirkNummer: userDto.wahlbezirkNummer!,
-        wahlbezirksArt: userDto.wahlbezirksArt!!,
+        wahlbezirksArt: userDto.wahlbezirksArt!,
         pin: userDto.pin!,
+        /* eslint-enable @typescript-eslint/no-non-null-assertion */
         authorities: userDto.authorities,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         wahlMetaData: _parseWbIdWahlnummer(userDto.wbid_wahlnummer!),
       } as User;
     }

@@ -23,25 +23,23 @@ export function useHandbuchService() {
     storeToRefs(useUserStore());
 
   async function getHandbuch(sendNotification = true) {
-    if (currentUserWahltagID.value && currentUserWahlbezirksArt.value) {
-      try {
-        const response = await handbuchControllerApi.getHandbuch(
-          currentUserWahltagID.value,
-          currentUserWahlbezirksArt.value,
-          { responseType: "blob" }
-        );
+    try {
+      const response = await handbuchControllerApi.getHandbuch(
+        currentUserWahltagID.value,
+        currentUserWahlbezirksArt.value,
+        { responseType: "blob" }
+      );
 
-        _downloadPdf(response);
-      } catch (e) {
-        if (sendNotification) {
-          addNotification(
-            "Fehler beim laden des Handbuchs",
-            UserNotificationCategoryEnum.ERROR
-          );
-        }
-        console.debug(e);
-        throw new Error("GetHandbuch Failed");
+      _downloadPdf(response);
+    } catch (e) {
+      if (sendNotification) {
+        addNotification(
+          "Fehler beim laden des Handbuchs",
+          UserNotificationCategoryEnum.ERROR
+        );
       }
+      console.debug(e);
+      throw new Error("GetHandbuch Failed");
     }
   }
 

@@ -110,30 +110,29 @@ export const useEreignisStore = defineStore(storeID, () => {
   }
 
   async function loadEreignisse() {
-    const wahlbezirkID = currentUserWahlbezirkID.value;
-    if (wahlbezirkID) {
-      error.value = null;
-      try {
-        wahlbezirkEreignisse.value = await getEreignisse(wahlbezirkID);
-        sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
-      } catch (e) {
-        error.value = "Fehler beim Laden der Ereignisse";
-        console.debug(e);
-      }
+    error.value = null;
+    try {
+      wahlbezirkEreignisse.value = await getEreignisse(
+        currentUserWahlbezirkID.value
+      );
+      sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
+    } catch (e) {
+      error.value = "Fehler beim Laden der Ereignisse";
+      console.debug(e);
     }
   }
 
   async function sendEreignisse() {
-    const wahlbezirkID = currentUserWahlbezirkID.value;
-    if (wahlbezirkID) {
-      error.value = null;
-      try {
-        sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
-        await saveEreignisse(wahlbezirkID, wahlbezirkEreignisse.value);
-      } catch (e) {
-        error.value = "Fehler beim Speichern der Ereignisse";
-        console.debug(e);
-      }
+    error.value = null;
+    try {
+      sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
+      await saveEreignisse(
+        currentUserWahlbezirkID.value,
+        wahlbezirkEreignisse.value
+      );
+    } catch (e) {
+      error.value = "Fehler beim Speichern der Ereignisse";
+      console.debug(e);
     }
   }
 
@@ -158,10 +157,11 @@ export const useEreignisStore = defineStore(storeID, () => {
     });
     _updateKeineFlagsOfEreignisseBasedOnCurrentState();
 
-    const wahlbezirkID = currentUserWahlbezirkID.value;
-    if (wahlbezirkID !== undefined) {
-      saveEreignisse(wahlbezirkID, wahlbezirkEreignisse.value, false);
-    }
+    saveEreignisse(
+      currentUserWahlbezirkID.value,
+      wahlbezirkEreignisse.value,
+      false
+    );
   }
 
   function _updateKeineFlagsOfEreignisseBasedOnCurrentState() {

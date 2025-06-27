@@ -47,29 +47,27 @@ export const useUserStore = defineStore("user", () => {
     }
   }
 
-  const currentUserWahlbezirkID = computed((): string | undefined => {
+  const currentUserWahlbezirkID = computed((): string => {
     return user.value.wahlbezirkID;
   });
 
-  const currentUserWahltagID = computed((): string | undefined => {
+  const currentUserWahltagID = computed((): string => {
     return user.value.wahltagID;
   });
 
-  const currentUserWahltag = computed((): string | undefined => {
+  const currentUserWahltag = computed((): string => {
     return user.value.wahltag;
   });
 
-  const currentUserWahlbezirksArt = computed(
-    (): WahlbezirksArtEnum | undefined => {
-      return user.value.wahlbezirksArt;
-    }
-  );
+  const currentUserWahlbezirksArt = computed((): WahlbezirksArtEnum => {
+    return user.value.wahlbezirksArt;
+  });
 
-  const currentUserWahlbezirkNummer = computed((): string | undefined => {
+  const currentUserWahlbezirkNummer = computed((): string => {
     return user.value.wahlbezirkNummer;
   });
 
-  const currentUserHauptWahlID = computed((): string | undefined => {
+  const currentUserHauptWahlID = computed((): string => {
     const smallestWbidWahlnummerObject = user.value.wahlMetaData?.reduce(
       (smallest, current) => {
         return parseInt(current.wahlnummer) < parseInt(smallest.wahlnummer)

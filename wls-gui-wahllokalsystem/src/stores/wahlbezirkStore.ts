@@ -1,6 +1,9 @@
+import type { UngueltigerWahlschein } from "@/types/wahlbezirk/UngueltigerWahlschein.ts";
+
 import { defineStore, storeToRefs } from "pinia";
 import { ref } from "vue";
 
+import { useUngueltigeWahlscheineService } from "@/composables/basisdaten/ungueltigeWahlscheineService.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useWahlvorbereitungService } from "@/composables/wahlvorbereitung/wahlvorbereitungService.ts";
@@ -12,7 +15,12 @@ const { registerStoreHMR } = useHmrUpdate();
 export const useWahlbezirkStore = defineStore(storeID, () => {
   const { postUrnenwahlSchliessungsuhrzeit, postEroeffnungsuhrzeit } =
     useWahlvorbereitungService();
-  const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
+  const { getUngueltigeWahlscheine } = useUngueltigeWahlscheineService();
+  const {
+    currentUserWahlbezirkID,
+    currentUserWahltagID,
+    currentUserWahlbezirksArt,
+  } = storeToRefs(useUserStore());
   const { isValidDate } = useDateTimeUtils();
 
   const eroeffnungsuhrzeit = ref<Date | undefined>(undefined);
@@ -22,6 +30,18 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   const schliessungsuhrzeit = ref<Date | undefined>(undefined);
   const schliessungsuhrzeitSent = ref<Date | undefined>(undefined);
   const schliessungsuhrzeitIsSaving = ref(false);
+
+  const ungueltigeWahlscheine = ref<UngueltigerWahlschein[]>([]);
+
+  async function initUngueltigeWahlscheine(sendNotification = true) {
+    if (currentUserWahltagID.value) {
+      ungueltigeWahlscheine.value = await getUngueltigeWahlscheine(
+        currentUserWahltagID.value,
+        currentUserWahlbezirksArt.value,
+        sendNotification
+      );
+    }
+  }
 
   async function sendEroeffnungsuhrzeit() {
     if (eroeffnungsuhrzeit.value) {
@@ -64,6 +84,8 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     schliessungsuhrzeit,
     schliessungsuhrzeitIsSaving,
     schliessungsuhrzeitSent,
+    ungueltigeWahlscheine,
+    initUngueltigeWahlscheine,
     sendEroeffnungsuhrzeit,
     sendSchliessungsuhrzeit,
   };

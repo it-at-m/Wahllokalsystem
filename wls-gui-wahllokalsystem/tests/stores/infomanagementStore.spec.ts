@@ -95,7 +95,7 @@ describe("infomanagementStore.ts", () => {
       expect(unitUnderTest.timeToCheckAnwesenheit).toBeUndefined();
     });
 
-    it("should_beAtTimeOfWahltag_whenWahltagAndConfigParamIsGiven", async () => {
+    it("should_beAtTimeOfWahltag_when_wahltagAndConfigParamIsGiven", async () => {
       const wahltagDateString = "2025-06-26";
       userStore.setUser(prepareUser().wahltag(wahltagDateString).build());
 

@@ -1,8 +1,11 @@
 import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
 
+import type { UngueltigerWahlschein } from "@/types/wahlbezirk/UngueltigerWahlschein.ts";
+
 import { defineStore, storeToRefs } from "pinia";
 import { ref, watch } from "vue";
 
+import { useUngueltigeWahlscheineService } from "@/composables/basisdaten/ungueltigeWahlscheineService.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useWahlvorbereitungService } from "@/composables/wahlvorbereitung/wahlvorbereitungService.ts";
@@ -18,11 +21,15 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     postEroeffnungsuhrzeit,
     postUrnenwahlvorbereitung,
   } = useWahlvorbereitungService();
+  const { getUngueltigeWahlscheine } = useUngueltigeWahlscheineService();
+  const {
+    currentUserWahlbezirkID,
+    currentUserWahltagID,
+    currentUserWahlbezirksArt,
+  } = storeToRefs(useUserStore());
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
   const { isValidDate } = useDateTimeUtils();
   const { wahlen } = storeToRefs(useWahlenStore());
-  const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
-
   const eroeffnungsuhrzeit = ref<Date | undefined>(undefined);
   const eroeffnungsuhrzeitSent = ref<Date | undefined>(undefined);
   const eroeffnungsuhrzeitIsSaving = ref(false);
@@ -31,6 +38,7 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   const schliessungsuhrzeitSent = ref<Date | undefined>(undefined);
   const schliessungsuhrzeitIsSaving = ref(false);
   const urnenWahlVorbereitungIsSaving = ref(false);
+  const ungueltigeWahlscheine = ref<UngueltigerWahlschein[]>([]);
 
   const urnenwahlVorbereitung = ref<Urnenwahlvorbereitung>({
     anzahlNebenraeume: null,
@@ -48,6 +56,17 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
         anzahl: null,
       })) || [];
   });
+
+
+  async function initUngueltigeWahlscheine(sendNotification = true) {
+    if (currentUserWahltagID.value) {
+      ungueltigeWahlscheine.value = await getUngueltigeWahlscheine(
+        currentUserWahltagID.value,
+        currentUserWahlbezirksArt.value,
+        sendNotification
+      );
+    }
+  }
 
   async function sendEroeffnungsuhrzeit() {
     if (currentUserWahlbezirkID.value && eroeffnungsuhrzeit.value) {
@@ -105,6 +124,8 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     schliessungsuhrzeit,
     schliessungsuhrzeitIsSaving,
     schliessungsuhrzeitSent,
+    ungueltigeWahlscheine,
+    initUngueltigeWahlscheine,
     sendEroeffnungsuhrzeit,
     sendSchliessungsuhrzeit,
     sendUrnenwahlvorbereitung,

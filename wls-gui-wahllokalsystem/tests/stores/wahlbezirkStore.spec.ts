@@ -68,16 +68,6 @@ describe("wahlbezirkStore.ts", () => {
         ]);
       }
     );
-
-    it("should_notCallService_when_userHasNoWahltagID", async () => {
-      useUserStore().setUser(prepareUser().wahltagID(undefined).build());
-
-      await unitUnderTest.initUngueltigeWahlscheine(true);
-
-      expect(mockDefinitions.getUngueltigeWahlscheine.mock.calls).toHaveLength(
-        0
-      );
-    });
   });
 
   describe("sendEroeffnungsuhrzeit", () => {

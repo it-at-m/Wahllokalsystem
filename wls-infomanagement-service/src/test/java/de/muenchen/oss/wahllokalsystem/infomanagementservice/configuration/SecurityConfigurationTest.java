@@ -255,12 +255,12 @@ class SecurityConfigurationTest {
 
             @Test
             @WithMockUser
-            void should_returnOk_when_callingAuthenticated() throws Exception {
+            void should_returnOk204_when_callingAuthenticated() throws Exception {
                 Mockito.when(konfigurationService.getKonfiguration(any())).thenReturn(Optional.empty());
 
                 val request = MockMvcRequestBuilders.get("/businessActions/konfiguration");
 
-                api.perform(request).andExpect(status().isOk());
+                api.perform(request).andExpect(status().isNoContent());
             }
         }
 

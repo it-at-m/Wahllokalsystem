@@ -48,7 +48,7 @@
           :to="ROUTE_BEGINN_STIMMABGABE"
         />
         <v-list-item
-          title="Wahlschliessung"
+          title="Wahlhandlung"
           :to="ROUTE_WAHLSCHLIESSUNG"
         />
       </v-list-group>

@@ -20,7 +20,7 @@ export const useInfomanagementStore = defineStore(storeID, () => {
 
   const konfigurationsparameter = ref<Konfigurationsparameter[] | null>(null);
 
-  const timeToCheckAnwesenheit = computed(() => {
+  const dateTimeToCheckAnwesenheit = computed(() => {
     const timeToCheckAnwesenheit = konfigurationsparameter.value?.find(
       (parameter) => parameter.schluessel === KONFIG_KEY_CHECK_ANWESENHEIT
     )?.wert;
@@ -50,7 +50,7 @@ export const useInfomanagementStore = defineStore(storeID, () => {
 
   return {
     konfigurationsparameter,
-    timeToCheckAnwesenheit,
+    dateTimeToCheckAnwesenheit,
     initKonfigurationsparameter,
   };
 });

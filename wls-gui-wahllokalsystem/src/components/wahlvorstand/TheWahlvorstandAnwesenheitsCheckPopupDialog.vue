@@ -31,10 +31,10 @@ import router from "@/plugins/router.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 
-const { timeToCheckAnwesenheit } = storeToRefs(useInfomanagementStore());
+const { dateTimeToCheckAnwesenheit } = storeToRefs(useInfomanagementStore());
 const { resetAllAnwesenheiten } = useWahlvorstandStore();
 
-useDateOfActionTimeout(timeToCheckAnwesenheit, showDialog);
+useDateOfActionTimeout(dateTimeToCheckAnwesenheit, showDialog);
 
 const BUTTON_TITLE_CONFIRM = "Anwesenheit erfassen";
 const BUTTON_TITLE_CANCEL = "Bleiben";
@@ -42,8 +42,8 @@ const BUTTON_TITLE_CANCEL = "Bleiben";
 const visible = ref(false);
 
 const hourOfTimeToCheck = computed(() => {
-  return timeToCheckAnwesenheit.value
-    ? new Date(timeToCheckAnwesenheit.value).getHours()
+  return dateTimeToCheckAnwesenheit.value
+    ? new Date(dateTimeToCheckAnwesenheit.value).getHours()
     : 0;
 });
 

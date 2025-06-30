@@ -72,9 +72,11 @@ describe("TheWahlvorstandAnwesenheitsCheckPopupDialog.vue", () => {
 
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_notRenderDialog_when_timeooutCallbackWasNotTriggered", async (context) => {
-      const { timeToCheckAnwesenheit } = storeToRefs(useInfomanagementStore());
+      const { dateTimeToCheckAnwesenheit } = storeToRefs(
+        useInfomanagementStore()
+      );
       // @ts-expect-error: cannot set readonly
-      timeToCheckAnwesenheit.value = new Date("2026-06-26T18:21:23.123");
+      dateTimeToCheckAnwesenheit.value = new Date("2026-06-26T18:21:23.123");
 
       await flushPromises();
 
@@ -84,9 +86,11 @@ describe("TheWahlvorstandAnwesenheitsCheckPopupDialog.vue", () => {
     });
 
     it("should_renderDialog_when_timeoutCallbackWasTriggered", async (context) => {
-      const { timeToCheckAnwesenheit } = storeToRefs(useInfomanagementStore());
+      const { dateTimeToCheckAnwesenheit } = storeToRefs(
+        useInfomanagementStore()
+      );
       // @ts-expect-error: cannot set readonly
-      timeToCheckAnwesenheit.value = new Date("2026-06-26T18:21:23.123");
+      dateTimeToCheckAnwesenheit.value = new Date("2026-06-26T18:21:23.123");
 
       componentCallback();
 
@@ -100,9 +104,11 @@ describe("TheWahlvorstandAnwesenheitsCheckPopupDialog.vue", () => {
 
   describe(COMPONENT_EVENT_TESTS, () => {
     it("should_triggerResetAllAnwesenheitSwitchToWahlvorstandAndCloseDialog_when_confirmClicked", async (context) => {
-      const { timeToCheckAnwesenheit } = storeToRefs(useInfomanagementStore());
+      const { dateTimeToCheckAnwesenheit } = storeToRefs(
+        useInfomanagementStore()
+      );
       // @ts-expect-error: cannot set readonly
-      timeToCheckAnwesenheit.value = new Date("2026-06-26T18:21:23.123");
+      dateTimeToCheckAnwesenheit.value = new Date("2026-06-26T18:21:23.123");
 
       componentCallback();
 

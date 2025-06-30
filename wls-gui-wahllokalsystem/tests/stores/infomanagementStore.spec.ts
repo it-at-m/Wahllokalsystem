@@ -69,13 +69,13 @@ describe("infomanagementStore.ts", () => {
     });
   });
 
-  describe("timeToCheckAnwesenheit", () => {
+  describe("dateTimeToCheckAnwesenheit", () => {
     it("should_beUndefined_when_userHasBlankCurrentWahltag", async () => {
       userStore.setUser(prepareUser().wahltag("").build());
 
       await flushPromises();
 
-      expect(unitUnderTest.timeToCheckAnwesenheit).toBeUndefined();
+      expect(unitUnderTest.dateTimeToCheckAnwesenheit).toBeUndefined();
     });
 
     it("should_beUndefined_when_userHasUndefinedCurrentWahltag", async () => {
@@ -83,7 +83,7 @@ describe("infomanagementStore.ts", () => {
 
       await flushPromises();
 
-      expect(unitUnderTest.timeToCheckAnwesenheit).toBeUndefined();
+      expect(unitUnderTest.dateTimeToCheckAnwesenheit).toBeUndefined();
     });
 
     it("should_beUndefined_when_userHasCurrentWahltagButConfigParamIsNotGiven", async () => {
@@ -92,7 +92,7 @@ describe("infomanagementStore.ts", () => {
 
       await flushPromises();
 
-      expect(unitUnderTest.timeToCheckAnwesenheit).toBeUndefined();
+      expect(unitUnderTest.dateTimeToCheckAnwesenheit).toBeUndefined();
     });
 
     it("should_beAtTimeOfWahltag_when_wahltagAndConfigParamIsGiven", async () => {
@@ -109,7 +109,7 @@ describe("infomanagementStore.ts", () => {
 
       await flushPromises();
 
-      expect(unitUnderTest.timeToCheckAnwesenheit?.getTime()).toStrictEqual(
+      expect(unitUnderTest.dateTimeToCheckAnwesenheit?.getTime()).toStrictEqual(
         new Date(`${wahltagDateString}T${anwesenheitCheckTimeString}`).getTime()
       );
     });
@@ -133,7 +133,7 @@ describe("infomanagementStore.ts", () => {
 
         await flushPromises();
 
-        expect(unitUnderTest.timeToCheckAnwesenheit).toBeUndefined();
+        expect(unitUnderTest.dateTimeToCheckAnwesenheit).toBeUndefined();
       }
     );
   });

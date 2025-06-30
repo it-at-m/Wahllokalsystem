@@ -12,6 +12,7 @@ import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration.
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationService;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationModel;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.wahltag.KonfigurierterWahltagService;
+import java.util.Collections;
 import java.util.Optional;
 import lombok.val;
 import org.junit.jupiter.api.Nested;
@@ -243,7 +244,7 @@ class SecurityConfigurationTest {
         }
 
         @Nested
-        class GetKonfigurations {
+        class GetAllKonfigurations {
 
             @Test
             @WithAnonymousUser
@@ -255,8 +256,8 @@ class SecurityConfigurationTest {
 
             @Test
             @WithMockUser
-            void should_returnOk204_when_callingAuthenticated() throws Exception {
-                Mockito.when(konfigurationService.getKonfiguration(any())).thenReturn(Optional.empty());
+            void should_returnNoContent_when_callingAuthenticated() throws Exception {
+                Mockito.when(konfigurationService.getAllKonfigurations()).thenReturn(Collections.emptyList());
 
                 val request = MockMvcRequestBuilders.get("/businessActions/konfiguration");
 

@@ -70,7 +70,7 @@ class UnicodeConfigurationTest {
         // Check persisted entity contains a composed string via JPA repository.
         val ereignisse = ereignisseRepository.findByWahlbezirkID(wahlbezirkID).orElseThrow();
         val ereignisSet = ereignisse.getEreignisse();
-        String beschreibung = "";
+        var beschreibung = "";
         val iterator = ereignisSet.iterator();
         if (iterator.hasNext()) {
             Ereignis erstesEreignis = iterator.next();

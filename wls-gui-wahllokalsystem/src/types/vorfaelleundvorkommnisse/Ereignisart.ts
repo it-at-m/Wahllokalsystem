@@ -27,7 +27,5 @@ export function getEreignisArtForDateRelatedToSchliessungsuhrzeit(
           ? EreignisartEnum.Vorkommnis
           : EreignisartEnum.Vorfall;
       }
-    default:
-      return EreignisartEnum.Vorkommnis;
   }
 }

@@ -71,7 +71,7 @@ class UnicodeConfigurationTest {
         val ereignisse = ereignisseRepository.findByWahlbezirkID(wahlbezirkID).orElseThrow();
         val ereignisSet = ereignisse.getEreignisse();
         String beschreibung = "";
-        Iterator<Ereignis> iterator = ereignisSet.iterator();
+        val iterator = ereignisSet.iterator();
         if (iterator.hasNext()) {
             Ereignis erstesEreignis = iterator.next();
             beschreibung = erstesEreignis.getBeschreibung();

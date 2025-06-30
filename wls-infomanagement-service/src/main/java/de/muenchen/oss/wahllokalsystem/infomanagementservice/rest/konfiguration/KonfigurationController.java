@@ -58,6 +58,7 @@ public class KonfigurationController {
             description = "Gibt alle Konfigurationen zurück.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Konfigurationen erfolgreich geladen."),
+                    @ApiResponse(responseCode = "204", description = "Keine Konfigurationen vorhanden."),
             }
     )
     @GetMapping("/konfiguration")

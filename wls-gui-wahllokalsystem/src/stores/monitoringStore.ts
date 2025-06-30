@@ -17,7 +17,9 @@ export const useMonitoringStore = defineStore(storeID, () => {
   const waehler = ref(0);
 
   function increaseWaehlerByOne() {
-    waehler.value++;
+    if (waehler.value < 9999) {
+      waehler.value++;
+    }
   }
 
   async function loadWaehler() {

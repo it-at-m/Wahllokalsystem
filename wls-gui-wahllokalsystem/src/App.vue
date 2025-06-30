@@ -22,7 +22,6 @@ import { VApp, VContainer, VFadeTransition, VMain } from "vuetify/components";
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
-import { useMonitoringCronjobService } from "@/composables/monitoring/monitoringCronjobService.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
@@ -35,8 +34,6 @@ const { loadWaehler } = useMonitoringStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
-const { startWahlbeteiligungInterval, stopWahlbeteiligungInterval } =
-  useMonitoringCronjobService();
 
 onMounted(async () => {
   await loadUser().then(() => {
@@ -44,7 +41,6 @@ onMounted(async () => {
     initTasks();
     loadEreignisse();
     loadWaehler();
-    startWahlbeteiligungInterval();
   });
 
   // config for service worker indexed db (same config as in wahl-worker.js !)
@@ -59,7 +55,6 @@ onMounted(async () => {
 
 onUnmounted(() => {
   stopBroadcastMessageInterval();
-  stopWahlbeteiligungInterval();
 });
 </script>
 

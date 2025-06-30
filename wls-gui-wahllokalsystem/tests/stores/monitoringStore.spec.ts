@@ -54,6 +54,13 @@ describe("monitoringStore.ts", () => {
 
       expect(unitUnderTest.waehler).toBe(11);
     });
+
+    it("should_notCountAbove9999_when_triggered", () => {
+      unitUnderTest.waehler = 9999;
+      unitUnderTest.increaseWaehlerByOne();
+
+      expect(unitUnderTest.waehler).toBe(9999);
+    });
   });
 
   describe("loadWaehler", () => {

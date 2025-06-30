@@ -11,14 +11,34 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
+import { onMounted, onUnmounted } from "vue";
 import { VBtn } from "vuetify/components";
 
+import { useMonitoringCronjobService } from "@/composables/monitoring/monitoringCronjobService.ts";
 import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 
 const { waehler } = storeToRefs(useMonitoringStore());
 const { increaseWaehlerByOne } = useMonitoringStore();
+const { startWahlbeteiligungInterval, stopWahlbeteiligungInterval } =
+  useMonitoringCronjobService();
+
+onMounted(() => {
+  document.addEventListener("keyup", onKeyupEvent);
+  startWahlbeteiligungInterval();
+});
+
+onUnmounted(() => {
+  document.removeEventListener("keyup", onKeyupEvent);
+  stopWahlbeteiligungInterval();
+});
 
 function onWaehleranzahlClicked() {
   increaseWaehlerByOne();
+}
+
+function onKeyupEvent(event: KeyboardEvent) {
+  if (event.key === "+") {
+    increaseWaehlerByOne();
+  }
 }
 </script>

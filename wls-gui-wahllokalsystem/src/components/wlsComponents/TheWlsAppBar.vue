@@ -20,6 +20,12 @@
         cols="3"
         class="d-flex align-center justify-end"
       >
+        <the-waehleranzahl-count-button
+          v-if="
+            eroeffnungsuhrzeit !== undefined &&
+            schliessungsuhrzeit === undefined
+          "
+        />
         <wls-clock class="mx-2" />
         <wls-heartbeat v-model:is-offline="isOffline" />
         <the-info-help-icon />
@@ -76,6 +82,7 @@ import {
 
 import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
+import TheWaehleranzahlCountButton from "@/components/monitoring/TheWaehleranzahlCountButton.vue";
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
@@ -86,6 +93,10 @@ import {
   ROUTE_WAHLVORSTAND,
 } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
+
+const { eroeffnungsuhrzeit, schliessungsuhrzeit } =
+  storeToRefs(useWahlbezirkStore());
 
 const { toGermanDateFormat } = useDateTimeFormatter();
 const { user, currentUserWahltag, currentUserWahlbezirkNummer } =

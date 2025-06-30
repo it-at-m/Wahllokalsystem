@@ -79,7 +79,7 @@ describe("dateOfActionTimeout", () => {
     setTimeoutSpy.mockRestore();
   });
 
-  it("should_clearOldTimeOut_when_newTimeoutIsSendAfterDateOfActionChanged", async () => {
+  it("should_clearOldTimeOut_when_newTimeoutIsSetAfterDateOfActionChanged", async () => {
     const setTimeoutSpy = vi.spyOn(window, "setTimeout");
     const clearTimeoutSpy = vi.spyOn(window, "clearTimeout");
 

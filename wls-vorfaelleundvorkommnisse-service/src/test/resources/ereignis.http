@@ -12,14 +12,16 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
+  "keineVorfaelle": true,
+  "keineVorkommnisse": false,
   "ereigniseintraege": [
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung1",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORKOMMNIS"
     },
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung2",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORKOMMNIS"
     }
@@ -32,14 +34,16 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
+  "keineVorfaelle": false,
+  "keineVorkommnisse": true,
   "ereigniseintraege": [
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung1",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORFALL"
     },
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung2",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORFALL"
     }
@@ -52,26 +56,41 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
+  "keineVorfaelle": false,
+  "keineVorkommnisse": false,
   "ereigniseintraege": [
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung1",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORFALL"
     },
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung2",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORKOMMNIS"
     }
   ]
 }
 
-### POST Ereignisse leer | user wls_all_uwb
+### POST Ereignisse leer keineVorfaelle/keineVorkommnisse gesetzt | user wls_all_uwb
 POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
+  "keineVorfaelle": true,
+  "keineVorkommnisse": true,
+  "ereigniseintraege": []
+}
+
+### POST Ereignisse leer, keineVorfaelle/keineVorkommnisse nicht gesetzt | user wls_all_uwb
+POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/9899cae4-df9a-4ffc-a940-f20cf2280171
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "keineVorfaelle": false,
+  "keineVorkommnisse": false,
   "ereigniseintraege": []
 }
 
@@ -86,14 +105,16 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
+  "keineVorfaelle": true,
+  "keineVorkommnisse": false,
   "ereigniseintraege": [
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung1",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORKOMMNIS"
     },
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung2",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORKOMMNIS"
     }
@@ -106,14 +127,16 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
+  "keineVorfaelle": false,
+  "keineVorkommnisse": true,
   "ereigniseintraege": [
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung1",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORFALL"
     },
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung2",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORFALL"
     }
@@ -126,26 +149,40 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
+  "keineVorfaelle": false,
+  "keineVorkommnisse": false,
   "ereigniseintraege": [
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung1",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORFALL"
     },
     {
-      "beschreibung": "beschreibung",
+      "beschreibung": "beschreibung2",
       "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORKOMMNIS"
     }
   ]
 }
 
-### POST Ereignisse leer | user wls_all_bwb
+### POST Ereignisse leer, keineVorfaelle/keineVorkommnisse gesetzt | user wls_all_bwb
 POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/9081145c-dc16-4a9b-8255-5c49ddb98c14
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
+  "keineVorfaelle": true,
+  "keineVorkommnisse": true,
   "ereigniseintraege": []
 }
 
+### POST Ereignisse leer, keineVorfaelle/keineVorkommnisse nicht gesetzt | user wls_all_bwb
+POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/9081145c-dc16-4a9b-8255-5c49ddb98c14
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "keineVorfaelle": false,
+  "keineVorkommnisse": false,
+  "ereigniseintraege": []
+}

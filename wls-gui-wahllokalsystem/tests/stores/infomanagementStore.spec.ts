@@ -121,7 +121,7 @@ describe("infomanagementStore.ts", () => {
       { invalidTime: "12:1" },
       { invalidTime: "12:61" },
     ])(
-      "should_beUndefined_when_wert'$invalidTime'IsNotATimeFormat",
+      "should_beUndefined_when_value'$invalidTime'IsNotATimeFormat",
       async (args) => {
         userStore.setUser(prepareUser().wahltag("2025-06-26").build());
         unitUnderTest.konfigurationsparameter = [

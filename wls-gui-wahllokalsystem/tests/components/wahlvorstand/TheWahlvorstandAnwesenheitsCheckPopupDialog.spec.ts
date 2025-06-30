@@ -71,7 +71,7 @@ describe("TheWahlvorstandAnwesenheitsCheckPopupDialog.vue", () => {
   });
 
   describe(COMPONENT_RENDER_TESTS, () => {
-    it("should_notRenderDialog_when_timeooutCallbackWasNotTriggered", async (context) => {
+    it("should_notRenderDialog_when_timeoutCallbackWasNotTriggered", async (context) => {
       const { dateTimeToCheckAnwesenheit } = storeToRefs(
         useInfomanagementStore()
       );

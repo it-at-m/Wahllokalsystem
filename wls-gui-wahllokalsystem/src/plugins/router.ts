@@ -6,6 +6,7 @@ import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_EREIGNISSE,
   ROUTE_WAHLSCHLIESSUNG,
+  ROUTE_WAHLUMGEBUNG,
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
 } from "@/constants";
@@ -15,6 +16,7 @@ import ExampleError404View from "@/views/ExampleError404View.vue";
 import HomeView from "@/views/HomeView.vue";
 import WahleroeffnungView from "@/views/wahlvorbereitung/WahleroeffnungView.vue";
 import WahlschliessungView from "@/views/wahlvorbereitung/WahlschliessungView.vue";
+import WahlumgebungView from "@/views/wahlvorbereitung/WahlumgebungView.vue";
 import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
 
 const routes = [
@@ -34,6 +36,11 @@ const routes = [
     path: "/wahlschliessung",
     name: ROUTE_WAHLSCHLIESSUNG,
     component: WahlschliessungView,
+  },
+  {
+    path: "/wahlumgebung",
+    name: ROUTE_WAHLUMGEBUNG,
+    component: WahlumgebungView,
   },
   {
     path: "/beginnStimmabgabe",

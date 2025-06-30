@@ -22,6 +22,17 @@ import BaseWahlschliessungCard from "@/components/wahlvorbereitung/BaseWahlschli
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
+const mockDefinitions = vi.hoisted(() => ({
+  postUrnenwahlSchliessungsuhrzeit: vi.fn(),
+}));
+
+vi.mock("@/composables/wahlvorbereitung/wahlvorbereitungService", () => ({
+  useWahlvorbereitungService: () => ({
+    postUrnenwahlSchliessungsuhrzeit:
+      mockDefinitions.postUrnenwahlSchliessungsuhrzeit,
+  }),
+}));
+
 describe("BaseWahlschliessungCard.vue", () => {
   let wrapper: VueWrapper<InstanceType<typeof BaseWahlschliessungCard>>;
 
@@ -108,6 +119,10 @@ describe("BaseWahlschliessungCard.vue", () => {
 
       const saveButton = wrapper.findComponent(BaseButtonSave);
       await saveButton.trigger("click");
+
+      mockDefinitions.postUrnenwahlSchliessungsuhrzeit.mockResolvedValue(
+        Promise.resolve()
+      );
 
       expect(wahlbezirkStore.sendSchliessungsuhrzeit).toHaveBeenCalled();
     });

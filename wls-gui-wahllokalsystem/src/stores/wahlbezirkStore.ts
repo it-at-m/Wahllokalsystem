@@ -1,6 +1,5 @@
-import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
-
 import type { UngueltigerWahlschein } from "@/types/wahlbezirk/UngueltigerWahlschein.ts";
+import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
 
 import { defineStore, storeToRefs } from "pinia";
 import { ref, watch } from "vue";
@@ -27,7 +26,6 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     currentUserWahltagID,
     currentUserWahlbezirksArt,
   } = storeToRefs(useUserStore());
-  const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
   const { isValidDate } = useDateTimeUtils();
   const { wahlen } = storeToRefs(useWahlenStore());
   const eroeffnungsuhrzeit = ref<Date | undefined>(undefined);
@@ -56,7 +54,6 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
         anzahl: null,
       })) || [];
   });
-
 
   async function initUngueltigeWahlscheine(sendNotification = true) {
     if (currentUserWahltagID.value) {

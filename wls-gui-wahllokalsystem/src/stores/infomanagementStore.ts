@@ -3,6 +3,7 @@ import type { Konfigurationsparameter } from "@/types/infomanagement/Konfigurati
 import { defineStore, storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
+import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useKonfigurationsparameterService } from "@/composables/infomanagement/konfigurationsparameterService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -10,6 +11,7 @@ import { useUserStore } from "@/stores/userStore.ts";
 export const storeID = "infomanagement";
 const { getKonfigurationsparameter } = useKonfigurationsparameterService();
 const { registerStoreHMR } = useHmrUpdate();
+const { isValidDate } = useDateTimeUtils();
 
 const KONFIG_KEY_CHECK_ANWESENHEIT = "MELDUNGSZEIT_ANWESENHEIT_CHECK";
 
@@ -23,9 +25,17 @@ export const useInfomanagementStore = defineStore(storeID, () => {
       (parameter) => parameter.schluessel === KONFIG_KEY_CHECK_ANWESENHEIT
     )?.wert;
 
-    return timeToCheckAnwesenheit && currentUserWahltag.value
-      ? new Date(`${currentUserWahltag.value}T${timeToCheckAnwesenheit}`)
-      : undefined;
+    if (timeToCheckAnwesenheit && currentUserWahltag.value) {
+      const dateToCheckAnwesenheit = new Date(
+        `${currentUserWahltag.value}T${timeToCheckAnwesenheit}`
+      );
+
+      return isValidDate(dateToCheckAnwesenheit)
+        ? dateToCheckAnwesenheit
+        : undefined;
+    } else {
+      return undefined;
+    }
   });
 
   async function initKonfigurationsparameter(sendNotification = true) {

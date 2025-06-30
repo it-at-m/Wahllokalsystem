@@ -113,5 +113,28 @@ describe("infomanagementStore.ts", () => {
         new Date(`${wahltagDateString}T${anwesenheitCheckTimeString}`).getTime()
       );
     });
+
+    it.each([
+      { invalidTime: "" },
+      { invalidTime: "   " },
+      { invalidTime: "13" },
+      { invalidTime: "12:1" },
+      { invalidTime: "12:61" },
+    ])(
+      "should_beUndefined_when_wert'$invalidTime'IsNotATimeFormat",
+      async (args) => {
+        userStore.setUser(prepareUser().wahltag("2025-06-26").build());
+        unitUnderTest.konfigurationsparameter = [
+          prepareKonfigurationsparameter()
+            .schluessel("MELDUNGSZEIT_ANWESENHEIT_CHECK")
+            .wert(args.invalidTime)
+            .build(),
+        ];
+
+        await flushPromises();
+
+        expect(unitUnderTest.timeToCheckAnwesenheit).toBeUndefined();
+      }
+    );
   });
 });

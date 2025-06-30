@@ -1,6 +1,12 @@
 /* eslint-disable */
-export const REQUIRED = (value: any) =>
-  (!!value && value.trim().length > 0) || "Feld darf nicht leer sein.";
+export const REQUIRED = (value: any) => {
+  if (typeof value === "string") {
+    return value.trim().length > 0 || "Feld darf nicht leer sein.";
+  } else if (typeof value === "number") {
+    return !isNaN(value) || "Feld darf nicht leer sein.";
+  }
+  return "Feld darf nicht leer sein.";
+};
 
 export const MAX_LENGTH = (length: number) => (value: any) =>
   (value && value.length <= length) || `Maximale Länge ist ${length} Zeichen.`;

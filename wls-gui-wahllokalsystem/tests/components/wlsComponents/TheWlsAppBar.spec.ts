@@ -6,9 +6,17 @@ import {
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
-import { mount } from "@vue/test-utils";
+import { enableAutoUnmount, mount } from "@vue/test-utils";
 import { createPinia } from "pinia";
-import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 import { h, nextTick } from "vue";
 import { VApp } from "vuetify/components";
 
@@ -47,6 +55,11 @@ describe("TheWlsAppBar.vue", () => {
         default: h(TheWlsAppBar),
       },
     });
+  });
+
+  enableAutoUnmount(afterEach);
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   describe(COMPONENT_RENDER_TESTS, () => {

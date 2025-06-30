@@ -68,6 +68,7 @@ describe("TheWlsAppBar.vue", () => {
       const user = useUserTestDataFactory().prepareUser().build();
       userStore.setUser(user);
       const taskManagerStore = useTaskManagerStore();
+      // @ts-expect-error: cannot set readonly
       taskManagerStore.hasInitializationOfTasksCompletelyRun = true;
 
       await nextTick();
@@ -82,6 +83,7 @@ describe("TheWlsAppBar.vue", () => {
       const user = useUserTestDataFactory().prepareUser().build();
       userStore.setUser(user);
       const taskManagerStore = useTaskManagerStore();
+      // @ts-expect-error: cannot set readonly
       taskManagerStore.hasInitializationOfTasksCompletelyRun = false;
 
       await nextTick();

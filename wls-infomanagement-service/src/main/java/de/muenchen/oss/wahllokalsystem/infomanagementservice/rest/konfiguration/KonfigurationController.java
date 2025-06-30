@@ -64,7 +64,7 @@ public class KonfigurationController {
     public ResponseEntity<List<KonfigurationDTO>> getKonfigurations() {
         val allKonfigurations = konfigurationService.getAllKonfigurations();
 
-        if (allKonfigurations == null) {
+        if (allKonfigurations == null || allKonfigurations.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.ok(allKonfigurations.stream().map(konfigurationDTOMapper::toDTO).toList());

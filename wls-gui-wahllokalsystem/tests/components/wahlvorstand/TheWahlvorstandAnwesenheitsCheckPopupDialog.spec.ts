@@ -116,6 +116,9 @@ describe("TheWahlvorstandAnwesenheitsCheckPopupDialog.vue", () => {
       await flushPromises();
 
       const confirmButton = wrapper.findAllComponents(VBtn)[1];
+      expect(confirmButton.attributes("data-test")).toStrictEqual(
+        "basedialog-btn-confirm"
+      );
       await confirmButton.trigger("click");
 
       await expect(document.body.innerHTML).toMatchFileSnapshot(

@@ -66,6 +66,8 @@ onUnmounted(() => {
 </script>
 
 <style>
+@import "@fontsource/roboto/400.css";
+
 .main {
   background-color: white;
 }

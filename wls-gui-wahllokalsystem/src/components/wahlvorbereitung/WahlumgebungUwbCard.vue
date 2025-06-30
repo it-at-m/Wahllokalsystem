@@ -30,7 +30,6 @@
           />
         </v-form>
       </v-card-text>
-
       <v-card-title>Abstimmungsschutzvorrichtungen</v-card-title>
       <v-card-text class="pb-0 pt-2">
         <v-form
@@ -76,7 +75,7 @@
       </v-card-text>
       <v-card
         v-show="isMinimumRequired"
-        class="border-lg border-error mt-2 mb-2"
+        class="border-lg border-error my-2"
       >
         <v-card-title>Ungültige Eingaben</v-card-title>
         <v-card-text>

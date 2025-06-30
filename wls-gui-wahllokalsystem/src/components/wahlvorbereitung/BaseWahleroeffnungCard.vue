@@ -8,7 +8,7 @@
         <base-time-input
           v-model="eroeffnungsuhrzeit"
           class="mt-5"
-          max-width="150"
+          max-width="300"
           :rules="[
             REQUIRED,
             TIME_NOT_IN_FUTURE,

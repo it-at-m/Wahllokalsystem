@@ -44,6 +44,10 @@
           />
         </template>
         <v-list-item
+          title="Wahlumgebung"
+          :to="ROUTE_WAHLUMGEBUNG"
+        />
+        <v-list-item
           title="Beginn Stimmabgabe"
           :to="ROUTE_BEGINN_STIMMABGABE"
         />
@@ -83,6 +87,7 @@ import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_EREIGNISSE,
   ROUTE_WAHLSCHLIESSUNG,
+  ROUTE_WAHLUMGEBUNG,
   ROUTE_WAHLVORSTAND,
 } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";

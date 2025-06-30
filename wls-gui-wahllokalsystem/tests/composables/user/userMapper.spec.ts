@@ -33,7 +33,7 @@ describe("userMapper.ts", () => {
           .build();
 
         expect(() => validateDtoAndMapToModel(invalidDto)).toThrow(
-          "Laden des Users fehlgeschlagen. Folgende Pflichtfelder sind nicht befüllt: username"
+          "Laden des Users fehlgeschlagen. Folgende Pflichtfelder sind nicht befüllt: Error: username is blank"
         );
       }
     );
@@ -68,7 +68,7 @@ describe("userMapper.ts", () => {
           .build();
 
         expect(() => validateDtoAndMapToModel(invalidDto)).toThrow(
-          "Laden des Users fehlgeschlagen. Folgende Pflichtfelder sind nicht befüllt: userEnabled"
+          "Laden des Users fehlgeschlagen. Folgende Pflichtfelder sind nicht befüllt: Error: userEnabled is undefined"
         );
       }
     );
@@ -86,7 +86,7 @@ describe("userMapper.ts", () => {
           .build();
 
         expect(() => validateDtoAndMapToModel(invalidDto)).toThrow(
-          "Laden des Users fehlgeschlagen. Folgende Pflichtfelder sind nicht befüllt: wahltagID"
+          "Laden des Users fehlgeschlagen. Folgende Pflichtfelder sind nicht befüllt: Error: wahltagID is blank"
         );
       }
     );
@@ -102,7 +102,7 @@ describe("userMapper.ts", () => {
         .build();
 
       expect(() => validateDtoAndMapToModel(invalidDto)).toThrow(
-        "Laden des Users fehlgeschlagen. Folgende Pflichtfelder sind nicht befüllt: wahltag"
+        "Laden des Users fehlgeschlagen. Folgende Pflichtfelder sind nicht befüllt: Error: wahltag is blank"
       );
     });
 
@@ -119,7 +119,7 @@ describe("userMapper.ts", () => {
           .build();
 
         expect(() => validateDtoAndMapToModel(invalidDto)).toThrow(
-          "Laden des Users fehlgeschlagen. Folgende Pflichtfelder sind nicht befüllt: wahlbezirkID"
+          "Laden des Users fehlgeschlagen. Folgende Pflichtfelder sind nicht befüllt: Error: wahlbezirkID is blank"
         );
       }
     );
@@ -137,7 +137,7 @@ describe("userMapper.ts", () => {
           .build();
 
         expect(() => validateDtoAndMapToModel(invalidDto)).toThrow(
-          "Laden des Users fehlgeschlagen. Folgende Pflichtfelder sind nicht befüllt: wahlbezirkNummer"
+          "Laden des Users fehlgeschlagen. Folgende Pflichtfelder sind nicht befüllt: Error: wahlbezirkNummer is blank"
         );
       }
     );
@@ -153,7 +153,7 @@ describe("userMapper.ts", () => {
           .build();
 
         expect(() => validateDtoAndMapToModel(invalidDto)).toThrow(
-          "Laden des Users fehlgeschlagen. Folgende Pflichtfelder sind nicht befüllt: wahlbezirksArt"
+          "Laden des Users fehlgeschlagen. Folgende Pflichtfelder sind nicht befüllt: Error: wahlbezirksArt is blank"
         );
       }
     );
@@ -169,7 +169,7 @@ describe("userMapper.ts", () => {
         .build();
 
       expect(() => validateDtoAndMapToModel(invalidDto)).toThrow(
-        "Laden des Users fehlgeschlagen. Folgende Pflichtfelder sind nicht befüllt: pin"
+        "Laden des Users fehlgeschlagen. Folgende Pflichtfelder sind nicht befüllt: Error: pin is blank"
       );
     });
 
@@ -179,7 +179,7 @@ describe("userMapper.ts", () => {
         .build();
 
       expect(() => validateDtoAndMapToModel(invalidDto)).toThrow(
-        "Laden des Users fehlgeschlagen. Folgende Pflichtfelder sind nicht befüllt: authorities"
+        "Laden des Users fehlgeschlagen. Folgende Pflichtfelder sind nicht befüllt: Error: authorities is empty"
       );
     });
 
@@ -196,7 +196,7 @@ describe("userMapper.ts", () => {
           .build();
 
         expect(() => validateDtoAndMapToModel(invalidDto)).toThrow(
-          "Laden des Users fehlgeschlagen. Folgende Pflichtfelder sind nicht befüllt: wbid_wahlnummer"
+          "Laden des Users fehlgeschlagen. Folgende Pflichtfelder sind nicht befüllt: Error: wbid_wahlnummer is blank"
         );
       }
     );

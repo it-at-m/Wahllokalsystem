@@ -37,7 +37,7 @@ public class AusdruckService {
     }
 
     @PreAuthorize(
-            "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostAusdruck') and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.wahlUndBezirkIDUndMeldungsartModel.wahlbezirkID, authentication)"
+        "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostAusdruck') and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.wahlUndBezirkIDUndMeldungsartModel.wahlbezirkID, authentication)"
     )
     public void saveAusdruck(@P("param") @NotNull final AusdruckWriteModel ausdruck) {
         log.debug("Saving printout {}", ausdruck.wahlUndBezirkIDUndMeldungsartModel().meldungsart());

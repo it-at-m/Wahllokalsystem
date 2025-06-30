@@ -33,6 +33,8 @@ export function useEreignisMapper() {
       (ereignisModel) => ereignisModelToEreignisDto(ereignisModel)
     );
     return {
+      keineVorfaelle: ereignisseModel.keineVorfaelle,
+      keineVorkommnisse: ereignisseModel.keineVorkommnisse,
       ereigniseintraege: ereignisseAsDto,
     };
   }
@@ -47,9 +49,7 @@ function ereignisDtoToEreignisModel(ereignisDto: EreignisDTO): Ereignis {
   return {
     beschreibung: ereignisDto.beschreibung ?? "",
     uhrzeit: ereignisDto.uhrzeit ? new Date(ereignisDto.uhrzeit) : undefined,
-    ereignisart: ereignisDto.ereignisart
-      ? ereignisartDtoToEreignisartModel(ereignisDto.ereignisart)
-      : undefined,
+    ereignisart: ereignisDto.ereignisart,
   };
 }
 
@@ -61,9 +61,7 @@ function ereignisModelToEreignisDto(ereignisModel: Ereignis): EreignisDTO {
   return {
     beschreibung: ereignisModel.beschreibung ?? "",
     uhrzeit: mappedUhrzeit?.toJSON(),
-    ereignisart: ereignisModel.ereignisart
-      ? ereignisartModelToEreignisartDto(ereignisModel.ereignisart)
-      : undefined,
+    ereignisart: ereignisartModelToEreignisartDto(ereignisModel.ereignisart),
   };
 }
 

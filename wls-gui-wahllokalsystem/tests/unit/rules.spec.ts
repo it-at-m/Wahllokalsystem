@@ -68,8 +68,12 @@ describe("Validation rules", () => {
   describe("RULE_REQUIRED", () => {
     const rule = REQUIRED;
 
-    it("should_returnTrue_when_inputExists", () => {
+    it("should_returnTrue_when_inputStringExists", () => {
       expect(rule("input")).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_inputNumberExists", () => {
+      expect(rule(3)).toStrictEqual(true);
     });
 
     it.each([

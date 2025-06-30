@@ -6,18 +6,11 @@ import {
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
-import { enableAutoUnmount, mount } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import { createPinia } from "pinia";
-import {
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vitest";
-import { nextTick } from "vue";
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { h, nextTick } from "vue";
+import { VApp } from "vuetify/components";
 
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import vuetify from "@/plugins/vuetify.ts";
@@ -26,13 +19,22 @@ import { useUserStore } from "@/stores/userStore.ts";
 
 describe("TheWlsAppBar.vue", () => {
   let wrapper: VueWrapper;
+  const mockedDate = new Date("2024-12-17T03:24:00");
+
+  const ResizeObserverMock = vi.fn(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+  }));
+  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
 
   beforeAll(() => {
     createPinia();
   });
 
   beforeEach(() => {
-    wrapper = mount(TheWlsAppBar, {
+    vi.setSystemTime(mockedDate);
+    wrapper = mount(VApp, {
       global: {
         plugins: [
           createTestingPinia({
@@ -41,14 +43,14 @@ describe("TheWlsAppBar.vue", () => {
           vuetify,
         ],
       },
+      slots: {
+        default: h(TheWlsAppBar),
+      },
     });
-    vi.clearAllMocks();
   });
 
-  enableAutoUnmount(afterEach);
-
   describe(COMPONENT_RENDER_TESTS, () => {
-    it("test", async (context) => {
+    it("when_initializationOfTaskHasCompletelyRun_then_renderNavigationDrawerIcon", async (context) => {
       const userStore = useUserStore();
       const user = useUserTestDataFactory().prepareUser().build();
       userStore.setUser(user);
@@ -56,6 +58,21 @@ describe("TheWlsAppBar.vue", () => {
       taskManagerStore.hasInitializationOfTasksCompletelyRun = true;
 
       await nextTick();
+
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+
+    it("when_initializationOfTaskHasNotCompletelyRun_then_dontRenderNavigationDrawerIcon", async (context) => {
+      const userStore = useUserStore();
+      const user = useUserTestDataFactory().prepareUser().build();
+      userStore.setUser(user);
+      const taskManagerStore = useTaskManagerStore();
+      taskManagerStore.hasInitializationOfTasksCompletelyRun = false;
+
+      await nextTick();
+
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );

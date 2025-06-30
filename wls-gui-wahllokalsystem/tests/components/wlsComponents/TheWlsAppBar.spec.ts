@@ -27,7 +27,7 @@ import { useUserStore } from "@/stores/userStore.ts";
 
 describe("TheWlsAppBar.vue", () => {
   let wrapper: VueWrapper;
-  const mockedDate = new Date("2024-12-17T03:24:00");
+  const mockedDate = new Date("2025-05-23T07:30:00");
 
   const ResizeObserverMock = vi.fn(() => ({
     observe: vi.fn(),

@@ -79,7 +79,7 @@ describe("TheWaehleranzahlCountButton", () => {
     it("should_callIncreaseWaehlerFunction_when_keyupEventWithPlus", async () => {
       const { increaseWaehlerByOne } = useMonitoringStore();
 
-      const event = new KeyboardEvent('keyup', { key: '+'});
+      const event = new KeyboardEvent("keyup", { key: "+" });
       document.dispatchEvent(event);
 
       await nextTick();

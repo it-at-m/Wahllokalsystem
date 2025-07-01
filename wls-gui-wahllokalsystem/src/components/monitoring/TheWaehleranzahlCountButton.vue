@@ -3,6 +3,8 @@
     class="bg-white mr-5"
     color="primary"
     prepend-icon="$addCircle"
+    @keydown.enter.prevent
+    @keyup.enter="onWaehleranzahlClicked"
     @click="onWaehleranzahlClicked"
   >
     {{ waehler }} Wähler*innen

@@ -12,8 +12,8 @@
           :rules="[
             REQUIRED,
             TIME_NOT_IN_FUTURE,
-            TIME_GREATER_THAN(FRUEHESTE_EROEFFNUNGSZEIT_UW_PARAM),
-            TIME_LESS_THAN(FRUEHESTE_SCHLIESSUNGSZEIT_UW_PARAM),
+            TIME_GREATER_OR_EQUAL(FRUEHESTE_EROEFFNUNGSZEIT_UW_PARAM),
+            TIME_LESS_OR_EQUAL(FRUEHESTE_SCHLIESSUNGSZEIT_UW_PARAM),
           ]"
         />
       </v-form>
@@ -46,8 +46,8 @@ import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import {
   REQUIRED,
-  TIME_GREATER_THAN,
-  TIME_LESS_THAN,
+  TIME_GREATER_OR_EQUAL,
+  TIME_LESS_OR_EQUAL,
   TIME_NOT_IN_FUTURE,
 } from "@/util/rules.ts";
 

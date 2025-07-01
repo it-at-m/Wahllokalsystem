@@ -30,10 +30,11 @@ export const TIME_NOT_IN_FUTURE = (value: string) =>
   getDateFromTimeString(value) <= new Date() ||
   `Eingabe darf nicht in der Zukunft liegen.`;
 
-export const TIME_GREATER_THAN = (compareValue: string) => (value: string) =>
-  getDateFromTimeString(value) >= getDateFromTimeString(compareValue) ||
-  `Eingabe muss größer als ${compareValue} sein.`;
+export const TIME_GREATER_OR_EQUAL =
+  (compareValue: string) => (value: string) =>
+    getDateFromTimeString(value) >= getDateFromTimeString(compareValue) ||
+    `Eingabe muss größer oder gleich ${compareValue} sein.`;
 
-export const TIME_LESS_THAN = (compareValue: string) => (value: string) =>
+export const TIME_LESS_OR_EQUAL = (compareValue: string) => (value: string) =>
   getDateFromTimeString(value) <= getDateFromTimeString(compareValue) ||
-  `Eingabe muss kleiner als ${compareValue} sein.`;
+  `Eingabe muss kleiner oder gleich ${compareValue} sein.`;

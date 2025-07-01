@@ -2,7 +2,7 @@ import type { Ref } from "vue";
 
 import { watch } from "vue";
 
-const MAX_DELAY = 0x7fffffff; //https://mrcoles.com/maximum-delay-settimeout/
+const MAX_DELAY_IN_MILLISECONDS = 0x7fffffff; //https://mrcoles.com/maximum-delay-settimeout/
 
 export function useDateOfActionTimeout(
   dateOfAction: Ref<Date | undefined>,
@@ -20,9 +20,12 @@ export function useDateOfActionTimeout(
     if (dateOfAction.value) {
       const currentTime = new Date().getTime();
       const popupTime = dateOfAction.value.getTime();
-      const timeUntilPopup = popupTime - currentTime;
-      if (timeUntilPopup >= 0 && timeUntilPopup < MAX_DELAY) {
-        popupTimeout = window.setTimeout(callback, timeUntilPopup);
+      const delayInMilliseconds = popupTime - currentTime;
+      if (
+        delayInMilliseconds >= 0 &&
+        delayInMilliseconds < MAX_DELAY_IN_MILLISECONDS
+      ) {
+        popupTimeout = window.setTimeout(callback, delayInMilliseconds);
       }
     }
   }

@@ -58,5 +58,15 @@ export default createVuetify({
       persistent: true,
       maxWidth: 600,
     },
+    VBtn: {
+      variant: "elevated",
+      activeColor: "primary",
+    },
+    VCardActions: {
+      VBtn: {
+        variant: "elevated",
+        activeColor: "primary",
+      },
+    },
   },
 });

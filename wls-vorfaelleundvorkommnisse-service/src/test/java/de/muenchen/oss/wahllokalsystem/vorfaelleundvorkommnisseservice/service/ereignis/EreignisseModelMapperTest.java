@@ -24,14 +24,14 @@ class EreignisseModelMapperTest {
             val ereignis1 = TestdataFactory.CreateEreignisEntity.withData("beschreibung1");
             val ereignis2 = TestdataFactory.CreateEreignisEntity.withData("beschreibung2");
             val ereignisEntitiesList = Set.of(ereignis1, ereignis2);
-            val mockedEreignisseEntity = TestdataFactory.CreateEreignisseEntity.withData(wahlbezirkID, ereignisEntitiesList);
+            val ereignisseEntity = TestdataFactory.CreateEreignisseEntity.withData(wahlbezirkID, ereignisEntitiesList);
 
             val expectedEreignisModel1 = TestdataFactory.CreateEreignisModel.fromEntity(ereignis1);
             val expectedEreignisModel2 = TestdataFactory.CreateEreignisModel.fromEntity(ereignis2);
             val ereignisModelList = List.of(expectedEreignisModel1, expectedEreignisModel2);
             val expectedWahlbezirkEreignisseModel = new EreignisseModel(wahlbezirkID, true, true, ereignisModelList);
 
-            val result = unitUnderTest.toModel(mockedEreignisseEntity);
+            val result = unitUnderTest.toModel(ereignisseEntity);
             Assertions.assertThat(result).usingRecursiveComparison().ignoringCollectionOrder().isEqualTo(expectedWahlbezirkEreignisseModel);
         }
     }

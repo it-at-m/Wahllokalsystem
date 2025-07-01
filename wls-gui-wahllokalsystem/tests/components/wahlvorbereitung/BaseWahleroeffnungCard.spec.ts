@@ -14,6 +14,16 @@ import BaseWahleroeffnungCard from "@/components/wahlvorbereitung/BaseWahleroeff
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
+const mockDefinitions = vi.hoisted(() => ({
+  postEroeffnungsuhrzeit: vi.fn(),
+}));
+
+vi.mock("@/composables/wahlvorbereitung/wahlvorbereitungService", () => ({
+  useWahlvorbereitungService: () => ({
+    postEroeffnungsuhrzeit: mockDefinitions.postEroeffnungsuhrzeit,
+  }),
+}));
+
 describe("BaseWahleroeffnungCard.vue", () => {
   let wrapper: VueWrapper<InstanceType<typeof BaseWahleroeffnungCard>>;
 
@@ -97,6 +107,10 @@ describe("BaseWahleroeffnungCard.vue", () => {
 
       const saveButton = wrapper.findComponent(BaseButtonSave);
       await saveButton.trigger("click");
+
+      mockDefinitions.postEroeffnungsuhrzeit.mockResolvedValue(
+        Promise.resolve()
+      );
 
       expect(wahlbezirkStore.sendEroeffnungsuhrzeit).toHaveBeenCalled();
     });

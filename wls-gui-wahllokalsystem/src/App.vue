@@ -41,13 +41,17 @@ const { startWahlbeteiligungInterval, stopWahlbeteiligungInterval } =
   useMonitoringCronjobService();
 
 onMounted(async () => {
-  await loadUser().then(() => {
-    startBroadcastMessageInterval();
-    initTasks();
-    loadEreignisse();
-    loadWaehler();
-    startWahlbeteiligungInterval();
-  });
+  await loadUser()
+    .then(() => {
+      startBroadcastMessageInterval();
+      initTasks();
+      loadEreignisse();
+      loadWaehler();
+      startWahlbeteiligungInterval();
+    })
+    .catch((error) => {
+      console.debug(error);
+    });
 
   // config for service worker indexed db (same config as in wahl-worker.js !)
   localforage.config({

@@ -56,17 +56,15 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   });
 
   async function initUngueltigeWahlscheine(sendNotification = true) {
-    if (currentUserWahltagID.value) {
-      ungueltigeWahlscheine.value = await getUngueltigeWahlscheine(
-        currentUserWahltagID.value,
-        currentUserWahlbezirksArt.value,
-        sendNotification
-      );
-    }
+    ungueltigeWahlscheine.value = await getUngueltigeWahlscheine(
+      currentUserWahltagID.value,
+      currentUserWahlbezirksArt.value,
+      sendNotification
+    );
   }
 
   async function sendEroeffnungsuhrzeit() {
-    if (currentUserWahlbezirkID.value && eroeffnungsuhrzeit.value) {
+    if (eroeffnungsuhrzeit.value) {
       const eroeffnungsuhrzeitToSave = new Date(eroeffnungsuhrzeit.value);
       eroeffnungsuhrzeitIsSaving.value = true;
       try {
@@ -82,7 +80,7 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   }
 
   async function sendSchliessungsuhrzeit() {
-    if (currentUserWahlbezirkID.value && schliessungsuhrzeit.value) {
+    if (schliessungsuhrzeit.value) {
       const schliessungszeitToSave = new Date(schliessungsuhrzeit.value);
       if (isValidDate(schliessungszeitToSave)) {
         schliessungsuhrzeitIsSaving.value = true;

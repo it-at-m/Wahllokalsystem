@@ -1,9 +1,13 @@
 import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 
 import { createTestingPinia } from "@pinia/testing";
-import { COMPONENT_RENDER_TESTS } from "@tests/utils/testutils.ts";
+import {
+  COMPONENT_RENDER_TESTS,
+  getSnapshotFilename,
+} from "@tests/utils/testutils.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import vuetify from "@/plugins/vuetify";
@@ -114,6 +118,19 @@ describe("TheEreignisseView", () => {
 
       const saveButton = wrapper.findComponent(BaseButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
+    });
+
+    it("should_renderSaveButtonInLoadingState_when_isSavingIsTrue", async (context) => {
+      const ereignisStore = useEreignisStore();
+      ereignisStore.isSaving = true;
+
+      await nextTick();
+      await flushPromises();
+
+      const saveButton = wrapper.findComponent(BaseButtonSave);
+      await expect(saveButton.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
     });
   });
 });

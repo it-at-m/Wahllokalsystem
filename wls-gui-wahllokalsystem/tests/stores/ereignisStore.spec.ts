@@ -95,12 +95,19 @@ describe("ereignisStore.ts", () => {
       expect(unitUnderTest.hasEintraege).toStrictEqual(false);
     });
     it("should_returnTrue_when_ereigniseintraegeHasOneItem", () => {
-      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [{}];
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
+        { ereignisart: EreignisartEnum.Vorfall },
+      ];
 
       expect(unitUnderTest.hasEintraege).toStrictEqual(true);
     });
     it("should_returnTrue_when_ereigniseintraegeHasMoreThanOneItem", () => {
-      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [{}, {}, {}, {}];
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
+        { ereignisart: EreignisartEnum.Vorfall },
+        { ereignisart: EreignisartEnum.Vorfall },
+        { ereignisart: EreignisartEnum.Vorfall },
+        { ereignisart: EreignisartEnum.Vorfall },
+      ];
 
       expect(unitUnderTest.hasEintraege).toStrictEqual(true);
     });
@@ -318,10 +325,10 @@ describe("ereignisStore.ts", () => {
       unitUnderTest.wahlbezirkEreignisse = {
         wahlbezirkID: "wahlbezirkID",
         ereigniseintraege: [
-          { beschreibung: "1" },
-          { beschreibung: "2" },
-          { beschreibung: "3" },
-          { beschreibung: "4" },
+          { beschreibung: "1", ereignisart: EreignisartEnum.Vorfall },
+          { beschreibung: "2", ereignisart: EreignisartEnum.Vorfall },
+          { beschreibung: "3", ereignisart: EreignisartEnum.Vorfall },
+          { beschreibung: "4", ereignisart: EreignisartEnum.Vorfall },
         ],
       };
 
@@ -330,9 +337,9 @@ describe("ereignisStore.ts", () => {
       expect(
         unitUnderTest.wahlbezirkEreignisse.ereigniseintraege
       ).toStrictEqual([
-        { beschreibung: "1" },
-        { beschreibung: "3" },
-        { beschreibung: "4" },
+        { beschreibung: "1", ereignisart: EreignisartEnum.Vorfall },
+        { beschreibung: "3", ereignisart: EreignisartEnum.Vorfall },
+        { beschreibung: "4", ereignisart: EreignisartEnum.Vorfall },
       ]);
     });
 
@@ -350,10 +357,10 @@ describe("ereignisStore.ts", () => {
 
     it("should_doNothing_when_indexIsOutOfRange", () => {
       const ereigniseintraege = [
-        { beschreibung: "1" },
-        { beschreibung: "2" },
-        { beschreibung: "3" },
-        { beschreibung: "4" },
+        { beschreibung: "1", ereignisart: EreignisartEnum.Vorfall },
+        { beschreibung: "2", ereignisart: EreignisartEnum.Vorfall },
+        { beschreibung: "3", ereignisart: EreignisartEnum.Vorfall },
+        { beschreibung: "4", ereignisart: EreignisartEnum.Vorfall },
       ];
       unitUnderTest.wahlbezirkEreignisse = {
         wahlbezirkID: "wahlbezirkID",
@@ -434,7 +441,10 @@ describe("ereignisStore.ts", () => {
 
     it("should_doNothing_when_indexIsOutOfRange", () => {
       const dateAsString = "2025-04-29T09:33:42";
-      const eintragNotToChange = { uhrzeit: new Date(dateAsString) };
+      const eintragNotToChange = {
+        uhrzeit: new Date(dateAsString),
+        ereignisart: EreignisartEnum.Vorfall,
+      };
       unitUnderTest.wahlbezirkEreignisse = {
         wahlbezirkID: "wahlbezirkID",
         ereigniseintraege: [eintragNotToChange],
@@ -447,7 +457,10 @@ describe("ereignisStore.ts", () => {
 
     it("should_updateUhrzeit_when_uhrzeitIsGiven", () => {
       const dateAsString = "2025-04-29T09:33:42";
-      const eintragToChange = { uhrzeit: new Date(dateAsString) };
+      const eintragToChange = {
+        uhrzeit: new Date(dateAsString),
+        ereignisart: EreignisartEnum.Vorfall,
+      };
       unitUnderTest.wahlbezirkEreignisse = {
         wahlbezirkID: "wahlbezirkID",
         ereigniseintraege: [eintragToChange],
@@ -461,7 +474,10 @@ describe("ereignisStore.ts", () => {
 
     it("should_setUhrzeitUndefined_when_uhrzeitIsUndefined", () => {
       const dateAsString = "2025-04-29T09:33:42";
-      const eintragToChange = { uhrzeit: new Date(dateAsString) };
+      const eintragToChange = {
+        uhrzeit: new Date(dateAsString),
+        ereignisart: EreignisartEnum.Vorfall,
+      };
       unitUnderTest.wahlbezirkEreignisse = {
         wahlbezirkID: "wahlbezirkID",
         ereigniseintraege: [eintragToChange],

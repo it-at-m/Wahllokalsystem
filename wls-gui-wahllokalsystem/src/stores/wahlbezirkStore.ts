@@ -34,13 +34,11 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   const ungueltigeWahlscheine = ref<UngueltigerWahlschein[]>([]);
 
   async function initUngueltigeWahlscheine(sendNotification = true) {
-    if (currentUserWahltagID.value) {
-      ungueltigeWahlscheine.value = await getUngueltigeWahlscheine(
-        currentUserWahltagID.value,
-        currentUserWahlbezirksArt.value,
-        sendNotification
-      );
-    }
+    ungueltigeWahlscheine.value = await getUngueltigeWahlscheine(
+      currentUserWahltagID.value,
+      currentUserWahlbezirksArt.value,
+      sendNotification
+    );
   }
 
   async function sendEroeffnungsuhrzeit() {

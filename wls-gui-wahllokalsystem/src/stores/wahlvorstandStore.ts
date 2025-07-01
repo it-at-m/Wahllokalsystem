@@ -104,14 +104,14 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   ) {
     isLoading.value = true;
     try {
-      const wahlbezirkID = currentUserWahlbezirkID.value;
-      if (wahlbezirkID) {
-        wahlvorstand.value = await getWahlvorstand(wahlbezirkID, {
+      wahlvorstand.value = await getWahlvorstand(
+        currentUserWahlbezirkID.value,
+        {
           forceUpdate: forceUpdate,
           sendNotification: sendNotification,
-        });
-        lastLoading.value = new Date();
-      }
+        }
+      );
+      lastLoading.value = new Date();
     } finally {
       isLoading.value = false;
     }

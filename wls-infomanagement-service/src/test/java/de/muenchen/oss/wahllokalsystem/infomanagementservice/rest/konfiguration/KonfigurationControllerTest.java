@@ -120,6 +120,16 @@ class KonfigurationControllerTest {
             Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
             Assertions.assertThat(result.getBody()).isNull();
         }
+
+        @Test
+        void should_returnNullWithHttpStatusNoContent_when_serviceReturnsEmptyCollection() {
+            Mockito.when(konfigurationService.getAllKonfigurations()).thenReturn(Collections.emptyList());
+
+            val result = unitUnderTest.getKonfigurations();
+
+            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+            Assertions.assertThat(result.getBody()).isNull();
+        }
     }
 
     @Nested

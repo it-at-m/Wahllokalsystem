@@ -70,7 +70,6 @@ export const useEreignisStore = defineStore(storeID, () => {
   watch(schliessungsuhrzeitSent, _onSchliessunguhrzeitSentChanged);
 
   function addEreignis() {
-    console.log("addEreignis");
     const currentDate = new Date();
     const currentEreignisart =
       getEreignisArtForDateRelatedToSchliessungsuhrzeit(
@@ -83,7 +82,6 @@ export const useEreignisStore = defineStore(storeID, () => {
       ereignisart: currentEreignisart,
     });
     // uncheck checkbox if set before
-    console.log("currentEreignisart: " + currentEreignisart);
     switch (currentEreignisart) {
       case EreignisartEnum.Vorfall:
         wahlbezirkEreignisse.value.keineVorfaelle = false;

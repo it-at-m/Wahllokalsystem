@@ -70,7 +70,6 @@ describe("infomanagementStore.ts", () => {
   });
 
   describe("dateTimeToCheckAnwesenheit", () => {
-
     it("should_beUndefined_when_userHasCurrentWahltagButConfigParamIsNotGiven", async () => {
       userStore.setUser(prepareUser().wahltag("2025-06-26").build());
       unitUnderTest.konfigurationsparameter = [];

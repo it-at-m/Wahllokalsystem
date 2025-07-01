@@ -23,17 +23,19 @@ export function useUserTestDataFactory() {
     return proxyBuilder<UserDTO>(_createUserDtoWithRandomValues());
   }
 
-  function mapUserDtoToUser(userDto: UserDTO): User {
+  function mapValidUserDtoToUser(userDto: UserDTO): User {
     return {
       username: userDto.username,
       email: userDto.email,
       userEnabled: userDto.userEnabled,
-      wahltagID: userDto.wahltagID,
-      wahltag: userDto.wahltag,
-      wahlbezirkID: userDto.wahlbezirkID,
-      wahlbezirkNummer: userDto.wahlbezirkNummer,
-      wahlbezirksArt: userDto.wahlbezirksArt,
-      pin: userDto.pin,
+      /* eslint-disable @typescript-eslint/no-non-null-assertion -- Temporarily disabling because only valid dto is given as input */
+      wahltagID: userDto.wahltagID!,
+      wahltag: userDto.wahltag!,
+      wahlbezirkID: userDto.wahlbezirkID!,
+      wahlbezirkNummer: userDto.wahlbezirkNummer!,
+      wahlbezirksArt: userDto.wahlbezirksArt!,
+      pin: userDto.pin!,
+      /* eslint-enable @typescript-eslint/no-non-null-assertion */
       authorities: userDto.authorities,
       wahlMetaData: _mapDtoWbIdWahlnummerToModelWahlMetaData(
         userDto.wbid_wahlnummer
@@ -52,8 +54,8 @@ export function useUserTestDataFactory() {
       wahlbezirkNummer: "",
       wahlbezirksArt: WahlbezirksArtEnum.UWB,
       pin: "",
-      authorities: new Set<string>(),
-      wahlMetaData: undefined,
+      authorities: new Set<string>(["authority"]),
+      wahlMetaData: [{ wahlbezirkID: "", wahlID: "", wahlnummer: "" }],
     };
   }
 
@@ -68,19 +70,21 @@ export function useUserTestDataFactory() {
       wahlbezirkNummer: generateRandomString(10),
       wahlbezirksArt: WahlbezirksArtEnum.BWB,
       pin: generateRandomString(10),
-      authorities: new Set<string>(),
+      authorities: new Set<string>(["authority"]),
       wbid_wahlnummer: `{"wbid_wahlnummer":[{"wahlbezirkID":"${generateRandomString(10)}","wahlnummer":"${generateRandomString(1)}","wahlID":"${generateRandomString(10)}"}]}`,
     };
   }
 
   function _mapDtoWbIdWahlnummerToModelWahlMetaData(
-    wbid_wahlnummer: string
+    wbid_wahlnummer: string | undefined
   ): WahlMetaData[] {
-    return JSON.parse(wbid_wahlnummer).wbid_wahlnummer;
+    return wbid_wahlnummer
+      ? JSON.parse(wbid_wahlnummer).wbid_wahlnummer
+      : undefined;
   }
 
   return {
-    mapUserDtoToUser,
+    mapValidUserDtoToUser,
     prepareUser,
     prepareUserDTO,
   };

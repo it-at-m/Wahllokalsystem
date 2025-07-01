@@ -35,8 +35,9 @@ describe("userStore.ts", () => {
       const user = createUserLocalDevelopment();
       mockDefinitions.getUser.mockRejectedValue(new Error("error in service"));
 
-      await unitUnderTest.loadUser();
-
+      await expect(() => unitUnderTest.loadUser()).rejects.toThrow(
+        "error in service"
+      );
       expect(unitUnderTest.user).toStrictEqual(user);
     });
 
@@ -64,7 +65,9 @@ describe("userStore.ts", () => {
       vi.stubEnv("DEV", false);
 
       expect(import.meta.env.DEV).toBe(false);
-      await unitUnderTest.loadUser();
+      await expect(() => unitUnderTest.loadUser()).rejects.toThrow(
+        "error in service"
+      );
 
       expect(unitUnderTest.user).toStrictEqual({
         username: "",
@@ -89,12 +92,6 @@ describe("userStore.ts", () => {
   });
 
   describe("currentUserWahlbezirkID", () => {
-    it("should_returnUndefined_when_noWahlbezirkIdExists", () => {
-      unitUnderTest.setUser(prepareUser().wahlbezirkID(undefined).build());
-
-      expect(unitUnderTest.currentUserWahlbezirkID).toStrictEqual(undefined);
-    });
-
     it("should_returnWahlbezirkId_when_wahlbezirkIdExists", () => {
       const wahlbezirkID = "ich bin eine id";
       unitUnderTest.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
@@ -104,12 +101,6 @@ describe("userStore.ts", () => {
   });
 
   describe("currentUserWahltagID", () => {
-    it("should_returnUndefined_when_noWahltagIdExists", () => {
-      unitUnderTest.setUser(prepareUser().wahltagID(undefined).build());
-
-      expect(unitUnderTest.currentUserWahltagID).toStrictEqual(undefined);
-    });
-
     it("should_returnWahltagId_when_wahltagIdExists", () => {
       const wahltagID = "ich bin eine id";
       unitUnderTest.setUser(prepareUser().wahltagID(wahltagID).build());
@@ -137,12 +128,6 @@ describe("userStore.ts", () => {
   });
 
   describe("currentUserHauptWahlID", () => {
-    it("should_returnUndefined_when_wahlMetaDataIsUndefined", () => {
-      unitUnderTest.setUser(prepareUser().wahlMetaData(undefined).build());
-
-      expect(unitUnderTest.currentUserHauptWahlID).toStrictEqual(undefined);
-    });
-
     it("should_returnHauptWahlId_when_wahlMetaDataHasOneEntry", () => {
       const expectedWahlID = "ID of object with smallest wahlnummer";
       unitUnderTest.setUser(

@@ -17,11 +17,9 @@ export const useBroadcastStore = defineStore(broadcastStoreId, () => {
   const currentBroadcastNachricht = ref<BroadcastMessage | null>(null);
 
   async function loadLatestMessage() {
-    if (currentUserWahlbezirkID.value !== undefined) {
-      currentBroadcastNachricht.value = await getMessage(
-        currentUserWahlbezirkID.value
-      );
-    }
+    currentBroadcastNachricht.value = await getMessage(
+      currentUserWahlbezirkID.value
+    );
   }
 
   async function markMessageAsReadAndLoadNextMessage() {

@@ -5,7 +5,7 @@ import { computed, ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useUserService } from "@/composables/user/userService.ts";
-import { createUserLocalDevelopment } from "@/types/User";
+import { createUserLocalDevelopment } from "@/types/User.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { getUser } = useUserService();
@@ -36,24 +36,26 @@ export const useUserStore = defineStore("user", () => {
   async function loadUser() {
     try {
       user.value = await getUser();
-    } catch {
+    } catch (e) {
       if (import.meta.env.DEV) {
         user.value = createUserLocalDevelopment();
+        throw e;
       } else {
         user.value = defaultUser;
+        throw e;
       }
     }
   }
 
-  const currentUserWahlbezirkID = computed((): string | undefined => {
-    return user.value?.wahlbezirkID;
+  const currentUserWahlbezirkID = computed((): string => {
+    return user.value.wahlbezirkID;
   });
 
-  const currentUserWahltagID = computed((): string | undefined => {
-    return user.value?.wahltagID;
+  const currentUserWahltagID = computed((): string => {
+    return user.value.wahltagID;
   });
 
-  const currentUserWahltag = computed((): string | undefined => {
+  const currentUserWahltag = computed((): string => {
     return user.value.wahltag;
   });
 
@@ -61,12 +63,12 @@ export const useUserStore = defineStore("user", () => {
     return user.value.wahlbezirksArt;
   });
 
-  const currentUserWahlbezirkNummer = computed((): string | undefined => {
-    return user.value?.wahlbezirkNummer;
+  const currentUserWahlbezirkNummer = computed((): string => {
+    return user.value.wahlbezirkNummer;
   });
 
-  const currentUserHauptWahlID = computed((): string | undefined => {
-    const smallestWbidWahlnummerObject = user.value?.wahlMetaData?.reduce(
+  const currentUserHauptWahlID = computed((): string => {
+    const smallestWbidWahlnummerObject = user.value.wahlMetaData?.reduce(
       (smallest, current) => {
         return parseInt(current.wahlnummer) < parseInt(smallest.wahlnummer)
           ? current

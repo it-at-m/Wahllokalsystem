@@ -57,26 +57,6 @@ describe("monitoringStore.ts", () => {
   });
 
   describe("loadWaehler", () => {
-    it("should_notLoadWaehleranzahl_when_usersWahlbezirkIdIsUndefined", async () => {
-      userStore.setUser(prepareUser().wahlbezirkID(undefined).build());
-
-      await unitUnderTest.loadWaehler();
-
-      expect(mockDefinitions.getWahlbeteiligung).toHaveBeenCalledTimes(0);
-      expect(unitUnderTest.waehler).toBe(0);
-    });
-
-    it("should_notLoadWaehleranzahl_when_usersHauptWahlIDIsUndefined", async () => {
-      userStore.setUser(prepareUser().wahlbezirkID("ich bin eine id").build());
-      // @ts-expect-error: cannot set readonly
-      userStore.currentUserHauptWahlID = undefined;
-
-      await unitUnderTest.loadWaehler();
-
-      expect(mockDefinitions.getWahlbeteiligung).toHaveBeenCalledTimes(0);
-      expect(unitUnderTest.waehler).toBe(0);
-    });
-
     it("should_loadWaehleranzahl_when_userHasWahlbezirkIDAndHauptWahlID", async () => {
       userStore.setUser(prepareUser().wahlbezirkID("ich bin eine id").build());
       // @ts-expect-error: cannot set readonly
@@ -100,26 +80,6 @@ describe("monitoringStore.ts", () => {
   });
 
   describe("sendWaehler", () => {
-    it("should_notSendWaehleranzahl_when_usersWahlbezirkIdIsUndefined", async () => {
-      userStore.setUser(prepareUser().wahlbezirkID(undefined).build());
-
-      await unitUnderTest.sendWaehler();
-
-      expect(mockDefinitions.postWahlbeteiligung).toHaveBeenCalledTimes(0);
-      expect(unitUnderTest.waehler).toBe(0);
-    });
-
-    it("should_notSendWaehleranzahl_when_usersHauptWahlIDIsUndefined", async () => {
-      userStore.setUser(prepareUser().wahlbezirkID("ich bin eine id").build());
-      // @ts-expect-error: cannot set readonly
-      userStore.currentUserHauptWahlID = undefined;
-
-      await unitUnderTest.sendWaehler();
-
-      expect(mockDefinitions.postWahlbeteiligung).toHaveBeenCalledTimes(0);
-      expect(unitUnderTest.waehler).toBe(0);
-    });
-
     it("should_sendWaehleranzahl_when_userHasWahlbezirkIDAndHauptWahlID", async () => {
       userStore.setUser(prepareUser().wahlbezirkID("ich bin eine id").build());
       // @ts-expect-error: cannot set readonly

@@ -23,7 +23,7 @@ export function useDateOfActionTimeout(
       const delayInMilliseconds = popupTime - currentTime;
       if (
         delayInMilliseconds >= 0 &&
-        delayInMilliseconds < MAX_DELAY_IN_MILLISECONDS
+        delayInMilliseconds <= MAX_DELAY_IN_MILLISECONDS
       ) {
         popupTimeout = window.setTimeout(callback, delayInMilliseconds);
       }

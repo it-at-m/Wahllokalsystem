@@ -79,6 +79,33 @@ describe("dateOfActionTimeout", () => {
     setTimeoutSpy.mockRestore();
   });
 
+  it("should_notSetTimeout_when_delayIsLargerThanMaxDelay", () => {
+    const setTimeoutSpy = vi.spyOn(window, "setTimeout");
+
+    useDateOfActionTimeout(
+      ref(new Date(mockedNow.getTime() + 0x80000000)),
+      defaultCallback
+    );
+
+    expect(setTimeoutSpy).toHaveBeenCalledTimes(0);
+
+    setTimeoutSpy.mockRestore();
+  });
+
+  it("should_setTimeout_when_delayIsEqualMaxDelay", () => {
+    const setTimeoutSpy = vi.spyOn(window, "setTimeout");
+
+    const callback = defaultCallback;
+    useDateOfActionTimeout(
+      ref(new Date(mockedNow.getTime() + 0x7fffffff)),
+      callback
+    );
+
+    expect(setTimeoutSpy).toHaveBeenCalledWith(callback, 0x7fffffff);
+
+    setTimeoutSpy.mockRestore();
+  });
+
   it("should_clearOldTimeOut_when_newTimeoutIsSetAfterDateOfActionChanged", async () => {
     const setTimeoutSpy = vi.spyOn(window, "setTimeout");
     const clearTimeoutSpy = vi.spyOn(window, "clearTimeout");

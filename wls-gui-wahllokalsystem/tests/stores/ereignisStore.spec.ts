@@ -341,18 +341,6 @@ describe("ereignisStore.ts", () => {
       );
     });
 
-    it("should_notLoadWahlbezirkEreignisse_when_usersWahlbezirkIdIsUndefined", async () => {
-      const userStore = useUserStore();
-      userStore.setUser(prepareUser().wahlbezirkID(undefined).build());
-
-      await unitUnderTest.loadEreignisse();
-
-      expect(mockDefinitions.getEreignisse).toHaveBeenCalledTimes(0);
-      expect(unitUnderTest.wahlbezirkEreignisse.ereigniseintraege).toHaveLength(
-        0
-      );
-    });
-
     it("should_handleError_when_getEreignisseThrowsError", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
@@ -384,15 +372,6 @@ describe("ereignisStore.ts", () => {
         wahlbezirkID,
         unitUnderTest.wahlbezirkEreignisse
       );
-    });
-
-    it("should_notsendEreignisse_when_wahlbezirkIDIsNotGiven", async () => {
-      const userStore = useUserStore();
-      userStore.setUser(prepareUser().wahlbezirkID(undefined).build());
-
-      await unitUnderTest.sendEreignisse();
-
-      expect(mockDefinitions.saveEreignisse).toBeCalledTimes(0);
     });
   });
 

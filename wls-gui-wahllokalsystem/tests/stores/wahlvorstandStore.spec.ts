@@ -369,15 +369,6 @@ describe("wahlvorstandStore.ts", () => {
 
       expect(unitUnderTest.lastSending).toStrictEqual(mockedNow);
     });
-
-    it("should_notSendWahlvorstand_when_wahlbezirkIDIsNotGiven", async () => {
-      const userStore = useUserStore();
-      userStore.setUser(_createUser(undefined));
-
-      await unitUnderTest.sendWahlvorstand();
-
-      expect(mockDefinitions.saveWahlvorstand).toBeCalledTimes(0);
-    });
   });
 
   describe("initWahlvorstand", () => {
@@ -456,16 +447,6 @@ describe("wahlvorstandStore.ts", () => {
         "API Error"
       );
 
-      expect(unitUnderTest.lastLoading).toBeNull();
-    });
-
-    it("should_notLoadWahlvorstand_when_usersWahlbezirkIdIsUndefined", async () => {
-      const userStore = useUserStore();
-      userStore.setUser(_createUser(undefined));
-
-      await unitUnderTest.forceLoadWahlvorstand();
-
-      expect(mockDefinitions.getWahlvorstand).toHaveBeenCalledTimes(0);
       expect(unitUnderTest.lastLoading).toBeNull();
     });
   });
@@ -657,6 +638,6 @@ describe("wahlvorstandStore.ts", () => {
   }
 });
 
-function _createUser(wahlbezirkID: string | undefined): User {
+function _createUser(wahlbezirkID: string): User {
   return prepareUser().wahlbezirkID(wahlbezirkID).build();
 }

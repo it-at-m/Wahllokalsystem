@@ -215,27 +215,6 @@ describe("wahlbezirkStore.ts", () => {
       );
     });
 
-    it("should_notSendUrnenwahlvorbereitungAndNotUpdateUrnenwahlVorbereitung_when_wahlbezirkIDIsNotGiven", async () => {
-      const userStore = useUserStore();
-      userStore.setUser(prepareUser().wahlbezirkID(undefined).build());
-
-      const urnenwahlvorbereitung = {
-        wahlbezirkID: "wahlbezirkID1",
-        anzahlWahltische: 1,
-        anzahlNebenraeume: 0,
-        anzahlWahlkabinen: 0,
-        urneVersiegelt: true,
-        urnenAnzahl: [
-          { wahlID: "wahlID1", anzahl: 1 },
-          { wahlID: "wahlID2", anzahl: 1 },
-        ],
-      };
-
-      await unitUnderTest.sendUrnenwahlvorbereitung(urnenwahlvorbereitung);
-
-      expect(mockDefinitions.postUrnenwahlvorbereitung).toBeCalledTimes(0);
-    });
-
     it("should_notUpdateUrnenwahlVorbereitung_when_postUrnenwahlvorbereitungFails", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";

@@ -3,7 +3,7 @@
     :visible="visible"
     dialogtitle="Anwesenheit kontrollieren"
     :confirmtext="BUTTON_TITLE_CONFIRM"
-    canceltext="BUTTON_TITLE_CANCEL"
+    :canceltext="BUTTON_TITLE_CANCEL"
     icon="$information"
     @confirm="onConfirmClicked"
     @cancel="onCancelClicked"

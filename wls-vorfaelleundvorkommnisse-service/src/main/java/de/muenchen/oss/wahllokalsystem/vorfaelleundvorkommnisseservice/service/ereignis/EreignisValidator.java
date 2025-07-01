@@ -20,7 +20,7 @@ public class EreignisValidator {
         }
     }
 
-    public void validEreignisAndWahlbezirkIDOrThrow(final EreignisseWriteModel ereignis) {
+    public void validEreignisAndWahlbezirkIDOrThrow(final EreignisseModel ereignis) {
         if (ereignis == null || StringUtils.isBlank(ereignis.wahlbezirkID())) {
             log.warn("#postEreignis: Parameter unvollständig");
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTEREIGNIS_PARAMS_UNVOLLSTAENDIG);

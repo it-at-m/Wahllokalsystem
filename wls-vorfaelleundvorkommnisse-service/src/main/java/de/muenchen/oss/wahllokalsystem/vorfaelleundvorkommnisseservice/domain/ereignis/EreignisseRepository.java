@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -10,25 +10,25 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
 @PreAuthorize("hasAuthority('VorfaelleUndVorkommnisse_READ_Ereignisse')")
-public interface EreignisRepository extends CrudRepository<Ereignis, UUID> {
+public interface EreignisseRepository extends CrudRepository<Ereignisse, UUID> {
 
     String CACHE = "EreignisCACHE";
 
     @Override
-    Iterable<Ereignis> findAll();
+    Iterable<Ereignisse> findAll();
 
     @Cacheable(value = CACHE, key = "#p0")
-    List<Ereignis> findByWahlbezirkID(String wahlbezirkID);
+    Optional<Ereignisse> findByWahlbezirkID(String wahlbezirkID);
 
     @Override
     @CachePut(value = CACHE, key = "#p0.wahlbezirkID")
     @PreAuthorize("hasAuthority('VorfaelleUndVorkommnisse_WRITE_Ereignisse')")
-    <S extends Ereignis> S save(S ereignis);
+    <S extends Ereignisse> S save(S ereignisse);
 
     @Override
     @CachePut(value = CACHE, key = "#p0.wahlbezirkID")
     @PreAuthorize("hasAuthority('VorfaelleUndVorkommnisse_WRITE_Ereignisse')")
-    <S extends Ereignis> Iterable<S> saveAll(Iterable<S> iterable);
+    <S extends Ereignisse> Iterable<S> saveAll(Iterable<S> iterable);
 
     @Override
     @CacheEvict(value = CACHE, key = "#p0")
@@ -38,12 +38,12 @@ public interface EreignisRepository extends CrudRepository<Ereignis, UUID> {
     @Override
     @CacheEvict(value = CACHE, key = "#p0.wahlbezirkID")
     @PreAuthorize("hasAuthority('VorfaelleUndVorkommnisse_DELETE_Ereignisse')")
-    void delete(Ereignis entity);
+    void delete(Ereignisse entity);
 
     @Override
     @CacheEvict(value = CACHE, allEntries = true)
     @PreAuthorize("hasAuthority('VorfaelleUndVorkommnisse_DELETE_Ereignisse')")
-    void deleteAll(Iterable<? extends Ereignis> entities);
+    void deleteAll(Iterable<? extends Ereignisse> entities);
 
     @Override
     @CacheEvict(value = CACHE, allEntries = true)

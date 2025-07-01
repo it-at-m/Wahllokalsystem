@@ -10,6 +10,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,7 +66,7 @@ public class KonfigurationController {
     public ResponseEntity<List<KonfigurationDTO>> getKonfigurations() {
         val allKonfigurations = konfigurationService.getAllKonfigurations();
 
-        if (allKonfigurations == null || allKonfigurations.isEmpty()) {
+        if (CollectionUtils.isEmpty(allKonfigurations)) {
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.ok(allKonfigurations.stream().map(konfigurationDTOMapper::toDTO).toList());

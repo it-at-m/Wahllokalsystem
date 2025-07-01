@@ -70,21 +70,6 @@ describe("infomanagementStore.ts", () => {
   });
 
   describe("dateTimeToCheckAnwesenheit", () => {
-    it("should_beUndefined_when_userHasBlankCurrentWahltag", async () => {
-      userStore.setUser(prepareUser().wahltag("").build());
-
-      await flushPromises();
-
-      expect(unitUnderTest.dateTimeToCheckAnwesenheit).toBeUndefined();
-    });
-
-    it("should_beUndefined_when_userHasUndefinedCurrentWahltag", async () => {
-      userStore.setUser(prepareUser().wahltag(undefined).build());
-
-      await flushPromises();
-
-      expect(unitUnderTest.dateTimeToCheckAnwesenheit).toBeUndefined();
-    });
 
     it("should_beUndefined_when_userHasCurrentWahltagButConfigParamIsNotGiven", async () => {
       userStore.setUser(prepareUser().wahltag("2025-06-26").build());

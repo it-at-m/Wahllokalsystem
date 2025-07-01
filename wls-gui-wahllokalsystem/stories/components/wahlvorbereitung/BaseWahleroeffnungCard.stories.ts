@@ -1,14 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
 
 import { useKonfigurationsparameterTestDataFactory } from "@tests/utils/infomanagement/KonfigurationsparameterTestDataFactory.ts";
+import { delay, http, HttpResponse } from "msw";
 import { createPinia, setActivePinia } from "pinia";
 
-import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
 import BaseWahleroeffnungCard from "@/components/wahlvorbereitung/BaseWahleroeffnungCard.vue";
 import pinia from "@/plugins/pinia";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { createUserLocalDevelopment } from "@/types/User.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const meta = {
   component: BaseWahleroeffnungCard,
@@ -30,9 +31,22 @@ const meta = {
       };
     },
   ],
+  parameters: {
+    msw: {
+      handlers: [
+        http.all("/api/*", async () => {
+          await delay(2000);
+          return new HttpResponse(null, {
+            status: 200,
+          });
+        }),
+      ],
+    },
+  },
 } satisfies Meta<typeof BaseWahleroeffnungCard>;
 
-const {} = useKonfigurationsparameterTestDataFactory(); //TODO
+const { prepareKonfigurationsparameter } =
+  useKonfigurationsparameterTestDataFactory(); //TODO
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -41,8 +55,18 @@ export const Default: Story = {
   async beforeEach() {
     const infomanagementStore = useInfomanagementStore(pinia);
     const user = createUserLocalDevelopment();
-    user.wahlbezirksArt = "BWB";
-    infomanagementStore.konfigurationsparameter = [{}];
+    user.wahlbezirksArt = WahlbezirksArtEnum.BWB;
+    useUserStore().setUser(user);
+    infomanagementStore.konfigurationsparameter = [
+      prepareKonfigurationsparameter()
+        .schluessel("FRUEHESTE_EROEFFNUNGSZEIT_BW")
+        .wert("08:00:00")
+        .build(),
+      prepareKonfigurationsparameter()
+        .schluessel("FRUEHESTE_SCHLIESSUNGSZEIT_BW")
+        .wert("16:00:00")
+        .build(),
+    ];
   },
   args: {
     userHint:

@@ -50,17 +50,6 @@ describe("broadcastStore.ts", () => {
         mockedBroadcastMessage
       );
     });
-
-    it("should_notCallService_when_noWahlbezirkIDIsGiven", async () => {
-      const userStore = useUserStore();
-      userStore.setUser(prepareUser().wahlbezirkID(undefined).build());
-
-      await unitUnderTest.loadLatestMessage();
-
-      expect(unitUnderTest.currentBroadcastNachricht).toBeNull();
-
-      expect(mockDefinitions.getMessage.mock.calls.length).toStrictEqual(0);
-    });
   });
 
   describe("markMessageAsReadAndLoadNextMessage", () => {

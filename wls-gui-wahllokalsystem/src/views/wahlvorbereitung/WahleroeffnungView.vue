@@ -27,6 +27,8 @@ const wahleroeffnungsCardTitle = computed(() => {
       return TITLE_UWB;
     case WahlbezirksArtEnum.BWB:
       return TITLE_BWB;
+    default:
+      return "";
   }
 });
 </script>

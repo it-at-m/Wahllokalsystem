@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration.dto.KonfigurationSetDTO;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationService;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KennbuchstabenListenModel;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationModel;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.wahltag.KonfigurierterWahltagService;
 import java.util.Optional;
@@ -278,7 +279,7 @@ class SecurityConfigurationTest {
             @Test
             @WithMockUser
             void should_returnOk_when_callingAuthenticated() throws Exception {
-                Mockito.when(konfigurationService.getKonfiguration(any())).thenReturn(Optional.empty());
+                Mockito.when(konfigurationService.getKennbuchstabenListen()).thenReturn(KennbuchstabenListenModel.builder().build());
 
                 val request = MockMvcRequestBuilders.get("/businessActions/kennbuchstaben");
 

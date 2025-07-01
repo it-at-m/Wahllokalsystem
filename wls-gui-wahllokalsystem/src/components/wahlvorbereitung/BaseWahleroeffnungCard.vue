@@ -2,8 +2,7 @@
   <v-card>
     <v-card-title>Beginn der Stimmabgabe</v-card-title>
     <v-card-text class="pb-0">
-      Bitte geben Sie die Uhrzeit ein, zu der mit der Stimmabgabe begonnen
-      wurde.
+      <slot name="userHint" />
       <v-form v-model="isEroeffnungsuhrzeitFormValid">
         <base-time-input
           v-model="eroeffnungsuhrzeit"

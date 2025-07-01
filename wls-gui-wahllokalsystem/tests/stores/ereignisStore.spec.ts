@@ -182,6 +182,60 @@ describe("ereignisStore.ts", () => {
     });
   });
 
+  describe("isSaving", () => {
+    it("should_updateIsSaving_when_sendErgebnisseIsCalled", async () => {
+      const timeout = 100;
+      const wahlbezirkID = "wahlbezirkID";
+      const userStore = useUserStore();
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+
+      mockDefinitions.saveEreignisse.mockReturnValue(
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({});
+          }, timeout);
+        })
+      );
+
+      expect(unitUnderTest.isSaving).toBe(false);
+
+      const promise = unitUnderTest.sendEreignisse();
+
+      expect(unitUnderTest.isSaving).toBe(true);
+
+      vi.advanceTimersByTime(timeout);
+      await promise;
+
+      expect(unitUnderTest.isSaving).toBe(false);
+    });
+
+    it("should_updateIsSaving_when_sendErgebnisseFails", async () => {
+      const timeout = 100;
+      const wahlbezirkID = "wahlbezirkID";
+      const userStore = useUserStore();
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+
+      mockDefinitions.saveEreignisse.mockReturnValue(
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            reject("Mocked API Error");
+          }, timeout);
+        })
+      );
+
+      expect(unitUnderTest.isSaving).toBe(false);
+
+      const promise = unitUnderTest.sendEreignisse();
+
+      expect(unitUnderTest.isSaving).toBe(true);
+
+      vi.advanceTimersByTime(timeout);
+      await promise;
+
+      expect(unitUnderTest.isSaving).toBe(false);
+    });
+  });
+
   describe("addEreignis", () => {
     it("should_addEreignisToWahlbezirkEreignisse_when_ereignisIsAdded", async () => {
       const userStore = useUserStore();

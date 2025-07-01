@@ -17,6 +17,7 @@
         >Ereignis hinzufügen</v-btn
       >
       <base-button-save
+        :loading="isSaving"
         :disabled="isSaveButtonDisabled"
         @click="onSaveClicked"
       />
@@ -44,7 +45,8 @@ import TheEreignisseRow from "@/components/vorfaelleundvorkommnisse/TheEreigniss
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 
 const ereignisStore = useEreignisStore();
-const { hasEintraege, hasMissingEreignisFlags } = storeToRefs(ereignisStore);
+const { hasEintraege, hasMissingEreignisFlags, isSaving } =
+  storeToRefs(ereignisStore);
 const { addEreignis, sendEreignisse } = ereignisStore;
 
 const ereignisseValidForm: Ref<null | boolean> = ref(null);

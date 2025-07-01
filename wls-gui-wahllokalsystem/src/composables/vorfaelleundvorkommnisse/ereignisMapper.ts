@@ -65,17 +65,6 @@ function ereignisModelToEreignisDto(ereignisModel: Ereignis): EreignisDTO {
   };
 }
 
-function ereignisartDtoToEreignisartModel(
-  ereignisartDto: EreignisDTOEreignisartEnum
-): EreignisartEnum {
-  switch (ereignisartDto) {
-    case "VORFALL":
-      return EreignisartEnum.Vorfall;
-    case "VORKOMMNIS":
-      return EreignisartEnum.Vorkommnis;
-  }
-}
-
 function ereignisartModelToEreignisartDto(
   ereignisartModel: EreignisartEnum
 ): EreignisDTOEreignisartEnum {

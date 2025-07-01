@@ -55,6 +55,8 @@ describe("ereignisMapper.ts", () => {
           "2025-04-28T08:15:00.000Z",
           "2025-04-28T11:40:00.000Z"
         ),
+        keineVorfaelle: false,
+        keineVorkommnisse: false,
       };
       expect(result).toStrictEqual(expectedResult);
     });

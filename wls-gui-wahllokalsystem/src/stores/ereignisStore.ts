@@ -27,6 +27,8 @@ export const useEreignisStore = defineStore(storeID, () => {
     storeToRefs(useUserStore());
   const { schliessungsuhrzeitSent } = storeToRefs(useWahlbezirkStore());
 
+  const isSaving = ref(false);
+
   const wahlbezirkEreignisse = ref<WahlbezirkEreignisse>(
     WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse()
   );
@@ -124,6 +126,7 @@ export const useEreignisStore = defineStore(storeID, () => {
 
   async function sendEreignisse() {
     error.value = null;
+    isSaving.value = true;
     try {
       sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
       await saveEreignisse(
@@ -133,6 +136,8 @@ export const useEreignisStore = defineStore(storeID, () => {
     } catch (e) {
       error.value = "Fehler beim Speichern der Ereignisse";
       console.debug(e);
+    } finally {
+      isSaving.value = false;
     }
   }
 
@@ -179,6 +184,7 @@ export const useEreignisStore = defineStore(storeID, () => {
     hasEintraege,
     hasVorfaelle,
     hasVorkommnisse,
+    isSaving,
     deleteEreignisByIndex,
     loadEreignisse,
     sendEreignisse,

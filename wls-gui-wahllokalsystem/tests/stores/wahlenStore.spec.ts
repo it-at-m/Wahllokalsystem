@@ -44,4 +44,18 @@ describe("wahlenStore.ts", () => {
       expect(unitUnderTest.wahlen).toStrictEqual(expectedWahlArray);
     });
   });
+
+  describe("getWahlNameOrBlankStringById", () => {
+    it("should_getWahlName_when_calledWithWahlId", async () => {
+      const wahlOne = createWahl();
+      const wahlTwo = createWahl();
+      const wahlThree = createWahl();
+
+      unitUnderTest.wahlen = [wahlOne, wahlTwo, wahlThree];
+
+      const result = unitUnderTest.getWahlNameOrBlankStringById(wahlOne.wahlID);
+
+      expect(result).toStrictEqual(wahlOne.name);
+    });
+  });
 });

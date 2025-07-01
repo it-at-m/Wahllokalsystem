@@ -22,8 +22,17 @@ export const useWahlenStore = defineStore(storeID, () => {
     );
   }
 
+  function getWahlNameOrBlankStringById(wahlID: string) {
+    if (wahlen.value) {
+      const wahl = wahlen.value.find((wahl) => wahl.wahlID === wahlID);
+      return wahl ? wahl.name : "";
+    }
+    return "";
+  }
+
   return {
     wahlen,
+    getWahlNameOrBlankStringById,
     initWahlen,
   };
 });

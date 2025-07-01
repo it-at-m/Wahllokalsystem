@@ -24,7 +24,7 @@ export const useInfomanagementStore = defineStore(storeID, () => {
   }
 
   /** FRUEHESTE_EROEFFNUNGSZEIT bezeichnet den frühesten Wert, zu dem die Wahlhandlung eröffnet werden kann. */
-  const FRUEHESTE_EROEFFNUNGSZEIT_UW_PARAM = computed(() => {
+  const fruehesteEroeffnungsuhrzeitUWB = computed(() => {
     const param = konfigurationsparameter.value?.find(
       (param) => param.schluessel === "FRUEHESTE_EROEFFNUNGSZEIT_UW"
     );
@@ -32,7 +32,7 @@ export const useInfomanagementStore = defineStore(storeID, () => {
   });
 
   /** FRUEHESTE_SCHLIESSUNGSZEIT bezeichnet den spätesten Wert, zu dem die Wahlhandlung eröffnet werden kann. */
-  const FRUEHESTE_SCHLIESSUNGSZEIT_UW_PARAM = computed(() => {
+  const fruehesteSchliessungsuhrzeitUWB = computed(() => {
     const param = konfigurationsparameter.value?.find(
       (param) => param.schluessel === "FRUEHESTE_SCHLIESSUNGSZEIT_UW"
     );
@@ -42,8 +42,8 @@ export const useInfomanagementStore = defineStore(storeID, () => {
   return {
     konfigurationsparameter,
     initKonfigurationsparameter,
-    FRUEHESTE_EROEFFNUNGSZEIT_UW_PARAM,
-    FRUEHESTE_SCHLIESSUNGSZEIT_UW_PARAM,
+    fruehesteEroeffnungsuhrzeitUWB,
+    fruehesteSchliessungsuhrzeitUWB,
   };
 });
 

@@ -12,8 +12,8 @@
           :rules="[
             REQUIRED,
             TIME_NOT_IN_FUTURE,
-            TIME_GREATER_OR_EQUAL(FRUEHESTE_EROEFFNUNGSZEIT_UW_PARAM),
-            TIME_LESS_OR_EQUAL(FRUEHESTE_SCHLIESSUNGSZEIT_UW_PARAM),
+            TIME_GREATER_OR_EQUAL(fruehesteEroeffnungsuhrzeitUWB),
+            TIME_LESS_OR_EQUAL(fruehesteSchliessungsuhrzeitUWB),
           ]"
         />
       </v-form>
@@ -54,10 +54,8 @@ import {
 const wahlbezirkStore = useWahlbezirkStore();
 const { eroeffnungsuhrzeit, eroeffnungsuhrzeitIsSaving } =
   storeToRefs(wahlbezirkStore);
-const {
-  FRUEHESTE_EROEFFNUNGSZEIT_UW_PARAM,
-  FRUEHESTE_SCHLIESSUNGSZEIT_UW_PARAM,
-} = storeToRefs(useInfomanagementStore());
+const { fruehesteEroeffnungsuhrzeitUWB, fruehesteSchliessungsuhrzeitUWB } =
+  storeToRefs(useInfomanagementStore());
 
 const isEroeffnungsuhrzeitFormValid = ref<boolean | null>(null);
 

@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltermindaten.AsyncProgress;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltermindaten.AsyncProgress;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.val;
@@ -57,7 +57,7 @@ class AsyncProgressControllerIntegrationTest {
             val wahlvorschlaegeTotal = 23;
             val wahlvorschlaegeFinished = 12;
             val wahlvorschlaegeNext = "wahlvorschlagID13";
-            val referendumvorlagenIsLoading = false;
+            val referendumvorlagenIsLoading = true;
             val referendumvorlagenTotal = 21;
             val referendumvorlagenFinished = 20;
             val referendumvorlagenNext = "referendumvorlagenID13";
@@ -66,11 +66,9 @@ class AsyncProgressControllerIntegrationTest {
             asyncProgress.setWahlNummer(wahlnummer);
             asyncProgress.setLastStartTime(lastStartTime);
             asyncProgress.setLastFinishTime(lastFinishTime);
-            asyncProgress.setWahlvorschlaegeLoadingActive(wahlvorschlaegeIsLoading);
             asyncProgress.setWahlvorschlaegeTotal(wahlvorschlaegeTotal);
             asyncProgress.setWahlvorschlageFinished(wahlvorschlaegeFinished);
             asyncProgress.setWahlvorschlaegeNext(wahlvorschlaegeNext);
-            asyncProgress.setReferendumLoadingActive(referendumvorlagenIsLoading);
             asyncProgress.setReferendumVorlagenTotal(referendumvorlagenTotal);
             asyncProgress.setReferendumVorlagenFinished(referendumvorlagenFinished);
             asyncProgress.setReferendumVorlagenNext(referendumvorlagenNext);

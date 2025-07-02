@@ -2,15 +2,28 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET wbzID-1
-GET {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/fortsetzungsUhrzeit/wbzID-1
+### GET wahlbezirkID | user wls_all_uwb
+GET {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/fortsetzungsUhrzeit/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST wbzID-1
-POST {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/fortsetzungsUhrzeit/wbzID-1
+### POST wahlbezirkID | user wls_all_uwb
+POST {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/fortsetzungsUhrzeit/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
-  "fortsetzungsUhrzeit": "2024-06-10T17:05:33.505"
+  "fortsetzungsUhrzeit": "2026-01-01T17:10:33.505"
+}
+
+### GET wahlbezirkID | user wls_all_bwb
+GET {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/fortsetzungsUhrzeit/9081145c-dc16-4a9b-8255-5c49ddb98c14
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### POST wahlbezirkID | user wls_all_bwb
+POST {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/fortsetzungsUhrzeit/9081145c-dc16-4a9b-8255-5c49ddb98c14
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "fortsetzungsUhrzeit": "2026-01-01T17:10:33.505"
 }

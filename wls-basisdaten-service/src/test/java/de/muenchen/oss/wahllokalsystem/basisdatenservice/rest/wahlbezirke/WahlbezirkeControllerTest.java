@@ -2,8 +2,8 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlbezirke;
 
 import static org.mockito.ArgumentMatchers.any;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkeService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlbezirke.WahlbezirkModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlbezirke.WahlbezirkeService;
 import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;

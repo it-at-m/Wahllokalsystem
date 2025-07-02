@@ -2,10 +2,9 @@ package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand
 
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.Wahlvorstand;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.WahlvorstandRepository;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.Wahlvorstandsmitglied;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.security.AuthenticationHandler;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.authentication.AuthDetailRetriever;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -34,7 +33,7 @@ public class WahlvorstandService {
     private final WahlenClient wahlenClient;
     private final ExceptionFactory exceptionFactory;
     private final FunktionsnamenMappingProperties namenMapping;
-    private final Collection<AuthenticationHandler> authenticationHandlers;
+    private final Collection<AuthDetailRetriever> authDetailRetrivers;
 
     private static final WahlbezirkArtModel WAHLBEZIRK_ART_FALLBACK = WahlbezirkArtModel.UWB;
     private static final String FALLBACK_STRING = "FALLBACK_";
@@ -103,74 +102,77 @@ public class WahlvorstandService {
         val wahlvorstandDB = wahlvorstandRepository.findById(wahlvorstand.wahlbezirkID());
         if (wahlvorstandDB.isPresent()) {
             try {
-                wahlvorstandRepository.save(populateFunktionsnameOffline(wahlvorstandModelMapper.toEntity(wahlvorstand), wahlvorstandDB.get()));
+                val wahlvorstandMitFunktionsnamen = populateFunktionsnameOffline(wahlvorstand, wahlvorstandDB.get());
+                wahlvorstandRepository.save(wahlvorstandModelMapper.toEntity(wahlvorstandMitFunktionsnamen));
+                return wahlvorstandMitFunktionsnamen;
             } catch (IllegalStateException ex) {
-                wahlvorstandRepository.save(populateFunktionsnameOnline(wahlvorstandModelMapper.toEntity(wahlvorstand), konfigurierterWahltagModel));
+                val wahlvorstandMitFunktionsnamen = populateFunktionsnameOnline(wahlvorstand, konfigurierterWahltagModel);
+                wahlvorstandRepository.save(wahlvorstandModelMapper.toEntity(wahlvorstandMitFunktionsnamen));
+                return wahlvorstandMitFunktionsnamen;
             }
         } else {
-            wahlvorstandRepository.save(populateFunktionsnameOnline(wahlvorstandModelMapper.toEntity(wahlvorstand), konfigurierterWahltagModel));
+            val wahlvorstandMitFunktionsnamen = populateFunktionsnameOnline(wahlvorstand, konfigurierterWahltagModel);
+            wahlvorstandRepository.save(wahlvorstandModelMapper.toEntity(wahlvorstandMitFunktionsnamen));
+            return wahlvorstandMitFunktionsnamen;
         }
-        return wahlvorstand;
     }
 
-    private Wahlvorstand populateFunktionsnameOffline(Wahlvorstand wahlvorstand, Wahlvorstand wahlvorstandDB) throws IllegalStateException {
-        val collect = wahlvorstand.getWahlvorstandsmitglieder().stream()
+    private WahlvorstandModel populateFunktionsnameOffline(WahlvorstandModel wahlvorstand, Wahlvorstand wahlvorstandDB) throws IllegalStateException {
+        val collect = wahlvorstand.wahlvorstandsmitglieder().stream()
                 .map(mitglied -> populateWahlvorstandsmitgliedFunktionsnameOffline(mitglied, wahlvorstandDB))
                 .toList();
-        wahlvorstand.setWahlvorstandsmitglieder(collect);
+        wahlvorstand.wahlvorstandsmitglieder().clear();
+        wahlvorstand.wahlvorstandsmitglieder().addAll(collect);
         return wahlvorstand;
     }
 
-    private Wahlvorstandsmitglied populateWahlvorstandsmitgliedFunktionsnameOffline(Wahlvorstandsmitglied mitglied, Wahlvorstand wahlvorstandDB)
+    private WahlvorstandsmitgliedModel populateWahlvorstandsmitgliedFunktionsnameOffline(WahlvorstandsmitgliedModel mitglied, Wahlvorstand wahlvorstandDB)
             throws IllegalStateException {
+        val functionOfMitglied = wahlvorstandModelMapper.toEntity(mitglied.funktion());
         val mitgliedDB = wahlvorstandDB.getWahlvorstandsmitglieder().stream()
-                .filter(wahlvorstandsmitglied -> wahlvorstandsmitglied.getFunktion().equals(mitglied.getFunktion()))
-                .findFirst()
-                .orElse(null);
-        if (mitgliedDB != null) {
-            mitglied.setFunktionsname(mitgliedDB.getFunktionsname());
-        } else {
-            throw new IllegalStateException("Bisher unbekannte Funktion in Wahlvorstand gefunden. Muss neu gemapt werden.");
-        }
-        return mitglied;
+                .filter(wahlvorstandsmitglied -> wahlvorstandsmitglied.getFunktion().equals(functionOfMitglied))
+                .findFirst();
+        return mitgliedDB.map(m -> new WahlvorstandsmitgliedModel(mitglied.identifikator(), mitglied.familienname(), mitglied.vorname(), mitglied.funktion(),
+                m.getFunktionsname(), mitglied.anwesend()))
+                .orElseThrow(() -> new IllegalStateException("Bisher unbekannte Funktion in Wahlvorstand gefunden. Muss neu gemappt werden."));
     }
 
-    private Wahlvorstand populateFunktionsnameOnline(Wahlvorstand wahlvorstand, KonfigurierterWahltagModel wahltagModel) {
+    private WahlvorstandModel populateFunktionsnameOnline(WahlvorstandModel wahlvorstand, KonfigurierterWahltagModel wahltagModel) {
         val wahlbezirkArt = getWahlbezirkArtOfAuthenticaton();
 
         val wahlen = wahlenClient.getWahlen(wahltagModel);
         if (wahlen == null) throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.BASISDATEN_ANTWORT_NULL);
         val zuerstAuszuzaehlendeWahlArt = wahlen.get(0).wahlart();
 
-        val collect = wahlvorstand.getWahlvorstandsmitglieder().stream()
+        val collect = wahlvorstand.wahlvorstandsmitglieder().stream()
                 .map(mitglied -> populateWahlvorstandsmitgliedFunktionsnameOnline(mitglied, zuerstAuszuzaehlendeWahlArt, wahlbezirkArt))
                 .toList();
-        wahlvorstand.getWahlvorstandsmitglieder().clear();
-        wahlvorstand.getWahlvorstandsmitglieder().addAll(collect);
+        wahlvorstand.wahlvorstandsmitglieder().clear();
+        wahlvorstand.wahlvorstandsmitglieder().addAll(collect);
         return wahlvorstand;
     }
 
-    private Wahlvorstandsmitglied populateWahlvorstandsmitgliedFunktionsnameOnline(
-            Wahlvorstandsmitglied mitglied, WahlartModel wahlart, WahlbezirkArtModel wahlbezirkArt) {
+    private WahlvorstandsmitgliedModel populateWahlvorstandsmitgliedFunktionsnameOnline(
+            WahlvorstandsmitgliedModel mitglied, WahlartModel wahlart, WahlbezirkArtModel wahlbezirkArt) {
         val funktionsBuilder = new StringBuilder();
         val thisFunktion = getFunktion(wahlbezirkArt, mitglied, wahlart);
         if (thisFunktion == null || thisFunktion.isEmpty()) {
-            funktionsBuilder.append(mitglied.getFunktion());
+            funktionsBuilder.append(mitglied.funktion());
         } else {
             funktionsBuilder.append(thisFunktion);
         }
-        mitglied.setFunktionsname(funktionsBuilder.toString());
-        return mitglied;
+        return new WahlvorstandsmitgliedModel(mitglied.identifikator(), mitglied.familienname(), mitglied.vorname(), mitglied.funktion(),
+                funktionsBuilder.toString(), mitglied.anwesend());
     }
 
-    private String getFunktion(WahlbezirkArtModel wahlbezirkArt, Wahlvorstandsmitglied mitglied, WahlartModel wahlart) {
+    private String getFunktion(WahlbezirkArtModel wahlbezirkArt, WahlvorstandsmitgliedModel mitglied, WahlartModel wahlart) {
         String funktion = "";
         val mappings = namenMapping.getMapping().get(wahlbezirkArt);
 
         if (mappings != null) {
             Map<String, String> wahlartMapping = mappings.get(wahlart.name());
             if (wahlartMapping != null) {
-                funktion = wahlartMapping.get(mitglied.getFunktion().name());
+                funktion = wahlartMapping.get(mitglied.funktion().name());
             }
         }
         return funktion;
@@ -178,9 +180,9 @@ public class WahlvorstandService {
 
     private WahlbezirkArtModel getWahlbezirkArtOfAuthenticaton() {
         val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-        val authenticationHandler = authenticationHandlers.stream().filter(handler -> handler.canHandle(currentAuthentication)).findFirst();
-        if (authenticationHandler.isPresent()) {
-            val wahlbezirkOfUser = authenticationHandler.get().getDetail("wahlbezirksArt", currentAuthentication);
+        val authDetailRetriever = authDetailRetrivers.stream().filter(retriever -> retriever.canHandle(currentAuthentication)).findFirst();
+        if (authDetailRetriever.isPresent()) {
+            val wahlbezirkOfUser = authDetailRetriever.get().getDetail("wahlbezirksArt", currentAuthentication);
             return wahlbezirkOfUser.map(WahlbezirkArtModel::valueOf).orElseGet(() -> {
                 log.error("#getKonfiguration Error: Wahlbezirkart konnte nicht erkannt werden. UWB wurde als Standardwert angenommen");
                 return WAHLBEZIRK_ART_FALLBACK;

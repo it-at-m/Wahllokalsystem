@@ -1,0 +1,9 @@
+dist
+node_modules
+
+src/api/wls-clients/generated-*-api
+src/resources/openapis
+
+.msw/**
+
+tests/**/__snapshots__/**

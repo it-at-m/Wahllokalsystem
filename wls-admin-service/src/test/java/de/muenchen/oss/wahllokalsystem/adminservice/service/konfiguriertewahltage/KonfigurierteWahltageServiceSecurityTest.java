@@ -4,7 +4,6 @@ import de.muenchen.oss.wahllokalsystem.adminservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.adminservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.adminservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag.KonfigurierteWahltageService;
 import de.muenchen.oss.wahllokalsystem.adminservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.LocalDate;

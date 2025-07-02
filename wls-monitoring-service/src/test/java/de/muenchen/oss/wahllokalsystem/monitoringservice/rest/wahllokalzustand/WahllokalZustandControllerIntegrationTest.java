@@ -1,9 +1,12 @@
 package de.muenchen.oss.wahllokalsystem.monitoringservice.rest.wahllokalzustand;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath;
 import static de.muenchen.oss.wahllokalsystem.monitoringservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.monitoringservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.MicroServiceApplication;
@@ -12,6 +15,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExcept
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionKonstanten;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import java.time.LocalDateTime;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -211,6 +215,39 @@ class WahllokalZustandControllerIntegrationTest {
 
             Assertions.assertThat(responseBodyAsWlsExceptionDTO_wahlbezirkID_empty).usingRecursiveComparison().ignoringFields("message")
                     .isEqualTo(expectedWlsExceptionDTO);
+        }
+
+        @Test
+        void should_notThrowAnyException_when_requestParamValidAndLocalDateTimeGotTimezone() throws Exception {
+            val request_valid_param = MockMvcRequestBuilders.post("/businessActions/niederschriftDruckuhrzeit").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("""
+                            {
+                              "druckuhrzeit": "2024-10-21T23:59:12.123",
+                              "bezirkUndWahlID": {
+                                "wahlID": "wahlID",
+                                "wahlbezirkID": "wahlbezirkID"
+                              }
+                            }""");
+            Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request_valid_param));
+        }
+
+        @Test
+        void should_convertTimeToJsonFormat_when_restCallWithTimestamp() throws Exception {
+            val validDruckDatenDTO = DruckdatenDTO.builder()
+                    .druckuhrzeit(LocalDateTime.parse("2024-10-21T23:59:12.123"))
+                    .bezirkUndWahlID(new BezirkUndWahlID("wahlID", "wahlbezirkID")).build();
+            val request_wahlbezirkID_empty = MockMvcRequestBuilders.post("/businessActions/niederschriftDruckuhrzeit").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON).content(
+                            objectMapper.writeValueAsString(validDruckDatenDTO));
+
+            mockMvc.perform(request_wahlbezirkID_empty);
+
+            WireMock.verify(WireMock.postRequestedFor(WireMock.urlEqualTo("/wahllokalzustand"))
+                    .withHeader("Content-Type", equalTo("application/json"))
+                    .withRequestBody(matchingJsonPath("$.wahlbezirkID", equalTo("wahlbezirkID")))
+                    .withRequestBody(matchingJsonPath("$.druckzustaende[0].wahlID", equalTo("wahlID")))
+                    .withRequestBody(matchingJsonPath("$.druckzustaende[0].niederschriftDruckUhrzeit", equalTo("2024-10-21T23:59:12.123"))));
         }
 
     }

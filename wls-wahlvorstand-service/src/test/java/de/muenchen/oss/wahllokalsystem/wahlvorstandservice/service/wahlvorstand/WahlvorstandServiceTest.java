@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand;
 
+import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.Funktion;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.domain.wahlvorstand.WahlvorstandRepository;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.utils.TestDataFactory;
@@ -87,7 +88,8 @@ public class WahlvorstandServiceTest {
 
             val mockedWahlvorstand = TestDataFactory.CreateWahlvorstandEntity.withData();
             Mockito.when(wahlvorstandRepository.findById(wahlbezirkID)).thenReturn(Optional.of(mockedWahlvorstand));
-            Mockito.when(wahlvorstandModelMapper.toEntity(mockedWahlvorstandModelFromClient)).thenReturn(mockedWahlvorstand);
+            Mockito.when(wahlvorstandModelMapper.toEntity(Mockito.any(FunktionModel.class))).thenReturn(Funktion.SB);
+            Mockito.when(wahlvorstandModelMapper.toEntity(Mockito.any(WahlvorstandModel.class))).thenReturn(mockedWahlvorstand);
 
             val result = unitUnderTest.updateWahlvorstand(wahlbezirkID);
             Assertions.assertThat(result).isEqualTo(Optional.of(expectedWahlvorstandModel));

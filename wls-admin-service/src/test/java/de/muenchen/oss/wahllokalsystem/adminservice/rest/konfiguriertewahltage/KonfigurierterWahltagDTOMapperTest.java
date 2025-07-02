@@ -1,8 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.rest.konfiguriertewahltage;
 
-import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.KonfigurierterWahltagDTO;
-import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.KonfigurierterWahltagDTOMapper;
-import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.WahltagStatusDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
 import java.time.LocalDate;
 import lombok.val;
@@ -16,7 +13,7 @@ class KonfigurierterWahltagDTOMapperTest {
     private final KonfigurierterWahltagDTOMapper unitUnderTest = Mappers.getMapper(KonfigurierterWahltagDTOMapper.class);
 
     @Nested
-    class ToDto {
+    class ToDTO {
 
         @Test
         void should_returnNull_when_nullIsGiven() {

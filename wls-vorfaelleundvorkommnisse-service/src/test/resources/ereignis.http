@@ -2,75 +2,187 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET Ereignisse
-GET {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/wahlbezirkID
+### GET Ereignisse - wahlbezirkID | user wls_all_uwb
+GET {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST Ereignisse nur Vorkommnisse
-POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/wahlbezirkID
+### POST Ereignisse nur Vorkommnisse - wahlbezirkID | user wls_all_uwb
+POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
+  "keineVorfaelle": true,
+  "keineVorkommnisse": false,
   "ereigniseintraege": [
     {
-      "beschreibung": "beschreibung",
-      "uhrzeit": "2024-06-09T23:59:12.123",
+      "beschreibung": "beschreibung1",
+      "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORKOMMNIS"
     },
     {
-      "beschreibung": "beschreibung",
-      "uhrzeit": "2024-06-09T23:59:12.123",
-      "ereignisart": "VORKOMMNIS"
-    }
-  ]
-}
-
-### POST Ereignisse nur Vorfälle
-POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/wahlbezirkID
-Authorization: Bearer {{$auth.token("auth-service")}}
-Content-Type: application/json
-
-{
-  "ereigniseintraege": [
-    {
-      "beschreibung": "beschreibung",
-      "uhrzeit": "2024-06-09T23:59:12.123",
-      "ereignisart": "VORFALL"
-    },
-    {
-      "beschreibung": "beschreibung",
-      "uhrzeit": "2024-06-09T23:59:12.123",
-      "ereignisart": "VORFALL"
-    }
-  ]
-}
-
-### POST Ereignisse gemischt
-POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/wahlbezirkID
-Authorization: Bearer {{$auth.token("auth-service")}}
-Content-Type: application/json
-
-{
-  "ereigniseintraege": [
-    {
-      "beschreibung": "beschreibung",
-      "uhrzeit": "2024-06-09T23:59:12.123",
-      "ereignisart": "VORFALL"
-    },
-    {
-      "beschreibung": "beschreibung",
-      "uhrzeit": "2024-06-09T23:59:12.123",
+      "beschreibung": "beschreibung2",
+      "uhrzeit": "2026-01-01T23:59:12.123",
       "ereignisart": "VORKOMMNIS"
     }
   ]
 }
 
-### POST Ereignisse leer
-POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/wahlbezirkID
+### POST Ereignisse nur Vorfälle | user wls_all_uwb
+POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
+  "keineVorfaelle": false,
+  "keineVorkommnisse": true,
+  "ereigniseintraege": [
+    {
+      "beschreibung": "beschreibung1",
+      "uhrzeit": "2026-01-01T23:59:12.123",
+      "ereignisart": "VORFALL"
+    },
+    {
+      "beschreibung": "beschreibung2",
+      "uhrzeit": "2026-01-01T23:59:12.123",
+      "ereignisart": "VORFALL"
+    }
+  ]
+}
+
+### POST Ereignisse gemischt | user wls_all_uwb
+POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/9899cae4-df9a-4ffc-a940-f20cf2280171
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "keineVorfaelle": false,
+  "keineVorkommnisse": false,
+  "ereigniseintraege": [
+    {
+      "beschreibung": "beschreibung1",
+      "uhrzeit": "2026-01-01T23:59:12.123",
+      "ereignisart": "VORFALL"
+    },
+    {
+      "beschreibung": "beschreibung2",
+      "uhrzeit": "2026-01-01T23:59:12.123",
+      "ereignisart": "VORKOMMNIS"
+    }
+  ]
+}
+
+### POST Ereignisse leer keineVorfaelle/keineVorkommnisse gesetzt | user wls_all_uwb
+POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/9899cae4-df9a-4ffc-a940-f20cf2280171
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "keineVorfaelle": true,
+  "keineVorkommnisse": true,
+  "ereigniseintraege": []
+}
+
+### POST Ereignisse leer, keineVorfaelle/keineVorkommnisse nicht gesetzt | user wls_all_uwb
+POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/9899cae4-df9a-4ffc-a940-f20cf2280171
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "keineVorfaelle": false,
+  "keineVorkommnisse": false,
+  "ereigniseintraege": []
+}
+
+
+### GET Ereignisse - wahlbezirkID | user wls_all_bwb
+GET {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/9081145c-dc16-4a9b-8255-5c49ddb98c14
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### POST Ereignisse nur Vorkommnisse - wahlbezirkID | user wls_all_bwb
+POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/9081145c-dc16-4a9b-8255-5c49ddb98c14
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "keineVorfaelle": true,
+  "keineVorkommnisse": false,
+  "ereigniseintraege": [
+    {
+      "beschreibung": "beschreibung1",
+      "uhrzeit": "2026-01-01T23:59:12.123",
+      "ereignisart": "VORKOMMNIS"
+    },
+    {
+      "beschreibung": "beschreibung2",
+      "uhrzeit": "2026-01-01T23:59:12.123",
+      "ereignisart": "VORKOMMNIS"
+    }
+  ]
+}
+
+### POST Ereignisse nur Vorfälle | user wls_all_bwb
+POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/9081145c-dc16-4a9b-8255-5c49ddb98c14
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "keineVorfaelle": false,
+  "keineVorkommnisse": true,
+  "ereigniseintraege": [
+    {
+      "beschreibung": "beschreibung1",
+      "uhrzeit": "2026-01-01T23:59:12.123",
+      "ereignisart": "VORFALL"
+    },
+    {
+      "beschreibung": "beschreibung2",
+      "uhrzeit": "2026-01-01T23:59:12.123",
+      "ereignisart": "VORFALL"
+    }
+  ]
+}
+
+### POST Ereignisse gemischt | user wls_all_bwb
+POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/9081145c-dc16-4a9b-8255-5c49ddb98c14
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "keineVorfaelle": false,
+  "keineVorkommnisse": false,
+  "ereigniseintraege": [
+    {
+      "beschreibung": "beschreibung1",
+      "uhrzeit": "2026-01-01T23:59:12.123",
+      "ereignisart": "VORFALL"
+    },
+    {
+      "beschreibung": "beschreibung2",
+      "uhrzeit": "2026-01-01T23:59:12.123",
+      "ereignisart": "VORKOMMNIS"
+    }
+  ]
+}
+
+### POST Ereignisse leer, keineVorfaelle/keineVorkommnisse gesetzt | user wls_all_bwb
+POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/9081145c-dc16-4a9b-8255-5c49ddb98c14
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "keineVorfaelle": true,
+  "keineVorkommnisse": true,
+  "ereigniseintraege": []
+}
+
+### POST Ereignisse leer, keineVorfaelle/keineVorkommnisse nicht gesetzt | user wls_all_bwb
+POST {{ WLS_VORFAELLEUNDVORKOMMNISSE_SERVICE_URL }}/businessActions/ereignisse/9081145c-dc16-4a9b-8255-5c49ddb98c14
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "keineVorfaelle": false,
+  "keineVorkommnisse": false,
   "ereigniseintraege": []
 }

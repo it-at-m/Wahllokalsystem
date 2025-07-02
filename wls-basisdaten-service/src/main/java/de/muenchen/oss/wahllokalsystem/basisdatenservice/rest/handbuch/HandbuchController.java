@@ -2,9 +2,9 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.handbuch;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.FileMapper;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.FileResponseEntityModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.WahlbezirkArtDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch.HandbuchService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.FileResponseEntityModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.handbuch.HandbuchService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

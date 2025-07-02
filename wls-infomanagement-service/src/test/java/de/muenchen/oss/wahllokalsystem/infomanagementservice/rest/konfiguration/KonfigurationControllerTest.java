@@ -72,7 +72,6 @@ class KonfigurationControllerTest {
             Assertions.assertThat(result.getBody()).isNull();
             Assertions.assertThat(result).isEqualTo(ResponseEntity.noContent().build());
         }
-
     }
 
     @Nested
@@ -93,7 +92,7 @@ class KonfigurationControllerTest {
     }
 
     @Nested
-    class GetKonfigurationen {
+    class GetKonfigurations {
 
         @Test
         void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
@@ -115,6 +114,16 @@ class KonfigurationControllerTest {
         @Test
         void should_returnNullWithHttpStatusNoContent_when_serviceReturnsNoData() {
             Mockito.when(konfigurationService.getAllKonfigurations()).thenReturn(null);
+
+            val result = unitUnderTest.getKonfigurations();
+
+            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+            Assertions.assertThat(result.getBody()).isNull();
+        }
+
+        @Test
+        void should_returnNullWithHttpStatusNoContent_when_serviceReturnsEmptyCollection() {
+            Mockito.when(konfigurationService.getAllKonfigurations()).thenReturn(Collections.emptyList());
 
             val result = unitUnderTest.getKonfigurations();
 
@@ -173,5 +182,4 @@ class KonfigurationControllerTest {
             Assertions.assertThat(result.getBody()).isNull();
         }
     }
-
 }

@@ -2,7 +2,6 @@ package de.muenchen.oss.wahllokalsystem.adminservice.service.konfiguriertewahlta
 
 import de.muenchen.oss.wahllokalsystem.adminservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag.KonfigurierterWahltagValidator;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.time.LocalDate;
@@ -26,7 +25,7 @@ class KonfigurierterWahltagValidatorTest {
     KonfigurierterWahltagValidator unitUnderTest;
 
     @Nested
-    class ValidModel {
+    class ValidateModel {
 
         @Test
         void should_notThrowException_when_modelIDIsValid() {

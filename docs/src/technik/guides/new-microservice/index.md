@@ -10,7 +10,7 @@ entsprechend angepasst werden.
 
 ## Workflows einrichten
 
-Im Repo gibt es diverse [Workflows](/technik/ecosystem/workflows). Die Workflows eines bestehenden Services sind zu
+Im Repo gibt es diverse [Workflows](/technik/ecosystem/workflowsAndArtifacts/). Die Workflows eines bestehenden Services sind zu
 kopieren und die Trigger anzupassen.
 
 > [!IMPORTANT]

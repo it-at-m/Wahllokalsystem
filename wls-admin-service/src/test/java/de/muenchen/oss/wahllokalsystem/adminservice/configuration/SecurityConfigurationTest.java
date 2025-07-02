@@ -8,12 +8,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.adminservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.KonfigurierterWahltagDTO;
-import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.WahltagStatusDTO;
+import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfiguriertewahltage.KonfigurierterWahltagDTO;
+import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfiguriertewahltage.WahltagStatusDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.rest.wahlen.FarbeDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.rest.wahlen.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.rest.wahlen.WahlartDTO;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag.KonfigurierteWahltageService;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.konfiguriertewahltage.KonfigurierteWahltageService;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahlen.WahlenService;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer.WahllokalBenutzerService;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahltage.WahltageService;
@@ -28,11 +28,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -48,19 +48,19 @@ class SecurityConfigurationTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    @MockBean
+    @MockitoBean
     WahltermindatenService wahltermindatenService;
 
-    @MockBean
+    @MockitoBean
     WahllokalBenutzerService wahllokalBenutzerService;
 
-    @MockBean
+    @MockitoBean
     KonfigurierteWahltageService konfigurierteWahltageService;
 
-    @MockBean
+    @MockitoBean
     WahltageService wahltageService;
 
-    @MockBean
+    @MockitoBean
     WahlenService wahlenService;
 
     @Test

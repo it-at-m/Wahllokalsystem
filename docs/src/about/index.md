@@ -14,9 +14,12 @@ prüfen kann, dass alle notwendigen Materialien für die Durchführung vorhanden
 wie viele Wähler\*innen bereits im Wahllokal waren. Des Weiteren werden über die Software wahlrelevante Vorkommnisse dokumentiert.
 
 Außerdem wird zu definierten Zeitpunkten abgefragt, welche Mitglieder des Wahlvorstandes im Wahllokal anwesend sind. So wird sichergestellt,
-dass das Gremium zu jederzeit ausreichend besetzt ist.
+dass das Gremium zu jeder Zeit ausreichend besetzt ist.
 
 Während der Stimmauszählung, und der damit verbundenen Erstellung der Niederschrift, unterstützt das System den Wahlvorstand bei der korrekten Erfassung der Daten.
 Dazu gibt es zahlreiche Regeln und Konsistenzprüfungen, die dem Wahlvorstand Feedback geben, ob die erfassten Daten korrekt sind.
 
 Das Wahlamt kann über das System den Wahlbezirken wichtige Informationen zukommen lassen.
+
+![Übersicht der Funktionen des Wahllokalsystems im zeitlichen Kontext einer Wahl](/relationshipOfUIsToElectionProcess.drawio.png)  
+*Übersicht der Funktionen des Wahllokalsystems im zeitlichen Kontext einer Wahl*

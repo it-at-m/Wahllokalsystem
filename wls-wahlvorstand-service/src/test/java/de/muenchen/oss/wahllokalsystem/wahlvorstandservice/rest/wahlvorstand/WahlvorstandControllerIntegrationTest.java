@@ -5,6 +5,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.admin.model.ServeEventQuery;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.clients.aoueai.WahlvorstandClientMapper;
@@ -81,12 +82,12 @@ public class WahlvorstandControllerIntegrationTest {
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(infomanagementKonfigurierterWahltag))));
 
-            var searchingForWahltag = infomanagementKonfigurierterWahltag.getWahltag();
-            val eaiWahlen = TestDataFactory.CreateFromClient.wahlModelList();
-            WireMock.stubFor(WireMock.get("/wahldaten/wahlen?forDate=" + searchingForWahltag + "&withNummer=nummerWahltag")
+            var searchingForWahltag = infomanagementKonfigurierterWahltag.getWahltagID();
+            val basisdatenWahlen = TestDataFactory.CreateFromClient.wahlModelList();
+            WireMock.stubFor(WireMock.get("/businessActions/wahlen/" + searchingForWahltag)
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
                             .withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(eaiWahlen))));
+                            .withBody(objectMapper.writeValueAsBytes(basisdatenWahlen))));
 
             val request = MockMvcRequestBuilders.get("/businessActions/wahlvorstand/wahlbezirkID");
             val response = api.perform(request).andExpect(status().isOk()).andReturn();
@@ -125,12 +126,12 @@ public class WahlvorstandControllerIntegrationTest {
             WireMock.stubFor(WireMock.get("/businessActions/konfigurierterWahltag")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
                             .withBody(objectMapper.writeValueAsBytes(infomanagementKonfigurierterWahltag))));
-            var searchingForWahltag = infomanagementKonfigurierterWahltag.getWahltag();
-            val eaiWahlen = TestDataFactory.CreateFromClient.wahlModelList();
-            WireMock.stubFor(WireMock.get("/wahldaten/wahlen?forDate=" + searchingForWahltag + "&withNummer=nummerWahltag")
+            var searchingForWahltag = infomanagementKonfigurierterWahltag.getWahltagID();
+            val basisdatenWahlen = TestDataFactory.CreateFromClient.wahlModelList();
+            WireMock.stubFor(WireMock.get("/businessActions/wahlen/" + searchingForWahltag)
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
                             .withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(eaiWahlen))));
+                            .withBody(objectMapper.writeValueAsBytes(basisdatenWahlen))));
             val eaiWahlvorstandDto = TestDataFactory.CreateFromClient.wahlvorstandDto(wahlbezirkID);
             WireMock.stubFor(WireMock.get("/wahlvorstaende?wahlbezirkID=" + wahlbezirkID)
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
@@ -143,7 +144,47 @@ public class WahlvorstandControllerIntegrationTest {
             val responseBodyAsDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WahlvorstandDTO.class);
 
             val expectedResponseDTO = wahlvorstandDTOMapper.toDTO(wahlvorstandClientMapper.toModel(eaiWahlvorstandDto));
-            Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseDTO);
+            Assertions.assertThat(responseBodyAsDTO)
+                    .usingRecursiveComparison()
+                    .ignoringFields("wahlvorstandsmitglieder.funktionsname")
+                    .isEqualTo(expectedResponseDTO);
+            Assertions.assertThat(responseBodyAsDTO.wahlvorstandsmitglieder())
+                    .allSatisfy(mitglied -> Assertions.assertThat(mitglied.funktionsname()).isNotEmpty());
+        }
+
+        @Test
+        @WithMockUserAsJwt(
+                authorities = { Authorities.SERVICE_GET_WAHLVORSTAND, Authorities.SERVICE_UPDATE_WAHLVORSTAND, Authorities.REPOSITORY_READ_WAHLVORSTAND,
+                        Authorities.REPOSITORY_WRITE_WAHLVORSTAND },
+                claimProperties = { "wahlbezirkID=wahlbezirkID" }
+        )
+        void should_returnFallbackWahlvorstand_when_forceUpdateParamIsTrueAndEaiCallFailed() throws Exception {
+            val wahlbezirkID = "wahlbezirkID";
+
+            val infomanagementKonfigurierterWahltag = TestDataFactory.CreateFromClient.konfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
+                    KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
+            WireMock.stubFor(WireMock.get("/businessActions/konfigurierterWahltag")
+                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
+                            .withBody(objectMapper.writeValueAsBytes(infomanagementKonfigurierterWahltag))));
+            var searchingForWahltag = infomanagementKonfigurierterWahltag.getWahltagID();
+
+            val basisdatenWahlen = TestDataFactory.CreateFromClient.wahlModelList();
+            WireMock.stubFor(WireMock.get("/businessActions/wahlen/" + searchingForWahltag)
+                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
+                            .withStatus(HttpStatus.OK.value())
+                            .withBody(objectMapper.writeValueAsBytes(basisdatenWahlen))));
+
+            WireMock.stubFor(WireMock.get("/wahlvorstaende?wahlbezirkID=" + wahlbezirkID)
+                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                            .withBody(objectMapper.writeValueAsBytes(
+                                    new WlsExceptionDTO(WlsExceptionCategory.T, "000", "WLS-EAI-SERVICE", "error on loading wahlvorstand")))));
+
+            val request = MockMvcRequestBuilders
+                    .get("/businessActions/wahlvorstand/" + wahlbezirkID)
+                    .header("forceUpdate", true);
+            val response = api.perform(request).andExpect(status().isOk()).andReturn();
+
+            Assertions.assertThat(response.getResponse().getContentAsString()).contains("FALLBACK");
         }
 
         @Test
@@ -171,7 +212,7 @@ public class WahlvorstandControllerIntegrationTest {
             val wahlbezirkID = "wahlbezirkID";
             val mockedWahlvorstandDTO = TestDataFactory.CreateWahlvorstandWriteDto.withData();
 
-            WireMock.stubFor(WireMock.put("/wahlvorstaende/anwesenheit")
+            val eaiPostWahlvorstandStubbing = WireMock.stubFor(WireMock.put("/wahlvorstaende/anwesenheit")
                     .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
                             .withStatus(HttpStatus.OK.value())));
 
@@ -183,6 +224,20 @@ public class WahlvorstandControllerIntegrationTest {
             val wahlvorstandFromRepo = wahlvorstandRepository.findById(wahlbezirkID).get();
             val expectedWahlvorstand = wahlvorstandModelMapper.toEntity(wahlvorstandDTOMapper.toModel(wahlbezirkID, mockedWahlvorstandDTO));
             Assertions.assertThat(wahlvorstandFromRepo).usingRecursiveComparison().isEqualTo(expectedWahlvorstand);
+
+            val eaiRequests = WireMock.getAllServeEvents(ServeEventQuery.forStubMapping(eaiPostWahlvorstandStubbing));
+
+            Assertions.assertThat(eaiRequests).hasSize(1);
+            val receivedEaiRequest = objectMapper.readTree(eaiRequests.get(0).getRequest().getBodyAsString());
+            val expectedEaiRequest = objectMapper.createObjectNode()
+                    .put("wahlbezirkID", wahlbezirkID)
+                    .put("anwesenheitBeginn", mockedWahlvorstandDTO.anwesenheitBeginn().toString())
+                    .set("mitglieder", objectMapper.createArrayNode()
+                            .add(objectMapper.createObjectNode()
+                                    .put("identifikator", mockedWahlvorstandDTO.wahlvorstandsmitglieder().get(0).identifikator())
+                                    .put("anwesend", mockedWahlvorstandDTO.wahlvorstandsmitglieder().get(0).anwesend())));
+
+            Assertions.assertThat(receivedEaiRequest).isEqualTo(expectedEaiRequest);
         }
 
         @Test

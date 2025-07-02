@@ -1,13 +1,13 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.utils;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.Wahlbezirk;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahlbezirkArt;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.Wahltag;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Kopfdaten;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Stimmzettelgebietsart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.Wahlbezirk;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Farbe;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahl;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.Wahltag;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.BasisdatenDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.BasisstrukturdatenDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.StimmzettelgebietDTO;
@@ -17,15 +17,17 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.infomanagement.mode
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.WahlbezirkArtDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.kopfdaten.KopfdatenDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.kopfdaten.StimmzettelgebietsartDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.StimmzettelgebietsartModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahlbezirkArtModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisdatenModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisstrukturdatenModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KonfigurierterWahltagModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KopfdatenModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.StimmzettelgebietModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.StimmzettelgebietsartModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahlbezirkArtModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.BasisdatenModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.BasisstrukturdatenModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.KonfigurierterWahltagModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.KopfdatenModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.StimmzettelgebietModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlbezirke.WahlbezirkModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.FarbeModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlartModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDate;
 import java.util.List;
@@ -89,8 +91,8 @@ public class MockDataFactory {
                         new BasisstrukturdatenModel("wahlID2", "szgID", "wahlbezirkID2_2", forDate),
                         new BasisstrukturdatenModel("wahlID2", "szgIDOther", "wahlbezirkID2_1", forDate)),
                 Set.of(
-                        new WahlModel("wahlID1", "Bundestagswahl", 1L, 1L, forDate, Wahlart.BTW, new Farbe(0, 1, 2), "0"),
-                        new WahlModel("wahlID2", "Europawahl", 2L, 1L, forDate, Wahlart.EUW, new Farbe(3, 4, 5), "1")),
+                        new WahlModel("wahlID1", "Bundestagswahl", 1L, 1L, forDate, WahlartModel.BTW, new FarbeModel(0, 1, 2), "0"),
+                        new WahlModel("wahlID2", "Europawahl", 2L, 1L, forDate, WahlartModel.EUW, new FarbeModel(3, 4, 5), "1")),
                 Set.of(
                         new WahlbezirkModel("wahlbezirkID1_1", WahlbezirkArtModel.UWB, "1201", forDate, "0", "wahlID1"),
                         new WahlbezirkModel("wahlbezirkID1_2", WahlbezirkArtModel.BWB, "1251", forDate, "0", "wahlID1"),
@@ -244,7 +246,7 @@ public class MockDataFactory {
         wahl1.setFarbe(new Farbe(1, 1, 1));
         wahl1.setWahlart(Wahlart.BAW);
         wahl1.setReihenfolge(1);
-        wahl1.setWaehlerverzeichnisnummer(1);
+        wahl1.setWaehlerverzeichnisNummer(1);
         wahl1.setWahltag(LocalDate.now().plusMonths(1));
 
         val wahl2 = new Wahl();
@@ -254,7 +256,7 @@ public class MockDataFactory {
         wahl2.setFarbe(new Farbe(2, 2, 2));
         wahl2.setWahlart(Wahlart.LTW);
         wahl2.setReihenfolge(2);
-        wahl2.setWaehlerverzeichnisnummer(2);
+        wahl2.setWaehlerverzeichnisNummer(2);
         wahl2.setWahltag(LocalDate.now().plusMonths(1));
 
         val wahl3 = new Wahl();
@@ -264,7 +266,7 @@ public class MockDataFactory {
         wahl3.setFarbe(new Farbe(3, 3, 3));
         wahl3.setWahlart(Wahlart.EUW);
         wahl3.setReihenfolge(3);
-        wahl3.setWaehlerverzeichnisnummer(3);
+        wahl3.setWaehlerverzeichnisNummer(3);
         wahl3.setWahltag(LocalDate.now().plusMonths(3));
 
         return List.of(wahl1, wahl2, wahl3);
@@ -272,8 +274,8 @@ public class MockDataFactory {
 
     public static List<WahlModel> createWahlModelList(final String praefix, final LocalDate forDate) {
         return List.of(
-                new WahlModel(praefix + "wahlID1", "Bundestagswahl", 1L, 1L, forDate, Wahlart.BTW, new Farbe(0, 1, 2), "0"),
-                new WahlModel(praefix + "wahlID2", "Europawahl", 2L, 1L, forDate, Wahlart.EUW, new Farbe(3, 4, 5), "1"));
+                new WahlModel(praefix + "wahlID1", "Bundestagswahl", 1L, 1L, forDate, WahlartModel.BTW, new FarbeModel(0, 1, 2), "0"),
+                new WahlModel(praefix + "wahlID2", "Europawahl", 2L, 1L, forDate, WahlartModel.EUW, new FarbeModel(3, 4, 5), "1"));
     }
 
     public static Set<WahlbezirkDTO> createSetOfClientWahlbezirkDTO(LocalDate aDate) {

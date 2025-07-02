@@ -38,7 +38,7 @@ class UrnenwahlvorbereitungServiceTest {
     UrnenwahlvorbereitungService unitUnderTest;
 
     @Nested
-    class getUrnenwahlvorbereitung {
+    class GetUrnenwahlvorbereitung {
 
         @Test
         void should_returnUrnenwahlvorbereitung_when_givenValidWahlbezirkID() {

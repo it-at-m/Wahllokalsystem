@@ -1,100 +1,6 @@
 <template>
   <v-app>
-    <the-snackbar />
-    <v-app-bar color="primary">
-      <v-row align="center">
-        <v-col
-          cols="3"
-          class="d-flex align-center justify-start"
-        >
-          <v-app-bar-nav-icon @click.stop="toggleDrawer()" />
-          <router-link to="/">
-            <v-toolbar-title class="font-weight-bold">
-              <span class="text-white">WLS</span>
-            </v-toolbar-title>
-          </router-link>
-        </v-col>
-        <v-col
-          cols="6"
-          class="d-flex align-center justify-center"
-        ></v-col>
-        <v-col
-          cols="3"
-          class="d-flex align-center justify-end"
-        >
-          <!-- heartbeat uses v-model for two-way-binding -->
-          <wls-heartbeat v-model:is-offline="isOffline"></wls-heartbeat>
-          <v-tooltip
-            location="bottom"
-            text="Backend Communication Examples"
-          >
-            <template #activator="{ props }">
-              <router-link
-                v-bind="props"
-                :to="{ name: EXAMPLE_ROUTES_BACKEND }"
-              >
-                <v-btn
-                  icon="$messageText"
-                  variant="text"
-                  density="comfortable"
-                  size="x-large"
-                  color="white"
-                >
-                </v-btn>
-              </router-link>
-            </template>
-          </v-tooltip>
-          <v-tooltip
-            location="bottom"
-            text="Routing Examples"
-          >
-            <template #activator="{ props }">
-              <router-link
-                v-bind="props"
-                :to="{ name: EXAMPLE_ROUTES_NEWROUTE }"
-              >
-                <v-btn
-                  icon="$routes"
-                  variant="text"
-                  density="comfortable"
-                  size="x-large"
-                  color="white"
-                >
-                </v-btn>
-              </router-link>
-            </template>
-          </v-tooltip>
-          <v-tooltip
-            location="bottom"
-            text="Datenvalidierung Examples"
-          >
-            <template #activator="{ props }">
-              <router-link
-                v-bind="props"
-                :to="{ name: EXAMPLE_VALIDATION }"
-              >
-                <v-btn
-                  icon="$textBoxCheck"
-                  variant="text"
-                  density="comfortable"
-                  size="x-large"
-                  color="white"
-                >
-                </v-btn>
-              </router-link>
-            </template>
-          </v-tooltip>
-        </v-col>
-      </v-row>
-    </v-app-bar>
-    <v-navigation-drawer v-model="drawer">
-      <v-list>
-        <v-list-item
-          title="Wahlvorstand"
-          :to="ROUTE_WAHLVORSTAND"
-        />
-      </v-list>
-    </v-navigation-drawer>
+    <the-wls-app-bar />
     <v-main>
       <v-container fluid>
         <router-view v-slot="{ Component }">
@@ -104,50 +10,48 @@
         </router-view>
       </v-container>
     </v-main>
+    <the-broadcast-read-confirmation-dialog />
+    <the-wahlvorstand-anwesenheits-check-popup-dialog />
   </v-app>
 </template>
 
 <script setup lang="ts">
-import { useToggle } from "@vueuse/core";
 import localforage from "localforage";
-import { onMounted, ref } from "vue";
-import {
-  VApp,
-  VAppBar,
-  VAppBarNavIcon,
-  VBtn,
-  VCol,
-  VContainer,
-  VFadeTransition,
-  VList,
-  VListItem,
-  VMain,
-  VNavigationDrawer,
-  VRow,
-  VToolbarTitle,
-  VTooltip,
-} from "vuetify/components";
+import { onMounted, onUnmounted } from "vue";
+import { VApp, VContainer, VFadeTransition, VMain } from "vuetify/components";
 
-import { getUser } from "@/api/user-client";
-import TheSnackbar from "@/components/TheSnackbar.vue";
-import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
-import {
-  EXAMPLE_ROUTES_BACKEND,
-  EXAMPLE_ROUTES_NEWROUTE,
-  EXAMPLE_VALIDATION,
-  ROUTE_WAHLVORSTAND,
-} from "@/constants";
-import { useUserStore } from "@/stores/user";
-import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
-import User, { UserLocalDevelopment } from "@/types/User";
+import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
+import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";
+import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
+import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
+import { useMonitoringCronjobService } from "@/composables/monitoring/monitoringCronjobService.ts";
+import { useEreignisStore } from "@/stores/ereignisStore.ts";
+import { useMonitoringStore } from "@/stores/monitoringStore.ts";
+import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 
-const userStore = useUserStore();
-const wahlvorstandStore = useWahlvorstandStore();
-const [drawer, toggleDrawer] = useToggle();
-const isOffline = ref(false);
+const { loadEreignisse } = useEreignisStore();
+const { loadUser } = useUserStore();
+const { initTasks } = useTaskManagerStore();
+const { loadWaehler } = useMonitoringStore();
 
-onMounted(() => {
-  loadUser();
+const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
+  useBroadcastCronjobService();
+const { startWahlbeteiligungInterval, stopWahlbeteiligungInterval } =
+  useMonitoringCronjobService();
+
+onMounted(async () => {
+  await loadUser()
+    .then(() => {
+      startBroadcastMessageInterval();
+      initTasks();
+      loadEreignisse();
+      loadWaehler();
+      startWahlbeteiligungInterval();
+    })
+    .catch((error) => {
+      console.debug(error);
+    });
 
   // config for service worker indexed db (same config as in wahl-worker.js !)
   localforage.config({
@@ -159,25 +63,15 @@ onMounted(() => {
   });
 });
 
-/**
- * Loads UserInfo from the backend and sets it in the store.
- */
-function loadUser(): void {
-  getUser()
-    .then((user: User) => userStore.setUser(user))
-    .catch(() => {
-      // No user info received, so fallback
-      if (import.meta.env.DEV) {
-        userStore.setUser(UserLocalDevelopment());
-      } else {
-        userStore.setUser(null);
-      }
-    })
-    .then(() => wahlvorstandStore.loadWahlvorstand());
-}
+onUnmounted(() => {
+  stopBroadcastMessageInterval();
+  stopWahlbeteiligungInterval();
+});
 </script>
 
 <style>
+@import "@fontsource/roboto/400.css";
+
 .main {
   background-color: white;
 }

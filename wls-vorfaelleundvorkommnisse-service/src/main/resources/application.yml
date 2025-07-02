@@ -19,6 +19,10 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://kubernetes.docker.internal:8100/oauth2/jwks
+  jpa:
+    hibernate:
+      ddl-auto: validate
+      naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
 security:
   # possible values: none, all, changing (With changing, only changing requests such as POST, PUT, DELETE are logged)

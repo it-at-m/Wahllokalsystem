@@ -4,8 +4,8 @@ import static org.mockito.ArgumentMatchers.any;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.client.WahldatenControllerApi;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahltagWithNummer;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.BasisdatenModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummerModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.BasisdatenModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.MockDataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
@@ -52,7 +52,7 @@ class WahldatenClientImplTest {
             Mockito.when(wahldatenClientMapper.fromRemoteClientDTOToModel(mockedClientResponse))
                     .thenReturn(mockedMappedClientResponse);
 
-            val result = unitUnderTest.loadBasisdaten(new WahltagWithNummer(testDate, "0"));
+            val result = unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(testDate, "0"));
 
             Assertions.assertThat(result).isSameAs(mockedMappedClientResponse);
         }
@@ -64,7 +64,7 @@ class WahldatenClientImplTest {
             Mockito.when(wahldatenControllerApi.loadBasisdaten(any(), any())).thenReturn(null);
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETKOPFDATEN_NO_BASISDATEN)).thenReturn(mockedWlsException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.loadBasisdaten(new WahltagWithNummer(LocalDate.now(), "0")))
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(LocalDate.now(), "0")))
                     .isSameAs(mockedWlsException);
         }
 
@@ -77,7 +77,8 @@ class WahldatenClientImplTest {
             Mockito.when(wahldatenControllerApi.loadBasisdaten(any(), any()))
                     .thenThrow(new RestClientException("error occurs while attempting to invoke the API"));
             Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI)).thenThrow(mockedException);
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.loadBasisdaten(new WahltagWithNummer(testDate, "0"))).isSameAs(mockedException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(testDate, "0")))
+                    .isSameAs(mockedException);
         }
 
     }

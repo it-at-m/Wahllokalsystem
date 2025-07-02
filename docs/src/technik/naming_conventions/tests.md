@@ -104,22 +104,15 @@ describe("wahlvorstandStore.ts", () => {// [!code focus]
   /* Die Description ist der Name der Funktion die getested wird */ // [!code focus]
   describe("isSchriftfuehrerAnwesend", () => { // [!code focus]
     /* Beschreibung des Testcases entsprechend des Schemas */ // [!code focus]
-    it("should_returnFalse_when_noMitgliedExists", () => { // [!code focus]
-    });
-
-    it("should_returnTrue_when_atLeastOneMitgliedMatches", () => { // [!code focus] 
-    });
-
+    it("should_returnFalse_when_noMitgliedExists", () => {});// [!code focus]
+    it("should_returnTrue_when_atLeastOneMitgliedMatches", () => {});
     it("should_returnFalse_when_whenMitgliedWithFunktionExistsButIsNotAnwesend", () => {});
-
     it("should_returnFalse_when_noMitgliedMatchesFunktion", () => {});
   });
 
   describe("sendWahlvorstand", () => { // [!code focus]
     it("should_sendWahlvorstand_when_wahlbezirkIDIsGiven", async () => {});
-
     it("should_setLastSend_when_wahlvorstandIsSent", async () => {});
-
     it("should_notSendWahlvorstand_when_wahlbezirkIDIsNotGiven", async () => {});
   });
 });
@@ -127,31 +120,38 @@ describe("wahlvorstandStore.ts", () => {// [!code focus]
 
 #### Beispiel für Tests zu einer Komponente
 
-```typescript
+::: code-group
+
+```typescript [ComponentTest.spec.ts]
 import { describe, it } from "vitest";
+import { COMPONENT_EVENT_TESTS, COMPONENT_RENDER_TESTS } from "@tests/utils/testutils.ts";
 
 /* Die Description ist der Dateiname des Testgegenstandes */ // [!code focus]
 describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => { // [!code focus]
 
   /* Tests die sich mit dem Rendern der Komponente befassen */ // [!code focus]
-  describe("visual logic", () => { // [!code focus]
+  describe(COMPONENT_RENDER_TESTS, () => { // [!code focus]
     /* Tests entsprechend der Testcasebeschreibung */ // [!code focus]
-    it("should_showNoErrorTexts_when_allRequirementsAreSatisfied", async (context) => { // [!code focus]
-    });
+    it("should_showNoErrorTexts_when_allRequirementsAreSatisfied", async (context) => {}); // [!code focus]
     it("should_showErrorText_when_schriftfuehrerIsNotAnwesend", async (context) => {});
     it("should_showErrorText_when_wahlvorsteherIsNotAnwesend", async (context) => {});
   });
 
   /* Tests zu den Events der Komponente */ // [!code focus]
-  describe("behavioral logic", () => { // [!code focus]
+  describe(COMPONENT_EVENT_TESTS, () => { // [!code focus]
     /* Tests zu dem Event `update:model-value` */ // [!code focus]
     describe("update:model-value", () => { // [!code focus]
       /* Tests entsprechend der Testcasebeschreibung */ // [!code focus]
-      it("should_setAnwesendTrue_when_checkBoxForMitgliedThatIsNotAnwesendWasClicked", async () => { // [!code focus]
-      });
-
+      it("should_setAnwesendTrue_when_checkBoxForMitgliedThatIsNotAnwesendWasClicked", async () => {}); // [!code focus]
       it("should_setAnwesendFalse_when_checkBoxForMitgliedThatChangedToFalse", async () => {});
     });
   });
 });
 ```
+
+```typescript [testutils.ts]
+export const COMPONENT_RENDER_TESTS = "visual logic";
+export const COMPONENT_EVENT_TESTS = "behavioral logic";
+```
+
+:::

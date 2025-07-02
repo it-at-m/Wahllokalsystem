@@ -1,8 +1,26 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="AuthService - local,standalone,db-dummydata" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,standalone,sec">
     <option name="ACTIVE_PROFILES" value="local,standalone,db-dummydata" />
+    <additionalParameters>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="spring.config.additional-location" />
+        <option name="value" value="file:../stack/run_configurations/additionalYmlFiles/application-rsa.yml" />
+      </param>
+    </additionalParameters>
     <module name="wls-auth-service" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication" />
+    <extension name="net.ashald.envfile">
+      <option name="IS_ENABLED" value="false"/>
+      <option name="IS_SUBST" value="false"/>
+      <option name="IS_PATH_MACRO_SUPPORTED" value="false"/>
+      <option name="IS_IGNORE_MISSING_FILES" value="false"/>
+      <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false"/>
+      <ENTRIES>
+        <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false"/>
+      </ENTRIES>
+    </extension>
+    <option name="WORKING_DIRECTORY" value="file://$MODULE_WORKING_DIR$" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

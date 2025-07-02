@@ -38,7 +38,7 @@ class FortsetzungsUhrzeitServiceTest {
     FortsetzungsUhrzeitService unitUnderTest;
 
     @Nested
-    class getFortsetzungsUhrzeit {
+    class GetFortsetzungsUhrzeit {
 
         @Test
         void should_returnFortsetzungsuhrzeit_when_givenValidWahlbezirkID() {

@@ -8,12 +8,12 @@ import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SP
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Farbe;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.WahlRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.Wahlart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.Wahltag;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.WahltagRepository;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.FarbeDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlartDTO;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
@@ -81,7 +81,7 @@ class UnicodeConfigurationTest {
     private List<WahlDTO> createControllerListOfWahlDTO(Wahltag searchingForWahltag) {
         val wahl1 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID1", TEXT_ATTRIBUTE_DECOMPOSED, 3L, 1L,
                 searchingForWahltag.getWahltag(),
-                Wahlart.BAW, new Farbe(1, 1, 1), "1");
+                WahlartDTO.BAW, new FarbeDTO(1, 1, 1), "1");
 
         return Stream.of(wahl1).filter(wahl -> (wahl.wahltag().equals(searchingForWahltag.getWahltag()))).collect(Collectors.toList());
     }

@@ -3,8 +3,6 @@ package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfigurat
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.common.security.AuthenticationHandler;
-import de.muenchen.oss.wahllokalsystem.infomanagementservice.common.security.JWTHandler;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.Konfiguration;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.domain.konfiguration.KonfigurationRepository;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.exception.ExceptionConstants;
@@ -16,6 +14,8 @@ import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfigurati
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.authentication.AuthDetailRetriever;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.authentication.JWTDetailRetriever;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -54,18 +54,18 @@ class KonfigurationServiceTest {
     ExceptionFactory exceptionFactory;
 
     @Mock
-    JWTHandler jwtHandler;
+    JWTDetailRetriever jwtDetailRetriever;
 
     @Spy
-    ArrayList<AuthenticationHandler> authenticationHandlers;
+    ArrayList<AuthDetailRetriever> authDetailRetrievers;
 
     @InjectMocks
     KonfigurationService unitUnderTest;
 
     @BeforeEach
     void setup() {
-        authenticationHandlers.clear();
-        authenticationHandlers.add(jwtHandler);
+        authDetailRetrievers.clear();
+        authDetailRetrievers.add(jwtDetailRetriever);
     }
 
     @Nested
@@ -84,8 +84,8 @@ class KonfigurationServiceTest {
             val mappedMockedKonfiguration = KonfigurationModel.builder().build();
 
             Mockito.doNothing().when(konfigurationModelValidator).validOrThrowGetKonfigurationByKey(alternativeKey);
-            Mockito.when(jwtHandler.canHandle(any())).thenReturn(true);
-            Mockito.when(jwtHandler.getDetail(eq(JWT_DETAIL_WAHLBEZIRKSART_KEY), any())).thenReturn(Optional.of("BWB"));
+            Mockito.when(jwtDetailRetriever.canHandle(any())).thenReturn(true);
+            Mockito.when(jwtDetailRetriever.getDetail(eq(JWT_DETAIL_WAHLBEZIRKSART_KEY), any())).thenReturn(Optional.of("BWB"));
             Mockito.when(konfigurationModelMapper.getAlternativeKey(keyForRequestedKonfiguration, WahlbezirkArt.BWB)).thenReturn(Optional.of(alternativeKey));
             Mockito.when(konfigurationModelMapper.toModel(mockedKonfigurationFromRepo)).thenReturn(mappedMockedKonfiguration);
             Mockito.when(konfigurationRepository.findById(alternativeKey.name())).thenReturn(mockedKonfigurationFromRepoAsOptional);
@@ -105,8 +105,8 @@ class KonfigurationServiceTest {
             val mappedMockedKonfiguration = KonfigurationModel.builder().build();
 
             Mockito.doNothing().when(konfigurationModelValidator).validOrThrowGetKonfigurationByKey(keyForRequestedKonfiguration);
-            Mockito.when(jwtHandler.canHandle(any())).thenReturn(true);
-            Mockito.when(jwtHandler.getDetail(eq(JWT_DETAIL_WAHLBEZIRKSART_KEY), any())).thenReturn(Optional.of("BWB"));
+            Mockito.when(jwtDetailRetriever.canHandle(any())).thenReturn(true);
+            Mockito.when(jwtDetailRetriever.getDetail(eq(JWT_DETAIL_WAHLBEZIRKSART_KEY), any())).thenReturn(Optional.of("BWB"));
             Mockito.when(konfigurationModelMapper.getAlternativeKey(keyForRequestedKonfiguration, WahlbezirkArt.BWB)).thenReturn(Optional.empty());
             Mockito.when(konfigurationModelMapper.toModel(mockedKonfigurationFromRepo)).thenReturn(mappedMockedKonfiguration);
             Mockito.when(konfigurationRepository.findById(konfigKeyAsString)).thenReturn(mockedKonfigurationFromRepoAsOptional);
@@ -124,8 +124,8 @@ class KonfigurationServiceTest {
             final Optional<Konfiguration> mockedKonfigurationFromRepoAsOptional = Optional.empty();
 
             Mockito.doNothing().when(konfigurationModelValidator).validOrThrowGetKonfigurationByKey(keyForRequestedKonfiguration);
-            Mockito.when(jwtHandler.canHandle(any())).thenReturn(true);
-            Mockito.when(jwtHandler.getDetail(eq(JWT_DETAIL_WAHLBEZIRKSART_KEY), any())).thenReturn(Optional.of("BWB"));
+            Mockito.when(jwtDetailRetriever.canHandle(any())).thenReturn(true);
+            Mockito.when(jwtDetailRetriever.getDetail(eq(JWT_DETAIL_WAHLBEZIRKSART_KEY), any())).thenReturn(Optional.of("BWB"));
             Mockito.when(konfigurationModelMapper.getAlternativeKey(keyForRequestedKonfiguration, WahlbezirkArt.BWB)).thenReturn(Optional.empty());
             Mockito.when(konfigurationRepository.findById(konfigKeyAsString)).thenReturn(mockedKonfigurationFromRepoAsOptional);
 
@@ -156,8 +156,8 @@ class KonfigurationServiceTest {
             val mappedMockedKonfiguration = KonfigurationModel.builder().build();
 
             Mockito.doNothing().when(konfigurationModelValidator).validOrThrowGetKonfigurationByKey(keyForRequestedKonfiguration);
-            Mockito.when(jwtHandler.canHandle(any())).thenReturn(true);
-            Mockito.when(jwtHandler.getDetail(eq(JWT_DETAIL_WAHLBEZIRKSART_KEY), any())).thenReturn(Optional.empty());
+            Mockito.when(jwtDetailRetriever.canHandle(any())).thenReturn(true);
+            Mockito.when(jwtDetailRetriever.getDetail(eq(JWT_DETAIL_WAHLBEZIRKSART_KEY), any())).thenReturn(Optional.empty());
             Mockito.when(konfigurationModelMapper.getAlternativeKey(keyForRequestedKonfiguration, WahlbezirkArt.UWB)).thenReturn(Optional.empty());
             Mockito.when(konfigurationModelMapper.toModel(mockedKonfigurationFromRepo)).thenReturn(mappedMockedKonfiguration);
             Mockito.when(konfigurationRepository.findById(konfigKeyAsString)).thenReturn(mockedKonfigurationFromRepoAsOptional);
@@ -179,7 +179,7 @@ class KonfigurationServiceTest {
             SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("princiap", "credential"));
 
             Mockito.doNothing().when(konfigurationModelValidator).validOrThrowGetKonfigurationByKey(keyForRequestedKonfiguration);
-            Mockito.when(jwtHandler.canHandle(any())).thenReturn(false);
+            Mockito.when(jwtDetailRetriever.canHandle(any())).thenReturn(false);
             Mockito.when(konfigurationModelMapper.getAlternativeKey(keyForRequestedKonfiguration, WahlbezirkArt.UWB)).thenReturn(Optional.empty());
             Mockito.when(konfigurationModelMapper.toModel(mockedKonfigurationFromRepo)).thenReturn(mappedMockedKonfiguration);
             Mockito.when(konfigurationRepository.findById(konfigKeyAsString)).thenReturn(mockedKonfigurationFromRepoAsOptional);

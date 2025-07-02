@@ -1,21 +1,22 @@
-// Composables
+import { storeToRefs } from "pinia";
 import { createRouter, createWebHashHistory } from "vue-router";
 
-import ExampleDynamicComponent from "@/components/ExampleDynamicComponent.vue";
 import {
-  EXAMPLE_ROUTES_BACKEND,
-  EXAMPLE_ROUTES_DYNAMIC,
-  EXAMPLE_ROUTES_NEWROUTE,
   EXAMPLE_ROUTES_NOTFOUND,
-  EXAMPLE_VALIDATION,
+  ROUTE_BEGINN_STIMMABGABE,
+  ROUTE_EREIGNISSE,
+  ROUTE_WAHLSCHLIESSUNG,
+  ROUTE_WAHLUMGEBUNG,
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
 } from "@/constants";
-import ExampleBackendCommunicationView from "@/views/ExampleBackendCommunicationView.vue";
+import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
+import EreignisseView from "@/views/EreignisseView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
-import ExampleNewRouteView from "@/views/ExampleNewRouteView.vue";
-import ExampleValidation from "@/views/ExampleValidation.vue";
 import HomeView from "@/views/HomeView.vue";
+import WahleroeffnungView from "@/views/wahlvorbereitung/WahleroeffnungView.vue";
+import WahlschliessungView from "@/views/wahlvorbereitung/WahlschliessungView.vue";
+import WahlumgebungView from "@/views/wahlvorbereitung/WahlumgebungView.vue";
 import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
 
 const routes = [
@@ -32,31 +33,31 @@ const routes = [
     meta: {},
   },
   {
-    path: "/talk-to-backend",
-    name: EXAMPLE_ROUTES_BACKEND,
-    component: ExampleBackendCommunicationView,
+    path: "/wahlschliessung",
+    name: ROUTE_WAHLSCHLIESSUNG,
+    component: WahlschliessungView,
+  },
+  {
+    path: "/wahlumgebung",
+    name: ROUTE_WAHLUMGEBUNG,
+    component: WahlumgebungView,
+  },
+  {
+    path: "/beginnStimmabgabe",
+    name: ROUTE_BEGINN_STIMMABGABE,
+    component: WahleroeffnungView,
+  },
+  {
+    path: "/ereignisse",
+    name: ROUTE_EREIGNISSE,
+    component: EreignisseView,
     meta: {},
-  },
-  {
-    path: "/newroute",
-    name: EXAMPLE_ROUTES_NEWROUTE,
-    component: ExampleNewRouteView,
-  },
-  {
-    path: "/dynamic/:wahlid",
-    name: EXAMPLE_ROUTES_DYNAMIC,
-    component: ExampleDynamicComponent,
   },
   {
     path: "/:catchAll(.*)*",
     name: EXAMPLE_ROUTES_NOTFOUND,
     component: ExampleError404View,
   }, // CatchAll route
-  {
-    path: "/validation-example",
-    name: EXAMPLE_VALIDATION,
-    component: ExampleValidation,
-  },
 ];
 
 const router = createRouter({
@@ -68,6 +69,16 @@ const router = createRouter({
       left: 0,
     };
   },
+});
+
+router.beforeEach((to) => {
+  const { hasInitializationOfTasksCompletelyRun } = storeToRefs(
+    useTaskManagerStore()
+  );
+
+  if (to.name != ROUTES_HOME && !hasInitializationOfTasksCompletelyRun.value) {
+    return { name: ROUTES_HOME };
+  }
 });
 
 export default router;

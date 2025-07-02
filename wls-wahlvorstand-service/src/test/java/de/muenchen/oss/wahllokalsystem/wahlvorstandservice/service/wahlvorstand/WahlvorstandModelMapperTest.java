@@ -5,6 +5,8 @@ import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mapstruct.factory.Mappers;
 
 public class WahlvorstandModelMapperTest {
@@ -50,6 +52,17 @@ public class WahlvorstandModelMapperTest {
 
                 val result = unitUnderTest.toEntity(mockedWahlvorstandModel);
                 Assertions.assertThat(result).isEqualTo(expectedWahlvorstandEntity);
+            }
+        }
+
+        @Nested
+        class ToFunktion {
+
+            @ParameterizedTest
+            @EnumSource(FunktionModel.class)
+            void should_returnFunktionWithSameName_when_givenFunktionModel(final FunktionModel funktionToMap) {
+                val mappedValue = unitUnderTest.toEntity(funktionToMap);
+                Assertions.assertThat(mappedValue.name()).isEqualTo(funktionToMap.name());
             }
         }
     }

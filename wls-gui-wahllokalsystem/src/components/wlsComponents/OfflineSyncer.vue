@@ -16,8 +16,7 @@
               size="x-small"
               color="primary"
               @click="synchronizeOfflineData"
-            >
-            </v-btn>
+            />
           </template>
         </v-tooltip>
       </template>
@@ -25,12 +24,12 @@
       <v-card
         title="Synchronizing"
         :text="statusText"
-      ></v-card>
+      />
     </v-dialog>
   </div>
 </template>
 <script setup lang="ts">
-import type IdbObject from "@/types/wlsTypes/IdbObject";
+import type { IdbObject } from "@/types/wlsTypes/IdbObject";
 
 import axios from "axios";
 import localforage from "localforage";

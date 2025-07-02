@@ -2,7 +2,6 @@ package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.
 
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.TestConstants;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.EreignisService;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.TestdataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
@@ -23,16 +22,16 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
 public class EreignisServiceSecurityTest {
 
-    @MockBean
+    @MockitoBean
     BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
     @Autowired
@@ -88,7 +87,7 @@ public class EreignisServiceSecurityTest {
         @Test
         void should_notThrowException_when_givenAllAuthorities() {
             val wahlbezirkID = "wahlbezirkID";
-            val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData());
+            val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData("beschreibung"));
             val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData(wahlbezirkID, mockedEreignisModelList);
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_EREIGNISSE);
@@ -100,7 +99,7 @@ public class EreignisServiceSecurityTest {
         @Test
         void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
             val wahlbezirkID = "wahlbezirkID";
-            val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData());
+            val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData("beschreibung"));
             val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData(wahlbezirkID, mockedEreignisModelList);
 
             SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_EREIGNISSE);
@@ -114,7 +113,7 @@ public class EreignisServiceSecurityTest {
         void should_throwAccessDeniedException_when_serviceAuthoritiesMissing(final ArgumentsAccessor argumentsAccessor) {
             SecurityUtils.runWith(ArrayUtils.addAll(Authorities.ALL_REPO_AUTHORITIES_SET_EREIGNISSE, argumentsAccessor.get(0, String[].class)));
             val wahlbezirkID = "wahlbezirkID";
-            val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData());
+            val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData("beschreibung"));
             val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData(wahlbezirkID, mockedEreignisModelList);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignisse(mockedEreignisseWriteModel)).isInstanceOf(AccessDeniedException.class);
@@ -130,7 +129,7 @@ public class EreignisServiceSecurityTest {
             SecurityUtils.runWith(ArrayUtils.addAll(Authorities.ALL_SERVICE_AUTHORITIES_SET_EREIGNISSE, argumentsAccessor.get(0, String[].class)));
 
             val wahlbezirkID = "wahlbezirkID";
-            val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData());
+            val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData("beschreibung"));
             val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData(wahlbezirkID, mockedEreignisModelList);
             Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
 

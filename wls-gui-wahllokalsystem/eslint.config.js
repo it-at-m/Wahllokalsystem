@@ -30,6 +30,39 @@ export default [
         "kebab-case",
         { registeredComponentsOnly: false },
       ],
+      "no-restricted-exports": [
+        "error",
+        {
+          restrictDefaultExports: {
+            direct: true, // restricts `export default abc;`
+            named: true, // restricts `export { abc as default };`
+          },
+        },
+      ],
+      "vue/html-self-closing": [
+        "error",
+        {
+          html: {
+            void: "never",
+            normal: "always",
+            component: "always",
+          },
+          svg: "always",
+          math: "always",
+        },
+      ],
+    },
+  },
+  // overrides for specific files or directories
+  {
+    files: [
+      ".storybook/*.ts",
+      "stories/**",
+      "*.config.{ts,js}",
+      "src/plugins/**",
+    ],
+    rules: {
+      "no-restricted-exports": "off", // deactivate rule for the above named directories
     },
   },
 ];

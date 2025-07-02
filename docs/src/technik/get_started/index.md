@@ -80,10 +80,12 @@ flowchart LR
 
 | Name        | Passwort | Beschreibung                                                          |
 | ----------- | -------- | --------------------------------------------------------------------- |
-| wls_test    | test     | Ein Benutzer ohne weitere Rechte                                      |
-| wls_all     | test     | Ein Benutzer mit allen Rechten                                        |
 | wls_all_bwb | test     | Ein Benutzer mit allen Rechten mit der WahlbezirksArt BWB (Briefwahl) |
 | wls_all_uwb | test     | Ein Benutzer mit allen Rechten mit der WahlbezirksArt UWB (Urnenwahl) |
+
+> [!CAUTION]
+> Für die Anmeldung am WLS muss der User die Rolle `WLS_WAHLVORSTAND` haben.
+> Für die Anmeldung am Admintool muss der User die Rolle `MONITORING_HELPDESK` haben.
 
 ## Datenbank
 
@@ -127,3 +129,17 @@ sollte der Container in Docker einmal komplett gelöscht und über das `docker-c
 > [!WARNING]
 > Bei dieser Variante ist es wichtig, dass die Änderung im `docker-compose.yml` File nicht gepusht wird, weil alle
 > anderen Container mit security laufen und das `no-security`-Profil nur für die Entwicklung benötigt wird.
+
+### Backend-Services
+
+Damit das Frontend im Zusammenspiel mit den anderen Services lokal gestartet werden kann, sind einmalig nach dem Aufsetzen der DB folgende Schritte notwendig:
+
+1. `db-oracle`-Service in Docker oder über das `docker-compose.yml` starten
+2. `auth-service` starten
+3. `refarch-gateway-wls`-Service in Docker oder über das `docker-compose.yml` starten
+4. Das Wahllokalsystem-Frontend in Docker oder über `npm run dev` starten
+   (siehe [Punkt 1](#1-starten-über-das-gateway--authentifizierung): *Jetzt kann das Frontend zwar aufgerufen werden, aber durch das fehlgeschlagene Laden der initialen Daten ist noch kein Zugriff auf die Anwendung möglich)*
+5. die Services `basisdaten-service`, `eai-service`, `infomanagement-service` und `wahlvorstand-service` starten und folgende http-requests ausführen:
+   - `"basisdaten-service/wahltage.http"`: `GET wahltage`
+   - `"basisdaten-service/ungueltigeWahlscheine.http"`: `POST ungueltige Wahlscheine | user wls_all_uwb`
+   - `"infomanagement-service/konfigurierterWahltag.http"`: `POST konfigurierter Wahltag` (für den entsprechenden User)

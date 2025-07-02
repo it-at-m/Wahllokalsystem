@@ -1,0 +1,179 @@
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
+import { createPinia, setActivePinia } from "pinia";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+import { useUserStore } from "@/stores/userStore.ts";
+import { createUserLocalDevelopment } from "@/types/User.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
+
+const mockDefinitions = vi.hoisted(() => ({
+  getUser: vi.fn(),
+}));
+
+vi.mock("@/composables/user/userService", () => ({
+  useUserService: () => ({
+    getUser: mockDefinitions.getUser,
+  }),
+}));
+
+const { prepareUser } = useUserTestDataFactory();
+
+describe("userStore.ts", () => {
+  let unitUnderTest: ReturnType<typeof useUserStore>;
+
+  beforeEach(() => {
+    setActivePinia(createPinia());
+    unitUnderTest = useUserStore();
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  describe("loadUser", () => {
+    it("should_setUserLocalDevelopment_when_serviceCallFailedAndInDevMode", async () => {
+      const user = createUserLocalDevelopment();
+      mockDefinitions.getUser.mockRejectedValue(new Error("error in service"));
+
+      await expect(() => unitUnderTest.loadUser()).rejects.toThrow(
+        "error in service"
+      );
+      expect(unitUnderTest.user).toStrictEqual(user);
+    });
+
+    it("should_setUser_when_serviceCalledSuccessfully", async () => {
+      const user = createUserLocalDevelopment();
+      mockDefinitions.getUser.mockResolvedValue(user);
+
+      await unitUnderTest.loadUser();
+
+      expect(unitUnderTest.user).toStrictEqual(user);
+    });
+  });
+
+  describe("setUser", () => {
+    it("should_setUser_when_givenUser", () => {
+      const user = prepareUser().build();
+      unitUnderTest.setUser(user);
+
+      expect(unitUnderTest.user).toStrictEqual(user);
+    });
+
+    it("should_setDefaultUser_when_serviceCallFailedAndInProdMode", async () => {
+      mockDefinitions.getUser.mockRejectedValue(new Error("error in service"));
+
+      vi.stubEnv("DEV", false);
+
+      expect(import.meta.env.DEV).toBe(false);
+      await expect(() => unitUnderTest.loadUser()).rejects.toThrow(
+        "error in service"
+      );
+
+      expect(unitUnderTest.user).toStrictEqual({
+        username: "",
+        email: "",
+        userEnabled: false,
+        wahltagID: "",
+        wahltag: "",
+        wahlbezirkID: "",
+        wahlbezirkNummer: "",
+        wahlbezirksArt: WahlbezirksArtEnum.UWB,
+        pin: "",
+        authorities: new Set<string>(),
+        wahlMetaData: [
+          {
+            wahlbezirkID: "",
+            wahlnummer: "",
+            wahlID: "",
+          },
+        ],
+      });
+    });
+  });
+
+  describe("currentUserWahlbezirkID", () => {
+    it("should_returnWahlbezirkId_when_wahlbezirkIdExists", () => {
+      const wahlbezirkID = "ich bin eine id";
+      unitUnderTest.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+
+      expect(unitUnderTest.currentUserWahlbezirkID).toStrictEqual(wahlbezirkID);
+    });
+  });
+
+  describe("currentUserWahltagID", () => {
+    it("should_returnWahltagId_when_wahltagIdExists", () => {
+      const wahltagID = "ich bin eine id";
+      unitUnderTest.setUser(prepareUser().wahltagID(wahltagID).build());
+
+      expect(unitUnderTest.currentUserWahltagID).toStrictEqual(wahltagID);
+    });
+  });
+
+  describe("currentUserWahlbezirksArt", () => {
+    it.each([
+      { wahlbezirksart: WahlbezirksArtEnum.UWB },
+      { wahlbezirksart: WahlbezirksArtEnum.BWB },
+    ])(
+      "should_return'$wahlbezirksart'_when_wahlbezirksArtIs'$wahlbezirksart'",
+      ({ wahlbezirksart }) => {
+        unitUnderTest.setUser(
+          prepareUser().wahlbezirksArt(wahlbezirksart).build()
+        );
+
+        expect(unitUnderTest.currentUserWahlbezirksArt).toStrictEqual(
+          wahlbezirksart
+        );
+      }
+    );
+  });
+
+  describe("currentUserHauptWahlID", () => {
+    it("should_returnHauptWahlId_when_wahlMetaDataHasOneEntry", () => {
+      const expectedWahlID = "ID of object with smallest wahlnummer";
+      unitUnderTest.setUser(
+        prepareUser()
+          .wahlMetaData([
+            {
+              wahlbezirkID: "123",
+              wahlnummer: "1",
+              wahlID: expectedWahlID,
+            },
+          ])
+          .build()
+      );
+
+      expect(unitUnderTest.currentUserHauptWahlID).toStrictEqual(
+        expectedWahlID
+      );
+    });
+
+    it("should_returnHauptWahlIdOfObjectWithSmallestWahlnummer_when_wahlMetaDataHasMultipleEntries", () => {
+      const expectedWahlID = "ID of object with smallest wahlnummer";
+      unitUnderTest.setUser(
+        prepareUser()
+          .wahlMetaData([
+            {
+              wahlbezirkID: "123",
+              wahlnummer: "1",
+              wahlID: "ID zu wahlnumemr 1",
+            },
+            {
+              wahlbezirkID: "123",
+              wahlnummer: "3",
+              wahlID: "ID zu wahlunmmer 3",
+            },
+            {
+              wahlbezirkID: "123",
+              wahlnummer: "0",
+              wahlID: expectedWahlID,
+            },
+          ])
+          .build()
+      );
+
+      expect(unitUnderTest.currentUserHauptWahlID).toStrictEqual(
+        expectedWahlID
+      );
+    });
+  });
+});

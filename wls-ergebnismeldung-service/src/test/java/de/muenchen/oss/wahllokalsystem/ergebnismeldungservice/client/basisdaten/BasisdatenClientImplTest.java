@@ -33,7 +33,7 @@ class BasisdatenClientImplTest {
     BasisdatenClientImpl unitUnderTest;
 
     @Nested
-    class GetWahlartOfCurrentWahltag {
+    class GetWahlart {
 
         private final String wahlID = "wahlID";
         private final String wahltagID = "wahltagID";
@@ -94,5 +94,4 @@ class BasisdatenClientImplTest {
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlart(wahltagID, wahlID)).isSameAs(mockedWlsException);
         }
     }
-
 }

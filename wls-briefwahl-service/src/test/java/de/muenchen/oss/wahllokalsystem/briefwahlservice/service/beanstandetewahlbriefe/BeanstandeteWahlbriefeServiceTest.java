@@ -35,7 +35,7 @@ class BeanstandeteWahlbriefeServiceTest {
 
         @Test
         void should_returnNull_when_noDataFound() {
-            val reference = BeanstandeteWahlbriefeReference.builder().build();
+            val reference = BeanstandeteWahlbriefeReferenceModel.builder().build();
 
             val mappedEntityId = new BezirkIDUndWaehlerverzeichnisNummer();
 
@@ -50,7 +50,7 @@ class BeanstandeteWahlbriefeServiceTest {
 
         @Test
         void should_returnBeanstandeteWahlbriefeModel_when_givenValidReference() {
-            val reference = BeanstandeteWahlbriefeReference.builder().build();
+            val reference = BeanstandeteWahlbriefeReferenceModel.builder().build();
 
             val mappedEntityId = new BezirkIDUndWaehlerverzeichnisNummer();
             val entityFromRepo = new BeanstandeteWahlbriefe();
@@ -68,7 +68,7 @@ class BeanstandeteWahlbriefeServiceTest {
 
         @Test
         void should_throwFachlicheWlsException_when_referenceIsInvalid() {
-            val reference = BeanstandeteWahlbriefeReference.builder().build();
+            val reference = BeanstandeteWahlbriefeReferenceModel.builder().build();
 
             val exceptionToThrow = FachlicheWlsException.withCode("0815").buildWithMessage("upsi");
 

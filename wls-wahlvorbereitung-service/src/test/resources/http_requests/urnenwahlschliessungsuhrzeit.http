@@ -2,15 +2,15 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET wbzID-1
-GET {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/urnenwahlSchliessungsUhrzeit/wbzID-1
+### GET wahlbezirkID | user wls_all_uwb
+GET {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/urnenwahlSchliessungsUhrzeit/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST wbzID-1
-POST {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/urnenwahlSchliessungsUhrzeit/wbzID-1
+### POST wahlbezirkID | user wls_all_uwb
+POST {{ WLS_WAHLVORBEREITUNG_SERVICE_URL }}/businessActions/urnenwahlSchliessungsUhrzeit/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
-  "schliessungsuhrzeit": "2024-06-10T17:05:33.505"
+  "schliessungsuhrzeit": "2024-06-10T18:05:33.505"
 }

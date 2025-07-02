@@ -28,7 +28,7 @@ class WahllokalBenutzerClientMapperTest {
             void should_mapToWahllokalUserInfoDTO_when_givenModel() {
                 val wahllokalBenutzerModel = getWahllokalBenutzerModelWithBWB();
 
-                val result = unitUnderTest.toWahllokalUserInfoDTO(wahllokalBenutzerModel);
+                val result = unitUnderTest.toDTO(wahllokalBenutzerModel);
 
                 val expectedWahllokalUserInfoDTO = getWahllokalUserInfoDTOWithBWB();
 
@@ -41,7 +41,7 @@ class WahllokalBenutzerClientMapperTest {
 
             @Test
             void should_returnNull_when_nullIsGiven() {
-                Assertions.assertThat(unitUnderTest.toListOfWahllokalUserInfoDTO(null)).isNull();
+                Assertions.assertThat(unitUnderTest.toDTO((List<WahllokalBenutzerModel>) null)).isNull();
             }
 
             @Test
@@ -50,7 +50,7 @@ class WahllokalBenutzerClientMapperTest {
 
                 Assertions.assertThat(wahllokalBenutzerModels).isNotEmpty();
 
-                val result = unitUnderTest.toListOfWahllokalUserInfoDTO(wahllokalBenutzerModels);
+                val result = unitUnderTest.toDTO(wahllokalBenutzerModels);
 
                 val expectedWahllokalUserInfoDTOs = getListOfWahlLokalUserInfoDTO();
 

@@ -5,7 +5,6 @@ import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
-import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { enableAutoUnmount, mount } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import {
@@ -23,7 +22,6 @@ import { VApp } from "vuetify/components";
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
-import { useUserStore } from "@/stores/userStore.ts";
 
 describe("TheWlsAppBar.vue", () => {
   let wrapper: VueWrapper;
@@ -63,10 +61,7 @@ describe("TheWlsAppBar.vue", () => {
   });
 
   describe(COMPONENT_RENDER_TESTS, () => {
-    it("when_initializationOfTaskHasCompletelyRun_then_renderNavigationDrawerIcon", async (context) => {
-      const userStore = useUserStore();
-      const user = useUserTestDataFactory().prepareUser().build();
-      userStore.setUser(user);
+    it("should_renderNavigationDrawerIcon_when_initializationOfTaskHasCompletelyRun", async (context) => {
       const taskManagerStore = useTaskManagerStore();
       // @ts-expect-error: cannot set readonly
       taskManagerStore.hasInitializationOfTasksCompletelyRun = true;
@@ -78,10 +73,7 @@ describe("TheWlsAppBar.vue", () => {
       );
     });
 
-    it("when_initializationOfTaskHasNotCompletelyRun_then_dontRenderNavigationDrawerIcon", async (context) => {
-      const userStore = useUserStore();
-      const user = useUserTestDataFactory().prepareUser().build();
-      userStore.setUser(user);
+    it("should_notRenderNavigationDrawerIcon_when_initializationOfTaskHasNotCompletelyRun", async (context) => {
       const taskManagerStore = useTaskManagerStore();
       // @ts-expect-error: cannot set readonly
       taskManagerStore.hasInitializationOfTasksCompletelyRun = false;

@@ -1,4 +1,4 @@
-import type { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
+import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 
 export interface Ereignis {
   beschreibung?: string;
@@ -14,12 +14,12 @@ export class EreignisBuilder implements Ereignis {
   ) {}
 
   static createMinimal(): EreignisBuilder {
-    return new EreignisBuilder("VORFALL");
+    return new EreignisBuilder(EreignisartEnum.Vorfall);
   }
 
   static createComplete(): EreignisBuilder {
     return new EreignisBuilder(
-      "VORFALL",
+      EreignisartEnum.Vorfall,
       "Ein Stift ist runter gefallen",
       new Date("2025-03-31T15:15:00.000")
     );

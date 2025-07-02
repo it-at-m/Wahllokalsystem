@@ -20,7 +20,6 @@
         <v-btn
           v-if="canceltext"
           data-test="basedialog-btn-cancel"
-          variant="text"
           @click="onCancelClicked"
         >
           {{ canceltext }}

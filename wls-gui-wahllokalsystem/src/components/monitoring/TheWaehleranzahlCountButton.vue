@@ -39,8 +39,15 @@ function onWaehleranzahlClicked() {
 }
 
 function onKeyupEvent(event: KeyboardEvent) {
-  if (event.key === "+") {
+  if (event.key === "+" && !isInputElement(event.target)) {
     increaseWaehlerByOne();
   }
+}
+
+function isInputElement(target: EventTarget | null): boolean {
+  if (!target) return false;
+  const tagName = (target as Element).tagName?.toLowerCase();
+  return tagName === 'input' || tagName === 'textarea' || 
+         (target as Element).getAttribute('contenteditable') === 'true';
 }
 </script>

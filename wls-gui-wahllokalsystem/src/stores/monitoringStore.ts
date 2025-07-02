@@ -23,21 +23,19 @@ export const useMonitoringStore = defineStore(storeID, () => {
   }
 
   async function loadWaehler() {
-    const wahlbezirkID = currentUserWahlbezirkID.value;
-    const wahlID = currentUserHauptWahlID.value;
-    if (wahlbezirkID && wahlID) {
-      const wahlbeteiligung = await getWahlbeteiligung(wahlID, wahlbezirkID);
-      waehler.value = wahlbeteiligung ? wahlbeteiligung.anzahlWaehler : 0;
-    }
+    const wahlbeteiligung = await getWahlbeteiligung(
+      currentUserHauptWahlID.value,
+      currentUserWahlbezirkID.value
+    );
+    waehler.value = wahlbeteiligung ? wahlbeteiligung.anzahlWaehler : 0;
   }
 
   async function sendWaehler() {
-    const wahlbezirkID = currentUserWahlbezirkID.value;
-    const wahlID = currentUserHauptWahlID.value;
-
-    if (wahlbezirkID && wahlID) {
-      await postWahlbeteiligung(wahlbezirkID, wahlID, waehler.value);
-    }
+    await postWahlbeteiligung(
+      currentUserWahlbezirkID.value,
+      currentUserHauptWahlID.value,
+      waehler.value
+    );
   }
 
   return { waehler, increaseWaehlerByOne, loadWaehler, sendWaehler };

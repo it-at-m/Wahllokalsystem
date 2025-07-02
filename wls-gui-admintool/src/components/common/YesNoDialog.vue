@@ -35,7 +35,6 @@
         <v-spacer />
         <v-btn
           id="yesnodialog-btn-no"
-          variant="text"
           @click="no"
         >
           Nein

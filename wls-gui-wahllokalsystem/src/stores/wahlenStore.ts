@@ -1,6 +1,6 @@
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
-import { defineStore } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
@@ -12,23 +12,27 @@ const wahlenService = useWahlService();
 const { registerStoreHMR } = useHmrUpdate();
 
 export const useWahlenStore = defineStore(storeID, () => {
-  const userStore = useUserStore();
+  const { currentUserWahltagID } = storeToRefs(useUserStore());
   const wahlen = ref<Wahl[] | null>();
 
   async function initWahlen(sendNotification = true) {
-    const currentWahltag = userStore.currentUserWahltagID;
-    if (currentWahltag) {
-      wahlen.value = await wahlenService.getWahlen(
-        currentWahltag,
-        sendNotification
-      );
-    } else {
-      await Promise.reject();
+    wahlen.value = await wahlenService.getWahlen(
+      currentUserWahltagID.value,
+      sendNotification
+    );
+  }
+
+  function getWahlNameOrBlankStringById(wahlID: string) {
+    if (wahlen.value) {
+      const wahl = wahlen.value.find((wahl) => wahl.wahlID === wahlID);
+      return wahl ? wahl.name : "";
     }
+    return "";
   }
 
   return {
     wahlen,
+    getWahlNameOrBlankStringById,
     initWahlen,
   };
 });

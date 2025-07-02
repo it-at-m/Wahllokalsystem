@@ -11,6 +11,7 @@
       </v-container>
     </v-main>
     <the-broadcast-read-confirmation-dialog />
+    <the-wahlvorstand-anwesenheits-check-popup-dialog />
   </v-app>
 </template>
 
@@ -20,6 +21,7 @@ import { onMounted, onUnmounted } from "vue";
 import { VApp, VContainer, VFadeTransition, VMain } from "vuetify/components";
 
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
+import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
@@ -36,12 +38,16 @@ const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
 
 onMounted(async () => {
-  await loadUser().then(() => {
-    startBroadcastMessageInterval();
-    initTasks();
-    loadEreignisse();
-    loadWaehler();
-  });
+  await loadUser()
+    .then(() => {
+      startBroadcastMessageInterval();
+      initTasks();
+      loadEreignisse();
+      loadWaehler();
+    })
+    .catch((error) => {
+      console.debug(error);
+    });
 
   // config for service worker indexed db (same config as in wahl-worker.js !)
   localforage.config({

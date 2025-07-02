@@ -60,15 +60,10 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   );
 
   async function initWahlvorstand(sendNotification = true) {
-    const wahlbezirkID = currentUserWahlbezirkID.value;
-    if (wahlbezirkID) {
-      wahlvorstand.value = await getWahlvorstand(wahlbezirkID, {
-        forceUpdate: true,
-        sendNotification: sendNotification,
-      });
-    } else {
-      await Promise.reject();
-    }
+    wahlvorstand.value = await getWahlvorstand(currentUserWahlbezirkID.value, {
+      forceUpdate: true,
+      sendNotification: sendNotification,
+    });
   }
 
   async function forceLoadWahlvorstand() {
@@ -79,17 +74,20 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     await _loadWahlvorstand(false, false);
   }
 
+  function resetAllAnwesenheiten() {
+    wahlvorstand.value.wahlvorstandsmitglieder.forEach(
+      (wahlvorstandsMitglied) => (wahlvorstandsMitglied.anwesend = false)
+    );
+  }
+
   async function sendWahlvorstand() {
     isSaving.value = true;
     try {
-      const wahlbezirkID = currentUserWahlbezirkID.value;
-      if (wahlbezirkID) {
-        const { updateDatetime } = await saveWahlvorstand(
-          wahlbezirkID,
-          wahlvorstand.value
-        );
-        lastSending.value = updateDatetime;
-      }
+      const { updateDatetime } = await saveWahlvorstand(
+        currentUserWahlbezirkID.value,
+        wahlvorstand.value
+      );
+      lastSending.value = updateDatetime;
     } finally {
       isSaving.value = false;
     }
@@ -112,14 +110,14 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
   ) {
     isLoading.value = true;
     try {
-      const wahlbezirkID = currentUserWahlbezirkID.value;
-      if (wahlbezirkID) {
-        wahlvorstand.value = await getWahlvorstand(wahlbezirkID, {
+      wahlvorstand.value = await getWahlvorstand(
+        currentUserWahlbezirkID.value,
+        {
           forceUpdate: forceUpdate,
           sendNotification: sendNotification,
-        });
-        lastLoading.value = new Date();
-      }
+        }
+      );
+      lastLoading.value = new Date();
     } finally {
       isLoading.value = false;
     }
@@ -139,6 +137,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     changeAnwesendOfMitglied,
     forceLoadWahlvorstand,
     loadWahlvorstand,
+    resetAllAnwesenheiten,
     sendWahlvorstand,
   };
 });

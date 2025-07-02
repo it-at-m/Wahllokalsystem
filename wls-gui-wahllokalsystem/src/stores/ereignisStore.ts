@@ -96,6 +96,8 @@ export const useEreignisStore = defineStore(storeID, () => {
 
   function deleteEreignisByIndex(index: number) {
     wahlbezirkEreignisse.value.ereigniseintraege?.splice(index, 1);
+
+    _updateKeineFlagsOfEreignisseBasedOnCurrentState();
   }
 
   function updateUhrzeitByIndex(uhrzeit: Date | undefined, index: number) {
@@ -114,6 +116,7 @@ export const useEreignisStore = defineStore(storeID, () => {
             uhrzeit,
             schliessungsuhrzeitSent.value
           );
+        _updateKeineFlagsOfEreignisseBasedOnCurrentState();
       } else {
         ereignisToChange.uhrzeit = undefined;
         ereignisToChange.ereignisart = EreignisartEnum.Vorfall;

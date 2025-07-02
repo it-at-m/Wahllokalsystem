@@ -62,4 +62,31 @@ describe("wahlenStore.ts", () => {
       expect(result).toStrictEqual(wahlOne.name);
     });
   });
+
+  describe("getWahlTagOrBlankStringById", () => {
+    it("should_getWahlTag_when_calledWithWahlId", () => {
+      const wahlOne = createWahl();
+      const wahlTwo = createWahl();
+      const wahlThree = createWahl();
+
+      unitUnderTest.wahlen = [wahlOne, wahlTwo, wahlThree];
+
+      const result = unitUnderTest.getWahlTagOrBlankStringById(wahlOne.wahlID);
+
+      expect(result).toStrictEqual(wahlOne.wahltag);
+    });
+
+    it("should_getBlank_when_calledWithWahlIdThatDoesNotExist", () => {
+      const wahlOne = createWahl();
+      const wahlTwo = createWahl();
+      const wahlThree = createWahl();
+      const wahlFour = createWahl();
+
+      unitUnderTest.wahlen = [wahlOne, wahlTwo, wahlThree];
+
+      const result = unitUnderTest.getWahlTagOrBlankStringById(wahlFour.wahlID);
+
+      expect(result).toStrictEqual("");
+    });
+  });
 });

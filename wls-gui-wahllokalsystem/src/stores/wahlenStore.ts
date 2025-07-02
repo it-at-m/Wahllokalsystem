@@ -32,7 +32,7 @@ export const useWahlenStore = defineStore(storeID, () => {
     return wahl ? wahl.name : "";
   }
 
-  function getWahltagOrBlankById(wahlID: string) {
+  function getWahlTagOrBlankStringById(wahlID: string) {
     const wahl = _getWahlOrUndefinedById(wahlID);
     return wahl ? wahl.wahltag : "";
   }
@@ -46,7 +46,7 @@ export const useWahlenStore = defineStore(storeID, () => {
   return {
     wahlen,
     getWahlNameOrBlankStringById,
-    getWahltagOrBlankById,
+    getWahlTagOrBlankStringById,
     initWahlen,
   };
 });

@@ -34,7 +34,7 @@ const wahlenStore = useWahlenStore();
 
 function _getWahlTagAsFormattedStringOrBlank() {
   const wahlTag = currentUserHauptWahlID.value
-    ? wahlenStore.getWahltagOrBlankById(currentUserHauptWahlID.value)
+    ? wahlenStore.getWahlTagOrBlankStringById(currentUserHauptWahlID.value)
     : "";
   return new Date(wahlTag).toLocaleDateString("de-DE", {
     year: "numeric",

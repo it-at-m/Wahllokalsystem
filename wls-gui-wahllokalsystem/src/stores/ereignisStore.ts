@@ -162,6 +162,10 @@ export const useEreignisStore = defineStore(storeID, () => {
     );
   }
 
+  function _hasToUpdateKeineVorkommnisse(): boolean {
+    return schliessungsuhrzeitSent.value !== undefined;
+  }
+
   function _onSchliessunguhrzeitSentChanged(
     newSchliessungsuhrzeit: Date | undefined
   ) {
@@ -183,9 +187,11 @@ export const useEreignisStore = defineStore(storeID, () => {
   }
 
   function _updateKeineFlagsOfEreignisseBasedOnCurrentState() {
-    wahlbezirkEreignisse.value.keineVorkommnisse = !_hasEintragOfEreignisart(
-      EreignisartEnum.Vorkommnis
-    );
+    if (_hasToUpdateKeineVorkommnisse()) {
+      wahlbezirkEreignisse.value.keineVorkommnisse = !_hasEintragOfEreignisart(
+        EreignisartEnum.Vorkommnis
+      );
+    }
     wahlbezirkEreignisse.value.keineVorfaelle = !_hasEintragOfEreignisart(
       EreignisartEnum.Vorfall
     );

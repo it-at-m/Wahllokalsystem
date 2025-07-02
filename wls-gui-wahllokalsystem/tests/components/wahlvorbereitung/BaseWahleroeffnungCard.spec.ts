@@ -35,13 +35,13 @@ describe("BaseWahleroeffnungCard.vue", () => {
   }));
   vi.stubGlobal("ResizeObserver", ResizeObserverMock);
 
-  const mockedNow = new Date();
-  mockedNow.setHours(7, 30);
-  vi.useFakeTimers({
-    now: mockedNow,
-  });
-
   beforeEach(() => {
+    const mockedNow = new Date();
+    mockedNow.setHours(7, 30);
+    vi.useFakeTimers({
+      now: mockedNow,
+    });
+
     wrapper = mount(BaseWahleroeffnungCard, {
       global: {
         plugins: [

@@ -7,6 +7,7 @@ import {
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import {
   afterAll,
+  afterEach,
   beforeAll,
   beforeEach,
   describe,
@@ -46,6 +47,12 @@ describe("BaseWahlschliessungCard.vue", () => {
   beforeAll(() => vi.stubGlobal("ResizeObserver", ResizeObserverMock));
 
   beforeEach(() => {
+    const mockedNow = new Date();
+    mockedNow.setHours(17, 31);
+    vi.useFakeTimers({
+      now: mockedNow,
+    });
+
     wrapper = mount(BaseWahlschliessungCard, {
       global: {
         plugins: [
@@ -59,6 +66,9 @@ describe("BaseWahlschliessungCard.vue", () => {
     });
   });
 
+  afterEach(() => {
+    vi.useRealTimers();
+  });
   afterAll(() => vi.unstubAllGlobals());
 
   describe(COMPONENT_RENDER_TESTS, () => {
@@ -132,13 +142,6 @@ describe("BaseWahlschliessungCard.vue", () => {
     });
 
     it("should_callSendSchliessungsuhrzeit_when_saveButtonIsClicked", async () => {
-      // mock time to avoid test failure due to TIME_NOT_IN_FUTURE rule
-      const mockedNow = new Date();
-      mockedNow.setHours(17, 31);
-      vi.useFakeTimers({
-        now: mockedNow,
-      });
-
       const infomanagementStore = useInfomanagementStore();
       // @ts-expect-error: cannot set readonly
       infomanagementStore.fruehesteSchliessungsuhrzeitUWB = "17:00:00";
@@ -156,7 +159,6 @@ describe("BaseWahlschliessungCard.vue", () => {
       );
 
       expect(wahlbezirkStore.sendSchliessungsuhrzeit).toHaveBeenCalled();
-      vi.useRealTimers();
     });
   });
 });

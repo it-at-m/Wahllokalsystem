@@ -7,41 +7,36 @@ import {
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
+import { useWahlvorstandTestDataFactory } from "@tests/utils/wahlvorstand/WahlvorstandTestDataFactory.ts";
 import { enableAutoUnmount, flushPromises, mount } from "@vue/test-utils";
-import { createPinia } from "pinia";
-import {
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vitest";
-import { nextTick } from "vue";
-import { createVuetify } from "vuetify";
-import * as components from "vuetify/components";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick, ref } from "vue";
 import { VBtn } from "vuetify/components";
-import * as directives from "vuetify/directives";
 
 import TheNachbesetzungDruckenButton from "@/components/wahlvorstand/TheNachbesetzungDruckenButton.vue";
+import vuetify from "@/plugins/vuetify.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
+const mockDefinitions = vi.hoisted(() => ({
+  loadWahlvorstand: vi.fn(),
+  sendWahlvorstand: vi.fn(),
+}));
+vi.mock("@/stores/wahlvorstandStore.ts", () => ({
+  useWahlvorstandStore: () => ({
+    wahlvorstand: ref(createWahlvorstand()),
+    sendWahlvorstand: mockDefinitions.sendWahlvorstand,
+    loadWahlvorstand: mockDefinitions.loadWahlvorstand,
+  }),
+}));
+
 const { prepareUser } = useUserTestDataFactory();
+const { createWahlvorstand } = useWahlvorstandTestDataFactory();
 
 describe("TheNachbesetzungDruckenButton.vue", () => {
-  let vuetify: ReturnType<typeof createVuetify>;
   let wrapper: VueWrapper;
 
-  beforeAll(() => {
-    createPinia();
-  });
-
   beforeEach(() => {
-    vuetify = createVuetify({ components, directives });
-
     wrapper = mount(TheNachbesetzungDruckenButton, {
       global: {
         plugins: [
@@ -90,10 +85,11 @@ describe("TheNachbesetzungDruckenButton.vue", () => {
     describe("onNachbesetzungDruckenClicked", () => {
       it("should_saveAndLoadWahlvorstandAndOpenNewWindow_when_clicked", async () => {
         const userStore = useUserStore();
-        const wahlvorstandStore = useWahlvorstandStore();
-
         userStore.setUser(
-          prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+          prepareUser()
+            .wahlbezirkID("fhrtf")
+            .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+            .build()
         );
         await nextTick();
 
@@ -109,8 +105,13 @@ describe("TheNachbesetzungDruckenButton.vue", () => {
         await button.trigger("click");
         await flushPromises(); // wait for all async operations to be executed
 
-        expect(wahlvorstandStore.sendWahlvorstand).toHaveBeenCalled();
-        expect(wahlvorstandStore.loadWahlvorstand).toHaveBeenCalled();
+        mockDefinitions.sendWahlvorstand.mockResolvedValue(Promise.resolve());
+        mockDefinitions.loadWahlvorstand.mockResolvedValue(
+          createWahlvorstand()
+        );
+
+        expect(mockDefinitions.sendWahlvorstand).toHaveBeenCalled();
+        expect(mockDefinitions.loadWahlvorstand).toHaveBeenCalled();
         expect(window.open).toHaveBeenCalled();
         expect(mockedWindow.print).toHaveBeenCalled();
 

@@ -70,6 +70,6 @@ export const Default: Story = {
   },
   args: {
     userHint:
-      "Ein nützlicher Hinweis für den User wie er die zu erfassenden Uhrzeit bestimmen kann",
+      "Ein nützlicher Hinweis für den User wie er die zu erfassende Uhrzeit bestimmen kann",
   },
 };

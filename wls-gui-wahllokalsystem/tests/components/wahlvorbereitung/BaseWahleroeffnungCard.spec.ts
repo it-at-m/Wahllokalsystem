@@ -53,7 +53,7 @@ describe("BaseWahleroeffnungCard.vue", () => {
         ],
       },
       slots: {
-        userHint: "content for slot useHint",
+        userHint: "content for slot userHint",
       },
     });
   });

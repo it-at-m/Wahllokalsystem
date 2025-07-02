@@ -74,6 +74,12 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     await _loadWahlvorstand(false, false);
   }
 
+  function resetAllAnwesenheiten() {
+    wahlvorstand.value.wahlvorstandsmitglieder.forEach(
+      (wahlvorstandsMitglied) => (wahlvorstandsMitglied.anwesend = false)
+    );
+  }
+
   async function sendWahlvorstand() {
     isSaving.value = true;
     try {
@@ -131,6 +137,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     changeAnwesendOfMitglied,
     forceLoadWahlvorstand,
     loadWahlvorstand,
+    resetAllAnwesenheiten,
     sendWahlvorstand,
   };
 });

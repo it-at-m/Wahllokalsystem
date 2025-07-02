@@ -49,9 +49,7 @@ describe("BaseWahlschliessungCard.vue", () => {
   beforeEach(() => {
     const mockedNow = new Date();
     mockedNow.setHours(17, 31);
-    vi.useFakeTimers({
-      now: mockedNow,
-    });
+    vi.setSystemTime(mockedNow);
 
     wrapper = mount(BaseWahlschliessungCard, {
       global: {

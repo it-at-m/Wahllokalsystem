@@ -56,7 +56,8 @@ export const useInfomanagementStore = defineStore(storeID, () => {
     return param?.wert || "00:00:00";
   });
 
-  /** FRUEHESTE_SCHLIESSUNGSZEIT bezeichnet den spätesten Wert, zu dem die Wahlhandlung eröffnet werden kann. */
+  /** FRUEHESTE_SCHLIESSUNGSZEIT bezeichnet den spätesten Wert, zu dem die Wahlhandlung eröffnet werden kann
+   * und den frühesten Wert, zu dem die Wahlhandlung geschlossen werden kann. */
   const fruehesteSchliessungsuhrzeitUWB = computed(() => {
     const param = konfigurationsparameter.value?.find(
       (param) => param.schluessel === "FRUEHESTE_SCHLIESSUNGSZEIT_UW"

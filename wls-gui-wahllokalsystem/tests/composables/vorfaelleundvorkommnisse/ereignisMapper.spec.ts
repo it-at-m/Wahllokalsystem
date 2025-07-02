@@ -60,6 +60,24 @@ describe("ereignisMapper.ts", () => {
       };
       expect(result).toStrictEqual(expectedResult);
     });
+
+    it("should_returnEreignisseWriteDto_when_modelIsGivenWithTrueValues", () => {
+      const modelToMap = getWahlbezirkEreignisse(getEreignisse());
+      modelToMap.keineVorfaelle = true;
+      modelToMap.keineVorkommnisse = true;
+
+      const result = toDto(modelToMap);
+
+      const expectedResult: EreignisseWriteDTO = {
+        ereigniseintraege: getEreignisseDTO(
+          "2025-04-28T08:15:00.000Z",
+          "2025-04-28T11:40:00.000Z"
+        ),
+        keineVorfaelle: true,
+        keineVorkommnisse: true,
+      };
+      expect(result).toStrictEqual(expectedResult);
+    });
   });
 });
 

@@ -49,7 +49,7 @@ function ereignisDtoToEreignisModel(ereignisDto: EreignisDTO): Ereignis {
   return {
     beschreibung: ereignisDto.beschreibung ?? "",
     uhrzeit: ereignisDto.uhrzeit ? new Date(ereignisDto.uhrzeit) : undefined,
-    ereignisart: ereignisDto.ereignisart,
+    ereignisart: ereignisartDtoToEreignisartModel(ereignisDto.ereignisart),
   };
 }
 
@@ -69,9 +69,20 @@ function ereignisartModelToEreignisartDto(
   ereignisartModel: EreignisartEnum
 ): EreignisDTOEreignisartEnum {
   switch (ereignisartModel) {
-    case "VORFALL":
+    case EreignisartEnum.Vorfall:
       return EreignisDTOEreignisartEnum.Vorfall;
-    case "VORKOMMNIS":
+    case EreignisartEnum.Vorkommnis:
       return EreignisDTOEreignisartEnum.Vorkommnis;
+  }
+}
+
+function ereignisartDtoToEreignisartModel(
+  ereignisartDto: EreignisDTOEreignisartEnum
+): EreignisartEnum {
+  switch (ereignisartDto) {
+    case EreignisDTOEreignisartEnum.Vorfall:
+      return EreignisartEnum.Vorfall;
+    case EreignisDTOEreignisartEnum.Vorkommnis:
+      return EreignisartEnum.Vorkommnis;
   }
 }

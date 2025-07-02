@@ -1,15 +1,14 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base"
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: [
+    'config:recommended',
   ],
-  "addLabels": [
-    "renovate"
+  addLabels: [
+    'renovate',
   ],
-  "ignoreDeps": [
-    "org.projectlombok:lombok",
-    //#248 https://github.com/it-at-m/Wahllokalsystem/issues/248#issuecomment-2228404217
-    "quay.io/keycloak/keycloak",
+  ignoreDeps: [
+    'org.projectlombok:lombok',
+    'quay.io/keycloak/keycloak',
   ],
   prConcurrentLimit: 2,
 }

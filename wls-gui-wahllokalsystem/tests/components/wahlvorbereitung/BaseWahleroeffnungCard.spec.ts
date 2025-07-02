@@ -5,7 +5,7 @@ import {
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
@@ -35,6 +35,12 @@ describe("BaseWahleroeffnungCard.vue", () => {
   }));
   vi.stubGlobal("ResizeObserver", ResizeObserverMock);
 
+  const mockedNow = new Date();
+  mockedNow.setHours(7, 30);
+  vi.useFakeTimers({
+    now: mockedNow,
+  });
+
   beforeEach(() => {
     wrapper = mount(BaseWahleroeffnungCard, {
       global: {
@@ -47,6 +53,10 @@ describe("BaseWahleroeffnungCard.vue", () => {
         ],
       },
     });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   describe(COMPONENT_RENDER_TESTS, () => {

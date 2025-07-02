@@ -45,9 +45,12 @@ function onKeyupEvent(event: KeyboardEvent) {
 }
 
 function isInputElement(target: EventTarget | null): boolean {
-  if (!target) return false;
+  if (!target || !(target instanceof Element)) return false;
   const tagName = (target as Element).tagName?.toLowerCase();
-  return tagName === 'input' || tagName === 'textarea' || 
-         (target as Element).getAttribute('contenteditable') === 'true';
+  return (
+    tagName === "input" ||
+    tagName === "textarea" ||
+    (target as Element).getAttribute("contenteditable") === "true"
+  );
 }
 </script>

@@ -17,15 +17,38 @@ import { VBtn } from "vuetify/components";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useWahlvorstandNachbesetzungsDruck } from "@/composables/wahlvorstand/wahlvorstandNachbesetzungsDruck.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 
 const { loadWahlvorstand, sendWahlvorstand } = useWahlvorstandStore();
 const { buildTemplateFromData } = useWahlvorstandNachbesetzungsDruck();
 const { toHhMm } = useDateTimeFormatter();
 
-const { currentUserWahlbezirkNummer, currentUserWahlbezirksArt } =
-  storeToRefs(useUserStore());
+const {
+  currentUserWahlbezirkNummer,
+  currentUserWahlbezirksArt,
+  currentUserHauptWahlID,
+} = storeToRefs(useUserStore());
 const { wahlvorstand } = storeToRefs(useWahlvorstandStore());
+const wahlenStore = useWahlenStore();
+
+function _getWahlTagAsFormattedStringOrBlank() {
+  const wahlTag = currentUserHauptWahlID.value
+    ? wahlenStore.getWahltagOrBlankById(currentUserHauptWahlID.value)
+    : "";
+  return new Date(wahlTag).toLocaleDateString("de-DE", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour12: false,
+  });
+}
+
+function _getWahlNameOrBlank() {
+  return currentUserHauptWahlID.value
+    ? wahlenStore.getWahlNameOrBlankStringById(currentUserHauptWahlID.value)
+    : "";
+}
 
 async function onNachbesetzungDruckenClicked() {
   await sendWahlvorstand();
@@ -35,6 +58,8 @@ async function onNachbesetzungDruckenClicked() {
 
 function _openPrintDialog() {
   const data: NachbesetzungsDruckInput = {
+    wahlName: _getWahlNameOrBlank(),
+    wahlTag: _getWahlTagAsFormattedStringOrBlank(),
     wahlbezirknummer: currentUserWahlbezirkNummer.value || "",
     wahlvorstaende: wahlvorstand.value.wahlvorstandsmitglieder,
     druckZeitpunkt: toHhMm(new Date()),

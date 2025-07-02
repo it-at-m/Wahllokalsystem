@@ -1,6 +1,8 @@
 import type { KonfigurationDTO } from "@/api/wls-clients/generated-infomanagement-api";
 import type { Konfigurationsparameter } from "@/types/infomanagement/Konfigurationsparameter.ts";
+import type { Builder } from "@tests/utils/Builder.ts";
 
+import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
 const { generateRandomString } = useCommonTestDataFactory();
@@ -19,15 +21,19 @@ export function useKonfigurationsparameterTestDataFactory() {
     return dtoList;
   }
 
+  function createKonfigurationsparameter(): Konfigurationsparameter {
+    return {
+      schluessel: generateRandomString(10),
+      wert: generateRandomString(10),
+    };
+  }
+
   function createKonfigurationsparameterList(
     length: number
   ): Konfigurationsparameter[] {
     const modelList: Konfigurationsparameter[] = [];
     for (let i = 0; i < length; i++) {
-      modelList.push({
-        schluessel: generateRandomString(10),
-        wert: generateRandomString(10),
-      });
+      modelList.push(createKonfigurationsparameter());
     }
     return modelList;
   }
@@ -43,9 +49,17 @@ export function useKonfigurationsparameterTestDataFactory() {
     return model;
   }
 
+  function prepareKonfigurationsparameter(): Builder<Konfigurationsparameter> {
+    return proxyBuilder<Konfigurationsparameter>(
+      createKonfigurationsparameter()
+    );
+  }
+
   return {
     createKonfigurationDtoList,
+    createKonfigurationsparameter,
     createKonfigurationsparameterList,
     mapDtosToModel,
+    prepareKonfigurationsparameter,
   };
 }

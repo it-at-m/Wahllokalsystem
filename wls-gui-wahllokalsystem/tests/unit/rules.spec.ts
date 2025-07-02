@@ -103,14 +103,21 @@ describe("Validation rules", () => {
 
     const rule = TIME_NOT_IN_FUTURE;
 
-    it.each(["12:23", "15:00:00"])(
+    it.each(["12:23", "14:58", "15:00:00"])(
       "should_returnTrue_when_inputTime'%s'IsLessOrEqualToNow",
       (input) => {
         expect(rule(input)).toStrictEqual(true);
       }
     );
 
-    it.each(["30:25", "14:75", "10:20:98", "15:01", "20:00:00"])(
+    it.each(["15:01", "19:36"])(
+      "should_returnErrorMessage_when_inputTimeIsInFuture",
+      (input) => {
+        expect(rule(input)).toBeTypeOf("string");
+      }
+    );
+
+    it.each(["30:25", "14:75", "10:20:98", "", " ", "text", "ab:cd"])(
       "should_returnErrorMessage_when_inputTime'%s'IsInvalid",
       (input) => {
         expect(rule(input)).toBeTypeOf("string");
@@ -129,6 +136,13 @@ describe("Validation rules", () => {
     );
 
     it.each(["00:00", "07:59"])(
+      "should_returnErrorMessage_when_inputTime'%s'IsLessThanComparedValue",
+      (input) => {
+        expect(rule(input)).toBeTypeOf("string");
+      }
+    );
+
+    it.each(["30:25", "14:75", "10:20:98", "", " ", "text", "ab:cd"])(
       "should_returnErrorMessage_when_inputTime'%s'IsInvalid",
       (input) => {
         expect(rule(input)).toBeTypeOf("string");
@@ -146,7 +160,14 @@ describe("Validation rules", () => {
       }
     );
 
-    it.each(["16:01", "26:14"])(
+    it.each(["16:01", "19:36"])(
+      "should_returnErrorMessage_when_inputTime'%s'IsGreaterThanComparedValue",
+      (input) => {
+        expect(rule(input)).toBeTypeOf("string");
+      }
+    );
+
+    it.each(["30:25", "14:75", "10:20:98", "", " ", "text", "ab:cd"])(
       "should_returnErrorMessage_when_inputTime'%s'IsInvalid",
       (input) => {
         expect(rule(input)).toBeTypeOf("string");

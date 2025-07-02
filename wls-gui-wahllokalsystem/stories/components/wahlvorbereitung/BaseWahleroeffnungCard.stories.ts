@@ -46,7 +46,7 @@ const meta = {
 } satisfies Meta<typeof BaseWahleroeffnungCard>;
 
 const { prepareKonfigurationsparameter } =
-  useKonfigurationsparameterTestDataFactory(); //TODO
+  useKonfigurationsparameterTestDataFactory();
 
 export default meta;
 type Story = StoryObj<typeof meta>;

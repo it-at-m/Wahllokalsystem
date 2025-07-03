@@ -76,25 +76,40 @@ export const useInfomanagementStore = defineStore(storeID, () => {
 
   /** FRUEHESTE_EROEFFNUNGSZEIT bezeichnet den frühesten Wert, zu dem die Wahlhandlung eröffnet werden kann. */
   const _fruehesteEroeffnungsuhrzeitUWB = computed(() => {
-    return _getOrDefault("FRUEHESTE_EROEFFNUNGSZEIT_UW", DEFAULT_TIME);
+    return _getKonfigParamValueOrDefault(
+      "FRUEHESTE_EROEFFNUNGSZEIT_UW",
+      DEFAULT_TIME
+    );
   });
 
   /** FRUEHESTE_SCHLIESSUNGSZEIT bezeichnet den spätesten Wert, zu dem die Wahlhandlung eröffnet werden kann. */
   const _fruehesteSchliessungsuhrzeitUWB = computed(() => {
-    return _getOrDefault("FRUEHESTE_SCHLIESSUNGSZEIT_UW", DEFAULT_TIME);
+    return _getKonfigParamValueOrDefault(
+      "FRUEHESTE_SCHLIESSUNGSZEIT_UW",
+      DEFAULT_TIME
+    );
   });
 
   /** FRUEHESTE_EROEFFNUNGSZEIT bezeichnet den frühesten Wert, zu dem die Wahlhandlung eröffnet werden kann. */
   const _fruehesteEroeffnungsuhrzeitBWB = computed(() => {
-    return _getOrDefault("FRUEHESTE_EROEFFNUNGSZEIT_BW", DEFAULT_TIME);
+    return _getKonfigParamValueOrDefault(
+      "FRUEHESTE_EROEFFNUNGSZEIT_BW",
+      DEFAULT_TIME
+    );
   });
 
   /** FRUEHESTE_SCHLIESSUNGSZEIT bezeichnet den spätesten Wert, zu dem die Wahlhandlung eröffnet werden kann. */
   const _fruehesteSchliessungsuhrzeitBWB = computed(() => {
-    return _getOrDefault("FRUEHESTE_SCHLIESSUNGSZEIT_BW", DEFAULT_TIME);
+    return _getKonfigParamValueOrDefault(
+      "FRUEHESTE_SCHLIESSUNGSZEIT_BW",
+      DEFAULT_TIME
+    );
   });
 
-  function _getOrDefault(schluessel: string, defaultValue: string) {
+  function _getKonfigParamValueOrDefault(
+    schluessel: string,
+    defaultValue: string
+  ) {
     const param = konfigurationsparameter.value?.find(
       (param) => param.schluessel === schluessel
     );

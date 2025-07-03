@@ -94,6 +94,15 @@ describe("dateTimeFormatter.ts", () => {
         expect(isNaN(result.getTime())).toBe(true);
       }
     );
+
+    it.each(["12:12", "12:12:30"])(
+      "should_returnDateWithZeroMilliseconds_when_givenValidTimeString'%s'",
+      (input) => {
+        const result = getDateFromTimeString(input);
+
+        expect(result.getMilliseconds()).toBe(0);
+      }
+    );
   });
 
   describe("toGermanDateFormat", () => {

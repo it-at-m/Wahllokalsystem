@@ -40,7 +40,6 @@ export function useDateTimeFormatter() {
 
   const getDateFromTimeString = function (timeString: string): Date {
     // Validate time string format (HH:MM)
-    console.log(timeString);
     if (!timeString || !/^\d{1,2}:\d{1,2}(?::\d{1,2})?$/.test(timeString)) {
       return new Date(NaN);
     }

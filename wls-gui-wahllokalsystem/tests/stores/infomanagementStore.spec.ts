@@ -1,4 +1,5 @@
 import { createTestingPinia } from "@pinia/testing";
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useKonfigurationsparameterTestDataFactory } from "@tests/utils/infomanagement/KonfigurationsparameterTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { flushPromises } from "@vue/test-utils";
@@ -7,6 +8,7 @@ import { nextTick } from "vue";
 
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getKonfigurationsparameter: vi.fn(),
@@ -21,6 +23,7 @@ vi.mock("@/composables/infomanagement/konfigurationsparameterService", () => ({
 const { createKonfigurationsparameterList, prepareKonfigurationsparameter } =
   useKonfigurationsparameterTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
+const { generateRandomString } = useCommonTestDataFactory();
 
 describe("infomanagementStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useInfomanagementStore>;
@@ -120,5 +123,245 @@ describe("infomanagementStore.ts", () => {
         expect(unitUnderTest.dateTimeToCheckAnwesenheit).toBeUndefined();
       }
     );
+  });
+
+  describe("fruehesteEroeffnungsuhrzeit", () => {
+    let userStore: ReturnType<typeof useUserStore>;
+    let infomanagementStore: ReturnType<typeof useInfomanagementStore>;
+
+    beforeEach(() => {
+      userStore = useUserStore();
+      infomanagementStore = useInfomanagementStore();
+    });
+
+    it("should_returnFruehesteEroeffnungszeitUWValue_when_wahlbezirkArtIsUWB", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      const konfigKeyValueUW = generateRandomString(8);
+      const konfigKeyValueBW = generateRandomString(8);
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("FRUEHESTE_EROEFFNUNGSZEIT_UW")
+          .wert(konfigKeyValueUW)
+          .build(),
+        prepareKonfigurationsparameter()
+          .schluessel("FRUEHESTE_EROEFFNUNGSZEIT_BW")
+          .wert(konfigKeyValueBW)
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.fruehesteEroeffnungsuhrzeit).toStrictEqual(
+        konfigKeyValueUW
+      );
+    });
+
+    it("should_returnDefaultValue_when_wahlbezirkArtIsUWBButKonfigKeyDoesNotExists", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      infomanagementStore.konfigurationsparameter = [];
+
+      await nextTick();
+
+      expect(infomanagementStore.fruehesteEroeffnungsuhrzeit).toStrictEqual(
+        "00:00:00"
+      );
+    });
+
+    it("should_returnDefaultValue_when_wahlbezirkArtIsUWBButKonfigKeyHasEmptyValue", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("FRUEHESTE_EROEFFNUNGSZEIT_UW")
+          .wert("")
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.fruehesteEroeffnungsuhrzeit).toStrictEqual(
+        "00:00:00"
+      );
+    });
+
+    it("should_returnFruehesteEroeffnungszeitBWValue_when_wahlbezirkArtIsBWB", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      const konfigKeyValueBW = generateRandomString(8);
+      const konfigKeyValueUW = generateRandomString(8);
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("FRUEHESTE_EROEFFNUNGSZEIT_BW")
+          .wert(konfigKeyValueBW)
+          .build(),
+        prepareKonfigurationsparameter()
+          .schluessel("FRUEHESTE_EROEFFNUNGSZEIT_UW")
+          .wert(konfigKeyValueUW)
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.fruehesteEroeffnungsuhrzeit).toStrictEqual(
+        konfigKeyValueBW
+      );
+    });
+
+    it("should_returnDefaultValue_when_wahlbezirkArtIsBWBButKonfigKeyDoesNotExists", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      infomanagementStore.konfigurationsparameter = [];
+
+      await nextTick();
+
+      expect(infomanagementStore.fruehesteEroeffnungsuhrzeit).toStrictEqual(
+        "00:00:00"
+      );
+    });
+
+    it("should_returnDefaultValue_when_wahlbezirkArtIsBWBButKonfigKeyHasEmptyValue", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("FRUEHESTE_EROEFFNUNGSZEIT_BW")
+          .wert("")
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.fruehesteEroeffnungsuhrzeit).toStrictEqual(
+        "00:00:00"
+      );
+    });
+  });
+
+  describe("fruehesteSchliessungsuhrzeit", () => {
+    let userStore: ReturnType<typeof useUserStore>;
+    let infomanagementStore: ReturnType<typeof useInfomanagementStore>;
+
+    beforeEach(() => {
+      userStore = useUserStore();
+      infomanagementStore = useInfomanagementStore();
+    });
+
+    it("should_returnFruehesteSchliessungszeitUWValue_when_wahlbezirkArtIsUWB", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      const konfigKeyValueUW = generateRandomString(8);
+      const konfigKeyValueBW = generateRandomString(8);
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("FRUEHESTE_SCHLIESSUNGSZEIT_UW")
+          .wert(konfigKeyValueUW)
+          .build(),
+        prepareKonfigurationsparameter()
+          .schluessel("FRUEHESTE_SCHLIESSUNGSZEIT_BW")
+          .wert(konfigKeyValueBW)
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.fruehesteSchliessungsuhrzeit).toStrictEqual(
+        konfigKeyValueUW
+      );
+    });
+
+    it("should_returnDefaultValue_when_wahlbezirkArtIsUWBButKonfigKeyDoesNotExists", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      infomanagementStore.konfigurationsparameter = [];
+
+      await nextTick();
+
+      expect(infomanagementStore.fruehesteSchliessungsuhrzeit).toStrictEqual(
+        "00:00:00"
+      );
+    });
+
+    it("should_returnDefaultValue_when_wahlbezirkArtIsUWBButKonfigKeyHasEmptyValue", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("FRUEHESTE_SCHLIESSUNGSZEIT_UW")
+          .wert("")
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.fruehesteSchliessungsuhrzeit).toStrictEqual(
+        "00:00:00"
+      );
+    });
+
+    it("should_returnFruehesteSchliessungszeitBWValue_when_wahlbezirkArtIsBWB", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      const konfigKeyValueBW = generateRandomString(8);
+      const konfigKeyValueUW = generateRandomString(8);
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("FRUEHESTE_SCHLIESSUNGSZEIT_BW")
+          .wert(konfigKeyValueBW)
+          .build(),
+        prepareKonfigurationsparameter()
+          .schluessel("FRUEHESTE_SCHLIESSUNGSZEIT_UW")
+          .wert(konfigKeyValueUW)
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.fruehesteSchliessungsuhrzeit).toStrictEqual(
+        konfigKeyValueBW
+      );
+    });
+
+    it("should_returnDefaultValue_when_wahlbezirkArtIsBWBButKonfigKeyDoesNotExists", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      infomanagementStore.konfigurationsparameter = [];
+
+      await nextTick();
+
+      expect(infomanagementStore.fruehesteSchliessungsuhrzeit).toStrictEqual(
+        "00:00:00"
+      );
+    });
+
+    it("should_returnDefaultValue_when_wahlbezirkArtIsBWBButKonfigKeyHasEmptyValue", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("FRUEHESTE_SCHLIESSUNGSZEIT_BW")
+          .wert("")
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.fruehesteSchliessungsuhrzeit).toStrictEqual(
+        "00:00:00"
+      );
+    });
   });
 });

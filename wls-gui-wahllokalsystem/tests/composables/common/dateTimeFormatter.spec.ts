@@ -10,6 +10,7 @@ describe("dateTimeFormatter.ts", () => {
     applyLocalTimezoneOffset,
     getDateFromTimeString,
     toGermanDateFormat,
+    toGermanDateWithLongMonth,
   } = useDateTimeFormatter();
 
   beforeEach(() => {
@@ -93,6 +94,15 @@ describe("dateTimeFormatter.ts", () => {
         expect(isNaN(result.getTime())).toBe(true);
       }
     );
+
+    it.each(["12:12", "12:12:30"])(
+      "should_returnDateWithZeroMilliseconds_when_givenValidTimeString'%s'",
+      (input) => {
+        const result = getDateFromTimeString(input);
+
+        expect(result.getMilliseconds()).toBe(0);
+      }
+    );
   });
 
   describe("toGermanDateFormat", () => {
@@ -106,6 +116,35 @@ describe("dateTimeFormatter.ts", () => {
       "should_returnDateStringInLocalFormat_when_givenValidDateString'%s'",
       (datestring) => {
         expect(toGermanDateFormat(datestring)).toBe("01.01.2026");
+      }
+    );
+
+    it.each([
+      "2026-01-32",
+      "2026-13-01",
+      "2026-01-AB",
+      "random string",
+      "",
+      " ",
+    ])(
+      "should_returnUndefined_when_givenInvalidDateString'%s'",
+      (datestring) => {
+        expect(toGermanDateFormat(datestring)).toBe(undefined);
+      }
+    );
+  });
+
+  describe("toGermanDateWithLongMonth", () => {
+    it.each([
+      "2026-01-01",
+      "2026/01/01",
+      "01.01.2026",
+      "2026-01-01T00:00:00Z",
+      "2026-1-1",
+    ])(
+      "should_returnDateStringInLocalFormatWithLongMonth_when_givenValidDateString'%s'",
+      (datestring) => {
+        expect(toGermanDateWithLongMonth(datestring)).toBe("1. Januar 2026");
       }
     );
 

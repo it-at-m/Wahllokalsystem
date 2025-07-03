@@ -95,12 +95,19 @@ describe("ereignisStore.ts", () => {
       expect(unitUnderTest.hasEintraege).toStrictEqual(false);
     });
     it("should_returnTrue_when_ereigniseintraegeHasOneItem", () => {
-      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [{}];
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
+        { ereignisart: EreignisartEnum.Vorfall },
+      ];
 
       expect(unitUnderTest.hasEintraege).toStrictEqual(true);
     });
     it("should_returnTrue_when_ereigniseintraegeHasMoreThanOneItem", () => {
-      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [{}, {}, {}, {}];
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
+        { ereignisart: EreignisartEnum.Vorfall },
+        { ereignisart: EreignisartEnum.Vorfall },
+        { ereignisart: EreignisartEnum.Vorfall },
+        { ereignisart: EreignisartEnum.Vorfall },
+      ];
 
       expect(unitUnderTest.hasEintraege).toStrictEqual(true);
     });
@@ -267,6 +274,50 @@ describe("ereignisStore.ts", () => {
 
       spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();
     });
+
+    it("should_setKeineVorfaelleFalse_when_vorfallWasAdded", async () => {
+      const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
+        ImportAllFromEreignisArt,
+        "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
+      );
+
+      unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = true;
+      spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockReturnValue(
+        EreignisartEnum.Vorfall
+      );
+
+      unitUnderTest.addEreignis();
+
+      await nextTick();
+
+      expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
+        false
+      );
+
+      spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();
+    });
+
+    it("should_setKeineVorkommnisseFalse_when_vorkommnissWasAdded", async () => {
+      const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
+        ImportAllFromEreignisArt,
+        "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
+      );
+
+      unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse = true;
+      spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockReturnValue(
+        EreignisartEnum.Vorkommnis
+      );
+
+      unitUnderTest.addEreignis();
+
+      await nextTick();
+
+      expect(
+        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse
+      ).toStrictEqual(false);
+
+      spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();
+    });
   });
 
   describe("deleteEreignisByIndex", () => {
@@ -274,10 +325,10 @@ describe("ereignisStore.ts", () => {
       unitUnderTest.wahlbezirkEreignisse = {
         wahlbezirkID: "wahlbezirkID",
         ereigniseintraege: [
-          { beschreibung: "1" },
-          { beschreibung: "2" },
-          { beschreibung: "3" },
-          { beschreibung: "4" },
+          { beschreibung: "1", ereignisart: EreignisartEnum.Vorfall },
+          { beschreibung: "2", ereignisart: EreignisartEnum.Vorfall },
+          { beschreibung: "3", ereignisart: EreignisartEnum.Vorfall },
+          { beschreibung: "4", ereignisart: EreignisartEnum.Vorfall },
         ],
       };
 
@@ -286,9 +337,9 @@ describe("ereignisStore.ts", () => {
       expect(
         unitUnderTest.wahlbezirkEreignisse.ereigniseintraege
       ).toStrictEqual([
-        { beschreibung: "1" },
-        { beschreibung: "3" },
-        { beschreibung: "4" },
+        { beschreibung: "1", ereignisart: EreignisartEnum.Vorfall },
+        { beschreibung: "3", ereignisart: EreignisartEnum.Vorfall },
+        { beschreibung: "4", ereignisart: EreignisartEnum.Vorfall },
       ]);
     });
 
@@ -306,10 +357,10 @@ describe("ereignisStore.ts", () => {
 
     it("should_doNothing_when_indexIsOutOfRange", () => {
       const ereigniseintraege = [
-        { beschreibung: "1" },
-        { beschreibung: "2" },
-        { beschreibung: "3" },
-        { beschreibung: "4" },
+        { beschreibung: "1", ereignisart: EreignisartEnum.Vorfall },
+        { beschreibung: "2", ereignisart: EreignisartEnum.Vorfall },
+        { beschreibung: "3", ereignisart: EreignisartEnum.Vorfall },
+        { beschreibung: "4", ereignisart: EreignisartEnum.Vorfall },
       ];
       unitUnderTest.wahlbezirkEreignisse = {
         wahlbezirkID: "wahlbezirkID",
@@ -390,7 +441,10 @@ describe("ereignisStore.ts", () => {
 
     it("should_doNothing_when_indexIsOutOfRange", () => {
       const dateAsString = "2025-04-29T09:33:42";
-      const eintragNotToChange = { uhrzeit: new Date(dateAsString) };
+      const eintragNotToChange = {
+        uhrzeit: new Date(dateAsString),
+        ereignisart: EreignisartEnum.Vorfall,
+      };
       unitUnderTest.wahlbezirkEreignisse = {
         wahlbezirkID: "wahlbezirkID",
         ereigniseintraege: [eintragNotToChange],
@@ -403,7 +457,10 @@ describe("ereignisStore.ts", () => {
 
     it("should_updateUhrzeit_when_uhrzeitIsGiven", () => {
       const dateAsString = "2025-04-29T09:33:42";
-      const eintragToChange = { uhrzeit: new Date(dateAsString) };
+      const eintragToChange = {
+        uhrzeit: new Date(dateAsString),
+        ereignisart: EreignisartEnum.Vorfall,
+      };
       unitUnderTest.wahlbezirkEreignisse = {
         wahlbezirkID: "wahlbezirkID",
         ereigniseintraege: [eintragToChange],
@@ -417,7 +474,10 @@ describe("ereignisStore.ts", () => {
 
     it("should_setUhrzeitUndefined_when_uhrzeitIsUndefined", () => {
       const dateAsString = "2025-04-29T09:33:42";
-      const eintragToChange = { uhrzeit: new Date(dateAsString) };
+      const eintragToChange = {
+        uhrzeit: new Date(dateAsString),
+        ereignisart: EreignisartEnum.Vorfall,
+      };
       unitUnderTest.wahlbezirkEreignisse = {
         wahlbezirkID: "wahlbezirkID",
         ereigniseintraege: [eintragToChange],
@@ -456,152 +516,6 @@ describe("ereignisStore.ts", () => {
         ).toStrictEqual(ereignisEintraege.length);
 
         spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();
-      });
-    });
-  });
-
-  describe("watchEffect", () => {
-    describe("updateKeineFlagsOfEreignisseBasedOnCurrentState", () => {
-      it("should_setKeineVorfaelleTrue_when_lastVorfallWasDeleted", async () => {
-        const ereigniseintraege = [
-          { beschreibung: "1", ereignisart: EreignisartEnum.Vorfall },
-          { beschreibung: "2", ereignisart: EreignisartEnum.Vorkommnis },
-          { beschreibung: "3", ereignisart: EreignisartEnum.Vorkommnis },
-          { beschreibung: "4", ereignisart: EreignisartEnum.Vorkommnis },
-        ];
-        unitUnderTest.wahlbezirkEreignisse = {
-          wahlbezirkID: "wahlbezirkID",
-          keineVorfaelle: false,
-          ereigniseintraege: Array.from(ereigniseintraege),
-        };
-
-        unitUnderTest.deleteEreignisByIndex(0);
-
-        await nextTick();
-
-        expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
-          true
-        );
-      });
-
-      it("should_setKeineVorkommnisseTrue_when_lastVorkommnisWasDeleted", async () => {
-        const ereigniseintraege = [
-          { beschreibung: "1", ereignisart: EreignisartEnum.Vorkommnis },
-          { beschreibung: "2", ereignisart: EreignisartEnum.Vorfall },
-          { beschreibung: "3", ereignisart: EreignisartEnum.Vorfall },
-          { beschreibung: "4", ereignisart: EreignisartEnum.Vorfall },
-        ];
-        unitUnderTest.wahlbezirkEreignisse = {
-          wahlbezirkID: "wahlbezirkID",
-          keineVorkommnisse: false,
-          ereigniseintraege: Array.from(ereigniseintraege),
-        };
-
-        unitUnderTest.deleteEreignisByIndex(0);
-
-        await nextTick();
-
-        expect(
-          unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse
-        ).toStrictEqual(true);
-      });
-
-      it("should_setKeineVorfaelleFalse_when_vorfallWasAdded", async () => {
-        const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
-          ImportAllFromEreignisArt,
-          "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
-        );
-
-        unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = true;
-        spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockReturnValue(
-          EreignisartEnum.Vorfall
-        );
-
-        unitUnderTest.addEreignis();
-
-        await nextTick();
-
-        expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
-          false
-        );
-
-        spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();
-      });
-
-      it("should_setKeineVorkommnisseFalse_when_vorkommnissWasAdded", async () => {
-        const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
-          ImportAllFromEreignisArt,
-          "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
-        );
-
-        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse = true;
-        spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockReturnValue(
-          EreignisartEnum.Vorkommnis
-        );
-
-        unitUnderTest.addEreignis();
-
-        await nextTick();
-
-        expect(
-          unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse
-        ).toStrictEqual(false);
-
-        spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();
-      });
-
-      it("should_switchFromKeineVorfaelleToKeineVorkommnisse_when_allEreignisseOfArtVorkommnissSwitchedToVorfall", async () => {
-        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
-          { ereignisart: EreignisartEnum.Vorkommnis },
-        ];
-        unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = true;
-        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse = false;
-
-        const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
-          ImportAllFromEreignisArt,
-          "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
-        );
-        spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockReturnValue(
-          EreignisartEnum.Vorfall
-        );
-
-        unitUnderTest.updateUhrzeitByIndex(new Date(), 0);
-
-        await nextTick();
-
-        expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
-          false
-        );
-        expect(
-          unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse
-        ).toStrictEqual(true);
-      });
-
-      it("should_switchFromKeineVorkommnisseToKeineVorfaelle_when_allEreignisseOfArtVorfallSwitchedToVorkommniss", async () => {
-        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
-          { ereignisart: EreignisartEnum.Vorfall },
-        ];
-        unitUnderTest.wahlbezirkEreignisse.keineVorfaelle = false;
-        unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse = true;
-
-        const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
-          ImportAllFromEreignisArt,
-          "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
-        );
-        spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockReturnValue(
-          EreignisartEnum.Vorkommnis
-        );
-
-        unitUnderTest.updateUhrzeitByIndex(new Date(), 0);
-
-        await nextTick();
-
-        expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
-          true
-        );
-        expect(
-          unitUnderTest.wahlbezirkEreignisse.keineVorkommnisse
-        ).toStrictEqual(false);
       });
     });
   });

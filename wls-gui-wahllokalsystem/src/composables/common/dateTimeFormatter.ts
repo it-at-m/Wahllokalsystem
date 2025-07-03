@@ -64,7 +64,7 @@ export function useDateTimeFormatter() {
     }
 
     const date = new Date();
-    date.setHours(hours, minutes, seconds);
+    date.setHours(hours, minutes, seconds, 0);
     return date;
   };
 
@@ -79,12 +79,25 @@ export function useDateTimeFormatter() {
     }
   }
 
+  function toGermanDateWithLongMonth(dateString: string) {
+    const date = new Date(dateString);
+    if (isValidDate(date)) {
+      return date.toLocaleDateString("de-DE", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour12: false,
+      });
+    }
+  }
+
   return {
     time,
     toHhMm,
     applyLocalTimezoneOffset,
     getDateFromTimeString,
     toGermanDateFormat,
+    toGermanDateWithLongMonth,
   };
 }
 

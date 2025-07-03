@@ -10,6 +10,7 @@ describe("dateTimeFormatter.ts", () => {
     applyLocalTimezoneOffset,
     getDateFromTimeString,
     toGermanDateFormat,
+    toGermanDateWithLongMonth,
   } = useDateTimeFormatter();
 
   beforeEach(() => {
@@ -122,5 +123,28 @@ describe("dateTimeFormatter.ts", () => {
         expect(toGermanDateFormat(datestring)).toBe(undefined);
       }
     );
+  });
+
+  describe("toGermanDateWithLongMonth", () => {
+    it.each([
+      "2026-01-01",
+      "2026/01/01",
+      "01.01.2026",
+      "2026-01-01T00:00:00Z",
+      "2026-1-1",
+    ])("should", (datestring) => {
+      expect(toGermanDateWithLongMonth(datestring)).toBe("1. Januar 2026");
+    });
+
+    it.each([
+      "2026-01-32",
+      "2026-13-01",
+      "2026-01-AB",
+      "random string",
+      "",
+      " ",
+    ])("should", (datestring) => {
+      expect(toGermanDateFormat(datestring)).toBe(undefined);
+    });
   });
 });

@@ -31,14 +31,9 @@ export const TIME_NOT_IN_FUTURE = (value: string) =>
   `Eingabe darf nicht in der Zukunft liegen.`;
 
 export const TIME_GREATER_OR_EQUAL =
-  (compareValue: string) => (value: string) => {
-    const inputValue = getDateFromTimeString(value);
-    const compareValueInput = getDateFromTimeString(compareValue);
-    return (
-      inputValue >= compareValueInput ||
-      `Eingabe muss größer oder gleich ${compareValue} sein.`
-    );
-  };
+  (compareValue: string) => (value: string) =>
+    getDateFromTimeString(value) >= getDateFromTimeString(compareValue) ||
+    `Eingabe muss größer oder gleich ${compareValue} sein.`;
 
 export const TIME_LESS_OR_EQUAL = (compareValue: string) => (value: string) =>
   getDateFromTimeString(value) <= getDateFromTimeString(compareValue) ||

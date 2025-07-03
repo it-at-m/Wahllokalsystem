@@ -3,8 +3,8 @@ import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 export function useMonitoringCronjobService() {
   const { sendWaehler } = useMonitoringStore();
 
-  const time1MinuteInMilliseconds = 60_000;
-  const wahlbeteiligungUpdateInterval = time1MinuteInMilliseconds;
+  const time30MinutesInMilliseconds = 1_800_000;
+  const wahlbeteiligungUpdateInterval = time30MinutesInMilliseconds;
 
   let wahlbeteiligungActiveInterval: number | null = null;
 

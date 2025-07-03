@@ -75,5 +75,28 @@ describe("TheWaehleranzahlCountButton", () => {
 
       expect(increaseWaehlerByOne).toHaveBeenCalledOnce();
     });
+
+    it("should_callIncreaseWaehlerFunction_when_keyupEventWithPlus", async () => {
+      const { increaseWaehlerByOne } = useMonitoringStore();
+
+      const event = new KeyboardEvent("keyup", { key: "+" });
+      document.dispatchEvent(event);
+
+      await nextTick();
+
+      expect(increaseWaehlerByOne).toHaveBeenCalledOnce();
+    });
+
+    it("should_notCallIncreaseWaehlerFunction_when_keyupEventOnTextarea", async () => {
+      const { increaseWaehlerByOne } = useMonitoringStore();
+
+      const event = new KeyboardEvent("keyup", { key: "+" });
+      const textarea = document.createElement("textarea");
+      textarea.dispatchEvent(event);
+
+      await nextTick();
+
+      expect(increaseWaehlerByOne).not.toHaveBeenCalledOnce();
+    });
   });
 });

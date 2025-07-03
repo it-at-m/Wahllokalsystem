@@ -23,6 +23,13 @@
         cols="3"
         class="d-flex align-center justify-end"
       >
+        <the-waehleranzahl-count-button
+          v-if="
+            eroeffnungsuhrzeitSent !== undefined &&
+            schliessungsuhrzeitSent === undefined &&
+            currentUserWahlbezirksArt === WahlbezirksArtEnum.UWB
+          "
+        />
         <wls-clock class="navbar-text mx-2" />
         <wls-heartbeat v-model:is-offline="isOffline" />
         <the-info-help-icon />
@@ -83,6 +90,7 @@ import {
 
 import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
+import TheWaehleranzahlCountButton from "@/components/monitoring/TheWaehleranzahlCountButton.vue";
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
@@ -95,9 +103,14 @@ import {
 } from "@/constants.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum";
+
+const { eroeffnungsuhrzeitSent, schliessungsuhrzeitSent } =
+  storeToRefs(useWahlbezirkStore());
 
 const { toGermanDateFormat } = useDateTimeFormatter();
-const { user, currentUserWahltag, currentUserWahlbezirkNummer } =
+const { user, currentUserWahltag, currentUserWahlbezirkNummer,  currentUserWahlbezirksArt } =
   storeToRefs(useUserStore());
 const { hasInitializationOfTasksCompletelyRun } = storeToRefs(
   useTaskManagerStore()

@@ -1,4 +1,8 @@
 name: auto-assign.yml
+permissions:
+  contents: read
+  pull-requests: write
+
 on:
   pull_request:
     types:

@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title>Wahlbriefe zulassen oder zurückweisen</v-card-title>
     <v-card-text>
-      <!-- bedenklicher wahlbrief row -->
+      <the-bedenklicher-wahlbrief-row />
     </v-card-text>
     <v-card-actions>
       <v-btn
@@ -29,6 +29,7 @@ import {
 } from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import TheBedenklicherWahlbriefRow from "@/components/wahlvorbereitung/TheBedenklicherWahlbriefRow.vue";
 
 const isSaveButtonDisabled = false; // todo
 const isSaving = false; // todo

@@ -29,6 +29,35 @@ export function useDateTimeFormatter() {
     return `${hour}${TIME_FIELD_SEPARATOR}${minute}`;
   };
 
+  const extractDateFromString = function (
+    timeString: string,
+    currentTime: Date
+  ): Date | undefined {
+    if (timeString.length != 0) {
+      const [year, month, day] = timeString.split("-").map(Number);
+      const newTime = new Date(currentTime);
+      newTime.setFullYear(year, month - 1, day);
+
+      return newTime;
+    } else {
+      return currentTime;
+    }
+  };
+
+  const extractTimeFromString = function (
+    timeString: string,
+    currentTime: Date
+  ): Date | undefined {
+    if (timeString != undefined && timeString.trim().length != 0) {
+      const [hours, minutes] = timeString.split(":").map(Number);
+      const newDate = new Date(currentTime);
+      newDate.setHours(hours);
+      newDate.setMinutes(minutes);
+
+      return newDate;
+    }
+  };
+
   const applyLocalTimezoneOffset = function (date: Date | string): Date {
     const mappedUhrzeit = new Date(date);
     mappedUhrzeit.setHours(
@@ -36,27 +65,6 @@ export function useDateTimeFormatter() {
         Math.trunc(mappedUhrzeit.getTimezoneOffset() / 60)
     );
     return mappedUhrzeit;
-  };
-
-  const getDateFromTimeString = function (timeString: string): Date {
-    // Validate time string format (HH:MM)
-    if (!timeString || !/^\d{1,2}:\d{1,2}$/.test(timeString)) {
-      return new Date(NaN);
-    }
-    const [hours, minutes] = timeString.split(":").map(Number);
-    if (
-      isNaN(hours) ||
-      isNaN(minutes) ||
-      hours < 0 ||
-      hours > 23 ||
-      minutes < 0 ||
-      minutes > 59
-    ) {
-      return new Date(NaN); // Return invalid date for invalid time values
-    }
-    const date = new Date();
-    date.setHours(hours, minutes);
-    return date;
   };
 
   function toGermanDateFormat(dateString: string) {

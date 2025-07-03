@@ -1,12 +1,12 @@
 <template>
   <v-text-field
-    :model-value="toHhMm(modelValue)"
+    :model-value="modelValue?.toISOString().split('T')[0]"
     :rules="[DATE_REQUIRED]"
-    label="Uhrzeit"
-    type="time"
+    label="Datum"
+    type="date"
     clearable
-    data-test="baseTimeInput"
-    @update:model-value="onTimeChanged"
+    data-test="baseDateInput"
+    @update:model-value="onDateChanged"
   />
 </template>
 
@@ -18,7 +18,7 @@ import { VTextField } from "vuetify/components";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { DATE_REQUIRED } from "@/util/rules.ts";
 
-const { toHhMm, extractTimeFromString } = useDateTimeFormatter();
+const { extractDateFromString } = useDateTimeFormatter();
 
 const modelValue = defineModel({
   type: Object as PropType<Date>,
@@ -26,10 +26,10 @@ const modelValue = defineModel({
 
 const emit = defineEmits(["update:model-value"]);
 
-const onTimeChanged = (newTime: string) => {
+const onDateChanged = (newDate: string) => {
   const currentTime = modelValue?.value || new Date();
 
-  const newDate = extractTimeFromString(newTime, currentTime);
-  emit("update:model-value", newDate);
+  const newTime = extractDateFromString(newDate, currentTime);
+  emit("update:model-value", newTime);
 };
 </script>

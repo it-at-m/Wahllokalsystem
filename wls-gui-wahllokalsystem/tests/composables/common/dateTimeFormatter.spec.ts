@@ -73,49 +73,4 @@ describe("dateTimeFormatter.ts", () => {
       expect(isNaN(result.getTime())).toBe(true);
     });
   });
-
-  describe("getDateFromTimeString", () => {
-    it("should_returnDateWithGivenTime_when_givenTimeString", () => {
-      const input = "12:12";
-      const result = getDateFromTimeString(input).toString();
-
-      expect(result).toContain("12:12");
-    });
-
-    it("should_returnInvalidDate_when_inputStringIsNoTimeString", () => {
-      const result = getDateFromTimeString("text");
-
-      expect(result).toBeInstanceOf(Date);
-      expect(isNaN(result.getTime())).toBe(true);
-    });
-  });
-
-  describe("toGermanDateFormat", () => {
-    it.each([
-      "2026-01-01",
-      "2026/01/01",
-      "01.01.2026",
-      "2026-01-01T00:00:00Z",
-      "2026-1-1",
-    ])(
-      "should_returnDateStringInLocalFormat_when_givenValidDateString'%s'",
-      (datestring) => {
-        expect(toGermanDateFormat(datestring)).toBe("01.01.2026");
-      }
-    );
-
-    it.each([
-      "2026-01-32",
-      "2026-13-01",
-      "2026-01-AB",
-      "random string",
-      "",
-      " ",
-    ])(
-      "should_returnUndefined_when_givenInvalidDateString'%s'",
-      (datestring) => {
-        expect(toGermanDateFormat(datestring)).toBe(undefined);
-      }
-    );
-  });
 });

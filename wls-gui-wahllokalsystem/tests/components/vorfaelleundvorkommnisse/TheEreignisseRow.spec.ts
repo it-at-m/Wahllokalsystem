@@ -211,9 +211,10 @@ describe("TheEreignisseRow.vue", () => {
       const ereignisStore = useEreignisStore();
 
       const ereigniseintraege = [] as Ereignis[];
-      for (let i = 0; i < 5; i++) {
+      for (let i = 1; i < 6; i++) {
         const date = new Date();
-        date.setHours(i, 0);
+        date.setHours(i, 10);
+        date.setFullYear(2025, 7, 30);
         ereigniseintraege.push(
           EreignisBuilder.createComplete()
             .withUhrzeit(date)
@@ -228,6 +229,39 @@ describe("TheEreignisseRow.vue", () => {
       const indexOfTimeInputForChange = 3;
       const firstEreignisTimeinput = wrapper.findAllComponents(
         '[data-test="baseTimeInput"]'
+      )[indexOfTimeInputForChange];
+      const newValue = new Date();
+      await firstEreignisTimeinput.setValue(newValue);
+
+      expect(ereignisStore.updateUhrzeitByIndex).toHaveBeenCalledWith(
+        newValue,
+        indexOfTimeInputForChange
+      );
+      expect(ereignisStore.updateUhrzeitByIndex).toHaveBeenCalledTimes(1);
+    });
+
+    it("should_triggerUpdateUhrzeitInStore_when_dateOfEreignisWasChanged", async () => {
+      const ereignisStore = useEreignisStore();
+
+      const ereigniseintraege = [] as Ereignis[];
+      for (let i = 1; i < 6; i++) {
+        const date = new Date();
+        date.setHours(1, 10);
+        date.setFullYear(2025, 12, i);
+        ereigniseintraege.push(
+          EreignisBuilder.createComplete()
+            .withUhrzeit(date)
+            .withBeschreibung(`Vorfall Nr.: ${i}`)
+        );
+      }
+
+      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = ereigniseintraege;
+
+      await nextTick();
+
+      const indexOfTimeInputForChange = 3;
+      const firstEreignisTimeinput = wrapper.findAllComponents(
+        '[data-test="baseDateInput"]'
       )[indexOfTimeInputForChange];
       const newValue = new Date();
       await firstEreignisTimeinput.setValue(newValue);

@@ -17,6 +17,14 @@
           "
         />
       </v-col>
+      <v-col cols="3">
+        <base-date-input
+          :model-value="ereignis.uhrzeit"
+          @update:model-value="
+            (value) => onEreignisUhrzeitUpdateModelValue(value, index)
+          "
+        />
+      </v-col>
       <v-col>
         <v-textarea
           v-model="ereignis.beschreibung"
@@ -57,6 +65,7 @@ import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import { VCol, VIcon, VRow, VTextarea } from "vuetify/components";
 
+import BaseDateInput from "@/components/common/inputs/BaseDateInput.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import YesNoDialog from "@/components/common/YesNoDialog.vue";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";

@@ -52,6 +52,9 @@ describe("BaseWahleroeffnungCard.vue", () => {
           vuetify,
         ],
       },
+      slots: {
+        userHint: "content for slot userHint",
+      },
     });
   });
 
@@ -74,9 +77,9 @@ describe("BaseWahleroeffnungCard.vue", () => {
     it("should_renderWithDisabledSaveButton_when_invalidUhrzeitIsEntered", async (context) => {
       const infomanagementStore = useInfomanagementStore();
       // @ts-expect-error: cannot set readonly
-      infomanagementStore.fruehesteEroeffnungsuhrzeitUWB = "07:00:00";
+      infomanagementStore.fruehesteEroeffnungsuhrzeit = "07:00:00";
       // @ts-expect-error: cannot set readonly
-      infomanagementStore.fruehesteSchliessungsuhrzeitUWB = "08:00:00";
+      infomanagementStore.fruehesteSchliessungsuhrzeit = "08:00:00";
 
       const wahlbezirkStore = useWahlbezirkStore();
       wahlbezirkStore.eroeffnungsuhrzeit = new Date("2025-05-23T06:30:00");
@@ -91,9 +94,9 @@ describe("BaseWahleroeffnungCard.vue", () => {
     it("should_renderWithEnabledSaveButton_when_validUhrzeitIsEntered", async (context) => {
       const infomanagementStore = useInfomanagementStore();
       // @ts-expect-error: cannot set readonly
-      infomanagementStore.fruehesteEroeffnungsuhrzeitUWB = "07:00:00";
+      infomanagementStore.fruehesteEroeffnungsuhrzeit = "07:00:00";
       // @ts-expect-error: cannot set readonly
-      infomanagementStore.fruehesteSchliessungsuhrzeitUWB = "08:00:00";
+      infomanagementStore.fruehesteSchliessungsuhrzeit = "08:00:00";
 
       const date = new Date("2025-05-23T07:30:00");
       const wahlbezirkStore = useWahlbezirkStore();
@@ -136,9 +139,9 @@ describe("BaseWahleroeffnungCard.vue", () => {
     it("should_callSendEroeffnungsuhrzeit_when_saveButtonIsClicked", async () => {
       const infomanagementStore = useInfomanagementStore();
       // @ts-expect-error: cannot set readonly
-      infomanagementStore.fruehesteEroeffnungsuhrzeitUWB = "07:00:00";
+      infomanagementStore.fruehesteEroeffnungsuhrzeit = "07:00:00";
       // @ts-expect-error: cannot set readonly
-      infomanagementStore.fruehesteSchliessungsuhrzeitUWB = "08:00:00";
+      infomanagementStore.fruehesteSchliessungsuhrzeit = "08:00:00";
 
       const wahlbezirkStore = useWahlbezirkStore();
       wahlbezirkStore.eroeffnungsuhrzeit = new Date("2025-05-23T07:30:00");

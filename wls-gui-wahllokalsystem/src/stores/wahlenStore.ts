@@ -23,16 +23,25 @@ export const useWahlenStore = defineStore(storeID, () => {
   }
 
   function getWahlNameOrBlankStringById(wahlID: string) {
-    if (wahlen.value) {
-      const wahl = wahlen.value.find((wahl) => wahl.wahlID === wahlID);
-      return wahl ? wahl.name : "";
-    }
-    return "";
+    const wahl = _getWahlOrUndefinedById(wahlID);
+    return wahl ? wahl.name : "";
+  }
+
+  function getWahlTagOrBlankStringById(wahlID: string) {
+    const wahl = _getWahlOrUndefinedById(wahlID);
+    return wahl ? wahl.wahltag : "";
+  }
+
+  function _getWahlOrUndefinedById(wahlID: string) {
+    return wahlen.value
+      ? wahlen.value.find((wahl) => wahl.wahlID === wahlID)
+      : undefined;
   }
 
   return {
     wahlen,
     getWahlNameOrBlankStringById,
+    getWahlTagOrBlankStringById,
     initWahlen,
   };
 });

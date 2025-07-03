@@ -5,6 +5,7 @@ import {
   EXAMPLE_ROUTES_NOTFOUND,
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_EREIGNISSE,
+  ROUTE_WAHLBRIEFE_ZULASSEN,
   ROUTE_WAHLSCHLIESSUNG,
   ROUTE_WAHLUMGEBUNG,
   ROUTE_WAHLVORSTAND,
@@ -14,6 +15,7 @@ import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import EreignisseView from "@/views/EreignisseView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
 import HomeView from "@/views/HomeView.vue";
+import WahlbriefZulassungView from "@/views/wahlvorbereitung/WahlbriefZulassungView.vue";
 import WahleroeffnungView from "@/views/wahlvorbereitung/WahleroeffnungView.vue";
 import WahlschliessungView from "@/views/wahlvorbereitung/WahlschliessungView.vue";
 import WahlumgebungView from "@/views/wahlvorbereitung/WahlumgebungView.vue";
@@ -46,6 +48,11 @@ const routes = [
     path: "/beginnStimmabgabe",
     name: ROUTE_BEGINN_STIMMABGABE,
     component: WahleroeffnungView,
+  },
+  {
+    path: "/wahlbriefzulassung",
+    name: ROUTE_WAHLBRIEFE_ZULASSEN,
+    component: WahlbriefZulassungView,
   },
   {
     path: "/ereignisse",

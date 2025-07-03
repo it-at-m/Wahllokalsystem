@@ -65,6 +65,11 @@
           title="Wahlhandlung"
           :to="ROUTE_WAHLSCHLIESSUNG"
         />
+        <v-list-item
+          v-if="currentUserWahlbezirksArt === WahlbezirksArtEnum.BWB"
+          title="Wahlbriefe zulassen"
+          :to="ROUTE_WAHLBRIEFE_ZULASSEN"
+        />
       </v-list-group>
       <v-list-item
         title="Ereignisse"
@@ -97,6 +102,7 @@ import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts"
 import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_EREIGNISSE,
+  ROUTE_WAHLBRIEFE_ZULASSEN,
   ROUTE_WAHLSCHLIESSUNG,
   ROUTE_WAHLUMGEBUNG,
   ROUTE_WAHLVORSTAND,

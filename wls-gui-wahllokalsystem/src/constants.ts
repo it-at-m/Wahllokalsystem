@@ -36,3 +36,5 @@ export const MONITORING_SERVICE_API_URL =
 export const AUTH_SERVICE_API_URL = WLS_SERVICE_API_URL + "auth-service";
 export const INFOMANAGEMENT_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "infomanagement-service";
+export const BRIEFWAHL_SERVICE_API_URL =
+  WLS_SERVICE_API_URL + "briefwahl-service";

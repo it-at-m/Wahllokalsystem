@@ -30,7 +30,6 @@ export default defineConfigWithVueTs(
       reportUnusedInlineConfigs: "error",
     },
     rules: {
-      "no-console": ["error", { allow: ["debug"] }],
       "vue/component-name-in-template-casing": [
         "error",
         "kebab-case",

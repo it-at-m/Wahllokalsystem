@@ -2,32 +2,41 @@ package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils;
 
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereignis;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereignisart;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereignisse;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis.EreignisDTO;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis.EreignisartDTO;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis.EreignisseWriteDTO;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis.WahlbezirkEreignisseDTO;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.ereignis.EreignisModel;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.ereignis.EreignisartModel;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.ereignis.EreignisseWriteModel;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.ereignis.WahlbezirkEreignisseModel;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.ereignis.EreignisseModel;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 public class TestdataFactory {
 
-    public static class CreateEreignisEntity {
+    public static class CreateEreignisseEntity {
 
-        public static Ereignis withData(String wahlbezirkID) {
-            return new Ereignis(null, wahlbezirkID, "beschreibung", LocalDateTime.now().withNano(0), Ereignisart.VORFALL);
+        public static Ereignisse withData(String wahlbezirkID, Set<Ereignis> ereignisse) {
+            return new Ereignisse(wahlbezirkID, true, true, ereignisse);
         }
 
-        public static Ereignis fromModel(EreignisModel ereignisModel, String wahlbezirkID) {
-            return new Ereignis(null, wahlbezirkID, ereignisModel.beschreibung(), ereignisModel.uhrzeit(),
+    }
+
+    public static class CreateEreignisEntity {
+
+        public static Ereignis withData(String beschreibung) {
+            return new Ereignis(beschreibung, LocalDateTime.now().withNano(0), Ereignisart.VORFALL);
+        }
+
+        public static Ereignis fromModel(EreignisModel ereignisModel) {
+            return new Ereignis(ereignisModel.beschreibung(), ereignisModel.uhrzeit(),
                     MapEreignisart.ereignisartModelToEreignisart(ereignisModel.ereignisart()));
         }
 
-        public static List<Ereignis> listFromModel(EreignisseWriteModel ereignisWriteModel) {
-            List<Ereignis> ereignisList = ereignisWriteModel.ereigniseintraege().stream().map(ereignis -> new Ereignis(null, ereignisWriteModel.wahlbezirkID(),
+        public static List<Ereignis> listFromModel(EreignisseModel ereignisWriteModel) {
+            List<Ereignis> ereignisList = ereignisWriteModel.ereigniseintraege().stream().map(ereignis -> new Ereignis(
                     ereignis.beschreibung(), ereignis.uhrzeit(), MapEreignisart.ereignisartModelToEreignisart(ereignis.ereignisart()))).toList();
             return ereignisList;
         }
@@ -35,8 +44,8 @@ public class TestdataFactory {
 
     public static class CreateEreignisModel {
 
-        public static EreignisModel withData() {
-            return new EreignisModel("beschreibung", LocalDateTime.now().withNano(0), EreignisartModel.VORFALL);
+        public static EreignisModel withData(String beschreibung) {
+            return new EreignisModel(beschreibung, LocalDateTime.now().withNano(0), EreignisartModel.VORFALL);
         }
 
         public static EreignisModel withEreignisart(EreignisartModel ereignisart) {
@@ -51,24 +60,24 @@ public class TestdataFactory {
 
     public static class CreateWahlbezirkEreignisseModel {
 
-        public static WahlbezirkEreignisseModel withData(String wahlbezirkID, boolean keineVorfaelle, boolean keineVorkommnisse,
+        public static EreignisseModel withData(String wahlbezirkID, boolean keineVorfaelle, boolean keineVorkommnisse,
                 List<EreignisModel> ereignisModelList) {
-            return new WahlbezirkEreignisseModel(wahlbezirkID, keineVorfaelle, keineVorkommnisse, ereignisModelList);
+            return new EreignisseModel(wahlbezirkID, keineVorfaelle, keineVorkommnisse, ereignisModelList);
         }
     }
 
     public static class CreateEreignisseWriteModel {
 
-        public static EreignisseWriteModel withData(String wahlbezirkID, List<EreignisModel> ereignisModelList) {
-            return new EreignisseWriteModel(wahlbezirkID, ereignisModelList);
+        public static EreignisseModel withData(String wahlbezirkID, List<EreignisModel> ereignisModelList) {
+            return new EreignisseModel(wahlbezirkID, true, true, ereignisModelList);
         }
 
-        public static EreignisseWriteModel fromDto(String wahlbezirkID, EreignisseWriteDTO ereignisseWriteDTO) {
+        public static EreignisseModel fromDto(String wahlbezirkID, EreignisseWriteDTO ereignisseWriteDTO) {
             List<EreignisModel> ereignisModelList = ereignisseWriteDTO.ereigniseintraege().stream()
                     .map(ereignisDto -> new EreignisModel(ereignisDto.beschreibung(), ereignisDto.uhrzeit(),
                             MapEreignisart.ereignisartDtoToEreignisartModel(ereignisDto.ereignisart())))
                     .toList();
-            return new EreignisseWriteModel(wahlbezirkID, ereignisModelList);
+            return new EreignisseModel(wahlbezirkID, ereignisseWriteDTO.keineVorfaelle(), ereignisseWriteDTO.keineVorkommnisse(), ereignisModelList);
         }
     }
 
@@ -80,12 +89,12 @@ public class TestdataFactory {
 
     public static class CreateEreignisseWriteDto {
         public static EreignisseWriteDTO withData(List<EreignisDTO> ereignisDtoList) {
-            return new EreignisseWriteDTO(ereignisDtoList);
+            return new EreignisseWriteDTO(true, true, ereignisDtoList);
         }
     }
 
     public static class CreateWahlbezirkEreignisseDto {
-        public static WahlbezirkEreignisseDTO fromModel(WahlbezirkEreignisseModel ereignisseModel) {
+        public static WahlbezirkEreignisseDTO fromModel(EreignisseModel ereignisseModel) {
             List<EreignisDTO> ereignisDtoList = ereignisseModel.ereigniseintraege().stream().map(ereignisModel -> new EreignisDTO(ereignisModel.beschreibung(),
                     ereignisModel.uhrzeit(), MapEreignisart.ereignisartModelToEreignisartDto(ereignisModel.ereignisart()))).toList();
             return new WahlbezirkEreignisseDTO(ereignisseModel.wahlbezirkID(), ereignisseModel.keineVorfaelle(), ereignisseModel.keineVorkommnisse(),

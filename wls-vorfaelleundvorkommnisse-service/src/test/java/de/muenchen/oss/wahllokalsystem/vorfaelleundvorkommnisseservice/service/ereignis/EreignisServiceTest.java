@@ -1,13 +1,13 @@
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.ereignis;
 
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.EreignisRepository;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.EreignisseRepository;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.utils.TestdataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -22,10 +22,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class EreignisServiceTest {
 
     @Mock
-    EreignisRepository ereignisRepository;
+    EreignisseRepository ereignisRepository;
 
     @Mock
-    EreignisModelMapper ereignisModelMapper;
+    EreignisseModelMapper ereignisModelMapper;
 
     @Mock
     EreignisValidator ereignisValidator;
@@ -40,20 +40,20 @@ public class EreignisServiceTest {
     class GetEreignisse {
 
         @Test
-        void should_returnEreignisseModel_when_givenValidWahlbezirkid() {
+        void should_returnEreignisseModel_when_givenValidWahlbezirkID() {
             val wahlbezirkID = "wahlbezirkID";
             val keineVorfaelle = false;
             val keineVorkommnisse = true;
 
-            val mockedEreignis = TestdataFactory.CreateEreignisEntity.withData(wahlbezirkID);
-            val mockedEreignisModel = TestdataFactory.CreateEreignisModel.fromEntity(mockedEreignis);
-            val mockedEeignisModelList = List.of(TestdataFactory.CreateEreignisModel.withEreignisart(EreignisartModel.VORFALL));
-            val expectedEreignisseModel = TestdataFactory.CreateWahlbezirkEreignisseModel.withData(wahlbezirkID, keineVorfaelle, keineVorkommnisse,
-                    mockedEeignisModelList);
+            val mockedEreignis = TestdataFactory.CreateEreignisEntity.withData("beschreibung");
+            val mockedEreignisse = TestdataFactory.CreateEreignisseEntity.withData(wahlbezirkID, Set.of(mockedEreignis));
 
-            Mockito.when(ereignisRepository.findByWahlbezirkID(wahlbezirkID)).thenReturn(List.of(mockedEreignis));
-            Mockito.when(ereignisModelMapper.toModel(mockedEreignis)).thenReturn(mockedEreignisModel);
-            Mockito.when(ereignisModelMapper.toEreignisseModel(wahlbezirkID, keineVorfaelle, keineVorkommnisse, mockedEeignisModelList))
+            val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withEreignisart(EreignisartModel.VORFALL));
+            val expectedEreignisseModel = TestdataFactory.CreateWahlbezirkEreignisseModel.withData(wahlbezirkID, keineVorfaelle, keineVorkommnisse,
+                    mockedEreignisModelList);
+
+            Mockito.when(ereignisRepository.findByWahlbezirkID(wahlbezirkID)).thenReturn(Optional.of(mockedEreignisse));
+            Mockito.when(ereignisModelMapper.toModel(mockedEreignisse))
                     .thenReturn(expectedEreignisseModel);
 
             val result = unitUnderTest.getEreignisse(wahlbezirkID);
@@ -66,7 +66,7 @@ public class EreignisServiceTest {
         void should_returnEmptyResponse_when_noDataFound() {
             val wahlbezirkID = "wahlbezirkID";
 
-            Mockito.when(ereignisRepository.findByWahlbezirkID(wahlbezirkID)).thenReturn(Collections.emptyList());
+            Mockito.when(ereignisRepository.findByWahlbezirkID(wahlbezirkID)).thenReturn(Optional.empty());
 
             val result = unitUnderTest.getEreignisse(wahlbezirkID);
             Assertions.assertThat(result).isEmpty();
@@ -78,29 +78,38 @@ public class EreignisServiceTest {
 
         @Test
         void should_notThrowException_when_newDataIsSaved() {
-            val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData());
-            val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData("wahlbezirkID", mockedEreignisModelList);
-            val mockedEreignisList = TestdataFactory.CreateEreignisEntity.listFromModel(mockedEreignisseWriteModel);
+            val wahlbezirkID = "wahlbezirkID";
 
-            Mockito.when(ereignisModelMapper.toEntity(mockedEreignisseWriteModel)).thenReturn(mockedEreignisList);
+            val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData("beschreibung"));
+            val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData(wahlbezirkID, mockedEreignisModelList);
+
+            val mockedEreignis = TestdataFactory.CreateEreignisEntity.withData("beschreibung");
+            val mockedEreignisse = TestdataFactory.CreateEreignisseEntity.withData(wahlbezirkID, Set.of(mockedEreignis));
+
+            Mockito.when(ereignisModelMapper.toEntity(mockedEreignisseWriteModel)).thenReturn(mockedEreignisse);
 
             Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postEreignisse(mockedEreignisseWriteModel));
 
             Mockito.verify(ereignisValidator).validEreignisAndWahlbezirkIDOrThrow(mockedEreignisseWriteModel);
             Mockito.verify(ereignisRepository).deleteByWahlbezirkID(mockedEreignisseWriteModel.wahlbezirkID());
-            Mockito.verify(ereignisRepository).saveAll(mockedEreignisList);
+            Mockito.verify(ereignisRepository).save(mockedEreignisse);
         }
 
         @Test
         void should_throwWlsException_when_savingFailed() {
-            val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData());
-            val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData("wahlbezirkID", mockedEreignisModelList);
-            val mockedEreignisList = TestdataFactory.CreateEreignisEntity.listFromModel(mockedEreignisseWriteModel);
+            val wahlbezirkID = "wahlbezirkID";
+
+            val mockedEreignisModelList = List.of(TestdataFactory.CreateEreignisModel.withData("beschreibung"));
+            val mockedEreignisseWriteModel = TestdataFactory.CreateEreignisseWriteModel.withData(wahlbezirkID, mockedEreignisModelList);
+
+            val mockedEreignis = TestdataFactory.CreateEreignisEntity.withData("beschreibung");
+            val mockedEreignisse = TestdataFactory.CreateEreignisseEntity.withData(wahlbezirkID, Set.of(mockedEreignis));
+
             val mockedRepoSaveException = new RuntimeException("saving failed");
             val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("");
 
-            Mockito.when(ereignisModelMapper.toEntity(mockedEreignisseWriteModel)).thenReturn(mockedEreignisList);
-            Mockito.doThrow(mockedRepoSaveException).when(ereignisRepository).saveAll(mockedEreignisList);
+            Mockito.when(ereignisModelMapper.toEntity(mockedEreignisseWriteModel)).thenReturn(mockedEreignisse);
+            Mockito.doThrow(mockedRepoSaveException).when(ereignisRepository).save(mockedEreignisse);
             Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.SAVEEREIGNIS_UNSAVABLE)).thenReturn(mockedWlsException);
 
             Assertions.assertThatThrownBy(() -> unitUnderTest.postEreignisse(mockedEreignisseWriteModel)).isSameAs(mockedWlsException);

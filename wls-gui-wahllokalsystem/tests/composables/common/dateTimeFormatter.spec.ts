@@ -70,6 +70,30 @@ describe("dateTimeFormatter.ts", () => {
     });
   });
 
+  describe("getDateFromTimeString", () => {
+    it.each(["12:12", "12:12:30"])(
+      "should_returnDateWithGivenTime_when_givenValidTimeString'%s'",
+      (input) => {
+        const result = getDateFromTimeString(input).toString();
+
+        expect(result).toContain(input);
+      }
+    );
+
+    it.each(["text", "26:12", "11:78", "23:45:67", "", " "])(
+      "should_returnInvalidDate_when_inputStringIsInvalidValue'%s'",
+      (input) => {
+        const result = getDateFromTimeString(input);
+
+        expect(result).toBeInstanceOf(Date);
+        expect(isNaN(result.getTime())).toBe(true);
+      }
+    );
+      expect(result).toBeInstanceOf(Date);
+      expect(isNaN(result.getTime())).toBe(true);
+    });
+  });
+
   describe("toGermanDateFormat", () => {
     it.each([
       "2026-01-01",

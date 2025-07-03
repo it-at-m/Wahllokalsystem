@@ -11,6 +11,7 @@
       </v-container>
     </v-main>
     <the-broadcast-read-confirmation-dialog />
+    <the-wahlvorstand-anwesenheits-check-popup-dialog />
   </v-app>
 </template>
 
@@ -20,6 +21,7 @@ import { onMounted, onUnmounted } from "vue";
 import { VApp, VContainer, VFadeTransition, VMain } from "vuetify/components";
 
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
+import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
 import { useMonitoringCronjobService } from "@/composables/monitoring/monitoringCronjobService.ts";
@@ -39,13 +41,17 @@ const { startWahlbeteiligungInterval, stopWahlbeteiligungInterval } =
   useMonitoringCronjobService();
 
 onMounted(async () => {
-  await loadUser().then(() => {
-    startBroadcastMessageInterval();
-    initTasks();
-    loadEreignisse();
-    loadWaehler();
-    startWahlbeteiligungInterval();
-  });
+  await loadUser()
+    .then(() => {
+      startBroadcastMessageInterval();
+      initTasks();
+      loadEreignisse();
+      loadWaehler();
+      startWahlbeteiligungInterval();
+    })
+    .catch((error) => {
+      console.debug(error);
+    });
 
   // config for service worker indexed db (same config as in wahl-worker.js !)
   localforage.config({
@@ -64,6 +70,8 @@ onUnmounted(() => {
 </script>
 
 <style>
+@import "@fontsource/roboto/400.css";
+
 .main {
   background-color: white;
 }

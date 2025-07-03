@@ -43,7 +43,10 @@ function _openPrintDialog() {
     wahlName: wahlenStore.getWahlNameOrBlankStringById(
       currentUserHauptWahlID.value
     ),
-    wahlTag: toGermanDateWithLongMonth(currentUserHauptWahlID.value) || "",
+    wahlTag:
+      toGermanDateWithLongMonth(
+        wahlenStore.getWahlTagOrBlankStringById(currentUserHauptWahlID.value)
+      ) || "",
     wahlbezirknummer: currentUserWahlbezirkNummer.value || "",
     wahlvorstaende: wahlvorstand.value.wahlvorstandsmitglieder,
     druckZeitpunkt: toHhMm(new Date()),

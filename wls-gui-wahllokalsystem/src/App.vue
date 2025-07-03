@@ -24,7 +24,6 @@ import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadc
 import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
-import { useMonitoringCronjobService } from "@/composables/monitoring/monitoringCronjobService.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
@@ -37,8 +36,6 @@ const { loadWaehler } = useMonitoringStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
-const { startWahlbeteiligungInterval, stopWahlbeteiligungInterval } =
-  useMonitoringCronjobService();
 
 onMounted(async () => {
   await loadUser()
@@ -47,7 +44,6 @@ onMounted(async () => {
       initTasks();
       loadEreignisse();
       loadWaehler();
-      startWahlbeteiligungInterval();
     })
     .catch((error) => {
       console.debug(error);
@@ -65,7 +61,6 @@ onMounted(async () => {
 
 onUnmounted(() => {
   stopBroadcastMessageInterval();
-  stopWahlbeteiligungInterval();
 });
 </script>
 

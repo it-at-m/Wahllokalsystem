@@ -108,6 +108,18 @@ export function useDateTimeFormatter() {
     }
   }
 
+  function toGermanDateWithLongMonth(dateString: string) {
+    const date = new Date(dateString);
+    if (isValidDate(date)) {
+      return date.toLocaleDateString("de-DE", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour12: false,
+      });
+    }
+  }
+
   return {
     time,
     toHhMm,
@@ -116,6 +128,7 @@ export function useDateTimeFormatter() {
     extractTimeFromString,
     toGermanDateFormat,
     getDateFromTimeString,
+    toGermanDateWithLongMonth,
   };
 }
 

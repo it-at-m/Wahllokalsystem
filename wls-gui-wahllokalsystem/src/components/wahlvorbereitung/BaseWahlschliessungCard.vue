@@ -12,7 +12,7 @@
           :rules="[
             REQUIRED,
             TIME_NOT_IN_FUTURE,
-            TIME_GREATER_OR_EQUAL(fruehesteSchliessungsuhrzeitUWB),
+            TIME_GREATER_OR_EQUAL(fruehesteSchliessungsuhrzeit),
           ]"
         />
       </v-form>
@@ -52,9 +52,7 @@ import {
 const { sendSchliessungsuhrzeit } = useWahlbezirkStore();
 const { schliessungsuhrzeit, schliessungsuhrzeitIsSaving } =
   storeToRefs(useWahlbezirkStore());
-const { fruehesteSchliessungsuhrzeitUWB } = storeToRefs(
-  useInfomanagementStore()
-);
+const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
 
 const schliessungsuhrzeitValidForm = ref<null | boolean>(null);
 

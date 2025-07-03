@@ -5,7 +5,10 @@
         cols="4"
         class="d-flex align-center justify-start"
       >
-        <v-app-bar-nav-icon @click.stop="toggleDrawer()" />
+        <v-app-bar-nav-icon
+          v-if="hasInitializationOfTasksCompletelyRun"
+          @click.stop="toggleDrawer()"
+        />
         <span class="navbar-text mx-2"> {{ wahltermin }} </span>
         <base-icon-wahlbezirksart class="mx-2" />
         <span class="navbar-text mx-2">
@@ -20,6 +23,13 @@
         cols="3"
         class="d-flex align-center justify-end"
       >
+        <the-waehleranzahl-count-button
+          v-if="
+            eroeffnungsuhrzeitSent !== undefined &&
+            schliessungsuhrzeitSent === undefined &&
+            currentUserWahlbezirksArt === WahlbezirksArtEnum.UWB
+          "
+        />
         <wls-clock class="navbar-text mx-2" />
         <wls-heartbeat v-model:is-offline="isOffline" />
         <the-info-help-icon />
@@ -80,6 +90,7 @@ import {
 
 import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
+import TheWaehleranzahlCountButton from "@/components/monitoring/TheWaehleranzahlCountButton.vue";
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
@@ -90,12 +101,24 @@ import {
   ROUTE_WAHLUMGEBUNG,
   ROUTE_WAHLVORSTAND,
 } from "@/constants.ts";
+import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum";
+
+const { eroeffnungsuhrzeitSent, schliessungsuhrzeitSent } =
+  storeToRefs(useWahlbezirkStore());
 
 const { toGermanDateFormat } = useDateTimeFormatter();
-const { user, currentUserWahltag, currentUserWahlbezirkNummer } =
-  storeToRefs(useUserStore());
-
+const {
+  user,
+  currentUserWahltag,
+  currentUserWahlbezirkNummer,
+  currentUserWahlbezirksArt,
+} = storeToRefs(useUserStore());
+const { hasInitializationOfTasksCompletelyRun } = storeToRefs(
+  useTaskManagerStore()
+);
 const [drawer, toggleDrawer] = useToggle();
 const isOffline = ref(false);
 const wahltermin = computed(() =>

@@ -2,8 +2,7 @@
   <v-card>
     <v-card-title>Beginn der Stimmabgabe</v-card-title>
     <v-card-text class="pb-0">
-      Bitte geben Sie die Uhrzeit ein, zu der mit der Stimmabgabe begonnen
-      wurde.
+      <slot name="userHint" />
       <v-form v-model="isEroeffnungsuhrzeitFormValid">
         <base-time-input
           v-model="eroeffnungsuhrzeit"
@@ -12,8 +11,8 @@
           :rules="[
             REQUIRED,
             TIME_NOT_IN_FUTURE,
-            TIME_GREATER_OR_EQUAL(fruehesteEroeffnungsuhrzeitUWB),
-            TIME_LESS_OR_EQUAL(fruehesteSchliessungsuhrzeitUWB),
+            TIME_GREATER_OR_EQUAL(fruehesteEroeffnungsuhrzeit),
+            TIME_LESS_OR_EQUAL(fruehesteSchliessungsuhrzeit),
           ]"
         />
       </v-form>
@@ -54,7 +53,7 @@ import {
 const wahlbezirkStore = useWahlbezirkStore();
 const { eroeffnungsuhrzeit, eroeffnungsuhrzeitIsSaving } =
   storeToRefs(wahlbezirkStore);
-const { fruehesteEroeffnungsuhrzeitUWB, fruehesteSchliessungsuhrzeitUWB } =
+const { fruehesteEroeffnungsuhrzeit, fruehesteSchliessungsuhrzeit } =
   storeToRefs(useInfomanagementStore());
 
 const isEroeffnungsuhrzeitFormValid = ref<boolean | null>(null);

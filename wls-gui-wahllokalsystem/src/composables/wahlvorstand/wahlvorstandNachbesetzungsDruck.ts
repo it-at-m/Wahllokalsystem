@@ -165,7 +165,7 @@ export function useWahlvorstandNachbesetzungsDruck() {
                 </div>
               </div>
               <div class="horizontal fontSize_16 marginTop3mm">
-                <div>Europawahl 2024 – Auszählung am 9. Juni 2024</div>
+                <div>${data.wahlName} – Auszählung am ${data.wahlTag}</div>
               </div>
               <div class="horizontal fontSize_12" style="margin: 0.5cm 0 0.5cm 0;">
                 <div><b>Wichtig:</b> Füllen Sie dieses Formular vollständig aus und geben es bei Ihrer Tischbetreuung ab. 

@@ -40,10 +40,13 @@ export function useDateTimeFormatter() {
 
   const getDateFromTimeString = function (timeString: string): Date {
     // Validate time string format (HH:MM)
-    if (!timeString || !/^\d{1,2}:\d{1,2}$/.test(timeString)) {
+    if (!timeString || !/^\d{1,2}:\d{1,2}(?::\d{1,2})?$/.test(timeString)) {
       return new Date(NaN);
     }
-    const [hours, minutes] = timeString.split(":").map(Number);
+
+    const timeParts = timeString.split(":").map(Number);
+
+    const [hours, minutes] = timeParts;
     if (
       isNaN(hours) ||
       isNaN(minutes) ||
@@ -54,8 +57,14 @@ export function useDateTimeFormatter() {
     ) {
       return new Date(NaN); // Return invalid date for invalid time values
     }
+
+    const seconds = timeParts.length === 3 ? timeParts[2] : 0;
+    if (!isNaN(seconds) && (seconds < 0 || seconds > 59)) {
+      return new Date(NaN);
+    }
+
     const date = new Date();
-    date.setHours(hours, minutes);
+    date.setHours(hours, minutes, seconds);
     return date;
   };
 

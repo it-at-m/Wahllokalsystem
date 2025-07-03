@@ -1,4 +1,5 @@
 import type { User } from "@/types/User.ts";
+import type { Wahlvorstandsmitglied } from "@/types/wahlvorstand/Wahlvorstandsmitglied.ts";
 
 import { createTestingPinia } from "@pinia/testing";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
@@ -43,8 +44,11 @@ vi.mock("@/composables/wahlvorstand/wahlvorstandService", () => ({
 
 const mockedNow = new Date();
 const { prepareUser } = useUserTestDataFactory();
-const { createWahlvorstand, prepareWahlvorstandsmitglied } =
-  useWahlvorstandTestDataFactory();
+const {
+  createWahlvorstand,
+  prepareWahlvorstand,
+  prepareWahlvorstandsmitglied,
+} = useWahlvorstandTestDataFactory();
 
 describe("wahlvorstandStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useWahlvorstandStore>;
@@ -369,15 +373,6 @@ describe("wahlvorstandStore.ts", () => {
 
       expect(unitUnderTest.lastSending).toStrictEqual(mockedNow);
     });
-
-    it("should_notSendWahlvorstand_when_wahlbezirkIDIsNotGiven", async () => {
-      const userStore = useUserStore();
-      userStore.setUser(_createUser(undefined));
-
-      await unitUnderTest.sendWahlvorstand();
-
-      expect(mockDefinitions.saveWahlvorstand).toBeCalledTimes(0);
-    });
   });
 
   describe("initWahlvorstand", () => {
@@ -456,16 +451,6 @@ describe("wahlvorstandStore.ts", () => {
         "API Error"
       );
 
-      expect(unitUnderTest.lastLoading).toBeNull();
-    });
-
-    it("should_notLoadWahlvorstand_when_usersWahlbezirkIdIsUndefined", async () => {
-      const userStore = useUserStore();
-      userStore.setUser(_createUser(undefined));
-
-      await unitUnderTest.forceLoadWahlvorstand();
-
-      expect(mockDefinitions.getWahlvorstand).toHaveBeenCalledTimes(0);
       expect(unitUnderTest.lastLoading).toBeNull();
     });
   });
@@ -648,6 +633,27 @@ describe("wahlvorstandStore.ts", () => {
     });
   });
 
+  describe("resetAllAnwesenheiten", () => {
+    it("should_setAnwesendFalseForAllWahlvorstandsmitglieder_when_wahlvorstandsmitgliederAreGiven", () => {
+      unitUnderTest.wahlvorstand = prepareWahlvorstand()
+        .wahlvorstandsmitglieder([
+          prepareWahlvorstandsmitglied().anwesend(true).build(),
+          prepareWahlvorstandsmitglied().anwesend(false).build(),
+          prepareWahlvorstandsmitglied().anwesend(true).build(),
+          prepareWahlvorstandsmitglied().anwesend(true).build(),
+          prepareWahlvorstandsmitglied().anwesend(false).build(),
+        ])
+        .build();
+
+      unitUnderTest.resetAllAnwesenheiten();
+
+      expect(unitUnderTest.wahlvorstand.wahlvorstandsmitglieder).toSatisfy(
+        (mitglieder: Wahlvorstandsmitglied[]) =>
+          mitglieder.every((mitglied) => !mitglied.anwesend)
+      );
+    });
+  });
+
   function _addAnwesendeWahlvorstandsmitglieder(zahl: number) {
     for (let i = 1; i <= zahl; i++) {
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder.push(
@@ -657,6 +663,6 @@ describe("wahlvorstandStore.ts", () => {
   }
 });
 
-function _createUser(wahlbezirkID: string | undefined): User {
+function _createUser(wahlbezirkID: string): User {
   return prepareUser().wahlbezirkID(wahlbezirkID).build();
 }

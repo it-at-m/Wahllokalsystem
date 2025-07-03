@@ -74,7 +74,6 @@ export const useInfomanagementStore = defineStore(storeID, () => {
     }
   }
 
-  /** FRUEHESTE_EROEFFNUNGSZEIT bezeichnet den frühesten Wert, zu dem die Wahlhandlung eröffnet werden kann. */
   const _fruehesteEroeffnungsuhrzeitUWB = computed(() => {
     return _getKonfigParamValueOrDefault(
       "FRUEHESTE_EROEFFNUNGSZEIT_UW",
@@ -82,7 +81,6 @@ export const useInfomanagementStore = defineStore(storeID, () => {
     );
   });
 
-  /** FRUEHESTE_SCHLIESSUNGSZEIT bezeichnet den spätesten Wert, zu dem die Wahlhandlung eröffnet werden kann. */
   const _fruehesteSchliessungsuhrzeitUWB = computed(() => {
     return _getKonfigParamValueOrDefault(
       "FRUEHESTE_SCHLIESSUNGSZEIT_UW",
@@ -90,7 +88,6 @@ export const useInfomanagementStore = defineStore(storeID, () => {
     );
   });
 
-  /** FRUEHESTE_EROEFFNUNGSZEIT bezeichnet den frühesten Wert, zu dem die Wahlhandlung eröffnet werden kann. */
   const _fruehesteEroeffnungsuhrzeitBWB = computed(() => {
     return _getKonfigParamValueOrDefault(
       "FRUEHESTE_EROEFFNUNGSZEIT_BW",
@@ -98,7 +95,6 @@ export const useInfomanagementStore = defineStore(storeID, () => {
     );
   });
 
-  /** FRUEHESTE_SCHLIESSUNGSZEIT bezeichnet den spätesten Wert, zu dem die Wahlhandlung eröffnet werden kann. */
   const _fruehesteSchliessungsuhrzeitBWB = computed(() => {
     return _getKonfigParamValueOrDefault(
       "FRUEHESTE_SCHLIESSUNGSZEIT_BW",
@@ -120,7 +116,10 @@ export const useInfomanagementStore = defineStore(storeID, () => {
     konfigurationsparameter,
     dateTimeToCheckAnwesenheit,
     initKonfigurationsparameter,
+    /** FRUEHESTE_EROEFFNUNGSZEIT bezeichnet den frühesten Wert, zu dem die Wahlhandlung eröffnet werden kann. */
     fruehesteEroeffnungsuhrzeit,
+    /** FRUEHESTE_SCHLIESSUNGSZEIT bezeichnet den spätesten Wert, zu dem die Wahlhandlung eröffnet werden kann
+     * und den frühesten Wert, zu dem die Wahlhandlung geschlossen werden kann. */
     fruehesteSchliessungsuhrzeit,
   };
 });

@@ -50,7 +50,7 @@
         <template #activator="{ props }">
           <v-list-item
             v-bind="props"
-            title="Wahlvorbereitung"
+            :title="wahlVerwaltungStepsTitle"
           />
         </template>
         <v-list-item
@@ -108,8 +108,6 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum";
 
 const { eroeffnungsuhrzeitSent, schliessungsuhrzeitSent } =
   storeToRefs(useWahlbezirkStore());
-
-const { toGermanDateFormat } = useDateTimeFormatter();
 const {
   user,
   currentUserWahltag,
@@ -119,14 +117,28 @@ const {
 const { hasInitializationOfTasksCompletelyRun } = storeToRefs(
   useTaskManagerStore()
 );
+
+const { toGermanDateFormat } = useDateTimeFormatter();
 const [drawer, toggleDrawer] = useToggle();
+
 const isOffline = ref(false);
+
 const wahltermin = computed(() =>
   user ? toGermanDateFormat(currentUserWahltag.value ?? "") : ""
 );
 const wahlbezirknummer = computed(() =>
   user ? currentUserWahlbezirkNummer.value : ""
 );
+const wahlVerwaltungStepsTitle = computed(() => {
+  switch (currentUserWahlbezirksArt.value) {
+    case WahlbezirksArtEnum.UWB:
+      return "Wahlvorbereitung";
+    case WahlbezirksArtEnum.BWB:
+      return "Wahlbriefzulassung";
+    default:
+      return "";
+  }
+});
 </script>
 
 <style>

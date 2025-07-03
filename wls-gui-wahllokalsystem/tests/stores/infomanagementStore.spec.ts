@@ -1,4 +1,5 @@
 import { createTestingPinia } from "@pinia/testing";
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useKonfigurationsparameterTestDataFactory } from "@tests/utils/infomanagement/KonfigurationsparameterTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { flushPromises } from "@vue/test-utils";
@@ -22,6 +23,7 @@ vi.mock("@/composables/infomanagement/konfigurationsparameterService", () => ({
 const { createKonfigurationsparameterList, prepareKonfigurationsparameter } =
   useKonfigurationsparameterTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
+const { generateRandomString } = useCommonTestDataFactory();
 
 describe("infomanagementStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useInfomanagementStore>;
@@ -136,18 +138,23 @@ describe("infomanagementStore.ts", () => {
       userStore.setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
       );
-      const konfigKeyValue = "12:34:51";
+      const konfigKeyValueUW = generateRandomString(8);
+      const konfigKeyValueBW = generateRandomString(8);
       infomanagementStore.konfigurationsparameter = [
         prepareKonfigurationsparameter()
           .schluessel("FRUEHESTE_EROEFFNUNGSZEIT_UW")
-          .wert(konfigKeyValue)
+          .wert(konfigKeyValueUW)
+          .build(),
+        prepareKonfigurationsparameter()
+          .schluessel("FRUEHESTE_EROEFFNUNGSZEIT_BW")
+          .wert(konfigKeyValueBW)
           .build(),
       ];
 
       await nextTick();
 
       expect(infomanagementStore.fruehesteEroeffnungsuhrzeit).toStrictEqual(
-        konfigKeyValue
+        konfigKeyValueUW
       );
     });
 
@@ -186,18 +193,23 @@ describe("infomanagementStore.ts", () => {
       userStore.setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
       );
-      const konfigKeyValue = "12:34:51";
+      const konfigKeyValueBW = generateRandomString(8);
+      const konfigKeyValueUW = generateRandomString(8);
       infomanagementStore.konfigurationsparameter = [
         prepareKonfigurationsparameter()
           .schluessel("FRUEHESTE_EROEFFNUNGSZEIT_BW")
-          .wert(konfigKeyValue)
+          .wert(konfigKeyValueBW)
+          .build(),
+        prepareKonfigurationsparameter()
+          .schluessel("FRUEHESTE_EROEFFNUNGSZEIT_UW")
+          .wert(konfigKeyValueUW)
           .build(),
       ];
 
       await nextTick();
 
       expect(infomanagementStore.fruehesteEroeffnungsuhrzeit).toStrictEqual(
-        konfigKeyValue
+        konfigKeyValueBW
       );
     });
 
@@ -246,18 +258,23 @@ describe("infomanagementStore.ts", () => {
       userStore.setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
       );
-      const konfigKeyValue = "12:34:51";
+      const konfigKeyValueUW = generateRandomString(8);
+      const konfigKeyValueBW = generateRandomString(8);
       infomanagementStore.konfigurationsparameter = [
         prepareKonfigurationsparameter()
           .schluessel("FRUEHESTE_SCHLIESSUNGSZEIT_UW")
-          .wert(konfigKeyValue)
+          .wert(konfigKeyValueUW)
+          .build(),
+        prepareKonfigurationsparameter()
+          .schluessel("FRUEHESTE_SCHLIESSUNGSZEIT_BW")
+          .wert(konfigKeyValueBW)
           .build(),
       ];
 
       await nextTick();
 
       expect(infomanagementStore.fruehesteSchliessungsuhrzeit).toStrictEqual(
-        konfigKeyValue
+        konfigKeyValueUW
       );
     });
 
@@ -296,18 +313,23 @@ describe("infomanagementStore.ts", () => {
       userStore.setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
       );
-      const konfigKeyValue = "12:34:51";
+      const konfigKeyValueBW = generateRandomString(8);
+      const konfigKeyValueUW = generateRandomString(8);
       infomanagementStore.konfigurationsparameter = [
         prepareKonfigurationsparameter()
           .schluessel("FRUEHESTE_SCHLIESSUNGSZEIT_BW")
-          .wert(konfigKeyValue)
+          .wert(konfigKeyValueBW)
+          .build(),
+        prepareKonfigurationsparameter()
+          .schluessel("FRUEHESTE_SCHLIESSUNGSZEIT_UW")
+          .wert(konfigKeyValueUW)
           .build(),
       ];
 
       await nextTick();
 
       expect(infomanagementStore.fruehesteSchliessungsuhrzeit).toStrictEqual(
-        konfigKeyValue
+        konfigKeyValueBW
       );
     });
 

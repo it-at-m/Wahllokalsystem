@@ -31,7 +31,7 @@ export function useWahlService() {
     } catch {
       if (sendNotification) {
         userNotificationService.addNotification(
-          "Fehler beim laden der Wahlen",
+          "Fehler beim laden der Kopfdaten",
           UserNotificationCategoryEnum.ERROR
         );
       }

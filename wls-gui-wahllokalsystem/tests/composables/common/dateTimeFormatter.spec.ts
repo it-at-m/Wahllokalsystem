@@ -5,8 +5,12 @@ import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts"
 const mockedNow = new Date();
 
 describe("dateTimeFormatter.ts", () => {
-  const { time, applyLocalTimezoneOffset, toGermanDateFormat } =
-    useDateTimeFormatter();
+  const {
+    time,
+    applyLocalTimezoneOffset,
+    toGermanDateFormat,
+    getDateFromTimeString,
+  } = useDateTimeFormatter();
 
   beforeEach(() => {
     vi.useFakeTimers({
@@ -89,9 +93,6 @@ describe("dateTimeFormatter.ts", () => {
         expect(isNaN(result.getTime())).toBe(true);
       }
     );
-      expect(result).toBeInstanceOf(Date);
-      expect(isNaN(result.getTime())).toBe(true);
-    });
   });
 
   describe("toGermanDateFormat", () => {

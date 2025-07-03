@@ -115,6 +115,7 @@ export function useDateTimeFormatter() {
     extractDateFromString,
     extractTimeFromString,
     toGermanDateFormat,
+    getDateFromTimeString,
   };
 }
 

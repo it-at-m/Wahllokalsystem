@@ -134,7 +134,7 @@ describe("infomanagementStore.ts", () => {
       infomanagementStore = useInfomanagementStore();
     });
 
-    it("should_returnFRUEHESTE_EROEFFNUNGSZEIT_UWValue_when_wahlbezirkArtIsUWB", async () => {
+    it("should_returnFruehesteEroeffnungszeitUWValue_when_wahlbezirkArtIsUWB", async () => {
       userStore.setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
       );
@@ -189,7 +189,7 @@ describe("infomanagementStore.ts", () => {
       );
     });
 
-    it("should_returnFRUEHESTE_EROEFFNUNGSZEIT_BWValue_when_wahlbezirkArtIsBWB", async () => {
+    it("should_returnFruehesteEroeffnungszeitBWValue_when_wahlbezirkArtIsBWB", async () => {
       userStore.setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
       );
@@ -254,7 +254,7 @@ describe("infomanagementStore.ts", () => {
       infomanagementStore = useInfomanagementStore();
     });
 
-    it("should_returnFRUEHESTE_SCHLIESSUNGSZEIT_UWValue_when_wahlbezirkArtIsUWB", async () => {
+    it("should_returnFruehesteSchliessungszeitUWValue_when_wahlbezirkArtIsUWB", async () => {
       userStore.setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
       );
@@ -309,7 +309,7 @@ describe("infomanagementStore.ts", () => {
       );
     });
 
-    it("should_returnFRUEHESTE_SCHLIESSUNGSZEIT_BWValue_when_wahlbezirkArtIsBWB", async () => {
+    it("should_returnFruehesteSchliessungszeitBWValue_when_wahlbezirkArtIsBWB", async () => {
       userStore.setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
       );

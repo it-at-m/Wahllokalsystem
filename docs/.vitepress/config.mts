@@ -114,6 +114,10 @@ export default withMermaid({
               text: "Nutzung von defineModel()",
               link: `${PATH_ADR}adr-use-defineModel`,
             },
+            {
+              text: "Kleine Menge von Renovate-PRs",
+              link: `${PATH_ADR}adr-lower-number-of-renovate-prs.md`,
+            },
           ],
         },
         {

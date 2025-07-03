@@ -22,12 +22,12 @@
       >
         <the-waehleranzahl-count-button
           v-if="
-            eroeffnungsuhrzeit !== undefined &&
-            schliessungsuhrzeit === undefined &&
+            eroeffnungsuhrzeitSent !== undefined &&
+            schliessungsuhrzeitSent === undefined &&
             currentUserWahlbezirksArt === WahlbezirksArtEnum.UWB
           "
         />
-        <wls-clock class="mx-2" />
+        <wls-clock class="navbar-text mx-2" />
         <wls-heartbeat v-model:is-offline="isOffline" />
         <the-info-help-icon />
       </v-col>
@@ -102,7 +102,7 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum";
 
-const { eroeffnungsuhrzeit, schliessungsuhrzeit } =
+const { eroeffnungsuhrzeitSent, schliessungsuhrzeitSent } =
   storeToRefs(useWahlbezirkStore());
 
 const { toGermanDateFormat } = useDateTimeFormatter();

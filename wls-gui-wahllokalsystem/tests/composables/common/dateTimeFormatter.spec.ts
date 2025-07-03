@@ -5,12 +5,8 @@ import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts"
 const mockedNow = new Date();
 
 describe("dateTimeFormatter.ts", () => {
-  const {
-    time,
-    applyLocalTimezoneOffset,
-    getDateFromTimeString,
-    toGermanDateFormat,
-  } = useDateTimeFormatter();
+  const { time, applyLocalTimezoneOffset, toGermanDateFormat } =
+    useDateTimeFormatter();
 
   beforeEach(() => {
     vi.useFakeTimers({
@@ -72,5 +68,34 @@ describe("dateTimeFormatter.ts", () => {
       expect(result).toBeInstanceOf(Date);
       expect(isNaN(result.getTime())).toBe(true);
     });
+  });
+
+  describe("toGermanDateFormat", () => {
+    it.each([
+      "2026-01-01",
+      "2026/01/01",
+      "01.01.2026",
+      "2026-01-01T00:00:00Z",
+      "2026-1-1",
+    ])(
+      "should_returnDateStringInLocalFormat_when_givenValidDateString'%s'",
+      (datestring) => {
+        expect(toGermanDateFormat(datestring)).toBe("01.01.2026");
+      }
+    );
+
+    it.each([
+      "2026-01-32",
+      "2026-13-01",
+      "2026-01-AB",
+      "random string",
+      "",
+      " ",
+    ])(
+      "should_returnUndefined_when_givenInvalidDateString'%s'",
+      (datestring) => {
+        expect(toGermanDateFormat(datestring)).toBe(undefined);
+      }
+    );
   });
 });

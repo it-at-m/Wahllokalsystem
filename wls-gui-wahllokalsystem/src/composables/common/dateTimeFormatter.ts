@@ -82,7 +82,8 @@ export function useDateTimeFormatter() {
     time,
     toHhMm,
     applyLocalTimezoneOffset,
-    getDateFromTimeString,
+    extractDateFromString,
+    extractTimeFromString,
     toGermanDateFormat,
   };
 }

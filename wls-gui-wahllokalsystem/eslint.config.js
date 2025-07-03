@@ -24,7 +24,6 @@ export default [
   },
   {
     rules: {
-      "no-console": ["error", { allow: ["debug"] }],
       "vue/component-name-in-template-casing": [
         "error",
         "kebab-case",

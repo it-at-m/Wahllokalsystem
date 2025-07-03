@@ -132,9 +132,12 @@ describe("dateTimeFormatter.ts", () => {
       "01.01.2026",
       "2026-01-01T00:00:00Z",
       "2026-1-1",
-    ])("should", (datestring) => {
-      expect(toGermanDateWithLongMonth(datestring)).toBe("1. Januar 2026");
-    });
+    ])(
+      "should_returnDateStringInLocalFormatWithLongMonth_when_givenValidDateString'%s'",
+      (datestring) => {
+        expect(toGermanDateWithLongMonth(datestring)).toBe("1. Januar 2026");
+      }
+    );
 
     it.each([
       "2026-01-32",
@@ -143,8 +146,11 @@ describe("dateTimeFormatter.ts", () => {
       "random string",
       "",
       " ",
-    ])("should", (datestring) => {
-      expect(toGermanDateFormat(datestring)).toBe(undefined);
-    });
+    ])(
+      "should_returnUndefined_when_givenInvalidDateString'%s'",
+      (datestring) => {
+        expect(toGermanDateFormat(datestring)).toBe(undefined);
+      }
+    );
   });
 });

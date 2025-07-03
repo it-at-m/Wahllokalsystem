@@ -5,13 +5,14 @@ import {
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import BaseWahleroeffnungCard from "@/components/wahlvorbereitung/BaseWahleroeffnungCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -35,6 +36,12 @@ describe("BaseWahleroeffnungCard.vue", () => {
   vi.stubGlobal("ResizeObserver", ResizeObserverMock);
 
   beforeEach(() => {
+    const mockedNow = new Date();
+    mockedNow.setHours(7, 30);
+    vi.useFakeTimers({
+      now: mockedNow,
+    });
+
     wrapper = mount(BaseWahleroeffnungCard, {
       global: {
         plugins: [
@@ -46,6 +53,10 @@ describe("BaseWahleroeffnungCard.vue", () => {
         ],
       },
     });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   describe(COMPONENT_RENDER_TESTS, () => {
@@ -60,12 +71,35 @@ describe("BaseWahleroeffnungCard.vue", () => {
       );
     });
 
-    it("should_renderWithEnabledSaveButton_when_uhrzeitIsGiven", async (context) => {
+    it("should_renderWithDisabledSaveButton_when_invalidUhrzeitIsEntered", async (context) => {
+      const infomanagementStore = useInfomanagementStore();
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.fruehesteEroeffnungsuhrzeitUWB = "07:00:00";
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.fruehesteSchliessungsuhrzeitUWB = "08:00:00";
+
+      const wahlbezirkStore = useWahlbezirkStore();
+      wahlbezirkStore.eroeffnungsuhrzeit = new Date("2025-05-23T06:30:00");
+
+      await flushPromises(); //update databinding and keep button disabled
+
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+
+    it("should_renderWithEnabledSaveButton_when_validUhrzeitIsEntered", async (context) => {
+      const infomanagementStore = useInfomanagementStore();
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.fruehesteEroeffnungsuhrzeitUWB = "07:00:00";
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.fruehesteSchliessungsuhrzeitUWB = "08:00:00";
+
       const date = new Date("2025-05-23T07:30:00");
       const wahlbezirkStore = useWahlbezirkStore();
       wahlbezirkStore.eroeffnungsuhrzeit = date;
 
-      await flushPromises(); //update databinding and enabled button
+      await flushPromises(); // update data binding and enable button
 
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
@@ -100,6 +134,12 @@ describe("BaseWahleroeffnungCard.vue", () => {
     });
 
     it("should_callSendEroeffnungsuhrzeit_when_saveButtonIsClicked", async () => {
+      const infomanagementStore = useInfomanagementStore();
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.fruehesteEroeffnungsuhrzeitUWB = "07:00:00";
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.fruehesteSchliessungsuhrzeitUWB = "08:00:00";
+
       const wahlbezirkStore = useWahlbezirkStore();
       wahlbezirkStore.eroeffnungsuhrzeit = new Date("2025-05-23T07:30:00");
 

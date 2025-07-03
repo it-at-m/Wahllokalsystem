@@ -13,4 +13,4 @@ jobs:
         working-directory: ./docs
     steps:
       - id: build_docs
-        uses: it-at-m/lhm_actions/action-templates/actions/action-build-docs@7863642bb665a1d1994b2c2645db6e64a1a694ad # v1.0.9
+        uses: it-at-m/lhm_actions/action-templates/actions/action-build-docs@9767179088fd2e344d1a24c17404ab809a60f1b6 # v1.0.20

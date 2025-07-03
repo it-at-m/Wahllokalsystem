@@ -110,8 +110,12 @@ const { eroeffnungsuhrzeitSent, schliessungsuhrzeitSent } =
   storeToRefs(useWahlbezirkStore());
 
 const { toGermanDateFormat } = useDateTimeFormatter();
-const { user, currentUserWahltag, currentUserWahlbezirkNummer,  currentUserWahlbezirksArt } =
-  storeToRefs(useUserStore());
+const {
+  user,
+  currentUserWahltag,
+  currentUserWahlbezirkNummer,
+  currentUserWahlbezirksArt,
+} = storeToRefs(useUserStore());
 const { hasInitializationOfTasksCompletelyRun } = storeToRefs(
   useTaskManagerStore()
 );

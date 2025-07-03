@@ -5,7 +5,10 @@
         cols="4"
         class="d-flex align-center justify-start"
       >
-        <v-app-bar-nav-icon @click.stop="toggleDrawer()" />
+        <v-app-bar-nav-icon
+          v-if="hasInitializationOfTasksCompletelyRun"
+          @click.stop="toggleDrawer()"
+        />
         <span class="navbar-text mx-2"> {{ wahltermin }} </span>
         <base-icon-wahlbezirksart class="mx-2" />
         <span class="navbar-text mx-2">
@@ -98,6 +101,7 @@ import {
   ROUTE_WAHLUMGEBUNG,
   ROUTE_WAHLVORSTAND,
 } from "@/constants.ts";
+import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum";
@@ -106,13 +110,11 @@ const { eroeffnungsuhrzeitSent, schliessungsuhrzeitSent } =
   storeToRefs(useWahlbezirkStore());
 
 const { toGermanDateFormat } = useDateTimeFormatter();
-const {
-  user,
-  currentUserWahltag,
-  currentUserWahlbezirkNummer,
-  currentUserWahlbezirksArt,
-} = storeToRefs(useUserStore());
-
+const { user, currentUserWahltag, currentUserWahlbezirkNummer,  currentUserWahlbezirksArt } =
+  storeToRefs(useUserStore());
+const { hasInitializationOfTasksCompletelyRun } = storeToRefs(
+  useTaskManagerStore()
+);
 const [drawer, toggleDrawer] = useToggle();
 const isOffline = ref(false);
 const wahltermin = computed(() =>

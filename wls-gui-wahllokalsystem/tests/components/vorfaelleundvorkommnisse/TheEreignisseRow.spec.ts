@@ -100,7 +100,7 @@ describe("TheEreignisseRow.vue", () => {
 
       const ereigniseintraege = [] as Ereignis[];
       for (let i = 1; i < 6; i++) {
-        const date = new Date();
+        const date = new Date(Date.UTC(2025, 6, 4));
         date.setHours(i, 0);
         ereigniseintraege.push(
           EreignisBuilder.createComplete()

@@ -27,7 +27,7 @@ export function useBroadcastService() {
       const response = await broadcastCA.getMessage(wahlbezirkID);
 
       const responseData = getNullOn204OrElseResponseData(response);
-      return responseData !== null ? dtoToModel(responseData) : null;
+      return responseData ? dtoToModel(responseData) : null;
     } catch {
       addNotification(
         "Abrufen der Broadcastnachricht ist fehlgeschlagen",

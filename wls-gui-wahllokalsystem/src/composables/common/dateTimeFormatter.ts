@@ -96,7 +96,7 @@ export function useDateTimeFormatter() {
     }
 
     const date = new Date();
-    date.setHours(hours, minutes, seconds);
+    date.setHours(hours, minutes, seconds, 0);
     return date;
   };
 

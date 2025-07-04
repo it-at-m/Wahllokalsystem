@@ -33,6 +33,8 @@ export function useEreignisMapper() {
       (ereignisModel) => ereignisModelToEreignisDto(ereignisModel)
     );
     return {
+      keineVorfaelle: ereignisseModel.keineVorfaelle,
+      keineVorkommnisse: ereignisseModel.keineVorkommnisse,
       ereigniseintraege: ereignisseAsDto,
     };
   }
@@ -47,9 +49,7 @@ function ereignisDtoToEreignisModel(ereignisDto: EreignisDTO): Ereignis {
   return {
     beschreibung: ereignisDto.beschreibung ?? "",
     uhrzeit: ereignisDto.uhrzeit ? new Date(ereignisDto.uhrzeit) : undefined,
-    ereignisart: ereignisDto.ereignisart
-      ? ereignisartDtoToEreignisartModel(ereignisDto.ereignisart)
-      : undefined,
+    ereignisart: ereignisartDtoToEreignisartModel(ereignisDto.ereignisart),
   };
 }
 
@@ -61,30 +61,28 @@ function ereignisModelToEreignisDto(ereignisModel: Ereignis): EreignisDTO {
   return {
     beschreibung: ereignisModel.beschreibung ?? "",
     uhrzeit: mappedUhrzeit?.toJSON(),
-    ereignisart: ereignisModel.ereignisart
-      ? ereignisartModelToEreignisartDto(ereignisModel.ereignisart)
-      : undefined,
+    ereignisart: ereignisartModelToEreignisartDto(ereignisModel.ereignisart),
   };
-}
-
-function ereignisartDtoToEreignisartModel(
-  ereignisartDto: EreignisDTOEreignisartEnum
-): EreignisartEnum {
-  switch (ereignisartDto) {
-    case "VORFALL":
-      return EreignisartEnum.Vorfall;
-    case "VORKOMMNIS":
-      return EreignisartEnum.Vorkommnis;
-  }
 }
 
 function ereignisartModelToEreignisartDto(
   ereignisartModel: EreignisartEnum
 ): EreignisDTOEreignisartEnum {
   switch (ereignisartModel) {
-    case "VORFALL":
+    case EreignisartEnum.Vorfall:
       return EreignisDTOEreignisartEnum.Vorfall;
-    case "VORKOMMNIS":
+    case EreignisartEnum.Vorkommnis:
       return EreignisDTOEreignisartEnum.Vorkommnis;
+  }
+}
+
+function ereignisartDtoToEreignisartModel(
+  ereignisartDto: EreignisDTOEreignisartEnum
+): EreignisartEnum {
+  switch (ereignisartDto) {
+    case EreignisDTOEreignisartEnum.Vorfall:
+      return EreignisartEnum.Vorfall;
+    case EreignisDTOEreignisartEnum.Vorkommnis:
+      return EreignisartEnum.Vorkommnis;
   }
 }

@@ -16,7 +16,7 @@ export function useKopfdatenService() {
     })
   );
 
-  async function getKopfdaten(wahlbezirk: string, wahlID: string) {
+  async function getKopfdaten(wahlID: string, wahlbezirk: string) {
     try {
       const response = await kopfdatenControllerApi.getKopfdaten(
         wahlID,

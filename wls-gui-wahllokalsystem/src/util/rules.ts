@@ -13,7 +13,7 @@ export const REQUIRED = (value: any) => {
 };
 
 export const DATE_REQUIRED = (value: any) =>
-  (!!value && value.trim().length >= 0) || "Feld darf nicht leer sein.";
+  (!!value && value.trim().length > 0) || "Feld darf nicht leer sein.";
 
 export const MAX_LENGTH = (length: number) => (value: any) =>
   (value && value.length <= length) || `Maximale Länge ist ${length} Zeichen.`;

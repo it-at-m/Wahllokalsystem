@@ -29,7 +29,7 @@ const emit = defineEmits(["update:model-value"]);
 const onTimeChanged = (newTime: string) => {
   const currentTime = modelValue?.value || new Date();
 
-  const newDate = extractTimeFromString(newTime, currentTime);
-  emit("update:model-value", newDate);
+  const updatedTime = extractTimeFromString(newTime, currentTime);
+  emit("update:model-value", updatedTime);
 };
 </script>

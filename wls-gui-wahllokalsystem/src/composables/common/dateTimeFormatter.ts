@@ -29,33 +29,36 @@ export function useDateTimeFormatter() {
     return `${hour}${TIME_FIELD_SEPARATOR}${minute}`;
   };
 
-  const extractDateFromString = function (
-    timeString: string,
-    currentTime: Date
-  ): Date | undefined {
-    if (timeString.length != 0) {
-      const [year, month, day] = timeString.split("-").map(Number);
-      const newTime = new Date(currentTime);
-      newTime.setFullYear(year, month - 1, day);
-
-      return newTime;
-    } else {
-      return currentTime;
-    }
-  };
-
   const extractTimeFromString = function (
     timeString: string,
     currentTime: Date
   ): Date | undefined {
-    if (timeString != undefined && timeString.trim().length != 0) {
-      const [hours, minutes] = timeString.split(":").map(Number);
-      const newDate = new Date(currentTime);
-      newDate.setHours(hours);
-      newDate.setMinutes(minutes);
-
-      return newDate;
+    if (!timeString || timeString.trim().length === 0) {
+      return undefined;
     }
+    const [hours, minutes] = timeString.split(":").map(Number);
+    if (isNaN(hours) || isNaN(minutes)) {
+      return undefined;
+    }
+    const newDate = new Date(currentTime);
+    newDate.setHours(hours, minutes);
+    return newDate;
+  };
+
+  const extractDateFromString = function (
+    dateString: string,
+    currentTime: Date
+  ): Date | undefined {
+    if (dateString.length === 0) {
+      return currentTime;
+    }
+    const [year, month, day] = dateString.split("-").map(Number);
+    if (isNaN(year) || isNaN(month) || isNaN(day)) {
+      return undefined;
+    }
+    const newTime = new Date(currentTime);
+    newTime.setFullYear(year, month - 1, day);
+    return newTime;
   };
 
   const applyLocalTimezoneOffset = function (date: Date | string): Date {

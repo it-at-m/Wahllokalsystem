@@ -9,7 +9,7 @@ describe("dateTimeFormatter.ts", () => {
     time,
     applyLocalTimezoneOffset,
     toGermanDateFormat,
-      getDateFromTimeString,
+    getDateFromTimeString,
     toGermanDateWithLongMonth,
   } = useDateTimeFormatter();
 

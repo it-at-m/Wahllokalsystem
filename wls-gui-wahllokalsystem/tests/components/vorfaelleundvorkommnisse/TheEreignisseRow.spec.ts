@@ -99,7 +99,7 @@ describe("TheEreignisseRow.vue", () => {
       const ereignisStore = useEreignisStore();
 
       const ereigniseintraege = [] as Ereignis[];
-      for (let i = 0; i < 5; i++) {
+      for (let i = 1; i < 6; i++) {
         const date = new Date();
         date.setHours(i, 0);
         ereigniseintraege.push(

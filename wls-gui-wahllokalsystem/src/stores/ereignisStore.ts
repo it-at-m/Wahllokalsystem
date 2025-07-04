@@ -2,7 +2,7 @@ import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 import { defineStore, storeToRefs } from "pinia";
-import { computed, ref, watch, watchEffect } from "vue";
+import { computed, ref, watch } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
@@ -70,22 +70,34 @@ export const useEreignisStore = defineStore(storeID, () => {
   });
 
   watch(schliessungsuhrzeitSent, _onSchliessunguhrzeitSentChanged);
-  watchEffect(() => _updateKeineFlagsOfEreignisseBasedOnCurrentState());
 
   function addEreignis() {
     const currentDate = new Date();
+    const currentEreignisart =
+      getEreignisArtForDateRelatedToSchliessungsuhrzeit(
+        currentDate,
+        schliessungsuhrzeitSent.value
+      );
     wahlbezirkEreignisse.value.ereigniseintraege?.push({
       uhrzeit: currentDate,
       beschreibung: "",
-      ereignisart: getEreignisArtForDateRelatedToSchliessungsuhrzeit(
-        currentDate,
-        schliessungsuhrzeitSent.value
-      ),
+      ereignisart: currentEreignisart,
     });
+    // uncheck checkbox if set before
+    switch (currentEreignisart) {
+      case EreignisartEnum.Vorfall:
+        wahlbezirkEreignisse.value.keineVorfaelle = false;
+        break;
+      case EreignisartEnum.Vorkommnis:
+        wahlbezirkEreignisse.value.keineVorkommnisse = false;
+        break;
+    }
   }
 
   function deleteEreignisByIndex(index: number) {
     wahlbezirkEreignisse.value.ereigniseintraege?.splice(index, 1);
+
+    _updateKeineFlagsOfEreignisseBasedOnCurrentState();
   }
 
   function updateUhrzeitByIndex(uhrzeit: Date | undefined, index: number) {
@@ -104,6 +116,7 @@ export const useEreignisStore = defineStore(storeID, () => {
             uhrzeit,
             schliessungsuhrzeitSent.value
           );
+        _updateKeineFlagsOfEreignisseBasedOnCurrentState();
       } else {
         ereignisToChange.uhrzeit = undefined;
         ereignisToChange.ereignisart = EreignisartEnum.Vorfall;
@@ -149,6 +162,10 @@ export const useEreignisStore = defineStore(storeID, () => {
     );
   }
 
+  function _hasToUpdateKeineVorkommnisse(): boolean {
+    return schliessungsuhrzeitSent.value !== undefined;
+  }
+
   function _onSchliessunguhrzeitSentChanged(
     newSchliessungsuhrzeit: Date | undefined
   ) {
@@ -170,9 +187,11 @@ export const useEreignisStore = defineStore(storeID, () => {
   }
 
   function _updateKeineFlagsOfEreignisseBasedOnCurrentState() {
-    wahlbezirkEreignisse.value.keineVorkommnisse = !_hasEintragOfEreignisart(
-      EreignisartEnum.Vorkommnis
-    );
+    if (_hasToUpdateKeineVorkommnisse()) {
+      wahlbezirkEreignisse.value.keineVorkommnisse = !_hasEintragOfEreignisart(
+        EreignisartEnum.Vorkommnis
+      );
+    }
     wahlbezirkEreignisse.value.keineVorfaelle = !_hasEintragOfEreignisart(
       EreignisartEnum.Vorfall
     );

@@ -61,9 +61,10 @@ describe("monitoringService.ts", () => {
         uhrzeit: new Date("2025-05-05T12:00:00"),
       };
 
-      mockDefinitions.getWahlbeteiligung.mockResolvedValue(
-        mockedWaehleranzahlDTO
-      );
+      mockDefinitions.getWahlbeteiligung.mockResolvedValue({
+        status: 200,
+        data: mockedWaehleranzahlDTO,
+      });
       mockDefinitions.toModel.mockReturnValue(mockedWaehleranzahlModel);
 
       const result = await getWahlbeteiligung(wahlID, wahlbezirkID);
@@ -73,6 +74,9 @@ describe("monitoringService.ts", () => {
         wahlbezirkID
       );
       expect(result).toEqual(mockedWaehleranzahlModel);
+      expect(mockDefinitions.toModel.mock.calls).toStrictEqual([
+        [mockedWaehleranzahlDTO],
+      ]);
     });
 
     it.each([
@@ -112,6 +116,24 @@ describe("monitoringService.ts", () => {
         expect(mockDefinitions.toModel).not.toHaveBeenCalled();
       }
     );
+
+    it("should_returnUndefined_when_apiCallReturnedResponseWithStatus204", async () => {
+      const wahlbezirkID = generateRandomString(10);
+      const wahlID = generateRandomString(10);
+
+      mockDefinitions.getWahlbeteiligung.mockResolvedValue(
+        Promise.resolve({ status: 204, data: null })
+      );
+
+      const result = await getWahlbeteiligung(wahlID, wahlbezirkID);
+
+      expect(result).toStrictEqual(undefined);
+      expect(mockDefinitions.getWahlbeteiligung).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID
+      );
+      expect(mockDefinitions.toModel).toHaveBeenCalledTimes(0);
+    });
   });
 
   describe("postWahlbeteiligung", () => {

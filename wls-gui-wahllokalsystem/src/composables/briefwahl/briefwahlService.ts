@@ -4,8 +4,11 @@ import {
   BeanstandeteWahlbriefeControllerApi,
   Configuration,
 } from "@/api/wls-clients/generated-briefwahl-api";
+import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts";
 import { BRIEFWAHL_SERVICE_API_URL } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+
+const { toModel } = useBeanstandeteWahlbriefeMapper();
 
 export function useBriefwahlService() {
   const beanstandeteWahlbriefeControllerAPI =
@@ -15,14 +18,14 @@ export function useBriefwahlService() {
 
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
 
-  async function getBeanstandeteWahlbriefe() {
+  async function getBeanstandeteWahlbriefe(waehlerverzeichnisNummer: number) {
     try {
       const response =
         await beanstandeteWahlbriefeControllerAPI.getBeanstandeteWahlbriefe(
           currentUserWahlbezirkID.value,
-          1 // todo: woher kommmt die wählerverzeichnisnummer?
+          waehlerverzeichnisNummer
         );
-      return response.data;
+      return toModel(response.data);
     } catch (e) {
       console.debug(e);
     }

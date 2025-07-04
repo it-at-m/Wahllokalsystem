@@ -25,7 +25,7 @@ export function useMonitoringService() {
         wahlbezirkID
       );
       const responseData = getNullOn204OrElseResponseData(response);
-      return responseData !== null ? toModel(responseData) : undefined;
+      return responseData ? toModel(responseData) : undefined;
     } catch (e) {
       console.debug(e);
     }

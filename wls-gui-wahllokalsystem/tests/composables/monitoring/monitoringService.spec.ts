@@ -61,9 +61,10 @@ describe("monitoringService.ts", () => {
         uhrzeit: new Date("2025-05-05T12:00:00"),
       };
 
-      mockDefinitions.getWahlbeteiligung.mockResolvedValue(
-        mockedWaehleranzahlDTO
-      );
+      mockDefinitions.getWahlbeteiligung.mockResolvedValue({
+        status: 200,
+        data: mockedWaehleranzahlDTO,
+      });
       mockDefinitions.toModel.mockReturnValue(mockedWaehleranzahlModel);
 
       const result = await getWahlbeteiligung(wahlID, wahlbezirkID);
@@ -73,6 +74,9 @@ describe("monitoringService.ts", () => {
         wahlbezirkID
       );
       expect(result).toEqual(mockedWaehleranzahlModel);
+      expect(mockDefinitions.toModel.mock.calls).toStrictEqual([
+        [mockedWaehleranzahlDTO],
+      ]);
     });
 
     it.each([

@@ -9,7 +9,7 @@
         prepend-icon="$add"
         @click="onAddBedenklicherWahlbriefClicked()"
       >
-        Beschluss erfassen
+        Neuen Beschluss erfassen
       </v-btn>
       <base-button-save
         :loading="isSaving"

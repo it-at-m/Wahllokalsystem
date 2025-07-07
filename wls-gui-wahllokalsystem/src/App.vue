@@ -17,6 +17,7 @@
 
 <script setup lang="ts">
 import localforage from "localforage";
+import { storeToRefs } from "pinia";
 import { onMounted, onUnmounted } from "vue";
 import { VApp, VContainer, VFadeTransition, VMain } from "vuetify/components";
 
@@ -24,26 +25,39 @@ import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadc
 import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
+import { useBriefwahlStore } from "@/stores/briefwahlStore.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const { loadEreignisse } = useEreignisStore();
 const { loadUser } = useUserStore();
 const { initTasks } = useTaskManagerStore();
 const { loadWaehler } = useMonitoringStore();
+const { wahlen } = storeToRefs(useWahlenStore());
+const { getWaehlerverzeichnisnummerOrUndefinedById } = useWahlenStore();
+const { initBeanstandeteWahlbriefe } = useBriefwahlStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
 
 onMounted(async () => {
   await loadUser()
-    .then(() => {
+    .then(async () => {
       startBroadcastMessageInterval();
-      initTasks();
-      loadEreignisse();
-      loadWaehler();
+      await initTasks();
+      await loadEreignisse();
+      await loadWaehler();
+      if (wahlen.value) {
+        for (const wahl of wahlen.value) {
+          const wvzNr = getWaehlerverzeichnisnummerOrUndefinedById(wahl.wahlID);
+          if (wvzNr) {
+            await initBeanstandeteWahlbriefe(wvzNr);
+          }
+        }
+      }
     })
     .catch((error) => {
       console.debug(error);

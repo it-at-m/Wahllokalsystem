@@ -79,7 +79,7 @@ describe("TheEreignisseRow.vue", () => {
       const ereigniseintraege = [] as Ereignis[];
 
       const date = new Date();
-      date.setHours(12, 0);
+      date.setHours(12, 15);
       ereigniseintraege.push(
         EreignisBuilder.createComplete()
           .withUhrzeit(date)
@@ -101,7 +101,7 @@ describe("TheEreignisseRow.vue", () => {
       const ereigniseintraege = [] as Ereignis[];
       for (let i = 1; i < 6; i++) {
         const date = new Date(Date.UTC(2025, 6, 4));
-        date.setHours(i, 0);
+        date.setHours(i, 15);
         ereigniseintraege.push(
           EreignisBuilder.createComplete()
             .withUhrzeit(date)

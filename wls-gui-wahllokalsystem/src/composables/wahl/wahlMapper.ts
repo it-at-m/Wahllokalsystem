@@ -19,6 +19,7 @@ export function useWahlMapper() {
       wahlart: _dtoEnumToModelEnum(dto.wahlart),
       farbe: dto.farbe ? _mapFarbeDtoToModel(dto.farbe) : undefined,
       nummer: dto.nummer,
+      beanstandeteWahlbriefe: undefined,
     };
   }
 

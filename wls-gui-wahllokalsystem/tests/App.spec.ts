@@ -54,12 +54,6 @@ describe("App", () => {
           vuetify,
           router,
         ],
-        mocks: {
-          loadUser: vi.fn(),
-          initTasks: vi.fn(),
-          loadEreignisse: vi.fn(),
-          loadWaehler: vi.fn(),
-        },
       },
     });
   });

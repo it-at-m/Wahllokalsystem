@@ -10,6 +10,12 @@ public class ExceptionConstants {
     public static final String CODE_BEZIRKID_FEHLT = "002";
     public static final String MESSAGE_BEZIRKID_FEHLT = "Die BezirkID fehlt";
 
+    // common
+    public static final ExceptionDataWrapper DATENALLGEMEIN_PARAMETER_FEHLEN = new ExceptionDataWrapper("102",
+            "Anfrage ist ungueltig da notwendige Anfragedaten fehlen");
+    public static final ExceptionDataWrapper ID_NICHT_KONVERTIERBAR = new ExceptionDataWrapper(
+            "103", "ID nicht konvertierbar");
+
     //loadWahlvorschlaege
     public static final ExceptionDataWrapper LOADWAHLVORSCHLAEGE_WAHLID_FEHLT = new ExceptionDataWrapper(
             CODE_WAHLID_FEHLT, MESSAGE_WAHLID_FEHLT);
@@ -56,6 +62,18 @@ public class ExceptionConstants {
 
     //saveWahllokalZustand
     public static final ExceptionDataWrapper SAVEWAHLLOKALZUSTAND_WAHLBEZIRKID_FEHLT = new ExceptionDataWrapper("001", "Die WahlbezirkID fehlt");
+
+    //loadWahlvorstand
+    public static final ExceptionDataWrapper LOADWAHLVORSTAND_SUCHKRITERIEN_UNVOLLSTAENDIG = new ExceptionDataWrapper(
+            "001", "Wahlvorstandskriterien sind nicht vollstaendig");
+
+    //saveAnwesenheit
+    public static final ExceptionDataWrapper SAVEANWESENHEIT_IDENTIFIKATOR_FEHLT = new ExceptionDataWrapper("002",
+            "Mindestens ein Identifikator für eine Aktualisierung fehlt");
+    public static final ExceptionDataWrapper SAVEANWESENHEIT_BEZIRKID_FEHLT = new ExceptionDataWrapper("003",
+            "Bezirk fehlt");
+    public static final ExceptionDataWrapper SAVEANWESENHEIT_ANWESENHEITBEGINN_FEHLT = new ExceptionDataWrapper("004",
+            "Es ist keine Information hinterlegt seit wann diese Anwesenheit gilt");
 
     /**
      * @throws IllegalAccessException when constructor is used

@@ -5,6 +5,15 @@ import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 
 const meta = {
   component: BaseInputFeedbackCard,
+  argTypes: {
+    default: {
+      description: "Inhalt, der neben dem Icon angezeigt wird",
+    },
+    additionalFeedback: {
+      description:
+        "Optionale zusätzliche Informationen, die unterhalb des Icons angezeigt werden",
+    },
+  },
   args: {
     default: "Der Inhalt des Defaultslot",
     title: "Titel des Dialoges",

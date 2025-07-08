@@ -78,3 +78,15 @@ In manchen Fällen ist es in einem Briefwahlbezirk notwendig, eine Nachbesetzung
 über den Button `Nachbesetzung drucken` ein entsprechendes PDF-Dokument generieren lassen, welches im Anschluss gedruckt
 und ausgefüllt werden kann.
 :::
+
+📃 **UseCase: `Vorbereitung der Wahlhandlung - Prüfung der Ausstattung des Wahllokals`**
+
+Für jede an dem entsprechenden Tag stattfindende Wahl muss die Anzahl der zur Verfügung gestellten Wahlurnen erfasst
+werden. Der Nutzer muss bestätigen, dass die Wahlurnen vor der Nutzung leer waren und versiegelt wurden, um speichern zu
+können.
+
+::: info Abstimmungsschutzvorrichtungen im Urnenwahlbezirk {data-uwb="true"}
+In jedem Urnenwahllokal müssen gewisse Abstimmungsschutzvorrichtungen gewährleistet sein, um das Wahlgeheimnis nicht zu
+gefährden. Dementsprechend muss die Summe der Anzahl der Tische mit Sichtblenden, der Nebenräume im Wahlraum, sowie der 
+Wahlkabinen insgesamt mindestens 1 ergeben, bevor der Nutzer speichern kann.
+:::

@@ -148,7 +148,7 @@ werden. Jedes Mal, wenn der Nutzer auf den entsprechenden Button klickt, oder al
 oder `Leertaste` drückt, wird die Wähleranzahl um 1 erhöht.
 :::
 
-📃 **UseCase: Wahl schliessen**
+📃 **UseCase: `Wahl schliessen`**
 
 ::: info `Erfassung der Schliessung des Wahllokals` im Urnenwahlbezirk {data-uwb="true"}
 Analog zur Öffnung der Wahl, wird sie vor der Auszählung auch wieder geschlossen. Die früheste Zeit zur Schließung

@@ -90,3 +90,20 @@ In jedem Urnenwahllokal müssen gewisse Abstimmungsschutzvorrichtungen gewährle
 gefährden. Dementsprechend muss die Summe der Anzahl der Tische mit Sichtblenden, der Nebenräume im Wahlraum, sowie der 
 Wahlkabinen insgesamt mindestens 1 ergeben, bevor der Nutzer speichern kann.
 :::
+
+📃 **UseCase: `Wahl eröffnen`**
+
+Der Nutzer wird dazu aufgefordert, die Uhrzeit einzutragen, zu welcher die Stimmabgabe begonnen wurde, beziehungsweise 
+zu welcher der Wahlvorstand zusammengetreten ist. Um speichern zu können, darf der Nutzer keine Zeit eingeben, die in 
+der Zukunft liegt. Ausserdem müssen die folgenden Grenzwerte je nach Wahlbezirksart berücksichtigt werden:
+
+::: info `Erfassung der Öffnung des Wahllokals` im Urnenwahlbezirk {data-uwb="true"}
+Die früheste Zeit, zu der das Wahllokal geöffnet werden kann, ist der Standardwert von 8 Uhr und wird mit dem 
+Konfigurationsparameter `FRUEHESTE_EROEFFNUNGSUHRZEIT_UW` geladen. Die späteste Zeit zur Öffnung richtet sich nach dem
+Konfigurationsparameter `FRUEHESTE_SCHLIESSUNGSUHRZEIT_UW` mit einem Standardwert von 18 Uhr.
+:::
+
+::: info `Erfassung des Zusammentretens des Wahlvorstands` im Briefwahlbezirk {data-bwb="true"}
+Die früheste Zeit, zu welcher der Wahlvorstand zusammentreten kann, ist der Standardwert von 15 Uhr und wird mit dem
+Konfigurationsparameter `FRUEHESTE_EROEFFNUNGSUHRZEIT_BW` geladen.
+:::

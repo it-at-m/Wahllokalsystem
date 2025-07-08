@@ -16,17 +16,13 @@ export function useKopfdatenService() {
     })
   );
 
-  async function getKopfdaten(wahlID: string, wahlbezirk: string) {
+  async function getKopfdaten(wahlID: string, wahlbezirkID: string) {
     try {
       const response = await kopfdatenControllerApi.getKopfdaten(
         wahlID,
-        wahlbezirk
+        wahlbezirkID
       );
-      if (response.status === 200) {
-        return toModel(response.data);
-      } else {
-        return null;
-      }
+      return toModel(response.data);
     } catch {
       userNotificationService.addNotification(
         "Fehler beim laden der Kopfdaten",

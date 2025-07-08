@@ -107,3 +107,11 @@ Konfigurationsparameter `FRUEHESTE_SCHLIESSUNGSUHRZEIT_UW` mit einem Standardwer
 Die früheste Zeit, zu welcher der Wahlvorstand zusammentreten kann, ist der Standardwert von 15 Uhr und wird mit dem
 Konfigurationsparameter `FRUEHESTE_EROEFFNUNGSUHRZEIT_BW` geladen.
 :::
+
+📃 **UseCase: Wahl schliessen**
+
+::: info `Erfassung der Schliessung des Wahllokals` im Urnenwahlbezirk {data-uwb="true"}
+Analog zur Öffnung der Wahl, wird diese vor der Auszählung auch wieder geschlossen. Die früheste Zeit zur Schliessung 
+richtet sich nach dem Konfigurationsparameter `FRUEHESTE_SCHLIESSUNGSUHRZEIT_UW` mit einem Standardwert von 18 Uhr. 
+Auch diese darf nicht in der Zukunft liegen.
+:::

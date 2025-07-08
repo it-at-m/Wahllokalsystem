@@ -59,6 +59,7 @@ const { prepareWahltagEvent } = useWahltagTestDataFactory();
 
 describe("BaseStepWahltagInit.vue", () => {
   let wrapper: VueWrapper<InstanceType<typeof BaseStepWahltagInit>>;
+  vi.stubGlobal("visualViewport", new EventTarget());
 
   beforeEach(() => {
     wrapper = mount(BaseStepWahltagInit, {

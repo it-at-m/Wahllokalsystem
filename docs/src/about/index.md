@@ -98,8 +98,8 @@ Anwesenheit kann nur bei Erfüllung folgender Bedingungen gespeichert werden:
 
 - es muss mindestens ein Wahlvorsteher anwesend sein
 - es muss mindestens ein Schriftführer anwesend sein
-- vor der Wahlschliessung müssen mindestens 3 Mitglieder anwesend sein
-- nach der Wahlschliessung müssen mindestens 5 Mitglieder anwesend sein
+- vor der Wahlschließung müssen mindestens 3 Mitglieder anwesend sein
+- nach der Wahlschließung müssen mindestens 5 Mitglieder anwesend sein
 
 Der Nutzer der Anwendung wird durch eine Fehlermeldung darauf hingewiesen, wenn diese Bedingungen nicht erfüllt sind.
 
@@ -125,7 +125,7 @@ Wahlkabinen insgesamt mindestens 1 ergeben, bevor der Nutzer speichern kann.
 
 Der Nutzer wird dazu aufgefordert, die Uhrzeit einzutragen, zu welcher die Stimmabgabe begonnen wurde, beziehungsweise
 zu welcher der Wahlvorstand zusammengetreten ist. Um speichern zu können, darf der Nutzer keine Zeit eingeben, die in
-der Zukunft liegt. Ausserdem müssen die folgenden Grenzwerte je nach Wahlbezirksart berücksichtigt werden:
+der Zukunft liegt. Außerdem müssen die folgenden Grenzwerte je nach Wahlbezirksart berücksichtigt werden:
 
 ::: info `Erfassung der Öffnung des Wahllokals` im Urnenwahlbezirk {data-uwb="true"}
 Die früheste Zeit, zu der das Wahllokal geöffnet werden kann, ist der Standardwert von 8 Uhr und wird mit dem
@@ -150,7 +150,7 @@ oder `Leertaste` drückt, wird die Wähleranzahl um 1 erhöht.
 
 📃 **UseCase: `Wahl schliessen`**
 
-::: info `Erfassung der Schliessung des Wahllokals` im Urnenwahlbezirk {data-uwb="true"}
+::: info `Erfassung der Schließung des Wahllokals` im Urnenwahlbezirk {data-uwb="true"}
 Analog zur Öffnung der Wahl, wird sie vor der Auszählung auch wieder geschlossen. Die früheste Zeit zur Schließung
 richtet sich nach dem Konfigurationsparameter `FRUEHESTE_SCHLIESSUNGSUHRZEIT_UW` mit einem Standardwert von 18 Uhr.
 Auch diese darf nicht in der Zukunft liegen.

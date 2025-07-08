@@ -1,9 +1,12 @@
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
+import { usePflegeWaehlerverzeichnisTestDataFactory } from "@tests/utils/wahlvorbereitung/PflegeWaehlerverzeichnisTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { ref } from "vue";
 
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -11,7 +14,16 @@ const mockDefinitions = vi.hoisted(() => ({
   postEroeffnungsuhrzeit: vi.fn(),
   postUrnenwahlvorbereitung: vi.fn(),
   getUngueltigeWahlscheine: vi.fn(),
+  getWaehlerverzeichnis: vi.fn(),
+  postWaehlerverzeichnis: vi.fn(),
+  getWaehlerverzeichnisOrUndefinedById: vi.fn(),
+  mockedWahlen: vi.fn(),
 }));
+
+const { createPflegeWaehlerverzeichnis } =
+  usePflegeWaehlerverzeichnisTestDataFactory();
+
+const mockedDefaultWaehlerverzeichnis = createPflegeWaehlerverzeichnis();
 
 vi.mock("@/composables/basisdaten/ungueltigeWahlscheineService.ts", () => ({
   useUngueltigeWahlscheineService: () => ({
@@ -24,6 +36,21 @@ vi.mock("@/composables/wahlvorbereitung/wahlvorbereitungService", () => ({
       mockDefinitions.postUrnenwahlSchliessungsuhrzeit,
     postEroeffnungsuhrzeit: mockDefinitions.postEroeffnungsuhrzeit,
     postUrnenwahlvorbereitung: mockDefinitions.postUrnenwahlvorbereitung,
+  }),
+}));
+vi.mock("@/composables/wahlvorbereitung/waehlerverzeichnisService.ts", () => ({
+  useWaehlerverzeichnisService: () => ({
+    createDefaultPflegeWaehlerverzeichnis: () =>
+      mockedDefaultWaehlerverzeichnis,
+    getWaehlerverzeichnis: mockDefinitions.getWaehlerverzeichnis,
+    postWaehlerverzeichnis: mockDefinitions.postWaehlerverzeichnis,
+  }),
+}));
+vi.mock("@/stores/wahlenStore.ts", () => ({
+  useWahlenStore: () => ({
+    wahlen: ref(mockDefinitions.mockedWahlen),
+    getWaehlerverzeichnisOrUndefinedById:
+      mockDefinitions.getWaehlerverzeichnisOrUndefinedById,
   }),
 }));
 
@@ -70,6 +97,39 @@ describe("wahlbezirkStore.ts", () => {
         ]);
       }
     );
+  });
+
+  describe("loadPflegeWaehlerverzeichnis", () => {
+    it("should_loadPflegeWaehlerverzeichnis_when_useHasWaehlerverzeichnisNummer", () => {
+      const wahlbezirkID = "wahlbezirkID";
+      useUserStore().setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+
+      const waehlerverzeichnisNummer = 12;
+      mockDefinitions.getWaehlerverzeichnisOrUndefinedById.mockReturnValue(
+        waehlerverzeichnisNummer
+      );
+
+      unitUnderTest.loadPflegeWaehlerverzeichnis();
+
+      expect(mockDefinitions.getWaehlerverzeichnis.mock.calls).toStrictEqual([
+        [wahlbezirkID, waehlerverzeichnisNummer],
+      ]);
+    });
+
+    it("should_notLoadPflegeWaehlerverzeichnis_when_userHasNoWaehlerverzeichnisNummer", () => {
+      const wahlbezirkID = "wahlbezirkID";
+      useUserStore().setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+
+      mockDefinitions.getWaehlerverzeichnisOrUndefinedById.mockReturnValue(
+        undefined
+      );
+
+      unitUnderTest.loadPflegeWaehlerverzeichnis();
+
+      expect(
+        mockDefinitions.getWaehlerverzeichnis.mock.calls.length
+      ).toStrictEqual(0);
+    });
   });
 
   describe("sendEroeffnungsuhrzeit", () => {

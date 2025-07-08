@@ -10,7 +10,7 @@
         vornehmen müssen.
       </base-input-feedback-card>
       <v-radio-group
-        v-model="data.waehlerverzeichnisUnchanged"
+        v-model="pflegeWaehlerverzeichnis.waehlerverzeichnisUnchanged"
         class="mb-4"
         hide-details
       >
@@ -31,17 +31,21 @@
         />
       </v-radio-group>
       <v-checkbox
-        v-model="data.nachtraeglicheBerichtigung"
+        v-model="pflegeWaehlerverzeichnis.nachtraeglicheBerichtigung"
         label="Die Wahlvorsteher*innen berichtigten später entsprechend das Wählerverzeichnis und die dazugehörige Abschlussbeurkundung unter Berücksichtigung der noch am Wahltag an erkrankte Wahlberechtigte erteilten Wahlscheine."
         hide-details
       />
       <v-checkbox
-        v-model="data.mitteilungUeberUngueltigeWahlscheineErhalten"
+        v-model="
+          pflegeWaehlerverzeichnis.mitteilungUeberUngueltigeWahlscheineErhalten
+        "
         :label="TEXT_MITTEILUNG_UEBER_UNGUELTIGE_WAHLSCHEINE"
         hide-details
       />
       <base-input-feedback-card
-        v-if="!data.mitteilungUeberUngueltigeWahlscheineErhalten"
+        v-if="
+          !pflegeWaehlerverzeichnis.mitteilungUeberUngueltigeWahlscheineErhalten
+        "
         title="Ungültige Eingabe"
         type="error"
         class="mt-2"
@@ -53,14 +57,18 @@
     <v-card-actions>
       <base-button-save
         active
-        :disabled="!data.mitteilungUeberUngueltigeWahlscheineErhalten"
+        :disabled="
+          !pflegeWaehlerverzeichnis.mitteilungUeberUngueltigeWahlscheineErhalten
+        "
+        :loading="pflegeWaehlerverzeichnisIsSaving"
+        @click="onSavePflegeWaehlerverzeichnisClicked"
       />
     </v-card-actions>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { storeToRefs } from "pinia";
 import {
   VCard,
   VCardActions,
@@ -73,13 +81,16 @@ import {
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
+import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
 const TEXT_MITTEILUNG_UEBER_UNGUELTIGE_WAHLSCHEINE =
   "Der Wahlvorstand wurde unterrichtet, dass folgende Wahlscheine für ungültig erklärt worden sind (gemäß Anlage).";
 
-const data = ref({
-  waehlerverzeichnisUnchanged: true,
-  mitteilungUeberUngueltigeWahlscheineErhalten: true,
-  nachtraeglicheBerichtigung: false,
-});
+const wahlbezirkStore = useWahlbezirkStore();
+const { pflegeWaehlerverzeichnis, pflegeWaehlerverzeichnisIsSaving } =
+  storeToRefs(wahlbezirkStore);
+
+function onSavePflegeWaehlerverzeichnisClicked() {
+  wahlbezirkStore.sendPflegeWaehlerverzeichnis();
+}
 </script>

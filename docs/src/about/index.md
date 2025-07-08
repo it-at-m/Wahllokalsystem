@@ -56,3 +56,25 @@ ungekennzeichnete Stimmzettel*, *Begründung - Stapel a*, *Stapel d*, *Stapel a*
 *Erfasste Wahlbriefe*, *Zugelassene Wahlbriefe*, *Wahlscheine*, *Stimmzettelumschläge*, *Begründung -
 Stimmzettelumschläge*, *Stapel b - leere Stimmzettelumschläge*
 :::
+
+#### Vor der Auszählung
+
+##### Vor der Stimmabgabe
+
+📃 **UseCase: `Erfassung der Anwesenheit des Wahlvorstands`**
+
+Beim Start der Anwendung wurden alle Wahlvorstandsmitglieder geladen, die für diesen Tag im Wahlbezirk eingeteilt sind. 
+Für alle Mitglieder, die tatsächlich anwesend sind, muss die Anwesenheit manuell per Checkbox erfasst werden. Die 
+Anwesenheit kann nur bei Erfüllung folgender Bedingungen gespeichert werden:
+- es muss mindestens ein Wahlvorsteher anwesend sein
+- es muss mindestens ein Schriftführer anwesend sein
+- vor der Wahlschliessung müssen mindestens 3 Mitglieder anwesend sein
+- nach der Wahlschliessung müssen mindestens 5 Mitglieder anwesend sein
+
+Der Nutzer der Anwendung wird durch eine Fehlermeldung darauf hingewiesen, wenn diese Bedingungen nicht erfüllt sind.
+
+::: info Nachbesetzungsdruck im Briefwahlbezirk {data-bwb="true"}
+In manchen Fällen ist es in einem Briefwahlbezirk notwendig, eine Nachbesetzung zu organisieren. Hierzu kann der Nutzer 
+über den Button `Nachbesetzung drucken` ein entsprechendes PDF-Dokument generieren lassen, welches im Anschluss gedruckt
+und ausgefüllt werden kann.
+:::

@@ -23,3 +23,36 @@ Das Wahlamt kann über das System den Wahlbezirken wichtige Informationen zukomm
 
 ![Übersicht der Funktionen des Wahllokalsystems im zeitlichen Kontext einer Wahl](/relationshipOfUIsToElectionProcess.drawio.png)  
 *Übersicht der Funktionen des Wahllokalsystems im zeitlichen Kontext einer Wahl*
+
+## Fachliche Anforderungen
+
+Im Folgenden werden die fachlichen Anforderungen an die Software je nach Funktion näher beschrieben. Die Einordnung in die Grafik lässt sich
+der jeweiligen Überschrift "📃 **UseCase: `Titel`**" entnehmen.
+
+### Wahllokalsystem UI
+
+Das Wahllokalsystem ist die Anwendung, die am Wahltag vom Wahlvorstand bedient wird.
+
+📃 **UseCase: Initiales Laden der Daten**
+
+In einem ersten Schritt nach dem Login werden die hinterlegten Daten des angemeldeten Benutzers geladen. Kommt es hier
+zu einem Fehler, wird der Wahlvorstand dazu aufgefordert, sich beim Wahlamt zu melden. Ist der Schritt erfolgreich,
+müssen anschließend alle für die Wahlen wichtigen Daten ebenfalls erfolgreich geladen werden. Bei Fehlern wird dem
+Nutzer der Zugriff auf die Anwendung verwehrt. Das erfolgreiche Laden ermöglicht später auch eine reibungslose Nutzung
+im Offline-Modus.
+
+Daten, die unabhängig von der Wahlbezirksart für eine **Kommunalwahl** geladen werden:
+*Wahlvorstand*, *Wahlvorschläge*, *Kopfdaten*, *Konfigurationen*, *Handbuch*, *Wahlvorbereitung*, *Eröffnungsuhrzeit*,
+*Störungen*, *Druckstatus*, *Stapel c - gültige Stimmzettel*, *Stapel c - ungültige Stimmzettel*, *Stapel b -
+ungekennzeichnete Stimmzettel*, *Begründung - Stapel a*, *Stapel d*, *Stapel a*, *Stapel b*, *Begründung Stapel ab*,
+*Stapel b-c*, *FortsetzungsUhrzeit*, *UnterbrechungsUhrzeit*
+
+::: info Kommunalwahl-Daten, die nur in einem Urnenwahlbezirk geladen werden {data-uwb="true"}
+*UngültigeWahlscheine*, *A-Werte*, *Wählerverzeichnis*, *Schließungsuhrzeit*, *Stimmabgabevermerke*, *Stimmzettel*,
+*Begründung - Stimmzettel*
+:::
+
+::: info Kommunalwahl-Daten, die nur in einem Briefwahlbezirk geladen werden {data-bwb="true"}
+*Erfasste Wahlbriefe*, *Zugelassene Wahlbriefe*, *Wahlscheine*, *Stimmzettelumschläge*, *Begründung -
+Stimmzettelumschläge*, *Stapel b - leere Stimmzettelumschläge*
+:::

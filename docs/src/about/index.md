@@ -59,19 +59,24 @@ Stimmzettelumschläge*, *Stapel b - leere Stimmzettelumschläge*
 
 📃 **UseCase: `Erfassung von Ereignissen`**
 
-Zu jeder Zeit der Wahlhandlung kann der Nutzer Ereignisse in der Anwendung erfassen. Sind keine Ereignisse vorgefallen,
-muss dies explizit durch das Aktivieren von Checkboxen bestätigt werden, um die Maske speichern zu können. Sind jedoch
-Ereignisse eingetreten, müssen diese einzeln erfasst werden. Jedes Ereignis hat
+Zu jeder Zeit der Wahlhandlung kann der Nutzer Ereignisse in der Anwendung erfassen. Jedes Ereignis hat folgende
+Pflichtfelder:
 
 - eine Ereignisart
-- ein Datum und eine Uhrzeit
+- ein Datum mit Uhrzeit
 - eine aussagekräftige Beschreibung mit mindestens 4 und maximal 500 Zeichen.
 
-Bei Bedarf können eingetragene Ereignisse auch wieder gelöscht werden. Das Löschen aller eingetragenen Ereignisse
-aktiviert automatisch die "Keine Ereignisse vorgefallen"-Checkboxen. Das Eintragen neuer Ereignisse, wenn vorher noch
-keine gespeichert wurden, deaktiviert die Checkboxen. Diese Relation wird für jeden Wahlbezirk in den Attributen
-`keineVorfaelle` und `keineVorkommnisse` gespeichert, die sich daraus berechnen, ob es Einträge mit der entsprechenden
-Ereignisart gibt.
+Weiterhin gibt es einige Verhaltensregeln für die Ereigniserfassung:
+
+- Wenn keine Ereignisse vorgefallen sind, muss dies explizit durch das Aktivieren einer Checkbox bestätigt werden, um
+  die Maske speichern zu können.
+- Sind Ereignisse eingetreten, müssen diese einzeln erfasst werden.
+- Bei Bedarf können eingetragene Ereignisse wieder gelöscht werden.
+- Das Löschen aller eingetragenen Ereignisse aktiviert automatisch die Checkboxen "Keine Ereignisse vorgefallen".
+- Das Eintragen neuer Ereignisse, wenn vorher noch keine gespeichert wurden, deaktiviert die Checkboxen automatisch.
+
+Diese Relationen werden für jeden Wahlbezirk in den Attributen `keineVorfaelle` und `keineVorkommnisse` gespeichert,
+die sich daraus berechnen, ob es Einträge mit der entsprechenden Ereignisart gibt.
 
 ::: info Ereignisse im Urnenwahlbezirk {data-uwb="true"}
 Im Urnenwahlbezirk wird zwischen Vorfällen, die am Wahltag während der Stimmabgabe auftreten, und Vorkommnissen, die

@@ -13,17 +13,12 @@ export const useKopfdatenStore = defineStore("kopfdaten", () => {
   const { currentWahlMetadata } = storeToRefs(useUserStore());
 
   async function initKopfdaten() {
-    currentWahlMetadata.value.forEach((metadata) =>
-      loadKopfdaten(metadata.wahlID, metadata.wahlbezirkID)
-    );
-  }
-
-  async function loadKopfdaten(wahlID: string, wahlbezirk: string) {
-    const loadedKopfdaten = await kopfdatenService.getKopfdaten(
-      wahlID,
-      wahlbezirk
-    );
-    if (loadedKopfdaten) {
+    kopfdaten.value = [];
+    for (const metadata of currentWahlMetadata.value) {
+      const loadedKopfdaten = await kopfdatenService.getKopfdaten(
+        metadata.wahlID,
+        metadata.wahlbezirkID
+      );
       kopfdaten.value.push(loadedKopfdaten);
     }
   }

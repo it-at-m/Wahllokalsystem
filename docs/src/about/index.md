@@ -108,6 +108,16 @@ Die früheste Zeit, zu welcher der Wahlvorstand zusammentreten kann, ist der Sta
 Konfigurationsparameter `FRUEHESTE_EROEFFNUNGSUHRZEIT_BW` geladen.
 :::
 
+##### Während der Stimmabgabe
+
+📃 **UseCase: `Erfassung der absoluten Wahlbeteiligung`**
+
+::: info Urnenwahlbezirk {data-uwb="true"}
+In einem Urnenwahlbezirk kann nach der Öffnung der Wahl die Anzahl der Wähler, die das Wahllokal besuchen, erfasst 
+werden. Jedes Mal, wenn der Nutzer auf den entsprechenden Button klickt, oder alternativ eine der Tasten `Eingabe`, `+`
+oder `Leertaste` drückt, wird die Wähleranzahl um 1 erhöht.
+:::
+
 📃 **UseCase: Wahl schliessen**
 
 ::: info `Erfassung der Schliessung des Wahllokals` im Urnenwahlbezirk {data-uwb="true"}

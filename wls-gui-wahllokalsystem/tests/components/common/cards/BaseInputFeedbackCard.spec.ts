@@ -3,7 +3,7 @@ import {
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
 import { mount, VueWrapper } from "@vue/test-utils";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
@@ -28,7 +28,7 @@ vi.mock("@/composables/common/inputFeedbackUtils.ts", () => ({
   }),
 }));
 
-describe("BaseInputFeedbackCard", () => {
+describe("BaseInputFeedbackCard.vue", () => {
   let wrapper: VueWrapper;
 
   afterEach(() => {
@@ -36,7 +36,7 @@ describe("BaseInputFeedbackCard", () => {
   });
 
   describe(COMPONENT_RENDER_TESTS, () => {
-    it("should_renderWithoutAdditionalFeedback_when_slotIsNotUsed", async (context) => {
+    it("should_renderWithoutAdditionalFeedback_when_additionalFeedbackSlotIsNotUsed", async (context) => {
       const feedbackType = InputFeedbackTypeEnum.error;
 
       mockDefinitions.getBorderColorForInputFeedbackType.mockReturnValue(
@@ -70,7 +70,7 @@ describe("BaseInputFeedbackCard", () => {
       );
     });
 
-    it("should_renderWithAdditionalFeedback_when_slotIsUsed", async (context) => {
+    it("should_renderWithAdditionalFeedback_when_additionalFeedbackSlotIsUsed", async (context) => {
       const feedbackType = InputFeedbackTypeEnum.error;
 
       mockDefinitions.getBorderColorForInputFeedbackType.mockReturnValue(

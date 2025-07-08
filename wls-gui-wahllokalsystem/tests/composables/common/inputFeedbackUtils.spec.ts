@@ -105,7 +105,7 @@ describe("inputFeedbackUtils.ts", () => {
         for (const inputFeedbackType in InputFeedbackTypeEnum) {
           const result = testSuitParams.functionUnderTest(inputFeedbackType);
           expect(
-            getBorderColorForInputFeedbackType(inputFeedbackType),
+            result,
             `result for ${inputFeedbackType} was ${result}`
           ).not.toBeUndefined();
         }

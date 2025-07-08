@@ -11,5 +11,5 @@
     //#248 https://github.com/it-at-m/Wahllokalsystem/issues/248#issuecomment-2228404217
     "quay.io/keycloak/keycloak",
   ],
-  prConcurrentLimit: 2,
+  prConcurrentLimit: 5,
 }

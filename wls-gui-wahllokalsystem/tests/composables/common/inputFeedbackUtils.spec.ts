@@ -102,7 +102,7 @@ describe("inputFeedbackUtils.ts", () => {
     "function $functionUnderTest.name supports any enum value",
     (testSuitParams) => {
       it("should_returnNonUndefinedValue_when_inputAnyFeedbackTypeIsGiven", () => {
-        for (let inputFeedbackType in InputFeedbackTypeEnum) {
+        for (const inputFeedbackType in InputFeedbackTypeEnum) {
           const result = testSuitParams.functionUnderTest(inputFeedbackType);
           expect(
             getBorderColorForInputFeedbackType(inputFeedbackType),

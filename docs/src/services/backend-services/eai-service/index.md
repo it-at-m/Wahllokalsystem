@@ -12,6 +12,8 @@ Der Service hat keine Abhängigkeiten zu anderen Services.
 Entsprechend dem [ADR zum Datenmodell](../../../technik/adr/adr002-controller-service-datamodels.md)
 verwendet die EAI kein eigenes Datenmodell in den Services. Die Serviceklassen mappen vom DTO auf die Entität.
 
+Zusätzlich zum Service-Layer wird hier auch aus dem Access-Layer auf die Exception Codes und Fehlermeldungen zugegriffen.
+
 ## Daten und Funktionen
 
 ### Wahldaten

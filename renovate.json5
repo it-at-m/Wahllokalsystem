@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "github>it-at-m/refarch//refarch-tools/refarch-renovate/refarch-renovate-config.json5"
   ],
   "addLabels": [
     "renovate"

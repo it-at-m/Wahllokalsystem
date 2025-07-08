@@ -73,7 +73,7 @@ Anwesenheit kann nur bei Erfüllung folgender Bedingungen gespeichert werden:
 
 Der Nutzer der Anwendung wird durch eine Fehlermeldung darauf hingewiesen, wenn diese Bedingungen nicht erfüllt sind.
 
-::: info Nachbesetzungsdruck im Briefwahlbezirk {data-bwb="true"}
+::: info 📃 UseCase: `Druck einer Wahlvorstand-Nachbesetzung` im Briefwahlbezirk {data-bwb="true"}
 In manchen Fällen ist es in einem Briefwahlbezirk notwendig, eine Nachbesetzung zu organisieren. Hierzu kann der Nutzer 
 über den Button `Nachbesetzung drucken` ein entsprechendes PDF-Dokument generieren lassen, welches im Anschluss gedruckt
 und ausgefüllt werden kann.

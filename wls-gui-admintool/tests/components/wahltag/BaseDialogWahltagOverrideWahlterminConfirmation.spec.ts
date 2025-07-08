@@ -4,7 +4,7 @@ import {
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
 import { mount, VueWrapper } from "@vue/test-utils";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 import { VTextField } from "vuetify/components";
 
@@ -17,6 +17,7 @@ describe("BaseDialogWahltagOverrideWahlterminConfirmation.vue", () => {
   let wrapper: VueWrapper<
     InstanceType<typeof BaseDialogWahltagOverrideWahlterminConfirmation>
   >;
+  vi.stubGlobal("visualViewport", new EventTarget());
 
   beforeEach(() => {
     wrapper = setupWrapper();

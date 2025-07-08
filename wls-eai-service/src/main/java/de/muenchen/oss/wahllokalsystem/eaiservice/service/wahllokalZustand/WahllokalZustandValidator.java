@@ -20,7 +20,7 @@ public class WahllokalZustandValidator {
 
         if (StringUtils.isBlank(zustand.wahlbezirkID())) {
             throw exceptionFactory.createFachlicheWlsException(
-                    de.muenchen.oss.wahllokalsystem.eaiservice.exception.ExceptionConstants.SAVEWAHLLOKALZUSTAND_WAHLBEZIRKID_FEHLT);
+                    ExceptionConstants.SAVEWAHLLOKALZUSTAND_WAHLBEZIRKID_FEHLT);
         }
     }
 }

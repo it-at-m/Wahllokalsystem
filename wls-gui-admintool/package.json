@@ -29,7 +29,7 @@
     "vue": "3.5.17",
     "vue-router": "4.5.1",
     "vue3-toastify": "0.2.8",
-    "vuetify": "3.7.18"
+    "vuetify": "3.9.0"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "3.2.6",

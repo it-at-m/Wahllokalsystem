@@ -57,6 +57,34 @@ ungekennzeichnete Stimmzettel*, *Begründung - Stapel a*, *Stapel d*, *Stapel a*
 Stimmzettelumschläge*, *Stapel b - leere Stimmzettelumschläge*
 :::
 
+📃 **UseCase: `Erfassung von Ereignissen`**
+
+Zu jeder Zeit der Wahlhandlung kann der Nutzer Ereignisse in der Anwendung erfassen. Sind keine Ereignisse vorgefallen,
+muss dies explizit durch das Aktivieren von Checkboxen bestätigt werden, um die Maske speichern zu können. Sind jedoch
+Ereignisse eingetreten, müssen diese einzeln erfasst werden. Jedes Ereignis hat
+- eine Ereignisart
+- ein Datum und eine Uhrzeit
+- eine aussagekräftige Beschreibung mit mindestens 4 und maximal 500 Zeichen.
+
+Bei Bedarf können eingetragene Ereignisse auch wieder gelöscht werden. Das Löschen aller eingetragenen Ereignisse 
+aktiviert automatisch die "Keine Ereignisse vorgefallen"-Checkboxen. Das Eintragen neuer Ereignisse, wenn vorher noch 
+keine gespeichert wurden, deaktiviert die Checkboxen. Diese Relation wird für jeden Wahlbezirk in den Attributen 
+`keineVorfaelle` und `keineVorkommnisse` gespeichert, die sich daraus berechnen, ob es Einträge mit der entsprechenden 
+Ereignisart gibt.
+
+::: info Ereignisse im Urnenwahlbezirk {data-uwb="true"}
+Im Urnenwahlbezirk wird zwischen Vorfällen, die am Wahltag während der Stimmabgabe auftreten, und Vorkommnissen, die
+während der Auszählung auftreten, unterschieden. Vorkommnisse können also auch an einem Tag nach der Wahl auftreten und
+erfasst werden. Wird die Uhrzeit eines Vorkommnisses nachträglich auf vor der Wahlschließung gesetzt, passt sich auch 
+die Ereignisart des Eintrags entsprechend an und wird zu einem Vorfall, und andersherum. Dementsprechend ist die 
+Ereignisart eng verknüpft mit dem zugehörigen Datum und der Uhrzeit.
+:::
+
+::: info Ereignisse im Briefwahlbezirk {data-bwb="true"}
+Im Briefwahlbezirk werden nur Vorkommnisse erfasst. Dies ist erst möglich, sobald für mindestens eine Wahl eine Wahlurne
+geöffnet wurde.
+:::
+
 #### Vor der Auszählung
 
 ##### Vor der Stimmabgabe

@@ -4,7 +4,4 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.Wahlbezi
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
-@Builder
-public record UngueltigeWahlscheineReferenceModel(@NotNull String wahltagID,
-                                                  @NotNull WahlbezirkArtModel wahlbezirksart) {
-}
+@Builder public record UngueltigeWahlscheineReferenceModel(@NotNull String wahltagID,@NotNull WahlbezirkArtModel wahlbezirksart){}

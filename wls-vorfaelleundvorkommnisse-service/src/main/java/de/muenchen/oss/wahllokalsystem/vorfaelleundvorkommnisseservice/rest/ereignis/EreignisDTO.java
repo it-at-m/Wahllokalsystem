@@ -3,7 +3,4 @@ package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ere
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-public record EreignisDTO(String beschreibung,
-                          LocalDateTime uhrzeit,
-                          @NotNull EreignisartDTO ereignisart) {
-}
+public record EreignisDTO(String beschreibung,LocalDateTime uhrzeit,@NotNull EreignisartDTO ereignisart){}

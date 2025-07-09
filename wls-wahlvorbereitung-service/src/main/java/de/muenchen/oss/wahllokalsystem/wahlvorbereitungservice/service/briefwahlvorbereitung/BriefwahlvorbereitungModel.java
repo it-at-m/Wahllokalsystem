@@ -4,7 +4,6 @@ import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.common.Wa
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
-@Builder
-public record BriefwahlvorbereitungModel(@NotNull String wahlbezirkID, @NotNull java.util.List<WahlurneModel> urnenAnzahl) {
+@Builder public record BriefwahlvorbereitungModel(@NotNull String wahlbezirkID,@NotNull java.util.List<WahlurneModel>urnenAnzahl){
 
 }

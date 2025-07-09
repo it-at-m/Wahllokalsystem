@@ -5,9 +5,4 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import lombok.Builder;
 
-@Builder
-public record WaehleranzahlModel(
-    @NotNull BezirkUndWahlID bezirkUndWahlID,
-    @NotNull long anzahlWaehler,
-    @NotNull LocalDateTime uhrzeit) {
-}
+@Builder public record WaehleranzahlModel(@NotNull BezirkUndWahlID bezirkUndWahlID,@NotNull long anzahlWaehler,@NotNull LocalDateTime uhrzeit){}

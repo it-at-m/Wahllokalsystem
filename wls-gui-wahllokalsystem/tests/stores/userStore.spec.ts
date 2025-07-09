@@ -176,4 +176,19 @@ describe("userStore.ts", () => {
       );
     });
   });
+
+  describe("currentUserWahlMetadata", () => {
+    it("should_returnWahlMetadata_when_wahlMetadataExists", () => {
+      const wahlMetadata = [
+        {
+          wahlbezirkID: "123",
+          wahlnummer: "1",
+          wahlID: "ID zu wahlnumemr 1",
+        },
+      ];
+      unitUnderTest.setUser(prepareUser().wahlMetaData(wahlMetadata).build());
+
+      expect(unitUnderTest.currentWahlMetadata).toStrictEqual(wahlMetadata);
+    });
+  });
 });

@@ -19,7 +19,7 @@ export function useInputFeedbackUtils() {
       case InputFeedbackTypeEnum.error:
         return "error";
       case InputFeedbackTypeEnum.information:
-        return "warning";
+        return "info";
     }
   }
 
@@ -30,7 +30,7 @@ export function useInputFeedbackUtils() {
       case InputFeedbackTypeEnum.error:
         return "text-error";
       case InputFeedbackTypeEnum.information:
-        return "text-warning";
+        return "text-info";
     }
   }
 
@@ -41,7 +41,7 @@ export function useInputFeedbackUtils() {
       case InputFeedbackTypeEnum.error:
         return "border-error";
       case InputFeedbackTypeEnum.information:
-        return "border-warning";
+        return "border-info";
     }
   }
 

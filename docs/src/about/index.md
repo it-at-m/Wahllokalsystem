@@ -102,7 +102,7 @@ Für alle Mitglieder, die tatsächlich anwesend sind, muss die Anwesenheit manue
 Anwesenheit kann nur bei Erfüllung folgender Bedingungen gespeichert werden:
 
 - es muss mindestens ein Wahlvorsteher oder dessen Stellvertreter anwesend sein
-- es muss mindestens ein Schriftführer anwesend sein
+- es muss mindestens ein Schriftführer oder dessen Stellvertreter  anwesend sein
 - vor der Wahlschließung müssen mindestens 3 Mitglieder anwesend sein
 - nach der Wahlschließung müssen mindestens 5 Mitglieder anwesend sein
 

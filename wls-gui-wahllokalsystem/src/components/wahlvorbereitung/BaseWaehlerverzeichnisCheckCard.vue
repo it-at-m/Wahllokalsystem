@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>Auf ungültige Wahlscheine hinweisen </v-card-title>
+    <v-card-title>Auf ungültige Wahlscheine hinweisen</v-card-title>
     <v-card-text>
       <base-input-feedback-card
         title="Bearbeitungshinweis"
@@ -28,7 +28,7 @@
             Wahlscheinen versehenen Wahlberechtigten in der Spalte für die
             Stimmabgabe den Vermerk "Wahlschein" oder den Buchstaben "W"
             eintrugen. Sie berichtigten auch die Zahlen der Abschlussbeurkundung
-            der Gemeinde; diese Berichtigung wurde von ihnen abgezeichnet.
+            der Gemeinde, diese Berichtigung wurde von ihnen abgezeichnet.
           </template>
         </v-radio>
       </v-radio-group>
@@ -60,7 +60,7 @@
         title="Ungültige Eingabe"
         type="error"
         class="mt-2"
-        >Bitte setzen sie einen Haken bei: „{{
+        >Bitte setzen sie einen Haken bei: "{{
           TEXT_MITTEILUNG_UEBER_UNGUELTIGE_WAHLSCHEINE
         }}"
       </base-input-feedback-card>

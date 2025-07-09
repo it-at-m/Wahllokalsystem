@@ -117,7 +117,7 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     if (waehlerverzeichnisNummer !== undefined) {
       try {
         pflegeWaehlerverzeichnisIsSaving.value = true;
-        postWaehlerverzeichnis(
+        await postWaehlerverzeichnis(
           currentUserWahlbezirkID.value,
           waehlerverzeichnisNummer,
           pflegeWaehlerverzeichnis.value

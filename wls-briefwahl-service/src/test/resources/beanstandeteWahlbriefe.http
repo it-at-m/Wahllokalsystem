@@ -2,25 +2,6 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET beanstandeteWahlbriefe | user wls_all_uwb
-GET {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/beanstandeteWahlbriefe/9899cae4-df9a-4ffc-a940-f20cf2280171/1
-Authorization: Bearer {{$auth.token("auth-service")}}
-
-### POST beanstandeteWahlbriefe | user wls_all_uwb
-POST {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/beanstandeteWahlbriefe/9899cae4-df9a-4ffc-a940-f20cf2280171/1
-Authorization: Bearer {{$auth.token("auth-service")}}
-Content-Type: application/json
-
-{
-  "beanstandeteWahlbriefe": {
-    "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1": [
-      "ZUGELASSEN",
-      "KEIN_ORIGINAL_SCHEIN",
-      "UNTERSCHRIFT_FEHLT"
-    ]
-  }
-}
-
 ### GET beanstandeteWahlbriefe | user wls_all_bwb
 GET {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/beanstandeteWahlbriefe/9081145c-dc16-4a9b-8255-5c49ddb98c14/1
 Authorization: Bearer {{$auth.token("auth-service")}}
@@ -41,6 +22,60 @@ Content-Type: application/json
       "ZUGELASSEN",
       "ZUGELASSEN",
       "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN",
+      "ZUGELASSEN"
+    ],
+    "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1": [
+      "ZUGELASSEN",
+      "KEIN_ORIGINAL_SCHEIN",
+      "UNTERSCHRIFT_FEHLT",
       "ZUGELASSEN",
       "ZUGELASSEN",
       "ZUGELASSEN",

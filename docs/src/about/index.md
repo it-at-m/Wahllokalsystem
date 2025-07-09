@@ -62,7 +62,7 @@ Stimmzettelumschläge*, *Stapel b - leere Stimmzettelumschläge*
 Zu jeder Zeit der Wahlhandlung kann der Nutzer Ereignisse in der Anwendung erfassen. Jedes Ereignis hat folgende
 Pflichtfelder:
 
-- eine Ereignisart
+- eine (berechnete) Ereignisart (siehe Infobox ["Ereignisse im Urnenwahlbezirk"](#infobox-ereignisse-uwb))
 - ein Datum mit Uhrzeit
 - eine aussagekräftige Beschreibung mit mindestens 4 und maximal 500 Zeichen.
 
@@ -78,6 +78,7 @@ Weiterhin gibt es einige Verhaltensregeln für die Ereigniserfassung:
 Diese Relationen werden für jeden Wahlbezirk in den Attributen `keineVorfaelle` und `keineVorkommnisse` gespeichert,
 die sich daraus berechnen, ob es Einträge mit der entsprechenden Ereignisart gibt.
 
+{#infobox-ereignisse-uwb}
 ::: info Ereignisse im Urnenwahlbezirk {data-uwb="true"}
 Im Urnenwahlbezirk wird zwischen Vorfällen, die am Wahltag während der Stimmabgabe auftreten, und Vorkommnissen, die
 während der Auszählung auftreten, unterschieden. Vorkommnisse können also auch an einem Tag nach der Wahl auftreten und

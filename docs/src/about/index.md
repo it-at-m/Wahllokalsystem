@@ -79,7 +79,7 @@ Diese Relationen werden für jeden Wahlbezirk in den Attributen `keineVorfaelle`
 die sich daraus berechnen, ob es Einträge mit der entsprechenden Ereignisart gibt.
 
 ::: info Ereignisse im Urnenwahlbezirk {data-uwb="true"}
-Im Urnenwahlbezirk wird zwischen Vorfällen, die am Wahltag während der Stimmabgabe auftreten, und Vorkommnissen, die
+Im Urnenwahlbezirk wird zwischen Vorfällen, die am Wahltag während oder vor der Stimmabgabe auftreten, und Vorkommnissen, die
 während der Auszählung auftreten, unterschieden. Vorkommnisse können also auch an einem Tag nach der Wahl auftreten und
 erfasst werden. Wird die Uhrzeit eines Vorkommnisses nachträglich auf vor der Wahlschließung gesetzt, passt sich auch
 die Ereignisart des Eintrags entsprechend an und wird zu einem Vorfall, und andersherum. Dementsprechend ist die

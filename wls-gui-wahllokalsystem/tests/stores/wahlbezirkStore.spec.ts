@@ -1,14 +1,11 @@
-import { rejects } from "node:assert";
-
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { usePflegeWaehlerverzeichnisTestDataFactory } from "@tests/utils/wahlvorbereitung/PflegeWaehlerverzeichnisTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { ref, watchEffect } from "vue";
+import { ref } from "vue";
 
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
-import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -114,7 +111,7 @@ describe("wahlbezirkStore.ts", () => {
       unitUnderTest.loadPflegeWaehlerverzeichnis();
 
       expect(mockDefinitions.getWaehlerverzeichnis.mock.calls).toStrictEqual([
-        [wahlbezirkID, waehlerverzeichnisNummer],
+        [wahlbezirkID, waehlerverzeichnisNummer, true],
       ]);
     });
 

@@ -85,10 +85,11 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     if (waehlerverzeichnisNummer !== undefined) {
       pflegeWaehlerverzeichnis.value = await getWaehlerverzeichnis(
         currentUserWahlbezirkID.value,
-        waehlerverzeichnisNummer
+        waehlerverzeichnisNummer,
+        sendNotification
       );
     } else {
-      console.warn(
+      console.debug(
         `sendPflegeWaehlerverzeichnis - es gibt keine waehlerverzeichnisNummer`
       );
     }
@@ -126,7 +127,7 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
         pflegeWaehlerverzeichnisIsSaving.value = false;
       }
     } else {
-      console.warn(
+      console.debug(
         `sendPflegeWaehlerverzeichnis - es gibt keine waehlerverzeichnisNummer`
       );
     }

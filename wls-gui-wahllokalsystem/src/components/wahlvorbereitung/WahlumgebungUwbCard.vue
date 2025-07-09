@@ -72,25 +72,15 @@
             </div>
           </div>
         </v-form>
-        <v-card
+        <base-input-feedback-card
           v-show="isMinimumRequired"
-          class="border-lg border-error my-2"
+          title="Ungültige Eingaben"
+          :type="InputFeedbackTypeEnum.error"
+          class="my-2"
         >
-          <v-card-title>Ungültige Eingaben</v-card-title>
-          <v-card-text>
-            <div class="d-flex align-center mb-2">
-              <v-icon
-                color="red"
-                class="mr-2"
-                icon="$invalid"
-              />
-              <div class="text-red">
-                Die Summe der Kabinen, Tische und Nebenräume muss mindestens 1
-                betragen.
-              </div>
-            </div>
-          </v-card-text>
-        </v-card>
+          Die Summe der Kabinen, Tische und Nebenräume muss mindestens 1
+          betragen.
+        </base-input-feedback-card>
       </v-card-text>
       <v-card-actions>
         <base-button-save
@@ -115,13 +105,14 @@ import {
   VCheckbox,
   VContainer,
   VForm,
-  VIcon,
   VNumberInput,
 } from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
 
 const anzahlWahlurnenValidForm = ref<null | boolean>(null);

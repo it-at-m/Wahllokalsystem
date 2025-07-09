@@ -1,6 +1,7 @@
 import type { WaehlerverzeichnisDTO } from "@/api/wls-clients/generated-wahlvorbereitung-api";
 import type { PflegeWaehlerverzeichnis } from "@/types/wahlbezirk/PflegeWaehlerverzeichnis.ts";
 
+import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
 const { generateRandomBoolean, generateRandomNumber, generateRandomString } =
@@ -28,5 +29,15 @@ export function usePflegeWaehlerverzeichnisTestDataFactory() {
     };
   }
 
-  return { createPflegeWaehlerverzeichnis, createWaehlerverzeichnisWriteDTO };
+  function preparePflegeWaehlerverzeichnis() {
+    return proxyBuilder<PflegeWaehlerverzeichnis>(
+      createPflegeWaehlerverzeichnis()
+    );
+  }
+
+  return {
+    createPflegeWaehlerverzeichnis,
+    createWaehlerverzeichnisWriteDTO,
+    preparePflegeWaehlerverzeichnis,
+  };
 }

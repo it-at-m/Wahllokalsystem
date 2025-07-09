@@ -37,9 +37,8 @@ export function useUserTestDataFactory() {
       pin: userDto.pin!,
       /* eslint-enable @typescript-eslint/no-non-null-assertion */
       authorities: userDto.authorities,
-      wahlMetaData: _mapDtoWbIdWahlnummerToModelWahlMetaData(
-        userDto.wbid_wahlnummer
-      ),
+      wahlMetaData:
+        _mapDtoWbIdWahlnummerToModelWahlMetaData(userDto.wbid_wahlnummer) || [],
     };
   }
 
@@ -77,7 +76,7 @@ export function useUserTestDataFactory() {
 
   function _mapDtoWbIdWahlnummerToModelWahlMetaData(
     wbid_wahlnummer: string | undefined
-  ): WahlMetaData[] {
+  ): WahlMetaData[] | undefined {
     return wbid_wahlnummer
       ? JSON.parse(wbid_wahlnummer).wbid_wahlnummer
       : undefined;

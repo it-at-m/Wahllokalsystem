@@ -5,11 +5,13 @@ import {
   Configuration,
 } from "@/api/wls-clients/generated-broadcast-api";
 import { useBroadcastMapper } from "@/composables/broadcast/broadcastMapper.ts";
+import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { BROADCAST_SERVICE_API_URL } from "@/constants.ts";
 
 const { dtoToModel } = useBroadcastMapper();
 const { addNotification } = useUserNotificationService();
+const { getNullOn204OrElseResponseData } = useCommonApiUtils();
 
 export function useBroadcastService() {
   const broadcastCA = new BroadcastControllerApi(
@@ -24,11 +26,8 @@ export function useBroadcastService() {
     try {
       const response = await broadcastCA.getMessage(wahlbezirkID);
 
-      if (response.status === 200) {
-        return dtoToModel(response.data);
-      } else {
-        return null;
-      }
+      const responseData = getNullOn204OrElseResponseData(response);
+      return responseData ? dtoToModel(responseData) : null;
     } catch {
       addNotification(
         "Abrufen der Broadcastnachricht ist fehlgeschlagen",

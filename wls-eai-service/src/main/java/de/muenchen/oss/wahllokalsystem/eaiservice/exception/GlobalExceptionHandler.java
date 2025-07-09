@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.exception;
 
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.errorhandler.AbstractExceptionHandler;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.DTOMapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;

@@ -44,24 +44,23 @@ const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
 
 onMounted(async () => {
-  await loadUser()
-    .then(async () => {
-      startBroadcastMessageInterval();
-      await initTasks();
-      await loadEreignisse();
-      await loadWaehler();
-      if (wahlen.value) {
-        for (const wahl of wahlen.value) {
-          const wvzNr = getWaehlerverzeichnisnummerOrUndefinedById(wahl.wahlID);
-          if (wvzNr) {
-            await initBeanstandeteWahlbriefe(wvzNr);
-          }
+  try {
+    await loadUser();
+    startBroadcastMessageInterval();
+    initTasks();
+    loadEreignisse();
+    loadWaehler();
+    if (wahlen.value) {
+      for (const wahl of wahlen.value) {
+        const wvzNr = getWaehlerverzeichnisnummerOrUndefinedById(wahl.wahlID);
+        if (wvzNr) {
+          await initBeanstandeteWahlbriefe(wvzNr);
         }
       }
-    })
-    .catch((error) => {
-      console.debug(error);
-    });
+    }
+  } catch (error) {
+    console.debug(error);
+  }
 
   // config for service worker indexed db (same config as in wahl-worker.js !)
   localforage.config({

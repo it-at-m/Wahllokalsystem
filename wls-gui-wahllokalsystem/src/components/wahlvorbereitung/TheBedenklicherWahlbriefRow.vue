@@ -30,14 +30,15 @@
             align="center"
             justify="space-between"
             class="px-2"
+            style="min-width: 115px"
           >
             <v-btn
               icon="$delete"
-              size="x-small"
+              variant="text"
             />
             <v-btn
-              icon="$save"
-              size="x-small"
+              icon="$edit"
+              variant="text"
             />
           </v-row>
         </td>
@@ -64,12 +65,17 @@ const _getMaxRows = computed(() => {
   );
   return Array.from({ length: maxLength }, (_, i) => i);
 });
-
 const _getCellContent = (wahl: Wahl, rowIndex: number): string => {
   if (!wahl.beanstandeteWahlbriefe) return "";
   const content = wahl.beanstandeteWahlbriefe[rowIndex];
   return content ? content : "";
 };
+const getIconForRowStatus = computed(() => {
+  // todo: if form valid return check, else return pencil
+});
+const getIconColorForRowStatus = computed(() => {
+  // todo: if icon is check return green, if is pencil return orange
+});
 </script>
 
 <style scoped>

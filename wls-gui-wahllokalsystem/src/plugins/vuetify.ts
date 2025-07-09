@@ -1,6 +1,7 @@
 import "vuetify/styles";
 
 import {
+  mdiCheckCircle,
   mdiContentSave,
   mdiDelete,
   mdiDiameterVariant,
@@ -10,6 +11,7 @@ import {
   mdiHome,
   mdiInformationOutline,
   mdiMapSearch,
+  mdiPencil,
   mdiPhone,
   mdiPlus,
   mdiPlusCircle,
@@ -56,6 +58,8 @@ export default createVuetify({
       fileDocument: mdiFileDocumentOutline,
       mapSearch: mdiMapSearch,
       remoteDesktop: mdiRemoteDesktop,
+      edit: mdiPencil,
+      check: mdiCheckCircle,
     },
     sets: {
       mdi,

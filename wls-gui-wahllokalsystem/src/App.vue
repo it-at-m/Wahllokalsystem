@@ -47,9 +47,9 @@ onMounted(async () => {
   try {
     await loadUser();
     startBroadcastMessageInterval();
-    initTasks();
-    loadEreignisse();
-    loadWaehler();
+    await initTasks();
+    await loadEreignisse();
+    await loadWaehler();
     if (wahlen.value) {
       for (const wahl of wahlen.value) {
         const wvzNr = getWaehlerverzeichnisnummerOrUndefinedById(wahl.wahlID);

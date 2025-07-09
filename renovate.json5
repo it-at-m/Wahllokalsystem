@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "github>it-at-m/refarch//refarch-tools/refarch-renovate/refarch-renovate-config.json5"
   ],
   "addLabels": [
     "renovate"
@@ -11,5 +11,5 @@
     //#248 https://github.com/it-at-m/Wahllokalsystem/issues/248#issuecomment-2228404217
     "quay.io/keycloak/keycloak",
   ],
-  prConcurrentLimit: 2,
+  prConcurrentLimit: 5,
 }

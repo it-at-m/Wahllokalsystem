@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlvorstand;
 
+import de.muenchen.oss.wahllokalsystem.eaiservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandsaktualisierungDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandsmitgliedAktualisierungDTO;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.time.LocalDateTime;
@@ -78,7 +78,7 @@ class WahlvorstandValidatorTest {
         void should_throwWlsException_when_aktualisierungIDIsNull() {
             val mockedValidationException = FachlicheWlsException.withCode("").buildWithMessage("");
             Mockito.when(exceptionFactory.createFachlicheWlsException(
-                    de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN))
+                    ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN))
                     .thenReturn(mockedValidationException);
 
             Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validateSaveAnwesenheitDataOrThrow(null)).isSameAs(mockedValidationException);

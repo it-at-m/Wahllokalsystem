@@ -16,7 +16,7 @@ public class ErgebnismeldungValidator {
     public void validDTOToSetOrThrow(ErgebnismeldungDTO ergebnismeldungToSet) {
         if (ergebnismeldungToSet == null) {
             throw exceptionFactory.createFachlicheWlsException(
-                    de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN);
+                    ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN);
         }
 
         if (StringUtils.isBlank(ergebnismeldungToSet.wahlbezirkID())) {

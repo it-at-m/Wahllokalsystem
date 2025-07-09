@@ -11,15 +11,13 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.Wahlvorsta
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.WahlvorstandRepository;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.Wahlvorstandsmitglied;
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahlvorstand.WahlvorstandsmitgliedsFunktion;
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.eaiservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandsaktualisierungDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorstand.dto.WahlvorstandsmitgliedAktualisierungDTO;
 import de.muenchen.oss.wahllokalsystem.eaiservice.service.wahlvorstand.WahlvorstandMapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
-import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
-import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
@@ -58,12 +56,6 @@ public class WahlvorstandControllerIntegrationTest {
 
     @Autowired
     WahlvorstandMapper wahlvorstandMapper;
-
-    @Autowired
-    ExceptionFactory exceptionFactory;
-
-    @Autowired
-    EntityManager entityManager;
 
     @AfterEach
     void teardown() {

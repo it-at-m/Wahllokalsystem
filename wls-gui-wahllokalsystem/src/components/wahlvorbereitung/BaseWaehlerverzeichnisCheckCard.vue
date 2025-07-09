@@ -14,34 +14,45 @@
         class="mb-4"
         hide-details
       >
-        <v-radio
-          label="Ein Verzeichnis über nachträglich ausgestellte Wahlscheine lag nicht
-          vor. Das Wählerverzeichnis war nicht zu berichtigen."
-          :value="true"
-        />
-        <v-radio
-          label='Vor Beginn der Stimmabgabe berichtigten die Wahlvorsteher*innen das
-          Wählerverzeichnis nach dem Verzeichnis der nachträglich erteilten
-          Wahlscheine, indem sie bei den Namen der nachträglich mit Wahlscheinen
-          versehenen Wahlberechtigten in der Spalte für die Stimmabgabe den
-          Vermerk "Wahlschein" oder den Buchstaben "W" eintrugen. Sie
-          berichtigten auch die Zahlen der Abschlussbeurkundung der Gemeinde;
-          diese Berichtigung wurde von ihnen abgezeichnet.'
-          :value="false"
-        />
+        <v-radio :value="true">
+          <template #label>
+            Ein Verzeichnis über nachträglich ausgestellte Wahlscheine lag nicht
+            vor. Das Wählerverzeichnis war nicht zu berichtigen.
+          </template>
+        </v-radio>
+        <v-radio :value="false">
+          <template #label>
+            Vor Beginn der Stimmabgabe berichtigten die Wahlvorsteher*innen das
+            Wählerverzeichnis nach dem Verzeichnis der nachträglich erteilten
+            Wahlscheine, indem sie bei den Namen der nachträglich mit
+            Wahlscheinen versehenen Wahlberechtigten in der Spalte für die
+            Stimmabgabe den Vermerk "Wahlschein" oder den Buchstaben "W"
+            eintrugen. Sie berichtigten auch die Zahlen der Abschlussbeurkundung
+            der Gemeinde; diese Berichtigung wurde von ihnen abgezeichnet.
+          </template>
+        </v-radio>
       </v-radio-group>
       <v-checkbox
         v-model="pflegeWaehlerverzeichnis.nachtraeglicheBerichtigung"
-        label="Die Wahlvorsteher*innen berichtigten später entsprechend das Wählerverzeichnis und die dazugehörige Abschlussbeurkundung unter Berücksichtigung der noch am Wahltag an erkrankte Wahlberechtigte erteilten Wahlscheine."
         hide-details
-      />
+      >
+        <template #label>
+          Die Wahlvorsteher*innen berichtigten später entsprechend das
+          Wählerverzeichnis und die dazugehörige Abschlussbeurkundung unter
+          Berücksichtigung der noch am Wahltag an erkrankte Wahlberechtigte
+          erteilten Wahlscheine.
+        </template>
+      </v-checkbox>
       <v-checkbox
         v-model="
           pflegeWaehlerverzeichnis.mitteilungUeberUngueltigeWahlscheineErhalten
         "
-        :label="TEXT_MITTEILUNG_UEBER_UNGUELTIGE_WAHLSCHEINE"
         hide-details
-      />
+      >
+        <template #label>
+          {{ TEXT_MITTEILUNG_UEBER_UNGUELTIGE_WAHLSCHEINE }}
+        </template>
+      </v-checkbox>
       <base-input-feedback-card
         v-if="
           !pflegeWaehlerverzeichnis.mitteilungUeberUngueltigeWahlscheineErhalten

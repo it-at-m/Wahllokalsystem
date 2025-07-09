@@ -103,7 +103,7 @@ Beim Start der Anwendung wurden alle Wahlvorstandsmitglieder geladen, die für d
 Für alle Mitglieder, die tatsächlich anwesend sind, muss die Anwesenheit manuell per Checkbox erfasst werden. Die
 Anwesenheit kann nur bei Erfüllung folgender Bedingungen gespeichert werden:
 
-- es muss mindestens ein Wahlvorsteher anwesend sein
+- es muss mindestens ein Wahlvorsteher oder dessen Stellvertreter anwesend sein
 - es muss mindestens ein Schriftführer anwesend sein
 - vor der Wahlschließung müssen mindestens 3 Mitglieder anwesend sein
 - nach der Wahlschließung müssen mindestens 5 Mitglieder anwesend sein

@@ -3,7 +3,7 @@ import {
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
 import { mount, VueWrapper } from "@vue/test-utils";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
@@ -31,6 +31,10 @@ vi.mock("@/composables/common/inputFeedbackUtils.ts", () => ({
 describe("BaseInputFeedbackCard.vue", () => {
   let wrapper: VueWrapper;
 
+  beforeEach(() => {
+    setupDefaultMockBehaviorForInputFeedbackUtils();
+  });
+
   afterEach(() => {
     vi.clearAllMocks();
   });
@@ -38,19 +42,6 @@ describe("BaseInputFeedbackCard.vue", () => {
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWithoutAdditionalFeedback_when_additionalFeedbackSlotIsNotUsed", async (context) => {
       const feedbackType = InputFeedbackTypeEnum.error;
-
-      mockDefinitions.getBorderColorForInputFeedbackType.mockReturnValue(
-        "mockedBorderColor"
-      );
-      mockDefinitions.getIconColorForInputFeedbackType.mockReturnValue(
-        "mockedIconColor"
-      );
-      mockDefinitions.getIconForInputFeedbackType.mockReturnValue(
-        "$information"
-      );
-      mockDefinitions.getTextColorForInputFeedbackType.mockReturnValue(
-        "mockedTextColor"
-      );
 
       wrapper = mount(BaseInputFeedbackCard, {
         global: {
@@ -73,19 +64,6 @@ describe("BaseInputFeedbackCard.vue", () => {
     it("should_renderWithAdditionalFeedback_when_additionalFeedbackSlotIsUsed", async (context) => {
       const feedbackType = InputFeedbackTypeEnum.error;
 
-      mockDefinitions.getBorderColorForInputFeedbackType.mockReturnValue(
-        "mockedBorderColor"
-      );
-      mockDefinitions.getIconColorForInputFeedbackType.mockReturnValue(
-        "mockedIconColor"
-      );
-      mockDefinitions.getIconForInputFeedbackType.mockReturnValue(
-        "$information"
-      );
-      mockDefinitions.getTextColorForInputFeedbackType.mockReturnValue(
-        "mockedTextColor"
-      );
-
       wrapper = mount(BaseInputFeedbackCard, {
         global: {
           plugins: [vuetify],
@@ -106,4 +84,17 @@ describe("BaseInputFeedbackCard.vue", () => {
       );
     });
   });
+
+  function setupDefaultMockBehaviorForInputFeedbackUtils() {
+    mockDefinitions.getBorderColorForInputFeedbackType.mockReturnValue(
+      "mockedBorderColor"
+    );
+    mockDefinitions.getIconColorForInputFeedbackType.mockReturnValue(
+      "mockedIconColor"
+    );
+    mockDefinitions.getIconForInputFeedbackType.mockReturnValue("$error");
+    mockDefinitions.getTextColorForInputFeedbackType.mockReturnValue(
+      "mockedTextColor"
+    );
+  }
 });

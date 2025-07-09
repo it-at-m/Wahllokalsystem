@@ -19,7 +19,7 @@ describe("inputFeedbackUtils.ts", () => {
       },
       {
         inputFeedbackType: InputFeedbackTypeEnum.information,
-        expectedResult: "border-warning",
+        expectedResult: "border-info",
       },
     ])(
       "should_returnCorrectValue_when_inputFeedbackType'$inputFeedbackType'IsGiven",
@@ -40,7 +40,7 @@ describe("inputFeedbackUtils.ts", () => {
       },
       {
         inputFeedbackType: InputFeedbackTypeEnum.information,
-        expectedResult: "warning",
+        expectedResult: "info",
       },
     ])(
       "should_returnCorrectValue_when_inputFeedbackType'$inputFeedbackType'IsGiven",
@@ -80,7 +80,7 @@ describe("inputFeedbackUtils.ts", () => {
       },
       {
         inputFeedbackType: InputFeedbackTypeEnum.information,
-        expectedResult: "text-warning",
+        expectedResult: "text-info",
       },
     ])(
       "should_returnCorrectValue_when_inputFeedbackType'$inputFeedbackType'IsGiven",

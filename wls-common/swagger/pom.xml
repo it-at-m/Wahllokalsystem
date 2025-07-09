@@ -21,7 +21,7 @@
   </scm>
     <properties>
         <wls.common.version>1.7.0-SNAPSHOT</wls.common.version>
-        <com.tngtech.archunit.version>1.4.0</com.tngtech.archunit.version>
+        <com.tngtech.archunit.version>1.4.1</com.tngtech.archunit.version>
     </properties>
 
     <dependencies>

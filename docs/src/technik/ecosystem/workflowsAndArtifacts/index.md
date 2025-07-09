@@ -21,6 +21,7 @@ sequenceDiagram
 
     Dev ->> PR: Create
 
+    PR ->> Workflow: run Auto Assign Author
     PR ->> Workflow: run CoderabbitAI Review
     PR ->> Workflow: run add service label to pr
     

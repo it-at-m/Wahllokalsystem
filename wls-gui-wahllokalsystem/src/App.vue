@@ -40,17 +40,16 @@ const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
 
 onMounted(async () => {
-  await loadUser()
-    .then(async () => {
-      startBroadcastMessageInterval();
-      await initTasks();
-      loadEreignisse();
-      loadWaehler();
-      loadPflegeWaehlerverzeichnis();
-    })
-    .catch((error) => {
-      console.debug(error);
-    });
+  try {
+    await loadUser();
+    startBroadcastMessageInterval();
+    await initTasks();
+    loadEreignisse();
+    loadWaehler();
+    loadPflegeWaehlerverzeichnis();
+  } catch (error) {
+    console.debug(error);
+  }
 
   // config for service worker indexed db (same config as in wahl-worker.js !)
   localforage.config({

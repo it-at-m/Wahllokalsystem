@@ -16,7 +16,6 @@
     <div v-if="!isWahlvorsteherAnwesend">
       Die Rolle Wahlvorsteher*in muss besetzt sein.
     </div>
-
     <template #additionalFeedback>
       Bitte wenden Sie sich bei fehlenden Mitgliedern oder getauschten Rollen an
       die Bezirksinspektion. Dort werden die Rollen im System richtig

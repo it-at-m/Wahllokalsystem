@@ -99,7 +99,7 @@ describe("wahlbezirkStore.ts", () => {
   });
 
   describe("loadPflegeWaehlerverzeichnis", () => {
-    it("should_loadPflegeWaehlerverzeichnis_when_useHasWaehlerverzeichnisNummer", () => {
+    it("should_loadPflegeWaehlerverzeichnis_when_userHasWaehlerverzeichnisNummer", () => {
       const wahlbezirkID = "wahlbezirkID";
       useUserStore().setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 

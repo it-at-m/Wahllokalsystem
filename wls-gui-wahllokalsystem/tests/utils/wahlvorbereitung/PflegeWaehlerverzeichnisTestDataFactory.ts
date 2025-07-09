@@ -19,7 +19,7 @@ export function usePflegeWaehlerverzeichnisTestDataFactory() {
     };
   }
 
-  function createWaehlverzeichnisDTO(): WaehlerverzeichnisDTO {
+  function createWaehlerverzeichnisDTO(): WaehlerverzeichnisDTO {
     return {
       nachtraeglicheBerichtigung: generateRandomBoolean(),
       verzeichnisLagVor: generateRandomBoolean(),
@@ -49,7 +49,7 @@ export function usePflegeWaehlerverzeichnisTestDataFactory() {
 
   return {
     createPflegeWaehlerverzeichnis,
-    createWaehlverzeichnisDTO,
+    createWaehlerverzeichnisDTO,
     createWaehlerverzeichnisWriteDTO,
     preparePflegeWaehlerverzeichnis,
   };

@@ -6,7 +6,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import { useWaehlerverzeichnisMapper } from "@/composables/wahlvorbereitung/waehlerverzeichnisMapper.ts";
 
-const { createPflegeWaehlerverzeichnis, createWaehlverzeichnisDTO } =
+const { createPflegeWaehlerverzeichnis, createWaehlerverzeichnisDTO } =
   usePflegeWaehlerverzeichnisTestDataFactory();
 
 describe("waehlverzeichnisMapper.ts", () => {
@@ -36,7 +36,7 @@ describe("waehlverzeichnisMapper.ts", () => {
 
   describe("toPflegeWaehlerverzeichnis", () => {
     it("should_createPflegeWaehlerverzeichnis_when_waehlverzeichnisDTOIsGiven", () => {
-      const dtoToMap = createWaehlverzeichnisDTO();
+      const dtoToMap = createWaehlerverzeichnisDTO();
 
       const result = unitUnderTest.toPflegeWaehlerverzeichnis(dtoToMap);
 

@@ -62,7 +62,7 @@ Stimmzettelumschläge*, *Stapel b - leere Stimmzettelumschläge*
 Zu jeder Zeit der Wahlhandlung kann der Nutzer Ereignisse in der Anwendung erfassen. Jedes Ereignis hat folgende
 Pflichtfelder:
 
-- eine (berechnete) Ereignisart (siehe Infobox ["Ereignisse im Urnenwahlbezirk"](#infobox-ereignisse-uwb))
+- eine (berechnete) Ereignisart (siehe Infobox ["Ereignisse im Urnenwahlbezirk"](./#infobox-ereignisse-uwb))
 - ein Datum mit Uhrzeit
 - eine aussagekräftige Beschreibung mit mindestens 4 und maximal 500 Zeichen.
 

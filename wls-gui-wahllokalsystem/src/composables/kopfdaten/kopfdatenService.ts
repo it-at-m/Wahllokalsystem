@@ -16,7 +16,11 @@ export function useKopfdatenService() {
     })
   );
 
-  async function getKopfdaten(wahlID: string, wahlbezirkID: string) {
+  async function getKopfdaten(
+    wahlID: string,
+    wahlbezirkID: string,
+    sendNotification = true
+  ) {
     try {
       const response = await kopfdatenControllerApi.getKopfdaten(
         wahlID,
@@ -24,10 +28,12 @@ export function useKopfdatenService() {
       );
       return toModel(response.data);
     } catch {
-      userNotificationService.addNotification(
-        "Fehler beim laden der Kopfdaten",
-        UserNotificationCategoryEnum.ERROR
-      );
+      if (sendNotification) {
+        userNotificationService.addNotification(
+          "Fehler beim laden der Kopfdaten",
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
       throw new Error("GetKopfdaten Failed");
     }
   }

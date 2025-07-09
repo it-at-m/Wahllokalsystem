@@ -60,4 +60,37 @@ describe("KopfdatenService.ts", () => {
       expect(result).toEqual(mockedKopfdaten);
     });
   });
+
+  it("should_triggerNotification_when_anExceptionOccurredDuringApiCall", async () => {
+    const wahlID = generateRandomString(10);
+    const wahlbezirkID = generateRandomString(10);
+
+    mockDefinitions.getKopfdaten.mockRejectedValue(
+      new Error("api called failed")
+    );
+
+    await expect(async () =>
+      getKopfdaten(wahlID, wahlbezirkID)
+    ).rejects.toThrowError();
+
+    expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+      expect.any(String),
+      "Error",
+    ]);
+  });
+
+  it("should_notTriggerNotification_when_anExceptionOccurredDuringApiCall", async () => {
+    const wahlID = generateRandomString(10);
+    const wahlbezirkID = generateRandomString(10);
+
+    mockDefinitions.getKopfdaten.mockRejectedValue(
+      new Error("api called failed")
+    );
+
+    await expect(async () =>
+      getKopfdaten(wahlID, wahlbezirkID, false)
+    ).rejects.toThrowError();
+
+    expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(0);
+  });
 });

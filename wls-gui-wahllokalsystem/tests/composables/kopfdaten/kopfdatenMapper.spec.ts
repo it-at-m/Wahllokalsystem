@@ -1,13 +1,13 @@
 import type { Kopfdaten } from "@/types/kopfdaten/kopfdaten.ts";
 
-import { useKopfdatenTestDataFacotry } from "@tests/utils/kopfdaten/KopfdatenTestDataFactory.ts";
+import { useKopfdatenTestDataFactory } from "@tests/utils/kopfdaten/KopfdatenTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 
 import { KopfdatenDTOStimmzettelgebietsartEnum } from "@/api/wls-clients/generated-basisdaten-api";
 import { useKopfdatenMapper } from "@/composables/kopfdaten/kopfdatenMapper.ts";
 import { KopfdatenStimmzettelgebietsartEnum } from "@/types/kopfdaten/KopfdatenStimmzettelgebietsartEnum.ts";
 
-const { prepareKopfdatenDto } = useKopfdatenTestDataFacotry();
+const { prepareKopfdatenDto } = useKopfdatenTestDataFactory();
 const { toModel } = useKopfdatenMapper();
 
 describe("kopfdatenMapper.ts", () => {

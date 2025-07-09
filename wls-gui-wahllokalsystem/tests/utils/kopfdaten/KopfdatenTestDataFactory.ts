@@ -10,7 +10,7 @@ import { KopfdatenStimmzettelgebietsartEnum } from "@/types/kopfdaten/KopfdatenS
 
 const { generateRandomString } = useCommonTestDataFactory();
 
-export function useKopfdatenTestDataFacotry() {
+export function useKopfdatenTestDataFactory() {
   function createKopfdatenDto(): KopfdatenDTO {
     return {
       gemeinde: generateRandomString(10),

@@ -1,5 +1,7 @@
-import { KopfdatenControllerApi } from "@/api/wls-clients/generated-basisdaten-api";
-import { Configuration } from "@/api/wls-clients/generated-vorfaelleundvorkommnisse-api";
+import {
+  Configuration,
+  KopfdatenControllerApi,
+} from "@/api/wls-clients/generated-basisdaten-api";
 import { useKopfdatenMapper } from "@/composables/kopfdaten/kopfdatenMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { BASISDATEN_SERVICE_API_URL } from "@/constants.ts";

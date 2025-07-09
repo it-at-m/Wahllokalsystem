@@ -1,10 +1,10 @@
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
-import { useKopfdatenTestDataFacotry } from "@tests/utils/kopfdaten/KopfdatenTestDataFactory.ts";
+import { useKopfdatenTestDataFactory } from "@tests/utils/kopfdaten/KopfdatenTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useKopfdatenService } from "@/composables/kopfdaten/kopfdatenService.ts";
 
-const { createKopfdaten, createKopfdatenDto } = useKopfdatenTestDataFacotry();
+const { createKopfdaten, createKopfdatenDto } = useKopfdatenTestDataFactory();
 
 const mockDefinitions = vi.hoisted(() => ({
   getKopfdaten: vi.fn(),

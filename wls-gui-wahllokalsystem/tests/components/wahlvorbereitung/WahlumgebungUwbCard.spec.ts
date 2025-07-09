@@ -88,7 +88,9 @@ describe("WahlumgebungUwbCard.vue", () => {
       const saveButton = wrapper.findComponent(BaseButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
 
-      expect(wrapper.html()).toMatchFileSnapshot(getSnapshotFilename(context));
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
     });
 
     it("should_renderWithFiveInputFieldsAndDisabledSaveButton_when_TwoWahlenAreGiven", async (context) => {
@@ -107,7 +109,9 @@ describe("WahlumgebungUwbCard.vue", () => {
       const saveButton = wrapper.findComponent(BaseButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
 
-      expect(wrapper.html()).toMatchFileSnapshot(getSnapshotFilename(context));
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
     });
   });
 });

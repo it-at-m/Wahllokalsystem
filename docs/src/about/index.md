@@ -109,6 +109,8 @@ Anwesenheit kann nur bei Erfüllung folgender Bedingungen gespeichert werden:
 - nach der Wahlschließung müssen mindestens 5 Mitglieder anwesend sein
 
 Der Nutzer der Anwendung wird durch eine Fehlermeldung darauf hingewiesen, wenn diese Bedingungen nicht erfüllt sind.
+Über einen "Aktualisieren"-Button, welcher den Wahlvorstand mit einem `forceUpdate`-Flag neu lädt, kann der Nutzer
+erzwingen, die Mitglieder durch eine mögliche neue Zusammensetzung zu überschreiben.
 
 ::: info 📃 UseCase: `Druck einer Wahlvorstand-Nachbesetzung` im Briefwahlbezirk {data-bwb="true"}
 In manchen Fällen ist es in einem Briefwahlbezirk notwendig, eine Nachbesetzung zu organisieren. Hierzu kann der Nutzer

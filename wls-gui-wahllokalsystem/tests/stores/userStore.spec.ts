@@ -188,7 +188,7 @@ describe("userStore.ts", () => {
       ];
       unitUnderTest.setUser(prepareUser().wahlMetaData(wahlMetadata).build());
 
-      expect(unitUnderTest.currentWahlMetadata).toStrictEqual(wahlMetadata);
+      expect(unitUnderTest.currentUserWahlMetadata).toStrictEqual(wahlMetadata);
     });
   });
 });

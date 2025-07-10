@@ -4,7 +4,7 @@
   />
   <wahlumgebung-bwb-card
     v-if="currentUserWahlbezirksArt == WahlbezirksArtEnum.BWB"
-  />/>
+  />
 </template>
 
 <script setup lang="ts">

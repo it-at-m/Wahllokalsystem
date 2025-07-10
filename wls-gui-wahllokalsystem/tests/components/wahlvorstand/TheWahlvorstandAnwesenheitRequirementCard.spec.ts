@@ -15,15 +15,12 @@ import {
   vi,
 } from "vitest";
 import { nextTick } from "vue";
-import { createVuetify } from "vuetify";
-import * as components from "vuetify/components";
-import * as directives from "vuetify/directives";
 
 import TheWahlvorstandAnwesenheitRequirementCard from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.vue";
+import vuetify from "@/plugins/vuetify.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 
 describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => {
-  let vuetify: ReturnType<typeof createVuetify>;
   let wrapper: VueWrapper;
 
   beforeAll(() => {
@@ -31,11 +28,6 @@ describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => {
   });
 
   beforeEach(() => {
-    vuetify = createVuetify({
-      components,
-      directives,
-    });
-
     wrapper = mount(TheWahlvorstandAnwesenheitRequirementCard, {
       global: {
         plugins: [

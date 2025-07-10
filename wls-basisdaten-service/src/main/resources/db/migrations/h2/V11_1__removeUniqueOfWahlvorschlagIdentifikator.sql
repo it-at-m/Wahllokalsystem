@@ -7,6 +7,7 @@ ALTER TABLE Wahlvorschlag
 
 ALTER TABLE Wahlvorschlag
     ADD identifikator VARCHAR(1000) NOT NULL;
-SET Wahlvorschlag.identifikator = Wahlvorschlag.identifikator2;
+UPDATE Wahlvorschlag
+    SET Wahlvorschlag.identifikator = Wahlvorschlag.identifikator2;
 ALTER TABLE Wahlvorschlag
     DROP COLUMN identifikator2;

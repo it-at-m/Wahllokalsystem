@@ -25,5 +25,6 @@ export const useKopfdatenStore = defineStore("kopfdaten", () => {
 
   return {
     initKopfdaten,
+    kopfdaten,
   };
 });

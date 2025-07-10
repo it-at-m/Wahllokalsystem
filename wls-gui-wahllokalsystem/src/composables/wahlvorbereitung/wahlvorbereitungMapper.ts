@@ -1,4 +1,6 @@
 import type {
+  BriefwahlvorbereitungDTO,
+  BriefwahlvorbereitungWriteDTO,
   EroeffnungsUhrzeitWriteDTO,
   UrnenwahlSchliessungsUhrzeitDTO,
   UrnenwahlSchliessungsUhrzeitWriteDTO,
@@ -6,6 +8,7 @@ import type {
   UrnenwahlvorbereitungWriteDTO,
   WahlurneDTO,
 } from "@/api/wls-clients/generated-wahlvorbereitung-api";
+import type { Briefwahlvorbereitung } from "@/types/wahlvorbereitung/Briefwahlvorbereitung.ts";
 import type { UrnenwahlSchliessungsuhrzeit } from "@/types/wahlvorbereitung/UrnenwahlSchliessungsuhrzeit.ts";
 import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
 import type { Wahlurne } from "@/types/wahlvorbereitung/Wahlurne.ts";
@@ -72,6 +75,33 @@ export function useWahlvorbereitungMapper() {
     };
   }
 
+  function toBriefwahlvorbereitungModel(
+    briefwahlvorbereitungDTO: BriefwahlvorbereitungDTO
+  ): Briefwahlvorbereitung {
+    const urnenAnzahlModel =
+      briefwahlvorbereitungDTO.urnenAnzahl?.map((wahlurneDTO) =>
+        _toWahlurneModel(wahlurneDTO)
+      ) ?? [];
+    return {
+      wahlbezirkID: briefwahlvorbereitungDTO.wahlbezirkID,
+      urneVersiegelt:
+        briefwahlvorbereitungDTO.urnenAnzahl[0]?.urneVersiegelt ?? false,
+      urnenAnzahl: urnenAnzahlModel,
+    };
+  }
+
+  function toBriefwahlvorbereitungWriteDto(
+    briefwahlvorbereitung: Briefwahlvorbereitung
+  ): BriefwahlvorbereitungWriteDTO {
+    const urnenAnzahlDto =
+      briefwahlvorbereitung.urnenAnzahl?.map((wahlurneDTO) =>
+        _toWahlurneDto(wahlurneDTO, briefwahlvorbereitung.urneVersiegelt)
+      ) ?? [];
+    return {
+      urnenAnzahl: urnenAnzahlDto,
+    };
+  }
+
   function _toWahlurneModel(wahlurneDto: WahlurneDTO): Wahlurne {
     return {
       wahlID: wahlurneDto.wahlID,
@@ -96,5 +126,7 @@ export function useWahlvorbereitungMapper() {
     toUrnenwahlSchliessungsuhrzeitDTO,
     toUrnenwahlvorbereitungModel,
     toUrnenwahlvorbereitungWriteDto,
+    toBriefwahlvorbereitungModel,
+    toBriefwahlvorbereitungWriteDto,
   };
 }

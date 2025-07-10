@@ -1,7 +1,9 @@
+import type { Briefwahlvorbereitung } from "@/types/wahlvorbereitung/Briefwahlvorbereitung.ts";
 import type { UrnenwahlSchliessungsuhrzeit } from "@/types/wahlvorbereitung/UrnenwahlSchliessungsuhrzeit.ts";
 import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
 
 import {
+  BriefwahlvorbereitungControllerApi,
   EroeffnungsUhrzeitControllerApi,
   UrnenwahlSchliessungsUhrzeitControllerApi,
   UrnenwahlvorbereitungControllerApi,
@@ -19,6 +21,8 @@ const {
   toEroeffnungsuhrzeitWriteDTO,
   toUrnenwahlvorbereitungModel,
   toUrnenwahlvorbereitungWriteDto,
+  toBriefwahlvorbereitungModel,
+  toBriefwahlvorbereitungWriteDto,
 } = useWahlvorbereitungMapper();
 
 export function useWahlvorbereitungService() {
@@ -34,6 +38,10 @@ export function useWahlvorbereitungService() {
   );
   const urnenwahlvorbereitungControllerAPI =
     new UrnenwahlvorbereitungControllerApi(
+      wahlvorbereitungsServiceConfiguration
+    );
+  const briefwahlvorbereitungControllerAPI =
+    new BriefwahlvorbereitungControllerApi(
       wahlvorbereitungsServiceConfiguration
     );
 
@@ -142,11 +150,55 @@ export function useWahlvorbereitungService() {
     }
   }
 
+  async function getBriefwahlvorbereitung(
+    wahlbezirkID: string
+  ): Promise<Briefwahlvorbereitung> {
+    try {
+      return await briefwahlvorbereitungControllerAPI
+        .getBriefwahlvorbereitung(wahlbezirkID)
+        .then((response) => toBriefwahlvorbereitungModel(response.data));
+    } catch (error) {
+      userNotificationService.addNotification(
+        "Fehler beim Laden der Briefwahlvorbereitung.",
+        UserNotificationCategoryEnum.ERROR
+      );
+      throw error;
+    }
+  }
+
+  async function postBriefwahlvorbereitung(
+    wahlbezirkID: string,
+    briefwahlvorbereitung: Briefwahlvorbereitung
+  ): Promise<void> {
+    const briefwahlvorbereitungWriteDTO = toBriefwahlvorbereitungWriteDto(
+      briefwahlvorbereitung
+    );
+
+    try {
+      await briefwahlvorbereitungControllerAPI.postBriefwahlvorbereitung(
+        wahlbezirkID,
+        briefwahlvorbereitungWriteDTO
+      );
+      userNotificationService.addNotification(
+        "Briefwahlvorbereitung erfolgreich gespeichert.",
+        UserNotificationCategoryEnum.SUCCESS
+      );
+    } catch (error) {
+      userNotificationService.addNotification(
+        "Speichern der Briefwahlvorbereitung fehlgeschlagen.",
+        UserNotificationCategoryEnum.ERROR
+      );
+      throw error;
+    }
+  }
+
   return {
     getUrnenwahlSchliessungsUhrzeit,
     postEroeffnungsuhrzeit,
     postUrnenwahlSchliessungsuhrzeit,
     getUrnenwahlvorbereitung,
     postUrnenwahlvorbereitung,
+    getBriefwahlvorbereitung,
+    postBriefwahlvorbereitung,
   };
 }

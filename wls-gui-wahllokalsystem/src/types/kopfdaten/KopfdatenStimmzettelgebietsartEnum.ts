@@ -1,5 +1,11 @@
 import { KopfdatenDTOStimmzettelgebietsartEnum } from "@/api/wls-clients/generated-basisdaten-api";
 
+/**
+ * SB = Stadtbezirk
+ * SG = Stimmgebiet
+ * SK = Stimmkreis
+ * WK = Wahlkreis
+ */
 export const KopfdatenStimmzettelgebietsartEnum = {
   Sb: "SB",
   Sg: "SG",

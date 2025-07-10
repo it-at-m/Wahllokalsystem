@@ -78,7 +78,7 @@ export const useUserStore = defineStore("user", () => {
     return smallestWbidWahlnummerObject?.wahlID;
   });
 
-  const currentWahlMetadata = computed(() => {
+  const currentUserWahlMetadata = computed(() => {
     return user.value.wahlMetaData;
   });
 
@@ -96,7 +96,7 @@ export const useUserStore = defineStore("user", () => {
     currentUserWahlbezirksArt,
     currentUserWahlbezirkNummer,
     currentUserHauptWahlID,
-    currentWahlMetadata,
+    currentUserWahlMetadata,
   };
 });
 

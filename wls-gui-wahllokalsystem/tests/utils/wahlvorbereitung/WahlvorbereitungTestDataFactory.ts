@@ -1,4 +1,5 @@
 import type {
+  BriefwahlvorbereitungDTO,
   EroeffnungsUhrzeitWriteDTO,
   UrnenwahlvorbereitungDTO,
   UrnenwahlvorbereitungWriteDTO,
@@ -6,6 +7,7 @@ import type {
 } from "@/api/wls-clients/generated-wahlvorbereitung-api";
 import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
 import type { Wahlurne } from "@/types/wahlvorbereitung/Wahlurne.ts";
+import type { Wahlvorbereitung } from "@/types/wahlvorbereitung/Wahlvorbereitung.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
@@ -48,6 +50,21 @@ export function useWahlvorbereitungTestDataFactory() {
     };
   }
 
+  function createWahlvorbereitung(): Wahlvorbereitung {
+    return {
+      wahlbezirkID: "wahlbezirkID1",
+      urneVersiegelt: true,
+      urnenAnzahl: _generateWahlurneArray(),
+    };
+  }
+
+  function createBriefwahlvorbereitungDTO(): BriefwahlvorbereitungDTO {
+    return {
+      wahlbezirkID: "wahlbezirkID1",
+      urnenAnzahl: _generateWahlurneDTOArray(),
+    };
+  }
+
   function _generateWahlurneArray(): Wahlurne[] {
     return [
       {
@@ -72,5 +89,7 @@ export function useWahlvorbereitungTestDataFactory() {
     createUrnenwahlvorbereitungWriteDTO,
     createUrnenwahlvorbereitung,
     createUrnenwahlvorbereitungDTO,
+    createWahlvorbereitung,
+    createBriefwahlvorbereitungDTO,
   };
 }

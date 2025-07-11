@@ -1,4 +1,6 @@
 import type {
+  BriefwahlvorbereitungDTO,
+  BriefwahlvorbereitungWriteDTO,
   EroeffnungsUhrzeitWriteDTO,
   UrnenwahlSchliessungsUhrzeitDTO,
   UrnenwahlSchliessungsUhrzeitWriteDTO,
@@ -7,6 +9,7 @@ import type {
 } from "@/api/wls-clients/generated-wahlvorbereitung-api";
 import type { UrnenwahlSchliessungsuhrzeit } from "@/types/wahlvorbereitung/UrnenwahlSchliessungsuhrzeit.ts";
 import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
+import type { Wahlvorbereitung } from "@/types/wahlvorbereitung/Wahlvorbereitung.ts";
 
 import { describe, expect, it, vi } from "vitest";
 
@@ -27,6 +30,8 @@ describe("wahlvorbereitungMapper.ts", () => {
     toEroeffnungsuhrzeitWriteDTO,
     toUrnenwahlvorbereitungWriteDto,
     toUrnenwahlvorbereitungModel,
+    toBriefwahlvorbereitungWriteDto,
+    toBriefwahlvorbereitungModel,
     toUrnenwahlSchliessungsuhrzeitModel,
     toUrnenwahlSchliessungsuhrzeitDTO,
   } = useWahlvorbereitungMapper();
@@ -161,6 +166,81 @@ describe("wahlvorbereitungMapper.ts", () => {
         anzahlWahlkabinen: 5,
         anzahlWahltische: 10,
         anzahlNebenraeume: 2,
+        urneVersiegelt: false,
+        urnenAnzahl: [
+          {
+            wahlID: "1",
+            anzahl: 3,
+          },
+          {
+            wahlID: "2",
+            anzahl: 2,
+          },
+        ],
+      };
+      expect(result).toStrictEqual(expectedResult);
+    });
+  });
+
+  describe("toBriefwahlvorbereitungWriteDto", () => {
+    it("should_returnDTO_when_validModelIsGiven", () => {
+      const briefwahlvorbereitung: Wahlvorbereitung = {
+        urneVersiegelt: false,
+        wahlbezirkID: "123",
+        urnenAnzahl: [
+          {
+            wahlID: "1",
+            anzahl: 3,
+          },
+          {
+            wahlID: "2",
+            anzahl: 2,
+          },
+        ],
+      };
+
+      const result = toBriefwahlvorbereitungWriteDto(briefwahlvorbereitung);
+
+      const expectedResult: BriefwahlvorbereitungWriteDTO = {
+        urnenAnzahl: [
+          {
+            wahlID: "1",
+            anzahl: 3,
+            urneVersiegelt: false,
+          },
+          {
+            wahlID: "2",
+            anzahl: 2,
+            urneVersiegelt: false,
+          },
+        ],
+      };
+      expect(result).toStrictEqual(expectedResult);
+    });
+  });
+
+  describe("toBriefwahlvorbereitungModel", () => {
+    it("should_returnModel_when_validDTOIsGiven", () => {
+      const briefwahlvorbereitungDTO: BriefwahlvorbereitungDTO = {
+        wahlbezirkID: "123",
+        urnenAnzahl: [
+          {
+            wahlID: "1",
+            anzahl: 3,
+            urneVersiegelt: false,
+          },
+          {
+            wahlID: "2",
+            anzahl: 2,
+            urneVersiegelt: false,
+          },
+        ],
+      };
+
+      const result = toBriefwahlvorbereitungModel(briefwahlvorbereitungDTO);
+
+      const expectedResult: Wahlvorbereitung = {
+        wahlbezirkID: "123",
         urneVersiegelt: false,
         urnenAnzahl: [
           {

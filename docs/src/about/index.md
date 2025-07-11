@@ -166,3 +166,8 @@ Analog zur Öffnung der Wahl, wird sie vor der Auszählung auch wieder geschloss
 richtet sich nach dem Konfigurationsparameter `FRUEHESTE_SCHLIESSUNGSUHRZEIT_UW` mit einem Standardwert von 18 Uhr.
 Auch diese darf nicht in der Zukunft liegen.
 :::
+
+::: info Briefwahlbezirk {data-bwb="true"}
+Im briefwahlbezirk gibt es keine "Schließung" des Wahllokals. Es wird aber eine Uhrzeit mit dem UseCase `Erfassung
+abgegebener Stimmen` übermittelt, welche der Schliessungsuhrzeit im Urnenwahllokal gleicht.
+:::

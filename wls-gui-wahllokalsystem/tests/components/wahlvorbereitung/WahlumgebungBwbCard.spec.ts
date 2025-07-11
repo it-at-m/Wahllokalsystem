@@ -26,7 +26,7 @@ vi.mock("@/composables/wahl/wahlservice", () => ({
   }),
 }));
 
-describe("WahlumgebungUwbCard.vue", () => {
+describe("WahlumgebungBwbCard.vue", () => {
   let wahlenStore: ReturnType<typeof useWahlenStore>;
   let wahlbezirkStore: ReturnType<typeof useWahlbezirkStore>;
   let testPinia: TestingPinia;

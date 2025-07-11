@@ -1,6 +1,6 @@
-import type { Briefwahlvorbereitung } from "@/types/wahlvorbereitung/Briefwahlvorbereitung.ts";
 import type { UrnenwahlSchliessungsuhrzeit } from "@/types/wahlvorbereitung/UrnenwahlSchliessungsuhrzeit.ts";
 import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
+import type { Wahlvorbereitung } from "@/types/wahlvorbereitung/Wahlvorbereitung.ts";
 
 import {
   BriefwahlvorbereitungControllerApi,
@@ -152,14 +152,14 @@ export function useWahlvorbereitungService() {
 
   async function getBriefwahlvorbereitung(
     wahlbezirkID: string
-  ): Promise<Briefwahlvorbereitung> {
+  ): Promise<Wahlvorbereitung> {
     try {
       return await briefwahlvorbereitungControllerAPI
         .getBriefwahlvorbereitung(wahlbezirkID)
         .then((response) => toBriefwahlvorbereitungModel(response.data));
     } catch (error) {
       userNotificationService.addNotification(
-        "Fehler beim Laden der Briefwahlvorbereitung.",
+        "Fehler beim Laden der Wahlvorbereitung.",
         UserNotificationCategoryEnum.ERROR
       );
       throw error;
@@ -168,7 +168,7 @@ export function useWahlvorbereitungService() {
 
   async function postBriefwahlvorbereitung(
     wahlbezirkID: string,
-    briefwahlvorbereitung: Briefwahlvorbereitung
+    briefwahlvorbereitung: Wahlvorbereitung
   ): Promise<void> {
     const briefwahlvorbereitungWriteDTO = toBriefwahlvorbereitungWriteDto(
       briefwahlvorbereitung
@@ -180,12 +180,12 @@ export function useWahlvorbereitungService() {
         briefwahlvorbereitungWriteDTO
       );
       userNotificationService.addNotification(
-        "Briefwahlvorbereitung erfolgreich gespeichert.",
+        "Wahlvorbereitung erfolgreich gespeichert.",
         UserNotificationCategoryEnum.SUCCESS
       );
     } catch (error) {
       userNotificationService.addNotification(
-        "Speichern der Briefwahlvorbereitung fehlgeschlagen.",
+        "Speichern der Wahlvorbereitung fehlgeschlagen.",
         UserNotificationCategoryEnum.ERROR
       );
       throw error;

@@ -8,10 +8,10 @@ import type {
   UrnenwahlvorbereitungWriteDTO,
   WahlurneDTO,
 } from "@/api/wls-clients/generated-wahlvorbereitung-api";
-import type { Briefwahlvorbereitung } from "@/types/wahlvorbereitung/Briefwahlvorbereitung.ts";
 import type { UrnenwahlSchliessungsuhrzeit } from "@/types/wahlvorbereitung/UrnenwahlSchliessungsuhrzeit.ts";
 import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
 import type { Wahlurne } from "@/types/wahlvorbereitung/Wahlurne.ts";
+import type { Wahlvorbereitung } from "@/types/wahlvorbereitung/Wahlvorbereitung.ts";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 
@@ -77,7 +77,7 @@ export function useWahlvorbereitungMapper() {
 
   function toBriefwahlvorbereitungModel(
     briefwahlvorbereitungDTO: BriefwahlvorbereitungDTO
-  ): Briefwahlvorbereitung {
+  ): Wahlvorbereitung {
     const urnenAnzahlModel =
       briefwahlvorbereitungDTO.urnenAnzahl?.map((wahlurneDTO) =>
         _toWahlurneModel(wahlurneDTO)
@@ -91,7 +91,7 @@ export function useWahlvorbereitungMapper() {
   }
 
   function toBriefwahlvorbereitungWriteDto(
-    briefwahlvorbereitung: Briefwahlvorbereitung
+    briefwahlvorbereitung: Wahlvorbereitung
   ): BriefwahlvorbereitungWriteDTO {
     const urnenAnzahlDto =
       briefwahlvorbereitung.urnenAnzahl?.map((wahlurneDTO) =>

@@ -1,6 +1,6 @@
 import type { UngueltigerWahlschein } from "@/types/wahlbezirk/UngueltigerWahlschein.ts";
-import type { Briefwahlvorbereitung } from "@/types/wahlvorbereitung/Briefwahlvorbereitung.ts";
 import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
+import type { Wahlvorbereitung } from "@/types/wahlvorbereitung/Wahlvorbereitung.ts";
 
 import { defineStore, storeToRefs } from "pinia";
 import { ref, watch } from "vue";
@@ -50,7 +50,7 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     urnenAnzahl: [],
   });
 
-  const briefwahlVorbereitung = ref<Briefwahlvorbereitung>({
+  const briefwahlVorbereitung = ref<Wahlvorbereitung>({
     urneVersiegelt: false,
     wahlbezirkID: currentUserWahlbezirkID.value,
     urnenAnzahl: [],
@@ -127,7 +127,7 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   }
 
   async function sendBriefwahlvorbereitung(
-    briefwahlvorbereitung: Briefwahlvorbereitung
+    briefwahlvorbereitung: Wahlvorbereitung
   ) {
     const wahlbezirkID = currentUserWahlbezirkID.value;
     briefWahlVorbereitungIsSaving.value = true;

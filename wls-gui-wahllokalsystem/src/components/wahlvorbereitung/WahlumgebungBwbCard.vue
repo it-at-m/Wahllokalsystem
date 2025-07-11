@@ -7,37 +7,22 @@
           ref="wahlurnenForm"
           v-model="anzahlWahlurnenValidForm"
         >
-          <div class="d-flex flex-wrap justify-start">
-            <div
-              v-for="(wahl, index) in briefwahlVorbereitung.urnenAnzahl"
-              :key="index"
-            >
-              <v-number-input
-                v-model="wahl.anzahl"
-                class="mr-4"
-                :rules="[REQUIRED, MIN_NUMBER(1), MAX_NUMBER(99)]"
-                :data-test="`textFieldUrnenAnzahl_${index}`"
-                :label="`Anzahl der Wahlurnen ${getWahlNameOrBlankStringById(wahl.wahlID)}`"
-                min-width="30rem"
-                clearable
-              />
-            </div>
-          </div>
+          <wahlumgebung-wahlurnen :wahl-vorbereitung="briefwahlVorbereitung" />
           <v-checkbox
             v-model="briefwahlVorbereitung.urneVersiegelt"
             :label="checkboxLabelText"
             data-test="checkboxAlleVersiegelt"
           />
+          <v-card-actions>
+            <base-button-save
+              active
+              :disabled="isSaveButtonDisabled"
+              :loading="briefWahlVorbereitungIsSaving"
+              @click="onSaveWahlumgebungBWBClicked"
+            />
+          </v-card-actions>
         </v-form>
       </v-card-text>
-      <v-card-actions>
-        <base-button-save
-          active
-          :disabled="isSaveButtonDisabled"
-          :loading="briefWahlVorbereitungIsSaving"
-          @click="onSaveWahlumgebungBWBClicked"
-        />
-      </v-card-actions>
     </v-card>
   </v-container>
 </template>
@@ -53,22 +38,19 @@ import {
   VCheckbox,
   VContainer,
   VForm,
-  VNumberInput,
 } from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import WahlumgebungWahlurnen from "@/components/wahlvorbereitung/WahlumgebungWahlurnen.vue";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
 
 const anzahlWahlurnenValidForm = ref<null | boolean>(null);
-const wahlurnenForm = ref<HTMLFormElement | null>(null);
 
 const { wahlen } = storeToRefs(useWahlenStore());
 const { sendBriefwahlvorbereitung } = useWahlbezirkStore();
 const { briefWahlVorbereitungIsSaving, briefwahlVorbereitung } =
   storeToRefs(useWahlbezirkStore());
-const { getWahlNameOrBlankStringById } = useWahlenStore();
 
 const isSaveButtonDisabled = computed(() => {
   return (
@@ -77,15 +59,14 @@ const isSaveButtonDisabled = computed(() => {
   );
 });
 
-function onSaveWahlumgebungBWBClicked() {
-  sendBriefwahlvorbereitung(briefwahlVorbereitung.value);
-}
-
 const checkboxLabelText = computed(() => {
   if (wahlen.value && wahlen.value?.length > 1) {
     return "Die Wahlurnen waren leer und wurden ordnungsgemäß versiegelt";
   }
   return "Die Wahlurne war leer und wurde ordnungsgemäß versiegelt";
 });
+
+function onSaveWahlumgebungBWBClicked() {
+  sendBriefwahlvorbereitung(briefwahlVorbereitung.value);
+}
 </script>
-<style scoped></style>

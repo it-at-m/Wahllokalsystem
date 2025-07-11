@@ -168,6 +168,8 @@ Auch diese darf nicht in der Zukunft liegen.
 :::
 
 ::: info Briefwahlbezirk {data-bwb="true"}
-Im briefwahlbezirk gibt es keine "Schließung" des Wahllokals. Es wird aber eine Uhrzeit mit dem UseCase `Erfassung
-abgegebener Stimmen` übermittelt, welche der Schliessungsuhrzeit im Urnenwahllokal gleicht.
+Im Briefwahlbezirk gibt es keine "Schließung" des Wahllokals. Es wird aber eine Uhrzeit mit dem UseCase `Erfassung
+abgegebener Stimmen` übermittelt, welche der Schliessungsuhrzeit im Urnenwahllokal gleicht. Die früheste Zeit, die
+übermittelt werden kann richtet sich nach dem Konfigurationsparameter `FRUEHESTE_SCHLIESSUNGSUHRZEIT_BW` mit einem
+Standardwert von 18 Uhr.
 :::

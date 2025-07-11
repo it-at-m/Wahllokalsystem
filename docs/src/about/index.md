@@ -156,7 +156,7 @@ Konfigurationsparameter `FRUEHESTE_EROEFFNUNGSUHRZEIT_BW` geladen.
 In einem Urnenwahlbezirk kann nach der Öffnung der Wahl die Anzahl der Wähler, die das Wahllokal besuchen, erfasst
 werden. Jedes Mal, wenn der Nutzer auf den entsprechenden Button klickt, wird die Wähleranzahl um 1 erhöht. Alternativ
 kann der Nutzer das Feld über seine Tastatur steuern. Wenn er sich nicht in einem Input-Feld befindet, kann er die Taste
-`+` drücken, oder - wenn der Zählbutton fokussiert ist - die Tasten `Eingabe` oder `Leertaste`.
+`+` drücken, oder, wenn der Zählbutton fokussiert ist, die Tasten `Eingabe` oder `Leertaste`.
 :::
 
 📃 **UseCase: `Wahl schliessen`**

@@ -5,10 +5,12 @@ import {
   Configuration,
 } from "@/api/wls-clients/generated-briefwahl-api";
 import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts";
+import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
 import { BRIEFWAHL_SERVICE_API_URL } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const { toModel } = useBeanstandeteWahlbriefeMapper();
+const { getNullOn204OrElseResponseData } = useCommonApiUtils();
 
 export function useBriefwahlService() {
   const beanstandeteWahlbriefeControllerAPI =
@@ -25,7 +27,9 @@ export function useBriefwahlService() {
           currentUserWahlbezirkID.value,
           waehlerverzeichnisNummer
         );
-      return toModel(response.data);
+      const responseData = getNullOn204OrElseResponseData(response);
+
+      return responseData ? toModel(responseData) : null;
     } catch (e) {
       console.debug(e);
     }

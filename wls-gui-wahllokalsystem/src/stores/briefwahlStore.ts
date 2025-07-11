@@ -15,7 +15,7 @@ export const useBriefwahlStore = defineStore(storeID, () => {
   const { getBeanstandeteWahlbriefe } = useBriefwahlService();
   const { wahlen } = storeToRefs(useWahlenStore());
 
-  const beanstandeteWahlbriefe = ref<BeanstandeteWahlbriefe | undefined>();
+  const beanstandeteWahlbriefe = ref<BeanstandeteWahlbriefe | null>();
 
   async function initBeanstandeteWahlbriefe(waehlerverzeichnisNummer: number) {
     beanstandeteWahlbriefe.value = await getBeanstandeteWahlbriefe(

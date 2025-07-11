@@ -41,7 +41,8 @@ müssen anschließend alle für die Wahlen wichtigen Daten ebenfalls erfolgreich
 Nutzer der Zugriff auf die Anwendung verwehrt. Das erfolgreiche Laden ermöglicht später auch eine reibungslose Nutzung
 im Offline-Modus.
 
-Daten, die unabhängig von der Wahlbezirksart für eine **Kommunalwahl** geladen werden:
+Folgende Daten werden bei einer **Kommunalwahl** von beiden Wahlbezirksarten "Urnenwahlbezirk" und "Briefwahlbezirk"
+geladen:
 *Wahlvorstand*, *Wahlvorschläge*, *Kopfdaten*, *Konfigurationen*, *Handbuch*, *Wahlvorbereitung*, *Eröffnungsuhrzeit*,
 *Störungen*, *Druckstatus*, *Stapel c - gültige Stimmzettel*, *Stapel c - ungültige Stimmzettel*, *Stapel b -
 ungekennzeichnete Stimmzettel*, *Begründung - Stapel a*, *Stapel d*, *Stapel a*, *Stapel b*, *Begründung Stapel ab*,

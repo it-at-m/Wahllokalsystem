@@ -15,15 +15,34 @@
 
     <tbody>
       <tr
-        v-for="(rowIndex, index) in _getMaxRows"
+        v-for="(rowIndex, index) in rows"
         :key="index"
       >
-        <td>{{ index + 1 }}. Platzhalter</td>
+        <td>
+          <v-row
+            align="center"
+            class="my-2"
+            style="min-width: 250px"
+          >
+            {{ index + 1 }}
+            <v-autocomplete
+              model-value="tbd - wird berechnet"
+              label="Beschlussergebnis"
+              class="ml-5"
+              hide-details
+            />
+          </v-row>
+        </td>
         <td
           v-for="wahl in wahlen"
           :key="`${wahl.wahlID}-${index}`"
         >
-          {{ _getCellContent(wahl, rowIndex) }}
+          <v-autocomplete
+            :model-value="_getCellContent(wahl, rowIndex)"
+            label="Beschlussergebnis"
+            :items="Object.keys(ZurueckweisungsgrundEnum)"
+            hide-details
+          />
         </td>
         <td>
           <v-row
@@ -35,6 +54,7 @@
             <v-btn
               icon="$delete"
               variant="text"
+              @click="deleteBeanstandeteWahlbriefeRow(rowIndex)"
             />
             <v-btn
               icon="$edit"
@@ -52,22 +72,20 @@ import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
-import { VBtn, VRow, VTable } from "vuetify/components";
+import { VAutocomplete, VBtn, VRow, VTable } from "vuetify/components";
 
+import { useBriefwahlStore } from "@/stores/briefwahlStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 
 const { wahlen } = storeToRefs(useWahlenStore());
+const { rows } = storeToRefs(useBriefwahlStore());
+const { deleteRow } = useBriefwahlStore();
 
-const _getMaxRows = computed(() => {
-  // find wahl with most beanstandeteWahlbriefe entries
-  const maxLength = Math.max(
-    ...wahlen.value!.map((w) => w.beanstandeteWahlbriefe?.length ?? 0)
-  );
-  return Array.from({ length: maxLength }, (_, i) => i);
-});
 const _getCellContent = (wahl: Wahl, rowIndex: number): string => {
   if (!wahl.beanstandeteWahlbriefe) return "";
-  const content = wahl.beanstandeteWahlbriefe[rowIndex];
+  const content = wahl.beanstandeteWahlbriefe[rowIndex - 1];
+  console.log(rowIndex + content);
   return content ? content : "";
 };
 const getIconForRowStatus = computed(() => {
@@ -76,6 +94,12 @@ const getIconForRowStatus = computed(() => {
 const getIconColorForRowStatus = computed(() => {
   // todo: if icon is check return green, if is pencil return orange
 });
+
+// delete row + remove item from beanstandeteWahlbriefeList
+function deleteBeanstandeteWahlbriefeRow(rowIndex: number) {
+  wahlen.value!.map((wahl) => wahl.beanstandeteWahlbriefe!.splice(rowIndex, 1));
+  deleteRow();
+}
 </script>
 
 <style scoped>

@@ -33,13 +33,14 @@ die Grafik lässt sich der jeweiligen Überschrift "📃 **UseCase: `Titel`**" e
 
 Das Wahllokalsystem ist die Anwendung, die am Wahltag vom Wahlvorstand bedient wird.
 
-📃 **UseCase: Initiales Laden der Daten**
+📃 **UseCase: `Initiales Laden der Daten`**
 
 In einem ersten Schritt nach dem Login werden die hinterlegten Daten des angemeldeten Benutzers geladen. Kommt es hier
 zu einem Fehler, wird der Wahlvorstand dazu aufgefordert, sich beim Wahlamt zu melden. Ist der Schritt erfolgreich,
-müssen anschließend alle für die Wahlen wichtigen Daten ebenfalls erfolgreich geladen werden. Bei Fehlern wird dem
-Nutzer der Zugriff auf die Anwendung verwehrt. Das erfolgreiche Laden ermöglicht später auch eine reibungslose Nutzung
-im Offline-Modus.
+müssen anschließend alle für die Wahlen wichtigen Daten ebenfalls erfolgreich geladen werden. Schlägt das Laden fehl, 
+kann die Initialisierungs-Anfrage für die betroffenen Daten wiederholt werden. Bei bestimmten fehlenden Daten wird dem
+Nutzer der Zugriff auf die Anwendung verwehrt, bei anderen, mit niedrigerer Priorität, ist der Zugriff auf die Anwendung
+trotzdem möglich. Das erfolgreiche Laden ermöglicht später auch eine reibungslose Nutzung im Offline-Modus.
 
 Folgende Daten werden bei einer **Kommunalwahl** von beiden Wahlbezirksarten "Urnenwahlbezirk" und "Briefwahlbezirk"
 geladen:

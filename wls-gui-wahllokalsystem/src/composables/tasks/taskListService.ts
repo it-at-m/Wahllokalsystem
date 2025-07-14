@@ -2,6 +2,7 @@ import type { Task } from "@/types/tasks/Task.ts";
 
 import { storeToRefs } from "pinia";
 
+import { KopfdatenTaskFactoryImpl } from "@/composables/tasks/KopfdatenTaskFactoryImpl.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -12,11 +13,13 @@ import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 export function useTaskListService() {
-  const { initWahlen } = useWahlenStore();
+  const { initWahlen, getWahlNameOrBlankStringById } = useWahlenStore();
   const { initKonfigurationsparameter } = useInfomanagementStore();
   const { initWahlvorstand } = useWahlvorstandStore();
   const { initUngueltigeWahlscheine } = useWahlbezirkStore();
   const { initKopfdaten } = useKopfdatenStore();
+  const { currentUserWahlMetadata } = useUserStore();
+
   const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
 
   const matchingWahlbezirkArt = (task: Task) =>
@@ -25,6 +28,24 @@ export function useTaskListService() {
 
   function getTaskList(): Task[] {
     return _tasks.filter(matchingWahlbezirkArt);
+  }
+
+  function initTasklist() {
+    initKopfdatenTaskList();
+  }
+
+  function initKopfdatenTaskList(): Task[] {
+    const kopfdatenFactory = new KopfdatenTaskFactoryImpl();
+    const taskList: Task[] = [];
+    currentUserWahlMetadata.forEach((wahlMetaData) => {
+      taskList.push(
+        kopfdatenFactory.createTask(
+          wahlMetaData,
+          getWahlNameOrBlankStringById(wahlMetaData.wahlID)
+        )
+      );
+    });
+    return taskList;
   }
 
   const _tasks: Task[] = [
@@ -74,7 +95,7 @@ export function useTaskListService() {
       callback: () => initUngueltigeWahlscheine(false),
     },
     {
-      name: "Kopfdaten",
+      name: "Kopfdaten-xy",
       onlyForWahlbezirksart: undefined,
       onlyForWahlen: undefined,
       onlyForAllWVaehlerverzeichnisse: undefined,

@@ -22,7 +22,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@fontsource/roboto": "5.2.5",
+    "@fontsource/roboto": "5.2.6",
     "@muenchen/appswitcher-vue": "2.2.0",
     "@vueuse/core": "13.5.0",
     "pinia": "3.0.1",
@@ -57,7 +57,7 @@
     "jsdom": "26.0.0",
     "msw": "2.7.5",
     "msw-storybook-addon": "2.0.4",
-    "prettier": "3.5.3",
+    "prettier": "3.6.2",
     "storybook": "8.6.12",
     "typescript": "5.8.3",
     "unplugin-fonts": "1.3.1",

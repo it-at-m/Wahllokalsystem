@@ -14,7 +14,7 @@ import WahlbriefErfassungCard from "@/components/wahlvorbereitung/WahlbriefErfas
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
-declare module '@vue/runtime-core' {
+declare module "@vue/runtime-core" {
   interface ComponentCustomProperties {
     anzahlWahlbriefeValid: boolean | null;
     anzahlVerzeichnisseValid: boolean | null;

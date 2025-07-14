@@ -76,7 +76,9 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   }
 
   async function initWahlbriefdaten() {
-    wahlbriefDaten.value = await getWahlbriefdaten(currentUserWahlbezirkID.value);
+    wahlbriefDaten.value = await getWahlbriefdaten(
+      currentUserWahlbezirkID.value
+    );
   }
 
   async function sendEroeffnungsuhrzeit() {

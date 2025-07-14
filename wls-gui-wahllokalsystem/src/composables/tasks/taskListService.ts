@@ -1,111 +1,78 @@
+import type { TaskFactoryMetaData } from "@/composables/tasks/TaskFactoryMetaData.ts";
 import type { Task } from "@/types/tasks/Task.ts";
 
 import { storeToRefs } from "pinia";
+import { computed, ref } from "vue";
 
-import { KopfdatenTaskFactoryImpl } from "@/composables/tasks/KopfdatenTaskFactoryImpl.ts";
-import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
-import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
+import { KonfigurationsparameterTaskFactoryImpl } from "@/composables/tasks/taskFactories/KonfigurationsparameterTaskFactoryImpl.ts";
+import { KopfdatenTaskFactoryImpl } from "@/composables/tasks/taskFactories/KopfdatenTaskFactoryImpl.ts";
+import { UngueltigeWahlscheineTaskFactoryImpl } from "@/composables/tasks/taskFactories/UngueltigeWahlscheineTaskFactoryImpl.ts";
+import { WahlvorstandTaskFactoryImpl } from "@/composables/tasks/taskFactories/WahlvorstandTaskFactoryImpl.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
-import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
-import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 export function useTaskListService() {
-  const { initWahlen, getWahlNameOrBlankStringById } = useWahlenStore();
-  const { initKonfigurationsparameter } = useInfomanagementStore();
-  const { initWahlvorstand } = useWahlvorstandStore();
-  const { initUngueltigeWahlscheine } = useWahlbezirkStore();
-  const { initKopfdaten } = useKopfdatenStore();
-  const { currentUserWahlMetadata } = useUserStore();
+  const { getWahlNameOrBlankStringById } = useWahlenStore();
+  const { currentUserWahlMetadata } = storeToRefs(useUserStore());
 
   const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
 
-  const matchingWahlbezirkArt = (task: Task) =>
-    task.onlyForWahlbezirksart === undefined ||
-    task.onlyForWahlbezirksart === currentUserWahlbezirksArt.value;
+  const _tasks = ref<Task[]>([]);
 
   function getTaskList(): Task[] {
-    return _tasks.filter(matchingWahlbezirkArt);
+    return _tasks.value;
   }
 
   function initTasklist() {
-    initKopfdatenTaskList();
+    _tasks.value.push(...initKopfdatenTaskList());
+    _tasks.value.push(...initUngueltigeWahlscheineTaskList());
+    _tasks.value.push(...initWahlvorstandTaskList());
+    _tasks.value.push(...initKonfigurationsparameterTaskList());
   }
+
+  const taskFactoryData = computed(() => {
+    const taskFactoryMetaData: TaskFactoryMetaData[] =
+      currentUserWahlMetadata.value.map((wahlMetadata) => {
+        const factoryMetaData: TaskFactoryMetaData = {
+          wahlID: wahlMetadata.wahlID,
+          wahlbezirkID: wahlMetadata.wahlbezirkID,
+          wahlname: getWahlNameOrBlankStringById(wahlMetadata.wahlID),
+          wahlnummer: wahlMetadata.wahlnummer,
+        };
+        return factoryMetaData;
+      });
+    return {
+      wahlbezirkArt: currentUserWahlbezirksArt.value,
+      taskFactoryMetaData: taskFactoryMetaData,
+    };
+  });
 
   function initKopfdatenTaskList(): Task[] {
     const kopfdatenFactory = new KopfdatenTaskFactoryImpl();
-    const taskList: Task[] = [];
-    currentUserWahlMetadata.forEach((wahlMetaData) => {
-      taskList.push(
-        kopfdatenFactory.createTask(
-          wahlMetaData,
-          getWahlNameOrBlankStringById(wahlMetaData.wahlID)
-        )
-      );
-    });
-    return taskList;
+    return kopfdatenFactory.createTasks(taskFactoryData.value);
   }
 
-  const _tasks: Task[] = [
-    {
-      name: "Konfigurationsparameter",
-      onlyForWahlbezirksart: undefined,
-      onlyForWahlen: undefined,
-      onlyForAllWVaehlerverzeichnisse: undefined,
-      callback: () => {
-        return initKonfigurationsparameter(false);
-      },
-    },
-    {
-      name: "Wahlen",
-      onlyForWahlbezirksart: undefined,
-      onlyForWahlen: [
-        WahlWahlartEnum.Obw,
-        WahlWahlartEnum.Bzw,
-        WahlWahlartEnum.Srw,
-      ],
-      onlyForAllWVaehlerverzeichnisse: undefined,
-      callback: () => {
-        return initWahlen(false);
-      },
-    },
-    {
-      name: "Wahlvorstand",
-      onlyForWahlbezirksart: undefined,
-      onlyForWahlen: undefined,
-      onlyForAllWVaehlerverzeichnisse: undefined,
-      callback: () => {
-        return initWahlvorstand(false);
-      },
-    },
-    {
-      name: "UngültigeWahlscheine",
-      onlyForWahlbezirksart: WahlbezirksArtEnum.UWB,
-      onlyForWahlen: [
-        WahlWahlartEnum.Btw,
-        WahlWahlartEnum.Beb,
-        WahlWahlartEnum.Euw,
-        WahlWahlartEnum.Obw,
-        WahlWahlartEnum.Srw,
-        WahlWahlartEnum.Baw,
-      ],
-      onlyForAllWVaehlerverzeichnisse: undefined,
-      callback: () => initUngueltigeWahlscheine(false),
-    },
-    {
-      name: "Kopfdaten-xy",
-      onlyForWahlbezirksart: undefined,
-      onlyForWahlen: undefined,
-      onlyForAllWVaehlerverzeichnisse: undefined,
-      callback: () => {
-        return initKopfdaten();
-      },
-    },
-  ];
+  function initUngueltigeWahlscheineTaskList(): Task[] {
+    const ungueltigeWahlscheineTaskFactory =
+      new UngueltigeWahlscheineTaskFactoryImpl();
+    return ungueltigeWahlscheineTaskFactory.createTasks(taskFactoryData.value);
+  }
+
+  function initWahlvorstandTaskList(): Task[] {
+    const WahlvorstandTaskFactory = new WahlvorstandTaskFactoryImpl();
+    return WahlvorstandTaskFactory.createTasks(taskFactoryData.value);
+  }
+
+  function initKonfigurationsparameterTaskList(): Task[] {
+    const KonfigurationsparameterTaskFactory =
+      new KonfigurationsparameterTaskFactoryImpl();
+    return KonfigurationsparameterTaskFactory.createTasks(
+      taskFactoryData.value
+    );
+  }
 
   return {
+    initTasklist,
     getTaskList,
   };
 }

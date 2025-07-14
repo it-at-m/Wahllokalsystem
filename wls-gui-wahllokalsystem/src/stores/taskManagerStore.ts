@@ -32,6 +32,7 @@ export const useTaskManagerStore = defineStore(storeID, () => {
   );
 
   async function initTasks() {
+    taskListService.initTasklist();
     const taskList = taskListService.getTaskList();
     numberOfTasksToRun.value = taskList.length;
     for (const task of taskList) {

@@ -65,6 +65,10 @@
           title="Wahlhandlung"
           :to="ROUTE_WAHLSCHLIESSUNG"
         />
+        <v-list-item
+          title="Erfassung Wahlbriefe"
+          :to="ROUTE_ERFASSUNG_WAHLBRIEFE"
+        />
       </v-list-group>
       <v-list-item
         title="Ereignisse"
@@ -97,6 +101,7 @@ import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts"
 import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_EREIGNISSE,
+  ROUTE_ERFASSUNG_WAHLBRIEFE,
   ROUTE_WAHLSCHLIESSUNG,
   ROUTE_WAHLUMGEBUNG,
   ROUTE_WAHLVORSTAND,

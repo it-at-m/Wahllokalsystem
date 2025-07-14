@@ -32,6 +32,7 @@ describe("taskListService.ts", () => {
         "Wahlen",
         "Wahlvorstand",
         "UngültigeWahlscheine",
+        "Kopfdaten",
       ];
 
       expect(taskNames).toStrictEqual(expectedTaskNames);
@@ -49,6 +50,7 @@ describe("taskListService.ts", () => {
         "Konfigurationsparameter",
         "Wahlen",
         "Wahlvorstand",
+        "Kopfdaten",
       ];
 
       expect(taskNames).toStrictEqual(expectedTaskNames);

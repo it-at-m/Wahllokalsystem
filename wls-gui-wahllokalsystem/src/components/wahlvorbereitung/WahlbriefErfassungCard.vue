@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title
-      >Anzahl der Wahlbriefe (aus Wahlurne und Wahlbrife, die vor 18 Uhr
+      >Anzahl der Wahlbriefe (aus Wahlurne und Wahlbriefe, die vor 18 Uhr
       übergeben wurden)</v-card-title
     >
     <v-card-text class="pb-0 pt-2">

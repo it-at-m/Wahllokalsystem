@@ -3,5 +3,5 @@ export interface Wahlbriefdaten {
   verzeichnisseUngueltige: number | undefined;
   nachtraege: number | undefined;
   nachtraeglichUeberbrachte: number | undefined;
-  zeitNachtraeglichUeberbrachte: string | undefined;
+  zeitNachtraeglichUeberbrachte: Date | undefined;
 }

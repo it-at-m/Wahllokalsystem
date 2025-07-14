@@ -14,6 +14,16 @@ import WahlbriefErfassungCard from "@/components/wahlvorbereitung/WahlbriefErfas
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
+declare module '@vue/runtime-core' {
+  interface ComponentCustomProperties {
+    anzahlWahlbriefeValid: boolean | null;
+    anzahlVerzeichnisseValid: boolean | null;
+    anzahlNachtraegeValid: boolean | null;
+    anzahlNachtraeglichUeberbrachteValid: boolean | null;
+    isZeitNachtragelichUeberbrachtRequired: () => boolean;
+  }
+}
+
 describe("WahlbriefErfassungCard.vue", () => {
   let wrapper: VueWrapper<InstanceType<typeof WahlbriefErfassungCard>>;
   let wahlbezirkStore: ReturnType<typeof useWahlbezirkStore>;

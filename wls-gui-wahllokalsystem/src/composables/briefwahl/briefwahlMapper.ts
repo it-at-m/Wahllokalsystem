@@ -8,13 +8,13 @@ export function useBriefwahlMapper() {
   function toWahlbriefdatenModel(
     wahlbriefdatenDTO: WahlbriefdatenDTO
   ): Wahlbriefdaten {
+    const parsedDate = wahlbriefdatenDTO.zeitNachtraeglichUeberbrachte !== undefined ? new Date(wahlbriefdatenDTO.zeitNachtraeglichUeberbrachte) : undefined;
     return {
       wahlbriefe: wahlbriefdatenDTO.wahlbriefe,
       verzeichnisseUngueltige: wahlbriefdatenDTO.verzeichnisseUngueltige,
       nachtraege: wahlbriefdatenDTO.nachtraege,
       nachtraeglichUeberbrachte: wahlbriefdatenDTO.nachtraeglichUeberbrachte,
-      zeitNachtraeglichUeberbrachte:
-        wahlbriefdatenDTO.zeitNachtraeglichUeberbrachte,
+      zeitNachtraeglichUeberbrachte: parsedDate,
     };
   }
 
@@ -27,7 +27,7 @@ export function useBriefwahlMapper() {
       nachtraege: wahlbriefdaten.nachtraege,
       nachtraeglichUeberbrachte: wahlbriefdaten.nachtraeglichUeberbrachte,
       zeitNachtraeglichUeberbrachte:
-        wahlbriefdaten.zeitNachtraeglichUeberbrachte,
+        wahlbriefdaten.zeitNachtraeglichUeberbrachte ? wahlbriefdaten.zeitNachtraeglichUeberbrachte.toJSON() : "",
     };
   }
 

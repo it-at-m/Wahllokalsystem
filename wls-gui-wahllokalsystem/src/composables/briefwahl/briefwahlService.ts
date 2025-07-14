@@ -50,12 +50,12 @@ export function useBriefwahlService() {
         wahlbriefdatenWriteDTO
       );
       userNotificationService.addNotification(
-        "Urnenwahlvorbereitung erfolgreich gespeichert.",
+        "Wahlbriefdaten erfolgreich gespeichert.",
         UserNotificationCategoryEnum.SUCCESS
       );
     } catch (error) {
       userNotificationService.addNotification(
-        "Speichern der Urnenwahlvorbereitung fehlgeschlagen.",
+        "Speichern der Wahlbriefdaten fehlgeschlagen.",
         UserNotificationCategoryEnum.ERROR
       );
       throw error;

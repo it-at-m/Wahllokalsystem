@@ -40,9 +40,7 @@ const isSaving = false; // todo
 
 // add row + add empty item to beanstandeteWahlbriefeList
 function onAddBedenklicherWahlbriefClicked() {
-  wahlen.value!.map(
-    (wahl) => wahl.beanstandeteWahlbriefe!.push("") // todo: muss leer sein beim befüllen
-  );
+  wahlen.value!.map((wahl) => wahl.beanstandeteWahlbriefe!.push(null));
 }
 
 function onSaveClicked() {

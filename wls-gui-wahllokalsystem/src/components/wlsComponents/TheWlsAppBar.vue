@@ -65,6 +65,10 @@
           title="Wahlhandlung"
           :to="ROUTE_WAHLSCHLIESSUNG"
         />
+        <v-list-item
+          title="Wählerverzeichnis"
+          :to="ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS"
+        />
       </v-list-group>
       <v-list-item
         title="Ereignisse"
@@ -99,6 +103,7 @@ import {
   ROUTE_EREIGNISSE,
   ROUTE_WAHLSCHLIESSUNG,
   ROUTE_WAHLUMGEBUNG,
+  ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
   ROUTE_WAHLVORSTAND,
 } from "@/constants.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";

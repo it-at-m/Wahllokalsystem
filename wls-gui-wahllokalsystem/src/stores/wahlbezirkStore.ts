@@ -88,10 +88,6 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
         waehlerverzeichnisNummer,
         sendNotification
       );
-    } else {
-      console.debug(
-        `sendPflegeWaehlerverzeichnis - es gibt keine waehlerverzeichnisNummer`
-      );
     }
   }
 
@@ -126,10 +122,6 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
       } finally {
         pflegeWaehlerverzeichnisIsSaving.value = false;
       }
-    } else {
-      console.debug(
-        `sendPflegeWaehlerverzeichnis - es gibt keine waehlerverzeichnisNummer`
-      );
     }
   }
 

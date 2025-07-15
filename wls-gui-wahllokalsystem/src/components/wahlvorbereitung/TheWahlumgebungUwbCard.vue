@@ -7,7 +7,9 @@
           ref="wahlurnenForm"
           v-model="anzahlWahlurnenValidForm"
         >
-          <wahlumgebung-wahlurnen :wahl-vorbereitung="urnenwahlVorbereitung" />
+          <base-wahlumgebung-wahlurnen-div
+            :wahl-vorbereitung="urnenwahlVorbereitung"
+          />
           <v-checkbox
             v-model="urnenwahlVorbereitung.urneVersiegelt"
             :label="checkboxLabelText"
@@ -95,7 +97,7 @@ import {
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
-import WahlumgebungWahlurnen from "@/components/wahlvorbereitung/WahlumgebungWahlurnen.vue";
+import BaseWahlumgebungWahlurnenDiv from "@/components/wahlvorbereitung/BaseWahlumgebungWahlurnenDiv.vue";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";

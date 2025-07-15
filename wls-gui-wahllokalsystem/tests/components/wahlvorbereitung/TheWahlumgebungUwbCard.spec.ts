@@ -10,7 +10,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { VNumberInput } from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import WahlumgebungUwbCard from "@/components/wahlvorbereitung/WahlumgebungUwbCard.vue";
+import TheWahlumgebungUwbCard from "@/components/wahlvorbereitung/TheWahlumgebungUwbCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -26,7 +26,7 @@ vi.mock("@/composables/wahl/wahlservice", () => ({
   }),
 }));
 
-describe("WahlumgebungUwbCard.vue", () => {
+describe("TheWahlumgebungUwbCard.vue", () => {
   let wahlenStore: ReturnType<typeof useWahlenStore>;
   let wahlbezirkStore: ReturnType<typeof useWahlbezirkStore>;
   let testPinia: TestingPinia;
@@ -78,7 +78,7 @@ describe("WahlumgebungUwbCard.vue", () => {
       wahlenStore = useWahlenStore(testPinia);
       wahlenStore.wahlen = [];
 
-      const wrapper = mount(WahlumgebungUwbCard, {
+      const wrapper = mount(TheWahlumgebungUwbCard, {
         global: {
           plugins: [testPinia, vuetify],
         },
@@ -99,7 +99,7 @@ describe("WahlumgebungUwbCard.vue", () => {
       wahlenStore.wahlen = validWahlen;
       wahlbezirkStore.urnenwahlVorbereitung = validUrnenwahlVorbereitung;
 
-      const wrapper = mount(WahlumgebungUwbCard, {
+      const wrapper = mount(TheWahlumgebungUwbCard, {
         global: {
           plugins: [testPinia, vuetify],
         },

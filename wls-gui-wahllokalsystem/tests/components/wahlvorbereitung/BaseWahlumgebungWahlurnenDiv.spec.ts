@@ -9,7 +9,7 @@ import { mount } from "@vue/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { VNumberInput } from "vuetify/components";
 
-import WahlumgebungWahlurnen from "@/components/wahlvorbereitung/WahlumgebungWahlurnen.vue";
+import BaseWahlumgebungWahlurnenDiv from "@/components/wahlvorbereitung/BaseWahlumgebungWahlurnenDiv.vue";
 import vuetify from "@/plugins/vuetify.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -22,7 +22,7 @@ vi.mock("@/composables/wahl/wahlservice", () => ({
   }),
 }));
 
-describe("WahlumgebungWahlurnen.vue", () => {
+describe("BaseWahlumgebungWahlurnenDiv.vue", () => {
   let testPinia: TestingPinia;
 
   const twoWahlenBriefwahlVorbereitung = {
@@ -49,7 +49,7 @@ describe("WahlumgebungWahlurnen.vue", () => {
 
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWithZeroInputFields_when_noWahlenAreGiven", async (context) => {
-      const wrapper = mount(WahlumgebungWahlurnen, {
+      const wrapper = mount(BaseWahlumgebungWahlurnenDiv, {
         global: {
           plugins: [testPinia, vuetify],
         },
@@ -66,7 +66,7 @@ describe("WahlumgebungWahlurnen.vue", () => {
     });
 
     it("should_renderWithTwoInputFields_when_TwoWahlenAreGiven", async (context) => {
-      const wrapper = mount(WahlumgebungWahlurnen, {
+      const wrapper = mount(BaseWahlumgebungWahlurnenDiv, {
         global: {
           plugins: [testPinia, vuetify],
         },

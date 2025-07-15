@@ -7,7 +7,9 @@
           ref="wahlurnenForm"
           v-model="anzahlWahlurnenValidForm"
         >
-          <wahlumgebung-wahlurnen :wahl-vorbereitung="briefwahlVorbereitung" />
+          <base-wahlumgebung-wahlurnen-div
+            :wahl-vorbereitung="briefwahlVorbereitung"
+          />
           <v-checkbox
             v-model="briefwahlVorbereitung.urneVersiegelt"
             :label="checkboxLabelText"
@@ -41,7 +43,7 @@ import {
 } from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import WahlumgebungWahlurnen from "@/components/wahlvorbereitung/WahlumgebungWahlurnen.vue";
+import BaseWahlumgebungWahlurnenDiv from "@/components/wahlvorbereitung/BaseWahlumgebungWahlurnenDiv.vue";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 

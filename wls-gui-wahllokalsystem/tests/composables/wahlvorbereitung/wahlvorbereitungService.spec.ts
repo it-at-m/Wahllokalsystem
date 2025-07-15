@@ -285,7 +285,7 @@ describe("wahlvorbereitungService", () => {
 
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [
-          "Fehler beim Laden der Wahlvorbereitung.",
+          "Fehler beim Laden der Briefwahlvorbereitung.",
           UserNotificationCategoryEnum.ERROR,
         ],
       ]);
@@ -306,7 +306,7 @@ describe("wahlvorbereitungService", () => {
 
       expect(mockDefinitions.addNotification.mock.calls).toStrictEqual([
         [
-          "Wahlvorbereitung erfolgreich gespeichert.",
+          "Briefwahlvorbereitung erfolgreich gespeichert.",
           UserNotificationCategoryEnum.SUCCESS,
         ],
       ]);
@@ -336,7 +336,7 @@ describe("wahlvorbereitungService", () => {
 
       expect(mockDefinitions.addNotification.mock.calls).toStrictEqual([
         [
-          "Speichern der Wahlvorbereitung fehlgeschlagen.",
+          "Speichern der Briefwahlvorbereitung fehlgeschlagen.",
           UserNotificationCategoryEnum.ERROR,
         ],
       ]);

@@ -15,7 +15,7 @@
 
     <tbody>
       <tr
-        v-for="(rowIndex, index) in rows"
+        v-for="index in maxRows"
         :key="index"
       >
         <td>
@@ -24,23 +24,25 @@
             class="my-2"
             style="min-width: 250px"
           >
-            {{ index + 1 }}
+            {{ index - 1 }}
             <v-autocomplete
               model-value="tbd - wird berechnet"
               label="Beschlussergebnis"
               class="ml-5"
+              :items="gruendeWahlscheine"
               hide-details
             />
           </v-row>
         </td>
         <td
           v-for="wahl in wahlen"
-          :key="`${wahl.wahlID}-${index}`"
+          :key="`${wahl.wahlID}-${index - 1}`"
         >
+          <!-- todo: man sieht nur schlecht dass man scrollen kann -->
           <v-autocomplete
-            :model-value="_getCellContent(wahl, rowIndex)"
+            :model-value="wahl.beanstandeteWahlbriefe![index - 1]"
             label="Beschlussergebnis"
-            :items="Object.keys(ZurueckweisungsgrundEnum)"
+            :items="gruendeStimmzettel"
             hide-details
           />
         </td>
@@ -54,7 +56,7 @@
             <v-btn
               icon="$delete"
               variant="text"
-              @click="deleteBeanstandeteWahlbriefeRow(rowIndex)"
+              @click="deleteBeanstandeteWahlbriefeRow(index - 1)"
             />
             <v-btn
               icon="$edit"
@@ -68,26 +70,24 @@
 </template>
 
 <script setup lang="ts">
-import type { Wahl } from "@/types/wahl/Wahl.ts";
-
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 import { VAutocomplete, VBtn, VRow, VTable } from "vuetify/components";
 
-import { useBriefwahlStore } from "@/stores/briefwahlStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
+import {
+  gruendeStimmzettel,
+  gruendeWahlscheine,
+} from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 
 const { wahlen } = storeToRefs(useWahlenStore());
-const { rows } = storeToRefs(useBriefwahlStore());
-const { deleteRow } = useBriefwahlStore();
 
-const _getCellContent = (wahl: Wahl, rowIndex: number): string => {
-  if (!wahl.beanstandeteWahlbriefe) return "";
-  const content = wahl.beanstandeteWahlbriefe[rowIndex - 1];
-  console.log(rowIndex + content);
-  return content ? content : "";
-};
+const maxRows = computed(() => {
+  return Math.max(
+    ...wahlen.value!.map((wahl) => wahl.beanstandeteWahlbriefe!.length)
+  );
+});
+
 const getIconForRowStatus = computed(() => {
   // todo: if form valid return check, else return pencil
 });
@@ -98,7 +98,6 @@ const getIconColorForRowStatus = computed(() => {
 // delete row + remove item from beanstandeteWahlbriefeList
 function deleteBeanstandeteWahlbriefeRow(rowIndex: number) {
   wahlen.value!.map((wahl) => wahl.beanstandeteWahlbriefe!.splice(rowIndex, 1));
-  deleteRow();
 }
 </script>
 

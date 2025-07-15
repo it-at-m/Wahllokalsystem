@@ -31,10 +31,8 @@ import {
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheBedenklicherWahlbriefRow from "@/components/wahlvorbereitung/TheBedenklicherWahlbriefRow.vue";
-import { useBriefwahlStore } from "@/stores/briefwahlStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
-const { addRow } = useBriefwahlStore();
 const { wahlen } = storeToRefs(useWahlenStore());
 
 const isSaveButtonDisabled = false; // todo
@@ -42,9 +40,8 @@ const isSaving = false; // todo
 
 // add row + add empty item to beanstandeteWahlbriefeList
 function onAddBedenklicherWahlbriefClicked() {
-  addRow();
   wahlen.value!.map(
-    (wahl) => wahl.beanstandeteWahlbriefe!.push(null) // todo: muss leer sein beim befüllen
+    (wahl) => wahl.beanstandeteWahlbriefe!.push("") // todo: muss leer sein beim befüllen
   );
 }
 

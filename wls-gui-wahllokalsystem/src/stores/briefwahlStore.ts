@@ -16,21 +16,12 @@ export const useBriefwahlStore = defineStore(storeID, () => {
   const { wahlen } = storeToRefs(useWahlenStore());
 
   const beanstandeteWahlbriefe = ref<BeanstandeteWahlbriefe | null>();
-  const rows = ref<number>(0);
 
   async function initBeanstandeteWahlbriefe(waehlerverzeichnisNummer: number) {
     beanstandeteWahlbriefe.value = await getBeanstandeteWahlbriefe(
       waehlerverzeichnisNummer
     );
     await _assignBeanstandeteWahlbriefeToCorrespondingWahl();
-  }
-
-  function addRow() {
-    rows.value++;
-  }
-
-  function deleteRow() {
-    rows.value--;
   }
 
   async function _assignBeanstandeteWahlbriefeToCorrespondingWahl() {
@@ -40,20 +31,13 @@ export const useBriefwahlStore = defineStore(storeID, () => {
           beanstandeteWahlbriefe.value?.beanstandeteWahlbriefe.get(
             wahl.wahlID
           ) ?? undefined;
-
-        if (wahl.beanstandeteWahlbriefe) {
-          rows.value = wahl.beanstandeteWahlbriefe.length;
-        }
       }
     }
   }
 
   return {
     beanstandeteWahlbriefe,
-    rows,
     initBeanstandeteWahlbriefe,
-    addRow,
-    deleteRow,
   };
 });
 

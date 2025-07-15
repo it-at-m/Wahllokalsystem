@@ -107,9 +107,7 @@ describe("TheEreignisseRow.vue", () => {
             .withUhrzeit(date)
             .withBeschreibung(`Vorfall Nr.: ${i}`)
         );
-        console.log(date);
       }
-      console.log(ereigniseintraege);
 
       ereignisStore.wahlbezirkEreignisse.ereigniseintraege = ereigniseintraege;
 

@@ -34,7 +34,7 @@ const onDateChanged = (newDate: string) => {
   }
 };
 
-const getFormattedValue = (date: any) => {
+const getFormattedValue = (date: Date) => {
   if (!date) return "";
 
   const correctedDate = new Date(

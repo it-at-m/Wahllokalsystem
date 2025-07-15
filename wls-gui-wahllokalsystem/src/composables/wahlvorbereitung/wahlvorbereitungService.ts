@@ -185,7 +185,7 @@ export function useWahlvorbereitungService() {
       );
     } catch (error) {
       userNotificationService.addNotification(
-        "Speichern der Wahlvorbereitung fehlgeschlagen.",
+        "Speichern der Briefwahlvorbereitung fehlgeschlagen.",
         UserNotificationCategoryEnum.ERROR
       );
       throw error;

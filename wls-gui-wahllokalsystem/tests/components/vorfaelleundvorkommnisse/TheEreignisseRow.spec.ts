@@ -78,7 +78,7 @@ describe("TheEreignisseRow.vue", () => {
       const ereignisStore = useEreignisStore();
       const ereigniseintraege = [] as Ereignis[];
 
-      const date = new Date();
+      const date = new Date(2025, 6, 4);
       date.setHours(12, 15);
       ereigniseintraege.push(
         EreignisBuilder.createComplete()
@@ -100,14 +100,16 @@ describe("TheEreignisseRow.vue", () => {
 
       const ereigniseintraege = [] as Ereignis[];
       for (let i = 1; i < 6; i++) {
-        const date = new Date(Date.UTC(2025, 6, 4));
+        const date = new Date(2025, 6, 4);
         date.setHours(i, 15);
         ereigniseintraege.push(
           EreignisBuilder.createComplete()
             .withUhrzeit(date)
             .withBeschreibung(`Vorfall Nr.: ${i}`)
         );
+        console.log(date);
       }
+      console.log(ereigniseintraege);
 
       ereignisStore.wahlbezirkEreignisse.ereigniseintraege = ereigniseintraege;
 
@@ -121,7 +123,7 @@ describe("TheEreignisseRow.vue", () => {
       const ereignisStore = useEreignisStore();
       const ereigniseintraege = [] as Ereignis[];
 
-      const date = new Date();
+      const date = new Date(2025, 6, 4);
       date.setHours(12, 0);
       ereigniseintraege.push(
         EreignisBuilder.createComplete().withUhrzeit(date).withBeschreibung(``)
@@ -147,7 +149,7 @@ describe("TheEreignisseRow.vue", () => {
       const ereignisStore = useEreignisStore();
       const ereigniseintraege = [] as Ereignis[];
 
-      const date = new Date();
+      const date = new Date(2025, 6, 4);
       date.setHours(12, 0);
       ereigniseintraege.push(
         EreignisBuilder.createComplete()
@@ -177,7 +179,7 @@ describe("TheEreignisseRow.vue", () => {
       const ereignisStore = useEreignisStore();
       const ereigniseintraege = [] as Ereignis[];
 
-      const date = new Date();
+      const date = new Date(2025, 6, 4);
       date.setHours(12, 0);
       ereigniseintraege.push(
         EreignisBuilder.createComplete()
@@ -212,7 +214,7 @@ describe("TheEreignisseRow.vue", () => {
 
       const ereigniseintraege = [] as Ereignis[];
       for (let i = 1; i < 6; i++) {
-        const date = new Date();
+        const date = new Date(2025, 6, 4);
         date.setHours(i, 10);
         date.setFullYear(2025, 7, 30);
         ereigniseintraege.push(
@@ -230,7 +232,7 @@ describe("TheEreignisseRow.vue", () => {
       const firstEreignisTimeinput = wrapper.findAllComponents(
         '[data-test="baseTimeInput"]'
       )[indexOfTimeInputForChange];
-      const newValue = new Date();
+      const newValue = new Date(2025, 6, 8);
       await firstEreignisTimeinput.setValue(newValue);
 
       expect(ereignisStore.updateUhrzeitByIndex).toHaveBeenCalledWith(
@@ -245,7 +247,7 @@ describe("TheEreignisseRow.vue", () => {
 
       const ereigniseintraege = [] as Ereignis[];
       for (let i = 1; i < 6; i++) {
-        const date = new Date();
+        const date = new Date(2025, 6, 4);
         date.setHours(1, 10);
         date.setFullYear(2025, 12, i);
         ereigniseintraege.push(
@@ -263,7 +265,7 @@ describe("TheEreignisseRow.vue", () => {
       const firstEreignisTimeinput = wrapper.findAllComponents(
         '[data-test="baseDateInput"]'
       )[indexOfTimeInputForChange];
-      const newValue = new Date();
+      const newValue = new Date(2025, 6, 8);
       await firstEreignisTimeinput.setValue(newValue);
 
       expect(ereignisStore.updateUhrzeitByIndex).toHaveBeenCalledWith(

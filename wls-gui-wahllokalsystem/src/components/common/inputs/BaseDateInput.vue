@@ -1,6 +1,6 @@
 <template>
   <v-text-field
-    :model-value="modelValue?.toISOString().split('T')[0]"
+    :model-value="getFormattedValue(modelValue)"
     :rules="[DATE_REQUIRED]"
     label="Datum"
     type="date"
@@ -32,5 +32,14 @@ const onDateChanged = (newDate: string) => {
   if (updatedDate) {
     emit("update:model-value", updatedDate);
   }
+};
+
+const getFormattedValue = (date: any) => {
+  if (!date) return "";
+
+  const correctedDate = new Date(
+    date.getTime() - date.getTimezoneOffset() * 60000
+  );
+  return correctedDate.toISOString().split("T")[0];
 };
 </script>

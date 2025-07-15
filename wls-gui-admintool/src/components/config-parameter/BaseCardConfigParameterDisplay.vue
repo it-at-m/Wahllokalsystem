@@ -16,7 +16,7 @@
       <v-btn
         class="v-button"
         icon="$edit"
-        @click="onConfirmEdit"
+        @click="onConfigParameterEditConfirmed"
         data-test="confirm-edit-button"
       />
     </v-card-text>
@@ -42,7 +42,7 @@ const emit = defineEmits<{
 }>();
 
 //Payload
-function onConfirmEdit() {
+function onConfigParameterEditConfirmed() {
   emit("confirmEdit", props.configParameter.name);
 }
 </script>

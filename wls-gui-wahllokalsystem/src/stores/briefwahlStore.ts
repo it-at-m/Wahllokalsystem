@@ -36,7 +36,6 @@ export const useBriefwahlStore = defineStore(storeID, () => {
   }
 
   return {
-    beanstandeteWahlbriefe,
     initBeanstandeteWahlbriefe,
   };
 });

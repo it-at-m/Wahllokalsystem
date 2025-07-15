@@ -83,6 +83,7 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import {
   gruendeStimmzettel,
   gruendeWahlscheine,
+  stringToEnumValue,
 } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 
 const { wahlen } = storeToRefs(useWahlenStore());
@@ -107,7 +108,7 @@ function onZulassungsgrundChanged(
   rowIndex: number
 ) {
   const wahl = getWahlOrUndefinedById(column.wahlID);
-  wahl!.beanstandeteWahlbriefe![rowIndex] = newValue;
+  wahl!.beanstandeteWahlbriefe![rowIndex] = stringToEnumValue(newValue);
 }
 
 // delete row + remove item from beanstandeteWahlbriefeList

@@ -31,3 +31,15 @@ export const gruendeStimmzettel: ZurueckweisungsgrundEnum[] = Object.values(
     value !== ZurueckweisungsgrundEnum.KeinOriginalSchein &&
     value !== ZurueckweisungsgrundEnum.UnterschriftFehlt
 );
+
+export function stringToEnumValue(value: string): ZurueckweisungsgrundEnum {
+  const enumValue = Object.values(ZurueckweisungsgrundEnum).find(
+    (grund) => grund === value
+  );
+
+  if (enumValue) {
+    return enumValue;
+  } else {
+    throw new Error("Ungültiger Zurückweisungsgrund");
+  }
+}

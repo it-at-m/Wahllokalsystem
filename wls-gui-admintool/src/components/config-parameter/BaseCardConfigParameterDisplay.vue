@@ -48,7 +48,6 @@ function onConfigParameterEditConfirmed() {
 </script>
 
 <style scoped>
-
 .card:hover {
   background-color: #f1f1f1;
 }

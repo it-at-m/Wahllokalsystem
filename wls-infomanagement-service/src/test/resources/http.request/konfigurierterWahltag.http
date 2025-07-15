@@ -10,19 +10,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 GET {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurierteWahltage
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### post konfigurierter Wahltag | user wls_all_uwb
-POST {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurierterWahltag
-Authorization: Bearer {{$auth.token("auth-service")}}
-Content-Type: application/json
-
-{
-  "wahltag": "2026-01-01",
-  "wahltagID": "4526485e-2a3f-43d6-bd57-d0a58fc330cb",
-  "wahltagStatus": "AKTIV",
-  "nummer": "nummer"
-}
-
-### POST konfigurierter Wahltag | user wls_all_bwb
+### POST konfigurierter Wahltag | user wls_all_bwb + wls_all_uwb
 POST {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurierterWahltag
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json

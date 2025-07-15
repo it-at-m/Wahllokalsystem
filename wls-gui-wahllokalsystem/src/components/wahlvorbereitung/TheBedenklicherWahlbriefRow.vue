@@ -44,6 +44,9 @@
             label="Beschlussergebnis"
             :items="gruendeStimmzettel"
             hide-details
+            @update:model-value="
+              (value) => onZulassungsgrundChanged(wahl, value, index - 1)
+            "
           />
         </td>
         <td>
@@ -70,6 +73,8 @@
 </template>
 
 <script setup lang="ts">
+import type { Wahl } from "@/types/wahl/Wahl.ts";
+
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 import { VAutocomplete, VBtn, VRow, VTable } from "vuetify/components";
@@ -81,6 +86,7 @@ import {
 } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 
 const { wahlen } = storeToRefs(useWahlenStore());
+const { getWahlOrUndefinedById } = useWahlenStore();
 
 const maxRows = computed(() => {
   return Math.max(
@@ -94,6 +100,15 @@ const getIconForRowStatus = computed(() => {
 const getIconColorForRowStatus = computed(() => {
   // todo: if icon is check return green, if is pencil return orange
 });
+
+function onZulassungsgrundChanged(
+  column: Wahl,
+  newValue: string,
+  rowIndex: number
+) {
+  const wahl = getWahlOrUndefinedById(column.wahlID);
+  wahl!.beanstandeteWahlbriefe![rowIndex] = newValue;
+}
 
 // delete row + remove item from beanstandeteWahlbriefeList
 function deleteBeanstandeteWahlbriefeRow(rowIndex: number) {

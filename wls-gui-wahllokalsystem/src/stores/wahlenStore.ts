@@ -23,21 +23,21 @@ export const useWahlenStore = defineStore(storeID, () => {
   }
 
   function getWahlNameOrBlankStringById(wahlID: string) {
-    const wahl = _getWahlOrUndefinedById(wahlID);
+    const wahl = getWahlOrUndefinedById(wahlID);
     return wahl ? wahl.name : "";
   }
 
   function getWahlTagOrBlankStringById(wahlID: string) {
-    const wahl = _getWahlOrUndefinedById(wahlID);
+    const wahl = getWahlOrUndefinedById(wahlID);
     return wahl ? wahl.wahltag : "";
   }
 
   function getWaehlerverzeichnisnummerOrUndefinedById(wahlID: string) {
-    const wahl = _getWahlOrUndefinedById(wahlID);
+    const wahl = getWahlOrUndefinedById(wahlID);
     return wahl ? wahl.waehlerverzeichnisNummer : undefined;
   }
 
-  function _getWahlOrUndefinedById(wahlID: string) {
+  function getWahlOrUndefinedById(wahlID: string) {
     return wahlen.value
       ? wahlen.value.find((wahl) => wahl.wahlID === wahlID)
       : undefined;
@@ -45,6 +45,7 @@ export const useWahlenStore = defineStore(storeID, () => {
 
   return {
     wahlen,
+    getWahlOrUndefinedById,
     getWahlNameOrBlankStringById,
     getWahlTagOrBlankStringById,
     getWaehlerverzeichnisnummerOrUndefinedById,

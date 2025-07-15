@@ -25,12 +25,14 @@
             style="min-width: 250px"
           >
             {{ index - 1 }}
+            <!-- todo v-model="beschlussergebnis[index - 1]"  -->
             <v-autocomplete
               model-value="tbd - wird berechnet"
               label="Beschlussergebnis"
               class="ml-5"
               :items="gruendeWahlscheine"
               hide-details
+              :rules="[REQUIRED]"
             />
           </v-row>
         </td>
@@ -44,6 +46,7 @@
             label="Beschlussergebnis"
             :items="gruendeStimmzettel"
             hide-details
+            :rules="[REQUIRED]"
             @update:model-value="
               (value) => onZulassungsgrundChanged(wahl, value, index - 1)
             "
@@ -61,9 +64,10 @@
               variant="text"
               @click="deleteBeanstandeteWahlbriefeRow(index - 1)"
             />
-            <v-btn
-              icon="$edit"
+            <v-icon
+              :icon="rowIcon[index - 1]"
               variant="text"
+              :color="rowColor[index - 1]"
             />
           </v-row>
         </td>
@@ -76,8 +80,8 @@
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
-import { VAutocomplete, VBtn, VRow, VTable } from "vuetify/components";
+import { computed, onMounted, ref, watch } from "vue";
+import { VAutocomplete, VBtn, VIcon, VRow, VTable } from "vuetify/components";
 
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import {
@@ -85,6 +89,7 @@ import {
   gruendeWahlscheine,
   stringToEnumValue,
 } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
+import { REQUIRED } from "@/util/rules.ts";
 
 const { wahlen } = storeToRefs(useWahlenStore());
 const { getWahlOrUndefinedById } = useWahlenStore();
@@ -95,11 +100,23 @@ const maxRows = computed(() => {
   );
 });
 
-const getIconForRowStatus = computed(() => {
-  // todo: if form valid return check, else return pencil
+const rowIcon = ref<string[]>([]);
+const rowColor = ref<string[]>([]);
+
+onMounted(() => {
+  for (const row of Array.from({ length: maxRows.value }, (_, i) => i)) {
+    // (_, i) => i wandelt jedes Element in seinen Index um
+    rowIcon.value[row] = _isRowValidAtIndex(row).value ? "$check" : "$edit";
+    rowColor.value[row] = _isRowValidAtIndex(row).value ? "success" : "error";
+  }
 });
-const getIconColorForRowStatus = computed(() => {
-  // todo: if icon is check return green, if is pencil return orange
+
+watch(maxRows, (newValue, oldValue) => {
+  if (oldValue < newValue) {
+    // row added
+    rowIcon.value.push("$edit");
+    rowColor.value.push("error");
+  }
 });
 
 function onZulassungsgrundChanged(
@@ -109,11 +126,32 @@ function onZulassungsgrundChanged(
 ) {
   const wahl = getWahlOrUndefinedById(column.wahlID);
   wahl!.beanstandeteWahlbriefe![rowIndex] = stringToEnumValue(newValue);
+
+  rowIcon.value[rowIndex] = _isRowValidAtIndex(rowIndex).value
+    ? "$check"
+    : "$edit";
+  rowColor.value[rowIndex] = _isRowValidAtIndex(rowIndex).value
+    ? "success"
+    : "error";
 }
 
 // delete row + remove item from beanstandeteWahlbriefeList
 function deleteBeanstandeteWahlbriefeRow(rowIndex: number) {
   wahlen.value!.map((wahl) => wahl.beanstandeteWahlbriefe!.splice(rowIndex, 1));
+  rowIcon.value.splice(rowIndex, 1);
+  rowColor.value.splice(rowIndex, 1);
+}
+
+function _isRowValidAtIndex(rowIndex: number) {
+  // todo wahlschein spalte auch noch checken
+  return computed(() => {
+    return wahlen.value!.every(
+      (wahl) =>
+        wahl.beanstandeteWahlbriefe &&
+        wahl.beanstandeteWahlbriefe[rowIndex] &&
+        !!wahl.beanstandeteWahlbriefe[rowIndex]
+    );
+  });
 }
 </script>
 

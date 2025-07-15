@@ -159,7 +159,7 @@ export function useWahlvorbereitungService() {
         .then((response) => toBriefwahlvorbereitungModel(response.data));
     } catch (error) {
       userNotificationService.addNotification(
-        "Fehler beim Laden der Wahlvorbereitung.",
+        "Fehler beim Laden der Briefwahlvorbereitung.",
         UserNotificationCategoryEnum.ERROR
       );
       throw error;

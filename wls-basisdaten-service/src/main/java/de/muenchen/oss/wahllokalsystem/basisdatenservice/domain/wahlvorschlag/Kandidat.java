@@ -34,7 +34,6 @@ public class Kandidat {
     @JdbcTypeCode(VARCHAR)
     private UUID id;
 
-    @NaturalId
     @NotNull
     @ToString.Include
     private String identifikator;

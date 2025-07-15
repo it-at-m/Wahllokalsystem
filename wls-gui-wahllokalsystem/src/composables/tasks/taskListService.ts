@@ -3,6 +3,7 @@ import type { Task } from "@/types/tasks/Task.ts";
 import { storeToRefs } from "pinia";
 
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
+import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -15,6 +16,7 @@ export function useTaskListService() {
   const { initKonfigurationsparameter } = useInfomanagementStore();
   const { initWahlvorstand } = useWahlvorstandStore();
   const { initUngueltigeWahlscheine } = useWahlbezirkStore();
+  const { initKopfdaten } = useKopfdatenStore();
   const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
 
   const matchingWahlbezirkArt = (task: Task) =>
@@ -70,6 +72,15 @@ export function useTaskListService() {
       ],
       onlyForAllWVaehlerverzeichnisse: undefined,
       callback: () => initUngueltigeWahlscheine(false),
+    },
+    {
+      name: "Kopfdaten",
+      onlyForWahlbezirksart: undefined,
+      onlyForWahlen: undefined,
+      onlyForAllWVaehlerverzeichnisse: undefined,
+      callback: () => {
+        return initKopfdaten();
+      },
     },
   ];
 

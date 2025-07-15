@@ -5,8 +5,9 @@ import {
 } from "@tests/utils/testutils.ts";
 import { mount, VueWrapper } from "@vue/test-utils";
 import { beforeEach, describe, expect, it } from "vitest";
-import vuetify from "@/plugins/vuetify.ts";
+
 import BaseCardConfigParameterDisplay from "@/components/config-parameter/BaseCardConfigParameterDisplay.vue";
+import vuetify from "@/plugins/vuetify.ts";
 import { InfomanagementConfigParameter } from "@/types/config/InfomanagementConfigParameter.ts";
 
 // Testdaten für Event
@@ -21,7 +22,7 @@ const configParameter: InfomanagementConfigParameter[] = [
 
 describe("BaseCardConfigParameterDisplay.vue", () => {
   let wrapper: VueWrapper<typeof BaseCardConfigParameterDisplay>;
-  const mountComponent = (config: InfomanagementConfigParameter) => {
+  const mountComponent = (config: InfomanagementConfigParameter[]) => {
     wrapper = mount(BaseCardConfigParameterDisplay, {
       props: { configParameter: config[0] },
       global: { plugins: [vuetify] },
@@ -50,10 +51,9 @@ describe("BaseCardConfigParameterDisplay.vue", () => {
       // Button per data-test selektieren
       const button = wrapper.find('[data-test="confirm-edit-button"]');
       await button.trigger("click");
-      expect(wrapper.emitted()).toHaveProperty("confirmEdit");
-      expect(wrapper.emitted("confirmEdit")![0]).toEqual([configParameter[0].name]);
+      const emitted = wrapper.emitted("confirmEdit");
+      expect(emitted).toBeDefined();
+      expect(emitted?.[0]?.[0]).toBe(configParameter[0].name);
     });
   });
 });
-
-

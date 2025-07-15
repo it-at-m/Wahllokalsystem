@@ -180,7 +180,7 @@ export function useWahlvorbereitungService() {
         briefwahlvorbereitungWriteDTO
       );
       userNotificationService.addNotification(
-        "Wahlvorbereitung erfolgreich gespeichert.",
+        "Briefwahlvorbereitung erfolgreich gespeichert.",
         UserNotificationCategoryEnum.SUCCESS
       );
     } catch (error) {

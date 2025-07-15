@@ -24,12 +24,12 @@ export function useWaehlerverzeichnisMapper() {
   ): PflegeWaehlerverzeichnis {
     return {
       waehlerverzeichnisUnchanged:
-        waehlerverzeichnisDTO.verzeichnisLagVor ?? true,
+        waehlerverzeichnisDTO.verzeichnisLagVor ?? false,
       nachtraeglicheBerichtigung:
         waehlerverzeichnisDTO.nachtraeglicheBerichtigung ?? false,
       mitteilungUeberUngueltigeWahlscheineErhalten:
         waehlerverzeichnisDTO.mitteilungUeberUngueltigeWahlscheineErhalten ??
-        true,
+        false,
     };
   }
   return { toPflegeWaehlerverzeichnis, toWaehlerverzeichnisWriteDTO };

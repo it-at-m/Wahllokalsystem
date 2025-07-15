@@ -22,7 +22,7 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Setup git user
-        uses: fregante/setup-git-user@v2
+        uses: fregante/setup-git-user@024bc0b8e177d7e77203b48dab6fb45666854b35 # v2.0.2
       - name: Install Java and Maven
         uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
         with:
@@ -63,7 +63,7 @@ jobs:
 
       - name: Create GitHub Release
         id: create_release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8 # v2.3.2
         with:
           files: "${{ github.event.inputs.service }}/target/*.jar\n${{ github.event.inputs.service }}/target/openapi.json"
           tag_name: ${{ github.event.inputs.service }}/${{ github.event.inputs.release-version }}

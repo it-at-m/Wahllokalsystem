@@ -7,6 +7,7 @@ import {
   ROUTE_EREIGNISSE,
   ROUTE_WAHLSCHLIESSUNG,
   ROUTE_WAHLUMGEBUNG,
+  ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
 } from "@/constants";
@@ -14,6 +15,7 @@ import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import EreignisseView from "@/views/EreignisseView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
 import HomeView from "@/views/HomeView.vue";
+import WaehlerverzeichnisView from "@/views/wahlvorbereitung/WaehlerverzeichnisView.vue";
 import WahleroeffnungView from "@/views/wahlvorbereitung/WahleroeffnungView.vue";
 import WahlschliessungView from "@/views/wahlvorbereitung/WahlschliessungView.vue";
 import WahlumgebungView from "@/views/wahlvorbereitung/WahlumgebungView.vue";
@@ -46,6 +48,11 @@ const routes = [
     path: "/beginnStimmabgabe",
     name: ROUTE_BEGINN_STIMMABGABE,
     component: WahleroeffnungView,
+  },
+  {
+    path: "/waehlerverzeichnis",
+    name: ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
+    component: WaehlerverzeichnisView,
   },
   {
     path: "/ereignisse",

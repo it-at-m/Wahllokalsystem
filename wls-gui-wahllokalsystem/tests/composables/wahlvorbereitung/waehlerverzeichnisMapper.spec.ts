@@ -1,4 +1,7 @@
-import type { WaehlerverzeichnisWriteDTO } from "@/api/wls-clients/generated-wahlvorbereitung-api";
+import type {
+  WaehlerverzeichnisDTO,
+  WaehlerverzeichnisWriteDTO,
+} from "@/api/wls-clients/generated-wahlvorbereitung-api";
 import type { PflegeWaehlerverzeichnis } from "@/types/wahlbezirk/PflegeWaehlerverzeichnis.ts";
 
 import { usePflegeWaehlerverzeichnisTestDataFactory } from "@tests/utils/wahlvorbereitung/PflegeWaehlerverzeichnisTestDataFactory.ts";
@@ -46,6 +49,24 @@ describe("waehlverzeichnisMapper.ts", () => {
           dtoToMap.nachtraeglicheBerichtigung === true,
         mitteilungUeberUngueltigeWahlscheineErhalten:
           dtoToMap.mitteilungUeberUngueltigeWahlscheineErhalten === true,
+      };
+      expect(result).toStrictEqual(expectedResult);
+    });
+
+    it("should_useFalse_when_sourceValueIsUndefined", () => {
+      const dtoToMap: WaehlerverzeichnisDTO = {
+        bezirkIDUndWaehlerverzeichnisNummer: {
+          waehlerverzeichnisNummer: 1,
+          wahlbezirkID: "wahlbezrikID",
+        },
+      };
+
+      const result = unitUnderTest.toPflegeWaehlerverzeichnis(dtoToMap);
+
+      const expectedResult: PflegeWaehlerverzeichnis = {
+        waehlerverzeichnisUnchanged: false,
+        mitteilungUeberUngueltigeWahlscheineErhalten: false,
+        nachtraeglicheBerichtigung: false,
       };
       expect(result).toStrictEqual(expectedResult);
     });

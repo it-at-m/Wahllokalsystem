@@ -90,7 +90,7 @@ describe("TheWahlumgebungBwbCard.vue", () => {
       );
     });
 
-    it("should_renderWithTwoInputFieldsAndDisabledSaveButton_when_twoWahlenAreGiven", async (context) => {
+    it("should_renderWithTwoInputFieldsAndDisabledSaveButton_when_twoWahlenAreGivenAndInputsAreEmpty", async (context) => {
       wahlbezirkStore = useWahlbezirkStore(testPinia);
       wahlenStore = useWahlenStore(testPinia);
       wahlenStore.wahlen = validWahlen;

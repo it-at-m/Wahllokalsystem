@@ -21,11 +21,6 @@ const meta: Meta<typeof BaseCardConfigParameterDisplay> = {
         category: "Events",
       },
     },
-    confirmEdit: {
-      table: {
-        disable: true,
-      },
-    },
   },
   args: {
     configParameter: {

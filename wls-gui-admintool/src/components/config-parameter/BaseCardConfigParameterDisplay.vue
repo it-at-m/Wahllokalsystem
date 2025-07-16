@@ -4,7 +4,7 @@
     :title="configParameter.name"
     :subtitle="configParameter?.beschreibung"
   >
-    <hr >
+    <v-divider class="card-divider" />
     <v-card-text class="card-content">
       <v-card-actions class="card-action">
         <div class="card-wert">
@@ -27,7 +27,13 @@ import type { InfomanagementConfigParameter } from "@/types/config/Infomanagemen
 import type { PropType } from "vue";
 
 import { defineEmits, defineProps } from "vue";
-import { VBtn, VCard, VCardActions, VCardText } from "vuetify/components";
+import {
+  VBtn,
+  VCard,
+  VCardActions,
+  VCardText,
+  VDivider,
+} from "vuetify/components";
 
 const props = defineProps({
   configParameter: {
@@ -36,9 +42,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits<{
-  confirmEdit: InfomanagementConfigParameter; // confirmEdit erwartet ein InfomanagementConfigParameter Objekt
-}>();
+const emit = defineEmits<(event: "confirmEdit", name: string) => void>(); // confirmEdit erwartet ein String "Name"
 
 //Payload
 function onConfigParameterEditConfirmed() {
@@ -58,8 +62,10 @@ function onConfigParameterEditConfirmed() {
   display: inline-flex;
 }
 
-hr {
-  border-top: 1px solid #333333;
+.card-divider {
+  border: 1px solid#333333;
+  display: block;
+  opacity: 0.2;
 }
 
 .v-button {

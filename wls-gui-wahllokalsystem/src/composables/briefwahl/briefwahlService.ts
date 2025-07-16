@@ -7,7 +7,6 @@ import {
 import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts";
 import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
 import { BRIEFWAHL_SERVICE_API_URL } from "@/constants.ts";
-import { useUserStore } from "@/stores/userStore.ts";
 
 const { toModel } = useBeanstandeteWahlbriefeMapper();
 const { getNullOn204OrElseResponseData } = useCommonApiUtils();
@@ -18,13 +17,14 @@ export function useBriefwahlService() {
       new Configuration({ basePath: BRIEFWAHL_SERVICE_API_URL })
     );
 
-  const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
-
-  async function getBeanstandeteWahlbriefe(waehlerverzeichnisNummer: number) {
+  async function getBeanstandeteWahlbriefe(
+    waehlerverzeichnisNummer: number,
+    wahlbezirkID: string
+  ) {
     try {
       const response =
         await beanstandeteWahlbriefeControllerAPI.getBeanstandeteWahlbriefe(
-          currentUserWahlbezirkID.value,
+          wahlbezirkID,
           waehlerverzeichnisNummer
         );
       const responseData = getNullOn204OrElseResponseData(response);

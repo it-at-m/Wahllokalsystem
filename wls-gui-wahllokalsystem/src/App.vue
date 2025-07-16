@@ -25,7 +25,6 @@ import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadc
 import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
-import { useBriefwahlStore } from "@/stores/briefwahlStore.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
@@ -37,8 +36,10 @@ const { loadUser } = useUserStore();
 const { initTasks } = useTaskManagerStore();
 const { loadWaehler } = useMonitoringStore();
 const { wahlen } = storeToRefs(useWahlenStore());
-const { getWaehlerverzeichnisnummerOrUndefinedById } = useWahlenStore();
-const { initBeanstandeteWahlbriefe } = useBriefwahlStore();
+const {
+  getWaehlerverzeichnisnummerOrUndefinedById,
+  initBeanstandeteWahlbriefe,
+} = useWahlenStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();

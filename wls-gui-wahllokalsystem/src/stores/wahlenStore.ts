@@ -3,16 +3,19 @@ import type { Wahl } from "@/types/wahl/Wahl.ts";
 import { defineStore, storeToRefs } from "pinia";
 import { ref } from "vue";
 
+import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useWahlService } from "@/composables/wahl/wahlService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 export const storeID = "wahlen";
 const wahlenService = useWahlService();
+const briefwahlService = useBriefwahlService();
 const { registerStoreHMR } = useHmrUpdate();
 
 export const useWahlenStore = defineStore(storeID, () => {
-  const { currentUserWahltagID } = storeToRefs(useUserStore());
+  const { currentUserWahltagID, currentUserWahlbezirkID } =
+    storeToRefs(useUserStore());
   const wahlen = ref<Wahl[] | null>();
 
   async function initWahlen(sendNotification = true) {
@@ -20,6 +23,21 @@ export const useWahlenStore = defineStore(storeID, () => {
       currentUserWahltagID.value,
       sendNotification
     );
+  }
+
+  async function initBeanstandeteWahlbriefe(waehlerverzeichnisNummer: number) {
+    const beanstandeteWahlbriefe =
+      await briefwahlService.getBeanstandeteWahlbriefe(
+        waehlerverzeichnisNummer,
+        currentUserWahlbezirkID.value
+      );
+    if (wahlen.value && beanstandeteWahlbriefe) {
+      for (const wahl of wahlen.value) {
+        wahl.beanstandeteWahlbriefe =
+          beanstandeteWahlbriefe.beanstandeteWahlbriefe.get(wahl.wahlID) ??
+          undefined;
+      }
+    }
   }
 
   function getWahlNameOrBlankStringById(wahlID: string) {
@@ -50,6 +68,7 @@ export const useWahlenStore = defineStore(storeID, () => {
     getWahlTagOrBlankStringById,
     getWaehlerverzeichnisnummerOrUndefinedById,
     initWahlen,
+    initBeanstandeteWahlbriefe,
   };
 });
 

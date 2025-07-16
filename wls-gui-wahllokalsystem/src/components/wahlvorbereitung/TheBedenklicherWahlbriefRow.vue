@@ -31,6 +31,7 @@
               class="ml-5"
               :items="gruendeWahlscheine"
               hide-details
+              auto-select-first
               :rules="[REQUIRED]"
               @update:model-value="
                 (value) => onZulassungsgrundChanged(value, index - 1)
@@ -48,6 +49,7 @@
             label="Beschlussergebnis"
             :items="gruendeStimmzettel"
             hide-details
+            auto-select-first
             :rules="[REQUIRED]"
             @update:model-value="
               (value) => onZulassungsgrundChanged(value, index - 1, wahl)

@@ -157,30 +157,30 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     }
   }
 
-  async function sendUrnenwahlvorbereitung(
-    urnenwahlvorbereitung: Urnenwahlvorbereitung
-  ) {
+  async function sendUrnenwahlvorbereitung() {
     const wahlbezirkID = currentUserWahlbezirkID.value;
     urnenWahlVorbereitungIsSaving.value = true;
     try {
       if (wahlbezirkID) {
-        await postUrnenwahlvorbereitung(wahlbezirkID, urnenwahlvorbereitung);
-        urnenwahlVorbereitung.value = urnenwahlvorbereitung;
+        await postUrnenwahlvorbereitung(
+          wahlbezirkID,
+          urnenwahlVorbereitung.value
+        );
       }
     } finally {
       urnenWahlVorbereitungIsSaving.value = false;
     }
   }
 
-  async function sendBriefwahlvorbereitung(
-    briefwahlvorbereitung: Wahlvorbereitung
-  ) {
+  async function sendBriefwahlvorbereitung() {
     const wahlbezirkID = currentUserWahlbezirkID.value;
     briefWahlVorbereitungIsSaving.value = true;
     try {
       if (wahlbezirkID) {
-        await postBriefwahlvorbereitung(wahlbezirkID, briefwahlvorbereitung);
-        briefwahlVorbereitung.value = briefwahlvorbereitung;
+        await postBriefwahlvorbereitung(
+          wahlbezirkID,
+          briefwahlVorbereitung.value
+        );
       }
     } finally {
       briefWahlVorbereitungIsSaving.value = false;

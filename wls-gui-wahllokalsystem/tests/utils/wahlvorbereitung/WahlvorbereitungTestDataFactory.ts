@@ -11,7 +11,12 @@ import type { Wahlvorbereitung } from "@/types/wahlvorbereitung/Wahlvorbereitung
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
-const { generateRandomDateTimeAsString } = useCommonTestDataFactory();
+const {
+  generateRandomDateTimeAsString,
+  generateRandomString,
+  generateRandomNumberInRange,
+  generateRandomBoolean,
+} = useCommonTestDataFactory();
 
 export function useWahlvorbereitungTestDataFactory() {
   function createEroeffnungsUhrzeitWriteDTO(): EroeffnungsUhrzeitWriteDTO {
@@ -22,45 +27,45 @@ export function useWahlvorbereitungTestDataFactory() {
 
   function createUrnenwahlvorbereitungWriteDTO(): UrnenwahlvorbereitungWriteDTO {
     return {
-      anzahlWahlkabinen: 1,
-      anzahlWahltische: 1,
-      anzahlNebenraeume: 1,
+      anzahlWahlkabinen: generateRandomNumberInRange(1, 10),
+      anzahlWahltische: generateRandomNumberInRange(1, 10),
+      anzahlNebenraeume: generateRandomNumberInRange(1, 10),
       urnenAnzahl: _generateWahlurneDTOArray(),
     };
   }
 
   function createUrnenwahlvorbereitungDTO(): UrnenwahlvorbereitungDTO {
     return {
-      wahlbezirkID: "wahlbezirkID1",
-      anzahlWahlkabinen: 1,
-      anzahlWahltische: 1,
-      anzahlNebenraeume: 1,
+      wahlbezirkID: generateRandomString(10),
+      anzahlWahlkabinen: generateRandomNumberInRange(1, 10),
+      anzahlWahltische: generateRandomNumberInRange(1, 10),
+      anzahlNebenraeume: generateRandomNumberInRange(1, 10),
       urnenAnzahl: _generateWahlurneDTOArray(),
     };
   }
 
   function createUrnenwahlvorbereitung(): Urnenwahlvorbereitung {
     return {
-      wahlbezirkID: "wahlbezirkID1",
-      anzahlWahlkabinen: 1,
-      anzahlWahltische: 1,
-      anzahlNebenraeume: 1,
-      urneVersiegelt: true,
+      wahlbezirkID: generateRandomString(10),
+      anzahlWahlkabinen: generateRandomNumberInRange(1, 10),
+      anzahlWahltische: generateRandomNumberInRange(1, 10),
+      anzahlNebenraeume: generateRandomNumberInRange(1, 10),
+      urneVersiegelt: generateRandomBoolean(),
       urnenAnzahl: _generateWahlurneArray(),
     };
   }
 
   function createWahlvorbereitung(): Wahlvorbereitung {
     return {
-      wahlbezirkID: "wahlbezirkID1",
-      urneVersiegelt: true,
+      wahlbezirkID: generateRandomString(10),
+      urneVersiegelt: generateRandomBoolean(),
       urnenAnzahl: _generateWahlurneArray(),
     };
   }
 
   function createBriefwahlvorbereitungDTO(): BriefwahlvorbereitungDTO {
     return {
-      wahlbezirkID: "wahlbezirkID1",
+      wahlbezirkID: generateRandomString(10),
       urnenAnzahl: _generateWahlurneDTOArray(),
     };
   }
@@ -68,8 +73,8 @@ export function useWahlvorbereitungTestDataFactory() {
   function _generateWahlurneArray(): Wahlurne[] {
     return [
       {
-        wahlID: "wahlID1",
-        anzahl: 1,
+        wahlID: generateRandomString(10),
+        anzahl: generateRandomNumberInRange(1, 10),
       },
     ];
   }
@@ -77,9 +82,9 @@ export function useWahlvorbereitungTestDataFactory() {
   function _generateWahlurneDTOArray(): WahlurneDTO[] {
     return [
       {
-        wahlID: "wahlID1",
-        anzahl: 1,
-        urneVersiegelt: true,
+        wahlID: generateRandomString(10),
+        anzahl: generateRandomNumberInRange(1, 10),
+        urneVersiegelt: generateRandomBoolean(),
       },
     ];
   }

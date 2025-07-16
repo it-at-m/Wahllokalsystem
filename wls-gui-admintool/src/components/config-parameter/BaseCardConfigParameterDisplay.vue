@@ -1,7 +1,6 @@
 <template>
   <v-card
     class="card"
-    :v-bind="configParameter"
     :title="configParameter.name"
     :subtitle="configParameter?.beschreibung"
   >
@@ -38,7 +37,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits<{
-  confirmEdit: InfomanagementConfigParameter; // confirmEdit erwartet ein configParameter Objekt
+  confirmEdit: InfomanagementConfigParameter; // confirmEdit erwartet ein InfomanagementConfigParameter Objekt
 }>();
 
 //Payload
@@ -56,11 +55,11 @@ function onConfigParameterEditConfirmed() {
   font-size: 1.5rem;
   padding-left: 16px;
   margin: auto;
-  display: block ruby;
+  display: inline-flex;
 }
 
 hr {
-  border-top: 1px #333333;
+  border-top: 1px solid #333333;
 }
 
 .v-button {
@@ -68,7 +67,7 @@ hr {
   background-color: #333;
   width: 30px;
   height: 30px;
-  margin-bottom: 10px;
+  margin-top: 10px;
   font-size: 0.6em;
 }
 

@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Advance Security Policy as Code
-        uses: advanced-security/policy-as-code@v2.9.1
+        uses: advanced-security/policy-as-code@ecab55354dd686856f4c4556aff3dd501160f11b # v2.9.1
         with:
           policy: it-at-m/policy-as-code
           policy-path: default.yaml

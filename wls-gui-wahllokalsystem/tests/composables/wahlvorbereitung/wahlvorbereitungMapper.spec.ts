@@ -180,6 +180,90 @@ describe("wahlvorbereitungMapper.ts", () => {
       };
       expect(result).toStrictEqual(expectedResult);
     });
+
+    it("should_returnModelWithUrneVersiegeltTrue_when_allUrneVersiegeltareTrue", () => {
+      const urnenwahlvorbereitungDTO: UrnenwahlvorbereitungDTO = {
+        wahlbezirkID: "123",
+        anzahlWahlkabinen: 5,
+        anzahlWahltische: 10,
+        anzahlNebenraeume: 2,
+        urnenAnzahl: [
+          {
+            wahlID: "1",
+            anzahl: 3,
+            urneVersiegelt: true,
+          },
+          {
+            wahlID: "2",
+            anzahl: 2,
+            urneVersiegelt: true,
+          },
+        ],
+      };
+
+      const result = toUrnenwahlvorbereitungModel(urnenwahlvorbereitungDTO);
+
+      const expectedResult: Urnenwahlvorbereitung = {
+        wahlbezirkID: "123",
+        anzahlWahlkabinen: 5,
+        anzahlWahltische: 10,
+        anzahlNebenraeume: 2,
+        urneVersiegelt: true,
+        urnenAnzahl: [
+          {
+            wahlID: "1",
+            anzahl: 3,
+          },
+          {
+            wahlID: "2",
+            anzahl: 2,
+          },
+        ],
+      };
+      expect(result).toStrictEqual(expectedResult);
+    });
+
+    it("should_returnModelWithUrneVersiegeltFalse_when_oneUrneVersiegeltISFalse", () => {
+      const urnenwahlvorbereitungDTO: UrnenwahlvorbereitungDTO = {
+        wahlbezirkID: "123",
+        anzahlWahlkabinen: 5,
+        anzahlWahltische: 10,
+        anzahlNebenraeume: 2,
+        urnenAnzahl: [
+          {
+            wahlID: "1",
+            anzahl: 3,
+            urneVersiegelt: true,
+          },
+          {
+            wahlID: "2",
+            anzahl: 2,
+            urneVersiegelt: false,
+          },
+        ],
+      };
+
+      const result = toUrnenwahlvorbereitungModel(urnenwahlvorbereitungDTO);
+
+      const expectedResult: Urnenwahlvorbereitung = {
+        wahlbezirkID: "123",
+        anzahlWahlkabinen: 5,
+        anzahlWahltische: 10,
+        anzahlNebenraeume: 2,
+        urneVersiegelt: false,
+        urnenAnzahl: [
+          {
+            wahlID: "1",
+            anzahl: 3,
+          },
+          {
+            wahlID: "2",
+            anzahl: 2,
+          },
+        ],
+      };
+      expect(result).toStrictEqual(expectedResult);
+    });
   });
 
   describe("toBriefwahlvorbereitungWriteDto", () => {
@@ -233,6 +317,78 @@ describe("wahlvorbereitungMapper.ts", () => {
             wahlID: "2",
             anzahl: 2,
             urneVersiegelt: false,
+          },
+        ],
+      };
+
+      const result = toBriefwahlvorbereitungModel(briefwahlvorbereitungDTO);
+
+      const expectedResult: Wahlvorbereitung = {
+        wahlbezirkID: "123",
+        urneVersiegelt: false,
+        urnenAnzahl: [
+          {
+            wahlID: "1",
+            anzahl: 3,
+          },
+          {
+            wahlID: "2",
+            anzahl: 2,
+          },
+        ],
+      };
+      expect(result).toStrictEqual(expectedResult);
+    });
+
+    it("should_returnModelWithUrneVersiegeltTrue_when_allUrneVersiegeltareTrue", () => {
+      const briefwahlvorbereitungDTO: BriefwahlvorbereitungDTO = {
+        wahlbezirkID: "123",
+        urnenAnzahl: [
+          {
+            wahlID: "1",
+            anzahl: 3,
+            urneVersiegelt: true,
+          },
+          {
+            wahlID: "2",
+            anzahl: 2,
+            urneVersiegelt: true,
+          },
+        ],
+      };
+
+      const result = toBriefwahlvorbereitungModel(briefwahlvorbereitungDTO);
+
+      const expectedResult: Wahlvorbereitung = {
+        wahlbezirkID: "123",
+        urneVersiegelt: true,
+        urnenAnzahl: [
+          {
+            wahlID: "1",
+            anzahl: 3,
+          },
+          {
+            wahlID: "2",
+            anzahl: 2,
+          },
+        ],
+      };
+      expect(result).toStrictEqual(expectedResult);
+    });
+
+    it("should_returnModelWithUrneVersiegeltFalse_when_oneUrneVersiegeltISFalse", () => {
+      const briefwahlvorbereitungDTO: BriefwahlvorbereitungDTO = {
+        wahlbezirkID: "123",
+        urnenAnzahl: [
+          {
+            wahlID: "1",
+            anzahl: 3,
+            urneVersiegelt: false,
+          },
+          {
+            wahlID: "2",
+            anzahl: 2,
+            urneVersiegelt: true,
           },
         ],
       };

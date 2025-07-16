@@ -54,8 +54,9 @@ export function useWahlvorbereitungMapper() {
       anzahlWahlkabinen: urnenwahlvorbereitungDTO.anzahlWahlkabinen,
       anzahlWahltische: urnenwahlvorbereitungDTO.anzahlWahltische,
       anzahlNebenraeume: urnenwahlvorbereitungDTO.anzahlNebenraeume,
-      urneVersiegelt:
-        urnenwahlvorbereitungDTO.urnenAnzahl[0]?.urneVersiegelt ?? false,
+      urneVersiegelt: _areAllUrnenVersiegelt(
+        urnenwahlvorbereitungDTO.urnenAnzahl
+      ),
       urnenAnzahl: urnenAnzahlModel,
     };
   }
@@ -84,8 +85,9 @@ export function useWahlvorbereitungMapper() {
       ) ?? [];
     return {
       wahlbezirkID: briefwahlvorbereitungDTO.wahlbezirkID,
-      urneVersiegelt:
-        briefwahlvorbereitungDTO.urnenAnzahl[0]?.urneVersiegelt ?? false,
+      urneVersiegelt: _areAllUrnenVersiegelt(
+        briefwahlvorbereitungDTO.urnenAnzahl
+      ),
       urnenAnzahl: urnenAnzahlModel,
     };
   }
@@ -118,6 +120,13 @@ export function useWahlvorbereitungMapper() {
       anzahl: wahlurne.anzahl ?? 0,
       urneVersiegelt: urneVersiegelt,
     };
+  }
+
+  function _areAllUrnenVersiegelt(wahlurneDTO: WahlurneDTO[]) {
+    if (!Array.isArray(wahlurneDTO) || wahlurneDTO.length === 0) {
+      return false;
+    }
+    return wahlurneDTO.every((urne) => urne.urneVersiegelt === true);
   }
 
   return {

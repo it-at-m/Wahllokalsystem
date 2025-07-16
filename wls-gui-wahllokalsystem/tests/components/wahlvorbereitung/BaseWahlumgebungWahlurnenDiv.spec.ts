@@ -65,7 +65,7 @@ describe("BaseWahlumgebungWahlurnenDiv.vue", () => {
       );
     });
 
-    it("should_renderWithTwoInputFields_when_TwoWahlenAreGiven", async (context) => {
+    it("should_renderWithTwoInputFields_when_twoWahlenAreGiven", async (context) => {
       const wrapper = mount(BaseWahlumgebungWahlurnenDiv, {
         global: {
           plugins: [testPinia, vuetify],

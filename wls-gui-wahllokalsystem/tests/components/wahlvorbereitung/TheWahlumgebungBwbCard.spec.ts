@@ -71,7 +71,7 @@ describe("TheWahlumgebungBwbCard.vue", () => {
   });
 
   describe(COMPONENT_RENDER_TESTS, () => {
-    it("should_renderWithZeroInputFieldsAndDisabledSaveButton_when_NoWahlenAreGiven", async (context) => {
+    it("should_renderWithZeroInputFieldsAndDisabledSaveButton_when_noWahlenAreGiven", async (context) => {
       wahlenStore = useWahlenStore(testPinia);
       wahlenStore.wahlen = [];
 
@@ -90,7 +90,7 @@ describe("TheWahlumgebungBwbCard.vue", () => {
       );
     });
 
-    it("should_renderWithTwoInputFieldsAndDisabledSaveButton_when_TwoWahlenAreGiven", async (context) => {
+    it("should_renderWithTwoInputFieldsAndDisabledSaveButton_when_twoWahlenAreGiven", async (context) => {
       wahlbezirkStore = useWahlbezirkStore(testPinia);
       wahlenStore = useWahlenStore(testPinia);
       wahlenStore.wahlen = validWahlen;

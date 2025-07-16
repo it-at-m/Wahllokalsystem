@@ -1,3 +1,5 @@
+import type { InfomanagementConfigParameter } from "@/types/config/InfomanagementConfigParameter.ts";
+
 import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
@@ -8,7 +10,6 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import BaseCardConfigParameterDisplay from "@/components/config-parameter/BaseCardConfigParameterDisplay.vue";
 import vuetify from "@/plugins/vuetify.ts";
-import { InfomanagementConfigParameter } from "@/types/config/InfomanagementConfigParameter.ts";
 
 // Testdaten für Event
 const configParameter: InfomanagementConfigParameter[] = [
@@ -21,7 +22,7 @@ const configParameter: InfomanagementConfigParameter[] = [
 ];
 
 describe("BaseCardConfigParameterDisplay.vue", () => {
-  let wrapper: VueWrapper<typeof BaseCardConfigParameterDisplay>;
+  let wrapper: VueWrapper;
   const mountComponent = (config: InfomanagementConfigParameter[]) => {
     wrapper = mount(BaseCardConfigParameterDisplay, {
       props: { configParameter: config[0] },

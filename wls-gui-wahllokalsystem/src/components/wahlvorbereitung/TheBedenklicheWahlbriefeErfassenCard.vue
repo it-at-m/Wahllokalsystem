@@ -37,14 +37,16 @@ import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheBedenklicherWahlbriefRow from "@/components/wahlvorbereitung/TheBedenklicherWahlbriefRow.vue";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
-const { wahlen } = storeToRefs(useWahlenStore());
+const { wahlen, isBeanstandeteWahlbriefeSaving } =
+  storeToRefs(useWahlenStore());
+const { saveBeanstandeteWahlbriefe } = useWahlenStore();
 
 const bedenklicheWahlbriefeFormValid = ref<null | boolean>(null);
 
 const isSaveButtonDisabled = computed(
   () => !bedenklicheWahlbriefeFormValid.value
 );
-const isSaving = false; // todo
+const isSaving = computed(() => isBeanstandeteWahlbriefeSaving.value);
 
 // add row + add empty item to beanstandeteWahlbriefeList
 function onAddBedenklicherWahlbriefClicked() {
@@ -52,6 +54,6 @@ function onAddBedenklicherWahlbriefClicked() {
 }
 
 function onSaveClicked() {
-  // sendBeschluesse();
+  saveBeanstandeteWahlbriefe();
 }
 </script>

@@ -1,3 +1,4 @@
+import type { BeanstandeteWahlbriefeCreateDTO } from "@/api/wls-clients/generated-briefwahl-api";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import { defineStore, storeToRefs } from "pinia";
@@ -17,6 +18,7 @@ export const useWahlenStore = defineStore(storeID, () => {
   const { currentUserWahltagID, currentUserWahlbezirkID } =
     storeToRefs(useUserStore());
   const wahlen = ref<Wahl[] | null>();
+  const isBeanstandeteWahlbriefeSaving = ref<boolean>(false);
 
   async function initWahlen(sendNotification = true) {
     wahlen.value = await wahlenService.getWahlen(
@@ -38,6 +40,31 @@ export const useWahlenStore = defineStore(storeID, () => {
           undefined;
       }
     }
+  }
+
+  async function saveBeanstandeteWahlbriefe() {
+    isBeanstandeteWahlbriefeSaving.value = true;
+    const beanstandeteWahlbriefeDTO: BeanstandeteWahlbriefeCreateDTO = {
+      beanstandeteWahlbriefe: {},
+    };
+    if (wahlen.value) {
+      for (const wahl of wahlen.value) {
+        if (
+          wahl.beanstandeteWahlbriefe &&
+          wahl.beanstandeteWahlbriefe.every((grund) => grund !== null)
+        ) {
+          beanstandeteWahlbriefeDTO.beanstandeteWahlbriefe[wahl.wahlID] =
+            wahl.beanstandeteWahlbriefe;
+        }
+
+        await briefwahlService.postBeanstandeteWahlbriefe(
+          beanstandeteWahlbriefeDTO,
+          currentUserWahlbezirkID.value,
+          wahl.waehlerverzeichnisNummer
+        );
+      }
+    }
+    isBeanstandeteWahlbriefeSaving.value = false;
   }
 
   function getWahlNameOrBlankStringById(wahlID: string) {
@@ -69,6 +96,8 @@ export const useWahlenStore = defineStore(storeID, () => {
     getWaehlerverzeichnisnummerOrUndefinedById,
     initWahlen,
     initBeanstandeteWahlbriefe,
+    saveBeanstandeteWahlbriefe,
+    isBeanstandeteWahlbriefeSaving,
   };
 });
 

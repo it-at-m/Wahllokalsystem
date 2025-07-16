@@ -1,4 +1,4 @@
-import { storeToRefs } from "pinia";
+import type { BeanstandeteWahlbriefeCreateDTO } from "@/api/wls-clients/generated-briefwahl-api";
 
 import {
   BeanstandeteWahlbriefeControllerApi,
@@ -35,5 +35,21 @@ export function useBriefwahlService() {
     }
   }
 
-  return { getBeanstandeteWahlbriefe };
+  async function postBeanstandeteWahlbriefe(
+    beanstandeteWahlbriefeDTO: BeanstandeteWahlbriefeCreateDTO,
+    wahlbezirkID: string,
+    waehlerVerzeichnisNummer: number
+  ) {
+    try {
+      await beanstandeteWahlbriefeControllerAPI.setBeanstandeteWahlbriefe(
+        wahlbezirkID,
+        waehlerVerzeichnisNummer,
+        beanstandeteWahlbriefeDTO
+      );
+    } catch {}
+
+    return;
+  }
+
+  return { getBeanstandeteWahlbriefe, postBeanstandeteWahlbriefe };
 }

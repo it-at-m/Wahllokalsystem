@@ -69,6 +69,6 @@ const checkboxLabelText = computed(() => {
 });
 
 function onSaveWahlumgebungBWBClicked() {
-  sendBriefwahlvorbereitung(briefwahlVorbereitung.value);
+  sendBriefwahlvorbereitung();
 }
 </script>

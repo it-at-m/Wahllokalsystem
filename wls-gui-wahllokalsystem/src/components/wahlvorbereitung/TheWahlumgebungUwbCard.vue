@@ -140,6 +140,6 @@ const checkboxLabelText = computed(() => {
 });
 
 function onSaveWahlumgebungUWBClicked() {
-  sendUrnenwahlvorbereitung(urnenwahlVorbereitung.value);
+  sendUrnenwahlvorbereitung();
 }
 </script>

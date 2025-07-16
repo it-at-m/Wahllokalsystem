@@ -95,10 +95,10 @@ export function useWahlvorbereitungMapper() {
   function toBriefwahlvorbereitungWriteDto(
     briefwahlvorbereitung: Wahlvorbereitung
   ): BriefwahlvorbereitungWriteDTO {
-    const urnenAnzahlDto =
-      briefwahlvorbereitung.urnenAnzahl?.map((wahlurneDTO) =>
+    const urnenAnzahlDto = briefwahlvorbereitung.urnenAnzahl.map(
+      (wahlurneDTO) =>
         _toWahlurneDto(wahlurneDTO, briefwahlvorbereitung.urneVersiegelt)
-      ) ?? [];
+    );
     return {
       urnenAnzahl: urnenAnzahlDto,
     };

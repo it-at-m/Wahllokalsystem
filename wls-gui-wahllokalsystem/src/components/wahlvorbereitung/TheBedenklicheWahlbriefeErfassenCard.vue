@@ -2,7 +2,9 @@
   <v-card>
     <v-card-title>Wahlbriefe zulassen oder zurückweisen</v-card-title>
     <v-card-text>
-      <the-bedenklicher-wahlbrief-row />
+      <v-form v-model="bedenklicheWahlbriefeFormValid">
+        <the-bedenklicher-wahlbrief-row />
+      </v-form>
     </v-card-text>
     <v-card-actions>
       <v-btn
@@ -21,12 +23,14 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
+import { computed, ref } from "vue";
 import {
   VBtn,
   VCard,
   VCardActions,
   VCardText,
   VCardTitle,
+  VForm,
 } from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
@@ -35,7 +39,11 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const { wahlen } = storeToRefs(useWahlenStore());
 
-const isSaveButtonDisabled = false; // todo
+const bedenklicheWahlbriefeFormValid = ref<null | boolean>(null);
+
+const isSaveButtonDisabled = computed(
+  () => !bedenklicheWahlbriefeFormValid.value
+);
 const isSaving = false; // todo
 
 // add row + add empty item to beanstandeteWahlbriefeList

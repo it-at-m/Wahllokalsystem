@@ -25,14 +25,16 @@
             style="min-width: 250px"
           >
             {{ index - 1 }}
-            <!-- todo v-model="beschlussergebnis[index - 1]"  -->
             <v-autocomplete
-              model-value="tbd - wird berechnet"
+              :model-value="wahlscheinGrund[index - 1]"
               label="Beschlussergebnis"
               class="ml-5"
               :items="gruendeWahlscheine"
               hide-details
               :rules="[REQUIRED]"
+              @update:model-value="
+                (value) => onZulassungsgrundChanged(value, index - 1)
+              "
             />
           </v-row>
         </td>
@@ -48,7 +50,7 @@
             hide-details
             :rules="[REQUIRED]"
             @update:model-value="
-              (value) => onZulassungsgrundChanged(wahl, value, index - 1)
+              (value) => onZulassungsgrundChanged(value, index - 1, wahl)
             "
           />
         </td>
@@ -103,11 +105,13 @@ const maxRows = computed(() => {
 const rowIcon = ref<string[]>([]);
 const rowColor = ref<string[]>([]);
 
+const wahlscheinGrund = ref(Array(maxRows.value).fill(""));
+
 onMounted(() => {
   for (const row of Array.from({ length: maxRows.value }, (_, i) => i)) {
     // (_, i) => i wandelt jedes Element in seinen Index um
-    rowIcon.value[row] = _isRowValidAtIndex(row).value ? "$check" : "$edit";
-    rowColor.value[row] = _isRowValidAtIndex(row).value ? "success" : "error";
+    rowIcon.value[row] = _isRowValidAtIndex(row) ? "$check" : "$edit";
+    rowColor.value[row] = _isRowValidAtIndex(row) ? "success" : "error";
   }
 });
 
@@ -120,31 +124,30 @@ watch(maxRows, (newValue, oldValue) => {
 });
 
 function onZulassungsgrundChanged(
-  column: Wahl,
   newValue: string,
-  rowIndex: number
+  rowIndex: number,
+  column?: Wahl
 ) {
-  const wahl = getWahlOrUndefinedById(column.wahlID);
-  wahl!.beanstandeteWahlbriefe![rowIndex] = stringToEnumValue(newValue);
-
-  rowIcon.value[rowIndex] = _isRowValidAtIndex(rowIndex).value
-    ? "$check"
-    : "$edit";
-  rowColor.value[rowIndex] = _isRowValidAtIndex(rowIndex).value
-    ? "success"
-    : "error";
+  if (column) {
+    const wahl = getWahlOrUndefinedById(column.wahlID);
+    wahl!.beanstandeteWahlbriefe![rowIndex] = stringToEnumValue(newValue);
+  } else {
+    wahlscheinGrund.value[rowIndex] = stringToEnumValue(newValue);
+  }
+  rowIcon.value[rowIndex] = _isRowValidAtIndex(rowIndex) ? "$check" : "$edit";
+  rowColor.value[rowIndex] = _isRowValidAtIndex(rowIndex) ? "success" : "error";
 }
 
-// delete row + remove item from beanstandeteWahlbriefeList
+// delete row + remove item from beanstandeteWahlbriefeList and wahlscheinGrundList
 function deleteBeanstandeteWahlbriefeRow(rowIndex: number) {
   wahlen.value!.map((wahl) => wahl.beanstandeteWahlbriefe!.splice(rowIndex, 1));
   rowIcon.value.splice(rowIndex, 1);
   rowColor.value.splice(rowIndex, 1);
+  wahlscheinGrund.value.splice(rowIndex, 1);
 }
 
 function _isRowValidAtIndex(rowIndex: number) {
-  // todo wahlschein spalte auch noch checken
-  return computed(() => {
+  const stimmzettelValid = computed(() => {
     return wahlen.value!.every(
       (wahl) =>
         wahl.beanstandeteWahlbriefe &&
@@ -152,6 +155,10 @@ function _isRowValidAtIndex(rowIndex: number) {
         !!wahl.beanstandeteWahlbriefe[rowIndex]
     );
   });
+  const beschlussValid: boolean =
+    wahlscheinGrund.value[rowIndex] && !!wahlscheinGrund.value[rowIndex];
+
+  return stimmzettelValid.value && beschlussValid;
 }
 </script>
 

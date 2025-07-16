@@ -13,8 +13,8 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>3.4.4</spring.boot.version>
-        <spring.cloud.version>2024.0.1</spring.cloud.version>
+        <spring.boot.version>3.4.7</spring.boot.version>
+        <spring.cloud.version>2024.0.2</spring.cloud.version>
         <logstash.encoder>8.1</logstash.encoder>
         <apache.commons.collections4>4.5.0</apache.commons.collections4>
         <apache.commons.csv>1.14.0</apache.commons.csv>
@@ -392,7 +392,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>7.12.0</version>
+                <version>7.14.0</version>
                 <configuration>
                     <typeMappings>
                         <typeMapping>OffsetDateTime=LocalDateTime</typeMapping>

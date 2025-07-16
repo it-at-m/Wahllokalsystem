@@ -21,7 +21,6 @@ const {
   toEroeffnungsuhrzeitWriteDTO,
   toUrnenwahlvorbereitungModel,
   toUrnenwahlvorbereitungWriteDto,
-  toBriefwahlvorbereitungModel,
   toBriefwahlvorbereitungWriteDto,
 } = useWahlvorbereitungMapper();
 
@@ -150,22 +149,6 @@ export function useWahlvorbereitungService() {
     }
   }
 
-  async function getBriefwahlvorbereitung(
-    wahlbezirkID: string
-  ): Promise<Wahlvorbereitung> {
-    try {
-      return await briefwahlvorbereitungControllerAPI
-        .getBriefwahlvorbereitung(wahlbezirkID)
-        .then((response) => toBriefwahlvorbereitungModel(response.data));
-    } catch (error) {
-      userNotificationService.addNotification(
-        "Fehler beim Laden der Briefwahlvorbereitung.",
-        UserNotificationCategoryEnum.ERROR
-      );
-      throw error;
-    }
-  }
-
   async function postBriefwahlvorbereitung(
     wahlbezirkID: string,
     briefwahlvorbereitung: Wahlvorbereitung
@@ -198,7 +181,6 @@ export function useWahlvorbereitungService() {
     postUrnenwahlSchliessungsuhrzeit,
     getUrnenwahlvorbereitung,
     postUrnenwahlvorbereitung,
-    getBriefwahlvorbereitung,
     postBriefwahlvorbereitung,
   };
 }

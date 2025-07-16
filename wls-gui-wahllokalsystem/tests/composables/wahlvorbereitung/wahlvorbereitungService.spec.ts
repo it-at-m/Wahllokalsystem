@@ -66,7 +66,6 @@ const {
   postEroeffnungsuhrzeit,
   getUrnenwahlvorbereitung,
   postUrnenwahlvorbereitung,
-  getBriefwahlvorbereitung,
   postBriefwahlvorbereitung,
 } = useWahlvorbereitungService();
 const {
@@ -247,45 +246,6 @@ describe("wahlvorbereitungService", () => {
       expect(mockDefinitions.addNotification.mock.calls).toStrictEqual([
         [
           "Speichern der Urnenwahlvorbereitung fehlgeschlagen.",
-          UserNotificationCategoryEnum.ERROR,
-        ],
-      ]);
-    });
-  });
-
-  describe("getBriefwahlvorbereitung", () => {
-    it("should_returnWahlvorbereitung_when_apiCallSucceeded", async () => {
-      const wahlbezirkID = "wahlbezirkID1";
-      const expectedWahlvorbereitung = createWahlvorbereitung();
-
-      mockDefinitions.toBriefwahlvorbereitungModel.mockReturnValue(
-        expectedWahlvorbereitung
-      );
-      // Mock the API call to return a response with the expected data
-      mockDefinitions.getBriefwahlvorbereitung.mockResolvedValue(
-        createBriefwahlvorbereitungDTO()
-      );
-
-      const result = await getBriefwahlvorbereitung(wahlbezirkID);
-
-      expect(result).toEqual(expectedWahlvorbereitung);
-    });
-
-    it("should_throwErrorAndCallNotificationService_when_apiCallFails", async () => {
-      const wahlbezirkID = "wahlbezirkID1";
-
-      const mockedApiError = new Error("API Error");
-      mockDefinitions.getBriefwahlvorbereitung.mockRejectedValue(
-        mockedApiError
-      );
-
-      await expect(getBriefwahlvorbereitung(wahlbezirkID)).rejects.toThrow(
-        "API Error"
-      );
-
-      expect(mockDefinitions.addNotification.mock.calls).toEqual([
-        [
-          "Fehler beim Laden der Briefwahlvorbereitung.",
           UserNotificationCategoryEnum.ERROR,
         ],
       ]);

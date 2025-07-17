@@ -12,5 +12,5 @@ export interface Wahl {
   wahlart: WahlWahlartEnum;
   farbe: Farbe | undefined;
   nummer: string | undefined;
-  beanstandeteWahlbriefe: (ZurueckweisungsgrundEnum | null)[] | undefined;
+  beanstandeteWahlbriefe: (ZurueckweisungsgrundEnum | null)[] | [];
 }

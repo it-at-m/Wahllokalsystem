@@ -36,8 +36,7 @@ export const useWahlenStore = defineStore(storeID, () => {
     if (wahlen.value && beanstandeteWahlbriefe) {
       for (const wahl of wahlen.value) {
         wahl.beanstandeteWahlbriefe =
-          beanstandeteWahlbriefe.beanstandeteWahlbriefe.get(wahl.wahlID) ??
-          undefined;
+          beanstandeteWahlbriefe.beanstandeteWahlbriefe.get(wahl.wahlID) ?? [];
       }
     }
   }
@@ -54,7 +53,7 @@ export const useWahlenStore = defineStore(storeID, () => {
           wahl.beanstandeteWahlbriefe.every((grund) => grund !== null)
         ) {
           beanstandeteWahlbriefeDTO.beanstandeteWahlbriefe[wahl.wahlID] =
-            wahl.beanstandeteWahlbriefe;
+            wahl.beanstandeteWahlbriefe.map((grund) => grund?.toString() ?? "");
         }
 
         await briefwahlService.postBeanstandeteWahlbriefe(

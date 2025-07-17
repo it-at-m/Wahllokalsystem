@@ -2,6 +2,7 @@ import type { TestingPinia } from "@pinia/testing";
 
 import { createTestingPinia } from "@pinia/testing";
 import {
+  COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
@@ -25,7 +26,7 @@ vi.mock("@/composables/wahl/wahlservice", () => ({
 describe("BaseWahlumgebungWahlurnenDiv.vue", () => {
   let testPinia: TestingPinia;
 
-  const twoWahlenBriefwahlVorbereitung = {
+  const twoWahlenWahlVorbereitung = {
     wahlbezirkID: "wahlbezirkID1",
     urneVersiegelt: false,
     urnenAnzahl: [
@@ -34,7 +35,7 @@ describe("BaseWahlumgebungWahlurnenDiv.vue", () => {
     ],
   };
 
-  const noWahlenBriefwahlVorbereitung = {
+  const noWahlenWahlVorbereitung = {
     wahlbezirkID: "wahlbezirkID1",
     urneVersiegelt: false,
     urnenAnzahl: [],
@@ -54,7 +55,7 @@ describe("BaseWahlumgebungWahlurnenDiv.vue", () => {
           plugins: [testPinia, vuetify],
         },
         props: {
-          wahlVorbereitung: noWahlenBriefwahlVorbereitung,
+          wahlVorbereitung: noWahlenWahlVorbereitung,
         },
       });
 
@@ -71,7 +72,7 @@ describe("BaseWahlumgebungWahlurnenDiv.vue", () => {
           plugins: [testPinia, vuetify],
         },
         props: {
-          wahlVorbereitung: twoWahlenBriefwahlVorbereitung,
+          wahlVorbereitung: twoWahlenWahlVorbereitung,
         },
       });
 
@@ -79,6 +80,30 @@ describe("BaseWahlumgebungWahlurnenDiv.vue", () => {
 
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
+      );
+    });
+  });
+
+  describe(COMPONENT_EVENT_TESTS, () => {
+    it("should_updateAnzahlForIndex_when_anzahlIsEnteredForIndex", async () => {
+      const wrapper = mount(BaseWahlumgebungWahlurnenDiv, {
+        global: {
+          plugins: [testPinia, vuetify],
+        },
+        props: {
+          wahlVorbereitung: twoWahlenWahlVorbereitung,
+        },
+      });
+
+      const anzahlNumberInput = wrapper.findComponent(
+        '[data-test="textFieldUrnenAnzahl_1"]'
+      );
+      const enteredAnzahl = 3;
+
+      await anzahlNumberInput.setValue(enteredAnzahl);
+
+      expect(wrapper.vm.wahlVorbereitung.urnenAnzahl[1].anzahl).toStrictEqual(
+        enteredAnzahl
       );
     });
   });

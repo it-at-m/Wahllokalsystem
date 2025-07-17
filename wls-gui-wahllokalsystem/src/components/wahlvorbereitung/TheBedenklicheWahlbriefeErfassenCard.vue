@@ -48,7 +48,6 @@ const isSaveButtonDisabled = computed(
 );
 const isSaving = computed(() => isBeanstandeteWahlbriefeSaving.value);
 
-// add row + add empty item to beanstandeteWahlbriefeList
 function onAddBedenklicherWahlbriefClicked() {
   wahlen.value!.map((wahl) => wahl.beanstandeteWahlbriefe!.push(null));
 }

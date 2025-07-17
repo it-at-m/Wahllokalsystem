@@ -111,7 +111,6 @@ const wahlscheinGrund = ref(Array(maxRows.value).fill(""));
 
 onMounted(() => {
   for (const row of Array.from({ length: maxRows.value }, (_, i) => i)) {
-    // (_, i) => i wandelt jedes Element in seinen Index um
     rowIcon.value[row] = _isRowValidAtIndex(row) ? "$check" : "$edit";
     rowColor.value[row] = _isRowValidAtIndex(row) ? "success" : "error";
   }
@@ -140,7 +139,6 @@ function onZulassungsgrundChanged(
   rowColor.value[rowIndex] = _isRowValidAtIndex(rowIndex) ? "success" : "error";
 }
 
-// delete row + remove item from beanstandeteWahlbriefeList and wahlscheinGrundList
 function deleteBeanstandeteWahlbriefeRow(rowIndex: number) {
   wahlen.value!.map((wahl) => wahl.beanstandeteWahlbriefe!.splice(rowIndex, 1));
   rowIcon.value.splice(rowIndex, 1);

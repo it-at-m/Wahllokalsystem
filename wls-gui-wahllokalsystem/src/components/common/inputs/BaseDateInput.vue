@@ -1,11 +1,11 @@
 <template>
   <v-text-field
     :model-value="getFormattedValue(modelValue)"
-    :rules="[DATE_REQUIRED]"
+    :rules="[REQUIRED]"
     label="Datum"
     type="date"
     clearable
-    data-test="baseDateInput"
+    data-test="base-date-input"
     @update:model-value="onDateChanged"
   />
 </template>
@@ -16,9 +16,9 @@ import type { PropType } from "vue";
 import { VTextField } from "vuetify/components";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
-import { DATE_REQUIRED } from "@/util/rules.ts";
+import { REQUIRED } from "@/util/rules.ts";
 
-const { extractDateFromString } = useDateTimeFormatter();
+const { updateDateOfDateObject } = useDateTimeFormatter();
 
 const modelValue = defineModel({
   type: Object as PropType<Date>,
@@ -28,7 +28,7 @@ const emit = defineEmits(["update:model-value"]);
 const onDateChanged = (newDate: string) => {
   const currentTime = modelValue?.value || new Date();
 
-  const updatedDate = extractDateFromString(newDate, currentTime);
+  const updatedDate = updateDateOfDateObject(newDate, currentTime);
   if (updatedDate) {
     emit("update:model-value", updatedDate);
   }

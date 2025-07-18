@@ -9,16 +9,16 @@
         class="text-center mt-5"
         >{{ index + 1 }}</v-col
       >
-      <v-col cols="2">
-        <base-time-input
+      <v-col cols="3">
+        <base-date-input
           :model-value="ereignis.uhrzeit"
           @update:model-value="
             (value) => onEreignisUhrzeitUpdateModelValue(value, index)
           "
         />
       </v-col>
-      <v-col cols="3">
-        <base-date-input
+      <v-col cols="2">
+        <base-time-input
           :model-value="ereignis.uhrzeit"
           @update:model-value="
             (value) => onEreignisUhrzeitUpdateModelValue(value, index)

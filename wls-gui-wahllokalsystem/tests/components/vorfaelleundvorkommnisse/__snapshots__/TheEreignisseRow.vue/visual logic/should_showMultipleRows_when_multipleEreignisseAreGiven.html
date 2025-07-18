@@ -1,8 +1,8 @@
 <div>
   <div class="v-row">
     <div class="v-col v-col-1 text-center mt-5">1</div>
-    <div class="v-col v-col-2">
-      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field" data-test="baseTimeInput">
+    <div class="v-col v-col-3">
+      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field" data-test="base-date-input">
         <!---->
         <div class="v-input__control">
           <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--dirty v-field--variant-filled v-theme--light v-locale--is-ltr">
@@ -23,15 +23,15 @@
             </div>
             <!---->
             <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" aria-hidden="true" for="input-v-0">
-                <!---->Uhrzeit
+                <!---->Datum
               </label><label class="v-label v-field-label" for="input-v-0">
-                <!---->Uhrzeit
+                <!---->Datum
               </label>
-              <!----><input size="1" type="time" id="input-v-0" aria-describedby="input-v-0-messages" class="v-field__input" value="01:15">
+              <!----><input size="1" type="date" id="input-v-0" aria-describedby="input-v-0-messages" class="v-field__input" value="2025-07-04">
               <!---->
             </div>
             <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
-              <div class="v-field__clearable"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Uhrzeit"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+              <div class="v-field__clearable"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Datum"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
                     <path d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"></path>
                   </svg></i></div>
             </transition-stub>
@@ -54,8 +54,8 @@
         </div>
       </div>
     </div>
-    <div class="v-col v-col-3">
-      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field" data-test="baseDateInput">
+    <div class="v-col v-col-2">
+      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field" data-test="base-time-input">
         <!---->
         <div class="v-input__control">
           <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--dirty v-field--variant-filled v-theme--light v-locale--is-ltr">
@@ -76,15 +76,15 @@
             </div>
             <!---->
             <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" aria-hidden="true" for="input-v-2">
-                <!---->Datum
+                <!---->Uhrzeit
               </label><label class="v-label v-field-label" for="input-v-2">
-                <!---->Datum
+                <!---->Uhrzeit
               </label>
-              <!----><input size="1" type="date" id="input-v-2" aria-describedby="input-v-2-messages" class="v-field__input" value="2025-07-04">
+              <!----><input size="1" type="time" id="input-v-2" aria-describedby="input-v-2-messages" class="v-field__input" value="00:15">
               <!---->
             </div>
             <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
-              <div class="v-field__clearable"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Datum"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+              <div class="v-field__clearable"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Uhrzeit"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
                     <path d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"></path>
                   </svg></i></div>
             </transition-stub>
@@ -133,7 +133,7 @@
               </label><label class="v-label v-field-label" for="input-v-4">
                 <!---->Beschreibung
               </label>
-              <!----><textarea class="v-field__input" rows="1" id="input-v-4" aria-describedby="input-v-4-messages" autofokus="" value="Vorfall Nr.: 1"></textarea><textarea class="v-field__input v-textarea__sizer" id="input-v-4-sizer" readonly="" aria-hidden="true"></textarea>
+              <!----><textarea class="v-field__input" rows="1" id="input-v-4" aria-describedby="input-v-4-messages" autofokus="" value="Vorfall Nr.: 0"></textarea><textarea class="v-field__input v-textarea__sizer" id="input-v-4-sizer" readonly="" aria-hidden="true"></textarea>
               <!---->
             </div>
             <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
@@ -169,8 +169,8 @@
   </div>
   <div class="v-row">
     <div class="v-col v-col-1 text-center mt-5">2</div>
-    <div class="v-col v-col-2">
-      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field" data-test="baseTimeInput">
+    <div class="v-col v-col-3">
+      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field" data-test="base-date-input">
         <!---->
         <div class="v-input__control">
           <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--dirty v-field--variant-filled v-theme--light v-locale--is-ltr">
@@ -191,15 +191,15 @@
             </div>
             <!---->
             <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" aria-hidden="true" for="input-v-6">
-                <!---->Uhrzeit
+                <!---->Datum
               </label><label class="v-label v-field-label" for="input-v-6">
-                <!---->Uhrzeit
+                <!---->Datum
               </label>
-              <!----><input size="1" type="time" id="input-v-6" aria-describedby="input-v-6-messages" class="v-field__input" value="02:15">
+              <!----><input size="1" type="date" id="input-v-6" aria-describedby="input-v-6-messages" class="v-field__input" value="2025-07-04">
               <!---->
             </div>
             <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
-              <div class="v-field__clearable"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Uhrzeit"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+              <div class="v-field__clearable"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Datum"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
                     <path d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"></path>
                   </svg></i></div>
             </transition-stub>
@@ -222,8 +222,8 @@
         </div>
       </div>
     </div>
-    <div class="v-col v-col-3">
-      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field" data-test="baseDateInput">
+    <div class="v-col v-col-2">
+      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field" data-test="base-time-input">
         <!---->
         <div class="v-input__control">
           <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--dirty v-field--variant-filled v-theme--light v-locale--is-ltr">
@@ -244,15 +244,15 @@
             </div>
             <!---->
             <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" aria-hidden="true" for="input-v-8">
-                <!---->Datum
+                <!---->Uhrzeit
               </label><label class="v-label v-field-label" for="input-v-8">
-                <!---->Datum
+                <!---->Uhrzeit
               </label>
-              <!----><input size="1" type="date" id="input-v-8" aria-describedby="input-v-8-messages" class="v-field__input" value="2025-07-04">
+              <!----><input size="1" type="time" id="input-v-8" aria-describedby="input-v-8-messages" class="v-field__input" value="01:15">
               <!---->
             </div>
             <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
-              <div class="v-field__clearable"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Datum"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+              <div class="v-field__clearable"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Uhrzeit"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
                     <path d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"></path>
                   </svg></i></div>
             </transition-stub>
@@ -301,7 +301,7 @@
               </label><label class="v-label v-field-label" for="input-v-10">
                 <!---->Beschreibung
               </label>
-              <!----><textarea class="v-field__input" rows="1" id="input-v-10" aria-describedby="input-v-10-messages" autofokus="" value="Vorfall Nr.: 2"></textarea><textarea class="v-field__input v-textarea__sizer" id="input-v-10-sizer" readonly="" aria-hidden="true"></textarea>
+              <!----><textarea class="v-field__input" rows="1" id="input-v-10" aria-describedby="input-v-10-messages" autofokus="" value="Vorfall Nr.: 1"></textarea><textarea class="v-field__input v-textarea__sizer" id="input-v-10-sizer" readonly="" aria-hidden="true"></textarea>
               <!---->
             </div>
             <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
@@ -337,8 +337,8 @@
   </div>
   <div class="v-row">
     <div class="v-col v-col-1 text-center mt-5">3</div>
-    <div class="v-col v-col-2">
-      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field" data-test="baseTimeInput">
+    <div class="v-col v-col-3">
+      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field" data-test="base-date-input">
         <!---->
         <div class="v-input__control">
           <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--dirty v-field--variant-filled v-theme--light v-locale--is-ltr">
@@ -359,15 +359,15 @@
             </div>
             <!---->
             <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" aria-hidden="true" for="input-v-12">
-                <!---->Uhrzeit
+                <!---->Datum
               </label><label class="v-label v-field-label" for="input-v-12">
-                <!---->Uhrzeit
+                <!---->Datum
               </label>
-              <!----><input size="1" type="time" id="input-v-12" aria-describedby="input-v-12-messages" class="v-field__input" value="03:15">
+              <!----><input size="1" type="date" id="input-v-12" aria-describedby="input-v-12-messages" class="v-field__input" value="2025-07-04">
               <!---->
             </div>
             <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
-              <div class="v-field__clearable"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Uhrzeit"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+              <div class="v-field__clearable"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Datum"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
                     <path d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"></path>
                   </svg></i></div>
             </transition-stub>
@@ -390,8 +390,8 @@
         </div>
       </div>
     </div>
-    <div class="v-col v-col-3">
-      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field" data-test="baseDateInput">
+    <div class="v-col v-col-2">
+      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field" data-test="base-time-input">
         <!---->
         <div class="v-input__control">
           <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--dirty v-field--variant-filled v-theme--light v-locale--is-ltr">
@@ -412,15 +412,15 @@
             </div>
             <!---->
             <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" aria-hidden="true" for="input-v-14">
-                <!---->Datum
+                <!---->Uhrzeit
               </label><label class="v-label v-field-label" for="input-v-14">
-                <!---->Datum
+                <!---->Uhrzeit
               </label>
-              <!----><input size="1" type="date" id="input-v-14" aria-describedby="input-v-14-messages" class="v-field__input" value="2025-07-04">
+              <!----><input size="1" type="time" id="input-v-14" aria-describedby="input-v-14-messages" class="v-field__input" value="02:15">
               <!---->
             </div>
             <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
-              <div class="v-field__clearable"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Datum"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+              <div class="v-field__clearable"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Uhrzeit"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
                     <path d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"></path>
                   </svg></i></div>
             </transition-stub>
@@ -469,7 +469,7 @@
               </label><label class="v-label v-field-label" for="input-v-16">
                 <!---->Beschreibung
               </label>
-              <!----><textarea class="v-field__input" rows="1" id="input-v-16" aria-describedby="input-v-16-messages" autofokus="" value="Vorfall Nr.: 3"></textarea><textarea class="v-field__input v-textarea__sizer" id="input-v-16-sizer" readonly="" aria-hidden="true"></textarea>
+              <!----><textarea class="v-field__input" rows="1" id="input-v-16" aria-describedby="input-v-16-messages" autofokus="" value="Vorfall Nr.: 2"></textarea><textarea class="v-field__input v-textarea__sizer" id="input-v-16-sizer" readonly="" aria-hidden="true"></textarea>
               <!---->
             </div>
             <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
@@ -505,8 +505,8 @@
   </div>
   <div class="v-row">
     <div class="v-col v-col-1 text-center mt-5">4</div>
-    <div class="v-col v-col-2">
-      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field" data-test="baseTimeInput">
+    <div class="v-col v-col-3">
+      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field" data-test="base-date-input">
         <!---->
         <div class="v-input__control">
           <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--dirty v-field--variant-filled v-theme--light v-locale--is-ltr">
@@ -527,15 +527,15 @@
             </div>
             <!---->
             <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" aria-hidden="true" for="input-v-18">
-                <!---->Uhrzeit
+                <!---->Datum
               </label><label class="v-label v-field-label" for="input-v-18">
-                <!---->Uhrzeit
+                <!---->Datum
               </label>
-              <!----><input size="1" type="time" id="input-v-18" aria-describedby="input-v-18-messages" class="v-field__input" value="04:15">
+              <!----><input size="1" type="date" id="input-v-18" aria-describedby="input-v-18-messages" class="v-field__input" value="2025-07-04">
               <!---->
             </div>
             <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
-              <div class="v-field__clearable"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Uhrzeit"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+              <div class="v-field__clearable"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Datum"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
                     <path d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"></path>
                   </svg></i></div>
             </transition-stub>
@@ -558,8 +558,8 @@
         </div>
       </div>
     </div>
-    <div class="v-col v-col-3">
-      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field" data-test="baseDateInput">
+    <div class="v-col v-col-2">
+      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field" data-test="base-time-input">
         <!---->
         <div class="v-input__control">
           <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--dirty v-field--variant-filled v-theme--light v-locale--is-ltr">
@@ -580,15 +580,15 @@
             </div>
             <!---->
             <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" aria-hidden="true" for="input-v-20">
-                <!---->Datum
+                <!---->Uhrzeit
               </label><label class="v-label v-field-label" for="input-v-20">
-                <!---->Datum
+                <!---->Uhrzeit
               </label>
-              <!----><input size="1" type="date" id="input-v-20" aria-describedby="input-v-20-messages" class="v-field__input" value="2025-07-04">
+              <!----><input size="1" type="time" id="input-v-20" aria-describedby="input-v-20-messages" class="v-field__input" value="03:15">
               <!---->
             </div>
             <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
-              <div class="v-field__clearable"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Datum"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+              <div class="v-field__clearable"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Uhrzeit"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
                     <path d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"></path>
                   </svg></i></div>
             </transition-stub>
@@ -637,7 +637,7 @@
               </label><label class="v-label v-field-label" for="input-v-22">
                 <!---->Beschreibung
               </label>
-              <!----><textarea class="v-field__input" rows="1" id="input-v-22" aria-describedby="input-v-22-messages" autofokus="" value="Vorfall Nr.: 4"></textarea><textarea class="v-field__input v-textarea__sizer" id="input-v-22-sizer" readonly="" aria-hidden="true"></textarea>
+              <!----><textarea class="v-field__input" rows="1" id="input-v-22" aria-describedby="input-v-22-messages" autofokus="" value="Vorfall Nr.: 3"></textarea><textarea class="v-field__input v-textarea__sizer" id="input-v-22-sizer" readonly="" aria-hidden="true"></textarea>
               <!---->
             </div>
             <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
@@ -673,8 +673,8 @@
   </div>
   <div class="v-row">
     <div class="v-col v-col-1 text-center mt-5">5</div>
-    <div class="v-col v-col-2">
-      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field" data-test="baseTimeInput">
+    <div class="v-col v-col-3">
+      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field" data-test="base-date-input">
         <!---->
         <div class="v-input__control">
           <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--dirty v-field--variant-filled v-theme--light v-locale--is-ltr">
@@ -695,15 +695,15 @@
             </div>
             <!---->
             <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" aria-hidden="true" for="input-v-24">
-                <!---->Uhrzeit
+                <!---->Datum
               </label><label class="v-label v-field-label" for="input-v-24">
-                <!---->Uhrzeit
+                <!---->Datum
               </label>
-              <!----><input size="1" type="time" id="input-v-24" aria-describedby="input-v-24-messages" class="v-field__input" value="05:15">
+              <!----><input size="1" type="date" id="input-v-24" aria-describedby="input-v-24-messages" class="v-field__input" value="2025-07-04">
               <!---->
             </div>
             <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
-              <div class="v-field__clearable"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Uhrzeit"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+              <div class="v-field__clearable"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Datum"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
                     <path d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"></path>
                   </svg></i></div>
             </transition-stub>
@@ -726,8 +726,8 @@
         </div>
       </div>
     </div>
-    <div class="v-col v-col-3">
-      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field" data-test="baseDateInput">
+    <div class="v-col v-col-2">
+      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field" data-test="base-time-input">
         <!---->
         <div class="v-input__control">
           <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--dirty v-field--variant-filled v-theme--light v-locale--is-ltr">
@@ -748,15 +748,15 @@
             </div>
             <!---->
             <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" aria-hidden="true" for="input-v-26">
-                <!---->Datum
+                <!---->Uhrzeit
               </label><label class="v-label v-field-label" for="input-v-26">
-                <!---->Datum
+                <!---->Uhrzeit
               </label>
-              <!----><input size="1" type="date" id="input-v-26" aria-describedby="input-v-26-messages" class="v-field__input" value="2025-07-04">
+              <!----><input size="1" type="time" id="input-v-26" aria-describedby="input-v-26-messages" class="v-field__input" value="04:15">
               <!---->
             </div>
             <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
-              <div class="v-field__clearable"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Datum"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+              <div class="v-field__clearable"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Uhrzeit"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
                     <path d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"></path>
                   </svg></i></div>
             </transition-stub>
@@ -805,7 +805,7 @@
               </label><label class="v-label v-field-label" for="input-v-28">
                 <!---->Beschreibung
               </label>
-              <!----><textarea class="v-field__input" rows="1" id="input-v-28" aria-describedby="input-v-28-messages" autofokus="" value="Vorfall Nr.: 5"></textarea><textarea class="v-field__input v-textarea__sizer" id="input-v-28-sizer" readonly="" aria-hidden="true"></textarea>
+              <!----><textarea class="v-field__input" rows="1" id="input-v-28" aria-describedby="input-v-28-messages" autofokus="" value="Vorfall Nr.: 4"></textarea><textarea class="v-field__input v-textarea__sizer" id="input-v-28-sizer" readonly="" aria-hidden="true"></textarea>
               <!---->
             </div>
             <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">

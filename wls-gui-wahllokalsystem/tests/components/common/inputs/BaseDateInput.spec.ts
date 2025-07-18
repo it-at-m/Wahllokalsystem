@@ -21,7 +21,7 @@ import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts"
 import pinia from "@/plugins/pinia.ts";
 import vuetify from "@/plugins/vuetify.ts";
 
-const { extractDateFromString } = useDateTimeFormatter();
+const { updateDateOfDateObject } = useDateTimeFormatter();
 const mockedNow = new Date();
 
 describe("BaseDateInput.vue", () => {
@@ -53,10 +53,10 @@ describe("BaseDateInput.vue", () => {
       );
     });
 
-    it("should_renderTimeInput_when_inputIsTyped", async (context) => {
+    it("should_renderDateInput_when_inputIsTyped", async (context) => {
       const input = "2025-07-01";
-      const currentTime = new Date("2025-06-02");
-      const date = extractDateFromString(input, currentTime);
+      const currentDate = new Date("2025-06-02");
+      const date = updateDateOfDateObject(input, currentDate);
       await wrapper.setProps({ modelValue: date });
 
       await expect(wrapper.html()).toMatchFileSnapshot(
@@ -69,9 +69,9 @@ describe("BaseDateInput.vue", () => {
   describe(COMPONENT_EVENT_TESTS, () => {
     it("should_updateModelValue_when_elementIsTyped", async () => {
       const input = "2025-07-01";
-      const currentTime = new Date("2025-06-15");
-      currentTime.setHours(10, 10);
-      const date = extractDateFromString(input, currentTime);
+      const currentDate = new Date("2025-06-15");
+      currentDate.setHours(10, 10);
+      const date = updateDateOfDateObject(input, currentDate);
 
       const inputTextfield = wrapper.findComponent(VTextField);
       await wrapper.setProps({

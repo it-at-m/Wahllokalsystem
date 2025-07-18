@@ -23,7 +23,7 @@ import pinia from "@/plugins/pinia.ts";
 import vuetify from "@/plugins/vuetify.ts";
 import { REQUIRED } from "@/util/rules.ts";
 
-const { extractTimeFromString } = useDateTimeFormatter();
+const { updateTimeOfDateObject } = useDateTimeFormatter();
 const mockedNow = new Date();
 
 describe("BaseTimeInput.vue", () => {
@@ -58,7 +58,7 @@ describe("BaseTimeInput.vue", () => {
     it("should_renderTimeInput_when_inputIsTyped", async (context) => {
       const input = "12:12";
       const currentTime = new Date("2025-06-15");
-      const date = extractTimeFromString(input, currentTime);
+      const date = updateTimeOfDateObject(input, currentTime);
       await wrapper.setProps({ modelValue: date });
 
       await expect(wrapper.html()).toMatchFileSnapshot(
@@ -86,7 +86,7 @@ describe("BaseTimeInput.vue", () => {
     it("should_updateModelValue_when_elementIsTyped", async () => {
       const input = "12:12";
       const currentTime = new Date("2025-06-15");
-      const date = extractTimeFromString(input, currentTime);
+      const date = updateTimeOfDateObject(input, currentTime);
 
       const inputTextfield = wrapper.findComponent(VTextField);
       await wrapper.setProps({

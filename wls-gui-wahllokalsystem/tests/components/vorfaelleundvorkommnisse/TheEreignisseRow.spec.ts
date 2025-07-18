@@ -99,7 +99,7 @@ describe("TheEreignisseRow.vue", () => {
       const ereignisStore = useEreignisStore();
 
       const ereigniseintraege = [] as Ereignis[];
-      for (let i = 1; i < 6; i++) {
+      for (let i = 0; i < 5; i++) {
         const date = new Date(2025, 6, 4);
         date.setHours(i, 15);
         ereigniseintraege.push(
@@ -160,7 +160,7 @@ describe("TheEreignisseRow.vue", () => {
       await nextTick();
 
       // Triggern des Updates des VTextfield mit undefined
-      const textfield = wrapper.findComponent({ name: "v-text-field" });
+      const textfield = wrapper.findComponent('[data-test="base-time-input"]');
       expect(textfield.exists()).toBe(true); // Überprüfen, ob das Textfeld existiert
       await textfield.setValue(undefined);
 
@@ -228,7 +228,7 @@ describe("TheEreignisseRow.vue", () => {
 
       const indexOfTimeInputForChange = 3;
       const firstEreignisTimeinput = wrapper.findAllComponents(
-        '[data-test="baseTimeInput"]'
+        '[data-test="base-time-input"]'
       )[indexOfTimeInputForChange];
       const newValue = new Date(2025, 6, 8);
       await firstEreignisTimeinput.setValue(newValue);
@@ -261,7 +261,7 @@ describe("TheEreignisseRow.vue", () => {
 
       const indexOfTimeInputForChange = 3;
       const firstEreignisTimeinput = wrapper.findAllComponents(
-        '[data-test="baseDateInput"]'
+        '[data-test="base-date-input"]'
       )[indexOfTimeInputForChange];
       const newValue = new Date(2025, 6, 8);
       await firstEreignisTimeinput.setValue(newValue);

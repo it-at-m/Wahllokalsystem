@@ -29,7 +29,7 @@ export function useDateTimeFormatter() {
     return `${hour}${TIME_FIELD_SEPARATOR}${minute}`;
   };
 
-  const extractTimeFromString = function (
+  const updateTimeOfDateObject = function (
     timeString: string,
     currentTime: Date
   ): Date | undefined {
@@ -45,7 +45,7 @@ export function useDateTimeFormatter() {
     return newDate;
   };
 
-  const extractDateFromString = function (
+  const updateDateOfDateObject = function (
     dateString: string,
     currentTime: Date
   ): Date | undefined {
@@ -127,8 +127,8 @@ export function useDateTimeFormatter() {
     time,
     toHhMm,
     applyLocalTimezoneOffset,
-    extractDateFromString,
-    extractTimeFromString,
+    updateDateOfDateObject,
+    updateTimeOfDateObject,
     toGermanDateFormat,
     getDateFromTimeString,
     toGermanDateWithLongMonth,

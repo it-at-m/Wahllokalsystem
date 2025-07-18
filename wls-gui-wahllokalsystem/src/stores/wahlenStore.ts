@@ -76,7 +76,7 @@ export const useWahlenStore = defineStore(storeID, () => {
     return wahl ? wahl.wahltag : "";
   }
 
-  function getWaehlerverzeichnisnummerOrUndefinedById(wahlID: string) {
+  function getWaehlerverzeichnisOrUndefinedById(wahlID: string) {
     const wahl = getWahlOrUndefinedById(wahlID);
     return wahl ? wahl.waehlerverzeichnisNummer : undefined;
   }
@@ -92,7 +92,7 @@ export const useWahlenStore = defineStore(storeID, () => {
     getWahlOrUndefinedById,
     getWahlNameOrBlankStringById,
     getWahlTagOrBlankStringById,
-    getWaehlerverzeichnisnummerOrUndefinedById,
+    getWaehlerverzeichnisOrUndefinedById,
     initWahlen,
     initBeanstandeteWahlbriefe,
     saveBeanstandeteWahlbriefe,

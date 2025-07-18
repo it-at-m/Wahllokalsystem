@@ -45,7 +45,7 @@
         >
           <!-- todo: man sieht nur schlecht dass man scrollen kann -->
           <v-autocomplete
-            :model-value="wahl.beanstandeteWahlbriefe![index - 1]"
+            :model-value="wahl.beanstandeteWahlbriefe[index - 1]"
             label="Beschlussergebnis"
             :items="gruendeStimmzettel"
             hide-details
@@ -100,7 +100,7 @@ const { getWahlOrUndefinedById } = useWahlenStore();
 
 const maxRows = computed(() => {
   return Math.max(
-    ...wahlen.value!.map((wahl) => wahl.beanstandeteWahlbriefe!.length)
+    ...wahlen.value!.map((wahl) => wahl.beanstandeteWahlbriefe.length)
   );
 });
 
@@ -132,6 +132,7 @@ function onZulassungsgrundChanged(
   if (column) {
     const wahl = getWahlOrUndefinedById(column.wahlID);
     wahl!.beanstandeteWahlbriefe![rowIndex] = stringToEnumValue(newValue);
+    wahl!.beanstandeteWahlbriefe[rowIndex] = stringToEnumValue(newValue);
   } else {
     wahlscheinGrund.value[rowIndex] = stringToEnumValue(newValue);
   }
@@ -140,7 +141,7 @@ function onZulassungsgrundChanged(
 }
 
 function deleteBeanstandeteWahlbriefeRow(rowIndex: number) {
-  wahlen.value!.map((wahl) => wahl.beanstandeteWahlbriefe!.splice(rowIndex, 1));
+  wahlen.value!.map((wahl) => wahl.beanstandeteWahlbriefe.splice(rowIndex, 1));
   rowIcon.value.splice(rowIndex, 1);
   rowColor.value.splice(rowIndex, 1);
   wahlscheinGrund.value.splice(rowIndex, 1);

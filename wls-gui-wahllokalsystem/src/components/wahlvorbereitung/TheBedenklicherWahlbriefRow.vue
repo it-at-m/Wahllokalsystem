@@ -22,11 +22,15 @@
           <v-row
             align="center"
             class="my-2"
-            style="min-width: 250px"
+            style="min-width: 350px"
           >
             {{ index - 1 }}
             <v-autocomplete
-              :model-value="wahlscheinGrund[index - 1]"
+              :model-value="
+                zurueckweisungsgrundEnumToDisplayString(
+                  wahlscheinGruende[index - 1]
+                )
+              "
               label="Beschlussergebnis"
               class="ml-5"
               :items="gruendeWahlscheine"
@@ -45,7 +49,11 @@
         >
           <!-- todo: man sieht nur schlecht dass man scrollen kann -->
           <v-autocomplete
-            :model-value="wahl.beanstandeteWahlbriefe[index - 1]"
+            :model-value="
+              zurueckweisungsgrundEnumToDisplayString(
+                wahl.beanstandeteWahlbriefe[index - 1]
+              )
+            "
             label="Beschlussergebnis"
             :items="gruendeStimmzettel"
             hide-details
@@ -88,17 +96,17 @@ import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
 import { VAutocomplete, VBtn, VIcon, VRow, VTable } from "vuetify/components";
 
+import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import {
-  gruendeStimmzettel,
-  gruendeWahlscheine,
-  stringToEnumValue,
-  ZurueckweisungsgrundEnum,
-} from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
+import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 import { REQUIRED } from "@/util/rules.ts";
 
 const { wahlen } = storeToRefs(useWahlenStore());
 const { getWahlOrUndefinedById } = useWahlenStore();
+const {
+  zurueckweisungsgrundStringToEnumValue,
+  zurueckweisungsgrundEnumToDisplayString,
+} = useBeanstandeteWahlbriefeMapper();
 
 const maxRows = computed(() => {
   return Math.max(
@@ -109,7 +117,25 @@ const maxRows = computed(() => {
 const rowIcon = ref<string[]>([]);
 const rowColor = ref<string[]>([]);
 
-const wahlscheinGrund = ref(Array(maxRows.value).fill(""));
+const wahlscheinGruende = ref(Array(maxRows.value).fill(""));
+
+const gruendeWahlscheine = [
+  "Zugelassen",
+  "Wahlschein ungültig laut Liste",
+  "Kein Original-Wahlschein",
+  "Unterschrift auf Wahlschein fehlt",
+];
+const gruendeStimmzettel = [
+  "Zugelassen",
+  "Stimmzettelumschlag fehlt",
+  "Lose Stimmzettel",
+  "Wahlbrief und Stimmzettelumschlag offen",
+  "Wahlscheine ungleich Stimmzettelumschläge",
+  "Nicht-amtlicher Stimmzettelumschlag",
+  "Stimmzettelumschlag gefährdet Wahlgeheimnis",
+  "Gegenstand im Stimmzettelumschlag",
+  "Für diese Wahl nicht wahlberechtigt",
+];
 
 onMounted(() => {
   for (const row of Array.from({ length: maxRows.value }, (_, i) => i)) {
@@ -119,15 +145,17 @@ onMounted(() => {
       wahlscheinZurueckweisungsgrund = grund;
       return (
         grund &&
-        gruendeWahlscheine.includes(grund) &&
+        gruendeWahlscheine.includes(
+          zurueckweisungsgrundEnumToDisplayString(grund)
+        ) &&
         grund !== ZurueckweisungsgrundEnum.Zugelassen
       );
     });
 
     if (hasAnyWahlAnyWahlscheinGrund) {
-      wahlscheinGrund.value[row] = wahlscheinZurueckweisungsgrund;
+      wahlscheinGruende.value[row] = wahlscheinZurueckweisungsgrund;
     } else {
-      wahlscheinGrund.value[row] = ZurueckweisungsgrundEnum.Zugelassen;
+      wahlscheinGruende.value[row] = ZurueckweisungsgrundEnum.Zugelassen;
     }
 
     rowIcon.value[row] = _isRowValidAtIndex(row) ? "$check" : "$edit";
@@ -148,7 +176,7 @@ function onZulassungsgrundChanged(
   rowIndex: number,
   column?: Wahl
 ) {
-  const selectedValue = stringToEnumValue(newValue);
+  const selectedValue = zurueckweisungsgrundStringToEnumValue(newValue);
   if (column) {
     const wahl = getWahlOrUndefinedById(column.wahlID);
     wahl!.beanstandeteWahlbriefe[rowIndex] = selectedValue;
@@ -167,7 +195,8 @@ function onZulassungsgrundChanged(
       }
     });
   } else {
-    wahlscheinGrund.value[rowIndex] = selectedValue;
+    // todo: wenn von zb scheinUngültig auf zugelassen geändert wird müssen die anderen werte der wahl auf null gestellt werden
+    wahlscheinGruende.value[rowIndex] = selectedValue;
     if (selectedValue !== ZurueckweisungsgrundEnum.Zugelassen) {
       wahlen.value!.map(
         (wahl) => (wahl.beanstandeteWahlbriefe[rowIndex] = selectedValue)
@@ -182,7 +211,7 @@ function deleteBeanstandeteWahlbriefeRow(rowIndex: number) {
   wahlen.value!.map((wahl) => wahl.beanstandeteWahlbriefe.splice(rowIndex, 1));
   rowIcon.value.splice(rowIndex, 1);
   rowColor.value.splice(rowIndex, 1);
-  wahlscheinGrund.value.splice(rowIndex, 1);
+  wahlscheinGruende.value.splice(rowIndex, 1);
 }
 
 function _isRowValidAtIndex(rowIndex: number) {
@@ -195,13 +224,13 @@ function _isRowValidAtIndex(rowIndex: number) {
     );
   });
   const beschlussValid: boolean =
-    wahlscheinGrund.value[rowIndex] && !!wahlscheinGrund.value[rowIndex];
+    wahlscheinGruende.value[rowIndex] && !!wahlscheinGruende.value[rowIndex];
 
   return stimmzettelValid.value && beschlussValid;
 }
 
 function _isInputDisabled(rowIndex: number) {
-  const grund = wahlscheinGrund.value[rowIndex];
+  const grund = wahlscheinGruende.value[rowIndex];
   return (
     grund == undefined ||
     (grund && grund !== ZurueckweisungsgrundEnum.Zugelassen)

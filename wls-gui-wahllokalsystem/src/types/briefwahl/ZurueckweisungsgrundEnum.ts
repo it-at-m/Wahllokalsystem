@@ -15,31 +15,3 @@ export const ZurueckweisungsgrundEnum = {
 
 export type ZurueckweisungsgrundEnum =
   (typeof ZurueckweisungsgrundEnum)[keyof typeof ZurueckweisungsgrundEnum];
-
-export const gruendeWahlscheine: ZurueckweisungsgrundEnum[] = [
-  ZurueckweisungsgrundEnum.Zugelassen,
-  ZurueckweisungsgrundEnum.ScheinUngueltig,
-  ZurueckweisungsgrundEnum.KeinOriginalSchein,
-  ZurueckweisungsgrundEnum.UnterschriftFehlt,
-];
-
-export const gruendeStimmzettel: ZurueckweisungsgrundEnum[] = Object.values(
-  ZurueckweisungsgrundEnum
-).filter(
-  (value) =>
-    value !== ZurueckweisungsgrundEnum.ScheinUngueltig &&
-    value !== ZurueckweisungsgrundEnum.KeinOriginalSchein &&
-    value !== ZurueckweisungsgrundEnum.UnterschriftFehlt
-);
-
-export function stringToEnumValue(value: string): ZurueckweisungsgrundEnum {
-  const enumValue = Object.values(ZurueckweisungsgrundEnum).find(
-    (grund) => grund === value
-  );
-
-  if (enumValue) {
-    return enumValue;
-  } else {
-    throw new Error("Ungültiger Zurückweisungsgrund");
-  }
-}

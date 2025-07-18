@@ -66,6 +66,10 @@
           :to="ROUTE_WAHLSCHLIESSUNG"
         />
         <v-list-item
+          title="Wählerverzeichnis"
+          :to="ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS"
+        />
+        <v-list-item
           v-if="currentUserWahlbezirksArt === WahlbezirksArtEnum.BWB"
           title="Wahlbriefe zulassen"
           :to="ROUTE_WAHLBRIEFE_ZULASSEN"
@@ -105,6 +109,7 @@ import {
   ROUTE_WAHLBRIEFE_ZULASSEN,
   ROUTE_WAHLSCHLIESSUNG,
   ROUTE_WAHLUMGEBUNG,
+  ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
   ROUTE_WAHLVORSTAND,
 } from "@/constants.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";

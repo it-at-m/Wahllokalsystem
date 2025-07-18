@@ -142,4 +142,5 @@ Damit das Frontend im Zusammenspiel mit den anderen Services lokal gestartet wer
 5. die Services `basisdaten-service`, `eai-service`, `infomanagement-service` und `wahlvorstand-service` starten und folgende http-requests ausführen:
    - `"basisdaten-service/wahltage.http"`: `GET wahltage`
    - `"basisdaten-service/ungueltigeWahlscheine.http"`: `POST ungueltige Wahlscheine | user wls_all_uwb`
+   - `"basisdaten-service/wahltermindaten.http"`: `Put Wahltermindaten | user wls_all_uwb`
    - `"infomanagement-service/konfigurierterWahltag.http"`: `POST konfigurierter Wahltag`

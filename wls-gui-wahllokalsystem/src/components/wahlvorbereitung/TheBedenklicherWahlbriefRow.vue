@@ -51,6 +51,7 @@
             hide-details
             auto-select-first
             :rules="[REQUIRED]"
+            :disabled="_isInputDisabled(index - 1)"
             @update:model-value="
               (value) => onZulassungsgrundChanged(value, index - 1, wahl)
             "
@@ -92,6 +93,7 @@ import {
   gruendeStimmzettel,
   gruendeWahlscheine,
   stringToEnumValue,
+  ZurueckweisungsgrundEnum,
 } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 import { REQUIRED } from "@/util/rules.ts";
 
@@ -129,12 +131,31 @@ function onZulassungsgrundChanged(
   rowIndex: number,
   column?: Wahl
 ) {
+  const selectedValue = stringToEnumValue(newValue);
   if (column) {
     const wahl = getWahlOrUndefinedById(column.wahlID);
-    wahl!.beanstandeteWahlbriefe![rowIndex] = stringToEnumValue(newValue);
-    wahl!.beanstandeteWahlbriefe[rowIndex] = stringToEnumValue(newValue);
+    wahl!.beanstandeteWahlbriefe[rowIndex] = selectedValue;
+
+    // add new value to other stimmzettelumschlag columns
+    wahlen.value!.forEach((wahl) => {
+      // avoid updating the same column again
+      if (wahl.wahlID !== column.wahlID) {
+        if (
+          selectedValue !== ZurueckweisungsgrundEnum.NichtWahlberechtigt &&
+          wahl.beanstandeteWahlbriefe[rowIndex] !==
+            ZurueckweisungsgrundEnum.NichtWahlberechtigt
+        ) {
+          wahl.beanstandeteWahlbriefe[rowIndex] = selectedValue;
+        }
+      }
+    });
   } else {
-    wahlscheinGrund.value[rowIndex] = stringToEnumValue(newValue);
+    wahlscheinGrund.value[rowIndex] = selectedValue;
+    if (selectedValue !== ZurueckweisungsgrundEnum.Zugelassen) {
+      wahlen.value!.map(
+        (wahl) => (wahl.beanstandeteWahlbriefe[rowIndex] = selectedValue)
+      );
+    }
   }
   rowIcon.value[rowIndex] = _isRowValidAtIndex(rowIndex) ? "$check" : "$edit";
   rowColor.value[rowIndex] = _isRowValidAtIndex(rowIndex) ? "success" : "error";
@@ -160,6 +181,14 @@ function _isRowValidAtIndex(rowIndex: number) {
     wahlscheinGrund.value[rowIndex] && !!wahlscheinGrund.value[rowIndex];
 
   return stimmzettelValid.value && beschlussValid;
+}
+
+function _isInputDisabled(rowIndex: number) {
+  const grund = wahlscheinGrund.value[rowIndex];
+  return (
+    grund == undefined ||
+    (grund && grund !== ZurueckweisungsgrundEnum.Zugelassen)
+  );
 }
 </script>
 

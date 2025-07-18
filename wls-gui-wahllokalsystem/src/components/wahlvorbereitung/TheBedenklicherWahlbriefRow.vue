@@ -12,7 +12,6 @@
         </th>
       </tr>
     </thead>
-
     <tbody>
       <tr
         v-for="index in maxRows"
@@ -109,9 +108,11 @@ const {
 } = useBeanstandeteWahlbriefeMapper();
 
 const maxRows = computed(() => {
-  return Math.max(
-    ...wahlen.value!.map((wahl) => wahl.beanstandeteWahlbriefe.length)
-  );
+  return wahlen.value
+    ? Math.max(
+        ...wahlen.value.map((wahl) => wahl.beanstandeteWahlbriefe.length)
+      )
+    : 0;
 });
 
 const rowIcon = ref<string[]>([]);
@@ -140,22 +141,24 @@ const gruendeStimmzettel = [
 onMounted(() => {
   for (const row of Array.from({ length: maxRows.value }, (_, i) => i)) {
     let wahlscheinZurueckweisungsgrund;
-    const hasAnyWahlAnyWahlscheinGrund = wahlen.value!.some((wahl) => {
-      const grund = wahl.beanstandeteWahlbriefe[row];
-      wahlscheinZurueckweisungsgrund = grund;
-      return (
-        grund &&
-        gruendeWahlscheine.includes(
-          zurueckweisungsgrundEnumToDisplayString(grund)
-        ) &&
-        grund !== ZurueckweisungsgrundEnum.Zugelassen
-      );
-    });
+    if (wahlen.value) {
+      const hasAnyWahlAnyWahlscheinGrund = wahlen.value.some((wahl) => {
+        const grund = wahl.beanstandeteWahlbriefe[row];
+        wahlscheinZurueckweisungsgrund = grund;
+        return (
+          grund &&
+          gruendeWahlscheine.includes(
+            zurueckweisungsgrundEnumToDisplayString(grund)
+          ) &&
+          grund !== ZurueckweisungsgrundEnum.Zugelassen
+        );
+      });
 
-    if (hasAnyWahlAnyWahlscheinGrund) {
-      wahlscheinGruende.value[row] = wahlscheinZurueckweisungsgrund;
-    } else {
-      wahlscheinGruende.value[row] = ZurueckweisungsgrundEnum.Zugelassen;
+      if (hasAnyWahlAnyWahlscheinGrund) {
+        wahlscheinGruende.value[row] = wahlscheinZurueckweisungsgrund;
+      } else {
+        wahlscheinGruende.value[row] = ZurueckweisungsgrundEnum.Zugelassen;
+      }
     }
 
     rowIcon.value[row] = _isRowValidAtIndex(row) ? "$check" : "$edit";
@@ -165,7 +168,6 @@ onMounted(() => {
 
 watch(maxRows, (newValue, oldValue) => {
   if (oldValue < newValue) {
-    // row added
     rowIcon.value.push("$edit");
     rowColor.value.push("error");
   }
@@ -179,26 +181,30 @@ function onZulassungsgrundChanged(
   const selectedValue = zurueckweisungsgrundStringToEnumValue(newValue);
   if (column) {
     const wahl = getWahlOrUndefinedById(column.wahlID);
-    wahl!.beanstandeteWahlbriefe[rowIndex] = selectedValue;
+    if (wahl) {
+      wahl.beanstandeteWahlbriefe[rowIndex] = selectedValue;
+    }
 
-    // add new value to other stimmzettelumschlag columns
-    wahlen.value!.forEach((wahl) => {
-      // avoid updating the same column again
-      if (wahl.wahlID !== column.wahlID) {
-        if (
-          selectedValue !== ZurueckweisungsgrundEnum.NichtWahlberechtigt &&
-          wahl.beanstandeteWahlbriefe[rowIndex] !==
-            ZurueckweisungsgrundEnum.NichtWahlberechtigt
-        ) {
-          wahl.beanstandeteWahlbriefe[rowIndex] = selectedValue;
+    if (wahlen.value) {
+      // add new value to other stimmzettelumschlag columns
+      wahlen.value.forEach((wahl) => {
+        // avoid updating the same column again
+        if (wahl.wahlID !== column.wahlID) {
+          if (
+            selectedValue !== ZurueckweisungsgrundEnum.NichtWahlberechtigt &&
+            wahl.beanstandeteWahlbriefe[rowIndex] !==
+              ZurueckweisungsgrundEnum.NichtWahlberechtigt
+          ) {
+            wahl.beanstandeteWahlbriefe[rowIndex] = selectedValue;
+          }
         }
-      }
-    });
+      });
+    }
   } else {
     // todo: wenn von zb scheinUngültig auf zugelassen geändert wird müssen die anderen werte der wahl auf null gestellt werden
     wahlscheinGruende.value[rowIndex] = selectedValue;
-    if (selectedValue !== ZurueckweisungsgrundEnum.Zugelassen) {
-      wahlen.value!.map(
+    if (selectedValue !== ZurueckweisungsgrundEnum.Zugelassen && wahlen.value) {
+      wahlen.value.map(
         (wahl) => (wahl.beanstandeteWahlbriefe[rowIndex] = selectedValue)
       );
     }
@@ -208,20 +214,24 @@ function onZulassungsgrundChanged(
 }
 
 function deleteBeanstandeteWahlbriefeRow(rowIndex: number) {
-  wahlen.value!.map((wahl) => wahl.beanstandeteWahlbriefe.splice(rowIndex, 1));
-  rowIcon.value.splice(rowIndex, 1);
-  rowColor.value.splice(rowIndex, 1);
-  wahlscheinGruende.value.splice(rowIndex, 1);
+  if (wahlen.value) {
+    wahlen.value.map((wahl) => wahl.beanstandeteWahlbriefe.splice(rowIndex, 1));
+    rowIcon.value.splice(rowIndex, 1);
+    rowColor.value.splice(rowIndex, 1);
+    wahlscheinGruende.value.splice(rowIndex, 1);
+  }
 }
 
 function _isRowValidAtIndex(rowIndex: number) {
   const stimmzettelValid = computed(() => {
-    return wahlen.value!.every(
-      (wahl) =>
-        wahl.beanstandeteWahlbriefe &&
-        wahl.beanstandeteWahlbriefe[rowIndex] &&
-        !!wahl.beanstandeteWahlbriefe[rowIndex]
-    );
+    return wahlen.value
+      ? wahlen.value.every(
+          (wahl) =>
+            wahl.beanstandeteWahlbriefe &&
+            wahl.beanstandeteWahlbriefe[rowIndex] &&
+            !!wahl.beanstandeteWahlbriefe[rowIndex]
+        )
+      : false;
   });
   const beschlussValid: boolean =
     wahlscheinGruende.value[rowIndex] && !!wahlscheinGruende.value[rowIndex];

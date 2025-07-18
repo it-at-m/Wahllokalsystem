@@ -46,11 +46,9 @@ export function useBeanstandeteWahlbriefeMapper() {
               throw new Error(`Ungültiger Zurückweisungsgrund: ${value}`);
           }
         });
-
         beanstandeteWahlbriefe.beanstandeteWahlbriefe.set(key, enumValues);
       }
     );
-
     return beanstandeteWahlbriefe;
   }
 

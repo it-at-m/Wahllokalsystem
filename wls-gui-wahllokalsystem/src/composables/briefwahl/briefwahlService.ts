@@ -46,7 +46,9 @@ export function useBriefwahlService() {
         waehlerVerzeichnisNummer,
         beanstandeteWahlbriefeDTO
       );
-    } catch {}
+    } catch {
+      // todo addNotification?
+    }
 
     return;
   }

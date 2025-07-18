@@ -49,7 +49,9 @@ const isSaveButtonDisabled = computed(
 const isSaving = computed(() => isBeanstandeteWahlbriefeSaving.value);
 
 function onAddBedenklicherWahlbriefClicked() {
-  wahlen.value!.map((wahl) => wahl.beanstandeteWahlbriefe!.push(null));
+  if (wahlen.value) {
+    wahlen.value.map((wahl) => wahl.beanstandeteWahlbriefe.push(null));
+  }
 }
 
 function onSaveClicked() {

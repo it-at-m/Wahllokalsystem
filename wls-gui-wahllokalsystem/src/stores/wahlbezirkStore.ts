@@ -1,4 +1,5 @@
 import type { Wahlbriefdaten } from "@/types/briefwahl/Wahlbriefdaten";
+import type { PflegeWaehlerverzeichnis } from "@/types/wahlbezirk/PflegeWaehlerverzeichnis.ts";
 import type { UngueltigerWahlschein } from "@/types/wahlbezirk/UngueltigerWahlschein.ts";
 import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
 
@@ -9,6 +10,7 @@ import { useUngueltigeWahlscheineService } from "@/composables/basisdaten/unguel
 import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
+import { useWaehlerverzeichnisService } from "@/composables/wahlvorbereitung/waehlerverzeichnisService.ts";
 import { useWahlvorbereitungService } from "@/composables/wahlvorbereitung/wahlvorbereitungService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -28,12 +30,25 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     currentUserWahlbezirkID,
     currentUserWahltagID,
     currentUserWahlbezirksArt,
+    currentUserHauptWahlID,
   } = storeToRefs(useUserStore());
+  const {
+    createDefaultPflegeWaehlerverzeichnis,
+    getWaehlerverzeichnis,
+    postWaehlerverzeichnis,
+  } = useWaehlerverzeichnisService();
+
+  const { getWaehlerverzeichnisOrUndefinedById } = useWahlenStore();
   const { isValidDate } = useDateTimeUtils();
   const { wahlen } = storeToRefs(useWahlenStore());
   const eroeffnungsuhrzeit = ref<Date | undefined>(undefined);
   const eroeffnungsuhrzeitSent = ref<Date | undefined>(undefined);
   const eroeffnungsuhrzeitIsSaving = ref(false);
+
+  const pflegeWaehlerverzeichnis = ref<PflegeWaehlerverzeichnis>(
+    createDefaultPflegeWaehlerverzeichnis()
+  );
+  const pflegeWaehlerverzeichnisIsSaving = ref(false);
 
   const schliessungsuhrzeit = ref<Date | undefined>(undefined);
   const schliessungsuhrzeitSent = ref<Date | undefined>(undefined);
@@ -81,6 +96,19 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     );
   }
 
+  async function loadPflegeWaehlerverzeichnis(sendNotification = true) {
+    const waehlerverzeichnisNummer = getWaehlerverzeichnisOrUndefinedById(
+      currentUserHauptWahlID.value
+    );
+    if (waehlerverzeichnisNummer !== undefined) {
+      pflegeWaehlerverzeichnis.value = await getWaehlerverzeichnis(
+        currentUserWahlbezirkID.value,
+        waehlerverzeichnisNummer,
+        sendNotification
+      );
+    }
+  }
+
   async function sendEroeffnungsuhrzeit() {
     if (eroeffnungsuhrzeit.value) {
       const eroeffnungsuhrzeitToSave = new Date(eroeffnungsuhrzeit.value);
@@ -93,6 +121,24 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
         eroeffnungsuhrzeitSent.value = eroeffnungsuhrzeitToSave;
       } finally {
         eroeffnungsuhrzeitIsSaving.value = false;
+      }
+    }
+  }
+
+  async function sendPflegeWaehlerverzeichnis() {
+    const waehlerverzeichnisNummer = getWaehlerverzeichnisOrUndefinedById(
+      currentUserHauptWahlID.value
+    );
+    if (waehlerverzeichnisNummer !== undefined) {
+      try {
+        pflegeWaehlerverzeichnisIsSaving.value = true;
+        await postWaehlerverzeichnis(
+          currentUserWahlbezirkID.value,
+          waehlerverzeichnisNummer,
+          pflegeWaehlerverzeichnis.value
+        );
+      } finally {
+        pflegeWaehlerverzeichnisIsSaving.value = false;
       }
     }
   }
@@ -145,12 +191,16 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     eroeffnungsuhrzeit,
     eroeffnungsuhrzeitIsSaving,
     eroeffnungsuhrzeitSent,
+    pflegeWaehlerverzeichnis,
+    pflegeWaehlerverzeichnisIsSaving,
     schliessungsuhrzeit,
     schliessungsuhrzeitIsSaving,
     schliessungsuhrzeitSent,
     ungueltigeWahlscheine,
     initUngueltigeWahlscheine,
+    loadPflegeWaehlerverzeichnis,
     sendEroeffnungsuhrzeit,
+    sendPflegeWaehlerverzeichnis,
     sendSchliessungsuhrzeit,
     sendUrnenwahlvorbereitung,
     urnenwahlVorbereitung,

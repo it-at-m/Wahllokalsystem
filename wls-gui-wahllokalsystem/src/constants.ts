@@ -9,6 +9,7 @@ export const ROUTE_WAHLSCHLIESSUNG = "wahlschliessung";
 export const ROUTE_WAHLUMGEBUNG = "wahlumgebung";
 export const ROUTE_BEGINN_STIMMABGABE = "beginnStimmabgabe";
 export const ROUTE_ERFASSUNG_WAHLBRIEFE = "erfassungWahlbriefe";
+export const ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS = "waehlerverzeichnis";
 
 export const TOAST = "toast";
 export const PRINT_EXAMPLE = "print-example";

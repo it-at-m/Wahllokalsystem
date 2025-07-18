@@ -69,6 +69,10 @@
           title="Erfassung Wahlbriefe"
           :to="ROUTE_ERFASSUNG_WAHLBRIEFE"
         />
+        <v-list-item
+          title="Wählerverzeichnis"
+          :to="ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS"
+        />
       </v-list-group>
       <v-list-item
         title="Ereignisse"
@@ -104,6 +108,7 @@ import {
   ROUTE_ERFASSUNG_WAHLBRIEFE,
   ROUTE_WAHLSCHLIESSUNG,
   ROUTE_WAHLUMGEBUNG,
+  ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
   ROUTE_WAHLVORSTAND,
 } from "@/constants.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";

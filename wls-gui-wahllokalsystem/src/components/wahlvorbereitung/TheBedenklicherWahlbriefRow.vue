@@ -113,6 +113,23 @@ const wahlscheinGrund = ref(Array(maxRows.value).fill(""));
 
 onMounted(() => {
   for (const row of Array.from({ length: maxRows.value }, (_, i) => i)) {
+    let wahlscheinZurueckweisungsgrund;
+    const hasAnyWahlAnyWahlscheinGrund = wahlen.value!.some((wahl) => {
+      const grund = wahl.beanstandeteWahlbriefe[row];
+      wahlscheinZurueckweisungsgrund = grund;
+      return (
+        grund &&
+        gruendeWahlscheine.includes(grund) &&
+        grund !== ZurueckweisungsgrundEnum.Zugelassen
+      );
+    });
+
+    if (hasAnyWahlAnyWahlscheinGrund) {
+      wahlscheinGrund.value[row] = wahlscheinZurueckweisungsgrund;
+    } else {
+      wahlscheinGrund.value[row] = ZurueckweisungsgrundEnum.Zugelassen;
+    }
+
     rowIcon.value[row] = _isRowValidAtIndex(row) ? "$check" : "$edit";
     rowColor.value[row] = _isRowValidAtIndex(row) ? "success" : "error";
   }

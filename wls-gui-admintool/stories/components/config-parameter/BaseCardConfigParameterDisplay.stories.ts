@@ -12,11 +12,11 @@ const meta: Meta<typeof BaseCardConfigParameterDisplay> = {
       description: "Konfigurationsparameter Objekt",
       control: "object",
     },
-    onConfirmEdit: {
+    onClickEdit: {
       description:
         "Wird ausgelöst wenn der Edit-Button geklickt wird und gibt den Namen des ConfigParameters zurück",
-      action: "confirmEdit",
-      name: "confirmEdit",
+      action: "clickEdit",
+      name: "clickEdit",
       table: {
         category: "Events",
       },
@@ -30,7 +30,7 @@ const meta: Meta<typeof BaseCardConfigParameterDisplay> = {
       defaultValue: "Herzlich willkommen zur Testwahl!",
     } as InfomanagementConfigParameter,
 
-    onConfirmEdit: fn(),
+    onClickEdit: fn(),
   },
 };
 
@@ -38,16 +38,4 @@ export default meta;
 
 type Story = StoryObj<typeof BaseCardConfigParameterDisplay>;
 
-export const WithValue: Story = {};
-
-export const NoValue: Story = {
-  args: {
-    configParameter: {
-      name: "Willkommenstext",
-      beschreibung: "Begrüßungstext auf der Anmeldemaske",
-      defaultValue: "Herzlich willkommen zur Testwahl!",
-    } as InfomanagementConfigParameter,
-
-    onConfirmEdit: fn(),
-  },
-};
+export const Default: Story = {};

@@ -11,7 +11,6 @@ import { beforeEach, describe, expect, it } from "vitest";
 import BaseCardConfigParameterDisplay from "@/components/config-parameter/BaseCardConfigParameterDisplay.vue";
 import vuetify from "@/plugins/vuetify.ts";
 
-// Testdaten für Event
 const configParameter: InfomanagementConfigParameter[] = [
   {
     name: "Willkommenstext",
@@ -42,17 +41,15 @@ describe("BaseCardConfigParameterDisplay.vue", () => {
     });
   });
 
-  //Payload Ausgabe
   describe(COMPONENT_EVENT_TESTS, () => {
     beforeEach(() => {
       mountComponent(configParameter);
     });
 
     it("should_emitConfigParameterName_when_ButtonIsClicked", async () => {
-      // Button per data-test selektieren
-      const button = wrapper.find('[data-test="confirm-edit-button"]');
+      const button = wrapper.find('[data-test="click-edit-button"]');
       await button.trigger("click");
-      const emitted = wrapper.emitted("confirmEdit");
+      const emitted = wrapper.emitted("clickEdit");
       expect(emitted).toBeDefined();
       expect(emitted?.[0]?.[0]).toBe(configParameter[0].name);
     });

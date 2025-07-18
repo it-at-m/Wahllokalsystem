@@ -6,18 +6,22 @@
   >
     <v-divider class="card-divider" />
     <v-card-text class="card-content">
-      <v-card-actions class="card-action">
-        <div class="card-wert">
-          <div v-if="configParameter?.wert">{{ configParameter?.wert }}</div>
-          <div v-else>{{ configParameter?.defaultValue }}</div>
-        </div>
-      </v-card-actions>
-      <v-btn
-        class="v-button"
-        icon="$edit"
-        @click="onConfigParameterEditConfirmed"
-        data-test="confirm-edit-button"
-      />
+      <v-row>
+          <v-card-actions class="card-action">
+            <v-col cols="6" class="mx-10" >Wert:</v-col>
+            <v-col cols="6" class="mx-2">{{ configParameter?.wert }}</v-col>
+            <v-btn
+                class="v-button"
+                icon="$edit"
+                @click="onConfigParameterEditClicked"
+                data-test="click-edit-button"
+            />
+          </v-card-actions>
+      </v-row>
+      <v-row>
+        <v-col cols="6" class="mx-5">   Standardwert: </v-col>
+        <v-col cols="6" class="mx-2">'{{ configParameter?.defaultValue }}'</v-col>
+      </v-row>
     </v-card-text>
   </v-card>
 </template>
@@ -33,6 +37,8 @@ import {
   VCardActions,
   VCardText,
   VDivider,
+  VRow,
+  VCol
 } from "vuetify/components";
 
 const props = defineProps({
@@ -42,25 +48,14 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits<(event: "confirmEdit", name: string) => void>(); // confirmEdit erwartet ein String "Name"
+const emit = defineEmits<(event: "clickEdit", name: string) => void>();
 
-//Payload
-function onConfigParameterEditConfirmed() {
-  emit("confirmEdit", props.configParameter.name);
+function onConfigParameterEditClicked() {
+  emit("clickEdit", props.configParameter.name);
 }
 </script>
 
 <style scoped>
-.card:hover {
-  background-color: #f1f1f1;
-}
-
-.card-content {
-  font-size: 1.5rem;
-  padding-left: 16px;
-  margin: auto;
-  display: inline-flex;
-}
 
 .card-divider {
   border: 1px solid#333333;
@@ -68,16 +63,4 @@ function onConfigParameterEditConfirmed() {
   opacity: 0.2;
 }
 
-.v-button {
-  color: white;
-  background-color: #333;
-  width: 30px;
-  height: 30px;
-  margin-top: 10px;
-  font-size: 0.6em;
-}
-
-.v-button:hover {
-  background-color: dimgrey;
-}
 </style>

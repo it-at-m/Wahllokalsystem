@@ -196,7 +196,7 @@ services:
 
   wls-admin-service:
     container_name: wls-admin-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-admin-service:latest-dev@sha256:9fb7dcc2988da3240e199d41295524a251604100ee32fbf98b00486a062d8d12
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-admin-service:latest-dev@sha256:04abfa7637428cba443dcded4b6bb0d3df6b7eb3d7ea1e833f517a15945dd3ca
     depends_on:
       - wls-db-oracle
     env_file:

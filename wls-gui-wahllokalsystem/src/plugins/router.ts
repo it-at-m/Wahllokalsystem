@@ -17,8 +17,8 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 import EreignisseView from "@/views/EreignisseView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
 import HomeView from "@/views/HomeView.vue";
-import UwbWaehlerverzeichnisView from "@/views/wahlvorbereitung/UWBWaehlerverzeichnisView.vue";
-import UwbWahlhandlungView from "@/views/wahlvorbereitung/UWBWahlhandlungView.vue";
+import UWBWaehlerverzeichnisView from "@/views/wahlvorbereitung/UWBWaehlerverzeichnisView.vue";
+import UWBWahlhandlungView from "@/views/wahlvorbereitung/UWBWahlhandlungView.vue";
 import WahleroeffnungView from "@/views/wahlvorbereitung/WahleroeffnungView.vue";
 import WahlumgebungView from "@/views/wahlvorbereitung/WahlumgebungView.vue";
 import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
@@ -44,7 +44,7 @@ const routes = [
   {
     path: "/wahlschliessung",
     name: ROUTE_WAHLSCHLIESSUNG,
-    component: UwbWahlhandlungView,
+    component: UWBWahlhandlungView,
     beforeEnter: routeWhenWahlbezirksArtIsUWb,
   },
   {
@@ -60,7 +60,7 @@ const routes = [
   {
     path: "/waehlerverzeichnis",
     name: ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
-    component: UwbWaehlerverzeichnisView,
+    component: UWBWaehlerverzeichnisView,
     beforeEnter: routeWhenWahlbezirksArtIsUWb,
   },
   {

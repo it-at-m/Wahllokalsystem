@@ -147,7 +147,7 @@ services:
 
   wls-wahlvorstand-service:
     container_name: wls-wahlvorstand-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-wahlvorstand-service:latest-dev@sha256:777218fc01e502c787ffd18a4886f3e5b83406af3fd4c66b1af5f7b756826b79
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-wahlvorstand-service:latest-dev@sha256:9ab93f4f71581c91bc98e968e7551e332c08b56b0a54f85dbb42a1beb6312668
     depends_on:
       - wls-db-oracle
     env_file:

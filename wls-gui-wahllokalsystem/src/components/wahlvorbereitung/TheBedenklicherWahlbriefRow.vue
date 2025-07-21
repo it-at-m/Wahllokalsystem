@@ -160,7 +160,7 @@ onMounted(() => {
       }
     }
 
-    rowIcon.value[row] = _isRowValidAtIndex(row) ? "$check" : "$edit";
+    rowIcon.value[row] = _isRowValidAtIndex(row) ? "$valid" : "$edit";
     rowColor.value[row] = _isRowValidAtIndex(row) ? "success" : "error";
   }
 });
@@ -212,7 +212,7 @@ function onZulassungsgrundChanged(
       );
     }
   }
-  rowIcon.value[rowIndex] = _isRowValidAtIndex(rowIndex) ? "$check" : "$edit";
+  rowIcon.value[rowIndex] = _isRowValidAtIndex(rowIndex) ? "$valid" : "$edit";
   rowColor.value[rowIndex] = _isRowValidAtIndex(rowIndex) ? "success" : "error";
 }
 

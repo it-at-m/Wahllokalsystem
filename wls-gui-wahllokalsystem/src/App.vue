@@ -37,9 +37,8 @@ const { loadUser } = useUserStore();
 const { initTasks } = useTaskManagerStore();
 const { loadWaehler } = useMonitoringStore();
 const { loadPflegeWaehlerverzeichnis } = useWahlbezirkStore();
-const { wahlen } = storeToRefs(useWahlenStore());
-const { getWaehlerverzeichnisOrUndefinedById, initBeanstandeteWahlbriefe } =
-  useWahlenStore();
+const { waehlerverzeichnisNummern } = storeToRefs(useWahlenStore());
+const { initBeanstandeteWahlbriefe } = useWahlenStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
@@ -52,13 +51,8 @@ onMounted(async () => {
     await loadEreignisse();
     await loadWaehler();
     await loadPflegeWaehlerverzeichnis();
-    if (wahlen.value) {
-      for (const wahl of wahlen.value) {
-        const wvzNr = getWaehlerverzeichnisOrUndefinedById(wahl.wahlID);
-        if (wvzNr) {
-          await initBeanstandeteWahlbriefe(wvzNr);
-        }
-      }
+    for (const wvzNr of waehlerverzeichnisNummern.value) {
+      await initBeanstandeteWahlbriefe(wvzNr);
     }
   } catch (error) {
     console.debug(error);

@@ -2,7 +2,7 @@ import type { BeanstandeteWahlbriefeCreateDTO } from "@/api/wls-clients/generate
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import { defineStore, storeToRefs } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
@@ -20,11 +20,23 @@ export const useWahlenStore = defineStore(storeID, () => {
   const wahlen = ref<Wahl[] | null>();
   const isBeanstandeteWahlbriefeSaving = ref<boolean>(false);
 
+  const waehlerverzeichnisNummern = computed<number[]>(() => {
+    if (!wahlen.value) return [];
+
+    const nummern = new Set<number>();
+
+    for (const wahl of wahlen.value) {
+      nummern.add(wahl.waehlerverzeichnisNummer);
+    }
+    return Array.from(nummern);
+  });
+
   async function initWahlen(sendNotification = true) {
     wahlen.value = await wahlenService.getWahlen(
       currentUserWahltagID.value,
       sendNotification
     );
+    // todo sortieren nach wahlnummer vor der zuweisung zu wahlen.value
   }
 
   async function initBeanstandeteWahlbriefe(waehlerverzeichnisNummer: number) {
@@ -46,20 +58,28 @@ export const useWahlenStore = defineStore(storeID, () => {
     const beanstandeteWahlbriefeDTO: BeanstandeteWahlbriefeCreateDTO = {
       beanstandeteWahlbriefe: {},
     };
-    if (wahlen.value) {
-      for (const wahl of wahlen.value) {
-        if (
-          wahl.beanstandeteWahlbriefe &&
-          wahl.beanstandeteWahlbriefe.every((grund) => grund !== null)
-        ) {
-          beanstandeteWahlbriefeDTO.beanstandeteWahlbriefe[wahl.wahlID] =
-            wahl.beanstandeteWahlbriefe.map((grund) => grund?.toString() ?? "");
-        }
 
+    for (const wvzNr of waehlerverzeichnisNummern.value) {
+      if (wahlen.value) {
+        const wahlenWithWvzNr = wahlen.value.filter(
+          (wahl) => wahl.waehlerverzeichnisNummer === wvzNr
+        );
+
+        for (const wahl of wahlenWithWvzNr) {
+          if (
+            wahl.beanstandeteWahlbriefe &&
+            wahl.beanstandeteWahlbriefe.every((grund) => grund !== null)
+          ) {
+            beanstandeteWahlbriefeDTO.beanstandeteWahlbriefe[wahl.wahlID] =
+              wahl.beanstandeteWahlbriefe.map(
+                (grund) => grund?.toString() ?? ""
+              );
+          }
+        }
         await briefwahlService.postBeanstandeteWahlbriefe(
           beanstandeteWahlbriefeDTO,
           currentUserWahlbezirkID.value,
-          wahl.waehlerverzeichnisNummer
+          wvzNr
         );
       }
     }
@@ -89,6 +109,7 @@ export const useWahlenStore = defineStore(storeID, () => {
 
   return {
     wahlen,
+    waehlerverzeichnisNummern,
     getWahlOrUndefinedById,
     getWahlNameOrBlankStringById,
     getWahlTagOrBlankStringById,

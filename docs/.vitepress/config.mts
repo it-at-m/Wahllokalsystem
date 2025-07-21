@@ -207,6 +207,10 @@ export default withMermaid({
                   text: "Offlinefähigkeit-Konzept",
                   link: `${PATH_SYSSPEC}frontend/offlinefaehigkeit-konzept.md`,
                 },
+                {
+                  text: "Task-Factories",
+                  link: `${PATH_SYSSPEC}frontend/task-factories.md`,
+                },
               ],
             },
           ],

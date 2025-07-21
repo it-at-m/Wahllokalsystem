@@ -5,16 +5,16 @@ import type { Task } from "@/types/tasks/Task.ts";
 
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 
-export class KopfdatenTaskFactoryImpl implements TaskFactoryInterface {
-  createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
+export function useKopfdatenTaskFactory(): TaskFactoryInterface {
+  function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
     const taskList: Task[] = [];
-    taskFactoryContext.taskFactoryMetaData.forEach((taskFactoryMetaData) => {
-      taskList.push(this._createTask(taskFactoryMetaData));
+    taskFactoryContext.extendedWahlMetaData.forEach((taskFactoryMetaData) => {
+      taskList.push(createTask(taskFactoryMetaData));
     });
     return taskList;
   }
 
-  _createTask(taskFactoryMetaData: ExtendedWahlMetaData): Task {
+  function createTask(taskFactoryMetaData: ExtendedWahlMetaData): Task {
     const { loadKopfdaten } = useKopfdatenStore();
     return {
       callback: () =>
@@ -25,4 +25,8 @@ export class KopfdatenTaskFactoryImpl implements TaskFactoryInterface {
       name: "Kopfdaten - " + taskFactoryMetaData.wahlname,
     };
   }
+
+  return {
+    createTasks,
+  };
 }

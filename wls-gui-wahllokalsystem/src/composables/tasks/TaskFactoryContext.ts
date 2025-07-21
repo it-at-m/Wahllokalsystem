@@ -3,5 +3,5 @@ import type { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 export interface TaskFactoryContext {
   wahlbezirkArt: WahlbezirksArtEnum;
-  taskFactoryMetaData: ExtendedWahlMetaData[];
+  extendedWahlMetaData: ExtendedWahlMetaData[];
 }

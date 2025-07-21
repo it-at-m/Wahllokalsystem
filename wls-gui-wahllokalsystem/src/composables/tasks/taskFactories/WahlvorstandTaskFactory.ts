@@ -4,15 +4,13 @@ import type { Task } from "@/types/tasks/Task.ts";
 
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 
-export class WahlvorstandTaskFactoryImpl implements TaskFactoryInterface {
+export function useWahlvorstandTaskFactory(): TaskFactoryInterface {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  createTasks(taskFactoryData: TaskFactoryContext): Task[] {
-    const taskList: Task[] = [];
-    taskList.push(this._createTask());
-    return taskList;
+  function createTasks(taskFactoryData: TaskFactoryContext): Task[] {
+    return [createTask()];
   }
 
-  _createTask(): Task {
+  function createTask(): Task {
     const { initWahlvorstand } = useWahlvorstandStore();
     return {
       name: "Wahlvorstand",
@@ -21,4 +19,8 @@ export class WahlvorstandTaskFactoryImpl implements TaskFactoryInterface {
       },
     };
   }
+
+  return {
+    createTasks,
+  };
 }

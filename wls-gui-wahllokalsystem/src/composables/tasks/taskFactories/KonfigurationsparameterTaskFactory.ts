@@ -4,17 +4,13 @@ import type { Task } from "@/types/tasks/Task.ts";
 
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 
-export class KonfigurationsparameterTaskFactoryImpl
-  implements TaskFactoryInterface
-{
+export function useKonfigurationsparameterTaskFactory(): TaskFactoryInterface {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  createTasks(taskFactoryData: TaskFactoryContext): Task[] {
-    const taskList: Task[] = [];
-    taskList.push(this._createTask());
-    return taskList;
+  function createTasks(taskFactoryData: TaskFactoryContext): Task[] {
+    return [_createTask()];
   }
 
-  _createTask(): Task {
+  function _createTask(): Task {
     const { initKonfigurationsparameter } = useInfomanagementStore();
     return {
       name: "Konfigurationsparameter",
@@ -23,4 +19,8 @@ export class KonfigurationsparameterTaskFactoryImpl
       },
     };
   }
+
+  return {
+    createTasks,
+  };
 }

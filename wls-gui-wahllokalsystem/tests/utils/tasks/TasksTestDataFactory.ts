@@ -21,14 +21,14 @@ export function useTasksTestDataFactory() {
     };
   }
 
-  function createTaskFactoryData(): TaskFactoryContext {
+  function createTaskFactoryContext(): TaskFactoryContext {
     return {
-      taskFactoryMetaData: [createTaskFactoryMetaData()],
+      extendedWahlMetaData: [createExtendedWahlMetaData()],
       wahlbezirkArt: WahlbezirksArtEnum.BWB,
     };
   }
 
-  function createTaskFactoryMetaData(): ExtendedWahlMetaData {
+  function createExtendedWahlMetaData(): ExtendedWahlMetaData {
     return {
       wahlart: WahlWahlartEnum.Baw,
       wahlnummer: generateRandomString(10),
@@ -38,14 +38,19 @@ export function useTasksTestDataFactory() {
     };
   }
 
-  function prepareTaskFactoryData(): Builder<TaskFactoryContext> {
-    return proxyBuilder<TaskFactoryContext>(createTaskFactoryData());
+  function prepareTaskFactoryContext(): Builder<TaskFactoryContext> {
+    return proxyBuilder<TaskFactoryContext>(createTaskFactoryContext());
+  }
+
+  function prepareExtendedWahlMetaData(): Builder<ExtendedWahlMetaData> {
+    return proxyBuilder<ExtendedWahlMetaData>(createExtendedWahlMetaData());
   }
 
   return {
     createTask,
-    createTaskFactoryData,
-    prepareTaskFactoryData,
-    createTaskFactoryMetaData,
+    createTaskFactoryContext,
+    prepareTaskFactoryContext,
+    createExtendedWahlMetaData,
+    prepareExtendedWahlMetaData,
   };
 }

@@ -4,10 +4,11 @@ import { useTasksTestDataFactory } from "@tests/utils/tasks/TasksTestDataFactory
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { WahlvorstandTaskFactoryImpl } from "@/composables/tasks/taskFactories/WahlvorstandTaskFactoryImpl.ts";
+import { useKonfigurationsparameterTaskFactory } from "@/composables/tasks/taskFactories/KonfigurationsparameterTaskFactory.ts";
 
-describe("WahlvorstandTaskFactoryImpl.ts", () => {
-  const { createTaskFactoryData } = useTasksTestDataFactory();
+describe("WahlvorstandTaskFactory.ts", () => {
+  const { createTaskFactoryContext } = useTasksTestDataFactory();
+  const { createTasks } = useKonfigurationsparameterTaskFactory();
 
   beforeEach(() => {
     setActivePinia(createPinia());
@@ -15,10 +16,9 @@ describe("WahlvorstandTaskFactoryImpl.ts", () => {
 
   describe("createTasks", () => {
     it("should_returnTaskList_when_calledWithCorrectParameters", () => {
-      const wahlvorstandTaskFactoryImpl = new WahlvorstandTaskFactoryImpl();
-      const taskFactoryData: TaskFactoryContext = createTaskFactoryData();
+      const taskFactoryContext: TaskFactoryContext = createTaskFactoryContext();
 
-      const result = wahlvorstandTaskFactoryImpl.createTasks(taskFactoryData);
+      const result = createTasks(taskFactoryContext);
 
       expect(result.length).toStrictEqual(1);
     });

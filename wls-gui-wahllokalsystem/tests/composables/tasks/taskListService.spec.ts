@@ -1,4 +1,6 @@
 import { createTestingPinia } from "@pinia/testing";
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { setActivePinia, storeToRefs } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -6,9 +8,59 @@ import { useTaskListService } from "@/composables/tasks/taskListService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
+const mockDefinitions = vi.hoisted(() => ({
+  createTasksKopfdaten: vi.fn(),
+  createTasksKonfigurationsparameter: vi.fn(),
+  createTasksUngueltigeWahlscheine: vi.fn(),
+  createTasksWahlvorstand: vi.fn(),
+  getWahlOrUndefinedById: vi.fn(),
+}));
+
+vi.mock(
+  "@/composables/tasks/taskFactories/KonfigurationsparameterTaskFactory.ts",
+  () => ({
+    useKonfigurationsparameterTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksKonfigurationsparameter,
+    })),
+  })
+);
+
+vi.mock("@/composables/tasks/taskFactories/KopfdatenTaskFactory.ts", () => ({
+  useKopfdatenTaskFactory: vi.fn().mockImplementation(() => ({
+    createTasks: mockDefinitions.createTasksKopfdaten,
+  })),
+}));
+
+vi.mock(
+  "@/composables/tasks/taskFactories/UngueltigeWahlscheineTaskFactory.ts",
+  () => ({
+    useUngueltigeWahlscheineTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksUngueltigeWahlscheine,
+    })),
+  })
+);
+
+vi.mock("@/composables/tasks/taskFactories/WahlvorstandTaskFactory.ts", () => ({
+  useWahlvorstandTaskFactory: vi.fn().mockImplementation(() => ({
+    createTasks: mockDefinitions.createTasksWahlvorstand,
+  })),
+}));
+
+vi.mock("@/composables/tasks/taskFactories/WahlvorstandTaskFactory.ts", () => ({
+  useWahlvorstandTaskFactory: vi.fn().mockImplementation(() => ({
+    createTasks: mockDefinitions.createTasksWahlvorstand,
+  })),
+}));
+
+vi.mock("@/stores/wahlenStore.ts", () => ({
+  useWahlenStore: () => ({
+    getWahlOrUndefinedById: mockDefinitions.getWahlOrUndefinedById,
+  }),
+}));
 describe("taskListService.ts", () => {
   let unitUnderTest: ReturnType<typeof useTaskListService>;
-
+  const { generateRandomString } = useCommonTestDataFactory();
+  const { createWahl } = useWahlTestDataFactory();
   beforeEach(() => {
     setActivePinia(
       createTestingPinia({
@@ -19,41 +71,70 @@ describe("taskListService.ts", () => {
   });
 
   describe("getTaskList", () => {
-    it("should_returnListOfTaskForUWB_when_tasksAndFiltersAreGiven", () => {
-      const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
+    it("should_containListWithTasks_when_initTaskListIsCalled", () => {
+      const { currentUserWahlMetadata, currentUserWahlbezirksArt } =
+        storeToRefs(useUserStore());
 
       // @ts-expect-error: cannot set readonly
       currentUserWahlbezirksArt.value = WahlbezirksArtEnum.UWB;
+      // @ts-expect-error: cannot set readonly
+      currentUserWahlMetadata.value = [
+        {
+          wahlbezirkID: generateRandomString(10),
+          wahlnummer: generateRandomString(10),
+          wahlID: generateRandomString(10),
+        },
+      ];
 
-      const taskNames = unitUnderTest.getTaskList().map((task) => task.name);
+      const mockedWahl = createWahl();
+
+      mockDefinitions.getWahlOrUndefinedById.mockReturnValue(mockedWahl);
+      mockDefinitions.createTasksKonfigurationsparameter.mockReturnValue([
+        {
+          name: "Konfigurationsparameter",
+          callback: Promise<unknown>,
+        },
+      ]);
+      mockDefinitions.createTasksKopfdaten.mockReturnValue([
+        {
+          name: "Kopfdaten - " + mockedWahl.name,
+          callback: Promise<unknown>,
+        },
+      ]);
+      mockDefinitions.createTasksUngueltigeWahlscheine.mockReturnValue([
+        {
+          name: "UngültigeWahlscheine",
+          callback: Promise<unknown>,
+        },
+      ]);
+      mockDefinitions.createTasksWahlvorstand.mockReturnValue([
+        {
+          name: "Wahlvorstand",
+          callback: Promise<unknown>,
+        },
+      ]);
+
+      unitUnderTest.initTasklist();
+
+      const taskNames = unitUnderTest.tasks.value.map((task) => task.name);
 
       const expectedTaskNames = [
         "Konfigurationsparameter",
-        "Wahlen",
         "Wahlvorstand",
         "UngültigeWahlscheine",
-        "Kopfdaten",
+        "Kopfdaten - " + mockedWahl.name,
       ];
 
-      expect(taskNames).toStrictEqual(expectedTaskNames);
-    });
+      expect(taskNames).toEqual(expect.arrayContaining(expectedTaskNames));
 
-    it("should_returnListOfTaskForBWB_when_tasksAndFiltersAreGiven", () => {
-      const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
-
-      // @ts-expect-error: cannot set readonly
-      currentUserWahlbezirksArt.value = WahlbezirksArtEnum.BWB;
-
-      const taskNames = unitUnderTest.getTaskList().map((task) => task.name);
-
-      const expectedTaskNames = [
-        "Konfigurationsparameter",
-        "Wahlen",
-        "Wahlvorstand",
-        "Kopfdaten",
-      ];
-
-      expect(taskNames).toStrictEqual(expectedTaskNames);
+      expect(
+        mockDefinitions.createTasksKonfigurationsparameter
+      ).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksKopfdaten).toHaveBeenCalled();
+      expect(
+        mockDefinitions.createTasksUngueltigeWahlscheine
+      ).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksWahlvorstand).toHaveBeenCalled();
     });
   });
 });

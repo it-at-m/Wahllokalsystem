@@ -4,7 +4,6 @@ import { createTestingPinia } from "@pinia/testing";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
-import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getTaskList: vi.fn(),
@@ -36,9 +35,6 @@ describe("taskManagerStore.ts", () => {
       const exampleTaskList: Task[] = [
         {
           name: "Test",
-          onlyForWahlbezirksart: undefined,
-          onlyForWahlen: [WahlWahlartEnum.Obw, WahlWahlartEnum.Bzw],
-          onlyForAllWVaehlerverzeichnisse: undefined,
           callback: () => {
             return Promise.resolve();
           },
@@ -58,13 +54,6 @@ describe("taskManagerStore.ts", () => {
       const exampleTaskList: Task[] = [
         {
           name: "Wahlen",
-          onlyForWahlbezirksart: undefined,
-          onlyForWahlen: [
-            WahlWahlartEnum.Obw,
-            WahlWahlartEnum.Bzw,
-            WahlWahlartEnum.Srw,
-          ],
-          onlyForAllWVaehlerverzeichnisse: undefined,
           callback: () => {
             return Promise.reject();
           },
@@ -84,18 +73,12 @@ describe("taskManagerStore.ts", () => {
       const exampleTaskList: Task[] = [
         {
           name: "Test",
-          onlyForWahlbezirksart: undefined,
-          onlyForWahlen: [WahlWahlartEnum.Obw],
-          onlyForAllWVaehlerverzeichnisse: undefined,
           callback: () => {
             return Promise.resolve();
           },
         },
         {
           name: "Test2",
-          onlyForWahlbezirksart: undefined,
-          onlyForWahlen: [WahlWahlartEnum.Obw, WahlWahlartEnum.Bzw],
-          onlyForAllWVaehlerverzeichnisse: undefined,
           callback: () => {
             return Promise.reject();
           },

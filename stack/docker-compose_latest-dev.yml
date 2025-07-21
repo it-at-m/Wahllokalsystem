@@ -321,7 +321,7 @@ services:
 
   wls-auth-service:
     container_name: wls-auth-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-auth-service:latest-dev@sha256:a69a8c2f94593cad892d2cb1dcd022189f358380240fefe3ecd736a30526dd7b
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-auth-service:latest-dev@sha256:bca4f28304508cef77abb25b23ee81aa0171b0acf6153173cb674eeae1649473
     depends_on:
       - wls-db-oracle
     env_file:

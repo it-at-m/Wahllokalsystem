@@ -181,9 +181,7 @@ describe("BaseWahleroeffnungCard.vue", () => {
 
       const wahlbezirkStore = useWahlbezirkStore();
       wahlbezirkStore.eroeffnungsuhrzeit = new Date();
-      wahlbezirkStore.eroeffnungsuhrzeit.setHours(7);
-      wahlbezirkStore.eroeffnungsuhrzeit.setMinutes(30);
-      wahlbezirkStore.eroeffnungsuhrzeit.setSeconds(0);
+      wahlbezirkStore.eroeffnungsuhrzeit.setHours(7, 30, 0);
 
       await flushPromises();
 
@@ -205,9 +203,7 @@ describe("BaseWahleroeffnungCard.vue", () => {
 
       const wahlbezirkStore = useWahlbezirkStore();
       wahlbezirkStore.eroeffnungsuhrzeit = new Date();
-      wahlbezirkStore.eroeffnungsuhrzeit.setHours(7);
-      wahlbezirkStore.eroeffnungsuhrzeit.setMinutes(30);
-      wahlbezirkStore.eroeffnungsuhrzeit.setSeconds(0);
+      wahlbezirkStore.eroeffnungsuhrzeit.setHours(7, 30, 0);
 
       await flushPromises();
 
@@ -238,9 +234,7 @@ describe("BaseWahleroeffnungCard.vue", () => {
 
       const wahlbezirkStore = useWahlbezirkStore();
       wahlbezirkStore.eroeffnungsuhrzeit = new Date();
-      wahlbezirkStore.eroeffnungsuhrzeit.setHours(7);
-      wahlbezirkStore.eroeffnungsuhrzeit.setMinutes(30);
-      wahlbezirkStore.eroeffnungsuhrzeit.setSeconds(0);
+      wahlbezirkStore.eroeffnungsuhrzeit.setHours(7, 30, 0);
 
       await flushPromises();
 

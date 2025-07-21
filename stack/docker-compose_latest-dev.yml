@@ -64,7 +64,7 @@ services:
 
   wls-wahlvorbereitung-service:
     container_name: wls-wahlvorbereitung-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-wahlvorbereitung-service:latest-dev@sha256:18408fbf3a44a79090c126f69c5e69dce8eb8b6d167abc490c5c1f0194388bf2
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-wahlvorbereitung-service:latest-dev@sha256:5ed0ba831972501281c458131ee0b6c8fa9f737993f0ac5933cf62f8bec87de5
     depends_on:
       - wls-db-oracle
     env_file:

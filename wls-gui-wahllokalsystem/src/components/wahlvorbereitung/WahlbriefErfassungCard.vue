@@ -12,7 +12,7 @@
           :rules="[REQUIRED, MIN_NUMBER(1), MAX_NUMBER(9999)]"
           data-test="textFieldWahlbriefeAnzahl"
           label="Anzahl Wahlbriefe"
-          max-width="300"
+          :max-width="WIDTH"
           clearable
         />
       </v-form>
@@ -29,7 +29,7 @@
           :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(9999)]"
           data-test="textFieldVerzeichnisseAnzahl"
           label="Anzahl Verzeichnisse"
-          max-width="300"
+          :max-width="WIDTH"
           clearable
         />
       </v-form>
@@ -43,7 +43,7 @@
           :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(9999)]"
           data-test="textFieldNachtraegeAnzahl"
           label="Anzahl Nachträge"
-          max-width="300"
+          :max-width="WIDTH"
           clearable
         />
       </v-form>
@@ -64,8 +64,8 @@
               :rules="[MIN_NUMBER(0), MAX_NUMBER(9999)]"
               data-test="textFieldNachtraeglichUeberbrachteAnzahl"
               label="Anzahl Wahlbriefe"
-              min-width="300"
-              max-width="300"
+              :min-width="WIDTH"
+              :max-width="WIDTH"
               clearable
             />
           </div>
@@ -73,8 +73,8 @@
             <base-time-input
               v-model="wahlbriefDaten.zeitNachtraeglichUeberbrachte"
               class="mr-4"
-              min-width="300"
-              max-width="300"
+              :min-width="WIDTH"
+              :max-width="WIDTH"
               data-test="timeInputZeitNachtraeglichUeberbrachteAnzahl"
               :rules="getDateRules()"
               :disabled="!isZeitNachtragelichUeberbrachtRequired()"
@@ -128,6 +128,8 @@ const anzahlNachtraeglichUeberbrachteValid = ref<null | boolean>(null);
 
 const nachtraeglichUeberbrachteForm = ref<HTMLFormElement>();
 
+const WIDTH = 300;
+
 const getDateRules = () => {
   const rules = [];
   if (isZeitNachtragelichUeberbrachtRequired()) {
@@ -167,6 +169,6 @@ function isZeitNachtragelichUeberbrachtRequired() {
 }
 
 function onSaveBriefwahldatenClicked() {
-  sendWahlbriefdaten(wahlbriefDaten.value);
+  sendWahlbriefdaten();
 }
 </script>

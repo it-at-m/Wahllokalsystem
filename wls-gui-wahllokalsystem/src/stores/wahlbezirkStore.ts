@@ -176,12 +176,11 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     }
   }
 
-  async function sendWahlbriefdaten(wahlbriefdaten: Wahlbriefdaten) {
+  async function sendWahlbriefdaten() {
     const wahlbezirkID = currentUserWahlbezirkID.value;
     wahlbriefDatenIsSaving.value = true;
     try {
-      await postWahlbriefdaten(wahlbezirkID, wahlbriefdaten);
-      wahlbriefDaten.value = wahlbriefdaten;
+      await postWahlbriefdaten(wahlbezirkID, wahlbriefDaten.value);
     } finally {
       wahlbriefDatenIsSaving.value = false;
     }

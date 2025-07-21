@@ -16,7 +16,7 @@ objectclass: inetOrgPerson
 cn: wls_all_uwb
 sn: uwb
 uid: wls_all_uwb
-userPassword: test2
+userPassword: test
 
 dn: uid=wls_all_bwb,ou=people,dc=springframework,dc=org
 objectclass: top

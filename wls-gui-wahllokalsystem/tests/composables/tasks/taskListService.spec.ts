@@ -17,7 +17,7 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock(
-  "@/composables/tasks/taskFactories/KonfigurationsparameterTaskFactory.ts",
+  "@/composables/tasks/taskFactories/konfigurationsparameterTaskFactory.ts",
   () => ({
     useKonfigurationsparameterTaskFactory: vi.fn().mockImplementation(() => ({
       createTasks: mockDefinitions.createTasksKonfigurationsparameter,
@@ -25,14 +25,14 @@ vi.mock(
   })
 );
 
-vi.mock("@/composables/tasks/taskFactories/KopfdatenTaskFactory.ts", () => ({
+vi.mock("@/composables/tasks/taskFactories/kopfdatenTaskFactory.ts", () => ({
   useKopfdatenTaskFactory: vi.fn().mockImplementation(() => ({
     createTasks: mockDefinitions.createTasksKopfdaten,
   })),
 }));
 
 vi.mock(
-  "@/composables/tasks/taskFactories/UngueltigeWahlscheineTaskFactory.ts",
+  "@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts",
   () => ({
     useUngueltigeWahlscheineTaskFactory: vi.fn().mockImplementation(() => ({
       createTasks: mockDefinitions.createTasksUngueltigeWahlscheine,
@@ -40,7 +40,7 @@ vi.mock(
   })
 );
 
-vi.mock("@/composables/tasks/taskFactories/WahlvorstandTaskFactory.ts", () => ({
+vi.mock("@/composables/tasks/taskFactories/wahlvorstandTaskFactory.ts", () => ({
   useWahlvorstandTaskFactory: vi.fn().mockImplementation(() => ({
     createTasks: mockDefinitions.createTasksWahlvorstand,
   })),

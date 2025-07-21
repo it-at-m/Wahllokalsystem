@@ -4,10 +4,10 @@ import type { Task } from "@/types/tasks/Task.ts";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
-import { useKonfigurationsparameterTaskFactory } from "@/composables/tasks/taskFactories/KonfigurationsparameterTaskFactory.ts";
-import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/KopfdatenTaskFactory.ts";
-import { useUngueltigeWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/UngueltigeWahlscheineTaskFactory.ts";
-import { useWahlvorstandTaskFactory } from "@/composables/tasks/taskFactories/WahlvorstandTaskFactory.ts";
+import { useKonfigurationsparameterTaskFactory } from "@/composables/tasks/taskFactories/konfigurationsparameterTaskFactory.ts";
+import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/kopfdatenTaskFactory.ts";
+import { useUngueltigeWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts";
+import { useWahlvorstandTaskFactory } from "@/composables/tasks/taskFactories/wahlvorstandTaskFactory.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 

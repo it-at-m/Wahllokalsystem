@@ -2,9 +2,9 @@ import { useTasksTestDataFactory } from "@tests/utils/tasks/TasksTestDataFactory
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { useWahlvorstandTaskFactory } from "@/composables/tasks/taskFactories/WahlvorstandTaskFactory.ts";
+import { useWahlvorstandTaskFactory } from "@/composables/tasks/taskFactories/wahlvorstandTaskFactory.ts";
 
-describe("WahlvorstandTaskFactory.ts", () => {
+describe("wahlvorstandTaskFactory.ts", () => {
   const { createTaskFactoryContext } = useTasksTestDataFactory();
   const { createTasks } = useWahlvorstandTaskFactory();
   beforeEach(() => {

@@ -4,9 +4,9 @@ import { useTasksTestDataFactory } from "@tests/utils/tasks/TasksTestDataFactory
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/KopfdatenTaskFactory.ts";
+import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/kopfdatenTaskFactory.ts";
 
-describe("KopfdatenTaskFactory.ts", () => {
+describe("kopfdatenTaskFactory.ts", () => {
   const { prepareTaskFactoryContext, createExtendedWahlMetaData } =
     useTasksTestDataFactory();
   const { createTasks } = useKopfdatenTaskFactory();

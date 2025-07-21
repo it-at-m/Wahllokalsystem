@@ -4,11 +4,11 @@ import { useTasksTestDataFactory } from "@tests/utils/tasks/TasksTestDataFactory
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { useUngueltigeWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/UngueltigeWahlscheineTaskFactory.ts";
+import { useUngueltigeWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
-describe("UngueltigeWahlscheineTaskFactory.ts", () => {
+describe("ungueltigeWahlscheineTaskFactory.ts", () => {
   const { prepareExtendedWahlMetaData, prepareTaskFactoryContext } =
     useTasksTestDataFactory();
   const { createTasks } = useUngueltigeWahlscheineTaskFactory();

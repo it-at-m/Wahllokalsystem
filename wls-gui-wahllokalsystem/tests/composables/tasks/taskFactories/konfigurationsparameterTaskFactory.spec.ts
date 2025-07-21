@@ -4,9 +4,9 @@ import { useTasksTestDataFactory } from "@tests/utils/tasks/TasksTestDataFactory
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { useKonfigurationsparameterTaskFactory } from "@/composables/tasks/taskFactories/KonfigurationsparameterTaskFactory.ts";
+import { useKonfigurationsparameterTaskFactory } from "@/composables/tasks/taskFactories/konfigurationsparameterTaskFactory.ts";
 
-describe("KonfigurationsparameterTaskFactory.ts", () => {
+describe("konfigurationsparameterTaskFactory.ts", () => {
   const { createTaskFactoryContext } = useTasksTestDataFactory();
   const { createTasks } = useKonfigurationsparameterTaskFactory();
 

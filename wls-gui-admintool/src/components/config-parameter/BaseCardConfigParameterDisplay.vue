@@ -7,20 +7,37 @@
     <v-divider class="card-divider" />
     <v-card-text class="card-content">
       <v-row>
-          <v-card-actions class="card-action">
-            <v-col cols="6" class="mx-10" >Wert:</v-col>
-            <v-col cols="6" class="mx-2">{{ configParameter?.wert }}</v-col>
-            <v-btn
-                class="v-button"
-                icon="$edit"
-                @click="onConfigParameterEditClicked"
-                data-test="click-edit-button"
-            />
-          </v-card-actions>
+        <v-card-actions class="card-action">
+          <v-col
+            cols="6"
+            class="mx-10"
+            >Wert:</v-col
+          >
+          <v-col
+            cols="6"
+            class="mx-2"
+            >{{ configParameter?.wert }}</v-col
+          >
+          <v-btn
+            class="v-button"
+            icon="$edit"
+            @click="onConfigParameterEditClicked"
+            data-test="click-edit-button"
+          />
+        </v-card-actions>
       </v-row>
       <v-row>
-        <v-col cols="6" class="mx-5">   Standardwert: </v-col>
-        <v-col cols="6" class="mx-2">'{{ configParameter?.defaultValue }}'</v-col>
+        <v-col
+          cols="6"
+          class="mx-5"
+        >
+          Standardwert:
+        </v-col>
+        <v-col
+          cols="6"
+          class="mx-2"
+          >'{{ configParameter?.defaultValue }}'</v-col
+        >
       </v-row>
     </v-card-text>
   </v-card>
@@ -36,9 +53,9 @@ import {
   VCard,
   VCardActions,
   VCardText,
+  VCol,
   VDivider,
   VRow,
-  VCol
 } from "vuetify/components";
 
 const props = defineProps({
@@ -56,11 +73,9 @@ function onConfigParameterEditClicked() {
 </script>
 
 <style scoped>
-
 .card-divider {
   border: 1px solid#333333;
   display: block;
   opacity: 0.2;
 }
-
 </style>

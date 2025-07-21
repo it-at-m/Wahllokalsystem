@@ -220,7 +220,7 @@ services:
 
   wls-eai-service:
     container_name: wls-eai-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-eai-service:latest-dev@sha256:5ee6d3300ff8cf8187ddb09b4c0859806e896f57280020adabf4787198298a47
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-eai-service:latest-dev@sha256:7d42dbbb4feb1a125ce2a1a56f976196f01175bb20c3e61dfd39d723b4059335
     depends_on:
       - wls-db-oracle
     env_file:

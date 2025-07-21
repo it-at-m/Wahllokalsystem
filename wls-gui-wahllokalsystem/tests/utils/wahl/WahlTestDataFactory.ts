@@ -10,6 +10,7 @@ import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
 import { WahlDTOWahlartEnum } from "@/api/wls-clients/generated-basisdaten-api";
+import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const {
@@ -22,7 +23,7 @@ const wahlWahlartEnumValues = Object.values(WahlWahlartEnum);
 const wahlDTOWahlartEnumValues = Object.values(WahlDTOWahlartEnum);
 
 export function useWahlTestDataFactory() {
-  function createRandomFarbe(): Farbe {
+  function _createRandomFarbe(): Farbe {
     return {
       r: generateRandomNumberInRange(0, 255),
       g: generateRandomNumberInRange(0, 255),
@@ -30,12 +31,27 @@ export function useWahlTestDataFactory() {
     };
   }
 
-  function createRandomFarbeDTO(): FarbeDTO {
+  function _createRandomFarbeDTO(): FarbeDTO {
     return {
       r: generateRandomNumberInRange(0, 255),
       g: generateRandomNumberInRange(0, 255),
       b: generateRandomNumberInRange(0, 255),
     };
+  }
+
+  function _createRandomBeanstandeteWahlbriefe(
+    length?: number
+  ): ZurueckweisungsgrundEnum[] {
+    const counter = length ?? 3;
+    const enumValues = Object.values(ZurueckweisungsgrundEnum);
+    const result: ZurueckweisungsgrundEnum[] = [];
+
+    for (let i = 0; i < counter; i++) {
+      const randomIndex = Math.floor(Math.random() * enumValues.length);
+      result.push(enumValues[randomIndex]);
+    }
+
+    return result;
   }
 
   function createWahlDTO(): WahlDTO {
@@ -49,7 +65,7 @@ export function useWahlTestDataFactory() {
         wahlDTOWahlartEnumValues[
           generateRandomNumberInRange(0, wahlDTOWahlartEnumValues.length - 1)
         ],
-      farbe: createRandomFarbeDTO(),
+      farbe: _createRandomFarbeDTO(),
       nummer: generateRandomString(5),
     };
   }
@@ -65,8 +81,9 @@ export function useWahlTestDataFactory() {
         wahlWahlartEnumValues[
           generateRandomNumberInRange(0, wahlWahlartEnumValues.length - 1)
         ],
-      farbe: createRandomFarbe(), // Randomly generated Farbe
+      farbe: _createRandomFarbe(), // Randomly generated Farbe
       nummer: generateRandomString(5),
+      beanstandeteWahlbriefe: _createRandomBeanstandeteWahlbriefe(),
     };
   }
 

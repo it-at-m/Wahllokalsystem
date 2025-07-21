@@ -6,7 +6,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import { useKonfigurationsparameterTaskFactory } from "@/composables/tasks/taskFactories/KonfigurationsparameterTaskFactory.ts";
 
-describe("WahlvorstandTaskFactory.ts", () => {
+describe("KonfigurationsparameterTaskFactory.ts", () => {
   const { createTaskFactoryContext } = useTasksTestDataFactory();
   const { createTasks } = useKonfigurationsparameterTaskFactory();
 

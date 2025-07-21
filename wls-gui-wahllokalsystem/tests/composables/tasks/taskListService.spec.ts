@@ -46,12 +46,6 @@ vi.mock("@/composables/tasks/taskFactories/WahlvorstandTaskFactory.ts", () => ({
   })),
 }));
 
-vi.mock("@/composables/tasks/taskFactories/WahlvorstandTaskFactory.ts", () => ({
-  useWahlvorstandTaskFactory: vi.fn().mockImplementation(() => ({
-    createTasks: mockDefinitions.createTasksWahlvorstand,
-  })),
-}));
-
 vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: () => ({
     getWahlOrUndefinedById: mockDefinitions.getWahlOrUndefinedById,
@@ -92,25 +86,25 @@ describe("taskListService.ts", () => {
       mockDefinitions.createTasksKonfigurationsparameter.mockReturnValue([
         {
           name: "Konfigurationsparameter",
-          callback: Promise<unknown>,
+          callback: () => Promise.resolve(),
         },
       ]);
       mockDefinitions.createTasksKopfdaten.mockReturnValue([
         {
           name: "Kopfdaten - " + mockedWahl.name,
-          callback: Promise<unknown>,
+          callback: () => Promise.resolve(),
         },
       ]);
       mockDefinitions.createTasksUngueltigeWahlscheine.mockReturnValue([
         {
           name: "UngültigeWahlscheine",
-          callback: Promise<unknown>,
+          callback: () => Promise.resolve(),
         },
       ]);
       mockDefinitions.createTasksWahlvorstand.mockReturnValue([
         {
           name: "Wahlvorstand",
-          callback: Promise<unknown>,
+          callback: () => Promise.resolve(),
         },
       ]);
 

@@ -37,7 +37,7 @@ export function useTaskListService() {
       currentUserWahlMetadata.value.map((wahlMetadata) => {
         const wahl = getWahlOrUndefinedById(wahlMetadata.wahlID);
         if (!wahl) {
-          throw new Error("Wahl not found");
+          throw new Error(`Wahl not found for wahlID: ${wahlMetadata.wahlID}`);
         }
         const extendedWahlMetaData: ExtendedWahlMetaData = {
           wahlID: wahlMetadata.wahlID,

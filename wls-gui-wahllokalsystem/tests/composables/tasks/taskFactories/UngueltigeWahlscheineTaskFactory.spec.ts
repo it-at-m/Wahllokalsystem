@@ -174,7 +174,7 @@ describe("UngueltigeWahlscheineTaskFactory.ts", () => {
       expect(result.length).toStrictEqual(0);
     });
 
-    it("should_returnZeroTasks_when_calledWithMultipleWahlMetaDataObjectsWhichContainWrongAndCorrectWahlArt", () => {
+    it("should_returnOneTask_when_calledWithMultipleWahlMetaDataObjectsWhichContainWrongAndCorrectWahlArt", () => {
       const extendedWahlMetaDataOne = prepareExtendedWahlMetaData()
         .wahlArt(WahlWahlartEnum.Btw)
         .build();

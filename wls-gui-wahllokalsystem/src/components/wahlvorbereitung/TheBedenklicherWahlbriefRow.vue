@@ -200,11 +200,15 @@ function onZulassungsgrundChanged(
       });
     }
   } else {
-    // todo: wenn von zb scheinUngültig auf zugelassen geändert wird müssen die anderen werte der wahl auf null gestellt werden
     wahlscheinGruende.value[rowIndex] = selectedValue;
     if (selectedValue !== ZurueckweisungsgrundEnum.Zugelassen && wahlen.value) {
       wahlen.value.map(
         (wahl) => (wahl.beanstandeteWahlbriefe[rowIndex] = selectedValue)
+      );
+    } else if (wahlen.value) {
+      // unset values of stimmzettelumschlag columns if "ZUGELASSEN" is selected
+      wahlen.value.map(
+        (wahl) => (wahl.beanstandeteWahlbriefe[rowIndex] = null)
       );
     }
   }

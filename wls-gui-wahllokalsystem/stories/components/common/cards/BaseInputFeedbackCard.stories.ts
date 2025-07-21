@@ -45,3 +45,10 @@ export const Information: Story = {
     type: InputFeedbackTypeEnum.information,
   },
 };
+
+export const Success: Story = {
+  args: {
+    title: "Titel zu einer Erfolgsmeldung",
+    type: InputFeedbackTypeEnum.success,
+  },
+};

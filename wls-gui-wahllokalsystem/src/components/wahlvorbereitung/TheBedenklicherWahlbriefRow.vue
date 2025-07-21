@@ -23,7 +23,7 @@
             class="my-2"
             style="min-width: 350px"
           >
-            {{ index - 1 }}
+            {{ index }}
             <v-autocomplete
               :model-value="
                 zurueckweisungsgrundEnumToDisplayString(

@@ -84,7 +84,7 @@ services:
 
   wls-vorfaelleundvorkommnisse-service:
     container_name: wls-vorfaelleundvorkommnisse-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-vorfaelleundvorkommnisse-service:latest-dev@sha256:b642693a7fd89ee0f2ce51050cb85ca28bb61172b32622bde63264ed3c87ae84
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-vorfaelleundvorkommnisse-service:latest-dev@sha256:e8b8526c02616ce3dceeb05cf314bde22ec0fda270f150bdaafd8ab402615810
     depends_on:
       - wls-db-oracle
     env_file:

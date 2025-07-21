@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>Wahlscheine und Uhrzeit Wahlende</v-card-title>
+    <v-card-title>Uhrzeit Wahlende</v-card-title>
     <v-card-text class="pb-0">
       Bitte geben Sie hier die Uhrzeit ein, zu der die Wahl für geschlossen
       erklärt wurde.

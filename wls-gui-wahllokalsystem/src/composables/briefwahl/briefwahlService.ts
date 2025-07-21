@@ -6,10 +6,13 @@ import {
 } from "@/api/wls-clients/generated-briefwahl-api";
 import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts";
 import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { BRIEFWAHL_SERVICE_API_URL } from "@/constants.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { toModel } = useBeanstandeteWahlbriefeMapper();
 const { getNullOn204OrElseResponseData } = useCommonApiUtils();
+const { addNotification } = useUserNotificationService();
 
 export function useBriefwahlService() {
   const beanstandeteWahlbriefeControllerAPI =
@@ -46,8 +49,15 @@ export function useBriefwahlService() {
         waehlerVerzeichnisNummer,
         beanstandeteWahlbriefeDTO
       );
+      addNotification(
+        "Die beanstandeten Wahlbriefe wurden erfolgreich gespeichert.",
+        UserNotificationCategoryEnum.SUCCESS
+      );
     } catch {
-      // todo addNotification?
+      addNotification(
+        "Die beanstandeten Wahlbriefe konnten nicht gespeichert werden.",
+        UserNotificationCategoryEnum.ERROR
+      );
     }
 
     return;

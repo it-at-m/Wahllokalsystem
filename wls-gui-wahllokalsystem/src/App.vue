@@ -28,13 +28,11 @@ import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
 const { loadEreignisse } = useEreignisStore();
 const { loadUser } = useUserStore();
 const { initTasks } = useTaskManagerStore();
 const { loadWaehler } = useMonitoringStore();
-const { loadPflegeWaehlerverzeichnis } = useWahlbezirkStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
@@ -43,10 +41,9 @@ onMounted(async () => {
   try {
     await loadUser();
     startBroadcastMessageInterval();
-    await initTasks();
+    initTasks();
     loadEreignisse();
     loadWaehler();
-    loadPflegeWaehlerverzeichnis();
   } catch (error) {
     console.debug(error);
   }

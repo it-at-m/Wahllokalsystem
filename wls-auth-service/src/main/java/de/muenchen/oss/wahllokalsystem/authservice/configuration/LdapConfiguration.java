@@ -48,8 +48,7 @@ public class LdapConfiguration {
     @Bean
     @Profile(Profiles.DUMMY_LDAP)
     public EmbeddedLdapServerContextSourceFactoryBean embeddedLdapContextSource(
-            @Value("${spring.ldap.embedded.ldif}") final String ldifResource
-    ) {
+            @Value("${spring.ldap.embedded.ldif}") final String ldifResource) {
         log.warn("using embeddedLdapContextSource");
         val embeddedLdapServer = EmbeddedLdapServerContextSourceFactoryBean
                 .fromEmbeddedLdapServer();

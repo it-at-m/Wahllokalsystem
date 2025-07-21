@@ -1,6 +1,7 @@
 import { createTestingPinia } from "@pinia/testing";
 import { COMPONENT_EVENT_TESTS } from "@tests/utils/testutils.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
+import { storeToRefs } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createRouter, createWebHistory } from "vue-router";
 
@@ -10,6 +11,7 @@ import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const startBroadcastMessageIntervalMock = vi.fn();
 const stopBroadcastMessageIntervalMock = vi.fn();
@@ -98,6 +100,30 @@ describe("App", () => {
       await flushPromises();
 
       expect(loadWaehler).toHaveBeenCalled();
+    });
+
+    it("should_callInitBeanstandeteWahlbriefe_when_mountedAndWaehlerverzeichnisNummernAreGiven", async () => {
+      const { initBeanstandeteWahlbriefe } = useWahlenStore();
+      const { waehlerverzeichnisNummern } = storeToRefs(useWahlenStore());
+
+      // @ts-expect-error: cannot set readonly
+      waehlerverzeichnisNummern.value = [1];
+
+      await flushPromises();
+
+      expect(initBeanstandeteWahlbriefe).toHaveBeenCalled();
+    });
+
+    it("should_notCallInitBeanstandeteWahlbriefe_when_mountedAndWaehlerverzeichnisNummernAreNotGiven", async () => {
+      const { initBeanstandeteWahlbriefe } = useWahlenStore();
+      const { waehlerverzeichnisNummern } = storeToRefs(useWahlenStore());
+
+      // @ts-expect-error: cannot set readonly
+      waehlerverzeichnisNummern.value = [];
+
+      await flushPromises();
+
+      expect(initBeanstandeteWahlbriefe).not.toHaveBeenCalled();
     });
 
     it("should_callStopBroadcastMessageInterval_when_unmounted", async () => {

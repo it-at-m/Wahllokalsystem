@@ -1,25 +1,20 @@
-import type { TaskFactoryData } from "@/composables/tasks/TaskFactoryData.ts";
+import type { ExtendedWahlMetaData } from "@/composables/tasks/ExtendedWahlMetaData.ts";
+import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.ts";
 import type { TaskFactoryInterface } from "@/composables/tasks/TaskFactoryInterface.ts";
-import type { TaskFactoryMetaData } from "@/composables/tasks/TaskFactoryMetaData.ts";
 import type { Task } from "@/types/tasks/Task.ts";
 
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 
 export class KopfdatenTaskFactoryImpl implements TaskFactoryInterface {
-  createTasks(taskFactoryData: TaskFactoryData): Task[] {
+  createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
     const taskList: Task[] = [];
-    taskFactoryData.taskFactoryMetaData.forEach((taskFactoryMetaData) => {
+    taskFactoryContext.taskFactoryMetaData.forEach((taskFactoryMetaData) => {
       taskList.push(this._createTask(taskFactoryMetaData));
     });
-    taskList.filter(
-      (task) =>
-        task.onlyForWahlbezirksart === taskFactoryData.wahlbezirkArt ||
-        task.onlyForWahlbezirksart === undefined
-    );
     return taskList;
   }
 
-  _createTask(taskFactoryMetaData: TaskFactoryMetaData): Task {
+  _createTask(taskFactoryMetaData: ExtendedWahlMetaData): Task {
     const { loadKopfdaten } = useKopfdatenStore();
     return {
       callback: () =>
@@ -28,9 +23,6 @@ export class KopfdatenTaskFactoryImpl implements TaskFactoryInterface {
           taskFactoryMetaData.wahlbezirkID
         ),
       name: "Kopfdaten - " + taskFactoryMetaData.wahlname,
-      onlyForAllWVaehlerverzeichnisse: undefined,
-      onlyForWahlbezirksart: undefined,
-      onlyForWahlen: undefined,
     };
   }
 }

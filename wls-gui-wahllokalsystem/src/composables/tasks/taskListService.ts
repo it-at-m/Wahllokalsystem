@@ -1,4 +1,4 @@
-import type { TaskFactoryMetaData } from "@/composables/tasks/TaskFactoryMetaData.ts";
+import type { ExtendedWahlMetaData } from "@/composables/tasks/ExtendedWahlMetaData.ts";
 import type { Task } from "@/types/tasks/Task.ts";
 
 import { storeToRefs } from "pinia";
@@ -12,7 +12,8 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 export function useTaskListService() {
-  const { getWahlNameOrBlankStringById } = useWahlenStore();
+  const { getWahlNameOrBlankStringById, getWahlOrUndefinedById } =
+    useWahlenStore();
   const { currentUserWahlMetadata } = storeToRefs(useUserStore());
 
   const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
@@ -31,12 +32,17 @@ export function useTaskListService() {
   }
 
   const taskFactoryData = computed(() => {
-    const taskFactoryMetaData: TaskFactoryMetaData[] =
+    const taskFactoryMetaData: ExtendedWahlMetaData[] =
       currentUserWahlMetadata.value.map((wahlMetadata) => {
-        const factoryMetaData: TaskFactoryMetaData = {
+        const wahl = getWahlOrUndefinedById(wahlMetadata.wahlID);
+        if (!wahl) {
+          throw new Error("Wahl not found");
+        }
+        const factoryMetaData: ExtendedWahlMetaData = {
           wahlID: wahlMetadata.wahlID,
+          wahlart: wahl.wahlart,
           wahlbezirkID: wahlMetadata.wahlbezirkID,
-          wahlname: getWahlNameOrBlankStringById(wahlMetadata.wahlID),
+          wahlname: wahl.name,
           wahlnummer: wahlMetadata.wahlnummer,
         };
         return factoryMetaData;

@@ -22,6 +22,10 @@ export const useWahlenStore = defineStore(storeID, () => {
     );
   }
 
+  function getWahlOrUndefinedById(wahlID: string) {
+    return wahlen.value?.find((wahl) => (wahl.wahlID = wahlID));
+  }
+
   function getWahlNameOrBlankStringById(wahlID: string) {
     const wahl = _getWahlOrUndefinedById(wahlID);
     return wahl ? wahl.name : "";
@@ -42,6 +46,7 @@ export const useWahlenStore = defineStore(storeID, () => {
     wahlen,
     getWahlNameOrBlankStringById,
     getWahlTagOrBlankStringById,
+    getWahlOrUndefinedById,
     initWahlen,
   };
 });

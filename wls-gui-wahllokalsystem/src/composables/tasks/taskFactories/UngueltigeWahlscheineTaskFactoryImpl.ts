@@ -1,4 +1,4 @@
-import type { TaskFactoryData } from "@/composables/tasks/TaskFactoryData.ts";
+import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.ts";
 import type { TaskFactoryInterface } from "@/composables/tasks/TaskFactoryInterface.ts";
 import type { Task } from "@/types/tasks/Task.ts";
 
@@ -9,14 +9,25 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 export class UngueltigeWahlscheineTaskFactoryImpl
   implements TaskFactoryInterface
 {
-  createTasks(taskFactoryData: TaskFactoryData): Task[] {
+  createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
     const taskList: Task[] = [];
-    taskList.push(this._createTask());
-    taskList.filter(
-      (task) =>
-        task.onlyForWahlbezirksart === taskFactoryData.wahlbezirkArt ||
-        task.onlyForWahlbezirksart === undefined
-    );
+    const onlyForWahlbezirksart = WahlbezirksArtEnum.UWB;
+    const onlyForWahlen: WahlWahlartEnum[] = [
+      WahlWahlartEnum.Btw,
+      WahlWahlartEnum.Beb,
+      WahlWahlartEnum.Euw,
+      WahlWahlartEnum.Obw,
+      WahlWahlartEnum.Srw,
+      WahlWahlartEnum.Baw,
+    ];
+    if (
+      taskFactoryContext.wahlbezirkArt == onlyForWahlbezirksart &&
+      taskFactoryContext.taskFactoryMetaData.some((extendedMetaData) =>
+        onlyForWahlen.includes(extendedMetaData.wahlart)
+      )
+    ) {
+      taskList.push(this._createTask());
+    }
     return taskList;
   }
 
@@ -24,16 +35,6 @@ export class UngueltigeWahlscheineTaskFactoryImpl
     const { initUngueltigeWahlscheine } = useWahlbezirkStore();
     return {
       name: "UngültigeWahlscheine",
-      onlyForWahlbezirksart: WahlbezirksArtEnum.UWB,
-      onlyForWahlen: [
-        WahlWahlartEnum.Btw,
-        WahlWahlartEnum.Beb,
-        WahlWahlartEnum.Euw,
-        WahlWahlartEnum.Obw,
-        WahlWahlartEnum.Srw,
-        WahlWahlartEnum.Baw,
-      ],
-      onlyForAllWVaehlerverzeichnisse: undefined,
       callback: () => initUngueltigeWahlscheine(false),
     };
   }

@@ -125,3 +125,4 @@ Alle Konfigurationsparameter beginnen mit dem Prefix `service.config`
 | rsa.rsa-key-setting                              | Enum (GENERATED_KEY,STATIC_KEY), das bestimmt welcher RSA-Key verwendet werden soll               |                          |
 | rsa.public-key                                   | Verwendeter Public-Key                                                                            |                          |
 | rsa.private-key                                  | Verwendeter Private-Key                                                                           |                          |
+| spring.ldap.embedded.ldif                        | Ort der LDAP-Resource für embedded LDAP-Server (Profil: `dummy.ldap`)                             | classpath:users.ldif     |

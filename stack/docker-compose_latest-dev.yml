@@ -126,7 +126,7 @@ services:
 
   wls-monitoring-service:
     container_name: wls-monitoring-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-monitoring-service:latest-dev@sha256:b62c78ee34e4933d14482cef5ca4fc0073d48f7ec0d8d8e13c0f679d5212a037
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-monitoring-service:latest-dev@sha256:c3d3ed0bee03506184f945989ae18e4a50c1b05331b705be189fa22eef252a6d
     depends_on:
       - wls-db-oracle
     env_file:

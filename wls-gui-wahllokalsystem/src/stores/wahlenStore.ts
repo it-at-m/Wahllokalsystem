@@ -36,7 +36,16 @@ export const useWahlenStore = defineStore(storeID, () => {
       currentUserWahltagID.value,
       sendNotification
     );
-    // todo sortieren nach wahlnummer vor der zuweisung zu wahlen.value
+
+    if (wahlen.value) {
+      wahlen.value.sort((a: Wahl, b: Wahl) => {
+        if (a.nummer && b.nummer) {
+          return a.nummer.localeCompare(b.nummer);
+        } else {
+          return 0;
+        }
+      });
+    }
   }
 
   async function initBeanstandeteWahlbriefe(waehlerverzeichnisNummer: number) {

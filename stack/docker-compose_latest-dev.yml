@@ -24,7 +24,7 @@ services:
 
   wls-infomanagement-service:
     container_name: wls-infomanagement-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-infomanagement-service:latest-dev@sha256:5e5cbda9ed50eddc0f8ed9a9dbf2bdf7539bbfadcb08b0317aa1792a1c227406
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-infomanagement-service:latest-dev@sha256:227a1e004e50654f1cbfcecd910aefb1b97b8ac10b3519a43b94660f51c7ee22
     depends_on:
       - wls-db-oracle
     env_file:

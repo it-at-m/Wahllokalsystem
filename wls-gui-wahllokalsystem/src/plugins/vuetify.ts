@@ -59,7 +59,7 @@ export default createVuetify({
       mapSearch: mdiMapSearch,
       remoteDesktop: mdiRemoteDesktop,
       edit: mdiPencil,
-      check: mdiCheckCircle,
+      valid: mdiCheckCircle,
     },
     sets: {
       mdi,

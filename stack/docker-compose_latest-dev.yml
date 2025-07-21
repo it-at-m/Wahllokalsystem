@@ -170,7 +170,7 @@ services:
 
   wls-ergebnismeldung-service:
     container_name: wls-ergebnismeldung-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-ergebnismeldung-service:latest-dev@sha256:9ced87b1d54852f39a08ede72abf382d894f730948913253e6b11c6d9c7909d9
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-ergebnismeldung-service:latest-dev@sha256:02d7a5373f02d49ef773c66d9ea7e1c1819f5681086268614dfb1b72be1e1c9c
     depends_on:
       - wls-db-oracle
     env_file:

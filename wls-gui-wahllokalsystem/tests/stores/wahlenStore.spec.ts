@@ -45,6 +45,36 @@ describe("wahlenStore.ts", () => {
     });
   });
 
+  describe("getWaehlerverzeichnisOrUndefinedById", () => {
+    it("should_returnWaehlerverzeichnisNummer_when_calledWithId", () => {
+      const wahlOne = createWahl();
+      const wahlTwo = createWahl();
+      const wahlThree = createWahl();
+
+      unitUnderTest.wahlen = [wahlOne, wahlTwo, wahlThree];
+
+      const result = unitUnderTest.getWaehlerverzeichnisOrUndefinedById(
+        wahlTwo.wahlID
+      );
+
+      expect(result).toStrictEqual(wahlTwo.waehlerverzeichnisNummer);
+    });
+
+    it("should_returnUndefined_when_calledWithIdThatDoesNotExist", () => {
+      const wahlOne = createWahl();
+      const wahlTwo = createWahl();
+      const wahlThree = createWahl();
+
+      unitUnderTest.wahlen = [wahlOne, wahlTwo];
+
+      const result = unitUnderTest.getWaehlerverzeichnisOrUndefinedById(
+        wahlThree.wahlID
+      );
+
+      expect(result).toBeUndefined();
+    });
+  });
+
   describe("getWahlNameOrBlankStringById", () => {
     it("should_getWahlName_when_calledWithWahlId", async () => {
       const wahlOne = createWahl();

@@ -30,9 +30,9 @@ export function useTasksTestDataFactory() {
 
   function createExtendedWahlMetaData(): ExtendedWahlMetaData {
     return {
-      wahlart: WahlWahlartEnum.Baw,
+      wahlArt: WahlWahlartEnum.Baw,
       wahlnummer: generateRandomString(10),
-      wahlname: generateRandomString(5),
+      wahlName: generateRandomString(5),
       wahlID: generateRandomString(20),
       wahlbezirkID: generateRandomString(20),
     };

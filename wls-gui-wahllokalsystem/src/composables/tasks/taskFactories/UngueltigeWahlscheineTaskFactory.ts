@@ -17,16 +17,11 @@ export function useUngueltigeWahlscheineTaskFactory(): TaskFactoryInterface {
   ];
 
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
-    const taskList: Task[] = [];
-    if (
-      taskFactoryContext.wahlbezirkArt == WahlbezirksArtEnum.UWB &&
-      taskFactoryContext.extendedWahlMetaData.some((extendedMetaData) =>
-        onlyForWahlen.includes(extendedMetaData.wahlart)
-      )
-    ) {
-      taskList.push(_createTask());
-    }
-    return taskList;
+    const isUwb = taskFactoryContext.wahlbezirkArt === WahlbezirksArtEnum.UWB;
+    const hasRelevantWahlart = taskFactoryContext.extendedWahlMetaData.some(
+      (extendedMetaData) => onlyForWahlen.includes(extendedMetaData.wahlArt)
+    );
+    return isUwb && hasRelevantWahlart ? [_createTask()] : [];
   }
 
   function _createTask(): Task {

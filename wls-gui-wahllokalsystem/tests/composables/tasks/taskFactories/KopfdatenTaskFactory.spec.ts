@@ -35,10 +35,10 @@ describe("WahlvorstandTaskFactory.ts", () => {
 
       expect(result.length).toStrictEqual(4);
       const expectedNames = [
-        kopfdatenNamePrefix + extendedWahlMetaDataOne.wahlname,
-        kopfdatenNamePrefix + extendedWahlMetaDataTwo.wahlname,
-        kopfdatenNamePrefix + extendedWahlMetaDataThree.wahlname,
-        kopfdatenNamePrefix + extendedWahlMetaDataFour.wahlname,
+        kopfdatenNamePrefix + extendedWahlMetaDataOne.wahlName,
+        kopfdatenNamePrefix + extendedWahlMetaDataTwo.wahlName,
+        kopfdatenNamePrefix + extendedWahlMetaDataThree.wahlName,
+        kopfdatenNamePrefix + extendedWahlMetaDataFour.wahlName,
       ];
       const resultNames = result.map((task) => task.name);
       expectedNames.forEach((name) => {
@@ -56,7 +56,7 @@ describe("WahlvorstandTaskFactory.ts", () => {
 
       expect(result.length).toStrictEqual(1);
       expect(result[0].name).toStrictEqual(
-        kopfdatenNamePrefix + extendedWahlMetaDataOne.wahlname
+        kopfdatenNamePrefix + extendedWahlMetaDataOne.wahlName
       );
     });
   });

@@ -29,7 +29,7 @@ describe("UngueltigeWahlscheineTaskFactory.ts", () => {
       "should_returnTaskListWithOneElement_when_calledWithCorrectWahlArt(%s)AndCorrectWahlbezirkArt(UWB)",
       (input) => {
         const extendedWahlMetaData = prepareExtendedWahlMetaData()
-          .wahlart(input)
+          .wahlArt(input)
           .build();
         const taskFactoryContext: TaskFactoryContext =
           prepareTaskFactoryContext()
@@ -54,7 +54,7 @@ describe("UngueltigeWahlscheineTaskFactory.ts", () => {
       "should_returnTaskListWithZeroElements_when_calledWithCorrectWahlArt(%s)AndWrongWahlbezirkArt(BWB)",
       (input) => {
         const extendedWahlMetaData = prepareExtendedWahlMetaData()
-          .wahlart(input)
+          .wahlArt(input)
           .build();
         const taskFactoryContext: TaskFactoryContext =
           prepareTaskFactoryContext()
@@ -78,7 +78,7 @@ describe("UngueltigeWahlscheineTaskFactory.ts", () => {
       "should_returnTaskListWithZeroElements_when_calledWithWrongWahlArt(%s)AndCorrectWahlbezirkArt(UWB)",
       (input) => {
         const extendedWahlMetaData = prepareExtendedWahlMetaData()
-          .wahlart(input)
+          .wahlArt(input)
           .build();
         const taskFactoryContext: TaskFactoryContext =
           prepareTaskFactoryContext()
@@ -102,7 +102,7 @@ describe("UngueltigeWahlscheineTaskFactory.ts", () => {
       "should_returnTaskListWithZeroElements_when_calledWithWrongWahlArt(%s)AndWrongWahlbezirkArt(BWB)",
       (input) => {
         const extendedWahlMetaData = prepareExtendedWahlMetaData()
-          .wahlart(input)
+          .wahlArt(input)
           .build();
         const taskFactoryContext: TaskFactoryContext =
           prepareTaskFactoryContext()
@@ -118,16 +118,16 @@ describe("UngueltigeWahlscheineTaskFactory.ts", () => {
 
     it("should_returnOneTask_when_calledWithMultipleWahlMetaDataObjectsWhichContainOnlyCorrectWahlArt", () => {
       const extendedWahlMetaDataOne = prepareExtendedWahlMetaData()
-        .wahlart(WahlWahlartEnum.Beb)
+        .wahlArt(WahlWahlartEnum.Beb)
         .build();
       const extendedWahlMetaDataTwo = prepareExtendedWahlMetaData()
-        .wahlart(WahlWahlartEnum.Btw)
+        .wahlArt(WahlWahlartEnum.Btw)
         .build();
       const extendedWahlMetaDataThree = prepareExtendedWahlMetaData()
-        .wahlart(WahlWahlartEnum.Euw)
+        .wahlArt(WahlWahlartEnum.Euw)
         .build();
       const extendedWahlMetaDataFour = prepareExtendedWahlMetaData()
-        .wahlart(WahlWahlartEnum.Srw)
+        .wahlArt(WahlWahlartEnum.Srw)
         .build();
 
       const taskFactoryContext: TaskFactoryContext = prepareTaskFactoryContext()
@@ -147,16 +147,16 @@ describe("UngueltigeWahlscheineTaskFactory.ts", () => {
 
     it("should_returnZeroTasks_when_calledWithMultipleWahlMetaDataObjectsWhichContainOnlyWrongWahlArt", () => {
       const extendedWahlMetaDataOne = prepareExtendedWahlMetaData()
-        .wahlart(WahlWahlartEnum.Bzw)
+        .wahlArt(WahlWahlartEnum.Bzw)
         .build();
       const extendedWahlMetaDataTwo = prepareExtendedWahlMetaData()
-        .wahlart(WahlWahlartEnum.Ve)
+        .wahlArt(WahlWahlartEnum.Ve)
         .build();
       const extendedWahlMetaDataThree = prepareExtendedWahlMetaData()
-        .wahlart(WahlWahlartEnum.Svw)
+        .wahlArt(WahlWahlartEnum.Svw)
         .build();
       const extendedWahlMetaDataFour = prepareExtendedWahlMetaData()
-        .wahlart(WahlWahlartEnum.Mbw)
+        .wahlArt(WahlWahlartEnum.Mbw)
         .build();
 
       const taskFactoryContext: TaskFactoryContext = prepareTaskFactoryContext()
@@ -176,16 +176,16 @@ describe("UngueltigeWahlscheineTaskFactory.ts", () => {
 
     it("should_returnZeroTasks_when_calledWithMultipleWahlMetaDataObjectsWhichContainWrongAndCorrectWahlArt", () => {
       const extendedWahlMetaDataOne = prepareExtendedWahlMetaData()
-        .wahlart(WahlWahlartEnum.Btw)
+        .wahlArt(WahlWahlartEnum.Btw)
         .build();
       const extendedWahlMetaDataTwo = prepareExtendedWahlMetaData()
-        .wahlart(WahlWahlartEnum.Beb)
+        .wahlArt(WahlWahlartEnum.Beb)
         .build();
       const extendedWahlMetaDataThree = prepareExtendedWahlMetaData()
-        .wahlart(WahlWahlartEnum.Svw)
+        .wahlArt(WahlWahlartEnum.Svw)
         .build();
       const extendedWahlMetaDataFour = prepareExtendedWahlMetaData()
-        .wahlart(WahlWahlartEnum.Mbw)
+        .wahlArt(WahlWahlartEnum.Mbw)
         .build();
 
       const taskFactoryContext: TaskFactoryContext = prepareTaskFactoryContext()

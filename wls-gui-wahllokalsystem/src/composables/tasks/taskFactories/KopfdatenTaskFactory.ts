@@ -7,11 +7,7 @@ import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 
 export function useKopfdatenTaskFactory(): TaskFactoryInterface {
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
-    const taskList: Task[] = [];
-    taskFactoryContext.extendedWahlMetaData.forEach((taskFactoryMetaData) => {
-      taskList.push(createTask(taskFactoryMetaData));
-    });
-    return taskList;
+    return taskFactoryContext.extendedWahlMetaData.map(createTask);
   }
 
   function createTask(taskFactoryMetaData: ExtendedWahlMetaData): Task {
@@ -22,7 +18,7 @@ export function useKopfdatenTaskFactory(): TaskFactoryInterface {
           taskFactoryMetaData.wahlID,
           taskFactoryMetaData.wahlbezirkID
         ),
-      name: "Kopfdaten - " + taskFactoryMetaData.wahlname,
+      name: "Kopfdaten - " + taskFactoryMetaData.wahlName,
     };
   }
 

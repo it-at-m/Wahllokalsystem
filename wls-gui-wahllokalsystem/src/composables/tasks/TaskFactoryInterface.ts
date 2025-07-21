@@ -2,5 +2,5 @@ import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.
 import type { Task } from "@/types/tasks/Task.ts";
 
 export interface TaskFactoryInterface {
-  createTasks(taskFactoryData: TaskFactoryContext): Task[];
+  createTasks(taskFactoryContext: TaskFactoryContext): Task[];
 }

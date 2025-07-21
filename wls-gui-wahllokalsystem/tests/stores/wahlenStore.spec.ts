@@ -85,4 +85,31 @@ describe("wahlenStore.ts", () => {
       expect(result).toStrictEqual("");
     });
   });
+
+  describe("getWahlOrUndefinedById", () => {
+    it("should_getWahl_when_calledWithWahlId", () => {
+      const wahlOne = createWahl();
+      const wahlTwo = createWahl();
+      const wahlThree = createWahl();
+
+      unitUnderTest.wahlen = [wahlOne, wahlTwo, wahlThree];
+
+      const result = unitUnderTest.getWahlOrUndefinedById(wahlOne.wahlID);
+
+      expect(result).toStrictEqual(wahlOne);
+    });
+
+    it("should_getUndefined_when_calledWithWahlIdThatDoesNotExist", () => {
+      const wahlOne = createWahl();
+      const wahlTwo = createWahl();
+      const wahlThree = createWahl();
+      const wahlFour = createWahl();
+
+      unitUnderTest.wahlen = [wahlOne, wahlTwo, wahlThree];
+
+      const result = unitUnderTest.getWahlOrUndefinedById(wahlFour.wahlID);
+
+      expect(result).toBeUndefined();
+    });
+  });
 });

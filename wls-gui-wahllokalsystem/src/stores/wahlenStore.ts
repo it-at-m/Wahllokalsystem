@@ -23,7 +23,7 @@ export const useWahlenStore = defineStore(storeID, () => {
   }
 
   function getWahlOrUndefinedById(wahlID: string) {
-    return wahlen.value?.find((wahl) => (wahl.wahlID = wahlID));
+    return wahlen.value?.find((wahl) => wahl.wahlID == wahlID);
   }
 
   function getWahlNameOrBlankStringById(wahlID: string) {

@@ -45,8 +45,8 @@ onMounted(async () => {
     await initWahlen();
     startBroadcastMessageInterval();
     await initTasks();
-    await loadEreignisse();
-    await loadWaehler();
+    loadEreignisse();
+    loadWaehler();
   } catch (error) {
     console.debug(error);
   }

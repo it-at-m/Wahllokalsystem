@@ -423,6 +423,15 @@ describe("wahlbezirkStore.ts", () => {
       const wahlbezirkID = "wahlbezirkID";
       userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
+      const timeout = 100;
+      mockDefinitions.postBriefwahlvorbereitung.mockReturnValue(
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({});
+          }, timeout);
+        })
+      );
+
       const mockedBriefwahlvorbereitung = {
         wahlbezirkID: "wahlbezirkID1",
         urneVersiegelt: true,
@@ -433,12 +442,19 @@ describe("wahlbezirkStore.ts", () => {
       };
       unitUnderTest.briefwahlVorbereitung = mockedBriefwahlvorbereitung;
 
-      await unitUnderTest.sendBriefwahlvorbereitung();
+      expect(unitUnderTest.briefWahlVorbereitungIsSaving).toStrictEqual(false);
+      const sendBriefwahlvorbereitungPromise =
+        unitUnderTest.sendBriefwahlvorbereitung();
+      expect(unitUnderTest.briefWahlVorbereitungIsSaving).toStrictEqual(true);
+
+      vi.advanceTimersByTime(timeout);
+      await sendBriefwahlvorbereitungPromise;
 
       expect(mockDefinitions.postBriefwahlvorbereitung).toHaveBeenCalledWith(
         wahlbezirkID,
         mockedBriefwahlvorbereitung
       );
+      expect(unitUnderTest.briefWahlVorbereitungIsSaving).toStrictEqual(false);
       expect(unitUnderTest.briefwahlVorbereitung).toEqual(
         mockedBriefwahlvorbereitung
       );

@@ -391,7 +391,7 @@ services:
 
   wls-gui-admintool:
     container_name: wls-gui-admintool
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-gui-admintool:latest-dev@sha256:785b8110b76f9b69b580cd8a5ad0306536111d8375dfb6a4f262b90c5fce2e80
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-gui-admintool:latest-dev@sha256:bb3a9ee9615048e8ef19a4112a9c282370086cd59b527cc635bc2a3148e8c5fe
     ports:
       - 8401:8080
     extra_hosts:

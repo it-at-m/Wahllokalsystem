@@ -6,12 +6,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
-  getTaskList: vi.fn(),
+  initTasklist: vi.fn(),
 }));
 
-vi.mock("@/composables/tasks/taskListService", () => ({
+vi.mock("@/composables/tasks/taskListService.ts", () => ({
   useTaskListService: () => ({
-    getTaskList: mockDefinitions.getTaskList,
+    initTasklist: mockDefinitions.initTasklist,
   }),
 }));
 
@@ -40,7 +40,7 @@ describe("taskManagerStore.ts", () => {
           },
         },
       ];
-      mockDefinitions.getTaskList.mockReturnValue(exampleTaskList);
+      mockDefinitions.initTasklist.mockReturnValue(exampleTaskList);
 
       await unitUnderTest.initTasks();
 
@@ -59,7 +59,7 @@ describe("taskManagerStore.ts", () => {
           },
         },
       ];
-      mockDefinitions.getTaskList.mockReturnValue(exampleTaskList);
+      mockDefinitions.initTasklist.mockReturnValue(exampleTaskList);
 
       await unitUnderTest.initTasks();
 
@@ -84,7 +84,7 @@ describe("taskManagerStore.ts", () => {
           },
         },
       ];
-      mockDefinitions.getTaskList.mockReturnValue(exampleTaskList);
+      mockDefinitions.initTasklist.mockReturnValue(exampleTaskList);
 
       await unitUnderTest.initTasks();
 

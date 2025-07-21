@@ -2,7 +2,7 @@ import type { ExtendedWahlMetaData } from "@/composables/tasks/ExtendedWahlMetaD
 import type { Task } from "@/types/tasks/Task.ts";
 
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
+import { computed } from "vue";
 
 import { useKonfigurationsparameterTaskFactory } from "@/composables/tasks/taskFactories/KonfigurationsparameterTaskFactory.ts";
 import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/KopfdatenTaskFactory.ts";
@@ -23,17 +23,13 @@ export function useTaskListService() {
   const { createTasks: createUngueltigeWahlscheineTasks } =
     useUngueltigeWahlscheineTaskFactory();
 
-  const tasks = ref<Task[]>([]);
-
-  function getTaskList(): Task[] {
-    return tasks.value;
-  }
-
   function initTasklist() {
-    tasks.value.push(...initKopfdatenTaskList());
-    tasks.value.push(...initUngueltigeWahlscheineTaskList());
-    tasks.value.push(...initWahlvorstandTaskList());
-    tasks.value.push(...initKonfigurationsparameterTaskList());
+    const tasks = [];
+    tasks.push(...initKopfdatenTaskList());
+    tasks.push(...initUngueltigeWahlscheineTaskList());
+    tasks.push(...initWahlvorstandTaskList());
+    tasks.push(...initKonfigurationsparameterTaskList());
+    return tasks;
   }
 
   const taskFactoryData = computed(() => {
@@ -45,9 +41,9 @@ export function useTaskListService() {
         }
         const extendedWahlMetaData: ExtendedWahlMetaData = {
           wahlID: wahlMetadata.wahlID,
-          wahlart: wahl.wahlart,
+          wahlArt: wahl.wahlart,
           wahlbezirkID: wahlMetadata.wahlbezirkID,
-          wahlname: wahl.name,
+          wahlName: wahl.name,
           wahlnummer: wahlMetadata.wahlnummer,
         };
         return extendedWahlMetaData;
@@ -76,7 +72,5 @@ export function useTaskListService() {
 
   return {
     initTasklist,
-    getTaskList,
-    tasks,
   };
 }

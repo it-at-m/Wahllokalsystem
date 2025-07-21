@@ -114,9 +114,9 @@ describe("taskListService.ts", () => {
         },
       ]);
 
-      unitUnderTest.initTasklist();
+      const result = unitUnderTest.initTasklist();
 
-      const taskNames = unitUnderTest.tasks.value.map((task) => task.name);
+      const taskNames = result.map((task) => task.name);
 
       const expectedTaskNames = [
         "Konfigurationsparameter",

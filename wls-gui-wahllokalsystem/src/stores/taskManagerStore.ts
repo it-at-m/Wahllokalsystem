@@ -11,7 +11,7 @@ const storeID = "taskManager";
 const { registerStoreHMR } = useHmrUpdate();
 
 export const useTaskManagerStore = defineStore(storeID, () => {
-  const taskListService = useTaskListService();
+  const { initTasklist } = useTaskListService();
   const currentlyRunningTask = ref<null | Task>(null);
   const failedTasks: Ref<Task[]> = ref([]);
   const successfullyTasks: Ref<Task[]> = ref([]);
@@ -32,8 +32,7 @@ export const useTaskManagerStore = defineStore(storeID, () => {
   );
 
   async function initTasks() {
-    taskListService.initTasklist();
-    const taskList = taskListService.getTaskList();
+    const taskList = initTasklist();
     numberOfTasksToRun.value = taskList.length;
     for (const task of taskList) {
       currentlyRunningTask.value = task;

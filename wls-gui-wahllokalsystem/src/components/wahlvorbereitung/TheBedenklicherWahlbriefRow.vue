@@ -46,7 +46,6 @@
           v-for="wahl in wahlen"
           :key="`${wahl.wahlID}-${index - 1}`"
         >
-          <!-- todo: man sieht nur schlecht dass man scrollen kann -->
           <v-autocomplete
             :model-value="
               zurueckweisungsgrundEnumToDisplayString(

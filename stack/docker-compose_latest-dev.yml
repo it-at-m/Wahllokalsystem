@@ -44,7 +44,7 @@ services:
 
   wls-briefwahl-service:
     container_name: wls-briefwahl-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-briefwahl-service:latest-dev@sha256:361005a318bf72b7a7bb588ad194bf706249bb112c2a808b0dc09cd7e3b0ab44
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-briefwahl-service:latest-dev@sha256:3167a29164d8b28c8093f94117b08bbba800c7243c1abda9635adfd8746b153a
     depends_on:
       - wls-db-oracle
     env_file:

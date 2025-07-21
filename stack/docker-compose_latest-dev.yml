@@ -4,7 +4,7 @@ services:
   ### WLS-Backend Services
   wls-broadcast-service:
     container_name: wls-broadcast-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-broadcast-service:latest-dev@sha256:6db4f4ba394ac9d1b62ef40b50a9d03864de5b4aba6ac2cc44c8e23c096cb286
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-broadcast-service:latest-dev@sha256:1da808b189f4159cd18ac960583130a505e6881d67a757a2826728cd760c10bf
     depends_on:
       - wls-db-oracle
     env_file:

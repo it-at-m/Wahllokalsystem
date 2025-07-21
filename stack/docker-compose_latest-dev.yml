@@ -104,7 +104,7 @@ services:
 
   wls-basisdaten-service:
     container_name: wls-basisdaten-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-basisdaten-service:latest-dev@sha256:0a6489e2b681cc28885ab330e5e2740b4eeab66c0ae8a776b069287ad6519276
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-basisdaten-service:latest-dev@sha256:31e6c09b3f3dbac75b61f070d13ff95490589ec864ec947d4d8fb67959b468d2
     depends_on:
       - wls-db-oracle
     env_file:

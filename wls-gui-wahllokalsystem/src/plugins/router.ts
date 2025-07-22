@@ -23,7 +23,7 @@ import WahleroeffnungView from "@/views/wahlvorbereitung/WahleroeffnungView.vue"
 import WahlumgebungView from "@/views/wahlvorbereitung/WahlumgebungView.vue";
 import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
 
-const routeWhenWahlbezirksArtIsUWb = () => {
+const permitNavigationForWahlbezirksArtUwb = () => {
   const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
   return currentUserWahlbezirksArt.value === WahlbezirksArtEnum.UWB;
 };
@@ -45,7 +45,7 @@ const routes = [
     path: "/wahlschliessung",
     name: ROUTE_WAHLSCHLIESSUNG,
     component: UWBWahlhandlungView,
-    beforeEnter: routeWhenWahlbezirksArtIsUWb,
+    beforeEnter: permitNavigationForWahlbezirksArtUwb,
   },
   {
     path: "/wahlumgebung",
@@ -61,7 +61,7 @@ const routes = [
     path: "/waehlerverzeichnis",
     name: ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
     component: UWBWaehlerverzeichnisView,
-    beforeEnter: routeWhenWahlbezirksArtIsUWb,
+    beforeEnter: permitNavigationForWahlbezirksArtUwb,
   },
   {
     path: "/ereignisse",

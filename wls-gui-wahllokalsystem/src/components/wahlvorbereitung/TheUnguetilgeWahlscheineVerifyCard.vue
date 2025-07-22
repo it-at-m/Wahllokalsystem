@@ -80,7 +80,7 @@
         active
         @click="onSearchClicked"
         :disabled="isSearchButtonDisabled"
-        >Suchen</v-btn
+        >{{ searchButtonLabel }}</v-btn
       >
       <base-button-refresh
         :loading="ungueltigeWahlscheineIsLoading"
@@ -146,6 +146,9 @@ const feedbackWahlscheinIsGueltigIsVisible = computed(
 const feedbackWahlscheinIsUngueltigIsVisible = computed(
   () => ungueltigerWahlschein.value
 );
+const searchButtonLabel = computed(() =>
+  ungueltigerWahlschein.value === undefined ? "Suchen" : "Suche zurücksetzen"
+);
 const titleFeedbackWahlscheinUngueltig = computed(() => {
   return `Wahlschein ${ungueltigerWahlschein.value?.wahlscheinnummer ?? ""} für ${ungueltigerWahlschein.value?.vorname} ${ungueltigerWahlschein.value?.familienname} ist ungültig`;
 });
@@ -155,7 +158,9 @@ function onRefreshClicked() {
 }
 
 function onSearchClicked() {
-  if (wahlscheinnummer.value !== null) {
+  if (ungueltigerWahlschein.value !== undefined) {
+    ungueltigerWahlschein.value = undefined;
+  } else if (wahlscheinnummer.value !== null) {
     ungueltigerWahlschein.value = getUngueltigerWahlscheinByWahlscheinnummer(
       `${wahlscheinnummer.value}`
     );

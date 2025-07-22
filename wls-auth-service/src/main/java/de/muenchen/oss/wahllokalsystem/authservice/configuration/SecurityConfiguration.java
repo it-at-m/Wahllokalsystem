@@ -50,7 +50,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
 /**
@@ -104,21 +103,21 @@ public class SecurityConfiguration {
         http
                 .authorizeHttpRequests((requests) -> requests.requestMatchers(
                         // allow access to /actuator/info
-                        AntPathRequestMatcher.antMatcher("/actuator/info"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/info"),
                         // allow access to /actuator/health for OpenShift Health Check
-                        AntPathRequestMatcher.antMatcher("/actuator/health"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/health"),
                         // allow access to /actuator/health/liveness for OpenShift Liveness Check
-                        AntPathRequestMatcher.antMatcher("/actuator/health/liveness"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/health/liveness"),
                         // allow access to /actuator/health/readiness for OpenShift Readiness Check
-                        AntPathRequestMatcher.antMatcher("/actuator/health/readiness"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/health/readiness"),
                         // allow access to /actuator/metrics for Prometheus monitoring in OpenShift
-                        AntPathRequestMatcher.antMatcher("/actuator/metrics"),
-                        AntPathRequestMatcher.antMatcher("/v3/api-docs/**"),
-                        AntPathRequestMatcher.antMatcher("/swagger-ui/**"),
-                        AntPathRequestMatcher.antMatcher("/"),
-                        AntPathRequestMatcher.antMatcher("/home"),
-                        AntPathRequestMatcher.antMatcher("/css/*"),
-                        AntPathRequestMatcher.antMatcher("/js/*"))
+                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/metrics"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/v3/api-docs/**"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/swagger-ui/**"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/home"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/css/*"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/js/*"))
                         .permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer -> httpSecurityOAuth2ResourceServerConfigurer

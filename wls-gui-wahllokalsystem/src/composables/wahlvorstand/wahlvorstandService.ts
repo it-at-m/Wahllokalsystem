@@ -8,6 +8,7 @@ import { useUserNotificationService } from "@/composables/userNotification/userN
 import { useWahlvorstandMapper } from "@/composables/wahlvorstand/wahlvorstandMapper";
 import { WAHLVORSTAND_SERVICE_API_URL } from "@/constants";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
+import { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion.ts";
 
 const { toModel, toDto } = useWahlvorstandMapper();
 
@@ -85,28 +86,28 @@ export function useWahlvorstandService() {
   }
 
   function _sortWahlvorstand(wahlvorstand: Wahlvorstand) {
-    const WahlvorstandFunktion = {
-      W: 0,
-      SWB: 1,
-      SB: 2,
-      SSB: 3,
-      B: 4,
+    const sortOrder = {
+      [WahlvorstandsmitgliedFunktionEnum.W]: 0,
+      [WahlvorstandsmitgliedFunktionEnum.Swb]: 1,
+      [WahlvorstandsmitgliedFunktionEnum.Sb]: 2,
+      [WahlvorstandsmitgliedFunktionEnum.Ssb]: 3,
+      [WahlvorstandsmitgliedFunktionEnum.B]: 4,
     };
 
-    wahlvorstand?.wahlvorstandsmitglieder.sort((a, b) => {
+    wahlvorstand?.wahlvorstandsmitglieder?.sort((a, b) => {
       const functionComparison =
-        WahlvorstandFunktion[a.funktion] - WahlvorstandFunktion[b.funktion];
+        sortOrder[a?.funktion ?? 999] - sortOrder[b?.funktion ?? 999];
       if (functionComparison !== 0) {
         return functionComparison;
       }
-      const familiennameComparison = a.familienname.localeCompare(
-        b.familienname
+      const familiennameComparison = (a?.familienname || "").localeCompare(
+        b?.familienname || ""
       );
       if (familiennameComparison !== 0) {
         return familiennameComparison;
       }
 
-      return a.vorname.localeCompare(b.vorname);
+      return (a?.vorname || "").localeCompare(b?.vorname || "");
     });
 
     return wahlvorstand;

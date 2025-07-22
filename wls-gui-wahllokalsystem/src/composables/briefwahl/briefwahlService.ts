@@ -35,6 +35,11 @@ export function useBriefwahlService() {
       return responseData ? toModel(responseData) : null;
     } catch (e) {
       console.debug(e);
+      addNotification(
+        "Die beanstandeten Wahlbriefe konnten nicht geladen werden.",
+        UserNotificationCategoryEnum.ERROR
+      );
+      throw new Error("Get beanstandete Wahlbriefe Failed");
     }
   }
 

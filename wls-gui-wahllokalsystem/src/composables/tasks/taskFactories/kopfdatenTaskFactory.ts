@@ -1,11 +1,11 @@
 import type { ExtendedWahlMetaData } from "@/composables/tasks/ExtendedWahlMetaData.ts";
+import type { TaskFactory } from "@/composables/tasks/TaskFactory.ts";
 import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.ts";
-import type { TaskFactoryInterface } from "@/composables/tasks/TaskFactoryInterface.ts";
 import type { Task } from "@/types/tasks/Task.ts";
 
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 
-export function useKopfdatenTaskFactory(): TaskFactoryInterface {
+export function useKopfdatenTaskFactory(): TaskFactory {
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
     return taskFactoryContext.extendedWahlMetaData.map(createTask);
   }

@@ -1,9 +1,9 @@
-import type { TaskFactoryInterface } from "@/composables/tasks/TaskFactoryInterface.ts";
+import type { TaskFactory } from "@/composables/tasks/TaskFactory.ts";
 import type { Task } from "@/types/tasks/Task.ts";
 
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 
-export function useWahlvorstandTaskFactory(): TaskFactoryInterface {
+export function useWahlvorstandTaskFactory(): TaskFactory {
   function createTasks(): Task[] {
     return [createTask()];
   }

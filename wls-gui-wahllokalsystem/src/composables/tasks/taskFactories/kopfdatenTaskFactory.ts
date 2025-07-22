@@ -18,7 +18,7 @@ export function useKopfdatenTaskFactory(): TaskFactoryInterface {
           taskFactoryMetaData.wahlID,
           taskFactoryMetaData.wahlbezirkID
         ),
-      name: "Kopfdaten - " + taskFactoryMetaData.wahlName,
+      name: `Kopfdaten - ${taskFactoryMetaData.wahlName}`,
     };
   }
 

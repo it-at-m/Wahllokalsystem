@@ -159,7 +159,7 @@ function onRefreshClicked() {
 
 function onSearchClicked() {
   if (ungueltigerWahlschein.value !== undefined) {
-    ungueltigerWahlschein.value = undefined;
+    resetUngueltigerWahlschein();
   } else if (wahlscheinnummer.value !== null) {
     ungueltigerWahlschein.value = getUngueltigerWahlscheinByWahlscheinnummer(
       `${wahlscheinnummer.value}`

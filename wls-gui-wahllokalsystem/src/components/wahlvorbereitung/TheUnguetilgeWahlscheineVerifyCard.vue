@@ -7,6 +7,7 @@
           :model-value="wahlscheinnummer"
           :rules="[REQUIRED, MIN_NUMBER(1), MAX_NUMBER(9999999)]"
           label="Wahlscheinnummer"
+          max-width="300"
           @update:model-value="onWahlscheinnummerChanged"
         />
 

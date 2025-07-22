@@ -330,6 +330,7 @@ services:
       SERVICE_CONFIG_CRYPTO_KEY: please change me
       SERVICE_CONFIG_OAUTH2_CLIENTS_WAHLLOKALGUI_ID: ${SSO_CLIENT_ID_WLS}
       SERVICE_CONFIG_OAUTH2_JWK_RSA_INIT_SEED: change_me
+      SPRING_LDAP_EMBEDDED_LDIF: file:/configLdap/users.ldif
       SPRING_PROFILES_ACTIVE: db-oracle,db-dummydata,dummy.ldap,plainTextLogging
       SPRING_DATASOURCE_URL: ${WLS_SERVICE_DB_URL}
       SERVER_PORT: 8080
@@ -374,6 +375,8 @@ services:
         KhpSD8VlzwIjLstXrtI/pmxHRwU26PNV+XR2f51Di01aHDiW4yeni4aoh9EqpbMs
         iQIDAQAB
         -----END PUBLIC KEY-----
+    volumes:
+      - './ldap:/configLdap'
     ports:
       - 8100:8080
     networks:

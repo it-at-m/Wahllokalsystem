@@ -1,7 +1,19 @@
 <template>
-  <wahlumgebung-uwb-card />
+  <the-wahlumgebung-uwb-card
+    v-if="currentUserWahlbezirksArt == WahlbezirksArtEnum.UWB"
+  />
+  <the-wahlumgebung-bwb-card
+    v-if="currentUserWahlbezirksArt == WahlbezirksArtEnum.BWB"
+  />
 </template>
 
 <script setup lang="ts">
-import WahlumgebungUwbCard from "@/components/wahlvorbereitung/WahlumgebungUwbCard.vue";
+import { storeToRefs } from "pinia";
+
+import TheWahlumgebungBwbCard from "@/components/wahlvorbereitung/TheWahlumgebungBwbCard.vue";
+import TheWahlumgebungUwbCard from "@/components/wahlvorbereitung/TheWahlumgebungUwbCard.vue";
+import { useUserStore } from "@/stores/userStore.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
+
+const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
 </script>

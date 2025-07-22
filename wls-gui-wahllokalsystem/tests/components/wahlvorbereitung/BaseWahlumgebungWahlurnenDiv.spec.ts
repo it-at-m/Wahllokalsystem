@@ -187,7 +187,7 @@ describe("BaseWahlumgebungWahlurnenDiv.vue", () => {
       expect(wrapper.html()).toContain(errorMessage);
     });
 
-    it.skip("should_renderErrorMessage_when_ruleRequiredIsViolated", async (context) => {
+    it("should_renderErrorMessage_when_ruleRequiredIsViolated", async (context) => {
       const twoWahlenWahlVorbereitungAnzahlNull = {
         wahlbezirkID: "wahlbezirkID1",
         urneVersiegelt: false,
@@ -217,6 +217,7 @@ describe("BaseWahlumgebungWahlurnenDiv.vue", () => {
 
       // zurück auf null
       await inputs[0].setValue(null);
+      await inputs[0].vm.validate();
       await flushPromises();
       expect(wrapper.vm.wahlVorbereitung.urnenAnzahl[0].anzahl).toBe(null);
 

@@ -124,6 +124,17 @@ export const useEreignisStore = defineStore(storeID, () => {
     }
   }
 
+  function updateBeschreibungByIndex(beschreibung: string, index: number) {
+    if (wahlbezirkEreignisse.value.ereigniseintraege) {
+      const ereignisToChange =
+        wahlbezirkEreignisse.value.ereigniseintraege[index];
+      if (ereignisToChange == undefined) {
+        return;
+      }
+      ereignisToChange.beschreibung = beschreibung;
+    }
+  }
+
   async function loadEreignisse() {
     error.value = null;
     try {
@@ -209,6 +220,7 @@ export const useEreignisStore = defineStore(storeID, () => {
     sendEreignisse,
     addEreignis,
     updateUhrzeitByIndex,
+    updateBeschreibungByIndex,
     error,
   };
 });

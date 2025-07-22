@@ -4,10 +4,14 @@ import {
   Configuration,
   WahlvorstandControllerApi,
 } from "@/api/wls-clients/generated-wahlvorstand-api";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWahlvorstandMapper } from "@/composables/wahlvorstand/wahlvorstandMapper";
 import { WAHLVORSTAND_SERVICE_API_URL } from "@/constants";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { toModel, toDto } = useWahlvorstandMapper();
+
+const userNotificationService = useUserNotificationService();
 
 export function useWahlvorstandService() {
   const wahlvorstandControllerApi = new WahlvorstandControllerApi(
@@ -16,10 +20,37 @@ export function useWahlvorstandService() {
     })
   );
 
-  function getWahlvorstand(wahlbezirkID: string): Promise<Wahlvorstand> {
-    return wahlvorstandControllerApi
-      .getWahlvorstand(wahlbezirkID)
-      .then((response) => toModel(response.data));
+  async function getWahlvorstand(
+    wahlbezirkID: string,
+    {
+      forceUpdate = false,
+      sendNotification = true,
+    }: {
+      forceUpdate?: boolean;
+      sendNotification?: boolean;
+    } = {}
+  ): Promise<Wahlvorstand> {
+    try {
+      const response = await wahlvorstandControllerApi.getWahlvorstand(
+        wahlbezirkID,
+        forceUpdate
+      );
+      if (sendNotification) {
+        userNotificationService.addNotification(
+          "Die Anwesenheit wurde aktualisiert.",
+          UserNotificationCategoryEnum.SUCCESS
+        );
+      }
+      return toModel(response.data);
+    } catch (error) {
+      if (sendNotification) {
+        userNotificationService.addNotification(
+          "Das Aktualisieren der Anwesenheit schlug fehl.",
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
+      throw error;
+    }
   }
 
   async function saveWahlvorstand(
@@ -31,11 +62,26 @@ export function useWahlvorstandService() {
     const now = new Date();
     const wahlvorstandDto = toDto(wahlvorstand, now);
 
-    wahlvorstandControllerApi.postWahlvorstand(wahlbezirkID, wahlvorstandDto);
+    try {
+      await wahlvorstandControllerApi.postWahlvorstand(
+        wahlbezirkID,
+        wahlvorstandDto
+      );
+      userNotificationService.addNotification(
+        "Der Anwesenheit wurde erfolgreich gespeichert.",
+        UserNotificationCategoryEnum.SUCCESS
+      );
+    } catch (error) {
+      userNotificationService.addNotification(
+        "Das Speichern der Anwesenheit schlug fehl.",
+        UserNotificationCategoryEnum.ERROR
+      );
+      throw error;
+    }
 
-    return Promise.resolve({
+    return {
       updateDatetime: now,
-    });
+    };
   }
 
   return {

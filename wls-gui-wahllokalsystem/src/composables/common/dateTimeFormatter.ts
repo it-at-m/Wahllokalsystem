@@ -1,6 +1,10 @@
+import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
+
 export function useDateTimeFormatter() {
   const NO_VALUE_DEFAULT = "";
   const TIME_FIELD_SEPARATOR = ":";
+
+  const { isValidDate } = useDateTimeUtils();
 
   const time = function (date?: Date | null): string {
     if (!date) {
@@ -36,10 +40,13 @@ export function useDateTimeFormatter() {
 
   const getDateFromTimeString = function (timeString: string): Date {
     // Validate time string format (HH:MM)
-    if (!timeString || !/^\d{1,2}:\d{1,2}$/.test(timeString)) {
+    if (!timeString || !/^\d{1,2}:\d{1,2}(?::\d{1,2})?$/.test(timeString)) {
       return new Date(NaN);
     }
-    const [hours, minutes] = timeString.split(":").map(Number);
+
+    const timeParts = timeString.split(":").map(Number);
+
+    const [hours, minutes] = timeParts;
     if (
       isNaN(hours) ||
       isNaN(minutes) ||
@@ -50,12 +57,48 @@ export function useDateTimeFormatter() {
     ) {
       return new Date(NaN); // Return invalid date for invalid time values
     }
+
+    const seconds = timeParts.length === 3 ? timeParts[2] : 0;
+    if (!isNaN(seconds) && (seconds < 0 || seconds > 59)) {
+      return new Date(NaN);
+    }
+
     const date = new Date();
-    date.setHours(hours, minutes);
+    date.setHours(hours, minutes, seconds, 0);
     return date;
   };
 
-  return { time, toHhMm, applyLocalTimezoneOffset, getDateFromTimeString };
+  function toGermanDateFormat(dateString: string) {
+    const date = new Date(dateString);
+    if (isValidDate(date)) {
+      return date.toLocaleDateString("de-DE", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+    }
+  }
+
+  function toGermanDateWithLongMonth(dateString: string) {
+    const date = new Date(dateString);
+    if (isValidDate(date)) {
+      return date.toLocaleDateString("de-DE", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour12: false,
+      });
+    }
+  }
+
+  return {
+    time,
+    toHhMm,
+    applyLocalTimezoneOffset,
+    getDateFromTimeString,
+    toGermanDateFormat,
+    toGermanDateWithLongMonth,
+  };
 }
 
 function leftPadTwoDigitsWithZero(number: number): string {

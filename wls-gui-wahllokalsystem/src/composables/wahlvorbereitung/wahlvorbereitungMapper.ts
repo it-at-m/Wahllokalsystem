@@ -1,22 +1,40 @@
 import type {
+  BriefwahlvorbereitungDTO,
+  BriefwahlvorbereitungWriteDTO,
+  EroeffnungsUhrzeitWriteDTO,
   UrnenwahlSchliessungsUhrzeitDTO,
   UrnenwahlSchliessungsUhrzeitWriteDTO,
+  UrnenwahlvorbereitungDTO,
+  UrnenwahlvorbereitungWriteDTO,
+  WahlurneDTO,
 } from "@/api/wls-clients/generated-wahlvorbereitung-api";
 import type { UrnenwahlSchliessungsuhrzeit } from "@/types/wahlvorbereitung/UrnenwahlSchliessungsuhrzeit.ts";
+import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
+import type { Wahlurne } from "@/types/wahlvorbereitung/Wahlurne.ts";
+import type { Wahlvorbereitung } from "@/types/wahlvorbereitung/Wahlvorbereitung.ts";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 
 const { applyLocalTimezoneOffset } = useDateTimeFormatter();
 
 export function useWahlvorbereitungMapper() {
-  function toModel(
+  function toEroeffnungsuhrzeitWriteDTO(
+    eroeffnungsuhrzeit: Date
+  ): EroeffnungsUhrzeitWriteDTO {
+    return {
+      eroeffnungsuhrzeit:
+        applyLocalTimezoneOffset(eroeffnungsuhrzeit).toISOString(),
+    };
+  }
+
+  function toUrnenwahlSchliessungsuhrzeitModel(
     schliessungsuhrzeitDTO: UrnenwahlSchliessungsUhrzeitDTO
   ): UrnenwahlSchliessungsuhrzeit {
     return { schliessungsuhrzeit: schliessungsuhrzeitDTO.schliessungsuhrzeit };
   }
 
-  function toDTO(
-    schliessungsuhrzeit: string
+  function toUrnenwahlSchliessungsuhrzeitDTO(
+    schliessungsuhrzeit: Date
   ): UrnenwahlSchliessungsUhrzeitWriteDTO {
     const mappedUhrzeit = applyLocalTimezoneOffset(schliessungsuhrzeit);
     return {
@@ -24,5 +42,100 @@ export function useWahlvorbereitungMapper() {
     };
   }
 
-  return { toModel, toDTO };
+  function toUrnenwahlvorbereitungModel(
+    urnenwahlvorbereitungDTO: UrnenwahlvorbereitungDTO
+  ): Urnenwahlvorbereitung {
+    const urnenAnzahlModel =
+      urnenwahlvorbereitungDTO.urnenAnzahl?.map((wahlurneDTO) =>
+        _toWahlurneModel(wahlurneDTO)
+      ) ?? [];
+    return {
+      wahlbezirkID: urnenwahlvorbereitungDTO.wahlbezirkID,
+      anzahlWahlkabinen: urnenwahlvorbereitungDTO.anzahlWahlkabinen,
+      anzahlWahltische: urnenwahlvorbereitungDTO.anzahlWahltische,
+      anzahlNebenraeume: urnenwahlvorbereitungDTO.anzahlNebenraeume,
+      urneVersiegelt: _areAllUrnenVersiegelt(
+        urnenwahlvorbereitungDTO.urnenAnzahl
+      ),
+      urnenAnzahl: urnenAnzahlModel,
+    };
+  }
+
+  function toUrnenwahlvorbereitungWriteDto(
+    urnenwahlvorbereitung: Urnenwahlvorbereitung
+  ): UrnenwahlvorbereitungWriteDTO {
+    const urnenAnzahlDto =
+      urnenwahlvorbereitung.urnenAnzahl?.map((wahlurneDTO) =>
+        _toWahlurneDto(wahlurneDTO, urnenwahlvorbereitung.urneVersiegelt)
+      ) ?? [];
+    return {
+      anzahlWahlkabinen: urnenwahlvorbereitung.anzahlWahlkabinen ?? 0,
+      anzahlWahltische: urnenwahlvorbereitung.anzahlWahltische ?? 0,
+      anzahlNebenraeume: urnenwahlvorbereitung.anzahlNebenraeume ?? 0,
+      urnenAnzahl: urnenAnzahlDto,
+    };
+  }
+
+  function toBriefwahlvorbereitungModel(
+    briefwahlvorbereitungDTO: BriefwahlvorbereitungDTO
+  ): Wahlvorbereitung {
+    const urnenAnzahlModel =
+      briefwahlvorbereitungDTO.urnenAnzahl?.map((wahlurneDTO) =>
+        _toWahlurneModel(wahlurneDTO)
+      ) ?? [];
+    return {
+      wahlbezirkID: briefwahlvorbereitungDTO.wahlbezirkID,
+      urneVersiegelt: _areAllUrnenVersiegelt(
+        briefwahlvorbereitungDTO.urnenAnzahl
+      ),
+      urnenAnzahl: urnenAnzahlModel,
+    };
+  }
+
+  function toBriefwahlvorbereitungWriteDto(
+    briefwahlvorbereitung: Wahlvorbereitung
+  ): BriefwahlvorbereitungWriteDTO {
+    const urnenAnzahlDto = briefwahlvorbereitung.urnenAnzahl.map(
+      (wahlurneDTO) =>
+        _toWahlurneDto(wahlurneDTO, briefwahlvorbereitung.urneVersiegelt)
+    );
+    return {
+      urnenAnzahl: urnenAnzahlDto,
+    };
+  }
+
+  function _toWahlurneModel(wahlurneDto: WahlurneDTO): Wahlurne {
+    return {
+      wahlID: wahlurneDto.wahlID,
+      anzahl: wahlurneDto.anzahl,
+    };
+  }
+
+  function _toWahlurneDto(
+    wahlurne: Wahlurne,
+    urneVersiegelt: boolean
+  ): WahlurneDTO {
+    return {
+      wahlID: wahlurne.wahlID,
+      anzahl: wahlurne.anzahl ?? 0,
+      urneVersiegelt: urneVersiegelt,
+    };
+  }
+
+  function _areAllUrnenVersiegelt(wahlurneDTO: WahlurneDTO[]) {
+    if (!Array.isArray(wahlurneDTO) || wahlurneDTO.length === 0) {
+      return false;
+    }
+    return wahlurneDTO.every((urne) => urne.urneVersiegelt === true);
+  }
+
+  return {
+    toEroeffnungsuhrzeitWriteDTO,
+    toUrnenwahlSchliessungsuhrzeitModel,
+    toUrnenwahlSchliessungsuhrzeitDTO,
+    toUrnenwahlvorbereitungModel,
+    toUrnenwahlvorbereitungWriteDto,
+    toBriefwahlvorbereitungModel,
+    toBriefwahlvorbereitungWriteDto,
+  };
 }

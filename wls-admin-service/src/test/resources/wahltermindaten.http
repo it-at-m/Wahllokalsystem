@@ -2,12 +2,12 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### Import Wahltermindaten - works only with profile "dummy.clients"
-POST {{ WLS_ADMIN_SERVICE_URL }}/businessActions/importWahltermindaten/wahltagID
+### Import Wahltermindaten - works only with profile "dummy.clients" | user wls_all_uwb + wls_all_bwb
+POST {{ WLS_ADMIN_SERVICE_URL }}/businessActions/importWahltermindaten/827e9e6a-ebe9-483f-a9cd-162b26f348e8
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
-### Import Wahltermindaten (needs profile 'dummy.clients' to make this work because of internal calls to other services)
-POST {{ WLS_ADMIN_SERVICE_URL }}/businessActions/deleteWahltermindaten/wahltagID
+### Delete Wahltermindaten (needs profile 'dummy.clients' to make this work because of internal calls to other services) | user wls_all_uwb + wls_all_bwb
+POST {{ WLS_ADMIN_SERVICE_URL }}/businessActions/deleteWahltermindaten/827e9e6a-ebe9-483f-a9cd-162b26f348e8
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json

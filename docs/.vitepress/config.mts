@@ -5,12 +5,15 @@ const PATH_SERVICES_BACKEND = PATH_SERVICES + "backend-services/";
 const PATH_SERVICES_FRONTEND = PATH_SERVICES + "frontend-services/";
 const PATH_TECHNIK = "/technik/";
 const PATH_ECOSYSTEM = PATH_TECHNIK + "ecosystem/";
+const PATH_ECOSTYSTEM_WORKFLOWS = `${PATH_ECOSYSTEM}workflowsAndArtifacts/`;
 const PATH_ADR = PATH_TECHNIK + "adr/";
 const PATH_NAMING_CONVENTIONS = PATH_TECHNIK + "naming_conventions/";
 const PATH_GUIDES = PATH_TECHNIK + "guides/";
 const PATH_API_CLIENT_GENERATION = PATH_GUIDES + "api-client-generation/";
 const PATH_MICROSERVICE_GENERATION = PATH_GUIDES + "new-microservice/";
 const PATH_SYSSPEC = PATH_TECHNIK + "systemspecification/";
+const PATH_SYSSPEC_BACKEND = PATH_SYSSPEC + "backend/";
+const PATH_TESTCONCEPTS = PATH_TECHNIK + "testconcepts/";
 
 // https://vitepress.dev/reference/site-config
 export default withMermaid({
@@ -19,6 +22,11 @@ export default withMermaid({
   lang: "de-DE",
   base: "/Wahllokalsystem/",
   srcDir: "src", //markdown files are located in that directory
+  vite: {
+    ssr: {
+      noExternal: ["vuetify"],
+    },
+  },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
@@ -52,7 +60,17 @@ export default withMermaid({
               text: "Tools & Frameworks",
               link: `${PATH_ECOSYSTEM}toolsAndFrameworks`,
             },
-            { text: "Workflows", link: `${PATH_ECOSYSTEM}workflows` },
+            {
+              text: "Workflows & Artefakte",
+              link: `${PATH_ECOSTYSTEM_WORKFLOWS}`,
+              collapsed: true,
+              items: [
+                {
+                  text: "Beziehungen",
+                  link: `${PATH_ECOSTYSTEM_WORKFLOWS}relations`,
+                },
+              ],
+            },
           ],
         },
         {
@@ -95,6 +113,10 @@ export default withMermaid({
             {
               text: "Nutzung von defineModel()",
               link: `${PATH_ADR}adr-use-defineModel`,
+            },
+            {
+              text: "Kleine Menge von Renovate-PRs",
+              link: `${PATH_ADR}adr-lower-number-of-renovate-prs.md`,
             },
           ],
         },
@@ -166,6 +188,17 @@ export default withMermaid({
               link: `${PATH_SYSSPEC}security`,
             },
             {
+              text: "Backend",
+              link: `${PATH_SYSSPEC}backend`,
+              collapsed: true,
+              items: [
+                {
+                  text: "Beziehungen",
+                  link: `${PATH_SYSSPEC_BACKEND}relations.md`,
+                },
+              ],
+            },
+            {
               text: "Frontend",
               link: `${PATH_SYSSPEC}frontend`,
               collapsed: true,
@@ -175,6 +208,17 @@ export default withMermaid({
                   link: `${PATH_SYSSPEC}frontend/offlinefaehigkeit-konzept.md`,
                 },
               ],
+            },
+          ],
+        },
+        {
+          text: "Testkonzepte",
+          link: `${PATH_TESTCONCEPTS}`,
+          collapsed: true,
+          items: [
+            {
+              text: "Backend",
+              link: `${PATH_TESTCONCEPTS}backend`,
             },
           ],
         },
@@ -290,5 +334,10 @@ export default withMermaid({
   },
   mermaidPlugin: {
     class: "mermaid my-class", // set additional css classes for parent container
+  },
+  mermaid: {
+    flowchart: {
+      wrappingWidth: 600,
+    },
   },
 });

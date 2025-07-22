@@ -5,8 +5,13 @@ import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts"
 const mockedNow = new Date();
 
 describe("dateTimeFormatter.ts", () => {
-  const { time, applyLocalTimezoneOffset, getDateFromTimeString } =
-    useDateTimeFormatter();
+  const {
+    time,
+    applyLocalTimezoneOffset,
+    getDateFromTimeString,
+    toGermanDateFormat,
+    toGermanDateWithLongMonth,
+  } = useDateTimeFormatter();
 
   beforeEach(() => {
     vi.useFakeTimers({
@@ -71,18 +76,90 @@ describe("dateTimeFormatter.ts", () => {
   });
 
   describe("getDateFromTimeString", () => {
-    it("should_returnDateWithGivenTime_when_givenTimeString", () => {
-      const input = "12:12";
-      const result = getDateFromTimeString(input).toString();
+    it.each(["12:12", "12:12:30"])(
+      "should_returnDateWithGivenTime_when_givenValidTimeString'%s'",
+      (input) => {
+        const result = getDateFromTimeString(input).toString();
 
-      expect(result).toContain("12:12");
-    });
+        expect(result).toContain(input);
+      }
+    );
 
-    it("should_returnInvalidDate_when_inputStringIsNoTimeString", () => {
-      const result = getDateFromTimeString("text");
+    it.each(["text", "26:12", "11:78", "23:45:67", "", " "])(
+      "should_returnInvalidDate_when_inputStringIsInvalidValue'%s'",
+      (input) => {
+        const result = getDateFromTimeString(input);
 
-      expect(result).toBeInstanceOf(Date);
-      expect(isNaN(result.getTime())).toBe(true);
-    });
+        expect(result).toBeInstanceOf(Date);
+        expect(isNaN(result.getTime())).toBe(true);
+      }
+    );
+
+    it.each(["12:12", "12:12:30"])(
+      "should_returnDateWithZeroMilliseconds_when_givenValidTimeString'%s'",
+      (input) => {
+        const result = getDateFromTimeString(input);
+
+        expect(result.getMilliseconds()).toBe(0);
+      }
+    );
+  });
+
+  describe("toGermanDateFormat", () => {
+    it.each([
+      "2026-01-01",
+      "2026/01/01",
+      "01.01.2026",
+      "2026-01-01T00:00:00Z",
+      "2026-1-1",
+    ])(
+      "should_returnDateStringInLocalFormat_when_givenValidDateString'%s'",
+      (datestring) => {
+        expect(toGermanDateFormat(datestring)).toBe("01.01.2026");
+      }
+    );
+
+    it.each([
+      "2026-01-32",
+      "2026-13-01",
+      "2026-01-AB",
+      "random string",
+      "",
+      " ",
+    ])(
+      "should_returnUndefined_when_givenInvalidDateString'%s'",
+      (datestring) => {
+        expect(toGermanDateFormat(datestring)).toBe(undefined);
+      }
+    );
+  });
+
+  describe("toGermanDateWithLongMonth", () => {
+    it.each([
+      "2026-01-01",
+      "2026/01/01",
+      "01.01.2026",
+      "2026-01-01T00:00:00Z",
+      "2026-1-1",
+    ])(
+      "should_returnDateStringInLocalFormatWithLongMonth_when_givenValidDateString'%s'",
+      (datestring) => {
+        expect(toGermanDateWithLongMonth(datestring)).toBe("1. Januar 2026");
+      }
+    );
+
+    it.each([
+      "2026-01-32",
+      "2026-13-01",
+      "2026-01-AB",
+      "random string",
+      "",
+      " ",
+    ])(
+      "should_returnUndefined_when_givenInvalidDateString'%s'",
+      (datestring) => {
+        expect(toGermanDateFormat(datestring)).toBe(undefined);
+      }
+    );
   });
 });

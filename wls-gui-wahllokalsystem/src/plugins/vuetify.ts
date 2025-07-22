@@ -1,15 +1,22 @@
 import "vuetify/styles";
 
 import {
+  mdiCheckCircle,
   mdiContentSave,
   mdiDelete,
   mdiDiameterVariant,
   mdiEmail,
+  mdiFileDocumentOutline,
+  mdiHelpCircleOutline,
   mdiHome,
   mdiInformationOutline,
+  mdiMapSearch,
+  mdiPhone,
   mdiPlus,
+  mdiPlusCircle,
   mdiPrinter,
   mdiReload,
+  mdiRemoteDesktop,
   mdiRoutes,
   mdiSend,
   mdiSignalCellular3,
@@ -44,6 +51,13 @@ export default createVuetify({
       wahlbezirksartUWB: mdiVote,
       wahlbezirksartBWB: mdiEmail,
       information: mdiInformationOutline,
+      addCircle: mdiPlusCircle,
+      help: mdiHelpCircleOutline,
+      phone: mdiPhone,
+      fileDocument: mdiFileDocumentOutline,
+      mapSearch: mdiMapSearch,
+      remoteDesktop: mdiRemoteDesktop,
+      valid: mdiCheckCircle,
     },
     sets: {
       mdi,
@@ -56,8 +70,9 @@ export default createVuetify({
           primary: "#546e7a",
           secondary: "#FFCC00",
           accent: "#7BA4D9",
-          success: "#69BE28",
+          success: "#7fbf7f",
           error: "#FF0000",
+          warn: "#ffe993",
         },
       },
     },
@@ -65,6 +80,20 @@ export default createVuetify({
   defaults: {
     VCardTitle: {
       class: "bg-grey-lighten-3 border-b border-grey-lighten-1 mb-2",
+    },
+    VProgressLinear: {
+      height: 50,
+      color: "primary",
+    },
+    VBtn: {
+      variant: "elevated",
+      activeColor: "primary",
+    },
+    VCardActions: {
+      VBtn: {
+        variant: "elevated",
+        activeColor: "primary",
+      },
     },
   },
 });

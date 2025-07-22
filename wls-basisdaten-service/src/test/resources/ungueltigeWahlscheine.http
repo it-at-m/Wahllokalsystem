@@ -2,8 +2,8 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST ungueltige Wahlscheine
-POST {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/ungueltigews/wahlID1/UWB
+### POST ungueltige Wahlscheine | user wls_all_uwb
+POST {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/ungueltigews/827e9e6a-ebe9-483f-a9cd-162b26f348e8/UWB
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: multipart/form-data; boundary=boundary
 
@@ -13,6 +13,21 @@ Content-Disposition: form-data; name="file"; filename="ungueltigeWahlscheine.csv
 < ./attachements/ungueltigeWahlscheine.csv
 --boundary
 
-### GET ungueltige Wahlscheine
-GET {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/ungueltigews/wahlID1/UWB
+### GET ungueltige Wahlscheine | user wls_all_uwb
+GET {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/ungueltigews/827e9e6a-ebe9-483f-a9cd-162b26f348e8/UWB
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### POST ungueltige Wahlscheine | user wls_all_bwb
+POST {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/ungueltigews/827e9e6a-ebe9-483f-a9cd-162b26f348e8/BWB
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="ungueltigeWahlscheine.csv"
+
+< ./attachements/ungueltigeWahlscheine.csv
+--boundary
+
+### GET ungueltige Wahlscheine | user wls_all_bwb
+GET {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/ungueltigews/827e9e6a-ebe9-483f-a9cd-162b26f348e8/BWB
 Authorization: Bearer {{$auth.token("auth-service")}}

@@ -4,7 +4,7 @@ import {
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
-import { createPinia } from "pinia";
+import { createPinia, storeToRefs } from "pinia";
 import {
   afterEach,
   beforeAll,
@@ -15,15 +15,12 @@ import {
   vi,
 } from "vitest";
 import { nextTick } from "vue";
-import { createVuetify } from "vuetify";
-import * as components from "vuetify/components";
-import * as directives from "vuetify/directives";
 
 import TheWahlvorstandAnwesenheitRequirementCard from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.vue";
+import vuetify from "@/plugins/vuetify.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 
 describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => {
-  let vuetify: ReturnType<typeof createVuetify>;
   let wrapper: VueWrapper;
 
   beforeAll(() => {
@@ -31,11 +28,6 @@ describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => {
   });
 
   beforeEach(() => {
-    vuetify = createVuetify({
-      components,
-      directives,
-    });
-
     wrapper = mount(TheWahlvorstandAnwesenheitRequirementCard, {
       global: {
         plugins: [
@@ -53,12 +45,18 @@ describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => {
 
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_showNoErrorTexts_when_allRequirementsAreSatisfied", async (context) => {
-      const wahlvorstandStore = useWahlvorstandStore();
+      const {
+        isSchriftfuehrerAnwesend,
+        isWahlvorsteherAnwesend,
+        isMindestanwesenheitErreicht,
+      } = storeToRefs(useWahlvorstandStore());
 
       // @ts-expect-error: cannot set readonly
-      wahlvorstandStore.isSchriftfuehrerAnwesend = true;
+      isSchriftfuehrerAnwesend.value = true;
       // @ts-expect-error: cannot set readonly
-      wahlvorstandStore.isWahlvorsteherAnwesend = true;
+      isWahlvorsteherAnwesend.value = true;
+      // @ts-expect-error: cannot set readonly
+      isMindestanwesenheitErreicht.value = true;
 
       await nextTick(); //changes of stores are handled in component
 
@@ -68,12 +66,18 @@ describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => {
     });
 
     it("should_showErrorText_when_schriftfuehrerIsNotAnwesend", async (context) => {
-      const wahlvorstandStore = useWahlvorstandStore();
+      const {
+        isSchriftfuehrerAnwesend,
+        isWahlvorsteherAnwesend,
+        isMindestanwesenheitErreicht,
+      } = storeToRefs(useWahlvorstandStore());
 
       // @ts-expect-error: cannot set readonly
-      wahlvorstandStore.isSchriftfuehrerAnwesend = false;
+      isSchriftfuehrerAnwesend.value = false;
       // @ts-expect-error: cannot set readonly
-      wahlvorstandStore.isWahlvorsteherAnwesend = true;
+      isWahlvorsteherAnwesend.value = true;
+      // @ts-expect-error: cannot set readonly
+      isMindestanwesenheitErreicht.value = true;
 
       await nextTick(); //changes of stores are handled in component
 
@@ -83,12 +87,39 @@ describe("TheWahlvorstandAnwesenheitRequirementCard.vue", () => {
     });
 
     it("should_showErrorText_when_wahlvorsteherIsNotAnwesend", async (context) => {
-      const wahlvorstandStore = useWahlvorstandStore();
+      const {
+        isSchriftfuehrerAnwesend,
+        isWahlvorsteherAnwesend,
+        isMindestanwesenheitErreicht,
+      } = storeToRefs(useWahlvorstandStore());
 
       // @ts-expect-error: cannot set readonly
-      wahlvorstandStore.isSchriftfuehrerAnwesend = true;
+      isSchriftfuehrerAnwesend.value = true;
       // @ts-expect-error: cannot set readonly
-      wahlvorstandStore.isWahlvorsteherAnwesend = false;
+      isWahlvorsteherAnwesend.value = false;
+      // @ts-expect-error: cannot set readonly
+      isMindestanwesenheitErreicht.value = true;
+
+      await nextTick(); //changes of stores are handled in component
+
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+
+    it("should_showErrorText_when_mindestAnwesenheitIsNotGiven", async (context) => {
+      const {
+        isSchriftfuehrerAnwesend,
+        isWahlvorsteherAnwesend,
+        isMindestanwesenheitErreicht,
+      } = storeToRefs(useWahlvorstandStore());
+
+      // @ts-expect-error: cannot set readonly
+      isSchriftfuehrerAnwesend.value = true;
+      // @ts-expect-error: cannot set readonly
+      isWahlvorsteherAnwesend.value = true;
+      // @ts-expect-error: cannot set readonly
+      isMindestanwesenheitErreicht.value = false;
 
       await nextTick(); //changes of stores are handled in component
 

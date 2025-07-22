@@ -59,6 +59,7 @@ const { prepareWahltagEvent } = useWahltagTestDataFactory();
 
 describe("BaseStepWahltagInit.vue", () => {
   let wrapper: VueWrapper<InstanceType<typeof BaseStepWahltagInit>>;
+  vi.stubGlobal("visualViewport", new EventTarget());
 
   beforeEach(() => {
     wrapper = mount(BaseStepWahltagInit, {
@@ -175,6 +176,8 @@ describe("BaseStepWahltagInit.vue", () => {
       expect(mockDefinitions.importWahlterminDaten).toHaveBeenCalledWith(
         wahltagEvent.wahltagID
       );
+
+      expect(wrapper.emitted()).toHaveProperty("importWahlterminDatenDone");
     });
 
     it("should_triggerDeleteAndImportWahlterminDaten_when_overrideWasClickedAndConfirmed", async () => {
@@ -204,6 +207,8 @@ describe("BaseStepWahltagInit.vue", () => {
 
       expect(dialogHideSpy).toHaveBeenCalledTimes(1);
 
+      expect(wrapper.emitted()).toHaveProperty("importWahlterminDatenDone");
+
       dialogHideSpy.mockRestore();
     });
 
@@ -232,6 +237,8 @@ describe("BaseStepWahltagInit.vue", () => {
       ).toHaveBeenCalledTimes(0);
 
       expect(dialogHideSpy).toHaveBeenCalledTimes(1);
+
+      expect(wrapper.emitted()).not.toHaveProperty("importWahlterminDatenDone");
 
       dialogHideSpy.mockRestore();
     });

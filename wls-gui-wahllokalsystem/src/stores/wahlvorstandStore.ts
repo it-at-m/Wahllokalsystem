@@ -1,11 +1,17 @@
 import type { Wahlvorstand } from "@/types/wahlvorstand/Wahlvorstand";
 
-import { acceptHMRUpdate, defineStore, storeToRefs } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
+import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useWahlvorstandService } from "@/composables/wahlvorstand/wahlvorstandService";
+import {
+  MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG,
+  MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG,
+} from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { WahlvorstandBuilder } from "@/types/wahlvorstand/Wahlvorstand";
+import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
+import { createEmptyWahlvorstand } from "@/types/wahlvorstand/Wahlvorstand";
 import {
   isSchriftfuehrer,
   isWahlvorsteher,
@@ -14,14 +20,17 @@ import {
 const { getWahlvorstand, saveWahlvorstand } = useWahlvorstandService();
 
 export const storeID = "wahlvorstand";
+const { registerStoreHMR } = useHmrUpdate();
 
 export const useWahlvorstandStore = defineStore(storeID, () => {
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
-  const wahlvorstand = ref<Wahlvorstand>(
-    WahlvorstandBuilder.createEmptyWahlvorstand()
-  );
+  const { schliessungsuhrzeitSent } = storeToRefs(useWahlbezirkStore());
+
+  const isLoading = ref(false);
+  const isSaving = ref(false);
   const lastLoading = ref<Date | null>(null);
   const lastSending = ref<Date | null>(null);
+  const wahlvorstand = ref<Wahlvorstand>(createEmptyWahlvorstand());
 
   const isSchriftfuehrerAnwesend = computed<boolean>(() =>
     wahlvorstand.value.wahlvorstandsmitglieder.some(
@@ -33,26 +42,54 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
       (mitglied) => isWahlvorsteher(mitglied.funktion) && mitglied.anwesend
     )
   );
+  const isMindestanwesenheitErreicht = computed<boolean>(() => {
+    const anwesend = wahlvorstand.value.wahlvorstandsmitglieder.filter(
+      (mitglied) => mitglied.anwesend
+    ).length;
+    if (!schliessungsuhrzeitSent.value) {
+      return anwesend >= MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG;
+    } else {
+      return anwesend >= MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG;
+    }
+  });
   const isWahlvorstandAusreichendAnwesend = computed<boolean>(
-    () => isWahlvorsteherAnwesend.value && isSchriftfuehrerAnwesend.value
+    () =>
+      isWahlvorsteherAnwesend.value &&
+      isSchriftfuehrerAnwesend.value &&
+      isMindestanwesenheitErreicht.value
   );
 
+  async function initWahlvorstand(sendNotification = true) {
+    wahlvorstand.value = await getWahlvorstand(currentUserWahlbezirkID.value, {
+      forceUpdate: true,
+      sendNotification: sendNotification,
+    });
+  }
+
+  async function forceLoadWahlvorstand() {
+    await _loadWahlvorstand(true, true);
+  }
+
   async function loadWahlvorstand() {
-    const wahlbezirkID = currentUserWahlbezirkID.value;
-    if (wahlbezirkID) {
-      wahlvorstand.value = await getWahlvorstand(wahlbezirkID);
-      lastLoading.value = new Date();
-    }
+    await _loadWahlvorstand(false, false);
+  }
+
+  function resetAllAnwesenheiten() {
+    wahlvorstand.value.wahlvorstandsmitglieder.forEach(
+      (wahlvorstandsMitglied) => (wahlvorstandsMitglied.anwesend = false)
+    );
   }
 
   async function sendWahlvorstand() {
-    const wahlbezirkID = currentUserWahlbezirkID.value;
-    if (wahlbezirkID) {
+    isSaving.value = true;
+    try {
       const { updateDatetime } = await saveWahlvorstand(
-        wahlbezirkID,
+        currentUserWahlbezirkID.value,
         wahlvorstand.value
       );
       lastSending.value = updateDatetime;
+    } finally {
+      isSaving.value = false;
     }
   }
 
@@ -67,21 +104,42 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     }
   }
 
+  async function _loadWahlvorstand(
+    forceUpdate: boolean,
+    sendNotification: boolean
+  ) {
+    isLoading.value = true;
+    try {
+      wahlvorstand.value = await getWahlvorstand(
+        currentUserWahlbezirkID.value,
+        {
+          forceUpdate: forceUpdate,
+          sendNotification: sendNotification,
+        }
+      );
+      lastLoading.value = new Date();
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   return {
+    isMindestanwesenheitErreicht,
     isSchriftfuehrerAnwesend,
     isWahlvorstandAusreichendAnwesend,
     isWahlvorsteherAnwesend,
     lastLoading,
     lastSending,
+    isLoading,
+    isSaving,
     wahlvorstand,
+    initWahlvorstand,
     changeAnwesendOfMitglied,
+    forceLoadWahlvorstand,
     loadWahlvorstand,
+    resetAllAnwesenheiten,
     sendWahlvorstand,
   };
 });
 
-if (import.meta.hot) {
-  import.meta.hot.accept(
-    acceptHMRUpdate(useWahlvorstandStore, import.meta.hot)
-  );
-}
+registerStoreHMR(useWahlvorstandStore);

@@ -8,13 +8,19 @@
         <base-time-input
           v-model="schliessungsuhrzeit"
           class="mt-5"
-          max-width="150"
+          max-width="300"
+          :rules="[
+            REQUIRED,
+            TIME_NOT_IN_FUTURE,
+            TIME_GREATER_OR_EQUAL(fruehesteSchliessungsuhrzeit),
+          ]"
         />
       </v-form>
     </v-card-text>
     <v-card-actions>
       <base-button-save
         active
+        :loading="schliessungsuhrzeitIsSaving"
         :disabled="isSaveButtonDisabled"
         @click="onSaveSchliessungsuhrzeitClicked"
       />
@@ -23,6 +29,7 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 import {
   VCard,
@@ -34,22 +41,26 @@ import {
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
+import {
+  REQUIRED,
+  TIME_GREATER_OR_EQUAL,
+  TIME_NOT_IN_FUTURE,
+} from "@/util/rules.ts";
+
+const { sendSchliessungsuhrzeit } = useWahlbezirkStore();
+const { schliessungsuhrzeit, schliessungsuhrzeitIsSaving } =
+  storeToRefs(useWahlbezirkStore());
+const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
 
 const schliessungsuhrzeitValidForm = ref<null | boolean>(null);
-const schliessungsuhrzeit = ref<Date | undefined>(undefined);
-
-const wahlbezirkStore = useWahlbezirkStore();
 
 const isSaveButtonDisabled = computed(
   () => schliessungsuhrzeitValidForm.value !== true
 );
 
 function onSaveSchliessungsuhrzeitClicked() {
-  if (schliessungsuhrzeit.value) {
-    wahlbezirkStore.sendSchliessungsuhrzeit(
-      schliessungsuhrzeit.value.toISOString()
-    );
-  }
+  sendSchliessungsuhrzeit();
 }
 </script>

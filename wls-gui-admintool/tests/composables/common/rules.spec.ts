@@ -24,7 +24,7 @@ describe("rules.ts", () => {
           value: requiredText + requiredText,
         },
       ])(
-        "should_returnFalse_when_$descriptionValueIsButRequiredTextIsNot",
+        "should_returnFalse_when_'$descriptionValueIs'ButRequiredTextIsNot",
         ({ value }) => {
           const rule = requiredTextRuleBuilder(requiredText);
 

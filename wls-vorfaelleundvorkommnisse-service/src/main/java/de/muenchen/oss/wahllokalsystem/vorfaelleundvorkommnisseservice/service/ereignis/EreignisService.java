@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.ereignis;
 
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.EreignisRepository;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.EreignisseRepository;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.Optional;
@@ -17,28 +17,25 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class EreignisService {
 
-    private final EreignisRepository ereignisRepository;
+    private final EreignisseRepository ereignisseRepository;
     private final ExceptionFactory exceptionFactory;
-    private final EreignisModelMapper ereignisModelMapper;
+    private final EreignisseModelMapper ereignisseModelMapper;
     private final EreignisValidator ereignisValidator;
 
     @PreAuthorize(
         "hasAuthority('VorfaelleUndVorkommnisse_BUSINESSACTION_GetEreignisse')"
                 + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
     )
-    public Optional<WahlbezirkEreignisseModel> getEreignisse(@P("wahlbezirkID") final String wahlbezirkID) {
+    public Optional<EreignisseModel> getEreignisse(@P("wahlbezirkID") final String wahlbezirkID) {
         log.info("#getEreignis");
         ereignisValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
 
-        val ereignisModelListe = ereignisRepository.findByWahlbezirkID(wahlbezirkID).stream().map(ereignisModelMapper::toModel).toList();
+        val ereignisse = ereignisseRepository.findByWahlbezirkID(wahlbezirkID);
 
-        if (ereignisModelListe.isEmpty()) {
+        if (ereignisse.isEmpty()) {
             return Optional.empty();
         } else {
-            val keineVorfaelle = ereignisModelListe.stream().noneMatch(ereignis -> EreignisartModel.VORFALL.equals(ereignis.ereignisart()));
-            val keineVorkommnisse = ereignisModelListe.stream().noneMatch(ereignis -> EreignisartModel.VORKOMMNIS.equals(ereignis.ereignisart()));
-
-            val ereignisseModel = ereignisModelMapper.toEreignisseModel(wahlbezirkID, keineVorfaelle, keineVorkommnisse, ereignisModelListe);
+            val ereignisseModel = ereignisseModelMapper.toModel(ereignisse.get());
             return Optional.of(ereignisseModel);
         }
     }
@@ -48,12 +45,12 @@ public class EreignisService {
         "hasAuthority('VorfaelleUndVorkommnisse_BUSINESSACTION_PostEreignisse')"
                 + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.wahlbezirkID, authentication)"
     )
-    public void postEreignisse(@P("param") EreignisseWriteModel ereignisse) {
+    public void postEreignisse(@P("param") EreignisseModel ereignisse) {
         log.info("#postEreignis");
         ereignisValidator.validEreignisAndWahlbezirkIDOrThrow(ereignisse);
         try {
-            ereignisRepository.deleteByWahlbezirkID(ereignisse.wahlbezirkID());
-            ereignisRepository.saveAll(ereignisModelMapper.toEntity(ereignisse));
+            ereignisseRepository.deleteByWahlbezirkID(ereignisse.wahlbezirkID());
+            ereignisseRepository.save(ereignisseModelMapper.toEntity(ereignisse));
         } catch (Exception e) {
             log.error("postEreignis: Ereignis konnte nicht gespeichert werden. " + e);
             throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.SAVEEREIGNIS_UNSAVABLE);

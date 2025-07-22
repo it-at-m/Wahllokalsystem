@@ -1,39 +1,38 @@
 import type { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
+import type { WahlMetaData } from "@/types/wlsTypes/WahlMetaData.ts";
 
-class User {
-  sub = "";
-
-  // LHM
-  displayName = "";
-  surname = "";
-  telephoneNumber = "";
-  email = "";
-  username = "";
-  givenname = "";
-  department = "";
-  lhmObjectID = "";
-  // LHM_Extended
-  preferred_username = "";
-  memberof: string[] = [];
-  user_roles: string[] = [];
-  authorities: string[] = [];
-
-  wahlbezirkID? = "";
-  wahlbezirksArt?: WahlbezirksArtEnum;
+export interface User {
+  username: string;
+  email: string | undefined;
+  userEnabled: boolean;
+  wahltagID: string;
+  wahltag: string;
+  wahlbezirkID: string;
+  wahlbezirkNummer: string;
+  wahlbezirksArt: WahlbezirksArtEnum;
+  pin: string;
+  authorities: Set<string>;
+  wahlMetaData: WahlMetaData[];
 }
 
-function UserLocalDevelopment(): User {
-  const u = new User();
-  u.username = "Local Development User";
-  u.displayName = "Local Development User";
-  u.wahlbezirksArt = "UWB";
-  u.authorities = [
-    // todo add authorities
-  ];
-  u.user_roles = [
-    // todo add user roles
-  ];
-  return u;
+export function createUserLocalDevelopment(): User {
+  return {
+    username: "Local Development User",
+    email: undefined,
+    userEnabled: true,
+    wahltagID: "wahltagID",
+    wahltag: "2026-01-01",
+    wahlbezirkID: "wahlbezirkID",
+    wahlbezirkNummer: "1234",
+    wahlbezirksArt: "UWB",
+    pin: "pin",
+    authorities: new Set<string>(),
+    wahlMetaData: [
+      {
+        wahlbezirkID: "wahlbezirkID",
+        wahlnummer: "wahlnummer",
+        wahlID: "wahlID",
+      },
+    ],
+  };
 }
-
-export { User, UserLocalDevelopment };

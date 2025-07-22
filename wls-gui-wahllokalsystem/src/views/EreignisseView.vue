@@ -1,5 +1,9 @@
 <template>
   <v-card>
+    <v-card-title>Eingetretene Ereignisse</v-card-title>
+    <v-card-text>
+      <the-ereignisse-no-events-checkboxes />
+    </v-card-text>
     <v-card-title>Dokumentation eingetretener Ereignisse</v-card-title>
     <v-card-text>
       <v-form v-model="ereignisseValidForm">
@@ -13,8 +17,10 @@
         >Ereignis hinzufügen</v-btn
       >
       <base-button-save
+        active
+        :loading="isSaving"
         :disabled="isSaveButtonDisabled"
-        @click="ereignisStore.sendEreignisse()"
+        @click="onSaveClicked"
       />
     </v-card-actions>
   </v-card>
@@ -23,6 +29,7 @@
 <script setup lang="ts">
 import type { Ref } from "vue";
 
+import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 import {
   VBtn,
@@ -34,16 +41,31 @@ import {
 } from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import TheEreignisseNoEventsCheckboxes from "@/components/vorfaelleundvorkommnisse/TheEreignisseNoEventsCheckboxes.vue";
 import TheEreignisseRow from "@/components/vorfaelleundvorkommnisse/TheEreignisseRow.vue";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 
 const ereignisStore = useEreignisStore();
+const { hasEintraege, hasMissingEreignisFlags, isSaving } =
+  storeToRefs(ereignisStore);
+const { addEreignis, sendEreignisse } = ereignisStore;
 
 const ereignisseValidForm: Ref<null | boolean> = ref(null);
 
-const isSaveButtonDisabled = computed(() => ereignisseValidForm.value !== true);
+const isEreignisseFormInvalid = computed(
+  () => ereignisseValidForm.value !== true
+);
+const isSaveButtonDisabled = computed(
+  () =>
+    (hasEintraege.value && isEreignisseFormInvalid.value) ||
+    !hasMissingEreignisFlags.value
+);
 
 function onAddEreignisClicked() {
-  ereignisStore.addEreignis();
+  addEreignis();
+}
+
+function onSaveClicked() {
+  sendEreignisse();
 }
 </script>

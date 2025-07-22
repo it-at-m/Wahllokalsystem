@@ -1,3 +1,36 @@
+/*Changes default settings to use full width of page.
+We have large images that require more space. #1266 #1277*/
 :root {
   --vp-code-copy-copied-text-content: "In Zwischenablage kopiert!";
+  --vp-layout-max-width: 100%;
+}
+
+.VPDoc.has-aside .content-container {
+  max-width: 100% !important;
+}
+
+.VPDoc.has-aside .content {
+  max-width: 100% !important;
+}
+
+.VPDoc:not(has-sidebar) .content-container {
+  max-width: 100% !important;
+}
+
+.VPDoc .container {
+  max-width: 100% !important;
+}
+
+.info[data-uwb="true"] {
+  background-color: white;
+  border-left: 5px solid #64b5f6;
+  padding: 5px 0 0 15px; /* top right bottom left */
+  margin: 10px 0;
+}
+
+.info[data-bwb="true"] {
+  background-color: white;
+  border-left: 5px solid #ffb74d;
+  padding: 5px 0 0 15px; /* top right bottom left */
+  margin: 10px 0;
 }

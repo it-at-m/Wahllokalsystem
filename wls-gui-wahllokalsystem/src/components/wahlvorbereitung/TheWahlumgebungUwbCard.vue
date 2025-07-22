@@ -7,22 +7,9 @@
           ref="wahlurnenForm"
           v-model="anzahlWahlurnenValidForm"
         >
-          <div class="d-flex flex-wrap justify-start">
-            <div
-              v-for="(wahl, index) in urnenwahlVorbereitung.urnenAnzahl"
-              :key="index"
-            >
-              <v-number-input
-                v-model="wahl.anzahl"
-                class="mr-4"
-                :rules="[REQUIRED, MIN_NUMBER(1), MAX_NUMBER(99)]"
-                :data-test="`textFieldUrnenAnzahl_${index}`"
-                :label="`Anzahl der Wahlurnen ${getWahlNameOrBlankStringById(wahl.wahlID)}`"
-                min-width="30rem"
-                clearable
-              />
-            </div>
-          </div>
+          <base-wahlumgebung-wahlurnen-div
+            :wahl-vorbereitung="urnenwahlVorbereitung"
+          />
           <v-checkbox
             v-model="urnenwahlVorbereitung.urneVersiegelt"
             :label="checkboxLabelText"
@@ -110,13 +97,13 @@ import {
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
+import BaseWahlumgebungWahlurnenDiv from "@/components/wahlvorbereitung/BaseWahlumgebungWahlurnenDiv.vue";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
 
 const anzahlWahlurnenValidForm = ref<null | boolean>(null);
-const wahlurnenForm = ref<HTMLFormElement | null>(null);
 const abstimmungsschutzvorrichtungenValidForm = ref<null | boolean>(null);
 const abstimmungsschutzvorrichtungenForm = ref<HTMLFormElement>();
 
@@ -124,7 +111,6 @@ const { wahlen } = storeToRefs(useWahlenStore());
 const { sendUrnenwahlvorbereitung } = useWahlbezirkStore();
 const { urnenWahlVorbereitungIsSaving, urnenwahlVorbereitung } =
   storeToRefs(useWahlbezirkStore());
-const { getWahlNameOrBlankStringById } = useWahlenStore();
 
 const isSaveButtonDisabled = computed(() => {
   return (
@@ -146,15 +132,14 @@ const isMinimumRequired = computed(() => {
   return tischeSichtblenden + nebenraeumeWahlraum + wahlkabinen < 1;
 });
 
-function onSaveWahlumgebungUWBClicked() {
-  sendUrnenwahlvorbereitung(urnenwahlVorbereitung.value);
-}
-
 const checkboxLabelText = computed(() => {
   if (wahlen.value && wahlen.value?.length > 1) {
     return "Die Wahlurnen waren leer und wurden ordnungsgemäß versiegelt";
   }
   return "Die Wahlurne war leer und wurde ordnungsgemäß versiegelt";
 });
+
+function onSaveWahlumgebungUWBClicked() {
+  sendUrnenwahlvorbereitung();
+}
 </script>
-<style scoped></style>

@@ -1,4 +1,5 @@
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
+import { useWahlbezirkTestDataFactory } from "@tests/utils/wahlbezirk/WahlbezirkTestDataFactory.ts";
 import { usePflegeWaehlerverzeichnisTestDataFactory } from "@tests/utils/wahlvorbereitung/PflegeWaehlerverzeichnisTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -55,6 +56,7 @@ vi.mock("@/stores/wahlenStore.ts", () => ({
 
 const mockedNow = new Date();
 const { prepareUser } = useUserTestDataFactory();
+const { prepareUngueltigerWahlschein } = useWahlbezirkTestDataFactory();
 
 describe("wahlbezirkStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useWahlbezirkStore>;
@@ -70,6 +72,45 @@ describe("wahlbezirkStore.ts", () => {
   afterEach(() => {
     vi.clearAllMocks();
     vi.useRealTimers();
+  });
+
+  describe("getUngueltigerWahlscheinByWahlscheinnummer", () => {
+    it("should_returnUngueltigerWahlschein_when_wahlscheinWithNummerExists", () => {
+      unitUnderTest.ungueltigeWahlscheine = [
+        prepareUngueltigerWahlschein().wahlscheinnummer("1").build(),
+        prepareUngueltigerWahlschein().wahlscheinnummer("2").build(),
+        prepareUngueltigerWahlschein().wahlscheinnummer("3").build(),
+        prepareUngueltigerWahlschein().wahlscheinnummer("4").build(),
+      ];
+
+      const result =
+        unitUnderTest.getUngueltigerWahlscheinByWahlscheinnummer("2");
+
+      expect(result).toStrictEqual(unitUnderTest.ungueltigeWahlscheine[1]);
+    });
+
+    it("should_returnNull_when_wahlscheinWithNummerDoesNotExists", () => {
+      unitUnderTest.ungueltigeWahlscheine = [
+        prepareUngueltigerWahlschein().wahlscheinnummer("1").build(),
+        prepareUngueltigerWahlschein().wahlscheinnummer("2").build(),
+        prepareUngueltigerWahlschein().wahlscheinnummer("3").build(),
+        prepareUngueltigerWahlschein().wahlscheinnummer("4").build(),
+      ];
+
+      const result =
+        unitUnderTest.getUngueltigerWahlscheinByWahlscheinnummer("5");
+
+      expect(result).toBeNull();
+    });
+
+    it("should_returnNull_when_wahlscheineArrayIsEmpty", () => {
+      unitUnderTest.ungueltigeWahlscheine = [];
+
+      const result =
+        unitUnderTest.getUngueltigerWahlscheinByWahlscheinnummer("1");
+
+      expect(result).toBeNull();
+    });
   });
 
   describe("initUngueltigeWahlscheine", () => {

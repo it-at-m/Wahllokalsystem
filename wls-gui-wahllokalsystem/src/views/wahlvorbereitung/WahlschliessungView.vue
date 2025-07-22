@@ -1,6 +1,8 @@
 <template>
-  <the-unguetilge-wahlscheine-verify-card />
-  <base-wahlschliessung-card />
+  <div>
+    <the-unguetilge-wahlscheine-verify-card />
+    <base-wahlschliessung-card />
+  </div>
 </template>
 
 <script setup lang="ts">

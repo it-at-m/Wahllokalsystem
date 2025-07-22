@@ -4,6 +4,7 @@ import de.muenchen.oss.wahllokalsystem.authservice.configuration.properties.Serv
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -46,9 +47,13 @@ public class LdapConfiguration {
 
     @Bean
     @Profile(Profiles.DUMMY_LDAP)
-    public EmbeddedLdapServerContextSourceFactoryBean embeddedLdapContextSource() {
+    public EmbeddedLdapServerContextSourceFactoryBean embeddedLdapContextSource(
+            @Value("${spring.ldap.embedded.ldif}") final String ldifResource) {
         log.warn("using embeddedLdapContextSource");
-        return EmbeddedLdapServerContextSourceFactoryBean.fromEmbeddedLdapServer();
+        val embeddedLdapServer = EmbeddedLdapServerContextSourceFactoryBean
+                .fromEmbeddedLdapServer();
+        embeddedLdapServer.setLdif(ldifResource);
+        return embeddedLdapServer;
     }
 
 }

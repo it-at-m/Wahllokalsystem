@@ -31,7 +31,7 @@
             v-for="(beanstandung, index) in ungueltigeeinzelsummen"
             :key="index"
           >
-            <td>{{ zuordnungGruende[beanstandung.grund] }}</td>
+            <td>{{ zurueckweisungsgrundEnumToDisplayString(ZurueckweisungsgrundEnum[beanstandung.grund as keyof typeof ZurueckweisungsgrundEnum]) }}</td>
             <td
               v-for="(value, idx) in beanstandung.ungueltig"
               :key="idx"
@@ -47,11 +47,16 @@
 
 <script setup lang="ts">
 import type { BeanstandeteWahlbriefeDTO } from "@/api/wls-clients/generated-briefwahl-api";
+import {ZurueckweisungsgrundEnum} from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 
 import { onMounted, ref } from "vue";
 import { VCard, VCardText, VCardTitle, VTable } from "vuetify/components";
 
-import { BeanstandeteWahlbriefeDTOBeanstandeteWahlbriefeEnum } from "@/api/wls-clients/generated-briefwahl-api";
+import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts";
+
+const {
+  zurueckweisungsgrundEnumToDisplayString,
+} = useBeanstandeteWahlbriefeMapper();
 
 const test = {
   wahlbezirkID:
@@ -88,33 +93,6 @@ const test = {
   },
 } as BeanstandeteWahlbriefeDTO;
 
-const zuordnungGruende: Record<string, string> = {
-  [BeanstandeteWahlbriefeDTOBeanstandeteWahlbriefeEnum.Zugelassen]:
-    "Zugelassen",
-  [BeanstandeteWahlbriefeDTOBeanstandeteWahlbriefeEnum.ScheinUngueltig]:
-    "Wahlschein ungültig laut Liste",
-  [BeanstandeteWahlbriefeDTOBeanstandeteWahlbriefeEnum.KeinOriginalSchein]:
-    "Kein Original-Wahlschein",
-  [BeanstandeteWahlbriefeDTOBeanstandeteWahlbriefeEnum.UnterschriftFehlt]:
-    "Unterschrift auf Wahlschein fehlt",
-  [BeanstandeteWahlbriefeDTOBeanstandeteWahlbriefeEnum.UmschlagFehlt]:
-    "Stimmzettelumschlag fehlt",
-  [BeanstandeteWahlbriefeDTOBeanstandeteWahlbriefeEnum.LoseStimmzettel]:
-    "Lose Stimmzettel",
-  [BeanstandeteWahlbriefeDTOBeanstandeteWahlbriefeEnum.WahlbriefUndUmschlagOffen]:
-    "Wahlbrief und Stimmzettelumschlag offen",
-  [BeanstandeteWahlbriefeDTOBeanstandeteWahlbriefeEnum.ScheineUngleichUmschlaege]:
-    "Wahlscheine ungleich Stimmzettelumschläge",
-  [BeanstandeteWahlbriefeDTOBeanstandeteWahlbriefeEnum.UmschlagNichtAmtlich]:
-    "Nicht-amtlicher Stimmzettelumschlag",
-  [BeanstandeteWahlbriefeDTOBeanstandeteWahlbriefeEnum.UmschlagGefaehrdetWahlgeheimnis]:
-    "Stimmzettelumschlag gefährdet Wahlgeheimnis",
-  [BeanstandeteWahlbriefeDTOBeanstandeteWahlbriefeEnum.GegenstandImUmschlag]:
-    "Gegenstand im Stimmzettelumschlag",
-  [BeanstandeteWahlbriefeDTOBeanstandeteWahlbriefeEnum.NichtWahlberechtigt]:
-    "Für diese Wahl nicht wahlberechtigt",
-};
-
 const sumGueltig = ref<number[]>([]);
 const sumUngueltig = ref<number[]>([]);
 const ungueltigeeinzelsummen = ref<ZurueckweisungRow[]>([]);
@@ -136,10 +114,10 @@ function calculateSums() {
 
   const tempUngueltigeEinzelstimmen: ZurueckweisungRow[] = [];
   const gruendeUngueltig = Object.values(
-    BeanstandeteWahlbriefeDTOBeanstandeteWahlbriefeEnum
+      ZurueckweisungsgrundEnum
   ).filter(
     (grund) =>
-      grund !== BeanstandeteWahlbriefeDTOBeanstandeteWahlbriefeEnum.Zugelassen
+      grund !== ZurueckweisungsgrundEnum.Zugelassen
   );
   gruendeUngueltig.forEach((grund, index) => {
     tempUngueltigeEinzelstimmen[index] = {
@@ -153,7 +131,7 @@ function calculateSums() {
       for (const beanstandung of beanstandungen) {
         if (
           beanstandung ===
-          BeanstandeteWahlbriefeDTOBeanstandeteWahlbriefeEnum.Zugelassen
+            ZurueckweisungsgrundEnum.Zugelassen
         ) {
           sumGueltig.value[wahlen.indexOf(wahl)] += 1;
         } else {

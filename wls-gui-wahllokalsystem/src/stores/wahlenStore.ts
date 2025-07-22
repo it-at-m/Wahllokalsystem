@@ -1,25 +1,53 @@
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import { defineStore, storeToRefs } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
+import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useWahlService } from "@/composables/wahl/wahlService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 export const storeID = "wahlen";
 const wahlenService = useWahlService();
+const briefwahlService = useBriefwahlService();
 const { registerStoreHMR } = useHmrUpdate();
 
 export const useWahlenStore = defineStore(storeID, () => {
-  const { currentUserWahltagID } = storeToRefs(useUserStore());
+  const { currentUserWahltagID, currentUserWahlbezirkID } =
+    storeToRefs(useUserStore());
   const wahlen = ref<Wahl[] | null>();
+
+  const waehlerverzeichnisNummern = computed<number[]>(() => {
+    if (!wahlen.value) return [];
+
+    const nummern = new Set<number>();
+
+    for (const wahl of wahlen.value) {
+      nummern.add(wahl.waehlerverzeichnisNummer);
+    }
+    return Array.from(nummern);
+  });
 
   async function initWahlen(sendNotification = true) {
     wahlen.value = await wahlenService.getWahlen(
       currentUserWahltagID.value,
       sendNotification
     );
+  }
+
+  async function initBeanstandeteWahlbriefe(waehlerverzeichnisNummer: number) {
+    const beanstandeteWahlbriefe =
+      await briefwahlService.getBeanstandeteWahlbriefe(
+        waehlerverzeichnisNummer,
+        currentUserWahlbezirkID.value
+      );
+    if (wahlen.value && beanstandeteWahlbriefe) {
+      for (const wahl of wahlen.value) {
+        wahl.beanstandeteWahlbriefe =
+          beanstandeteWahlbriefe.beanstandeteWahlbriefe.get(wahl.wahlID) ?? [];
+      }
+    }
   }
 
   function getWaehlerverzeichnisOrUndefinedById(wahlID: string) {
@@ -46,9 +74,11 @@ export const useWahlenStore = defineStore(storeID, () => {
   return {
     wahlen,
     getWaehlerverzeichnisOrUndefinedById,
+    waehlerverzeichnisNummern,
     getWahlNameOrBlankStringById,
     getWahlTagOrBlankStringById,
     initWahlen,
+    initBeanstandeteWahlbriefe,
   };
 });
 

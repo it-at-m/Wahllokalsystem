@@ -17,6 +17,7 @@
 
 <script setup lang="ts">
 import localforage from "localforage";
+import { storeToRefs } from "pinia";
 import { onMounted, onUnmounted } from "vue";
 import { VApp, VContainer, VFadeTransition, VMain } from "vuetify/components";
 
@@ -29,12 +30,15 @@ import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const { loadEreignisse } = useEreignisStore();
 const { loadUser } = useUserStore();
 const { initTasks } = useTaskManagerStore();
 const { loadWaehler } = useMonitoringStore();
 const { loadPflegeWaehlerverzeichnis } = useWahlbezirkStore();
+const { waehlerverzeichnisNummern } = storeToRefs(useWahlenStore());
+const { initBeanstandeteWahlbriefe } = useWahlenStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
@@ -44,9 +48,12 @@ onMounted(async () => {
     await loadUser();
     startBroadcastMessageInterval();
     await initTasks();
-    loadEreignisse();
-    loadWaehler();
-    loadPflegeWaehlerverzeichnis();
+    await loadEreignisse();
+    await loadWaehler();
+    await loadPflegeWaehlerverzeichnis();
+    for (const wvzNr of waehlerverzeichnisNummern.value) {
+      await initBeanstandeteWahlbriefe(wvzNr);
+    }
   } catch (error) {
     console.debug(error);
   }

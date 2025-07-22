@@ -9,15 +9,15 @@ import { storeToRefs } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
-import WahlbriefZulassungBeschlussergebnis from "@/components/wahlbriefzulassung/WahlbriefZulassungBeschlussergebnis.vue";
+import TheBedenklicheWahlbriefeBeschlussergebnis from "@/components/wahlvorbereitung/TheBedenklicheWahlbriefeBeschlussergebnis.vue";
 import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import vuetify from "@/plugins/vuetify.ts";
 
-describe("WahlbriefZulassungBeschlussergebnis", () => {
+describe("TheBedenklicheWahlbriefeBeschlussergebnis", () => {
   let wrapper: VueWrapper;
 
   beforeEach(() => {
-    wrapper = mount(WahlbriefZulassungBeschlussergebnis, {
+    wrapper = mount(TheBedenklicheWahlbriefeBeschlussergebnis, {
       global: {
         plugins: [
           createTestingPinia({
@@ -60,7 +60,7 @@ describe("WahlbriefZulassungBeschlussergebnis", () => {
 });
 
 function initWrapper() {
-  return mount(WahlbriefZulassungBeschlussergebnis, {
+  return mount(TheBedenklicheWahlbriefeBeschlussergebnis, {
     global: {
       plugins: [
         createTestingPinia({

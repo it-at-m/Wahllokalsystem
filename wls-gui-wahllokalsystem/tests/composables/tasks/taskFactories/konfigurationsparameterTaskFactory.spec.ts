@@ -15,7 +15,7 @@ describe("konfigurationsparameterTaskFactory.ts", () => {
   });
 
   describe("createTasks", () => {
-    it("should_returnTaskList_when_calledWithCorrectParameters", () => {
+    it("should_returnTaskList_when_calledIndependentlyOfParameters", () => {
       const taskFactoryContext: TaskFactoryContext = createTaskFactoryContext();
 
       const result = createTasks(taskFactoryContext);

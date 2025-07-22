@@ -17,7 +17,7 @@ describe("kopfdatenTaskFactory.ts", () => {
   });
 
   describe("createTasks", () => {
-    it("should_returnTaskListWithFourElements_when_calledWithCorrectParametersAndFourWahldataElements", () => {
+    it("should_returnTaskListWithFourElements_when_calledWithFourWahldataElements", () => {
       const extendedWahlMetaDataOne = createExtendedWahlMetaData();
       const extendedWahlMetaDataTwo = createExtendedWahlMetaData();
       const extendedWahlMetaDataThree = createExtendedWahlMetaData();
@@ -46,7 +46,7 @@ describe("kopfdatenTaskFactory.ts", () => {
       });
     });
 
-    it("should_returnTaskListWithOneElement_when_calledWithCorrectParametersAndOneWahldataElement", () => {
+    it("should_returnTaskListWithOneElement_when_calledWithOneWahldataElement", () => {
       const extendedWahlMetaDataOne = createExtendedWahlMetaData();
       const taskFactoryContext: TaskFactoryContext = prepareTaskFactoryContext()
         .extendedWahlMetaData([extendedWahlMetaDataOne])

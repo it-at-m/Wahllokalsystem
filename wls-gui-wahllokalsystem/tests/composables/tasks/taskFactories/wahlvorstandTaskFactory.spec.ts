@@ -12,7 +12,7 @@ describe("wahlvorstandTaskFactory.ts", () => {
   });
 
   describe("createTasks", () => {
-    it("should_returnTaskList_when_calledWithCorrectParametersAndOneWahl", () => {
+    it("should_returnTaskList_when_calledIndependentlyOfContext", () => {
       const taskFactoryContext = createTaskFactoryContext();
 
       const result = createTasks(taskFactoryContext);

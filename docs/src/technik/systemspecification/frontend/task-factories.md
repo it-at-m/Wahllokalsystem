@@ -24,17 +24,17 @@ sequenceDiagram
     participant taskManagerStore
     participant taskService
     participant TaskFactoryInterface
-    participant TaskFactoryXY1
-    participant TaskFactoryXY2
-    participant TaskFactoryXY3
+    participant TaskFactoryA
+    participant TaskFactoryB
+    participant TaskFactoryC
 
     taskManagerStore ->> taskService: initTaskList()
-    taskService -->> TaskFactoryXY1: createTasks()
-    TaskFactoryXY1 -->> taskService: Tasks[]
-    taskService -->> TaskFactoryXY2: createTasks()
-    TaskFactoryXY2 -->> taskService: Tasks[]
-    taskService -->> TaskFactoryXY3: createTasks()
-    TaskFactoryXY3 -->> taskService: Tasks[]
+    taskService -->> TaskFactoryA: createTasks()
+    TaskFactoryA -->> taskService: Tasks[]
+    taskService -->> TaskFactoryB: createTasks()
+    TaskFactoryB -->> taskService: Tasks[]
+    taskService -->> TaskFactoryC: createTasks()
+    TaskFactoryC -->> taskService: Tasks[]
     taskService ->> taskManagerStore: Tasks[]
 
 ```

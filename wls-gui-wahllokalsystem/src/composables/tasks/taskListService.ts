@@ -1,8 +1,6 @@
 import type { ExtendedWahlMetaData } from "@/composables/tasks/ExtendedWahlMetaData.ts";
-import type { Task } from "@/types/tasks/Task.ts";
 
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
 
 import { useKonfigurationsparameterTaskFactory } from "@/composables/tasks/taskFactories/konfigurationsparameterTaskFactory.ts";
 import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/kopfdatenTaskFactory.ts";
@@ -24,15 +22,16 @@ export function useTaskListService() {
     useUngueltigeWahlscheineTaskFactory();
 
   function initTasklist() {
+    const taskFactoryData = _createTaskFactoryData();
     const tasks = [];
-    tasks.push(...initKopfdatenTaskList());
-    tasks.push(...initUngueltigeWahlscheineTaskList());
-    tasks.push(...initWahlvorstandTaskList());
-    tasks.push(...initKonfigurationsparameterTaskList());
+    tasks.push(...createKopfdatenTasks(taskFactoryData));
+    tasks.push(...createUngueltigeWahlscheineTasks(taskFactoryData));
+    tasks.push(...createWahlvorstandTasks(taskFactoryData));
+    tasks.push(...createKonfigurationsparameterTasks(taskFactoryData));
     return tasks;
   }
 
-  const taskFactoryData = computed(() => {
+  function _createTaskFactoryData() {
     const extendedWahlMetaData: ExtendedWahlMetaData[] =
       currentUserWahlMetadata.value.map((wahlMetadata) => {
         const wahl = getWahlOrUndefinedById(wahlMetadata.wahlID);
@@ -52,22 +51,6 @@ export function useTaskListService() {
       wahlbezirkArt: currentUserWahlbezirksArt.value,
       extendedWahlMetaData: extendedWahlMetaData,
     };
-  });
-
-  function initKopfdatenTaskList(): Task[] {
-    return createKopfdatenTasks(taskFactoryData.value);
-  }
-
-  function initUngueltigeWahlscheineTaskList(): Task[] {
-    return createUngueltigeWahlscheineTasks(taskFactoryData.value);
-  }
-
-  function initWahlvorstandTaskList(): Task[] {
-    return createWahlvorstandTasks(taskFactoryData.value);
-  }
-
-  function initKonfigurationsparameterTaskList(): Task[] {
-    return createKonfigurationsparameterTasks(taskFactoryData.value);
   }
 
   return {

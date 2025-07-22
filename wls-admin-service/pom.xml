@@ -557,8 +557,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.baseUri}/src/main/resources/openapis/openapi.auth.0.6.2.json
-                            </inputSpec>
+                            <inputSpec>${project.baseUri}/src/main/resources/openapis/openapi.auth.0.6.2.json</inputSpec>
 
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
@@ -591,8 +590,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.basisdaten.0.4.0.json
-                            </inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.basisdaten.0.4.0.json</inputSpec>
 
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
@@ -625,9 +623,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>
-                                ${project.basedir}/src/main/resources/openapis/openapi.infomanagement.0.2.0.json
-                            </inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.infomanagement.0.2.0.json</inputSpec>
 
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
@@ -660,9 +656,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>
-                                ${project.basedir}/src/main/resources/openapis/openapi.ergebnismeldung.0.2.1.json
-                            </inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.ergebnismeldung.0.2.1.json</inputSpec>
 
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>

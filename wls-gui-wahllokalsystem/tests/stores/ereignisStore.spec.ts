@@ -36,6 +36,7 @@ describe("ereignisStore.ts", () => {
   let wahlbezirkStore: ReturnType<typeof useWahlbezirkStore>;
 
   const BESCHREIBUNG = "Beschreibung";
+  const BESCHREIBUNG_NEU = "Neue Beschreibung";
 
   beforeEach(() => {
     const testPinia = createTestingPinia({
@@ -434,7 +435,7 @@ describe("ereignisStore.ts", () => {
         wahlbezirkID: "wahlbezirkID",
       };
 
-      unitUnderTest.updateBeschreibungByIndex(BESCHREIBUNG, 1);
+      unitUnderTest.updateBeschreibungByIndex(BESCHREIBUNG_NEU, 1);
 
       expect(
         unitUnderTest.wahlbezirkEreignisse.ereigniseintraege
@@ -451,7 +452,7 @@ describe("ereignisStore.ts", () => {
         ereigniseintraege: [eintragNotToChange],
       };
 
-      unitUnderTest.updateBeschreibungByIndex(BESCHREIBUNG, 1);
+      unitUnderTest.updateBeschreibungByIndex(BESCHREIBUNG_NEU, 1);
 
       expect(eintragNotToChange.beschreibung).toEqual(BESCHREIBUNG);
     });
@@ -459,16 +460,16 @@ describe("ereignisStore.ts", () => {
     it("should_updateBeschreibung_when_beschreibungGiven", () => {
       const eintragToChange = {
         ereignisart: EreignisartEnum.Vorfall,
-        beschreibung: "Vorherige Beschreibung",
+        beschreibung: BESCHREIBUNG,
       };
       unitUnderTest.wahlbezirkEreignisse = {
         wahlbezirkID: "wahlbezirkID",
         ereigniseintraege: [eintragToChange],
       };
 
-      unitUnderTest.updateBeschreibungByIndex(BESCHREIBUNG, 0);
+      unitUnderTest.updateBeschreibungByIndex(BESCHREIBUNG_NEU, 0);
 
-      expect(eintragToChange.beschreibung).toEqual(BESCHREIBUNG);
+      expect(eintragToChange.beschreibung).toEqual(BESCHREIBUNG_NEU);
     });
   });
 

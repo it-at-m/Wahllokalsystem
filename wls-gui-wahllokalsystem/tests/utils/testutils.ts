@@ -1,4 +1,7 @@
 import type { RunnerTestSuite, TestContext } from "vitest";
+import type { App } from "vue";
+
+import { createApp } from "vue";
 
 export function getSnapshotFilename(context: TestContext): string {
   const path = `./__snapshots__/${getSuitePath(context.task.suite)}/`;
@@ -19,6 +22,19 @@ function getSuitePath(suite?: RunnerTestSuite): string {
   }
 
   return pathElementsBottomUp.reverse().join("/");
+}
+
+export function withSetup<T>(composable: () => T): [T, App] {
+  let result: T;
+  const app = createApp({
+    setup() {
+      result = composable();
+      return;
+    },
+  });
+  app.mount(document.createElement("div"));
+  // @ts-expect-error: error TS2454: Variable 'result' is used before being assigned.
+  return [result, app];
 }
 
 export const COMPONENT_RENDER_TESTS = "visual logic";

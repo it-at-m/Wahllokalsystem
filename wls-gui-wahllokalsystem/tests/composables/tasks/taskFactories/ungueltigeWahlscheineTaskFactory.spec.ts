@@ -2,11 +2,21 @@ import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.
 
 import { useTasksTestDataFactory } from "@tests/utils/tasks/TasksTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useUngueltigeWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
+
+const mockDefinitions = vi.hoisted(() => ({
+  initUngueltigeWahlscheine: vi.fn(),
+}));
+
+vi.mock("@/stores/wahlbezirkStore.ts", () => ({
+  useWahlbezirkStore: vi.fn().mockImplementation(() => ({
+    initUngueltigeWahlscheine: mockDefinitions.initUngueltigeWahlscheine,
+  })),
+}));
 
 describe("ungueltigeWahlscheineTaskFactory.ts", () => {
   const { prepareExtendedWahlMetaData, prepareTaskFactoryContext } =
@@ -201,6 +211,43 @@ describe("ungueltigeWahlscheineTaskFactory.ts", () => {
       const result = createTasks(taskFactoryContext);
 
       expect(result.length).toStrictEqual(1);
+    });
+
+    it("should_returnOneTaskWithExpectedCallback_when_calledWithMultipleWahlMetaDataObjectsWhichContainOnlyCorrectWahlArt", () => {
+      const extendedWahlMetaDataOne = prepareExtendedWahlMetaData()
+        .wahlArt(WahlWahlartEnum.Beb)
+        .build();
+      const extendedWahlMetaDataTwo = prepareExtendedWahlMetaData()
+        .wahlArt(WahlWahlartEnum.Btw)
+        .build();
+      const extendedWahlMetaDataThree = prepareExtendedWahlMetaData()
+        .wahlArt(WahlWahlartEnum.Euw)
+        .build();
+      const extendedWahlMetaDataFour = prepareExtendedWahlMetaData()
+        .wahlArt(WahlWahlartEnum.Srw)
+        .build();
+
+      mockDefinitions.initUngueltigeWahlscheine.mockReturnValue(
+        Promise.resolve()
+      );
+
+      const taskFactoryContext: TaskFactoryContext = prepareTaskFactoryContext()
+        .extendedWahlMetaData([
+          extendedWahlMetaDataOne,
+          extendedWahlMetaDataTwo,
+          extendedWahlMetaDataThree,
+          extendedWahlMetaDataFour,
+        ])
+        .wahlbezirkArt(WahlbezirksArtEnum.UWB)
+        .build();
+
+      const result = createTasks(taskFactoryContext);
+
+      expect(result.length).toStrictEqual(1);
+
+      result[0].callback();
+
+      expect(mockDefinitions.initUngueltigeWahlscheine).toHaveBeenCalledOnce();
     });
   });
 });

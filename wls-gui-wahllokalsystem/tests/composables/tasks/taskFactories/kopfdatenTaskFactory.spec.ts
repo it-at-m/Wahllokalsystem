@@ -2,10 +2,19 @@ import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.
 
 import { useTasksTestDataFactory } from "@tests/utils/tasks/TasksTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/kopfdatenTaskFactory.ts";
 
+const mockDefinitions = vi.hoisted(() => ({
+  loadKopfdaten: vi.fn(),
+}));
+
+vi.mock("@/stores/kopfdatenStore.ts", () => ({
+  useKopfdatenStore: vi.fn().mockImplementation(() => ({
+    loadKopfdaten: mockDefinitions.loadKopfdaten,
+  })),
+}));
 describe("kopfdatenTaskFactory.ts", () => {
   const { prepareTaskFactoryContext, createExtendedWahlMetaData } =
     useTasksTestDataFactory();
@@ -57,6 +66,34 @@ describe("kopfdatenTaskFactory.ts", () => {
       expect(result.length).toStrictEqual(1);
       expect(result[0].name).toStrictEqual(
         kopfdatenNamePrefix + extendedWahlMetaDataOne.wahlName
+      );
+    });
+
+    it("should_returnTaskListWithTwoElementsContainingTheExpectedCallbacksWithCorrectInputs_when_calledWithTwoWahldataElement", () => {
+      const extendedWahlMetaDataOne = createExtendedWahlMetaData();
+      const extendedWahlMetaDataTwo = createExtendedWahlMetaData();
+      const taskFactoryContext: TaskFactoryContext = prepareTaskFactoryContext()
+        .extendedWahlMetaData([
+          extendedWahlMetaDataOne,
+          extendedWahlMetaDataTwo,
+        ])
+        .build();
+
+      mockDefinitions.loadKopfdaten.mockReturnValue(Promise.resolve());
+
+      const result = createTasks(taskFactoryContext);
+
+      expect(result.length).toStrictEqual(2);
+
+      result.forEach((task) => task.callback());
+      expect(mockDefinitions.loadKopfdaten).toHaveBeenCalledTimes(2);
+      expect(mockDefinitions.loadKopfdaten).toHaveBeenCalledWith(
+        extendedWahlMetaDataOne.wahlID,
+        extendedWahlMetaDataOne.wahlbezirkID
+      );
+      expect(mockDefinitions.loadKopfdaten).toHaveBeenCalledWith(
+        extendedWahlMetaDataTwo.wahlID,
+        extendedWahlMetaDataTwo.wahlbezirkID
       );
     });
   });

@@ -5,14 +5,23 @@ import {
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import BaseWahleroeffnungCard from "@/components/wahlvorbereitung/BaseWahleroeffnungCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
+import { useEreignisStore } from "@/stores/ereignisStore.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
+
+declare module "@vue/runtime-core" {
+  interface ComponentCustomProperties {
+    isZuSpaet: boolean;
+    onConfirmBegruendung(begruendung: string): void;
+  }
+}
 
 const mockDefinitions = vi.hoisted(() => ({
   postEroeffnungsuhrzeit: vi.fn(),
@@ -27,6 +36,7 @@ vi.mock("@/composables/wahlvorbereitung/wahlvorbereitungService", () => ({
 describe("BaseWahleroeffnungCard.vue", () => {
   let wrapper: VueWrapper<InstanceType<typeof BaseWahleroeffnungCard>>;
 
+  vi.stubGlobal("visualViewport", new EventTarget());
   const ResizeObserverMock = vi.fn(() => ({
     observe: vi.fn(),
     unobserve: vi.fn(),
@@ -35,6 +45,12 @@ describe("BaseWahleroeffnungCard.vue", () => {
   vi.stubGlobal("ResizeObserver", ResizeObserverMock);
 
   beforeEach(() => {
+    const mockedNow = new Date();
+    mockedNow.setHours(7, 30);
+    vi.useFakeTimers({
+      now: mockedNow,
+    });
+
     wrapper = mount(BaseWahleroeffnungCard, {
       global: {
         plugins: [
@@ -45,7 +61,14 @@ describe("BaseWahleroeffnungCard.vue", () => {
           vuetify,
         ],
       },
+      slots: {
+        userHint: "content for slot userHint",
+      },
     });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   describe(COMPONENT_RENDER_TESTS, () => {
@@ -60,12 +83,40 @@ describe("BaseWahleroeffnungCard.vue", () => {
       );
     });
 
-    it("should_renderWithEnabledSaveButton_when_uhrzeitIsGiven", async (context) => {
+    it("should_renderWithDisabledSaveButton_when_invalidUhrzeitIsEntered", async (context) => {
+      const infomanagementStore = useInfomanagementStore();
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.fruehesteEroeffnungsuhrzeit = "07:00:00";
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.fruehesteSchliessungsuhrzeit = "08:00:00";
+
+      const wahlbezirkStore = useWahlbezirkStore();
+      wahlbezirkStore.eroeffnungsuhrzeit = new Date("2025-05-23T06:30:00");
+
+      await flushPromises(); //update databinding and keep button disabled
+
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+
+    it("should_renderWithEnabledSaveButton_when_validUhrzeitIsEntered", async (context) => {
+      const infomanagementStore = useInfomanagementStore();
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.fruehesteEroeffnungsuhrzeit = "07:00:00";
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.fruehesteSchliessungsuhrzeit = "08:00:00";
+
       const date = new Date("2025-05-23T07:30:00");
       const wahlbezirkStore = useWahlbezirkStore();
       wahlbezirkStore.eroeffnungsuhrzeit = date;
 
-      await flushPromises(); //update databinding and enabled button
+      await flushPromises(); // update data binding and enable button
+
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.spaetesteEroeffnungsuhrzeit = "07:50:00";
+
+      expect(wrapper.vm.isZuSpaet).toBe(false);
 
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
@@ -100,6 +151,12 @@ describe("BaseWahleroeffnungCard.vue", () => {
     });
 
     it("should_callSendEroeffnungsuhrzeit_when_saveButtonIsClicked", async () => {
+      const infomanagementStore = useInfomanagementStore();
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.fruehesteEroeffnungsuhrzeit = "07:00:00";
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.fruehesteSchliessungsuhrzeit = "08:00:00";
+
       const wahlbezirkStore = useWahlbezirkStore();
       wahlbezirkStore.eroeffnungsuhrzeit = new Date("2025-05-23T07:30:00");
 
@@ -113,6 +170,101 @@ describe("BaseWahleroeffnungCard.vue", () => {
       );
 
       expect(wahlbezirkStore.sendEroeffnungsuhrzeit).toHaveBeenCalled();
+    });
+
+    it("should_setIsZuSpaet_when_eroeffnungsuhrzeitIsToLate", async () => {
+      const infomanagementStore = useInfomanagementStore();
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.fruehesteEroeffnungsuhrzeit = "07:00:00";
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.fruehesteSchliessungsuhrzeit = "08:00:00";
+
+      const wahlbezirkStore = useWahlbezirkStore();
+      wahlbezirkStore.eroeffnungsuhrzeit = new Date();
+      wahlbezirkStore.eroeffnungsuhrzeit.setHours(7, 30, 0);
+
+      await flushPromises();
+
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.spaetesteEroeffnungsuhrzeit = "07:10:00";
+
+      const saveButton = wrapper.findComponent(BaseButtonSave);
+      await saveButton.trigger("click");
+
+      expect(wrapper.vm.isZuSpaet).toBe(true);
+    });
+
+    it("should_resetEroeffnungsuhrzeit_when_cancelButtonClicked", async () => {
+      const infomanagementStore = useInfomanagementStore();
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.fruehesteEroeffnungsuhrzeit = "07:00:00";
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.fruehesteSchliessungsuhrzeit = "08:00:00";
+
+      const wahlbezirkStore = useWahlbezirkStore();
+      wahlbezirkStore.eroeffnungsuhrzeit = new Date();
+      wahlbezirkStore.eroeffnungsuhrzeit.setHours(7, 30, 0);
+
+      await flushPromises();
+
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.spaetesteEroeffnungsuhrzeit = "07:10:00";
+
+      const saveButton = wrapper.findComponent(BaseButtonSave);
+      await saveButton.trigger("click");
+
+      const cancelButton = wrapper.findComponent(
+        '[data-test="basedialogbegruendung-btn-cancel"]'
+      );
+      await cancelButton.trigger("click");
+
+      expect(wrapper.vm.isZuSpaet).toBe(false);
+      expect(wahlbezirkStore.eroeffnungsuhrzeit).toBeUndefined();
+    });
+
+    it("should_createEreignis_when_confirmButtonClickedWithBegruendung", async () => {
+      const begruendung = "Begründung, weil zu spät eröffnet";
+
+      const ereignisStore = useEreignisStore();
+      const infomanagementStore = useInfomanagementStore();
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.fruehesteEroeffnungsuhrzeit = "07:00:00";
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.fruehesteSchliessungsuhrzeit = "08:00:00";
+
+      const wahlbezirkStore = useWahlbezirkStore();
+      wahlbezirkStore.eroeffnungsuhrzeit = new Date();
+      wahlbezirkStore.eroeffnungsuhrzeit.setHours(7, 30, 0);
+
+      await flushPromises();
+
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.spaetesteEroeffnungsuhrzeit = "07:10:00";
+
+      expect(ereignisStore.wahlbezirkEreignisse.ereigniseintraege?.length).toBe(
+        0
+      );
+
+      const saveButton = wrapper.findComponent(BaseButtonSave);
+      await saveButton.trigger("click");
+
+      await wrapper
+        .findComponent('[data-test="basedialogbegruendung-textarea"]')
+        .setValue(begruendung);
+
+      const confirmButton = wrapper.findComponent(
+        '[data-test="basedialogbegruendung-btn-confirm"]'
+      );
+      await confirmButton.trigger("click");
+
+      expect(ereignisStore.wahlbezirkEreignisse.ereigniseintraege?.length).toBe(
+        1
+      );
+      if (ereignisStore.wahlbezirkEreignisse.ereigniseintraege) {
+        expect(
+          ereignisStore.wahlbezirkEreignisse.ereigniseintraege[0].beschreibung
+        ).toBe(begruendung);
+      }
     });
   });
 });

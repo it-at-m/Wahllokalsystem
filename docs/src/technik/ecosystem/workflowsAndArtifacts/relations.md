@@ -23,10 +23,12 @@ flowchart LR
         anyPR([jeder PR])
     end
 
-    subgraph githubActions 
+    subgraph githubActions
        labeler 
+       auto-assign
     end
     anyPR --> labeler
+    anyPR --> auto-assign
 ```
 
 <em>Workflow und Action, die bei jedem Pull-Request ausgeführt wird</em>

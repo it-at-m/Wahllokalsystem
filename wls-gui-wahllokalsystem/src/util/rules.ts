@@ -1,3 +1,7 @@
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+
+const { getDateFromTimeString } = useDateTimeFormatter();
+
 /* eslint-disable */
 export const REQUIRED = (value: any) => {
   if (typeof value === "string") {
@@ -21,3 +25,16 @@ export const MIN_NUMBER = (min: number) => (value: number) =>
   value >= min || `Eingabe darf nicht kleiner als ${min} sein.`;
 
 export const NO_NEGATIVE_INPUT = MIN_NUMBER(0);
+
+export const TIME_NOT_IN_FUTURE = (value: string) =>
+  getDateFromTimeString(value) <= new Date() ||
+  `Eingabe darf nicht in der Zukunft liegen.`;
+
+export const TIME_GREATER_OR_EQUAL =
+  (compareValue: string) => (value: string) =>
+    getDateFromTimeString(value) >= getDateFromTimeString(compareValue) ||
+    `Eingabe muss größer oder gleich ${compareValue} sein.`;
+
+export const TIME_LESS_OR_EQUAL = (compareValue: string) => (value: string) =>
+  getDateFromTimeString(value) <= getDateFromTimeString(compareValue) ||
+  `Eingabe muss kleiner oder gleich ${compareValue} sein.`;

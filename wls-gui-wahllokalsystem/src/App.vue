@@ -24,34 +24,32 @@ import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadc
 import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
-import { useMonitoringCronjobService } from "@/composables/monitoring/monitoringCronjobService.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
 const { loadEreignisse } = useEreignisStore();
 const { loadUser } = useUserStore();
 const { initTasks } = useTaskManagerStore();
 const { loadWaehler } = useMonitoringStore();
+const { loadPflegeWaehlerverzeichnis } = useWahlbezirkStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
-const { startWahlbeteiligungInterval, stopWahlbeteiligungInterval } =
-  useMonitoringCronjobService();
 
 onMounted(async () => {
-  await loadUser()
-    .then(() => {
-      startBroadcastMessageInterval();
-      initTasks();
-      loadEreignisse();
-      loadWaehler();
-      startWahlbeteiligungInterval();
-    })
-    .catch((error) => {
-      console.debug(error);
-    });
+  try {
+    await loadUser();
+    startBroadcastMessageInterval();
+    await initTasks();
+    loadEreignisse();
+    loadWaehler();
+    loadPflegeWaehlerverzeichnis();
+  } catch (error) {
+    console.debug(error);
+  }
 
   // config for service worker indexed db (same config as in wahl-worker.js !)
   localforage.config({
@@ -65,7 +63,6 @@ onMounted(async () => {
 
 onUnmounted(() => {
   stopBroadcastMessageInterval();
-  stopWahlbeteiligungInterval();
 });
 </script>
 

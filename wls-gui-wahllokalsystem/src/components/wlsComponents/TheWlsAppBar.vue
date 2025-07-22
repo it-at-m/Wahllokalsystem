@@ -5,7 +5,10 @@
         cols="4"
         class="d-flex align-center justify-start"
       >
-        <v-app-bar-nav-icon @click.stop="toggleDrawer()" />
+        <v-app-bar-nav-icon
+          v-if="hasInitializationOfTasksCompletelyRun"
+          @click.stop="toggleDrawer()"
+        />
         <span class="navbar-text mx-2"> {{ wahltermin }} </span>
         <base-icon-wahlbezirksart class="mx-2" />
         <span class="navbar-text mx-2">
@@ -20,7 +23,14 @@
         cols="3"
         class="d-flex align-center justify-end"
       >
-        <wls-clock class="mx-2" />
+        <the-waehleranzahl-count-button
+          v-if="
+            eroeffnungsuhrzeitSent !== undefined &&
+            schliessungsuhrzeitSent === undefined &&
+            currentUserWahlbezirksArt === WahlbezirksArtEnum.UWB
+          "
+        />
+        <wls-clock class="navbar-text mx-2" />
         <wls-heartbeat v-model:is-offline="isOffline" />
         <the-info-help-icon />
       </v-col>
@@ -36,26 +46,12 @@
         title="Wahlvorstand"
         :to="ROUTE_WAHLVORSTAND"
       />
-      <v-list-group value="Wahlvorbereitung">
-        <template #activator="{ props }">
-          <v-list-item
-            v-bind="props"
-            title="Wahlvorbereitung"
-          />
-        </template>
-        <v-list-item
-          title="Wahlumgebung"
-          :to="ROUTE_WAHLUMGEBUNG"
-        />
-        <v-list-item
-          title="Beginn Stimmabgabe"
-          :to="ROUTE_BEGINN_STIMMABGABE"
-        />
-        <v-list-item
-          title="Wahlhandlung"
-          :to="ROUTE_WAHLSCHLIESSUNG"
-        />
-      </v-list-group>
+      <the-b-w-b-preparation-list-group
+        v-if="currentUserWahlbezirksArt === WahlbezirksArtEnum.BWB"
+      />
+      <the-u-w-b-preparation-list-group
+        v-if="currentUserWahlbezirksArt === WahlbezirksArtEnum.UWB"
+      />
       <v-list-item
         title="Ereignisse"
         :to="ROUTE_EREIGNISSE"
@@ -72,7 +68,6 @@ import {
   VAppBarNavIcon,
   VCol,
   VList,
-  VListGroup,
   VListItem,
   VNavigationDrawer,
   VRow,
@@ -80,22 +75,31 @@ import {
 
 import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
+import TheWaehleranzahlCountButton from "@/components/monitoring/TheWaehleranzahlCountButton.vue";
+import TheBWBPreparationListGroup from "@/components/navigation/TheBWBPreparationListGroup.vue";
+import TheUWBPreparationListGroup from "@/components/navigation/TheUWBPreparationListGroup.vue";
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
-import {
-  ROUTE_BEGINN_STIMMABGABE,
-  ROUTE_EREIGNISSE,
-  ROUTE_WAHLSCHLIESSUNG,
-  ROUTE_WAHLUMGEBUNG,
-  ROUTE_WAHLVORSTAND,
-} from "@/constants.ts";
+import { ROUTE_EREIGNISSE, ROUTE_WAHLVORSTAND } from "@/constants.ts";
+import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum";
+
+const { eroeffnungsuhrzeitSent, schliessungsuhrzeitSent } =
+  storeToRefs(useWahlbezirkStore());
 
 const { toGermanDateFormat } = useDateTimeFormatter();
-const { user, currentUserWahltag, currentUserWahlbezirkNummer } =
-  storeToRefs(useUserStore());
-
+const {
+  user,
+  currentUserWahltag,
+  currentUserWahlbezirkNummer,
+  currentUserWahlbezirksArt,
+} = storeToRefs(useUserStore());
+const { hasInitializationOfTasksCompletelyRun } = storeToRefs(
+  useTaskManagerStore()
+);
 const [drawer, toggleDrawer] = useToggle();
 const isOffline = ref(false);
 const wahltermin = computed(() =>

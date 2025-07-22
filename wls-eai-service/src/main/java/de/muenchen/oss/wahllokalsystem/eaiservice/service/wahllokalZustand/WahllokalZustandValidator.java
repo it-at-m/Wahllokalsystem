@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.service.wahllokalZustand;
 
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.eaiservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahllokalzustand.dto.WahllokalZustandDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class WahllokalZustandValidator {
 
         if (StringUtils.isBlank(zustand.wahlbezirkID())) {
             throw exceptionFactory.createFachlicheWlsException(
-                    de.muenchen.oss.wahllokalsystem.eaiservice.exception.ExceptionConstants.SAVEWAHLLOKALZUSTAND_WAHLBEZIRKID_FEHLT);
+                    ExceptionConstants.SAVEWAHLLOKALZUSTAND_WAHLBEZIRKID_FEHLT);
         }
     }
 }

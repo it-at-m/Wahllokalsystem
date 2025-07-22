@@ -38,8 +38,6 @@ public class Wahlvorschlag {
     @JdbcTypeCode(VARCHAR)
     private UUID id;
 
-    //    @Id
-    @NaturalId
     @NotNull
     @ToString.Include
     private String identifikator;

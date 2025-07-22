@@ -4,4 +4,6 @@ export interface NachbesetzungsDruckInput {
   wahlbezirknummer: string;
   wahlvorstaende: Wahlvorstandsmitglied[];
   druckZeitpunkt: string;
+  wahlName: string;
+  wahlTag: string;
 }

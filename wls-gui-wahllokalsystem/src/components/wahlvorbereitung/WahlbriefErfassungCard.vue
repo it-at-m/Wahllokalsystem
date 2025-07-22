@@ -55,6 +55,7 @@
       <v-form
         ref="nachtraeglichUeberbrachteForm"
         v-model="anzahlNachtraeglichUeberbrachteValid"
+        data-test="nachtraeglichUeberbrachteForm"
       >
         <div class="d-flex flex-wrap justify-start">
           <div>

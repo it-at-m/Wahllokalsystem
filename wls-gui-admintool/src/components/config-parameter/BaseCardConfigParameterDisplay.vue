@@ -7,35 +7,37 @@
     <v-divider class="card-divider" />
     <v-card-text class="card-content">
       <v-row>
-        <v-card-actions class="card-action">
-          <v-col
-            cols="6"
-            class="mx-10"
-            >Wert:</v-col
-          >
-          <v-col
-            cols="6"
-            class="mx-2"
-            >{{ configParameter?.wert }}</v-col
-          >
-          <v-btn
-            class="v-button"
-            icon="$edit"
-            @click="onConfigParameterEditClicked"
-            data-test="click-edit-button"
-          />
-        </v-card-actions>
+        <v-col
+          cols="1"
+          class="mx-1 d-flex align-center"
+        >
+          Wert:
+        </v-col>
+        <v-col
+          cols="3"
+          class="mx-1 d-flex align-center"
+        >
+          <v-card-actions class="card-action">
+            {{ configParameter?.wert }}
+            <v-btn
+              class="v-button"
+              icon="$edit"
+              @click="onConfigParameterEditClicked"
+              data-test="click-edit-button"
+            />
+          </v-card-actions>
+        </v-col>
       </v-row>
       <v-row>
         <v-col
-          cols="6"
-          class="mx-5"
+          cols="1"
+          class="mx-1 d-flex align-center"
         >
           Standardwert:
         </v-col>
         <v-col
-          cols="6"
-          class="mx-2"
+          cols="3"
+          class="mx-1 d-flex align-center"
           >'{{ configParameter?.defaultValue }}'</v-col
         >
       </v-row>

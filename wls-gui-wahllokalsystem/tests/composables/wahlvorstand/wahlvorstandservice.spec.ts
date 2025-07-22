@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useWahlvorstandService } from "@/composables/wahlvorstand/wahlvorstandService.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
+import { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   addNotification: vi.fn(),
@@ -107,6 +108,116 @@ describe("WahlvorstandService.ts", () => {
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
       ]);
+    });
+
+    it("should_returnWahlvorstandSortedByFunktionFamiliennameVorname_when_apiReturnsUnsortedWahlvorstand", async () => {
+      const wahlbezirkID = generateRandomString(10);
+      // unsorted mock returned by mapper
+      const mockedUnsortedWahlvorstand = {
+        wahlvorstandsmitglieder: [
+          {
+            identifikator: "1",
+            anwesend: true,
+            familienname: "Müller",
+            vorname: "Anna",
+            funktion: WahlvorstandsmitgliedFunktionEnum.Sb,
+          },
+          {
+            identifikator: "2",
+            anwesend: true,
+            familienname: "Bauer",
+            vorname: "Karl",
+            funktion: WahlvorstandsmitgliedFunktionEnum.W,
+          },
+          {
+            identifikator: "3",
+            anwesend: true,
+            familienname: "Schmidt",
+            vorname: "Ursula",
+            funktion: WahlvorstandsmitgliedFunktionEnum.Sb,
+          },
+          {
+            identifikator: "4",
+            anwesend: true,
+            familienname: "Müller",
+            vorname: "Hans",
+            funktion: WahlvorstandsmitgliedFunktionEnum.Swb,
+          },
+          {
+            identifikator: "5",
+            anwesend: true,
+            familienname: "Schmidt",
+            vorname: "Berta",
+            funktion: WahlvorstandsmitgliedFunktionEnum.B,
+          },
+          {
+            identifikator: "6",
+            anwesend: true,
+            familienname: "Schmidt",
+            vorname: "Anna",
+            funktion: WahlvorstandsmitgliedFunktionEnum.B,
+          },
+        ],
+      };
+      mockDefinitions.mapDtoToModel.mockReturnValue(mockedUnsortedWahlvorstand);
+
+      // correctly sorted service return value after '_sortWahlvorstand'
+      const expectedSortedWahlvorstand = {
+        wahlvorstandsmitglieder: [
+          {
+            identifikator: "2",
+            anwesend: true,
+            familienname: "Bauer",
+            vorname: "Karl",
+            funktion: WahlvorstandsmitgliedFunktionEnum.W,
+          },
+          {
+            identifikator: "4",
+            anwesend: true,
+            familienname: "Müller",
+            vorname: "Hans",
+            funktion: WahlvorstandsmitgliedFunktionEnum.Swb,
+          },
+          {
+            identifikator: "1",
+            anwesend: true,
+            familienname: "Müller",
+            vorname: "Anna",
+            funktion: WahlvorstandsmitgliedFunktionEnum.Sb,
+          },
+          {
+            identifikator: "3",
+            anwesend: true,
+            familienname: "Schmidt",
+            vorname: "Ursula",
+            funktion: WahlvorstandsmitgliedFunktionEnum.Sb,
+          },
+          {
+            identifikator: "6",
+            anwesend: true,
+            familienname: "Schmidt",
+            vorname: "Anna",
+            funktion: WahlvorstandsmitgliedFunktionEnum.B,
+          },
+          {
+            identifikator: "5",
+            anwesend: true,
+            familienname: "Schmidt",
+            vorname: "Berta",
+            funktion: WahlvorstandsmitgliedFunktionEnum.B,
+          },
+        ],
+      };
+
+      mockDefinitions.getWahlvorstand.mockReturnValue(
+        Promise.resolve({ data: null })
+      );
+
+      const result = await unitUnderTest.getWahlvorstand(wahlbezirkID, {
+        sendNotification: true,
+      });
+
+      expect(result).toStrictEqual(expectedSortedWahlvorstand);
     });
 
     it("should_callUserNotificationWithError_when_apiCallFailed", async () => {

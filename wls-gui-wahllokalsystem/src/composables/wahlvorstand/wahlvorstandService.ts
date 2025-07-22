@@ -41,7 +41,7 @@ export function useWahlvorstandService() {
           UserNotificationCategoryEnum.SUCCESS
         );
       }
-      return toModel(response.data);
+      return _sortWahlvorstand(toModel(response.data));
     } catch (error) {
       if (sendNotification) {
         userNotificationService.addNotification(
@@ -82,6 +82,34 @@ export function useWahlvorstandService() {
     return {
       updateDatetime: now,
     };
+  }
+
+  function _sortWahlvorstand(wahlvorstand: Wahlvorstand) {
+    const WahlvorstandFunktion = {
+      W: 0,
+      SWB: 1,
+      SB: 2,
+      SSB: 3,
+      B: 4,
+    };
+
+    wahlvorstand?.wahlvorstandsmitglieder.sort((a, b) => {
+      const functionComparison =
+        WahlvorstandFunktion[a.funktion] - WahlvorstandFunktion[b.funktion];
+      if (functionComparison !== 0) {
+        return functionComparison;
+      }
+      const familiennameComparison = a.familienname.localeCompare(
+        b.familienname
+      );
+      if (familiennameComparison !== 0) {
+        return familiennameComparison;
+      }
+
+      return a.vorname.localeCompare(b.vorname);
+    });
+
+    return wahlvorstand;
   }
 
   return {

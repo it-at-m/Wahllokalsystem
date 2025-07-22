@@ -4,24 +4,16 @@ Beim initialen Laden der WLS-GUI (Wahllokalsystem) muss für die Startseite eine
 Diese Liste zeigt an, wie viele Tasks noch geladen werden müssen und ob die zu ladenden Tasks erfolgreich abgeschlossen wurden oder nicht.
 Zur Erstellung der Tasks werden Factories verwendet, die von einem `TaskFactoryInterface` erben.
 
-Das initiale Laden der Tasks erfolgt nur einmal beim Start der Anwendung. Danach sind alle Daten über den `TaskManager` abrufbar.
+Das initiale Erstellen der Tasks erfolgt nur einmal beim Start der Anwendung. Danach sind alle Tasks über den `TaskManager` abrufbar.
 
 Das `TaskFactoryInterface` enthält eine `createTasks` Methode, die jede Factory implementieren und zugänglich machen muss.
 
-```ts
-export interface TaskFactoryInterface {
-    createTasks(taskFactoryContext: TaskFactoryContext): Task[];
-}
-
-```
 
 Für die Umsetzung der Factories wurden Composables verwendet.
 
 ```ts
-import {TaskFactoryInterface} from "./TaskFactoryInterface";
-
 export function useFactory(): TaskFactoryInterface {
-    createTasks(taskFactoryContext: TaskFactoryContext)
+    createTasks(taskFactoryContext: TaskFactoryContext): Task[]
 }
 ```
 
@@ -43,7 +35,6 @@ sequenceDiagram
     TaskFactoryXY2 -->> taskService: Tasks[]
     taskService -->> TaskFactoryXY3: createTasks()
     TaskFactoryXY3 -->> taskService: Tasks[]
-    Note right of TaskFactoryInterface: TaskFactoryXY1, TaskFactoryXY2, TaskFactoryXY3 erben von TaskFactoryInterface
     taskService ->> taskManagerStore: Tasks[]
 
 ```

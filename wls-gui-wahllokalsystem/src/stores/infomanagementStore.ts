@@ -53,6 +53,17 @@ export const useInfomanagementStore = defineStore(storeID, () => {
     }
   });
 
+  const spaetesteEroeffnungsuhrzeit = computed(() => {
+    switch (currentUserWahlbezirksArt.value) {
+      case WahlbezirksArtEnum.UWB:
+        return _spaetesteErfoeffnungsuhrzeitUWB.value;
+      case WahlbezirksArtEnum.BWB:
+        return _spaetesteErfoeffnungsuhrzeitBWB.value;
+      default:
+        return DEFAULT_TIME;
+    }
+  });
+
   const fruehesteSchliessungsuhrzeit = computed(() => {
     switch (currentUserWahlbezirksArt.value) {
       case WahlbezirksArtEnum.UWB:
@@ -81,6 +92,13 @@ export const useInfomanagementStore = defineStore(storeID, () => {
     );
   });
 
+  const _spaetesteErfoeffnungsuhrzeitUWB = computed(() => {
+    return _getKonfigParamValueOrDefault(
+      "SPAETESTE_EROEFFNUNGSZEIT_UW",
+      DEFAULT_TIME
+    );
+  });
+
   const _fruehesteSchliessungsuhrzeitUWB = computed(() => {
     return _getKonfigParamValueOrDefault(
       "FRUEHESTE_SCHLIESSUNGSZEIT_UW",
@@ -91,6 +109,13 @@ export const useInfomanagementStore = defineStore(storeID, () => {
   const _fruehesteEroeffnungsuhrzeitBWB = computed(() => {
     return _getKonfigParamValueOrDefault(
       "FRUEHESTE_EROEFFNUNGSZEIT_BW",
+      DEFAULT_TIME
+    );
+  });
+
+  const _spaetesteErfoeffnungsuhrzeitBWB = computed(() => {
+    return _getKonfigParamValueOrDefault(
+      "SPAETESTE_EROEFFNUNGSZEIT_BW",
       DEFAULT_TIME
     );
   });
@@ -118,6 +143,9 @@ export const useInfomanagementStore = defineStore(storeID, () => {
     initKonfigurationsparameter,
     /** FRUEHESTE_EROEFFNUNGSZEIT bezeichnet den frühesten Wert, zu dem die Wahlhandlung eröffnet werden kann. */
     fruehesteEroeffnungsuhrzeit,
+    /** SPAETESTE_EROEFFNUNGSZEIT bezeichnet den spätesten Wert, zu dem die Wahlhandlung eröffnet werden kann,
+     * ohne dass die verspätete Eröffnung als Ereignis dokumentiert werden muss. */
+    spaetesteEroeffnungsuhrzeit,
     /** FRUEHESTE_SCHLIESSUNGSZEIT bezeichnet den spätesten Wert, zu dem die Wahlhandlung eröffnet werden kann
      * und den frühesten Wert, zu dem die Wahlhandlung geschlossen werden kann. */
     fruehesteSchliessungsuhrzeit,

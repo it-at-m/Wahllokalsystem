@@ -8,7 +8,7 @@
       <div class="d-flex align-center">
         <v-icon
           :color="iconColor"
-          class="mr-2"
+          class="mr-5"
           :icon="icon"
         />
         <div :class="textColor">

@@ -6,16 +6,16 @@ package de.muenchen.oss.wahllokalsystem.authservice.configuration;
 
 import static de.muenchen.oss.wahllokalsystem.authservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.authservice.TestConstants.SPRING_TEST_PROFILE;
-import static de.muenchen.oss.wahllokalsystem.authservice.TestConstants.TheEntityDto;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.authservice.domain.TheEntity;
-import de.muenchen.oss.wahllokalsystem.authservice.rest.TheEntityRepository;
+import de.muenchen.oss.wahllokalsystem.authservice.domain.UserRepository;
+import de.muenchen.oss.wahllokalsystem.authservice.rest.WahlbezirksartDTO;
+import de.muenchen.oss.wahllokalsystem.authservice.rest.WahllokalUserInfoDTO;
 import java.net.URI;
-import java.util.UUID;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.Disabled;
+import java.time.LocalDate;
+import java.util.List;
+import lombok.val;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,7 +33,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE, Profiles.DUMMY_CLIENTS })
 class UnicodeConfigurationTest {
 
-    private static final String ENTITY_ENDPOINT_URL = "/theEntities";
+    private static final String AUTH_ENDPOINT_URL = "/generateAndExportWahllokalbenutzer/";
 
     /**
      * Decomposed string: String "Ä-é" represented with unicode letters "A◌̈-e◌́"
@@ -49,28 +49,18 @@ class UnicodeConfigurationTest {
     private TestRestTemplate testRestTemplate;
 
     @Autowired
-    private TheEntityRepository theEntityRepository;
+    private UserRepository userRepository;
 
     @Test
-    @Disabled
-    void should_returnComposedString_when_givenDecomposedString() {
-        // Persist entity with decomposed string.
-        final TheEntityDto theEntityDto = new TheEntityDto();
-        theEntityDto.setTextAttribute(TEXT_ATTRIBUTE_DECOMPOSED);
-        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), theEntityDto.getTextAttribute().length());
-        final TheEntityDto response = testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), theEntityDto, TheEntityDto.class).getBody();
+    void should_testForNfcNormalization_when_givenComposedString() {
+        val wahltagID = "wahltagID";
+        val wahllokalUser = new WahllokalUserInfoDTO("wahlbezirknummer", LocalDate.now(), "wbzID",
+                WahlbezirksartDTO.UWB, TEXT_ATTRIBUTE_DECOMPOSED);
 
-        // Check whether response contains a composed string.
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, response.getTextAttribute());
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), response.getTextAttribute().length());
+        testRestTemplate.postForEntity(URI.create(AUTH_ENDPOINT_URL + wahltagID), List.of(wahllokalUser), Void.class);
 
-        // Extract uuid from self link.
-        final UUID uuid = UUID.fromString(StringUtils.substringAfterLast(response.getRequiredLink("self").getHref(), "/"));
-
-        // Check persisted entity contains a composed string via JPA repository.
-        final TheEntity theEntity = theEntityRepository.findById(uuid).orElse(null);
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, theEntity.getTextAttribute());
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), theEntity.getTextAttribute().length());
+        val users = userRepository.findByWahltagID(wahltagID);
+        Assertions.assertThat(users).hasSize(1);
+        Assertions.assertThat(users.stream().findFirst().get().getWbid_wahlnummer()).isEqualTo(TEXT_ATTRIBUTE_COMPOSED);
     }
-
 }

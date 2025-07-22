@@ -35,6 +35,9 @@ describe("ereignisStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useEreignisStore>;
   let wahlbezirkStore: ReturnType<typeof useWahlbezirkStore>;
 
+  const BESCHREIBUNG = "Beschreibung";
+  const BESCHREIBUNG_NEU = "Neue Beschreibung";
+
   beforeEach(() => {
     const testPinia = createTestingPinia({
       stubActions: false,
@@ -423,6 +426,50 @@ describe("ereignisStore.ts", () => {
         wahlbezirkID,
         unitUnderTest.wahlbezirkEreignisse
       );
+    });
+  });
+
+  describe("updateBeschreibungByIndex", () => {
+    it("should_doNoting_when_noEreignisEintrageAreGiven", () => {
+      unitUnderTest.wahlbezirkEreignisse = {
+        wahlbezirkID: "wahlbezirkID",
+      };
+
+      unitUnderTest.updateBeschreibungByIndex(BESCHREIBUNG_NEU, 1);
+
+      expect(
+        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege
+      ).toBeUndefined();
+    });
+
+    it("should_doNothing_when_indexIsOutOfRange", () => {
+      const eintragNotToChange = {
+        ereignisart: EreignisartEnum.Vorfall,
+        beschreibung: BESCHREIBUNG,
+      };
+      unitUnderTest.wahlbezirkEreignisse = {
+        wahlbezirkID: "wahlbezirkID",
+        ereigniseintraege: [eintragNotToChange],
+      };
+
+      unitUnderTest.updateBeschreibungByIndex(BESCHREIBUNG_NEU, 1);
+
+      expect(eintragNotToChange.beschreibung).toEqual(BESCHREIBUNG);
+    });
+
+    it("should_updateBeschreibung_when_beschreibungGiven", () => {
+      const eintragToChange = {
+        ereignisart: EreignisartEnum.Vorfall,
+        beschreibung: BESCHREIBUNG,
+      };
+      unitUnderTest.wahlbezirkEreignisse = {
+        wahlbezirkID: "wahlbezirkID",
+        ereigniseintraege: [eintragToChange],
+      };
+
+      unitUnderTest.updateBeschreibungByIndex(BESCHREIBUNG_NEU, 0);
+
+      expect(eintragToChange.beschreibung).toEqual(BESCHREIBUNG_NEU);
     });
   });
 

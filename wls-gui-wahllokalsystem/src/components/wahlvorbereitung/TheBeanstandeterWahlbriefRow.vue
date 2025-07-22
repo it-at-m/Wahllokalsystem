@@ -39,6 +39,7 @@
               @update:model-value="
                 (value) => onZulassungsgrundChanged(value, index - 1)
               "
+              :data-test="`wahlscheingruende-input-${index - 1}`"
             />
           </v-row>
         </td>
@@ -61,6 +62,7 @@
             @update:model-value="
               (value) => onZulassungsgrundChanged(value, index - 1, wahl)
             "
+            :data-test="`stimmzettelgruende-input-${wahl.wahlID}-${index - 1}`"
           />
         </td>
         <td>
@@ -74,11 +76,13 @@
               icon="$delete"
               variant="text"
               @click="deleteBeanstandeteWahlbriefeRow(index - 1)"
+              :data-test="`delete-btn-${index - 1}`"
             />
             <v-icon
               :icon="rowIcon[index - 1]"
               variant="text"
               :color="rowColor[index - 1]"
+              :data-test="`rowstatus-icon-${index - 1}`"
             />
           </v-row>
         </td>

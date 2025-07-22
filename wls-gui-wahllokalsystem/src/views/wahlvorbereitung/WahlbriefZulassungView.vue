@@ -1,6 +1,6 @@
 <template>
-  <the-bedenkliche-wahlbriefe-erfassen-card />
+  <the-beanstandete-wahlbriefe-erfassen-card />
 </template>
 <script setup lang="ts">
-import TheBedenklicheWahlbriefeErfassenCard from "@/components/wahlvorbereitung/TheBedenklicheWahlbriefeErfassenCard.vue";
+import TheBeanstandeteWahlbriefeErfassenCard from "@/components/wahlvorbereitung/TheBeanstandeteWahlbriefeErfassenCard.vue";
 </script>

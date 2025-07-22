@@ -1,7 +1,9 @@
 import type { UrnenwahlSchliessungsuhrzeit } from "@/types/wahlvorbereitung/UrnenwahlSchliessungsuhrzeit.ts";
 import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
+import type { Wahlvorbereitung } from "@/types/wahlvorbereitung/Wahlvorbereitung.ts";
 
 import {
+  BriefwahlvorbereitungControllerApi,
   EroeffnungsUhrzeitControllerApi,
   UrnenwahlSchliessungsUhrzeitControllerApi,
   UrnenwahlvorbereitungControllerApi,
@@ -19,6 +21,7 @@ const {
   toEroeffnungsuhrzeitWriteDTO,
   toUrnenwahlvorbereitungModel,
   toUrnenwahlvorbereitungWriteDto,
+  toBriefwahlvorbereitungWriteDto,
 } = useWahlvorbereitungMapper();
 
 export function useWahlvorbereitungService() {
@@ -34,6 +37,10 @@ export function useWahlvorbereitungService() {
   );
   const urnenwahlvorbereitungControllerAPI =
     new UrnenwahlvorbereitungControllerApi(
+      wahlvorbereitungsServiceConfiguration
+    );
+  const briefwahlvorbereitungControllerAPI =
+    new BriefwahlvorbereitungControllerApi(
       wahlvorbereitungsServiceConfiguration
     );
 
@@ -142,11 +149,38 @@ export function useWahlvorbereitungService() {
     }
   }
 
+  async function postBriefwahlvorbereitung(
+    wahlbezirkID: string,
+    briefwahlvorbereitung: Wahlvorbereitung
+  ): Promise<void> {
+    const briefwahlvorbereitungWriteDTO = toBriefwahlvorbereitungWriteDto(
+      briefwahlvorbereitung
+    );
+
+    try {
+      await briefwahlvorbereitungControllerAPI.postBriefwahlvorbereitung(
+        wahlbezirkID,
+        briefwahlvorbereitungWriteDTO
+      );
+      userNotificationService.addNotification(
+        "Briefwahlvorbereitung erfolgreich gespeichert.",
+        UserNotificationCategoryEnum.SUCCESS
+      );
+    } catch (error) {
+      userNotificationService.addNotification(
+        "Speichern der Briefwahlvorbereitung fehlgeschlagen.",
+        UserNotificationCategoryEnum.ERROR
+      );
+      throw error;
+    }
+  }
+
   return {
     getUrnenwahlSchliessungsUhrzeit,
     postEroeffnungsuhrzeit,
     postUrnenwahlSchliessungsuhrzeit,
     getUrnenwahlvorbereitung,
     postUrnenwahlvorbereitung,
+    postBriefwahlvorbereitung,
   };
 }

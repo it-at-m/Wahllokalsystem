@@ -74,7 +74,7 @@ function onConfigParameterEditClicked() {
 
 <style scoped>
 .card-divider {
-  border: 1px solid#333333;
+  border: 1px solid #333333;
   display: block;
   opacity: 0.2;
 }

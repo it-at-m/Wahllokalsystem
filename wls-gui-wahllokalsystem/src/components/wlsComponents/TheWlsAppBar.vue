@@ -46,7 +46,7 @@
         title="Wahlvorstand"
         :to="ROUTE_WAHLVORSTAND"
       />
-      <the-bwb-preparation-list-group
+      <the-b-w-b-preparation-list-group
         v-if="currentUserWahlbezirksArt === WahlbezirksArtEnum.BWB"
       />
       <the-u-w-b-preparation-list-group
@@ -76,7 +76,7 @@ import {
 import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
 import TheWaehleranzahlCountButton from "@/components/monitoring/TheWaehleranzahlCountButton.vue";
-import TheBwbPreparationListGroup from "@/components/navigation/TheBWBPreparationListGroup.vue";
+import TheBWBPreparationListGroup from "@/components/navigation/TheBWBPreparationListGroup.vue";
 import TheUWBPreparationListGroup from "@/components/navigation/TheUWBPreparationListGroup.vue";
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";

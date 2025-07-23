@@ -30,6 +30,11 @@ const permitNavigationOnlyForWahlbezirksArtUwb = () => {
   return currentUserWahlbezirksArt.value === WahlbezirksArtEnum.UWB;
 };
 
+const permitNavigationOnlyForWahlbezirksArtBwb = () => {
+  const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
+  return currentUserWahlbezirksArt.value === WahlbezirksArtEnum.BWB;
+};
+
 const routes = [
   {
     path: "/",
@@ -63,6 +68,7 @@ const routes = [
     path: "/erfassungWahlbriefe",
     name: ROUTE_ERFASSUNG_WAHLBRIEFE,
     component: BWBWahlbriefErfassungView,
+    beforeEnter: permitNavigationOnlyForWahlbezirksArtBwb,
   },
   {
     path: "/waehlerverzeichnis",

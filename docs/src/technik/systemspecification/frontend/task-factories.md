@@ -1,20 +1,29 @@
 # Erstellen der Task List
 
-Beim initialen Laden der WLS-GUI (Wahllokalsystem) muss für die Startseite eine Liste von Tasks erstellt werden.
-Diese Liste zeigt an, wie viele Tasks noch geladen werden müssen und ob die zu ladenden Tasks erfolgreich abgeschlossen wurden oder nicht.
-Zur Erstellung der Tasks werden Factories verwendet, die von einem `TaskFactoryInterface` erben.
+Beim initialen Aufruf des `Wahllokalsystem UI` müssen eine Reihe von Daten geladen werden, u.a. damit diese Offline zur Verfügung stehen (siehe [Offlinekonzept](./offlinefaehigkeit-konzept)).
+Dazu wird eine Liste von Tasks erstellt.
+Anhand dieser Liste wird angezeigt, wie viele Tasks noch geladen werden müssen und ob die ausgeführten Tasks erfolgreich abgeschlossen wurden oder nicht.
 
 Das initiale Erstellen der Tasks erfolgt nur einmal beim Start der Anwendung. Danach sind alle Tasks über den `TaskManager` abrufbar.
 
 Das `TaskFactoryInterface` enthält eine `createTasks` Methode, die jede Factory implementieren und zugänglich machen muss.
 
-
 Für die Umsetzung der Factories wurden Composables verwendet.
 
-```ts
-export function useFactory(): TaskFactoryInterface {
-    createTasks(taskFactoryContext: TaskFactoryContext): Task[]
-}
+```mermaid
+classDiagram
+    TaskFactoryA ..|> TaskFactoryInterface     
+    TaskFactoryB ..|> TaskFactoryInterface
+    TaskFactoryInterface -- Task
+
+    class TaskFactoryInterface{
+       <<interface>>
+      +createTasks(taskFactoryContext: TaskFactoryContext) Task[]
+    }
+    class Task{
+      +String name
+      +function callback
+    }
 ```
 
 Der Ablauf, wie Tasks erstellt werden kann wie folgt abgebildet werden:

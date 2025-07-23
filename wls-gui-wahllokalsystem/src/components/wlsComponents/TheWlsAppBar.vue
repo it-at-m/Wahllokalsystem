@@ -46,34 +46,12 @@
         title="Wahlvorstand"
         :to="ROUTE_WAHLVORSTAND"
       />
-      <v-list-group value="Wahlvorbereitung">
-        <template #activator="{ props }">
-          <v-list-item
-            v-bind="props"
-            title="Wahlvorbereitung"
-          />
-        </template>
-        <v-list-item
-          title="Wahlumgebung"
-          :to="ROUTE_WAHLUMGEBUNG"
-        />
-        <v-list-item
-          title="Beginn Stimmabgabe"
-          :to="ROUTE_BEGINN_STIMMABGABE"
-        />
-        <v-list-item
-          title="Wahlhandlung"
-          :to="ROUTE_WAHLSCHLIESSUNG"
-        />
-        <v-list-item
-          title="Erfassung Wahlbriefe"
-          :to="ROUTE_ERFASSUNG_WAHLBRIEFE"
-        />
-        <v-list-item
-          title="Wählerverzeichnis"
-          :to="ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS"
-        />
-      </v-list-group>
+      <the-b-w-b-preparation-list-group
+        v-if="currentUserWahlbezirksArt === WahlbezirksArtEnum.BWB"
+      />
+      <the-u-w-b-preparation-list-group
+        v-if="currentUserWahlbezirksArt === WahlbezirksArtEnum.UWB"
+      />
       <v-list-item
         title="Ereignisse"
         :to="ROUTE_EREIGNISSE"
@@ -90,7 +68,6 @@ import {
   VAppBarNavIcon,
   VCol,
   VList,
-  VListGroup,
   VListItem,
   VNavigationDrawer,
   VRow,
@@ -99,18 +76,12 @@ import {
 import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
 import TheWaehleranzahlCountButton from "@/components/monitoring/TheWaehleranzahlCountButton.vue";
+import TheBWBPreparationListGroup from "@/components/navigation/TheBWBPreparationListGroup.vue";
+import TheUWBPreparationListGroup from "@/components/navigation/TheUWBPreparationListGroup.vue";
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
-import {
-  ROUTE_BEGINN_STIMMABGABE,
-  ROUTE_EREIGNISSE,
-  ROUTE_ERFASSUNG_WAHLBRIEFE,
-  ROUTE_WAHLSCHLIESSUNG,
-  ROUTE_WAHLUMGEBUNG,
-  ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
-  ROUTE_WAHLVORSTAND,
-} from "@/constants.ts";
+import { ROUTE_EREIGNISSE, ROUTE_WAHLVORSTAND } from "@/constants.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";

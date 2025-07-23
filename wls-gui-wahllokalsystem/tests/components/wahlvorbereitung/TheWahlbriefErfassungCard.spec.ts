@@ -12,7 +12,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import WahlbriefErfassungCard from "@/components/wahlvorbereitung/WahlbriefErfassungCard.vue";
+import TheWahlbriefErfassungCard from "@/components/wahlvorbereitung/TheWahlbriefErfassungCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
@@ -35,8 +35,8 @@ vi.mock("@/composables/briefwahl/briefwahlService", () => ({
   }),
 }));
 
-describe("WahlbriefErfassungCard.vue", () => {
-  let wrapper: VueWrapper<InstanceType<typeof WahlbriefErfassungCard>>;
+describe("TheWahlbriefErfassungCard.vue", () => {
+  let wrapper: VueWrapper<InstanceType<typeof TheWahlbriefErfassungCard>>;
   let wahlbezirkStore: ReturnType<typeof useWahlbezirkStore>;
   let testPinia: TestingPinia;
 
@@ -68,7 +68,7 @@ describe("WahlbriefErfassungCard.vue", () => {
       stubActions: false,
       createSpy: vi.fn,
     });
-    wrapper = mount(WahlbriefErfassungCard, {
+    wrapper = mount(TheWahlbriefErfassungCard, {
       global: {
         plugins: [testPinia, vuetify],
       },

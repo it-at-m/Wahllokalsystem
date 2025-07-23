@@ -10,11 +10,16 @@ Die Benennung erfolgt grundsätzlich auf Englisch, mit Ausnahme von Fachbegriffe
 
 ## Views
 
-`<Domain>[<Funktion>]View.vue`
+`[UWB|BWB]<Domain>[<Funktion>]View.vue`
+
+Der Prefix `UWB` oder `BWB` ist zu setzen wenn diese View nur für eine bestimmte Wahlbezirksart gedacht ist. Erfolgt
+innerhalb der View eine Unterscheidung welche Subkomponenten angezeigt werden, oder ist die View unabhängig von der
+Wahlbezirksart, ist kein Prefix zu vergeben.
 
 ### Beispiel
 
-`WahlvorstandView.vue` ... eine View für den Wahlvorstand
+`WahlvorstandView.vue` ... eine View für den Wahlvorstand, die für alle Wahlbezirksarten gedacht ist  
+`UWBWaehlerverzeichnisView.vue` ... eine View die nur bei der Wahlbezirksart `UWB` angezeigt werden soll
 
 ## Components
 

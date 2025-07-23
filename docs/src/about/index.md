@@ -184,6 +184,9 @@ Nach der Suche bekommt der Nutzer Feedback, ob der Wahlschein gültig oder ungü
 Handlungsanweisungen angezeigt. Ist der Wahlschein ungültig, wird in der Fehlermeldung neben der Wahlscheinnummer
 auch Vor- und Familienname angezeigt.
 
+Um Suche zu können muss eine Wahlscheinnummer vorhanden sein. Die Wahlscheinnummer muss außerdem im Bereich von `1` bis
+`9999999` liegen.
+
 Nach einer Suche kann über den Button, der zuvor die Suche ausgeführt hat, die Suche zurückgesetzt werden. Dabei
 werden die Eingabe und Handlungsanweisungen entfernt.
 

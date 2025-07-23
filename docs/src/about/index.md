@@ -188,7 +188,8 @@ Um Suche zu können muss eine Wahlscheinnummer vorhanden sein. Die Wahlscheinnum
 `9999999` liegen.
 
 Nach einer Suche kann über den Button, der zuvor die Suche ausgeführt hat, die Suche zurückgesetzt werden. Dabei
-werden die Eingabe und Handlungsanweisungen entfernt.
+werden die Eingabe und Handlungsanweisungen entfernt. Die Suche wird ebenfalls zurückgesetzt, wenn der User
+die Wahlscheinnummer verändert.
 
 Zu Unterstützung des Wahlvorstands wird ein Bild angezeigt das helfen soll die Stelle, wo die Wahlnummer steht,
 zu identifizieren.

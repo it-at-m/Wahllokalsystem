@@ -9,6 +9,8 @@ export function useInputFeedbackUtils() {
         return "$invalid";
       case InputFeedbackTypeEnum.information:
         return "$information";
+      case InputFeedbackTypeEnum.success:
+        return "$valid";
     }
   }
 
@@ -20,6 +22,8 @@ export function useInputFeedbackUtils() {
         return "error";
       case InputFeedbackTypeEnum.information:
         return "info";
+      case InputFeedbackTypeEnum.success:
+        return "success";
     }
   }
 
@@ -31,6 +35,8 @@ export function useInputFeedbackUtils() {
         return "text-error";
       case InputFeedbackTypeEnum.information:
         return "text-info";
+      case InputFeedbackTypeEnum.success:
+        return "text-success";
     }
   }
 
@@ -42,6 +48,8 @@ export function useInputFeedbackUtils() {
         return "border-error";
       case InputFeedbackTypeEnum.information:
         return "border-info";
+      case InputFeedbackTypeEnum.success:
+        return "border-success";
     }
   }
 

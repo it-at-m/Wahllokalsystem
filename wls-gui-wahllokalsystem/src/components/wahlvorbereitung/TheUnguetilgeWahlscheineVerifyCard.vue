@@ -11,6 +11,7 @@
           :rules="[REQUIRED, MIN_NUMBER(1), MAX_NUMBER(9999999)]"
           label="Wahlscheinnummer"
           max-width="300"
+          data-test="number-input-wahlscheinnummer"
           @update:model-value="onWahlscheinnummerChanged"
         />
 
@@ -84,6 +85,7 @@
         active
         @click="onSearchClicked"
         :disabled="isSearchButtonDisabled"
+        data-test="button-search"
         >{{ searchButtonLabel }}</v-btn
       >
       <base-button-refresh

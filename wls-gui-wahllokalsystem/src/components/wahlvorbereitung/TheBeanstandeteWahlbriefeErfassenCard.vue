@@ -10,6 +10,7 @@
       <v-btn
         prepend-icon="$add"
         @click="onAddBedenklicherWahlbriefClicked()"
+        data-test="addBedenklicherWahlbriefRow"
       >
         Neuen Beschluss erfassen
       </v-btn>

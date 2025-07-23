@@ -31,7 +31,7 @@ export function useDateTimeFormatter() {
 
   const updateTimeOfDateObject = function (
     timeString: string,
-    currentTime: Date
+    dateToModify: Date
   ): Date | undefined {
     if (!timeString || timeString.trim().length === 0) {
       return undefined;
@@ -40,23 +40,23 @@ export function useDateTimeFormatter() {
     if (isNaN(hours) || isNaN(minutes)) {
       return undefined;
     }
-    const newDate = new Date(currentTime);
+    const newDate = new Date(dateToModify);
     newDate.setHours(hours, minutes);
     return newDate;
   };
 
   const updateDateOfDateObject = function (
     dateString: string,
-    currentTime: Date
+    dateToModify: Date
   ): Date | undefined {
     if (dateString.length === 0) {
-      return currentTime;
+      return dateToModify;
     }
     const [year, month, day] = dateString.split("-").map(Number);
     if (isNaN(year) || isNaN(month) || isNaN(day)) {
       return undefined;
     }
-    const newTime = new Date(currentTime);
+    const newTime = new Date(dateToModify);
     newTime.setFullYear(year, month - 1, day);
     return newTime;
   };
@@ -123,6 +123,11 @@ export function useDateTimeFormatter() {
     }
   }
 
+  const parseDateString = (dateString: string) => {
+    const date = new Date(dateString);
+    return isNaN(date.getTime()) ? null : date;
+  };
+
   return {
     time,
     toHhMm,
@@ -132,6 +137,7 @@ export function useDateTimeFormatter() {
     toGermanDateFormat,
     getDateFromTimeString,
     toGermanDateWithLongMonth,
+    parseDateString,
   };
 }
 

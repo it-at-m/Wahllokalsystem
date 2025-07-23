@@ -1,6 +1,6 @@
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 
-const { getDateFromTimeString } = useDateTimeFormatter();
+const { getDateFromTimeString, parseDateString } = useDateTimeFormatter();
 
 /* eslint-disable */
 export const REQUIRED = (value: any) => {
@@ -11,9 +11,6 @@ export const REQUIRED = (value: any) => {
   }
   return "Feld darf nicht leer sein.";
 };
-
-export const DATE_REQUIRED = (value: any) =>
-  (!!value && value.trim().length > 0) || "Feld darf nicht leer sein.";
 
 export const MAX_LENGTH = (length: number) => (value: any) =>
   (value && value.length <= length) || `Maximale Länge ist ${length} Zeichen.`;
@@ -41,3 +38,18 @@ export const TIME_GREATER_OR_EQUAL =
 export const TIME_LESS_OR_EQUAL = (compareValue: string) => (value: string) =>
   getDateFromTimeString(value) <= getDateFromTimeString(compareValue) ||
   `Eingabe muss kleiner oder gleich ${compareValue} sein.`;
+
+export const DATE_NOT_BEFORE_WAHLTAG = (
+  value: string,
+  currentUserWahltag: string
+) => {
+  const valueDate = parseDateString(value);
+  const wahltagDate = parseDateString(currentUserWahltag);
+
+  if (valueDate === null || wahltagDate === null) {
+    return "Ungültiges Datumsformat.";
+  }
+  return (
+    valueDate >= wahltagDate || `Eingabe darf nicht vor dem Wahltag liegen.`
+  );
+};

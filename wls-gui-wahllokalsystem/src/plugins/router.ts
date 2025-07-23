@@ -5,6 +5,7 @@ import {
   EXAMPLE_ROUTES_NOTFOUND,
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_EREIGNISSE,
+  ROUTE_ERFASSUNG_WAHLBRIEFE,
   ROUTE_WAHLBRIEFE_ZULASSEN,
   ROUTE_WAHLSCHLIESSUNG,
   ROUTE_WAHLUMGEBUNG,
@@ -18,6 +19,7 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 import EreignisseView from "@/views/EreignisseView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
 import HomeView from "@/views/HomeView.vue";
+import BWBWahlbriefErfassungView from "@/views/wahlvorbereitung/BWBWahlbriefErfassungView.vue";
 import UWBWaehlerverzeichnisView from "@/views/wahlvorbereitung/UWBWaehlerverzeichnisView.vue";
 import UWBWahlhandlungView from "@/views/wahlvorbereitung/UWBWahlhandlungView.vue";
 import WahlbriefZulassungView from "@/views/wahlvorbereitung/WahlbriefZulassungView.vue";
@@ -28,6 +30,11 @@ import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue
 const permitNavigationOnlyForWahlbezirksArtUwb = () => {
   const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
   return currentUserWahlbezirksArt.value === WahlbezirksArtEnum.UWB;
+};
+
+const permitNavigationOnlyForWahlbezirksArtBwb = () => {
+  const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
+  return currentUserWahlbezirksArt.value === WahlbezirksArtEnum.BWB;
 };
 
 const routes = [
@@ -60,6 +67,12 @@ const routes = [
     component: WahleroeffnungView,
   },
   {
+    path: "/erfassungWahlbriefe",
+    name: ROUTE_ERFASSUNG_WAHLBRIEFE,
+    component: BWBWahlbriefErfassungView,
+    beforeEnter: permitNavigationOnlyForWahlbezirksArtBwb,
+  },
+  {
     path: "/waehlerverzeichnis",
     name: ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
     component: UWBWaehlerverzeichnisView,
@@ -69,6 +82,7 @@ const routes = [
     path: "/wahlbriefzulassung",
     name: ROUTE_WAHLBRIEFE_ZULASSEN,
     component: WahlbriefZulassungView,
+    beforeEnter: permitNavigationOnlyForWahlbezirksArtBwb,
   },
   {
     path: "/ereignisse",

@@ -7,6 +7,7 @@
     clearable
     data-test="base-time-input"
     @update:model-value="onTimeChanged"
+    @click:clear="resetTimeKeepDateAndTriggerUpdateOnce"
   />
 </template>
 
@@ -26,7 +27,24 @@ const modelValue = defineModel({
 
 const onTimeChanged = (newTime: string) => {
   const currentDate = modelValue?.value || new Date();
+  const updatedTime = updateTimeOfDateObject(newTime, currentDate);
+  if (updatedTime) {
+    modelValue.value = updatedTime;
+  }
+};
 
-  modelValue.value = updateTimeOfDateObject(newTime, currentDate);
+const resetTimeKeepDateAndTriggerUpdateOnce = () => {
+  if (modelValue.value != undefined) {
+    const newDateForReset = new Date();
+    modelValue.value.setHours(
+      newDateForReset.getUTCHours() + 2,
+      newDateForReset.getMinutes()
+    );
+    const timeString = modelValue.value.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    onTimeChanged(timeString);
+  }
 };
 </script>

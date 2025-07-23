@@ -33,7 +33,7 @@ export function useDateTimeFormatter() {
     timeString: string,
     dateToModify: Date
   ): Date | undefined {
-    if (!timeString || timeString.trim().length === 0) {
+    if (!timeString || timeString.length === 0) {
       return undefined;
     }
     const [hours, minutes] = timeString.split(":").map(Number);
@@ -49,7 +49,7 @@ export function useDateTimeFormatter() {
     dateString: string,
     dateToModify: Date
   ): Date | undefined {
-    if (dateString.length === 0) {
+    if (!dateString || dateString.length === 0) {
       return dateToModify;
     }
     const [year, month, day] = dateString.split("-").map(Number);

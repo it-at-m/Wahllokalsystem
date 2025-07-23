@@ -10,6 +10,7 @@
     clearable
     data-test="base-date-input"
     @update:model-value="onDateChanged"
+    @click:clear="resetDateKeepTime"
   />
 </template>
 
@@ -31,7 +32,6 @@ const modelValue = defineModel({
 
 const onDateChanged = (newDate: string) => {
   const currentTime = modelValue?.value || new Date();
-
   const updatedDate = updateDateOfDateObject(newDate, currentTime);
   if (updatedDate) {
     modelValue.value = updatedDate;
@@ -45,5 +45,13 @@ const getFormattedValue = (date: Date | undefined) => {
     date.getTime() - date.getTimezoneOffset() * 60000
   );
   return correctedDate.toISOString().split("T")[0];
+};
+
+const resetDateKeepTime = () => {
+  const currentTime = modelValue?.value || new Date();
+
+  const newDate = new Date();
+  newDate.setHours(currentTime.getHours(), currentTime.getMinutes());
+  modelValue.value = newDate;
 };
 </script>

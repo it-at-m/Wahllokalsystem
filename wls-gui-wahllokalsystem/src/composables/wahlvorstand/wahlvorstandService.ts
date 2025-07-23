@@ -6,13 +6,14 @@ import {
 } from "@/api/wls-clients/generated-wahlvorstand-api";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWahlvorstandMapper } from "@/composables/wahlvorstand/wahlvorstandMapper";
+import { useWahlvorstandComparators } from "@/composables/wahlvorstand/wahlvorstandUtils.ts";
 import { WAHLVORSTAND_SERVICE_API_URL } from "@/constants";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
-import { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion.ts";
 
 const { toModel, toDto } = useWahlvorstandMapper();
 
 const userNotificationService = useUserNotificationService();
+const { compareWahlvorstandsMitglieder } = useWahlvorstandComparators();
 
 export function useWahlvorstandService() {
   const wahlvorstandControllerApi = new WahlvorstandControllerApi(
@@ -42,7 +43,13 @@ export function useWahlvorstandService() {
           UserNotificationCategoryEnum.SUCCESS
         );
       }
-      return _sortWahlvorstand(toModel(response.data));
+
+      const wahlvorstand = toModel(response.data);
+      wahlvorstand?.wahlvorstandsmitglieder.sort(
+        compareWahlvorstandsMitglieder
+      );
+
+      return wahlvorstand;
     } catch (error) {
       if (sendNotification) {
         userNotificationService.addNotification(
@@ -83,34 +90,6 @@ export function useWahlvorstandService() {
     return {
       updateDatetime: now,
     };
-  }
-
-  function _sortWahlvorstand(wahlvorstand: Wahlvorstand) {
-    const sortOrder = {
-      [WahlvorstandsmitgliedFunktionEnum.W]: 0,
-      [WahlvorstandsmitgliedFunktionEnum.Swb]: 1,
-      [WahlvorstandsmitgliedFunktionEnum.Sb]: 2,
-      [WahlvorstandsmitgliedFunktionEnum.Ssb]: 3,
-      [WahlvorstandsmitgliedFunktionEnum.B]: 4,
-    };
-
-    wahlvorstand?.wahlvorstandsmitglieder?.sort((a, b) => {
-      const functionComparison =
-        sortOrder[a?.funktion ?? 999] - sortOrder[b?.funktion ?? 999];
-      if (functionComparison !== 0) {
-        return functionComparison;
-      }
-      const familiennameComparison = (a?.familienname || "").localeCompare(
-        b?.familienname || ""
-      );
-      if (familiennameComparison !== 0) {
-        return familiennameComparison;
-      }
-
-      return (a?.vorname || "").localeCompare(b?.vorname || "");
-    });
-
-    return wahlvorstand;
   }
 
   return {

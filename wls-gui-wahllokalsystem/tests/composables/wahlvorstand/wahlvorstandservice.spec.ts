@@ -112,100 +112,70 @@ describe("WahlvorstandService.ts", () => {
 
     it("should_returnWahlvorstandSortedByFunktionFamiliennameVorname_when_apiReturnsUnsortedWahlvorstand", async () => {
       const wahlbezirkID = generateRandomString(10);
+      const mitglied1 = {
+        identifikator: "1",
+        anwesend: true,
+        familienname: "Müller",
+        vorname: "Anna",
+        funktion: WahlvorstandsmitgliedFunktionEnum.Sb,
+      };
+      const mitglied2 = {
+        identifikator: "2",
+        anwesend: true,
+        familienname: "Bauer",
+        vorname: "Karl",
+        funktion: WahlvorstandsmitgliedFunktionEnum.W,
+      };
+      const mitglied3 = {
+        identifikator: "3",
+        anwesend: true,
+        familienname: "Schmidt",
+        vorname: "Ursula",
+        funktion: WahlvorstandsmitgliedFunktionEnum.Sb,
+      };
+      const mitglied4 = {
+        identifikator: "4",
+        anwesend: true,
+        familienname: "Müller",
+        vorname: "Hans",
+        funktion: WahlvorstandsmitgliedFunktionEnum.Swb,
+      };
+      const mitglied5 = {
+        identifikator: "5",
+        anwesend: true,
+        familienname: "Schmidt",
+        vorname: "Berta",
+        funktion: WahlvorstandsmitgliedFunktionEnum.B,
+      };
+      const mitglied6 = {
+        identifikator: "6",
+        anwesend: true,
+        familienname: "Schmidt",
+        vorname: "Anna",
+        funktion: WahlvorstandsmitgliedFunktionEnum.B,
+      };
       // unsorted mock returned by mapper
       const mockedUnsortedWahlvorstand = {
         wahlvorstandsmitglieder: [
-          {
-            identifikator: "1",
-            anwesend: true,
-            familienname: "Müller",
-            vorname: "Anna",
-            funktion: WahlvorstandsmitgliedFunktionEnum.Sb,
-          },
-          {
-            identifikator: "2",
-            anwesend: true,
-            familienname: "Bauer",
-            vorname: "Karl",
-            funktion: WahlvorstandsmitgliedFunktionEnum.W,
-          },
-          {
-            identifikator: "3",
-            anwesend: true,
-            familienname: "Schmidt",
-            vorname: "Ursula",
-            funktion: WahlvorstandsmitgliedFunktionEnum.Sb,
-          },
-          {
-            identifikator: "4",
-            anwesend: true,
-            familienname: "Müller",
-            vorname: "Hans",
-            funktion: WahlvorstandsmitgliedFunktionEnum.Swb,
-          },
-          {
-            identifikator: "5",
-            anwesend: true,
-            familienname: "Schmidt",
-            vorname: "Berta",
-            funktion: WahlvorstandsmitgliedFunktionEnum.B,
-          },
-          {
-            identifikator: "6",
-            anwesend: true,
-            familienname: "Schmidt",
-            vorname: "Anna",
-            funktion: WahlvorstandsmitgliedFunktionEnum.B,
-          },
+          mitglied1,
+          mitglied2,
+          mitglied3,
+          mitglied4,
+          mitglied5,
+          mitglied6,
         ],
       };
       mockDefinitions.mapDtoToModel.mockReturnValue(mockedUnsortedWahlvorstand);
 
-      // correctly sorted service return value after '_sortWahlvorstand'
+      // correctly sorted service return value
       const expectedSortedWahlvorstand = {
         wahlvorstandsmitglieder: [
-          {
-            identifikator: "2",
-            anwesend: true,
-            familienname: "Bauer",
-            vorname: "Karl",
-            funktion: WahlvorstandsmitgliedFunktionEnum.W,
-          },
-          {
-            identifikator: "4",
-            anwesend: true,
-            familienname: "Müller",
-            vorname: "Hans",
-            funktion: WahlvorstandsmitgliedFunktionEnum.Swb,
-          },
-          {
-            identifikator: "1",
-            anwesend: true,
-            familienname: "Müller",
-            vorname: "Anna",
-            funktion: WahlvorstandsmitgliedFunktionEnum.Sb,
-          },
-          {
-            identifikator: "3",
-            anwesend: true,
-            familienname: "Schmidt",
-            vorname: "Ursula",
-            funktion: WahlvorstandsmitgliedFunktionEnum.Sb,
-          },
-          {
-            identifikator: "6",
-            anwesend: true,
-            familienname: "Schmidt",
-            vorname: "Anna",
-            funktion: WahlvorstandsmitgliedFunktionEnum.B,
-          },
-          {
-            identifikator: "5",
-            anwesend: true,
-            familienname: "Schmidt",
-            vorname: "Berta",
-            funktion: WahlvorstandsmitgliedFunktionEnum.B,
-          },
+          mitglied2,
+          mitglied4,
+          mitglied1,
+          mitglied3,
+          mitglied6,
+          mitglied5,
         ],
       };
 

@@ -7,8 +7,8 @@ import {
   WahlbriefdatenControllerApi,
 } from "@/api/wls-clients/generated-briefwahl-api";
 import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts";
-import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
 import { useBriefwahlMapper } from "@/composables/briefwahl/briefwahlMapper.ts";
+import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { BRIEFWAHL_SERVICE_API_URL } from "@/constants.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
@@ -21,16 +21,14 @@ const { toWahlbriefdatenModel, toWahlbriefdatenWriteDTO } =
   useBriefwahlMapper();
 
 export function useBriefwahlService() {
-    const briefwahlServiceConfiguration = new Configuration({
-        basePath: BRIEFWAHL_SERVICE_API_URL,
-    });
-    const wahlbriefdatenControllerApi = new WahlbriefdatenControllerApi(
-        briefwahlServiceConfiguration
-    );
-    const beanstandeteWahlbriefeControllerAPI =
-    new BeanstandeteWahlbriefeControllerApi(
-        briefwahlServiceConfiguration
-    );
+  const briefwahlServiceConfiguration = new Configuration({
+    basePath: BRIEFWAHL_SERVICE_API_URL,
+  });
+  const wahlbriefdatenControllerApi = new WahlbriefdatenControllerApi(
+    briefwahlServiceConfiguration
+  );
+  const beanstandeteWahlbriefeControllerAPI =
+    new BeanstandeteWahlbriefeControllerApi(briefwahlServiceConfiguration);
 
   async function getBeanstandeteWahlbriefe(
     waehlerverzeichnisNummer: number,
@@ -80,46 +78,50 @@ export function useBriefwahlService() {
     return;
   }
 
-    async function getWahlbriefdaten(
-        wahlbezirkID: string
-    ): Promise<Wahlbriefdaten> {
-        try {
-            return await wahlbriefdatenControllerApi
-                .getWahlbriefdaten(wahlbezirkID)
-                .then((response) => toWahlbriefdatenModel(response.data));
-        } catch (error) {
-            addNotification(
-                "Fehler beim Laden der Wahlbriefdaten.",
-                UserNotificationCategoryEnum.ERROR
-            );
-            throw error;
-        }
+  async function getWahlbriefdaten(
+    wahlbezirkID: string
+  ): Promise<Wahlbriefdaten> {
+    try {
+      return await wahlbriefdatenControllerApi
+        .getWahlbriefdaten(wahlbezirkID)
+        .then((response) => toWahlbriefdatenModel(response.data));
+    } catch (error) {
+      addNotification(
+        "Fehler beim Laden der Wahlbriefdaten.",
+        UserNotificationCategoryEnum.ERROR
+      );
+      throw error;
     }
+  }
 
-    async function postWahlbriefdaten(
-        wahlbezirkID: string,
-        wahlbriefdaten: Wahlbriefdaten
-    ): Promise<void> {
-        const wahlbriefdatenWriteDTO = toWahlbriefdatenWriteDTO(wahlbriefdaten);
+  async function postWahlbriefdaten(
+    wahlbezirkID: string,
+    wahlbriefdaten: Wahlbriefdaten
+  ): Promise<void> {
+    const wahlbriefdatenWriteDTO = toWahlbriefdatenWriteDTO(wahlbriefdaten);
 
-        try {
-            await wahlbriefdatenControllerApi.postWahlbriefdaten(
-                wahlbezirkID,
-                wahlbriefdatenWriteDTO
-            );
-            addNotification(
-                "Wahlbriefdaten erfolgreich gespeichert.",
-                UserNotificationCategoryEnum.SUCCESS
-            );
-        } catch (error) {
-            addNotification(
-                "Speichern der Wahlbriefdaten fehlgeschlagen.",
-                UserNotificationCategoryEnum.ERROR
-            );
-            throw error;
-        }
+    try {
+      await wahlbriefdatenControllerApi.postWahlbriefdaten(
+        wahlbezirkID,
+        wahlbriefdatenWriteDTO
+      );
+      addNotification(
+        "Wahlbriefdaten erfolgreich gespeichert.",
+        UserNotificationCategoryEnum.SUCCESS
+      );
+    } catch (error) {
+      addNotification(
+        "Speichern der Wahlbriefdaten fehlgeschlagen.",
+        UserNotificationCategoryEnum.ERROR
+      );
+      throw error;
     }
+  }
 
-  return { getBeanstandeteWahlbriefe, postBeanstandeteWahlbriefe, getWahlbriefdaten,
-      postWahlbriefdaten, };
+  return {
+    getBeanstandeteWahlbriefe,
+    postBeanstandeteWahlbriefe,
+    getWahlbriefdaten,
+    postWahlbriefdaten,
+  };
 }

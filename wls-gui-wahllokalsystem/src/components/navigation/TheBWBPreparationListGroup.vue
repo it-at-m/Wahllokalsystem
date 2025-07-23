@@ -30,8 +30,8 @@ import { VListGroup, VListItem } from "vuetify/components";
 
 import {
   ROUTE_BEGINN_STIMMABGABE,
-  ROUTE_WAHLBRIEFE_ZULASSEN,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
+  ROUTE_WAHLBRIEFE_ZULASSEN,
   ROUTE_WAHLUMGEBUNG,
 } from "@/constants.ts";
 </script>

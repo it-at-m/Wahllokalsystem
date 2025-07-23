@@ -36,10 +36,10 @@
               hide-details
               auto-select-first
               :rules="[REQUIRED]"
+              :data-test="`wahlscheingruende-input-${index - 1}`"
               @update:model-value="
                 (value) => onZulassungsgrundChanged(value, index - 1)
               "
-              :data-test="`wahlscheingruende-input-${index - 1}`"
             />
           </v-row>
         </td>
@@ -59,10 +59,10 @@
             auto-select-first
             :rules="[REQUIRED]"
             :disabled="_isInputDisabled(index - 1)"
+            :data-test="`stimmzettelgruende-input-${wahl.wahlID}-${index - 1}`"
             @update:model-value="
               (value) => onZulassungsgrundChanged(value, index - 1, wahl)
             "
-            :data-test="`stimmzettelgruende-input-${wahl.wahlID}-${index - 1}`"
           />
         </td>
         <td>
@@ -75,8 +75,8 @@
             <v-btn
               icon="$delete"
               variant="text"
-              @click="onDeleteBeanstandeteWahlbriefeRowClicked(index - 1)"
               :data-test="`delete-btn-${index - 1}`"
+              @click="onDeleteBeanstandeteWahlbriefeRowClicked(index - 1)"
             />
             <v-icon
               :icon="rowIcon[index - 1]"

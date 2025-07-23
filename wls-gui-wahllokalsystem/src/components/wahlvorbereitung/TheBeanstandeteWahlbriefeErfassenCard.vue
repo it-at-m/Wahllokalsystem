@@ -9,8 +9,8 @@
     <v-card-actions>
       <v-btn
         prepend-icon="$add"
-        @click="onAddBedenklicherWahlbriefClicked()"
         data-test="addBedenklicherWahlbriefRow"
+        @click="onAddBedenklicherWahlbriefClicked()"
       >
         Neuen Beschluss erfassen
       </v-btn>

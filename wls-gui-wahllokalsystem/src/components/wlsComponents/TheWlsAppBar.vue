@@ -46,35 +46,12 @@
         title="Wahlvorstand"
         :to="ROUTE_WAHLVORSTAND"
       />
-      <v-list-group value="Wahlvorbereitung">
-        <template #activator="{ props }">
-          <v-list-item
-            v-bind="props"
-            :title="wahlVerwaltungStepsTitle"
-          />
-        </template>
-        <v-list-item
-          title="Wahlumgebung"
-          :to="ROUTE_WAHLUMGEBUNG"
-        />
-        <v-list-item
-          title="Beginn Stimmabgabe"
-          :to="ROUTE_BEGINN_STIMMABGABE"
-        />
-        <v-list-item
-          title="Wahlhandlung"
-          :to="ROUTE_WAHLSCHLIESSUNG"
-        />
-        <v-list-item
-          title="Wählerverzeichnis"
-          :to="ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS"
-        />
-        <v-list-item
-          v-if="currentUserWahlbezirksArt === WahlbezirksArtEnum.BWB"
-          title="Wahlbriefe zulassen"
-          :to="ROUTE_WAHLBRIEFE_ZULASSEN"
-        />
-      </v-list-group>
+      <the-b-w-b-preparation-list-group
+        v-if="currentUserWahlbezirksArt === WahlbezirksArtEnum.BWB"
+      />
+      <the-u-w-b-preparation-list-group
+        v-if="currentUserWahlbezirksArt === WahlbezirksArtEnum.UWB"
+      />
       <v-list-item
         title="Ereignisse"
         :to="ROUTE_EREIGNISSE"
@@ -91,7 +68,6 @@ import {
   VAppBarNavIcon,
   VCol,
   VList,
-  VListGroup,
   VListItem,
   VNavigationDrawer,
   VRow,
@@ -100,18 +76,12 @@ import {
 import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
 import TheWaehleranzahlCountButton from "@/components/monitoring/TheWaehleranzahlCountButton.vue";
+import TheBWBPreparationListGroup from "@/components/navigation/TheBWBPreparationListGroup.vue";
+import TheUWBPreparationListGroup from "@/components/navigation/TheUWBPreparationListGroup.vue";
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
-import {
-  ROUTE_BEGINN_STIMMABGABE,
-  ROUTE_EREIGNISSE,
-  ROUTE_WAHLBRIEFE_ZULASSEN,
-  ROUTE_WAHLSCHLIESSUNG,
-  ROUTE_WAHLUMGEBUNG,
-  ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
-  ROUTE_WAHLVORSTAND,
-} from "@/constants.ts";
+import { ROUTE_EREIGNISSE, ROUTE_WAHLVORSTAND } from "@/constants.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
@@ -140,16 +110,6 @@ const wahltermin = computed(() =>
 const wahlbezirknummer = computed(() =>
   user ? currentUserWahlbezirkNummer.value : ""
 );
-const wahlVerwaltungStepsTitle = computed(() => {
-  switch (currentUserWahlbezirksArt.value) {
-    case WahlbezirksArtEnum.UWB:
-      return "Wahlvorbereitung";
-    case WahlbezirksArtEnum.BWB:
-      return "Wahlbriefzulassung";
-    default:
-      return "";
-  }
-});
 </script>
 
 <style>

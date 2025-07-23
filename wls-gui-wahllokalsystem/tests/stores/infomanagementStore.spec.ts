@@ -245,6 +245,126 @@ describe("infomanagementStore.ts", () => {
     });
   });
 
+  describe("spaetesteEroeffnungsuhrzeit", () => {
+    let userStore: ReturnType<typeof useUserStore>;
+    let infomanagementStore: ReturnType<typeof useInfomanagementStore>;
+
+    beforeEach(() => {
+      userStore = useUserStore();
+      infomanagementStore = useInfomanagementStore();
+    });
+
+    it("should_returnSpaetesteEroeffnungszeitUWValue_when_wahlbezirkArtIsUWB", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      const konfigKeyValueUW = generateRandomString(8);
+      const konfigKeyValueBW = generateRandomString(8);
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("SPAETESTE_EROEFFNUNGSZEIT_UW")
+          .wert(konfigKeyValueUW)
+          .build(),
+        prepareKonfigurationsparameter()
+          .schluessel("SPAETESTE_EROEFFNUNGSZEIT_BW")
+          .wert(konfigKeyValueBW)
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.spaetesteEroeffnungsuhrzeit).toStrictEqual(
+        konfigKeyValueUW
+      );
+    });
+
+    it("should_returnDefaultValue_when_wahlbezirkArtIsUWBButKonfigKeyDoesNotExists", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      infomanagementStore.konfigurationsparameter = [];
+
+      await nextTick();
+
+      expect(infomanagementStore.spaetesteEroeffnungsuhrzeit).toStrictEqual(
+        "00:00:00"
+      );
+    });
+
+    it("should_returnDefaultValue_when_wahlbezirkArtIsUWBButKonfigKeyHasEmptyValue", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("SPAETESTE_EROEFFNUNGSZEIT_UW")
+          .wert("")
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.spaetesteEroeffnungsuhrzeit).toStrictEqual(
+        "00:00:00"
+      );
+    });
+
+    it("should_returnSpaetesteEroeffnungszeitBWValue_when_wahlbezirkArtIsBWB", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      const konfigKeyValueBW = generateRandomString(8);
+      const konfigKeyValueUW = generateRandomString(8);
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("SPAETESTE_EROEFFNUNGSZEIT_BW")
+          .wert(konfigKeyValueBW)
+          .build(),
+        prepareKonfigurationsparameter()
+          .schluessel("SPAETESTE_EROEFFNUNGSZEIT_UW")
+          .wert(konfigKeyValueUW)
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.spaetesteEroeffnungsuhrzeit).toStrictEqual(
+        konfigKeyValueBW
+      );
+    });
+
+    it("should_returnDefaultValue_when_wahlbezirkArtIsBWBButKonfigKeyDoesNotExists", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      infomanagementStore.konfigurationsparameter = [];
+
+      await nextTick();
+
+      expect(infomanagementStore.spaetesteEroeffnungsuhrzeit).toStrictEqual(
+        "00:00:00"
+      );
+    });
+
+    it("should_returnDefaultValue_when_wahlbezirkArtIsBWBButKonfigKeyHasEmptyValue", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("SPAETESTE_EROEFFNUNGSZEIT_BW")
+          .wert("")
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.spaetesteEroeffnungsuhrzeit).toStrictEqual(
+        "00:00:00"
+      );
+    });
+  });
+
   describe("fruehesteSchliessungsuhrzeit", () => {
     let userStore: ReturnType<typeof useUserStore>;
     let infomanagementStore: ReturnType<typeof useInfomanagementStore>;

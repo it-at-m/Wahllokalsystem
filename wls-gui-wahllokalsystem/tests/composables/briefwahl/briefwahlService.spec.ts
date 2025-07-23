@@ -18,6 +18,7 @@ vi.mock("@/api/wls-clients/generated-briefwahl-api", () => ({
     setBeanstandeteWahlbriefe: mockDefinitions.setBeanstandeteWahlbriefe,
   })),
   Configuration: mockDefinitions.configurationConstructor,
+  WahlbriefdatenControllerApi: vi.fn(),
 }));
 
 vi.mock("@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts", () => ({

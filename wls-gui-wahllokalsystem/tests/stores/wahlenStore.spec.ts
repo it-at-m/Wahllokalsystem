@@ -29,10 +29,8 @@ vi.mock("@/composables/briefwahl/briefwahlService.ts", () => ({
 const { createWahl, prepareWahl } = useWahlTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
-const {
-  prepareBeanstandeteWahlbriefeCreateDTO,
-  prepareBeanstandeteWahlbriefe,
-} = useBeanstandeteWahlbriefeTestDataFactory();
+const { prepareBeanstandeteWahlbriefe } =
+  useBeanstandeteWahlbriefeTestDataFactory();
 
 const mockedNow = new Date();
 
@@ -229,10 +227,6 @@ describe("wahlenStore.ts", () => {
 
       const wahlID = "wahlID";
       const wvzNr = 1;
-
-      const dto = prepareBeanstandeteWahlbriefeCreateDTO()
-        .beanstandeteWahlbriefe({ [wahlID]: ["ZUGELASSEN"] })
-        .build();
 
       unitUnderTest.wahlen = [
         prepareWahl()

@@ -147,6 +147,23 @@ domainService -. uses .-> domainClient
 domainService -. uses .-> domainMapper
 ```
 
+## Ablauf Initiales Laden von Tasks
+
+Das folgende Sequenzdiagramm beschreibt den Ablauf des initialen Ladens und Erstellens von Tasks:
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant gui as WLS-GUI
+
+    User ->>+ gui : init
+    gui ->> gui : load user data
+    gui ->> gui : load wahlen
+    gui ->> gui : create tasks
+    gui ->> gui : run tasks
+    gui ->>- User : ready to use
+```
+
 ## Testkonzept
 
 ### Unittesting

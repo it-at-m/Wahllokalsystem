@@ -20,6 +20,7 @@ import ExampleError404View from "@/views/ExampleError404View.vue";
 import HomeView from "@/views/HomeView.vue";
 import UWBWaehlerverzeichnisView from "@/views/wahlvorbereitung/UWBWaehlerverzeichnisView.vue";
 import UWBWahlhandlungView from "@/views/wahlvorbereitung/UWBWahlhandlungView.vue";
+import WahlbriefZulassungView from "@/views/wahlvorbereitung/WahlbriefZulassungView.vue";
 import WahleroeffnungView from "@/views/wahlvorbereitung/WahleroeffnungView.vue";
 import WahlumgebungView from "@/views/wahlvorbereitung/WahlumgebungView.vue";
 import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";

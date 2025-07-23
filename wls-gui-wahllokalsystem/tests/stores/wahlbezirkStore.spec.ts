@@ -206,7 +206,7 @@ describe("wahlbezirkStore.ts", () => {
       );
     });
 
-    it("should_keepUngueltigeWahlscheineClear_when_serviceThrowError", async () => {
+    it("should_clearUngueltigeWahlscheine_when_serviceThrowError", async () => {
       const wahltagID = "wahltagID";
       const wahlbezirksArt = WahlbezirksArtEnum.UWB;
       useUserStore().setUser(

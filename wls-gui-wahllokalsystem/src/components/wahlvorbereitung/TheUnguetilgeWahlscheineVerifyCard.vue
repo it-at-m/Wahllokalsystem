@@ -2,7 +2,10 @@
   <v-card>
     <v-card-title>Wahlschein prüfen</v-card-title>
     <v-card-text class="pb-0">
-      <v-form v-model="isFormValid">
+      <v-form
+        v-model="isFormValid"
+        ref="wahlscheinValidationForm"
+      >
         <v-number-input
           :model-value="wahlscheinnummer"
           :rules="[REQUIRED, MIN_NUMBER(1), MAX_NUMBER(9999999)]"
@@ -93,9 +96,10 @@
 
 <script setup lang="ts">
 import type { UngueltigerWahlschein } from "@/types/wahlbezirk/UngueltigerWahlschein.ts";
+import type { ShallowRef } from "vue";
 
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
+import { computed, ref, useTemplateRef } from "vue";
 import {
   VBtn,
   VCard,
@@ -114,6 +118,9 @@ import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
 
 const isFormValid = ref<boolean | null>(null);
 const isSearchButtonDisabled = computed(() => isFormValid.value !== true);
+const wahlscheinValidationForm = useTemplateRef(
+  "wahlscheinValidationForm"
+) as Readonly<ShallowRef<InstanceType<typeof VForm>>>;
 
 const {
   getUngueltigerWahlscheinByWahlscheinnummer,
@@ -161,6 +168,7 @@ function onRefreshClicked() {
 function onSearchClicked() {
   if (ungueltigerWahlschein.value !== undefined) {
     resetUngueltigerWahlschein();
+    wahlscheinValidationForm.value.reset();
   } else if (wahlscheinnummer.value !== null) {
     ungueltigerWahlschein.value = getUngueltigerWahlscheinByWahlscheinnummer(
       `${wahlscheinnummer.value}`

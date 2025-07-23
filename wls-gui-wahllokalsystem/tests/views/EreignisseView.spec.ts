@@ -12,6 +12,7 @@ import { nextTick } from "vue";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import vuetify from "@/plugins/vuetify";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import EreignisseView from "@/views/EreignisseView.vue";
 
@@ -59,14 +60,16 @@ describe("TheEreignisseView", () => {
 
     it("should_renderSaveButtonEnabled_when_hasEintraegeIsTrueWithValidDataAndHasMissingEreignisFlagsValid", async () => {
       const ereignisStore = useEreignisStore();
+      const userStore = useUserStore();
 
       const validEreignis: Ereignis = {
         ereignisart: EreignisartEnum.Vorfall,
-        uhrzeit: new Date(),
+        uhrzeit: new Date("2036-02-18T14:10:23"),
         beschreibung: "beschreibung",
       };
       ereignisStore.wahlbezirkEreignisse.ereigniseintraege = [validEreignis];
-
+      // @ts-expect-error: cannot set readonly
+      userStore.currentUserWahltag = new Date("2026-02-18T14:10:00");
       // @ts-expect-error: cannot set readonly
       ereignisStore.hasMissingEreignisFlags = true;
       // @ts-expect-error: cannot set readonly
@@ -88,6 +91,29 @@ describe("TheEreignisseView", () => {
       }; //pseudo event to set form invalid
       ereignisStore.wahlbezirkEreignisse.ereigniseintraege = [invalidEreignis];
 
+      // @ts-expect-error: cannot set readonly
+      ereignisStore.hasMissingEreignisFlags = true;
+      // @ts-expect-error: cannot set readonly
+      ereignisStore.hasEintraege = true;
+
+      await flushPromises();
+
+      const saveButton = wrapper.findComponent(BaseButtonSave);
+      expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
+    });
+
+    it("should_renderSaveButtonDisabled_when_hasEintraegeIsTrueWithDateBeforeWahltagAndHasMissingEreignisFlagsValid", async () => {
+      const ereignisStore = useEreignisStore();
+      const userStore = useUserStore();
+
+      const validEreignis: Ereignis = {
+        ereignisart: EreignisartEnum.Vorfall,
+        uhrzeit: new Date("2000-01-18T14:10:00"),
+        beschreibung: "beschreibung",
+      };
+      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = [validEreignis];
+      // @ts-expect-error: cannot set readonly
+      userStore.currentUserWahltag = new Date("2026-02-18T14:10:00");
       // @ts-expect-error: cannot set readonly
       ereignisStore.hasMissingEreignisFlags = true;
       // @ts-expect-error: cannot set readonly

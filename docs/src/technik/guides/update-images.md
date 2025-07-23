@@ -2,7 +2,7 @@
 
 Um die bestehenden Images zu aktualisieren und neue Versionen zu erhalten, müssen die folgenden Schritte durchgeführt werden:
 
-1. Zuerst müssen die bestehenden Container über die GUI gelöscht werden.
+1. Zuerst müssen die bestehenden Container über die Podman-GUI gelöscht werden.
 
 2. Anschließend müssen die neuen Images heruntergeladen werden:
 

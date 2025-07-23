@@ -131,7 +131,7 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
         currentUserWahlbezirksArt.value,
         true
       );
-    } catch (error) {
+    } catch {
       ungueltigeWahlscheineLoadingFailed.value = true;
     } finally {
       ungueltigeWahlscheineIsLoading.value = false;

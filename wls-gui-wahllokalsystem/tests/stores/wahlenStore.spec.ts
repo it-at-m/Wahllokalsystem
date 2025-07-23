@@ -141,5 +141,13 @@ describe("wahlenStore.ts", () => {
 
       expect(result).toBeUndefined();
     });
+
+    it("should_getUndefined_when_wahlenDoNotExist", () => {
+      unitUnderTest.wahlen = null;
+
+      const result = unitUnderTest.getWahlOrUndefinedById("testId");
+
+      expect(result).toBeUndefined();
+    });
   });
 });

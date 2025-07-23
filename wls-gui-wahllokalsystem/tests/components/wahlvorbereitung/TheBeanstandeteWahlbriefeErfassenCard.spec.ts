@@ -27,6 +27,15 @@ import TheBeanstandeteWahlbriefeErfassenCard from "@/components/wahlvorbereitung
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
+const mockDefinitions = vi.hoisted(() => ({
+  postBeanstandeteWahlbriefe: vi.fn(),
+}));
+vi.mock("@/composables/briefwahl/briefwahlService.ts", () => ({
+  useBriefwahlService: () => ({
+    postBeanstandeteWahlbriefe: mockDefinitions.postBeanstandeteWahlbriefe,
+  }),
+}));
+
 describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
   let wrapper: VueWrapper;
   let pinia: TestingPinia;
@@ -99,6 +108,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
         getSnapshotFilename(context)
       );
     });
+
     it("should_renderWithSaveButtonInLoadingState_when_isSavingIsTrue", async (context) => {
       wrapper = mount(TheBeanstandeteWahlbriefeErfassenCard, {
         global: {
@@ -146,7 +156,11 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
 
       await saveButton.trigger("click");
 
-      expect(wahlenStore.saveBeanstandeteWahlbriefe).toHaveBeenCalled();
+      mockDefinitions.postBeanstandeteWahlbriefe.mockReturnValue(
+        Promise.resolve()
+      );
+
+      expect(mockDefinitions.postBeanstandeteWahlbriefe).toHaveBeenCalled();
     });
 
     it("should_addBeanstandeteWahlbriefeEntriesInStore_when_addRowButtonIsClicked", async () => {

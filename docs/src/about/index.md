@@ -174,3 +174,24 @@ abgegebener Stimmen` übermittelt, welche der Schliessungsuhrzeit im Urnenwahllo
 übermittelt werden kann richtet sich nach dem Konfigurationsparameter `FRUEHESTE_SCHLIESSUNGSUHRZEIT_BW` mit einem
 Standardwert von 18 Uhr.
 :::
+
+📃 **UseCase: `Überprüfung der ungültigen Wahlscheine`**
+
+::: info Urnenwahlbezirk {data-uwb="true"}
+In einem Urnenwahlbezirk muss, wenn jemand mit Wahlschein kommt, geprüft, ob dieser Wahlschein gültig ist. Dazu
+gibt es in der Anwendung eine Liste ungültiger Wahlscheine. Der Nutzer gibt die Nummer des Wahlscheins und sucht.
+Nach der Suche bekommt der Nutzer Feedback, ob der Wahlschein gültig oder ungültig ist. Entsprechend werden auch
+Handlungsanweisungen angezeigt. Ist der Wahlschein ungültig, wird in der Fehlermeldung neben der Wahlscheinnummer
+auch Vor- und Familienname angezeigt.
+
+Nach einer Suche kann über den Button, der zuvor die Suche ausgeführt hat, die Suche zurückgesetzt werden. Dabei
+werden die Eingabe und Handlungsanweisungen entfernt.
+
+Zu Unterstützung des Wahlvorstands wird ein Bild angezeigt das helfen soll die Stelle, wo die Wahlnummer steht,
+zu identifizieren.
+
+Die vorhandene Liste kann über den Aktualisieren-Button erneut geladen werden.
+
+Ist die Liste leere oder konnte die Liste nicht geladen werden, bekommt der Nutzer entsprechende Fehlermeldungen
+angezeigt.
+:::

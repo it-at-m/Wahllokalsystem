@@ -4,7 +4,7 @@ services:
   ### WLS-Backend Services
   wls-broadcast-service:
     container_name: wls-broadcast-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-broadcast-service:latest@sha256:73ee058b2e36a1c90cd1cab5a78105e7c28b48a7ea1405bec3624cc056265e19
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-broadcast-service:latest
     depends_on:
       - wls-db-oracle
     env_file:
@@ -24,7 +24,7 @@ services:
 
   wls-infomanagement-service:
     container_name: wls-infomanagement-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-infomanagement-service:latest@sha256:87f6ef2536cffdc70bae2f7a1e146c596144b3c867cc884ca0670a6bdefadadf
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-infomanagement-service:latest
     depends_on:
       - wls-db-oracle
     env_file:
@@ -44,7 +44,7 @@ services:
 
   wls-briefwahl-service:
     container_name: wls-briefwahl-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-briefwahl-service:latest@sha256:cb0cb4c5babcd14aaa7e1557c49e94b14f8861bd106f23232a56de3dac77c45a
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-briefwahl-service:latest
     depends_on:
       - wls-db-oracle
     env_file:
@@ -64,7 +64,7 @@ services:
 
   wls-wahlvorbereitung-service:
     container_name: wls-wahlvorbereitung-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-wahlvorbereitung-service:latest@sha256:0e790dc235dfdd214bf5a918b13a69010fb2ac0425c4a9a0e64f1b2b05e66ec1
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-wahlvorbereitung-service:latest
     depends_on:
       - wls-db-oracle
     env_file:
@@ -84,7 +84,7 @@ services:
 
   wls-vorfaelleundvorkommnisse-service:
     container_name: wls-vorfaelleundvorkommnisse-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-vorfaelleundvorkommnisse-service:latest@sha256:ae86126fcac34d5d891897a862cc9c4c95f07052635ac813d2173a6c59bb9db9
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-vorfaelleundvorkommnisse-service:latest
     depends_on:
       - wls-db-oracle
     env_file:
@@ -104,7 +104,7 @@ services:
 
   wls-basisdaten-service:
     container_name: wls-basisdaten-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-basisdaten-service:latest@sha256:ebdc291ba3620051adc23a0571ca52066af1d33e37e459e4222f03acb533695d
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-basisdaten-service:latest
     depends_on:
       - wls-db-oracle
     env_file:
@@ -126,7 +126,7 @@ services:
 
   wls-monitoring-service:
     container_name: wls-monitoring-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-monitoring-service:latest@sha256:4696eadd0a3cb677d6b774780d5c39d943348d21f4e6021bf42fabc77412a71f
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-monitoring-service:latest
     depends_on:
       - wls-db-oracle
     env_file:
@@ -147,7 +147,7 @@ services:
 
   wls-wahlvorstand-service:
     container_name: wls-wahlvorstand-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-wahlvorstand-service:latest@sha256:4cca8199e8a05836b7f9a5b670a561abf9dd97ad7652815260d519659177b9e8
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-wahlvorstand-service:latest
     depends_on:
       - wls-db-oracle
     env_file:
@@ -170,7 +170,7 @@ services:
 
   wls-ergebnismeldung-service:
     container_name: wls-ergebnismeldung-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-ergebnismeldung-service:latest@sha256:b5fd51801803c8e085418371e632949f5cd788b7850b9fe96fb1e6c59978ac4f
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-ergebnismeldung-service:latest
     depends_on:
       - wls-db-oracle
     env_file:
@@ -196,7 +196,7 @@ services:
 
   wls-admin-service:
     container_name: wls-admin-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-admin-service:latest@sha256:e9681685ac9c17916e9152cc00544a9ed20d9a10c766eb63c23314f659a5527d
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-admin-service:latest
     depends_on:
       - wls-db-oracle
     env_file:
@@ -220,7 +220,7 @@ services:
 
   wls-eai-service:
     container_name: wls-eai-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-eai-service:latest@sha256:a759083f2a5b90922da0582cce01b22ed43f76f59002feed3c5d82a19cfb5594
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-eai-service:latest
     depends_on:
       - wls-db-oracle
     env_file:
@@ -321,7 +321,7 @@ services:
 
   wls-auth-service:
     container_name: wls-auth-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-auth-service:latest@sha256:70ed4d1b567742af94ebc60a2f36619889bff75642b660ac0ab195a3c20e806d
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-auth-service:latest
     depends_on:
       - wls-db-oracle
     env_file:
@@ -384,7 +384,7 @@ services:
 
   wls-gui-wahllokalsystem:
     container_name: wls-gui-wahllokalsystem
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-gui-wahllokalsystem:latest@sha256:63fc2c5138e11408b6e035480ada534e574d5bd590bc0534b2f5ee4636a429c6
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-gui-wahllokalsystem:latest
     ports:
       - 8400:8080
     extra_hosts:
@@ -394,7 +394,7 @@ services:
 
   wls-gui-admintool:
     container_name: wls-gui-admintool
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-gui-admintool:latest@sha256:5f682fbefed65a5a0a87d6923077a8966deeeb7082877aac403935acddee8877
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-gui-admintool:latest
     ports:
       - 8401:8080
     extra_hosts:

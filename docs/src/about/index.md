@@ -149,6 +149,17 @@ Die früheste Zeit, zu welcher der Wahlvorstand zusammentreten kann, ist der Sta
 Konfigurationsparameter `FRUEHESTE_EROEFFNUNGSUHRZEIT_BW` geladen.
 :::
 
+📃 **UseCase: `Erfassung der erhaltenen Wahlbriefe`**
+
+::: info Briefwahlbezirk {data-bwb="true"}
+In einem Briefwahlbezirk werden die erhaltenen Wahlbriefe erfasst. Die dabei relevanten Werte sind die Anzahl der
+Wahlbriefe, die vor 18 Uhr übergeben wurden. Dabei muss mindestens ein Wahlbrief erfasst werden. Ebenso gilt es die
+Anzahl der Verzeichnisse der für ungültig erklärten Wahlscheine sowie die Anzahl der Nachträge zu den Verzeichnissen zu
+erfassen. Erst nach der Angabe dieser drei Werte können die Informationen gespeichert werden. Optional ist die Angabe
+einer Anzahl an nachgelieferten Wahlbriefen nach 18 Uhr. Sollte es nachgelieferte Wahlbriefe geben, so muss eine Uhrzeit
+dazu angegeben werden.
+:::
+
 ##### Während der Stimmabgabe
 
 📃 **UseCase: `Erfassung der absoluten Wahlbeteiligung`**

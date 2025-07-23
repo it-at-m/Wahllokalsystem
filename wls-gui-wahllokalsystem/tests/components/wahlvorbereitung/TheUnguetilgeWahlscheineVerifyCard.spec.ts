@@ -20,6 +20,9 @@ import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 const { createUngueltigerWahlschein, prepareUngueltigerWahlschein } =
   useWahlbezirkTestDataFactory();
 
+const WAHLSCHEIN_MIN_VALUE = 1;
+const WAHLSCHEIN_MAX_VALUE = 9999999;
+
 describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
   let wrapper: VueWrapper;
   let testPinia: TestingPinia;
@@ -136,6 +139,46 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
       useWahlbezirkStore().ungueltigeWahlscheineIsLoading = true;
 
       await flushPromises();
+
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+
+    it("should_renderNoErrorMessage_when_wahlscheinnummerIsMinValue", async (context) => {
+      const wahlscheinnummerInput = getInputWahlscheinnummer();
+      await wahlscheinnummerInput.setValue(WAHLSCHEIN_MIN_VALUE);
+      await wahlscheinnummerInput.vm.validate();
+
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+
+    it("should_renderNoErrorMessage_when_wahlscheinnummerIsMaxValue", async (context) => {
+      const wahlscheinnummerInput = getInputWahlscheinnummer();
+      await wahlscheinnummerInput.setValue(WAHLSCHEIN_MAX_VALUE);
+      await wahlscheinnummerInput.vm.validate();
+
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+
+    it("should_renderErrorMessage_when_wahlscheinnummerIsBelowMinValue", async (context) => {
+      const wahlscheinnummerInput = getInputWahlscheinnummer();
+      await wahlscheinnummerInput.setValue(WAHLSCHEIN_MIN_VALUE - 1);
+      await wahlscheinnummerInput.vm.validate();
+
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+
+    it("should_renderErrorMessage_when_wahlscheinnummerIsAboveMaxValue", async (context) => {
+      const wahlscheinnummerInput = getInputWahlscheinnummer();
+      await wahlscheinnummerInput.setValue(WAHLSCHEIN_MAX_VALUE + 1);
+      await wahlscheinnummerInput.vm.validate();
 
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)

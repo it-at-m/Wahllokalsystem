@@ -75,7 +75,7 @@
             <v-btn
               icon="$delete"
               variant="text"
-              @click="deleteBeanstandeteWahlbriefeRow(index - 1)"
+              @click="onDeleteBeanstandeteWahlbriefeRowClicked(index - 1)"
               :data-test="`delete-btn-${index - 1}`"
             />
             <v-icon
@@ -220,7 +220,7 @@ function onZulassungsgrundChanged(
   rowColor.value[rowIndex] = _isRowValidAtIndex(rowIndex) ? "success" : "error";
 }
 
-function deleteBeanstandeteWahlbriefeRow(rowIndex: number) {
+function onDeleteBeanstandeteWahlbriefeRowClicked(rowIndex: number) {
   if (wahlen.value) {
     wahlen.value.map((wahl) => wahl.beanstandeteWahlbriefe.splice(rowIndex, 1));
     rowIcon.value.splice(rowIndex, 1);

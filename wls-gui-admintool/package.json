@@ -55,7 +55,7 @@
     "eslint-plugin-storybook": "0.12.0",
     "eslint-plugin-vue": "9.33.0",
     "jsdom": "26.0.0",
-    "msw": "2.7.6",
+    "msw": "2.10.4",
     "msw-storybook-addon": "2.0.4",
     "prettier": "3.6.2",
     "storybook": "8.6.12",

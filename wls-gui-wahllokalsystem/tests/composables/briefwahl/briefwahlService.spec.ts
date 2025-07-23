@@ -1,6 +1,6 @@
 import { useBeanstandeteWahlbriefeTestDataFactory } from "@tests/utils/briefwahl/BeanstandeteWahlbriefeTestDataFactory.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService.ts";
 
@@ -33,94 +33,69 @@ vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
   }),
 }));
 
-const {
-  createBeanstandeteWahlbriefeDTO,
-  createBeanstandeteWahlbriefe,
-  createBeanstandeteWahlbriefeCreateDTO,
-} = useBeanstandeteWahlbriefeTestDataFactory();
-const { getBeanstandeteWahlbriefe, postBeanstandeteWahlbriefe } =
-  useBriefwahlService();
-const { generateRandomNumber, generateRandomString } =
-  useCommonTestDataFactory();
+describe("briefwahlService.ts", () => {
+  const {
+    createBeanstandeteWahlbriefeDTO,
+    createBeanstandeteWahlbriefe,
+    createBeanstandeteWahlbriefeCreateDTO,
+  } = useBeanstandeteWahlbriefeTestDataFactory();
+  const { getBeanstandeteWahlbriefe, postBeanstandeteWahlbriefe } =
+    useBriefwahlService();
+  const { generateRandomNumber, generateRandomString } =
+    useCommonTestDataFactory();
 
-describe("getBeanstandeteWahlbriefe", () => {
-  it("should_returnBeanstandeteWahlbriefe_when_calledWithValidParams", async () => {
-    const wvzNr = generateRandomNumber(1);
-    const wahlbezirkID = generateRandomString(10);
-    const mockedBeanstandeteWahlbriefe = createBeanstandeteWahlbriefe();
-
-    mockDefinitions.getBeanstandeteWahlbriefe.mockReturnValue(
-      Promise.resolve({
-        status: 200,
-        data: createBeanstandeteWahlbriefeDTO(),
-      })
-    );
-    mockDefinitions.mapDtoToModel.mockReturnValue(mockedBeanstandeteWahlbriefe);
-
-    const result = await getBeanstandeteWahlbriefe(wvzNr, wahlbezirkID);
-
-    expect(result).toEqual(mockedBeanstandeteWahlbriefe);
+  beforeEach(() => {
+    vi.resetAllMocks();
+    vi.clearAllMocks();
   });
 
-  it("should_triggerNotification_when_anExceptionOccurredDuringApiCall", async () => {
-    const wvzNr = generateRandomNumber(1);
-    const wahlbezirkID = generateRandomString(10);
+  describe("getBeanstandeteWahlbriefe", () => {
+    it("should_returnBeanstandeteWahlbriefe_when_calledWithValidParams", async () => {
+      const wvzNr = generateRandomNumber(1);
+      const wahlbezirkID = generateRandomString(10);
+      const mockedBeanstandeteWahlbriefe = createBeanstandeteWahlbriefe();
 
-    mockDefinitions.getBeanstandeteWahlbriefe.mockRejectedValue(
-      new Error("mocked api call failed")
-    );
+      mockDefinitions.getBeanstandeteWahlbriefe.mockReturnValue(
+        Promise.resolve({
+          status: 200,
+          data: createBeanstandeteWahlbriefeDTO(),
+        })
+      );
+      mockDefinitions.mapDtoToModel.mockReturnValue(
+        mockedBeanstandeteWahlbriefe
+      );
 
-    await expect(async () =>
-      getBeanstandeteWahlbriefe(wvzNr, wahlbezirkID)
-    ).rejects.toThrowError();
+      const result = await getBeanstandeteWahlbriefe(wvzNr, wahlbezirkID);
 
-    expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
-      expect.any(String),
-      "Error",
-    ]);
-  });
-});
+      expect(result).toEqual(mockedBeanstandeteWahlbriefe);
+    });
 
-describe("postBeanstandeteWahlbriefe", () => {
-  it("should_postBeanstandeteWahlbriefe_when_calledWithValidParams", async () => {
-    const wvzNr = generateRandomNumber(1);
-    const wahlbezirkID = generateRandomString(10);
-    const dto = createBeanstandeteWahlbriefeCreateDTO();
+    it("should_triggerNotification_when_anExceptionOccurredDuringApiCall", async () => {
+      const wvzNr = generateRandomNumber(1);
+      const wahlbezirkID = generateRandomString(10);
 
-    mockDefinitions.setBeanstandeteWahlbriefe.mockReturnValue({});
-
-    await postBeanstandeteWahlbriefe(dto, wahlbezirkID, wvzNr);
-
-    expect(mockDefinitions.setBeanstandeteWahlbriefe).toHaveBeenCalledWith(
-      wahlbezirkID,
-      wvzNr,
-      dto
-    );
-    expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
-      expect.any(String),
-      "Success",
-    ]);
-  });
-
-  it.each([
-    {
-      when: "wahlbezirkIdEmpty",
-      wvzNr: generateRandomNumber(1),
-      wahlbezirkID: "",
-    },
-    {
-      when: "wahlbezirkIdBlank",
-      wvzNr: generateRandomNumber(1),
-      wahlbezirkID: "  ",
-    },
-  ])(
-    "should_showUserNotification_when_$when",
-    async ({ wvzNr, wahlbezirkID }) => {
-      const dto = createBeanstandeteWahlbriefeCreateDTO();
-
-      mockDefinitions.setBeanstandeteWahlbriefe.mockRejectedValueOnce(
+      mockDefinitions.getBeanstandeteWahlbriefe.mockRejectedValue(
         new Error("mocked api call failed")
       );
+
+      await expect(async () =>
+        getBeanstandeteWahlbriefe(wvzNr, wahlbezirkID)
+      ).rejects.toThrowError();
+
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        expect.any(String),
+        "Error",
+      ]);
+    });
+  });
+
+  describe("postBeanstandeteWahlbriefe", () => {
+    it("should_postBeanstandeteWahlbriefe_when_calledWithValidParams", async () => {
+      const wvzNr = generateRandomNumber(1);
+      const wahlbezirkID = generateRandomString(10);
+      const dto = createBeanstandeteWahlbriefeCreateDTO();
+
+      mockDefinitions.setBeanstandeteWahlbriefe.mockReturnValue({});
 
       await postBeanstandeteWahlbriefe(dto, wahlbezirkID, wvzNr);
 
@@ -131,8 +106,42 @@ describe("postBeanstandeteWahlbriefe", () => {
       );
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
-        "Error",
+        "Success",
       ]);
-    }
-  );
+    });
+
+    it.each([
+      {
+        when: "wahlbezirkIdEmpty",
+        wvzNr: generateRandomNumber(1),
+        wahlbezirkID: "",
+      },
+      {
+        when: "wahlbezirkIdBlank",
+        wvzNr: generateRandomNumber(1),
+        wahlbezirkID: "  ",
+      },
+    ])(
+      "should_showUserNotification_when_$when",
+      async ({ wvzNr, wahlbezirkID }) => {
+        const dto = createBeanstandeteWahlbriefeCreateDTO();
+
+        mockDefinitions.setBeanstandeteWahlbriefe.mockRejectedValueOnce(
+          new Error("mocked api call failed")
+        );
+
+        await postBeanstandeteWahlbriefe(dto, wahlbezirkID, wvzNr);
+
+        expect(mockDefinitions.setBeanstandeteWahlbriefe).toHaveBeenCalledWith(
+          wahlbezirkID,
+          wvzNr,
+          dto
+        );
+        expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+          expect.any(String),
+          "Error",
+        ]);
+      }
+    );
+  });
 });

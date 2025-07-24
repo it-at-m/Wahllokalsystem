@@ -25,6 +25,13 @@ declare module "@vue/runtime-core" {
 
 const mockDefinitions = vi.hoisted(() => ({
   postEroeffnungsuhrzeit: vi.fn(),
+  saveEreignisse: vi.fn(),
+}));
+
+vi.mock("@/composables/vorfaelleundvorkommnisse/ereignisService.ts", () => ({
+  useEreignisService: () => ({
+    saveEreignisse: mockDefinitions.saveEreignisse,
+  }),
 }));
 
 vi.mock("@/composables/wahlvorbereitung/wahlvorbereitungService", () => ({
@@ -265,6 +272,7 @@ describe("BaseWahleroeffnungCard.vue", () => {
           ereignisStore.wahlbezirkEreignisse.ereigniseintraege[0].beschreibung
         ).toBe(begruendung);
       }
+      expect(mockDefinitions.saveEreignisse).toHaveBeenCalled();
     });
   });
 });

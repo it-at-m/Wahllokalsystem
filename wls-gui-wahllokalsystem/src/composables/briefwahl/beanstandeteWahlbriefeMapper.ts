@@ -15,7 +15,7 @@ export function useBeanstandeteWahlbriefeMapper() {
     };
 
     Object.entries(beanstandeteWahlbriefeDto.beanstandeteWahlbriefe).forEach(
-      ([key, values]) => {
+      ([wahlID, values]) => {
         const enumValues = values.map((value) => {
           switch (value) {
             case "ZUGELASSEN":
@@ -46,7 +46,7 @@ export function useBeanstandeteWahlbriefeMapper() {
               throw new Error(`Ungültiger Zurückweisungsgrund: ${value}`);
           }
         });
-        beanstandeteWahlbriefe.beanstandeteWahlbriefe.set(key, enumValues);
+        beanstandeteWahlbriefe.beanstandeteWahlbriefe.set(wahlID, enumValues);
       }
     );
     return beanstandeteWahlbriefe;

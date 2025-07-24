@@ -29,8 +29,10 @@ vi.mock("@/composables/briefwahl/briefwahlService.ts", () => ({
 const { createWahl, prepareWahl } = useWahlTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
-const { prepareBeanstandeteWahlbriefe } =
-  useBeanstandeteWahlbriefeTestDataFactory();
+const {
+  prepareBeanstandeteWahlbriefe,
+  prepareBeanstandeteWahlbriefeCreateDTO,
+} = useBeanstandeteWahlbriefeTestDataFactory();
 
 const mockedNow = new Date();
 
@@ -216,6 +218,41 @@ describe("wahlenStore.ts", () => {
       expect(unitUnderTest.wahlen[0].beanstandeteWahlbriefe).toStrictEqual([
         "ZUGELASSEN",
       ]);
+    });
+  });
+
+  describe("saveBeanstandeteWahlbriefe", () => {
+    it("should_saveBeanstandeteWahlbriefe_when_called", async () => {
+      const wahlbezirkID = "wahlbezirkId";
+      const userStore = useUserStore();
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+
+      const wahlID = "wahlID";
+      const wvzNr = 1;
+      const dto = prepareBeanstandeteWahlbriefeCreateDTO()
+        .beanstandeteWahlbriefe({ [wahlID]: ["ZUGELASSEN"] })
+        .build();
+
+      unitUnderTest.wahlen = [
+        prepareWahl()
+          .wahlID(wahlID)
+          .waehlerverzeichnisNummer(wvzNr)
+          .beanstandeteWahlbriefe(["ZUGELASSEN"])
+          .build(),
+      ];
+      expect(unitUnderTest.wahlen).toBeDefined();
+
+      mockDefinitions.postBeanstandeteWahlbriefe.mockReturnValue(
+        Promise.resolve()
+      );
+
+      await unitUnderTest.saveBeanstandeteWahlbriefe();
+
+      expect(mockDefinitions.postBeanstandeteWahlbriefe).toHaveBeenCalledWith(
+        dto,
+        wahlbezirkID,
+        wvzNr
+      );
     });
   });
 

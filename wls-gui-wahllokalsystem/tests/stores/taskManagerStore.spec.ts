@@ -4,15 +4,14 @@ import { createTestingPinia } from "@pinia/testing";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
-import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
-  getTaskList: vi.fn(),
+  initTasklist: vi.fn(),
 }));
 
-vi.mock("@/composables/tasks/taskListService", () => ({
+vi.mock("@/composables/tasks/taskListService.ts", () => ({
   useTaskListService: () => ({
-    getTaskList: mockDefinitions.getTaskList,
+    initTasklist: mockDefinitions.initTasklist,
   }),
 }));
 
@@ -36,15 +35,12 @@ describe("taskManagerStore.ts", () => {
       const exampleTaskList: Task[] = [
         {
           name: "Test",
-          onlyForWahlbezirksart: undefined,
-          onlyForWahlen: [WahlWahlartEnum.Obw, WahlWahlartEnum.Bzw],
-          onlyForAllWVaehlerverzeichnisse: undefined,
           callback: () => {
             return Promise.resolve();
           },
         },
       ];
-      mockDefinitions.getTaskList.mockReturnValue(exampleTaskList);
+      mockDefinitions.initTasklist.mockReturnValue(exampleTaskList);
 
       await unitUnderTest.initTasks();
 
@@ -58,19 +54,12 @@ describe("taskManagerStore.ts", () => {
       const exampleTaskList: Task[] = [
         {
           name: "Wahlen",
-          onlyForWahlbezirksart: undefined,
-          onlyForWahlen: [
-            WahlWahlartEnum.Obw,
-            WahlWahlartEnum.Bzw,
-            WahlWahlartEnum.Srw,
-          ],
-          onlyForAllWVaehlerverzeichnisse: undefined,
           callback: () => {
             return Promise.reject();
           },
         },
       ];
-      mockDefinitions.getTaskList.mockReturnValue(exampleTaskList);
+      mockDefinitions.initTasklist.mockReturnValue(exampleTaskList);
 
       await unitUnderTest.initTasks();
 
@@ -84,24 +73,18 @@ describe("taskManagerStore.ts", () => {
       const exampleTaskList: Task[] = [
         {
           name: "Test",
-          onlyForWahlbezirksart: undefined,
-          onlyForWahlen: [WahlWahlartEnum.Obw],
-          onlyForAllWVaehlerverzeichnisse: undefined,
           callback: () => {
             return Promise.resolve();
           },
         },
         {
           name: "Test2",
-          onlyForWahlbezirksart: undefined,
-          onlyForWahlen: [WahlWahlartEnum.Obw, WahlWahlartEnum.Bzw],
-          onlyForAllWVaehlerverzeichnisse: undefined,
           callback: () => {
             return Promise.reject();
           },
         },
       ];
-      mockDefinitions.getTaskList.mockReturnValue(exampleTaskList);
+      mockDefinitions.initTasklist.mockReturnValue(exampleTaskList);
 
       await unitUnderTest.initTasks();
 

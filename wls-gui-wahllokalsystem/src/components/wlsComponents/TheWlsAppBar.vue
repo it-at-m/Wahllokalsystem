@@ -89,6 +89,8 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum";
 
 const { eroeffnungsuhrzeitSent, schliessungsuhrzeitSent } =
   storeToRefs(useWahlbezirkStore());
+
+const { toGermanDateFormat } = useDateTimeFormatter();
 const {
   user,
   currentUserWahltag,
@@ -98,12 +100,8 @@ const {
 const { hasInitializationOfTasksCompletelyRun } = storeToRefs(
   useTaskManagerStore()
 );
-
-const { toGermanDateFormat } = useDateTimeFormatter();
 const [drawer, toggleDrawer] = useToggle();
-
 const isOffline = ref(false);
-
 const wahltermin = computed(() =>
   user ? toGermanDateFormat(currentUserWahltag.value ?? "") : ""
 );

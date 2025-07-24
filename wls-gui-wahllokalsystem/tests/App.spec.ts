@@ -6,12 +6,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createRouter, createWebHistory } from "vue-router";
 
 import App from "@/App.vue";
+import { ROUTES_HOME } from "@/constants.ts";
 import vuetify from "@/plugins/vuetify";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import HomeView from "@/views/HomeView.vue";
 
 const startBroadcastMessageIntervalMock = vi.fn();
 const stopBroadcastMessageIntervalMock = vi.fn();
@@ -43,7 +45,14 @@ describe("App", () => {
 
   const router = createRouter({
     history: createWebHistory(),
-    routes: [],
+    routes: [
+      {
+        path: "/",
+        name: ROUTES_HOME,
+        component: HomeView,
+        meta: {},
+      },
+    ],
   });
 
   beforeEach(() => {

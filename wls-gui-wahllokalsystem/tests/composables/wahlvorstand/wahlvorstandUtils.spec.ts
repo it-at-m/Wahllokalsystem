@@ -99,4 +99,69 @@ describe("useWahlvorstandComparators", () => {
 
     expect(compareWahlvorstandsMitglieder(mitgliedA, mitgliedB)).toBe(0);
   });
+
+  it("should_sortArrayByFunktionFamiliennameVorname_when_unsortedArrayIsGiven", () => {
+    const mitglied1 = prepareWahlvorstandsmitglied()
+      .identifikator("1")
+      .anwesend(true)
+      .familienname("Müller")
+      .vorname("Anna")
+      .funktion(WahlvorstandsmitgliedFunktionEnum.Sb)
+      .build();
+    const mitglied2 = prepareWahlvorstandsmitglied()
+      .identifikator("2")
+      .anwesend(true)
+      .familienname("Bauer")
+      .vorname("Karl")
+      .funktion(WahlvorstandsmitgliedFunktionEnum.W)
+      .build();
+    const mitglied3 = prepareWahlvorstandsmitglied()
+      .identifikator("3")
+      .anwesend(true)
+      .familienname("Schmidt")
+      .vorname("Ursula")
+      .funktion(WahlvorstandsmitgliedFunktionEnum.Sb)
+      .build();
+    const mitglied4 = prepareWahlvorstandsmitglied()
+      .identifikator("4")
+      .anwesend(true)
+      .familienname("Müller")
+      .vorname("Hans")
+      .funktion(WahlvorstandsmitgliedFunktionEnum.Swb)
+      .build();
+    const mitglied5 = prepareWahlvorstandsmitglied()
+      .identifikator("5")
+      .anwesend(true)
+      .familienname("Schmidt")
+      .vorname("Berta")
+      .funktion(WahlvorstandsmitgliedFunktionEnum.B)
+      .build();
+    const mitglied6 = prepareWahlvorstandsmitglied()
+      .identifikator("6")
+      .anwesend(true)
+      .familienname("Schmidt")
+      .vorname("Anna")
+      .funktion(WahlvorstandsmitgliedFunktionEnum.B)
+      .build();
+    const unsortedWahlvorstandsmitglieder = [
+      mitglied1,
+      mitglied2,
+      mitglied3,
+      mitglied4,
+      mitglied5,
+      mitglied6,
+    ];
+    const expectedSortedWahlvorstandsmitglieder = [
+      mitglied2,
+      mitglied4,
+      mitglied1,
+      mitglied3,
+      mitglied6,
+      mitglied5,
+    ];
+
+    expect(
+      unsortedWahlvorstandsmitglieder.sort(compareWahlvorstandsMitglieder)
+    ).toStrictEqual(expectedSortedWahlvorstandsmitglieder);
+  });
 });

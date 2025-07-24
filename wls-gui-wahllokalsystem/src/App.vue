@@ -51,9 +51,11 @@ onMounted(async () => {
     await loadEreignisse();
     await loadWaehler();
     await loadPflegeWaehlerverzeichnis();
-    for (const wvzNr of waehlerverzeichnisNummern.value) {
-      await initBeanstandeteWahlbriefe(wvzNr);
-    }
+    await Promise.all(
+      waehlerverzeichnisNummern.value.map((wvzNr) =>
+        initBeanstandeteWahlbriefe(wvzNr)
+      )
+    );
   } catch (error) {
     console.debug(error);
   }

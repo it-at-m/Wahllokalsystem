@@ -102,6 +102,16 @@ geöffnet wurde.
 📃 **UseCase: `Erfassung der Anwesenheit des Wahlvorstands`**
 
 Beim Start der Anwendung wurden alle Wahlvorstandsmitglieder geladen, die für diesen Tag im Wahlbezirk eingeteilt sind.
+Die Liste der Wahlvorstandsmitglieder ist nach Funktion in folgender Reihenfolge sortiert:
+
+1. Wahlvorsteher*in
+2. Stellvertretung Wahlvorsteher*in
+3. Schriftführer*in
+4. Stellvertretung Schriftführer*in
+5. Beisitzer*in
+
+Bei gleicher Funktion wird zusätzlich nach Familienname und Vorname sortiert.
+
 Für alle Mitglieder, die tatsächlich anwesend sind, muss die Anwesenheit manuell per Checkbox erfasst werden. Die
 Anwesenheit kann nur bei Erfüllung folgender Bedingungen gespeichert werden:
 

@@ -183,13 +183,13 @@ describe("wahlenStore.ts", () => {
       expect(result).toBeUndefined();
     });
 
-      it("should_returnUndefined_when_wahlenDoNotExist", () => {
-          unitUnderTest.wahlen = null;
+    it("should_returnUndefined_when_wahlenDoNotExist", () => {
+      unitUnderTest.wahlen = null;
 
-          const result = unitUnderTest.getWahlOrUndefinedById("testId");
+      const result = unitUnderTest.getWahlOrUndefinedById("testId");
 
-          expect(result).toBeUndefined();
-      });
+      expect(result).toBeUndefined();
+    });
   });
 
   describe("initBeanstandeteWahlbriefe", () => {

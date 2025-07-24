@@ -120,7 +120,8 @@ const maxRows = computed(() => {
 
 const rowIcon = ref<string[]>([]);
 const rowColor = ref<string[]>([]);
-const wahlscheinGruende = ref<string[]>([]);
+
+const wahlscheinGruende = ref(Array(maxRows.value).fill(""));
 
 const gruendeWahlscheine = [
   "Zugelassen",
@@ -141,8 +142,6 @@ const gruendeStimmzettel = [
 ];
 
 onMounted(() => {
-  wahlscheinGruende.value = Array(maxRows.value).fill("");
-
   for (const row of Array.from({ length: maxRows.value }, (_, i) => i)) {
     let wahlscheinZurueckweisungsgrund;
     if (wahlen.value) {

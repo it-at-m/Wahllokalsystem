@@ -249,10 +249,7 @@ function _isRowValidAtIndex(rowIndex: number) {
 
 function _isInputDisabled(rowIndex: number) {
   const grund = wahlscheinGruende.value[rowIndex];
-  return (
-    grund == undefined ||
-    (grund && grund !== ZurueckweisungsgrundEnum.Zugelassen)
-  );
+  return grund == undefined || grund !== ZurueckweisungsgrundEnum.Zugelassen;
 }
 </script>
 

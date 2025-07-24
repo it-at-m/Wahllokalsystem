@@ -23,12 +23,12 @@ import {
 import { nextTick } from "vue";
 import { VBtn } from "vuetify/components";
 
-import TheBeanstandeterWahlbriefRow from "@/components/wahlvorbereitung/TheBeanstandeterWahlbriefRow.vue";
+import TheBeanstandeteWahlbriefeTable from "@/components/wahlvorbereitung/TheBeanstandeteWahlbriefeTable.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 
-describe("TheBeanstandeterWahlbriefRow", () => {
+describe("TheBeanstandeteWahlbriefeTable", () => {
   let wrapper: VueWrapper;
   let pinia: TestingPinia;
   const { prepareWahl } = useWahlTestDataFactory();
@@ -55,7 +55,7 @@ describe("TheBeanstandeterWahlbriefRow", () => {
 
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_onlyShowWahlscheinHeader_when_noWahlenGiven", async (context) => {
-      wrapper = mount(TheBeanstandeterWahlbriefRow, {
+      wrapper = mount(TheBeanstandeteWahlbriefeTable, {
         global: {
           plugins: [pinia, vuetify],
         },
@@ -84,7 +84,7 @@ describe("TheBeanstandeterWahlbriefRow", () => {
           .build(),
       ];
 
-      wrapper = mount(TheBeanstandeterWahlbriefRow, {
+      wrapper = mount(TheBeanstandeteWahlbriefeTable, {
         global: {
           plugins: [pinia, vuetify],
         },
@@ -115,7 +115,7 @@ describe("TheBeanstandeterWahlbriefRow", () => {
           .build(),
       ];
 
-      wrapper = mount(TheBeanstandeterWahlbriefRow, {
+      wrapper = mount(TheBeanstandeteWahlbriefeTable, {
         global: {
           plugins: [pinia, vuetify],
         },
@@ -152,7 +152,7 @@ describe("TheBeanstandeterWahlbriefRow", () => {
           .build(),
       ];
 
-      wrapper = mount(TheBeanstandeterWahlbriefRow, {
+      wrapper = mount(TheBeanstandeteWahlbriefeTable, {
         global: {
           plugins: [pinia, vuetify],
         },
@@ -195,7 +195,7 @@ describe("TheBeanstandeterWahlbriefRow", () => {
               .build(),
           ];
 
-          wrapper = mount(TheBeanstandeterWahlbriefRow, {
+          wrapper = mount(TheBeanstandeteWahlbriefeTable, {
             global: {
               plugins: [pinia, vuetify],
             },
@@ -236,7 +236,7 @@ describe("TheBeanstandeterWahlbriefRow", () => {
               .build(),
           ];
 
-          wrapper = mount(TheBeanstandeterWahlbriefRow, {
+          wrapper = mount(TheBeanstandeteWahlbriefeTable, {
             global: {
               plugins: [pinia, vuetify],
             },
@@ -269,7 +269,7 @@ describe("TheBeanstandeterWahlbriefRow", () => {
             .build(),
         ];
 
-        wrapper = mount(TheBeanstandeterWahlbriefRow, {
+        wrapper = mount(TheBeanstandeteWahlbriefeTable, {
           global: {
             plugins: [pinia, vuetify],
           },
@@ -312,7 +312,7 @@ describe("TheBeanstandeterWahlbriefRow", () => {
             .build(),
         ];
 
-        wrapper = mount(TheBeanstandeterWahlbriefRow, {
+        wrapper = mount(TheBeanstandeteWahlbriefeTable, {
           global: {
             plugins: [pinia, vuetify],
           },
@@ -364,7 +364,7 @@ describe("TheBeanstandeterWahlbriefRow", () => {
             .build(),
         ];
 
-        wrapper = mount(TheBeanstandeterWahlbriefRow, {
+        wrapper = mount(TheBeanstandeteWahlbriefeTable, {
           global: {
             plugins: [pinia, vuetify],
           },
@@ -413,7 +413,7 @@ describe("TheBeanstandeterWahlbriefRow", () => {
             .build(),
         ];
 
-        wrapper = mount(TheBeanstandeterWahlbriefRow, {
+        wrapper = mount(TheBeanstandeteWahlbriefeTable, {
           global: {
             plugins: [pinia, vuetify],
           },
@@ -457,7 +457,7 @@ describe("TheBeanstandeterWahlbriefRow", () => {
             .build(),
         ];
 
-        wrapper = mount(TheBeanstandeterWahlbriefRow, {
+        wrapper = mount(TheBeanstandeteWahlbriefeTable, {
           global: {
             plugins: [pinia, vuetify],
           },
@@ -511,7 +511,7 @@ describe("TheBeanstandeterWahlbriefRow", () => {
             .build(),
         ];
 
-        wrapper = mount(TheBeanstandeterWahlbriefRow, {
+        wrapper = mount(TheBeanstandeteWahlbriefeTable, {
           global: {
             plugins: [pinia, vuetify],
           },
@@ -575,7 +575,7 @@ describe("TheBeanstandeterWahlbriefRow", () => {
             .build(),
         ];
 
-        wrapper = mount(TheBeanstandeterWahlbriefRow, {
+        wrapper = mount(TheBeanstandeteWahlbriefeTable, {
           global: {
             plugins: [pinia, vuetify],
           },

@@ -3,7 +3,7 @@
     <v-card-title>Wahlbriefe zulassen oder zurückweisen</v-card-title>
     <v-card-text>
       <v-form v-model="bedenklicheWahlbriefeFormValid">
-        <the-beanstandeter-wahlbrief-row />
+        <the-beanstandete-wahlbriefe-table />
       </v-form>
     </v-card-text>
     <v-card-actions>
@@ -35,7 +35,7 @@ import {
 } from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import TheBeanstandeterWahlbriefRow from "@/components/wahlvorbereitung/TheBeanstandeterWahlbriefRow.vue";
+import TheBeanstandeteWahlbriefeTable from "@/components/wahlvorbereitung/TheBeanstandeteWahlbriefeTable.vue";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const { wahlen, isBeanstandeteWahlbriefeSaving } =

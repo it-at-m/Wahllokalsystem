@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "test": "vitest run",
+    "test": "vitest -u",
     "build": "vue-tsc --build --force && vite build",
     "preview": "vite preview",
     "build-preview": "npm run build && npm run preview",

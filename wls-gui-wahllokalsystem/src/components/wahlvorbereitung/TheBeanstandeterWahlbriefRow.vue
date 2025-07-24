@@ -230,20 +230,19 @@ function onDeleteBeanstandeteWahlbriefeRowClicked(rowIndex: number) {
 }
 
 function _isRowValidAtIndex(rowIndex: number) {
-  const stimmzettelValid = computed(() => {
-    return wahlen.value
-      ? wahlen.value.every(
-          (wahl) =>
-            wahl.beanstandeteWahlbriefe &&
-            wahl.beanstandeteWahlbriefe[rowIndex] &&
-            !!wahl.beanstandeteWahlbriefe[rowIndex]
-        )
-      : false;
-  });
+  const stimmzettelValid = wahlen.value
+    ? wahlen.value.every(
+        (wahl) =>
+          wahl.beanstandeteWahlbriefe &&
+          wahl.beanstandeteWahlbriefe[rowIndex] &&
+          !!wahl.beanstandeteWahlbriefe[rowIndex]
+      )
+    : false;
+
   const beschlussValid: boolean =
     wahlscheinGruende.value[rowIndex] && !!wahlscheinGruende.value[rowIndex];
 
-  return stimmzettelValid.value && beschlussValid;
+  return stimmzettelValid && beschlussValid;
 }
 
 function _isInputDisabled(rowIndex: number) {

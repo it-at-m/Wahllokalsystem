@@ -130,7 +130,9 @@ describe("briefwahlService.ts", () => {
           new Error("mocked api call failed")
         );
 
-        await postBeanstandeteWahlbriefe(dto, wahlbezirkID, wvzNr);
+        await expect(async () =>
+          postBeanstandeteWahlbriefe(dto, wahlbezirkID, wvzNr)
+        ).rejects.toThrowError();
 
         expect(mockDefinitions.setBeanstandeteWahlbriefe).toHaveBeenCalledWith(
           wahlbezirkID,

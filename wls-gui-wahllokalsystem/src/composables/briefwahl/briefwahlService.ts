@@ -68,14 +68,14 @@ export function useBriefwahlService() {
         "Die beanstandeten Wahlbriefe wurden erfolgreich gespeichert.",
         UserNotificationCategoryEnum.SUCCESS
       );
-    } catch {
+    } catch (e) {
+      console.debug(e);
       addNotification(
         "Die beanstandeten Wahlbriefe konnten nicht gespeichert werden.",
         UserNotificationCategoryEnum.ERROR
       );
+      throw new Error("Post beanstandete Wahlbriefe Failed");
     }
-
-    return;
   }
 
   async function getWahlbriefdaten(

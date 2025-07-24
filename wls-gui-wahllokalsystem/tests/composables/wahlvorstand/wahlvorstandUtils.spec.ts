@@ -3,10 +3,10 @@ import { describe, expect, it } from "vitest";
 import { useWahlvorstandComparators } from "@/composables/wahlvorstand/wahlvorstandUtils.ts";
 import { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion.ts";
 
-describe("Wahlvorstand Comparators", () => {
+describe("useWahlvorstandComparators", () => {
   const { compareWahlvorstandsMitglieder } = useWahlvorstandComparators();
 
-  it("should_sortByFunktion_first", () => {
+  it("should_sortByFunktion_when_funktionIsDifferent", () => {
     const mitgliedA = {
       identifikator: "1",
       anwesend: true,
@@ -30,7 +30,7 @@ describe("Wahlvorstand Comparators", () => {
     ).toBeGreaterThan(0);
   });
 
-  it("should_sortByFamilienname_when_funktionenAreTheSame", () => {
+  it("should_sortByFamilienname_when_funktionIsTheSame", () => {
     const mitgliedA = {
       identifikator: "1",
       anwesend: true,
@@ -54,7 +54,7 @@ describe("Wahlvorstand Comparators", () => {
     );
   });
 
-  it("should_sortByVorname_whenFunktionAndFamiliennameAreTheSame", () => {
+  it("should_sortByVorname_when_funktionAndFamiliennameAreTheSame", () => {
     const mitgliedA = {
       identifikator: "1",
       anwesend: true,
@@ -78,7 +78,7 @@ describe("Wahlvorstand Comparators", () => {
     ).toBeGreaterThan(0);
   });
 
-  it("should_handleCasesWithSimilarAttributes", () => {
+  it("should_handleCase_when_funktionAndFamiliennameAndVornameAreTheSame", () => {
     const mitgliedA = {
       identifikator: "1",
       anwesend: true,

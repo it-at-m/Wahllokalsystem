@@ -206,12 +206,12 @@ function onZulassungsgrundChanged(
   } else {
     wahlscheinGruende.value[rowIndex] = selectedValue;
     if (selectedValue !== ZurueckweisungsgrundEnum.Zugelassen && wahlen.value) {
-      wahlen.value.map(
+      wahlen.value.forEach(
         (wahl) => (wahl.beanstandeteWahlbriefe[rowIndex] = selectedValue)
       );
     } else if (wahlen.value) {
       // unset values of stimmzettelumschlag columns if "ZUGELASSEN" is selected
-      wahlen.value.map(
+      wahlen.value.forEach(
         (wahl) => (wahl.beanstandeteWahlbriefe[rowIndex] = null)
       );
     }
@@ -222,7 +222,9 @@ function onZulassungsgrundChanged(
 
 function onDeleteBeanstandeteWahlbriefeRowClicked(rowIndex: number) {
   if (wahlen.value) {
-    wahlen.value.map((wahl) => wahl.beanstandeteWahlbriefe.splice(rowIndex, 1));
+    wahlen.value.forEach((wahl) =>
+      wahl.beanstandeteWahlbriefe.splice(rowIndex, 1)
+    );
     rowIcon.value.splice(rowIndex, 1);
     rowColor.value.splice(rowIndex, 1);
     wahlscheinGruende.value.splice(rowIndex, 1);

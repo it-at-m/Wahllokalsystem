@@ -124,7 +124,6 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
     });
 
     it("should_renderWarning_when_noLoadingOfListeFailed", async (context) => {
-      // @ts-expect-error: cannot set readonly
       useWahlbezirkStore().ungueltigeWahlscheineLoadingFailed = true;
       useWahlbezirkStore().ungueltigeWahlscheineIsLoading = false;
 

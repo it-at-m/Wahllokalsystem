@@ -176,6 +176,10 @@ export default withMermaid({
               text: "ArchUnit Rules Testen",
               link: `${PATH_GUIDES}archunit-rule-tests.md`,
             },
+            {
+              text: "Aktualisierung von Images",
+              link: `${PATH_GUIDES}update-images.md`,
+            },
           ],
         },
         {

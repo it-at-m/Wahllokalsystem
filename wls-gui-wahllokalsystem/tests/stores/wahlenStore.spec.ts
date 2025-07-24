@@ -221,11 +221,19 @@ describe("wahlenStore.ts", () => {
 
       expect(unitUnderTest.wahlen[0].beanstandeteWahlbriefe).toStrictEqual([]);
 
-      await unitUnderTest.initBeanstandeteWahlbriefe(wvzNr);
+      await unitUnderTest.initBeanstandeteWahlbriefe();
 
       expect(unitUnderTest.wahlen[0].beanstandeteWahlbriefe).toStrictEqual([
         "ZUGELASSEN",
       ]);
+    });
+
+    it("should_notCallService_when_noWahlenGiven", async () => {
+      unitUnderTest.wahlen = [];
+
+      await unitUnderTest.initBeanstandeteWahlbriefe();
+
+      expect(mockDefinitions.getBeanstandeteWahlbriefe).not.toHaveBeenCalled();
     });
   });
 

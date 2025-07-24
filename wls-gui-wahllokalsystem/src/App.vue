@@ -53,11 +53,7 @@ onMounted(async () => {
     await loadEreignisse();
     await loadWaehler();
     await loadPflegeWaehlerverzeichnis();
-    await Promise.all(
-      waehlerverzeichnisNummern.value.map((wvzNr) =>
-        initBeanstandeteWahlbriefe(wvzNr)
-      )
-    );
+    await initBeanstandeteWahlbriefe();
   } catch (error) {
     console.debug(error);
   }

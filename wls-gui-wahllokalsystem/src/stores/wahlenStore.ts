@@ -48,16 +48,21 @@ export const useWahlenStore = defineStore(storeID, () => {
     }
   }
 
-  async function initBeanstandeteWahlbriefe(waehlerverzeichnisNummer: number) {
-    const beanstandeteWahlbriefe =
-      await briefwahlService.getBeanstandeteWahlbriefe(
-        waehlerverzeichnisNummer,
-        currentUserWahlbezirkID.value
-      );
-    if (wahlen.value && beanstandeteWahlbriefe) {
-      for (const wahl of wahlen.value) {
-        wahl.beanstandeteWahlbriefe =
-          beanstandeteWahlbriefe.beanstandeteWahlbriefe.get(wahl.wahlID) ?? [];
+  async function initBeanstandeteWahlbriefe() {
+    for (const wvzNr of waehlerverzeichnisNummern.value) {
+      const beanstandeteWahlbriefe =
+        await briefwahlService.getBeanstandeteWahlbriefe(
+          wvzNr,
+          currentUserWahlbezirkID.value
+        );
+      if (wahlen.value && beanstandeteWahlbriefe) {
+        wahlen.value.forEach((wahl) => {
+          if (wahl.waehlerverzeichnisNummer == wvzNr) {
+            wahl.beanstandeteWahlbriefe =
+              beanstandeteWahlbriefe.beanstandeteWahlbriefe.get(wahl.wahlID) ??
+              [];
+          }
+        });
       }
     }
   }

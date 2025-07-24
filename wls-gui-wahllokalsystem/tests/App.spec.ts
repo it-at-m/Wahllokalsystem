@@ -123,18 +123,6 @@ describe("App", () => {
       expect(initBeanstandeteWahlbriefe).toHaveBeenCalled();
     });
 
-    it("should_notCallInitBeanstandeteWahlbriefe_when_mountedAndWaehlerverzeichnisNummernAreNotGiven", async () => {
-      const { initBeanstandeteWahlbriefe } = useWahlenStore();
-      const { waehlerverzeichnisNummern } = storeToRefs(useWahlenStore());
-
-      // @ts-expect-error: cannot set readonly
-      waehlerverzeichnisNummern.value = [];
-
-      await flushPromises();
-
-      expect(initBeanstandeteWahlbriefe).not.toHaveBeenCalled();
-    });
-
     it("should_callStopBroadcastMessageInterval_when_unmounted", async () => {
       wrapper.unmount();
 

@@ -10,7 +10,7 @@ export function useBeanstandeteWahlbriefeMapper() {
     const beanstandeteWahlbriefe: BeanstandeteWahlbriefe = {
       wahlbezirkID: beanstandeteWahlbriefeDto.wahlbezirkID,
       waehlerverzeichnisNummer:
-      beanstandeteWahlbriefeDto.waehlerverzeichnisNummer,
+        beanstandeteWahlbriefeDto.waehlerverzeichnisNummer,
       beanstandeteWahlbriefe: new Map(),
     };
 

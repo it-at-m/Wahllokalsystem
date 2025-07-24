@@ -6,6 +6,7 @@ import type { Farbe } from "@/types/wahl/Farbe.ts";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
+import { useBeanstandeteWahlbriefeTestDataFactory } from "@tests/utils/briefwahl/BeanstandeteWahlbriefeTestDataFactory.ts";
 import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
@@ -17,6 +18,8 @@ const {
   generateRandomString,
   generateRandomNumberInRange,
 } = useCommonTestDataFactory();
+const { createRandomBeanstandeteWahlbriefeValues } =
+  useBeanstandeteWahlbriefeTestDataFactory();
 
 const wahlWahlartEnumValues = Object.values(WahlWahlartEnum);
 const wahlDTOWahlartEnumValues = Object.values(WahlDTOWahlartEnum);
@@ -51,6 +54,7 @@ export function useWahlTestDataFactory() {
         ],
       farbe: createRandomFarbeDTO(),
       nummer: generateRandomString(5),
+      beanstandeteWahlbriefe: createRandomBeanstandeteWahlbriefeValues(),
     };
   }
 

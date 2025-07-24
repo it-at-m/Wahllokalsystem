@@ -26,12 +26,16 @@
           </tr>
           <tr>
             <td><b>Zurückweisungsgrund</b></td>
+            <td />
+            <td />
           </tr>
           <tr
             v-for="(beanstandung, index) in ungueltigeeinzelsummen"
             :key="index"
           >
-            <td>{{ zurueckweisungsgrundEnumToDisplayString(ZurueckweisungsgrundEnum[beanstandung.grund as keyof typeof ZurueckweisungsgrundEnum]) }}</td>
+            <td>
+              {{ zurueckweisungsgrundEnumToDisplayString(beanstandung.grund) }}
+            </td>
             <td
               v-for="(value, idx) in beanstandung.ungueltig"
               :key="idx"
@@ -46,52 +50,17 @@
 </template>
 
 <script setup lang="ts">
-import type { BeanstandeteWahlbriefeDTO } from "@/api/wls-clients/generated-briefwahl-api";
-import {ZurueckweisungsgrundEnum} from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
-
+import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
 import { VCard, VCardText, VCardTitle, VTable } from "vuetify/components";
 
 import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 
-const {
-  zurueckweisungsgrundEnumToDisplayString,
-} = useBeanstandeteWahlbriefeMapper();
-
-const test = {
-  wahlbezirkID:
-    "1eineGehashteIdDieImKLartextAndersAussiehtAlsWahlbezirk.wahlnummerbw1",
-  waehlerverzeichnisNummer: 1,
-  beanstandeteWahlbriefe: {
-    "OBW-WAHL-ID": [
-      "KEIN_ORIGINAL_SCHEIN",
-      "UMSCHLAG_NICHT_AMTLICH",
-      "LOSE_STIMMZETTEL",
-      "SCHEINE_UNGLEICH_UMSCHLAEGE",
-      "NICHT_WAHLBERECHTIGT",
-      "ZUGELASSEN",
-      "NICHT_WAHLBERECHTIGT",
-    ],
-    "SRW-WAHL-ID": [
-      "KEIN_ORIGINAL_SCHEIN",
-      "UMSCHLAG_NICHT_AMTLICH",
-      "LOSE_STIMMZETTEL",
-      "NICHT_WAHLBERECHTIGT",
-      "LOSE_STIMMZETTEL",
-      "NICHT_WAHLBERECHTIGT",
-      "ZUGELASSEN",
-    ],
-    "BAW-WAHL-ID": [
-      "KEIN_ORIGINAL_SCHEIN",
-      "UMSCHLAG_NICHT_AMTLICH",
-      "LOSE_STIMMZETTEL",
-      "SCHEINE_UNGLEICH_UMSCHLAEGE",
-      "LOSE_STIMMZETTEL",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-    ],
-  },
-} as BeanstandeteWahlbriefeDTO;
+const { wahlen } = storeToRefs(useWahlenStore());
+const { zurueckweisungsgrundEnumToDisplayString } =
+  useBeanstandeteWahlbriefeMapper();
 
 const sumGueltig = ref<number[]>([]);
 const sumUngueltig = ref<number[]>([]);
@@ -103,47 +72,44 @@ onMounted(() => {
 
 interface ZurueckweisungRow {
   ungueltig: number[];
-  grund: string;
+  grund: ZurueckweisungsgrundEnum;
 }
 
 function calculateSums() {
-  const wahlen = Object.keys(test.beanstandeteWahlbriefe);
-  const anzahlWahlen = wahlen.length;
-  sumGueltig.value = new Array(anzahlWahlen).fill(0);
-  sumUngueltig.value = new Array(anzahlWahlen).fill(0);
+  if (wahlen.value) {
+    const anzahlWahlen = wahlen.value.length;
+    sumGueltig.value = new Array(anzahlWahlen).fill(0);
+    sumUngueltig.value = new Array(anzahlWahlen).fill(0);
 
-  const tempUngueltigeEinzelstimmen: ZurueckweisungRow[] = [];
-  const gruendeUngueltig = Object.values(
-      ZurueckweisungsgrundEnum
-  ).filter(
-    (grund) =>
-      grund !== ZurueckweisungsgrundEnum.Zugelassen
-  );
-  gruendeUngueltig.forEach((grund, index) => {
-    tempUngueltigeEinzelstimmen[index] = {
-      ungueltig: new Array(anzahlWahlen).fill(0),
-      grund: grund,
-    };
-  });
+    const tempUngueltigeEinzelstimmen: ZurueckweisungRow[] = [];
+    const gruendeUngueltig = Object.values(ZurueckweisungsgrundEnum).filter(
+      (grund) => grund !== ZurueckweisungsgrundEnum.Zugelassen
+    );
+    gruendeUngueltig.forEach((grund, index) => {
+      tempUngueltigeEinzelstimmen[index] = {
+        ungueltig: new Array(anzahlWahlen).fill(0),
+        grund: grund,
+      };
+    });
 
-  Object.entries(test.beanstandeteWahlbriefe).forEach(
-    ([wahl, beanstandungen]) => {
-      for (const beanstandung of beanstandungen) {
-        if (
-          beanstandung ===
-            ZurueckweisungsgrundEnum.Zugelassen
-        ) {
-          sumGueltig.value[wahlen.indexOf(wahl)] += 1;
-        } else {
-          sumUngueltig.value[wahlen.indexOf(wahl)] += 1;
-          tempUngueltigeEinzelstimmen[
-            gruendeUngueltig.findIndex((value) => value === beanstandung)
-          ].ungueltig[wahlen.indexOf(wahl)] += 1;
+    wahlen.value.forEach((wahl) => {
+      wahl.beanstandeteWahlbriefe.forEach((beanstandeteWahlbrief) => {
+        if (wahlen.value) {
+          if (beanstandeteWahlbrief === ZurueckweisungsgrundEnum.Zugelassen) {
+            sumGueltig.value[wahlen.value.indexOf(wahl)] += 1;
+          } else {
+            sumUngueltig.value[wahlen.value.indexOf(wahl)] += 1;
+            tempUngueltigeEinzelstimmen[
+              gruendeUngueltig.findIndex(
+                (value) => value === beanstandeteWahlbrief
+              )
+            ].ungueltig[wahlen.value.indexOf(wahl)] += 1;
+          }
         }
-      }
-    }
-  );
+      });
+    });
 
-  ungueltigeeinzelsummen.value = tempUngueltigeEinzelstimmen;
+    ungueltigeeinzelsummen.value = tempUngueltigeEinzelstimmen;
+  }
 }
 </script>

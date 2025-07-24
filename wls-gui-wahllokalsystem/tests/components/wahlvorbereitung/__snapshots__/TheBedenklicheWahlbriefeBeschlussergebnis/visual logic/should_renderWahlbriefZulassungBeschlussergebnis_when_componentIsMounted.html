@@ -1,0 +1,45 @@
+<div class="v-card v-theme--light v-card--density-default v-card--variant-elevated">
+  <!---->
+  <div class="v-card__loader">
+    <div class="v-progress-linear v-theme--light v-locale--is-ltr" style="top: 0px; height: 0px; --v-progress-linear-height: 2px;" role="progressbar" aria-hidden="true" aria-valuemin="0" aria-valuemax="100">
+      <!---->
+      <div class="v-progress-linear__background bg-primary"></div>
+      <div class="v-progress-linear__buffer bg-primary" style="width: 0%;"></div>
+      <transition-stub name="fade-transition" appear="false" persisted="false" css="true">
+        <div class="v-progress-linear__indeterminate">
+          <div class="v-progress-linear__indeterminate long bg-primary"></div>
+          <div class="v-progress-linear__indeterminate short bg-primary"></div>
+        </div>
+      </transition-stub>
+      <!---->
+    </div>
+  </div>
+  <!---->
+  <!---->
+  <div class="v-card-title bg-grey-lighten-3 border-b border-grey-lighten-1 mb-2"> Beschlussergebnis </div>
+  <div class="v-card-text pb-0">
+    <div class="v-table v-theme--light v-table--density-default">
+      <!---->
+      <div class="v-table__wrapper">
+        <table>
+          <tbody>
+            <tr>
+              <td><b>Zugelassen</b></td>
+            </tr>
+            <tr>
+              <td><b>Nicht zugelassen</b></td>
+            </tr>
+            <tr>
+              <td><b>Zurückweisungsgrund</b></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!---->
+    </div>
+  </div>
+  <!---->
+  <!----><span class="v-card__underlay"></span>
+</div>

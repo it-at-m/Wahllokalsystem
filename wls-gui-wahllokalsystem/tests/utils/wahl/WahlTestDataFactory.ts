@@ -35,7 +35,7 @@ export function useWahlTestDataFactory() {
       wahlart:
         wahlDTOWahlartEnumValues[
           generateRandomNumberInRange(0, wahlDTOWahlartEnumValues.length - 1)
-          ],
+        ],
       farbe: _createRandomFarbeDTO(),
       nummer: generateRandomString(5),
     };
@@ -51,7 +51,7 @@ export function useWahlTestDataFactory() {
       wahlart:
         wahlWahlartEnumValues[
           generateRandomNumberInRange(0, wahlWahlartEnumValues.length - 1)
-          ],
+        ],
       farbe: _createRandomFarbe(), // Randomly generated Farbe
       nummer: generateRandomString(5),
       beanstandeteWahlbriefe: createRandomBeanstandeteWahlbriefeValues(),

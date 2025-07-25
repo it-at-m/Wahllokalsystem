@@ -467,20 +467,7 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
           prepareWahl()
             .name("Wahl1")
             .wahlID("id1")
-            .beanstandeteWahlbriefe([
-              "GEGENSTAND_IM_UMSCHLAG",
-              "ZUGELASSEN",
-              "UNTERSCHRIFT_FEHLT",
-            ])
-            .build(),
-          prepareWahl()
-            .name("Wahl2")
-            .wahlID("id2")
-            .beanstandeteWahlbriefe([
-              "GEGENSTAND_IM_UMSCHLAG",
-              "ZUGELASSEN",
-              "NICHT_WAHLBERECHTIGT",
-            ])
+            .beanstandeteWahlbriefe(["GEGENSTAND_IM_UMSCHLAG"])
             .build(),
         ];
 
@@ -490,33 +477,15 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
           },
         });
 
-        await nextTick();
-
-        expect(wahlenStore.wahlen[0].beanstandeteWahlbriefe).toStrictEqual([
-          "GEGENSTAND_IM_UMSCHLAG",
-          "ZUGELASSEN",
-          "UNTERSCHRIFT_FEHLT",
-        ]);
-        expect(wahlenStore.wahlen[1].beanstandeteWahlbriefe).toStrictEqual([
-          "GEGENSTAND_IM_UMSCHLAG",
-          "ZUGELASSEN",
-          "NICHT_WAHLBERECHTIGT",
-        ]);
-
         // delete first row
         const deleteButton = wrapper.findComponent<typeof VBtn>(
           `[data-test="delete-btn-0"]`
         );
         await deleteButton.trigger("click");
 
-        expect(wahlenStore.wahlen[0].beanstandeteWahlbriefe).toStrictEqual([
-          "ZUGELASSEN",
-          "UNTERSCHRIFT_FEHLT",
-        ]);
-        expect(wahlenStore.wahlen[1].beanstandeteWahlbriefe).toStrictEqual([
-          "ZUGELASSEN",
-          "NICHT_WAHLBERECHTIGT",
-        ]);
+        expect(
+          wahlenStore.deleteBeanstandeterWahlbriefEntry
+        ).toHaveBeenCalled();
       });
     });
   });

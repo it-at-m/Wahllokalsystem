@@ -101,6 +101,7 @@ import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/Zurueckweisungsgrund
 import { REQUIRED } from "@/util/rules.ts";
 
 const { wahlen } = storeToRefs(useWahlenStore());
+const { deleteBeanstandeterWahlbriefEntry } = useWahlenStore();
 const {
   zurueckweisungsgrundStringToEnumValue,
   zurueckweisungsgrundEnumToDisplayString,
@@ -204,12 +205,8 @@ function onZulassungsgrundStimmzettelChanged(
 }
 
 function onDeleteBeanstandeteWahlbriefeRowClicked(rowIndex: number) {
-  if (wahlen.value) {
-    wahlen.value.forEach((wahl) =>
-      wahl.beanstandeteWahlbriefe.splice(rowIndex, 1)
-    );
-    wahlscheinGruende.value.splice(rowIndex, 1);
-  }
+  deleteBeanstandeterWahlbriefEntry(rowIndex);
+  wahlscheinGruende.value.splice(rowIndex, 1);
 }
 
 function _isInputDisabled(rowIndex: number) {

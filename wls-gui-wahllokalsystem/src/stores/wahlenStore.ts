@@ -73,6 +73,14 @@ export const useWahlenStore = defineStore(storeID, () => {
     }
   }
 
+  function deleteBeanstandeterWahlbriefEntry(index: number) {
+    if (wahlen.value) {
+      wahlen.value.forEach((wahl) =>
+        wahl.beanstandeteWahlbriefe.splice(index, 1)
+      );
+    }
+  }
+
   async function saveBeanstandeteWahlbriefe() {
     isBeanstandeteWahlbriefeSaving.value = true;
 
@@ -140,6 +148,7 @@ export const useWahlenStore = defineStore(storeID, () => {
     initWahlen,
     initBeanstandeteWahlbriefe,
     addBeanstandeterWahlbriefEntry,
+    deleteBeanstandeterWahlbriefEntry,
     saveBeanstandeteWahlbriefe,
     isBeanstandeteWahlbriefeSaving,
   };

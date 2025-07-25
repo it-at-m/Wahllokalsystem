@@ -1,7 +1,10 @@
 <template>
   <div>
-    <v-icon icon="$updateTime" />Letzte Aktualisierungszeit:
-    {{ time(wahlvorstandStore.lastLoading) }}
+    <v-icon
+      icon="$updateTime"
+      class="mr-2"
+    />
+    Letzte Aktualisierungszeit: {{ time(wahlvorstandStore.lastLoading) }}
   </div>
 </template>
 

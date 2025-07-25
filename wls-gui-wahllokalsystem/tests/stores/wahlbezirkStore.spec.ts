@@ -283,49 +283,57 @@ describe("wahlbezirkStore.ts", () => {
       expect(unitUnderTest.ungueltigeWahlscheineIsLoading).toStrictEqual(false);
     });
 
-    it("should_resetAndSetFailedFlagToTrue_when_serviceThrowError", async () => {
-      const wahltagID = "wahltagID";
-      const wahlbezirksArt = WahlbezirksArtEnum.UWB;
-      useUserStore().setUser(
-        prepareUser()
-          .wahltagID(wahltagID)
-          .wahlbezirksArt(wahlbezirksArt)
-          .build()
-      );
-      unitUnderTest.ungueltigeWahlscheineLoadingFailed = false;
+    it.each([true, false])(
+      "should_resetAndSetFailedFlagToTrue_when_serviceThrowErrorAndFlagWasInitially'%o'",
+      async (initValueForUngueltigeWahlscheineLoadingFailed) => {
+        const wahltagID = "wahltagID";
+        const wahlbezirksArt = WahlbezirksArtEnum.UWB;
+        useUserStore().setUser(
+          prepareUser()
+            .wahltagID(wahltagID)
+            .wahlbezirksArt(wahlbezirksArt)
+            .build()
+        );
+        unitUnderTest.ungueltigeWahlscheineLoadingFailed =
+          initValueForUngueltigeWahlscheineLoadingFailed;
 
-      mockDefinitions.getUngueltigeWahlscheine.mockRejectedValue(
-        new Error("mocked service error")
-      );
+        mockDefinitions.getUngueltigeWahlscheine.mockRejectedValue(
+          new Error("mocked service error")
+        );
 
-      await unitUnderTest.loadUngueltigeWahlscheine();
+        await unitUnderTest.loadUngueltigeWahlscheine();
 
-      expect(unitUnderTest.ungueltigeWahlscheineLoadingFailed).toStrictEqual(
-        true
-      );
-    });
+        expect(unitUnderTest.ungueltigeWahlscheineLoadingFailed).toStrictEqual(
+          true
+        );
+      }
+    );
 
-    it("should_resetAndSetFailedFlagToTrue_when_serviceSucceeded", async () => {
-      const wahltagID = "wahltagID";
-      const wahlbezirksArt = WahlbezirksArtEnum.UWB;
-      useUserStore().setUser(
-        prepareUser()
-          .wahltagID(wahltagID)
-          .wahlbezirksArt(wahlbezirksArt)
-          .build()
-      );
-      unitUnderTest.ungueltigeWahlscheineLoadingFailed = true;
+    it.each([true, false])(
+      "should_resetAndSetFailedFlagToTrue_when_serviceSucceededAndFlagWasInitially'%o'",
+      async (initValueForUngueltigeWahlscheineLoadingFailed) => {
+        const wahltagID = "wahltagID";
+        const wahlbezirksArt = WahlbezirksArtEnum.UWB;
+        useUserStore().setUser(
+          prepareUser()
+            .wahltagID(wahltagID)
+            .wahlbezirksArt(wahlbezirksArt)
+            .build()
+        );
+        unitUnderTest.ungueltigeWahlscheineLoadingFailed =
+          initValueForUngueltigeWahlscheineLoadingFailed;
 
-      mockDefinitions.getUngueltigeWahlscheine.mockReturnValue(
-        createUngueltigerWahlschein()
-      );
+        mockDefinitions.getUngueltigeWahlscheine.mockReturnValue(
+          createUngueltigerWahlschein()
+        );
 
-      await unitUnderTest.loadUngueltigeWahlscheine();
+        await unitUnderTest.loadUngueltigeWahlscheine();
 
-      expect(unitUnderTest.ungueltigeWahlscheineLoadingFailed).toStrictEqual(
-        false
-      );
-    });
+        expect(unitUnderTest.ungueltigeWahlscheineLoadingFailed).toStrictEqual(
+          false
+        );
+      }
+    );
   });
 
   describe("sendEroeffnungsuhrzeit", () => {

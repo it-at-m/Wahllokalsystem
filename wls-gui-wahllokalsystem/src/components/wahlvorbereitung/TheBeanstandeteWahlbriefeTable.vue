@@ -79,12 +79,7 @@
               :data-test="`delete-btn-${index - 1}`"
               @click="onDeleteBeanstandeteWahlbriefeRowClicked(index - 1)"
             />
-            <v-icon
-              :icon="rowIcon[index - 1]"
-              variant="text"
-              :color="rowColor[index - 1]"
-              :data-test="`rowstatus-icon-${index - 1}`"
-            />
+            <the-beanstandete-wahlbriefe-row-status-icon :index="index - 1" />
           </v-row>
         </td>
       </tr>
@@ -96,9 +91,10 @@
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import { storeToRefs } from "pinia";
-import { computed, onMounted, ref, watch } from "vue";
-import { VAutocomplete, VBtn, VIcon, VRow, VTable } from "vuetify/components";
+import { computed, onMounted, ref } from "vue";
+import { VAutocomplete, VBtn, VRow, VTable } from "vuetify/components";
 
+import TheBeanstandeteWahlbriefeRowStatusIcon from "@/components/common/icons/TheBeanstandeteWahlbriefeRowStatusIcon.vue";
 import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
@@ -117,9 +113,6 @@ const maxRows = computed(() => {
       )
     : 0;
 });
-
-const rowIcon = ref<string[]>([]);
-const rowColor = ref<string[]>([]);
 
 const wahlscheinGruende = ref(Array(maxRows.value).fill(""));
 
@@ -163,16 +156,6 @@ onMounted(() => {
         wahlscheinGruende.value[row] = ZurueckweisungsgrundEnum.Zugelassen;
       }
     }
-
-    rowIcon.value[row] = _isRowValidAtIndex(row) ? "$valid" : "$edit";
-    rowColor.value[row] = _isRowValidAtIndex(row) ? "success" : "error";
-  }
-});
-
-watch(maxRows, (newValue, oldValue) => {
-  if (oldValue < newValue) {
-    rowIcon.value.push("$edit");
-    rowColor.value.push("error");
   }
 });
 
@@ -193,9 +176,6 @@ function onZulassungsgrundWahlscheinChanged(
       (wahl) => (wahl.beanstandeteWahlbriefe[rowIndex] = null)
     );
   }
-
-  rowIcon.value[rowIndex] = _isRowValidAtIndex(rowIndex) ? "$valid" : "$edit";
-  rowColor.value[rowIndex] = _isRowValidAtIndex(rowIndex) ? "success" : "error";
 }
 
 function onZulassungsgrundStimmzettelChanged(
@@ -221,9 +201,6 @@ function onZulassungsgrundStimmzettelChanged(
       }
     });
   }
-
-  rowIcon.value[rowIndex] = _isRowValidAtIndex(rowIndex) ? "$valid" : "$edit";
-  rowColor.value[rowIndex] = _isRowValidAtIndex(rowIndex) ? "success" : "error";
 }
 
 function onDeleteBeanstandeteWahlbriefeRowClicked(rowIndex: number) {
@@ -231,26 +208,8 @@ function onDeleteBeanstandeteWahlbriefeRowClicked(rowIndex: number) {
     wahlen.value.forEach((wahl) =>
       wahl.beanstandeteWahlbriefe.splice(rowIndex, 1)
     );
-    rowIcon.value.splice(rowIndex, 1);
-    rowColor.value.splice(rowIndex, 1);
     wahlscheinGruende.value.splice(rowIndex, 1);
   }
-}
-
-function _isRowValidAtIndex(rowIndex: number) {
-  const stimmzettelValid = wahlen.value
-    ? wahlen.value.every(
-        (wahl) =>
-          wahl.beanstandeteWahlbriefe &&
-          wahl.beanstandeteWahlbriefe[rowIndex] &&
-          !!wahl.beanstandeteWahlbriefe[rowIndex]
-      )
-    : false;
-
-  const beschlussValid: boolean =
-    wahlscheinGruende.value[rowIndex] && !!wahlscheinGruende.value[rowIndex];
-
-  return stimmzettelValid && beschlussValid;
 }
 
 function _isInputDisabled(rowIndex: number) {

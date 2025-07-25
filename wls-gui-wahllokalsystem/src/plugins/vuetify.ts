@@ -11,6 +11,7 @@ import {
   mdiHome,
   mdiInformationOutline,
   mdiMapSearch,
+  mdiPencil,
   mdiPhone,
   mdiPlus,
   mdiPlusCircle,
@@ -57,6 +58,7 @@ export default createVuetify({
       fileDocument: mdiFileDocumentOutline,
       mapSearch: mdiMapSearch,
       remoteDesktop: mdiRemoteDesktop,
+      edit: mdiPencil,
       valid: mdiCheckCircle,
     },
     sets: {

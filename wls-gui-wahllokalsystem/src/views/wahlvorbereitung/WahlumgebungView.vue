@@ -1,10 +1,12 @@
 <template>
-  <the-wahlumgebung-uwb-card
-    v-if="currentUserWahlbezirksArt == WahlbezirksArtEnum.UWB"
-  />
-  <the-wahlumgebung-bwb-card
-    v-if="currentUserWahlbezirksArt == WahlbezirksArtEnum.BWB"
-  />
+  <div>
+    <the-wahlumgebung-uwb-card
+      v-if="currentUserWahlbezirksArt == WahlbezirksArtEnum.UWB"
+    />
+    <the-wahlumgebung-bwb-card
+      v-if="currentUserWahlbezirksArt == WahlbezirksArtEnum.BWB"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">

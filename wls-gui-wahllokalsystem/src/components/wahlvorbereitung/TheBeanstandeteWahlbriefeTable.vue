@@ -38,7 +38,7 @@
               :rules="[REQUIRED]"
               :data-test="`wahlscheingruende-input-${index - 1}`"
               @update:model-value="
-                (value) => onZulassungsgrundChanged(value, index - 1)
+                (value) => onZulassungsgrundWahlscheinChanged(value, index - 1)
               "
             />
           </v-row>
@@ -61,7 +61,8 @@
             :disabled="_isInputDisabled(index - 1)"
             :data-test="`stimmzettelgruende-input-${wahl.wahlID}-${index - 1}`"
             @update:model-value="
-              (value) => onZulassungsgrundChanged(value, index - 1, wahl)
+              (value) =>
+                onZulassungsgrundStimmzettelChanged(value, index - 1, wahl)
             "
           />
         </td>
@@ -104,7 +105,6 @@ import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/Zurueckweisungsgrund
 import { REQUIRED } from "@/util/rules.ts";
 
 const { wahlen } = storeToRefs(useWahlenStore());
-const { getWahlOrUndefinedById } = useWahlenStore();
 const {
   zurueckweisungsgrundStringToEnumValue,
   zurueckweisungsgrundEnumToDisplayString,
@@ -176,46 +176,52 @@ watch(maxRows, (newValue, oldValue) => {
   }
 });
 
-function onZulassungsgrundChanged(
+function onZulassungsgrundWahlscheinChanged(
   newValue: string,
-  rowIndex: number,
-  column?: Wahl
+  rowIndex: number
 ) {
   const selectedValue = zurueckweisungsgrundStringToEnumValue(newValue);
-  if (column) {
-    const wahl = getWahlOrUndefinedById(column.wahlID);
-    if (wahl) {
-      wahl.beanstandeteWahlbriefe[rowIndex] = selectedValue;
-    }
+  wahlscheinGruende.value[rowIndex] = selectedValue;
 
-    if (wahlen.value) {
-      // add new value to other stimmzettelumschlag columns
-      wahlen.value.forEach((wahl) => {
-        // avoid updating the same column again
-        if (wahl.wahlID !== column.wahlID) {
-          if (
-            selectedValue !== ZurueckweisungsgrundEnum.NichtWahlberechtigt &&
-            wahl.beanstandeteWahlbriefe[rowIndex] !==
-              ZurueckweisungsgrundEnum.NichtWahlberechtigt
-          ) {
-            wahl.beanstandeteWahlbriefe[rowIndex] = selectedValue;
-          }
-        }
-      });
-    }
-  } else {
-    wahlscheinGruende.value[rowIndex] = selectedValue;
-    if (selectedValue !== ZurueckweisungsgrundEnum.Zugelassen && wahlen.value) {
-      wahlen.value.forEach(
-        (wahl) => (wahl.beanstandeteWahlbriefe[rowIndex] = selectedValue)
-      );
-    } else if (wahlen.value) {
-      // unset values of stimmzettelumschlag columns if "ZUGELASSEN" is selected
-      wahlen.value.forEach(
-        (wahl) => (wahl.beanstandeteWahlbriefe[rowIndex] = null)
-      );
-    }
+  if (selectedValue !== ZurueckweisungsgrundEnum.Zugelassen && wahlen.value) {
+    wahlen.value.forEach(
+      (wahl) => (wahl.beanstandeteWahlbriefe[rowIndex] = selectedValue)
+    );
+  } else if (wahlen.value) {
+    // unset values of stimmzettelumschlag columns if "ZUGELASSEN" is selected
+    wahlen.value.forEach(
+      (wahl) => (wahl.beanstandeteWahlbriefe[rowIndex] = null)
+    );
   }
+
+  rowIcon.value[rowIndex] = _isRowValidAtIndex(rowIndex) ? "$valid" : "$edit";
+  rowColor.value[rowIndex] = _isRowValidAtIndex(rowIndex) ? "success" : "error";
+}
+
+function onZulassungsgrundStimmzettelChanged(
+  newValue: string,
+  rowIndex: number,
+  wahl: Wahl
+) {
+  const selectedValue = zurueckweisungsgrundStringToEnumValue(newValue);
+  wahl.beanstandeteWahlbriefe[rowIndex] = selectedValue;
+
+  if (wahlen.value) {
+    // add new value to other stimmzettelumschlag columns
+    wahlen.value.forEach((otherWahl) => {
+      // avoid updating the same wahl again
+      if (otherWahl.wahlID !== wahl.wahlID) {
+        if (
+          selectedValue !== ZurueckweisungsgrundEnum.NichtWahlberechtigt &&
+          otherWahl.beanstandeteWahlbriefe[rowIndex] !==
+            ZurueckweisungsgrundEnum.NichtWahlberechtigt
+        ) {
+          otherWahl.beanstandeteWahlbriefe[rowIndex] = selectedValue;
+        }
+      }
+    });
+  }
+
   rowIcon.value[rowIndex] = _isRowValidAtIndex(rowIndex) ? "$valid" : "$edit";
   rowColor.value[rowIndex] = _isRowValidAtIndex(rowIndex) ? "success" : "error";
 }

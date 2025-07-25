@@ -251,9 +251,7 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
           expect(wahlscheineInput0.props("modelValue")).toBe(expected);
         }
       );
-    });
 
-    describe("onZulassungsgrundChanged", () => {
       it("should_updateRowIconToBeValid_when_rowHasValidInputs", async () => {
         const wahlenStore = useWahlenStore();
         wahlenStore.wahlen = [
@@ -295,58 +293,6 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
         expect(stimmzettelInputWahl2Row0.props("modelValue")).toBeTruthy();
         expect(iconRow0.props("icon")).toBe("$valid");
         expect(iconRow0.props("color")).toBe("success");
-      });
-
-      it("should_updateRowIconToBeInvalid_when_rowHasMissingInputs", async () => {
-        const wahlenStore = useWahlenStore();
-        wahlenStore.wahlen = [
-          prepareWahl()
-            .name("Wahl1")
-            .wahlID("id1")
-            .beanstandeteWahlbriefe(["KEIN_ORIGINAL_SCHEIN"])
-            .build(),
-          prepareWahl()
-            .name("Wahl2")
-            .wahlID("id2")
-            .beanstandeteWahlbriefe(["KEIN_ORIGINAL_SCHEIN"])
-            .build(),
-        ];
-
-        wrapper = mount(TheBeanstandeteWahlbriefeTable, {
-          global: {
-            plugins: [pinia, vuetify],
-          },
-        });
-
-        await nextTick();
-
-        const iconRow0 = wrapper.findComponent<typeof VIcon>(
-          `[data-test="rowstatus-icon-0"]`
-        );
-
-        expect(iconRow0.props("icon")).toBe("$valid");
-        expect(iconRow0.props("color")).toBe("success");
-
-        const wahlscheineInputRow0 = wrapper.findComponent<
-          typeof VAutocomplete
-        >('[data-test="wahlscheingruende-input-0"]');
-
-        // set wahlschein grund to zugelassen, to enforce other row values to be set to null
-        wahlscheineInputRow0.vm.$emit("update:modelValue", "Zugelassen");
-        await nextTick();
-
-        const stimmzettelInputWahl1Row0 = wrapper.findComponent<
-          typeof VAutocomplete
-        >(`[data-test="stimmzettelgruende-input-id1-0"]`);
-        const stimmzettelInputWahl2Row0 = wrapper.findComponent<
-          typeof VAutocomplete
-        >(`[data-test="stimmzettelgruende-input-id2-0"]`);
-
-        expect(wahlscheineInputRow0.props("modelValue")).toBeTruthy();
-        expect(stimmzettelInputWahl1Row0.props("modelValue")).toBeFalsy();
-        expect(stimmzettelInputWahl2Row0.props("modelValue")).toBeFalsy();
-        expect(iconRow0.props("icon")).toBe("$edit");
-        expect(iconRow0.props("color")).toBe("error");
       });
 
       it("should_disableWahlColumnInputsAndSetModelValue_when_wahlscheinColumnInputIsValidWahlscheinGrund", async () => {
@@ -397,157 +343,215 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
         );
         expect(stimmzettelInputWahl2Row0.props("disabled")).toBe(true);
       });
+    });
 
-      it("should_enableWahlColumnInputsAndSetValueToNull_when_wahlscheinColumnInputIsSetToZugelassen", async () => {
-        const wahlenStore = useWahlenStore();
-        wahlenStore.wahlen = [
-          prepareWahl()
-            .name("Wahl1")
-            .wahlID("id1")
-            .beanstandeteWahlbriefe(["KEIN_ORIGINAL_SCHEIN"])
-            .build(),
-          prepareWahl()
-            .name("Wahl2")
-            .wahlID("id2")
-            .beanstandeteWahlbriefe(["KEIN_ORIGINAL_SCHEIN"])
-            .build(),
-        ];
+    describe("onZulassungsgrundChanged", () => {
+      describe("onZulassungsgrundWahlscheinChanged", () => {
+        it("should_updateRowIconToBeInvalid_when_rowHasMissingInputs", async () => {
+          const wahlenStore = useWahlenStore();
+          wahlenStore.wahlen = [
+            prepareWahl()
+              .name("Wahl1")
+              .wahlID("id1")
+              .beanstandeteWahlbriefe(["KEIN_ORIGINAL_SCHEIN"])
+              .build(),
+            prepareWahl()
+              .name("Wahl2")
+              .wahlID("id2")
+              .beanstandeteWahlbriefe(["KEIN_ORIGINAL_SCHEIN"])
+              .build(),
+          ];
 
-        wrapper = mount(TheBeanstandeteWahlbriefeTable, {
-          global: {
-            plugins: [pinia, vuetify],
-          },
+          wrapper = mount(TheBeanstandeteWahlbriefeTable, {
+            global: {
+              plugins: [pinia, vuetify],
+            },
+          });
+
+          await nextTick();
+
+          const iconRow0 = wrapper.findComponent<typeof VIcon>(
+            `[data-test="rowstatus-icon-0"]`
+          );
+
+          expect(iconRow0.props("icon")).toBe("$valid");
+          expect(iconRow0.props("color")).toBe("success");
+
+          const wahlscheineInputRow0 = wrapper.findComponent<
+            typeof VAutocomplete
+          >('[data-test="wahlscheingruende-input-0"]');
+
+          // set wahlschein grund to zugelassen, to enforce other row values to be set to null
+          wahlscheineInputRow0.vm.$emit("update:modelValue", "Zugelassen");
+          await nextTick();
+
+          const stimmzettelInputWahl1Row0 = wrapper.findComponent<
+            typeof VAutocomplete
+          >(`[data-test="stimmzettelgruende-input-id1-0"]`);
+          const stimmzettelInputWahl2Row0 = wrapper.findComponent<
+            typeof VAutocomplete
+          >(`[data-test="stimmzettelgruende-input-id2-0"]`);
+
+          expect(wahlscheineInputRow0.props("modelValue")).toBeTruthy();
+          expect(stimmzettelInputWahl1Row0.props("modelValue")).toBeFalsy();
+          expect(stimmzettelInputWahl2Row0.props("modelValue")).toBeFalsy();
+          expect(iconRow0.props("icon")).toBe("$edit");
+          expect(iconRow0.props("color")).toBe("error");
         });
 
-        await nextTick();
+        it("should_enableWahlColumnInputsAndSetValueToNull_when_wahlscheinColumnInputIsSetToZugelassen", async () => {
+          const wahlenStore = useWahlenStore();
+          wahlenStore.wahlen = [
+            prepareWahl()
+              .name("Wahl1")
+              .wahlID("id1")
+              .beanstandeteWahlbriefe(["KEIN_ORIGINAL_SCHEIN"])
+              .build(),
+            prepareWahl()
+              .name("Wahl2")
+              .wahlID("id2")
+              .beanstandeteWahlbriefe(["KEIN_ORIGINAL_SCHEIN"])
+              .build(),
+          ];
 
-        const wahlscheineInputRow0 = wrapper.findComponent<
-          typeof VAutocomplete
-        >('[data-test="wahlscheingruende-input-0"]');
+          wrapper = mount(TheBeanstandeteWahlbriefeTable, {
+            global: {
+              plugins: [pinia, vuetify],
+            },
+          });
 
-        wahlscheineInputRow0.vm.$emit("update:modelValue", "Zugelassen");
-        await nextTick();
+          await nextTick();
 
-        const stimmzettelInputWahl1Row0 = wrapper.findComponent<
-          typeof VAutocomplete
-        >(`[data-test="stimmzettelgruende-input-id1-0"]`);
-        const stimmzettelInputWahl2Row0 = wrapper.findComponent<
-          typeof VAutocomplete
-        >(`[data-test="stimmzettelgruende-input-id2-0"]`);
+          const wahlscheineInputRow0 = wrapper.findComponent<
+            typeof VAutocomplete
+          >('[data-test="wahlscheingruende-input-0"]');
 
-        expect(wahlscheineInputRow0.props("modelValue")).toBe("Zugelassen");
-        expect(stimmzettelInputWahl1Row0.props("modelValue")).toBeFalsy();
-        expect(stimmzettelInputWahl1Row0.props("disabled")).toBe(false);
-        expect(stimmzettelInputWahl2Row0.props("modelValue")).toBeFalsy();
-        expect(stimmzettelInputWahl2Row0.props("disabled")).toBe(false);
+          wahlscheineInputRow0.vm.$emit("update:modelValue", "Zugelassen");
+          await nextTick();
+
+          const stimmzettelInputWahl1Row0 = wrapper.findComponent<
+            typeof VAutocomplete
+          >(`[data-test="stimmzettelgruende-input-id1-0"]`);
+          const stimmzettelInputWahl2Row0 = wrapper.findComponent<
+            typeof VAutocomplete
+          >(`[data-test="stimmzettelgruende-input-id2-0"]`);
+
+          expect(wahlscheineInputRow0.props("modelValue")).toBe("Zugelassen");
+          expect(stimmzettelInputWahl1Row0.props("modelValue")).toBeFalsy();
+          expect(stimmzettelInputWahl1Row0.props("disabled")).toBe(false);
+          expect(stimmzettelInputWahl2Row0.props("modelValue")).toBeFalsy();
+          expect(stimmzettelInputWahl2Row0.props("disabled")).toBe(false);
+        });
       });
 
-      it("should_setWahlColumnValues_when_anyWahlColumnInputExceptNichtWahlberechtigtIsSet", async () => {
-        const wahlenStore = useWahlenStore();
-        wahlenStore.wahlen = [
-          prepareWahl()
-            .name("Wahl1")
-            .wahlID("id1")
-            .beanstandeteWahlbriefe(["UMSCHLAG_NICHT_AMTLICH"])
-            .build(),
-          prepareWahl()
-            .name("Wahl2")
-            .wahlID("id2")
-            .beanstandeteWahlbriefe(["UMSCHLAG_NICHT_AMTLICH"])
-            .build(),
-        ];
+      describe("onZulassungsgrundStimmzettelChanged", () => {
+        it("should_setWahlColumnValues_when_anyWahlColumnInputExceptNichtWahlberechtigtIsSet", async () => {
+          const wahlenStore = useWahlenStore();
+          wahlenStore.wahlen = [
+            prepareWahl()
+              .name("Wahl1")
+              .wahlID("id1")
+              .beanstandeteWahlbriefe(["UMSCHLAG_NICHT_AMTLICH"])
+              .build(),
+            prepareWahl()
+              .name("Wahl2")
+              .wahlID("id2")
+              .beanstandeteWahlbriefe(["UMSCHLAG_NICHT_AMTLICH"])
+              .build(),
+          ];
 
-        wrapper = mount(TheBeanstandeteWahlbriefeTable, {
-          global: {
-            plugins: [pinia, vuetify],
-          },
+          wrapper = mount(TheBeanstandeteWahlbriefeTable, {
+            global: {
+              plugins: [pinia, vuetify],
+            },
+          });
+
+          await nextTick();
+
+          const oldZurueckweisungsgrund = "Nicht-amtlicher Stimmzettelumschlag";
+          const newZurueckweisungsgrund = "Lose Stimmzettel";
+
+          const stimmzettelInputWahl1Row0 = wrapper.findComponent<
+            typeof VAutocomplete
+          >(`[data-test="stimmzettelgruende-input-id1-0"]`);
+          const stimmzettelInputWahl2Row0 = wrapper.findComponent<
+            typeof VAutocomplete
+          >(`[data-test="stimmzettelgruende-input-id2-0"]`);
+
+          expect(stimmzettelInputWahl1Row0.props("modelValue")).toBe(
+            oldZurueckweisungsgrund
+          );
+          expect(stimmzettelInputWahl2Row0.props("modelValue")).toBe(
+            oldZurueckweisungsgrund
+          );
+
+          stimmzettelInputWahl1Row0.vm.$emit(
+            "update:modelValue",
+            newZurueckweisungsgrund
+          );
+          await nextTick();
+
+          expect(stimmzettelInputWahl1Row0.props("modelValue")).toBe(
+            newZurueckweisungsgrund
+          );
+          expect(stimmzettelInputWahl2Row0.props("modelValue")).toBe(
+            newZurueckweisungsgrund
+          );
         });
 
-        await nextTick();
+        it("should_notSetAnyValues_when_anyWahlColumnInputIsSetToNichtWahlberechtigt", async () => {
+          const wahlenStore = useWahlenStore();
+          wahlenStore.wahlen = [
+            prepareWahl()
+              .name("Wahl1")
+              .wahlID("id1")
+              .beanstandeteWahlbriefe(["UMSCHLAG_NICHT_AMTLICH"])
+              .build(),
+            prepareWahl()
+              .name("Wahl2")
+              .wahlID("id2")
+              .beanstandeteWahlbriefe(["UMSCHLAG_NICHT_AMTLICH"])
+              .build(),
+          ];
 
-        const oldZurueckweisungsgrund = "Nicht-amtlicher Stimmzettelumschlag";
-        const newZurueckweisungsgrund = "Lose Stimmzettel";
+          wrapper = mount(TheBeanstandeteWahlbriefeTable, {
+            global: {
+              plugins: [pinia, vuetify],
+            },
+          });
 
-        const stimmzettelInputWahl1Row0 = wrapper.findComponent<
-          typeof VAutocomplete
-        >(`[data-test="stimmzettelgruende-input-id1-0"]`);
-        const stimmzettelInputWahl2Row0 = wrapper.findComponent<
-          typeof VAutocomplete
-        >(`[data-test="stimmzettelgruende-input-id2-0"]`);
+          await nextTick();
 
-        expect(stimmzettelInputWahl1Row0.props("modelValue")).toBe(
-          oldZurueckweisungsgrund
-        );
-        expect(stimmzettelInputWahl2Row0.props("modelValue")).toBe(
-          oldZurueckweisungsgrund
-        );
+          const oldZurueckweisungsgrund = "Nicht-amtlicher Stimmzettelumschlag";
+          const newZurueckweisungsgrund = "Für diese Wahl nicht wahlberechtigt";
 
-        stimmzettelInputWahl1Row0.vm.$emit(
-          "update:modelValue",
-          newZurueckweisungsgrund
-        );
-        await nextTick();
+          const stimmzettelInputWahl1Row0 = wrapper.findComponent<
+            typeof VAutocomplete
+          >(`[data-test="stimmzettelgruende-input-id1-0"]`);
+          const stimmzettelInputWahl2Row0 = wrapper.findComponent<
+            typeof VAutocomplete
+          >(`[data-test="stimmzettelgruende-input-id2-0"]`);
 
-        expect(stimmzettelInputWahl1Row0.props("modelValue")).toBe(
-          newZurueckweisungsgrund
-        );
-        expect(stimmzettelInputWahl2Row0.props("modelValue")).toBe(
-          newZurueckweisungsgrund
-        );
-      });
+          expect(stimmzettelInputWahl1Row0.props("modelValue")).toBe(
+            oldZurueckweisungsgrund
+          );
+          expect(stimmzettelInputWahl2Row0.props("modelValue")).toBe(
+            oldZurueckweisungsgrund
+          );
 
-      it("should_notSetAnyValues_when_anyWahlColumnInputIsSetToNichtWahlberechtigt", async () => {
-        const wahlenStore = useWahlenStore();
-        wahlenStore.wahlen = [
-          prepareWahl()
-            .name("Wahl1")
-            .wahlID("id1")
-            .beanstandeteWahlbriefe(["UMSCHLAG_NICHT_AMTLICH"])
-            .build(),
-          prepareWahl()
-            .name("Wahl2")
-            .wahlID("id2")
-            .beanstandeteWahlbriefe(["UMSCHLAG_NICHT_AMTLICH"])
-            .build(),
-        ];
+          stimmzettelInputWahl1Row0.vm.$emit(
+            "update:modelValue",
+            newZurueckweisungsgrund
+          );
+          await nextTick();
 
-        wrapper = mount(TheBeanstandeteWahlbriefeTable, {
-          global: {
-            plugins: [pinia, vuetify],
-          },
+          expect(stimmzettelInputWahl1Row0.props("modelValue")).toBe(
+            newZurueckweisungsgrund
+          );
+          expect(stimmzettelInputWahl2Row0.props("modelValue")).toBe(
+            oldZurueckweisungsgrund
+          );
         });
-
-        await nextTick();
-
-        const oldZurueckweisungsgrund = "Nicht-amtlicher Stimmzettelumschlag";
-        const newZurueckweisungsgrund = "Für diese Wahl nicht wahlberechtigt";
-
-        const stimmzettelInputWahl1Row0 = wrapper.findComponent<
-          typeof VAutocomplete
-        >(`[data-test="stimmzettelgruende-input-id1-0"]`);
-        const stimmzettelInputWahl2Row0 = wrapper.findComponent<
-          typeof VAutocomplete
-        >(`[data-test="stimmzettelgruende-input-id2-0"]`);
-
-        expect(stimmzettelInputWahl1Row0.props("modelValue")).toBe(
-          oldZurueckweisungsgrund
-        );
-        expect(stimmzettelInputWahl2Row0.props("modelValue")).toBe(
-          oldZurueckweisungsgrund
-        );
-
-        stimmzettelInputWahl1Row0.vm.$emit(
-          "update:modelValue",
-          newZurueckweisungsgrund
-        );
-        await nextTick();
-
-        expect(stimmzettelInputWahl1Row0.props("modelValue")).toBe(
-          newZurueckweisungsgrund
-        );
-        expect(stimmzettelInputWahl2Row0.props("modelValue")).toBe(
-          oldZurueckweisungsgrund
-        );
       });
     });
 

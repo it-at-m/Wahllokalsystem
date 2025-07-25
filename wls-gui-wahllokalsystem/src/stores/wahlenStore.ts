@@ -84,37 +84,45 @@ export const useWahlenStore = defineStore(storeID, () => {
   async function saveBeanstandeteWahlbriefe() {
     isBeanstandeteWahlbriefeSaving.value = true;
 
-    const wahlenGroupedByWvzNr = new Map<number, Wahl[]>();
-    if (wahlen.value) {
-      for (const wahl of wahlen.value) {
-        const existingWahlen =
-          wahlenGroupedByWvzNr.get(wahl.waehlerverzeichnisNummer) ?? [];
-        existingWahlen.push(wahl);
-        wahlenGroupedByWvzNr.set(wahl.waehlerverzeichnisNummer, existingWahlen);
-      }
-    }
-
-    for (const [wvzNr, wahlenWithWvzNr] of wahlenGroupedByWvzNr.entries()) {
-      const beanstandeteWahlbriefeDTO: BeanstandeteWahlbriefeCreateDTO = {
-        beanstandeteWahlbriefe: {},
-      };
-
-      for (const wahl of wahlenWithWvzNr) {
-        if (
-          wahl.beanstandeteWahlbriefe &&
-          wahl.beanstandeteWahlbriefe.every((grund) => grund !== null)
-        ) {
-          beanstandeteWahlbriefeDTO.beanstandeteWahlbriefe[wahl.wahlID] =
-            wahl.beanstandeteWahlbriefe.map((grund) => grund?.toString() ?? "");
+    try {
+      const wahlenGroupedByWvzNr = new Map<number, Wahl[]>();
+      if (wahlen.value) {
+        for (const wahl of wahlen.value) {
+          const existingWahlen =
+            wahlenGroupedByWvzNr.get(wahl.waehlerverzeichnisNummer) ?? [];
+          existingWahlen.push(wahl);
+          wahlenGroupedByWvzNr.set(
+            wahl.waehlerverzeichnisNummer,
+            existingWahlen
+          );
         }
       }
-      await briefwahlService.postBeanstandeteWahlbriefe(
-        beanstandeteWahlbriefeDTO,
-        currentUserWahlbezirkID.value,
-        wvzNr
-      );
+
+      for (const [wvzNr, wahlenWithWvzNr] of wahlenGroupedByWvzNr.entries()) {
+        const beanstandeteWahlbriefeDTO: BeanstandeteWahlbriefeCreateDTO = {
+          beanstandeteWahlbriefe: {},
+        };
+
+        for (const wahl of wahlenWithWvzNr) {
+          if (
+            wahl.beanstandeteWahlbriefe &&
+            wahl.beanstandeteWahlbriefe.every((grund) => grund !== null)
+          ) {
+            beanstandeteWahlbriefeDTO.beanstandeteWahlbriefe[wahl.wahlID] =
+              wahl.beanstandeteWahlbriefe.map(
+                (grund) => grund?.toString() ?? ""
+              );
+          }
+        }
+        await briefwahlService.postBeanstandeteWahlbriefe(
+          beanstandeteWahlbriefeDTO,
+          currentUserWahlbezirkID.value,
+          wvzNr
+        );
+      }
+    } finally {
+      isBeanstandeteWahlbriefeSaving.value = false;
     }
-    isBeanstandeteWahlbriefeSaving.value = false;
   }
 
   function getWahlNameOrBlankStringById(wahlID: string) {

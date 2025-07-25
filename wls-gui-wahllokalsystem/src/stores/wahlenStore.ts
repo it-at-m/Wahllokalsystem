@@ -47,6 +47,17 @@ export const useWahlenStore = defineStore(storeID, () => {
     }
   }
 
+  function getWahlOrUndefinedById(wahlID: string) {
+    return wahlen.value
+      ? wahlen.value.find((wahl) => wahl.wahlID === wahlID)
+      : undefined;
+  }
+
+  function getWaehlerverzeichnisOrUndefinedById(wahlID: string) {
+    const wahl = getWahlOrUndefinedById(wahlID);
+    return wahl ? wahl.waehlerverzeichnisNummer : undefined;
+  }
+
   async function initBeanstandeteWahlbriefe() {
     for (const wvzNr of waehlerverzeichnisNummern.value) {
       const beanstandeteWahlbriefe =
@@ -116,24 +127,13 @@ export const useWahlenStore = defineStore(storeID, () => {
     return wahl ? wahl.wahltag : "";
   }
 
-  function getWaehlerverzeichnisOrUndefinedById(wahlID: string) {
-    const wahl = getWahlOrUndefinedById(wahlID);
-    return wahl ? wahl.waehlerverzeichnisNummer : undefined;
-  }
-
-  function getWahlOrUndefinedById(wahlID: string) {
-    return wahlen.value
-      ? wahlen.value.find((wahl) => wahl.wahlID === wahlID)
-      : undefined;
-  }
-
   return {
     wahlen,
+    getWaehlerverzeichnisOrUndefinedById,
     waehlerverzeichnisNummern,
-    getWahlOrUndefinedById,
     getWahlNameOrBlankStringById,
     getWahlTagOrBlankStringById,
-    getWaehlerverzeichnisOrUndefinedById,
+    getWahlOrUndefinedById,
     initWahlen,
     initBeanstandeteWahlbriefe,
     addBeanstandeterWahlbriefEntry,

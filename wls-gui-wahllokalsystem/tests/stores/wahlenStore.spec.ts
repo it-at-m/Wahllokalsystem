@@ -161,7 +161,7 @@ describe("wahlenStore.ts", () => {
   });
 
   describe("getWahlOrUndefinedById", () => {
-    it("should_returnWahl_when_calledWithWahlId", () => {
+    it("should_getWahl_when_calledWithWahlId", () => {
       const wahlOne = createWahl();
       const wahlTwo = createWahl();
       const wahlThree = createWahl();
@@ -173,17 +173,20 @@ describe("wahlenStore.ts", () => {
       expect(result).toStrictEqual(wahlOne);
     });
 
-    it("should_returnUndefined_when_calledWithWahlIdThatDoesNotExist", () => {
+    it("should_getUndefined_when_calledWithWahlIdThatDoesNotExist", () => {
       const wahlOne = createWahl();
+      const wahlTwo = createWahl();
+      const wahlThree = createWahl();
+      const wahlFour = createWahl();
 
-      unitUnderTest.wahlen = [wahlOne];
+      unitUnderTest.wahlen = [wahlOne, wahlTwo, wahlThree];
 
-      const result = unitUnderTest.getWahlOrUndefinedById("invalid id");
+      const result = unitUnderTest.getWahlOrUndefinedById(wahlFour.wahlID);
 
       expect(result).toBeUndefined();
     });
 
-    it("should_returnUndefined_when_wahlenDoNotExist", () => {
+    it("should_getUndefined_when_wahlenDoNotExist", () => {
       unitUnderTest.wahlen = null;
 
       const result = unitUnderTest.getWahlOrUndefinedById("testId");

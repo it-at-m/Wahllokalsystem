@@ -11,12 +11,15 @@
       </v-container>
     </v-main>
     <the-broadcast-read-confirmation-dialog />
-    <the-wahlvorstand-anwesenheits-check-popup-dialog />
+    <the-wahlvorstand-anwesenheits-check-popup-dialog
+      v-if="currentUserWahlbezirksArt === WahlbezirksArtEnum.UWB"
+    />
   </v-app>
 </template>
 
 <script setup lang="ts">
 import localforage from "localforage";
+import { storeToRefs } from "pinia";
 import { onMounted, onUnmounted } from "vue";
 import { VApp, VContainer, VFadeTransition, VMain } from "vuetify/components";
 
@@ -30,9 +33,11 @@ import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { loadEreignisse } = useEreignisStore();
 const { loadUser } = useUserStore();
+const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
 const { initTasks } = useTaskManagerStore();
 const { loadWaehler } = useMonitoringStore();
 const { initWahlen } = useWahlenStore();

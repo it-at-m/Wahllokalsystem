@@ -78,6 +78,37 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
       );
     });
 
+    it("should_renderWithDisabledSaveButton_when_rowsAreInvalid", async (context) => {
+      const wahlenStore = useWahlenStore();
+      wahlenStore.wahlen = [
+        prepareWahl()
+          .name("Wahl1")
+          .wahlID("id1")
+          .beanstandeteWahlbriefe(["KEIN_ORIGINAL_SCHEIN"])
+          .build(),
+        prepareWahl()
+          .name("Wahl2")
+          .wahlID("id2")
+          .beanstandeteWahlbriefe([null])
+          .build(),
+      ];
+
+      wrapper = mount(TheBeanstandeteWahlbriefeErfassenCard, {
+        global: {
+          plugins: [pinia, vuetify],
+        },
+      });
+
+      await flushPromises();
+
+      const saveButton = wrapper.findComponent<typeof VBtn>(BaseButtonSave);
+
+      expect(saveButton.props("disabled")).toBe(true);
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+
     it("should_renderWithEnabledSaveButton_when_rowsAreValid", async (context) => {
       const wahlenStore = useWahlenStore();
       wahlenStore.wahlen = [

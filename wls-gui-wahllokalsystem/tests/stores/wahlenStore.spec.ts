@@ -1,3 +1,5 @@
+import type { Wahl } from "@/types/wahl/Wahl.ts";
+
 import { useBeanstandeteWahlbriefeTestDataFactory } from "@tests/utils/briefwahl/BeanstandeteWahlbriefeTestDataFactory.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
@@ -29,10 +31,8 @@ vi.mock("@/composables/briefwahl/briefwahlService.ts", () => ({
 const { createWahl, prepareWahl } = useWahlTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
-const {
-  prepareBeanstandeteWahlbriefe,
-  prepareBeanstandeteWahlbriefeCreateDTO,
-} = useBeanstandeteWahlbriefeTestDataFactory();
+const { prepareBeanstandeteWahlbriefe } =
+  useBeanstandeteWahlbriefeTestDataFactory();
 
 const mockedNow = new Date();
 
@@ -315,17 +315,18 @@ describe("wahlenStore.ts", () => {
 
       const wahlID = "wahlID";
       const wvzNr = 1;
-      const dto = prepareBeanstandeteWahlbriefeCreateDTO()
-        .beanstandeteWahlbriefe({ [wahlID]: ["ZUGELASSEN"] })
+
+      const wahl = prepareWahl()
+        .wahlID(wahlID)
+        .waehlerverzeichnisNummer(wvzNr)
+        .beanstandeteWahlbriefe(["ZUGELASSEN"])
         .build();
 
-      unitUnderTest.wahlen = [
-        prepareWahl()
-          .wahlID(wahlID)
-          .waehlerverzeichnisNummer(wvzNr)
-          .beanstandeteWahlbriefe(["ZUGELASSEN"])
-          .build(),
-      ];
+      const mockedWahlenGroupedByWvzNr = new Map<number, Wahl[]>([
+        [wvzNr, [wahl]],
+      ]);
+
+      unitUnderTest.wahlen = [wahl];
       expect(unitUnderTest.wahlen).toBeDefined();
 
       mockDefinitions.postBeanstandeteWahlbriefe.mockReturnValue(
@@ -335,9 +336,8 @@ describe("wahlenStore.ts", () => {
       await unitUnderTest.saveBeanstandeteWahlbriefe();
 
       expect(mockDefinitions.postBeanstandeteWahlbriefe).toHaveBeenCalledWith(
-        dto,
-        wahlbezirkID,
-        wvzNr
+        mockedWahlenGroupedByWvzNr,
+        wahlbezirkID
       );
     });
   });

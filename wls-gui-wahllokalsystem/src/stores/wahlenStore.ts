@@ -1,4 +1,3 @@
-import type { BeanstandeteWahlbriefeCreateDTO } from "@/api/wls-clients/generated-briefwahl-api";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import { defineStore, storeToRefs } from "pinia";
@@ -98,28 +97,10 @@ export const useWahlenStore = defineStore(storeID, () => {
         }
       }
 
-      for (const [wvzNr, wahlenWithWvzNr] of wahlenGroupedByWvzNr.entries()) {
-        const beanstandeteWahlbriefeDTO: BeanstandeteWahlbriefeCreateDTO = {
-          beanstandeteWahlbriefe: {},
-        };
-
-        for (const wahl of wahlenWithWvzNr) {
-          if (
-            wahl.beanstandeteWahlbriefe &&
-            wahl.beanstandeteWahlbriefe.every((grund) => grund !== null)
-          ) {
-            beanstandeteWahlbriefeDTO.beanstandeteWahlbriefe[wahl.wahlID] =
-              wahl.beanstandeteWahlbriefe.map(
-                (grund) => grund?.toString() ?? ""
-              );
-          }
-        }
-        await briefwahlService.postBeanstandeteWahlbriefe(
-          beanstandeteWahlbriefeDTO,
-          currentUserWahlbezirkID.value,
-          wvzNr
-        );
-      }
+      await briefwahlService.postBeanstandeteWahlbriefe(
+        wahlenGroupedByWvzNr,
+        currentUserWahlbezirkID.value
+      );
     } finally {
       isBeanstandeteWahlbriefeSaving.value = false;
     }

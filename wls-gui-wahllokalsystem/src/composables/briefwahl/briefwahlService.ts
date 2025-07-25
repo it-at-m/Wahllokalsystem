@@ -1,5 +1,6 @@
 import type { BeanstandeteWahlbriefeCreateDTO } from "@/api/wls-clients/generated-briefwahl-api";
 import type { Wahlbriefdaten } from "@/types/briefwahl/Wahlbriefdaten";
+import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import {
   BeanstandeteWahlbriefeControllerApi,
@@ -54,16 +55,34 @@ export function useBriefwahlService() {
   }
 
   async function postBeanstandeteWahlbriefe(
-    beanstandeteWahlbriefeDTO: BeanstandeteWahlbriefeCreateDTO,
-    wahlbezirkID: string,
-    waehlerVerzeichnisNummer: number
+    wahlenGroupedByWvzNr: Map<number, Wahl[]>,
+    wahlbezirkID: string
   ) {
     try {
-      await beanstandeteWahlbriefeControllerAPI.setBeanstandeteWahlbriefe(
-        wahlbezirkID,
-        waehlerVerzeichnisNummer,
-        beanstandeteWahlbriefeDTO
-      );
+      for (const [wvzNr, wahlenWithWvzNr] of wahlenGroupedByWvzNr.entries()) {
+        const beanstandeteWahlbriefeDTO: BeanstandeteWahlbriefeCreateDTO = {
+          beanstandeteWahlbriefe: {},
+        };
+
+        wahlenWithWvzNr.map((wahl) => {
+          if (
+            wahl.beanstandeteWahlbriefe &&
+            wahl.beanstandeteWahlbriefe.every((grund) => grund !== null)
+          ) {
+            beanstandeteWahlbriefeDTO.beanstandeteWahlbriefe[wahl.wahlID] =
+              wahl.beanstandeteWahlbriefe.map(
+                (grund) => grund?.toString() ?? ""
+              );
+          }
+        });
+
+        await beanstandeteWahlbriefeControllerAPI.setBeanstandeteWahlbriefe(
+          wahlbezirkID,
+          wvzNr,
+          beanstandeteWahlbriefeDTO
+        );
+      }
+
       addNotification(
         "Die beanstandeten Wahlbriefe wurden erfolgreich gespeichert.",
         UserNotificationCategoryEnum.SUCCESS

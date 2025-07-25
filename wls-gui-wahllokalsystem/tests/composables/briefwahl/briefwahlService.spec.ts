@@ -1,8 +1,12 @@
+import type { Wahl } from "@/types/wahl/Wahl.ts";
+
 import { useBeanstandeteWahlbriefeTestDataFactory } from "@tests/utils/briefwahl/BeanstandeteWahlbriefeTestDataFactory.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService.ts";
+import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getBeanstandeteWahlbriefe: vi.fn(),
@@ -37,12 +41,13 @@ describe("briefwahlService.ts", () => {
   const {
     createBeanstandeteWahlbriefeDTO,
     createBeanstandeteWahlbriefe,
-    createBeanstandeteWahlbriefeCreateDTO,
+    prepareBeanstandeteWahlbriefeCreateDTO,
   } = useBeanstandeteWahlbriefeTestDataFactory();
   const { getBeanstandeteWahlbriefe, postBeanstandeteWahlbriefe } =
     useBriefwahlService();
   const { generateRandomNumber, generateRandomString } =
     useCommonTestDataFactory();
+  const { prepareWahl } = useWahlTestDataFactory();
 
   beforeEach(() => {
     vi.resetAllMocks();
@@ -93,11 +98,26 @@ describe("briefwahlService.ts", () => {
     it("should_postBeanstandeteWahlbriefe_when_calledWithValidParams", async () => {
       const wvzNr = generateRandomNumber(1);
       const wahlbezirkID = generateRandomString(10);
-      const dto = createBeanstandeteWahlbriefeCreateDTO();
+      const beanstandeteWahlbriefe = [ZurueckweisungsgrundEnum.Zugelassen];
+      const wahl = prepareWahl()
+        .beanstandeteWahlbriefe(beanstandeteWahlbriefe)
+        .waehlerverzeichnisNummer(wvzNr)
+        .build();
+      const mockedWahlenGroupedByWvzNr = new Map<number, Wahl[]>([
+        [wvzNr, [wahl]],
+      ]);
+      const dto = prepareBeanstandeteWahlbriefeCreateDTO()
+        .beanstandeteWahlbriefe({
+          [wahl.wahlID]: beanstandeteWahlbriefe,
+        })
+        .build();
 
       mockDefinitions.setBeanstandeteWahlbriefe.mockReturnValue({});
 
-      await postBeanstandeteWahlbriefe(dto, wahlbezirkID, wvzNr);
+      await postBeanstandeteWahlbriefe(
+        mockedWahlenGroupedByWvzNr,
+        wahlbezirkID
+      );
 
       expect(mockDefinitions.setBeanstandeteWahlbriefe).toHaveBeenCalledWith(
         wahlbezirkID,
@@ -124,14 +144,26 @@ describe("briefwahlService.ts", () => {
     ])(
       "should_showUserNotification_when_$when",
       async ({ wvzNr, wahlbezirkID }) => {
-        const dto = createBeanstandeteWahlbriefeCreateDTO();
+        const beanstandeteWahlbriefe = [ZurueckweisungsgrundEnum.Zugelassen];
+        const wahl = prepareWahl()
+          .beanstandeteWahlbriefe(beanstandeteWahlbriefe)
+          .waehlerverzeichnisNummer(wvzNr)
+          .build();
+        const mockedWahlenGroupedByWvzNr = new Map<number, Wahl[]>([
+          [wvzNr, [wahl]],
+        ]);
+        const dto = prepareBeanstandeteWahlbriefeCreateDTO()
+          .beanstandeteWahlbriefe({
+            [wahl.wahlID]: beanstandeteWahlbriefe,
+          })
+          .build();
 
         mockDefinitions.setBeanstandeteWahlbriefe.mockRejectedValueOnce(
           new Error("mocked api call failed")
         );
 
         await expect(async () =>
-          postBeanstandeteWahlbriefe(dto, wahlbezirkID, wvzNr)
+          postBeanstandeteWahlbriefe(mockedWahlenGroupedByWvzNr, wahlbezirkID)
         ).rejects.toThrowError();
 
         expect(mockDefinitions.setBeanstandeteWahlbriefe).toHaveBeenCalledWith(

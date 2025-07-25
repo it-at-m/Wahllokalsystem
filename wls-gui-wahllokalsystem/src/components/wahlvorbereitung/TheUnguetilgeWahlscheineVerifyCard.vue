@@ -60,7 +60,6 @@
         </base-input-feedback-card>
         <v-img
           position="left"
-          alt=""
           style="height: 40mm"
           :src="wahlscheinExampleImage"
         />

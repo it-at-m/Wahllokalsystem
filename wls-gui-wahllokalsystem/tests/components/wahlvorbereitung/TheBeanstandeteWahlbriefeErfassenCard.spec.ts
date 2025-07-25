@@ -23,7 +23,7 @@ import { nextTick } from "vue";
 import { VBtn } from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import TheBeanstandeteWahlbriefeErfassenCard from "@/components/wahlvorbereitung/TheBeanstandeteWahlbriefeErfassenCard.vue";
+import TheBeanstandeteWahlbriefeErfassenCard from "@/components/wahlvorbereitung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeErfassenCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 

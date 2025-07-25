@@ -21,7 +21,7 @@ import {
 } from "vitest";
 import { nextTick } from "vue";
 
-import TheBeanstandeteWahlbriefeRowStatusIcon from "@/components/common/icons/TheBeanstandeteWahlbriefeRowStatusIcon.vue";
+import TheBeanstandeteWahlbriefeRowStatusIcon from "@/components/wahlvorbereitung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeRowStatusIcon.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 

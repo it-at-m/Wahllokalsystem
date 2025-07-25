@@ -23,7 +23,7 @@ import {
 import { nextTick } from "vue";
 import { VBtn } from "vuetify/components";
 
-import TheBeanstandeteWahlbriefeTable from "@/components/wahlvorbereitung/TheBeanstandeteWahlbriefeTable.vue";
+import TheBeanstandeteWahlbriefeTable from "@/components/wahlvorbereitung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeTable.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";

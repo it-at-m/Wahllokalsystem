@@ -94,7 +94,7 @@ import { storeToRefs } from "pinia";
 import { computed, onMounted, ref } from "vue";
 import { VAutocomplete, VBtn, VRow, VTable } from "vuetify/components";
 
-import TheBeanstandeteWahlbriefeRowStatusIcon from "@/components/common/icons/TheBeanstandeteWahlbriefeRowStatusIcon.vue";
+import TheBeanstandeteWahlbriefeRowStatusIcon from "@/components/wahlvorbereitung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeRowStatusIcon.vue";
 import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";

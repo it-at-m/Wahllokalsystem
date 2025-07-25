@@ -35,7 +35,7 @@ import {
 } from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import TheBeanstandeteWahlbriefeTable from "@/components/wahlvorbereitung/TheBeanstandeteWahlbriefeTable.vue";
+import TheBeanstandeteWahlbriefeTable from "@/components/wahlvorbereitung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeTable.vue";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const { isBeanstandeteWahlbriefeSaving } = storeToRefs(useWahlenStore());

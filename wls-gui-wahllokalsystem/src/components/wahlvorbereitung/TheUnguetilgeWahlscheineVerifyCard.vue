@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <div>
     <v-card-title>Wahlschein prüfen</v-card-title>
     <v-card-text class="pb-0">
       <v-form
@@ -61,6 +61,7 @@
         <v-img
           position="left"
           style="height: 40mm"
+          class="mt-2"
           :src="wahlscheinExampleImage"
         />
 
@@ -93,7 +94,7 @@
         @click="onRefreshClicked"
       />
     </v-card-actions>
-  </v-card>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -104,7 +105,6 @@ import { storeToRefs } from "pinia";
 import { computed, ref, useTemplateRef } from "vue";
 import {
   VBtn,
-  VCard,
   VCardActions,
   VCardText,
   VCardTitle,

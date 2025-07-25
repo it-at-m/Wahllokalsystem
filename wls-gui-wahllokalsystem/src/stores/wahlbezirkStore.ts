@@ -5,7 +5,7 @@ import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvo
 import type { Wahlvorbereitung } from "@/types/wahlvorbereitung/Wahlvorbereitung.ts";
 
 import { defineStore, storeToRefs } from "pinia";
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 
 import { useUngueltigeWahlscheineService } from "@/composables/basisdaten/ungueltigeWahlscheineService.ts";
 import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService";
@@ -58,6 +58,11 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   const urnenWahlVorbereitungIsSaving = ref(false);
   const briefWahlVorbereitungIsSaving = ref(false);
   const ungueltigeWahlscheine = ref<UngueltigerWahlschein[]>([]);
+  const ungueltigeWahlscheineIsLoading = ref(false);
+  const ungueltigeWahlscheineLoadingFailed = ref(false);
+  const ungueltigeWahlscheineIsEmpty = computed(
+    () => ungueltigeWahlscheine.value.length === 0
+  );
 
   const wahlbriefDatenIsSaving = ref(false);
   const wahlbriefDaten = ref<Wahlbriefdaten>({
@@ -96,6 +101,17 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
       })) || [];
   });
 
+  function getUngueltigerWahlscheinByWahlscheinnummer(
+    wahlscheinNummer: string
+  ) {
+    return (
+      ungueltigeWahlscheine.value.find(
+        (ungueltigerWahlschein) =>
+          ungueltigerWahlschein.wahlscheinnummer === wahlscheinNummer
+      ) ?? null
+    );
+  }
+
   async function initUngueltigeWahlscheine(sendNotification = true) {
     ungueltigeWahlscheine.value = await getUngueltigeWahlscheine(
       currentUserWahltagID.value,
@@ -120,6 +136,23 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
         waehlerverzeichnisNummer,
         sendNotification
       );
+    }
+  }
+
+  async function loadUngueltigeWahlscheine() {
+    ungueltigeWahlscheineIsLoading.value = true;
+    ungueltigeWahlscheineLoadingFailed.value = false;
+    ungueltigeWahlscheine.value = [];
+    try {
+      ungueltigeWahlscheine.value = await getUngueltigeWahlscheine(
+        currentUserWahltagID.value,
+        currentUserWahlbezirksArt.value,
+        true
+      );
+    } catch {
+      ungueltigeWahlscheineLoadingFailed.value = true;
+    } finally {
+      ungueltigeWahlscheineIsLoading.value = false;
     }
   }
 
@@ -225,8 +258,13 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     schliessungsuhrzeitIsSaving,
     schliessungsuhrzeitSent,
     ungueltigeWahlscheine,
+    ungueltigeWahlscheineIsLoading,
+    ungueltigeWahlscheineIsEmpty,
+    ungueltigeWahlscheineLoadingFailed,
+    getUngueltigerWahlscheinByWahlscheinnummer,
     initUngueltigeWahlscheine,
     loadPflegeWaehlerverzeichnis,
+    loadUngueltigeWahlscheine,
     sendEroeffnungsuhrzeit,
     sendPflegeWaehlerverzeichnis,
     sendSchliessungsuhrzeit,

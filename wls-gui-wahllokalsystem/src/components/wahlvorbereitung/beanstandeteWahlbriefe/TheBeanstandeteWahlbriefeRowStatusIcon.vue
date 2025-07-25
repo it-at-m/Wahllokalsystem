@@ -33,8 +33,7 @@ function areRowInputsValid() {
     ? wahlen.value.every(
         (wahl) =>
           wahl.beanstandeteWahlbriefe &&
-          wahl.beanstandeteWahlbriefe[props.index] &&
-          !!wahl.beanstandeteWahlbriefe[props.index]
+          wahl.beanstandeteWahlbriefe[props.index]
       )
     : false;
 }

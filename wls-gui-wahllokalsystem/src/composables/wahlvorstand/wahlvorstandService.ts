@@ -6,12 +6,14 @@ import {
 } from "@/api/wls-clients/generated-wahlvorstand-api";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWahlvorstandMapper } from "@/composables/wahlvorstand/wahlvorstandMapper";
+import { useWahlvorstandComparators } from "@/composables/wahlvorstand/wahlvorstandUtils.ts";
 import { WAHLVORSTAND_SERVICE_API_URL } from "@/constants";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { toModel, toDto } = useWahlvorstandMapper();
 
 const userNotificationService = useUserNotificationService();
+const { compareWahlvorstandsMitglieder } = useWahlvorstandComparators();
 
 export function useWahlvorstandService() {
   const wahlvorstandControllerApi = new WahlvorstandControllerApi(
@@ -41,7 +43,13 @@ export function useWahlvorstandService() {
           UserNotificationCategoryEnum.SUCCESS
         );
       }
-      return toModel(response.data);
+
+      const wahlvorstand = toModel(response.data);
+      wahlvorstand?.wahlvorstandsmitglieder.sort(
+        compareWahlvorstandsMitglieder
+      );
+
+      return wahlvorstand;
     } catch (error) {
       if (sendNotification) {
         userNotificationService.addNotification(

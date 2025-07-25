@@ -25,22 +25,6 @@ const wahlWahlartEnumValues = Object.values(WahlWahlartEnum);
 const wahlDTOWahlartEnumValues = Object.values(WahlDTOWahlartEnum);
 
 export function useWahlTestDataFactory() {
-  function createRandomFarbe(): Farbe {
-    return {
-      r: generateRandomNumberInRange(0, 255),
-      g: generateRandomNumberInRange(0, 255),
-      b: generateRandomNumberInRange(0, 255),
-    };
-  }
-
-  function createRandomFarbeDTO(): FarbeDTO {
-    return {
-      r: generateRandomNumberInRange(0, 255),
-      g: generateRandomNumberInRange(0, 255),
-      b: generateRandomNumberInRange(0, 255),
-    };
-  }
-
   function createWahlDTO(): WahlDTO {
     return {
       wahlID: generateRandomString(10),
@@ -51,10 +35,9 @@ export function useWahlTestDataFactory() {
       wahlart:
         wahlDTOWahlartEnumValues[
           generateRandomNumberInRange(0, wahlDTOWahlartEnumValues.length - 1)
-        ],
-      farbe: createRandomFarbeDTO(),
+          ],
+      farbe: _createRandomFarbeDTO(),
       nummer: generateRandomString(5),
-      beanstandeteWahlbriefe: createRandomBeanstandeteWahlbriefeValues(),
     };
   }
 
@@ -68,9 +51,10 @@ export function useWahlTestDataFactory() {
       wahlart:
         wahlWahlartEnumValues[
           generateRandomNumberInRange(0, wahlWahlartEnumValues.length - 1)
-        ],
-      farbe: createRandomFarbe(), // Randomly generated Farbe
+          ],
+      farbe: _createRandomFarbe(), // Randomly generated Farbe
       nummer: generateRandomString(5),
+      beanstandeteWahlbriefe: createRandomBeanstandeteWahlbriefeValues(),
     };
   }
 
@@ -80,6 +64,22 @@ export function useWahlTestDataFactory() {
 
   function prepareWahl(): Builder<Wahl> {
     return proxyBuilder<Wahl>(createWahl());
+  }
+
+  function _createRandomFarbe(): Farbe {
+    return {
+      r: generateRandomNumberInRange(0, 255),
+      g: generateRandomNumberInRange(0, 255),
+      b: generateRandomNumberInRange(0, 255),
+    };
+  }
+
+  function _createRandomFarbeDTO(): FarbeDTO {
+    return {
+      r: generateRandomNumberInRange(0, 255),
+      g: generateRandomNumberInRange(0, 255),
+      b: generateRandomNumberInRange(0, 255),
+    };
   }
 
   return {

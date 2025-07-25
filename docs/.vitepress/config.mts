@@ -176,6 +176,10 @@ export default withMermaid({
               text: "ArchUnit Rules Testen",
               link: `${PATH_GUIDES}archunit-rule-tests.md`,
             },
+            {
+              text: "Aktualisierung von Images",
+              link: `${PATH_GUIDES}update-images.md`,
+            },
           ],
         },
         {
@@ -206,6 +210,10 @@ export default withMermaid({
                 {
                   text: "Offlinefähigkeit-Konzept",
                   link: `${PATH_SYSSPEC}frontend/offlinefaehigkeit-konzept.md`,
+                },
+                {
+                  text: "Task-Factories",
+                  link: `${PATH_SYSSPEC}frontend/task-factories.md`,
                 },
               ],
             },

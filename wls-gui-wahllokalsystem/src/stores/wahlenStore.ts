@@ -17,6 +17,7 @@ export const useWahlenStore = defineStore(storeID, () => {
   const { currentUserWahltagID, currentUserWahlbezirkID } =
     storeToRefs(useUserStore());
   const wahlen = ref<Wahl[] | null>();
+  const isBeanstandeteWahlbriefeSaving = ref<boolean>(false);
 
   const waehlerverzeichnisNummern = computed<number[]>(() => {
     if (!wahlen.value) return [];
@@ -34,41 +35,94 @@ export const useWahlenStore = defineStore(storeID, () => {
       currentUserWahltagID.value,
       sendNotification
     );
+
+    if (wahlen.value) {
+      wahlen.value.sort((a: Wahl, b: Wahl) => {
+        if (a.nummer && b.nummer) {
+          return a.nummer.localeCompare(b.nummer);
+        } else {
+          return 0;
+        }
+      });
+    }
   }
 
-  async function initBeanstandeteWahlbriefe(waehlerverzeichnisNummer: number) {
-    const beanstandeteWahlbriefe =
-      await briefwahlService.getBeanstandeteWahlbriefe(
-        waehlerverzeichnisNummer,
-        currentUserWahlbezirkID.value
-      );
-    if (wahlen.value && beanstandeteWahlbriefe) {
-      for (const wahl of wahlen.value) {
-        wahl.beanstandeteWahlbriefe =
-          beanstandeteWahlbriefe.beanstandeteWahlbriefe.get(wahl.wahlID) ?? [];
+  function getWahlOrUndefinedById(wahlID: string) {
+    return wahlen.value?.find((wahl) => wahl.wahlID === wahlID);
+  }
+
+  function getWaehlerverzeichnisOrUndefinedById(wahlID: string) {
+    const wahl = getWahlOrUndefinedById(wahlID);
+    return wahl ? wahl.waehlerverzeichnisNummer : undefined;
+  }
+
+  async function initBeanstandeteWahlbriefe() {
+    for (const wvzNr of waehlerverzeichnisNummern.value) {
+      const beanstandeteWahlbriefe =
+        await briefwahlService.getBeanstandeteWahlbriefe(
+          wvzNr,
+          currentUserWahlbezirkID.value
+        );
+      if (wahlen.value && beanstandeteWahlbriefe) {
+        wahlen.value.forEach((wahl) => {
+          if (wahl.waehlerverzeichnisNummer == wvzNr) {
+            wahl.beanstandeteWahlbriefe =
+              beanstandeteWahlbriefe.beanstandeteWahlbriefe.get(wahl.wahlID) ??
+              [];
+          }
+        });
       }
     }
   }
 
-  function getWaehlerverzeichnisOrUndefinedById(wahlID: string) {
-    const wahl = _getWahlOrUndefinedById(wahlID);
-    return wahl ? wahl.waehlerverzeichnisNummer : undefined;
+  function addBeanstandeterWahlbriefEntry() {
+    if (wahlen.value) {
+      wahlen.value.map((wahl) => wahl.beanstandeteWahlbriefe.push(null));
+    }
+  }
+
+  function deleteBeanstandeterWahlbriefEntry(index: number) {
+    if (wahlen.value) {
+      wahlen.value.forEach((wahl) =>
+        wahl.beanstandeteWahlbriefe.splice(index, 1)
+      );
+    }
+  }
+
+  async function saveBeanstandeteWahlbriefe() {
+    isBeanstandeteWahlbriefeSaving.value = true;
+
+    try {
+      const wahlenGroupedByWvzNr = new Map<number, Wahl[]>();
+      if (wahlen.value) {
+        for (const wahl of wahlen.value) {
+          const wahlenWithWVZNummer =
+            wahlenGroupedByWvzNr.get(wahl.waehlerverzeichnisNummer) ?? [];
+          wahlenWithWVZNummer.push(wahl);
+          wahlenGroupedByWvzNr.set(
+            wahl.waehlerverzeichnisNummer,
+            wahlenWithWVZNummer
+          );
+        }
+      }
+
+      await briefwahlService.postBeanstandeteWahlbriefe(
+        wahlenGroupedByWvzNr,
+        currentUserWahlbezirkID.value
+      );
+    } finally {
+      isBeanstandeteWahlbriefeSaving.value = false;
+    }
   }
 
   function getWahlNameOrBlankStringById(wahlID: string) {
-    const wahl = _getWahlOrUndefinedById(wahlID);
+    const wahl = getWahlOrUndefinedById(wahlID);
     return wahl ? wahl.name : "";
   }
 
   function getWahlTagOrBlankStringById(wahlID: string) {
-    const wahl = _getWahlOrUndefinedById(wahlID);
+    const wahl = getWahlOrUndefinedById(wahlID);
     return wahl ? wahl.wahltag : "";
-  }
-
-  function _getWahlOrUndefinedById(wahlID: string) {
-    return wahlen.value
-      ? wahlen.value.find((wahl) => wahl.wahlID === wahlID)
-      : undefined;
   }
 
   return {
@@ -77,8 +131,13 @@ export const useWahlenStore = defineStore(storeID, () => {
     waehlerverzeichnisNummern,
     getWahlNameOrBlankStringById,
     getWahlTagOrBlankStringById,
+    getWahlOrUndefinedById,
     initWahlen,
     initBeanstandeteWahlbriefe,
+    addBeanstandeterWahlbriefEntry,
+    deleteBeanstandeterWahlbriefEntry,
+    saveBeanstandeteWahlbriefe,
+    isBeanstandeteWahlbriefeSaving,
   };
 });
 

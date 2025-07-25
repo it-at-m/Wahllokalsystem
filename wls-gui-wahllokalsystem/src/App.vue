@@ -17,7 +17,6 @@
 
 <script setup lang="ts">
 import localforage from "localforage";
-import { storeToRefs } from "pinia";
 import { onMounted, onUnmounted } from "vue";
 import { VApp, VContainer, VFadeTransition, VMain } from "vuetify/components";
 
@@ -36,8 +35,8 @@ const { loadEreignisse } = useEreignisStore();
 const { loadUser } = useUserStore();
 const { initTasks } = useTaskManagerStore();
 const { loadWaehler } = useMonitoringStore();
+const { initWahlen } = useWahlenStore();
 const { loadPflegeWaehlerverzeichnis } = useWahlbezirkStore();
-const { waehlerverzeichnisNummern } = storeToRefs(useWahlenStore());
 const { initBeanstandeteWahlbriefe } = useWahlenStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
@@ -46,14 +45,13 @@ const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
 onMounted(async () => {
   try {
     await loadUser();
+    await initWahlen();
     startBroadcastMessageInterval();
     await initTasks();
     await loadEreignisse();
     await loadWaehler();
     await loadPflegeWaehlerverzeichnis();
-    for (const wvzNr of waehlerverzeichnisNummern.value) {
-      await initBeanstandeteWahlbriefe(wvzNr);
-    }
+    await initBeanstandeteWahlbriefe();
   } catch (error) {
     console.debug(error);
   }

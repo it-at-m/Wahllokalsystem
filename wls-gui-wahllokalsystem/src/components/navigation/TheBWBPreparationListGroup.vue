@@ -15,12 +15,12 @@
       :to="ROUTE_WAHLUMGEBUNG"
     />
     <v-list-item
-      title="🚧 Wahlbriefe erfassen"
-      :to="'tbdWahlbriefeErfassen'"
+      title="Wahlbriefe erfassen"
+      :to="ROUTE_ERFASSUNG_WAHLBRIEFE"
     />
     <v-list-item
-      title="🚧 Wahlbriefe zulassen"
-      :to="'tbdWahlbriefeZulassen'"
+      title="Wahlbriefe zulassen"
+      :to="ROUTE_WAHLBRIEFE_ZULASSEN"
     />
   </v-list-group>
 </template>
@@ -28,5 +28,10 @@
 <script setup lang="ts">
 import { VListGroup, VListItem } from "vuetify/components";
 
-import { ROUTE_BEGINN_STIMMABGABE, ROUTE_WAHLUMGEBUNG } from "@/constants.ts";
+import {
+  ROUTE_BEGINN_STIMMABGABE,
+  ROUTE_ERFASSUNG_WAHLBRIEFE,
+  ROUTE_WAHLBRIEFE_ZULASSEN,
+  ROUTE_WAHLUMGEBUNG,
+} from "@/constants.ts";
 </script>

@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.http.client.ClientHttpRequestFactorySettings;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -75,7 +76,7 @@ class LdapConfigurationTest {
     @Value("${service.config.oauth2.clients.wahllokalgui.id}")
     String wahllokalGui;
 
-    TestRestTemplate restTemplate = new TestRestTemplate();
+    TestRestTemplate restTemplate = new TestRestTemplate().withRedirects(ClientHttpRequestFactorySettings.Redirects.DONT_FOLLOW);
 
     @BeforeEach
     void setup() {

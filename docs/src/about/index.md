@@ -102,6 +102,16 @@ geöffnet wurde.
 📃 **UseCase: `Erfassung der Anwesenheit des Wahlvorstands`**
 
 Beim Start der Anwendung wurden alle Wahlvorstandsmitglieder geladen, die für diesen Tag im Wahlbezirk eingeteilt sind.
+Die Liste der Wahlvorstandsmitglieder ist nach Funktion in folgender Reihenfolge sortiert:
+
+1. Wahlvorsteher*in
+2. Stellvertretung Wahlvorsteher*in
+3. Schriftführer*in
+4. Stellvertretung Schriftführer*in
+5. Beisitzer*in
+
+Bei gleicher Funktion wird zusätzlich nach Familienname und Vorname sortiert.
+
 Für alle Mitglieder, die tatsächlich anwesend sind, muss die Anwesenheit manuell per Checkbox erfasst werden. Die
 Anwesenheit kann nur bei Erfüllung folgender Bedingungen gespeichert werden:
 
@@ -149,6 +159,17 @@ Die früheste Zeit, zu welcher der Wahlvorstand zusammentreten kann, ist der Sta
 Konfigurationsparameter `FRUEHESTE_EROEFFNUNGSUHRZEIT_BW` geladen.
 :::
 
+📃 **UseCase: `Erfassung der erhaltenen Wahlbriefe`**
+
+::: info Briefwahlbezirk {data-bwb="true"}
+In einem Briefwahlbezirk werden die erhaltenen Wahlbriefe erfasst. Die dabei relevanten Werte sind die Anzahl der
+Wahlbriefe, die vor 18 Uhr übergeben wurden. Dabei muss mindestens ein Wahlbrief erfasst werden. Ebenso gilt es die
+Anzahl der Verzeichnisse der für ungültig erklärten Wahlscheine sowie die Anzahl der Nachträge zu den Verzeichnissen zu
+erfassen. Erst nach der Angabe dieser drei Werte können die Informationen gespeichert werden. Optional ist die Angabe
+einer Anzahl an nachgelieferten Wahlbriefen nach 18 Uhr. Sollte es nachgelieferte Wahlbriefe geben, so muss eine Uhrzeit
+dazu angegeben werden.
+:::
+
 ##### Während der Stimmabgabe
 
 📃 **UseCase: `Erfassung der absoluten Wahlbeteiligung`**
@@ -173,4 +194,29 @@ Im Briefwahlbezirk gibt es keine "Schließung" des Wahllokals. Es wird aber eine
 abgegebener Stimmen` übermittelt, welche der Schliessungsuhrzeit im Urnenwahllokal gleicht. Die früheste Zeit, die
 übermittelt werden kann richtet sich nach dem Konfigurationsparameter `FRUEHESTE_SCHLIESSUNGSUHRZEIT_BW` mit einem
 Standardwert von 18 Uhr.
+:::
+
+📃 **UseCase: `Überprüfung der ungültigen Wahlscheine`**
+
+::: info Urnenwahlbezirk {data-uwb="true"}
+In einem Urnenwahlbezirk muss, wenn jemand mit Wahlschein kommt, geprüft werden, ob dieser Wahlschein gültig ist. Dazu
+gibt es in der Anwendung eine Liste ungültiger Wahlscheine. Der Nutzer gibt die Nummer des Wahlscheins ein und sucht.
+Nach der Suche erhält der Nutzer Feedback darüber, ob der Wahlschein gültig oder ungültig ist. Entsprechend werden auch
+Handlungsanweisungen angezeigt. Ist der Wahlschein ungültig, werden in der Fehlermeldung neben der Wahlscheinnummer
+auch Vor- und Familienname angezeigt.
+
+Um suchen zu können, muss eine Wahlscheinnummer vorhanden sein. Die Wahlscheinnummer muss außerdem im Bereich von `1` bis
+`9999999` liegen.
+
+Nach einer Suche kann über den Button, der zuvor die Suche ausgeführt hat, die Suche zurückgesetzt werden. Dabei
+werden die Eingabe und Handlungsanweisungen entfernt. Die Suche wird ebenfalls zurückgesetzt, wenn der Nutzer
+die Wahlscheinnummer verändert.
+
+Zur Unterstützung des Wahlvorstands wird ein Bild angezeigt, das helfen soll, die Stelle, wo die Wahlnummer steht,
+zu identifizieren.
+
+Die vorhandene Liste kann über den Aktualisieren-Button erneut geladen werden.
+
+Ist die Liste leer oder konnte die Liste nicht geladen werden, erhält der Nutzer entsprechende Fehlermeldungen
+angezeigt.
 :::

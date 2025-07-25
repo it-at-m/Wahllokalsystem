@@ -16,7 +16,7 @@ export function useBeanstandeteWahlbriefeMapper() {
 
     Object.entries(beanstandeteWahlbriefeDto.beanstandeteWahlbriefe).forEach(
       ([wahlID, values]) => {
-        const enumValues = _mapEnumValues(values);
+        const enumValues = values.map((value) => _getEnumValue(value));
         beanstandeteWahlbriefe.beanstandeteWahlbriefe.set(wahlID, enumValues);
       }
     );
@@ -89,37 +89,35 @@ export function useBeanstandeteWahlbriefeMapper() {
     }
   }
 
-  function _mapEnumValues(values: string[]): ZurueckweisungsgrundEnum[] {
-    return values.map((value) => {
-      switch (value) {
-        case "ZUGELASSEN":
-          return ZurueckweisungsgrundEnum.Zugelassen;
-        case "SCHEIN_UNGUELTIG":
-          return ZurueckweisungsgrundEnum.ScheinUngueltig;
-        case "KEIN_ORIGINAL_SCHEIN":
-          return ZurueckweisungsgrundEnum.KeinOriginalSchein;
-        case "UNTERSCHRIFT_FEHLT":
-          return ZurueckweisungsgrundEnum.UnterschriftFehlt;
-        case "UMSCHLAG_FEHLT":
-          return ZurueckweisungsgrundEnum.UmschlagFehlt;
-        case "LOSE_STIMMZETTEL":
-          return ZurueckweisungsgrundEnum.LoseStimmzettel;
-        case "WAHLBRIEF_UND_UMSCHLAG_OFFEN":
-          return ZurueckweisungsgrundEnum.WahlbriefUndUmschlagOffen;
-        case "SCHEINE_UNGLEICH_UMSCHLAEGE":
-          return ZurueckweisungsgrundEnum.ScheineUngleichUmschlaege;
-        case "UMSCHLAG_NICHT_AMTLICH":
-          return ZurueckweisungsgrundEnum.UmschlagNichtAmtlich;
-        case "UMSCHLAG_GEFAEHRDET_WAHLGEHEIMNIS":
-          return ZurueckweisungsgrundEnum.UmschlagGefaehrdetWahlgeheimnis;
-        case "GEGENSTAND_IM_UMSCHLAG":
-          return ZurueckweisungsgrundEnum.GegenstandImUmschlag;
-        case "NICHT_WAHLBERECHTIGT":
-          return ZurueckweisungsgrundEnum.NichtWahlberechtigt;
-        default:
-          throw new Error(`Ungültiger Zurückweisungsgrund: ${value}`);
-      }
-    });
+  function _getEnumValue(value: string): ZurueckweisungsgrundEnum {
+    switch (value) {
+      case "ZUGELASSEN":
+        return ZurueckweisungsgrundEnum.Zugelassen;
+      case "SCHEIN_UNGUELTIG":
+        return ZurueckweisungsgrundEnum.ScheinUngueltig;
+      case "KEIN_ORIGINAL_SCHEIN":
+        return ZurueckweisungsgrundEnum.KeinOriginalSchein;
+      case "UNTERSCHRIFT_FEHLT":
+        return ZurueckweisungsgrundEnum.UnterschriftFehlt;
+      case "UMSCHLAG_FEHLT":
+        return ZurueckweisungsgrundEnum.UmschlagFehlt;
+      case "LOSE_STIMMZETTEL":
+        return ZurueckweisungsgrundEnum.LoseStimmzettel;
+      case "WAHLBRIEF_UND_UMSCHLAG_OFFEN":
+        return ZurueckweisungsgrundEnum.WahlbriefUndUmschlagOffen;
+      case "SCHEINE_UNGLEICH_UMSCHLAEGE":
+        return ZurueckweisungsgrundEnum.ScheineUngleichUmschlaege;
+      case "UMSCHLAG_NICHT_AMTLICH":
+        return ZurueckweisungsgrundEnum.UmschlagNichtAmtlich;
+      case "UMSCHLAG_GEFAEHRDET_WAHLGEHEIMNIS":
+        return ZurueckweisungsgrundEnum.UmschlagGefaehrdetWahlgeheimnis;
+      case "GEGENSTAND_IM_UMSCHLAG":
+        return ZurueckweisungsgrundEnum.GegenstandImUmschlag;
+      case "NICHT_WAHLBERECHTIGT":
+        return ZurueckweisungsgrundEnum.NichtWahlberechtigt;
+      default:
+        throw new Error(`Ungültiger Zurückweisungsgrund: ${value}`);
+    }
   }
 
   return {

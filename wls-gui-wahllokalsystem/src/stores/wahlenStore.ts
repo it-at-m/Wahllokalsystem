@@ -87,12 +87,12 @@ export const useWahlenStore = defineStore(storeID, () => {
       const wahlenGroupedByWvzNr = new Map<number, Wahl[]>();
       if (wahlen.value) {
         for (const wahl of wahlen.value) {
-          const existingWahlen =
+          const wahlenWithWVZNummer =
             wahlenGroupedByWvzNr.get(wahl.waehlerverzeichnisNummer) ?? [];
-          existingWahlen.push(wahl);
+          wahlenWithWVZNummer.push(wahl);
           wahlenGroupedByWvzNr.set(
             wahl.waehlerverzeichnisNummer,
-            existingWahlen
+            wahlenWithWVZNummer
           );
         }
       }

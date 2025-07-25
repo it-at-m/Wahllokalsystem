@@ -48,9 +48,7 @@ export const useWahlenStore = defineStore(storeID, () => {
   }
 
   function getWahlOrUndefinedById(wahlID: string) {
-    return wahlen.value
-      ? wahlen.value.find((wahl) => wahl.wahlID === wahlID)
-      : undefined;
+    return wahlen.value?.find((wahl) => wahl.wahlID === wahlID);
   }
 
   function getWaehlerverzeichnisOrUndefinedById(wahlID: string) {

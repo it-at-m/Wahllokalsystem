@@ -12,7 +12,10 @@
           />
           <span class="navbar-text mx-2"> {{ wahltermin }} </span>
           <base-icon-wahlbezirksart class="mx-2" />
-          <span class="navbar-text mx-2">
+          <span
+            class="navbar-text mx-2"
+            style="white-space: nowrap"
+          >
             Wahlbezirk {{ wahlbezirknummer }}
           </span>
         </v-col>

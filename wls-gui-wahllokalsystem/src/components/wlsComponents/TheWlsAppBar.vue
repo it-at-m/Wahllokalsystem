@@ -1,63 +1,68 @@
 <template>
-  <v-app-bar color="primary">
-    <v-row align="center">
-      <v-col
-        cols="4"
-        class="d-flex align-center justify-start"
-      >
-        <v-app-bar-nav-icon
-          v-if="hasInitializationOfTasksCompletelyRun"
-          @click.stop="toggleDrawer()"
+  <div>
+    <v-app-bar color="primary">
+      <v-row align="center">
+        <v-col
+          cols="4"
+          class="d-flex align-center justify-start"
+        >
+          <v-app-bar-nav-icon
+            v-if="hasInitializationOfTasksCompletelyRun"
+            @click.stop="toggleDrawer()"
+          />
+          <span class="navbar-text mx-2"> {{ wahltermin }} </span>
+          <base-icon-wahlbezirksart class="mx-2" />
+          <span
+            class="navbar-text mx-2"
+            style="white-space: nowrap"
+          >
+            Wahlbezirk {{ wahlbezirknummer }}
+          </span>
+        </v-col>
+        <v-col
+          cols="5"
+          class="d-flex align-center justify-center"
         />
-        <span class="navbar-text mx-2"> {{ wahltermin }} </span>
-        <base-icon-wahlbezirksart class="mx-2" />
-        <span class="navbar-text mx-2">
-          Wahlbezirk {{ wahlbezirknummer }}
-        </span>
-      </v-col>
-      <v-col
-        cols="5"
-        class="d-flex align-center justify-center"
-      />
-      <v-col
-        cols="3"
-        class="d-flex align-center justify-end"
-      >
-        <the-waehleranzahl-count-button
-          v-if="
-            eroeffnungsuhrzeitSent !== undefined &&
-            schliessungsuhrzeitSent === undefined &&
-            currentUserWahlbezirksArt === WahlbezirksArtEnum.UWB
-          "
+        <v-col
+          cols="3"
+          class="d-flex align-center justify-end"
+        >
+          <the-waehleranzahl-count-button
+            v-if="
+              eroeffnungsuhrzeitSent !== undefined &&
+              schliessungsuhrzeitSent === undefined &&
+              currentUserWahlbezirksArt === WahlbezirksArtEnum.UWB
+            "
+          />
+          <wls-clock class="navbar-text mx-2 mt-1" />
+          <wls-heartbeat v-model:is-offline="isOffline" />
+          <the-info-help-icon />
+        </v-col>
+      </v-row>
+    </v-app-bar>
+    <v-navigation-drawer v-model="drawer">
+      <v-list>
+        <v-list-item
+          title="Home"
+          :to="'/'"
         />
-        <wls-clock class="navbar-text mx-2" />
-        <wls-heartbeat v-model:is-offline="isOffline" />
-        <the-info-help-icon />
-      </v-col>
-    </v-row>
-  </v-app-bar>
-  <v-navigation-drawer v-model="drawer">
-    <v-list>
-      <v-list-item
-        title="Home"
-        :to="'/'"
-      />
-      <v-list-item
-        title="Wahlvorstand"
-        :to="ROUTE_WAHLVORSTAND"
-      />
-      <the-b-w-b-preparation-list-group
-        v-if="currentUserWahlbezirksArt === WahlbezirksArtEnum.BWB"
-      />
-      <the-u-w-b-preparation-list-group
-        v-if="currentUserWahlbezirksArt === WahlbezirksArtEnum.UWB"
-      />
-      <v-list-item
-        title="Ereignisse"
-        :to="ROUTE_EREIGNISSE"
-      />
-    </v-list>
-  </v-navigation-drawer>
+        <v-list-item
+          title="Wahlvorstand"
+          :to="ROUTE_WAHLVORSTAND"
+        />
+        <the-b-w-b-preparation-list-group
+          v-if="currentUserWahlbezirksArt === WahlbezirksArtEnum.BWB"
+        />
+        <the-u-w-b-preparation-list-group
+          v-if="currentUserWahlbezirksArt === WahlbezirksArtEnum.UWB"
+        />
+        <v-list-item
+          title="Ereignisse"
+          :to="ROUTE_EREIGNISSE"
+        />
+      </v-list>
+    </v-navigation-drawer>
+  </div>
 </template>
 <script setup lang="ts">
 import { useToggle } from "@vueuse/core";

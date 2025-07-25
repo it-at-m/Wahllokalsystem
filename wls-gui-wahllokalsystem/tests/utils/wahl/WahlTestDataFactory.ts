@@ -6,6 +6,7 @@ import type { Farbe } from "@/types/wahl/Farbe.ts";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
+import { useBeanstandeteWahlbriefeTestDataFactory } from "@tests/utils/briefwahl/BeanstandeteWahlbriefeTestDataFactory.ts";
 import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
@@ -17,27 +18,13 @@ const {
   generateRandomString,
   generateRandomNumberInRange,
 } = useCommonTestDataFactory();
+const { createRandomBeanstandeteWahlbriefeValues } =
+  useBeanstandeteWahlbriefeTestDataFactory();
 
 const wahlWahlartEnumValues = Object.values(WahlWahlartEnum);
 const wahlDTOWahlartEnumValues = Object.values(WahlDTOWahlartEnum);
 
 export function useWahlTestDataFactory() {
-  function createRandomFarbe(): Farbe {
-    return {
-      r: generateRandomNumberInRange(0, 255),
-      g: generateRandomNumberInRange(0, 255),
-      b: generateRandomNumberInRange(0, 255),
-    };
-  }
-
-  function createRandomFarbeDTO(): FarbeDTO {
-    return {
-      r: generateRandomNumberInRange(0, 255),
-      g: generateRandomNumberInRange(0, 255),
-      b: generateRandomNumberInRange(0, 255),
-    };
-  }
-
   function createWahlDTO(): WahlDTO {
     return {
       wahlID: generateRandomString(10),
@@ -49,7 +36,7 @@ export function useWahlTestDataFactory() {
         wahlDTOWahlartEnumValues[
           generateRandomNumberInRange(0, wahlDTOWahlartEnumValues.length - 1)
         ],
-      farbe: createRandomFarbeDTO(),
+      farbe: _createRandomFarbeDTO(),
       nummer: generateRandomString(5),
     };
   }
@@ -65,8 +52,9 @@ export function useWahlTestDataFactory() {
         wahlWahlartEnumValues[
           generateRandomNumberInRange(0, wahlWahlartEnumValues.length - 1)
         ],
-      farbe: createRandomFarbe(), // Randomly generated Farbe
+      farbe: _createRandomFarbe(), // Randomly generated Farbe
       nummer: generateRandomString(5),
+      beanstandeteWahlbriefe: createRandomBeanstandeteWahlbriefeValues(),
     };
   }
 
@@ -76,6 +64,22 @@ export function useWahlTestDataFactory() {
 
   function prepareWahl(): Builder<Wahl> {
     return proxyBuilder<Wahl>(createWahl());
+  }
+
+  function _createRandomFarbe(): Farbe {
+    return {
+      r: generateRandomNumberInRange(0, 255),
+      g: generateRandomNumberInRange(0, 255),
+      b: generateRandomNumberInRange(0, 255),
+    };
+  }
+
+  function _createRandomFarbeDTO(): FarbeDTO {
+    return {
+      r: generateRandomNumberInRange(0, 255),
+      g: generateRandomNumberInRange(0, 255),
+      b: generateRandomNumberInRange(0, 255),
+    };
   }
 
   return {

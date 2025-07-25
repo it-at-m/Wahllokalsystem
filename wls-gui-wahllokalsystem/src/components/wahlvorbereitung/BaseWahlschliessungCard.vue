@@ -1,6 +1,6 @@
 <template>
-  <v-card>
-    <v-card-title>Wahlscheine und Uhrzeit Wahlende</v-card-title>
+  <div>
+    <v-card-title>Uhrzeit Wahlende</v-card-title>
     <v-card-text class="pb-0">
       Bitte geben Sie hier die Uhrzeit ein, zu der die Wahl für geschlossen
       erklärt wurde.
@@ -25,19 +25,13 @@
         @click="onSaveSchliessungsuhrzeitClicked"
       />
     </v-card-actions>
-  </v-card>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
-import {
-  VCard,
-  VCardActions,
-  VCardText,
-  VCardTitle,
-  VForm,
-} from "vuetify/components";
+import { VCardActions, VCardText, VCardTitle, VForm } from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";

@@ -1,46 +1,48 @@
 <template>
-  <v-card>
-    <v-card-title>Beginn der Stimmabgabe</v-card-title>
-    <v-card-text class="pb-0">
-      <slot name="userHint" />
-      <v-form v-model="isEroeffnungsuhrzeitFormValid">
-        <base-time-input
-          v-model="eroeffnungsuhrzeit"
-          class="mt-5"
-          max-width="300"
-          :rules="[
-            REQUIRED,
-            TIME_NOT_IN_FUTURE,
-            TIME_GREATER_OR_EQUAL(fruehesteEroeffnungsuhrzeit),
-            TIME_LESS_OR_EQUAL(fruehesteSchliessungsuhrzeit),
-          ]"
+  <div>
+    <v-card>
+      <v-card-title>Beginn der Stimmabgabe</v-card-title>
+      <v-card-text class="pb-0">
+        <slot name="userHint" />
+        <v-form v-model="isEroeffnungsuhrzeitFormValid">
+          <base-time-input
+            v-model="eroeffnungsuhrzeit"
+            class="mt-5"
+            max-width="300"
+            :rules="[
+              REQUIRED,
+              TIME_NOT_IN_FUTURE,
+              TIME_GREATER_OR_EQUAL(fruehesteEroeffnungsuhrzeit),
+              TIME_LESS_OR_EQUAL(fruehesteSchliessungsuhrzeit),
+            ]"
+          />
+        </v-form>
+      </v-card-text>
+      <v-card-actions>
+        <base-button-save
+          active
+          :loading="eroeffnungsuhrzeitIsSaving"
+          :disabled="isSaveButtonDisabled"
+          @click="onSaveEroeffnungsuhrzeitClicked"
         />
-      </v-form>
-    </v-card-text>
-    <v-card-actions>
-      <base-button-save
-        active
-        :loading="eroeffnungsuhrzeitIsSaving"
-        :disabled="isSaveButtonDisabled"
-        @click="onSaveEroeffnungsuhrzeitClicked"
-      />
-    </v-card-actions>
-  </v-card>
-  <base-dialog-begruendung
-    :visible="isZuSpaet"
-    dialogtitle=""
-    label="Begründung"
-    data-test="zuSpaetDialog"
-    @cancel="onCancelBegruendung"
-    @confirm="onConfirmBegruendung"
-  >
-    <span>
-      Die eingetragene Uhrzeit ist nach
-      {{ toHhMm(getDateFromTimeString(spaetesteEroeffnungsuhrzeit)) }} Uhr,
-      bitte begründen Sie die verspätete Eröffnung der Wahlhandlung in Form
-      eines besonderen Vorfalls.
-    </span>
-  </base-dialog-begruendung>
+      </v-card-actions>
+    </v-card>
+    <base-dialog-begruendung
+      :visible="isZuSpaet"
+      dialogtitle=""
+      label="Begründung"
+      data-test="zuSpaetDialog"
+      @cancel="onCancelBegruendung"
+      @confirm="onConfirmBegruendung"
+    >
+      <span>
+        Die eingetragene Uhrzeit ist nach
+        {{ toHhMm(getDateFromTimeString(spaetesteEroeffnungsuhrzeit)) }} Uhr,
+        bitte begründen Sie die verspätete Eröffnung der Wahlhandlung in Form
+        eines besonderen Vorfalls.
+      </span>
+    </base-dialog-begruendung>
+  </div>
 </template>
 
 <script setup lang="ts">

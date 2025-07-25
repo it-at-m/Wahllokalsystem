@@ -10,6 +10,7 @@
 
     <artifactId>swagger</artifactId>
     <version>1.7.0-SNAPSHOT</version>
+    <name>wls-common-swagger</name>
     <description>Uebergreifende Swagger Config</description>
     <url>${wls.github.url}</url>
 

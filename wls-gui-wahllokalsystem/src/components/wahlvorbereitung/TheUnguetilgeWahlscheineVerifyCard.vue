@@ -121,7 +121,7 @@ import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
 
 const isFormValid = ref<boolean | null>(null);
-const isSearchButtonDisabled = computed(() => !isFormValid.value)
+const isSearchButtonDisabled = computed(() => !isFormValid.value);
 const wahlscheinValidationForm = useTemplateRef(
   "wahlscheinValidationForm"
 ) as Readonly<ShallowRef<InstanceType<typeof VForm>>>;

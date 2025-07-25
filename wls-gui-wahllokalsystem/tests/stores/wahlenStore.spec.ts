@@ -237,6 +237,41 @@ describe("wahlenStore.ts", () => {
     });
   });
 
+  describe("addBeanstandeterWahlbriefEntry", () => {
+    it("should_addBeanstandeteWahlbriefeEntryInStore_when_addWahlbriefIsCalled", () => {
+      unitUnderTest.wahlen = [
+        prepareWahl()
+          .name("Wahl1")
+          .wahlID("id1")
+          .beanstandeteWahlbriefe(["GEGENSTAND_IM_UMSCHLAG"])
+          .build(),
+        prepareWahl()
+          .name("Wahl2")
+          .wahlID("id2")
+          .beanstandeteWahlbriefe(["GEGENSTAND_IM_UMSCHLAG"])
+          .build(),
+      ];
+
+      expect(unitUnderTest.wahlen[0].beanstandeteWahlbriefe).toStrictEqual([
+        "GEGENSTAND_IM_UMSCHLAG",
+      ]);
+      expect(unitUnderTest.wahlen[1].beanstandeteWahlbriefe).toStrictEqual([
+        "GEGENSTAND_IM_UMSCHLAG",
+      ]);
+
+      unitUnderTest.addBeanstandeterWahlbriefEntry();
+
+      expect(unitUnderTest.wahlen[0].beanstandeteWahlbriefe).toStrictEqual([
+        "GEGENSTAND_IM_UMSCHLAG",
+        null,
+      ]);
+      expect(unitUnderTest.wahlen[1].beanstandeteWahlbriefe).toStrictEqual([
+        "GEGENSTAND_IM_UMSCHLAG",
+        null,
+      ]);
+    });
+  });
+
   describe("saveBeanstandeteWahlbriefe", () => {
     it("should_saveBeanstandeteWahlbriefe_when_called", async () => {
       const wahlbezirkID = "wahlbezirkId";

@@ -163,18 +163,13 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
       expect(mockDefinitions.postBeanstandeteWahlbriefe).toHaveBeenCalled();
     });
 
-    it("should_addBeanstandeteWahlbriefeEntriesInStore_when_addRowButtonIsClicked", async () => {
+    it("should_callAddBeanstandeteWahlbriefe_when_addRowButtonIsClicked", async () => {
       const wahlenStore = useWahlenStore();
       wahlenStore.wahlen = [
         prepareWahl()
           .name("Wahl1")
           .wahlID("id1")
-          .beanstandeteWahlbriefe(["GEGENSTAND_IM_UMSCHLAG"])
-          .build(),
-        prepareWahl()
-          .name("Wahl2")
-          .wahlID("id2")
-          .beanstandeteWahlbriefe(["GEGENSTAND_IM_UMSCHLAG"])
+          .beanstandeteWahlbriefe(["ZUGELASSEN"])
           .build(),
       ];
 
@@ -184,28 +179,12 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
         },
       });
 
-      await nextTick();
-
-      expect(wahlenStore.wahlen[0].beanstandeteWahlbriefe).toStrictEqual([
-        "GEGENSTAND_IM_UMSCHLAG",
-      ]);
-      expect(wahlenStore.wahlen[1].beanstandeteWahlbriefe).toStrictEqual([
-        "GEGENSTAND_IM_UMSCHLAG",
-      ]);
-
       const addRowButton = wrapper.findComponent<typeof VBtn>(
         `[data-test="addBedenklicherWahlbriefRow"]`
       );
       await addRowButton.trigger("click");
 
-      expect(wahlenStore.wahlen[0].beanstandeteWahlbriefe).toStrictEqual([
-        "GEGENSTAND_IM_UMSCHLAG",
-        null,
-      ]);
-      expect(wahlenStore.wahlen[1].beanstandeteWahlbriefe).toStrictEqual([
-        "GEGENSTAND_IM_UMSCHLAG",
-        null,
-      ]);
+      expect(wahlenStore.addBeanstandeterWahlbriefEntry).toHaveBeenCalled();
     });
   });
 });

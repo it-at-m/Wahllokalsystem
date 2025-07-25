@@ -67,6 +67,12 @@ export const useWahlenStore = defineStore(storeID, () => {
     }
   }
 
+  function addBeanstandeterWahlbriefEntry() {
+    if (wahlen.value) {
+      wahlen.value.map((wahl) => wahl.beanstandeteWahlbriefe.push(null));
+    }
+  }
+
   async function saveBeanstandeteWahlbriefe() {
     isBeanstandeteWahlbriefeSaving.value = true;
 
@@ -133,6 +139,7 @@ export const useWahlenStore = defineStore(storeID, () => {
     getWaehlerverzeichnisOrUndefinedById,
     initWahlen,
     initBeanstandeteWahlbriefe,
+    addBeanstandeterWahlbriefEntry,
     saveBeanstandeteWahlbriefe,
     isBeanstandeteWahlbriefeSaving,
   };

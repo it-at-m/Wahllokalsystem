@@ -10,7 +10,7 @@
       <v-btn
         prepend-icon="$add"
         data-test="addBedenklicherWahlbriefRow"
-        @click="onAddBedenklicherWahlbriefClicked()"
+        @click="onAddBeanstandeterWahlbriefClicked()"
       >
         Neuen Beschluss erfassen
       </v-btn>
@@ -38,9 +38,9 @@ import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheBeanstandeteWahlbriefeTable from "@/components/wahlvorbereitung/TheBeanstandeteWahlbriefeTable.vue";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
-const { wahlen, isBeanstandeteWahlbriefeSaving } =
-  storeToRefs(useWahlenStore());
-const { saveBeanstandeteWahlbriefe } = useWahlenStore();
+const { isBeanstandeteWahlbriefeSaving } = storeToRefs(useWahlenStore());
+const { addBeanstandeterWahlbriefEntry, saveBeanstandeteWahlbriefe } =
+  useWahlenStore();
 
 const bedenklicheWahlbriefeFormValid = ref<null | boolean>(null);
 
@@ -49,10 +49,8 @@ const isSaveButtonDisabled = computed(
 );
 const isSaving = computed(() => isBeanstandeteWahlbriefeSaving.value);
 
-function onAddBedenklicherWahlbriefClicked() {
-  if (wahlen.value) {
-    wahlen.value.map((wahl) => wahl.beanstandeteWahlbriefe.push(null));
-  }
+function onAddBeanstandeterWahlbriefClicked() {
+  addBeanstandeterWahlbriefEntry();
 }
 
 function onSaveClicked() {

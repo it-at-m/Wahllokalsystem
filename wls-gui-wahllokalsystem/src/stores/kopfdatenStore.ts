@@ -26,9 +26,22 @@ export const useKopfdatenStore = defineStore("kopfdaten", () => {
     }
   }
 
+  async function loadKopfdaten(wahlID: string, wahlbezirkID: string) {
+    try {
+      const loadedKopfdaten = await kopfdatenService.getKopfdaten(
+        wahlID,
+        wahlbezirkID
+      );
+      kopfdaten.value.push(loadedKopfdaten);
+    } catch {
+      throw Error("Fehler beim Resolven der Promises");
+    }
+  }
+
   return {
     initKopfdaten,
     kopfdaten,
+    loadKopfdaten,
   };
 });
 

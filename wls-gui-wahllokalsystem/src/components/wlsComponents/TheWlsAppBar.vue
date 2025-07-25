@@ -12,7 +12,10 @@
           />
           <span class="navbar-text mx-2"> {{ wahltermin }} </span>
           <base-icon-wahlbezirksart class="mx-2" />
-          <span class="navbar-text mx-2">
+          <span
+            class="navbar-text mx-2"
+            style="white-space: nowrap"
+          >
             Wahlbezirk {{ wahlbezirknummer }}
           </span>
         </v-col>
@@ -31,7 +34,7 @@
               currentUserWahlbezirksArt === WahlbezirksArtEnum.UWB
             "
           />
-          <wls-clock class="navbar-text mx-2" />
+          <wls-clock class="navbar-text mx-2 mt-1" />
           <wls-heartbeat v-model:is-offline="isOffline" />
           <the-info-help-icon />
         </v-col>

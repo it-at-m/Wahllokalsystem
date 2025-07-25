@@ -21,14 +21,14 @@ const props = defineProps<{
 }>();
 
 function getIcon() {
-  return _areRowInputsValid() ? "$valid" : "$edit";
+  return areRowInputsValid() ? "$valid" : "$edit";
 }
 
 function getColor() {
-  return _areRowInputsValid() ? "success" : "error";
+  return areRowInputsValid() ? "success" : "error";
 }
 
-function _areRowInputsValid() {
+function areRowInputsValid() {
   return wahlen.value
     ? wahlen.value.every(
         (wahl) =>

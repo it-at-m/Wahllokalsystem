@@ -137,6 +137,9 @@ const {
 } = storeToRefs(useWahlbezirkStore());
 
 const wahlscheinnummer = ref<null | number>(null);
+//null - no hit on search
+//undefined - not search yet, or search was reset
+//value - found something while searching
 const ungueltigerWahlschein = ref<null | undefined | UngueltigerWahlschein>(
   undefined
 );

@@ -17,7 +17,6 @@
 
 <script setup lang="ts">
 import localforage from "localforage";
-import { storeToRefs } from "pinia";
 import { onMounted, onUnmounted } from "vue";
 import { VApp, VContainer, VFadeTransition, VMain } from "vuetify/components";
 
@@ -38,7 +37,6 @@ const { initTasks } = useTaskManagerStore();
 const { loadWaehler } = useMonitoringStore();
 const { initWahlen } = useWahlenStore();
 const { loadPflegeWaehlerverzeichnis } = useWahlbezirkStore();
-const { waehlerverzeichnisNummern } = storeToRefs(useWahlenStore());
 const { initBeanstandeteWahlbriefe } = useWahlenStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =

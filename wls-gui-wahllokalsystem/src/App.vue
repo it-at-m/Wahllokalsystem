@@ -37,6 +37,7 @@ const { initTasks } = useTaskManagerStore();
 const { loadWaehler } = useMonitoringStore();
 const { initWahlen } = useWahlenStore();
 const { loadPflegeWaehlerverzeichnis } = useWahlbezirkStore();
+const { initBeanstandeteWahlbriefe } = useWahlenStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
@@ -47,9 +48,10 @@ onMounted(async () => {
     await initWahlen();
     startBroadcastMessageInterval();
     await initTasks();
-    loadEreignisse();
-    loadWaehler();
-    loadPflegeWaehlerverzeichnis();
+    await loadEreignisse();
+    await loadWaehler();
+    await loadPflegeWaehlerverzeichnis();
+    await initBeanstandeteWahlbriefe();
   } catch (error) {
     console.debug(error);
   }

@@ -171,9 +171,8 @@ describe("briefwahlService.ts", () => {
           wvzNr,
           dto
         );
-        expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
-          expect.any(String),
-          "Error",
+        expect(mockDefinitions.addNotification.mock.calls).toEqual([
+          [expect.any(String), "Error"],
         ]);
       }
     );

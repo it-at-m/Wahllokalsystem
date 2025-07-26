@@ -1,27 +1,38 @@
-import { computed, ref } from "vue";
+import type { Ref } from "vue";
 
-export function useDateAndTime(date: Date | undefined) {
-  const dateComponent = ref<Date | undefined>(date);
-  const timeComponent = ref<Date | undefined>(date);
+import { computed, ref, watch } from "vue";
 
-  function readDate(date: Date | undefined) {
-    dateComponent.value = date;
-    timeComponent.value = date;
+export function useDateAndTime(initState: Ref<Date | undefined>) {
+  const dateOnly = ref<Date | undefined>(initState.value);
+  const timeOnly = ref<Date | undefined>(initState.value);
+
+  watch(initState, (value, oldValue) => {
+    console.debug(
+      `useDateAndTime - watch of date - value: ${value}, oldValue: ${oldValue}, dateAndTimeCombined: ${dateAndTimeCombined.value}`
+    );
+    if (value?.getTime() !== dateAndTimeCombined.value?.getTime()) {
+      syncChronoComponents(value);
+    }
+  });
+
+  function syncChronoComponents(date: Date | undefined) {
+    dateOnly.value = date;
+    timeOnly.value = date;
   }
 
   const dateAndTimeCombined = computed(() => {
-    if (dateComponent.value && timeComponent.value) {
+    if (dateOnly.value && timeOnly.value) {
       const combinedDate = new Date();
       combinedDate.setFullYear(
-        dateComponent.value.getFullYear(),
-        dateComponent.value.getMonth(),
-        dateComponent.value.getDate()
+        dateOnly.value.getFullYear(),
+        dateOnly.value.getMonth(),
+        dateOnly.value.getDate()
       );
       combinedDate.setHours(
-        timeComponent.value.getHours(),
-        timeComponent.value.getMinutes(),
-        timeComponent.value.getSeconds(),
-        timeComponent.value.getMilliseconds()
+        timeOnly.value.getHours(),
+        timeOnly.value.getMinutes(),
+        timeOnly.value.getSeconds(),
+        timeOnly.value.getMilliseconds()
       );
       console.debug(
         `dateAndTimeCombined - result: ${JSON.stringify(combinedDate)}`
@@ -34,9 +45,9 @@ export function useDateAndTime(date: Date | undefined) {
   });
 
   return {
-    dateComponent,
-    timeComponent,
+    dateOnly,
+    timeOnly,
     dateAndTimeCombined,
-    readDate,
+    syncChronoComponents,
   };
 }

@@ -8,10 +8,10 @@
     >
       <v-row>
         <!--      <div class="d-flex ga-2">-->
-        <v-col cols="5"><base-time-input v-model="timeComponent" /></v-col>
+        <v-col cols="5"><base-time-input v-model="timeOnly" /></v-col>
         <v-col cols="7"
           ><base-date-input
-            v-model="dateComponent"
+            v-model="dateOnly"
             :rules="[REQUIRED]"
         /></v-col>
       </v-row>
@@ -48,7 +48,7 @@
 import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 import type { PropType } from "vue";
 
-import { watch } from "vue";
+import { computed, watch } from "vue";
 import { VCol, VIcon, VRow, VTextarea } from "vuetify/components";
 
 import BaseDateInput from "@/components/common/inputs/BaseDateInput.vue";
@@ -70,25 +70,17 @@ const model = defineModel({
   required: true,
 });
 
-const { dateComponent, timeComponent, dateAndTimeCombined, readDate } =
-  useDateAndTime(model.value.uhrzeit);
+const ereignisUhrzeit = computed(() => model.value.uhrzeit);
+
+const { dateOnly, timeOnly, dateAndTimeCombined } =
+  useDateAndTime(ereignisUhrzeit);
 
 watch(dateAndTimeCombined, (newValue) => {
-  if (model.value.uhrzeit !== newValue) {
+  console.debug(`watch of dateAndTimeCombined - newValue: ${newValue}`);
+  if (model.value.uhrzeit?.getTime() !== newValue?.getTime()) {
     model.value.uhrzeit = newValue ?? undefined;
   }
 });
-watch(
-  () => model.value.uhrzeit,
-  (newValue, oldValue) => {
-    console.log(
-      `watch model.value.uhrzeit - oldValue: ${oldValue}, newValue: ${newValue}`
-    );
-    if (newValue?.getTime() !== oldValue?.getTime()) {
-      readDate(newValue);
-    }
-  }
-);
 
 const emit = defineEmits<{ delete: [] }>();
 

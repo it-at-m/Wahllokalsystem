@@ -11,14 +11,9 @@ export function useDateAndTime(initState: ComputedRef<Date | undefined>) {
       `useDateAndTime - watch of date - value: ${value}, oldValue: ${oldValue}, dateAndTimeCombined: ${dateAndTimeCombined.value}`
     );
     if (value?.getTime() !== dateAndTimeCombined.value?.getTime()) {
-      syncChronoComponents(value);
+      _syncChronoComponents(value);
     }
   });
-
-  function syncChronoComponents(date: Date | undefined) {
-    dateOnly.value = date;
-    timeOnly.value = date;
-  }
 
   const dateAndTimeCombined = computed(() => {
     if (dateOnly.value && timeOnly.value) {
@@ -44,10 +39,14 @@ export function useDateAndTime(initState: ComputedRef<Date | undefined>) {
     }
   });
 
+  function _syncChronoComponents(date: Date | undefined) {
+    dateOnly.value = date;
+    timeOnly.value = date;
+  }
+
   return {
     dateOnly,
     timeOnly,
     dateAndTimeCombined,
-    syncChronoComponents,
   };
 }

@@ -4,6 +4,11 @@ export function useDateAndTime(date: Date | undefined) {
   const dateComponent = ref<Date | undefined>(date);
   const timeComponent = ref<Date | undefined>(date);
 
+  function readDate(date: Date | undefined) {
+    dateComponent.value = date;
+    timeComponent.value = date;
+  }
+
   const dateAndTimeCombined = computed(() => {
     if (dateComponent.value && timeComponent.value) {
       const combinedDate = new Date();
@@ -18,8 +23,12 @@ export function useDateAndTime(date: Date | undefined) {
         timeComponent.value.getSeconds(),
         timeComponent.value.getMilliseconds()
       );
+      console.debug(
+        `dateAndTimeCombined - result: ${JSON.stringify(combinedDate)}`
+      );
       return combinedDate;
     } else {
+      console.debug(`dateAndTimeCombined - result: null`);
       return null;
     }
   });
@@ -28,5 +37,6 @@ export function useDateAndTime(date: Date | undefined) {
     dateComponent,
     timeComponent,
     dateAndTimeCombined,
+    readDate,
   };
 }

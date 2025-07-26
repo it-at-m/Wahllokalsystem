@@ -70,13 +70,24 @@ const model = defineModel({
   required: true,
 });
 
-const { dateComponent, timeComponent, dateAndTimeCombined } = useDateAndTime(
-  model.value.uhrzeit
-);
+const { dateComponent, timeComponent, dateAndTimeCombined, readDate } =
+  useDateAndTime(model.value.uhrzeit);
 
+watch(dateAndTimeCombined, (newValue) => {
+  if (model.value.uhrzeit !== newValue) {
+    model.value.uhrzeit = newValue ?? undefined;
+  }
+});
 watch(
-  dateAndTimeCombined,
-  (newValue) => (model.value.uhrzeit = newValue ?? undefined)
+  () => model.value.uhrzeit,
+  (newValue, oldValue) => {
+    console.log(
+      `watch model.value.uhrzeit - oldValue: ${oldValue}, newValue: ${newValue}`
+    );
+    if (newValue?.getTime() !== oldValue?.getTime()) {
+      readDate(newValue);
+    }
+  }
 );
 
 const emit = defineEmits<{ delete: [] }>();

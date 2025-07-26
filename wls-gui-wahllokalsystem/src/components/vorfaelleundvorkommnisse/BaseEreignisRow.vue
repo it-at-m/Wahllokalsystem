@@ -28,10 +28,7 @@
         :counter="maxLengthForEreignisBeschreibung"
       />
     </v-col>
-    <v-col
-      cols="1"
-      class="text-center mt-5"
-    >
+    <v-col class="text-center mt-5 flex-grow-0">
       <v-icon
         data-test="delete-ereignis-icon"
         icon="$delete"

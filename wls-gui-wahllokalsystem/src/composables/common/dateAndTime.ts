@@ -1,8 +1,8 @@
-import type { Ref } from "vue";
+import type { ComputedRef } from "vue";
 
 import { computed, ref, watch } from "vue";
 
-export function useDateAndTime(initState: Ref<Date | undefined>) {
+export function useDateAndTime(initState: ComputedRef<Date | undefined>) {
   const dateOnly = ref<Date | undefined>(initState.value);
   const timeOnly = ref<Date | undefined>(initState.value);
 

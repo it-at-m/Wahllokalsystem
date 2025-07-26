@@ -5,9 +5,7 @@
       :key="index"
       :model-value="ereignis"
       :line-number="index + 1"
-      @update:model-value="
-        (newValue) => (wahlbezirkEreignisse.ereigniseintraege[index] = newValue)
-      "
+      @delete="() => onDeleteIconClicked(index)"
     />
     <yes-no-dialog
       v-model="deleteDialog"
@@ -29,7 +27,6 @@ import { useEreignisStore } from "@/stores/ereignisStore.ts";
 
 const ereignisStore = useEreignisStore();
 const { wahlbezirkEreignisse } = storeToRefs(ereignisStore);
-const { updateUhrzeitByIndex } = ereignisStore;
 const deleteDialog = ref(false);
 const deleteIndex = ref<number | null>(null);
 
@@ -40,13 +37,6 @@ function closeYesNoDialog() {
 function showYesNoDialogForItem(index: number) {
   deleteIndex.value = index;
   deleteDialog.value = true;
-}
-
-function onEreignisUhrzeitUpdateModelValue(
-  newEreignisUhrzeit: Date | undefined,
-  ereignisIndex: number
-) {
-  updateUhrzeitByIndex(newEreignisUhrzeit, ereignisIndex);
 }
 
 function onDeleteIconClicked(index: number) {

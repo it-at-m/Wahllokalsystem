@@ -7,7 +7,6 @@
       style="min-width: 380px"
     >
       <v-row>
-        <!--      <div class="d-flex ga-2">-->
         <v-col cols="5"><base-time-input v-model="timeOnly" /></v-col>
         <v-col cols="7"
           ><base-date-input
@@ -15,7 +14,6 @@
             :rules="[REQUIRED]"
         /></v-col>
       </v-row>
-      <!--      </div>-->
     </v-col>
     <v-col>
       <v-textarea

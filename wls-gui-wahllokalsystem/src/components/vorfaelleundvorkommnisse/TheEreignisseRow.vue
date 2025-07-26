@@ -9,48 +9,6 @@
         (newValue) => (wahlbezirkEreignisse.ereigniseintraege[index] = newValue)
       "
     />
-    <!--    <v-row-->
-    <!--      v-for="(ereignis, index) in wahlbezirkEreignisse.ereigniseintraege"-->
-    <!--      :key="index"-->
-    <!--    >-->
-    <!--      <v-col-->
-    <!--        cols="1"-->
-    <!--        class="text-center mt-5"-->
-    <!--        >{{ index + 1 }}</v-col-->
-    <!--      >-->
-    <!--      <v-col cols="2">-->
-    <!--        <base-time-input-->
-    <!--          :model-value="ereignis.uhrzeit"-->
-    <!--          @update:model-value="-->
-    <!--            (value) => onEreignisUhrzeitUpdateModelValue(value, index)-->
-    <!--          "-->
-    <!--        />-->
-    <!--      </v-col>-->
-    <!--      <v-col>-->
-    <!--        <v-textarea-->
-    <!--          v-model="ereignis.beschreibung"-->
-    <!--          :rules="[MIN_LENGTH(4), MAX_LENGTH(maxLengthForEreignisBeschreibung)]"-->
-    <!--          rows="1"-->
-    <!--          label="Beschreibung"-->
-    <!--          auto-grow-->
-    <!--          clearable-->
-    <!--          autofokus-->
-    <!--          persistent-counter-->
-    <!--          :counter="maxLengthForEreignisBeschreibung"-->
-    <!--        />-->
-    <!--      </v-col>-->
-    <!--      <v-col-->
-    <!--        cols="1"-->
-    <!--        class="text-center mt-5"-->
-    <!--      >-->
-    <!--        <v-icon-->
-    <!--          data-test="delete-ereignis-icon"-->
-    <!--          icon="$delete"-->
-    <!--          title="Löschen"-->
-    <!--          @click="onDeleteIconClicked(index)"-->
-    <!--        />-->
-    <!--      </v-col>-->
-    <!--    </v-row>-->
     <yes-no-dialog
       v-model="deleteDialog"
       dialogtitle="Ereignis löschen"
@@ -74,7 +32,6 @@ const { wahlbezirkEreignisse } = storeToRefs(ereignisStore);
 const { updateUhrzeitByIndex } = ereignisStore;
 const deleteDialog = ref(false);
 const deleteIndex = ref<number | null>(null);
-const maxLengthForEreignisBeschreibung = 500;
 
 function closeYesNoDialog() {
   deleteDialog.value = false;

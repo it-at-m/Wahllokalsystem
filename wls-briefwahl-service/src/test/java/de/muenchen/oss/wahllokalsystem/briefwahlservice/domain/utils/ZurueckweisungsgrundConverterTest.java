@@ -47,7 +47,7 @@ class ZurueckweisungsgrundConverterTest {
 
         @Test
         void should_convertToEmptyArray_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.convertToEntityAttribute("")).isEqualTo(new Zurueckweisungsgrund[0]);
+            Assertions.assertThat(unitUnderTest.convertToEntityAttribute(null)).isEqualTo(new Zurueckweisungsgrund[0]);
         }
 
         @Test

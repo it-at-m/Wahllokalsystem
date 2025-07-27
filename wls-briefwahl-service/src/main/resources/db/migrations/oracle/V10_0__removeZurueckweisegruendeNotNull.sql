@@ -1,0 +1,3 @@
+alter table ZURUECKWEISEGRUENDE
+    modify ZURUECKWEISEGRUENDE null
+
